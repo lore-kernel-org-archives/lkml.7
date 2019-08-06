@@ -2,137 +2,120 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A279CC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 22:04:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78292C32751
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 22:04:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63FEB20651
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 22:04:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Gq51WFCg"
+	by mail.kernel.org (Postfix) with ESMTP id 461C32189E
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 22:04:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565129092;
+	bh=AuqdTVytYqGwq/gm5yHhPwjwfhHe1pLTnzeuDh1BmAo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vt5UiHxQgUuAs3dB1YfFQ0qMQHfjuyXWOkkGC4YiVsL7gR5DK/41uCuDHsGkOB2VU
+	 d6tf9CShtvejMYsFk9uYKCn1ImynNW97ik0MLmdD2nmoXC8KRYSADu79czmtyAdwM+
+	 1zTvNKPbUkt/DEwMk1XqVhZYxRwj6UeSGd8tamNM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbfHFWEj (ORCPT
+        id S1727090AbfHFWEv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 18:04:39 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:45214 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726133AbfHFWEj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 18:04:39 -0400
-Received: by mail-oi1-f194.google.com with SMTP id m206so68949567oib.12
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 15:04:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QfnP4WFLi3j9Pcefb2omV5XrdW/cAbsj/88MkL4fbvI=;
-        b=Gq51WFCgr1zdsFkg5BQRpfVFNcqwrXt/ByM2qpZmeimqpO9xdv5amX6U9IY+GySEbs
-         MW9UFDu+wuO0qwiLcw5AezTeq7h+VLNv8b5+LbA6ah+w0ZHGGwJQ9WzabRJ356Vtp9rZ
-         xijUotEAFl5yO3Q2wbmCiP2UycrvTZVkEbjiG1pJrgkzA3ISkkoZ73f/08M9ZgLIJ+qX
-         7YTDOUphK/A4GisdJxfftSNZEA9tT0YrdJ20eY2EViMjxF+/iegHSa0mmgn7SYzSc9Dk
-         wSEfADHPl6hQqvVOX5MkU+S0MdyfKy9IfPUAJcNEePMpK6/NR4D6g9wdaTaNiV0Mm7oq
-         QDNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QfnP4WFLi3j9Pcefb2omV5XrdW/cAbsj/88MkL4fbvI=;
-        b=ePK7TK2A5maoiCKD5bSt54bDh2PG4J+a2Ea38GNsDmlfCuW6cd+oNh2sThZAabY0O/
-         y8D2pAPoIjlcNsf0IiMLXc8y43E1XRlLPcIWcd93tqATN2VMIx8zLoUjbituBKiHWxw4
-         f4hrzKPZm/llw/xm74Fd83FVJYEo2H0CzIFzYBc3xcTDJ6p7z5e/ZYIs7pZxPMBiipKF
-         ldDKgabZzyPKeOth1h5RTq2X8XbSHKyZ9vn9xPeoULRnH/ahCIKZVnz/2xuD8uDidjZ9
-         Qn/l4kE0c7CGgXt6MzIrBFueyTVPcfK/2cSa4umG3f2FQ1nGr5/hQGgIgFn1J76iTWw5
-         PWJQ==
-X-Gm-Message-State: APjAAAVi2ITfD/DjjDhzfWcWSWbSHaRXtpayFVDWDebhzYqgSHjAAMDD
-        gCBtEilt4BsebAwIzDYoZv3Uq1fYmw6vCv1lz8ulcA==
-X-Google-Smtp-Source: APXvYqxotQJSiWzEumcCLEIqBNRnOr8vATGsyoLi96yVYHfCMRt5aTAq4Tb9x3MuVSGks46FUgah69A375EX3l1ZKwM=
-X-Received: by 2002:aca:1803:: with SMTP id h3mr2930076oih.24.1565129078021;
- Tue, 06 Aug 2019 15:04:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190806192654.138605-1-saravanak@google.com> <20190806192654.138605-2-saravanak@google.com>
- <CAL_Jsq+BwHSj1XUNp_eY362XnNoOqVTNHqAkvnbgece8ZQE3Qw@mail.gmail.com>
-In-Reply-To: <CAL_Jsq+BwHSj1XUNp_eY362XnNoOqVTNHqAkvnbgece8ZQE3Qw@mail.gmail.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Tue, 6 Aug 2019 15:04:01 -0700
-Message-ID: <CAGETcx8+EETv6nSu+BEBStKvbmBs+tZZgo1u_Pw8SNu+7Urq1Q@mail.gmail.com>
-Subject: Re: [PATCH 2/2] of/platform: Disable generic device linking code for PowerPC
-To:     Rob Herring <robh+dt@kernel.org>
+        Tue, 6 Aug 2019 18:04:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35002 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726716AbfHFWEu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 18:04:50 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7657121880;
+        Tue,  6 Aug 2019 22:04:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565129089;
+        bh=AuqdTVytYqGwq/gm5yHhPwjwfhHe1pLTnzeuDh1BmAo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kUuYVb6xuyzs4OnPtaiKRTKPuzMpF5WG8+SnMfOoePE+aHCgTx55/ym/eXIQA3b9O
+         K9a5bvTZL1N9WU0Qm2HjEiV5SCCqiYirLBV4H3S0jvF5rohkl9F6dq7MFMnY/8hl+j
+         5PSu+wp/SJNVAA5v8ca3g746OP2auWkvQ39K2mIo=
+Date:   Tue, 6 Aug 2019 18:04:48 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Robin Murphy <robin.murphy@arm.com>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Android Kernel Team <kernel-team@android.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Fugang Duan <fugang.duan@nxp.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH 5.2 073/131] dma-direct: correct the physical addr in
+ dma_direct_sync_sg_for_cpu/device
+Message-ID: <20190806220448.GN17747@sasha-vm>
+References: <20190805124951.453337465@linuxfoundation.org>
+ <20190805124956.543654128@linuxfoundation.org>
+ <20190806124143.GF17747@sasha-vm>
+ <9dd82745-1673-afc3-5eb4-8b79ddb5824b@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9dd82745-1673-afc3-5eb4-8b79ddb5824b@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 6, 2019 at 2:27 PM Rob Herring <robh+dt@kernel.org> wrote:
+On Tue, Aug 06, 2019 at 01:57:56PM +0100, Robin Murphy wrote:
+>On 06/08/2019 13:41, Sasha Levin wrote:
+>>On Mon, Aug 05, 2019 at 03:02:40PM +0200, Greg Kroah-Hartman wrote:
+>>>[ Upstream commit 449fa54d6815be8c2c1f68fa9dbbae9384a7c03e ]
+>>>
+>>>dma_map_sg() may use swiotlb buffer when the kernel command line includes
+>>>"swiotlb=force" or the dma_addr is out of dev->dma_mask range.  After
+>>>DMA complete the memory moving from device to memory, then user call
+>>>dma_sync_sg_for_cpu() to sync with DMA buffer, and copy the original
+>>>virtual buffer to other space.
+>>>
+>>>So dma_direct_sync_sg_for_cpu() should use swiotlb physical addr, not
+>>>the original physical addr from sg_phys(sg).
+>>>
+>>>dma_direct_sync_sg_for_device() also has the same issue, correct it as
+>>>well.
+>>>
+>>>Fixes: 55897af63091("dma-direct: merge swiotlb_dma_ops into the 
+>>>dma_direct code")
+>>>Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
+>>>Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+>>>Signed-off-by: Christoph Hellwig <hch@lst.de>
+>>>Signed-off-by: Sasha Levin <sashal@kernel.org>
+>>
+>>I'm going to drop this one. There's a fix to it upstream, but the fix
+>>also seems to want 0036bc73ccbe ("drm/msm: stop abusing dma_map/unmap for
+>>cache") which we're not taking, so I'm just going to drop this one as
+>>well.
 >
-> On Tue, Aug 6, 2019 at 1:27 PM Saravana Kannan <saravanak@google.com> wrote:
-> >
-> > PowerPC platforms don't use the generic of/platform code to populate the
-> > devices from DT.
->
-> Yes, they do.
+>Given that the two commits touch entirely separate files I'm not sure 
+>what the imagined dependency could be :/
 
-No they don't. My wording could be better, but they don't use
-of_platform_default_populate_init()
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/of/platform.c#n511
+From the commit message of 3de433c5b38a ("drm/msm: Use the correct
+dma_sync calls in msm_gem"):
 
->
-> > Therefore the generic device linking code is never used
-> > in PowerPC.  Compile it out to avoid warning about unused functions.
->
-> I'd prefer this get disabled on PPC using 'if (IS_ENABLED(CONFIG_PPC))
-> return' rather than #ifdefs.
+    Fixes the combination of two patches:
 
-I'm just moving the existing ifndef some lines above. I don't want to
-go change existing #ifndef in this patch. Maybe that should be a
-separate patch series that goes and fixes all such code in drivers/of/
-or driver/
+    Fixes: 0036bc73ccbe (drm/msm: stop abusing dma_map/unmap for cache)
+    Fixes: 449fa54d6815 (dma-direct: correct the physical addr in dma_direct_sync_sg_for_cpu/device)
 
--Saravana
+>0036bc73ccbe is indeed not a fix (frankly I'm not convinced it's even 
+>a valid change at all) but even conceptually it bears no relation 
+>whatsoever to the genuine bug fixed by 449fa54d6815.
 
->
-> >
-> > If a specific PowerPC platform wants to use this code in the future,
-> > bringing this back for PowerPC would be trivial. We'll just need to export
-> > of_link_to_suppliers() and then let the machine specific files do the
-> > linking as they populate the devices from DT.
-> >
-> > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > ---
-> >  drivers/of/platform.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> > index f68de5c4aeff..a2a4e4b79d43 100644
-> > --- a/drivers/of/platform.c
-> > +++ b/drivers/of/platform.c
-> > @@ -506,6 +506,7 @@ int of_platform_default_populate(struct device_node *root,
-> >  }
-> >  EXPORT_SYMBOL_GPL(of_platform_default_populate);
-> >
-> > +#ifndef CONFIG_PPC
-> >  static bool of_link_is_valid(struct device_node *con, struct device_node *sup)
-> >  {
-> >         of_node_get(sup);
-> > @@ -683,7 +684,6 @@ static int of_link_to_suppliers(struct device *dev)
-> >         return __of_link_to_suppliers(dev, dev->of_node);
-> >  }
-> >
-> > -#ifndef CONFIG_PPC
-> >  static const struct of_device_id reserved_mem_matches[] = {
-> >         { .compatible = "qcom,rmtfs-mem" },
-> >         { .compatible = "qcom,cmd-db" },
-> > --
-> > 2.22.0.770.g0f2c4a37fd-goog
-> >
+Given that Rob Clark asked me to drop 0036bc73ccbe not because it's
+irrelevant but because it's potentially dangerous, I did not feel
+confident enough ignoring the statement in the commit message and
+dropped this patch instead.
+
+If I'm  wrong here, I'd be happy to take these two patches if someone
+acks it.
+
+--
+Thanks,
+Sasha
