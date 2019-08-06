@@ -2,120 +2,196 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2DE6C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:39:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E59C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:40:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B29D2208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:39:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84074208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:40:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387938AbfHFQjH (ORCPT
+        id S2387651AbfHFQkY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 12:39:07 -0400
-Received: from mxwww.masterlogin.de ([95.129.51.220]:38588 "EHLO
-        mxwww.masterlogin.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732743AbfHFQjE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 12:39:04 -0400
-X-Greylist: delayed 505 seconds by postgrey-1.27 at vger.kernel.org; Tue, 06 Aug 2019 12:39:03 EDT
-Received: from mxout1.routing.net (unknown [192.168.10.81])
-        by new.mxwww.masterlogin.de (Postfix) with ESMTPS id E164A96CDE;
-        Tue,  6 Aug 2019 16:30:38 +0000 (UTC)
-Received: from mxbox1.masterlogin.de (unknown [192.168.10.253])
-        by mxout1.routing.net (Postfix) with ESMTP id 1E41143C54;
-        Tue,  6 Aug 2019 16:30:39 +0000 (UTC)
-Received: from localhost.localdomain (fttx-pool-217.61.153.94.bambit.de [217.61.153.94])
-        by mxbox1.masterlogin.de (Postfix) with ESMTPSA id DF773403C7;
-        Tue,  6 Aug 2019 18:30:37 +0200 (CEST)
-From:   Frank Wunderlich <frank-w@public-files.de>
-To:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Allison Randal <allison@lohutok.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, Eddie Huang <eddie.huang@mediatek.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Richard Fontana <rfontana@redhat.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Tianping . Fang" <tianping.fang@mediatek.com>
-Cc:     Josef Friedl <josef.friedl@speed.at>,
-        Frank Wunderlich <frank-w@public-files.de>
-Subject: [PATCH v4 10/10] arm: dts: mt6323: add keys, power-controller, rtc and codec
-Date:   Tue,  6 Aug 2019 18:30:26 +0200
-Message-Id: <20190806163026.8530-2-frank-w@public-files.de>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190806163026.8530-1-frank-w@public-files.de>
-References: <20190806163026.8530-1-frank-w@public-files.de>
+        Tue, 6 Aug 2019 12:40:24 -0400
+Received: from foss.arm.com ([217.140.110.172]:36726 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732729AbfHFQkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 12:40:24 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D9AD5344;
+        Tue,  6 Aug 2019 09:40:23 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8522B3F575;
+        Tue,  6 Aug 2019 09:40:22 -0700 (PDT)
+Date:   Tue, 6 Aug 2019 17:40:20 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     linux-pm@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        LAKML <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 5/6] ARM: psci: cpuidle: Enable PSCI CPUidle driver
+Message-ID: <20190806164020.GD15498@e121166-lin.cambridge.arm.com>
+References: <20190722153745.32446-1-lorenzo.pieralisi@arm.com>
+ <20190722153745.32446-6-lorenzo.pieralisi@arm.com>
+ <20190806161624.GE16546@e107155-lin>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190806161624.GE16546@e107155-lin>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Friedl <josef.friedl@speed.at>
+On Tue, Aug 06, 2019 at 05:16:24PM +0100, Sudeep Holla wrote:
+> On Mon, Jul 22, 2019 at 04:37:44PM +0100, Lorenzo Pieralisi wrote:
+> > Allow selection of the PSCI CPUidle in the kernel by adding
+> > the required Kconfig options.
+> > 
+> > Remove PSCI callbacks from ARM/ARM64 generic CPU ops
+> > to prevent the PSCI idle driver from clashing with the generic
+> > ARM CPUidle driver initialization, that relies on CPU ops
+> > to initialize and enter idle states.
+> > 
+> > Update the affected defconfig files to guarantee seamingless
+> > transition from the generic ARM CPUidle to the PSCI CPUidle
+> > driver on arch/platforms using it.
+> > 
+> > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > Cc: Will Deacon <will@kernel.org>
+> > Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> > Cc: Sudeep Holla <sudeep.holla@arm.com>
+> > Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> > Cc: Catalin Marinas <catalin.marinas@arm.com>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> > ---
+> >  arch/arm/configs/imx_v6_v7_defconfig | 1 +
+> >  arch/arm64/configs/defconfig         | 1 +
+> 
+> Better to keep above you as separate patch, though it may cause
+> minor issues from bisectibility. It may be needed anyway for merging.
 
-support poweroff and power-related keys on bpi-r2
+That's a good point, I will split these bits in a separate patch.
 
-Suggested-by: Frank Wunderlich <frank-w@public-files.de>
-Signed-off-by: Josef Friedl <josef.friedl@speed.at>
-Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
----
-changes since v3: none
-changes since v2: none (=v2 part 7)
+> >  arch/arm64/kernel/cpuidle.c          | 7 ++++---
+> >  arch/arm64/kernel/psci.c             | 4 ----
+> >  drivers/cpuidle/Kconfig.arm          | 8 ++++++--
+> >  drivers/firmware/psci/psci.c         | 9 ---------
+> >  6 files changed, 12 insertions(+), 18 deletions(-)
+> > 
+> > diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6_v7_defconfig
+> > index a53b29251ed4..4174fd1b79e7 100644
+> > --- a/arch/arm/configs/imx_v6_v7_defconfig
+> > +++ b/arch/arm/configs/imx_v6_v7_defconfig
+> > @@ -60,6 +60,7 @@ CONFIG_ARM_IMX6Q_CPUFREQ=y
+> >  CONFIG_ARM_IMX_CPUFREQ_DT=y
+> >  CONFIG_CPU_IDLE=y
+> >  CONFIG_ARM_CPUIDLE=y
+> > +CONFIG_ARM_PSCI_CPUIDLE=y
+> >  CONFIG_VFP=y
+> >  CONFIG_NEON=y
+> >  CONFIG_PM_DEBUG=y
+> > diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> > index 0e58ef02880c..c0a7cfe3aebd 100644
+> > --- a/arch/arm64/configs/defconfig
+> > +++ b/arch/arm64/configs/defconfig
+> > @@ -72,6 +72,7 @@ CONFIG_RANDOMIZE_BASE=y
+> >  CONFIG_HIBERNATION=y
+> >  CONFIG_WQ_POWER_EFFICIENT_DEFAULT=y
+> >  CONFIG_ARM_CPUIDLE=y
+> > +CONFIG_ARM_PSCI_CPUIDLE=y
+> >  CONFIG_CPU_FREQ=y
+> >  CONFIG_CPU_FREQ_STAT=y
+> >  CONFIG_CPU_FREQ_GOV_POWERSAVE=m
+> > diff --git a/arch/arm64/kernel/cpuidle.c b/arch/arm64/kernel/cpuidle.c
+> > index d1048173fd8a..4bcd1bca0dfc 100644
+> > --- a/arch/arm64/kernel/cpuidle.c
+> > +++ b/arch/arm64/kernel/cpuidle.c
+> > @@ -11,6 +11,7 @@
+> >  #include <linux/cpu_pm.h>
+> >  #include <linux/of.h>
+> >  #include <linux/of_device.h>
+> > +#include <linux/psci.h>
+> >  
+> >  #include <asm/cpuidle.h>
+> >  #include <asm/cpu_ops.h>
+> > @@ -48,15 +49,15 @@ int arm_cpuidle_suspend(int index)
+> >  
+> >  int acpi_processor_ffh_lpi_probe(unsigned int cpu)
+> >  {
+> > -	return arm_cpuidle_init(cpu);
+> > +	return psci_acpi_cpu_init_idle(cpu);
+> 
+> This will break build as psci_acpi_cpu_init_idle is introduced in next patch.
+> You can simply move it to next patch I assume.
 
- arch/arm/boot/dts/mt6323.dtsi | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+Yes, it is a bisectability issue, I fixed it already but thanks
+for spotting it anyway.
 
-diff --git a/arch/arm/boot/dts/mt6323.dtsi b/arch/arm/boot/dts/mt6323.dtsi
-index ba397407c1dd..7fda40ab5fe8 100644
---- a/arch/arm/boot/dts/mt6323.dtsi
-+++ b/arch/arm/boot/dts/mt6323.dtsi
-@@ -238,5 +238,32 @@
- 				regulator-enable-ramp-delay = <216>;
- 			};
- 		};
-+
-+		mt6323keys: mt6323keys {
-+			compatible = "mediatek,mt6323-keys";
-+			mediatek,long-press-mode = <1>;
-+			power-off-time-sec = <0>;
-+
-+			power {
-+				linux,keycodes = <116>;
-+				wakeup-source;
-+			};
-+
-+			home {
-+				linux,keycodes = <114>;
-+			};
-+		};
-+
-+		codec: mt6397codec {
-+			compatible = "mediatek,mt6397-codec";
-+		};
-+
-+		power-controller {
-+			compatible = "mediatek,mt6323-pwrc";
-+		};
-+
-+		rtc {
-+			compatible = "mediatek,mt6323-rtc";
-+		};
- 	};
- };
--- 
-2.17.1
+> >  }
+> >  
+> >  int acpi_processor_ffh_lpi_enter(struct acpi_lpi_state *lpi)
+> >  {
+> >  	if (ARM64_LPI_IS_RETENTION_STATE(lpi->arch_flags))
+> > -		return CPU_PM_CPU_IDLE_ENTER_RETENTION(arm_cpuidle_suspend,
+> > +		return CPU_PM_CPU_IDLE_ENTER_RETENTION(psci_cpu_suspend_enter,
+> >  						lpi->index);
+> >  	else
+> > -		return CPU_PM_CPU_IDLE_ENTER(arm_cpuidle_suspend, lpi->index);
+> > +		return CPU_PM_CPU_IDLE_ENTER(psci_cpu_suspend_enter, lpi->index);
+> >  }
+> >  #endif
+> > diff --git a/arch/arm64/kernel/psci.c b/arch/arm64/kernel/psci.c
+> > index 85ee7d07889e..a543ab7e007c 100644
+> > --- a/arch/arm64/kernel/psci.c
+> > +++ b/arch/arm64/kernel/psci.c
+> > @@ -105,10 +105,6 @@ static int cpu_psci_cpu_kill(unsigned int cpu)
+> >  
+> >  const struct cpu_operations cpu_psci_ops = {
+> >  	.name		= "psci",
+> > -#ifdef CONFIG_CPU_IDLE
+> > -	.cpu_init_idle	= psci_cpu_init_idle,
+> > -	.cpu_suspend	= psci_cpu_suspend_enter,
+> > -#endif
+> >  	.cpu_init	= cpu_psci_cpu_init,
+> >  	.cpu_prepare	= cpu_psci_cpu_prepare,
+> >  	.cpu_boot	= cpu_psci_cpu_boot,
+> > diff --git a/drivers/cpuidle/Kconfig.arm b/drivers/cpuidle/Kconfig.arm
+> > index 929b57424ea4..b9c56c60ab98 100644
+> > --- a/drivers/cpuidle/Kconfig.arm
+> > +++ b/drivers/cpuidle/Kconfig.arm
+> > @@ -14,8 +14,12 @@ config ARM_CPUIDLE
+> >            provided by architecture code.
+> >  
+> >  config ARM_PSCI_CPUIDLE
+> > -	bool
+> > -
+> > +	bool "PSCI CPU idle Driver"
+> 
+> As mentioned in previous patch, do you see issues having just above
+> change in this patch and the below ones moved to the previous.
 
+No you are right, I will make this change.
+
+> > +	depends on ARM_PSCI_FW
+> > +	select DT_IDLE_STATES
+> > +	select CPU_IDLE_MULTIPLE_DRIVERS
+> > +	help
+> > +	  Select this to enable PSCI firmware based CPUidle driver for ARM.
+> 
+> You need extra blank line here.
+
+OK.
+
+Thanks,
+Lorenzo
