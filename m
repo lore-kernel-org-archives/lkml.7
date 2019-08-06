@@ -2,243 +2,135 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61949C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:18:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D973C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:19:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38C012089E
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:18:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AFE6214C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:19:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565097572;
+	bh=fwhYa36kicYLd4QAPZrcY2nHdSADWgG7TogiOuwcMIE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pdLhr+WsSn1bV8O/t1VQDJTZvQdLPb+bjb2gwBxteoztVhbCV3xY3IPSJ2ZbApfLP
+	 RXPuhKcQY6x1zhumMlp3o6lzzWuxIOhQgi9oLfsyGLihgRx+P3BMj6UZqQcGexBcHC
+	 6lkOhUSYCZsbz34aVOBpArRP2GVw+w3jUT+KR1Tw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732415AbfHFNSS (ORCPT
+        id S1731859AbfHFNTa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 09:18:18 -0400
-Received: from mail-oi1-f199.google.com ([209.85.167.199]:52704 "EHLO
-        mail-oi1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731532AbfHFNSK (ORCPT
+        Tue, 6 Aug 2019 09:19:30 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52606 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726877AbfHFNTa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 09:18:10 -0400
-Received: by mail-oi1-f199.google.com with SMTP id y1so34823474oih.19
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 06:18:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=CXzF0+8nk83L5+c/SAzPo5vMbjmAIMyV5WPska+YU0s=;
-        b=O/PKkoPLrQ8tsJ/kbFjZsVIQ4GCVXHfpYGm9FQ2JOWvmzQjjcVuiZdvKXZJFoWFHF6
-         LG6cF2E3ov+nle45umK33/GHFna+9SYnDUi7AOn4yh68CK7QklBKGzFzbG7zGYkNnw8y
-         FI0lo1/K1w1e/EPnqBCuC2Zg8mc/1WEuvrBZxCEN9g86m21S1UvQcwK9Xy8ebQz9oz76
-         4azFbeMc68zp/69CqGJmaa8OtpNxmD7dpHXCJZFhU7TdTSHlKE4T9g9uBrhTSA91M1JA
-         CNGN9jVxhX63pFyols7Y4Omi7Hw+3A1T+3qGp590fRC6zp/90eMSO/uUuaAwqnyQFpJH
-         kG5Q==
-X-Gm-Message-State: APjAAAXOL56I7pY/qr7RsLm/f+1n1EMbra+bpueBJojZyC2oH4d75I4y
-        E8S4SLciI5+iPRNn/hf4/jFIJHSRAvbwY2WW7PfzOi/HrmCW
-X-Google-Smtp-Source: APXvYqxORkL5KWGLqKGvGqAdIzkN6qJgbXTLVJiBooQkPBHI8Se6tJ8FdhPcUZ/UJkb73IVeLA182OD6OQf7elLZSNB6/9dlN2KW
+        Tue, 6 Aug 2019 09:19:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=/YlBTsdKaLWiGTA3PgSDfUuNoWKMNUoS35CDFJHvndg=; b=wXJ0GPsyXW3kOHbFTuOfhIXfp
+        0tuUwVVQ+VRWj3g0WdMV33xltNLalzNIVhnDTNZDPy2Fe1tzCgG9SqLtQVatAaFR5x8CJSkD366pG
+        +5lBZ03HBwKvUTXDBjjdUqHE5Ld3Msmt8mKMtFauycD6ygiJnL6CchvyIAr1gSV+HvmYI=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1huzN8-0004aT-5B; Tue, 06 Aug 2019 13:19:26 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 274A02742B67; Tue,  6 Aug 2019 14:19:25 +0100 (BST)
+Date:   Tue, 6 Aug 2019 14:19:25 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Konstantin Ryabitsev <mricon@kernel.org>
+Subject: Re: [GIT PULL] regulator fixes for v5.3
+Message-ID: <20190806131925.GC4527@sirena.org.uk>
+References: <20190805143431.GH6432@sirena.org.uk>
+ <CAADWXX_DXyBx5soZdYMcGtVB-MFhCy0C590ez=OH09eA+c1Kvw@mail.gmail.com>
 MIME-Version: 1.0
-X-Received: by 2002:a5d:8195:: with SMTP id u21mr3664571ion.260.1565097488698;
- Tue, 06 Aug 2019 06:18:08 -0700 (PDT)
-Date:   Tue, 06 Aug 2019 06:18:08 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000da58ed058f72a7f1@google.com>
-Subject: KASAN: use-after-free Read in hiddev_ioctl
-From:   syzbot <syzbot+5e9ed50a49eb77802d0e@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, benjamin.tissoires@redhat.com,
-        jikos@kernel.org, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="5G06lTa6Jq83wMTw"
+Content-Disposition: inline
+In-Reply-To: <CAADWXX_DXyBx5soZdYMcGtVB-MFhCy0C590ez=OH09eA+c1Kvw@mail.gmail.com>
+X-Cookie: All men have the right to wait in line.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-syzbot found the following crash on:
+--5G06lTa6Jq83wMTw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-HEAD commit:    e96407b4 usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=1732258a600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=cfa2c18fb6a8068e
-dashboard link: https://syzkaller.appspot.com/bug?extid=5e9ed50a49eb77802d0e
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+On Mon, Aug 05, 2019 at 11:42:29AM -0700, Linus Torvalds wrote:
 
-Unfortunately, I don't have any reproducer for this crash yet.
+Adding Konstantin.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+5e9ed50a49eb77802d0e@syzkaller.appspotmail.com
+>  these got marked as spam once again, because
+>=20
+>    dmarc=3Dfail (p=3DNONE sp=3DNONE dis=3DNONE) header.from=3Dkernel.org
+>=20
+> and I think it's because you have
+>=20
+>    DKIM-Signature: v=3D1; a=3Drsa-sha256; q=3Ddns/txt; c=3Drelaxed/relaxe=
+d;
+> d=3Dsirena.org.uk;
+>=20
+> but then you have
+>=20
+>    From: Mark Brown <broonie@kernel.org>
+>=20
+> so the DKIM signature is all correct, but it's correct for
+> sirena.org.uk, not for the sender information..
 
-==================================================================
-BUG: KASAN: use-after-free in __mutex_lock_common  
-kernel/locking/mutex.c:912 [inline]
-BUG: KASAN: use-after-free in __mutex_lock+0xf23/0x1360  
-kernel/locking/mutex.c:1077
-Read of size 8 at addr ffff8881cf955468 by task syz-executor.1/19529
+Well, AFAICT this is your mail provider deciding to impose their own
+requirements on things.  (and for clarity it's only the From: that has
+kernel.org, the envelope sender has sirena.org.uk.)
 
-CPU: 0 PID: 19529 Comm: syz-executor.1 Not tainted 5.3.0-rc2+ #25
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e lib/dump_stack.c:113
-  print_address_description+0x6a/0x32c mm/kasan/report.c:351
-  __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
-  kasan_report+0xe/0x12 mm/kasan/common.c:612
-  __mutex_lock_common kernel/locking/mutex.c:912 [inline]
-  __mutex_lock+0xf23/0x1360 kernel/locking/mutex.c:1077
-  hiddev_ioctl+0xea/0x1550 drivers/hid/usbhid/hiddev.c:607
-  vfs_ioctl fs/ioctl.c:46 [inline]
-  file_ioctl fs/ioctl.c:509 [inline]
-  do_vfs_ioctl+0xd2d/0x1330 fs/ioctl.c:696
-  ksys_ioctl+0x9b/0xc0 fs/ioctl.c:713
-  __do_sys_ioctl fs/ioctl.c:720 [inline]
-  __se_sys_ioctl fs/ioctl.c:718 [inline]
-  __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:718
-  do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x459829
-Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f0ec5dd7c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459829
-RDX: 0000000020000380 RSI: 0000000081044804 RDI: 0000000000000005
-RBP: 000000000075c070 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f0ec5dd86d4
-R13: 00000000004c2249 R14: 00000000004d55f8 R15: 00000000ffffffff
+The DKIM signature there says that the sirena.org.uk systems are
+asserting that they take responsibility for the headers they sign, this
+is true and says nothing about the content of those headers other than
+you can tell if they were modified since leaving sirena.org.uk.  The
+DMARC check is a separate one based on the domain reported in the
+address, kernel.org has one which explicitly advertises having no policy
+and only filtering 1% of outbound mail so shouldn't really mean anything
+for processing.  DMARC can flag that there has to be a DKIM signature
+=66rom the domain in the headers but kernel.org doesn't do that.
 
-Allocated by task 2777:
-  save_stack+0x1b/0x80 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_kmalloc mm/kasan/common.c:487 [inline]
-  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:460
-  kmalloc include/linux/slab.h:552 [inline]
-  kzalloc include/linux/slab.h:748 [inline]
-  hiddev_connect+0x242/0x5b0 drivers/hid/usbhid/hiddev.c:900
-  hid_connect+0x239/0xbb0 drivers/hid/hid-core.c:1882
-  hid_hw_start drivers/hid/hid-core.c:1981 [inline]
-  hid_hw_start+0xa2/0x130 drivers/hid/hid-core.c:1972
-  appleir_probe+0x13e/0x1a0 drivers/hid/hid-appleir.c:308
-  hid_device_probe+0x2be/0x3f0 drivers/hid/hid-core.c:2209
-  really_probe+0x281/0x650 drivers/base/dd.c:548
-  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
-  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:882
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2114
-  hid_add_device+0x33c/0x990 drivers/hid/hid-core.c:2365
-  usbhid_probe+0xa81/0xfa0 drivers/hid/usbhid/hid-core.c:1386
-  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
-  really_probe+0x281/0x650 drivers/base/dd.c:548
-  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
-  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:882
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2114
-  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
-  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
-  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
-  really_probe+0x281/0x650 drivers/base/dd.c:548
-  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
-  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:882
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2114
-  usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
-  hub_port_connect drivers/usb/core/hub.c:5098 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
-  port_event drivers/usb/core/hub.c:5359 [inline]
-  hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
-  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
-  process_scheduled_works kernel/workqueue.c:2331 [inline]
-  worker_thread+0x7ab/0xe20 kernel/workqueue.c:2417
-  kthread+0x318/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+We *do* have a SPF record for kernel.org which I think isn't helping
+since it flags all hosts as being SOFTFAIL (the last match is ~all)
+which is supposed to be something along the lines of accept but flag, I
+can see your provider deciding that spam is the appropriate tag there.
+As far as I can see that'd also flag mail sent by things like the
+patchwork tracker bot similarly (it sends from mail.kernel.org which
+isn't advertised as a sender).
 
-Freed by task 2777:
-  save_stack+0x1b/0x80 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_slab_free+0x130/0x180 mm/kasan/common.c:449
-  slab_free_hook mm/slub.c:1423 [inline]
-  slab_free_freelist_hook mm/slub.c:1470 [inline]
-  slab_free mm/slub.c:3012 [inline]
-  kfree+0xe4/0x2f0 mm/slub.c:3953
-  hiddev_connect.cold+0x45/0x5c drivers/hid/usbhid/hiddev.c:914
-  hid_connect+0x239/0xbb0 drivers/hid/hid-core.c:1882
-  hid_hw_start drivers/hid/hid-core.c:1981 [inline]
-  hid_hw_start+0xa2/0x130 drivers/hid/hid-core.c:1972
-  appleir_probe+0x13e/0x1a0 drivers/hid/hid-appleir.c:308
-  hid_device_probe+0x2be/0x3f0 drivers/hid/hid-core.c:2209
-  really_probe+0x281/0x650 drivers/base/dd.c:548
-  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
-  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:882
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2114
-  hid_add_device+0x33c/0x990 drivers/hid/hid-core.c:2365
-  usbhid_probe+0xa81/0xfa0 drivers/hid/usbhid/hid-core.c:1386
-  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
-  really_probe+0x281/0x650 drivers/base/dd.c:548
-  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
-  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:882
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2114
-  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
-  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
-  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
-  really_probe+0x281/0x650 drivers/base/dd.c:548
-  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
-  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:882
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2114
-  usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
-  hub_port_connect drivers/usb/core/hub.c:5098 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
-  port_event drivers/usb/core/hub.c:5359 [inline]
-  hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
-  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
-  process_scheduled_works kernel/workqueue.c:2331 [inline]
-  worker_thread+0x7ab/0xe20 kernel/workqueue.c:2417
-  kthread+0x318/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+I suspect Google will only be happy if I inject mail through them,
+possibly also if I filter kernel.org mail to redirect via kernel.org
+though that might still trip them up.
 
-The buggy address belongs to the object at ffff8881cf955400
-  which belongs to the cache kmalloc-512 of size 512
-The buggy address is located 104 bytes inside of
-  512-byte region [ffff8881cf955400, ffff8881cf955600)
-The buggy address belongs to the page:
-page:ffffea00073e5500 refcount:1 mapcount:0 mapping:ffff8881da002500  
-index:0x0 compound_mapcount: 0
-flags: 0x200000000010200(slab|head)
-raw: 0200000000010200 ffffea0007659680 0000000600000003 ffff8881da002500
-raw: 0000000000000000 00000000000c000c 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
+--5G06lTa6Jq83wMTw
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Memory state around the buggy address:
-  ffff8881cf955300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8881cf955380: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> ffff8881cf955400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                                           ^
-  ffff8881cf955480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8881cf955500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1JflwACgkQJNaLcl1U
+h9BM4wf/Rx59c60W/6jq29u9EAPRAe3iUem2n9OYioKpZU+gVTmr08lf0m3nB6ih
+cTi5ehzBOSic1SyflKvj1tzT0DV971WRZvj2Z0mUppcNrv37ouUYxJf3qg8n5N+k
+qSS/1yHme62GA0nNvBa6vt/ZG8OwhAOB9T3fC5h5UlPx3ikh49TA3BAxjPcLHNmX
+VLCXVQrju0Tai8mCMpP9ugZnUXlG9Fmwu+ixw7c5kAkmAP3FjS/BsJAX5vCXlioe
+TvUIA0qEmezB1AeoVZiY6/f5L46Qucb82sQbjBzKOOxO+a/CAHOhPLWxQOVasnED
+2IJmcn574cSJqu9OAPEQipJ3787wQg==
+=l47q
+-----END PGP SIGNATURE-----
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+--5G06lTa6Jq83wMTw--
