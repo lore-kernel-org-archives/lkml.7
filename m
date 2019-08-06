@@ -2,298 +2,108 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90061C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 07:28:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A14C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 07:28:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59A4620C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 07:28:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6704218DA
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 07:28:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732033AbfHFH2Y (ORCPT
+        id S1732066AbfHFH25 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 03:28:24 -0400
-Received: from esa4.mentor.iphmx.com ([68.232.137.252]:50056 "EHLO
-        esa4.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731557AbfHFH2X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 03:28:23 -0400
-X-Greylist: delayed 426 seconds by postgrey-1.27 at vger.kernel.org; Tue, 06 Aug 2019 03:28:22 EDT
-IronPort-SDR: j9eLfhqmlrdKRfV98AKqbtRM0gGOfxcaOukQSpbRTGeq9T7JKAfYDAwBanzv/u82JSutp3hUId
- +Z5syIZ9Vdz4XXPIisBccRelKdOwmurky+4dWukq9z2Cg1UL0fIErkFpyqPt1YLFIgwbAKgOlm
- mCX++M8CRGAV+EWl4qkzyaWKvKtlo0+p4ru8O0EsUjXMhkwh5kJNAij4qeqYsnnWajqnMvr05L
- tAd1FwDBzoEopDuZQ8XKdoIvvIXMB6vxiPwPyQXYlsAtEAgiYqhlaDvX0hT0/nzwcrB52pBHWY
- 92U=
-X-IronPort-AV: E=Sophos;i="5.64,352,1559548800"; 
-   d="scan'208";a="40206524"
-Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa4.mentor.iphmx.com with ESMTP; 05 Aug 2019 23:21:15 -0800
-IronPort-SDR: WP1n50YQpkUi8UHPfq9Uhy3Q80W3OHO97juBjokPJAwmL7Zz0mkFVtLgVHXDqV2jeQefMn+NrJ
- vqdEoFmoHrG6CV16CKijBkganpIIFKPu2loYop2jASZ4k0XMqasQ0qUiIgIZDWyLLW3vXUduNY
- V2lsdIlKA4twG3HIuGbD6mxdVzpC0dcNZr8be5be6C97S2EiDHjlMBAAqVC4mHICB3/vWi+nTJ
- S1yi0WOAa+f84zOgKExAG64oyp283ot+X3e1EjdFTBcW4SyV8OiF/rJMaTplXRCm4Y0lnfyfB3
- Dsc=
-Subject: Re: [PATCH v1 2/3] ASoC: rsnd: Allow reconfiguration of clock rate
-To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-CC:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>, <twischer@de.adit-jv.com>,
-        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
-References: <20190722072403.11008-1-jiada_wang@mentor.com>
- <20190722072403.11008-3-jiada_wang@mentor.com>
- <87a7d6h3b2.wl-kuninori.morimoto.gx@renesas.com>
-From:   Jiada Wang <jiada_wang@mentor.com>
-Message-ID: <731330d0-e177-f9cb-50d2-91701f8dff0a@mentor.com>
-Date:   Tue, 6 Aug 2019 16:21:00 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 6 Aug 2019 03:28:57 -0400
+Received: from mga02.intel.com ([134.134.136.20]:31201 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731557AbfHFH25 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 03:28:57 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 00:24:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,352,1559545200"; 
+   d="scan'208";a="325555334"
+Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
+  by orsmga004.jf.intel.com with ESMTP; 06 Aug 2019 00:24:38 -0700
+From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
+To:     Peter Zijlstra <a.p.zijlstra@chello.nl>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        kan.liang@linux.intel.com,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Subject: [PATCH v5 0/7] perf, intel: Add support for PEBS output to Intel PT
+Date:   Tue,  6 Aug 2019 10:24:26 +0300
+Message-Id: <20190806072433.26820-1-alexander.shishkin@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <87a7d6h3b2.wl-kuninori.morimoto.gx@renesas.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SVR-ORW-MBX-05.mgc.mentorg.com (147.34.90.205) To
- svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Morimoto-san
+Hi Peter,
 
-Sorry for the delayed response
+Sixth attempt at the PEBS-via-PT feature. The previous ones were [1], [2],
+[3], [4], [5]. This one addresses the most recent review comments, mainly
+renaming the new attribute bit and everything related to 'aux_output'.
+Tooling also changed to use /aux-output/ config term.
 
-On 2019/07/22 17:41, Kuninori Morimoto wrote:
-> 
-> Hi Jiada
-> 
-> The solution looks very over-kill to me,
-> especiallyq [3/3] patch is too much to me.
-> 
-> 1st, can we start clock at .hw_param, instead of .prepare ?
-> and stop it at .hw_free ?
-> 
-the reasoning to move start of clock from .init to .prepare by
-commit 4d230d1271064 ("ASoC: rsnd: fixup not to call clk_get/set under 
-non-atomic")
-is to prevent clk_{get, set_rate} be called from atomic context,
-since .hw_params is non atomic context,
-so I think start of clock can be moved from .prepare to .hw_params
+The PEBS feature: output to Intel PT stream instead of the DS area. It's
+theoretically useful in virtualized environments, where DS area can't be
+used. It's also good for those who are interested in instruction trace for
+context of the PEBS events. As PEBS goes, it can provide LBR context with
+all the branch-related information that PT doesn't provide at the moment.
 
-> 2nd, can we keep usrcnt setup as-is ?
-> I guess we can just avoid rsnd_ssi_master_clk_start() if ssi->rate was not 0 ?
+PEBS records are packetized in the PT stream, so instead of extracting
+them in the PMI, we leave it to the perf tool, because real time PT
+decoding is not practical.
 
-I don't fully understand your 2nd question,
-in case of rsnd_ssi_master_clk_stop(), if avoid 
-rsnd_ssi_master_clk_stop() when ssi->rate is 0 by apply following change
+[1] https://marc.info/?l=linux-kernel&m=155679423430002
+[2] https://marc.info/?l=linux-kernel&m=156225605132606
+[3] https://marc.info/?l=linux-kernel&m=156458152126310
+[4] https://marc.info/?l=linux-kernel&m=156458348626999
+[5] https://marc.info/?l=linux-kernel&m=156498939722450
 
-  	static void rsnd_ssi_master_clk_stop(struct rsnd_mod *mod,
-  				     struct rsnd_dai_stream *io)
-  	{
-  		...
-  -		if (ssi->usrcnt > 1)
-  +		if (ssi->rate == 0)
-  			return;
-  		...
-  	}
+Adrian Hunter (5):
+  perf tools: Add aux_output attribute flag
+  perf tools: Add itrace option 'o' to synthesize aux-output events
+  perf intel-pt: Process options for PEBS event synthesis
+  perf tools: Add aux-output config term
+  perf intel-pt: Add brief documentation for PEBS via Intel PT
 
-then when any IO stream with same SSI calls .hw_free,
-the other IO stream's clock will be stopped too.
+Alexander Shishkin (2):
+  perf: Allow normal events to output AUX data
+  perf/x86/intel: Support PEBS output to PT
 
-Thanks,
-Jiada
+ arch/x86/events/core.c                   | 34 +++++++++
+ arch/x86/events/intel/core.c             | 18 +++++
+ arch/x86/events/intel/ds.c               | 51 ++++++++++++-
+ arch/x86/events/intel/pt.c               |  5 ++
+ arch/x86/events/perf_event.h             | 17 +++++
+ arch/x86/include/asm/intel_pt.h          |  2 +
+ arch/x86/include/asm/msr-index.h         |  4 +
+ include/linux/perf_event.h               | 14 ++++
+ include/uapi/linux/perf_event.h          |  3 +-
+ kernel/events/core.c                     | 93 ++++++++++++++++++++++++
+ tools/include/uapi/linux/perf_event.h    |  3 +-
+ tools/perf/Documentation/intel-pt.txt    | 15 ++++
+ tools/perf/Documentation/itrace.txt      |  2 +
+ tools/perf/Documentation/perf-record.txt |  2 +
+ tools/perf/arch/x86/util/intel-pt.c      | 23 ++++++
+ tools/perf/util/auxtrace.c               |  4 +
+ tools/perf/util/auxtrace.h               |  3 +
+ tools/perf/util/evsel.c                  |  4 +
+ tools/perf/util/evsel.h                  |  2 +
+ tools/perf/util/intel-pt.c               | 18 +++++
+ tools/perf/util/parse-events.c           |  8 ++
+ tools/perf/util/parse-events.h           |  1 +
+ tools/perf/util/parse-events.l           |  1 +
+ 23 files changed, 324 insertions(+), 3 deletions(-)
 
-> similar for rsnd_ssi_master_clk_stop()
-> 
-> 	static int rsnd_ssi_master_clk_start(struct rsnd_mod *mod,
-> 				     struct rsnd_dai_stream *io)
-> 	{
-> 		...
-> 		if (ssi->rate)
-> 			return 0;
-> 		...
-> 	}
-> 
-> 	static void rsnd_ssi_master_clk_stop(struct rsnd_mod *mod,
-> 				     struct rsnd_dai_stream *io)
-> 	{
-> 		...
-> -		if (ssi->usrcnt > 1)
-> +		if (ssi->rate == 0)
-> 			return;
-> 		...
-> 	}
-> 
-> 
->> From: Timo Wischer <twischer@de.adit-jv.com>
->>
->> Currently after clock rate is started in .prepare reconfiguration
->> of clock rate is not allowed, unless the stream is stopped.
->>
->> But there is use case in Gstreamer ALSA sink, in case of changed caps
->> Gsreatmer reconfigs and it calls snd_pcm_hw_free() before snd_pcm_prepre().
->> See gstreamer1.0-plugins-base/
->> gst-libs/gst/audio/gstaudiobasesink.c: gst_audio_base_sink_setcaps():
->> - gst_audio_ring_buffer_release()
->> - gst_audio_sink_ring_buffer_release()
->> - gst_alsasink_unprepare()
->> - snd_pcm_hw_free()
->> is called before
->> - gst_audio_ring_buffer_acquire()
->> - gst_audio_sink_ring_buffer_acquire()
->> - gst_alsasink_prepare()
->> - set_hwparams()
->> - snd_pcm_hw_params()
->> - snd_pcm_prepare()
->>
->> The issue mentioned in this commit can be reproduced with the following
->> aplay patch:
->>
->>      >diff --git a/aplay/aplay.c b/aplay/aplay.c
->>      >@@ -2760,6 +2760,8 @@ static void playback_go(int fd, size_t loaded,
->>      >      header(rtype, name);
->>      >      set_params();
->>      >+     hwparams.rate = (hwparams.rate == 48000) ? 44100 : 48000;
->>      >+     set_params();
->>      >
->>      >      while (loaded > chunk_bytes && written < count && !in_aborting)
->>      >      {
->>      >              if (pcm_write(audiobuf + written, chunk_size) <= 0)
->>
->> $ aplay -Dplughw:0,0,0 -c8 -fS24_LE -r48000 /dev/zero
->> rcar_sound ec500000.sound: SSI parent/child should use same rate
->> rcar_sound ec500000.sound: ssi[3] : prepare error -22
->> rcar_sound ec500000.sound: ASoC: cpu DAI prepare error: -22
->> rsnd_link0: ASoC: prepare FE rsnd_link0 failed
->>
->> this patch address the issue by stop clock in .hw_free,
->> to allow reconfiguration of clock rate without stop of the stream.
->>
->> Signed-off-by: Timo Wischer <twischer@de.adit-jv.com>
->> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
->> ---
->>   sound/soc/sh/rcar/ssi.c | 53 +++++++++++++++++++++++++++++------------
->>   1 file changed, 38 insertions(+), 15 deletions(-)
->>
->> diff --git a/sound/soc/sh/rcar/ssi.c b/sound/soc/sh/rcar/ssi.c
->> index f6a7466622ea..f43937d2c588 100644
->> --- a/sound/soc/sh/rcar/ssi.c
->> +++ b/sound/soc/sh/rcar/ssi.c
->> @@ -286,7 +286,7 @@ static int rsnd_ssi_master_clk_start(struct rsnd_mod *mod,
->>   	if (rsnd_ssi_is_multi_slave(mod, io))
->>   		return 0;
->>   
->> -	if (ssi->usrcnt > 0) {
->> +	if (ssi->rate) {
->>   		if (ssi->rate != rate) {
->>   			dev_err(dev, "SSI parent/child should use same rate\n");
->>   			return -EINVAL;
->> @@ -471,13 +471,9 @@ static int rsnd_ssi_init(struct rsnd_mod *mod,
->>   			 struct rsnd_dai_stream *io,
->>   			 struct rsnd_priv *priv)
->>   {
->> -	struct rsnd_ssi *ssi = rsnd_mod_to_ssi(mod);
->> -
->>   	if (!rsnd_ssi_is_run_mods(mod, io))
->>   		return 0;
->>   
->> -	ssi->usrcnt++;
->> -
->>   	rsnd_mod_power_on(mod);
->>   
->>   	rsnd_ssi_config_init(mod, io);
->> @@ -505,18 +501,8 @@ static int rsnd_ssi_quit(struct rsnd_mod *mod,
->>   		return -EIO;
->>   	}
->>   
->> -	rsnd_ssi_master_clk_stop(mod, io);
->> -
->>   	rsnd_mod_power_off(mod);
->>   
->> -	ssi->usrcnt--;
->> -
->> -	if (!ssi->usrcnt) {
->> -		ssi->cr_own	= 0;
->> -		ssi->cr_mode	= 0;
->> -		ssi->wsr	= 0;
->> -	}
->> -
->>   	return 0;
->>   }
->>   
->> @@ -525,6 +511,7 @@ static int rsnd_ssi_hw_params(struct rsnd_mod *mod,
->>   			      struct snd_pcm_substream *substream,
->>   			      struct snd_pcm_hw_params *params)
->>   {
->> +	struct rsnd_ssi *ssi = rsnd_mod_to_ssi(mod);
->>   	struct rsnd_dai *rdai = rsnd_io_to_rdai(io);
->>   	unsigned int fmt_width = snd_pcm_format_width(params_format(params));
->>   
->> @@ -536,6 +523,11 @@ static int rsnd_ssi_hw_params(struct rsnd_mod *mod,
->>   		return -EINVAL;
->>   	}
->>   
->> +	if (!rsnd_ssi_is_run_mods(mod, io))
->> +		return 0;
->> +
->> +	ssi->usrcnt++;
->> +
->>   	return 0;
->>   }
->>   
->> @@ -913,6 +905,35 @@ static int rsnd_ssi_prepare(struct rsnd_mod *mod,
->>   	return rsnd_ssi_master_clk_start(mod, io);
->>   }
->>   
->> +static int rsnd_ssi_hw_free(struct rsnd_mod *mod, struct rsnd_dai_stream *io,
->> +			    struct snd_pcm_substream *substream)
->> +{
->> +	struct rsnd_ssi *ssi = rsnd_mod_to_ssi(mod);
->> +
->> +	if (!rsnd_ssi_is_run_mods(mod, io))
->> +		return 0;
->> +
->> +	if (!ssi->usrcnt) {
->> +		struct rsnd_priv *priv = rsnd_mod_to_priv(mod);
->> +		struct device *dev = rsnd_priv_to_dev(priv);
->> +
->> +		dev_err(dev, "%s usrcnt error\n", rsnd_mod_name(mod));
->> +		return -EIO;
->> +	}
->> +
->> +	rsnd_ssi_master_clk_stop(mod, io);
->> +
->> +	ssi->usrcnt--;
->> +
->> +	if (!ssi->usrcnt) {
->> +		ssi->cr_own	= 0;
->> +		ssi->cr_mode	= 0;
->> +		ssi->wsr	= 0;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->>   static struct rsnd_mod_ops rsnd_ssi_pio_ops = {
->>   	.name		= SSI_NAME,
->>   	.probe		= rsnd_ssi_common_probe,
->> @@ -926,6 +947,7 @@ static struct rsnd_mod_ops rsnd_ssi_pio_ops = {
->>   	.pcm_new	= rsnd_ssi_pcm_new,
->>   	.hw_params	= rsnd_ssi_hw_params,
->>   	.prepare	= rsnd_ssi_prepare,
->> +	.hw_free	= rsnd_ssi_hw_free,
->>   	.get_status	= rsnd_ssi_get_status,
->>   };
->>   
->> @@ -1012,6 +1034,7 @@ static struct rsnd_mod_ops rsnd_ssi_dma_ops = {
->>   	.pcm_new	= rsnd_ssi_pcm_new,
->>   	.fallback	= rsnd_ssi_fallback,
->>   	.hw_params	= rsnd_ssi_hw_params,
->> +	.hw_free	= rsnd_ssi_hw_free,
->>   	.prepare	= rsnd_ssi_prepare,
->>   	.get_status	= rsnd_ssi_get_status,
->>   };
->> -- 
->> 2.19.2
->>
+-- 
+2.20.1
+
