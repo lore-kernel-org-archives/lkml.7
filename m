@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13ED6C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 10:01:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1854C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 10:01:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E224E2147A
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 10:01:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7644E20651
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 10:01:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565085703;
-	bh=I/ZhpfDIBoxiS46SxEHUxRpTRKiiuWuOxkHGL5fQ5is=;
+	s=default; t=1565085706;
+	bh=l2L7hKM0gazybQJ7eY/btm4i/Lb7hzoHs45H8pleOdk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kTIUP+UmxyDYnZ9OYX6dBBm5C0mXwoxx7JO6s1IU1LIYNNp9MoPFpiTD2YFqwGOlJ
-	 JY5ZJ2AwjJHMTnYZpYS9QCCzvthoZ77RVlun+d9TDaDxzZnwreThfT/Jd5WEMoDY2d
-	 VFsJy4c2852Lg/Ia7bDr6kpNqDWlS6QwpRIkwsHI=
+	b=x6ZNaxp31iV6Dw8nynAjZtaZKWJ6Au1a6snQaBRAt8dvsUr+okC4og3lSD0wxvm7f
+	 lPMmGkPKwZvEDF5mBYdlGX/vbfoHjCeEQ6Mgc2sugkaPaVy5aEWOfBIIvCHbwfNy7I
+	 YYa2wr8hy8uIBsskCszFQcEuuarcoljS6cpP69Lc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732723AbfHFKBl (ORCPT
+        id S1732752AbfHFKBp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 06:01:41 -0400
-Received: from foss.arm.com ([217.140.110.172]:59470 "EHLO foss.arm.com"
+        Tue, 6 Aug 2019 06:01:45 -0400
+Received: from foss.arm.com ([217.140.110.172]:59512 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732562AbfHFKBi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 06:01:38 -0400
+        id S1732726AbfHFKBn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 06:01:43 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 656751570;
-        Tue,  6 Aug 2019 03:01:38 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B999C1684;
+        Tue,  6 Aug 2019 03:01:42 -0700 (PDT)
 Received: from filthy-habits.cambridge.arm.com (filthy-habits.cambridge.arm.com [10.1.197.61])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2A0333F706;
-        Tue,  6 Aug 2019 03:01:37 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 817F33F706;
+        Tue,  6 Aug 2019 03:01:41 -0700 (PDT)
 From:   Marc Zyngier <maz@kernel.org>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Jason Cooper <jason@lakedaemon.net>,
@@ -43,9 +43,9 @@ Cc:     John Garry <john.garry@huawei.com>,
         <shameerali.kolothum.thodi@huawei.com>,
         Lokesh Vutla <lokeshvutla@ti.com>,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 07/12] irqchip/gic-v3: Dynamically allocate PPI partition descriptors
-Date:   Tue,  6 Aug 2019 11:01:16 +0100
-Message-Id: <20190806100121.240767-8-maz@kernel.org>
+Subject: [PATCH v2 10/12] irqchip/gic-v3: Warn about inconsistent implementations of extended ranges
+Date:   Tue,  6 Aug 2019 11:01:19 +0100
+Message-Id: <20190806100121.240767-11-maz@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190806100121.240767-1-maz@kernel.org>
 References: <20190806100121.240767-1-maz@kernel.org>
@@ -56,67 +56,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Again, PPIs are becoming a variable set. Let's hack the PPI partition
-code to make the top-level array dynamically allocated.
+As is it usual for the GIC, it isn't disallowed to put together a system
+that is majorly inconsistent, with a distributor supporting the
+extended ranges while some of the CPUs don't.
+
+Kindly tell the user that things are sailing isn't going to be smooth.
 
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- drivers/irqchip/irq-gic-v3.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ drivers/irqchip/irq-gic-v3.c       | 5 +++++
+ include/linux/irqchip/arm-gic-v3.h | 1 +
+ 2 files changed, 6 insertions(+)
 
 diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index 4253c7f67c86..34f8a96bd747 100644
+index f53e58d398ba..334a10d9dbfb 100644
 --- a/drivers/irqchip/irq-gic-v3.c
 +++ b/drivers/irqchip/irq-gic-v3.c
-@@ -52,7 +52,7 @@ struct gic_chip_data {
- 	u64			flags;
- 	bool			has_rss;
- 	unsigned int		ppi_nr;
--	struct partition_desc	*ppi_descs[16];
-+	struct partition_desc	**ppi_descs;
- };
+@@ -1014,6 +1014,11 @@ static void gic_cpu_init(void)
  
- static struct gic_chip_data gic_data __read_mostly;
-@@ -1354,7 +1354,8 @@ static int gic_irq_domain_select(struct irq_domain *d,
- 	 * then we need to match the partition domain.
- 	 */
- 	if (fwspec->param_count >= 4 &&
--	    fwspec->param[0] == 1 && fwspec->param[3] != 0)
-+	    fwspec->param[0] == 1 && fwspec->param[3] != 0 &&
-+	    gic_data.ppi_descs)
- 		return d == partition_get_domain(gic_data.ppi_descs[fwspec->param[1]]);
+ 	gic_enable_redist(true);
  
- 	return d == gic_data.domain;
-@@ -1375,6 +1376,9 @@ static int partition_domain_translate(struct irq_domain *d,
- 	struct device_node *np;
- 	int ret;
- 
-+	if (!gic_data.ppi_descs)
-+		return -ENOMEM;
++	WARN((gic_data.ppi_nr > 16 || GIC_ESPI_NR != 0) &&
++	     !(gic_read_ctlr() & ICC_CTLR_EL1_ExtRange),
++	     "Distributor has extended ranges, but CPU%d doesn't\n",
++	     smp_processor_id());
 +
- 	np = of_find_node_by_phandle(fwspec->param[3]);
- 	if (WARN_ON(!np))
- 		return -EINVAL;
-@@ -1531,6 +1535,10 @@ static void __init gic_populate_ppi_partitions(struct device_node *gic_node)
- 	if (!parts_node)
- 		return;
+ 	rbase = gic_data_rdist_sgi_base();
  
-+	gic_data.ppi_descs = kcalloc(gic_data.ppi_nr, sizeof(*gic_data.ppi_descs), GFP_KERNEL);
-+	if (!gic_data.ppi_descs)
-+		return;
-+
- 	nr_parts = of_get_child_count(parts_node);
- 
- 	if (!nr_parts)
-@@ -1582,7 +1590,7 @@ static void __init gic_populate_ppi_partitions(struct device_node *gic_node)
- 		part_idx++;
- 	}
- 
--	for (i = 0; i < 16; i++) {
-+	for (i = 0; i < gic_data.ppi_nr; i++) {
- 		unsigned int irq;
- 		struct partition_desc *desc;
- 		struct irq_fwspec ppi_fwspec = {
+ 	/* Configure SGIs/PPIs as non-secure Group-1 */
+diff --git a/include/linux/irqchip/arm-gic-v3.h b/include/linux/irqchip/arm-gic-v3.h
+index 9ec3349dee04..5cc10cf7cb3e 100644
+--- a/include/linux/irqchip/arm-gic-v3.h
++++ b/include/linux/irqchip/arm-gic-v3.h
+@@ -496,6 +496,7 @@
+ #define ICC_CTLR_EL1_A3V_SHIFT		15
+ #define ICC_CTLR_EL1_A3V_MASK		(0x1 << ICC_CTLR_EL1_A3V_SHIFT)
+ #define ICC_CTLR_EL1_RSS		(0x1 << 18)
++#define ICC_CTLR_EL1_ExtRange		(0x1 << 19)
+ #define ICC_PMR_EL1_SHIFT		0
+ #define ICC_PMR_EL1_MASK		(0xff << ICC_PMR_EL1_SHIFT)
+ #define ICC_BPR0_EL1_SHIFT		0
 -- 
 2.20.1
 
