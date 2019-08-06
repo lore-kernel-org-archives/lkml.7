@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2861C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF8DC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:38:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 727912189E
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:38:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6AB1218A6
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:38:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127492;
-	bh=OSDZjGF/Qz2AU+ibnMfKOlSobEgeyAk25LXtXkBD0/Y=;
+	s=default; t=1565127496;
+	bh=WfJITCGv9bAQKx9HPueqnYT/6ry3FvjBX8ESFIOFElE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GpNhdrocfhYoXhWhK8Mz7qERWZO2LCLE1YEZScGlAgBhb8KI3OObqX16ZkBGj5igI
-	 GPJy8rbKZMZLYgU1Ek0olTZfFej8IWbx6niUt+2++zXxfH2NwrA4O9HwBCGs0NKN4J
-	 pqwUhYoxS9pxRh9+69HwWTs18Z1SDbMnm/JTCWsA=
+	b=nb3vFz1Ifzds4urKGhgblStNRg3zAQBoCliXzU9ogWNNhFpU0e6eZIm4PfIH9D0xA
+	 VZYBWE8CLywlT0h3G3C253lc94e3MbVGeKecRWAMKtdeWlHv3qAmQo7zqQONbuFdez
+	 6/wm6IKIpVk26weDd9700k4d+NKg8/Z+0AWtmO5A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729652AbfHFViK (ORCPT
+        id S1729672AbfHFViO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:38:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55770 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 17:38:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729604AbfHFViG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:38:06 -0400
+        id S1727570AbfHFViL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:38:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A78A20C01;
-        Tue,  6 Aug 2019 21:38:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F27A20C01;
+        Tue,  6 Aug 2019 21:38:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127485;
-        bh=OSDZjGF/Qz2AU+ibnMfKOlSobEgeyAk25LXtXkBD0/Y=;
+        s=default; t=1565127489;
+        bh=WfJITCGv9bAQKx9HPueqnYT/6ry3FvjBX8ESFIOFElE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sIC4Hrm4Y2b+mH5yJDEVLMA77c6ylNgSUugPw+W+suic9OHrVDjoUTI+zEyAuYlQx
-         u019R9iPJSSUJjDiwfMZdlVeDz7fhuuhlvSHkBfaDu6JL/L+WdsnP49MDD3GbNS+68
-         UlwWoztCqnxTWBrodu668XvYQ4sZPpJ6W42jo6sI=
+        b=sW90APsVeVDQpVt0nOUMuZbfmaBLu3nOLRBaSBz8k4V8L+r81JZ10Z/5GI9GMdI2k
+         E5Dck8mVYOXVDeQyjL+HdyiMBi4o2OfyYudNuWmof4IVOnD7o3R30hKxAGtAYH28nE
+         E9BpGXkLMXNlSiOBAmnjrs8lycC5wmtXrj5ZLL+Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christian Brauner <christian@brauner.io>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 08/14] exit: make setting exit_state consistent
-Date:   Tue,  6 Aug 2019 17:37:42 -0400
-Message-Id: <20190806213749.20689-8-sashal@kernel.org>
+Cc:     "Luck, Tony" <tony.luck@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 11/14] IB/core: Add mitigation for Spectre V1
+Date:   Tue,  6 Aug 2019 17:37:45 -0400
+Message-Id: <20190806213749.20689-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190806213749.20689-1-sashal@kernel.org>
 References: <20190806213749.20689-1-sashal@kernel.org>
@@ -60,51 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Brauner <christian@brauner.io>
+From: "Luck, Tony" <tony.luck@intel.com>
 
-[ Upstream commit 30b692d3b390c6fe78a5064be0c4bbd44a41be59 ]
+[ Upstream commit 61f259821dd3306e49b7d42a3f90fb5a4ff3351b ]
 
-Since commit b191d6491be6 ("pidfd: fix a poll race when setting exit_state")
-we unconditionally set exit_state to EXIT_ZOMBIE before calling into
-do_notify_parent(). This was done to eliminate a race when querying
-exit_state in do_notify_pidfd().
-Back then we decided to do the absolute minimal thing to fix this and
-not touch the rest of the exit_notify() function where exit_state is
-set.
-Since this fix has not caused any issues change the setting of
-exit_state to EXIT_DEAD in the autoreap case to account for the fact hat
-exit_state is set to EXIT_ZOMBIE unconditionally. This fix was planned
-but also explicitly requested in [1] and makes the whole code more
-consistent.
+Some processors may mispredict an array bounds check and
+speculatively access memory that they should not. With
+a user supplied array index we like to play things safe
+by masking the value with the array size before it is
+used as an index.
 
-/* References */
-[1]: https://lore.kernel.org/lkml/CAHk-=wigcxGFR2szue4wavJtH5cYTTeNES=toUBVGsmX0rzX+g@mail.gmail.com
-
-Signed-off-by: Christian Brauner <christian@brauner.io>
-Acked-by: Oleg Nesterov <oleg@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+Link: https://lore.kernel.org/r/20190731043957.GA1600@agluck-desk2.amr.corp.intel.com
+Signed-off-by: Doug Ledford <dledford@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/exit.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/infiniband/core/user_mad.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/exit.c b/kernel/exit.c
-index 03f6722302b54..14c2f0717ee4b 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -619,9 +619,10 @@ static void exit_notify(struct task_struct *tsk, int group_dead)
- 		autoreap = true;
+diff --git a/drivers/infiniband/core/user_mad.c b/drivers/infiniband/core/user_mad.c
+index 57f281f8d6862..e9e75f40714cb 100644
+--- a/drivers/infiniband/core/user_mad.c
++++ b/drivers/infiniband/core/user_mad.c
+@@ -49,6 +49,7 @@
+ #include <linux/sched.h>
+ #include <linux/semaphore.h>
+ #include <linux/slab.h>
++#include <linux/nospec.h>
+ 
+ #include <asm/uaccess.h>
+ 
+@@ -842,11 +843,14 @@ static int ib_umad_unreg_agent(struct ib_umad_file *file, u32 __user *arg)
+ 
+ 	if (get_user(id, arg))
+ 		return -EFAULT;
++	if (id >= IB_UMAD_MAX_AGENTS)
++		return -EINVAL;
+ 
+ 	mutex_lock(&file->port->file_mutex);
+ 	mutex_lock(&file->mutex);
+ 
+-	if (id >= IB_UMAD_MAX_AGENTS || !__get_agent(file, id)) {
++	id = array_index_nospec(id, IB_UMAD_MAX_AGENTS);
++	if (!__get_agent(file, id)) {
+ 		ret = -EINVAL;
+ 		goto out;
  	}
- 
--	tsk->exit_state = autoreap ? EXIT_DEAD : EXIT_ZOMBIE;
--	if (tsk->exit_state == EXIT_DEAD)
-+	if (autoreap) {
-+		tsk->exit_state = EXIT_DEAD;
- 		list_add(&tsk->ptrace_entry, &dead);
-+	}
- 
- 	/* mt-exec, de_thread() is waiting for group leader */
- 	if (unlikely(tsk->signal->notify_count < 0))
 -- 
 2.20.1
 
