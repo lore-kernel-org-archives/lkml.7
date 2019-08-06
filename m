@@ -2,108 +2,155 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07942C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:28:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C179C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:29:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C98E12086D
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AB682086D
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:29:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="BSfD2+tA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387859AbfHFQ2Q (ORCPT
+        id S2387956AbfHFQ3E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 12:28:16 -0400
-Received: from foss.arm.com ([217.140.110.172]:36370 "EHLO foss.arm.com"
+        Tue, 6 Aug 2019 12:29:04 -0400
+Received: from mout.gmx.net ([212.227.17.21]:58567 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728927AbfHFQ2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 12:28:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5C489344;
-        Tue,  6 Aug 2019 09:28:14 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5A1443F575;
-        Tue,  6 Aug 2019 09:28:13 -0700 (PDT)
-Date:   Tue, 6 Aug 2019 17:28:11 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Remi Pommarel <repk@triplefau.lt>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Ellie Reeves <ellierevves@gmail.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] PCI: aardvark: Fix PCI_EXP_RTCTL register
- configuration
-Message-ID: <20190806162811.GB15498@e121166-lin.cambridge.arm.com>
-References: <20190614101059.1664-1-repk@triplefau.lt>
+        id S2387909AbfHFQ3C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 12:29:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1565108877;
+        bh=xGvBBhBv8mIQUww1OPe1/FCAqKvtmv/lhpMvp7Optzo=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=BSfD2+tA0aFUeRWZUCCocQ7jVyr4dAsFDcSNF064B7Iw+MZQxKnTCLGg5sxQ4LloC
+         QjZegJ6sNrw5PcK19M7/KIcsV2i2q/Dx1tuiQ5oQKm/JmC2GFkERV5QeLMhit7Nqwm
+         /DF5TEImzOdzQt0nQiTjiaFu4BEYB4qOR68brwpc=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([217.61.153.94]) by mail.gmx.com
+ (mrgmx103 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 0MgsVY-1hhvJc3Ibg-00M5Kb; Tue, 06 Aug 2019 18:27:56 +0200
+From:   Frank Wunderlich <frank-w@public-files.de>
+To:     Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Allison Randal <allison@lohutok.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, Eddie Huang <eddie.huang@mediatek.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Tianping . Fang" <tianping.fang@mediatek.com>
+Cc:     Frank Wunderlich <frank-w@public-files.de>
+Subject: [PATCH v4 00/10] implement poweroff for mt6323 / bpi-r2
+Date:   Tue,  6 Aug 2019 18:27:35 +0200
+Message-Id: <20190806162745.8414-1-frank-w@public-files.de>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190614101059.1664-1-repk@triplefau.lt>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:fDGgKZ6spNEPfINJWpjM4TL6DAKb4WwwHdcrKqACYngUW5cxd34
+ UZ0Ho8Wdo+kM1XFugD0+bBIsncohO47Y/sc/RusG2Zb7ILZYqlMpyXGwEgIhoisr16zD0un
+ YDZ+MewnWXpQezMt+h+8894slE/RbtsTaGLPHyMnNHkGqHrjfuww/avOiQJ2WeZ7o/KEC1I
+ zQAEPiRtVQ33nCYGGyFEA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:gTunm3r6LcY=:+rmQ5RPc3CYtKjH56Fxl5y
+ vdyanBHcAMIOsE31w0gi6hFSfzJhhsOufq774CqVZBjjb/ijn4jYzA12RCL+zCl5P/5ysvUpH
+ UJ4/PISlMpUSzkVPnaZ4ikA21TgNkQvltXlJUh5AZBvcOYbpWU/U/KIZfDVZV7x2GSCzVB6Ov
+ 4Z9Ds35L9fOJ4DOB8HpCllPXK9Zwn3PVS0/O5FJULdJTBYvw4zKUMFb/aAQYPzNm6O1tAASLP
+ ZK5UW6wFuwisdCGk2aczDlK6PQSsVzvj+3IQsH8xtgpZKP6GGRSgyMDS0EkIJVk3wXOzTab1a
+ e6lfBJZgs2royFjjJk7mtoeUMMnXkXu5VaGVDbo9rJHA6PmNSBxpeIuTHxX1+wN94R0gFxrY4
+ 11tq/wO1MS5Fl0HrWMhzj9T7xsP7V0m/htbEb2Ckkd6y2zAhc5zDFDJvw+jJmxJeeM/LUEKFN
+ mIxjwe21KxXFdGLHvL0+Au9kqAns25TfeIZoSOALUeFtmfspB+gkSoyoZwlIIAROWs7ko5r3L
+ fGISutTiyK63UI0Mzx2JJoSZQeFl+3IjxhD9BEEv0D68NgcmQ+OorS+OpA5hMeSdDXXK9YgWE
+ eeiz1jCZ2L1q1WxxAQX+0ml95KUWAaOuw7a7Cu/By/qTFT/5XPvJinje9KvXs+LBSsWTmbaqn
+ Li2QFfIzL1NvY4LGMM91uer4Y5Af57CdBQAwu5uQvwAnwyPsuk0xmD/C9++rMqZawP5v0HUsl
+ SMNkbhrdHRNKQKAfP4EQ3UNNB/XVMaLNSehJLXUBwXYkD7jcr+udDBDjXqewNP2qlr4NxLJf1
+ ed+GSlbU6HjIJDM41eet0w7Zx5ckQ2Y+5nAyq+yvnsXDBdICORm5jFxS03CTJ7SGkLIxR7EHg
+ lQ27xFMC4eyzw/ssfpiYW1FKmWz8aq1/Ndr0Rka2p/ricCEaFb1EU9LAbmB8CoG47DLAq8dja
+ +udTuoRvPkWg/62YQtWhTYFx8Ev8lgPQnTVWL1vYKfFsEOnd1T1px4DRZtAogiSbrfJe8XRqf
+ DM+kLIMjACgDT5aiRCXGQjwckMtqCRPHkQ3l09EqUetTmAmR4yz3a/5zTWtQsKzr+UWzff34P
+ zJXVD4E/SzPHxUcl1t5Xmwhn6ANLJNRYAIFE25H4bt/+U5SxFTXk7lInkfB+/NSM5fP9K38pk
+ /6GDw=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 12:10:59PM +0200, Remi Pommarel wrote:
-> PCI_EXP_RTCTL is used to activate PME interrupt only, so writing into it
-> should not modify other interrupts' mask. The ISR mask polarity was also
-> inverted, when PCI_EXP_RTCTL_PMEIE is set PCIE_MSG_PM_PME_MASK mask bit
-> should actually be cleared.
-> 
-> Fixes: 8a3ebd8de328 ("PCI: aardvark: Implement emulated root PCI bridge config space")
-> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
-> ---
-> Changes since v1:
->  * Improve code readability
->  * Fix mask polarity
->  * PME_MASK shift was off by one
-> Changes since v2:
->  * Modify patch title
->  * Change Fixes tag to commit that actually introduces the bug
-> ---
->  drivers/pci/controller/pci-aardvark.c | 13 +++++++++----
->  1 file changed, 9 insertions(+), 4 deletions(-)
+mainline-driver does not support mt6323
 
-Thomas, are you OK with this patch ?
+this series makes some cleanup to mt6397-rtc-driver, adds mt6323 and
+implement power-controller on it.
 
-Thanks,
-Lorenzo
+tested on bananapi-r2
 
-> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> index 134e0306ff00..f6e55c4597b1 100644
-> --- a/drivers/pci/controller/pci-aardvark.c
-> +++ b/drivers/pci/controller/pci-aardvark.c
-> @@ -415,7 +415,7 @@ advk_pci_bridge_emul_pcie_conf_read(struct pci_bridge_emul *bridge,
->  
->  	case PCI_EXP_RTCTL: {
->  		u32 val = advk_readl(pcie, PCIE_ISR0_MASK_REG);
-> -		*value = (val & PCIE_MSG_PM_PME_MASK) ? PCI_EXP_RTCTL_PMEIE : 0;
-> +		*value = (val & PCIE_MSG_PM_PME_MASK) ? 0 : PCI_EXP_RTCTL_PMEIE;
->  		return PCI_BRIDGE_EMUL_HANDLED;
->  	}
->  
-> @@ -451,10 +451,15 @@ advk_pci_bridge_emul_pcie_conf_write(struct pci_bridge_emul *bridge,
->  		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
->  		break;
->  
-> -	case PCI_EXP_RTCTL:
-> -		new = (new & PCI_EXP_RTCTL_PMEIE) << 3;
-> -		advk_writel(pcie, new, PCIE_ISR0_MASK_REG);
-> +	case PCI_EXP_RTCTL: {
-> +		/* Only mask/unmask PME interrupt */
-> +		u32 val = advk_readl(pcie, PCIE_ISR0_MASK_REG) &
-> +			~PCIE_MSG_PM_PME_MASK;
-> +		if ((new & PCI_EXP_RTCTL_PMEIE) == 0)
-> +			val |= PCIE_MSG_PM_PME_MASK;
-> +		advk_writel(pcie, val, PCIE_ISR0_MASK_REG);
->  		break;
-> +	}
->  
->  	case PCI_EXP_RTSTA:
->  		new = (new & PCI_EXP_RTSTA_PME) >> 9;
-> -- 
-> 2.20.1
-> 
+Original Patch from Josef Friedl
+
+changes since v3:
+	- moved SOB in 2/10 and 9/10
+	- moved part 5 to 6 to be near driver-change
+	- changehistory of patches below ---
+
+changes since v2:
+	- Splitted some parts and rebased on 5.3-rc2:
+
+	v2.1 dt-bindings: add powercontroller =E2=80=93 try to make better subjec=
+t
+	v2.2 separate rtc-mt6397.txt (suggested by Alexandre Belloni)
+		add missing commit-message (suggested by Matthias Brugger)
+	v2.3 fix alloc after IRQ (suggested by Alexandre Belloni)
+		new compatible (splitting suggested by Alexandre Belloni)
+		needed due to different rtc-base/size see #7
+	v2.4 simplifications (Define-res-macros)
+		add mt6323 rtc+pwrc
+	v2.5 add poweroff-driver (no change)
+	v2.6 MAINTAINERS (no change)
+	v2.7 DTS-Changes (no change)
+
+
+Josef Friedl (10):
+  dt-bindings: add powercontroller
+  dt-bindings: add missing mt6397 rtc
+  rtc: mt6397: move some common definitions into rtc.h
+  rtc: mt6397: improvements of rtc driver
+  mfd: mt6323: some improvements of mt6397-core
+  rtc: mt6397: add compatible for mt6323
+  mfd: mt6323: add mt6323 rtc+pwrc
+  power: reset: add driver for mt6323 poweroff
+  MAINTAINERS: add Mediatek shutdown drivers
+  arm: dts: mt6323: add keys, power-controller, rtc and codec
+
+ .../devicetree/bindings/mfd/mt6397.txt        |  10 +-
+ .../bindings/power/reset/mt6323-poweroff.txt  |  20 ++++
+ .../devicetree/bindings/rtc/rtc-mt6397.txt    |  29 +++++
+ MAINTAINERS                                   |   7 ++
+ arch/arm/boot/dts/mt6323.dtsi                 |  27 +++++
+ drivers/mfd/mt6397-core.c                     |  40 +++++--
+ drivers/power/reset/Kconfig                   |  10 ++
+ drivers/power/reset/Makefile                  |   1 +
+ drivers/power/reset/mt6323-poweroff.c         |  97 ++++++++++++++++
+ drivers/rtc/rtc-mt6397.c                      | 107 ++++--------------
+ include/linux/mfd/mt6397/core.h               |   2 +
+ include/linux/mfd/mt6397/rtc.h                |  71 ++++++++++++
+ 12 files changed, 323 insertions(+), 98 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/reset/mt6323-p=
+oweroff.txt
+ create mode 100644 Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
+ create mode 100644 drivers/power/reset/mt6323-poweroff.c
+ create mode 100644 include/linux/mfd/mt6397/rtc.h
+
+=2D-
+2.17.1
+
