@@ -2,183 +2,121 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE72C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 11:28:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1939C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 11:29:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B24E20818
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 11:28:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ddm8ncEc";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ddm8ncEc"
+	by mail.kernel.org (Postfix) with ESMTP id 9C07120818
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 11:29:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731157AbfHFL22 (ORCPT
+        id S1731326AbfHFL35 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 07:28:28 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:53426 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726783AbfHFL21 (ORCPT
+        Tue, 6 Aug 2019 07:29:57 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:45895 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726783AbfHFL35 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 07:28:27 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 990AA60AD1; Tue,  6 Aug 2019 11:28:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1565090906;
-        bh=NCToKbuzXkhWhHuK/S79srEeYec4gCngVAfQo4VLI1I=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ddm8ncEcXJtLm03CcusTGMnEWQyT9yH8ABFVL5Fc+rzFnNB3PMNN/I7G8a9uXWxl8
-         lxi8IjrqRHx4RpRYo8qXYiVqbx54y6PKOVVchLryHMyjnbloMglkxyDpG6/R0le52n
-         1lChwOX0i83iweCtw+u8a7WcEUMVwK8cwJygX0SE=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0697260A0A;
-        Tue,  6 Aug 2019 11:28:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1565090906;
-        bh=NCToKbuzXkhWhHuK/S79srEeYec4gCngVAfQo4VLI1I=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ddm8ncEcXJtLm03CcusTGMnEWQyT9yH8ABFVL5Fc+rzFnNB3PMNN/I7G8a9uXWxl8
-         lxi8IjrqRHx4RpRYo8qXYiVqbx54y6PKOVVchLryHMyjnbloMglkxyDpG6/R0le52n
-         1lChwOX0i83iweCtw+u8a7WcEUMVwK8cwJygX0SE=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0697260A0A
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     David Miller <davem@davemloft.net>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: pull-request: wireless-drivers 2019-08-06
-Date:   Tue, 06 Aug 2019 14:28:22 +0300
-Message-ID: <87h86ufs89.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Tue, 6 Aug 2019 07:29:57 -0400
+X-UUID: f455010bd29142c48c7dbdffd71aecee-20190806
+X-UUID: f455010bd29142c48c7dbdffd71aecee-20190806
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        (envelope-from <miles.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
+        with ESMTP id 1004773151; Tue, 06 Aug 2019 19:29:48 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs06n1.mediatek.inc (172.21.101.129) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 6 Aug 2019 19:29:49 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 6 Aug 2019 19:29:49 +0800
+From:   Miles Chen <miles.chen@mediatek.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
+        Miles Chen <miles.chen@mediatek.com>,
+        Mark Rutland <Mark.rutland@arm.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        James Morse <james.morse@arm.com>
+Subject: [PATCH] arm64: mm: print hexadecimal EC value in mem_abort_decode()
+Date:   Tue, 6 Aug 2019 19:29:48 +0800
+Message-ID: <20190806112948.4357-1-miles.chen@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
 Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dave,
+This change prints the hexadecimal EC value in mem_abort_decode(),
+which makes it easier to lookup the corresponding EC in
+the ARM Architecture Reference Manual.
 
-here's a pull request to net tree for v5.3, more information below.
-Please let me know if there are any problems.
+The commit 1f9b8936f36f ("arm64: Decode information from ESR upon mem
+faults") prints useful information when memory abort occurs. It would
+be easier to lookup "0x25" instead of "DABT" in the document. Then we
+can check the corresponding ISS.
 
-Kalle
+For example:
+Current	info	  	Document
+		  	EC	Exception class
+"CP15 MCR/MRC"		0x3	"MCR or MRC access to CP15a..."
+"ASIMD"			0x7	"Access to SIMD or floating-point..."
+"DABT (current EL)" 	0x25	"Data Abort taken without..."
+...
 
-The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
+Before:
+Unable to handle kernel paging request at virtual address 000000000000c000
+Mem abort info:
+  ESR = 0x96000046
+  Exception class = DABT (current EL), IL = 32 bits
+  SET = 0, FnV = 0
+  EA = 0, S1PTW = 0
+Data abort info:
+  ISV = 0, ISS = 0x00000046
+  CM = 0, WnR = 1
 
-  Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
+After:
+Unable to handle kernel paging request at virtual address 000000000000c000
+Mem abort info:
+  ESR = 0x96000046
+  EC = 0x25, Exception class = DABT (current EL), IL = 32 bits
+  SET = 0, FnV = 0
+  EA = 0, S1PTW = 0
+Data abort info:
+  ISV = 0, ISS = 0x00000046
+  CM = 0, WnR = 1
 
-are available in the git repository at:
+Cc: Mark Rutland <Mark.rutland@arm.com>
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: James Morse <james.morse@arm.com>
+Signed-off-by: Miles Chen <miles.chen@mediatek.com>
+---
+ arch/arm64/mm/fault.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/kvalo/wireless-drivers.git tags/wireless-drivers-for-davem-2019-08-06
-
-for you to fetch changes up to 1f66072503316134873060b24b7895dbbcccf00e:
-
-  iwlwifi: dbg_ini: fix compile time assert build errors (2019-08-01 19:48:00 +0300)
-
-----------------------------------------------------------------
-wireless-drivers fixes for 5.3
-
-Second set of fixes for 5.3. Lots of iwlwifi fixes have accumulated
-which consists most of patches in this pull request. Only most notable
-iwlwifi fixes are listed below.
-
-mwifiex
-
-* fix a regression related to WPA1 networks since v5.3-rc1
-
-iwlwifi
-
-* fix use-after-free issues
-
-* fix DMA mapping API usage errors
-
-* fix frame drop occurring due to reorder buffer handling in
-  RSS in certain conditions
-
-* fix rate scale locking issues
-
-* disable TX A-MSDU on older NICs as it causes problems and was
-  never supposed to be supported
-
-* new PCI IDs
-
-* GEO_TX_POWER_LIMIT API issue that many people were hitting
-
-----------------------------------------------------------------
-Brian Norris (1):
-      mwifiex: fix 802.11n/WPA detection
-
-Colin Ian King (1):
-      iwlwifi: mvm: fix comparison of u32 variable with less than zero
-
-Emmanuel Grumbach (8):
-      iwlwifi: mvm: prepare the ground for more RSS notifications
-      iwlwifi: mvm: add a new RSS sync notification for NSSN sync
-      iwlwiif: mvm: refactor iwl_mvm_notify_rx_queue
-      iwlwifi: mvm: add a loose synchronization of the NSSN across Rx queues
-      iwlwifi: mvm: fix frame drop from the reordering buffer
-      iwlwifi: don't unmap as page memory that was mapped as single
-      iwlwifi: mvm: fix an out-of-bound access
-      iwlwifi: mvm: fix a use-after-free bug in iwl_mvm_tx_tso_segment
-
-Gregory Greenman (4):
-      iwlwifi: mvm: add a wrapper around rs_tx_status to handle locks
-      iwlwifi: mvm: send LQ command always ASYNC
-      iwlwifi: mvm: replace RS mutex with a spin_lock
-      iwlwifi: mvm: fix possible out-of-bounds read when accessing lq_info
-
-Ihab Zhaika (1):
-      iwlwifi: add 3 new IDs for the 9000 series (iwl9260_2ac_160_cfg)
-
-Johannes Berg (2):
-      iwlwifi: mvm: disable TX-AMSDU on older NICs
-      iwlwifi: fix locking in delayed GTK setting
-
-Kalle Valo (1):
-      Merge tag 'iwlwifi-fixes-for-kvalo-2019-07-30' of git://git.kernel.org/.../iwlwifi/iwlwifi-fixes
-
-Luca Coelho (2):
-      iwlwifi: mvm: don't send GEO_TX_POWER_LIMIT on version < 41
-      iwlwifi: mvm: fix version check for GEO_TX_POWER_LIMIT support
-
-Mauro Rossi (1):
-      iwlwifi: dbg_ini: fix compile time assert build errors
-
-Mordechay Goodstein (1):
-      iwlwifi: mvm: avoid races in rate init and rate perform
-
-Shahar S Matityahu (2):
-      iwlwifi: dbg_ini: move iwl_dbg_tlv_load_bin out of debug override ifdef
-      iwlwifi: dbg_ini: move iwl_dbg_tlv_free outside of debugfs ifdef
-
- drivers/net/wireless/intel/iwlwifi/fw/api/rx.h    |   3 +-
- drivers/net/wireless/intel/iwlwifi/fw/dbg.c       |  22 +-
- drivers/net/wireless/intel/iwlwifi/iwl-drv.c      |   4 +-
- drivers/net/wireless/intel/iwlwifi/mvm/fw.c       |  29 +-
- drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c |  58 ++-
- drivers/net/wireless/intel/iwlwifi/mvm/mvm.h      |   8 +-
- drivers/net/wireless/intel/iwlwifi/mvm/nvm.c      |   2 +-
- drivers/net/wireless/intel/iwlwifi/mvm/ops.c      |   4 +-
- drivers/net/wireless/intel/iwlwifi/mvm/rs.c       | 539 ++++++++++++----------
- drivers/net/wireless/intel/iwlwifi/mvm/rs.h       |   3 +-
- drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c     | 185 ++++++--
- drivers/net/wireless/intel/iwlwifi/mvm/sta.c      |   6 +-
- drivers/net/wireless/intel/iwlwifi/mvm/sta.h      |  12 +-
- drivers/net/wireless/intel/iwlwifi/mvm/tx.c       |   3 +-
- drivers/net/wireless/intel/iwlwifi/mvm/utils.c    |   4 +-
- drivers/net/wireless/intel/iwlwifi/pcie/drv.c     |   3 +
- drivers/net/wireless/intel/iwlwifi/pcie/tx.c      |   2 +
- drivers/net/wireless/marvell/mwifiex/main.h       |   1 +
- drivers/net/wireless/marvell/mwifiex/scan.c       |   3 +-
- 19 files changed, 538 insertions(+), 353 deletions(-)
-
+diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
+index cfd65b63f36f..afb6041e25e6 100644
+--- a/arch/arm64/mm/fault.c
++++ b/arch/arm64/mm/fault.c
+@@ -86,8 +86,8 @@ static void mem_abort_decode(unsigned int esr)
+ 	pr_alert("Mem abort info:\n");
+ 
+ 	pr_alert("  ESR = 0x%08x\n", esr);
+-	pr_alert("  Exception class = %s, IL = %u bits\n",
+-		 esr_get_class_string(esr),
++	pr_alert("  EC = 0x%lx, Exception class = %s, IL = %u bits\n",
++		 ESR_ELx_EC(esr), esr_get_class_string(esr),
+ 		 (esr & ESR_ELx_IL) ? 32 : 16);
+ 	pr_alert("  SET = %lu, FnV = %lu\n",
+ 		 (esr & ESR_ELx_SET_MASK) >> ESR_ELx_SET_SHIFT,
 -- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+2.18.0
+
