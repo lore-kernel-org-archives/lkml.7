@@ -2,131 +2,103 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A02B0C32754
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:04:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5482FC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:04:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78E6520B1F
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:04:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C69A20C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:04:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="kwN8iZgG"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SEwGHkmi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731368AbfHFMET (ORCPT
+        id S1731593AbfHFMEp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 08:04:19 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:42671 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728056AbfHFMES (ORCPT
+        Tue, 6 Aug 2019 08:04:45 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:57506 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726783AbfHFMEp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 08:04:18 -0400
-Received: by mail-qt1-f193.google.com with SMTP id h18so84224753qtm.9
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 05:04:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=/FPGr6jzHPYMmvLrWMP/4jeZ5wMtWr8MomConqYdxCw=;
-        b=kwN8iZgGsA616k+ie7zVtqoKkPJCUoU9iiNH6foaeOBTxgKFKg+cZig/4zEdPfsbAE
-         imTkOw+N/gal+1pboal/fWK91KxOgzhhMdL0iTRREJABvKyEt3Ufx9IKidWtLDpA7wlG
-         9D0U+Ocv+7+jGN8gmxkVmfJqgoulbE7JQaMbA++nVny+EMylWeaEfpgkD0hSjvguAUdx
-         LTme6+JAjIDsU31cell6nZpPIOasOpsE3BLX48Nh53wDpRS1MGS6UPgJlSEriefVBoaW
-         X9Q/yQXt7r0a9KNgEj2XwtztzIPh4TLr8mCicotwiPelZo/OQ+sSdt6ODRD0nTuMLItg
-         nPCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=/FPGr6jzHPYMmvLrWMP/4jeZ5wMtWr8MomConqYdxCw=;
-        b=jne4Y4nkO1OZDNJK3VgfJ5rUtc66tsY0+6bHsaKQY4OluMBnpjv9OeM6bgq+isI7Xh
-         zITo8wT1/x9ksI1UvG/fRFII7wXf88Pgcdi1SgIZvekxSnDGH2nhz8nGjB5xkxy7+aRi
-         /Ls7wEph4JGei+9E8d6XDmDqOrW4ISgrUWFs44e4c2qhndZKHh+9Bokuzz2UkxyasbAq
-         EiiPTYrcjaRlzbULH5DVXkJqNEn1WcredMQb3Hy2KEWZf42DXSWRXUuXpF/6mlrN6VUZ
-         EjSH9yeiG0elY4KG5+VPTdic2k4NqYHj5VnKM3qsfnyBMz79VXu36BD+KgiyLzKKIOHo
-         Eahw==
-X-Gm-Message-State: APjAAAUth1c+mXsGBc9l2yUpBsokXkWMvQj7V0KMNsbgoq8DyH6dUkGl
-        ktjl4CVAN6+ySGJPy70WHld8bA==
-X-Google-Smtp-Source: APXvYqyl6pRejslnyvYVBtbHRarAvLE8/IwB9kBOqtljVW3kFuK45lKI6xsfV3oqosPPvOz7rhnfwA==
-X-Received: by 2002:ac8:252e:: with SMTP id 43mr2606764qtm.61.1565093057443;
-        Tue, 06 Aug 2019 05:04:17 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id c45sm44553632qte.70.2019.08.06.05.04.16
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 06 Aug 2019 05:04:16 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1huyCO-0003hy-5t; Tue, 06 Aug 2019 09:04:16 -0300
-Date:   Tue, 6 Aug 2019 09:04:16 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     mst@redhat.com, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH V2 7/9] vhost: do not use RCU to synchronize MMU notifier
- with worker
-Message-ID: <20190806120416.GB11627@ziepe.ca>
-References: <20190731084655.7024-1-jasowang@redhat.com>
- <20190731084655.7024-8-jasowang@redhat.com>
- <20190731123935.GC3946@ziepe.ca>
- <7555c949-ae6f-f105-6e1d-df21ddae9e4e@redhat.com>
- <20190731193057.GG3946@ziepe.ca>
- <a3bde826-6329-68e4-2826-8a9de4c5bd1e@redhat.com>
- <20190801141512.GB23899@ziepe.ca>
- <42ead87b-1749-4c73-cbe4-29dbeb945041@redhat.com>
- <20190802124613.GA11245@ziepe.ca>
- <11b2a930-eae4-522c-4132-3f8a2da05666@redhat.com>
+        Tue, 6 Aug 2019 08:04:45 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x76C409i076642;
+        Tue, 6 Aug 2019 12:04:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=bPliwkGTvpcew6pJBv+ngwOrNIRjc2W/37cr0qQOeFc=;
+ b=SEwGHkmif8CpscXJfHDn/qyv/zUZt3VpsemT07L1JWp/l4Zqpmy7HbeO6QF8kBXTnG3s
+ ROKUKqUUopkdJV2/zZwc+jmNw1u4gVMqEdxSvVY1NiAVMRl6fjkz2FCEmDI62RIPDdBl
+ xy8Jyk32yRiAHteyR3neftSlkL9kHu0nJBWvANxVnSAR1R1XjMLRonjic72c3QZNtkMD
+ lZxkwFaVzaSiXCpix0xgzujA+F/8vTIcvB3wUkf1+HyuhiJ3fUniSC5MwKejZ7/XW+sa
+ VSryg2ycmAJNQOcBeqa04xdBan4o6r8v9grYUeGk/4vYCX+Mz9oRNC/kkBgtK+FpW+gU Qg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2u527pnkad-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 06 Aug 2019 12:04:39 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x76C2bvh086897;
+        Tue, 6 Aug 2019 12:04:39 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2u75bvejj0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 06 Aug 2019 12:04:39 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x76C4bRA002921;
+        Tue, 6 Aug 2019 12:04:38 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 06 Aug 2019 05:04:36 -0700
+Date:   Tue, 6 Aug 2019 15:04:27 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Merwin Trever Ferrao <merwintf@gmail.com>
+Cc:     Larry.Finger@lwfinger.net, gregkh@linuxfoundation.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Staging: rtl8188eu: core: rtw_security: fixed a coding
+ style issue
+Message-ID: <20190806120427.GG1974@kadam>
+References: <20190806115438.GA24258@IoT-COE>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <11b2a930-eae4-522c-4132-3f8a2da05666@redhat.com>
+In-Reply-To: <20190806115438.GA24258@IoT-COE>
 User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9340 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908060121
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9340 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908060121
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 05, 2019 at 12:20:45PM +0800, Jason Wang wrote:
-> 
-> On 2019/8/2 下午8:46, Jason Gunthorpe wrote:
-> > On Fri, Aug 02, 2019 at 05:40:07PM +0800, Jason Wang wrote:
-> > > > This must be a proper barrier, like a spinlock, mutex, or
-> > > > synchronize_rcu.
-> > > 
-> > > I start with synchronize_rcu() but both you and Michael raise some
-> > > concern.
-> > I've also idly wondered if calling synchronize_rcu() under the various
-> > mm locks is a deadlock situation.
-> 
-> 
-> Maybe, that's why I suggest to use vhost_work_flush() which is much
-> lightweight can can achieve the same function. It can guarantee all previous
-> work has been processed after vhost_work_flush() return.
+On Tue, Aug 06, 2019 at 05:24:38PM +0530, Merwin Trever Ferrao wrote:
+> Fixed WARNING: else is not generally useful after a break or return
+> ---
 
-If things are already running in a work, then yes, you can piggyback
-on the existing spinlocks inside the workqueue and be Ok
+Much better, but you forgot the the Signed-off-by so we can't apply it.
 
-However, if that work is doing any copy_from_user, then the flush
-becomes dependent on swap and it won't work again...
+Also it's nice to be more specific with the subject.
+[PATCH] Staging: rtl8188eu: rtw_security: tidy up crc32_init().
+And for the full commit message maybe write something like:
 
-> > > 1) spinlock: add lots of overhead on datapath, this leads 0 performance
-> > > improvement.
-> > I think the topic here is correctness not performance improvement> 
- 
-> But the whole series is to speed up vhost.
+This code generates a checkpatch warning:
 
-So? Starting with a whole bunch of crazy, possibly broken, locking and
-claiming a performance win is not reasonable.
+    WARNING: else is not generally useful after a break or return
 
-> Spinlock is correct but make the whole series meaningless consider it won't
-> bring any performance improvement.
+If we move the declarations to the start of the function then we can
+pull the code back one tab and it makes the function a lot more readable.
 
-You can't invent a faster spinlock by opencoding some wild
-scheme. There is nothing special about the usage here, it needs a
-blocking lock, plain and simple.
+regards,
+dan carpenter
 
-Jason
