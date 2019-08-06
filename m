@@ -2,200 +2,130 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E31CC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:10:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5854CC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:11:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56305214C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:10:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27BBD214C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:11:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lVmlFjkW"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SZo4fdmX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732875AbfHFOKl (ORCPT
+        id S1732877AbfHFOLx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 10:10:41 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35548 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728259AbfHFOKk (ORCPT
+        Tue, 6 Aug 2019 10:11:53 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:36130 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726834AbfHFOLx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 10:10:40 -0400
-Received: by mail-wm1-f68.google.com with SMTP id l2so76577518wmg.0
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 07:10:38 -0700 (PDT)
+        Tue, 6 Aug 2019 10:11:53 -0400
+Received: by mail-oi1-f194.google.com with SMTP id c15so11369218oic.3
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 07:11:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=cARuDPvllFn1lWUM9aELb0vIdKd2MGWlXsw/sP4g2S0=;
-        b=lVmlFjkWa5PZBY76E9+D+WKr0leENjWuTmvkyl7GSqREHpHwKPxJ+BGSsDpp06DwFc
-         X3l0XKa6cnKN7eHCORXzaczS4KqhWAN3LU8uTKSuJm8e+n8FjnYs9jOpMyfmxI+HMSa4
-         QZDYyc3MkJSTMsVBCDlYB7jk6nLO6ixJHUn2QpEoeV2p3fXb/UWwMJA/v8ZcsFe7YLO8
-         kLpyu4TUIXlE1mI7RX2Zd+UPoDt+pG5UnzoH1tnbefHgudRQKsxn9aWnCeLfA9yLIWvV
-         yk664BqZ6ZuLTyeRpjd5nHQs365INAPIdr2ZKDFwy0Sy7ZDzmEvflevNFlPO4DJHcH4d
-         xasg==
+        bh=KSZHR8G3MghKTiH3RE/z9t0oAkPmKdy9XO/QMCZqNZU=;
+        b=SZo4fdmXeH8WXLZpaSB/sTV0Fj/AOoy8kq3bwOXiCeK8jvWHo70O+zD6FGjZ4ESlzG
+         MJwNG4UTGW0T+1XmwKK1L0YCnIqCOJzMb+NEEP94tgXzPcO60WWioadGoDrAlJhawAxu
+         C6B3hppVH+zXeBCt8Dxdu3vMqTF2xSy6yZ4Us=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=cARuDPvllFn1lWUM9aELb0vIdKd2MGWlXsw/sP4g2S0=;
-        b=ON/RqJJkmOVh/haFo68QQ1PGPMlg2lOdRniRxPVr/APxruK9XpGrbhkE7ExKLnV6ej
-         h+WRvrMeMrxvbOGv1oaESgEASrO3Y7cf9z5N1xdopZs5drp/Yel/PFAwJqgzkW9m+kDk
-         hMIk2XDLm34CqAlRx+Dk2reNgkt/DVy/Ivhb3KdeBN75zhP0Anl8FYRbdRR4zoTOSxd8
-         QZDe0bjQ6pJkLC0m5+uMczvXqfwnFBs6qyPuwPgkiNVRbpuARb/Uz8iSRTV5+qtT+NLg
-         a6hNX+cEtXW9HPykg35ofjAniE2rS8R5HgO097SMbF9mgQZwPH+iNlPVMMbE8xtGIoTc
-         JUAw==
-X-Gm-Message-State: APjAAAVJloroMxqJbO/qVntwQ43gZfLR6OqfCl2LAdR+4Rl0Z62kvGPX
-        BwCGKou0oGL9k1maRC6G9PdW/8B6EUxEOGYXzMQ=
-X-Google-Smtp-Source: APXvYqwMEPB4UjTcplXgUvnLsC7BrhZCQUuZrPENBgkdggX2EZaIxt+4UShPR6rDLuSDrzBQ6dvA+NtmFBD+leSooPA=
-X-Received: by 2002:a1c:9e90:: with SMTP id h138mr5312157wme.67.1565100637820;
- Tue, 06 Aug 2019 07:10:37 -0700 (PDT)
+        bh=KSZHR8G3MghKTiH3RE/z9t0oAkPmKdy9XO/QMCZqNZU=;
+        b=r33EYGYM+Lgq0Mh9FzI1J5sWNWxGHqf3gy4XVSeh0uTmvIvlYXotOBuVi6cmm7s6y7
+         NEdjDgRubrukKbIhA3La3XHGefeq6kMkdSSoMarvlBppcZmnpfwChpKmaGXs4tevWgRD
+         Js/pX+/VvN8BEMqcJpYJQinDIdV3ZYSIqDJMj6qc0lAyli6/ltonr5PoR3EcPPbaVvP5
+         O1JW5AG8sa1Sd6OGEToApD8xjNSmYAKj7fP0doxp4qGopNVTjTW/thFR0EUbgq7JejqV
+         fQdAegEmj24T5x+48MfXKpwLbGWrBa34afQ3uHPlAmevRzL0jj7T7/WhobEAvd0qnFMD
+         IkRg==
+X-Gm-Message-State: APjAAAXtP7AWx681ag9610VJdebig4jUjtn6KoOZI68T/chbJWyuq4ym
+        Uw7xd/MlRUebCmdXrgpcCWp7tNZZx2gxVZWNHlEJGWg5/M4=
+X-Google-Smtp-Source: APXvYqytpvT8vaMFRA5kJCHz75f7m4Y8MAbUwJhZNd42scl1WSb2yxqI74afmLk/TEYBgez6jiANQdmqKzHF5x1pzu0=
+X-Received: by 2002:a02:c916:: with SMTP id t22mr4302514jao.24.1565100712372;
+ Tue, 06 Aug 2019 07:11:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190804203713.13724-1-natechancellor@gmail.com> <MN2PR12MB3344B936DC2DBD85443C6AC7E4DA0@MN2PR12MB3344.namprd12.prod.outlook.com>
-In-Reply-To: <MN2PR12MB3344B936DC2DBD85443C6AC7E4DA0@MN2PR12MB3344.namprd12.prod.outlook.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Tue, 6 Aug 2019 10:10:25 -0400
-Message-ID: <CADnq5_OWUn3Y2RA68pT-Sw1yRKSY0Eqtz=TAoPOXZ5V-KY5EWA@mail.gmail.com>
-Subject: Re: [PATCH] drm/amd/powerplay: Zero initialize some variables
-To:     "Quan, Evan" <Evan.Quan@amd.com>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>,
-        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
-        "clang-built-linux@googlegroups.com" 
-        <clang-built-linux@googlegroups.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190805211451.20176-1-robdclark@gmail.com> <20190806084821.GA17129@lst.de>
+In-Reply-To: <20190806084821.GA17129@lst.de>
+From:   Rob Clark <robdclark@chromium.org>
+Date:   Tue, 6 Aug 2019 07:11:41 -0700
+Message-ID: <CAJs_Fx6eh1w7c=crMoD5XyEOMzP6orLhqUewErE51cPGYmObBQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] drm: add cache support for arm64
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Rob Clark <robdclark@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Applied.  Thanks!
+On Tue, Aug 6, 2019 at 1:48 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+> This goes in the wrong direction.  drm_cflush_* are a bad API we need to
+> get rid of, not add use of it.  The reason for that is two-fold:
+>
+>  a) it doesn't address how cache maintaince actually works in most
+>     platforms.  When talking about a cache we three fundamental operations:
+>
+>         1) write back - this writes the content of the cache back to the
+>            backing memory
+>         2) invalidate - this remove the content of the cache
+>         3) write back + invalidate - do both of the above
 
-Alex
+Agreed that drm_cflush_* isn't a great API.  In this particular case
+(IIUC), I need wb+inv so that there aren't dirty cache lines that drop
+out to memory later, and so that I don't get a cache hit on
+uncached/wc mmap'ing.
 
-On Sun, Aug 4, 2019 at 9:21 PM Quan, Evan <Evan.Quan@amd.com> wrote:
+>  b) which of the above operation you use when depends on a couple of
+>     factors of what you want to do with the range you do the cache
+>     maintainance operations
 >
-> Thanks Nathan. The patch is reviewed-by: Evan Quan <evan.quan@amd.com>
->
-> > -----Original Message-----
-> > From: Nathan Chancellor <natechancellor@gmail.com>
-> > Sent: Monday, August 05, 2019 4:37 AM
-> > To: Quan, Evan <Evan.Quan@amd.com>; Deucher, Alexander
-> > <Alexander.Deucher@amd.com>; Koenig, Christian
-> > <Christian.Koenig@amd.com>; Zhou, David(ChunMing)
-> > <David1.Zhou@amd.com>
-> > Cc: amd-gfx@lists.freedesktop.org; dri-devel@lists.freedesktop.org; linux-
-> > kernel@vger.kernel.org; clang-built-linux@googlegroups.com; Nathan
-> > Chancellor <natechancellor@gmail.com>
-> > Subject: [PATCH] drm/amd/powerplay: Zero initialize some variables
-> >
-> > Clang warns (only Navi warning shown but Arcturus warns as well):
-> >
-> > drivers/gpu/drm/amd/amdgpu/../powerplay/navi10_ppt.c:1534:4: warning:
-> > variable 'asic_default_power_limit' is used uninitialized whenever '?:'
-> > condition is false [-Wsometimes-uninitialized]
-> >                         smu_read_smc_arg(smu, &asic_default_power_limit);
-> >                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > drivers/gpu/drm/amd/amdgpu/../powerplay/inc/amdgpu_smu.h:588:3:
-> > note:
-> > expanded from macro 'smu_read_smc_arg'
-> >         ((smu)->funcs->read_smc_arg? (smu)->funcs->read_smc_arg((smu),
-> > (arg)) : 0)
-> >          ^~~~~~~~~~~~~~~~~~~~~~~~~~
-> > drivers/gpu/drm/amd/amdgpu/../powerplay/navi10_ppt.c:1550:30: note:
-> > uninitialized use occurs here
-> >                 smu->default_power_limit = asic_default_power_limit;
-> >                                            ^~~~~~~~~~~~~~~~~~~~~~~~
-> > drivers/gpu/drm/amd/amdgpu/../powerplay/navi10_ppt.c:1534:4: note:
-> > remove the '?:' if its condition is always true
-> >                         smu_read_smc_arg(smu, &asic_default_power_limit);
-> >                         ^
-> > drivers/gpu/drm/amd/amdgpu/../powerplay/inc/amdgpu_smu.h:588:3:
-> > note:
-> > expanded from macro 'smu_read_smc_arg'
-> >         ((smu)->funcs->read_smc_arg? (smu)->funcs->read_smc_arg((smu),
-> > (arg)) : 0)
-> >          ^
-> > drivers/gpu/drm/amd/amdgpu/../powerplay/navi10_ppt.c:1517:35: note:
-> > initialize the variable 'asic_default_power_limit' to silence this warning
-> >         uint32_t asic_default_power_limit;
-> >                                          ^
-> >                                           = 0
-> > 1 warning generated.
-> >
-> > As the code is currently written, if read_smc_arg were ever NULL, arg would
-> > fail to be initialized but the code would continue executing as normal
-> > because the return value would just be zero.
-> >
-> > There are a few different possible solutions to resolve this class of warnings
-> > which have appeared in these drivers before:
-> >
-> > 1. Assume the function pointer will never be NULL and eliminate the
-> >    wrapper macros.
-> >
-> > 2. Have the wrapper macros initialize arg when the function pointer is
-> >    NULL.
-> >
-> > 3. Have the wrapper macros return an error code instead of 0 when the
-> >    function pointer is NULL so that the callsites can properly bail out
-> >    before arg can be used.
-> >
-> > 4. Initialize arg at the top of its function.
-> >
-> > Number four is the path of least resistance right now as every other change
-> > will be driver wide so do that here. I only make the comment now as food for
-> > thought.
-> >
-> > Fixes: b4af964e75c4 ("drm/amd/powerplay: make power limit retrieval as
-> > asic specific")
-> > Link: https://github.com/ClangBuiltLinux/linux/issues/627
-> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> > ---
-> >  drivers/gpu/drm/amd/powerplay/arcturus_ppt.c | 2 +-
-> >  drivers/gpu/drm/amd/powerplay/navi10_ppt.c   | 2 +-
-> >  2 files changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/amd/powerplay/arcturus_ppt.c
-> > b/drivers/gpu/drm/amd/powerplay/arcturus_ppt.c
-> > index 215f7173fca8..b92eded7374f 100644
-> > --- a/drivers/gpu/drm/amd/powerplay/arcturus_ppt.c
-> > +++ b/drivers/gpu/drm/amd/powerplay/arcturus_ppt.c
-> > @@ -1326,7 +1326,7 @@ static int arcturus_get_power_limit(struct
-> > smu_context *smu,
-> >                                    bool asic_default)
-> >  {
-> >       PPTable_t *pptable = smu->smu_table.driver_pptable;
-> > -     uint32_t asic_default_power_limit;
-> > +     uint32_t asic_default_power_limit = 0;
-> >       int ret = 0;
-> >       int power_src;
-> >
-> > diff --git a/drivers/gpu/drm/amd/powerplay/navi10_ppt.c
-> > b/drivers/gpu/drm/amd/powerplay/navi10_ppt.c
-> > index 106352a4fb82..d844bc8411aa 100644
-> > --- a/drivers/gpu/drm/amd/powerplay/navi10_ppt.c
-> > +++ b/drivers/gpu/drm/amd/powerplay/navi10_ppt.c
-> > @@ -1514,7 +1514,7 @@ static int navi10_get_power_limit(struct
-> > smu_context *smu,
-> >                                    bool asic_default)
-> >  {
-> >       PPTable_t *pptable = smu->smu_table.driver_pptable;
-> > -     uint32_t asic_default_power_limit;
-> > +     uint32_t asic_default_power_limit = 0;
-> >       int ret = 0;
-> >       int power_src;
-> >
-> > --
-> > 2.23.0.rc1
->
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+> Take a look at the comment in arch/arc/mm/dma.c around line 30 that
+> explains how this applies to buffer ownership management.  Note that
+> "for device" applies to "for userspace" in the same way, just that
+> userspace then also needs to follow this protocol.  So the whole idea
+> that random driver code calls random low-level cache maintainance
+> operations (and use the non-specific term flush to make it all more
+> confusing) is a bad idea.  Fortunately enough we have really good
+> arch helpers for all non-coherent architectures (this excludes the
+> magic i915 won't be covered by that, but that is a separate issue
+> to be addressed later, and the fact that while arm32 did grew them
+> very recently and doesn't expose them for all configs, which is easily
+> fixable if needed) with arch_sync_dma_for_device and
+> arch_sync_dma_for_cpu.  So what we need is to figure out where we
+> have valid cases for buffer ownership transfer outside the DMA
+> API, and build proper wrappers around the above function for that.
+> My guess is it should probably be build to go with the iommu API
+> as that is the only other way to map memory for DMA access, but
+> if you have a better idea I'd be open to discussion.
+
+Tying it in w/ iommu seems a bit weird to me.. but maybe that is just
+me, I'm certainly willing to consider proposals or to try things and
+see how they work out.
+
+Exposing the arch_sync_* API and using that directly (bypassing
+drm_cflush_*) actually seems pretty reasonable and pragmatic.  I did
+have one doubt, as phys_to_virt() is only valid for kernel direct
+mapped memory (AFAIU), what happens for pages that are not in kernel
+linear map?  Maybe it is ok to ignore those pages, since they won't
+have an aliased mapping?
+
+BR,
+-R
