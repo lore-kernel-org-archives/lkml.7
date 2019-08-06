@@ -2,84 +2,116 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED582C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:30:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAB6CC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:31:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD3DF2075B
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:30:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hgwNVBPR"
+	by mail.kernel.org (Postfix) with ESMTP id C3604206A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:31:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732266AbfHFIal (ORCPT
+        id S1732280AbfHFIbq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 04:30:41 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:53480 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726713AbfHFIal (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 04:30:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=/s8wUNloiVZ/r39DkCHiVqmnKOfRol4hev9m4wU/nnw=; b=hgwNVBPR8xl0odZWuchrJVQcX
-        3su7RZX0frEguJeRnZ6+3h3hvReZRGEX8N700MrQbaje4yl7A0T40cVnOl7nP5xYmATfSy+tHccMP
-        PQIdIJ5WCCTkFOiGak6iDAaFKfqYG6qeDqggPdEnar6XDbJN31SXBieGI5mJT1qJB5BcIiMENIq6E
-        MOKBO2UxvOBl8YodIUuxMf/I3ANstalAfJHbXDUUCfC8VAc49vwsQarrFSdOH+SJ8MygukczTc/jN
-        Vv2nT3PfK5pkb5OItnNSg1qDrdoEWSW+Q8r6oHU7XbIKJEasF45ShptwDOBIGu79w1t1lViBAlHK6
-        lESRTSSdg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1huura-0004S5-1j; Tue, 06 Aug 2019 08:30:34 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 3D150201D5B0F; Tue,  6 Aug 2019 10:30:32 +0200 (CEST)
-Date:   Tue, 6 Aug 2019 10:30:32 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Thomas Garnier <thgarnie@chromium.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Kristen Carlson Accardi <kristen@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v9 04/11] x86/entry/64: Adapt assembly for PIE support
-Message-ID: <20190806083032.GN2332@hirez.programming.kicks-ass.net>
-References: <20190730191303.206365-1-thgarnie@chromium.org>
- <20190730191303.206365-5-thgarnie@chromium.org>
- <20190805172854.GF18785@zn.tnic>
- <CAJcbSZGedSfZZ5rveH2+_3q7pvmMyDGLxmZU41Nno=ZBX8kN=w@mail.gmail.com>
- <20190806050851.GA25897@zn.tnic>
+        Tue, 6 Aug 2019 04:31:46 -0400
+Received: from foss.arm.com ([217.140.110.172]:58618 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726713AbfHFIbq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 04:31:46 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6D59F337;
+        Tue,  6 Aug 2019 01:31:45 -0700 (PDT)
+Received: from [10.163.1.69] (unknown [10.163.1.69])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6B3763F706;
+        Tue,  6 Aug 2019 01:31:42 -0700 (PDT)
+Subject: Re: [PATCH V2] fork: Improve error message for corrupted page tables
+To:     Vlastimil Babka <vbabka@suse.cz>,
+        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Cc:     dave.hansen@intel.com, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <3ef8a340deb1c87b725d44edb163073e2b6eca5a.1565059496.git.sai.praneeth.prakhya@intel.com>
+ <5ba88460-cf01-3d53-6d13-45e650b4eacd@suse.cz>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <926d50ce-4742-0ae7-474c-ef561fe23cdd@arm.com>
+Date:   Tue, 6 Aug 2019 14:02:26 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190806050851.GA25897@zn.tnic>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <5ba88460-cf01-3d53-6d13-45e650b4eacd@suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 07:08:51AM +0200, Borislav Petkov wrote:
-> On Mon, Aug 05, 2019 at 10:50:30AM -0700, Thomas Garnier wrote:
-> > I saw that %rdx was used for temporary usage and restored before the
-> > end so I assumed that it was not an option.
+
+
+On 08/06/2019 01:23 PM, Vlastimil Babka wrote:
 > 
-> PUSH_AND_CLEAR_REGS saves all regs earlier so I think you should be
-> able to use others. Like SAVE_AND_SWITCH_TO_KERNEL_CR3/RESTORE_CR3, for
-> example, uses %r15 and %r14.
+> On 8/6/19 5:05 AM, Sai Praneeth Prakhya wrote:
+>> When a user process exits, the kernel cleans up the mm_struct of the user
+>> process and during cleanup, check_mm() checks the page tables of the user
+>> process for corruption (E.g: unexpected page flags set/cleared). For
+>> corrupted page tables, the error message printed by check_mm() isn't very
+>> clear as it prints the loop index instead of page table type (E.g: Resident
+>> file mapping pages vs Resident shared memory pages). The loop index in
+>> check_mm() is used to index rss_stat[] which represents individual memory
+>> type stats. Hence, instead of printing index, print memory type, thereby
+>> improving error message.
+>>
+>> Without patch:
+>> --------------
+>> [  204.836425] mm/pgtable-generic.c:29: bad p4d 0000000089eb4e92(800000025f941467)
+>> [  204.836544] BUG: Bad rss-counter state mm:00000000f75895ea idx:0 val:2
+>> [  204.836615] BUG: Bad rss-counter state mm:00000000f75895ea idx:1 val:5
+>> [  204.836685] BUG: non-zero pgtables_bytes on freeing mm: 20480
+>>
+>> With patch:
+>> -----------
+>> [   69.815453] mm/pgtable-generic.c:29: bad p4d 0000000084653642(800000025ca37467)
+>> [   69.815872] BUG: Bad rss-counter state mm:00000000014a6c03 type:MM_FILEPAGES val:2
+>> [   69.815962] BUG: Bad rss-counter state mm:00000000014a6c03 type:MM_ANONPAGES val:5
+>> [   69.816050] BUG: non-zero pgtables_bytes on freeing mm: 20480
+>>
+>> Also, change print function (from printk(KERN_ALERT, ..) to pr_alert()) so
+>> that it matches the other print statement.
+>>
+>> Cc: Ingo Molnar <mingo@kernel.org>
+>> Cc: Vlastimil Babka <vbabka@suse.cz>
+>> Cc: Peter Zijlstra <peterz@infradead.org>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
+>> Acked-by: Dave Hansen <dave.hansen@intel.com>
+>> Suggested-by: Dave Hansen <dave.hansen@intel.com>
+>> Signed-off-by: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
+> 
+> Acked-by: Vlastimil Babka <vbabka@suse.cz>
+> 
+> I would also add something like this to reduce risk of breaking it in the
+> future:
+> 
+> ----8<----
+> diff --git a/include/linux/mm_types_task.h b/include/linux/mm_types_task.h
+> index d7016dcb245e..a6f83cbe4603 100644
+> --- a/include/linux/mm_types_task.h
+> +++ b/include/linux/mm_types_task.h
+> @@ -36,6 +36,9 @@ struct vmacache {
+>  	struct vm_area_struct *vmas[VMACACHE_SIZE];
+>  };
+>  
+> +/*
+> + * When touching this, update also resident_page_types in kernel/fork.c
+> + */
+>  enum {
+>  	MM_FILEPAGES,	/* Resident file mapping pages */
+>  	MM_ANONPAGES,	/* Resident anonymous pages */
+> 
 
-AFAICT the CONFIG_DEBUG_ENTRY thing he's changing is before we setup
-pt_regs.
+Agreed and with that
 
-Also consider the UNWIND hint that's in there, it states we only have
-the IRET frame on stack, not a full regs set.
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
