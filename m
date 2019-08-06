@@ -2,158 +2,206 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FFADC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 11:32:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2822CC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 11:32:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FBD720818
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 11:32:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC0D020C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 11:32:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732783AbfHFLcb (ORCPT
+        id S1732806AbfHFLcp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 07:32:31 -0400
-Received: from mga14.intel.com ([192.55.52.115]:57611 "EHLO mga14.intel.com"
+        Tue, 6 Aug 2019 07:32:45 -0400
+Received: from ozlabs.org ([203.11.71.1]:56657 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729413AbfHFLca (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 07:32:30 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 04:32:30 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,353,1559545200"; 
-   d="scan'208";a="198285894"
-Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.254.212.182]) ([10.254.212.182])
-  by fmsmga004.fm.intel.com with ESMTP; 06 Aug 2019 04:32:28 -0700
-Subject: Re: [PATCH v2] perf diff: Report noisy for cycles diff
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <20190724221432.26297-1-yao.jin@linux.intel.com>
- <20190806083429.GI7695@krava>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <e61655d3-f69f-c210-3509-1cf745c1081c@linux.intel.com>
-Date:   Tue, 6 Aug 2019 19:32:27 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1728845AbfHFLcp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 07:32:45 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 462sty3LhMz9s7T;
+        Tue,  6 Aug 2019 21:32:42 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
+        "linuxppc-dev\@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "christophe.leroy\@c-s.fr" <christophe.leroy@c-s.fr>,
+        "npiggin\@gmail.com" <npiggin@gmail.com>
+Cc:     "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Grant McEwan <grant.mcewan@alliedtelesis.co.nz>
+Subject: Re: SMP lockup at boot on Freescale/NXP T2080 (powerpc 64)
+In-Reply-To: <4525a16cd3e65f89741b50daf2ec259b6baaab78.camel@alliedtelesis.co.nz>
+References: <1564970785.27215.29.camel@alliedtelesis.co.nz> <4525a16cd3e65f89741b50daf2ec259b6baaab78.camel@alliedtelesis.co.nz>
+Date:   Tue, 06 Aug 2019 21:32:39 +1000
+Message-ID: <87wofqv8a0.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-In-Reply-To: <20190806083429.GI7695@krava>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Chris Packham <Chris.Packham@alliedtelesis.co.nz> writes:
+> On Mon, 2019-08-05 at 14:06 +1200, Chris Packham wrote:
+>> Hi All,
+>> 
+>> I have a custom board that uses the Freescale/NXP T2080 SoC.
+>> 
+>> The board boots fine using v4.19.60 but when I use v5.1.21 it locks
+>> up
+>> waiting for the other CPUs to come online (earlyprintk output below).
+>> If I set maxcpus=0 then the system boots all the way through to
+>> userland. The same thing happens with 5.3-rc2.
+>> 
+>> The defconfig I'm using is 
+>> https://gist.github.com/cpackham/f24d0b426f3
+>> de0eaaba17b82c3528a9d it was updated from the working v4.19.60
+>> defconfig using make olddefconfig.
+>> 
+>> Does this ring any bells for anyone?
+>> 
+>> I haven't dug into the differences between the working an non-working
+>> versions yet. I'll start looking now.
+>
+> I've bisected this to the following commit
+
+Thanks that's super helpful.
+
+> commit ed1cd6deb013a11959d17a94e35ce159197632da
+> Author: Christophe Leroy <christophe.leroy@c-s.fr>
+> Date:   Thu Jan 31 10:08:58 2019 +0000
+>
+>     powerpc: Activate CONFIG_THREAD_INFO_IN_TASK
+>     
+>     This patch activates CONFIG_THREAD_INFO_IN_TASK which
+>     moves the thread_info into task_struct.
+>
+> I'll be the first to admit this is well beyond my area of knowledge so
+> I'm unsure what about this patch is problematic but I can be fairly
+> sure that a build immediately before this patch works while a build
+> with this patch hangs.
+
+It makes a pretty fundamental change to the way the kernel stores some
+information about each task, moving it off the stack and into the task
+struct.
+
+It definitely has the potential to break things, but I thought we had
+reasonable test coverage of the Book3E platforms, I have a p5020ds
+(e5500) that I boot as part of my CI.
+
+Aha. If I take your config and try to boot it on my p5020ds I get the
+same behaviour, stuck at SMP bringup. So it seems it's something in your
+config vs corenet64_smp_defconfig that is triggering the bug.
+
+Can you try bisecting what in the config triggers it?
+
+To do that you checkout ed1cd6deb013a11959d17a94e35ce159197632da, then
+you build/boot with corenet64_smp_defconfig to confirm it works. Then
+you use tools/testing/ktest/config-bisect.pl to bisect the changes in
+the .config.
+
+cheers
 
 
-On 8/6/2019 4:34 PM, Jiri Olsa wrote:
-> On Thu, Jul 25, 2019 at 06:14:32AM +0800, Jin Yao wrote:
-> 
-> SNIP
-> 
->>   static int cycles_printf(struct hist_entry *he, struct hist_entry *pair,
->> -			 struct perf_hpp *hpp, int width)
->> +			 struct perf_hpp *hpp, int width __maybe_unused)
->>   {
->>   	struct block_hist *bh = container_of(he, struct block_hist, he);
->>   	struct block_hist *bh_pair = container_of(pair, struct block_hist, he);
->>   	struct hist_entry *block_he;
->>   	struct block_info *bi;
->> -	char buf[128];
->> +	char buf[128], spark[32];
->>   	char *start_line, *end_line;
->> +	int ret = 0, pad;
->> +	char pfmt[20] = " ";
->> +	double d;
->>   
->>   	block_he = hists__get_entry(&bh_pair->block_hists, bh->block_idx);
->>   	if (!block_he) {
->> @@ -1350,18 +1375,56 @@ static int cycles_printf(struct hist_entry *he, struct hist_entry *pair,
->>   	end_line = map__srcline(he->ms.map, bi->sym->start + bi->end,
->>   				he->ms.sym);
->>   
->> -	if ((start_line != SRCLINE_UNKNOWN) && (end_line != SRCLINE_UNKNOWN)) {
->> -		scnprintf(buf, sizeof(buf), "[%s -> %s] %4ld",
->> -			  start_line, end_line, block_he->diff.cycles);
->> +	if (show_noisy) {
->> +		ret = print_stat_spark(spark, sizeof(spark),
->> +				       &block_he->diff.stats);
->> +		d = rel_stddev_stats(stddev_stats(&block_he->diff.stats),
->> +				     avg_stats(&block_he->diff.stats));
->> +
->> +		if ((start_line != SRCLINE_UNKNOWN) &&
->> +		    (end_line != SRCLINE_UNKNOWN)) {
->> +			scnprintf(buf, sizeof(buf),
->> +				  "[%s -> %s] %4ld  %s%5.1f%% %s",
->> +				  start_line, end_line, block_he->diff.cycles,
->> +				  "\u00B1", d, spark);
->> +		} else {
->> +			scnprintf(buf, sizeof(buf),
->> +				  "[%7lx -> %7lx] %4ld  %s%5.1f%% %s",
->> +				  bi->start, bi->end, block_he->diff.cycles,
->> +				  "\u00B1", d, spark);
->> +		}
->> +
->> +		if (ret > 0) {
->> +			pad = 8 - ((ret - 1) / 3);
->> +			scnprintf(pfmt, 20, "%%%ds",
->> +				  81 + (2 * ((ret - 1) / 3)) - pad);
->> +			ret = scnprintf(hpp->buf, hpp->size, pfmt, buf);
->> +			if (pad > 0) {
->> +				ret += scnprintf(hpp->buf + ret,
->> +						 hpp->size - ret,
->> +						 "%-*s", pad, " ");
->> +			}
->> +		} else {
->> +			ret = scnprintf(hpp->buf, hpp->size, "%73s", buf);
->> +			ret += scnprintf(hpp->buf + ret, hpp->size - ret,
->> +					 "%-*s", 8, " ");
->> +		}
-> 
-> 
-> hum, why isn't the histogram in the separate column?
-> looks like there's lot of duplicated code in here
-> 
-> thanks,
-> jirka
-> 
-
-Yes, it'd better add the histogram in a separate column. But it's not 
-very easy to add that. Anyway let me double check if I can find a less 
-complicated method for that.
-
-Thanks
-Jin Yao
-
-
->>   	} else {
->> -		scnprintf(buf, sizeof(buf), "[%7lx -> %7lx] %4ld",
->> -			  bi->start, bi->end, block_he->diff.cycles);
->> +		if ((start_line != SRCLINE_UNKNOWN) &&
->> +		    (end_line != SRCLINE_UNKNOWN)) {
->> +			scnprintf(buf, sizeof(buf), "[%s -> %s] %4ld",
->> +				  start_line, end_line, block_he->diff.cycles);
->> +		} else {
->> +			scnprintf(buf, sizeof(buf), "[%7lx -> %7lx] %4ld",
->> +				  bi->start, bi->end, block_he->diff.cycles);
->> +		}
->> +
->> +		ret = scnprintf(hpp->buf, hpp->size, "%*s", width, buf);
->>   	}
->>   
->>   	free_srcline(start_line);
->>   	free_srcline(end_line);
->> -
->> -	return scnprintf(hpp->buf, hpp->size, "%*s", width, buf);
->> +	return ret;
->>   }
-> 
-> SNIP
-> 
+>> Booting...
+>> MMU: Supported page sizes
+>>          4 KB as direct
+>>       2048 KB as direct & indirect
+>>       4096 KB as direct
+>>      16384 KB as direct
+>>      65536 KB as direct
+>>     262144 KB as direct
+>>    1048576 KB as direct
+>> MMU: Book3E HW tablewalk enabled
+>> Linux version 5.1.21-at1+ (@chrisp-dl) (gcc version 4.9.3 (crosstool-
+>> NG 
+>> crosstool-ng-1.22.0)) #24 SMP PREEMPT Mon Aug 5 01:42:00 UTC 2019
+>> Found initrd at 0xc00000002f045000:0xc000000030000000
+>> Using CoreNet Generic machine description
+>> Found legacy serial port 0 for /soc@ffe000000/serial@11c500
+>>   mem=ffe11c500, taddr=ffe11c500, irq=0, clk=300000000, speed=0
+>> Found legacy serial port 1 for /soc@ffe000000/serial@11c600
+>>   mem=ffe11c600, taddr=ffe11c600, irq=0, clk=300000000, speed=0
+>> Found legacy serial port 2 for /soc@ffe000000/serial@11d500
+>>   mem=ffe11d500, taddr=ffe11d500, irq=0, clk=300000000, speed=0
+>> Found legacy serial port 3 for /soc@ffe000000/serial@11d600
+>>   mem=ffe11d600, taddr=ffe11d600, irq=0, clk=300000000, speed=0
+>> printk: bootconsole [udbg0] enabled
+>> CPU maps initialized for 2 threads per core
+>>  (thread shift is 1)
+>> Allocated 1856 bytes for 8 pacas
+>> -----------------------------------------------------
+>> phys_mem_size     = 0x100000000
+>> dcache_bsize      = 0x40
+>> icache_bsize      = 0x40
+>> cpu_features      = 0x00000003009003b6
+>>   possible        = 0x00000003009003b6
+>>   always          = 0x00000003008003b4
+>> cpu_user_features = 0xdc008000 0x08000000
+>> mmu_features      = 0x000a0010
+>> firmware_features = 0x0000000000000000
+>> -----------------------------------------------------
+>> CoreNet Generic board
+>> barrier-nospec: using isync; sync as speculation barrier
+>> barrier-nospec: patched 412 locations
+>> Top of RAM: 0x100000000, Total RAM: 0x100000000
+>> Memory hole size: 0MB
+>> Zone ranges:
+>>   DMA      [mem 0x0000000000000000-0x000000007fffefff]
+>>   Normal   [mem 0x000000007ffff000-0x00000000ffffffff]
+>> Movable zone start for each node
+>> Early memory node ranges
+>>   node   0: [mem 0x0000000000000000-0x00000000ffffffff]
+>> Initmem setup node 0 [mem 0x0000000000000000-0x00000000ffffffff]
+>> On node 0 totalpages: 1048576
+>>   DMA zone: 7168 pages used for memmap
+>>   DMA zone: 0 pages reserved
+>>   DMA zone: 524287 pages, LIFO batch:63
+>>   Normal zone: 7169 pages used for memmap
+>>   Normal zone: 524289 pages, LIFO batch:63
+>> MMU: Allocated 2112 bytes of context maps for 255 contexts
+>> percpu: Embedded 22 pages/cpu s49304 r0 d40808 u131072
+>> pcpu-alloc: s49304 r0 d40808 u131072 alloc=1*1048576
+>> pcpu-alloc: [0] 0 1 2 3 4 5 6 7 
+>> Built 1 zonelists, mobility grouping on.  Total pages: 1034239
+>> Kernel command line: console=ttyS0,115200 root=/dev/ram0
+>> releasefile=linuxbox_ppc64_e6500mc-tb233.rel bootversion=6.2.7
+>> loglevel=8 mtdoops.mtddev=errlog
+>> mtdparts=fff800000.flash:4088M(user),8M(errlog)
+>> earlyprintk=ttyS0,115200 real_init=
+>> /bin/sh securitylevel=1 reladdr=0x1000000,1522523
+>> printk: log_buf_len individual max cpu contribution: 4096 bytes
+>> printk: log_buf_len total cpu_extra contributions: 28672 bytes
+>> printk: log_buf_len min size: 16384 bytes
+>> printk: log_buf_len: 65536 bytes
+>> printk: early log buf free: 12412(75%)
+>> Dentry cache hash table entries: 524288 (order: 10, 4194304 bytes)
+>> Inode-cache hash table entries: 262144 (order: 9, 2097152 bytes)
+>> Memory: 3979284K/4194304K available (8704K kernel code, 1584K rwdata,
+>> 2496K rodata, 472K init, 299K bss, 215020K reserved, 0K cma-reserved)
+>> SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=8, Nodes=1
+>> rcu: Preemptible hierarchical RCU implementation.
+>> rcu:    RCU event tracing is enabled.
+>>         Tasks RCU enabled.
+>> rcu: RCU calculated value of scheduler-enlistment delay is 25
+>> jiffies.
+>> NR_IRQS: 512, nr_irqs: 512, preallocated irqs: 16
+>> mpic: Setting up MPIC " OpenPIC  " version 1.2 at ffe040000, max 8
+>> CPUs
+>> mpic: ISU size: 512, shift: 9, mask: 1ff
+>> mpic: Initializing for 512 sources
+>> time_init: decrementer frequency = 37.500000 MHz
+>> time_init: processor frequency   = 1500.000000 MHz
+>> clocksource: timebase: mask: 0xffffffffffffffff max_cycles:
+>> 0x8a60dd6a9, max_idle_ns: 440795204056 ns
+>> clocksource: timebase mult[1aaaaaab] shift[24] registered
+>> clockevent: decrementer mult[999999a] shift[32] cpu[0]
+>> pid_max: default: 32768 minimum: 301
+>> Mount-cache hash table entries: 8192 (order: 4, 65536 bytes)
+>> Mountpoint-cache hash table entries: 8192 (order: 4, 65536 bytes)
+>> e6500 family performance monitor hardware support registered
+>> rcu: Hierarchical SRCU implementation.
+>> smp: Bringing up secondary CPUs ...
