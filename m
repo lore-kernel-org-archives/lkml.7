@@ -2,176 +2,102 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE45DC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:07:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D15C2C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89A3D20818
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:07:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xfVML/Pa"
+	by mail.kernel.org (Postfix) with ESMTP id B1E3220818
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:08:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732869AbfHFOHp (ORCPT
+        id S1732890AbfHFOIC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 10:07:45 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:55572 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726834AbfHFOHp (ORCPT
+        Tue, 6 Aug 2019 10:08:02 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:41569 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728259AbfHFOIC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 10:07:45 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x76E7hXW127613;
-        Tue, 6 Aug 2019 09:07:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1565100463;
-        bh=9YtLjEZEadsz4KozTsMZV1AwvV6y2GZFO/F76/NxOT0=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=xfVML/Paw5tmeELiNpO0KHNOaVe9i8KBpyIcgVeISCQbqllotcfyRcgymsa2szCxW
-         K9ath2sKcY4lG12mB/LmK/zGF+FWWJzZSchVBNTvktqfbewyEZuJ7z8rwTsB4ag1Ya
-         x774B5HBpIuIBy0TVdOokSb7Eo95sgERErOuKAOw=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x76E7hvw077090
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 6 Aug 2019 09:07:43 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 6 Aug
- 2019 09:07:42 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 6 Aug 2019 09:07:43 -0500
-Received: from [137.167.41.248] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x76E7frI020451;
-        Tue, 6 Aug 2019 09:07:41 -0500
-Subject: Re: [PATCH] phy: ti: am654-serdes: fix an use-after-free in
- serdes_am654_clk_register()
-To:     Wen Yang <wen.yang99@zte.com.cn>, <linux-kernel@vger.kernel.org>
-CC:     <xue.zhihong@zte.com.cn>, <wang.yi59@zte.com.cn>,
-        <cheng.shengyu@zte.com.cn>, Kishon Vijay Abraham I <kishon@ti.com>
-References: <1562566745-7447-1-git-send-email-wen.yang99@zte.com.cn>
- <1562566745-7447-4-git-send-email-wen.yang99@zte.com.cn>
-From:   Roger Quadros <rogerq@ti.com>
-Message-ID: <2eec3583-4f89-189c-4a08-57b5acc2272b@ti.com>
-Date:   Tue, 6 Aug 2019 17:07:42 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 6 Aug 2019 10:08:02 -0400
+Received: by mail-wr1-f67.google.com with SMTP id c2so84828204wrm.8;
+        Tue, 06 Aug 2019 07:08:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3I/0mLICIdXJjIirYonvMMd0Ui1WokJ1/uiCix86QbE=;
+        b=UgxEUALeAbtzBD8c4wZt6Vyw0D4sysSB7a8gjR5G8QsHXR+/zSJaiKtFCFIwPkEKDq
+         7gk4E8T8oNy5/VsmBDqYYFO9rdUbNDuukukBPW6bQNksJ0V5+/B9T6nNMVuUffVKyWbc
+         o9UwpLoARljKU09H2ip+L0n/MqVfJiXhtc5RmqjH+InVSn5AIgMLRa2yWJIBFHwBOZLy
+         jltGD61oItO5wexnKCR92hUJLUySrMMF3UXdoyV0ONY9GRf1b9k//9EbwH/75FM7b503
+         3RdnQG7xb9gHyQ6rQftmen/1sL6dcEvbIFOlGinUu2MuE9czxwdNcYGK6mLUEnIDI8TR
+         qjVg==
+X-Gm-Message-State: APjAAAXsh39A2bRKTkAoDhOtJ7yQxmN3PrZAYwEEtuq2AHFzarwc7fiw
+        gxYNJ9FHu3w2PHye8AUj5CM=
+X-Google-Smtp-Source: APXvYqy/o0BoWizFr6r9rCsfifC7aLByMMjAJ7paSO9dvT3pmex0RYbEi3b9VCHTyd65T6y5g37O2w==
+X-Received: by 2002:adf:cf02:: with SMTP id o2mr5103951wrj.352.1565100480114;
+        Tue, 06 Aug 2019 07:08:00 -0700 (PDT)
+Received: from green.intra.ispras.ru (bran.ispras.ru. [83.149.199.196])
+        by smtp.googlemail.com with ESMTPSA id f204sm146742145wme.18.2019.08.06.07.07.58
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 06 Aug 2019 07:07:59 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Denis Efremov <efremov@linux.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] PCI: use PCI_SRIOV_NUM_BARS in loops instead of PCI_IOV_RESOURCE_END
+Date:   Tue,  6 Aug 2019 17:07:15 +0300
+Message-Id: <20190806140715.19847-1-efremov@linux.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <1562566745-7447-4-git-send-email-wen.yang99@zte.com.cn>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+It's a general pattern to write loops with 'i < PCI_SRIOV_NUM_BARS'
+condition. This patch fixes remaining loops which violates this implicit
+agreement.
 
+Signed-off-by: Denis Efremov <efremov@linux.com>
+---
+ drivers/pci/iov.c       | 4 ++--
+ drivers/pci/setup-bus.c | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-On 08/07/2019 09:19, Wen Yang wrote:
-> The regmap_node variable is still being used in the syscon_node_to_regmap()
-> call after the of_node_put() call, which may result in use-after-free.
-> 
-> Fixes: 71e2f5c5c224 ("phy: ti: Add a new SERDES driver for TI's AM654x SoC")
-> Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-> Cc: Kishon Vijay Abraham I <kishon@ti.com>
-> Cc: Roger Quadros <rogerq@ti.com>
-> Cc: linux-kernel@vger.kernel.org
-
-Reviewed-by: Roger Quadros <rogerq@ti.com>
-
-> ---
->  drivers/phy/ti/phy-am654-serdes.c | 33 ++++++++++++++++++++++-----------
->  1 file changed, 22 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/phy/ti/phy-am654-serdes.c b/drivers/phy/ti/phy-am654-serdes.c
-> index f8edd08..f14f1f0 100644
-> --- a/drivers/phy/ti/phy-am654-serdes.c
-> +++ b/drivers/phy/ti/phy-am654-serdes.c
-> @@ -405,6 +405,7 @@ static int serdes_am654_clk_register(struct serdes_am654 *am654_phy,
->  	const __be32 *addr;
->  	unsigned int reg;
->  	struct clk *clk;
-> +	int ret = 0;
->  
->  	mux = devm_kzalloc(dev, sizeof(*mux), GFP_KERNEL);
->  	if (!mux)
-> @@ -413,34 +414,40 @@ static int serdes_am654_clk_register(struct serdes_am654 *am654_phy,
->  	init = &mux->clk_data;
->  
->  	regmap_node = of_parse_phandle(node, "ti,serdes-clk", 0);
-> -	of_node_put(regmap_node);
->  	if (!regmap_node) {
->  		dev_err(dev, "Fail to get serdes-clk node\n");
-> -		return -ENODEV;
-> +		ret = -ENODEV;
-> +		goto out_put_node;
->  	}
->  
->  	regmap = syscon_node_to_regmap(regmap_node->parent);
->  	if (IS_ERR(regmap)) {
->  		dev_err(dev, "Fail to get Syscon regmap\n");
-> -		return PTR_ERR(regmap);
-> +		ret = PTR_ERR(regmap);
-> +		goto out_put_node;
->  	}
->  
->  	num_parents = of_clk_get_parent_count(node);
->  	if (num_parents < 2) {
->  		dev_err(dev, "SERDES clock must have parents\n");
-> -		return -EINVAL;
-> +		ret = -EINVAL;
-> +		goto out_put_node;
->  	}
->  
->  	parent_names = devm_kzalloc(dev, (sizeof(char *) * num_parents),
->  				    GFP_KERNEL);
-> -	if (!parent_names)
-> -		return -ENOMEM;
-> +	if (!parent_names) {
-> +		ret = -ENOMEM;
-> +		goto out_put_node;
-> +	}
->  
->  	of_clk_parent_fill(node, parent_names, num_parents);
->  
->  	addr = of_get_address(regmap_node, 0, NULL, NULL);
-> -	if (!addr)
-> -		return -EINVAL;
-> +	if (!addr) {
-> +		ret = -EINVAL;
-> +		goto out_put_node;
-> +	}
->  
->  	reg = be32_to_cpu(*addr);
->  
-> @@ -456,12 +463,16 @@ static int serdes_am654_clk_register(struct serdes_am654 *am654_phy,
->  	mux->hw.init = init;
->  
->  	clk = devm_clk_register(dev, &mux->hw);
-> -	if (IS_ERR(clk))
-> -		return PTR_ERR(clk);
-> +	if (IS_ERR(clk)) {
-> +		ret = PTR_ERR(clk);
-> +		goto out_put_node;
-> +	}
->  
->  	am654_phy->clks[clock_num] = clk;
->  
-> -	return 0;
-> +out_put_node:
-> +	of_node_put(regmap_node);
-> +	return ret;
->  }
->  
->  static const struct of_device_id serdes_am654_id_table[] = {
-> 
-
+diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+index 525fd3f272b3..9b48818ced01 100644
+--- a/drivers/pci/iov.c
++++ b/drivers/pci/iov.c
+@@ -557,8 +557,8 @@ static void sriov_restore_state(struct pci_dev *dev)
+ 	ctrl |= iov->ctrl & PCI_SRIOV_CTRL_ARI;
+ 	pci_write_config_word(dev, iov->pos + PCI_SRIOV_CTRL, ctrl);
+ 
+-	for (i = PCI_IOV_RESOURCES; i <= PCI_IOV_RESOURCE_END; i++)
+-		pci_update_resource(dev, i);
++	for (i = 0; i < PCI_SRIOV_NUM_BARS; i++)
++		pci_update_resource(dev, i + PCI_IOV_RESOURCES);
+ 
+ 	pci_write_config_dword(dev, iov->pos + PCI_SRIOV_SYS_PGSIZE, iov->pgsz);
+ 	pci_iov_set_numvfs(dev, iov->num_VFs);
+diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+index 79b1fa6519be..e7dbe21705ba 100644
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -1662,8 +1662,8 @@ static int iov_resources_unassigned(struct pci_dev *dev, void *data)
+ 	int i;
+ 	bool *unassigned = data;
+ 
+-	for (i = PCI_IOV_RESOURCES; i <= PCI_IOV_RESOURCE_END; i++) {
+-		struct resource *r = &dev->resource[i];
++	for (i = 0; i < PCI_SRIOV_NUM_BARS; i++) {
++		struct resource *r = &dev->resource[i + PCI_IOV_RESOURCES];
+ 		struct pci_bus_region region;
+ 
+ 		/* Not assigned or rejected by kernel? */
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+2.21.0
+
