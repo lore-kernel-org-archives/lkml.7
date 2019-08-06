@@ -2,172 +2,92 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11871C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:07:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B80C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D343B2089E
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:07:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8C3220B1F
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:16:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565093779;
+	bh=qhMVapevkt7GGro5itwqbhs4kgXV6GMbDr4EtrsfY3A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VYtyFBD4N7druYmrM1tS+doYa8WrUsHkOe2WNd89R7kBlfxIHZrSZkPoClHMDk7di
+	 Hyelq4SDq4R30aGnYOBqwZv99uCcYW2NWVldKA1z32PTClywoQMprLiGGbiWwI0T6F
+	 b2q5BVxwmQGXotcPl4t2jf6a+Ttd6wAqU8DMquOs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728886AbfHFMHL (ORCPT
+        id S1729168AbfHFMQR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 08:07:11 -0400
-Received: from foss.arm.com ([217.140.110.172]:60768 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726036AbfHFMHL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 08:07:11 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1DE6228;
-        Tue,  6 Aug 2019 05:07:10 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4EFBC3F694;
-        Tue,  6 Aug 2019 05:07:09 -0700 (PDT)
-Date:   Tue, 6 Aug 2019 13:07:07 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64/cache: fix -Woverride-init compiler warnings
-Message-ID: <20190806120706.GC475@lakrids.cambridge.arm.com>
-References: <1564759944-2197-1-git-send-email-cai@lca.pw>
- <20190805095256.ocgdb2yfhnbdz6kw@willie-the-truck>
- <771C4B4C-6D79-419D-9778-5DE1BFC67FBE@lca.pw>
- <20190805140118.fys437oor2b2rnq5@willie-the-truck>
- <06613F4A-3DA7-4FF9-8616-52CB4BB58C48@lca.pw>
+        Tue, 6 Aug 2019 08:16:17 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:59290 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726036AbfHFMQQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 08:16:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=qhMVapevkt7GGro5itwqbhs4kgXV6GMbDr4EtrsfY3A=; b=R7lP8lCrLZjQLhSWdDBL6I5Vg
+        q8RWHe5JPteLEB8J4Z5ZgzeVYAp3RkzBPa7STUdzYAgoc7z/w+yBYZgYa0c/aExgGREJdhsyeUWCK
+        JtXFr91mQ3reSbuCghmkUdjo9g3MlBepLvRAMKWR/3Dzim5xky+daS6F5wpllsKq3Dpus=;
+Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1huyNx-0003Mg-Tf; Tue, 06 Aug 2019 12:16:13 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 575E22742B67; Tue,  6 Aug 2019 13:16:12 +0100 (BST)
+Date:   Tue, 6 Aug 2019 13:16:12 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Cc:     Kamal Dasu <kdasu.kdev@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/1] spi: bcm-qspi: Make BSPI default mode
+Message-ID: <20190806121612.GB4527@sirena.org.uk>
+References: <1565086474-4461-1-git-send-email-rayagonda.kokatanur@broadcom.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Bn2rw/3z4jIqBvZU"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <06613F4A-3DA7-4FF9-8616-52CB4BB58C48@lca.pw>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <1565086474-4461-1-git-send-email-rayagonda.kokatanur@broadcom.com>
+X-Cookie: All men have the right to wait in line.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 05, 2019 at 11:50:03PM -0400, Qian Cai wrote:
-> 
-> 
-> > On Aug 5, 2019, at 10:01 AM, Will Deacon <will@kernel.org> wrote:
-> > 
-> > On Mon, Aug 05, 2019 at 07:47:37AM -0400, Qian Cai wrote:
-> >> 
-> >> 
-> >>> On Aug 5, 2019, at 5:52 AM, Will Deacon <will@kernel.org> wrote:
-> >>> 
-> >>> On Fri, Aug 02, 2019 at 11:32:24AM -0400, Qian Cai wrote:
-> >>>> The commit 155433cb365e ("arm64: cache: Remove support for ASID-tagged
-> >>>> VIVT I-caches") introduced some compiation warnings from GCC,
-> >>>> 
-> >>>> arch/arm64/kernel/cpuinfo.c:38:26: warning: initialized field
-> >>>> overwritten [-Woverride-init]
-> >>>> [ICACHE_POLICY_VIPT]  = "VIPT",
-> >>>>                         ^~~~~~
-> >>>> arch/arm64/kernel/cpuinfo.c:38:26: note: (near initialization for
-> >>>> 'icache_policy_str[2]')
-> >>>> arch/arm64/kernel/cpuinfo.c:39:26: warning: initialized field
-> >>>> overwritten [-Woverride-init]
-> >>>> [ICACHE_POLICY_PIPT]  = "PIPT",
-> >>>>                         ^~~~~~
-> >>>> arch/arm64/kernel/cpuinfo.c:39:26: note: (near initialization for
-> >>>> 'icache_policy_str[3]')
-> >>>> arch/arm64/kernel/cpuinfo.c:40:27: warning: initialized field
-> >>>> overwritten [-Woverride-init]
-> >>>> [ICACHE_POLICY_VPIPT]  = "VPIPT",
-> >>>>                          ^~~~~~~
-> >>>> arch/arm64/kernel/cpuinfo.c:40:27: note: (near initialization for
-> >>>> 'icache_policy_str[0]')
-> >>>> 
-> >>>> because it initializes icache_policy_str[0 ... 3] twice.
-> >>>> 
-> >>>> Fixes: 155433cb365e ("arm64: cache: Remove support for ASID-tagged VIVT I-caches")
-> >>>> Signed-off-by: Qian Cai <cai@lca.pw>
-> >>>> ---
-> >>>> arch/arm64/kernel/cpuinfo.c | 4 ++--
-> >>>> 1 file changed, 2 insertions(+), 2 deletions(-)
-> >>>> 
-> >>>> diff --git a/arch/arm64/kernel/cpuinfo.c b/arch/arm64/kernel/cpuinfo.c
-> >>>> index 876055e37352..193b38da8d96 100644
-> >>>> --- a/arch/arm64/kernel/cpuinfo.c
-> >>>> +++ b/arch/arm64/kernel/cpuinfo.c
-> >>>> @@ -34,10 +34,10 @@
-> >>>> static struct cpuinfo_arm64 boot_cpu_data;
-> >>>> 
-> >>>> static char *icache_policy_str[] = {
-> >>>> -	[0 ... ICACHE_POLICY_PIPT]	= "RESERVED/UNKNOWN",
-> >>>> +	[ICACHE_POLICY_VPIPT]		= "VPIPT",
-> >>>> +	[ICACHE_POLICY_VPIPT + 1]	= "RESERVED/UNKNOWN",
-> >>>> 	[ICACHE_POLICY_VIPT]		= "VIPT",
-> >>>> 	[ICACHE_POLICY_PIPT]		= "PIPT",
-> >>>> -	[ICACHE_POLICY_VPIPT]		= "VPIPT",
-> >>> 
-> >>> I really don't like this patch. Using "[0 ... MAXIDX] = <default>" is a
-> >>> useful idiom and I think the code is more error-prone the way you have
-> >>> restructured it.
-> >>> 
-> >>> Why are you passing -Woverride-init to the compiler anyway? There's only
-> >>> one Makefile that references that option, and it's specific to a pinctrl
-> >>> driver.
-> >> 
-> >> Those extra warnings can be enabled by “make W=1”. “-Woverride-init “ seems to be useful
-> >> to catch potential developer mistakes with unintented double-initializations. It is normal to
-> >> start to fix the most of false-positives first before globally enabling the flag by default just like
-> >> “-Wimplicit-fallthrough” mentioned in,
-> >> 
-> >> https://lwn.net/Articles/794944/
-> > 
-> > I think this case is completely different to the implicit fallthrough stuff.
-> > The solution there was simply to add a comment without restructuring the
-> > surrounding code. What your patch does here is actively make the code harder
-> > to understand.
-> > 
-> > Initialising a static array with a non-zero pattern is a useful idiom and I
-> > don't think we should throw that away just to appease a silly compiler
-> > warning that appears only with non-default build options. Have a look at
-> > the way we use PERF_MAP_ALL_UNSUPPORTED in the Arm PMU code, for example.
-> 
-> Well, both GCC and Clang would generate warnings for those. Clang even enable this by
-> default,
-> 
-> https://releases.llvm.org/8.0.0/tools/clang/docs/DiagnosticsReference.html#winitializer-overrides
-> 
-> Assume compiler people are sane, I probably not call those are “silly”.
 
-We're not disputing the sanity of compiler folk; Will did not say
-anything about that.
+--Bn2rw/3z4jIqBvZU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The warning is unhelpful in the case of the [0 ... MAXIDX] = <default>
-idiom, and the modification you suggest:
+On Tue, Aug 06, 2019 at 03:44:34PM +0530, Rayagonda Kokatanur wrote:
+> Switch back to BSPI mode after MSPI operations (write and erase)
+> are completed. This change will keep qpsi in BSPI mode by default.
 
-* Makes the code harder to read.
+Why?
 
-* Increases the necessary context. e.g. I must know the specific values
-  of the enum to know that ICACHE_POLICY_VPIPT + 1 is the unallocated
-  slot.
+--Bn2rw/3z4jIqBvZU
+Content-Type: application/pgp-signature; name="signature.asc"
 
-* Less robust. If the enum gets re-ordered, we must update the array.
-  If the enum is expanded, new elements must be added to the array to
-  initialize entries to the default value, which also makes the code
-  more verbose and painful to read. IIUC if we don't explicitly
-  initialize an element, we won't get a warning, which would be harmful.
+-----BEGIN PGP SIGNATURE-----
 
-If there's some way to mark the default initialization as overridable,
-I think that would be fine, e.g.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1Jb4sACgkQJNaLcl1U
+h9DgGgf/XDjuMvbF0gxlnycvschMI54KdALlicilAY/EdgOqMP0nYuI2Aq5ajfLW
+iyCZuqnv5yB8zvfCmgkQDpMHCFqvyzOD+1e0uaHzW87GiksgU34YADpCjdhYc+Qw
+Ji2fr1lH0NCiCPeMc2ATQ+r431RO2f05Cgo1eUIdtdYdIMGeRt8r3NUbs9P/pTgf
+SFvVWF8s+bb3nsQKiLizNjCCzBAjzPcKsxkKIlwYMu5v2dlQQJUVQNA/Wrs6bada
+FRHWgV5N1VCYSAWxTG9X0nK9prvb6U2K4RLn4Sx4KQjG9+dXIcON3yIRjqCbIyCg
+jWPS/FWELxU9yNtO0ja47BfU2zbm1Q==
+=NEaP
+-----END PGP SIGNATURE-----
 
-struct foo *array[] = {
-	[0 ... MAXIDX] __default = <default>,
-	[SOMEIDX] = <someval>,
-	[OTHERIDX] = <otherval>,
-}
-
-We have a number of cases where the [0 ... MAXIDX] = <default> idiom are
-used, and I don't think that any of them should be changed in the manner
-suggested by this patch.
-
-
-Thanks,
-Mark.
+--Bn2rw/3z4jIqBvZU--
