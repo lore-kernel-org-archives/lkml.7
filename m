@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E1FC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:35:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F78C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:35:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10ADD21872
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:35:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98E9D21872
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:35:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127336;
-	bh=6JV/eXHPRFmydwhx6rceM0VG9eU28vzSbQjCmveJ8qw=;
+	s=default; t=1565127338;
+	bh=JRxs4CjZsR9Mwk1SkqyAGfhLAqxCj8GtLVUw0Wj+tr8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lvF3eSz4Z2nnQGh/0TgxAsznyAy/KbuJUHMjTUzv8er/zV08+321OtN7162JX/m/K
-	 QuNo4AHvdd9vbPe5WBQHXc8yDuHDvmswy295nIdXOpd/cGOTXHnnauv4L/NpHV29v1
-	 qdRWXMYmjtXzSpYCJLoKV3bRXEpPwvcnKBiq/kx0=
+	b=iY6W8SAktia16AufAHiqd254sZEaCLzUIlIHc3axxd9Y2Nr7Xd/wFzZvAfvBNadx+
+	 x/mBSBQuuDmw5PlxBC+4pBtDXtnVR62Jd+sEOdVdEAkB8l8H4Kq7cyx6bkZoCvEkO9
+	 HdBPGG6lp+YpC05ReVkkgnCJR7LZBe9amnlFth/E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728552AbfHFVfe (ORCPT
+        id S1728573AbfHFVfh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:35:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53268 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 17:35:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728522AbfHFVfb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:35:31 -0400
+        id S1728548AbfHFVfe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:35:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F9CD2186A;
-        Tue,  6 Aug 2019 21:35:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 159C12186A;
+        Tue,  6 Aug 2019 21:35:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127331;
-        bh=6JV/eXHPRFmydwhx6rceM0VG9eU28vzSbQjCmveJ8qw=;
+        s=default; t=1565127333;
+        bh=JRxs4CjZsR9Mwk1SkqyAGfhLAqxCj8GtLVUw0Wj+tr8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NkOxHOeodWm/ka5FTJUwKORV+AwDAyFnQeQTutA6OYtvUWCZsHzNH4Z9ChQo4C+KO
-         6ZKQUXVO2dSZ4HLCMbBnTjXqGEewDY3rrfoIIdUlM0i+/m91qnAax+G8FDw0Np4H7x
-         Cp3RV1P3X+HJQ5RcEasF6NyTLSGjfsgds5/8Fj84=
+        b=pkYZTHqlZtmxGsGp8569PEWPL933Zt7+RBpk67D7wTWvHYpoLgDppAugCxSNy6+YG
+         KnjxsxKeL0t71zTN1cyE6oL266qYJ2JbSFPirkvmwwJyVy94pBSlP3kbtMlz+tiXCY
+         P4LfvPBx0iBrs/VwQe601yO+zeDx25rzCxCYu1s4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Max Filippov <jcmvbkbc@gmail.com>, Sasha Levin <sashal@kernel.org>,
-        linux-xtensa@linux-xtensa.org
-Subject: [PATCH AUTOSEL 4.19 04/32] xtensa: fix build for cores with coprocessors
-Date:   Tue,  6 Aug 2019 17:34:52 -0400
-Message-Id: <20190806213522.19859-4-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 05/32] xen/pciback: remove set but not used variable 'old_state'
+Date:   Tue,  6 Aug 2019 17:34:53 -0400
+Message-Id: <20190806213522.19859-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190806213522.19859-1-sashal@kernel.org>
 References: <20190806213522.19859-1-sashal@kernel.org>
@@ -58,33 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Max Filippov <jcmvbkbc@gmail.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit e3cacb73e626d885b8cf24103fed0ae26518e3c4 ]
+[ Upstream commit 09e088a4903bd0dd911b4f1732b250130cdaffed ]
 
-Assembly entry/return abstraction change didn't add asmmacro.h include
-statement to coprocessor.S, resulting in references to undefined macros
-abi_entry and abi_ret on cores that define XTENSA_HAVE_COPROCESSORS.
-Fix that by including asm/asmmacro.h from the coprocessor.S.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+drivers/xen/xen-pciback/conf_space_capability.c: In function pm_ctrl_write:
+drivers/xen/xen-pciback/conf_space_capability.c:119:25: warning:
+ variable old_state set but not used [-Wunused-but-set-variable]
+
+It is never used so can be removed.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/xtensa/kernel/coprocessor.S | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/xen/xen-pciback/conf_space_capability.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/xtensa/kernel/coprocessor.S b/arch/xtensa/kernel/coprocessor.S
-index 4f8b52d575a24..6454c0a95cccb 100644
---- a/arch/xtensa/kernel/coprocessor.S
-+++ b/arch/xtensa/kernel/coprocessor.S
-@@ -14,6 +14,7 @@
+diff --git a/drivers/xen/xen-pciback/conf_space_capability.c b/drivers/xen/xen-pciback/conf_space_capability.c
+index 73427d8e01161..e5694133ebe57 100644
+--- a/drivers/xen/xen-pciback/conf_space_capability.c
++++ b/drivers/xen/xen-pciback/conf_space_capability.c
+@@ -116,13 +116,12 @@ static int pm_ctrl_write(struct pci_dev *dev, int offset, u16 new_value,
+ {
+ 	int err;
+ 	u16 old_value;
+-	pci_power_t new_state, old_state;
++	pci_power_t new_state;
  
- #include <linux/linkage.h>
- #include <asm/asm-offsets.h>
-+#include <asm/asmmacro.h>
- #include <asm/processor.h>
- #include <asm/coprocessor.h>
- #include <asm/thread_info.h>
+ 	err = pci_read_config_word(dev, offset, &old_value);
+ 	if (err)
+ 		goto out;
+ 
+-	old_state = (pci_power_t)(old_value & PCI_PM_CTRL_STATE_MASK);
+ 	new_state = (pci_power_t)(new_value & PCI_PM_CTRL_STATE_MASK);
+ 
+ 	new_value &= PM_OK_BITS;
 -- 
 2.20.1
 
