@@ -2,1039 +2,144 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7755C32754
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF1BC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DFB8208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:38:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95CD1208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:39:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Zpijeva7"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="ts0fga/Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732291AbfHFNi4 (ORCPT
+        id S1732434AbfHFNjC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 09:38:56 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:37354 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731664AbfHFNiz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 09:38:55 -0400
-Received: by mail-pl1-f194.google.com with SMTP id b3so37927364plr.4
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 06:38:55 -0700 (PDT)
+        Tue, 6 Aug 2019 09:39:02 -0400
+Received: from mail-eopbgr810058.outbound.protection.outlook.com ([40.107.81.58]:10608
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732103AbfHFNjA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 09:39:00 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZTEg16ry3vhRbnRUP+y0x/hsW202Tgro/MRoT6MMSYR4AmH0IXxjw71lKXsuOtwSeXLoflxFAqCE0/e0QbDKN9ABBGLrXOpoV4+c57odQw54nWU0bmCCqBMz2j4O+X4uc8FGKN6P85rmNSG4RlSWwcdmoCFRarUnOb1fWFP0NG2z6FXjQPOIzcDJaOQAR7em/JcJpmtXYtD7Iv2KO5vWhuddTuK5TOvKRgWvTcbWiok8eQu5ykNW5t6QB74WIwaRU8mOduIMixd9golEmOzWppATCEXUYh6MmKKlMq6PKZ/VyA9FQFPgvO0D6gTdU4karC5+YKLiN//ZO3pVUDpW6w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lwW/esXYhGhEUeROiIJOESnT7VKUfz7DmoZrXsEo3Xk=;
+ b=VIVeLUQZAM/ESzpC8dMfBJnHZdrvT30st5kefSeXorEkHLAdss82WQ5/XSKX6oX3buqqFDRMgzm9vEYamBiXA6CDaAde0c/DEKYCZM6da2Zw+OAJafIPdtGdWIyKQjdu1Kd+q8uB4vKuEpu+1WDG55pvIGbEz8hSHG7xYo7ikKz7NKVXj0TEbwA7zp3zcyUPUMTnkAIOe5LUQgCcfBDYhsQNe5xVrPaXdeU9WH+a9LaBp4yKQCQ9JBpkC0HiglGtAbp19zmxbXKQOr31vgfd7MBMGn23/hQ0BxL3JHnOPEfXde/GBj6t7Aepn09m8Ojycqs7nim3I89mC/Qy6T3LFQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=amd.com;dmarc=pass action=none header.from=amd.com;dkim=pass
+ header.d=amd.com;arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=64aZ5cnLBiIxvSpBxBeAsStiDVeiuFlzJ8yc5lwKRYE=;
-        b=Zpijeva77UTQ7kxB8VvOEUeYDatF87EgExuthXDR1RSiJZHDglaBAp9KcwYCgm2efg
-         XfaCp5HJ0J/QaBWE3rS8kjGaYNKtbETcpbP5RMRsmj8rlkEbOvm0gahEoASNC8s5twg6
-         aal8xhnrVrHJdn+iA4EQZi1+YPY5PCnIGFh0Mz3W+S87mJlBCeBF6TLwxUI9k7ACCgrB
-         1jseWJpNbntDpG+/93ImBy++rcBIz/rfadU5zE82ASPnBM4mV6YlkH88y6oF2v43sBjq
-         o/9fNGQaGe9xSm0CpxT+8WBCN/qmYuxBKq7UmccA3/f1xVeZ+HvCw4g2E8dC6vzn2GSa
-         Vd8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=64aZ5cnLBiIxvSpBxBeAsStiDVeiuFlzJ8yc5lwKRYE=;
-        b=PN4cVjgOADQiS0AYjbt26tZ6CSn2F8h9+N8MSkYCjDJze6CNMaies90ohvCU9XmzF9
-         zPpu6LTs1EBrBc/QZRjoy3eczBcbPXTsTsBqmOzYYxO/2IXVW8YSUz/tqltMK8JHm9nD
-         qV+UeNLM36AniajvMCtQN9x6HHDihaEAt5xrlT8ypKMFydrvamicrQwDslc31zYcNv/8
-         Qr4lpAJX2n2CgQ+zWG3A5fV+qj2st0y6SsDE1ZzmqyX3d6sQeM7/gEb5inzeYha4k7Da
-         hRzdOK+HUJYRa9AjEJ6WHDf7g6HZvOnIBMxLNZlJFd1MYVUhSY/iCaoDaXq3G2w346H7
-         9EEw==
-X-Gm-Message-State: APjAAAVcqlhirTu5gNzHT7QdpzmhGztElj6EisxiZLlTu1glirYKNN8D
-        Acl1OQc6sfOPDesCVDBUmdLOaQ==
-X-Google-Smtp-Source: APXvYqwF7qalNz2kLJndlRkfc6AVBq+ARNWefQp54pyR75JQuXvi4xbQtrHJ1OoKK2OkquSLU6fQIA==
-X-Received: by 2002:a17:902:2be8:: with SMTP id l95mr3060860plb.231.1565098734414;
-        Tue, 06 Aug 2019 06:38:54 -0700 (PDT)
-Received: from localhost.localdomain ([45.114.72.197])
-        by smtp.gmail.com with ESMTPSA id l4sm89183984pff.50.2019.08.06.06.38.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 06 Aug 2019 06:38:53 -0700 (PDT)
-From:   Sumit Garg <sumit.garg@linaro.org>
-To:     keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-security-module@vger.kernel.org
-Cc:     dhowells@redhat.com, herbert@gondor.apana.org.au,
-        davem@davemloft.net, peterhuewe@gmx.de, jgg@ziepe.ca,
-        jejb@linux.ibm.com, jarkko.sakkinen@linux.intel.com, arnd@arndb.de,
-        gregkh@linuxfoundation.org, zohar@linux.ibm.com, jmorris@namei.org,
-        serge@hallyn.com, casey@schaufler-ca.com,
-        ard.biesheuvel@linaro.org, daniel.thompson@linaro.org,
-        linux-kernel@vger.kernel.org, tee-dev@lists.linaro.org,
-        Sumit Garg <sumit.garg@linaro.org>
-Subject: [RFC/RFT v3 3/3] KEYS: trusted: Add generic trusted keys framework
-Date:   Tue,  6 Aug 2019 19:07:20 +0530
-Message-Id: <1565098640-12536-4-git-send-email-sumit.garg@linaro.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1565098640-12536-1-git-send-email-sumit.garg@linaro.org>
-References: <1565098640-12536-1-git-send-email-sumit.garg@linaro.org>
+ d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lwW/esXYhGhEUeROiIJOESnT7VKUfz7DmoZrXsEo3Xk=;
+ b=ts0fga/QAhMYtCjlyJH5bE3tlBgiqYFFjgxV8f7Fut/D1RBfZ8Jtt07fVba+uf8aPvd9OnbqglUFoQS24YW/W1DP12E5+9bgu3qcFcVOwdYD2p1GjSmyRqS4aQhzVDnHvx57SMzJ04dt9hs7Bts4mDEMZWLEVJmps0fRXiaKWkE=
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com (20.179.104.150) by
+ DM6PR12MB3594.namprd12.prod.outlook.com (20.178.199.81) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2136.16; Tue, 6 Aug 2019 13:38:57 +0000
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::9c3d:8593:906c:e4f7]) by DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::9c3d:8593:906c:e4f7%6]) with mapi id 15.20.2136.018; Tue, 6 Aug 2019
+ 13:38:57 +0000
+From:   "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+To:     Christoph Hellwig <hch@lst.de>,
+        Lucas Stach <l.stach@pengutronix.de>
+CC:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>
+Subject: Re: Regression due to d98849aff879 (dma-direct: handle
+ DMA_ATTR_NO_KERNEL_MAPPING in common code)
+Thread-Topic: Regression due to d98849aff879 (dma-direct: handle
+ DMA_ATTR_NO_KERNEL_MAPPING in common code)
+Thread-Index: AQHVTDc5jxhkF6eBGE2vQ7mpw/Pby6bt/Q4AgAAjGIA=
+Date:   Tue, 6 Aug 2019 13:38:57 +0000
+Message-ID: <41cc93b1-62b5-7fb6-060d-01982e68503b@amd.com>
+References: <1565082809.2323.24.camel@pengutronix.de>
+ <20190806113318.GA20215@lst.de>
+In-Reply-To: <20190806113318.GA20215@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SN6PR06CA0020.namprd06.prod.outlook.com
+ (2603:10b6:805:8e::33) To DM6PR12MB3163.namprd12.prod.outlook.com
+ (2603:10b6:5:182::22)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Thomas.Lendacky@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.204.77.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 125b6e18-9dcb-4d2d-73e5-08d71a736e44
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR12MB3594;
+x-ms-traffictypediagnostic: DM6PR12MB3594:
+x-microsoft-antispam-prvs: <DM6PR12MB3594379105268ED358EB6AE7ECD50@DM6PR12MB3594.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0121F24F22
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(346002)(376002)(136003)(39860400002)(199004)(189003)(6116002)(6246003)(31696002)(256004)(31686004)(3846002)(36756003)(81166006)(86362001)(305945005)(26005)(81156014)(6486002)(478600001)(6512007)(25786009)(8936002)(54906003)(71190400001)(71200400001)(316002)(52116002)(7736002)(2906002)(110136005)(53936002)(64756008)(66556008)(66476007)(102836004)(14454004)(476003)(8676002)(99286004)(66446008)(486006)(5660300002)(76176011)(6436002)(4326008)(11346002)(53546011)(66066001)(229853002)(66946007)(446003)(6506007)(186003)(68736007)(2616005)(386003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3594;H:DM6PR12MB3163.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Q+K75nkx9QaGUrW40RiqEbKpYNEaqcEVlKAtTLJLVL4RMXsDra36njh6iP5+gYlJz71ejwMSgWgvc03LM3qXjejMGhissrCKJccUIIeTVZAsUpZygyzXeFV87r7WRRJVOe9kQOchhewyCICvb57sye8Z7yeUHJ0+2I/KuKXYJgrOq7YoLnc7aZulWGcTYJGGOZvX22yLSRr4IezbtqDm3p1PgnWlQg64JLpi/o6Cavr1SIk5aFPR2g17eTd+XWED1npxCPvESkL4seUG5cmRXMgUApTorTOJ9Hv13//BMbmR5627TaWYbdWy+NYhCBUOWwEdPKxzAaBR57ZeeilDYnT5PwaWaLtLqekRyjJnsBZu4ZXuPS8g4qVV/E8haiX55goz+aZy5GlwtBYLwzAm8z6Mn8LuFg+qy7GQTA+SwuY=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <8065952E1A506246A136908F61BC426D@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 125b6e18-9dcb-4d2d-73e5-08d71a736e44
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Aug 2019 13:38:57.1444
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: tlendack@amd.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3594
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current trusted keys framework is tightly coupled to use TPM device as
-an underlying implementation which makes it difficult for implementations
-like Trusted Execution Environment (TEE) etc. to provide trusked keys
-support in case platform doesn't posses a TPM device.
-
-So this patch tries to add generic trusted keys framework where underlying
-implemtations like TPM, TEE etc. could be easily plugged-in.
-
-Suggested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
----
- include/keys/trusted-type.h              |  45 ++++
- include/keys/trusted_tpm.h               |  15 --
- security/keys/trusted-keys/Makefile      |   3 +-
- security/keys/trusted-keys/trusted-tpm.c | 345 ++++++-------------------------
- security/keys/trusted-keys/trusted.c     | 343 ++++++++++++++++++++++++++++++
- 5 files changed, 448 insertions(+), 303 deletions(-)
- create mode 100644 security/keys/trusted-keys/trusted.c
-
-diff --git a/include/keys/trusted-type.h b/include/keys/trusted-type.h
-index a94c03a..5559010 100644
---- a/include/keys/trusted-type.h
-+++ b/include/keys/trusted-type.h
-@@ -40,6 +40,51 @@ struct trusted_key_options {
- 	uint32_t policyhandle;
- };
- 
-+struct trusted_key_ops {
-+	/*
-+	 * flag to indicate if trusted key implementation supports migration
-+	 * or not.
-+	 */
-+	unsigned char migratable;
-+
-+	/* trusted key init */
-+	int (*init)(void);
-+
-+	/* seal a trusted key */
-+	int (*seal)(struct trusted_key_payload *p, char *datablob);
-+
-+	/* unseal a trusted key */
-+	int (*unseal)(struct trusted_key_payload *p, char *datablob);
-+
-+	/* get random trusted key */
-+	int (*get_random)(unsigned char *key, size_t key_len);
-+
-+	/* trusted key cleanup */
-+	void (*cleanup)(void);
-+};
-+
- extern struct key_type key_type_trusted;
-+#if defined(CONFIG_TCG_TPM)
-+extern struct trusted_key_ops tpm_trusted_key_ops;
-+#endif
-+
-+#define TRUSTED_DEBUG 0
-+
-+#if TRUSTED_DEBUG
-+static inline void dump_payload(struct trusted_key_payload *p)
-+{
-+	pr_info("trusted_key: key_len %d\n", p->key_len);
-+	print_hex_dump(KERN_INFO, "key ", DUMP_PREFIX_NONE,
-+		       16, 1, p->key, p->key_len, 0);
-+	pr_info("trusted_key: bloblen %d\n", p->blob_len);
-+	print_hex_dump(KERN_INFO, "blob ", DUMP_PREFIX_NONE,
-+		       16, 1, p->blob, p->blob_len, 0);
-+	pr_info("trusted_key: migratable %d\n", p->migratable);
-+}
-+#else
-+static inline void dump_payload(struct trusted_key_payload *p)
-+{
-+}
-+#endif
- 
- #endif /* _KEYS_TRUSTED_TYPE_H */
-diff --git a/include/keys/trusted_tpm.h b/include/keys/trusted_tpm.h
-index 77a2b5c..ec54516 100644
---- a/include/keys/trusted_tpm.h
-+++ b/include/keys/trusted_tpm.h
-@@ -68,17 +68,6 @@ static inline void dump_options(struct trusted_key_options *o)
- 		       16, 1, o->pcrinfo, o->pcrinfo_len, 0);
- }
- 
--static inline void dump_payload(struct trusted_key_payload *p)
--{
--	pr_info("trusted_key: key_len %d\n", p->key_len);
--	print_hex_dump(KERN_INFO, "key ", DUMP_PREFIX_NONE,
--		       16, 1, p->key, p->key_len, 0);
--	pr_info("trusted_key: bloblen %d\n", p->blob_len);
--	print_hex_dump(KERN_INFO, "blob ", DUMP_PREFIX_NONE,
--		       16, 1, p->blob, p->blob_len, 0);
--	pr_info("trusted_key: migratable %d\n", p->migratable);
--}
--
- static inline void dump_sess(struct osapsess *s)
- {
- 	print_hex_dump(KERN_INFO, "trusted-key: handle ", DUMP_PREFIX_NONE,
-@@ -104,10 +93,6 @@ static inline void dump_options(struct trusted_key_options *o)
- {
- }
- 
--static inline void dump_payload(struct trusted_key_payload *p)
--{
--}
--
- static inline void dump_sess(struct osapsess *s)
- {
- }
-diff --git a/security/keys/trusted-keys/Makefile b/security/keys/trusted-keys/Makefile
-index 590a694..c2e6b9a 100644
---- a/security/keys/trusted-keys/Makefile
-+++ b/security/keys/trusted-keys/Makefile
-@@ -3,5 +3,6 @@
- # Makefile for trusted keys
- #
- 
--obj-$(CONFIG_TRUSTED_KEYS) += trusted-tpm.o \
-+obj-$(CONFIG_TRUSTED_KEYS) += trusted.o \
-+			trusted-tpm.o \
- 			trusted-tpm2.o
-diff --git a/security/keys/trusted-keys/trusted-tpm.c b/security/keys/trusted-keys/trusted-tpm.c
-index d09893b..fe7abc1 100644
---- a/security/keys/trusted-keys/trusted-tpm.c
-+++ b/security/keys/trusted-keys/trusted-tpm.c
-@@ -1,29 +1,26 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-  * Copyright (C) 2010 IBM Corporation
-+ * Copyright (c) 2019, Linaro Limited
-  *
-  * Author:
-  * David Safford <safford@us.ibm.com>
-+ * Switch to generic trusted key framework: Sumit Garg <sumit.garg@linaro.org>
-  *
-  * See Documentation/security/keys/trusted-encrypted.rst
-  */
- 
- #include <crypto/hash_info.h>
--#include <linux/uaccess.h>
--#include <linux/module.h>
- #include <linux/init.h>
- #include <linux/slab.h>
- #include <linux/parser.h>
- #include <linux/string.h>
- #include <linux/err.h>
--#include <keys/user-type.h>
- #include <keys/trusted-type.h>
- #include <linux/key-type.h>
--#include <linux/rcupdate.h>
- #include <linux/crypto.h>
- #include <crypto/hash.h>
- #include <crypto/sha.h>
--#include <linux/capability.h>
- #include <linux/tpm.h>
- #include <linux/tpm_command.h>
- 
-@@ -717,7 +714,6 @@ static int key_unseal(struct trusted_key_payload *p,
- 
- enum {
- 	Opt_err,
--	Opt_new, Opt_load, Opt_update,
- 	Opt_keyhandle, Opt_keyauth, Opt_blobauth,
- 	Opt_pcrinfo, Opt_pcrlock, Opt_migratable,
- 	Opt_hash,
-@@ -726,9 +722,6 @@ enum {
- };
- 
- static const match_table_t key_tokens = {
--	{Opt_new, "new"},
--	{Opt_load, "load"},
--	{Opt_update, "update"},
- 	{Opt_keyhandle, "keyhandle=%s"},
- 	{Opt_keyauth, "keyauth=%s"},
- 	{Opt_blobauth, "blobauth=%s"},
-@@ -855,71 +848,6 @@ static int getoptions(char *c, struct trusted_key_payload *pay,
- 	return 0;
- }
- 
--/*
-- * datablob_parse - parse the keyctl data and fill in the
-- * 		    payload and options structures
-- *
-- * On success returns 0, otherwise -EINVAL.
-- */
--static int datablob_parse(char *datablob, struct trusted_key_payload *p,
--			  struct trusted_key_options *o)
--{
--	substring_t args[MAX_OPT_ARGS];
--	long keylen;
--	int ret = -EINVAL;
--	int key_cmd;
--	char *c;
--
--	/* main command */
--	c = strsep(&datablob, " \t");
--	if (!c)
--		return -EINVAL;
--	key_cmd = match_token(c, key_tokens, args);
--	switch (key_cmd) {
--	case Opt_new:
--		/* first argument is key size */
--		c = strsep(&datablob, " \t");
--		if (!c)
--			return -EINVAL;
--		ret = kstrtol(c, 10, &keylen);
--		if (ret < 0 || keylen < MIN_KEY_SIZE || keylen > MAX_KEY_SIZE)
--			return -EINVAL;
--		p->key_len = keylen;
--		ret = getoptions(datablob, p, o);
--		if (ret < 0)
--			return ret;
--		ret = Opt_new;
--		break;
--	case Opt_load:
--		/* first argument is sealed blob */
--		c = strsep(&datablob, " \t");
--		if (!c)
--			return -EINVAL;
--		p->blob_len = strlen(c) / 2;
--		if (p->blob_len > MAX_BLOB_SIZE)
--			return -EINVAL;
--		ret = hex2bin(p->blob, c, p->blob_len);
--		if (ret < 0)
--			return -EINVAL;
--		ret = getoptions(datablob, p, o);
--		if (ret < 0)
--			return ret;
--		ret = Opt_load;
--		break;
--	case Opt_update:
--		/* all arguments are options */
--		ret = getoptions(datablob, p, o);
--		if (ret < 0)
--			return ret;
--		ret = Opt_update;
--		break;
--	case Opt_err:
--		return -EINVAL;
--		break;
--	}
--	return ret;
--}
--
- static struct trusted_key_options *trusted_options_alloc(void)
- {
- 	struct trusted_key_options *options;
-@@ -940,258 +868,99 @@ static struct trusted_key_options *trusted_options_alloc(void)
- 	return options;
- }
- 
--static struct trusted_key_payload *trusted_payload_alloc(struct key *key)
-+static int tpm_tk_seal(struct trusted_key_payload *p, char *datablob)
- {
--	struct trusted_key_payload *p = NULL;
--	int ret;
--
--	ret = key_payload_reserve(key, sizeof *p);
--	if (ret < 0)
--		return p;
--	p = kzalloc(sizeof *p, GFP_KERNEL);
--	if (p)
--		p->migratable = 1; /* migratable by default */
--	return p;
--}
--
--/*
-- * trusted_instantiate - create a new trusted key
-- *
-- * Unseal an existing trusted blob or, for a new key, get a
-- * random key, then seal and create a trusted key-type key,
-- * adding it to the specified keyring.
-- *
-- * On success, return 0. Otherwise return errno.
-- */
--static int trusted_instantiate(struct key *key,
--			       struct key_preparsed_payload *prep)
--{
--	struct trusted_key_payload *payload = NULL;
- 	struct trusted_key_options *options = NULL;
--	size_t datalen = prep->datalen;
--	char *datablob;
- 	int ret = 0;
--	int key_cmd;
--	size_t key_len;
- 	int tpm2;
- 
- 	tpm2 = tpm_is_tpm2(chip);
- 	if (tpm2 < 0)
- 		return tpm2;
- 
--	if (datalen <= 0 || datalen > 32767 || !prep->data)
--		return -EINVAL;
--
--	datablob = kmalloc(datalen + 1, GFP_KERNEL);
--	if (!datablob)
--		return -ENOMEM;
--	memcpy(datablob, prep->data, datalen);
--	datablob[datalen] = '\0';
--
- 	options = trusted_options_alloc();
--	if (!options) {
--		ret = -ENOMEM;
--		goto out;
--	}
--	payload = trusted_payload_alloc(key);
--	if (!payload) {
--		ret = -ENOMEM;
--		goto out;
--	}
-+	if (!options)
-+		return -ENOMEM;
- 
--	key_cmd = datablob_parse(datablob, payload, options);
--	if (key_cmd < 0) {
--		ret = key_cmd;
-+	ret = getoptions(datablob, p, options);
-+	if (ret < 0)
- 		goto out;
--	}
-+	dump_options(options);
- 
- 	if (!options->keyhandle) {
- 		ret = -EINVAL;
- 		goto out;
- 	}
- 
--	dump_payload(payload);
--	dump_options(options);
-+	if (tpm2)
-+		ret = tpm_seal_trusted(chip, p, options);
-+	else
-+		ret = key_seal(p, options);
-+	if (ret < 0) {
-+		pr_info("tpm_trusted_key: key_seal failed (%d)\n", ret);
-+		goto out;
-+	}
- 
--	switch (key_cmd) {
--	case Opt_load:
--		if (tpm2)
--			ret = tpm_unseal_trusted(chip, payload, options);
--		else
--			ret = key_unseal(payload, options);
--		dump_payload(payload);
--		dump_options(options);
--		if (ret < 0)
--			pr_info("trusted_key: key_unseal failed (%d)\n", ret);
--		break;
--	case Opt_new:
--		key_len = payload->key_len;
--		ret = tpm_get_random(chip, payload->key, key_len);
--		if (ret != key_len) {
--			pr_info("trusted_key: key_create failed (%d)\n", ret);
-+	if (options->pcrlock) {
-+		ret = pcrlock(options->pcrlock);
-+		if (ret < 0) {
-+			pr_info("tpm_trusted_key: pcrlock failed (%d)\n", ret);
- 			goto out;
- 		}
--		if (tpm2)
--			ret = tpm_seal_trusted(chip, payload, options);
--		else
--			ret = key_seal(payload, options);
--		if (ret < 0)
--			pr_info("trusted_key: key_seal failed (%d)\n", ret);
--		break;
--	default:
--		ret = -EINVAL;
--		goto out;
- 	}
--	if (!ret && options->pcrlock)
--		ret = pcrlock(options->pcrlock);
- out:
--	kzfree(datablob);
- 	kzfree(options);
--	if (!ret)
--		rcu_assign_keypointer(key, payload);
--	else
--		kzfree(payload);
- 	return ret;
- }
- 
--static void trusted_rcu_free(struct rcu_head *rcu)
--{
--	struct trusted_key_payload *p;
--
--	p = container_of(rcu, struct trusted_key_payload, rcu);
--	kzfree(p);
--}
--
--/*
-- * trusted_update - reseal an existing key with new PCR values
-- */
--static int trusted_update(struct key *key, struct key_preparsed_payload *prep)
-+static int tpm_tk_unseal(struct trusted_key_payload *p, char *datablob)
- {
--	struct trusted_key_payload *p;
--	struct trusted_key_payload *new_p;
--	struct trusted_key_options *new_o;
--	size_t datalen = prep->datalen;
--	char *datablob;
-+	struct trusted_key_options *options = NULL;
- 	int ret = 0;
-+	int tpm2;
- 
--	if (key_is_negative(key))
--		return -ENOKEY;
--	p = key->payload.data[0];
--	if (!p->migratable)
--		return -EPERM;
--	if (datalen <= 0 || datalen > 32767 || !prep->data)
--		return -EINVAL;
-+	tpm2 = tpm_is_tpm2(chip);
-+	if (tpm2 < 0)
-+		return tpm2;
- 
--	datablob = kmalloc(datalen + 1, GFP_KERNEL);
--	if (!datablob)
-+	options = trusted_options_alloc();
-+	if (!options)
- 		return -ENOMEM;
--	new_o = trusted_options_alloc();
--	if (!new_o) {
--		ret = -ENOMEM;
--		goto out;
--	}
--	new_p = trusted_payload_alloc(key);
--	if (!new_p) {
--		ret = -ENOMEM;
--		goto out;
--	}
- 
--	memcpy(datablob, prep->data, datalen);
--	datablob[datalen] = '\0';
--	ret = datablob_parse(datablob, new_p, new_o);
--	if (ret != Opt_update) {
--		ret = -EINVAL;
--		kzfree(new_p);
-+	ret = getoptions(datablob, p, options);
-+	if (ret < 0)
- 		goto out;
--	}
-+	dump_options(options);
- 
--	if (!new_o->keyhandle) {
-+	if (!options->keyhandle) {
- 		ret = -EINVAL;
--		kzfree(new_p);
- 		goto out;
- 	}
- 
--	/* copy old key values, and reseal with new pcrs */
--	new_p->migratable = p->migratable;
--	new_p->key_len = p->key_len;
--	memcpy(new_p->key, p->key, p->key_len);
--	dump_payload(p);
--	dump_payload(new_p);
-+	if (tpm2)
-+		ret = tpm_unseal_trusted(chip, p, options);
-+	else
-+		ret = key_unseal(p, options);
-+	if (ret < 0)
-+		pr_info("tpm_trusted_key: key_unseal failed (%d)\n", ret);
- 
--	ret = key_seal(new_p, new_o);
--	if (ret < 0) {
--		pr_info("trusted_key: key_seal failed (%d)\n", ret);
--		kzfree(new_p);
--		goto out;
--	}
--	if (new_o->pcrlock) {
--		ret = pcrlock(new_o->pcrlock);
-+	if (options->pcrlock) {
-+		ret = pcrlock(options->pcrlock);
- 		if (ret < 0) {
--			pr_info("trusted_key: pcrlock failed (%d)\n", ret);
--			kzfree(new_p);
-+			pr_info("tpm_trusted_key: pcrlock failed (%d)\n", ret);
- 			goto out;
- 		}
- 	}
--	rcu_assign_keypointer(key, new_p);
--	call_rcu(&p->rcu, trusted_rcu_free);
- out:
--	kzfree(datablob);
--	kzfree(new_o);
-+	kzfree(options);
- 	return ret;
- }
- 
--/*
-- * trusted_read - copy the sealed blob data to userspace in hex.
-- * On success, return to userspace the trusted key datablob size.
-- */
--static long trusted_read(const struct key *key, char __user *buffer,
--			 size_t buflen)
--{
--	const struct trusted_key_payload *p;
--	char *ascii_buf;
--	char *bufp;
--	int i;
--
--	p = dereference_key_locked(key);
--	if (!p)
--		return -EINVAL;
--
--	if (buffer && buflen >= 2 * p->blob_len) {
--		ascii_buf = kmalloc_array(2, p->blob_len, GFP_KERNEL);
--		if (!ascii_buf)
--			return -ENOMEM;
--
--		bufp = ascii_buf;
--		for (i = 0; i < p->blob_len; i++)
--			bufp = hex_byte_pack(bufp, p->blob[i]);
--		if (copy_to_user(buffer, ascii_buf, 2 * p->blob_len) != 0) {
--			kzfree(ascii_buf);
--			return -EFAULT;
--		}
--		kzfree(ascii_buf);
--	}
--	return 2 * p->blob_len;
--}
--
--/*
-- * trusted_destroy - clear and free the key's payload
-- */
--static void trusted_destroy(struct key *key)
-+int tpm_tk_get_random(unsigned char *key, size_t key_len)
- {
--	kzfree(key->payload.data[0]);
-+	return tpm_get_random(chip, key, key_len);
- }
- 
--struct key_type key_type_trusted = {
--	.name = "trusted",
--	.instantiate = trusted_instantiate,
--	.update = trusted_update,
--	.destroy = trusted_destroy,
--	.describe = user_describe,
--	.read = trusted_read,
--};
--
--EXPORT_SYMBOL_GPL(key_type_trusted);
--
- static void trusted_shash_release(void)
- {
- 	if (hashalg)
-@@ -1206,14 +975,14 @@ static int __init trusted_shash_alloc(void)
- 
- 	hmacalg = crypto_alloc_shash(hmac_alg, 0, 0);
- 	if (IS_ERR(hmacalg)) {
--		pr_info("trusted_key: could not allocate crypto %s\n",
-+		pr_info("tpm_trusted_key: could not allocate crypto %s\n",
- 			hmac_alg);
- 		return PTR_ERR(hmacalg);
- 	}
- 
- 	hashalg = crypto_alloc_shash(hash_alg, 0, 0);
- 	if (IS_ERR(hashalg)) {
--		pr_info("trusted_key: could not allocate crypto %s\n",
-+		pr_info("tpm_trusted_key: could not allocate crypto %s\n",
- 			hash_alg);
- 		ret = PTR_ERR(hashalg);
- 		goto hashalg_fail;
-@@ -1249,16 +1018,13 @@ static int __init init_digests(void)
- 	return 0;
- }
- 
--static int __init init_trusted(void)
-+static int __init init_tpm_trusted(void)
- {
- 	int ret;
- 
--	/* encrypted_keys.ko depends on successful load of this module even if
--	 * TPM is not used.
--	 */
- 	chip = tpm_default_chip();
- 	if (!chip)
--		return 0;
-+		return -ENODEV;
- 
- 	ret = init_digests();
- 	if (ret < 0)
-@@ -1279,7 +1045,7 @@ static int __init init_trusted(void)
- 	return ret;
- }
- 
--static void __exit cleanup_trusted(void)
-+static void __exit cleanup_tpm_trusted(void)
- {
- 	if (chip) {
- 		put_device(&chip->dev);
-@@ -1289,7 +1055,12 @@ static void __exit cleanup_trusted(void)
- 	}
- }
- 
--late_initcall(init_trusted);
--module_exit(cleanup_trusted);
--
--MODULE_LICENSE("GPL");
-+struct trusted_key_ops tpm_trusted_key_ops = {
-+	.migratable = 1, /* migratable by default */
-+	.init = init_tpm_trusted,
-+	.seal = tpm_tk_seal,
-+	.unseal = tpm_tk_unseal,
-+	.get_random = tpm_tk_get_random,
-+	.cleanup = cleanup_tpm_trusted,
-+};
-+EXPORT_SYMBOL_GPL(tpm_trusted_key_ops);
-diff --git a/security/keys/trusted-keys/trusted.c b/security/keys/trusted-keys/trusted.c
-new file mode 100644
-index 0000000..8f00fde
---- /dev/null
-+++ b/security/keys/trusted-keys/trusted.c
-@@ -0,0 +1,343 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2010 IBM Corporation
-+ * Copyright (c) 2019, Linaro Limited
-+ *
-+ * Author:
-+ * David Safford <safford@us.ibm.com>
-+ * Added generic trusted key framework: Sumit Garg <sumit.garg@linaro.org>
-+ *
-+ * See Documentation/security/keys/trusted-encrypted.rst
-+ */
-+
-+#include <keys/user-type.h>
-+#include <keys/trusted-type.h>
-+#include <linux/capability.h>
-+#include <linux/err.h>
-+#include <linux/init.h>
-+#include <linux/key-type.h>
-+#include <linux/module.h>
-+#include <linux/parser.h>
-+#include <linux/rcupdate.h>
-+#include <linux/slab.h>
-+#include <linux/string.h>
-+#include <linux/uaccess.h>
-+
-+static struct trusted_key_ops *available_tk_ops[] = {
-+#if defined(CONFIG_TCG_TPM)
-+	&tpm_trusted_key_ops,
-+#endif
-+};
-+static struct trusted_key_ops *tk_ops;
-+
-+enum {
-+	Opt_err,
-+	Opt_new, Opt_load, Opt_update,
-+};
-+
-+static const match_table_t key_tokens = {
-+	{Opt_new, "new"},
-+	{Opt_load, "load"},
-+	{Opt_update, "update"},
-+	{Opt_err, NULL}
-+};
-+
-+/*
-+ * datablob_parse - parse the keyctl data and fill in the
-+ *                  payload structure
-+ *
-+ * On success returns 0, otherwise -EINVAL.
-+ */
-+static int datablob_parse(char *datablob, struct trusted_key_payload *p)
-+{
-+	substring_t args[MAX_OPT_ARGS];
-+	long keylen;
-+	int ret = -EINVAL;
-+	int key_cmd;
-+	char *c;
-+
-+	/* main command */
-+	c = strsep(&datablob, " \t");
-+	if (!c)
-+		return -EINVAL;
-+	key_cmd = match_token(c, key_tokens, args);
-+	switch (key_cmd) {
-+	case Opt_new:
-+		/* first argument is key size */
-+		c = strsep(&datablob, " \t");
-+		if (!c)
-+			return -EINVAL;
-+		ret = kstrtol(c, 10, &keylen);
-+		if (ret < 0 || keylen < MIN_KEY_SIZE || keylen > MAX_KEY_SIZE)
-+			return -EINVAL;
-+		p->key_len = keylen;
-+		ret = Opt_new;
-+		break;
-+	case Opt_load:
-+		/* first argument is sealed blob */
-+		c = strsep(&datablob, " \t");
-+		if (!c)
-+			return -EINVAL;
-+		p->blob_len = strlen(c) / 2;
-+		if (p->blob_len > MAX_BLOB_SIZE)
-+			return -EINVAL;
-+		ret = hex2bin(p->blob, c, p->blob_len);
-+		if (ret < 0)
-+			return -EINVAL;
-+		ret = Opt_load;
-+		break;
-+	case Opt_update:
-+		ret = Opt_update;
-+		break;
-+	case Opt_err:
-+		return -EINVAL;
-+	}
-+	return ret;
-+}
-+
-+static struct trusted_key_payload *trusted_payload_alloc(struct key *key)
-+{
-+	struct trusted_key_payload *p = NULL;
-+	int ret;
-+
-+	ret = key_payload_reserve(key, sizeof(*p));
-+	if (ret < 0)
-+		return p;
-+	p = kzalloc(sizeof(*p), GFP_KERNEL);
-+
-+	p->migratable = tk_ops->migratable;
-+
-+	return p;
-+}
-+
-+/*
-+ * trusted_instantiate - create a new trusted key
-+ *
-+ * Unseal an existing trusted blob or, for a new key, get a
-+ * random key, then seal and create a trusted key-type key,
-+ * adding it to the specified keyring.
-+ *
-+ * On success, return 0. Otherwise return errno.
-+ */
-+static int trusted_instantiate(struct key *key,
-+			       struct key_preparsed_payload *prep)
-+{
-+	struct trusted_key_payload *payload = NULL;
-+	size_t datalen = prep->datalen;
-+	char *datablob;
-+	int ret = 0;
-+	int key_cmd;
-+	size_t key_len;
-+
-+	if (datalen <= 0 || datalen > 32767 || !prep->data)
-+		return -EINVAL;
-+
-+	datablob = kmalloc(datalen + 1, GFP_KERNEL);
-+	if (!datablob)
-+		return -ENOMEM;
-+	memcpy(datablob, prep->data, datalen);
-+	datablob[datalen] = '\0';
-+
-+	payload = trusted_payload_alloc(key);
-+	if (!payload) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
-+
-+	key_cmd = datablob_parse(datablob, payload);
-+	if (key_cmd < 0) {
-+		ret = key_cmd;
-+		goto out;
-+	}
-+
-+	dump_payload(payload);
-+
-+	switch (key_cmd) {
-+	case Opt_load:
-+		ret = tk_ops->unseal(payload, datablob);
-+		dump_payload(payload);
-+		if (ret < 0)
-+			pr_info("trusted_key: key_unseal failed (%d)\n", ret);
-+		break;
-+	case Opt_new:
-+		key_len = payload->key_len;
-+		ret = tk_ops->get_random(payload->key, key_len);
-+		if (ret != key_len) {
-+			pr_info("trusted_key: key_create failed (%d)\n", ret);
-+			goto out;
-+		}
-+
-+		ret = tk_ops->seal(payload, datablob);
-+		if (ret < 0)
-+			pr_info("trusted_key: key_seal failed (%d)\n", ret);
-+		break;
-+	default:
-+		ret = -EINVAL;
-+	}
-+out:
-+	kzfree(datablob);
-+	if (!ret)
-+		rcu_assign_keypointer(key, payload);
-+	else
-+		kzfree(payload);
-+	return ret;
-+}
-+
-+static void trusted_rcu_free(struct rcu_head *rcu)
-+{
-+	struct trusted_key_payload *p;
-+
-+	p = container_of(rcu, struct trusted_key_payload, rcu);
-+	kzfree(p);
-+}
-+
-+/*
-+ * trusted_update - reseal an existing key with new PCR values
-+ */
-+static int trusted_update(struct key *key, struct key_preparsed_payload *prep)
-+{
-+	struct trusted_key_payload *p;
-+	struct trusted_key_payload *new_p;
-+	size_t datalen = prep->datalen;
-+	char *datablob;
-+	int ret = 0;
-+
-+	if (key_is_negative(key))
-+		return -ENOKEY;
-+	p = key->payload.data[0];
-+	if (!p->migratable)
-+		return -EPERM;
-+	if (datalen <= 0 || datalen > 32767 || !prep->data)
-+		return -EINVAL;
-+
-+	datablob = kmalloc(datalen + 1, GFP_KERNEL);
-+	if (!datablob)
-+		return -ENOMEM;
-+
-+	new_p = trusted_payload_alloc(key);
-+	if (!new_p) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
-+
-+	memcpy(datablob, prep->data, datalen);
-+	datablob[datalen] = '\0';
-+	ret = datablob_parse(datablob, new_p);
-+	if (ret != Opt_update) {
-+		ret = -EINVAL;
-+		kzfree(new_p);
-+		goto out;
-+	}
-+
-+	/* copy old key values, and reseal with new pcrs */
-+	new_p->migratable = p->migratable;
-+	new_p->key_len = p->key_len;
-+	memcpy(new_p->key, p->key, p->key_len);
-+	dump_payload(p);
-+	dump_payload(new_p);
-+
-+	ret = tk_ops->seal(new_p, datablob);
-+	if (ret < 0) {
-+		pr_info("trusted_key: key_seal failed (%d)\n", ret);
-+		kzfree(new_p);
-+		goto out;
-+	}
-+
-+	rcu_assign_keypointer(key, new_p);
-+	call_rcu(&p->rcu, trusted_rcu_free);
-+out:
-+	kzfree(datablob);
-+	return ret;
-+}
-+
-+/*
-+ * trusted_read - copy the sealed blob data to userspace in hex.
-+ * On success, return to userspace the trusted key datablob size.
-+ */
-+static long trusted_read(const struct key *key, char __user *buffer,
-+			 size_t buflen)
-+{
-+	const struct trusted_key_payload *p;
-+	char *ascii_buf;
-+	char *bufp;
-+	int i;
-+
-+	p = dereference_key_locked(key);
-+	if (!p)
-+		return -EINVAL;
-+
-+	if (buffer && buflen >= 2 * p->blob_len) {
-+		ascii_buf = kmalloc_array(2, p->blob_len, GFP_KERNEL);
-+		if (!ascii_buf)
-+			return -ENOMEM;
-+
-+		bufp = ascii_buf;
-+		for (i = 0; i < p->blob_len; i++)
-+			bufp = hex_byte_pack(bufp, p->blob[i]);
-+		if (copy_to_user(buffer, ascii_buf, 2 * p->blob_len) != 0) {
-+			kzfree(ascii_buf);
-+			return -EFAULT;
-+		}
-+		kzfree(ascii_buf);
-+	}
-+	return 2 * p->blob_len;
-+}
-+
-+/*
-+ * trusted_destroy - clear and free the key's payload
-+ */
-+static void trusted_destroy(struct key *key)
-+{
-+	kzfree(key->payload.data[0]);
-+}
-+
-+struct key_type key_type_trusted = {
-+	.name = "trusted",
-+	.instantiate = trusted_instantiate,
-+	.update = trusted_update,
-+	.destroy = trusted_destroy,
-+	.describe = user_describe,
-+	.read = trusted_read,
-+};
-+EXPORT_SYMBOL_GPL(key_type_trusted);
-+
-+static int __init init_trusted(void)
-+{
-+	int i, ret = 0;
-+
-+	for (i = 0; i < sizeof(available_tk_ops); i++) {
-+		tk_ops = available_tk_ops[i];
-+
-+		if (!(tk_ops && tk_ops->init && tk_ops->seal &&
-+		      tk_ops->unseal && tk_ops->get_random))
-+			continue;
-+
-+		ret = tk_ops->init();
-+		if (ret) {
-+			if (tk_ops->cleanup)
-+				tk_ops->cleanup();
-+		} else {
-+			break;
-+		}
-+	}
-+
-+	/*
-+	 * encrypted_keys.ko depends on successful load of this module even if
-+	 * trusted key implementation is not found.
-+	 */
-+	if (ret == -ENODEV)
-+		return 0;
-+
-+	return ret;
-+}
-+
-+static void __exit cleanup_trusted(void)
-+{
-+	if (tk_ops->cleanup)
-+		tk_ops->cleanup();
-+}
-+
-+late_initcall(init_trusted);
-+module_exit(cleanup_trusted);
-+
-+MODULE_LICENSE("GPL");
--- 
-2.7.4
-
+T24gOC82LzE5IDY6MzMgQU0sIENocmlzdG9waCBIZWxsd2lnIHdyb3RlOg0KPiBPbiBUdWUsIEF1
+ZyAwNiwgMjAxOSBhdCAxMToxMzoyOUFNICswMjAwLCBMdWNhcyBTdGFjaCB3cm90ZToNCj4+IEhp
+IENocmlzdG9waCwNCj4+DQo+PiBJIGp1c3QgZm91bmQgYSByZWdyZXNzaW9uIHdoZXJlIG15IE5W
+TWUgZGV2aWNlIGlzIG5vIGxvbmdlciBhYmxlIHRvIHNldA0KPj4gdXAgaXRzIEhNQi4NCj4+DQo+
+PiBBZnRlciBzdWJqZWN0IGNvbW1pdCBkbWFfZGlyZWN0X2FsbG9jX3BhZ2VzKCkgaXMgbm8gbG9u
+Z2VyIGluaXRpYWxpemluZw0KPj4gZG1hX2hhbmRsZSBwcm9wZXJseSB3aGVuIERNQV9BVFRSX05P
+X0tFUk5FTF9NQVBQSU5HIGlzIHNldCwgYXMgdGhlDQo+PiBmdW5jdGlvbiBpcyBub3cgcmV0dXJu
+aW5nIHRvbyBlYXJseS4NCj4+DQo+PiBOb3cgdGhpcyBjb3VsZCBlYXNpbHkgYmUgZml4ZWQgYnkg
+YWRkaW5nIHRoZSBwaHlfdG9fZG1hIHRyYW5zbGF0aW9uIHRvDQo+PiB0aGUgTk9fS0VSTkVMX01B
+UFBJTkcgY29kZSBwYXRoLCBidXQgSSdtIG5vdCBzdXJlIGhvdyB0aGlzIHN0dWZmDQo+PiBpbnRl
+cmFjdHMgd2l0aCB0aGUgbWVtb3J5IGVuY3J5cHRpb24gc3R1ZmYgc2V0IHVwIGxhdGVyIGluIHRo
+ZQ0KPj4gZnVuY3Rpb24sIHNvIEkgZ3Vlc3MgdGhpcyBzaG91bGQgYmUgbG9va2VkIGF0IGJ5IHNv
+bWVvbmUgd2l0aCBtb3JlDQo+PiBleHBlcmllbmNlIHdpdGggdGhpcyBjb2RlIHRoYW4gbWUuDQo+
+IA0KPiBUaGVyZSBpcyBub3QgbXVjaCB3ZSBjYW4gZG8gYWJvdXQgdGhlIG1lbW9yeSBlbmNyeXB0
+aW9uIGNhc2UgaGVyZSwNCj4gYXMgdGhhdCByZXF1aXJlcyBhIGtlcm5lbCBhZGRyZXNzIHRvIG1h
+cmsgdGhlIG1lbW9yeSBhcyB1bmVuY3J5cHRlZC4NCj4gDQo+IFNvIHRoZSBvYnZpb3VzIHRyaXZp
+YWwgZml4IGlzIHByb2JhYmx5IHRoZSByaWdodCBvbmU6DQoNClRoaXMgd2lsbCBwcmVzZW50IHBy
+b2JsZW1zIHVuZGVyIFNFViAocHJvYmFibHkgbm90IFNNRSB1bmxlc3MgdGhlIERNQQ0KbWFzayBk
+b2Vzbid0IHN1cHBvcnQgNDgtYml0IERNQSkgd2hlbiBhbiBOVk1lIGRldmljZSBpcyBwYXNzZWQg
+dGhyb3VnaC4NClRoZSBEb2N1bWVudGF0aW9uIHN0YXRlcyB0aGF0IERNQV9BVFRSX05PX0tFUk5F
+TF9NQVBQSU5HIGlzIHRvIGF2b2lkDQpjcmVhdGluZyB0aGUgbWFwcGluZyBiZWNhdXNlIG9mIHRp
+bWUgYW5kIHJlc291cmNlcyB0aGF0IG1heSBiZSBpbnZvbHZlZA0Kb24gc29tZSBhcmNocy4gV291
+bGQgaXQgbWFrZSBzZW5zZSB0byBjaGVjayBmb3IgbWVtb3J5IGVuY3J5cHRpb24gdXNpbmcNCmZv
+cmNlX2RtYV91bmVuY3J5cHRlZCgpIGFuZCBvdmVycmlkZSB0aGUgZmxhZyBpbiB0aG9zZSBjYXNl
+cz8gRG9lcyB4ODYNCmhhdmUgaXNzdWVzIHdoZXJlIHRoaXMgZmxhZyBpcyBuZWVkZWQ/IEl0IGNv
+dWxkIGJlIHNldCB0aGF0IHRoZSBtYXBwaW5nDQppcyBvbmx5IGdlbmVyYXRlZCBpZiB5b3UgaGF2
+ZSB0byBmb3JjZSBhbiB1bmVuY3J5cHRlZCBETUEuIFRoZSBjb2RlIGlzbid0DQphcyBjbGVhbiBh
+bmQgeW91IHdvdWxkIGhhdmUgdG8gaGl0IHRoZSBkbWFfZGlyZWN0X2ZyZWVfcGFnZXMoKSBwYXRo
+LCBhbHNvLg0KDQpJIHN1c3BlY3QgUG93ZXIgYW5kIHMzOTAgbWF5IGhhdmUgdGhlIHNhbWUgY29u
+Y2VybnMgaGVyZSAoYWRkaW5nIHRoZW0gb24NCkNjOiBqdXN0IGluIGNhc2UpLg0KDQpUaGFua3Ms
+DQpUb20NCg0KPiANCj4gDQo+IGRpZmYgLS1naXQgYS9rZXJuZWwvZG1hL2RpcmVjdC5jIGIva2Vy
+bmVsL2RtYS9kaXJlY3QuYw0KPiBpbmRleCA1OWJkY2VlYTM3MzcuLmM0OTEyMDE5MzMwOSAxMDA2
+NDQNCj4gLS0tIGEva2VybmVsL2RtYS9kaXJlY3QuYw0KPiArKysgYi9rZXJuZWwvZG1hL2RpcmVj
+dC5jDQo+IEBAIC0xMzUsNiArMTM1LDcgQEAgdm9pZCAqZG1hX2RpcmVjdF9hbGxvY19wYWdlcyhz
+dHJ1Y3QgZGV2aWNlICpkZXYsIHNpemVfdCBzaXplLA0KPiAgCQlpZiAoIVBhZ2VIaWdoTWVtKHBh
+Z2UpKQ0KPiAgCQkJYXJjaF9kbWFfcHJlcF9jb2hlcmVudChwYWdlLCBzaXplKTsNCj4gIAkJLyog
+cmV0dXJuIHRoZSBwYWdlIHBvaW50ZXIgYXMgdGhlIG9wYXF1ZSBjb29raWUgKi8NCj4gKwkJKmRt
+YV9oYW5kbGUgPSBwaHlzX3RvX2RtYShkZXYsIHBhZ2VfdG9fcGh5cyhwYWdlKSk7DQo+ICAJCXJl
+dHVybiBwYWdlOw0KPiAgCX0NCj4gIA0KPiANCg==
