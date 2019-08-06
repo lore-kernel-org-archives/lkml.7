@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75533C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05490C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 481A22189E
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:43:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD43D21880
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:43:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127804;
-	bh=3A6m9fMUKPW0uA/L4zOoMyYo00AiR3KuJVo9+xKS1CU=;
+	s=default; t=1565127809;
+	bh=qMAinlzQ7+uEcv47sCj80Tt1am1WRdCpsOCm4BaZJ0w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UlGDZG142YzC4XDVsOFtYQi0z84LXVoEfA7U1G51UNtDYacgL2Y2Hs8vrXkl9ZjoS
-	 nFQiypCnknBVG0ZDMXFBUGp3X7xaEl5ohhLCq2CQV/mKRB8NsQMAENdWZTlKWS8JHm
-	 fxJ7sYDxuF1orE3oFsCG622fgZN869xkcmUNvxCU=
+	b=A2rAxeBLfHvVGbuuMyWOTcNnOi5HzcGqyEyKguJlKFUmn77sIWGAOY1ADbR+2ynBt
+	 pj2tiRngEknx6gwuaKwqoaf9gOn+7MpR3oprBAiApfQcW78eWmOWo53x/DTkruq09U
+	 Js8IYXrOpdMWe9RKMpesCBPkVnp8xgnx7W2yb2ZE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728934AbfHFVnX (ORCPT
+        id S1729013AbfHFVn2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:43:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52602 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 17:43:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727881AbfHFVer (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:34:47 -0400
+        id S1727766AbfHFVeh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:34:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 106012089E;
-        Tue,  6 Aug 2019 21:34:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A000D217D9;
+        Tue,  6 Aug 2019 21:34:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127286;
-        bh=3A6m9fMUKPW0uA/L4zOoMyYo00AiR3KuJVo9+xKS1CU=;
+        s=default; t=1565127276;
+        bh=qMAinlzQ7+uEcv47sCj80Tt1am1WRdCpsOCm4BaZJ0w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Nj6mLkp8Ij16qORmI4NIvb4lpFW5f6z4lC0fimakhM+HqgcBfzHQSzIm2f1v02N+8
-         i5H9/BrApvndxd1fv75Fw9swLVOJfzeawMqofdJUETaxsVo1hTziaRlYi4PWOt93ss
-         znCXPoCbE3Au1hplTIF0YODj/Hk7EVOZIsHTzfwc=
+        b=YxKJE3y5+YrfIFQPuqAMZdB3WE8RyPjMYLOPbujAVqzAxrWCu61wGz4weOgoUisGU
+         GpLJuXHDIWVUTws82JhRWFgURh7U+c6SGdGK+RD9BEOZfdFdok620c3iG3sqYrrcaW
+         gOTeHGqMgyNvcCxRckGpTO/gzcbvJUacqcrJhkDg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qian Cai <cai@lca.pw>, Will Deacon <will@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 43/59] arm64/mm: fix variable 'tag' set but not used
-Date:   Tue,  6 Aug 2019 17:33:03 -0400
-Message-Id: <20190806213319.19203-43-sashal@kernel.org>
+Cc:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        stable@kernel.org, Ray Jui <ray.jui@broadcom.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 39/59] i2c: iproc: Fix i2c master read more than 63 bytes
+Date:   Tue,  6 Aug 2019 17:32:59 -0400
+Message-Id: <20190806213319.19203-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190806213319.19203-1-sashal@kernel.org>
 References: <20190806213319.19203-1-sashal@kernel.org>
@@ -58,66 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
 
-[ Upstream commit 7732d20a160c76006c7fe7bca5178aea6af1d2e8 ]
+[ Upstream commit fd01eecdf9591453177d7b06faaabef8c300114a ]
 
-When CONFIG_KASAN_SW_TAGS=n, set_tag() is compiled away. GCC throws a
-warning,
+Use SMBUS_MASTER_DATA_READ.MASTER_RD_STATUS bit to check for RX
+FIFO empty condition because SMBUS_MASTER_FIFO_CONTROL.MASTER_RX_PKT_COUNT
+is not updated for read >= 64 bytes. This fixes the issue when trying to
+read from the I2C slave more than 63 bytes.
 
-mm/kasan/common.c: In function '__kasan_kmalloc':
-mm/kasan/common.c:464:5: warning: variable 'tag' set but not used
-[-Wunused-but-set-variable]
-  u8 tag = 0xff;
-     ^~~
-
-Fix it by making __tag_set() a static inline function the same as
-arch_kasan_set_tag() in mm/kasan/kasan.h for consistency because there
-is a macro in arch/arm64/include/asm/kasan.h,
-
- #define arch_kasan_set_tag(addr, tag) __tag_set(addr, tag)
-
-However, when CONFIG_DEBUG_VIRTUAL=n and CONFIG_SPARSEMEM_VMEMMAP=y,
-page_to_virt() will call __tag_set() with incorrect type of a
-parameter, so fix that as well. Also, still let page_to_virt() return
-"void *" instead of "const void *", so will not need to add a similar
-cast in lowmem_page_address().
-
-Signed-off-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Will Deacon <will@kernel.org>
+Fixes: c24b8d574b7c ("i2c: iproc: Extend I2C read up to 255 bytes")
+Cc: stable@kernel.org
+Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/memory.h | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/i2c/busses/i2c-bcm-iproc.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/include/asm/memory.h b/arch/arm64/include/asm/memory.h
-index b7ba75809751e..fb04f10a78ab3 100644
---- a/arch/arm64/include/asm/memory.h
-+++ b/arch/arm64/include/asm/memory.h
-@@ -210,7 +210,11 @@ extern u64			vabits_user;
- #define __tag_reset(addr)	untagged_addr(addr)
- #define __tag_get(addr)		(__u8)((u64)(addr) >> 56)
- #else
--#define __tag_set(addr, tag)	(addr)
-+static inline const void *__tag_set(const void *addr, u8 tag)
-+{
-+	return addr;
-+}
-+
- #define __tag_reset(addr)	(addr)
- #define __tag_get(addr)		0
- #endif
-@@ -301,8 +305,8 @@ static inline void *phys_to_virt(phys_addr_t x)
- #define page_to_virt(page)	({					\
- 	unsigned long __addr =						\
- 		((__page_to_voff(page)) | PAGE_OFFSET);			\
--	unsigned long __addr_tag =					\
--		 __tag_set(__addr, page_kasan_tag(page));		\
-+	const void *__addr_tag =					\
-+		__tag_set((void *)__addr, page_kasan_tag(page));	\
- 	((void *)__addr_tag);						\
- })
+diff --git a/drivers/i2c/busses/i2c-bcm-iproc.c b/drivers/i2c/busses/i2c-bcm-iproc.c
+index a845b8decac8f..ad1681872e39d 100644
+--- a/drivers/i2c/busses/i2c-bcm-iproc.c
++++ b/drivers/i2c/busses/i2c-bcm-iproc.c
+@@ -403,16 +403,18 @@ static bool bcm_iproc_i2c_slave_isr(struct bcm_iproc_i2c_dev *iproc_i2c,
+ static void bcm_iproc_i2c_read_valid_bytes(struct bcm_iproc_i2c_dev *iproc_i2c)
+ {
+ 	struct i2c_msg *msg = iproc_i2c->msg;
++	uint32_t val;
  
+ 	/* Read valid data from RX FIFO */
+ 	while (iproc_i2c->rx_bytes < msg->len) {
+-		if (!((iproc_i2c_rd_reg(iproc_i2c, M_FIFO_CTRL_OFFSET) >> M_FIFO_RX_CNT_SHIFT)
+-		      & M_FIFO_RX_CNT_MASK))
++		val = iproc_i2c_rd_reg(iproc_i2c, M_RX_OFFSET);
++
++		/* rx fifo empty */
++		if (!((val >> M_RX_STATUS_SHIFT) & M_RX_STATUS_MASK))
+ 			break;
+ 
+ 		msg->buf[iproc_i2c->rx_bytes] =
+-			(iproc_i2c_rd_reg(iproc_i2c, M_RX_OFFSET) >>
+-			M_RX_DATA_SHIFT) & M_RX_DATA_MASK;
++			(val >> M_RX_DATA_SHIFT) & M_RX_DATA_MASK;
+ 		iproc_i2c->rx_bytes++;
+ 	}
+ }
 -- 
 2.20.1
 
