@@ -7,53 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01C0FC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 972DEC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:40:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C50FE218A3
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:40:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B2FC2189E
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:40:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127644;
-	bh=ZYa+k17RJXfbbcqFPq9IwDXjhOi5CzyHoi9u/5eofKQ=;
+	s=default; t=1565127648;
+	bh=c6YxvaO8bKDe5vGY8W+h81GUnIprS1pVpZ8Pg6d7HYg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P8v4mMiS/YwOA2gJaNL23RIBNRWKCVqlYgRhb3gPyq6NT2O3P1tWq0IojNpZj45tQ
-	 eLP1Rc6f3t2TW00rRLS6/LH1WwJ8mULSKeicFEIJCHyJc975IfCUOuLjsv1VMejNDp
-	 wrUvrOcKn/ah5r1ifXkAFjEUzLfChq2bdeEGEXfM=
+	b=xpLq1AylBCUHsfKw9RQmpIBdj8bSebd0OgQXqHmUpnx6czEaxbuuz/3FQdUuSGlLJ
+	 xLWnBHlug5Bdatq9VU3v2J13SFHffSJnEMAyKxV0uDJwDsAPbzesR0iN5ocVul6mdh
+	 v4R2FFFUbwPoaTb6Oiz83Cwh6AqnB1Scx7KTiBFs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729083AbfHFVgq (ORCPT
+        id S1729457AbfHFVkr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:36:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54526 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 17:40:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727954AbfHFVgn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:36:43 -0400
+        id S1729067AbfHFVgp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:36:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E545621874;
-        Tue,  6 Aug 2019 21:36:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1E3521873;
+        Tue,  6 Aug 2019 21:36:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127402;
-        bh=ZYa+k17RJXfbbcqFPq9IwDXjhOi5CzyHoi9u/5eofKQ=;
+        s=default; t=1565127404;
+        bh=c6YxvaO8bKDe5vGY8W+h81GUnIprS1pVpZ8Pg6d7HYg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0x02gF6iR86lC+gZX7MNG0VoSCBUTJgScte4Mtr5bVn3odSfzs+A9sV3FWL5aYfk9
-         TwWBVVBMp5UDVwkykmekM7p1CM5xRlUzlhoaRtvIehj5t5AIlW0PeYpTvviVdDMlAO
-         EpxDjT9OrmojwB1prbZ2AVkQOY+66XRJ/K8jCdEc=
+        b=CBKzpv53FyTGnnxOSd5Czo2YbZtzc0luA2xpfPYCDd6bA2quXUCLJx6CYt0bH8cVj
+         /YSLY0PYJh5XuXTdLUhxGINsOdn21Xb/WzIWM0j1pMg4DAC6nRvbIZM5Ui2osi5U2/
+         Drwjyj5Gg7TBTHs229Q25AoSQOAAb3b2s/snONss=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Numfor Mbiziwo-Tiapo <nums@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>,
-        Mark Drayton <mbd@fb.com>, Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Stephane Eranian <eranian@google.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
         Sasha Levin <sashal@kernel.org>,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.14 08/25] perf header: Fix use of unitialized value warning
-Date:   Tue,  6 Aug 2019 17:36:05 -0400
-Message-Id: <20190806213624.20194-8-sashal@kernel.org>
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.14 10/25] drm/bridge: lvds-encoder: Fix build error while CONFIG_DRM_KMS_HELPER=m
+Date:   Tue,  6 Aug 2019 17:36:07 -0400
+Message-Id: <20190806213624.20194-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190806213624.20194-1-sashal@kernel.org>
 References: <20190806213624.20194-1-sashal@kernel.org>
@@ -66,68 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Numfor Mbiziwo-Tiapo <nums@google.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 20f9781f491360e7459c589705a2e4b1f136bee9 ]
+[ Upstream commit f4cc743a98136df3c3763050a0e8223b52d9a960 ]
 
-When building our local version of perf with MSAN (Memory Sanitizer) and
-running the perf record command, MSAN throws a use of uninitialized
-value warning in "tools/perf/util/util.c:333:6".
+If DRM_LVDS_ENCODER=y but CONFIG_DRM_KMS_HELPER=m,
+build fails:
 
-This warning stems from the "buf" variable being passed into "write".
-It originated as the variable "ev" with the type union perf_event*
-defined in the "perf_event__synthesize_attr" function in
-"tools/perf/util/header.c".
+drivers/gpu/drm/bridge/lvds-encoder.o: In function `lvds_encoder_probe':
+lvds-encoder.c:(.text+0x155): undefined reference to `devm_drm_panel_bridge_add'
 
-In the "perf_event__synthesize_attr" function they allocate space with a malloc
-call using ev, then go on to only assign some of the member variables before
-passing "ev" on as a parameter to the "process" function therefore "ev"
-contains uninitialized memory. Changing the malloc call to zalloc to initialize
-all the members of "ev" which gets rid of the warning.
-
-To reproduce this warning, build perf by running:
-make -C tools/perf CLANG=1 CC=clang EXTRA_CFLAGS="-fsanitize=memory\
- -fsanitize-memory-track-origins"
-
-(Additionally, llvm might have to be installed and clang might have to
-be specified as the compiler - export CC=/usr/bin/clang)
-
-then running:
-tools/perf/perf record -o - ls / | tools/perf/perf --no-pager annotate\
- -i - --stdio
-
-Please see the cover letter for why false positive warnings may be
-generated.
-
-Signed-off-by: Numfor Mbiziwo-Tiapo <nums@google.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Drayton <mbd@fb.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Stephane Eranian <eranian@google.com>
-Link: http://lkml.kernel.org/r/20190724234500.253358-2-nums@google.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: dbb58bfd9ae6 ("drm/bridge: Fix lvds-encoder since the panel_bridge rework.")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190729071216.27488-1-yuehaibing@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/header.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/bridge/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index c78c2ed009ea0..cdbc877b79d4e 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -2990,7 +2990,7 @@ int perf_event__synthesize_attr(struct perf_tool *tool,
- 	size += sizeof(struct perf_event_header);
- 	size += ids * sizeof(u64);
- 
--	ev = malloc(size);
-+	ev = zalloc(size);
- 
- 	if (ev == NULL)
- 		return -ENOMEM;
+diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
+index adf9ae0e0b7c9..85aa824317f01 100644
+--- a/drivers/gpu/drm/bridge/Kconfig
++++ b/drivers/gpu/drm/bridge/Kconfig
+@@ -35,6 +35,7 @@ config DRM_DUMB_VGA_DAC
+ config DRM_LVDS_ENCODER
+ 	tristate "Transparent parallel to LVDS encoder support"
+ 	depends on OF
++	select DRM_KMS_HELPER
+ 	select DRM_PANEL_BRIDGE
+ 	help
+ 	  Support for transparent parallel to LVDS encoders that don't require
 -- 
 2.20.1
 
