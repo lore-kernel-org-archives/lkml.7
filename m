@@ -2,127 +2,75 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05122C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C72B4C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 19:00:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE8B4214C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:59:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EF9D2075B
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 19:00:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KzkDXYOp"
+	dkim=pass (2048-bit key) header.d=aalto.fi header.i=@aalto.fi header.b="pU670Cb0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726268AbfHFS7M (ORCPT
+        id S1726473AbfHFTAU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 14:59:12 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41783 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbfHFS7M (ORCPT
+        Tue, 6 Aug 2019 15:00:20 -0400
+Received: from smtp-out-02.aalto.fi ([130.233.228.121]:57279 "EHLO
+        smtp-out-02.aalto.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726085AbfHFTAU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 14:59:12 -0400
-Received: by mail-wr1-f67.google.com with SMTP id c2so85702184wrm.8
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 11:59:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KdYR5EY08dTrABja8SUaSb/bjYgZpuHfqWAB/BpsnN0=;
-        b=KzkDXYOptvkwojTFBCmVBlV+3tIliyzrdwY+53s8Esprf/Qgz2f1eCQC0QZw//ozZE
-         RcNDjvbJB0Cq3mVPeQ15pOOzXvlweppXj6YAayOw27YWsleceaonHnL4Nzg52TLIthMV
-         rYjlL0699xdOcqu7sevttzOxuBg4lN0lkzV2K+uunyzS+RpjhuoPhqdSTlnWnb+T7JCY
-         HjZ7JWiEwVAUgYx71nCzkRtYctAe5o7uJNxjGtB37j8Kd+2mGvXbEYuFLbnlo+SIJTJp
-         +5YjsJV6IoI9YUlqfsHsDvbDUa1C/1KA3eKWNZE2oqsn4qlL+cyH/WoPyn6i66w9Lttj
-         o0FA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KdYR5EY08dTrABja8SUaSb/bjYgZpuHfqWAB/BpsnN0=;
-        b=Hsl2FePBd8msHu2k3lddBnTGuZtrOAm4W42nCP3HIRcSDruCKwE9E4gNWZImDin/Vx
-         xsevUNkC1fwoU9j2tklKC6gg07jVbbh0kUnd21zTn1cxdP/fDw475xbBA45Max09+YGI
-         jkIJ5sTqbbqcoS9XwZzKeMI2+7jW4TlfIlnmseaqwz2LDVuRxNqmrXzSUc9Qd/TdKyyn
-         BpqJ+dj35oj0/k2fS9XQykuEj/8gocPodAdeC+tI7bTPuFLXrzK7Oe/N/7vMst6azW/c
-         dxToEK84l2vxTtYSs8nw86Pr45foYt22ma/u8iqoCbjfLYcu+mfl6m3XEnGGNhjDtYzR
-         1/EQ==
-X-Gm-Message-State: APjAAAVQr0Ffb3DbJWa4CSFOhFnhBPLurpvM35R7Q03eCOe33M1liYU6
-        Sq6dn8EgYOadsZrB9DqMOJkuXWaPvtpY5QOMu60=
-X-Google-Smtp-Source: APXvYqyvIOyL3ta7PNqlaft8AIjrG08VwxtlFNFvdOLUq+AjfF7aZKuWk+kMq57BwYyz3aJneYaERa/Thq7ouYxDQUo=
-X-Received: by 2002:adf:dfc5:: with SMTP id q5mr6393234wrn.142.1565117950081;
- Tue, 06 Aug 2019 11:59:10 -0700 (PDT)
+        Tue, 6 Aug 2019 15:00:20 -0400
+X-Greylist: delayed 320 seconds by postgrey-1.27 at vger.kernel.org; Tue, 06 Aug 2019 15:00:18 EDT
+Received: from smtp-out-02.aalto.fi (localhost.localdomain [127.0.0.1])
+        by localhost (Email Security Appliance) with SMTP id 811F12715D9_D49CB7BB;
+        Tue,  6 Aug 2019 18:48:27 +0000 (GMT)
+Received: from exng2.org.aalto.fi (exng2.org.aalto.fi [130.233.223.21])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "exng2.org.aalto.fi", Issuer "org.aalto.fi RootCA" (not verified))
+        by smtp-out-02.aalto.fi (Sophos Email Appliance) with ESMTPS id 5CFE12715C0_D49CB7BF;
+        Tue,  6 Aug 2019 18:48:27 +0000 (GMT)
+Received: from exng5.org.aalto.fi (130.233.223.24) by exng2.org.aalto.fi
+ (130.233.223.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 6 Aug
+ 2019 21:54:56 +0300
+Received: from exng5.org.aalto.fi ([fe80::c840:c193:838f:f99c]) by
+ exng5.org.aalto.fi ([fe80::c840:c193:838f:f99c%17]) with mapi id
+ 15.01.1713.006; Tue, 6 Aug 2019 21:54:56 +0300
+From:   Fihlman Emil <emil.fihlman@aalto.fi>
+To:     "yauheni.kaliuta@redhat.com" <yauheni.kaliuta@redhat.com>
+CC:     "e@kellett.im" <e@kellett.im>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [RFC PATCH] gcc-9: workaround array bounds warning on boot_params
+ cleaning
+Thread-Topic: [RFC PATCH] gcc-9: workaround array bounds warning on
+ boot_params cleaning
+Thread-Index: AQHVTIZ5ZwmQNTpoNka2oFBQBcpa5g==
+Date:   Tue, 6 Aug 2019 18:54:56 +0000
+Message-ID: <e72c48b3d10540a8b763f5ba862f2b8a@aalto.fi>
+Accept-Language: fi-FI, en-US
+Content-Language: fi-FI
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [130.233.0.5]
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190806160554.14046-1-hch@lst.de> <20190806160554.14046-16-hch@lst.de>
- <20190806174437.GK11627@ziepe.ca> <587b1c3c-83c4-7de9-242f-6516528049f4@amd.com>
-In-Reply-To: <587b1c3c-83c4-7de9-242f-6516528049f4@amd.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Tue, 6 Aug 2019 14:58:58 -0400
-Message-ID: <CADnq5_Puv-N=FVpNXhv7gOWZ8=tgBD2VjrKpVzEE0imWqJdD1A@mail.gmail.com>
-Subject: Re: [PATCH 15/15] amdgpu: remove CONFIG_DRM_AMDGPU_USERPTR
-To:     "Kuehling, Felix" <Felix.Kuehling@amd.com>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Christoph Hellwig <hch@lst.de>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+X-SASI-RCODE: 200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aalto.fi; h=from:to:cc:subject:date:message-id:content-type:content-transfer-encoding:mime-version; s=its18; bh=DTcRCjzvwexjGwi0bfYpzBB/zMQQ341EDXvwkAQEMi8=; b=pU670Cb04MTtGIj9/Yl+GtcL2tys5tHq8OrfOve1JuTQerYbQsR8YrvVm4cLIcUvIiULoX41ocJsy7/Ehc6zsdMsH6A0ZS79gdrJ1LTELYcN/RYSOIErN50z7tat/gFtjvhnWTPfT/bHTQ1am1wOe7Rt92b43f83wj0+idir/ibySRIx3HkY5Kxsq2TwnW7f9s4NrwThgjtnILfTxE6ZhwywrMdZI7AiXIf2pEoCpVh/eOwLmNVVhitpQeWX9brYsYbva30rCdg+lqzppKJAWKFlMy3SCZ7xXZQYPe1vzuzSgXyxNWGM0D8NtKK6CzbHNiXab7Po9Yu0VmeTKBVVMA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 6, 2019 at 1:51 PM Kuehling, Felix <Felix.Kuehling@amd.com> wrote:
->
-> On 2019-08-06 13:44, Jason Gunthorpe wrote:
-> > On Tue, Aug 06, 2019 at 07:05:53PM +0300, Christoph Hellwig wrote:
-> >> The option is just used to select HMM mirror support and has a very
-> >> confusing help text.  Just pull in the HMM mirror code by default
-> >> instead.
-> >>
-> >> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> >> ---
-> >>   drivers/gpu/drm/Kconfig                 |  2 ++
-> >>   drivers/gpu/drm/amd/amdgpu/Kconfig      | 10 ----------
-> >>   drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c |  6 ------
-> >>   drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.h | 12 ------------
-> >>   4 files changed, 2 insertions(+), 28 deletions(-)
-> > Felix, was this an effort to avoid the arch restriction on hmm or
-> > something? Also can't see why this was like this.
->
-> This option predates KFD's support of userptrs, which in turn predates
-> HMM. Radeon has the same kind of option, though it doesn't affect HMM in
-> that case.
->
-> Alex, Christian, can you think of a good reason to maintain userptr
-> support as an option in amdgpu? I suspect it was originally meant as a
-> way to allow kernels with amdgpu without MMU notifiers. Now it would
-> allow a kernel with amdgpu without HMM or MMU notifiers. I don't know if
-> this is a useful thing to have.
+It should also be possibly to simply cast to u64 and then to u8 * unless
+the compiler overzealously tracks out of bound accesses even when
+6.3.2.3 #5-6 explicitly allows pointer-integer-pointer conversions like
+this and removes previous guarantees. Ie.
 
-Right.  There were people that didn't have MMU notifiers that wanted
-support for the GPU.  For a lot of older APIs, a lack of userptr
-support was not a big deal (it just disabled some optimizations and
-API extensions), but as it becomes more relevant it may make sense to
-just make it a requirement.
+memset((u8 *)((u64)(&(boot_params->ext_ramdisk_image))), 0, size)
 
-Alex
+I apologise for not having the in-reply-to header.
 
->
-> Regards,
->    Felix
->
-> >
-> > Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-> >
-> > Jason
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+Emil Fihlman
