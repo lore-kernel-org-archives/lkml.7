@@ -2,108 +2,80 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E41C5C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11B2BC32754
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:41:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BADAD216F4
+	by mail.kernel.org (Postfix) with ESMTP id E5CC620C01
 	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:41:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726464AbfHFSla (ORCPT
+        id S1726427AbfHFSl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 14:41:30 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:51215 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbfHFSlR (ORCPT
+        Tue, 6 Aug 2019 14:41:29 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:47880 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725881AbfHFSlP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 14:41:17 -0400
-X-Originating-IP: 88.190.179.123
-Received: from localhost (unknown [88.190.179.123])
-        (Authenticated sender: repk@triplefau.lt)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 5DF3D6000E;
-        Tue,  6 Aug 2019 18:41:13 +0000 (UTC)
-Date:   Tue, 6 Aug 2019 20:49:46 +0200
-From:   Remi Pommarel <repk@triplefau.lt>
-To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Ellie Reeves <ellierevves@gmail.com>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: aardvark: Wait for endpoint to be ready before
- training link
-Message-ID: <20190806184945.GU12859@voidbox.localdomain>
-References: <20190522213351.21366-2-repk@triplefau.lt>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190522213351.21366-2-repk@triplefau.lt>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 6 Aug 2019 14:41:15 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 9E3CB152488F2;
+        Tue,  6 Aug 2019 11:41:14 -0700 (PDT)
+Date:   Tue, 06 Aug 2019 11:41:14 -0700 (PDT)
+Message-Id: <20190806.114114.1672670570404825284.davem@davemloft.net>
+To:     ivan.khoronzhuk@linaro.org
+Cc:     vinicius.gomes@intel.com, jhs@mojatatu.com,
+        xiyou.wangcong@gmail.com, jiri@resnulli.us, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: sched: sch_taprio: fix memleak in error path for
+ sched list parse
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190806100425.4356-1-ivan.khoronzhuk@linaro.org>
+References: <20190806100425.4356-1-ivan.khoronzhuk@linaro.org>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 06 Aug 2019 11:41:14 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 11:33:50PM +0200, Remi Pommarel wrote:
-> When configuring pcie reset pin from gpio (e.g. initially set by
-> u-boot) to pcie function this pin goes low for a brief moment
-> asserting the PERST# signal. Thus connected device enters fundamental
-> reset process and link configuration can only begin after a minimal
-> 100ms delay (see [1]).
-> 
-> Because the pin configuration comes from the "default" pinctrl it is
-> implicitly configured before the probe callback is called:
-> 
-> driver_probe_device()
->   really_probe()
->     ...
->     pinctrl_bind_pins() /* Here pin goes from gpio to PCIE reset
->                            function and PERST# is asserted */
->     ...
->     drv->probe()
-> 
-> [1] "PCI Express Base Specification", REV. 4.0
->     PCI Express, February 19 2014, 6.6.1 Conventional Reset
-> 
-> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
-> ---
-> Changes since v1:
->   - Add a comment about pinctrl implicit pin configuration
->   - Use more legible msleep
->   - Use PCI_PM_D3COLD_WAIT macro
-> 
-> Please note that I will unlikely be able to answer any comments from May
-> 24th to June 10th.
-> ---
->  drivers/pci/controller/pci-aardvark.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> index 134e0306ff00..d998c2b9cd04 100644
-> --- a/drivers/pci/controller/pci-aardvark.c
-> +++ b/drivers/pci/controller/pci-aardvark.c
-> @@ -324,6 +324,14 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
->  	reg |= PIO_CTRL_ADDR_WIN_DISABLE;
->  	advk_writel(pcie, reg, PIO_CTRL);
+From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Date: Tue,  6 Aug 2019 13:04:25 +0300
+
+> Based on net/master
+
+I wonder about that because:
+
+> --- a/net/sched/sch_taprio.c
+> +++ b/net/sched/sch_taprio.c
+> @@ -1451,7 +1451,8 @@ static int taprio_change(struct Qdisc *sch, struct nlattr *opt,
+>  	spin_unlock_bh(qdisc_lock(sch));
 >  
-> +	/*
-> +	 * PERST# signal could have been asserted by pinctrl subsystem before
-> +	 * probe() callback has been called, making the endpoint going into
-> +	 * fundamental reset. As required by PCI Express spec a delay for at
-> +	 * least 100ms after such a reset before link training is needed.
-> +	 */
-> +	msleep(PCI_PM_D3COLD_WAIT);
-> +
->  	/* Start link training */
->  	reg = advk_readl(pcie, PCIE_CORE_LINK_CTRL_STAT_REG);
->  	reg |= PCIE_CORE_LINK_TRAINING;
-> -- 
-> 2.20.1
+>  free_sched:
+> -	kfree(new_admin);
+> +	if (new_admin)
+> +		call_rcu(&new_admin->rcu, taprio_free_sched_cb);
+>  
+>  	return err;
 
-Gentle ping.
+In my tree the context around line 1451 is:
 
--- 
-Remi
+	nla_nest_end(skb, sched_nest);
+
+done:
+	rcu_read_unlock();
+
+	return nla_nest_end(skb, nest);
+
+
+which is part of function taprio_dump().
+
+Please respin this properly against current 'net' sources.
