@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71FFDC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:37:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26C4EC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40FB921881
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:37:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA434218A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:37:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127453;
-	bh=Nge1Rt5g/b+aqtX1NJamqBDlTw67F+5Aabrmh1A3G+w=;
+	s=default; t=1565127458;
+	bh=w1cbrw5c4/EmdhRzSIH7FF2wHTmrc24GsUuw2qPaICY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Nmf0TbY9mohSrlCUMb29b1OeZrmaxubTpRbMPnDe4RvX52c4y+GPphEb/cKsN9GFq
-	 ONTAESBooFPXt79R1OrWUw0JzpeB0D2XbOv8mB2/cUxwHb4DhHxkP0RBwBBULmB6IP
-	 QVZydBB9L/mT8EGu2qrtbHjzdh4eXIb1AuVBO65I=
+	b=gEaApO2k4c4qkfGn2tQujzZOaeVRXnM8ZjCaDNSQOUBmmjTcVXYjdtSKJvbgVw7Ko
+	 uqIFt1ypQ7JYQe+aFzO1mG7pKXW5PL+aQ6BZjy+Y1sN/0/1wtft/mU+Y9SmbFJNZFv
+	 +jkLU2PWrMuCuLGLgvWGY5diPZATOBRnjj07tTQI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729378AbfHFVhb (ORCPT
+        id S1729415AbfHFVhg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:37:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55260 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 17:37:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727800AbfHFVh3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:37:29 -0400
+        id S1727373AbfHFVhe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:37:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF6E521873;
-        Tue,  6 Aug 2019 21:37:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D133121874;
+        Tue,  6 Aug 2019 21:37:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127448;
-        bh=Nge1Rt5g/b+aqtX1NJamqBDlTw67F+5Aabrmh1A3G+w=;
+        s=default; t=1565127454;
+        bh=w1cbrw5c4/EmdhRzSIH7FF2wHTmrc24GsUuw2qPaICY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pPFJuTVrGU+bytlQATwwXZ1yks9Q20yAaRcWTThG6dj3NuD6OhUQgBNPZI/WezQJb
-         XIylvEklD5PdWq3sCqOGRWoLm3uKuu6LfYOSP+XxEkbAmoAwdPvkhoC6/7K7aFxR10
-         Fh78rQnWQC5yLsR3posu5uulUvt2oohKUbFLZzlg=
+        b=0MPGSeQXIcuUE2QtSOM0Z1A4sOBmgU6xVY7CH/z4uazo+uAQoLOMT/rDdtQmVEbRR
+         lmlnteCHZSDiv2VCAtBZEFnNbHjIk6u4ZXE4Tgl3CVhEmbLZQ/iWvnO591azyS0cxN
+         U09Oy3IOH2CU1Lm3RmWQ/xRmftAWzts9K1YkTBUU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
-        Jeffrin Jose T <jeffrin@rajagiritech.edu.in>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-ide@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 06/17] libata: zpodd: Fix small read overflow in zpodd_get_mech_type()
-Date:   Tue,  6 Aug 2019 17:37:03 -0400
-Message-Id: <20190806213715.20487-6-sashal@kernel.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 10/17] kbuild: modpost: handle KBUILD_EXTRA_SYMBOLS only for external modules
+Date:   Tue,  6 Aug 2019 17:37:07 -0400
+Message-Id: <20190806213715.20487-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190806213715.20487-1-sashal@kernel.org>
 References: <20190806213715.20487-1-sashal@kernel.org>
@@ -61,50 +58,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-[ Upstream commit 71d6c505b4d9e6f76586350450e785e3d452b346 ]
+[ Upstream commit cb4819934a7f9b87876f11ed05b8624c0114551b ]
 
-Jeffrin reported a KASAN issue:
+KBUILD_EXTRA_SYMBOLS makes sense only when building external modules.
+Moreover, the modpost sets 'external_module' if the -e option is given.
 
-  BUG: KASAN: global-out-of-bounds in ata_exec_internal_sg+0x50f/0xc70
-  Read of size 16 at addr ffffffff91f41f80 by task scsi_eh_1/149
-  ...
-  The buggy address belongs to the variable:
-    cdb.48319+0x0/0x40
+I replaced $(patsubst %, -e %,...) with simpler $(addprefix -e,...)
+while I was here.
 
-Much like commit 18c9a99bce2a ("libata: zpodd: small read overflow in
-eject_tray()"), this fixes a cdb[] buffer length, this time in
-zpodd_get_mech_type():
-
-We read from the cdb[] buffer in ata_exec_internal_sg(). It has to be
-ATAPI_CDB_LEN (16) bytes long, but this buffer is only 12 bytes.
-
-Reported-by: Jeffrin Jose T <jeffrin@rajagiritech.edu.in>
-Fixes: afe759511808c ("libata: identify and init ZPODD devices")
-Link: https://lore.kernel.org/lkml/201907181423.E808958@keescook/
-Tested-by: Jeffrin Jose T <jeffrin@rajagiritech.edu.in>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ata/libata-zpodd.c | 2 +-
+ scripts/Makefile.modpost | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/ata/libata-zpodd.c b/drivers/ata/libata-zpodd.c
-index 7017a81d53cf2..083856272e92a 100644
---- a/drivers/ata/libata-zpodd.c
-+++ b/drivers/ata/libata-zpodd.c
-@@ -55,7 +55,7 @@ static enum odd_mech_type zpodd_get_mech_type(struct ata_device *dev)
- 	unsigned int ret;
- 	struct rm_feature_desc *desc;
- 	struct ata_taskfile tf;
--	static const char cdb[] = {  GPCMD_GET_CONFIGURATION,
-+	static const char cdb[ATAPI_CDB_LEN] = {  GPCMD_GET_CONFIGURATION,
- 			2,      /* only 1 feature descriptor requested */
- 			0, 3,   /* 3, removable medium feature */
- 			0, 0, 0,/* reserved */
+diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
+index 16923ba4b5b10..8cb7971b3f25c 100644
+--- a/scripts/Makefile.modpost
++++ b/scripts/Makefile.modpost
+@@ -74,7 +74,7 @@ modpost = scripts/mod/modpost                    \
+  $(if $(CONFIG_MODULE_SRCVERSION_ALL),-a,)       \
+  $(if $(KBUILD_EXTMOD),-i,-o) $(kernelsymfile)   \
+  $(if $(KBUILD_EXTMOD),-I $(modulesymfile))      \
+- $(if $(KBUILD_EXTRA_SYMBOLS), $(patsubst %, -e %,$(KBUILD_EXTRA_SYMBOLS))) \
++ $(if $(KBUILD_EXTMOD),$(addprefix -e ,$(KBUILD_EXTRA_SYMBOLS))) \
+  $(if $(KBUILD_EXTMOD),-o $(modulesymfile))      \
+  $(if $(CONFIG_DEBUG_SECTION_MISMATCH),,-S)      \
+  $(if $(CONFIG_SECTION_MISMATCH_WARN_ONLY),,-E)  \
 -- 
 2.20.1
 
