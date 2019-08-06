@@ -4,56 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 695E3C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8438FC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:35:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C83A2089E
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:35:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 590C82089E
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:35:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127313;
-	bh=8eiQAAiot3lKz22lYGS7QHSgMck+Aovg7d6oIfpVbzU=;
+	s=default; t=1565127315;
+	bh=tnBCKsNOXpc/So9mge9o69O10x6UKsl/NYQ+QplWqDo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AlF1kL3zsuP5jmFs75poi+iL++RbD+uemYHQ2T+2LQekhm0FzNI/BeuF3Q/pZ7FdM
-	 E/4N3Uk5g3jhk8Ba/P3pJOFE3/nret8QM+fpvOzsBBbGOFu/M4QLxdn+N4Bu5YTXzJ
-	 rDq+8+7SW2Wu4AzVCuhhADO4UM6hKtLHCpbaQuXk=
+	b=fG200dLtEM0KPI5UKNFD2GblLDlN6HOK0sneToPhkf/Y+wQkcFAcFFUD7Wb0GLkSc
+	 KbpCaEebLtZA+orx8sjoBUQhbAMwJv6yLQ9mwol1SFr5C1dESFKWXuzTuYVfjxOzG0
+	 oMENHFnLHJAUhMnLI4v50rZt3o8DcBAMli1qXDhM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728191AbfHFVfM (ORCPT
+        id S1727207AbfHFVfK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:35:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52972 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728193AbfHFVfK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 6 Aug 2019 17:35:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52902 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728172AbfHFVfH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:35:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27622217D7;
-        Tue,  6 Aug 2019 21:35:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66D96217F5;
+        Tue,  6 Aug 2019 21:35:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127309;
-        bh=8eiQAAiot3lKz22lYGS7QHSgMck+Aovg7d6oIfpVbzU=;
+        s=default; t=1565127306;
+        bh=tnBCKsNOXpc/So9mge9o69O10x6UKsl/NYQ+QplWqDo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s/YcJcYPaF+NEyysrdiy2Pe1CkVIwXp+PnxQ/yK+AavxPS+nX7fs3YF99gMzlyqUi
-         vQ3gQ/x4NU21fr1L8ubek/gqQVqdbtqE+saTV2D0BrSw/AlZ5sAb9p0a5WqaHx7Myx
-         A3AI5g4OAWEu2h0rAlWWWd7mvY/qKqhJNq0Tq+wc=
+        b=0SMu6vPLVAQdNgrK/yUVnxifbLj7RDXmrfs1PyIfJtGzPxZ/rYoJz8pDqmtvLl2ht
+         SF4eOaPI4P1Adir3X5cGM9vMAGKy2kdSptQ/YOJWUYWNmEyXykp6MVojy5s+h0Ex1+
+         rrFMX7TxaZZAs6QylVjbjm4jTqYFAWZAv1odLNHo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
-        Jun Piao <piaojun@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 55/59] ocfs2: remove set but not used variable 'last_hash'
-Date:   Tue,  6 Aug 2019 17:33:15 -0400
-Message-Id: <20190806213319.19203-55-sashal@kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 53/59] arm64: Make debug exception handlers visible from RCU
+Date:   Tue,  6 Aug 2019 17:33:13 -0400
+Message-Id: <20190806213319.19203-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190806213319.19203-1-sashal@kernel.org>
 References: <20190806213319.19203-1-sashal@kernel.org>
@@ -66,54 +60,151 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 7bc36e3ce91471b6377c8eadc0a2f220a2280083 ]
+[ Upstream commit d8bb6718c4db9bcd075dde7ff55d46091ccfae15 ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+Make debug exceptions visible from RCU so that synchronize_rcu()
+correctly track the debug exception handler.
 
-  fs/ocfs2/xattr.c: In function ocfs2_xattr_bucket_find:
-  fs/ocfs2/xattr.c:3828:6: warning: variable last_hash set but not used [-Wunused-but-set-variable]
+This also introduces sanity checks for user-mode exceptions as same
+as x86's ist_enter()/ist_exit().
 
-It's never used and can be removed.
+The debug exception can interrupt in idle task. For example, it warns
+if we put a kprobe on a function called from idle task as below.
+The warning message showed that the rcu_read_lock() caused this
+problem. But actually, this means the RCU is lost the context which
+is already in NMI/IRQ.
 
-Link: http://lkml.kernel.org/r/20190716132110.34836-1-yuehaibing@huawei.com
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Cc: Gang He <ghe@suse.com>
-Cc: Jun Piao <piaojun@huawei.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+  /sys/kernel/debug/tracing # echo p default_idle_call >> kprobe_events
+  /sys/kernel/debug/tracing # echo 1 > events/kprobes/enable
+  /sys/kernel/debug/tracing # [  135.122237]
+  [  135.125035] =============================
+  [  135.125310] WARNING: suspicious RCU usage
+  [  135.125581] 5.2.0-08445-g9187c508bdc7 #20 Not tainted
+  [  135.125904] -----------------------------
+  [  135.126205] include/linux/rcupdate.h:594 rcu_read_lock() used illegally while idle!
+  [  135.126839]
+  [  135.126839] other info that might help us debug this:
+  [  135.126839]
+  [  135.127410]
+  [  135.127410] RCU used illegally from idle CPU!
+  [  135.127410] rcu_scheduler_active = 2, debug_locks = 1
+  [  135.128114] RCU used illegally from extended quiescent state!
+  [  135.128555] 1 lock held by swapper/0/0:
+  [  135.128944]  #0: (____ptrval____) (rcu_read_lock){....}, at: call_break_hook+0x0/0x178
+  [  135.130499]
+  [  135.130499] stack backtrace:
+  [  135.131192] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.2.0-08445-g9187c508bdc7 #20
+  [  135.131841] Hardware name: linux,dummy-virt (DT)
+  [  135.132224] Call trace:
+  [  135.132491]  dump_backtrace+0x0/0x140
+  [  135.132806]  show_stack+0x24/0x30
+  [  135.133133]  dump_stack+0xc4/0x10c
+  [  135.133726]  lockdep_rcu_suspicious+0xf8/0x108
+  [  135.134171]  call_break_hook+0x170/0x178
+  [  135.134486]  brk_handler+0x28/0x68
+  [  135.134792]  do_debug_exception+0x90/0x150
+  [  135.135051]  el1_dbg+0x18/0x8c
+  [  135.135260]  default_idle_call+0x0/0x44
+  [  135.135516]  cpu_startup_entry+0x2c/0x30
+  [  135.135815]  rest_init+0x1b0/0x280
+  [  135.136044]  arch_call_rest_init+0x14/0x1c
+  [  135.136305]  start_kernel+0x4d4/0x500
+  [  135.136597]
+
+So make debug exception visible to RCU can fix this warning.
+
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Acked-by: Paul E. McKenney <paulmck@linux.ibm.com>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/xattr.c | 3 ---
- 1 file changed, 3 deletions(-)
+ arch/arm64/mm/fault.c | 57 +++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 49 insertions(+), 8 deletions(-)
 
-diff --git a/fs/ocfs2/xattr.c b/fs/ocfs2/xattr.c
-index 385f3aaa24480..90c830e3758e2 100644
---- a/fs/ocfs2/xattr.c
-+++ b/fs/ocfs2/xattr.c
-@@ -3825,7 +3825,6 @@ static int ocfs2_xattr_bucket_find(struct inode *inode,
- 	u16 blk_per_bucket = ocfs2_blocks_per_xattr_bucket(inode->i_sb);
- 	int low_bucket = 0, bucket, high_bucket;
- 	struct ocfs2_xattr_bucket *search;
--	u32 last_hash;
- 	u64 blkno, lower_blkno = 0;
+diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
+index 2d115016feb42..414b8e0f19e0e 100644
+--- a/arch/arm64/mm/fault.c
++++ b/arch/arm64/mm/fault.c
+@@ -800,6 +800,53 @@ void __init hook_debug_fault_code(int nr,
+ 	debug_fault_info[nr].name	= name;
+ }
  
- 	search = ocfs2_xattr_bucket_new(inode);
-@@ -3869,8 +3868,6 @@ static int ocfs2_xattr_bucket_find(struct inode *inode,
- 		if (xh->xh_count)
- 			xe = &xh->xh_entries[le16_to_cpu(xh->xh_count) - 1];
++/*
++ * In debug exception context, we explicitly disable preemption despite
++ * having interrupts disabled.
++ * This serves two purposes: it makes it much less likely that we would
++ * accidentally schedule in exception context and it will force a warning
++ * if we somehow manage to schedule by accident.
++ */
++static void debug_exception_enter(struct pt_regs *regs)
++{
++	/*
++	 * Tell lockdep we disabled irqs in entry.S. Do nothing if they were
++	 * already disabled to preserve the last enabled/disabled addresses.
++	 */
++	if (interrupts_enabled(regs))
++		trace_hardirqs_off();
++
++	if (user_mode(regs)) {
++		RCU_LOCKDEP_WARN(!rcu_is_watching(), "entry code didn't wake RCU");
++	} else {
++		/*
++		 * We might have interrupted pretty much anything.  In
++		 * fact, if we're a debug exception, we can even interrupt
++		 * NMI processing. We don't want this code makes in_nmi()
++		 * to return true, but we need to notify RCU.
++		 */
++		rcu_nmi_enter();
++	}
++
++	preempt_disable();
++
++	/* This code is a bit fragile.  Test it. */
++	RCU_LOCKDEP_WARN(!rcu_is_watching(), "exception_enter didn't work");
++}
++NOKPROBE_SYMBOL(debug_exception_enter);
++
++static void debug_exception_exit(struct pt_regs *regs)
++{
++	preempt_enable_no_resched();
++
++	if (!user_mode(regs))
++		rcu_nmi_exit();
++
++	if (interrupts_enabled(regs))
++		trace_hardirqs_on();
++}
++NOKPROBE_SYMBOL(debug_exception_exit);
++
+ #ifdef CONFIG_ARM64_ERRATUM_1463225
+ DECLARE_PER_CPU(int, __in_cortex_a76_erratum_1463225_wa);
  
--		last_hash = le32_to_cpu(xe->xe_name_hash);
--
- 		/* record lower_blkno which may be the insert place. */
- 		lower_blkno = blkno;
+@@ -840,12 +887,7 @@ asmlinkage void __exception do_debug_exception(unsigned long addr_if_watchpoint,
+ 	if (cortex_a76_erratum_1463225_debug_handler(regs))
+ 		return;
  
+-	/*
+-	 * Tell lockdep we disabled irqs in entry.S. Do nothing if they were
+-	 * already disabled to preserve the last enabled/disabled addresses.
+-	 */
+-	if (interrupts_enabled(regs))
+-		trace_hardirqs_off();
++	debug_exception_enter(regs);
+ 
+ 	if (user_mode(regs) && !is_ttbr0_addr(pc))
+ 		arm64_apply_bp_hardening();
+@@ -855,7 +897,6 @@ asmlinkage void __exception do_debug_exception(unsigned long addr_if_watchpoint,
+ 				 inf->sig, inf->code, (void __user *)pc, esr);
+ 	}
+ 
+-	if (interrupts_enabled(regs))
+-		trace_hardirqs_on();
++	debug_exception_exit(regs);
+ }
+ NOKPROBE_SYMBOL(do_debug_exception);
 -- 
 2.20.1
 
