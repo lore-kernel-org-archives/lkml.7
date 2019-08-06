@@ -2,380 +2,128 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7885CC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 19:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB3E4C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 19:55:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DD77205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 19:54:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB773208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 19:55:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="b9GAepqR"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fGAJjSUR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726549AbfHFTyL (ORCPT
+        id S1726488AbfHFTzA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 15:54:11 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:44600 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725970AbfHFTyK (ORCPT
+        Tue, 6 Aug 2019 15:55:00 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:40356 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725970AbfHFTy7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 15:54:10 -0400
-Received: by mail-qk1-f193.google.com with SMTP id d79so63854216qke.11
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 12:54:09 -0700 (PDT)
+        Tue, 6 Aug 2019 15:54:59 -0400
+Received: by mail-wr1-f65.google.com with SMTP id r1so89020965wrl.7;
+        Tue, 06 Aug 2019 12:54:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=1rHDXdmOEwR8xptFY1wQGCbwesX8kKKPC5gJB64uoto=;
-        b=b9GAepqRbKFM3pzqYg2LpdHR2OEdgWMc/HZxIv2Gp9vLLA3ZTzFCsANpReq6o3heh3
-         W1ptDk2UP62oVh0l6motNAk9K+wx+wzmppMPTOJTEgaxY2+N7G1GfJsdfjFGK9J/ydhd
-         1JAQk+iuy/FOLH+ODao/HTvc8ZtAAW1UurzvdNfmAUudfT/DZ0X+8DL+1u85ZSbBYCly
-         WgtOdpYIMLK+B2j83KqX+LKq9JgvsjwdwG7j0sTwebuX3AHqYlKN3JJ05J8D/90qYLwr
-         3ydTkB4DNAQnO7JPElLfGlkn1OHq07X5Z9MyGidOLtK0y+fU5ATneF1nAhI/NLAg8l8A
-         ZIEg==
+        d=gmail.com; s=20161025;
+        h=date:user-agent:in-reply-to:references:mime-version
+         :content-transfer-encoding:subject:to:cc:from:message-id;
+        bh=pweWeMZ+YAimqC/rJkc+DaUbocqC+KDHTVadFtRmDA0=;
+        b=fGAJjSURN9jdmlO/I/yY7LcvHVIFWmV3kCQetZLe/YsASKUdA/2V49frkUJFh32akX
+         gt/nIuAshzYJrMBWOFMq7WOhOnKJNFylLc88RXm5VVxEyXnwZExq/aQyyFcw6PsIBdUO
+         UJBdbyqjns/oNRuElRx8SE96dBXcqAcxK/aj5vopiYWvxDSJwtP4RSABBjLH4MQt17dB
+         AOwLQA5PL/xZM+pTYZxvJhnFpmDkdLkUqo8nndY4GhfnYq58zUpjD8I5R57K4OgKkBFx
+         zGfzjahX0X8XzLBcff5KFwL0tPALfivB00M77hWMEdiAzB0K55NAJxYWQYAE+1ReF+f8
+         qkQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=1rHDXdmOEwR8xptFY1wQGCbwesX8kKKPC5gJB64uoto=;
-        b=dJOfm60LDVnYEMs6TOqMZhyPEt1hdG1LEktp5cjoTRyRoloWuHHKCtXbHI1XaENqGK
-         cbqL0ecaAH/bQS2sDcNjX9TK4qq9r5N2Klm0oWsjvYeyo4T8NG7LOUPwZ+TahL+GA+NF
-         OkfxmAwhW1IYUFupXmPGVL9oCgMTe3+6RnuMQvsr305w6VGE96H5kva4LoF4cnsAEaPf
-         PunPMGhMpeE8w5xoHpIRQCFzhPCpLvBJlndEsT0fbT8NFWviDdQpQN5egdAC009WcBcj
-         OwMl1IuEEAAGjeL/Ozm4hphlwAHtG0OVcUUzEYkatf151C6RUIiaxgZs+2+KIPZrpjns
-         DJIw==
-X-Gm-Message-State: APjAAAXhSw6WXdc+MX4EzLnYCWQlQMmclS5w51svGJYmnUuouGRYRgeI
-        eg9rhex9FvURvym/W3CNJbD797BadIE=
-X-Google-Smtp-Source: APXvYqxrBdTEbJz96Q2eq+iIvW0j3N8XWLn08kcP6O+0VhSZ/q8ftrBCG23A5U4DAubf7/lDubR3mQ==
-X-Received: by 2002:ae9:df84:: with SMTP id t126mr2672184qkf.328.1565121249378;
-        Tue, 06 Aug 2019 12:54:09 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id l8sm2170230qtr.38.2019.08.06.12.54.08
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 06 Aug 2019 12:54:09 -0700 (PDT)
-Date:   Tue, 6 Aug 2019 12:53:42 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Hayes Wang <hayeswang@realtek.com>
-Cc:     <netdev@vger.kernel.org>, <nic_swsd@realtek.com>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>
-Subject: Re: [PATCH net-next 2/5] r8152: replace array with linking list for
- rx information
-Message-ID: <20190806125342.4620a94f@cakuba.netronome.com>
-In-Reply-To: <1394712342-15778-291-albertk@realtek.com>
-References: <1394712342-15778-289-albertk@realtek.com>
-        <1394712342-15778-291-albertk@realtek.com>
-Organization: Netronome Systems, Ltd.
+        h=x-gm-message-state:date:user-agent:in-reply-to:references
+         :mime-version:content-transfer-encoding:subject:to:cc:from
+         :message-id;
+        bh=pweWeMZ+YAimqC/rJkc+DaUbocqC+KDHTVadFtRmDA0=;
+        b=WurGKoyN2lV3dZY27B2iD59Pkm57nngCQuoA0JCxmdWNrXcqPOUTorzW0CTsnTz+CD
+         fUzu7Xi/KbFgJRj/iuRy8d9SUsof5QPxw2n/1y9klemunXVVAu8W/tR35yStFjQanxrv
+         pctQbFR3vt+67Wqj7VCFj1jLqLOHJ6xaeSyw/84aaywlMGmvU1xhIbI27OWxXAIzuPaz
+         MxO7ykkjeG2QXqgsuRvveMJ3sLnp3IFaMRfeemq9KJ9shOQiykykAZqgiuJUtZ3hTGBj
+         UDzGj0QYcbGBx99Fuj3k6DY4ugBnfFo++QRA+EgIYrU020QFmeA+BdLSxqLDTLN4MSTB
+         IO7g==
+X-Gm-Message-State: APjAAAU8dfRGIAOotTjHeKzqZd34RaSGGpkG/Zy4jWKzDYBzyNMAh5hd
+        A3slLXpUvDMcN9Sl3n/VPARv8QJO3kI=
+X-Google-Smtp-Source: APXvYqyqfIIs/GR5fj1UygzkWQGeAlXeuTKMOwI7ZkHYeJsqCO/4oOppuFUB/Tcua3HuCcOYDPpdjw==
+X-Received: by 2002:adf:fe10:: with SMTP id n16mr5585332wrr.92.1565121297462;
+        Tue, 06 Aug 2019 12:54:57 -0700 (PDT)
+Received: from [192.168.1.32] ([141.226.31.91])
+        by smtp.gmail.com with ESMTPSA id a8sm77911466wma.31.2019.08.06.12.54.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 06 Aug 2019 12:54:56 -0700 (PDT)
+Date:   Tue, 06 Aug 2019 22:54:48 +0300
+User-Agent: K-9 Mail for Android
+In-Reply-To: <CACRpkdaTmxQn2Z=vD6nyqk-iXCFrnCG1xpkXwO3-+sazOhGBvw@mail.gmail.com>
+References: <20190803133436.15016-1-rfried.dev@gmail.com> <CACRpkdYEdQdk62bWJ2=i2Mbvpz3kwL=9bnMoxksFsTgAHRh68w@mail.gmail.com> <CACRpkdaTmxQn2Z=vD6nyqk-iXCFrnCG1xpkXwO3-+sazOhGBvw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] gpiolib: Take MUX usage into account
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Stefan Wahren <stefan.wahren@i2se.com>
+From:   Ramon Fried <rfried.dev@gmail.com>
+Message-ID: <2F7B6E95-045E-4F57-B2CB-858BEE298986@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 6 Aug 2019 19:18:01 +0800, Hayes Wang wrote:
-> The original method uses an array to store the rx information. The
-> new one uses a list to link each rx structure. Then, it is possible
-> to increase/decrease the number of rx structure dynamically.
-> 
-> Signed-off-by: Hayes Wang <hayeswang@realtek.com>
-> ---
->  drivers/net/usb/r8152.c | 187 ++++++++++++++++++++++++++++------------
->  1 file changed, 132 insertions(+), 55 deletions(-)
-> 
-> diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
-> index 0f07ed05ab34..44d832ceb516 100644
-> --- a/drivers/net/usb/r8152.c
-> +++ b/drivers/net/usb/r8152.c
-> @@ -22,6 +22,7 @@
->  #include <linux/mdio.h>
->  #include <linux/usb/cdc.h>
->  #include <linux/suspend.h>
-> +#include <linux/atomic.h>
->  #include <linux/acpi.h>
->  
->  /* Information for net-next */
-> @@ -694,7 +695,7 @@ struct tx_desc {
->  struct r8152;
->  
->  struct rx_agg {
-> -	struct list_head list;
-> +	struct list_head list, info_list;
->  	struct urb *urb;
->  	struct r8152 *context;
->  	void *buffer;
-> @@ -719,7 +720,7 @@ struct r8152 {
->  	struct net_device *netdev;
->  	struct urb *intr_urb;
->  	struct tx_agg tx_info[RTL8152_MAX_TX];
-> -	struct rx_agg rx_info[RTL8152_MAX_RX];
-> +	struct list_head rx_info;
->  	struct list_head rx_done, tx_free;
->  	struct sk_buff_head tx_queue, rx_queue;
->  	spinlock_t rx_lock, tx_lock;
-> @@ -744,6 +745,8 @@ struct r8152 {
->  		void (*autosuspend_en)(struct r8152 *tp, bool enable);
->  	} rtl_ops;
->  
-> +	atomic_t rx_count;
 
-I wonder what the advantage of rx_count being atomic is, perhpas it
-could be protected by the same lock as the list head?
 
->  	int intr_interval;
->  	u32 saved_wolopts;
->  	u32 msg_enable;
-> @@ -1468,19 +1471,86 @@ static inline void *tx_agg_align(void *data)
->  	return (void *)ALIGN((uintptr_t)data, TX_ALIGN);
->  }
->  
-> +static void free_rx_agg(struct r8152 *tp, struct rx_agg *agg)
-> +{
-> +	list_del(&agg->info_list);
-> +
-> +	usb_free_urb(agg->urb);
-> +	kfree(agg->buffer);
-> +	kfree(agg);
-> +
-> +	atomic_dec(&tp->rx_count);
-> +}
-> +
-> +static struct rx_agg *alloc_rx_agg(struct r8152 *tp, gfp_t mflags)
-> +{
-> +	struct net_device *netdev = tp->netdev;
-> +	int node = netdev->dev.parent ? dev_to_node(netdev->dev.parent) : -1;
-> +	struct rx_agg *rx_agg;
-> +
-> +	rx_agg = kmalloc_node(sizeof(*rx_agg), mflags, node);
-> +	if (rx_agg) {
+On August 6, 2019 4:11:27 PM GMT+03:00, Linus Walleij <linus=2Ewalleij@lin=
+aro=2Eorg> wrote:
+>On Tue, Aug 6, 2019 at 3:04 PM Linus Walleij <linus=2Ewalleij@linaro=2Eor=
+g>
+>wrote:
+>> On Sat, Aug 3, 2019 at 3:34 PM Ramon Fried <rfried=2Edev@gmail=2Ecom>
+>wrote:
+>>
+>> > From: Stefan Wahren <stefan=2Ewahren@i2se=2Ecom>
+>> >
+>> > The user space like gpioinfo only see the GPIO usage but not the
+>> > MUX usage (e=2Eg=2E I2C or SPI usage) of a pin=2E As a user we want t=
+o
+>know which
+>> > pin is free/safe to use=2E So take the MUX usage of strict pinmux
+>controllers
+>> > into account to get a more realistic view for ioctl
+>GPIO_GET_LINEINFO_IOCTL=2E
+>> >
+>> > Signed-off-by: Stefan Wahren <stefan=2Ewahren@i2se=2Ecom>
+>> > Tested-By: Ramon Fried <rfried=2Edev@gmail=2Ecom>
+>> > Signed-off-by: Ramon Fried <rfried=2Edev@gmail=2Ecom>
+>> > ---
+>> > Sending Stefan's RFC as patch, as I tested it and it seems to work,
+>> > additionally, an accompanying fix was made by me to gpiolibd to fix
+>a
+>> > display error of the actual result:
+>> > https://patchwork=2Eozlabs=2Eorg/patch/1139923/
+>>
+>> This is mostly fine, some style nits so I fixed it up when
+>> applying=2E
+>
+>Ooops no=2E It needs a deeper rework in accordance to my comments
+>last time it was posted=2E Please read this reply to Stefan's patch
+>and address the comments:
+>
+NP, I'll try to address these in a new patch=2E=20
+Thanks=2E=20
+Ramon=20
+>https://lore=2Ekernel=2Eorg/linux-gpio/CACRpkdb5DjAMRYkT+b0U6HVk7E6ccLT79=
+-LB=3DQGQWWtE17aPUg@mail=2Egmail=2Ecom/
+>
+>Yours,
+>Linus Walleij
 
-nit: you could possibly save the indentation by returning early here
-
-> +		unsigned long flags;
-> +		u8 *buf;
-> +
-> +		buf = kmalloc_node(tp->rx_buf_sz, mflags, node);
-> +		if (!buf)
-> +			goto free_rx;
-> +
-> +		if (buf != rx_agg_align(buf)) {
-> +			kfree(buf);
-> +			buf = kmalloc_node(tp->rx_buf_sz + RX_ALIGN, mflags,
-> +					   node);
-> +			if (!buf)
-> +				goto free_rx;
-> +		}
-> +
-> +		rx_agg->buffer = buf;
-> +		rx_agg->head = rx_agg_align(buf);
-> +
-> +		rx_agg->urb = usb_alloc_urb(0, mflags);
-> +		if (!rx_agg->urb)
-> +			goto free_buf;
-> +
-> +		rx_agg->context = tp;
-> +
-> +		INIT_LIST_HEAD(&rx_agg->list);
-> +		INIT_LIST_HEAD(&rx_agg->info_list);
-> +		spin_lock_irqsave(&tp->rx_lock, flags);
-> +		list_add_tail(&rx_agg->info_list, &tp->rx_info);
-> +		spin_unlock_irqrestore(&tp->rx_lock, flags);
-> +
-> +		atomic_inc(&tp->rx_count);
-> +	}
-> +
-> +	return rx_agg;
-> +
-> +free_buf:
-> +	kfree(rx_agg->buffer);
-> +free_rx:
-> +	kfree(rx_agg);
-> +	return NULL;
-> +}
-> +
->  static void free_all_mem(struct r8152 *tp)
->  {
-> +	struct list_head *cursor, *next;
-> +	unsigned long flags;
->  	int i;
->  
-> -	for (i = 0; i < RTL8152_MAX_RX; i++) {
-> -		usb_free_urb(tp->rx_info[i].urb);
-> -		tp->rx_info[i].urb = NULL;
-> +	spin_lock_irqsave(&tp->rx_lock, flags);
->  
-> -		kfree(tp->rx_info[i].buffer);
-> -		tp->rx_info[i].buffer = NULL;
-> -		tp->rx_info[i].head = NULL;
-> +	list_for_each_safe(cursor, next, &tp->rx_info) {
-
-nit: list_for_each_entry_safe, perhaps?
-
-> +		struct rx_agg *agg;
-> +
-> +		agg = list_entry(cursor, struct rx_agg, info_list);
-> +		free_rx_agg(tp, agg);
->  	}
->  
-> +	spin_unlock_irqrestore(&tp->rx_lock, flags);
-> +
-> +	WARN_ON(unlikely(atomic_read(&tp->rx_count)));
-
-nit: WARN_ON() has an unlikely() already built in
-
->  	for (i = 0; i < RTL8152_MAX_TX; i++) {
->  		usb_free_urb(tp->tx_info[i].urb);
->  		tp->tx_info[i].urb = NULL;
-> @@ -1503,46 +1573,28 @@ static int alloc_all_mem(struct r8152 *tp)
->  	struct usb_interface *intf = tp->intf;
->  	struct usb_host_interface *alt = intf->cur_altsetting;
->  	struct usb_host_endpoint *ep_intr = alt->endpoint + 2;
-> -	struct urb *urb;
->  	int node, i;
-> -	u8 *buf;
->  
->  	node = netdev->dev.parent ? dev_to_node(netdev->dev.parent) : -1;
->  
->  	spin_lock_init(&tp->rx_lock);
->  	spin_lock_init(&tp->tx_lock);
-> +	INIT_LIST_HEAD(&tp->rx_info);
->  	INIT_LIST_HEAD(&tp->tx_free);
->  	INIT_LIST_HEAD(&tp->rx_done);
->  	skb_queue_head_init(&tp->tx_queue);
->  	skb_queue_head_init(&tp->rx_queue);
-> +	atomic_set(&tp->rx_count, 0);
->  
->  	for (i = 0; i < RTL8152_MAX_RX; i++) {
-> -		buf = kmalloc_node(tp->rx_buf_sz, GFP_KERNEL, node);
-> -		if (!buf)
-> -			goto err1;
-> -
-> -		if (buf != rx_agg_align(buf)) {
-> -			kfree(buf);
-> -			buf = kmalloc_node(tp->rx_buf_sz + RX_ALIGN, GFP_KERNEL,
-> -					   node);
-> -			if (!buf)
-> -				goto err1;
-> -		}
-> -
-> -		urb = usb_alloc_urb(0, GFP_KERNEL);
-> -		if (!urb) {
-> -			kfree(buf);
-> +		if (!alloc_rx_agg(tp, GFP_KERNEL))
->  			goto err1;
-> -		}
-> -
-> -		INIT_LIST_HEAD(&tp->rx_info[i].list);
-> -		tp->rx_info[i].context = tp;
-> -		tp->rx_info[i].urb = urb;
-> -		tp->rx_info[i].buffer = buf;
-> -		tp->rx_info[i].head = rx_agg_align(buf);
->  	}
->  
->  	for (i = 0; i < RTL8152_MAX_TX; i++) {
-> +		struct urb *urb;
-> +		u8 *buf;
-> +
->  		buf = kmalloc_node(agg_buf_sz, GFP_KERNEL, node);
->  		if (!buf)
->  			goto err1;
-> @@ -2331,44 +2383,69 @@ static void rxdy_gated_en(struct r8152 *tp, bool enable)
->  
->  static int rtl_start_rx(struct r8152 *tp)
->  {
-> -	int i, ret = 0;
-> +	struct list_head *cursor, *next, tmp_list;
-> +	unsigned long flags;
-> +	int ret = 0;
-> +
-> +	INIT_LIST_HEAD(&tmp_list);
-> +
-> +	spin_lock_irqsave(&tp->rx_lock, flags);
->  
->  	INIT_LIST_HEAD(&tp->rx_done);
-> -	for (i = 0; i < RTL8152_MAX_RX; i++) {
-> -		INIT_LIST_HEAD(&tp->rx_info[i].list);
-> -		ret = r8152_submit_rx(tp, &tp->rx_info[i], GFP_KERNEL);
-> -		if (ret)
-> -			break;
-> -	}
->  
-> -	if (ret && ++i < RTL8152_MAX_RX) {
-> -		struct list_head rx_queue;
-> -		unsigned long flags;
-> +	list_splice_init(&tp->rx_info, &tmp_list);
->  
-> -		INIT_LIST_HEAD(&rx_queue);
-> +	spin_unlock_irqrestore(&tp->rx_lock, flags);
->  
-> -		do {
-> -			struct rx_agg *agg = &tp->rx_info[i++];
-> -			struct urb *urb = agg->urb;
-> +	list_for_each_safe(cursor, next, &tmp_list) {
-> +		struct rx_agg *agg;
->  
-> -			urb->actual_length = 0;
-> -			list_add_tail(&agg->list, &rx_queue);
-> -		} while (i < RTL8152_MAX_RX);
-> +		agg = list_entry(cursor, struct rx_agg, info_list);
-> +		INIT_LIST_HEAD(&agg->list);
->  
-> -		spin_lock_irqsave(&tp->rx_lock, flags);
-> -		list_splice_tail(&rx_queue, &tp->rx_done);
-> -		spin_unlock_irqrestore(&tp->rx_lock, flags);
-> +		if (ret < 0)
-> +			list_add_tail(&agg->list, &tp->rx_done);
-> +		else
-> +			ret = r8152_submit_rx(tp, agg, GFP_KERNEL);
->  	}
->  
-> +	spin_lock_irqsave(&tp->rx_lock, flags);
-> +	WARN_ON(unlikely(!list_empty(&tp->rx_info)));
-> +	list_splice(&tmp_list, &tp->rx_info);
-> +	spin_unlock_irqrestore(&tp->rx_lock, flags);
-> +
->  	return ret;
->  }
->  
->  static int rtl_stop_rx(struct r8152 *tp)
->  {
-> -	int i;
-> +	struct list_head *cursor, *next, tmp_list;
-> +	unsigned long flags;
-> +
-> +	INIT_LIST_HEAD(&tmp_list);
->  
-> -	for (i = 0; i < RTL8152_MAX_RX; i++)
-> -		usb_kill_urb(tp->rx_info[i].urb);
-> +	/* The usb_kill_urb() couldn't be used in atomic.
-> +	 * Therefore, move the list of rx_info to a tmp one.
-> +	 * Then, list_for_each_safe could be used without
-> +	 * spin lock.
-> +	 */
-
-Would you mind explaining in a little more detail why taking the
-entries from the list for a brief period of time is safe? 
-
-> +	spin_lock_irqsave(&tp->rx_lock, flags);
-> +	list_splice_init(&tp->rx_info, &tmp_list);
-> +	spin_unlock_irqrestore(&tp->rx_lock, flags);
-> +
-> +	list_for_each_safe(cursor, next, &tmp_list) {
-> +		struct rx_agg *agg;
-> +
-> +		agg = list_entry(cursor, struct rx_agg, info_list);
-> +		usb_kill_urb(agg->urb);
-> +	}
-> +
-> +	/* Move back the list of temp to the rx_info */
-> +	spin_lock_irqsave(&tp->rx_lock, flags);
-> +	WARN_ON(unlikely(!list_empty(&tp->rx_info)));
-> +	list_splice(&tmp_list, &tp->rx_info);
-> +	spin_unlock_irqrestore(&tp->rx_lock, flags);
->  
->  	while (!skb_queue_empty(&tp->rx_queue))
->  		dev_kfree_skb(__skb_dequeue(&tp->rx_queue));
-
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
