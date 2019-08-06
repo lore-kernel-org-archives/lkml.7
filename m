@@ -2,120 +2,160 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 393C5C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA71C41514
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:07:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B1E020C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:04:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SGltPae4"
+	by mail.kernel.org (Postfix) with ESMTP id 9AF88214C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:07:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732846AbfHFOEp (ORCPT
+        id S1732798AbfHFOHD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 10:04:45 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46605 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728102AbfHFOEo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 10:04:44 -0400
-Received: by mail-wr1-f68.google.com with SMTP id z1so88037615wru.13
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 07:04:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VmcJWVEpEPtuq51rQa3PysAqXBTFaGDudgNwWewCnB0=;
-        b=SGltPae4XNh4Q+UGWFbguwHk7b6jQ96uA1pyBjf+QImbi5hjWu6foT2yyu4Ef8S8VZ
-         WVQ/5cNOi1rMbGhKWXrTeVLUKI/CtBgs7M84SRhAkqoLujGnITkbj/6saLmBHMuyXgah
-         1uxOPOVV+919HPTggX95bSKrIeFfCrmDszvuFRqP8jK181DQVJjKWOOI/1hD0kXJr4lG
-         +7kraMbIBnVIQ+BP31bPjafkdXRA+DVhas327iLAgmFsq8Jj+8I8K0bUnDl8w8MsCIAe
-         j0ZTVdQotWW9cFsZ4JUpO8uV3/Rg9576/5I1tlswQdQN30IqIy6JATvtdpkoS8zwvtAf
-         +U6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VmcJWVEpEPtuq51rQa3PysAqXBTFaGDudgNwWewCnB0=;
-        b=UYlpE3k5oS3yF+thw9b+sMdeCn6L6IygzU/aqNUUN0PycLDt4+QNI6Uy27Z/0gvSRm
-         lNLhq/RFYjBsnJ/AH1kdXw1chWLrivKr59yik9ngGWlVRZzGbNFOdkdQaGYHmv3Cmoc1
-         jlgtLwqTHDC3IRQtIpE5dhymILc9cib5irOgQCoBPwOGf7zGQ7b0hxvAChOa79U7aAfT
-         UZwY6vQtXXakQ4pCPLDRLgrELg6Zr8i50InbH18PxqvMq/zJHFewRKMPgAx2Um00oVHy
-         ifHHfOhJlKQDOHULtMcqysNRszc9LOweoh3+6e2O3vmy7ptIs0w8a9AKFEsquGXwQhZI
-         rDDg==
-X-Gm-Message-State: APjAAAWFCVUSrd8M/JrhxWxBbf0NjEizpnIivwbEq1IXxvq3x6WGfcQD
-        pZZYPTJ9EEuCJZQtNmoxeVBjkVfbI0y73a2AGlk=
-X-Google-Smtp-Source: APXvYqwfnictYRbYBmrF7TNe8rBMjnPDB347HH4iMDw6RFdkqryAQ2ApRjvZ92eEZ3nb/TN2z3s0Dy+pdTvnPR/MnNQ=
-X-Received: by 2002:a5d:6ccd:: with SMTP id c13mr5328135wrc.4.1565100282994;
- Tue, 06 Aug 2019 07:04:42 -0700 (PDT)
+        Tue, 6 Aug 2019 10:07:03 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3767 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728836AbfHFOHD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 10:07:03 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id E96F6A1A2E2A146353F6;
+        Tue,  6 Aug 2019 22:06:59 +0800 (CST)
+Received: from huawei.com (10.90.53.225) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Tue, 6 Aug 2019
+ 22:06:52 +0800
+From:   Cheng Jian <cj.chengjian@huawei.com>
+To:     <mingo@redhat.com>, <peterz@infradead.org>, <xiexiuqi@huawei.com>,
+        <huawei.libin@huawei.com>, <cj.chengjian@huawei.com>,
+        <bobo.shaobowang@huawei.com>
+CC:     <linux-kernel@vger.kernel.org>
+Subject: [PATCH] sched/core: decrease rq->nr_uninterruptible before set_task_cpu
+Date:   Tue, 6 Aug 2019 22:12:50 +0800
+Message-ID: <1565100770-110193-1-git-send-email-cj.chengjian@huawei.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-References: <20190805173257.GA4917@hari-Inspiron-1545>
-In-Reply-To: <20190805173257.GA4917@hari-Inspiron-1545>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Tue, 6 Aug 2019 10:04:31 -0400
-Message-ID: <CADnq5_OL1+bJUGh44AY48DP=G=xTtdrf+kO2233qjJzudWhw_Q@mail.gmail.com>
-Subject: Re: [PATCH] gpu: drm: amd: display: dc: dcn20: Remove redudant condition
-To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>
-Cc:     Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Nikola Cornij <nikola.cornij@amd.com>,
-        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.90.53.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 5, 2019 at 3:01 PM Hariprasad Kelam
-<hariprasad.kelam@gmail.com> wrote:
->
-> Remove redudant codition "dsc_cfg->dc_dsc_cfg.num_slices_v".
->
-> fixes coverity defect 1451853
->
-> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
-> ---
->  drivers/gpu/drm/amd/display/dc/dcn20/dcn20_dsc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_dsc.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_dsc.c
-> index e870caa..42133bd 100644
-> --- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_dsc.c
-> +++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_dsc.c
-> @@ -302,7 +302,7 @@ static bool dsc_prepare_config(struct display_stream_compressor *dsc, const stru
->                     dsc_cfg->dc_dsc_cfg.linebuf_depth == 0)));
->         ASSERT(96 <= dsc_cfg->dc_dsc_cfg.bits_per_pixel && dsc_cfg->dc_dsc_cfg.bits_per_pixel <= 0x3ff); // 6.0 <= bits_per_pixel <= 63.9375
->
-> -       if (!dsc_cfg->dc_dsc_cfg.num_slices_v || !dsc_cfg->dc_dsc_cfg.num_slices_v ||
-> +       if (!dsc_cfg->dc_dsc_cfg.num_slices_v ||
+Migration may occur when wake up a process, so we must update
+the rq->nr_uninterruptible before set_task_cpu, otherwise we
+will decrease the nr_interuptible of the incorrect rq. Over
+time, it cause some rq accounting according to be too large,
+but others are negative.
 
-Harry, can you or Nick check if this should be something else?  maybe
-a copy paste typo.
+Also change the type of rq->nr_uninterruptible to atomic_t.
 
-Alex
+Signed-off-by: Cheng Jian <cj.chengjian@huawei.com>
+---
+ kernel/sched/core.c    | 14 +++++++++-----
+ kernel/sched/debug.c   |  2 +-
+ kernel/sched/loadavg.c |  2 +-
+ kernel/sched/sched.h   |  2 +-
+ 4 files changed, 12 insertions(+), 8 deletions(-)
 
->                 !(dsc_cfg->dc_dsc_cfg.version_minor == 1 || dsc_cfg->dc_dsc_cfg.version_minor == 2) ||
->                 !dsc_cfg->pic_width || !dsc_cfg->pic_height ||
->                 !((dsc_cfg->dc_dsc_cfg.version_minor == 1 && // v1.1 line buffer depth range:
-> --
-> 2.7.4
->
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 2b037f1..4d3bbc1 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -1198,7 +1198,7 @@ static inline void dequeue_task(struct rq *rq, struct task_struct *p, int flags)
+ void activate_task(struct rq *rq, struct task_struct *p, int flags)
+ {
+ 	if (task_contributes_to_load(p))
+-		rq->nr_uninterruptible--;
++		atomic_dec(&rq->nr_uninterruptible);
+ 
+ 	enqueue_task(rq, p, flags);
+ 
+@@ -1210,7 +1210,7 @@ void deactivate_task(struct rq *rq, struct task_struct *p, int flags)
+ 	p->on_rq = (flags & DEQUEUE_SLEEP) ? 0 : TASK_ON_RQ_MIGRATING;
+ 
+ 	if (task_contributes_to_load(p))
+-		rq->nr_uninterruptible++;
++		atomic_inc(&rq->nr_uninterruptible);
+ 
+ 	dequeue_task(rq, p, flags);
+ }
+@@ -2135,9 +2135,6 @@ ttwu_do_activate(struct rq *rq, struct task_struct *p, int wake_flags,
+ 	lockdep_assert_held(&rq->lock);
+ 
+ #ifdef CONFIG_SMP
+-	if (p->sched_contributes_to_load)
+-		rq->nr_uninterruptible--;
+-
+ 	if (wake_flags & WF_MIGRATED)
+ 		en_flags |= ENQUEUE_MIGRATED;
+ #endif
+@@ -2500,11 +2497,15 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
+ 	p->sched_contributes_to_load = !!task_contributes_to_load(p);
+ 	p->state = TASK_WAKING;
+ 
++	/* update the rq accounting according before set_task_cpu */
+ 	if (p->in_iowait) {
+ 		delayacct_blkio_end(p);
+ 		atomic_dec(&task_rq(p)->nr_iowait);
+ 	}
+ 
++	if (p->sched_contributes_to_load)
++		atomic_dec(&task_rq(p)->nr_uninterruptible);
++
+ 	cpu = select_task_rq(p, p->wake_cpu, SD_BALANCE_WAKE, wake_flags);
+ 	if (task_cpu(p) != cpu) {
+ 		wake_flags |= WF_MIGRATED;
+@@ -2519,6 +2520,9 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
+ 		atomic_dec(&task_rq(p)->nr_iowait);
+ 	}
+ 
++	if (p->sched_contributes_to_load)
++		atomic_dec(&task_rq(p)->nr_uninterruptible);
++
+ #endif /* CONFIG_SMP */
+ 
+ 	ttwu_queue(p, cpu, wake_flags);
+diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
+index f7e4579..fa2c1bc 100644
+--- a/kernel/sched/debug.c
++++ b/kernel/sched/debug.c
+@@ -641,7 +641,7 @@ do {									\
+ 	P(nr_running);
+ 	P(nr_switches);
+ 	P(nr_load_updates);
+-	P(nr_uninterruptible);
++	SEQ_printf(m, "  .%-30s: %d\n", "nr_uninterruptible", atomic_read(&rq->nr_uninterruptible));
+ 	PN(next_balance);
+ 	SEQ_printf(m, "  .%-30s: %ld\n", "curr->pid", (long)(task_pid_nr(rq->curr)));
+ 	PN(clock);
+diff --git a/kernel/sched/loadavg.c b/kernel/sched/loadavg.c
+index 28a5165..cae7643 100644
+--- a/kernel/sched/loadavg.c
++++ b/kernel/sched/loadavg.c
+@@ -81,7 +81,7 @@ long calc_load_fold_active(struct rq *this_rq, long adjust)
+ 	long nr_active, delta = 0;
+ 
+ 	nr_active = this_rq->nr_running - adjust;
+-	nr_active += (long)this_rq->nr_uninterruptible;
++	nr_active += (long)atomic_read(&this_rq->nr_uninterruptible);
+ 
+ 	if (nr_active != this_rq->calc_load_active) {
+ 		delta = nr_active - this_rq->calc_load_active;
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 802b1f3..8429281 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -890,7 +890,7 @@ struct rq {
+ 	 * one CPU and if it got migrated afterwards it may decrease
+ 	 * it on another CPU. Always updated under the runqueue lock:
+ 	 */
+-	unsigned long		nr_uninterruptible;
++	atomic_t		nr_uninterruptible;
+ 
+ 	struct task_struct	*curr;
+ 	struct task_struct	*idle;
+-- 
+2.7.4
+
