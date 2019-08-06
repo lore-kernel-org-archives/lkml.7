@@ -2,140 +2,108 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E761C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:05:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C808AC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:11:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBAD920C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:05:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97E76206A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:11:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="z2yxKPxy"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Rlh/PYjp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbfHFVFi (ORCPT
+        id S1726602AbfHFVLy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:05:38 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:34025 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726069AbfHFVFi (ORCPT
+        Tue, 6 Aug 2019 17:11:54 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:9178 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726016AbfHFVLy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:05:38 -0400
-Received: by mail-ot1-f67.google.com with SMTP id n5so96145690otk.1
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 14:05:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bL9WIDO7sBDPuzb3CXk+Z4+KurUQJsfGVwyfuIglMnE=;
-        b=z2yxKPxyTcUc/O0JPDhYlubCTmWn88V/XHMgPAW10JVY9PDY328HIFjdo5D72jUH9f
-         NgLzeLRf01N3eu0r1mdcfI7/BvjmTgkY/TwdpldwvbZ6CYEkwmp0eYXtVjobhRaRQuLv
-         UKVBPLyKcHIhmZ3R5exIUzoaoQVCcIZsFwVAzTGEHH8mOBIpEeJV0N4FZvasdWo3/BMo
-         KGuoLOtTZHjpAh9PykT0gDKxN/TsFkitTz6RF0I1c9hGrl8ZOrgqZWNkXh78fIJeqajS
-         J0PWgZNpFBbIOgjBn3Sa58UezqTODB4r3nJN4DcwPF/L6QTs9YSzBz3/MuR4za3eFBwA
-         +vLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bL9WIDO7sBDPuzb3CXk+Z4+KurUQJsfGVwyfuIglMnE=;
-        b=to/n2Amvmt26+Un2hlnlhYNXl5MxaLcDLySmLhC1Rsy/vu7JxBNwPNaLK1q4KYcqYI
-         G6GVjFIDb1WTgAGO9BJLZLYRIqkYVfkKDWyaj6ZMEQfB1Ca/XOFQpRsHGcNmkO1Zgtn3
-         iMW80N8kgF7pPxkCasgh7gb7Ltj2C5roPYSK8901i6tKyrVbU8+7xvcpa7Qh3cybOg5T
-         Czm/O53IhPrNz0LbJEjFtNRD1Ek8n0MeRZMiik7hImhZLQt79lydnBlCkRjtT9g/imPL
-         Z0GQJag4lb0Ec2h6tmE6gJIw8i02HCa/G2W81ucE2PSYpmlqGxVWIqmyA9b+AFoF0PTR
-         E7nQ==
-X-Gm-Message-State: APjAAAU2g0Q1CdWCergKyjTPKY/f86OfU3xGT70sMuNY22/R3NTw+qEb
-        or8Z13ieQiPHRHxVvVpvuTdD/Kam3N4pkDt/lpHi2w==
-X-Google-Smtp-Source: APXvYqz/Ak9jnetJg9GXee4VtqrfI/7ybe9DtdbHdF+C7k/OSWwPkzRw1cnJyGFIKt8iguhq8EC0LfgFQg7v9HFSu0g=
-X-Received: by 2002:a9d:470d:: with SMTP id a13mr4639053otf.126.1565125537390;
- Tue, 06 Aug 2019 14:05:37 -0700 (PDT)
+        Tue, 6 Aug 2019 17:11:54 -0400
+Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
+        by m0001303.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x76L2ZbG017521
+        for <linux-kernel@vger.kernel.org>; Tue, 6 Aug 2019 14:11:53 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=facebook;
+ bh=f13IO85jl9Vu83Wg4MpoupSf6Pne2xh7V/ZR08MQRjw=;
+ b=Rlh/PYjpWulTTG322iPWpErrv8+mSOvNN7ZmuFeN9l54x5C48HlntpESLYLLgbno9/W5
+ 5TQ9UyVdZEPW6cHUM2zPRN9imhM7vP4nKeMDwjdEa6EJY/vCw2tWuRqfdS8oEtM+Iw6u
+ B+fYVAI6ZQZApHu+10ulVTI4vS1fHNdmbyo= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by m0001303.ppops.net with ESMTP id 2u7an3hr2w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 14:11:53 -0700
+Received: from mx-out.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:82::f) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 6 Aug 2019 14:11:52 -0700
+Received: by devvm24792.prn1.facebook.com (Postfix, from userid 150176)
+        id EE36C18C5041C; Tue,  6 Aug 2019 14:09:24 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Tao Ren <taoren@fb.com>
+Smtp-Origin-Hostname: devvm24792.prn1.facebook.com
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Arun Parameswaran <arun.parameswaran@broadcom.com>,
+        Justin Chen <justinpopo6@gmail.com>,
+        Vladimir Oltean <olteanv@gmail.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <openbmc@lists.ozlabs.org>
+CC:     Tao Ren <taoren@fb.com>
+Smtp-Origin-Cluster: prn1c35
+Subject: [PATCH net-next v4 1/2] net: phy: modify assignment to OR for dev_flags in phy_attach_direct
+Date:   Tue, 6 Aug 2019 14:09:23 -0700
+Message-ID: <20190806210923.3722864-1-taoren@fb.com>
+X-Mailer: git-send-email 2.17.1
+X-FB-Internal: Safe
 MIME-Version: 1.0
-References: <1565112345-28754-1-git-send-email-jane.chu@oracle.com> <1565112345-28754-2-git-send-email-jane.chu@oracle.com>
-In-Reply-To: <1565112345-28754-2-git-send-email-jane.chu@oracle.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 6 Aug 2019 14:05:25 -0700
-Message-ID: <CAPcyv4jv1Dr=mDkYZ62B=nZux=bFWxYFu3u_N+8Pr0i0jyM2Lg@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] mm/memory-failure.c clean up around tk pre-allocation
-To:     Jane Chu <jane.chu@oracle.com>
-Cc:     Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-06_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=706 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908060182
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jane, looks good. Checkpatch prompts me to point out a couple more fixups:
+Modify the assignment to OR when dealing with phydev->dev_flags in
+phy_attach_direct function, and this is to make sure dev_flags set in
+driver's probe callback won't be lost.
 
-This patch is titled:
+Suggested-by: Andrew Lunn <andrew@lunn.ch>
+CC: Heiner Kallweit <hkallweit1@gmail.com>
+CC: Vladimir Oltean <olteanv@gmail.com>
+Signed-off-by: Tao Ren <taoren@fb.com>
+---
+ Changes:
+  - nothing is changed in v1/v2/v3: it's given v4 to align with v4 of the
+    2nd patch in the series.
 
-    "mm/memory-failure.c clean up..."
+ drivers/net/phy/phy_device.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-...to match the second patch it should be:
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index 6b5cb87f3866..9259eb45c794 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -1270,7 +1270,7 @@ int phy_attach_direct(struct net_device *dev, struct phy_device *phydev,
+ 			phydev_err(phydev, "error creating 'phy_standalone' sysfs entry\n");
+ 	}
+ 
+-	phydev->dev_flags = flags;
++	phydev->dev_flags |= flags;
+ 
+ 	phydev->interface = interface;
+ 
+-- 
+2.17.1
 
-    "mm/memory-failure: clean up..."
-
-On Tue, Aug 6, 2019 at 10:26 AM Jane Chu <jane.chu@oracle.com> wrote:
->
-> add_to_kill() expects the first 'tk' to be pre-allocated, it makes
-> subsequent allocations on need basis, this makes the code a bit
-> difficult to read. Move all the allocation internal to add_to_kill()
-> and drop the **tk argument.
->
-> Signed-off-by: Jane Chu <jane.chu@oracle.com>
-> ---
->  mm/memory-failure.c | 40 +++++++++++++---------------------------
->  1 file changed, 13 insertions(+), 27 deletions(-)
->
-> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-> index d9cc660..51d5b20 100644
-> --- a/mm/memory-failure.c
-> +++ b/mm/memory-failure.c
-> @@ -304,25 +304,19 @@ static unsigned long dev_pagemap_mapping_shift(struct page *page,
->  /*
->   * Schedule a process for later kill.
->   * Uses GFP_ATOMIC allocations to avoid potential recursions in the VM.
-> - * TBD would GFP_NOIO be enough?
->   */
->  static void add_to_kill(struct task_struct *tsk, struct page *p,
->                        struct vm_area_struct *vma,
-> -                      struct list_head *to_kill,
-> -                      struct to_kill **tkc)
-> +                      struct list_head *to_kill)
->  {
->         struct to_kill *tk;
->
-> -       if (*tkc) {
-> -               tk = *tkc;
-> -               *tkc = NULL;
-> -       } else {
-> -               tk = kmalloc(sizeof(struct to_kill), GFP_ATOMIC);
-> -               if (!tk) {
-> -                       pr_err("Memory failure: Out of memory while machine check handling\n");
-> -                       return;
-> -               }
-> +       tk = kmalloc(sizeof(struct to_kill), GFP_ATOMIC);
-> +       if (!tk) {
-> +               pr_err("Memory failure: Out of memory while machine check handling\n");
-> +               return;
->         }
-
-checkpatch points out that this error message can be deleted.
-According to the commit that added this check (ebfdc40969f2
-"checkpatch: attempt to find unnecessary 'out of memory' messages")
-the kernel already prints a message and a backtrace on these events,
-so seems like a decent additional cleanup to fold.
-
-With those fixups you can add:
-
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-
-...along with Naoya's ack.
-
-I would Cc: Andrew Morton on the v5 posting of these as he's the
-upstream path for changes to this file.
