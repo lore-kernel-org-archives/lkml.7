@@ -3,155 +3,166 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E648C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 04:39:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC1EBC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 04:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04EC32147A
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 04:39:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CE3A2147A
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 04:46:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="DPhaoKaJ"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="0WEACkB6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731562AbfHFEjq (ORCPT
+        id S1728873AbfHFEqj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 00:39:46 -0400
-Received: from mail-eopbgr70074.outbound.protection.outlook.com ([40.107.7.74]:29632
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726072AbfHFEjp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 00:39:45 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OFdxps6KlTPwnIy9UbleNv8APEH4r3ICWL19OnmkujSOPP9iYvbR0I8PQchSRZIxM8eBNjt9mHZO2ylDN3M0vT0hFHlTPTcKn6RbaeZdYEcuK5itxbPXEK7gKxeKYV407GXdhZl1P3D8AujvCMscY1ZjgV0M5O5dMNVgZeqaqsv4bnhxaZ5/Jq7+S4u/8NMFHNlgw1laktf5taJFo2fCdozRZR9wXFZCYrIUGo6PHTzMIXmoWTzIRg87NnvGJt59Uw0Oe7zkoZrdkqab+zBNozsKjr+uLlzn8SbLoQNiFAEU7tLlmUE4lAYAYFR/IXyJiBQYyaHvh6qzV0r5eLisDA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xec13rTUsXd1gASYhpv92Ws18KXOus6tZg8/T/zH3Kc=;
- b=E8Ls3A1R6K1w5nv4/rwQoNhJy7+Krq3oewr/SNsqWi9kClTXLeG9w9+Tvsjh4uHtmR2Qtz43V9e5A3S71n8cdT5Swuv546QTALY474t5vJQE2tqBTVpjS9/9AgocunFgZ0tOkWygMgz6DnUirtfY5RGzKtrovw0y7TWosc3Rblp38A9zX8vP4V7yQBzHKrrFL0LprSOZ9ttZrbSzKfPya22A1suDEuU5rYQUzhXrKdmwWgs2xAeJS5SvDgqhYhtKUcmTRHKOgKEUDcUSSZXcPc7Uh9LlGdOpqdn5XN9xcqL4AnXongEKXnKSgXWihmb4LgIUs9V6lXldi4L6cwZ8hg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
- header.d=nxp.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xec13rTUsXd1gASYhpv92Ws18KXOus6tZg8/T/zH3Kc=;
- b=DPhaoKaJZAW6CAwCAefLQC27QoG1yb0UqbIrB4MfAowUEF26QUUbjTfjdlibgAHw+6kvDv3auT0aPWW8CcXFTJsaGdCoxVwH82dZAotnW5zAVUtSkOETYi1xXfuiuNZjO7x3lAF48xq40Dn7emv7bstU1EcBKIt2suDfUfV5UUw=
-Received: from DB8PR04MB6747.eurprd04.prod.outlook.com (20.179.250.159) by
- DB8PR04MB6763.eurprd04.prod.outlook.com (20.179.250.156) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2136.17; Tue, 6 Aug 2019 04:39:39 +0000
-Received: from DB8PR04MB6747.eurprd04.prod.outlook.com
- ([fe80::19ec:cddf:5e07:37eb]) by DB8PR04MB6747.eurprd04.prod.outlook.com
- ([fe80::19ec:cddf:5e07:37eb%3]) with mapi id 15.20.2136.018; Tue, 6 Aug 2019
- 04:39:39 +0000
-From:   "Z.q. Hou" <zhiqiang.hou@nxp.com>
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>,
-        "pombredanne@nexb.com" <pombredanne@nexb.com>,
-        "shawn.lin@rock-chips.com" <shawn.lin@rock-chips.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-CC:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: RE: [PATCHv2 3/3] PCI: layerscape: Add LS1028a support
-Thread-Topic: [PATCHv2 3/3] PCI: layerscape: Add LS1028a support
-Thread-Index: AQHVS0RTVBSwbW4lj0i37Oj0WQ6yPqbtihIQ
-Date:   Tue, 6 Aug 2019 04:39:38 +0000
-Message-ID: <DB8PR04MB6747A3AE99090E6B49AAE3D984D50@DB8PR04MB6747.eurprd04.prod.outlook.com>
-References: <20190805040453.48009-1-xiaowei.bao@nxp.com>
- <20190805040453.48009-3-xiaowei.bao@nxp.com>
-In-Reply-To: <20190805040453.48009-3-xiaowei.bao@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=zhiqiang.hou@nxp.com; 
-x-originating-ip: [27.187.43.90]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b6602838-d15d-479d-6f36-08d71a281787
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB8PR04MB6763;
-x-ms-traffictypediagnostic: DB8PR04MB6763:
-x-microsoft-antispam-prvs: <DB8PR04MB6763B2B4E35F53D7AFD75CD284D50@DB8PR04MB6763.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3383;
-x-forefront-prvs: 0121F24F22
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(366004)(39860400002)(136003)(376002)(189003)(199004)(13464003)(478600001)(66476007)(99286004)(33656002)(186003)(53546011)(6506007)(52536014)(7696005)(9686003)(102836004)(26005)(68736007)(256004)(76176011)(5660300002)(7416002)(66066001)(2201001)(25786009)(14454004)(4326008)(6246003)(71190400001)(7736002)(6116002)(74316002)(305945005)(3846002)(110136005)(2906002)(81166006)(53936002)(71200400001)(8936002)(8676002)(6436002)(11346002)(66446008)(229853002)(316002)(446003)(81156014)(55016002)(2501003)(476003)(86362001)(66946007)(64756008)(66556008)(486006)(76116006)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB6763;H:DB8PR04MB6747.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: qRmlN9e8Ri/fejJdAA3hr9PUh5dBjuzjzNqxQ/5/ngHqRxV2bvnivXCa0kzsfR0Gb1Qp3jYN1WYp34/rL1Q/bXgmUYuHkYaXCLuYtFJKcWhxxQ/ww56TS20KmFqDfPQ0MoPs559jTZlycM1L7NofmBuo0/FB8HNaFgHKTsnwc7yDHiUAXD/eUdD1eT7Di1pq57v6PnMqH0o9lDqEuliFFz4Gx+6dJjG18etc2Xt2XyeKCikYoRvBoFPDgtVTpVYXI402Ehm2Ib9nARbwWVPoln7OYQR3rCiHJkZe2T/faqhXW2ypu6w/PKBcwstxbNtF0J64xKZ4EcY4MMYwI9CZ+mIPsHmFU67HWFwhHYW2Nf7Ppxshl3fThmi1N2VTN+oCmfNqYuuBj402ahIhdrUjI6H8/FONAxIJH1iNp/995MU=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Tue, 6 Aug 2019 00:46:39 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36607 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725853AbfHFEqj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 00:46:39 -0400
+Received: by mail-pg1-f194.google.com with SMTP id l21so40870772pgm.3
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 21:46:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=2j7+zajW8YHjJb6vtd6GGK8PfR2IXlyooiMNjhgqda4=;
+        b=0WEACkB6+tkSwapaLx3mUtGXDP8tMN+Mw0CtY4oq4TY6eb6BPbFQ03Rq2JZAoM20/u
+         FY8yhlRyoAUr2kF8VcVVR4h1UEAzDuwkzsU7nYIJ1qyZPWUMp23JmIfyrAGr3kvvZPrF
+         Sdjlj4dm+VQbaqllPiRCeTV7Da9fWHPMaV77IFgzqVJwYBuAK/0TvHPhNfqAJveP7gSq
+         6umgH6JcdQoRVJeg1LsHHvrANHxAgrbqwGK/adiCXx9KDqVtIjQOy89BCabkWAd+YMco
+         nwsihxmqdAzfW6NyggGtIhUVCR96fStCxpW/zabYpJcYfwuyq0TJWULFKJYpIURYyfDn
+         dv0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=2j7+zajW8YHjJb6vtd6GGK8PfR2IXlyooiMNjhgqda4=;
+        b=dNfmmd+Ilm9RWCxS9T8+b4S+nf0yBWODO4q0mJ7Ds0MfrfPH+QKMowZhqHZXVpcIAK
+         JV0HkomkSNiDc9hHJ40RNWH3qSEn29aywRDM/3b9FVV/BlLYg1X2j8pUQlB/3qMJJ+fn
+         3ghdMuF+imoctGw+ob0Q2j5T43moKdDe4buF4LFtzLYTQV9oWLw5ErDTCvoARBoYyqET
+         i+fydTftc2OlOr26N+3uYwgbohvggjYCGuK3mDNvuXdzRLEOrrNWpbFHx+rf+lA0RVRN
+         xNfCUB5rpHNHSt9wXEon0AD3YcZX2MAfRqdky7wLBwUBJrqZSbyNtf+n8hcZKpHxcpK2
+         YF5A==
+X-Gm-Message-State: APjAAAUtzlrB/5vwQ1vUTM4wOENM6Fb4k7IcDml2+hWp6ihIDWglaquw
+        iXEv6Gw7V706sjhHt+8C/tgPWw==
+X-Google-Smtp-Source: APXvYqxJ1GU+jM362HNbpRUZRKuHn12ZYsRHo95Oyr4gTePUavWdw/B4lZOUiOayXIOV5B07X0OeVQ==
+X-Received: by 2002:a17:90a:a489:: with SMTP id z9mr1170396pjp.24.1565066798435;
+        Mon, 05 Aug 2019 21:46:38 -0700 (PDT)
+Received: from cakuba.netronome.com (c-71-204-185-212.hsd1.ca.comcast.net. [71.204.185.212])
+        by smtp.gmail.com with ESMTPSA id v18sm85291165pgl.87.2019.08.05.21.46.37
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 05 Aug 2019 21:46:38 -0700 (PDT)
+Date:   Mon, 5 Aug 2019 21:46:14 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Jose Abreu <Jose.Abreu@synopsys.com>
+Cc:     netdev@vger.kernel.org, Joao Pinto <Joao.Pinto@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 06/10] net: stmmac: Implement RSS and enable it
+ in XGMAC core
+Message-ID: <20190805214600.4c84ccd7@cakuba.netronome.com>
+In-Reply-To: <e70981c111ac857a0bac77750bd69a3383d99ee0.1565027782.git.joabreu@synopsys.com>
+References: <cover.1565027782.git.joabreu@synopsys.com>
+        <e70981c111ac857a0bac77750bd69a3383d99ee0.1565027782.git.joabreu@synopsys.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b6602838-d15d-479d-6f36-08d71a281787
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Aug 2019 04:39:39.0371
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: zhiqiang.hou@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6763
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgWGlhb3dlaSwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBYaWFv
-d2VpIEJhbyBbbWFpbHRvOnhpYW93ZWkuYmFvQG54cC5jb21dDQo+IFNlbnQ6IDIwMTnE6jjUwjXI
-1SAxMjowNQ0KPiBUbzogYmhlbGdhYXNAZ29vZ2xlLmNvbTsgcm9iaCtkdEBrZXJuZWwub3JnOyBt
-YXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj4gc2hhd25ndW9Aa2VybmVsLm9yZzsgTGVvIExpIDxsZW95
-YW5nLmxpQG54cC5jb20+OyBraXNob25AdGkuY29tOw0KPiBsb3JlbnpvLnBpZXJhbGlzaUBhcm0u
-Y29tOyBhcm5kQGFybmRiLmRlOyBncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZzsNCj4gTS5oLiBM
-aWFuIDxtaW5naHVhbi5saWFuQG54cC5jb20+OyBNaW5na2FpIEh1IDxtaW5na2FpLmh1QG54cC5j
-b20+Ow0KPiBaLnEuIEhvdSA8emhpcWlhbmcuaG91QG54cC5jb20+OyBSb3kgWmFuZyA8cm95Lnph
-bmdAbnhwLmNvbT47DQo+IGtzdGV3YXJ0QGxpbnV4Zm91bmRhdGlvbi5vcmc7IHBvbWJyZWRhbm5l
-QG5leGIuY29tOw0KPiBzaGF3bi5saW5Acm9jay1jaGlwcy5jb207IGxpbnV4LXBjaUB2Z2VyLmtl
-cm5lbC5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdl
-ci5rZXJuZWwub3JnOw0KPiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxp
-bnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnDQo+IENjOiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5i
-YW9AbnhwLmNvbT4NCj4gU3ViamVjdDogW1BBVENIdjIgMy8zXSBQQ0k6IGxheWVyc2NhcGU6IEFk
-ZCBMUzEwMjhhIHN1cHBvcnQNCj4gDQo+IEFkZCBzdXBwb3J0IGZvciB0aGUgTFMxMDI4YSBQQ0ll
-IGNvbnRyb2xsZXIuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5i
-YW9AbnhwLmNvbT4NCj4gLS0tDQo+IHYyOg0KPiAgLSBubyBjaGFuZ2UuDQo+IA0KPiAgZHJpdmVy
-cy9wY2kvY29udHJvbGxlci9kd2MvcGNpLWxheWVyc2NhcGUuYyB8IDkgKysrKysrKysrDQo+ICAx
-IGZpbGUgY2hhbmdlZCwgOSBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVy
-cy9wY2kvY29udHJvbGxlci9kd2MvcGNpLWxheWVyc2NhcGUuYw0KPiBiL2RyaXZlcnMvcGNpL2Nv
-bnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLmMNCj4gaW5kZXggM2E1ZmEyNi4uOGM1NTZlMSAx
-MDA2NDQNCj4gLS0tIGEvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpLWxheWVyc2NhcGUu
-Yw0KPiArKysgYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktbGF5ZXJzY2FwZS5jDQo+
-IEBAIC0yMzYsNiArMjM2LDE0IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbHNfcGNpZV9kcnZkYXRh
-IGxzMTA0M19kcnZkYXRhID0NCj4gew0KPiAgCS5kd19wY2llX29wcyA9ICZkd19sc19wY2llX29w
-cywNCj4gIH07DQo+IA0KPiArc3RhdGljIGNvbnN0IHN0cnVjdCBsc19wY2llX2RydmRhdGEgbHMx
-MDI4YV9kcnZkYXRhID0gew0KPiArCS5sdXRfb2Zmc2V0ID0gMHg4MDAwMCwNCj4gKwkubHRzc21f
-c2hpZnQgPSAwLA0KPiArCS5sdXRfZGJnID0gMHg0MDdmYywNCj4gKwkub3BzID0gJmxzX3BjaWVf
-aG9zdF9vcHMsDQo+ICsJLmR3X3BjaWVfb3BzID0gJmR3X2xzX3BjaWVfb3BzLA0KPiArfTsNCj4g
-Kw0KDQpSZXVzZSB0aGUgZHJpdmVyIGRhdGEgc3RydWN0dXJlIG9mIExTMjA4OCBpbnN0ZWFkIGFk
-ZCBhIG5ldyBvbmUuDQoNCi0gWmhpcWlhbmcNCg0KPiAgc3RhdGljIGNvbnN0IHN0cnVjdCBsc19w
-Y2llX2RydmRhdGEgbHMxMDQ2X2RydmRhdGEgPSB7DQo+ICAJLmx1dF9vZmZzZXQgPSAweDgwMDAw
-LA0KPiAgCS5sdHNzbV9zaGlmdCA9IDI0LA0KPiBAQCAtMjYzLDYgKzI3MSw3IEBAIHN0YXRpYyBj
-b25zdCBzdHJ1Y3QgbHNfcGNpZV9kcnZkYXRhIGxzMjA4OF9kcnZkYXRhID0NCj4geyAgc3RhdGlj
-IGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgbHNfcGNpZV9vZl9tYXRjaFtdID0gew0KPiAgCXsg
-LmNvbXBhdGlibGUgPSAiZnNsLGxzMTAxMmEtcGNpZSIsIC5kYXRhID0gJmxzMTA0Nl9kcnZkYXRh
-IH0sDQo+ICAJeyAuY29tcGF0aWJsZSA9ICJmc2wsbHMxMDIxYS1wY2llIiwgLmRhdGEgPSAmbHMx
-MDIxX2RydmRhdGEgfSwNCj4gKwl7IC5jb21wYXRpYmxlID0gImZzbCxsczEwMjhhLXBjaWUiLCAu
-ZGF0YSA9ICZsczEwMjhhX2RydmRhdGEgfSwNCj4gIAl7IC5jb21wYXRpYmxlID0gImZzbCxsczEw
-NDNhLXBjaWUiLCAuZGF0YSA9ICZsczEwNDNfZHJ2ZGF0YSB9LA0KPiAgCXsgLmNvbXBhdGlibGUg
-PSAiZnNsLGxzMTA0NmEtcGNpZSIsIC5kYXRhID0gJmxzMTA0Nl9kcnZkYXRhIH0sDQo+ICAJeyAu
-Y29tcGF0aWJsZSA9ICJmc2wsbHMyMDgwYS1wY2llIiwgLmRhdGEgPSAmbHMyMDgwX2RydmRhdGEg
-fSwNCj4gLS0NCj4gMi45LjUNCg0K
+On Mon,  5 Aug 2019 20:01:19 +0200, Jose Abreu wrote:
+> Implement the RSS functionality and add the corresponding callbacks in
+> XGMAC core.
+> 
+> Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+> ---
+> Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+> Cc: Alexandre Torgue <alexandre.torgue@st.com>
+> Cc: Jose Abreu <joabreu@synopsys.com>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+> Cc: netdev@vger.kernel.org
+> Cc: linux-stm32@st-md-mailman.stormreply.com
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c
+> index c4c45402b8f8..9ff9d9ac1a50 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c
+> @@ -254,6 +254,34 @@ static void dwxgmac2_clear(struct dma_desc *p)
+>  	p->des3 = 0;
+>  }
+>  
+> +static int dwxgmac2_get_rx_hash(struct dma_desc *p, u32 *hash,
+> +				enum pkt_hash_types *type)
+> +{
+> +	unsigned int rdes3 = le32_to_cpu(p->des3);
+> +	u32 ptype;
+> +
+> +	if (rdes3 & XGMAC_RDES3_RSV) {
+> +		ptype = (rdes3 & XGMAC_RDES3_L34T) >> XGMAC_RDES3_L34T_SHIFT;
+> +
+> +		switch (ptype) {
+> +		case 0x1:
+> +		case 0x2:
+> +		case 0x9:
+> +		case 0xA:
+
+nit: it'd be nice to have defines for these constants
+
+> +			*type = PKT_HASH_TYPE_L4;
+> +			break;
+> +		default:
+> +			*type = PKT_HASH_TYPE_L3;
+> +			break;
+> +		}
+> +
+> +		*hash = le32_to_cpu(p->des1);
+> +		return 0;
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+>  const struct stmmac_desc_ops dwxgmac210_desc_ops = {
+>  	.tx_status = dwxgmac2_get_tx_status,
+>  	.rx_status = dwxgmac2_get_rx_status,
+
+> @@ -4182,7 +4208,7 @@ int stmmac_dvr_probe(struct device *device,
+>  	struct net_device *ndev = NULL;
+>  	struct stmmac_priv *priv;
+>  	u32 queue, maxq;
+> -	int ret = 0;
+> +	int i, ret = 0;
+>  
+>  	ndev = devm_alloc_etherdev_mqs(device, sizeof(struct stmmac_priv),
+>  				       MTL_MAX_TX_QUEUES, MTL_MAX_RX_QUEUES);
+> @@ -4290,6 +4316,14 @@ int stmmac_dvr_probe(struct device *device,
+>  #endif
+>  	priv->msg_enable = netif_msg_init(debug, default_msg_level);
+>  
+> +	/* Initialize RSS */
+> +	netdev_rss_key_fill(priv->rss.key, sizeof(priv->rss.key));
+> +	for (i = 0; i < ARRAY_SIZE(priv->rss.table); i++)
+> +		priv->rss.table[i] = i % priv->plat->rx_queues_to_use;
+
+ethtool_rxfh_indir_default() ?
+
+> +	if (priv->dma_cap.rssen && priv->plat->rss_en)
+> +		ndev->features |= NETIF_F_RXHASH;
+> +
+>  	/* MTU range: 46 - hw-specific max */
+>  	ndev->min_mtu = ETH_ZLEN - ETH_HLEN;
+>  	if ((priv->plat->enh_desc) || (priv->synopsys_id >= DWMAC_CORE_4_00))
