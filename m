@@ -2,246 +2,124 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB76C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:12:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBAEBC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:12:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E49CB2089E
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:12:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DAB1214C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:12:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565104378;
+	bh=5bnsFMIWFOI6iCESZfiLVc9Rosm0DrIKb+aQb+lYbGs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gAGx2oDRj8vc3u4L24/pQLBGsKZb9OQRXGxnVcVo/Hl0Cgk6qorr5R5EiT1XIk/Ei
+	 /pC3XvNcv+Nv0Eu+i3uJu1079GfR32J8yXm08Kpf7ynhT8DuTct/6VrT5dAPqTEqFU
+	 udL9MUXxcZOxliMp3dZL/ZCLGczH/Ob36heynfnI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733077AbfHFPMv (ORCPT
+        id S1733114AbfHFPM5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 11:12:51 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:58140 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727540AbfHFPMe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 11:12:34 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 132442002C0;
-        Tue,  6 Aug 2019 17:12:30 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 053962000BA;
-        Tue,  6 Aug 2019 17:12:30 +0200 (CEST)
-Received: from fsr-ub1864-103.ea.freescale.net (fsr-ub1864-103.ea.freescale.net [10.171.82.17])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 0FE76205DD;
-        Tue,  6 Aug 2019 17:12:29 +0200 (CEST)
-From:   Daniel Baluta <daniel.baluta@nxp.com>
-To:     broonie@kernel.org
-Cc:     l.stach@pengutronix.de, mihai.serban@gmail.com,
-        alsa-devel@alsa-project.org, timur@kernel.org,
-        shengjiu.wang@nxp.com, angus@akkea.ca, tiwai@suse.com,
-        nicoleotsuka@gmail.com, linux-imx@nxp.com, kernel@pengutronix.de,
-        festevam@gmail.com, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh@kernel.org,
-        Daniel Baluta <daniel.baluta@nxp.com>
-Subject: [PATCH v3 1/5] ASoC: fsl_sai: Add registers definition for multiple datalines
-Date:   Tue,  6 Aug 2019 18:12:10 +0300
-Message-Id: <20190806151214.6783-2-daniel.baluta@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190806151214.6783-1-daniel.baluta@nxp.com>
-References: <20190806151214.6783-1-daniel.baluta@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 6 Aug 2019 11:12:57 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48546 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727540AbfHFPMy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 11:12:54 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 8B566AF4C;
+        Tue,  6 Aug 2019 15:12:52 +0000 (UTC)
+Date:   Tue, 6 Aug 2019 17:12:51 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Pankaj Suryawanshi <pankajssuryawanshi@gmail.com>
+Cc:     Vlastimil Babka <vbabka@suse.cz>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, pankaj.suryawanshi@einfochips.com
+Subject: Re: oom-killer
+Message-ID: <20190806151251.GJ11812@dhcp22.suse.cz>
+References: <CACDBo54Jbueeq1XbtbrFOeOEyF-Q4ipZJab8mB7+0cyK1Foqyw@mail.gmail.com>
+ <20190805112437.GF7597@dhcp22.suse.cz>
+ <0821a17d-1703-1b82-d850-30455e19e0c1@suse.cz>
+ <20190805120525.GL7597@dhcp22.suse.cz>
+ <CACDBo562xHy6McF5KRq3yngKqAm4a15FFKgbWkCTGQZ0pnJWgw@mail.gmail.com>
+ <20190805201650.GT7597@dhcp22.suse.cz>
+ <CACDBo54kBy_YBcXBzs1dOxQRg+TKFQox_aqqtB2dvL+mmusDVg@mail.gmail.com>
+ <20190806150733.GH11812@dhcp22.suse.cz>
+ <CACDBo54KihsV=8NLGZkTghTzb2p70WURF2L5op=fW7DGj_vJ1A@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACDBo54KihsV=8NLGZkTghTzb2p70WURF2L5op=fW7DGj_vJ1A@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SAI IP supports up to 8 data lines. The configuration of
-supported number of data lines is decided at SoC integration
-time.
+On Tue 06-08-19 20:39:22, Pankaj Suryawanshi wrote:
+> On Tue, Aug 6, 2019 at 8:37 PM Michal Hocko <mhocko@kernel.org> wrote:
+> >
+> > On Tue 06-08-19 20:24:03, Pankaj Suryawanshi wrote:
+> > > On Tue, 6 Aug, 2019, 1:46 AM Michal Hocko, <mhocko@kernel.org> wrote:
+> > > >
+> > > > On Mon 05-08-19 21:04:53, Pankaj Suryawanshi wrote:
+> > > > > On Mon, Aug 5, 2019 at 5:35 PM Michal Hocko <mhocko@kernel.org> wrote:
+> > > > > >
+> > > > > > On Mon 05-08-19 13:56:20, Vlastimil Babka wrote:
+> > > > > > > On 8/5/19 1:24 PM, Michal Hocko wrote:
+> > > > > > > >> [  727.954355] CPU: 0 PID: 56 Comm: kworker/u8:2 Tainted: P           O  4.14.65 #606
+> > > > > > > > [...]
+> > > > > > > >> [  728.029390] [<c034a094>] (oom_kill_process) from [<c034af24>] (out_of_memory+0x140/0x368)
+> > > > > > > >> [  728.037569]  r10:00000001 r9:c12169bc r8:00000041 r7:c121e680 r6:c1216588 r5:dd347d7c > [  728.045392]  r4:d5737080
+> > > > > > > >> [  728.047929] [<c034ade4>] (out_of_memory) from [<c03519ac>]  (__alloc_pages_nodemask+0x1178/0x124c)
+> > > > > > > >> [  728.056798]  r7:c141e7d0 r6:c12166a4 r5:00000000 r4:00001155
+> > > > > > > >> [  728.062460] [<c0350834>] (__alloc_pages_nodemask) from [<c021e9d4>] (copy_process.part.5+0x114/0x1a28)
+> > > > > > > >> [  728.071764]  r10:00000000 r9:dd358000 r8:00000000 r7:c1447e08 r6:c1216588 r5:00808111
+> > > > > > > >> [  728.079587]  r4:d1063c00
+> > > > > > > >> [  728.082119] [<c021e8c0>] (copy_process.part.5) from [<c0220470>] (_do_fork+0xd0/0x464)
+> > > > > > > >> [  728.090034]  r10:00000000 r9:00000000 r8:dd008400 r7:00000000 r6:c1216588 r5:d2d58ac0
+> > > > > > > >> [  728.097857]  r4:00808111
+> > > > > > > >
+> > > > > > > > The call trace tells that this is a fork (of a usermodhlper but that is
+> > > > > > > > not all that important.
+> > > > > > > > [...]
+> > > > > > > >> [  728.260031] DMA free:17960kB min:16384kB low:25664kB high:29760kB active_anon:3556kB inactive_anon:0kB active_file:280kB inactive_file:28kB unevictable:0kB writepending:0kB present:458752kB managed:422896kB mlocked:0kB kernel_stack:6496kB pagetables:9904kB bounce:0kB free_pcp:348kB local_pcp:0kB free_cma:0kB
+> > > > > > > >> [  728.287402] lowmem_reserve[]: 0 0 579 579
+> > > > > > > >
+> > > > > > > > So this is the only usable zone and you are close to the min watermark
+> > > > > > > > which means that your system is under a serious memory pressure but not
+> > > > > > > > yet under OOM for order-0 request. The situation is not great though
+> > > > > > >
+> > > > > > > Looking at lowmem_reserve above, wonder if 579 applies here? What does
+> > > > > > > /proc/zoneinfo say?
+> > > > >
+> > > > >
+> > > > > What is  lowmem_reserve[]: 0 0 579 579 ?
+> > > >
+> > > > This controls how much of memory from a lower zone you might an
+> > > > allocation request for a higher zone consume. E.g. __GFP_HIGHMEM is
+> > > > allowed to use both lowmem and highmem zones. It is preferable to use
+> > > > highmem zone because other requests are not allowed to use it.
+> > > >
+> > > > Please see __zone_watermark_ok for more details.
+> > > >
+> > > >
+> > > > > > This is GFP_KERNEL request essentially so there shouldn't be any lowmem
+> > > > > > reserve here, no?
+> > > > >
+> > > > >
+> > > > > Why only low 1G is accessible by kernel in 32-bit system ?
+> > >
+> > >
+> > > 1G ivirtual or physical memory (I have 2GB of RAM) ?
+> >
+> > virtual
+> >
+>  I have set 2G/2G still it works ?
 
-This patch adds definitions for all related data TX/RX registers:
-	* TDR0..7, Transmit data register
-	* TFR0..7, Transmit FIFO register
-	* RDR0..7, Receive data register
-	* RFR0..7, Receive FIFO register
-
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
----
- sound/soc/fsl/fsl_sai.c | 76 +++++++++++++++++++++++++++++++++++------
- sound/soc/fsl/fsl_sai.h | 36 ++++++++++++++++---
- 2 files changed, 98 insertions(+), 14 deletions(-)
-
-diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
-index 6d3c6c8d50ce..17b0aff4ee8b 100644
---- a/sound/soc/fsl/fsl_sai.c
-+++ b/sound/soc/fsl/fsl_sai.c
-@@ -685,7 +685,14 @@ static struct reg_default fsl_sai_reg_defaults[] = {
- 	{FSL_SAI_TCR3, 0},
- 	{FSL_SAI_TCR4, 0},
- 	{FSL_SAI_TCR5, 0},
--	{FSL_SAI_TDR,  0},
-+	{FSL_SAI_TDR0, 0},
-+	{FSL_SAI_TDR1, 0},
-+	{FSL_SAI_TDR2, 0},
-+	{FSL_SAI_TDR3, 0},
-+	{FSL_SAI_TDR4, 0},
-+	{FSL_SAI_TDR5, 0},
-+	{FSL_SAI_TDR6, 0},
-+	{FSL_SAI_TDR7, 0},
- 	{FSL_SAI_TMR,  0},
- 	{FSL_SAI_RCR1, 0},
- 	{FSL_SAI_RCR2, 0},
-@@ -704,7 +711,14 @@ static bool fsl_sai_readable_reg(struct device *dev, unsigned int reg)
- 	case FSL_SAI_TCR3:
- 	case FSL_SAI_TCR4:
- 	case FSL_SAI_TCR5:
--	case FSL_SAI_TFR:
-+	case FSL_SAI_TFR0:
-+	case FSL_SAI_TFR1:
-+	case FSL_SAI_TFR2:
-+	case FSL_SAI_TFR3:
-+	case FSL_SAI_TFR4:
-+	case FSL_SAI_TFR5:
-+	case FSL_SAI_TFR6:
-+	case FSL_SAI_TFR7:
- 	case FSL_SAI_TMR:
- 	case FSL_SAI_RCSR:
- 	case FSL_SAI_RCR1:
-@@ -712,8 +726,22 @@ static bool fsl_sai_readable_reg(struct device *dev, unsigned int reg)
- 	case FSL_SAI_RCR3:
- 	case FSL_SAI_RCR4:
- 	case FSL_SAI_RCR5:
--	case FSL_SAI_RDR:
--	case FSL_SAI_RFR:
-+	case FSL_SAI_RDR0:
-+	case FSL_SAI_RDR1:
-+	case FSL_SAI_RDR2:
-+	case FSL_SAI_RDR3:
-+	case FSL_SAI_RDR4:
-+	case FSL_SAI_RDR5:
-+	case FSL_SAI_RDR6:
-+	case FSL_SAI_RDR7:
-+	case FSL_SAI_RFR0:
-+	case FSL_SAI_RFR1:
-+	case FSL_SAI_RFR2:
-+	case FSL_SAI_RFR3:
-+	case FSL_SAI_RFR4:
-+	case FSL_SAI_RFR5:
-+	case FSL_SAI_RFR6:
-+	case FSL_SAI_RFR7:
- 	case FSL_SAI_RMR:
- 		return true;
- 	default:
-@@ -726,9 +754,30 @@ static bool fsl_sai_volatile_reg(struct device *dev, unsigned int reg)
- 	switch (reg) {
- 	case FSL_SAI_TCSR:
- 	case FSL_SAI_RCSR:
--	case FSL_SAI_TFR:
--	case FSL_SAI_RFR:
--	case FSL_SAI_RDR:
-+	case FSL_SAI_TFR0:
-+	case FSL_SAI_TFR1:
-+	case FSL_SAI_TFR2:
-+	case FSL_SAI_TFR3:
-+	case FSL_SAI_TFR4:
-+	case FSL_SAI_TFR5:
-+	case FSL_SAI_TFR6:
-+	case FSL_SAI_TFR7:
-+	case FSL_SAI_RFR0:
-+	case FSL_SAI_RFR1:
-+	case FSL_SAI_RFR2:
-+	case FSL_SAI_RFR3:
-+	case FSL_SAI_RFR4:
-+	case FSL_SAI_RFR5:
-+	case FSL_SAI_RFR6:
-+	case FSL_SAI_RFR7:
-+	case FSL_SAI_RDR0:
-+	case FSL_SAI_RDR1:
-+	case FSL_SAI_RDR2:
-+	case FSL_SAI_RDR3:
-+	case FSL_SAI_RDR4:
-+	case FSL_SAI_RDR5:
-+	case FSL_SAI_RDR6:
-+	case FSL_SAI_RDR7:
- 		return true;
- 	default:
- 		return false;
-@@ -744,7 +793,14 @@ static bool fsl_sai_writeable_reg(struct device *dev, unsigned int reg)
- 	case FSL_SAI_TCR3:
- 	case FSL_SAI_TCR4:
- 	case FSL_SAI_TCR5:
--	case FSL_SAI_TDR:
-+	case FSL_SAI_TDR0:
-+	case FSL_SAI_TDR1:
-+	case FSL_SAI_TDR2:
-+	case FSL_SAI_TDR3:
-+	case FSL_SAI_TDR4:
-+	case FSL_SAI_TDR5:
-+	case FSL_SAI_TDR6:
-+	case FSL_SAI_TDR7:
- 	case FSL_SAI_TMR:
- 	case FSL_SAI_RCSR:
- 	case FSL_SAI_RCR1:
-@@ -885,8 +941,8 @@ static int fsl_sai_probe(struct platform_device *pdev)
- 				   MCLK_DIR(index));
- 	}
- 
--	sai->dma_params_rx.addr = res->start + FSL_SAI_RDR;
--	sai->dma_params_tx.addr = res->start + FSL_SAI_TDR;
-+	sai->dma_params_rx.addr = res->start + FSL_SAI_RDR0;
-+	sai->dma_params_tx.addr = res->start + FSL_SAI_TDR0;
- 	sai->dma_params_rx.maxburst = FSL_SAI_MAXBURST_RX;
- 	sai->dma_params_tx.maxburst = FSL_SAI_MAXBURST_TX;
- 
-diff --git a/sound/soc/fsl/fsl_sai.h b/sound/soc/fsl/fsl_sai.h
-index 7c1ef671da28..4bb478041d67 100644
---- a/sound/soc/fsl/fsl_sai.h
-+++ b/sound/soc/fsl/fsl_sai.h
-@@ -20,8 +20,22 @@
- #define FSL_SAI_TCR3	0x0c /* SAI Transmit Configuration 3 */
- #define FSL_SAI_TCR4	0x10 /* SAI Transmit Configuration 4 */
- #define FSL_SAI_TCR5	0x14 /* SAI Transmit Configuration 5 */
--#define FSL_SAI_TDR	0x20 /* SAI Transmit Data */
--#define FSL_SAI_TFR	0x40 /* SAI Transmit FIFO */
-+#define FSL_SAI_TDR0	0x20 /* SAI Transmit Data 0 */
-+#define FSL_SAI_TDR1	0x24 /* SAI Transmit Data 1 */
-+#define FSL_SAI_TDR2	0x28 /* SAI Transmit Data 2 */
-+#define FSL_SAI_TDR3	0x2C /* SAI Transmit Data 3 */
-+#define FSL_SAI_TDR4	0x30 /* SAI Transmit Data 4 */
-+#define FSL_SAI_TDR5	0x34 /* SAI Transmit Data 5 */
-+#define FSL_SAI_TDR6	0x38 /* SAI Transmit Data 6 */
-+#define FSL_SAI_TDR7	0x3C /* SAI Transmit Data 7 */
-+#define FSL_SAI_TFR0	0x40 /* SAI Transmit FIFO 0 */
-+#define FSL_SAI_TFR1	0x44 /* SAI Transmit FIFO 1 */
-+#define FSL_SAI_TFR2	0x48 /* SAI Transmit FIFO 2 */
-+#define FSL_SAI_TFR3	0x4C /* SAI Transmit FIFO 3 */
-+#define FSL_SAI_TFR4	0x50 /* SAI Transmit FIFO 4 */
-+#define FSL_SAI_TFR5	0x54 /* SAI Transmit FIFO 5 */
-+#define FSL_SAI_TFR6	0x58 /* SAI Transmit FIFO 6 */
-+#define FSL_SAI_TFR7	0x5C /* SAI Transmit FIFO 7 */
- #define FSL_SAI_TMR	0x60 /* SAI Transmit Mask */
- #define FSL_SAI_RCSR	0x80 /* SAI Receive Control */
- #define FSL_SAI_RCR1	0x84 /* SAI Receive Configuration 1 */
-@@ -29,8 +43,22 @@
- #define FSL_SAI_RCR3	0x8c /* SAI Receive Configuration 3 */
- #define FSL_SAI_RCR4	0x90 /* SAI Receive Configuration 4 */
- #define FSL_SAI_RCR5	0x94 /* SAI Receive Configuration 5 */
--#define FSL_SAI_RDR	0xa0 /* SAI Receive Data */
--#define FSL_SAI_RFR	0xc0 /* SAI Receive FIFO */
-+#define FSL_SAI_RDR0	0xa0 /* SAI Receive Data 0 */
-+#define FSL_SAI_RDR1	0xa4 /* SAI Receive Data 1 */
-+#define FSL_SAI_RDR2	0xa8 /* SAI Receive Data 2 */
-+#define FSL_SAI_RDR3	0xac /* SAI Receive Data 3 */
-+#define FSL_SAI_RDR4	0xb0 /* SAI Receive Data 4 */
-+#define FSL_SAI_RDR5	0xb4 /* SAI Receive Data 5 */
-+#define FSL_SAI_RDR6	0xb8 /* SAI Receive Data 6 */
-+#define FSL_SAI_RDR7	0xbc /* SAI Receive Data 7 */
-+#define FSL_SAI_RFR0	0xc0 /* SAI Receive FIFO 0 */
-+#define FSL_SAI_RFR1	0xc4 /* SAI Receive FIFO 1 */
-+#define FSL_SAI_RFR2	0xc8 /* SAI Receive FIFO 2 */
-+#define FSL_SAI_RFR3	0xcc /* SAI Receive FIFO 3 */
-+#define FSL_SAI_RFR4	0xd0 /* SAI Receive FIFO 4 */
-+#define FSL_SAI_RFR5	0xd4 /* SAI Receive FIFO 5 */
-+#define FSL_SAI_RFR6	0xd8 /* SAI Receive FIFO 6 */
-+#define FSL_SAI_RFR7	0xdc /* SAI Receive FIFO 7 */
- #define FSL_SAI_RMR	0xe0 /* SAI Receive Mask */
- 
- #define FSL_SAI_xCSR(tx)	(tx ? FSL_SAI_TCSR : FSL_SAI_RCSR)
+It would reduce the amount of memory that userspace might use. It may
+work for your particular case but the fundamental restriction is still
+there.
 -- 
-2.17.1
-
+Michal Hocko
+SUSE Labs
