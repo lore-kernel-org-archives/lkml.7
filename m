@@ -2,116 +2,135 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B173C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 17:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51794C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 17:13:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFC622086D
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 17:12:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UjWbpIYd"
+	by mail.kernel.org (Postfix) with ESMTP id 25FEB214C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 17:13:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565111628;
+	bh=GcwPgkJicx4YCfVs1IPwu6WwyqpK78qeXeT/YMfDkko=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qlUKvTX1c8P6vMW87va5KMqcPwmYPvMayePUgolnIuD9cfnbqqQZ5Cn4zT26sggTN
+	 k1MM19DET79B1qttpPk47LC2Ji4WV0cJcSFId+b83V6FK/j9rkQ7LAYA/+mNQe5MiI
+	 wAaZheIzEL6S05uJ0WEDDk3yYb7MUxBxEw+Z8WMQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733134AbfHFRMz (ORCPT
+        id S1733191AbfHFRNr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 13:12:55 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50612 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728189AbfHFRMz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 13:12:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=/PLCpfMIiXDbrZKcO+CegpzUS+nShcw+EtHGygpPYFc=; b=UjWbpIYdko4jsnDq93k7NNuYq
-        Uro7dX7Ud/DysTy8YAezq7snHwGe9RRLLHmJb3KNTOxWDwefXyI4zaExd/uZuQZyTC/j2wjoU0bAc
-        mK1G8XAQZ/IdvVRBNBS3KLVvw875FSg3WBMf6lG1ThG1x3ObOp1RxBdykeNJ1zozLz2sjuplq+9vM
-        1RXjtPF2CXZxkTl2leJDVtlLmMTGSdd1m3mfV2X2zJmYzYsQIFC0cBu6z3zYd+Ht2zzM1pvgIY6cx
-        NEwKjfxPL3/BtB9IbLECEWF0kSh/WTOov0Tp6XmcQV8G/Np9N9tpAB2lt/AmHyz3rZj7Gb3NkCWe+
-        0Qyy9pY5w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hv30u-0007Ai-BB; Tue, 06 Aug 2019 17:12:44 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Tue, 6 Aug 2019 13:13:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42228 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728189AbfHFRNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 13:13:46 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BB7743077A6;
-        Tue,  6 Aug 2019 19:12:15 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2AACF201B3683; Tue,  6 Aug 2019 19:12:41 +0200 (CEST)
-Date:   Tue, 6 Aug 2019 19:12:41 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Tim Chen <tim.c.chen@linux.intel.com>
-Cc:     Aaron Lu <aaron.lu@linux.alibaba.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        "Li, Aubrey" <aubrey.li@linux.intel.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7ACF82086D;
+        Tue,  6 Aug 2019 17:13:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565111625;
+        bh=GcwPgkJicx4YCfVs1IPwu6WwyqpK78qeXeT/YMfDkko=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rTAT9bH7GKNJUZdS8BRtbH8phw4qgZ5+dRNFkldjVWk6dGxX0O1d/RnE/0V20gryu
+         PTJMl31RRRdUsoRUBPiBr87DgRaB/HWSPKLtCibTJQQUtSYBOvQ2oBVDM1HUaAlT2q
+         mkbOtB7+YYYk5DiFCNquMbqioXWuU2alu3yKrGRo=
+Date:   Tue, 6 Aug 2019 18:13:36 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Will Deacon <will.deacon@arm.com>
+Cc:     Andrey Konovalov <andreyknvl@google.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
+        dri-devel@lists.freedesktop.org,
+        Kostya Serebryany <kcc@google.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org,
+        Christoph Hellwig <hch@infradead.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        linux-media@vger.kernel.org, Kevin Brodsky <kevin.brodsky@arm.com>,
         Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
-Message-ID: <20190806171241.GQ2349@hirez.programming.kicks-ass.net>
-References: <20190619183302.GA6775@sinkpad>
- <20190718100714.GA469@aaronlu>
- <CAERHkrtvLKxrpvfw04urAuougsYOWnNw4-H1vUDFx27Dvy0=Ww@mail.gmail.com>
- <20190725143003.GA992@aaronlu>
- <20190726152101.GA27884@sinkpad>
- <7dc86e3c-aa3f-905f-3745-01181a3b0dac@linux.intel.com>
- <20190802153715.GA18075@sinkpad>
- <f4778816-69e5-146c-2a30-ec42e7f1677f@linux.intel.com>
- <20190806032418.GA54717@aaronlu>
- <e1c4a7ed-822e-93cb-ff1d-6a0842db115f@linux.intel.com>
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        enh <enh@google.com>, Robin Murphy <robin.murphy@arm.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Subject: Re: [PATCH v19 00/15] arm64: untag user pointers passed to the kernel
+Message-ID: <20190806171335.4dzjex5asoertaob@willie-the-truck>
+References: <cover.1563904656.git.andreyknvl@google.com>
+ <CAAeHK+yc0D_nd7nTRsY4=qcSx+eQR0VLut3uXMf4NEiE-VpeCw@mail.gmail.com>
+ <20190724140212.qzvbcx5j2gi5lcoj@willie-the-truck>
+ <CAAeHK+xXzdQHpVXL7f1T2Ef2P7GwFmDMSaBH4VG8fT3=c_OnjQ@mail.gmail.com>
+ <20190724142059.GC21234@fuggles.cambridge.arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e1c4a7ed-822e-93cb-ff1d-6a0842db115f@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190724142059.GC21234@fuggles.cambridge.arm.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 10:03:29AM -0700, Tim Chen wrote:
-> On 8/5/19 8:24 PM, Aaron Lu wrote:
-> 
-> > I've been thinking if we should consider core wide tenent fairness?
+On Wed, Jul 24, 2019 at 03:20:59PM +0100, Will Deacon wrote:
+> On Wed, Jul 24, 2019 at 04:16:49PM +0200, Andrey Konovalov wrote:
+> > On Wed, Jul 24, 2019 at 4:02 PM Will Deacon <will@kernel.org> wrote:
+> > > On Tue, Jul 23, 2019 at 08:03:29PM +0200, Andrey Konovalov wrote:
+> > > > Should this go through the mm or the arm tree?
+> > >
+> > > I would certainly prefer to take at least the arm64 bits via the arm64 tree
+> > > (i.e. patches 1, 2 and 15). We also need a Documentation patch describing
+> > > the new ABI.
 > > 
-> > Let's say there are 3 tasks on 2 threads' rq of the same core, 2 tasks
-> > (e.g. A1, A2) belong to tenent A and the 3rd B1 belong to another tenent
-> > B. Assume A1 and B1 are queued on the same thread and A2 on the other
-> > thread, when we decide priority for A1 and B1, shall we also consider
-> > A2's vruntime? i.e. shall we consider A1 and A2 as a whole since they
-> > belong to the same tenent? I tend to think we should make fairness per
-> > core per tenent, instead of per thread(cpu) per task(sched entity). What
-> > do you guys think?
-> > 
-> > Implemention of the idea is a mess to me, as I feel I'm duplicating the
-> > existing per cpu per sched_entity enqueue/update vruntime/dequeue logic
-> > for the per core per tenent stuff.
+> > Sounds good! Should I post those patches together with the
+> > Documentation patches from Vincenzo as a separate patchset?
 > 
-> I'm wondering if something simpler will work.  It is easier to maintain fairness
-> between the CPU threads.  A simple scheme may be if the force idle deficit
-> on a CPU thread exceeds a threshold compared to its sibling, we will
-> bias in choosing the task on the suppressed CPU thread.  
-> The fairness among the tenents per run queue is balanced out by cfq fairness,
-> so things should be fair if we maintain fairness in CPU utilization between
-> the two CPU threads.
+> Yes, please (although as you say below, we need a new version of those
+> patches from Vincenzo to address the feedback on v5). The other thing I
+> should say is that I'd be happy to queue the other patches in the series
+> too, but some of them are missing acks from the relevant maintainers (e.g.
+> the mm/ and fs/ changes).
 
-IIRC pjt once did a simle 5ms flip flop between siblings.
+Ok, I've queued patches 1, 2, and 15 on a stable branch here:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git/log/?h=for-next/tbi
+
+which should find its way into -next shortly via our for-next/core branch.
+If you want to make changes, please send additional patches on top.
+
+This is targetting 5.4, but I will drop it before the merge window if
+we don't have both of the following in place:
+
+  * Updated ABI documentation with Acks from Catalin and Kevin
+  * The other patches in the series either Acked (so I can pick them up)
+    or queued via some other tree(s) for 5.4.
+
+Make sense?
+
+Cheers,
+
+Will
