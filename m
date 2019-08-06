@@ -6,70 +6,92 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FBD2C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A67EC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:00:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DA4B20C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:59:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A466216B7
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:00:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732356AbfHFN7C (ORCPT
+        id S1732603AbfHFOAU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 09:59:02 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39916 "EHLO mx1.redhat.com"
+        Tue, 6 Aug 2019 10:00:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726834AbfHFN7C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 09:59:02 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726834AbfHFOAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 10:00:19 -0400
+Received: from home.goodmis.org (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7DEDE31475D8;
-        Tue,  6 Aug 2019 13:59:02 +0000 (UTC)
-Received: from lorien.usersys.redhat.com (ovpn-117-119.phx2.redhat.com [10.3.117.119])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B2BCF600CC;
-        Tue,  6 Aug 2019 13:59:01 +0000 (UTC)
-Date:   Tue, 6 Aug 2019 09:58:59 -0400
-From:   Phil Auld <pauld@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: [PATCH] sched: use rq_lock/unlock in online_fair_sched_group
-Message-ID: <20190806135858.GA15188@lorien.usersys.redhat.com>
-References: <20190801133749.11033-1-pauld@redhat.com>
- <20190806130334.GO2349@hirez.programming.kicks-ass.net>
+        by mail.kernel.org (Postfix) with ESMTPSA id D691220C01;
+        Tue,  6 Aug 2019 14:00:17 +0000 (UTC)
+Date:   Tue, 6 Aug 2019 09:59:42 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Thomas Garnier <thgarnie@chromium.org>,
+        kernel-hardening@lists.openwall.com, kristen@linux.intel.com,
+        keescook@chromium.org, Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 04/11] x86/entry/64: Adapt assembly for PIE support
+Message-ID: <20190806135942.xnuovr4vbanbxneb@home.goodmis.org>
+References: <20190730191303.206365-1-thgarnie@chromium.org>
+ <20190730191303.206365-5-thgarnie@chromium.org>
+ <20190805172854.GF18785@zn.tnic>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190806130334.GO2349@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Tue, 06 Aug 2019 13:59:02 +0000 (UTC)
+In-Reply-To: <20190805172854.GF18785@zn.tnic>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 03:03:34PM +0200 Peter Zijlstra wrote:
-> On Thu, Aug 01, 2019 at 09:37:49AM -0400, Phil Auld wrote:
-> > Enabling WARN_DOUBLE_CLOCK in /sys/kernel/debug/sched_features causes
+On Mon, Aug 05, 2019 at 07:28:54PM +0200, Borislav Petkov wrote:
+> >  1:
+> > @@ -1571,7 +1572,8 @@ nested_nmi:
+> >  	pushq	%rdx
+> >  	pushfq
+> >  	pushq	$__KERNEL_CS
+> > -	pushq	$repeat_nmi
+> > +	leaq	repeat_nmi(%rip), %rdx
+> > +	pushq	%rdx
+> >  
+> >  	/* Put stack back */
+> >  	addq	$(6*8), %rsp
+> > @@ -1610,7 +1612,11 @@ first_nmi:
+> >  	addq	$8, (%rsp)	/* Fix up RSP */
+> >  	pushfq			/* RFLAGS */
+> >  	pushq	$__KERNEL_CS	/* CS */
+> > -	pushq	$1f		/* RIP */
+> > +	pushq	$0		/* Future return address */
+> > +	pushq	%rax		/* Save RAX */
+> > +	leaq	1f(%rip), %rax	/* RIP */
+> > +	movq    %rax, 8(%rsp)   /* Put 1f on return address */
+> > +	popq	%rax		/* Restore RAX */
 > 
-> ISTR there were more issues; but it sure is good to start picking them
-> off.
+> Can't you just use a callee-clobbered reg here instead of preserving
+> %rax?
 
-I haven't hit any others but if/when I'll try to dig into them. 
+As Peter stated later in this thread, we only have the IRQ stack frame saved
+here, because we just took an NMI, and this is the logic to determine if it
+was a nested NMI or not (where we have to be *very* careful about touching the
+stack!)
 
-> 
-> > warning to fire in update_rq_clock. This seems to be caused by onlining
-> > a new fair sched group not using the rq lock wrappers.
-> > 
-> > [472978.683085] rq->clock_update_flags & RQCF_UPDATED
-> > [472978.683100] WARNING: CPU: 5 PID: 54385 at kernel/sched/core.c:210 update_rq_clock+0xec/0x150
-> 
-> > Using the wrappers in online_fair_sched_group instead of the raw locking 
-> > removes this warning. 
-> 
-> Yeah, that seems sane. Thanks!
+That said, the code modified here is to test the NMI nesting logic (only
+enabled with CONFIG_DEBUG_ENTRY), and what it is doing is re-enabling NMIs
+before calling the first NMI handler, to help trigger nested NMIs without the
+need of a break point or page fault (iret enables NMIs again).
 
-Thanks,
-Phil
+This code is in the path of the "first nmi" (we confirmed that this is not
+nested), which means that it should be safe to push onto the stack.
 
--- 
+Yes, we need to save and restore whatever reg we used. The only comment I
+would make is to use %rdx instead of %rax as that has been our "scratch"
+register used before saving pt_regs. Just to be consistent.
+
+-- Steve
+
+
