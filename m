@@ -2,79 +2,97 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3427DC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:35:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7707CC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:39:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CF4A208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:35:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BD5F208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:39:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387961AbfHFQf1 (ORCPT
+        id S2387919AbfHFQjF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 12:35:27 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:56360 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726877AbfHFQf0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 12:35:26 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 0D6F1403823FB709DEE3;
-        Wed,  7 Aug 2019 00:35:24 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.238) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Wed, 7 Aug 2019
- 00:35:22 +0800
-Subject: Re: [PATCH] docs: mtd: Update spi nor reference driver
-To:     <corbet@lwn.net>, <mchehab+samsung@kernel.org>,
-        <linux-mtd@lists.infradead.org>
-References: <1565107583-68506-1-git-send-email-john.garry@huawei.com>
-CC:     <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <frieder.schrempf@kontron.de>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <6c4bb892-6cf5-af46-3ace-b333fd47ef14@huawei.com>
-Date:   Tue, 6 Aug 2019 17:35:18 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
-MIME-Version: 1.0
-In-Reply-To: <1565107583-68506-1-git-send-email-john.garry@huawei.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.238]
-X-CFilter-Loop: Reflected
+        Tue, 6 Aug 2019 12:39:05 -0400
+Received: from mxwww.masterlogin.de ([95.129.51.220]:38574 "EHLO
+        mxwww.masterlogin.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732809AbfHFQjE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 12:39:04 -0400
+Received: from mxout2.routing.net (unknown [192.168.10.82])
+        by new.mxwww.masterlogin.de (Postfix) with ESMTPS id D344996CD2;
+        Tue,  6 Aug 2019 16:30:34 +0000 (UTC)
+Received: from mxbox1.masterlogin.de (unknown [192.168.10.253])
+        by mxout2.routing.net (Postfix) with ESMTP id 0A2DC6203B;
+        Tue,  6 Aug 2019 16:30:35 +0000 (UTC)
+Received: from localhost.localdomain (fttx-pool-217.61.153.94.bambit.de [217.61.153.94])
+        by mxbox1.masterlogin.de (Postfix) with ESMTPSA id A2882403C7;
+        Tue,  6 Aug 2019 18:30:33 +0200 (CEST)
+From:   Frank Wunderlich <frank-w@public-files.de>
+To:     Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Allison Randal <allison@lohutok.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, Eddie Huang <eddie.huang@mediatek.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Tianping . Fang" <tianping.fang@mediatek.com>
+Cc:     Josef Friedl <josef.friedl@speed.at>,
+        Frank Wunderlich <frank-w@public-files.de>
+Subject: [PATCH v4 09/10] MAINTAINERS: add Mediatek shutdown drivers
+Date:   Tue,  6 Aug 2019 18:30:25 +0200
+Message-Id: <20190806163026.8530-1-frank-w@public-files.de>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/08/2019 17:06, John Garry wrote:
-> The reference driver no longer exists since commit 50f1242c6742 ("mtd:
-> fsl-quadspi: Remove the driver as it was replaced by spi-fsl-qspi.c").
->
-> Update reference to spi-fsl-qspi.c driver.
->
-> Signed-off-by: John Garry <john.garry@huawei.com>
->
-> diff --git a/Documentation/driver-api/mtd/spi-nor.rst b/Documentation/driver-api/mtd/spi-nor.rst
-> index f5333e3bf486..1f0437676762 100644
-> --- a/Documentation/driver-api/mtd/spi-nor.rst
-> +++ b/Documentation/driver-api/mtd/spi-nor.rst
+From: Josef Friedl <josef.friedl@speed.at>
 
-In fact this document has many references to Freescale QuadSPI - could 
-someone kindly review this complete document for up-to-date accuracy?
+add Section in MAINTAINERS file for poweroff driver
 
-Thanks,
-John
+Signed-off-by: Josef Friedl <josef.friedl@speed.at>
+Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+---
+changes since v3: moved SOB
+changes since v2: none (=v2 part 6)
 
-> @@ -59,7 +59,7 @@ Part III - How can drivers use the framework?
->
->  The main API is spi_nor_scan(). Before you call the hook, a driver should
->  initialize the necessary fields for spi_nor{}. Please see
-> -drivers/mtd/spi-nor/spi-nor.c for detail. Please also refer to fsl-quadspi.c
-> +drivers/mtd/spi-nor/spi-nor.c for detail. Please also refer to spi-fsl-qspi.c
->  when you want to write a new driver for a SPI NOR controller.
->  Another API is spi_nor_restore(), this is used to restore the status of SPI
->  flash chip such as addressing mode. Call it whenever detach the driver from
->
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 6426db5198f0..4172a3177633 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10128,6 +10128,13 @@ S:	Maintained
+ F:	drivers/net/dsa/mt7530.*
+ F:	net/dsa/tag_mtk.c
+ 
++MEDIATEK BOARD LEVEL SHUTDOWN DRIVERS
++M:	Sean Wang <sean.wang@mediatek.com>
++L:	linux-pm@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
++F:	drivers/power/reset/mt6323-poweroff.c
++
+ MEDIATEK JPEG DRIVER
+ M:	Rick Chang <rick.chang@mediatek.com>
+ M:	Bin Liu <bin.liu@mediatek.com>
+-- 
+2.17.1
 
