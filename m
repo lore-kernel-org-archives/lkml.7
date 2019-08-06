@@ -4,56 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB1D5C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 04:50:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A373C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 04:50:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85B372147A
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 04:50:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D96C52147A
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 04:50:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731574AbfHFEu0 (ORCPT
+        id S1731587AbfHFEu3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 00:50:26 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:37532 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726075AbfHFEuX (ORCPT
+        Tue, 6 Aug 2019 00:50:29 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:24278 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731491AbfHFEuX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 6 Aug 2019 00:50:23 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x764kaC8072728;
-        Tue, 6 Aug 2019 00:49:59 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x764kcr1076657;
+        Tue, 6 Aug 2019 00:49:54 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2u7174b9vy-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2u72j8rkpu-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 06 Aug 2019 00:49:59 -0400
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x764kl7E073080;
-        Tue, 6 Aug 2019 00:49:58 -0400
-Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2u7174b9vh-1
+        Tue, 06 Aug 2019 00:49:54 -0400
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x764koZv076959;
+        Tue, 6 Aug 2019 00:49:53 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2u72j8rkpg-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 06 Aug 2019 00:49:58 -0400
-Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
-        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x764igeo003024;
-        Tue, 6 Aug 2019 04:49:57 GMT
+        Tue, 06 Aug 2019 00:49:53 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x764iccO015806;
+        Tue, 6 Aug 2019 04:49:52 GMT
 Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
-        by ppma04wdc.us.ibm.com with ESMTP id 2u51w6a811-1
+        by ppma03dal.us.ibm.com with ESMTP id 2u51w6nwn7-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 06 Aug 2019 04:49:57 +0000
+        Tue, 06 Aug 2019 04:49:52 +0000
 Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x764nuf020971838
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x764no9q54264276
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 6 Aug 2019 04:49:56 GMT
+        Tue, 6 Aug 2019 04:49:50 GMT
 Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4B31A78063;
-        Tue,  6 Aug 2019 04:49:56 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id C66397805C;
+        Tue,  6 Aug 2019 04:49:50 +0000 (GMT)
 Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3EE977805C;
-        Tue,  6 Aug 2019 04:49:51 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id CDAE07805F;
+        Tue,  6 Aug 2019 04:49:45 +0000 (GMT)
 Received: from morokweng.localdomain.com (unknown [9.85.207.254])
         by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue,  6 Aug 2019 04:49:50 +0000 (GMT)
+        Tue,  6 Aug 2019 04:49:45 +0000 (GMT)
 From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
 To:     x86@kernel.org
 Cc:     iommu@lists.linux-foundation.org, linux-fsdevel@vger.kernel.org,
@@ -72,9 +72,9 @@ Cc:     iommu@lists.linux-foundation.org, linux-fsdevel@vger.kernel.org,
         Ram Pai <linuxram@us.ibm.com>,
         Thiago Jung Bauermann <bauerman@linux.ibm.com>,
         Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH v4 3/6] dma-mapping: Remove dma_check_mask()
-Date:   Tue,  6 Aug 2019 01:49:16 -0300
-Message-Id: <20190806044919.10622-4-bauerman@linux.ibm.com>
+Subject: [PATCH v4 2/6] swiotlb: Remove call to sme_active()
+Date:   Tue,  6 Aug 2019 01:49:15 -0300
+Message-Id: <20190806044919.10622-3-bauerman@linux.ibm.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190806044919.10622-1-bauerman@linux.ibm.com>
 References: <20190806044919.10622-1-bauerman@linux.ibm.com>
@@ -84,7 +84,7 @@ X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-06_02:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
  mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1906280000 definitions=main-1908060056
@@ -94,47 +94,30 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 sme_active() is an x86-specific function so it's better not to call it from
-generic code. Christoph Hellwig mentioned that "There is no reason why we
-should have a special debug printk just for one specific reason why there
-is a requirement for a large DMA mask.", so just remove dma_check_mask().
+generic code.
+
+There's no need to mention which memory encryption feature is active, so
+just use a more generic message. Besides, other architectures will have
+different names for similar technology.
 
 Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
 ---
- kernel/dma/mapping.c | 8 --------
- 1 file changed, 8 deletions(-)
+ kernel/dma/swiotlb.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
-index 1f628e7ac709..61eeefbfcb36 100644
---- a/kernel/dma/mapping.c
-+++ b/kernel/dma/mapping.c
-@@ -291,12 +291,6 @@ void dma_free_attrs(struct device *dev, size_t size, void *cpu_addr,
- }
- EXPORT_SYMBOL(dma_free_attrs);
+diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
+index 9de232229063..f29caad71e13 100644
+--- a/kernel/dma/swiotlb.c
++++ b/kernel/dma/swiotlb.c
+@@ -461,8 +461,7 @@ phys_addr_t swiotlb_tbl_map_single(struct device *hwdev,
+ 		panic("Can not allocate SWIOTLB buffer earlier and can't now provide you with the DMA bounce buffer");
  
--static inline void dma_check_mask(struct device *dev, u64 mask)
--{
--	if (sme_active() && (mask < (((u64)sme_get_me_mask() << 1) - 1)))
--		dev_warn(dev, "SME is active, device will require DMA bounce buffers\n");
--}
--
- int dma_supported(struct device *dev, u64 mask)
- {
- 	const struct dma_map_ops *ops = get_dma_ops(dev);
-@@ -327,7 +321,6 @@ int dma_set_mask(struct device *dev, u64 mask)
- 		return -EIO;
+ 	if (mem_encrypt_active())
+-		pr_warn_once("%s is active and system is using DMA bounce buffers\n",
+-			     sme_active() ? "SME" : "SEV");
++		pr_warn_once("Memory encryption is active and system is using DMA bounce buffers\n");
  
- 	arch_dma_set_mask(dev, mask);
--	dma_check_mask(dev, mask);
- 	*dev->dma_mask = mask;
- 	return 0;
- }
-@@ -345,7 +338,6 @@ int dma_set_coherent_mask(struct device *dev, u64 mask)
- 	if (!dma_supported(dev, mask))
- 		return -EIO;
+ 	mask = dma_get_seg_boundary(hwdev);
  
--	dma_check_mask(dev, mask);
- 	dev->coherent_dma_mask = mask;
- 	return 0;
- }
