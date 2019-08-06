@@ -2,114 +2,118 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 765B9C433FF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F89C32751
 	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:41:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 462CF216F4
+	by mail.kernel.org (Postfix) with ESMTP id 71E4720818
 	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:41:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TO8OuL1B"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565116882;
+	bh=u1x4R5iUanTwInCID5PwGTrmyW23jOXOmyoOOvc4ERA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aC39N2gVCiIgaz+I17oNEGBzaCpmYvxg6ZzCE7N3es3v9/5uJIwfID7PeZWJacipS
+	 ndOLMuwdN3h2QPJEwCTdNdik3adnoK+3VZt70yZf+YgVl576qbPMr8STLAclnljFdi
+	 iR8ojWVBUE6ylMx/fyDJO4NFYYVfrKvS76ZNtWbE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726321AbfHFSkv (ORCPT
+        id S1726253AbfHFSkv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 6 Aug 2019 14:40:51 -0400
-Received: from mail-vk1-f201.google.com ([209.85.221.201]:48845 "EHLO
-        mail-vk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725974AbfHFSks (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 14:40:48 -0400
-Received: by mail-vk1-f201.google.com with SMTP id x71so29362580vkd.15
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 11:40:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=KgzH53PwLND1jLbrm/0exiWYFdiM2SzHVv8Uf5Mh6WA=;
-        b=TO8OuL1BlbirCPPWqGBbRPnqwohgpSqYuh+mhD9Fan+N5xQ1xSkyjcwfXIqmsy4UCP
-         9XcJI/4gKegHjuZT9J96o6CEHzcowSFVIEEH8eLjEVCKjWtcE6XaEeaavb0XxUegiXe+
-         ZmzLJa6mwQpxrwLxiwrEDMxmoyNGiEeyXQ9BQ2VpoIA4LVG9HwGTXVcg74DWpEKIApEK
-         TIB5s9aGPzn5c59x+rXxXBEIWx49BC1LVuUnpN/Nf3jbUw1qZIqz9dgxYeMnOS6c3rGg
-         6KpnF9tEFyWR48Xn35qMlIJaALvbd7W09HjbGGX/vD8US+B03GIHucPGf9rOIKjcKdZt
-         lH7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=KgzH53PwLND1jLbrm/0exiWYFdiM2SzHVv8Uf5Mh6WA=;
-        b=GfNv5YzKicfvAnduSkp07FF+nCRMijWe93A2P/mSbsotWtcuIygaShaXrncirMXyup
-         dyBKXUO3qbAxuis4stO2vTKpqH4j30LVxAT9EgSU5CxNnp4KsGt+3wm4hJkfzCqFqzUJ
-         kAJHNEtDEeGt8gnJXnzOuHy3JMZk4ZFd5XR+HNbXvrT2/kuB9CPLwn+hrH7nKT8Ry+/3
-         qhsZMAkr9w/bP0y9BqGpQ4GC54hGN32KcJV80sTmD0SN3iOgk1tf1PqkAKXxa5wEyWOD
-         1qdnxVmtkd4kL/tTOT/6gu+fyrCOSP7do1uyIh2IesJLJzHtv5bp80Hna1s/dDpWRJSc
-         3p5Q==
-X-Gm-Message-State: APjAAAVIegutzS2xfTPfKIuut5KWVG/kJvl0G/q2j5YkMCv2KxDw1JaO
-        q1riTQQ6A3w0WKgs+U7h40d7uCE2Ses=
-X-Google-Smtp-Source: APXvYqyj/C1aMKroLXjnt52133U+mF/4/m9/pdxH6SIvZVODYB8EP6DW0aydx4KyYo0ko4Aw4zZlgx5Prrg=
-X-Received: by 2002:ab0:5398:: with SMTP id k24mr1923016uaa.6.1565116847615;
- Tue, 06 Aug 2019 11:40:47 -0700 (PDT)
-Date:   Tue,  6 Aug 2019 11:40:06 -0700
-In-Reply-To: <20190806184007.60739-1-hridya@google.com>
-Message-Id: <20190806184007.60739-3-hridya@google.com>
-Mime-Version: 1.0
-References: <20190806184007.60739-1-hridya@google.com>
-X-Mailer: git-send-email 2.22.0.770.g0f2c4a37fd-goog
-Subject: [PATCH v2 2/2] binder: Validate the default binderfs device names.
-From:   Hridya Valsaraju <hridya@google.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "=?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?=" <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Christian Brauner <christian@brauner.io>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Cc:     kernel-team@android.com, Hridya Valsaraju <hridya@google.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Content-Type: text/plain; charset="UTF-8"
+Received: from mail.kernel.org ([198.145.29.99]:37458 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725973AbfHFSkp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 14:40:45 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2C1120818;
+        Tue,  6 Aug 2019 18:40:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565116844;
+        bh=u1x4R5iUanTwInCID5PwGTrmyW23jOXOmyoOOvc4ERA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=K3bxmHgVSZOVnoqiuGhDKNBmuYYh0uuCp6Y1rh99th1Z9FIUYrg5RIIvgqAUNT2KI
+         ZS2B2vSpvb845Qx10KpHQAtMMTHeYD1Mp/YQ1cIff7Gn79tPvtnPj/Yb7hQVHCMtVD
+         K0NCzYURphpm5+cWg0U71eUEriCKwUDCdL6mBrcY=
+Date:   Tue, 6 Aug 2019 20:40:42 +0200
+From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+To:     Stefan-gabriel Mirea <stefan-gabriel.mirea@nxp.com>
+Cc:     "corbet@lwn.net" <corbet@lwn.net>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "jslaby@suse.com" <jslaby@suse.com>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Cosmin Stefan Stoica <cosmin.stoica@nxp.com>,
+        Larisa Ileana Grigore <larisa.grigore@nxp.com>
+Subject: Re: [PATCH 5/6] tty: serial: Add linflexuart driver for S32V234
+Message-ID: <20190806184042.GA26041@kroah.com>
+References: <20190802194702.30249-1-stefan-gabriel.mirea@nxp.com>
+ <20190802194702.30249-6-stefan-gabriel.mirea@nxp.com>
+ <20190805153114.GA16836@kroah.com>
+ <HE1PR0402MB28579034C09EB49A76A4F8E7DFD50@HE1PR0402MB2857.eurprd04.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <HE1PR0402MB28579034C09EB49A76A4F8E7DFD50@HE1PR0402MB2857.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Length of a binderfs device name cannot exceed BINDERFS_MAX_NAME.
-This patch adds a check in binderfs_init() to ensure the same
-for the default binder devices that will be created in every
-binderfs instance.
+On Tue, Aug 06, 2019 at 05:11:17PM +0000, Stefan-gabriel Mirea wrote:
+> On 8/5/2019 6:31 PM, gregkh@linuxfoundation.org wrote:
+> > On Fri, Aug 02, 2019 at 07:47:23PM +0000, Stefan-gabriel Mirea wrote:
+> >>
+> >> +/* Freescale Linflex UART */
+> >> +#define PORT_LINFLEXUART     121
+> > 
+> > Do you really need this modified?
+> 
+> Hello Greg,
+> 
+> This macro is meant to be assigned to port->type in the config_port
+> method from uart_ops, in order for verify_port to know if the received
+> serial_struct structure was really targeted for a LINFlex port. It
+> needs to be defined outside, to avoid "collisions" with other drivers.
 
-Co-developed-by: Christian Brauner <christian.brauner@ubuntu.com>
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-Signed-off-by: Hridya Valsaraju <hridya@google.com>
----
- drivers/android/binderfs.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Yes, I know what it goes to, but does anyone in userspace actually use
+it?
 
-diff --git a/drivers/android/binderfs.c b/drivers/android/binderfs.c
-index 886b4e0f482f..52c8bd361906 100644
---- a/drivers/android/binderfs.c
-+++ b/drivers/android/binderfs.c
-@@ -572,6 +572,18 @@ static struct file_system_type binder_fs_type = {
- int __init init_binderfs(void)
- {
- 	int ret;
-+	const char *name;
-+	size_t len;
-+
-+	/* Verify that the default binderfs device names are valid. */
-+	name = binder_devices_param;
-+	for (len = strcspn(name, ","); len > 0; len = strcspn(name, ",")) {
-+		if (len > BINDERFS_MAX_NAME)
-+			return -E2BIG;
-+		name += len;
-+		if (*name == ',')
-+			name++;
-+	}
- 
- 	/* Allocate new major number for binderfs. */
- 	ret = alloc_chrdev_region(&binderfs_dev, 0, BINDERFS_MAX_MINOR,
--- 
-2.22.0.770.g0f2c4a37fd-goog
+> As far as I see, uart_set_info() will actually fail at the
+> "baud_base < 9600" check[1], right after calling verify_port(), when
+> performing an ioctl() on "/dev/console" with TIOCSSERIAL using a
+> serial_struct obtained with TIOCGSERIAL. This happens because this
+> reduced version of the LINFlex UART driver will not touch the uartclk
+> field of the uart_port (as there is currently no clock support).
+> Therefore, the linflex_config/verify_port() functions, along with the
+> PORT_LINFLEXUART macro, may be indeed unnecessary at this point (and
+> should be added later). Is this what you mean?
 
+No, see below.
+
+> Other than that, I do not see anything wrong with the addition of a
+> define in serial_core.h for this purpose (which is also what most of the
+> serial drivers do, including amba-pl011.c, mentioned in
+> Documentation/driver-api/serial/driver.rst as providing the reference
+> implementation), so please be more specific.
+
+I am getting tired of dealing with merge issues with that list, and no
+one seems to be able to find where they are really needed for userspace,
+especially for new devices.  What happens if you do not have use it?
+
+thanks,
+
+greg k-h
