@@ -2,114 +2,93 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27BE9C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 10:57:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5EF1C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 10:58:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0917820679
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 10:57:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9832C216B7
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 10:58:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732701AbfHFK5Q (ORCPT
+        id S1732671AbfHFK61 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 06:57:16 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:2256 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730902AbfHFK5Q (ORCPT
+        Tue, 6 Aug 2019 06:58:27 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:5385 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730877AbfHFK61 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 06:57:16 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x76AvDWH031831
-        for <linux-kernel@vger.kernel.org>; Tue, 6 Aug 2019 06:57:14 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2u75nex83s-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 06:57:14 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <gor@linux.ibm.com>;
-        Tue, 6 Aug 2019 11:56:53 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 6 Aug 2019 11:56:50 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x76AunAF56754246
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 6 Aug 2019 10:56:49 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9B915A4051;
-        Tue,  6 Aug 2019 10:56:49 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 73193A404D;
-        Tue,  6 Aug 2019 10:56:49 +0000 (GMT)
-Received: from localhost (unknown [9.152.212.148])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue,  6 Aug 2019 10:56:49 +0000 (GMT)
-Date:   Tue, 6 Aug 2019 12:56:48 +0200
-From:   Vasily Gorbik <gor@linux.ibm.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] s390/build: use size command to perform empty .bss check
-References: <patch-1.thread-2257a1.git-188f5a3d81d5.your-ad-here.call-01565088755-ext-5120@work.hours>
+        Tue, 6 Aug 2019 06:58:27 -0400
+X-IronPort-AV: E=Sophos;i="5.64,353,1559520000"; 
+   d="scan'208";a="691286792"
+Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-2b-4ff6265a.us-west-2.amazon.com) ([10.47.22.34])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 06 Aug 2019 10:58:23 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2b-4ff6265a.us-west-2.amazon.com (Postfix) with ESMTPS id 6EC1FA27C0;
+        Tue,  6 Aug 2019 10:58:23 +0000 (UTC)
+Received: from EX13D16UEA003.ant.amazon.com (10.43.61.183) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 6 Aug 2019 10:58:23 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
+ EX13D16UEA003.ant.amazon.com (10.43.61.183) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 6 Aug 2019 10:58:22 +0000
+Received: from localhost (172.23.204.141) by mail-relay.amazon.com
+ (10.43.61.243) with Microsoft SMTP Server id 15.0.1367.3 via Frontend
+ Transport; Tue, 6 Aug 2019 10:58:22 +0000
+Date:   Tue, 6 Aug 2019 10:58:22 +0000
+From:   Balbir Singh <sblbir@amzn.com>
+To:     Wei Yang <richardw.yang@linux.intel.com>
+CC:     <akpm@linux-foundation.org>, <mhocko@suse.com>, <vbabka@suse.cz>,
+        <kirill.shutemov@linux.intel.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mm/mmap.c: refine data locality of find_vma_prev
+Message-ID: <20190806105822.GA25354@dev-dsk-sblbir-2a-88e651b2.us-west-2.amazon.com>
+References: <20190806081123.22334-1-richardw.yang@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <patch-1.thread-2257a1.git-188f5a3d81d5.your-ad-here.call-01565088755-ext-5120@work.hours>
-X-Patchwork-Bot: notify
-X-TM-AS-GCONF: 00
-x-cbid: 19080610-0012-0000-0000-0000033A8946
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19080610-0013-0000-0000-0000217442AF
-Message-Id: <patch-2.thread-2257a1.git-2257a1c53d4a.your-ad-here.call-01565088755-ext-5120@work.hours>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-06_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=908 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908060113
+In-Reply-To: <20190806081123.22334-1-richardw.yang@linux.intel.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently empty .bss checks performed do not pay attention to "common
-objects" in object files which end up in .bss section eventually.
+On Tue, Aug 06, 2019 at 04:11:23PM +0800, Wei Yang wrote:
+> When addr is out of the range of the whole rb_tree, pprev will points to
+> the biggest node. find_vma_prev gets is by going through the right most
+> node of the tree.
+> 
+> Since only the last node is the one it is looking for, it is not
+> necessary to assign pprev to those middle stage nodes. By assigning
+> pprev to the last node directly, it tries to improve the function
+> locality a little.
+> 
+> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+> ---
+>  mm/mmap.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+> 
+> diff --git a/mm/mmap.c b/mm/mmap.c
+> index 7e8c3e8ae75f..284bc7e51f9c 100644
+> --- a/mm/mmap.c
+> +++ b/mm/mmap.c
+> @@ -2271,11 +2271,10 @@ find_vma_prev(struct mm_struct *mm, unsigned long addr,
+>  		*pprev = vma->vm_prev;
+>  	} else {
+>  		struct rb_node *rb_node = mm->mm_rb.rb_node;
+> -		*pprev = NULL;
+> -		while (rb_node) {
+> -			*pprev = rb_entry(rb_node, struct vm_area_struct, vm_rb);
+> +		while (rb_node && rb_node->rb_right)
+>  			rb_node = rb_node->rb_right;
+> -		}
+> +		*pprev = rb_node ? NULL
+> +			 : rb_entry(rb_node, struct vm_area_struct, vm_rb);
 
-The "size" tool is a part of binutils and since version 2.18 provides
-"--common" command line option, which allows to account "common objects"
-sizes in .bss section size. Utilize "size --common" to perform accurate
-check that .bss section is unused. Besides that the size tool handles
-object files without .bss section gracefully and doesn't require
-additional objdump run.
+Can rb_node ever be NULL? assuming mm->mm_rb.rb_node is not NULL when we
+enter here
 
-The linux kernel requires binutils 2.20 since 4.13.
-
-Kbuild exports OBJSIZE to reference the right size tool.
-
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
----
- arch/s390/scripts/Makefile.chkbss | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/arch/s390/scripts/Makefile.chkbss b/arch/s390/scripts/Makefile.chkbss
-index 884a9caff5fb..ba1d7a8a242f 100644
---- a/arch/s390/scripts/Makefile.chkbss
-+++ b/arch/s390/scripts/Makefile.chkbss
-@@ -11,8 +11,7 @@ chkbss: $(addprefix $(obj)/, $(chkbss-files))
- 
- quiet_cmd_chkbss = CHKBSS  $<
-       cmd_chkbss = \
--	if $(OBJDUMP) -h $< | grep -q "\.bss" && \
--	   ! $(OBJDUMP) -j .bss -w -h $< | awk 'END { if ($$3) exit 1 }'; then \
-+	if ! $(OBJSIZE) --common $< | awk 'END { if ($$3) exit 1 }'; then \
- 		echo "error: $< .bss section is not empty" >&2; exit 1; \
- 	fi; \
- 	touch $@;
--- 
-2.21.0
+Balbir Singh
 
