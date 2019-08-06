@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A940C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:41:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD243C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:41:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FF41216F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:41:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FC66216F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:41:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127687;
-	bh=l9lNgHY2O3o2XR+hkENaOk5pAlN16gJqUbwHG1j/Euk=;
+	s=default; t=1565127693;
+	bh=S0tqz9MXLj31EXsnKp0qEfKVE/xoNlwFs6zk3KcFN3g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m/om1VOye15RTWlqoDg7jpLxFEEqC4iKLjg5ZW4N3g8HLZrlgdA5wFPkOqMI/M7S1
-	 hoD/+RnqYPlGfYQqNIm0UBaJb9WSIbUWqxy9hts4/yqovPnQ0/1DgR/co3vxBn0Lv0
-	 jjkcJjMxMLQwm2kcaxbSlONCnmTUBafHdz8LK12s=
+	b=pjg+emj2x05L/E/mxzjjCubzgJ45g3OlNhFza5gb71Fh1A88wq1LoIAXB09qV0daq
+	 oZwUJlHbfEBwDuUS0LagBQd1hlQ4Y9vyu1vevOGvgN4n1yl9Umb4MtNUtCHTIzF0P0
+	 b7KO8TqIvgcQrTaCkoEus3Gs+UvVZuXlxV8k+rDU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729400AbfHFVlZ (ORCPT
+        id S1727707AbfHFVgI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:41:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54064 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 17:36:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728887AbfHFVgQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:36:16 -0400
+        id S1727664AbfHFVgF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:36:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB00A21871;
-        Tue,  6 Aug 2019 21:36:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7598E21871;
+        Tue,  6 Aug 2019 21:36:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127375;
-        bh=l9lNgHY2O3o2XR+hkENaOk5pAlN16gJqUbwHG1j/Euk=;
+        s=default; t=1565127364;
+        bh=S0tqz9MXLj31EXsnKp0qEfKVE/xoNlwFs6zk3KcFN3g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xomnEifnu/s7IvJWZcqozrz45vbTOMICJnPNfVq1CnMyvRAS3h6A0p8P41druEvbZ
-         qaOzTje5J1VjXAaNY4LYjzJeYkUIcC8tyHtg0cW0MmS/bO3TQ5p3KFTj2atg/r0X7m
-         7tu4cSUeTfZ3V/n1gFj1AHckz/y6HDPLzwNwAnlA=
+        b=UJ/Me9KglNkvup6+w3P2DJ0yxjkiBVxwUIA5NCp1GcDkLo2JxsP/dtlsqwcEPKq+l
+         TX9cM9aY1QvMSxwSa0Ml+4LbhqTfmz1g2wezYwd6fJv89LP1GG+UM+dpjfHBFMk6Lh
+         wcwCglPOv9rRpfPIM7eaYoW1cO8KCnlXC0SxtfM8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Inki Dae <inki.dae@samsung.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 28/32] drm/exynos: fix missing decrement of retry counter
-Date:   Tue,  6 Aug 2019 17:35:16 -0400
-Message-Id: <20190806213522.19859-28-sashal@kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 22/32] arm64: unwind: Prohibit probing on return_address()
+Date:   Tue,  6 Aug 2019 17:35:10 -0400
+Message-Id: <20190806213522.19859-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190806213522.19859-1-sashal@kernel.org>
 References: <20190806213522.19859-1-sashal@kernel.org>
@@ -60,41 +59,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 1bbbab097a05276e312dd2462791d32b21ceb1ee ]
+[ Upstream commit ee07b93e7721ccd5d5b9fa6f0c10cb3fe2f1f4f9 ]
 
-Currently the retry counter is not being decremented, leading to a
-potential infinite spin if the scalar_reads don't change state.
+Prohibit probing on return_address() and subroutines which
+is called from return_address(), since the it is invoked from
+trace_hardirqs_off() which is also kprobe blacklisted.
 
-Addresses-Coverity: ("Infinite loop")
-Fixes: 280e54c9f614 ("drm/exynos: scaler: Reset hardware before starting the operation")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Inki Dae <inki.dae@samsung.com>
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/exynos/exynos_drm_scaler.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/kernel/return_address.c | 3 +++
+ arch/arm64/kernel/stacktrace.c     | 3 +++
+ 2 files changed, 6 insertions(+)
 
-diff --git a/drivers/gpu/drm/exynos/exynos_drm_scaler.c b/drivers/gpu/drm/exynos/exynos_drm_scaler.c
-index 0ddb6eec7b113..df228436a03d9 100644
---- a/drivers/gpu/drm/exynos/exynos_drm_scaler.c
-+++ b/drivers/gpu/drm/exynos/exynos_drm_scaler.c
-@@ -108,12 +108,12 @@ static inline int scaler_reset(struct scaler_context *scaler)
- 	scaler_write(SCALER_CFG_SOFT_RESET, SCALER_CFG);
- 	do {
- 		cpu_relax();
--	} while (retry > 1 &&
-+	} while (--retry > 1 &&
- 		 scaler_read(SCALER_CFG) & SCALER_CFG_SOFT_RESET);
- 	do {
- 		cpu_relax();
- 		scaler_write(1, SCALER_INT_EN);
--	} while (retry > 0 && scaler_read(SCALER_INT_EN) != 1);
-+	} while (--retry > 0 && scaler_read(SCALER_INT_EN) != 1);
+diff --git a/arch/arm64/kernel/return_address.c b/arch/arm64/kernel/return_address.c
+index 933adbc0f654d..0311fe52c8ffb 100644
+--- a/arch/arm64/kernel/return_address.c
++++ b/arch/arm64/kernel/return_address.c
+@@ -11,6 +11,7 @@
  
- 	return retry ? 0 : -EIO;
+ #include <linux/export.h>
+ #include <linux/ftrace.h>
++#include <linux/kprobes.h>
+ 
+ #include <asm/stack_pointer.h>
+ #include <asm/stacktrace.h>
+@@ -32,6 +33,7 @@ static int save_return_addr(struct stackframe *frame, void *d)
+ 		return 0;
+ 	}
  }
++NOKPROBE_SYMBOL(save_return_addr);
+ 
+ void *return_address(unsigned int level)
+ {
+@@ -55,3 +57,4 @@ void *return_address(unsigned int level)
+ 		return NULL;
+ }
+ EXPORT_SYMBOL_GPL(return_address);
++NOKPROBE_SYMBOL(return_address);
+diff --git a/arch/arm64/kernel/stacktrace.c b/arch/arm64/kernel/stacktrace.c
+index 4989f7ea1e599..bb482ec044b61 100644
+--- a/arch/arm64/kernel/stacktrace.c
++++ b/arch/arm64/kernel/stacktrace.c
+@@ -18,6 +18,7 @@
+ #include <linux/kernel.h>
+ #include <linux/export.h>
+ #include <linux/ftrace.h>
++#include <linux/kprobes.h>
+ #include <linux/sched.h>
+ #include <linux/sched/debug.h>
+ #include <linux/sched/task_stack.h>
+@@ -85,6 +86,7 @@ int notrace unwind_frame(struct task_struct *tsk, struct stackframe *frame)
+ 
+ 	return 0;
+ }
++NOKPROBE_SYMBOL(unwind_frame);
+ 
+ void notrace walk_stackframe(struct task_struct *tsk, struct stackframe *frame,
+ 		     int (*fn)(struct stackframe *, void *), void *data)
+@@ -99,6 +101,7 @@ void notrace walk_stackframe(struct task_struct *tsk, struct stackframe *frame,
+ 			break;
+ 	}
+ }
++NOKPROBE_SYMBOL(walk_stackframe);
+ 
+ #ifdef CONFIG_STACKTRACE
+ struct stack_trace_data {
 -- 
 2.20.1
 
