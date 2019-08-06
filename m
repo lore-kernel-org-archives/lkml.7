@@ -2,126 +2,104 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE94C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E749FC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:51:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8072C20818
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:51:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565117464;
-	bh=zyLFJxno5lBgFK8RfBeA4t2XI66/iYh/XkOF6IMJSqA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=utDUPiTobNgrARJNnltUcNaD/1fXpI5m1IaXEDfkNPfb5i4LoMZdSVizG6o6nBlAx
-	 SeTArOAEU98pNVguC+p/8OS73muwf+OrOVrMmPWh67IrTczT8xSDXgLz9vLMMNGEj0
-	 jsg6jk9DUAXtIfcpQv8YSdtvFYFjmFNmG3V/3yYw=
+	by mail.kernel.org (Postfix) with ESMTP id C1EB6216F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:51:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726147AbfHFSvD (ORCPT
+        id S1726438AbfHFSvO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 14:51:03 -0400
-Received: from mail-lf1-f47.google.com ([209.85.167.47]:42380 "EHLO
-        mail-lf1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725798AbfHFSvD (ORCPT
+        Tue, 6 Aug 2019 14:51:14 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:51538 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726266AbfHFSvN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 14:51:03 -0400
-Received: by mail-lf1-f47.google.com with SMTP id s19so62028801lfb.9
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 11:51:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YFrdn8TjmQNSnIaAcCuqbEzq3mrXCDg59WKear6Xdpg=;
-        b=MlysRV02mcMixM5P973XDGPSxckBz4Nea7C3SNGSHcfQXpMYCeOaEo4xQvZFVIgIBy
-         AFFjp9IQ8QdVB/2B+8z1j1rT4dC0Ak27vpobppoYytcpWfuMnn4/z0OVQMXSAxk5j/X4
-         5pVDLEKsr8UIaKS0UpizhCPTazxnvNME05Bg0=
+        Tue, 6 Aug 2019 14:51:13 -0400
+Received: from mail-pl1-f199.google.com ([209.85.214.199])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <gpiccoli@canonical.com>)
+        id 1hv4YB-00041L-19
+        for linux-kernel@vger.kernel.org; Tue, 06 Aug 2019 18:51:11 +0000
+Received: by mail-pl1-f199.google.com with SMTP id t2so48849000plo.10
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 11:51:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YFrdn8TjmQNSnIaAcCuqbEzq3mrXCDg59WKear6Xdpg=;
-        b=CPIDck8RaU7g1iIe2lu38mmJEVsZUQP2koSa5VO0oIMmP/8t8Ny3MwssxXpTEdBD7o
-         PZK1ZOyono+BGqTijxUX2ExzWsn0WtQbRUFJ8uQl55SXAmaUSHsSVVKVok5OItei/zQ4
-         EmV0/wn0xgjQNrYKF67LUtwuROh6WL1JIpoYomY4VuQE6mmlqD8x2pP2Cw93m8ob9iZV
-         8L23Cmc/eVMeuloAFZrGoDIWCsco5yZxW6nrn/7ldijNOsdGjW0n0C3IFU67RXrpQyrS
-         rf2CBhBPC3eyLHXvtbK3V3D/tssdDS/+c8knQMRHloGg0t7DgwRyumvnmLy08tU7KqUp
-         9umg==
-X-Gm-Message-State: APjAAAULCG97EPxTkP5pSzBYrg4Cv7BZaHngiWPF49aMs9//dq/D1deH
-        YA2E2I5vWFMbtVRFcup1CZpHwF6Vph4=
-X-Google-Smtp-Source: APXvYqxJjd6U9nt8sLXhA5ieCKFs6yAlcUtosHkCB4eBu/WZP9RowqNodXLXSsI19cimtZeBrFJSBg==
-X-Received: by 2002:a19:5e10:: with SMTP id s16mr3374091lfb.13.1565117459797;
-        Tue, 06 Aug 2019 11:50:59 -0700 (PDT)
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com. [209.85.167.53])
-        by smtp.gmail.com with ESMTPSA id s24sm17980378lje.58.2019.08.06.11.50.58
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 06 Aug 2019 11:50:58 -0700 (PDT)
-Received: by mail-lf1-f53.google.com with SMTP id c9so61958997lfh.4
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 11:50:58 -0700 (PDT)
-X-Received: by 2002:a19:c20b:: with SMTP id l11mr3479307lfc.106.1565117458380;
- Tue, 06 Aug 2019 11:50:58 -0700 (PDT)
+        h=x-gm-message-state:to:cc:in-reply-to:from:subject:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:content-language
+         :content-transfer-encoding;
+        bh=2zdSETPQrksyHBxfstGVcIf+FZddbD5bcxUPXoyzSyw=;
+        b=UpWrlq7HXPm2zOcStbl3mrV5xIsCC7B0uV1ABoE7Cy5P7ERJYm1l5TmnEmcN0GpSX7
+         l/U5lppIzIpfKOzIzgYE+IJgl413gZ7MMJpfg0Y7uQi0XLbjsuOAvlERwNgpPA4HpjGe
+         S94c/8hLqlTHPYCOF/Bj7POyimzNlxMYEENQFjZuRf6j3CjK2YHXTdhVvQblroFZgWYC
+         iR2WwFtZrlDASERfEE+OmwilKdF0kiJWD0Y1Eiu8zX4bA2C3sUPtj5GTY1njAveKXZtJ
+         5HUWBQiDQ/nIDDO1clHoOmxT8QhKBZNB1A+jK1SOfGnIjAE81NMa7QpXrNqw8i77rusS
+         R8Iw==
+X-Gm-Message-State: APjAAAWBPHEHAPL/3RKrUXAXCmU5HWov/HzqxNc0Dzvry7DNJd136R2b
+        ubtr9emKU0mBLQeeLMhUznPoCE5RJovPdRiJR+6QzGcCDbnrxZkJLf6SQv839AcL1sltmEWkpeL
+        flqSd3cpCvoERZjZrpgexEdj51nIQtZ8owJrmL2G5XQ==
+X-Received: by 2002:a62:b515:: with SMTP id y21mr5237957pfe.213.1565117469797;
+        Tue, 06 Aug 2019 11:51:09 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxCPT1G7eI1+2Oh1tZekJKUqADBMlTDDGNt0pdOxu47nAXI84gEwYTa99lDvnee6ttk5zTZjw==
+X-Received: by 2002:a62:b515:: with SMTP id y21mr5237937pfe.213.1565117469617;
+        Tue, 06 Aug 2019 11:51:09 -0700 (PDT)
+Received: from [192.168.1.200] ([152.254.169.4])
+        by smtp.gmail.com with ESMTPSA id a1sm59604807pgh.61.2019.08.06.11.51.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 06 Aug 2019 11:51:08 -0700 (PDT)
+To:     dhowells@redhat.com
+Cc:     lists@nerdbynature.de, linux-kernel@vger.kernel.org,
+        anna.schumaker@netapp.com, steved@redhat.com
+In-Reply-To: 
+From:   "Guilherme G. Piccoli" <gpiccoli@canonical.com>
+Subject: Re: [PATCH 1/3] fscache: Fix cookie collision
+Openpgp: preference=signencrypt
+Autocrypt: addr=gpiccoli@canonical.com; prefer-encrypt=mutual; keydata=
+ mQENBFpVBxcBCADPNKmu2iNKLepiv8+Ssx7+fVR8lrL7cvakMNFPXsXk+f0Bgq9NazNKWJIn
+ Qxpa1iEWTZcLS8ikjatHMECJJqWlt2YcjU5MGbH1mZh+bT3RxrJRhxONz5e5YILyNp7jX+Vh
+ 30rhj3J0vdrlIhPS8/bAt5tvTb3ceWEic9mWZMsosPavsKVcLIO6iZFlzXVu2WJ9cov8eQM/
+ irIgzvmFEcRyiQ4K+XUhuA0ccGwgvoJv4/GWVPJFHfMX9+dat0Ev8HQEbN/mko/bUS4Wprdv
+ 7HR5tP9efSLucnsVzay0O6niZ61e5c97oUa9bdqHyApkCnGgKCpg7OZqLMM9Y3EcdMIJABEB
+ AAG0LUd1aWxoZXJtZSBHLiBQaWNjb2xpIDxncGljY29saUBjYW5vbmljYWwuY29tPokBNwQT
+ AQgAIQUCWmClvQIbAwULCQgHAgYVCAkKCwIEFgIDAQIeAQIXgAAKCRDOR5EF9K/7Gza3B/9d
+ 5yczvEwvlh6ksYq+juyuElLvNwMFuyMPsvMfP38UslU8S3lf+ETukN1S8XVdeq9yscwtsRW/
+ 4YoUwHinJGRovqy8gFlm3SAtjfdqysgJqUJwBmOtcsHkmvFXJmPPGVoH9rMCUr9s6VDPox8f
+ q2W5M7XE9YpsfchS/0fMn+DenhQpV3W6pbLtuDvH/81GKrhxO8whSEkByZbbc+mqRhUSTdN3
+ iMpRL0sULKPVYbVMbQEAnfJJ1LDkPqlTikAgt3peP7AaSpGs1e3pFzSEEW1VD2jIUmmDku0D
+ LmTHRl4t9KpbU/H2/OPZkrm7809QovJGRAxjLLPcYOAP7DUeltveuQENBFpVBxcBCADbxD6J
+ aNw/KgiSsbx5Sv8nNqO1ObTjhDR1wJw+02Bar9DGuFvx5/qs3ArSZkl8qX0X9Vhptk8rYnkn
+ pfcrtPBYLoux8zmrGPA5vRgK2ItvSc0WN31YR/6nqnMfeC4CumFa/yLl26uzHJa5RYYQ47jg
+ kZPehpc7IqEQ5IKy6cCKjgAkuvM1rDP1kWQ9noVhTUFr2SYVTT/WBHqUWorjhu57/OREo+Tl
+ nxI1KrnmW0DbF52tYoHLt85dK10HQrV35OEFXuz0QPSNrYJT0CZHpUprkUxrupDgkM+2F5LI
+ bIcaIQ4uDMWRyHpDbczQtmTke0x41AeIND3GUc+PQ4hWGp9XABEBAAGJAR8EGAEIAAkFAlpV
+ BxcCGwwACgkQzkeRBfSv+xv1wwgAj39/45O3eHN5pK0XMyiRF4ihH9p1+8JVfBoSQw7AJ6oU
+ 1Hoa+sZnlag/l2GTjC8dfEGNoZd3aRxqfkTrpu2TcfT6jIAsxGjnu+fUCoRNZzmjvRziw3T8
+ egSPz+GbNXrTXB8g/nc9mqHPPprOiVHDSK8aGoBqkQAPZDjUtRwVx112wtaQwArT2+bDbb/Y
+ Yh6gTrYoRYHo6FuQl5YsHop/fmTahpTx11IMjuh6IJQ+lvdpdfYJ6hmAZ9kiVszDF6pGFVkY
+ kHWtnE2Aa5qkxnA2HoFpqFifNWn5TyvJFpyqwVhVI8XYtXyVHub/WbXLWQwSJA4OHmqU8gDl
+ X18zwLgdiQ==
+Message-ID: <66d23ccb-0d3d-54cc-59b3-2d2bc10d5e9e@canonical.com>
+Date:   Tue, 6 Aug 2019 15:50:58 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <CAPM=9tzJQ+26n_Df1eBPG1A=tXf4xNuVEjbG3aZj-aqYQ9nnAg@mail.gmail.com>
- <CAPM=9twvwhm318btWy_WkQxOcpRCzjpok52R8zPQxQrnQ8QzwQ@mail.gmail.com>
- <CAHk-=wjC3VX5hSeGRA1SCLjT+hewPbbG4vSJPFK7iy26z4QAyw@mail.gmail.com>
- <CAHk-=wiD6a189CXj-ugRzCxA9r1+siSCA0eP_eoZ_bk_bLTRMw@mail.gmail.com>
- <48890b55-afc5-ced8-5913-5a755ce6c1ab@shipmail.org> <CAHk-=whwcMLwcQZTmWgCnSn=LHpQG+EBbWevJEj5YTKMiE_-oQ@mail.gmail.com>
- <CAHk-=wghASUU7QmoibQK7XS09na7rDRrjSrWPwkGz=qLnGp_Xw@mail.gmail.com> <20190806073831.GA26668@infradead.org>
-In-Reply-To: <20190806073831.GA26668@infradead.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 6 Aug 2019 11:50:42 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wi7L0MDG7DY39Hx6v8jUMSq3ZCE3QTnKKirba_8KAFNyw@mail.gmail.com>
-Message-ID: <CAHk-=wi7L0MDG7DY39Hx6v8jUMSq3ZCE3QTnKKirba_8KAFNyw@mail.gmail.com>
-Subject: Re: drm pull for v5.3-rc1
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     =?UTF-8?Q?Thomas_Hellstr=C3=B6m_=28VMware=29?= 
-        <thomas@shipmail.org>, Dave Airlie <airlied@gmail.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Price <steven.price@arm.com>,
-        Linux-MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 6, 2019 at 12:38 AM Christoph Hellwig <hch@infradead.org> wrote:
->
-> Seems like no one took this up.  Below is a version which I think is
-> slightly better by also moving the mm_walk structure initialization
-> into the helpers, with an outcome of just a handful of added lines.
+Hi David, was there any respin for this patch? I couldn't find it upstream.
 
-Ack. Agreed, I think that's a nicer interface.
+This message shows a lot in the xfstests against cifs.
+Thanks in advance,
 
-In fact, I do note that a lot of the users don't actually use the
-"void *private" argument at all - they just want the walker - and just
-pass in a NULL private pointer. So we have things like this:
 
-> +       if (walk_page_range(&init_mm, va, va + size, &set_nocache_walk_ops,
-> +                       NULL)) {
-
-and in a perfect world we'd have arguments with default values so that
-we could skip those entirely for when people just don't need it.
-
-I'm not a huge fan of C++ because of a lot of the complexity (and some
-really bad decisions), but many of the _syntactic_ things in C++ would
-be nice to use. This one doesn't seem to be one that the gcc people
-have picked up as an extension ;(
-
-Yes, yes, we could do it with a macro, I guess.
-
-   #define walk_page_range(mm, start,end, ops, ...) \
-       __walk_page_range(mm, start, end, (NULL , ## __VA_ARGS__))
-
-but I'm not sure it's worthwhile.
-
-                  Linus
+Guilherme
