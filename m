@@ -2,72 +2,115 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D898FC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2373FC32751
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:12:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8C88206A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:12:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB8E9206A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:12:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="nTAloYe1"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="yPVtcuIm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726849AbfHFVMD (ORCPT
+        id S1726936AbfHFVMJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:12:03 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:38648 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726016AbfHFVMD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:12:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=Fc00WBtovQWbwYWrsv1JjCYQajV6WgZsSgkyMDMnwmQ=; b=nTAloYe1jHjKOUvI8oG2rVCIuf
-        8l0QzmynOpMgso4HVgULgT1ngDM6pxm2PaZwe6/I4rGXxRJtv/BuI6QaEqL0nx8AZF4hjOca8WKp3
-        zt9197AHBXJBBbLXaCcBbTTxv9g2WL915ObwC6YRRnDzeHLbT4ufKAOgXc0vW+H/P79c=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hv6kO-0008KH-GQ; Tue, 06 Aug 2019 23:11:56 +0200
-Date:   Tue, 6 Aug 2019 23:11:56 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Tao Ren <taoren@fb.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Arun Parameswaran <arun.parameswaran@broadcom.com>,
-        Justin Chen <justinpopo6@gmail.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
-Subject: Re: [PATCH net-next] net: phy: modify assignment to OR for dev_flags
- in phy_attach_direct
-Message-ID: <20190806211156.GD29142@lunn.ch>
-References: <20190805185551.3140564-1-taoren@fb.com>
+        Tue, 6 Aug 2019 17:12:09 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:46757 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726851AbfHFVMI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:12:08 -0400
+Received: by mail-ot1-f66.google.com with SMTP id z23so67778666ote.13
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 14:12:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SxfvXS8dkeLPpXkICvCXwX+4rlE1NK6AW+Bou/1xFzU=;
+        b=yPVtcuImiPOLRP461tix/AcQLCmPpM2hT6wfZ3z3u8rK+/Z4Wcy9TZYR1+pBKb1sEv
+         8s5ZXsKoBm0t/6DdFcCMSQQnCtMuYyJQRjyChWPlRiCLIdVoUKmVW20uRNmVEQwz55Q0
+         bE/hu0rH2S8PkC3OoCF8CUVDVOjsDrmQt5AwkwC3N5pRqe3g/DntzunlOcmsfFn2MCbD
+         i/D13Z/hbxjfwNu62slNJ6Upz8aIY9OSQn0Oh9mvcGHdw8JdOq4oK7LKRHM//+sN1MJN
+         6p+ftsIHRD7HxlD2OO+al3P77mmVq899M63tNAeQ9Mm+CdQEQz3bbwdYoFTGtLZ1zNlr
+         Fcgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SxfvXS8dkeLPpXkICvCXwX+4rlE1NK6AW+Bou/1xFzU=;
+        b=jVGdOm3GuWCvvuJns6uB9LA1I69VdxpJ0zy/E9FuAT50DY8bDyV029aVRu2Tain2J5
+         OKxjDKOwBPy/FZ/ohT4py2YFVykQ60cZNobz/TYeNSOjYR233k6Yua5iQ4NwAycBfmUD
+         4/epbtp5JaxWJfmxBDer89O4f2Ylrir94Afl7Ng7V0JTzfwR6TZiLpxvLY8cEuEJUo6e
+         C5VOO7fAzAC5BDkL2YOvIVnFU2nb18oVK6FY2Po+TYnI72hh/N0OjJ1eRoQYf9c8pb9F
+         O4mYA/F27bk7VlkMxyfFDjeMmIPExlixnLosl4UwgZwzy1Du3nm6xqJaW74O6lhNBywo
+         tAtQ==
+X-Gm-Message-State: APjAAAWvVd3+5lqIvhjIM+ulZabhtlLwWn+67rkDLB0Xr8LFLBK+EU9T
+        hD3LLf7VywN1nNmAzpTGgLWG5Lfvq8Rv+VGAhNwkur/6
+X-Google-Smtp-Source: APXvYqw9o9Yb/ND1MDNnGatZSfaVVbG1TKnSQ9e0LNGeNp1/ZpabJ2T1j/9smMMqoDrW/seGup0iO9zq36rzrSQKj2U=
+X-Received: by 2002:a9d:7a8b:: with SMTP id l11mr4580336otn.247.1565125927538;
+ Tue, 06 Aug 2019 14:12:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190805185551.3140564-1-taoren@fb.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <1565112345-28754-1-git-send-email-jane.chu@oracle.com> <1565112345-28754-3-git-send-email-jane.chu@oracle.com>
+In-Reply-To: <1565112345-28754-3-git-send-email-jane.chu@oracle.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 6 Aug 2019 14:11:56 -0700
+Message-ID: <CAPcyv4jgtYMKgEB4jnQ0g4fQPO39BCOmQM8Zo231=_D7L6wH=A@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] mm/memory-failure: Poison read receives SIGKILL
+ instead of SIGBUS if mmaped more than once
+To:     Jane Chu <jane.chu@oracle.com>
+Cc:     Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 05, 2019 at 11:55:51AM -0700, Tao Ren wrote:
-> Modify the assignment to OR when dealing with phydev->dev_flags in
-> phy_attach_direct function, and this is to make sure dev_flags set in
-> driver's probe callback won't be lost.
-> 
-> Suggested-by: Andrew Lunn <andrew@lunn.ch>
-> CC: Heiner Kallweit <hkallweit1@gmail.com>
-> CC: Vladimir Oltean <olteanv@gmail.com>
-> Signed-off-by: Tao Ren <taoren@fb.com>
+On Tue, Aug 6, 2019 at 10:28 AM Jane Chu <jane.chu@oracle.com> wrote:
+>
+> Mmap /dev/dax more than once, then read the poison location using address
+> from one of the mappings. The other mappings due to not having the page
+> mapped in will cause SIGKILLs delivered to the process. SIGKILL succeeds
+> over SIGBUS, so user process looses the opportunity to handle the UE.
+>
+> Although one may add MAP_POPULATE to mmap(2) to work around the issue,
+> MAP_POPULATE makes mapping 128GB of pmem several magnitudes slower, so
+> isn't always an option.
+>
+> Details -
+>
+> ndctl inject-error --block=10 --count=1 namespace6.0
+>
+> ./read_poison -x dax6.0 -o 5120 -m 2
+> mmaped address 0x7f5bb6600000
+> mmaped address 0x7f3cf3600000
+> doing local read at address 0x7f3cf3601400
+> Killed
+>
+> Console messages in instrumented kernel -
+>
+> mce: Uncorrected hardware memory error in user-access at edbe201400
+> Memory failure: tk->addr = 7f5bb6601000
+> Memory failure: address edbe201: call dev_pagemap_mapping_shift
+> dev_pagemap_mapping_shift: page edbe201: no PUD
+> Memory failure: tk->size_shift == 0
+> Memory failure: Unable to find user space address edbe201 in read_poison
+> Memory failure: tk->addr = 7f3cf3601000
+> Memory failure: address edbe201: call dev_pagemap_mapping_shift
+> Memory failure: tk->size_shift = 21
+> Memory failure: 0xedbe201: forcibly killing read_poison:22434 because of failure to unmap corrupted page
+>   => to deliver SIGKILL
+> Memory failure: 0xedbe201: Killing read_poison:22434 due to hardware memory corruption
+>   => to deliver SIGBUS
+>
+> Signed-off-by: Jane Chu <jane.chu@oracle.com>
+> Suggested-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Looks good, ignore the checkpatch warning about too long subject line,
+looks appropriate to me:
 
-    Andrew
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
