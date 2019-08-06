@@ -2,321 +2,118 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62D23C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 09:04:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD8EC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 09:10:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FAC7208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 09:04:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66C8420B1F
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 09:10:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P4lt3gZl"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="R0hKzPZG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732355AbfHFJEe (ORCPT
+        id S1732306AbfHFJKA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 05:04:34 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:33264 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732142AbfHFJEd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 05:04:33 -0400
-Received: by mail-wr1-f66.google.com with SMTP id n9so87200172wru.0;
-        Tue, 06 Aug 2019 02:04:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=NMCiJWt+aN8oYwwrRXVDzW0rjDAKNwhJN21m/pSEVRA=;
-        b=P4lt3gZl5d4stVZdifTLoSbiUd94mDr/WkAcxspb6s898D/FUQg3E8jApiZiMaT+Fd
-         lUi73kVFVrX1qlU7JYjE2WSvxKEdiBwApQFvL30GCd2VkdoO2RfRRapfUWKvn0SUf28Y
-         osKmfcfx4RqWftYsFh42U9hCkYTcqL2KpxWJf1EP4TSmrvJ0rwt4R9IfHeTag0B3XBM2
-         Y9+86bpnoJJCNOue+pYAIqIJKQFDXi/iJVzpRYULAMRtIelDNcToeFiFhiedmGmxEiGA
-         D8eFl3jvMbShz87HhmR65J+xRZXSHe2uQPv6PaW1nM2/AM1MiFMeHl42n2ksyiUA4E5M
-         q5uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=NMCiJWt+aN8oYwwrRXVDzW0rjDAKNwhJN21m/pSEVRA=;
-        b=pPgus9/Jz6CEJU/rZX93UAKc8mEYwwqPDzESznIQReq061eGbfx7WHMOfGjjwJg+jk
-         CeWXawa2SPVBfk4y2RB1JvEqdeZF3cw+81eL7pg6eEA4qnauSTsIUm8H3gaC6I0bTbo3
-         McR525DUZMFiPOSZm7reFDX37tknVGa6OPNYEcJdxfJFjGsNEbt1O+pBcdVVXKcAkp+B
-         NziXrCM9xuVacONRWDcjbXjDAbS6K9otA5MpYpAiBBh6s/NSQlqvw0AYkdDNLc1JS10+
-         +pr9TDOHy27MVMBUZk1sW8BwRkSUIfGjnBoPvQ6WZQ8tFlQf7P8gbzwhqeU7eaH6rxDv
-         fKvA==
-X-Gm-Message-State: APjAAAVpgxyhy9kQF28dKg1R+jgl5qWbTIWcFFhbTFZZ0ZZVzM9bWwXS
-        SxaRU+Vhx1irH1QLdMILzverCgv+
-X-Google-Smtp-Source: APXvYqyuuGYtf5nUzBrBw/k1Y88LZatbQ9O7NLyEKbBesu7E3A0jQur31fl20zr3GW9DLTKDibGeAA==
-X-Received: by 2002:adf:de8b:: with SMTP id w11mr3445196wrl.134.1565082269757;
-        Tue, 06 Aug 2019 02:04:29 -0700 (PDT)
-Received: from localhost ([197.211.57.137])
-        by smtp.gmail.com with ESMTPSA id c7sm79921956wro.70.2019.08.06.02.04.27
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 06 Aug 2019 02:04:29 -0700 (PDT)
-Date:   Tue, 6 Aug 2019 10:03:23 +0100
-From:   Sheriff Esseson <sheriffesseson@gmail.com>
-To:     skhan@linuxfoundation.org
-Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        "supporter:XFS FILESYSTEM" <linux-xfs@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: [PATCH] Documentation: fs: Convert xfs-delayed-logging-design.txt to
- ReSt
-Message-ID: <20190806090323.GA16095@localhost>
+        Tue, 6 Aug 2019 05:10:00 -0400
+Received: from mail-eopbgr40081.outbound.protection.outlook.com ([40.107.4.81]:57571
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728845AbfHFJKA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 05:10:00 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LtBWGoHqXmcTIIKJYpXwLfVgjiNp+5xfG7io2p0o7WKfvECe8/6rNNEhekuzef6RcCCg1e+IBpQz71psz0Vbh/cdQDaWJ0RIrLrGQLRU8zqFvMXQvkkde6EvvY40d/EI9aqG+ROf3rxhiFlv/Ksp3WX2Szp+BF0MgggnywMkIRIqZJG+S05vlrWwljDEn6DE+153hPibfvz3kmgwfTqVkZC1l0t6J8zX2c4qawkgrRA9X3NHasKH2LfZF8dEjqnSoWpohBummhncyqVwxcSCedaW2gwJCHKQxka/GpGN+UOeVq8db6ud4RdiNGrzhBbVcWfUtQJmhv/3m49r9gAujw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/nKftMWjY934pOzqU3H14jfywtR37BlCJHdjFEIKxI4=;
+ b=JhXefSe80oDgtLgxudEYp9mk2jm57lsG2m76mXK1hcllslJ5cZNKpgWqdezCcj/hP60VSDGtE9YJ2IrtcOkEpQAmAtOsMMMWmc1DoFwLyD/0NR8TTxUsKmfp1UEq8wGmIat4CbkJBYl70S6Z2diSvNU832yGDxGfQDY86poPzRSzGdJEX1FlUGXzDhQazmogOo5bBvpuQFQA7xcWa69bkU0beaEhbHUYGymQLd8tA9zyYBBw7h0dYgZZrlNh1nw9EOAV1quOIDwBIbKKQ/i+BXMX12udFMx7C3ow1Y/fjQngGMRk01g8laZZ5QNoqJrgOJ6F+M/cByitzlrKXSLSMQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=nxp.com;dmarc=pass action=none header.from=nxp.com;dkim=pass
+ header.d=nxp.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/nKftMWjY934pOzqU3H14jfywtR37BlCJHdjFEIKxI4=;
+ b=R0hKzPZGzcKWMX33DMSL5+eK8JAHihjdq2Gjh7aJ2gCfzHHS0ealDN+OS/Vd7H8NfFjplgzDEfbHiSgoe8tS0ncIUBKKZdGBAL0lV/wBKmMbvbVWMOTWGgfMeInV3B+q78p/qbJtzeM3wZnhJDdlcVl7+cTi6qSPRljhRaps554=
+Received: from VI1PR04MB4094.eurprd04.prod.outlook.com (52.133.13.160) by
+ VI1PR04MB7103.eurprd04.prod.outlook.com (10.186.156.140) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2136.13; Tue, 6 Aug 2019 09:09:54 +0000
+Received: from VI1PR04MB4094.eurprd04.prod.outlook.com
+ ([fe80::c85e:7409:9270:3c3c]) by VI1PR04MB4094.eurprd04.prod.outlook.com
+ ([fe80::c85e:7409:9270:3c3c%7]) with mapi id 15.20.2136.018; Tue, 6 Aug 2019
+ 09:09:53 +0000
+From:   Daniel Baluta <daniel.baluta@nxp.com>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Fancy Fang <chen.fang@nxp.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        Jacky Bai <ping.bai@nxp.com>, Jun Li <jun.li@nxp.com>,
+        "agx@sigxcpu.org" <agx@sigxcpu.org>, Abel Vesa <abel.vesa@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Anson Huang <anson.huang@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        Peng Fan <peng.fan@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH 1/2] clk: imx8mm: Unregister clks when of_clk_add_provider
+ failed
+Thread-Topic: [PATCH 1/2] clk: imx8mm: Unregister clks when
+ of_clk_add_provider failed
+Thread-Index: AQHVTCQEIiAvfTsLQk6nSaEaD5dOEabt1SEA
+Date:   Tue, 6 Aug 2019 09:09:53 +0000
+Message-ID: <16eb2412986ec69d8fd99a63daa98d174ea6d499.camel@nxp.com>
+References: <20190806064614.20294-1-Anson.Huang@nxp.com>
+In-Reply-To: <20190806064614.20294-1-Anson.Huang@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=daniel.baluta@nxp.com; 
+x-originating-ip: [89.37.124.34]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 876d7c30-5301-4fa2-155e-08d71a4dd84c
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB7103;
+x-ms-traffictypediagnostic: VI1PR04MB7103:
+x-microsoft-antispam-prvs: <VI1PR04MB710349B93265F6D737A3AE24F9D50@VI1PR04MB7103.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 0121F24F22
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(366004)(39860400002)(346002)(136003)(189003)(199004)(66946007)(7416002)(316002)(2201001)(99286004)(50226002)(5660300002)(486006)(25786009)(2906002)(110136005)(229853002)(4326008)(3846002)(26005)(2616005)(6116002)(86362001)(68736007)(558084003)(6246003)(102836004)(76176011)(446003)(256004)(66066001)(6512007)(71200400001)(305945005)(8936002)(53936002)(71190400001)(118296001)(11346002)(81156014)(478600001)(8676002)(6436002)(6486002)(476003)(64756008)(6506007)(186003)(66446008)(44832011)(81166006)(76116006)(2501003)(14454004)(7736002)(66476007)(91956017)(66556008)(36756003)(99106002)(921003)(32563001)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB7103;H:VI1PR04MB4094.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 97/+BX4A5dzYSMcuQULlH6c2pjW0Ri6EAG9LVrefqy30vMKVCwXqwD/9KVhgTZ1v++iGIZm8EOKC3laEuLNa84sv2qungvUxgh0ecZBOtDUYEccJMFOHhJPy7s2BjmCbNbuFuqApA8wJatQXXApkR6nX1n7Z+224cHatfc85FaYbQgggyMnTKNvoHsx3zIXvRdP2FZrP4LgcsW0P2nSWTutlM6qNtEOTl4HjNQM/FFBzXFOea0jB/oMHUk6EvIYTCU05jfk1j3kabyc1W9eJe15sHyG0H9fievkw7ERkcioi4IFqsjizzkeCwP+0YtlCtQGWZD9lTqcGbLe1VZbj6d9F+zcH79Hbbe0PiUF0mO8lHS//iuLArsxWLhVhpNqccLFyirmrkS+gsChcxF+xW8DkdgexD/yHxQoPCpHiDAM=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <13DE6831E267424BBCCC77BEA2122F31@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 876d7c30-5301-4fa2-155e-08d71a4dd84c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Aug 2019 09:09:53.8294
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: daniel.baluta@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB7103
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert xfs-delayed-logging-design.txt to ReST and fix broken references.
-The enumerations at "Lifecycle Changes" breaks because of lines begining with
-"<", treat as diagrams.
-
-Signed-off-by: Sheriff Esseson <sheriffesseson@gmail.com>
----
- Documentation/filesystems/index.rst           |  1 +
- ...ign.txt => xfs-delayed-logging-design.rst} | 69 +++++++++++--------
- MAINTAINERS                                   |  2 +-
- 3 files changed, 44 insertions(+), 28 deletions(-)
- rename Documentation/filesystems/{xfs-delayed-logging-design.txt => xfs-delayed-logging-design.rst} (96%)
-
-diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
-index 2de2fe2ab078..0b94ff710b67 100644
---- a/Documentation/filesystems/index.rst
-+++ b/Documentation/filesystems/index.rst
-@@ -32,3 +32,4 @@ filesystem implementations.
- 
-    journalling
-    fscrypt
-+   xfs-delayed-logging-design
-diff --git a/Documentation/filesystems/xfs-delayed-logging-design.txt b/Documentation/filesystems/xfs-delayed-logging-design.rst
-similarity index 96%
-rename from Documentation/filesystems/xfs-delayed-logging-design.txt
-rename to Documentation/filesystems/xfs-delayed-logging-design.rst
-index 9a6dd289b17b..a85ca00d4221 100644
---- a/Documentation/filesystems/xfs-delayed-logging-design.txt
-+++ b/Documentation/filesystems/xfs-delayed-logging-design.rst
-@@ -1,8 +1,11 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+==========================
- XFS Delayed Logging Design
----------------------------
-+==========================
- 
- Introduction to Re-logging in XFS
-----------------------------------
-+=================================
- 
- XFS logging is a combination of logical and physical logging. Some objects,
- such as inodes and dquots, are logged in logical format where the details
-@@ -27,14 +30,18 @@ written to disk after change D, we would see in the log the following series
- of transactions, their contents and the log sequence number (LSN) of the
- transaction:
- 
-+        ============           =========        ==============
- 	Transaction		Contents	LSN
-+        ============           =========        ==============
- 	   A			   A		   X
- 	   B			  A+B		  X+n
- 	   C			 A+B+C		 X+n+m
- 	   D			A+B+C+D		X+n+m+o
- 	    <object written to disk>
--	   E			   E		   Y (> X+n+m+o)
-+        ------------------------------------------------------
-+	   E			   E		Y (> X+n+m+o)
- 	   F			  E+F		  Y+p
-+        ============           =========        ==============
- 
- In other words, each time an object is relogged, the new transaction contains
- the aggregation of all the previous changes currently held only in the log.
-@@ -85,7 +92,7 @@ IO permanently. Hence the XFS journalling subsystem can be considered to be IO
- bound.
- 
- Delayed Logging: Concepts
---------------------------
-+=========================
- 
- The key thing to note about the asynchronous logging combined with the
- relogging technique XFS uses is that we can be relogging changed objects
-@@ -154,9 +161,10 @@ The fundamental requirements for delayed logging in XFS are simple:
- 	6. No performance regressions for synchronous transaction workloads.
- 
- Delayed Logging: Design
-------------------------
-+=======================
- 
- Storing Changes
-+---------------
- 
- The problem with accumulating changes at a logical level (i.e. just using the
- existing log item dirty region tracking) is that when it comes to writing the
-@@ -194,30 +202,30 @@ asynchronous transactions to the log. The differences between the existing
- formatting method and the delayed logging formatting can be seen in the
- diagram below.
- 
--Current format log vector:
-+Current format log vector::
- 
--Object    +---------------------------------------------+
--Vector 1      +----+
--Vector 2                    +----+
--Vector 3                                   +----------+
-+        Object    +---------------------------------------------+
-+        Vector 1      +----+
-+        Vector 2                    +----+
-+        Vector 3                                   +----------+
- 
--After formatting:
-+After formatting::
- 
--Log Buffer    +-V1-+-V2-+----V3----+
-+        Log Buffer    +-V1-+-V2-+----V3----+
- 
--Delayed logging vector:
-+Delayed logging vector::
- 
--Object    +---------------------------------------------+
--Vector 1      +----+
--Vector 2                    +----+
--Vector 3                                   +----------+
-+        Object    +---------------------------------------------+
-+        Vector 1      +----+
-+        Vector 2                    +----+
-+        Vector 3                                   +----------+
- 
--After formatting:
-+After formatting::
- 
--Memory Buffer +-V1-+-V2-+----V3----+
--Vector 1      +----+
--Vector 2           +----+
--Vector 3                +----------+
-+        Memory Buffer +-V1-+-V2-+----V3----+
-+        Vector 1      +----+
-+        Vector 2           +----+
-+        Vector 3                +----------+
- 
- The memory buffer and associated vector need to be passed as a single object,
- but still need to be associated with the parent object so if the object is
-@@ -242,6 +250,7 @@ relogged in memory.
- 
- 
- Tracking Changes
-+----------------
- 
- Now that we can record transactional changes in memory in a form that allows
- them to be used without limitations, we need to be able to track and accumulate
-@@ -278,6 +287,7 @@ done for convenience/sanity of the developers.
- 
- 
- Delayed Logging: Checkpoints
-+============================
- 
- When we have a log synchronisation event, commonly known as a "log force",
- all the items in the CIL must be written into the log via the log buffers.
-@@ -341,7 +351,7 @@ Hence log vectors need to be able to be chained together to allow them to be
- detached from the log items. That is, when the CIL is flushed the memory
- buffer and log vector attached to each log item needs to be attached to the
- checkpoint context so that the log item can be released. In diagrammatic form,
--the CIL would look like this before the flush:
-+the CIL would look like this before the flush::
- 
- 	CIL Head
- 	   |
-@@ -362,7 +372,7 @@ the CIL would look like this before the flush:
- 					-> vector array
- 
- And after the flush the CIL head is empty, and the checkpoint context log
--vector list would look like:
-+vector list would look like::
- 
- 	Checkpoint Context
- 	   |
-@@ -411,6 +421,7 @@ compare" situation that can be done after a working and reviewed implementation
- is in the dev tree....
- 
- Delayed Logging: Checkpoint Sequencing
-+======================================
- 
- One of the key aspects of the XFS transaction subsystem is that it tags
- committed transactions with the log sequence number of the transaction commit.
-@@ -474,6 +485,7 @@ force the log at the LSN of that transaction) and so the higher level code
- behaves the same regardless of whether delayed logging is being used or not.
- 
- Delayed Logging: Checkpoint Log Space Accounting
-+================================================
- 
- The big issue for a checkpoint transaction is the log space reservation for the
- transaction. We don't know how big a checkpoint transaction is going to be
-@@ -491,7 +503,7 @@ the size of the transaction and the number of regions being logged (the number
- of log vectors in the transaction).
- 
- An example of the differences would be logging directory changes versus logging
--inode changes. If you modify lots of inode cores (e.g. chmod -R g+w *), then
-+inode changes. If you modify lots of inode cores e.g. ``$ chmod -R g+w *``, then
- there are lots of transactions that only contain an inode core and an inode log
- format structure. That is, two vectors totaling roughly 150 bytes. If we modify
- 10,000 inodes, we have about 1.5MB of metadata to write in 20,000 vectors. Each
-@@ -565,6 +577,7 @@ which is once every 30s.
- 
- 
- Delayed Logging: Log Item Pinning
-+=================================
- 
- Currently log items are pinned during transaction commit while the items are
- still locked. This happens just after the items are formatted, though it could
-@@ -605,6 +618,7 @@ object, we have a race with CIL being flushed between the check and the pin
- lock to guarantee that we pin the items correctly.
- 
- Delayed Logging: Concurrent Scalability
-+=======================================
- 
- A fundamental requirement for the CIL is that accesses through transaction
- commits must scale to many concurrent commits. The current transaction commit
-@@ -683,8 +697,9 @@ woken by the wrong event.
- 
- 
- Lifecycle Changes
-+=================
- 
--The existing log item life cycle is as follows:
-+The existing log item life cycle is as follows::
- 
- 	1. Transaction allocate
- 	2. Transaction reserve
-@@ -729,7 +744,7 @@ at the same time. If the log item is in the AIL or between steps 6 and 7
- and steps 1-6 are re-entered, then the item is relogged. Only when steps 8-9
- are entered and completed is the object considered clean.
- 
--With delayed logging, there are new steps inserted into the life cycle:
-+With delayed logging, there are new steps inserted into the life cycle::
- 
- 	1. Transaction allocate
- 	2. Transaction reserve
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 6c49b48cfd69..acbce11c3d49 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17664,7 +17664,7 @@ T:	git git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
- S:	Supported
- F:	Documentation/admin-guide/xfs.rst
- F:	Documentation/ABI/testing/sysfs-fs-xfs
--F:	Documentation/filesystems/xfs-delayed-logging-design.txt
-+F:	Documentation/filesystems/xfs-delayed-logging-design.rst
- F:	Documentation/filesystems/xfs-self-describing-metadata.txt
- F:	fs/xfs/
- F:	include/uapi/linux/dqblk_xfs.h
--- 
-2.17.1
-
+T24gVHVlLCAyMDE5LTA4LTA2IGF0IDE0OjQ2ICswODAwLCBBbnNvbi5IdWFuZ0BueHAuY29tIHdy
+b3RlOg0KPiBGcm9tOiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gDQo+IFdo
+ZW4gb2ZfY2xrX2FkZF9wcm92aWRlciBmYWlsZWQsIGFsbCBjbGtzIHNob3VsZCBiZSB1bnJlZ2lz
+dGVyZWQuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhw
+LmNvbT4NCg0KDQpSZXZpZXdlZC1ieTogRGFuaWVsIEJhbHV0YSA8ZGFuaWVsLmJhbHV0YUBueHAu
+Y29tPg0KDQpUaGFua3MgQW5zb24gZm9yIHRoZSBwYXRjaCENCg==
