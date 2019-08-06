@@ -2,91 +2,101 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E700DC32751
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 02:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA016C41514
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 02:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C72D3206A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 02:40:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6A0A206A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 02:41:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731498AbfHFCkZ (ORCPT
+        id S1731523AbfHFClP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 22:40:25 -0400
-Received: from aclms3.advantech.com.tw ([125.252.70.86]:62562 "EHLO
-        ACLMS3.advantech.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731387AbfHFCkZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 22:40:25 -0400
-X-Greylist: delayed 602 seconds by postgrey-1.27 at vger.kernel.org; Mon, 05 Aug 2019 22:40:23 EDT
-Received: from taipei08.ADVANTECH.CORP (unverified [172.20.0.235]) by ACLMS3.advantech.com.tw
- (Clearswift SMTPRS 5.6.0) with ESMTP id <Td972e51551ac1401c81b6c@ACLMS3.advantech.com.tw>;
- Tue, 6 Aug 2019 10:31:59 +0800
-From:   <Amy.Shih@advantech.com.tw>
-To:     <she90122@gmail.com>
-CC:     <amy.shih@advantech.com.tw>, <oakley.ding@advantech.com.tw>,
-        <jia.sui@advantech.com.cn>, Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [v4 2/2] hwmon: (nct7904) Fix the confused calculation of case hwmon_fan_min in function "nct7904_write_fan".
-Date:   Tue, 6 Aug 2019 02:31:46 +0000
-Message-ID: <83bd9eed7e19ffc8c064648ae00bf1c71b9d2815.1565006479.git.amy.shih@advantech.com.tw>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <d1b58bc36bcb0204bca811d97a8ef1063fe876e0.1565006479.git.amy.shih@advantech.com.tw>
-References: <d1b58bc36bcb0204bca811d97a8ef1063fe876e0.1565006479.git.amy.shih@advantech.com.tw>
+        Mon, 5 Aug 2019 22:41:15 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35406 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729334AbfHFClP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 22:41:15 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 20FB9C0546F1;
+        Tue,  6 Aug 2019 02:41:15 +0000 (UTC)
+Received: from dhcp-128-65.nay.redhat.com (ovpn-12-88.pek2.redhat.com [10.72.12.88])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8E9365C1D4;
+        Tue,  6 Aug 2019 02:41:12 +0000 (UTC)
+Date:   Tue, 6 Aug 2019 10:41:08 +0800
+From:   Dave Young <dyoung@redhat.com>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        Kexec Mailing List <kexec@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        Bhupesh Sharma <bhsharma@redhat.com>
+Subject: Re: [PATCH] do not clean dummy variable in kexec path
+Message-ID: <20190806024108.GA6956@dhcp-128-65.nay.redhat.com>
+References: <20190805083553.GA27708@dhcp-128-65.nay.redhat.com>
+ <CAKv+Gu-my6EpLfxBnbMn21be62oHrF6PKFu2rt-4Pqk9wG9SXA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.17.10.28]
-X-ClientProxiedBy: ACLDAG.ADVANTECH.CORP (172.20.2.88) To
- taipei08.ADVANTECH.CORP (172.20.0.235)
-X-StopIT: No
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKv+Gu-my6EpLfxBnbMn21be62oHrF6PKFu2rt-4Pqk9wG9SXA@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Tue, 06 Aug 2019 02:41:15 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "amy.shih" <amy.shih@advantech.com.tw>
+On 08/05/19 at 06:55pm, Ard Biesheuvel wrote:
+> On Mon, 5 Aug 2019 at 11:36, Dave Young <dyoung@redhat.com> wrote:
+> >
+> > kexec reboot fails randomly in UEFI based kvm guest.  The firmware
+> > just reset while calling efi_delete_dummy_variable();  Unfortunately
+> > I don't know how to debug the firmware, it is also possible a potential
+> > problem on real hardware as well although nobody reproduced it.
+> >
+> > The intention of efi_delete_dummy_variable is to trigger garbage collection
+> > when entering virtual mode.  But SetVirtualAddressMap can only run once
+> > for each physical reboot, thus kexec_enter_virtual_mode is not necessarily
+> > a good place to clean dummy object.
+> >
+> 
+> I would argue that this means it is not a good place to *create* the
+> dummy variable, and if we don't create it, we don't have to delete it
+> either.
+> 
+> > Drop efi_delete_dummy_variable so that kexec reboot can work.
+> >
+> 
+> Creating it and not deleting it is bad, so please try and see if we
+> can omit the creation on this code path instead.
 
-Use the macro "DIV_ROUND_CLOSEST" instead.
+I'm not sure in this case the var is created or not, the logic seems
+tricky to me.  It seems to me it is intend to force delete a non-exist
+var here.
 
-Signed-off-by: amy.shih <amy.shih@advantech.com.tw>
+Matthew, can you comment here about Ard's question?
 
-Changes in v4:
-- Fix the confused calculation of case hwmon_fan_min in function
-"nct7904_write_fan".
-Changes in v3:
-- Squashed subsequent fixes of below patches into one patch.
-
--- Fix bad fallthrough in various switch statements.
--- Fix the wrong declared of tmp as u8 in nct7904_write_in, declared tmp to int.
--- Fix incorrect register setting of voltage.
--- Fix incorrect register bit mapping of temperature alarm.
--- Fix wrong return code 0x1fff in function nct7904_write_fan.
--- Delete wrong comment in function nct7904_write_in.
--- Fix wrong attribute names for temperature.
--- Fix wrong registers setting for temperature.
-Changes in v2:
-- Fix bad fallthrough in various switch statements.
-- Fix the wrong declared of tmp as u8 in nct7904_write_in, declared tmp to int.
----
- drivers/hwmon/nct7904.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/hwmon/nct7904.c b/drivers/hwmon/nct7904.c
-index 6527b56e4f6c..76372f20d71a 100644
---- a/drivers/hwmon/nct7904.c
-+++ b/drivers/hwmon/nct7904.c
-@@ -553,7 +553,7 @@ static int nct7904_write_fan(struct device *dev, u32 attr, int channel,
- 		if (val <= 0)
- 			return -EINVAL;
- 
--		val = clamp_val((1350000 + (val >> 1)) / val, 1, 0x1fff);
-+		val = clamp_val(DIV_ROUND_CLOSEST(1350000, val), 1, 0x1fff);
- 		tmp = (val >> 5) & 0xff;
- 		ret = nct7904_write_reg(data, BANK_1,
- 					FANIN1_HV_HL_REG + channel * 2, tmp);
--- 
-2.17.1
-
+> 
+> 
+> > Signed-off-by: Dave Young <dyoung@redhat.com>
+> > ---
+> >  arch/x86/platform/efi/efi.c |    3 ---
+> >  1 file changed, 3 deletions(-)
+> >
+> > --- linux-x86.orig/arch/x86/platform/efi/efi.c
+> > +++ linux-x86/arch/x86/platform/efi/efi.c
+> > @@ -894,9 +894,6 @@ static void __init kexec_enter_virtual_m
+> >
+> >         if (efi_enabled(EFI_OLD_MEMMAP) && (__supported_pte_mask & _PAGE_NX))
+> >                 runtime_code_page_mkexec();
+> > -
+> > -       /* clean DUMMY object */
+> > -       efi_delete_dummy_variable();
+> >  #endif
+> >  }
+> >
