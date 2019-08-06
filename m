@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB7BC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:06:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F0ADC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:06:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56E8320651
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:06:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20D6420651
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:06:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732408AbfHFIGH (ORCPT
+        id S1732399AbfHFIGG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 04:06:07 -0400
+        Tue, 6 Aug 2019 04:06:06 -0400
 Received: from mga03.intel.com ([134.134.136.65]:5861 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732356AbfHFIGE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 04:06:04 -0400
+        id S1732338AbfHFIGD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 04:06:03 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 01:00:59 -0700
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 01:00:54 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,352,1559545200"; 
-   d="scan'208";a="373337398"
+   d="scan'208";a="373337365"
 Received: from devel-ww.sh.intel.com ([10.239.48.128])
-  by fmsmga005.fm.intel.com with ESMTP; 06 Aug 2019 01:00:57 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 06 Aug 2019 01:00:52 -0700
 From:   Wei Wang <wei.w.wang@intel.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         ak@linux.intel.com, peterz@infradead.org, pbonzini@redhat.com
 Cc:     kan.liang@intel.com, mingo@redhat.com, rkrcmar@redhat.com,
         like.xu@intel.com, wei.w.wang@intel.com, jannh@google.com,
         arei.gonglei@huawei.com, jmattson@google.com
-Subject: [PATCH v8 10/14] perf/x86/lbr: don't share lbr for the vcpu usage case
-Date:   Tue,  6 Aug 2019 15:16:10 +0800
-Message-Id: <1565075774-26671-11-git-send-email-wei.w.wang@intel.com>
+Subject: [PATCH v8 08/14] perf/core: set the event->owner before event_init
+Date:   Tue,  6 Aug 2019 15:16:08 +0800
+Message-Id: <1565075774-26671-9-git-send-email-wei.w.wang@intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1565075774-26671-1-git-send-email-wei.w.wang@intel.com>
 References: <1565075774-26671-1-git-send-email-wei.w.wang@intel.com>
@@ -45,72 +45,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Perf event scheduling lets multiple lbr events share the lbr if they
-use the same config for LBR_SELECT. For the vcpu case, the vcpu's lbr
-event created on the host deliberately sets the config to the user
-callstack mode to have the host support to save/restore the lbr state
-on vcpu context switching, and the config won't be written to the
-LBR_SELECT, as the LBR_SELECT is configured by the guest, which might
-not be the same as the user callstack mode. So don't allow the vcpu's
-lbr event to share lbr with other host lbr events.
+Kernel and user events can be distinguished by checking event->owner. Some
+pmu driver implementation may need to know event->owner in event_init. For
+example, intel_pmu_setup_lbr_filter treats a kernel event with
+exclude_host set as an lbr event created for guest lbr emulation, which
+doesn't need a pmu counter.
+
+So move the event->owner assignment into perf_event_alloc to have it
+set before event_init is called.
 
 Signed-off-by: Wei Wang <wei.w.wang@intel.com>
 ---
- arch/x86/events/intel/lbr.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ kernel/events/core.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
-index 4f4bd18..a0f3686 100644
---- a/arch/x86/events/intel/lbr.c
-+++ b/arch/x86/events/intel/lbr.c
-@@ -45,6 +45,12 @@ static const enum {
- #define LBR_CALL_STACK_BIT	9 /* enable call stack */
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 0463c11..7663f85 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -10288,6 +10288,7 @@ static void account_event(struct perf_event *event)
+ static struct perf_event *
+ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+ 		 struct task_struct *task,
++		 struct task_struct *owner,
+ 		 struct perf_event *group_leader,
+ 		 struct perf_event *parent_event,
+ 		 perf_overflow_handler_t overflow_handler,
+@@ -10340,6 +10341,7 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+ 	event->group_leader	= group_leader;
+ 	event->pmu		= NULL;
+ 	event->oncpu		= -1;
++	event->owner		= owner;
  
- /*
-+ * Set this hardware reserved bit if the lbr perf event is for the vcpu lbr
-+ * emulation. This makes the reg->config different from other regular lbr
-+ * events' config, so that they will not share the lbr feature.
-+ */
-+#define LBR_VCPU_BIT		62
-+/*
-  * Following bit only exists in Linux; we mask it out before writing it to
-  * the actual MSR. But it helps the constraint perf code to understand
-  * that this is a separate configuration.
-@@ -62,6 +68,7 @@ static const enum {
- #define LBR_FAR		(1 << LBR_FAR_BIT)
- #define LBR_CALL_STACK	(1 << LBR_CALL_STACK_BIT)
- #define LBR_NO_INFO	(1ULL << LBR_NO_INFO_BIT)
-+#define LBR_VCPU	(1ULL << LBR_VCPU_BIT)
+ 	event->parent		= parent_event;
  
- #define LBR_PLM (LBR_KERNEL | LBR_USER)
+@@ -10891,7 +10893,7 @@ SYSCALL_DEFINE5(perf_event_open,
+ 	if (flags & PERF_FLAG_PID_CGROUP)
+ 		cgroup_fd = pid;
  
-@@ -818,6 +825,26 @@ static int intel_pmu_setup_hw_lbr_filter(struct perf_event *event)
- 	    (x86_pmu.intel_cap.lbr_format == LBR_FORMAT_INFO))
- 		reg->config |= LBR_NO_INFO;
+-	event = perf_event_alloc(&attr, cpu, task, group_leader, NULL,
++	event = perf_event_alloc(&attr, cpu, task, current, group_leader, NULL,
+ 				 NULL, NULL, cgroup_fd);
+ 	if (IS_ERR(event)) {
+ 		err = PTR_ERR(event);
+@@ -11153,8 +11155,6 @@ SYSCALL_DEFINE5(perf_event_open,
+ 	perf_event__header_size(event);
+ 	perf_event__id_header_size(event);
  
-+	/*
-+	 * An lbr perf event without a counter indicates this is for the vcpu
-+	 * lbr emulation. The vcpu lbr emulation does not allow the lbr
-+	 * feature to be shared with other lbr events on the host, because the
-+	 * LBR_SELECT msr is configured by the guest itself. The reg->config
-+	 * is deliberately configured to be user call stack mode via the
-+	 * related attr fileds to get the host perf's help to save/restore the
-+	 * lbr state on vcpu context switching. It doesn't represent what
-+	 * LBR_SELECT will be configured.
-+	 *
-+	 * Set the reserved LBR_VCPU bit for the vcpu usage case, so that the
-+	 * vcpu's lbr perf event will not share the lbr feature with other perf
-+	 * events. (see __intel_shared_reg_get_constraints, failing to share
-+	 * makes it return the emptyconstraint, which finally makes
-+	 * x86_schedule_events fail to schedule the lower priority lbr event on
-+	 * the lbr feature).
-+	 */
-+	if (is_no_counter_event(event))
-+		reg->config |= LBR_VCPU;
-+
- 	return 0;
- }
+-	event->owner = current;
+-
+ 	perf_install_in_context(ctx, event, event->cpu);
+ 	perf_unpin_context(ctx);
  
+@@ -11231,16 +11231,13 @@ perf_event_create_kernel_counter(struct perf_event_attr *attr, int cpu,
+ 	 * Get the target context (task or percpu):
+ 	 */
+ 
+-	event = perf_event_alloc(attr, cpu, task, NULL, NULL,
++	event = perf_event_alloc(attr, cpu, task, TASK_TOMBSTONE, NULL, NULL,
+ 				 overflow_handler, context, -1);
+ 	if (IS_ERR(event)) {
+ 		err = PTR_ERR(event);
+ 		goto err;
+ 	}
+ 
+-	/* Mark owner so we could distinguish it from user events. */
+-	event->owner = TASK_TOMBSTONE;
+-
+ 	ctx = find_get_context(event->pmu, task, event);
+ 	if (IS_ERR(ctx)) {
+ 		err = PTR_ERR(ctx);
+@@ -11677,6 +11674,7 @@ inherit_event(struct perf_event *parent_event,
+ 
+ 	child_event = perf_event_alloc(&parent_event->attr,
+ 					   parent_event->cpu,
++					   parent_event->owner,
+ 					   child,
+ 					   group_leader, parent_event,
+ 					   NULL, NULL, -1);
 -- 
 2.7.4
 
