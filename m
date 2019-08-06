@@ -2,179 +2,238 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99AC8C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:41:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4983FC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:42:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76BDF20C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:41:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 174A320C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:42:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733084AbfHFOlb (ORCPT
+        id S1733090AbfHFOmJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 10:41:31 -0400
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:39190 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731807AbfHFOlb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 10:41:31 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=aaron.lu@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0TYpaznJ_1565102485;
-Received: from 10.15.232.115(mailfrom:aaron.lu@linux.alibaba.com fp:SMTPD_---0TYpaznJ_1565102485)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 06 Aug 2019 22:41:26 +0800
-Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
-To:     Phil Auld <pauld@redhat.com>
-Cc:     Julien Desfossez <jdesfossez@digitalocean.com>,
-        "Li, Aubrey" <aubrey.li@linux.intel.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-References: <CAERHkrsMFjjBpPZS7jDhzbob4PSmiPj83OfqEeiKgaDAU3ajOA@mail.gmail.com>
- <20190619183302.GA6775@sinkpad> <20190718100714.GA469@aaronlu>
- <CAERHkrtvLKxrpvfw04urAuougsYOWnNw4-H1vUDFx27Dvy0=Ww@mail.gmail.com>
- <20190725143003.GA992@aaronlu> <20190726152101.GA27884@sinkpad>
- <7dc86e3c-aa3f-905f-3745-01181a3b0dac@linux.intel.com>
- <20190802153715.GA18075@sinkpad> <20190805200914.GD20173@pauld.bos.csb>
- <20190806135401.GB46757@aaronlu> <20190806141750.GA20858@pauld.bos.csb>
-From:   Aaron Lu <aaron.lu@linux.alibaba.com>
-Message-ID: <83904232-dc75-34fa-2cf6-e11739ae7e5c@linux.alibaba.com>
-Date:   Tue, 6 Aug 2019 22:41:25 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 6 Aug 2019 10:42:09 -0400
+Received: from mga02.intel.com ([134.134.136.20]:4676 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731314AbfHFOmJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 10:42:09 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 07:41:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,353,1559545200"; 
+   d="scan'208";a="373438238"
+Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
+  by fmsmga005.fm.intel.com with ESMTP; 06 Aug 2019 07:41:14 -0700
+From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc:     Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Subject: [PATCH v1] perf record: Add an option to take an AUX snapshot on exit
+Date:   Tue,  6 Aug 2019 17:41:01 +0300
+Message-Id: <20190806144101.62892-1-alexander.shishkin@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190806141750.GA20858@pauld.bos.csb>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/8/6 22:17, Phil Auld wrote:
-> On Tue, Aug 06, 2019 at 09:54:01PM +0800 Aaron Lu wrote:
->> On Mon, Aug 05, 2019 at 04:09:15PM -0400, Phil Auld wrote:
->>> Hi,
->>>
->>> On Fri, Aug 02, 2019 at 11:37:15AM -0400 Julien Desfossez wrote:
->>>> We tested both Aaron's and Tim's patches and here are our results.
->>>>
->>>> Test setup:
->>>> - 2 1-thread sysbench, one running the cpu benchmark, the other one the
->>>>   mem benchmark
->>>> - both started at the same time
->>>> - both are pinned on the same core (2 hardware threads)
->>>> - 10 30-seconds runs
->>>> - test script: https://paste.debian.net/plainh/834cf45c
->>>> - only showing the CPU events/sec (higher is better)
->>>> - tested 4 tag configurations:
->>>>   - no tag
->>>>   - sysbench mem untagged, sysbench cpu tagged
->>>>   - sysbench mem tagged, sysbench cpu untagged
->>>>   - both tagged with a different tag
->>>> - "Alone" is the sysbench CPU running alone on the core, no tag
->>>> - "nosmt" is both sysbench pinned on the same hardware thread, no tag
->>>> - "Tim's full patchset + sched" is an experiment with Tim's patchset
->>>>   combined with Aaron's "hack patch" to get rid of the remaining deep
->>>>   idle cases
->>>> - In all test cases, both tasks can run simultaneously (which was not
->>>>   the case without those patches), but the standard deviation is a
->>>>   pretty good indicator of the fairness/consistency.
->>>>
->>>> No tag
->>>> ------
->>>> Test                            Average     Stdev
->>>> Alone                           1306.90     0.94
->>>> nosmt                           649.95      1.44
->>>> Aaron's full patchset:          828.15      32.45
->>>> Aaron's first 2 patches:        832.12      36.53
->>>> Aaron's 3rd patch alone:        864.21      3.68
->>>> Tim's full patchset:            852.50      4.11
->>>> Tim's full patchset + sched:    852.59      8.25
->>>>
->>>> Sysbench mem untagged, sysbench cpu tagged
->>>> ------------------------------------------
->>>> Test                            Average     Stdev
->>>> Alone                           1306.90     0.94
->>>> nosmt                           649.95      1.44
->>>> Aaron's full patchset:          586.06      1.77
->>>> Aaron's first 2 patches:        630.08      47.30
->>>> Aaron's 3rd patch alone:        1086.65     246.54
->>>> Tim's full patchset:            852.50      4.11
->>>> Tim's full patchset + sched:    390.49      15.76
->>>>
->>>> Sysbench mem tagged, sysbench cpu untagged
->>>> ------------------------------------------
->>>> Test                            Average     Stdev
->>>> Alone                           1306.90     0.94
->>>> nosmt                           649.95      1.44
->>>> Aaron's full patchset:          583.77      3.52
->>>> Aaron's first 2 patches:        513.63      63.09
->>>> Aaron's 3rd patch alone:        1171.23     3.35
->>>> Tim's full patchset:            564.04      58.05
->>>> Tim's full patchset + sched:    1026.16     49.43
->>>>
->>>> Both sysbench tagged
->>>> --------------------
->>>> Test                            Average     Stdev
->>>> Alone                           1306.90     0.94
->>>> nosmt                           649.95      1.44
->>>> Aaron's full patchset:          582.15      3.75
->>>> Aaron's first 2 patches:        561.07      91.61
->>>> Aaron's 3rd patch alone:        638.49      231.06
->>>> Tim's full patchset:            679.43      70.07
->>>> Tim's full patchset + sched:    664.34      210.14
->>>>
->>>
->>> Sorry if I'm missing something obvious here but with only 2 processes 
->>> of interest shouldn't one tagged and one untagged be about the same
->>> as both tagged?  
->>
->> It should.
->>
->>> In both cases the 2 sysbenches should not be running on the core at 
->>> the same time. 
->>
->> Agree.
->>
->>> There will be times when oher non-related threads could share the core
->>> with the untagged one. Is that enough to account for this difference?
->>
->> What difference do you mean?
-> 
-> 
-> I was looking at the above posted numbers. For example:
-> 
->>>> Sysbench mem untagged, sysbench cpu tagged
->>>> Aaron's 3rd patch alone:        1086.65     246.54
-> 
->>>> Sysbench mem tagged, sysbench cpu untagged
->>>> Aaron's 3rd patch alone:        1171.23     3.35
-> 
->>>> Both sysbench tagged
->>>> Aaron's 3rd patch alone:        638.49      231.06
-> 
-> 
-> Admittedly, there's some high variance on some of those numbers. 
+It is sometimes useful to generate a snapshot when perf record exits;
+I've been using a wrapper script around the workload that would do a
+killall -USR2 perf when the workload exits.
 
-The high variance suggests the code having some fairness issues :-)
+This patch makes it easier and also works when perf record is attached
+to a pre-existing task. A new snapshot option 'e' can be specified in
+-S to enable this behavior:
 
-For the test here, I didn't expect the 3rd patch being used alone
-since the fairness is solved by patch2 and patch3 together.
+root@elsewhere:~# perf record -e intel_pt// -Se sleep 1
+[ perf record: Woken up 2 times to write data ]
+[ perf record: Captured and wrote 0.085 MB perf.data ]
+
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Co-developed-by: Adrian Hunter <adrian.hunter@intel.com>
+---
+ tools/perf/Documentation/perf-record.txt | 11 +++++---
+ tools/perf/builtin-record.c              | 34 +++++++++++++++++++++---
+ tools/perf/perf.h                        |  1 +
+ tools/perf/util/auxtrace.c               | 14 ++++++++--
+ tools/perf/util/auxtrace.h               |  2 +-
+ 5 files changed, 52 insertions(+), 10 deletions(-)
+
+diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+index 15e0fa87241b..d5e58e0a2bca 100644
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -422,9 +422,14 @@ CLOCK_BOOTTIME, CLOCK_REALTIME and CLOCK_TAI.
+ -S::
+ --snapshot::
+ Select AUX area tracing Snapshot Mode. This option is valid only with an
+-AUX area tracing event. Optionally the number of bytes to capture per
+-snapshot can be specified. In Snapshot Mode, trace data is captured only when
+-signal SIGUSR2 is received.
++AUX area tracing event. Optionally, certain snapshot capturing parameters
++can be specified in a string that follows this option:
++  'e': take one last snapshot on exit; guarantees that there is at least one
++       snapshot in the output file;
++  <size>: if the PMU supports this, specify the desired snapshot size.
++
++In Snapshot Mode trace data is captured only when signal SIGUSR2 is received
++and on exit if the above 'e' option is given.
+ 
+ --proc-map-timeout::
+ When processing pre-existing threads /proc/XXX/mmap, it may take a long time,
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index d31d7a5a1be3..e9a2525ecfcc 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -613,19 +613,35 @@ static int record__auxtrace_read_snapshot_all(struct record *rec)
+ 	return rc;
+ }
+ 
+-static void record__read_auxtrace_snapshot(struct record *rec)
++static void record__read_auxtrace_snapshot(struct record *rec, bool on_exit)
+ {
+ 	pr_debug("Recording AUX area tracing snapshot\n");
+ 	if (record__auxtrace_read_snapshot_all(rec) < 0) {
+ 		trigger_error(&auxtrace_snapshot_trigger);
+ 	} else {
+-		if (auxtrace_record__snapshot_finish(rec->itr))
++		if (auxtrace_record__snapshot_finish(rec->itr, on_exit))
+ 			trigger_error(&auxtrace_snapshot_trigger);
+ 		else
+ 			trigger_ready(&auxtrace_snapshot_trigger);
+ 	}
+ }
+ 
++static int record__auxtrace_snapshot_exit(struct record *rec)
++{
++	if (trigger_is_error(&auxtrace_snapshot_trigger))
++		return 0;
++
++	if (!auxtrace_record__snapshot_started &&
++	    auxtrace_record__snapshot_start(rec->itr))
++		return -1;
++
++	record__read_auxtrace_snapshot(rec, true);
++	if (trigger_is_error(&auxtrace_snapshot_trigger))
++		return -1;
++
++	return 0;
++}
++
+ static int record__auxtrace_init(struct record *rec)
+ {
+ 	int err;
+@@ -654,7 +670,7 @@ int record__auxtrace_mmap_read(struct record *rec __maybe_unused,
+ }
+ 
+ static inline
+-void record__read_auxtrace_snapshot(struct record *rec __maybe_unused)
++void record__read_auxtrace_snapshot(struct record *rec __maybe_unused, bool on_exit)
+ {
+ }
+ 
+@@ -664,6 +680,12 @@ int auxtrace_record__snapshot_start(struct auxtrace_record *itr __maybe_unused)
+ 	return 0;
+ }
+ 
++static inline
++int record__auxtrace_snapshot_exit(struct record *rec)
++{
++	return 0;
++}
++
+ static int record__auxtrace_init(struct record *rec __maybe_unused)
+ {
+ 	return 0;
+@@ -1536,7 +1558,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 		if (auxtrace_record__snapshot_started) {
+ 			auxtrace_record__snapshot_started = 0;
+ 			if (!trigger_is_error(&auxtrace_snapshot_trigger))
+-				record__read_auxtrace_snapshot(rec);
++				record__read_auxtrace_snapshot(rec, false);
+ 			if (trigger_is_error(&auxtrace_snapshot_trigger)) {
+ 				pr_err("AUX area tracing snapshot failed\n");
+ 				err = -1;
+@@ -1609,9 +1631,13 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 			disabled = true;
+ 		}
+ 	}
++
+ 	trigger_off(&auxtrace_snapshot_trigger);
+ 	trigger_off(&switch_output_trigger);
+ 
++	if (opts->auxtrace_snapshot_on_exit)
++		record__auxtrace_snapshot_exit(rec);
++
+ 	if (forks && workload_exec_errno) {
+ 		char msg[STRERR_BUFSIZE];
+ 		const char *emsg = str_error_r(workload_exec_errno, msg, sizeof(msg));
+diff --git a/tools/perf/perf.h b/tools/perf/perf.h
+index 74d0124d38f3..dc0a7a237887 100644
+--- a/tools/perf/perf.h
++++ b/tools/perf/perf.h
+@@ -57,6 +57,7 @@ struct record_opts {
+ 	bool	     running_time;
+ 	bool	     full_auxtrace;
+ 	bool	     auxtrace_snapshot_mode;
++	bool	     auxtrace_snapshot_on_exit;
+ 	bool	     record_namespaces;
+ 	bool	     record_switch_events;
+ 	bool	     all_kernel;
+diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+index 65728cdeefb6..72ce4c5e7c78 100644
+--- a/tools/perf/util/auxtrace.c
++++ b/tools/perf/util/auxtrace.c
+@@ -539,9 +539,9 @@ int auxtrace_record__snapshot_start(struct auxtrace_record *itr)
+ 	return 0;
+ }
+ 
+-int auxtrace_record__snapshot_finish(struct auxtrace_record *itr)
++int auxtrace_record__snapshot_finish(struct auxtrace_record *itr, bool on_exit)
+ {
+-	if (itr && itr->snapshot_finish)
++	if (!on_exit && itr && itr->snapshot_finish)
+ 		return itr->snapshot_finish(itr);
+ 	return 0;
+ }
+@@ -577,6 +577,16 @@ int auxtrace_parse_snapshot_options(struct auxtrace_record *itr,
+ 	if (!str)
+ 		return 0;
+ 
++	/* PMU-agnostic options */
++	switch (*str) {
++	case 'e':
++		opts->auxtrace_snapshot_on_exit = true;
++		str++;
++		break;
++	default:
++		break;
++	}
++
+ 	if (itr)
+ 		return itr->parse_snapshot_options(itr, opts, str);
+ 
+diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
+index 17eb04a1da4d..8ccabacd0b11 100644
+--- a/tools/perf/util/auxtrace.h
++++ b/tools/perf/util/auxtrace.h
+@@ -499,7 +499,7 @@ int auxtrace_record__info_fill(struct auxtrace_record *itr,
+ 			       size_t priv_size);
+ void auxtrace_record__free(struct auxtrace_record *itr);
+ int auxtrace_record__snapshot_start(struct auxtrace_record *itr);
+-int auxtrace_record__snapshot_finish(struct auxtrace_record *itr);
++int auxtrace_record__snapshot_finish(struct auxtrace_record *itr, bool on_exit);
+ int auxtrace_record__find_snapshot(struct auxtrace_record *itr, int idx,
+ 				   struct auxtrace_mmap *mm,
+ 				   unsigned char *data, u64 *head, u64 *old);
+-- 
+2.20.1
+
