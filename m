@@ -2,182 +2,355 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B9DC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:43:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C619C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:44:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6825208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:43:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFBE220C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:44:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="UuDLXvSX"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="l1SruBq0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732928AbfHFNnl (ORCPT
+        id S1732988AbfHFNoF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 09:43:41 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:32927 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732833AbfHFNnY (ORCPT
+        Tue, 6 Aug 2019 09:44:05 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:59114 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730188AbfHFNm5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 09:43:24 -0400
-Received: by mail-pg1-f195.google.com with SMTP id n190so815193pgn.0
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 06:43:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=IvbA0Qi9ZdVQqNSbxozysL3Fqa9OBFyiiqy53wDpULw=;
-        b=UuDLXvSXeYwo63iVf+Lu0ahwvUcYOzu27p9dcgydbmlpy6nzua+tt9PNukjSS6Be4q
-         vRcxA4E5INCnPKwSUPg3krigp8ll/UXfu4lFBciOfQ91x+tJtxsbDAGtnGkpWU6B/HJH
-         mkzPwEGTE+qSwX2QK3R1MvFtovwBfdLF5sBXA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=IvbA0Qi9ZdVQqNSbxozysL3Fqa9OBFyiiqy53wDpULw=;
-        b=E8/br378G9CfHtAwVTwhEIRFSY0RI3xu9uLnj1D8Dw/Y81/4JvS3waujjkBxHuSenS
-         vu1hT8l4VM5r0NlImOZw4jN6AJfiOEwgGv73VxPNKZU0QU0QQG5SmvcEExG+RimgdQTa
-         OlUtlMPqXKaAH7XT4xxljewHLHRG7aE2/VuKlIDavqfI2hKi3rRxTrotVIc9JEE74O1P
-         KMBORnIFZ0EUkilWCxE3Dguutdkb4DXZZbOhc/Qayc/gGvDMog77/mYqEfuWI8spXi8D
-         9M+S5syQflpyp7uA5kE1ZR06tLs0/QCjuH4sYEj1PnTuO0Qan4hj+ApcDXp9HBoF5mz3
-         YvUw==
-X-Gm-Message-State: APjAAAXpviBEsUWoVs321yyiyGDBs5o9on7BOOm2bkZWqQnzcBxpcZk2
-        TQs5EzocTmkeFKbYbeaqtiCKHw==
-X-Google-Smtp-Source: APXvYqw8mKqZ/XeNBFb/10DncPVZsFq6EPDftOF3wo4TDqzt8e9GiUU74z85gx7FrtAqaFlq2j2rPw==
-X-Received: by 2002:a62:6454:: with SMTP id y81mr3622264pfb.13.1565099003926;
-        Tue, 06 Aug 2019 06:43:23 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id b37sm44764722pjc.15.2019.08.06.06.43.22
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 06 Aug 2019 06:43:23 -0700 (PDT)
-Date:   Tue, 6 Aug 2019 09:43:21 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Brendan Gregg <bgregg@netflix.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christian Hansen <chansen3@cisco.com>, dancol@google.com,
-        fmayer@google.com, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        linux-api@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Mike Rapoport <rppt@linux.ibm.com>, minchan@kernel.org,
-        namhyung@google.com, paulmck@linux.ibm.com,
-        Roman Gushchin <guro@fb.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>, surenb@google.com,
-        Thomas Gleixner <tglx@linutronix.de>, tkjos@google.com,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v4 3/5] [RFC] arm64: Add support for idle bit in swap PTE
-Message-ID: <20190806134321.GA15167@google.com>
-References: <20190805170451.26009-1-joel@joelfernandes.org>
- <20190805170451.26009-3-joel@joelfernandes.org>
- <20190806084203.GJ11812@dhcp22.suse.cz>
- <20190806103627.GA218260@google.com>
- <20190806104755.GR11812@dhcp22.suse.cz>
- <20190806111446.GA117316@google.com>
- <20190806115703.GY11812@dhcp22.suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190806115703.GY11812@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 6 Aug 2019 09:42:57 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 63054C21C5;
+        Tue,  6 Aug 2019 13:42:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1565098976; bh=IdzI6RJvtLS6glcud2Ck6HY/xqrooA4DukMJhtajPfo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=l1SruBq0Huls/hhWEPtJPl6biPaJiAumk0LZ47KqX9GMym6G30D7QjyDyy6pEgM1b
+         VO1ZgoGskBMEX18aa3mhjORMK4e9DIXlgQosLJdR4swS+JR0Zi9IM2J17Q0xPV5cij
+         0DznMj27ei6boa1FdEjKzgq3uXzzryJAiC5XNZ69F0ZFzin+LkW6Zsn+D1iqOl2tR2
+         1pf9xej+iTP168xlMPx1rugRJPCdUZ8Jw65fyttKUA2OVNeBIoWvgvSXg4Jh9hi6J3
+         ieR4sws1OFHrfIwiXdegsHCCkYBUZiw82ofFtaSonC/T1tAI87Iy+5RSjPsHB1zCco
+         7fwTkD0LtbS6Q==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 1EF3FA006E;
+        Tue,  6 Aug 2019 13:42:55 +0000 (UTC)
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     netdev@vger.kernel.org
+Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net-next v2 06/10] net: stmmac: Implement VLAN Hash Filtering in XGMAC
+Date:   Tue,  6 Aug 2019 15:42:47 +0200
+Message-Id: <00cb8ef4f1bac0833fedf4e7f3d2f50c02d5ec1a.1565098881.git.joabreu@synopsys.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1565098881.git.joabreu@synopsys.com>
+References: <cover.1565098881.git.joabreu@synopsys.com>
+In-Reply-To: <cover.1565098881.git.joabreu@synopsys.com>
+References: <cover.1565098881.git.joabreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 01:57:03PM +0200, Michal Hocko wrote:
-> On Tue 06-08-19 07:14:46, Joel Fernandes wrote:
-> > On Tue, Aug 06, 2019 at 12:47:55PM +0200, Michal Hocko wrote:
-> > > On Tue 06-08-19 06:36:27, Joel Fernandes wrote:
-> > > > On Tue, Aug 06, 2019 at 10:42:03AM +0200, Michal Hocko wrote:
-> > > > > On Mon 05-08-19 13:04:49, Joel Fernandes (Google) wrote:
-> > > > > > This bit will be used by idle page tracking code to correctly identify
-> > > > > > if a page that was swapped out was idle before it got swapped out.
-> > > > > > Without this PTE bit, we lose information about if a page is idle or not
-> > > > > > since the page frame gets unmapped.
-> > > > > 
-> > > > > And why do we need that? Why cannot we simply assume all swapped out
-> > > > > pages to be idle? They were certainly idle enough to be reclaimed,
-> > > > > right? Or what does idle actualy mean here?
-> > > > 
-> > > > Yes, but other than swapping, in Android a page can be forced to be swapped
-> > > > out as well using the new hints that Minchan is adding?
-> > > 
-> > > Yes and that is effectivelly making them idle, no?
-> > 
-> > That depends on how you think of it.
-> 
-> I would much prefer to have it documented so that I do not have to guess ;)
+Implement the VLAN Hash Filtering feature in XGMAC core.
 
-Sure :)
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 
-> > If you are thinking of a monitoring
-> > process like a heap profiler, then from the heap profiler's (that only cares
-> > about the process it is monitoring) perspective it will look extremely odd if
-> > pages that are recently accessed by the process appear to be idle which would
-> > falsely look like those processes are leaking memory. The reality being,
-> > Android forced those pages into swap because of other reasons. I would like
-> > for the swapping mechanism, whether forced swapping or memory reclaim, not to
-> > interfere with the idle detection.
-> 
-> Hmm, but how are you going to handle situation when the page is unmapped
-> and refaulted again (e.g. a normal reclaim of a pagecache)? You are
-> losing that information same was as in the swapout case, no? Or am I
-> missing something?
+---
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Jose Abreu <joabreu@synopsys.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: netdev@vger.kernel.org
+Cc: linux-stm32@st-md-mailman.stormreply.com
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/net/ethernet/stmicro/stmmac/common.h       |  1 +
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h     | 10 +++
+ .../net/ethernet/stmicro/stmmac/dwxgmac2_core.c    | 41 +++++++++++
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c |  1 +
+ drivers/net/ethernet/stmicro/stmmac/hwif.h         |  5 ++
+ drivers/net/ethernet/stmicro/stmmac/stmmac.h       |  2 +
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  | 79 ++++++++++++++++++++++
+ 7 files changed, 139 insertions(+)
 
-Yes you are right, it would have the same issue, thanks for bringing it up.
-Should we rename this bit to PTE_IDLE and do the same thing that we are doing
-for swap?
-
-i.e. if (page_idle(page)) and page is a file page, then we write state
-into the PTE of the page. Later on refault, the PTE bit would automatically
-get cleared (just like it does on swap-in). But before refault, the idle
-tracking code sees the page as still marked idle. Do you see any issue with that?
-
-
-> > This is just an effort to make the idle tracking a little bit better. We
-> > would like to not lose the 'accessed' information of the pages.
-> > 
-> > Initially, I had proposed what you are suggesting as well however the above
-> > reasons made me to do it like this. Also Minchan and Konstantin suggested
-> > this, so there are more people interested in the swap idle bit. Minchan, can
-> > you provide more thoughts here? (He is on 2-week vacation from today so
-> > hopefully replies before he vanishes ;-)).
-> 
-> We can move on with the rest of the series in the mean time but I would
-> like to see a proper justification for the swap entries and why they
-> should be handled special.
-
-Ok, I will improve the changelog.
-
-
-> > Also assuming all swap pages as idle has other "semantic" issues. It is quite
-> > odd if a swapped page is automatically marked as idle without userspace
-> > telling it to. Consider the following set of events: 1. Userspace marks only
-> > a certain memory region as idle. 2. Userspace reads back the bits
-> > corresponding to a bigger region. Part of this bigger region is swapped.
-> > Userspace expects all of the pages it did not mark, to have idle bit set to
-> > '0' because it never marked them as idle. However if it is now surprised by
-> > what it read back (not all '0' read back). Since a page is swapped, it will
-> > be now marked "automatically" as idle as per your proposal, even if userspace
-> > never marked it explicity before. This would be quite confusing/ambiguous.
-> 
-> OK, I see. I guess the primary question I have is how do you distinguish
-> Idle page which got unmapped and faulted in again from swapped out page
-> and refaulted - including the time the pte is not present.
-
-Ok, lets discuss more.
-
-thanks Michal!
-
- - Joel
+diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
+index 45a997fe571c..e1e6f67041ec 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/common.h
++++ b/drivers/net/ethernet/stmicro/stmmac/common.h
+@@ -355,6 +355,7 @@ struct dma_features {
+ 	unsigned int frpes;
+ 	unsigned int addr64;
+ 	unsigned int rssen;
++	unsigned int vlhash;
+ };
+ 
+ /* GMAC TX FIFO is 8K, Rx FIFO is 16K */
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
+index 70ac202435aa..f2c281887868 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
+@@ -44,11 +44,20 @@
+ #define XGMAC_CORE_INIT_RX		0
+ #define XGMAC_PACKET_FILTER		0x00000008
+ #define XGMAC_FILTER_RA			BIT(31)
++#define XGMAC_FILTER_VTFE		BIT(16)
+ #define XGMAC_FILTER_PCF		BIT(7)
+ #define XGMAC_FILTER_PM			BIT(4)
+ #define XGMAC_FILTER_HMC		BIT(2)
+ #define XGMAC_FILTER_PR			BIT(0)
+ #define XGMAC_HASH_TABLE(x)		(0x00000010 + (x) * 4)
++#define XGMAC_VLAN_TAG			0x00000050
++#define XGMAC_VLAN_EDVLP		BIT(26)
++#define XGMAC_VLAN_VTHM			BIT(25)
++#define XGMAC_VLAN_DOVLTC		BIT(20)
++#define XGMAC_VLAN_ESVL			BIT(18)
++#define XGMAC_VLAN_ETV			BIT(16)
++#define XGMAC_VLAN_VID			GENMASK(15, 0)
++#define XGMAC_VLAN_HASH_TABLE		0x00000058
+ #define XGMAC_RXQ_CTRL0			0x000000a0
+ #define XGMAC_RXQEN(x)			GENMASK((x) * 2 + 1, (x) * 2)
+ #define XGMAC_RXQEN_SHIFT(x)		((x) * 2)
+@@ -85,6 +94,7 @@
+ #define XGMAC_HWFEAT_MMCSEL		BIT(8)
+ #define XGMAC_HWFEAT_MGKSEL		BIT(7)
+ #define XGMAC_HWFEAT_RWKSEL		BIT(6)
++#define XGMAC_HWFEAT_VLHASH		BIT(4)
+ #define XGMAC_HWFEAT_GMIISEL		BIT(1)
+ #define XGMAC_HW_FEATURE1		0x00000120
+ #define XGMAC_HWFEAT_RSSEN		BIT(20)
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
+index 42d528310e8c..d0fd059d8c53 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
+@@ -421,6 +421,46 @@ static int dwxgmac2_rss_configure(struct mac_device_info *hw,
+ 	return 0;
+ }
+ 
++static void dwxgmac2_update_vlan_hash(struct mac_device_info *hw, u32 hash,
++				      bool is_double)
++{
++	void __iomem *ioaddr = hw->pcsr;
++
++	writel(hash, ioaddr + XGMAC_VLAN_HASH_TABLE);
++
++	if (hash) {
++		u32 value = readl(ioaddr + XGMAC_PACKET_FILTER);
++
++		value |= XGMAC_FILTER_VTFE;
++
++		writel(value, ioaddr + XGMAC_PACKET_FILTER);
++
++		value |= XGMAC_VLAN_VTHM | XGMAC_VLAN_ETV;
++		if (is_double) {
++			value |= XGMAC_VLAN_EDVLP;
++			value |= XGMAC_VLAN_ESVL;
++			value |= XGMAC_VLAN_DOVLTC;
++		}
++
++		writel(value, ioaddr + XGMAC_VLAN_TAG);
++	} else {
++		u32 value = readl(ioaddr + XGMAC_PACKET_FILTER);
++
++		value &= ~XGMAC_FILTER_VTFE;
++
++		writel(value, ioaddr + XGMAC_PACKET_FILTER);
++
++		value = readl(ioaddr + XGMAC_VLAN_TAG);
++
++		value &= ~(XGMAC_VLAN_VTHM | XGMAC_VLAN_ETV);
++		value &= ~(XGMAC_VLAN_EDVLP | XGMAC_VLAN_ESVL);
++		value &= ~XGMAC_VLAN_DOVLTC;
++		value &= ~XGMAC_VLAN_VID;
++
++		writel(value, ioaddr + XGMAC_VLAN_TAG);
++	}
++}
++
+ const struct stmmac_ops dwxgmac210_ops = {
+ 	.core_init = dwxgmac2_core_init,
+ 	.set_mac = dwxgmac2_set_mac,
+@@ -452,6 +492,7 @@ const struct stmmac_ops dwxgmac210_ops = {
+ 	.set_filter = dwxgmac2_set_filter,
+ 	.set_mac_loopback = dwxgmac2_set_mac_loopback,
+ 	.rss_configure = dwxgmac2_rss_configure,
++	.update_vlan_hash = dwxgmac2_update_vlan_hash,
+ };
+ 
+ int dwxgmac2_setup(struct stmmac_priv *priv)
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
+index 45a6634ee397..b50e275e76c2 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
+@@ -359,6 +359,7 @@ static void dwxgmac2_get_hw_feature(void __iomem *ioaddr,
+ 	dma_cap->rmon = (hw_cap & XGMAC_HWFEAT_MMCSEL) >> 8;
+ 	dma_cap->pmt_magic_frame = (hw_cap & XGMAC_HWFEAT_MGKSEL) >> 7;
+ 	dma_cap->pmt_remote_wake_up = (hw_cap & XGMAC_HWFEAT_RWKSEL) >> 6;
++	dma_cap->vlhash = (hw_cap & XGMAC_HWFEAT_VLHASH) >> 4;
+ 	dma_cap->mbps_1000 = (hw_cap & XGMAC_HWFEAT_GMIISEL) >> 1;
+ 
+ 	/* MAC HW feature 1 */
+diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.h b/drivers/net/ethernet/stmicro/stmmac/hwif.h
+index bfe7efee9481..52fc2344b066 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/hwif.h
++++ b/drivers/net/ethernet/stmicro/stmmac/hwif.h
+@@ -336,6 +336,9 @@ struct stmmac_ops {
+ 	/* RSS */
+ 	int (*rss_configure)(struct mac_device_info *hw,
+ 			     struct stmmac_rss *cfg, u32 num_rxq);
++	/* VLAN */
++	void (*update_vlan_hash)(struct mac_device_info *hw, u32 hash,
++				 bool is_double);
+ };
+ 
+ #define stmmac_core_init(__priv, __args...) \
+@@ -408,6 +411,8 @@ struct stmmac_ops {
+ 	stmmac_do_void_callback(__priv, mac, set_mac_loopback, __args)
+ #define stmmac_rss_configure(__priv, __args...) \
+ 	stmmac_do_callback(__priv, mac, rss_configure, __args)
++#define stmmac_update_vlan_hash(__priv, __args...) \
++	stmmac_do_void_callback(__priv, mac, update_vlan_hash, __args)
+ 
+ /* PTP and HW Timer helpers */
+ struct stmmac_hwtimestamp {
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac.h b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
+index d2f6f56ae29c..4179559b11ad 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac.h
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
+@@ -13,6 +13,7 @@
+ #define DRV_MODULE_VERSION	"Jan_2016"
+ 
+ #include <linux/clk.h>
++#include <linux/if_vlan.h>
+ #include <linux/stmmac.h>
+ #include <linux/phylink.h>
+ #include <linux/pci.h>
+@@ -191,6 +192,7 @@ struct stmmac_priv {
+ 	spinlock_t ptp_lock;
+ 	void __iomem *mmcaddr;
+ 	void __iomem *ptpaddr;
++	unsigned long active_vlans[BITS_TO_LONGS(VLAN_N_VID)];
+ 
+ #ifdef CONFIG_DEBUG_FS
+ 	struct dentry *dbgfs_dir;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 3cfe75057874..9c4554a128a7 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -4036,6 +4036,79 @@ static void stmmac_exit_fs(struct net_device *dev)
+ }
+ #endif /* CONFIG_DEBUG_FS */
+ 
++static u32 stmmac_vid_crc32_le(__le16 vid_le)
++{
++	unsigned char *data = (unsigned char *)&vid_le;
++	unsigned char data_byte = 0;
++	u32 crc = ~0x0;
++	u32 temp = 0;
++	int i, bits;
++
++	bits = get_bitmask_order(VLAN_VID_MASK);
++	for (i = 0; i < bits; i++) {
++		if ((i % 8) == 0)
++			data_byte = data[i / 8];
++
++		temp = ((crc & 1) ^ data_byte) & 1;
++		crc >>= 1;
++		data_byte >>= 1;
++
++		if (temp)
++			crc ^= 0xedb88320;
++	}
++
++	return crc;
++}
++
++static int stmmac_vlan_update(struct stmmac_priv *priv, bool is_double)
++{
++	u32 crc, hash = 0;
++	u16 vid;
++
++	for_each_set_bit(vid, priv->active_vlans, VLAN_N_VID) {
++		__le16 vid_le = cpu_to_le16(vid);
++		crc = bitrev32(~stmmac_vid_crc32_le(vid_le)) >> 28;
++		hash |= (1 << crc);
++	}
++
++	return stmmac_update_vlan_hash(priv, priv->hw, hash, is_double);
++}
++
++static int stmmac_vlan_rx_add_vid(struct net_device *ndev, __be16 proto, u16 vid)
++{
++	struct stmmac_priv *priv = netdev_priv(ndev);
++	bool is_double = false;
++	int ret;
++
++	if (!priv->dma_cap.vlhash)
++		return -EOPNOTSUPP;
++	if (be16_to_cpu(proto) == ETH_P_8021AD)
++		is_double = true;
++
++	set_bit(vid, priv->active_vlans);
++	ret = stmmac_vlan_update(priv, is_double);
++	if (ret) {
++		clear_bit(vid, priv->active_vlans);
++		return ret;
++	}
++
++	return ret;
++}
++
++static int stmmac_vlan_rx_kill_vid(struct net_device *ndev, __be16 proto, u16 vid)
++{
++	struct stmmac_priv *priv = netdev_priv(ndev);
++	bool is_double = false;
++
++	if (!priv->dma_cap.vlhash)
++		return -EOPNOTSUPP;
++	if (be16_to_cpu(proto) == ETH_P_8021AD)
++		is_double = true;
++
++	clear_bit(vid, priv->active_vlans);
++	return stmmac_vlan_update(priv, is_double);
++}
++
+ static const struct net_device_ops stmmac_netdev_ops = {
+ 	.ndo_open = stmmac_open,
+ 	.ndo_start_xmit = stmmac_xmit,
+@@ -4052,6 +4125,8 @@ static const struct net_device_ops stmmac_netdev_ops = {
+ 	.ndo_poll_controller = stmmac_poll_controller,
+ #endif
+ 	.ndo_set_mac_address = stmmac_set_mac_address,
++	.ndo_vlan_rx_add_vid = stmmac_vlan_rx_add_vid,
++	.ndo_vlan_rx_kill_vid = stmmac_vlan_rx_kill_vid,
+ };
+ 
+ static void stmmac_reset_subtask(struct stmmac_priv *priv)
+@@ -4306,6 +4381,10 @@ int stmmac_dvr_probe(struct device *device,
+ #ifdef STMMAC_VLAN_TAG_USED
+ 	/* Both mac100 and gmac support receive VLAN tag detection */
+ 	ndev->features |= NETIF_F_HW_VLAN_CTAG_RX | NETIF_F_HW_VLAN_STAG_RX;
++	if (priv->dma_cap.vlhash) {
++		ndev->features |= NETIF_F_HW_VLAN_CTAG_FILTER;
++		ndev->features |= NETIF_F_HW_VLAN_STAG_FILTER;
++	}
+ #endif
+ 	priv->msg_enable = netif_msg_init(debug, default_msg_level);
+ 
+-- 
+2.7.4
 
