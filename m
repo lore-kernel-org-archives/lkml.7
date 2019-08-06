@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 248DDC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:46:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0DF0C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:46:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE0F9216F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:46:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A66B4216F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:46:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127968;
-	bh=JRxs4CjZsR9Mwk1SkqyAGfhLAqxCj8GtLVUw0Wj+tr8=;
+	s=default; t=1565127975;
+	bh=fc+CB2Ssrn59WPr6z/hOAw7WWXrO2WuzYj3CQEMvPIU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ECVETUPPkhX5TTYvh0rfbienE6U17uDYN6HFG4/eAwDoTu90gFUWmI6LplIdSv1Ce
-	 QiDQLUGjlsCc68DpjLJGDxJssXVPZmuuDWXZWB4m6vrf7k76n9Jok5WsdhgjlJHphp
-	 Ks412YxqYlJJbwbiLrPLtu/S3lp/bDugdC4zBotM=
+	b=rsEKztTLRo/IJBUIAyEYpTg3jxmfENHRXK3ZFAulEPOp9b+nEmM8wkftyF/Kh1KE/
+	 E94dqkuUmXUWel9HByFIOUruMw0d7z1MSXc+lCyFtLU63PBnI4TTQZGRIOO79zR8t0
+	 sXKc39lWW1idxcwA5/F1/+OQRLeDNBb1sg+ioLnk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727646AbfHFVqG (ORCPT
+        id S1727931AbfHFVqO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:46:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51400 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 17:46:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727088AbfHFVdf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:33:35 -0400
+        id S1726983AbfHFVda (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:33:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B4E4216F4;
-        Tue,  6 Aug 2019 21:33:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 246A8217D9;
+        Tue,  6 Aug 2019 21:33:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127214;
-        bh=JRxs4CjZsR9Mwk1SkqyAGfhLAqxCj8GtLVUw0Wj+tr8=;
+        s=default; t=1565127210;
+        bh=fc+CB2Ssrn59WPr6z/hOAw7WWXrO2WuzYj3CQEMvPIU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mdftATFeAVABEVh2zaeYcT9dtkRN15z3Sg7hWUO9IErS5dsVQqm9vy1PdDOx84pWM
-         i391tVwoz6qbVX0JCOFCsh4tlN1DIgRxp84ll4+Zg2AM6qMrby7osSSN1Jh5kK/fNx
-         QRWdi+kyCDuf5T0K2rRVzyUy3ntPEO/F66L+0ALw=
+        b=e//4k9qlsdcqXc6DCH6S5ulFnMnNzT+qihhcUQbpZFcDn+UeX/YZVGoCSa/miym9B
+         uVQxCu0GMmsyNJ42rRDdkFCXgUuo7s86+Zbg1rvFPaK5Cy74oVLI5VH04GXyYFp50u
+         JgL0iK2rF2ZDDegOynMXPqQzIy8eDptHKO2jwE10=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 11/59] xen/pciback: remove set but not used variable 'old_state'
-Date:   Tue,  6 Aug 2019 17:32:31 -0400
-Message-Id: <20190806213319.19203-11-sashal@kernel.org>
+Cc:     Jean Delvare <jdelvare@suse.de>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 08/59] platform/x86: pcengines-apuv2: Fix softdep statement
+Date:   Tue,  6 Aug 2019 17:32:28 -0400
+Message-Id: <20190806213319.19203-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190806213319.19203-1-sashal@kernel.org>
 References: <20190806213319.19203-1-sashal@kernel.org>
@@ -60,46 +63,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Jean Delvare <jdelvare@suse.de>
 
-[ Upstream commit 09e088a4903bd0dd911b4f1732b250130cdaffed ]
+[ Upstream commit edbfe83def34153a05439ecb3352ae0bb65024de ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+Only first MODULE_SOFTDEP statement is handled per module.
+Multiple dependencies must be expressed in a single statement.
 
-drivers/xen/xen-pciback/conf_space_capability.c: In function pm_ctrl_write:
-drivers/xen/xen-pciback/conf_space_capability.c:119:25: warning:
- variable old_state set but not used [-Wunused-but-set-variable]
-
-It is never used so can be removed.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Signed-off-by: Juergen Gross <jgross@suse.com>
+Signed-off-by: Jean Delvare <jdelvare@suse.de>
+Cc: "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc: Darren Hart <dvhart@infradead.org>
+Cc: Andy Shevchenko <andy@infradead.org>
+[andy: massaged commit message]
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/xen/xen-pciback/conf_space_capability.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/platform/x86/pcengines-apuv2.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/xen/xen-pciback/conf_space_capability.c b/drivers/xen/xen-pciback/conf_space_capability.c
-index 73427d8e01161..e5694133ebe57 100644
---- a/drivers/xen/xen-pciback/conf_space_capability.c
-+++ b/drivers/xen/xen-pciback/conf_space_capability.c
-@@ -116,13 +116,12 @@ static int pm_ctrl_write(struct pci_dev *dev, int offset, u16 new_value,
- {
- 	int err;
- 	u16 old_value;
--	pci_power_t new_state, old_state;
-+	pci_power_t new_state;
- 
- 	err = pci_read_config_word(dev, offset, &old_value);
- 	if (err)
- 		goto out;
- 
--	old_state = (pci_power_t)(old_value & PCI_PM_CTRL_STATE_MASK);
- 	new_state = (pci_power_t)(new_value & PCI_PM_CTRL_STATE_MASK);
- 
- 	new_value &= PM_OK_BITS;
+diff --git a/drivers/platform/x86/pcengines-apuv2.c b/drivers/platform/x86/pcengines-apuv2.c
+index c1ca931e1fab8..7a8cbfb5d2135 100644
+--- a/drivers/platform/x86/pcengines-apuv2.c
++++ b/drivers/platform/x86/pcengines-apuv2.c
+@@ -255,6 +255,4 @@ MODULE_DESCRIPTION("PC Engines APUv2/APUv3 board GPIO/LED/keys driver");
+ MODULE_LICENSE("GPL");
+ MODULE_DEVICE_TABLE(dmi, apu_gpio_dmi_table);
+ MODULE_ALIAS("platform:pcengines-apuv2");
+-MODULE_SOFTDEP("pre: platform:" AMD_FCH_GPIO_DRIVER_NAME);
+-MODULE_SOFTDEP("pre: platform:leds-gpio");
+-MODULE_SOFTDEP("pre: platform:gpio_keys_polled");
++MODULE_SOFTDEP("pre: platform:" AMD_FCH_GPIO_DRIVER_NAME " platform:leds-gpio platform:gpio_keys_polled");
 -- 
 2.20.1
 
