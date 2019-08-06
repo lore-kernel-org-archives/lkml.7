@@ -2,32 +2,33 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30ADFC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7875EC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0169920717
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:12:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58211214C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:12:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732605AbfHFPMd (ORCPT
+        id S1732840AbfHFPMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 11:12:33 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:55616 "EHLO inva020.nxp.com"
+        Tue, 6 Aug 2019 11:12:35 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:55666 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726713AbfHFPMd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726783AbfHFPMd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 6 Aug 2019 11:12:33 -0400
 Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 06D7F1A02BD;
-        Tue,  6 Aug 2019 17:12:29 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 10D5D1A01FF;
+        Tue,  6 Aug 2019 17:12:31 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id ED6491A062C;
-        Tue,  6 Aug 2019 17:12:28 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 03B091A01F6;
+        Tue,  6 Aug 2019 17:12:31 +0200 (CEST)
 Received: from fsr-ub1864-103.ea.freescale.net (fsr-ub1864-103.ea.freescale.net [10.171.82.17])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 18B5C205DD;
-        Tue,  6 Aug 2019 17:12:28 +0200 (CEST)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 1AE24205DD;
+        Tue,  6 Aug 2019 17:12:30 +0200 (CEST)
 From:   Daniel Baluta <daniel.baluta@nxp.com>
 To:     broonie@kernel.org
 Cc:     l.stach@pengutronix.de, mihai.serban@gmail.com,
@@ -37,58 +38,67 @@ Cc:     l.stach@pengutronix.de, mihai.serban@gmail.com,
         festevam@gmail.com, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, robh@kernel.org,
         Daniel Baluta <daniel.baluta@nxp.com>
-Subject: [PATCH v3 0/5] Add support for new SAI IP version
-Date:   Tue,  6 Aug 2019 18:12:09 +0300
-Message-Id: <20190806151214.6783-1-daniel.baluta@nxp.com>
+Subject: [PATCH v3 2/5] ASoC: fsl_sai: Update Tx/Rx channel enable mask
+Date:   Tue,  6 Aug 2019 18:12:11 +0300
+Message-Id: <20190806151214.6783-3-daniel.baluta@nxp.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190806151214.6783-1-daniel.baluta@nxp.com>
+References: <20190806151214.6783-1-daniel.baluta@nxp.com>
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-So far SAI IPs integrated with imx6 only supported one data line.
-Starting with imx7 and imx8 SAI integration support up to 8 data
-lines. First patch introduce register definition to support this.
+Tx channel enable (TCE) / Rx channel enable (RCE) bits
+enable corresponding data channel for Tx/Rx operation.
 
-New SAI IP version introduces two new registers (Version and Parmeter
-registers) which are placed at the beginning of register address space.
-For this reason we need to fix the register's address. Support for
-this is introduced in patch 3.
+Because SAI supports up the 8 channels TCE/RCE occupy
+up the 8 bits inside TCR3/RCR3 registers we need to extend
+the mask to reflect this.
 
-Changes since v2:
-	- removed patches regarding data line mask because I need to
-	find a better way to describe to model data lines. Perhaps,we
-	only need to specify how many datalines a specific SAI instance
-	supports and then let SAI driver to activate datalines based on
-	the number of channels. Will open the discussion on this on a
-	separate thread.
-	- fixed devicetree documentation as per Nicolin comments and
-	will send a separate patch to convert it to yaml.
+Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+---
+ sound/soc/fsl/fsl_sai.c | 6 ++++--
+ sound/soc/fsl/fsl_sai.h | 1 +
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
-Changes since v1:
-        - removed patches from Lucas as they were already accepted
-        - addressed comments from Lucas and Nicolin regarding
-        device tree property naming
-        - removed comment saying that "datalines" must be always
-        consecutively enabled (this is not true, checked with IP owner)
-        - added new patch to document newly introduced compatbile
-          strings
-        - removed patch introducing combined mode as I will still need
-        some time to figure out how to properly allow users to set it.
-
-Daniel Baluta (5):
-  ASoC: fsl_sai: Add registers definition for multiple datalines
-  ASoC: fsl_sai: Update Tx/Rx channel enable mask
-  ASoC: fsl_sai: Add support for SAI new version
-  ASoC: fsl_sai: Add support for imx7ulp/imx8mq
-  ASoC: dt-bindings: Introduce compatible strings for 7ULP and 8MQ
-
- .../devicetree/bindings/sound/fsl-sai.txt     |   3 +-
- sound/soc/fsl/fsl_sai.c                       | 320 ++++++++++++------
- sound/soc/fsl/fsl_sai.h                       |  78 +++--
- 3 files changed, 273 insertions(+), 128 deletions(-)
-
+diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
+index 17b0aff4ee8b..637b1d12a575 100644
+--- a/sound/soc/fsl/fsl_sai.c
++++ b/sound/soc/fsl/fsl_sai.c
+@@ -599,7 +599,8 @@ static int fsl_sai_startup(struct snd_pcm_substream *substream,
+ 	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
+ 	int ret;
+ 
+-	regmap_update_bits(sai->regmap, FSL_SAI_xCR3(tx), FSL_SAI_CR3_TRCE,
++	regmap_update_bits(sai->regmap, FSL_SAI_xCR3(tx),
++			   FSL_SAI_CR3_TRCE_MASK,
+ 			   FSL_SAI_CR3_TRCE);
+ 
+ 	ret = snd_pcm_hw_constraint_list(substream->runtime, 0,
+@@ -614,7 +615,8 @@ static void fsl_sai_shutdown(struct snd_pcm_substream *substream,
+ 	struct fsl_sai *sai = snd_soc_dai_get_drvdata(cpu_dai);
+ 	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
+ 
+-	regmap_update_bits(sai->regmap, FSL_SAI_xCR3(tx), FSL_SAI_CR3_TRCE, 0);
++	regmap_update_bits(sai->regmap, FSL_SAI_xCR3(tx),
++			   FSL_SAI_CR3_TRCE_MASK, 0);
+ }
+ 
+ static const struct snd_soc_dai_ops fsl_sai_pcm_dai_ops = {
+diff --git a/sound/soc/fsl/fsl_sai.h b/sound/soc/fsl/fsl_sai.h
+index 4bb478041d67..20c5b9b1e8bc 100644
+--- a/sound/soc/fsl/fsl_sai.h
++++ b/sound/soc/fsl/fsl_sai.h
+@@ -110,6 +110,7 @@
+ 
+ /* SAI Transmit and Receive Configuration 3 Register */
+ #define FSL_SAI_CR3_TRCE	BIT(16)
++#define FSL_SAI_CR3_TRCE_MASK	GENMASK(23, 16)
+ #define FSL_SAI_CR3_WDFL(x)	(x)
+ #define FSL_SAI_CR3_WDFL_MASK	0x1f
+ 
 -- 
 2.17.1
 
