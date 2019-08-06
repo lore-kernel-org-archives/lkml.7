@@ -2,159 +2,85 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C783C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 02:59:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3220C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 02:59:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C1CB214C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 02:59:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WHN5rfgB"
+	by mail.kernel.org (Postfix) with ESMTP id B1DE220717
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 02:59:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731474AbfHFC7B (ORCPT
+        id S1731506AbfHFC7I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 22:59:01 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:40526 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728870AbfHFC7B (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 22:59:01 -0400
-Received: by mail-pl1-f193.google.com with SMTP id a93so37164499pla.7;
-        Mon, 05 Aug 2019 19:59:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=a4Ub+sv1k1e8nsgh66la+6tG6yPygg10HKO3z6Kulf8=;
-        b=WHN5rfgBqk16eNjZkhFHQ7ySxBkrv4oo0C1U4UR12Z3MJG3WVsRY856VOKl72aygO8
-         Hu4ZjRWlzceL40MjxAYvPFswixkpGlWILzBT6HTOxAewfYVYsGNNInhK0nWGjs2NdzQH
-         SC8xAdlm8qNTkGSsobxV5PzkxEH5GHOBMYHI9Cit3nbiEKrCaPStlT4pOXD6ahUTWs06
-         Wr0vIFd27Q6lQdTGRdS7ko5y8Au5L+HRX6WyQoZVHVZgIadFJ9gD2hVIL++8E3AAZN9n
-         hK7O8RgnTM1pAHb95pomOr8lGCySOCCmXdWIxUKmPlbZy6wVZlRqitsCIWF7M3ZZPvXP
-         9QJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=a4Ub+sv1k1e8nsgh66la+6tG6yPygg10HKO3z6Kulf8=;
-        b=O1TbSGEEmv6wCnWWc1mks4vFXRH5y2UV0Wh2EqOGZo+B/fHEHavWkTnQwxeUMzaDzq
-         0Jiegjbgpigsad2cGYRY6eUPZzbQFBA+pFtKLYJaulDVFjEet4J4GF9/fMFq2eRdfLkc
-         1zmjaMAYUilnoEGWAq4k63VIlxWdmP+MBsq0UuYnXtJHUY5BJLuOXlkvybtptbqQz7Qp
-         G0G1g2jUnZEcBcBDKpkLfLtPzmLNUNT4E5PuKQJo2vnYsOE+OmDA/DWsE5Vx0XY7gXa5
-         izYprAMp0GJ1OxaJe8QV8c7rHLVjcKdRhYur6CKEELMoi3HUtWsyIVf3FsPqZtAUlNKT
-         wjdw==
-X-Gm-Message-State: APjAAAUfmaReDwsTsZ48oiXLaz0IwGMh8l0XAIcHpKzJ4ohw5j8P2kuv
-        kUbzCBhIPR3x++8+vV2Lu5E=
-X-Google-Smtp-Source: APXvYqzZf8fM+1aEIUQxGGaPBdMFTxp6ZvswfiPWM17x6tGZzrhVFt+qMfFX9pAqis1lkaWrRiaxPw==
-X-Received: by 2002:a17:902:1e9:: with SMTP id b96mr843699plb.277.1565060340386;
-        Mon, 05 Aug 2019 19:59:00 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id l189sm103166522pfl.7.2019.08.05.19.58.57
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 05 Aug 2019 19:58:59 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Vishal Kulkarni <vishal@chelsio.com>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH 2/2] cxgb4: smt: Use normal int for refcount
-Date:   Tue,  6 Aug 2019 10:58:54 +0800
-Message-Id: <20190806025854.17076-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+        Mon, 5 Aug 2019 22:59:08 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:33618 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729170AbfHFC7H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 22:59:07 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 7DECF1A009A;
+        Tue,  6 Aug 2019 04:59:06 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id B0CA41A0043;
+        Tue,  6 Aug 2019 04:59:00 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 5FC6E402B5;
+        Tue,  6 Aug 2019 10:58:53 +0800 (SGT)
+From:   Hui Song <hui.song_1@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Song Hui <hui.song_1@nxp.com>
+Subject: [PATCH v2] gpio: mpc8xxx: Add new platforms GPIO DT node description
+Date:   Tue,  6 Aug 2019 10:49:23 +0800
+Message-Id: <20190806024923.34355-1-hui.song_1@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All refcount operations are protected by spinlocks now.
-Then the atomic counter can be replaced by a normal int.
+From: Song Hui <hui.song_1@nxp.com>
 
-This patch depends on PATCH 1/2.
+Update the NXP GPIO node dt-binding file for QorIQ and
+Layerscape platforms, and add one more example with
+ls1028a GPIO node.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: Song Hui <hui.song_1@nxp.com>
 ---
- drivers/net/ethernet/chelsio/cxgb4/smt.c | 14 +++++++-------
- drivers/net/ethernet/chelsio/cxgb4/smt.h |  2 +-
- 2 files changed, 8 insertions(+), 8 deletions(-)
+ Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/smt.c b/drivers/net/ethernet/chelsio/cxgb4/smt.c
-index d6e84c8b5554..01c65d13fc0e 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/smt.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/smt.c
-@@ -57,7 +57,7 @@ struct smt_data *t4_init_smt(void)
- 		s->smtab[i].state = SMT_STATE_UNUSED;
- 		memset(&s->smtab[i].src_mac, 0, ETH_ALEN);
- 		spin_lock_init(&s->smtab[i].lock);
--		atomic_set(&s->smtab[i].refcnt, 0);
-+		s->smtab[i].refcnt = 0;
- 	}
- 	return s;
- }
-@@ -68,7 +68,7 @@ static struct smt_entry *find_or_alloc_smte(struct smt_data *s, u8 *smac)
- 	struct smt_entry *e, *end;
- 
- 	for (e = &s->smtab[0], end = &s->smtab[s->smt_size]; e != end; ++e) {
--		if (atomic_read(&e->refcnt) == 0) {
-+		if (e->refcnt == 0) {
- 			if (!first_free)
- 				first_free = e;
- 		} else {
-@@ -97,7 +97,7 @@ static struct smt_entry *find_or_alloc_smte(struct smt_data *s, u8 *smac)
- 
- static void t4_smte_free(struct smt_entry *e)
- {
--	if (atomic_read(&e->refcnt) == 0) {  /* hasn't been recycled */
-+	if (e->refcnt == 0) {  /* hasn't been recycled */
- 		e->state = SMT_STATE_UNUSED;
- 	}
- }
-@@ -110,7 +110,7 @@ static void t4_smte_free(struct smt_entry *e)
- void cxgb4_smt_release(struct smt_entry *e)
- {
- 	spin_lock_bh(&e->lock);
--	if (atomic_dec_and_test(&e->refcnt))
-+	if ((--e->refcnt) == 0)
- 		t4_smte_free(e);
- 	spin_unlock_bh(&e->lock);
- }
-@@ -215,14 +215,14 @@ static struct smt_entry *t4_smt_alloc_switching(struct adapter *adap, u16 pfvf,
- 	e = find_or_alloc_smte(s, smac);
- 	if (e) {
- 		spin_lock(&e->lock);
--		if (!atomic_read(&e->refcnt)) {
--			atomic_set(&e->refcnt, 1);
-+		if (!e->refcnt) {
-+			e->refcnt = 1;
- 			e->state = SMT_STATE_SWITCHING;
- 			e->pfvf = pfvf;
- 			memcpy(e->src_mac, smac, ETH_ALEN);
- 			write_smt_entry(adap, e);
- 		} else {
--			atomic_inc(&e->refcnt);
-+			++e->refcnt;
- 		}
- 		spin_unlock(&e->lock);
- 	}
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/smt.h b/drivers/net/ethernet/chelsio/cxgb4/smt.h
-index d6c2cc271398..1268d6e93a47 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/smt.h
-+++ b/drivers/net/ethernet/chelsio/cxgb4/smt.h
-@@ -59,7 +59,7 @@ struct smt_entry {
- 	u16 idx;
- 	u16 pfvf;
- 	u8 src_mac[ETH_ALEN];
--	atomic_t refcnt;
-+	int refcnt;
- 	spinlock_t lock;	/* protect smt entry add,removal */
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt b/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
+index 69d4616..2df5fc0 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
+@@ -37,3 +37,17 @@ gpio0: gpio@2300000 {
+ 	interrupt-controller;
+ 	#interrupt-cells = <2>;
  };
- 
++
++
++Example of gpio-controller node for a ls1028a SoC:
++
++gpio1: gpio@2300000 {
++	compatible = "fsl,ls1028a-gpio","fsl,qoriq-gpio";
++	reg = <0x0 0x2300000 0x0 0x10000>;
++	interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
++	gpio-controller;
++	#gpio-cells = <2>;
++	interrupt-controller;
++	#interrupt-cells = <2>;
++	little-endian;
++};
 -- 
-2.20.1
+2.9.5
 
