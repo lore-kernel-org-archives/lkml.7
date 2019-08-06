@@ -2,134 +2,104 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A9FC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 07:29:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E08C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 07:30:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 565B1218D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 07:29:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 808AD218D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 07:30:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732233AbfHFH34 (ORCPT
+        id S1732112AbfHFHaW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 03:29:56 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:42819 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731807AbfHFH34 (ORCPT
+        Tue, 6 Aug 2019 03:30:22 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:43136 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731735AbfHFHaW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 03:29:56 -0400
-Received: from uno.localdomain (mob-109-112-31-244.net.vodafone.it [109.112.31.244])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 79D0420000F;
-        Tue,  6 Aug 2019 07:29:51 +0000 (UTC)
-Date:   Tue, 6 Aug 2019 09:31:14 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Stefan Agner <stefan@agner.ch>, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: adc: max9611: Fix temperature reading in probe
-Message-ID: <20190806073114.4mujzdvbrgxivizs@uno.localdomain>
-References: <20190805155515.22621-1-jacopo+renesas@jmondi.org>
- <20190805181244.663585ac@archlinux>
+        Tue, 6 Aug 2019 03:30:22 -0400
+Received: by mail-oi1-f194.google.com with SMTP id w79so65222950oif.10;
+        Tue, 06 Aug 2019 00:30:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Rt7p4w8GRASsTh4L8meL9OiYP/BUIZ+eM+Oj2ozLZX0=;
+        b=jNHIHAgNhRMrrc89l8FgqZBib4R88DxCJIa/S/gK0xb0C+QyYDxrNxsJ/aTo9zTQkX
+         FzQ9oXsxHVPjfNUQwrMDojCh7gIFqYh3V7XbmTExcVsERJHBGo2LeAscv6P1E8dgxaKo
+         DaXV3ImToOknn2cVFB09gANmXfL5s2ng69BNG0K40yD0K+z3xB7LrSPJvhxTXmWCfsg0
+         dkmc23aa1tOaaDY8AV2jTxral0OW/oeXVlMIEPHQ3vnNZeXUVF5RN57vrB0LBJ6NXIaK
+         dlUyIjHKnB1tMPlHPScrbFKqIWyRNFBc6k5WGrPaK19jTjYdXBP7ct+3YVMLCXgykZjf
+         stKg==
+X-Gm-Message-State: APjAAAXujK44SfLOxpJ4GLMS0OKls9Y+Xy8uCe4Ev61MQipwBfd6ZlYE
+        oCRIErLLB7IjbF/zbY9E43yvrJijXE+VN7himQg=
+X-Google-Smtp-Source: APXvYqxf2mIJF0r2WtOWgOXoNk4Ssm0txTKBpp4NeSTCt6wKFUnz/OViHpCBQnDGu1cEhPCsgOUabbz+AFvLaKfo1fs=
+X-Received: by 2002:aca:bd43:: with SMTP id n64mr1471003oif.148.1565076621538;
+ Tue, 06 Aug 2019 00:30:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="hmkibl6tqohgtmac"
-Content-Disposition: inline
-In-Reply-To: <20190805181244.663585ac@archlinux>
-User-Agent: NeoMutt/20180716
+References: <20190710193918.31135-1-kieran.bingham+renesas@ideasonboard.com>
+ <0e1b6e0b-1c94-4b00-7fda-c2a303ee3816@redhat.com> <20190731194419.GB4084@kunai>
+ <CAK7LNAQ6siWHU+N2c+6gqh7hHEJ_aDrVoiWnrTq1jiXQWSYYBA@mail.gmail.com> <2567a74d-738e-6fed-d91c-cc70743e116d@redhat.com>
+In-Reply-To: <2567a74d-738e-6fed-d91c-cc70743e116d@redhat.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 6 Aug 2019 09:30:10 +0200
+Message-ID: <CAMuHMdX3QqXGt4=31ECZ7vryjsSA7NufuvA_XVLjS91_1q=uqw@mail.gmail.com>
+Subject: Re: [PATCH RFC] modpost: Support I2C Aliases from OF tables
+To:     Javier Martinez Canillas <javierm@redhat.com>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---hmkibl6tqohgtmac
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-
-Hi Jonathan,
-
-On Mon, Aug 05, 2019 at 06:12:44PM +0100, Jonathan Cameron wrote:
-> On Mon,  5 Aug 2019 17:55:15 +0200
-> Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
+On Tue, Aug 6, 2019 at 12:48 AM Javier Martinez Canillas
+<javierm@redhat.com> wrote:
+> On 8/1/19 4:17 AM, Masahiro Yamada wrote:
+> So I think that we should either:
 >
-> > The max9611 driver reads the die temperature at probe time to validate
-> > the communication channel. Use the actual read value to perform the test
-> > instead of the read function return value, which was mistakenly used so
-> > far.
-> >
-> > The temperature reading test was only successful because the 0 return
-> > value is in the range of supported temperatures.
-> >
-> > Fixes: 69780a3bbc0b ("iio: adc: Add Maxim max9611 ADC driver")
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> a) take Kieran's patch or b) remove the i2c_of_match_device_sysfs() fallback
+> for OF and require an I2C device table for sysfs instantiation and matching.
 >
-> Applied to the fixes-togreg branch of iio.git and marked for
-> stable.  That'll be a bit fiddly given other changes around this
-> so we may need to do backports.
+> > If a driver supports DT and devices are instantiated via DT,
+> > in which situation is this useful?
 >
-
-Indeed, I should have mentioned this patch depends on Joe's
-ae8cc91a7d85 ("iio: adc: max9611: Fix misuse of GENMASK macro")
-which is now in linux-next, otherwise it might atually trigger errors
-due to the wrong mask value.
-
-I wonder if there's a way to keep track of these dependencies for the
-sake of backporting, or it's an operation that has to be carried out
-manually...
-
-Thanks
-   j
-
+> Is useful if you don't have all the I2C devices described in the DT. For example
+> a daughterboard with an I2C device is connected to a board through an expansion
+> slot or an I2C device connected directly to I2C pins exposed in a machine.
 >
-> > ---
-> >  drivers/iio/adc/max9611.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/iio/adc/max9611.c b/drivers/iio/adc/max9611.c
-> > index 917223d5ff5b..e9f6b1da1b94 100644
-> > --- a/drivers/iio/adc/max9611.c
-> > +++ b/drivers/iio/adc/max9611.c
-> > @@ -480,7 +480,7 @@ static int max9611_init(struct max9611_dev *max9611)
-> >  	if (ret)
-> >  		return ret;
-> >
-> > -	regval = ret & MAX9611_TEMP_MASK;
-> > +	regval &= MAX9611_TEMP_MASK;
-> >
-> >  	if ((regval > MAX9611_TEMP_MAX_POS &&
-> >  	     regval < MAX9611_TEMP_MIN_NEG) ||
-> > --
-> > 2.22.0
-> >
+> In these cases your I2C devices won't be static so users might want to use the
+> sysfs user-space interface to instantiate the I2C devices, i.e:
 >
+>  # echo eeprom 0x50 > /sys/bus/i2c/devices/i2c-3/new_device
+>
+> as explained in https://github.com/torvalds/linux/blob/master/Documentation/i2c/instantiating-devices#L207
 
---hmkibl6tqohgtmac
-Content-Type: application/pgp-signature; name="signature.asc"
+Does this actually work with DT names, too? E.g.
 
------BEGIN PGP SIGNATURE-----
+# echo atmel,24c02 > /sys/bus/i2c/devices/i2c-3/new_device
 
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl1JLMIACgkQcjQGjxah
-Vjx4OBAAxQU3tgkW1phGiUlCylmAblCdAtYezFCdcbL28QA5ui5zPocDUerLjRar
-06uAx/kjK5oxH9rDMWh5OgwznfUkenGpNeo3n6/n7CVq6yUW4oTzb802/5EgqOfP
-4P7iKVRbEwOj3DJgcS/l+GCqkZfDj+IncK5C4up2c0NYvTr4kIDOHFCr84qI4Doe
-6O7DDmNZsA1GHTc/KbMBuo0AekVF7SdXgzSHm+EN41SOPK93YtvS7d9z7ethOvYr
-cHrdtWveTOK+HNTO0fWILq0wdKC+n0FXSnGBVdWDPRBJCzYyUIvP9m4NTDETe9fE
-PQH84hC052OmoUxwQmnLh8FB15d4VfOfP/QuykvaVuao3JoQyI4EeVzEgiGV1Eg6
-nhkr/QsEMmxgAzDGVZ39eSXJWZos4lueWnQ5ohzTs5SjeYQnFsPMEnsNoGfX15wL
-z3Z2hZh9Ra8fs3cDeijbwbyljffVEA+ZnFXPItjlZaNeMTKXM66qSy0vKENteRJi
-JJPNAO+3/MDDWFweAUFXimd8htUSAHWEuRRG2EE5sweBam4V/AnkC3AdZsVXBMeg
-QtuS4/VfkZXS1UL8FOGyWU9xQ+daMc2vMDWeA/+EwEes8s1uMzP6aAQ1h6y/W46s
-g6+sxY53Yp+RzsNKoi8OCiQpF7lkESc9XxUKuKV0jhrhT6oQLZE=
-=oFtH
------END PGP SIGNATURE-----
+Still leaves us with legacy names for backwards compatibility.
 
---hmkibl6tqohgtmac--
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
