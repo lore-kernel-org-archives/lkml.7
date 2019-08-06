@@ -6,54 +6,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C0CC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 05:23:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8EF4C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 05:23:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC5F92173C
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 05:23:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92568214C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 05:23:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731662AbfHFFXf (ORCPT
+        id S1731684AbfHFFXk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 01:23:35 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60860 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731626AbfHFFX3 (ORCPT
+        Tue, 6 Aug 2019 01:23:40 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:25822 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731665AbfHFFXj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 01:23:29 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x765Lvkq110070;
-        Tue, 6 Aug 2019 01:23:03 -0400
+        Tue, 6 Aug 2019 01:23:39 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x765M3VT106194;
+        Tue, 6 Aug 2019 01:23:19 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2u7253agdf-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2u70mk5fhe-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 06 Aug 2019 01:23:02 -0400
-Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x765N2ST112942;
-        Tue, 6 Aug 2019 01:23:02 -0400
-Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2u7253agd4-1
+        Tue, 06 Aug 2019 01:23:18 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x765N3dE108742;
+        Tue, 6 Aug 2019 01:23:18 -0400
+Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2u70mk5fgv-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 06 Aug 2019 01:23:02 -0400
-Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
-        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x765KH54025494;
-        Tue, 6 Aug 2019 05:23:01 GMT
-Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
-        by ppma05wdc.us.ibm.com with ESMTP id 2u51w6a8kp-1
+        Tue, 06 Aug 2019 01:23:18 -0400
+Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
+        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x765KHSn019637;
+        Tue, 6 Aug 2019 05:23:17 GMT
+Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
+        by ppma03wdc.us.ibm.com with ESMTP id 2u51w629bm-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 06 Aug 2019 05:23:01 +0000
+        Tue, 06 Aug 2019 05:23:17 +0000
 Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x765N1CH50397598
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x765NGQp36569422
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 6 Aug 2019 05:23:01 GMT
+        Tue, 6 Aug 2019 05:23:16 GMT
 Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4311C112061;
-        Tue,  6 Aug 2019 05:23:01 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 87060112061;
+        Tue,  6 Aug 2019 05:23:16 +0000 (GMT)
 Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 33574112064;
-        Tue,  6 Aug 2019 05:22:59 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 703C5112063;
+        Tue,  6 Aug 2019 05:23:14 +0000 (GMT)
 Received: from morokweng.localdomain.com (unknown [9.85.207.254])
         by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue,  6 Aug 2019 05:22:59 +0000 (GMT)
+        Tue,  6 Aug 2019 05:23:14 +0000 (GMT)
 From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
 To:     linuxppc-dev@lists.ozlabs.org
 Cc:     linux-kernel@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
@@ -65,10 +65,11 @@ Cc:     linux-kernel@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
         Paul Mackerras <paulus@samba.org>,
         Ram Pai <linuxram@us.ibm.com>,
         Claudio Carvalho <cclaudio@linux.ibm.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Subject: [PATCH v3 01/16] powerpc/kernel: Add ucall_norets() ultravisor call handler
-Date:   Tue,  6 Aug 2019 02:22:22 -0300
-Message-Id: <20190806052237.12525-2-bauerman@linux.ibm.com>
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Alexey Kardashevskiy <aik@linux.ibm.com>
+Subject: [PATCH v3 07/16] powerpc/pseries: Add and use LPPACA_SIZE constant
+Date:   Tue,  6 Aug 2019 02:22:28 -0300
+Message-Id: <20190806052237.12525-8-bauerman@linux.ibm.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190806052237.12525-1-bauerman@linux.ibm.com>
 References: <20190806052237.12525-1-bauerman@linux.ibm.com>
@@ -87,147 +88,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Claudio Carvalho <cclaudio@linux.ibm.com>
+Helps document what the hard-coded number means.
 
-The ultracalls (ucalls for short) allow the Secure Virtual Machines
-(SVM)s and hypervisor to request services from the ultravisor such as
-accessing a register or memory region that can only be accessed when
-running in ultravisor-privileged mode.
+Also take the opportunity to fix an #endif comment.
 
-This patch adds ucall_norets() ultravisor call handler. Like
-plpar_hcall_norets(), it also saves and restores the Condition
-Register (CR).
-
-The specific service needed from an ucall is specified in register
-R3 (the first parameter to the ucall). Other parameters to the
-ucall, if any, are specified in registers R4 through R12.
-
-Return value of all ucalls is in register R3. Other output values
-from the ucall, if any, are returned in registers R4 through R12.
-
-Each ucall returns specific error codes, applicable in the context
-of the ucall. However, like with the PowerPC Architecture Platform
-Reference (PAPR), if no specific error code is defined for a particular
-situation, then the ucall will fallback to an erroneous
-parameter-position based code. i.e U_PARAMETER, U_P2, U_P3 etc depending
-on the ucall parameter that may have caused the error.
-
-Every host kernel (powernv) needs to be able to do ucalls in case it
-ends up being run in a machine with ultravisor enabled. Otherwise, the
-kernel may crash early in boot trying to access ultravisor resources,
-for instance, trying to set the partition table entry 0.
-
-Since secure guests also need to be able to do ucalls and its kernel may
-not have CONFIG_PPC_POWERNV=y, the ucall.S file is placed under
-arch/powerpc/kernel.
-
-If ultravisor is not enabled, the ucalls will be redirected to the
-hypervisor which must handle/fail the call.
-
-Thanks to inputs from Ram Pai and Michael Anderson.
-
-Signed-off-by: Claudio Carvalho <cclaudio@linux.ibm.com>
+Suggested-by: Alexey Kardashevskiy <aik@linux.ibm.com>
 Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
 ---
- arch/powerpc/include/asm/asm-prototypes.h | 11 +++++++++++
- arch/powerpc/include/asm/ultravisor-api.h | 23 +++++++++++++++++++++++
- arch/powerpc/kernel/Makefile              |  1 +
- arch/powerpc/kernel/ucall.S               | 20 ++++++++++++++++++++
- 4 files changed, 55 insertions(+)
+ arch/powerpc/kernel/paca.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/asm-prototypes.h b/arch/powerpc/include/asm/asm-prototypes.h
-index ec1c97a8e8cb..e698f48cbc6d 100644
---- a/arch/powerpc/include/asm/asm-prototypes.h
-+++ b/arch/powerpc/include/asm/asm-prototypes.h
-@@ -15,6 +15,7 @@
- #include <asm/epapr_hcalls.h>
- #include <asm/dcr.h>
- #include <asm/mmu_context.h>
-+#include <asm/ultravisor-api.h>
+diff --git a/arch/powerpc/kernel/paca.c b/arch/powerpc/kernel/paca.c
+index e3ad8aa4730d..612fc87ef785 100644
+--- a/arch/powerpc/kernel/paca.c
++++ b/arch/powerpc/kernel/paca.c
+@@ -52,6 +52,8 @@ static void *__init alloc_paca_data(unsigned long size, unsigned long align,
  
- #include <uapi/asm/ucontext.h>
+ #ifdef CONFIG_PPC_PSERIES
  
-@@ -34,6 +35,16 @@ extern struct static_key hcall_tracepoint_key;
- void __trace_hcall_entry(unsigned long opcode, unsigned long *args);
- void __trace_hcall_exit(long opcode, long retval, unsigned long *retbuf);
++#define LPPACA_SIZE 0x400
++
+ /*
+  * See asm/lppaca.h for more detail.
+  *
+@@ -65,7 +67,7 @@ static inline void init_lppaca(struct lppaca *lppaca)
  
-+/* Ultravisor */
-+#ifdef CONFIG_PPC_POWERNV
-+long ucall_norets(unsigned long opcode, ...);
-+#else
-+static inline long ucall_norets(unsigned long opcode, ...)
-+{
-+	return U_NOT_AVAILABLE;
-+}
-+#endif
-+
- /* OPAL */
- int64_t __opal_call(int64_t a0, int64_t a1, int64_t a2, int64_t a3,
- 		    int64_t a4, int64_t a5, int64_t a6, int64_t a7,
-diff --git a/arch/powerpc/include/asm/ultravisor-api.h b/arch/powerpc/include/asm/ultravisor-api.h
-new file mode 100644
-index 000000000000..88ffa78f9d61
---- /dev/null
-+++ b/arch/powerpc/include/asm/ultravisor-api.h
-@@ -0,0 +1,23 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Ultravisor API.
-+ *
-+ * Copyright 2019, IBM Corporation.
-+ *
-+ */
-+#ifndef _ASM_POWERPC_ULTRAVISOR_API_H
-+#define _ASM_POWERPC_ULTRAVISOR_API_H
-+
-+#include <asm/hvcall.h>
-+
-+/* Return codes */
-+#define U_FUNCTION		H_FUNCTION
-+#define U_NOT_AVAILABLE		H_NOT_AVAILABLE
-+#define U_P2			H_P2
-+#define U_P3			H_P3
-+#define U_P4			H_P4
-+#define U_P5			H_P5
-+#define U_PARAMETER		H_PARAMETER
-+#define U_SUCCESS		H_SUCCESS
-+
-+#endif /* _ASM_POWERPC_ULTRAVISOR_API_H */
-diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
-index ea0c69236789..c6c4ea240b2a 100644
---- a/arch/powerpc/kernel/Makefile
-+++ b/arch/powerpc/kernel/Makefile
-@@ -156,6 +156,7 @@ endif
+ 	*lppaca = (struct lppaca) {
+ 		.desc = cpu_to_be32(0xd397d781),	/* "LpPa" */
+-		.size = cpu_to_be16(0x400),
++		.size = cpu_to_be16(LPPACA_SIZE),
+ 		.fpregs_in_use = 1,
+ 		.slb_count = cpu_to_be16(64),
+ 		.vmxregs_in_use = 0,
+@@ -75,19 +77,18 @@ static inline void init_lppaca(struct lppaca *lppaca)
+ static struct lppaca * __init new_lppaca(int cpu, unsigned long limit)
+ {
+ 	struct lppaca *lp;
+-	size_t size = 0x400;
  
- obj-$(CONFIG_EPAPR_PARAVIRT)	+= epapr_paravirt.o epapr_hcalls.o
- obj-$(CONFIG_KVM_GUEST)		+= kvm.o kvm_emul.o
-+obj-$(CONFIG_PPC_POWERNV)	+= ucall.o
+-	BUILD_BUG_ON(size < sizeof(struct lppaca));
++	BUILD_BUG_ON(sizeof(struct lppaca) > LPPACA_SIZE);
  
- # Disable GCOV, KCOV & sanitizers in odd or sensitive code
- GCOV_PROFILE_prom_init.o := n
-diff --git a/arch/powerpc/kernel/ucall.S b/arch/powerpc/kernel/ucall.S
-new file mode 100644
-index 000000000000..de9133e45d21
---- /dev/null
-+++ b/arch/powerpc/kernel/ucall.S
-@@ -0,0 +1,20 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Generic code to perform an ultravisor call.
-+ *
-+ * Copyright 2019, IBM Corporation.
-+ *
-+ */
-+#include <asm/ppc_asm.h>
-+#include <asm/export.h>
-+
-+_GLOBAL(ucall_norets)
-+EXPORT_SYMBOL_GPL(ucall_norets)
-+	mfcr	r0
-+	stw	r0,8(r1)
-+
-+	sc	2		/* Invoke the ultravisor */
-+
-+	lwz	r0,8(r1)
-+	mtcrf	0xff,r0
-+	blr			/* Return r3 = status */
+ 	if (early_cpu_has_feature(CPU_FTR_HVMODE))
+ 		return NULL;
+ 
+-	lp = alloc_paca_data(size, 0x400, limit, cpu);
++	lp = alloc_paca_data(LPPACA_SIZE, 0x400, limit, cpu);
+ 	init_lppaca(lp);
+ 
+ 	return lp;
+ }
+-#endif /* CONFIG_PPC_BOOK3S */
++#endif /* CONFIG_PPC_PSERIES */
+ 
+ #ifdef CONFIG_PPC_BOOK3S_64
+ 
