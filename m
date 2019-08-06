@@ -2,89 +2,133 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D014C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:10:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 186CCC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:10:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3851C20679
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:10:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB38320679
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:10:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733080AbfHFQKS (ORCPT
+        id S2387647AbfHFQKi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 12:10:18 -0400
-Received: from mga05.intel.com ([192.55.52.43]:58388 "EHLO mga05.intel.com"
+        Tue, 6 Aug 2019 12:10:38 -0400
+Received: from foss.arm.com ([217.140.110.172]:36094 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732203AbfHFQKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 12:10:17 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 09:10:17 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,353,1559545200"; 
-   d="scan'208";a="198355562"
-Received: from orsmsx101.amr.corp.intel.com ([10.22.225.128])
-  by fmsmga004.fm.intel.com with ESMTP; 06 Aug 2019 09:10:16 -0700
-Received: from orsmsx114.amr.corp.intel.com ([169.254.8.96]) by
- ORSMSX101.amr.corp.intel.com ([169.254.8.157]) with mapi id 14.03.0439.000;
- Tue, 6 Aug 2019 09:10:16 -0700
-From:   "Prakhya, Sai Praneeth" <sai.praneeth.prakhya@intel.com>
-To:     Vlastimil Babka <vbabka@suse.cz>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>
-CC:     "Hansen, Dave" <dave.hansen@intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>
-Subject: RE: [PATCH V2] fork: Improve error message for corrupted page tables
-Thread-Topic: [PATCH V2] fork: Improve error message for corrupted page
- tables
-Thread-Index: AQHVTARBoUI2WxhjVEayaDrB3An0D6buNXYAgAAUpHA=
-Date:   Tue, 6 Aug 2019 16:10:16 +0000
-Message-ID: <FFF73D592F13FD46B8700F0A279B802F4FA16EF9@ORSMSX114.amr.corp.intel.com>
-References: <3ef8a340deb1c87b725d44edb163073e2b6eca5a.1565059496.git.sai.praneeth.prakhya@intel.com>
- <5ba88460-cf01-3d53-6d13-45e650b4eacd@suse.cz>
-In-Reply-To: <5ba88460-cf01-3d53-6d13-45e650b4eacd@suse.cz>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYjY0MjgyNjMtNzcwZC00Yzk1LWE0NzEtNDY0NWU5ZTcxYzg2IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiaUJ5clZZdENIcktBbmpycTA5TER2Vlk2QVJPZlVEUElwXC93MzZIOVwvTG5Tb1VcL3l4MEw3XC9YUXVVUzlvcDhUbVwvIn0=
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: request-justification,no-action
-x-originating-ip: [10.22.254.138]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1732203AbfHFQKh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 12:10:37 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EF139344;
+        Tue,  6 Aug 2019 09:10:36 -0700 (PDT)
+Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 996D33F575;
+        Tue,  6 Aug 2019 09:10:35 -0700 (PDT)
+Date:   Tue, 6 Aug 2019 17:10:33 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     linux-pm@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        LAKML <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 4/6] ARM: psci: cpuidle: Introduce PSCI CPUidle driver
+Message-ID: <20190806161033.GD16546@e107155-lin>
+References: <20190722153745.32446-1-lorenzo.pieralisi@arm.com>
+ <20190722153745.32446-5-lorenzo.pieralisi@arm.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190722153745.32446-5-lorenzo.pieralisi@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiA+IFdpdGggcGF0Y2g6DQo+ID4gLS0tLS0tLS0tLS0NCj4gPiBbICAgNjkuODE1NDUzXSBtbS9w
-Z3RhYmxlLWdlbmVyaWMuYzoyOTogYmFkIHA0ZA0KPiAwMDAwMDAwMDg0NjUzNjQyKDgwMDAwMDAy
-NWNhMzc0NjcpDQo+ID4gWyAgIDY5LjgxNTg3Ml0gQlVHOiBCYWQgcnNzLWNvdW50ZXIgc3RhdGUg
-bW06MDAwMDAwMDAwMTRhNmMwMw0KPiB0eXBlOk1NX0ZJTEVQQUdFUyB2YWw6Mg0KPiA+IFsgICA2
-OS44MTU5NjJdIEJVRzogQmFkIHJzcy1jb3VudGVyIHN0YXRlIG1tOjAwMDAwMDAwMDE0YTZjMDMN
-Cj4gdHlwZTpNTV9BTk9OUEFHRVMgdmFsOjUNCj4gPiBbICAgNjkuODE2MDUwXSBCVUc6IG5vbi16
-ZXJvIHBndGFibGVzX2J5dGVzIG9uIGZyZWVpbmcgbW06IDIwNDgwDQo+ID4NCj4gPiBBbHNvLCBj
-aGFuZ2UgcHJpbnQgZnVuY3Rpb24gKGZyb20gcHJpbnRrKEtFUk5fQUxFUlQsIC4uKSB0bw0KPiA+
-IHByX2FsZXJ0KCkpIHNvIHRoYXQgaXQgbWF0Y2hlcyB0aGUgb3RoZXIgcHJpbnQgc3RhdGVtZW50
-Lg0KPiA+DQo+ID4gQ2M6IEluZ28gTW9sbmFyIDxtaW5nb0BrZXJuZWwub3JnPg0KPiA+IENjOiBW
-bGFzdGltaWwgQmFia2EgPHZiYWJrYUBzdXNlLmN6Pg0KPiA+IENjOiBQZXRlciBaaWpsc3RyYSA8
-cGV0ZXJ6QGluZnJhZGVhZC5vcmc+DQo+ID4gQ2M6IEFuZHJldyBNb3J0b24gPGFrcG1AbGludXgt
-Zm91bmRhdGlvbi5vcmc+DQo+ID4gQ2M6IEFuc2h1bWFuIEtoYW5kdWFsIDxhbnNodW1hbi5raGFu
-ZHVhbEBhcm0uY29tPg0KPiA+IEFja2VkLWJ5OiBEYXZlIEhhbnNlbiA8ZGF2ZS5oYW5zZW5AaW50
-ZWwuY29tPg0KPiA+IFN1Z2dlc3RlZC1ieTogRGF2ZSBIYW5zZW4gPGRhdmUuaGFuc2VuQGludGVs
-LmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBTYWkgUHJhbmVldGggUHJha2h5YSA8c2FpLnByYW5l
-ZXRoLnByYWtoeWFAaW50ZWwuY29tPg0KPiANCj4gQWNrZWQtYnk6IFZsYXN0aW1pbCBCYWJrYSA8
-dmJhYmthQHN1c2UuY3o+DQo+IA0KPiBJIHdvdWxkIGFsc28gYWRkIHNvbWV0aGluZyBsaWtlIHRo
-aXMgdG8gcmVkdWNlIHJpc2sgb2YgYnJlYWtpbmcgaXQgaW4gdGhlDQo+IGZ1dHVyZToNCg0KU3Vy
-ZSEgU291bmRzIGdvb2QgdG8gbWUuIFdpbGwgYWRkIGl0IHRvIFYzLg0KDQpSZWdhcmRzLA0KU2Fp
-DQo=
+On Mon, Jul 22, 2019 at 04:37:43PM +0100, Lorenzo Pieralisi wrote:
+> PSCI firmware is the standard power management control for
+> all ARM64 based platforms and it is also deployed on some
+> ARM 32 bit platforms to date.
+>
+> Idle state entry in PSCI is currently achieved by calling
+> arm_cpuidle_init() and arm_cpuidle_suspend() in a generic
+> idle driver, which in turn relies on ARM/ARM64 CPUidle back-end
+> to relay the call into PSCI firmware if PSCI is the boot method.
+>
+> Given that PSCI is the standard idle entry method on ARM64 systems
+> (which means that no other CPUidle driver are expected on ARM64
+> platforms - so PSCI is already a generic idle driver), in order to
+> simplify idle entry and code maintenance, it makes sense to have a PSCI
+> specific idle driver so that idle code that it is currently living in
+> drivers/firmware directory can be hoisted out of it and moved
+> where it belongs, into a full-fledged PSCI driver, leaving PSCI code
+> in drivers/firmware as a pure firmware interface, as it should be.
+>
+> Implement a PSCI CPUidle driver. By default it is a silent Kconfig entry
+> which is left unselected, since it selection would clash with the
+> generic ARM CPUidle driver that provides a PSCI based idle driver
+> through the arm/arm64 arches back-ends CPU operations.
+>
+> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Cc: Sudeep Holla <sudeep.holla@arm.com>
+
+Once the error path issues pointed by Ulf are resolved,
+
+Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> ---
+>  MAINTAINERS                    |   8 ++
+>  drivers/cpuidle/Kconfig.arm    |   3 +
+>  drivers/cpuidle/Makefile       |   1 +
+>  drivers/cpuidle/cpuidle-psci.c | 150 +++++++++++++++++++++++++++++++++
+>  4 files changed, 162 insertions(+)
+>  create mode 100644 drivers/cpuidle/cpuidle-psci.c
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 783569e3c4b4..c2bf8ce65e83 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -4286,6 +4286,14 @@ S:	Supported
+>  F:	drivers/cpuidle/cpuidle-exynos.c
+>  F:	arch/arm/mach-exynos/pm.c
+>
+> +CPUIDLE DRIVER - ARM PSCI
+> +M:	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> +M:	Sudeep Holla <sudeep.holla@arm.com>
+> +L:	linux-pm@vger.kernel.org
+> +L:	linux-arm-kernel@lists.infradead.org
+> +S:	Supported
+> +F:	drivers/cpuidle/cpuidle-psci.c
+> +
+>  CPU IDLE TIME MANAGEMENT FRAMEWORK
+>  M:	"Rafael J. Wysocki" <rjw@rjwysocki.net>
+>  M:	Daniel Lezcano <daniel.lezcano@linaro.org>
+> diff --git a/drivers/cpuidle/Kconfig.arm b/drivers/cpuidle/Kconfig.arm
+> index 48cb3d4bb7d1..929b57424ea4 100644
+> --- a/drivers/cpuidle/Kconfig.arm
+> +++ b/drivers/cpuidle/Kconfig.arm
+> @@ -13,6 +13,9 @@ config ARM_CPUIDLE
+>            initialized by calling the CPU operations init idle hook
+>            provided by architecture code.
+>
+> +config ARM_PSCI_CPUIDLE
+> +	bool
+> +
+
+[nit] I understand the intention to keep it hidden, but can't we have
+the dependency and selection of other config as part of this patch to
+make it more complete ?
+
+--
+Regards,
+Sudeep
