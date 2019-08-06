@@ -2,133 +2,110 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B30DC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:53:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73F48C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:56:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D38392075B
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:53:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YDWulAFE"
+	by mail.kernel.org (Postfix) with ESMTP id 50CC82075B
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:56:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733161AbfHFQxw (ORCPT
+        id S2387624AbfHFQ4A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 12:53:52 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34285 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728927AbfHFQxw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 12:53:52 -0400
-Received: by mail-wr1-f66.google.com with SMTP id 31so88635084wrm.1;
-        Tue, 06 Aug 2019 09:53:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=gxNkkJD3b/WJ2BCN1yM/UBEgODs/xbGIxyPlrinnovU=;
-        b=YDWulAFE5M1Cj2s64V8j8s4cLZ1QNjqZ5aD10HE/qncnQNsNiWNP1srKy9Z936zPzZ
-         GfLtuLfTfrrKO3l7ixtUHK6aIHkRVgaik5+aOyFeBIxlxV7xPMyeKBLP45ubBVWxqsvG
-         wv/eUSKpDGVhO/g1WIJNOS0+R9Wfm8cnW8QIO5tIdAWAE7WTYI7POS3z35s1jXLnCod4
-         CWXJQqx3mhYa908hr5zPh9VqNo/osxl0WXgr26ayPgSZw6kCEbUbyRkHjfamOz2yZxLr
-         yYLSsxfbZ8JDyt/lxippVAe3faaTsN4WpYs1vq6t0UsM2gnR9HGI8OGgrzC6l8M2QSke
-         UBOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=gxNkkJD3b/WJ2BCN1yM/UBEgODs/xbGIxyPlrinnovU=;
-        b=QdON+hfanZRqD8cCT+topmyEO3sUEoaRjRnbCJzwxR7wzyRKdss6V4z/oGqbcYIJuj
-         yEAaQiUcSup0dOdcD9704qezWV+sWG1649aB0XfFkQQJR04fHe/YGNfYFqsFg8i0ZOfn
-         E7m3K+9bmLrM6UFrpV53BF3uGz9DFUIKFAUGrwC7iCjQbypQLGew8GOwizn2+GhNsm/J
-         cxaYwQfOU0PC0Sq6CiBr7fimv4dj1maER6Z2UMwo7zjXBU2FJLcJZzN4gGa9IqGb50gr
-         7+4FW0NFPgS4au0CWlzRToaxcQhXO5aRkb/kCss2WZ0RUdgZXmmDnGd2yFpHBmEeq7PW
-         FVPw==
-X-Gm-Message-State: APjAAAUkO6rERWhiSm/BEasrlWqr0J7WYWt6A4e5dn83yDbPHg6cB6uQ
-        MwfZoOfZmUvpESFBrb9ez0bB0zkX
-X-Google-Smtp-Source: APXvYqwkEM8/7FtU/qIz2EzqolfwDqNOFGtE+29zXZgsxLDAnchWnPtpfHMtQFGIzAti+86XMVHClQ==
-X-Received: by 2002:adf:ec49:: with SMTP id w9mr5292515wrn.303.1565110429245;
-        Tue, 06 Aug 2019 09:53:49 -0700 (PDT)
-Received: from [172.30.90.245] (sjewanfw1-nat.mentorg.com. [139.181.7.34])
-        by smtp.gmail.com with ESMTPSA id l15sm2581667wrq.64.2019.08.06.09.53.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 06 Aug 2019 09:53:48 -0700 (PDT)
-Subject: Re: [PATCH 04/22] media: Move v4l2_fwnode_parse_link from v4l2 to
- driver base
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Hyun Kwon <hyun.kwon@xilinx.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Len Brown <lenb@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Enrico Weigelt <info@metux.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/ZYNQ ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
-        "open list:ACPI" <linux-acpi@vger.kernel.org>
-References: <20190805233505.21167-1-slongerbeam@gmail.com>
- <20190805233505.21167-5-slongerbeam@gmail.com>
- <CAHp75VcOh8bOf_s6t0ehwGtcYn64QFGj303SVvpHrztEOhTRgg@mail.gmail.com>
-From:   Steve Longerbeam <slongerbeam@gmail.com>
-Message-ID: <4750b347-b421-6569-600f-0ced8406460e@gmail.com>
-Date:   Tue, 6 Aug 2019 09:53:41 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Tue, 6 Aug 2019 12:56:00 -0400
+Received: from mga14.intel.com ([192.55.52.115]:21567 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732048AbfHFQ4A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 12:56:00 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 09:55:59 -0700
+X-IronPort-AV: E=Sophos;i="5.64,353,1559545200"; 
+   d="scan'208";a="325687415"
+Received: from rchatre-mobl.amr.corp.intel.com (HELO [10.24.14.91]) ([10.24.14.91])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 06 Aug 2019 09:55:59 -0700
+Subject: Re: [PATCH V2 01/10] x86/CPU: Expose if cache is inclusive of lower
+ level caches
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     tglx@linutronix.de, fenghua.yu@intel.com, tony.luck@intel.com,
+        kuo-lang.tseng@intel.com, mingo@redhat.com, hpa@zytor.com,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1564504901.git.reinette.chatre@intel.com>
+ <6c78593207224014d6a9d43698a3d1a0b3ccf2b6.1564504901.git.reinette.chatre@intel.com>
+ <20190802180352.GE30661@zn.tnic>
+ <e532ab90-196c-8b58-215a-f56f5e409512@intel.com>
+ <20190803094423.GA2100@zn.tnic>
+ <122b005a-46b1-2b1e-45a8-7f92a5dba2d9@intel.com>
+ <20190806155716.GE25897@zn.tnic>
+From:   Reinette Chatre <reinette.chatre@intel.com>
+Message-ID: <151002be-33e6-20d6-7699-bc9be7e51f33@intel.com>
+Date:   Tue, 6 Aug 2019 09:55:56 -0700
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VcOh8bOf_s6t0ehwGtcYn64QFGj303SVvpHrztEOhTRgg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20190806155716.GE25897@zn.tnic>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
+Hi Borislav,
 
-On 8/5/19 11:41 PM, Andy Shevchenko wrote:
-> On Tue, Aug 6, 2019 at 2:37 AM Steve Longerbeam <slongerbeam@gmail.com> wrote:
->> There is nothing v4l2-specific about v4l2_fwnode_{parse|put}_link().
->> Make these functions more generally available by moving them to driver
->> base, with the appropriate name changes to the functions and struct.
->>
->> In the process embed a 'struct fwnode_endpoint' in 'struct fwnode_link'
->> for both sides of the link, and make use of fwnode_graph_parse_endpoint()
->> to fully parse both endpoints. Rename members local_node and
->> remote_node to more descriptive local_port_parent and
->> remote_port_parent.
->>
-> May I ask if it's going to be used outside of v4l2?
+On 8/6/2019 8:57 AM, Borislav Petkov wrote:
+> On Mon, Aug 05, 2019 at 10:57:04AM -0700, Reinette Chatre wrote:
+>> What do you think?
+> 
+> Actually, I was thinking about something a lot simpler: something
+> along the lines of adding the CPUID check in a helper function which
+> rdt_pseudo_lock_init() calls. If the cache is not inclusive - and my
+> guess is it would suffice to check any cache but I'd prefer you correct
+> me on that - you simply return error and rdt_pseudo_lock_init() returns
+> early without doing any futher init.
+> 
+> How does that sound?
 
-It could be, I can see fwnode_graph_parse_link() being useful in DRM, 
-for example. But at this, only media core and v4l2 are making use of it.
+I am a bit cautious about this. When I started this work I initially
+added a helper function to resctrl that calls CPUID to determine if the
+cache is inclusive. At that time I became aware of a discussion
+motivating against scattered CPUID calls and motivating for one instance
+of CPUID information:
+http://lkml.kernel.org/r/alpine.DEB.2.21.1906162141301.1760@nanos.tec.linutronix.de
 
-This patch was created so that fwnode links can be parsed in a new media 
-core function that forms media links from fwnode links.
+My interpretation of the above resulted in a move away from calling
+CPUID in resctrl to the patch you are reviewing now.
 
-The full patchset doesn't seem to be up yet, but see [1] for the cover 
-letter.
+I do indeed prefer a simple approach and would change to what you
+suggest if you find it to be best.
 
-Steve
+To answer your question about checking any cache: this seems to be
+different between L2 and L3. On the Atom systems where L2 pseudo-locking
+works well the L2 cache is not inclusive. We are also working on
+supporting cache pseudo-locking on L3 cache that is not inclusive.
 
-[1] https://www.mail-archive.com/linux-media@vger.kernel.org/msg148910.html
+I could add the single CPUID check during rdt_pseudo_lock_init(),
+checking on any CPU should work. I think it would be simpler (reasons
+below) to initialize that single system-wide setting in
+rdt_pseudo_lock_init() and keep the result locally in the pseudo-locking
+code, that can be referred to when the user requests the pseudo-locked
+region.
+
+Simpler for two reasons:
+* Prevent future platform specific code within rdt_pseudo_lock_init()
+trying to pick when L3 is allowed to be inclusive or not.
+* rdt_pseudo_lock_init() does not currently make decision whether
+platform supports pseudo-locking - this is currently done when user
+requests a pseudo-lock region. rdt_pseudo_lock_init() does
+initialization of things that should not fail and for which resctrl's
+mount should not proceed if it fails. A platform not supporting
+pseudo-locking should not prevent resctrl from being mounted and used
+for cache allocation.
+
+Thank you very much
+
+Reinette
