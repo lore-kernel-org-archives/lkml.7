@@ -6,232 +6,231 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB5AC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 09:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA570C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 09:26:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44BF820B1F
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 09:25:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7D742147A
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 09:26:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732484AbfHFJZX (ORCPT
+        id S1732464AbfHFJ0x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 05:25:23 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45622 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730068AbfHFJZW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 05:25:22 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 83305AE6F;
-        Tue,  6 Aug 2019 09:25:19 +0000 (UTC)
-Subject: Re: [PATCH] lpfc: Fix Buffer Overflow Error
-To:     KyleMahlkuch <kmahlkuc@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
-References: <1562948135-5533-1-git-send-email-kmahlkuc@linux.vnet.ibm.com>
-From:   Hannes Reinecke <hare@suse.de>
+        Tue, 6 Aug 2019 05:26:53 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49290 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728056AbfHFJ0x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 05:26:53 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 23E24C008621;
+        Tue,  6 Aug 2019 09:26:52 +0000 (UTC)
+Received: from [10.36.117.71] (ovpn-117-71.ams2.redhat.com [10.36.117.71])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5E2705D704;
+        Tue,  6 Aug 2019 09:26:50 +0000 (UTC)
+Subject: Re: [PATCH v1] driver/base/memory.c: Validate memory block size early
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Dan Williams <dan.j.williams@intel.com>
+References: <20190806090142.22709-1-david@redhat.com>
+From:   David Hildenbrand <david@redhat.com>
 Openpgp: preference=signencrypt
-Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
- 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
- azzYF4VRJsdl+d0MCaSy8mUh
-Message-ID: <a8b38655-018e-4bc7-0dbf-792f72cbc8b6@suse.de>
-Date:   Tue, 6 Aug 2019 11:25:19 +0200
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <74d3653a-59cd-15c8-4a11-13f57060ad2c@redhat.com>
+Date:   Tue, 6 Aug 2019 11:26:49 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <1562948135-5533-1-git-send-email-kmahlkuc@linux.vnet.ibm.com>
+In-Reply-To: <20190806090142.22709-1-david@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Tue, 06 Aug 2019 09:26:52 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/12/19 6:15 PM, KyleMahlkuch wrote:
-> Power and x86 have different page sizes so rather than allocate the
-> buffer based on number of pages we should allocate space by using
-> max_sectors. There is also code in lpfc_scsi.c to be sure we don't
-> write past the end of this buffer.
+On 06.08.19 11:01, David Hildenbrand wrote:
+
+"s/driver/drivers/" in subject.
+
+I think long term, we should move the whole memory block size
+configuration (set_memory_block_size_order() and
+memory_block_size_bytes()) into drivers/base/memory.c.
+
+> Let's validate the memory block size early, when initializing the
+> memory device infrastructure. Fail hard in case the value is not
+> suitable.
 > 
-> Signed-off-by: KyleMahlkuch <kmahlkuc@linux.vnet.ibm.com>
+> As nobody checks the return value of memory_dev_init(), turn it into a
+> void function and fail with a panic in all scenarios instead. Otherwise,
+> we'll crash later during boot when core/drivers expect that the memory
+> device infrastructure (including memory_block_size_bytes()) works as
+> expected.
+> 
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 > ---
->  drivers/scsi/lpfc/lpfc_init.c | 41 +++++++----------------------------------
->  drivers/scsi/lpfc/lpfc_scsi.c | 14 ++++++++++++--
->  2 files changed, 19 insertions(+), 36 deletions(-)
+>  drivers/base/memory.c  | 31 +++++++++----------------------
+>  include/linux/memory.h |  6 +++---
+>  2 files changed, 12 insertions(+), 25 deletions(-)
 > 
-> diff --git a/drivers/scsi/lpfc/lpfc_init.c b/drivers/scsi/lpfc/lpfc_init.c
-> index eaaef68..59b52a0 100644
-> --- a/drivers/scsi/lpfc/lpfc_init.c
-> +++ b/drivers/scsi/lpfc/lpfc_init.c
-> @@ -39,6 +39,7 @@
->  #include <linux/msi.h>
->  #include <linux/irq.h>
->  #include <linux/bitops.h>
-> +#include <linux/vmalloc.h>
+> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+> index 790b3bcd63a6..6bea4f3f8040 100644
+> --- a/drivers/base/memory.c
+> +++ b/drivers/base/memory.c
+> @@ -100,21 +100,6 @@ unsigned long __weak memory_block_size_bytes(void)
+>  }
+>  EXPORT_SYMBOL_GPL(memory_block_size_bytes);
 >  
->  #include <scsi/scsi.h>
->  #include <scsi/scsi_device.h>
-> @@ -7549,7 +7550,6 @@ struct lpfc_rpi_hdr *
->  	uint32_t old_mask;
->  	uint32_t old_guard;
->  
-> -	int pagecnt = 10;
->  	if (phba->cfg_prot_mask && phba->cfg_prot_guard) {
->  		lpfc_printf_log(phba, KERN_INFO, LOG_INIT,
->  				"1478 Registering BlockGuard with the "
-> @@ -7588,23 +7588,9 @@ struct lpfc_rpi_hdr *
->  	}
->  
->  	if (!_dump_buf_data) {
-> -		while (pagecnt) {
-> -			spin_lock_init(&_dump_buf_lock);
-> -			_dump_buf_data =
-> -				(char *) __get_free_pages(GFP_KERNEL, pagecnt);
-> -			if (_dump_buf_data) {
-> -				lpfc_printf_log(phba, KERN_ERR, LOG_BG,
-> -					"9043 BLKGRD: allocated %d pages for "
-> -				       "_dump_buf_data at 0x%p\n",
-> -				       (1 << pagecnt), _dump_buf_data);
-> -				_dump_buf_data_order = pagecnt;
-> -				memset(_dump_buf_data, 0,
-> -				       ((1 << PAGE_SHIFT) << pagecnt));
-> -				break;
-> -			} else
-> -				--pagecnt;
-> -		}
-> -		if (!_dump_buf_data_order)
-> +		_dump_buf_data = (char *) vmalloc(shost->hostt->max_sectors * 512);
-> +		_dump_buf_data_order = get_order(shost->hostt->max_sectors * 512);
-> +		if (!_dump_buf_data)
->  			lpfc_printf_log(phba, KERN_ERR, LOG_BG,
->  				"9044 BLKGRD: ERROR unable to allocate "
->  			       "memory for hexdump\n");
-> @@ -7613,22 +7599,9 @@ struct lpfc_rpi_hdr *
->  			"9045 BLKGRD: already allocated _dump_buf_data=0x%p"
->  		       "\n", _dump_buf_data);
->  	if (!_dump_buf_dif) {
-> -		while (pagecnt) {
-> -			_dump_buf_dif =
-> -				(char *) __get_free_pages(GFP_KERNEL, pagecnt);
-> -			if (_dump_buf_dif) {
-> -				lpfc_printf_log(phba, KERN_ERR, LOG_BG,
-> -					"9046 BLKGRD: allocated %d pages for "
-> -				       "_dump_buf_dif at 0x%p\n",
-> -				       (1 << pagecnt), _dump_buf_dif);
-> -				_dump_buf_dif_order = pagecnt;
-> -				memset(_dump_buf_dif, 0,
-> -				       ((1 << PAGE_SHIFT) << pagecnt));
-> -				break;
-> -			} else
-> -				--pagecnt;
-> -		}
-> -		if (!_dump_buf_dif_order)
-> +		_dump_buf_dif = (char *) vmalloc(shost->hostt->max_sectors * 512);
-> +		_dump_buf_dif_order = get_order(shost->hostt->max_sectors * 512);
-> +		if (!_dump_buf_dif)
->  			lpfc_printf_log(phba, KERN_ERR, LOG_BG,
->  			"9047 BLKGRD: ERROR unable to allocate "
->  			       "memory for hexdump\n");
-> diff --git a/drivers/scsi/lpfc/lpfc_scsi.c b/drivers/scsi/lpfc/lpfc_scsi.c
-> index ba996fb..719612d 100644
-> --- a/drivers/scsi/lpfc/lpfc_scsi.c
-> +++ b/drivers/scsi/lpfc/lpfc_scsi.c
-> @@ -92,7 +92,7 @@ struct scsi_dif_tuple {
->  static void
->  lpfc_debug_save_data(struct lpfc_hba *phba, struct scsi_cmnd *cmnd)
+> -static unsigned long get_memory_block_size(void)
+> -{
+> -	unsigned long block_sz;
+> -
+> -	block_sz = memory_block_size_bytes();
+> -
+> -	/* Validate blk_sz is a power of 2 and not less than section size */
+> -	if ((block_sz & (block_sz - 1)) || (block_sz < MIN_MEMORY_BLOCK_SIZE)) {
+> -		WARN_ON(1);
+> -		block_sz = MIN_MEMORY_BLOCK_SIZE;
+> -	}
+> -
+> -	return block_sz;
+> -}
+> -
+>  /*
+>   * Show the first physical section index (number) of this memory block.
+>   */
+> @@ -461,7 +446,7 @@ static DEVICE_ATTR_RO(removable);
+>  static ssize_t block_size_bytes_show(struct device *dev,
+>  				     struct device_attribute *attr, char *buf)
 >  {
-> -	void *src, *dst;
-> +	void *src, *dst, *end;
->  	struct scatterlist *sgde = scsi_sglist(cmnd);
+> -	return sprintf(buf, "%lx\n", get_memory_block_size());
+> +	return sprintf(buf, "%lx\n", memory_block_size_bytes());
+>  }
 >  
->  	if (!_dump_buf_data) {
-> @@ -110,7 +110,12 @@ struct scsi_dif_tuple {
->  	}
->  
->  	dst = (void *) _dump_buf_data;
-> +	end = ((char *) dst) + ((1 << PAGE_SHIFT) << _dump_buf_data_order);
->  	while (sgde) {
-> +		if (dst + sgde->length >= end) {
-> +			printk(KERN_ERR "overflow buffer\n");
-> +			break;
-> +		}
->  		src = sg_virt(sgde);
->  		memcpy(dst, src, sgde->length);
->  		dst += sgde->length;
-> @@ -121,7 +126,7 @@ struct scsi_dif_tuple {
->  static void
->  lpfc_debug_save_dif(struct lpfc_hba *phba, struct scsi_cmnd *cmnd)
+>  static DEVICE_ATTR_RO(block_size_bytes);
+> @@ -811,19 +796,22 @@ static const struct attribute_group *memory_root_attr_groups[] = {
+>  /*
+>   * Initialize the sysfs support for memory devices...
+>   */
+> -int __init memory_dev_init(void)
+> +void __init memory_dev_init(void)
 >  {
-> -	void *src, *dst;
-> +	void *src, *dst, *end;
->  	struct scatterlist *sgde = scsi_prot_sglist(cmnd);
+>  	int ret;
+>  	int err;
+>  	unsigned long block_sz, nr;
 >  
->  	if (!_dump_buf_dif) {
-> @@ -138,7 +143,12 @@ struct scsi_dif_tuple {
->  	}
+> +	/* Validate the configured memory block size */
+> +	block_sz = memory_block_size_bytes();
+> +	if (!is_power_of_2(block_sz) || block_sz < MIN_MEMORY_BLOCK_SIZE)
+> +		panic("Memory block size not suitable: 0x%lx\n", block_sz);
+> +	sections_per_block = block_sz / MIN_MEMORY_BLOCK_SIZE;
+> +
+>  	ret = subsys_system_register(&memory_subsys, memory_root_attr_groups);
+>  	if (ret)
+>  		goto out;
 >  
->  	dst = _dump_buf_dif;
-> +	end = ((char *) dst) + ((1 << PAGE_SHIFT) << _dump_buf_dif_order);
->  	while (sgde) {
-> +		if (dst + sgde->length >= end) {
-> +			printk(KERN_ERR "overflow buffer\n");
-> +			break;
-> +		}
->  		src = sg_virt(sgde);
->  		memcpy(dst, src, sgde->length);
->  		dst += sgde->length;
+> -	block_sz = get_memory_block_size();
+> -	sections_per_block = block_sz / MIN_MEMORY_BLOCK_SIZE;
+> -
+>  	/*
+>  	 * Create entries for memory sections that were found
+>  	 * during boot and have been initialized
+> @@ -839,8 +827,7 @@ int __init memory_dev_init(void)
+>  
+>  out:
+>  	if (ret)
+> -		printk(KERN_ERR "%s() failed: %d\n", __func__, ret);
+> -	return ret;
+> +		panic("%s() failed: %d\n", __func__, ret);
+>  }
+>  
+>  /**
+> diff --git a/include/linux/memory.h b/include/linux/memory.h
+> index 704215d7258a..0ebb105eb261 100644
+> --- a/include/linux/memory.h
+> +++ b/include/linux/memory.h
+> @@ -79,9 +79,9 @@ struct mem_section;
+>  #define IPC_CALLBACK_PRI        10
+>  
+>  #ifndef CONFIG_MEMORY_HOTPLUG_SPARSE
+> -static inline int memory_dev_init(void)
+> +static inline void memory_dev_init(void)
+>  {
+> -	return 0;
+> +	return;
+>  }
+>  static inline int register_memory_notifier(struct notifier_block *nb)
+>  {
+> @@ -112,7 +112,7 @@ extern int register_memory_isolate_notifier(struct notifier_block *nb);
+>  extern void unregister_memory_isolate_notifier(struct notifier_block *nb);
+>  int create_memory_block_devices(unsigned long start, unsigned long size);
+>  void remove_memory_block_devices(unsigned long start, unsigned long size);
+> -extern int memory_dev_init(void);
+> +extern void memory_dev_init(void);
+>  extern int memory_notify(unsigned long val, void *v);
+>  extern int memory_isolate_notify(unsigned long val, void *v);
+>  extern struct memory_block *find_memory_block(struct mem_section *);
 > 
-Not sure this is correct.
-vmalloc() is not equivalent to __get_pages().
 
-I would rather start off with the fixed buffer size (say, 40k), and
-calculate the values like pagecnt etc from there.
 
-Cheers,
-
-Hannes
 -- 
-Dr. Hannes Reinecke		   Teamlead Storage & Networking
-hare@suse.de			               +49 911 74053 688
-SUSE LINUX GmbH, Maxfeldstr. 5, 90409 Nürnberg
-GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
-HRB 21284 (AG Nürnberg)
+
+Thanks,
+
+David / dhildenb
