@@ -4,50 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E3DC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B45A4C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:39:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33F512189F
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:39:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AB7B2189F
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:39:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127551;
-	bh=NUZggXvPBEy/q3q5YoXf8umnkLf7FMDxEdABCmsqVG0=;
+	s=default; t=1565127555;
+	bh=hBlharvEjR1CAE4XGytQM/ZaRZ/yd+YI11AyHBJCrIU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ssWiJbrDYztpCi5bzq36NAd2k5hqqUHJC7xjpzb5xe6zmjKc6qfU3fbfNqp6n85AU
-	 m7AOKnbmL+bT/zratPcC2snT5Al0Y5JAtYJKq5Ut8iQJBSbHy59WX5r89sFJ0LNCZd
-	 s1jFE4x5y9El/seAy/FnjwvTuL9MeJ5r6IZOPB5s=
+	b=cxiEsRXekK+DRxD29hp7PfMoo3Tv+9soFwbQpLsWTK0HOyDCJV2FqaFWQZF9Wqojk
+	 +okjmTYkWvwFJKfYZCzBhfevxJCIj1wI8gRTIy6a8CdonHzyinqbIYfd3JW4sC9npZ
+	 tV7SmnWkhQINYgUbZAxLzJnieA+Awhk36B6WwvM8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729500AbfHFVhs (ORCPT
+        id S1729055AbfHFVjO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:37:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55450 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 17:39:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727781AbfHFVho (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:37:44 -0400
+        id S1729495AbfHFVhs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:37:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B11521874;
-        Tue,  6 Aug 2019 21:37:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CCE721874;
+        Tue,  6 Aug 2019 21:37:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127463;
-        bh=NUZggXvPBEy/q3q5YoXf8umnkLf7FMDxEdABCmsqVG0=;
+        s=default; t=1565127467;
+        bh=hBlharvEjR1CAE4XGytQM/ZaRZ/yd+YI11AyHBJCrIU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sv9KYiZZI2i4mA0OaRWsZnxQp2XR5xRrLKrITPqiqVEULeuCxLpLkBBp5HocXq80i
-         jVQe8N2xRxFg3TF1IQwKw/SYgZ8WpL1UFCoKeyZWpAcyROFgX0dGUfGVklild0LQ1F
-         9StRrAkJHNctlmdnMWfho8jR0d1bgxrt0dxTgTmk=
+        b=JNLQIRAy+5RiV2cwd0KLuLF8qAZp2mOyPIei4aBfjG8nYzNxVh7OSAGlaaO5U0yS0
+         QR4DCz8YMwnHB7BGz/yhk4jlqs/ORpa1UNglcMKhFWBx7j7bdO94DL0Lnv2nngz1dV
+         plcoL1MtcchjvgM0hVR4ePM6ewvRxUhbyxker/Js=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jack Morgenstein <jackm@dev.mellanox.co.il>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 14/17] IB/mad: Fix use-after-free in ib mad completion handling
-Date:   Tue,  6 Aug 2019 17:37:11 -0400
-Message-Id: <20190806213715.20487-14-sashal@kernel.org>
+Cc:     Qian Cai <cai@lca.pw>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Jakub Jelinek <jakub@redhat.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Bill Wendling <morbo@google.com>,
+        James Y Knight <jyknight@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arch@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 17/17] asm-generic: fix -Wtype-limits compiler warnings
+Date:   Tue,  6 Aug 2019 17:37:14 -0400
+Message-Id: <20190806213715.20487-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190806213715.20487-1-sashal@kernel.org>
 References: <20190806213715.20487-1-sashal@kernel.org>
@@ -60,150 +68,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jack Morgenstein <jackm@dev.mellanox.co.il>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit 770b7d96cfff6a8bf6c9f261ba6f135dc9edf484 ]
+[ Upstream commit cbedfe11347fe418621bd188d58a206beb676218 ]
 
-We encountered a use-after-free bug when unloading the driver:
+Commit d66acc39c7ce ("bitops: Optimise get_order()") introduced a
+compilation warning because "rx_frag_size" is an "ushort" while
+PAGE_SHIFT here is 16.
 
-[ 3562.116059] BUG: KASAN: use-after-free in ib_mad_post_receive_mads+0xddc/0xed0 [ib_core]
-[ 3562.117233] Read of size 4 at addr ffff8882ca5aa868 by task kworker/u13:2/23862
-[ 3562.118385]
-[ 3562.119519] CPU: 2 PID: 23862 Comm: kworker/u13:2 Tainted: G           OE     5.1.0-for-upstream-dbg-2019-05-19_16-44-30-13 #1
-[ 3562.121806] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Ubuntu-1.8.2-1ubuntu2 04/01/2014
-[ 3562.123075] Workqueue: ib-comp-unb-wq ib_cq_poll_work [ib_core]
-[ 3562.124383] Call Trace:
-[ 3562.125640]  dump_stack+0x9a/0xeb
-[ 3562.126911]  print_address_description+0xe3/0x2e0
-[ 3562.128223]  ? ib_mad_post_receive_mads+0xddc/0xed0 [ib_core]
-[ 3562.129545]  __kasan_report+0x15c/0x1df
-[ 3562.130866]  ? ib_mad_post_receive_mads+0xddc/0xed0 [ib_core]
-[ 3562.132174]  kasan_report+0xe/0x20
-[ 3562.133514]  ib_mad_post_receive_mads+0xddc/0xed0 [ib_core]
-[ 3562.134835]  ? find_mad_agent+0xa00/0xa00 [ib_core]
-[ 3562.136158]  ? qlist_free_all+0x51/0xb0
-[ 3562.137498]  ? mlx4_ib_sqp_comp_worker+0x1970/0x1970 [mlx4_ib]
-[ 3562.138833]  ? quarantine_reduce+0x1fa/0x270
-[ 3562.140171]  ? kasan_unpoison_shadow+0x30/0x40
-[ 3562.141522]  ib_mad_recv_done+0xdf6/0x3000 [ib_core]
-[ 3562.142880]  ? _raw_spin_unlock_irqrestore+0x46/0x70
-[ 3562.144277]  ? ib_mad_send_done+0x1810/0x1810 [ib_core]
-[ 3562.145649]  ? mlx4_ib_destroy_cq+0x2a0/0x2a0 [mlx4_ib]
-[ 3562.147008]  ? _raw_spin_unlock_irqrestore+0x46/0x70
-[ 3562.148380]  ? debug_object_deactivate+0x2b9/0x4a0
-[ 3562.149814]  __ib_process_cq+0xe2/0x1d0 [ib_core]
-[ 3562.151195]  ib_cq_poll_work+0x45/0xf0 [ib_core]
-[ 3562.152577]  process_one_work+0x90c/0x1860
-[ 3562.153959]  ? pwq_dec_nr_in_flight+0x320/0x320
-[ 3562.155320]  worker_thread+0x87/0xbb0
-[ 3562.156687]  ? __kthread_parkme+0xb6/0x180
-[ 3562.158058]  ? process_one_work+0x1860/0x1860
-[ 3562.159429]  kthread+0x320/0x3e0
-[ 3562.161391]  ? kthread_park+0x120/0x120
-[ 3562.162744]  ret_from_fork+0x24/0x30
-...
-[ 3562.187615] Freed by task 31682:
-[ 3562.188602]  save_stack+0x19/0x80
-[ 3562.189586]  __kasan_slab_free+0x11d/0x160
-[ 3562.190571]  kfree+0xf5/0x2f0
-[ 3562.191552]  ib_mad_port_close+0x200/0x380 [ib_core]
-[ 3562.192538]  ib_mad_remove_device+0xf0/0x230 [ib_core]
-[ 3562.193538]  remove_client_context+0xa6/0xe0 [ib_core]
-[ 3562.194514]  disable_device+0x14e/0x260 [ib_core]
-[ 3562.195488]  __ib_unregister_device+0x79/0x150 [ib_core]
-[ 3562.196462]  ib_unregister_device+0x21/0x30 [ib_core]
-[ 3562.197439]  mlx4_ib_remove+0x162/0x690 [mlx4_ib]
-[ 3562.198408]  mlx4_remove_device+0x204/0x2c0 [mlx4_core]
-[ 3562.199381]  mlx4_unregister_interface+0x49/0x1d0 [mlx4_core]
-[ 3562.200356]  mlx4_ib_cleanup+0xc/0x1d [mlx4_ib]
-[ 3562.201329]  __x64_sys_delete_module+0x2d2/0x400
-[ 3562.202288]  do_syscall_64+0x95/0x470
-[ 3562.203277]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+The commit changed the get_order() to be a multi-line macro where
+compilers insist to check all statements in the macro even when
+__builtin_constant_p(rx_frag_size) will return false as "rx_frag_size"
+is a module parameter.
 
-The problem was that the MAD PD was deallocated before the MAD CQ.
-There was completion work pending for the CQ when the PD got deallocated.
-When the mad completion handling reached procedure
-ib_mad_post_receive_mads(), we got a use-after-free bug in the following
-line of code in that procedure:
-   sg_list.lkey = qp_info->port_priv->pd->local_dma_lkey;
-(the pd pointer in the above line is no longer valid, because the
-pd has been deallocated).
+In file included from ./arch/powerpc/include/asm/page_64.h:107,
+                 from ./arch/powerpc/include/asm/page.h:242,
+                 from ./arch/powerpc/include/asm/mmu.h:132,
+                 from ./arch/powerpc/include/asm/lppaca.h:47,
+                 from ./arch/powerpc/include/asm/paca.h:17,
+                 from ./arch/powerpc/include/asm/current.h:13,
+                 from ./include/linux/thread_info.h:21,
+                 from ./arch/powerpc/include/asm/processor.h:39,
+                 from ./include/linux/prefetch.h:15,
+                 from drivers/net/ethernet/emulex/benet/be_main.c:14:
+drivers/net/ethernet/emulex/benet/be_main.c: In function 'be_rx_cqs_create':
+./include/asm-generic/getorder.h:54:9: warning: comparison is always
+true due to limited range of data type [-Wtype-limits]
+   (((n) < (1UL << PAGE_SHIFT)) ? 0 :  \
+         ^
+drivers/net/ethernet/emulex/benet/be_main.c:3138:33: note: in expansion
+of macro 'get_order'
+  adapter->big_page_size = (1 << get_order(rx_frag_size)) * PAGE_SIZE;
+                                 ^~~~~~~~~
 
-We fix this by allocating the PD before the CQ in procedure
-ib_mad_port_open(), and deallocating the PD after freeing the CQ
-in procedure ib_mad_port_close().
+Fix it by moving all of this multi-line macro into a proper function,
+and killing __get_order() off.
 
-Since the CQ completion work queue is flushed during ib_free_cq(),
-no completions will be pending for that CQ when the PD is later
-deallocated.
-
-Note that freeing the CQ before deallocating the PD is the practice
-in the ULPs.
-
-Fixes: 4be90bc60df4 ("IB/mad: Remove ib_get_dma_mr calls")
-Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Link: https://lore.kernel.org/r/20190801121449.24973-1-leon@kernel.org
-Signed-off-by: Doug Ledford <dledford@redhat.com>
+[akpm@linux-foundation.org: remove __get_order() altogether]
+[cai@lca.pw: v2]
+  Link: http://lkml.kernel.org/r/1564000166-31428-1-git-send-email-cai@lca.pw
+Link: http://lkml.kernel.org/r/1563914986-26502-1-git-send-email-cai@lca.pw
+Fixes: d66acc39c7ce ("bitops: Optimise get_order()")
+Signed-off-by: Qian Cai <cai@lca.pw>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Jakub Jelinek <jakub@redhat.com>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Bill Wendling <morbo@google.com>
+Cc: James Y Knight <jyknight@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/mad.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ include/asm-generic/getorder.h | 50 ++++++++++++++--------------------
+ 1 file changed, 20 insertions(+), 30 deletions(-)
 
-diff --git a/drivers/infiniband/core/mad.c b/drivers/infiniband/core/mad.c
-index 3e2ab04201e2c..25a28e7060725 100644
---- a/drivers/infiniband/core/mad.c
-+++ b/drivers/infiniband/core/mad.c
-@@ -3155,18 +3155,18 @@ static int ib_mad_port_open(struct ib_device *device,
- 	if (has_smi)
- 		cq_size *= 2;
+diff --git a/include/asm-generic/getorder.h b/include/asm-generic/getorder.h
+index 65e4468ac53da..52fbf236a90ea 100644
+--- a/include/asm-generic/getorder.h
++++ b/include/asm-generic/getorder.h
+@@ -6,24 +6,6 @@
+ #include <linux/compiler.h>
+ #include <linux/log2.h>
  
-+	port_priv->pd = ib_alloc_pd(device, 0);
-+	if (IS_ERR(port_priv->pd)) {
-+		dev_err(&device->dev, "Couldn't create ib_mad PD\n");
-+		ret = PTR_ERR(port_priv->pd);
-+		goto error3;
+-/*
+- * Runtime evaluation of get_order()
+- */
+-static inline __attribute_const__
+-int __get_order(unsigned long size)
+-{
+-	int order;
+-
+-	size--;
+-	size >>= PAGE_SHIFT;
+-#if BITS_PER_LONG == 32
+-	order = fls(size);
+-#else
+-	order = fls64(size);
+-#endif
+-	return order;
+-}
+-
+ /**
+  * get_order - Determine the allocation order of a memory size
+  * @size: The size for which to get the order
+@@ -42,19 +24,27 @@ int __get_order(unsigned long size)
+  * to hold an object of the specified size.
+  *
+  * The result is undefined if the size is 0.
+- *
+- * This function may be used to initialise variables with compile time
+- * evaluations of constants.
+  */
+-#define get_order(n)						\
+-(								\
+-	__builtin_constant_p(n) ? (				\
+-		((n) == 0UL) ? BITS_PER_LONG - PAGE_SHIFT :	\
+-		(((n) < (1UL << PAGE_SHIFT)) ? 0 :		\
+-		 ilog2((n) - 1) - PAGE_SHIFT + 1)		\
+-	) :							\
+-	__get_order(n)						\
+-)
++static inline __attribute_const__ int get_order(unsigned long size)
++{
++	if (__builtin_constant_p(size)) {
++		if (!size)
++			return BITS_PER_LONG - PAGE_SHIFT;
++
++		if (size < (1UL << PAGE_SHIFT))
++			return 0;
++
++		return ilog2((size) - 1) - PAGE_SHIFT + 1;
 +	}
 +
- 	port_priv->cq = ib_alloc_cq(port_priv->device, port_priv, cq_size, 0,
- 			IB_POLL_WORKQUEUE);
- 	if (IS_ERR(port_priv->cq)) {
- 		dev_err(&device->dev, "Couldn't create ib_mad CQ\n");
- 		ret = PTR_ERR(port_priv->cq);
--		goto error3;
--	}
--
--	port_priv->pd = ib_alloc_pd(device, 0);
--	if (IS_ERR(port_priv->pd)) {
--		dev_err(&device->dev, "Couldn't create ib_mad PD\n");
--		ret = PTR_ERR(port_priv->pd);
- 		goto error4;
- 	}
++	size--;
++	size >>= PAGE_SHIFT;
++#if BITS_PER_LONG == 32
++	return fls(size);
++#else
++	return fls64(size);
++#endif
++}
  
-@@ -3209,11 +3209,11 @@ static int ib_mad_port_open(struct ib_device *device,
- error7:
- 	destroy_mad_qp(&port_priv->qp_info[0]);
- error6:
--	ib_dealloc_pd(port_priv->pd);
--error4:
- 	ib_free_cq(port_priv->cq);
- 	cleanup_recv_queue(&port_priv->qp_info[1]);
- 	cleanup_recv_queue(&port_priv->qp_info[0]);
-+error4:
-+	ib_dealloc_pd(port_priv->pd);
- error3:
- 	kfree(port_priv);
+ #endif	/* __ASSEMBLY__ */
  
-@@ -3243,8 +3243,8 @@ static int ib_mad_port_close(struct ib_device *device, int port_num)
- 	destroy_workqueue(port_priv->wq);
- 	destroy_mad_qp(&port_priv->qp_info[1]);
- 	destroy_mad_qp(&port_priv->qp_info[0]);
--	ib_dealloc_pd(port_priv->pd);
- 	ib_free_cq(port_priv->cq);
-+	ib_dealloc_pd(port_priv->pd);
- 	cleanup_recv_queue(&port_priv->qp_info[1]);
- 	cleanup_recv_queue(&port_priv->qp_info[0]);
- 	/* XXX: Handle deallocation of MAD registration tables */
 -- 
 2.20.1
 
