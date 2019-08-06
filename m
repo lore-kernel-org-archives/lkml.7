@@ -2,123 +2,173 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4797FC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE85C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:56:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E66F20C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:55:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D93B20C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:56:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gDftQyU1"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="OH9CoQZ2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732627AbfHFNzZ (ORCPT
+        id S1732646AbfHFN4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 09:55:25 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:38732 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726373AbfHFNzZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 09:55:25 -0400
-Received: by mail-lf1-f65.google.com with SMTP id h28so61159459lfj.5
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 06:55:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=416ovtRseB2pZqvtmfp0MPISej3Ly1ggyhuXKFA1TSc=;
-        b=gDftQyU1sPLNDej0wqOudB1zkk8RWR8GaBumdUmuN1ITOuIMv6D184qQCjXC2BONd5
-         5vqAH8nQ1i61o5WZKQqN3Ed4at81eZcE6pSsx1nf/ywXDy1Q/9CGHvZKHuIodIOfBuWx
-         VwQ19fUMCt8gIbT1VdEX7+mvkWYJuO9qJ4cz9kRNbfF7ufzFj9CsH6Wv2vvnpqWCl/24
-         e7FaiAo+HHBnWEvkt2QsYiXs/P25XMi38nnDymc7XFlY2NiOXo6uTcCd9Aud+bq08rgH
-         31Z/k5NNVcW4wN+P3YtazLFd82nhrnIqxbwG+nhaDOO2bY0OaoEi77I/o7bKQFyhCg2L
-         IAJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=416ovtRseB2pZqvtmfp0MPISej3Ly1ggyhuXKFA1TSc=;
-        b=tX0EmsYYwHEm+oNrtJddtaKyqNNcRROz8ntisMPqGrxFgzLg842xvbB8Rp6S5HNIGK
-         P/Suh1b8z4iAIIE2ihAeHZvj5wlAN/3XvWgK3tDkKhio4ObVfZWqjXz8HQZmJD5Z4DFL
-         i7jHI//clsEWfsmnRjgVwsKCEGgMxl15YrVqs677AgurxeXrDGCeWljjtlYii1w2hKQ5
-         TlbbWFHqDCjr8JxKYLZ/L/VhU27sv9TO4nVpKBAVeA+8PRUkM8J+HhFb9h+kZvwU2HHa
-         4jDMnQsy9HURFOk7TiMZu0ZNIYoV/y3z6sZJ8FPCN5Vi7t3mhd+TmcybSiPmEFqdaxKX
-         58yQ==
-X-Gm-Message-State: APjAAAXKBdOtN7tDRYtddh9FOc6CfbHuuZO+J3Vh8uefAHW1kjvXiHQe
-        zDG9zvcMx2N8Vufd4SNQM9WXUGUOLmJ2C/6D5p6OQg==
-X-Google-Smtp-Source: APXvYqyDhk3mM2mXFVY+5NaLG5MnfeslEX98rS822FuxZkz+Chdgp4KVCeTC7L8SPh116s2rDNgHQ7ixop5FDBZ38Q4=
-X-Received: by 2002:ac2:5637:: with SMTP id b23mr2634100lff.186.1565099723639;
- Tue, 06 Aug 2019 06:55:23 -0700 (PDT)
+        Tue, 6 Aug 2019 09:56:18 -0400
+Received: from mout.gmx.net ([212.227.15.18]:44889 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726834AbfHFN4R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 09:56:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1565099765;
+        bh=+EHdsKdaA7hJ0g7EJRYeqVtf5tKZ3QvOcjLchqIgwpY=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=OH9CoQZ2a84BAx3WVjXgZE51s7kCaJsO5ShKaWqmBwyR6OZ3dF7m1xt838fPydNcy
+         gjA21bOjRshtbrwgSnQA+flhfp4vkCrk6iT4yTLsaU+K/HK6ohv5Q7KU10HaD7w7ld
+         0Y2C3W2uqw1FGz6eQpMvR9L53K5A1FKm2qj+vs2Q=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [0.0.0.0] ([54.250.245.166]) by mail.gmx.com (mrgmx003
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 0LfC00-1if7K024FM-00olyE; Tue, 06
+ Aug 2019 15:56:05 +0200
+Subject: Re: btrfs: qgroup: Try our best to delete qgroup relations (bug
+ report)
+To:     Colin Ian King <colin.king@canonical.com>,
+        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        linux-btrfs@vger.kernel.org
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <ea7f88e7-108e-ad2a-232f-b18715607bf3@canonical.com>
+ <ca0946de-5343-aaf9-10f2-007e341cb8a4@canonical.com>
+From:   Qu Wenruo <quwenruo.btrfs@gmx.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=quwenruo.btrfs@gmx.com; prefer-encrypt=mutual; keydata=
+ mQENBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
+ 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
+ 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
+ 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
+ gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
+ AAG0IlF1IFdlbnJ1byA8cXV3ZW5ydW8uYnRyZnNAZ214LmNvbT6JAVQEEwEIAD4CGwMFCwkI
+ BwIGFQgJCgsCBBYCAwECHgECF4AWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCWdWCnQUJCWYC
+ bgAKCRDCPZHzoSX+qAR8B/94VAsSNygx1C6dhb1u1Wp1Jr/lfO7QIOK/nf1PF0VpYjTQ2au8
+ ihf/RApTna31sVjBx3jzlmpy+lDoPdXwbI3Czx1PwDbdhAAjdRbvBmwM6cUWyqD+zjVm4RTG
+ rFTPi3E7828YJ71Vpda2qghOYdnC45xCcjmHh8FwReLzsV2A6FtXsvd87bq6Iw2axOHVUax2
+ FGSbardMsHrya1dC2jF2R6n0uxaIc1bWGweYsq0LXvLcvjWH+zDgzYCUB0cfb+6Ib/ipSCYp
+ 3i8BevMsTs62MOBmKz7til6Zdz0kkqDdSNOq8LgWGLOwUTqBh71+lqN2XBpTDu1eLZaNbxSI
+ ilaVuQENBFnVga8BCACqU+th4Esy/c8BnvliFAjAfpzhI1wH76FD1MJPmAhA3DnX5JDORcga
+ CbPEwhLj1xlwTgpeT+QfDmGJ5B5BlrrQFZVE1fChEjiJvyiSAO4yQPkrPVYTI7Xj34FnscPj
+ /IrRUUka68MlHxPtFnAHr25VIuOS41lmYKYNwPNLRz9Ik6DmeTG3WJO2BQRNvXA0pXrJH1fN
+ GSsRb+pKEKHKtL1803x71zQxCwLh+zLP1iXHVM5j8gX9zqupigQR/Cel2XPS44zWcDW8r7B0
+ q1eW4Jrv0x19p4P923voqn+joIAostyNTUjCeSrUdKth9jcdlam9X2DziA/DHDFfS5eq4fEv
+ ABEBAAGJATwEGAEIACYWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCWdWBrwIbDAUJA8JnAAAK
+ CRDCPZHzoSX+qA3xB/4zS8zYh3Cbm3FllKz7+RKBw/ETBibFSKedQkbJzRlZhBc+XRwF61mi
+ f0SXSdqKMbM1a98fEg8H5kV6GTo62BzvynVrf/FyT+zWbIVEuuZttMk2gWLIvbmWNyrQnzPl
+ mnjK4AEvZGIt1pk+3+N/CMEfAZH5Aqnp0PaoytRZ/1vtMXNgMxlfNnb96giC3KMR6U0E+siA
+ 4V7biIoyNoaN33t8m5FwEwd2FQDG9dAXWhG13zcm9gnk63BN3wyCQR+X5+jsfBaS4dvNzvQv
+ h8Uq/YGjCoV1ofKYh3WKMY8avjq25nlrhzD/Nto9jHp8niwr21K//pXVA81R2qaXqGbql+zo
+Message-ID: <8f8edc81-0c54-da50-0902-663e7c4f26ca@gmx.com>
+Date:   Tue, 6 Aug 2019 21:55:57 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <1565098640-12536-1-git-send-email-sumit.garg@linaro.org>
- <1565098640-12536-3-git-send-email-sumit.garg@linaro.org> <20190806134322.GA10783@kroah.com>
-In-Reply-To: <20190806134322.GA10783@kroah.com>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Tue, 6 Aug 2019 19:25:12 +0530
-Message-ID: <CAFA6WYPVc_0dm2=w0Ec-Y0Sr9SipukGSJcjond-FrHREHQXTrQ@mail.gmail.com>
-Subject: Re: [RFC/RFT v3 2/3] KEYS: trusted: move tpm2 trusted keys code
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        linux-security-module@vger.kernel.org, dhowells@redhat.com,
-        Herbert Xu <herbert@gondor.apana.org.au>, davem@davemloft.net,
-        peterhuewe@gmx.de, jgg@ziepe.ca, jejb@linux.ibm.com,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <ca0946de-5343-aaf9-10f2-007e341cb8a4@canonical.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:PX2YsugXiYFMk+uek3kDxQiaRgDjeqM8BrXtieqvgMN1bbR5YPN
+ pSsnTeV7/RT625QYYmFU9H1kq1nbupy0xMOLylJlLsBJS06ddUYccx+lxpWPVhMLUMlBLyh
+ m3q2yc8eZJO8uIz1nchsr4Bz4HJXGwcYRANJTzfSzIjSxYzMl0FinKrBBjJ24d0itgWFCBf
+ F04ddtcmn6/hzaWDKVFbQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:B8+Ch19fU84=:D1RbNAAFQcREciKFvnXECt
+ 6zdbk8s4aaeyt/O57XllOewA4BSy8/Kv39KXJ904Q042NyT028B9ZwPlbsrvyJfhMlyShKv0O
+ mjYwVNlX/p+K/Nz/dz5I2bWO4UfOnjv01CJi2p1U3IIEVn7RQu6lDVrmAOp6ruRLqg4/+ZA0m
+ ZhhXNNbvUaMlzZ+FHW/Agdfc7Vqtk9qAKvkwD5159CzxL18Uv7gD1JdCK1N4PPAyXkNO5yWkN
+ Ss0qhD8DhaV505PX0PRj1EgoAliuZBTy/cv9NmOfYhDuOKpp9ELg2AaHzc6GDAVtxA1/lmSHc
+ qeAOWBbTMiET5WnRFxgD2OkYyaWh0hiVqJQv7wRD/hSPeu7fvpxR/pCK/IaW7Fss/G4Cwax2v
+ k7siCOnH8rcXIE6WcxLWGGQ934qJ1V3Xwn2+GIEPP2V5I0K8nXZH/6ZBb7zOMU1/a3GKHe63r
+ DZrSnVHwmLRMpbxbqN9BKDh6aLIlogzM3skNXjCf6CX2dpLI+nFG/RFfdAWbpFHFaoN7SHWFb
+ hSVloh0uIkOjZoHytCr2ki+pVOWg2sCXTh5venB7kinzKW2ijR+La/WRVKrIoRkdQnQTQIN12
+ 039UbumU7l9zuNpItx73vsFMy+yOR7+G1Uga7M5/3GPEgIcP/9Tg9FjFlUFaS0BO6InI6RD+7
+ LZDF811yoemgkSo5yxIhUPkBvVFGGmYp5xdjQbSF/F3zALdPnsSu0r2L+so491ChpsJHOEp8S
+ +MQ4cCZXeaTFg/Frp+0kU+mLVfh2uEUr8zxZ5wqHCInkyl7bG1C95SFTuBp9lXnVclbOxIpRU
+ 3HCIzfQc3t5hkz91/ebv7VrUCv78QLnpwT8uJD1kPSWtNwty4pY9tCceV5ld7jHt9COKFK1wE
+ 4pdII33dh3MiCk885WLfdzrsP9wfOgbOtCK1a3lbFrcdvD/klDvyvCRLDJNOx9rLJE4jcVKFB
+ vlnkrO1mKib9wdaB2vy5BYoovk/BbyBQoJGUx1aybWYV04hzWMqsHP1Nmsi0yt8Ky9hYPhMT7
+ lLDLskquERHJhwgRluA6pJa2JXe1+4JUq8gy8ilkh6P8B/Pqf1jsRUwBNvSY6j8HgQEiYR+WW
+ ueETPT5plk4RKu75BdYVjSQIInvw5PX8WZmgeA8P/5r2YGrpNkxVrV/ti9aLHyqZ+s3vnOE40
+ CZFfm9p5dUmEvRtmTHc5OmG7ECGcaFvWrJpwsu78C+tw0ft1s5TUUAncrcRkzAzcwxONrKj7a
+ LDdUvGwcwmdtYHbkix6vnmDpOYKZYyyEsqvQgTIf9KGt09lRYYOZCubJbFoqYXZm74t2TgOZw
+ cRr8+vazHBmXBh26LSZ9tVxSuIOgGJfR0aosV5wB52XYMW0POLVFscswHr2zJftM3xHSegEl9
+ IjB4Gqs4ZRJdYzUTGFJ9tXPScjac8RM6O3Wia2GlwU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 6 Aug 2019 at 19:13, Greg KH <gregkh@linuxfoundation.org> wrote:
+
+
+On 2019/8/6 =E4=B8=8B=E5=8D=889:49, Colin Ian King wrote:
+> On 06/08/2019 14:48, Colin Ian King wrote:
+>> Hi,
+>>
+>> Static analysis with Coverity on linux-next picked up a potential issue
+>> with the following commit:
+>>
+>> commit 035087b3c256741be367747eab866505cece31fb
+>> Author: Qu Wenruo <wqu@suse.com>
+>> Date:   Sat Aug 3 14:45:59 2019 +0800
+>>
+>>     btrfs: qgroup: Try our best to delete qgroup relations
+>>
+>> The static analysis report is as follows:
+>>
+>> 1334         */
+>>
+>>     3. Condition !member, taking true branch.
+>>     4. var_compare_op: Comparing member to null implies that member
+>> might be null.
+>>     5. Condition !parent, taking false branch.
+>>
+>> 1335        if (!member && !parent)
+>> 1336                goto delete_item;
+>> 1337
+>> 1338        /* check if such qgroup relation exist firstly */
+>>
+>>
+>> CID 85026 (#1 of 1): Dereference after null check (FORWARD_NULL)
+>>
+>> 6. var_deref_op: Dereferencing null pointer member.
+>>
+>> 1339        list_for_each_entry(list, &member->groups, next_group) {
+>> 1340                if (list->group =3D=3D parent) {
+>> 1341                        found =3D true;
+>> 1342                        break;
+>> 1343                }
+>> 1344        }
+>>
+>> An example of the issue that if member is NULL and parent is not null
+>> then  the list_for_each_entry loop with dereference the NULL member
+>> pointer.  The changed logic in the patch on line 1335 is the root cause
+>> of this regression.  I believe it should still be:
+>>
+>> 	if (!member && !parent)
+>> 		goto delete_item;
 >
-> On Tue, Aug 06, 2019 at 07:07:19PM +0530, Sumit Garg wrote:
-> > Move TPM2 trusted keys code to trusted keys subsystem.
-> >
-> > Suggested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-> > ---
-> >  drivers/char/tpm/tpm-interface.c          |  56 -----
-> >  drivers/char/tpm/tpm.h                    | 224 ------------------
-> >  drivers/char/tpm/tpm2-cmd.c               | 307 ------------------------
-> >  include/keys/trusted_tpm.h                |  23 +-
-> >  include/linux/tpm.h                       | 264 +++++++++++++++++++--
-> >  security/keys/trusted-keys/Makefile       |   3 +-
-> >  security/keys/trusted-keys/trusted-tpm.c  |  16 +-
-> >  security/keys/trusted-keys/trusted-tpm2.c | 378 ++++++++++++++++++++++++++++++
-> >  8 files changed, 652 insertions(+), 619 deletions(-)
-> >  create mode 100644 security/keys/trusted-keys/trusted-tpm2.c
+> oops, I mean:
 >
-> 'git format-patch -M' will create a patch that shows the rename, and
-> then any tiny differences that happened after that.  A patch like this
-> is hard to see what changed in the move.
+> 	if (!member || !parent)
+> 		goto delete_item;
+
+Right, thanks for catching this!
+
+I'll update the patch soon.
+
+Thanks,
+Qu
 >
-
-I used this option only to generate the patch-set. Following is the
-command I used:
-
-git format-patch -M -3 --cover-letter --subject-prefix="RFC/RFT v3"
-
-It seems like for this patch I need to collect pieces from
-"drivers/char/tpm/" and aggregate them under
-"security/keys/trusted-keys/trusted-tpm2.c" and "include/linux/tpm.h"
-files. So that could be the reason for such patch view.
-
--Sumit
-
-> thanks,
+>>
+>> Colin
+>>
 >
-> greg k-h
