@@ -2,78 +2,94 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8FE8C32751
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 02:44:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E59F8C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 02:56:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D5FA206A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 02:44:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0C35214C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 02:56:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=thegavinli.com header.i=@thegavinli.com header.b="UanfDFFy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731475AbfHFCoU (ORCPT
+        id S1730875AbfHFC4A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 22:44:20 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:29846 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729334AbfHFCoU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 22:44:20 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 006523001AA4;
-        Tue,  6 Aug 2019 02:44:20 +0000 (UTC)
-Received: from dhcp-128-65.nay.redhat.com (ovpn-12-88.pek2.redhat.com [10.72.12.88])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6C5DC19C5B;
-        Tue,  6 Aug 2019 02:44:17 +0000 (UTC)
-Date:   Tue, 6 Aug 2019 10:44:13 +0800
-From:   Dave Young <dyoung@redhat.com>
-To:     Matthew Garrett <mjg59@google.com>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        kexec@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        bhsharma@redhat.com
-Subject: Re: [PATCH] do not clean dummy variable in kexec path
-Message-ID: <20190806024413.GB6956@dhcp-128-65.nay.redhat.com>
-References: <20190805083553.GA27708@dhcp-128-65.nay.redhat.com>
- <CACdnJusRUnhmOLdowqbGoM9Z-tWsKrhZ8sFfQUUmjyKmRVN+vw@mail.gmail.com>
+        Mon, 5 Aug 2019 22:56:00 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:36364 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728870AbfHFC4A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 22:56:00 -0400
+Received: by mail-ed1-f66.google.com with SMTP id k21so80932289edq.3
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 19:55:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=thegavinli.com; s=google;
+        h=sender:mime-version:references:in-reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=ymynYvUaAJ/fSsk8dTF47gjXr8CYua8YobOOSKegPcM=;
+        b=UanfDFFyXJgYSA7QqCuSdaCf5p+I3v2GUlvbhA8+2qe6l86pJKL0lTlbCFnTx3gBOk
+         jjw0CPJdEKovLTwXtm6Go48h8/Y8NunT8oKKFGaMd9OyBH8HT4SxYQbIV6jerO9zgRB+
+         DhQfv6wnIBUjLqio5JTWuVL4Tjft7woEGwUdE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:mime-version:references:in-reply-to:from
+         :date:message-id:subject:to:cc;
+        bh=ymynYvUaAJ/fSsk8dTF47gjXr8CYua8YobOOSKegPcM=;
+        b=DEzqe45EbHiUEwvmKs2DJprsMa2yDxU2ApGesGKPbFHnzkAoimYDRbJBD7SZmK7Smu
+         kAD3vy+UBBUmcyu9iGilgFfj98kpd+NBDsAf4HAHq3rCKT5yPMk4t6ka0yrDcIfaRyE+
+         HuvqLWNGcU0XPxX+nmwfAwGmvGY8n+UvcQdg7haOIECk95iYezMVpCGePgDF4FiF5dnq
+         vLKovV6PiUI73kx0Wwes03FuEccziA2V3g/j39zQ8lbsCjBk30bGUZidbTNebCan3bvs
+         ks6NwgjAC0sPVcTODmVVwEto142u5wZLN4pZYygPPjD81wnjh2rcgQC4fCUnfuefIIJ6
+         uKAQ==
+X-Gm-Message-State: APjAAAXRu0eNuH1splcYwZ+J+LRTgphpfHgcljQYzTTiuyeafi31tw01
+        VlxurTkgCMZKG0TH+sHXsU5PYw==
+X-Google-Smtp-Source: APXvYqwCQ/MXwCzExS5dUl/Wau0R2IDrgb+fZVtZ3SzyY0Yt7wlLBRDhvpUMbujiF6VcO+U3M2RlWg==
+X-Received: by 2002:aa7:d781:: with SMTP id s1mr1523685edq.20.1565060158213;
+        Mon, 05 Aug 2019 19:55:58 -0700 (PDT)
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com. [209.85.208.43])
+        by smtp.gmail.com with ESMTPSA id 17sm20458990edu.21.2019.08.05.19.55.55
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 05 Aug 2019 19:55:57 -0700 (PDT)
+Received: by mail-ed1-f43.google.com with SMTP id v15so80947545eds.9;
+        Mon, 05 Aug 2019 19:55:55 -0700 (PDT)
+X-Received: by 2002:a17:906:b315:: with SMTP id n21mr1014103ejz.312.1565060155502;
+ Mon, 05 Aug 2019 19:55:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACdnJusRUnhmOLdowqbGoM9Z-tWsKrhZ8sFfQUUmjyKmRVN+vw@mail.gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Tue, 06 Aug 2019 02:44:20 +0000 (UTC)
+References: <20190805080145.5694-1-hch@lst.de> <20190805080145.5694-2-hch@lst.de>
+ <CAP_+7SzPdNCMKuuXMjHjpCzxsey2YWR_e6mTAWtNSZ6kKBvKFw@mail.gmail.com>
+In-Reply-To: <CAP_+7SzPdNCMKuuXMjHjpCzxsey2YWR_e6mTAWtNSZ6kKBvKFw@mail.gmail.com>
+From:   Gavin Li <gavinli@thegavinli.com>
+Date:   Mon, 5 Aug 2019 19:55:44 -0700
+X-Gmail-Original-Message-ID: <CA+GxvY5C_rrukCzC5K-h72bePyW8PS_Rfj3uxh-K6UrcAextUQ@mail.gmail.com>
+Message-ID: <CA+GxvY5C_rrukCzC5K-h72bePyW8PS_Rfj3uxh-K6UrcAextUQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dma-mapping: fix page attributes for dma_mmap_*
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Shawn Anastasio <shawn@anastas.io>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Gavin Li <git@thegavinli.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/05/19 at 10:09am, Matthew Garrett wrote:
-> On Mon, Aug 5, 2019 at 1:36 AM Dave Young <dyoung@redhat.com> wrote:
-> >
-> > kexec reboot fails randomly in UEFI based kvm guest.  The firmware
-> > just reset while calling efi_delete_dummy_variable();  Unfortunately
-> > I don't know how to debug the firmware, it is also possible a potential
-> > problem on real hardware as well although nobody reproduced it.
-> >
-> > The intention of efi_delete_dummy_variable is to trigger garbage collection
-> > when entering virtual mode.  But SetVirtualAddressMap can only run once
-> > for each physical reboot, thus kexec_enter_virtual_mode is not necessarily
-> > a good place to clean dummy object.
-> 
-> I agree that this isn't necessarily the best place to do this in the
-> kexec case, but given we control the firmware, figuring out what's
-> actually breaking seems like a good plan.
+>         /* create a coherent mapping */
+>         ret = dma_common_contiguous_remap(page, size, VM_USERMAP,
+> -                       arch_dma_mmap_pgprot(dev, PAGE_KERNEL, attrs),
+> +                       dma_pgprot(dev, PAGE_KERNEL, attrs),
+>                         __builtin_return_address(0));
+>         if (!ret) {
+>                 __dma_direct_free_pages(dev, size, page);
 
-I'm more than glad to get the root cause, if you can help on debugging I
-would like to share the efi var file etc.
-
-But it is indeed a problem cause weird reset on end user part, but even if we can
-not find the root cause (in firmware..)  I think we still need avoid it
-with such workaround.
-
-Thanks
-Dave
+Is dma_common_contiguous_remap() still necessary in the
+DMA_ATTR_NON_CONSISTENT case? I would presume it would be fine to just
+return a linearly mapped address in that case.
