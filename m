@@ -2,120 +2,91 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78292C32751
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 22:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F4012C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 22:05:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 461C32189E
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 22:04:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565129092;
-	bh=AuqdTVytYqGwq/gm5yHhPwjwfhHe1pLTnzeuDh1BmAo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vt5UiHxQgUuAs3dB1YfFQ0qMQHfjuyXWOkkGC4YiVsL7gR5DK/41uCuDHsGkOB2VU
-	 d6tf9CShtvejMYsFk9uYKCn1ImynNW97ik0MLmdD2nmoXC8KRYSADu79czmtyAdwM+
-	 1zTvNKPbUkt/DEwMk1XqVhZYxRwj6UeSGd8tamNM=
+	by mail.kernel.org (Postfix) with ESMTP id C0F432189F
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 22:05:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="RyUHGmb+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbfHFWEv (ORCPT
+        id S1727229AbfHFWFk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 18:04:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35002 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726716AbfHFWEu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 18:04:50 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7657121880;
-        Tue,  6 Aug 2019 22:04:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565129089;
-        bh=AuqdTVytYqGwq/gm5yHhPwjwfhHe1pLTnzeuDh1BmAo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kUuYVb6xuyzs4OnPtaiKRTKPuzMpF5WG8+SnMfOoePE+aHCgTx55/ym/eXIQA3b9O
-         K9a5bvTZL1N9WU0Qm2HjEiV5SCCqiYirLBV4H3S0jvF5rohkl9F6dq7MFMnY/8hl+j
-         5PSu+wp/SJNVAA5v8ca3g746OP2auWkvQ39K2mIo=
-Date:   Tue, 6 Aug 2019 18:04:48 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Fugang Duan <fugang.duan@nxp.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 5.2 073/131] dma-direct: correct the physical addr in
- dma_direct_sync_sg_for_cpu/device
-Message-ID: <20190806220448.GN17747@sasha-vm>
-References: <20190805124951.453337465@linuxfoundation.org>
- <20190805124956.543654128@linuxfoundation.org>
- <20190806124143.GF17747@sasha-vm>
- <9dd82745-1673-afc3-5eb4-8b79ddb5824b@arm.com>
+        Tue, 6 Aug 2019 18:05:40 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:8410 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726133AbfHFWFk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 18:05:40 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d49f9b40003>; Tue, 06 Aug 2019 15:05:40 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 06 Aug 2019 15:05:39 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 06 Aug 2019 15:05:39 -0700
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 6 Aug
+ 2019 22:05:38 +0000
+Subject: Re: [PATCH 0/3] mm/: 3 more put_user_page() conversions
+To:     Andrew Morton <akpm@linux-foundation.org>, <john.hubbard@gmail.com>
+CC:     Christoph Hellwig <hch@infradead.org>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jerome Glisse <jglisse@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-fsdevel@vger.kernel.org>
+References: <20190805222019.28592-1-jhubbard@nvidia.com>
+ <20190806145938.3c136b6c4eb4f758c1b1a0ae@linux-foundation.org>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <d606c822-df9e-965e-38b6-458f6c3dfe14@nvidia.com>
+Date:   Tue, 6 Aug 2019 15:05:38 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9dd82745-1673-afc3-5eb4-8b79ddb5824b@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190806145938.3c136b6c4eb4f758c1b1a0ae@linux-foundation.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1565129140; bh=rN4rO17/aT7+L127LeaBuWusoBpU6GuMzRTNeTvQtyA=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=RyUHGmb+ONciHZR8TDcra6EGCiFc19hpKqbxJhOr5CXgF0u+AJ08BIc8YQ9TMG9TO
+         A9s2SNx+MQOxeMTHn3uY/yVZ5GdJ//1j13FexJcRa0b9agZTk3/VsNKAH6byhf+8uY
+         5C2+0NZac11xcQJNzTAlaXEQrJF+y+w2GMYO4mfiet5sOmrqRPueGIQPRDaGbCCyUm
+         T+fKwawV4VNNTsWpspkvC/lbu2zcbyLpZf2kqrj2Ity9iXJjT6Gv7fZLHNEGEUHcJR
+         HBk/OIw+SgIgy6VNZXjdZlETfaPAxScsnN9sFdRA5kaIWJpurj4C2Oq0zVysHK5aGX
+         iXaXX6n53Ozzg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 01:57:56PM +0100, Robin Murphy wrote:
->On 06/08/2019 13:41, Sasha Levin wrote:
->>On Mon, Aug 05, 2019 at 03:02:40PM +0200, Greg Kroah-Hartman wrote:
->>>[ Upstream commit 449fa54d6815be8c2c1f68fa9dbbae9384a7c03e ]
->>>
->>>dma_map_sg() may use swiotlb buffer when the kernel command line includes
->>>"swiotlb=force" or the dma_addr is out of dev->dma_mask range.  After
->>>DMA complete the memory moving from device to memory, then user call
->>>dma_sync_sg_for_cpu() to sync with DMA buffer, and copy the original
->>>virtual buffer to other space.
->>>
->>>So dma_direct_sync_sg_for_cpu() should use swiotlb physical addr, not
->>>the original physical addr from sg_phys(sg).
->>>
->>>dma_direct_sync_sg_for_device() also has the same issue, correct it as
->>>well.
->>>
->>>Fixes: 55897af63091("dma-direct: merge swiotlb_dma_ops into the 
->>>dma_direct code")
->>>Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
->>>Reviewed-by: Robin Murphy <robin.murphy@arm.com>
->>>Signed-off-by: Christoph Hellwig <hch@lst.de>
->>>Signed-off-by: Sasha Levin <sashal@kernel.org>
->>
->>I'm going to drop this one. There's a fix to it upstream, but the fix
->>also seems to want 0036bc73ccbe ("drm/msm: stop abusing dma_map/unmap for
->>cache") which we're not taking, so I'm just going to drop this one as
->>well.
->
->Given that the two commits touch entirely separate files I'm not sure 
->what the imagined dependency could be :/
+On 8/6/19 2:59 PM, Andrew Morton wrote:
+> On Mon,  5 Aug 2019 15:20:16 -0700 john.hubbard@gmail.com wrote:
+> 
+>> Here are a few more mm/ files that I wasn't ready to send with the
+>> larger 34-patch set.
+> 
+> Seems that a v3 of "put_user_pages(): miscellaneous call sites" is in
+> the works, so can we make that a 37 patch series?
+> 
 
-From the commit message of 3de433c5b38a ("drm/msm: Use the correct
-dma_sync calls in msm_gem"):
+Sure, I'll add them to that.
 
-    Fixes the combination of two patches:
-
-    Fixes: 0036bc73ccbe (drm/msm: stop abusing dma_map/unmap for cache)
-    Fixes: 449fa54d6815 (dma-direct: correct the physical addr in dma_direct_sync_sg_for_cpu/device)
-
->0036bc73ccbe is indeed not a fix (frankly I'm not convinced it's even 
->a valid change at all) but even conceptually it bears no relation 
->whatsoever to the genuine bug fixed by 449fa54d6815.
-
-Given that Rob Clark asked me to drop 0036bc73ccbe not because it's
-irrelevant but because it's potentially dangerous, I did not feel
-confident enough ignoring the statement in the commit message and
-dropped this patch instead.
-
-If I'm  wrong here, I'd be happy to take these two patches if someone
-acks it.
-
---
-Thanks,
-Sasha
+thanks,
+-- 
+John Hubbard
+NVIDIA
