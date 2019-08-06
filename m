@@ -2,118 +2,127 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48FA3C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 19:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2001C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 19:04:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 213452075B
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 19:02:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FEA62075B
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 19:04:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BN6fTSTy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726213AbfHFTCc (ORCPT
+        id S1726276AbfHFTEv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 15:02:32 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18766 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725939AbfHFTCb (ORCPT
+        Tue, 6 Aug 2019 15:04:51 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37193 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726016AbfHFTEu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 15:02:31 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x76J2ItQ128790
-        for <linux-kernel@vger.kernel.org>; Tue, 6 Aug 2019 15:02:30 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u7e24u49x-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 15:02:29 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Tue, 6 Aug 2019 20:02:22 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 6 Aug 2019 20:02:19 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x76J2IPi46530734
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 6 Aug 2019 19:02:18 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 53060A404D;
-        Tue,  6 Aug 2019 19:02:18 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4B06CA4051;
-        Tue,  6 Aug 2019 19:02:17 +0000 (GMT)
-Received: from dhcp-9-31-103-47.watson.ibm.com (unknown [9.31.103.47])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  6 Aug 2019 19:02:17 +0000 (GMT)
-Subject: Re: linux-next: build failure after merge of the integrity tree
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Cc:     Mimi Zohar <zohar@linux.vnet.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Philipp Rudo <prudo@linux.ibm.com>,
-        Jessica Yu <jeyu@kernel.org>
-Date:   Tue, 06 Aug 2019 15:02:16 -0400
-In-Reply-To: <20190806134530.747d155e@canb.auug.org.au>
-References: <20190806121519.0f8ac653@canb.auug.org.au>
-         <87imrb0yoh.fsf@morokweng.localdomain>
-         <20190806134530.747d155e@canb.auug.org.au>
+        Tue, 6 Aug 2019 15:04:50 -0400
+Received: by mail-wm1-f68.google.com with SMTP id f17so77503161wme.2
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 12:04:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=H2Cunc+Unwf7KU+04domOtpvjoHMaWW2nIlPjO6jjTE=;
+        b=BN6fTSTygoPjeCrvFUr+x4oz3yZvMdv1eG7K80Zk+VtKyHCKONyDXzLIi4SnpqyZjw
+         8h2NKM38bkah9qUw9o+RETqEthm/8Dtf2DeewNDMxSSHR4EnJq5UMweNpx/6UysDkqEH
+         GkkdkaXwmSvZEyLvnywl3/+vUHht6/p1JYfUHAd/jMh8Apfyo3/AETHY5OZvxy3uyVRx
+         PEVi3gcqWN71WUijLkEYMXJsPjJOue5fM5bn54pAnvTfvwvWVSZa7WfJfZrdrYoDUipZ
+         5ezCyTXq7qXijKhI1VQP1YyNXygcBJu5KcZrWVsFYqD0VmeWgWPuJYMIa9gUo/gUi2fS
+         SZuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=H2Cunc+Unwf7KU+04domOtpvjoHMaWW2nIlPjO6jjTE=;
+        b=WeKnFIOLD1d2yEw5kMHUAuOFZ8nzm1EKl4okhvDV5cOHOoFNl+qMMtFBJ1kMfrNOkn
+         8agw8o756rNpYJUZAQ2FenqHsbevRBGt5zgmhOJCDVKsSiQEUoqTwB7JioKFTpGvVFpD
+         ja5+bBNB8fUmhfXYD8i3YdQupS3GTVRcmFW6s5v4d1O1Le6iQJapFzvnUYhW3ppb2IYl
+         X8Rz1H+F+G2KCLmMfXd1XTfJ5ll7g5IClALsJX4JI7Ha+CkyHqFcuD+trused0TF9/UV
+         AGdt467SVPulaeevZ6gL3f24Thaqhim9IuHcHgc9qEnC1up5GXAu6EI493633r0qHDfQ
+         Cuag==
+X-Gm-Message-State: APjAAAVDZiInn0XEOi1q1e2UJLNOM1KyyWQCothYuDHRGqSSyVifVVfy
+        rPLVLKlY/JWQitckcoqvJMYafpw7csiSf8J8jlM=
+X-Google-Smtp-Source: APXvYqxt13CUFdoIsvF7s1UaYB4shCev9jOY+/A5iMYNG4jYXaQRzQ0A6X4y2qH2KhLwYuXooFHWxN94IO01gg/JqIo=
+X-Received: by 2002:a7b:c751:: with SMTP id w17mr6322996wmk.127.1565118288585;
+ Tue, 06 Aug 2019 12:04:48 -0700 (PDT)
+MIME-Version: 1.0
+References: <CADnq5_OL1+bJUGh44AY48DP=G=xTtdrf+kO2233qjJzudWhw_Q@mail.gmail.com>
+ <20190806174549.7856-1-harry.wentland@amd.com>
+In-Reply-To: <20190806174549.7856-1-harry.wentland@amd.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Tue, 6 Aug 2019 15:04:36 -0400
+Message-ID: <CADnq5_NLTOQ31XXhw3o8aoJkRmzq6guurgUz13cxKD6U6M90Cw@mail.gmail.com>
+Subject: Re: [PATCH] drm/amd/display: Add number of slices per line to DSC
+ parameter validation
+To:     Harry Wentland <harry.wentland@amd.com>
+Cc:     Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        Chunming Zhou <David1.Zhou@amd.com>,
+        "Leo (Sunpeng) Li" <sunpeng.li@amd.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Nikola Cornij <nikola.cornij@amd.com>,
+        Dave Airlie <airlied@linux.ie>,
+        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>, Daniel Vetter <daniel@ffwll.ch>,
+        "Deucher, Alexander" <alexander.deucher@amd.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Christian Koenig <christian.koenig@amd.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19080619-0008-0000-0000-00000305E60D
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19080619-0009-0000-0000-0000A17FF045
-Message-Id: <1565118136.11223.215.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-06_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908060167
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+On Tue, Aug 6, 2019 at 1:45 PM Harry Wentland <harry.wentland@amd.com> wrote:
+>
+> From: Nikola Cornij <nikola.cornij@amd.com>
+>
+> [why]
+> Number of slices per line was mistakenly left out
+>
+> Cc: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+> Signed-off-by: Nikola Cornij <nikola.cornij@amd.com>
+> Signed-off-by: Harry Wentland <harry.wentland@amd.com>
+> Reviewed-by: Harry Wentland <harry.wentland@amd.com>
 
-On Tue, 2019-08-06 at 13:45 +1000, Stephen Rothwell wrote:
-> Hi Thiago,
-> 
-> On Tue, 06 Aug 2019 00:18:06 -0300 Thiago Jung Bauermann <bauerman@linux.ibm.com> wrote:
-> >
-> > Sorry for the trouble. I wasn't aware of that build time check.
-> > I'll enable HEADER_TEST and KERNEL_HEADER_TEST for my next patches.
+Acked-by: Alex Deucher <alexander.deucher@amd.com>
 
-ditto
-
-> 
-> I do allmodconfig builds which enable those.
-> 
-> > Thanks for providing the fix. Should I post a new version or can Mimi
-> > squash the above into the original patch?
-> 
-> Up to Mimi, but either works (or just committing my patch if the tree is
-> normally not rebased).
-
-Based on the new "Documentation/maintainer/rebasing-and-merging.rst",
-I'm under the impression that we shouldn't be rebasing, even for
-"just" adding tags.  Waiting for tags before pushing out to next-
-integrity is causing delays, but we're trying out this approach.  So
-for now, I've included your commit.
-
-thanks,
-
-Mimi
-
-
-
+> ---
+>
+> Thanks, Hariprasad, for your patch. The second condition should actually check
+> for num_slices_h.
+>
+> Harry
+>
+>  drivers/gpu/drm/amd/display/dc/dcn20/dcn20_dsc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_dsc.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_dsc.c
+> index e870caa8d4fa..adb69c038efb 100644
+> --- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_dsc.c
+> +++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_dsc.c
+> @@ -302,7 +302,7 @@ static bool dsc_prepare_config(struct display_stream_compressor *dsc, const stru
+>                     dsc_cfg->dc_dsc_cfg.linebuf_depth == 0)));
+>         ASSERT(96 <= dsc_cfg->dc_dsc_cfg.bits_per_pixel && dsc_cfg->dc_dsc_cfg.bits_per_pixel <= 0x3ff); // 6.0 <= bits_per_pixel <= 63.9375
+>
+> -       if (!dsc_cfg->dc_dsc_cfg.num_slices_v || !dsc_cfg->dc_dsc_cfg.num_slices_v ||
+> +       if (!dsc_cfg->dc_dsc_cfg.num_slices_v || !dsc_cfg->dc_dsc_cfg.num_slices_h ||
+>                 !(dsc_cfg->dc_dsc_cfg.version_minor == 1 || dsc_cfg->dc_dsc_cfg.version_minor == 2) ||
+>                 !dsc_cfg->pic_width || !dsc_cfg->pic_height ||
+>                 !((dsc_cfg->dc_dsc_cfg.version_minor == 1 && // v1.1 line buffer depth range:
+> --
+> 2.22.0
+>
+> _______________________________________________
+> amd-gfx mailing list
+> amd-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
