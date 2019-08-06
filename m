@@ -2,98 +2,182 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18779C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 19:47:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD70C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 19:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0259208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 19:47:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F88E21738
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 19:50:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=anastas.io header.i=@anastas.io header.b="VF/YxkoG"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KcpdUETM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726350AbfHFTrT (ORCPT
+        id S1726266AbfHFTug (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 15:47:19 -0400
-Received: from alpha.anastas.io ([104.248.188.109]:34451 "EHLO
-        alpha.anastas.io" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725798AbfHFTrT (ORCPT
+        Tue, 6 Aug 2019 15:50:36 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35800 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725906AbfHFTug (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 15:47:19 -0400
-X-Greylist: delayed 486 seconds by postgrey-1.27 at vger.kernel.org; Tue, 06 Aug 2019 15:47:19 EDT
-Received: from authenticated-user (alpha.anastas.io [104.248.188.109])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by alpha.anastas.io (Postfix) with ESMTPSA id 2FB9F7F91A;
-        Tue,  6 Aug 2019 14:39:08 -0500 (CDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=anastas.io; s=mail;
-        t=1565120352; bh=HXAHKgiQsfJr2nTxca5W5Al0GVPsqRNPo3FiFtTBIoc=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=VF/YxkoGj8ca1JQcWi5sYSQVWRKBYyZtR9HUzDE+ew2GrVyUCIeEXZFt6rVd6W6wg
-         vtSTCcBTAjJH0ZszPuJKYt0eFgEDwICoBRPS0wGBydBz0++9N23+H7Ed3B5qGV1VMC
-         LvZrV59lni9MLs/JcvnzGbRKNJzNv+d8Qk4W2RBQao6w281+TddI5F/TzpRT8SkiIO
-         nhUyXU745H9K0uufXJpjZAa7VpAkGr/JSB0EdEr/q/xdFRPa19oitpAqc+ktLxg9Is
-         kcvPFe0HGSSTtWUCJqLE5dUJRbo5Vz5U2m6kzrfDAVngIfOzeFSuQSEh/otww7M/bt
-         SjEGu4AGs8jvg==
-Subject: Re: [PATCH 1/2] dma-mapping: fix page attributes for dma_mmap_*
-To:     Christoph Hellwig <hch@lst.de>, iommu@lists.linux-foundation.org
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>, linuxppc-dev@lists.ozlabs.org,
-        linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Gavin Li <git@thegavinli.com>
-References: <20190805080145.5694-1-hch@lst.de>
- <20190805080145.5694-2-hch@lst.de>
-From:   Shawn Anastasio <shawn@anastas.io>
-Message-ID: <7df95ffb-6df3-b118-284c-ee32cad81199@anastas.io>
-Date:   Tue, 6 Aug 2019 21:39:06 +0200
+        Tue, 6 Aug 2019 15:50:36 -0400
+Received: by mail-wr1-f65.google.com with SMTP id k2so3186974wrq.2
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 12:50:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kGaKvQFsZgZRc0gqerogxzfGiThuXifNLB2OEC0cIoY=;
+        b=KcpdUETMBYuJyx4JKxpCZkDiJd9PgHCJ+KVUsKbiK69I/uNOk1diB7NGlPKuUTgu03
+         5bvA0tDzp9uxmVSvU3Lv5Kpo7zoW4UH6UPRVZc6txr//tC1JsGtF6JpWd1zZHIskDlEb
+         TiRFuGrOZGzTrirywRRsM6BJdkmLwC1GzPQDKM/xujPh5hjKsBo+NZHsVRyUVRK6xBU2
+         vJqGL0IWeQCMCKJQRh7DG0Ngjau29xL3YjVRvzBQoh73f4JOplrpPqhkR0G094ZbQUaY
+         Grq5Qh03BfsG/86N1AeD7/6qVYclfLMGsRTp4j/jG1NhjPNzUa1Pc3kMLtmlv43w7HEU
+         F9gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kGaKvQFsZgZRc0gqerogxzfGiThuXifNLB2OEC0cIoY=;
+        b=jbYRFhNUP9v+HEqeu7EdqcBoUQD0daLca2ARfX3cdZkIPIkH9Mf/a7qztPrTR2nQqQ
+         nU2BELkdZsVZst6jBS7YECXSPwTGYAOkTqcOPcGokF0ZHqfMmsyf5mCzG96bs+N0czvD
+         k390JHidrhiylVPFxf8yIWhORVoJblgQK/Fw7EhkcwtAkz9NWRI4mgEwcwTrxjtM+9C0
+         msccCIuPxPbxmTk/ZRS5Zl9tZKVMcVnJrMxOIsmvqPsMib1fOgkegUA9pH0fzUBXwWtT
+         04BCPOsbMwQaY3UWYN+xUWsb79oScjnUEgGhW1fZsNnGEsR+JPkiDi9LUA+c3hvlq0vi
+         yrZw==
+X-Gm-Message-State: APjAAAUdjKBpQ2rbMZws9cm6y1OXTXNcF8gmkzvgd49QnME/rF5/eRi6
+        vlTPYTopEFUCuKFfpiJq6LHZzlhomVFKfaPmcCPC
+X-Google-Smtp-Source: APXvYqyDnhoa/uCrTWnPgUp2jKiHChoqXQq+xQxY9yMjyk5SXnWI/bXZHLptGN4xGZpSOxpD0VQaSeeW0iGW7hI8NOM=
+X-Received: by 2002:a5d:6650:: with SMTP id f16mr6385465wrw.89.1565121033666;
+ Tue, 06 Aug 2019 12:50:33 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190805080145.5694-2-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190628073425.25165-1-jianjun.wang@mediatek.com>
+ <20190628073425.25165-3-jianjun.wang@mediatek.com> <1564385918.17211.6.camel@mhfsdcap03>
+ <20190806162432.GA15498@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20190806162432.GA15498@e121166-lin.cambridge.arm.com>
+From:   Bjorn Helgaas <bhelgaas@google.com>
+Date:   Tue, 6 Aug 2019 14:50:20 -0500
+Message-ID: <CAErSpo5AVXekj8hWxDbf+zTwv9WmQessdBppNrVtOWOkuTREtA@mail.gmail.com>
+Subject: Re: [v2,2/2] PCI: mediatek: Add controller support for MT7629
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Jianjun Wang <jianjun.wang@mediatek.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm <linux-arm-kernel@lists.infradead.org>,
+        youlin.pei@mediatek.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/5/19 10:01 AM, Christoph Hellwig wrote:
-> diff --git a/include/linux/dma-noncoherent.h b/include/linux/dma-noncoherent.h
-> index 3813211a9aad..9ae5cee543c4 100644
-> --- a/include/linux/dma-noncoherent.h
-> +++ b/include/linux/dma-noncoherent.h
-> @@ -42,13 +42,8 @@ void arch_dma_free(struct device *dev, size_t size, void *cpu_addr,
->   		dma_addr_t dma_addr, unsigned long attrs);
->   long arch_dma_coherent_to_pfn(struct device *dev, void *cpu_addr,
->   		dma_addr_t dma_addr);
-> -
-> -#ifdef CONFIG_ARCH_HAS_DMA_MMAP_PGPROT
->   pgprot_t arch_dma_mmap_pgprot(struct device *dev, pgprot_t prot,
->   		unsigned long attrs);
-> -#else
-> -# define arch_dma_mmap_pgprot(dev, prot, attrs)	pgprot_noncached(prot)
-> -#endif
+On Tue, Aug 6, 2019 at 11:24 AM Lorenzo Pieralisi
+<lorenzo.pieralisi@arm.com> wrote:
+>
+> [trim the CC list please to keep only required maintainers]
+>
+> On Mon, Jul 29, 2019 at 03:38:38PM +0800, Jianjun Wang wrote:
+> > On Fri, 2019-06-28 at 15:34 +0800, Jianjun Wang wrote:
+> > > MT7629 is an ARM platform SoC which has the same PCIe IP with MT7622.
+> > >
+> > > The HW default value of its Device ID is invalid, fix its Device ID to
+> > > match the hardware implementation.
+> > >
+> > > Acked-by: Ryder Lee <ryder.lee@mediatek.com>
+> > > Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
+> > > ---
+> > >  drivers/pci/controller/pcie-mediatek.c | 18 ++++++++++++++++++
+> > >  include/linux/pci_ids.h                |  1 +
+> > >  2 files changed, 19 insertions(+)
+> > >
+> > > diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+> > > index 80601e1b939e..e5e6740b635d 100644
+> > > --- a/drivers/pci/controller/pcie-mediatek.c
+> > > +++ b/drivers/pci/controller/pcie-mediatek.c
+> > > @@ -73,6 +73,7 @@
+> > >  #define PCIE_MSI_VECTOR            0x0c0
+> > >
+> > >  #define PCIE_CONF_VEND_ID  0x100
+> > > +#define PCIE_CONF_DEVICE_ID        0x102
+> > >  #define PCIE_CONF_CLASS_ID 0x106
+> > >
+> > >  #define PCIE_INT_MASK              0x420
+> > > @@ -141,12 +142,16 @@ struct mtk_pcie_port;
+> > >  /**
+> > >   * struct mtk_pcie_soc - differentiate between host generations
+> > >   * @need_fix_class_id: whether this host's class ID needed to be fixed or not
+> > > + * @need_fix_device_id: whether this host's Device ID needed to be fixed or not
+> > > + * @device_id: Device ID which this host need to be fixed
+> > >   * @ops: pointer to configuration access functions
+> > >   * @startup: pointer to controller setting functions
+> > >   * @setup_irq: pointer to initialize IRQ functions
+> > >   */
+> > >  struct mtk_pcie_soc {
+> > >     bool need_fix_class_id;
+> > > +   bool need_fix_device_id;
+> > > +   unsigned int device_id;
+> > >     struct pci_ops *ops;
+> > >     int (*startup)(struct mtk_pcie_port *port);
+> > >     int (*setup_irq)(struct mtk_pcie_port *port, struct device_node *node);
+> > > @@ -696,6 +701,9 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
+> > >             writew(val, port->base + PCIE_CONF_CLASS_ID);
+> > >     }
+> > >
+> > > +   if (soc->need_fix_device_id)
+> > > +           writew(soc->device_id, port->base + PCIE_CONF_DEVICE_ID);
+> > > +
+> > >     /* 100ms timeout value should be enough for Gen1/2 training */
+> > >     err = readl_poll_timeout(port->base + PCIE_LINK_STATUS_V2, val,
+> > >                              !!(val & PCIE_PORT_LINKUP_V2), 20,
+> > > @@ -1216,11 +1224,21 @@ static const struct mtk_pcie_soc mtk_pcie_soc_mt7622 = {
+> > >     .setup_irq = mtk_pcie_setup_irq,
+> > >  };
+> > >
+> > > +static const struct mtk_pcie_soc mtk_pcie_soc_mt7629 = {
+> > > +   .need_fix_class_id = true,
+> > > +   .need_fix_device_id = true,
+> > > +   .device_id = PCI_DEVICE_ID_MEDIATEK_7629,
+> > > +   .ops = &mtk_pcie_ops_v2,
+> > > +   .startup = mtk_pcie_startup_port_v2,
+> > > +   .setup_irq = mtk_pcie_setup_irq,
+> > > +};
+> > > +
+> > >  static const struct of_device_id mtk_pcie_ids[] = {
+> > >     { .compatible = "mediatek,mt2701-pcie", .data = &mtk_pcie_soc_v1 },
+> > >     { .compatible = "mediatek,mt7623-pcie", .data = &mtk_pcie_soc_v1 },
+> > >     { .compatible = "mediatek,mt2712-pcie", .data = &mtk_pcie_soc_mt2712 },
+> > >     { .compatible = "mediatek,mt7622-pcie", .data = &mtk_pcie_soc_mt7622 },
+> > > +   { .compatible = "mediatek,mt7629-pcie", .data = &mtk_pcie_soc_mt7629 },
+> > >     {},
+> > >  };
+> > >
+> > > diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> > > index 70e86148cb1e..aa32962759b2 100644
+> > > --- a/include/linux/pci_ids.h
+> > > +++ b/include/linux/pci_ids.h
+> > > @@ -2131,6 +2131,7 @@
+> > >  #define PCI_VENDOR_ID_MYRICOM              0x14c1
+> > >
+> > >  #define PCI_VENDOR_ID_MEDIATEK             0x14c3
+> > > +#define PCI_DEVICE_ID_MEDIATEK_7629        0x7629
+> > >
+> > >  #define PCI_VENDOR_ID_TITAN                0x14D2
+> > >  #define PCI_DEVICE_ID_TITAN_010L   0x8001
+> >
+> > Hi Bjorn & Lorenzo,
+> >
+> > Is this patch ok or is there anything I need to fixed?
+>
+> The commit log need to be fixed and I will do it, the code if
+> Bjorn is OK with it I can merge it.
 
-Nit, but maybe the prototype should still be ifdef'd here? It at least
-could prevent a reader from incorrectly thinking that the function is
-always present.
-
-Also, like Will mentioned earlier, the function name isn't entirely
-accurate anymore. I second the suggestion of using something like
-arch_dma_noncoherent_pgprot(). As for your idea of defining
-pgprot_dmacoherent for all architectures as
-
-#ifndef pgprot_dmacoherent
-#define pgprot_dmacoherent pgprot_noncached
-#endif
-
-I think that the name here is kind of misleading too, since this
-definition will only be used when there is no support for proper
-DMA coherency.
-
+Sure, I'm fine with this.  I don't think there's a need to add
+PCI_DEVICE_ID_MEDIATEK_7629, since it's only used in one place, but
+I'm fine with the code.
