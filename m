@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31449C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF42C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:34:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1DCA217D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:34:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6478217D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:34:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127289;
-	bh=iaM43qCCC5bNlVt7SIRVxodUFhg3MptrAPwcX2CNjwo=;
+	s=default; t=1565127292;
+	bh=XPa39C+ImOWiH3ShEPLYIBOk+rk+TWk7X2QkYKWN7SU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FDKIpk9uukUWC/rY4uiIq9bl2niACvHmD+fMg4+9G9x3ZefJDE5keeFBpZdnD/uwW
-	 5NLIRfUOxsxLDuYjqRdlWYHhg0K0jF3WEOnw4vFLam02S+VW5W5eSsYeBjcsuHYEaM
-	 Ol8ZMaKOc8iKd4/oXmMEY4ibsSppYoA+/CEmMEE0=
+	b=2a0/y6dJyKywzwh4pwXkMnqS56r1tSPnJqOh3I1oQK7cBvd7cfvDzrfGru5vPPNvO
+	 hbTeMI5GjO2Lq7eYMOkl3DC1LYK14+MATW5yHb3lNeeWQm+ffBeLDEgl9wDJ9yY5KO
+	 HNoWjX3sCA/w7Ud4SfSvkAzO6FnT5fCdot5TDH6s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727915AbfHFVes (ORCPT
+        id S1727944AbfHFVev (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:34:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52566 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 17:34:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727860AbfHFVeo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:34:44 -0400
+        id S1726923AbfHFVeu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:34:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0E05217D9;
-        Tue,  6 Aug 2019 21:34:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 837DA2089E;
+        Tue,  6 Aug 2019 21:34:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127284;
-        bh=iaM43qCCC5bNlVt7SIRVxodUFhg3MptrAPwcX2CNjwo=;
+        s=default; t=1565127289;
+        bh=XPa39C+ImOWiH3ShEPLYIBOk+rk+TWk7X2QkYKWN7SU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ptuiB3m8HEIss/MJbUgQYaGuCLCRfK1wBosMOuiP8oHx8MbOH15CO9F1hohwvfibj
-         Gq1GPbbf9VipH3lxKQjmh1oXorykXU9vDx21uVnUi+aCTkooTYpT7w8J6nBctuEeb7
-         To++mdEhksw79zx10RGmCJAvUsOwsqg18TX9k5BY=
+        b=fIxB25/gPJOTDnHp3TULo8k3h6HMsbaq2uJMJToede4puDc3KDk3dAqCVzyjBLQIf
+         GSviBl1JrmpucNL2rQqVBPIL1EsMna+adn+8O47b59JZJxVC0dgjLiFIer3HEEil9L
+         NeTjMDK42V2P7ZBdAkmNdRRusbXnxbdbdo3njoFk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qian Cai <cai@lca.pw>, Will Deacon <will@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 42/59] arm64/mm: fix variable 'pud' set but not used
-Date:   Tue,  6 Aug 2019 17:33:02 -0400
-Message-Id: <20190806213319.19203-42-sashal@kernel.org>
+Cc:     "Luck, Tony" <tony.luck@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 44/59] IB/core: Add mitigation for Spectre V1
+Date:   Tue,  6 Aug 2019 17:33:04 -0400
+Message-Id: <20190806213319.19203-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190806213319.19203-1-sashal@kernel.org>
 References: <20190806213319.19203-1-sashal@kernel.org>
@@ -58,43 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: "Luck, Tony" <tony.luck@intel.com>
 
-[ Upstream commit 7d4e2dcf311d3b98421d1f119efe5964cafa32fc ]
+[ Upstream commit 61f259821dd3306e49b7d42a3f90fb5a4ff3351b ]
 
-GCC throws a warning,
+Some processors may mispredict an array bounds check and
+speculatively access memory that they should not. With
+a user supplied array index we like to play things safe
+by masking the value with the array size before it is
+used as an index.
 
-arch/arm64/mm/mmu.c: In function 'pud_free_pmd_page':
-arch/arm64/mm/mmu.c:1033:8: warning: variable 'pud' set but not used
-[-Wunused-but-set-variable]
-  pud_t pud;
-        ^~~
-
-because pud_table() is a macro and compiled away. Fix it by making it a
-static inline function and for pud_sect() as well.
-
-Signed-off-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+Link: https://lore.kernel.org/r/20190731043957.GA1600@agluck-desk2.amr.corp.intel.com
+Signed-off-by: Doug Ledford <dledford@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/pgtable.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/infiniband/core/user_mad.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index fca26759081a7..b9574d850f14f 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -419,8 +419,8 @@ extern pgprot_t phys_mem_access_prot(struct file *file, unsigned long pfn,
- 				 PMD_TYPE_SECT)
+diff --git a/drivers/infiniband/core/user_mad.c b/drivers/infiniband/core/user_mad.c
+index 671f07ba1fad6..025b6d86a61fc 100644
+--- a/drivers/infiniband/core/user_mad.c
++++ b/drivers/infiniband/core/user_mad.c
+@@ -49,6 +49,7 @@
+ #include <linux/sched.h>
+ #include <linux/semaphore.h>
+ #include <linux/slab.h>
++#include <linux/nospec.h>
  
- #if defined(CONFIG_ARM64_64K_PAGES) || CONFIG_PGTABLE_LEVELS < 3
--#define pud_sect(pud)		(0)
--#define pud_table(pud)		(1)
-+static inline bool pud_sect(pud_t pud) { return false; }
-+static inline bool pud_table(pud_t pud) { return true; }
- #else
- #define pud_sect(pud)		((pud_val(pud) & PUD_TYPE_MASK) == \
- 				 PUD_TYPE_SECT)
+ #include <linux/uaccess.h>
+ 
+@@ -883,11 +884,14 @@ static int ib_umad_unreg_agent(struct ib_umad_file *file, u32 __user *arg)
+ 
+ 	if (get_user(id, arg))
+ 		return -EFAULT;
++	if (id >= IB_UMAD_MAX_AGENTS)
++		return -EINVAL;
+ 
+ 	mutex_lock(&file->port->file_mutex);
+ 	mutex_lock(&file->mutex);
+ 
+-	if (id >= IB_UMAD_MAX_AGENTS || !__get_agent(file, id)) {
++	id = array_index_nospec(id, IB_UMAD_MAX_AGENTS);
++	if (!__get_agent(file, id)) {
+ 		ret = -EINVAL;
+ 		goto out;
+ 	}
 -- 
 2.20.1
 
