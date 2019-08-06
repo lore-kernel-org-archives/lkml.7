@@ -2,137 +2,71 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78078C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:49:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08239C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:50:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F2C72086D
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:49:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="I8CviA6x"
+	by mail.kernel.org (Postfix) with ESMTP id D85112086D
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:50:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732393AbfHFItw (ORCPT
+        id S1732421AbfHFIux (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 04:49:52 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54574 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732320AbfHFItv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 04:49:51 -0400
-Received: by mail-wm1-f66.google.com with SMTP id p74so77307073wme.4
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 01:49:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=e/5FlaB9m3gEnKe48majyR+7xFOfFfXfyiygau9Wh2Q=;
-        b=I8CviA6xn+lteqKb2DklgcnuqBxGyR27LIonjjd1h6SlJ7vCnVT73BukBTDQpMD/QN
-         U2y4909fk17Tj5+3DdR7UNyfYIEf0X01AupJp7sjyy+38+tOjJs0Uf+JrTykxS5yDnwl
-         wpOTes3fxdYyL63v1gnEB0C5Yv8qgoEypMDTFHQyFrFNwkr3OnK1em/jY5s6AmTUf0bq
-         Ru/EEqxoGZ1zYjLzFWFmPK8ebIGnhYIBm77pE5A4FxWigCCjJ7LHtKmhzsCkqNbHyIPQ
-         vHE+9pliBkDd0CMU9qbuKNEbEw1dETq0tYpY6S4ziSkyt3NVkefhqW5/l6FiivltiBZ4
-         qeOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=e/5FlaB9m3gEnKe48majyR+7xFOfFfXfyiygau9Wh2Q=;
-        b=OrIzPSwH292XWKHlkFkJcSAmLVVA6QqJAgIdSAlpncCLqMUA1OqRT4g1XvAo/Xfiil
-         /z1FAacGBVWeKgCBzEqt+3+Pu/aukTe8zpuub9ia5VNi8MhsV7pe9Zvmi0wg9gO5QbBz
-         DLYKib6OPKhMF8bXnkHeikWTOAbclUp+RWeI5BSBlx9vP6qXCgXLw1vqfpaGCqQ+jaN6
-         qpArTQZtHHGr0b3Jr+r+Z9x/f4D/XCVGorFowmt/fak8coPkpiPclNquXfLfPyu5w4GW
-         7x2YmP9mwo54UKzF+sZ88W1+qD9jlttd3zNaXIuvKe3dhmVDquNIJkK6EqrP7DYTvWpZ
-         djmQ==
-X-Gm-Message-State: APjAAAUumBZxXL/arlQ2SlxgXuKNjv/jnY9gQo74k71GCCY686Fca1tm
-        r6WXfYjXrkH2R000CqpgU6B6lQ==
-X-Google-Smtp-Source: APXvYqydrWSyKv/Z8aE0wnm5mBDuLQIs85p2Q4UZiFE76n+eAsC040k+pd2/Q6j5qysjYrVv9GE9ZA==
-X-Received: by 2002:a1c:720e:: with SMTP id n14mr3443503wmc.53.1565081389300;
-        Tue, 06 Aug 2019 01:49:49 -0700 (PDT)
-Received: from localhost (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id x8sm74356883wmc.5.2019.08.06.01.49.48
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 06 Aug 2019 01:49:48 -0700 (PDT)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH 3/9] clk: meson: axg-audio: Don't reference clk_init_data after registration
-In-Reply-To: <20190731193517.237136-4-sboyd@kernel.org>
-References: <20190731193517.237136-1-sboyd@kernel.org> <20190731193517.237136-4-sboyd@kernel.org>
-Date:   Tue, 06 Aug 2019 10:49:47 +0200
-Message-ID: <1jwofqvftg.fsf@starbuckisacylon.baylibre.com>
+        Tue, 6 Aug 2019 04:50:53 -0400
+Received: from mga07.intel.com ([134.134.136.100]:5513 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731835AbfHFIux (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 04:50:53 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 01:36:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,353,1559545200"; 
+   d="scan'208";a="202738275"
+Received: from mylly.fi.intel.com (HELO [10.237.72.124]) ([10.237.72.124])
+  by fmsmga002.fm.intel.com with ESMTP; 06 Aug 2019 01:36:22 -0700
+Subject: Re: [PATCH] i2c: designware: Fix unused variable warning in
+ i2c_dw_init_recovery_info
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190806075054.GA15418@embeddedor>
+From:   Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Message-ID: <2ddc2077-aefb-2330-3096-7473dc55f19c@linux.intel.com>
+Date:   Tue, 6 Aug 2019 11:36:21 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20190806075054.GA15418@embeddedor>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 31 Jul 2019 at 12:35, Stephen Boyd <sboyd@kernel.org> wrote:
+Hi
 
-> A future patch is going to change semantics of clk_register() so that
-> clk_hw::init is guaranteed to be NULL after a clk is registered. Avoid
-> referencing this member here so that we don't run into NULL pointer
-> exceptions.
-
-Hi Stephen,
-
-What to do you indend to do with this one ? Will you apply directly or
-should we take it ?
-
-We have several changes for the controller which may conflict with this
-one. It is nothing major but the sooner I know how this changes goes in,
-the sooner I can rebase the rest.
-
-Also, We were (re)using the init_data only on register failures.
-I understand that you want to guarantee .init is NULL when the clock is
-registered, but it this particular case, the registeration failed so the
-clock is not registered.
-
-IMO, it would be better if devm_clk_hw_register() left the init_data
-untouched if the registration fails.
-
->
-> Cc: Neil Armstrong <narmstrong@baylibre.com>
-> Cc: Jerome Brunet <jbrunet@baylibre.com>
-> Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+On 8/6/19 10:50 AM, Gustavo A. R. Silva wrote:
+> Fix the following warning:
+> 
+> drivers/i2c/busses/i2c-designware-master.c: In function ‘i2c_dw_init_recovery_info’:
+> drivers/i2c/busses/i2c-designware-master.c:658:6: warning: unused variable ‘r’ [-Wunused-variable]
+>    int r;
+>        ^
+> 
+> Fixes: 33eb09a02e8d ("i2c: designware: make use of devm_gpiod_get_optional")
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 > ---
->
-> Please ack so I can take this through clk tree
->
->  drivers/clk/meson/axg-audio.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/clk/meson/axg-audio.c b/drivers/clk/meson/axg-audio.c
-> index 8028ff6f6610..db0b73d53551 100644
-> --- a/drivers/clk/meson/axg-audio.c
-> +++ b/drivers/clk/meson/axg-audio.c
-> @@ -992,15 +992,18 @@ static int axg_audio_clkc_probe(struct platform_device *pdev)
->  
->  	/* Take care to skip the registered input clocks */
->  	for (i = AUD_CLKID_DDR_ARB; i < data->hw_onecell_data->num; i++) {
-> +		const char *name;
-> +
->  		hw = data->hw_onecell_data->hws[i];
->  		/* array might be sparse */
->  		if (!hw)
->  			continue;
->  
-> +		name = hw->init->name;
-> +
->  		ret = devm_clk_hw_register(dev, hw);
->  		if (ret) {
-> -			dev_err(dev, "failed to register clock %s\n",
-> -				hw->init->name);
-> +			dev_err(dev, "failed to register clock %s\n", name);
->  			return ret;
->  		}
->  	}
-> -- 
-> Sent by a computer through tubes
+This was fixed yesterday, not applied yet though:
+
+https://www.spinics.net/lists/linux-i2c/msg41651.html
+
+-- 
+Jarkko
