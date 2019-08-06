@@ -2,171 +2,321 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D93AEC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 09:01:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62D23C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 09:04:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B302B208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 09:01:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FAC7208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 09:04:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P4lt3gZl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732379AbfHFJBs (ORCPT
+        id S1732355AbfHFJEe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 05:01:48 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59812 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728056AbfHFJBr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 05:01:47 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5DEB13082B15;
-        Tue,  6 Aug 2019 09:01:47 +0000 (UTC)
-Received: from t460s.redhat.com (ovpn-117-71.ams2.redhat.com [10.36.117.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 039DE1A269;
-        Tue,  6 Aug 2019 09:01:42 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: [PATCH v1] driver/base/memory.c: Validate memory block size early
-Date:   Tue,  6 Aug 2019 11:01:42 +0200
-Message-Id: <20190806090142.22709-1-david@redhat.com>
+        Tue, 6 Aug 2019 05:04:34 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33264 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732142AbfHFJEd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 05:04:33 -0400
+Received: by mail-wr1-f66.google.com with SMTP id n9so87200172wru.0;
+        Tue, 06 Aug 2019 02:04:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=NMCiJWt+aN8oYwwrRXVDzW0rjDAKNwhJN21m/pSEVRA=;
+        b=P4lt3gZl5d4stVZdifTLoSbiUd94mDr/WkAcxspb6s898D/FUQg3E8jApiZiMaT+Fd
+         lUi73kVFVrX1qlU7JYjE2WSvxKEdiBwApQFvL30GCd2VkdoO2RfRRapfUWKvn0SUf28Y
+         osKmfcfx4RqWftYsFh42U9hCkYTcqL2KpxWJf1EP4TSmrvJ0rwt4R9IfHeTag0B3XBM2
+         Y9+86bpnoJJCNOue+pYAIqIJKQFDXi/iJVzpRYULAMRtIelDNcToeFiFhiedmGmxEiGA
+         D8eFl3jvMbShz87HhmR65J+xRZXSHe2uQPv6PaW1nM2/AM1MiFMeHl42n2ksyiUA4E5M
+         q5uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=NMCiJWt+aN8oYwwrRXVDzW0rjDAKNwhJN21m/pSEVRA=;
+        b=pPgus9/Jz6CEJU/rZX93UAKc8mEYwwqPDzESznIQReq061eGbfx7WHMOfGjjwJg+jk
+         CeWXawa2SPVBfk4y2RB1JvEqdeZF3cw+81eL7pg6eEA4qnauSTsIUm8H3gaC6I0bTbo3
+         McR525DUZMFiPOSZm7reFDX37tknVGa6OPNYEcJdxfJFjGsNEbt1O+pBcdVVXKcAkp+B
+         NziXrCM9xuVacONRWDcjbXjDAbS6K9otA5MpYpAiBBh6s/NSQlqvw0AYkdDNLc1JS10+
+         +pr9TDOHy27MVMBUZk1sW8BwRkSUIfGjnBoPvQ6WZQ8tFlQf7P8gbzwhqeU7eaH6rxDv
+         fKvA==
+X-Gm-Message-State: APjAAAVpgxyhy9kQF28dKg1R+jgl5qWbTIWcFFhbTFZZ0ZZVzM9bWwXS
+        SxaRU+Vhx1irH1QLdMILzverCgv+
+X-Google-Smtp-Source: APXvYqyuuGYtf5nUzBrBw/k1Y88LZatbQ9O7NLyEKbBesu7E3A0jQur31fl20zr3GW9DLTKDibGeAA==
+X-Received: by 2002:adf:de8b:: with SMTP id w11mr3445196wrl.134.1565082269757;
+        Tue, 06 Aug 2019 02:04:29 -0700 (PDT)
+Received: from localhost ([197.211.57.137])
+        by smtp.gmail.com with ESMTPSA id c7sm79921956wro.70.2019.08.06.02.04.27
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 06 Aug 2019 02:04:29 -0700 (PDT)
+Date:   Tue, 6 Aug 2019 10:03:23 +0100
+From:   Sheriff Esseson <sheriffesseson@gmail.com>
+To:     skhan@linuxfoundation.org
+Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        "supporter:XFS FILESYSTEM" <linux-xfs@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: [PATCH] Documentation: fs: Convert xfs-delayed-logging-design.txt to
+ ReSt
+Message-ID: <20190806090323.GA16095@localhost>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Tue, 06 Aug 2019 09:01:47 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Let's validate the memory block size early, when initializing the
-memory device infrastructure. Fail hard in case the value is not
-suitable.
+Convert xfs-delayed-logging-design.txt to ReST and fix broken references.
+The enumerations at "Lifecycle Changes" breaks because of lines begining with
+"<", treat as diagrams.
 
-As nobody checks the return value of memory_dev_init(), turn it into a
-void function and fail with a panic in all scenarios instead. Otherwise,
-we'll crash later during boot when core/drivers expect that the memory
-device infrastructure (including memory_block_size_bytes()) works as
-expected.
-
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Sheriff Esseson <sheriffesseson@gmail.com>
 ---
- drivers/base/memory.c  | 31 +++++++++----------------------
- include/linux/memory.h |  6 +++---
- 2 files changed, 12 insertions(+), 25 deletions(-)
+ Documentation/filesystems/index.rst           |  1 +
+ ...ign.txt => xfs-delayed-logging-design.rst} | 69 +++++++++++--------
+ MAINTAINERS                                   |  2 +-
+ 3 files changed, 44 insertions(+), 28 deletions(-)
+ rename Documentation/filesystems/{xfs-delayed-logging-design.txt => xfs-delayed-logging-design.rst} (96%)
 
-diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-index 790b3bcd63a6..6bea4f3f8040 100644
---- a/drivers/base/memory.c
-+++ b/drivers/base/memory.c
-@@ -100,21 +100,6 @@ unsigned long __weak memory_block_size_bytes(void)
- }
- EXPORT_SYMBOL_GPL(memory_block_size_bytes);
+diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
+index 2de2fe2ab078..0b94ff710b67 100644
+--- a/Documentation/filesystems/index.rst
++++ b/Documentation/filesystems/index.rst
+@@ -32,3 +32,4 @@ filesystem implementations.
  
--static unsigned long get_memory_block_size(void)
--{
--	unsigned long block_sz;
--
--	block_sz = memory_block_size_bytes();
--
--	/* Validate blk_sz is a power of 2 and not less than section size */
--	if ((block_sz & (block_sz - 1)) || (block_sz < MIN_MEMORY_BLOCK_SIZE)) {
--		WARN_ON(1);
--		block_sz = MIN_MEMORY_BLOCK_SIZE;
--	}
--
--	return block_sz;
--}
--
- /*
-  * Show the first physical section index (number) of this memory block.
-  */
-@@ -461,7 +446,7 @@ static DEVICE_ATTR_RO(removable);
- static ssize_t block_size_bytes_show(struct device *dev,
- 				     struct device_attribute *attr, char *buf)
- {
--	return sprintf(buf, "%lx\n", get_memory_block_size());
-+	return sprintf(buf, "%lx\n", memory_block_size_bytes());
- }
- 
- static DEVICE_ATTR_RO(block_size_bytes);
-@@ -811,19 +796,22 @@ static const struct attribute_group *memory_root_attr_groups[] = {
- /*
-  * Initialize the sysfs support for memory devices...
-  */
--int __init memory_dev_init(void)
-+void __init memory_dev_init(void)
- {
- 	int ret;
- 	int err;
- 	unsigned long block_sz, nr;
- 
-+	/* Validate the configured memory block size */
-+	block_sz = memory_block_size_bytes();
-+	if (!is_power_of_2(block_sz) || block_sz < MIN_MEMORY_BLOCK_SIZE)
-+		panic("Memory block size not suitable: 0x%lx\n", block_sz);
-+	sections_per_block = block_sz / MIN_MEMORY_BLOCK_SIZE;
+    journalling
+    fscrypt
++   xfs-delayed-logging-design
+diff --git a/Documentation/filesystems/xfs-delayed-logging-design.txt b/Documentation/filesystems/xfs-delayed-logging-design.rst
+similarity index 96%
+rename from Documentation/filesystems/xfs-delayed-logging-design.txt
+rename to Documentation/filesystems/xfs-delayed-logging-design.rst
+index 9a6dd289b17b..a85ca00d4221 100644
+--- a/Documentation/filesystems/xfs-delayed-logging-design.txt
++++ b/Documentation/filesystems/xfs-delayed-logging-design.rst
+@@ -1,8 +1,11 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
- 	ret = subsys_system_register(&memory_subsys, memory_root_attr_groups);
- 	if (ret)
- 		goto out;
++==========================
+ XFS Delayed Logging Design
+---------------------------
++==========================
  
--	block_sz = get_memory_block_size();
--	sections_per_block = block_sz / MIN_MEMORY_BLOCK_SIZE;
--
- 	/*
- 	 * Create entries for memory sections that were found
- 	 * during boot and have been initialized
-@@ -839,8 +827,7 @@ int __init memory_dev_init(void)
+ Introduction to Re-logging in XFS
+----------------------------------
++=================================
  
- out:
- 	if (ret)
--		printk(KERN_ERR "%s() failed: %d\n", __func__, ret);
--	return ret;
-+		panic("%s() failed: %d\n", __func__, ret);
- }
+ XFS logging is a combination of logical and physical logging. Some objects,
+ such as inodes and dquots, are logged in logical format where the details
+@@ -27,14 +30,18 @@ written to disk after change D, we would see in the log the following series
+ of transactions, their contents and the log sequence number (LSN) of the
+ transaction:
  
- /**
-diff --git a/include/linux/memory.h b/include/linux/memory.h
-index 704215d7258a..0ebb105eb261 100644
---- a/include/linux/memory.h
-+++ b/include/linux/memory.h
-@@ -79,9 +79,9 @@ struct mem_section;
- #define IPC_CALLBACK_PRI        10
++        ============           =========        ==============
+ 	Transaction		Contents	LSN
++        ============           =========        ==============
+ 	   A			   A		   X
+ 	   B			  A+B		  X+n
+ 	   C			 A+B+C		 X+n+m
+ 	   D			A+B+C+D		X+n+m+o
+ 	    <object written to disk>
+-	   E			   E		   Y (> X+n+m+o)
++        ------------------------------------------------------
++	   E			   E		Y (> X+n+m+o)
+ 	   F			  E+F		  Y+p
++        ============           =========        ==============
  
- #ifndef CONFIG_MEMORY_HOTPLUG_SPARSE
--static inline int memory_dev_init(void)
-+static inline void memory_dev_init(void)
- {
--	return 0;
-+	return;
- }
- static inline int register_memory_notifier(struct notifier_block *nb)
- {
-@@ -112,7 +112,7 @@ extern int register_memory_isolate_notifier(struct notifier_block *nb);
- extern void unregister_memory_isolate_notifier(struct notifier_block *nb);
- int create_memory_block_devices(unsigned long start, unsigned long size);
- void remove_memory_block_devices(unsigned long start, unsigned long size);
--extern int memory_dev_init(void);
-+extern void memory_dev_init(void);
- extern int memory_notify(unsigned long val, void *v);
- extern int memory_isolate_notify(unsigned long val, void *v);
- extern struct memory_block *find_memory_block(struct mem_section *);
+ In other words, each time an object is relogged, the new transaction contains
+ the aggregation of all the previous changes currently held only in the log.
+@@ -85,7 +92,7 @@ IO permanently. Hence the XFS journalling subsystem can be considered to be IO
+ bound.
+ 
+ Delayed Logging: Concepts
+--------------------------
++=========================
+ 
+ The key thing to note about the asynchronous logging combined with the
+ relogging technique XFS uses is that we can be relogging changed objects
+@@ -154,9 +161,10 @@ The fundamental requirements for delayed logging in XFS are simple:
+ 	6. No performance regressions for synchronous transaction workloads.
+ 
+ Delayed Logging: Design
+------------------------
++=======================
+ 
+ Storing Changes
++---------------
+ 
+ The problem with accumulating changes at a logical level (i.e. just using the
+ existing log item dirty region tracking) is that when it comes to writing the
+@@ -194,30 +202,30 @@ asynchronous transactions to the log. The differences between the existing
+ formatting method and the delayed logging formatting can be seen in the
+ diagram below.
+ 
+-Current format log vector:
++Current format log vector::
+ 
+-Object    +---------------------------------------------+
+-Vector 1      +----+
+-Vector 2                    +----+
+-Vector 3                                   +----------+
++        Object    +---------------------------------------------+
++        Vector 1      +----+
++        Vector 2                    +----+
++        Vector 3                                   +----------+
+ 
+-After formatting:
++After formatting::
+ 
+-Log Buffer    +-V1-+-V2-+----V3----+
++        Log Buffer    +-V1-+-V2-+----V3----+
+ 
+-Delayed logging vector:
++Delayed logging vector::
+ 
+-Object    +---------------------------------------------+
+-Vector 1      +----+
+-Vector 2                    +----+
+-Vector 3                                   +----------+
++        Object    +---------------------------------------------+
++        Vector 1      +----+
++        Vector 2                    +----+
++        Vector 3                                   +----------+
+ 
+-After formatting:
++After formatting::
+ 
+-Memory Buffer +-V1-+-V2-+----V3----+
+-Vector 1      +----+
+-Vector 2           +----+
+-Vector 3                +----------+
++        Memory Buffer +-V1-+-V2-+----V3----+
++        Vector 1      +----+
++        Vector 2           +----+
++        Vector 3                +----------+
+ 
+ The memory buffer and associated vector need to be passed as a single object,
+ but still need to be associated with the parent object so if the object is
+@@ -242,6 +250,7 @@ relogged in memory.
+ 
+ 
+ Tracking Changes
++----------------
+ 
+ Now that we can record transactional changes in memory in a form that allows
+ them to be used without limitations, we need to be able to track and accumulate
+@@ -278,6 +287,7 @@ done for convenience/sanity of the developers.
+ 
+ 
+ Delayed Logging: Checkpoints
++============================
+ 
+ When we have a log synchronisation event, commonly known as a "log force",
+ all the items in the CIL must be written into the log via the log buffers.
+@@ -341,7 +351,7 @@ Hence log vectors need to be able to be chained together to allow them to be
+ detached from the log items. That is, when the CIL is flushed the memory
+ buffer and log vector attached to each log item needs to be attached to the
+ checkpoint context so that the log item can be released. In diagrammatic form,
+-the CIL would look like this before the flush:
++the CIL would look like this before the flush::
+ 
+ 	CIL Head
+ 	   |
+@@ -362,7 +372,7 @@ the CIL would look like this before the flush:
+ 					-> vector array
+ 
+ And after the flush the CIL head is empty, and the checkpoint context log
+-vector list would look like:
++vector list would look like::
+ 
+ 	Checkpoint Context
+ 	   |
+@@ -411,6 +421,7 @@ compare" situation that can be done after a working and reviewed implementation
+ is in the dev tree....
+ 
+ Delayed Logging: Checkpoint Sequencing
++======================================
+ 
+ One of the key aspects of the XFS transaction subsystem is that it tags
+ committed transactions with the log sequence number of the transaction commit.
+@@ -474,6 +485,7 @@ force the log at the LSN of that transaction) and so the higher level code
+ behaves the same regardless of whether delayed logging is being used or not.
+ 
+ Delayed Logging: Checkpoint Log Space Accounting
++================================================
+ 
+ The big issue for a checkpoint transaction is the log space reservation for the
+ transaction. We don't know how big a checkpoint transaction is going to be
+@@ -491,7 +503,7 @@ the size of the transaction and the number of regions being logged (the number
+ of log vectors in the transaction).
+ 
+ An example of the differences would be logging directory changes versus logging
+-inode changes. If you modify lots of inode cores (e.g. chmod -R g+w *), then
++inode changes. If you modify lots of inode cores e.g. ``$ chmod -R g+w *``, then
+ there are lots of transactions that only contain an inode core and an inode log
+ format structure. That is, two vectors totaling roughly 150 bytes. If we modify
+ 10,000 inodes, we have about 1.5MB of metadata to write in 20,000 vectors. Each
+@@ -565,6 +577,7 @@ which is once every 30s.
+ 
+ 
+ Delayed Logging: Log Item Pinning
++=================================
+ 
+ Currently log items are pinned during transaction commit while the items are
+ still locked. This happens just after the items are formatted, though it could
+@@ -605,6 +618,7 @@ object, we have a race with CIL being flushed between the check and the pin
+ lock to guarantee that we pin the items correctly.
+ 
+ Delayed Logging: Concurrent Scalability
++=======================================
+ 
+ A fundamental requirement for the CIL is that accesses through transaction
+ commits must scale to many concurrent commits. The current transaction commit
+@@ -683,8 +697,9 @@ woken by the wrong event.
+ 
+ 
+ Lifecycle Changes
++=================
+ 
+-The existing log item life cycle is as follows:
++The existing log item life cycle is as follows::
+ 
+ 	1. Transaction allocate
+ 	2. Transaction reserve
+@@ -729,7 +744,7 @@ at the same time. If the log item is in the AIL or between steps 6 and 7
+ and steps 1-6 are re-entered, then the item is relogged. Only when steps 8-9
+ are entered and completed is the object considered clean.
+ 
+-With delayed logging, there are new steps inserted into the life cycle:
++With delayed logging, there are new steps inserted into the life cycle::
+ 
+ 	1. Transaction allocate
+ 	2. Transaction reserve
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 6c49b48cfd69..acbce11c3d49 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -17664,7 +17664,7 @@ T:	git git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
+ S:	Supported
+ F:	Documentation/admin-guide/xfs.rst
+ F:	Documentation/ABI/testing/sysfs-fs-xfs
+-F:	Documentation/filesystems/xfs-delayed-logging-design.txt
++F:	Documentation/filesystems/xfs-delayed-logging-design.rst
+ F:	Documentation/filesystems/xfs-self-describing-metadata.txt
+ F:	fs/xfs/
+ F:	include/uapi/linux/dqblk_xfs.h
 -- 
-2.21.0
+2.17.1
 
