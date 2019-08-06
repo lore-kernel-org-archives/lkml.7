@@ -2,110 +2,126 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BD65C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:22:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9DDBC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:28:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A2FD2070D
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:22:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1F31206A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:28:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="aU+lXWEv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732122AbfHFIWE (ORCPT
+        id S1732186AbfHFI2X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 04:22:04 -0400
-Received: from ngcobalt01.manitu.net ([217.11.48.101]:47560 "EHLO
-        ngcobalt01.manitu.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728056AbfHFIWE (ORCPT
+        Tue, 6 Aug 2019 04:28:23 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42351 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726713AbfHFI2W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 04:22:04 -0400
-X-Greylist: delayed 556 seconds by postgrey-1.27 at vger.kernel.org; Tue, 06 Aug 2019 04:22:03 EDT
-Received: from server.passau (ipbcc33479.dynamic.kabel-deutschland.de [188.195.52.121])
-        (Authenticated sender: smtp-send)
-        by ngcobalt01.manitu.net (Postfix) with ESMTPSA id 1E60A33E4ED3;
-        Tue,  6 Aug 2019 10:12:46 +0200 (CEST)
-Received: from [192.168.6.60] (t460p [192.168.6.60])
-        by server.passau (Postfix) with ESMTPSA id 76841814DE;
-        Tue,  6 Aug 2019 10:12:45 +0200 (CEST)
-From:   Philipp Wendler <ml@philippwendler.de>
-Subject: Re: pivot_root(".", ".") and the fchdir() dance
-To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>,
-        Aleksa Sarai <asarai@suse.de>
-Cc:     linux-man <linux-man@vger.kernel.org>,
-        Containers <containers@lists.linux-foundation.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Jordan Ogas <jogas@lanl.gov>, werner@almesberger.net,
-        Al Viro <viro@ftp.linux.org.uk>
-References: <CAKgNAki0bR5zZr+kp_xjq+bNUky6-F+s2ep+jnR0YrjHhNMB1g@mail.gmail.com>
- <20190805103630.tu4kytsbi5evfrhi@mikami>
- <3a96c631-6595-b75e-f6a7-db703bf89bcf@gmail.com>
-Message-ID: <da747415-4c7a-f931-6f2e-2962da63c161@philippwendler.de>
-Date:   Tue, 6 Aug 2019 10:12:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 6 Aug 2019 04:28:22 -0400
+Received: by mail-wr1-f67.google.com with SMTP id x1so37066284wrr.9
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 01:28:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=DVFYv472sz+yHZKlPnNeqX3YVoj+1DLyrPSYY32g1tE=;
+        b=aU+lXWEv+aOZX4F54PjmzIgEBPB/5g4gVzTLgVwe3Bp34WRGMKwo1gwqyZI3EqndvQ
+         66/UK0P6Dq4l56pAOqlTP98HZCwlFEd4r86u5zQ8jH05RniLtwMIIjeKX1QWZ+nrSslx
+         yC4pHdFRv8CNIjqY8xXlS67znB9nh+bEO5mag1bOurVgi2kKUtOkEi6VDB11E3DaK1hi
+         Vq6ok8XxOB0vlzLqvwVpOCM97SY1RXpTPoJ1z3nDyYg2I5+jWRXUPnYD1eneknocO3qI
+         5O2OHzXRsEeSr9UVdGPwR4s2w6Y1UTr+UJtBhU4OhTePuKxapn4IZGNNVblETx64h74f
+         UFuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=DVFYv472sz+yHZKlPnNeqX3YVoj+1DLyrPSYY32g1tE=;
+        b=KvU9piKDKdJZjKzU29pN0NkjvbvSntzb93BYGg23Z6+6YynzxzuJE4yvcAcCaubnWS
+         OJEBGA3SiGDhvObh0kr+m8Zn45ee/QtCSE1MV3pgTWzjCoqHFwhYPIqdHbavWqNAoeqQ
+         /ZI8iHIwuYgHzysQcP+qFr2wF54RuQiPXJtbEybGRymonLvW/sXj+JRXtHrwZY74D/It
+         5x3b1UgvHUhwi4X8YcwtL35VR97rkF8Gn/JnTQYCTHEnjYWi6lYSZEA12RditVh6udB6
+         x78dTOyG7/9Fz+LM/ITp9zyrUYiI6qmW3tVQN1SaKUlN7h7yMUsQrnnNIlWwUERxRORc
+         3olA==
+X-Gm-Message-State: APjAAAXVeeRczLTYz9Jv1PUKHQwKf/HPycwT/F48ZY6dixZ8rCWAykXg
+        3eDCMJQFS8T5fuN8GgoVvbhEnA==
+X-Google-Smtp-Source: APXvYqzOLXGaercRAbrASDcbtLCTcSm2SMt3N5yX52X0q7EIRcAvf1mi5IUz8Fk3qAs/wmcB+8dmQg==
+X-Received: by 2002:adf:b64e:: with SMTP id i14mr3279108wre.248.1565080100382;
+        Tue, 06 Aug 2019 01:28:20 -0700 (PDT)
+Received: from localhost (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id f7sm87293405wrv.38.2019.08.06.01.28.19
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 06 Aug 2019 01:28:19 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>, sboyd@kernel.org
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH v2 1/4] clk: core: introduce clk_hw_set_parent()
+In-Reply-To: <20190731084019.8451-2-narmstrong@baylibre.com>
+References: <20190731084019.8451-1-narmstrong@baylibre.com> <20190731084019.8451-2-narmstrong@baylibre.com>
+Date:   Tue, 06 Aug 2019 10:28:19 +0200
+Message-ID: <1j36iewvdo.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <3a96c631-6595-b75e-f6a7-db703bf89bcf@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Michael, hello Aleksa,
+On Wed 31 Jul 2019 at 10:40, Neil Armstrong <narmstrong@baylibre.com> wrote:
 
-Am 05.08.19 um 14:29 schrieb Michael Kerrisk (man-pages):
+> Introduce the clk_hw_set_parent() provider call to change parent of
+> a clock by using the clk_hw pointers.
+>
+> This eases the clock reparenting from clock rate notifiers and
+> implementing DVFS with simpler code avoiding the boilerplates
+> functions as __clk_lookup(clk_hw_get_name()) then clk_set_parent().
+>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-> On 8/5/19 12:36 PM, Aleksa Sarai wrote:
->> On 2019-08-01, Michael Kerrisk (man-pages) <mtk.manpages@gmail.com> wrote:
->>> I'd like to add some documentation about the pivot_root(".", ".")
->>> idea, but I have a doubt/question. In the lxc_pivot_root() code we
->>> have these steps
->>>
->>>         oldroot = open("/", O_DIRECTORY | O_RDONLY | O_CLOEXEC);
->>>         newroot = open(rootfs, O_DIRECTORY | O_RDONLY | O_CLOEXEC);
->>>
->>>         fchdir(newroot);
->>>         pivot_root(".", ".");
->>>
->>>         fchdir(oldroot);      // ****
->>>
->>>         mount("", ".", "", MS_SLAVE | MS_REC, NULL);
->>>         umount2(".", MNT_DETACH);
->>
->>>         fchdir(newroot);      // ****
->>
->> And this one is required because we are in @oldroot at this point, due
->> to the first fchdir(2). If we don't have the first one, then switching
->> from "." to "/" in the mount/umount2 calls should fix the issue.
-> 
-> See my notes above for why I therefore think that the second fchdir()
-> is also not needed (and therefore why switching from "." to "/" in the
-> mount()/umount2() calls is unnecessary.
-> 
-> Do you agree with my analysis?
+Looks ok to me but we will obviously need Stephen's ack to apply it
 
-If both the second and third fchdir are not required,
-then we do not need to bother with file descriptors at all, right?
-
-Indeed, my tests show that the following seems to work fine:
-
-chdir(rootfs)
-pivot_root(".", ".")
-umount2(".", MNT_DETACH)
-
-I tested that with my own tool[1] that uses user namespaces and marks
-everything MS_PRIVATE before, so I do not need the mount(MS_SLAVE) here.
-
-And it works the same with both umount2("/") and umount2(".").
-
-Did I overlook something that makes the file descriptors required?
-If not, wouldn't the above snippet make sense as example in the man page?
-
-Greetings
-Philipp
-
-[1]: https://github.com/sosy-lab/benchexec/blob/b90aeb034b867711845a453587b73fbe8e4dca68/benchexec/container.py#L735
+> ---
+>  drivers/clk/clk.c            | 6 ++++++
+>  include/linux/clk-provider.h | 1 +
+>  2 files changed, 7 insertions(+)
+>
+> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> index c0990703ce54..c11b1781d24a 100644
+> --- a/drivers/clk/clk.c
+> +++ b/drivers/clk/clk.c
+> @@ -2487,6 +2487,12 @@ static int clk_core_set_parent_nolock(struct clk_core *core,
+>  	return ret;
+>  }
+>  
+> +int clk_hw_set_parent(struct clk_hw *hw, struct clk_hw *parent)
+> +{
+> +	return clk_core_set_parent_nolock(hw->core, parent->core);
+> +}
+> +EXPORT_SYMBOL_GPL(clk_hw_set_parent);
+> +
+>  /**
+>   * clk_set_parent - switch the parent of a mux clk
+>   * @clk: the mux clk whose input we are switching
+> diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
+> index 2ae7604783dd..dce5521a9bf6 100644
+> --- a/include/linux/clk-provider.h
+> +++ b/include/linux/clk-provider.h
+> @@ -817,6 +817,7 @@ unsigned int clk_hw_get_num_parents(const struct clk_hw *hw);
+>  struct clk_hw *clk_hw_get_parent(const struct clk_hw *hw);
+>  struct clk_hw *clk_hw_get_parent_by_index(const struct clk_hw *hw,
+>  					  unsigned int index);
+> +int clk_hw_set_parent(struct clk_hw *hw, struct clk_hw *new_parent);
+>  unsigned int __clk_get_enable_count(struct clk *clk);
+>  unsigned long clk_hw_get_rate(const struct clk_hw *hw);
+>  unsigned long __clk_get_flags(struct clk *clk);
+> -- 
+> 2.22.0
