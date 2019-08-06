@@ -2,104 +2,107 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB6CEC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 10:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F1D6C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 10:48:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C361420818
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 10:48:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M4HUVcHj"
+	by mail.kernel.org (Postfix) with ESMTP id F0C2A20818
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 10:48:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732746AbfHFKsF (ORCPT
+        id S1732670AbfHFKso (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 06:48:05 -0400
-Received: from mail-pf1-f175.google.com ([209.85.210.175]:35192 "EHLO
-        mail-pf1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728845AbfHFKsE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 06:48:04 -0400
-Received: by mail-pf1-f175.google.com with SMTP id u14so41316390pfn.2;
-        Tue, 06 Aug 2019 03:48:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=tSv0N+buuXcfO2cMmMhlzp2LfygH9vWetg+buoM6+PE=;
-        b=M4HUVcHj3lA270e1ADCiKHblHxlb+KfeMaLEsCpeMYzREBWo/h6X/pOFR3Yw8RA5R+
-         +RMnaNsaT2MqnLIDPPJlR6op/GcNKibUh1j4zCBtJjGPUhV9kPSqqzhR9HK5+Gdplx2v
-         4xUFFzMEEC3LKQNEuF00f6UbLeqxSBhX1N+hEDgiirGXJqxjpUZG7g5pn5iiCSHwdL76
-         XQGhdevZ7T6zfjHIECxwTo/oCXQMCmAmZQ0VdswzO2kYIiIAnZK3KqWjAIQ5URfxJHBl
-         OHF84giOeCoadHjuoicuc927ncNvap6ANjahQPbvtHAxM7cJMN9OYbjk6PC2DGogcqx8
-         sfJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=tSv0N+buuXcfO2cMmMhlzp2LfygH9vWetg+buoM6+PE=;
-        b=udHzXEL5AAQLOIP5hqEC1G7Gnd49hJKFiYQVjpTUdw1B6XuG8NzY1Cwo6xeEOCxVfY
-         sDnBumAULsu0N13+cq3gBNc5ynZWetVGhqMGAmCiLT99qqGFzK1UA8sH9bCuyVL/MjMm
-         GKnOvArkbHJnpEKH4FkXKRKwnh2IK/2Z5IAw4gSGX3yuWb6jp/Ckxh8Na2JkKhr4SPR6
-         XFiZpMISOXw8RsO/qsXaDt09OsdvLfLYiGzbQAyFFqXOCXbCffp7nDJR/M2t+zsCfobO
-         RVx5QnF7UCU/meFG+lAGfCZFteWyYIiBjhsV/GuNSeQugorxaDcChErfiCqEUFCXDpS4
-         JFrg==
-X-Gm-Message-State: APjAAAWYkpRbHp41nobfFtvCR0T1khwXr00hellTeM+RPPGmdjHjVTOw
-        N+z0qehswm/jHBIxQv55BXLTEo3IOjS4Hw==
-X-Google-Smtp-Source: APXvYqzjn12vozHs0fboLhCynVya4jjSWy7VPGJi4K0jd3nYUa/1Jg07U9WJB9Et0BNhCKglVhUt/g==
-X-Received: by 2002:aa7:8a99:: with SMTP id a25mr3007540pfc.127.1565088483835;
-        Tue, 06 Aug 2019 03:48:03 -0700 (PDT)
-Received: from SC-GAME.lan ([2408:8256:3084:b0:885f:efd1:c65b:ab81])
-        by smtp.gmail.com with ESMTPSA id v63sm89417888pfv.174.2019.08.06.03.47.58
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 06 Aug 2019 03:48:02 -0700 (PDT)
-From:   Chen Minqiang <ptpt52@gmail.com>
-Cc:     davem@davemloft.net, Chen Minqiang <ptpt52@gmail.com>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] net/ipv4: reset mac head before call ip_tunnel_rcv()
-Date:   Tue,  6 Aug 2019 18:47:31 +0800
-Message-Id: <20190806104731.30603-1-ptpt52@gmail.com>
+        Tue, 6 Aug 2019 06:48:44 -0400
+Received: from foss.arm.com ([217.140.110.172]:60124 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728845AbfHFKso (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 06:48:44 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6C036337;
+        Tue,  6 Aug 2019 03:48:43 -0700 (PDT)
+Received: from DESKTOP-E1NTVVP.cambridge.arm.com (unknown [10.1.25.192])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 427DB3F694;
+        Tue,  6 Aug 2019 03:48:42 -0700 (PDT)
+From:   Brian Starkey <brian.starkey@arm.com>
+To:     Liviu Dudau <Liviu.Dudau@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>, nd@arm.com,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     dri-devel@lists.freedesktop.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2] drm/crc-debugfs: Add notes about CRC<->commit interactions
+Date:   Tue,  6 Aug 2019 11:48:35 +0100
+Message-Id: <20190806104835.26075-1-brian.starkey@arm.com>
 X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20190806091233.GX7444@phenom.ffwll.local>
+References: <20190806091233.GX7444@phenom.ffwll.local>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Chen Minqiang <ptpt52@gmail.com>
----
- net/ipv4/ipip.c | 1 +
- net/ipv6/sit.c  | 1 +
- 2 files changed, 2 insertions(+)
+CRC generation can be impacted by commits coming from userspace, and
+enabling CRC generation may itself trigger a commit. Add notes about
+this to the kerneldoc.
 
-diff --git a/net/ipv4/ipip.c b/net/ipv4/ipip.c
-index 43adfc1641ba..ba2b5fc8910f 100644
---- a/net/ipv4/ipip.c
-+++ b/net/ipv4/ipip.c
-@@ -242,6 +242,7 @@ static int ipip_tunnel_rcv(struct sk_buff *skb, u8 ipproto)
- 			if (!tun_dst)
- 				return 0;
- 		}
-+		skb_reset_mac_header(skb);
- 		return ip_tunnel_rcv(tunnel, skb, tpi, tun_dst, log_ecn_error);
- 	}
+Signed-off-by: Brian Starkey <brian.starkey@arm.com>
+---
+ drivers/gpu/drm/drm_debugfs_crc.c | 17 +++++++++++++----
+ include/drm/drm_crtc.h            |  4 ++++
+ 2 files changed, 17 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/gpu/drm/drm_debugfs_crc.c b/drivers/gpu/drm/drm_debugfs_crc.c
+index 7ca486d750e9..77159b6e77c3 100644
+--- a/drivers/gpu/drm/drm_debugfs_crc.c
++++ b/drivers/gpu/drm/drm_debugfs_crc.c
+@@ -65,10 +65,19 @@
+  * it submits. In this general case, the maximum userspace can do is to compare
+  * the reported CRCs of frames that should have the same contents.
+  *
+- * On the driver side the implementation effort is minimal, drivers only need to
+- * implement &drm_crtc_funcs.set_crc_source. The debugfs files are automatically
+- * set up if that vfunc is set. CRC samples need to be captured in the driver by
+- * calling drm_crtc_add_crc_entry().
++ * On the driver side the implementation effort is minimal, drivers only need
++ * to implement &drm_crtc_funcs.set_crc_source. The debugfs files are
++ * automatically set up if that vfunc is set. CRC samples need to be captured
++ * in the driver by calling drm_crtc_add_crc_entry(). Depending on the driver
++ * and HW requirements, &drm_crtc_funcs.set_crc_source may result in a commit
++ * (even a full modeset).
++ *
++ * CRC results must be reliable across non-full-modeset atomic commits, so if a
++ * commit via DRM_IOCTL_MODE_ATOMIC would disable or otherwise interfere with
++ * CRC generation, then the driver must mark that commit as a full modeset
++ * (drm_atomic_crtc_needs_modeset() should return true). As a result, to ensure
++ * consistent results, generic userspace must re-setup CRC generation after a
++ * legacy SETCRTC or an atomic commit with DRM_MODE_ATOMIC_ALLOW_MODESET.
+  */
  
-diff --git a/net/ipv6/sit.c b/net/ipv6/sit.c
-index 80610899a323..44a9674d06a6 100644
---- a/net/ipv6/sit.c
-+++ b/net/ipv6/sit.c
-@@ -739,6 +739,7 @@ static int sit_tunnel_rcv(struct sk_buff *skb, u8 ipproto)
- 			tpi = &ipip_tpi;
- 		if (iptunnel_pull_header(skb, 0, tpi->proto, false))
- 			goto drop;
-+		skb_reset_mac_header(skb);
- 		return ip_tunnel_rcv(tunnel, skb, tpi, NULL, log_ecn_error);
- 	}
- 
+ static int crc_control_show(struct seq_file *m, void *data)
+diff --git a/include/drm/drm_crtc.h b/include/drm/drm_crtc.h
+index 128d8b210621..7d14c11bdc0a 100644
+--- a/include/drm/drm_crtc.h
++++ b/include/drm/drm_crtc.h
+@@ -756,6 +756,9 @@ struct drm_crtc_funcs {
+ 	 * provided from the configured source. Drivers must accept an "auto"
+ 	 * source name that will select a default source for this CRTC.
+ 	 *
++	 * This may trigger an atomic modeset commit if necessary, to enable CRC
++	 * generation.
++	 *
+ 	 * Note that "auto" can depend upon the current modeset configuration,
+ 	 * e.g. it could pick an encoder or output specific CRC sampling point.
+ 	 *
+@@ -767,6 +770,7 @@ struct drm_crtc_funcs {
+ 	 * 0 on success or a negative error code on failure.
+ 	 */
+ 	int (*set_crc_source)(struct drm_crtc *crtc, const char *source);
++
+ 	/**
+ 	 * @verify_crc_source:
+ 	 *
 -- 
 2.17.1
 
