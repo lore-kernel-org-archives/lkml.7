@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD53DC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:41:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4263C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5C8821743
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:41:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DFCF21874
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:42:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127715;
-	bh=PLr8k4TWW+G7xVQIGP2VSxN/aJZHk3HpXCqOe3yDu7Q=;
+	s=default; t=1565127723;
+	bh=UUJuLsrm3zV6ZEHRW9fyqquTnoyQjAhYN10RPTHWzv4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e7FAdtO3VY3E0Ygab4XFPSSjzDREuEB9tVNvTvHbuItUtlex+BP1XgqQs41LfMQYV
-	 RE36xmDkvaPseL9GN3U06zsoDH8nfVaUg7V539KSFm1XekGoo/K1daCGhiedF071tI
-	 sbf5nExZ7G0dcNDNuO/UfPHn/LFBz3TGY58Lns0k=
+	b=lm/CbDsIF+qu0OoTfem3CQUxoz04jfpSdvM93gw5DCHLkOES4lH65vQzKJOXIkf96
+	 uV1judg/U3uBf/WeK1cySrM7hPbzIfRPgutfX7yy2NyoZOun694c/7jL1XEdaHcDh0
+	 rjEzLaRrODych0LJ6KAlqmAAt5kDoPs5BQfi0bD8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728986AbfHFVly (ORCPT
+        id S1727471AbfHFVmC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:41:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53640 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 17:42:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728718AbfHFVfu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:35:50 -0400
+        id S1728677AbfHFVfp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:35:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7015E217D9;
-        Tue,  6 Aug 2019 21:35:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7384821872;
+        Tue,  6 Aug 2019 21:35:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127350;
-        bh=PLr8k4TWW+G7xVQIGP2VSxN/aJZHk3HpXCqOe3yDu7Q=;
+        s=default; t=1565127345;
+        bh=UUJuLsrm3zV6ZEHRW9fyqquTnoyQjAhYN10RPTHWzv4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I024dj+7Attu6TFnLvr0OgrgjTf+WiFeq61k1vxeN6xkaBDyFUzBK+Xs7DAbNWThk
-         jXSKS+W72djbUA9VHIrH4oSzGmWGQIGyuv+ZueeqX7U+hvCL2V/DvnDInjFtSDc5el
-         ZLWKIViJ5bBZpn54DyHoNVVyrOTF+qQrTa8IpTew=
+        b=fB/oiGBhFOb7DlcgrAkZQM9WQbP5YW4GE+h20CoAX/cj5kl/WETtwFfjb0SyaNTqC
+         fpqpDUOh9xZVIknJ+MmQtzYkZ+b5qIEKte3L7PCjKD8Z2RvannCK2iq6K1a8edCbEc
+         zaMX4QEr781Bh3vnFsW7JMBxvBDxPM5bM0k/Z7Js=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christian Brauner <christian@brauner.io>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 15/32] exit: make setting exit_state consistent
-Date:   Tue,  6 Aug 2019 17:35:03 -0400
-Message-Id: <20190806213522.19859-15-sashal@kernel.org>
+Cc:     Filipe Manana <fdmanana@suse.com>, David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 12/32] Btrfs: fix deadlock between fiemap and transaction commits
+Date:   Tue,  6 Aug 2019 17:35:00 -0400
+Message-Id: <20190806213522.19859-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190806213522.19859-1-sashal@kernel.org>
 References: <20190806213522.19859-1-sashal@kernel.org>
@@ -60,51 +58,213 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Brauner <christian@brauner.io>
+From: Filipe Manana <fdmanana@suse.com>
 
-[ Upstream commit 30b692d3b390c6fe78a5064be0c4bbd44a41be59 ]
+[ Upstream commit a6d155d2e363f26290ffd50591169cb96c2a609e ]
 
-Since commit b191d6491be6 ("pidfd: fix a poll race when setting exit_state")
-we unconditionally set exit_state to EXIT_ZOMBIE before calling into
-do_notify_parent(). This was done to eliminate a race when querying
-exit_state in do_notify_pidfd().
-Back then we decided to do the absolute minimal thing to fix this and
-not touch the rest of the exit_notify() function where exit_state is
-set.
-Since this fix has not caused any issues change the setting of
-exit_state to EXIT_DEAD in the autoreap case to account for the fact hat
-exit_state is set to EXIT_ZOMBIE unconditionally. This fix was planned
-but also explicitly requested in [1] and makes the whole code more
-consistent.
+The fiemap handler locks a file range that can have unflushed delalloc,
+and after locking the range, it tries to attach to a running transaction.
+If the running transaction started its commit, that is, it is in state
+TRANS_STATE_COMMIT_START, and either the filesystem was mounted with the
+flushoncommit option or the transaction is creating a snapshot for the
+subvolume that contains the file that fiemap is operating on, we end up
+deadlocking. This happens because fiemap is blocked on the transaction,
+waiting for it to complete, and the transaction is waiting for the flushed
+dealloc to complete, which requires locking the file range that the fiemap
+task already locked. The following stack traces serve as an example of
+when this deadlock happens:
 
-/* References */
-[1]: https://lore.kernel.org/lkml/CAHk-=wigcxGFR2szue4wavJtH5cYTTeNES=toUBVGsmX0rzX+g@mail.gmail.com
+  (...)
+  [404571.515510] Workqueue: btrfs-endio-write btrfs_endio_write_helper [btrfs]
+  [404571.515956] Call Trace:
+  [404571.516360]  ? __schedule+0x3ae/0x7b0
+  [404571.516730]  schedule+0x3a/0xb0
+  [404571.517104]  lock_extent_bits+0x1ec/0x2a0 [btrfs]
+  [404571.517465]  ? remove_wait_queue+0x60/0x60
+  [404571.517832]  btrfs_finish_ordered_io+0x292/0x800 [btrfs]
+  [404571.518202]  normal_work_helper+0xea/0x530 [btrfs]
+  [404571.518566]  process_one_work+0x21e/0x5c0
+  [404571.518990]  worker_thread+0x4f/0x3b0
+  [404571.519413]  ? process_one_work+0x5c0/0x5c0
+  [404571.519829]  kthread+0x103/0x140
+  [404571.520191]  ? kthread_create_worker_on_cpu+0x70/0x70
+  [404571.520565]  ret_from_fork+0x3a/0x50
+  [404571.520915] kworker/u8:6    D    0 31651      2 0x80004000
+  [404571.521290] Workqueue: btrfs-flush_delalloc btrfs_flush_delalloc_helper [btrfs]
+  (...)
+  [404571.537000] fsstress        D    0 13117  13115 0x00004000
+  [404571.537263] Call Trace:
+  [404571.537524]  ? __schedule+0x3ae/0x7b0
+  [404571.537788]  schedule+0x3a/0xb0
+  [404571.538066]  wait_current_trans+0xc8/0x100 [btrfs]
+  [404571.538349]  ? remove_wait_queue+0x60/0x60
+  [404571.538680]  start_transaction+0x33c/0x500 [btrfs]
+  [404571.539076]  btrfs_check_shared+0xa3/0x1f0 [btrfs]
+  [404571.539513]  ? extent_fiemap+0x2ce/0x650 [btrfs]
+  [404571.539866]  extent_fiemap+0x2ce/0x650 [btrfs]
+  [404571.540170]  do_vfs_ioctl+0x526/0x6f0
+  [404571.540436]  ksys_ioctl+0x70/0x80
+  [404571.540734]  __x64_sys_ioctl+0x16/0x20
+  [404571.540997]  do_syscall_64+0x60/0x1d0
+  [404571.541279]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+  (...)
+  [404571.543729] btrfs           D    0 14210  14208 0x00004000
+  [404571.544023] Call Trace:
+  [404571.544275]  ? __schedule+0x3ae/0x7b0
+  [404571.544526]  ? wait_for_completion+0x112/0x1a0
+  [404571.544795]  schedule+0x3a/0xb0
+  [404571.545064]  schedule_timeout+0x1ff/0x390
+  [404571.545351]  ? lock_acquire+0xa6/0x190
+  [404571.545638]  ? wait_for_completion+0x49/0x1a0
+  [404571.545890]  ? wait_for_completion+0x112/0x1a0
+  [404571.546228]  wait_for_completion+0x131/0x1a0
+  [404571.546503]  ? wake_up_q+0x70/0x70
+  [404571.546775]  btrfs_wait_ordered_extents+0x27c/0x400 [btrfs]
+  [404571.547159]  btrfs_commit_transaction+0x3b0/0xae0 [btrfs]
+  [404571.547449]  ? btrfs_mksubvol+0x4a4/0x640 [btrfs]
+  [404571.547703]  ? remove_wait_queue+0x60/0x60
+  [404571.547969]  btrfs_mksubvol+0x605/0x640 [btrfs]
+  [404571.548226]  ? __sb_start_write+0xd4/0x1c0
+  [404571.548512]  ? mnt_want_write_file+0x24/0x50
+  [404571.548789]  btrfs_ioctl_snap_create_transid+0x169/0x1a0 [btrfs]
+  [404571.549048]  btrfs_ioctl_snap_create_v2+0x11d/0x170 [btrfs]
+  [404571.549307]  btrfs_ioctl+0x133f/0x3150 [btrfs]
+  [404571.549549]  ? mem_cgroup_charge_statistics+0x4c/0xd0
+  [404571.549792]  ? mem_cgroup_commit_charge+0x84/0x4b0
+  [404571.550064]  ? __handle_mm_fault+0xe3e/0x11f0
+  [404571.550306]  ? do_raw_spin_unlock+0x49/0xc0
+  [404571.550608]  ? _raw_spin_unlock+0x24/0x30
+  [404571.550976]  ? __handle_mm_fault+0xedf/0x11f0
+  [404571.551319]  ? do_vfs_ioctl+0xa2/0x6f0
+  [404571.551659]  ? btrfs_ioctl_get_supported_features+0x30/0x30 [btrfs]
+  [404571.552087]  do_vfs_ioctl+0xa2/0x6f0
+  [404571.552355]  ksys_ioctl+0x70/0x80
+  [404571.552621]  __x64_sys_ioctl+0x16/0x20
+  [404571.552864]  do_syscall_64+0x60/0x1d0
+  [404571.553104]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+  (...)
 
-Signed-off-by: Christian Brauner <christian@brauner.io>
-Acked-by: Oleg Nesterov <oleg@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
+If we were joining the transaction instead of attaching to it, we would
+not risk a deadlock because a join only blocks if the transaction is in a
+state greater then or equals to TRANS_STATE_COMMIT_DOING, and the delalloc
+flush performed by a transaction is done before it reaches that state,
+when it is in the state TRANS_STATE_COMMIT_START. However a transaction
+join is intended for use cases where we do modify the filesystem, and
+fiemap only needs to peek at delayed references from the current
+transaction in order to determine if extents are shared, and, besides
+that, when there is no current transaction or when it blocks to wait for
+a current committing transaction to complete, it creates a new transaction
+without reserving any space. Such unnecessary transactions, besides doing
+unnecessary IO, can cause transaction aborts (-ENOSPC) and unnecessary
+rotation of the precious backup roots.
+
+So fix this by adding a new transaction join variant, named join_nostart,
+which behaves like the regular join, but it does not create a transaction
+when none currently exists or after waiting for a committing transaction
+to complete.
+
+Fixes: 03628cdbc64db6 ("Btrfs: do not start a transaction during fiemap")
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/exit.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ fs/btrfs/backref.c     |  2 +-
+ fs/btrfs/transaction.c | 22 ++++++++++++++++++----
+ fs/btrfs/transaction.h |  3 +++
+ 3 files changed, 22 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/exit.c b/kernel/exit.c
-index 5c0964dc805ac..d9cfc39e5f97b 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -732,9 +732,10 @@ static void exit_notify(struct task_struct *tsk, int group_dead)
- 		autoreap = true;
+diff --git a/fs/btrfs/backref.c b/fs/btrfs/backref.c
+index ac6c383d63140..19855659f6503 100644
+--- a/fs/btrfs/backref.c
++++ b/fs/btrfs/backref.c
+@@ -1485,7 +1485,7 @@ int btrfs_check_shared(struct btrfs_root *root, u64 inum, u64 bytenr)
+ 		goto out;
  	}
  
--	tsk->exit_state = autoreap ? EXIT_DEAD : EXIT_ZOMBIE;
--	if (tsk->exit_state == EXIT_DEAD)
-+	if (autoreap) {
-+		tsk->exit_state = EXIT_DEAD;
- 		list_add(&tsk->ptrace_entry, &dead);
-+	}
+-	trans = btrfs_attach_transaction(root);
++	trans = btrfs_join_transaction_nostart(root);
+ 	if (IS_ERR(trans)) {
+ 		if (PTR_ERR(trans) != -ENOENT && PTR_ERR(trans) != -EROFS) {
+ 			ret = PTR_ERR(trans);
+diff --git a/fs/btrfs/transaction.c b/fs/btrfs/transaction.c
+index bb8f6c020d227..a68e9130663fe 100644
+--- a/fs/btrfs/transaction.c
++++ b/fs/btrfs/transaction.c
+@@ -28,15 +28,18 @@ static const unsigned int btrfs_blocked_trans_types[TRANS_STATE_MAX] = {
+ 	[TRANS_STATE_COMMIT_START]	= (__TRANS_START | __TRANS_ATTACH),
+ 	[TRANS_STATE_COMMIT_DOING]	= (__TRANS_START |
+ 					   __TRANS_ATTACH |
+-					   __TRANS_JOIN),
++					   __TRANS_JOIN |
++					   __TRANS_JOIN_NOSTART),
+ 	[TRANS_STATE_UNBLOCKED]		= (__TRANS_START |
+ 					   __TRANS_ATTACH |
+ 					   __TRANS_JOIN |
+-					   __TRANS_JOIN_NOLOCK),
++					   __TRANS_JOIN_NOLOCK |
++					   __TRANS_JOIN_NOSTART),
+ 	[TRANS_STATE_COMPLETED]		= (__TRANS_START |
+ 					   __TRANS_ATTACH |
+ 					   __TRANS_JOIN |
+-					   __TRANS_JOIN_NOLOCK),
++					   __TRANS_JOIN_NOLOCK |
++					   __TRANS_JOIN_NOSTART),
+ };
  
- 	/* mt-exec, de_thread() is waiting for group leader */
- 	if (unlikely(tsk->signal->notify_count < 0))
+ void btrfs_put_transaction(struct btrfs_transaction *transaction)
+@@ -531,7 +534,8 @@ start_transaction(struct btrfs_root *root, unsigned int num_items,
+ 		ret = join_transaction(fs_info, type);
+ 		if (ret == -EBUSY) {
+ 			wait_current_trans(fs_info);
+-			if (unlikely(type == TRANS_ATTACH))
++			if (unlikely(type == TRANS_ATTACH ||
++				     type == TRANS_JOIN_NOSTART))
+ 				ret = -ENOENT;
+ 		}
+ 	} while (ret == -EBUSY);
+@@ -647,6 +651,16 @@ struct btrfs_trans_handle *btrfs_join_transaction_nolock(struct btrfs_root *root
+ 				 BTRFS_RESERVE_NO_FLUSH, true);
+ }
+ 
++/*
++ * Similar to regular join but it never starts a transaction when none is
++ * running or after waiting for the current one to finish.
++ */
++struct btrfs_trans_handle *btrfs_join_transaction_nostart(struct btrfs_root *root)
++{
++	return start_transaction(root, 0, TRANS_JOIN_NOSTART,
++				 BTRFS_RESERVE_NO_FLUSH, true);
++}
++
+ /*
+  * btrfs_attach_transaction() - catch the running transaction
+  *
+diff --git a/fs/btrfs/transaction.h b/fs/btrfs/transaction.h
+index 4cbb1b55387dc..c1d34cc704722 100644
+--- a/fs/btrfs/transaction.h
++++ b/fs/btrfs/transaction.h
+@@ -97,11 +97,13 @@ struct btrfs_transaction {
+ #define __TRANS_JOIN		(1U << 11)
+ #define __TRANS_JOIN_NOLOCK	(1U << 12)
+ #define __TRANS_DUMMY		(1U << 13)
++#define __TRANS_JOIN_NOSTART	(1U << 14)
+ 
+ #define TRANS_START		(__TRANS_START | __TRANS_FREEZABLE)
+ #define TRANS_ATTACH		(__TRANS_ATTACH)
+ #define TRANS_JOIN		(__TRANS_JOIN | __TRANS_FREEZABLE)
+ #define TRANS_JOIN_NOLOCK	(__TRANS_JOIN_NOLOCK)
++#define TRANS_JOIN_NOSTART	(__TRANS_JOIN_NOSTART)
+ 
+ #define TRANS_EXTWRITERS	(__TRANS_START | __TRANS_ATTACH)
+ 
+@@ -187,6 +189,7 @@ struct btrfs_trans_handle *btrfs_start_transaction_fallback_global_rsv(
+ 					int min_factor);
+ struct btrfs_trans_handle *btrfs_join_transaction(struct btrfs_root *root);
+ struct btrfs_trans_handle *btrfs_join_transaction_nolock(struct btrfs_root *root);
++struct btrfs_trans_handle *btrfs_join_transaction_nostart(struct btrfs_root *root);
+ struct btrfs_trans_handle *btrfs_attach_transaction(struct btrfs_root *root);
+ struct btrfs_trans_handle *btrfs_attach_transaction_barrier(
+ 					struct btrfs_root *root);
 -- 
 2.20.1
 
