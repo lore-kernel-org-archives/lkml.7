@@ -2,171 +2,178 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 383C5C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 05:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFBFCC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 05:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15AE4206A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 05:44:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9696C206A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 05:45:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pWORd/fN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731693AbfHFFot (ORCPT
+        id S1731727AbfHFFpe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 01:44:49 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:41494 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726092AbfHFFot (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 01:44:49 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5D0FF1A01B4;
-        Tue,  6 Aug 2019 07:44:46 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A86651A00C1;
-        Tue,  6 Aug 2019 07:44:41 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id EE818402B5;
-        Tue,  6 Aug 2019 13:44:35 +0800 (SGT)
-From:   Yuantian Tang <andy.tang@nxp.com>
-To:     shawnguo@kernel.org
-Cc:     leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Yuantian Tang <andy.tang@nxp.com>
-Subject: [PATCH v2] arm64: dts: ls1028a: Add Thermal Monitor Unit node
-Date:   Tue,  6 Aug 2019 13:35:07 +0800
-Message-Id: <20190806053507.37069-1-andy.tang@nxp.com>
-X-Mailer: git-send-email 2.9.5
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 6 Aug 2019 01:45:34 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:35230 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726036AbfHFFpe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 01:45:34 -0400
+Received: by mail-lf1-f67.google.com with SMTP id p197so59937222lfa.2
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 22:45:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=P89CogMKW6Sgt++XgWFL5PZQbnz0kdGQjsZFbC0bIZE=;
+        b=pWORd/fNaoUJf5GcizzIMXGj6i036nY9lYwtj8PyyH147iqP0GyvGfWuAZVszJTZze
+         2IPmbVm4Fdgs9C3B+vLxHZ52p+XrpYVA4lnsw+SL9LJG9cULCyTvUlqszLHNpmPao2TX
+         qOd71isHdHksQYX7BXkA7sHEJ4AJvL9sF0oqOdgyjDwylT9q8+d/+Ahjbe+0uuU3u8g7
+         t9TBU3QNPB/QUmxTF10wWzJ1mbvK5pUDUVJVG41FZ7VE9MmBe3IEZc514SWekZ3f1Dsb
+         2/JQgjqHVqGK6Tv1IPJS5DWb0tv3utT9x5ZwGFwJK0/Y60cYdTmsHQCbSgOdz8mUvzKv
+         IvfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=P89CogMKW6Sgt++XgWFL5PZQbnz0kdGQjsZFbC0bIZE=;
+        b=LpPZWCr1wFGd1re0EXcC/TN9p8ajh0av9jMCYkePuupuTXFHok0ZzZRC4MP3/Iuz9+
+         jwkChqhfbu5GlOtD5Z9AKdIDN5cKRiXdsCMd5JF1XoD5bakXBhFQolT1bzuO4AEIQqxA
+         dVNqLZxkuAXpgk9G2yQNSbL4mSLj9G/EqM2VcF3A2uEogiSn9Tfjh2yLiIDWVkuyKudl
+         AF2ydL8u1H/p30X5RHRgKAtef9bWRrVdkDGqcKwrDPdFQ/mc77K8W5ZShUMhwGodrj7C
+         5qohESKNLAzndq2vZQJNbQYqaYDKhww1XI9JNOqU96acZjSvUcR1OQIvcyRp9fgoOXHG
+         WA8A==
+X-Gm-Message-State: APjAAAUaOJu+TZ8Je+uSP1ncdv3Kzou8GS2duNVSu7Dpaw0h9z8/ip6b
+        Ijm+/5l8h27GC98aEEpj4X7RgJjEpc9S+jxcvlLxxw==
+X-Google-Smtp-Source: APXvYqx19TOv8C6W7I1yY4YKf5TjwgDb1MgC6pdjkpOhRrq5Qy9ZNIC+gdhEXR7u63hnv436pxAen083jHJMV1kYIu8=
+X-Received: by 2002:a19:6d02:: with SMTP id i2mr995829lfc.191.1565070332250;
+ Mon, 05 Aug 2019 22:45:32 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190805124935.819068648@linuxfoundation.org>
+In-Reply-To: <20190805124935.819068648@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 6 Aug 2019 11:15:20 +0530
+Message-ID: <CA+G9fYt8JTW3q-VCyDzeU-p09d3fecr6-5D0qQoeWE7J2b4AWw@mail.gmail.com>
+Subject: Re: [PATCH 4.19 00/74] 4.19.65-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Thermal Monitoring Unit (TMU) monitors and reports the
-temperature from 2 remote temperature measurement sites
-located on ls1028a chip.
-Add TMU dts node to enable this feature.
+On Mon, 5 Aug 2019 at 18:39, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.19.65 release.
+> There are 74 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Wed 07 Aug 2019 12:47:58 PM UTC.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.19.65-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.19.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
-Acked-by: Eduardo Valentin <edubezval@gmail.com>
----
-v2:
-	- remove multiple sensors support
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
- .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 85 +++++++++++++++++++
- 1 file changed, 85 insertions(+)
+Summary
+------------------------------------------------------------------------
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-index aef5b06a98d5..20d7e7db5dcb 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-@@ -29,6 +29,7 @@
- 			clocks = <&clockgen 1 0>;
- 			next-level-cache = <&l2>;
- 			cpu-idle-states = <&CPU_PW20>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu1: cpu@1 {
-@@ -39,6 +40,7 @@
- 			clocks = <&clockgen 1 0>;
- 			next-level-cache = <&l2>;
- 			cpu-idle-states = <&CPU_PW20>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		l2: l2-cache {
-@@ -503,6 +505,89 @@
- 			status = "disabled";
- 		};
- 
-+		tmu: tmu@1f00000 {
-+			compatible = "fsl,qoriq-tmu";
-+			reg = <0x0 0x1f80000 0x0 0x10000>;
-+			interrupts = <0 23 0x4>;
-+			fsl,tmu-range = <0xb0000 0xa0026 0x80048 0x70061>;
-+			fsl,tmu-calibration = <0x00000000 0x00000024
-+					       0x00000001 0x0000002b
-+					       0x00000002 0x00000031
-+					       0x00000003 0x00000038
-+					       0x00000004 0x0000003f
-+					       0x00000005 0x00000045
-+					       0x00000006 0x0000004c
-+					       0x00000007 0x00000053
-+					       0x00000008 0x00000059
-+					       0x00000009 0x00000060
-+					       0x0000000a 0x00000066
-+					       0x0000000b 0x0000006d
-+
-+					       0x00010000 0x0000001c
-+					       0x00010001 0x00000024
-+					       0x00010002 0x0000002c
-+					       0x00010003 0x00000035
-+					       0x00010004 0x0000003d
-+					       0x00010005 0x00000045
-+					       0x00010006 0x0000004d
-+					       0x00010007 0x00000045
-+					       0x00010008 0x0000005e
-+					       0x00010009 0x00000066
-+					       0x0001000a 0x0000006e
-+
-+					       0x00020000 0x00000018
-+					       0x00020001 0x00000022
-+					       0x00020002 0x0000002d
-+					       0x00020003 0x00000038
-+					       0x00020004 0x00000043
-+					       0x00020005 0x0000004d
-+					       0x00020006 0x00000058
-+					       0x00020007 0x00000063
-+					       0x00020008 0x0000006e
-+
-+					       0x00030000 0x00000010
-+					       0x00030001 0x0000001c
-+					       0x00030002 0x00000029
-+					       0x00030003 0x00000036
-+					       0x00030004 0x00000042
-+					       0x00030005 0x0000004f
-+					       0x00030006 0x0000005b
-+					       0x00030007 0x00000068>;
-+			little-endian;
-+			#thermal-sensor-cells = <1>;
-+		};
-+
-+		thermal-zones {
-+			core-cluster {
-+				polling-delay-passive = <1000>;
-+				polling-delay = <5000>;
-+				thermal-sensors = <&tmu 0>;
-+
-+				trips {
-+					core_cluster_alert: core-cluster-alert {
-+						temperature = <85000>;
-+						hysteresis = <2000>;
-+						type = "passive";
-+					};
-+
-+					core_cluster_crit: core-cluster-crit {
-+						temperature = <95000>;
-+						hysteresis = <2000>;
-+						type = "critical";
-+					};
-+				};
-+
-+				cooling-maps {
-+					map0 {
-+						trip = <&core_cluster_alert>;
-+						cooling-device =
-+							<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+					};
-+				};
-+			};
-+		};
-+
- 		pcie@1f0000000 { /* Integrated Endpoint Root Complex */
- 			compatible = "pci-host-ecam-generic";
- 			reg = <0x01 0xf0000000 0x0 0x100000>;
--- 
-2.17.1
+kernel: 4.19.65-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.19.y
+git commit: e2fa6c5f11d562e4b6d9d0eaf3f9adea96e72032
+git describe: v4.19.64-75-ge2fa6c5f11d5
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
+ild/v4.19.64-75-ge2fa6c5f11d5
 
+
+No regressions (compared to build v4.19.64)
+
+No fixes (compared to build v4.19.64)
+
+
+Ran 25240 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libgpiod
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* ltp-fs-tests
+* network-basic-tests
+* ltp-open-posix-tests
+* kvm-unit-tests
+* ssuite
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
