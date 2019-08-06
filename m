@@ -2,80 +2,165 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11B2BC32754
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8734AC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:41:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5CC620C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:41:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5809720818
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:41:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565116919;
+	bh=Y8rOeUIQT1VhBQQvs72EzdeVir4CjttwJHAzvg3kzsA=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=yC4pVZrJKsHuFNx9CX1IozbYhEOU1oQzGy/e8Qe+RiGQ7eLnoMG3jzNDZJT4Z/q1B
+	 Qstz7EK/FJt9JmCiWl0jwOqM32QMchH1RthEmcIOMPpTa9chHQ5g/qi/mGs6KPOc2v
+	 gqlHt/m80vxDzYTYd/0rAbB2amwhcCd6xXHesce0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726427AbfHFSl3 (ORCPT
+        id S1726522AbfHFSl5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 14:41:29 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:47880 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725881AbfHFSlP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 14:41:15 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 9E3CB152488F2;
-        Tue,  6 Aug 2019 11:41:14 -0700 (PDT)
-Date:   Tue, 06 Aug 2019 11:41:14 -0700 (PDT)
-Message-Id: <20190806.114114.1672670570404825284.davem@davemloft.net>
-To:     ivan.khoronzhuk@linaro.org
-Cc:     vinicius.gomes@intel.com, jhs@mojatatu.com,
-        xiyou.wangcong@gmail.com, jiri@resnulli.us, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: sched: sch_taprio: fix memleak in error path for
- sched list parse
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190806100425.4356-1-ivan.khoronzhuk@linaro.org>
-References: <20190806100425.4356-1-ivan.khoronzhuk@linaro.org>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 06 Aug 2019 11:41:14 -0700 (PDT)
+        Tue, 6 Aug 2019 14:41:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38540 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725798AbfHFSlr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 14:41:47 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 713F220C01;
+        Tue,  6 Aug 2019 18:41:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565116907;
+        bh=Y8rOeUIQT1VhBQQvs72EzdeVir4CjttwJHAzvg3kzsA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=0cQ/+EFe5By94WbNy6ITl/y+sJutU0NnYQxV2ohcG42H494Y796eq2RD7ka/Jqfod
+         ML2QPOoWal3erGaqy+BTKKHiaXQUO6Q62Pw1TgMZdz6QSAKmkyMSB7kkT5DIeVqKzb
+         Pkr4Lwo+Nw33SsD8RLUWOrxhG/g1msRV57E0D+Js=
+Date:   Tue, 6 Aug 2019 20:41:44 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
+Subject: Linux 4.4.188
+Message-ID: <20190806184144.GA27426@kroah.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Date: Tue,  6 Aug 2019 13:04:25 +0300
+I'm announcing the release of the 4.4.188 kernel.
 
-> Based on net/master
+All users of the 4.4 kernel series must upgrade.
 
-I wonder about that because:
+The updated 4.4.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-4.4.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
 
-> --- a/net/sched/sch_taprio.c
-> +++ b/net/sched/sch_taprio.c
-> @@ -1451,7 +1451,8 @@ static int taprio_change(struct Qdisc *sch, struct nlattr *opt,
->  	spin_unlock_bh(qdisc_lock(sch));
->  
->  free_sched:
-> -	kfree(new_admin);
-> +	if (new_admin)
-> +		call_rcu(&new_admin->rcu, taprio_free_sched_cb);
->  
->  	return err;
+thanks,
 
-In my tree the context around line 1451 is:
+greg k-h
 
-	nla_nest_end(skb, sched_nest);
+------------
 
-done:
-	rcu_read_unlock();
+ Makefile                                    |    2 -
+ arch/arm/boot/dts/rk3288.dtsi               |    1 
+ arch/arm/mach-rpc/dma.c                     |    5 +++-
+ arch/mips/lantiq/irq.c                      |    5 ++--
+ arch/x86/include/asm/apic.h                 |    2 -
+ arch/x86/include/asm/kvm_host.h             |   34 +++++++++++++++-------------
+ arch/x86/kernel/apic/apic.c                 |    2 -
+ arch/x86/math-emu/fpu_emu.h                 |    2 -
+ arch/x86/math-emu/reg_constant.c            |    2 -
+ drivers/dma/sh/rcar-dmac.c                  |    2 -
+ drivers/net/ethernet/emulex/benet/be_main.c |    6 ++++
+ drivers/s390/block/dasd_alias.c             |   22 +++++++++++++-----
+ drivers/s390/scsi/zfcp_erp.c                |    7 +++++
+ drivers/xen/swiotlb-xen.c                   |    4 +--
+ fs/adfs/super.c                             |    5 +++-
+ fs/btrfs/volumes.c                          |    3 --
+ fs/ceph/super.h                             |    7 ++++-
+ fs/coda/psdev.c                             |    5 +++-
+ include/linux/acpi.h                        |    5 +++-
+ include/linux/coda.h                        |    3 --
+ include/linux/coda_psdev.h                  |   11 +++++++++
+ include/uapi/linux/coda_psdev.h             |   13 ----------
+ ipc/mqueue.c                                |   19 ++++++++-------
+ kernel/module.c                             |    6 +---
+ mm/cma.c                                    |   13 ++++++++++
+ security/selinux/ss/policydb.c              |    6 ++++
+ 26 files changed, 124 insertions(+), 68 deletions(-)
 
-	return nla_nest_end(skb, nest);
+Andrea Parri (1):
+      ceph: fix improper use of smp_mb__before_atomic()
 
+Arnd Bergmann (2):
+      ACPI: fix false-positive -Wuninitialized warning
+      x86: math-emu: Hide clang warnings for 16-bit overflow
 
-which is part of function taprio_dump().
+Benjamin Block (1):
+      scsi: zfcp: fix GCC compiler warning emitted with -Wmaybe-uninitialized
 
-Please respin this properly against current 'net' sources.
+Benjamin Poirier (1):
+      be2net: Signal that the device cannot transmit during reconfiguration
+
+David Sterba (1):
+      btrfs: fix minimum number of chunk errors for DUP
+
+Doug Berger (1):
+      mm/cma.c: fail if fixed declaration can't be honored
+
+Douglas Anderson (1):
+      ARM: dts: rockchip: Mark that the rk3288 timer might stop in suspend
+
+Geert Uytterhoeven (1):
+      dmaengine: rcar-dmac: Reject zero-length slave DMA requests
+
+Greg Kroah-Hartman (1):
+      Linux 4.4.188
+
+Josh Poimboeuf (1):
+      x86/kvm: Don't call kvm_spurious_fault() from .fixup
+
+Juergen Gross (1):
+      xen/swiotlb: fix condition for calling xen_destroy_contiguous_region()
+
+Kees Cook (1):
+      ipc/mqueue.c: only perform resource calculation if user valid
+
+Mikko Rapeli (1):
+      uapi linux/coda_psdev.h: move upc_req definition from uapi to kernel side headers
+
+Ondrej Mosnacek (1):
+      selinux: fix memory leak in policydb_init()
+
+Petr Cvek (1):
+      MIPS: lantiq: Fix bitfield masking
+
+Prarit Bhargava (1):
+      kernel/module.c: Only return -EEXIST for modules that have finished loading
+
+Qian Cai (1):
+      x86/apic: Silence -Wtype-limits compiler warnings
+
+Russell King (2):
+      ARM: riscpc: fix DMA
+      fs/adfs: super: fix use-after-free bug
+
+Sam Protsenko (1):
+      coda: fix build using bare-metal toolchain
+
+Stefan Haberland (1):
+      s390/dasd: fix endless loop after read unit address configuration
+
+Zhouyang Jia (1):
+      coda: add error handling for fget
+
