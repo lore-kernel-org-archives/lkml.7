@@ -2,135 +2,224 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51794C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 17:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8492C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 17:15:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25FEB214C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 17:13:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565111628;
-	bh=GcwPgkJicx4YCfVs1IPwu6WwyqpK78qeXeT/YMfDkko=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qlUKvTX1c8P6vMW87va5KMqcPwmYPvMayePUgolnIuD9cfnbqqQZ5Cn4zT26sggTN
-	 k1MM19DET79B1qttpPk47LC2Ji4WV0cJcSFId+b83V6FK/j9rkQ7LAYA/+mNQe5MiI
-	 wAaZheIzEL6S05uJ0WEDDk3yYb7MUxBxEw+Z8WMQ=
+	by mail.kernel.org (Postfix) with ESMTP id 8BAF82086D
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 17:15:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N1tVemlQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733191AbfHFRNr (ORCPT
+        id S1733232AbfHFRPS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 13:13:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42228 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728189AbfHFRNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 13:13:46 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7ACF82086D;
-        Tue,  6 Aug 2019 17:13:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565111625;
-        bh=GcwPgkJicx4YCfVs1IPwu6WwyqpK78qeXeT/YMfDkko=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rTAT9bH7GKNJUZdS8BRtbH8phw4qgZ5+dRNFkldjVWk6dGxX0O1d/RnE/0V20gryu
-         PTJMl31RRRdUsoRUBPiBr87DgRaB/HWSPKLtCibTJQQUtSYBOvQ2oBVDM1HUaAlT2q
-         mkbOtB7+YYYk5DiFCNquMbqioXWuU2alu3yKrGRo=
-Date:   Tue, 6 Aug 2019 18:13:36 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Will Deacon <will.deacon@arm.com>
-Cc:     Andrey Konovalov <andreyknvl@google.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        dri-devel@lists.freedesktop.org,
-        Kostya Serebryany <kcc@google.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org,
-        Christoph Hellwig <hch@infradead.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        linux-media@vger.kernel.org, Kevin Brodsky <kevin.brodsky@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        enh <enh@google.com>, Robin Murphy <robin.murphy@arm.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Subject: Re: [PATCH v19 00/15] arm64: untag user pointers passed to the kernel
-Message-ID: <20190806171335.4dzjex5asoertaob@willie-the-truck>
-References: <cover.1563904656.git.andreyknvl@google.com>
- <CAAeHK+yc0D_nd7nTRsY4=qcSx+eQR0VLut3uXMf4NEiE-VpeCw@mail.gmail.com>
- <20190724140212.qzvbcx5j2gi5lcoj@willie-the-truck>
- <CAAeHK+xXzdQHpVXL7f1T2Ef2P7GwFmDMSaBH4VG8fT3=c_OnjQ@mail.gmail.com>
- <20190724142059.GC21234@fuggles.cambridge.arm.com>
+        Tue, 6 Aug 2019 13:15:18 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:34089 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728189AbfHFRPR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 13:15:17 -0400
+Received: by mail-qk1-f194.google.com with SMTP id t8so63477792qkt.1;
+        Tue, 06 Aug 2019 10:15:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:message-id:from:to:cc:subject:in-reply-to:references
+         :mime-version:content-disposition:content-transfer-encoding;
+        bh=4ETp3KDACY7J/KgmMynjvWyuPGRUs1Kf57shq9pOwbQ=;
+        b=N1tVemlQ1uZQCsg9PxNkrnC/r3XUrVeg/zEtgWh0JJiiMJf7C9iRSMrVpEZvBJkuEl
+         5DK/Y6nYTtUPitLqahaHLay7adP42zFYjdh3uLrk8lj/4QE01WVzH9XsycTM75J6/StK
+         ZDTG+E0LpmvCLzp/qSmlxAcQe/IUid1PAHThA72eDOsG5HcWlUONjOa0mwy7zB2x+Roi
+         alvE1RikovkKRZXcIE1dI2sIIVggLxy1SAdi8IPDChTqTFNZnx8C99gkkNvU/Aka9bYl
+         7jrQEZjdjPra0BqzbmrMrC/4PfbKT2w2lXKU6f3zVXTkm0dTMDIr25IXg8ZOuG6VBU0A
+         k7VQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:from:to:cc:subject:in-reply-to
+         :references:mime-version:content-disposition
+         :content-transfer-encoding;
+        bh=4ETp3KDACY7J/KgmMynjvWyuPGRUs1Kf57shq9pOwbQ=;
+        b=aA+XS4llcRZTlDrtaywXJGa76Cq9qhgBZiaUASVK8ucPuDi34vtka26GgYSuRu5rgu
+         zls0vvt+quhttNODaYvcLAL+BSiyIkWfP7AxWtuNu+epi3dmKBlqR26zCrjiW3Ku8Qy6
+         p1Sx/sqIozeImfgqACGqMuA6ZimPXY5cbp9jaa9JBflFks2qrr2JTO+6nc3r42F5r659
+         JH2BMHo4wwEbW6umWy6QsSmoq5xBYi28RjC2mx8K/W8uS/gSvGS/gyErJuJLqImS/jup
+         6g6lRi30gir+EZ0J368kMqrefhkWi7BoxNjv7E8BZntdBJYOSFLtla51bKqWW/cNweid
+         YSEw==
+X-Gm-Message-State: APjAAAW1PdWSW435PH/ggqofvxsTVfFN0JnnBTvXpR15NIB/86ZAbYs7
+        sYPcr7QfhRSzXNQN22eJmRclwi3X
+X-Google-Smtp-Source: APXvYqxFob69tzsh98NPvybxoKP7u40j8vHxvy/oDLks9hNpdI8xC5iNcOhAHGE3qKe+2u36tcMwmQ==
+X-Received: by 2002:a37:490d:: with SMTP id w13mr4012485qka.179.1565111715675;
+        Tue, 06 Aug 2019 10:15:15 -0700 (PDT)
+Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
+        by smtp.gmail.com with ESMTPSA id q17sm34096809qtl.13.2019.08.06.10.15.14
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 06 Aug 2019 10:15:14 -0700 (PDT)
+Date:   Tue, 6 Aug 2019 13:15:13 -0400
+Message-ID: <20190806131513.GB2822@t480s.localdomain>
+From:   Vivien Didelot <vivien.didelot@gmail.com>
+To:     Chen-Yu Tsai <wens@kernel.org>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Chen-Yu Tsai <wens@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net v2] net: dsa: Check existence of .port_mdb_add
+ callback before calling it
+In-Reply-To: <20190806075325.9011-1-wens@kernel.org>
+References: <20190806075325.9011-1-wens@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190724142059.GC21234@fuggles.cambridge.arm.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 03:20:59PM +0100, Will Deacon wrote:
-> On Wed, Jul 24, 2019 at 04:16:49PM +0200, Andrey Konovalov wrote:
-> > On Wed, Jul 24, 2019 at 4:02 PM Will Deacon <will@kernel.org> wrote:
-> > > On Tue, Jul 23, 2019 at 08:03:29PM +0200, Andrey Konovalov wrote:
-> > > > Should this go through the mm or the arm tree?
-> > >
-> > > I would certainly prefer to take at least the arm64 bits via the arm64 tree
-> > > (i.e. patches 1, 2 and 15). We also need a Documentation patch describing
-> > > the new ABI.
-> > 
-> > Sounds good! Should I post those patches together with the
-> > Documentation patches from Vincenzo as a separate patchset?
+Hi Chen-Yu,
+
+On Tue,  6 Aug 2019 15:53:25 +0800, Chen-Yu Tsai <wens@kernel.org> wrote:
+> From: Chen-Yu Tsai <wens@csie.org>
 > 
-> Yes, please (although as you say below, we need a new version of those
-> patches from Vincenzo to address the feedback on v5). The other thing I
-> should say is that I'd be happy to queue the other patches in the series
-> too, but some of them are missing acks from the relevant maintainers (e.g.
-> the mm/ and fs/ changes).
+> With the recent addition of commit 75dad2520fc3 ("net: dsa: b53: Disable
+> all ports on setup"), users of b53 (BCM53125 on Lamobo R1 in my case)
+> are forced to use the dsa subsystem to enable the switch, instead of
+> having it in the default transparent "forward-to-all" mode.
+> 
+> The b53 driver does not support mdb bitmap functions. However the dsa
+> layer does not check for the existence of the .port_mdb_add callback
+> before actually using it. This results in a NULL pointer dereference,
+> as shown in the kernel oops below.
+> 
+> The other functions seem to be properly guarded. Do the same for
+> .port_mdb_add in dsa_switch_mdb_add_bitmap() as well.
+> 
+> b53 is not the only driver that doesn't support mdb bitmap functions.
+> Others include bcm_sf2, dsa_loop, lantiq_gswip, mt7530, mv88e6060,
+> qca8k, realtek-smi, and vitesse-vsc73xx.
 
-Ok, I've queued patches 1, 2, and 15 on a stable branch here:
+I don't know what you mean by that, there's no "mdb bitmap function"
+support for drivers, only the port_mdb_{prepare,add,del} callbacks...
+> 
+>     8<--- cut here ---
+>     Unable to handle kernel NULL pointer dereference at virtual address 00000000
+>     pgd = (ptrval)
+>     [00000000] *pgd=00000000
+>     Internal error: Oops: 80000005 [#1] SMP ARM
+>     Modules linked in: rtl8xxxu rtl8192cu rtl_usb rtl8192c_common rtlwifi mac80211 cfg80211
+>     CPU: 1 PID: 134 Comm: kworker/1:2 Not tainted 5.3.0-rc1-00247-gd3519030752a #1
+>     Hardware name: Allwinner sun7i (A20) Family
+>     Workqueue: events switchdev_deferred_process_work
+>     PC is at 0x0
+>     LR is at dsa_switch_event+0x570/0x620
+>     pc : [<00000000>]    lr : [<c08533ec>]    psr: 80070013
+>     sp : ee871db8  ip : 00000000  fp : ee98d0a4
+>     r10: 0000000c  r9 : 00000008  r8 : ee89f710
+>     r7 : ee98d040  r6 : ee98d088  r5 : c0f04c48  r4 : ee98d04c
+>     r3 : 00000000  r2 : ee89f710  r1 : 00000008  r0 : ee98d040
+>     Flags: Nzcv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
+>     Control: 10c5387d  Table: 6deb406a  DAC: 00000051
+>     Process kworker/1:2 (pid: 134, stack limit = 0x(ptrval))
+>     Stack: (0xee871db8 to 0xee872000)
+>     1da0:                                                       ee871e14 103ace2d
+>     1dc0: 00000000 ffffffff 00000000 ee871e14 00000005 00000000 c08524a0 00000000
+>     1de0: ffffe000 c014bdfc c0f04c48 ee871e98 c0f04c48 ee9e5000 c0851120 c014bef0
+>     1e00: 00000000 b643aea2 ee9b4068 c08509a8 ee2bf940 ee89f710 ee871ecb 00000000
+>     1e20: 00000008 103ace2d 00000000 c087e248 ee29c868 103ace2d 00000001 ffffffff
+>     1e40: 00000000 ee871e98 00000006 00000000 c0fb2a50 c087e2d0 ffffffff c08523c4
+>     1e60: ffffffff c014bdfc 00000006 c0fad2d0 ee871e98 ee89f710 00000000 c014c500
+>     1e80: 00000000 ee89f3c0 c0f04c48 00000000 ee9e5000 c087dfb4 ee9e5000 00000000
+>     1ea0: ee89f710 ee871ecb 00000001 103ace2d 00000000 c0f04c48 00000000 c087e0a8
+>     1ec0: 00000000 efd9a3e0 0089f3c0 103ace2d ee89f700 ee89f710 ee9e5000 00000122
+>     1ee0: 00000100 c087e130 ee89f700 c0fad2c8 c1003ef0 c087de4c 2e928000 c0fad2ec
+>     1f00: c0fad2ec ee839580 ef7a62c0 ef7a9400 00000000 c087def8 c0fad2ec c01447dc
+>     1f20: ef315640 ef7a62c0 00000008 ee839580 ee839594 ef7a62c0 00000008 c0f03d00
+>     1f40: ef7a62d8 ef7a62c0 ffffe000 c0145b84 ffffe000 c0fb2420 c0bfaa8c 00000000
+>     1f60: ffffe000 ee84b600 ee84b5c0 00000000 ee870000 ee839580 c0145b40 ef0e5ea4
+>     1f80: ee84b61c c014a6f8 00000001 ee84b5c0 c014a5b0 00000000 00000000 00000000
+>     1fa0: 00000000 00000000 00000000 c01010e8 00000000 00000000 00000000 00000000
+>     1fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+>     1fe0: 00000000 00000000 00000000 00000000 00000013 00000000 00000000 00000000
+>     [<c08533ec>] (dsa_switch_event) from [<c014bdfc>] (notifier_call_chain+0x48/0x84)
+>     [<c014bdfc>] (notifier_call_chain) from [<c014bef0>] (raw_notifier_call_chain+0x18/0x20)
+>     [<c014bef0>] (raw_notifier_call_chain) from [<c08509a8>] (dsa_port_mdb_add+0x48/0x74)
+>     [<c08509a8>] (dsa_port_mdb_add) from [<c087e248>] (__switchdev_handle_port_obj_add+0x54/0xd4)
+>     [<c087e248>] (__switchdev_handle_port_obj_add) from [<c087e2d0>] (switchdev_handle_port_obj_add+0x8/0x14)
+>     [<c087e2d0>] (switchdev_handle_port_obj_add) from [<c08523c4>] (dsa_slave_switchdev_blocking_event+0x94/0xa4)
+>     [<c08523c4>] (dsa_slave_switchdev_blocking_event) from [<c014bdfc>] (notifier_call_chain+0x48/0x84)
+>     [<c014bdfc>] (notifier_call_chain) from [<c014c500>] (blocking_notifier_call_chain+0x50/0x68)
+>     [<c014c500>] (blocking_notifier_call_chain) from [<c087dfb4>] (switchdev_port_obj_notify+0x44/0xa8)
+>     [<c087dfb4>] (switchdev_port_obj_notify) from [<c087e0a8>] (switchdev_port_obj_add_now+0x90/0x104)
+>     [<c087e0a8>] (switchdev_port_obj_add_now) from [<c087e130>] (switchdev_port_obj_add_deferred+0x14/0x5c)
+>     [<c087e130>] (switchdev_port_obj_add_deferred) from [<c087de4c>] (switchdev_deferred_process+0x64/0x104)
+>     [<c087de4c>] (switchdev_deferred_process) from [<c087def8>] (switchdev_deferred_process_work+0xc/0x14)
+>     [<c087def8>] (switchdev_deferred_process_work) from [<c01447dc>] (process_one_work+0x218/0x50c)
+>     [<c01447dc>] (process_one_work) from [<c0145b84>] (worker_thread+0x44/0x5bc)
+>     [<c0145b84>] (worker_thread) from [<c014a6f8>] (kthread+0x148/0x150)
+>     [<c014a6f8>] (kthread) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
+>     Exception stack(0xee871fb0 to 0xee871ff8)
+>     1fa0:                                     00000000 00000000 00000000 00000000
+>     1fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+>     1fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+>     Code: bad PC value
+>     ---[ end trace 1292c61abd17b130 ]---
+> 
+>     [<c08533ec>] (dsa_switch_event) from [<c014bdfc>] (notifier_call_chain+0x48/0x84)
+>     corresponds to
+> 
+> 	$ arm-linux-gnueabihf-addr2line -C -i -e vmlinux c08533ec
+> 
+> 	linux/net/dsa/switch.c:156
+> 	linux/net/dsa/switch.c:178
+> 	linux/net/dsa/switch.c:328
+> 
+> Fixes: e6db98db8a95 ("net: dsa: add switch mdb bitmap functions")
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> ---
+> Changes since v1:
+> 
+>   - Moved the check to the beginning of dsa_switch_mdb_add()
+> 
+> Looks like we could also move the ops check out of
+> dsa_switch_mdb_prepare_bitmap(), though I suppose keeping the code the
+> way it is now is clearer.
+> 
+> ---
+>  net/dsa/switch.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/net/dsa/switch.c b/net/dsa/switch.c
+> index 4ec5b7f85d51..231af5268656 100644
+> --- a/net/dsa/switch.c
+> +++ b/net/dsa/switch.c
+> @@ -164,6 +164,9 @@ static int dsa_switch_mdb_add(struct dsa_switch *ds,
+>  	struct switchdev_trans *trans = info->trans;
+>  	int port;
+>  
+> +	if (!ds->ops->port_mdb_add)
+> +		return -EOPNOTSUPP;
+> +
+>  	/* Build a mask of Multicast group members */
+>  	bitmap_zero(ds->bitmap, ds->num_ports);
+>  	if (ds->index == info->sw_index)
+> -- 
+> 2.20.1
+> 
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git/log/?h=for-next/tbi
+I don't understand the crash here, nor the fix. dsa_switch_mdb_add()
+is supposed to be called through switchdev with a prepare phase,
+which checks for ds->ops->port_mdb_add. Do you mean that a switchdev
+MDB object is added somewhere without a prepare phase? If that's
+the case, this is what the commit message must say. Then the
+ds->ops->port_mdb_add check must go where it is used, that is to say
+at the beginning of dsa_switch_mdb_add_bitmap() (similarly to what
+dsa_switch_mdb_prepare_bitmap() does), not in dsa_switch_mdb_add.
 
-which should find its way into -next shortly via our for-next/core branch.
-If you want to make changes, please send additional patches on top.
 
-This is targetting 5.4, but I will drop it before the merge window if
-we don't have both of the following in place:
+Thanks,
 
-  * Updated ABI documentation with Acks from Catalin and Kevin
-  * The other patches in the series either Acked (so I can pick them up)
-    or queued via some other tree(s) for 5.4.
-
-Make sense?
-
-Cheers,
-
-Will
+	Vivien
