@@ -2,27 +2,28 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DDC5C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 02:31:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D88CC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 02:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19C1D20B1F
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 02:31:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2E632147A
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 02:31:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731430AbfHFCbB (ORCPT
+        id S1731505AbfHFCbG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 22:31:01 -0400
-Received: from twhmllg4.macronix.com ([211.75.127.132]:63478 "EHLO
+        Mon, 5 Aug 2019 22:31:06 -0400
+Received: from twhmllg4.macronix.com ([211.75.127.132]:63482 "EHLO
         TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731181AbfHFCbB (ORCPT
+        with ESMTP id S1731457AbfHFCbF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 22:31:01 -0400
+        Mon, 5 Aug 2019 22:31:05 -0400
 Received: from localhost.localdomain ([172.17.195.96])
-        by TWHMLLG4.macronix.com with ESMTP id x762UI08046114;
-        Tue, 6 Aug 2019 10:30:18 +0800 (GMT-8)
+        by TWHMLLG4.macronix.com with ESMTP id x762UI0A046114;
+        Tue, 6 Aug 2019 10:30:21 +0800 (GMT-8)
         (envelope-from masonccyang@mxic.com.tw)
 From:   Mason Yang <masonccyang@mxic.com.tw>
 To:     broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
@@ -34,115 +35,78 @@ Cc:     juliensu@mxic.com.tw, Simon Horman <horms@verge.net.au>,
         lee.jones@linaro.org, sergei.shtylyov@cogentembedded.com,
         Mason Yang <masonccyang@mxic.com.tw>, marek.vasut@gmail.com,
         miquel.raynal@bootlin.com
-Subject: [PATCH v17 0/2] spi: Add Renesas R-Car Gen3 RPC-IF SPI driver
-Date:   Tue,  6 Aug 2019 10:54:19 +0800
-Message-Id: <1565060061-11588-1-git-send-email-masonccyang@mxic.com.tw>
+Subject: [PATCH v17 2/2] dt-bindings: spi: Document Renesas R-Car Gen3 RPC-IF controller bindings
+Date:   Tue,  6 Aug 2019 10:54:21 +0800
+Message-Id: <1565060061-11588-3-git-send-email-masonccyang@mxic.com.tw>
 X-Mailer: git-send-email 1.9.1
-X-MAIL: TWHMLLG4.macronix.com x762UI08046114
+In-Reply-To: <1565060061-11588-1-git-send-email-masonccyang@mxic.com.tw>
+References: <1565060061-11588-1-git-send-email-masonccyang@mxic.com.tw>
+X-MAIL: TWHMLLG4.macronix.com x762UI0A046114
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
+Document the bindings used by the Renesas R-Car Gen3 RPC-IF controller.
 
-v17 patch including:
-1) patch adding rpc_spi_hw_init() after reset_control_rest()
-2) v14 dt-binding file has reviewed by Rob Herring.
-
-v16 patch including:
-1) fixed typo and spi-tx/rx-bus-width in DTS.
-2) v14 dt-binding file has reviewed by Rob Herring.
-
-v15 patch including:
-1) A typo in dt-bindings and add flash subnode description
-2) v14 dt-binding file has reviewed by Rob Herring.
-
-v14 patch including:
-1) Patch RPC-IF back to SPI mode only instead of MFD & SPI 
-   by MFD maintainer, Lee Jones comments.
-2) Patch pm_runtime control in spi transfer.
-
-v13 patch including:
-1) rename mfd to ddata for SPI driver.
-2) Patch RPC-IF devicetree for SPI and HyperFlash.
-
-v12 patch including:
-1) add back "wbuf" in dts example.
-2) RPC-IF replace rpc-if in dts.
-
-v11 patch including:
-1) Patch mfd include header file.
-2) mfd coding style.
-3) add back wbuf description in dts.
-
-v10 patch including:
-1) Address range for > 64M byte flash.
-2) Removed dirmap_write due to WBUF 256 bytes transfer issue.
-3) Dummy bytes setting according to spi-nor.c layer.
-
-v9 patch is for RPC MFD driver and RPC SPI driver.
-
-v8 patch including:
-1) Supported SoC-specific values in DTS.
-2) Rename device node name as flash.
-
-v7 patch is according to Geert and Sergei's comments:
-1) Add all R-Car Gen3 model in dts.
-2) patch rpc-if child node search.
-3) minror coding style.
-
-v6 patch is accroding to Geert, Marek and Sergei's comments:
-1) spi_controller for new code.
-2) "renesas,rcar-gen3-rpc" instead of "renesas,r8a77995-rpc."
-3) patch external address read mode w/o u64 readq().
-4) patch dts for write buffer & drop "renesas,rpc-mode".
-5) coding style and so on.
-
-v5 patch is accroding to Sergei's comments:
-1) Read 6 bytes ID from Sergei's patch.
-2) regmap_update_bits().
-3) C++ style comment.
-
-v4 patch is according to Sergei's comments including:
-1) Drop soc_device_match().
-2) Drop unused RPC registers.
-3) Use ilog2() instead of fls().
-4) Patch read 6 bytes ID w/ one command.
-5) Coding style and so on.
-
-v3 patch is according to Marek and Geert's comments including:
-1) soc_device_mach() to set up RPC_PHYCNT_STRTIM.
-2) get_unaligned().
-3) rpc-mode for rpi-spi-flash or rpc-hyperflash.
-4) coding style and so on.
-
-v2 patch including:
-1) remove RPC clock enable/dis-able control,
-2) patch run time PM.
-3) add RPC module software reset,
-4) add regmap.
-5) other coding style and so on.
-
-thanks for your review.
-
-best regards,
-Mason
-
-
-Mason Yang (2):
-  spi: Add Renesas R-Car Gen3 RPC-IF SPI controller driver
-  dt-bindings: spi: Document Renesas R-Car Gen3 RPC-IF controller
-    bindings
-
- .../devicetree/bindings/spi/spi-renesas-rpc.txt    |  45 ++
- drivers/spi/Kconfig                                |   6 +
- drivers/spi/Makefile                               |   1 +
- drivers/spi/spi-renesas-rpc.c                      | 756 +++++++++++++++++++++
- 4 files changed, 808 insertions(+)
+Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/spi/spi-renesas-rpc.txt    | 45 ++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/spi/spi-renesas-rpc.txt
- create mode 100644 drivers/spi/spi-renesas-rpc.c
 
+diff --git a/Documentation/devicetree/bindings/spi/spi-renesas-rpc.txt b/Documentation/devicetree/bindings/spi/spi-renesas-rpc.txt
+new file mode 100644
+index 0000000..d4344c9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/spi-renesas-rpc.txt
+@@ -0,0 +1,45 @@
++Renesas R-Car Gen3 RPC-IF controller Device Tree Bindings
++---------------------------------------------------------
++
++Required properties:
++- compatible: should be an SoC-specific compatible value, followed by
++		"renesas,rcar-gen3-rpc" as a fallback.
++		supported SoC-specific values are:
++		"renesas,r8a77980-rpc"	(R-Car V3H)
++		"renesas,r8a77995-rpc"	(R-Car D3)
++- reg: should contain three register areas:
++       first for the base address of RPC-IF registers,
++       second for the direct mapping read mode and
++       third for the write buffer area.
++- reg-names: should contain "regs", "dirmap" and "wbuf"
++- clocks: should contain the clock phandle/specifier pair for the module clock.
++- clock-names: should contain "rpc"
++- power-domains: should contain the power domain phandle/secifier pair.
++- resets: should contain the reset controller phandle/specifier pair.
++- #address-cells: should be 1
++- #size-cells: should be 0
++- flash: should be represented by a subnode of the RPC-IF node,
++	 its "compatible" property contains "jedec,spi-nor" if SPI is used.
++
++Example:
++
++	rpc: spi@ee200000 {
++		compatible = "renesas,r8a77995-rpc", "renesas,rcar-gen3-rpc";
++		reg = <0 0xee200000 0 0x200>, <0 0x08000000 0 0x4000000>,
++		      <0 0xee208000 0 0x100>;
++		reg-names = "regs", "dirmap", "wbuf";
++		clocks = <&cpg CPG_MOD 917>;
++		clock-names = "rpc";
++		power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
++		resets = <&cpg 917>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		flash@0 {
++			compatible = "jedec,spi-nor";
++			reg = <0>;
++			spi-max-frequency = <40000000>;
++			spi-tx-bus-width = <4>;
++			spi-rx-bus-width = <4>;
++		};
++	};
 -- 
 1.9.1
 
