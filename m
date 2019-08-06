@@ -2,97 +2,110 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A365AC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16DFCC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A83821743
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:01:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565078479;
-	bh=WXvtMO6UZCwNOFHSyUuDfZy5/bYB9El1apxJuXfBWrw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=wPk2e81lU+gr76gEi1OnZ7873TsRXuv7S3Ul+MShdefFYFTzswXdiCNwWgZ4Z/mUX
-	 sxaLbXaLbOYwHadURcgZZaK86y8T4lxlJ1buxDqo17dEPgRGCHVJGdCSra38JU3FM4
-	 9qXzHO6TLxh0kaY6hCoFrDBdTlmLCq9aTo0FAYMs=
+	by mail.kernel.org (Postfix) with ESMTP id ED1C42054F
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:02:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732250AbfHFIBS (ORCPT
+        id S1732200AbfHFICQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 04:01:18 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:45759 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727259AbfHFIBS (ORCPT
+        Tue, 6 Aug 2019 04:02:16 -0400
+Received: from skedge03.snt-world.com ([91.208.41.68]:50128 "EHLO
+        skedge03.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727259AbfHFICP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 04:01:18 -0400
-Received: by mail-ot1-f66.google.com with SMTP id x21so24815258otq.12;
-        Tue, 06 Aug 2019 01:01:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zUs0xIhgTH6wwFy+pIi473fY3cNI70KH0eyUmBXIqyE=;
-        b=hP8bMCfWQVwlcM70vKGu2JyEvNDXeZJQRciBJNJrLwRQ1mdtdKPz6jVTmmc8G+7lu+
-         0YWu+RGe5Fk+pF7SZlK4bQjLghJsSOYKlj5FMZwQkZ75m0mQPRX7cbiIgz6tNEp3ICd9
-         nX1i2/jQv5Ijnh/AMDuBYQ7zjLOdlgNWNQsbs5380b0rOOsVuLf8Zz6u1ujGZyxfe/QD
-         eiJCkwp/rJTO7mIOnLUcqxCZ67lOcA9Ze2ktcIGQd6hqRQ/AoEvIkmbjKGlnKBqQTbuL
-         ABiB96muXABEgh6ANtCSey0R1XljjY5IzzYJ8Rq+ibE/Es/q3ScCRxnGDcztrNnOcYwV
-         dSBA==
-X-Gm-Message-State: APjAAAVpyVaDnKRQa9AanlVgzfj1eS/9ssd6Ri4yEh72QxJSXFDSfv6U
-        Q8Gi7KyD6nMbVNte2uVW44MMB2XFUVKH8QksvQQ=
-X-Google-Smtp-Source: APXvYqywCxq1EnPd1Un9O/Ra9WUoJF8y5q5e6rNxxbDtgntcVTWejmBx8iAPavHTpNCItROyJW0urUxcpUKxGieVl4A=
-X-Received: by 2002:a9d:6b96:: with SMTP id b22mr2075090otq.262.1565078476888;
- Tue, 06 Aug 2019 01:01:16 -0700 (PDT)
+        Tue, 6 Aug 2019 04:02:15 -0400
+Received: from sntmail11s.snt-is.com (unknown [10.203.32.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by skedge03.snt-world.com (Postfix) with ESMTPS id BCCFC626313;
+        Tue,  6 Aug 2019 10:02:04 +0200 (CEST)
+Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail11s.snt-is.com
+ (10.203.32.181) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 6 Aug 2019
+ 10:02:04 +0200
+Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
+ sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
+ 15.01.1713.004; Tue, 6 Aug 2019 10:02:04 +0200
+From:   Schrempf Frieder <frieder.schrempf@kontron.de>
+To:     =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= 
+        <u.kleine-koenig@pengutronix.de>
+CC:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux-imx@nxp.com" <linux-imx@nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "geert+renesas@glider.be" <geert+renesas@glider.be>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3 2/4] serial: mctrl_gpio: Add a NULL check to
+ mctrl_gpio_to_gpiod()
+Thread-Topic: [PATCH v3 2/4] serial: mctrl_gpio: Add a NULL check to
+ mctrl_gpio_to_gpiod()
+Thread-Index: AQHVSRmhj6XM1Buz9UqFmvYk2hHNCKbno2OAgASBqgCAAX0UAIAABJuA
+Date:   Tue, 6 Aug 2019 08:02:04 +0000
+Message-ID: <3672939d-183d-f844-c44c-c70a77931c72@kontron.de>
+References: <20190802100349.8659-1-frieder.schrempf@kontron.de>
+ <20190802100349.8659-2-frieder.schrempf@kontron.de>
+ <20190802121231.wk6yg5mkyivs3rni@pengutronix.de>
+ <f866213b-fd3b-8602-6c11-56cb65a1ea05@kontron.de>
+ <20190806074534.5w773nltywxyiljz@pengutronix.de>
+In-Reply-To: <20190806074534.5w773nltywxyiljz@pengutronix.de>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.25.9.193]
+x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <44F6FF28ECA0604BAC78178DAA15EB46@snt-world.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <cover.1563862014.git.viresh.kumar@linaro.org> <86dc4a082ea00c278c0e1d7f3fcbdc4ab9af2eec.1563862014.git.viresh.kumar@linaro.org>
- <1782403.O7LH3UnqfR@kreacher> <20190806043904.dbpon4qf3mfsm4vz@vireshk-i7>
-In-Reply-To: <20190806043904.dbpon4qf3mfsm4vz@vireshk-i7>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 6 Aug 2019 10:01:05 +0200
-Message-ID: <CAJZ5v0iqwc4mvqHoTHwoNS-T1zueS07S2e-1STEsKhFhoOh0dA@mail.gmail.com>
-Subject: Re: [PATCH V2 05/10] ACPI: cpufreq: Switch to QoS requests instead of
- cpufreq notifier
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
-        Robert Moore <robert.moore@intel.com>,
-        Erik Schmauss <erik.schmauss@intel.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>
-Content-Type: text/plain; charset="UTF-8"
+X-SnT-MailScanner-Information: Please contact the ISP for more information
+X-SnT-MailScanner-ID: BCCFC626313.A0B69
+X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
+X-SnT-MailScanner-SpamCheck: 
+X-SnT-MailScanner-From: frieder.schrempf@kontron.de
+X-SnT-MailScanner-To: festevam@gmail.com, geert+renesas@glider.be,
+        gregkh@linuxfoundation.org, jslaby@suse.com, kernel@pengutronix.de,
+        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+        s.hauer@pengutronix.de, shawnguo@kernel.org,
+        u.kleine-koenig@pengutronix.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 6, 2019 at 6:39 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 05-08-19, 11:42, Rafael J. Wysocki wrote:
-> > On Tuesday, July 23, 2019 8:14:05 AM CEST Viresh Kumar wrote:
-> > > @@ -310,8 +339,11 @@ static int __init acpi_processor_driver_init(void)
-> > >     cpuhp_setup_state_nocalls(CPUHP_ACPI_CPUDRV_DEAD, "acpi/cpu-drv:dead",
-> > >                               NULL, acpi_soft_cpu_dead);
-> > >
-> > > -   acpi_thermal_cpufreq_init();
-> > > -   acpi_processor_ppc_init();
-> > > +   if (!cpufreq_register_notifier(&acpi_processor_notifier_block,
-> > > +                                  CPUFREQ_POLICY_NOTIFIER)) {
-> > > +           acpi_processor_cpufreq_init = true;
-> >
-> > Can't that be set/cleared by acpi_processor_notifier() itself?
->
-> This is required to be done only once at initialization and setting it
-> to true again and again on every invocation of the notifier callback
-> doesn't look right.
->
-> I have updated the patch based on rest of your suggestions, please see
-> if it looks okay now.
-
-Yes, it does, thanks!
-
-[No need to resend, I'll take it from this message.]
+T24gMDYuMDguMTkgMDk6NDUsIFV3ZSBLbGVpbmUtS8O2bmlnIHdyb3RlOg0KPiBIZWxsbyBGcmll
+ZGVyLA0KPiANCj4gT24gTW9uLCBBdWcgMDUsIDIwMTkgYXQgMDk6MDE6MzlBTSArMDAwMCwgU2No
+cmVtcGYgRnJpZWRlciB3cm90ZToNCj4+IE9uIDAyLjA4LjE5IDE0OjEyLCBVd2UgS2xlaW5lLUvD
+tm5pZyB3cm90ZToNCj4+PiBPbiBGcmksIEF1ZyAwMiwgMjAxOSBhdCAxMDowNDoxMEFNICswMDAw
+LCBTY2hyZW1wZiBGcmllZGVyIHdyb3RlOg0KPj4+PiBGcm9tOiBGcmllZGVyIFNjaHJlbXBmIDxm
+cmllZGVyLnNjaHJlbXBmQGtvbnRyb24uZGU+DQo+Pj4+DQo+Pj4+IEFzIGl0IGlzIGFsbG93ZWQg
+dG8gdXNlIHRoZSBtY3RybF9ncGlvXyogZnVuY3Rpb25zIGJlZm9yZQ0KPj4+PiBpbml0aWFsaXph
+dGlvbiAoYXMgdGhlIDgyNTAgZHJpdmVyIGRvZXMgYWNjb3JkaW5nIHRvIDQzNGJlMGFlN2FhNyks
+DQo+Pj4NCj4+PiBBY3R1YWxseSBJIHdhcyBzdXJwcmlzZWQgc29tZSB0aW1lIGFnbyB0aGF0IDgy
+NTAgdXNlZCBzZXJpYWxfbWN0cmwNCj4+PiB3aXRob3V0IGZpcnN0IGluaXRpYWxpemluZyBpdCBh
+bmQgZXhwZWN0aW5nIGl0IHRvIHdvcmsuIEkgZGlkbid0IGxvb2sgaW4NCj4+PiBkZXRhaWwsIGJ1
+dCBJIHdvdWxkbid0IGdvIHNvIGZhciB0byBjYWxsIHRoaXMgImFsbG93ZWQiLiBUaGUgY29tbWl0
+DQo+Pj4gaXRzZWxmIGNhbGxzIGl0ICJ3b3JrYXJvdW5kIiB3aGljaCBzZWVtcyBhIGJldHRlciBt
+YXRjaC4NCj4+DQo+PiBPaywgYnV0IGlmIHRoaXMgaXMgY29uc2lkZXJlZCB0byBiZSBhIHdvcmth
+cm91bmQgYW5kIGFzIHRoZSA4MjUwIGRyaXZlcg0KPj4gZG9lcyBub3QgdXNlIG1jdHJsX2dwaW9f
+dG9fZ3Bpb2QoKSwgd2Ugc2hvdWxkIG1heWJlIGp1c3QgZHJvcCB0aGlzIHBhdGNoDQo+PiBpbnN0
+ZWFkIG9mIGVuY291cmFnaW5nIG90aGVycyB0byB1c2UgbWN0cmxfZ3BpbyBiZWZvcmUgaW5pdGlh
+bGl6YXRpb24uDQo+Pg0KPj4gSSdtIHJlYWxseSBub3Qgc3VyZSB3aGF0J3MgYmVzdCwgc28gZGVw
+ZW5kaW5nIG9uIHdoYXQgeW91IHdpbGwgcHJvcG9zZSwNCj4+IEknbGwgc2VuZCBhIG5ldyB2ZXJz
+aW9uIG9mIHRoaXMgcGF0Y2ggd2l0aCBhZGp1c3RlZCBjb21taXQgbWVzc2FnZSBvciBub3QuDQo+
+IA0KPiBJIHdvdWxkbid0IGVuY291cmFnZSB1c2FnZSBvZiBtY3RybC1ncGlvIGJlZm9yZSBpdCdz
+IGluaXRpYWxpemVkLiBTbyBJDQo+IHN1Z2dlc3QgdG8gZHJvcCB0aGlzIHBhdGNoLg0KDQpPaywg
+dGhhbmtzLg==
