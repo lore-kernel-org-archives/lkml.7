@@ -5,42 +5,42 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEBB1C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:42:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33264C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B190B208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:42:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 094FA208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:43:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="RXK3m646"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="ULYr+Udh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732724AbfHFNm6 (ORCPT
+        id S1732776AbfHFNnA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 09:42:58 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:59090 "EHLO
+        Tue, 6 Aug 2019 09:43:00 -0400
+Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:59102 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726373AbfHFNm4 (ORCPT
+        by vger.kernel.org with ESMTP id S1730006AbfHFNm4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 6 Aug 2019 09:42:56 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 31424C21C1;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 519B3C21C4;
         Tue,  6 Aug 2019 13:42:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1565098976; bh=zI3HK+UTZ44RZkO8jYc/7a2ErTxkGDz/3XKo16xRMIY=;
+        t=1565098976; bh=Qxwoph4ddCKg0VtmbodiUMUPm3P937Jz58/B5VZy51c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=RXK3m646k1pMKyLWluAoINfK01PJnYYKQsc/MvDFaeU5y6sXbgyXwDcPfZyFYKQ+O
-         eEukmK1uOj6KB1n5HF6aKWhXP+90+jEk5vP2ibgRj+TMLXKWTSwloQXBSoo/s7XXqS
-         YtnnJ+Y7eXnmiXKIYkzoP9Z44gEXg277pQ6SLbjeX4D7wrnLxAZM03UPMw0uxQ0DqS
-         42cVL1IQWBh78EEokKslwdmx/TStgttiuzB8q55y5+2MEpRD0BX19geRinxdmxWNe0
-         O2UjMrrFx5eBaNT7EwziRp17VJ9aLgn9OkWPw/mRxGza6ikkGe0UtBXKlMZaFuWsx6
-         lfdwunJbHLFGw==
+        b=ULYr+UdhBO3+Uc9CTdHLRngBPuCG2n91HGFuxxyCI1sirT+Oaoq7JBCbF0pxzWCwe
+         mIU3+JW1n/s/481MyV2usAz4xFGcmUao/SDBXrL/lm+4IAfw3g4WESSvVbLQPrHynv
+         YXwvbRwsxVyBdTFde1j1l6sDgzJiycjROR0mpGcuEzoC9YaAda/wGFL+VpoCCGOTX/
+         mHvSjjbuUVBffj7XzZl+KM68bGaOm2YYUBnwhot2qU89aBEFpGj2UsyRY/LT2xZjrX
+         PVlDpK9kHk6Hoxk3117s41s1MT/e/mYG72YKqYnqQHCOohCDsh8GKhf76vJ8rzDmDd
+         2vdNW0EpPZmXQ==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id BB577A0061;
-        Tue,  6 Aug 2019 13:42:54 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTP id 15EAAA006A;
+        Tue,  6 Aug 2019 13:42:55 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
 Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
@@ -51,9 +51,9 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v2 02/10] net: stmmac: xgmac: Implement set_mtl_tx_queue_weight()
-Date:   Tue,  6 Aug 2019 15:42:43 +0200
-Message-Id: <c193a2986aacbe554cdfc42c9296ddbdccfbba2b.1565098881.git.joabreu@synopsys.com>
+Subject: [PATCH net-next v2 05/10] net: stmmac: selftests: Add RSS test
+Date:   Tue,  6 Aug 2019 15:42:46 +0200
+Message-Id: <f0dc140cc6ab9889b488f04796ab5d4c8bee6ffc.1565098881.git.joabreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1565098881.git.joabreu@synopsys.com>
 References: <cover.1565098881.git.joabreu@synopsys.com>
@@ -64,8 +64,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement the TX Queue Weight callback. In order for this to be active
-we also need to set ETS algorithm when configuring Queue.
+Add a test for RSS in the stmmac selftests.
 
 Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 
@@ -80,61 +79,46 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- .../net/ethernet/stmicro/stmmac/dwxgmac2_core.c    | 22 +++++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+ .../net/ethernet/stmicro/stmmac/stmmac_selftests.c    | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-index 0a32c96a7854..44d728c5c4e4 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-@@ -140,7 +140,9 @@ static void dwxgmac2_prog_mtl_tx_algorithms(struct mac_device_info *hw,
- 					    u32 tx_alg)
- {
- 	void __iomem *ioaddr = hw->pcsr;
-+	bool ets = true;
- 	u32 value;
-+	int i;
- 
- 	value = readl(ioaddr + XGMAC_MTL_OPMODE);
- 	value &= ~XGMAC_ETSALG;
-@@ -156,10 +158,28 @@ static void dwxgmac2_prog_mtl_tx_algorithms(struct mac_device_info *hw,
- 		value |= XGMAC_DWRR;
- 		break;
- 	default:
-+		ets = false;
- 		break;
- 	}
- 
- 	writel(value, ioaddr + XGMAC_MTL_OPMODE);
-+
-+	/* Set ETS if desired */
-+	for (i = 0; i < MTL_MAX_TX_QUEUES; i++) {
-+		value = readl(ioaddr + XGMAC_MTL_TCx_ETS_CONTROL(i));
-+		value &= ~XGMAC_TSA;
-+		if (ets)
-+			value |= XGMAC_ETS;
-+		writel(value, ioaddr + XGMAC_MTL_TCx_ETS_CONTROL(i));
-+	}
-+}
-+
-+static void dwxgmac2_set_mtl_tx_queue_weight(struct mac_device_info *hw,
-+					     u32 weight, u32 queue)
-+{
-+	void __iomem *ioaddr = hw->pcsr;
-+
-+	writel(weight, ioaddr + XGMAC_MTL_TCx_QUANTUM_WEIGHT(queue));
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
+index a97b1ea76438..83b775a8cedc 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
+@@ -700,6 +700,21 @@ static int stmmac_test_flowctrl(struct stmmac_priv *priv)
+ 	return ret;
  }
  
- static void dwxgmac2_map_mtl_to_dma(struct mac_device_info *hw, u32 queue,
-@@ -343,7 +363,7 @@ const struct stmmac_ops dwxgmac210_ops = {
- 	.rx_queue_routing = NULL,
- 	.prog_mtl_rx_algorithms = dwxgmac2_prog_mtl_rx_algorithms,
- 	.prog_mtl_tx_algorithms = dwxgmac2_prog_mtl_tx_algorithms,
--	.set_mtl_tx_queue_weight = NULL,
-+	.set_mtl_tx_queue_weight = dwxgmac2_set_mtl_tx_queue_weight,
- 	.map_mtl_to_dma = dwxgmac2_map_mtl_to_dma,
- 	.config_cbs = dwxgmac2_config_cbs,
- 	.dump_regs = NULL,
++static int stmmac_test_rss(struct stmmac_priv *priv)
++{
++	struct stmmac_packet_attrs attr = { };
++
++	if (!priv->dma_cap.rssen || !priv->rss.enable)
++		return -EOPNOTSUPP;
++
++	attr.dst = priv->dev->dev_addr;
++	attr.exp_hash = true;
++	attr.sport = 0x321;
++	attr.dport = 0x123;
++
++	return __stmmac_test_loopback(priv, &attr);
++}
++
+ #define STMMAC_LOOPBACK_NONE	0
+ #define STMMAC_LOOPBACK_MAC	1
+ #define STMMAC_LOOPBACK_PHY	2
+@@ -745,6 +760,10 @@ static const struct stmmac_test {
+ 		.name = "Flow Control         ",
+ 		.lb = STMMAC_LOOPBACK_PHY,
+ 		.fn = stmmac_test_flowctrl,
++	}, {
++		.name = "RSS                  ",
++		.lb = STMMAC_LOOPBACK_PHY,
++		.fn = stmmac_test_rss,
+ 	},
+ };
+ 
 -- 
 2.7.4
 
