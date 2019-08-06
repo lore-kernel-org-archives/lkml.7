@@ -2,114 +2,94 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C739C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A751C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:29:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEA3220717
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:27:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565126827;
-	bh=Omab2aaLx1gzMfzJZgEqTd/OAd4bfJxT6vIOj463fSQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=V4sKPmkDc1sOt9B0xBJUV7xwFAmvicBNLQRgnkeFrZgQquQqB1FrZ4sWj1lla0R4m
-	 vcyFcFJKLjcd3uT19bC0h5gjX6yiLcYIuG8vjfVjbVYp0eb1uFdZ6xeNsoNC0tmbLx
-	 1NEA26vXk6Qc07ilCkqlMir9zyqT1ktf7GGxF0F4=
+	by mail.kernel.org (Postfix) with ESMTP id 4D0302086D
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:29:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B1fQq7Ol"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbfHFV1G (ORCPT
+        id S1726688AbfHFV33 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:27:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49974 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725974AbfHFV1G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:27:06 -0400
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2EA932075B;
-        Tue,  6 Aug 2019 21:27:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565126825;
-        bh=Omab2aaLx1gzMfzJZgEqTd/OAd4bfJxT6vIOj463fSQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=cc+DOxbv7t+qm1HL+uMx6x/01ArqanOo9PuQKBfxQO2pLgdn7uPxoNkA9XUuRYsAU
-         je8lX1mNVa8LqlhmF+5IukfgIN9lybKnIXRjaBFA4eGiLKF94DmZxTLgSaPXi6fUz4
-         ZGdz6JBo6r3zWBuYVS9abYNCBEMySooilSH2UVXg=
-Received: by mail-qk1-f178.google.com with SMTP id d15so64121561qkl.4;
-        Tue, 06 Aug 2019 14:27:05 -0700 (PDT)
-X-Gm-Message-State: APjAAAU7e5ehtgSYP4A3TvMIJHhtnE/tdHflGtWEz2S0auQpDnLS92b9
-        VTjcZg8vJOR+PLBNsgoUwRVm1qqgpgAUuaMJAA==
-X-Google-Smtp-Source: APXvYqz6MiK/9r6wnlSZQe3SUXiZOJhyEiFYrQoWgGX9vBTELl/dXmEjfCx6Pf8dwVZBOvzBv4MZdozaGg0tpmYHix4=
-X-Received: by 2002:a37:6944:: with SMTP id e65mr4894358qkc.119.1565126824392;
- Tue, 06 Aug 2019 14:27:04 -0700 (PDT)
+        Tue, 6 Aug 2019 17:29:29 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:33728 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725974AbfHFV32 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:29:28 -0400
+Received: by mail-qk1-f196.google.com with SMTP id r6so64195760qkc.0
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 14:29:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3nDyENKB38R0uDM7hzocjvJMgcMblLNFl99d81wPXq0=;
+        b=B1fQq7Olm//etuiMshyzmR6nSITrP4xNB2SwIKDtHN5C821cmc3nhuNNwgaDWMZGto
+         1qYoxibjR9Z9Oigna5Oiuk2AYfsr+1BH8D00qhDVSSA1ZyZ4B/N59UUHC+FsVGq2FWHl
+         CtGq2qFPjmvD53RUyCsRTToG3Z22W2bFRi1zs9A+4fJEk+NVMXUqDTKSaHZu3bYzxFxr
+         D8fjEqe/NPo4IKE8KJKVG3k7PNY/7kPcZBU4/FL+gkuooHMkjb9V6OTyRPVJgE+mZpsK
+         zi9/sADR3/muEXHww/dsvT39wNnXqIjhUpuDogkcSLgvusdYd9NyTzpgxtbqIIZJxq8e
+         DQhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3nDyENKB38R0uDM7hzocjvJMgcMblLNFl99d81wPXq0=;
+        b=hM/w2tIftZ6mqoWRiQ3XTj7lCKWvG3uflmBUFzoq42dDN8GWDKqXtckGDJwek1Waf5
+         RlczAr93ISjNgCXjOmnO8EWrE1sOIYSPU+DIWJ4Fq/Bw8aJg8X/GpDz3xkITMH98mc8Z
+         L10WVnMEwQaRVoYoE70YAzfRMZlzqDsPLZdrngVUHTrwTiYzVzm4KRML1XtKHNWszbnL
+         ryK32Y9tk4YyC95WKizNa+YTMXW3KMwz/0ARPnX8fd1xH3mrk/xoPg6pM/n6J31roXv8
+         fluAOTfhtuxDMc41FHToU1pYheC2Wlv74dvY+uGLNTIIGJtyRwI2zBilgx7qTyVNfAwp
+         hVPA==
+X-Gm-Message-State: APjAAAVEbS0GVaHZP16TfqPtXOGxlyeEw/48qxl7DBebLEQR18EZJE9Z
+        iJqC6d2CwlyQo1t3Q6z2XVSqZP5zrphMR945uPGndQ==
+X-Google-Smtp-Source: APXvYqwMhpodfcmFZmigtZ2ZQfdNe3smtprv7hGk7bV/GFr4e1nUIfOgE0olXMdgZCEEf2V/pzG/GSvH0OLHgF7TDz4=
+X-Received: by 2002:a37:4d82:: with SMTP id a124mr5158808qkb.72.1565126967750;
+ Tue, 06 Aug 2019 14:29:27 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190806192654.138605-1-saravanak@google.com> <20190806192654.138605-2-saravanak@google.com>
-In-Reply-To: <20190806192654.138605-2-saravanak@google.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 6 Aug 2019 15:26:53 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+BwHSj1XUNp_eY362XnNoOqVTNHqAkvnbgece8ZQE3Qw@mail.gmail.com>
-Message-ID: <CAL_Jsq+BwHSj1XUNp_eY362XnNoOqVTNHqAkvnbgece8ZQE3Qw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] of/platform: Disable generic device linking code for PowerPC
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Android Kernel Team <kernel-team@android.com>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190801231046.105022-1-nhuck@google.com> <01222982-4206-9925-0482-639a79384451@arm.com>
+ <CAJkfWY6StuyMuKG7XdEJrqMsA_Xy02QZKp8r0K2jwSZwBCt+9Q@mail.gmail.com> <20190805133940.GA10425@arm.com>
+In-Reply-To: <20190805133940.GA10425@arm.com>
+From:   Nathan Huckleberry <nhuck@google.com>
+Date:   Tue, 6 Aug 2019 14:29:16 -0700
+Message-ID: <CAJkfWY5EL+MyRzSfcfJF2H8WoX73FEO0bOrwcoR4c4ekvaWvOQ@mail.gmail.com>
+Subject: Re: [RFC PATCH] ARM: UNWINDER_FRAME_POINTER implementation for Clang
+To:     Dave Martin <Dave.Martin@arm.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Tri Vo <trong@google.com>, linux@armlinux.org.uk,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 6, 2019 at 1:27 PM Saravana Kannan <saravanak@google.com> wrote:
->
-> PowerPC platforms don't use the generic of/platform code to populate the
-> devices from DT.
+I'm not sure that we should disable a broken feature instead of
+attempting a fix.
 
-Yes, they do.
+CONFIG_FUNCTION_GRAPH_TRACER is dependent on CONFIG_FRAME_POINTER and
+there have been reports by MediaTek that the frame pointer unwinder is
+faster in some cases.
 
-> Therefore the generic device linking code is never used
-> in PowerPC.  Compile it out to avoid warning about unused functions.
-
-I'd prefer this get disabled on PPC using 'if (IS_ENABLED(CONFIG_PPC))
-return' rather than #ifdefs.
-
+On Mon, Aug 5, 2019 at 6:39 AM Dave Martin <Dave.Martin@arm.com> wrote:
 >
-> If a specific PowerPC platform wants to use this code in the future,
-> bringing this back for PowerPC would be trivial. We'll just need to export
-> of_link_to_suppliers() and then let the machine specific files do the
-> linking as they populate the devices from DT.
+> On Fri, Aug 02, 2019 at 10:27:30AM -0700, Nathan Huckleberry wrote:
+> > You're right. Would pushing an extra register be an adequate fix?
 >
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> ---
->  drivers/of/platform.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Would forcing CONFIG_ARM_UNWIND=y for clang work as an alternative to
+> this?
 >
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index f68de5c4aeff..a2a4e4b79d43 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -506,6 +506,7 @@ int of_platform_default_populate(struct device_node *root,
->  }
->  EXPORT_SYMBOL_GPL(of_platform_default_populate);
+> Assuming clang supports -funwind-tables or equivalent, this may just
+> work.
 >
-> +#ifndef CONFIG_PPC
->  static bool of_link_is_valid(struct device_node *con, struct device_node *sup)
->  {
->         of_node_get(sup);
-> @@ -683,7 +684,6 @@ static int of_link_to_suppliers(struct device *dev)
->         return __of_link_to_suppliers(dev, dev->of_node);
->  }
+> [...]
 >
-> -#ifndef CONFIG_PPC
->  static const struct of_device_id reserved_mem_matches[] = {
->         { .compatible = "qcom,rmtfs-mem" },
->         { .compatible = "qcom,cmd-db" },
-> --
-> 2.22.0.770.g0f2c4a37fd-goog
->
+> Cheers
+> ---Dave
