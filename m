@@ -2,144 +2,151 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF636C32751
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 23:57:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C70C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 23:58:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCB6120684
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 23:57:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="W8eEgM2i"
+	by mail.kernel.org (Postfix) with ESMTP id F1786216F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 23:58:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565135908;
+	bh=j/RvlO/MM/u062VCfMQ2ZMvgSxU6N459yDU0a9QHEGM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Sje/oS4JnThNFaruuwqX6VIvY8mk3FmHCH272cHZ4mk0pfBP1ei2UUorsiYFtwDTl
+	 xqJXVonbz3iFIOeyRHsz1dgY7i+VWUDnXarL/NCoBW73T3cmx3HmCIhLdj4d5X2HFb
+	 8v485X8MutZq750b0lsOF3+3YQOl6uKyoi5/wu8I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727392AbfHFX5N (ORCPT
+        id S1727433AbfHFX60 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 19:57:13 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37263 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726238AbfHFX5M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 19:57:12 -0400
-Received: by mail-wm1-f65.google.com with SMTP id f17so78100015wme.2
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 16:57:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jfBO9hCNqYo64ONFM6ciZWbt58m9OYqaTu2HQ9ca9Ro=;
-        b=W8eEgM2it0wryCQemd+9sTsxohxFSftJHniJZ5Qr1hletzTU3TNMP1w2zUH/hfEuyL
-         0au0nFicRsBByjUVgItZ0FtKdIpaCavvW1sRv2pm8h3YDr6nL2e8gnVavWNGVQpWip/T
-         5mI7nVfekdb19B4eyRMnImDBHWb0FMcuYpX5A97FOG6afLhCWQb+V7KsuMdmM8CJgMTj
-         gY58iFdklW31tLr8gjYOP6HV4zZtOWxNsDsPPtFNu0t4Qs97YGVrncp3eRuqu5RfuI2l
-         LELLaXTY4KdsSWOpYJSSqfhMOT0S3g+8iQK0nNIljP4ioEqsDzwKUjIFNI4cl1v+ZBzQ
-         eBjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jfBO9hCNqYo64ONFM6ciZWbt58m9OYqaTu2HQ9ca9Ro=;
-        b=i0+3YIfww5FLuplIhIRRGNqtzGKktmApU9UgCvDoIKtg70BCi8PW1Qvx7pbj/lHF/8
-         EIzF0zQaW/HXF+/Q4QwCjE5p3ilWIFims00rh8CbSJ8tNMmTtkzFmuOR9sXshDQTO7rj
-         /C3/+QhBr9AxhZjCodSZwTIZPSfYnKbdN3SBhRqxJXoCrUxtlBFNzmrALt8GU5hX111j
-         tCGbTSg9+4mkXCYUawXuEoojp4xWScFXH6Vl+rNHGZmTFkPCJNE9XSJd0Vj6OCeGX2tI
-         VnLfOJQwC9iyWHEhZHztBccP9YpbvywNcokSI+DkwczhANdy0QCE675lymdWbtFg1BD1
-         U7vw==
-X-Gm-Message-State: APjAAAX/FzzoQe+H9T6BXTRPW51y0sJMLVgiAAfyT/JQMA0otRggA/Rx
-        xksIsoDfvriYn26mSKB2+G4xpQ==
-X-Google-Smtp-Source: APXvYqwvAhL5NTzknYTD6D/k6t0NbWDbuFz6QsImjCl9poL59Fzt5ijxAEO79VvVV+dV8ZfyhIK5nA==
-X-Received: by 2002:a1c:4b0b:: with SMTP id y11mr7085231wma.25.1565135830388;
-        Tue, 06 Aug 2019 16:57:10 -0700 (PDT)
-Received: from google.com ([2a00:79e0:d:210:e751:37a0:1e95:e65d])
-        by smtp.gmail.com with ESMTPSA id b19sm63982440wmj.13.2019.08.06.16.57.09
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 06 Aug 2019 16:57:09 -0700 (PDT)
-Date:   Wed, 7 Aug 2019 00:57:08 +0100
-From:   Alessio Balsini <balsini@android.com>
-To:     Joel Fernandes <joelaf@google.com>
-Cc:     "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>, dvander@gmail.com,
-        Yifan Hong <elsk@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>
-Subject: Re: [PATCH] loop: Add LOOP_SET_DIRECT_IO in compat ioctl
-Message-ID: <20190806235708.GA10161@google.com>
-References: <20190806220524.251404-1-balsini@android.com>
- <CAJWu+oq9JLnbGdqy+362JZUzjv6PvuRTNwiarTQiEfizsY32hQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJWu+oq9JLnbGdqy+362JZUzjv6PvuRTNwiarTQiEfizsY32hQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 6 Aug 2019 19:58:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59396 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726133AbfHFX60 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 19:58:26 -0400
+Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96CCD20663;
+        Tue,  6 Aug 2019 23:58:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565135905;
+        bh=j/RvlO/MM/u062VCfMQ2ZMvgSxU6N459yDU0a9QHEGM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Sv03h4En6sHUvjYMfXRk7QmI1g/wUlUCsu+aLDz8UlUIF+0+cyQ6Di38j7Nnhrysv
+         4SOmjpm0qbcj0ZtINtXe+NNaZM+B40VBZiQd0Ldi81tCJ4rI86C8d8hc1svMxl0Ha0
+         p2uze6hxnY52pKINnpq4ffN6GSw4LSF0BCnJxCUg=
+Date:   Tue, 6 Aug 2019 16:58:23 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Steven Price <steven.price@arm.com>
+Cc:     linux-mm@kvack.org, Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        =?UTF-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>
+Subject: Re: [PATCH v10 20/22] x86: mm: Convert dump_pagetables to use
+ walk_page_range
+Message-Id: <20190806165823.3f735b45a7c4163aca20a767@linux-foundation.org>
+In-Reply-To: <20190731154603.41797-21-steven.price@arm.com>
+References: <20190731154603.41797-1-steven.price@arm.com>
+        <20190731154603.41797-21-steven.price@arm.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joel,
+On Wed, 31 Jul 2019 16:46:01 +0100 Steven Price <steven.price@arm.com> wrote:
 
-I was considering the rationale for this patch totally strightforward:
-it enables Direct I/O ioctl to 32 bit processes running on 64 bit
-systems for compatibility reasons, as for all the other lo_compat_ioctl
-commands.
-Also the reason why someone would decide to use Direct I/O with loop
-devices is well known, that is why the feature exists :) So I thought
-this was another redundant information to put in the commit message and
-decided to omit it.
+> Make use of the new functionality in walk_page_range to remove the
+> arch page walking code and use the generic code to walk the page tables.
+> 
+> The effective permissions are passed down the chain using new fields
+> in struct pg_state.
+> 
+> The KASAN optimisation is implemented by including test_p?d callbacks
+> which can decide to skip an entire tree of entries
+> 
+> ...
+>
+> +static const struct ptdump_range ptdump_ranges[] = {
+> +#ifdef CONFIG_X86_64
+>  
+> -#define pgd_large(a) (pgtable_l5_enabled() ? pgd_large(a) : p4d_large(__p4d(pgd_val(a))))
+> -#define pgd_none(a)  (pgtable_l5_enabled() ? pgd_none(a) : p4d_none(__p4d(pgd_val(a))))
+> +#define normalize_addr_shift (64 - (__VIRTUAL_MASK_SHIFT + 1))
+> +#define normalize_addr(u) ((signed long)(u << normalize_addr_shift) \
+> +				>> normalize_addr_shift)
+>  
+> -static inline bool is_hypervisor_range(int idx)
+> -{
+> -#ifdef CONFIG_X86_64
+> -	/*
+> -	 * A hole in the beginning of kernel address space reserved
+> -	 * for a hypervisor.
+> -	 */
+> -	return	(idx >= pgd_index(GUARD_HOLE_BASE_ADDR)) &&
+> -		(idx <  pgd_index(GUARD_HOLE_END_ADDR));
+> +	{0, PTRS_PER_PGD * PGD_LEVEL_MULT / 2},
+> +	{normalize_addr(PTRS_PER_PGD * PGD_LEVEL_MULT / 2), ~0UL},
 
-If you still think that I should update the commit message with this
-information, I will do so.
+This blows up because PGD_LEVEL_MULT is sometimes not a constant.
 
-Thanks again,
-Alessio
+x86_64 allmodconfig:
 
-On Tue, Aug 06, 2019 at 06:25:42PM -0400, 'Joel Fernandes' via kernel-team wrote:
-> Hi Alessio,
-> 
-> On Tue, Aug 6, 2019 at 6:05 PM Alessio Balsini <balsini@android.com> wrote:
-> >
-> > Export LOOP_SET_DIRECT_IO as additional lo_compat_ioctl.
-> > The input argument for this ioctl is a single long, in the end converted
-> > to a 1-bit boolean. Compatibility is then preserved.
-> >
-> > Cc: Jens Axboe <axboe@kernel.dk>
-> > Signed-off-by: Alessio Balsini <balsini@android.com>
-> 
-> This looks Ok to me, but I believe the commit message should also
-> explain what was this patch "fixing", how was this lack of an "export"
-> noticed, why does it matter, etc as well.
-> 
-> thanks,
-> 
->  - Joel
-> 
-> 
-> > ---
-> >  drivers/block/loop.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-> > index 3036883fc9f8..a7461f482467 100644
-> > --- a/drivers/block/loop.c
-> > +++ b/drivers/block/loop.c
-> > @@ -1755,6 +1755,7 @@ static int lo_compat_ioctl(struct block_device *bdev, fmode_t mode,
-> >         case LOOP_SET_FD:
-> >         case LOOP_CHANGE_FD:
-> >         case LOOP_SET_BLOCK_SIZE:
-> > +       case LOOP_SET_DIRECT_IO:
-> >                 err = lo_ioctl(bdev, mode, cmd, arg);
-> >                 break;
-> >         default:
-> > --
-> > 2.22.0.770.g0f2c4a37fd-goog
-> >
-> > --
-> > To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
-> >
-> 
-> -- 
-> To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
-> 
+In file included from ./arch/x86/include/asm/pgtable_types.h:249:0,
+                 from ./arch/x86/include/asm/paravirt_types.h:45,
+                 from ./arch/x86/include/asm/ptrace.h:94,
+                 from ./arch/x86/include/asm/math_emu.h:5,
+                 from ./arch/x86/include/asm/processor.h:12,
+                 from ./arch/x86/include/asm/cpufeature.h:5,
+                 from ./arch/x86/include/asm/thread_info.h:53,
+                 from ./include/linux/thread_info.h:38,
+                 from ./arch/x86/include/asm/preempt.h:7,
+                 from ./include/linux/preempt.h:78,
+                 from ./include/linux/spinlock.h:51,
+                 from ./include/linux/wait.h:9,
+                 from ./include/linux/wait_bit.h:8,
+                 from ./include/linux/fs.h:6,
+                 from ./include/linux/debugfs.h:15,
+                 from arch/x86/mm/dump_pagetables.c:11:
+./arch/x86/include/asm/pgtable_64_types.h:56:22: error: initializer element is not constant
+ #define PTRS_PER_PGD 512
+                      ^
+arch/x86/mm/dump_pagetables.c:363:6: note: in expansion of macro ‘PTRS_PER_PGD’
+  {0, PTRS_PER_PGD * PGD_LEVEL_MULT / 2},
+      ^~~~~~~~~~~~
+./arch/x86/include/asm/pgtable_64_types.h:56:22: note: (near initialization for ‘ptdump_ranges[0].end’)
+ #define PTRS_PER_PGD 512
+                      ^
+arch/x86/mm/dump_pagetables.c:363:6: note: in expansion of macro ‘PTRS_PER_PGD’
+  {0, PTRS_PER_PGD * PGD_LEVEL_MULT / 2},
+      ^~~~~~~~~~~~
+arch/x86/mm/dump_pagetables.c:360:27: error: initializer element is not constant
+ #define normalize_addr(u) ((signed long)(u << normalize_addr_shift) \
+                           ^
+arch/x86/mm/dump_pagetables.c:364:3: note: in expansion of macro ‘normalize_addr’
+  {normalize_addr(PTRS_PER_PGD * PGD_LEVEL_MULT / 2), ~0UL},
+   ^~~~~~~~~~~~~~
+arch/x86/mm/dump_pagetables.c:360:27: note: (near initialization for ‘ptdump_ranges[1].start’)
+ #define normalize_addr(u) ((signed long)(u << normalize_addr_shift) \
+                           ^
+arch/x86/mm/dump_pagetables.c:364:3: note: in expansion of macro ‘normalize_addr’
+  {normalize_addr(PTRS_PER_PGD * PGD_LEVEL_MULT / 2), ~0UL},
+
+I don't know what to do about this so I'll drop the series.
