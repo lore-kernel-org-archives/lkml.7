@@ -2,87 +2,122 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A94C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 03:27:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81AE3C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 03:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF6B020C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 03:27:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 519D420C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 03:27:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="GteYQ77L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731489AbfHFD1Y (ORCPT
+        id S1731490AbfHFD1g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 23:27:24 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:31240 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729383AbfHFD1Y (ORCPT
+        Mon, 5 Aug 2019 23:27:36 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:39806 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729383AbfHFD1f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 23:27:24 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x763RMiQ045929
-        for <linux-kernel@vger.kernel.org>; Mon, 5 Aug 2019 23:27:23 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u6xn25me5-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 23:27:23 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
-        Tue, 6 Aug 2019 04:27:10 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 6 Aug 2019 04:27:06 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x763R5Id54853792
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 6 Aug 2019 03:27:05 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 24931A4062;
-        Tue,  6 Aug 2019 03:27:05 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 89FD8A405B;
-        Tue,  6 Aug 2019 03:27:03 +0000 (GMT)
-Received: from [9.124.31.110] (unknown [9.124.31.110])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  6 Aug 2019 03:27:03 +0000 (GMT)
-Subject: Re: [PATCH v3 0/3] Powerpc64/Watchpoint: Few important fixes
-To:     mpe@ellerman.id.au, mikey@neuling.org
-Cc:     benh@kernel.crashing.org, paulus@samba.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        npiggin@gmail.com, christophe.leroy@c-s.fr,
-        naveen.n.rao@linux.vnet.ibm.com,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-References: <20190710045445.31037-1-ravi.bangoria@linux.ibm.com>
-From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Date:   Tue, 6 Aug 2019 08:57:02 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190710045445.31037-1-ravi.bangoria@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19080603-0028-0000-0000-0000038C0670
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19080603-0029-0000-0000-0000244C65DB
-Message-Id: <334222f3-37af-722c-aa87-02d629b6062a@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-06_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=662 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908060038
+        Mon, 5 Aug 2019 23:27:35 -0400
+Received: by mail-qt1-f195.google.com with SMTP id l9so83117241qtu.6
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 20:27:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=7I+W1IHQoXT5wG6AmL/uplOOrHiM/gS299fH35smI2I=;
+        b=GteYQ77LCE+NXYg+K4be284RsKS1h1ELviGK0SVws/hdbk8Fdkh2Nw9bZCAcgNioFe
+         NjKyEUSuQbZ1NB88MRZbBeTB8ciGwJVaUxl+6HuOqH0xiq49WzSAn0qpTCeY6w9Faj3F
+         oXbkZWMYN3kV0ralkzNxBlNqs03+hoYHwK28kRjSsmdz1/kziwXhF0c71rtnpWBA6pE+
+         W+8BVTX1c2gf/qLtOF3JezTFjk7Lm0jIcMG9amp05PRI6UpGiF+u+njxfV0wT9tKqKYb
+         7opepZB2hnAdfEOBFz91arf6uRQYeDnaxqfsXEEA/wEmWFRyf+XInMCaRU6lP0/lQRkL
+         WYCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=7I+W1IHQoXT5wG6AmL/uplOOrHiM/gS299fH35smI2I=;
+        b=nakx8AQgtBgHBQUf5Y40/D7ZOLqQj8POHROqTbnBuNHykNkfOxSAC/OZ4K7hJajTAG
+         Ugdk8Psh3+NkE44DdfhueG/0sxrI42BovtwyOBQ9uVOwAzvwYROi7AoW6GumpLqXxzK+
+         FRWV+x6C/HQYvhE8EHENYGh7CETtttC466nPEkm6qtdpGVl2DpK+ddIEl+y6KEs1sDZ7
+         1x9OVy2cfU82AGtm5kllNCrBVVDUWVeTDFGrk7/CBzvS6o9wAqpUgseeWlrg7zxy/6x5
+         x3vvHDlmTSX40YFniPd9+AdBZyGdR/a6q67B+2vRkbpgphN6fTdVbRiulCzxtn7fgtvZ
+         NuSQ==
+X-Gm-Message-State: APjAAAXQB9T5/rNLkzDSw+ORqtQ38ICOrs/SSVzybZPiEgktrbI8jbeC
+        yUIkYoFUhgijNHoWX6apzo+Aeg==
+X-Google-Smtp-Source: APXvYqxr9YCL08+FHp/K5Wy5t/sLEwyqKoNQgzetzS19x8cuoy4vyiAzic0dcnLG7XC4Dx5guujpsA==
+X-Received: by 2002:ac8:35f6:: with SMTP id l51mr1190044qtb.109.1565062054968;
+        Mon, 05 Aug 2019 20:27:34 -0700 (PDT)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id m5sm35790115qke.25.2019.08.05.20.27.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 05 Aug 2019 20:27:34 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH] scsi/megaraid_sas: fix a compilation warning
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <1564151143-22889-1-git-send-email-cai@lca.pw>
+Date:   Mon, 5 Aug 2019 23:27:32 -0400
+Cc:     jejb@linux.ibm.com, Kashyap Desai <kashyap.desai@broadcom.com>,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        shivasharan.srikanteshwara@broadcom.com,
+        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <B961A6AE-2377-406C-891D-4363DCD9827C@lca.pw>
+References: <1564151143-22889-1-git-send-email-cai@lca.pw>
+To:     martin.petersen@oracle.com
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mikey, mpe ...
+Ping. Please take a look at this trivial patch.
 
-Any thoughts?
+> On Jul 26, 2019, at 10:25 AM, Qian Cai <cai@lca.pw> wrote:
+>=20
+> The commit de516379e85f ("scsi: megaraid_sas: changes to function
+> prototypes") introduced a comilation warning due to it changed the
+> function prototype of read_fw_status_reg() to take an instance pointer
+> instead, but forgot to remove an unused variable.
+>=20
+> drivers/scsi/megaraid/megaraid_sas_fusion.c: In function
+> 'megasas_fusion_update_can_queue':
+> drivers/scsi/megaraid/megaraid_sas_fusion.c:326:39: warning: variable
+> 'reg_set' set but not used [-Wunused-but-set-variable]
+>  struct megasas_register_set __iomem *reg_set;
+>                                       ^~~~~~~
+> Fixes: de516379e85f ("scsi: megaraid_sas: changes to function =
+prototypes")
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+> drivers/scsi/megaraid/megaraid_sas_fusion.c | 3 ---
+> 1 file changed, 3 deletions(-)
+>=20
+> diff --git a/drivers/scsi/megaraid/megaraid_sas_fusion.c =
+b/drivers/scsi/megaraid/megaraid_sas_fusion.c
+> index a32b3f0fcd15..e8092d59d575 100644
+> --- a/drivers/scsi/megaraid/megaraid_sas_fusion.c
+> +++ b/drivers/scsi/megaraid/megaraid_sas_fusion.c
+> @@ -323,9 +323,6 @@ inline void megasas_return_cmd_fusion(struct =
+megasas_instance *instance,
+> {
+> 	u16 cur_max_fw_cmds =3D 0;
+> 	u16 ldio_threshold =3D 0;
+> -	struct megasas_register_set __iomem *reg_set;
+> -
+> -	reg_set =3D instance->reg_set;
+>=20
+> 	/* ventura FW does not fill outbound_scratch_pad_2 with queue =
+depth */
+> 	if (instance->adapter_type < VENTURA_SERIES)
+> --=20
+> 1.8.3.1
+>=20
 
