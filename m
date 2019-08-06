@@ -2,185 +2,166 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D434FC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 23:16:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17954C32751
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 23:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8DC720B1F
+	by mail.kernel.org (Postfix) with ESMTP id D485B214C6
 	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 23:16:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="WIvITimi"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="CG5mOnAd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727468AbfHFXQ0 (ORCPT
+        id S1727497AbfHFXQ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 19:16:26 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:41906 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726461AbfHFXQQ (ORCPT
+        Tue, 6 Aug 2019 19:16:29 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:53720 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727439AbfHFXQZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 19:16:16 -0400
-Received: by mail-qt1-f194.google.com with SMTP id d17so7513851qtj.8
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 16:16:15 -0700 (PDT)
+        Tue, 6 Aug 2019 19:16:25 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 10so717745wmp.3
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 16:16:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=qo3M/m6bAMWNKeEf1KSsSvYS6KA/79bnXZ/MG9HQ7+c=;
-        b=WIvITimiWkKwXR9MAnwvbjPd/jMGoFdgSbKJFYsFUTclr60pQsMdghZmIOiCh5YXC0
-         UttFPobZS06cPlOZT0PF7D3HVksfWxSV4t/CAk8TXFyUTmugFgIF0+8oo8kipepx+JH2
-         FaOArh02dXo+Kn1J1o19Ll/t6xFzUWU5L8C0euhgPJsWnHYPCsSB+yc+FHlEmVCAuX1U
-         +F5OWyMlJ9C8l6nJvwq0WdkKMN98R7WVkx30edRvtFR93R5JGnJIrzkZgNRu9P36xdgz
-         ULUtU6UxEUUqnG9agwf1nN+Htatwu+jA9bbrHaEueg4ngKDbsCMWsyahgp9VLjoDhgxe
-         +acQ==
+        d=arista.com; s=googlenew;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Q61qm30k8cg74IhXkTUjHjLeO5mUvURwLoiElUgi8sA=;
+        b=CG5mOnAd/KW5rIyYsfrD490hIM61X0WzvKgxKZKRNh1jbjz3QVZzq/BixrHW97Y1bZ
+         5bcL6b5ns+9nUsXfNYBhtP1nup+a6bcv+sOsyI+6d78PGJXA+WQojPR+nXuAUKycyODS
+         SF8LepmehB+2SnMgqAjYVO/syNqKd47gZ8RS6s7gYrmDvbTUOxzupWz+yoz5SXCmxe9n
+         uUWFSm8nyF3ZKPovqDFvymKkg6Wm0AUuBWDYjSWxblYTcoakjOe/3IKGtDwYQHmxqc9Q
+         WeRbC4xKJj1kqo/MnRE5WE/Ygbpg6qdGy3sONDN1T+ecuJvl+OlpV1DqSYBSFzXsNDwQ
+         C3+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=qo3M/m6bAMWNKeEf1KSsSvYS6KA/79bnXZ/MG9HQ7+c=;
-        b=lltsyWvC/Xm/xX5oEqXvsSEuIWhHUDeXigXHx7x5BepvFk8GKDPClEZiAM3Bq4tHQr
-         cWTiNMEUxPJGCq9WhniTNjb5VXGbnUolvuzsiIc3SRLjxhTWUCH9Vu03Wvj6YiXJsOfy
-         WR4v1JMzUb3u4OBkZh7I1kbJ2SDn4bE0uvLxyfBA0MENNJVGuhjYWIKvHYCDj+DoEUgo
-         HmZLthZJwUT5lrHXfRe8WQhKkBlIbPoljgsUhBOkGrH1Pdz/w9A7XCT1apI/8t7ineaF
-         zB5gJE1JqCLo4yTaFxruw9fy3Qo0JEDfyYJMkImwDiM6Kt403W0SZ5q+TI5wEyMipiYO
-         8DqQ==
-X-Gm-Message-State: APjAAAU6ktSidLXUv/E1oelULjPdA75THFqstbUk96gh31hl/VDgzpgp
-        v1D+8sKH8/3LZgOP8tgAxwvLcA==
-X-Google-Smtp-Source: APXvYqwzSzqBhit7womFZned74qAW6JuvC+DaQssS9gJgppa+iNTQrGgfDRkcUg2AKLeoxFn+koswg==
-X-Received: by 2002:a0c:ad6f:: with SMTP id v44mr5590212qvc.40.1565133375491;
-        Tue, 06 Aug 2019 16:16:15 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id l5sm38853627qte.9.2019.08.06.16.16.14
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 06 Aug 2019 16:16:14 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hv8gg-0006eL-1z; Tue, 06 Aug 2019 20:16:14 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     linux-mm@kvack.org
-Cc:     Andrea Arcangeli <aarcange@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        "Kuehling, Felix" <Felix.Kuehling@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        Dimitri Sivanich <sivanich@sgi.com>,
-        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        iommu@lists.linux-foundation.org, intel-gfx@lists.freedesktop.org,
-        Gavin Shan <shangw@linux.vnet.ibm.com>,
-        Andrea Righi <andrea@betterlinux.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH v3 hmm 02/11] mm/mmu_notifiers: do not speculatively allocate a mmu_notifier_mm
-Date:   Tue,  6 Aug 2019 20:15:39 -0300
-Message-Id: <20190806231548.25242-3-jgg@ziepe.ca>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190806231548.25242-1-jgg@ziepe.ca>
-References: <20190806231548.25242-1-jgg@ziepe.ca>
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Q61qm30k8cg74IhXkTUjHjLeO5mUvURwLoiElUgi8sA=;
+        b=HGPu1WYTzsPaaqtA/H+hJ1/3FuoIs9N9PuYBpLf417VE3YA/VuDQbefnmFZDSK3d+H
+         pe0TSxYhHZol5Xbia7YL0WDiJXeXfhNW62Ts5SNemI68qy0jHGZghUGK7tdFAhtAWKud
+         U2yNb2o3PQHI8Zs43spMuNsxjiXKu8JWZ4ZA1jXDfkV3t13i/FoRyrjxnsvhX9EDaKoI
+         DHBMJiygbPLuWWjjltuoNQ8gxmh9YzSBye9dOw7cYege1NcDRHennEPlb2caSK4u8E4c
+         CHvqG42GO8Q/M6bdj7SVoAupTz2X/qY7JqT0uhSGfy64FtLuFo+7Mxsm6QGbhXL8HZj5
+         Iy9Q==
+X-Gm-Message-State: APjAAAVhDBOLpX6ZiCG5ypoNeEcTbAnhVVY+p/w+EpynfcnZW/6ed1Hm
+        wjo1PMizDJoj75xBe4ug8wKwJU+Noi8OQXi8Mhb8JjMgvMwuncv3NzcwPwdAB99aUYUlqjHTFyX
+        gzQ8pwYSfFXpCBNYPzd5T1xcp7l5UqUL0IYFGJ7mZifozjrFHbrEcFd+cvTC59PPdNoqswb7cOL
+        xjlxi0KHL9KXBXlmSZGqiD8cQOR/eJ2cQZDAX5Qpo=
+X-Google-Smtp-Source: APXvYqxZdd7iJIqOekT+GFHNpa0uxjIVasHt3cn+nlZds1B0ydrjr2hGKRtue33c0rK7PgKaL/W/JQ==
+X-Received: by 2002:a1c:c545:: with SMTP id v66mr6790710wmf.51.1565133383213;
+        Tue, 06 Aug 2019 16:16:23 -0700 (PDT)
+Received: from [10.83.36.153] ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id o6sm193083319wra.27.2019.08.06.16.16.22
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 06 Aug 2019 16:16:22 -0700 (PDT)
+Subject: Re: [PATCH 4.19 17/32] iommu/vt-d: Dont queue_iova() if there is no
+ flush queue
+From:   Dmitry Safonov <dima@arista.com>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     linux-kernel@vger.kernel.org,
+        David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        iommu@lists.linux-foundation.org, Joerg Roedel <jroedel@suse.de>
+References: <20190802092101.913646560@linuxfoundation.org>
+ <20190802092107.177554199@linuxfoundation.org> <20190803213453.GA22416@amd>
+ <dc639510-5d88-5b05-a973-5f4b7c720f76@arista.com>
+Message-ID: <858b5409-d8ed-5ff1-2daf-3f6287fb5c8e@arista.com>
+Date:   Wed, 7 Aug 2019 00:16:21 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <dc639510-5d88-5b05-a973-5f4b7c720f76@arista.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CLOUD-SEC-AV-Info: arista,google_mail,monitor
+X-CLOUD-SEC-AV-Sent: true
+X-Gm-Spam: 0
+X-Gm-Phishy: 0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+On 8/6/19 11:47 PM, Dmitry Safonov wrote:
+> Hi Pavel,
+> 
+> On 8/3/19 10:34 PM, Pavel Machek wrote:
+>> Hi!
+>>
+>>> --- a/drivers/iommu/intel-iommu.c
+>>> +++ b/drivers/iommu/intel-iommu.c
+>>> @@ -3721,7 +3721,7 @@ static void intel_unmap(struct device *d
+>>>  
+>>>  	freelist = domain_unmap(domain, start_pfn, last_pfn);
+>>>  
+>>> -	if (intel_iommu_strict) {
+>>> +	if (intel_iommu_strict || !has_iova_flush_queue(&domain->iovad)) {
+>>>  		iommu_flush_iotlb_psi(iommu, domain, start_pfn,
+>>>  				      nrpages, !freelist, 0);
+>>>  		/* free iova */
+>>> --- a/drivers/iommu/iova.c
+>>> +++ b/drivers/iommu/iova.c
+>>> @@ -65,9 +65,14 @@ init_iova_domain(struct iova_domain *iov
+>>>  }
+>>>  EXPORT_SYMBOL_GPL(init_iova_domain);
+>>>  
+>>> +bool has_iova_flush_queue(struct iova_domain *iovad)
+>>> +{
+>>> +	return !!iovad->fq;
+>>
+>> Should this be READ_ONCE()?
+> 
+> Why? Compiler can't anyhow assume that it's always true/false and there
+> is a clear data dependency between this and:
+> :	queue_iova(&domain->iovad, iova_pfn, nrpages,
+> :			   (unsigned long)freelist);
+> 
+>>
+>>> @@ -100,13 +106,17 @@ int init_iova_flush_queue(struct iova_do
+>>>  	for_each_possible_cpu(cpu) {
+>>>  		struct iova_fq *fq;
+>>>  
+>>> -		fq = per_cpu_ptr(iovad->fq, cpu);
+>>> +		fq = per_cpu_ptr(queue, cpu);
+>>>  		fq->head = 0;
+>>>  		fq->tail = 0;
+>>>  
+>>>  		spin_lock_init(&fq->lock);
+>>>  	}
+>>>  
+>>> +	smp_wmb();
+>>> +
+>>> +	iovad->fq = queue;
+>>> +
+>>
+>> Could we have a comment why the barrier is needed,
+> 
+> I'm up for the comment if you feel like it - in my POV it's quite
+> obvious that we want finish initializing the queue's internals before
+> assigning the queue. I didn't put the comment exactly because I felt
+> like it would state something evident [in my POV].
+> 
+>> and perhaps there
+>> should be oposing smp_rmb() somewhere? Does this need to be
+>> WRITE_ONCE() as it is racing against reader?
+> 
+> I feel confused. I might have forgotten everything about barriers, but
+> again if I'm not mistaken, one doesn't need a barrier in:
+> : if (A->a != NULL)
+> :     use(A); /* dereferences A->a */
+> : else
+> :     /* don't use `a' */
 
-A prior commit e0f3c3f78da2 ("mm/mmu_notifier: init notifier if necessary")
-made an attempt at doing this, but had to be reverted as calling
-the GFP_KERNEL allocator under the i_mmap_mutex causes deadlock, see
-commit 35cfa2b0b491 ("mm/mmu_notifier: allocate mmu_notifier in advance").
+And in this simplified example I mean that use() will either see A->a
+initialized (IOW, CPU can't load A->a->field1 before checking the
+condition) or use() will not be called.
 
-However, we can avoid that problem by doing the allocation only under
-the mmap_sem, which is already happening.
-
-Since all writers to mm->mmu_notifier_mm hold the write side of the
-mmap_sem reading it under that sem is deterministic and we can use that to
-decide if the allocation path is required, without speculation.
-
-The actual update to mmu_notifier_mm must still be done under the
-mm_take_all_locks() to ensure read-side coherency.
-
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
----
- mm/mmu_notifier.c | 34 ++++++++++++++++++++++------------
- 1 file changed, 22 insertions(+), 12 deletions(-)
-
-diff --git a/mm/mmu_notifier.c b/mm/mmu_notifier.c
-index 218a6f108bc2d0..696810f632ade1 100644
---- a/mm/mmu_notifier.c
-+++ b/mm/mmu_notifier.c
-@@ -242,27 +242,32 @@ EXPORT_SYMBOL_GPL(__mmu_notifier_invalidate_range);
-  */
- int __mmu_notifier_register(struct mmu_notifier *mn, struct mm_struct *mm)
- {
--	struct mmu_notifier_mm *mmu_notifier_mm;
-+	struct mmu_notifier_mm *mmu_notifier_mm = NULL;
- 	int ret;
- 
- 	lockdep_assert_held_write(&mm->mmap_sem);
- 	BUG_ON(atomic_read(&mm->mm_users) <= 0);
- 
--	mmu_notifier_mm = kmalloc(sizeof(struct mmu_notifier_mm), GFP_KERNEL);
--	if (unlikely(!mmu_notifier_mm))
--		return -ENOMEM;
-+	if (!mm->mmu_notifier_mm) {
-+		/*
-+		 * kmalloc cannot be called under mm_take_all_locks(), but we
-+		 * know that mm->mmu_notifier_mm can't change while we hold
-+		 * the write side of the mmap_sem.
-+		 */
-+		mmu_notifier_mm =
-+			kmalloc(sizeof(struct mmu_notifier_mm), GFP_KERNEL);
-+		if (!mmu_notifier_mm)
-+			return -ENOMEM;
-+
-+		INIT_HLIST_HEAD(&mmu_notifier_mm->list);
-+		spin_lock_init(&mmu_notifier_mm->lock);
-+	}
- 
- 	ret = mm_take_all_locks(mm);
- 	if (unlikely(ret))
- 		goto out_clean;
- 
--	if (!mm_has_notifiers(mm)) {
--		INIT_HLIST_HEAD(&mmu_notifier_mm->list);
--		spin_lock_init(&mmu_notifier_mm->lock);
--
--		mm->mmu_notifier_mm = mmu_notifier_mm;
--		mmu_notifier_mm = NULL;
--	}
-+	/* Pairs with the mmdrop in mmu_notifier_unregister_* */
- 	mmgrab(mm);
- 
- 	/*
-@@ -273,14 +278,19 @@ int __mmu_notifier_register(struct mmu_notifier *mn, struct mm_struct *mm)
- 	 * We can't race against any other mmu notifier method either
- 	 * thanks to mm_take_all_locks().
- 	 */
-+	if (mmu_notifier_mm)
-+		mm->mmu_notifier_mm = mmu_notifier_mm;
-+
- 	spin_lock(&mm->mmu_notifier_mm->lock);
- 	hlist_add_head_rcu(&mn->hlist, &mm->mmu_notifier_mm->list);
- 	spin_unlock(&mm->mmu_notifier_mm->lock);
- 
- 	mm_drop_all_locks(mm);
-+	BUG_ON(atomic_read(&mm->mm_users) <= 0);
-+	return 0;
-+
- out_clean:
- 	kfree(mmu_notifier_mm);
--	BUG_ON(atomic_read(&mm->mm_users) <= 0);
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(__mmu_notifier_register);
--- 
-2.22.0
-
+Thanks,
+          Dmitry
