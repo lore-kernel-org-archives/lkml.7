@@ -2,143 +2,197 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 645E4C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 17:59:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF5C2C32754
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3980D20B1F
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 17:59:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B11920C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:00:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CZTMF4p4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IzSuLQwk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730959AbfHFR7n (ORCPT
+        id S1731902AbfHFSAH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 13:59:43 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:45044 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726713AbfHFR7n (ORCPT
+        Tue, 6 Aug 2019 14:00:07 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:45198 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726713AbfHFSAG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 13:59:43 -0400
-Received: by mail-pg1-f195.google.com with SMTP id i18so41990447pgl.11
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 10:59:42 -0700 (PDT)
+        Tue, 6 Aug 2019 14:00:06 -0400
+Received: by mail-wr1-f66.google.com with SMTP id n1so2481367wrw.12;
+        Tue, 06 Aug 2019 11:00:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=iGsntDZpOimrecz1+mcPXqzMsFWapOrrKVLJor/Xhk0=;
-        b=CZTMF4p4qzDuGkqF4qaSCfhkMg2nUn1BP5BunO5paXaKilbH3bNH8CeI/5jC5zJHBc
-         4GQAyYPa63FOXkGNgCgBhAF04B9+H2t7clpoN3/CUIXJlstIec6oOfzATE774zvoKbgw
-         z9HkQ8A1YHBBUqCo9crJqRCSPvqPmywGpF3nc=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=H5oxnh6AO2iA8nJMA3gm0i0KrEK2AnvYtvfzFwUa/VE=;
+        b=IzSuLQwki0yPJVH+d2Lbq4S+g4ZX2atTnbAvcpq0wE42xwkMJXiMqPeaS+r8xL/eJR
+         yYnjYN4vJkH3QaoGEegtr4CskAhmGEEJlNnan2gZeaJ/3x8JtuBMJNuNfrSBD+PS0WVE
+         1DbHnAkhJcKPjfpoprfD9f9K469CSmuGORfCOxkyIbCXql6IgsdNXiwySWIQSfdJser5
+         VjDTtVoAhWsxRu4uYcGxs9xZolHRtAkdOq2IXCzk2//Zv+7Oy8EzDl2EUB/iwXGh5PWK
+         /7jCtQ56iS/RLwsu/+GtzMSMZ8vkSSukriVez8SsXpLnO+CZ4zq5Gr82na4GPtZGD89d
+         5oXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=iGsntDZpOimrecz1+mcPXqzMsFWapOrrKVLJor/Xhk0=;
-        b=VsuBUcse+ApRS2VsWWGU+4Vx5zsW9Usen7w3F6GqSGtrP6jk3Ox+ISBs7UtyddnExH
-         0w5JKgHEDpOd/xamjtTQzoOeope1qxrG34H3jHl45jfunqbtd1YckpirDflw5CLp47Co
-         IK/hJnwVVfEWOsEmkfZe3sOcIreYZhv9yxnO4mi/n6DAPesZo5o5VHwV9UDHXweqsxs5
-         zsNpZzkZNX0T+TU2ssrxgSOJ5GTtOyK/1PHBUmf0ERxAwKNXMPDaMidAt3T97U1CDB60
-         l+0NwbdU75XOsWVJmItlRv/X1THZVAjhFIFlYC+Ed6z+vaNm7YpN9vTjc9f6uKRR8Qg3
-         fagg==
-X-Gm-Message-State: APjAAAX2q5qskyKYrWhrbFsYDaDWcEMEH5qQDwiLnznQ27BjU3WMg2zt
-        Pyq4zXmrqlGzCaQGC339G8KEAA==
-X-Google-Smtp-Source: APXvYqx/U4HYVbYf3P0ormkFK+H8jcLkKqwNe85vod3curm/4VtQFCmyXUWrWspLpRWyvPLKuR6xew==
-X-Received: by 2002:a17:90a:32ec:: with SMTP id l99mr4480249pjb.44.1565114382119;
-        Tue, 06 Aug 2019 10:59:42 -0700 (PDT)
-Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id x25sm118229090pfa.90.2019.08.06.10.59.41
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 06 Aug 2019 10:59:41 -0700 (PDT)
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     stable@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
-        Steven Price <steven.price@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 4.19] Revert "initramfs: free initrd memory if opening /initrd.image fails"
-Date:   Tue,  6 Aug 2019 10:59:40 -0700
-Message-Id: <20190806175940.156412-1-swboyd@chromium.org>
-X-Mailer: git-send-email 2.22.0.770.g0f2c4a37fd-goog
+        bh=H5oxnh6AO2iA8nJMA3gm0i0KrEK2AnvYtvfzFwUa/VE=;
+        b=p+85ICzLfBQzknBS85lr/c50S5gA98FUcJyYeji6zmVSOhbyHKuQSiPcdoG4+hGt+L
+         Jvlj6VQT/fj8BCHCgpFa/1lyqx6AiNbT3R2oS2e9tIdFNWu5yRMrUqHbvVihh00oQovB
+         7yPFQDAiqqeRegiiu3eUD8pdNPSl6rN3KTQiVC5On2l8bf7UtnD6Z4p9sWzQHesiuhFd
+         Bq8JyZVbUyuVrcu1M9VGFqEgQLU665hdXqX66SBvhkJ8MRzKCusL7MNK1DahUswDXD0g
+         dzz63/GaX64fTjzbktQnQ6aZAIaCLAmI86nBYrhvI5Xojmf0vcbIdwSoc0lPo1DqPHC1
+         9DDw==
+X-Gm-Message-State: APjAAAVvhjB0LMgS4wUSYsebp96HT5DTJ9usjaAdd4yQb6DdmaeRYM8h
+        l1Ik/950SbLzLJm5Qjf3yoJOSMUy
+X-Google-Smtp-Source: APXvYqwjSklAKmvrxBm7vAtY5yV+LjCxCE5435J3gWbWBlaR4/GMOjfR3ZIimhrfsVDAPcavz8+urg==
+X-Received: by 2002:adf:dd01:: with SMTP id a1mr5755415wrm.12.1565114403275;
+        Tue, 06 Aug 2019 11:00:03 -0700 (PDT)
+Received: from [192.168.2.145] ([94.29.34.218])
+        by smtp.googlemail.com with ESMTPSA id k9sm22855190wrd.46.2019.08.06.11.00.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 06 Aug 2019 11:00:02 -0700 (PDT)
+Subject: Re: [PATCH v7 01/20] pinctrl: tegra: Add suspend and resume support
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
+        jason@lakedaemon.net, marc.zyngier@arm.com,
+        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
+References: <1564607463-28802-1-git-send-email-skomatineni@nvidia.com>
+ <1564607463-28802-2-git-send-email-skomatineni@nvidia.com>
+ <6b1482f6-0578-f602-d8d1-541d86303ce2@gmail.com>
+ <b45ca99a-188a-c695-3f3d-48d273808f9c@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <36351140-afd4-38c4-3722-4ee0894287fa@gmail.com>
+Date:   Tue, 6 Aug 2019 20:59:55 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
+In-Reply-To: <b45ca99a-188a-c695-3f3d-48d273808f9c@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit 25511676362d8f7d4b8805730a3d29484ceab1ec in the 4.19
-stable trees. From what I can tell this commit doesn't do anything to
-improve the situation, mostly just reordering code to call free_initrd()
-from one place instead of many. In doing that, it causes free_initrd()
-to be called even in the case when there isn't an initrd present. That
-leads to virtual memory bugs that manifest on arm64 devices.
+05.08.2019 21:06, Sowjanya Komatineni пишет:
+> 
+> On 8/5/19 3:50 AM, Dmitry Osipenko wrote:
+>> 01.08.2019 0:10, Sowjanya Komatineni пишет:
+>>> This patch adds support for Tegra pinctrl driver suspend and resume.
+>>>
+>>> During suspend, context of all pinctrl registers are stored and
+>>> on resume they are all restored to have all the pinmux and pad
+>>> configuration for normal operation.
+>>>
+>>> Acked-by: Thierry Reding <treding@nvidia.com>
+>>> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>> ---
+>>>   drivers/pinctrl/tegra/pinctrl-tegra.c | 59
+>>> +++++++++++++++++++++++++++++++++++
+>>>   drivers/pinctrl/tegra/pinctrl-tegra.h |  3 ++
+>>>   2 files changed, 62 insertions(+)
+>>>
+>>> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c
+>>> b/drivers/pinctrl/tegra/pinctrl-tegra.c
+>>> index 186ef98e7b2b..e3a237534281 100644
+>>> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
+>>> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
+>>> @@ -631,6 +631,58 @@ static void
+>>> tegra_pinctrl_clear_parked_bits(struct tegra_pmx *pmx)
+>>>       }
+>>>   }
+>>>   +static size_t tegra_pinctrl_get_bank_size(struct device *dev,
+>>> +                      unsigned int bank_id)
+>>> +{
+>>> +    struct platform_device *pdev = to_platform_device(dev);
+>>> +    struct resource *res;
+>>> +
+>>> +    res = platform_get_resource(pdev, IORESOURCE_MEM, bank_id);
+>>> +
+>>> +    return resource_size(res) / 4;
+>>> +}
+>>> +
+>>> +static int tegra_pinctrl_suspend(struct device *dev)
+>>> +{
+>>> +    struct tegra_pmx *pmx = dev_get_drvdata(dev);
+>>> +    u32 *backup_regs = pmx->backup_regs;
+>>> +    u32 *regs;
+>>> +    size_t bank_size;
+>>> +    unsigned int i, k;
+>>> +
+>>> +    for (i = 0; i < pmx->nbanks; i++) {
+>>> +        bank_size = tegra_pinctrl_get_bank_size(dev, i);
+>>> +        regs = pmx->regs[i];
+>>> +        for (k = 0; k < bank_size; k++)
+>>> +            *backup_regs++ = readl_relaxed(regs++);
+>>> +    }
+>>> +
+>>> +    return pinctrl_force_sleep(pmx->pctl);
+>>> +}
+>>> +
+>>> +static int tegra_pinctrl_resume(struct device *dev)
+>>> +{
+>>> +    struct tegra_pmx *pmx = dev_get_drvdata(dev);
+>>> +    u32 *backup_regs = pmx->backup_regs;
+>>> +    u32 *regs;
+>>> +    size_t bank_size;
+>>> +    unsigned int i, k;
+>>> +
+>>> +    for (i = 0; i < pmx->nbanks; i++) {
+>>> +        bank_size = tegra_pinctrl_get_bank_size(dev, i);
+>>> +        regs = pmx->regs[i];
+>>> +        for (k = 0; k < bank_size; k++)
+>>> +            writel_relaxed(*backup_regs++, regs++);
+>>> +    }
+>> I'm now curious whether any kind of barrier is needed after the
+>> writings. The pmx_writel() doesn't insert a barrier after the write and
+>> seems it just misuses writel, which actually should be writel_relaxed()
+>> + barrier, IIUC.
+> 
+> pmx_writel uses writel and it has wmb before raw_write which complete
+> all writes initiated prior to this.
+> 
+> By misusing writel, you mean to have barrier after register write?
 
-The fix has been merged upstream in commit 5d59aa8f9ce9 ("initramfs:
-don't free a non-existent initrd"), but backporting that here is more
-complicated because the patch is stacked upon this patch being reverted
-along with more patches that rewrites the logic in this area.
+Yes, at least to me it doesn't make much sense for this driver to stall
+before the write. It's the pinctrl user which should be taking care
+about everything to be ready before making a change to the pinctrl's
+configuration.
 
-Let's just revert the patch from the stable tree instead of trying to
-backport a collection of fixes to get the final fix from upstream.
+>> It's also not obvious whether PINCTRL HW has any kind of write-FIFO and
+>> thus maybe read-back + rmb() is needed in order ensure that writes are
+>> actually completed.
+> I believe adding write barrier wmb after writel_relaxed should be good
+> rather than doing readback + rmb
+>>
+>> The last thing which is not obvious is when the new configuration
+>> actually takes into effect, does it happen immediately or maybe some
+>> delay is needed?
+>>
+>> [snip]
+> 
+> Based on internal design there is no internal delay and it all depends
+> on APB rate that it takes to write to register.
+> 
+> Pinmux value change to reflect internally might take couple of clock
+> cycles which is much faster than SW can read.
 
-Cc: Sasha Levin <sashal@kernel.org>
-Cc: Steven Price <steven.price@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
----
-
-This patch is for 4.19 stable series.
-
- init/initramfs.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
-
-diff --git a/init/initramfs.c b/init/initramfs.c
-index cd5fb00fcb54..f6f4a1e4cd54 100644
---- a/init/initramfs.c
-+++ b/init/initramfs.c
-@@ -612,12 +612,13 @@ static int __init populate_rootfs(void)
- 		printk(KERN_INFO "Trying to unpack rootfs image as initramfs...\n");
- 		err = unpack_to_rootfs((char *)initrd_start,
- 			initrd_end - initrd_start);
--		if (!err)
-+		if (!err) {
-+			free_initrd();
- 			goto done;
--
--		clean_rootfs();
--		unpack_to_rootfs(__initramfs_start, __initramfs_size);
--
-+		} else {
-+			clean_rootfs();
-+			unpack_to_rootfs(__initramfs_start, __initramfs_size);
-+		}
- 		printk(KERN_INFO "rootfs image is not initramfs (%s)"
- 				"; looks like an initrd\n", err);
- 		fd = ksys_open("/initrd.image",
-@@ -631,6 +632,7 @@ static int __init populate_rootfs(void)
- 				       written, initrd_end - initrd_start);
- 
- 			ksys_close(fd);
-+			free_initrd();
- 		}
- 	done:
- 		/* empty statement */;
-@@ -640,9 +642,9 @@ static int __init populate_rootfs(void)
- 			initrd_end - initrd_start);
- 		if (err)
- 			printk(KERN_EMERG "Initramfs unpacking failed: %s\n", err);
-+		free_initrd();
- #endif
- 	}
--	free_initrd();
- 	flush_delayed_fput();
- 	/*
- 	 * Try loading default modules from initramfs.  This gives
--- 
-Sent by a computer through tubes
-
+Still not quite obvious if it's possible to have a case where some
+hardware is touched before necessary pinctrl change is fully completed
+and then to get into trouble because of it.
