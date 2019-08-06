@@ -2,48 +2,64 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E93C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39922C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:29:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB2EB216B7
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:28:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1614F2070D
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:29:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733187AbfHFP2O (ORCPT
+        id S1731513AbfHFP3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 11:28:14 -0400
-Received: from 8bytes.org ([81.169.241.247]:48060 "EHLO theia.8bytes.org"
+        Tue, 6 Aug 2019 11:29:44 -0400
+Received: from mga18.intel.com ([134.134.136.126]:27216 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731608AbfHFP2O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 11:28:14 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 4DEA53D5; Tue,  6 Aug 2019 17:28:13 +0200 (CEST)
-Date:   Tue, 6 Aug 2019 17:28:12 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     Anders Roxell <anders.roxell@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        robin.murphy@arm.com
-Subject: Re: [PATCH v2] iommu: arm-smmu-v3: Mark expected switch fall-through
-Message-ID: <20190806152811.GD1198@8bytes.org>
-References: <20190730152012.2615-1-anders.roxell@linaro.org>
- <20190730152600.643mg43y6567pchi@willie-the-truck>
+        id S1728259AbfHFP3o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 11:29:44 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 08:29:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,353,1559545200"; 
+   d="scan'208";a="192690589"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga001.fm.intel.com with ESMTP; 06 Aug 2019 08:29:43 -0700
+Date:   Tue, 6 Aug 2019 08:29:43 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jim Mattson <jmattson@google.com>
+Subject: Re: [PATCH v2 1/5] x86: KVM: svm: don't pretend to advance RIP in
+ case wrmsr_interception() results in #GP
+Message-ID: <20190806152943.GC27766@linux.intel.com>
+References: <20190806060150.32360-1-vkuznets@redhat.com>
+ <20190806060150.32360-2-vkuznets@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190730152600.643mg43y6567pchi@willie-the-truck>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190806060150.32360-2-vkuznets@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 04:26:01PM +0100, Will Deacon wrote:
-> Joerg -- if you'd like to pick this up as a fix, feel free, otherwise I'll
-> include it in my pull request for 5.4.
+On Tue, Aug 06, 2019 at 08:01:46AM +0200, Vitaly Kuznetsov wrote:
+> svm->next_rip is only used by skip_emulated_instruction() and in case
+> kvm_set_msr() fails we rightfully don't do that. Move svm->next_rip
+> advancement to 'else' branch to avoid creating false impression that
+> it's always advanced (and make it look like rdmsr_interception()).
+> 
+> This is a preparatory change to removing hardcoded RIP advancement
+> from instruction intercepts, no functional change.
+> 
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-Applied to iommu/fixes, thanks.
+Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
