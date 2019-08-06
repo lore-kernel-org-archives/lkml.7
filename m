@@ -2,108 +2,174 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDB86C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:53:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D15C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFE1F208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:53:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Y3/5lTgA"
+	by mail.kernel.org (Postfix) with ESMTP id E5E7A20C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:54:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731584AbfHFNxA (ORCPT
+        id S1732325AbfHFNyH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 09:53:00 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:45816 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726373AbfHFNw7 (ORCPT
+        Tue, 6 Aug 2019 09:54:07 -0400
+Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:44074 "EHLO
+        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726373AbfHFNyH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 09:52:59 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x76DXxiQ085313;
-        Tue, 6 Aug 2019 13:52:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=sLQXqKTfAC+DgapIOljC6Hu1hP2ySZexluDwG30necU=;
- b=Y3/5lTgAcSA0tHehdiqZfTT/zElI6h13BR1el/tcfM3XvSzIdBxTUfuYzsKQdv5cR10w
- HPN9S/En9zGsUfiK5q6K3joBnoZqF+agISIJ9PJtKn6DIzvIbegohGn49/Wvxsb9LTEn
- kDCFZkr9HirBEOLGrVgUrBbZj3IBSgn49GxjSyquXuhEUtRhwmL3e8Gke9UgFb2+qhXB
- M//7k5//R6mAdXr75wYmh+GJJ+Q/LvU7znw8NbBcIL7abZ5WrNVFyviM45eoZFegixMC
- SP2MLi8QVEGyu35JbqhQUNHnmn/s8NNRmBoOZC9ASSGL9jgHd8UyQ6kMyefdqth5opVd Xw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2u51ptxcjy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 06 Aug 2019 13:52:40 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x76DXGId106595;
-        Tue, 6 Aug 2019 13:52:39 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2u75bvh3w9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 06 Aug 2019 13:52:39 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x76DqcuC017738;
-        Tue, 6 Aug 2019 13:52:38 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 06 Aug 2019 06:52:37 -0700
-Date:   Tue, 6 Aug 2019 16:52:31 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Oliver Hartkopp <socketcan@hartkopp.net>
-Cc:     Mao Wenan <maowenan@huawei.com>, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH net-next] net: can: Fix compiling warning
-Message-ID: <20190806135231.GJ1974@kadam>
-References: <20190802033643.84243-1-maowenan@huawei.com>
- <0050efdb-af9f-49b9-8d83-f574b3d46a2e@hartkopp.net>
+        Tue, 6 Aug 2019 09:54:07 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07417;MF=aaron.lu@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0TYpDuCR_1565099641;
+Received: from aaronlu(mailfrom:aaron.lu@linux.alibaba.com fp:SMTPD_---0TYpDuCR_1565099641)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 06 Aug 2019 21:54:03 +0800
+Date:   Tue, 6 Aug 2019 21:54:01 +0800
+From:   Aaron Lu <aaron.lu@linux.alibaba.com>
+To:     Phil Auld <pauld@redhat.com>
+Cc:     Julien Desfossez <jdesfossez@digitalocean.com>,
+        "Li, Aubrey" <aubrey.li@linux.intel.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
+Message-ID: <20190806135401.GB46757@aaronlu>
+References: <20190613032246.GA17752@sinkpad>
+ <CAERHkrsMFjjBpPZS7jDhzbob4PSmiPj83OfqEeiKgaDAU3ajOA@mail.gmail.com>
+ <20190619183302.GA6775@sinkpad>
+ <20190718100714.GA469@aaronlu>
+ <CAERHkrtvLKxrpvfw04urAuougsYOWnNw4-H1vUDFx27Dvy0=Ww@mail.gmail.com>
+ <20190725143003.GA992@aaronlu>
+ <20190726152101.GA27884@sinkpad>
+ <7dc86e3c-aa3f-905f-3745-01181a3b0dac@linux.intel.com>
+ <20190802153715.GA18075@sinkpad>
+ <20190805200914.GD20173@pauld.bos.csb>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0050efdb-af9f-49b9-8d83-f574b3d46a2e@hartkopp.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9340 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=843
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908060138
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9340 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=891 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908060138
+In-Reply-To: <20190805200914.GD20173@pauld.bos.csb>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 02, 2019 at 10:10:20AM +0200, Oliver Hartkopp wrote:
-> On 02/08/2019 05.36, Mao Wenan wrote:
-> > There are two warings in net/can, fix them by setting bcm_sock_no_ioctlcmd
-> > and raw_sock_no_ioctlcmd as static.
-> > 
-> > net/can/bcm.c:1683:5: warning: symbol 'bcm_sock_no_ioctlcmd' was not declared. Should it be static?
-> > net/can/raw.c:840:5: warning: symbol 'raw_sock_no_ioctlcmd' was not declared. Should it be static?
-> > 
-> > Fixes: 473d924d7d46 ("can: fix ioctl function removal")
-> > 
-> > Signed-off-by: Mao Wenan <maowenan@huawei.com>
+On Mon, Aug 05, 2019 at 04:09:15PM -0400, Phil Auld wrote:
+> Hi,
 > 
-> Acked-by: Oliver Hartkopp <socketcan@hartkopp.net>
+> On Fri, Aug 02, 2019 at 11:37:15AM -0400 Julien Desfossez wrote:
+> > We tested both Aaron's and Tim's patches and here are our results.
+> > 
+> > Test setup:
+> > - 2 1-thread sysbench, one running the cpu benchmark, the other one the
+> >   mem benchmark
+> > - both started at the same time
+> > - both are pinned on the same core (2 hardware threads)
+> > - 10 30-seconds runs
+> > - test script: https://paste.debian.net/plainh/834cf45c
+> > - only showing the CPU events/sec (higher is better)
+> > - tested 4 tag configurations:
+> >   - no tag
+> >   - sysbench mem untagged, sysbench cpu tagged
+> >   - sysbench mem tagged, sysbench cpu untagged
+> >   - both tagged with a different tag
+> > - "Alone" is the sysbench CPU running alone on the core, no tag
+> > - "nosmt" is both sysbench pinned on the same hardware thread, no tag
+> > - "Tim's full patchset + sched" is an experiment with Tim's patchset
+> >   combined with Aaron's "hack patch" to get rid of the remaining deep
+> >   idle cases
+> > - In all test cases, both tasks can run simultaneously (which was not
+> >   the case without those patches), but the standard deviation is a
+> >   pretty good indicator of the fairness/consistency.
+> > 
+> > No tag
+> > ------
+> > Test                            Average     Stdev
+> > Alone                           1306.90     0.94
+> > nosmt                           649.95      1.44
+> > Aaron's full patchset:          828.15      32.45
+> > Aaron's first 2 patches:        832.12      36.53
+> > Aaron's 3rd patch alone:        864.21      3.68
+> > Tim's full patchset:            852.50      4.11
+> > Tim's full patchset + sched:    852.59      8.25
+> > 
+> > Sysbench mem untagged, sysbench cpu tagged
+> > ------------------------------------------
+> > Test                            Average     Stdev
+> > Alone                           1306.90     0.94
+> > nosmt                           649.95      1.44
+> > Aaron's full patchset:          586.06      1.77
+> > Aaron's first 2 patches:        630.08      47.30
+> > Aaron's 3rd patch alone:        1086.65     246.54
+> > Tim's full patchset:            852.50      4.11
+> > Tim's full patchset + sched:    390.49      15.76
+> > 
+> > Sysbench mem tagged, sysbench cpu untagged
+> > ------------------------------------------
+> > Test                            Average     Stdev
+> > Alone                           1306.90     0.94
+> > nosmt                           649.95      1.44
+> > Aaron's full patchset:          583.77      3.52
+> > Aaron's first 2 patches:        513.63      63.09
+> > Aaron's 3rd patch alone:        1171.23     3.35
+> > Tim's full patchset:            564.04      58.05
+> > Tim's full patchset + sched:    1026.16     49.43
+> > 
+> > Both sysbench tagged
+> > --------------------
+> > Test                            Average     Stdev
+> > Alone                           1306.90     0.94
+> > nosmt                           649.95      1.44
+> > Aaron's full patchset:          582.15      3.75
+> > Aaron's first 2 patches:        561.07      91.61
+> > Aaron's 3rd patch alone:        638.49      231.06
+> > Tim's full patchset:            679.43      70.07
+> > Tim's full patchset + sched:    664.34      210.14
+> > 
 > 
-> Thanks Mao!
+> Sorry if I'm missing something obvious here but with only 2 processes 
+> of interest shouldn't one tagged and one untagged be about the same
+> as both tagged?  
+
+It should.
+
+> In both cases the 2 sysbenches should not be running on the core at 
+> the same time. 
+
+Agree.
+
+> There will be times when oher non-related threads could share the core
+> with the untagged one. Is that enough to account for this difference?
+
+What difference do you mean?
+
+Thanks,
+Aaron
+
+> > So in terms of fairness, Aaron's full patchset is the most consistent, but only
+> > Tim's patchset performs better than nosmt in some conditions.
+> > 
+> > Of course, this is one of the worst case scenario, as soon as we have
+> > multithreaded applications on overcommitted systems, core scheduling performs
+> > better than nosmt.
+> > 
+> > Thanks,
+> > 
+> > Julien
 > 
-> Btw. what kind of compiler/make switches are you using so that I can see
-> these warnings myself the next time?
-
-These are Sparse warnings, not from GCC.
-
-regards,
-dan carpenter
-
+> -- 
