@@ -2,108 +2,129 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0168C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 312D1C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:51:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9BF2216F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:48:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565128135;
-	bh=jJlefsLNTHcXdSrlXz0gbSzDo7ArhuKPE0ip2ySlfZk=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=OF+Amb4S5P3/1qpx5i2Nq6lyLFB8ZLECKGtCECkGZBBTETQbI5jcLY02JkQJ2APe9
-	 UUjfoy1K27a7R+2hXCtBeRShoZHlHROp9mlezyRc284H/ZpXTavP2aJLCcZp4Bj2ss
-	 iSMz1f9q0v2vwScox/X1QX7cKnuqjxPtsN/T7vR0=
+	by mail.kernel.org (Postfix) with ESMTP id 02C982086D
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:51:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="oMlhdEUV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbfHFVsy (ORCPT
+        id S1726941AbfHFVv0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:48:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60250 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726133AbfHFVsy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:48:54 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE14F216F4;
-        Tue,  6 Aug 2019 21:48:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565128133;
-        bh=jJlefsLNTHcXdSrlXz0gbSzDo7ArhuKPE0ip2ySlfZk=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=srrBWXOtzoGkFmJiNuxDu9wKwsGsgB54/PMoj8eFAizxqjUv7e/4YESmAbmU0UCb7
-         6eFHX/29bco/LMbM9R6FWuOM7n3if+oYydQTNXduSKP+pzpmuOepRqPinxvB0QkiRy
-         l5vdBoo7EmQgQdI5zNRXLC1jOEhdso1XVGq8SEZQ=
-Content-Type: text/plain; charset="utf-8"
+        Tue, 6 Aug 2019 17:51:26 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:6224 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726052AbfHFVvZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:51:25 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d49f65d0002>; Tue, 06 Aug 2019 14:51:25 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 06 Aug 2019 14:51:24 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 06 Aug 2019 14:51:24 -0700
+Received: from [10.110.102.151] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 6 Aug
+ 2019 21:51:23 +0000
+Subject: Re: [PATCH v7 01/20] pinctrl: tegra: Add suspend and resume support
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        "Stephen Boyd" <sboyd@kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        <jckuo@nvidia.com>, "Joseph Lo" <josephl@nvidia.com>,
+        <talho@nvidia.com>, <linux-tegra@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Mikko Perttunen" <mperttunen@nvidia.com>, <spatra@nvidia.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        viresh kumar <viresh.kumar@linaro.org>,
+        Linux PM list <linux-pm@vger.kernel.org>
+References: <1564607463-28802-1-git-send-email-skomatineni@nvidia.com>
+ <1564607463-28802-2-git-send-email-skomatineni@nvidia.com>
+ <CACRpkdZVR-i1c5eATL2hSPbLXcX1sR8NgXwa4j259XXUi57xug@mail.gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <a2fb3795-5ec1-1d03-f496-f151d1270e90@nvidia.com>
+Date:   Tue, 6 Aug 2019 14:51:23 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1jwofqvftg.fsf@starbuckisacylon.baylibre.com>
-References: <20190731193517.237136-1-sboyd@kernel.org> <20190731193517.237136-4-sboyd@kernel.org> <1jwofqvftg.fsf@starbuckisacylon.baylibre.com>
-Subject: Re: [PATCH 3/9] clk: meson: axg-audio: Don't reference clk_init_data after registration
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Michael Turquette <mturquette@baylibre.com>
-User-Agent: alot/0.8.1
-Date:   Tue, 06 Aug 2019 14:48:52 -0700
-Message-Id: <20190806214852.DE14F216F4@mail.kernel.org>
+In-Reply-To: <CACRpkdZVR-i1c5eATL2hSPbLXcX1sR8NgXwa4j259XXUi57xug@mail.gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1565128285; bh=gUV/nSFh9pyMbly/cxjMzIWO74RSun53rYYSNmmjoN4=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=oMlhdEUVeAmLGkU//WqtrKAHRzWtFZLiP6j4JhfYiR20Wo6xa2/qMIG5sVEIyqvRP
+         VNiYGpXrJvCrevAHJzkq8q/7QhZENK9zqamKqdYdefnNkULU4Iws4Ilg+XG9W2WqCZ
+         3FoURqBqFmv9gntK41TQNuDMgdwA+7fsCwHoZYd7//RhHIFM73L/f51tow56+N6Kjy
+         xwnIGz9auKNZneGQPaTt/u6N01Tel9NCTolybXgyWQGDupdaIZYDfuDi83EpeJ+58I
+         X2j+aJ03o6TC/zSlBZrz48r6vTKEyBFm+jOd4iQ+K105mVHPGMQeGAlkjF09AXQe4d
+         l3ugSzwppV/tg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Jerome Brunet (2019-08-06 01:49:47)
-> On Wed 31 Jul 2019 at 12:35, Stephen Boyd <sboyd@kernel.org> wrote:
->=20
-> > A future patch is going to change semantics of clk_register() so that
-> > clk_hw::init is guaranteed to be NULL after a clk is registered. Avoid
-> > referencing this member here so that we don't run into NULL pointer
-> > exceptions.
->=20
-> Hi Stephen,
->=20
-> What to do you indend to do with this one ? Will you apply directly or
-> should we take it ?
 
-I said below:
+On 8/5/19 2:20 AM, Linus Walleij wrote:
+> On Wed, Jul 31, 2019 at 11:11 PM Sowjanya Komatineni
+> <skomatineni@nvidia.com> wrote:
+>
+>> This patch adds support for Tegra pinctrl driver suspend and resume.
+>>
+>> During suspend, context of all pinctrl registers are stored and
+>> on resume they are all restored to have all the pinmux and pad
+>> configuration for normal operation.
+>>
+>> Acked-by: Thierry Reding <treding@nvidia.com>
+>> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> Patch applied to the pinctrl tree.
+>
+> This patch seems finished.
+>
+> Also if the rest don't get merged for v5.4 then at least this is so
+> your patch stack gets more shallow.
+>
+> I hope it's fine to merge this separately, else tell me and I'll
+> pull it out.
+>
+> Yours,
+> Linus Walleij
 
- Please ack so I can take this through clk tree
+Yes, this patch can be merged separately. But, there's latest feedback 
+from Dmitry to add barrier after writes to make sure pinmux register 
+writes happen.
 
->=20
-> We have several changes for the controller which may conflict with this
-> one. It is nothing major but the sooner I know how this changes goes in,
-> the sooner I can rebase the rest.
+So will update this patch to add barrier in v8. So, need to wait for v8.
 
-Will it conflict? I can deal with conflicts.
+Thanks
 
->=20
-> Also, We were (re)using the init_data only on register failures.
-> I understand that you want to guarantee .init is NULL when the clock is
-> registered, but it this particular case, the registeration failed so the
-> clock is not registered.
->=20
-> IMO, it would be better if devm_clk_hw_register() left the init_data
-> untouched if the registration fails.
+Sowjanya
 
-Do you have other usage of the init_data besides printing out the name?
-I think we could have devm_clk_hw_register() print out the name of the
-clk that failed to register instead, and get rid of more code in drivers
-that way. Unless of course there are other uses of the init struct?
-
->=20
-> >
-> > Cc: Neil Armstrong <narmstrong@baylibre.com>
-> > Cc: Jerome Brunet <jbrunet@baylibre.com>
-> > Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-> > ---
-> >
-> > Please ack so I can take this through clk tree
-> >
-> >  drivers/clk/meson/axg-audio.c | 7 +++++--
-> >  1 file changed, 5 insertions(+), 2 deletions(-)
-> >
