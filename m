@@ -7,47 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6045C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:36:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E5AC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:36:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A35421871
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:36:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11E3D2187F
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:36:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127373;
-	bh=c4SWqxEVkDOOshiCTZCQDp/v/qbClgzW5QOXT48+CyA=;
+	s=default; t=1565127383;
+	bh=TcjWidqiZrPkQ/26XXwCadx8AkRwUsQ0dNaHr8jtgxM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HpoFqaOhrmd9/MUgKiwp8k6SnZ05hYQbdnGYAQ5veM/NUjhXfPfwrBS23tGbk9Ble
-	 NGDk0imxmf0ZorE8b7VznNYODhDbLD0ztcGAPZHk6O1grouNKhryYI1tepwcTAlUxJ
-	 5ndeD7FPTHHk+PMX+b7oFQZ7A01ZmvtvzmxIYm2g=
+	b=XjqdQhKZjWWAsv5SLAihR4RBKA0aMjEPl9mGPz7//5DmGMJN84yC4pACY5ykMny9O
+	 OsvQf8LUg8OibTqtMcZzWWmkEuHLapucUFbhq4pzSGaNAMqzu6hOURLK3AQ1hSEOCT
+	 Q2BXFJIr1jtJTa8tLpuUAmhKiD022XuFRExOO1jM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728884AbfHFVgM (ORCPT
+        id S1727206AbfHFVgW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:36:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53948 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 17:36:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727527AbfHFVgL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:36:11 -0400
+        id S1728903AbfHFVgT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:36:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6078D217D9;
-        Tue,  6 Aug 2019 21:36:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66E0A217D9;
+        Tue,  6 Aug 2019 21:36:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127370;
-        bh=c4SWqxEVkDOOshiCTZCQDp/v/qbClgzW5QOXT48+CyA=;
+        s=default; t=1565127378;
+        bh=TcjWidqiZrPkQ/26XXwCadx8AkRwUsQ0dNaHr8jtgxM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tXPu4j39GFbiqedE8EJ7kHJ5z23a5gdsILBnrQrFIymwv+WTcV1Dmlkw4bzfzu/gB
-         /t6rChF2mz9IvOwelF7JPlL3jFCgPk2zJ5BugLzdq0kDkJxvSTeVVRCAJS3NBna490
-         CPEFFa6zqysmnuxcN4TWPoVnhU5+4rVyn4q6Z67M=
+        b=UOwlYFat72d4RtqmAGTHEexH6Vsbz+wXGh5LfOtLc78I9PvDwvwyc2MucQ5o0whrF
+         l/bfBcTFmlG+ZoiZ7AyaxPQUlHwKuPQvOI34RRuApu9AntLUDKKFLqNkNvPXhCl8TC
+         UjegYTVbM+ZNRbxSCtHZ1OKNqQXMl8Kax2GVq5f8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Guy Levi <guyle@mellanox.com>, Moni Shoua <monis@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 25/32] IB/mlx5: Fix MR registration flow to use UMR properly
-Date:   Tue,  6 Aug 2019 17:35:13 -0400
-Message-Id: <20190806213522.19859-25-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
+        Jun Piao <piaojun@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 30/32] ocfs2: remove set but not used variable 'last_hash'
+Date:   Tue,  6 Aug 2019 17:35:18 -0400
+Message-Id: <20190806213522.19859-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190806213522.19859-1-sashal@kernel.org>
 References: <20190806213522.19859-1-sashal@kernel.org>
@@ -60,108 +66,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guy Levi <guyle@mellanox.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit e5366d309a772fef264ec85e858f9ea46f939848 ]
+[ Upstream commit 7bc36e3ce91471b6377c8eadc0a2f220a2280083 ]
 
-Driver shouldn't allow to use UMR to register a MR when
-umr_modify_atomic_disabled is set. Otherwise it will always end up with a
-failure in the post send flow which sets the UMR WQE to modify atomic access
-right.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Fixes: c8d75a980fab ("IB/mlx5: Respect new UMR capabilities")
-Signed-off-by: Guy Levi <guyle@mellanox.com>
-Reviewed-by: Moni Shoua <monis@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Link: https://lore.kernel.org/r/20190731081929.32559-1-leon@kernel.org
-Signed-off-by: Doug Ledford <dledford@redhat.com>
+  fs/ocfs2/xattr.c: In function ocfs2_xattr_bucket_find:
+  fs/ocfs2/xattr.c:3828:6: warning: variable last_hash set but not used [-Wunused-but-set-variable]
+
+It's never used and can be removed.
+
+Link: http://lkml.kernel.org/r/20190716132110.34836-1-yuehaibing@huawei.com
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Acked-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Gang He <ghe@suse.com>
+Cc: Jun Piao <piaojun@huawei.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx5/mr.c | 27 +++++++++------------------
- 1 file changed, 9 insertions(+), 18 deletions(-)
+ fs/ocfs2/xattr.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/infiniband/hw/mlx5/mr.c b/drivers/infiniband/hw/mlx5/mr.c
-index 7df4a4fe4af47..4ea8d04143ae5 100644
---- a/drivers/infiniband/hw/mlx5/mr.c
-+++ b/drivers/infiniband/hw/mlx5/mr.c
-@@ -51,22 +51,12 @@ static void clean_mr(struct mlx5_ib_dev *dev, struct mlx5_ib_mr *mr);
- static void dereg_mr(struct mlx5_ib_dev *dev, struct mlx5_ib_mr *mr);
- static int mr_cache_max_order(struct mlx5_ib_dev *dev);
- static int unreg_umr(struct mlx5_ib_dev *dev, struct mlx5_ib_mr *mr);
--static bool umr_can_modify_entity_size(struct mlx5_ib_dev *dev)
--{
--	return !MLX5_CAP_GEN(dev->mdev, umr_modify_entity_size_disabled);
--}
+diff --git a/fs/ocfs2/xattr.c b/fs/ocfs2/xattr.c
+index 3a24ce3deb013..c146e12a8601f 100644
+--- a/fs/ocfs2/xattr.c
++++ b/fs/ocfs2/xattr.c
+@@ -3833,7 +3833,6 @@ static int ocfs2_xattr_bucket_find(struct inode *inode,
+ 	u16 blk_per_bucket = ocfs2_blocks_per_xattr_bucket(inode->i_sb);
+ 	int low_bucket = 0, bucket, high_bucket;
+ 	struct ocfs2_xattr_bucket *search;
+-	u32 last_hash;
+ 	u64 blkno, lower_blkno = 0;
  
- static bool umr_can_use_indirect_mkey(struct mlx5_ib_dev *dev)
- {
- 	return !MLX5_CAP_GEN(dev->mdev, umr_indirect_mkey_disabled);
- }
+ 	search = ocfs2_xattr_bucket_new(inode);
+@@ -3877,8 +3876,6 @@ static int ocfs2_xattr_bucket_find(struct inode *inode,
+ 		if (xh->xh_count)
+ 			xe = &xh->xh_entries[le16_to_cpu(xh->xh_count) - 1];
  
--static bool use_umr(struct mlx5_ib_dev *dev, int order)
--{
--	return order <= mr_cache_max_order(dev) &&
--		umr_can_modify_entity_size(dev);
--}
+-		last_hash = le32_to_cpu(xe->xe_name_hash);
 -
- static int destroy_mkey(struct mlx5_ib_dev *dev, struct mlx5_ib_mr *mr)
- {
- 	int err = mlx5_core_destroy_mkey(dev->mdev, &mr->mmkey);
-@@ -1302,7 +1292,7 @@ struct ib_mr *mlx5_ib_reg_user_mr(struct ib_pd *pd, u64 start, u64 length,
- {
- 	struct mlx5_ib_dev *dev = to_mdev(pd->device);
- 	struct mlx5_ib_mr *mr = NULL;
--	bool populate_mtts = false;
-+	bool use_umr;
- 	struct ib_umem *umem;
- 	int page_shift;
- 	int npages;
-@@ -1335,29 +1325,30 @@ struct ib_mr *mlx5_ib_reg_user_mr(struct ib_pd *pd, u64 start, u64 length,
- 	if (err < 0)
- 		return ERR_PTR(err);
+ 		/* record lower_blkno which may be the insert place. */
+ 		lower_blkno = blkno;
  
--	if (use_umr(dev, order)) {
-+	use_umr = !MLX5_CAP_GEN(dev->mdev, umr_modify_entity_size_disabled) &&
-+		  (!MLX5_CAP_GEN(dev->mdev, umr_modify_atomic_disabled) ||
-+		   !MLX5_CAP_GEN(dev->mdev, atomic));
-+
-+	if (order <= mr_cache_max_order(dev) && use_umr) {
- 		mr = alloc_mr_from_cache(pd, umem, virt_addr, length, ncont,
- 					 page_shift, order, access_flags);
- 		if (PTR_ERR(mr) == -EAGAIN) {
- 			mlx5_ib_dbg(dev, "cache empty for order %d\n", order);
- 			mr = NULL;
- 		}
--		populate_mtts = false;
- 	} else if (!MLX5_CAP_GEN(dev->mdev, umr_extended_translation_offset)) {
- 		if (access_flags & IB_ACCESS_ON_DEMAND) {
- 			err = -EINVAL;
- 			pr_err("Got MR registration for ODP MR > 512MB, not supported for Connect-IB\n");
- 			goto error;
- 		}
--		populate_mtts = true;
-+		use_umr = false;
- 	}
- 
- 	if (!mr) {
--		if (!umr_can_modify_entity_size(dev))
--			populate_mtts = true;
- 		mutex_lock(&dev->slow_path_mutex);
- 		mr = reg_create(NULL, pd, virt_addr, length, umem, ncont,
--				page_shift, access_flags, populate_mtts);
-+				page_shift, access_flags, !use_umr);
- 		mutex_unlock(&dev->slow_path_mutex);
- 	}
- 
-@@ -1375,7 +1366,7 @@ struct ib_mr *mlx5_ib_reg_user_mr(struct ib_pd *pd, u64 start, u64 length,
- 	update_odp_mr(mr);
- #endif
- 
--	if (!populate_mtts) {
-+	if (use_umr) {
- 		int update_xlt_flags = MLX5_IB_UPD_XLT_ENABLE;
- 
- 		if (access_flags & IB_ACCESS_ON_DEMAND)
 -- 
 2.20.1
 
