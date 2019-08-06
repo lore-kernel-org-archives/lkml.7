@@ -2,139 +2,361 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F79FC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 11:57:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A095C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 11:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5645620C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 11:57:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565092630;
-	bh=jmdggg38TboDRj5TTtGvby9FdDxzrB8Veg6nuDixYJ4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YR5BV/y26XVbKUX9KAIJU351YOPxpRJ+sr6wPb75RX96rcQ2Zvy66TocMyH88Wpr/
-	 8ApSf1gTwIjCbGnnSY5ft1wHSSkqH2BIoqqkgOHsEW+Yij6GXSN8PKlpWw/HamrHxI
-	 mbZSSKUZ9SlAtyTmAFrZqpGfbOnBYLtjGYQ2nM6I=
+	by mail.kernel.org (Postfix) with ESMTP id 2C04C20B1F
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 11:58:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="Q/Cspor0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730992AbfHFL5J (ORCPT
+        id S1731006AbfHFL6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 07:57:09 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33706 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726243AbfHFL5I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 07:57:08 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id CF36EAD95;
-        Tue,  6 Aug 2019 11:57:05 +0000 (UTC)
-Date:   Tue, 6 Aug 2019 13:57:03 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Brendan Gregg <bgregg@netflix.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christian Hansen <chansen3@cisco.com>, dancol@google.com,
-        fmayer@google.com, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        linux-api@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Mike Rapoport <rppt@linux.ibm.com>, minchan@kernel.org,
-        namhyung@google.com, paulmck@linux.ibm.com,
-        Roman Gushchin <guro@fb.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>, surenb@google.com,
-        Thomas Gleixner <tglx@linutronix.de>, tkjos@google.com,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v4 3/5] [RFC] arm64: Add support for idle bit in swap PTE
-Message-ID: <20190806115703.GY11812@dhcp22.suse.cz>
-References: <20190805170451.26009-1-joel@joelfernandes.org>
- <20190805170451.26009-3-joel@joelfernandes.org>
- <20190806084203.GJ11812@dhcp22.suse.cz>
- <20190806103627.GA218260@google.com>
- <20190806104755.GR11812@dhcp22.suse.cz>
- <20190806111446.GA117316@google.com>
+        Tue, 6 Aug 2019 07:58:09 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:50234 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726243AbfHFL6I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 07:58:08 -0400
+Received: by mail-wm1-f65.google.com with SMTP id v15so77914563wml.0
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 04:58:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloud.ionos.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HipvVzip+SvgCCvlPkREKUIpD/Rq5iyM6ORwsOJkPoM=;
+        b=Q/Cspor0lpl8jL7JpPl0FO9TAtExf0Gp3OudhePc8na+jCG4qPhY+7exk2Cco4LsIN
+         8LRAbN4PuzrgkU0xFMQ3q1LUJuynEw+m8/ObW5kB4zUJ+nklzHKLUCRf6UBR7sECy44y
+         c99MC42qfX+CyqoDntsbi6A2mxqpJsOY6OnT6pWZ3knc8QA4+EYDqIhxIQPFwUG6YPJX
+         4FfGjbVlEKU5an/rOAiacRkvJhCsdj0+YL2g9Ga7HHGV8ICCYTGWEqOx8NEpgygjWPpS
+         eziR+km+NHD4RoC2UKEhdZTPzezJjxnzgfs1YrDnOwMxugy8JEDGkziefhtTmoKY2UI1
+         KW0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HipvVzip+SvgCCvlPkREKUIpD/Rq5iyM6ORwsOJkPoM=;
+        b=V0BIQd6Tna7pV2X8i6iweRcyjwWjSAC/UYNa14Gl9/v71lqr7lxmET5kjf/QhcF5Y0
+         I1qFLew4guEZuvQ22pBajOGhzKxnq22G7wlzioYaWUUAyA9iKPsOS/phwHUiFjNQDmga
+         UmA8ezMfoLq5XF94DH0LmPtlTjcM9HPMRWGMoywFGojS9bWwa4kUYoK4jhCyTI2SLhJC
+         FYxnvJFNVy3FKNRL1TkovZ/M+cU+cDeKFxowYHVyRzmSpDbytjChGkLLHF4np4eWgj06
+         180neYVtlRcrd/wPXoOkc6GHiLY4bLDjQEeO1pdNdIrsRABZ94gQY/mjonWwPB8eJMmR
+         //+w==
+X-Gm-Message-State: APjAAAVT1+C1Yy7CMEtr1vL+OK2MYaHaxGxCef2Z2UZK0uuS+7HA4Abi
+        9jseAIGWOwq8Qoed5qJ4e5Lvtpm+VV3fYycUi9H0vg==
+X-Google-Smtp-Source: APXvYqxEG/ckMbXv+MseMxQsB7FBIMk8wYV8o+7PyurCz/nVLmYfrfFdL/+umDm2gr0Tx+Htd3cH3mtJl41JHjceP6U=
+X-Received: by 2002:a1c:b457:: with SMTP id d84mr4760241wmf.153.1565092684138;
+ Tue, 06 Aug 2019 04:58:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190806111446.GA117316@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CAMGffEkotpvVz8FA78vNFh0qZv3kEMNrXXfVPEUC=MhH0pMCZA@mail.gmail.com>
+ <0a83fde3-1a74-684c-0d70-fb44b9021f96@molgen.mpg.de> <CAMGffE=_kPoBmSwbxvrqdqbhpR5Cu2Vbe4ArGqm9ns9+iVEH_g@mail.gmail.com>
+ <CAMGffEkcXcQC+kjwdH0iVSrFDk-o+dp+b3Q1qz4z=R=6D+QqLQ@mail.gmail.com>
+ <87h86vjhv0.fsf@notabene.neil.brown.name> <CAMGffEnKXQJBbDS8Yi0S5ZKEMHVJ2_SKVPHeb9Rcd6oT_8eTuw@mail.gmail.com>
+In-Reply-To: <CAMGffEnKXQJBbDS8Yi0S5ZKEMHVJ2_SKVPHeb9Rcd6oT_8eTuw@mail.gmail.com>
+From:   Jinpu Wang <jinpu.wang@cloud.ionos.com>
+Date:   Tue, 6 Aug 2019 13:57:53 +0200
+Message-ID: <CAMGffEkfs0KsuWX8vGY==1dym78d6wsao_otSjzBAPzwGtoQcw@mail.gmail.com>
+Subject: Re: Bisected: Kernel 4.14 + has 3 times higher write IO latency than
+ Kernel 4.4 with raid1
+To:     NeilBrown <neilb@suse.com>
+Cc:     linux-raid <linux-raid@vger.kernel.org>,
+        Alexandr Iarygin <alexandr.iarygin@cloud.ionos.com>,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 06-08-19 07:14:46, Joel Fernandes wrote:
-> On Tue, Aug 06, 2019 at 12:47:55PM +0200, Michal Hocko wrote:
-> > On Tue 06-08-19 06:36:27, Joel Fernandes wrote:
-> > > On Tue, Aug 06, 2019 at 10:42:03AM +0200, Michal Hocko wrote:
-> > > > On Mon 05-08-19 13:04:49, Joel Fernandes (Google) wrote:
-> > > > > This bit will be used by idle page tracking code to correctly identify
-> > > > > if a page that was swapped out was idle before it got swapped out.
-> > > > > Without this PTE bit, we lose information about if a page is idle or not
-> > > > > since the page frame gets unmapped.
-> > > > 
-> > > > And why do we need that? Why cannot we simply assume all swapped out
-> > > > pages to be idle? They were certainly idle enough to be reclaimed,
-> > > > right? Or what does idle actualy mean here?
-> > > 
-> > > Yes, but other than swapping, in Android a page can be forced to be swapped
-> > > out as well using the new hints that Minchan is adding?
-> > 
-> > Yes and that is effectivelly making them idle, no?
-> 
-> That depends on how you think of it.
+On Tue, Aug 6, 2019 at 9:54 AM Jinpu Wang <jinpu.wang@cloud.ionos.com> wrote:
+>
+> On Tue, Aug 6, 2019 at 1:46 AM NeilBrown <neilb@suse.com> wrote:
+> >
+> > On Mon, Aug 05 2019, Jinpu Wang wrote:
+> >
+> > > Hi Neil,
+> > >
+> > > For the md higher write IO latency problem, I bisected it to these commits:
+> > >
+> > > 4ad23a97 MD: use per-cpu counter for writes_pending
+> > > 210f7cd percpu-refcount: support synchronous switch to atomic mode.
+> > >
+> > > Do you maybe have an idea? How can we fix it?
+> >
+> > Hmmm.... not sure.
+> Hi Neil,
+>
+> Thanks for reply, detailed result in line.
+> >
+> > My guess is that the set_in_sync() call from md_check_recovery()
+> > is taking a long time, and is being called too often.
+> >
+> > Could you try two experiments please.
+> >
+> Baseline on 5.3-rc3:
+> root@ib2:/home/jwang# cat md_lat_ib2_5.3.0-rc3-1-storage_2019_0806_092003.log
+> write-test: (g=0): rw=write, bs=4K-4K/4K-4K/4K-4K, ioengine=libaio, iodepth=32
+> fio-2.2.10
+> Starting 1 process
+>
+> write-test: (groupid=0, jobs=1): err= 0: pid=2621: Tue Aug  6 09:20:44 2019
+>   write: io=800004KB, bw=20000KB/s, iops=4999, runt= 40001msec
+>     slat (usec): min=2, max=69992, avg= 5.37, stdev=374.95
+>     clat (usec): min=0, max=147, avg= 2.42, stdev=13.57
+>      lat (usec): min=2, max=70079, avg= 7.84, stdev=376.07
+>     clat percentiles (usec):
+>      |  1.00th=[    0],  5.00th=[    0], 10.00th=[    0], 20.00th=[    1],
+>      | 30.00th=[    1], 40.00th=[    1], 50.00th=[    1], 60.00th=[    1],
+>      | 70.00th=[    1], 80.00th=[    1], 90.00th=[    1], 95.00th=[    1],
+>      | 99.00th=[   96], 99.50th=[  125], 99.90th=[  137], 99.95th=[  139],
+>      | 99.99th=[  141]
+>     bw (KB  /s): min=18454, max=21608, per=100.00%, avg=20005.15, stdev=352.24
+>     lat (usec) : 2=98.52%, 4=0.01%, 10=0.01%, 20=0.02%, 50=0.06%
+>     lat (usec) : 100=0.46%, 250=0.94%
+>   cpu          : usr=4.64%, sys=0.00%, ctx=197118, majf=0, minf=11
+>   IO depths    : 1=98.5%, 2=0.1%, 4=0.1%, 8=0.1%, 16=0.1%, 32=1.3%, >=64=0.0%
+>      submit    : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
+>      complete  : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
+>      issued    : total=r=0/w=200001/d=0, short=r=0/w=0/d=0, drop=r=0/w=0/d=0
+>      latency   : target=0, window=0, percentile=100.00%, depth=32
+>
+> Run status group 0 (all jobs):
+>   WRITE: io=800004KB, aggrb=19999KB/s, minb=19999KB/s, maxb=19999KB/s,
+> mint=40001msec, maxt=40001msec
+>
+> Disk stats (read/write):
+>     md0: ios=60/199436, merge=0/0, ticks=0/0, in_queue=0, util=0.00%,
+> aggrios=0/0, aggrmerge=0/0, aggrticks=0/0, aggrin_queue=0,
+> aggrutil=0.00%
+>   ram0: ios=0/0, merge=0/0, ticks=0/0, in_queue=0, util=0.00%
+>   ram1: ios=0/0, merge=0/0, ticks=0/0, in_queue=0, util=0.00%
+>
+>
+> > 1/ set  /sys/block/md0/md/safe_mode_delay
+> >    to 20 or more.  It defaults to about 0.2.
+> only set 20 to safe_mode_delay,  give a nice improvement.
+> root@ib2:/home/jwang# cat md_lat_ib2_5.3.0-rc3-1-storage_2019_0806_092144.log
+> write-test: (g=0): rw=write, bs=4K-4K/4K-4K/4K-4K, ioengine=libaio, iodepth=32
+> fio-2.2.10
+> Starting 1 process
+>
+> write-test: (groupid=0, jobs=1): err= 0: pid=2676: Tue Aug  6 09:22:25 2019
+>   write: io=800004KB, bw=20000KB/s, iops=4999, runt= 40001msec
+>     slat (usec): min=2, max=99490, avg= 2.98, stdev=222.46
+>     clat (usec): min=0, max=103, avg= 0.96, stdev= 4.51
+>      lat (usec): min=2, max=99581, avg= 3.99, stdev=222.71
+>     clat percentiles (usec):
+>      |  1.00th=[    0],  5.00th=[    0], 10.00th=[    0], 20.00th=[    0],
+>      | 30.00th=[    1], 40.00th=[    1], 50.00th=[    1], 60.00th=[    1],
+>      | 70.00th=[    1], 80.00th=[    1], 90.00th=[    1], 95.00th=[    1],
+>      | 99.00th=[    1], 99.50th=[    1], 99.90th=[   90], 99.95th=[   91],
+>      | 99.99th=[   95]
+>     bw (KB  /s): min=20000, max=20008, per=100.00%, avg=20001.82, stdev= 3.38
+>     lat (usec) : 2=99.72%, 4=0.01%, 10=0.01%, 20=0.01%, 50=0.01%
+>     lat (usec) : 100=0.25%, 250=0.01%
+>   cpu          : usr=3.17%, sys=1.48%, ctx=199470, majf=0, minf=11
+>   IO depths    : 1=99.7%, 2=0.1%, 4=0.1%, 8=0.1%, 16=0.1%, 32=0.2%, >=64=0.0%
+>      submit    : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
+>      complete  : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
+>      issued    : total=r=0/w=200001/d=0, short=r=0/w=0/d=0, drop=r=0/w=0/d=0
+>      latency   : target=0, window=0, percentile=100.00%, depth=32
+>
+> Run status group 0 (all jobs):
+>   WRITE: io=800004KB, aggrb=19999KB/s, minb=19999KB/s, maxb=19999KB/s,
+> mint=40001msec, maxt=40001msec
+>
+> Disk stats (read/write):
+>     md0: ios=60/199461, merge=0/0, ticks=0/0, in_queue=0, util=0.00%,
+> aggrios=0/0, aggrmerge=0/0, aggrticks=0/0, aggrin_queue=0,
+> aggrutil=0.00%
+>   ram0: ios=0/0, merge=0/0, ticks=0/0, in_queue=0, util=0.00%
+>   ram1: ios=0/0, merge=0/0, ticks=0/0, in_queue=0, util=0.00%
+>
+>
+> >
+> > 2/ comment out the call the set_in_sync() in md_check_recovery().
+> Only commented out set_in_sync get a better improvement
+> root@ib2:/home/jwang# cat md_lat_ib2_5.3.0-rc3-1-storage+_2019_0806_093340.log
+> write-test: (g=0): rw=write, bs=4K-4K/4K-4K/4K-4K, ioengine=libaio, iodepth=32
+> fio-2.2.10
+> Starting 1 process
+>
+> write-test: (groupid=0, jobs=1): err= 0: pid=2626: Tue Aug  6 09:34:20 2019
+>   write: io=800004KB, bw=20000KB/s, iops=4999, runt= 40001msec
+>     slat (usec): min=2, max=29, avg= 2.49, stdev= 0.72
+>     clat (usec): min=0, max=101, avg= 0.78, stdev= 1.17
+>      lat (usec): min=2, max=117, avg= 3.34, stdev= 1.25
+>     clat percentiles (usec):
+>      |  1.00th=[    0],  5.00th=[    0], 10.00th=[    0], 20.00th=[    0],
+>      | 30.00th=[    1], 40.00th=[    1], 50.00th=[    1], 60.00th=[    1],
+>      | 70.00th=[    1], 80.00th=[    1], 90.00th=[    1], 95.00th=[    1],
+>      | 99.00th=[    1], 99.50th=[    1], 99.90th=[    1], 99.95th=[    1],
+>      | 99.99th=[   72]
+>     bw (KB  /s): min=20000, max=20008, per=100.00%, avg=20002.03, stdev= 3.50
+>     lat (usec) : 2=99.96%, 4=0.01%, 10=0.01%, 20=0.01%, 50=0.01%
+>     lat (usec) : 100=0.02%, 250=0.01%
+>   cpu          : usr=4.17%, sys=0.00%, ctx=199951, majf=0, minf=12
+>   IO depths    : 1=100.0%, 2=0.1%, 4=0.1%, 8=0.1%, 16=0.1%, 32=0.1%, >=64=0.0%
+>      submit    : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
+>      complete  : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
+>      issued    : total=r=0/w=200001/d=0, short=r=0/w=0/d=0, drop=r=0/w=0/d=0
+>      latency   : target=0, window=0, percentile=100.00%, depth=32
+>
+> Run status group 0 (all jobs):
+>   WRITE: io=800004KB, aggrb=19999KB/s, minb=19999KB/s, maxb=19999KB/s,
+> mint=40001msec, maxt=40001msec
+>
+> Disk stats (read/write):
+>     md0: ios=60/199435, merge=0/0, ticks=0/0, in_queue=0, util=0.00%,
+> aggrios=0/0, aggrmerge=0/0, aggrticks=0/0, aggrin_queue=0,
+> aggrutil=0.00%
+>   ram0: ios=0/0, merge=0/0, ticks=0/0, in_queue=0, util=0.00%
+>   ram1: ios=0/0, merge=0/0, ticks=0/0, in_queue=0, util=0.00%
+>
+> With both applied
+> root@ib2:/home/jwang# cat md_lat_ib2_5.3.0-rc3-1-storage+_2019_0806_093916.log
+> write-test: (g=0): rw=write, bs=4K-4K/4K-4K/4K-4K, ioengine=libaio, iodepth=32
+> fio-2.2.10
+> Starting 1 process
+>
+> write-test: (groupid=0, jobs=1): err= 0: pid=2709: Tue Aug  6 09:39:57 2019
+>   write: io=800004KB, bw=20000KB/s, iops=4999, runt= 40001msec
+>     slat (usec): min=2, max=16, avg= 2.46, stdev= 0.69
+>     clat (usec): min=0, max=100, avg= 0.61, stdev= 1.18
+>      lat (usec): min=2, max=104, avg= 3.12, stdev= 1.33
+>     clat percentiles (usec):
+>      |  1.00th=[    0],  5.00th=[    0], 10.00th=[    0], 20.00th=[    0],
+>      | 30.00th=[    0], 40.00th=[    0], 50.00th=[    1], 60.00th=[    1],
+>      | 70.00th=[    1], 80.00th=[    1], 90.00th=[    1], 95.00th=[    1],
+>      | 99.00th=[    1], 99.50th=[    1], 99.90th=[    1], 99.95th=[    1],
+>      | 99.99th=[   70]
+>     bw (KB  /s): min=20000, max=20008, per=100.00%, avg=20002.73, stdev= 3.82
+>     lat (usec) : 2=99.96%, 4=0.01%, 10=0.01%, 20=0.01%, 50=0.01%
+>     lat (usec) : 100=0.02%, 250=0.01%
+>   cpu          : usr=3.33%, sys=1.31%, ctx=199941, majf=0, minf=12
+>   IO depths    : 1=100.0%, 2=0.1%, 4=0.1%, 8=0.1%, 16=0.1%, 32=0.1%, >=64=0.0%
+>      submit    : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
+>      complete  : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
+>      issued    : total=r=0/w=200001/d=0, short=r=0/w=0/d=0, drop=r=0/w=0/d=0
+>      latency   : target=0, window=0, percentile=100.00%, depth=32
+>
+> Run status group 0 (all jobs):
+>   WRITE: io=800004KB, aggrb=19999KB/s, minb=19999KB/s, maxb=19999KB/s,
+> mint=40001msec, maxt=40001msec
+>
+> Disk stats (read/write):
+>     md0: ios=60/199460, merge=0/0, ticks=0/0, in_queue=0, util=0.00%,
+> aggrios=0/0, aggrmerge=0/0, aggrticks=0/0, aggrin_queue=0,
+> aggrutil=0.00%
+>   ram0: ios=0/0, merge=0/0, ticks=0/0, in_queue=0, util=0.00%
+>   ram1: ios=0/0, merge=0/0, ticks=0/0, in_queue=0, util=0.00%
+>
+> >
+> > Then run the least separately after each of these changes.
+> >
+>
+>
+> > I the second one makes a difference, I'd like to know how often it gets
+> > called - and why.  The test
+> >         if ( ! (
+> >                 (mddev->sb_flags & ~ (1<<MD_SB_CHANGE_PENDING)) ||
+> >                 test_bit(MD_RECOVERY_NEEDED, &mddev->recovery) ||
+> >                 test_bit(MD_RECOVERY_DONE, &mddev->recovery) ||
+> >                 (mddev->external == 0 && mddev->safemode == 1) ||
+> >                 (mddev->safemode == 2
+> >                  && !mddev->in_sync && mddev->recovery_cp == MaxSector)
+> >                 ))
+> >                 return;
+> >
+I added following debug message:
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -2404,6 +2404,8 @@ static void export_array(struct mddev *mddev)
+ static bool set_in_sync(struct mddev *mddev)
+ {
+        lockdep_assert_held(&mddev->lock);
++       pr_info("md %s in_sync is %d, sb_flags %ld, recovery %ld,
+external %d, safemode %d, recovery_cp %llu\n",mdname(mddev),
+mddev->in_sync, mddev->sb_flags, mddev->recovery, mddev->external,
+mddev->safemode, (unsigned long long)mddev->recovery_cp);
++
+        if (!mddev->in_sync) {
+                mddev->sync_checkers++;
+                spin_unlock(&mddev->lock);
+@@ -2411,6 +2413,7 @@ static bool set_in_sync(struct mddev *mddev)
+                spin_lock(&mddev->lock);
+                if (!mddev->in_sync &&
+                    percpu_ref_is_zero(&mddev->writes_pending)) {
++            pr_info("set_in_sync\n");
+                        mddev->in_sync = 1;
+                        /*
+                         * Ensure ->in_sync is visible before we clear
 
-I would much prefer to have it documented so that I do not have to guess ;)
+The relevant dmesg:
+[  103.976374] md/raid1:md0: not clean -- starting background reconstruction
+[  103.976479] md/raid1:md0: active with 2 out of 2 mirrors
+[  103.976597] md0: detected capacity change from 0 to 535822336
+[  103.976721] md: resync of RAID array md0
+[  104.427369] md md0 in_sync is 0, sb_flags 6, recovery 3, external
+0, safemode 0, recovery_cp 393216
+[  105.052186] md md0 in_sync is 0, sb_flags 2, recovery 3, external
+0, safemode 0, recovery_cp 458752
+[  105.127718] set_in_sync
+[  105.133299] md md0 in_sync is 0, sb_flags 2, recovery 3, external
+0, safemode 0, recovery_cp 524288
+[  105.207723] set_in_sync
+[  105.213318] md md0 in_sync is 0, sb_flags 2, recovery 3, external
+0, safemode 0, recovery_cp 589824
+[  105.287717] set_in_sync
+[  105.293299] md md0 in_sync is 0, sb_flags 2, recovery 3, external
+0, safemode 0, recovery_cp 655360
+[  105.347718] set_in_sync
+[  105.353267] md md0 in_sync is 0, sb_flags 2, recovery 3, external
+0, safemode 0, recovery_cp 720896
+[  105.397717] set_in_sync
+[  105.403367] md md0 in_sync is 0, sb_flags 2, recovery 3, external
+0, safemode 0, recovery_cp 786432
+[  105.457718] set_in_sync
+[  105.981324] md md0 in_sync is 0, sb_flags 2, recovery 3, external
+0, safemode 0, recovery_cp 851968
+[  106.017718] set_in_sync
+[  106.022784] md md0 in_sync is 0, sb_flags 2, recovery 3, external
+0, safemode 0, recovery_cp 917504
+[  106.057718] set_in_sync
+[  106.063357] md md0 in_sync is 0, sb_flags 2, recovery 3, external
+0, safemode 0, recovery_cp 983040
+[  106.117718] set_in_sync
+[  106.122851] md: md0: resync done.
+[  106.123261] md md0 in_sync is 0, sb_flags 5, recovery 19, external
+0, safemode 0, recovery_cp 18446744073709551615
+[  106.157741] md md0 in_sync is 0, sb_flags 0, recovery 32, external
+0, safemode 0, recovery_cp 18446744073709551615
+[  106.217718] set_in_sync
+[  144.707722] md md0 in_sync is 0, sb_flags 0, recovery 0, external
+0, safemode 0, recovery_cp 18446744073709551615
+[  144.767720] set_in_sync
 
-> If you are thinking of a monitoring
-> process like a heap profiler, then from the heap profiler's (that only cares
-> about the process it is monitoring) perspective it will look extremely odd if
-> pages that are recently accessed by the process appear to be idle which would
-> falsely look like those processes are leaking memory. The reality being,
-> Android forced those pages into swap because of other reasons. I would like
-> for the swapping mechanism, whether forced swapping or memory reclaim, not to
-> interfere with the idle detection.
+Please let me know if you need further information, I can also test
+any draft patch if needed.
 
-Hmm, but how are you going to handle situation when the page is unmapped
-and refaulted again (e.g. a normal reclaim of a pagecache)? You are
-losing that information same was as in the swapout case, no? Or am I
-missing something?
+Thanks,
+Jack Wang
 
-> This is just an effort to make the idle tracking a little bit better. We
-> would like to not lose the 'accessed' information of the pages.
-> 
-> Initially, I had proposed what you are suggesting as well however the above
-> reasons made me to do it like this. Also Minchan and Konstantin suggested
-> this, so there are more people interested in the swap idle bit. Minchan, can
-> you provide more thoughts here? (He is on 2-week vacation from today so
-> hopefully replies before he vanishes ;-)).
 
-We can move on with the rest of the series in the mean time but I would
-like to see a proper justification for the swap entries and why they
-should be handled special.
 
-> Also assuming all swap pages as idle has other "semantic" issues. It is quite
-> odd if a swapped page is automatically marked as idle without userspace
-> telling it to. Consider the following set of events: 1. Userspace marks only
-> a certain memory region as idle. 2. Userspace reads back the bits
-> corresponding to a bigger region. Part of this bigger region is swapped.
-> Userspace expects all of the pages it did not mark, to have idle bit set to
-> '0' because it never marked them as idle. However if it is now surprised by
-> what it read back (not all '0' read back). Since a page is swapped, it will
-> be now marked "automatically" as idle as per your proposal, even if userspace
-> never marked it explicity before. This would be quite confusing/ambiguous.
 
-OK, I see. I guess the primary question I have is how do you distinguish
-Idle page which got unmapped and faulted in again from swapped out page
-and refaulted - including the time the pte is not present.
--- 
-Michal Hocko
-SUSE Labs
+> > should normally return when doing lots of IO - I'd like to know
+> > which condition causes it to not return.
+> I will check, and report later today.
+> Thanks again!
+>
+> Jack Wang
+> >
+> > Thanks,
+> > NeilBrown
