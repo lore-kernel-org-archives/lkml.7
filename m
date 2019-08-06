@@ -2,118 +2,153 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A15C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 03:24:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B58EBC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 03:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 329B5214C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 03:24:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E63E217F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 03:27:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="J9nWhfi9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731412AbfHFDYa (ORCPT
+        id S1731197AbfHFD1R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 23:24:30 -0400
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:54661 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729383AbfHFDY3 (ORCPT
+        Mon, 5 Aug 2019 23:27:17 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:43700 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729383AbfHFD1Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 23:24:29 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=aaron.lu@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0TYnWuqk_1565061858;
-Received: from aaronlu(mailfrom:aaron.lu@linux.alibaba.com fp:SMTPD_---0TYnWuqk_1565061858)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 06 Aug 2019 11:24:24 +0800
-Date:   Tue, 6 Aug 2019 11:24:18 +0800
-From:   Aaron Lu <aaron.lu@linux.alibaba.com>
-To:     Tim Chen <tim.c.chen@linux.intel.com>
-Cc:     Julien Desfossez <jdesfossez@digitalocean.com>,
-        "Li, Aubrey" <aubrey.li@linux.intel.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
-Message-ID: <20190806032418.GA54717@aaronlu>
-References: <20190613032246.GA17752@sinkpad>
- <CAERHkrsMFjjBpPZS7jDhzbob4PSmiPj83OfqEeiKgaDAU3ajOA@mail.gmail.com>
- <20190619183302.GA6775@sinkpad>
- <20190718100714.GA469@aaronlu>
- <CAERHkrtvLKxrpvfw04urAuougsYOWnNw4-H1vUDFx27Dvy0=Ww@mail.gmail.com>
- <20190725143003.GA992@aaronlu>
- <20190726152101.GA27884@sinkpad>
- <7dc86e3c-aa3f-905f-3745-01181a3b0dac@linux.intel.com>
- <20190802153715.GA18075@sinkpad>
- <f4778816-69e5-146c-2a30-ec42e7f1677f@linux.intel.com>
+        Mon, 5 Aug 2019 23:27:16 -0400
+Received: by mail-oi1-f193.google.com with SMTP id w79so64543843oif.10
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 20:27:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Nxtz2kZ+l7OR4MFHv2stHBbHUHxdL1vfEFCmbcfh8CA=;
+        b=J9nWhfi9ZP583VeloWxqen9o8Z08nPXCs2Mg+X3S6ICi4P0yXoDyV5Ww7hSDCD6rnq
+         rGGBQ5hhMBUlQPbK8q1/eLX+2LSiqtTinvh2tgmcqMPjVlxIypXqVOv6omJUvp+VC6IP
+         rMZ5pxEXcSZ35hDaCFpvOZd/Nk7N/K4dTb57qARzZp86bvb6ajq9SqGVJmDAjki99Zfn
+         NnNWG45uHpYle+tuGgJ2aDK6SF3vuXxiMwdSi4HH7Hz2C+dev9gpTmTqtqzvnpxIjXy2
+         1nlOjCSHfoswnQ1PsB7vf1rlohQoJrGyhchm4mBW7MjUJwYFeNCM/a4tpCfob5/lM/Lf
+         jp5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Nxtz2kZ+l7OR4MFHv2stHBbHUHxdL1vfEFCmbcfh8CA=;
+        b=hEVT9K5kWn18Qf4RpuqoVHW7ZpoGkM/v/k6hhZoSdxq8YhiOfR7I6iH1Cn8/20OAJg
+         ldrN6K4bVx3eztMvAKHXn54q1RvToFSsaEO/Q/KoYOcp+zpyK2Ef99j+ylT0W0DKiF6f
+         VKxcZiMB4lXNlzUZHX4Nw4VJojZN0ATYNSVNhn+If6YJ8lMNwK9mLgzQG5ZZwosHcxOs
+         rsdeQ1/Rns6xdtzGQ8OVa0AvsX9whaVuPMf25Q653hD/kMg7PdKIB/Hnu702KJxM5QhY
+         CmOmsf0fF3hzvN9c2vixexeMvq4QPnkPIIFxhxg54/JUGgsGMAErDrPLXuUwQeEwf0cy
+         GExg==
+X-Gm-Message-State: APjAAAXLXrkGjuCoKDr8J/dmS+Qm5A/CazYvromKQS/bYWsXQJBgsTXk
+        Ssq5sBzhvNh1qH9mst/57zXa8t/VVY+1xXHrqVhSfw==
+X-Google-Smtp-Source: APXvYqzqOFl+rejoEX8/ERi13dLIbgq21jpzsPxnsRuP8cMnosl8/EC6nixIh/y4rOGQU3UUzihpDdFgKpHGnTa/ZDA=
+X-Received: by 2002:aca:ec82:: with SMTP id k124mr966027oih.73.1565062035500;
+ Mon, 05 Aug 2019 20:27:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f4778816-69e5-146c-2a30-ec42e7f1677f@linux.intel.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <20190725023100.31141-1-t-fukasawa@vx.jp.nec.com>
+ <20190725023100.31141-3-t-fukasawa@vx.jp.nec.com> <20190725090341.GC13855@dhcp22.suse.cz>
+ <40b3078e-fb8b-87ef-5c4e-6321956cc940@vx.jp.nec.com> <20190726070615.GB6142@dhcp22.suse.cz>
+ <3a926ce5-75b9-ea94-d6e4-6888872e0dc4@vx.jp.nec.com>
+In-Reply-To: <3a926ce5-75b9-ea94-d6e4-6888872e0dc4@vx.jp.nec.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 5 Aug 2019 20:27:03 -0700
+Message-ID: <CAPcyv4iCXWgxkLi3eM_EaqD0cuzmRyg5k4c9CeS1TyN+bajXFw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] /proc/kpageflags: do not use uninitialized struct pages
+To:     Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "adobriyan@gmail.com" <adobriyan@gmail.com>,
+        "hch@lst.de" <hch@lst.de>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Junichi Nomura <j-nomura@ce.jp.nec.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 05, 2019 at 08:55:28AM -0700, Tim Chen wrote:
-> On 8/2/19 8:37 AM, Julien Desfossez wrote:
-> > We tested both Aaron's and Tim's patches and here are our results.
-> > 
-> > Test setup:
-> > - 2 1-thread sysbench, one running the cpu benchmark, the other one the
-> >   mem benchmark
-> > - both started at the same time
-> > - both are pinned on the same core (2 hardware threads)
-> > - 10 30-seconds runs
-> > - test script: https://paste.debian.net/plainh/834cf45c
-> > - only showing the CPU events/sec (higher is better)
-> > - tested 4 tag configurations:
-> >   - no tag
-> >   - sysbench mem untagged, sysbench cpu tagged
-> >   - sysbench mem tagged, sysbench cpu untagged
-> >   - both tagged with a different tag
-> > - "Alone" is the sysbench CPU running alone on the core, no tag
-> > - "nosmt" is both sysbench pinned on the same hardware thread, no tag
-> > - "Tim's full patchset + sched" is an experiment with Tim's patchset
-> >   combined with Aaron's "hack patch" to get rid of the remaining deep
-> >   idle cases
-> > - In all test cases, both tasks can run simultaneously (which was not
-> >   the case without those patches), but the standard deviation is a
-> >   pretty good indicator of the fairness/consistency.
-> 
-> Thanks for testing the patches and giving such detailed data.
+On Sun, Aug 4, 2019 at 10:31 PM Toshiki Fukasawa
+<t-fukasawa@vx.jp.nec.com> wrote:
+>
+> On 2019/07/26 16:06, Michal Hocko wrote:
+> > On Fri 26-07-19 06:25:49, Toshiki Fukasawa wrote:
+> >>
+> >>
+> >> On 2019/07/25 18:03, Michal Hocko wrote:
+> >>> On Thu 25-07-19 02:31:18, Toshiki Fukasawa wrote:
+> >>>> A kernel panic was observed during reading /proc/kpageflags for
+> >>>> first few pfns allocated by pmem namespace:
+> >>>>
+> >>>> BUG: unable to handle page fault for address: fffffffffffffffe
+> >>>> [  114.495280] #PF: supervisor read access in kernel mode
+> >>>> [  114.495738] #PF: error_code(0x0000) - not-present page
+> >>>> [  114.496203] PGD 17120e067 P4D 17120e067 PUD 171210067 PMD 0
+> >>>> [  114.496713] Oops: 0000 [#1] SMP PTI
+> >>>> [  114.497037] CPU: 9 PID: 1202 Comm: page-types Not tainted 5.3.0-rc1 #1
+> >>>> [  114.497621] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.11.0-0-g63451fca13-prebuilt.qemu-project.org 04/01/2014
+> >>>> [  114.498706] RIP: 0010:stable_page_flags+0x27/0x3f0
+> >>>> [  114.499142] Code: 82 66 90 66 66 66 66 90 48 85 ff 0f 84 d1 03 00 00 41 54 55 48 89 fd 53 48 8b 57 08 48 8b 1f 48 8d 42 ff 83 e2 01 48 0f 44 c7 <48> 8b 00 f6 c4 02 0f 84 57 03 00 00 45 31 e4 48 8b 55 08 48 89 ef
+> >>>> [  114.500788] RSP: 0018:ffffa5e601a0fe60 EFLAGS: 00010202
+> >>>> [  114.501373] RAX: fffffffffffffffe RBX: ffffffffffffffff RCX: 0000000000000000
+> >>>> [  114.502009] RDX: 0000000000000001 RSI: 00007ffca13a7310 RDI: ffffd07489000000
+> >>>> [  114.502637] RBP: ffffd07489000000 R08: 0000000000000001 R09: 0000000000000000
+> >>>> [  114.503270] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000240000
+> >>>> [  114.503896] R13: 0000000000080000 R14: 00007ffca13a7310 R15: ffffa5e601a0ff08
+> >>>> [  114.504530] FS:  00007f0266c7f540(0000) GS:ffff962dbbac0000(0000) knlGS:0000000000000000
+> >>>> [  114.505245] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> >>>> [  114.505754] CR2: fffffffffffffffe CR3: 000000023a204000 CR4: 00000000000006e0
+> >>>> [  114.506401] Call Trace:
+> >>>> [  114.506660]  kpageflags_read+0xb1/0x130
+> >>>> [  114.507051]  proc_reg_read+0x39/0x60
+> >>>> [  114.507387]  vfs_read+0x8a/0x140
+> >>>> [  114.507686]  ksys_pread64+0x61/0xa0
+> >>>> [  114.508021]  do_syscall_64+0x5f/0x1a0
+> >>>> [  114.508372]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> >>>> [  114.508844] RIP: 0033:0x7f0266ba426b
+> >>>>
+> >>>> The reason for the panic is that stable_page_flags() which parses
+> >>>> the page flags uses uninitialized struct pages reserved by the
+> >>>> ZONE_DEVICE driver.
+> >>>
+> >>> Why pmem hasn't initialized struct pages?
+> >>
+> >> We proposed to initialize in previous approach but that wasn't merged.
+> >> (See https://marc.info/?l=linux-mm&m=152964792500739&w=2)
+> >>
+> >>> Isn't that a bug that should be addressed rather than paper over it like this?
+> >>
+> >> I'm not sure. What do you think, Dan?
+> >
+> > Yeah, I am really curious about details. Why do we keep uninitialized
+> > struct pages at all? What is a random pfn walker supposed to do? What
+> > kind of metadata would be clobbered? In other words much more details
+> > please.
+> >
+> I also want to know. I do not think that initializing struct pages will
+> clobber any metadata.
 
-Thanks Julien.
+The nvdimm implementation uses vmem_altmap to arrange for the 'struct
+page' array to be allocated from a reservation of a pmem namespace. A
+namespace in this mode contains an info-block that consumes the first
+8K of the namespace capacity, capacity designated for page mapping,
+capacity for padding the start of data to optionally 4K, 2MB, or 1GB
+(on x86), and then the namespace data itself. The implementation
+specifies a section aligned (now sub-section aligned) address to
+arch_add_memory() to establish the linear mapping to map the metadata,
+and then vmem_altmap indicates to memmap_init_zone() which pfns
+represent data. The implementation only specifies enough 'struct page'
+capacity for pfn_to_page() to operate on the data space, not the
+namespace metadata space.
 
-> I came to realize that for my scheme, the accumulated deficit of forced idle could be wiped
-> out in one execution of a task on the forced idle cpu, with the update of the min_vruntime,
-> even if the execution time could be far less than the accumulated deficit.
-> That's probably one reason my scheme didn't achieve fairness.
-
-I've been thinking if we should consider core wide tenent fairness?
-
-Let's say there are 3 tasks on 2 threads' rq of the same core, 2 tasks
-(e.g. A1, A2) belong to tenent A and the 3rd B1 belong to another tenent
-B. Assume A1 and B1 are queued on the same thread and A2 on the other
-thread, when we decide priority for A1 and B1, shall we also consider
-A2's vruntime? i.e. shall we consider A1 and A2 as a whole since they
-belong to the same tenent? I tend to think we should make fairness per
-core per tenent, instead of per thread(cpu) per task(sched entity). What
-do you guys think?
-
-Implemention of the idea is a mess to me, as I feel I'm duplicating the
-existing per cpu per sched_entity enqueue/update vruntime/dequeue logic
-for the per core per tenent stuff.
+The proposal to validate ZONE_DEVICE pfns against the altmap seems the
+right approach to me.
