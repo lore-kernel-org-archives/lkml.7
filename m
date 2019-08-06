@@ -2,192 +2,152 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60BACC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:29:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36F63C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:29:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2ABC1208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:29:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="VSLzJXXT"
+	by mail.kernel.org (Postfix) with ESMTP id 0B6182075B
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:29:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565080158;
+	bh=3edY4Y9PFCZ1ppIc6dRX/VFv9Pmaa5EO6FEFuE6ZR9w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ocN22QT41s8hQozUcLVrsUclRCJz4bu7BSQ565y0GnHrGIOtJgHrsMtEy3UgTTYbM
+	 7yKuLxh20uW90GJnYrESyvMr3eXHv4SbtaG/NQOiX3AEZfVk0n/2Vwm24WBLHS8S/t
+	 FNLJ0FIFdVklJ7bzoKzMzFxRJ9EVrPzG+W8gap/s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732278AbfHFI3N (ORCPT
+        id S1732295AbfHFI3R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 6 Aug 2019 04:29:17 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55794 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728056AbfHFI3N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 6 Aug 2019 04:29:13 -0400
-Received: from gateway36.websitewelcome.com ([192.185.195.25]:30405 "EHLO
-        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726713AbfHFI3I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 04:29:08 -0400
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway36.websitewelcome.com (Postfix) with ESMTP id 115B4400C7A51
-        for <linux-kernel@vger.kernel.org>; Tue,  6 Aug 2019 02:53:40 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id uuqBh1jbk2qH7uuqBh2e7S; Tue, 06 Aug 2019 03:29:07 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=WVAi0vZcLPXALGm+zh7ti9JDHwAnJCM0op5bLb/Mk3w=; b=VSLzJXXT7nHuLGrQFBFMGdZgZ3
-        xcmZmZegT8ArbZCoOmm8NDGWYi27CDkR2icGD+btZlUoFGtTwFvUX1YTfnPjHkj7QDlbTRN6LQzIK
-        wxmb4DRV0M2rXmLDSpAbkTsL5wCioyrbqeJrBkF0HYNeyxZbqc8wet05waMxiHzkz7XcCKnoTDeuQ
-        19rAesSQ7qHGIOc9ivqKc5YJFzJ1JUEmy9GTEVxVwXPRR3K5Il/vLm24Nhdz82ruP3RrvgmxxkVqG
-        VshRsgW1jXGJNBbGaPPOruhIIKATwSlxrh3vcXio44JisZmK5xJwLtVqoOMNltXXCFViF6HHcCpoC
-        txBRGWvw==;
-Received: from [187.192.11.120] (port=44456 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1huuq9-000v9N-Fr; Tue, 06 Aug 2019 03:29:05 -0500
-Date:   Tue, 6 Aug 2019 03:29:02 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Russell King <linux@armlinux.org.uk>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] scsi: fas216: Mark expected switch fall-throughs
-Message-ID: <20190806082902.GA11122@embeddedor>
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 9C99FAF1D;
+        Tue,  6 Aug 2019 08:29:10 +0000 (UTC)
+Date:   Tue, 6 Aug 2019 10:29:07 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     syzbot <syzbot+8e6326965378936537c3@syzkaller.appspotmail.com>,
+        akpm@linux-foundation.org, chris@chrisdown.name, chris@zankel.net,
+        dancol@google.com, dave.hansen@intel.com, hannes@cmpxchg.org,
+        hdanton@sina.com, james.bottomley@hansenpartnership.com,
+        kirill.shutemov@linux.intel.com, ktkhai@virtuozzo.com,
+        laoar.shao@gmail.com, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, mgorman@techsingularity.net,
+        oleksandr@redhat.com, ralf@linux-mips.org, rth@twiddle.net,
+        sfr@canb.auug.org.au, shakeelb@google.com, sonnyrao@google.com,
+        surenb@google.com, syzkaller-bugs@googlegroups.com,
+        timmurray@google.com, yang.shi@linux.alibaba.com
+Subject: Re: kernel BUG at mm/vmscan.c:LINE! (2)
+Message-ID: <20190806082907.GI11812@dhcp22.suse.cz>
+References: <000000000000a9694d058f261963@google.com>
+ <20190802200643.GA181880@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.192.11.120
-X-Source-L: No
-X-Exim-ID: 1huuq9-000v9N-Fr
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [187.192.11.120]:44456
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 11
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <20190802200643.GA181880@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mark switch cases where we are expecting to fall through.
+On Sat 03-08-19 05:06:43, Minchan Kim wrote:
+> On Fri, Aug 02, 2019 at 10:58:05AM -0700, syzbot wrote:
+> > Hello,
+> > 
+> > syzbot found the following crash on:
+> > 
+> > HEAD commit:    0d8b3265 Add linux-next specific files for 20190729
+> > git tree:       linux-next
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=1663c7d0600000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=ae96f3b8a7e885f7
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=8e6326965378936537c3
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=133c437c600000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15645854600000
+> > 
+> > The bug was bisected to:
+> > 
+> > commit 06a833a1167e9cbb43a9a4317ec24585c6ec85cb
+> > Author: Minchan Kim <minchan@kernel.org>
+> > Date:   Sat Jul 27 05:12:38 2019 +0000
+> > 
+> >     mm: introduce MADV_PAGEOUT
+> > 
+> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1545f764600000
+> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=1745f764600000
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=1345f764600000
+> > 
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+8e6326965378936537c3@syzkaller.appspotmail.com
+> > Fixes: 06a833a1167e ("mm: introduce MADV_PAGEOUT")
+> > 
+> > raw: 01fffc0000090025 dead000000000100 dead000000000122 ffff88809c49f741
+> > raw: 0000000000020000 0000000000000000 00000002ffffffff ffff88821b6eaac0
+> > page dumped because: VM_BUG_ON_PAGE(PageActive(page))
+> > page->mem_cgroup:ffff88821b6eaac0
+> > ------------[ cut here ]------------
+> > kernel BUG at mm/vmscan.c:1156!
+> > invalid opcode: 0000 [#1] PREEMPT SMP KASAN
+> > CPU: 1 PID: 9846 Comm: syz-executor110 Not tainted 5.3.0-rc2-next-20190729
+> > #54
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > Google 01/01/2011
+> > RIP: 0010:shrink_page_list+0x2872/0x5430 mm/vmscan.c:1156
+> 
+> My old version had PG_active flag clear but it seems to lose it with revising
+> patchsets. Thanks, Sizbot!
+> 
+> >From 66d64988619ef7e86b0002b2fc20fdf5b84ad49c Mon Sep 17 00:00:00 2001
+> From: Minchan Kim <minchan@kernel.org>
+> Date: Sat, 3 Aug 2019 04:54:02 +0900
+> Subject: [PATCH] mm: Clear PG_active on MADV_PAGEOUT
+> 
+> shrink_page_list expects every pages as argument should be no active
+> LRU pages so we need to clear PG_active.
 
-Fix the following warnings (Building: rpc_defconfig arm):
+Ups, missed that during review.
 
-drivers/scsi/arm/fas216.c: In function ‘fas216_disconnect_intr’:
-drivers/scsi/arm/fas216.c:913:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   if (fas216_get_last_msg(info, info->scsi.msgin_fifo) == ABORT) {
-      ^
-drivers/scsi/arm/fas216.c:919:2: note: here
-  default:    /* huh?     */
-  ^~~~~~~
-drivers/scsi/arm/fas216.c: In function ‘fas216_kick’:
-drivers/scsi/arm/fas216.c:1959:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   fas216_allocate_tag(info, SCpnt);
-   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/scsi/arm/fas216.c:1960:2: note: here
-  case TYPE_OTHER:
-  ^~~~
-drivers/scsi/arm/fas216.c: In function ‘fas216_busservice_intr’:
-drivers/scsi/arm/fas216.c:1413:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   fas216_stoptransfer(info);
-   ^~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/scsi/arm/fas216.c:1414:2: note: here
-  case STATE(STAT_STATUS, PHASE_SELSTEPS):/* Sel w/ steps -> Status       */
-  ^~~~
-drivers/scsi/arm/fas216.c:1424:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   fas216_stoptransfer(info);
-   ^~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/scsi/arm/fas216.c:1425:2: note: here
-  case STATE(STAT_MESGIN, PHASE_COMMAND): /* Command -> Message In */
-  ^~~~
-drivers/scsi/arm/fas216.c: In function ‘fas216_funcdone_intr’:
-drivers/scsi/arm/fas216.c:1573:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   if ((stat & STAT_BUSMASK) == STAT_MESGIN) {
-      ^
-drivers/scsi/arm/fas216.c:1579:2: note: here
-  default:
-  ^~~~~~~
-drivers/scsi/arm/fas216.c: In function ‘fas216_handlesync’:
-drivers/scsi/arm/fas216.c:605:20: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   info->scsi.phase = PHASE_MSGOUT_EXPECT;
-   ~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~
-drivers/scsi/arm/fas216.c:607:2: note: here
-  case async:
-  ^~~~
+> 
+> Reported-by: syzbot+8e6326965378936537c3@syzkaller.appspotmail.com
+> Fixes: 06a833a1167e ("mm: introduce MADV_PAGEOUT")
 
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/scsi/arm/fas216.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+This is not a valid sha1 because it likely comes from linux-next. I
+guess Andrew will squash it into mm-introduce-madv_pageout.patch
 
-diff --git a/drivers/scsi/arm/fas216.c b/drivers/scsi/arm/fas216.c
-index aea4fd73c862..6c68c2303638 100644
---- a/drivers/scsi/arm/fas216.c
-+++ b/drivers/scsi/arm/fas216.c
-@@ -603,6 +603,7 @@ static void fas216_handlesync(FAS216_Info *info, char *msg)
- 		msgqueue_flush(&info->scsi.msgs);
- 		msgqueue_addmsg(&info->scsi.msgs, 1, MESSAGE_REJECT);
- 		info->scsi.phase = PHASE_MSGOUT_EXPECT;
-+		/* fall through */
- 
- 	case async:
- 		dev->period = info->ifcfg.asyncperiod / 4;
-@@ -915,6 +916,7 @@ static void fas216_disconnect_intr(FAS216_Info *info)
- 			fas216_done(info, DID_ABORT);
- 			break;
- 		}
-+		/* else, fall through */
- 
- 	default:				/* huh?					*/
- 		printk(KERN_ERR "scsi%d.%c: unexpected disconnect in phase %s\n",
-@@ -1411,6 +1413,8 @@ static void fas216_busservice_intr(FAS216_Info *info, unsigned int stat, unsigne
- 	case STATE(STAT_STATUS, PHASE_DATAOUT): /* Data Out     -> Status       */
- 	case STATE(STAT_STATUS, PHASE_DATAIN):  /* Data In      -> Status       */
- 		fas216_stoptransfer(info);
-+		/* fall through */
-+
- 	case STATE(STAT_STATUS, PHASE_SELSTEPS):/* Sel w/ steps -> Status       */
- 	case STATE(STAT_STATUS, PHASE_MSGOUT):  /* Message Out  -> Status       */
- 	case STATE(STAT_STATUS, PHASE_COMMAND): /* Command      -> Status       */
-@@ -1422,6 +1426,8 @@ static void fas216_busservice_intr(FAS216_Info *info, unsigned int stat, unsigne
- 	case STATE(STAT_MESGIN, PHASE_DATAOUT): /* Data Out     -> Message In   */
- 	case STATE(STAT_MESGIN, PHASE_DATAIN):  /* Data In      -> Message In   */
- 		fas216_stoptransfer(info);
-+		/* fall through */
-+
- 	case STATE(STAT_MESGIN, PHASE_COMMAND):	/* Command	-> Message In	*/
- 	case STATE(STAT_MESGIN, PHASE_SELSTEPS):/* Sel w/ steps -> Message In   */
- 	case STATE(STAT_MESGIN, PHASE_MSGOUT):  /* Message Out  -> Message In   */
-@@ -1575,6 +1581,7 @@ static void fas216_funcdone_intr(FAS216_Info *info, unsigned int stat, unsigned
- 			fas216_message(info);
- 			break;
- 		}
-+		/* else, fall through */
- 
- 	default:
- 		fas216_log(info, 0, "internal phase %s for function done?"
-@@ -1957,6 +1964,7 @@ static void fas216_kick(FAS216_Info *info)
- 	switch (where_from) {
- 	case TYPE_QUEUE:
- 		fas216_allocate_tag(info, SCpnt);
-+		/* fall through */
- 	case TYPE_OTHER:
- 		fas216_start_command(info, SCpnt);
- 		break;
+Just for the record
+Acked-by: Michal Hocko <mhocko@suse.com>
+
+And thanks for syzkaller to exercise the new interface so quickly!
+
+> Signed-off-by: Minchan Kim <minchan@kernel.org>
+> ---
+>  mm/vmscan.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index 47aa2158cfac2..e2a8d3f5bbe48 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -2181,6 +2181,7 @@ unsigned long reclaim_pages(struct list_head *page_list)
+>  		}
+>  
+>  		if (nid == page_to_nid(page)) {
+> +			ClearPageActive(page);
+>  			list_move(&page->lru, &node_page_list);
+>  			continue;
+>  		}
+> -- 
+> 2.22.0.770.g0f2c4a37fd-goog
+
 -- 
-2.22.0
-
+Michal Hocko
+SUSE Labs
