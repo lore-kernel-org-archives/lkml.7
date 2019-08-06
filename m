@@ -2,162 +2,97 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E499C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A365AC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 702352070C
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:00:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f3hrVj8Z"
+	by mail.kernel.org (Postfix) with ESMTP id 7A83821743
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:01:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565078479;
+	bh=WXvtMO6UZCwNOFHSyUuDfZy5/bYB9El1apxJuXfBWrw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=wPk2e81lU+gr76gEi1OnZ7873TsRXuv7S3Ul+MShdefFYFTzswXdiCNwWgZ4Z/mUX
+	 sxaLbXaLbOYwHadURcgZZaK86y8T4lxlJ1buxDqo17dEPgRGCHVJGdCSra38JU3FM4
+	 9qXzHO6TLxh0kaY6hCoFrDBdTlmLCq9aTo0FAYMs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732242AbfHFIAp (ORCPT
+        id S1732250AbfHFIBS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 04:00:45 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:37509 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728975AbfHFIAo (ORCPT
+        Tue, 6 Aug 2019 04:01:18 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:45759 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727259AbfHFIBS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 04:00:44 -0400
-Received: by mail-pg1-f196.google.com with SMTP id d1so8335155pgp.4
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 01:00:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=VPlLXY0wXzdcZsw+gwjQql0L/1vV4IXahw59/Pbnezs=;
-        b=f3hrVj8ZgSrkyz6mbiTGMtbGJs5//kmK0LanZLxVWpezH8VpgJt8y1ox4rbd5P+7Xu
-         rzgSCTmtRAEF7TnsRnCMRtWtnaxg/idNjkjI98rTH/vcVoKdlRfMtcn+GTAVn9u5nrbY
-         /kXvVE+IL6jIN3PrJOjEjy2+1PFE9ioV7h3oak9qXBxVb3sVGREH58rI+mP/pBGg9T1W
-         dSGuAXe3gUK4/mKwGZhLSa6+q0H8YIiD5gO4WY1k9Liar/mnk7rLB2o2y49Q6Ee68fry
-         dmqFLhb6R1cXymhQ7T2tOsaMakcuCNSQbzfwW8Unea6HJvVUNiD4Iic21I5EDOenle3t
-         h1/A==
+        Tue, 6 Aug 2019 04:01:18 -0400
+Received: by mail-ot1-f66.google.com with SMTP id x21so24815258otq.12;
+        Tue, 06 Aug 2019 01:01:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=VPlLXY0wXzdcZsw+gwjQql0L/1vV4IXahw59/Pbnezs=;
-        b=CqjHP7SptOimi6dplMpNcVLQ0qczt5wThIPhZ6sk44Xd/uL82TygFX4X8J1QcHTmGh
-         Exita/KCAknCIBzqWfukYtCgOrvKgrYDLTy9/OilYxQoRnF0ocILVv3MQ/8PdMIehT/p
-         77XHf2xajQ7k/pL4I+IJ0VEj5wdCVIypeSzrZUAUo0B4H2czpODpYbJl0tvMYez052vo
-         oCX0M/kyFKM561S3f4cE9dc94jfuVCDW6khsw6AIj4b1M7PVUfucEfXCkNRiapwWyvXM
-         z6EZxl3ccP8cPo5fz6FRGAuyAAIhAaN973DEDDXiRgZFoLr5JaRFhgav7/8cs6ZzXvoB
-         iOiQ==
-X-Gm-Message-State: APjAAAXyYQi18BJM/J3LLKHRyUwBM+Ws0REBykWnZStbTRSe4djf+E8U
-        WTuYHN8YZOUnJ/g0woIFmw==
-X-Google-Smtp-Source: APXvYqyiwHAHgTc4msK2mvodCQr/+/YaQdZ92NMfmgPYPCboKZknrpOFM/qqY3qhKWJuKDfTi9GXsQ==
-X-Received: by 2002:a62:5c47:: with SMTP id q68mr2350903pfb.205.1565078444317;
-        Tue, 06 Aug 2019 01:00:44 -0700 (PDT)
-Received: from mylaptop.redhat.com ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id p7sm96840679pfp.131.2019.08.06.01.00.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 06 Aug 2019 01:00:43 -0700 (PDT)
-From:   Pingfan Liu <kernelfans@gmail.com>
-To:     linux-mm@kvack.org
-Cc:     Pingfan Liu <kernelfans@gmail.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Jan Kara <jack@suse.cz>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] mm/migrate: remove the duplicated code migrate_vma_collect_hole()
-Date:   Tue,  6 Aug 2019 16:00:11 +0800
-Message-Id: <1565078411-27082-3-git-send-email-kernelfans@gmail.com>
-X-Mailer: git-send-email 2.7.5
-In-Reply-To: <1565078411-27082-1-git-send-email-kernelfans@gmail.com>
-References: <1565078411-27082-1-git-send-email-kernelfans@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zUs0xIhgTH6wwFy+pIi473fY3cNI70KH0eyUmBXIqyE=;
+        b=hP8bMCfWQVwlcM70vKGu2JyEvNDXeZJQRciBJNJrLwRQ1mdtdKPz6jVTmmc8G+7lu+
+         0YWu+RGe5Fk+pF7SZlK4bQjLghJsSOYKlj5FMZwQkZ75m0mQPRX7cbiIgz6tNEp3ICd9
+         nX1i2/jQv5Ijnh/AMDuBYQ7zjLOdlgNWNQsbs5380b0rOOsVuLf8Zz6u1ujGZyxfe/QD
+         eiJCkwp/rJTO7mIOnLUcqxCZ67lOcA9Ze2ktcIGQd6hqRQ/AoEvIkmbjKGlnKBqQTbuL
+         ABiB96muXABEgh6ANtCSey0R1XljjY5IzzYJ8Rq+ibE/Es/q3ScCRxnGDcztrNnOcYwV
+         dSBA==
+X-Gm-Message-State: APjAAAVpyVaDnKRQa9AanlVgzfj1eS/9ssd6Ri4yEh72QxJSXFDSfv6U
+        Q8Gi7KyD6nMbVNte2uVW44MMB2XFUVKH8QksvQQ=
+X-Google-Smtp-Source: APXvYqywCxq1EnPd1Un9O/Ra9WUoJF8y5q5e6rNxxbDtgntcVTWejmBx8iAPavHTpNCItROyJW0urUxcpUKxGieVl4A=
+X-Received: by 2002:a9d:6b96:: with SMTP id b22mr2075090otq.262.1565078476888;
+ Tue, 06 Aug 2019 01:01:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <cover.1563862014.git.viresh.kumar@linaro.org> <86dc4a082ea00c278c0e1d7f3fcbdc4ab9af2eec.1563862014.git.viresh.kumar@linaro.org>
+ <1782403.O7LH3UnqfR@kreacher> <20190806043904.dbpon4qf3mfsm4vz@vireshk-i7>
+In-Reply-To: <20190806043904.dbpon4qf3mfsm4vz@vireshk-i7>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 6 Aug 2019 10:01:05 +0200
+Message-ID: <CAJZ5v0iqwc4mvqHoTHwoNS-T1zueS07S2e-1STEsKhFhoOh0dA@mail.gmail.com>
+Subject: Re: [PATCH V2 05/10] ACPI: cpufreq: Switch to QoS requests instead of
+ cpufreq notifier
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Schmauss <erik.schmauss@intel.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After the previous patch which sees hole as invalid source,
-migrate_vma_collect_hole() has the same code as migrate_vma_collect_skip().
-Removing the duplicated code.
+On Tue, Aug 6, 2019 at 6:39 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 05-08-19, 11:42, Rafael J. Wysocki wrote:
+> > On Tuesday, July 23, 2019 8:14:05 AM CEST Viresh Kumar wrote:
+> > > @@ -310,8 +339,11 @@ static int __init acpi_processor_driver_init(void)
+> > >     cpuhp_setup_state_nocalls(CPUHP_ACPI_CPUDRV_DEAD, "acpi/cpu-drv:dead",
+> > >                               NULL, acpi_soft_cpu_dead);
+> > >
+> > > -   acpi_thermal_cpufreq_init();
+> > > -   acpi_processor_ppc_init();
+> > > +   if (!cpufreq_register_notifier(&acpi_processor_notifier_block,
+> > > +                                  CPUFREQ_POLICY_NOTIFIER)) {
+> > > +           acpi_processor_cpufreq_init = true;
+> >
+> > Can't that be set/cleared by acpi_processor_notifier() itself?
+>
+> This is required to be done only once at initialization and setting it
+> to true again and again on every invocation of the notifier callback
+> doesn't look right.
+>
+> I have updated the patch based on rest of your suggestions, please see
+> if it looks okay now.
 
-Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-Cc: "Jérôme Glisse" <jglisse@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: Jan Kara <jack@suse.cz>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Mike Kravetz <mike.kravetz@oracle.com>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-To: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org
----
- mm/migrate.c | 22 +++-------------------
- 1 file changed, 3 insertions(+), 19 deletions(-)
+Yes, it does, thanks!
 
-diff --git a/mm/migrate.c b/mm/migrate.c
-index 832483f..95e038d 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -2128,22 +2128,6 @@ struct migrate_vma {
- 	unsigned long		end;
- };
- 
--static int migrate_vma_collect_hole(unsigned long start,
--				    unsigned long end,
--				    struct mm_walk *walk)
--{
--	struct migrate_vma *migrate = walk->private;
--	unsigned long addr;
--
--	for (addr = start & PAGE_MASK; addr < end; addr += PAGE_SIZE) {
--		migrate->src[migrate->npages] = 0;
--		migrate->dst[migrate->npages] = 0;
--		migrate->npages++;
--	}
--
--	return 0;
--}
--
- static int migrate_vma_collect_skip(unsigned long start,
- 				    unsigned long end,
- 				    struct mm_walk *walk)
-@@ -2173,7 +2157,7 @@ static int migrate_vma_collect_pmd(pmd_t *pmdp,
- 
- again:
- 	if (pmd_none(*pmdp))
--		return migrate_vma_collect_hole(start, end, walk);
-+		return migrate_vma_collect_skip(start, end, walk);
- 
- 	if (pmd_trans_huge(*pmdp)) {
- 		struct page *page;
-@@ -2206,7 +2190,7 @@ static int migrate_vma_collect_pmd(pmd_t *pmdp,
- 				return migrate_vma_collect_skip(start, end,
- 								walk);
- 			if (pmd_none(*pmdp))
--				return migrate_vma_collect_hole(start, end,
-+				return migrate_vma_collect_skip(start, end,
- 								walk);
- 		}
- 	}
-@@ -2337,7 +2321,7 @@ static void migrate_vma_collect(struct migrate_vma *migrate)
- 
- 	mm_walk.pmd_entry = migrate_vma_collect_pmd;
- 	mm_walk.pte_entry = NULL;
--	mm_walk.pte_hole = migrate_vma_collect_hole;
-+	mm_walk.pte_hole = migrate_vma_collect_skip;
- 	mm_walk.hugetlb_entry = NULL;
- 	mm_walk.test_walk = NULL;
- 	mm_walk.vma = migrate->vma;
--- 
-2.7.5
-
+[No need to resend, I'll take it from this message.]
