@@ -2,93 +2,140 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84670C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F4A0C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:34:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A5F82089E
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:31:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eU6JjZPN"
+	by mail.kernel.org (Postfix) with ESMTP id 561DB2089E
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:34:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732995AbfHFOby (ORCPT
+        id S1732895AbfHFOeK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 10:31:54 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:45243 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728756AbfHFOby (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 10:31:54 -0400
-Received: by mail-oi1-f194.google.com with SMTP id m206so66880322oib.12;
-        Tue, 06 Aug 2019 07:31:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=mRsJuqvbI6SyoD25uf83ShcXx0a/DNaI7q9ymEAEVyc=;
-        b=eU6JjZPN1qTreBUTPlh7utNRgqNJcNAfmsqAMjcaVswhhVuAN6s/UGkd+x5kwUoD9h
-         UlbiZXKMyloARs+IKU5gcXgSiICSh2w3SB3LALeyOWlha27iqcqvxxyujOhkOTsqJa83
-         DBj1be/Qd/EP4lj51ZqZ+OC/lAfT1URgVGIsNXGsntOyd1kbVQ9AyRR9jiXWHKIn7DYv
-         UaIqX/MuXROM+O1qRCcVgMh+ULM2Ffx+rGUNBL5kNcucBOTu8XORiOHd/A+k+YosfAQ0
-         vtBoGn81r2iB34cYZ6MpF34C9Ul+JlXqYmSsqzqq6QUHCR1qEf5UpRtI52225CVpq7N8
-         OjiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=mRsJuqvbI6SyoD25uf83ShcXx0a/DNaI7q9ymEAEVyc=;
-        b=H3X/F79nnMfB7PY+Mg/m2oUzmq+/+H9GkjLpDyoBWS5S4FRYpzM8nWaEZAvNtkqlhe
-         SPDaMqqQMnP+Z7jxtb+ISLYlJxb0wbX5pozk6H2zhrO8JGg+FYXhb3JNA7GH3ATZM441
-         7agOSVy/WZ4uZuITgvkeJM/voGKjYUQCiz32aSP/hnl4cXTiNc4mLB+EiKY36hgwQhfq
-         JdyWSUeDMMGhNz8ra3no/gQHjAWs5AEJjfj8c3W4EKjKPQD57Kit6XtbHiE6bm6xmrFR
-         SO/UY0hkasgqdZcjgE2rDVwoDfZcvE9ftRlVxvlWj/15LWHp9K4vfvs0oUo0ECdFvKi0
-         AbXQ==
-X-Gm-Message-State: APjAAAWltDbi7VTjj09A9Tvt7pMQGRMxhPiqC8eccjwD7l4+I0QZnN9a
-        1ODZXLEXq726/rc5rq9G/JTOPJGPuYxANdVqBxJJ9t4=
-X-Google-Smtp-Source: APXvYqzfN5wxo8W3llD9Sh1nlweb/1gOpvvOG7t5gCQ4mAbIK8hvP+7dFRao/uXZoKHdgajaZrhWCLZhA99OmSMBg40=
-X-Received: by 2002:aca:dd04:: with SMTP id u4mr1154017oig.152.1565101912904;
- Tue, 06 Aug 2019 07:31:52 -0700 (PDT)
+        Tue, 6 Aug 2019 10:34:10 -0400
+Received: from mga14.intel.com ([192.55.52.115]:8709 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728756AbfHFOeJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 10:34:09 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 07:34:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,353,1559545200"; 
+   d="scan'208";a="185665611"
+Received: from um.fi.intel.com (HELO localhost) ([10.237.72.183])
+  by orsmga002.jf.intel.com with ESMTP; 06 Aug 2019 07:34:07 -0700
+From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@infradead.org>,
+        adrian.hunter@intel.com
+Cc:     Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf record: Add an option to take an AUX snapshot on exit
+In-Reply-To: <20170511131943.23850-1-alexander.shishkin@linux.intel.com>
+References: <20170511131943.23850-1-alexander.shishkin@linux.intel.com>
+Date:   Tue, 06 Aug 2019 17:34:06 +0300
+Message-ID: <87o9122wip.fsf@ashishki-desk.ger.corp.intel.com>
 MIME-Version: 1.0
-From:   =?UTF-8?B?6rOg7KSA?= <gojun077@gmail.com>
-Date:   Tue, 6 Aug 2019 23:31:41 +0900
-Message-ID: <CAH040W7fdd-ND4-QG3DwGpFAPTMGB4zzuXYohMdfoSejV6XE_Q@mail.gmail.com>
-Subject: Realtek r8822be wireless card fails to work with new rtw88 kernel module
-To:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Alexander Shishkin <alexander.shishkin@linux.intel.com> writes:
 
-I recently reported a bug to Ubuntu regarding a regression in wireless
-driver support for the Realtek r8822be wireless chipset. The issue
-link on launchpad is:
-
-https://bugs.launchpad.net/bugs/1838133
-
-After Canonical developers triaged the bug they determined that the
-problem lies upstream, and instructed me to send mails to the relevant
-kernel module maintainers at Realtek and to the general kernel.org
-mailing list.
-
-I built kernel 5.3.0-rc1+ with the latest realtek drivers from
-wireless-drivers-next but my Realtek r8822be doesn't work with
-rtw88/rtwpci kernel modules.
-
-Please let me know if there is any additional information I can
-provide that would help in debugging this issue.
-
-Best regards,
-Jun
-
-
-Link to GPG Public Key:
-https://keybase.io/gojun077#show-public
-
-Backup link:
-https://keys.openpgp.org/vks/v1/by-fingerprint/79F173A93EB3623D32F86309A56930CF7235138D
+> It is sometimes useful to generate a snapshot when perf record exits;
+> I've been using a wrapper script around the workload that would do a
+> killall -USR2 perf when the workload exits.
+>
+> This patch makes it easier and also works when perf record is attached
+> to a pre-existing task. A new snapshot option 'e' can be specified in
+> -S to enable this behavior:
+>
+> root@elsewhere:~# perf record -e intel_pt// -Se sleep 1
+> [ perf record: Woken up 2 times to write data ]
+> [ perf record: Captured and wrote 0.085 MB perf.data ]
+>
+> Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> ---
+>  tools/perf/Documentation/perf-record.txt | 11 ++++++++---
+>  tools/perf/builtin-record.c              |  4 ++++
+>  tools/perf/perf.h                        |  1 +
+>  tools/perf/util/auxtrace.c               | 10 ++++++++++
+>  4 files changed, 23 insertions(+), 3 deletions(-)
+>
+> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+> index ea3789d05e..164ffce680 100644
+> --- a/tools/perf/Documentation/perf-record.txt
+> +++ b/tools/perf/Documentation/perf-record.txt
+> @@ -387,9 +387,14 @@ CLOCK_BOOTTIME, CLOCK_REALTIME and CLOCK_TAI.
+>  -S::
+>  --snapshot::
+>  Select AUX area tracing Snapshot Mode. This option is valid only with an
+> -AUX area tracing event. Optionally the number of bytes to capture per
+> -snapshot can be specified. In Snapshot Mode, trace data is captured only when
+> -signal SIGUSR2 is received.
+> +AUX area tracing event. Optionally, certain snapshot capturing parameters
+> +can be specified in a string that follows this option:
+> +  'e': take one last snapshot on exit; guarantees that there is at least one
+> +       snapshot in the output file;
+> +  <size>: if the PMU supports this, specify the desired snapshot size.
+> +
+> +In Snapshot Mode trace data is captured only when signal SIGUSR2 is received
+> +and on exit if the above 'e' option is given.
+>  
+>  --proc-map-timeout::
+>  When processing pre-existing threads /proc/XXX/mmap, it may take a long time,
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index 70340ff200..42d1b7aeee 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -1136,6 +1136,10 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+>  			disabled = true;
+>  		}
+>  	}
+> +
+> +	if (opts->auxtrace_snapshot_on_exit)
+> +		record__read_auxtrace_snapshot(rec);
+> +
+>  	trigger_off(&auxtrace_snapshot_trigger);
+>  	trigger_off(&switch_output_trigger);
+>  
+> diff --git a/tools/perf/perf.h b/tools/perf/perf.h
+> index 806c216a10..b79c57485b 100644
+> --- a/tools/perf/perf.h
+> +++ b/tools/perf/perf.h
+> @@ -50,6 +50,7 @@ struct record_opts {
+>  	bool	     running_time;
+>  	bool	     full_auxtrace;
+>  	bool	     auxtrace_snapshot_mode;
+> +	bool	     auxtrace_snapshot_on_exit;
+>  	bool	     record_namespaces;
+>  	bool	     record_switch_events;
+>  	bool	     all_kernel;
+> diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+> index 0daf63b9ee..25ad4445b0 100644
+> --- a/tools/perf/util/auxtrace.c
+> +++ b/tools/perf/util/auxtrace.c
+> @@ -564,6 +564,16 @@ int auxtrace_parse_snapshot_options(struct auxtrace_record *itr,
+>  	if (!str)
+>  		return 0;
+>  
+> +	/* PMU-agnostic options */
+> +	switch (*str) {
+> +	case 'e':
+> +		opts->auxtrace_snapshot_on_exit = true;
+> +		str++;
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +
+>  	if (itr)
+>  		return itr->parse_snapshot_options(itr, opts, str);
+>  
+> -- 
+> 2.11.0
