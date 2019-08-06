@@ -2,126 +2,84 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF0EBC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:04:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6372C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:06:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FACE20651
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:04:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9182520C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:06:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TE+gQkru"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eIIvEQvb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387577AbfHFQEF (ORCPT
+        id S2387550AbfHFQGB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 12:04:05 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41230 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728927AbfHFQEF (ORCPT
+        Tue, 6 Aug 2019 12:06:01 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:43562 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728927AbfHFQGB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 12:04:05 -0400
-Received: by mail-pf1-f196.google.com with SMTP id m30so41754953pff.8;
-        Tue, 06 Aug 2019 09:04:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=NFpfgZSca4f/il0m1rKI2O4H3v5HdUMXHwHA02nA/gw=;
-        b=TE+gQkruCFbNMB/Bu4p0yuUTFx9lKVSAGgQBrtYD6EGsG0av5zdwsHkYq1Sp1GIvtM
-         rlzGKiG3YM34heVySo0vYaGr2yyGdDIQ7PogfTxA2MvF8azUoXigPq+H+HidWl+wWWFy
-         IS7251UWjAF6tbeVDkz4TsGuQoTfdb5xZn+imMLYwvUFcDYkUlcYJdekV90RUDbLS8ey
-         yg9BOjgq3V201eosTOS30qplWsJFoMpdp/cPlXIrWER76kLP14a/gJhDsLkRQhqojDzO
-         Ju/gdexcQHujRtqJ/RCpeyUknxZO/nnrBf5O+BsUOvdtkfBI033CqT5w1xmcfpV+mUIR
-         JJpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NFpfgZSca4f/il0m1rKI2O4H3v5HdUMXHwHA02nA/gw=;
-        b=qjYRWpvE+2/tDqRnGLAqUd7DbFVwQX1kAQD/2UY8HJy8NImOK4V5EnRvjzY8qisfg0
-         YEfjOM9LtuTIk9aC/b9KtRO0Zj3X2KmPMWyMeBfZuhT5vPYDI0Ss3Ttkp9jtkzNp7AWD
-         UZl+G5zbHWVtLW1VaDvEoY4DZOG3HGCebGw0R5vHlI1wq3YKHGNwx0YKoQWG3rsOGtlQ
-         mUUzeawoJpR+40pWhNRNbDgYYN/Xws9h6tI2acrFH36uXsi52FSgkAZqati6+I8B2mV7
-         lSh83yCUoR9I1auV1LuN2w2uffZxWn+1XUt2pruG/enAqpH2AEbPB06hEU0f83E6zMOz
-         6t9Q==
-X-Gm-Message-State: APjAAAW86wk0WGL5+LUmr7FITl6lQZmDeSIFerg01TcaRid+tGjxuUDU
-        xa7JGmupP+dM2iAoX6KxdkU=
-X-Google-Smtp-Source: APXvYqzY19DJR7nKb84UZdsM6H3VktbfteX5pl3p78jNZcz9qG+RZxohnFHnZ7lhZbaKQnQn8Y0+gA==
-X-Received: by 2002:a63:b904:: with SMTP id z4mr3605353pge.388.1565107443803;
-        Tue, 06 Aug 2019 09:04:03 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id o24sm162749731pfp.135.2019.08.06.09.04.02
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 06 Aug 2019 09:04:03 -0700 (PDT)
-Date:   Tue, 6 Aug 2019 09:04:00 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Input: applespi - use struct_size() helper
-Message-ID: <20190806160400.GC178933@dtor-ws>
-References: <20190806000638.GA4827@embeddedor>
+        Tue, 6 Aug 2019 12:06:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=5MxxtDMNs1Lvn21R+Aqvcobycge3qF/vKSqdu5UNw7E=; b=eIIvEQvbf6HxKp4vB8rYWilc1
+        Y+u02rLmHHgGDQ0BTiNLEYHLedfAofs5F3rHecD7klB5qWZyLsUVZ6dxMkLS2pAWxn04GZTAsbBO/
+        ouTJ85EOwF/aluMfxLMuqi+nHzvOBHhK79wk9TKTlzEO/ORS3GGMIcaDAA5aQ/dikzACu9/rM2gl6
+        pdRKvVBCY0KTPXd1q47Fs+imhFbAzx721LUs3CqY+31uYX516XCJ473j9veaAi1jB50nfgfna6Gf6
+        LLlbHAeFh+Cb66JQz5UcvMUc+Bju9mEnnjbibagKSd8OEOzKmC4fRTXUeOQC3Q/7CRnpMm8MDH+Ro
+        R8ayd9OvQ==;
+Received: from [195.167.85.94] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hv1yG-0000Ve-2p; Tue, 06 Aug 2019 16:05:56 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>
+Cc:     Ralph Campbell <rcampbell@nvidia.com>, linux-mm@kvack.org,
+        nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: hmm cleanups, v2
+Date:   Tue,  6 Aug 2019 19:05:38 +0300
+Message-Id: <20190806160554.14046-1-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190806000638.GA4827@embeddedor>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 05, 2019 at 07:06:38PM -0500, Gustavo A. R. Silva wrote:
-> One of the more common cases of allocation size calculations is finding
-> the size of a structure that has a zero-sized array at the end, along
-> with memory for some number of elements for that array. For example:
-> 
-> struct touchpad_protocol {
-> 	...
->         struct tp_finger        fingers[0];
-> };
-> 
-> Make use of the struct_size() helper instead of an open-coded version
-> in order to avoid any potential type mistakes.
-> 
-> So, replace the following form:
-> 
-> sizeof(*tp) + tp->number_of_fingers * sizeof(tp->fingers[0]);
-> 
-> with:
-> 
-> struct_size(tp, fingers, tp->number_of_fingers)
-> 
-> This code was detected with the help of Coccinelle.
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-Applied, thank you.
+Hi Jérôme, Ben, Felix and Jason,
 
-> ---
->  drivers/input/keyboard/applespi.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/input/keyboard/applespi.c b/drivers/input/keyboard/applespi.c
-> index acf34a5ff571..584289b67fb3 100644
-> --- a/drivers/input/keyboard/applespi.c
-> +++ b/drivers/input/keyboard/applespi.c
-> @@ -1494,8 +1494,7 @@ static void applespi_got_data(struct applespi_data *applespi)
->  		size_t tp_len;
->  
->  		tp = &message->touchpad;
-> -		tp_len = sizeof(*tp) +
-> -			 tp->number_of_fingers * sizeof(tp->fingers[0]);
-> +		tp_len = struct_size(tp, fingers, tp->number_of_fingers);
->  
->  		if (le16_to_cpu(message->length) + 2 != tp_len) {
->  			dev_warn_ratelimited(&applespi->spi->dev,
-> -- 
-> 2.22.0
-> 
+below is a series against the hmm tree which cleans up various minor
+bits and allows HMM_MIRROR to be built on all architectures.
 
--- 
-Dmitry
+Diffstat:
+
+    11 files changed, 94 insertions(+), 210 deletions(-)
+
+A git tree is also available at:
+
+    git://git.infradead.org/users/hch/misc.git hmm-cleanups.2
+
+Gitweb:
+
+    http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/hmm-cleanups.2
+
+Changes since v1:
+ - fix the cover letter subject
+ - improve various patch descriptions
+ - use svmm->mm in nouveau_range_fault
+ - inverse the hmask field when using it
+ - select HMM_MIRROR instead of making it a user visible option
