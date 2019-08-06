@@ -2,154 +2,316 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7DE3C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 00:35:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A6D3C0650F
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 00:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 860E1208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 00:35:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fq19oDdB"
+	by mail.kernel.org (Postfix) with ESMTP id 03603216B7
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 00:37:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565051874;
+	bh=sbaxTE7kYFCFGs3ifzk0BZVFtKFrLdqe3vyYh0wqMBU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wk8h1uvRW4kSD+gfQbN0NMhwy64TQNEfUpXzjFL/03Wglhuc389sV61tcf0iMtM5w
+	 EC6ch8PIZJ9uZ0aLY+GO7l7jOl/AFW5ZzUVrPvQfqUNrzq9LJ5LtEKVscDvP3wPe3g
+	 vxHHrPY3HNCACorID9bC/+yFpZI20AXuSfieTLdg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731155AbfHFAf5 (ORCPT
+        id S1731171AbfHFAhw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 20:35:57 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:46554 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728870AbfHFAf5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 20:35:57 -0400
-Received: by mail-ot1-f67.google.com with SMTP id z23so59945506ote.13;
-        Mon, 05 Aug 2019 17:35:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Z9NTvWBCg6Eq31qvrM6xnHz2Uar1qkqJe1rdCMMJAYQ=;
-        b=fq19oDdB3Z+CqaxXIcSgiosGBMsWrfwO45aYTJuV2pCNYTAO3zsqv4DE1WVvNCBowR
-         G1qsu9Kgd9o6qQ5oBZpRkNvtTYCDbRpsUIz3yxRG3lAhyPRPhAKH6dw1V7IzoCoJ4Rrt
-         EenmaWr6VfMtlVQNfAUrnB9My/kVt8yBc3+3wENQS1vISf1sroE30SCgcavTa4MruFRU
-         InUFQkRlzs/hffNkIdXss8JMNaFXVad9XjJf3tvzWN1d9D8pWlIKO3ZNpryC3zxNqQT6
-         qcNF6JHHQttGFAzfD2eNCPeO5DFvnmz5j9jUOvYbHoCG1rez+kars4rT91/sxyw4BHM3
-         hejQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Z9NTvWBCg6Eq31qvrM6xnHz2Uar1qkqJe1rdCMMJAYQ=;
-        b=SefCVXwwlWU3JnJ8NxZTYAq8GgG+bdUre1iuZYMxJq1URGOlaXllcU/D0W387/CjjN
-         1zC3h3o6aF4eNUWGblGEusyknQudLIkLvDli6GHACvhYjMDlrsjYcAZKlfy4bMWNM9Fe
-         Xf4fCGQodkkIG4AYerUTKF9KMeuo/4bR3mq3pJivlO5XOB4Tb8zK/fny4lfyo+NvzEk1
-         fd9cHMUeb+gqOzejot694W+LKeJYe48hlbWj9hD9vNrET/G7SwXPO8wgF60plnH0Rtsa
-         NHzjSclk3EAXTKXCLrKz1u1kSGK0I/0hfwk6gXveC3nMWdMLBg9x1P+uxSEz5BwahGYG
-         OVRQ==
-X-Gm-Message-State: APjAAAUnIFFwsm44dnlo6+iyq8xmX37jTE5OCd+xl/MjVs4tfgeoAvb9
-        YHX97ZtBNhHN9m8Hz+mcsCdKVCno55IS2/RXw1WmzQ==
-X-Google-Smtp-Source: APXvYqyVm6G9MWttRZ2MuXzLawro8vn5XN33ftVOxoe3go0cI6eGaCe95KJzUOtKGkK/1d9w4yxvpdef/zIeI+eSuHw=
-X-Received: by 2002:a9d:62c4:: with SMTP id z4mr594082otk.56.1565051755954;
- Mon, 05 Aug 2019 17:35:55 -0700 (PDT)
+        Mon, 5 Aug 2019 20:37:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55380 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728870AbfHFAhw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 20:37:52 -0400
+Received: from localhost (unknown [104.132.0.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88D332147A;
+        Tue,  6 Aug 2019 00:37:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565051870;
+        bh=sbaxTE7kYFCFGs3ifzk0BZVFtKFrLdqe3vyYh0wqMBU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ScwRm8hYp7YQfd8Ar9IxfsD1IvTjjwbM9jdo1Kd4SoDa8WR86nXNa01XPZU3REWWy
+         wvgcV2VQ+AR7KTnMyIVtNtSIv5ux4o6nw94lUm18wR6u88fn6RXCw85FNO/Ohe7xFP
+         waJwBcl7zjIbk+x0JP69cudAjwY/VbY5Nq3Xko2w=
+Date:   Mon, 5 Aug 2019 17:37:49 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, chao@kernel.org
+Subject: Re: [PATCH v2] f2fs: separate NOCoW and pinfile semantics
+Message-ID: <20190806003749.GB98101@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20190723023640.GC60778@jaegeuk-macbookpro.roam.corp.google.com>
+ <d4d064a2-2b3c-3536-6488-39e7cfdb1ea4@huawei.com>
+ <20190729055738.GA95664@jaegeuk-macbookpro.roam.corp.google.com>
+ <07cd3aba-3516-9ba5-286e-277abb98e244@huawei.com>
+ <20190730180231.GB76478@jaegeuk-macbookpro.roam.corp.google.com>
+ <00e70eb1-c4fa-a6c9-69d7-71ff995c7d6c@huawei.com>
+ <20190801041435.GB84433@jaegeuk-macbookpro.roam.corp.google.com>
+ <d35d5ad7-5622-fbf5-5853-e541f8c26670@huawei.com>
+ <20190801222746.GA27597@jaegeuk-macbookpro.roam.corp.google.com>
+ <5d566fce-4412-65b2-e9d9-279b648f7551@huawei.com>
 MIME-Version: 1.0
-References: <1564970604-10044-1-git-send-email-wanpengli@tencent.com> <9acbc733-442f-0f65-9b56-ff800a3fa0f5@redhat.com>
-In-Reply-To: <9acbc733-442f-0f65-9b56-ff800a3fa0f5@redhat.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Tue, 6 Aug 2019 08:35:44 +0800
-Message-ID: <CANRm+CwH54S555nw-Zik-3NFDH9yqe+SOZrGc3mPoAU_qGxP-A@mail.gmail.com>
-Subject: Re: [PATCH v4 1/6] KVM: Fix leak vCPU's VMCS value into other pCPU
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Marc Zyngier <Marc.Zyngier@arm.com>,
-        "# v3 . 10+" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5d566fce-4412-65b2-e9d9-279b648f7551@huawei.com>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 6 Aug 2019 at 07:17, Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 05/08/19 04:03, Wanpeng Li wrote:
-> > From: Wanpeng Li <wanpengli@tencent.com>
-> >
-> > After commit d73eb57b80b (KVM: Boost vCPUs that are delivering interrup=
-ts), a
-> > five years old bug is exposed. Running ebizzy benchmark in three 80 vCP=
-Us VMs
-> > on one 80 pCPUs Skylake server, a lot of rcu_sched stall warning splatt=
-ing
-> > in the VMs after stress testing:
-> >
-> >  INFO: rcu_sched detected stalls on CPUs/tasks: { 4 41 57 62 77} (detec=
-ted by 15, t=3D60004 jiffies, g=3D899, c=3D898, q=3D15073)
-> >  Call Trace:
-> >    flush_tlb_mm_range+0x68/0x140
-> >    tlb_flush_mmu.part.75+0x37/0xe0
-> >    tlb_finish_mmu+0x55/0x60
-> >    zap_page_range+0x142/0x190
-> >    SyS_madvise+0x3cd/0x9c0
-> >    system_call_fastpath+0x1c/0x21
-> >
-> > swait_active() sustains to be true before finish_swait() is called in
-> > kvm_vcpu_block(), voluntarily preempted vCPUs are taken into account
-> > by kvm_vcpu_on_spin() loop greatly increases the probability condition
-> > kvm_arch_vcpu_runnable(vcpu) is checked and can be true, when APICv
-> > is enabled the yield-candidate vCPU's VMCS RVI field leaks(by
-> > vmx_sync_pir_to_irr()) into spinning-on-a-taken-lock vCPU's current
-> > VMCS.
-> >
-> > This patch fixes it by checking conservatively a subset of events.
-> >
-> > Cc: Paolo Bonzini <pbonzini@redhat.com>
-> > Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
-> > Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-> > Cc: Marc Zyngier <Marc.Zyngier@arm.com>
-> > Cc: stable@vger.kernel.org
-> > Fixes: 98f4a1467 (KVM: add kvm_arch_vcpu_runnable() test to kvm_vcpu_on=
-_spin() loop)
-> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> > ---
-> > v3 -> v4:
-> >  * just test KVM_REQ_*
-> >  * rename the hook to apicv_has_pending_interrupt
-> >  * wrap with #ifdef CONFIG_KVM_ASYNC_PF
-> > v2 -> v3:
-> >  * check conservatively a subset of events
-> > v1 -> v2:
-> >  * checking swait_active(&vcpu->wq) for involuntary preemption
-> >
-> >  arch/mips/kvm/mips.c            |  5 +++++
-> >  arch/powerpc/kvm/powerpc.c      |  5 +++++
-> >  arch/s390/kvm/kvm-s390.c        |  5 +++++
-> >  arch/x86/include/asm/kvm_host.h |  1 +
-> >  arch/x86/kvm/svm.c              |  6 ++++++
-> >  arch/x86/kvm/vmx/vmx.c          |  6 ++++++
-> >  arch/x86/kvm/x86.c              | 16 ++++++++++++++++
-> >  include/linux/kvm_host.h        |  1 +
-> >  virt/kvm/arm/arm.c              |  5 +++++
-> >  virt/kvm/kvm_main.c             | 16 +++++++++++++++-
-> >  10 files changed, 65 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/mips/kvm/mips.c b/arch/mips/kvm/mips.c
-> > index 2cfe839..95a4642 100644
-> > --- a/arch/mips/kvm/mips.c
-> > +++ b/arch/mips/kvm/mips.c
-> > @@ -98,6 +98,11 @@ int kvm_arch_vcpu_runnable(struct kvm_vcpu *vcpu)
-> >       return !!(vcpu->arch.pending_exceptions);
-> >  }
-> >
-> > +bool kvm_arch_dy_runnable(struct kvm_vcpu *vcpu)
->
-> Using a __weak definition for the default implementation is a bit more
-> concise.  Queued with that change.
+On 08/02, Chao Yu wrote:
+> On 2019/8/2 6:27, Jaegeuk Kim wrote:
+> > On 08/01, Chao Yu wrote:
+> >> On 2019/8/1 12:14, Jaegeuk Kim wrote:
+> >>> On 07/31, Chao Yu wrote:
+> >>>> On 2019/7/31 2:02, Jaegeuk Kim wrote:
+> >>>>> On 07/29, Chao Yu wrote:
+> >>>>>> On 2019/7/29 13:57, Jaegeuk Kim wrote:
+> >>>>>>> On 07/23, Chao Yu wrote:
+> >>>>>>>> On 2019/7/23 10:36, Jaegeuk Kim wrote:
+> >>>>>>>>> On 07/19, Chao Yu wrote:
+> >>>>>>>>>> Pinning a file is heavy, because skipping pinned files make GC
+> >>>>>>>>>> running with heavy load or no effect.
+> >>>>>>>>>
+> >>>>>>>>> Pinned file is a part of NOCOW files, so I don't think we can simply drop it
+> >>>>>>>>> for backward compatibility.
+> >>>>>>>>
+> >>>>>>>> Yes,
+> >>>>>>>>
+> >>>>>>>> But what I concerned is that pin file is too heavy, so in order to satisfy below
+> >>>>>>>> demand, how about introducing pin_file_2 flag to triggering IPU only during
+> >>>>>>>> flush/writeback.
+> >>>>>>>
+> >>>>>>> That can be done by cold files?
+> >>>>>>
+> >>>>>> Then it may inherit property of cold type file, e.g. a) goes into cold area; b)
+> >>>>>> update with very low frequency.
+> >>>>>>
+> >>>>>> Actually pin_file_2 could be used by db-wal/log file, which are updated
+> >>>>>> frequently, and should go to hot/warm area, it does not match above two property.
+> >>>>>
+> >>>>> How about considering another name like "IPU-only mode"?
+> >>>>>
+> >>>>>               fallocate         write    Flag         GC
+> >>>>> Pin_file:     preallocate       IPU      FS_NOCOW_FL  Not allowed
+> >>>>> IPU_file:     Not preallocate   IPU      N/A          Default by temperature
+> >>>>
+> >>>> One question, do we need preallocate physical block address for IPU_file as
+> >>>> Pin_file? since it can enhance db file's sequential read performance, not sure,
+> >>>> db can handle random data in preallocated blocks.
+> >>>
+> >>> db file will do atomic writes, which can not be used with this. -wal may be able
+> >>
+> >> Now WAL mode were set by default in Android, so most of db file are -wal type now.
+> > 
+> > Will be back again tho.
+> 
+> R?
 
-Thank you, Paolo! Btw, how about other 5 patches?
+Q.
 
-Regards,
-Wanpeng Li
+> 
+> > 
+> >>
+> >>> to preallocate blocks, but it can eat disk space unnecessarily.
+> >>
+> >> I meant .db-wal file rather than .db.
+> >>
+> >> Yes, that's ext4 style, that would bring better performance due to less holes in
+> >> block distribution.
+> >>
+> >> I don't think we need to worry about space issue for db-wal file. I tracked
+> >> .db-wal file's update before:
+> >> - there are very frequently truncation and deletion, that means the preallocated
+> >> blocks won't exist for long time.
+> >> - and also there are very frequently append writes, I suspect there almost very
+> >> few preallocate block are not written.
+> >> - total db-wal file number is less.
+> > 
+> > Sometimes it can be large enough for system.
+> 
+> For this, it's trade off:
+> - lose a few disk space at the very begin of db-wal lifecycle Or
+> - face fragment and read performance degradation.
+> 
+> > If it's from user apps and short lived, why do we need preallocation?
+> 
+> It triggers sequential read on db-wal file during checkpoint, though it's short
+> lived, still it can affect performance.
+> 
+> What do you think of doing some performance test on WAL file to decide the
+> preallocation policy?
+
+Good idea. Can we?
+
+> 
+> Thanks,
+> 
+> > 
+> >>
+> >>>
+> >>>>
+> >>>> Other behaviors looks good to me. :)
+> >>>>
+> >>>> I plan to use last bit in inode.i_inline to store this flag.
+> >>>
+> >>> Why not using i_flag like FS_NOCOW_FL?
+> >>
+> >> Oops, as you listed in last email, I can see you don't want to break
+> >> FS_NOCOW_FL's semantics for backward compatibility.
+> >>
+> >> 			Flag
+> >> IPU_file		N/A			
+> >>
+> >> If we plan to use FS_NOCOW_FL, that's what this patch has already did, you can
+> >> merge it directly... :P
+> >>
+> >>>
+> >>>>
+> >>>>> Cold_file:    Not preallocate   IPU      N/A          Move in cold area
+> >>>>> Hot_file:     Not preallocate   IPU/OPU  N/A          Move in hot area
+> >>>>
+> >>>> Should hot file be gced to hot area? That would mix new hot data with old 'hot'
+> >>>> data which actually become cold.
+> >>>
+> >>> But, user explicitly specified this is hot.
+> >>
+> >> With current implementation, GC will migrate data from hot/warm/cold area to
+> >> cold area.
+> >>
+> >> Thanks,
+> >>
+> >>>
+> >>>>
+> >>>> Thanks,
+> >>>>
+> >>>>>
+> >>>>>>
+> >>>>>> Thank,
+> >>>>>>
+> >>>>>>>
+> >>>>>>>>
+> >>>>>>>>>
+> >>>>>>>>>>
+> >>>>>>>>>> So that this patch propose to separate nocow and pinfile semantics:
+> >>>>>>>>>> - NOCoW flag can only be set on regular file.
+> >>>>>>>>>> - NOCoW file will only trigger IPU at common writeback/flush.
+> >>>>>>>>>> - NOCow file will do OPU during GC.
+> >>>>>>>>>>
+> >>>>>>>>>> For the demand of 1) avoid fragment of file's physical block and
+> >>>>>>>>>> 2) userspace don't care about file's specific physical address,
+> >>>>>>>>>> tagging file as NOCoW will be cheaper than pinned one.
+> >>>>>>>>
+> >>>>>>>> ^^^
+> >>>>>>>>
+> >>>>>>>> Thanks,
+> >>>>>>>>
+> >>>>>>>>>>
+> >>>>>>>>>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> >>>>>>>>>> ---
+> >>>>>>>>>> v2:
+> >>>>>>>>>> - rebase code to fix compile error.
+> >>>>>>>>>>  fs/f2fs/data.c |  3 ++-
+> >>>>>>>>>>  fs/f2fs/f2fs.h |  1 +
+> >>>>>>>>>>  fs/f2fs/file.c | 22 +++++++++++++++++++---
+> >>>>>>>>>>  3 files changed, 22 insertions(+), 4 deletions(-)
+> >>>>>>>>>>
+> >>>>>>>>>> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+> >>>>>>>>>> index a2a28bb269bf..15fb8954c363 100644
+> >>>>>>>>>> --- a/fs/f2fs/data.c
+> >>>>>>>>>> +++ b/fs/f2fs/data.c
+> >>>>>>>>>> @@ -1884,7 +1884,8 @@ static inline bool check_inplace_update_policy(struct inode *inode,
+> >>>>>>>>>>  
+> >>>>>>>>>>  bool f2fs_should_update_inplace(struct inode *inode, struct f2fs_io_info *fio)
+> >>>>>>>>>>  {
+> >>>>>>>>>> -	if (f2fs_is_pinned_file(inode))
+> >>>>>>>>>> +	if (f2fs_is_pinned_file(inode) ||
+> >>>>>>>>>> +			F2FS_I(inode)->i_flags & F2FS_NOCOW_FL)
+> >>>>>>>>>>  		return true;
+> >>>>>>>>>>  
+> >>>>>>>>>>  	/* if this is cold file, we should overwrite to avoid fragmentation */
+> >>>>>>>>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> >>>>>>>>>> index 596ab3e1dd7b..f6c5a3d2e659 100644
+> >>>>>>>>>> --- a/fs/f2fs/f2fs.h
+> >>>>>>>>>> +++ b/fs/f2fs/f2fs.h
+> >>>>>>>>>> @@ -2374,6 +2374,7 @@ static inline void f2fs_change_bit(unsigned int nr, char *addr)
+> >>>>>>>>>>  #define F2FS_NOATIME_FL			0x00000080 /* do not update atime */
+> >>>>>>>>>>  #define F2FS_INDEX_FL			0x00001000 /* hash-indexed directory */
+> >>>>>>>>>>  #define F2FS_DIRSYNC_FL			0x00010000 /* dirsync behaviour (directories only) */
+> >>>>>>>>>> +#define F2FS_NOCOW_FL			0x00800000 /* Do not cow file */
+> >>>>>>>>>>  #define F2FS_PROJINHERIT_FL		0x20000000 /* Create with parents projid */
+> >>>>>>>>>>  
+> >>>>>>>>>>  /* Flags that should be inherited by new inodes from their parent. */
+> >>>>>>>>>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> >>>>>>>>>> index 7ca545874060..ae0fec54cac6 100644
+> >>>>>>>>>> --- a/fs/f2fs/file.c
+> >>>>>>>>>> +++ b/fs/f2fs/file.c
+> >>>>>>>>>> @@ -1692,6 +1692,7 @@ static const struct {
+> >>>>>>>>>>  	{ F2FS_NOATIME_FL,	FS_NOATIME_FL },
+> >>>>>>>>>>  	{ F2FS_INDEX_FL,	FS_INDEX_FL },
+> >>>>>>>>>>  	{ F2FS_DIRSYNC_FL,	FS_DIRSYNC_FL },
+> >>>>>>>>>> +	{ F2FS_NOCOW_FL,	FS_NOCOW_FL },
+> >>>>>>>>>>  	{ F2FS_PROJINHERIT_FL,	FS_PROJINHERIT_FL },
+> >>>>>>>>>>  };
+> >>>>>>>>>>  
+> >>>>>>>>>> @@ -1715,7 +1716,8 @@ static const struct {
+> >>>>>>>>>>  		FS_NODUMP_FL |		\
+> >>>>>>>>>>  		FS_NOATIME_FL |		\
+> >>>>>>>>>>  		FS_DIRSYNC_FL |		\
+> >>>>>>>>>> -		FS_PROJINHERIT_FL)
+> >>>>>>>>>> +		FS_PROJINHERIT_FL |	\
+> >>>>>>>>>> +		FS_NOCOW_FL)
+> >>>>>>>>>>  
+> >>>>>>>>>>  /* Convert f2fs on-disk i_flags to FS_IOC_{GET,SET}FLAGS flags */
+> >>>>>>>>>>  static inline u32 f2fs_iflags_to_fsflags(u32 iflags)
+> >>>>>>>>>> @@ -1753,8 +1755,6 @@ static int f2fs_ioc_getflags(struct file *filp, unsigned long arg)
+> >>>>>>>>>>  		fsflags |= FS_ENCRYPT_FL;
+> >>>>>>>>>>  	if (f2fs_has_inline_data(inode) || f2fs_has_inline_dentry(inode))
+> >>>>>>>>>>  		fsflags |= FS_INLINE_DATA_FL;
+> >>>>>>>>>> -	if (is_inode_flag_set(inode, FI_PIN_FILE))
+> >>>>>>>>>> -		fsflags |= FS_NOCOW_FL;
+> >>>>>>>>>>  
+> >>>>>>>>>>  	fsflags &= F2FS_GETTABLE_FS_FL;
+> >>>>>>>>>>  
+> >>>>>>>>>> @@ -1794,6 +1794,22 @@ static int f2fs_ioc_setflags(struct file *filp, unsigned long arg)
+> >>>>>>>>>>  	if (ret)
+> >>>>>>>>>>  		goto out;
+> >>>>>>>>>>  
+> >>>>>>>>>> +	if ((fsflags ^ old_fsflags) & FS_NOCOW_FL) {
+> >>>>>>>>>> +		if (!S_ISREG(inode->i_mode)) {
+> >>>>>>>>>> +			ret = -EINVAL;
+> >>>>>>>>>> +			goto out;
+> >>>>>>>>>> +		}
+> >>>>>>>>>> +
+> >>>>>>>>>> +		if (f2fs_should_update_outplace(inode, NULL)) {
+> >>>>>>>>>> +			ret = -EINVAL;
+> >>>>>>>>>> +			goto out;
+> >>>>>>>>>> +		}
+> >>>>>>>>>> +
+> >>>>>>>>>> +		ret = f2fs_convert_inline_inode(inode);
+> >>>>>>>>>> +		if (ret)
+> >>>>>>>>>> +			goto out;
+> >>>>>>>>>> +	}
+> >>>>>>>>>> +
+> >>>>>>>>>>  	ret = f2fs_setflags_common(inode, iflags,
+> >>>>>>>>>>  			f2fs_fsflags_to_iflags(F2FS_SETTABLE_FS_FL));
+> >>>>>>>>>>  out:
+> >>>>>>>>>> -- 
+> >>>>>>>>>> 2.18.0.rc1
+> >>>>>>>>> .
+> >>>>>>>>>
+> >>>>>>> .
+> >>>>>>>
+> >>>>> .
+> >>>>>
+> >>> .
+> >>>
+> > .
+> > 
