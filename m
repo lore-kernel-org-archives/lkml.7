@@ -3,145 +3,115 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9822C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:49:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A28E0C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96B68208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:49:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74C97208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:50:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732672AbfHFNtz (ORCPT
+        id S1732350AbfHFNuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 09:49:55 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:44544 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728189AbfHFNtz (ORCPT
+        Tue, 6 Aug 2019 09:50:16 -0400
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:47657 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726713AbfHFNuQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 09:49:55 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1huzqa-0004Tf-Tq; Tue, 06 Aug 2019 13:49:52 +0000
-Subject: Re: btrfs: qgroup: Try our best to delete qgroup relations (bug
- report)
-From:   Colin Ian King <colin.king@canonical.com>
-To:     Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        linux-btrfs@vger.kernel.org
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <ea7f88e7-108e-ad2a-232f-b18715607bf3@canonical.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <ca0946de-5343-aaf9-10f2-007e341cb8a4@canonical.com>
-Date:   Tue, 6 Aug 2019 14:49:52 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 6 Aug 2019 09:50:16 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R251e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=aaron.lu@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0TYpJ7Gd_1565099397;
+Received: from aaronlu(mailfrom:aaron.lu@linux.alibaba.com fp:SMTPD_---0TYpJ7Gd_1565099397)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 06 Aug 2019 21:50:02 +0800
+Date:   Tue, 6 Aug 2019 21:49:57 +0800
+From:   Aaron Lu <aaron.lu@linux.alibaba.com>
+To:     Vineeth Remanan Pillai <vpillai@digitalocean.com>
+Cc:     Aubrey Li <aubrey.intel@gmail.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        "Li, Aubrey" <aubrey.li@linux.intel.com>,
+        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
+Message-ID: <20190806134949.GA46757@aaronlu>
+References: <CAERHkrtvLKxrpvfw04urAuougsYOWnNw4-H1vUDFx27Dvy0=Ww@mail.gmail.com>
+ <20190725143003.GA992@aaronlu>
+ <20190726152101.GA27884@sinkpad>
+ <7dc86e3c-aa3f-905f-3745-01181a3b0dac@linux.intel.com>
+ <20190802153715.GA18075@sinkpad>
+ <f4778816-69e5-146c-2a30-ec42e7f1677f@linux.intel.com>
+ <20190806032418.GA54717@aaronlu>
+ <CAERHkrtJ3f1ggfG7Qo-KnznGo66p0Y3E0sAfb3ki6U=ADT6__g@mail.gmail.com>
+ <54fa27ff-69a7-b2ac-6152-6915f78a57f9@linux.alibaba.com>
+ <CANaguZDPdUp3Nb7hYjEiTpJTMVrKJyw2JDKP5EEphMjV-PAYpA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <ea7f88e7-108e-ad2a-232f-b18715607bf3@canonical.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANaguZDPdUp3Nb7hYjEiTpJTMVrKJyw2JDKP5EEphMjV-PAYpA@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/08/2019 14:48, Colin Ian King wrote:
-> Hi,
+On Tue, Aug 06, 2019 at 08:24:17AM -0400, Vineeth Remanan Pillai wrote:
+> > >
+> > > I also think a way to make fairness per cookie per core, is this what you
+> > > want to propose?
+> >
+> > Yes, that's what I meant.
 > 
-> Static analysis with Coverity on linux-next picked up a potential issue
-> with the following commit:
-> 
-> commit 035087b3c256741be367747eab866505cece31fb
-> Author: Qu Wenruo <wqu@suse.com>
-> Date:   Sat Aug 3 14:45:59 2019 +0800
-> 
->     btrfs: qgroup: Try our best to delete qgroup relations
-> 
-> The static analysis report is as follows:
-> 
-> 1334         */
-> 
->     3. Condition !member, taking true branch.
->     4. var_compare_op: Comparing member to null implies that member
-> might be null.
->     5. Condition !parent, taking false branch.
-> 
-> 1335        if (!member && !parent)
-> 1336                goto delete_item;
-> 1337
-> 1338        /* check if such qgroup relation exist firstly */
-> 
-> 
-> CID 85026 (#1 of 1): Dereference after null check (FORWARD_NULL)
-> 
-> 6. var_deref_op: Dereferencing null pointer member.
-> 
-> 1339        list_for_each_entry(list, &member->groups, next_group) {
-> 1340                if (list->group == parent) {
-> 1341                        found = true;
-> 1342                        break;
-> 1343                }
-> 1344        }
-> 
-> An example of the issue that if member is NULL and parent is not null
-> then  the list_for_each_entry loop with dereference the NULL member
-> pointer.  The changed logic in the patch on line 1335 is the root cause
-> of this regression.  I believe it should still be:
-> 
-> 	if (!member && !parent)
-> 		goto delete_item;
+> I think that would hurt some kind of workloads badly, especially if
+> one tenant is
+> having way more tasks than the other. Tenant with more task on the same core
+> might have immediate requirements from some threads than the other and we
+> would fail to take that into account. With some hierarchical management, we can
+> alleviate this, but as Aaron said, it would be a bit messy.
 
-oops, I mean:
+I think tenant will have per core weight, similar to sched entity's per
+cpu weight. The tenant's per core weight could derive from its
+corresponding taskgroup's per cpu sched entities' weight(sum them up
+perhaps). Tenant with higher weight will have its core wide vruntime
+advance slower than tenant with lower weight. Does this address the
+issue here?
 
-	if (!member || !parent)
-		goto delete_item;
+> Peter's rebalance logic actually takes care of most of the runq
+> imbalance caused
+> due to cookie tagging. What we have found from our testing is, fairness issue is
+> caused mostly due to a Hyperthread going idle and not waking up. Aaron's 3rd
+> patch works around that. As Julien mentioned, we are working on a per thread
+> coresched idle thread concept. The problem that we found was, idle thread causes
+> accounting issues and wakeup issues as it was not designed to be used in this
+> context. So if we can have a low priority thread which looks like any other task
+> to the scheduler, things becomes easy for the scheduler and we achieve security
+> as well. Please share your thoughts on this idea.
 
+Care to elaborate the idea of coresched idle thread concept?
+How it solved the hyperthread going idle problem and what the accounting
+issues and wakeup issues are, etc.
+
+Thanks,
+Aaron
+
+> The results are encouraging, but we do not yet have the coresched idle
+> to not spin
+> 100%. We will soon post the patch once it is a bit more stable for
+> running the tests
+> that we all have done so far.
 > 
-> Colin
-> 
-
+> Thanks,
+> Vineeth
