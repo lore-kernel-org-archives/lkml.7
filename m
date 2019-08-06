@@ -2,93 +2,101 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 332D4C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:25:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDAB3C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:26:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1233C2086D
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:25:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C20272086D
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:26:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZBV4oHn5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387776AbfHFQZq (ORCPT
+        id S2387785AbfHFQ02 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 12:25:46 -0400
-Received: from foss.arm.com ([217.140.110.172]:36310 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728927AbfHFQZq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 12:25:46 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D9793344;
-        Tue,  6 Aug 2019 09:25:45 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id F15AB3F575;
-        Tue,  6 Aug 2019 09:25:44 -0700 (PDT)
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Gary R Hook <gary.hook@amd.com>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH] lib: remove redundant ftrace flag removal
-Date:   Tue,  6 Aug 2019 17:25:39 +0100
-Message-Id: <20190806162539.51918-1-mark.rutland@arm.com>
-X-Mailer: git-send-email 2.11.0
+        Tue, 6 Aug 2019 12:26:28 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:32860 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730265AbfHFQ02 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 12:26:28 -0400
+Received: by mail-vs1-f66.google.com with SMTP id m8so58777388vsj.0
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 09:26:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1l5ZrHi0Yk9YrLdE/QA8qgrMQVeapVUN6J/JOSvAOYc=;
+        b=ZBV4oHn5MVJP82WyuT5P3kIh8PCv/GK73DVyI6Q+Iv7zO1Oco9bjpqilJ0cmyPPxx/
+         PZMs4cf0csx7Sl3GioHm6+yiGvHAhZ54V/qtkc1PvY2NmjcsMJpXwSDLN30Ta2x8aDis
+         vyln7ihg3bJ76am6PXKXDohQCkHRmyewx7KMQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1l5ZrHi0Yk9YrLdE/QA8qgrMQVeapVUN6J/JOSvAOYc=;
+        b=eRklOF+2uzCfSc+odUqGwuJmFxtjs7zqG+W4pi/buaJohQKG30pp6ufAWErQLkTo35
+         mX0Z6nvXYp2Ujy4/gI5/Tk4mkcwtLMB4LL3A4H8AJyiVMcInShOXoaCHW1wP6kpaf1BW
+         mcfSW/6F4tAcshq6BkCIsyM8NOqA+CGQjF7rGLohPw11d9P7mmC2ZDVN7QwInk02B+zD
+         SmeMMcc8QslgOtzIgI8Jtqkz4jf1fnL68nJlKGXAVMUBv9a2xQlFYqTwwN4SOcfDyAd8
+         N9fdNEBu9yBCkfc2wz5dS9B0bGDeXdqifcRO+lEYuDZciWq55/m2lWA8ldnlvFbCGlZJ
+         V0oQ==
+X-Gm-Message-State: APjAAAUwCyEbj+rMcC1I8qGFEo0JK0TEZZV7FZ6rgyIycp2xcAB0bRsl
+        rvDeryWyFjmrmPOlw4BR63TpD98uoAF6o6DAns8mog==
+X-Google-Smtp-Source: APXvYqwcAz9ahI3UjO9cuqIBc0I2yQDE+A8Mr2TXIaxm06KJMfs4AnTSSTTINyr+iiH0P6wDgJEqM8oppH2++ox+PQo=
+X-Received: by 2002:a67:ba12:: with SMTP id l18mr3017326vsn.29.1565108787535;
+ Tue, 06 Aug 2019 09:26:27 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190805211451.20176-1-robdclark@gmail.com> <20190806084821.GA17129@lst.de>
+ <CAJs_Fx6eh1w7c=crMoD5XyEOMzP6orLhqUewErE51cPGYmObBQ@mail.gmail.com>
+ <20190806155044.GC25050@lst.de> <CAJs_Fx6uztwDy2PqRy3Tc9p12k8r_ovS2tAcsMV6HqnAp=Ggug@mail.gmail.com>
+In-Reply-To: <CAJs_Fx6uztwDy2PqRy3Tc9p12k8r_ovS2tAcsMV6HqnAp=Ggug@mail.gmail.com>
+From:   Rob Clark <robdclark@chromium.org>
+Date:   Tue, 6 Aug 2019 09:26:16 -0700
+Message-ID: <CAJs_Fx4dUNKwd_U7wXMaedvTy6mORdmzL4mi-mGp1UnU_SVnzQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] drm: add cache support for arm64
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Rob Clark <robdclark@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since architectures can implement ftrace using a variety of mechanisms,
-generic code should always use CC_FLAGS_FTRACE rather than assuming that
-ftrace is built using -pg.
+On Tue, Aug 6, 2019 at 9:23 AM Rob Clark <robdclark@chromium.org> wrote:
+>
+> On Tue, Aug 6, 2019 at 8:50 AM Christoph Hellwig <hch@lst.de> wrote:
+> >
+> > On Tue, Aug 06, 2019 at 07:11:41AM -0700, Rob Clark wrote:
+> > > Agreed that drm_cflush_* isn't a great API.  In this particular case
+> > > (IIUC), I need wb+inv so that there aren't dirty cache lines that drop
+> > > out to memory later, and so that I don't get a cache hit on
+> > > uncached/wc mmap'ing.
+> >
+> > So what is the use case here?  Allocate pages using the page allocator
+> > (or CMA for that matter), and then mmaping them to userspace and never
+> > touching them again from the kernel?
+>
+> Currently, it is pages coming from tmpfs.  Ideally we want pages that
+> are swappable when unpinned.
 
-Since commit:
+to be more specific, pages come from
+shmem_file_setup()/shmem_read_mapping_page()
 
-  2464a609ded09420 ("ftrace: do not trace library functions")
-
-... lib/Makefile has removed CC_FLAGS_FTRACE from KBUILD_CFLAGS, so ftrace is
-disabled for all files under lib/.
-
-Given that, we shouldn't explicitly remove -pg when building
-lib/string.o, as this is redundant and bad form.
-
-This patch cleans things up accordingly.
-
-There should be no functional change as a result of this patch.
-
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Gary R Hook <gary.hook@amd.com>
-Cc: Ingo Molnar <mingo@kernel.org>
----
- lib/Makefile | 4 ----
- 1 file changed, 4 deletions(-)
-
-I've verified this atop of v5.3-rc3, where the Makefile removes all of
-CC_FLAGS_FTRACE (containing "-pg -mrecord-mcount -mfentry") from the CFLAGS for
-building string.o
-
-Mark.
-
-diff --git a/lib/Makefile b/lib/Makefile
-index 29c02a924973..c5892807e06f 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -21,10 +21,6 @@ KCOV_INSTRUMENT_dynamic_debug.o := n
- ifdef CONFIG_AMD_MEM_ENCRYPT
- KASAN_SANITIZE_string.o := n
- 
--ifdef CONFIG_FUNCTION_TRACER
--CFLAGS_REMOVE_string.o = -pg
--endif
--
- CFLAGS_string.o := $(call cc-option, -fno-stack-protector)
- endif
- 
--- 
-2.11.0
-
+BR,
+-R
