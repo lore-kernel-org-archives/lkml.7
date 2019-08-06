@@ -2,176 +2,233 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F5A7C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 07:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD4C5C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 07:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FED920665
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 07:24:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90FAD2086D
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 07:26:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HkHWeHbe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732022AbfHFHYc (ORCPT
+        id S1732021AbfHFH0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 03:24:32 -0400
-Received: from bmailout3.hostsharing.net ([176.9.242.62]:58399 "EHLO
-        bmailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731735AbfHFHYb (ORCPT
+        Tue, 6 Aug 2019 03:26:37 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:44387 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731557AbfHFH0g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 03:24:31 -0400
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout3.hostsharing.net (Postfix) with ESMTPS id A9E27101C06FB;
-        Tue,  6 Aug 2019 09:24:28 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 6ED1FCCB7; Tue,  6 Aug 2019 09:24:28 +0200 (CEST)
-Date:   Tue, 6 Aug 2019 09:24:28 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, yaohongbo@huawei.com,
-        guohanjun@huawei.com, huawei.libin@huawei.com
-Subject: Re: [RFC PATCH] pciehp: use completion to wait irq_thread
- 'pciehp_ist'
-Message-ID: <20190806072428.2v7k775tvvgkbloh@wunner.de>
-References: <1562226638-54134-1-git-send-email-wangxiongfeng2@huawei.com>
+        Tue, 6 Aug 2019 03:26:36 -0400
+Received: by mail-lf1-f68.google.com with SMTP id v16so6333968lfg.11
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 00:26:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=RwJqQDsRZ9AaLr/ekC9Gdx1vhurMfbMK5qMIFyjdmMY=;
+        b=HkHWeHbeFUjBWyDvZUKxfFH/WkeH9dkUS16Y5GRnBi91t54nMbVt/XorG/JXWA5jZJ
+         wv+hU6jBYyJN9xQ7qSqsopUw/vFHMrdRD1cLx4l91coySp/zMd/MnmN0UmtLRKykM0rF
+         YdIWhEyurVbfV+9tIpH9dpxK22vM77eZZuLl5biNjJKFM+VBPfS0/l3m6C0X6+1lLl1q
+         F+tHsOeqwfnFw3jv2GJ7FzfTfrIEcaNA4yEclC038TBckWjvRjK0bV2wdjey/rtobNnv
+         TmGR7hZ3tngqlGETH0zEKPgyNOJmDaUbn1CIdFR5E/QZMXgF/kaZ4CX78i0t40y3ak3B
+         KAcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=RwJqQDsRZ9AaLr/ekC9Gdx1vhurMfbMK5qMIFyjdmMY=;
+        b=PgQhOEsx3w/SjrqvWuFaC95wwlPZzgfpkvFovIjRbnbjSMyrTnByRk62hd+vZjdDGR
+         JzeNj4r9JTHWKrTPgWS6uzP9QQEXr1wPZeMULAKpIH4fAGeZpSUEoOFrdTarToPYLccg
+         S71m9zkh+Et/AsHzv28L67+X+j4HKz0wibwYFNT2lwBS7RQQRu63vc9/050x7piAaobn
+         EhaVdHXbyYZJREOz7v2YwbZAwwfdw9IJhJ6H1F+BHrC9pRZJ3rVzaQN4xT+blMxK8o/V
+         mocS9F7NP7YL3vMP63PpVV9soRQzC7ZSU5Y3TndmBf65H/u2qIcXaWV7MKT0mdMi/6H6
+         u6aw==
+X-Gm-Message-State: APjAAAVGkhECaBetvUFhoqUeqho4KeqtELKRND9CgPG/jyS7LCWQR1zo
+        V58vWBvPC7LYsaRhTQngsBrzKuIH/bSTYhLJ2dFZOQ==
+X-Google-Smtp-Source: APXvYqxNSUUlWAzx8oictpwRYd8Zg+c7SEIFsrenLoLlTH9vDkh63cTnmW1jbAgbNgPTEOHbkG3/J8Cj5I115SVc55U=
+X-Received: by 2002:a19:5f0f:: with SMTP id t15mr1409306lfb.67.1565076394740;
+ Tue, 06 Aug 2019 00:26:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1562226638-54134-1-git-send-email-wangxiongfeng2@huawei.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <20190805124918.070468681@linuxfoundation.org>
+In-Reply-To: <20190805124918.070468681@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 6 Aug 2019 12:56:23 +0530
+Message-ID: <CA+G9fYvhTQfV=gOVeqtNax9sgmRVUexWAwkBcorEG3PqShGXsw@mail.gmail.com>
+Subject: Re: [PATCH 4.4 00/22] 4.4.188-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 04, 2019 at 03:50:38PM +0800, Xiongfeng Wang wrote:
-> When I use the following command to power on a slot which has been
-> powered off already.
-> echo 1 > /sys/bus/pci/slots/22/power
-> It prints the following error:
-> -bash: echo: write error: No such device
-> But the slot is actually powered on and the devices is probed.
-> 
-> In function 'pciehp_sysfs_enable_slot()', we use 'wait_event()' to wait
-> until 'ctrl->pending_events' is cleared in 'pciehp_ist()'. But in some
-> situation, when 'pciehp_ist()' is woken up on a nearby CPU after
-> 'pciehp_request' is called, 'ctrl->pending_events' is cleared before we
-> go into sleep state. 'wait_event()' will check the condition before
-> going into sleep. So we return immediately and '-ENODEV' is return.
-> 
-> This patch use struct completion to wait until irq_thread 'pciehp_ist'
-> is completed.
+On Mon, 5 Aug 2019 at 18:34, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.4.188 release.
+> There are 22 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Wed 07 Aug 2019 12:47:58 PM UTC.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.4.188-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.4.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
 
-Thank you, good catch.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-Unfortunately your patch still allows the following race AFAICS:
+Summary
+------------------------------------------------------------------------
 
-* pciehp_ist() is running (e.g. due to a hotplug operation)
-* a request to disable or enable the slot is submitted via sysfs,
-  the completion is reinitialized
-* pciehp_ist() finishes, signals completion
-* the sysfs request returns to user space prematurely
-* pciehp_ist() is run, handles the sysfs request, signals completion again
+kernel: 4.4.188-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.4.y
+git commit: 462a4b2bd3bfaa6e11d1e8180bc95324efc96390
+git describe: v4.4.187-23-g462a4b2bd3bf
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.4-oe/bui=
+ld/v4.4.187-23-g462a4b2bd3bf
 
-I'd suggest something like the below instead, could you give it a whirl
-and see if it reliably fixes the issue for you?
 
--- >8 --
+No regressions (compared to build v4.4.187)
 
-Subject: [PATCH] PCI: pciehp: Avoid returning prematurely from sysfs requests
 
-A sysfs request to enable or disable a PCIe hotplug slot should not
-return before it has been carried out.  That is sought to be achieved
-by waiting until the controller's "pending_events" have been cleared.
+No fixes (compared to build v4.4.187)
 
-However the IRQ thread pciehp_ist() clears the "pending_events" before
-it acts on them.  If pciehp_sysfs_enable_slot() / _disable_slot() happen
-to check the "pending_events" after they have been cleared but while
-pciehp_ist() is still running, the functions may return prematurely
-with an incorrect return value.
+Ran 20069 total tests in the following environments and test suites.
 
-Fix by introducing an "ist_running" flag which must be false before a
-sysfs request is allowed to return.
+Environments
+--------------
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
 
-Fixes: 32a8cef274fe ("PCI: pciehp: Enable/disable exclusively from IRQ thread")
-Link: https://lore.kernel.org/linux-pci/1562226638-54134-1-git-send-email-wangxiongfeng2@huawei.com
-Reported-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Cc: stable@vger.kernel.org # v4.19+
----
- drivers/pci/hotplug/pciehp.h      | 2 ++
- drivers/pci/hotplug/pciehp_ctrl.c | 6 ++++--
- drivers/pci/hotplug/pciehp_hpc.c  | 2 ++
- 3 files changed, 8 insertions(+), 2 deletions(-)
+Test Suites
+-----------
+* build
+* kselftest
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-open-posix-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* network-basic-tests
+* perf
+* prep-tmp-disk
+* spectre-meltdown-checker-test
+* kvm-unit-tests
+* v4l2-compliance
+* install-android-platform-tools-r2600
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+* ssuite
 
-diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
-index 8c51a04b8083..e316bde45c7b 100644
---- a/drivers/pci/hotplug/pciehp.h
-+++ b/drivers/pci/hotplug/pciehp.h
-@@ -72,6 +72,7 @@ extern int pciehp_poll_time;
-  * @reset_lock: prevents access to the Data Link Layer Link Active bit in the
-  *	Link Status register and to the Presence Detect State bit in the Slot
-  *	Status register during a slot reset which may cause them to flap
-+ * @ist_running: flag to keep user request waiting while IRQ thread is running
-  * @request_result: result of last user request submitted to the IRQ thread
-  * @requester: wait queue to wake up on completion of user request,
-  *	used for synchronous slot enable/disable request via sysfs
-@@ -101,6 +102,7 @@ struct controller {
- 
- 	struct hotplug_slot hotplug_slot;	/* hotplug core interface */
- 	struct rw_semaphore reset_lock;
-+	unsigned int ist_running;
- 	int request_result;
- 	wait_queue_head_t requester;
- };
-diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
-index 631ced0ab28a..1ce9ce335291 100644
---- a/drivers/pci/hotplug/pciehp_ctrl.c
-+++ b/drivers/pci/hotplug/pciehp_ctrl.c
-@@ -368,7 +368,8 @@ int pciehp_sysfs_enable_slot(struct hotplug_slot *hotplug_slot)
- 		ctrl->request_result = -ENODEV;
- 		pciehp_request(ctrl, PCI_EXP_SLTSTA_PDC);
- 		wait_event(ctrl->requester,
--			   !atomic_read(&ctrl->pending_events));
-+			   !atomic_read(&ctrl->pending_events) &&
-+			   !ctrl->ist_running);
- 		return ctrl->request_result;
- 	case POWERON_STATE:
- 		ctrl_info(ctrl, "Slot(%s): Already in powering on state\n",
-@@ -401,7 +402,8 @@ int pciehp_sysfs_disable_slot(struct hotplug_slot *hotplug_slot)
- 		mutex_unlock(&ctrl->state_lock);
- 		pciehp_request(ctrl, DISABLE_SLOT);
- 		wait_event(ctrl->requester,
--			   !atomic_read(&ctrl->pending_events));
-+			   !atomic_read(&ctrl->pending_events) &&
-+			   !ctrl->ist_running);
- 		return ctrl->request_result;
- 	case POWEROFF_STATE:
- 		ctrl_info(ctrl, "Slot(%s): Already in powering off state\n",
-diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-index bd990e3371e3..9e2d7688e8cc 100644
---- a/drivers/pci/hotplug/pciehp_hpc.c
-+++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -608,6 +608,7 @@ static irqreturn_t pciehp_ist(int irq, void *dev_id)
- 	irqreturn_t ret;
- 	u32 events;
- 
-+	ctrl->ist_running = true;
- 	pci_config_pm_runtime_get(pdev);
- 
- 	/* rerun pciehp_isr() if the port was inaccessible on interrupt */
-@@ -654,6 +655,7 @@ static irqreturn_t pciehp_ist(int irq, void *dev_id)
- 	up_read(&ctrl->reset_lock);
- 
- 	pci_config_pm_runtime_put(pdev);
-+	ctrl->ist_running = false;
- 	wake_up(&ctrl->requester);
- 	return IRQ_HANDLED;
- }
--- 
-2.20.1
+Summary
+------------------------------------------------------------------------
 
+kernel: 4.4.188-rc1
+git repo: https://git.linaro.org/lkft/arm64-stable-rc.git
+git branch: 4.4.188-rc1-hikey-20190805-520
+git commit: c9b6c3a54493f03773243bfd3c3ffbc88982ec27
+git describe: 4.4.188-rc1-hikey-20190805-520
+Test details: https://qa-reports.linaro.org/lkft/linaro-hikey-stable-rc-4.4=
+-oe/build/4.4.188-rc1-hikey-20190805-520
+
+
+No regressions (compared to build 4.4.187-rc2-hikey-20190802-517)
+
+
+No fixes (compared to build 4.4.187-rc2-hikey-20190802-517)
+
+Ran 1550 total tests in the following environments and test suites.
+
+Environments
+--------------
+- hi6220-hikey - arm64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
