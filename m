@@ -2,93 +2,125 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CEE0C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB936C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:34:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7052B2070D
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:34:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="o8jDBbLt";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Og22Blc4"
+	by mail.kernel.org (Postfix) with ESMTP id 896242070D
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:34:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731049AbfHFMeU (ORCPT
+        id S1731546AbfHFMez (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 08:34:20 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:57524 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726373AbfHFMeT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 08:34:19 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id C73566074F; Tue,  6 Aug 2019 12:34:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1565094858;
-        bh=QsaLFNEdiPZF/qEZPEqWyzvCOr9IQNtzwO8avKhniBI=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=o8jDBbLtRw0fq7AsK0azoyjXhijlgh63gFsrMxMMePSTuDmYXXOXznfS+/Rg1iNMB
-         j9t64s7AuK3iwaxjA7md7kjUKHGXUrTi/jMuFD4L38AlZldzbblqkW8pgFaIQCCPBs
-         nvmgXnftIs3g5QQVggtOPUBUyMOarc1XaCvJgAEs=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A066D6019D;
-        Tue,  6 Aug 2019 12:34:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1565094858;
-        bh=QsaLFNEdiPZF/qEZPEqWyzvCOr9IQNtzwO8avKhniBI=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=Og22Blc46ZZCt0SVnSe9eglwgCTlx59VVLCi0qAkrDpyiIzuHNfW3LEkS4pHH1wQJ
-         w7ERv3L0a0rM+1DOl9FXI3ntahJjf3jNhLgicw8t4vzyAC3Mxmvgr/RkRh7m+seVqF
-         yQz7QOW9D7xAjTbdnX0xl+Tzk8JGK3F1pQidd4FM=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A066D6019D
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Tue, 6 Aug 2019 08:34:55 -0400
+Received: from foss.arm.com ([217.140.110.172]:60920 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726834AbfHFMez (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 08:34:55 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2361A28;
+        Tue,  6 Aug 2019 05:34:54 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DC1073F694;
+        Tue,  6 Aug 2019 05:34:52 -0700 (PDT)
+Date:   Tue, 6 Aug 2019 13:34:50 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Miles Chen <miles.chen@mediatek.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        James Morse <james.morse@arm.com>
+Subject: Re: [PATCH] arm64: mm: print hexadecimal EC value in
+ mem_abort_decode()
+Message-ID: <20190806123450.GE475@lakrids.cambridge.arm.com>
+References: <20190806112948.4357-1-miles.chen@mediatek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH net-next 06/10] iwlegacy: Use dev_get_drvdata where
- possible
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20190724112730.13403-1-hslester96@gmail.com>
-References: <20190724112730.13403-1-hslester96@gmail.com>
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     unlisted-recipients:; (no To-header on input)
-        Stanislaw Gruszka <sgruszka@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Illegal-Object: Syntax error in Cc: address found on vger.kernel.org:
-        Cc:     unlisted-recipients:; (no To-header on input)Stanislaw Gruszka <sgruszka@redhat.com>
-                                                                     ^-missing end of address
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20190806123418.C73566074F@smtp.codeaurora.org>
-Date:   Tue,  6 Aug 2019 12:34:18 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190806112948.4357-1-miles.chen@mediatek.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Chuhong Yuan <hslester96@gmail.com> wrote:
-
-> Instead of using to_pci_dev + pci_get_drvdata,
-> use dev_get_drvdata to make code simpler.
+On Tue, Aug 06, 2019 at 07:29:48PM +0800, Miles Chen wrote:
+> This change prints the hexadecimal EC value in mem_abort_decode(),
+> which makes it easier to lookup the corresponding EC in
+> the ARM Architecture Reference Manual.
 > 
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> The commit 1f9b8936f36f ("arm64: Decode information from ESR upon mem
+> faults") prints useful information when memory abort occurs. It would
+> be easier to lookup "0x25" instead of "DABT" in the document. Then we
+> can check the corresponding ISS.
+> 
+> For example:
+> Current	info	  	Document
+> 		  	EC	Exception class
+> "CP15 MCR/MRC"		0x3	"MCR or MRC access to CP15a..."
+> "ASIMD"			0x7	"Access to SIMD or floating-point..."
+> "DABT (current EL)" 	0x25	"Data Abort taken without..."
+> ...
+> 
+> Before:
+> Unable to handle kernel paging request at virtual address 000000000000c000
+> Mem abort info:
+>   ESR = 0x96000046
+>   Exception class = DABT (current EL), IL = 32 bits
+>   SET = 0, FnV = 0
+>   EA = 0, S1PTW = 0
+> Data abort info:
+>   ISV = 0, ISS = 0x00000046
+>   CM = 0, WnR = 1
+> 
+> After:
+> Unable to handle kernel paging request at virtual address 000000000000c000
+> Mem abort info:
+>   ESR = 0x96000046
+>   EC = 0x25, Exception class = DABT (current EL), IL = 32 bits
+>   SET = 0, FnV = 0
+>   EA = 0, S1PTW = 0
+> Data abort info:
+>   ISV = 0, ISS = 0x00000046
+>   CM = 0, WnR = 1
+> 
+> Cc: Mark Rutland <Mark.rutland@arm.com>
+> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
+> Cc: James Morse <james.morse@arm.com>
+> Signed-off-by: Miles Chen <miles.chen@mediatek.com>
+> ---
+>  arch/arm64/mm/fault.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
+> index cfd65b63f36f..afb6041e25e6 100644
+> --- a/arch/arm64/mm/fault.c
+> +++ b/arch/arm64/mm/fault.c
+> @@ -86,8 +86,8 @@ static void mem_abort_decode(unsigned int esr)
+>  	pr_alert("Mem abort info:\n");
+>  
+>  	pr_alert("  ESR = 0x%08x\n", esr);
+> -	pr_alert("  Exception class = %s, IL = %u bits\n",
+> -		 esr_get_class_string(esr),
+> +	pr_alert("  EC = 0x%lx, Exception class = %s, IL = %u bits\n",
+> +		 ESR_ELx_EC(esr), esr_get_class_string(esr),
 
-4 patches applied to wireless-drivers-next.git, thanks.
+Could we make this:
 
-a40c28700d98 iwlegacy: Use dev_get_drvdata where possible
-ffa4d78cbc26 mwifiex: pcie: Use dev_get_drvdata
-1f5f5ea72fc9 qtnfmac_pcie: Use dev_get_drvdata
-e7338e031985 rtlwifi: rtl_pci: Use dev_get_drvdata
+	pr_alert("  EC = 0x%02lx: %s, IL = %u bits\n",
+		 ESR_ELx_EC(esr), esr_get_class_string(esr));
 
--- 
-https://patchwork.kernel.org/patch/11056621/
+We don't need to spell out "Exception Class" if we say "EC", and we
+should print the EC hex value with a consistent width as we do for the
+ISS.
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+With that:
 
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+
+Thanks,
+Mark.
