@@ -2,186 +2,99 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4AA3C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 22:08:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01773C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 22:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3CBA21872
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 22:08:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C72B221872
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 22:10:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="uoHPmS9+"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="S7Xmi1DI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727529AbfHFWIb (ORCPT
+        id S1727252AbfHFWKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 18:08:31 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:40402 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727464AbfHFWIb (ORCPT
+        Tue, 6 Aug 2019 18:10:24 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:39005 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726923AbfHFWKX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 18:08:31 -0400
-Received: by mail-qt1-f195.google.com with SMTP id a15so86244953qtn.7
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 15:08:30 -0700 (PDT)
+        Tue, 6 Aug 2019 18:10:23 -0400
+Received: by mail-lj1-f196.google.com with SMTP id v18so83495680ljh.6
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 15:10:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=lgpI3ynHW3gTvfclzfXkVuyqpqeD3VNzN05HaWx4zvc=;
-        b=uoHPmS9+YoOxcoJBDbzfC+2fbzNEkLRoav7HUYfBUs9/anx0fxJOpaTnyi46GM/rJJ
-         CqXno/3jcs1X1U0FuCvbUjuZt95T++kOykcCT1edliWysW7pqf2xdfINEWc+GSF69zPE
-         jtHxEzv4MwSIFGUNIT7R9gz1Bv1LSteX2Sid9G0hOHIfI49Hp3EpcE/5Ogq45V9pl/7H
-         wcb0ruPFB9D2hHg4FQIgrCXvkjhcPzLVr3u8ROXXrOFetGkQXdUBrnr0D3+gaAAeZ3e3
-         dEjz9enIH+6aoeYC0FoZNymuqfkuvnM+oCZwxsW+T5CwZJTgU2KaRQgxxqWprLgJKSFB
-         98wA==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bgewXXxxhY/dAfBGFMPvrzGizAhrJK4ewhsHFFY/ZXc=;
+        b=S7Xmi1DIjpcc1NyZ1euHM9kbzVqM1CVov4LeTusvdshoFAvVWX2NW0xhDTbpTxPMrD
+         F7/LCPShWklAmxPw+ZcI2kxGXmv9K9+L08AoQI9dFlQYVFnOYSub7m4UKm1+siM0tYEg
+         QVqSH1iJP+cLOAbmK71a2wYQT7CyhUoE2UeVA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=lgpI3ynHW3gTvfclzfXkVuyqpqeD3VNzN05HaWx4zvc=;
-        b=oWs04iJG1rQpVzlN+oIy1rLJigaGGyF3vcPwCxBeCsjlfA+7ExU9mwaG7bP+8f9ICJ
-         yzvJOawFWeFbGtAYi+ukY1IVOCB9CBEhpXIzF/3st4Bg/4fA62e12mai5XK3e5e62wZM
-         hDgYFZnZcj4xyhDID8thKX7c102UlpdM02fqlMLeZD9dmpjKWfrebHFinu+EcU7PW9on
-         zXRzPZQm/H3bJWB86qFnqsQ7pFYaYSD5hH6ODK54QjfUGq8mOOF2ByX7wymE3PfHFO+5
-         8bAkwNUkTGcGaDp+bYr2ffUdZromhm6Wn6Ze+Pdwdqnix4nRf/HJIbvg0JUi2sKEILXc
-         APJg==
-X-Gm-Message-State: APjAAAVGqV0mYxbnIvekdvuezQwPDGcjw4kqV5zBJjRCNIjQARlmiSMU
-        KNAdcMFZehG+sD44GSCd840ydvUq9nw=
-X-Google-Smtp-Source: APXvYqyM775FoP3ymrZoS1cfi0VLU7KWY4ABIV0dCgd+BKaX2iGy1XM4e6b8j0l6rf7gx/MWm2HYZg==
-X-Received: by 2002:ad4:5405:: with SMTP id f5mr5184364qvt.242.1565129310229;
-        Tue, 06 Aug 2019 15:08:30 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id z5sm36883130qti.80.2019.08.06.15.08.28
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 06 Aug 2019 15:08:29 -0700 (PDT)
-Date:   Tue, 6 Aug 2019 15:08:02 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Hayes Wang <hayeswang@realtek.com>
-Cc:     <netdev@vger.kernel.org>, <nic_swsd@realtek.com>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>
-Subject: Re: [PATCH net-next 4/5] r8152: support skb_add_rx_frag
-Message-ID: <20190806150802.72e0ef02@cakuba.netronome.com>
-In-Reply-To: <1394712342-15778-293-albertk@realtek.com>
-References: <1394712342-15778-289-albertk@realtek.com>
-        <1394712342-15778-293-albertk@realtek.com>
-Organization: Netronome Systems, Ltd.
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bgewXXxxhY/dAfBGFMPvrzGizAhrJK4ewhsHFFY/ZXc=;
+        b=N8xHby6YWGJQxgQ7WHIv0GwpLQTPDm2yHqPTSUHCFNkPPckyTUPXdCmOdLx5+6WwbC
+         1A/5kb1I27u6cW0+NKo1P8NA76mdnkkuJkI9DbA0VhnnEP5ArmwhRzMM4m6w0wHp5j5E
+         GJJe0pAQoux3JWH3vH998l69/UIJxFXM2L/dRs4o4ClllsX6F5IsbJGgOye3eXOQb2wr
+         w75n7eJH87OSjqDvqoIFNQa+18yRQMIv0xQSV/H1D105conVthVC5Y+xOIUGcSghj6v5
+         TxQ+cI07OJZRTggaEiIqsU2SjiCW/zaNifbrY03/f11i6dyTX8c7uG6Bd1+vefwNeaUp
+         M+1A==
+X-Gm-Message-State: APjAAAUcGirW8lyhTW+vo8D4s/bCFJchgugh7C8yUQLIQFxTo0/A6fGS
+        OR/xUmeJuKNZnN02EwlB0J9ZQvczRys=
+X-Google-Smtp-Source: APXvYqzVONaeocq1PjqYfS1jUicJF+VxAiGmJK1YjdS+M2Ud5PDatKk4Dgc2+dL68dxlLxGJUW9qSA==
+X-Received: by 2002:a2e:8744:: with SMTP id q4mr2924491ljj.77.1565129421064;
+        Tue, 06 Aug 2019 15:10:21 -0700 (PDT)
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
+        by smtp.gmail.com with ESMTPSA id u5sm2904041lfg.66.2019.08.06.15.10.17
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 06 Aug 2019 15:10:18 -0700 (PDT)
+Received: by mail-lj1-f174.google.com with SMTP id i21so4305221ljj.3
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 15:10:17 -0700 (PDT)
+X-Received: by 2002:a2e:3602:: with SMTP id d2mr3006585lja.112.1565129417010;
+ Tue, 06 Aug 2019 15:10:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20190729204954.25510-1-briannorris@chromium.org>
+In-Reply-To: <20190729204954.25510-1-briannorris@chromium.org>
+From:   Brian Norris <briannorris@chromium.org>
+Date:   Tue, 6 Aug 2019 15:10:05 -0700
+X-Gmail-Original-Message-ID: <CA+ASDXPZxD6D2P_7vucseZS=Fe8KDEyNGvNQySvJYu_-fGxk5A@mail.gmail.com>
+Message-ID: <CA+ASDXPZxD6D2P_7vucseZS=Fe8KDEyNGvNQySvJYu_-fGxk5A@mail.gmail.com>
+Subject: Re: [PATCH] driver core: platform: return -ENXIO for missing GpioInt
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Salvatore Bellizzi <salvatore.bellizzi@linux.seppia.net>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Enrico Granata <egranata@chromium.org>,
+        Enrico Granata <egranata@google.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 6 Aug 2019 19:18:03 +0800, Hayes Wang wrote:
-> Use skb_add_rx_frag() to reduce the memory copy for rx data.
-> 
-> Use a new list of rx_used to store the rx buffer which couldn't be
-> reused yet.
-> 
-> Besides, the total number of rx buffer may be increased or decreased
-> dynamically. And it is limited by RTL8152_MAX_RX_AGG.
-> 
-> Signed-off-by: Hayes Wang <hayeswang@realtek.com>
+On Mon, Jul 29, 2019 at 1:50 PM Brian Norris <briannorris@chromium.org> wrote:
+> Side note: it might have helped alleviate some of this pain if there
+> were email notifications to the mailing list when a patch gets applied.
+> I didn't realize (and I'm not sure if Enrico did) that v2 was already
+> merged by the time I noted its mistakes. If I had known, I would have
+> suggested a follow-up patch, not a v3.
 
-> diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
-> index 401e56112365..1615900c8592 100644
-> --- a/drivers/net/usb/r8152.c
-> +++ b/drivers/net/usb/r8152.c
-> @@ -584,6 +584,9 @@ enum rtl_register_content {
->  #define TX_ALIGN		4
->  #define RX_ALIGN		8
->  
-> +#define RTL8152_MAX_RX_AGG	(10 * RTL8152_MAX_RX)
-> +#define RTL8152_RXFG_HEADSZ	256
-> +
->  #define INTR_LINK		0x0004
->  
->  #define RTL8152_REQT_READ	0xc0
-> @@ -720,7 +723,7 @@ struct r8152 {
->  	struct net_device *netdev;
->  	struct urb *intr_urb;
->  	struct tx_agg tx_info[RTL8152_MAX_TX];
-> -	struct list_head rx_info;
-> +	struct list_head rx_info, rx_used;
+I guess I'll be the bot this time: 'twas applied by Greg on Tuesday,
+July 30 UTC-07:00.
 
-I don't see where entries on the rx_used list get freed when driver is
-unloaded, could you explain how that's taken care of?
-
->  	struct list_head rx_done, tx_free;
->  	struct sk_buff_head tx_queue, rx_queue;
->  	spinlock_t rx_lock, tx_lock;
-> @@ -1476,7 +1479,7 @@ static void free_rx_agg(struct r8152 *tp, struct rx_agg *agg)
->  	list_del(&agg->info_list);
->  
->  	usb_free_urb(agg->urb);
-> -	__free_pages(agg->page, get_order(tp->rx_buf_sz));
-> +	put_page(agg->page);
->  	kfree(agg);
->  
->  	atomic_dec(&tp->rx_count);
-> @@ -1493,7 +1496,7 @@ static struct rx_agg *alloc_rx_agg(struct r8152 *tp, gfp_t mflags)
->  	if (rx_agg) {
->  		unsigned long flags;
->  
-> -		rx_agg->page = alloc_pages(mflags, order);
-> +		rx_agg->page = alloc_pages(mflags | __GFP_COMP, order);
->  		if (!rx_agg->page)
->  			goto free_rx;
->  
-> @@ -1951,6 +1954,50 @@ static u8 r8152_rx_csum(struct r8152 *tp, struct rx_desc *rx_desc)
->  	return checksum;
->  }
->  
-> +static inline bool rx_count_exceed(struct r8152 *tp)
-> +{
-> +	return atomic_read(&tp->rx_count) > RTL8152_MAX_RX;
-> +}
-> +
-> +static inline int agg_offset(struct rx_agg *agg, void *addr)
-> +{
-> +	return (int)(addr - agg->buffer);
-> +}
-> +
-> +static struct rx_agg *rtl_get_free_rx(struct r8152 *tp, gfp_t mflags)
-> +{
-> +	struct list_head *cursor, *next;
-> +	struct rx_agg *agg_free = NULL;
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&tp->rx_lock, flags);
-> +
-> +	list_for_each_safe(cursor, next, &tp->rx_used) {
-> +		struct rx_agg *agg;
-> +
-> +		agg = list_entry(cursor, struct rx_agg, list);
-> +
-> +		if (page_count(agg->page) == 1) {
-> +			if (!agg_free) {
-> +				list_del_init(cursor);
-> +				agg_free = agg;
-> +				continue;
-> +			} else if (rx_count_exceed(tp)) {
-
-nit: else unnecessary after continue
-
-> +				list_del_init(cursor);
-> +				free_rx_agg(tp, agg);
-> +			}
-> +			break;
-> +		}
-> +	}
-> +
-> +	spin_unlock_irqrestore(&tp->rx_lock, flags);
-> +
-> +	if (!agg_free && atomic_read(&tp->rx_count) < RTL8152_MAX_RX_AGG)
-> +		agg_free = alloc_rx_agg(tp, mflags);
-> +
-> +	return agg_free;
-> +}
-> +
->  static int rx_bottom(struct r8152 *tp, int budget)
->  {
->  	unsigned long flags;
+Thanks,
+Brian
