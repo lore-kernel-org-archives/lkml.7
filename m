@@ -2,238 +2,79 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4983FC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:42:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B73EC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:42:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 174A320C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:42:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B473214C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:42:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565102551;
+	bh=ayNN7M5ClahzSEkoICsJ9tdxykID4BzfuIXdV5FkkSk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ROg1E/2SumjSb5OryLpfcTNbuSeGnMXpHgzRbxO7GRQ7Xg3bduJJyFMmbT2B0bEbT
+	 9BUHyhWT4t4hP8DDQgcWH/5Xvr4PWPfwVNVVldTfAl0nj7uotfrNZfn+edx7NufjF7
+	 oHBGUULCyTV+9G8LnyJ67TSCWbw9xyZKWXJCDnJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733090AbfHFOmJ (ORCPT
+        id S1733100AbfHFOma (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 10:42:09 -0400
-Received: from mga02.intel.com ([134.134.136.20]:4676 "EHLO mga02.intel.com"
+        Tue, 6 Aug 2019 10:42:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731314AbfHFOmJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 10:42:09 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 07:41:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,353,1559545200"; 
-   d="scan'208";a="373438238"
-Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by fmsmga005.fm.intel.com with ESMTP; 06 Aug 2019 07:41:14 -0700
-From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc:     Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH v1] perf record: Add an option to take an AUX snapshot on exit
-Date:   Tue,  6 Aug 2019 17:41:01 +0300
-Message-Id: <20190806144101.62892-1-alexander.shishkin@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
+        id S1730489AbfHFOm3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 10:42:29 -0400
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F318E216B7;
+        Tue,  6 Aug 2019 14:42:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565102549;
+        bh=ayNN7M5ClahzSEkoICsJ9tdxykID4BzfuIXdV5FkkSk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=bTbWK6zN8e74EiUInvCzlJh8s8pDjATO9JzQUMdXxk6cU/2pZNm8TUK17uyZpVfJ0
+         4FZI0AkjPnznc6y7v3VBWWAC1kQSnEwBjExjEj7sYOaXOcf5nPWXmFN8Z+rFyFpRUh
+         hrxslYKA+xfCBbu9+gYq2vac2T4hyXzaOAopQ2GA=
+Received: by mail-qk1-f182.google.com with SMTP id s145so63059835qke.7;
+        Tue, 06 Aug 2019 07:42:28 -0700 (PDT)
+X-Gm-Message-State: APjAAAUG6Gm7aYG4mj+PrFVBtusHUmtvqQTIBGNt/MhQRTjVfVv2zOdM
+        IJhcbKZCvws2gCfQLvzo1JqDhx7Iu5bWAGHpmA==
+X-Google-Smtp-Source: APXvYqyYuQYdgl7KuocuQ/T+ajuGJuzeSGZTaiXznVOz10/x+Ufuo4OOyDhhu0VZEDMYzparLR0uzkrMOBPV7qu8mt8=
+X-Received: by 2002:a37:a44a:: with SMTP id n71mr3437539qke.393.1565102548144;
+ Tue, 06 Aug 2019 07:42:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190806075520.14652-1-narmstrong@baylibre.com>
+In-Reply-To: <20190806075520.14652-1-narmstrong@baylibre.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 6 Aug 2019 08:42:15 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJ=dUX-bPa06KxJowf_3GM2-mPwm4U1KyTXyH0thA1pvg@mail.gmail.com>
+Message-ID: <CAL_JsqJ=dUX-bPa06KxJowf_3GM2-mPwm4U1KyTXyH0thA1pvg@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: arm: amlogic: fix x96-max/sei510 section in amlogic.yaml
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Christian Hewitt <christianshewitt@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is sometimes useful to generate a snapshot when perf record exits;
-I've been using a wrapper script around the workload that would do a
-killall -USR2 perf when the workload exits.
+On Tue, Aug 6, 2019 at 1:55 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> From: Christian Hewitt <christianshewitt@gmail.com>
+>
+> Move amediatech,x96-max and seirobotics,sei510 to the S905D2 section and
+> update the S905D2 description to S905D2/X2/Y2.
+>
+> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  Documentation/devicetree/bindings/arm/amlogic.yaml | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 
-This patch makes it easier and also works when perf record is attached
-to a pre-existing task. A new snapshot option 'e' can be specified in
--S to enable this behavior:
-
-root@elsewhere:~# perf record -e intel_pt// -Se sleep 1
-[ perf record: Woken up 2 times to write data ]
-[ perf record: Captured and wrote 0.085 MB perf.data ]
-
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Co-developed-by: Adrian Hunter <adrian.hunter@intel.com>
----
- tools/perf/Documentation/perf-record.txt | 11 +++++---
- tools/perf/builtin-record.c              | 34 +++++++++++++++++++++---
- tools/perf/perf.h                        |  1 +
- tools/perf/util/auxtrace.c               | 14 ++++++++--
- tools/perf/util/auxtrace.h               |  2 +-
- 5 files changed, 52 insertions(+), 10 deletions(-)
-
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index 15e0fa87241b..d5e58e0a2bca 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -422,9 +422,14 @@ CLOCK_BOOTTIME, CLOCK_REALTIME and CLOCK_TAI.
- -S::
- --snapshot::
- Select AUX area tracing Snapshot Mode. This option is valid only with an
--AUX area tracing event. Optionally the number of bytes to capture per
--snapshot can be specified. In Snapshot Mode, trace data is captured only when
--signal SIGUSR2 is received.
-+AUX area tracing event. Optionally, certain snapshot capturing parameters
-+can be specified in a string that follows this option:
-+  'e': take one last snapshot on exit; guarantees that there is at least one
-+       snapshot in the output file;
-+  <size>: if the PMU supports this, specify the desired snapshot size.
-+
-+In Snapshot Mode trace data is captured only when signal SIGUSR2 is received
-+and on exit if the above 'e' option is given.
- 
- --proc-map-timeout::
- When processing pre-existing threads /proc/XXX/mmap, it may take a long time,
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index d31d7a5a1be3..e9a2525ecfcc 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -613,19 +613,35 @@ static int record__auxtrace_read_snapshot_all(struct record *rec)
- 	return rc;
- }
- 
--static void record__read_auxtrace_snapshot(struct record *rec)
-+static void record__read_auxtrace_snapshot(struct record *rec, bool on_exit)
- {
- 	pr_debug("Recording AUX area tracing snapshot\n");
- 	if (record__auxtrace_read_snapshot_all(rec) < 0) {
- 		trigger_error(&auxtrace_snapshot_trigger);
- 	} else {
--		if (auxtrace_record__snapshot_finish(rec->itr))
-+		if (auxtrace_record__snapshot_finish(rec->itr, on_exit))
- 			trigger_error(&auxtrace_snapshot_trigger);
- 		else
- 			trigger_ready(&auxtrace_snapshot_trigger);
- 	}
- }
- 
-+static int record__auxtrace_snapshot_exit(struct record *rec)
-+{
-+	if (trigger_is_error(&auxtrace_snapshot_trigger))
-+		return 0;
-+
-+	if (!auxtrace_record__snapshot_started &&
-+	    auxtrace_record__snapshot_start(rec->itr))
-+		return -1;
-+
-+	record__read_auxtrace_snapshot(rec, true);
-+	if (trigger_is_error(&auxtrace_snapshot_trigger))
-+		return -1;
-+
-+	return 0;
-+}
-+
- static int record__auxtrace_init(struct record *rec)
- {
- 	int err;
-@@ -654,7 +670,7 @@ int record__auxtrace_mmap_read(struct record *rec __maybe_unused,
- }
- 
- static inline
--void record__read_auxtrace_snapshot(struct record *rec __maybe_unused)
-+void record__read_auxtrace_snapshot(struct record *rec __maybe_unused, bool on_exit)
- {
- }
- 
-@@ -664,6 +680,12 @@ int auxtrace_record__snapshot_start(struct auxtrace_record *itr __maybe_unused)
- 	return 0;
- }
- 
-+static inline
-+int record__auxtrace_snapshot_exit(struct record *rec)
-+{
-+	return 0;
-+}
-+
- static int record__auxtrace_init(struct record *rec __maybe_unused)
- {
- 	return 0;
-@@ -1536,7 +1558,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 		if (auxtrace_record__snapshot_started) {
- 			auxtrace_record__snapshot_started = 0;
- 			if (!trigger_is_error(&auxtrace_snapshot_trigger))
--				record__read_auxtrace_snapshot(rec);
-+				record__read_auxtrace_snapshot(rec, false);
- 			if (trigger_is_error(&auxtrace_snapshot_trigger)) {
- 				pr_err("AUX area tracing snapshot failed\n");
- 				err = -1;
-@@ -1609,9 +1631,13 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 			disabled = true;
- 		}
- 	}
-+
- 	trigger_off(&auxtrace_snapshot_trigger);
- 	trigger_off(&switch_output_trigger);
- 
-+	if (opts->auxtrace_snapshot_on_exit)
-+		record__auxtrace_snapshot_exit(rec);
-+
- 	if (forks && workload_exec_errno) {
- 		char msg[STRERR_BUFSIZE];
- 		const char *emsg = str_error_r(workload_exec_errno, msg, sizeof(msg));
-diff --git a/tools/perf/perf.h b/tools/perf/perf.h
-index 74d0124d38f3..dc0a7a237887 100644
---- a/tools/perf/perf.h
-+++ b/tools/perf/perf.h
-@@ -57,6 +57,7 @@ struct record_opts {
- 	bool	     running_time;
- 	bool	     full_auxtrace;
- 	bool	     auxtrace_snapshot_mode;
-+	bool	     auxtrace_snapshot_on_exit;
- 	bool	     record_namespaces;
- 	bool	     record_switch_events;
- 	bool	     all_kernel;
-diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index 65728cdeefb6..72ce4c5e7c78 100644
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -539,9 +539,9 @@ int auxtrace_record__snapshot_start(struct auxtrace_record *itr)
- 	return 0;
- }
- 
--int auxtrace_record__snapshot_finish(struct auxtrace_record *itr)
-+int auxtrace_record__snapshot_finish(struct auxtrace_record *itr, bool on_exit)
- {
--	if (itr && itr->snapshot_finish)
-+	if (!on_exit && itr && itr->snapshot_finish)
- 		return itr->snapshot_finish(itr);
- 	return 0;
- }
-@@ -577,6 +577,16 @@ int auxtrace_parse_snapshot_options(struct auxtrace_record *itr,
- 	if (!str)
- 		return 0;
- 
-+	/* PMU-agnostic options */
-+	switch (*str) {
-+	case 'e':
-+		opts->auxtrace_snapshot_on_exit = true;
-+		str++;
-+		break;
-+	default:
-+		break;
-+	}
-+
- 	if (itr)
- 		return itr->parse_snapshot_options(itr, opts, str);
- 
-diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
-index 17eb04a1da4d..8ccabacd0b11 100644
---- a/tools/perf/util/auxtrace.h
-+++ b/tools/perf/util/auxtrace.h
-@@ -499,7 +499,7 @@ int auxtrace_record__info_fill(struct auxtrace_record *itr,
- 			       size_t priv_size);
- void auxtrace_record__free(struct auxtrace_record *itr);
- int auxtrace_record__snapshot_start(struct auxtrace_record *itr);
--int auxtrace_record__snapshot_finish(struct auxtrace_record *itr);
-+int auxtrace_record__snapshot_finish(struct auxtrace_record *itr, bool on_exit);
- int auxtrace_record__find_snapshot(struct auxtrace_record *itr, int idx,
- 				   struct auxtrace_mmap *mm,
- 				   unsigned char *data, u64 *head, u64 *old);
--- 
-2.20.1
-
+Acked-by: Rob Herring <robh@kernel.org>
