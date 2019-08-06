@@ -4,58 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 183FBC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 19:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E45AFC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 19:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE2ED208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 19:27:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7B6B208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 19:27:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LHk9KRvN"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q4Fm42nZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbfHFT1A (ORCPT
+        id S1726543AbfHFT1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 15:27:00 -0400
-Received: from mail-vs1-f74.google.com ([209.85.217.74]:33294 "EHLO
-        mail-vs1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbfHFT07 (ORCPT
+        Tue, 6 Aug 2019 15:27:03 -0400
+Received: from mail-qk1-f201.google.com ([209.85.222.201]:50390 "EHLO
+        mail-qk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbfHFT1C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 15:26:59 -0400
-Received: by mail-vs1-f74.google.com with SMTP id x140so22416717vsc.0
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 12:26:59 -0700 (PDT)
+        Tue, 6 Aug 2019 15:27:02 -0400
+Received: by mail-qk1-f201.google.com with SMTP id e18so76647017qkl.17
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 12:27:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=D3pdZ1hpsDBBSSu9uYSfSRCE32NuFY9z8QfNXGGTrto=;
-        b=LHk9KRvN4gVYqdpbzH/h6AXDTltFI1mcEX8tIfDeaaz7Pp/s1h6kD5/luThnNVkRXo
-         RFprVeqH+KMHp8FIm6SlOg6lN817W54y8MNPmJ2PPAZSmanotW9ORWMMT7bLPtY/Ogw1
-         l0/wUU+j2GL2oPXGJQAK/smUR/uZAZ8uvIXwSeGYNr+5rbJaOwhWQfTDWRAIrdOnXsRC
-         oDnLW2t6xqw9H4TGRe9jA7NjyIzr621ALRjr8ny9y6N5BzR8aiT7q7zykTyhfszTICrY
-         3bbTdssMsUOKUCJiIAMDjpzv7t5+paMDYudQmEGzotuahcrwMAyB3nMw7QmMjnIOz+hB
-         aTLA==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=iPCtVhelamfyNmHFH2EKFLaaUs7nprfge3H+YNAP5fc=;
+        b=q4Fm42nZXSCJMyda/16R+zUSCptYRFIOQduf9C9prXzhSCNR19aofjCM0QXcsykY2X
+         2HKqnLbG79HIix8cv2sfU5b80A0OSlzXo9CLrzoaJG7FH+fTDbVU7Ymd48rZdXxILzVP
+         CacYAFOjUqwDsHfatUmMbSxcMnEz+qmVWXRFIoLilts8110jHqBaLSiNs+9XqIlF7/Xl
+         BKaDDXqmY938i3Ia2NwlPAL1LANJePJ4o+5SctEALb+1RUP+/YeHFY0OHLy0qbd5JJdU
+         oiADb5RW5SW7sIq0VnRaoLuQWxtSNXBWMmlejP1ksJZIig9EoJ2tZKcqnaFVTpWWVFDV
+         9xAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=D3pdZ1hpsDBBSSu9uYSfSRCE32NuFY9z8QfNXGGTrto=;
-        b=RRt39lqbAM7dFQTpzLoY0iZjSxDh9D9hNdd5HH7dGY2H3aqnWkiW7rWr9iF4lww5Zt
-         /dcDEaQ1f0S1Sux6tjZ2Mo49G06oHdEVB+3Z/6AGQdb+4VTCVia0Ndw6eQDQwiaifBbR
-         t9nuTKzqAHr5OntE6qdF9kFrEn1XBl+88axLSXW0iXlil6o69IynOCG2zBWfi7czK42s
-         KIMuLTvhrcZaRlQA1tsPhJ5FTxSAHU1OBHQGCS6S5g9sRlXo29Uzq0kQljBT1h88fr7c
-         k4hWzPbHwGh8Cant4HVuQMEsBrh5oeyinRTRIVJTg/eTIIB9hbh8NvxmhYIL8Nq5VVRO
-         wdBg==
-X-Gm-Message-State: APjAAAWhyp7rO3pFAc+LltmVBHCoEHxidxvw9Q7ayq7T3qrt5IK2Bw6W
-        gJvKFZJwdrW2d4aqgIQF+jd45rw2MKYVO4I=
-X-Google-Smtp-Source: APXvYqxGDu8U5booa1l1NNHse+Ok3XBT02Jwb4vocS7V3EHzsgihODf2xQqyNWYaIEk7cAN9qJAShbo0brkax0k=
-X-Received: by 2002:ab0:6503:: with SMTP id w3mr3177460uam.99.1565119618579;
- Tue, 06 Aug 2019 12:26:58 -0700 (PDT)
-Date:   Tue,  6 Aug 2019 12:26:53 -0700
-Message-Id: <20190806192654.138605-1-saravanak@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=iPCtVhelamfyNmHFH2EKFLaaUs7nprfge3H+YNAP5fc=;
+        b=Lga9dlvrH3JcxylTwB5I10qTrs/Y3rSAGhlnNbGIj7rbDuUZ8G7K8aqWMV02nukrnP
+         eaazuXVbxuCVYfW9ucBwRKBhtEcudx6uAX37dmh4QfMX2SZ5DQuxwn12ntfDapQsGNPt
+         3BbWCMJ9EaIAQutcGZsdXotkwkxnx77Hfd/xy32/Vrhb1rj0H8SXWOI4if9ZfvfzPvAb
+         6w7oY3ocalNd1+3UlcfrxdhXXOKvz7b7w2dkLgy15cmPvpCv7zjb88xK3Gm8hk2wZd0N
+         kbH7pd/KlnikLXtp+9WqtGN1Qk49prWQ+NTrlaa+5Gp+sKEWifnx6GeghKMhFXjuffHt
+         Bv4w==
+X-Gm-Message-State: APjAAAW2UBsLm+aPZCORYImmivQ2CY+MsBq3CPhD4cfZaVEjJRR4t10W
+        Z9ZgsBAGKIDHb26uyNAz/0McXunFSHAkZB8=
+X-Google-Smtp-Source: APXvYqwvpDkuXUO1XDLIDxYen3s/Nv6gDoebrjDR5FqT9Q5FwKWsU6sSd2XJVBvKkXw1iiOO87nDjTgsTylqOQc=
+X-Received: by 2002:ac8:24e3:: with SMTP id t32mr4733485qtt.104.1565119621558;
+ Tue, 06 Aug 2019 12:27:01 -0700 (PDT)
+Date:   Tue,  6 Aug 2019 12:26:54 -0700
+In-Reply-To: <20190806192654.138605-1-saravanak@google.com>
+Message-Id: <20190806192654.138605-2-saravanak@google.com>
 Mime-Version: 1.0
+References: <20190806192654.138605-1-saravanak@google.com>
 X-Mailer: git-send-email 2.22.0.770.g0f2c4a37fd-goog
-Subject: [PATCH 1/2] of/platform: Fix fn definitons for of_link_is_valid() and of_link_property()
+Subject: [PATCH 2/2] of/platform: Disable generic device linking code for PowerPC
 From:   Saravana Kannan <saravanak@google.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -70,38 +73,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-of_link_is_valid() can be static since it's not used anywhere else.
+PowerPC platforms don't use the generic of/platform code to populate the
+devices from DT.  Therefore the generic device linking code is never used
+in PowerPC.  Compile it out to avoid warning about unused functions.
 
-of_link_property() return type should have been int instead of bool.
+If a specific PowerPC platform wants to use this code in the future,
+bringing this back for PowerPC would be trivial. We'll just need to export
+of_link_to_suppliers() and then let the machine specific files do the
+linking as they populate the devices from DT.
 
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
 Signed-off-by: Saravana Kannan <saravanak@google.com>
 ---
- drivers/of/platform.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/of/platform.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 21838226d68a..f68de5c4aeff 100644
+index f68de5c4aeff..a2a4e4b79d43 100644
 --- a/drivers/of/platform.c
 +++ b/drivers/of/platform.c
-@@ -506,7 +506,7 @@ int of_platform_default_populate(struct device_node *root,
+@@ -506,6 +506,7 @@ int of_platform_default_populate(struct device_node *root,
  }
  EXPORT_SYMBOL_GPL(of_platform_default_populate);
  
--bool of_link_is_valid(struct device_node *con, struct device_node *sup)
-+static bool of_link_is_valid(struct device_node *con, struct device_node *sup)
++#ifndef CONFIG_PPC
+ static bool of_link_is_valid(struct device_node *con, struct device_node *sup)
  {
  	of_node_get(sup);
- 	/*
-@@ -625,7 +625,7 @@ static const struct supplier_bindings bindings[] = {
- 	{ },
- };
+@@ -683,7 +684,6 @@ static int of_link_to_suppliers(struct device *dev)
+ 	return __of_link_to_suppliers(dev, dev->of_node);
+ }
  
--static bool of_link_property(struct device *dev, struct device_node *con_np,
-+static int of_link_property(struct device *dev, struct device_node *con_np,
- 			     const char *prop)
- {
- 	struct device_node *phandle;
+-#ifndef CONFIG_PPC
+ static const struct of_device_id reserved_mem_matches[] = {
+ 	{ .compatible = "qcom,rmtfs-mem" },
+ 	{ .compatible = "qcom,cmd-db" },
 -- 
 2.22.0.770.g0f2c4a37fd-goog
 
