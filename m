@@ -6,98 +6,88 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C7DC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:44:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16DC2C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD8AF20717
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:44:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9AD720717
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:45:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732545AbfHFPoJ (ORCPT
+        id S1731783AbfHFPpl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 11:44:09 -0400
-Received: from verein.lst.de ([213.95.11.211]:57434 "EHLO verein.lst.de"
+        Tue, 6 Aug 2019 11:45:41 -0400
+Received: from mga01.intel.com ([192.55.52.88]:16580 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728558AbfHFPoJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 11:44:09 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 9842B227A8A; Tue,  6 Aug 2019 17:44:03 +0200 (CEST)
-Date:   Tue, 6 Aug 2019 17:44:03 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Lucas Stach <l.stach@pengutronix.de>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>
-Subject: Re: Regression due to d98849aff879 (dma-direct: handle
- DMA_ATTR_NO_KERNEL_MAPPING in common code)
-Message-ID: <20190806154403.GA25050@lst.de>
-References: <1565082809.2323.24.camel@pengutronix.de> <20190806113318.GA20215@lst.de> <41cc93b1-62b5-7fb6-060d-01982e68503b@amd.com> <20190806140408.GA22902@lst.de> <1565100418.2323.32.camel@pengutronix.de>
+        id S1726877AbfHFPpk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 11:45:40 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 08:45:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,353,1559545200"; 
+   d="scan'208";a="165020924"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by orsmga007.jf.intel.com with ESMTP; 06 Aug 2019 08:45:39 -0700
+Date:   Tue, 6 Aug 2019 08:45:39 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jim Mattson <jmattson@google.com>
+Subject: Re: [PATCH v2 3/5] x86: KVM: clear interrupt shadow on EMULTYPE_SKIP
+Message-ID: <20190806154539.GE27766@linux.intel.com>
+References: <20190806060150.32360-1-vkuznets@redhat.com>
+ <20190806060150.32360-4-vkuznets@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1565100418.2323.32.camel@pengutronix.de>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20190806060150.32360-4-vkuznets@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 04:06:58PM +0200, Lucas Stach wrote:
+On Tue, Aug 06, 2019 at 08:01:48AM +0200, Vitaly Kuznetsov wrote:
+> When doing x86_emulate_instruction(EMULTYPE_SKIP) interrupt shadow has to
+> be cleared if and only if the skipping is successful.
 > 
-> dma_direct_free_pages() then needs the same check, as otherwise the cpu
-> address is treated as a cookie instead of a real address and the
-> encryption needs to be re-enabled.
+> There are two immediate issues:
+> - In SVM skip_emulated_instruction() we are not zapping interrupt shadow
+>   in case kvm_emulate_instruction(EMULTYPE_SKIP) is used to advance RIP
+>   (!nrpip_save).
+> - In VMX handle_ept_misconfig() when running as a nested hypervisor we
+>   (static_cpu_has(X86_FEATURE_HYPERVISOR) case) we forget to clear
 
-Ok, lets try this one instead:
+Redundant 'we'.  Might be worth adding a blurb in the changelog to note
+that this intentionally doesn't handle "MOV/POP SS" as skip-emulation of
+those instructions can only occur if the guest is doing something silly.
 
---
-From 3a7aa9fe38a5eae5d879831b4f8c1032e735a0b6 Mon Sep 17 00:00:00 2001
-From: Christoph Hellwig <hch@lst.de>
-Date: Tue, 6 Aug 2019 14:33:23 +0300
-Subject: dma-direct: fix DMA_ATTR_NO_KERNEL_MAPPING
+Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
 
-The new DMA_ATTR_NO_KERNEL_MAPPING needs to actually assign
-a dma_addr to work.  Also skip it if the architecture needs
-forced decryption handling, as that needs a kernel virtual
-address.
-
-Fixes: d98849aff879 (dma-direct: handle DMA_ATTR_NO_KERNEL_MAPPING in common code)
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- kernel/dma/direct.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-index 59bdceea3737..4c211c87a719 100644
---- a/kernel/dma/direct.c
-+++ b/kernel/dma/direct.c
-@@ -130,11 +130,13 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
- 	if (!page)
- 		return NULL;
- 
--	if (attrs & DMA_ATTR_NO_KERNEL_MAPPING) {
-+	if ((attrs & DMA_ATTR_NO_KERNEL_MAPPING) &&
-+	    !force_dma_unencrypted(dev)) {
- 		/* remove any dirty cache lines on the kernel alias */
- 		if (!PageHighMem(page))
- 			arch_dma_prep_coherent(page, size);
- 		/* return the page pointer as the opaque cookie */
-+		*dma_handle = phys_to_dma(dev, page_to_phys(page));
- 		return page;
- 	}
- 
-@@ -178,7 +180,8 @@ void dma_direct_free_pages(struct device *dev, size_t size, void *cpu_addr,
- {
- 	unsigned int page_order = get_order(size);
- 
--	if (attrs & DMA_ATTR_NO_KERNEL_MAPPING) {
-+	if ((attrs & DMA_ATTR_NO_KERNEL_MAPPING) &&
-+	    !force_dma_unencrypted(dev)) {
- 		/* cpu_addr is a struct page cookie, not a kernel address */
- 		__dma_direct_free_pages(dev, size, cpu_addr);
- 		return;
--- 
-2.20.1
-
+>   interrupt shadow.
+> 
+> Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> ---
+>  arch/x86/kvm/x86.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index c6d951cbd76c..eac8253d84d2 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -6537,6 +6537,7 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu,
+>  		kvm_rip_write(vcpu, ctxt->_eip);
+>  		if (ctxt->eflags & X86_EFLAGS_RF)
+>  			kvm_set_rflags(vcpu, ctxt->eflags & ~X86_EFLAGS_RF);
+> +		kvm_x86_ops->set_interrupt_shadow(vcpu, 0);
+>  		return EMULATE_DONE;
+>  	}
+>  
+> -- 
+> 2.20.1
+> 
