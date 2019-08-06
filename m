@@ -2,317 +2,88 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB353C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 01:05:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D0ABC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 01:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C752216B7
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 01:05:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="mzB6AdEV"
+	by mail.kernel.org (Postfix) with ESMTP id C6017214C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 01:06:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565053592;
+	bh=9WldU+70OTg4/XnU8IihgnOgQkq9Lj1lvWH/3Weo2zg=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=AvkfIwuVpeT4wJyKhIaUHZUFSraesqBgIujsX1XRRhrMfltiRTrmn+XK0Ajcx5djD
+	 WUR1ksRiPtLFaiz7Y2yAY1v3i86De+/PL7IE5jXEjWAfilHSVxLEzk+PjqaWHufkw8
+	 T0yTfXfaI/eIeKU3izpYQDBbYmjtWtJmDi+jmsX0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731083AbfHFBFL (ORCPT
+        id S1731213AbfHFBGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 21:05:11 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:33722 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729383AbfHFBFK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 21:05:10 -0400
-Received: by mail-qt1-f196.google.com with SMTP id r6so78682799qtt.0
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 18:05:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=Ze4jXorbQcbyiTviWAuUecQWQSJW6wnww0pz5GcYx3c=;
-        b=mzB6AdEVjir5AoAzd4rkjWyZGK5Xejii9o9gEYsBH5j6bktf50F4als1XZKA6ODUig
-         X9QkEMBVECCL/wFDCnpNLIXtC3VvtFX2sDCfny4IqztThR8SJ0ikMpEGGnOFasDxUiU9
-         QGFiAIKQHJxltQZlOUmqQMmCueC/SGhEx6BAj/nDFlkYIJZwWjBEKUdFVYfmxFCeNG47
-         J5gwQpVh+VJruT6JHVbP3T2bxQ8gt3HfQ4r5pH6SchUnT31Xp2k6zvg+lW2p4CTWWI6A
-         apBMt+iGLi2yvDXki0q37bnbjd/Agn43ZKoQU5rggl+5RI3aQMlY4jS/OcGzA+DcIMe3
-         cpBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=Ze4jXorbQcbyiTviWAuUecQWQSJW6wnww0pz5GcYx3c=;
-        b=dnQCtNhTmV2oVBDCDf5KY8E8n+6VncQOj06FRxy27rCsjnVspXToFTi3Km5dbwPaV9
-         3nkGQsQoxvQEml6aG9rPzGKjivTwqW97B0aUskp1364zA3tQ5LtS/mgLQ0IA17kEye8c
-         bfmWHQYtI89aJsYZ5SMQF/VQCWoszSgU7UGY5stE0uuwPir4QErdOrUy0eiKN+APaR6i
-         y5sWwM2MxbScdWaHAxj/woFTk4BgWJDj2bYHDegOksjj1Tti97v+2vsYtQxHUNTMGek9
-         a/aoQOZgpg6OGXcA+PK3tSlJ3771pZfPGFjSHKREYeB2oDD6vlklsEQ8i14fbgY006v6
-         /28w==
-X-Gm-Message-State: APjAAAWJTlIW4BrsERjWUdHsh1xDn++EBOl6BchjuwJ/AiQu/nv+WoML
-        kyQmMFqHOgXNllOkpb3ghbvjObpag9+2zA==
-X-Google-Smtp-Source: APXvYqxfLwu5nGOBBS6j+3EAfoxvuHMOzVz2Vcoj3uDz9YWN6YUzKPstt3eiVGPzLJvllpSBTy2xrQ==
-X-Received: by 2002:a0c:99e9:: with SMTP id y41mr746597qve.186.1565053509255;
-        Mon, 05 Aug 2019 18:05:09 -0700 (PDT)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id q9sm34415265qkm.63.2019.08.05.18.05.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 05 Aug 2019 18:05:08 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: list corruption in deferred_split_scan()
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <13487e44-273e-819d-89be-8b7823c2f936@linux.alibaba.com>
-Date:   Mon, 5 Aug 2019 21:05:06 -0400
-Cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <DC199A92-616B-4BE9-A293-5E674C20F8D1@lca.pw>
-References: <1562795006.8510.19.camel@lca.pw>
- <1564002826.11067.17.camel@lca.pw>
- <db71dacc-5074-65ef-d018-df695e25c769@linux.alibaba.com>
- <13487e44-273e-819d-89be-8b7823c2f936@linux.alibaba.com>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-X-Mailer: Apple Mail (2.3445.104.11)
+        Mon, 5 Aug 2019 21:06:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34960 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729383AbfHFBGb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 21:06:31 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 272902075B;
+        Tue,  6 Aug 2019 01:06:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565053590;
+        bh=9WldU+70OTg4/XnU8IihgnOgQkq9Lj1lvWH/3Weo2zg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Zw8DwvvX7a6SkYNjLA1gGZUHCQsbdvh+fck64F5TZMPos1dqBPiSgZ250egyEU2gn
+         cD2vMQwNNoBQBjyhNME1U0GK7yuEvFnBzi0sV/w8u03iYA7YEFA7Hn8/A5WPFs2A3r
+         fpm0GksAQ3HXWkuUczBToamvf6mTjN4VMm+fEeN0=
+Subject: Re: [PATCH 4.14 00/53] 4.14.137-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20190805124927.973499541@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <9e6208f9-7a78-885e-1e95-8a121862165e@kernel.org>
+Date:   Mon, 5 Aug 2019 19:06:29 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190805124927.973499541@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 8/5/19 7:02 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.137 release.
+> There are 53 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Wed 07 Aug 2019 12:47:58 PM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.137-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
+Compiled and booted on my test system. No dmesg regressions.
 
-> On Aug 5, 2019, at 6:15 PM, Yang Shi <yang.shi@linux.alibaba.com> =
-wrote:
->=20
->=20
->=20
-> On 7/25/19 2:46 PM, Yang Shi wrote:
->>=20
->>=20
->> On 7/24/19 2:13 PM, Qian Cai wrote:
->>> On Wed, 2019-07-10 at 17:43 -0400, Qian Cai wrote:
->>>> Running LTP oom01 test case with swap triggers a crash below. =
-Revert the
->>>> series
->>>> "Make deferred split shrinker memcg aware" [1] seems fix the issue.
->>> You might want to look harder on this commit, as reverted it alone =
-on the top of
->>>   5.2.0-next-20190711 fixed the issue.
->>>=20
->>> aefde94195ca mm: thp: make deferred split shrinker memcg aware [1]
->>>=20
->>> [1] =
-https://lore.kernel.org/linux-mm/1561507361-59349-5-git-send-email-yang.sh=
-i@
->>> linux.alibaba.com/
->>=20
->> This is the real meat of the patch series, which converted to memcg =
-deferred split queue actually.
->>=20
->>>=20
->>>=20
->>> list_del corruption. prev->next should be ffffea0022b10098, but was
->>> 0000000000000000
->>=20
->> Finally I could reproduce the list corruption issue on my machine =
-with THP swap (swap device is fast device). I should checked this with =
-you at the first place. The problem can't be reproduced with rotate swap =
-device. So, I'm supposed you were using THP swap too.
->>=20
->> Actually, I found two issues with THP swap:
->> 1. free_transhuge_page() is called in reclaim path instead of =
-put_page. The mem_cgroup_uncharge() is called before =
-free_transhuge_page() in reclaim path, which causes page->mem_cgroup is =
-NULL so the wrong deferred_split_queue would be used, so the THP was not =
-deleted from the memcg's list at all. Then the page might be split or =
-reused later, page->mapping would be override.
->>=20
->> 2. There is a race condition caused by try_to_unmap() with THP swap. =
-The try_to_unmap() just calls page_remove_rmap() to add THP to deferred =
-split queue in reclaim path. This might cause the below race condition =
-to corrupt the list:
->>=20
->>                   A                                      B
->> deferred_split_scan
->>     list_move
->>                                                try_to_unmap
->> list_add_tail
->>=20
->> list_splice <-- The list might get corrupted here
->>=20
->>                                                free_transhuge_page
->>                                                       list_del <-- =
-kernel bug triggered
->>=20
->> I hope the below patch would solve your problem (tested locally).
->=20
-> Hi Qian,
->=20
-> Did the below patch solve your problem? I would like the fold the fix =
-into the series then target to 5.4 release.
-
-It is going to take a while before I would be able to access that system =
-again. Since you can reproduce this and
-test yourself now, I=E2=80=99d say go ahead posting the patch.
-
-
->=20
-> Thanks,
-> Yang
->=20
->>=20
->>=20
->> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
->> index b7f709d..d6612ec 100644
->> --- a/mm/huge_memory.c
->> +++ b/mm/huge_memory.c
->> @@ -2830,6 +2830,19 @@ void deferred_split_huge_page(struct page =
-*page)
->>=20
->>         VM_BUG_ON_PAGE(!PageTransHuge(page), page);
->>=20
->> +       /*
->> +        * The try_to_unmap() in page reclaim path might reach here =
-too,
->> +        * this may cause a race condition to corrupt deferred split =
-queue.
->> +        * And, if page reclaim is already handling the same page, it =
-is
->> +        * unnecessary to handle it again in shrinker.
->> +        *
->> +        * Check PageSwapCache to determine if the page is being
->> +        * handled by page reclaim since THP swap would add the page =
-into
->> +        * swap cache before reaching try_to_unmap().
->> +        */
->> +       if (PageSwapCache(page))
->> +               return;
->> +
->>         spin_lock_irqsave(&ds_queue->split_queue_lock, flags);
->>         if (list_empty(page_deferred_list(page))) {
->>                 count_vm_event(THP_DEFERRED_SPLIT_PAGE);
->> diff --git a/mm/vmscan.c b/mm/vmscan.c
->> index a0301ed..40c684a 100644
->> --- a/mm/vmscan.c
->> +++ b/mm/vmscan.c
->> @@ -1485,10 +1485,9 @@ static unsigned long shrink_page_list(struct =
-list_head *page_list,
->>                  * Is there need to periodically free_page_list? It =
-would
->>                  * appear not as the counts should be low
->>                  */
->> -               if (unlikely(PageTransHuge(page))) {
->> -                       mem_cgroup_uncharge(page);
->> +               if (unlikely(PageTransHuge(page)))
->>                         (*get_compound_page_dtor(page))(page);
->> -               } else
->> +               else
->>                         list_add(&page->lru, &free_pages);
->>                 continue;
->>=20
->> @@ -1909,7 +1908,6 @@ static unsigned noinline_for_stack =
-move_pages_to_lru(struct lruvec *lruvec,
->>=20
->>                         if (unlikely(PageCompound(page))) {
->> spin_unlock_irq(&pgdat->lru_lock);
->> -                               mem_cgroup_uncharge(page);
->> (*get_compound_page_dtor(page))(page);
->> spin_lock_irq(&pgdat->lru_lock);
->>                         } else
->>=20
->>> [  685.284254][ T3456] ------------[ cut here ]------------
->>> [  685.289616][ T3456] kernel BUG at lib/list_debug.c:53!
->>> [  685.294808][ T3456] invalid opcode: 0000 [#1] SMP DEBUG_PAGEALLOC =
-KASAN NOPTI
->>> [  685.301998][ T3456] CPU: 5 PID: 3456 Comm: oom01 Tainted:
->>> G        W         5.2.0-next-20190711+ #3
->>> [  685.311193][ T3456] Hardware name: HPE ProLiant DL385 =
-Gen10/ProLiant DL385
->>> Gen10, BIOS A40 06/24/2019
->>> [  685.320485][ T3456] RIP: 0010:__list_del_entry_valid+0x8b/0xb6
->>> [  685.326364][ T3456] Code: f1 e0 ff 49 8b 55 08 4c 39 e2 75 2c 5b =
-b8 01 00 00
->>> 00 41 5c 41 5d 5d c3 4c 89 e2 48 89 de 48 c7 c7 c0 5a 73 a3 e8 d9 fa =
-bc ff <0f>
->>> 0b 48 c7 c7 60 a0 e1 a3 e8 13 52 01 00 4c 89 e6 48 c7 c7 20 5b
->>> [  685.345956][ T3456] RSP: 0018:ffff888e0c8a73c0 EFLAGS: 00010082
->>> [  685.351920][ T3456] RAX: 0000000000000054 RBX: ffffea0022b10098 =
-RCX:
->>> ffffffffa2d5d708
->>> [  685.359807][ T3456] RDX: 0000000000000000 RSI: 0000000000000008 =
-RDI:
->>> ffff8888442bd380
->>> [  685.367693][ T3456] RBP: ffff888e0c8a73d8 R08: ffffed1108857a71 =
-R09:
->>> ffffed1108857a70
->>> [  685.375577][ T3456] R10: ffffed1108857a70 R11: ffff8888442bd387 =
-R12:
->>> 0000000000000000
->>> [  685.383462][ T3456] R13: 0000000000000000 R14: ffffea0022b10034 =
-R15:
->>> ffffea0022b10098
->>> [  685.391348][ T3456] FS:  00007fbe26db4700(0000) =
-GS:ffff888844280000(0000)
->>> knlGS:0000000000000000
->>> [  685.400194][ T3456] CS:  0010 DS: 0000 ES: 0000 CR0: =
-0000000080050033
->>> [  685.406681][ T3456] CR2: 00007fbcabb3f000 CR3: 0000001012e44000 =
-CR4:
->>> 00000000001406a0
->>> [  685.414563][ T3456] Call Trace:
->>> [  685.417736][ T3456]  deferred_split_scan+0x337/0x740
->>> [  685.422741][ T3456]  ? split_huge_page_to_list+0xe10/0xe10
->>> [  685.428272][ T3456]  ? __radix_tree_lookup+0x12d/0x1e0
->>> [  685.433453][ T3456]  ? node_tag_get.part.0.constprop.6+0x40/0x40
->>> [  685.439505][ T3456]  do_shrink_slab+0x244/0x5a0
->>> [  685.444071][ T3456]  shrink_slab+0x253/0x440
->>> [  685.448375][ T3456]  ? unregister_shrinker+0x110/0x110
->>> [  685.453551][ T3456]  ? kasan_check_read+0x11/0x20
->>> [  685.458291][ T3456]  ? mem_cgroup_protected+0x20f/0x260
->>> [  685.463555][ T3456]  shrink_node+0x31e/0xa30
->>> [  685.467858][ T3456]  ? shrink_node_memcg+0x1560/0x1560
->>> [  685.473036][ T3456]  ? ktime_get+0x93/0x110
->>> [  685.477250][ T3456]  do_try_to_free_pages+0x22f/0x820
->>> [  685.482338][ T3456]  ? shrink_node+0xa30/0xa30
->>> [  685.486815][ T3456]  ? kasan_check_read+0x11/0x20
->>> [  685.491556][ T3456]  ? check_chain_key+0x1df/0x2e0
->>> [  685.496383][ T3456]  try_to_free_pages+0x242/0x4d0
->>> [  685.501209][ T3456]  ? do_try_to_free_pages+0x820/0x820
->>> [  685.506476][ T3456]  __alloc_pages_nodemask+0x9ce/0x1bc0
->>> [  685.511826][ T3456]  ? gfp_pfmemalloc_allowed+0xc0/0xc0
->>> [  685.517089][ T3456]  ? kasan_check_read+0x11/0x20
->>> [  685.521826][ T3456]  ? check_chain_key+0x1df/0x2e0
->>> [  685.526657][ T3456]  ? do_anonymous_page+0x343/0xe30
->>> [  685.531658][ T3456]  ? lock_downgrade+0x390/0x390
->>> [  685.536399][ T3456]  ? get_kernel_page+0xa0/0xa0
->>> [  685.541050][ T3456]  ? __lru_cache_add+0x108/0x160
->>> [  685.545879][ T3456]  alloc_pages_vma+0x89/0x2c0
->>> [  685.550444][ T3456]  do_anonymous_page+0x3e1/0xe30
->>> [  685.555271][ T3456]  ? __update_load_avg_cfs_rq+0x2c/0x490
->>> [  685.560796][ T3456]  ? finish_fault+0x120/0x120
->>> [  685.565361][ T3456]  ? alloc_pages_vma+0x21e/0x2c0
->>> [  685.570187][ T3456]  handle_pte_fault+0x457/0x12c0
->>> [  685.575014][ T3456]  __handle_mm_fault+0x79a/0xa50
->>> [  685.579841][ T3456]  ? vmf_insert_mixed_mkwrite+0x20/0x20
->>> [  685.585280][ T3456]  ? kasan_check_read+0x11/0x20
->>> [  685.590021][ T3456]  ? __count_memcg_events+0x8b/0x1c0
->>> [  685.595196][ T3456]  handle_mm_fault+0x17f/0x370
->>> [  685.599850][ T3456]  __do_page_fault+0x25b/0x5d0
->>> [  685.604501][ T3456]  do_page_fault+0x4c/0x2cf
->>> [  685.608892][ T3456]  ? page_fault+0x5/0x20
->>> [  685.613019][ T3456]  page_fault+0x1b/0x20
->>> [  685.617058][ T3456] RIP: 0033:0x410be0
->>> [  685.620840][ T3456] Code: 89 de e8 e3 23 ff ff 48 83 f8 ff 0f 84 =
-86 00 00 00
->>> 48 89 c5 41 83 fc 02 74 28 41 83 fc 03 74 62 e8 95 29 ff ff 31 d2 48 =
-98 90 <c6>
->>> 44 15 00 07 48 01 c2 48 39 d3 7f f3 31 c0 5b 5d 41 5c c3 0f 1f
->>> [  68[  687.120156][ T3456] Shutting down cpus with NMI
->>> [  687.124731][ T3456] Kernel Offset: 0x21800000 from =
-0xffffffff81000000
->>> (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
->>> [  687.136389][ T3456] ---[ end Kernel panic - not syncing: Fatal =
-exception ]---
->>=20
->=20
+thanks,
+-- Shuah
 
