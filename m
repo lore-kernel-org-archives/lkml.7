@@ -2,121 +2,143 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 942D2C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AD74C32751
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66855216F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:32:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E5A3217F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:33:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127162;
-	bh=frBRW98Gphsjm7khOnwDtnCiYYJEpmxxx35acMgCkB8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=vlRQc585f3LdySkVOpLdt3vtKoY7i7X37NY7zEpzEj+4qqF02+/viZvhvz38+8SiT
-	 Y0QD5rZLgpHjH8ci7tTRNRAJD9w56OG2oCXJUjerotdJLNI2Fp1q/uqD131sBKBIJn
-	 hds6nXKNoa0Ch1/5Qgggw51+v3TbDZ4YTOP+vUe8=
+	s=default; t=1565127204;
+	bh=eOG/9O+o+bwLlESBHf18XtsMhZvQveP+DSpLB/qDpY8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=mVgbTgQ0WtTPxRiONlh8fW2hL0vOWo/W8747Nm/jFJgmVg9y12U2lXAckWgMJet6t
+	 zNjsKiBuaTtNgS2DN7oGpOW9nffi3ovrqPa0bWS131HgfCGpL4ZIL28RKd2GL2F16X
+	 5Dfk4k8oBr7/kxBrj8vvS2jLvKH3YYcTwNdYEIAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbfHFVcl (ORCPT
+        id S1726771AbfHFVdX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:32:41 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:36349 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725974AbfHFVck (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:32:40 -0400
-Received: by mail-oi1-f195.google.com with SMTP id c15so13424236oic.3;
-        Tue, 06 Aug 2019 14:32:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ef8vY14IPg+ARIOj2VrrOApE5VT46udp6YkWmmIY8Ms=;
-        b=C9tpcqn2Gg1FkvdmKFSoHZzZpu7xwyVY7lSOlgHozEIMXdpQGdGjlFZGhNTo//CHGA
-         z0f0OyVtxGZwCgGGqEoT18sEkm7LGTENIZT1LAQv4vfJ7JSwSo9E6RQQ1MKfqBs93EMn
-         g5a4SyThQ8EI9MEW8/Jt8qlcmlCrqEGnTUtrjCbzBwrN5nbvMh6Lpimd4h/kuGPYn4S8
-         MItErD+nfNesXZG+uUt4+82N6BHomyH0SloZH2cXNYZMnbbxKZYqMB8ty8dvakV4WOwm
-         4Bu2U/9jZ3mq/uVfhKl/XEsRIlrbVzO667+PiDpVWfxAcckczXaoxo2icywo+divFWLy
-         J9sw==
-X-Gm-Message-State: APjAAAWOvh9d7SKKkN5v2Np35ZG534woE8xnhYbEDoDa2lqbAAuHy2+5
-        dXIV0iJRZn4FaguH5zRAriNSmjUcuXvNf03RuHg=
-X-Google-Smtp-Source: APXvYqz5InPmzAE9CcFUiwV8OQSK3Rfqze+93pwnQo2dyWs4n8mTKQoIhMVewx9cL+IVA1slbun5a7mS7PvjzPnLM8g=
-X-Received: by 2002:aca:cdd3:: with SMTP id d202mr3451399oig.115.1565127159601;
- Tue, 06 Aug 2019 14:32:39 -0700 (PDT)
+        Tue, 6 Aug 2019 17:33:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51124 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725974AbfHFVdW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:33:22 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B09EB2089E;
+        Tue,  6 Aug 2019 21:33:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565127201;
+        bh=eOG/9O+o+bwLlESBHf18XtsMhZvQveP+DSpLB/qDpY8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=NCLWyyjitZoEq9sa6svsUDvj8BLsT2iGjFXTxPtUfc14RdMddOBmhPu4tsBJMmNCd
+         m7jISFZfWq7qRsSppdhsXJj0K2wUlczIwxAwaomV0CJyvuGITE2eTEA7rMnx9paBNB
+         8oYrUTIaqB2L0zWFf16C37l10RdaiN8j/UxpYALk=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Xi Wang <wangxi11@huawei.com>, Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 01/59] RDMA/hns: Fix sg offset non-zero issue
+Date:   Tue,  6 Aug 2019 17:32:21 -0400
+Message-Id: <20190806213319.19203-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190805175848.163558-1-trong@android.com> <20190805175848.163558-4-trong@android.com>
- <5d48bbc2.1c69fb81.62114.5473@mx.google.com> <CANA+-vBFY_mVfhhK=5BL5m_yyQ5+GTE9bv32fk-qsfnAmfE4nA@mail.gmail.com>
-In-Reply-To: <CANA+-vBFY_mVfhhK=5BL5m_yyQ5+GTE9bv32fk-qsfnAmfE4nA@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 6 Aug 2019 23:32:27 +0200
-Message-ID: <CAJZ5v0ijZdTPi3dFrqcGwPo-gmCEOmjnShv=fLBW9L_8vDNuZQ@mail.gmail.com>
-Subject: Re: [PATCH v7 3/3] PM / wakeup: Show wakeup sources stats in sysfs
-To:     Tri Vo <trong@android.com>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Hridya Valsaraju <hridya@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Kalesh Singh <kaleshsingh@google.com>,
-        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 6, 2019 at 8:51 PM Tri Vo <trong@android.com> wrote:
->
-> On Mon, Aug 5, 2019 at 4:29 PM Stephen Boyd <swboyd@chromium.org> wrote:
-> >
-> > Quoting Tri Vo (2019-08-05 10:58:48)
-> > > diff --git a/drivers/base/power/wakeup_stats.c b/drivers/base/power/wakeup_stats.c
-> > > new file mode 100644
-> > > index 000000000000..3a4f55028e27
-> > > --- /dev/null
-> > > +++ b/drivers/base/power/wakeup_stats.c
-> > > @@ -0,0 +1,161 @@
-> > [...]
-> > > +/**
-> > > + * wakeup_source_sysfs_add - Add wakeup_source attributes to sysfs.
-> > > + * @parent: Device given wakeup source is associated with (or NULL if virtual).
-> > > + * @ws: Wakeup source to be added in sysfs.
-> > > + */
-> > > +int wakeup_source_sysfs_add(struct device *parent, struct wakeup_source *ws)
-> > > +{
-> > > +       struct device *dev;
-> > > +
-> > > +       dev = device_create_with_groups(wakeup_class, parent, MKDEV(0, 0), ws,
-> > > +                                       wakeup_source_groups, "wakeup%d",
-> > > +                                       ws->id);
-> > > +       if (IS_ERR(dev))
-> > > +               return PTR_ERR(dev);
-> > > +       ws->dev = dev;
-> > > +       pm_runtime_no_callbacks(ws->dev);
-> >
-> > Does this only avoid adding runtime PM attributes?
-> >
-> > I thought we would call device_set_pm_not_required() on the device here.
-> > Probably requiring a bit of copy/paste from device_create_with_groups()
-> > so that it can be set before the device is registered. Or another
-> > version of device_create_with_groups() that does everything besides call
-> > device_add().
->
-> Comments on pm_runtime_no_callbacks() say,
->   "Set the power.no_callbacks flag, which tells the PM core that this
->    device is power-managed through its parent and has no runtime PM
->    callbacks of its own.  The runtime sysfs attributes will be removed."
->
-> Sound like it's appropriate to apply this function to the wakeup source.
+From: Xi Wang <wangxi11@huawei.com>
 
-This is only useful if you ever enable PM-runtime for this device.
-Which you won't do.
+[ Upstream commit 60c3becfd1a138fdcfe48f2a5ef41ef0078d481e ]
 
-You could use device_set_pm_not_required(), though.
+When run perftest in many times, the system will report a BUG as follows:
+
+   BUG: Bad rss-counter state mm:(____ptrval____) idx:0 val:-1
+   BUG: Bad rss-counter state mm:(____ptrval____) idx:1 val:1
+
+We tested with different kernel version and found it started from the the
+following commit:
+
+commit d10bcf947a3e ("RDMA/umem: Combine contiguous PAGE_SIZE regions in
+SGEs")
+
+In this commit, the sg->offset is always 0 when sg_set_page() is called in
+ib_umem_get() and the drivers are not allowed to change the sgl, otherwise
+it will get bad page descriptor when unfolding SGEs in __ib_umem_release()
+as sg_page_count() will get wrong result while sgl->offset is not 0.
+
+However, there is a weird sgl usage in the current hns driver, the driver
+modified sg->offset after calling ib_umem_get(), which caused we iterate
+past the wrong number of pages in for_each_sg_page iterator.
+
+This patch fixes it by correcting the non-standard sgl usage found in the
+hns_roce_db_map_user() function.
+
+Fixes: d10bcf947a3e ("RDMA/umem: Combine contiguous PAGE_SIZE regions in SGEs")
+Fixes: 0425e3e6e0c7 ("RDMA/hns: Support flush cqe for hip08 in kernel space")
+Link: https://lore.kernel.org/r/1562808737-45723-1-git-send-email-oulijun@huawei.com
+Signed-off-by: Xi Wang <wangxi11@huawei.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/infiniband/hw/hns/hns_roce_db.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/infiniband/hw/hns/hns_roce_db.c b/drivers/infiniband/hw/hns/hns_roce_db.c
+index 0c6c1fe87705c..d60453e98db7c 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_db.c
++++ b/drivers/infiniband/hw/hns/hns_roce_db.c
+@@ -12,13 +12,15 @@ int hns_roce_db_map_user(struct hns_roce_ucontext *context,
+ 			 struct ib_udata *udata, unsigned long virt,
+ 			 struct hns_roce_db *db)
+ {
++	unsigned long page_addr = virt & PAGE_MASK;
+ 	struct hns_roce_user_db_page *page;
++	unsigned int offset;
+ 	int ret = 0;
+ 
+ 	mutex_lock(&context->page_mutex);
+ 
+ 	list_for_each_entry(page, &context->page_list, list)
+-		if (page->user_virt == (virt & PAGE_MASK))
++		if (page->user_virt == page_addr)
+ 			goto found;
+ 
+ 	page = kmalloc(sizeof(*page), GFP_KERNEL);
+@@ -28,8 +30,8 @@ int hns_roce_db_map_user(struct hns_roce_ucontext *context,
+ 	}
+ 
+ 	refcount_set(&page->refcount, 1);
+-	page->user_virt = (virt & PAGE_MASK);
+-	page->umem = ib_umem_get(udata, virt & PAGE_MASK, PAGE_SIZE, 0, 0);
++	page->user_virt = page_addr;
++	page->umem = ib_umem_get(udata, page_addr, PAGE_SIZE, 0, 0);
+ 	if (IS_ERR(page->umem)) {
+ 		ret = PTR_ERR(page->umem);
+ 		kfree(page);
+@@ -39,10 +41,9 @@ int hns_roce_db_map_user(struct hns_roce_ucontext *context,
+ 	list_add(&page->list, &context->page_list);
+ 
+ found:
+-	db->dma = sg_dma_address(page->umem->sg_head.sgl) +
+-		  (virt & ~PAGE_MASK);
+-	page->umem->sg_head.sgl->offset = virt & ~PAGE_MASK;
+-	db->virt_addr = sg_virt(page->umem->sg_head.sgl);
++	offset = virt - page_addr;
++	db->dma = sg_dma_address(page->umem->sg_head.sgl) + offset;
++	db->virt_addr = sg_virt(page->umem->sg_head.sgl) + offset;
+ 	db->u.user_page = page;
+ 	refcount_inc(&page->refcount);
+ 
+-- 
+2.20.1
+
