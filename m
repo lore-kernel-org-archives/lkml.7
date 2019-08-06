@@ -2,240 +2,83 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C853CC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 19:35:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA0DBC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 19:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 828D720818
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 19:35:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B44D20880
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 19:40:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K1zoApo+"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="I5CqAKAJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726246AbfHFTfn (ORCPT
+        id S1726145AbfHFTkp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 15:35:43 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38491 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725798AbfHFTfm (ORCPT
+        Tue, 6 Aug 2019 15:40:45 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:36183 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725798AbfHFTkp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 15:35:42 -0400
-Received: by mail-wr1-f66.google.com with SMTP id g17so89012337wrr.5;
-        Tue, 06 Aug 2019 12:35:40 -0700 (PDT)
+        Tue, 6 Aug 2019 15:40:45 -0400
+Received: by mail-qt1-f195.google.com with SMTP id z4so85879649qtc.3
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 12:40:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=cc:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=tpg0af9/U2JURUKymJ1WeymBF/I9PdpGOpltEYj/iLU=;
-        b=K1zoApo+80Lle4P4NxbR/2kRWHO+Ps3k6oiTDLtbeRoCiCi735wIF3+DfzvrtWqfFm
-         u7V7ROR8+rMEaR/1l4H2Mo1nKBHuzMKJkwnJFKtJ27h/SfUtkwPz72AOQyxYSsXtLG9x
-         fYJcz5393bUnPzxFyy5Y9DBLJ/u+p0osPUWrxcUyQYLUvzx1n6oY2OLLq51fGNMZZ8B5
-         79kEUhdr6fNvT9luL9NEI3Yxmc1BBJGLLLBQIsyg6evtJYsoDlGbFmoLbMgux6X0eD29
-         J8xNGRveN+O6hiRTvb4P0N9EcQajpWIvOgdpFesul9/2i90OafCohntyJtY+rUQgf4+O
-         Rv9g==
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=Y7UpGezK0Ud1sFcHnTxPRnpHSsAKoECEyD/JfXJH5eE=;
+        b=I5CqAKAJvqBMZ7cVCkQIZzJxWZqDXUmJ4fuZDVxnWO0sObj/kWqJbEiCN/DzeHzivD
+         8qIms80lB/zz/ShDMd1VDvdRN5EHjP6LkKuODP2W1iTPeIp7KvpeOh3En1pcYoAc3Skb
+         b/zSpO5QpmAhh+C24sIQTl8wTjGjmmr2hy0pKlto1ERsY3Q+W6NriEtj+HuB9Y6nMnW7
+         JqSd1u8UcvNaomN3QglbfI8msemVHGvNViZ3+xfWbF5a4Qdup9cHeqGz4eEbTGK4PHmu
+         4XeeL8psXWyoNs2BhXqpxpv7h2YNndQJsFnQrVsxQfthViC+T/3V6S83+MCSBw1y3pgZ
+         1J6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=tpg0af9/U2JURUKymJ1WeymBF/I9PdpGOpltEYj/iLU=;
-        b=JzZhKiExtFP72Dqldr3xpLEipe7WGWCB9nlXUAEp5JSD4ayQKO3Gk99MSv/USDSA7k
-         ixHdF5+1qAe7FoMeMguN+TQhZ7QNKweLzZPdjvvbZDwv/1Z4faTU9Xj18YEfevn6dxf/
-         xQNv/lifsxfLmvd2DtTixx+vJFwXfluseP6ohoI/aI5cohjxM4+6hgLVy80ipXO1ftfE
-         +cXGwE0jR6zWp4Z2irS2ApDV91CDXFZ2UwTVgE262GbEnhb8RYgKpaMhZzoZS09fJGAs
-         w8WavCLUBKABZbUReP6p+fPRzzH/RhcD2SQD7dLJ6Yz7GsNujO3GbrOHnBMiFilgpspO
-         GnEQ==
-X-Gm-Message-State: APjAAAUPWRuJ9IuS+tzXfzO8Ms9/0qPH8owi1Jw+xbFCdwZh0LYrwcuX
-        tb8n1i0g3vIFgQzKSYY4ACk=
-X-Google-Smtp-Source: APXvYqwQFpOz41LCT+YyQ37GpgIUrF6vthgmDiflTR9yjvYYf0d/UqaMIx0HX8fc9cvSZfMFAAYXAw==
-X-Received: by 2002:adf:df10:: with SMTP id y16mr6275738wrl.302.1565120139380;
-        Tue, 06 Aug 2019 12:35:39 -0700 (PDT)
-Received: from ?IPv6:2001:a61:3aff:2d01:3e8:cefd:7d80:b611? ([2001:a61:3aff:2d01:3e8:cefd:7d80:b611])
-        by smtp.gmail.com with ESMTPSA id z5sm63786972wmf.48.2019.08.06.12.35.38
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 06 Aug 2019 12:35:38 -0700 (PDT)
-Cc:     mtk.manpages@gmail.com, "Serge E. Hallyn" <serge@hallyn.com>,
-        linux-man <linux-man@vger.kernel.org>,
-        Containers <containers@lists.linux-foundation.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Jordan Ogas <jogas@lanl.gov>, Al Viro <viro@ftp.linux.org.uk>,
-        werner@almesberger.net, Aleksa Sarai <cyphar@cyphar.com>
-Subject: Re: pivot_root(".", ".") and the fchdir() dance
-To:     Aleksa Sarai <asarai@suse.de>
-References: <CAKgNAki0bR5zZr+kp_xjq+bNUky6-F+s2ep+jnR0YrjHhNMB1g@mail.gmail.com>
- <20190805103630.tu4kytsbi5evfrhi@mikami>
- <3a96c631-6595-b75e-f6a7-db703bf89bcf@gmail.com>
- <20190805133744.7sm6wx2rspwiuxu5@mikami>
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Message-ID: <855fe920-7630-b16c-343b-b08b93eceffa@gmail.com>
-Date:   Tue, 6 Aug 2019 21:35:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=Y7UpGezK0Ud1sFcHnTxPRnpHSsAKoECEyD/JfXJH5eE=;
+        b=XEdSapeLh1tJJpDmXTyEjyTTDS2yX21ao2eJ+LmggyYzzRCfEGmrkcRS4lUd3N2L66
+         //I586DO/jxW9BqDPfwjra587RlZqdpq2CT4KhGxBLJgNfpaN+tH9KUWk51GL3R+PyQh
+         Q/ZC4hU7cbMs3dc0EOiVDOg0ZJje0rPUfV+0mPALdPXq5ke6T3VKpapifaMTNG2mxtIs
+         0V1mOMjROfRU3y26STl9JvvzNy53jG4SBAelrk/I1XgQkr7V7+p4taUdQPJKolC+YjIb
+         dkGR8H7CJOS8vqGM/AXzRlbG0J9G3CoDEI3Qzpq4Jx4yJD54TcRC9oJQ5uIMhoydgUnt
+         GonA==
+X-Gm-Message-State: APjAAAXnHqeu+ggBgPKcWZn0dCwfYV9bAnDmVnfAhqyhAVBOLyG49it4
+        EisUf+wdhsgcobTBQjF+QZ69WQ==
+X-Google-Smtp-Source: APXvYqxi59nkItJAOGN4OwKGOH4912Tt8J12kJYya2XOtlNL8EkJaIagn0XHoE9jbWY9aKFh4K3utQ==
+X-Received: by 2002:aed:3091:: with SMTP id 17mr1193900qtf.290.1565120444179;
+        Tue, 06 Aug 2019 12:40:44 -0700 (PDT)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id y9sm37534001qki.116.2019.08.06.12.40.42
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 06 Aug 2019 12:40:43 -0700 (PDT)
+Date:   Tue, 6 Aug 2019 12:40:17 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Jose Abreu <Jose.Abreu@synopsys.com>
+Cc:     netdev@vger.kernel.org, Joao Pinto <Joao.Pinto@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v2 00/10] net: stmmac: Improvements for -next
+Message-ID: <20190806124017.77e0f63c@cakuba.netronome.com>
+In-Reply-To: <cover.1565098881.git.joabreu@synopsys.com>
+References: <cover.1565098881.git.joabreu@synopsys.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-In-Reply-To: <20190805133744.7sm6wx2rspwiuxu5@mikami>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Aleksa,
+On Tue,  6 Aug 2019 15:42:41 +0200, Jose Abreu wrote:
+> Couple of improvements for -next tree. More info in commit logs.
 
-On 8/5/19 3:37 PM, Aleksa Sarai wrote:
-> On 2019-08-05, Michael Kerrisk (man-pages) <mtk.manpages@gmail.com> wrote:
->> On 8/5/19 12:36 PM, Aleksa Sarai wrote:
->>> On 2019-08-01, Michael Kerrisk (man-pages) <mtk.manpages@gmail.com> wrote:
->>>> I'd like to add some documentation about the pivot_root(".", ".")
->>>> idea, but I have a doubt/question. In the lxc_pivot_root() code we
->>>> have these steps
->>>>
->>>>         oldroot = open("/", O_DIRECTORY | O_RDONLY | O_CLOEXEC);
->>>>         newroot = open(rootfs, O_DIRECTORY | O_RDONLY | O_CLOEXEC);
->>>>
->>>>         fchdir(newroot);
->>>>         pivot_root(".", ".");
->>>>
->>>>         fchdir(oldroot);      // ****
->>>
->>> This one is "required" because (as the pivot_root(2) man page states),
->>> it's technically not guaranteed by the kernel that the process's cwd
->>> will be the same after pivot_root(2):
->>>
->>>> pivot_root() may or may not change the current root and the current
->>>> working directory of any processes or threads which use the old root
->>>> directory.
->>>
->>> Now, if it turns out that we can rely on the current behaviour (and the
->>> man page you're improving is actually inaccurate on this point) then
->>> you're right that this fchdir(2) isn't required.
->>
->> I'm not sure that I follow your logic here. In the old manual page
->> text that you quote above, it says that [pivot_root() may change the
->> CWD of any processes that use the old root directory]. Two points 
->> there:
->>
->> (1) the first fchdir() has *already* changed the CWD of the calling
->> process to the new root directory, and
-> 
-> Right, I (and presumably the LXC folks as well) must've missed the
-> qualifier on the end of the sentence and was thinking that it said "you
-> can't trust CWD after pivot_root(2)".
-> 
-> My follow-up was going to be that we need to be in the old root to
-> umount, but as you mentioned that shouldn't be necessary either since
-> the umount will apply to the stacked mount (which is somewhat
-> counter-intuitively the earlier mount not the later one -- I will freely
-> admit that I don't understand all of the stacked and tucked mount
-> logic in VFS).
-
-Your not alone. I don't follow that code easily either. But, looking
-at the order that the mounts were stacked in /proc/PID/mountinfo
-helped clarify things for me.
-
->> (2) the manual page implied but did not explicitly say that the
->> CWD of processes using the old root may be changed *to the new root
->> directory* (rather than changed to some arbitrary location!);
->> presumably, omitting to mention that detail explicitly in the manual
->> page was an oversight, since that is indeed the kernel's behavior.
->>
->> The point is, the manual page was written 19 years ago and has
->> barely been changed since then. Even at the time that the system
->> call was officially released (in Linux 2.4.0), the manual page was
->> already inaccurate in a number of details, since it was written 
->> about a year beforehand (during the 2.3 series), and the 
->> implementation already changed by the time of 2.4.0, but the manual
->> page was not changed then (or since, but I'm working on that).
->>
->> The behavior has in practice always been (modulo the introduction
->> of mount namespaces in 2001/2002):
->>
->>        pivot_root()  changes  the root directory and the current
->>        working directory of each process or thread in  the  same
->>        mount namespace to new_root if they point to the old root
->>        directory.
->>
->> Given that this has been the behavior since Linux 2.4.0 was
->> released, it improbable that this will ever change, since,
->> notwithstanding what the manual page says, this would be an ABI
->> breakage.
->>
->> I hypothesize that the original manual page text, written before
->> the system call was even officially released, reflects Werner's
->> belief at the time that perhaps in the not too distant future
->> the implementation might change. But, 18 years on from 2.4.0,
->> it has not.
->>
->> And arguably, the manual page should reflect that reality,
->> describing what the kernel actually does, rather than speculating
->> that things might (after 19 years) still sometime change.
-> 
-> I wasn't aware of the history of the man page, and took it as gospel
-> that we should avoid making assumptions about current's CWD surrounding
-> a pivot_root(2). Given the history (and that it appears the behaviour
-> was never intended to be changed after being merged), we should
-> definitely drop that text to avoid the confusion which has already
-> caused us container folks to implement this in a
-> more-convoluted-than-necessary fashion.
-> 
-> In case you haven't noticed already, you might want to also send a patch
-> to util-linux to also update pivot_root(8) which makes the same mistake
-> in its text:
-> 
->> Note that, depending on the implementation of pivot_root, root and cwd
->> of the caller may or may not change.
->
-> Then again, it's also possible this text is independently just as vague
-> for other reasons.
-
-I think that page was also written by Werner, back in the day. So I
-think it's vague for the same reasons.
- 
->>> And this one is required because we are in @oldroot at this point, due
->>> to the first fchdir(2). If we don't have the first one, then switching
->>> from "." to "/" in the mount/umount2 calls should fix the issue.
->>
->> See my notes above for why I therefore think that the second fchdir()
->> is also not needed (and therefore why switching from "." to "/" in the
->> mount()/umount2() calls is unnecessary.
-> 
-> My gut feeling reading this was that operating on "." will result in you
-> doing the later mount operations on @newroot (since "." is @newroot) not
-> on the stacked mount which isn't your CWD.
-> 
-> *But* my gut feeling is obviously wrong (since you've tested it), and I
-> will again admit I don't understand quite how CWD references interact
-> with mount operations -- especially in the context of stacked mounts.
-> 
->> Do you agree with my analysis?
-> 
-> Minus the mount bits that I'm not too sure about (I defer to
-> Christian/Serge/et al on that point), it seems reasonable to me.
-
-Okay.
-
-> My only real argument for keeping it the way it is, is that it's much
-> easier (for me, at least) to understand the semantics with explicit
-> fchdir(2)s. But that's not really a good reason to continue doing it the
-> way we do it now -- if it's documented in ah man page that'd be more than
-> sufficient to avoid confusion when reading snippets that do it without
-> the fchdir(2)s.
-
-Yes. I'm wanting to get a some feedback/confirmation from others
-before I finalize the changes ti the manual page. The feedback from
-you and Philipp has already been helpful. I'm hoping that Serge or
-Andy might also chip in.
-
-Cheers,
-
-Michael
-
--- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+Code looks good to me now, thanks!
