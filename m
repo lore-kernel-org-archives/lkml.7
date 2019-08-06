@@ -2,136 +2,183 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 141E1C41514
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 11:26:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE72C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 11:28:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E01F420818
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 11:26:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B24E20818
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 11:28:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="KdWHadNe"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ddm8ncEc";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ddm8ncEc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732744AbfHFL0J (ORCPT
+        id S1731157AbfHFL22 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 07:26:09 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:38100 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726783AbfHFL0J (ORCPT
+        Tue, 6 Aug 2019 07:28:28 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:53426 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726783AbfHFL21 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 07:26:09 -0400
-Received: by mail-pl1-f194.google.com with SMTP id az7so37726463plb.5
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 04:26:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=eQDxozI2qjukpUkcofnkYlDLvFKSd1P/XqoYuWp8Iko=;
-        b=KdWHadNeW6pa2dnhFD6vGAJeFuZ4bU94l8h5hGmJoB6iVklb97AFdq2hkigQMM5/UW
-         duwzf5xlAas4hj7F57fOHGW4Fbh0eAqKIwiEUMntWH0rzszBSsXQxg7vmdW0vXnYKvIV
-         u177tjd2FQ7ASDBdqt2QwZ/5p/Ocdpipr0UPw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=eQDxozI2qjukpUkcofnkYlDLvFKSd1P/XqoYuWp8Iko=;
-        b=iR1F76b7NfaVtIKttegJ2xvOaosUa8GQzn6YkwJbkQSWNAja3b4MN5/DFsAP1EP4lN
-         WzkqFdEA0ut5OT41agDM1wdAn/DKi/GQU80HlFYbEkyOB2p+eI/MSZQqNlpOkE8fapLD
-         8piANTIWTFlDpvn37pfB4nY1NOOxOK/Qe5xocQtURgAqN1aoi+8X/KHG76zZtG0Q3eEI
-         y/qNVVpV7qIQ/ZUYg6H79VxVMXCE/wKZFFzlxDaPYET/ZGkk7S1H2U2k4DwvByCUni1F
-         VgGSfjWqj59zej32sbEIB8lb41DEVOtq0HyAb5XDFKV/QM8EeKfc6XYie5KYQZwEGbmn
-         0Lvw==
-X-Gm-Message-State: APjAAAVSy138xI29E7t23MBehtuD9su5/RLYAFj+4CMO+GTLRNLSLytV
-        m2fjamT9v8oks8HUffpVAufspw==
-X-Google-Smtp-Source: APXvYqyhzcoKkLyUNInxKHTRQ0D58ehVR/MM5voEdZBk61kMSmPqKu2JfV8+IDkI8ipd4TE0B17EDQ==
-X-Received: by 2002:a17:902:a413:: with SMTP id p19mr2767311plq.134.1565090768446;
-        Tue, 06 Aug 2019 04:26:08 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id h14sm113010833pfq.22.2019.08.06.04.26.07
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 06 Aug 2019 04:26:07 -0700 (PDT)
-Date:   Tue, 6 Aug 2019 07:26:06 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Minchan Kim <minchan@kernel.org>, linux-kernel@vger.kernel.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Brendan Gregg <bgregg@netflix.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christian Hansen <chansen3@cisco.com>, dancol@google.com,
-        fmayer@google.com, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        linux-api@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Mike Rapoport <rppt@linux.ibm.com>, namhyung@google.com,
-        paulmck@linux.ibm.com, Roman Gushchin <guro@fb.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>, surenb@google.com,
-        Thomas Gleixner <tglx@linutronix.de>, tkjos@google.com,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v4 3/5] [RFC] arm64: Add support for idle bit in swap PTE
-Message-ID: <20190806112606.GC117316@google.com>
-References: <20190805170451.26009-1-joel@joelfernandes.org>
- <20190805170451.26009-3-joel@joelfernandes.org>
- <20190806084203.GJ11812@dhcp22.suse.cz>
- <20190806103627.GA218260@google.com>
- <20190806104755.GR11812@dhcp22.suse.cz>
- <20190806110737.GB32615@google.com>
- <20190806111452.GW11812@dhcp22.suse.cz>
+        Tue, 6 Aug 2019 07:28:27 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 990AA60AD1; Tue,  6 Aug 2019 11:28:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1565090906;
+        bh=NCToKbuzXkhWhHuK/S79srEeYec4gCngVAfQo4VLI1I=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ddm8ncEcXJtLm03CcusTGMnEWQyT9yH8ABFVL5Fc+rzFnNB3PMNN/I7G8a9uXWxl8
+         lxi8IjrqRHx4RpRYo8qXYiVqbx54y6PKOVVchLryHMyjnbloMglkxyDpG6/R0le52n
+         1lChwOX0i83iweCtw+u8a7WcEUMVwK8cwJygX0SE=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0697260A0A;
+        Tue,  6 Aug 2019 11:28:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1565090906;
+        bh=NCToKbuzXkhWhHuK/S79srEeYec4gCngVAfQo4VLI1I=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ddm8ncEcXJtLm03CcusTGMnEWQyT9yH8ABFVL5Fc+rzFnNB3PMNN/I7G8a9uXWxl8
+         lxi8IjrqRHx4RpRYo8qXYiVqbx54y6PKOVVchLryHMyjnbloMglkxyDpG6/R0le52n
+         1lChwOX0i83iweCtw+u8a7WcEUMVwK8cwJygX0SE=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0697260A0A
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     David Miller <davem@davemloft.net>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: pull-request: wireless-drivers 2019-08-06
+Date:   Tue, 06 Aug 2019 14:28:22 +0300
+Message-ID: <87h86ufs89.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190806111452.GW11812@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 01:14:52PM +0200, Michal Hocko wrote:
-> On Tue 06-08-19 20:07:37, Minchan Kim wrote:
-> > On Tue, Aug 06, 2019 at 12:47:55PM +0200, Michal Hocko wrote:
-> > > On Tue 06-08-19 06:36:27, Joel Fernandes wrote:
-> > > > On Tue, Aug 06, 2019 at 10:42:03AM +0200, Michal Hocko wrote:
-> > > > > On Mon 05-08-19 13:04:49, Joel Fernandes (Google) wrote:
-> > > > > > This bit will be used by idle page tracking code to correctly identify
-> > > > > > if a page that was swapped out was idle before it got swapped out.
-> > > > > > Without this PTE bit, we lose information about if a page is idle or not
-> > > > > > since the page frame gets unmapped.
-> > > > > 
-> > > > > And why do we need that? Why cannot we simply assume all swapped out
-> > > > > pages to be idle? They were certainly idle enough to be reclaimed,
-> > > > > right? Or what does idle actualy mean here?
-> > > > 
-> > > > Yes, but other than swapping, in Android a page can be forced to be swapped
-> > > > out as well using the new hints that Minchan is adding?
-> > > 
-> > > Yes and that is effectivelly making them idle, no?
-> > 
-> > 1. mark page-A idle which was present at that time.
-> > 2. run workload
-> > 3. page-A is touched several times
-> > 4. *sudden* memory pressure happen so finally page A is finally swapped out
-> > 5. now see the page A idle - but it's incorrect.
-> 
-> Could you expand on what you mean by idle exactly? Why pageout doesn't
-> really qualify as "mark-idle and reclaim"? Also could you describe a
-> usecase where the swapout distinction really matters and it would lead
-> to incorrect behavior?
+Hi Dave,
 
-Michal,
-Did you read this post ? :
-https://lore.kernel.org/lkml/20190806104715.GC218260@google.com/T/#m4ece68ceaf6e54d4d29e974f5f4c1080e733f6c1
+here's a pull request to net tree for v5.3, more information below.
+Please let me know if there are any problems.
 
-Just wanted to be sure you did not miss it.
+Kalle
 
-thanks,
+The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
 
- - Joel
+  Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
 
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/kvalo/wireless-drivers.git tags/wireless-drivers-for-davem-2019-08-06
+
+for you to fetch changes up to 1f66072503316134873060b24b7895dbbcccf00e:
+
+  iwlwifi: dbg_ini: fix compile time assert build errors (2019-08-01 19:48:00 +0300)
+
+----------------------------------------------------------------
+wireless-drivers fixes for 5.3
+
+Second set of fixes for 5.3. Lots of iwlwifi fixes have accumulated
+which consists most of patches in this pull request. Only most notable
+iwlwifi fixes are listed below.
+
+mwifiex
+
+* fix a regression related to WPA1 networks since v5.3-rc1
+
+iwlwifi
+
+* fix use-after-free issues
+
+* fix DMA mapping API usage errors
+
+* fix frame drop occurring due to reorder buffer handling in
+  RSS in certain conditions
+
+* fix rate scale locking issues
+
+* disable TX A-MSDU on older NICs as it causes problems and was
+  never supposed to be supported
+
+* new PCI IDs
+
+* GEO_TX_POWER_LIMIT API issue that many people were hitting
+
+----------------------------------------------------------------
+Brian Norris (1):
+      mwifiex: fix 802.11n/WPA detection
+
+Colin Ian King (1):
+      iwlwifi: mvm: fix comparison of u32 variable with less than zero
+
+Emmanuel Grumbach (8):
+      iwlwifi: mvm: prepare the ground for more RSS notifications
+      iwlwifi: mvm: add a new RSS sync notification for NSSN sync
+      iwlwiif: mvm: refactor iwl_mvm_notify_rx_queue
+      iwlwifi: mvm: add a loose synchronization of the NSSN across Rx queues
+      iwlwifi: mvm: fix frame drop from the reordering buffer
+      iwlwifi: don't unmap as page memory that was mapped as single
+      iwlwifi: mvm: fix an out-of-bound access
+      iwlwifi: mvm: fix a use-after-free bug in iwl_mvm_tx_tso_segment
+
+Gregory Greenman (4):
+      iwlwifi: mvm: add a wrapper around rs_tx_status to handle locks
+      iwlwifi: mvm: send LQ command always ASYNC
+      iwlwifi: mvm: replace RS mutex with a spin_lock
+      iwlwifi: mvm: fix possible out-of-bounds read when accessing lq_info
+
+Ihab Zhaika (1):
+      iwlwifi: add 3 new IDs for the 9000 series (iwl9260_2ac_160_cfg)
+
+Johannes Berg (2):
+      iwlwifi: mvm: disable TX-AMSDU on older NICs
+      iwlwifi: fix locking in delayed GTK setting
+
+Kalle Valo (1):
+      Merge tag 'iwlwifi-fixes-for-kvalo-2019-07-30' of git://git.kernel.org/.../iwlwifi/iwlwifi-fixes
+
+Luca Coelho (2):
+      iwlwifi: mvm: don't send GEO_TX_POWER_LIMIT on version < 41
+      iwlwifi: mvm: fix version check for GEO_TX_POWER_LIMIT support
+
+Mauro Rossi (1):
+      iwlwifi: dbg_ini: fix compile time assert build errors
+
+Mordechay Goodstein (1):
+      iwlwifi: mvm: avoid races in rate init and rate perform
+
+Shahar S Matityahu (2):
+      iwlwifi: dbg_ini: move iwl_dbg_tlv_load_bin out of debug override ifdef
+      iwlwifi: dbg_ini: move iwl_dbg_tlv_free outside of debugfs ifdef
+
+ drivers/net/wireless/intel/iwlwifi/fw/api/rx.h    |   3 +-
+ drivers/net/wireless/intel/iwlwifi/fw/dbg.c       |  22 +-
+ drivers/net/wireless/intel/iwlwifi/iwl-drv.c      |   4 +-
+ drivers/net/wireless/intel/iwlwifi/mvm/fw.c       |  29 +-
+ drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c |  58 ++-
+ drivers/net/wireless/intel/iwlwifi/mvm/mvm.h      |   8 +-
+ drivers/net/wireless/intel/iwlwifi/mvm/nvm.c      |   2 +-
+ drivers/net/wireless/intel/iwlwifi/mvm/ops.c      |   4 +-
+ drivers/net/wireless/intel/iwlwifi/mvm/rs.c       | 539 ++++++++++++----------
+ drivers/net/wireless/intel/iwlwifi/mvm/rs.h       |   3 +-
+ drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c     | 185 ++++++--
+ drivers/net/wireless/intel/iwlwifi/mvm/sta.c      |   6 +-
+ drivers/net/wireless/intel/iwlwifi/mvm/sta.h      |  12 +-
+ drivers/net/wireless/intel/iwlwifi/mvm/tx.c       |   3 +-
+ drivers/net/wireless/intel/iwlwifi/mvm/utils.c    |   4 +-
+ drivers/net/wireless/intel/iwlwifi/pcie/drv.c     |   3 +
+ drivers/net/wireless/intel/iwlwifi/pcie/tx.c      |   2 +
+ drivers/net/wireless/marvell/mwifiex/main.h       |   1 +
+ drivers/net/wireless/marvell/mwifiex/scan.c       |   3 +-
+ 19 files changed, 538 insertions(+), 353 deletions(-)
+
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
