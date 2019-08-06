@@ -2,125 +2,85 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB936C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BBFDC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:34:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 896242070D
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:34:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70BE72070D
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:34:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="FWKBS6ON";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="BfTgMDm8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731546AbfHFMez (ORCPT
+        id S1731270AbfHFMez (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 6 Aug 2019 08:34:55 -0400
-Received: from foss.arm.com ([217.140.110.172]:60920 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726834AbfHFMez (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 08:34:55 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2361A28;
-        Tue,  6 Aug 2019 05:34:54 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DC1073F694;
-        Tue,  6 Aug 2019 05:34:52 -0700 (PDT)
-Date:   Tue, 6 Aug 2019 13:34:50 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Miles Chen <miles.chen@mediatek.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        James Morse <james.morse@arm.com>
-Subject: Re: [PATCH] arm64: mm: print hexadecimal EC value in
- mem_abort_decode()
-Message-ID: <20190806123450.GE475@lakrids.cambridge.arm.com>
-References: <20190806112948.4357-1-miles.chen@mediatek.com>
+Received: from smtp.codeaurora.org ([198.145.29.96]:58136 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726373AbfHFMey (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 08:34:54 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id E807660907; Tue,  6 Aug 2019 12:34:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1565094893;
+        bh=j3IQ8khHcAdJB6SI5pT6gGee/zo9CcFWWZR+13cdipw=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=FWKBS6ONTqycTpdUvDznP/W/W8n3FAZpYWWJSX8EGFMZR1FD787Xrk3qWT5pboN5t
+         cP7Ix1Kt4RbKNlDndDSB3UUUYdy1g0bVqrdx2PcEkgj2G9FwkMTDXDMAv9tL8pTwXp
+         XaEU9dVygJIW1K6C+frBI4e92cq2kFyItCGd8WjY=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9F2AE6038E;
+        Tue,  6 Aug 2019 12:34:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1565094893;
+        bh=j3IQ8khHcAdJB6SI5pT6gGee/zo9CcFWWZR+13cdipw=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=BfTgMDm82Kk71nxz6v6+Ttk1yGWKAow1KxtBYkNVcEKGpMNSTYP/eXpUEmLjFJY86
+         y/1E6rpo3gRJ+1TGUYuD9cukkivkG2t6FwlNOttBa1xkWc+cPVMo9hXS6eT9WAZr1f
+         BVHRVaGnU4t/6weyz51tWTCHEseCGK/0zObWW56Y=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9F2AE6038E
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190806112948.4357-1-miles.chen@mediatek.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] rtlwifi: remove unneeded function _rtl_dump_channel_map()
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20190724141020.58800-1-yuehaibing@huawei.com>
+References: <20190724141020.58800-1-yuehaibing@huawei.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     <pkshih@realtek.com>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <linux-wireless@vger.kernel.org>,
+        <davem@davemloft.net>, YueHaibing <yuehaibing@huawei.com>
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20190806123453.E807660907@smtp.codeaurora.org>
+Date:   Tue,  6 Aug 2019 12:34:53 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 07:29:48PM +0800, Miles Chen wrote:
-> This change prints the hexadecimal EC value in mem_abort_decode(),
-> which makes it easier to lookup the corresponding EC in
-> the ARM Architecture Reference Manual.
-> 
-> The commit 1f9b8936f36f ("arm64: Decode information from ESR upon mem
-> faults") prints useful information when memory abort occurs. It would
-> be easier to lookup "0x25" instead of "DABT" in the document. Then we
-> can check the corresponding ISS.
-> 
-> For example:
-> Current	info	  	Document
-> 		  	EC	Exception class
-> "CP15 MCR/MRC"		0x3	"MCR or MRC access to CP15a..."
-> "ASIMD"			0x7	"Access to SIMD or floating-point..."
-> "DABT (current EL)" 	0x25	"Data Abort taken without..."
-> ...
-> 
-> Before:
-> Unable to handle kernel paging request at virtual address 000000000000c000
-> Mem abort info:
->   ESR = 0x96000046
->   Exception class = DABT (current EL), IL = 32 bits
->   SET = 0, FnV = 0
->   EA = 0, S1PTW = 0
-> Data abort info:
->   ISV = 0, ISS = 0x00000046
->   CM = 0, WnR = 1
-> 
-> After:
-> Unable to handle kernel paging request at virtual address 000000000000c000
-> Mem abort info:
->   ESR = 0x96000046
->   EC = 0x25, Exception class = DABT (current EL), IL = 32 bits
->   SET = 0, FnV = 0
->   EA = 0, S1PTW = 0
-> Data abort info:
->   ISV = 0, ISS = 0x00000046
->   CM = 0, WnR = 1
-> 
-> Cc: Mark Rutland <Mark.rutland@arm.com>
-> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
-> Cc: James Morse <james.morse@arm.com>
-> Signed-off-by: Miles Chen <miles.chen@mediatek.com>
-> ---
->  arch/arm64/mm/fault.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
-> index cfd65b63f36f..afb6041e25e6 100644
-> --- a/arch/arm64/mm/fault.c
-> +++ b/arch/arm64/mm/fault.c
-> @@ -86,8 +86,8 @@ static void mem_abort_decode(unsigned int esr)
->  	pr_alert("Mem abort info:\n");
->  
->  	pr_alert("  ESR = 0x%08x\n", esr);
-> -	pr_alert("  Exception class = %s, IL = %u bits\n",
-> -		 esr_get_class_string(esr),
-> +	pr_alert("  EC = 0x%lx, Exception class = %s, IL = %u bits\n",
-> +		 ESR_ELx_EC(esr), esr_get_class_string(esr),
+YueHaibing <yuehaibing@huawei.com> wrote:
 
-Could we make this:
+> Now _rtl_dump_channel_map() does not do any actual
+> thing using the channel. So remove it.
+> 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> Acked-by: Ping-Ke Shih <pkshih@realtek.com>
 
-	pr_alert("  EC = 0x%02lx: %s, IL = %u bits\n",
-		 ESR_ELx_EC(esr), esr_get_class_string(esr));
+Patch applied to wireless-drivers-next.git, thanks.
 
-We don't need to spell out "Exception Class" if we say "EC", and we
-should print the EC hex value with a consistent width as we do for the
-ISS.
+a4a68f727fb8 rtlwifi: remove unneeded function _rtl_dump_channel_map()
 
-With that:
+-- 
+https://patchwork.kernel.org/patch/11056997/
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
-Thanks,
-Mark.
