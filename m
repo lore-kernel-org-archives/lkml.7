@@ -2,440 +2,139 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B630C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 11:55:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F79FC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 11:57:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FF1220B1F
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 11:55:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5645620C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 11:57:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565092630;
+	bh=jmdggg38TboDRj5TTtGvby9FdDxzrB8Veg6nuDixYJ4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YR5BV/y26XVbKUX9KAIJU351YOPxpRJ+sr6wPb75RX96rcQ2Zvy66TocMyH88Wpr/
+	 8ApSf1gTwIjCbGnnSY5ft1wHSSkqH2BIoqqkgOHsEW+Yij6GXSN8PKlpWw/HamrHxI
+	 mbZSSKUZ9SlAtyTmAFrZqpGfbOnBYLtjGYQ2nM6I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730952AbfHFLz5 (ORCPT
+        id S1730992AbfHFL5J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 07:55:57 -0400
-Received: from mga18.intel.com ([134.134.136.126]:8687 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726092AbfHFLz4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 07:55:56 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 04:55:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,353,1559545200"; 
-   d="scan'208";a="349403780"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.122]) ([10.237.72.122])
-  by orsmga005.jf.intel.com with ESMTP; 06 Aug 2019 04:55:53 -0700
-Subject: Re: [PATCH V2 1/1] mmc: sdhci: Fix O2 Host data read/write DLL lock
- Phase shift issue
-To:     "Chevron Li (WH)" <chevron.li@bayhubtech.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     "Max Huang (SC)" <max.huang@bayhubtech.com>,
-        "Xiaoguang Yu (WH)" <xiaoguang.yu@bayhubtech.com>,
-        "Shirley Her (SC)" <shirley.her@bayhubtech.com>,
-        "Shaper Liu (WH)" <shaper.liu@bayhubtech.com>,
-        "Louis Lu (TP)" <louis.lu@bayhubtech.com>
-References: <1564166909-7437-1-git-send-email-shirley.her@bayhubtech.com>
- <0ce0b72d-46f6-ee06-092b-abb0d656c083@intel.com>
- <MW2PR16MB2249FF19BBE7890B0E7703C9EAD90@MW2PR16MB2249.namprd16.prod.outlook.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <48c25923-432f-25df-caa8-30b38f4ac9f7@intel.com>
-Date:   Tue, 6 Aug 2019 14:54:29 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 6 Aug 2019 07:57:09 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33706 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726243AbfHFL5I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 07:57:08 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id CF36EAD95;
+        Tue,  6 Aug 2019 11:57:05 +0000 (UTC)
+Date:   Tue, 6 Aug 2019 13:57:03 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Brendan Gregg <bgregg@netflix.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christian Hansen <chansen3@cisco.com>, dancol@google.com,
+        fmayer@google.com, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
+        linux-api@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        Mike Rapoport <rppt@linux.ibm.com>, minchan@kernel.org,
+        namhyung@google.com, paulmck@linux.ibm.com,
+        Roman Gushchin <guro@fb.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>, surenb@google.com,
+        Thomas Gleixner <tglx@linutronix.de>, tkjos@google.com,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v4 3/5] [RFC] arm64: Add support for idle bit in swap PTE
+Message-ID: <20190806115703.GY11812@dhcp22.suse.cz>
+References: <20190805170451.26009-1-joel@joelfernandes.org>
+ <20190805170451.26009-3-joel@joelfernandes.org>
+ <20190806084203.GJ11812@dhcp22.suse.cz>
+ <20190806103627.GA218260@google.com>
+ <20190806104755.GR11812@dhcp22.suse.cz>
+ <20190806111446.GA117316@google.com>
 MIME-Version: 1.0
-In-Reply-To: <MW2PR16MB2249FF19BBE7890B0E7703C9EAD90@MW2PR16MB2249.namprd16.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190806111446.GA117316@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/08/19 1:53 PM, Chevron Li (WH) wrote:
-> Hi, Adrian,
+On Tue 06-08-19 07:14:46, Joel Fernandes wrote:
+> On Tue, Aug 06, 2019 at 12:47:55PM +0200, Michal Hocko wrote:
+> > On Tue 06-08-19 06:36:27, Joel Fernandes wrote:
+> > > On Tue, Aug 06, 2019 at 10:42:03AM +0200, Michal Hocko wrote:
+> > > > On Mon 05-08-19 13:04:49, Joel Fernandes (Google) wrote:
+> > > > > This bit will be used by idle page tracking code to correctly identify
+> > > > > if a page that was swapped out was idle before it got swapped out.
+> > > > > Without this PTE bit, we lose information about if a page is idle or not
+> > > > > since the page frame gets unmapped.
+> > > > 
+> > > > And why do we need that? Why cannot we simply assume all swapped out
+> > > > pages to be idle? They were certainly idle enough to be reclaimed,
+> > > > right? Or what does idle actualy mean here?
+> > > 
+> > > Yes, but other than swapping, in Android a page can be forced to be swapped
+> > > out as well using the new hints that Minchan is adding?
+> > 
+> > Yes and that is effectivelly making them idle, no?
 > 
-> Firstly, really appreciate for your valuable suggestions.
-> 
-> For your question that " Tuning will be executed whenever the system resumes, which is not an error. Can you explain when error recovery is needed,
-> and how this patch works."
-> 
-> We have blow questions need your help.
-> 
-> 1. In which cases card initialization module(mmc_init_card) will be called after first init completed exclude error happened? Whether the case is Resume from idle or sleep, any case else?
->   In which cases tuning module(execute_tuning) will be called after first init completed exclude error happened? Whether the case is Resume from idle or sleep, any case else?
+> That depends on how you think of it.
 
-Re-tuning can happen after CRC-error, resume, or re-tuning timer timeout.
-Also as part of re-initializing a card after repeated errors in
-mmc_blk_mq_rw_recovery.
+I would much prefer to have it documented so that I do not have to guess ;)
 
-> 
-> Because in Bayhub driver, once tuning module is called exclude first initialization the tuning call will be thought as error recovery tuning.
-> 
-> 2. If the tuning and initialization are called cases are not clearly, can we get the mmc_blk_request error status(block request error) in tuning module?
+> If you are thinking of a monitoring
+> process like a heap profiler, then from the heap profiler's (that only cares
+> about the process it is monitoring) perspective it will look extremely odd if
+> pages that are recently accessed by the process appear to be idle which would
+> falsely look like those processes are leaking memory. The reality being,
+> Android forced those pages into swap because of other reasons. I would like
+> for the swapping mechanism, whether forced swapping or memory reclaim, not to
+> interfere with the idle detection.
 
-It would be better for the Bayhub driver to save error status.
+Hmm, but how are you going to handle situation when the page is unmapped
+and refaulted again (e.g. a normal reclaim of a pagecache)? You are
+losing that information same was as in the swapout case, no? Or am I
+missing something?
 
+> This is just an effort to make the idle tracking a little bit better. We
+> would like to not lose the 'accessed' information of the pages.
 > 
-> What method can be used to get the structure mmc_blk_request in tuning module(execute_tuning)
-> 
-> 3. If there is no method to get the block request error status in tuning module, we want to add a variable to save the error status during block request,
-> and use it in tuning module as the condition to call Bayhub dll recovery.
-> 
-> So which structure the variable should be added, and how to acquire it in mmc_blk_mq_rw_recovery, how to acquire it in execute_tuning.
-> 
-> Looking forward to your reply!
-> 
-> Thanks,
-> Chevron
-> 
-> 
-> -----Original Message-----
-> From: Adrian Hunter [mailto:adrian.hunter@intel.com] 
-> Sent: 2019年7月29日 20:13
-> To: Shirley Her (SC); Ulf Hansson; linux-mmc@vger.kernel.org; linux-kernel@vger.kernel.org
-> Cc: Louis Lu (TP); Max Huang (SC); Chevron Li (WH)
-> Subject: Re: [PATCH V2 1/1] mmc: sdhci: Fix O2 Host data read/write DLL lock Phase shift issue
-> 
-> On 26/07/19 9:48 PM, Shirley Her (SC) wrote:
->> Fix data read/write error in HS200 mode due to chip DLL lock phase 
->> shift
-> 
-> More explanation is needed.  See comment below where
-> sdhci_o2_error_recovery() is called.
-> 
->>
->> Signed-off-by:Shirley Her<shirley.her@bayhubtech.com>
->> ---
->> change in V2:
->>   1. Use usleep_range instead of udelay
->>   2. move dll_adjust_count to sdhci-pci-o2micro.c
->>
->> change in V1:
->>   1. Add error recovery function to relock the DLL with correct phase
->>   2. Retuning HS200 after DLL locked
->> ---
->> ---
->>  drivers/mmc/host/sdhci-pci-o2micro.c | 157 
->> +++++++++++++++++++++++++++++------
->>  1 file changed, 133 insertions(+), 24 deletions(-)
->>
->> diff --git a/drivers/mmc/host/sdhci-pci-o2micro.c 
->> b/drivers/mmc/host/sdhci-pci-o2micro.c
->> index 9dc4548..c43b2ce 100644
->> --- a/drivers/mmc/host/sdhci-pci-o2micro.c
->> +++ b/drivers/mmc/host/sdhci-pci-o2micro.c
->> @@ -51,13 +51,60 @@
->>  #define O2_SD_VENDOR_SETTING2	0x1C8
->>  #define O2_SD_HW_TUNING_DISABLE	BIT(4)
->>  
->> -#define O2_PLL_WDT_CONTROL1	0x1CC
->> +#define O2_PLL_DLL_WDT_CONTROL1	0x1CC
-> 
-> Renaming O2_PLL_WDT_CONTROL1 should be a separate patch.
-> 
->>  #define  O2_PLL_FORCE_ACTIVE	BIT(18)
->>  #define  O2_PLL_LOCK_STATUS	BIT(14)
->>  #define  O2_PLL_SOFT_RESET	BIT(12)
->> +#define  O2_DLL_LOCK_STATUS	BIT(11)
->>  
->>  #define O2_SD_DETECT_SETTING 0x324
->>  
->> +static const u32 dmdn_table[5] = {0x25100000, 0x2B1C0000,
->> +	0x2C1A0000, 0x371B0000, 0x35100000}; static u8 dll_adjust_count;
-> 
-> This should be in a struct:
-> 
-> struct o2_host {
-> 	u8 dll_adjust_count;
-> }
-> 
-> 
->> +static int sdhci_o2_get_cd(struct mmc_host *mmc);
-> 
-> Please make a separate patch that reorders the functions so that forward declaration of sdhci_o2_get_cd() is not necessary.
-> 
->> +
->> +static void o2_pci_set_baseclk(struct sdhci_pci_chip *chip, u32 
->> +value) {
->> +	u32 scratch_32;
->> +
->> +	pci_read_config_dword(chip->pdev,
->> +			      O2_SD_PLL_SETTING, &scratch_32);
->> +
->> +	scratch_32 &= 0x0000FFFF;
->> +	scratch_32 |= value;
->> +
->> +	pci_write_config_dword(chip->pdev,
->> +			       O2_SD_PLL_SETTING, scratch_32); }
->> +
->> +static int sdhci_o2_wait_dll_detect_lock(struct sdhci_host *host) {
->> +	ktime_t timeout;
->> +	u32 scratch32;
->> +
->> +	usleep_range(5000, 6000);
->> +	scratch32 = sdhci_readl(host, O2_PLL_DLL_WDT_CONTROL1);
->> +	if (!(scratch32 & O2_DLL_LOCK_STATUS)) {
->> +		pr_warn("%s: DLL is still unlocked after wait 5ms\n",
->> +			mmc_hostname(host->mmc));
->> +	}
->> +
->> +	/* Detect 500 ms */
->> +	timeout = ktime_add_ms(ktime_get(), 500);
->> +	while (1) {
->> +		bool timedout = ktime_after(ktime_get(), timeout);
->> +
->> +		scratch32 = sdhci_readl(host, O2_PLL_DLL_WDT_CONTROL1);
->> +		if (!(scratch32 & O2_DLL_LOCK_STATUS))
->> +			return 0;
->> +
->> +		if (timedout)
->> +			return 1;
->> +		usleep_range(10, 1000);
->> +	}
->> +}
->> +
->>  static void sdhci_o2_set_tuning_mode(struct sdhci_host *host)  {
->>  	u16 reg;
->> @@ -95,11 +142,85 @@ static void __sdhci_o2_execute_tuning(struct sdhci_host *host, u32 opcode)
->>  	sdhci_reset_tuning(host);
->>  }
->>  
->> +static int sdhci_o2_error_recovery(struct sdhci_pci_chip *chip,
->> +				 struct sdhci_host *host)
->> +{
->> +	int ret = 0;
->> +	u8 scratch_8 = 0;
->> +	u32 scratch_32 = 0;
-> 
-> Please add a blank line after local variable declaration
-> 
->> +	/* Disable clock */
->> +	sdhci_writeb(host, 0, SDHCI_CLOCK_CONTROL);
->> +
->> +DLL_ADJUST:
-> 
-> Please use a 'do', 'for' or 'while' loop.
-> 
->> +	if (dll_adjust_count >= 5) {
->> +		dll_adjust_count = 4;
->> +		pr_warn("%s: error recovery failed with the dll_adjust_count over max value.\n",
->> +			mmc_hostname(host->mmc));
-> 
-> Isn't it necessary to exit the loop here?
-> 
->> +	}
->> +
->> +	/* UnLock WP */
->> +	ret = pci_read_config_byte(chip->pdev,
->> +			O2_SD_LOCK_WP, &scratch_8);
->> +	if (ret)
->> +		return ret;
->> +
->> +	scratch_8 &= 0x7f;
->> +	pci_write_config_byte(chip->pdev, O2_SD_LOCK_WP, scratch_8);
->> +
->> +	/* PLL software reset */
->> +	scratch_32 = sdhci_readl(host, O2_PLL_DLL_WDT_CONTROL1);
->> +	scratch_32 |= O2_PLL_SOFT_RESET;
->> +	sdhci_writel(host, scratch_32, O2_PLL_DLL_WDT_CONTROL1);
->> +
->> +	ret = pci_read_config_dword(chip->pdev,
->> +				    O2_SD_FUNC_REG4,
->> +				    &scratch_32);
->> +	/* Enable Base Clk setting change */
->> +	scratch_32 |= O2_SD_FREG4_ENABLE_CLK_SET;
->> +	pci_write_config_dword(chip->pdev, O2_SD_FUNC_REG4, scratch_32);
->> +	o2_pci_set_baseclk(chip, dmdn_table[dll_adjust_count]);
->> +
->> +
-> 
-> Please don't use multiple blank lines
-> 
->> +	/* Enable internal clock */
->> +	scratch_8 = SDHCI_CLOCK_INT_EN;
->> +	sdhci_writeb(host, scratch_8, SDHCI_CLOCK_CONTROL);
->> +
->> +	if (sdhci_o2_get_cd(host->mmc)) {
->> +		if (sdhci_o2_wait_dll_detect_lock(host)) {
->> +			scratch_8 |= SDHCI_CLOCK_CARD_EN;
->> +			sdhci_writeb(host, scratch_8, SDHCI_CLOCK_CONTROL);
->> +			ret = 1;
->> +		} else {
->> +
-> 
-> Blank lines aren't necessary after an open brace '{'
-> 
->> +			pr_warn("%s: DLL unlocked when dll_adjust_count is %d.\n",
->> +			mmc_hostname(host->mmc), dll_adjust_count);
->> +			dll_adjust_count++;
->> +			goto DLL_ADJUST;
->> +		}
->> +	} else
->> +		goto DLL_ADJUST;
-> 
-> braces {} should be used on all arms of this statement
-> 
->> +
->> +		/* Lock WP */
->> +	ret = pci_read_config_byte(chip->pdev,
->> +				   O2_SD_LOCK_WP, &scratch_8);
->> +	if (ret)
->> +		return ret;
->> +	scratch_8 |= 0x80;
->> +	pci_write_config_byte(chip->pdev, O2_SD_LOCK_WP, scratch_8);
->> +	return ret;
->> +}
->> +
->>  static int sdhci_o2_execute_tuning(struct mmc_host *mmc, u32 opcode)  
->> {
->>  	struct sdhci_host *host = mmc_priv(mmc);
->> +	struct sdhci_pci_slot *slot = sdhci_priv(host);
-> 
-> This is how you get a reference to o2_host:
-> 
-> 	struct o2_host *o2_host = sdhci_pci_priv(slot);
-> 
->>  	int current_bus_width = 0;
->>  
->> +
-> 
-> Please don't use multiple blank lines
-> 
->> +	if (dll_adjust_count)
-> 
-> dll_adjust_count should be in struct o2_host
-> 
-> 	o2_host->dll_adjust_count
-> 
->> +		sdhci_o2_error_recovery(slot->chip, host);
-> 
-> Tuning will be executed whenever the system resumes, which is not an error.
-> Can you explain when error recovery is needed, and how this patch works.
-> 
->> +
->> +	dll_adjust_count++;
->>  	/*
->>  	 * This handler only implements the eMMC tuning that is specific to
->>  	 * this controller.  Fall back to the standard method for other TIMING.
->> @@ -131,23 +252,11 @@ static int sdhci_o2_execute_tuning(struct mmc_host *mmc, u32 opcode)
->>  		mmc->ios.bus_width = MMC_BUS_WIDTH_8;
->>  		sdhci_set_bus_width(host, current_bus_width);
->>  	}
->> -
-> 
-> Please avoid unrelated white space changes.
-> 
->>  	host->flags &= ~SDHCI_HS400_TUNING;
->>  	return 0;
->>  }
->>  
->> -static void o2_pci_set_baseclk(struct sdhci_pci_chip *chip, u32 
->> value) -{
->> -	u32 scratch_32;
->> -	pci_read_config_dword(chip->pdev,
->> -			      O2_SD_PLL_SETTING, &scratch_32);
->>  
->> -	scratch_32 &= 0x0000FFFF;
->> -	scratch_32 |= value;
->> -
->> -	pci_write_config_dword(chip->pdev,
->> -			       O2_SD_PLL_SETTING, scratch_32);
->> -}
->>  
->>  static void o2_pci_led_enable(struct sdhci_pci_chip *chip)  { @@ 
->> -316,23 +425,23 @@ static void sdhci_o2_enable_internal_clock(struct sdhci_host *host)
->>  	u32 scratch32;
->>  
->>  	/* PLL software reset */
->> -	scratch32 = sdhci_readl(host, O2_PLL_WDT_CONTROL1);
->> +	scratch32 = sdhci_readl(host, O2_PLL_DLL_WDT_CONTROL1);
->>  	scratch32 |= O2_PLL_SOFT_RESET;
->> -	sdhci_writel(host, scratch32, O2_PLL_WDT_CONTROL1);
->> +	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
->>  	udelay(1);
->>  	scratch32 &= ~(O2_PLL_SOFT_RESET);
->> -	sdhci_writel(host, scratch32, O2_PLL_WDT_CONTROL1);
->> +	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
->>  
->>  	/* PLL force active */
->>  	scratch32 |= O2_PLL_FORCE_ACTIVE;
->> -	sdhci_writel(host, scratch32, O2_PLL_WDT_CONTROL1);
->> +	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
->>  
->>  	/* Wait max 20 ms */
->>  	timeout = ktime_add_ms(ktime_get(), 20);
->>  	while (1) {
->>  		bool timedout = ktime_after(ktime_get(), timeout);
->>  
->> -		scratch = sdhci_readw(host, O2_PLL_WDT_CONTROL1);
->> +		scratch = sdhci_readw(host, O2_PLL_DLL_WDT_CONTROL1);
->>  		if (scratch & O2_PLL_LOCK_STATUS)
->>  			break;
->>  		if (timedout) {
->> @@ -350,16 +459,16 @@ static void 
->> sdhci_o2_enable_internal_clock(struct sdhci_host *host)
->>  
->>  out:
->>  	/* Cancel PLL force active */
->> -	scratch32 = sdhci_readl(host, O2_PLL_WDT_CONTROL1);
->> +	scratch32 = sdhci_readl(host, O2_PLL_DLL_WDT_CONTROL1);
->>  	scratch32 &= ~O2_PLL_FORCE_ACTIVE;
->> -	sdhci_writel(host, scratch32, O2_PLL_WDT_CONTROL1);
->> +	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
->>  }
->>  
->>  static int sdhci_o2_get_cd(struct mmc_host *mmc)  {
->>  	struct sdhci_host *host = mmc_priv(mmc);
->> -
-> 
-> Please keep the blank line after declarations.
-> 
->> -	sdhci_o2_enable_internal_clock(host);
->> +	if (!(sdhci_readw(host, O2_PLL_DLL_WDT_CONTROL1) & O2_PLL_LOCK_STATUS))
->> +		sdhci_o2_enable_internal_clock(host);
->>  
->>  	return !!(sdhci_readl(host, SDHCI_PRESENT_STATE) & 
->> SDHCI_CARD_PRESENT);  } @@ -369,7 +478,7 @@ static void 
->> sdhci_o2_enable_clk(struct sdhci_host *host, u16 clk)
->>  	/* Enable internal clock */
->>  	clk |= SDHCI_CLOCK_INT_EN;
->>  	sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
->> -
->> +	sdhci_o2_enable_internal_clock(host);
->>  	if (sdhci_o2_get_cd(host->mmc)) {
->>  		clk |= SDHCI_CLOCK_CARD_EN;
->>  		sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL); @@ -400,7 +509,7 @@ 
->> int sdhci_pci_o2_probe_slot(struct sdhci_pci_slot *slot)
->>  
->>  	chip = slot->chip;
->>  	host = slot->host;
->> -
->> +	dll_adjust_count = 0;
->>  	caps = sdhci_readl(host, SDHCI_CAPABILITIES);
->>  
->>  	/*
->>
-> 
-> Set up o2_host like this:
-> 
-> diff --git a/drivers/mmc/host/sdhci-pci-o2micro.c
-> b/drivers/mmc/host/sdhci-pci-o2micro.c
-> index c43b2cecdf30..cfe57f23dcf1 100644
-> --- a/drivers/mmc/host/sdhci-pci-o2micro.c
-> +++ b/drivers/mmc/host/sdhci-pci-o2micro.c
-> @@ -796,4 +796,5 @@ const struct sdhci_pci_fixes sdhci_o2 = {
->  	.resume = sdhci_pci_o2_resume,
->  #endif
->  	.ops = &sdhci_pci_o2_ops,
-> +	.priv_size = sizeof(struct o2_host),
->  };
-> 
+> Initially, I had proposed what you are suggesting as well however the above
+> reasons made me to do it like this. Also Minchan and Konstantin suggested
+> this, so there are more people interested in the swap idle bit. Minchan, can
+> you provide more thoughts here? (He is on 2-week vacation from today so
+> hopefully replies before he vanishes ;-)).
 
+We can move on with the rest of the series in the mean time but I would
+like to see a proper justification for the swap entries and why they
+should be handled special.
+
+> Also assuming all swap pages as idle has other "semantic" issues. It is quite
+> odd if a swapped page is automatically marked as idle without userspace
+> telling it to. Consider the following set of events: 1. Userspace marks only
+> a certain memory region as idle. 2. Userspace reads back the bits
+> corresponding to a bigger region. Part of this bigger region is swapped.
+> Userspace expects all of the pages it did not mark, to have idle bit set to
+> '0' because it never marked them as idle. However if it is now surprised by
+> what it read back (not all '0' read back). Since a page is swapped, it will
+> be now marked "automatically" as idle as per your proposal, even if userspace
+> never marked it explicity before. This would be quite confusing/ambiguous.
+
+OK, I see. I guess the primary question I have is how do you distinguish
+Idle page which got unmapped and faulted in again from swapped out page
+and refaulted - including the time the pte is not present.
+-- 
+Michal Hocko
+SUSE Labs
