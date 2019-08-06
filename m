@@ -4,55 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 360C1C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:41:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3CD2C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0282D2189E
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:41:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E59121874
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:41:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127667;
-	bh=2BVVPK4xbTgUYFuMIDpQMlpYil7ViUX1Y+o86OQez4c=;
+	s=default; t=1565127673;
+	bh=oQTegqnBdN+8NH3rtxET6dr016Tg2c77I8dr7iWPRXE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N6zecpgFCQk75LX+JVaMBA/TQ8p8gSpT9OEXnKGH+Yu7Y9xQgELFA2m/nuatt2jpM
-	 IQHiezR0NXb2tDgGd1Uwv0uWJOfJ6CBW8JVpBU2PKxgA6HU8nlRmuYxSVPGWPkLWhG
-	 f4/GAwmfVHoiu1QsLXa7MRDwudVSZjejwHtsPiZQ=
+	b=GOs1yVjZduqWsupbZ1NM9nDf37nYrm413BJqqsegwXtePvkCbsLY+Tjq0W/hGbu/b
+	 Y6Qg5tFblOYtxGTFyRVwJy64rONFk9HW98VURkfrZB461CwRu50kI3XyzT2FGTcGCM
+	 R1dKSFGcbt8W8bfNpx6/tGKMJTisOqsXiExSc+cw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729011AbfHFVlF (ORCPT
+        id S1728926AbfHFVgU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:41:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54288 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 17:36:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728983AbfHFVg2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:36:28 -0400
+        id S1727751AbfHFVgP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:36:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A31172187F;
-        Tue,  6 Aug 2019 21:36:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73FC6217D9;
+        Tue,  6 Aug 2019 21:36:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127387;
-        bh=2BVVPK4xbTgUYFuMIDpQMlpYil7ViUX1Y+o86OQez4c=;
+        s=default; t=1565127374;
+        bh=oQTegqnBdN+8NH3rtxET6dr016Tg2c77I8dr7iWPRXE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KKxUnSIjJo702n4sCYhA6jDUve3uAWRIL1YW7S5WcbxX32DXRB9Tx5ozEq9gvEEcR
-         gE4m1VvSi7hovVC9rNaFut/uBYygArv7uQdTeJiplpPgXrcx65E5uTBT++llaMhqcQ
-         d+okmhHk1E+dsxdJlIP7K/K1L3/Zr3VhPNeRGsvE=
+        b=TKxJjBmK13HqeMzAoQ7X7gsGbxtGVWVqweH0NG437svRyXCXZPTH3n6n/QUyXAzUc
+         gVgf1CghNgFtOT4a5FFTDBGAPWxT4Xfg4M76i2ksm1/vp7eNT2iPFmbmyWEE4A3BlH
+         D0RvUg+DxIe5WNUT102Wa/jS/LgY68g2h6plDS5A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Yao Lihua <Lihua.Yao@desay-svautomotive.com>,
-        Linh Phung <linh.phung.jy@renesas.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 02/25] clk: renesas: cpg-mssr: Fix reset control race condition
-Date:   Tue,  6 Aug 2019 17:35:59 -0400
-Message-Id: <20190806213624.20194-2-sashal@kernel.org>
+Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 27/32] drm: msm: Fix add_gpu_components
+Date:   Tue,  6 Aug 2019 17:35:15 -0400
+Message-Id: <20190806213522.19859-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190806213624.20194-1-sashal@kernel.org>
-References: <20190806213624.20194-1-sashal@kernel.org>
+In-Reply-To: <20190806213522.19859-1-sashal@kernel.org>
+References: <20190806213522.19859-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -62,108 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 
-[ Upstream commit e1f1ae8002e4b06addc52443fcd975bbf554ae92 ]
+[ Upstream commit 9ca7ad6c7706edeae331c1632d0c63897418ebad ]
 
-The module reset code in the Renesas CPG/MSSR driver uses
-read-modify-write (RMW) operations to write to a Software Reset Register
-(SRCRn), and simple writes to write to a Software Reset Clearing
-Register (SRSTCLRn), as was mandated by the R-Car Gen2 and Gen3 Hardware
-User's Manuals.
+add_gpu_components() adds found GPU nodes from the DT to the match list,
+regardless of the status of the nodes.  This is a problem, because if the
+nodes are disabled, they should not be on the match list because they will
+not be matched.  This prevents display from initing if a GPU node is
+defined, but it's status is disabled.
 
-However, this may cause a race condition when two devices are reset in
-parallel: if the reset for device A completes in the middle of the RMW
-operation for device B, device A may be reset again, causing subtle
-failures (e.g. i2c timeouts):
+Fix this by checking the node's status before adding it to the match list.
 
-	thread A			thread B
-	--------			--------
-
-	val = SRCRn
-	val |= bit A
-	SRCRn = val
-
-	delay
-
-					val = SRCRn (bit A is set)
-
-	SRSTCLRn = bit A
-	(bit A in SRCRn is cleared)
-
-					val |= bit B
-					SRCRn = val (bit A and B are set)
-
-This can be reproduced on e.g. Salvator-XS using:
-
-    $ while true; do i2cdump -f -y 4 0x6A b > /dev/null; done &
-    $ while true; do i2cdump -f -y 2 0x10 b > /dev/null; done &
-
-    i2c-rcar e6510000.i2c: error -110 : 40000002
-    i2c-rcar e66d8000.i2c: error -110 : 40000002
-
-According to the R-Car Gen3 Hardware Manual Errata for Rev.
-0.80 of Feb 28, 2018, reflected in Rev. 1.00 of the R-Car Gen3 Hardware
-User's Manual, writes to SRCRn do not require read-modify-write cycles.
-
-Note that the R-Car Gen2 Hardware User's Manual has not been updated
-yet, and still says a read-modify-write sequence is required.  According
-to the hardware team, the reset hardware block is the same on both R-Car
-Gen2 and Gen3, though.
-
-Hence fix the issue by replacing the read-modify-write operations on
-SRCRn by simple writes.
-
-Reported-by: Yao Lihua <Lihua.Yao@desay-svautomotive.com>
-Fixes: 6197aa65c4905532 ("clk: renesas: cpg-mssr: Add support for reset control")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Tested-by: Linh Phung <linh.phung.jy@renesas.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Fixes: dc3ea265b856 (drm/msm: Drop the gpu binding)
+Reviewed-by: Rob Clark <robdclark@gmail.com>
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190626180015.45242-1-jeffrey.l.hugo@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/renesas/renesas-cpg-mssr.c | 16 ++--------------
- 1 file changed, 2 insertions(+), 14 deletions(-)
+ drivers/gpu/drm/msm/msm_drv.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/renesas/renesas-cpg-mssr.c b/drivers/clk/renesas/renesas-cpg-mssr.c
-index 30c23b882675a..fe25d37ce9d39 100644
---- a/drivers/clk/renesas/renesas-cpg-mssr.c
-+++ b/drivers/clk/renesas/renesas-cpg-mssr.c
-@@ -522,17 +522,11 @@ static int cpg_mssr_reset(struct reset_controller_dev *rcdev,
- 	unsigned int reg = id / 32;
- 	unsigned int bit = id % 32;
- 	u32 bitmask = BIT(bit);
--	unsigned long flags;
--	u32 value;
+diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
+index ed9a3a1e50efb..dbfd2c006f740 100644
+--- a/drivers/gpu/drm/msm/msm_drv.c
++++ b/drivers/gpu/drm/msm/msm_drv.c
+@@ -1284,7 +1284,8 @@ static int add_gpu_components(struct device *dev,
+ 	if (!np)
+ 		return 0;
  
- 	dev_dbg(priv->dev, "reset %u%02u\n", reg, bit);
+-	drm_of_component_match_add(dev, matchptr, compare_of, np);
++	if (of_device_is_available(np))
++		drm_of_component_match_add(dev, matchptr, compare_of, np);
  
- 	/* Reset module */
--	spin_lock_irqsave(&priv->rmw_lock, flags);
--	value = readl(priv->base + SRCR(reg));
--	value |= bitmask;
--	writel(value, priv->base + SRCR(reg));
--	spin_unlock_irqrestore(&priv->rmw_lock, flags);
-+	writel(bitmask, priv->base + SRCR(reg));
- 
- 	/* Wait for at least one cycle of the RCLK clock (@ ca. 32 kHz) */
- 	udelay(35);
-@@ -549,16 +543,10 @@ static int cpg_mssr_assert(struct reset_controller_dev *rcdev, unsigned long id)
- 	unsigned int reg = id / 32;
- 	unsigned int bit = id % 32;
- 	u32 bitmask = BIT(bit);
--	unsigned long flags;
--	u32 value;
- 
- 	dev_dbg(priv->dev, "assert %u%02u\n", reg, bit);
- 
--	spin_lock_irqsave(&priv->rmw_lock, flags);
--	value = readl(priv->base + SRCR(reg));
--	value |= bitmask;
--	writel(value, priv->base + SRCR(reg));
--	spin_unlock_irqrestore(&priv->rmw_lock, flags);
-+	writel(bitmask, priv->base + SRCR(reg));
- 	return 0;
- }
+ 	of_node_put(np);
  
 -- 
 2.20.1
