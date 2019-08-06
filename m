@@ -2,132 +2,171 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 437EFC32751
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:17:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 490C6C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:18:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 156CF20717
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:17:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WLHNTNtd"
+	by mail.kernel.org (Postfix) with ESMTP id 248B220717
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:18:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732801AbfHFPRK (ORCPT
+        id S1732943AbfHFPSK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 11:17:10 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:34238 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726713AbfHFPRJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 11:17:09 -0400
-Received: by mail-pf1-f194.google.com with SMTP id b13so41676616pfo.1
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 08:17:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lXgJn1gEuR2HESTa1ndelxSYh8xdRTY96+2aKnOkV4E=;
-        b=WLHNTNtdvYZnGps9OKP2aN43a4ST6cZGZOzKvDY82EUdEZiXShDnHzLjPviIjHaCQq
-         j/zAqk7SmwONd+9FeIAM1eASQE0RKO8jBTjCHCeI5eKmP1drc2JM6+2/QsZhH/3ctL6v
-         oV8pwoqflV4QZpiaqoxtny/FIkf75tD1dFH/kTUOwee9YF4NWA7xakHdG15RhFesxO6L
-         zQ5magnirFxDDxBr+jnRfQSGWVJYJryBbQP9MY9XcVBFLZU6rLAbCDUYAUDb7u2fRU1g
-         U372AsWFP1bA+PfiXCCQ2hxhp80+oxjwt3M1Y1IhcwKMyZOqlLizz7jK06Aw7RzBTmH0
-         fXpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lXgJn1gEuR2HESTa1ndelxSYh8xdRTY96+2aKnOkV4E=;
-        b=jePiULIBSGtZLW1mwbXgFYvvv6vDxbgyRtGR6o8oFNYGhhhuEC27j0MY8fhI38QBd/
-         /yEE2jA2PpiDQSWT9C03suYNa1FOUR0XSkv37Cj/3paR3C3XYJhndkmOYGX/8dk8jjZF
-         lClHNpZjENtkh4umz/kT7Ci87L0S3uzmEW3B3RYfpvOGw/AHiqUgxHCaHXP1MTg2WkNH
-         WTqD2BcSZt9OVKJgT6ocDsWkwiP7u0rbj2FYQYS5+aJEVGjfZU5anWtPi1m52uvgz3MH
-         9bN8v5Lh/DDXGhC5nN8ccKKvvlg6f/wbwY82HHS9AjNyyGEHTHT0s2ilhtkiewmQZXuM
-         Hwaw==
-X-Gm-Message-State: APjAAAXieoSZLnkhiWNM6lf8lKyZWz9J24eqbG+VQtCQu2XlIAZghO1/
-        xwwIUZFtB9MGcyRcVTF+kvI=
-X-Google-Smtp-Source: APXvYqz6qPpUBClfeUoDRXj64wGcHBWfUs13obdwHRyXXmB71VN2YMQAJUzpw1nU1ef6aAc/KNytfg==
-X-Received: by 2002:a17:90a:b011:: with SMTP id x17mr3765254pjq.113.1565104629076;
-        Tue, 06 Aug 2019 08:17:09 -0700 (PDT)
-Received: from localhost.localdomain.localdomain ([2408:823c:c11:4c4:b8c3:8577:bf2f:2])
-        by smtp.gmail.com with ESMTPSA id b14sm22500814pga.20.2019.08.06.08.17.01
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 06 Aug 2019 08:17:08 -0700 (PDT)
-From:   Pengfei Li <lpf.vector@gmail.com>
-To:     akpm@linux-foundation.org
-Cc:     mgorman@techsingularity.net, vbabka@suse.cz, cai@lca.pw,
-        aryabinin@virtuozzo.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Pengfei Li <lpf.vector@gmail.com>
-Subject: [PATCH] mm/compaction: remove unnecessary zone parameter in isolate_migratepages()
-Date:   Tue,  6 Aug 2019 23:16:16 +0800
-Message-Id: <20190806151616.21107-1-lpf.vector@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Tue, 6 Aug 2019 11:18:10 -0400
+Received: from mga06.intel.com ([134.134.136.31]:22167 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726713AbfHFPSJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 11:18:09 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 08:16:37 -0700
+X-IronPort-AV: E=Sophos;i="5.64,353,1559545200"; 
+   d="scan'208";a="185676339"
+Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 08:16:36 -0700
+Message-ID: <dcd778623685079f66bfccb5dc0195e6f5bc992d.camel@linux.intel.com>
+Subject: Re: [PATCH v3 6/6] virtio-balloon: Add support for providing unused
+ page reports to host
+From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        kvm@vger.kernel.org, david@redhat.com, dave.hansen@intel.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, yang.zhang.wz@gmail.com,
+        pagupta@redhat.com, riel@surriel.com, konrad.wilk@oracle.com,
+        willy@infradead.org, lcapitulino@redhat.com, wei.w.wang@intel.com,
+        aarcange@redhat.com, pbonzini@redhat.com, dan.j.williams@intel.com
+Date:   Tue, 06 Aug 2019 08:16:36 -0700
+In-Reply-To: <20190806073047-mutt-send-email-mst@kernel.org>
+References: <20190801222158.22190.96964.stgit@localhost.localdomain>
+         <20190801223829.22190.36831.stgit@localhost.localdomain>
+         <1cff09a4-d302-639c-ab08-9d82e5fc1383@redhat.com>
+         <ed48ecdb833808bf6b08bc54fa98503cbad493f3.camel@linux.intel.com>
+         <20190806073047-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Like commit 40cacbcb3240 ("mm, compaction: remove unnecessary zone
-parameter in some instances"), remove unnecessary zone parameter.
+On Tue, 2019-08-06 at 07:31 -0400, Michael S. Tsirkin wrote:
+> On Mon, Aug 05, 2019 at 09:27:16AM -0700, Alexander Duyck wrote:
+> > On Mon, 2019-08-05 at 12:00 -0400, Nitesh Narayan Lal wrote:
+> > > On 8/1/19 6:38 PM, Alexander Duyck wrote:
+> > > > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > > > 
+> > > > Add support for the page reporting feature provided by virtio-balloon.
+> > > > Reporting differs from the regular balloon functionality in that is is
+> > > > much less durable than a standard memory balloon. Instead of creating a
+> > > > list of pages that cannot be accessed the pages are only inaccessible
+> > > > while they are being indicated to the virtio interface. Once the
+> > > > interface has acknowledged them they are placed back into their respective
+> > > > free lists and are once again accessible by the guest system.
+> > > > 
+> > > > Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > > > ---
+> > > >  drivers/virtio/Kconfig              |    1 +
+> > > >  drivers/virtio/virtio_balloon.c     |   56 +++++++++++++++++++++++++++++++++++
+> > > >  include/uapi/linux/virtio_balloon.h |    1 +
+> > > >  3 files changed, 58 insertions(+)
+> > > > 
+> > > > diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
+> > > > index 078615cf2afc..4b2dd8259ff5 100644
+> > > > --- a/drivers/virtio/Kconfig
+> > > > +++ b/drivers/virtio/Kconfig
+> > > > @@ -58,6 +58,7 @@ config VIRTIO_BALLOON
+> > > >  	tristate "Virtio balloon driver"
+> > > >  	depends on VIRTIO
+> > > >  	select MEMORY_BALLOON
+> > > > +	select PAGE_REPORTING
+> > > >  	---help---
+> > > >  	 This driver supports increasing and decreasing the amount
+> > > >  	 of memory within a KVM guest.
+> > > > diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+> > > > index 2c19457ab573..971fe924e34f 100644
+> > > > --- a/drivers/virtio/virtio_balloon.c
+> > > > +++ b/drivers/virtio/virtio_balloon.c
+> > > > @@ -19,6 +19,7 @@
+> > > >  #include <linux/mount.h>
+> > > >  #include <linux/magic.h>
+> > > >  #include <linux/pseudo_fs.h>
+> > > > +#include <linux/page_reporting.h>
+> > > >  
+> > > >  /*
+> > > >   * Balloon device works in 4K page units.  So each page is pointed to by
+> > > > @@ -37,6 +38,9 @@
+> > > >  #define VIRTIO_BALLOON_FREE_PAGE_SIZE \
+> > > >  	(1 << (VIRTIO_BALLOON_FREE_PAGE_ORDER + PAGE_SHIFT))
+> > > >  
+> > > > +/*  limit on the number of pages that can be on the reporting vq */
+> > > > +#define VIRTIO_BALLOON_VRING_HINTS_MAX	16
+> > > > +
+> > > >  #ifdef CONFIG_BALLOON_COMPACTION
+> > > >  static struct vfsmount *balloon_mnt;
+> > > >  #endif
+> > > > @@ -46,6 +50,7 @@ enum virtio_balloon_vq {
+> > > >  	VIRTIO_BALLOON_VQ_DEFLATE,
+> > > >  	VIRTIO_BALLOON_VQ_STATS,
+> > > >  	VIRTIO_BALLOON_VQ_FREE_PAGE,
+> > > > +	VIRTIO_BALLOON_VQ_REPORTING,
+> > > >  	VIRTIO_BALLOON_VQ_MAX
+> > > >  };
+> > > >  
+> > > > @@ -113,6 +118,10 @@ struct virtio_balloon {
+> > > >  
+> > > >  	/* To register a shrinker to shrink memory upon memory pressure */
+> > > >  	struct shrinker shrinker;
+> > > > +
+> > > > +	/* Unused page reporting device */
+> > > > +	struct virtqueue *reporting_vq;
+> > > > +	struct page_reporting_dev_info ph_dev_info;
+> > > >  };
+> > > >  
+> > > >  static struct virtio_device_id id_table[] = {
+> > > > @@ -152,6 +161,23 @@ static void tell_host(struct virtio_balloon *vb, struct virtqueue *vq)
+> > > >  
+> > > >  }
+> > > >  
+> > > > +void virtballoon_unused_page_report(struct page_reporting_dev_info *ph_dev_info,
+> > > > +				    unsigned int nents)
+> > > > +{
+> > > > +	struct virtio_balloon *vb =
+> > > > +		container_of(ph_dev_info, struct virtio_balloon, ph_dev_info);
+> > > > +	struct virtqueue *vq = vb->reporting_vq;
+> > > > +	unsigned int unused;
+> > > > +
+> > > > +	/* We should always be able to add these buffers to an empty queue. */
+> > > > +	virtqueue_add_inbuf(vq, ph_dev_info->sg, nents, vb,
+> > > > +			    GFP_NOWAIT | __GFP_NOWARN);
+> > > 
+> > > I think you should handle allocation failure here. It is a possibility, isn't?
+> > > Maybe return an error or even disable page hinting/reporting?
+> > > 
+> > 
+> > I don't think it is an issue I have to worry about. Specifically I am
+> > limiting the size of the scatterlist based on the size of the vq. As such
+> > I will never exceed the size and should be able to use it to store the
+> > scatterlist directly.
+> 
+> I agree. But it can't hurt to BUG_ON for good measure.
+> 
 
-No functional change.
+I wouldn't use a BUG_ON as that seems overkill. No need to panic the
+kernel just because we couldn't report some idle pages.
 
-Signed-off-by: Pengfei Li <lpf.vector@gmail.com>
----
- mm/compaction.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+I can probably do something like:
+	if (WARN_ON(err))
+		return;
 
-diff --git a/mm/compaction.c b/mm/compaction.c
-index 952dc2fb24e5..685c3e3d0a0f 100644
---- a/mm/compaction.c
-+++ b/mm/compaction.c
-@@ -1737,8 +1737,7 @@ static unsigned long fast_find_migrateblock(struct compact_control *cc)
-  * starting at the block pointed to by the migrate scanner pfn within
-  * compact_control.
-  */
--static isolate_migrate_t isolate_migratepages(struct zone *zone,
--					struct compact_control *cc)
-+static isolate_migrate_t isolate_migratepages(struct compact_control *cc)
- {
- 	unsigned long block_start_pfn;
- 	unsigned long block_end_pfn;
-@@ -1756,8 +1755,8 @@ static isolate_migrate_t isolate_migratepages(struct zone *zone,
- 	 */
- 	low_pfn = fast_find_migrateblock(cc);
- 	block_start_pfn = pageblock_start_pfn(low_pfn);
--	if (block_start_pfn < zone->zone_start_pfn)
--		block_start_pfn = zone->zone_start_pfn;
-+	if (block_start_pfn < cc->zone->zone_start_pfn)
-+		block_start_pfn = cc->zone->zone_start_pfn;
- 
- 	/*
- 	 * fast_find_migrateblock marks a pageblock skipped so to avoid
-@@ -1787,8 +1786,8 @@ static isolate_migrate_t isolate_migratepages(struct zone *zone,
- 		if (!(low_pfn % (SWAP_CLUSTER_MAX * pageblock_nr_pages)))
- 			cond_resched();
- 
--		page = pageblock_pfn_to_page(block_start_pfn, block_end_pfn,
--									zone);
-+		page = pageblock_pfn_to_page(block_start_pfn,
-+						block_end_pfn, cc->zone);
- 		if (!page)
- 			continue;
- 
-@@ -2158,7 +2157,7 @@ compact_zone(struct compact_control *cc, struct capture_control *capc)
- 			cc->rescan = true;
- 		}
- 
--		switch (isolate_migratepages(cc->zone, cc)) {
-+		switch (isolate_migratepages(cc)) {
- 		case ISOLATE_ABORT:
- 			ret = COMPACT_CONTENDED;
- 			putback_movable_pages(&cc->migratepages);
--- 
-2.21.0
+That way the unused page reporting can run to completion still and the
+fact that we aren't really hinting on the pages would effectively be no
+different then if we had a direct assigned device or shared memory in the
+hypervisor.
 
