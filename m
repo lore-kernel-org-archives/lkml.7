@@ -4,56 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E233C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B7AC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:38:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ED6D2189F
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:38:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB3662189F
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:38:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127502;
-	bh=qGsun2nBwGKYUuXuCKiiDlZM9Ty0QpT5hz8syLcrrzI=;
+	s=default; t=1565127508;
+	bh=hBlharvEjR1CAE4XGytQM/ZaRZ/yd+YI11AyHBJCrIU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QKw4oLV8N3p7/F7by/+8Q/fs9RZOZNP2IOHuS/giR7XYQYagLkGH+cB46BykyRQvS
-	 0oIBjn5jkyJ2OGjSf89KdJA9n9iMcmYFuOhZoGmr+jizYc62bCUaq7doAx6KRHmp5M
-	 kaeVK9ACrIktsI3ANKgxZiaaQd3SpgOFN9VQBDLw=
+	b=yyAP0iTEnobGBo5AN9q8OcQRHIPQ5RuWpb4UKZlwNwRTHtURRN913y9iN5nMM6qRT
+	 OTe53J2kFE71Vu34Kv982zTfjFWvPwGkGUc0EfsOqW3x83SkuMXFU1VYb1TOlmWMAC
+	 A1owlgWT8bP3FhXvsLnAvRmZhI2dIkoS+E61u1Gw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729739AbfHFViU (ORCPT
+        id S1728205AbfHFViS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:38:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55872 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 17:38:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729604AbfHFViM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:38:12 -0400
+        id S1727570AbfHFViP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:38:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 422E621882;
-        Tue,  6 Aug 2019 21:38:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26D66218A4;
+        Tue,  6 Aug 2019 21:38:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127491;
-        bh=qGsun2nBwGKYUuXuCKiiDlZM9Ty0QpT5hz8syLcrrzI=;
+        s=default; t=1565127494;
+        bh=hBlharvEjR1CAE4XGytQM/ZaRZ/yd+YI11AyHBJCrIU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a0Nzr7dVCQNlINWHbrKM5jMpZ2eWzG4mGpI5niMA+wqoZk5G86WMxY/F4+GwluuLu
-         d7nFS3b2HqsTHKXUN+z9CWBnHPjRqu3zwU9wWV76FpaadxuBiwJW0d12ZB3SckZBQz
-         l8IUmgZI0KeSflncIz5eok7ZVXAB67Es/4V8+VYU=
+        b=kxslMfuBLQ64elUWfimm33RGRI1PTyY37FD/tshxC0gBNm5WzdK2xlvXoAa53SBub
+         Z1/O/55sG0ixi219MPpukYlAP3nH7+wcxqdVz1PkKV0XXbOnFW/Uu2rhyi3mQMABJB
+         95NACmQvtosVETSXbw4dftU6pQg9/CpMn5my6eQg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
-        Jun Piao <piaojun@huawei.com>,
+Cc:     Qian Cai <cai@lca.pw>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Jakub Jelinek <jakub@redhat.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Bill Wendling <morbo@google.com>,
+        James Y Knight <jyknight@google.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 12/14] ocfs2: remove set but not used variable 'last_hash'
-Date:   Tue,  6 Aug 2019 17:37:46 -0400
-Message-Id: <20190806213749.20689-12-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-arch@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 14/14] asm-generic: fix -Wtype-limits compiler warnings
+Date:   Tue,  6 Aug 2019 17:37:48 -0400
+Message-Id: <20190806213749.20689-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190806213749.20689-1-sashal@kernel.org>
 References: <20190806213749.20689-1-sashal@kernel.org>
@@ -66,53 +68,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit 7bc36e3ce91471b6377c8eadc0a2f220a2280083 ]
+[ Upstream commit cbedfe11347fe418621bd188d58a206beb676218 ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+Commit d66acc39c7ce ("bitops: Optimise get_order()") introduced a
+compilation warning because "rx_frag_size" is an "ushort" while
+PAGE_SHIFT here is 16.
 
-  fs/ocfs2/xattr.c: In function ocfs2_xattr_bucket_find:
-  fs/ocfs2/xattr.c:3828:6: warning: variable last_hash set but not used [-Wunused-but-set-variable]
+The commit changed the get_order() to be a multi-line macro where
+compilers insist to check all statements in the macro even when
+__builtin_constant_p(rx_frag_size) will return false as "rx_frag_size"
+is a module parameter.
 
-It's never used and can be removed.
+In file included from ./arch/powerpc/include/asm/page_64.h:107,
+                 from ./arch/powerpc/include/asm/page.h:242,
+                 from ./arch/powerpc/include/asm/mmu.h:132,
+                 from ./arch/powerpc/include/asm/lppaca.h:47,
+                 from ./arch/powerpc/include/asm/paca.h:17,
+                 from ./arch/powerpc/include/asm/current.h:13,
+                 from ./include/linux/thread_info.h:21,
+                 from ./arch/powerpc/include/asm/processor.h:39,
+                 from ./include/linux/prefetch.h:15,
+                 from drivers/net/ethernet/emulex/benet/be_main.c:14:
+drivers/net/ethernet/emulex/benet/be_main.c: In function 'be_rx_cqs_create':
+./include/asm-generic/getorder.h:54:9: warning: comparison is always
+true due to limited range of data type [-Wtype-limits]
+   (((n) < (1UL << PAGE_SHIFT)) ? 0 :  \
+         ^
+drivers/net/ethernet/emulex/benet/be_main.c:3138:33: note: in expansion
+of macro 'get_order'
+  adapter->big_page_size = (1 << get_order(rx_frag_size)) * PAGE_SIZE;
+                                 ^~~~~~~~~
 
-Link: http://lkml.kernel.org/r/20190716132110.34836-1-yuehaibing@huawei.com
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Cc: Gang He <ghe@suse.com>
-Cc: Jun Piao <piaojun@huawei.com>
+Fix it by moving all of this multi-line macro into a proper function,
+and killing __get_order() off.
+
+[akpm@linux-foundation.org: remove __get_order() altogether]
+[cai@lca.pw: v2]
+  Link: http://lkml.kernel.org/r/1564000166-31428-1-git-send-email-cai@lca.pw
+Link: http://lkml.kernel.org/r/1563914986-26502-1-git-send-email-cai@lca.pw
+Fixes: d66acc39c7ce ("bitops: Optimise get_order()")
+Signed-off-by: Qian Cai <cai@lca.pw>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Jakub Jelinek <jakub@redhat.com>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Bill Wendling <morbo@google.com>
+Cc: James Y Knight <jyknight@google.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/xattr.c | 3 ---
- 1 file changed, 3 deletions(-)
+ include/asm-generic/getorder.h | 50 ++++++++++++++--------------------
+ 1 file changed, 20 insertions(+), 30 deletions(-)
 
-diff --git a/fs/ocfs2/xattr.c b/fs/ocfs2/xattr.c
-index 4f0788232f2f9..06faa608e5622 100644
---- a/fs/ocfs2/xattr.c
-+++ b/fs/ocfs2/xattr.c
-@@ -3808,7 +3808,6 @@ static int ocfs2_xattr_bucket_find(struct inode *inode,
- 	u16 blk_per_bucket = ocfs2_blocks_per_xattr_bucket(inode->i_sb);
- 	int low_bucket = 0, bucket, high_bucket;
- 	struct ocfs2_xattr_bucket *search;
--	u32 last_hash;
- 	u64 blkno, lower_blkno = 0;
+diff --git a/include/asm-generic/getorder.h b/include/asm-generic/getorder.h
+index 65e4468ac53da..52fbf236a90ea 100644
+--- a/include/asm-generic/getorder.h
++++ b/include/asm-generic/getorder.h
+@@ -6,24 +6,6 @@
+ #include <linux/compiler.h>
+ #include <linux/log2.h>
  
- 	search = ocfs2_xattr_bucket_new(inode);
-@@ -3852,8 +3851,6 @@ static int ocfs2_xattr_bucket_find(struct inode *inode,
- 		if (xh->xh_count)
- 			xe = &xh->xh_entries[le16_to_cpu(xh->xh_count) - 1];
- 
--		last_hash = le32_to_cpu(xe->xe_name_hash);
+-/*
+- * Runtime evaluation of get_order()
+- */
+-static inline __attribute_const__
+-int __get_order(unsigned long size)
+-{
+-	int order;
 -
- 		/* record lower_blkno which may be the insert place. */
- 		lower_blkno = blkno;
+-	size--;
+-	size >>= PAGE_SHIFT;
+-#if BITS_PER_LONG == 32
+-	order = fls(size);
+-#else
+-	order = fls64(size);
+-#endif
+-	return order;
+-}
+-
+ /**
+  * get_order - Determine the allocation order of a memory size
+  * @size: The size for which to get the order
+@@ -42,19 +24,27 @@ int __get_order(unsigned long size)
+  * to hold an object of the specified size.
+  *
+  * The result is undefined if the size is 0.
+- *
+- * This function may be used to initialise variables with compile time
+- * evaluations of constants.
+  */
+-#define get_order(n)						\
+-(								\
+-	__builtin_constant_p(n) ? (				\
+-		((n) == 0UL) ? BITS_PER_LONG - PAGE_SHIFT :	\
+-		(((n) < (1UL << PAGE_SHIFT)) ? 0 :		\
+-		 ilog2((n) - 1) - PAGE_SHIFT + 1)		\
+-	) :							\
+-	__get_order(n)						\
+-)
++static inline __attribute_const__ int get_order(unsigned long size)
++{
++	if (__builtin_constant_p(size)) {
++		if (!size)
++			return BITS_PER_LONG - PAGE_SHIFT;
++
++		if (size < (1UL << PAGE_SHIFT))
++			return 0;
++
++		return ilog2((size) - 1) - PAGE_SHIFT + 1;
++	}
++
++	size--;
++	size >>= PAGE_SHIFT;
++#if BITS_PER_LONG == 32
++	return fls(size);
++#else
++	return fls64(size);
++#endif
++}
+ 
+ #endif	/* __ASSEMBLY__ */
  
 -- 
 2.20.1
