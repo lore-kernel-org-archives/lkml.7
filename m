@@ -7,27 +7,27 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 475F5C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C027FC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A24320C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:57:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95FB7216B7
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:57:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="En0Lsg9M"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="L32f2mT8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387545AbfHFP54 (ORCPT
+        id S2387560AbfHFP55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 11:57:56 -0400
-Received: from vps.xff.cz ([195.181.215.36]:55402 "EHLO vps.xff.cz"
+        Tue, 6 Aug 2019 11:57:57 -0400
+Received: from vps.xff.cz ([195.181.215.36]:55450 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387493AbfHFP5x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 11:57:53 -0400
+        id S2387527AbfHFP5y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 11:57:54 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1565107071; bh=1WLK5mVFKFuv1g4gs40+VCmjvdPbojsyFq5tU/7xRNw=;
+        t=1565107072; bh=hF73OcLMSBQTt85tuavHzM/b80WjbO/5pa+6hf7Ij0Q=;
         h=From:To:Cc:Subject:Date:References:From;
-        b=En0Lsg9MSZMhN5LVrV5ajakQGazmxXH2790lmj21RVWwqGRKVUaYb2Ok/E+4f2sds
-         +YclFbmClg3rpIYnCPF1DLeG8WuXXBlfhpYaloESxdumT7segy9d43Qilgvm/+pazg
-         ceL5eHOb1ddah4PrChZZUG/4QKxZ+j1mzZBCrasg=
+        b=L32f2mT8XPQVCjlNq+xzSMAm+p1moJpligfxrFrnmeGmNpQDjL751AvS62z1xm8iX
+         PpnbV0LiMXIP2NkYYb7qaGz8kr4Fy2DtLlFbT5Q35ejNCy3rNU+c4BL4oc8MAEEIr0
+         5Kv974GSt2ff+5OPqmAtHCq4WIwHHXRF7Uv4CR/s=
 From:   megous@megous.com
 To:     linux-sunxi@googlegroups.com,
         Maxime Ripard <maxime.ripard@bootlin.com>,
@@ -37,11 +37,10 @@ Cc:     Ondrej Jirman <megous@megous.com>, David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
         Mark Rutland <mark.rutland@arm.com>,
         dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v8 2/4] dt-bindings: display: hdmi-connector: Support DDC bus enable
-Date:   Tue,  6 Aug 2019 17:57:41 +0200
-Message-Id: <20190806155744.10263-3-megous@megous.com>
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v8 4/4] arm64: dts: allwinner: orange-pi-3: Enable HDMI output
+Date:   Tue,  6 Aug 2019 17:57:43 +0200
+Message-Id: <20190806155744.10263-5-megous@megous.com>
 In-Reply-To: <20190806155744.10263-1-megous@megous.com>
 References: <20190806155744.10263-1-megous@megous.com>
 MIME-Version: 1.0
@@ -53,31 +52,66 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ondrej Jirman <megous@megous.com>
 
-Some Allwinner SoC using boards (Orange Pi 3 for example) need to enable
-on-board voltage shifting logic for the DDC bus using a gpio to be able
-to access DDC bus. Use ddc-en-gpios property on the hdmi-connector to
-model this.
-
-Add binding documentation for optional ddc-en-gpios property.
+Orange Pi 3 has a DDC_CEC_EN signal connected to PH2, that enables the DDC
+I2C bus voltage shifter. Before EDID can be read, we need to pull PH2 high.
+This is realized by the ddc-en-gpios property.
 
 Signed-off-by: Ondrej Jirman <megous@megous.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/display/connector/hdmi-connector.txt     | 1 +
- 1 file changed, 1 insertion(+)
+ .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 26 +++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt b/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
-index 508aee461e0d..aeb07c4bd703 100644
---- a/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
-+++ b/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
-@@ -9,6 +9,7 @@ Optional properties:
- - label: a symbolic name for the connector
- - hpd-gpios: HPD GPIO number
- - ddc-i2c-bus: phandle link to the I2C controller used for DDC EDID probing
-+- ddc-en-gpios: signal to enable DDC bus
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+index 2c6807b74ff6..01bb1bafe284 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+@@ -22,6 +22,18 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
  
- Required nodes:
- - Video port for HDMI input
++	connector {
++		compatible = "hdmi-connector";
++		ddc-en-gpios = <&pio 7 2 GPIO_ACTIVE_HIGH>; /* PH2 */
++		type = "a";
++
++		port {
++			hdmi_con_in: endpoint {
++				remote-endpoint = <&hdmi_out_con>;
++			};
++		};
++	};
++
+ 	leds {
+ 		compatible = "gpio-leds";
+ 
+@@ -72,6 +84,10 @@
+ 	cpu-supply = <&reg_dcdca>;
+ };
+ 
++&de {
++	status = "okay";
++};
++
+ &ehci0 {
+ 	status = "okay";
+ };
+@@ -91,6 +107,16 @@
+ 	status = "okay";
+ };
+ 
++&hdmi {
++	status = "okay";
++};
++
++&hdmi_out {
++	hdmi_out_con: endpoint {
++		remote-endpoint = <&hdmi_con_in>;
++	};
++};
++
+ &mdio {
+ 	ext_rgmii_phy: ethernet-phy@1 {
+ 		compatible = "ethernet-phy-ieee802.3-c22";
 -- 
 2.22.0
 
