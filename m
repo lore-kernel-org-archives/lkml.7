@@ -2,103 +2,155 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4841C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 20:22:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17CEDC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 20:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D90F20880
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 20:22:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CED1D2173B
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 20:26:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="HRs67MTZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726136AbfHFUW0 (ORCPT
+        id S1726205AbfHFU04 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 16:22:26 -0400
-Received: from mga06.intel.com ([134.134.136.31]:47463 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725970AbfHFUW0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 16:22:26 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 13:22:25 -0700
-X-IronPort-AV: E=Sophos;i="5.64,353,1559545200"; 
-   d="scan'208";a="325743887"
-Received: from rchatre-mobl.amr.corp.intel.com (HELO [10.24.14.91]) ([10.24.14.91])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 06 Aug 2019 13:22:25 -0700
-Subject: Re: [PATCH V2 01/10] x86/CPU: Expose if cache is inclusive of lower
- level caches
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     tglx@linutronix.de, fenghua.yu@intel.com, tony.luck@intel.com,
-        kuo-lang.tseng@intel.com, mingo@redhat.com, hpa@zytor.com,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-References: <20190802180352.GE30661@zn.tnic>
- <e532ab90-196c-8b58-215a-f56f5e409512@intel.com>
- <20190803094423.GA2100@zn.tnic>
- <122b005a-46b1-2b1e-45a8-7f92a5dba2d9@intel.com>
- <20190806155716.GE25897@zn.tnic>
- <151002be-33e6-20d6-7699-bc9be7e51f33@intel.com>
- <20190806173300.GF25897@zn.tnic>
- <d0c04521-ec1a-3468-595c-6929f25f37ff@intel.com>
- <20190806183333.GA4698@zn.tnic>
- <e86c1f54-092d-6580-7652-cbc4ddade440@intel.com>
- <20190806191559.GB4698@zn.tnic>
-From:   Reinette Chatre <reinette.chatre@intel.com>
-Message-ID: <18004821-577d-b0dd-62b8-13b6f9264e72@intel.com>
-Date:   Tue, 6 Aug 2019 13:22:22 -0700
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190806191559.GB4698@zn.tnic>
-Content-Type: text/plain; charset=utf-8
+        Tue, 6 Aug 2019 16:26:56 -0400
+Received: from mail-eopbgr770073.outbound.protection.outlook.com ([40.107.77.73]:41350
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725881AbfHFU04 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 16:26:56 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kcMRE2cMBOic/dOHcC8cak6LjjwFN1A1qDBjXy8Owp9uG8b5dkc16mgvMr41z7fqzXl5NsDpbByUP7aPNf25VKU3H85gXKbYHGlioO3ALlpQU/OD/YNHl0u85SScDViFC3nhR2Zwpd6INuqsRsCzZZbNQIjwvc+I/PkmIKBSThBoaNeaO6L3RH6+xSC4r3/UkAovnsvz6/8Yc9LQt+9BKpP8YcM59Yn7vynVE4/89F0USS9aDpyhTpHrOKkIMs4D4uo8QQrYQB6UB5CoHl+x1bx8SzSIa0Zr7bI4UzkbIDM0mnFZLTc+P4LZCMpRNdBLYgKaBEMQQaMneo6FVKHwyg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7IGkLjPpS/zSYDGWQ2cgLZHa/giqNj0So6XUn+tZCoA=;
+ b=UfTdwi4c0s2d6DTZAXRN9FfjwDTqLcA9s+IJ2L4TSj2h8ymroRTKRLFKUWA6i+HA/lwZ7XFpwzd/T4up9BviJOsCMg/zi8d7D7ZJyHWQVgmbFHkAcuahDl1JMqvXY0X7pYbyPVwV60SnevDfZ1Q7dZbrLPnUGN53p9hj2nt8Og8mIeywkpSwGCNX1ELwd1soSlInqaiO2QPg/6/TF3Xi9aaXozGpAq1a/SlcVSiv45VI4j+U1Vzw/jp7Glmcf6v2FzhpOtSftnWy5dpINW1Ms5MJJ9qdaFXKUU7X3iWeK4Nlo5ce9ZHe+U0E2gjmF2oN3FL2kHPmj8xz2Pei2s3lHw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=amd.com;dmarc=pass action=none header.from=amd.com;dkim=pass
+ header.d=amd.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7IGkLjPpS/zSYDGWQ2cgLZHa/giqNj0So6XUn+tZCoA=;
+ b=HRs67MTZx9u4y4IQLCxmnUKPVamisFEDKxM9vNhOPNY4JdqbbCnk1fCeTJ+Q9Hv8hCzuuB8Oy8lzstB1lbGfJLjk9ZfFlfrmRj23vLaf47fP/fpPlOU8rjJljq02T1NBQDTJb9CuxH/8loLKQ5+/n6jwiROyFeHhKQuNYAwb5IE=
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com (20.179.104.150) by
+ DM6PR12MB3529.namprd12.prod.outlook.com (20.179.106.160) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2136.13; Tue, 6 Aug 2019 20:26:52 +0000
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::9c3d:8593:906c:e4f7]) by DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::9c3d:8593:906c:e4f7%6]) with mapi id 15.20.2136.018; Tue, 6 Aug 2019
+ 20:26:52 +0000
+From:   "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        David Howells <dhowells@redhat.com>
+CC:     Kees Cook <keescook@chromium.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Kai Huang <kai.huang@linux.intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCHv2 47/59] kvm, x86, mmu: setup MKTME keyID to spte for
+ given PFN
+Thread-Topic: [PATCHv2 47/59] kvm, x86, mmu: setup MKTME keyID to spte for
+ given PFN
+Thread-Index: AQHVR7N50JZUMg30+0GwscyLbLRscqbumx6A
+Date:   Tue, 6 Aug 2019 20:26:52 +0000
+Message-ID: <a3aee9ea-a3ce-1219-b7ff-5a1b291bffdd@amd.com>
+References: <20190731150813.26289-1-kirill.shutemov@linux.intel.com>
+ <20190731150813.26289-48-kirill.shutemov@linux.intel.com>
+In-Reply-To: <20190731150813.26289-48-kirill.shutemov@linux.intel.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SN4PR0501CA0013.namprd05.prod.outlook.com
+ (2603:10b6:803:40::26) To DM6PR12MB3163.namprd12.prod.outlook.com
+ (2603:10b6:5:182::22)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Thomas.Lendacky@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.204.77.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7960527e-446d-46f2-db0a-08d71aac6ac5
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR12MB3529;
+x-ms-traffictypediagnostic: DM6PR12MB3529:
+x-microsoft-antispam-prvs: <DM6PR12MB3529625FBB8E66B94F41FAA9ECD50@DM6PR12MB3529.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1247;
+x-forefront-prvs: 0121F24F22
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(376002)(396003)(39860400002)(136003)(346002)(189003)(199004)(36756003)(68736007)(7416002)(476003)(486006)(2616005)(71190400001)(71200400001)(11346002)(446003)(14454004)(4326008)(86362001)(316002)(478600001)(54906003)(31696002)(25786009)(6246003)(6436002)(305945005)(7736002)(26005)(66476007)(3846002)(64756008)(53546011)(66446008)(186003)(6116002)(110136005)(2906002)(6486002)(66556008)(229853002)(76176011)(102836004)(2501003)(66066001)(31686004)(66946007)(5660300002)(6512007)(53936002)(256004)(99286004)(81156014)(81166006)(386003)(52116002)(8676002)(6506007)(14444005)(8936002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3529;H:DM6PR12MB3163.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: jPjow3QyH9EJwADFTNpzZbgFVaQpvj9QzYT8YMR8WojofdDX/GZWJCw5IFVGigJNfQaTmAtxdvyOQ00nkK/HiKBMIxIe/UO5jAAI12M2RH0HS0DsMcEBcU8F4cyW+RLkT7Ds+rr3lsoDYz3ktu1sY4/Zr7aXzKwq0e0qrT2uhWKxJ2zb+lfhYb2DXBNR7g7eqd1P4Iu5u84GN759SSe0Un4qgAEiiryqTxmUjwGLbt6yC7bwKmcCwvPlmzPFocof4/ejUB6CykkXchOmrkDlsIV0MBpVCiirLpAcmUS6eINz8UGqOxj0vO8KuEhhM8V2AJb15woKl5MPs2AZQzx1KEfusMqbnai73RUt2+l5SiCkp9OFT457XuvkFs3TTeSbuGxVwYsu8u0ZlMSz8AVogUHehKXCtfBpR8xUA5EbWKk=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <52FCCCB87C0C0148AD8C552201384C4E@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7960527e-446d-46f2-db0a-08d71aac6ac5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Aug 2019 20:26:52.6811
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: tlendack@amd.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3529
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Borislav,
-
-On 8/6/2019 12:16 PM, Borislav Petkov wrote:
-> On Tue, Aug 06, 2019 at 11:53:40AM -0700, Reinette Chatre wrote:
->> In get_prefetch_disable_bits() the platforms that support cache
->> pseudo-locking are hardcoded as part of configuring the hardware
->> prefetch disable bits to use.
-> 
-> Ok, so there is already a way to check pseudo-locking support.
-
-Correct. This check is per platform though.
-
-> Now, why
-> do we have to look at cache inclusivity too?
-
-... because some platforms differ in which SKUs support cache
-pseudo-locking. On these platforms only the SKUs with inclusive cache
-support cache pseudo-locking, thus the additional check.
-
-> 
-> Your 0/10 mail says:
-> 
-> "Only systems with L3 inclusive cache is supported at this time because
-> if the L3 cache is not inclusive then pseudo-locked memory within the L3
-> cache would be evicted when migrated to L2."
-> 
-> but then a couple of mails earlier you said:
-> 
-> "... this seems to be different between L2 and L3. On the Atom systems
-> where L2 pseudo-locking works well the L2 cache is not inclusive. We are
-> also working on supporting cache pseudo-locking on L3 cache that is not
-> inclusive."
-> 
-> which leads me to still think that we don't really need L3 cache
-> inclusivity and theoretically, you could do without it.
-> 
-> Or are you saying that cache pseudo-locking on non-inclusive L3 is not
-> supported yet so no need to enable it yet?
-
-Correct. Hardware and software changes will be needed to support this.
-
-Reinette
-
+T24gNy8zMS8xOSAxMDowOCBBTSwgS2lyaWxsIEEuIFNodXRlbW92IHdyb3RlOg0KPiBGcm9tOiBL
+YWkgSHVhbmcgPGthaS5odWFuZ0BsaW51eC5pbnRlbC5jb20+DQo+IA0KPiBTZXR1cCBrZXlJRCB0
+byBTUFRFLCB3aGljaCB3aWxsIGJlIGV2ZW50dWFsbHkgcHJvZ3JhbW1lZCB0byBzaGFkb3cgTU1V
+DQo+IG9yIEVQVCB0YWJsZSwgYWNjb3JkaW5nIHRvIHBhZ2UncyBhc3NvY2lhdGVkIGtleUlELCBz
+byB0aGF0IGd1ZXN0IGlzDQo+IGFibGUgdG8gdXNlIGNvcnJlY3Qga2V5SUQgdG8gYWNjZXNzIGd1
+ZXN0IG1lbW9yeS4NCj4gDQo+IE5vdGUgY3VycmVudCBzaGFkb3dfbWVfbWFzayBkb2Vzbid0IHN1
+aXQgTUtUTUUncyBuZWVkcywgc2luY2UgZm9yIE1LVE1FDQo+IHRoZXJlJ3Mgbm8gZml4ZWQgbWVt
+b3J5IGVuY3J5cHRpb24gbWFzaywgYnV0IGNhbiB2YXJ5IGZyb20ga2V5SUQgMSB0bw0KPiBtYXhp
+bXVtIGtleUlELCB0aGVyZWZvcmUgc2hhZG93X21lX21hc2sgcmVtYWlucyAwIGZvciBNS1RNRS4N
+Cj4gDQo+IFNpZ25lZC1vZmYtYnk6IEthaSBIdWFuZyA8a2FpLmh1YW5nQGxpbnV4LmludGVsLmNv
+bT4NCj4gU2lnbmVkLW9mZi1ieTogS2lyaWxsIEEuIFNodXRlbW92IDxraXJpbGwuc2h1dGVtb3ZA
+bGludXguaW50ZWwuY29tPg0KPiAtLS0NCj4gIGFyY2gveDg2L2t2bS9tbXUuYyB8IDE4ICsrKysr
+KysrKysrKysrKysrLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDE3IGluc2VydGlvbnMoKyksIDEgZGVs
+ZXRpb24oLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9hcmNoL3g4Ni9rdm0vbW11LmMgYi9hcmNoL3g4
+Ni9rdm0vbW11LmMNCj4gaW5kZXggOGY3MjUyNmUyZjY4Li5iODc0MmU2MjE5ZjYgMTAwNjQ0DQo+
+IC0tLSBhL2FyY2gveDg2L2t2bS9tbXUuYw0KPiArKysgYi9hcmNoL3g4Ni9rdm0vbW11LmMNCj4g
+QEAgLTI5MzYsNiArMjkzNiwyMiBAQCBzdGF0aWMgYm9vbCBrdm1faXNfbW1pb19wZm4oa3ZtX3Bm
+bl90IHBmbikNCj4gICNkZWZpbmUgU0VUX1NQVEVfV1JJVEVfUFJPVEVDVEVEX1BUCUJJVCgwKQ0K
+PiAgI2RlZmluZSBTRVRfU1BURV9ORUVEX1JFTU9URV9UTEJfRkxVU0gJQklUKDEpDQo+ICANCj4g
+K3N0YXRpYyB1NjQgZ2V0X3BoeXNfZW5jcnlwdGlvbl9tYXNrKGt2bV9wZm5fdCBwZm4pDQo+ICt7
+DQo+ICsjaWZkZWYgQ09ORklHX1g4Nl9JTlRFTF9NS1RNRQ0KPiArCXN0cnVjdCBwYWdlICpwYWdl
+Ow0KPiArDQo+ICsJaWYgKCFwZm5fdmFsaWQocGZuKSkNCj4gKwkJcmV0dXJuIDA7DQo+ICsNCj4g
+KwlwYWdlID0gcGZuX3RvX3BhZ2UocGZuKTsNCj4gKw0KPiArCXJldHVybiAoKHU2NClwYWdlX2tl
+eWlkKHBhZ2UpKSA8PCBta3RtZV9rZXlpZF9zaGlmdCgpOw0KPiArI2Vsc2UNCj4gKwlyZXR1cm4g
+c2hhZG93X21lX21hc2s7DQo+ICsjZW5kaWYNCj4gK30NCg0KVGhpcyBwYXRjaCBicmVha3MgQU1E
+IHZpcnR1YWxpemF0aW9uIChTVk0pIGluIGdlbmVyYWwgKG5vbi1TRVYgYW5kIFNFVg0KZ3Vlc3Rz
+KSB3aGVuIFNNRSBpcyBhY3RpdmUuIFNob3VsZG4ndCB0aGlzIGJlIGEgcnVuIHRpbWUsIHZzIGJ1
+aWxkIHRpbWUsDQpjaGVjayBmb3IgTUtUTUUgYmVpbmcgYWN0aXZlPw0KDQpUaGFua3MsDQpUb20N
+Cg0KPiArDQo+ICBzdGF0aWMgaW50IHNldF9zcHRlKHN0cnVjdCBrdm1fdmNwdSAqdmNwdSwgdTY0
+ICpzcHRlcCwNCj4gIAkJICAgIHVuc2lnbmVkIHB0ZV9hY2Nlc3MsIGludCBsZXZlbCwNCj4gIAkJ
+ICAgIGdmbl90IGdmbiwga3ZtX3Bmbl90IHBmbiwgYm9vbCBzcGVjdWxhdGl2ZSwNCj4gQEAgLTI5
+ODIsNyArMjk5OCw3IEBAIHN0YXRpYyBpbnQgc2V0X3NwdGUoc3RydWN0IGt2bV92Y3B1ICp2Y3B1
+LCB1NjQgKnNwdGVwLA0KPiAgCQlwdGVfYWNjZXNzICY9IH5BQ0NfV1JJVEVfTUFTSzsNCj4gIA0K
+PiAgCWlmICgha3ZtX2lzX21taW9fcGZuKHBmbikpDQo+IC0JCXNwdGUgfD0gc2hhZG93X21lX21h
+c2s7DQo+ICsJCXNwdGUgfD0gZ2V0X3BoeXNfZW5jcnlwdGlvbl9tYXNrKHBmbik7DQo+ICANCj4g
+IAlzcHRlIHw9ICh1NjQpcGZuIDw8IFBBR0VfU0hJRlQ7DQo+ICANCj4gDQo=
