@@ -2,90 +2,93 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E91DEC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:49:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60EABC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:50:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B41F720B1F
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:49:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CB0220B1F
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:50:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GsAGNu2Y"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="RTZRwX5l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731196AbfHFMtz (ORCPT
+        id S1730381AbfHFMuq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 08:49:55 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:49230 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726036AbfHFMty (ORCPT
+        Tue, 6 Aug 2019 08:50:46 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:32866 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730222AbfHFMup (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 08:49:54 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x76CkMM6041562;
-        Tue, 6 Aug 2019 12:48:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=zBKsoyvZW42pljgNs2qIOF6TztDTbsqax0iQzIQWQUA=;
- b=GsAGNu2Y6qtsIHwl45KkdUA6HeAwIhix9kO+Z6MO+x+7QPubpPVdo2Um4Y7xtMLsZiEg
- 5IZ6PCp10+0JMkU0tUHg6Z4BPLldm7AyznNWjVxulJ/frAUXplxQcdHPg9BySdj4mSRQ
- XaZtw8jHWj0GDW9aaPWSar7XBNCFexDB+1r4u5E99JUPRgfLngAUXJhXmKcc/KLFDbe1
- bzM5O4ySrXozVEMbSA6llto4+QtJHad92MXMnHdj8Lnjb5SiBXhDumt9kG6OmhZCfgfP
- g7DRe6XvgRixUvhHC8d5KVSnveK84iK6muRdsX8evknWCXQ97Z1Y4eBfL8JxnIvOKODr Yg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2u51ptx08h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 06 Aug 2019 12:48:28 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x76CldLw014390;
-        Tue, 6 Aug 2019 12:48:27 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2u7576yns5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 06 Aug 2019 12:48:27 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x76CmQZA008964;
-        Tue, 6 Aug 2019 12:48:26 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 06 Aug 2019 05:48:25 -0700
-Date:   Tue, 6 Aug 2019 15:48:19 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Merwin Trever Ferrao <merwintf@gmail.com>
-Cc:     Larry.Finger@lwfinger.net, gregkh@linuxfoundation.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Staging: rtl8188eu: core: rtw_security: tidy up
- crc32_init()
-Message-ID: <20190806124819.GE1935@kadam>
-References: <20190806122849.GA25628@IoT-COE>
+        Tue, 6 Aug 2019 08:50:45 -0400
+Received: by mail-wm1-f66.google.com with SMTP id h19so8887102wme.0
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 05:50:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=i8yW7mVu+nN03VbqETwhpsoLUtIU4YcLbfhs55o7BvE=;
+        b=RTZRwX5lhpwBk5ffpnQxAAYx7/cLanVfmlliMxc8iNALHbRdTPbkXa73FiQngVF4k2
+         gSR0nOfzERuCwqrzYPvSe6lQofqNqPqmAIDQYitxE/mLl6BCuiy1cQSaNQfPw+V/7ShZ
+         tnjlpMi5kgAstEAkSvRTFWs3Te4PCbUIiafni+sBHmgX7jOygkvQuhor9CBfI3jXaA+N
+         qYJFwoWghWxkSlGmDwY4Ooltorgm5bfc65AOpvepNg1wS1RCvbIZRmCj0LVKqLMy03cg
+         NPYjcOmyId0MlWnqhIp2J1V6qUTGUTpSHrJDxbxu4lRlPJ82xwQBpdT2BHMDT5IF/ItJ
+         fEOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=i8yW7mVu+nN03VbqETwhpsoLUtIU4YcLbfhs55o7BvE=;
+        b=SaH7+bxbOd4OLelqg+Gl4BSh3CYu4ynGeqstNUnYSRUuZG8Z8tCrVfjCgQ2gTItw3j
+         pl6x8s0iX7nvEnie9/g9U1B/qwG8W5t/QmBLO8w4SiSkJnLt2N2V2038/c+1TmyQvBdK
+         hyl0vB9KE63rT7dFIEXi0U1/pp1BAWUD4z0yVJd9SKoBDGy45fZvNIbUCpVWw8ONkU2w
+         tnN2IXqYKx+U3Wo/eraOBx0r8t6Ms8Qr5nlVPmRBdwuzXx0dUBWKRxcLVWb/g92ZW74V
+         LBtoiDc6z5wv16izAbv+UZvqdkEHXcIaiFZoda2VLV4G1zjLCgNKP2n+C+UqHOre8sia
+         dXXw==
+X-Gm-Message-State: APjAAAXm5nsQUxXsvKlyd75lEWnWovQruGs/cL9nlfMydsk9mWZGImZ0
+        H3NkwcpmHdo27ASJZi4r/2hRgw==
+X-Google-Smtp-Source: APXvYqyO9qfySQufHv8FTPVAmHGN0v/i1YcTHeQd2dt7QxoS3vNu24XyzJhi5stC39e658qAYY58Sg==
+X-Received: by 2002:a1c:3b02:: with SMTP id i2mr4611089wma.23.1565095843565;
+        Tue, 06 Aug 2019 05:50:43 -0700 (PDT)
+Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id e3sm109049221wrs.37.2019.08.06.05.50.42
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 06 Aug 2019 05:50:43 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     robh+dt@kernel.org
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        martin.blumenstingl@googlemail.com, devicetree@vger.kernel.org,
+        netdev@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/2] dt-bindings: net: meson-dwmac: convert to yaml
+Date:   Tue,  6 Aug 2019 14:50:39 +0200
+Message-Id: <20190806125041.16105-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190806122849.GA25628@IoT-COE>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9340 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=960
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908060128
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9340 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908060127
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks good.
+This patchsets converts the Amlogic Meson DWMAC glue bindings over to
+YAML schemas using the already converted dwmac bindings.
 
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+The first patch is needed because the Amlogic glue needs a supplementary
+reg cell to access the DWMAC glue registers.
 
-regards,
-dan carpenter
+Neil Armstrong (2):
+  dt-bindings: net: snps,dwmac: update reg minItems maxItems
+  dt-bindings: net: meson-dwmac: convert to yaml
+
+ .../bindings/net/amlogic,meson-dwmac.yaml     | 113 ++++++++++++++++++
+ .../devicetree/bindings/net/meson-dwmac.txt   |  71 -----------
+ .../devicetree/bindings/net/snps,dwmac.yaml   |   8 +-
+ 3 files changed, 120 insertions(+), 72 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/amlogic,meson-dwmac.yaml
+ delete mode 100644 Documentation/devicetree/bindings/net/meson-dwmac.txt
+
+-- 
+2.22.0
 
