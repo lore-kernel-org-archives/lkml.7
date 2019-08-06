@@ -2,114 +2,67 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E43C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 20:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46B4EC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 20:48:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12FE620B1F
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 20:48:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565124486;
-	bh=RXIWyokVY5jFs2cNty8/qR9NmcWvvGUIU49LRtWPjsw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yIcwmJIb6MYP/RhbbH0BoF7bqr2N3q8oonJN71aptOqNI4zdq0nOjOVav6mdY6xWy
-	 ifttLujfYEtqIN+daakgmZpIJcRrCA5MVA8iluD4Apmvr+VIvjFU93/0ps3aeDeTvN
-	 eTm1RBLqpRaWMwrz4SxiRN41eutqNA4gVupSgiEg=
+	by mail.kernel.org (Postfix) with ESMTP id 1EB6720818
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 20:48:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbfHFUsF (ORCPT
+        id S1726796AbfHFUsv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 16:48:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42564 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726009AbfHFUsE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 16:48:04 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FA8A20818;
-        Tue,  6 Aug 2019 20:48:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565124483;
-        bh=RXIWyokVY5jFs2cNty8/qR9NmcWvvGUIU49LRtWPjsw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=I0nc9rOMh6f1LbzncBqUH6zKXv/iuHIJJLjKQhhSo1j0VDi7lWFLEz549NJin+0N4
-         xOPldoIj1nl1bXaR/UosgFuoHdgbVOu7L0dicdlruXAXjUVjeiLLS1i2/KpC3JlqwT
-         4JEYsa/N6iP8bWWh0To5Gqco57+uKpI42OIZWr7U=
-Date:   Tue, 6 Aug 2019 15:48:01 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Sebastian Ott <sebott@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        linux-pci@vger.kernel.org, linux-s390@vger.kernel.org,
+        Tue, 6 Aug 2019 16:48:51 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:49582 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725973AbfHFUsv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 16:48:51 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id A05ED1264D598;
+        Tue,  6 Aug 2019 13:48:48 -0700 (PDT)
+Date:   Tue, 06 Aug 2019 13:48:48 -0700 (PDT)
+Message-Id: <20190806.134848.2232719643712591918.davem@davemloft.net>
+To:     saeedm@mellanox.com
+Cc:     hslester96@gmail.com, linux-rdma@vger.kernel.org,
+        netdev@vger.kernel.org, leon@kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] s390/pci: PCI_IOV_RESOURCES loop refactoring in
- zpci_map_resources
-Message-ID: <20190806204801.GV151852@google.com>
-References: <20190806160137.29275-1-efremov@linux.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190806160137.29275-1-efremov@linux.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Subject: Re: [PATCH v2] net/mlx5e: Use refcount_t for refcount
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <aaf9680afe5c62d0cf71ff4382b66b3e4d735008.camel@mellanox.com>
+References: <20190802164828.20243-1-hslester96@gmail.com>
+        <aaf9680afe5c62d0cf71ff4382b66b3e4d735008.camel@mellanox.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 06 Aug 2019 13:48:48 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for the patch!
+From: Saeed Mahameed <saeedm@mellanox.com>
+Date: Tue, 6 Aug 2019 20:42:56 +0000
 
-Sebastian may have silently fixed this, but for future reference,
-
-  $ git log --oneline arch/s390/pci/pci.c
-  c7ff0e918a7c s390/pci: deal with devices that have no support for MIO instructions
-  dcd33b23c9f3 s390/pci: fix assignment of bus resources
-  56271303808f s390/pci: add parameter to disable usage of MIO instructions
-  71ba41c9b1d9 s390/pci: provide support for MIO instructions
-  81deca12c202 s390/pci: move io address mapping code to pci_insn.c
-  fbfe07d440f2 s390/pci: add parameter to force floating irqs
-  c840927cf5f2 s390/pci: move everything irq related to pci_irq.c
-  066ee72aecdc s390/pci: remove unused define
-  ...
-
-shows that the typical style there is to start the subject with a verb
-so it's an imperative sentence.
-
-On Tue, Aug 06, 2019 at 07:01:37PM +0300, Denis Efremov wrote:
-> This patch alters the for loop iteration scheme in zpci_map_resources
-> to make it more usual. Thus, the patch generalizes the style for
-> PCI_IOV_RESOURCES iteration and improves readability.
+> On Sat, 2019-08-03 at 00:48 +0800, Chuhong Yuan wrote:
+>> refcount_t is better for reference counters since its
+>> implementation can prevent overflows.
+>> So convert atomic_t ref counters to refcount_t.
+>> 
+>> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+>> ---
+>> Changes in v2:
+>>   - Add #include.
+>> 
 > 
-> Signed-off-by: Denis Efremov <efremov@linux.com>
-> ---
->  arch/s390/pci/pci.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+> Acked-by: Saeed Mahameed <saeedm@mellanox.com>
 > 
-> diff --git a/arch/s390/pci/pci.c b/arch/s390/pci/pci.c
-> index b0e3b9a0e488..c7fea9bea8cb 100644
-> --- a/arch/s390/pci/pci.c
-> +++ b/arch/s390/pci/pci.c
-> @@ -431,13 +431,13 @@ static void zpci_map_resources(struct pci_dev *pdev)
->  	}
->  
->  #ifdef CONFIG_PCI_IOV
-> -	i = PCI_IOV_RESOURCES;
-> +	for (i = 0; i < PCI_SRIOV_NUM_BARS; i++) {
-> +		int bar = i + PCI_IOV_RESOURCES;
->  
-> -	for (; i < PCI_SRIOV_NUM_BARS + PCI_IOV_RESOURCES; i++) {
-> -		len = pci_resource_len(pdev, i);
-> +		len = pci_resource_len(pdev, bar);
->  		if (!len)
->  			continue;
-> -		pdev->resource[i].parent = &iov_res;
-> +		pdev->resource[bar].parent = &iov_res;
->  	}
->  #endif
->  }
-> -- 
-> 2.21.0
-> 
+> Dave, up to you take it, or leave it to me :).
+
+Please take it, thank you.
