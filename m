@@ -2,169 +2,89 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7CAFC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:35:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F22BC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 890AF214C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:35:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 436FE214C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:35:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dfTE8QFW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730896AbfHFNfB (ORCPT
+        id S1731652AbfHFNfN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 09:35:01 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51552 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726713AbfHFNfA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 09:35:00 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E586F629C0;
-        Tue,  6 Aug 2019 13:34:59 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-144.ams2.redhat.com [10.36.116.144])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 291F61A269;
-        Tue,  6 Aug 2019 13:34:59 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 3773117473; Tue,  6 Aug 2019 15:34:55 +0200 (CEST)
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     tzimmermann@suse.de, Gerd Hoffmann <kraxel@redhat.com>,
-        Dave Airlie <airlied@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        virtualization@lists.linux-foundation.org (open list:DRM DRIVER FOR QXL
-        VIRTUAL GPU),
-        spice-devel@lists.freedesktop.org (open list:DRM DRIVER FOR QXL VIRTUAL
-        GPU), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 3/3] drm/qxl: switch qxl to use the new ttm helpers.
-Date:   Tue,  6 Aug 2019 15:34:54 +0200
-Message-Id: <20190806133454.8254-4-kraxel@redhat.com>
-In-Reply-To: <20190806133454.8254-1-kraxel@redhat.com>
-References: <20190806133454.8254-1-kraxel@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Tue, 06 Aug 2019 13:35:00 +0000 (UTC)
+        Tue, 6 Aug 2019 09:35:13 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:41880 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726877AbfHFNfM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 09:35:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=LSrTDhsJpuHztoZ1vcQuO446UAhMwmMAYnYunQdQJVw=; b=dfTE8QFWDKasKNrl8PXCKENnA
+        IsKrDnUGP/zpSEhJ0QG5ygHuuJTq3B7DlBi+/eJWeBsvzw8dnTtST1kAD3YyRToBtRJP58aeFUkiB
+        3+HRTgVlp4K8xeDLEison7I8LUYJzN3p7U7CWFDZb7K/qvO/C8zZRSiIQHkz+hR0W88uBNtqkGpe1
+        Ppo6E5ronvOPCj5A8eBSS4I6gwTQ6BRzRzAeoXB2LvkUug8dmGHFuyFsE1IBOgJAViCJagElvFJgJ
+        iAMHMYibhwEkKHFLQBQdjiRlRVhKF2doWfHNqHwVh8YNPrflGEylFt9NBAx6TV5/ZlXTEVvfpBxWM
+        VFYR7EQTA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1huzcF-0005L9-Op; Tue, 06 Aug 2019 13:35:03 +0000
+Date:   Tue, 6 Aug 2019 06:35:03 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Pingfan Liu <kernelfans@gmail.com>
+Cc:     linux-mm@kvack.org,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Jan Kara <jack@suse.cz>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] mm/migrate: clean up useless code in
+ migrate_vma_collect_pmd()
+Message-ID: <20190806133503.GC30179@bombadil.infradead.org>
+References: <1565078411-27082-1-git-send-email-kernelfans@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1565078411-27082-1-git-send-email-kernelfans@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
----
- drivers/gpu/drm/qxl/qxl_drv.h    |  4 +---
- drivers/gpu/drm/qxl/qxl_object.h |  5 -----
- drivers/gpu/drm/qxl/qxl_drv.c    |  2 +-
- drivers/gpu/drm/qxl/qxl_dumb.c   | 17 -----------------
- drivers/gpu/drm/qxl/qxl_ioctl.c  |  5 +++--
- drivers/gpu/drm/qxl/Kconfig      |  1 +
- 6 files changed, 6 insertions(+), 28 deletions(-)
 
-diff --git a/drivers/gpu/drm/qxl/qxl_drv.h b/drivers/gpu/drm/qxl/qxl_drv.h
-index 9e034c5fa87d..82efbe76062a 100644
---- a/drivers/gpu/drm/qxl/qxl_drv.h
-+++ b/drivers/gpu/drm/qxl/qxl_drv.h
-@@ -38,6 +38,7 @@
- #include <drm/drm_crtc.h>
- #include <drm/drm_encoder.h>
- #include <drm/drm_fb_helper.h>
-+#include <drm/drm_gem_ttm_helper.h>
- #include <drm/drm_ioctl.h>
- #include <drm/drm_gem.h>
- #include <drm/qxl_drm.h>
-@@ -347,9 +348,6 @@ int qxl_bo_kmap(struct qxl_bo *bo, void **ptr);
- int qxl_mode_dumb_create(struct drm_file *file_priv,
- 			 struct drm_device *dev,
- 			 struct drm_mode_create_dumb *args);
--int qxl_mode_dumb_mmap(struct drm_file *filp,
--		       struct drm_device *dev,
--		       uint32_t handle, uint64_t *offset_p);
- 
- /* qxl ttm */
- int qxl_ttm_init(struct qxl_device *qdev);
-diff --git a/drivers/gpu/drm/qxl/qxl_object.h b/drivers/gpu/drm/qxl/qxl_object.h
-index 8ae54ba7857c..1f0316ebcfd0 100644
---- a/drivers/gpu/drm/qxl/qxl_object.h
-+++ b/drivers/gpu/drm/qxl/qxl_object.h
-@@ -58,11 +58,6 @@ static inline unsigned long qxl_bo_size(struct qxl_bo *bo)
- 	return bo->tbo.num_pages << PAGE_SHIFT;
- }
- 
--static inline u64 qxl_bo_mmap_offset(struct qxl_bo *bo)
--{
--	return drm_vma_node_offset_addr(&bo->tbo.base.vma_node);
--}
--
- static inline int qxl_bo_wait(struct qxl_bo *bo, u32 *mem_type,
- 			      bool no_wait)
- {
-diff --git a/drivers/gpu/drm/qxl/qxl_drv.c b/drivers/gpu/drm/qxl/qxl_drv.c
-index c1802e01d9f6..18249110aa56 100644
---- a/drivers/gpu/drm/qxl/qxl_drv.c
-+++ b/drivers/gpu/drm/qxl/qxl_drv.c
-@@ -252,7 +252,7 @@ static struct drm_driver qxl_driver = {
- 	.driver_features = DRIVER_GEM | DRIVER_MODESET | DRIVER_ATOMIC,
- 
- 	.dumb_create = qxl_mode_dumb_create,
--	.dumb_map_offset = qxl_mode_dumb_mmap,
-+	.dumb_map_offset = drm_gem_ttm_driver_dumb_mmap_offset,
- #if defined(CONFIG_DEBUG_FS)
- 	.debugfs_init = qxl_debugfs_init,
- #endif
-diff --git a/drivers/gpu/drm/qxl/qxl_dumb.c b/drivers/gpu/drm/qxl/qxl_dumb.c
-index 272d19b677d8..bd3b16a701a6 100644
---- a/drivers/gpu/drm/qxl/qxl_dumb.c
-+++ b/drivers/gpu/drm/qxl/qxl_dumb.c
-@@ -69,20 +69,3 @@ int qxl_mode_dumb_create(struct drm_file *file_priv,
- 	args->handle = handle;
- 	return 0;
- }
--
--int qxl_mode_dumb_mmap(struct drm_file *file_priv,
--		       struct drm_device *dev,
--		       uint32_t handle, uint64_t *offset_p)
--{
--	struct drm_gem_object *gobj;
--	struct qxl_bo *qobj;
--
--	BUG_ON(!offset_p);
--	gobj = drm_gem_object_lookup(file_priv, handle);
--	if (gobj == NULL)
--		return -ENOENT;
--	qobj = gem_to_qxl_bo(gobj);
--	*offset_p = qxl_bo_mmap_offset(qobj);
--	drm_gem_object_put_unlocked(gobj);
--	return 0;
--}
-diff --git a/drivers/gpu/drm/qxl/qxl_ioctl.c b/drivers/gpu/drm/qxl/qxl_ioctl.c
-index 8117a45b3610..b1cc38ed0ed4 100644
---- a/drivers/gpu/drm/qxl/qxl_ioctl.c
-+++ b/drivers/gpu/drm/qxl/qxl_ioctl.c
-@@ -67,8 +67,9 @@ static int qxl_map_ioctl(struct drm_device *dev, void *data,
- 	struct qxl_device *qdev = dev->dev_private;
- 	struct drm_qxl_map *qxl_map = data;
- 
--	return qxl_mode_dumb_mmap(file_priv, &qdev->ddev, qxl_map->handle,
--				  &qxl_map->offset);
-+	return drm_gem_ttm_driver_dumb_mmap_offset(file_priv, &qdev->ddev,
-+						   qxl_map->handle,
-+						   &qxl_map->offset);
- }
- 
- struct qxl_reloc_info {
-diff --git a/drivers/gpu/drm/qxl/Kconfig b/drivers/gpu/drm/qxl/Kconfig
-index d0d691b31f4a..bfe90c7d17b2 100644
---- a/drivers/gpu/drm/qxl/Kconfig
-+++ b/drivers/gpu/drm/qxl/Kconfig
-@@ -3,6 +3,7 @@ config DRM_QXL
- 	tristate "QXL virtual GPU"
- 	depends on DRM && PCI && MMU
- 	select DRM_KMS_HELPER
-+	select DRM_TTM_HELPER
- 	select DRM_TTM
- 	select CRC32
- 	help
--- 
-2.18.1
+This needs something beyond the subject line.  Maybe ...
+
+After these assignments, we either restart the loop with a fresh variable,
+or we assign to the variable again without using the value we've assigned.
+
+Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+
+>  			goto next;
+>  		}
+> -		pfn = page_to_pfn(page);
+
+After you've done all this, as far as I can tell, the 'pfn' variable is
+only used in one arm of the conditions, so it can be moved there.
+
+ie something like:
+
+-               unsigned long mpfn, pfn;
++               unsigned long mpfn;
+...
+-               pfn = pte_pfn(pte);
+...
++                       unsigned long pfn = pte_pfn(pte);
++
 
