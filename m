@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E05AC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 23:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6ED4C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 23:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E50B720C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 23:17:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A20F320C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 23:17:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="iT2jZ5QE"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="lO1sgfmm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727670AbfHFXRB (ORCPT
+        id S1727724AbfHFXRI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 19:17:01 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:45410 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726953AbfHFXQS (ORCPT
+        Tue, 6 Aug 2019 19:17:08 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:35135 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726375AbfHFXQQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 19:16:18 -0400
-Received: by mail-qt1-f195.google.com with SMTP id x22so13035576qtp.12
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 16:16:17 -0700 (PDT)
+        Tue, 6 Aug 2019 19:16:16 -0400
+Received: by mail-qt1-f194.google.com with SMTP id d23so86477140qto.2
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 16:16:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ziepe.ca; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=dzzOeMTojFZzc4SDmpKjinKIrvNC9sVRWsnQeUnBSlc=;
-        b=iT2jZ5QEHCnRmwj3Fy7Flix3yuM6JMZfZlMd66YumfXZFQGPbYnOuPrN2Nfkw15MlA
-         AIO8aK6lBmEInROdH9Of3/332lc2HB5S42qr/W/2UIUKnnEndBMdeXDMUMGuGmW1p/5X
-         2V9fSmgrxz5r4ozB8rfrhYVEEKHdIhsoNUQQsTCfq9bfSXzc1vCmzCjIC9mqI2MdlycL
-         losCEg5d1lwwYehJqUjfY/pnKpJgJIYYu7a4Y2tCpde7gotzr2SCMXURkOCZhZ1LHzu9
-         LGt3R9vq4t3nIrE8fpnUEuW7OeTfeGz53wQSaHM3MZcXljasEHmfZblbVGzG8efyMB8t
-         WlBg==
+        bh=zMCnJFSOouEfBlilBoskv+IiaZaXJbwxtFCutX/1ZbM=;
+        b=lO1sgfmmxfGlNqAPOvqLT1SGqrTemHFJclBTTUaP/JdfZebfYNEmZx12KN2d9x+t1K
+         lII9WK9gYfQZPyWgyPFTPCoEGHZt8F0M7jQCLkLSlFxnaHHwQXPyY3CcqvQ580SczZfN
+         qAhsOYwXpYzFayOyEW24oPZpEQGwPISo/iiZPCSocZqmP49DBEnHdgl5cijvZU770sK2
+         rst5KmBjQuunoLWsnmCgllUhFH26FxYZrBl8qIJPrLLJfK3/2D+8ShVoV4s+9VzUPpPr
+         JMuDt8hth2BUVJE2B6xnVe4lowU/3I7TBYPiS33xCwbY2pskYzWJYZAzDEPq+ODY5GTM
+         Yhuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=dzzOeMTojFZzc4SDmpKjinKIrvNC9sVRWsnQeUnBSlc=;
-        b=ISLnLDfbAV8IAua0aoKlJ3i2s5R1M6GjTKIe1hKq3UbnB2GXXyxNZNduazcOwKTPOW
-         19UB0UfTEyrt5NNqltPHY1liExRVCToz9a0uKh2uk1T/5a2XL7/WrjYjc8BOz94qA7M8
-         tGEvq11Ncs6gV4ERsMMSoQ3Zn1fvkUfMVnDqZoQqBpEqIbaec5MnRTNyNjMQtv9gshAl
-         3na3gZLNmksmsinZCaHU8EVam+dnfFKO9m+5p48x7EF8uWxKQ9wwInDwdj9+QqEA+4n0
-         E1KPAjBiFzh5wFCnws4+kNuQD0kOzVqyap4CLs1dgD535rB8beIgHeCAVfaIYzC0Vyfu
-         g1FA==
-X-Gm-Message-State: APjAAAU+fTfTNGwRLwVYybfgd/6YJDqGT3HvPvjRRZTSXc5YijAjunLU
-        yFR1UJz81lAT6lBuy7q06nxU1g==
-X-Google-Smtp-Source: APXvYqzZwoBudgHBaayJbkJ+GNCYTi4q4UlbCBCz8/DGe/Mgsz0vD7Z3MTdLgeaTsGPYtDKzYwIczQ==
-X-Received: by 2002:a0c:9932:: with SMTP id h47mr5359549qvd.147.1565133376933;
-        Tue, 06 Aug 2019 16:16:16 -0700 (PDT)
+        bh=zMCnJFSOouEfBlilBoskv+IiaZaXJbwxtFCutX/1ZbM=;
+        b=k/JS7/X2+SR8tmcWJe3PO5jOjWOLu3oNS2F/LYOy+izycOYyWxYpuiGchquYOJT5P5
+         YXVJ6aEdZwdPfqDUriw/XZ3jAT/DMtcjecgA3OTfbEfAmPGJrz0BRn81auC50L3u0KGa
+         UnQ9sU8TnCSAXr3285XPg5zId3Mz465nzKrdpB0EsLqzTOmAa+O49SZPCmHsFkcimrY3
+         95KZnH8kWr2NgkR5XVrkXtWyUy32LmcD5+oS4LQZ18hBLILwyuNrI67LUQYRfasNHFDv
+         3HcUMIgeYFEyKFCrm6inCxZ8c1wHCeHFvOyxhXS5slcXZC7cjpnOhyfX4GwuYh4jGDiH
+         fO3g==
+X-Gm-Message-State: APjAAAUOCgcIr2CQn7iScfDpIPgi21WAQqXvVm3yvSXgqPRySMrIMDSk
+        5vZV0S29yZ/IMw8luEBYlt1sAw==
+X-Google-Smtp-Source: APXvYqxMVRT0WflMzTw7hoNYehDw3sJ1fV7g1I1BCJ9PGgwnJ2UQq4JSqfd/nXhEpMBqp4lLxDXVKg==
+X-Received: by 2002:a0c:9e27:: with SMTP id p39mr5387552qve.151.1565133375135;
+        Tue, 06 Aug 2019 16:16:15 -0700 (PDT)
 Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id p23sm39124569qke.44.2019.08.06.16.16.14
+        by smtp.gmail.com with ESMTPSA id d9sm38947489qke.136.2019.08.06.16.16.14
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
         Tue, 06 Aug 2019 16:16:14 -0700 (PDT)
 Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
         (envelope-from <jgg@ziepe.ca>)
-        id 1hv8gg-0006eg-7x; Tue, 06 Aug 2019 20:16:14 -0300
+        id 1hv8gg-0006eZ-5J; Tue, 06 Aug 2019 20:16:14 -0300
 From:   Jason Gunthorpe <jgg@ziepe.ca>
 To:     linux-mm@kvack.org
 Cc:     Andrea Arcangeli <aarcange@redhat.com>,
@@ -77,9 +77,9 @@ Cc:     Andrea Arcangeli <aarcange@redhat.com>,
         Gavin Shan <shangw@linux.vnet.ibm.com>,
         Andrea Righi <andrea@betterlinux.com>,
         Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH v3 hmm 05/11] hmm: use mmu_notifier_get/put for 'struct hmm'
-Date:   Tue,  6 Aug 2019 20:15:42 -0300
-Message-Id: <20190806231548.25242-6-jgg@ziepe.ca>
+Subject: [PATCH v3 hmm 04/11] misc/sgi-gru: use mmu_notifier_get/put for struct gru_mm_struct
+Date:   Tue,  6 Aug 2019 20:15:41 -0300
+Message-Id: <20190806231548.25242-5-jgg@ziepe.ca>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190806231548.25242-1-jgg@ziepe.ca>
 References: <20190806231548.25242-1-jgg@ziepe.ca>
@@ -92,379 +92,168 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jason Gunthorpe <jgg@mellanox.com>
 
-This is a significant simplification, it eliminates all the remaining
-'hmm' stuff in mm_struct, eliminates krefing along the critical notifier
-paths, and takes away all the ugly locking and abuse of page_table_lock.
+GRU is already using almost the same algorithm as get/put, it even
+helpfully has a 10 year old comment to make this algorithm common, which
+is finally happening.
 
-mmu_notifier_get() provides the single struct hmm per struct mm which
-eliminates mm->hmm.
-
-It also directly guarantees that no mmu_notifier op callback is callable
-while concurrent free is possible, this eliminates all the krefs inside
-the mmu_notifier callbacks.
-
-The remaining krefs in the range code were overly cautious, drivers are
-already not permitted to free the mirror while a range exists.
+There are a few differences and fixes from this conversion:
+- GRU used rcu not srcu to read the hlist
+- Unclear how the locking worked to prevent gru_register_mmu_notifier()
+  from running concurrently with gru_drop_mmu_notifier() - this version is
+  safe
+- GRU had a release function which only set a variable without any locking
+  that skiped the synchronize_srcu during unregister which looks racey,
+  but this makes it reliable via the integrated call_srcu().
+- It is unclear if the mmap_sem is actually held when
+  __mmu_notifier_register() was called, lockdep will now warn if this is
+  wrong
 
 Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c |   1 +
- drivers/gpu/drm/nouveau/nouveau_drm.c   |   3 +
- include/linux/hmm.h                     |  12 +--
- include/linux/mm_types.h                |   6 --
- kernel/fork.c                           |   1 -
- mm/hmm.c                                | 121 ++++++------------------
- 6 files changed, 33 insertions(+), 111 deletions(-)
+ drivers/misc/sgi-gru/grufile.c     |  1 +
+ drivers/misc/sgi-gru/grutables.h   |  2 -
+ drivers/misc/sgi-gru/grutlbpurge.c | 84 +++++++++---------------------
+ 3 files changed, 25 insertions(+), 62 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-index f2e8b4238efd49..d50774a5f98ef7 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-@@ -1464,6 +1464,7 @@ static void __exit amdgpu_exit(void)
- 	amdgpu_unregister_atpx_handler();
- 	amdgpu_sync_fini();
- 	amdgpu_fence_slab_fini();
+diff --git a/drivers/misc/sgi-gru/grufile.c b/drivers/misc/sgi-gru/grufile.c
+index a2a142ae087bfa..9d042310214ff9 100644
+--- a/drivers/misc/sgi-gru/grufile.c
++++ b/drivers/misc/sgi-gru/grufile.c
+@@ -573,6 +573,7 @@ static void __exit gru_exit(void)
+ 	gru_free_tables();
+ 	misc_deregister(&gru_miscdev);
+ 	gru_proc_exit();
 +	mmu_notifier_synchronize();
  }
  
- module_init(amdgpu_init);
-diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouveau/nouveau_drm.c
-index 7c2fcaba42d6c3..a0e48a482452d7 100644
---- a/drivers/gpu/drm/nouveau/nouveau_drm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
-@@ -28,6 +28,7 @@
- #include <linux/pci.h>
- #include <linux/pm_runtime.h>
- #include <linux/vga_switcheroo.h>
-+#include <linux/mmu_notifier.h>
+ static const struct file_operations gru_fops = {
+diff --git a/drivers/misc/sgi-gru/grutables.h b/drivers/misc/sgi-gru/grutables.h
+index 438191c220570c..a7e44b2eb413f6 100644
+--- a/drivers/misc/sgi-gru/grutables.h
++++ b/drivers/misc/sgi-gru/grutables.h
+@@ -307,10 +307,8 @@ struct gru_mm_tracker {				/* pack to reduce size */
  
- #include <drm/drmP.h>
- #include <drm/drm_crtc_helper.h>
-@@ -1292,6 +1293,8 @@ nouveau_drm_exit(void)
- #ifdef CONFIG_NOUVEAU_PLATFORM_DRIVER
- 	platform_driver_unregister(&nouveau_platform_driver);
- #endif
-+	if (IS_ENABLED(CONFIG_DRM_NOUVEAU_SVM))
-+		mmu_notifier_synchronize();
+ struct gru_mm_struct {
+ 	struct mmu_notifier	ms_notifier;
+-	atomic_t		ms_refcnt;
+ 	spinlock_t		ms_asid_lock;	/* protects ASID assignment */
+ 	atomic_t		ms_range_active;/* num range_invals active */
+-	char			ms_released;
+ 	wait_queue_head_t	ms_wait_queue;
+ 	DECLARE_BITMAP(ms_asidmap, GRU_MAX_GRUS);
+ 	struct gru_mm_tracker	ms_asids[GRU_MAX_GRUS];
+diff --git a/drivers/misc/sgi-gru/grutlbpurge.c b/drivers/misc/sgi-gru/grutlbpurge.c
+index 59ba0adf23cee4..10921cd2608dfa 100644
+--- a/drivers/misc/sgi-gru/grutlbpurge.c
++++ b/drivers/misc/sgi-gru/grutlbpurge.c
+@@ -235,83 +235,47 @@ static void gru_invalidate_range_end(struct mmu_notifier *mn,
+ 		gms, range->start, range->end);
  }
  
- module_init(nouveau_drm_init);
-diff --git a/include/linux/hmm.h b/include/linux/hmm.h
-index 82265118d94abd..c3902449db6412 100644
---- a/include/linux/hmm.h
-+++ b/include/linux/hmm.h
-@@ -84,15 +84,12 @@
-  * @notifiers: count of active mmu notifiers
-  */
- struct hmm {
--	struct mm_struct	*mm;
--	struct kref		kref;
-+	struct mmu_notifier	mmu_notifier;
- 	spinlock_t		ranges_lock;
- 	struct list_head	ranges;
- 	struct list_head	mirrors;
--	struct mmu_notifier	mmu_notifier;
- 	struct rw_semaphore	mirrors_sem;
- 	wait_queue_head_t	wq;
--	struct rcu_head		rcu;
- 	long			notifiers;
- };
- 
-@@ -436,13 +433,6 @@ long hmm_range_dma_unmap(struct hmm_range *range,
-  */
- #define HMM_RANGE_DEFAULT_TIMEOUT 1000
- 
--/* Below are for HMM internal use only! Not to be used by device driver! */
--static inline void hmm_mm_init(struct mm_struct *mm)
--{
--	mm->hmm = NULL;
--}
--#else /* IS_ENABLED(CONFIG_HMM_MIRROR) */
--static inline void hmm_mm_init(struct mm_struct *mm) {}
- #endif /* IS_ENABLED(CONFIG_HMM_MIRROR) */
- 
- #endif /* LINUX_HMM_H */
-diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index 3a37a89eb7a7c3..525d25d93330f2 100644
---- a/include/linux/mm_types.h
-+++ b/include/linux/mm_types.h
-@@ -25,7 +25,6 @@
- 
- struct address_space;
- struct mem_cgroup;
--struct hmm;
- 
- /*
-  * Each physical page in the system has a struct page associated with
-@@ -502,11 +501,6 @@ struct mm_struct {
- 		atomic_long_t hugetlb_usage;
- #endif
- 		struct work_struct async_put_work;
--
--#ifdef CONFIG_HMM_MIRROR
--		/* HMM needs to track a few things per mm */
--		struct hmm *hmm;
--#endif
- 	} __randomize_layout;
- 
- 	/*
-diff --git a/kernel/fork.c b/kernel/fork.c
-index d8ae0f1b414802..bd4a0762f12f3e 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -1007,7 +1007,6 @@ static struct mm_struct *mm_init(struct mm_struct *mm, struct task_struct *p,
- 	mm_init_owner(mm, p);
- 	RCU_INIT_POINTER(mm->exe_file, NULL);
- 	mmu_notifier_mm_init(mm);
--	hmm_mm_init(mm);
- 	init_tlb_flush_pending(mm);
- #if defined(CONFIG_TRANSPARENT_HUGEPAGE) && !USE_SPLIT_PMD_PTLOCKS
- 	mm->pmd_huge_pte = NULL;
-diff --git a/mm/hmm.c b/mm/hmm.c
-index 9a908902e4cc38..00f94f94906afc 100644
---- a/mm/hmm.c
-+++ b/mm/hmm.c
-@@ -26,101 +26,37 @@
- #include <linux/mmu_notifier.h>
- #include <linux/memory_hotplug.h>
- 
--static const struct mmu_notifier_ops hmm_mmu_notifier_ops;
--
--/**
-- * hmm_get_or_create - register HMM against an mm (HMM internal)
-- *
-- * @mm: mm struct to attach to
-- * Return: an HMM object, either by referencing the existing
-- *          (per-process) object, or by creating a new one.
-- *
-- * This is not intended to be used directly by device drivers. If mm already
-- * has an HMM struct then it get a reference on it and returns it. Otherwise
-- * it allocates an HMM struct, initializes it, associate it with the mm and
-- * returns it.
-- */
--static struct hmm *hmm_get_or_create(struct mm_struct *mm)
-+static struct mmu_notifier *hmm_alloc_notifier(struct mm_struct *mm)
+-static void gru_release(struct mmu_notifier *mn, struct mm_struct *mm)
++static struct mmu_notifier *gru_alloc_notifier(struct mm_struct *mm)
  {
- 	struct hmm *hmm;
- 
--	lockdep_assert_held_write(&mm->mmap_sem);
--
--	/* Abuse the page_table_lock to also protect mm->hmm. */
--	spin_lock(&mm->page_table_lock);
--	hmm = mm->hmm;
--	if (mm->hmm && kref_get_unless_zero(&mm->hmm->kref))
--		goto out_unlock;
--	spin_unlock(&mm->page_table_lock);
--
--	hmm = kmalloc(sizeof(*hmm), GFP_KERNEL);
-+	hmm = kzalloc(sizeof(*hmm), GFP_KERNEL);
- 	if (!hmm)
--		return NULL;
+-	struct gru_mm_struct *gms = container_of(mn, struct gru_mm_struct,
+-						 ms_notifier);
++	struct gru_mm_struct *gms;
++
++	gms = kzalloc(sizeof(*gms), GFP_KERNEL);
++	if (!gms)
 +		return ERR_PTR(-ENOMEM);
-+
- 	init_waitqueue_head(&hmm->wq);
- 	INIT_LIST_HEAD(&hmm->mirrors);
- 	init_rwsem(&hmm->mirrors_sem);
--	hmm->mmu_notifier.ops = NULL;
- 	INIT_LIST_HEAD(&hmm->ranges);
- 	spin_lock_init(&hmm->ranges_lock);
--	kref_init(&hmm->kref);
- 	hmm->notifiers = 0;
--	hmm->mm = mm;
--
--	hmm->mmu_notifier.ops = &hmm_mmu_notifier_ops;
--	if (__mmu_notifier_register(&hmm->mmu_notifier, mm)) {
--		kfree(hmm);
--		return NULL;
--	}
--
--	mmgrab(hmm->mm);
--
--	/*
--	 * We hold the exclusive mmap_sem here so we know that mm->hmm is
--	 * still NULL or 0 kref, and is safe to update.
--	 */
--	spin_lock(&mm->page_table_lock);
--	mm->hmm = hmm;
--
--out_unlock:
--	spin_unlock(&mm->page_table_lock);
--	return hmm;
-+	return &hmm->mmu_notifier;
++	STAT(gms_alloc);
++	spin_lock_init(&gms->ms_asid_lock);
++	init_waitqueue_head(&gms->ms_wait_queue);
+ 
+-	gms->ms_released = 1;
+-	gru_dbg(grudev, "gms %p\n", gms);
++	return &gms->ms_notifier;
  }
  
--static void hmm_free_rcu(struct rcu_head *rcu)
-+static void hmm_free_notifier(struct mmu_notifier *mn)
- {
--	struct hmm *hmm = container_of(rcu, struct hmm, rcu);
-+	struct hmm *hmm = container_of(mn, struct hmm, mmu_notifier);
++static void gru_free_notifier(struct mmu_notifier *mn)
++{
++	kfree(container_of(mn, struct gru_mm_struct, ms_notifier));
++	STAT(gms_free);
++}
  
--	mmdrop(hmm->mm);
-+	WARN_ON(!list_empty(&hmm->ranges));
-+	WARN_ON(!list_empty(&hmm->mirrors));
- 	kfree(hmm);
- }
- 
--static void hmm_free(struct kref *kref)
--{
--	struct hmm *hmm = container_of(kref, struct hmm, kref);
--
--	spin_lock(&hmm->mm->page_table_lock);
--	if (hmm->mm->hmm == hmm)
--		hmm->mm->hmm = NULL;
--	spin_unlock(&hmm->mm->page_table_lock);
--
--	mmu_notifier_unregister_no_release(&hmm->mmu_notifier, hmm->mm);
--	mmu_notifier_call_srcu(&hmm->rcu, hmm_free_rcu);
--}
--
--static inline void hmm_put(struct hmm *hmm)
--{
--	kref_put(&hmm->kref, hmm_free);
--}
--
- static void hmm_release(struct mmu_notifier *mn, struct mm_struct *mm)
- {
- 	struct hmm *hmm = container_of(mn, struct hmm, mmu_notifier);
- 	struct hmm_mirror *mirror;
- 
--	/* Bail out if hmm is in the process of being freed */
--	if (!kref_get_unless_zero(&hmm->kref))
--		return;
--
- 	/*
- 	 * Since hmm_range_register() holds the mmget() lock hmm_release() is
- 	 * prevented as long as a range exists.
-@@ -137,8 +73,6 @@ static void hmm_release(struct mmu_notifier *mn, struct mm_struct *mm)
- 			mirror->ops->release(mirror);
- 	}
- 	up_read(&hmm->mirrors_sem);
--
--	hmm_put(hmm);
- }
- 
- static void notifiers_decrement(struct hmm *hmm)
-@@ -169,9 +103,6 @@ static int hmm_invalidate_range_start(struct mmu_notifier *mn,
- 	unsigned long flags;
- 	int ret = 0;
- 
--	if (!kref_get_unless_zero(&hmm->kref))
--		return 0;
--
- 	spin_lock_irqsave(&hmm->ranges_lock, flags);
- 	hmm->notifiers++;
- 	list_for_each_entry(range, &hmm->ranges, list) {
-@@ -206,7 +137,6 @@ static int hmm_invalidate_range_start(struct mmu_notifier *mn,
- out:
- 	if (ret)
- 		notifiers_decrement(hmm);
--	hmm_put(hmm);
- 	return ret;
- }
- 
-@@ -215,17 +145,15 @@ static void hmm_invalidate_range_end(struct mmu_notifier *mn,
- {
- 	struct hmm *hmm = container_of(mn, struct hmm, mmu_notifier);
- 
--	if (!kref_get_unless_zero(&hmm->kref))
--		return;
--
- 	notifiers_decrement(hmm);
--	hmm_put(hmm);
- }
- 
- static const struct mmu_notifier_ops hmm_mmu_notifier_ops = {
- 	.release		= hmm_release,
- 	.invalidate_range_start	= hmm_invalidate_range_start,
- 	.invalidate_range_end	= hmm_invalidate_range_end,
-+	.alloc_notifier		= hmm_alloc_notifier,
-+	.free_notifier		= hmm_free_notifier,
+ static const struct mmu_notifier_ops gru_mmuops = {
+ 	.invalidate_range_start	= gru_invalidate_range_start,
+ 	.invalidate_range_end	= gru_invalidate_range_end,
+-	.release		= gru_release,
++	.alloc_notifier		= gru_alloc_notifier,
++	.free_notifier		= gru_free_notifier,
  };
  
- /*
-@@ -237,18 +165,27 @@ static const struct mmu_notifier_ops hmm_mmu_notifier_ops = {
-  *
-  * To start mirroring a process address space, the device driver must register
-  * an HMM mirror struct.
-+ *
-+ * The caller cannot unregister the hmm_mirror while any ranges are
-+ * registered.
-+ *
-+ * Callers using this function must put a call to mmu_notifier_synchronize()
-+ * in their module exit functions.
-  */
- int hmm_mirror_register(struct hmm_mirror *mirror, struct mm_struct *mm)
+-/* Move this to the basic mmu_notifier file. But for now... */
+-static struct mmu_notifier *mmu_find_ops(struct mm_struct *mm,
+-			const struct mmu_notifier_ops *ops)
+-{
+-	struct mmu_notifier *mn, *gru_mn = NULL;
+-
+-	if (mm->mmu_notifier_mm) {
+-		rcu_read_lock();
+-		hlist_for_each_entry_rcu(mn, &mm->mmu_notifier_mm->list,
+-					 hlist)
+-		    if (mn->ops == ops) {
+-			gru_mn = mn;
+-			break;
+-		}
+-		rcu_read_unlock();
+-	}
+-	return gru_mn;
+-}
+-
+ struct gru_mm_struct *gru_register_mmu_notifier(void)
  {
-+	struct mmu_notifier *mn;
+-	struct gru_mm_struct *gms;
+ 	struct mmu_notifier *mn;
+-	int err;
+-
+-	mn = mmu_find_ops(current->mm, &gru_mmuops);
+-	if (mn) {
+-		gms = container_of(mn, struct gru_mm_struct, ms_notifier);
+-		atomic_inc(&gms->ms_refcnt);
+-	} else {
+-		gms = kzalloc(sizeof(*gms), GFP_KERNEL);
+-		if (!gms)
+-			return ERR_PTR(-ENOMEM);
+-		STAT(gms_alloc);
+-		spin_lock_init(&gms->ms_asid_lock);
+-		gms->ms_notifier.ops = &gru_mmuops;
+-		atomic_set(&gms->ms_refcnt, 1);
+-		init_waitqueue_head(&gms->ms_wait_queue);
+-		err = __mmu_notifier_register(&gms->ms_notifier, current->mm);
+-		if (err)
+-			goto error;
+-	}
+-	if (gms)
+-		gru_dbg(grudev, "gms %p, refcnt %d\n", gms,
+-			atomic_read(&gms->ms_refcnt));
+-	return gms;
+-error:
+-	kfree(gms);
+-	return ERR_PTR(err);
 +
- 	lockdep_assert_held_write(&mm->mmap_sem);
- 
- 	/* Sanity check */
- 	if (!mm || !mirror || !mirror->ops)
- 		return -EINVAL;
- 
--	mirror->hmm = hmm_get_or_create(mm);
--	if (!mirror->hmm)
--		return -ENOMEM;
-+	mn = mmu_notifier_get_locked(&hmm_mmu_notifier_ops, mm);
++	mn = mmu_notifier_get_locked(&gru_mmuops, current->mm);
 +	if (IS_ERR(mn))
-+		return PTR_ERR(mn);
-+	mirror->hmm = container_of(mn, struct hmm, mmu_notifier);
- 
- 	down_write(&mirror->hmm->mirrors_sem);
- 	list_add(&mirror->list, &mirror->hmm->mirrors);
-@@ -272,7 +209,7 @@ void hmm_mirror_unregister(struct hmm_mirror *mirror)
- 	down_write(&hmm->mirrors_sem);
- 	list_del(&mirror->list);
- 	up_write(&hmm->mirrors_sem);
--	hmm_put(hmm);
-+	mmu_notifier_put(&hmm->mmu_notifier);
++		return ERR_CAST(mn);
++
++	return container_of(mn, struct gru_mm_struct, ms_notifier);
  }
- EXPORT_SYMBOL(hmm_mirror_unregister);
  
-@@ -880,14 +817,13 @@ int hmm_range_register(struct hmm_range *range,
- 	range->end = end;
+ void gru_drop_mmu_notifier(struct gru_mm_struct *gms)
+ {
+-	gru_dbg(grudev, "gms %p, refcnt %d, released %d\n", gms,
+-		atomic_read(&gms->ms_refcnt), gms->ms_released);
+-	if (atomic_dec_return(&gms->ms_refcnt) == 0) {
+-		if (!gms->ms_released)
+-			mmu_notifier_unregister(&gms->ms_notifier, current->mm);
+-		kfree(gms);
+-		STAT(gms_free);
+-	}
++	mmu_notifier_put(&gms->ms_notifier);
+ }
  
- 	/* Prevent hmm_release() from running while the range is valid */
--	if (!mmget_not_zero(hmm->mm))
-+	if (!mmget_not_zero(hmm->mmu_notifier.mm))
- 		return -EFAULT;
- 
- 	/* Initialize range to track CPU page table updates. */
- 	spin_lock_irqsave(&hmm->ranges_lock, flags);
- 
- 	range->hmm = hmm;
--	kref_get(&hmm->kref);
- 	list_add(&range->list, &hmm->ranges);
- 
- 	/*
-@@ -919,8 +855,7 @@ void hmm_range_unregister(struct hmm_range *range)
- 	spin_unlock_irqrestore(&hmm->ranges_lock, flags);
- 
- 	/* Drop reference taken by hmm_range_register() */
--	mmput(hmm->mm);
--	hmm_put(hmm);
-+	mmput(hmm->mmu_notifier.mm);
- 
- 	/*
- 	 * The range is now invalid and the ref on the hmm is dropped, so
-@@ -970,14 +905,14 @@ long hmm_range_fault(struct hmm_range *range, unsigned int flags)
- 	struct mm_walk mm_walk;
- 	int ret;
- 
--	lockdep_assert_held(&hmm->mm->mmap_sem);
-+	lockdep_assert_held(&hmm->mmu_notifier.mm->mmap_sem);
- 
- 	do {
- 		/* If range is no longer valid force retry. */
- 		if (!range->valid)
- 			return -EBUSY;
- 
--		vma = find_vma(hmm->mm, start);
-+		vma = find_vma(hmm->mmu_notifier.mm, start);
- 		if (vma == NULL || (vma->vm_flags & device_vma))
- 			return -EFAULT;
- 
+ /*
 -- 
 2.22.0
 
