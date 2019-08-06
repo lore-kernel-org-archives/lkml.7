@@ -2,205 +2,114 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5931C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:54:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 657CEC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:54:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EB25218B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:54:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 346682173C
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:54:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="a3WZIm9X"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="nC2RK+wj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbfHFVyY (ORCPT
+        id S1726993AbfHFVyv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:54:24 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:6328 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726052AbfHFVyY (ORCPT
+        Tue, 6 Aug 2019 17:54:51 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:46265 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726381AbfHFVyv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:54:24 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d49f70d0000>; Tue, 06 Aug 2019 14:54:23 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 06 Aug 2019 14:54:22 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 06 Aug 2019 14:54:22 -0700
-Received: from [10.110.102.151] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 6 Aug
- 2019 21:54:18 +0000
-Subject: Re: [PATCH v7 01/20] pinctrl: tegra: Add suspend and resume support
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <tglx@linutronix.de>,
-        <jason@lakedaemon.net>, <marc.zyngier@arm.com>,
-        <linus.walleij@linaro.org>, <stefan@agner.ch>,
-        <mark.rutland@arm.com>
-CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
-        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
-        <josephl@nvidia.com>, <talho@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>, <rjw@rjwysocki.net>,
-        <viresh.kumar@linaro.org>, <linux-pm@vger.kernel.org>
-References: <1564607463-28802-1-git-send-email-skomatineni@nvidia.com>
- <1564607463-28802-2-git-send-email-skomatineni@nvidia.com>
- <6b1482f6-0578-f602-d8d1-541d86303ce2@gmail.com>
- <b45ca99a-188a-c695-3f3d-48d273808f9c@nvidia.com>
- <36351140-afd4-38c4-3722-4ee0894287fa@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <961ceece-f42a-b933-9184-97e9d30ea381@nvidia.com>
-Date:   Tue, 6 Aug 2019 14:54:18 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 6 Aug 2019 17:54:51 -0400
+Received: by mail-ot1-f66.google.com with SMTP id z23so68048247ote.13
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 14:54:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=e0N0ZZ7gbRhdL+UK8EX1dMgG/3bO/cb7jXRFzExUL4k=;
+        b=nC2RK+wjbSKbABdylLiYJMYOsFyEaY+iXsRPvSPywyopW3IGcH2lgAojRCNmpiStVL
+         zZYaAtNAnpiMxnK1MpKnaUChgb3VqZ5jtmBfmbv6GIQXd4RHouKZ1RwGKGSFTwENK2Gu
+         CdYxLb5F44BiYphtIhsfrdBL/XR3rPypAqjPWi4GEwj8Ql8mYTJvQFS/5l82Xbp2sQNU
+         IJfybu+HiA8Rzx1717EYb+nbJVTaOUTfNhq4nq4vsiwoLg/bcTL6duKfQwWMfvzOxFzJ
+         gC6aZfHv2hwKrTzOH0+vWrpHBmFbcJylo+X4DmM0Gl7/X40VjmJfhWM9fhWbHYSpk2XK
+         crzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=e0N0ZZ7gbRhdL+UK8EX1dMgG/3bO/cb7jXRFzExUL4k=;
+        b=lKVvP9Yc9zNopq4huZi0JNskQY/8gbHtsswtCWzwVfHxb5kPQuP2N/SDE8OKGSwaOG
+         PMbeiMcMke46+1BMPrgP3qoK1wmSUzkrDjFjWmfLiLu5Hzh3ug6TcDbPfAmC8/HExD/3
+         TUGNltqqrOT32lKcIYaERZ+rOVFx3RfIB7IYrSczYQofwUPEuz/pF1YbcAD5p7B16cCG
+         OfaM5ZDUEVrQpSb62YhKuOhOjAmfv9fl88ziQ6aa9qaN/yFtr9WET3in0+J3eFq+ZqeY
+         IEqFBeAOxcLjXOxBHLmTS+NHKnwyIGFdpTSMlbmGsENmiOwLJiSENlEkzwE5IpHcKgvo
+         pzKw==
+X-Gm-Message-State: APjAAAW1TQsUkx1VPZonwxXNwfMv7UPMEfR1YM08rpDSghYSUUyxoVcg
+        IZlocfXSGa96iIXZitR+dwap6Q==
+X-Google-Smtp-Source: APXvYqzPVNaDRTXzYBHYAB33LLYEDUma/TzBsb06XC691qDzmkvhh49XRDXuGu0MTeDKJrnOkXJJAg==
+X-Received: by 2002:a6b:1ca:: with SMTP id 193mr6162600iob.264.1565128490422;
+        Tue, 06 Aug 2019 14:54:50 -0700 (PDT)
+Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
+        by smtp.gmail.com with ESMTPSA id e26sm71330428iod.10.2019.08.06.14.54.49
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 06 Aug 2019 14:54:50 -0700 (PDT)
+Date:   Tue, 6 Aug 2019 14:54:49 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Atish Patra <atish.patra@wdc.com>, Anup Patel <anup.patel@wdc.com>
+cc:     linux-kernel@vger.kernel.org, Alan Kao <alankao@andestech.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        devicetree@vger.kernel.org, Enrico Weigelt <info@metux.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>,
+        linux-riscv@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v4 2/4] RISC-V: Add riscv_isa reprensenting ISA features
+ common across CPUs
+In-Reply-To: <20190803042723.7163-3-atish.patra@wdc.com>
+Message-ID: <alpine.DEB.2.21.9999.1908061452570.13971@viisi.sifive.com>
+References: <20190803042723.7163-1-atish.patra@wdc.com> <20190803042723.7163-3-atish.patra@wdc.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-In-Reply-To: <36351140-afd4-38c4-3722-4ee0894287fa@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1565128463; bh=PVOjXIF+h+isaZujY/+iB+zLIz1zcPjtFjV9ZXA4++s=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=a3WZIm9XcXwus1d36RFmpHdqXZHFkFcDczX0E1fQhmQZlYCIoC3p1cAKACHZoJ51L
-         zmiGE5+ZLVbes5JkcO1DEKwZOv44Oio7LW7JngdMWVcWv19fF00FBcDyvl0QO75vku
-         3VhkchAk7YLUw108KAwmJKT5NpIGc48m6lMAFd5D39T59FtF3OhBtrWyHav2Xi18Dd
-         0p3d8TiiR0Re6ikOPHJvJSUZKdWpn9+09aThtpIynYuNEhygJK+/F20l6X+RDLV2E7
-         VOckSGhgSDh1xp+BaVcw6zEwJJI7jAiRm7jiidyUOB5AEOxIupaDDXqaZ/TQ3dPkzC
-         XGRzKbwX2A+Gg==
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Anup, Atish,
 
-On 8/6/19 10:59 AM, Dmitry Osipenko wrote:
-> 05.08.2019 21:06, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> On 8/5/19 3:50 AM, Dmitry Osipenko wrote:
->>> 01.08.2019 0:10, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>> This patch adds support for Tegra pinctrl driver suspend and resume.
->>>>
->>>> During suspend, context of all pinctrl registers are stored and
->>>> on resume they are all restored to have all the pinmux and pad
->>>> configuration for normal operation.
->>>>
->>>> Acked-by: Thierry Reding <treding@nvidia.com>
->>>> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
->>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>> ---
->>>>  =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra.c | 59
->>>> +++++++++++++++++++++++++++++++++++
->>>>  =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra.h |=C2=A0 3 ++
->>>>  =C2=A0 2 files changed, 62 insertions(+)
->>>>
->>>> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c
->>>> b/drivers/pinctrl/tegra/pinctrl-tegra.c
->>>> index 186ef98e7b2b..e3a237534281 100644
->>>> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
->>>> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
->>>> @@ -631,6 +631,58 @@ static void
->>>> tegra_pinctrl_clear_parked_bits(struct tegra_pmx *pmx)
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>>  =C2=A0 }
->>>>  =C2=A0 +static size_t tegra_pinctrl_get_bank_size(struct device *dev,
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int bank=
-_id)
->>>> +{
->>>> +=C2=A0=C2=A0=C2=A0 struct platform_device *pdev =3D to_platform_devic=
-e(dev);
->>>> +=C2=A0=C2=A0=C2=A0 struct resource *res;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 res =3D platform_get_resource(pdev, IORESOURCE_MEM=
-, bank_id);
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 return resource_size(res) / 4;
->>>> +}
->>>> +
->>>> +static int tegra_pinctrl_suspend(struct device *dev)
->>>> +{
->>>> +=C2=A0=C2=A0=C2=A0 struct tegra_pmx *pmx =3D dev_get_drvdata(dev);
->>>> +=C2=A0=C2=A0=C2=A0 u32 *backup_regs =3D pmx->backup_regs;
->>>> +=C2=A0=C2=A0=C2=A0 u32 *regs;
->>>> +=C2=A0=C2=A0=C2=A0 size_t bank_size;
->>>> +=C2=A0=C2=A0=C2=A0 unsigned int i, k;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < pmx->nbanks; i++) {
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bank_size =3D tegra_pinctr=
-l_get_bank_size(dev, i);
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 regs =3D pmx->regs[i];
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 for (k =3D 0; k < bank_siz=
-e; k++)
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *b=
-ackup_regs++ =3D readl_relaxed(regs++);
->>>> +=C2=A0=C2=A0=C2=A0 }
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 return pinctrl_force_sleep(pmx->pctl);
->>>> +}
->>>> +
->>>> +static int tegra_pinctrl_resume(struct device *dev)
->>>> +{
->>>> +=C2=A0=C2=A0=C2=A0 struct tegra_pmx *pmx =3D dev_get_drvdata(dev);
->>>> +=C2=A0=C2=A0=C2=A0 u32 *backup_regs =3D pmx->backup_regs;
->>>> +=C2=A0=C2=A0=C2=A0 u32 *regs;
->>>> +=C2=A0=C2=A0=C2=A0 size_t bank_size;
->>>> +=C2=A0=C2=A0=C2=A0 unsigned int i, k;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 for (i =3D 0; i < pmx->nbanks; i++) {
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bank_size =3D tegra_pinctr=
-l_get_bank_size(dev, i);
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 regs =3D pmx->regs[i];
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 for (k =3D 0; k < bank_siz=
-e; k++)
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 wr=
-itel_relaxed(*backup_regs++, regs++);
->>>> +=C2=A0=C2=A0=C2=A0 }
->>> I'm now curious whether any kind of barrier is needed after the
->>> writings. The pmx_writel() doesn't insert a barrier after the write and
->>> seems it just misuses writel, which actually should be writel_relaxed()
->>> + barrier, IIUC.
->> pmx_writel uses writel and it has wmb before raw_write which complete
->> all writes initiated prior to this.
->>
->> By misusing writel, you mean to have barrier after register write?
-> Yes, at least to me it doesn't make much sense for this driver to stall
-> before the write. It's the pinctrl user which should be taking care
-> about everything to be ready before making a change to the pinctrl's
-> configuration.
->
->>> It's also not obvious whether PINCTRL HW has any kind of write-FIFO and
->>> thus maybe read-back + rmb() is needed in order ensure that writes are
->>> actually completed.
->> I believe adding write barrier wmb after writel_relaxed should be good
->> rather than doing readback + rmb
->>> The last thing which is not obvious is when the new configuration
->>> actually takes into effect, does it happen immediately or maybe some
->>> delay is needed?
->>>
->>> [snip]
->> Based on internal design there is no internal delay and it all depends
->> on APB rate that it takes to write to register.
->>
->> Pinmux value change to reflect internally might take couple of clock
->> cycles which is much faster than SW can read.
-> Still not quite obvious if it's possible to have a case where some
-> hardware is touched before necessary pinctrl change is fully completed
-> and then to get into trouble because of it.
+On Fri, 2 Aug 2019, Atish Patra wrote:
 
-To be safer, will add write barrier after all writes in resume and also=20
-will have separate patch for pmx_writel fix to use writel_relaxed=20
-followed by write barrier.
+> From: Anup Patel <anup.patel@wdc.com>
+> 
+> This patch adds riscv_isa integer to represent ISA features common
+> across all CPUs. The riscv_isa is not same as elf_hwcap because
+> elf_hwcap will only have ISA features relevant for user-space apps
+> whereas riscv_isa will have ISA features relevant to both kernel
+> and user-space apps.
+> 
+> One of the use case is KVM hypervisor where riscv_isa will be used
+> to do following operations:
+> 
+> 1. Check whether hypervisor extension is available
+> 2. Find ISA features that need to be virtualized (e.g. floating
+>    point support, vector extension, etc.)
+> 
+> Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
 
-Thanks
+Do you have any opinions on how this patch might change for the Z-prefix 
+extensions?  This bitfield approach probably won't scale, and with the 
+EXPORT_SYMBOL(), it might be worth trying to put together a approach that 
+would work over the long term?
 
-Sowjanya
 
+- Paul
