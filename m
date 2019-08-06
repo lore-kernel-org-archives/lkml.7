@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC16C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:43:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2749C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:44:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94F1C216F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:43:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75A4821874
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:44:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127837;
-	bh=gK56fSYyRsg25NtN0vMOBKtrbqwKisNofmHMCKKZoVg=;
+	s=default; t=1565127844;
+	bh=w7ZeJ1UA06evD7HjvkGhJg55AF7OGY6ypOUX9UQQZck=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jqTx7cU5Et3e3qcizyDILDfg1itDXlW4+jjZN/FbLe5EoNoSRbnp8K0CnJELLoT/C
-	 5mr7brl0PUAxiAY9MErbnkr7wGuZk73BaLccJtCT/oIrk+1Q1Z6Zay2lPQ3355Qibm
-	 9r0r20yropBNArNzEoa4ZXBBz29dj7jGmL0Gd4Vc=
+	b=I83fh5ErMJsC95XBxujlIrvg3MAM5woGqLKw9ryvEZf9tmDnWxZZMqAlbW8UAlgaO
+	 bMOLeCgDgQIdjtadBu8YiNK1Dip85JJDv8M+Do3Gw5iAwkBPHT15pK9lDmnHowWPjL
+	 I8Wd/kZhYflKaWXiaa0BLBmQ6/so1EdnvsvRqRwc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728582AbfHFVn4 (ORCPT
+        id S1727470AbfHFVeC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:43:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52068 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 17:34:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726375AbfHFVeP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:34:15 -0400
+        id S1727411AbfHFVd7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:33:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1693216F4;
-        Tue,  6 Aug 2019 21:34:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95BF42089E;
+        Tue,  6 Aug 2019 21:33:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127255;
-        bh=gK56fSYyRsg25NtN0vMOBKtrbqwKisNofmHMCKKZoVg=;
+        s=default; t=1565127238;
+        bh=w7ZeJ1UA06evD7HjvkGhJg55AF7OGY6ypOUX9UQQZck=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SI55ORxq7BAI2m1E0CxdQhDfnXfuSCb6uaW6K20z+/pwHx8jxHoA9FqaHO5XQTtj/
-         id9C8LDNqRD2dGW2zotDZr1zmpmVIwiwlYVh5EyfiHUl+xUyqKG1oDyeFfNF/iS0Jz
-         mH2yUkP5Y2vTGSxryfxk7f8XHsAwY7W02c8J0HkU=
+        b=Y5g7Mwi9I66TpqSc77Td1wGn8Za03ghFwgTuD9lWxH3y9zXM0wB46m49t6kuAGWqt
+         x9Fp4/R8++WoFLHRyMWG3L34AvlLKQg2C61wq4+ulrppyZFhDE8+lKPYQwXSeonR3W
+         5fjlCnvQwYF5XE/yrsvPprUQc230trPU8g+uR1cw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kent Russell <kent.russell@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.2 29/59] drm/amdkfd: Fix byte align on VegaM
-Date:   Tue,  6 Aug 2019 17:32:49 -0400
-Message-Id: <20190806213319.19203-29-sashal@kernel.org>
+Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.2 21/59] powerpc/nvdimm: Pick nearby online node if the device node is not online
+Date:   Tue,  6 Aug 2019 17:32:41 -0400
+Message-Id: <20190806213319.19203-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190806213319.19203-1-sashal@kernel.org>
 References: <20190806213319.19203-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,34 +60,141 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kent Russell <kent.russell@amd.com>
+From: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
 
-[ Upstream commit d65848657c3da5c0d4b685f823d0230f151ab34e ]
+[ Upstream commit da1115fdbd6e86c62185cdd2b4bf7add39f2f82b ]
 
-This was missed during the addition of VegaM support
+Currently, nvdimm subsystem expects the device numa node for SCM device to be
+an online node. It also doesn't try to bring the device numa node online. Hence
+if we use a non-online numa node as device node we hit crashes like below. This
+is because we try to access uninitialized NODE_DATA in different code paths.
 
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Kent Russell <kent.russell@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+cpu 0x0: Vector: 300 (Data Access) at [c0000000fac53170]
+    pc: c0000000004bbc50: ___slab_alloc+0x120/0xca0
+    lr: c0000000004bc834: __slab_alloc+0x64/0xc0
+    sp: c0000000fac53400
+   msr: 8000000002009033
+   dar: 73e8
+ dsisr: 80000
+  current = 0xc0000000fabb6d80
+  paca    = 0xc000000003870000   irqmask: 0x03   irq_happened: 0x01
+    pid   = 7, comm = kworker/u16:0
+Linux version 5.2.0-06234-g76bd729b2644 (kvaneesh@ltc-boston123) (gcc version 7.4.0 (Ubuntu 7.4.0-1ubuntu1~18.04.1)) #135 SMP Thu Jul 11 05:36:30 CDT 2019
+enter ? for help
+[link register   ] c0000000004bc834 __slab_alloc+0x64/0xc0
+[c0000000fac53400] c0000000fac53480 (unreliable)
+[c0000000fac53500] c0000000004bc818 __slab_alloc+0x48/0xc0
+[c0000000fac53560] c0000000004c30a0 __kmalloc_node_track_caller+0x3c0/0x6b0
+[c0000000fac535d0] c000000000cfafe4 devm_kmalloc+0x74/0xc0
+[c0000000fac53600] c000000000d69434 nd_region_activate+0x144/0x560
+[c0000000fac536d0] c000000000d6b19c nd_region_probe+0x17c/0x370
+[c0000000fac537b0] c000000000d6349c nvdimm_bus_probe+0x10c/0x230
+[c0000000fac53840] c000000000cf3cc4 really_probe+0x254/0x4e0
+[c0000000fac538d0] c000000000cf429c driver_probe_device+0x16c/0x1e0
+[c0000000fac53950] c000000000cf0b44 bus_for_each_drv+0x94/0x130
+[c0000000fac539b0] c000000000cf392c __device_attach+0xdc/0x200
+[c0000000fac53a50] c000000000cf231c bus_probe_device+0x4c/0xf0
+[c0000000fac53a90] c000000000ced268 device_add+0x528/0x810
+[c0000000fac53b60] c000000000d62a58 nd_async_device_register+0x28/0xa0
+[c0000000fac53bd0] c0000000001ccb8c async_run_entry_fn+0xcc/0x1f0
+[c0000000fac53c50] c0000000001bcd9c process_one_work+0x46c/0x860
+[c0000000fac53d20] c0000000001bd4f4 worker_thread+0x364/0x5f0
+[c0000000fac53db0] c0000000001c7260 kthread+0x1b0/0x1c0
+[c0000000fac53e20] c00000000000b954 ret_from_kernel_thread+0x5c/0x68
+
+The patch tries to fix this by picking the nearest online node as the SCM node.
+This does have a problem of us losing the information that SCM node is
+equidistant from two other online nodes. If applications need to understand these
+fine-grained details we should express then like x86 does via
+/sys/devices/system/node/nodeX/accessY/initiators/
+
+With the patch we get
+
+ # numactl -H
+available: 2 nodes (0-1)
+node 0 cpus:
+node 0 size: 0 MB
+node 0 free: 0 MB
+node 1 cpus: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
+node 1 size: 130865 MB
+node 1 free: 129130 MB
+node distances:
+node   0   1
+  0:  10  20
+  1:  20  10
+ # cat /sys/bus/nd/devices/region0/numa_node
+0
+ # dmesg | grep papr_scm
+[   91.332305] papr_scm ibm,persistent-memory:ibm,pmemory@44104001: Region registered with target node 2 and online node 0
+
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190729095128.23707-1-aneesh.kumar@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/powerpc/platforms/pseries/papr_scm.c | 29 +++++++++++++++++++++--
+ 1 file changed, 27 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-index 4b192e0ce92f4..ed7977d0dd018 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-@@ -1148,7 +1148,8 @@ int amdgpu_amdkfd_gpuvm_alloc_memory_of_gpu(
- 			adev->asic_type != CHIP_FIJI &&
- 			adev->asic_type != CHIP_POLARIS10 &&
- 			adev->asic_type != CHIP_POLARIS11 &&
--			adev->asic_type != CHIP_POLARIS12) ?
-+			adev->asic_type != CHIP_POLARIS12 &&
-+			adev->asic_type != CHIP_VEGAM) ?
- 			VI_BO_SIZE_ALIGN : 1;
+diff --git a/arch/powerpc/platforms/pseries/papr_scm.c b/arch/powerpc/platforms/pseries/papr_scm.c
+index 96c53b23e58f9..30af5019a68fe 100644
+--- a/arch/powerpc/platforms/pseries/papr_scm.c
++++ b/arch/powerpc/platforms/pseries/papr_scm.c
+@@ -194,12 +194,32 @@ static const struct attribute_group *papr_scm_dimm_groups[] = {
+ 	NULL,
+ };
  
- 	mapping_flags = AMDGPU_VM_PAGE_READABLE;
++static inline int papr_scm_node(int node)
++{
++	int min_dist = INT_MAX, dist;
++	int nid, min_node;
++
++	if ((node == NUMA_NO_NODE) || node_online(node))
++		return node;
++
++	min_node = first_online_node;
++	for_each_online_node(nid) {
++		dist = node_distance(node, nid);
++		if (dist < min_dist) {
++			min_dist = dist;
++			min_node = nid;
++		}
++	}
++	return min_node;
++}
++
+ static int papr_scm_nvdimm_init(struct papr_scm_priv *p)
+ {
+ 	struct device *dev = &p->pdev->dev;
+ 	struct nd_mapping_desc mapping;
+ 	struct nd_region_desc ndr_desc;
+ 	unsigned long dimm_flags;
++	int target_nid, online_nid;
+ 
+ 	p->bus_desc.ndctl = papr_scm_ndctl;
+ 	p->bus_desc.module = THIS_MODULE;
+@@ -238,8 +258,10 @@ static int papr_scm_nvdimm_init(struct papr_scm_priv *p)
+ 
+ 	memset(&ndr_desc, 0, sizeof(ndr_desc));
+ 	ndr_desc.attr_groups = region_attr_groups;
+-	ndr_desc.numa_node = dev_to_node(&p->pdev->dev);
+-	ndr_desc.target_node = ndr_desc.numa_node;
++	target_nid = dev_to_node(&p->pdev->dev);
++	online_nid = papr_scm_node(target_nid);
++	ndr_desc.numa_node = online_nid;
++	ndr_desc.target_node = target_nid;
+ 	ndr_desc.res = &p->res;
+ 	ndr_desc.of_node = p->dn;
+ 	ndr_desc.provider_data = p;
+@@ -254,6 +276,9 @@ static int papr_scm_nvdimm_init(struct papr_scm_priv *p)
+ 				ndr_desc.res, p->dn);
+ 		goto err;
+ 	}
++	if (target_nid != online_nid)
++		dev_info(dev, "Region registered with target node %d and online node %d",
++			 target_nid, online_nid);
+ 
+ 	return 0;
+ 
 -- 
 2.20.1
 
