@@ -2,143 +2,163 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2FE3C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 23:02:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 258F1C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 23:03:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDBB720717
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 23:02:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="DvQR+/td"
+	by mail.kernel.org (Postfix) with ESMTP id EDF622089E
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 23:03:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565132591;
+	bh=qT4gAKs+8ApcJTe9M2dRBF2NOvklKVKeDkSelB5PNpE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=qSZ7PZ75PT0hMUdtNw7meInKQfBCxOwN5YiIQ8mVr0zo0eGpyUucXXI82DIRQoiuL
+	 26W4ct3ny2M/dAWfDN2UX7Xj7rplTWdraIZpZ5Fk0rsSB5jzeaMrfaGZ5o+AbGXCqQ
+	 Soa22khGk9TUCw4wX4pjxLLbwDalw7guMo0X4odU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727082AbfHFXCT (ORCPT
+        id S1727123AbfHFXDJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 19:02:19 -0400
-Received: from mail-eopbgr820139.outbound.protection.outlook.com ([40.107.82.139]:20346
-        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726133AbfHFXCT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 19:02:19 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=c0WFXQaNKEqfyfWfox8sqqBlOtnQAg5m9KM6mmBHJ/mfi2UXA2JyfGNuKZi+M6EZRKp0YDS0xHACdZsv0sY8YlVYWR+bHWF7YsuMYGHZYl9URVxGBHyMi0TcWlh6gKbgZwomKs1cOSKwc4sFskhAY7sEUdv6c4xsoQxdeyoI0pIYYwOFYaF6tiNWRxJrbg5cHnMVzZQsSp0pCkvOeLw3/LTgx0GvgaJxaMejD29+MciJYn1moyIXZSJD17KBcdM5IUOVVyKce+j/U0jM/+D6txaXe0iQ5zAnKuJSijMq0ravbvcl6Dn6itZzwAHiz74UR2VZHOiKjEEEqZgSSkzlFA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=J7euFI8OYUm+NEXNwmTz+51gG4WX56Of7uCZEObQmnc=;
- b=QLLXvebMREqeZVaHGe/FEyqD+oXy+ljUz0cqpOvcL6xf8vDLGlJtz9RRy7gvh7uuHKdjgCbF3v7MO9uzTB5P2oYy8ePWrIfh/BiOrwb37rmYr/vcQtDqMYZPIi7zzLhJVcgDzzutrzVFO9zLCtnPN1nb4zcbk0rRlvBf2i5x4f4WCsPoMnrQRMMXjJVvpJcPzfyLmtu/le9WDA2W1SHlI2zefxbDKGSDce4ceXeWK+Xxt4UfE8fOr+EA48gDEYmEJyhj4lA6pTBD+Dzo7Gp8F3Ydp/mW2xPFBaQMefPPDpYIwiJhFCXw8v1anEfnwEu1Cw6cBk+/R3McxqHZlC1MwA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=wavecomp.com;dmarc=pass action=none
- header.from=mips.com;dkim=pass header.d=mips.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=J7euFI8OYUm+NEXNwmTz+51gG4WX56Of7uCZEObQmnc=;
- b=DvQR+/tdes/iPgDAIqNxnyjfH8cK23jp7/ASblZnY9mL799VkcZlT4XyBvYBI9mUnKjjM5HWixSOvOSK7DaAWImwXTLGJ1tHrGdYtRq1zzZ6yTmkwAQ10xnvXd+EWQ+mwsKGstgvE7j4n2dqfj0Nqe+HagePeCQcCPwFWZz3v5c=
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
- MWHPR2201MB1198.namprd22.prod.outlook.com (10.174.169.161) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2136.16; Tue, 6 Aug 2019 23:02:15 +0000
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::f566:bf1f:dcd:862c]) by MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::f566:bf1f:dcd:862c%10]) with mapi id 15.20.2136.018; Tue, 6 Aug 2019
- 23:02:15 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Christoph Lameter <cl@linux.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <pburton@wavecomp.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        James Hogan <jhogan@kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
-Subject: Re: [PATCH] mips: fix vdso32 build, again
-Thread-Topic: [PATCH] mips: fix vdso32 build, again
-Thread-Index: AQHVTKr84D2YQOWUbke1AwqGjUbDnQ==
-Date:   Tue, 6 Aug 2019 23:02:14 +0000
-Message-ID: <MWHPR2201MB1277159F069EC421016593A9C1D50@MWHPR2201MB1277.namprd22.prod.outlook.com>
-References: <20190806112509.3244608-1-arnd@arndb.de>
-In-Reply-To: <20190806112509.3244608-1-arnd@arndb.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR02CA0036.namprd02.prod.outlook.com
- (2603:10b6:a02:ee::49) To MWHPR2201MB1277.namprd22.prod.outlook.com
- (2603:10b6:301:18::12)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [12.94.197.246]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1cf3d4e4-bf96-423c-bdc5-08d71ac21f45
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR2201MB1198;
-x-ms-traffictypediagnostic: MWHPR2201MB1198:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <MWHPR2201MB1198E94046C94889E8C3D1F7C1D50@MWHPR2201MB1198.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0121F24F22
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(39850400004)(366004)(376002)(136003)(346002)(199004)(189003)(486006)(54906003)(229853002)(102836004)(7736002)(966005)(446003)(186003)(25786009)(4326008)(42882007)(11346002)(99286004)(26005)(81166006)(4744005)(5660300002)(305945005)(71200400001)(52536014)(81156014)(71190400001)(44832011)(256004)(8676002)(476003)(8936002)(316002)(478600001)(66066001)(68736007)(52116002)(7696005)(6916009)(2906002)(66946007)(3846002)(66476007)(66556008)(64756008)(66446008)(6116002)(7416002)(9686003)(6306002)(55016002)(53936002)(6436002)(76176011)(6506007)(386003)(14454004)(74316002)(6246003)(33656002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1198;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: /BwxiPuj1MTmZsWOZAPWNXKSfxEwTVcz+ogEvkv8Pf8wVxMkHIw0cmyLT8rKUEsvyEXR8T8CUEoiNh0yunWCMr/JTVWzkRTu294Y9VRV9p/zIBmZQIAg1eC1HJHLSeQ1OZm2IK03ZtrIsnYyGIDyuKutdxQyq6WXyAoNGEtv2Ww48lmjoblh35uvNpXUrmq8GczintFDeYiZhH2oxqZC4ObrssuloYGZyA1W+Pcy9Jdhxj98EWa6OLzrIKf3doEnk8iQEp7E/gYA6JA13GsbzxiKwfmiseZJPeyBy8fBIYia02z27Nym+a7uXfJuIB1Jfm/4z5sfWjQAx/ai2MHcIDGOM2t2p0+k8x9zPwZtpF5KUIE5pSxLWrqg80u0O9KGtcdYqsag6JhWbNU5bfQzTGYoQSiXHP+Tgf6VuVi+eqU=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1cf3d4e4-bf96-423c-bdc5-08d71ac21f45
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Aug 2019 23:02:14.8650
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pburton@wavecomp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1198
+        Tue, 6 Aug 2019 19:03:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51718 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726133AbfHFXDJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 19:03:09 -0400
+Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A33320717;
+        Tue,  6 Aug 2019 23:03:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565132587;
+        bh=qT4gAKs+8ApcJTe9M2dRBF2NOvklKVKeDkSelB5PNpE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=nYhQksXMjFdjn7qsubpevTF4BxP7xsit/IdT2SfJ3mrS0Rx7B0zEjLoFZc8NJZXxT
+         jiawPejTfcVjvKx3FcMC6k2JIomNwGOL5/r2KBhYy/ve+cJBFcRC62rjV6qGuOk6dC
+         UUV7Z7MUl5e1flsun/zvccyVkG5K2bYpuLV3Qae0=
+Date:   Tue, 6 Aug 2019 16:03:06 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     axboe@kernel.dk, jack@suse.cz, hannes@cmpxchg.org,
+        mhocko@kernel.org, vdavydov.dev@gmail.com, cgroups@vger.kernel.org,
+        linux-mm@kvack.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com, guro@fb.com
+Subject: Re: [PATCH 4/4] writeback, memcg: Implement foreign dirty flushing
+Message-Id: <20190806160306.5330bd4fdddf357db4b7086c@linux-foundation.org>
+In-Reply-To: <20190803140155.181190-5-tj@kernel.org>
+References: <20190803140155.181190-1-tj@kernel.org>
+        <20190803140155.181190-5-tj@kernel.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Sat,  3 Aug 2019 07:01:55 -0700 Tejun Heo <tj@kernel.org> wrote:
 
-Arnd Bergmann wrote:
-> The generic vdso support adds the same #if hack in two places,
-> asm/vdso/vdso.h and config-n32-o32-env.c, but only the second
-> is actually used. The result lacks the BUILD_VDSO32_64 macro,
-> and that triggers a build error:
->=20
-> ./include/linux/page-flags-layout.h:95:2: error: #error "Not enough bits =
-in page flags"
->=20
-> Move the macro into the other place, and remove the duplicated
-> bits.
+> There's an inherent mismatch between memcg and writeback.  The former
+> trackes ownership per-page while the latter per-inode.  This was a
+> deliberate design decision because honoring per-page ownership in the
+> writeback path is complicated, may lead to higher CPU and IO overheads
+> and deemed unnecessary given that write-sharing an inode across
+> different cgroups isn't a common use-case.
+> 
+> Combined with inode majority-writer ownership switching, this works
+> well enough in most cases but there are some pathological cases.  For
+> example, let's say there are two cgroups A and B which keep writing to
+> different but confined parts of the same inode.  B owns the inode and
+> A's memory is limited far below B's.  A's dirty ratio can rise enough
+> to trigger balance_dirty_pages() sleeps but B's can be low enough to
+> avoid triggering background writeback.  A will be slowed down without
+> a way to make writeback of the dirty pages happen.
+> 
+> This patch implements foreign dirty recording and foreign mechanism so
+> that when a memcg encounters a condition as above it can trigger
+> flushes on bdi_writebacks which can clean its pages.  Please see the
+> comment on top of mem_cgroup_track_foreign_dirty_slowpath() for
+> details.
+> 
+> ...
+>
+> +void mem_cgroup_track_foreign_dirty_slowpath(struct page *page,
+> +					     struct bdi_writeback *wb)
+> +{
+> +	struct mem_cgroup *memcg = page->mem_cgroup;
+> +	struct memcg_cgwb_frn *frn;
+> +	u64 now = jiffies_64;
+> +	u64 oldest_at = now;
+> +	int oldest = -1;
+> +	int i;
+> +
+> +	/*
+> +	 * Pick the slot to use.  If there is already a slot for @wb, keep
+> +	 * using it.  If not replace the oldest one which isn't being
+> +	 * written out.
+> +	 */
+> +	for (i = 0; i < MEMCG_CGWB_FRN_CNT; i++) {
+> +		frn = &memcg->cgwb_frn[i];
+> +		if (frn->bdi_id == wb->bdi->id &&
+> +		    frn->memcg_id == wb->memcg_css->id)
+> +			break;
+> +		if (frn->at < oldest_at && atomic_read(&frn->done.cnt) == 1) {
+> +			oldest = i;
+> +			oldest_at = frn->at;
+> +		}
+> +	}
+> +
+> +	if (i < MEMCG_CGWB_FRN_CNT) {
+> +		unsigned long update_intv =
+> +			min_t(unsigned long, HZ,
+> +			      msecs_to_jiffies(dirty_expire_interval * 10) / 8);
 
-Applied to mips-next.
+An explanation of what's going on here would be helpful.
 
-> commit 6393e6064486
-> https://git.kernel.org/mips/c/6393e6064486
->=20
-> Reported-by: Guenter Roeck <linux@roeck-us.net>
-> Fixes: ee38d94a0ad8 ("page flags: prioritize kasan bits over last-cpuid")
-> Fixes: 24640f233b46 ("mips: Add support for generic vDSO")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Paul Burton <paul.burton@mips.com>
+Why "* 1.25" and not, umm "* 1.24"?
 
-Thanks,
-    Paul
+> +		/*
+> +		 * Re-using an existing one.  Let's update timestamp lazily
+> +		 * to avoid making the cacheline hot.
+> +		 */
+> +		if (frn->at < now - update_intv)
+> +			frn->at = now;
+> +	} else if (oldest >= 0) {
+> +		/* replace the oldest free one */
+> +		frn = &memcg->cgwb_frn[oldest];
+> +		frn->bdi_id = wb->bdi->id;
+> +		frn->memcg_id = wb->memcg_css->id;
+> +		frn->at = now;
+> +	}
+> +}
+> +
+> +/*
+> + * Issue foreign writeback flushes for recorded foreign dirtying events
+> + * which haven't expired yet and aren't already being written out.
+> + */
+> +void mem_cgroup_flush_foreign(struct bdi_writeback *wb)
+> +{
+> +	struct mem_cgroup *memcg = mem_cgroup_from_css(wb->memcg_css);
+> +	unsigned long intv = msecs_to_jiffies(dirty_expire_interval * 10);
 
-[ This message was auto-generated; if you believe anything is incorrect
-  then please email paul.burton@mips.com to report it. ]
+Ditto.
+
+> +	u64 now = jiffies_64;
+> +	int i;
+> +
+> +	for (i = 0; i < MEMCG_CGWB_FRN_CNT; i++) {
+> +		struct memcg_cgwb_frn *frn = &memcg->cgwb_frn[i];
+> +
+> +		if (frn->at > now - intv && atomic_read(&frn->done.cnt) == 1) {
+> +			frn->at = 0;
+> +			cgroup_writeback_by_id(frn->bdi_id, frn->memcg_id,
+> +					       LONG_MAX, WB_REASON_FOREIGN_FLUSH,
+> +					       &frn->done);
+> +		}
+> +	}
+> +}
+> +
+
