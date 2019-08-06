@@ -2,86 +2,93 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42EDDC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:31:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84670C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13A272089E
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:31:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A5F82089E
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:31:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eU6JjZPN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732950AbfHFObn convert rfc822-to-8bit (ORCPT
+        id S1732995AbfHFOby (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 10:31:43 -0400
-Received: from lithops.sigma-star.at ([195.201.40.130]:38408 "EHLO
-        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728756AbfHFObn (ORCPT
+        Tue, 6 Aug 2019 10:31:54 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:45243 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728756AbfHFOby (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 10:31:43 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 15BAD60632C5;
-        Tue,  6 Aug 2019 16:31:41 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 6tSzbEOwQAU8; Tue,  6 Aug 2019 16:31:38 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id CF0AA60632C6;
-        Tue,  6 Aug 2019 16:31:38 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id cpqRSinVYc4o; Tue,  6 Aug 2019 16:31:38 +0200 (CEST)
-Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 83B8460632C5;
-        Tue,  6 Aug 2019 16:31:38 +0200 (CEST)
-Date:   Tue, 6 Aug 2019 16:31:38 +0200 (CEST)
-From:   Richard Weinberger <richard@nod.at>
-To:     Liu Song <fishland@aliyun.com>
-Cc:     Artem Bityutskiy <dedekind1@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        liu song11 <liu.song11@zte.com.cn>
-Message-ID: <797425154.59041.1565101898396.JavaMail.zimbra@nod.at>
-In-Reply-To: <20190806142140.33013-1-fishland@aliyun.com>
-References: <20190806142140.33013-1-fishland@aliyun.com>
-Subject: Re: [PATCH] ubifs: limit the number of pages in shrink_liability
+        Tue, 6 Aug 2019 10:31:54 -0400
+Received: by mail-oi1-f194.google.com with SMTP id m206so66880322oib.12;
+        Tue, 06 Aug 2019 07:31:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=mRsJuqvbI6SyoD25uf83ShcXx0a/DNaI7q9ymEAEVyc=;
+        b=eU6JjZPN1qTreBUTPlh7utNRgqNJcNAfmsqAMjcaVswhhVuAN6s/UGkd+x5kwUoD9h
+         UlbiZXKMyloARs+IKU5gcXgSiICSh2w3SB3LALeyOWlha27iqcqvxxyujOhkOTsqJa83
+         DBj1be/Qd/EP4lj51ZqZ+OC/lAfT1URgVGIsNXGsntOyd1kbVQ9AyRR9jiXWHKIn7DYv
+         UaIqX/MuXROM+O1qRCcVgMh+ULM2Ffx+rGUNBL5kNcucBOTu8XORiOHd/A+k+YosfAQ0
+         vtBoGn81r2iB34cYZ6MpF34C9Ul+JlXqYmSsqzqq6QUHCR1qEf5UpRtI52225CVpq7N8
+         OjiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=mRsJuqvbI6SyoD25uf83ShcXx0a/DNaI7q9ymEAEVyc=;
+        b=H3X/F79nnMfB7PY+Mg/m2oUzmq+/+H9GkjLpDyoBWS5S4FRYpzM8nWaEZAvNtkqlhe
+         SPDaMqqQMnP+Z7jxtb+ISLYlJxb0wbX5pozk6H2zhrO8JGg+FYXhb3JNA7GH3ATZM441
+         7agOSVy/WZ4uZuITgvkeJM/voGKjYUQCiz32aSP/hnl4cXTiNc4mLB+EiKY36hgwQhfq
+         JdyWSUeDMMGhNz8ra3no/gQHjAWs5AEJjfj8c3W4EKjKPQD57Kit6XtbHiE6bm6xmrFR
+         SO/UY0hkasgqdZcjgE2rDVwoDfZcvE9ftRlVxvlWj/15LWHp9K4vfvs0oUo0ECdFvKi0
+         AbXQ==
+X-Gm-Message-State: APjAAAWltDbi7VTjj09A9Tvt7pMQGRMxhPiqC8eccjwD7l4+I0QZnN9a
+        1ODZXLEXq726/rc5rq9G/JTOPJGPuYxANdVqBxJJ9t4=
+X-Google-Smtp-Source: APXvYqzfN5wxo8W3llD9Sh1nlweb/1gOpvvOG7t5gCQ4mAbIK8hvP+7dFRao/uXZoKHdgajaZrhWCLZhA99OmSMBg40=
+X-Received: by 2002:aca:dd04:: with SMTP id u4mr1154017oig.152.1565101912904;
+ Tue, 06 Aug 2019 07:31:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [195.201.40.130]
-X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF60 (Linux)/8.8.12_GA_3809)
-Thread-Topic: ubifs: limit the number of pages in shrink_liability
-Thread-Index: cczq56dldsF78VWHvcAJFcITyquhhQ==
+From:   =?UTF-8?B?6rOg7KSA?= <gojun077@gmail.com>
+Date:   Tue, 6 Aug 2019 23:31:41 +0900
+Message-ID: <CAH040W7fdd-ND4-QG3DwGpFAPTMGB4zzuXYohMdfoSejV6XE_Q@mail.gmail.com>
+Subject: Realtek r8822be wireless card fails to work with new rtw88 kernel module
+To:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ Ursprüngliche Mail -----
-> Von: "Liu Song" <fishland@aliyun.com>
-> An: "richard" <richard@nod.at>, "Artem Bityutskiy" <dedekind1@gmail.com>, "Adrian Hunter" <adrian.hunter@intel.com>
-> CC: "linux-mtd" <linux-mtd@lists.infradead.org>, "linux-kernel" <linux-kernel@vger.kernel.org>, "liu song11"
-> <liu.song11@zte.com.cn>
-> Gesendet: Dienstag, 6. August 2019 16:21:40
-> Betreff: [PATCH] ubifs: limit the number of pages in shrink_liability
+Hello,
 
-> From: Liu Song <liu.song11@zte.com.cn>
-> 
-> If the number of dirty pages to be written back is large,
-> then writeback_inodes_sb will block waiting for a long time,
-> causing hung task detection alarm. Therefore, we should limit
-> the maximum number of pages written back this time, which let
-> the budget be completed faster. The remaining dirty pages
-> tend to rely on the writeback mechanism to complete the
-> synchronization.
+I recently reported a bug to Ubuntu regarding a regression in wireless
+driver support for the Realtek r8822be wireless chipset. The issue
+link on launchpad is:
 
-On which kind of system do you hit this?
-Your fix makes sense but I'd like to have more background information.
+https://bugs.launchpad.net/bugs/1838133
 
-UBIFS acts that way for almost a decade, see:
-b6e51316daed ("writeback: separate starting of sync vs opportunistic writeback")
+After Canonical developers triaged the bug they determined that the
+problem lies upstream, and instructed me to send mails to the relevant
+kernel module maintainers at Realtek and to the general kernel.org
+mailing list.
 
-Thanks,
-//richard
+I built kernel 5.3.0-rc1+ with the latest realtek drivers from
+wireless-drivers-next but my Realtek r8822be doesn't work with
+rtw88/rtwpci kernel modules.
+
+Please let me know if there is any additional information I can
+provide that would help in debugging this issue.
+
+Best regards,
+Jun
+
+
+Link to GPG Public Key:
+https://keybase.io/gojun077#show-public
+
+Backup link:
+https://keys.openpgp.org/vks/v1/by-fingerprint/79F173A93EB3623D32F86309A56930CF7235138D
