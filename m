@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C3FC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:35:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E00D8C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA0362089E
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:35:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFA3A217D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:35:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127302;
-	bh=FsU2bOnczHjVUYUWGONuiGSha5N7bJ30nzPRVEw0Mus=;
+	s=default; t=1565127307;
+	bh=vflVOD8EJIT9+3S/Swb39tn2qxmGSfyQdQ1zzz8gUfs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IzONX54K65GE/qfl3WBoFG5CqapMYQHvrbWgGJbCwDGKKaYWq59WFlCi51iekglQW
-	 YNTgMT1jVTts7+OtpyxMxP4K+CHaaGA6vcyFg/Z7BJZG9aaDJz7zah5nAS4AKdd+mn
-	 3FwE47vYpINbhuqVa58rXT/OC2zoxuYRMjZ2cd9k=
+	b=ZBZ389p+MHsZZLS61P7hHAPLnF0b2cddKN5mNLh/i22zkTNTUUyGuX/yI/S/My/E8
+	 pi3V24ckL6rfXV50d57HUb0Ry9HisEBdNVqIKKEbFQtm2pJiPKHNjE5X0xz08Y9QVO
+	 VAoHtzo/ptXqzFrpHKrofrTJI6ls4c/mHWEIfno8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728129AbfHFVfB (ORCPT
+        id S1727162AbfHFVfG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:35:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52726 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 17:35:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727956AbfHFVe6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:34:58 -0400
+        id S1727103AbfHFVfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:35:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2D7C217F5;
-        Tue,  6 Aug 2019 21:34:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C4122089E;
+        Tue,  6 Aug 2019 21:35:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127296;
-        bh=FsU2bOnczHjVUYUWGONuiGSha5N7bJ30nzPRVEw0Mus=;
+        s=default; t=1565127303;
+        bh=vflVOD8EJIT9+3S/Swb39tn2qxmGSfyQdQ1zzz8gUfs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wBhVQ5a7ACZ/D3FJ3ShkUWJXAqossRdjomVyh4PRbtwwj5/Xm74PJEIoWfasVeeRB
-         aVpyGhQrxEWRAYmPRrxThzoKjXvisvAk+IKSlCojZd6KePm2FyPvGoNlzvZ0wTYK4E
-         TbhQeTCTTssef2h+Utg0220iMRIJI6ZxktYLwyz8=
+        b=bkCd6vpOlsPOea26JnRbkjawV8CQIp/gjJ3T3tUBclpfnDHnO5yOJV4U9H1qM1yJq
+         p9F+VIIeGfHfD/41a4nZzj/amLKqOAD3y8JxsQi6PcGyTs9Bz7ZzqMHh+udFhZgSfU
+         dz196+Dhw/K4cGcwggw0htoOUmBccMqEW2fHVhg8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Leon Romanovsky <leonro@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 48/59] RDMA/mlx5: Release locks during notifier unregister
-Date:   Tue,  6 Aug 2019 17:33:08 -0400
-Message-Id: <20190806213319.19203-48-sashal@kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        James Morse <james.morse@arm.com>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 52/59] arm64: kprobes: Recover pstate.D in single-step exception handler
+Date:   Tue,  6 Aug 2019 17:33:12 -0400
+Message-Id: <20190806213319.19203-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190806213319.19203-1-sashal@kernel.org>
 References: <20190806213319.19203-1-sashal@kernel.org>
@@ -59,109 +60,138 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leon Romanovsky <leonro@mellanox.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 23eaf3b5c1a755e3193480c76fb29414be648688 ]
+[ Upstream commit b3980e48528c4d2a9e70b145a5bba328b73a0f93 ]
 
-The below kernel panic was observed when created bond mode LACP
-with GRE tunnel on top. The reason to it was not released spinlock
-during mlx5 notify unregsiter sequence.
+kprobes manipulates the interrupted PSTATE for single step, and
+doesn't restore it. Thus, if we put a kprobe where the pstate.D
+(debug) masked, the mask will be cleared after the kprobe hits.
 
-[  234.562007] BUG: scheduling while atomic: sh/10900/0x00000002
-[  234.563005] Preemption disabled at:
-[  234.566864] ------------[ cut here ]------------
-[  234.567120] DEBUG_LOCKS_WARN_ON(val > preempt_count())
-[  234.567139] WARNING: CPU: 16 PID: 10900 at kernel/sched/core.c:3203 preempt_count_sub+0xca/0x170
-[  234.569550] CPU: 16 PID: 10900 Comm: sh Tainted: G        W 5.2.0-rc1-for-linust-dbg-2019-05-25_04-57-33-60 #1
-[  234.569886] Hardware name: Dell Inc. PowerEdge R720/0X3D66, BIOS 2.6.1 02/12/2018
-[  234.570183] RIP: 0010:preempt_count_sub+0xca/0x170
-[  234.570404] Code: 03 38
-d0 7c 08 84 d2 0f 85 b0 00 00 00 8b 15 dd 02 03 04 85 d2 75 ba 48 c7 c6
-00 e1 88 83 48 c7 c7 40 e1 88 83 e8 76 11 f7 ff <0f> 0b 5b c3 65 8b 05
-d3 1f d8 7e 84 c0 75 82 e8 62 c3 c3 00 85 c0
-[  234.570911] RSP: 0018:ffff888b94477b08 EFLAGS: 00010286
-[  234.571133] RAX: 0000000000000000 RBX: 0000000000000001 RCX: 0000000000000000
-[  234.571391] RDX: 0000000000000000 RSI: 0000000000000004 RDI: 0000000000000246
-[  234.571648] RBP: ffff888ba5560000 R08: fffffbfff08962d5 R09: fffffbfff08962d5
-[  234.571902] R10: 0000000000000001 R11: fffffbfff08962d4 R12: ffff888bac6e9548
-[  234.572157] R13: ffff888babfaf728 R14: ffff888bac6e9568 R15: ffff888babfaf750
-[  234.572412] FS: 00007fcafa59b740(0000) GS:ffff888bed200000(0000) knlGS:0000000000000000
-[  234.572686] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  234.572914] CR2: 00007f984f16b140 CR3: 0000000b2bf0a001 CR4: 00000000001606e0
-[  234.573172] Call Trace:
-[  234.573336] _raw_spin_unlock+0x2e/0x50
-[  234.573542] mlx5_ib_unbind_slave_port+0x1bc/0x690 [mlx5_ib]
-[  234.573793] mlx5_ib_cleanup_multiport_master+0x1d3/0x660 [mlx5_ib]
-[  234.574039] mlx5_ib_stage_init_cleanup+0x4c/0x360 [mlx5_ib]
-[  234.574271]  ? kfree+0xf5/0x2f0
-[  234.574465] __mlx5_ib_remove+0x61/0xd0 [mlx5_ib]
-[  234.574688]  ? __mlx5_ib_remove+0xd0/0xd0 [mlx5_ib]
-[  234.574951] mlx5_remove_device+0x234/0x300 [mlx5_core]
-[  234.575224] mlx5_unregister_device+0x4d/0x1e0 [mlx5_core]
-[  234.575493] remove_one+0x4f/0x160 [mlx5_core]
-[  234.575704] pci_device_remove+0xef/0x2a0
-[  234.581407]  ? pcibios_free_irq+0x10/0x10
-[  234.587143]  ? up_read+0xc1/0x260
-[  234.592785] device_release_driver_internal+0x1ab/0x430
-[  234.598442] unbind_store+0x152/0x200
-[  234.604064]  ? sysfs_kf_write+0x3b/0x180
-[  234.609441]  ? sysfs_file_ops+0x160/0x160
-[  234.615021] kernfs_fop_write+0x277/0x440
-[  234.620288]  ? __sb_start_write+0x1ef/0x2c0
-[  234.625512] vfs_write+0x15e/0x460
-[  234.630786] ksys_write+0x156/0x1e0
-[  234.635988]  ? __ia32_sys_read+0xb0/0xb0
-[  234.641120]  ? trace_hardirqs_off_thunk+0x1a/0x1c
-[  234.646163] do_syscall_64+0x95/0x470
-[  234.651106] entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[  234.656004] RIP: 0033:0x7fcaf9c9cfd0
-[  234.660686] Code: 73 01
-c3 48 8b 0d c0 6e 2d 00 f7 d8 64 89 01 48 83 c8 ff c3 66 0f 1f 44 00 00
-83 3d cd cf 2d 00 00 75 10 b8 01 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73
-31 c3 48 83 ec 08 e8 ee cb 01 00 48 89 04 24
-[  234.670128] RSP: 002b:00007ffd3b01ddd8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-[  234.674811] RAX: ffffffffffffffda RBX: 000000000000000d RCX: 00007fcaf9c9cfd0
-[  234.679387] RDX: 000000000000000d RSI: 00007fcafa5c1000 RDI: 0000000000000001
-[  234.683848] RBP: 00007fcafa5c1000 R08: 000000000000000a R09: 00007fcafa59b740
-[  234.688167] R10: 00007ffd3b01d8e0 R11: 0000000000000246 R12: 00007fcaf9f75400
-[  234.692386] R13: 000000000000000d R14: 0000000000000001 R15: 0000000000000000
-[  234.696495] irq event stamp: 153067
-[  234.700525] hardirqs last enabled at (153067): [<ffffffff83258c39>] _raw_spin_unlock_irqrestore+0x59/0x70
-[  234.704665] hardirqs last disabled at (153066): [<ffffffff83259382>] _raw_spin_lock_irqsave+0x22/0x90
-[  234.708722] softirqs last enabled at (153058): [<ffffffff836006c5>] __do_softirq+0x6c5/0xb4e
-[  234.712673] softirqs last disabled at (153051): [<ffffffff81227c1d>] irq_exit+0x17d/0x1d0
-[  234.716601] ---[ end trace 5dbf096843ee9ce6 ]---
+Moreover, in the most complicated case, this can lead a kernel
+crash with below message when a nested kprobe hits.
 
-Fixes: df097a278c75 ("IB/mlx5: Use the new mlx5 core notifier API")
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Link: https://lore.kernel.org/r/20190731083852.584-1-leon@kernel.org
-Signed-off-by: Doug Ledford <dledford@redhat.com>
+[  152.118921] Unexpected kernel single-step exception at EL1
+
+When the 1st kprobe hits, do_debug_exception() will be called.
+At this point, debug exception (= pstate.D) must be masked (=1).
+But if another kprobes hits before single-step of the first kprobe
+(e.g. inside user pre_handler), it unmask the debug exception
+(pstate.D = 0) and return.
+Then, when the 1st kprobe setting up single-step, it saves current
+DAIF, mask DAIF, enable single-step, and restore DAIF.
+However, since "D" flag in DAIF is cleared by the 2nd kprobe, the
+single-step exception happens soon after restoring DAIF.
+
+This has been introduced by commit 7419333fa15e ("arm64: kprobe:
+Always clear pstate.D in breakpoint exception handler")
+
+To solve this issue, this stores all DAIF bits and restore it
+after single stepping.
+
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Fixes: 7419333fa15e ("arm64: kprobe: Always clear pstate.D in breakpoint exception handler")
+Reviewed-by: James Morse <james.morse@arm.com>
+Tested-by: James Morse <james.morse@arm.com>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx5/main.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ arch/arm64/include/asm/daifflags.h |  2 ++
+ arch/arm64/kernel/probes/kprobes.c | 40 +++++-------------------------
+ 2 files changed, 8 insertions(+), 34 deletions(-)
 
-diff --git a/drivers/infiniband/hw/mlx5/main.c b/drivers/infiniband/hw/mlx5/main.c
-index a6713a3b6c803..9ab276a8bc81a 100644
---- a/drivers/infiniband/hw/mlx5/main.c
-+++ b/drivers/infiniband/hw/mlx5/main.c
-@@ -5687,13 +5687,12 @@ static void mlx5_ib_unbind_slave_port(struct mlx5_ib_dev *ibdev,
- 		return;
- 	}
+diff --git a/arch/arm64/include/asm/daifflags.h b/arch/arm64/include/asm/daifflags.h
+index ae7e605085d71..9c0e0178ea291 100644
+--- a/arch/arm64/include/asm/daifflags.h
++++ b/arch/arm64/include/asm/daifflags.h
+@@ -13,6 +13,8 @@
+ #define DAIF_PROCCTX		0
+ #define DAIF_PROCCTX_NOIRQ	PSR_I_BIT
+ #define DAIF_ERRCTX		(PSR_I_BIT | PSR_A_BIT)
++#define DAIF_MASK		(PSR_D_BIT | PSR_A_BIT | PSR_I_BIT | PSR_F_BIT)
++
  
--	if (mpi->mdev_events.notifier_call)
--		mlx5_notifier_unregister(mpi->mdev, &mpi->mdev_events);
--	mpi->mdev_events.notifier_call = NULL;
+ /* mask/save/unmask/restore all exceptions, including interrupts. */
+ static inline void local_daif_mask(void)
+diff --git a/arch/arm64/kernel/probes/kprobes.c b/arch/arm64/kernel/probes/kprobes.c
+index 88ce502c8e6f1..624f2501f3f87 100644
+--- a/arch/arm64/kernel/probes/kprobes.c
++++ b/arch/arm64/kernel/probes/kprobes.c
+@@ -21,6 +21,7 @@
+ #include <asm/ptrace.h>
+ #include <asm/cacheflush.h>
+ #include <asm/debug-monitors.h>
++#include <asm/daifflags.h>
+ #include <asm/system_misc.h>
+ #include <asm/insn.h>
+ #include <linux/uaccess.h>
+@@ -165,33 +166,6 @@ static void __kprobes set_current_kprobe(struct kprobe *p)
+ 	__this_cpu_write(current_kprobe, p);
+ }
+ 
+-/*
+- * When PSTATE.D is set (masked), then software step exceptions can not be
+- * generated.
+- * SPSR's D bit shows the value of PSTATE.D immediately before the
+- * exception was taken. PSTATE.D is set while entering into any exception
+- * mode, however software clears it for any normal (none-debug-exception)
+- * mode in the exception entry. Therefore, when we are entering into kprobe
+- * breakpoint handler from any normal mode then SPSR.D bit is already
+- * cleared, however it is set when we are entering from any debug exception
+- * mode.
+- * Since we always need to generate single step exception after a kprobe
+- * breakpoint exception therefore we need to clear it unconditionally, when
+- * we become sure that the current breakpoint exception is for kprobe.
+- */
+-static void __kprobes
+-spsr_set_debug_flag(struct pt_regs *regs, int mask)
+-{
+-	unsigned long spsr = regs->pstate;
 -
- 	mpi->ibdev = NULL;
+-	if (mask)
+-		spsr |= PSR_D_BIT;
+-	else
+-		spsr &= ~PSR_D_BIT;
+-
+-	regs->pstate = spsr;
+-}
+-
+ /*
+  * Interrupts need to be disabled before single-step mode is set, and not
+  * reenabled until after single-step mode ends.
+@@ -203,17 +177,17 @@ spsr_set_debug_flag(struct pt_regs *regs, int mask)
+ static void __kprobes kprobes_save_local_irqflag(struct kprobe_ctlblk *kcb,
+ 						struct pt_regs *regs)
+ {
+-	kcb->saved_irqflag = regs->pstate;
++	kcb->saved_irqflag = regs->pstate & DAIF_MASK;
+ 	regs->pstate |= PSR_I_BIT;
++	/* Unmask PSTATE.D for enabling software step exceptions. */
++	regs->pstate &= ~PSR_D_BIT;
+ }
  
- 	spin_unlock(&port->mp.mpi_lock);
-+	if (mpi->mdev_events.notifier_call)
-+		mlx5_notifier_unregister(mpi->mdev, &mpi->mdev_events);
-+	mpi->mdev_events.notifier_call = NULL;
- 	mlx5_remove_netdev_notifier(ibdev, port_num);
- 	spin_lock(&port->mp.mpi_lock);
+ static void __kprobes kprobes_restore_local_irqflag(struct kprobe_ctlblk *kcb,
+ 						struct pt_regs *regs)
+ {
+-	if (kcb->saved_irqflag & PSR_I_BIT)
+-		regs->pstate |= PSR_I_BIT;
+-	else
+-		regs->pstate &= ~PSR_I_BIT;
++	regs->pstate &= ~DAIF_MASK;
++	regs->pstate |= kcb->saved_irqflag;
+ }
  
+ static void __kprobes
+@@ -250,8 +224,6 @@ static void __kprobes setup_singlestep(struct kprobe *p,
+ 
+ 		set_ss_context(kcb, slot);	/* mark pending ss */
+ 
+-		spsr_set_debug_flag(regs, 0);
+-
+ 		/* IRQs and single stepping do not mix well. */
+ 		kprobes_save_local_irqflag(kcb, regs);
+ 		kernel_enable_single_step(regs);
 -- 
 2.20.1
 
