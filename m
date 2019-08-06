@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 328EFC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:36:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 012D2C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:36:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0667C2089E
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:36:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC11121871
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:36:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127366;
-	bh=SNC+6pbju1r7RA/U2WTXMM0vJyegy1aHbOMPtmiYIwc=;
+	s=default; t=1565127370;
+	bh=f4dGjI3OrhNRjV5gnLp4EV0MkcL7DBhSXrN5oYy7s0M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u+uSQ5QCXwFQFwBQ+qF+kt47RE19QOUMqypdzNkfwlqnqRAIj8jl/A7C9XshcrlW/
-	 NxzAsLVcGnKO4zP/RcZ63b7rN0J467U6mYzWoLGOetndqMzta71NJ0tZpDTCXWfbJE
-	 +lHJaIjsHhLOD9CVg9XdfoYY1MgfRXdsgcxdAJa4=
+	b=VYFlbJNFWIyAFh4mlV+/ALHpd1742hnXKJMH6wlVf8W6G9JgUBJe9r4b4WPL1is5X
+	 Vm15HKiSSXQD9e4BFkVGPPto54P7dYyjT6mgI5AJDn1DmrmBanf4fVI3CVVg81U101
+	 8F8cn52ArqaxRhEQdb/flqVy48b5ySKa8WxgeREg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728808AbfHFVgE (ORCPT
+        id S1728844AbfHFVgJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:36:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53808 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 17:36:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728790AbfHFVgC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:36:02 -0400
+        id S1726529AbfHFVgH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:36:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8570217D9;
-        Tue,  6 Aug 2019 21:35:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7765217D9;
+        Tue,  6 Aug 2019 21:36:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127360;
-        bh=SNC+6pbju1r7RA/U2WTXMM0vJyegy1aHbOMPtmiYIwc=;
+        s=default; t=1565127366;
+        bh=f4dGjI3OrhNRjV5gnLp4EV0MkcL7DBhSXrN5oYy7s0M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f+An9Hoe02cZRogew6gPYXbbx0S3oB5MQ60IN2CTu7Mgnr5CbbQaCx8JW1dQBNsAM
-         FgsMpxX2pVB5Vxj8hoAnYFC0IlVXLYFO11gWs8BGZKTVnrZsxnyaP6YYA1jRhaMgSL
-         wnb08NIhG8i8cnCJzmytsC13aJ8lEXgyp8sovYhY=
+        b=Cp/AdDBCrcgoxLSZ5SQYTiwV3m8WXERsUSunM3tC4nonSMHzYPLPjaZppn+EgcQu8
+         l4gWuOsAzyMgOZLFYslmDyBT+4KIJvABrGdptdD5Z1Ip9vHh2EqTbaa2u72Y7Y+vgr
+         s298M4bC2e4wC2dDyU9a/za4tZS3l6m+if+Myudk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rob Clark <robdclark@chromium.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Sean Paul <seanpaul@chromium.org>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 21/32] drm/vgem: fix cache synchronization on arm/arm64
-Date:   Tue,  6 Aug 2019 17:35:09 -0400
-Message-Id: <20190806213522.19859-21-sashal@kernel.org>
+Cc:     Qian Cai <cai@lca.pw>, Will Deacon <will@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 23/32] arm64/mm: fix variable 'pud' set but not used
+Date:   Tue,  6 Aug 2019 17:35:11 -0400
+Message-Id: <20190806213522.19859-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190806213522.19859-1-sashal@kernel.org>
 References: <20190806213522.19859-1-sashal@kernel.org>
@@ -61,215 +58,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit 7e9e5ead55beacc11116b3fb90b0de6e7cf55a69 ]
+[ Upstream commit 7d4e2dcf311d3b98421d1f119efe5964cafa32fc ]
 
-drm_cflush_pages() is no-op on arm/arm64.  But instead we can use
-dma_sync API.
+GCC throws a warning,
 
-Fixes failures w/ vgem_test.
+arch/arm64/mm/mmu.c: In function 'pud_free_pmd_page':
+arch/arm64/mm/mmu.c:1033:8: warning: variable 'pud' set but not used
+[-Wunused-but-set-variable]
+  pud_t pud;
+        ^~~
 
-Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190717211542.30482-1-robdclark@gmail.com
+because pud_table() is a macro and compiled away. Fix it by making it a
+static inline function and for pud_sect() as well.
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/vgem/vgem_drv.c | 130 ++++++++++++++++++++------------
- 1 file changed, 83 insertions(+), 47 deletions(-)
+ arch/arm64/include/asm/pgtable.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/vgem/vgem_drv.c b/drivers/gpu/drm/vgem/vgem_drv.c
-index 4709f08f39e49..78c913f163851 100644
---- a/drivers/gpu/drm/vgem/vgem_drv.c
-+++ b/drivers/gpu/drm/vgem/vgem_drv.c
-@@ -47,10 +47,16 @@ static struct vgem_device {
- 	struct platform_device *platform;
- } *vgem_device;
+diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+index ea423db393644..2214a403f39b9 100644
+--- a/arch/arm64/include/asm/pgtable.h
++++ b/arch/arm64/include/asm/pgtable.h
+@@ -419,8 +419,8 @@ extern pgprot_t phys_mem_access_prot(struct file *file, unsigned long pfn,
+ 				 PMD_TYPE_SECT)
  
-+static void sync_and_unpin(struct drm_vgem_gem_object *bo);
-+static struct page **pin_and_sync(struct drm_vgem_gem_object *bo);
-+
- static void vgem_gem_free_object(struct drm_gem_object *obj)
- {
- 	struct drm_vgem_gem_object *vgem_obj = to_vgem_bo(obj);
- 
-+	if (!obj->import_attach)
-+		sync_and_unpin(vgem_obj);
-+
- 	kvfree(vgem_obj->pages);
- 	mutex_destroy(&vgem_obj->pages_lock);
- 
-@@ -78,40 +84,15 @@ static vm_fault_t vgem_gem_fault(struct vm_fault *vmf)
- 		return VM_FAULT_SIGBUS;
- 
- 	mutex_lock(&obj->pages_lock);
-+	if (!obj->pages)
-+		pin_and_sync(obj);
- 	if (obj->pages) {
- 		get_page(obj->pages[page_offset]);
- 		vmf->page = obj->pages[page_offset];
- 		ret = 0;
- 	}
- 	mutex_unlock(&obj->pages_lock);
--	if (ret) {
--		struct page *page;
--
--		page = shmem_read_mapping_page(
--					file_inode(obj->base.filp)->i_mapping,
--					page_offset);
--		if (!IS_ERR(page)) {
--			vmf->page = page;
--			ret = 0;
--		} else switch (PTR_ERR(page)) {
--			case -ENOSPC:
--			case -ENOMEM:
--				ret = VM_FAULT_OOM;
--				break;
--			case -EBUSY:
--				ret = VM_FAULT_RETRY;
--				break;
--			case -EFAULT:
--			case -EINVAL:
--				ret = VM_FAULT_SIGBUS;
--				break;
--			default:
--				WARN_ON(PTR_ERR(page));
--				ret = VM_FAULT_SIGBUS;
--				break;
--		}
- 
--	}
- 	return ret;
- }
- 
-@@ -277,32 +258,93 @@ static const struct file_operations vgem_driver_fops = {
- 	.release	= drm_release,
- };
- 
--static struct page **vgem_pin_pages(struct drm_vgem_gem_object *bo)
-+/* Called under pages_lock, except in free path (where it can't race): */
-+static void sync_and_unpin(struct drm_vgem_gem_object *bo)
- {
--	mutex_lock(&bo->pages_lock);
--	if (bo->pages_pin_count++ == 0) {
--		struct page **pages;
-+	struct drm_device *dev = bo->base.dev;
-+
-+	if (bo->table) {
-+		dma_sync_sg_for_cpu(dev->dev, bo->table->sgl,
-+				bo->table->nents, DMA_BIDIRECTIONAL);
-+		sg_free_table(bo->table);
-+		kfree(bo->table);
-+		bo->table = NULL;
-+	}
-+
-+	if (bo->pages) {
-+		drm_gem_put_pages(&bo->base, bo->pages, true, true);
-+		bo->pages = NULL;
-+	}
-+}
-+
-+static struct page **pin_and_sync(struct drm_vgem_gem_object *bo)
-+{
-+	struct drm_device *dev = bo->base.dev;
-+	int npages = bo->base.size >> PAGE_SHIFT;
-+	struct page **pages;
-+	struct sg_table *sgt;
-+
-+	WARN_ON(!mutex_is_locked(&bo->pages_lock));
-+
-+	pages = drm_gem_get_pages(&bo->base);
-+	if (IS_ERR(pages)) {
-+		bo->pages_pin_count--;
-+		mutex_unlock(&bo->pages_lock);
-+		return pages;
-+	}
- 
--		pages = drm_gem_get_pages(&bo->base);
--		if (IS_ERR(pages)) {
--			bo->pages_pin_count--;
--			mutex_unlock(&bo->pages_lock);
--			return pages;
--		}
-+	sgt = drm_prime_pages_to_sg(pages, npages);
-+	if (IS_ERR(sgt)) {
-+		dev_err(dev->dev,
-+			"failed to allocate sgt: %ld\n",
-+			PTR_ERR(bo->table));
-+		drm_gem_put_pages(&bo->base, pages, false, false);
-+		mutex_unlock(&bo->pages_lock);
-+		return ERR_CAST(bo->table);
-+	}
-+
-+	/*
-+	 * Flush the object from the CPU cache so that importers
-+	 * can rely on coherent indirect access via the exported
-+	 * dma-address.
-+	 */
-+	dma_sync_sg_for_device(dev->dev, sgt->sgl,
-+			sgt->nents, DMA_BIDIRECTIONAL);
-+
-+	bo->pages = pages;
-+	bo->table = sgt;
-+
-+	return pages;
-+}
-+
-+static struct page **vgem_pin_pages(struct drm_vgem_gem_object *bo)
-+{
-+	struct page **pages;
- 
--		bo->pages = pages;
-+	mutex_lock(&bo->pages_lock);
-+	if (bo->pages_pin_count++ == 0 && !bo->pages) {
-+		pages = pin_and_sync(bo);
-+	} else {
-+		WARN_ON(!bo->pages);
-+		pages = bo->pages;
- 	}
- 	mutex_unlock(&bo->pages_lock);
- 
--	return bo->pages;
-+	return pages;
- }
- 
- static void vgem_unpin_pages(struct drm_vgem_gem_object *bo)
- {
-+	/*
-+	 * We shouldn't hit this for imported bo's.. in the import
-+	 * case we don't own the scatter-table
-+	 */
-+	WARN_ON(bo->base.import_attach);
-+
- 	mutex_lock(&bo->pages_lock);
- 	if (--bo->pages_pin_count == 0) {
--		drm_gem_put_pages(&bo->base, bo->pages, true, true);
--		bo->pages = NULL;
-+		WARN_ON(!bo->table);
-+		sync_and_unpin(bo);
- 	}
- 	mutex_unlock(&bo->pages_lock);
- }
-@@ -310,18 +352,12 @@ static void vgem_unpin_pages(struct drm_vgem_gem_object *bo)
- static int vgem_prime_pin(struct drm_gem_object *obj)
- {
- 	struct drm_vgem_gem_object *bo = to_vgem_bo(obj);
--	long n_pages = obj->size >> PAGE_SHIFT;
- 	struct page **pages;
- 
- 	pages = vgem_pin_pages(bo);
- 	if (IS_ERR(pages))
- 		return PTR_ERR(pages);
- 
--	/* Flush the object from the CPU cache so that importers can rely
--	 * on coherent indirect access via the exported dma-address.
--	 */
--	drm_clflush_pages(pages, n_pages);
--
- 	return 0;
- }
- 
+ #if defined(CONFIG_ARM64_64K_PAGES) || CONFIG_PGTABLE_LEVELS < 3
+-#define pud_sect(pud)		(0)
+-#define pud_table(pud)		(1)
++static inline bool pud_sect(pud_t pud) { return false; }
++static inline bool pud_table(pud_t pud) { return true; }
+ #else
+ #define pud_sect(pud)		((pud_val(pud) & PUD_TYPE_MASK) == \
+ 				 PUD_TYPE_SECT)
 -- 
 2.20.1
 
