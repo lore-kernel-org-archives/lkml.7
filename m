@@ -2,79 +2,126 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61CE4C32751
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF0EBC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:04:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27632216B7
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:02:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565107322;
-	bh=HOrSVJmekUuoCcV/AI4yIkSlnbHhBNxOYMrMq6QoUfA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2qcHTxnyxr3XT4+gQdPAxUpkzTbjA/5gzXsG9hBHHtyEyuPrlf2SF746yzOb5fqG1
-	 m9l229rR+1gJ2KquVQkQ1juxLf4T+moxgciJJVABr2gqmBGJIax/osPgasTa1YxSeN
-	 M72KS8o4dUTb1wISQ7lqPbaUmOHHxBv3rQDfshoA=
+	by mail.kernel.org (Postfix) with ESMTP id 9FACE20651
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:04:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TE+gQkru"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387540AbfHFQCB (ORCPT
+        id S2387577AbfHFQEF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 12:02:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46884 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728756AbfHFQCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 12:02:01 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 724DA20818;
-        Tue,  6 Aug 2019 16:01:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565107319;
-        bh=HOrSVJmekUuoCcV/AI4yIkSlnbHhBNxOYMrMq6QoUfA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=p1wdzBKALR62tUMD+QaTFEmzmEaW/8ZtLkwmt1k0SZpOfKlq8F7+00YtT0PDB671O
-         6MCbL6mxtDPl/Pm1xnT3zD9QAOfdVoyNYCokwpqFYdpH7cNXhUex7HHgh++7A4cFhk
-         kRXe/2bFa4GIKUztyTDJD0mY2eJ5H4q9xqTXxgWQ=
-Date:   Tue, 6 Aug 2019 18:01:57 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.2 000/131] 5.2.7-stable review
-Message-ID: <20190806160157.GA1988@kroah.com>
-References: <20190805124951.453337465@linuxfoundation.org>
- <20190806155020.GE12156@roeck-us.net>
+        Tue, 6 Aug 2019 12:04:05 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41230 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728927AbfHFQEF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 12:04:05 -0400
+Received: by mail-pf1-f196.google.com with SMTP id m30so41754953pff.8;
+        Tue, 06 Aug 2019 09:04:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NFpfgZSca4f/il0m1rKI2O4H3v5HdUMXHwHA02nA/gw=;
+        b=TE+gQkruCFbNMB/Bu4p0yuUTFx9lKVSAGgQBrtYD6EGsG0av5zdwsHkYq1Sp1GIvtM
+         rlzGKiG3YM34heVySo0vYaGr2yyGdDIQ7PogfTxA2MvF8azUoXigPq+H+HidWl+wWWFy
+         IS7251UWjAF6tbeVDkz4TsGuQoTfdb5xZn+imMLYwvUFcDYkUlcYJdekV90RUDbLS8ey
+         yg9BOjgq3V201eosTOS30qplWsJFoMpdp/cPlXIrWER76kLP14a/gJhDsLkRQhqojDzO
+         Ju/gdexcQHujRtqJ/RCpeyUknxZO/nnrBf5O+BsUOvdtkfBI033CqT5w1xmcfpV+mUIR
+         JJpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NFpfgZSca4f/il0m1rKI2O4H3v5HdUMXHwHA02nA/gw=;
+        b=qjYRWpvE+2/tDqRnGLAqUd7DbFVwQX1kAQD/2UY8HJy8NImOK4V5EnRvjzY8qisfg0
+         YEfjOM9LtuTIk9aC/b9KtRO0Zj3X2KmPMWyMeBfZuhT5vPYDI0Ss3Ttkp9jtkzNp7AWD
+         UZl+G5zbHWVtLW1VaDvEoY4DZOG3HGCebGw0R5vHlI1wq3YKHGNwx0YKoQWG3rsOGtlQ
+         mUUzeawoJpR+40pWhNRNbDgYYN/Xws9h6tI2acrFH36uXsi52FSgkAZqati6+I8B2mV7
+         lSh83yCUoR9I1auV1LuN2w2uffZxWn+1XUt2pruG/enAqpH2AEbPB06hEU0f83E6zMOz
+         6t9Q==
+X-Gm-Message-State: APjAAAW86wk0WGL5+LUmr7FITl6lQZmDeSIFerg01TcaRid+tGjxuUDU
+        xa7JGmupP+dM2iAoX6KxdkU=
+X-Google-Smtp-Source: APXvYqzY19DJR7nKb84UZdsM6H3VktbfteX5pl3p78jNZcz9qG+RZxohnFHnZ7lhZbaKQnQn8Y0+gA==
+X-Received: by 2002:a63:b904:: with SMTP id z4mr3605353pge.388.1565107443803;
+        Tue, 06 Aug 2019 09:04:03 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id o24sm162749731pfp.135.2019.08.06.09.04.02
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 06 Aug 2019 09:04:03 -0700 (PDT)
+Date:   Tue, 6 Aug 2019 09:04:00 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Input: applespi - use struct_size() helper
+Message-ID: <20190806160400.GC178933@dtor-ws>
+References: <20190806000638.GA4827@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190806155020.GE12156@roeck-us.net>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190806000638.GA4827@embeddedor>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 08:50:20AM -0700, Guenter Roeck wrote:
-> On Mon, Aug 05, 2019 at 03:01:27PM +0200, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.2.7 release.
-> > There are 131 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Wed 07 Aug 2019 12:47:58 PM UTC.
-> > Anything received after that time might be too late.
-> > 
+On Mon, Aug 05, 2019 at 07:06:38PM -0500, Gustavo A. R. Silva wrote:
+> One of the more common cases of allocation size calculations is finding
+> the size of a structure that has a zero-sized array at the end, along
+> with memory for some number of elements for that array. For example:
 > 
-> Build results:
-> 	total: 159 pass: 159 fail: 0
-> Qemu test results:
-> 	total: 364 pass: 364 fail: 0
+> struct touchpad_protocol {
+> 	...
+>         struct tp_finger        fingers[0];
+> };
+> 
+> Make use of the struct_size() helper instead of an open-coded version
+> in order to avoid any potential type mistakes.
+> 
+> So, replace the following form:
+> 
+> sizeof(*tp) + tp->number_of_fingers * sizeof(tp->fingers[0]);
+> 
+> with:
+> 
+> struct_size(tp, fingers, tp->number_of_fingers)
+> 
+> This code was detected with the help of Coccinelle.
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-Wonderful, thanks for testing all of these and letting me know.
+Applied, thank you.
 
-greg k-h
+> ---
+>  drivers/input/keyboard/applespi.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/input/keyboard/applespi.c b/drivers/input/keyboard/applespi.c
+> index acf34a5ff571..584289b67fb3 100644
+> --- a/drivers/input/keyboard/applespi.c
+> +++ b/drivers/input/keyboard/applespi.c
+> @@ -1494,8 +1494,7 @@ static void applespi_got_data(struct applespi_data *applespi)
+>  		size_t tp_len;
+>  
+>  		tp = &message->touchpad;
+> -		tp_len = sizeof(*tp) +
+> -			 tp->number_of_fingers * sizeof(tp->fingers[0]);
+> +		tp_len = struct_size(tp, fingers, tp->number_of_fingers);
+>  
+>  		if (le16_to_cpu(message->length) + 2 != tp_len) {
+>  			dev_warn_ratelimited(&applespi->spi->dev,
+> -- 
+> 2.22.0
+> 
+
+-- 
+Dmitry
