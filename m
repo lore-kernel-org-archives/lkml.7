@@ -2,88 +2,132 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B95C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:16:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 437EFC32751
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:17:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 057EC216B7
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:16:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565104560;
-	bh=la0HnOemoXK5fpvWjp+yCiuvCkWWSLx12p8REZ1hLrc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ANsFB65sj21ylPI1JTkgjJ2OY9FDaZuvAH72Sc6YCA/FkkdOiC4m5j9kurRS/oDa7
-	 40vDir1OVnjSRPcuDeur+ShTnv6FgCjm3monWRseO8C9BNbWDHBnlga0vTkO7vI95a
-	 Ikp1uohJy8HuZMzIX2ea9sU6hxJcfh9+60t5DByM=
+	by mail.kernel.org (Postfix) with ESMTP id 156CF20717
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:17:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WLHNTNtd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732757AbfHFPP7 (ORCPT
+        id S1732801AbfHFPRK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 11:15:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58554 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726713AbfHFPP6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 11:15:58 -0400
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A620D2173C;
-        Tue,  6 Aug 2019 15:15:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565104557;
-        bh=la0HnOemoXK5fpvWjp+yCiuvCkWWSLx12p8REZ1hLrc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=cScU+ROGIiEoPjPJtTRdXG1cbQsMMpzEBSty6kfgERiB6umRY2L+C2ht5GwKKeCdJ
-         nf0igOibxERc7xRV173c1Dp8A004bt+yeTKLrOFqRSGcUO70GxzHw5vhMW517vqGh3
-         exHqFJOsZ4QKxPe/HxRcIXgWmdcw20oZH+8I7bEQ=
-Received: by mail-qk1-f170.google.com with SMTP id g18so63145536qkl.3;
-        Tue, 06 Aug 2019 08:15:57 -0700 (PDT)
-X-Gm-Message-State: APjAAAVppu63WgttGv36475I5TjltgHt8Lu1MVjC/pPlv0rwbE2KmE0N
-        X7DGuaZJwiNMorb5l6naVpbdLkMt7lPorqZrkQ==
-X-Google-Smtp-Source: APXvYqwLPJFWVImQ45weKYeyNJR2eA5NTRfK2u/H55qjIL0tD0cxfdGp8MnhGn/VAZvOKrsEobtM9NSgRSK3rhzUNug=
-X-Received: by 2002:a37:a010:: with SMTP id j16mr3781144qke.152.1565104556857;
- Tue, 06 Aug 2019 08:15:56 -0700 (PDT)
+        Tue, 6 Aug 2019 11:17:10 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:34238 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726713AbfHFPRJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 11:17:09 -0400
+Received: by mail-pf1-f194.google.com with SMTP id b13so41676616pfo.1
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 08:17:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lXgJn1gEuR2HESTa1ndelxSYh8xdRTY96+2aKnOkV4E=;
+        b=WLHNTNtdvYZnGps9OKP2aN43a4ST6cZGZOzKvDY82EUdEZiXShDnHzLjPviIjHaCQq
+         j/zAqk7SmwONd+9FeIAM1eASQE0RKO8jBTjCHCeI5eKmP1drc2JM6+2/QsZhH/3ctL6v
+         oV8pwoqflV4QZpiaqoxtny/FIkf75tD1dFH/kTUOwee9YF4NWA7xakHdG15RhFesxO6L
+         zQ5magnirFxDDxBr+jnRfQSGWVJYJryBbQP9MY9XcVBFLZU6rLAbCDUYAUDb7u2fRU1g
+         U372AsWFP1bA+PfiXCCQ2hxhp80+oxjwt3M1Y1IhcwKMyZOqlLizz7jK06Aw7RzBTmH0
+         fXpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lXgJn1gEuR2HESTa1ndelxSYh8xdRTY96+2aKnOkV4E=;
+        b=jePiULIBSGtZLW1mwbXgFYvvv6vDxbgyRtGR6o8oFNYGhhhuEC27j0MY8fhI38QBd/
+         /yEE2jA2PpiDQSWT9C03suYNa1FOUR0XSkv37Cj/3paR3C3XYJhndkmOYGX/8dk8jjZF
+         lClHNpZjENtkh4umz/kT7Ci87L0S3uzmEW3B3RYfpvOGw/AHiqUgxHCaHXP1MTg2WkNH
+         WTqD2BcSZt9OVKJgT6ocDsWkwiP7u0rbj2FYQYS5+aJEVGjfZU5anWtPi1m52uvgz3MH
+         9bN8v5Lh/DDXGhC5nN8ccKKvvlg6f/wbwY82HHS9AjNyyGEHTHT0s2ilhtkiewmQZXuM
+         Hwaw==
+X-Gm-Message-State: APjAAAXieoSZLnkhiWNM6lf8lKyZWz9J24eqbG+VQtCQu2XlIAZghO1/
+        xwwIUZFtB9MGcyRcVTF+kvI=
+X-Google-Smtp-Source: APXvYqz6qPpUBClfeUoDRXj64wGcHBWfUs13obdwHRyXXmB71VN2YMQAJUzpw1nU1ef6aAc/KNytfg==
+X-Received: by 2002:a17:90a:b011:: with SMTP id x17mr3765254pjq.113.1565104629076;
+        Tue, 06 Aug 2019 08:17:09 -0700 (PDT)
+Received: from localhost.localdomain.localdomain ([2408:823c:c11:4c4:b8c3:8577:bf2f:2])
+        by smtp.gmail.com with ESMTPSA id b14sm22500814pga.20.2019.08.06.08.17.01
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 06 Aug 2019 08:17:08 -0700 (PDT)
+From:   Pengfei Li <lpf.vector@gmail.com>
+To:     akpm@linux-foundation.org
+Cc:     mgorman@techsingularity.net, vbabka@suse.cz, cai@lca.pw,
+        aryabinin@virtuozzo.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Pengfei Li <lpf.vector@gmail.com>
+Subject: [PATCH] mm/compaction: remove unnecessary zone parameter in isolate_migratepages()
+Date:   Tue,  6 Aug 2019 23:16:16 +0800
+Message-Id: <20190806151616.21107-1-lpf.vector@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190806125041.16105-1-narmstrong@baylibre.com> <20190806125041.16105-3-narmstrong@baylibre.com>
-In-Reply-To: <20190806125041.16105-3-narmstrong@baylibre.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 6 Aug 2019 09:15:45 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKnzNMittFbvmz+ELu9UVMkmPmFoVT8ydWOYtCST+MwVA@mail.gmail.com>
-Message-ID: <CAL_JsqKnzNMittFbvmz+ELu9UVMkmPmFoVT8ydWOYtCST+MwVA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] dt-bindings: net: meson-dwmac: convert to yaml
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        devicetree@vger.kernel.org, netdev <netdev@vger.kernel.org>,
-        linux-amlogic@lists.infradead.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 6, 2019 at 6:50 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> Now that we have the DT validation in place, let's convert the device tree
-> bindings for the Synopsys DWMAC Glue for Amlogic SoCs over to a YAML schemas.
->
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  .../bindings/net/amlogic,meson-dwmac.yaml     | 113 ++++++++++++++++++
->  .../devicetree/bindings/net/meson-dwmac.txt   |  71 -----------
->  .../devicetree/bindings/net/snps,dwmac.yaml   |   5 +
->  3 files changed, 118 insertions(+), 71 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/net/amlogic,meson-dwmac.yaml
->  delete mode 100644 Documentation/devicetree/bindings/net/meson-dwmac.txt
+Like commit 40cacbcb3240 ("mm, compaction: remove unnecessary zone
+parameter in some instances"), remove unnecessary zone parameter.
 
-I don't love the compatible schema with 'additionalItems: true' and
-contains, but I guess it is what it is. I'm hopeful schemas help limit
-how many variations we end up with.
+No functional change.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Pengfei Li <lpf.vector@gmail.com>
+---
+ mm/compaction.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-Rob
+diff --git a/mm/compaction.c b/mm/compaction.c
+index 952dc2fb24e5..685c3e3d0a0f 100644
+--- a/mm/compaction.c
++++ b/mm/compaction.c
+@@ -1737,8 +1737,7 @@ static unsigned long fast_find_migrateblock(struct compact_control *cc)
+  * starting at the block pointed to by the migrate scanner pfn within
+  * compact_control.
+  */
+-static isolate_migrate_t isolate_migratepages(struct zone *zone,
+-					struct compact_control *cc)
++static isolate_migrate_t isolate_migratepages(struct compact_control *cc)
+ {
+ 	unsigned long block_start_pfn;
+ 	unsigned long block_end_pfn;
+@@ -1756,8 +1755,8 @@ static isolate_migrate_t isolate_migratepages(struct zone *zone,
+ 	 */
+ 	low_pfn = fast_find_migrateblock(cc);
+ 	block_start_pfn = pageblock_start_pfn(low_pfn);
+-	if (block_start_pfn < zone->zone_start_pfn)
+-		block_start_pfn = zone->zone_start_pfn;
++	if (block_start_pfn < cc->zone->zone_start_pfn)
++		block_start_pfn = cc->zone->zone_start_pfn;
+ 
+ 	/*
+ 	 * fast_find_migrateblock marks a pageblock skipped so to avoid
+@@ -1787,8 +1786,8 @@ static isolate_migrate_t isolate_migratepages(struct zone *zone,
+ 		if (!(low_pfn % (SWAP_CLUSTER_MAX * pageblock_nr_pages)))
+ 			cond_resched();
+ 
+-		page = pageblock_pfn_to_page(block_start_pfn, block_end_pfn,
+-									zone);
++		page = pageblock_pfn_to_page(block_start_pfn,
++						block_end_pfn, cc->zone);
+ 		if (!page)
+ 			continue;
+ 
+@@ -2158,7 +2157,7 @@ compact_zone(struct compact_control *cc, struct capture_control *capc)
+ 			cc->rescan = true;
+ 		}
+ 
+-		switch (isolate_migratepages(cc->zone, cc)) {
++		switch (isolate_migratepages(cc)) {
+ 		case ISOLATE_ABORT:
+ 			ret = COMPACT_CONTENDED;
+ 			putback_movable_pages(&cc->migratepages);
+-- 
+2.21.0
+
