@@ -2,71 +2,80 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C029FC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:16:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C627C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EB022070C
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:16:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 275502070D
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:19:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731994AbfHFIQE (ORCPT
+        id S1732088AbfHFITK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 04:16:04 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49192 "EHLO mx1.redhat.com"
+        Tue, 6 Aug 2019 04:19:10 -0400
+Received: from mga02.intel.com ([134.134.136.20]:35535 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727259AbfHFIQE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 04:16:04 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 09F9C2D6A3D;
-        Tue,  6 Aug 2019 08:16:04 +0000 (UTC)
-Received: from gondolin (dhcp-192-181.str.redhat.com [10.33.192.181])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 583BC10016E8;
-        Tue,  6 Aug 2019 08:15:58 +0000 (UTC)
-Date:   Tue, 6 Aug 2019 10:15:56 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Parav Pandit <parav@mellanox.com>
-Cc:     kvm@vger.kernel.org, wankhede@nvidia.com,
-        linux-kernel@vger.kernel.org, alex.williamson@redhat.com,
-        cjia@nvidia.com
-Subject: Re: [PATCH 1/2] vfio-mdev/mtty: Simplify interrupt generation
-Message-ID: <20190806101556.3ca75900.cohuck@redhat.com>
-In-Reply-To: <20190802065905.45239-2-parav@mellanox.com>
-References: <20190802065905.45239-1-parav@mellanox.com>
-        <20190802065905.45239-2-parav@mellanox.com>
-Organization: Red Hat GmbH
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Tue, 06 Aug 2019 08:16:04 +0000 (UTC)
+        id S1728918AbfHFITJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 04:19:09 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 01:11:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,352,1559545200"; 
+   d="scan'208";a="176561599"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by orsmga003.jf.intel.com with ESMTP; 06 Aug 2019 01:11:48 -0700
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     akpm@linux-foundation.org, mhocko@suse.com, vbabka@suse.cz,
+        kirill.shutemov@linux.intel.com
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Wei Yang <richardw.yang@linux.intel.com>
+Subject: [PATCH] mm/mmap.c: refine data locality of find_vma_prev
+Date:   Tue,  6 Aug 2019 16:11:23 +0800
+Message-Id: <20190806081123.22334-1-richardw.yang@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri,  2 Aug 2019 01:59:04 -0500
-Parav Pandit <parav@mellanox.com> wrote:
+When addr is out of the range of the whole rb_tree, pprev will points to
+the biggest node. find_vma_prev gets is by going through the right most
+node of the tree.
 
-> While generating interrupt, mdev_state is already available for which
-> interrupt is generated.
-> Instead of doing indirect way from state->device->uuid-> to searching
-> state linearly in linked list on every interrupt generation,
-> directly use the available state.
-> 
-> Hence, simplify the code to use mdev_state and remove unused helper
-> function with that.
-> 
-> Signed-off-by: Parav Pandit <parav@mellanox.com>
-> ---
->  samples/vfio-mdev/mtty.c | 39 ++++++++-------------------------------
->  1 file changed, 8 insertions(+), 31 deletions(-)
+Since only the last node is the one it is looking for, it is not
+necessary to assign pprev to those middle stage nodes. By assigning
+pprev to the last node directly, it tries to improve the function
+locality a little.
 
-This is sample code, so no high impact; but it makes sense to set a
-good example.
+Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+---
+ mm/mmap.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+diff --git a/mm/mmap.c b/mm/mmap.c
+index 7e8c3e8ae75f..284bc7e51f9c 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -2271,11 +2271,10 @@ find_vma_prev(struct mm_struct *mm, unsigned long addr,
+ 		*pprev = vma->vm_prev;
+ 	} else {
+ 		struct rb_node *rb_node = mm->mm_rb.rb_node;
+-		*pprev = NULL;
+-		while (rb_node) {
+-			*pprev = rb_entry(rb_node, struct vm_area_struct, vm_rb);
++		while (rb_node && rb_node->rb_right)
+ 			rb_node = rb_node->rb_right;
+-		}
++		*pprev = rb_node ? NULL
++			 : rb_entry(rb_node, struct vm_area_struct, vm_rb);
+ 	}
+ 	return vma;
+ }
+-- 
+2.17.1
+
