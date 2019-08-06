@@ -2,114 +2,112 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF74FC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 03:19:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B70EC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 03:24:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0C4C20C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 03:19:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="xQaMHCEu"
+	by mail.kernel.org (Postfix) with ESMTP id E6777216B7
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 03:24:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731531AbfHFDTi (ORCPT
+        id S1731160AbfHFDYO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 5 Aug 2019 23:19:38 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:34026 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729170AbfHFDTi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 5 Aug 2019 23:19:38 -0400
-Received: by mail-wm1-f66.google.com with SMTP id w9so7929147wmd.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 20:19:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dr2+cEWOTjWIrHgq1rAPpBc6r9tZtYF1YbUnLR69BFg=;
-        b=xQaMHCEu94MSWV0KnK1zA0WkUuR9+C2JoA7OyFGL1bMhbTfgWoKYiPiBLsiLmW+h+x
-         MQ3B6t0N0TyWSy9h9rZc8F+4VTFAIH8Iedrf8KilAY2c5AOdX2tC2CndcOeVjxSy2GHO
-         GI93PGu9zITG/U5rrHWGkkA5Ju5ktIJiHKkSvIGs+vOJ9Kez1Xb0dI8QvVhhWkfzaKsV
-         tMP55LDR3YYdlt9K21sGMwHzYF9O1rH+IegheKtwbw9tlS2hUgPhoge/HJIJWt3xMgRz
-         uA7D4HcLjXGGPwdp50RKYHh/RJ0kRwQ0JvqWO80/m5fi1DQlNlA09FUD+/020u8Gvf4D
-         8o6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dr2+cEWOTjWIrHgq1rAPpBc6r9tZtYF1YbUnLR69BFg=;
-        b=gd5s/zkNj3YzeDdWdU+tTcQR+DmXmsj+9JdvB0gD5IAqQOEwoqXGzzAo3PXABjwYeq
-         teG0iHCq6iajbonOtcM59Y4UXuja+3G3e/YaJkbQYjfwFiZ/VJuq/uiXJZqz7AABKiTq
-         StP1UoursbpYR8gtdloMz2uxgdOVC/CLS++ZpIjN0Vc6+nZib7B3G8OAZjtvWUOTMnUe
-         X6S2A8aEgOlJ/cOwOi0BPBB/dbHz3mv2SEaMFuiPIRKR+OLQlflf/VXiF88hB0mcEiK9
-         Dx8NlHaOgew0q7j7qh5ApGctfBjR6/9aRVMGMwJwK74a9SFpVAATdiZVUBrCv0w0Q0xS
-         oM3g==
-X-Gm-Message-State: APjAAAXso7VVs0f0hkbU5/Y+VobNgTFJ+ZiX7f8zH2lxSNielNEqrRnw
-        nn9nL2tjw1NqQGbaPUluPstcVu634sYrrc9bjqeFPQ==
-X-Google-Smtp-Source: APXvYqwH6qC9nSAJAWBGGxZ0uXvKgHP/raIkzQCYLK0pRSGDcTtZMMyScdsr3bxWn1y3xiVpXqFzA7f5nHQEnBJZ3yw=
-X-Received: by 2002:a05:600c:254b:: with SMTP id e11mr1313747wma.171.1565061575887;
- Mon, 05 Aug 2019 20:19:35 -0700 (PDT)
+        Mon, 5 Aug 2019 23:24:14 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:52942 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729383AbfHFDYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 5 Aug 2019 23:24:14 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 4475FF721CE4C434936;
+        Tue,  6 Aug 2019 11:24:12 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 6 Aug 2019
+ 11:24:10 +0800
+Subject: Re: [PATCH v2] f2fs: fix wrong available node count calculation
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
+References: <20190805102725.27834-1-yuchao0@huawei.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <7a47ec24-2352-7438-bed2-493a89d5c576@huawei.com>
+Date:   Tue, 6 Aug 2019 11:24:22 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <20190805134201.2814-1-anup.patel@wdc.com> <20190805134201.2814-12-anup.patel@wdc.com>
- <21bdde39-8d33-6aae-e729-476ce11406a3@redhat.com>
-In-Reply-To: <21bdde39-8d33-6aae-e729-476ce11406a3@redhat.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Tue, 6 Aug 2019 08:49:24 +0530
-Message-ID: <CAAhSdy03G-8S0y7kg96PzC-4npdEFv+WCCuBvoCbEt9244kDOg@mail.gmail.com>
-Subject: Re: [PATCH v3 11/19] RISC-V: KVM: Implement VMID allocator
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Radim K <rkrcmar@redhat.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190805102725.27834-1-yuchao0@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 5, 2019 at 9:33 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 05/08/19 15:43, Anup Patel wrote:
-> > +     spin_lock(&vmid_lock);
-> > +
-> > +     /*
-> > +      * We need to re-check the vmid_version here to ensure that if
-> > +      * another vcpu already allocated a valid vmid for this vm.
-> > +      */
-> > +     if (!kvm_riscv_stage2_vmid_ver_changed(vmid)) {
-> > +             spin_unlock(&vmid_lock);
-> > +             return;
-> > +     }
-> > +
-> > +     /* First user of a new VMID version? */
-> > +     if (unlikely(vmid_next == 0)) {
-> > +             WRITE_ONCE(vmid_version, READ_ONCE(vmid_version) + 1);
-> > +             vmid_next = 1;
-> > +
-> > +             /*
-> > +              * On SMP, we know no other CPUs can use this CPU's or
-> > +              * each other's VMID after forced exit returns since the
-> > +              * vmid_lock blocks them from re-entry to the guest.
-> > +              */
-> > +             spin_unlock(&vmid_lock);
-> > +             kvm_flush_remote_tlbs(vcpu->kvm);
-> > +             spin_lock(&vmid_lock);
->
-> This comment is not true anymore, so this "if" should become a "while".
+On 2019/8/5 18:27, Chao Yu wrote:
+> In mkfs, we have counted quota file's node number in cp.valid_node_count,
+> so we have to avoid wrong substraction of quota node number in
+> .available_nid/.avail_node_count calculation.
+> 
+> f2fs_write_check_point_pack()
+> {
+> ..
+> 	set_cp(valid_node_count, 1 + c.quota_inum + c.lpf_inum);
+> 
+> Fixes: 292c196a3695 ("reserve nid resource for quota sysfile")
 
-Sure, I will update in v4.
+Jaegeuk,
 
-Regards,
-Anup
+Could you help to add prefix "f2fs: " into commit tile in your branch, I missed
+to add it. :P
+
+Thanks,
+
+> Fixes: 7b63f72f73af ("f2fs: fix to do sanity check on valid node/block count")
+> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> ---
+>  fs/f2fs/node.c  | 2 +-
+>  fs/f2fs/super.c | 6 ++----
+>  2 files changed, 3 insertions(+), 5 deletions(-)
+> 
+> diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
+> index a18b2a895771..d9ba1db2d01e 100644
+> --- a/fs/f2fs/node.c
+> +++ b/fs/f2fs/node.c
+> @@ -2964,7 +2964,7 @@ static int init_node_manager(struct f2fs_sb_info *sbi)
+>  
+>  	/* not used nids: 0, node, meta, (and root counted as valid node) */
+>  	nm_i->available_nids = nm_i->max_nid - sbi->total_valid_node_count -
+> -				sbi->nquota_files - F2FS_RESERVED_NODE_NUM;
+> +						F2FS_RESERVED_NODE_NUM;
+>  	nm_i->nid_cnt[FREE_NID] = 0;
+>  	nm_i->nid_cnt[PREALLOC_NID] = 0;
+>  	nm_i->nat_cnt = 0;
+> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+> index 6a7f1166d068..118a31f90a37 100644
+> --- a/fs/f2fs/super.c
+> +++ b/fs/f2fs/super.c
+> @@ -1297,8 +1297,7 @@ static int f2fs_statfs(struct dentry *dentry, struct kstatfs *buf)
+>  	else
+>  		buf->f_bavail = 0;
+>  
+> -	avail_node_count = sbi->total_node_count - sbi->nquota_files -
+> -						F2FS_RESERVED_NODE_NUM;
+> +	avail_node_count = sbi->total_node_count - F2FS_RESERVED_NODE_NUM;
+>  
+>  	if (avail_node_count > user_block_count) {
+>  		buf->f_files = user_block_count;
+> @@ -2750,8 +2749,7 @@ int f2fs_sanity_check_ckpt(struct f2fs_sb_info *sbi)
+>  	}
+>  
+>  	valid_node_count = le32_to_cpu(ckpt->valid_node_count);
+> -	avail_node_count = sbi->total_node_count - sbi->nquota_files -
+> -						F2FS_RESERVED_NODE_NUM;
+> +	avail_node_count = sbi->total_node_count - F2FS_RESERVED_NODE_NUM;
+>  	if (valid_node_count > avail_node_count) {
+>  		f2fs_err(sbi, "Wrong valid_node_count: %u, avail_node_count: %u",
+>  			 valid_node_count, avail_node_count);
+> 
