@@ -4,54 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC6D5C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:35:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26558C32751
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:35:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6A102187F
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:35:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5B10217F5
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:35:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127354;
-	bh=deWW5vlBj++ysuzD6zOU7rfEcdSPo/KELRiGC7TA8uA=;
+	s=default; t=1565127358;
+	bh=sLYG0LYrflSu3iY1UZXemJUKsxG0IIDikOYOm9YDNvs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GDrKsTkpDJy9925pyVnEibW7VgbNrHUYjNwp0J3ityfohTs9qzymA2+SWb0Cc6yr+
-	 SqEiEPsbgWaGpb1IIWD7ToVqCfcV5nMS70qbRYBCs/l6pvY+g7cLznVfvQLZUKHRLE
-	 ioENsyo07XjKXqQkNcCegTqe04rQe3OxuANmNZdE=
+	b=O7AUmBQzUq7ZWL4u1v2CZ+lgTKJ3xQxk5CNkbXTbAqVtJbGtTowY4ZXX1ClEqh1fO
+	 /6nH98m9MiKO7jx0TMxQ2GUVqWBh195GTk+H8xBX2rvpLMl/guxt4qzc1WEhgkuLBQ
+	 8QOsJMPSEZQiWTHsOFSJix64AaR+wNzTpbOk1RiE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728740AbfHFVfx (ORCPT
+        id S1728762AbfHFVf5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:35:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53602 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 17:35:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728652AbfHFVfs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:35:48 -0400
+        id S1728652AbfHFVfy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:35:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAB1A217D9;
-        Tue,  6 Aug 2019 21:35:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64A09217D9;
+        Tue,  6 Aug 2019 21:35:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127347;
-        bh=deWW5vlBj++ysuzD6zOU7rfEcdSPo/KELRiGC7TA8uA=;
+        s=default; t=1565127353;
+        bh=sLYG0LYrflSu3iY1UZXemJUKsxG0IIDikOYOm9YDNvs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zdwH1BAMP/7d98RD9MPhDXWbSGB+eKt9Qrf2t9g51nzHJBEcRnBglnh10UR50sFKV
-         ZQrOhz2w2QwJu0qhNbCg6YO9PuV1tBnSY0wuIX9aODcW8IEXqNmA1ah//lew6ETLlo
-         lwzqCYxr7IF3QytuM44zsaFWf0dV+kuu6dbUeAHc=
+        b=KMMmFy8XC/J/tEMHtzMrhMXmTnLGjJ03h8RYOSRoFlKexginBnoG9E/ZU+jIS1rEJ
+         mR3eiKZCAnUhSk7ezmdkt8hHtKAEOInUayDhQaJ4kuEcvbfxqP1idoh888lRfvbTyv
+         i0LyxVjlJByMAhfSniJW+s8eyxeVMe6Ah8vgUnMA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 14/32] scsi: qla2xxx: Fix possible fcport null-pointer dereferences
-Date:   Tue,  6 Aug 2019 17:35:02 -0400
-Message-Id: <20190806213522.19859-14-sashal@kernel.org>
+Cc:     Wang Xiayang <xywang.sjtu@sjtu.edu.cn>,
+        Chunming Zhou <david1.zhou@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 16/32] drm/amdgpu: fix a potential information leaking bug
+Date:   Tue,  6 Aug 2019 17:35:04 -0400
+Message-Id: <20190806213522.19859-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190806213522.19859-1-sashal@kernel.org>
 References: <20190806213522.19859-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,48 +63,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Wang Xiayang <xywang.sjtu@sjtu.edu.cn>
 
-[ Upstream commit e82f04ec6ba91065fd33a6201ffd7cab840e1475 ]
+[ Upstream commit 929e571c04c285861e0bb049a396a2bdaea63282 ]
 
-In qla2x00_alloc_fcport(), fcport is assigned to NULL in the error
-handling code on line 4880:
-    fcport = NULL;
+Coccinelle reports a path that the array "data" is never initialized.
+The path skips the checks in the conditional branches when either
+of callback functions, read_wave_vgprs and read_wave_sgprs, is not
+registered. Later, the uninitialized "data" array is read
+in the while-loop below and passed to put_user().
 
-Then fcport is used on lines 4883-4886:
-    INIT_WORK(&fcport->del_work, qla24xx_delete_sess_fn);
-	INIT_WORK(&fcport->reg_work, qla_register_fcport_fn);
-	INIT_LIST_HEAD(&fcport->gnl_entry);
-	INIT_LIST_HEAD(&fcport->list);
+Fix the path by allocating the array with kcalloc().
 
-Thus, possible null-pointer dereferences may occur.
+The patch is simplier than adding a fall-back branch that explicitly
+calls memset(data, 0, ...). Also it does not need the multiplication
+1024*sizeof(*data) as the size parameter for memset() though there is
+no risk of integer overflow.
 
-To fix these bugs, qla2x00_alloc_fcport() directly returns NULL
-in the error handling code.
-
-These bugs are found by a static analysis tool STCheck written by us.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Acked-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Wang Xiayang <xywang.sjtu@sjtu.edu.cn>
+Reviewed-by: Chunming Zhou <david1.zhou@amd.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_init.c | 2 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_init.c b/drivers/scsi/qla2xxx/qla_init.c
-index f84f9bf150278..ddce32fe0513a 100644
---- a/drivers/scsi/qla2xxx/qla_init.c
-+++ b/drivers/scsi/qla2xxx/qla_init.c
-@@ -4732,7 +4732,7 @@ qla2x00_alloc_fcport(scsi_qla_host_t *vha, gfp_t flags)
- 		ql_log(ql_log_warn, vha, 0xd049,
- 		    "Failed to allocate ct_sns request.\n");
- 		kfree(fcport);
--		fcport = NULL;
-+		return NULL;
- 	}
- 	INIT_WORK(&fcport->del_work, qla24xx_delete_sess_fn);
- 	INIT_LIST_HEAD(&fcport->gnl_entry);
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
+index f5fb93795a69a..65cecfdd9b454 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
+@@ -707,7 +707,7 @@ static ssize_t amdgpu_debugfs_gpr_read(struct file *f, char __user *buf,
+ 	thread = (*pos & GENMASK_ULL(59, 52)) >> 52;
+ 	bank = (*pos & GENMASK_ULL(61, 60)) >> 60;
+ 
+-	data = kmalloc_array(1024, sizeof(*data), GFP_KERNEL);
++	data = kcalloc(1024, sizeof(*data), GFP_KERNEL);
+ 	if (!data)
+ 		return -ENOMEM;
+ 
 -- 
 2.20.1
 
