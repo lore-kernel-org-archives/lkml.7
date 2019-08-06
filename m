@@ -2,189 +2,121 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D1DCC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:30:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 942D2C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:32:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44DD02086D
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:30:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kOAGLiHH"
+	by mail.kernel.org (Postfix) with ESMTP id 66855216F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:32:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565127162;
+	bh=frBRW98Gphsjm7khOnwDtnCiYYJEpmxxx35acMgCkB8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=vlRQc585f3LdySkVOpLdt3vtKoY7i7X37NY7zEpzEj+4qqF02+/viZvhvz38+8SiT
+	 Y0QD5rZLgpHjH8ci7tTRNRAJD9w56OG2oCXJUjerotdJLNI2Fp1q/uqD131sBKBIJn
+	 hds6nXKNoa0Ch1/5Qgggw51+v3TbDZ4YTOP+vUe8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbfHFVag (ORCPT
+        id S1726631AbfHFVcl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:30:36 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:48034 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725974AbfHFVag (ORCPT
+        Tue, 6 Aug 2019 17:32:41 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:36349 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725974AbfHFVck (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:30:36 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x76LUIHF012505;
-        Tue, 6 Aug 2019 16:30:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1565127018;
-        bh=WdeZC33FQzUWVkojwaOQI3NxAt+YMap5Tl9hn+mPGaA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=kOAGLiHHmutdic+kFgKihOFdUxHKB7ihp+q0M1HR8vSrqzCpkJvEw4p6uF7yWq+JO
-         ff4xkY1QqHsvraG3Urzv98BF+dmBOffCU3lytoIrcPlUzD25N9ZHsjb4blGVvoS3bd
-         wunaAkYh25prIMpCyfE1RcAigwMMzRfE6zg9awew=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x76LUIEn119700
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 6 Aug 2019 16:30:18 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 6 Aug
- 2019 16:30:18 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 6 Aug 2019 16:30:18 -0500
-Received: from [128.247.58.153] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x76LUH4a105393;
-        Tue, 6 Aug 2019 16:30:18 -0500
-Subject: Re: [PATCH 0/6] hwspinlock: allow sharing of hwspinlocks
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-CC:     Fabien DESSENNE <fabien.dessenne@st.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        Benjamin GAIGNARD <benjamin.gaignard@st.com>
-References: <1552492237-28810-1-git-send-email-fabien.dessenne@st.com>
- <20190801191403.GA7234@tuxbook-pro>
- <1a057176-81ab-e302-4375-2717ceef6924@st.com>
- <20190805174659.GA23928@tuxbook-pro>
- <dcd1aeea-cffe-d5fb-af5a-e52efcc2e046@ti.com>
- <20190806182128.GD26807@tuxbook-pro>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <1aea3d28-29dc-f9de-3b86-cf777e0d5caa@ti.com>
-Date:   Tue, 6 Aug 2019 16:30:17 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 6 Aug 2019 17:32:40 -0400
+Received: by mail-oi1-f195.google.com with SMTP id c15so13424236oic.3;
+        Tue, 06 Aug 2019 14:32:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ef8vY14IPg+ARIOj2VrrOApE5VT46udp6YkWmmIY8Ms=;
+        b=C9tpcqn2Gg1FkvdmKFSoHZzZpu7xwyVY7lSOlgHozEIMXdpQGdGjlFZGhNTo//CHGA
+         z0f0OyVtxGZwCgGGqEoT18sEkm7LGTENIZT1LAQv4vfJ7JSwSo9E6RQQ1MKfqBs93EMn
+         g5a4SyThQ8EI9MEW8/Jt8qlcmlCrqEGnTUtrjCbzBwrN5nbvMh6Lpimd4h/kuGPYn4S8
+         MItErD+nfNesXZG+uUt4+82N6BHomyH0SloZH2cXNYZMnbbxKZYqMB8ty8dvakV4WOwm
+         4Bu2U/9jZ3mq/uVfhKl/XEsRIlrbVzO667+PiDpVWfxAcckczXaoxo2icywo+divFWLy
+         J9sw==
+X-Gm-Message-State: APjAAAWOvh9d7SKKkN5v2Np35ZG534woE8xnhYbEDoDa2lqbAAuHy2+5
+        dXIV0iJRZn4FaguH5zRAriNSmjUcuXvNf03RuHg=
+X-Google-Smtp-Source: APXvYqz5InPmzAE9CcFUiwV8OQSK3Rfqze+93pwnQo2dyWs4n8mTKQoIhMVewx9cL+IVA1slbun5a7mS7PvjzPnLM8g=
+X-Received: by 2002:aca:cdd3:: with SMTP id d202mr3451399oig.115.1565127159601;
+ Tue, 06 Aug 2019 14:32:39 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190806182128.GD26807@tuxbook-pro>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20190805175848.163558-1-trong@android.com> <20190805175848.163558-4-trong@android.com>
+ <5d48bbc2.1c69fb81.62114.5473@mx.google.com> <CANA+-vBFY_mVfhhK=5BL5m_yyQ5+GTE9bv32fk-qsfnAmfE4nA@mail.gmail.com>
+In-Reply-To: <CANA+-vBFY_mVfhhK=5BL5m_yyQ5+GTE9bv32fk-qsfnAmfE4nA@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 6 Aug 2019 23:32:27 +0200
+Message-ID: <CAJZ5v0ijZdTPi3dFrqcGwPo-gmCEOmjnShv=fLBW9L_8vDNuZQ@mail.gmail.com>
+Subject: Re: [PATCH v7 3/3] PM / wakeup: Show wakeup sources stats in sysfs
+To:     Tri Vo <trong@android.com>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Hridya Valsaraju <hridya@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Kalesh Singh <kaleshsingh@google.com>,
+        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/6/19 1:21 PM, Bjorn Andersson wrote:
-> On Tue 06 Aug 10:38 PDT 2019, Suman Anna wrote:
-> 
->> Hi Fabien,
->>
->> On 8/5/19 12:46 PM, Bjorn Andersson wrote:
->>> On Mon 05 Aug 01:48 PDT 2019, Fabien DESSENNE wrote:
->>>
->>>>
->>>> On 01/08/2019 9:14 PM, Bjorn Andersson wrote:
->>>>> On Wed 13 Mar 08:50 PDT 2019, Fabien Dessenne wrote:
-> [..]
->>>> B/ This would introduce some inconsistency between the two 'request' API
->>>> which are hwspin_lock_request() and hwspin_lock_request_specific().
->>>> hwspin_lock_request() looks for an unused lock, so requests for an exclusive
->>>> usage. On the other side, request_specific() would request shared locks.
->>>> Worst the following sequence can transform an exclusive usage into a shared
->>>>
->>>
->>> There is already an inconsistency in between these; as with above any
->>> system that uses both request() and request_specific() will be suffering
->>> from intermittent failures due to probe ordering.
->>>
->>>> one:
->>>>    -hwspin_lock_request() -> returns Id#0 (exclusive)
->>>>    -hwspin_lock_request() -> returns Id#1 (exclusive)
->>>>    -hwspin_lock_request_specific(0) -> returns Id#0 and makes Id#0 shared
->>>> Honestly I am not sure that this is a real issue, but it's better to have it
->>>> in mind before we take ay decision
->>
->> Wouldn't it be actually simpler to just introduce a new specific API
->> variant for this, similar to the reset core for example (it uses a
->> separate exclusive API), without having to modify the bindings at all.
->> It is just a case of your driver using the right API, and the core can
->> be modified to use the additional tag semantics based on the API. It
->> should avoid any confusion with say using a different second cell value
->> for the same lock in two different nodes.
->>
-> 
-> But this implies that there is an actual need to hold these locks
-> exclusively. Given that they are (except for the raw case) all wrapped
-> by Linux locking primitives there shouldn't be a problem sharing a lock
-> (except possibly for the raw case).
+On Tue, Aug 6, 2019 at 8:51 PM Tri Vo <trong@android.com> wrote:
+>
+> On Mon, Aug 5, 2019 at 4:29 PM Stephen Boyd <swboyd@chromium.org> wrote:
+> >
+> > Quoting Tri Vo (2019-08-05 10:58:48)
+> > > diff --git a/drivers/base/power/wakeup_stats.c b/drivers/base/power/wakeup_stats.c
+> > > new file mode 100644
+> > > index 000000000000..3a4f55028e27
+> > > --- /dev/null
+> > > +++ b/drivers/base/power/wakeup_stats.c
+> > > @@ -0,0 +1,161 @@
+> > [...]
+> > > +/**
+> > > + * wakeup_source_sysfs_add - Add wakeup_source attributes to sysfs.
+> > > + * @parent: Device given wakeup source is associated with (or NULL if virtual).
+> > > + * @ws: Wakeup source to be added in sysfs.
+> > > + */
+> > > +int wakeup_source_sysfs_add(struct device *parent, struct wakeup_source *ws)
+> > > +{
+> > > +       struct device *dev;
+> > > +
+> > > +       dev = device_create_with_groups(wakeup_class, parent, MKDEV(0, 0), ws,
+> > > +                                       wakeup_source_groups, "wakeup%d",
+> > > +                                       ws->id);
+> > > +       if (IS_ERR(dev))
+> > > +               return PTR_ERR(dev);
+> > > +       ws->dev = dev;
+> > > +       pm_runtime_no_callbacks(ws->dev);
+> >
+> > Does this only avoid adding runtime PM attributes?
+> >
+> > I thought we would call device_set_pm_not_required() on the device here.
+> > Probably requiring a bit of copy/paste from device_create_with_groups()
+> > so that it can be set before the device is registered. Or another
+> > version of device_create_with_groups() that does everything besides call
+> > device_add().
+>
+> Comments on pm_runtime_no_callbacks() say,
+>   "Set the power.no_callbacks flag, which tells the PM core that this
+>    device is power-managed through its parent and has no runtime PM
+>    callbacks of its own.  The runtime sysfs attributes will be removed."
+>
+> Sound like it's appropriate to apply this function to the wakeup source.
 
-Yes agreed, the HWLOCK_RAW and HWLOCK_IN_ATOMIC cases are unprotected. I
-am still trying to understand better the usecase to see if the same lock
-is being multiplexed for different protection contexts, or if all of
-them are protecting the same context.
+This is only useful if you ever enable PM-runtime for this device.
+Which you won't do.
 
-> 
-> I agree that we shouldn't specify this property in DT - if anything it
-> should be a variant of the API.
-> 
->> If you are sharing a hwlock on the Linux side, surely your driver should
->> be aware that it is a shared lock. The tag can be set during the first
->> request API, and you look through both tags when giving out a handle.
->>
-> 
-> Why would the driver need to know about it?
-
-Just the semantics if we were to support single user vs multiple users
-on Linux-side to even get a handle. Your point is that this may be moot
-since we have protection anyway other than the raw cases. But we need to
-be able to have the same API work across all cases.
-
-So far, it had mostly been that there would be one user on Linux
-competing with other equivalent peer entities on different processors.
-It is not common to have multiple users since these protection schemes
-are usually needed only at the lowest levels of a stack, so the
-exclusive handle stuff had been sufficient.
-
-> 
->> Obviously, the hwspin_lock_request() API usage semantics always had the
->> implied additional need for communicating the lock id to the other peer
->> entity, so a realistic usage is most always the specific API variant. I
->> doubt this API would be of much use for the shared driver usage. This
->> also implies that the client user does not care about specifying a lock
->> in DT.
->>
-> 
-> Afaict if the lock are shared then there shouldn't be a problem with
-> some clients using the request API and others request_specific(). As any
-> collisions would simply mean that there are more contention on the lock.
-> 
-> With the current exclusive model that is not possible and the success of
-> the request_specific will depend on probe order.
-> 
-> But perhaps it should be explicitly prohibited to use both APIs on the
-> same hwspinlock instance?
-
-Yeah, they are meant to be complimentary usage, though I doubt we will
-ever have any realistic users for the generic API if we haven't had a
-usage so far. I had posted a concept of reserved locks long back [1] to
-keep away certain locks from the generic requestor, but dropped it since
-we did not have an actual use-case needing it.
-
-regards
-Suman
-
-[1] https://lwn.net/Articles/611944/
+You could use device_set_pm_not_required(), though.
