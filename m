@@ -2,124 +2,118 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32DDFC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE3B5C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:32:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BC432173C
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:30:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F46E208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:32:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PaNovIOO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388056AbfHFQar (ORCPT
+        id S2387693AbfHFQcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 12:30:47 -0400
-Received: from mga04.intel.com ([192.55.52.120]:23275 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730265AbfHFQaq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 12:30:46 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 09:30:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,353,1559545200"; 
-   d="scan'208";a="179200133"
-Received: from unknown (HELO [10.7.201.140]) ([10.7.201.140])
-  by orsmga006.jf.intel.com with ESMTP; 06 Aug 2019 09:30:45 -0700
-Subject: Re: [PATCH V2] fork: Improve error message for corrupted page tables
-To:     Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Cc:     Ingo Molnar <mingo@kernel.org>, Vlastimil Babka <vbabka@suse.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>
-References: <3ef8a340deb1c87b725d44edb163073e2b6eca5a.1565059496.git.sai.praneeth.prakhya@intel.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <73b77479-cdd2-6d53-14ae-25ec4c4c3d25@intel.com>
-Date:   Tue, 6 Aug 2019 09:30:45 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 6 Aug 2019 12:32:07 -0400
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:39015 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731659AbfHFQcG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 12:32:06 -0400
+Received: by mail-ua1-f66.google.com with SMTP id j8so33860109uan.6
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 09:32:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qJV0VVyb7OBSwrj4NQkfWBYcw+e0SGu2TpYvncrxquQ=;
+        b=PaNovIOOce5SiqO4ZfKl84Pa4yv0mSqVy5C30RPobTjNSM7clsyNQbQ/vhelfWggU9
+         NgsFUrCfnnyuoAdH13iul7qyQW+rfYTpPfBbokbf4T3tjfWMbJTP7PDBLdM2atX1U17L
+         kqJ0ZreL5023LO6c/T/0E/lD7i0AsyjbuCbI0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qJV0VVyb7OBSwrj4NQkfWBYcw+e0SGu2TpYvncrxquQ=;
+        b=Br25eRa4EmpfraGiMKIsZQS0ojq7PvqUaUqZ432HCApB3f/nQ2vSp7ZFWBZr35l2DD
+         CuyRLlLOl6zzS1fAFu/hwWciWA0pwQvZ8H12rrHl0PFGxxeA8pRY7mzMcR33kbrHIIhj
+         flj8yVMVwZThzFXgbwl8BJEBzmmegcqyTh+mIf3DI6daHdQR999E3aEmgScoO/ITItXx
+         47Zw92AoAhaW5oyDjWlf9b/7RP020QAwWqxTbMJsJIP9DmhlgO12fkrV4sYASK5AWl1T
+         XY9Sq974xmfzMWQAQbwzPnrB8ftzE5bQLB6np5BPy4kj0DV0ejGTv42hGIYnCKEfVYG7
+         9Pqw==
+X-Gm-Message-State: APjAAAVQoGY/sAdIYOGd0MXKJQuBWzviuiLGpJOJ3Pw8AFyL++uxnnnN
+        6okzv8Wycb98PBL2tP5NcY67f2z9EygchGZtXxgZKA==
+X-Google-Smtp-Source: APXvYqxN7Za8djlBzCs0iQ70yJGGaDd0xjSmac554wXuA65p9UMe7pqTUjduNocumSHig7Qa6Mhlgd8Iif02bjhVezI=
+X-Received: by 2002:ab0:66d2:: with SMTP id d18mr1393892uaq.101.1565109125884;
+ Tue, 06 Aug 2019 09:32:05 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <3ef8a340deb1c87b725d44edb163073e2b6eca5a.1565059496.git.sai.praneeth.prakhya@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20190805211451.20176-1-robdclark@gmail.com> <20190806084821.GA17129@lst.de>
+ <CAJs_Fx6eh1w7c=crMoD5XyEOMzP6orLhqUewErE51cPGYmObBQ@mail.gmail.com> <20190806143457.GF475@lakrids.cambridge.arm.com>
+In-Reply-To: <20190806143457.GF475@lakrids.cambridge.arm.com>
+From:   Rob Clark <robdclark@chromium.org>
+Date:   Tue, 6 Aug 2019 09:31:55 -0700
+Message-ID: <CAJs_Fx4h6SWGmDTLBnV4nmWUFAs_Ge1inxd-dW9aDKgKqmc1eQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] drm: add cache support for arm64
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Rob Clark <robdclark@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/5/19 8:05 PM, Sai Praneeth Prakhya wrote:
-> +static const char * const resident_page_types[NR_MM_COUNTERS] = {
-> +	[MM_FILEPAGES]		= "MM_FILEPAGES",
-> +	[MM_ANONPAGES]		= "MM_ANONPAGES",
-> +	[MM_SWAPENTS]		= "MM_SWAPENTS",
-> +	[MM_SHMEMPAGES]		= "MM_SHMEMPAGES",
-> +};
+On Tue, Aug 6, 2019 at 7:35 AM Mark Rutland <mark.rutland@arm.com> wrote:
+>
+> On Tue, Aug 06, 2019 at 07:11:41AM -0700, Rob Clark wrote:
+> > On Tue, Aug 6, 2019 at 1:48 AM Christoph Hellwig <hch@lst.de> wrote:
+> > >
+> > > This goes in the wrong direction.  drm_cflush_* are a bad API we need to
+> > > get rid of, not add use of it.  The reason for that is two-fold:
+> > >
+> > >  a) it doesn't address how cache maintaince actually works in most
+> > >     platforms.  When talking about a cache we three fundamental operations:
+> > >
+> > >         1) write back - this writes the content of the cache back to the
+> > >            backing memory
+> > >         2) invalidate - this remove the content of the cache
+> > >         3) write back + invalidate - do both of the above
+> >
+> > Agreed that drm_cflush_* isn't a great API.  In this particular case
+> > (IIUC), I need wb+inv so that there aren't dirty cache lines that drop
+> > out to memory later, and so that I don't get a cache hit on
+> > uncached/wc mmap'ing.
+>
+> Is there a cacheable alias lying around (e.g. the linear map), or are
+> these addresses only mapped uncached/wc?
+>
+> If there's a cacheable alias, performing an invalidate isn't sufficient,
+> since a CPU can allocate a new (clean) entry at any point in time (e.g.
+> as a result of prefetching or arbitrary speculation).
 
-One trick to ensure that this gets updated if the names are ever
-updated.  You can do:
+I *believe* that there are not alias mappings (that I don't control
+myself) for pages coming from
+shmem_file_setup()/shmem_read_mapping_page()..  digging around at what
+dma_sync_sg_* does under the hood, it looks like it is just
+arch_sync_dma_for_cpu/device(), so I guess that should be sufficient
+for what I need.
 
-#define NAMED_ARRAY_INDEX(x)	[x] = __stringify(x),
+There are a few buffers that I vmap for use on kernel side, but like
+the userspace mmap's, the vmaps are also writecombine.
 
-and
-
-static const char * const resident_page_types[NR_MM_COUNTERS] = {
-	NAMED_ARRAY_INDEX(MM_FILE_PAGES),
-	NAMED_ARRAY_INDEX(MM_SHMEMPAGES),
-	...
-};
-
-That makes sure that any name changes make it into the strings.  Then
-stick a:
-
-	BUILD_BUG_ON(NR_MM_COUNTERS != ARRAY_SIZE(resident_page_types));
-
-somewhere.  That makes sure that any new array indexes get a string
-added in the array.  Otherwise you get nice, early, compile-time errors.
+BR,
+-R
