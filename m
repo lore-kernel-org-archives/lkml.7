@@ -2,116 +2,130 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C6FDC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6206C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:06:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DD162070C
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:06:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565078775;
-	bh=RLfJxrItS5i2yAvJInGgelnco6bcSti3r2wL1VlofFg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=QN3vo5ttTT1IuA7x3/5k7wyAaChK/qBwu/MOI821i3OmmfyPc0iCW2pC9m9Mbwa53
-	 cwD/pcbPmy/yJGczOeNIYdXWPOjehleZgTeAK5Niz7n3HxMeZuloBAkVdCHGJl0AOs
-	 8KlEd0DyFTWkkV9GF5YzLZtdyhV9MUQayRX134Tw=
+	by mail.kernel.org (Postfix) with ESMTP id B1D7D20665
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:06:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732387AbfHFIGF (ORCPT
+        id S1732373AbfHFIGE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 04:06:05 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:44974 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728998AbfHFIGD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 04:06:04 -0400
+Received: from mga03.intel.com ([134.134.136.65]:5858 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731946AbfHFIGD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 6 Aug 2019 04:06:03 -0400
-Received: by mail-oi1-f193.google.com with SMTP id e189so65138979oib.11;
-        Tue, 06 Aug 2019 01:06:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RLfJxrItS5i2yAvJInGgelnco6bcSti3r2wL1VlofFg=;
-        b=RJDX3GveCjaScf11R8uzm3PPi3xXl/d48qEib5ZoKFKfylAQXH6EYXeHOG4e4PhgjX
-         NYfHO+AHOdEqQnD0xye04yEag2GqHIuqUFAFbbIyK1eoSgVxRfCU/OL8zQYbffuhlMP5
-         0w5SwrczZNrSqnS5y9JtCTirxFrlq6Hb0Lw1yiDI1anC4zYCg4ytAL9h2ZlEvBz3Qkj/
-         4EFO6AecQqBiSEdWK30szd/J3NARmBrnQaxyLSgp/RXKw5LDItHDtERJqtL+zGljFl+M
-         NnsZCt6E569zDnLrW8JgQ+ogqzKj9BISY+vIF4Tn/q7GylIrOs1ULeLM5r42uv2SzwJj
-         UO9w==
-X-Gm-Message-State: APjAAAVF1uk+v69LSD2bRi4HRg+7MADCZXLEzk5VgGU70glzThaNNF3C
-        GmSFcLx4aizZiN3kgMXtnkIFERaZrwi8uA4arPA=
-X-Google-Smtp-Source: APXvYqyLQKZMc6OARyXAA5bgNuojMgNMFqi0RC50XL/T1ZP4rZT2XmCEiCdGhjsQ+Op7NfcPSUNiklHa2fNC9P2yZq4=
-X-Received: by 2002:aca:5a41:: with SMTP id o62mr1795289oib.110.1565078761925;
- Tue, 06 Aug 2019 01:06:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <7dedb6bd157b8183c693bb578e25e313cf4f451d.1564724511.git.viresh.kumar@linaro.org>
- <23e3dee8688f5a9767635b686bb7a9c0e09a4438.1564724511.git.viresh.kumar@linaro.org>
- <CAJZ5v0iqztRWyxf1cgiAN1dK4qTGwy9raaGOx5u3tfBTGUKOng@mail.gmail.com>
- <2676200.jfxhmTd764@kreacher> <20190806041048.ksqs3l5bzsakaael@vireshk-i7>
-In-Reply-To: <20190806041048.ksqs3l5bzsakaael@vireshk-i7>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 6 Aug 2019 10:05:51 +0200
-Message-ID: <CAJZ5v0hepyx_yVC=di7E6VSme4GF11p+OhQfA==1p5-FwVRM0Q@mail.gmail.com>
-Subject: Re: [PATCH V3 2/2] cpufreq: intel_pstate: Implement ->resolve_freq()
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "v4 . 18+" <stable@vger.kernel.org>,
-        Doug Smythies <doug.smythies@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 01:00:49 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,352,1559545200"; 
+   d="scan'208";a="373337339"
+Received: from devel-ww.sh.intel.com ([10.239.48.128])
+  by fmsmga005.fm.intel.com with ESMTP; 06 Aug 2019 01:00:47 -0700
+From:   Wei Wang <wei.w.wang@intel.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        ak@linux.intel.com, peterz@infradead.org, pbonzini@redhat.com
+Cc:     kan.liang@intel.com, mingo@redhat.com, rkrcmar@redhat.com,
+        like.xu@intel.com, wei.w.wang@intel.com, jannh@google.com,
+        arei.gonglei@huawei.com, jmattson@google.com
+Subject: [PATCH v8 06/14] KVM/x86: expose MSR_IA32_PERF_CAPABILITIES to the guest
+Date:   Tue,  6 Aug 2019 15:16:06 +0800
+Message-Id: <1565075774-26671-7-git-send-email-wei.w.wang@intel.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1565075774-26671-1-git-send-email-wei.w.wang@intel.com>
+References: <1565075774-26671-1-git-send-email-wei.w.wang@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 6, 2019 at 6:10 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 02-08-19, 11:28, Rafael J. Wysocki wrote:
-> > On Friday, August 2, 2019 11:17:55 AM CEST Rafael J. Wysocki wrote:
-> > > On Fri, Aug 2, 2019 at 7:44 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > > >
-> > > > Intel pstate driver exposes min_perf_pct and max_perf_pct sysfs files,
-> > > > which can be used to force a limit on the min/max P state of the driver.
-> > > > Though these files eventually control the min/max frequencies that the
-> > > > CPUs will run at, they don't make a change to policy->min/max values.
-> > >
-> > > That's correct.
-> > >
-> > > > When the values of these files are changed (in passive mode of the
-> > > > driver), it leads to calling ->limits() callback of the cpufreq
-> > > > governors, like schedutil. On a call to it the governors shall
-> > > > forcefully update the frequency to come within the limits.
-> > >
-> > > OK, so the problem is that it is a bug to invoke the governor's ->limits()
-> > > callback without updating policy->min/max, because that's what
-> > > "limits" mean to the governors.
-> > >
-> > > Fair enough.
-> >
-> > AFAICS this can be addressed by adding PM QoS freq limits requests of each CPU to
-> > intel_pstate in the passive mode such that changing min_perf_pct or max_perf_pct
-> > will cause these requests to be updated.
->
-> Right, that sounds like a good plan.
->
-> But that will never make it to the stable kernels as there will be a
-> long dependency of otherwise unrelated patches to get that done. My
-> initial thought was to get this patch merged as it is and then later
-> migrate to QoS, but since this patch doesn't fix ondemand and
-> conservative, this patch isn't good enough as well.
+Bits [0, 5] of MSR_IA32_PERF_CAPABILITIES tell about the format of
+the addresses stored in the lbr stack. Expose those bits to the guest
+when the guest lbr feature is enabled.
 
-Right.
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Signed-off-by: Wei Wang <wei.w.wang@intel.com>
+---
+ arch/x86/include/asm/perf_event.h |  2 ++
+ arch/x86/kvm/cpuid.c              |  2 +-
+ arch/x86/kvm/vmx/pmu_intel.c      | 16 ++++++++++++++++
+ 3 files changed, 19 insertions(+), 1 deletion(-)
 
-> Maybe we should add the regular notifier based solution first, mark it
-> for stable kernels, and then add the QoS specific solution ?
+diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
+index 2606100..aa77da2 100644
+--- a/arch/x86/include/asm/perf_event.h
++++ b/arch/x86/include/asm/perf_event.h
+@@ -95,6 +95,8 @@
+ #define PEBS_DATACFG_LBRS	BIT_ULL(3)
+ #define PEBS_DATACFG_LBR_SHIFT	24
+ 
++#define X86_PERF_CAP_MASK_LBR_FMT			0x3f
++
+ /*
+  * Intel "Architectural Performance Monitoring" CPUID
+  * detection/enumeration details:
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index 22c2720..826b2dc 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -458,7 +458,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
+ 		F(XMM3) | F(PCLMULQDQ) | 0 /* DTES64, MONITOR */ |
+ 		0 /* DS-CPL, VMX, SMX, EST */ |
+ 		0 /* TM2 */ | F(SSSE3) | 0 /* CNXT-ID */ | 0 /* Reserved */ |
+-		F(FMA) | F(CX16) | 0 /* xTPR Update, PDCM */ |
++		F(FMA) | F(CX16) | 0 /* xTPR Update*/ | F(PDCM) |
+ 		F(PCID) | 0 /* Reserved, DCA */ | F(XMM4_1) |
+ 		F(XMM4_2) | F(X2APIC) | F(MOVBE) | F(POPCNT) |
+ 		0 /* Reserved*/ | F(AES) | F(XSAVE) | 0 /* OSXSAVE */ | F(AVX) |
+diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
+index 53bb95e..f0ad78f 100644
+--- a/arch/x86/kvm/vmx/pmu_intel.c
++++ b/arch/x86/kvm/vmx/pmu_intel.c
+@@ -151,6 +151,7 @@ static bool intel_is_valid_msr(struct kvm_vcpu *vcpu, u32 msr)
+ 	case MSR_CORE_PERF_GLOBAL_STATUS:
+ 	case MSR_CORE_PERF_GLOBAL_CTRL:
+ 	case MSR_CORE_PERF_GLOBAL_OVF_CTRL:
++	case MSR_IA32_PERF_CAPABILITIES:
+ 		ret = pmu->version > 1;
+ 		break;
+ 	default:
+@@ -316,6 +317,19 @@ static int intel_pmu_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 	case MSR_CORE_PERF_GLOBAL_OVF_CTRL:
+ 		msr_info->data = pmu->global_ovf_ctrl;
+ 		return 0;
++	case MSR_IA32_PERF_CAPABILITIES: {
++		u64 data;
++
++		if (!boot_cpu_has(X86_FEATURE_PDCM) ||
++		    (!msr_info->host_initiated &&
++		     !guest_cpuid_has(vcpu, X86_FEATURE_PDCM)))
++			return 1;
++		data = native_read_msr(MSR_IA32_PERF_CAPABILITIES);
++		msr_info->data = 0;
++		if (vcpu->kvm->arch.lbr_in_guest)
++			msr_info->data |= (data & X86_PERF_CAP_MASK_LBR_FMT);
++		return 0;
++	}
+ 	default:
+ 		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0))) {
+ 			u64 val = pmc_read_counter(pmc);
+@@ -374,6 +388,8 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 			return 0;
+ 		}
+ 		break;
++	case MSR_IA32_PERF_CAPABILITIES:
++		return 1; /* RO MSR */
+ 	default:
+ 		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0))) {
+ 			if (msr_info->host_initiated)
+-- 
+2.7.4
 
-I'm not sure if -stable kernels really need a fix here.
-
-Let's just make sure that the mainline is OK and let's go straight for
-the final approach.
