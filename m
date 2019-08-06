@@ -2,129 +2,105 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA1CBC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:38:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A8EBC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:39:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB24420717
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:38:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565105938;
-	bh=WSyjZn+YLypg21sFQeIjJZqQbHjw3ecOVTDeasZ6QE4=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=NdpKGK020cKt2cxGHKuGsx1K1X6kWVAoJYXMW0DkSLCddAWPkfi7+eN2LQWwgpzZb
-	 LaieHM2dp1c4pxm7RPsup/VVMcaaWdp2XRGrkKCASkr8qRwwh9QYMWLFZPnKcfHgaw
-	 iCPFYbndtMk89Yo0fgW5W/AzZ3Xnz49yWq/FOjlc=
+	by mail.kernel.org (Postfix) with ESMTP id F0ACB20C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:39:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="554UWq0p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731887AbfHFPi5 (ORCPT
+        id S1732479AbfHFPjV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 11:38:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38706 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 11:39:21 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:37574 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728156AbfHFPi5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 11:38:57 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D2CE20717;
-        Tue,  6 Aug 2019 15:38:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565105935;
-        bh=WSyjZn+YLypg21sFQeIjJZqQbHjw3ecOVTDeasZ6QE4=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Chbn1UpOQSIkiQmbmfnz3vY2T8w8jfDOCzP60WH3GSv0NCvXaMV8z0zV9S+9hCPLM
-         YiUjcVLXt0gPO43bEiCiabBpUk/0K+RcdnKhupjr7PerFPsJBW8hAraqI7RCqNfjZ8
-         8aaNHzq1Fjl0qmJhFlOgNBRzmHjjZoYSaHQTbIj8=
-Subject: Re: [PATCH v4 1/2] usbip: Skip DMA mapping and unmapping for urb at
- vhci
-To:     Suwan Kim <suwan.kim027@gmail.com>
-Cc:     valentina.manea.m@gmail.com, gregkh@linuxfoundation.org,
-        stern@rowland.harvard.edu, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20190806123154.23798-1-suwan.kim027@gmail.com>
- <20190806123154.23798-2-suwan.kim027@gmail.com>
- <c3485edd-f7e3-95a7-38db-acda371575a2@kernel.org>
- <20190806153241.GA3738@localhost.localdomain>
-From:   shuah <shuah@kernel.org>
-Message-ID: <b5c6c9e5-0855-c055-6bb5-47dbc497f606@kernel.org>
-Date:   Tue, 6 Aug 2019 09:38:54 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1728156AbfHFPjU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 11:39:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=/dQaZQMhVFrWkGgcjKYtqkC8hkpv/jcBX7O5fB1A2Gs=; b=554UWq0phj8ND95AlfMvrXrRV8
+        FvfBalqc2Cn2fc/uOEXhojHHPT3ibrrKrXhJFciKKTSH5nBlZjdC8y4QfW0/cav/IkUrl/yA+MF/N
+        T8nqRvwYQZT/0Lj56dBKtn3mMHCnvmw47vmttwXSeDZ7vExd1XrElJcexqnFDvp66kkY=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hv1YM-0005SY-HM; Tue, 06 Aug 2019 17:39:10 +0200
+Date:   Tue, 6 Aug 2019 17:39:10 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Cc:     "davem@davemloft.net" <davem@davemloft.net>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+Subject: Re: [PATCH 06/16] net: phy: adin: support PHY mode converters
+Message-ID: <20190806153910.GB20422@lunn.ch>
+References: <20190805165453.3989-1-alexandru.ardelean@analog.com>
+ <20190805165453.3989-7-alexandru.ardelean@analog.com>
+ <20190805145105.GN24275@lunn.ch>
+ <15cf5732415c313a7bfe610e7039e7c97b987073.camel@analog.com>
 MIME-Version: 1.0
-In-Reply-To: <20190806153241.GA3738@localhost.localdomain>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <15cf5732415c313a7bfe610e7039e7c97b987073.camel@analog.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/6/19 9:32 AM, Suwan Kim wrote:
-> On Tue, Aug 06, 2019 at 09:11:30AM -0600, shuah wrote:
->> On 8/6/19 6:31 AM, Suwan Kim wrote:
->>> vhci doesn’t do DMA for remote device. Actually, the real DMA
->>> operation is done by network card driver. vhci just passes virtual
->>> address of the buffer to the network stack, so vhci doesn’t use and
->>> need dma address of the buffer of the URB.
->>>
->>> But HCD provides DMA mapping and unmapping function by default.
->>> Moreover, it causes unnecessary DMA mapping and unmapping which
->>> will be done again at the NIC driver and it wastes CPU cycles.
->>> So, implement map_urb_for_dma and unmap_urb_for_dma function for
->>> vhci in order to skip the DMA mapping and unmapping procedure.
->>>
->>> When it comes to supporting SG for vhci, it is useful to use native
->>> SG list (urb->num_sgs) instead of mapped SG list because DMA mapping
->>> fnuction can adjust the number of SG list (urb->num_mapped_sgs).
->>> And vhci_map_urb_for_dma() prevents isoc pipe from using SG as
->>> hcd_map_urb_for_dma() does.
->>>
->>> Signed-off-by: Suwan Kim <suwan.kim027@gmail.com>
->>> ---
->>> v3 - v4:
->>> - Replace WARN_ON() with pr_err() in the error path.
->>>
->>> v2 - v3
->>> - Move setting URB_DMA_MAP_SG flag to the patch 2.
->>> - Prevent isoc pipe from using SG buffer.
->>>
->>> v1 - v2
->>> - Add setting URB_DMA_MAP_SG flag in urb->transfer_flags to tell
->>> stub driver to use SG buffer.
->>> ---
->>>    drivers/usb/usbip/vhci_hcd.c | 19 +++++++++++++++++++
->>>    1 file changed, 19 insertions(+)
->>>
->>> diff --git a/drivers/usb/usbip/vhci_hcd.c b/drivers/usb/usbip/vhci_hcd.c
->>> index 000ab7225717..429e4e989f38 100644
->>> --- a/drivers/usb/usbip/vhci_hcd.c
->>> +++ b/drivers/usb/usbip/vhci_hcd.c
->>> @@ -1288,6 +1288,22 @@ static int vhci_free_streams(struct usb_hcd *hcd, struct usb_device *udev,
->>>    	return 0;
->>>    }
->>> +static int vhci_map_urb_for_dma(struct usb_hcd *hcd, struct urb *urb,
->>> +				gfp_t mem_flags)
->>> +{
->>> +	if (usb_endpoint_xfer_isoc(&urb->ep->desc) && urb->num_sgs) {
->>> +		pr_err("SG is not supported for isochronous transfer\n");
->>
->> Any reason to not use dev_err()?
+On Tue, Aug 06, 2019 at 06:47:08AM +0000, Ardelean, Alexandru wrote:
+> On Mon, 2019-08-05 at 16:51 +0200, Andrew Lunn wrote:
+> > [External]
+> > 
+> > On Mon, Aug 05, 2019 at 07:54:43PM +0300, Alexandru Ardelean wrote:
+> > > Sometimes, the connection between a MAC and PHY is done via a
+> > > mode/interface converter. An example is a GMII-to-RGMII converter, which
+> > > would mean that the MAC operates in GMII mode while the PHY operates in
+> > > RGMII. In this case there is a discrepancy between what the MAC expects &
+> > > what the PHY expects and both need to be configured in their respective
+> > > modes.
+> > > 
+> > > Sometimes, this converter is specified via a board/system configuration (in
+> > > the device-tree for example). But, other times it can be left unspecified.
+> > > The use of these converters is common in boards that have FPGA on them.
+> > > 
+> > > This patch also adds support for a `adi,phy-mode-internal` property that
+> > > can be used in these (implicit convert) cases. The internal PHY mode will
+> > > be used to specify the correct register settings for the PHY.
+> > > 
+> > > `fwnode_handle` is used, since this property may be specified via ACPI as
+> > > well in other setups, but testing has been done in DT context.
+> > 
+> > Looking at the patch, you seems to assume phy-mode is what the MAC is
+> > using? That seems rather odd, given the name. It seems like a better
+> > solution would be to add a mac-mode, which the MAC uses to configure
+> > its side of the link. The MAC driver would then implement this
+> > property.
+> > 
 > 
-> Because some codes in vhci_hcd.c use pr_err().There is no other
-> reason. However, dev_err() seems more appropriate than pr_err().
-> I will replace pr_err() with dev_err(urb->dev->dev, "SG is ...")
-> Is it ok?
+> actually, that's a pretty good idea;
+> i guess i was narrow-minded when writing the driver, and got stuck on phy specifics, and forgot about the MAC-side;
+> [ i also catch these design elements when reviewing, but i also seem to miss them when writing stuff sometimes ]
 > 
 
-Please. This way we will have the device information. pr_err()
-won't us that. In general I prefer dev_* if dev is available in
-the code path, which is the case here.
+Hi Ardelean
 
-thanks,
--- Shuah
+We should also consider the media converter itself. It is passive, or
+does it need a driver. You seems to be considering GMII-to-RGMII. But
+what about RGMII to SGMII? or RGMII to 1000Base-KX etc? Ideally we
+want a generic solution and we need to think about all the parts in
+the system.
 
+     Andrew
