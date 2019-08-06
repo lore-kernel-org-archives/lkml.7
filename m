@@ -7,113 +7,102 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE3B5C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DAB9C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:32:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F46E208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:32:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53509208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:32:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PaNovIOO"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="I621EdGh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387693AbfHFQcH (ORCPT
+        id S2387862AbfHFQc0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 12:32:07 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:39015 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731659AbfHFQcG (ORCPT
+        Tue, 6 Aug 2019 12:32:26 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:41198 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732809AbfHFQcZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 12:32:06 -0400
-Received: by mail-ua1-f66.google.com with SMTP id j8so33860109uan.6
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 09:32:06 -0700 (PDT)
+        Tue, 6 Aug 2019 12:32:25 -0400
+Received: by mail-ot1-f66.google.com with SMTP id o101so94003514ota.8
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 09:32:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=qJV0VVyb7OBSwrj4NQkfWBYcw+e0SGu2TpYvncrxquQ=;
-        b=PaNovIOOce5SiqO4ZfKl84Pa4yv0mSqVy5C30RPobTjNSM7clsyNQbQ/vhelfWggU9
-         NgsFUrCfnnyuoAdH13iul7qyQW+rfYTpPfBbokbf4T3tjfWMbJTP7PDBLdM2atX1U17L
-         kqJ0ZreL5023LO6c/T/0E/lD7i0AsyjbuCbI0=
+        bh=KBxXq8YTWqrzjOONyNdo67CLVjbGNpjfYUbKMPMPSDc=;
+        b=I621EdGhepEbCNMhRh/ZLPcDGselbtxmltdR802wrqrXLRID4S5GgQmJEtmeHcB6CX
+         AZ7IWSkq384F70ACBOlYgpZHby9PusV2Ob/dS5I2cU/rpeh6VZOVpXML8HzoV12TEIxh
+         +MHRnEfuTt8BDqW57xvh2YdBYXbD9YHYhCU6Q=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=qJV0VVyb7OBSwrj4NQkfWBYcw+e0SGu2TpYvncrxquQ=;
-        b=Br25eRa4EmpfraGiMKIsZQS0ojq7PvqUaUqZ432HCApB3f/nQ2vSp7ZFWBZr35l2DD
-         CuyRLlLOl6zzS1fAFu/hwWciWA0pwQvZ8H12rrHl0PFGxxeA8pRY7mzMcR33kbrHIIhj
-         flj8yVMVwZThzFXgbwl8BJEBzmmegcqyTh+mIf3DI6daHdQR999E3aEmgScoO/ITItXx
-         47Zw92AoAhaW5oyDjWlf9b/7RP020QAwWqxTbMJsJIP9DmhlgO12fkrV4sYASK5AWl1T
-         XY9Sq974xmfzMWQAQbwzPnrB8ftzE5bQLB6np5BPy4kj0DV0ejGTv42hGIYnCKEfVYG7
-         9Pqw==
-X-Gm-Message-State: APjAAAVQoGY/sAdIYOGd0MXKJQuBWzviuiLGpJOJ3Pw8AFyL++uxnnnN
-        6okzv8Wycb98PBL2tP5NcY67f2z9EygchGZtXxgZKA==
-X-Google-Smtp-Source: APXvYqxN7Za8djlBzCs0iQ70yJGGaDd0xjSmac554wXuA65p9UMe7pqTUjduNocumSHig7Qa6Mhlgd8Iif02bjhVezI=
-X-Received: by 2002:ab0:66d2:: with SMTP id d18mr1393892uaq.101.1565109125884;
- Tue, 06 Aug 2019 09:32:05 -0700 (PDT)
+        bh=KBxXq8YTWqrzjOONyNdo67CLVjbGNpjfYUbKMPMPSDc=;
+        b=iavJlEZPj4wEgqc9wfKkgqVWqyftd/8SkyMXuKd++bTcs+0WrHiJSPsMseGhbrvmUe
+         gueBXAKgSTaeKAKYSu2zUseM0DYjOShBjyRXPKNQzBtIZXmB8Fx4E2oijCI97UAhqfdx
+         DpdXhBEmJge+m05VLZq9Oc53M46VCIYqILPXeXxEwez7g7YztRF1Jqot+fb8sriBMP5F
+         2ZD+Y76Wu/dWtVdSihY0mPgwdrMrBlq+aEME/C8JPK84hdRQLQzsLeUK1THFIb0cULCw
+         E0ccwtNwpZXd45Zf/xEqy0lAbMkFbnrjOpEZ3NW9XpQxNGAHLCiEAlxsO9tQ3KkKGTC7
+         l/5g==
+X-Gm-Message-State: APjAAAWvmfFaT2mO/VPmigOySfliUE3L6NL+v6g3GSyJEeNb+BgbvBLg
+        G+BFI+J4nWatp+U1PHussgDymwzHzHxNugF0RyQDFQ==
+X-Google-Smtp-Source: APXvYqyoPmb4InoTECAZM2ixU1RK2J1UKKqwBWQUbzMA9FlBRHuKXtJkWqf6x4AfDRv9GhjmviHmJs99wWNE6FVoQLI=
+X-Received: by 2002:a5d:9bc6:: with SMTP id d6mr4118794ion.160.1565109144963;
+ Tue, 06 Aug 2019 09:32:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190805211451.20176-1-robdclark@gmail.com> <20190806084821.GA17129@lst.de>
- <CAJs_Fx6eh1w7c=crMoD5XyEOMzP6orLhqUewErE51cPGYmObBQ@mail.gmail.com> <20190806143457.GF475@lakrids.cambridge.arm.com>
-In-Reply-To: <20190806143457.GF475@lakrids.cambridge.arm.com>
-From:   Rob Clark <robdclark@chromium.org>
-Date:   Tue, 6 Aug 2019 09:31:55 -0700
-Message-ID: <CAJs_Fx4h6SWGmDTLBnV4nmWUFAs_Ge1inxd-dW9aDKgKqmc1eQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] drm: add cache support for arm64
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Rob Clark <robdclark@gmail.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>
+References: <CAJ-EccMXEVktpuPS5BwkGqTo++dGcpHAuSUZo7WgJhAzFByz0g@mail.gmail.com>
+ <CAHk-=whZzJ8WxAeHcirUghcbeOYxmpCr+XxeS9ngH3df3+=p2Q@mail.gmail.com>
+ <CAJ-EccOqmmrf2KPb7Z7NU6bF_4W1XUawLLy=pLekCyFKqusjKQ@mail.gmail.com>
+ <CAHk-=wgT7Z3kCbKS9Q1rdA=OVxPL32CdBovX=eHvD2PppWCHpQ@mail.gmail.com>
+ <20190805142756.GA4887@chatter.i7.local> <CAHk-=wgdiiBVprEVoi8+mpicGnOVNZ4Lb9YUJVskOXahO50sXw@mail.gmail.com>
+ <20190805191136.GB4887@chatter.i7.local> <CAHk-=wg4xMXMM3EfW=NV6YuScA4zvcvaCAPou3bxegjGy6r-qA@mail.gmail.com>
+ <20190805192727.GA15470@chatter.i7.local>
+In-Reply-To: <20190805192727.GA15470@chatter.i7.local>
+From:   Micah Morton <mortonm@chromium.org>
+Date:   Tue, 6 Aug 2019 09:32:14 -0700
+Message-ID: <CAJ-EccPFnR7fTFee3s_1Er+-zbhD8AqaJu_ifTLwHUykKmwJLg@mail.gmail.com>
+Subject: Re: [GIT PULL] SafeSetID MAINTAINERS file update for v5.3
+To:     Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 6, 2019 at 7:35 AM Mark Rutland <mark.rutland@arm.com> wrote:
+On Mon, Aug 5, 2019 at 12:27 PM Konstantin Ryabitsev
+<konstantin@linuxfoundation.org> wrote:
 >
-> On Tue, Aug 06, 2019 at 07:11:41AM -0700, Rob Clark wrote:
-> > On Tue, Aug 6, 2019 at 1:48 AM Christoph Hellwig <hch@lst.de> wrote:
-> > >
-> > > This goes in the wrong direction.  drm_cflush_* are a bad API we need to
-> > > get rid of, not add use of it.  The reason for that is two-fold:
-> > >
-> > >  a) it doesn't address how cache maintaince actually works in most
-> > >     platforms.  When talking about a cache we three fundamental operations:
-> > >
-> > >         1) write back - this writes the content of the cache back to the
-> > >            backing memory
-> > >         2) invalidate - this remove the content of the cache
-> > >         3) write back + invalidate - do both of the above
+> On Mon, Aug 05, 2019 at 12:17:49PM -0700, Linus Torvalds wrote:
+> >> However, I suspect that getting message-ids for all your pull
+> >> requests
+> >> would significantly complicate your workflow.
 > >
-> > Agreed that drm_cflush_* isn't a great API.  In this particular case
-> > (IIUC), I need wb+inv so that there aren't dirty cache lines that drop
-> > out to memory later, and so that I don't get a cache hit on
-> > uncached/wc mmap'ing.
+> >Yeah, that would be a noticeable annoyance. If I were to process pull
+> >requests the way I used to process emailed patches (ie "git am -s" on
+> >a mailbox) that would be a natural thing to perhaps do, but it's not
+> >at all how it ends up working. Having to save the pull request email
+> >to then process it with some script would turn it into a chore.
+> >
+> >I think the pr-tracker-bot clearly catches most cases as it is, and
+> >it's only the occasional "somebody did something odd" that then misses
+> >an automated response. Not a huge deal. For me it was actually more
+> >the "I didn't understand why the response didn't happen", not so much
+> >"I really want to always see responses".
 >
-> Is there a cacheable alias lying around (e.g. the linear map), or are
-> these addresses only mapped uncached/wc?
+> Ok, let me add a fix for Re: at the start -- this won't make things
+> significantly more expensive, but will catch this particular corner
+> case.
 >
-> If there's a cacheable alias, performing an invalidate isn't sufficient,
-> since a CPU can allocate a new (clean) entry at any point in time (e.g.
-> as a result of prefetching or arbitrary speculation).
+> Best regards,
+> -K
 
-I *believe* that there are not alias mappings (that I don't control
-myself) for pages coming from
-shmem_file_setup()/shmem_read_mapping_page()..  digging around at what
-dma_sync_sg_* does under the hood, it looks like it is just
-arch_sync_dma_for_cpu/device(), so I guess that should be sufficient
-for what I need.
+Linus, thanks for the tips earlier about gitk. I'll use that in the future.
 
-There are a few buffers that I vmap for use on kernel side, but like
-the userspace mmap's, the vmaps are also writecombine.
-
-BR,
--R
+Unfortunately I didn't have the mental model quite right of what
+happens during the pull request. I was thinking along the lines of my
+commits being cherry picked onto your tree, rather than how it
+actually happens with git merge where my tree's commit history needs
+to match yours perfectly.
