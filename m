@@ -2,61 +2,159 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19B72C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:36:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05D76C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:38:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E961C2086D
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:36:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAA6620818
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:38:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="DzULNXQE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733239AbfHFSgm (ORCPT
+        id S1731972AbfHFSiY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 14:36:42 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:47820 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728558AbfHFSgl (ORCPT
+        Tue, 6 Aug 2019 14:38:24 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:40167 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728836AbfHFSiX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 14:36:41 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id E0BF0152488DC;
-        Tue,  6 Aug 2019 11:36:40 -0700 (PDT)
-Date:   Tue, 06 Aug 2019 11:36:40 -0700 (PDT)
-Message-Id: <20190806.113640.171591509807004446.davem@davemloft.net>
-To:     firo.yang@suse.com
-Cc:     netdev@vger.kernel.org, jeffrey.t.kirsher@intel.com,
-        intel-wired-lan@lists.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] ixgbe: sync the first fragment unconditionally
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190806092919.13211-1-firo.yang@suse.com>
-References: <20190806092919.13211-1-firo.yang@suse.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 06 Aug 2019 11:36:41 -0700 (PDT)
+        Tue, 6 Aug 2019 14:38:23 -0400
+Received: by mail-qk1-f194.google.com with SMTP id s145so63719572qke.7
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 11:38:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=t0FZaLhTQo8X5m9sJH3jai3ugnitzUTUhXxicv7YDk8=;
+        b=DzULNXQEJNZwg345/aqx14lziCowwmZZ111AycKfFi5XM1I301Ud8rtZZt1wgeF5Pl
+         UU6wbBcMywCdYe2A00lP3rFFRmRHkverVEso5c/xpaLDR8J1XMlG7KG83Vs1L8jQdWhi
+         o82MwcEtBdtL0DJveIufG1vt+LkvzW6Fe5LtJGtcF3gNTJmIummsJdbcVlAV3fyEpO46
+         6VVPQLT6TIe9NED3IcRJk8e+lTOltkPSvmuu6jEvNkJHdRpRrIsHpypmQJKpFVqidOGc
+         9UEGDh2qogUsM6aedOr0W515t9WTNWR1c68j4XvUSFM/riUM3zuVVTRliMQEO0XOPTUX
+         EA3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=t0FZaLhTQo8X5m9sJH3jai3ugnitzUTUhXxicv7YDk8=;
+        b=lwLXDMjU9qH2IO4rG6nILO5vHslz30Cd+u38UNt2qGO8i2FV9QUZyQj2QJuZxn3P/p
+         VfoybtHNOCrgXbEH2lsu1B8K93iy3PDoNqeHrCXMA+DH0jN3FBvGa4OPQLjwFYMLEDyz
+         atAODlhR/JlM2yLp/Av0+AEV6/DP6i+bSA3CSbLu5l4wWRpmJxV7vHHMZwyqfxO+RKhw
+         hSnu6QHmcxzgSOKdYBxZCwxk8pjHEsfMpH/ugv8o/Iv0eI+IiC+h2EPdID0f8AkQG5lX
+         WX0nPd3DmdteUrQVIEThbyIol8GKHhFesn90SaFExWshm//TI3JUMyCEUki5+H+Q5vtY
+         qcmg==
+X-Gm-Message-State: APjAAAWTgXWtjWkohGcCYimjthqqT0BdAQmSPCACbW3n3Qzy7EbnKUBj
+        cyY6hRi9OfY9tbrNCpCUyPQ5JQ==
+X-Google-Smtp-Source: APXvYqyTCcAt6GJ8H61tbGk2kUskSoko6Ijz7dJpmZwAc8BT25Kjo621gYUI55QkHQ/0656a/D+FUw==
+X-Received: by 2002:a05:620a:124f:: with SMTP id a15mr4630085qkl.173.1565116702615;
+        Tue, 06 Aug 2019 11:38:22 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id d141sm37790010qke.3.2019.08.06.11.38.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 06 Aug 2019 11:38:21 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hv4Ll-0004NN-6J; Tue, 06 Aug 2019 15:38:21 -0300
+Date:   Tue, 6 Aug 2019 15:38:21 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     Saeed Mahameed <saeedm@mellanox.com>,
+        "hslester96@gmail.com" <hslester96@gmail.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] net/mlx5e: Use refcount_t for refcount
+Message-ID: <20190806183821.GR11627@ziepe.ca>
+References: <20190802164828.20243-1-hslester96@gmail.com>
+ <20190804125858.GJ4832@mtr-leonro.mtl.com>
+ <CANhBUQ2H5MU0m2xM0AkJGPf7+MJBZ3Eq5rR0kgeOoKRi4q1j6Q@mail.gmail.com>
+ <20190805061320.GN4832@mtr-leonro.mtl.com>
+ <CANhBUQ0tUTXQKq__zvhNCUxXTFfDyr2xKF+Cwupod9xmvSrw2A@mail.gmail.com>
+ <b19b7cd49d373cc51d3e745a6444b27166b88304.camel@mellanox.com>
+ <20190806065958.GQ4832@mtr-leonro.mtl.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190806065958.GQ4832@mtr-leonro.mtl.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Firo Yang <firo.yang@suse.com>
-Date: Tue, 6 Aug 2019 09:29:51 +0000
-
-> In Xen environment, if Xen-swiotlb is enabled, ixgbe driver
-> could possibly allocate a page, DMA memory buffer, for the first
-> fragment which is not suitable for Xen-swiotlb to do DMA operations.
-> Xen-swiotlb will internally allocate another page for doing DMA
-> operations. It requires syncing between those two pages. Otherwise,
-> we may get an incomplete skb. To fix this problem, sync the first
-> fragment no matter the first fargment is makred as "page_released"
-> or not.
+On Tue, Aug 06, 2019 at 09:59:58AM +0300, Leon Romanovsky wrote:
+> On Mon, Aug 05, 2019 at 08:06:36PM +0000, Saeed Mahameed wrote:
+> > On Mon, 2019-08-05 at 14:55 +0800, Chuhong Yuan wrote:
+> > > On Mon, Aug 5, 2019 at 2:13 PM Leon Romanovsky <leon@kernel.org>
+> > > wrote:
+> > > > On Sun, Aug 04, 2019 at 10:44:47PM +0800, Chuhong Yuan wrote:
+> > > > > On Sun, Aug 4, 2019 at 8:59 PM Leon Romanovsky <leon@kernel.org>
+> > > > > wrote:
+> > > > > > On Sat, Aug 03, 2019 at 12:48:28AM +0800, Chuhong Yuan wrote:
+> > > > > > > refcount_t is better for reference counters since its
+> > > > > > > implementation can prevent overflows.
+> > > > > > > So convert atomic_t ref counters to refcount_t.
+> > > > > >
+> > > > > > I'm not thrilled to see those automatic conversion patches,
+> > > > > > especially
+> > > > > > for flows which can't overflow. There is nothing wrong in using
+> > > > > > atomic_t
+> > > > > > type of variable, do you have in mind flow which will cause to
+> > > > > > overflow?
+> > > > > >
+> > > > > > Thanks
+> > > > >
+> > > > > I have to say that these patches are not done automatically...
+> > > > > Only the detection of problems is done by a script.
+> > > > > All conversions are done manually.
+> > > >
+> > > > Even worse, you need to audit usage of atomic_t and replace there
+> > > > it can overflow.
+> > > >
+> > > > > I am not sure whether the flow can cause an overflow.
+> > > >
+> > > > It can't.
+> > > >
+> > > > > But I think it is hard to ensure that a data path is impossible
+> > > > > to have problems in any cases including being attacked.
+> > > >
+> > > > It is not data path, and I doubt that such conversion will be
+> > > > allowed
+> > > > in data paths without proving that no performance regression is
+> > > > introduced.
+> > > > > So I think it is better to do this minor revision to prevent
+> > > > > potential risk, just like we have done in mlx5/core/cq.c.
+> > > >
+> > > > mlx5/core/cq.c is a different beast, refcount there means actual
+> > > > users
+> > > > of CQ which are limited in SW, so in theory, they have potential
+> > > > to be overflown.
+> > > >
+> > > > It is not the case here, there your are adding new port.
+> > > > There is nothing wrong with atomic_t.
+> > > >
+> > >
+> > > Thanks for your explanation!
+> > > I will pay attention to this point in similar cases.
+> > > But it seems that the semantic of refcount is not always as clear as
+> > > here...
+> > >
+> >
+> > Semantically speaking, there is nothing wrong with moving to refcount_t
+> > in the case of vxlan ports.. it also seems more accurate and will
+> > provide the type protection, even if it is not necessary. Please let me
+> > know what is the verdict here, i can apply this patch to net-next-mlx5.
 > 
-> Signed-off-by: Firo Yang <firo.yang@suse.com>
+> There is no verdict here, it is up to you., if you like code churn, go
+> for it.
 
-I don't understand, an unmap operation implies a sync operation.
+IMHO CONFIG_REFCOUNT_FULL is a valuable enough reason to not open code
+with an atomic even if overflow is not possible. 
+
+Races resulting in incrs on 0 refcounts is a common enough mistake.
+
+Jason
