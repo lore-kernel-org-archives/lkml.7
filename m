@@ -2,145 +2,127 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAE31C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 20:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 633E7C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 20:04:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E5622070C
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 20:02:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 230BA214C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 20:04:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g6geZrRS"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="dcd3JYDJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726395AbfHFUCk (ORCPT
+        id S1726460AbfHFUD7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 16:02:40 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:40000 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbfHFUCk (ORCPT
+        Tue, 6 Aug 2019 16:03:59 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:35848 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726018AbfHFUD6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 16:02:40 -0400
-Received: by mail-ot1-f68.google.com with SMTP id l15so38386698oth.7;
-        Tue, 06 Aug 2019 13:02:39 -0700 (PDT)
+        Tue, 6 Aug 2019 16:03:58 -0400
+Received: by mail-qt1-f194.google.com with SMTP id z4so85963998qtc.3
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 13:03:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gqjViCXObN2WgC0+IhrtTb7Ll35AmMVzauFcMWGTI3Y=;
-        b=g6geZrRSw1Dk72HeV3MeqgqDiCymOKGzorDS9kcJv2KYasDx9IRJzWdUCQ5iz/Ck/a
-         sMOqtrYcPYFkeOtOkh3EZ6BQOFZFtjfX4FeNaR7psKg3xzJZZT2HZI2UO45VHTO99KCa
-         5DJfIPEVo7ChrD9UA9ksvW4WKmWAYqfMY6fVOBsARhj6ITM/Y954KCB64DT/86RovKv+
-         v3izTjlAuvKv3KGD3bthq9dyPH36SX8i7m0+F89SRk5FQznew6pgkuE+/KIjfgWA0K30
-         KRvE8YQ5YyG26Sgb8bPl/FmaHp9h4HQXgX6WZJSlRti8akUyiqMHCDslkE+F9DWvSgMq
-         +SWA==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=X4WStm4sd99gxcsiHRK905oUotgl76w2o1W1C4yVJ6I=;
+        b=dcd3JYDJk152NlFfhO/9qO7tld2EmCF8YFkFxS8Gs6O3Eoi2v5a/p+kLVV72KaaDZH
+         4AOPO6UQwsqqSpKlkkmk62Hxppen7/IFJKSpOLIvaEcL3N5LOWdJcJ3uwdOeXMO99Q9Q
+         Y+QyzsRM0n6nW3nAnKygZxiG5A+b6hJR/51n9u0k+imi9/6Ip/PFhv8jDVoF1QLCfhOE
+         mc8U5KqjaSeDQJIru7Rkv0aQxcqZ/bBs3+8ohxG0EleOYIJ0yGSZ17/3ZQ9kmYzGdGc9
+         lnGhK+bfHIxMwOWyuDrIFwNQZiRvrAKnQOXdx2VYo9gZpFBLdNdodmHnLp7wXWjv5EFF
+         EsSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gqjViCXObN2WgC0+IhrtTb7Ll35AmMVzauFcMWGTI3Y=;
-        b=DAVKmvYCat5Dj/ruLiTDzFFuhZq4kak1ETB6I0A26uw55TdS6uBJmEri64wRgyHQVs
-         GN0Hy5n4PPvA4kEaPHcBmPMzYLhiipyLt5cVtdtxMbMaA5/o5SReiskWf1eMKNW0iPH1
-         e4DwW70VB23KpGrgxdaSpWb29r9f194r6Ro7GM7esYhQ0u0xEquCc8jXCfeKeAqWU8rL
-         QHTybgeHsj6D1htR0yXbCfmlDtKElfBibDqXLIv4CfekibAMhtjmTZ3r04tBCHWvTopq
-         yXqopfEBABpB5N5VkeK5JNRcYTvhc2ynumq8hJR0CH5cmo0QtomaTzLcDwfnVnVl0N6f
-         1IVw==
-X-Gm-Message-State: APjAAAUv/enkbaZmdiOEMTkClH/qX+lO8nl3kZrRCiqzEPZP78AwDiNv
-        C4f3UQG58s/Izj9E+KwZXS+RfZRthcf/rEJWTYc=
-X-Google-Smtp-Source: APXvYqxUZRrA60vyMd0kzSQ4htAnblGQWHtpdj5jgj0q6G1y1gZxQTbe74lzuUCM09PKJHet7o8XCRwQJqJO6Q95G/0=
-X-Received: by 2002:a5d:9942:: with SMTP id v2mr5555846ios.177.1565121759065;
- Tue, 06 Aug 2019 13:02:39 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=X4WStm4sd99gxcsiHRK905oUotgl76w2o1W1C4yVJ6I=;
+        b=pK8813+Z8oe0MYZ/5W6mVNMsOeV0lmTv+qlm/6tlhu0DKsJ+ChaH9428GkRWTruWu8
+         f6xm6raihJiBIfNC4osPzr5RBjyeakBEy+dek1g2kkC3T3c6cWnOPGlLf3hySti2ULFw
+         +YEG++xYS+P3v56B7rHIhvuSTGsZ94ENQGlhdVOqDmeN9eMWT7QUB9VtgXTE1gwKG8ST
+         49VF9YyCC1snkQQsxig4nvoKWxm5a9qtJRsBKZVAWN66a5emWxieAOcQ+0n31sxWhFp5
+         ZH8jk+dGfzlREH1o3F76z3ImqIM5piCqC0V+gz/tsujiq4qKCJm72vrTXaDml6899aSR
+         GvtQ==
+X-Gm-Message-State: APjAAAWOQ7b4+lRBfUTdLkq2OkAZfQXkbGeFXI9XEVCL0YPeernsFebq
+        ImsPCdYDFsL/f9ovQaDTIkh+bA==
+X-Google-Smtp-Source: APXvYqx6UY5l/vYT32k/wTnl8SPfwuXYE5Fx1fiKKYFrCmOXi/6TIYwyn3yhKlGhO9HMcVXQYwiuNw==
+X-Received: by 2002:ac8:3118:: with SMTP id g24mr4769493qtb.390.1565121837686;
+        Tue, 06 Aug 2019 13:03:57 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id g10sm35341761qki.37.2019.08.06.13.03.57
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 06 Aug 2019 13:03:57 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hv5ga-0003dB-O6; Tue, 06 Aug 2019 17:03:56 -0300
+Date:   Tue, 6 Aug 2019 17:03:56 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Alex Deucher <alexdeucher@gmail.com>
+Cc:     "Kuehling, Felix" <Felix.Kuehling@amd.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>
+Subject: Re: [PATCH 15/15] amdgpu: remove CONFIG_DRM_AMDGPU_USERPTR
+Message-ID: <20190806200356.GU11627@ziepe.ca>
+References: <20190806160554.14046-1-hch@lst.de>
+ <20190806160554.14046-16-hch@lst.de>
+ <20190806174437.GK11627@ziepe.ca>
+ <587b1c3c-83c4-7de9-242f-6516528049f4@amd.com>
+ <CADnq5_Puv-N=FVpNXhv7gOWZ8=tgBD2VjrKpVzEE0imWqJdD1A@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190731195713.3150463-1-arnd@arndb.de> <20190731195713.3150463-6-arnd@arndb.de>
-In-Reply-To: <20190731195713.3150463-6-arnd@arndb.de>
-From:   Sylvain Lemieux <slemieux.tyco@gmail.com>
-Date:   Tue, 6 Aug 2019 16:02:27 -0400
-Message-ID: <CA+rxa6p4gD7+6-aRyd4-V4TvkyMiUh9ueMLc6ggBaDC=LG7fQg@mail.gmail.com>
-Subject: Re: [PATCH 05/14] gpio: lpc32xx: allow building on non-lpc32xx targets
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     soc@kernel.org,
-        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Guenter Roeck <linux@roeck-us.net>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        linux-serial@vger.kernel.org, USB list <linux-usb@vger.kernel.org>,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CADnq5_Puv-N=FVpNXhv7gOWZ8=tgBD2VjrKpVzEE0imWqJdD1A@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
+On Tue, Aug 06, 2019 at 02:58:58PM -0400, Alex Deucher wrote:
+> On Tue, Aug 6, 2019 at 1:51 PM Kuehling, Felix <Felix.Kuehling@amd.com> wrote:
+> >
+> > On 2019-08-06 13:44, Jason Gunthorpe wrote:
+> > > On Tue, Aug 06, 2019 at 07:05:53PM +0300, Christoph Hellwig wrote:
+> > >> The option is just used to select HMM mirror support and has a very
+> > >> confusing help text.  Just pull in the HMM mirror code by default
+> > >> instead.
+> > >>
+> > >> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > >>   drivers/gpu/drm/Kconfig                 |  2 ++
+> > >>   drivers/gpu/drm/amd/amdgpu/Kconfig      | 10 ----------
+> > >>   drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c |  6 ------
+> > >>   drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.h | 12 ------------
+> > >>   4 files changed, 2 insertions(+), 28 deletions(-)
+> > > Felix, was this an effort to avoid the arch restriction on hmm or
+> > > something? Also can't see why this was like this.
+> >
+> > This option predates KFD's support of userptrs, which in turn predates
+> > HMM. Radeon has the same kind of option, though it doesn't affect HMM in
+> > that case.
+> >
+> > Alex, Christian, can you think of a good reason to maintain userptr
+> > support as an option in amdgpu? I suspect it was originally meant as a
+> > way to allow kernels with amdgpu without MMU notifiers. Now it would
+> > allow a kernel with amdgpu without HMM or MMU notifiers. I don't know if
+> > this is a useful thing to have.
+> 
+> Right.  There were people that didn't have MMU notifiers that wanted
+> support for the GPU.
 
-On Wed, Jul 31, 2019 at 4:00 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> The driver uses hardwire MMIO addresses instead of the data
-> that is passed in device tree. Change it over to only
-> hardcode the register offset values and allow compile-testing.
->
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/gpio/Kconfig        |  8 +++++
->  drivers/gpio/Makefile       |  2 +-
->  drivers/gpio/gpio-lpc32xx.c | 63 ++++++++++++++++++++++++-------------
->  3 files changed, 50 insertions(+), 23 deletions(-)
->
-[...]
+?? Is that even a real thing? mmu_notifier does not have much kconfig
+dependency.
 
-> diff --git a/drivers/gpio/gpio-lpc32xx.c b/drivers/gpio/gpio-lpc32xx.c
-> index 24885b3db3d5..548f7cb69386 100644
-> --- a/drivers/gpio/gpio-lpc32xx.c
-> +++ b/drivers/gpio/gpio-lpc32xx.c
-
-[...]
-
-> @@ -498,6 +509,10 @@ static int lpc32xx_gpio_probe(struct platform_device *pdev)
->  {
->         int i;
->
-> +       gpio_reg_base = devm_platform_ioremap_resource(pdev, 0);
-> +       if (gpio_reg_base)
-> +               return -ENXIO;
-
-The probe function will always return an error.
-Please replace the previous 2 lines with:
-    if (IS_ERR(gpio_reg_base))
-        return PTR_ERR(gpio_reg_base);
-
-You can add my acked-by and tested-by in the v2 patch.
-Acked-by: Sylvain Lemieux <slemieux.tyco@gmail.com>
-Tested-by: Sylvain Lemieux <slemieux.tyco@gmail.com>
-
-> +
->         for (i = 0; i < ARRAY_SIZE(lpc32xx_gpiochip); i++) {
->                 if (pdev->dev.of_node) {
->                         lpc32xx_gpiochip[i].chip.of_xlate = lpc32xx_of_xlate;
-> @@ -527,3 +542,7 @@ static struct platform_driver lpc32xx_gpio_driver = {
->  };
->
->  module_platform_driver(lpc32xx_gpio_driver);
-> +
-> +MODULE_AUTHOR("Kevin Wells <kevin.wells@nxp.com>");
-> +MODULE_LICENSE("GPL");
-> +MODULE_DESCRIPTION("GPIO driver for LPC32xx SoC");
-> --
-> 2.20.0
->
-Sylvain
+Jason
