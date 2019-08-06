@@ -2,125 +2,105 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 611EEC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 05:33:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88CE0C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 05:34:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EF87214C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 05:33:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AA3920665
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 05:34:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=eng.ucsd.edu header.i=@eng.ucsd.edu header.b="XtIPgb4w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731653AbfHFFdP (ORCPT
+        id S1731650AbfHFFee (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 01:33:15 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:19614 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726077AbfHFFdO (ORCPT
+        Tue, 6 Aug 2019 01:34:34 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:40779 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726036AbfHFFee (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 01:33:14 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x765VsbU096174;
-        Tue, 6 Aug 2019 01:32:50 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2u73fc0224-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 06 Aug 2019 01:32:50 -0400
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x765WUva097565;
-        Tue, 6 Aug 2019 01:32:49 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2u73fc021j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 06 Aug 2019 01:32:49 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x765TaTl017893;
-        Tue, 6 Aug 2019 05:32:49 GMT
-Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
-        by ppma01wdc.us.ibm.com with ESMTP id 2u51w6dfxw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 06 Aug 2019 05:32:49 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x765WlMh32375074
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 6 Aug 2019 05:32:47 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4E92D7805C;
-        Tue,  6 Aug 2019 05:32:47 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2E61B7805F;
-        Tue,  6 Aug 2019 05:32:44 +0000 (GMT)
-Received: from morokweng.localdomain.com (unknown [9.85.207.254])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue,  6 Aug 2019 05:32:43 +0000 (GMT)
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     linuxppc-dev@lists.ozlabs.org
-Cc:     linux-kernel@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Anshuman Khandual <anshuman.linux@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Mike Anderson <andmike@linux.ibm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        Ryan Grimm <grimm@linux.vnet.ibm.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Subject: [PATCH v3 16/16] powerpc/configs: Enable secure guest support in pseries and ppc64 defconfigs
-Date:   Tue,  6 Aug 2019 02:32:27 -0300
-Message-Id: <20190806053227.21108-2-bauerman@linux.ibm.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190806053227.21108-1-bauerman@linux.ibm.com>
-References: <20190806053227.21108-1-bauerman@linux.ibm.com>
+        Tue, 6 Aug 2019 01:34:34 -0400
+Received: by mail-pf1-f195.google.com with SMTP id p184so40846597pfp.7
+        for <linux-kernel@vger.kernel.org>; Mon, 05 Aug 2019 22:34:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=eng.ucsd.edu; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ITZzXk4hkchefAa/C9vch93mRZp0Y9hrzcYHt1CxoXA=;
+        b=XtIPgb4wZqOrKmW/tyl/QqxOYFVvbKKuvd9MA51RVQmTlFCPH2GcLl2+Yms2/Avcg9
+         EZTxoWpQQUenC6fwYQ+VTBb7m34eiUsH2fGBy0sdch+TGCxAIZOZSk/oxFFOplsuZa9e
+         V6E1ChrlnDWbp8GoKFGKqvTacAXBLXp3rbiVE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ITZzXk4hkchefAa/C9vch93mRZp0Y9hrzcYHt1CxoXA=;
+        b=gHk5cb26UidHXi8IDhLfd21uu1zCbuwvlHO5l+XjrejWHO1EjHr1rTmBpHcib5ZllU
+         cGGTkdwxzbvt900+Slbtvcg3Yk3xF+d/rUwP4cP18jVjR6aWu2C/zIOL105yejxTo2SF
+         ZmuSQOIIOhrft61MqHyD/UC8iMh0binr2HbRKAVgHlkeJWiW/RxPaFJdQDfdaeJyOobd
+         FrDtWWfxIJCRcsbYECutgec5uJ2SyicJ2UKArk3UUMRKYOaX89vZciZ+DDl6yrDSi2G3
+         QP2fYfdSFmFw4IQZpox+eGovSvX/ZiyC6kSX1HqFyak51l3TW0/lgZjrMoV/WQbSlIWa
+         CFmg==
+X-Gm-Message-State: APjAAAXRkB5lDasN17wPtOG0AIY+iwCgX6yOUlcLXpQE+g2T9vADGfcu
+        mrKAkSCfnfOwgbnMAio7vP+9dg==
+X-Google-Smtp-Source: APXvYqzH8Z0Hn489Zyo573sDGL6BycECAxRLofQeib0NEkjpsn4FwKtl3QVZuhTS8CTnrpt5DYMuQQ==
+X-Received: by 2002:a62:5883:: with SMTP id m125mr1817575pfb.248.1565069673515;
+        Mon, 05 Aug 2019 22:34:33 -0700 (PDT)
+Received: from luke-XPS-13 (114-198-81-189.dyn.iinet.net.au. [114.198.81.189])
+        by smtp.gmail.com with ESMTPSA id 143sm131382923pgc.6.2019.08.05.22.34.29
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 05 Aug 2019 22:34:32 -0700 (PDT)
+Date:   Mon, 5 Aug 2019 22:34:26 -0700
+From:   Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
+To:     Joe Perches <joe@perches.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        syzbot+a4387f5b6b799f6becbf@syzkaller.appspotmail.com
+Subject: Re: [PATCH 5.2 10/20] media: radio-raremono: change devm_k*alloc to
+ k*alloc
+Message-ID: <20190806053426.GA7108@luke-XPS-13>
+References: <20190802092055.131876977@linuxfoundation.org>
+ <20190802092100.285432717@linuxfoundation.org>
+ <9403fd1e250bb4dd8e1bcf0536e6d224be7c889c.camel@perches.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-06_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908060065
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9403fd1e250bb4dd8e1bcf0536e6d224be7c889c.camel@perches.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ryan Grimm <grimm@linux.vnet.ibm.com>
+Hi there, 
 
-Enables running as a secure guest in platforms with an Ultravisor.
+On Fri, Aug 02, 2019 at 03:04:25AM -0700, Joe Perches wrote:
+> On Fri, 2019-08-02 at 11:40 +0200, Greg Kroah-Hartman wrote:
+> > From: Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
+> > 
+> > commit c666355e60ddb4748ead3bdd983e3f7f2224aaf0 upstream.
+> > 
+> > Change devm_k*alloc to k*alloc to manually allocate memory
+> > 
+> > The manual allocation and freeing of memory is necessary because when
+> > the USB radio is disconnected, the memory associated with devm_k*alloc
+> > is freed. Meaning if we still have unresolved references to the radio
+> > device, then we get use-after-free errors.
+> > 
+> > This patch fixes this by manually allocating memory, and freeing it in
+> > the v4l2.release callback that gets called when the last radio device
+> > exits.
+> 
+> This really should be commented in the code
+> and not just in the commit changelog as some
+> unsuspecting person will likely undo this in
+> the future without one.
 
-Signed-off-by: Ryan Grimm <grimm@linux.vnet.ibm.com>
-Signed-off-by: Ram Pai <linuxram@us.ibm.com>
-Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
----
- arch/powerpc/configs/ppc64_defconfig   | 1 +
- arch/powerpc/configs/pseries_defconfig | 1 +
- 2 files changed, 2 insertions(+)
+You reckon I should submit a patch with the necessary parts commented? 
 
-diff --git a/arch/powerpc/configs/ppc64_defconfig b/arch/powerpc/configs/ppc64_defconfig
-index dc83fefa04f7..b250e6f5a7ca 100644
---- a/arch/powerpc/configs/ppc64_defconfig
-+++ b/arch/powerpc/configs/ppc64_defconfig
-@@ -29,6 +29,7 @@ CONFIG_DTL=y
- CONFIG_SCANLOG=m
- CONFIG_PPC_SMLPAR=y
- CONFIG_IBMEBUS=y
-+CONFIG_PPC_SVM=y
- CONFIG_PPC_MAPLE=y
- CONFIG_PPC_PASEMI=y
- CONFIG_PPC_PASEMI_IOMMU=y
-diff --git a/arch/powerpc/configs/pseries_defconfig b/arch/powerpc/configs/pseries_defconfig
-index 38abc9c1770a..26126b4d4de3 100644
---- a/arch/powerpc/configs/pseries_defconfig
-+++ b/arch/powerpc/configs/pseries_defconfig
-@@ -42,6 +42,7 @@ CONFIG_DTL=y
- CONFIG_SCANLOG=m
- CONFIG_PPC_SMLPAR=y
- CONFIG_IBMEBUS=y
-+CONFIG_PPC_SVM=y
- # CONFIG_PPC_PMAC is not set
- CONFIG_RTAS_FLASH=m
- CONFIG_CPU_FREQ_DEFAULT_GOV_ONDEMAND=y
+Thanks, 
+- Luke
