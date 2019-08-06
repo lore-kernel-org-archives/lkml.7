@@ -2,44 +2,45 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D755BC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 547D9C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:43:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACFEA20C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:43:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D36820C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 13:43:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="UF/s6Itm"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="ggMGdYW7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732570AbfHFNm5 (ORCPT
+        id S1732825AbfHFNnR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 09:42:57 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:59074 "EHLO
+        Tue, 6 Aug 2019 09:43:17 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:59162 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726036AbfHFNm4 (ORCPT
+        by vger.kernel.org with ESMTP id S1731894AbfHFNm5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 09:42:56 -0400
+        Tue, 6 Aug 2019 09:42:57 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 31394C21AE;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id BE706C21CC;
         Tue,  6 Aug 2019 13:42:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1565098976; bh=g3fYN+8z/UxI7FeCuuLDjSYU9su9owSrWnBkpruQfVk=;
-        h=From:To:Cc:Subject:Date:From;
-        b=UF/s6Itmeojm8oETQnPHErGmMkvlb08dC+w1dnzGHFrL/riVd8JM6sKyJ3g8DGsVz
-         CJkwybaxciRPAd1jUVTY4bt/wdNX8b6J2SzPfTh0Oo0EsxOhaqMs6ufEQFg6a1j4xl
-         ZwWfbSebC8r1RcS6z906yKPdQehIG6j+3AVfi//hEbTUiNY6kOhSldocrHUCHU/+sJ
-         HXApwwNQCP+Y2RQE0Sfbt08ciP1s/x+QCv2AvFyODtsmYC4/WbmoRLHWXLrXZAFQHs
-         BVNyqzZ6kjSPtvJp/zX7bsVIpjPWhxCf/QxP0ItHfE+8XuO2PvQQ+aZC2kOyzrCeYP
-         TxJIOoHwCn6Qg==
+        t=1565098977; bh=18B/BrYz2sxVzKeQcjktizOD0pcEwHNkm/ulnP89N5A=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=ggMGdYW7W/TdZKv7lXxaEWfjmo/y1eQGWGZl5pw5rKnHNzvSgAkLa7aV9H48M6Dfj
+         lKIX0EVMX4yUCAlBh7jwyxmOHlC634Z1VtYftkc29s7Bvpn8RNtQQF6HxESPKLni5s
+         ZW+qzxtYrJgxeQyV5hEDPrBwz9A0TVku2Tc3JNd+pR4jHyIFiQOf0ATNnGgWBy8nnQ
+         +bbxovWKCm8KTIjK1oo+9B7VNop5V6qRUv0m+j23C5EQc0Ab+ABXFaBzCGwg30rmKV
+         heps87PchFFwmNn9ZaIp5NawFjLUHTkUmU6oy+qcI0EjdAeMxiRk7eCcpgswvmhRMn
+         ewiG+JvHfyZqA==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id ADC9EA0057;
-        Tue,  6 Aug 2019 13:42:53 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTP id 7B0AFA007A;
+        Tue,  6 Aug 2019 13:42:55 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
 Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
@@ -50,16 +51,22 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v2 00/10] net: stmmac: Improvements for -next
-Date:   Tue,  6 Aug 2019 15:42:41 +0200
-Message-Id: <cover.1565098881.git.joabreu@synopsys.com>
+Subject: [PATCH net-next v2 10/10] net: stmmac: selftests: Add a selftest for Flexible RX Parser
+Date:   Tue,  6 Aug 2019 15:42:51 +0200
+Message-Id: <486b11dcec03cb5a7d0dc166bf57c09627e53a8b.1565098881.git.joabreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1565098881.git.joabreu@synopsys.com>
+References: <cover.1565098881.git.joabreu@synopsys.com>
+In-Reply-To: <cover.1565098881.git.joabreu@synopsys.com>
+References: <cover.1565098881.git.joabreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Couple of improvements for -next tree. More info in commit logs.
+Add a selftest for the Flexible RX Parser feature.
+
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 
 ---
 Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
@@ -72,35 +79,141 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
+ .../net/ethernet/stmicro/stmmac/stmmac_selftests.c | 98 +++++++++++++++++++++-
+ 1 file changed, 97 insertions(+), 1 deletion(-)
 
-Jose Abreu (10):
-  net: stmmac: xgmac: Implement MMC counters
-  net: stmmac: xgmac: Implement set_mtl_tx_queue_weight()
-  net: stmmac: xgmac: Implement tx_queue_prio()
-  net: stmmac: Implement RSS and enable it in XGMAC core
-  net: stmmac: selftests: Add RSS test
-  net: stmmac: Implement VLAN Hash Filtering in XGMAC
-  net: stmmac: selftests: Add test for VLAN and Double VLAN Filtering
-  net: stmmac: Implement Safety Features in XGMAC core
-  net: stmmac: Add Flexible RX Parser support in XGMAC
-  net: stmmac: selftests: Add a selftest for Flexible RX Parser
-
- drivers/net/ethernet/stmicro/stmmac/common.h       |   6 +
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h     |  76 ++-
- .../net/ethernet/stmicro/stmmac/dwxgmac2_core.c    | 605 ++++++++++++++++++++-
- .../net/ethernet/stmicro/stmmac/dwxgmac2_descs.c   |  29 +
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c |  10 +
- drivers/net/ethernet/stmicro/stmmac/hwif.c         |   4 +-
- drivers/net/ethernet/stmicro/stmmac/hwif.h         |  17 +
- drivers/net/ethernet/stmicro/stmmac/mmc.h          |   9 +
- drivers/net/ethernet/stmicro/stmmac/mmc_core.c     | 192 +++++++
- drivers/net/ethernet/stmicro/stmmac/stmmac.h       |  11 +
- .../net/ethernet/stmicro/stmmac/stmmac_ethtool.c   |  81 +++
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  | 120 +++-
- .../net/ethernet/stmicro/stmmac/stmmac_selftests.c | 322 ++++++++++-
- include/linux/stmmac.h                             |   1 +
- 14 files changed, 1474 insertions(+), 9 deletions(-)
-
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
+index 6b08bb15af15..abab84f2ef8b 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
+@@ -11,8 +11,10 @@
+ #include <linux/ip.h>
+ #include <linux/phy.h>
+ #include <linux/udp.h>
++#include <net/pkt_cls.h>
+ #include <net/tcp.h>
+ #include <net/udp.h>
++#include <net/tc_act/tc_gact.h>
+ #include "stmmac.h"
+ 
+ struct stmmachdr {
+@@ -229,7 +231,7 @@ static int stmmac_test_loopback_validate(struct sk_buff *skb,
+ 			goto out;
+ 	}
+ 	if (tpriv->packet->src) {
+-		if (!ether_addr_equal(ehdr->h_source, orig_ndev->dev_addr))
++		if (!ether_addr_equal(ehdr->h_source, tpriv->packet->src))
+ 			goto out;
+ 	}
+ 
+@@ -912,6 +914,96 @@ static int stmmac_test_dvlanfilt(struct stmmac_priv *priv)
+ 	return ret;
+ }
+ 
++#ifdef CONFIG_NET_CLS_ACT
++static int stmmac_test_rxp(struct stmmac_priv *priv)
++{
++	unsigned char addr[ETH_ALEN] = {0xde, 0xad, 0xbe, 0xef, 0x00, 0x00};
++	struct tc_cls_u32_offload cls_u32 = { };
++	struct stmmac_packet_attrs attr = { };
++	struct tc_action **actions, *act;
++	struct tc_u32_sel *sel;
++	struct tcf_exts *exts;
++	int ret, i, nk = 1;
++
++	if (!tc_can_offload(priv->dev))
++		return -EOPNOTSUPP;
++	if (!priv->dma_cap.frpsel)
++		return -EOPNOTSUPP;
++
++	sel = kzalloc(sizeof(*sel) + nk * sizeof(struct tc_u32_key), GFP_KERNEL);
++	if (!sel)
++		return -ENOMEM;
++
++	exts = kzalloc(sizeof(*exts), GFP_KERNEL);
++	if (!exts) {
++		ret = -ENOMEM;
++		goto cleanup_sel;
++	}
++
++	actions = kzalloc(nk * sizeof(*actions), GFP_KERNEL);
++	if (!actions) {
++		ret = -ENOMEM;
++		goto cleanup_exts;
++	}
++
++	act = kzalloc(nk * sizeof(*act), GFP_KERNEL);
++	if (!act) {
++		ret = -ENOMEM;
++		goto cleanup_actions;
++	}
++
++	cls_u32.command = TC_CLSU32_NEW_KNODE;
++	cls_u32.common.chain_index = 0;
++	cls_u32.common.protocol = htons(ETH_P_ALL);
++	cls_u32.knode.exts = exts;
++	cls_u32.knode.sel = sel;
++	cls_u32.knode.handle = 0x123;
++
++	exts->nr_actions = nk;
++	exts->actions = actions;
++	for (i = 0; i < nk; i++) {
++		struct tcf_gact *gact = to_gact(&act[i]);
++
++		actions[i] = &act[i];
++		gact->tcf_action = TC_ACT_SHOT;
++	}
++
++	sel->nkeys = nk;
++	sel->offshift = 0;
++	sel->keys[0].off = 6;
++	sel->keys[0].val = htonl(0xdeadbeef);
++	sel->keys[0].mask = ~0x0;
++
++	ret = stmmac_tc_setup_cls_u32(priv, priv, &cls_u32);
++	if (ret)
++		goto cleanup_act;
++
++	attr.dst = priv->dev->dev_addr;
++	attr.src = addr;
++
++	ret = __stmmac_test_loopback(priv, &attr);
++	ret = !ret; /* Shall NOT receive packet */
++
++	cls_u32.command = TC_CLSU32_DELETE_KNODE;
++	stmmac_tc_setup_cls_u32(priv, priv, &cls_u32);
++
++cleanup_act:
++	kfree(act);
++cleanup_actions:
++	kfree(actions);
++cleanup_exts:
++	kfree(exts);
++cleanup_sel:
++	kfree(sel);
++	return ret;
++}
++#else
++static int stmmac_test_rxp(struct stmmac_priv *priv)
++{
++	return -EOPNOTSUPP;
++}
++#endif
++
+ #define STMMAC_LOOPBACK_NONE	0
+ #define STMMAC_LOOPBACK_MAC	1
+ #define STMMAC_LOOPBACK_PHY	2
+@@ -969,6 +1061,10 @@ static const struct stmmac_test {
+ 		.name = "Double VLAN Filtering",
+ 		.lb = STMMAC_LOOPBACK_PHY,
+ 		.fn = stmmac_test_dvlanfilt,
++	}, {
++		.name = "Flexible RX Parser   ",
++		.lb = STMMAC_LOOPBACK_PHY,
++		.fn = stmmac_test_rxp,
+ 	},
+ };
+ 
 -- 
 2.7.4
 
