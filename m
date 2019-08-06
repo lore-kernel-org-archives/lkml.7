@@ -2,160 +2,101 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA71C41514
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:07:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B15C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:07:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AF88214C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:07:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FEBF20C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 14:07:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732798AbfHFOHD (ORCPT
+        id S1732854AbfHFOHE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 6 Aug 2019 10:07:04 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:46399 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729525AbfHFOHD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 6 Aug 2019 10:07:03 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3767 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728836AbfHFOHD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 10:07:03 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id E96F6A1A2E2A146353F6;
-        Tue,  6 Aug 2019 22:06:59 +0800 (CST)
-Received: from huawei.com (10.90.53.225) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Tue, 6 Aug 2019
- 22:06:52 +0800
-From:   Cheng Jian <cj.chengjian@huawei.com>
-To:     <mingo@redhat.com>, <peterz@infradead.org>, <xiexiuqi@huawei.com>,
-        <huawei.libin@huawei.com>, <cj.chengjian@huawei.com>,
-        <bobo.shaobowang@huawei.com>
-CC:     <linux-kernel@vger.kernel.org>
-Subject: [PATCH] sched/core: decrease rq->nr_uninterruptible before set_task_cpu
-Date:   Tue, 6 Aug 2019 22:12:50 +0800
-Message-ID: <1565100770-110193-1-git-send-email-cj.chengjian@huawei.com>
-X-Mailer: git-send-email 2.7.4
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.90.53.225]
-X-CFilter-Loop: Reflected
+Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1hv07A-00031G-2a; Tue, 06 Aug 2019 16:07:00 +0200
+Message-ID: <1565100418.2323.32.camel@pengutronix.de>
+Subject: Re: Regression due to d98849aff879 (dma-direct: handle
+ DMA_ATTR_NO_KERNEL_MAPPING in common code)
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Christoph Hellwig <hch@lst.de>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+Cc:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>
+Date:   Tue, 06 Aug 2019 16:06:58 +0200
+In-Reply-To: <20190806140408.GA22902@lst.de>
+References: <1565082809.2323.24.camel@pengutronix.de>
+         <20190806113318.GA20215@lst.de>
+         <41cc93b1-62b5-7fb6-060d-01982e68503b@amd.com>
+         <20190806140408.GA22902@lst.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Migration may occur when wake up a process, so we must update
-the rq->nr_uninterruptible before set_task_cpu, otherwise we
-will decrease the nr_interuptible of the incorrect rq. Over
-time, it cause some rq accounting according to be too large,
-but others are negative.
+Am Dienstag, den 06.08.2019, 16:04 +0200 schrieb Christoph Hellwig:
+> Ok, does this work?
+> 
+> --
+> From 34d35f335a98f515f2516b515051e12eae744c8d Mon Sep 17 00:00:00 2001
+> > From: Christoph Hellwig <hch@lst.de>
+> Date: Tue, 6 Aug 2019 14:33:23 +0300
+> Subject: dma-direct: fix DMA_ATTR_NO_KERNEL_MAPPING
+> 
+> The new DMA_ATTR_NO_KERNEL_MAPPING needs to actually assign
+> a dma_addr to work.  Also skip it if the architecture needs
+> forced decryption handling, as that needs a kernel virtual
+> address.
+> 
+> Fixes: d98849aff879 (dma-direct: handle DMA_ATTR_NO_KERNEL_MAPPING in common code)
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  kernel/dma/direct.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+> index 59bdceea3737..b01064d884f2 100644
+> --- a/kernel/dma/direct.c
+> +++ b/kernel/dma/direct.c
+> @@ -130,11 +130,13 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
+> >  	if (!page)
+> >  		return NULL;
+>  
+> > -	if (attrs & DMA_ATTR_NO_KERNEL_MAPPING) {
+> > +	if ((attrs & DMA_ATTR_NO_KERNEL_MAPPING) &&
+> +	    !force_dma_unencrypted(dev)) {
 
-Also change the type of rq->nr_uninterruptible to atomic_t.
+dma_direct_free_pages() then needs the same check, as otherwise the cpu
+address is treated as a cookie instead of a real address and the
+encryption needs to be re-enabled.
 
-Signed-off-by: Cheng Jian <cj.chengjian@huawei.com>
----
- kernel/sched/core.c    | 14 +++++++++-----
- kernel/sched/debug.c   |  2 +-
- kernel/sched/loadavg.c |  2 +-
- kernel/sched/sched.h   |  2 +-
- 4 files changed, 12 insertions(+), 8 deletions(-)
+Regards,
+Lucas
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 2b037f1..4d3bbc1 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1198,7 +1198,7 @@ static inline void dequeue_task(struct rq *rq, struct task_struct *p, int flags)
- void activate_task(struct rq *rq, struct task_struct *p, int flags)
- {
- 	if (task_contributes_to_load(p))
--		rq->nr_uninterruptible--;
-+		atomic_dec(&rq->nr_uninterruptible);
- 
- 	enqueue_task(rq, p, flags);
- 
-@@ -1210,7 +1210,7 @@ void deactivate_task(struct rq *rq, struct task_struct *p, int flags)
- 	p->on_rq = (flags & DEQUEUE_SLEEP) ? 0 : TASK_ON_RQ_MIGRATING;
- 
- 	if (task_contributes_to_load(p))
--		rq->nr_uninterruptible++;
-+		atomic_inc(&rq->nr_uninterruptible);
- 
- 	dequeue_task(rq, p, flags);
- }
-@@ -2135,9 +2135,6 @@ ttwu_do_activate(struct rq *rq, struct task_struct *p, int wake_flags,
- 	lockdep_assert_held(&rq->lock);
- 
- #ifdef CONFIG_SMP
--	if (p->sched_contributes_to_load)
--		rq->nr_uninterruptible--;
--
- 	if (wake_flags & WF_MIGRATED)
- 		en_flags |= ENQUEUE_MIGRATED;
- #endif
-@@ -2500,11 +2497,15 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
- 	p->sched_contributes_to_load = !!task_contributes_to_load(p);
- 	p->state = TASK_WAKING;
- 
-+	/* update the rq accounting according before set_task_cpu */
- 	if (p->in_iowait) {
- 		delayacct_blkio_end(p);
- 		atomic_dec(&task_rq(p)->nr_iowait);
- 	}
- 
-+	if (p->sched_contributes_to_load)
-+		atomic_dec(&task_rq(p)->nr_uninterruptible);
-+
- 	cpu = select_task_rq(p, p->wake_cpu, SD_BALANCE_WAKE, wake_flags);
- 	if (task_cpu(p) != cpu) {
- 		wake_flags |= WF_MIGRATED;
-@@ -2519,6 +2520,9 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
- 		atomic_dec(&task_rq(p)->nr_iowait);
- 	}
- 
-+	if (p->sched_contributes_to_load)
-+		atomic_dec(&task_rq(p)->nr_uninterruptible);
-+
- #endif /* CONFIG_SMP */
- 
- 	ttwu_queue(p, cpu, wake_flags);
-diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
-index f7e4579..fa2c1bc 100644
---- a/kernel/sched/debug.c
-+++ b/kernel/sched/debug.c
-@@ -641,7 +641,7 @@ do {									\
- 	P(nr_running);
- 	P(nr_switches);
- 	P(nr_load_updates);
--	P(nr_uninterruptible);
-+	SEQ_printf(m, "  .%-30s: %d\n", "nr_uninterruptible", atomic_read(&rq->nr_uninterruptible));
- 	PN(next_balance);
- 	SEQ_printf(m, "  .%-30s: %ld\n", "curr->pid", (long)(task_pid_nr(rq->curr)));
- 	PN(clock);
-diff --git a/kernel/sched/loadavg.c b/kernel/sched/loadavg.c
-index 28a5165..cae7643 100644
---- a/kernel/sched/loadavg.c
-+++ b/kernel/sched/loadavg.c
-@@ -81,7 +81,7 @@ long calc_load_fold_active(struct rq *this_rq, long adjust)
- 	long nr_active, delta = 0;
- 
- 	nr_active = this_rq->nr_running - adjust;
--	nr_active += (long)this_rq->nr_uninterruptible;
-+	nr_active += (long)atomic_read(&this_rq->nr_uninterruptible);
- 
- 	if (nr_active != this_rq->calc_load_active) {
- 		delta = nr_active - this_rq->calc_load_active;
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 802b1f3..8429281 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -890,7 +890,7 @@ struct rq {
- 	 * one CPU and if it got migrated afterwards it may decrease
- 	 * it on another CPU. Always updated under the runqueue lock:
- 	 */
--	unsigned long		nr_uninterruptible;
-+	atomic_t		nr_uninterruptible;
- 
- 	struct task_struct	*curr;
- 	struct task_struct	*idle;
--- 
-2.7.4
-
+>  		/* remove any dirty cache lines on the kernel alias */
+> >  		if (!PageHighMem(page))
+> >  			arch_dma_prep_coherent(page, size);
+> >  		/* return the page pointer as the opaque cookie */
+> > +		*dma_handle = phys_to_dma(dev, page_to_phys(page));
+> >  		return page;
+> >  	}
+>  
