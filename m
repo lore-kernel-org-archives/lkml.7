@@ -2,99 +2,136 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77635C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8200FC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:42:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5342721880
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:41:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A587820B1F
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:42:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b="EWEQt0a3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387897AbfHFQlB convert rfc822-to-8bit (ORCPT
+        id S2387905AbfHFQmR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 12:41:01 -0400
-Received: from foss.arm.com ([217.140.110.172]:36768 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732917AbfHFQlB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 12:41:01 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 12764344;
-        Tue,  6 Aug 2019 09:41:00 -0700 (PDT)
-Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7CC9F3F575;
-        Tue,  6 Aug 2019 09:40:57 -0700 (PDT)
-References: <20190802090853.4810-1-patrick.bellasi@arm.com> <20190806161206.GA20526@blackbody.suse.cz>
-User-agent: mu4e 1.3.3; emacs 26.2
-From:   Patrick Bellasi <patrick.bellasi@arm.com>
-To:     Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-api@vger.kernel.org, cgroups@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tejun Heo <tj@kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        "Vincent Guittot" <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Paul Turner <pjt@google.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Todd Kjos <tkjos@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Steve Muckle <smuckle@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Alessio Balsini <balsini@android.com>
-Subject: Re: [PATCH v13 0/6] Add utilization clamping support (CGroups API)
-In-reply-to: <20190806161206.GA20526@blackbody.suse.cz>
-Date:   Tue, 06 Aug 2019 17:40:55 +0100
-Message-ID: <87k1bqfdrc.fsf@arm.com>
+        Tue, 6 Aug 2019 12:42:17 -0400
+Received: from mo4-p00-ob.smtp.rzone.de ([85.215.255.24]:26683 "EHLO
+        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732048AbfHFQmR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 12:42:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1565109732;
+        s=strato-dkim-0002; d=hartkopp.net;
+        h=In-Reply-To:Date:Message-ID:From:References:Cc:To:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=KJ/hU+j/ewD+T3jhdhw81CeIOchxwYxcu7jDq+0evYc=;
+        b=EWEQt0a3YmaP3YyjkblXoNj3lrfFCSJWLTd2aCDYSFxKJREXbnfoKWbzGabdRmXFqC
+        +hTkuV0p3zxofX9Dm5CNyVvwTxmo7UXvMEzuLRjGGLy9b0yY3RiZ6s9Qd1+ItvtgmIHc
+        +leSIWOj++VVD5FU6CNm9n6QRCtihSbRaZWAebrPug9MIj+b5/aaMG4s0n4ytI0apIO7
+        zLBahmoGybPy0q95xJp/BAHrOZ3nqjupcdDGSWDmKotDe7eXxzWMz5tXk9eQMjd9WSq/
+        p1mEcpQVhLUXnLbqkJTkl0/KYv/u+uMqcJUFUO2RPKeqiPAHIVnx+tc4RbWtpjwlt6jh
+        5ArA==
+X-RZG-AUTH: ":P2MHfkW8eP4Mre39l357AZT/I7AY/7nT2yrDxb8mjG14FZxedJy6qgO1o3PMaViOoLMJU8h5l0ix"
+X-RZG-CLASS-ID: mo00
+Received: from [192.168.1.177]
+        by smtp.strato.de (RZmta 44.24 DYNA|AUTH)
+        with ESMTPSA id k05d3bv76GfoJR9
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Tue, 6 Aug 2019 18:41:50 +0200 (CEST)
+Subject: Re: [PATCH net-next] net: can: Fix compiling warning
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Mao Wenan <maowenan@huawei.com>, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+References: <20190802033643.84243-1-maowenan@huawei.com>
+ <0050efdb-af9f-49b9-8d83-f574b3d46a2e@hartkopp.net>
+ <20190806135231.GJ1974@kadam>
+From:   Oliver Hartkopp <socketcan@hartkopp.net>
+Message-ID: <6e1c5aa0-8ed3-eec3-a34d-867ea8f54e9d@hartkopp.net>
+Date:   Tue, 6 Aug 2019 18:41:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20190806135231.GJ1974@kadam>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello Dan,
 
-On Tue, Aug 06, 2019 at 17:12:06 +0100, Michal Koutný wrote...
+On 06/08/2019 15.52, Dan Carpenter wrote:
+> On Fri, Aug 02, 2019 at 10:10:20AM +0200, Oliver Hartkopp wrote:
 
-> On Fri, Aug 02, 2019 at 10:08:47AM +0100, Patrick Bellasi <patrick.bellasi@arm.com> wrote:
->> Patrick Bellasi (6):
->>   sched/core: uclamp: Extend CPU's cgroup controller
->>   sched/core: uclamp: Propagate parent clamps
->>   sched/core: uclamp: Propagate system defaults to root group
->>   sched/core: uclamp: Use TG's clamps to restrict TASK's clamps
->>   sched/core: uclamp: Update CPU's refcount on TG's clamp changes
->>   sched/core: uclamp: always use enum uclamp_id for clamp_id values
+>> Btw. what kind of compiler/make switches are you using so that I can see
+>> these warnings myself the next time?
+> 
+> These are Sparse warnings, not from GCC.
 
-Hi Michal!
+I compiled the code (the original version), but I do not get that 
+"Should it be static?" warning:
 
-> Thank you Patrick for your patience.
+user@box:~/net-next$ make C=1
+   CALL    scripts/checksyscalls.sh
+   CALL    scripts/atomic/check-atomics.sh
+   DESCEND  objtool
+   CHK     include/generated/compile.h
+   CHECK   net/can/af_can.c
+./include/linux/sched.h:609:43: error: bad integer constant expression
+./include/linux/sched.h:609:73: error: invalid named zero-width bitfield 
+`value'
+./include/linux/sched.h:610:43: error: bad integer constant expression
+./include/linux/sched.h:610:67: error: invalid named zero-width bitfield 
+`bucket_id'
+   CC [M]  net/can/af_can.o
+   CHECK   net/can/proc.c
+./include/linux/sched.h:609:43: error: bad integer constant expression
+./include/linux/sched.h:609:73: error: invalid named zero-width bitfield 
+`value'
+./include/linux/sched.h:610:43: error: bad integer constant expression
+./include/linux/sched.h:610:67: error: invalid named zero-width bitfield 
+`bucket_id'
+   CC [M]  net/can/proc.o
+   LD [M]  net/can/can.o
+   CHECK   net/can/raw.c
+./include/linux/sched.h:609:43: error: bad integer constant expression
+./include/linux/sched.h:609:73: error: invalid named zero-width bitfield 
+`value'
+./include/linux/sched.h:610:43: error: bad integer constant expression
+./include/linux/sched.h:610:67: error: invalid named zero-width bitfield 
+`bucket_id'
+   CC [M]  net/can/raw.o
+   LD [M]  net/can/can-raw.o
+   CHECK   net/can/bcm.c
+./include/linux/sched.h:609:43: error: bad integer constant expression
+./include/linux/sched.h:609:73: error: invalid named zero-width bitfield 
+`value'
+./include/linux/sched.h:610:43: error: bad integer constant expression
+./include/linux/sched.h:610:67: error: invalid named zero-width bitfield 
+`bucket_id'
+   CC [M]  net/can/bcm.o
+   LD [M]  net/can/can-bcm.o
+   CHECK   net/can/gw.c
+./include/linux/sched.h:609:43: error: bad integer constant expression
+./include/linux/sched.h:609:73: error: invalid named zero-width bitfield 
+`value'
+./include/linux/sched.h:610:43: error: bad integer constant expression
+./include/linux/sched.h:610:67: error: invalid named zero-width bitfield 
+`bucket_id'
+   CC [M]  net/can/gw.o
+   LD [M]  net/can/can-gw.o
+Kernel: arch/x86/boot/bzImage is ready  (#2)
 
-Thanks to you for your reviews.
+I've seen that warning at different other code - but not in bcm.c & raw.c
 
-> I used the time to revisit the series once again and I think the RCU
-> locks can be streamlined a bit.
+I downloaded & compiled the latest sparse source. But still no "static" 
+warning. Any idea?
 
-I'll have a look at those, thanks!
-
-> If you find that correct, feel free to add my Reviewed-by to the
-> updated series (for 1/6 and legacy, I'm just asking).
-
-Sure, actually sorry for not having already added that tag in the
-current version, it will be there in v14 ;)
-
-> Michal
-
-Cheers,
-Patrick
-
---
-#include <best/regards.h>
-
-Patrick Bellasi
-
+Best regards,
+Oliver
