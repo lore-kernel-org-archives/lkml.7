@@ -2,110 +2,101 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73F48C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:56:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A2BFC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 17:02:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50CC82075B
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:56:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7647120717
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 17:02:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387624AbfHFQ4A (ORCPT
+        id S2387782AbfHFRCT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 12:56:00 -0400
-Received: from mga14.intel.com ([192.55.52.115]:21567 "EHLO mga14.intel.com"
+        Tue, 6 Aug 2019 13:02:19 -0400
+Received: from foss.arm.com ([217.140.110.172]:36984 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732048AbfHFQ4A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 12:56:00 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 09:55:59 -0700
-X-IronPort-AV: E=Sophos;i="5.64,353,1559545200"; 
-   d="scan'208";a="325687415"
-Received: from rchatre-mobl.amr.corp.intel.com (HELO [10.24.14.91]) ([10.24.14.91])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 06 Aug 2019 09:55:59 -0700
-Subject: Re: [PATCH V2 01/10] x86/CPU: Expose if cache is inclusive of lower
- level caches
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     tglx@linutronix.de, fenghua.yu@intel.com, tony.luck@intel.com,
-        kuo-lang.tseng@intel.com, mingo@redhat.com, hpa@zytor.com,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-References: <cover.1564504901.git.reinette.chatre@intel.com>
- <6c78593207224014d6a9d43698a3d1a0b3ccf2b6.1564504901.git.reinette.chatre@intel.com>
- <20190802180352.GE30661@zn.tnic>
- <e532ab90-196c-8b58-215a-f56f5e409512@intel.com>
- <20190803094423.GA2100@zn.tnic>
- <122b005a-46b1-2b1e-45a8-7f92a5dba2d9@intel.com>
- <20190806155716.GE25897@zn.tnic>
-From:   Reinette Chatre <reinette.chatre@intel.com>
-Message-ID: <151002be-33e6-20d6-7699-bc9be7e51f33@intel.com>
-Date:   Tue, 6 Aug 2019 09:55:56 -0700
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190806155716.GE25897@zn.tnic>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1730505AbfHFRCT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 13:02:19 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3EB75344;
+        Tue,  6 Aug 2019 10:02:16 -0700 (PDT)
+Received: from usa.arm.com (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 571DB3F575;
+        Tue,  6 Aug 2019 10:02:14 -0700 (PDT)
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Sudeep Holla <sudeep.holla@arm.com>, Peng Fan <peng.fan@nxp.com>,
+        linux-kernel@vger.kernel.org,
+        Bo Zhang <bozhang.zhang@broadcom.com>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        Volodymyr Babchuk <volodymyr_babchuk@epam.com>,
+        Gaku Inami <gaku.inami.xh@renesas.com>,
+        aidapala@qti.qualcomm.com, pajay@qti.qualcomm.com,
+        Etienne Carriere <etienne.carriere@linaro.org>,
+        Souvik Chakravarty <Souvik.Chakravarty@arm.com>,
+        wesleys@xilinx.com, Felix Burton <fburton@xilinx.com>,
+        Saeed Nowshadi <saeed.nowshadi@xilinx.com>
+Subject: [PATCH v2 0/5] firmware: arm_scmi: add SCMI v2.0 fastchannels and reset protocol support
+Date:   Tue,  6 Aug 2019 18:02:03 +0100
+Message-Id: <20190806170208.6787-1-sudeep.holla@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Borislav,
+SCMI v2.0[1] released recently adds support for:
 
-On 8/6/2019 8:57 AM, Borislav Petkov wrote:
-> On Mon, Aug 05, 2019 at 10:57:04AM -0700, Reinette Chatre wrote:
->> What do you think?
-> 
-> Actually, I was thinking about something a lot simpler: something
-> along the lines of adding the CPUID check in a helper function which
-> rdt_pseudo_lock_init() calls. If the cache is not inclusive - and my
-> guess is it would suffice to check any cache but I'd prefer you correct
-> me on that - you simply return error and rdt_pseudo_lock_init() returns
-> early without doing any futher init.
-> 
-> How does that sound?
+1. Performance protocol fast channels
+2. Reset Management Protocol
+among several other features.
 
-I am a bit cautious about this. When I started this work I initially
-added a helper function to resctrl that calls CPUID to determine if the
-cache is inclusive. At that time I became aware of a discussion
-motivating against scattered CPUID calls and motivating for one instance
-of CPUID information:
-http://lkml.kernel.org/r/alpine.DEB.2.21.1906162141301.1760@nanos.tec.linutronix.de
+This series adds support for the above 2.
 
-My interpretation of the above resulted in a move away from calling
-CPUID in resctrl to the patch you are reviewing now.
+The code is based on the cleanup[2] and Rx/async/delayed response series[3]
+and is available @[4]
 
-I do indeed prefer a simple approach and would change to what you
-suggest if you find it to be best.
+--
+Regards,
+Sudeep
 
-To answer your question about checking any cache: this seems to be
-different between L2 and L3. On the Atom systems where L2 pseudo-locking
-works well the L2 cache is not inclusive. We are also working on
-supporting cache pseudo-locking on L3 cache that is not inclusive.
+v1[5]->v2:
+	- Changed the macro SCMI_PERF_FC_RING_DB to use do {} while(0)
+	- Renamed RESET_ARM_SCMI to RESET_SCMI and reworded Kconfig text
+	- Dropped unused struct device pointer from scmi_reset_data
+	- Added to_scmi_handle which helped to remove some repetitive code
+	- Fixed some doxygen comments
+	- Initialised rcdev.nr_resets
+	- Fixed MODULE_DESCRIPTION
 
-I could add the single CPUID check during rdt_pseudo_lock_init(),
-checking on any CPU should work. I think it would be simpler (reasons
-below) to initialize that single system-wide setting in
-rdt_pseudo_lock_init() and keep the result locally in the pseudo-locking
-code, that can be referred to when the user requests the pseudo-locked
-region.
+[1] http://infocenter.arm.com/help/topic/com.arm.doc.den0056b/DEN0056B_System_Control_and_Management_Interface_v2_0.pdf
+[2] https://lore.kernel.org/lkml/20190726134531.8928-1-sudeep.holla@arm.com
+[3] https://lore.kernel.org/lkml/20190726135138.9858-1-sudeep.holla@arm.com/
+[4] git://git.kernel.org/pub/scm/linux/kernel/git/sudeep.holla/linux.git scmi_updates
+[5] https://lore.kernel.org/lkml/20190726135954.11078-1-sudeep.holla@arm.com/
 
-Simpler for two reasons:
-* Prevent future platform specific code within rdt_pseudo_lock_init()
-trying to pick when L3 is allowed to be inclusive or not.
-* rdt_pseudo_lock_init() does not currently make decision whether
-platform supports pseudo-locking - this is currently done when user
-requests a pseudo-lock region. rdt_pseudo_lock_init() does
-initialization of things that should not fail and for which resctrl's
-mount should not proceed if it fails. A platform not supporting
-pseudo-locking should not prevent resctrl from being mounted and used
-for cache allocation.
+Sudeep Holla (5):
+  firmware: arm_scmi: Add discovery of SCMI v2.0 performance fastchannels
+  firmware: arm_scmi: Make use SCMI v2.0 fastchannel for performance protocol
+  dt-bindings: arm: Extend SCMI to support new reset protocol
+  firmware: arm_scmi: Add RESET protocol in SCMI v2.0
+  reset: Add support for resets provided by SCMI
 
-Thank you very much
+ .../devicetree/bindings/arm/arm,scmi.txt      |  17 ++
+ MAINTAINERS                                   |   1 +
+ drivers/firmware/arm_scmi/Makefile            |   2 +-
+ drivers/firmware/arm_scmi/perf.c              | 257 +++++++++++++++++-
+ drivers/firmware/arm_scmi/reset.c             | 231 ++++++++++++++++
+ drivers/reset/Kconfig                         |  11 +
+ drivers/reset/Makefile                        |   1 +
+ drivers/reset/reset-scmi.c                    | 126 +++++++++
+ include/linux/scmi_protocol.h                 |  26 ++
+ 9 files changed, 663 insertions(+), 9 deletions(-)
+ create mode 100644 drivers/firmware/arm_scmi/reset.c
+ create mode 100644 drivers/reset/reset-scmi.c
 
-Reinette
+--
+2.17.1
+
