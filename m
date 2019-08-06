@@ -2,98 +2,80 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18E07C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1178C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:45:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE181214C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:44:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565117051;
-	bh=82KdnV5xgDw0h/RCZKJpwmgLGzGBvW3IThY72SpKrcA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=c5uj5/mo2nrGPHQO1r9bQmR150d8v/7PEtIM3LE9SGuqYJ8ThuOdI7bxxDlEoR/21
-	 XeuqeEgdxc/NbRCleDTbe1yv438X9cmur/WO2gJXaCxLqaFWusDBIXOQS64C0fr4vA
-	 ROAgnKH76keYfeOI137MG/D06R33q1Qy7w3sWRCw=
+	by mail.kernel.org (Postfix) with ESMTP id 763E720818
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:45:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726911AbfHFSoL (ORCPT
+        id S1726210AbfHFSpp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 14:44:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40524 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 14:45:45 -0400
+Received: from mga05.intel.com ([192.55.52.43]:6976 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726009AbfHFSoI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 14:44:08 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2106F20818;
-        Tue,  6 Aug 2019 18:44:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565117047;
-        bh=82KdnV5xgDw0h/RCZKJpwmgLGzGBvW3IThY72SpKrcA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SBOXAzFLr0DfHY9SWf8LsgEhWckLONpPtqkpqmKD+sHQXkPj8u8YtWI2v4SSRYwCP
-         yJ8CvUUllkvyex4vgZlPj1d+wag8DGgyI3ybWNnX7DDcXoa7gi0lo17nNC0kBNwcy8
-         u+222RaBSFjyOHk6fXPUV8zVN8CEkytzIMgTb7z0=
-Date:   Tue, 6 Aug 2019 20:44:05 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH 5.2 000/131] 5.2.7-stable review
-Message-ID: <20190806184405.GA28058@kroah.com>
-References: <20190805124951.453337465@linuxfoundation.org>
- <c01bc729-c9c1-fe90-4850-7907fee27a2b@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c01bc729-c9c1-fe90-4850-7907fee27a2b@nvidia.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        id S1725798AbfHFSpp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 14:45:45 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 11:45:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,353,1559545200"; 
+   d="scan'208";a="373511109"
+Received: from megha-z97x-ud7-th.sc.intel.com ([143.183.85.162])
+  by fmsmga005.fm.intel.com with ESMTP; 06 Aug 2019 11:45:44 -0700
+Message-ID: <1565118415.2401.113.camel@intel.com>
+Subject: Re: [RFC V1 RESEND 3/6] x86: Introduce the dynamic teardown function
+From:   Megha Dey <megha.dey@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, marc.zyngier@arm.com,
+        ashok.raj@intel.com, jacob.jun.pan@linux.intel.com,
+        megha.dey@linux.intel.com
+Date:   Tue, 06 Aug 2019 12:06:55 -0700
+In-Reply-To: <alpine.DEB.2.21.1906290959400.1802@nanos.tec.linutronix.de>
+References: <1561162778-12669-1-git-send-email-megha.dey@linux.intel.com>
+         <1561162778-12669-4-git-send-email-megha.dey@linux.intel.com>
+         <alpine.DEB.2.21.1906290959400.1802@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.18.5.2-0ubuntu3.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 07:30:45PM +0100, Jon Hunter wrote:
+On Sat, 2019-06-29 at 10:01 +0200, Thomas Gleixner wrote:
+> Megha,
 > 
-> On 05/08/2019 14:01, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.2.7 release.
-> > There are 131 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
+> On Fri, 21 Jun 2019, Megha Dey wrote:
 > > 
-> > Responses should be made by Wed 07 Aug 2019 12:47:58 PM UTC.
-> > Anything received after that time might be too late.
-> > 
-> > The whole patch series can be found in one patch at:
-> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.7-rc1.gz
-> > or in the git tree and branch at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.2.y
-> > and the diffstat can be found below.
-> > 
-> > thanks,
-> > 
-> > greg k-h
+> >  
+> > +void default_teardown_msi_irqs_grp(struct pci_dev *dev, int
+> > group_id)
+> > +{
+> > +	int i;
+> > +	struct msi_desc *entry;
+> > +
+> > +	for_each_pci_msi_entry(entry, dev) {
+> > +		if (entry->group_id == group_id && entry->irq) {
+> > +			for (i = 0; i < entry->nvec_used; i++)
+> > +				arch_teardown_msi_irq(entry->irq +
+> > i);
+> With proper group management this whole group_id muck goes away. You
+> hand
+> in a group and clean it up and if done right then you don't need a
+> new
+> interface at all simply because everything is group based.
 > 
-> All tests passing for Tegra ...
-> 
-> Test results for stable-v5.2:
->     12 builds:	12 pass, 0 fail
->     22 boots:	22 pass, 0 fail
->     38 tests:	38 pass, 0 fail
-> 
-> Linux version:	5.2.7-rc1-g22499a291939
-> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
->                 tegra194-p2972-0000, tegra20-ventana,
->                 tegra210-p2371-2180, tegra30-cardhu-a04
 
-Thanks for testing all of these and letting me know.
+Yeah , with the new proposal, this will hopefully be much cleaner.
 
-greg k-h
+> Thanks,
+> 
+> 	tglx
