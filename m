@@ -2,182 +2,115 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2981C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 179D6C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:59:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEBF820C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:59:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9C0E214C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:59:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731510AbfHFM7X (ORCPT
+        id S1731629AbfHFM7g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 08:59:23 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54038 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729898AbfHFM7X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 08:59:23 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 0C6EFAC8C;
-        Tue,  6 Aug 2019 12:59:21 +0000 (UTC)
-Subject: Re: [PATCH v2] bcache: fix deadlock in bcache_allocator
-To:     Andrea Righi <andrea.righi@canonical.com>
-Cc:     Kent Overstreet <kent.overstreet@gmail.com>,
-        linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190806091801.GC11184@xps-13>
-From:   Coly Li <colyli@suse.de>
-Openpgp: preference=signencrypt
-Organization: SUSE Labs
-Message-ID: <29c73faa-4829-f791-b714-b37159f5b956@suse.de>
-Date:   Tue, 6 Aug 2019 20:59:16 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
+        Tue, 6 Aug 2019 08:59:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58324 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731132AbfHFM7g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 08:59:36 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id F133F50F4D;
+        Tue,  6 Aug 2019 12:59:35 +0000 (UTC)
+Received: from treble (ovpn-121-192.rdu2.redhat.com [10.10.121.192])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id DC1291001284;
+        Tue,  6 Aug 2019 12:59:33 +0000 (UTC)
+Date:   Tue, 6 Aug 2019 07:59:31 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Sedat Dilek <sedat.dilek@gmail.com>
+Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] drm/i915: Remove redundant user_access_end() from
+ __copy_from_user() error path
+Message-ID: <20190806125931.oqeqateyzqikusku@treble>
+References: <51a4155c5bc2ca847a9cbe85c1c11918bb193141.1564086017.git.jpoimboe@redhat.com>
+ <alpine.DEB.2.21.1907252355150.1791@nanos.tec.linutronix.de>
+ <156416793450.30723.5556760526480191131@skylake-alporthouse-com>
+ <alpine.DEB.2.21.1907262116530.1791@nanos.tec.linutronix.de>
+ <156416944205.21451.12269136304831943624@skylake-alporthouse-com>
+ <CA+icZUXwBFS-6e+Qp4e3PhnRzEHvwdzWtS6OfVsgy85R5YNGOg@mail.gmail.com>
+ <CA+icZUWA6e0Zsio6sthRUC=Ehb2-mw_9U76UnvwGc_tOnOqt7w@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190806091801.GC11184@xps-13>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+In-Reply-To: <CA+icZUWA6e0Zsio6sthRUC=Ehb2-mw_9U76UnvwGc_tOnOqt7w@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Tue, 06 Aug 2019 12:59:36 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/8/6 5:18 下午, Andrea Righi wrote:
-> bcache_allocator() can call the following:
+On Mon, Aug 05, 2019 at 09:29:53PM +0200, Sedat Dilek wrote:
+> On Wed, Jul 31, 2019 at 2:25 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
+> >
+> > On Fri, Jul 26, 2019 at 9:30 PM Chris Wilson <chris@chris-wilson.co.uk> wrote:
+> > >
+> > > Quoting Thomas Gleixner (2019-07-26 20:18:32)
+> > > > On Fri, 26 Jul 2019, Chris Wilson wrote:
+> > > > > Quoting Thomas Gleixner (2019-07-25 22:55:45)
+> > > > > > On Thu, 25 Jul 2019, Josh Poimboeuf wrote:
+> > > > > >
+> > > > > > > Objtool reports:
+> > > > > > >
+> > > > > > >   drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool: .altinstr_replacement+0x36: redundant UACCESS disable
+> > > > > > >
+> > > > > > > __copy_from_user() already does both STAC and CLAC, so the
+> > > > > > > user_access_end() in its error path adds an extra unnecessary CLAC.
+> > > > > > >
+> > > > > > > Fixes: 0b2c8f8b6b0c ("i915: fix missing user_access_end() in page fault exception case")
+> > > > > > > Reported-by: Thomas Gleixner <tglx@linutronix.de>
+> > > > > > > Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
+> > > > > > > Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > > > > > > Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+> > > > > > > Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+> > > > > > > Link: https://github.com/ClangBuiltLinux/linux/issues/617
+> > > > > > > Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> > > > > >
+> > > > > > Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+> > > > >
+> > > > > Which tree do you plan to apply it to? I can put in drm-intel, and with
+> > > > > the fixes tag it will percolate through to 5.3 and beyond, but if you
+> > > > > want to apply it directly to squash the build warnings, feel free.
+> > > >
+> > > > It would be nice to get it into 5.3. I can route it linuxwards if you give
+> > > > an Acked-by, but I'm happy to hand it to you :)
+> > >
+> > > Acked-by: Chris Wilson <chris@chris-wilson.co.uk>
+> >
+> > Thomas did you take this through tip tree after Chris' ACK?
+> >
 > 
->  bch_allocator_thread()
->   -> bch_prio_write()
->      -> bch_bucket_alloc()
->         -> wait on &ca->set->bucket_wait
+> Hi,
 > 
-> But the wake up event on bucket_wait is supposed to come from
-> bch_allocator_thread() itself => deadlock:
-> 
-> [ 1158.490744] INFO: task bcache_allocato:15861 blocked for more than 10 seconds.
-> [ 1158.495929]       Not tainted 5.3.0-050300rc3-generic #201908042232
-> [ 1158.500653] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> [ 1158.504413] bcache_allocato D    0 15861      2 0x80004000
-> [ 1158.504419] Call Trace:
-> [ 1158.504429]  __schedule+0x2a8/0x670
-> [ 1158.504432]  schedule+0x2d/0x90
-> [ 1158.504448]  bch_bucket_alloc+0xe5/0x370 [bcache]
-> [ 1158.504453]  ? wait_woken+0x80/0x80
-> [ 1158.504466]  bch_prio_write+0x1dc/0x390 [bcache]
-> [ 1158.504476]  bch_allocator_thread+0x233/0x490 [bcache]
-> [ 1158.504491]  kthread+0x121/0x140
-> [ 1158.504503]  ? invalidate_buckets+0x890/0x890 [bcache]
-> [ 1158.504506]  ? kthread_park+0xb0/0xb0
-> [ 1158.504510]  ret_from_fork+0x35/0x40
-> 
-> Fix by making the call to bch_prio_write() non-blocking, so that
-> bch_allocator_thread() never waits on itself.
-> 
-> Moreover, make sure to wake up the garbage collector thread when
-> bch_prio_write() is failing to allocate buckets.
-> 
-> BugLink: https://bugs.launchpad.net/bugs/1784665
-> BugLink: https://bugs.launchpad.net/bugs/1796292
-> Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
+> Gentle ping...
+> Thomas and Chris: Will someone of you pick this up?
+> As "objtool: Improve UACCESS coverage" [1] went trough tip tree I
+> highly appreciate to do so with this one.
 
-At this moment I am not able to find a better solution, so I take this
-patch in my for-test.
-
-Thank you. And I hope you may continue to maintain this change if people
-report problem (I mean if) in future.
-
-
-Coly Li
-
-
-> ---
-> Changes in v2:
->  - prevent retry_invalidate busy loop in bch_allocator_thread()
-> 
->  drivers/md/bcache/alloc.c  |  5 ++++-
->  drivers/md/bcache/bcache.h |  2 +-
->  drivers/md/bcache/super.c  | 13 +++++++++----
->  3 files changed, 14 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/md/bcache/alloc.c b/drivers/md/bcache/alloc.c
-> index 6f776823b9ba..a1df0d95151c 100644
-> --- a/drivers/md/bcache/alloc.c
-> +++ b/drivers/md/bcache/alloc.c
-> @@ -377,7 +377,10 @@ static int bch_allocator_thread(void *arg)
->  			if (!fifo_full(&ca->free_inc))
->  				goto retry_invalidate;
->  
-> -			bch_prio_write(ca);
-> +			if (bch_prio_write(ca, false) < 0) {
-> +				ca->invalidate_needs_gc = 1;
-> +				wake_up_gc(ca->set);
-> +			}
->  		}
->  	}
->  out:
-> diff --git a/drivers/md/bcache/bcache.h b/drivers/md/bcache/bcache.h
-> index 013e35a9e317..deb924e1d790 100644
-> --- a/drivers/md/bcache/bcache.h
-> +++ b/drivers/md/bcache/bcache.h
-> @@ -977,7 +977,7 @@ bool bch_cached_dev_error(struct cached_dev *dc);
->  __printf(2, 3)
->  bool bch_cache_set_error(struct cache_set *c, const char *fmt, ...);
->  
-> -void bch_prio_write(struct cache *ca);
-> +int bch_prio_write(struct cache *ca, bool wait);
->  void bch_write_bdev_super(struct cached_dev *dc, struct closure *parent);
->  
->  extern struct workqueue_struct *bcache_wq;
-> diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-> index 20ed838e9413..716ea272fb55 100644
-> --- a/drivers/md/bcache/super.c
-> +++ b/drivers/md/bcache/super.c
-> @@ -529,7 +529,7 @@ static void prio_io(struct cache *ca, uint64_t bucket, int op,
->  	closure_sync(cl);
->  }
->  
-> -void bch_prio_write(struct cache *ca)
-> +int bch_prio_write(struct cache *ca, bool wait)
->  {
->  	int i;
->  	struct bucket *b;
-> @@ -564,8 +564,12 @@ void bch_prio_write(struct cache *ca)
->  		p->magic	= pset_magic(&ca->sb);
->  		p->csum		= bch_crc64(&p->magic, bucket_bytes(ca) - 8);
->  
-> -		bucket = bch_bucket_alloc(ca, RESERVE_PRIO, true);
-> -		BUG_ON(bucket == -1);
-> +		bucket = bch_bucket_alloc(ca, RESERVE_PRIO, wait);
-> +		if (bucket == -1) {
-> +			if (!wait)
-> +				return -ENOMEM;
-> +			BUG_ON(1);
-> +		}
->  
->  		mutex_unlock(&ca->set->bucket_lock);
->  		prio_io(ca, bucket, REQ_OP_WRITE, 0);
-> @@ -593,6 +597,7 @@ void bch_prio_write(struct cache *ca)
->  
->  		ca->prio_last_buckets[i] = ca->prio_buckets[i];
->  	}
-> +	return 0;
->  }
->  
->  static void prio_read(struct cache *ca, uint64_t bucket)
-> @@ -1954,7 +1959,7 @@ static int run_cache_set(struct cache_set *c)
->  
->  		mutex_lock(&c->bucket_lock);
->  		for_each_cache(ca, c, i)
-> -			bch_prio_write(ca);
-> +			bch_prio_write(ca, true);
->  		mutex_unlock(&c->bucket_lock);
->  
->  		err = "cannot allocate new UUID bucket";
-> 
-
+I think Thomas has gone on holiday, so hopefully Chris can pick it up
+after all.
 
 -- 
-
-Coly Li
+Josh
