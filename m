@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 316A9C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:34:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 636B7C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 056BC217D9
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:34:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3399421874
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:34:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127273;
-	bh=m5gHbQrcUMFbJ76EWBnK/TgYPTtChWNCLVydJT9814s=;
+	s=default; t=1565127276;
+	bh=L0qH2xuYaLGHGVGpZsR8NfgkXxZmwE0sfE4wA2PK214=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lLoh/bh6zCM7AeUHh2/kAlBwHK/tDcqVOKIrI4iJhApfyNnpsszzmSVLbaqzEiSp1
-	 +4gPAC2fyUNXPTvTnYl6yNpsuAz/UcaE4JxmFa29UqjsYuL1/qrvP5jGvmaklhT2nY
-	 4XISwq3VYUyQkvG2X53MhxofEZ/t5MLGwhhRw/2s=
+	b=QM++CI19hcReZwqKgEPepevj4JYkAaQ2epSXdRpyTDEE7sbKvlDo6aPMe7/Tan1SH
+	 YhSTDrygG26sDMcDcHh83M+QRmYLoJq+BlCj4SPUZxt35XM0xRmZL5RJaQed3bW5bv
+	 gljDrG5Qz2C8/Hy55UeHXw02EU+liuLHDJvYhjoA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbfHFVec (ORCPT
+        id S1727792AbfHFVef (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:34:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52272 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 17:34:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727724AbfHFVe2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:34:28 -0400
+        id S1727766AbfHFVec (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:34:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A3B4217D9;
-        Tue,  6 Aug 2019 21:34:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9933D217D9;
+        Tue,  6 Aug 2019 21:34:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127267;
-        bh=m5gHbQrcUMFbJ76EWBnK/TgYPTtChWNCLVydJT9814s=;
+        s=default; t=1565127271;
+        bh=L0qH2xuYaLGHGVGpZsR8NfgkXxZmwE0sfE4wA2PK214=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0nGiPdQY73MucymDa1/7dic/V3gGrVItm8bBRRjU8Gv1ilk4nwvRXyYiRceFwKnOc
-         UlY7oWDW95SZgOeiOtet8PMqWc+DiOz1u76ftIcu5aGOLZXDLzFwSD0mn+mGcOTqr3
-         8TXJyMtI0Dv83qu5Pbp2v/88jFJ04QEXBEHokrU8=
+        b=1NjRvde0bVnHx2azYdWBqbFIof64kgYWVnzJHFw8Zo5WQZMXStkvkhV9/hldeZ0PQ
+         AoYT5UG92ZZiweDFegaZlF4cLUNnPJspEWyHyuBeKti2UK1jahI75xT5Eru1aBY+zy
+         y+lnLYmloP9WYACI/29rOqtuUrNhbAril1D+FJD8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Peter Smith <peter.smith@linaro.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 5.2 35/59] kbuild: Check for unknown options with cc-option usage in Kconfig and clang
-Date:   Tue,  6 Aug 2019 17:32:55 -0400
-Message-Id: <20190806213319.19203-35-sashal@kernel.org>
+Cc:     Rob Clark <robdclark@chromium.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Sean Paul <seanpaul@chromium.org>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.2 37/59] drm/vgem: fix cache synchronization on arm/arm64
+Date:   Tue,  6 Aug 2019 17:32:57 -0400
+Message-Id: <20190806213319.19203-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190806213319.19203-1-sashal@kernel.org>
 References: <20190806213319.19203-1-sashal@kernel.org>
@@ -64,65 +61,215 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Boyd <swboyd@chromium.org>
+From: Rob Clark <robdclark@chromium.org>
 
-[ Upstream commit e8de12fb7cde2c85bc31097cd098da79a4818305 ]
+[ Upstream commit 7e9e5ead55beacc11116b3fb90b0de6e7cf55a69 ]
 
-If the particular version of clang a user has doesn't enable
--Werror=unknown-warning-option by default, even though it is the
-default[1], then make sure to pass the option to the Kconfig cc-option
-command so that testing options from Kconfig files works properly.
-Otherwise, depending on the default values setup in the clang toolchain
-we will silently assume options such as -Wmaybe-uninitialized are
-supported by clang, when they really aren't.
+drm_cflush_pages() is no-op on arm/arm64.  But instead we can use
+dma_sync API.
 
-A compilation issue only started happening for me once commit
-589834b3a009 ("kbuild: Add -Werror=unknown-warning-option to
-CLANG_FLAGS") was applied on top of commit b303c6df80c9 ("kbuild:
-compute false-positive -Wmaybe-uninitialized cases in Kconfig"). This
-leads kbuild to try and test for the existence of the
--Wmaybe-uninitialized flag with the cc-option command in
-scripts/Kconfig.include, and it doesn't see an error returned from the
-option test so it sets the config value to Y. Then the Makefile tries to
-pass the unknown option on the command line and
--Werror=unknown-warning-option catches the invalid option and breaks the
-build. Before commit 589834b3a009 ("kbuild: Add
--Werror=unknown-warning-option to CLANG_FLAGS") the build works fine,
-but any cc-option test of a warning option in Kconfig files silently
-evaluates to true, even if the warning option flag isn't supported on
-clang.
+Fixes failures w/ vgem_test.
 
-Note: This doesn't change cc-option usages in Makefiles because those
-use a different rule that includes KBUILD_CFLAGS by default (see the
-__cc-option command in scripts/Kbuild.incluide). The KBUILD_CFLAGS
-variable already has the -Werror=unknown-warning-option flag set. Thanks
-to Doug for pointing out the different rule.
-
-[1] https://clang.llvm.org/docs/DiagnosticsReference.html#wunknown-warning-option
-Cc: Peter Smith <peter.smith@linaro.org>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190717211542.30482-1-robdclark@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/Kconfig.include | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/vgem/vgem_drv.c | 130 ++++++++++++++++++++------------
+ 1 file changed, 83 insertions(+), 47 deletions(-)
 
-diff --git a/scripts/Kconfig.include b/scripts/Kconfig.include
-index 8a5c4d645eb14..4bbf4fc163a29 100644
---- a/scripts/Kconfig.include
-+++ b/scripts/Kconfig.include
-@@ -25,7 +25,7 @@ failure = $(if-success,$(1),n,y)
+diff --git a/drivers/gpu/drm/vgem/vgem_drv.c b/drivers/gpu/drm/vgem/vgem_drv.c
+index 11a8f99ba18c5..fc04803ff4035 100644
+--- a/drivers/gpu/drm/vgem/vgem_drv.c
++++ b/drivers/gpu/drm/vgem/vgem_drv.c
+@@ -47,10 +47,16 @@ static struct vgem_device {
+ 	struct platform_device *platform;
+ } *vgem_device;
  
- # $(cc-option,<flag>)
- # Return y if the compiler supports <flag>, n otherwise
--cc-option = $(success,$(CC) -Werror $(1) -E -x c /dev/null -o /dev/null)
-+cc-option = $(success,$(CC) -Werror $(CLANG_FLAGS) $(1) -E -x c /dev/null -o /dev/null)
++static void sync_and_unpin(struct drm_vgem_gem_object *bo);
++static struct page **pin_and_sync(struct drm_vgem_gem_object *bo);
++
+ static void vgem_gem_free_object(struct drm_gem_object *obj)
+ {
+ 	struct drm_vgem_gem_object *vgem_obj = to_vgem_bo(obj);
  
- # $(ld-option,<flag>)
- # Return y if the linker supports <flag>, n otherwise
++	if (!obj->import_attach)
++		sync_and_unpin(vgem_obj);
++
+ 	kvfree(vgem_obj->pages);
+ 	mutex_destroy(&vgem_obj->pages_lock);
+ 
+@@ -78,40 +84,15 @@ static vm_fault_t vgem_gem_fault(struct vm_fault *vmf)
+ 		return VM_FAULT_SIGBUS;
+ 
+ 	mutex_lock(&obj->pages_lock);
++	if (!obj->pages)
++		pin_and_sync(obj);
+ 	if (obj->pages) {
+ 		get_page(obj->pages[page_offset]);
+ 		vmf->page = obj->pages[page_offset];
+ 		ret = 0;
+ 	}
+ 	mutex_unlock(&obj->pages_lock);
+-	if (ret) {
+-		struct page *page;
+-
+-		page = shmem_read_mapping_page(
+-					file_inode(obj->base.filp)->i_mapping,
+-					page_offset);
+-		if (!IS_ERR(page)) {
+-			vmf->page = page;
+-			ret = 0;
+-		} else switch (PTR_ERR(page)) {
+-			case -ENOSPC:
+-			case -ENOMEM:
+-				ret = VM_FAULT_OOM;
+-				break;
+-			case -EBUSY:
+-				ret = VM_FAULT_RETRY;
+-				break;
+-			case -EFAULT:
+-			case -EINVAL:
+-				ret = VM_FAULT_SIGBUS;
+-				break;
+-			default:
+-				WARN_ON(PTR_ERR(page));
+-				ret = VM_FAULT_SIGBUS;
+-				break;
+-		}
+ 
+-	}
+ 	return ret;
+ }
+ 
+@@ -277,32 +258,93 @@ static const struct file_operations vgem_driver_fops = {
+ 	.release	= drm_release,
+ };
+ 
+-static struct page **vgem_pin_pages(struct drm_vgem_gem_object *bo)
++/* Called under pages_lock, except in free path (where it can't race): */
++static void sync_and_unpin(struct drm_vgem_gem_object *bo)
+ {
+-	mutex_lock(&bo->pages_lock);
+-	if (bo->pages_pin_count++ == 0) {
+-		struct page **pages;
++	struct drm_device *dev = bo->base.dev;
++
++	if (bo->table) {
++		dma_sync_sg_for_cpu(dev->dev, bo->table->sgl,
++				bo->table->nents, DMA_BIDIRECTIONAL);
++		sg_free_table(bo->table);
++		kfree(bo->table);
++		bo->table = NULL;
++	}
++
++	if (bo->pages) {
++		drm_gem_put_pages(&bo->base, bo->pages, true, true);
++		bo->pages = NULL;
++	}
++}
++
++static struct page **pin_and_sync(struct drm_vgem_gem_object *bo)
++{
++	struct drm_device *dev = bo->base.dev;
++	int npages = bo->base.size >> PAGE_SHIFT;
++	struct page **pages;
++	struct sg_table *sgt;
++
++	WARN_ON(!mutex_is_locked(&bo->pages_lock));
++
++	pages = drm_gem_get_pages(&bo->base);
++	if (IS_ERR(pages)) {
++		bo->pages_pin_count--;
++		mutex_unlock(&bo->pages_lock);
++		return pages;
++	}
+ 
+-		pages = drm_gem_get_pages(&bo->base);
+-		if (IS_ERR(pages)) {
+-			bo->pages_pin_count--;
+-			mutex_unlock(&bo->pages_lock);
+-			return pages;
+-		}
++	sgt = drm_prime_pages_to_sg(pages, npages);
++	if (IS_ERR(sgt)) {
++		dev_err(dev->dev,
++			"failed to allocate sgt: %ld\n",
++			PTR_ERR(bo->table));
++		drm_gem_put_pages(&bo->base, pages, false, false);
++		mutex_unlock(&bo->pages_lock);
++		return ERR_CAST(bo->table);
++	}
++
++	/*
++	 * Flush the object from the CPU cache so that importers
++	 * can rely on coherent indirect access via the exported
++	 * dma-address.
++	 */
++	dma_sync_sg_for_device(dev->dev, sgt->sgl,
++			sgt->nents, DMA_BIDIRECTIONAL);
++
++	bo->pages = pages;
++	bo->table = sgt;
++
++	return pages;
++}
++
++static struct page **vgem_pin_pages(struct drm_vgem_gem_object *bo)
++{
++	struct page **pages;
+ 
+-		bo->pages = pages;
++	mutex_lock(&bo->pages_lock);
++	if (bo->pages_pin_count++ == 0 && !bo->pages) {
++		pages = pin_and_sync(bo);
++	} else {
++		WARN_ON(!bo->pages);
++		pages = bo->pages;
+ 	}
+ 	mutex_unlock(&bo->pages_lock);
+ 
+-	return bo->pages;
++	return pages;
+ }
+ 
+ static void vgem_unpin_pages(struct drm_vgem_gem_object *bo)
+ {
++	/*
++	 * We shouldn't hit this for imported bo's.. in the import
++	 * case we don't own the scatter-table
++	 */
++	WARN_ON(bo->base.import_attach);
++
+ 	mutex_lock(&bo->pages_lock);
+ 	if (--bo->pages_pin_count == 0) {
+-		drm_gem_put_pages(&bo->base, bo->pages, true, true);
+-		bo->pages = NULL;
++		WARN_ON(!bo->table);
++		sync_and_unpin(bo);
+ 	}
+ 	mutex_unlock(&bo->pages_lock);
+ }
+@@ -310,18 +352,12 @@ static void vgem_unpin_pages(struct drm_vgem_gem_object *bo)
+ static int vgem_prime_pin(struct drm_gem_object *obj)
+ {
+ 	struct drm_vgem_gem_object *bo = to_vgem_bo(obj);
+-	long n_pages = obj->size >> PAGE_SHIFT;
+ 	struct page **pages;
+ 
+ 	pages = vgem_pin_pages(bo);
+ 	if (IS_ERR(pages))
+ 		return PTR_ERR(pages);
+ 
+-	/* Flush the object from the CPU cache so that importers can rely
+-	 * on coherent indirect access via the exported dma-address.
+-	 */
+-	drm_clflush_pages(pages, n_pages);
+-
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
