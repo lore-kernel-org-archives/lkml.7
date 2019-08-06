@@ -2,29 +2,29 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D805C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 04:20:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D9CEC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 04:21:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2A0E20C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 04:20:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6547C20C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 04:21:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728810AbfHFEUf (ORCPT
+        id S1730717AbfHFEVG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 00:20:35 -0400
-Received: from emh03.mail.saunalahti.fi ([62.142.5.109]:58470 "EHLO
+        Tue, 6 Aug 2019 00:21:06 -0400
+Received: from emh03.mail.saunalahti.fi ([62.142.5.109]:58750 "EHLO
         emh03.mail.saunalahti.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfHFEUe (ORCPT
+        with ESMTP id S1725747AbfHFEVF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 00:20:34 -0400
+        Tue, 6 Aug 2019 00:21:05 -0400
 Received: from toshiba (85-76-131-212-nat.elisa-mobile.fi [85.76.131.212])
-        by emh03.mail.saunalahti.fi (Postfix) with ESMTP id 076594000A;
-        Tue,  6 Aug 2019 07:20:30 +0300 (EEST)
-Message-ID: <5D490002.8C6EBB8B@users.sourceforge.net>
-Date:   Tue, 06 Aug 2019 07:20:18 +0300
+        by emh03.mail.saunalahti.fi (Postfix) with ESMTP id 0A83540021;
+        Tue,  6 Aug 2019 07:21:02 +0300 (EEST)
+Message-ID: <5D490021.F1CCC042@users.sourceforge.net>
+Date:   Tue, 06 Aug 2019 07:20:49 +0300
 From:   Jari Ruusu <jariruusu@users.sourceforge.net>
 MIME-Version: 1.0
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
@@ -51,7 +51,7 @@ Greg Kroah-Hartman wrote:
 > 
 > Can you send properly backported and tested patches?
 
-linux-4.9 backport of "x86/atomic: Fix smp_mb__{before,after}_atomic()".
+linux-4.4 backport of "x86/atomic: Fix smp_mb__{before,after}_atomic()".
 Tested.
 
 Signed-off-by: Jari Ruusu <jari.ruusu@gmail.com>
@@ -134,17 +134,16 @@ Signed-off-by: Jari Ruusu <jari.ruusu@gmail.com>
  /**
 --- a/arch/x86/include/asm/barrier.h
 +++ b/arch/x86/include/asm/barrier.h
-@@ -105,8 +105,8 @@
+@@ -116,7 +116,7 @@
  #endif
  
  /* Atomic operations are already serializing on x86 */
--#define __smp_mb__before_atomic()	barrier()
--#define __smp_mb__after_atomic()	barrier()
-+#define __smp_mb__before_atomic()	do { } while (0)
-+#define __smp_mb__after_atomic()	do { } while (0)
+-#define smp_mb__before_atomic()	barrier()
+-#define smp_mb__after_atomic()	barrier()
++#define smp_mb__before_atomic()	do { } while (0)
++#define smp_mb__after_atomic()	do { } while (0)
  
- #include <asm-generic/barrier.h>
- 
+ #endif /* _ASM_X86_BARRIER_H */
 
 -- 
 Jari Ruusu  4096R/8132F189 12D6 4C3A DCDA 0AA4 27BD  ACDF F073 3C80 8132 F189
