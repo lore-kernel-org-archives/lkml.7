@@ -2,72 +2,75 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDCFAC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 22:10:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E4BEC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 22:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0A7E2189F
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 22:10:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="DiNlS0lM"
+	by mail.kernel.org (Postfix) with ESMTP id 00643218A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 22:19:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565129966;
+	bh=uggloegaAwke9A4UP4qBuMyVFR/d5SRDz42VgcGIwio=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=mUQc5yW8ihygFLvvMeDtwhTqeapxbNANGD3X8z5Zfii7Bex+6X8/lPBP8QhAU85Gk
+	 p6/wnVMOLEb/MW+67efubqbKdq8LOg4+6OYkP4Ekpv0ocJG8YEZh+cFCpvD/sNsydj
+	 fVdsPAwrHrXxhwY57kF6uRfGm2a6zdhk5HWYYp78=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727418AbfHFWKe (ORCPT
+        id S1727163AbfHFWTZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 18:10:34 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:41440 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727261AbfHFWKe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 18:10:34 -0400
-Received: by mail-qt1-f193.google.com with SMTP id d17so7364656qtj.8
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 15:10:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=k5MlzirpZYamcdWz7AWbdCMy4iWhcebC9AZ/B4iX4vQ=;
-        b=DiNlS0lMBqKQ8N8XEC9ggrn/qkh+UA2hvtCs3VnCp/1FDuRFh8AWh0IrPMQTSI1seh
-         ILTlQ69cQuC8/r1/C++1zZs61I17M+qy5aejqcX8ujbltSmqJ1JxPV4twEW8bb/XA75B
-         R2wDG0iLFvBwzqcChOWMGDsxHqs5u1o207qqjuEv/znX7OKV48xSF6SE1i9X2jzYisqS
-         zSyAFrx2evZTUZNrvCIVwVGYMifT8jRUHFC7oRXrAH6Hf/lj4EaJLSciLzD6e6GSoyc6
-         KQpvphQctVTQIdodoQQq/kfH+9K0S98Umqp8zkpdkLtRZmbCCklHtYljPnaonLTZ5sEK
-         Okug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=k5MlzirpZYamcdWz7AWbdCMy4iWhcebC9AZ/B4iX4vQ=;
-        b=VtGz91RkmCJMFDQXbosgyELz5v+LZdjwFiSm9dRn5GYrxGio2ym+UoozEGjY5Axab5
-         STL4KAl2AjnRvccwaiXlEAAyWV6Y6V+K+xXWlR3F23M0v+1NT8rV74QG/CpcxrNsgBxV
-         1nSHCCePv3k+9h0hHLy4hTQ6ZpU+RM/EKodomLwYwiPBVZYkrmJdMZLzfSykCyiHFWRr
-         xf+6s30+dZXqxEIVCkaya57YucKnfxak1RZ1oeyfnR5GLxNd3jnVadn3rS2KGnfJs8SJ
-         t1h9mPesenQloqr84MZ+/k9Ii0pMJJpm9eInE1DDHv7GRp3PY7fGlH7O/Mz2JUSr0xoo
-         HIEg==
-X-Gm-Message-State: APjAAAW4iQMJmkFwCxFCGPGpzJGMXNa1Edu/0eXNrlGCLgravY+szdCD
-        IuHm1fHzQgZDWmUkYyZJRpSVXg==
-X-Google-Smtp-Source: APXvYqxJVIiFVF2MvxFJ5nvgTIbxn2d6z4r2/R64xlzNBTDE0v1VaGLNq/YntAbOLyQiOadkdwKc7w==
-X-Received: by 2002:aed:3987:: with SMTP id m7mr5096695qte.56.1565129433194;
-        Tue, 06 Aug 2019 15:10:33 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id t26sm47547788qtc.95.2019.08.06.15.10.32
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 06 Aug 2019 15:10:33 -0700 (PDT)
-Date:   Tue, 6 Aug 2019 15:10:07 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Hayes Wang <hayeswang@realtek.com>
-Cc:     <netdev@vger.kernel.org>, <nic_swsd@realtek.com>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>
-Subject: Re: [PATCH net-next 5/5] r8152: change rx_frag_head_sz and
- rx_max_agg_num dynamically
-Message-ID: <20190806151007.75a8dd2c@cakuba.netronome.com>
-In-Reply-To: <1394712342-15778-294-albertk@realtek.com>
-References: <1394712342-15778-289-albertk@realtek.com>
-        <1394712342-15778-294-albertk@realtek.com>
-Organization: Netronome Systems, Ltd.
-MIME-Version: 1.0
+        Tue, 6 Aug 2019 18:19:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37640 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726419AbfHFWTY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 18:19:24 -0400
+Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB7B121874;
+        Tue,  6 Aug 2019 22:19:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565129963;
+        bh=uggloegaAwke9A4UP4qBuMyVFR/d5SRDz42VgcGIwio=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=meFIABtuhORcSvMNLD1Hv0nThWvFZI0Qr53BkMiWwh6sZaACsB8AxS19EWRhOD245
+         XPjeM7EQeanIE0mnWrDAF2RVaT5KRg5MyslBzowrxK7IAG3AckB1mYjDZTe7CHOPId
+         5LjvjYRK0qyrzcwOxuFdWnbt8prbQySEv0+MClOM=
+Date:   Tue, 6 Aug 2019 15:19:21 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Brendan Gregg <bgregg@netflix.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christian Hansen <chansen3@cisco.com>, dancol@google.com,
+        fmayer@google.com, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@redhat.com>, joelaf@google.com,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
+        linux-api@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Rapoport <rppt@linux.ibm.com>, minchan@kernel.org,
+        namhyung@google.com, paulmck@linux.ibm.com,
+        Robin Murphy <robin.murphy@arm.com>,
+        Roman Gushchin <guro@fb.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>, surenb@google.com,
+        Thomas Gleixner <tglx@linutronix.de>, tkjos@google.com,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Will Deacon <will@kernel.org>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>
+Subject: Re: [PATCH v4 1/5] mm/page_idle: Add per-pid idle page tracking
+ using virtual indexing
+Message-Id: <20190806151921.edec128271caccb5214fc1bd@linux-foundation.org>
+In-Reply-To: <20190805170451.26009-1-joel@joelfernandes.org>
+References: <20190805170451.26009-1-joel@joelfernandes.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,11 +78,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 6 Aug 2019 19:18:04 +0800, Hayes Wang wrote:
-> Let rx_frag_head_sz and rx_max_agg_num could be modified dynamically
-> through the sysfs.
-> 
-> Signed-off-by: Hayes Wang <hayeswang@realtek.com>
+(cc Brendan's other email address, hoping for review input ;))
 
-Please don't expose those via sysfs. Ethtool's copybreak and descriptor
-count should be applicable here, I think.
+On Mon,  5 Aug 2019 13:04:47 -0400 "Joel Fernandes (Google)" <joel@joelfernandes.org> wrote:
+
+> The page_idle tracking feature currently requires looking up the pagemap
+> for a process followed by interacting with /sys/kernel/mm/page_idle.
+> Looking up PFN from pagemap in Android devices is not supported by
+> unprivileged process and requires SYS_ADMIN and gives 0 for the PFN.
+> 
+> This patch adds support to directly interact with page_idle tracking at
+> the PID level by introducing a /proc/<pid>/page_idle file.  It follows
+> the exact same semantics as the global /sys/kernel/mm/page_idle, but now
+> looking up PFN through pagemap is not needed since the interface uses
+> virtual frame numbers, and at the same time also does not require
+> SYS_ADMIN.
+> 
+> In Android, we are using this for the heap profiler (heapprofd) which
+> profiles and pin points code paths which allocates and leaves memory
+> idle for long periods of time. This method solves the security issue
+> with userspace learning the PFN, and while at it is also shown to yield
+> better results than the pagemap lookup, the theory being that the window
+> where the address space can change is reduced by eliminating the
+> intermediate pagemap look up stage. In virtual address indexing, the
+> process's mmap_sem is held for the duration of the access.
+
+Quite a lot of changes to the page_idle code.  Has this all been
+runtime tested on architectures where
+CONFIG_HAVE_ARCH_PTE_SWP_PGIDLE=n?  That could be x86 with a little
+Kconfig fiddle-for-testing-purposes.
+
+> 8 files changed, 376 insertions(+), 45 deletions(-)
+
+Quite a lot of new code unconditionally added to major architectures. 
+Are we confident that everyone will want this feature?
+
+>
+> ...
+>
+> +static int proc_page_idle_open(struct inode *inode, struct file *file)
+> +{
+> +	struct mm_struct *mm;
+> +
+> +	mm = proc_mem_open(inode, PTRACE_MODE_READ);
+> +	if (IS_ERR(mm))
+> +		return PTR_ERR(mm);
+> +	file->private_data = mm;
+> +	return 0;
+> +}
+> +
+> +static int proc_page_idle_release(struct inode *inode, struct file *file)
+> +{
+> +	struct mm_struct *mm = file->private_data;
+> +
+> +	if (mm)
+
+I suspect the test isn't needed?  proc_page_idle_release) won't be
+called if proc_page_idle_open() failed?
+
+> +		mmdrop(mm);
+> +	return 0;
+> +}
+>
+> ...
+>
