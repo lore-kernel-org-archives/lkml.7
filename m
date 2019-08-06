@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67289C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:39:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A0E9C41514
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:39:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E9302189E
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:39:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5342A2189E
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:39:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127563;
-	bh=mX7KElrI02fArXyDhlXVSIrzOeX6Zeft/TCqFwBzzpU=;
+	s=default; t=1565127568;
+	bh=dOVw1+t0bk3hP66ZoMzkoKnp7lOeABUi7vUvl+BUYHI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ewm3SJcJV3Riwc4oyTyXpitcs0XNI+13I6it3AVo1o593rEdLViABWk1/oCNgnYQe
-	 HObaZOqVbI20a/yRZHenCj3JXuAiE+4Tes1HnUMmfSz4Lk7+A7P6Hk+zQqDpBAkltW
-	 xmbx6bJmVg9Bvh28QiEScVcyjjuTbxFMLCeNYJIk=
+	b=Sd1Qd792dBbCjhY2tZay3T+wAMaAXkMN02bIaLktkzVks0Fy/CAvLV3b93czdLkX8
+	 Rh3jsnC+kp/BX7wSNKreVzexW8i6kq9ces9do2kY8zh/aCz09OETd35wERaAHpP54m
+	 tESUvSlqMh0CM6OUQXhpSRlN34A84DsOK8Y7YP2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729443AbfHFVhi (ORCPT
+        id S1729396AbfHFVhf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:37:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55362 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 17:37:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729397AbfHFVhg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:37:36 -0400
+        id S1727800AbfHFVhc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:37:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C90CF21873;
-        Tue,  6 Aug 2019 21:37:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE3B121873;
+        Tue,  6 Aug 2019 21:37:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127455;
-        bh=mX7KElrI02fArXyDhlXVSIrzOeX6Zeft/TCqFwBzzpU=;
+        s=default; t=1565127452;
+        bh=dOVw1+t0bk3hP66ZoMzkoKnp7lOeABUi7vUvl+BUYHI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zt7lHW34SDnk8Wb4XFftqI2EtERQ7V5jSgy52qe1KZtCifQ2fNMSCiLviYZewf19N
-         MPCYpUh7dOgk0YVJER/cPud5Nu/1g+xgM3m/n3Ehrzr/0LuzjrrALpKtdEs/5YM90X
-         qNRtPjUGeDv/B9d3ME4i8RccjZGRRqL+Cl5x7gco=
+        b=S5A+dABLZK9AsPEvbciht1i8kuqWXtm+NdeopY+toyCFP2mqRX4D/Mve48BDp5wVE
+         hxFzknl1AAFx94zAotsS1lI7tRB9WSymIK//8RlsmOvPYZBY/0eOigaVzN/A3sVPm4
+         vv2Yimg7H8qaDhSK884Kly0Cqv+7c6MbOvcI5SSY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qian Cai <cai@lca.pw>, Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-efi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 11/17] arm64/efi: fix variable 'si' set but not used
-Date:   Tue,  6 Aug 2019 17:37:08 -0400
-Message-Id: <20190806213715.20487-11-sashal@kernel.org>
+Cc:     Christian Brauner <christian@brauner.io>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 08/17] exit: make setting exit_state consistent
+Date:   Tue,  6 Aug 2019 17:37:05 -0400
+Message-Id: <20190806213715.20487-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190806213715.20487-1-sashal@kernel.org>
 References: <20190806213715.20487-1-sashal@kernel.org>
@@ -59,43 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Christian Brauner <christian@brauner.io>
 
-[ Upstream commit f1d4836201543e88ebe70237e67938168d5fab19 ]
+[ Upstream commit 30b692d3b390c6fe78a5064be0c4bbd44a41be59 ]
 
-GCC throws out this warning on arm64.
+Since commit b191d6491be6 ("pidfd: fix a poll race when setting exit_state")
+we unconditionally set exit_state to EXIT_ZOMBIE before calling into
+do_notify_parent(). This was done to eliminate a race when querying
+exit_state in do_notify_pidfd().
+Back then we decided to do the absolute minimal thing to fix this and
+not touch the rest of the exit_notify() function where exit_state is
+set.
+Since this fix has not caused any issues change the setting of
+exit_state to EXIT_DEAD in the autoreap case to account for the fact hat
+exit_state is set to EXIT_ZOMBIE unconditionally. This fix was planned
+but also explicitly requested in [1] and makes the whole code more
+consistent.
 
-drivers/firmware/efi/libstub/arm-stub.c: In function 'efi_entry':
-drivers/firmware/efi/libstub/arm-stub.c:132:22: warning: variable 'si'
-set but not used [-Wunused-but-set-variable]
+/* References */
+[1]: https://lore.kernel.org/lkml/CAHk-=wigcxGFR2szue4wavJtH5cYTTeNES=toUBVGsmX0rzX+g@mail.gmail.com
 
-Fix it by making free_screen_info() a static inline function.
-
-Acked-by: Will Deacon <will@kernel.org>
-Signed-off-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Christian Brauner <christian@brauner.io>
+Acked-by: Oleg Nesterov <oleg@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/efi.h | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ kernel/exit.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/include/asm/efi.h b/arch/arm64/include/asm/efi.h
-index 65615820155e6..65db124a44bff 100644
---- a/arch/arm64/include/asm/efi.h
-+++ b/arch/arm64/include/asm/efi.h
-@@ -52,7 +52,11 @@ int efi_set_mapping_permissions(struct mm_struct *mm, efi_memory_desc_t *md);
- #define efi_is_64bit()			(true)
+diff --git a/kernel/exit.c b/kernel/exit.c
+index d9394fcd0e2c3..d8fee3e1ec1f2 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -694,9 +694,10 @@ static void exit_notify(struct task_struct *tsk, int group_dead)
+ 		autoreap = true;
+ 	}
  
- #define alloc_screen_info(x...)		&screen_info
--#define free_screen_info(x...)
-+
-+static inline void free_screen_info(efi_system_table_t *sys_table_arg,
-+				    struct screen_info *si)
-+{
-+}
+-	tsk->exit_state = autoreap ? EXIT_DEAD : EXIT_ZOMBIE;
+-	if (tsk->exit_state == EXIT_DEAD)
++	if (autoreap) {
++		tsk->exit_state = EXIT_DEAD;
+ 		list_add(&tsk->ptrace_entry, &dead);
++	}
  
- /* redeclare as 'hidden' so the compiler will generate relative references */
- extern struct screen_info screen_info __attribute__((__visibility__("hidden")));
+ 	/* mt-exec, de_thread() is waiting for group leader */
+ 	if (unlikely(tsk->signal->notify_count < 0))
 -- 
 2.20.1
 
