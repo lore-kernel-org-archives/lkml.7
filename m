@@ -2,105 +2,118 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8032FC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:16:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8838C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:19:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51E4020C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:16:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93D912075B
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 18:19:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732896AbfHFSQD convert rfc822-to-8bit (ORCPT
+        id S1732920AbfHFSTb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 14:16:03 -0400
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:41897 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726373AbfHFSQC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 14:16:02 -0400
-Received: by mail-yb1-f195.google.com with SMTP id x188so8802492yba.8;
-        Tue, 06 Aug 2019 11:16:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=uRafBTDMBjTvHKV2v0W2ocmyW8oxhcyjl8OuCW8KKpk=;
-        b=V6766grtOTciLDI60ThaFYVhEvL9guKmIvzYoVESyUSBEvAZQ85PasiJ7sXBa7givy
-         WUvcEaWOeAxBGhMhSKqP70MZS1n8uXBa06JSQZVZyJEM7NfyxzR/DfHx/MPVvZnYbeFH
-         HabZZGSGnFIFGFl3WwVXxJmPg3MSoxcgcEK/kcPrakLa0+bwXL4VdjQHBt//FLLB776D
-         quCt8xrR+DDUY+CUFqzHo21LtjV3DeRu0EXKaCq1Z+feB9EDUy+iF5np0S42VSYM7ynP
-         hfOgGe8aghCLisBI5P+AfuWUlNf63cSzJaBdjF8OqIvq9frmer/W6MZRYDakM7QnYn5x
-         NKeA==
-X-Gm-Message-State: APjAAAUHoud7YysAyMWt9u0c6j8R+Sgl6yFcOqiypmPBh+Y91bWvu1p5
-        2/hMKBPk7k3/dOpaTehz2J9CyXIMbLcZxeNvutw=
-X-Google-Smtp-Source: APXvYqz0ie1VExybZGhZgDfu505MGE+a+39mqnOYkI3V/mDbdlmTbKQDByXcVDmU1YGQZWUYuxZ/qsZyNwMnHAZjYVg=
-X-Received: by 2002:a25:aa85:: with SMTP id t5mr3779024ybi.376.1565115362068;
- Tue, 06 Aug 2019 11:16:02 -0700 (PDT)
+        Tue, 6 Aug 2019 14:19:31 -0400
+Received: from mga03.intel.com ([134.134.136.65]:60069 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726373AbfHFSTb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 14:19:31 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 11:13:24 -0700
+X-IronPort-AV: E=Sophos;i="5.64,353,1559545200"; 
+   d="scan'208";a="325711406"
+Received: from rchatre-mobl.amr.corp.intel.com (HELO [10.24.14.91]) ([10.24.14.91])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 06 Aug 2019 11:13:24 -0700
+Subject: Re: [PATCH V2 01/10] x86/CPU: Expose if cache is inclusive of lower
+ level caches
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     tglx@linutronix.de, fenghua.yu@intel.com, tony.luck@intel.com,
+        kuo-lang.tseng@intel.com, mingo@redhat.com, hpa@zytor.com,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1564504901.git.reinette.chatre@intel.com>
+ <6c78593207224014d6a9d43698a3d1a0b3ccf2b6.1564504901.git.reinette.chatre@intel.com>
+ <20190802180352.GE30661@zn.tnic>
+ <e532ab90-196c-8b58-215a-f56f5e409512@intel.com>
+ <20190803094423.GA2100@zn.tnic>
+ <122b005a-46b1-2b1e-45a8-7f92a5dba2d9@intel.com>
+ <20190806155716.GE25897@zn.tnic>
+ <151002be-33e6-20d6-7699-bc9be7e51f33@intel.com>
+ <20190806173300.GF25897@zn.tnic>
+From:   Reinette Chatre <reinette.chatre@intel.com>
+Message-ID: <d0c04521-ec1a-3468-595c-6929f25f37ff@intel.com>
+Date:   Tue, 6 Aug 2019 11:13:22 -0700
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <1565001715-22966-1-git-send-email-linux@roeck-us.net>
-In-Reply-To: <1565001715-22966-1-git-send-email-linux@roeck-us.net>
-From:   =?UTF-8?Q?Philippe_Mathieu=2DDaud=C3=A9?= <f4bug@amsat.org>
-Date:   Tue, 6 Aug 2019 20:15:51 +0200
-Message-ID: <CAAdtpL634spP0friWLstK9Ehy5BaHxS3u+GhrEGKsF-1_uCENQ@mail.gmail.com>
-Subject: Re: [PATCH] MIPS: OCTEON: octeon-usb: Mark expected switch fall-through
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20190806173300.GF25897@zn.tnic>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 5, 2019 at 12:42 PM Guenter Roeck <linux@roeck-us.net> wrote:
->
-> Since commit a035d552a93b ("Makefile: Globally enable fall-through
-> warning"), cavium_octeon_defconfig builds fail with
->
-> In file included from
-> arch/mips/cavium-octeon/octeon-usb.c:12:
-> arch/mips/cavium-octeon/octeon-usb.c: In function 'dwc3_octeon_clocks_start':
-> include/linux/device.h:1499:2: error: this statement may fall through
->   _dev_err(dev, dev_fmt(fmt), ##__VA_ARGS__)
->   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> arch/mips/cavium-octeon/octeon-usb.c:399:3: note:
->                         in expansion of macro 'dev_err'
->   dev_err(dev, "Invalid ref_clk %u, using 100000000 instead\n",
->   ^~~~~~~
-> arch/mips/cavium-octeon/octeon-usb.c:401:2: note: here
->   case 100000000:
->   ^~~~~~~
->
-> Mark the switch case to expect fall through.
->
-> Cc: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Hi Borislav,
 
-Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
+On 8/6/2019 10:33 AM, Borislav Petkov wrote:
+> On Tue, Aug 06, 2019 at 09:55:56AM -0700, Reinette Chatre wrote:
+>> I am a bit cautious about this. When I started this work I initially
+>> added a helper function to resctrl that calls CPUID to determine if the
+>> cache is inclusive. At that time I became aware of a discussion
+>> motivating against scattered CPUID calls and motivating for one instance
+>> of CPUID information:
+>> http://lkml.kernel.org/r/alpine.DEB.2.21.1906162141301.1760@nanos.tec.linutronix.de
+> 
+> Ah, there's that. That's still somewhat a work/discussion in progress
+> thing. Let me discuss it with tglx.
+> 
+>> To answer your question about checking any cache: this seems to be
+> 
+> I meant the CPUID on any CPU and thus any cache - i.e., all L3s on the
+> system should be inclusive and identical in that respect. Can't work
+> otherwise, I'd strongly presume.
 
-> ---
->  arch/mips/cavium-octeon/octeon-usb.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/mips/cavium-octeon/octeon-usb.c b/arch/mips/cavium-octeon/octeon-usb.c
-> index 1f730ded5224..8a16ab37aa11 100644
-> --- a/arch/mips/cavium-octeon/octeon-usb.c
-> +++ b/arch/mips/cavium-octeon/octeon-usb.c
-> @@ -398,6 +398,7 @@ static int dwc3_octeon_clocks_start(struct device *dev, u64 base)
->         default:
->                 dev_err(dev, "Invalid ref_clk %u, using 100000000 instead\n",
->                         clock_rate);
-> +               /* Fall through */
->         case 100000000:
->                 mpll_mul = 0x19;
->                 if (ref_clk_sel < 2)
-> --
-> 2.7.4
->
+This is my understanding, yes. While this patch supports knowing whether
+each L3 is inclusive or not, I expect this information to be the same
+for all L3 instances as will be supported by a single query in
+rdt_pseudo_lock_init(). This definitely is the case on the platforms we
+are enabling in this round.
+
+>> different between L2 and L3. On the Atom systems where L2 pseudo-locking
+>> works well the L2 cache is not inclusive. We are also working on
+>> supporting cache pseudo-locking on L3 cache that is not inclusive.
+> 
+> Hmm, so why are you enforcing the inclusivity now:
+> 
+> +       if (p->r->cache_level == 3 &&
+> +           !get_cache_inclusive(plr->cpu, p->r->cache_level)) {
+> +               rdt_last_cmd_puts("L3 cache not inclusive\n");
+> 
+> but then will remove this requirement in the future? Why are we even
+> looking at cache inclusivity then and not make pseudo-locking work
+> regardless of that cache property?
+
+Some platforms being enabled in this round have SKUs with inclusive
+cache and also SKUs with non-inclusive cache. The non-inclusive cache
+SKUs do not support cache pseudo-locking and cannot be made to support
+cache pseudo-locking with software changes. Needing to know if cache is
+inclusive or not will thus remain a requirement to distinguish between
+these different SKUs. Supporting cache pseudo-locking on platforms with
+non inclusive cache will require new hardware features.
+> Because if we're going to go and model this cache inclusivity property
+> properly in struct cpuinfo_x86 or struct cacheinfo or wherever, and do
+> that for all cache levels because apparently we're going to need that;
+> but then later it turns out we won't need it after all, why are we even
+> bothering?
+> 
+> Or am I missing some aspect?
+
+Reinette
+
+
+
+
