@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDAB8C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD65AC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:39:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B63D62189E
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:39:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB09421874
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:39:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127572;
-	bh=TVfTkcJ8KkVOiUsmcxKFMFDoP6IU3vPc4t5JMQzWKuQ=;
+	s=default; t=1565127578;
+	bh=i4cYp5VFecvi+4i+fcVFtpNTa9F1GwX1EdbRRya6u1g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N09WA6jfT/UxHY8kGYeivzOLUtWLckHbtb4sydzaA/pQ4UszLb8FgIzah8AKgz46N
-	 zWlD3wbv9Bv3jtUBikJFWVmfzFRgO34kdt07za/nr068xLXPl7BY8u0yRs+vkNAjHS
-	 UvpOuJ4rV/Xc727ivG5ZMAxR1rJSt/pHbhf5kUk0=
+	b=1li6Vm3NI2CRb6GmDJLqsx7YA5NZIMZjDdw3ESTkdPqSTi+b2MfYWeslDbKFdrYTX
+	 0jcUpCzGyAvAhaCAjWV8OQ/w9bAFhRjTKlKtiHo8+6nMPvj/5PVBIk5hmXhb3x6C+k
+	 BSEnzAZrZ0WTSu7Cnpw2H34EF3AAytqNMDuLa5i0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728900AbfHFVjb (ORCPT
+        id S1729155AbfHFVjh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:39:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55344 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 17:39:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729381AbfHFVhe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:37:34 -0400
+        id S1729351AbfHFVha (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:37:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B288C2187F;
-        Tue,  6 Aug 2019 21:37:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B4A821874;
+        Tue,  6 Aug 2019 21:37:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127453;
-        bh=TVfTkcJ8KkVOiUsmcxKFMFDoP6IU3vPc4t5JMQzWKuQ=;
+        s=default; t=1565127450;
+        bh=i4cYp5VFecvi+4i+fcVFtpNTa9F1GwX1EdbRRya6u1g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oSCENpjZq1sAIxOI+DyOaq5yAYKfVXTc3k6kgDSjsiEl1/6204K9fCDiMTCfylp0o
-         bUp0Mq/6dGekx/bjbuMUKR+HpppSQy4y4HziTH2tKHP0XmcNjpLdlRWONN74nPzYjv
-         7jDsyEHdXfxiL5WXGQdo9TCjK53UcmqnDlv0Qwfs=
+        b=kOs2QvBPtmFhyoFqmjFIrcVjMZjf2x/lTrC1dgP5WMr+2W4Zt1gdwuHE+VWaAZa3f
+         kWwkhKSUnrWfjfKyuBX9RV3PdLWBZV+7IphO5RxeToLj0mpKN94M2spDemjCJ4GsWJ
+         Ji0/wX6aSQBDSeDKvAI2txumhQiIMuimu3dpTQh8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-ide@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 09/17] ata: libahci: do not complain in case of deferred probe
-Date:   Tue,  6 Aug 2019 17:37:06 -0400
-Message-Id: <20190806213715.20487-9-sashal@kernel.org>
+Cc:     Don Brace <don.brace@microsemi.com>,
+        Bader Ali - Saleh <bader.alisaleh@microsemi.com>,
+        Scott Teel <scott.teel@microsemi.com>,
+        Scott Benesh <scott.benesh@microsemi.com>,
+        Kevin Barnett <kevin.barnett@microsemi.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, esc.storagedev@microsemi.com,
+        linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 07/17] scsi: hpsa: correct scsi command status issue after reset
+Date:   Tue,  6 Aug 2019 17:37:04 -0400
+Message-Id: <20190806213715.20487-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190806213715.20487-1-sashal@kernel.org>
 References: <20190806213715.20487-1-sashal@kernel.org>
@@ -60,36 +64,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miquel Raynal <miquel.raynal@bootlin.com>
+From: Don Brace <don.brace@microsemi.com>
 
-[ Upstream commit 090bb803708198e5ab6b0046398c7ed9f4d12d6b ]
+[ Upstream commit eeebce1862970653cdf5c01e98bc669edd8f529a ]
 
-Retrieving PHYs can defer the probe, do not spawn an error when
--EPROBE_DEFER is returned, it is normal behavior.
-
-Fixes: b1a9edbda040 ("ata: libahci: allow to use multiple PHYs")
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Reviewed-by: Bader Ali - Saleh <bader.alisaleh@microsemi.com>
+Reviewed-by: Scott Teel <scott.teel@microsemi.com>
+Reviewed-by: Scott Benesh <scott.benesh@microsemi.com>
+Reviewed-by: Kevin Barnett <kevin.barnett@microsemi.com>
+Signed-off-by: Don Brace <don.brace@microsemi.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ata/libahci_platform.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/scsi/hpsa.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/ata/libahci_platform.c b/drivers/ata/libahci_platform.c
-index cd2eab6aa92ea..65371e1befe8a 100644
---- a/drivers/ata/libahci_platform.c
-+++ b/drivers/ata/libahci_platform.c
-@@ -300,6 +300,9 @@ static int ahci_platform_get_phy(struct ahci_host_priv *hpriv, u32 port,
- 		hpriv->phys[port] = NULL;
- 		rc = 0;
- 		break;
-+	case -EPROBE_DEFER:
-+		/* Do not complain yet */
-+		break;
+diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
+index 9f98c7211ec24..b82df8cdf9626 100644
+--- a/drivers/scsi/hpsa.c
++++ b/drivers/scsi/hpsa.c
+@@ -2236,6 +2236,8 @@ static int handle_ioaccel_mode2_error(struct ctlr_info *h,
+ 	case IOACCEL2_SERV_RESPONSE_COMPLETE:
+ 		switch (c2->error_data.status) {
+ 		case IOACCEL2_STATUS_SR_TASK_COMP_GOOD:
++			if (cmd)
++				cmd->result = 0;
+ 			break;
+ 		case IOACCEL2_STATUS_SR_TASK_COMP_CHK_COND:
+ 			cmd->result |= SAM_STAT_CHECK_CONDITION;
+@@ -2423,8 +2425,10 @@ static void process_ioaccel2_completion(struct ctlr_info *h,
  
- 	default:
- 		dev_err(dev,
+ 	/* check for good status */
+ 	if (likely(c2->error_data.serv_response == 0 &&
+-			c2->error_data.status == 0))
++			c2->error_data.status == 0)) {
++		cmd->result = 0;
+ 		return hpsa_cmd_free_and_done(h, c, cmd);
++	}
+ 
+ 	/*
+ 	 * Any RAID offload error results in retry which will use
+@@ -5511,6 +5515,12 @@ static int hpsa_scsi_queue_command(struct Scsi_Host *sh, struct scsi_cmnd *cmd)
+ 	}
+ 	c = cmd_tagged_alloc(h, cmd);
+ 
++	/*
++	 * This is necessary because the SML doesn't zero out this field during
++	 * error recovery.
++	 */
++	cmd->result = 0;
++
+ 	/*
+ 	 * Call alternate submit routine for I/O accelerated commands.
+ 	 * Retries always go down the normal I/O path.
 -- 
 2.20.1
 
