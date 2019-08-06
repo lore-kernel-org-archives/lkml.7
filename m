@@ -2,101 +2,102 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41442C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92F92C32754
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:50:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12DD220B1F
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:50:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6094C20C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:50:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="skjdDU4d"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="O3dE1DHl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731881AbfHFMuy (ORCPT
+        id S1731694AbfHFMuu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 08:50:54 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:44933 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729898AbfHFMuw (ORCPT
+        Tue, 6 Aug 2019 08:50:50 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:52255 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730458AbfHFMuq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 08:50:52 -0400
-Received: by mail-qk1-f196.google.com with SMTP id d79so62669606qke.11
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 05:50:52 -0700 (PDT)
+        Tue, 6 Aug 2019 08:50:46 -0400
+Received: by mail-wm1-f67.google.com with SMTP id s3so78057230wms.2
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 05:50:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/P5o7bDpjWmN9ZebSBZsGlXpEvCnGcCbzXRf1g4vqlg=;
-        b=skjdDU4dtUeHC+kMGTUC9fPCCNWSMbFGsd3aaAekUU7izdW2GKUeIP8Sc/7RaZ53a3
-         c4WVPqMdHWjNyyW0UWhDJ0fecC+2XNYt9iZkVBq18GzQt0yMKpbUgS8dvW6mSIgHnbdh
-         HgzihabMSOBMmrqfJECNcEsIof7X5520tUVHMvH5488p+gJmkSZPzVJSWkUv+6yiugI+
-         dgv3Rs+IDXTYKez5jrRsEDothYUJaypa/tg0TDtMtCXOlx6daS632GYFAcAEFt4W2kE2
-         cE7i2NUujJPjRXjOO6Plf8QlNLfVcl1X4iFP0PV0Dknt5Xu0vEfGta9zYRm29owweO/D
-         Lcbg==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=yzbvwLA71SutNdcRHcgBexC8KRT0RQ0GJQYA84SLkGA=;
+        b=O3dE1DHluIpu7fXmyotf13Fm6oEcfDpRu2r5FwuYeHLyxbncudzQIuUVO0dpLrlcPF
+         tGM9uz0klewnYgo+rd6yN2F4qAq82UhQyCJRQxj6dtH4eMEcvzoremBWPJhmfINtmfzx
+         upgt7GL6h3RkZUmi+HxHGedeta4NBcC2tNsg1pPlSkqkCRcQ++SGOobtwg91tWVaMbbU
+         Bh9T0pYvxKSEdp0vvYRhP7h528nS6XSUJBLXObD//8iAITlP2THqfu7y5F87wRXlQMUE
+         hU2mxHpNtD9Qxxog1+yr6cIIO6mnZnXBNXdRSyH8rFuH6r+8kh3o4CSGRLiTj54qJbcq
+         iNsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/P5o7bDpjWmN9ZebSBZsGlXpEvCnGcCbzXRf1g4vqlg=;
-        b=HkX6CFh3Z3RNZR7427DHOHXUshktyWt2gMW3tfiH2Shth1WU1y9W8oKfUF+iRbx2t+
-         7vxQYoYjnXNsTbtIKZDxwdoCiX9v+rr0YzGDL+gFgcQ0DCUCrVEhJ1pSOO4xsXQq4ylt
-         gWpQuu/fI/Pq/wDsCmxGybetfnnq6KTKn1Qv4P+nGoxhviLkG7QvhgejK01cnl+guVIz
-         SRqKvWbtbCi5Ivgd9zwVC9hhxD6flTuzNCQ+Bt4MyRkq/K3LCR+pAsBWOpK+ViETvwQr
-         fHt8DRR9u2A7V/Ww4Mj3BtdLx5TZXp7wy85D4yTkbHc636FU3SHdl5pyh2dnUvYX4Mp1
-         zUKg==
-X-Gm-Message-State: APjAAAWzd+I1kZcoJ7Uzis9+eOnU0WAtmee+Ftauz1ptTidENNfW2qF2
-        DcFovGhOpsmBg7whAWSp8/IUMwVmsJKAKhXVhAs=
-X-Google-Smtp-Source: APXvYqwfWWN4YkKLQ+LRmVpH+VROfBQy2m9vp40Fsf+NNf7IJbqfFo2xpdZXFbe8bmZEplS9SM16o6+Vkfq7lHGwoQE=
-X-Received: by 2002:a37:9a0b:: with SMTP id c11mr3120476qke.204.1565095852172;
- Tue, 06 Aug 2019 05:50:52 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=yzbvwLA71SutNdcRHcgBexC8KRT0RQ0GJQYA84SLkGA=;
+        b=BWDtA7UeScR3p1trJJRHft+gpO+nOB1SXvPVaaQCRUjEk1xDttAxIeXbWUuGihy2e9
+         npV2VtIRk7QqYVoqFzsSyusLStUYWXcZVRavXYvfDFWQDosSUteqOPB1ymZZ2b8zGjkP
+         EfcLtqhcau4yiz/4UAODpzIoHLbqNbXC3onqM9m6Ht1GrdyAxRz0B2nNO1OGAua6zAQZ
+         oCB75FjjlOSqRc2uNOm14TWFIKFuqryZC4jqIuOdHwTVPuW1RzTU+XrmVtJ4W7Zd3V9u
+         DWsJAdozbSzin9bfbjRepR3kxDh5URrnf7gqtEaX4A+ZYmbdcTv4KVaMBDe11QIWS63H
+         f6NA==
+X-Gm-Message-State: APjAAAVOcFQE1iPzqd5TP3aSxhzNDKdS4jfIyQBP8zghFtn5NBA1cA+j
+        rGNr59uxYcA/aQpq16wRL0rELw==
+X-Google-Smtp-Source: APXvYqx80EosVrp9UyukzeR9aDnPspDjd/F40dn6Me7nABU+FtMHoLvpD/lZwMP5x40WKWnwAvJUJQ==
+X-Received: by 2002:a1c:c14b:: with SMTP id r72mr4792277wmf.166.1565095844304;
+        Tue, 06 Aug 2019 05:50:44 -0700 (PDT)
+Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id e3sm109049221wrs.37.2019.08.06.05.50.43
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 06 Aug 2019 05:50:43 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     robh+dt@kernel.org
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        martin.blumenstingl@googlemail.com, devicetree@vger.kernel.org,
+        netdev@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/2] dt-bindings: net: snps,dwmac: update reg minItems maxItems
+Date:   Tue,  6 Aug 2019 14:50:40 +0200
+Message-Id: <20190806125041.16105-2-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190806125041.16105-1-narmstrong@baylibre.com>
+References: <20190806125041.16105-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
-References: <20190806030718.29048-1-luaraneda@gmail.com> <20190806030718.29048-3-luaraneda@gmail.com>
- <194fe121-151d-0b64-b83e-e4d82c02efa7@xilinx.com>
-In-Reply-To: <194fe121-151d-0b64-b83e-e4d82c02efa7@xilinx.com>
-From:   Luis Araneda <luaraneda@gmail.com>
-Date:   Tue, 6 Aug 2019 08:49:59 -0400
-Message-ID: <CAHbBuxpM8YKxADGJv2PAPbyS-2FZ6xiwohJwGJ1DMPuGnDV-Jg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] ARM: zynq: Use memcpy_toio instead of memcpy on smp bring-up
-To:     Michal Simek <michal.simek@xilinx.com>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michal,
+The Amlogic Meson DWMAC glue bindings needs a second reg cells for the
+glue registers, thus update the reg minItems/maxItems to allow more
+than a single reg cell.
 
-On Tue, Aug 6, 2019 at 2:42 AM Michal Simek <michal.simek@xilinx.com> wrote:
-> On 06. 08. 19 5:07, Luis Araneda wrote:
-> > This fixes a kernel panic (read overflow) on memcpy when
-> > FORTIFY_SOURCE is enabled.
-> >
-> > The computed size of memcpy args are:
-> > - p_size (dst): 4294967295 = (size_t) -1
-> > - q_size (src): 1
-> > - size (len): 8
-> >
-> > Additionally, the memory is marked as __iomem, so one of
-> > the memcpy_* functions should be used for read/write
-> >
-> > Signed-off-by: Luis Araneda <luaraneda@gmail.com>
-[...]
-> I would consider this one as stable material. Please also add there link
-> to the patch which this patch fixes.
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ Documentation/devicetree/bindings/net/snps,dwmac.yaml | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-I'm dropping stable CC (for now), as I'm not sure I completely
-understood the process for inclusion in stable trees.
-Do I have to wait for the patch to be on Linus' tree before CCing stable?
+diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+index 76fea2be66ac..4377f511a51d 100644
+--- a/Documentation/devicetree/bindings/net/snps,dwmac.yaml
++++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+@@ -61,7 +61,8 @@ properties:
+         - snps,dwxgmac-2.10
+ 
+   reg:
+-    maxItems: 1
++    minItems: 1
++    maxItems: 2
+ 
+   interrupts:
+     minItems: 1
+-- 
+2.22.0
 
-As for the link which this patch fixes, you mean
-aa7eb2bb4e4a22e41bbe4612ff46e5885b13c33e (arm: zynq: Add smp support)?
-where you added SMP support for zynq.
-
-Thanks,
-Luis Araneda.
