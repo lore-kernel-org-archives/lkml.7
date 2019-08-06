@@ -2,92 +2,92 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B80C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:16:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9014C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:21:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8C3220B1F
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:16:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565093779;
-	bh=qhMVapevkt7GGro5itwqbhs4kgXV6GMbDr4EtrsfY3A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VYtyFBD4N7druYmrM1tS+doYa8WrUsHkOe2WNd89R7kBlfxIHZrSZkPoClHMDk7di
-	 Hyelq4SDq4R30aGnYOBqwZv99uCcYW2NWVldKA1z32PTClywoQMprLiGGbiWwI0T6F
-	 b2q5BVxwmQGXotcPl4t2jf6a+Ttd6wAqU8DMquOs=
+	by mail.kernel.org (Postfix) with ESMTP id 7A85420B1F
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 12:21:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729168AbfHFMQR (ORCPT
+        id S1729461AbfHFMVA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 08:16:17 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:59290 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726036AbfHFMQQ (ORCPT
+        Tue, 6 Aug 2019 08:21:00 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:33443 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726877AbfHFMVA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 08:16:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=qhMVapevkt7GGro5itwqbhs4kgXV6GMbDr4EtrsfY3A=; b=R7lP8lCrLZjQLhSWdDBL6I5Vg
-        q8RWHe5JPteLEB8J4Z5ZgzeVYAp3RkzBPa7STUdzYAgoc7z/w+yBYZgYa0c/aExgGREJdhsyeUWCK
-        JtXFr91mQ3reSbuCghmkUdjo9g3MlBepLvRAMKWR/3Dzim5xky+daS6F5wpllsKq3Dpus=;
-Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1huyNx-0003Mg-Tf; Tue, 06 Aug 2019 12:16:13 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 575E22742B67; Tue,  6 Aug 2019 13:16:12 +0100 (BST)
-Date:   Tue, 6 Aug 2019 13:16:12 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Cc:     Kamal Dasu <kdasu.kdev@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/1] spi: bcm-qspi: Make BSPI default mode
-Message-ID: <20190806121612.GB4527@sirena.org.uk>
-References: <1565086474-4461-1-git-send-email-rayagonda.kokatanur@broadcom.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Bn2rw/3z4jIqBvZU"
-Content-Disposition: inline
-In-Reply-To: <1565086474-4461-1-git-send-email-rayagonda.kokatanur@broadcom.com>
-X-Cookie: All men have the right to wait in line.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 6 Aug 2019 08:21:00 -0400
+Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1huySY-0006uH-1d; Tue, 06 Aug 2019 14:20:58 +0200
+Message-ID: <1565094057.2323.28.camel@pengutronix.de>
+Subject: Re: Regression due to d98849aff879 (dma-direct: handle
+ DMA_ATTR_NO_KERNEL_MAPPING in common code)
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Tom Lendacky <thomas.lendacky@amd.com>
+Date:   Tue, 06 Aug 2019 14:20:57 +0200
+In-Reply-To: <20190806113318.GA20215@lst.de>
+References: <1565082809.2323.24.camel@pengutronix.de>
+         <20190806113318.GA20215@lst.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Am Dienstag, den 06.08.2019, 13:33 +0200 schrieb Christoph Hellwig:
+> On Tue, Aug 06, 2019 at 11:13:29AM +0200, Lucas Stach wrote:
+> > Hi Christoph,
+> > 
+> > I just found a regression where my NVMe device is no longer able to
+> > set
+> > up its HMB.
+> > 
+> > After subject commit dma_direct_alloc_pages() is no longer
+> > initializing
+> > dma_handle properly when DMA_ATTR_NO_KERNEL_MAPPING is set, as the
+> > function is now returning too early.
+> > 
+> > Now this could easily be fixed by adding the phy_to_dma translation
+> > to
+> > the NO_KERNEL_MAPPING code path, but I'm not sure how this stuff
+> > interacts with the memory encryption stuff set up later in the
+> > function, so I guess this should be looked at by someone with more
+> > experience with this code than me.
+> 
+> There is not much we can do about the memory encryption case here,
 
---Bn2rw/3z4jIqBvZU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Which I would guess means we need to ignore DMA_ATTR_NO_KERNEL_MAPPING
+in that case instead of dropping out early?
 
-On Tue, Aug 06, 2019 at 03:44:34PM +0530, Rayagonda Kokatanur wrote:
-> Switch back to BSPI mode after MSPI operations (write and erase)
-> are completed. This change will keep qpsi in BSPI mode by default.
-
-Why?
-
---Bn2rw/3z4jIqBvZU
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1Jb4sACgkQJNaLcl1U
-h9DgGgf/XDjuMvbF0gxlnycvschMI54KdALlicilAY/EdgOqMP0nYuI2Aq5ajfLW
-iyCZuqnv5yB8zvfCmgkQDpMHCFqvyzOD+1e0uaHzW87GiksgU34YADpCjdhYc+Qw
-Ji2fr1lH0NCiCPeMc2ATQ+r431RO2f05Cgo1eUIdtdYdIMGeRt8r3NUbs9P/pTgf
-SFvVWF8s+bb3nsQKiLizNjCCzBAjzPcKsxkKIlwYMu5v2dlQQJUVQNA/Wrs6bada
-FRHWgV5N1VCYSAWxTG9X0nK9prvb6U2K4RLn4Sx4KQjG9+dXIcON3yIRjqCbIyCg
-jWPS/FWELxU9yNtO0ja47BfU2zbm1Q==
-=NEaP
------END PGP SIGNATURE-----
-
---Bn2rw/3z4jIqBvZU--
+> as that requires a kernel address to mark the memory as unencrypted.
+> 
+> So the obvious trivial fix is probably the right one:
+> 
+> 
+> diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+> index 59bdceea3737..c49120193309 100644
+> --- a/kernel/dma/direct.c
+> +++ b/kernel/dma/direct.c
+> @@ -135,6 +135,7 @@ void *dma_direct_alloc_pages(struct device *dev,
+> size_t size,
+>  		if (!PageHighMem(page))
+>  			arch_dma_prep_coherent(page, size);
+>  		/* return the page pointer as the opaque cookie */
+> +		*dma_handle = phys_to_dma(dev, page_to_phys(page));
+>  		return page;
+>  	}
+>  
