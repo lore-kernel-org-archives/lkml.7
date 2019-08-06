@@ -2,258 +2,230 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6ED4C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 23:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48C5AC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 23:27:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A20F320C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 23:17:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07B0E216F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 23:27:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="lO1sgfmm"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="A1NCke0a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727724AbfHFXRI (ORCPT
+        id S1726892AbfHFX1c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 19:17:08 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:35135 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726375AbfHFXQQ (ORCPT
+        Tue, 6 Aug 2019 19:27:32 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:34697 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726069AbfHFX1c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 19:16:16 -0400
-Received: by mail-qt1-f194.google.com with SMTP id d23so86477140qto.2
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 16:16:15 -0700 (PDT)
+        Tue, 6 Aug 2019 19:27:32 -0400
+Received: by mail-ot1-f67.google.com with SMTP id n5so97001638otk.1
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 16:27:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=zMCnJFSOouEfBlilBoskv+IiaZaXJbwxtFCutX/1ZbM=;
-        b=lO1sgfmmxfGlNqAPOvqLT1SGqrTemHFJclBTTUaP/JdfZebfYNEmZx12KN2d9x+t1K
-         lII9WK9gYfQZPyWgyPFTPCoEGHZt8F0M7jQCLkLSlFxnaHHwQXPyY3CcqvQ580SczZfN
-         qAhsOYwXpYzFayOyEW24oPZpEQGwPISo/iiZPCSocZqmP49DBEnHdgl5cijvZU770sK2
-         rst5KmBjQuunoLWsnmCgllUhFH26FxYZrBl8qIJPrLLJfK3/2D+8ShVoV4s+9VzUPpPr
-         JMuDt8hth2BUVJE2B6xnVe4lowU/3I7TBYPiS33xCwbY2pskYzWJYZAzDEPq+ODY5GTM
-         Yhuw==
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=V5E/vEU5l0XkioyuorxP6jKxsdFKokFL9ZSrtexRssk=;
+        b=A1NCke0a/LjS9zvr7+/34vGTAEoKD6Z7pY809prBn3C4amAQe063I+j3pzu6tKiV6N
+         zANesKaI6teNmSxD4Six9jmjo5ZWki6o2jPPLuzPBYmTsteU3evikYzBntcUrMCrwNih
+         fMT7X4BH3MRi92FoB9FhEUSN2I8ak+MseNYgMRrK5gz7m5yvMjVIiYPxMZ8CJ+SOSc24
+         WOApgJYr3w0NR6neMgEo2AKw3p1ESlkH8TbATHjL6sUvWxVwFcLMPiLAv9yN10H88Fq5
+         VyjCqs4jI9gSActsyazLApeytbPoBB9RbFPpHL4om+y3U8GG4IiFtdcY+RMibJ0KGWM6
+         C7zg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=zMCnJFSOouEfBlilBoskv+IiaZaXJbwxtFCutX/1ZbM=;
-        b=k/JS7/X2+SR8tmcWJe3PO5jOjWOLu3oNS2F/LYOy+izycOYyWxYpuiGchquYOJT5P5
-         YXVJ6aEdZwdPfqDUriw/XZ3jAT/DMtcjecgA3OTfbEfAmPGJrz0BRn81auC50L3u0KGa
-         UnQ9sU8TnCSAXr3285XPg5zId3Mz465nzKrdpB0EsLqzTOmAa+O49SZPCmHsFkcimrY3
-         95KZnH8kWr2NgkR5XVrkXtWyUy32LmcD5+oS4LQZ18hBLILwyuNrI67LUQYRfasNHFDv
-         3HcUMIgeYFEyKFCrm6inCxZ8c1wHCeHFvOyxhXS5slcXZC7cjpnOhyfX4GwuYh4jGDiH
-         fO3g==
-X-Gm-Message-State: APjAAAUOCgcIr2CQn7iScfDpIPgi21WAQqXvVm3yvSXgqPRySMrIMDSk
-        5vZV0S29yZ/IMw8luEBYlt1sAw==
-X-Google-Smtp-Source: APXvYqxMVRT0WflMzTw7hoNYehDw3sJ1fV7g1I1BCJ9PGgwnJ2UQq4JSqfd/nXhEpMBqp4lLxDXVKg==
-X-Received: by 2002:a0c:9e27:: with SMTP id p39mr5387552qve.151.1565133375135;
-        Tue, 06 Aug 2019 16:16:15 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id d9sm38947489qke.136.2019.08.06.16.16.14
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 06 Aug 2019 16:16:14 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hv8gg-0006eZ-5J; Tue, 06 Aug 2019 20:16:14 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     linux-mm@kvack.org
-Cc:     Andrea Arcangeli <aarcange@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        "Kuehling, Felix" <Felix.Kuehling@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        Dimitri Sivanich <sivanich@sgi.com>,
-        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        iommu@lists.linux-foundation.org, intel-gfx@lists.freedesktop.org,
-        Gavin Shan <shangw@linux.vnet.ibm.com>,
-        Andrea Righi <andrea@betterlinux.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH v3 hmm 04/11] misc/sgi-gru: use mmu_notifier_get/put for struct gru_mm_struct
-Date:   Tue,  6 Aug 2019 20:15:41 -0300
-Message-Id: <20190806231548.25242-5-jgg@ziepe.ca>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190806231548.25242-1-jgg@ziepe.ca>
-References: <20190806231548.25242-1-jgg@ziepe.ca>
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=V5E/vEU5l0XkioyuorxP6jKxsdFKokFL9ZSrtexRssk=;
+        b=HD9VvjR9NkdBn53K3bKDUrO+5tV4ifQ4BktraUU/MCWFWqyqzrrXIRHHjN8elezzv6
+         z2DG7Vi0plA5o0G/fVtEjBGvcMmZSdK/TCro5yWTyubRa3qVZNk+2kNKMq/v/9/m1Dd/
+         jRXyAb2dINtOlA31Z3JIUeq88w6nBMpbR0RjLUniyFnDYgsoyty/k+cITzJR2NRP2stT
+         zLvalkrH7l3hhJ5dgQJL86OChgibDXpZKjXlXfprY5CXqUjLYsHsfzyeNur3vTG9ukzY
+         3Ek0ydArOre2tmEaRJZNRMV0oSAO/ihzPO0wy4guCl39YAZ/CbuoJce8O8bXY4ARE41j
+         ndBw==
+X-Gm-Message-State: APjAAAWp6qd+qbzKLypDeyPQ1UyI3M4WAHN4d2wMGzoCnTGoPHmjO1w0
+        3eYoMj9BKyN4fI8d71GlpVagkQ==
+X-Google-Smtp-Source: APXvYqySNV0ICs40X1PhGp8WppnE7/Hq6YdPV4lbOreMMENDHsln4iW6yVs87f7uUjg5jNYUoSYPwA==
+X-Received: by 2002:a6b:c081:: with SMTP id q123mr6295296iof.210.1565134051058;
+        Tue, 06 Aug 2019 16:27:31 -0700 (PDT)
+Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
+        by smtp.gmail.com with ESMTPSA id z19sm97593360ioh.12.2019.08.06.16.27.30
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 06 Aug 2019 16:27:30 -0700 (PDT)
+Date:   Tue, 6 Aug 2019 16:27:30 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Atish Patra <atish.patra@wdc.com>
+cc:     linux-kernel@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>,
+        Allison Randal <allison@lohutok.net>,
+        Anup Patel <anup.patel@wdc.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        devicetree@vger.kernel.org, Enrico Weigelt <info@metux.net>,
+        Gary Guo <gary@garyguo.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>,
+        linux-riscv@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Yangtao Li <tiny.windzz@gmail.com>
+Subject: Re: [PATCH v3 3/5] RISC-V: Fix unsupported isa string info.
+In-Reply-To: <20190801005843.10343-4-atish.patra@wdc.com>
+Message-ID: <alpine.DEB.2.21.9999.1908061625190.13971@viisi.sifive.com>
+References: <20190801005843.10343-1-atish.patra@wdc.com> <20190801005843.10343-4-atish.patra@wdc.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+On Wed, 31 Jul 2019, Atish Patra wrote:
 
-GRU is already using almost the same algorithm as get/put, it even
-helpfully has a 10 year old comment to make this algorithm common, which
-is finally happening.
+> Currently, kernel prints a info warning if any of the extensions
+> from "mafdcsu" is missing in device tree. This is not entirely
+> correct as Linux can boot with "f or d" extensions if kernel is
+> configured accordingly. Moreover, it will continue to print the
+> info string for future extensions such as hypervisor as well which
+> is misleading. /proc/cpuinfo also doesn't print any other extensions
+> except "mafdcsu".
+> 
+> Make sure that info log is only printed only if kernel is configured
+> to have any mandatory extensions but device tree doesn't describe it.
+> All the extensions present in device tree and follow the order
+> described in the RISC-V specification (except 'S') are printed via
+> /proc/cpuinfo always.
+> 
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
 
-There are a few differences and fixes from this conversion:
-- GRU used rcu not srcu to read the hlist
-- Unclear how the locking worked to prevent gru_register_mmu_notifier()
-  from running concurrently with gru_drop_mmu_notifier() - this version is
-  safe
-- GRU had a release function which only set a variable without any locking
-  that skiped the synchronize_srcu during unregister which looks racey,
-  but this makes it reliable via the integrated call_srcu().
-- It is unclear if the mmap_sem is actually held when
-  __mmu_notifier_register() was called, lockdep will now warn if this is
-  wrong
+I tested this patch after dropping the CONFIG_ISA_RISCV_C test (see 
+below).  Running "cat /proc/cpuinfo" generated the following kernel 
+warnings:
+          
+[   73.412626] unsupported ISA extensions "su" in device tree for cpu [0]
+[   73.418417] unsupported ISA extensions "su" in device tree for cpu [1]
+[   73.424912] unsupported ISA extensions "su" in device tree for cpu [2]
+[   73.431425] unsupported ISA extensions "su" in device tree for cpu [3]
 
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
----
- drivers/misc/sgi-gru/grufile.c     |  1 +
- drivers/misc/sgi-gru/grutables.h   |  2 -
- drivers/misc/sgi-gru/grutlbpurge.c | 84 +++++++++---------------------
- 3 files changed, 25 insertions(+), 62 deletions(-)
+Seems like the "su" should be dropped from mandatory_ext.  What do you 
+think?
 
-diff --git a/drivers/misc/sgi-gru/grufile.c b/drivers/misc/sgi-gru/grufile.c
-index a2a142ae087bfa..9d042310214ff9 100644
---- a/drivers/misc/sgi-gru/grufile.c
-+++ b/drivers/misc/sgi-gru/grufile.c
-@@ -573,6 +573,7 @@ static void __exit gru_exit(void)
- 	gru_free_tables();
- 	misc_deregister(&gru_miscdev);
- 	gru_proc_exit();
-+	mmu_notifier_synchronize();
- }
- 
- static const struct file_operations gru_fops = {
-diff --git a/drivers/misc/sgi-gru/grutables.h b/drivers/misc/sgi-gru/grutables.h
-index 438191c220570c..a7e44b2eb413f6 100644
---- a/drivers/misc/sgi-gru/grutables.h
-+++ b/drivers/misc/sgi-gru/grutables.h
-@@ -307,10 +307,8 @@ struct gru_mm_tracker {				/* pack to reduce size */
- 
- struct gru_mm_struct {
- 	struct mmu_notifier	ms_notifier;
--	atomic_t		ms_refcnt;
- 	spinlock_t		ms_asid_lock;	/* protects ASID assignment */
- 	atomic_t		ms_range_active;/* num range_invals active */
--	char			ms_released;
- 	wait_queue_head_t	ms_wait_queue;
- 	DECLARE_BITMAP(ms_asidmap, GRU_MAX_GRUS);
- 	struct gru_mm_tracker	ms_asids[GRU_MAX_GRUS];
-diff --git a/drivers/misc/sgi-gru/grutlbpurge.c b/drivers/misc/sgi-gru/grutlbpurge.c
-index 59ba0adf23cee4..10921cd2608dfa 100644
---- a/drivers/misc/sgi-gru/grutlbpurge.c
-+++ b/drivers/misc/sgi-gru/grutlbpurge.c
-@@ -235,83 +235,47 @@ static void gru_invalidate_range_end(struct mmu_notifier *mn,
- 		gms, range->start, range->end);
- }
- 
--static void gru_release(struct mmu_notifier *mn, struct mm_struct *mm)
-+static struct mmu_notifier *gru_alloc_notifier(struct mm_struct *mm)
- {
--	struct gru_mm_struct *gms = container_of(mn, struct gru_mm_struct,
--						 ms_notifier);
-+	struct gru_mm_struct *gms;
-+
-+	gms = kzalloc(sizeof(*gms), GFP_KERNEL);
-+	if (!gms)
-+		return ERR_PTR(-ENOMEM);
-+	STAT(gms_alloc);
-+	spin_lock_init(&gms->ms_asid_lock);
-+	init_waitqueue_head(&gms->ms_wait_queue);
- 
--	gms->ms_released = 1;
--	gru_dbg(grudev, "gms %p\n", gms);
-+	return &gms->ms_notifier;
- }
- 
-+static void gru_free_notifier(struct mmu_notifier *mn)
-+{
-+	kfree(container_of(mn, struct gru_mm_struct, ms_notifier));
-+	STAT(gms_free);
-+}
- 
- static const struct mmu_notifier_ops gru_mmuops = {
- 	.invalidate_range_start	= gru_invalidate_range_start,
- 	.invalidate_range_end	= gru_invalidate_range_end,
--	.release		= gru_release,
-+	.alloc_notifier		= gru_alloc_notifier,
-+	.free_notifier		= gru_free_notifier,
- };
- 
--/* Move this to the basic mmu_notifier file. But for now... */
--static struct mmu_notifier *mmu_find_ops(struct mm_struct *mm,
--			const struct mmu_notifier_ops *ops)
--{
--	struct mmu_notifier *mn, *gru_mn = NULL;
--
--	if (mm->mmu_notifier_mm) {
--		rcu_read_lock();
--		hlist_for_each_entry_rcu(mn, &mm->mmu_notifier_mm->list,
--					 hlist)
--		    if (mn->ops == ops) {
--			gru_mn = mn;
--			break;
--		}
--		rcu_read_unlock();
--	}
--	return gru_mn;
--}
--
- struct gru_mm_struct *gru_register_mmu_notifier(void)
- {
--	struct gru_mm_struct *gms;
- 	struct mmu_notifier *mn;
--	int err;
--
--	mn = mmu_find_ops(current->mm, &gru_mmuops);
--	if (mn) {
--		gms = container_of(mn, struct gru_mm_struct, ms_notifier);
--		atomic_inc(&gms->ms_refcnt);
--	} else {
--		gms = kzalloc(sizeof(*gms), GFP_KERNEL);
--		if (!gms)
--			return ERR_PTR(-ENOMEM);
--		STAT(gms_alloc);
--		spin_lock_init(&gms->ms_asid_lock);
--		gms->ms_notifier.ops = &gru_mmuops;
--		atomic_set(&gms->ms_refcnt, 1);
--		init_waitqueue_head(&gms->ms_wait_queue);
--		err = __mmu_notifier_register(&gms->ms_notifier, current->mm);
--		if (err)
--			goto error;
--	}
--	if (gms)
--		gru_dbg(grudev, "gms %p, refcnt %d\n", gms,
--			atomic_read(&gms->ms_refcnt));
--	return gms;
--error:
--	kfree(gms);
--	return ERR_PTR(err);
-+
-+	mn = mmu_notifier_get_locked(&gru_mmuops, current->mm);
-+	if (IS_ERR(mn))
-+		return ERR_CAST(mn);
-+
-+	return container_of(mn, struct gru_mm_struct, ms_notifier);
- }
- 
- void gru_drop_mmu_notifier(struct gru_mm_struct *gms)
- {
--	gru_dbg(grudev, "gms %p, refcnt %d, released %d\n", gms,
--		atomic_read(&gms->ms_refcnt), gms->ms_released);
--	if (atomic_dec_return(&gms->ms_refcnt) == 0) {
--		if (!gms->ms_released)
--			mmu_notifier_unregister(&gms->ms_notifier, current->mm);
--		kfree(gms);
--		STAT(gms_free);
--	}
-+	mmu_notifier_put(&gms->ms_notifier);
- }
- 
- /*
--- 
-2.22.0
+> ---
+>  arch/riscv/kernel/cpu.c | 47 ++++++++++++++++++++++++++++++++---------
+>  1 file changed, 37 insertions(+), 10 deletions(-)
+> 
+> diff --git a/arch/riscv/kernel/cpu.c b/arch/riscv/kernel/cpu.c
+> index 7da3c6a93abd..9b1d4550fbe6 100644
+> --- a/arch/riscv/kernel/cpu.c
+> +++ b/arch/riscv/kernel/cpu.c
+> @@ -7,6 +7,7 @@
+>  #include <linux/seq_file.h>
+>  #include <linux/of.h>
+>  #include <asm/smp.h>
+> +#include <asm/hwcap.h>
+>  
+>  /*
+>   * Returns the hart ID of the given device tree node, or -ENODEV if the node
+> @@ -46,11 +47,14 @@ int riscv_of_processor_hartid(struct device_node *node)
+>  
+>  #ifdef CONFIG_PROC_FS
+>  
+> -static void print_isa(struct seq_file *f, const char *orig_isa)
+> +static void print_isa(struct seq_file *f, const char *orig_isa,
+> +		      unsigned long cpuid)
+>  {
+> -	static const char *ext = "mafdcsu";
+> +	static const char *mandatory_ext = "mafdcsu";
+>  	const char *isa = orig_isa;
+>  	const char *e;
+> +	char unsupported_isa[26] = {0};
+> +	int index = 0;
+>  
+>  	/*
+>  	 * Linux doesn't support rv32e or rv128i, and we only support booting
+> @@ -70,27 +74,50 @@ static void print_isa(struct seq_file *f, const char *orig_isa)
+>  	isa += 5;
+>  
+>  	/*
+> -	 * Check the rest of the ISA string for valid extensions, printing those
+> -	 * we find.  RISC-V ISA strings define an order, so we only print the
+> +	 * RISC-V ISA strings define an order, so we only print all the
+>  	 * extension bits when they're in order. Hide the supervisor (S)
+>  	 * extension from userspace as it's not accessible from there.
+> +	 * Throw a warning only if any mandatory extensions are not available
+> +	 * and kernel is configured to have that mandatory extensions.
+>  	 */
+> -	for (e = ext; *e != '\0'; ++e) {
+> -		if (isa[0] == e[0]) {
+> +	for (e = mandatory_ext; *e != '\0'; ++e) {
+> +		if (isa[0] != e[0]) {
+> +#if defined(CONFIG_ISA_RISCV_C)
 
+There's no Kconfig option by this name, and we're requiring compressed 
+instruction support as part of the RISC-V Linux baseline.  Could you share 
+the rationale behind this?  Looks to me like this should be dropped.
+
+
+> +			if (isa[0] == 'c')
+> +				continue;
+> +#endif
+> +#if defined(CONFIG_FP)
+> +			if ((isa[0] == 'f') || (isa[0] == 'd'))
+> +				continue;
+> +#endif
+> +			unsupported_isa[index] = e[0];
+> +			index++;
+> +		}
+> +		/* Only write if part of isa string */
+> +		if (isa[0] != '\0') {
+>  			if (isa[0] != 's')
+>  				seq_write(f, isa, 1);
+> -
+>  			isa++;
+>  		}
+>  	}
+> +	if (isa[0] != '\0') {
+> +		/* Add remainging isa strings */
+> +		for (e = isa; *e != '\0'; ++e) {
+> +#if !defined(CONFIG_VIRTUALIZATION)
+> +			if (e[0] != 'h')
+> +#endif
+> +				seq_write(f, e, 1);
+> +		}
+> +	}
+>  	seq_puts(f, "\n");
+>  
+>  	/*
+>  	 * If we were given an unsupported ISA in the device tree then print
+>  	 * a bit of info describing what went wrong.
+>  	 */
+> -	if (isa[0] != '\0')
+> -		pr_info("unsupported ISA \"%s\" in device tree\n", orig_isa);
+> +	if (unsupported_isa[0])
+> +		pr_info("unsupported ISA extensions \"%s\" in device tree for cpu [%ld]\n",
+> +			unsupported_isa, cpuid);
+>  }
+>  
+>  static void print_mmu(struct seq_file *f, const char *mmu_type)
+> @@ -134,7 +161,7 @@ static int c_show(struct seq_file *m, void *v)
+>  	seq_printf(m, "processor\t: %lu\n", cpu_id);
+>  	seq_printf(m, "hart\t\t: %lu\n", cpuid_to_hartid_map(cpu_id));
+>  	if (!of_property_read_string(node, "riscv,isa", &isa))
+> -		print_isa(m, isa);
+> +		print_isa(m, isa, cpu_id);
+>  	if (!of_property_read_string(node, "mmu-type", &mmu))
+>  		print_mmu(m, mmu);
+>  	if (!of_property_read_string(node, "compatible", &compat)
+> -- 
+> 2.21.0
+> 
+> 
+
+
+- Paul
