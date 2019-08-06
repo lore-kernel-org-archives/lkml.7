@@ -2,81 +2,149 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D9DC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 11:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF8A2C32754
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 11:12:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FA4C20B1F
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 11:11:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565089874;
-	bh=TMm6oqmx5PpUGjqqMqLwT0Tqw0Nq4KsVh/fjsfwMlJc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WOW0B1pQM7QO/RQMYMhQfJuyhapslk+O4QNa9sGotJgnPI5BRK+iX5yRYtepmbucG
-	 aTUjkSYeSwV772kCGaVQCmwNtsWNiQwnnqft0TojrxbYnvgnQ0Ic8mg7GaOw7/3JMY
-	 R5A37q4iZW8doL10UBbsJCmmztmym0/S/71EffIg=
+	by mail.kernel.org (Postfix) with ESMTP id B7A802147A
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 11:12:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="dzc5ZzSl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731235AbfHFLLN (ORCPT
+        id S1732630AbfHFLMO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 07:11:13 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48218 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728845AbfHFLLN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 07:11:13 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id DB69CB629;
-        Tue,  6 Aug 2019 11:11:11 +0000 (UTC)
-Date:   Tue, 6 Aug 2019 13:11:09 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     kernel test robot <oliver.sang@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Miguel de Dios <migueldedios@google.com>,
-        Wei Wang <wvw@google.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Mel Gorman <mgorman@techsingularity.net>, lkp@01.org
-Subject: Re: [mm]  755d6edc1a:  will-it-scale.per_process_ops -4.1% regression
-Message-ID: <20190806111109.GV11812@dhcp22.suse.cz>
-References: <20190729071037.241581-1-minchan@kernel.org>
- <20190806070547.GA10123@xsang-OptiPlex-9020>
- <20190806080415.GG11812@dhcp22.suse.cz>
- <20190806110024.GA32615@google.com>
+        Tue, 6 Aug 2019 07:12:14 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:46415 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728845AbfHFLMN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 07:12:13 -0400
+Received: by mail-ed1-f66.google.com with SMTP id d4so81972663edr.13
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 04:12:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=IVUZ3vCUTZaoNKcACCnsP7M9ScGcHtHaH8K8c7i8HGE=;
+        b=dzc5ZzSlafWAy4fTC2ybrGXSCublaxnDUYbea0pzEG0z1VVySMMflBJVhE69+xqsxQ
+         ESDT9/Cp7bfZI3bAbHXvis/zbWvnBL2Tt5UimOA9lpTrAdZc/C2ry9LQNpbmWXzDlqEI
+         Uv2TeJm+Zisvbj8s0NnelXo1te8MM6RBy56cFCUBrFEBGLwOhQJX5pQ5s/Fi5zOv1P3N
+         vxUj4YVvG++IvGchx4EZYQq6T2UHYO58Gx0S8bgicbKPJVYzkmuJrWWXexEv9O9yPDpe
+         TLWBH3Igl7oDCOQj92KYngp53w9jybNVCctzRFInXAgzw/hzdUgcgskgBuK259f86s2x
+         WiOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=IVUZ3vCUTZaoNKcACCnsP7M9ScGcHtHaH8K8c7i8HGE=;
+        b=FyVoMw2gCiMnF5Z6IOJHvzFdkyXwzepZqnaFiBPkgyx5eM7r/68mSFWGh64egBwZha
+         1WCFUCDXy4uBuoylynU0+6cC8qPHB90AyOonx5Z/nP0lJjsO7aaU8y327Xxpz3s53/bt
+         FUHt4R7Un7KO7xRtNLU63oDbz+OCsvX95jIQ5oNVAAHdjaRMShc1gUL/OJw72M31EUWj
+         pCkfdnJOtSZg+ooCItfa10x7Ehu6K94C7iBHjheYyfqS0lnt5jDM57wEHNjX0aVj83M1
+         7HzgZjdsjftaNUDmHQe6VFViQMexbf5Zlo6UV2/5BaaqJLe5k+4+KqgXxYHTCXxyXUWy
+         XQ9g==
+X-Gm-Message-State: APjAAAXgVu7B8guxLnzZmmW/U7lltqdgeTWGuxuxx/I3cV87t5GIcSP9
+        f6uKcEx8keMud/CcennRIuNVbw==
+X-Google-Smtp-Source: APXvYqztbyBgleEnQ54uuSvw10HgZnTrh29ZTTFUfYTHSJDyykKw0nXSNOlE5//gAzIYtisxx3tk1Q==
+X-Received: by 2002:a50:f98a:: with SMTP id q10mr3146171edn.267.1565089931994;
+        Tue, 06 Aug 2019 04:12:11 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id c48sm20888241edb.10.2019.08.06.04.12.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 06 Aug 2019 04:12:11 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id CC6D01003C7; Tue,  6 Aug 2019 14:12:10 +0300 (+03)
+Date:   Tue, 6 Aug 2019 14:12:10 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     William Kucharski <william.kucharski@oracle.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Bob Kasten <robert.a.kasten@intel.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Chad Mynhier <chad.mynhier@oracle.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Johannes Weiner <jweiner@fb.com>,
+        Matthew Wilcox <willy@infradead.org>
+Subject: Re: [PATCH v3 2/2] mm,thp: Add experimental config option
+ RO_EXEC_FILEMAP_HUGE_FAULT_THP
+Message-ID: <20190806111210.7xpmjsd4hq54vuml@box>
+References: <20190731082513.16957-1-william.kucharski@oracle.com>
+ <20190731082513.16957-3-william.kucharski@oracle.com>
+ <20190801123658.enpchkjkqt7cdkue@box>
+ <c8d02a3b-e1ad-2b95-ce15-13d3ed4cca87@oracle.com>
+ <20190805132854.5dnqkfaajmstpelm@box.shutemov.name>
+ <19A86A16-B440-4B73-98FE-922A09484DFD@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190806110024.GA32615@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <19A86A16-B440-4B73-98FE-922A09484DFD@oracle.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 06-08-19 20:00:24, Minchan Kim wrote:
-> On Tue, Aug 06, 2019 at 10:04:15AM +0200, Michal Hocko wrote:
-> > On Tue 06-08-19 15:05:47, kernel test robot wrote:
-> > > Greeting,
-> > > 
-> > > FYI, we noticed a -4.1% regression of will-it-scale.per_process_ops due to commit:
+On Mon, Aug 05, 2019 at 09:56:45AM -0600, William Kucharski wrote:
+> >> I don't really care if the start of the VMA is suitable, just whether I can map
+> >> the current faulting page with a THP. As far as I know, there's nothing wrong
+> >> with mapping all the pages before the VMA hits a properly aligned bound with
+> >> PAGESIZE pages and then aligned chunks in the middle with THP.
 > > 
-> > I have to confess I cannot make much sense from numbers because they
-> > seem to be too volatile and the main contributor doesn't stand up for
-> > me. Anyway, regressions on microbenchmarks like this are not all that
-> > surprising when a locking is slightly changed and the critical section
-> > made shorter. I have seen that in the past already.
+> > You cannot map any paged as huge into wrongly aligned VMA.
+> > 
+> > THP's ->index must be aligned to HPAGE_PMD_NR, so if the combination VMA's
+> > ->vm_start and ->vm_pgoff doesn't allow for this, you must fallback to
+> > mapping the page with PTEs. I don't see it handled properly here.
 > 
-> I guess if it's multi process workload. The patch will give more chance
-> to be scheduled out so TLB miss ratio would be bigger than old.
-> I see it's natural trade-off for latency vs. performance so only thing
-> I could think is just increase threshold from 32 to 64 or 128?
+> It was my assumption that if say a VMA started at an address say one page
+> before a large page alignment, you could map that page with a PAGESIZE
+> page but if VMA size allowed, there was a fault on the next page, and
+> VMA size allowed, you could map that next range with a large page, taking
+> taking the approach of mapping chunks of the VMA with the largest page
+> possible.
+> 
+> Is it that the start of the VMA must always align or that the entire VMA
+> must be properly aligned and a multiple of the PMD size (so you either map
+> with all large pages or none)?
 
-This still feels like a magic number tunning, doesn't it?
+IIUC, you are missing ->vm_pgoff from the picture. The newly allocated
+page must land into page cache aligned on HPAGE_PMD_NR boundary. In other
+word you cannout have huge page with ->index, let say, 1.
+
+VMA is only suitable for at least one file-THP page if:
+
+ - (vma->vm_start >> PAGE_SHIFT) % (HPAGE_PMD_NR - 1) is equal to
+    vma->vm_pgoff % (HPAGE_PMD_NR - 1)
+
+    This guarantees right alignment in the backing page cache.
+
+ - *and* vma->vm_end - round_up(vma->vm_start, HPAGE_PMD_SIZE) is equal or
+   greater than HPAGE_PMD_SIZE.
+
+Does it make sense?
+
+> 
+> >> This is the page that content was just read to; readpage() will unlock the page
+> >> when it is done with I/O, but the page needs to be locked before it's inserted
+> >> into the page cache.
+> > 
+> > Then you must to lock the page properly with lock_page().
+> > 
+> > __SetPageLocked() is fine for just allocated pages that was not exposed
+> > anywhere. After ->readpage() it's not the case and it's not safe to use
+> > __SetPageLocked() for them.
+> 
+> In the current code, it's assumed it is not exposed, because a single read
+> of a large page that does no readahead before the page is inserted into the
+> cache means there are no external users of the page.
+
+You've exposed the page to the filesystem once you call ->readpage().
+It *may* track the page somehow after the call.
 
 -- 
-Michal Hocko
-SUSE Labs
+ Kirill A. Shutemov
