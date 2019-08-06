@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96CE6C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 10:01:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28497C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 10:01:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D40920651
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 10:01:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E531A214C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 10:01:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565085693;
-	bh=EZTBYw44dIaCfDN9MR5R58JaRhfb1XqrB+msqmZgur8=;
+	s=default; t=1565085699;
+	bh=jzd/JiQAlhq7w+5mW6wL3BCxqWB9hIVFdDsfZrBfN60=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iQA/8T85yqaCN4dfpDdq2olsQx03ECv2OUgcYzJZgHboIzmBHMn0xury5kZOHJ+c9
-	 RDw7VEwjNaWzb6dLaECUTX1FkGuayxg9gcZioohMhXyv07Iq8buh7kNXs28hJue3Hu
-	 r9KCa2sTBWKnTvXgFGKhaL+bwhwuyBRE8rk0z/l8=
+	b=qow/SW/LOZU4gziVSJADnm8rMTKWQjX6xILw7qrBc/T7j3EwHH2ir34srgq8XdOpO
+	 svWsEl1fgzvYcBWZakizjCK+d3KtVuylVe3tI0EU4LZgy1/6BzGN7fhCyoElUMYGfn
+	 /ZPJYLcWnYT2kQjFPrqU9GLIPmBg9f34PvEuWQSs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732661AbfHFKBb (ORCPT
+        id S1732703AbfHFKBi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 06:01:31 -0400
-Received: from foss.arm.com ([217.140.110.172]:59372 "EHLO foss.arm.com"
+        Tue, 6 Aug 2019 06:01:38 -0400
+Received: from foss.arm.com ([217.140.110.172]:59440 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732635AbfHFKBa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 06:01:30 -0400
+        id S1732675AbfHFKBg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 06:01:36 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 913CC1570;
-        Tue,  6 Aug 2019 03:01:29 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7B68F1688;
+        Tue,  6 Aug 2019 03:01:35 -0700 (PDT)
 Received: from filthy-habits.cambridge.arm.com (filthy-habits.cambridge.arm.com [10.1.197.61])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 595173F706;
-        Tue,  6 Aug 2019 03:01:28 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 42F513F706;
+        Tue,  6 Aug 2019 03:01:34 -0700 (PDT)
 From:   Marc Zyngier <maz@kernel.org>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Jason Cooper <jason@lakedaemon.net>,
@@ -43,9 +43,9 @@ Cc:     John Garry <john.garry@huawei.com>,
         <shameerali.kolothum.thodi@huawei.com>,
         Lokesh Vutla <lokeshvutla@ti.com>,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 01/12] irqchip/gic: Rework gic_configure_irq to take the full ICFGR base
-Date:   Tue,  6 Aug 2019 11:01:10 +0100
-Message-Id: <20190806100121.240767-2-maz@kernel.org>
+Subject: [PATCH v2 05/12] irqchip/gic: Prepare for more than 16 PPIs
+Date:   Tue,  6 Aug 2019 11:01:14 +0100
+Message-Id: <20190806100121.240767-6-maz@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190806100121.240767-1-maz@kernel.org>
 References: <20190806100121.240767-1-maz@kernel.org>
@@ -56,131 +56,177 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-gic_configure_irq is currently passed the (re)distributor address,
-to which it applies an a fixed offset to get to the configuration
-registers. This offset is constant across all GICs, or rather it was
-until to v3.1...
+GICv3.1 allows up to 80 PPIs (16 legaci PPIs and 64 Extended PPIs),
+meaning we can't just leave the old 16 hardcoded everywhere.
 
-An easy way out is for the individual drivers to pass the base
-address of the configuration register for the considered interrupt.
-At the same time, move part of the error handling back to the
-individual drivers, as things are about to change on that front.
+We also need to add the infrastructure to discover the number of PPIs
+on a per redistributor basis, although we still pretend there is only
+16 of them for now.
+
+No functional change.
 
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- drivers/irqchip/irq-gic-common.c | 14 +++++---------
- drivers/irqchip/irq-gic-v3.c     | 11 ++++++++++-
- drivers/irqchip/irq-gic.c        | 10 +++++++++-
- drivers/irqchip/irq-hip04.c      |  7 ++++++-
- 4 files changed, 30 insertions(+), 12 deletions(-)
+ drivers/irqchip/irq-gic-common.c | 19 ++++++++++++-------
+ drivers/irqchip/irq-gic-common.h |  2 +-
+ drivers/irqchip/irq-gic-v3.c     | 22 +++++++++++++++-------
+ drivers/irqchip/irq-gic.c        |  2 +-
+ drivers/irqchip/irq-hip04.c      |  2 +-
+ 5 files changed, 30 insertions(+), 17 deletions(-)
 
 diff --git a/drivers/irqchip/irq-gic-common.c b/drivers/irqchip/irq-gic-common.c
-index b0a8215a13fc..6900b6f0921c 100644
+index 6900b6f0921c..14110db01c05 100644
 --- a/drivers/irqchip/irq-gic-common.c
 +++ b/drivers/irqchip/irq-gic-common.c
-@@ -63,7 +63,7 @@ int gic_configure_irq(unsigned int irq, unsigned int type,
- 	 * for "irq", depending on "type".
- 	 */
- 	raw_spin_lock_irqsave(&irq_controller_lock, flags);
--	val = oldval = readl_relaxed(base + GIC_DIST_CONFIG + confoff);
-+	val = oldval = readl_relaxed(base + confoff);
- 	if (type & IRQ_TYPE_LEVEL_MASK)
- 		val &= ~confmask;
- 	else if (type & IRQ_TYPE_EDGE_BOTH)
-@@ -83,14 +83,10 @@ int gic_configure_irq(unsigned int irq, unsigned int type,
- 	 * does not allow us to set the configuration or we are in a
- 	 * non-secure mode, and hence it may not be catastrophic.
- 	 */
--	writel_relaxed(val, base + GIC_DIST_CONFIG + confoff);
--	if (readl_relaxed(base + GIC_DIST_CONFIG + confoff) != val) {
--		if (WARN_ON(irq >= 32))
--			ret = -EINVAL;
--		else
--			pr_warn("GIC: PPI%d is secure or misconfigured\n",
--				irq - 16);
--	}
-+	writel_relaxed(val, base + confoff);
-+	if (readl_relaxed(base + confoff) != val)
-+		ret = -EINVAL;
-+
- 	raw_spin_unlock_irqrestore(&irq_controller_lock, flags);
+@@ -128,26 +128,31 @@ void gic_dist_config(void __iomem *base, int gic_irqs,
+ 		sync_access();
+ }
  
+-void gic_cpu_config(void __iomem *base, void (*sync_access)(void))
++void gic_cpu_config(void __iomem *base, int nr, void (*sync_access)(void))
+ {
+ 	int i;
+ 
+ 	/*
+ 	 * Deal with the banked PPI and SGI interrupts - disable all
+-	 * PPI interrupts, ensure all SGI interrupts are enabled.
+-	 * Make sure everything is deactivated.
++	 * private interrupts. Make sure everything is deactivated.
+ 	 */
+-	writel_relaxed(GICD_INT_EN_CLR_X32, base + GIC_DIST_ACTIVE_CLEAR);
+-	writel_relaxed(GICD_INT_EN_CLR_PPI, base + GIC_DIST_ENABLE_CLEAR);
+-	writel_relaxed(GICD_INT_EN_SET_SGI, base + GIC_DIST_ENABLE_SET);
++	for (i = 0; i < nr; i += 32) {
++		writel_relaxed(GICD_INT_EN_CLR_X32,
++			       base + GIC_DIST_ACTIVE_CLEAR + i / 8);
++		writel_relaxed(GICD_INT_EN_CLR_X32,
++			       base + GIC_DIST_ENABLE_CLEAR + i / 8);
++	}
+ 
+ 	/*
+ 	 * Set priority on PPI and SGI interrupts
+ 	 */
+-	for (i = 0; i < 32; i += 4)
++	for (i = 0; i < nr; i += 4)
+ 		writel_relaxed(GICD_INT_DEF_PRI_X4,
+ 					base + GIC_DIST_PRI + i * 4 / 4);
+ 
++	/* Ensure all SGI interrupts are now enabled */
++	writel_relaxed(GICD_INT_EN_SET_SGI, base + GIC_DIST_ENABLE_SET);
++
  	if (sync_access)
+ 		sync_access();
+ }
+diff --git a/drivers/irqchip/irq-gic-common.h b/drivers/irqchip/irq-gic-common.h
+index 5a46b6b57750..ccba8b0fe0f5 100644
+--- a/drivers/irqchip/irq-gic-common.h
++++ b/drivers/irqchip/irq-gic-common.h
+@@ -22,7 +22,7 @@ int gic_configure_irq(unsigned int irq, unsigned int type,
+                        void __iomem *base, void (*sync_access)(void));
+ void gic_dist_config(void __iomem *base, int gic_irqs,
+ 		     void (*sync_access)(void));
+-void gic_cpu_config(void __iomem *base, void (*sync_access)(void));
++void gic_cpu_config(void __iomem *base, int nr, void (*sync_access)(void));
+ void gic_enable_quirks(u32 iidr, const struct gic_quirk *quirks,
+ 		void *data);
+ void gic_enable_of_quirks(const struct device_node *np,
 diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index 96d927f0f91a..b250e69908f8 100644
+index 1ca4dde32034..e03fb6d7c2ce 100644
 --- a/drivers/irqchip/irq-gic-v3.c
 +++ b/drivers/irqchip/irq-gic-v3.c
-@@ -407,6 +407,7 @@ static int gic_set_type(struct irq_data *d, unsigned int type)
- 	unsigned int irq = gic_irq(d);
- 	void (*rwp_wait)(void);
- 	void __iomem *base;
-+	int ret;
+@@ -51,6 +51,7 @@ struct gic_chip_data {
+ 	u32			nr_redist_regions;
+ 	u64			flags;
+ 	bool			has_rss;
++	unsigned int		ppi_nr;
+ 	struct partition_desc	*ppi_descs[16];
+ };
  
- 	/* Interrupt configuration for SGIs can't be changed */
- 	if (irq < 16)
-@@ -425,7 +426,15 @@ static int gic_set_type(struct irq_data *d, unsigned int type)
- 		rwp_wait = gic_dist_wait_for_rwp;
- 	}
- 
--	return gic_configure_irq(irq, type, base, rwp_wait);
-+
-+	ret = gic_configure_irq(irq, type, base + GICD_ICFGR, rwp_wait);
-+	if (ret && irq < 32) {
-+		/* Misconfigured PPIs are usually not fatal */
-+		pr_warn("GIC: PPI%d is secure or misconfigured\n", irq - 16);
-+		ret = 0;
-+	}
-+
-+	return ret;
+@@ -812,19 +813,24 @@ static int gic_populate_rdist(void)
+ 	return -ENODEV;
  }
  
- static int gic_irq_set_vcpu_affinity(struct irq_data *d, void *vcpu)
+-static int __gic_update_vlpi_properties(struct redist_region *region,
+-					void __iomem *ptr)
++static int __gic_update_rdist_properties(struct redist_region *region,
++					 void __iomem *ptr)
+ {
+ 	u64 typer = gic_read_typer(ptr + GICR_TYPER);
+ 	gic_data.rdists.has_vlpis &= !!(typer & GICR_TYPER_VLPIS);
+ 	gic_data.rdists.has_direct_lpi &= !!(typer & GICR_TYPER_DirectLPIS);
++	gic_data.ppi_nr = 16;
+ 
+ 	return 1;
+ }
+ 
+-static void gic_update_vlpi_properties(void)
++static void gic_update_rdist_properties(void)
+ {
+-	gic_iterate_rdists(__gic_update_vlpi_properties);
++	gic_data.ppi_nr = UINT_MAX;
++	gic_iterate_rdists(__gic_update_rdist_properties);
++	if (WARN_ON(gic_data.ppi_nr == UINT_MAX))
++		gic_data.ppi_nr = 0;
++	pr_info("%d PPIs implemented\n", gic_data.ppi_nr);
+ 	pr_info("%sVLPI support, %sdirect LPI support\n",
+ 		!gic_data.rdists.has_vlpis ? "no " : "",
+ 		!gic_data.rdists.has_direct_lpi ? "no " : "");
+@@ -968,6 +974,7 @@ static int gic_dist_supports_lpis(void)
+ static void gic_cpu_init(void)
+ {
+ 	void __iomem *rbase;
++	int i;
+ 
+ 	/* Register ourselves with the rest of the world */
+ 	if (gic_populate_rdist())
+@@ -978,9 +985,10 @@ static void gic_cpu_init(void)
+ 	rbase = gic_data_rdist_sgi_base();
+ 
+ 	/* Configure SGIs/PPIs as non-secure Group-1 */
+-	writel_relaxed(~0, rbase + GICR_IGROUPR0);
++	for (i = 0; i < gic_data.ppi_nr + 16; i += 32)
++		writel_relaxed(~0, rbase + GICR_IGROUPR0 + i / 8);
+ 
+-	gic_cpu_config(rbase, gic_redist_wait_for_rwp);
++	gic_cpu_config(rbase, gic_data.ppi_nr + 16, gic_redist_wait_for_rwp);
+ 
+ 	/* initialise system registers */
+ 	gic_cpu_sys_reg_init();
+@@ -1449,7 +1457,7 @@ static int __init gic_init_bases(void __iomem *dist_base,
+ 
+ 	set_handle_irq(gic_handle_irq);
+ 
+-	gic_update_vlpi_properties();
++	gic_update_rdist_properties();
+ 
+ 	gic_smp_init();
+ 	gic_dist_init();
 diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
-index e45f45e68720..ab48760acabb 100644
+index ab48760acabb..25c1ae69db30 100644
 --- a/drivers/irqchip/irq-gic.c
 +++ b/drivers/irqchip/irq-gic.c
-@@ -291,6 +291,7 @@ static int gic_set_type(struct irq_data *d, unsigned int type)
- {
- 	void __iomem *base = gic_dist_base(d);
- 	unsigned int gicirq = gic_irq(d);
-+	int ret;
+@@ -543,7 +543,7 @@ static int gic_cpu_init(struct gic_chip_data *gic)
+ 				gic_cpu_map[i] &= ~cpu_mask;
+ 	}
  
- 	/* Interrupt configuration for SGIs can't be changed */
- 	if (gicirq < 16)
-@@ -301,7 +302,14 @@ static int gic_set_type(struct irq_data *d, unsigned int type)
- 			    type != IRQ_TYPE_EDGE_RISING)
- 		return -EINVAL;
+-	gic_cpu_config(dist_base, NULL);
++	gic_cpu_config(dist_base, 32, NULL);
  
--	return gic_configure_irq(gicirq, type, base, NULL);
-+	ret = gic_configure_irq(gicirq, type, base + GIC_DIST_CONFIG, NULL);
-+	if (ret && gicirq < 32) {
-+		/* Misconfigured PPIs are usually not fatal */
-+		pr_warn("GIC: PPI%d is secure or misconfigured\n", gicirq - 16);
-+		ret = 0;
-+	}
-+
-+	return ret;
- }
- 
- static int gic_irq_set_vcpu_affinity(struct irq_data *d, void *vcpu)
+ 	writel_relaxed(GICC_INT_PRI_THRESHOLD, base + GIC_CPU_PRIMASK);
+ 	gic_cpu_if_up(gic);
 diff --git a/drivers/irqchip/irq-hip04.c b/drivers/irqchip/irq-hip04.c
-index cf705827599c..1626131834a6 100644
+index 1626131834a6..130caa1c9d93 100644
 --- a/drivers/irqchip/irq-hip04.c
 +++ b/drivers/irqchip/irq-hip04.c
-@@ -130,7 +130,12 @@ static int hip04_irq_set_type(struct irq_data *d, unsigned int type)
+@@ -273,7 +273,7 @@ static void hip04_irq_cpu_init(struct hip04_irq_data *intc)
+ 		if (i != cpu)
+ 			hip04_cpu_map[i] &= ~cpu_mask;
  
- 	raw_spin_lock(&irq_controller_lock);
+-	gic_cpu_config(dist_base, NULL);
++	gic_cpu_config(dist_base, 32, NULL);
  
--	ret = gic_configure_irq(irq, type, base, NULL);
-+	ret = gic_configure_irq(irq, type, base + GIC_DIST_CONFIG, NULL);
-+	if (ret && irq < 32) {
-+		/* Misconfigured PPIs are usually not fatal */
-+		pr_warn("GIC: PPI%d is secure or misconfigured\n", irq - 16);
-+		ret = 0;
-+	}
- 
- 	raw_spin_unlock(&irq_controller_lock);
- 
+ 	writel_relaxed(0xf0, base + GIC_CPU_PRIMASK);
+ 	writel_relaxed(1, base + GIC_CPU_CTRL);
 -- 
 2.20.1
 
