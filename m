@@ -2,167 +2,309 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A04AC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:27:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9FC1C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:28:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D90202086D
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:27:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kPF7hmaf"
+	by mail.kernel.org (Postfix) with ESMTP id 91EB720C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 16:28:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387795AbfHFQ1U (ORCPT
+        id S2387823AbfHFQ2E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 12:27:20 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:35961 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730265AbfHFQ1U (ORCPT
+        Tue, 6 Aug 2019 12:28:04 -0400
+Received: from smtp-sh2.infomaniak.ch ([128.65.195.6]:60569 "EHLO
+        smtp-sh2.infomaniak.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728927AbfHFQ2D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 12:27:20 -0400
-Received: by mail-wm1-f67.google.com with SMTP id g67so72990467wme.1
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 09:27:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ks68pV+pQcpLEmyiOxXRz96t/W4aSnKi5+iAyNyk/gE=;
-        b=kPF7hmafGtpnVgV3WJzmD140fPZ6avB9wiei7DSrdAx9HzVAwNo/YTaYwSr/+hs23M
-         2/QGGeppoE4nReQBnlBMru0ShdCxjI4+w6iCup4dH/BMo1y2+fDyYnZHO772HVj43dcV
-         75URyF088CdpW/HWe3m0arYmMvP7ap8wSOpisWI7s+rQSHKoahLZZ5rYSJ28x9GcP+F1
-         LfEiZR6X24HopMiCTspJO6/9yszxq5JS3Pw1Fpni0HhjelTngGgYqsdgmyv6F38Lv/6o
-         kZbWRjPGH1GGOBu5Xfm2cV0qt/eLd6QW0GovJOTqITzpsy5+ujIWWBn4E07BNlkArQqP
-         v02w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ks68pV+pQcpLEmyiOxXRz96t/W4aSnKi5+iAyNyk/gE=;
-        b=djg5trgcC4etA3zIFFT8iEIotQd/ICHS8JgQzsQ6bohc2x26WGwgx9BiaZymfzdLIA
-         QD86kpHs2XUYvqj6ZSwiNCDIkYkEQorgrvey63Dod64WbtTJQxApiYcl2oCQgzEF9qdL
-         okgkcKU/oiYvv7hxZlx/kwIBpVW0iMknVDqfVfD5nduQ7eMt/iTZVHUmumVtU/ujxbCQ
-         wWyp3NOr6ZVtAKXq5rGTN/dsvl7znqs4k6CTsa8yzx29nyMkFt3AgySAeXNJD2O80Emk
-         F/vOSCf9B1uJaeb3oUSAEPnkqX1p95IF1F+TPXcxrUGDk5Sm3w14/9gvugp3Dos/ztLH
-         3Odw==
-X-Gm-Message-State: APjAAAWneaA+Pwp49s+i1U8jg4MgHw2bGmGh3Aog7EQ/YB7vq1fTBQfb
-        Yb3QNWHCXIchsFFXqn1BzyPzRRKx+HHZueE3Tc4517gJXQU=
-X-Google-Smtp-Source: APXvYqxqH906LyRFrGKmI+Hu/5yd0tY4SJx3TP7vli5npqM8lWs74BhfL7iUa0EHu1RyEzfNfP//hvLYlxK55C3nLnU=
-X-Received: by 2002:a7b:c947:: with SMTP id i7mr5778477wml.77.1565108837080;
- Tue, 06 Aug 2019 09:27:17 -0700 (PDT)
-MIME-Version: 1.0
-References: <d9802b6a-949b-b327-c4a6-3dbca485ec20@gmx.com> <ce102f29-3adc-d0fd-41ee-e32c1bcd7e8d@suse.cz>
- <20190805193148.GB4128@cmpxchg.org> <CAJuCfpHhR+9ybt9ENzxMbdVUd_8rJN+zFbDm+5CeE2Desu82Gg@mail.gmail.com>
- <398f31f3-0353-da0c-fc54-643687bb4774@suse.cz> <20190806142728.GA12107@cmpxchg.org>
- <20190806143608.GE11812@dhcp22.suse.cz>
-In-Reply-To: <20190806143608.GE11812@dhcp22.suse.cz>
-From:   Suren Baghdasaryan <surenb@google.com>
-Date:   Tue, 6 Aug 2019 09:27:05 -0700
-Message-ID: <CAJuCfpFmOzj-gU1NwoQFmS_pbDKKd2XN=CS1vUV4gKhYCJOUtw@mail.gmail.com>
-Subject: Re: Let's talk about the elephant in the room - the Linux kernel's
- inability to gracefully handle low memory pressure
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Artem S. Tashkinov" <aros@gmx.com>,
+        Tue, 6 Aug 2019 12:28:03 -0400
+Received: from smtp7.infomaniak.ch (smtp7.infomaniak.ch [83.166.132.30])
+        by smtp-sh2.infomaniak.ch (8.14.4/8.14.4/Debian-8+deb8u2) with ESMTP id x76GOeaY171470
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 6 Aug 2019 18:24:40 +0200
+Received: from ns3096276.ip-94-23-54.eu (ns3096276.ip-94-23-54.eu [94.23.54.103])
+        (authenticated bits=0)
+        by smtp7.infomaniak.ch (8.14.5/8.14.5) with ESMTP id x76GOCVa082314
+        (version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=NO);
+        Tue, 6 Aug 2019 18:24:34 +0200
+Subject: Re: [PATCH bpf-next v10 06/10] bpf,landlock: Add a new map type:
+ inode
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
         LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        David Drysdale <drysdale@google.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        James Morris <jmorris@namei.org>, Jann Horn <jann@thejh.net>,
+        John Johansen <john.johansen@canonical.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Stephen Smalley <sds@tycho.nsa.gov>, Tejun Heo <tj@kernel.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Thomas Graf <tgraf@suug.ch>, Tycho Andersen <tycho@tycho.ws>,
+        Will Drewry <wad@chromium.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux-Fsdevel <linux-fsdevel@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>
+References: <20190721213116.23476-1-mic@digikod.net>
+ <20190721213116.23476-7-mic@digikod.net>
+ <20190727014048.3czy3n2hi6hfdy3m@ast-mbp.dhcp.thefacebook.com>
+ <a870c2c9-d2f7-e0fa-c8cc-35dbf8b5b87d@ssi.gouv.fr>
+ <CAADnVQLqkfVijWoOM29PxCL_yK6K0fr8B89r4c5EKgddevJhGQ@mail.gmail.com>
+ <59e8fab9-34df-0ebe-ca6b-8b34bf582b75@ssi.gouv.fr>
+ <20190801173534.etfls5ltixp5hfrh@ast-mbp.dhcp.thefacebook.com>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+Openpgp: preference=signencrypt
+Message-ID: <9c64ff70-b3bb-d4ad-0d57-e4c941c61503@digikod.net>
+Date:   Tue, 6 Aug 2019 18:24:12 +0200
+User-Agent: 
+MIME-Version: 1.0
+In-Reply-To: <20190801173534.etfls5ltixp5hfrh@ast-mbp.dhcp.thefacebook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
+X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 6, 2019 at 7:36 AM Michal Hocko <mhocko@kernel.org> wrote:
->
-> On Tue 06-08-19 10:27:28, Johannes Weiner wrote:
-> > On Tue, Aug 06, 2019 at 11:36:48AM +0200, Vlastimil Babka wrote:
-> > > On 8/6/19 3:08 AM, Suren Baghdasaryan wrote:
-> > > >> @@ -1280,3 +1285,50 @@ static int __init psi_proc_init(void)
-> > > >>         return 0;
-> > > >>  }
-> > > >>  module_init(psi_proc_init);
-> > > >> +
-> > > >> +#define OOM_PRESSURE_LEVEL     80
-> > > >> +#define OOM_PRESSURE_PERIOD    (10 * NSEC_PER_SEC)
-> > > >
-> > > > 80% of the last 10 seconds spent in full stall would definitely be a
-> > > > problem. If the system was already low on memory (which it probably
-> > > > is, or we would not be reclaiming so hard and registering such a big
-> > > > stall) then oom-killer would probably kill something before 8 seconds
-> > > > are passed.
-> > >
-> > > If oom killer can act faster, than great! On small embedded systems you probably
-> > > don't enable PSI anyway?
 
-We use PSI triggers with 1 sec tracking window. PSI averages are less
-useful on such systems because in 10 secs (which is the shortest PSI
-averaging window) memory conditions can change drastically.
+On 01/08/2019 19:35, Alexei Starovoitov wrote:
+> On Wed, Jul 31, 2019 at 09:11:10PM +0200, Mickaël Salaün wrote:
+>>
+>>
+>> On 31/07/2019 20:58, Alexei Starovoitov wrote:
+>>> On Wed, Jul 31, 2019 at 11:46 AM Mickaël Salaün
+>>> <mickael.salaun@ssi.gouv.fr> wrote:
+>>>>>> +    for (i = 0; i < htab->n_buckets; i++) {
+>>>>>> +            head = select_bucket(htab, i);
+>>>>>> +            hlist_nulls_for_each_entry_safe(l, n, head, hash_node) {
+>>>>>> +                    landlock_inode_remove_map(*((struct inode **)l->key), map);
+>>>>>> +            }
+>>>>>> +    }
+>>>>>> +    htab_map_free(map);
+>>>>>> +}
+>>>>>
+>>>>> user space can delete the map.
+>>>>> that will trigger inode_htab_map_free() which will call
+>>>>> landlock_inode_remove_map().
+>>>>> which will simply itereate the list and delete from the list.
+>>>>
+>>>> landlock_inode_remove_map() removes the reference to the map (being
+>>>> freed) from the inode (with an RCU lock).
+>>>
+>>> I'm going to ignore everything else for now and focus only on this bit,
+>>> since it's fundamental issue to address before this discussion can
+>>> go any further.
+>>> rcu_lock is not a spin_lock. I'm pretty sure you know this.
+>>> But you're arguing that it's somehow protecting from the race
+>>> I mentioned above?
+>>>
+>>
+>> I was just clarifying your comment to avoid misunderstanding about what
+>> is being removed.
+>>
+>> As said in the full response, there is currently a race but, if I add a
+>> bpf_map_inc() call when the map is referenced by inode->security, then I
+>> don't see how a race could occur because such added map could only be
+>> freed in a security_inode_free() (as long as it retains a reference to
+>> this inode).
+> 
+> then it will be a cycle and a map will never be deleted?
+> closing map_fd should delete a map. It cannot be alive if it's not
+> pinned in bpffs, there are no FDs that are holding it, and no progs using it.
+> So the map deletion will iterate over inodes that belong to this map.
+> In parallel security_inode_free() will be called that will iterate
+> over its link list that contains elements from different maps.
+> So the same link list is modified by two cpus.
+> Where is a lock that protects from concurrent links list manipulations?
 
-> > > > If my line of thinking is correct, then do we really
-> > > > benefit from such additional protection mechanism? I might be wrong
-> > > > here because my experience is limited to embedded systems with
-> > > > relatively small amounts of memory.
-> > >
-> > > Well, Artem in his original mail describes a minutes long stall. Things are
-> > > really different on a fast desktop/laptop with SSD. I have experienced this as
-> > > well, ending up performing manual OOM by alt-sysrq-f (then I put more RAM than
-> > > 8GB in the laptop). IMHO the default limit should be set so that the user
-> > > doesn't do that manual OOM (or hard reboot) before the mechanism kicks in. 10
-> > > seconds should be fine.
-> >
-> > That's exactly what I have experienced in the past, and this was also
-> > the consistent story in the bug reports we have had.
-> >
-> > I suspect it requires a certain combination of RAM size, CPU speed,
-> > and IO capacity: the OOM killer kicks in when reclaim fails, which
-> > happens when all scanned LRU pages were locked and under IO. So IO
-> > needs to be slow enough, or RAM small enough, that the CPU can scan
-> > all LRU pages while they are temporarily unreclaimable (page lock).
-> >
-> > It may well be that on phones the RAM is small enough relative to CPU
-> > size.
-> >
-> > But on desktops/servers, we frequently see that there is a wider
-> > window of memory consumption in which reclaim efficiency doesn't drop
-> > low enough for the OOM killer to kick in. In the time it takes the CPU
-> > to scan through RAM, enough pages will have *just* finished reading
-> > for reclaim to free them again and continue to make "progress".
-> >
-> > We do know that the OOM killer might not kick in for at least 20-25
-> > minutes while the system is entirely unresponsive. People usually
-> > don't wait this long before forcibly rebooting. In a managed fleet,
-> > ssh heartbeat tests eventually fail and force a reboot.
+Ok, I think I got it. What about this fix?
 
-Got it. Thanks for the explanation.
+diff --git a/kernel/bpf/hashtab.c b/kernel/bpf/hashtab.c
+index 4fc7755042f0..3226e50b6211 100644
+--- a/kernel/bpf/hashtab.c
++++ b/kernel/bpf/hashtab.c
+@@ -1708,10 +1708,16 @@ static void inode_htab_map_free(struct bpf_map *map)
 
-> > I'm not sure 10s is the perfect value here, but I do think the kernel
-> > should try to get out of such a state, where interacting with the
-> > system is impossible, within a reasonable amount of time.
-> >
-> > It could be a little too short for non-interactive number-crunching
-> > systems...
->
-> Would it be possible to have a module with tunning knobs as parameters
-> and hook into the PSI infrastructure? People can play with the setting
-> to their need, we wouldn't really have think about the user visible API
-> for the tuning and this could be easily adopted as an opt-in mechanism
-> without a risk of regressions.
+ 	for (i = 0; i < htab->n_buckets; i++) {
+ 		head = select_bucket(htab, i);
+-		hlist_nulls_for_each_entry_safe(l, n, head, hash_node) {
++		rcu_read_lock();
++		hlist_nulls_for_each_entry_rcu(l, n, head, hash_node) {
+ 			landlock_inode_remove_map(*((struct inode **)l->key), map);
+ 		}
++		rcu_read_unlock();
+ 	}
++	/*
++	 * The last pending put_landlock_inode_map() may be called here, before
++	 * the rcu_barrier() from htab_map_free().
++	 */
+ 	htab_map_free(map);
+ }
 
-PSI averages stalls over 10, 60 and 300 seconds, so implementing 3
-corresponding thresholds would be easy. The patch Johannes posted can
-be extended to support 3 thresholds instead of 1. I can take a stab at
-it if Johannes is busy.
-If we want more flexibility we could use PSI triggers with
-configurable tracking window but that's more complex and probably not
-worth it.
+diff --git a/security/landlock/common.h b/security/landlock/common.h
+index b0ba3f31ac7d..535c6a4292b9 100644
+--- a/security/landlock/common.h
++++ b/security/landlock/common.h
+@@ -58,6 +58,11 @@ struct landlock_prog_set {
+ 	refcount_t usage;
+ };
 
-> I would really love to see a simple threshing watchdog like the one you
-> have proposed earlier. It is self contained and easy to play with if the
-> parameters are not hardcoded.
->
-> --
-> Michal Hocko
-> SUSE Labs
++struct landlock_inode_security {
++	struct list_head list;
++	spinlock_t lock;
++};
++
+ struct landlock_inode_map {
+ 	struct list_head list;
+ 	struct rcu_head rcu_put;
+diff --git a/security/landlock/hooks_fs.c b/security/landlock/hooks_fs.c
+index 8c9d6a333111..b9bfd558f8b8 100644
+--- a/security/landlock/hooks_fs.c
++++ b/security/landlock/hooks_fs.c
+@@ -10,6 +10,7 @@
+ #include <linux/kernel.h> /* ARRAY_SIZE */
+ #include <linux/lsm_hooks.h>
+ #include <linux/rcupdate.h> /* synchronize_rcu() */
++#include <linux/spinlock.h>
+ #include <linux/stat.h> /* S_ISDIR */
+ #include <linux/stddef.h> /* offsetof */
+ #include <linux/types.h> /* uintptr_t */
+@@ -251,13 +252,16 @@ static int hook_sb_pivotroot(const struct path *old_path,
+
+ /* inode helpers */
+
+-static inline struct list_head *inode_landlock(const struct inode *inode)
++static inline struct landlock_inode_security *inode_landlock(
++		const struct inode *inode)
+ {
+ 	return inode->i_security + landlock_blob_sizes.lbs_inode;
+ }
+
+ int landlock_inode_add_map(struct inode *inode, struct bpf_map *map)
+ {
++	unsigned long flags;
++	struct landlock_inode_security *inode_sec = inode_landlock(inode);
+ 	struct landlock_inode_map *inode_map;
+
+ 	inode_map = kzalloc(sizeof(*inode_map), GFP_ATOMIC);
+@@ -266,60 +270,66 @@ int landlock_inode_add_map(struct inode *inode, struct bpf_map *map)
+ 	INIT_LIST_HEAD(&inode_map->list);
+ 	inode_map->map = map;
+ 	inode_map->inode = inode;
+-	list_add_tail(&inode_map->list, inode_landlock(inode));
++	spin_lock_irqsave(&inode_sec->lock, flags);
++	list_add_tail_rcu(&inode_map->list, &inode_sec->list);
++	spin_unlock_irqrestore(&inode_sec->lock, flags);
+ 	return 0;
+ }
+
+ static void put_landlock_inode_map(struct rcu_head *head)
+ {
+ 	struct landlock_inode_map *inode_map;
+-	int err;
+
+ 	inode_map = container_of(head, struct landlock_inode_map, rcu_put);
+-	err = bpf_inode_ptr_unlocked_htab_map_delete_elem(inode_map->map,
++	bpf_inode_ptr_unlocked_htab_map_delete_elem(inode_map->map,
+ 			&inode_map->inode, false);
+-	bpf_map_put(inode_map->map);
+ 	kfree(inode_map);
+ }
+
+ void landlock_inode_remove_map(struct inode *inode, const struct bpf_map *map)
+ {
++	unsigned long flags;
++	struct landlock_inode_security *inode_sec = inode_landlock(inode);
+ 	struct landlock_inode_map *inode_map;
+-	bool found = false;
+
++	spin_lock_irqsave(&inode_sec->lock, flags);
+ 	rcu_read_lock();
+-	list_for_each_entry_rcu(inode_map, inode_landlock(inode), list) {
++	list_for_each_entry_rcu(inode_map, &inode_sec->list, list) {
+ 		if (inode_map->map == map) {
+-			found = true;
+ 			list_del_rcu(&inode_map->list);
+ 			kfree_rcu(inode_map, rcu_put);
+ 			break;
+ 		}
+ 	}
+ 	rcu_read_unlock();
+-	WARN_ON(!found);
++	spin_unlock_irqrestore(&inode_sec->lock, flags);
+ }
+
+ /* inode hooks */
+
+ static int hook_inode_alloc_security(struct inode *inode)
+ {
+-	struct list_head *ll_inode = inode_landlock(inode);
++	struct landlock_inode_security *inode_sec = inode_landlock(inode);
+
+-	INIT_LIST_HEAD(ll_inode);
++	INIT_LIST_HEAD(&inode_sec->list);
++	spin_lock_init(&inode_sec->lock);
+ 	return 0;
+ }
+
+ static void hook_inode_free_security(struct inode *inode)
+ {
++	unsigned long flags;
++	struct landlock_inode_security *inode_sec = inode_landlock(inode);
+ 	struct landlock_inode_map *inode_map;
+
++	spin_lock_irqsave(&inode_sec->lock, flags);
+ 	rcu_read_lock();
+-	list_for_each_entry_rcu(inode_map, inode_landlock(inode), list) {
++	list_for_each_entry_rcu(inode_map, &inode_sec->list, list) {
+ 		list_del_rcu(&inode_map->list);
+ 		call_rcu(&inode_map->rcu_put, put_landlock_inode_map);
+ 	}
+ 	rcu_read_unlock();
++	spin_unlock_irqrestore(&inode_sec->lock, flags);
+ }
+
+ /* a directory inode contains only one dentry */
+diff --git a/security/landlock/init.c b/security/landlock/init.c
+index 35165fc8a595..1305255f5d2e 100644
+--- a/security/landlock/init.c
++++ b/security/landlock/init.c
+@@ -137,7 +137,7 @@ static int __init landlock_init(void)
+ }
+
+ struct lsm_blob_sizes landlock_blob_sizes __lsm_ro_after_init = {
+-	.lbs_inode = sizeof(struct list_head),
++	.lbs_inode = sizeof(struct landlock_inode_security),
+ };
+
+ DEFINE_LSM(LANDLOCK_NAME) = {
+
+
+> 
+>> Les données à caractère personnel recueillies et traitées dans le cadre de cet échange, le sont à seule fin d’exécution d’une relation professionnelle et s’opèrent dans cette seule finalité et pour la durée nécessaire à cette relation. Si vous souhaitez faire usage de vos droits de consultation, de rectification et de suppression de vos données, veuillez contacter contact.rgpd@sgdsn.gouv.fr. Si vous avez reçu ce message par erreur, nous vous remercions d’en informer l’expéditeur et de détruire le message. The personal data collected and processed during this exchange aims solely at completing a business relationship and is limited to the necessary duration of that relationship. If you wish to use your rights of consultation, rectification and deletion of your data, please contact: contact.rgpd@sgdsn.gouv.fr. If you have received this message in error, we thank you for informing the sender and destroying the message.
+> 
+> Please get rid of this. It's absolutely not appropriate on public mailing list.
+> Next time I'd have to ignore emails that contain such disclaimers.
+
+Unfortunately this message is automatically appended (server-side) to all my
+professional emails...
