@@ -4,93 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 469BCC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72853C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:55:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2702F208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:52:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 499FA208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:55:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732499AbfHFIwm (ORCPT
+        id S1732347AbfHFIzR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 04:52:42 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:17886 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729987AbfHFIwl (ORCPT
+        Tue, 6 Aug 2019 04:55:17 -0400
+Received: from smtp03.smtpout.orange.fr ([80.12.242.125]:45952 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729987AbfHFIzR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 04:52:41 -0400
-X-IronPort-AV: E=Sophos;i="5.64,352,1559487600"; 
-   d="scan'208";a="23240851"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 06 Aug 2019 17:52:38 +0900
-Received: from localhost.localdomain (unknown [10.166.17.210])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 79DEF4009423;
-        Tue,  6 Aug 2019 17:52:38 +0900 (JST)
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     kishon@ti.com
-Cc:     linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        stable@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH] phy: renesas: rcar-gen3-usb2: Disable clearing VBUS in over-current
-Date:   Tue,  6 Aug 2019 17:51:19 +0900
-Message-Id: <1565081479-24340-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 6 Aug 2019 04:55:17 -0400
+Received: from localhost.localdomain ([90.33.211.207])
+        by mwinf5d26 with ME
+        id lkv92000g4V2DRm03kvANn; Tue, 06 Aug 2019 10:55:14 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Tue, 06 Aug 2019 10:55:14 +0200
+X-ME-IP: 90.33.211.207
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     vishal@chelsio.com, davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] net: cxgb3_main: Fix a resource leak in a error path in 'init_one()'
+Date:   Tue,  6 Aug 2019 10:55:12 +0200
+Message-Id: <20190806085512.11729-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The hardware manual should be revised, but the initial value of
-VBCTRL.OCCLREN is set to 1 actually. If the bit is set, the hardware
-clears VBCTRL.VBOUT and ADPCTRL.DRVVBUS registers automatically
-when the hardware detects over-current signal from a USB power switch.
-However, since the hardware doesn't have any registers which
-indicates over-current, the driver cannot handle it at all. So, if
-"is_otg_channel" hardware detects over-current, since ADPCTRL.DRVVBUS
-register is cleared automatically, the channel cannot be used after
-that.
+A call to 'kfree_skb()' is missing in the error handling path of
+'init_one()'.
+This is already present in 'remove_one()' but is missing here.
 
-To resolve this behavior, this patch sets the VBCTRL.OCCLREN to 0
-to keep ADPCTRL.DRVVBUS even if the "is_otg_channel" hardware
-detects over-current. (We assume a USB power switch itself protects
-over-current and turns the VBUS off.)
-
-This patch is inspired by a BSP patch from Kazuya Mizuguchi.
-
-Fixes: 1114e2d31731 ("phy: rcar-gen3-usb2: change the mode to OTG on the combined channel")
-Cc: <stable@vger.kernel.org> # v4.5+
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 ---
- This patch might be difficult to backport to v4.9 or older because
- the v4.13 added vendor specific directories by commit
- 0b56e9a7e835 ("phy: Group vendor specific phy drivers").
+ drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-
- drivers/phy/renesas/phy-rcar-gen3-usb2.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/phy/renesas/phy-rcar-gen3-usb2.c b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-index 8ffba67..b7f6b13 100644
---- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-+++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-@@ -61,6 +61,7 @@
- 					 USB2_OBINT_IDDIGCHG)
+diff --git a/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c b/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c
+index 1e82b9efe447..58f89f6a040f 100644
+--- a/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c
++++ b/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c
+@@ -3269,7 +3269,7 @@ static int init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	if (!adapter->regs) {
+ 		dev_err(&pdev->dev, "cannot map device registers\n");
+ 		err = -ENOMEM;
+-		goto out_free_adapter;
++		goto out_free_adapter_nofail;
+ 	}
  
- /* VBCTRL */
-+#define USB2_VBCTRL_OCCLREN		BIT(16)
- #define USB2_VBCTRL_DRVVBUSSEL		BIT(8)
+ 	adapter->pdev = pdev;
+@@ -3397,6 +3397,9 @@ static int init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 		if (adapter->port[i])
+ 			free_netdev(adapter->port[i]);
  
- /* LINECTRL1 */
-@@ -374,6 +375,7 @@ static void rcar_gen3_init_otg(struct rcar_gen3_chan *ch)
- 	writel(val, usb2_base + USB2_LINECTRL1);
++out_free_adapter_nofail:
++	kfree_skb(adapter->nofail_skb);
++
+ out_free_adapter:
+ 	kfree(adapter);
  
- 	val = readl(usb2_base + USB2_VBCTRL);
-+	val &= ~USB2_VBCTRL_OCCLREN;
- 	writel(val | USB2_VBCTRL_DRVVBUSSEL, usb2_base + USB2_VBCTRL);
- 	val = readl(usb2_base + USB2_ADPCTRL);
- 	writel(val | USB2_ADPCTRL_IDPULLUP, usb2_base + USB2_ADPCTRL);
 -- 
-2.7.4
+2.20.1
 
