@@ -2,216 +2,101 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA0ECC31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C64A6C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:51:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FE1E2086D
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:51:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9119720C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 15:51:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="omsCdPaW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733245AbfHFPv3 (ORCPT
+        id S1733267AbfHFPvc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 11:51:29 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:57045 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732048AbfHFPv2 (ORCPT
+        Tue, 6 Aug 2019 11:51:32 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58694 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732048AbfHFPvb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 11:51:28 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
+        Tue, 6 Aug 2019 11:51:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=SncjWrmoRC5b495lasgofj0Rqb2mQTyyh5dUq+5um6c=; b=omsCdPaWcnXHcWz6QUOPsZ1pH
+        m4nhZmOCV5hlYYIM86PIwoYv97n1noOSx61nqdD5Rvo9OhGQQJ+ZPRQzx7OSmkV0g38j23wJVV0Wu
+        OA6nibDOjqa3aQAvytDJ1hR4rA9LfBGjXdSQASh7g9TEaQ8ZQXZk5SLvA35tGtSk8QSRL8vagnuRA
+        grsvsDLfqhl+NiT+Dqly9Tn8qDyLmrA6YcWPBssLEypNK8woJHz1tPHv/fxvUgbTsilr6PrnL7CMY
+        86FQfGDuo3nB2UVQvSwY6mHsHIHy7t5NB7g5s7yo2yQLb4vLc/RxZQGZgFdwDXYBYoVrN3i/SKjrc
+        dsPnU77wA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hv1ji-0001tD-Q5; Tue, 06 Aug 2019 15:50:54 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 9A53120049;
-        Tue,  6 Aug 2019 17:51:24 +0200 (CEST)
-Date:   Tue, 6 Aug 2019 17:51:23 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>, tzimmermann@suse.de,
-        Sean Paul <sean@poorly.run>
-Subject: Re: [PATCH 1/3] drm: add gem ttm helpers
-Message-ID: <20190806155123.GB10478@ravnborg.org>
-References: <20190806133454.8254-1-kraxel@redhat.com>
- <20190806133454.8254-2-kraxel@redhat.com>
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 55E2F3077A6;
+        Tue,  6 Aug 2019 17:50:09 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B8089201B3F8E; Tue,  6 Aug 2019 17:50:34 +0200 (CEST)
+Date:   Tue, 6 Aug 2019 17:50:34 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Thomas Garnier <thgarnie@chromium.org>,
+        kernel-hardening@lists.openwall.com, kristen@linux.intel.com,
+        keescook@chromium.org, Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Juergen Gross <jgross@suse.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        "VMware, Inc." <pv-drivers@vmware.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Nadav Amit <namit@vmware.com>, Jann Horn <jannh@google.com>,
+        Feng Tang <feng.tang@intel.com>,
+        Maran Wilson <maran.wilson@oracle.com>,
+        Enrico Weigelt <info@metux.net>,
+        Allison Randal <allison@lohutok.net>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v9 00/11] x86: PIE support to extend KASLR randomization
+Message-ID: <20190806155034.GP2349@hirez.programming.kicks-ass.net>
+References: <20190730191303.206365-1-thgarnie@chromium.org>
+ <20190806154347.GD25897@zn.tnic>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190806133454.8254-2-kraxel@redhat.com>
+In-Reply-To: <20190806154347.GD25897@zn.tnic>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=20KFwNOVAAAA:8
-        a=e5mUnYsNAAAA:8 a=5DYXHGcTGYXu9a63KT0A:9 a=CjuIK1q_8ugA:10
-        a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gerd.
-
-On Tue, Aug 06, 2019 at 03:34:52PM +0200, Gerd Hoffmann wrote:
-> Now with ttm_buffer_object being a subclass of drm_gem_object we can
-> easily lookup ttm_buffer_object for a given drm_gem_object, which in
-> turm allows to create common helper functions.  This patch starts off
-> with dump mmap helpers.
+On Tue, Aug 06, 2019 at 05:43:47PM +0200, Borislav Petkov wrote:
+> On Tue, Jul 30, 2019 at 12:12:44PM -0700, Thomas Garnier wrote:
+> > These patches make some of the changes necessary to build the kernel as
+> > Position Independent Executable (PIE) on x86_64. Another patchset will
+> > add the PIE option and larger architecture changes.
 > 
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-> ---
->  include/drm/drm_gem_ttm_helper.h     | 27 +++++++++++++++
->  drivers/gpu/drm/drm_gem_ttm_helper.c | 52 ++++++++++++++++++++++++++++
->  drivers/gpu/drm/Kconfig              |  7 ++++
->  drivers/gpu/drm/Makefile             |  3 ++
->  4 files changed, 89 insertions(+)
->  create mode 100644 include/drm/drm_gem_ttm_helper.h
->  create mode 100644 drivers/gpu/drm/drm_gem_ttm_helper.c
+> Yeah, about this: do we have a longer writeup about the actual benefits
+> of all this and why we should take this all? After all, after looking
+> at the first couple of asm patches, it is posing restrictions to how
+> we deal with virtual addresses in asm (only RIP-relative addressing in
+> 64-bit mode, MOVs with 64-bit immediates, etc, for example) and I'm
+> willing to bet money that some future unrelated change will break PIE
+> sooner or later.
 
-You have made nice kernel-doc comments for the struct and the public
-functions.
-Could we plug this into the existing doc too so one can browse around.
-This will also allow you to check for any syntax errors using 
-"make htmldocs"
-(I spotted  one gbo versus bo mismatch)
+Possibly objtool can help here; it should be possible to teach it about
+these rules, and then it will yell when violated. That should avoid
+regressions.
 
-A small DOC section in the top of drm_gem_ttm_helper.c
-would also be nice. Just a few lines that introduce the purpose of this
-file would cut it.
-
-	Sam
-
-
-> diff --git a/include/drm/drm_gem_ttm_helper.h b/include/drm/drm_gem_ttm_helper.h
-> new file mode 100644
-> index 000000000000..2c6874190b17
-> --- /dev/null
-> +++ b/include/drm/drm_gem_ttm_helper.h
-> @@ -0,0 +1,27 @@
-> +/* SPDX-License-Identifier: GPL-2.0-or-later */
-> +
-> +#ifndef DRM_GEM_TTM_HELPER_H
-> +#define DRM_GEM_TTM_HELPER_H
-> +
-> +#include <drm/drm_gem.h>
-> +#include <drm/ttm/ttm_bo_api.h>
-> +#include <linux/kernel.h> /* for container_of() */
-> +
-> +/**
-> + * Returns the container of type &struct ttm_buffer_object
-> + * for field base.
-> + * @gem:	the GEM object
-> + * Returns:	The containing GEM VRAM object
-> + */
-> +static inline struct ttm_buffer_object *drm_gem_ttm_of_gem(
-> +	struct drm_gem_object *gem)
-> +{
-> +	return container_of(gem, struct ttm_buffer_object, base);
-> +}
-> +
-> +u64 drm_gem_ttm_mmap_offset(struct ttm_buffer_object *bo);
-> +int drm_gem_ttm_driver_dumb_mmap_offset(struct drm_file *file,
-> +					struct drm_device *dev,
-> +					uint32_t handle, uint64_t *offset);
-> +
-> +#endif
-> diff --git a/drivers/gpu/drm/drm_gem_ttm_helper.c b/drivers/gpu/drm/drm_gem_ttm_helper.c
-> new file mode 100644
-> index 000000000000..b069bd0c4c94
-> --- /dev/null
-> +++ b/drivers/gpu/drm/drm_gem_ttm_helper.c
-> @@ -0,0 +1,52 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +
-> +#include <drm/drm_gem_ttm_helper.h>
-> +
-> +/**
-> + * drm_gem_ttm_mmap_offset() - Returns a GEM ttm object's mmap offset
-> + * @gbo:	the GEM ttm object
-> + *
-> + * See drm_vma_node_offset_addr() for more information.
-> + *
-> + * Returns:
-> + * The buffer object's offset for userspace mappings on success, or
-> + * 0 if no offset is allocated.
-> + */
-> +u64 drm_gem_ttm_mmap_offset(struct ttm_buffer_object *bo)
-> +{
-> +	return drm_vma_node_offset_addr(&bo->base.vma_node);
-> +}
-> +EXPORT_SYMBOL(drm_gem_ttm_mmap_offset);
-> +
-> +/**
-> + * drm_gem_ttm_driver_dumb_mmap_offset() - \
-> +	Implements &struct drm_driver.dumb_mmap_offset
-> + * @file:	DRM file pointer.
-> + * @dev:	DRM device.
-> + * @handle:	GEM handle
-> + * @offset:	Returns the mapping's memory offset on success
-> + *
-> + * Returns:
-> + * 0 on success, or
-> + * a negative errno code otherwise.
-> + */
-> +int drm_gem_ttm_driver_dumb_mmap_offset(struct drm_file *file,
-> +					 struct drm_device *dev,
-> +					 uint32_t handle, uint64_t *offset)
-> +{
-> +	struct drm_gem_object *gem;
-> +	struct ttm_buffer_object *bo;
-> +
-> +	gem = drm_gem_object_lookup(file, handle);
-> +	if (!gem)
-> +		return -ENOENT;
-> +
-> +	bo = drm_gem_ttm_of_gem(gem);
-> +	*offset = drm_gem_ttm_mmap_offset(bo);
-> +
-> +	drm_gem_object_put_unlocked(gem);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(drm_gem_ttm_driver_dumb_mmap_offset);
-> +
-> diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
-> index e6f40fb54c9a..f7b25519f95c 100644
-> --- a/drivers/gpu/drm/Kconfig
-> +++ b/drivers/gpu/drm/Kconfig
-> @@ -172,6 +172,13 @@ config DRM_VRAM_HELPER
->  	help
->  	  Helpers for VRAM memory management
->  
-> +config DRM_TTM_HELPER
-> +	tristate
-> +	depends on DRM
-> +	select DRM_TTM
-> +	help
-> +	  Helpers for ttm-based gem objects
-> +
->  config DRM_GEM_CMA_HELPER
->  	bool
->  	depends on DRM
-> diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
-> index 10f8329a8b71..545c61d6528b 100644
-> --- a/drivers/gpu/drm/Makefile
-> +++ b/drivers/gpu/drm/Makefile
-> @@ -37,6 +37,9 @@ drm_vram_helper-y := drm_gem_vram_helper.o \
->  		     drm_vram_mm_helper.o
->  obj-$(CONFIG_DRM_VRAM_HELPER) += drm_vram_helper.o
->  
-> +drm_ttm_helper-y := drm_gem_ttm_helper.o
-> +obj-$(CONFIG_DRM_TTM_HELPER) += drm_ttm_helper.o
-> +
->  drm_kms_helper-y := drm_crtc_helper.o drm_dp_helper.o drm_dsc.o drm_probe_helper.o \
->  		drm_plane_helper.o drm_dp_mst_topology.o drm_atomic_helper.o \
->  		drm_kms_helper_common.o drm_dp_dual_mode_helper.o \
-> -- 
-> 2.18.1
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
