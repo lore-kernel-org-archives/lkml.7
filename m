@@ -2,127 +2,116 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F0ADC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:06:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C6FDC433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:06:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20D6420651
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:06:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DD162070C
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 08:06:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565078775;
+	bh=RLfJxrItS5i2yAvJInGgelnco6bcSti3r2wL1VlofFg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=QN3vo5ttTT1IuA7x3/5k7wyAaChK/qBwu/MOI821i3OmmfyPc0iCW2pC9m9Mbwa53
+	 cwD/pcbPmy/yJGczOeNIYdXWPOjehleZgTeAK5Niz7n3HxMeZuloBAkVdCHGJl0AOs
+	 8KlEd0DyFTWkkV9GF5YzLZtdyhV9MUQayRX134Tw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732399AbfHFIGG (ORCPT
+        id S1732387AbfHFIGF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 04:06:06 -0400
-Received: from mga03.intel.com ([134.134.136.65]:5861 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732338AbfHFIGD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 04:06:05 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:44974 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728998AbfHFIGD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 6 Aug 2019 04:06:03 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 01:00:54 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,352,1559545200"; 
-   d="scan'208";a="373337365"
-Received: from devel-ww.sh.intel.com ([10.239.48.128])
-  by fmsmga005.fm.intel.com with ESMTP; 06 Aug 2019 01:00:52 -0700
-From:   Wei Wang <wei.w.wang@intel.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        ak@linux.intel.com, peterz@infradead.org, pbonzini@redhat.com
-Cc:     kan.liang@intel.com, mingo@redhat.com, rkrcmar@redhat.com,
-        like.xu@intel.com, wei.w.wang@intel.com, jannh@google.com,
-        arei.gonglei@huawei.com, jmattson@google.com
-Subject: [PATCH v8 08/14] perf/core: set the event->owner before event_init
-Date:   Tue,  6 Aug 2019 15:16:08 +0800
-Message-Id: <1565075774-26671-9-git-send-email-wei.w.wang@intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1565075774-26671-1-git-send-email-wei.w.wang@intel.com>
-References: <1565075774-26671-1-git-send-email-wei.w.wang@intel.com>
+Received: by mail-oi1-f193.google.com with SMTP id e189so65138979oib.11;
+        Tue, 06 Aug 2019 01:06:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RLfJxrItS5i2yAvJInGgelnco6bcSti3r2wL1VlofFg=;
+        b=RJDX3GveCjaScf11R8uzm3PPi3xXl/d48qEib5ZoKFKfylAQXH6EYXeHOG4e4PhgjX
+         NYfHO+AHOdEqQnD0xye04yEag2GqHIuqUFAFbbIyK1eoSgVxRfCU/OL8zQYbffuhlMP5
+         0w5SwrczZNrSqnS5y9JtCTirxFrlq6Hb0Lw1yiDI1anC4zYCg4ytAL9h2ZlEvBz3Qkj/
+         4EFO6AecQqBiSEdWK30szd/J3NARmBrnQaxyLSgp/RXKw5LDItHDtERJqtL+zGljFl+M
+         NnsZCt6E569zDnLrW8JgQ+ogqzKj9BISY+vIF4Tn/q7GylIrOs1ULeLM5r42uv2SzwJj
+         UO9w==
+X-Gm-Message-State: APjAAAVF1uk+v69LSD2bRi4HRg+7MADCZXLEzk5VgGU70glzThaNNF3C
+        GmSFcLx4aizZiN3kgMXtnkIFERaZrwi8uA4arPA=
+X-Google-Smtp-Source: APXvYqyLQKZMc6OARyXAA5bgNuojMgNMFqi0RC50XL/T1ZP4rZT2XmCEiCdGhjsQ+Op7NfcPSUNiklHa2fNC9P2yZq4=
+X-Received: by 2002:aca:5a41:: with SMTP id o62mr1795289oib.110.1565078761925;
+ Tue, 06 Aug 2019 01:06:01 -0700 (PDT)
+MIME-Version: 1.0
+References: <7dedb6bd157b8183c693bb578e25e313cf4f451d.1564724511.git.viresh.kumar@linaro.org>
+ <23e3dee8688f5a9767635b686bb7a9c0e09a4438.1564724511.git.viresh.kumar@linaro.org>
+ <CAJZ5v0iqztRWyxf1cgiAN1dK4qTGwy9raaGOx5u3tfBTGUKOng@mail.gmail.com>
+ <2676200.jfxhmTd764@kreacher> <20190806041048.ksqs3l5bzsakaael@vireshk-i7>
+In-Reply-To: <20190806041048.ksqs3l5bzsakaael@vireshk-i7>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 6 Aug 2019 10:05:51 +0200
+Message-ID: <CAJZ5v0hepyx_yVC=di7E6VSme4GF11p+OhQfA==1p5-FwVRM0Q@mail.gmail.com>
+Subject: Re: [PATCH V3 2/2] cpufreq: intel_pstate: Implement ->resolve_freq()
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "v4 . 18+" <stable@vger.kernel.org>,
+        Doug Smythies <doug.smythies@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kernel and user events can be distinguished by checking event->owner. Some
-pmu driver implementation may need to know event->owner in event_init. For
-example, intel_pmu_setup_lbr_filter treats a kernel event with
-exclude_host set as an lbr event created for guest lbr emulation, which
-doesn't need a pmu counter.
+On Tue, Aug 6, 2019 at 6:10 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 02-08-19, 11:28, Rafael J. Wysocki wrote:
+> > On Friday, August 2, 2019 11:17:55 AM CEST Rafael J. Wysocki wrote:
+> > > On Fri, Aug 2, 2019 at 7:44 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > > >
+> > > > Intel pstate driver exposes min_perf_pct and max_perf_pct sysfs files,
+> > > > which can be used to force a limit on the min/max P state of the driver.
+> > > > Though these files eventually control the min/max frequencies that the
+> > > > CPUs will run at, they don't make a change to policy->min/max values.
+> > >
+> > > That's correct.
+> > >
+> > > > When the values of these files are changed (in passive mode of the
+> > > > driver), it leads to calling ->limits() callback of the cpufreq
+> > > > governors, like schedutil. On a call to it the governors shall
+> > > > forcefully update the frequency to come within the limits.
+> > >
+> > > OK, so the problem is that it is a bug to invoke the governor's ->limits()
+> > > callback without updating policy->min/max, because that's what
+> > > "limits" mean to the governors.
+> > >
+> > > Fair enough.
+> >
+> > AFAICS this can be addressed by adding PM QoS freq limits requests of each CPU to
+> > intel_pstate in the passive mode such that changing min_perf_pct or max_perf_pct
+> > will cause these requests to be updated.
+>
+> Right, that sounds like a good plan.
+>
+> But that will never make it to the stable kernels as there will be a
+> long dependency of otherwise unrelated patches to get that done. My
+> initial thought was to get this patch merged as it is and then later
+> migrate to QoS, but since this patch doesn't fix ondemand and
+> conservative, this patch isn't good enough as well.
 
-So move the event->owner assignment into perf_event_alloc to have it
-set before event_init is called.
+Right.
 
-Signed-off-by: Wei Wang <wei.w.wang@intel.com>
----
- kernel/events/core.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+> Maybe we should add the regular notifier based solution first, mark it
+> for stable kernels, and then add the QoS specific solution ?
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 0463c11..7663f85 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -10288,6 +10288,7 @@ static void account_event(struct perf_event *event)
- static struct perf_event *
- perf_event_alloc(struct perf_event_attr *attr, int cpu,
- 		 struct task_struct *task,
-+		 struct task_struct *owner,
- 		 struct perf_event *group_leader,
- 		 struct perf_event *parent_event,
- 		 perf_overflow_handler_t overflow_handler,
-@@ -10340,6 +10341,7 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
- 	event->group_leader	= group_leader;
- 	event->pmu		= NULL;
- 	event->oncpu		= -1;
-+	event->owner		= owner;
- 
- 	event->parent		= parent_event;
- 
-@@ -10891,7 +10893,7 @@ SYSCALL_DEFINE5(perf_event_open,
- 	if (flags & PERF_FLAG_PID_CGROUP)
- 		cgroup_fd = pid;
- 
--	event = perf_event_alloc(&attr, cpu, task, group_leader, NULL,
-+	event = perf_event_alloc(&attr, cpu, task, current, group_leader, NULL,
- 				 NULL, NULL, cgroup_fd);
- 	if (IS_ERR(event)) {
- 		err = PTR_ERR(event);
-@@ -11153,8 +11155,6 @@ SYSCALL_DEFINE5(perf_event_open,
- 	perf_event__header_size(event);
- 	perf_event__id_header_size(event);
- 
--	event->owner = current;
--
- 	perf_install_in_context(ctx, event, event->cpu);
- 	perf_unpin_context(ctx);
- 
-@@ -11231,16 +11231,13 @@ perf_event_create_kernel_counter(struct perf_event_attr *attr, int cpu,
- 	 * Get the target context (task or percpu):
- 	 */
- 
--	event = perf_event_alloc(attr, cpu, task, NULL, NULL,
-+	event = perf_event_alloc(attr, cpu, task, TASK_TOMBSTONE, NULL, NULL,
- 				 overflow_handler, context, -1);
- 	if (IS_ERR(event)) {
- 		err = PTR_ERR(event);
- 		goto err;
- 	}
- 
--	/* Mark owner so we could distinguish it from user events. */
--	event->owner = TASK_TOMBSTONE;
--
- 	ctx = find_get_context(event->pmu, task, event);
- 	if (IS_ERR(ctx)) {
- 		err = PTR_ERR(ctx);
-@@ -11677,6 +11674,7 @@ inherit_event(struct perf_event *parent_event,
- 
- 	child_event = perf_event_alloc(&parent_event->attr,
- 					   parent_event->cpu,
-+					   parent_event->owner,
- 					   child,
- 					   group_leader, parent_event,
- 					   NULL, NULL, -1);
--- 
-2.7.4
+I'm not sure if -stable kernels really need a fix here.
 
+Let's just make sure that the mainline is OK and let's go straight for
+the final approach.
