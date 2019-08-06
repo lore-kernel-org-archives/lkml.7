@@ -2,110 +2,55 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9DD9C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 17:29:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B833C433FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 17:30:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C87CA2075B
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 17:29:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5610220C01
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 17:30:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387424AbfHFR3A (ORCPT
+        id S2387445AbfHFRaB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 13:29:00 -0400
-Received: from mga09.intel.com ([134.134.136.24]:34235 "EHLO mga09.intel.com"
+        Tue, 6 Aug 2019 13:30:01 -0400
+Received: from ms.lwn.net ([45.79.88.28]:45096 "EHLO ms.lwn.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729898AbfHFR3A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 13:29:00 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 10:28:59 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,353,1559545200"; 
-   d="scan'208";a="374127088"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga006.fm.intel.com with ESMTP; 06 Aug 2019 10:28:59 -0700
-Received: from [10.54.74.33] (skuppusw-desk.jf.intel.com [10.54.74.33])
-        by linux.intel.com (Postfix) with ESMTP id E3D8158044F;
-        Tue,  6 Aug 2019 10:28:58 -0700 (PDT)
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH] PCI: use PCI_SRIOV_NUM_BARS in loops instead of
- PCI_IOV_RESOURCE_END
-To:     Denis Efremov <efremov@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190806140715.19847-1-efremov@linux.com>
-From:   sathyanarayanan kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Organization: Intel
-Message-ID: <3322ea7f-c4c7-0dc0-73bd-778f57cc9450@linux.intel.com>
-Date:   Tue, 6 Aug 2019 10:26:21 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        id S1729898AbfHFRaA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 13:30:00 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 40F06728;
+        Tue,  6 Aug 2019 17:30:00 +0000 (UTC)
+Date:   Tue, 6 Aug 2019 11:29:59 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Todor Tomov <todor.too@gmail.com>
+Cc:     will@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mailmap: Add an entry for my email address
+Message-ID: <20190806112959.14845da4@lwn.net>
+In-Reply-To: <20190801172603.14177-1-todor.too@gmail.com>
+References: <20190801172603.14177-1-todor.too@gmail.com>
+Organization: LWN.net
 MIME-Version: 1.0
-In-Reply-To: <20190806140715.19847-1-efremov@linux.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu,  1 Aug 2019 20:26:03 +0300
+Todor Tomov <todor.too@gmail.com> wrote:
 
-On 8/6/19 7:07 AM, Denis Efremov wrote:
-> It's a general pattern to write loops with 'i < PCI_SRIOV_NUM_BARS'
-> condition. This patch fixes remaining loops which violates this implicit
-> agreement.
+> My @linaro.org email address doesn't exist anymore so add a
+> mailmap entry to map it to my @gmail.com address.
+> 
+> Signed-off-by: Todor Tomov <todor.too@gmail.com>
 
-Looks good to me.
+I've applied this, but I'm still not convinced that all of these .mailmap
+entries are really needed.  As long as your name matches, git shortlog
+will do the right thing regardless...
 
-Reviewed-by: Kuppuswamy Sathyanarayanan 
-<sathyanarayanan.kuppuswamy@linux.intel.com>
-
->
-> Signed-off-by: Denis Efremov <efremov@linux.com>
-> ---
->   drivers/pci/iov.c       | 4 ++--
->   drivers/pci/setup-bus.c | 4 ++--
->   2 files changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> index 525fd3f272b3..9b48818ced01 100644
-> --- a/drivers/pci/iov.c
-> +++ b/drivers/pci/iov.c
-> @@ -557,8 +557,8 @@ static void sriov_restore_state(struct pci_dev *dev)
->   	ctrl |= iov->ctrl & PCI_SRIOV_CTRL_ARI;
->   	pci_write_config_word(dev, iov->pos + PCI_SRIOV_CTRL, ctrl);
->   
-> -	for (i = PCI_IOV_RESOURCES; i <= PCI_IOV_RESOURCE_END; i++)
-> -		pci_update_resource(dev, i);
-> +	for (i = 0; i < PCI_SRIOV_NUM_BARS; i++)
-> +		pci_update_resource(dev, i + PCI_IOV_RESOURCES);
->   
->   	pci_write_config_dword(dev, iov->pos + PCI_SRIOV_SYS_PGSIZE, iov->pgsz);
->   	pci_iov_set_numvfs(dev, iov->num_VFs);
-> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-> index 79b1fa6519be..e7dbe21705ba 100644
-> --- a/drivers/pci/setup-bus.c
-> +++ b/drivers/pci/setup-bus.c
-> @@ -1662,8 +1662,8 @@ static int iov_resources_unassigned(struct pci_dev *dev, void *data)
->   	int i;
->   	bool *unassigned = data;
->   
-> -	for (i = PCI_IOV_RESOURCES; i <= PCI_IOV_RESOURCE_END; i++) {
-> -		struct resource *r = &dev->resource[i];
-> +	for (i = 0; i < PCI_SRIOV_NUM_BARS; i++) {
-> +		struct resource *r = &dev->resource[i + PCI_IOV_RESOURCES];
->   		struct pci_bus_region region;
->   
->   		/* Not assigned or rejected by kernel? */
-
--- 
-Sathyanarayanan Kuppuswamy
-Linux kernel developer
-
+jon
