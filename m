@@ -2,131 +2,170 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65AB8C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 10:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69F04C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 10:45:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D6BD20C01
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 10:45:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EEAF20818
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 10:45:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="dCNqxHY8"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="BK0x5edz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732699AbfHFKpT (ORCPT
+        id S1732650AbfHFKp5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 06:45:19 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:34729 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730844AbfHFKpT (ORCPT
+        Tue, 6 Aug 2019 06:45:57 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:46892 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730844AbfHFKp4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 06:45:19 -0400
-Received: by mail-ed1-f65.google.com with SMTP id s49so47061469edb.1
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 03:45:18 -0700 (PDT)
+        Tue, 6 Aug 2019 06:45:56 -0400
+Received: by mail-pg1-f196.google.com with SMTP id w3so4175820pgt.13
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 03:45:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        d=joelfernandes.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=mLxh1xnnQMfeNrHf0aYqKYeviGu5yN55vYMo0/wqLZk=;
-        b=dCNqxHY8plIDmYXpsy08QCX+iLvxPKZniVm+ncSZ3Buz54doFAW+0MiXkxSfa6aZ8N
-         jTXJVTUqheLEyn7aW+R/fuDvBVdUs6Xh1fwu7j26vjbyzEwKEDlhCUidQu4KmRqzZOVa
-         oDhQ+hqdK6ua5BH0xjQgzzSY2YytIfxpQZbUbhHRfBt+5myVtlvcOTS0tg2Us6YrayDX
-         spYFcJQpsTWAHLAWlWQ4c+a7j4DzTav2yKnrSBmM6urDLun3EPrbW9LTSp94TCS/Nqy6
-         yUFovGgvKMukOtEtX/dZWO89MRVjVrn4dfNeI+KJg31PeTSFYAKqz3WMNOK0C1qeIyJD
-         lgzQ==
+        bh=ABKgADdiGa23iy+5xy09f6OBQqR3I/07f0qdbQrp2Ug=;
+        b=BK0x5edz5Iheer/fK6xR02+EYpWEe73+fBNaVu3psDyEfFgQR4iTDEjMX3llLyVbBQ
+         oo5c2wtKKMdHq+s0dbGvvCrA28tZJ7WgRbNvmF9B9TCPhzQEMI365I16VRvzSe8CiyqZ
+         ulIdft17U/LPUUnWy2+R0724GxrzxbZjJPUj8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mLxh1xnnQMfeNrHf0aYqKYeviGu5yN55vYMo0/wqLZk=;
-        b=S1YBeDMpmTFroQBHkfxBJ1GAN0Q6EWA2ogmL8PcgqY9uSsZoSxy9ft82a/00FFFQ1l
-         E1XDgWY/clv0+c4OKrSobpmZsyNt0EA/yhPzf2yKzHSWjoP8Tn+Ii0xwm4zB7Zz57raM
-         KfWcKSmvc9u6A0MIRylHogtK+tmzNw6crEuJHz3KCe7vNUSPeYeK34b4Xntyco3gqYYd
-         iSmP1BqWJO9wK310P0q1S7LtiX1ANDQkRYLvmSOkcMMw8rPEZiR4gUm+rOVL0psoIepQ
-         CjdRuXB0BGuo42GqtUzRALNfrefqXJjXN3M4T5muF+8rnoOqW5Xy1LUKXVEUm8W8sFyf
-         LQbQ==
-X-Gm-Message-State: APjAAAUk30jjPlF5Jz3jWG80Ht8Qr6cK+QcEYk5pkpgRvGpkbuFuW/4X
-        2hKd/GSOMF5xk5/+C4IEuXdvKw==
-X-Google-Smtp-Source: APXvYqz/KhBA+ZSNGOJbjZoeKD/ak+4bM/swWsBeb0rTxPioOaajmtlsxRIAU93xegZHr6XtYLs1kQ==
-X-Received: by 2002:a17:906:340e:: with SMTP id c14mr2544571ejb.170.1565088317410;
-        Tue, 06 Aug 2019 03:45:17 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id e43sm20620511ede.62.2019.08.06.03.45.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 06 Aug 2019 03:45:16 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 3AED71003C7; Tue,  6 Aug 2019 13:45:16 +0300 (+03)
-Date:   Tue, 6 Aug 2019 13:45:16 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Qian Cai <cai@lca.pw>
-Cc:     akpm@linux-foundation.org, arnd@arndb.de,
-        kirill.shutemov@linux.intel.com, mhocko@suse.com,
-        linux-mm@kvack.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] asm-generic: fix variable 'p4d' set but not used
-Message-ID: <20190806104516.yvioe2t4w2vwvs64@box>
-References: <1564774882-22926-1-git-send-email-cai@lca.pw>
+        bh=ABKgADdiGa23iy+5xy09f6OBQqR3I/07f0qdbQrp2Ug=;
+        b=ZN03eDvIdXCg+JbgGO4GvUl268LNLd71ikiPOryX/pK9a339isnczUJeJv3z3KARQw
+         hNkpdFHluL+8ir8SrqjL4lJDCM6pwKGLcR95l6v2CRcfsjxUp52WU+4HH6cb5GM9txJv
+         TwWWx3PrHOyju13e2RMZ0QUSnccp/t1caQQy/jeaUwXSwuRdQrqPyoTw9WM7tI8Uo+GJ
+         4RuYZ50ThF/HKb2TiSPwPVpQitl3enGbfAvGVmiboczx0DDVIuXywDM7pRhKut0Mf2U0
+         RDg94hwZjC2o+D444Q3WZAY3ZvVzujzvxNVb7lgps6eFqOoFI+8r6iXQktR88MWgzb0H
+         HVUg==
+X-Gm-Message-State: APjAAAXJWr8LxCoegUTBlJPVrk4u5gREVpOoJlmaGVKmDRzmPNVyrG1i
+        gELKD4kB0RvOCOnqAl4Ob+pKLA==
+X-Google-Smtp-Source: APXvYqyKhAOOvSnRzmdX9OiAK7Cu7h4b/c73qpWbsn3JUV5APW6ELiBP2MjwevD8QijB6PWnNqvwJA==
+X-Received: by 2002:aa7:90d4:: with SMTP id k20mr2919746pfk.78.1565088356112;
+        Tue, 06 Aug 2019 03:45:56 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id b126sm126571952pfa.126.2019.08.06.03.45.54
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 06 Aug 2019 03:45:55 -0700 (PDT)
+Date:   Tue, 6 Aug 2019 06:45:54 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Brendan Gregg <bgregg@netflix.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christian Hansen <chansen3@cisco.com>, dancol@google.com,
+        fmayer@google.com, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
+        linux-api@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        Mike Rapoport <rppt@linux.ibm.com>, minchan@kernel.org,
+        namhyung@google.com, paulmck@linux.ibm.com,
+        Robin Murphy <robin.murphy@arm.com>,
+        Roman Gushchin <guro@fb.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>, surenb@google.com,
+        Thomas Gleixner <tglx@linutronix.de>, tkjos@google.com,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v4 4/5] page_idle: Drain all LRU pagevec before idle
+ tracking
+Message-ID: <20190806104554.GB218260@google.com>
+References: <20190805170451.26009-1-joel@joelfernandes.org>
+ <20190805170451.26009-4-joel@joelfernandes.org>
+ <20190806084357.GK11812@dhcp22.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1564774882-22926-1-git-send-email-cai@lca.pw>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190806084357.GK11812@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 02, 2019 at 03:41:22PM -0400, Qian Cai wrote:
-> GCC throws a warning on an arm64 system since the commit 9849a5697d3d
-> ("arch, mm: convert all architectures to use 5level-fixup.h"),
+On Tue, Aug 06, 2019 at 10:43:57AM +0200, Michal Hocko wrote:
+> On Mon 05-08-19 13:04:50, Joel Fernandes (Google) wrote:
+> > During idle tracking, we see that sometimes faulted anon pages are in
+> > pagevec but are not drained to LRU. Idle tracking considers pages only
+> > on LRU. Drain all CPU's LRU before starting idle tracking.
 > 
-> mm/kasan/init.c: In function 'kasan_free_p4d':
-> mm/kasan/init.c:344:9: warning: variable 'p4d' set but not used
-> [-Wunused-but-set-variable]
->   p4d_t *p4d;
->          ^~~
-> 
-> because p4d_none() in "5level-fixup.h" is compiled away while it is a
-> static inline function in "pgtable-nopud.h". However, if converted
-> p4d_none() to a static inline there, powerpc would be unhappy as it
-> reads those in assembler language in
-> "arch/powerpc/include/asm/book3s/64/pgtable.h",
-> 
-> ./include/asm-generic/5level-fixup.h: Assembler messages:
-> ./include/asm-generic/5level-fixup.h:20: Error: unrecognized opcode:
-> `static'
-> ./include/asm-generic/5level-fixup.h:21: Error: junk at end of line,
-> first unrecognized character is `{'
-> ./include/asm-generic/5level-fixup.h:22: Error: unrecognized opcode:
-> `return'
-> ./include/asm-generic/5level-fixup.h:23: Error: junk at end of line,
-> first unrecognized character is `}'
-> ./include/asm-generic/5level-fixup.h:25: Error: unrecognized opcode:
-> `static'
-> ./include/asm-generic/5level-fixup.h:26: Error: junk at end of line,
-> first unrecognized character is `{'
-> ./include/asm-generic/5level-fixup.h:27: Error: unrecognized opcode:
-> `return'
-> ./include/asm-generic/5level-fixup.h:28: Error: junk at end of line,
-> first unrecognized character is `}'
-> ./include/asm-generic/5level-fixup.h:30: Error: unrecognized opcode:
-> `static'
-> ./include/asm-generic/5level-fixup.h:31: Error: junk at end of line,
-> first unrecognized character is `{'
-> ./include/asm-generic/5level-fixup.h:32: Error: unrecognized opcode:
-> `return'
-> ./include/asm-generic/5level-fixup.h:33: Error: junk at end of line,
-> first unrecognized character is `}'
-> make[2]: *** [scripts/Makefile.build:375:
-> arch/powerpc/kvm/book3s_hv_rmhandlers.o] Error 1
-> 
-> Fix it by reference the variable in the macro instead.
-> 
-> Signed-off-by: Qian Cai <cai@lca.pw>
+> Please expand on why does this matter enough to introduce a potentially
+> expensinve draining which has to schedule a work on each CPU and wait
+> for them to finish.
 
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Sure, I can expand. I am able to find multiple issues involving this. One
+issue looks like idle tracking is completely broken. It shows up in my
+testing as if a page that is marked as idle is always "accessed" -- because
+it was never marked as idle (due to not draining of pagevec).
 
--- 
- Kirill A. Shutemov
+The other issue shows up as a failure in my "swap test", with the following
+sequence:
+1. Allocate some pages
+2. Write to them
+3. Mark them as idle                                    <--- fails
+4. Introduce some memory pressure to induce swapping.
+5. Check the swap bit I introduced in this series.      <--- fails to set idle
+                                                             bit in swap PTE.
+
+Draining the pagevec in advance fixes both of these issues.
+
+This operation even if expensive is only done once during the access of the
+page_idle file. Did you have a better fix in mind?
+
+thanks,
+
+ - Joel
+
+
+> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > ---
+> >  mm/page_idle.c | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> > 
+> > diff --git a/mm/page_idle.c b/mm/page_idle.c
+> > index a5b00d63216c..2972367a599f 100644
+> > --- a/mm/page_idle.c
+> > +++ b/mm/page_idle.c
+> > @@ -180,6 +180,8 @@ static ssize_t page_idle_bitmap_read(struct file *file, struct kobject *kobj,
+> >  	unsigned long pfn, end_pfn;
+> >  	int bit, ret;
+> >  
+> > +	lru_add_drain_all();
+> > +
+> >  	ret = page_idle_get_frames(pos, count, NULL, &pfn, &end_pfn);
+> >  	if (ret == -ENXIO)
+> >  		return 0;  /* Reads beyond max_pfn do nothing */
+> > @@ -211,6 +213,8 @@ static ssize_t page_idle_bitmap_write(struct file *file, struct kobject *kobj,
+> >  	unsigned long pfn, end_pfn;
+> >  	int bit, ret;
+> >  
+> > +	lru_add_drain_all();
+> > +
+> >  	ret = page_idle_get_frames(pos, count, NULL, &pfn, &end_pfn);
+> >  	if (ret)
+> >  		return ret;
+> > @@ -428,6 +432,8 @@ ssize_t page_idle_proc_generic(struct file *file, char __user *ubuff,
+> >  	walk.private = &priv;
+> >  	walk.mm = mm;
+> >  
+> > +	lru_add_drain_all();
+> > +
+> >  	down_read(&mm->mmap_sem);
+> >  
+> >  	/*
+> > -- 
+> > 2.22.0.770.g0f2c4a37fd-goog
+> 
+> -- 
+> Michal Hocko
+> SUSE Labs
