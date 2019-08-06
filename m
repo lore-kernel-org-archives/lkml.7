@@ -2,59 +2,69 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6410C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:15:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 149C2C31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:15:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B03A921743
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:15:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA4CB2173C
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:15:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565126113;
+	bh=XQ/t2SiIzqQevAjIV1jZt+CRddJP9K0PErPscXN7u3M=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=PIY1un1TO0VqfcYRy6d8yfTpMaatVFHOSf+J1X+iM70jrTRUjNnvRvL3y/ryumDw7
+	 pK2p1CNcEThvSee7rMnRLIJE8wWxrgjQEk9jPJAJZA5oK9OxTptt/cJ6O6YW6PhToD
+	 RZC/w7retT1FebEwH5kN4dmkFwsJ7r1iyebNa20M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbfHFVPI (ORCPT
+        id S1726898AbfHFVPN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:15:08 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:49932 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725973AbfHFVPI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:15:08 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 6206812B02594;
-        Tue,  6 Aug 2019 14:15:07 -0700 (PDT)
-Date:   Tue, 06 Aug 2019 14:15:06 -0700 (PDT)
-Message-Id: <20190806.141506.1823070920831784903.davem@davemloft.net>
-To:     xiaojiangfeng@huawei.com
-Cc:     yisen.zhuang@huawei.com, salil.mehta@huawei.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        leeyou.li@huawei.com, xiaowei774@huawei.com, nixiaoming@huawei.com
-Subject: Re: [PATCH v1 0/3] net: hisilicon: Fix a few problems with
- hip04_eth
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1564835501-90257-1-git-send-email-xiaojiangfeng@huawei.com>
-References: <1564835501-90257-1-git-send-email-xiaojiangfeng@huawei.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 06 Aug 2019 14:15:07 -0700 (PDT)
+        Tue, 6 Aug 2019 17:15:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48106 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725973AbfHFVPL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:15:11 -0400
+Subject: Re: [GIT PULL] MIPS fixes
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565126110;
+        bh=XQ/t2SiIzqQevAjIV1jZt+CRddJP9K0PErPscXN7u3M=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=wK0N1fr9SySm8lQhPoXLQk1GkbRYtqjatCorHOMHQndphrz5jlwWqDbFB+BWTHCzD
+         NLcNyhMx9gyZ9KjR1e3bBEaTUci8ZXWtzrGNWdb/OvFE7jk3ueanNcrqPokothRGat
+         I+NRa1PW+W2RaLnFtecpyQ5GLP7mxsmX1SIVM728=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190806192315.y2faix6zk5igs2ry@pburton-laptop>
+References: <20190806192315.y2faix6zk5igs2ry@pburton-laptop>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190806192315.y2faix6zk5igs2ry@pburton-laptop>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git
+ tags/mips_fixes_5.3_1
+X-PR-Tracked-Commit-Id: 74034a09267c1f48d5ce7ae4c4a317fac7d43418
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 76d7961ff4ee02cc70365600a52fb59ca544dc7c
+Message-Id: <156512611045.6604.9076200938283634387.pr-tracker-bot@kernel.org>
+Date:   Tue, 06 Aug 2019 21:15:10 +0000
+To:     Paul Burton <paul.burton@mips.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
-Date: Sat, 3 Aug 2019 20:31:38 +0800
+The pull request you sent on Tue, 6 Aug 2019 19:23:16 +0000:
 
-> During the use of the hip04_eth driver,
-> several problems were found,
-> which solved the hip04_tx_reclaim reentry problem,
-> fixed the problem that hip04_mac_start_xmit never
-> returns NETDEV_TX_BUSY
-> and the dma_map_single failed on the arm64 platform.
+> git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git tags/mips_fixes_5.3_1
 
-Series applied.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/76d7961ff4ee02cc70365600a52fb59ca544dc7c
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
