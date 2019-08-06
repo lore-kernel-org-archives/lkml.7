@@ -7,52 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A27FEC433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F79C32751
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E4F82189E
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:42:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BDE721874
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 21:42:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565127757;
-	bh=RJ/mBnQ9yApPExC7G9QkBrupCdlJeI8/8KL7fi+0rj8=;
+	s=default; t=1565127760;
+	bh=IB6SHesi+A+4IuSaCxBprlGHXn7PaDRVN21talzL+Qg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eKhSAeef0DgQqCcbC6mI2Du4eiT74czw66bohOdSpr51ht+pO3rhaPjUjHolrlAuO
-	 HXVXchSNc7Wo/usDs9aQ7s/6V3i/W2djX3FGCaK0DFu3uJJL9I5mPeIzXlwTyqjEn5
-	 s1LMNBnTjhTMxIjYQTzjFyqwtsMuQbdAARrelrS4=
+	b=gvKgPyx+HPjcvIAPlxX82tNi3AMjItd1Pw25+pQIso+b0Y7n1Tx+QfMHz+0MTyZJe
+	 XpV7xCStoT/6A9R1aZqPzPflHEmE6OZ1tdHYVsfOa530RT3870n+Rcl/vmxVdLo/kD
+	 xJRDeZ7ukyUCiMwjqvm/ume356FqeQh4puiR3Zxw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728372AbfHFVfV (ORCPT
+        id S1728336AbfHFVfT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 17:35:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52918 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 17:35:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53032 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728179AbfHFVfJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 17:35:09 -0400
+        id S1726431AbfHFVfP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 17:35:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8492E2089E;
-        Tue,  6 Aug 2019 21:35:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9FD3217D9;
+        Tue,  6 Aug 2019 21:35:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565127307;
-        bh=RJ/mBnQ9yApPExC7G9QkBrupCdlJeI8/8KL7fi+0rj8=;
+        s=default; t=1565127314;
+        bh=IB6SHesi+A+4IuSaCxBprlGHXn7PaDRVN21talzL+Qg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JOEECtgZbf89hAtxVEUkrgEIwEAgwWO8mT1nCBMPJpN7f+hFIAzoz6G4Cv1aobdBF
-         +yjYI9YhZzb8HZuyTO6Zj6CLIkhikJsufSFkEwGqB80aE6wBhUQ6e/C6+VDPftjiPF
-         xwfodfYyKN3Czg73YaRAQ6528VOCIaYCoAcI8Fyo=
+        b=ZKXvf3D62mJWxNaWzGWXyJxt9xCCSI+axvqfo4YAIfLzKbFdoW3gWEEFkl4GW6xuU
+         3NmSNWdYLO7igq02iRH8h1GH11RMakxicVRz+WjaRG8UJDvs4WCCA0OLshAespTE62
+         +n9B0OceBYWjD+EjQ33XuZIoj38RHxmuYf0hbKio=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yang Shi <yang.shi@linux.alibaba.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Michal Hocko <mhocko@suse.com>,
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
         Dmitry Vyukov <dvyukov@google.com>,
-        David Rientjes <rientjes@google.com>,
-        Matthew Wilcox <willy@infradead.org>, Qian Cai <cai@lca.pw>,
+        Will Deacon <will.deacon@arm.com>,
+        Christoph Lameter <cl@linux.com>,
+        Mark Rutland <mark.rutland@arm.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 5.2 54/59] Revert "kmemleak: allow to coexist with fault injection"
-Date:   Tue,  6 Aug 2019 17:33:14 -0400
-Message-Id: <20190806213319.19203-54-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-mips@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 56/59] page flags: prioritize kasan bits over last-cpuid
+Date:   Tue,  6 Aug 2019 17:33:16 -0400
+Message-Id: <20190806213319.19203-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190806213319.19203-1-sashal@kernel.org>
 References: <20190806213319.19203-1-sashal@kernel.org>
@@ -65,70 +66,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yang Shi <yang.shi@linux.alibaba.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit df9576def004d2cd5beedc00cb6e8901427634b9 ]
+[ Upstream commit ee38d94a0ad89890b770f6c876263cf9fcbfde84 ]
 
-When running ltp's oom test with kmemleak enabled, the below warning was
-triggerred since kernel detects __GFP_NOFAIL & ~__GFP_DIRECT_RECLAIM is
-passed in:
+ARM64 randdconfig builds regularly run into a build error, especially
+when NUMA_BALANCING and SPARSEMEM are enabled but not SPARSEMEM_VMEMMAP:
 
-  WARNING: CPU: 105 PID: 2138 at mm/page_alloc.c:4608 __alloc_pages_nodemask+0x1c31/0x1d50
-  Modules linked in: loop dax_pmem dax_pmem_core ip_tables x_tables xfs virtio_net net_failover virtio_blk failover ata_generic virtio_pci virtio_ring virtio libata
-  CPU: 105 PID: 2138 Comm: oom01 Not tainted 5.2.0-next-20190710+ #7
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.10.2-0-g5f4c7b1-prebuilt.qemu-project.org 04/01/2014
-  RIP: 0010:__alloc_pages_nodemask+0x1c31/0x1d50
-  ...
-   kmemleak_alloc+0x4e/0xb0
-   kmem_cache_alloc+0x2a7/0x3e0
-   mempool_alloc_slab+0x2d/0x40
-   mempool_alloc+0x118/0x2b0
-   bio_alloc_bioset+0x19d/0x350
-   get_swap_bio+0x80/0x230
-   __swap_writepage+0x5ff/0xb20
+  #error "KASAN: not enough bits in page flags for tag"
 
-The mempool_alloc_slab() clears __GFP_DIRECT_RECLAIM, however kmemleak
-has __GFP_NOFAIL set all the time due to d9570ee3bd1d4f2 ("kmemleak:
-allow to coexist with fault injection").  But, it doesn't make any sense
-to have __GFP_NOFAIL and ~__GFP_DIRECT_RECLAIM specified at the same
-time.
+The last-cpuid bits are already contitional on the available space, so
+the result of the calculation is a bit random on whether they were
+already left out or not.
 
-According to the discussion on the mailing list, the commit should be
-reverted for short term solution.  Catalin Marinas would follow up with
-a better solution for longer term.
+Adding the kasan tag bits before last-cpuid makes it much more likely to
+end up with a successful build here, and should be reliable for
+randconfig at least, as long as that does not randomize NR_CPUS or
+NODES_SHIFT but uses the defaults.
 
-The failure rate of kmemleak metadata allocation may increase in some
-circumstances, but this should be expected side effect.
+In order for the modified check to not trigger in the x86 vdso32 code
+where all constants are wrong (building with -m32), enclose all the
+definitions with an #ifdef.
 
-Link: http://lkml.kernel.org/r/1563299431-111710-1-git-send-email-yang.shi@linux.alibaba.com
-Fixes: d9570ee3bd1d4f2 ("kmemleak: allow to coexist with fault injection")
-Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-Suggested-by: Catalin Marinas <catalin.marinas@arm.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
+[arnd@arndb.de: build fix]
+  Link: http://lkml.kernel.org/r/CAK8P3a3Mno1SWTcuAOT0Wa9VS15pdU6EfnkxLbDpyS55yO04+g@mail.gmail.com
+Link: http://lkml.kernel.org/r/20190722115520.3743282-1-arnd@arndb.de
+Link: https://lore.kernel.org/lkml/20190618095347.3850490-1-arnd@arndb.de/
+Fixes: 2813b9c02962 ("kasan, mm, arm64: tag non slab memory allocated via pagealloc")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Andrey Konovalov <andreyknvl@google.com>
+Reviewed-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc: Andrey Konovalov <andreyknvl@google.com>
 Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Qian Cai <cai@lca.pw>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/kmemleak.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/mips/vdso/vdso.h             |  1 +
+ include/linux/page-flags-layout.h | 18 +++++++++++-------
+ 2 files changed, 12 insertions(+), 7 deletions(-)
 
-diff --git a/mm/kmemleak.c b/mm/kmemleak.c
-index 3e147ea831826..3afb01bce736a 100644
---- a/mm/kmemleak.c
-+++ b/mm/kmemleak.c
-@@ -114,7 +114,7 @@
- /* GFP bitmask for kmemleak internal allocations */
- #define gfp_kmemleak_mask(gfp)	(((gfp) & (GFP_KERNEL | GFP_ATOMIC)) | \
- 				 __GFP_NORETRY | __GFP_NOMEMALLOC | \
--				 __GFP_NOWARN | __GFP_NOFAIL)
-+				 __GFP_NOWARN)
+diff --git a/arch/mips/vdso/vdso.h b/arch/mips/vdso/vdso.h
+index 14b1931be69c3..b65b169778e31 100644
+--- a/arch/mips/vdso/vdso.h
++++ b/arch/mips/vdso/vdso.h
+@@ -9,6 +9,7 @@
+ #if _MIPS_SIM != _MIPS_SIM_ABI64 && defined(CONFIG_64BIT)
  
- /* scanning area inside a memory block */
- struct kmemleak_scan_area {
+ /* Building 32-bit VDSO for the 64-bit kernel. Fake a 32-bit Kconfig. */
++#define BUILD_VDSO32_64
+ #undef CONFIG_64BIT
+ #define CONFIG_32BIT 1
+ #ifndef __ASSEMBLY__
+diff --git a/include/linux/page-flags-layout.h b/include/linux/page-flags-layout.h
+index 1dda31825ec4a..71283739ffd23 100644
+--- a/include/linux/page-flags-layout.h
++++ b/include/linux/page-flags-layout.h
+@@ -32,6 +32,7 @@
+ 
+ #endif /* CONFIG_SPARSEMEM */
+ 
++#ifndef BUILD_VDSO32_64
+ /*
+  * page->flags layout:
+  *
+@@ -76,20 +77,22 @@
+ #define LAST_CPUPID_SHIFT 0
+ #endif
+ 
+-#if SECTIONS_WIDTH+ZONES_WIDTH+NODES_SHIFT+LAST_CPUPID_SHIFT <= BITS_PER_LONG - NR_PAGEFLAGS
++#ifdef CONFIG_KASAN_SW_TAGS
++#define KASAN_TAG_WIDTH 8
++#else
++#define KASAN_TAG_WIDTH 0
++#endif
++
++#if SECTIONS_WIDTH+ZONES_WIDTH+NODES_SHIFT+LAST_CPUPID_SHIFT+KASAN_TAG_WIDTH \
++	<= BITS_PER_LONG - NR_PAGEFLAGS
+ #define LAST_CPUPID_WIDTH LAST_CPUPID_SHIFT
+ #else
+ #define LAST_CPUPID_WIDTH 0
+ #endif
+ 
+-#ifdef CONFIG_KASAN_SW_TAGS
+-#define KASAN_TAG_WIDTH 8
+ #if SECTIONS_WIDTH+NODES_WIDTH+ZONES_WIDTH+LAST_CPUPID_WIDTH+KASAN_TAG_WIDTH \
+ 	> BITS_PER_LONG - NR_PAGEFLAGS
+-#error "KASAN: not enough bits in page flags for tag"
+-#endif
+-#else
+-#define KASAN_TAG_WIDTH 0
++#error "Not enough bits in page flags"
+ #endif
+ 
+ /*
+@@ -104,4 +107,5 @@
+ #define LAST_CPUPID_NOT_IN_PAGE_FLAGS
+ #endif
+ 
++#endif
+ #endif /* _LINUX_PAGE_FLAGS_LAYOUT */
 -- 
 2.20.1
 
