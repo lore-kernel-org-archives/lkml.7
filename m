@@ -2,100 +2,81 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DFE7C433FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 11:08:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D9DC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 11:11:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D672620B1F
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 11:08:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FA4C20B1F
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 11:11:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565089874;
+	bh=TMm6oqmx5PpUGjqqMqLwT0Tqw0Nq4KsVh/fjsfwMlJc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WOW0B1pQM7QO/RQMYMhQfJuyhapslk+O4QNa9sGotJgnPI5BRK+iX5yRYtepmbucG
+	 aTUjkSYeSwV772kCGaVQCmwNtsWNiQwnnqft0TojrxbYnvgnQ0Ic8mg7GaOw7/3JMY
+	 R5A37q4iZW8doL10UBbsJCmmztmym0/S/71EffIg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732648AbfHFLIi (ORCPT
+        id S1731235AbfHFLLN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 07:08:38 -0400
-Received: from mga05.intel.com ([192.55.52.43]:32559 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728845AbfHFLIh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 07:08:37 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 04:08:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,353,1559545200"; 
-   d="scan'208";a="349394291"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.122]) ([10.237.72.122])
-  by orsmga005.jf.intel.com with ESMTP; 06 Aug 2019 04:08:34 -0700
-Subject: Re: [PATCH V4 1/2] mmc: sdhci: Fix O2 Host data read/write DLL Lock
- Phase shift issue
-To:     "Shirley Her (SC)" <shirley.her@bayhubtech.com>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     "Louis Lu (TP)" <louis.lu@bayhubtech.com>,
-        "Chevron Li (WH)" <chevron.li@bayhubtech.com>,
-        "Max Huang (SC)" <max.huang@bayhubtech.com>
-References: <1564767547-4515-1-git-send-email-shirley.her@bayhubtech.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <34425078-f5fa-5f7d-1a80-c27346bb87d9@intel.com>
-Date:   Tue, 6 Aug 2019 14:07:11 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 6 Aug 2019 07:11:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48218 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728845AbfHFLLN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 07:11:13 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id DB69CB629;
+        Tue,  6 Aug 2019 11:11:11 +0000 (UTC)
+Date:   Tue, 6 Aug 2019 13:11:09 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     kernel test robot <oliver.sang@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Miguel de Dios <migueldedios@google.com>,
+        Wei Wang <wvw@google.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Mel Gorman <mgorman@techsingularity.net>, lkp@01.org
+Subject: Re: [mm]  755d6edc1a:  will-it-scale.per_process_ops -4.1% regression
+Message-ID: <20190806111109.GV11812@dhcp22.suse.cz>
+References: <20190729071037.241581-1-minchan@kernel.org>
+ <20190806070547.GA10123@xsang-OptiPlex-9020>
+ <20190806080415.GG11812@dhcp22.suse.cz>
+ <20190806110024.GA32615@google.com>
 MIME-Version: 1.0
-In-Reply-To: <1564767547-4515-1-git-send-email-shirley.her@bayhubtech.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190806110024.GA32615@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/08/19 8:39 PM, Shirley Her (SC) wrote:
-> Fix data read/write error in HS200 mode due to chip DLL lock phase shift
+On Tue 06-08-19 20:00:24, Minchan Kim wrote:
+> On Tue, Aug 06, 2019 at 10:04:15AM +0200, Michal Hocko wrote:
+> > On Tue 06-08-19 15:05:47, kernel test robot wrote:
+> > > Greeting,
+> > > 
+> > > FYI, we noticed a -4.1% regression of will-it-scale.per_process_ops due to commit:
+> > 
+> > I have to confess I cannot make much sense from numbers because they
+> > seem to be too volatile and the main contributor doesn't stand up for
+> > me. Anyway, regressions on microbenchmarks like this are not all that
+> > surprising when a locking is slightly changed and the critical section
+> > made shorter. I have seen that in the past already.
 > 
-> Signed-off-by:Shirley Her<shirley.her@bayhubtech.com>
-> ---
-> change in V4:
->  1. add a bug fix in V3
-> 
-> change in V3:
->  1. add more explanation in dll_recovery and execute_tuning function
->  2. move dll_adjust_count to O2_host struct
->  3. fix some coding style error
->  4. renaming O2_PLL_WDT_CONTROL1 TO O2_PLL_DLL_WDT_CONTROL1
-> 
-> change in V2:
->  1. use usleep_range instead of udelay
->  2. move dll_adjust_count to sdhci-pci-o2micro.c
-> 
-> chagne in V1:
->  1. add error recovery function to relock DLL with correct phase
->  2. retuning HS200 after DLL locked
-> ---
->  drivers/mmc/host/sdhci-pci-o2micro.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci-pci-o2micro.c b/drivers/mmc/host/sdhci-pci-o2micro.c
-> index 9dc4548..186a33d 100644
-> --- a/drivers/mmc/host/sdhci-pci-o2micro.c
-> +++ b/drivers/mmc/host/sdhci-pci-o2micro.c
-> @@ -51,7 +51,7 @@
->  #define O2_SD_VENDOR_SETTING2	0x1C8
->  #define O2_SD_HW_TUNING_DISABLE	BIT(4)
->  
-> -#define O2_PLL_WDT_CONTROL1	0x1CC
-> +#define O2_PLL_DLL_WDT_CONTROL1	0x1CC
+> I guess if it's multi process workload. The patch will give more chance
+> to be scheduled out so TLB miss ratio would be bigger than old.
+> I see it's natural trade-off for latency vs. performance so only thing
+> I could think is just increase threshold from 32 to 64 or 128?
 
-Please also change the other places that O2_PLL_WDT_CONTROL1 appears, so
-that the code compiles.
+This still feels like a magic number tunning, doesn't it?
 
->  #define  O2_PLL_FORCE_ACTIVE	BIT(18)
->  #define  O2_PLL_LOCK_STATUS	BIT(14)
->  #define  O2_PLL_SOFT_RESET	BIT(12)
-> 
-
+-- 
+Michal Hocko
+SUSE Labs
