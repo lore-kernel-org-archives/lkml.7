@@ -2,214 +2,256 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0754C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBBE5C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88E6F21E71
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:38:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A63E42199C
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:39:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dmwdpEnQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B2l7rU7I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388138AbfHGOia (ORCPT
+        id S2388179AbfHGOjQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 10:38:30 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:41356 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387987AbfHGOia (ORCPT
+        Wed, 7 Aug 2019 10:39:16 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51304 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729550AbfHGOjQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 10:38:30 -0400
-Received: by mail-pl1-f196.google.com with SMTP id m9so40984592pls.8
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 07:38:29 -0700 (PDT)
+        Wed, 7 Aug 2019 10:39:16 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 207so313769wma.1;
+        Wed, 07 Aug 2019 07:39:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KMsjImvk15rGU5K4/oqAPhe2wws+c5HRyaASvfXzRqo=;
-        b=dmwdpEnQk09MKsR9mnrVQPNSW7+jNvOzyv3yN5luKEGQ4FUz7+8j8NsrN/WUCLp3IY
-         9TWqAPWvuBJWBBEyA/0hzI/qOQ5e9rU8ULd0Tmz8jBvKTOhgcmoR6C76+i5ItnmQoTFQ
-         c99OxI4fjjF9sazaslLwfGEgaRk68KFRinUA6BseVnzGihLDn2sJfGi3rEEoWQos0LVZ
-         cCvIpNdYuIVQ8uQ+vt9LYzKNKUmDGyDFZ4RZdhDL60Ghnz7Xw5ojrdDHT/ofaSH8Pbbm
-         Q4ryYzAbvqzaY9SwnEu3yPmyel9uFN5ozJ/u953ntjXyz6A56pntrVLhKErExwJKmIWY
-         dXUA==
+         :cc:content-transfer-encoding;
+        bh=K3Yjg+xwVoamXkqxN6/Mo8Ar1gX/X1ON888J6lxpDb0=;
+        b=B2l7rU7IPu+JXRGMl8QfJUzpwZ28LjIHxm8XnVXNq0gwva0s9ictzM6X7F5r5lOaRh
+         W/9M+aS5PF/moOqTNrvL8PTWBrU1OChSRHHYD5Gl26UM2c/XJuQSj+zUSqeyx5mHw9KV
+         JxrV/PASdpePmtAV2LgSlO1jODiKVEaxrkvNE2zyoUpKD+57HAIz9G0Vt+cbffnZAB8y
+         KMOyQ4wYUJL7Jx8aRRqsfh5HCuPKEioi/X+yVVB2YYKKRmop624g3uv1OSnQn1OiZcbN
+         X7xXbq5SabV5/H+oo/rTqQLcX1gftqHyjyL3W23xdeYYUU5gpEjxvNqmpl2XC+ZUVEHH
+         O57g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KMsjImvk15rGU5K4/oqAPhe2wws+c5HRyaASvfXzRqo=;
-        b=XYUDMbwz4CWp0Hjj4w5MfVMFdV7HBw9q6htYQ5DRm4jygNNTzafMjiMV4M1ye00wR3
-         O2Zu7A5rJQgJWTXHOgYumCz/Rxlna4FhKDmPjN+v8jTktCqkBVaYMdoAXr+LAPF70Hiu
-         NYeZYsHL+DJWCR3e/AlokXyLrPOH7/aqe9jQC/T5VtnRS3/ffDq4ngvZfOWzf1VOos4p
-         0WCHMNCPWrg1T/lM9AQ2DdiuaUyyTsseFCiT6l86CsgHugIqMun/+/EE7TWJq+SqhvTw
-         DTp1xOCB5mTNRnxDxvKfow6H5PCtupnJs5bkdw6pINlr13Ly//Q/TyvjG3TyiWy+LFD+
-         OrSw==
-X-Gm-Message-State: APjAAAVFOYIWTkDFP6keEINZ6FWRsnBxczME4ULqpKKDdWsKh48WEo55
-        Q05dC1+1dfNB+3MaI25I5oRWpQDAWETk1LX/8H2vzw==
-X-Google-Smtp-Source: APXvYqxoraqX8e0vrNgin5hDiKl0we0jI5cMqwxUZV0VBfxRLdQcaNKpbrik0blFlvyOD13BolkVlp+TzI9Q5JeAm7Q=
-X-Received: by 2002:a17:902:6a87:: with SMTP id n7mr8311508plk.336.1565188708900;
- Wed, 07 Aug 2019 07:38:28 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=K3Yjg+xwVoamXkqxN6/Mo8Ar1gX/X1ON888J6lxpDb0=;
+        b=LAdtyg3usgfdDS3poRyY/OauNQ74eMXhcHlYLT+urFEZaJ3Aqm1M7GAHDMqRGB7l9d
+         9CoQDVeD3XXRrHm4ZankySwXpy2dE1i9fWGS+qM9NigS6uUPIgDYEHctwO0BodrKFoP7
+         rdlsS4iEmxSIoGFsE6LAErXknVVGXNExsCPlnlU+QXTJu1QzotIzwCdGFT1Ru6rMdTqD
+         1orGUXSTfxESwC/El7YPmADTvu+qta325KLsCocvGrCW92UWfUYqkSpH5YgaNUCB2mEl
+         S2kjlzkzmdc4QXoQx8BOz+xQXu+qf7ORSGbkFUPV3uFb7lFvI6EiWjCbIDBzn0tU4EB5
+         RuDg==
+X-Gm-Message-State: APjAAAXXA6YJ5TpIgE33qv7OuRew4g393DU4cMD8AXQLMdSFzdqdnLWW
+        6pARjaB6+PWE2LMKc9oHmHK85Lgiuvg6nNo6vfBLnRzKALo=
+X-Google-Smtp-Source: APXvYqwZNSmFBi3BN7qPlFo9Y+mrgNDxC+IKDcfat8O3sJ6OJz8/ng2g2yNHMqSIvOfg0Ag2R+8W+Stu5hZuRd9Xt3k=
+X-Received: by 2002:a7b:c051:: with SMTP id u17mr290648wmc.25.1565188753002;
+ Wed, 07 Aug 2019 07:39:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAAeHK+zLrYaE+Kt6AULPjKhBNknxPBWncfkTDmm3eFoLSpsffw@mail.gmail.com>
- <Pine.LNX.4.44L0.1908071000560.1514-100000@iolanthe.rowland.org>
- <CAAeHK+yAY_ov4yH7n-R8ppnxc1ux33A-SEdxx18ywU1SyLGwug@mail.gmail.com> <CAAeHK+xV3SgXvu7RsGLVtPH7scV9GZ0uwPzTu8N2bw1kt9i7aw@mail.gmail.com>
-In-Reply-To: <CAAeHK+xV3SgXvu7RsGLVtPH7scV9GZ0uwPzTu8N2bw1kt9i7aw@mail.gmail.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Wed, 7 Aug 2019 16:38:17 +0200
-Message-ID: <CAAeHK+z7EiEaQ8VNfTTByyV9TnOvxc9NvxYg6NQu9B2c7FR3sA@mail.gmail.com>
-Subject: Re: possible deadlock in open_rio
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     syzbot <syzbot+7bbcbe9c9ff0cd49592a@syzkaller.appspotmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Cesar Miquel <miquel@df.uba.ar>,
-        rio500-users@lists.sourceforge.net,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+References: <20190723084104.12639-1-daniel.baluta@nxp.com> <20190723084104.12639-4-daniel.baluta@nxp.com>
+ <d85909d6-c7cb-c64b-dfa9-6cee6c0da2cb@linux.intel.com> <CAEnQRZDr+gj_eiESLNbVUVy1rreRE1nnDgtb3g=CjaRF5Aq9Vw@mail.gmail.com>
+In-Reply-To: <CAEnQRZDr+gj_eiESLNbVUVy1rreRE1nnDgtb3g=CjaRF5Aq9Vw@mail.gmail.com>
+From:   Daniel Baluta <daniel.baluta@gmail.com>
+Date:   Wed, 7 Aug 2019 17:39:00 +0300
+Message-ID: <CAEnQRZDctjdzQ2RjJXhQh+s=d0y_j3Taa51hDaR4bqJ62C=7iQ@mail.gmail.com>
+Subject: Re: [Sound-open-firmware] [PATCH v2 3/5] ASoC: SOF: Add DT DSP device support
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>, Anson Huang <anson.huang@nxp.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Paul Olaru <paul.olaru@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        sound-open-firmware@alsa-project.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 7, 2019 at 4:34 PM Andrey Konovalov <andreyknvl@google.com> wrote:
+On Wed, Jul 24, 2019 at 10:04 AM Daniel Baluta <daniel.baluta@gmail.com> wr=
+ote:
 >
-> On Wed, Aug 7, 2019 at 4:24 PM Andrey Konovalov <andreyknvl@google.com> wrote:
+> On Tue, Jul 23, 2019 at 6:19 PM Pierre-Louis Bossart
+> <pierre-louis.bossart@linux.intel.com> wrote:
 > >
-> > On Wed, Aug 7, 2019 at 4:01 PM Alan Stern <stern@rowland.harvard.edu> wrote:
-> > >
-> > > On Wed, 7 Aug 2019, Andrey Konovalov wrote:
-> > >
-> > > > On Tue, Aug 6, 2019 at 9:13 PM Alan Stern <stern@rowland.harvard.edu> wrote:
-> > > > >
-> > > > > On Thu, 1 Aug 2019, syzbot wrote:
-> > > > >
-> > > > > > Hello,
-> > > > > >
-> > > > > > syzbot found the following crash on:
-> > > > > >
-> > > > > > HEAD commit:    7f7867ff usb-fuzzer: main usb gadget fuzzer driver
-> > > > > > git tree:       https://github.com/google/kasan.git usb-fuzzer
-> > > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=136b6aec600000
-> > > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=792eb47789f57810
-> > > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=7bbcbe9c9ff0cd49592a
-> > > > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > > > >
-> > > > > > Unfortunately, I don't have any reproducer for this crash yet.
-> > > > > >
-> > > > > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > > > > Reported-by: syzbot+7bbcbe9c9ff0cd49592a@syzkaller.appspotmail.com
-> > > > > >
-> > > > > > ======================================================
-> > > > > > WARNING: possible circular locking dependency detected
-> > > > > > 5.3.0-rc2+ #23 Not tainted
-> > > > > > ------------------------------------------------------
-> > > > >
-> > > > > Andrey:
-> > > > >
-> > > > > This should be completely reproducible, since it's a simple ABBA
-> > > > > locking violation.  Maybe just introducing a time delay (to avoid races
-> > > > > and give the open() call time to run) between the gadget creation and
-> > > > > gadget removal would be enough to do it.
-> > > >
-> > > > I've tried some simple approaches to reproducing this, but failed.
-> > > > Should this require two rio500 devices to trigger?
-> > >
-> > > No, one device should be enough.  Just plug it in and then try to open
-> > > the character device file.
 > >
-> > OK, I've reproduced it, so I can test a patch manually. The reason
-> > syzbot couldn't do that, is because it doesn't open character devices.
-> > Right now the USB fuzzing instance only opens /dev/input*,
-> > /dev/hidraw* and /dev/usb/hiddev* (only the devices that are created
-> > by USB HID devices as I've been working on adding USB HID targeted
-> > fuzzing support lately).
+> > > diff --git a/sound/soc/sof/Kconfig b/sound/soc/sof/Kconfig
+> > > index 61b97fc55bb2..2aa3a1cdf60c 100644
+> > > --- a/sound/soc/sof/Kconfig
+> > > +++ b/sound/soc/sof/Kconfig
+> > > @@ -36,6 +36,15 @@ config SND_SOC_SOF_ACPI
+> > >         Say Y if you need this option
+> > >         If unsure select "N".
+> > >
+> > > +config SND_SOC_SOF_DT
+> > > +     tristate "SOF DT enumeration support"
+> > > +     select SND_SOC_SOF
+> > > +     select SND_SOC_SOF_OPTIONS
+> > > +     help
+> > > +       This adds support for Device Tree enumeration. This option is
+> > > +       required to enable i.MX8 devices.
+> > > +       Say Y if you need this option. If unsure select "N".
+> > > +
 > >
-> > I guess we should open /dev/chr/* as well. The problem is that there
-> > 300+ devices there even without connecting USB devices and opening
-> > them blindly probably won't work. Is there a way to know which
-> > character devices are created by USB devices? Maybe they are exposed
-> > over /sys/bus/usb or via some other way?
+> > [snip]
+> >
+> > > diff --git a/sound/soc/sof/imx/Kconfig b/sound/soc/sof/imx/Kconfig
+> > > index fff64a9970f0..fa35994a79c4 100644
+> > > --- a/sound/soc/sof/imx/Kconfig
+> > > +++ b/sound/soc/sof/imx/Kconfig
+> > > @@ -12,6 +12,7 @@ if SND_SOC_SOF_IMX_TOPLEVEL
+> > >
+> > >   config SND_SOC_SOF_IMX8
+> > >       tristate "SOF support for i.MX8"
+> > > +     select SND_SOC_SOF_DT
+> >
+> > This looks upside down. You should select SOF_DT first then include the
+> > NXP stuff.
+> >
+> > >       help
+> > >             This adds support for Sound Open Firmware for NXP i.MX8 p=
+latforms
+> > >             Say Y if you have such a device.
+> > > diff --git a/sound/soc/sof/sof-dt-dev.c b/sound/soc/sof/sof-dt-dev.c
+> > > new file mode 100644
+> > > index 000000000000..31429bbb5c7e
+> > > --- /dev/null
+> > > +++ b/sound/soc/sof/sof-dt-dev.c
+> > > @@ -0,0 +1,159 @@
+> > > +// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
+> > > +//
+> > > +// Copyright 2019 NXP
+> > > +//
+> > > +// Author: Daniel Baluta <daniel.baluta@nxp.com>
+> > > +//
+> > > +
+> > > +#include <linux/firmware.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/pm_runtime.h>
+> > > +#include <sound/sof.h>
+> > > +
+> > > +#include "ops.h"
+> > > +
+> > > +extern struct snd_sof_dsp_ops sof_imx8_ops;
+> > > +
+> > > +static char *fw_path;
+> > > +module_param(fw_path, charp, 0444);
+> > > +MODULE_PARM_DESC(fw_path, "alternate path for SOF firmware.");
+> > > +
+> > > +static char *tplg_path;
+> > > +module_param(tplg_path, charp, 0444);
+> > > +MODULE_PARM_DESC(tplg_path, "alternate path for SOF topology.");
+> > > +
+> > > +/* platform specific devices */
+> > > +#if IS_ENABLED(CONFIG_SND_SOC_SOF_IMX8)
+> > > +static struct sof_dev_desc sof_dt_imx8qxp_desc =3D {
+> > > +     .default_fw_path =3D "imx/sof",
+> > > +     .default_tplg_path =3D "imx/sof-tplg",
+> > > +     .nocodec_fw_filename =3D "sof-imx8.ri",
+> > > +     .nocodec_tplg_filename =3D "sof-imx8-nocodec.tplg",
+> > > +     .ops =3D &sof_imx8_ops,
+> > > +};
+> > > +#endif
+> > > +
+> > > +static const struct dev_pm_ops sof_dt_pm =3D {
+> > > +     SET_SYSTEM_SLEEP_PM_OPS(snd_sof_suspend, snd_sof_resume)
+> > > +     SET_RUNTIME_PM_OPS(snd_sof_runtime_suspend, snd_sof_runtime_res=
+ume,
+> > > +                        NULL)
+> > > +};
+> > > +
+> > > +static void sof_dt_probe_complete(struct device *dev)
+> > > +{
+> > > +     /* allow runtime_pm */
+> > > +     pm_runtime_set_autosuspend_delay(dev, SND_SOF_SUSPEND_DELAY_MS)=
+;
+> > > +     pm_runtime_use_autosuspend(dev);
+> > > +     pm_runtime_enable(dev);
+> > > +}
+> > > +
+> > > +static int sof_dt_probe(struct platform_device *pdev)
+> > > +{
+> > > +     struct device *dev =3D &pdev->dev;
+> > > +     const struct sof_dev_desc *desc;
+> > > +     /*TODO: create a generic snd_soc_xxx_mach */
+> > > +     struct snd_soc_acpi_mach *mach;
+> >
+> > I wonder if you really need to use the same structures. For Intel we ge=
+t
+> > absolutely zero info from the firmware so rely on an ACPI codec ID as a
+> > key to find information on which firmware and topology to use, and whic=
+h
+> > machine driver to load. You could have all this information in a DT blo=
+b?
 >
-> Ah, OK, I see that it's also exposed as /dev/rio500 for this
-> particular driver. This doesn't really help, as these names will
-> differ for different drivers, and this will require custom syzkaller
-> descriptions for each driver. I'm planning to add them for some
-> widely-used (i.e. enabled on Android) drivers at some point, but it's
-> too much work to do it for all the drivers enabled on e.g. Ubuntu.
-
-BTW, the deadlock report is actually followed by another one, which
-looks like a different bug:
-
-usercopy: Kernel memory exposure attempt detected from wrapped address
-(offset 0, size 184466!
-------------[ cut here ]------------
-kernel BUG at mm/usercopy.c:98!
-invalid opcode: 0000 [#1] SMP KASAN
-CPU: 1 PID: 2287 Comm: cat Not tainted 5.3.0-rc2+ #126
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
-RIP: 0010:usercopy_abort+0xb9/0xbb mm/usercopy.c:86
-Code: e8 b1 f5 d6 ff 49 89 d9 4d 89 e8 4c 89 e1 41 56 48 89 ee 48 c7
-c7 20 f4 cd 85 ff 74 24 1
-RSP: 0018:ffff88806655fc60 EFLAGS: 00010282
-RAX: 000000000000006d RBX: ffffffff85cdf140 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff8128a0fd RDI: ffffed100ccabf7e
-RBP: ffffffff85cdf300 R08: 000000000000006d R09: ffffed100d965d60
-R10: ffffed100d965d5f R11: ffff88806cb2eaff R12: ffffffff85cdf4a0
-R13: ffffffff85cdf140 R14: ffff887feae14e00 R15: ffffffff85cdf140
-FS:  00007f4ab703f700(0000) GS:ffff88806cb00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000008cd068 CR3: 0000000065ffa000 CR4: 00000000000006e0
-Call Trace:
- check_bogus_address mm/usercopy.c:151
- __check_object_size mm/usercopy.c:260
- __check_object_size.cold+0xb2/0xba mm/usercopy.c:250
- check_object_size ./include/linux/thread_info.h:119
- check_copy_size ./include/linux/thread_info.h:150
- copy_to_user ./include/linux/uaccess.h:151
- read_rio+0x223/0x480 drivers/usb/misc/rio500.c:423
- __vfs_read+0x76/0x100 fs/read_write.c:425
- vfs_read+0x1ea/0x430 fs/read_write.c:461
- ksys_read+0x127/0x250 fs/read_write.c:587
- do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
- entry_SYSCALL_64_after_hwframe+0x49/0xbe arch/x86/entry/entry_64.S:175
-RIP: 0033:0x7f4ab6b6d310
-Code: 73 01 c3 48 8b 0d 28 4b 2b 00 31 d2 48 29 c2 64 89 11 48 83 c8
-ff eb ea 90 90 83 3d e5 4
-RSP: 002b:00007fff2ba3e448 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
-RAX: ffffffffffffffda RBX: 0000000000008000 RCX: 00007f4ab6b6d310
-RDX: 0000000000008000 RSI: 00000000008c5000 RDI: 0000000000000003
-RBP: 0000000000008000 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000008c5000
-R13: 0000000000000003 R14: 0000000000000000 R15: 0000000000008000
-Modules linked in:
----[ end trace 01dee08b337d41c2 ]---
-RIP: 0010:usercopy_abort+0xb9/0xbb mm/usercopy.c:86
-Code: e8 b1 f5 d6 ff 49 89 d9 4d 89 e8 4c 89 e1 41 56 48 89 ee 48 c7
-c7 20 f4 cd 85 ff 74 24 1
-RSP: 0018:ffff88806655fc60 EFLAGS: 00010282
-RAX: 000000000000006d RBX: ffffffff85cdf140 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff8128a0fd RDI: ffffed100ccabf7e
-RBP: ffffffff85cdf300 R08: 000000000000006d R09: ffffed100d965d60
-R10: ffffed100d965d5f R11: ffff88806cb2eaff R12: ffffffff85cdf4a0
-R13: ffffffff85cdf140 R14: ffff887feae14e00 R15: ffffffff85cdf140
-FS:  00007f4ab703f700(0000) GS:ffff88806cb00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000008cd068 CR3: 0000000065ffa000 CR4: 00000000000006e0
-usb 1-1: USB disconnect, device number 3
-
+> Yes. I see your point. I will still need to make a generic structure for
+> snd_soc_acpi_mach so that everyone can use sof_nocodec_setup function.
 >
-> >
-> > >
-> > > Alan Stern
-> > >
-> > > > > Is there any way you can test this?
-> > > >
-> > > > Not yet.
-> > > >
-> > > > >
-> > > > > Alan Stern
-> > >
+> Maybe something like this:
+>
+> struct snd_soc_mach {
+>   union {
+>   struct snd_soc_acpi_mach acpi_mach;
+>   struct snd_soc_of_mach of_mach;
+>   }
+> };
+>
+> and then change the prototype of sof_nocodec_setup.
+
+Hi Pierre,
+
+I fixed all the comments except the one above. Replacing snd_soc_acpi_mach
+with a generic snd_soc_mach is not trivial task.
+
+I wonder if it is acceptable to get the initial patches as they are
+now and later switch to
+generic ACPI/OF abstraction.
+
+Asking this because for the moment on the i.MX side I have only
+implemented no codec
+version and we don't probe any of the machine drivers we have.
+
+So, there is this only one member of snd_soc_acpi_mach that imx
+version is making use of:
+
+  mach->drv_name =3D "sof-nocodec";
+
+That's all.
+
+I think the change as it is now is very clean and non-intrusive. Later
+we will get options to
+read firmware name and stuff from DT.
+
+Anyhow, I don't think we can get rid of snd_dev_desc structure on
+i.MX. This will be used
+to store the information read from DT:
+
+static struct sof_dev_desc sof_of_imx8qxp_desc =3D {
+=C2=BB       .default_fw_path =3D "imx/sof",
+=C2=BB       .default_tplg_path =3D "imx/sof-tplg",
+=C2=BB       .nocodec_fw_filename =3D "sof-imx8.ri",
+=C2=BB       .nocodec_tplg_filename =3D "sof-imx8-nocodec.tplg",
+=C2=BB       .ops =3D &sof_imx8_ops,
+};
+
+For the moment we will only use the default values.
+
+thanks,
+Daniel.
