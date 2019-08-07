@@ -2,213 +2,260 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E3FBC19759
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 07:34:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3558C19759
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 07:41:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0D6D22CEB
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 07:34:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="sm33IYA6"
+	by mail.kernel.org (Postfix) with ESMTP id B6971217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 07:41:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387480AbfHGHeh (ORCPT
+        id S1727696AbfHGHlr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 03:34:37 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36723 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387404AbfHGHeg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 03:34:36 -0400
-Received: by mail-wm1-f68.google.com with SMTP id g67so74802827wme.1
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 00:34:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from:cc;
-        bh=FZrUQH33y44Ytw4iJLLaq3ZcMTl1mI3uSlJR/j+IYIA=;
-        b=sm33IYA6YCZXfStWQ2VxSkjKlqC6Pc49HxVe5SFTOVZhHqE4v/mQWVzH8A8t9QXGf1
-         MZio94ryosMuUEyzoLF9A/9ZbHvZMRkXvwuoMEhDSTLqABdT45gyFfcm+vi/XY0NWzfX
-         THUmMpBdZkqb55o9sEHSpbShnr+XMEUziry7S1aUi3q4APB+e2DcQ7A37XAaHeqpFkmP
-         WDt9acG91X+y2w2BX9IhvXr1WtCR5ZYdoHgCDfYP3h1Tr5urOXUUtTzJiTdsEh4jFL1K
-         zwxf1jq0f7jJhGDCZvh8f4M9acWpPg6VvRMAhd2q6wUsl+JwQufNZP47i9mjvwB/P5Fz
-         tbZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from:cc;
-        bh=FZrUQH33y44Ytw4iJLLaq3ZcMTl1mI3uSlJR/j+IYIA=;
-        b=nKYpC57Y4nb4KErlalLaJkDDOJgnHK8OEMSJ95LcfHhEACmEAxkMQgqQ6M0cnZB4gO
-         0h/5AQBvdpmrPTWXr07JA7PBs/jhlfLwiCoKqH562AYoXwBzMAJPfRhEg8jC20Dxun2z
-         ZDju43YfvWAoYoHJbOUGOrmtma0es5HrBIEauAt4zABvGZ2mjxAQ2xGSIFKjVMawPtE3
-         3cdTGJNF1QNi28du0vdofPuuB2hCZjEh1w9nLECKb+7Rnhyyu8yKlk9hz84zaiv7SVUu
-         Jef6j3PwO3kWWXJuBSNoLzl/8LvyQOTBw5V2Os4Fr12Vgv7rED5NN8t6ZJy+AJ9Wtavs
-         aTEQ==
-X-Gm-Message-State: APjAAAXw/TW+L1LHZty6RnIEZzT/RYv1CjMzUpfF19ienwCwlbhSjRS7
-        KzC90ZG5Nq79LmsSNyq44HfaYg==
-X-Google-Smtp-Source: APXvYqzDJy8goZnkK981FtKvLP4ltt5j12SyCQo15xhOCqUOj4ur0/SSjmlX9lG53vtJrI5qznaTjA==
-X-Received: by 2002:a05:600c:114f:: with SMTP id z15mr8983631wmz.131.1565163272906;
-        Wed, 07 Aug 2019 00:34:32 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id y2sm79688035wrl.4.2019.08.07.00.34.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 07 Aug 2019 00:34:32 -0700 (PDT)
-Message-ID: <5d4a7f08.1c69fb81.5cc82.1018@mx.google.com>
-Date:   Wed, 07 Aug 2019 00:34:32 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Wed, 7 Aug 2019 03:41:47 -0400
+Received: from mga04.intel.com ([192.55.52.120]:24656 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727190AbfHGHlr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 03:41:47 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Aug 2019 00:41:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,356,1559545200"; 
+   d="scan'208";a="203093384"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.122]) ([10.237.72.122])
+  by fmsmga002.fm.intel.com with ESMTP; 07 Aug 2019 00:41:45 -0700
+Subject: Re: [PATCH v1] perf record: Add an option to take an AUX snapshot on
+ exit
+To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc:     Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
+References: <20190806144101.62892-1-alexander.shishkin@linux.intel.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <0541bee6-7bdf-2dbc-998d-5df3ddf18208@intel.com>
+Date:   Wed, 7 Aug 2019 10:40:39 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Tree: net-next
-X-Kernelci-Kernel: v5.3-rc1-460-g05bb520376af
-X-Kernelci-Lab-Name: lab-baylibre
-X-Kernelci-Branch: master
-X-Kernelci-Report-Type: bisect
-Subject: net-next/master boot bisection: v5.3-rc1-460-g05bb520376af on
- meson-gxm-khadas-vim2
-To:     Andrew Bowers <andrewx.bowers@intel.com>,
-        tomeu.vizoso@collabora.com, guillaume.tucker@collabora.com,
-        mgalka@collabora.com, Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        broonie@kernel.org, matthew.hart@linaro.org, khilman@baylibre.com,
-        enric.balletbo@collabora.com,
-        Jacob Keller <jacob.e.keller@intel.com>
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     netdev@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>
+In-Reply-To: <20190806144101.62892-1-alexander.shishkin@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-* This automated bisection report was sent to you on the basis  *
-* that you may be involved with the breaking commit it has      *
-* found.  No manual investigation has been done to verify it,   *
-* and the root cause of the problem may be somewhere else.      *
-*                                                               *
-* If you do send a fix, please include this trailer:            *
-*   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
-*                                                               *
-* Hope this helps!                                              *
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+On 6/08/19 5:41 PM, Alexander Shishkin wrote:
+> It is sometimes useful to generate a snapshot when perf record exits;
+> I've been using a wrapper script around the workload that would do a
+> killall -USR2 perf when the workload exits.
+> 
+> This patch makes it easier and also works when perf record is attached
+> to a pre-existing task. A new snapshot option 'e' can be specified in
+> -S to enable this behavior:
+> 
+> root@elsewhere:~# perf record -e intel_pt// -Se sleep 1
+> [ perf record: Woken up 2 times to write data ]
+> [ perf record: Captured and wrote 0.085 MB perf.data ]
+> 
+> Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Co-developed-by: Adrian Hunter <adrian.hunter@intel.com>
 
-net-next/master boot bisection: v5.3-rc1-460-g05bb520376af on meson-gxm-kha=
-das-vim2
+checkpatch says:
+WARNING: Co-developed-by: must be immediately followed by Signed-off-by
 
-Summary:
-  Start:      05bb520376af Merge branch '40GbE' of git://git.kernel.org/pub=
-/scm/linux/kernel/git/jkirsher/next-queue
-  Details:    https://kernelci.org/boot/id/5d4a3a6759b51422d431b28d
-  Plain log:  https://storage.kernelci.org//net-next/master/v5.3-rc1-460-g0=
-5bb520376af/arm64/defconfig/gcc-8/lab-baylibre/boot-meson-gxm-khadas-vim2.t=
-xt
-  HTML log:   https://storage.kernelci.org//net-next/master/v5.3-rc1-460-g0=
-5bb520376af/arm64/defconfig/gcc-8/lab-baylibre/boot-meson-gxm-khadas-vim2.h=
-tml
-  Result:     b27223591606 i40e: verify string count matches even on early =
-return
+> ---
+>  tools/perf/Documentation/perf-record.txt | 11 +++++---
+>  tools/perf/builtin-record.c              | 34 +++++++++++++++++++++---
+>  tools/perf/perf.h                        |  1 +
+>  tools/perf/util/auxtrace.c               | 14 ++++++++--
+>  tools/perf/util/auxtrace.h               |  2 +-
+>  5 files changed, 52 insertions(+), 10 deletions(-)
+> 
+> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+> index 15e0fa87241b..d5e58e0a2bca 100644
+> --- a/tools/perf/Documentation/perf-record.txt
+> +++ b/tools/perf/Documentation/perf-record.txt
+> @@ -422,9 +422,14 @@ CLOCK_BOOTTIME, CLOCK_REALTIME and CLOCK_TAI.
+>  -S::
+>  --snapshot::
+>  Select AUX area tracing Snapshot Mode. This option is valid only with an
+> -AUX area tracing event. Optionally the number of bytes to capture per
+> -snapshot can be specified. In Snapshot Mode, trace data is captured only when
+> -signal SIGUSR2 is received.
+> +AUX area tracing event. Optionally, certain snapshot capturing parameters
+> +can be specified in a string that follows this option:
+> +  'e': take one last snapshot on exit; guarantees that there is at least one
+> +       snapshot in the output file;
+> +  <size>: if the PMU supports this, specify the desired snapshot size.
+> +
+> +In Snapshot Mode trace data is captured only when signal SIGUSR2 is received
+> +and on exit if the above 'e' option is given.
+>  
+>  --proc-map-timeout::
+>  When processing pre-existing threads /proc/XXX/mmap, it may take a long time,
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index d31d7a5a1be3..e9a2525ecfcc 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -613,19 +613,35 @@ static int record__auxtrace_read_snapshot_all(struct record *rec)
+>  	return rc;
+>  }
+>  
+> -static void record__read_auxtrace_snapshot(struct record *rec)
+> +static void record__read_auxtrace_snapshot(struct record *rec, bool on_exit)
+>  {
+>  	pr_debug("Recording AUX area tracing snapshot\n");
+>  	if (record__auxtrace_read_snapshot_all(rec) < 0) {
+>  		trigger_error(&auxtrace_snapshot_trigger);
+>  	} else {
+> -		if (auxtrace_record__snapshot_finish(rec->itr))
+> +		if (auxtrace_record__snapshot_finish(rec->itr, on_exit))
+>  			trigger_error(&auxtrace_snapshot_trigger);
+>  		else
+>  			trigger_ready(&auxtrace_snapshot_trigger);
+>  	}
+>  }
+>  
+> +static int record__auxtrace_snapshot_exit(struct record *rec)
+> +{
+> +	if (trigger_is_error(&auxtrace_snapshot_trigger))
+> +		return 0;
+> +
+> +	if (!auxtrace_record__snapshot_started &&
+> +	    auxtrace_record__snapshot_start(rec->itr))
+> +		return -1;
+> +
+> +	record__read_auxtrace_snapshot(rec, true);
 
-Checks:
-  revert:     PASS
-  verify:     PASS
+Buffers can get un-mapped earlier as tasks exit.  Refer
+perf_evlist__filter_pollfd() -> perf_evlist__munmap_filtered().
+Maybe we should prevent that for this case.
+e.g. do perf_mmap__get()'s on the mmaps at the start, and then 'put' them
+all here.
 
-Parameters:
-  Tree:       net-next
-  URL:        git://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.=
-git
-  Branch:     master
-  Target:     meson-gxm-khadas-vim2
-  CPU arch:   arm64
-  Lab:        lab-baylibre
-  Compiler:   gcc-8
-  Config:     defconfig
-  Test suite: boot
+> +	if (trigger_is_error(&auxtrace_snapshot_trigger))
+> +		return -1;
+> +
+> +	return 0;
+> +}
+> +
+>  static int record__auxtrace_init(struct record *rec)
+>  {
+>  	int err;
+> @@ -654,7 +670,7 @@ int record__auxtrace_mmap_read(struct record *rec __maybe_unused,
+>  }
+>  
+>  static inline
+> -void record__read_auxtrace_snapshot(struct record *rec __maybe_unused)
+> +void record__read_auxtrace_snapshot(struct record *rec __maybe_unused, bool on_exit)
+>  {
+>  }
+>  
+> @@ -664,6 +680,12 @@ int auxtrace_record__snapshot_start(struct auxtrace_record *itr __maybe_unused)
+>  	return 0;
+>  }
+>  
+> +static inline
+> +int record__auxtrace_snapshot_exit(struct record *rec)
+> +{
+> +	return 0;
+> +}
+> +
+>  static int record__auxtrace_init(struct record *rec __maybe_unused)
+>  {
+>  	return 0;
+> @@ -1536,7 +1558,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+>  		if (auxtrace_record__snapshot_started) {
+>  			auxtrace_record__snapshot_started = 0;
+>  			if (!trigger_is_error(&auxtrace_snapshot_trigger))
+> -				record__read_auxtrace_snapshot(rec);
+> +				record__read_auxtrace_snapshot(rec, false);
+>  			if (trigger_is_error(&auxtrace_snapshot_trigger)) {
+>  				pr_err("AUX area tracing snapshot failed\n");
+>  				err = -1;
+> @@ -1609,9 +1631,13 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+>  			disabled = true;
+>  		}
+>  	}
+> +
+>  	trigger_off(&auxtrace_snapshot_trigger);
+>  	trigger_off(&switch_output_trigger);
+>  
+> +	if (opts->auxtrace_snapshot_on_exit)
+> +		record__auxtrace_snapshot_exit(rec);
+> +
+>  	if (forks && workload_exec_errno) {
+>  		char msg[STRERR_BUFSIZE];
+>  		const char *emsg = str_error_r(workload_exec_errno, msg, sizeof(msg));
+> diff --git a/tools/perf/perf.h b/tools/perf/perf.h
+> index 74d0124d38f3..dc0a7a237887 100644
+> --- a/tools/perf/perf.h
+> +++ b/tools/perf/perf.h
+> @@ -57,6 +57,7 @@ struct record_opts {
+>  	bool	     running_time;
+>  	bool	     full_auxtrace;
+>  	bool	     auxtrace_snapshot_mode;
+> +	bool	     auxtrace_snapshot_on_exit;
+>  	bool	     record_namespaces;
+>  	bool	     record_switch_events;
+>  	bool	     all_kernel;
+> diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+> index 65728cdeefb6..72ce4c5e7c78 100644
+> --- a/tools/perf/util/auxtrace.c
+> +++ b/tools/perf/util/auxtrace.c
+> @@ -539,9 +539,9 @@ int auxtrace_record__snapshot_start(struct auxtrace_record *itr)
+>  	return 0;
+>  }
+>  
+> -int auxtrace_record__snapshot_finish(struct auxtrace_record *itr)
+> +int auxtrace_record__snapshot_finish(struct auxtrace_record *itr, bool on_exit)
+>  {
+> -	if (itr && itr->snapshot_finish)
+> +	if (!on_exit && itr && itr->snapshot_finish)
 
-Breaking commit found:
+You are assuming you know what every ->snapshot_finish() does.  It would be
+better to pass on_exit to ->snapshot_finish().
 
----------------------------------------------------------------------------=
-----
-commit b27223591606f59c1f7c042b8e3dc74affadf492
-Author: Jacob Keller <jacob.e.keller@intel.com>
-Date:   Tue Jul 2 08:22:58 2019 -0400
+>  		return itr->snapshot_finish(itr);
+>  	return 0;
+>  }
+> @@ -577,6 +577,16 @@ int auxtrace_parse_snapshot_options(struct auxtrace_record *itr,
+>  	if (!str)
+>  		return 0;
+>  
+> +	/* PMU-agnostic options */
+> +	switch (*str) {
+> +	case 'e':
+> +		opts->auxtrace_snapshot_on_exit = true;
+> +		str++;
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +
+>  	if (itr)
+>  		return itr->parse_snapshot_options(itr, opts, str);
+>  
+> diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
+> index 17eb04a1da4d..8ccabacd0b11 100644
+> --- a/tools/perf/util/auxtrace.h
+> +++ b/tools/perf/util/auxtrace.h
+> @@ -499,7 +499,7 @@ int auxtrace_record__info_fill(struct auxtrace_record *itr,
+>  			       size_t priv_size);
+>  void auxtrace_record__free(struct auxtrace_record *itr);
+>  int auxtrace_record__snapshot_start(struct auxtrace_record *itr);
+> -int auxtrace_record__snapshot_finish(struct auxtrace_record *itr);
+> +int auxtrace_record__snapshot_finish(struct auxtrace_record *itr, bool on_exit);
+>  int auxtrace_record__find_snapshot(struct auxtrace_record *itr, int idx,
+>  				   struct auxtrace_mmap *mm,
+>  				   unsigned char *data, u64 *head, u64 *old);
+> 
 
-    i40e: verify string count matches even on early return
-    =
-
-    Similar to i40e_get_ethtool_stats, add a goto to verify that the data
-    pointer for the strings lines up with the expected stats count. This
-    helps ensure that bugs are not introduced when adding stats.
-    =
-
-    Signed-off-by: Jacob Keller <jacob.e.keller@intel.com>
-    Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-    Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_ethtool.c b/drivers/net/e=
-thernet/intel/i40e/i40e_ethtool.c
-index ceca57a261dc..01e4615b1b4b 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_ethtool.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_ethtool.c
-@@ -2342,7 +2342,7 @@ static void i40e_get_stat_strings(struct net_device *=
-netdev, u8 *data)
- 	}
- =
-
- 	if (vsi !=3D pf->vsi[pf->lan_vsi] || pf->hw.partition_id !=3D 1)
--		return;
-+		goto check_data_pointer;
- =
-
- 	i40e_add_stat_strings(&data, i40e_gstrings_veb_stats);
- =
-
-@@ -2354,6 +2354,7 @@ static void i40e_get_stat_strings(struct net_device *=
-netdev, u8 *data)
- 	for (i =3D 0; i < I40E_MAX_USER_PRIORITY; i++)
- 		i40e_add_stat_strings(&data, i40e_gstrings_pfc_stats, i);
- =
-
-+check_data_pointer:
- 	WARN_ONCE(data - p !=3D i40e_get_stats_count(netdev) * ETH_GSTRING_LEN,
- 		  "stat strings count mismatch!");
- }
----------------------------------------------------------------------------=
-----
-
-
-Git bisection log:
-
----------------------------------------------------------------------------=
-----
-git bisect start
-# good: [9e8fb25254f76cb483303d8e9a97ed80a65418fe] Merge branch 'net-l3-l4-=
-functional-tests'
-git bisect good 9e8fb25254f76cb483303d8e9a97ed80a65418fe
-# bad: [05bb520376af2c5146d3c44832c22ec3bb54d778] Merge branch '40GbE' of g=
-it://git.kernel.org/pub/scm/linux/kernel/git/jkirsher/next-queue
-git bisect bad 05bb520376af2c5146d3c44832c22ec3bb54d778
-# good: [c4ed52538cd012bd9dfe97beda6802454d367e70] Merge branch 'drop_monit=
-or-Various-improvements-and-cleanups'
-git bisect good c4ed52538cd012bd9dfe97beda6802454d367e70
-# good: [fb1b775a247ee8d846152841f780eba6cb71bcfc] net: sched: add skbedit =
-of ptype action to hardware IR
-git bisect good fb1b775a247ee8d846152841f780eba6cb71bcfc
-# good: [ef68de56c7ad6f708bee8db5e08b83013083e757] Merge branch 'Support-tu=
-nnels-over-VLAN-in-NFP'
-git bisect good ef68de56c7ad6f708bee8db5e08b83013083e757
-# good: [0969402fd5dd57268bb7547d7e5ece8fcd81157d] i40e: Update visual effe=
-ct for advertised FEC mode.
-git bisect good 0969402fd5dd57268bb7547d7e5ece8fcd81157d
-# bad: [b27223591606f59c1f7c042b8e3dc74affadf492] i40e: verify string count=
- matches even on early return
-git bisect bad b27223591606f59c1f7c042b8e3dc74affadf492
-# good: [b603f9dc20afed5e4666642c8713cafb94a23058] i40e: Log info when PF i=
-s entering and leaving Allmulti mode.
-git bisect good b603f9dc20afed5e4666642c8713cafb94a23058
-# first bad commit: [b27223591606f59c1f7c042b8e3dc74affadf492] i40e: verify=
- string count matches even on early return
----------------------------------------------------------------------------=
-----
