@@ -2,184 +2,131 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4907FC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:13:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18284C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:13:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 128362173C
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:13:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SJOajrac"
+	by mail.kernel.org (Postfix) with ESMTP id E59302173C
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:13:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727829AbfHGBNs (ORCPT
+        id S1727892AbfHGBN4 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 21:13:48 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:37703 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727527AbfHGBNr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 21:13:47 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 19so42461709pfa.4;
-        Tue, 06 Aug 2019 18:13:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=u4CFBN9jcxG6CFNFBBtApHbFd9s1AZ+ekko2NJrvock=;
-        b=SJOajracFAt3ijWVg+xaCoFsDiOS0z6dXguBR3ct2tWASXNXm3ND0eBFc5aiQEqlkv
-         Rx/XTPj2KqEB9hOzAc93i82xzgazlJevAuiGXOQ2J58m2isIRtl/whLs5CFd96GA7mvS
-         YHrurPGFvI3f+Wq0N2QEzro2LC7QfjOWwvuMkQy0Q/OTQvX1oKsxm/p/jZ69o2ZmmGuz
-         yJCycoVPICxMZKW5yANTPmkS/TcyZ3Ti1veEQ7TPNp+nT2EUIlJLK4MjQjTGwXDM48Qj
-         lgpaPxWI+tV8jJnP73RbFBNWoZ37eYZiY96I+fKpgnBMA3tmyZKKELFCnxTz3fZtlrNW
-         Ie3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=u4CFBN9jcxG6CFNFBBtApHbFd9s1AZ+ekko2NJrvock=;
-        b=jt7F9YLA+2JTVXzVH8yihPjIl8BQvnTqLCLH/b4j4pJw3MUBhgqnrhL70Mg2bKn+ug
-         zJ0+hiXezLM43zKPbtOTFLVnd/DWdjjW6W59K5Y51Jq/SQUjxDYYU7qeCmyXUxGJpPzU
-         578IwU52MxKe7C+BZboQhA4iURYt4ScqfsqKFOuUmKZyUVuSzEzRpN/rTbXP60nmEmZu
-         FoG4YXpncsJ0biXk2+9EJ8t4n8MaGHtHyiGS5UoEkSk+yyGHgi3rv9orQ0mqKyMX5Lz2
-         08+/J9cploGdsjOJc/DTFaotX5qLJ9nijBs2yYnREuts46bctMsh7dTIWg95smUzSmXi
-         URhQ==
-X-Gm-Message-State: APjAAAURUWOZcwGwDZPuCy4Zw2C4PxFmiIBAyP5jhqfSeviT3rvCD3+N
-        kSBDcLjC/eZqzP4XqAm85Pk=
-X-Google-Smtp-Source: APXvYqw8kAF7UlF/qKmSi5AAFuHDbAWLLnoX4Lh+1nADuqi9UM9xsAI2PZwM/lrArwNjUY3moTd4iQ==
-X-Received: by 2002:a62:174a:: with SMTP id 71mr6866238pfx.140.1565140426593;
-        Tue, 06 Aug 2019 18:13:46 -0700 (PDT)
-Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id r6sm49734116pjb.22.2019.08.06.18.13.45
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 06 Aug 2019 18:13:46 -0700 (PDT)
-Date:   Tue, 6 Aug 2019 18:14:41 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Daniel Baluta <daniel.baluta@gmail.com>
-Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
-        Mark Brown <broonie@kernel.org>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Mihai Serban <mihai.serban@gmail.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Viorel Suman <viorel.suman@nxp.com>,
-        Timur Tabi <timur@kernel.org>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Takashi Iwai <tiwai@suse.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 3/7] ASoC: fsl_sai: Add support to enable multiple
- data lines
-Message-ID: <20190807011441.GC8938@Asurada-Nvidia.nvidia.com>
-References: <20190728192429.1514-1-daniel.baluta@nxp.com>
- <20190728192429.1514-4-daniel.baluta@nxp.com>
- <20190729202154.GC20594@Asurada-Nvidia.nvidia.com>
- <CAEnQRZBN5Y+75cpgS2h3LwDj5BkF5cesqu6=V3GuPU4=5pgn6A@mail.gmail.com>
+        Tue, 6 Aug 2019 21:13:56 -0400
+Received: from ozlabs.org ([203.11.71.1]:44759 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727527AbfHGBN4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 21:13:56 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 463D6T4c5rz9sNF;
+        Wed,  7 Aug 2019 11:13:52 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
+        "linuxppc-dev\@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "christophe.leroy\@c-s.fr" <christophe.leroy@c-s.fr>,
+        "npiggin\@gmail.com" <npiggin@gmail.com>
+Cc:     "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Grant McEwan <grant.mcewan@alliedtelesis.co.nz>
+Subject: Re: SMP lockup at boot on Freescale/NXP T2080 (powerpc 64)
+In-Reply-To: <1565135404.16914.5.camel@alliedtelesis.co.nz>
+References: <1564970785.27215.29.camel@alliedtelesis.co.nz> <4525a16cd3e65f89741b50daf2ec259b6baaab78.camel@alliedtelesis.co.nz> <87wofqv8a0.fsf@concordia.ellerman.id.au> <1565135404.16914.5.camel@alliedtelesis.co.nz>
+Date:   Wed, 07 Aug 2019 11:13:46 +1000
+Message-ID: <87o911vktx.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEnQRZBN5Y+75cpgS2h3LwDj5BkF5cesqu6=V3GuPU4=5pgn6A@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 06:23:27PM +0300, Daniel Baluta wrote:
-> On Mon, Jul 29, 2019 at 11:22 PM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
-> >
-> > On Sun, Jul 28, 2019 at 10:24:25PM +0300, Daniel Baluta wrote:
-> > > SAI supports up to 8 Rx/Tx data lines which can be enabled
-> > > using TCE/RCE bits of TCR3/RCR3 registers.
-> > >
-> > > Data lines to be enabled are read from DT fsl,dl-mask property.
-> > > By default (if no DT entry is provided) only data line 0 is enabled.
-> > >
-> > > Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-> > > ---
-> > >  sound/soc/fsl/fsl_sai.c | 11 ++++++++++-
-> > >  sound/soc/fsl/fsl_sai.h |  4 +++-
-> > >  2 files changed, 13 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
-> > > index 637b1d12a575..5e7cb7fd29f5 100644
-> > > --- a/sound/soc/fsl/fsl_sai.c
-> > > +++ b/sound/soc/fsl/fsl_sai.c
-> > > @@ -601,7 +601,7 @@ static int fsl_sai_startup(struct snd_pcm_substream *substream,
-> > >
-> > >       regmap_update_bits(sai->regmap, FSL_SAI_xCR3(tx),
-> > >                          FSL_SAI_CR3_TRCE_MASK,
-> > > -                        FSL_SAI_CR3_TRCE);
-> > > +                        FSL_SAI_CR3_TRCE(sai->soc_data->dl_mask[tx]);
-> > >
-> > >       ret = snd_pcm_hw_constraint_list(substream->runtime, 0,
-> > >                       SNDRV_PCM_HW_PARAM_RATE, &fsl_sai_rate_constraints);
-> > > @@ -888,6 +888,15 @@ static int fsl_sai_probe(struct platform_device *pdev)
-> > >               }
-> > >       }
-> > >
-> > > +     /*
-> > > +      * active data lines mask for TX/RX, defaults to 1 (only the first
-> > > +      * data line is enabled
-> > > +      */
-> > > +     sai->dl_mask[RX] = 1;
-> > > +     sai->dl_mask[TX] = 1;
-> > > +     of_property_read_u32_index(np, "fsl,dl-mask", RX, &sai->dl_mask[RX]);
-> > > +     of_property_read_u32_index(np, "fsl,dl-mask", TX, &sai->dl_mask[TX]);
-> >
-> > Just curious what if we enable 8 data lines through DT bindings
-> > while an audio file only has 1 or 2 channels. Will TRCE bits be
-> > okay to stay with 8 data channels configurations? Btw, how does
-> > DMA work for the data registers? ESAI has one entry at a fixed
-> > address for all data channels while SAI seems to have different
-> > data registers.
-> 
-> Hi Nicolin,
-> 
-> I have sent v3 and removed this patch from the series because we
-> need to find a better solution.
+Chris Packham <Chris.Packham@alliedtelesis.co.nz> writes:
+> On Tue, 2019-08-06 at 21:32 +1000, Michael Ellerman wrote:
+>> Chris Packham <Chris.Packham@alliedtelesis.co.nz> writes:
+>> > On Mon, 2019-08-05 at 14:06 +1200, Chris Packham wrote:
+>> > > 
+>> > > Hi All,
+>> > > 
+>> > > I have a custom board that uses the Freescale/NXP T2080 SoC.
+>> > > 
+>> > > The board boots fine using v4.19.60 but when I use v5.1.21 it
+>> > > locks
+>> > > up
+>> > > waiting for the other CPUs to come online (earlyprintk output
+>> > > below).
+>> > > If I set maxcpus=0 then the system boots all the way through to
+>> > > userland. The same thing happens with 5.3-rc2.
+>> > > 
+>> > > The defconfig I'm using is 
+>> > > https://gist.github.com/cpackham/f24d0b426f3
+>> > > de0eaaba17b82c3528a9d it was updated from the working v4.19.60
+>> > > defconfig using make olddefconfig.
+>> > > 
+>> > > Does this ring any bells for anyone?
+>> > > 
+>> > > I haven't dug into the differences between the working an non-
+>> > > working
+>> > > versions yet. I'll start looking now.
+>> > I've bisected this to the following commit
+>> Thanks that's super helpful.
+>> 
+>> > 
+>> > commit ed1cd6deb013a11959d17a94e35ce159197632da
+>> > Author: Christophe Leroy <christophe.leroy@c-s.fr>
+>> > Date:   Thu Jan 31 10:08:58 2019 +0000
+>> > 
+>> >     powerpc: Activate CONFIG_THREAD_INFO_IN_TASK
+>> >     
+>> >     This patch activates CONFIG_THREAD_INFO_IN_TASK which
+>> >     moves the thread_info into task_struct.
+>> > 
+>> > I'll be the first to admit this is well beyond my area of knowledge
+>> > so
+>> > I'm unsure what about this patch is problematic but I can be fairly
+>> > sure that a build immediately before this patch works while a build
+>> > with this patch hangs.
+>> It makes a pretty fundamental change to the way the kernel stores
+>> some
+>> information about each task, moving it off the stack and into the
+>> task
+>> struct.
+>> 
+>> It definitely has the potential to break things, but I thought we had
+>> reasonable test coverage of the Book3E platforms, I have a p5020ds
+>> (e5500) that I boot as part of my CI.
+>> 
+>> Aha. If I take your config and try to boot it on my p5020ds I get the
+>> same behaviour, stuck at SMP bringup. So it seems it's something in
+>> your
+>> config vs corenet64_smp_defconfig that is triggering the bug.
+>> 
+>> Can you try bisecting what in the config triggers it?
+>> 
+>> To do that you checkout ed1cd6deb013a11959d17a94e35ce159197632da,
+>> then
+>> you build/boot with corenet64_smp_defconfig to confirm it works. Then
+>> you use tools/testing/ktest/config-bisect.pl to bisect the changes in
+>> the .config.
+>> 
+>
+> The difference between a working and non working defconfig is
+> CONFIG_PREEMPT specifically CONFIG_PREEMPT=y makes my system hang at
+> boot.
+>
+> Is that now intentionally prohibited on 64-bit powerpc?
 
-Ack. I was in that private mail thread. So it's totally fine.
+It's not prohibitied, but it probably should be because no one really
+tests it properly. I have a handful of IBM machines where I boot a
+PREEMPT kernel but that's about it.
 
-> 
-> I think we should enable TCE based on the number of available datalines
-> and the number of active channels.  Will come with a RFC patch later.
+The corenet configs don't have PREEMPT enabled, which suggests it was
+never really supported on those machines.
 
-Yea, that's exactly what I suspected during patch review and
-what I suggested previously too. Look forward to your patch.
+But maybe someone from NXP can tell me otherwise.
 
-> Pasting here the reply of SAI Audio IP owner regarding to your question above,
-> just for anyone to have more info of our private discussion:
-> 
-> If all 8 datalines are enabled using TCE then the transmit FIFO for
-> all 8 datalines need to be serviced, otherwise a FIFO underrun will be
-> generated.
-> Each dataline has a separate transmit FIFO with a separate register to
-> service the FIFO, so each dataline can be serviced separately. Note
-> that configuring FCOMB=2 would make it look like ESAI with a common
-> address for all FIFOs.
-> When performing DMA transfers to multiple datalines, there are a
-> couple of options:
->     * Use 1 DMA channel to copy first slot for each dataline to each
-> FIFO and then update the destination address back to the first
-> register.
->     * Configure separate DMA channel for each dataline and trigger the
-> first one by the DMA request and the subsequent channels by DMA
-> linking or scatter/gather.
->     * Configure FCOMB=2 and treat it the same as the ESAI. This is
-> almost the same as 1, but don’t need to update the destination
-> address.
-> 
-> Thanks,
-> Daniel.
+cheers
