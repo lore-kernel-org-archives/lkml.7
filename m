@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EE9DC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 19:41:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06646C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 19:41:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FC6022305
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 19:41:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA3E32231F
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 19:41:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="fm9TJElX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="XXGPKLB2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389556AbfHGTlT (ORCPT
+        id S2389546AbfHGTlS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 15:41:19 -0400
-Received: from vern.gendns.com ([98.142.107.122]:43712 "EHLO vern.gendns.com"
+        Wed, 7 Aug 2019 15:41:18 -0400
+Received: from vern.gendns.com ([98.142.107.122]:43666 "EHLO vern.gendns.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389496AbfHGTlI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 15:41:08 -0400
+        id S2389465AbfHGTlE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 15:41:04 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=lechnology.com; s=default; h=References:In-Reply-To:Message-Id:Date:Subject
         :Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=pbaXv8/k76yXM2YSUI6OCA9KXxg0bErOr3/Oy6pyLQc=; b=fm9TJElXx7urRtkHpdrAlASKn
-        ZvRvvv22JlIUuESZN1sMD/SHohdI0IgyJcPTDkCYUOiitYGHUSh1nDwpVmePKd0PoFWnrVNXQg7Fi
-        Wl4TIsnt+mDz9YIEeIux6TDTKqcBGLj/i6FLrDQcmQn5IPFWyjlrUUgUdFTxreUq4163xq+DNggPB
-        ansjf2JQCu8TyIgS4gsZM+LxIY/+3ISfVY74YDl+VSAqn0ma8/41etOWZ4sc8JRpsfpPZvdUqONJ6
-        mUK+6dkms54fyxWcmFRUTiS3D++b8tlGkMSTmByy2ILbvVCvSIGjETFtCo0aZLJP469olaEvgwPhG
-        lFEehLYow==;
+         bh=JZcnPzar3TAVprcml8r+efuLQk5t0pInzE4jZWaXCBk=; b=XXGPKLB2Mm4mjXRvx8gH2vX9Q
+        VLCywFtIlZubPg6sogAXy7XWrvWth5acPhOUfP8OFXdsBdZ3QTpi7U1OvQKGNcV6og0GnTUPh2/wp
+        h7Qhwbqvj89S52YfAKOU2juuCZ4cbwfxuKOqyEDDMLTNQOcoK4DcZhQJBnHHNSbZ9I+lK7iRsAmH6
+        Mi/PRO3UMsrkHunn/LEiXC+QMDZV6cDBU6QuLAjlYRKGxWyoQOTvO1ditorowhxBTxyOF4OEh12qr
+        tmdnByzhoywqjF3AausbXT6hj3P8u+a7DWcGV3Bx2ojP1vG2zWRahZTMl6Q/qfFJI0lnswHHS6zGP
+        JxxaHGGEQ==;
 Received: from 108-198-5-147.lightspeed.okcbok.sbcglobal.net ([108.198.5.147]:60292 helo=freyr.lechnology.com)
         by vern.gendns.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
         (Exim 4.92)
         (envelope-from <david@lechnology.com>)
-        id 1hvRo1-00006r-Cl; Wed, 07 Aug 2019 15:41:05 -0400
+        id 1hvRnx-00006r-V4; Wed, 07 Aug 2019 15:41:02 -0400
 From:   David Lechner <david@lechnology.com>
 To:     linux-iio@vger.kernel.org, linux-omap@vger.kernel.org
 Cc:     David Lechner <david@lechnology.com>,
@@ -50,9 +50,9 @@ Cc:     David Lechner <david@lechnology.com>,
         Thierry Reding <thierry.reding@gmail.com>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-pwm@vger.kernel.org
-Subject: [PATCH v2 5/5] ARM: dts: am335x-boneblue: Enable eQEP
-Date:   Wed,  7 Aug 2019 14:40:23 -0500
-Message-Id: <20190807194023.15318-6-david@lechnology.com>
+Subject: [PATCH v2 2/5] dt-bindings: counter: new bindings for TI eQEP
+Date:   Wed,  7 Aug 2019 14:40:20 -0500
+Message-Id: <20190807194023.15318-3-david@lechnology.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190807194023.15318-1-david@lechnology.com>
 References: <20190807194023.15318-1-david@lechnology.com>
@@ -71,87 +71,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This enables the Enhanced Quadrature Encoder Pulse (eQEP) module for
-connectors E1, E2 and E3 on BeagleBone Blue.
+This documents device tree binding for the Texas Instruments Enhanced
+Quadrature Encoder Pulse (eQEP) Module found in various TI SoCs.
 
 Signed-off-by: David Lechner <david@lechnology.com>
 ---
 
 v2 changes:
-- none
+- convert to .yaml format
+- rename clock to "sysclkout"
 
- arch/arm/boot/dts/am335x-boneblue.dts | 54 +++++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
+ .../devicetree/bindings/counter/ti-eqep.yaml  | 50 +++++++++++++++++++
+ 1 file changed, 50 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/counter/ti-eqep.yaml
 
-diff --git a/arch/arm/boot/dts/am335x-boneblue.dts b/arch/arm/boot/dts/am335x-boneblue.dts
-index 0257576d5d16..df3978ce061c 100644
---- a/arch/arm/boot/dts/am335x-boneblue.dts
-+++ b/arch/arm/boot/dts/am335x-boneblue.dts
-@@ -258,6 +258,30 @@
- 			AM33XX_PADCONF(AM335X_PIN_MII1_RXD0, PIN_OUTPUT, MUX_MODE7)		/* (M16) gmii1_rxd0.gpio2[21] */
- 		>;
- 	};
+diff --git a/Documentation/devicetree/bindings/counter/ti-eqep.yaml b/Documentation/devicetree/bindings/counter/ti-eqep.yaml
+new file mode 100644
+index 000000000000..8f8b2e87e5c3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/counter/ti-eqep.yaml
+@@ -0,0 +1,50 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/counter/ti-eqep.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+	/* E1 */
-+	eqep0_pins: pinmux_eqep0_pins {
-+		pinctrl-single,pins = <
-+			AM33XX_PADCONF(AM335X_PIN_MCASP0_AXR0, PIN_INPUT, MUX_MODE1)		/* (B12) mcasp0_aclkr.eQEP0A_in */
-+			AM33XX_PADCONF(AM335X_PIN_MCASP0_FSR, PIN_INPUT, MUX_MODE1)		/* (C13) mcasp0_fsr.eQEP0B_in */
-+		>;
-+	};
++title: Texas Instruments Enhanced Quadrature Encoder Pulse (eQEP) Module
 +
-+	/* E2 */
-+	eqep1_pins: pinmux_eqep1_pins {
-+		pinctrl-single,pins = <
-+			AM33XX_PADCONF(AM335X_PIN_LCD_DATA12, PIN_INPUT, MUX_MODE2)		/* (V2) lcd_data12.eQEP1A_in */
-+			AM33XX_PADCONF(AM335X_PIN_LCD_DATA13, PIN_INPUT, MUX_MODE2)		/* (V3) lcd_data13.eQEP1B_in */
-+		>;
-+	};
++maintainers:
++  - David Lechner <david@lechnology.com>
 +
-+	/* E3 */
-+	eqep2_pins: pinmux_eqep2_pins {
-+		pinctrl-single,pins = <
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_AD12, PIN_INPUT, MUX_MODE4)		/* (T12) gpmc_ad12.eQEP2A_in */
-+			AM33XX_PADCONF(AM335X_PIN_GPMC_AD13, PIN_INPUT, MUX_MODE4)		/* (R12) gpmc_ad13.eQEP2B_in */
-+		>;
-+	};
- };
- 
- &uart0 {
-@@ -530,3 +554,33 @@
- 		line-name = "LS_BUF_EN";
- 	};
- };
++properties:
++  compatible:
++    const: "ti,am3352-eqep"
 +
-+&epwmss0 {
-+	status = "okay";
-+};
++  reg:
++    maxItems: 1
 +
-+&eqep0 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&eqep0_pins>;
-+};
++  interrupts:
++    description: The eQEP event interrupt
++    maxItems: 1
 +
-+&epwmss1 {
-+	status = "okay";
-+};
++  clocks:
++    description: The clock that determines the SYSCLKOUT rate for the eQEP
++                 peripheral.
++    maxItems: 1
 +
-+&eqep1 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&eqep1_pins>;
-+};
++  clock-names:
++    const: sysclkout
 +
-+&epwmss2 {
-+	status = "okay";
-+};
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
 +
-+&eqep2 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&eqep2_pins>;
-+};
++additionalProperties: false
++
++examples:
++  - |
++    eqep0: eqep@180 {
++        compatible = "ti,am3352-eqep";
++        reg = <0x180 0x80>;
++        clocks = <&l4ls_gclk>;
++        clock-names = "sysclkout";
++        interrupts = <79>;
++    };
++
++...
 -- 
 2.17.1
 
