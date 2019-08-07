@@ -2,119 +2,79 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D984C32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 09:26:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59025C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 09:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F3BB22305
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 09:26:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33F8821E6E
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 09:28:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728903AbfHGJ0h (ORCPT
+        id S2387578AbfHGJ2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 05:26:37 -0400
-Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:47519 "EHLO
-        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726772AbfHGJ0h (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 05:26:37 -0400
-Received: from [IPv6:2001:983:e9a7:1:9c05:4bbc:890e:7747] ([IPv6:2001:983:e9a7:1:9c05:4bbc:890e:7747])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id vIDJhk9lbAffAvIDKh7Y1B; Wed, 07 Aug 2019 11:26:34 +0200
-Subject: Re: [PATCH 4/5] media/ivtv: Reduce default FIFO priority
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Andy Walls <andy@silverblocksystems.net>
-Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org,
-        Andy Walls <awalls@md.metrocast.net>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
-References: <20190801111348.530242235@infradead.org>
- <20190801111541.858088180@infradead.org>
- <7970f0e30d1eb83e7067225d07b923863bf1ac50.camel@silverblocksystems.net>
- <20190801123806.GA31398@hirez.programming.kicks-ass.net>
- <20190802085822.GA2386@hirez.programming.kicks-ass.net>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <c3f71479-d280-94ad-ab20-5098e599526a@xs4all.nl>
-Date:   Wed, 7 Aug 2019 11:26:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 7 Aug 2019 05:28:08 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53948 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726461AbfHGJ2H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 05:28:07 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id AF3B72F366E;
+        Wed,  7 Aug 2019 09:28:07 +0000 (UTC)
+Received: from gondolin (ovpn-117-166.ams2.redhat.com [10.36.117.166])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EDD391001284;
+        Wed,  7 Aug 2019 09:28:03 +0000 (UTC)
+Date:   Wed, 7 Aug 2019 11:28:01 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Parav Pandit <parav@mellanox.com>
+Cc:     kvm@vger.kernel.org, wankhede@nvidia.com,
+        linux-kernel@vger.kernel.org, alex.williamson@redhat.com,
+        cjia@nvidia.com
+Subject: Re: [PATCH v1 2/2] vfio/mdev: Removed unused and redundant API for
+ mdev UUID
+Message-ID: <20190807112801.6b2ceb36.cohuck@redhat.com>
+In-Reply-To: <20190806141826.52712-3-parav@mellanox.com>
+References: <20190802065905.45239-1-parav@mellanox.com>
+        <20190806141826.52712-1-parav@mellanox.com>
+        <20190806141826.52712-3-parav@mellanox.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-In-Reply-To: <20190802085822.GA2386@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfJl2hd1oBQ6uwnNgOxAxzYDsPm3NqVvYmwZbMVqyv1ZKT/NmBhqCp4Uh54+pKrRkJRXW3Z9kwoIqANVpdmBH4xrloe7lgEIluhdQnKHkpl9Vvi+dlbXQ
- OtrEb/s2mBU14VLDUJLDUXT2Mpsq6NhPxCgaZCYdt/i8481rV7ZdFozasa6ZBz7fpRfjRTjOdafazIdZ0Ul5masuvBxRf7BBoiiJZahGuEWx9ZI88OpjvJDX
- ZR/ZQ40CzRW6zzzzIPOf2jg1j7etAR9L6++sbnyTDGU+wO9Pi/RimhTp9cKqhx6y2Z1sTnUDeUvX3oEiIwv+dK/IyW038FkQ3k4JA3C3Y2qoB53EhtRvaoRW
- xEnSgOzDGzjSOfrsGId2tAB/2795uVIpXuHxfDAupAEVMfpzbKyVFvcVwCClXTsTNF5tMMfOuQWfvAnAIh3gGCJnikkS3LoXj2MgWfeT27IYXzK5QInHgSkA
- KtzsLpO0UhBWV3Jm71wi6EyJkeQ31112y7B0RQ==
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Wed, 07 Aug 2019 09:28:07 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/2/19 10:58 AM, Peter Zijlstra wrote:
-> On Thu, Aug 01, 2019 at 02:38:06PM +0200, Peter Zijlstra wrote:
->> If the consumer of the data are RT tasks as well (I hadn't expected that
->> from a TV capture device) then I'd propose to use FIFO-50 as default.
->>
->> The thing is, the moment you're doing actual proper RT, the admin needs
->> to configure things anyway, which then very much includes setting the
->> priority of interrupt threads and the like.
->>
->> (that is exacty why pretty much everything defaults to FIFO-50)
-> 
-> Is the below acceptible?
+On Tue,  6 Aug 2019 09:18:26 -0500
+Parav Pandit <parav@mellanox.com> wrote:
 
-I think this should be OK. ivtv is real-time sensitive since certain
-tasks have to happen within (if I remember correctly) 1/60th of a second
-(the time it takes to capture a single video field). Data is lost if it
-can't be done within that time.
+> There is no single production driver who is interested in mdev device
+> uuid. Currently UUID is mainly used to derive a device name.
+> Additionally mdev device name is already available using core kernel
+> API dev_name().
 
-Using FIFO-50 means that it competes with other irq threads, and since
-irq threads shouldn't take up much time anyway this should be OK.
-
-Andy, what do you think?
-
-Regards,
-
-	Hans
+Well, the mdev code actually uses the uuid to check for duplicates
+before registration with the driver core would fail... I'd just drop
+the two sentences talking about the device name, IMHO they don't really
+add useful information; but I'll leave that decision to the maintainers.
 
 > 
+> Hence removed unused exported symbol.
+> 
+> Signed-off-by: Parav Pandit <parav@mellanox.com>
 > ---
-> Subject: media/ivtv: Reduce default FIFO priority
-> From: Peter Zijlstra <peterz@infradead.org>
-> Date: Thu Aug  1 12:56:40 CEST 2019
-> 
-> The ivtv driver creates a FIFO-99 thread by default, reduce this to
-> FIFO-50.
-> 
-> FIFO-99 is the very highest priority available to SCHED_FIFO and
-> it not a suitable default; it would indicate the ivtv work is the
-> most important work on the machine.
-> 
-> Cc: Andy Walls <awalls@md.metrocast.net>
-> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Cc: linux-media@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Changelog:
+> v0->v1:
+>  - Updated commit log to address comments from Cornelia
 > ---
->  drivers/media/pci/ivtv/ivtv-driver.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> --- a/drivers/media/pci/ivtv/ivtv-driver.c
-> +++ b/drivers/media/pci/ivtv/ivtv-driver.c
-> @@ -738,7 +738,7 @@ static void ivtv_process_options(struct
->   */
->  static int ivtv_init_struct1(struct ivtv *itv)
->  {
-> -	struct sched_param param = { .sched_priority = 99 };
-> +	struct sched_param param = { .sched_priority = MAX_RT_PRIO / 2 };
->  
->  	itv->base_addr = pci_resource_start(itv->pdev, 0);
->  	itv->enc_mbox.max_mbox = 2; /* the encoder has 3 mailboxes (0-2) */
-> 
+>  drivers/vfio/mdev/mdev_core.c | 6 ------
+>  include/linux/mdev.h          | 1 -
+>  2 files changed, 7 deletions(-)
 
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
