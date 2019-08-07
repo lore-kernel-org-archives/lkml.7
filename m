@@ -2,159 +2,295 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3310C32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 249C6C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:47:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBA772231F
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:46:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565167617;
-	bh=vvS0+eseD+S2MPZfq94XTqm/3eT89OOZLoZueDS081Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1UxvexL9cup9vcZ1NyBlQhWQ8J80EwzqkktmjXDMXPX1SmxezvptwKnJqxAh69Dbl
-	 H6sVC485anzJKKr9x4yHaGRxgJCMM/K4qWyYIV8GV27gnNwBrOkjdwhy9pbV5vjO6x
-	 UoZRWRR+lUtiW2h9XUyI63MZv5ZUF1c9Gm7oc/lc=
+	by mail.kernel.org (Postfix) with ESMTP id EDBFF2238B
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:47:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387819AbfHGIq4 (ORCPT
+        id S2387838AbfHGIrI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 04:46:56 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55384 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387743AbfHGIqy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 04:46:54 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 8E81EAD29;
-        Wed,  7 Aug 2019 08:46:50 +0000 (UTC)
-Date:   Wed, 7 Aug 2019 10:46:49 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Jan Kara <jack@suse.cz>
-Cc:     John Hubbard <jhubbard@nvidia.com>,
-        Matthew Wilcox <willy@infradead.org>, john.hubbard@gmail.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, ceph-devel@vger.kernel.org,
-        devel@driverdev.osuosl.org, devel@lists.orangefs.org,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mm@kvack.org,
-        linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org, linux-xfs@vger.kernel.org,
-        netdev@vger.kernel.org, rds-devel@oss.oracle.com,
-        sparclinux@vger.kernel.org, x86@kernel.org,
-        xen-devel@lists.xenproject.org
-Subject: Re: [PATCH 00/34] put_user_pages(): miscellaneous call sites
-Message-ID: <20190807084649.GQ11812@dhcp22.suse.cz>
-References: <20190802022005.5117-1-jhubbard@nvidia.com>
- <20190802091244.GD6461@dhcp22.suse.cz>
- <20190802124146.GL25064@quack2.suse.cz>
- <20190802142443.GB5597@bombadil.infradead.org>
- <20190802145227.GQ25064@quack2.suse.cz>
- <076e7826-67a5-4829-aae2-2b90f302cebd@nvidia.com>
- <20190807083726.GA14658@quack2.suse.cz>
+        Wed, 7 Aug 2019 04:47:08 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:39744 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2387414AbfHGIrG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 04:47:06 -0400
+X-UUID: 7263336c114146898f747d5a3fff6b62-20190807
+X-UUID: 7263336c114146898f747d5a3fff6b62-20190807
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <jitao.shi@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 2125418400; Wed, 07 Aug 2019 16:46:59 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33DR.mediatek.inc
+ (172.27.6.106) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 7 Aug
+ 2019 16:46:53 +0800
+Received: from mszsdclx1018.gcn.mediatek.inc (172.27.4.253) by
+ MTKCAS36.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
+ 15.0.1395.4 via Frontend Transport; Wed, 7 Aug 2019 16:46:51 +0800
+From:   Jitao Shi <jitao.shi@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        Ian Campbell <ijc+devicetree@hellion.org.uk>,
+        <linux-pwm@vger.kernel.org>, David Airlie <airlied@linux.ie>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>
+CC:     Jitao Shi <jitao.shi@mediatek.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Ajay Kumar <ajaykumar.rs@samsung.com>,
+        Inki Dae <inki.dae@samsung.com>,
+        "Rahul Sharma" <rahul.sharma@samsung.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        "Vincent Palatin" <vpalatin@chromium.org>,
+        Andy Yan <andy.yan@rock-chips.com>,
+        "Philipp Zabel" <p.zabel@pengutronix.de>,
+        Russell King <rmk+kernel@arm.linux.org.uk>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        "Sascha Hauer" <kernel@pengutronix.de>,
+        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
+        <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
+        <ck.hu@mediatek.com>, <stonea168@163.com>
+Subject: [PATCH v6 3/3] drm/mediatek: add mipi_tx driver for mt8183
+Date:   Wed, 7 Aug 2019 16:46:45 +0800
+Message-ID: <20190807084645.63738-4-jitao.shi@mediatek.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190807084645.63738-1-jitao.shi@mediatek.com>
+References: <20190807084645.63738-1-jitao.shi@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190807083726.GA14658@quack2.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-TM-AS-Product-Ver: SMEX-12.5.0.1684-8.5.1010-24828.001
+X-TM-AS-Result: No-4.180400-8.000000-10
+X-TMASE-MatchedRID: 6j4eTuaZbtMfKML5AJtfLf3HILfxLV/9E1YUt4FjGjGOUV82NDH4AkwS
+        eVQnSS/F/SrcY9Zl4TqPQi9XuOWoOF3kw/94/kQqGjzBgnFZvQ40VTU7yL3Dkw5SzgJNSArLu/q
+        +tuzAwMz7PB9rRkAeWknhL8mFKNasRx6S2cF3onpwLF78dZXkZg/o5bNHEsCTRjNrjV0arFImNh
+        b+NkYsr1J5R3CC0+bWBnXN9qDb2BZV2C/9+oeSXsF7z3OyLkPQ36DIeK03Kb+bKItl61J/yZ+in
+        TK0bC9eKrauXd3MZDWdoo0/Al2OnHjxItbvhFrf7+vS+kF4lH/RZCmVQnen7QH0dylXmiKJd39b
+        v0KoEaG40dptVjEDlfm935TgNq1fg8WGktkEkQncYFxZVrWia/iFRwAjfKn+4r2sHcnNbn8R2lf
+        q9e3YRscnU+Ex88Gj
+X-TM-AS-User-Approved-Sender: No
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--4.180400-8.000000
+X-TMASE-Version: SMEX-12.5.0.1684-8.5.1010-24828.001
+X-TM-SNTS-SMTP: 04A35C171F23F701E3EBB0AEDD5DCE9A53609A95BD4432678018C9BACE0ADC7C2000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 07-08-19 10:37:26, Jan Kara wrote:
-> On Fri 02-08-19 12:14:09, John Hubbard wrote:
-> > On 8/2/19 7:52 AM, Jan Kara wrote:
-> > > On Fri 02-08-19 07:24:43, Matthew Wilcox wrote:
-> > > > On Fri, Aug 02, 2019 at 02:41:46PM +0200, Jan Kara wrote:
-> > > > > On Fri 02-08-19 11:12:44, Michal Hocko wrote:
-> > > > > > On Thu 01-08-19 19:19:31, john.hubbard@gmail.com wrote:
-> > > > > > [...]
-> > > > > > > 2) Convert all of the call sites for get_user_pages*(), to
-> > > > > > > invoke put_user_page*(), instead of put_page(). This involves dozens of
-> > > > > > > call sites, and will take some time.
-> > > > > > 
-> > > > > > How do we make sure this is the case and it will remain the case in the
-> > > > > > future? There must be some automagic to enforce/check that. It is simply
-> > > > > > not manageable to do it every now and then because then 3) will simply
-> > > > > > be never safe.
-> > > > > > 
-> > > > > > Have you considered coccinele or some other scripted way to do the
-> > > > > > transition? I have no idea how to deal with future changes that would
-> > > > > > break the balance though.
-> > 
-> > Hi Michal,
-> > 
-> > Yes, I've thought about it, and coccinelle falls a bit short (it's not smart
-> > enough to know which put_page()'s to convert). However, there is a debug
-> > option planned: a yet-to-be-posted commit [1] uses struct page extensions
-> > (obviously protected by CONFIG_DEBUG_GET_USER_PAGES_REFERENCES) to add
-> > a redundant counter. That allows:
-> > 
-> > void __put_page(struct page *page)
-> > {
-> > 	...
-> > 	/* Someone called put_page() instead of put_user_page() */
-> > 	WARN_ON_ONCE(atomic_read(&page_ext->pin_count) > 0);
-> > 
-> > > > > 
-> > > > > Yeah, that's why I've been suggesting at LSF/MM that we may need to create
-> > > > > a gup wrapper - say vaddr_pin_pages() - and track which sites dropping
-> > > > > references got converted by using this wrapper instead of gup. The
-> > > > > counterpart would then be more logically named as unpin_page() or whatever
-> > > > > instead of put_user_page().  Sure this is not completely foolproof (you can
-> > > > > create new callsite using vaddr_pin_pages() and then just drop refs using
-> > > > > put_page()) but I suppose it would be a high enough barrier for missed
-> > > > > conversions... Thoughts?
-> > 
-> > The debug option above is still a bit simplistic in its implementation
-> > (and maybe not taking full advantage of the data it has), but I think
-> > it's preferable, because it monitors the "core" and WARNs.
-> > 
-> > Instead of the wrapper, I'm thinking: documentation and the passage of
-> > time, plus the debug option (perhaps enhanced--probably once I post it
-> > someone will notice opportunities), yes?
-> 
-> So I think your debug option and my suggested renaming serve a bit
-> different purposes (and thus both make sense). If you do the renaming, you
-> can just grep to see unconverted sites. Also when someone merges new GUP
-> user (unaware of the new rules) while you switch GUP to use pins instead of
-> ordinary references, you'll get compilation error in case of renaming
-> instead of hard to debug refcount leak without the renaming. And such
-> conflict is almost bound to happen given the size of GUP patch set... Also
-> the renaming serves against the "coding inertia" - i.e., GUP is around for
-> ages so people just use it without checking any documentation or comments.
-> After switching how GUP works, what used to be correct isn't anymore so
-> renaming the function serves as a warning that something has really
-> changed.
+This patch add mt8183 mipi_tx driver.
+And also support other chips that use the same binding and driver.
 
-Fully agreed!
+Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+---
+ drivers/gpu/drm/mediatek/Makefile             |   1 +
+ drivers/gpu/drm/mediatek/mtk_mipi_tx.c        |   2 +
+ drivers/gpu/drm/mediatek/mtk_mipi_tx.h        |   1 +
+ drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c | 150 ++++++++++++++++++
+ 4 files changed, 154 insertions(+)
+ create mode 100644 drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c
 
-> Your refcount debug patches are good to catch bugs in the conversions done
-> but that requires you to be able to excercise the code path in the first
-> place which may require particular HW or so, and you also have to enable
-> the debug option which means you already aim at verifying the GUP
-> references are treated properly.
-> 
-> 								Honza
-> 
-> -- 
-> Jan Kara <jack@suse.com>
-> SUSE Labs, CR
-
+diff --git a/drivers/gpu/drm/mediatek/Makefile b/drivers/gpu/drm/mediatek/Makefile
+index 2c8de1f5a5ee..8067a4be8311 100644
+--- a/drivers/gpu/drm/mediatek/Makefile
++++ b/drivers/gpu/drm/mediatek/Makefile
+@@ -13,6 +13,7 @@ mediatek-drm-y := mtk_disp_color.o \
+ 		  mtk_dsi.o \
+ 		  mtk_mipi_tx.o \
+ 		  mtk_mt8173_mipi_tx.o \
++		  mtk_mt8183_mipi_tx.o \
+ 		  mtk_dpi.o
+ 
+ obj-$(CONFIG_DRM_MEDIATEK) += mediatek-drm.o
+diff --git a/drivers/gpu/drm/mediatek/mtk_mipi_tx.c b/drivers/gpu/drm/mediatek/mtk_mipi_tx.c
+index 77b9a185e970..e4d34484ecc8 100644
+--- a/drivers/gpu/drm/mediatek/mtk_mipi_tx.c
++++ b/drivers/gpu/drm/mediatek/mtk_mipi_tx.c
+@@ -175,6 +175,8 @@ static const struct of_device_id mtk_mipi_tx_match[] = {
+ 	  .data = &mt2701_mipitx_data },
+ 	{ .compatible = "mediatek,mt8173-mipi-tx",
+ 	  .data = &mt8173_mipitx_data },
++	{ .compatible = "mediatek,mt8183-mipi-tx",
++	  .data = &mt8183_mipitx_data },
+ 	{ },
+ };
+ 
+diff --git a/drivers/gpu/drm/mediatek/mtk_mipi_tx.h b/drivers/gpu/drm/mediatek/mtk_mipi_tx.h
+index 4f905313564f..413f35d86219 100644
+--- a/drivers/gpu/drm/mediatek/mtk_mipi_tx.h
++++ b/drivers/gpu/drm/mediatek/mtk_mipi_tx.h
+@@ -44,5 +44,6 @@ unsigned long mtk_mipi_tx_pll_recalc_rate(struct clk_hw *hw,
+ 
+ extern const struct mtk_mipitx_data mt2701_mipitx_data;
+ extern const struct mtk_mipitx_data mt8173_mipitx_data;
++extern const struct mtk_mipitx_data mt8183_mipitx_data;
+ 
+ #endif
+diff --git a/drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c b/drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c
+new file mode 100644
+index 000000000000..db13ebdbe262
+--- /dev/null
++++ b/drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c
+@@ -0,0 +1,150 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2019 MediaTek Inc.
++ * Author: jitao.shi <jitao.shi@mediatek.com>
++ */
++
++#include "mtk_mipi_tx.h"
++
++#define MIPITX_LANE_CON		0x000c
++#define RG_DSI_CPHY_T1DRV_EN		BIT(0)
++#define RG_DSI_ANA_CK_SEL		BIT(1)
++#define RG_DSI_PHY_CK_SEL		BIT(2)
++#define RG_DSI_CPHY_EN			BIT(3)
++#define RG_DSI_PHYCK_INV_EN		BIT(4)
++#define RG_DSI_PWR04_EN			BIT(5)
++#define RG_DSI_BG_LPF_EN		BIT(6)
++#define RG_DSI_BG_CORE_EN		BIT(7)
++#define RG_DSI_PAD_TIEL_SEL		BIT(8)
++
++#define MIPITX_PLL_PWR	0x0028
++#define MIPITX_PLL_CON0	0x002c
++#define MIPITX_PLL_CON1	0x0030
++#define MIPITX_PLL_CON2	0x0034
++#define MIPITX_PLL_CON3	0x0038
++#define MIPITX_PLL_CON4	0x003c
++#define RG_DSI_PLL_IBIAS		(3 << 10)
++
++#define MIPITX_D2_SW_CTL_EN	0x0144
++#define MIPITX_D0_SW_CTL_EN	0x0244
++#define MIPITX_CK_CKMODE_EN	0x0328
++#define DSI_CK_CKMODE_EN		BIT(0)
++#define MIPITX_CK_SW_CTL_EN	0x0344
++#define MIPITX_D1_SW_CTL_EN	0x0444
++#define MIPITX_D3_SW_CTL_EN	0x0544
++#define DSI_SW_CTL_EN			BIT(0)
++#define AD_DSI_PLL_SDM_PWR_ON		BIT(0)
++#define AD_DSI_PLL_SDM_ISO_EN		BIT(1)
++
++#define RG_DSI_PLL_EN			BIT(4)
++#define RG_DSI_PLL_POSDIV		(0x7 << 8)
++
++static int mtk_mipi_tx_pll_enable(struct clk_hw *hw)
++{
++	struct mtk_mipi_tx *mipi_tx = mtk_mipi_tx_from_clk_hw(hw);
++	unsigned int txdiv, txdiv0;
++	u64 pcw;
++
++	dev_dbg(mipi_tx->dev, "enable: %u bps\n", mipi_tx->data_rate);
++
++	if (mipi_tx->data_rate >= 2000000000) {
++		txdiv = 1;
++		txdiv0 = 0;
++	} else if (mipi_tx->data_rate >= 1000000000) {
++		txdiv = 2;
++		txdiv0 = 1;
++	} else if (mipi_tx->data_rate >= 500000000) {
++		txdiv = 4;
++		txdiv0 = 2;
++	} else if (mipi_tx->data_rate > 250000000) {
++		txdiv = 8;
++		txdiv0 = 3;
++	} else if (mipi_tx->data_rate >= 125000000) {
++		txdiv = 16;
++		txdiv0 = 4;
++	} else {
++		return -EINVAL;
++	}
++
++	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_PLL_CON4, RG_DSI_PLL_IBIAS);
++
++	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_PLL_PWR, AD_DSI_PLL_SDM_PWR_ON);
++	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_PLL_CON1, RG_DSI_PLL_EN);
++	udelay(1);
++	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_PLL_PWR, AD_DSI_PLL_SDM_ISO_EN);
++	pcw = div_u64(((u64)mipi_tx->data_rate * txdiv) << 24, 26000000);
++	writel(pcw, mipi_tx->regs + MIPITX_PLL_CON0);
++	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_PLL_CON1, RG_DSI_PLL_POSDIV,
++				txdiv0 << 8);
++	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_PLL_CON1, RG_DSI_PLL_EN);
++
++	return 0;
++}
++
++static void mtk_mipi_tx_pll_disable(struct clk_hw *hw)
++{
++	struct mtk_mipi_tx *mipi_tx = mtk_mipi_tx_from_clk_hw(hw);
++
++	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_PLL_CON1, RG_DSI_PLL_EN);
++
++	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_PLL_PWR, AD_DSI_PLL_SDM_ISO_EN);
++	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_PLL_PWR, AD_DSI_PLL_SDM_PWR_ON);
++}
++
++static long mtk_mipi_tx_pll_round_rate(struct clk_hw *hw, unsigned long rate,
++				       unsigned long *prate)
++{
++	return clamp_val(rate, 50000000, 1600000000);
++}
++
++static const struct clk_ops mtk_mipi_tx_pll_ops = {
++	.enable = mtk_mipi_tx_pll_enable,
++	.disable = mtk_mipi_tx_pll_disable,
++	.round_rate = mtk_mipi_tx_pll_round_rate,
++	.set_rate = mtk_mipi_tx_pll_set_rate,
++	.recalc_rate = mtk_mipi_tx_pll_recalc_rate,
++};
++
++static void mtk_mipi_tx_power_on_signal(struct phy *phy)
++{
++	struct mtk_mipi_tx *mipi_tx = phy_get_drvdata(phy);
++
++	/* BG_LPF_EN / BG_CORE_EN */
++	writel(RG_DSI_PAD_TIEL_SEL | RG_DSI_BG_CORE_EN,
++	       mipi_tx->regs + MIPITX_LANE_CON);
++	usleep_range(30, 100);
++	writel(RG_DSI_BG_CORE_EN | RG_DSI_BG_LPF_EN,
++	       mipi_tx->regs + MIPITX_LANE_CON);
++
++	/* Switch OFF each Lane */
++	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_D0_SW_CTL_EN, DSI_SW_CTL_EN);
++	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_D1_SW_CTL_EN, DSI_SW_CTL_EN);
++	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_D2_SW_CTL_EN, DSI_SW_CTL_EN);
++	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_D3_SW_CTL_EN, DSI_SW_CTL_EN);
++	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_CK_SW_CTL_EN, DSI_SW_CTL_EN);
++
++	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_CK_CKMODE_EN, DSI_CK_CKMODE_EN);
++}
++
++static void mtk_mipi_tx_power_off_signal(struct phy *phy)
++{
++	struct mtk_mipi_tx *mipi_tx = phy_get_drvdata(phy);
++
++	/* Switch ON each Lane */
++	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_D0_SW_CTL_EN, DSI_SW_CTL_EN);
++	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_D1_SW_CTL_EN, DSI_SW_CTL_EN);
++	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_D2_SW_CTL_EN, DSI_SW_CTL_EN);
++	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_D3_SW_CTL_EN, DSI_SW_CTL_EN);
++	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_CK_SW_CTL_EN, DSI_SW_CTL_EN);
++
++	writel(RG_DSI_PAD_TIEL_SEL | RG_DSI_BG_CORE_EN,
++	       mipi_tx->regs + MIPITX_LANE_CON);
++	writel(RG_DSI_PAD_TIEL_SEL, mipi_tx->regs + MIPITX_LANE_CON);
++}
++
++const struct mtk_mipitx_data mt8183_mipitx_data = {
++	.mipi_tx_clk_ops = &mtk_mipi_tx_pll_ops,
++	.mipi_tx_enable_signal = mtk_mipi_tx_power_on_signal,
++	.mipi_tx_disable_signal = mtk_mipi_tx_power_off_signal,
++};
++
 -- 
-Michal Hocko
-SUSE Labs
+2.21.0
+
