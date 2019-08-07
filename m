@@ -2,110 +2,181 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B45C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:16:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72398C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:17:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1810F21EF2
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:16:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Q1NTA61K"
+	by mail.kernel.org (Postfix) with ESMTP id 4001A21E6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:17:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565183831;
+	bh=Hi6JoU+FAx1CSC0qE3eh8u8LvYqkjVnhomHfLbGGl48=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=E3OFxG7k5FQhEG+M4uIicZwiUecNh2EMnCaqWMVC/4XVqJjlexsro97NehBhelesW
+	 d8z0rSj8CgIb6f2o+pzvechhMLe1+fbcxWJe5BrFLbyyGnNCH4TDBuu65l3QVlgUXt
+	 dtkeP/g+V0obe6pa12K2MSZhbwBeQRru/EP+6lzY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388134AbfHGNQu (ORCPT
+        id S2388154AbfHGNRK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 09:16:50 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:41901 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387982AbfHGNQu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 09:16:50 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x77DGNXu2694547
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 7 Aug 2019 06:16:24 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x77DGNXu2694547
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1565183784;
-        bh=TLbuexVVkH4flQi/Zk02KNj+uo+Ez+kCrWCObIT/MRc=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=Q1NTA61Krfq6QsAbfegct7GGplRZD7veRN6mwRUJ4NwBQRLzmCfe2AxLY/GBsjyvk
-         Au7ZtZTjeMR5gtZtNUY25WaaQDYhqjYGV4kRPnAWPBjjYb6kNZv34B+uT2zQPJ+r04
-         MJdkW85ASnC2gVGeU0K3rXLBl9bPGnw0iGI9eAflS7dAPl6/Wb648d2p02xQ5vzsIW
-         j91xe4mq/rj03yi8K1iMIKuum2ZgK48TeCyEB0k8v9HDwMcNyRUnwYBnyuBaPGUOzT
-         pgaCmAbY9OA9jCV2CraqSc5fWgA3XKvB6dktWR24L87o7pz5TZ1c4SKHEocfUbBH9e
-         QlaSR8L1bL6ew==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x77DGNFI2694544;
-        Wed, 7 Aug 2019 06:16:23 -0700
-Date:   Wed, 7 Aug 2019 06:16:23 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   "tip-bot for Gustavo A. R. Silva" <tipbot@zytor.com>
-Message-ID: <tip-4ab9ab656a6cea5257bfa31f00c922d68f7a5c2f@git.kernel.org>
-Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        gustavo@embeddedor.com, keescook@chromium.org, hpa@zytor.com
-Reply-To: hpa@zytor.com, tglx@linutronix.de, keescook@chromium.org,
-          gustavo@embeddedor.com, mingo@kernel.org,
-          linux-kernel@vger.kernel.org
-In-Reply-To: <20190805195654.GA17831@embeddedor>
-References: <20190805195654.GA17831@embeddedor>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/urgent] x86/ptrace: Mark expected switch fall-through
-Git-Commit-ID: 4ab9ab656a6cea5257bfa31f00c922d68f7a5c2f
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Wed, 7 Aug 2019 09:17:10 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34638 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387982AbfHGNRJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 09:17:09 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id CD87EAE34;
+        Wed,  7 Aug 2019 13:17:07 +0000 (UTC)
+Date:   Wed, 7 Aug 2019 15:17:06 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "adobriyan@gmail.com" <adobriyan@gmail.com>,
+        "hch@lst.de" <hch@lst.de>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Junichi Nomura <j-nomura@ce.jp.nec.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH 2/2] /proc/kpageflags: do not use uninitialized struct
+ pages
+Message-ID: <20190807131706.GA11812@dhcp22.suse.cz>
+References: <20190725023100.31141-1-t-fukasawa@vx.jp.nec.com>
+ <20190725023100.31141-3-t-fukasawa@vx.jp.nec.com>
+ <20190725090341.GC13855@dhcp22.suse.cz>
+ <40b3078e-fb8b-87ef-5c4e-6321956cc940@vx.jp.nec.com>
+ <20190726070615.GB6142@dhcp22.suse.cz>
+ <3a926ce5-75b9-ea94-d6e4-6888872e0dc4@vx.jp.nec.com>
+ <CAPcyv4iCXWgxkLi3eM_EaqD0cuzmRyg5k4c9CeS1TyN+bajXFw@mail.gmail.com>
+ <20190806064636.GU7597@dhcp22.suse.cz>
+ <CAPcyv4i5FjTOnPbXNcTzvt+e6RQYow0JRQwSFuxaa62LSuvzHQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <CAPcyv4i5FjTOnPbXNcTzvt+e6RQYow0JRQwSFuxaa62LSuvzHQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  4ab9ab656a6cea5257bfa31f00c922d68f7a5c2f
-Gitweb:     https://git.kernel.org/tip/4ab9ab656a6cea5257bfa31f00c922d68f7a5c2f
-Author:     Gustavo A. R. Silva <gustavo@embeddedor.com>
-AuthorDate: Mon, 5 Aug 2019 14:56:54 -0500
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Wed, 7 Aug 2019 15:12:01 +0200
+On Tue 06-08-19 09:15:25, Dan Williams wrote:
+> On Mon, Aug 5, 2019 at 11:47 PM Michal Hocko <mhocko@kernel.org> wrote:
+> >
+> > On Mon 05-08-19 20:27:03, Dan Williams wrote:
+> > > On Sun, Aug 4, 2019 at 10:31 PM Toshiki Fukasawa
+> > > <t-fukasawa@vx.jp.nec.com> wrote:
+> > > >
+> > > > On 2019/07/26 16:06, Michal Hocko wrote:
+> > > > > On Fri 26-07-19 06:25:49, Toshiki Fukasawa wrote:
+> > > > >>
+> > > > >>
+> > > > >> On 2019/07/25 18:03, Michal Hocko wrote:
+> > > > >>> On Thu 25-07-19 02:31:18, Toshiki Fukasawa wrote:
+> > > > >>>> A kernel panic was observed during reading /proc/kpageflags for
+> > > > >>>> first few pfns allocated by pmem namespace:
+> > > > >>>>
+> > > > >>>> BUG: unable to handle page fault for address: fffffffffffffffe
+> > > > >>>> [  114.495280] #PF: supervisor read access in kernel mode
+> > > > >>>> [  114.495738] #PF: error_code(0x0000) - not-present page
+> > > > >>>> [  114.496203] PGD 17120e067 P4D 17120e067 PUD 171210067 PMD 0
+> > > > >>>> [  114.496713] Oops: 0000 [#1] SMP PTI
+> > > > >>>> [  114.497037] CPU: 9 PID: 1202 Comm: page-types Not tainted 5.3.0-rc1 #1
+> > > > >>>> [  114.497621] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.11.0-0-g63451fca13-prebuilt.qemu-project.org 04/01/2014
+> > > > >>>> [  114.498706] RIP: 0010:stable_page_flags+0x27/0x3f0
+> > > > >>>> [  114.499142] Code: 82 66 90 66 66 66 66 90 48 85 ff 0f 84 d1 03 00 00 41 54 55 48 89 fd 53 48 8b 57 08 48 8b 1f 48 8d 42 ff 83 e2 01 48 0f 44 c7 <48> 8b 00 f6 c4 02 0f 84 57 03 00 00 45 31 e4 48 8b 55 08 48 89 ef
+> > > > >>>> [  114.500788] RSP: 0018:ffffa5e601a0fe60 EFLAGS: 00010202
+> > > > >>>> [  114.501373] RAX: fffffffffffffffe RBX: ffffffffffffffff RCX: 0000000000000000
+> > > > >>>> [  114.502009] RDX: 0000000000000001 RSI: 00007ffca13a7310 RDI: ffffd07489000000
+> > > > >>>> [  114.502637] RBP: ffffd07489000000 R08: 0000000000000001 R09: 0000000000000000
+> > > > >>>> [  114.503270] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000240000
+> > > > >>>> [  114.503896] R13: 0000000000080000 R14: 00007ffca13a7310 R15: ffffa5e601a0ff08
+> > > > >>>> [  114.504530] FS:  00007f0266c7f540(0000) GS:ffff962dbbac0000(0000) knlGS:0000000000000000
+> > > > >>>> [  114.505245] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > > >>>> [  114.505754] CR2: fffffffffffffffe CR3: 000000023a204000 CR4: 00000000000006e0
+> > > > >>>> [  114.506401] Call Trace:
+> > > > >>>> [  114.506660]  kpageflags_read+0xb1/0x130
+> > > > >>>> [  114.507051]  proc_reg_read+0x39/0x60
+> > > > >>>> [  114.507387]  vfs_read+0x8a/0x140
+> > > > >>>> [  114.507686]  ksys_pread64+0x61/0xa0
+> > > > >>>> [  114.508021]  do_syscall_64+0x5f/0x1a0
+> > > > >>>> [  114.508372]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > > > >>>> [  114.508844] RIP: 0033:0x7f0266ba426b
+> > > > >>>>
+> > > > >>>> The reason for the panic is that stable_page_flags() which parses
+> > > > >>>> the page flags uses uninitialized struct pages reserved by the
+> > > > >>>> ZONE_DEVICE driver.
+> > > > >>>
+> > > > >>> Why pmem hasn't initialized struct pages?
+> > > > >>
+> > > > >> We proposed to initialize in previous approach but that wasn't merged.
+> > > > >> (See https://marc.info/?l=linux-mm&m=152964792500739&w=2)
+> > > > >>
+> > > > >>> Isn't that a bug that should be addressed rather than paper over it like this?
+> > > > >>
+> > > > >> I'm not sure. What do you think, Dan?
+> > > > >
+> > > > > Yeah, I am really curious about details. Why do we keep uninitialized
+> > > > > struct pages at all? What is a random pfn walker supposed to do? What
+> > > > > kind of metadata would be clobbered? In other words much more details
+> > > > > please.
+> > > > >
+> > > > I also want to know. I do not think that initializing struct pages will
+> > > > clobber any metadata.
+> > >
+> > > The nvdimm implementation uses vmem_altmap to arrange for the 'struct
+> > > page' array to be allocated from a reservation of a pmem namespace. A
+> > > namespace in this mode contains an info-block that consumes the first
+> > > 8K of the namespace capacity, capacity designated for page mapping,
+> > > capacity for padding the start of data to optionally 4K, 2MB, or 1GB
+> > > (on x86), and then the namespace data itself. The implementation
+> > > specifies a section aligned (now sub-section aligned) address to
+> > > arch_add_memory() to establish the linear mapping to map the metadata,
+> > > and then vmem_altmap indicates to memmap_init_zone() which pfns
+> > > represent data. The implementation only specifies enough 'struct page'
+> > > capacity for pfn_to_page() to operate on the data space, not the
+> > > namespace metadata space.
+> >
+> > Maybe I am dense but I do not really understand what prevents those
+> > struct pages to be initialized to whatever state nvidimm subsystem
+> > expects them to be? Is that a initialization speed up optimization?
+> 
+> No, not an optimization. If anything a regrettable choice in the
+> initial implementation to not reserve struct page space for the
+> metadata area. Certainly the kernel could fix this going forward, and
+> there are some configurations where even the existing allocation could
+> store those pfns, but there are others that need that reservation. So
+> there is a regression risk for some currently working configurations.
+> 
+> As always we could try making the reservation change and fail to
+> instantiate old namespaces that don't reserve enough capacity to see
+> who screams. I think the risk is low, but non-zero. That makes my
+> first choice to teach kpageflags_read() about the constraint.
 
-x86/ptrace: Mark expected switch fall-through
+Thanks for the explanation!
 
-Mark switch cases where we are expecting to fall through.
+> > > The proposal to validate ZONE_DEVICE pfns against the altmap seems the
+> > > right approach to me.
+> >
+> > This however means that all pfn walkers have to be aware of these
+> > special struct pages somehow and that is error prone.
+> 
+> True, but what other blind pfn walkers do we have besides
+> kpageflags_read()? I expect most other pfn_to_page() code paths are
+> constrained to known pfns and avoid this surprise, but yes I need to
+> go audit those.
 
-Fix the following warning (Building: allnoconfig i386):
+Well, most pfn walkers in the MM code do go within a zone boundary. Many
+check also the zone to ensure interleaving zones are handled properly. I
+hope that these special zone device ranges are not going to interleave
+with other normal zones. But as always having a subtle land mine like
+this is really not nice. All valid pfns should have a real and
+initialized struct pages.
 
-arch/x86/kernel/ptrace.c:202:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   if (unlikely(value == 0))
-      ^
-arch/x86/kernel/ptrace.c:206:2: note: here
-  default:
-  ^~~~~~~
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Link: https://lkml.kernel.org/r/20190805195654.GA17831@embeddedor
-
----
- arch/x86/kernel/ptrace.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/x86/kernel/ptrace.c b/arch/x86/kernel/ptrace.c
-index 0fdbe89d0754..3c5bbe8e4120 100644
---- a/arch/x86/kernel/ptrace.c
-+++ b/arch/x86/kernel/ptrace.c
-@@ -201,6 +201,7 @@ static int set_segment_reg(struct task_struct *task,
- 	case offsetof(struct user_regs_struct, ss):
- 		if (unlikely(value == 0))
- 			return -EIO;
-+		/* Else, fall through */
- 
- 	default:
- 		*pt_regs_access(task_pt_regs(task), offset) = value;
+-- 
+Michal Hocko
+SUSE Labs
