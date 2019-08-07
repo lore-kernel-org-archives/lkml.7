@@ -2,120 +2,122 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A8AC32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 10:08:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF3EC32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 10:08:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD50A21E6C
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 10:08:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="CBZWenHG";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Te+Ko0Of"
+	by mail.kernel.org (Postfix) with ESMTP id CB62621E6C
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 10:08:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729528AbfHGKIT (ORCPT
+        id S1729567AbfHGKIa convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 06:08:19 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:48712 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729407AbfHGKIS (ORCPT
+        Wed, 7 Aug 2019 06:08:30 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:54159 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729407AbfHGKIa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 06:08:18 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 1C2EB60E57; Wed,  7 Aug 2019 10:08:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1565172497;
-        bh=gU6ZPaKh9dAzkbWbOv9DhaSWpALlsDO/188gFBItDO0=;
-        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
-        b=CBZWenHGnnA0tPLWexyBodtJPUj9QVzi8QntloAs3UqZAh9hgmFeMukY8ogtotNN5
-         lWeIYzKje2yALMAJdtqvdVqwbCXe3U+vjuS2oofH937YBWGEFw1CO1IXsQ9m/x3tl4
-         GAtbO64nX6MRsZr33k4r22duNhE2gyO2+NM17Kfk=
-Received: from [10.79.136.27] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E6F5760E42;
-        Wed,  7 Aug 2019 10:08:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1565172496;
-        bh=gU6ZPaKh9dAzkbWbOv9DhaSWpALlsDO/188gFBItDO0=;
-        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
-        b=Te+Ko0OfuQkyQ7e5aV31TzE9Y4VNHKu8pvkNxHEbsO2ZwpFVcP9nuBZQdYDqerJlT
-         5uJSzVmaXWgIrCtLJOURITHj/loUV4W+ChytdhhAgrHDy1COrdwoP3B6I43WTiFz83
-         NcZ9075LPeIg0lx0H5IJKwx2g4nT7WmVaIkk0xv0=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E6F5760E42
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
-Subject: Re: [PATCHv9 1/3] arm64: dts: qcom: sdm845: Add Coresight support
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Rajendra Nayak <rnayak@codeaurora.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>
-References: <cover.1564550873.git.saiprakash.ranjan@codeaurora.org>
- <be6d77eb6c7498df09d04e0a369d4d65b38f4b8e.1564550873.git.saiprakash.ranjan@codeaurora.org>
- <b50c06d4-8298-7abe-4442-2aff336509f5@codeaurora.org>
-Message-ID: <b5cb08ef-ca2f-e852-f234-d0f693b58596@codeaurora.org>
-Date:   Wed, 7 Aug 2019 15:38:10 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 7 Aug 2019 06:08:30 -0400
+X-Originating-IP: 86.250.200.211
+Received: from xps13 (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 9E20A240002;
+        Wed,  7 Aug 2019 10:08:27 +0000 (UTC)
+Date:   Wed, 7 Aug 2019 12:08:26 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     shiva.linuxworks@gmail.com
+Cc:     Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Frieder Schrempf <frieder.schrempf@kontron.de>,
+        Shivamurthy Shastri <sshivamurthy@micron.com>,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Jeff Kletsky <git-commits@allycomm.com>,
+        Chuanhong Guo <gch981213@gmail.com>,
+        liaoweixiong <liaoweixiong@allwinnertech.com>
+Subject: Re: [PATCH 8/8] mtd: spinand: micron: Enable micron flashes with
+ multi-die
+Message-ID: <20190807120826.3b9e43d6@xps13>
+In-Reply-To: <20190722055621.23526-9-sshivamurthy@micron.com>
+References: <20190722055621.23526-1-sshivamurthy@micron.com>
+        <20190722055621.23526-9-sshivamurthy@micron.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <b50c06d4-8298-7abe-4442-2aff336509f5@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Suzuki,
+Hi Shiva,
 
-On 7/31/2019 11:35 AM, Sai Prakash Ranjan wrote:
-> Hi Suzuki,
-> 
-> On 7/31/2019 11:28 AM, Sai Prakash Ranjan wrote:
->> Add coresight components found on Qualcomm SDM845 SoC.
->>
->> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
->> Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
->> ---
->>   arch/arm64/boot/dts/qcom/sdm845.dtsi | 451 +++++++++++++++++++++++++++
->>   1 file changed, 451 insertions(+)
-> 
-> I have tested coresight with scatter gather on SDM845 MTP and MSM8996
-> based DB820c board and posted the results in
-> 
-> - https://github.com/saiprakash-ranjan/coresight-test-results
-> 
-> Please let me know if you need some additional testing done.
-> 
-> I could not perform coresight tests on MSM8998 MTP with latest build
-> as it was resulting in crash due to some AHB timeouts. This was not
-> due to scatter-gather and mostly likely the problem with the build.
-> Maybe we can keep msm8998-coresight on hold?
-> 
-> BTW, patches are based on linux-next.
-> 
+shiva.linuxworks@gmail.com wrote on Mon, 22 Jul 2019 07:56:21 +0200:
 
-Any more tests you would want me to run?
+"with multiple dies" in the title
 
--Sai
+> From: Shivamurthy Shastri <sshivamurthy@micron.com>
+> 
+> Some of the Micron flashes has multi-die, and need to select the die
+                             have multiple dies and
+> each time while accessing it.
+> 
+> Signed-off-by: Shivamurthy Shastri <sshivamurthy@micron.com>
+> ---
+>  drivers/mtd/nand/spi/micron.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/drivers/mtd/nand/spi/micron.c b/drivers/mtd/nand/spi/micron.c
+> index 1e28ea3d1362..fa2b43caf39d 100644
+> --- a/drivers/mtd/nand/spi/micron.c
+> +++ b/drivers/mtd/nand/spi/micron.c
+> @@ -90,6 +90,19 @@ static int micron_ecc_get_status(struct spinand_device *spinand,
+>  	return -EINVAL;
+>  }
+>  
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Please explain in a comment what you do here, like in the commit title.
+
+> +static int micron_select_target(struct spinand_device *spinand,
+> +				unsigned int target)
+> +{
+> +	struct spi_mem_op op = SPINAND_SET_FEATURE_OP(0xd0,
+> +						      spinand->scratchbuf);
+> +
+> +	if (target == 1)
+> +		target = 0x40;
+> +
+> +	*spinand->scratchbuf = target;
+
+if (target == 1)
+        *spinand->scratchbuf = 0x40
+
+space
+
+> +	return spi_mem_exec_op(spinand->spimem, &op);
+> +}
+> +
+>  static int micron_spinand_detect(struct spinand_device *spinand)
+>  {
+>  	const struct spi_mem_op *op;
+> @@ -105,6 +118,7 @@ static int micron_spinand_detect(struct spinand_device *spinand)
+>  	spinand->flags = 0;
+>  	spinand->eccinfo.get_status = micron_ecc_get_status;
+>  	spinand->eccinfo.ooblayout = &micron_ooblayout_ops;
+> +	spinand->select_target = micron_select_target;
+>  
+>  	op = spinand_select_op_variant(spinand,
+>  				       &read_cache_variants);
+
+
+
+
+Thanks,
+Miquèl
