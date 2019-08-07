@@ -2,129 +2,83 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F188AC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 06:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A19C7C19759
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 06:04:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA14B22387
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 06:03:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 808A2229ED
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 06:04:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727142AbfHGGDb (ORCPT
+        id S1727144AbfHGGEe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 02:03:31 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:59228 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726861AbfHGGDT (ORCPT
+        Wed, 7 Aug 2019 02:04:34 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:47758 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726511AbfHGGEd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 02:03:19 -0400
-X-UUID: 11cca7c1d3254cfcbab6bebdd5996c88-20190807
-X-UUID: 11cca7c1d3254cfcbab6bebdd5996c88-20190807
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <jitao.shi@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 202368417; Wed, 07 Aug 2019 14:03:09 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33N2.mediatek.inc
- (172.27.4.76) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 7 Aug
- 2019 14:03:07 +0800
-Received: from mszsdclx1018.gcn.mediatek.inc (172.27.4.253) by
- MTKCAS36.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
- 15.0.1395.4 via Frontend Transport; Wed, 7 Aug 2019 14:03:06 +0800
-From:   Jitao Shi <jitao.shi@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ian Campbell <ijc+devicetree@hellion.org.uk>,
-        <linux-pwm@vger.kernel.org>, David Airlie <airlied@linux.ie>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     Jitao Shi <jitao.shi@mediatek.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Ajay Kumar <ajaykumar.rs@samsung.com>,
-        Inki Dae <inki.dae@samsung.com>,
-        Rahul Sharma <rahul.sharma@samsung.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Vincent Palatin <vpalatin@chromium.org>,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Russell King <rmk+kernel@arm.linux.org.uk>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
-        <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
-        <ck.hu@mediatek.com>, <stonea168@163.com>
-Subject: [PATCH v5 3/4] drm/mediatek: add mt8183 dpi clock factor
-Date:   Wed, 7 Aug 2019 14:02:56 +0800
-Message-ID: <20190807060257.57007-4-jitao.shi@mediatek.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190807060257.57007-1-jitao.shi@mediatek.com>
-References: <20190807060257.57007-1-jitao.shi@mediatek.com>
+        Wed, 7 Aug 2019 02:04:33 -0400
+Received: from p200300ddd742df588d2c07822b9f4274.dip0.t-ipconnect.de ([2003:dd:d742:df58:8d2c:782:2b9f:4274])
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hvF3Z-0006g6-5p; Wed, 07 Aug 2019 08:04:17 +0200
+Date:   Wed, 7 Aug 2019 08:04:10 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Dmitry Safonov <dima@arista.com>
+cc:     linux-kernel@vger.kernel.org,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@gmail.com>,
+        Adrian Reber <adrian@lisas.de>,
+        Andrei Vagin <avagin@openvz.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        containers@lists.linux-foundation.org, criu@openvz.org,
+        linux-api@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCHv5 06/37] alarmtimer: Provide get_timespec() callback
+In-Reply-To: <20190729215758.28405-7-dima@arista.com>
+Message-ID: <alpine.DEB.2.21.1908070803030.24014@nanos.tec.linutronix.de>
+References: <20190729215758.28405-1-dima@arista.com> <20190729215758.28405-7-dima@arista.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-TM-SNTS-SMTP: 0C390326424C10AA3C3085083CFE39619D6B7E7D496F7D7C048FF37BC493A5D52000:8
-X-MTK:  N
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The factor depends on the divider of DPI in MT8183, therefore,
-we should fix this factor to the right and new one.
+On Mon, 29 Jul 2019, Dmitry Safonov wrote:
+>  /**
+> @@ -869,8 +871,10 @@ static int __init alarmtimer_init(void)
+>  	/* Initialize alarm bases */
+>  	alarm_bases[ALARM_REALTIME].base_clockid = CLOCK_REALTIME;
+>  	alarm_bases[ALARM_REALTIME].get_ktime = &ktime_get_real;
+> +	alarm_bases[ALARM_REALTIME].get_timespec = posix_get_timespec,
 
-Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
----
- drivers/gpu/drm/mediatek/mtk_dpi.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+That's just wrong:
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
-index 743230864ba0..4f2700cbfdb7 100644
---- a/drivers/gpu/drm/mediatek/mtk_dpi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
-@@ -672,6 +672,16 @@ static unsigned int mt2701_calculate_factor(int clock)
- 		return 1;
- }
- 
-+static unsigned int mt8183_calculate_factor(int clock)
-+{
-+	if (clock <= 27000)
-+		return 8;
-+	else if (clock <= 167000)
-+		return 4;
-+	else
-+		return 2;
-+}
-+
- static const struct mtk_dpi_conf mt8173_conf = {
- 	.cal_factor = mt8173_calculate_factor,
- 	.reg_h_fre_con = 0xe0,
-@@ -683,6 +693,11 @@ static const struct mtk_dpi_conf mt2701_conf = {
- 	.edge_sel_en = true,
- };
- 
-+static const struct mtk_dpi_conf mt8183_conf = {
-+	.cal_factor = mt8183_calculate_factor,
-+	.reg_h_fre_con = 0xe0,
-+};
-+
- static int mtk_dpi_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -779,6 +794,9 @@ static const struct of_device_id mtk_dpi_of_ids[] = {
- 	{ .compatible = "mediatek,mt8173-dpi",
- 	  .data = &mt8173_conf,
- 	},
-+	{ .compatible = "mediatek,mt8183-dpi",
-+	  .data = &mt8183_conf,
-+	},
- 	{ },
- };
- 
--- 
-2.21.0
+>  /*
+>   * Get monotonic time for posix timers
+>   */
+> -static int posix_get_timespec(clockid_t which_clock, struct timespec64 *tp)
+> +int posix_get_timespec(clockid_t which_clock, struct timespec64 *tp)
+>  {
+>  	ktime_get_ts64(tp);
+>  	return 0;
+
+Using a proper function name would have avoided this.
 
