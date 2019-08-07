@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9162C41514
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:34:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF2A1C31E40
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DBD121743
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:34:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D5652173C
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:34:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SC6fy0nJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BG5A7Xtq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729501AbfHGBeV (ORCPT
+        id S1729562AbfHGBeY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 21:34:21 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:35848 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729383AbfHGBeS (ORCPT
+        Tue, 6 Aug 2019 21:34:24 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:39655 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729486AbfHGBeV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 21:34:18 -0400
-Received: by mail-pf1-f193.google.com with SMTP id r7so42500575pfl.3;
-        Tue, 06 Aug 2019 18:34:17 -0700 (PDT)
+        Tue, 6 Aug 2019 21:34:21 -0400
+Received: by mail-pg1-f196.google.com with SMTP id u17so42543853pgi.6;
+        Tue, 06 Aug 2019 18:34:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Zk7mJfsjIPJK9Qgsn0u5osZJajJrXebF0c1tZrgdgoI=;
-        b=SC6fy0nJ+5PJ+uzUodkQNgZrF01XL4oLeLC56OFBk8WNdVXJEhXdfnbycjiEGLb0We
-         Iu9ehQr2XuhNar0+cOOcnuWTDzgnJQOZf2nhFq9SkSbfMVKKQlgbBbr/DzgGJpA2zgNE
-         SH9LdtGtZEDMK2ObSXiKnb7p35+i1ZPY62UTf23m8h6lM8RDSVmojjsKFFq6AHV0Kg7N
-         l0Mr0PozM18bgs6gsyipPgOwh2HesyAFpZqdTaDseaeVgz0a/Wn16vsKh7i90SBwvo7N
-         ssA83RPwWAs18iPpiVevS9yzToDMKktmsaAXU8RmgcEKrZ1Ps1HBX3IeUwmveghlYyG8
-         ruRQ==
+        bh=PTeNIVNtmjQFCjQxL5R5M/OrbQjiP2mk2OJMaygoDr4=;
+        b=BG5A7XtqqH4f15Klc4uU0q4X0R2Yv3wfhImw8oiXt1v6JO5KY1LfJ/FOOlCOXGnxrU
+         VariQ4IygIhND6FU5kQCuk9//LCB/lYGlYLJ8TWLMj0IGcKtGZaK7cHMiGMOL9oUoiZc
+         YswM2ntpv1sQkIcN3tEUtcv2aNlSoNXxcBOnTcDMk5HYtBIeSLrq5eWXN9nroLrC19Z/
+         C0ZG1Pu1hecBjOrW3c3xob4Zs7H7sVar9fXDnKdmBW1H5ACiR9/XADMiFFYI0P1SdPij
+         tJqcrXGje17KBWR1RldTVMzhM/TqzNCkMDLzOIHQRTxPFXZrOO5rIe3URKbbtNFMFJkR
+         bC8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Zk7mJfsjIPJK9Qgsn0u5osZJajJrXebF0c1tZrgdgoI=;
-        b=DfJE0kFuP23Uzv1vIFKuKssfkzsuysNG4hs63rz4u360LnxeeDVwF6P0UHB9JZvByV
-         Zez6Z77HDttW5wnAE2tuAv7L+NVIPW/3Ac0SrJQvQVcWOL910VqFT6Yh0KRaBWM9y87n
-         JVef56oIPWFkNQWlyvwzLLsG0THt7V9bds5TSWB5iuGHrGDX95CH8W95eEvxG+wHDfIf
-         39hShY4wHZc2QSlfXcsclHIQnIeJW/SCcsQEi3DL1lAAlz/BPztgQ4QJCp0yRl+6SY/P
-         Ba58XPsgES2rTUBeyUp1N1jNgZnu6PtLsgrjp2ElclzSfrn+UVmUzbS1f9n3xWp2YmAb
-         uCMg==
-X-Gm-Message-State: APjAAAUEdOXIiASuGkIPff/A8wQIHd8xDHDdOhC93ASenjpEkkfbVOMN
-        yN+ZYHicI2aTYjo2WbYnf7I=
-X-Google-Smtp-Source: APXvYqzgZPQySecfl1w9rbSdSUoujeX96j23T70OrIYhDcbszTpXzwBQIEpy9+PmeMFp8KmBYei+SA==
-X-Received: by 2002:a63:dd17:: with SMTP id t23mr4918609pgg.295.1565141656992;
-        Tue, 06 Aug 2019 18:34:16 -0700 (PDT)
+        bh=PTeNIVNtmjQFCjQxL5R5M/OrbQjiP2mk2OJMaygoDr4=;
+        b=kRVJieXvImOixcfFLveXbK99FGO7xgUMCGKlHLH4esjlLpSulhjS86h0P2hM7mbmVe
+         o334t0YiA3MDisTQfOOcxiIIS9EGZ3Opq4zxG7L+IBERPFet9BN/gcVva9O28UPCpOmk
+         qO+fYW2twZcxq3AP3+Id+ydCivM0okMJOg/qpnHVAXA84++7gZYbQrvrzMzFoQaT+e7/
+         +uo9x2S7Iqc6OtX2lORuMHVQYVcxY5f/58Tq5O5cNClhEEGUZZsEv+NoSzBak2GfXmWx
+         JrweIG62ZfsIN7sO5/ufn6Wcw+on7TtjFVUbgDI+j8QkpZ+T1J+IMcBZrfh3tm8Bwl41
+         XRHw==
+X-Gm-Message-State: APjAAAUfP7Jr2mRlKMkonW4uVx5Srq6vayFqOxdbOZx7hdM5RE5YSjR/
+        s7HnxSlzjb11cb/fLdWEiDM=
+X-Google-Smtp-Source: APXvYqwNS1xrXhm+UjCuzC7PKxoGrXRgWDwKbPmsbF2Yg7VGgKZOnBNXO8oPa1127+JgtcA8HVibPw==
+X-Received: by 2002:a63:c055:: with SMTP id z21mr5455551pgi.380.1565141660136;
+        Tue, 06 Aug 2019 18:34:20 -0700 (PDT)
 Received: from blueforge.nvidia.com (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id u69sm111740800pgu.77.2019.08.06.18.34.15
+        by smtp.gmail.com with ESMTPSA id u69sm111740800pgu.77.2019.08.06.18.34.18
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 06 Aug 2019 18:34:16 -0700 (PDT)
+        Tue, 06 Aug 2019 18:34:19 -0700 (PDT)
 From:   john.hubbard@gmail.com
 X-Google-Original-From: jhubbard@nvidia.com
 To:     Andrew Morton <akpm@linux-foundation.org>
@@ -80,14 +80,11 @@ Cc:     Christoph Hellwig <hch@infradead.org>,
         netdev@vger.kernel.org, rds-devel@oss.oracle.com,
         sparclinux@vger.kernel.org, x86@kernel.org,
         xen-devel@lists.xenproject.org, John Hubbard <jhubbard@nvidia.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Kees Cook <keescook@chromium.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Bhumika Goyal <bhumirks@gmail.com>,
-        Arvind Yadav <arvind.yadav.cs@gmail.com>
-Subject: [PATCH v3 20/41] fbdev/pvr2fb: convert put_page() to put_user_page*()
-Date:   Tue,  6 Aug 2019 18:33:19 -0700
-Message-Id: <20190807013340.9706-21-jhubbard@nvidia.com>
+        Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Subject: [PATCH v3 22/41] xen: convert put_page() to put_user_page*()
+Date:   Tue,  6 Aug 2019 18:33:21 -0700
+Message-Id: <20190807013340.9706-23-jhubbard@nvidia.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190807013340.9706-1-jhubbard@nvidia.com>
 References: <20190807013340.9706-1-jhubbard@nvidia.com>
@@ -108,32 +105,100 @@ release_pages().
 This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
 ("mm: introduce put_user_page*(), placeholder versions").
 
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Bhumika Goyal <bhumirks@gmail.com>
-Cc: Arvind Yadav <arvind.yadav.cs@gmail.com>
-Cc: dri-devel@lists.freedesktop.org
-Cc: linux-fbdev@vger.kernel.org
+This also handles pages[i] == NULL cases, thanks to an approach
+that is actually written by Juergen Gross.
+
+Signed-off-by: Juergen Gross <jgross@suse.com>
+
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: xen-devel@lists.xenproject.org
 Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 ---
- drivers/video/fbdev/pvr2fb.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/xen/privcmd.c | 32 +++++++++++---------------------
+ 1 file changed, 11 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/video/fbdev/pvr2fb.c b/drivers/video/fbdev/pvr2fb.c
-index 7ff4b6b84282..0e4f9aa6444d 100644
---- a/drivers/video/fbdev/pvr2fb.c
-+++ b/drivers/video/fbdev/pvr2fb.c
-@@ -700,8 +700,7 @@ static ssize_t pvr2fb_write(struct fb_info *info, const char *buf,
- 	ret = count;
+diff --git a/drivers/xen/privcmd.c b/drivers/xen/privcmd.c
+index c6070e70dd73..c7d0763ca8c2 100644
+--- a/drivers/xen/privcmd.c
++++ b/drivers/xen/privcmd.c
+@@ -582,10 +582,11 @@ static long privcmd_ioctl_mmap_batch(
  
- out_unmap:
--	for (i = 0; i < nr_pages; i++)
--		put_page(pages[i]);
-+	put_user_pages(pages, nr_pages);
+ static int lock_pages(
+ 	struct privcmd_dm_op_buf kbufs[], unsigned int num,
+-	struct page *pages[], unsigned int nr_pages)
++	struct page *pages[], unsigned int *nr_pages)
+ {
+-	unsigned int i;
++	unsigned int i, free = *nr_pages;
  
++	*nr_pages = 0;
+ 	for (i = 0; i < num; i++) {
+ 		unsigned int requested;
+ 		int pinned;
+@@ -593,35 +594,22 @@ static int lock_pages(
+ 		requested = DIV_ROUND_UP(
+ 			offset_in_page(kbufs[i].uptr) + kbufs[i].size,
+ 			PAGE_SIZE);
+-		if (requested > nr_pages)
++		if (requested > free)
+ 			return -ENOSPC;
+ 
+ 		pinned = get_user_pages_fast(
+ 			(unsigned long) kbufs[i].uptr,
+-			requested, FOLL_WRITE, pages);
++			requested, FOLL_WRITE, pages + *nr_pages);
+ 		if (pinned < 0)
+ 			return pinned;
+ 
+-		nr_pages -= pinned;
+-		pages += pinned;
++		free -= pinned;
++		*nr_pages += pinned;
+ 	}
+ 
+ 	return 0;
+ }
+ 
+-static void unlock_pages(struct page *pages[], unsigned int nr_pages)
+-{
+-	unsigned int i;
+-
+-	if (!pages)
+-		return;
+-
+-	for (i = 0; i < nr_pages; i++) {
+-		if (pages[i])
+-			put_page(pages[i]);
+-	}
+-}
+-
+ static long privcmd_ioctl_dm_op(struct file *file, void __user *udata)
+ {
+ 	struct privcmd_data *data = file->private_data;
+@@ -681,11 +669,12 @@ static long privcmd_ioctl_dm_op(struct file *file, void __user *udata)
+ 
+ 	xbufs = kcalloc(kdata.num, sizeof(*xbufs), GFP_KERNEL);
+ 	if (!xbufs) {
++		nr_pages = 0;
+ 		rc = -ENOMEM;
+ 		goto out;
+ 	}
+ 
+-	rc = lock_pages(kbufs, kdata.num, pages, nr_pages);
++	rc = lock_pages(kbufs, kdata.num, pages, &nr_pages);
+ 	if (rc)
+ 		goto out;
+ 
+@@ -699,7 +688,8 @@ static long privcmd_ioctl_dm_op(struct file *file, void __user *udata)
+ 	xen_preemptible_hcall_end();
+ 
+ out:
+-	unlock_pages(pages, nr_pages);
++	if (pages)
++		put_user_pages(pages, nr_pages);
+ 	kfree(xbufs);
  	kfree(pages);
- 
+ 	kfree(kbufs);
 -- 
 2.22.0
 
