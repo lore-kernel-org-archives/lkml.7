@@ -2,91 +2,84 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E664C32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 18:40:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 412F8C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 18:41:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 070A022297
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 18:40:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565203255;
-	bh=VKlpFXfVW80ymoam21KvWSfAtQRhZgM295nEIE9UYco=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yUqB1RUgIe6t1Vn1iAwTilIMRawdN7/zWjKXGGYy8w6p23ltaJoZ7G60AW0IcBPwZ
-	 ZyHm13VyiHWQ28k3tT16trCff7wOzNgimNQr1wZNfNhRgIWnbMuNiifJMO30duHzrp
-	 JZDb8GbDowx0xFBtRg4FBVTgCrSkUT+GqAzX3OFA=
+	by mail.kernel.org (Postfix) with ESMTP id 0C87E2229C
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 18:41:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="3tdidtw8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389349AbfHGSky (ORCPT
+        id S2389363AbfHGSlz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 14:40:54 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:45808 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388612AbfHGSkx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 14:40:53 -0400
-Received: by mail-qt1-f194.google.com with SMTP id x22so15999579qtp.12;
-        Wed, 07 Aug 2019 11:40:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=G/k7GjX7actKY3ZvBhXdU3H/Qr3MiRhENkA6l010uvs=;
-        b=LYvjXlm2BFEjDPmfW8e/+v5eAaXWtqMFvTIXCTr/2Dcj3s8L/diONyZq6DkHlabtdB
-         tlSCUvvAl0aErFOwrmUS/ojOMX+xf35thBmmsjwWUZ2CIvx2GIO0RV+POFBh1BcT67/j
-         ElLjBgNW1YuZ5CQz73fCLLw2Bf4XJgegV0xVCu6HSLb30f2xR7Te9pNFu0LOap9vj7/F
-         E6X9iPLWjuz+gs0fKtQO3TYOxmgyv2UPzUEf2s84xxZzGtCOmqWBT+kkZ+EDJzZPVnKY
-         VM9A+vCmfxpAyFsJXPiXgh5/siHQAAle7TSplwahn16dqsW1XsMWnaOvdeOwU1v+n5l6
-         wPUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=G/k7GjX7actKY3ZvBhXdU3H/Qr3MiRhENkA6l010uvs=;
-        b=HCazLg6DdSBDVD3AXwu/doQuH4LCAqCnkYS7/552TBWfHNGcTBH7jbnEYU7VYbG7E1
-         wVC+rFsaeuVonZFEHvkdT0sYTOH4ACGtbPCItxoaDOQkDn9YHzq7Yw9FGe3Duv7BELhV
-         RVb7OjvDFBKVynTwPpwy1Lzs3h89HFJ5NGTYAQ4rBWjDqFv1hCAUbQFnMLaMjVZ2BS4o
-         DsP5Y/2zJwWW7xmlE8u+xmHMe0HBWZun5iBpFZuS0r7+V0M13ihSJOpZJzmxf/D0W5Fc
-         h5VK8+FT+Y+E4E4DQjkV1C0wLKQdicXgFI7nmZjlvVVZhK4j0fH3By/H9c55IjfITyBf
-         DoTw==
-X-Gm-Message-State: APjAAAXdu48tdn1y4WYWbrEe17Wzk2o24InuHtxNwRzweEt5EDrHTMbH
-        zOamdW+OuIo4NKTAN5TZyD0=
-X-Google-Smtp-Source: APXvYqzvJeLYNaljhRCjXflpoXguQRhx7Iy1pG96ylBcv2F+KfLQm1mDfVkIiPK1zQaP+KxuftvCOA==
-X-Received: by 2002:a0c:d09c:: with SMTP id z28mr9520059qvg.149.1565203252465;
-        Wed, 07 Aug 2019 11:40:52 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::6ac7])
-        by smtp.gmail.com with ESMTPSA id c5sm41870256qkb.41.2019.08.07.11.40.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 07 Aug 2019 11:40:51 -0700 (PDT)
-Date:   Wed, 7 Aug 2019 11:40:50 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Marc Koderer <marc@koderer.com>
-Cc:     lizefan@huawei.com, hannes@cmpxchg.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Use kvmalloc in cgroups-v1
-Message-ID: <20190807184050.GO136335@devbig004.ftw2.facebook.com>
-References: <20190806132412.92945-1-marc@koderer.com>
+        Wed, 7 Aug 2019 14:41:55 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:41894 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388612AbfHGSly (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 14:41:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=nRrL2RrmXJ4qDuv3jGu0S0UxnxABuwo+AIt33hOFMyE=; b=3tdidtw83xdpeFJz683w+s0zR9
+        wznZMEN1+N9GVJsyFYckUaTvFg2Obu97K0yPcjC3ZgTt+s6+DYZDe5RaObfU893ocEYI6/Z765FMb
+        BCNKh12tGoIwIJ9K+gPMjo2LERE6JX+TSV0d4WfXqURF8JuRONn5UwyQi6itMcDD1vec=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hvQsZ-0006zX-AB; Wed, 07 Aug 2019 20:41:43 +0200
+Date:   Wed, 7 Aug 2019 20:41:43 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>
+Cc:     Tao Ren <taoren@fb.com>,
+        Samuel Mendoza-Jonas <sam@mendozajonas.com>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
+        William Kennington <wak@google.com>,
+        Joel Stanley <joel@jms.id.au>
+Subject: Re: [PATCH net-next] net/ncsi: allow to customize BMC MAC Address
+ offset
+Message-ID: <20190807184143.GE26047@lunn.ch>
+References: <20190807002118.164360-1-taoren@fb.com>
+ <20190807112518.644a21a2@cakuba.netronome.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190806132412.92945-1-marc@koderer.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190807112518.644a21a2@cakuba.netronome.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 03:24:12PM +0200, Marc Koderer wrote:
-> Instead of using its own logic for k-/vmalloc rely on
-> kvmalloc which is actually doing quite the same.
+On Wed, Aug 07, 2019 at 11:25:18AM -0700, Jakub Kicinski wrote:
+> On Tue, 6 Aug 2019 17:21:18 -0700, Tao Ren wrote:
+> > Currently BMC's MAC address is calculated by adding 1 to NCSI NIC's base
+> > MAC address when CONFIG_NCSI_OEM_CMD_GET_MAC option is enabled. The logic
+> > doesn't work for platforms with different BMC MAC offset: for example,
+> > Facebook Yamp BMC's MAC address is calculated by adding 2 to NIC's base
+> > MAC address ("BaseMAC + 1" is reserved for Host use).
+> > 
+> > This patch adds NET_NCSI_MC_MAC_OFFSET config option to customize offset
+> > between NIC's Base MAC address and BMC's MAC address. Its default value is
+> > set to 1 to avoid breaking existing users.
+> > 
+> > Signed-off-by: Tao Ren <taoren@fb.com>
 > 
-> Signed-off-by: Marc Koderer <marc@koderer.com>
+> Maybe someone more knowledgeable like Andrew has an opinion here, 
+> but to me it seems a bit strange to encode what seems to be platfrom
+> information in the kernel config :(
 
-Applied to cgroup/for-5.4.
+Yes, this is not a good idea. It makes it impossible to have a 'BMC
+distro' kernel which you install on a number of different BMCs.
 
-Thanks.
+A device tree property would be better. Ideally it would be the
+standard local-mac-address, or mac-address.
 
--- 
-tejun
+  Andrew
