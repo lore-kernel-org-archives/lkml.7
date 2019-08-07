@@ -6,294 +6,124 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CA90C32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:29:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC75C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0069D21E6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:29:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD42E21E73
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:30:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388299AbfHGN3e (ORCPT
+        id S2388319AbfHGNaD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 09:29:34 -0400
-Received: from muru.com ([72.249.23.125]:56732 "EHLO muru.com"
+        Wed, 7 Aug 2019 09:30:03 -0400
+Received: from mga06.intel.com ([134.134.136.31]:20721 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387982AbfHGN3e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 09:29:34 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 42A988116;
-        Wed,  7 Aug 2019 13:29:58 +0000 (UTC)
-Date:   Wed, 7 Aug 2019 06:29:28 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        ~@devbig004.ftw2.facebook.com, linux-kernel@vger.kernel.org,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCH] kernfs: fix memleak in kernel_ops_readdir()
-Message-ID: <20190807132928.GD5443@atomide.com>
-References: <20190805173404.GF136335@devbig004.ftw2.facebook.com>
+        id S2387982AbfHGNaC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 09:30:02 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Aug 2019 06:30:01 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,357,1559545200"; 
+   d="scan'208";a="185993385"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
+  by orsmga002.jf.intel.com with ESMTP; 07 Aug 2019 06:29:59 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1hvM0r-0002hp-7c; Wed, 07 Aug 2019 16:29:57 +0300
+Date:   Wed, 7 Aug 2019 16:29:57 +0300
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Cc:     linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        jslaby@suse.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        qi-ming.wu@intel.com, cheol.yong.kim@intel.com,
+        rahul.tanwar@intel.com
+Subject: Re: [PATCH 3/5] serial: lantiq: Make IRQ & ISR assignment dynamic
+Message-ID: <20190807132957.GY30120@smile.fi.intel.com>
+References: <cover.1565160764.git.rahul.tanwar@linux.intel.com>
+ <6dd57ea99f734bd4e413f6913914c0a93c00f295.1565160764.git.rahul.tanwar@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190805173404.GF136335@devbig004.ftw2.facebook.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <6dd57ea99f734bd4e413f6913914c0a93c00f295.1565160764.git.rahul.tanwar@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Aug 07, 2019 at 05:21:33PM +0800, Rahul Tanwar wrote:
+> This driver/IP is reused across multiple SoCs. Older SoCs supported three
+> separate IRQs for tx, rx & err interrupts. Newer Lightning Mountain SoC
+> supports single IRQ for all of tx/rx/err interrupts. This patch modifies
+> the driver design to support dynamic assignment of IRQ resources & ISRs
+> based on devicetree node compatible entries.
 
-* Tejun Heo <tj@kernel.org> [691231 23:00]:
-> From: Andrea Arcangeli <aarcange@redhat.com>
-> 
-> If getdents64 is killed or hits on segfault, it'll leave cgroups
-> directories in sysfs pinned leaking memory because the kernfs node
-> won't be freed on rmdir and the parent neither.
+> +struct ltq_soc_data {
+> +	int	(*fetch_irq)(struct platform_device *pdev,
+> +				 struct ltq_uart_port *ltq_port);
 
-Somehow this causes a regression in Linux next for me where I'm seeing
-lots of sysfs entries now missing under /sys/bus/platform/devices.
+This can be simple
 
-For example, I now only see one .serial entry show up in sysfs.
-Things work again if I revert commit cc798c83898e ("kernfs: fix memleak
-inkernel_ops_readdir()"). Any ideas why that would be?
+	int	(*fetch_irq)(struct device *dev, struct ltq_uart_port *ltq_port);
 
-Below is a diff -u of ls /sys/bus/platform/devices for reference
-showing the missing entries with cc798c83898e.
+(Note one line and struct device instead of platform_device)
 
-Regards,
+> +	int	(*request_irq)(struct uart_port *port);
+> +	void	(*free_irq)(struct uart_port *port);
+> +};
 
-Tony
+> +	retval = ltq_port->soc->request_irq(port);
+> +	if(retval)
 
-8< -----------------------
---- works
-+++ fails
-@@ -1,227 +1,44 @@
--2c000000.ethernet
- 40100000.interconnect
--40100000.interconnect:segment@0
--40122000.mcbsp
--4012208c.target-module
--4012408c.target-module
- 4012608c.target-module
--40128000.target-module
--4012c000.target-module
--4012e000.target-module
--40130000.target-module
--40130000.wdt
--40132000.target-module
- 40138000.target-module
--40138000.timer
--4013a000.target-module
--4013a000.timer
--4013c000.target-module
--4013c000.timer
- 4013e000.target-module
--4013e000.timer
--401f1000.target-module
--40304000.ocmcram
--44000000.ocp
--48000000.interconnect
--48000000.interconnect:segment@0
--48000000.interconnect:segment@200000
--48020000.serial
--48020050.target-module
--48032000.target-module
--48032000.timer
--48034000.target-module
--48034000.timer
--48036000.target-module
- 48036000.timer
--4803e000.target-module
--4803e000.timer
- 48055000.gpio
--48055000.target-module
--48057000.gpio
--48057000.target-module
--48059000.gpio
- 48059000.target-module
--4805b000.gpio
--4805b000.target-module
--4805d000.gpio
- 4805d000.target-module
--48060000.i2c
--48060000.target-module
--4806a000.serial
--4806a050.target-module
--4806c000.serial
--4806c050.target-module
- 4806e000.serial
- 4806e050.target-module
--48070000.i2c
- 48070000.i2c:twl@48:gpadc
--48070000.i2c:twl@48:pwm
--48070000.i2c:twl@48:pwmled
--48070000.i2c:twl@48:regulator-v1v8
--48070000.i2c:twl@48:regulator-v2v1
- 48070000.i2c:twl@48:regulator-vana
--48070000.i2c:twl@48:regulator-vaux1
--48070000.i2c:twl@48:regulator-vaux2
--48070000.i2c:twl@48:regulator-vaux3
- 48070000.i2c:twl@48:regulator-vcxio
--48070000.i2c:twl@48:regulator-vdac
--48070000.i2c:twl@48:regulator-vmmc
--48070000.i2c:twl@48:regulator-vpp
--48070000.i2c:twl@48:regulator-vusb
--48070000.i2c:twl@48:regulator-vusim
--48070000.i2c:twl@48:rtc
- 48070000.i2c:twl@48:usb-comparator
--48070000.target-module
--48072000.i2c
--48072000.target-module
--48076000.target-module
--48078000.target-module
--48086000.target-module
- 48086000.timer
--48088000.target-module
--48088000.timer
--4809608c.target-module
--48098000.spi
--48098000.target-module
--4809a000.spi
- 4809a000.target-module
--4809c000.mmc
- 4809c000.target-module
--480a5000.des
--480ad000.target-module
--480b2000.1w
--480b2000.target-module
--480b4000.target-module
- 480b8000.spi
--480b8000.target-module
--480ba000.spi
--480ba000.target-module
--480d1000.target-module
- 480d5000.mmc
--480d5000.target-module
--48240600.local-timer
- 48242000.l2-cache-controller
--48350000.i2c
--48350000.target-module
--4a000000.interconnect
--4a000000.interconnect:segment@0
--4a000000.interconnect:segment@100000
--4a000000.interconnect:segment@180000
--4a000000.interconnect:segment@200000
--4a000000.interconnect:segment@280000
- 4a000000.interconnect:segment@300000
- 4a000000.interconnect:segment@80000
--4a002000.scm
--4a002000.scm_conf
--4a002000.target-module
--4a002260.bandgap
--4a002300.control-phy
--4a00233c.control-phy
--4a004000.cm1
--4a004000.target-module
--4a004300.mpuss_cm
--4a004400.tesla_cm
--4a004500.abe_cm
--4a008000.cm2
--4a008000.target-module
--4a008600.l4_ao_cm
--4a008700.l3_1_cm
--4a008800.l3_2_cm
--4a008900.ducati_cm
--4a008a00.l3_dma_cm
- 4a008b00.l3_emif_cm
- 4a008c00.d2d_cm
--4a008d00.l4_cfg_cm
- 4a008e00.l3_instr_cm
--4a008f00.ivahd_cm
--4a009000.iss_cm
--4a009100.l3_dss_cm
--4a009200.l3_gfx_cm
--4a009300.l3_init_cm
--4a009400.l4_per_cm
--4a056000.dma-controller
- 4a056000.target-module
--4a058000.hsi
--4a058000.target-module
- 4a062000.target-module
--4a062000.usbhstll
--4a064000.target-module
- 4a064000.usbhshost
- 4a064800.ohci
--4a064c00.ehci
--4a066000.mmu
--4a0ab000.usb_otg_hs
- 4a0ab400.target-module
--4a0ad000.ocp2scp
--4a0ad000.target-module
- 4a0ad080.usb2phy
--4a0d9000.smartreflex
--4a0d9038.target-module
- 4a0db000.smartreflex
--4a0db038.target-module
--4a0dd000.smartreflex
--4a0dd038.target-module
--4a0f4000.mailbox
--4a0f4000.target-module
--4a0f6000.spinlock
--4a0f6000.target-module
- 4a100000.target-module
- 4a100040.pinmux
--4a1005a0.omap4_padconf_global
--4a100600.pbias_regulator
--4a10a000.target-module
--4a300000.interconnect
--4a300000.interconnect:segment@0
--4a300000.interconnect:segment@10000
- 4a300000.interconnect:segment@20000
--4a306000.prm
--4a306000.target-module
--4a307bd0.regulator-abb-mpu
- 4a30a000.scrm
--4a30a000.target-module
--4a30c000.target-module
- 4a30c000.target-module:scm@c000
--4a310000.gpio
--4a310000.target-module
- 4a314000.target-module
--4a314000.wdt
--4a31c000.keypad
--4a31c000.target-module
--4a31e000.target-module
--4a31e040.pinmux
- 4b100000.sham
--4b501000.aes
- 4b701000.aes
- 4c000000.emif
--4d000000.emif
--4e000000.dmm
--50000000.gpmc
--52000000.target-module
--55082000.mmu
--5601fc00.target-module
--58000000.dss
--Fixed MDIO bus.0
--a0080000.ramoops
--alarmtimer
--connector
--cpufreq-dt
- gpio_keys
--hsusb1_phy
--leds
--omap_dma_system.0
--oprofile-perf.0
--pmu
- reg-dummy
--regulator-vdd33a
--regulator-vddvario
--serial8250
--soc
--soc:dsp
--soc:iva
--soc:mpu
--sound
--twl
--twl6040-codec
--twl6040-gpo
--twl6040-pdmclk
- w2cbw0015_vmmc
+Space is missed.
+
+>  		return retval;
+
+
+> +static int fetch_irq_lantiq(struct platform_device *pdev,
+> +			    struct ltq_uart_port *ltq_port)
+> +{
+> +	struct device_node *node = pdev->dev.of_node;
+> +	struct uart_port *port = &ltq_port->port;
+> +	struct resource irqres[3];
+> +	int ret;
+> +
+> +	ret = of_irq_to_resource_table(node, irqres, 3);
+> +	if (ret != 3) {
+> +		dev_err(&pdev->dev,
+> +			"failed to get IRQs for serial port\n");
+> +		return -ENODEV;
+> +	}
+> +	ltq_port->tx_irq = irqres[0].start;
+> +	ltq_port->rx_irq = irqres[1].start;
+> +	ltq_port->err_irq = irqres[2].start;
+> +	port->irq = irqres[0].start;
+> +
+
+> +	return ret;
+
+I'm not sure you need to return known value. 0 will be good enough...
+
+> +}
+
+> +	ltq_port->soc = of_device_get_match_data(&pdev->dev);
+> +	ret = ltq_port->soc->fetch_irq(pdev, ltq_port);
+
+> +	if (ret < 0)
+
+...and thus simple...
+
+	if (ret)
+
+...may be used.
+
+> +		return ret;
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
