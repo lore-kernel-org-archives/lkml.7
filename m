@@ -2,103 +2,90 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B9BC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 12:38:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB53FC32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 12:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E3AE21BF2
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 12:38:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9795021BF6
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 12:39:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RAnrNzwG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729802AbfHGMiN (ORCPT
+        id S1729918AbfHGMjE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 08:38:13 -0400
-Received: from foss.arm.com ([217.140.110.172]:47614 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726773AbfHGMiN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 08:38:13 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3757F28;
-        Wed,  7 Aug 2019 05:38:12 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 358E03F575;
-        Wed,  7 Aug 2019 05:38:10 -0700 (PDT)
-Date:   Wed, 7 Aug 2019 13:38:08 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Rob Clark <robdclark@chromium.org>
-Cc:     Christoph Hellwig <hch@lst.de>, Rob Clark <robdclark@gmail.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] drm: add cache support for arm64
-Message-ID: <20190807123807.GD54191@lakrids.cambridge.arm.com>
-References: <20190805211451.20176-1-robdclark@gmail.com>
- <20190806084821.GA17129@lst.de>
- <CAJs_Fx6eh1w7c=crMoD5XyEOMzP6orLhqUewErE51cPGYmObBQ@mail.gmail.com>
- <20190806143457.GF475@lakrids.cambridge.arm.com>
- <CAJs_Fx4h6SWGmDTLBnV4nmWUFAs_Ge1inxd-dW9aDKgKqmc1eQ@mail.gmail.com>
+        Wed, 7 Aug 2019 08:39:04 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:34659 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726873AbfHGMjE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 08:39:04 -0400
+Received: by mail-lf1-f68.google.com with SMTP id b29so56677661lfq.1
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 05:39:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TF8WdIG/GBC2B0M9b1jzvI8C7ifY+jxxqdmdf35RJnQ=;
+        b=RAnrNzwG8H2/CmrBRYmjmwFER746NivQ+c3H6MAgOQTtgbdbE+plXLUg/Pb2VX8N8y
+         /3CSu6PD4n6Ow9WZorSa0EeqxxcUrrNYU2UVYRceVVXN2eSKtTEUc0ymFz1UPy+pX06p
+         sBOiBJOu07e0ijHIKNaReZOvn1hFP5ekYGjpt1XG3RFm7eH1Q+0H2mqNabivvavJXPq9
+         brvGtWglmmR8k+toTssfm/YbGEdkIoIsz6Ez8MZhSWd+8+20OGUUJciV91ZTyVkdraBI
+         0DtUooopmsUeGyVsj2TIEuzVTOPKomWIGT+2qCBFUUpZ1vtA7mVCIGJ8h+WGZkf9i9nG
+         eozA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TF8WdIG/GBC2B0M9b1jzvI8C7ifY+jxxqdmdf35RJnQ=;
+        b=po19wFMJURHkcfpg5adFbYcD56aMrT5OjWND/7CN9fIxu9A6LSlI+Lz2ftizvsXwIT
+         TVTX6f5r4z0JwtS7/mRNCGyGTdlCgY3cGQW1ERWd+aPo5XWnLzuEkCoEhdwpak++nssW
+         sfch55z6Z8WwmbMMD+y7Wdc6KNtcxd5KWDSuhLNSCfUKALd6EGcXhz/zUvxuNRm/JBjV
+         negAMXt7HguXoDSMS+I1m21BhpvK5nvGmtr5zyQox87oLsd143FQVK8Y51iSewQ931EN
+         Z5wzKINB4Uw8IvdSRVJ/hhfscs0H8fJbMM8KQ3nq1A4c787Oi80o+tLU2jgKhSkIqAN/
+         uqYA==
+X-Gm-Message-State: APjAAAUQZ1a0dsrGm2Gvr1vhj2nkLsc08xkhYiT83EXndMMir6V3zYQJ
+        WsEW/99zMeOSt4RKwekJQgHvUkzESe0pPcf1OC+nmg==
+X-Google-Smtp-Source: APXvYqzj2koP6TS5ONHRZFw3kwuCVAqOEziE1cUAfaaag6Bc/wbf6kDZ6QI8ReWDq+/VrKEp+xB3gGAoMEXRhZU/e/Q=
+X-Received: by 2002:ac2:5c42:: with SMTP id s2mr5973751lfp.61.1565181542001;
+ Wed, 07 Aug 2019 05:39:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJs_Fx4h6SWGmDTLBnV4nmWUFAs_Ge1inxd-dW9aDKgKqmc1eQ@mail.gmail.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+References: <20190807021254.49092-1-hui.song_1@nxp.com>
+In-Reply-To: <20190807021254.49092-1-hui.song_1@nxp.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 7 Aug 2019 14:38:50 +0200
+Message-ID: <CACRpkdY5V9HGMciOq90RJzrMoc_gbyWKJ96sw2HOB5UMzGn1GA@mail.gmail.com>
+Subject: Re: [PATCH v3] gpio: mpc8xxx: Add new platforms GPIO DT node description
+To:     Hui Song <hui.song_1@nxp.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 09:31:55AM -0700, Rob Clark wrote:
-> On Tue, Aug 6, 2019 at 7:35 AM Mark Rutland <mark.rutland@arm.com> wrote:
-> >
-> > On Tue, Aug 06, 2019 at 07:11:41AM -0700, Rob Clark wrote:
-> > > On Tue, Aug 6, 2019 at 1:48 AM Christoph Hellwig <hch@lst.de> wrote:
-> > > >
-> > > > This goes in the wrong direction.  drm_cflush_* are a bad API we need to
-> > > > get rid of, not add use of it.  The reason for that is two-fold:
-> > > >
-> > > >  a) it doesn't address how cache maintaince actually works in most
-> > > >     platforms.  When talking about a cache we three fundamental operations:
-> > > >
-> > > >         1) write back - this writes the content of the cache back to the
-> > > >            backing memory
-> > > >         2) invalidate - this remove the content of the cache
-> > > >         3) write back + invalidate - do both of the above
-> > >
-> > > Agreed that drm_cflush_* isn't a great API.  In this particular case
-> > > (IIUC), I need wb+inv so that there aren't dirty cache lines that drop
-> > > out to memory later, and so that I don't get a cache hit on
-> > > uncached/wc mmap'ing.
-> >
-> > Is there a cacheable alias lying around (e.g. the linear map), or are
-> > these addresses only mapped uncached/wc?
-> >
-> > If there's a cacheable alias, performing an invalidate isn't sufficient,
-> > since a CPU can allocate a new (clean) entry at any point in time (e.g.
-> > as a result of prefetching or arbitrary speculation).
-> 
-> I *believe* that there are not alias mappings (that I don't control
-> myself) for pages coming from
-> shmem_file_setup()/shmem_read_mapping_page()..  
+On Wed, Aug 7, 2019 at 4:22 AM Hui Song <hui.song_1@nxp.com> wrote:
 
-AFAICT, that's regular anonymous memory, so there will be a cacheable
-alias in the linear/direct map.
+> From: Song Hui <hui.song_1@nxp.com>
+>
+> Update the NXP GPIO node dt-binding file for QorIQ and
+> Layerscape platforms, and add one more example with
+> ls1028a GPIO node.
+>
+> Signed-off-by: Song Hui <hui.song_1@nxp.com>
 
-> digging around at what dma_sync_sg_* does under the hood, it looks
-> like it is just arch_sync_dma_for_cpu/device(), so I guess that should
-> be sufficient for what I need.
-
-I don't think that's the case, per the example I gave above.
+Patch applied!
 
 Thanks,
-Mark.
+Linus Walleij
