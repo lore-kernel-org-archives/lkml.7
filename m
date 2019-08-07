@@ -2,139 +2,100 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83BC0C32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 11:45:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C48F6C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 11:46:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AE3A21BF6
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 11:45:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9820221BF6
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 11:46:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="NGY9Z4zL";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="mbi26Zn+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=anastas.io header.i=@anastas.io header.b="hP9u2rSZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729683AbfHGLp6 (ORCPT
+        id S1729797AbfHGLqB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 07:45:58 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:48010 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728592AbfHGLp5 (ORCPT
+        Wed, 7 Aug 2019 07:46:01 -0400
+Received: from alpha.anastas.io ([104.248.188.109]:54663 "EHLO
+        alpha.anastas.io" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728592AbfHGLqA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 07:45:57 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 5D34560E42; Wed,  7 Aug 2019 11:45:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1565178356;
-        bh=7MLbyRKJqEYHBK8k42Bf4KgbYjxrgaFNcZjAenCYYLA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=NGY9Z4zLWwyyyiz2DBo9uzQ1x/CnBD5Xy7fb44bDM65yv++nIDnJn0RALckpVmXp+
-         BKJFTBhp9xWBlRptKDABdvrqMANhoFbAECuUXfIyZEpWotrGo85a7WTvipzuB7YeN3
-         s6d7ht+/XJXM9Z0w8JRo02yupANcOigDp1mLOAIk=
-Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Wed, 7 Aug 2019 07:46:00 -0400
+Received: from authenticated-user (alpha.anastas.io [104.248.188.109])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: sibis@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B9D4160275;
-        Wed,  7 Aug 2019 11:45:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1565178355;
-        bh=7MLbyRKJqEYHBK8k42Bf4KgbYjxrgaFNcZjAenCYYLA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=mbi26Zn+BAxdxBNDsr5iZORnWZ6ZvrpHblTpZYwLQcVKzgEwSw50y0V5/Y5StVi2N
-         UotkeluE31IR1WH4KP8e403dSH1lKVRa78ay9MRwyOEnj+R+winCLGIcHeFNfjRC0S
-         UErHk8379KsWlXnzh7vnD+xuDLXkMm1+T/WVu5X4=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B9D4160275
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     tdas@codeaurora.org, viresh.kumar@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, vkoul@kernel.org,
-        bjorn.andersson@linaro.org, amit.kucheria@linaro.org,
-        rjw@rjwysocki.net, agross@kernel.org,
-        Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH] cpufreq: qcom-hw: Update logic to detect turbo frequency
-Date:   Wed,  7 Aug 2019 17:15:43 +0530
-Message-Id: <20190807114543.7187-1-sibis@codeaurora.org>
-X-Mailer: git-send-email 2.22.0
+        by alpha.anastas.io (Postfix) with ESMTPSA id 4E68D7F6C7;
+        Wed,  7 Aug 2019 06:45:56 -0500 (CDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=anastas.io; s=mail;
+        t=1565178359; bh=446J/ks+11OkveMVUDF0cNPnmfj1n92jZbU24O7P9/w=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=hP9u2rSZ2plqV7LSihnZ4KMQVILfq7Ta2sV8HqIs1xbk2MqAhVpRJ6umqGgci1XIw
+         hvh77x7f8n37Psb6kp4uuHgh1P6AfAITszpAvWuCtCDloHJlE5k+uWk9f/dQej3UDU
+         qMHsetLafrL3ESTZBFd89wh1+uVXTW3/D3TX+Bpwv2+kSdwrkuePe9f0Clec/3r7iH
+         7yIC+pqI+WIPPbX9PsepRnRJZLc921VqOzBwDqsh6FmLCalWwMFybFzndKvL3JEuXi
+         5dqTaMkGqM4FXMkjra5WMd5s7geBuqsT9BcRdnx5ncHjHaUtqJtFLGYWb97FotCml5
+         CVyfcDxoPGXew==
+Subject: Re: [PATCH 1/2] dma-mapping: fix page attributes for dma_mmap_*
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     iommu@lists.linux-foundation.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Gavin Li <git@thegavinli.com>
+References: <20190805080145.5694-1-hch@lst.de>
+ <20190805080145.5694-2-hch@lst.de>
+ <7df95ffb-6df3-b118-284c-ee32cad81199@anastas.io>
+ <20190807060432.GD6627@lst.de>
+From:   Shawn Anastasio <shawn@anastas.io>
+Message-ID: <765a7f25-0e3d-3edc-3f6d-9a17e2379253@anastas.io>
+Date:   Wed, 7 Aug 2019 13:45:51 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190807060432.GD6627@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The core count read back from the each domain's look up table serves
-as an indicator for the onset of the turbo frequency and not accurate
-representation of number of cores in a paticular domain. Update turbo
-detection logic accordingly to add support for SM8150 SoCs.
+On 8/7/19 8:04 AM, Christoph Hellwig wrote:
+> Actually it is typical modern Linux style to just provide a prototype
+> and then use "if (IS_ENABLED(CONFIG_FOO))" to guard the call(s) to it.
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
+I see.
 
-Source Referenoce:
-CAF msm-4.14:
-https://source.codeaurora.org/quic/la/kernel/msm-4.14/tree/drivers/clk/qcom/clk-cpu-osm.c?h=LA.UM.7.1.r1-14000-sm8150.0#n666
+>> Also, like Will mentioned earlier, the function name isn't entirely
+>> accurate anymore. I second the suggestion of using something like
+>> arch_dma_noncoherent_pgprot().
+> 
+> As mentioned I plan to remove arch_dma_mmap_pgprot for 5.4, so I'd
+> rather avoid churn for the short period of time.
 
- drivers/cpufreq/qcom-cpufreq-hw.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Yeah, fair enough.
 
-diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-cpufreq-hw.c
-index 4b0b50403901b..6b456cd67b767 100644
---- a/drivers/cpufreq/qcom-cpufreq-hw.c
-+++ b/drivers/cpufreq/qcom-cpufreq-hw.c
-@@ -20,6 +20,7 @@
- #define LUT_VOLT			GENMASK(11, 0)
- #define LUT_ROW_SIZE			32
- #define CLK_HW_DIV			2
-+#define LUT_TURBO_IND			1
- 
- /* Register offsets */
- #define REG_ENABLE			0x0
-@@ -79,7 +80,6 @@ static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
- {
- 	u32 data, src, lval, i, core_count, prev_cc = 0, prev_freq = 0, freq;
- 	u32 volt;
--	unsigned int max_cores = cpumask_weight(policy->cpus);
- 	struct cpufreq_frequency_table	*table;
- 
- 	table = kcalloc(LUT_MAX_ENTRIES + 1, sizeof(*table), GFP_KERNEL);
-@@ -102,12 +102,12 @@ static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
- 		else
- 			freq = cpu_hw_rate / 1000;
- 
--		if (freq != prev_freq && core_count == max_cores) {
-+		if (freq != prev_freq && core_count != LUT_TURBO_IND) {
- 			table[i].frequency = freq;
- 			dev_pm_opp_add(cpu_dev, freq * 1000, volt);
- 			dev_dbg(cpu_dev, "index=%d freq=%d, core_count %d\n", i,
- 				freq, core_count);
--		} else {
-+		} else if (core_count == LUT_TURBO_IND) {
- 			table[i].frequency = CPUFREQ_ENTRY_INVALID;
- 		}
- 
-@@ -115,14 +115,14 @@ static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
- 		 * Two of the same frequencies with the same core counts means
- 		 * end of table
- 		 */
--		if (i > 0 && prev_freq == freq && prev_cc == core_count) {
-+		if (i > 0 && prev_freq == freq) {
- 			struct cpufreq_frequency_table *prev = &table[i - 1];
- 
- 			/*
- 			 * Only treat the last frequency that might be a boost
- 			 * as the boost frequency
- 			 */
--			if (prev_cc != max_cores) {
-+			if (prev->frequency == CPUFREQ_ENTRY_INVALID) {
- 				prev->frequency = prev_freq;
- 				prev->flags = CPUFREQ_BOOST_FREQ;
- 				dev_pm_opp_add(cpu_dev,	prev_freq * 1000, volt);
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+>> As for your idea of defining
+>> pgprot_dmacoherent for all architectures as
+>>
+>> #ifndef pgprot_dmacoherent
+>> #define pgprot_dmacoherent pgprot_noncached
+>> #endif
+>>
+>> I think that the name here is kind of misleading too, since this
+>> definition will only be used when there is no support for proper
+>> DMA coherency.
+> 
+> Do you have a suggestion for a better name?  I'm pretty bad at naming,
+> so just reusing the arm name seemed like a good way to avoid having
+> to make naming decisions myself.
+
+Good question. Perhaps something like `pgprot_dmacoherent_fallback`
+would better convey that this is only used for devices that don't
+support DMA coherency? Or maybe `pgprot_dma_noncoherent`?
 
