@@ -2,136 +2,201 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C6E0C19759
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:17:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA93AC19759
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:17:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30694229EB
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:17:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lw+MGCG5"
+	by mail.kernel.org (Postfix) with ESMTP id AA4BA229EB
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:17:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728766AbfHGIRv (ORCPT
+        id S2387574AbfHGIR5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 04:17:51 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:35987 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728567AbfHGIRu (ORCPT
+        Wed, 7 Aug 2019 04:17:57 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:38369 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728588AbfHGIRz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 04:17:50 -0400
-Received: by mail-lj1-f196.google.com with SMTP id i21so5374144ljj.3
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 01:17:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=uZ71/IjfnhtwBPFF6THZcvtecPOI1brQIp9ai2NeI1k=;
-        b=lw+MGCG53qlHD6l00B/7Hr2jQ5KNOzTe/Gk4nJidoMcAM/PCuqYZNE5tCopKN5tIB9
-         ybdrmwbQq5dr9qON9O8J8tGMHldp8JlCb68Ac2C0JgrkXcGwvDALxCGgpGaA82m0RYXA
-         zDX6S/ynK0N53ICsuuEg/6wrYFCVbJ2HCDDXtR42Frjtd5oq48/dnaIr00RzlNlkR7gP
-         Dui88b7Dhs5Iyz7jNvscReYjqxYvEeRM5v4NIkWqclUCYLi2XkMxH0PRxVxOG9bZJv2L
-         5QY+LkAUXXOj7VzSwILoN2j9w6heWQ+OyEsdpqqgtZUaF4YL1FkoK0LlSOT4PJM4xtNO
-         sGGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=uZ71/IjfnhtwBPFF6THZcvtecPOI1brQIp9ai2NeI1k=;
-        b=PcN9A9kOo83AtUiJ7Cmn7sBD3VuaGi4gDlQAZNVJa91h1gVPxDi1Bpjb52EIItiVKj
-         pN8gd8mbFgS8nKtGb8Ia9emzxjALto0sSVOkURh8tfYcwckFuFVg20lxXAt9bi8iyUDz
-         yTertKTQ0oqFxVj1jPlpl5zzx91eB48g1qYlVJE40cwE36EoNVNgsgMDSWKdvMl1aKfY
-         2eQc9BZLB0659E8KzS5Ug1jVYjtI57FZODgKaHTidsJSTkfdfapp8oEbA3/oJbndIat/
-         q+5aQHAq25fPq92wad21zZs03LRu5gHMcWsJlgKcRZIs4NxPUJs6Yw5N9Dtn4ZtNRY4Y
-         Ndhg==
-X-Gm-Message-State: APjAAAUfOkAQCwWNJywObnZWJ9/EXtIvYrbp1IVX1litpTAg06UlyPhL
-        1iYCyl1ffdsW97VkRZzZ1I0Gn0Yq+9V4iHJuXqVg0Q==
-X-Google-Smtp-Source: APXvYqwBt9zZPEZS9Zv/S7dA7gva1bRM0PXxxk+aEKCKsKDg9IuOsBbotspesjzG8OPcsmVa9uK3w9BCohv4bn1xoHc=
-X-Received: by 2002:a2e:87d0:: with SMTP id v16mr4116786ljj.24.1565165868639;
- Wed, 07 Aug 2019 01:17:48 -0700 (PDT)
-MIME-Version: 1.0
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 7 Aug 2019 13:47:37 +0530
-Message-ID: <CA+G9fYus+cW4775Y2_Xqpc+G6YP_KfjGeCMzoSQq6o2yVY8Q3w@mail.gmail.com>
-Subject: next-20190806: arm64: adv7511 3-0039: failed to find dsi host
-To:     Linux-Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Hans Verkuil <hans.verkuil@cisco.com>, mchehab@kernel.org,
-        robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        linux-media@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, agross@kernel.org,
-        david.brown@linaro.org, lkft-triage@lists.linaro.org
+        Wed, 7 Aug 2019 04:17:55 -0400
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1hvH8q-0001UB-81; Wed, 07 Aug 2019 10:17:52 +0200
+Message-ID: <1565165870.5048.4.camel@pengutronix.de>
+Subject: Re: [PATCH v2 4/5] firmware: arm_scmi: Add RESET protocol in SCMI
+ v2.0
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Sudeep Holla <sudeep.holla@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Peng Fan <peng.fan@nxp.com>, linux-kernel@vger.kernel.org,
+        Bo Zhang <bozhang.zhang@broadcom.com>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        Volodymyr Babchuk <volodymyr_babchuk@epam.com>,
+        Gaku Inami <gaku.inami.xh@renesas.com>,
+        aidapala@qti.qualcomm.com, pajay@qti.qualcomm.com,
+        Etienne Carriere <etienne.carriere@linaro.org>,
+        Souvik Chakravarty <Souvik.Chakravarty@arm.com>,
+        wesleys@xilinx.com, Felix Burton <fburton@xilinx.com>,
+        Saeed Nowshadi <saeed.nowshadi@xilinx.com>
+Date:   Wed, 07 Aug 2019 10:17:50 +0200
+In-Reply-To: <20190806170208.6787-5-sudeep.holla@arm.com>
+References: <20190806170208.6787-1-sudeep.holla@arm.com>
+         <20190806170208.6787-5-sudeep.holla@arm.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-arm64 devices dragonboard 410c (QC410E) and hi6220-hikey running Linux
-next-20190806 loading modules causing floods of kernel messages.
+On Tue, 2019-08-06 at 18:02 +0100, Sudeep Holla wrote:
+> SCMIv2.0 adds a new Reset Management Protocol to manage various reset
+> states a given device or domain can enter. Device(s) that can be
+> collectively reset through a common reset signal constitute a reset
+> domain for the firmware.
+> 
+> A reset domain can be reset autonomously or explicitly through assertion
+> and de-assertion of the signal. When autonomous reset is chosen, the
+> firmware is responsible for taking the necessary steps to reset the
+> domain and to subsequently bring it out of reset. When explicit reset is
+> chosen, the caller has to specifically assert and then de-assert the
+> reset signal by issuing two separate RESET commands.
+> 
+> Add the basic SCMI reset infrastructure that can be used by Linux
+> reset controller driver.
+> 
+> Cc: Philipp Zabel <p.zabel@pengutronix.de>
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> ---
+>  drivers/firmware/arm_scmi/Makefile |   2 +-
+>  drivers/firmware/arm_scmi/reset.c  | 231 +++++++++++++++++++++++++++++
+>  include/linux/scmi_protocol.h      |  26 ++++
+>  3 files changed, 258 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/firmware/arm_scmi/reset.c
+> 
+> diff --git a/drivers/firmware/arm_scmi/Makefile b/drivers/firmware/arm_scmi/Makefile
+> index c47d28d556b6..5f298f00a82e 100644
+> --- a/drivers/firmware/arm_scmi/Makefile
+> +++ b/drivers/firmware/arm_scmi/Makefile
+> @@ -2,5 +2,5 @@
+>  obj-y	= scmi-bus.o scmi-driver.o scmi-protocols.o
+>  scmi-bus-y = bus.o
+>  scmi-driver-y = driver.o
+> -scmi-protocols-y = base.o clock.o perf.o power.o sensors.o
+> +scmi-protocols-y = base.o clock.o perf.o power.o reset.o sensors.o
+>  obj-$(CONFIG_ARM_SCMI_POWER_DOMAIN) += scmi_pm_domain.o
+> diff --git a/drivers/firmware/arm_scmi/reset.c b/drivers/firmware/arm_scmi/reset.c
+> new file mode 100644
+> index 000000000000..11cb8b5ccf34
+> --- /dev/null
+> +++ b/drivers/firmware/arm_scmi/reset.c
+> @@ -0,0 +1,231 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * System Control and Management Interface (SCMI) Reset Protocol
+> + *
+> + * Copyright (C) 2019 ARM Ltd.
+> + */
+> +
+> +#include "common.h"
+> +
+> +enum scmi_reset_protocol_cmd {
+> +	RESET_DOMAIN_ATTRIBUTES = 0x3,
+> +	RESET = 0x4,
+> +	RESET_NOTIFY = 0x5,
+> +};
+> +
+> +enum scmi_reset_protocol_notify {
+> +	RESET_ISSUED = 0x0,
+> +};
+> +
+> +#define NUM_RESET_DOMAIN_MASK	0xffff
+> +#define RESET_NOTIFY_ENABLE	BIT(0)
+> +
+> +struct scmi_msg_resp_reset_domain_attributes {
+> +	__le32 attributes;
+> +#define SUPPORTS_ASYNC_RESET(x)		((x) & BIT(31))
+> +#define SUPPORTS_NOTIFY_RESET(x)	((x) & BIT(30))
+> +	__le32 latency;
+> +	    u8 name[SCMI_MAX_STR_SIZE];
+> +};
+> +
+> +struct scmi_msg_reset_domain_reset {
+> +	__le32 domain_id;
+> +	__le32 flags;
+> +#define AUTONOMOUS_RESET	BIT(0)
+> +#define EXPLICIT_RESET_ASSERT	BIT(1)
+> +#define ASYNCHRONOUS_RESET	BIT(2)
+> +	__le32 reset_state;
+> +#define ARCH_RESET_TYPE		BIT(31)
+> +#define COLD_RESET_STATE	BIT(0)
+> +#define ARCH_COLD_RESET		(ARCH_RESET_TYPE | COLD_RESET_STATE)
+> +};
+> +
+> +struct reset_dom_info {
+> +	bool async_reset;
+> +	bool reset_notify;
+> +	u32 latency_us;
+> +	char name[SCMI_MAX_STR_SIZE];
+> +};
+> +
+> +struct scmi_reset_info {
+> +	int num_domains;
+> +	struct reset_dom_info *dom_info;
+> +};
+> +
+> +static int scmi_reset_attributes_get(const struct scmi_handle *handle,
+> +				     struct scmi_reset_info *pi)
+> +{
+> +	int ret;
+> +	struct scmi_xfer *t;
+> +	u32 *attr;
+> +
+> +	ret = scmi_xfer_get_init(handle, PROTOCOL_ATTRIBUTES,
+> +				 SCMI_PROTOCOL_RESET, 0, sizeof(*attr), &t);
+> +	if (ret)
+> +		return ret;
+> +
+> +	attr = t->rx.buf;
+> +
+> +	ret = scmi_do_xfer(handle, t);
+> +	if (!ret)
+> +		pi->num_domains = le32_to_cpu(*attr) & NUM_RESET_DOMAIN_MASK;
+> +
+> +	scmi_xfer_put(handle, t);
+> +	return ret;
+> +}
+> +
+> +static int
+> +scmi_reset_domain_attributes_get(const struct scmi_handle *handle, u32 domain,
+> +				 struct reset_dom_info *dom_info)
+> +{
+> +	int ret;
+> +	struct scmi_xfer *t;
+> +	struct scmi_msg_resp_reset_domain_attributes *attr;
+> +
+> +	ret = scmi_xfer_get_init(handle, RESET_DOMAIN_ATTRIBUTES,
+> +				 SCMI_PROTOCOL_RESET, sizeof(domain),
+> +				 sizeof(*attr), &t);
+> +	if (ret)
+> +		return ret;
+> +
+> +	*(__le32 *)t->tx.buf = cpu_to_le32(domain);
 
-We have enabled few extra kernel configs for testing.
-CONFIG_DRM_I2C_ADV7511=m
-CONFIG_DRM_I2C_ADV7511_CEC=y
-...
+Should this use
+	put_unaligned_le32(domain, t->tx.buf);
+? Either way,
 
-Please find below boot log and config file link.
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 
-[    0.000000] Linux version 5.3.0-rc3-next-20190806 (oe-user@oe-host)
-(gcc version 7.3.0 (GCC)) #1 SMP PREEMPT Tue Aug 6 05:49:36 UTC 2019
-[    0.000000] Machine model: Qualcomm Technologies, Inc. APQ 8016 SBC
-....
-[   10.051193] adv7511 3-0039: 3-0039 supply dvdd not found, using
-dummy regulator
-[   10.051633] adv7511 3-0039: 3-0039 supply pvdd not found, using
-dummy regulator
-[   10.076257] adreno 1c00000.gpu: Adding to iommu group 0
-[   10.090929] adv7511 3-0039: 3-0039 supply a2vdd not found, using
-dummy regulator
-[   10.101703] msm_mdp 1a01000.mdp: Adding to iommu group 1
-[   10.102563] msm_mdp 1a01000.mdp: No interconnect support may cause
-display underflows!
-[   10.139492] adv7511 3-0039: failed to find dsi host
-...
-[   33.065744] adv7511 3-0039: failed to find dsi host
-[   33.076721] msm 1a00000.mdss: 1a00000.mdss supply vdd not found,
-using dummy regulator
-[   33.078344] msm_mdp 1a01000.mdp: [drm:mdp5_bind [msm]] MDP5 version v1.6
-[   33.083862] msm 1a00000.mdss: bound 1a01000.mdp (ops mdp5_ops [msm])
-[   33.090892] msm_dsi 1a98000.dsi: 1a98000.dsi supply gdsc not found,
-using dummy regulator
-[   33.097756] msm_dsi 1a98000.dsi: 1a98000.dsi supply gdsc not found,
-using dummy regulator
-[   33.106606] msm_dsi_manager_register: failed to register mipi dsi
-host for DSI 0
-[   33.114579] msm 1a00000.mdss: failed to bind 1a98000.dsi (ops
-dsi_ops [msm]): -517
-[   33.121263] msm 1a00000.mdss: master bind failed: -517
-[   33.135547] adv7511 3-0039: 3-0039 supply dvdd not found, using
-dummy regulator
-[   33.139360] adv7511 3-0039: 3-0039 supply pvdd not found, using
-dummy regulator
-[   33.143646] adv7511 3-0039: 3-0039 supply a2vdd not found, using
-dummy regulator
-
-Full test log
-https://lkft.validation.linaro.org/scheduler/job/860208#L956
-
-metadata:
-  git branch: master
-  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-  git commit: 958eb4327c1761c609bde8e9f7c04e9d1c6fbb96
-  git describe: next-20190806
-  make_kernelversion: 5.3.0-rc3
-  kernel-config:
-http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/dragonboard-410c/lkft/linux-next/579/config
-  kernel-defconfig:
-http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/dragonboard-410c/lkft/linux-next/579/defconfig
-  build-location:
-http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/dragonboard-410c/lkft/linux-next/579
-
-Best regards
-Naresh Kamboju
+regards
+Philipp
