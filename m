@@ -2,108 +2,100 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EDC6C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 09:09:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41049C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 09:09:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 660D321923
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 09:09:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 137D82231F
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 09:09:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565168978;
+	bh=XQaexSKpB8mjQkX9j2g2RC9xp05Rscu1DqTDQY3MAQ8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xhHJuPe+KUTgZ+HXJ8nlsObBSd/Da6d/8WQ5H8OuIvmNmo2WpRfak0fpyOLKx3LBu
+	 vlRtPwI8EFyi1OG72q7XTEwFpa8gbVePjExiJndHceNVRHFTFb2Wd0P0QZBjVy7EhM
+	 eKoGDfsRw8Ylaq6I3UjhVCYjQdhI0mMVGflZq+ME=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728360AbfHGJJM (ORCPT
+        id S1728663AbfHGJJg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 05:09:12 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:37792 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726244AbfHGJJM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 05:09:12 -0400
-Received: by mail-yw1-f67.google.com with SMTP id u141so32062658ywe.4
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 02:09:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=cYG9qyve6yyxmV+AOeRIzDv8dPpq2DUERiyZ5aq12Zs=;
-        b=SKUZRpOVwQ5AJTF4pNeoHjGAH0DH0tWhObE/Z2r75vnr1z0YSUCOdOxJsVj4tyNtsC
-         oVyKF9WI8Wnt30tcwHnoESftooaL1OSgnTQCzDtgEHDFR07LWpVks78EQdYgV1hiQaQ8
-         uJVpII/jr5hg6Kh9Z6WP/6/KKehvo5EXWdZ6C4V4VsZadJTIO+8IxGvzHg8huk6VXKas
-         //HOfUvrfhGVbjsECpaTmlscyUxH3BzdJC66Gj8z0DuavoLtB+vTVnkf76UAdRA99HIh
-         +xstTCKnLYkwb9cjP9DsH0AnObetUa9ps1yl5BULXYajm014OjFIQsCUtPap+LIWyZWs
-         782A==
-X-Gm-Message-State: APjAAAWDRKL88/K6eii+E0Er9zQf/r9f1xrPouCRjonIlbuO4ihxST3u
-        eN0OL2lCTaaSSh/EMKKhBNk=
-X-Google-Smtp-Source: APXvYqwNxPXEUwt4w+RyJ6UmqNqlXasDRygpmijmshd7FwsVJpuUzLPrT2DBiLP7P/OjcBZnCgqR0g==
-X-Received: by 2002:a81:47d5:: with SMTP id u204mr5374829ywa.145.1565168951718;
-        Wed, 07 Aug 2019 02:09:11 -0700 (PDT)
-Received: from localhost.localdomain (24-158-240-219.dhcp.smyr.ga.charter.com. [24.158.240.219])
-        by smtp.gmail.com with ESMTPSA id 193sm369421ywh.89.2019.08.07.02.09.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 07 Aug 2019 02:09:11 -0700 (PDT)
-From:   Wenwen Wang <wenwen@cs.uga.edu>
-To:     Wenwen Wang <wenwen@cs.uga.edu>
-Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        Allison Randal <allison@lohutok.net>,
+        Wed, 7 Aug 2019 05:09:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34616 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726244AbfHGJJg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 05:09:36 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E123621923;
+        Wed,  7 Aug 2019 09:09:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565168975;
+        bh=XQaexSKpB8mjQkX9j2g2RC9xp05Rscu1DqTDQY3MAQ8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=paLu/T8/g5s29vdIji8xgfdeM6HRb3Plfvlozu0Sp2+Nov9i8Xb7jUQd6hEbec2SI
+         /8EEfcBFw9uoVcqjnxQa/qWawtSvSNBtU03i2qObDLVs2h2mmHaufhGwGA5Cn2vUPG
+         gWq+cBpa+fo539mrgFOn6BubxfBT7fkaE54UQcGI=
+Date:   Wed, 7 Aug 2019 10:09:29 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Jia He <justin.he@arm.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Punit Agrawal <punitagrawal@gmail.com>, Qian Cai <cai@lca.pw>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Jun Yao <yaojun8558363@gmail.com>,
+        Alex Van Brunt <avanbrunt@nvidia.com>,
+        Robin Murphy <robin.murphy@arm.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        alsa-devel@alsa-project.org (moderated list:SOUND),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3] ALSA: hiface: fix multiple memory leak bugs
-Date:   Wed,  7 Aug 2019 04:08:51 -0500
-Message-Id: <1565168932-6337-1-git-send-email-wenwen@cs.uga.edu>
-X-Mailer: git-send-email 2.7.4
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: mm: add missing PTE_SPECIAL in pte_mkdevmap on
+ arm64
+Message-ID: <20190807090929.zsiupxyqop75uzkn@willie-the-truck>
+References: <20190807045851.10772-1-justin.he@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190807045851.10772-1-justin.he@arm.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In hiface_pcm_init(), 'rt' is firstly allocated through kzalloc(). Later
-on, hiface_pcm_init_urb() is invoked to initialize 'rt->out_urbs[i]'. In
-hiface_pcm_init_urb(), 'rt->out_urbs[i].buffer' is allocated through
-kzalloc().  However, if hiface_pcm_init_urb() fails, both 'rt' and
-'rt->out_urbs[i].buffer' are not deallocated, leading to memory leak bugs.
-Also, 'rt->out_urbs[i].buffer' is not deallocated if snd_pcm_new() fails.
+On Wed, Aug 07, 2019 at 12:58:51PM +0800, Jia He wrote:
+> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+> index 5fdcfe237338..e09760ece844 100644
+> --- a/arch/arm64/include/asm/pgtable.h
+> +++ b/arch/arm64/include/asm/pgtable.h
+> @@ -209,7 +209,7 @@ static inline pmd_t pmd_mkcont(pmd_t pmd)
+>  
+>  static inline pte_t pte_mkdevmap(pte_t pte)
+>  {
+> -	return set_pte_bit(pte, __pgprot(PTE_DEVMAP));
+> +	return set_pte_bit(pte, __pgprot(PTE_DEVMAP | PTE_SPECIAL));
+>  }
+>  
+>  static inline void set_pte(pte_t *ptep, pte_t pte)
+> @@ -396,7 +396,10 @@ static inline int pmd_protnone(pmd_t pmd)
+>  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>  #define pmd_devmap(pmd)		pte_devmap(pmd_pte(pmd))
+>  #endif
+> -#define pmd_mkdevmap(pmd)	pte_pmd(pte_mkdevmap(pmd_pte(pmd)))
+> +static inline pmd_t pmd_mkdevmap(pmd_t pmd)
+> +{
+> +	return pte_pmd(set_pte_bit(pmd_pte(pmd), __pgprot(PTE_DEVMAP)));
+> +}
+>  
+>  #define __pmd_to_phys(pmd)	__pte_to_phys(pmd_pte(pmd))
+>  #define __phys_to_pmd_val(phys)	__phys_to_pte_val(phys)
 
-To fix the above issues, free 'rt' and 'rt->out_urbs[i].buffer'.
+Acked-by: Will Deacon <will@kernel.org>
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
----
- sound/usb/hiface/pcm.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+I think Catalin can take this as a fix, although the commit message should
+probably be trimmed down a bit to remove the two call traces etc.
 
-diff --git a/sound/usb/hiface/pcm.c b/sound/usb/hiface/pcm.c
-index 14fc1e1..c406497 100644
---- a/sound/usb/hiface/pcm.c
-+++ b/sound/usb/hiface/pcm.c
-@@ -600,14 +600,13 @@ int hiface_pcm_init(struct hiface_chip *chip, u8 extra_freq)
- 		ret = hiface_pcm_init_urb(&rt->out_urbs[i], chip, OUT_EP,
- 				    hiface_pcm_out_urb_handler);
- 		if (ret < 0)
--			return ret;
-+			goto error;
- 	}
- 
- 	ret = snd_pcm_new(chip->card, "USB-SPDIF Audio", 0, 1, 0, &pcm);
- 	if (ret < 0) {
--		kfree(rt);
- 		dev_err(&chip->dev->dev, "Cannot create pcm instance\n");
--		return ret;
-+		goto error;
- 	}
- 
- 	pcm->private_data = rt;
-@@ -620,4 +619,10 @@ int hiface_pcm_init(struct hiface_chip *chip, u8 extra_freq)
- 
- 	chip->pcm = rt;
- 	return 0;
-+
-+error:
-+	for (i = 0; i < PCM_N_URBS; i++)
-+		kfree(rt->out_urbs[i].buffer);
-+	kfree(rt);
-+	return ret;
- }
--- 
-2.7.4
-
+Will
