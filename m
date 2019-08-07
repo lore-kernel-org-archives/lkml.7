@@ -2,124 +2,72 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA2DC32754
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 18:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82BC3C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 18:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5256F2229C
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 18:58:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VMsjrbJv"
+	by mail.kernel.org (Postfix) with ESMTP id 5840B22305
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 18:59:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389442AbfHGS65 (ORCPT
+        id S2389447AbfHGS7a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 14:58:57 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:33263 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388681AbfHGS65 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 14:58:57 -0400
-Received: by mail-pl1-f196.google.com with SMTP id c14so42065634plo.0
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 11:58:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XCzr1T0/DdxuLzB0miWs6nmo/kjr1O+wefDJdVCthWw=;
-        b=VMsjrbJvk+g4nuenJH9gKjwL+nI/korDji0hz9wNkfoScVuH5bCVUSFxNq85n39JKG
-         CeOFJppRsD0xS8+adGEHtdyDc6MxRCswVPkSRDSn1xokdW/+graOqWD42UoVNCNaomhJ
-         7a21HU5a3LJiuXu9XV4qhkVyOw0cis6DQrK2E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XCzr1T0/DdxuLzB0miWs6nmo/kjr1O+wefDJdVCthWw=;
-        b=nPPMqhCKF1OanYj1BoKcZMtzl/SZCp37cFT0ID5H8z68tYWFZ9GjndW2CLTe+RDARi
-         tTqQPbAQ4oZOJbAkw2jMz2aTrC3faKrmWVzsIiCSgxtyYEvgMLY5wfbcWkTLDZyE4Zuo
-         e3/6D4VbaoATZ41LXPzFY1kD55bsdH3pyY5NkSctGtvMyV/U3168g0r/xw3gJ/qhPimA
-         7JgHA4Ctg/tf7YRetzVylsqZpjNbKWm9Ytsph8noFwD01SDkC9iSZe1giWvzyze66ijp
-         SOvIJIK158UQmRKDfku0+YzusU5zBbpmSbH3OgVJ8fHW1EDc6lQKWL2dhvm5ziiJXfxT
-         IvnQ==
-X-Gm-Message-State: APjAAAUQ+WnwmsMhNYkmeFG6yTqY3DpSf+gC43ZvA3yfLfJQEQKgRaw0
-        HnmbCYu0C0m7RvD/zBudohR9gw==
-X-Google-Smtp-Source: APXvYqye5Ih64EmIap1AvYJwGX0VY16CGMiYgufWLv/h2MA7+ghBeRgEVFZnXDKaQtUanldVqTOrPQ==
-X-Received: by 2002:a63:2807:: with SMTP id o7mr9116751pgo.131.1565204336255;
-        Wed, 07 Aug 2019 11:58:56 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id v14sm5588599pgi.79.2019.08.07.11.58.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 07 Aug 2019 11:58:55 -0700 (PDT)
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>
-Cc:     linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
-        Rocky Liao <rjliao@codeaurora.org>,
-        Harish Bandi <c-hbandi@codeaurora.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH v2] Bluetooth: hci_qca: Remove redundant initializations to zero
-Date:   Wed,  7 Aug 2019 11:58:49 -0700
-Message-Id: <20190807185849.253065-1-mka@chromium.org>
-X-Mailer: git-send-email 2.22.0.770.g0f2c4a37fd-goog
+        Wed, 7 Aug 2019 14:59:30 -0400
+Received: from mga18.intel.com ([134.134.136.126]:7649 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727213AbfHGS73 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 14:59:29 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Aug 2019 11:59:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,358,1559545200"; 
+   d="scan'208";a="198766417"
+Received: from geyerral-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.37.199])
+  by fmsmga004.fm.intel.com with ESMTP; 07 Aug 2019 11:59:21 -0700
+Date:   Wed, 7 Aug 2019 21:59:21 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-crypto@vger.kernel.org,
+        linux-security-module@vger.kernel.org, dhowells@redhat.com,
+        herbert@gondor.apana.org.au, davem@davemloft.net,
+        peterhuewe@gmx.de, jgg@ziepe.ca, jejb@linux.ibm.com, arnd@arndb.de,
+        gregkh@linuxfoundation.org, zohar@linux.ibm.com, jmorris@namei.org,
+        serge@hallyn.com, casey@schaufler-ca.com,
+        ard.biesheuvel@linaro.org, daniel.thompson@linaro.org,
+        linux-kernel@vger.kernel.org, tee-dev@lists.linaro.org
+Subject: Re: [RFC/RFT v3 1/3] KEYS: trusted: create trusted keys subsystem
+Message-ID: <20190807185921.lhdt3ek6tphj33bo@linux.intel.com>
+References: <1565098640-12536-1-git-send-email-sumit.garg@linaro.org>
+ <1565098640-12536-2-git-send-email-sumit.garg@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1565098640-12536-2-git-send-email-sumit.garg@linaro.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The qca_data structure is allocated with kzalloc() and hence
-zero-initialized. Remove a bunch of unnecessary explicit
-initializations of struct members to zero.
+On Tue, Aug 06, 2019 at 07:07:18PM +0530, Sumit Garg wrote:
+> Move existing code to trusted keys subsystem. Also, rename files with
+> "tpm" as suffix which provides the underlying implementation.
+> 
+> Suggested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
 
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-Reviewed-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
----
-just noticed that this patch fell through the cracks, resending a
-rebased version.
+The name for should be still trusted.ko even if new backends are added.
+Must be done in order not to break user space.
 
-Changes in v2:
-- added 'Reviewed-by' tag from Balakrishna
-- rebased on bluetooth-next/master
+Situation is quite similar as when new backends were added to tpm_tis
+some time ago: MMIO backed implementation was kept as tpm_tis.ko, the
+core module was named as tpm_tis_core and SPI backed implementation was
+named as tpm_tis_spi.ko.
 
- drivers/bluetooth/hci_qca.c | 19 -------------------
- 1 file changed, 19 deletions(-)
-
-diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-index 16db6c00ae64..007e98c36e2f 100644
---- a/drivers/bluetooth/hci_qca.c
-+++ b/drivers/bluetooth/hci_qca.c
-@@ -499,26 +499,7 @@ static int qca_open(struct hci_uart *hu)
- 	qca->tx_ibs_state = HCI_IBS_TX_ASLEEP;
- 	qca->rx_ibs_state = HCI_IBS_RX_ASLEEP;
- 
--	/* clocks actually on, but we start votes off */
--	qca->tx_vote = false;
--	qca->rx_vote = false;
--	qca->flags = 0;
--
--	qca->ibs_sent_wacks = 0;
--	qca->ibs_sent_slps = 0;
--	qca->ibs_sent_wakes = 0;
--	qca->ibs_recv_wacks = 0;
--	qca->ibs_recv_slps = 0;
--	qca->ibs_recv_wakes = 0;
- 	qca->vote_last_jif = jiffies;
--	qca->vote_on_ms = 0;
--	qca->vote_off_ms = 0;
--	qca->votes_on = 0;
--	qca->votes_off = 0;
--	qca->tx_votes_on = 0;
--	qca->tx_votes_off = 0;
--	qca->rx_votes_on = 0;
--	qca->rx_votes_off = 0;
- 
- 	hu->priv = qca;
- 
--- 
-2.22.0.770.g0f2c4a37fd-goog
-
+/Jarkko
