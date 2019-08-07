@@ -2,123 +2,77 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89CB8C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:21:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D50C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:21:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6075A21E6E
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:21:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mAq5BtUh"
+	by mail.kernel.org (Postfix) with ESMTP id 0701D21E6E
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:21:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388301AbfHGNVE (ORCPT
+        id S2388303AbfHGNVo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 09:21:04 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:44134 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388059AbfHGNVC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 09:21:02 -0400
-Received: by mail-ed1-f68.google.com with SMTP id k8so86166315edr.11;
-        Wed, 07 Aug 2019 06:21:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=o7gDnBpDuDwXcYQ6QlYY8efn/08+76Px3igT9oXiK5k=;
-        b=mAq5BtUhI3z8QjtUP5eyHqp1lRL4rZsr/asLgLulVustVZihkiAI2jA/936C7Ne/Ed
-         +xw/1ApoAaKYMSgiUNBNjXo2CB+CdcNkkNBURfQpUUq+UP0tFevI/h82lw+gaAPp7c8S
-         CKxixq506MTIMdNj/oi6+ck/B1WkHpBKKjeO+T0z3AGtCcwQgua98Bzsi8QbSvWdVGEx
-         VerZihDR9aiEfl3sdyDR9h8+g96A8ucnrauVnkL+4u/bf2waTqhRWO11a2nNqQJ4WNHR
-         OvlarePLz5a2++24v8FYro2WWIMz2kQJIkBt2//lDo34fG0oqRghVDuWHYj+Jb5PTL2D
-         R/ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=o7gDnBpDuDwXcYQ6QlYY8efn/08+76Px3igT9oXiK5k=;
-        b=ujj0mpFg3nG3BbA1sJ6girzUrXNwTU+qxnIJI3kE32lKtuGBrAYRawTOZatd3JKIwd
-         1LA7h1uULi7ca62v4dhdQW8NnOfQiDvcP69bUhXJF65XydteCH4E1hIXnbckAl4bguID
-         k8ALTNR2IJiBNWGbqmlZZ/pfxzp0L6qC6OeXlff9QyaqTSyM+gIr2ZppMQ5KHUnmKkLS
-         SEa4lIXrW0Bk7EI4mTWYRC636jY35aNZzSvT4JHw0VJ6qYsUWx1bdsy9tzw7f5FHr2JY
-         Dv/A1reeR+kgWMD5XMN9O+F7j5EkmzudfrrrW7AGfVHbWEAE7ZmwFbGu6OY0csl2BZ9V
-         Aqww==
-X-Gm-Message-State: APjAAAUrc8H3IboR0rnbo0jSjg878TBOQsumrCGyEGQunZ92+qhvA6yO
-        vzDNUCDE9z3qtNlekGkSbEt6mVJhuBRvWNuvUXi0dw==
-X-Google-Smtp-Source: APXvYqzlJc+LZ/CNeaxM3+J0/iEtUaUJ17IdZUeXr/6iVQDtk6kNp4wINoAEOPiTbMG5Rvj71glBbrpO1B+cBWZPyzM=
-X-Received: by 2002:a17:906:b7d8:: with SMTP id fy24mr8450496ejb.230.1565184060594;
- Wed, 07 Aug 2019 06:21:00 -0700 (PDT)
+        Wed, 7 Aug 2019 09:21:44 -0400
+Received: from shell.v3.sk ([90.176.6.54]:42164 "EHLO shell.v3.sk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388059AbfHGNVn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 09:21:43 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 2C065CE936;
+        Wed,  7 Aug 2019 15:21:28 +0200 (CEST)
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id SzZ9YSBTi9mQ; Wed,  7 Aug 2019 15:21:20 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id F35F1CE949;
+        Wed,  7 Aug 2019 15:21:19 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at zimbra.v3.sk
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id eCep9nSFWp-x; Wed,  7 Aug 2019 15:21:19 +0200 (CEST)
+Received: from furthur.local (ip-37-188-233-8.eurotel.cz [37.188.233.8])
+        by zimbra.v3.sk (Postfix) with ESMTPSA id 5387BCE936;
+        Wed,  7 Aug 2019 15:21:11 +0200 (CEST)
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Jiri Kosina <trivial@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH] PCI: OF: fix a trivial typo in a doc comment
+Date:   Wed,  7 Aug 2019 15:20:49 +0200
+Message-Id: <20190807132049.10304-1-lkundrak@v3.sk>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190807130856.60792-1-yuehaibing@huawei.com> <CA+h21hrrWGrw4kiTfjowWvQ-B6sNPLAcgTaaadA02ZAmYw1SjQ@mail.gmail.com>
-In-Reply-To: <CA+h21hrrWGrw4kiTfjowWvQ-B6sNPLAcgTaaadA02ZAmYw1SjQ@mail.gmail.com>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Wed, 7 Aug 2019 16:20:49 +0300
-Message-ID: <CA+h21hpt1UghzkdQ-x5k37T=SZ8Hc1euV11WyHPrYVCF-rq+Uw@mail.gmail.com>
-Subject: Re: [PATCH net-next] net: dsa: sja1105: remove set but not used
- variables 'tx_vid' and 'rx_vid'
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 7 Aug 2019 at 16:19, Vladimir Oltean <olteanv@gmail.com> wrote:
->
-> On Wed, 7 Aug 2019 at 16:09, YueHaibing <yuehaibing@huawei.com> wrote:
-> >
-> > Fixes gcc '-Wunused-but-set-variable' warning:
-> >
-> > drivers/net/dsa/sja1105/sja1105_main.c: In function sja1105_fdb_dump:
-> > drivers/net/dsa/sja1105/sja1105_main.c:1226:14: warning:
-> >  variable tx_vid set but not used [-Wunused-but-set-variable]
-> > drivers/net/dsa/sja1105/sja1105_main.c:1226:6: warning:
-> >  variable rx_vid set but not used [-Wunused-but-set-variable]
-> >
-> > They are not used since commit 6d7c7d948a2e ("net: dsa:
-> > sja1105: Fix broken learning with vlan_filtering disabled")
-> >
-> > Reported-by: Hulk Robot <hulkci@huawei.com>
-> > Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> > ---
->
-> Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
+Diverged from what the code does with commit 530210c7814e ("of/irq: Repla=
+ce
+of_irq with of_phandle_args").
 
-This patch should also go to the "net" tree.
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+---
+ drivers/pci/of.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->
-> >  drivers/net/dsa/sja1105/sja1105_main.c | 4 ----
-> >  1 file changed, 4 deletions(-)
-> >
-> > diff --git a/drivers/net/dsa/sja1105/sja1105_main.c b/drivers/net/dsa/sja1105/sja1105_main.c
-> > index d073baf..df976b25 100644
-> > --- a/drivers/net/dsa/sja1105/sja1105_main.c
-> > +++ b/drivers/net/dsa/sja1105/sja1105_main.c
-> > @@ -1223,12 +1223,8 @@ static int sja1105_fdb_dump(struct dsa_switch *ds, int port,
-> >  {
-> >         struct sja1105_private *priv = ds->priv;
-> >         struct device *dev = ds->dev;
-> > -       u16 rx_vid, tx_vid;
-> >         int i;
-> >
-> > -       rx_vid = dsa_8021q_rx_vid(ds, port);
-> > -       tx_vid = dsa_8021q_tx_vid(ds, port);
-> > -
-> >         for (i = 0; i < SJA1105_MAX_L2_LOOKUP_COUNT; i++) {
-> >                 struct sja1105_l2_lookup_entry l2_lookup = {0};
-> >                 u8 macaddr[ETH_ALEN];
-> > --
-> > 2.7.4
-> >
-> >
+diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+index bc7b27a28795d..36891e7deee34 100644
+--- a/drivers/pci/of.c
++++ b/drivers/pci/of.c
+@@ -353,7 +353,7 @@ EXPORT_SYMBOL_GPL(devm_of_pci_get_host_bridge_resourc=
+es);
+ /**
+  * of_irq_parse_pci - Resolve the interrupt for a PCI device
+  * @pdev:       the device whose interrupt is to be resolved
+- * @out_irq:    structure of_irq filled by this function
++ * @out_irq:    structure of_phandle_args filled by this function
+  *
+  * This function resolves the PCI interrupt for a given PCI device. If a
+  * device-node exists for a given pci_dev, it will use normal OF tree
+--=20
+2.21.0
+
