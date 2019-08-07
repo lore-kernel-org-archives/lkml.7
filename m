@@ -2,124 +2,120 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE0DC32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 16:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1336EC32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 16:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ACB32229C
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 16:21:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E547221E6C
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 16:22:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388821AbfHGQVQ (ORCPT
+        id S2388842AbfHGQWd convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 12:21:16 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33050 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387922AbfHGQVQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 12:21:16 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BDF28641DA;
-        Wed,  7 Aug 2019 16:21:15 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.136])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 8A2B160852;
-        Wed,  7 Aug 2019 16:21:13 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Wed,  7 Aug 2019 18:21:15 +0200 (CEST)
-Date:   Wed, 7 Aug 2019 18:21:12 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Dmitry Safonov <0x7f454c46@gmail.com>
-Cc:     Adrian Reber <areber@redhat.com>,
-        Christian Brauner <christian@brauner.io>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelianov <xemul@virtuozzo.com>,
-        Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org,
-        Andrei Vagin <avagin@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>
-Subject: Re: [PATCH v3 1/2] fork: extend clone3() to support CLONE_SET_TID
-Message-ID: <20190807162112.GF24112@redhat.com>
-References: <20190806191551.22192-1-areber@redhat.com>
- <20190807154828.GD24112@redhat.com>
- <b57e809d-e5fa-bda2-ee81-e86116bb2856@gmail.com>
+        Wed, 7 Aug 2019 12:22:33 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:52517 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387922AbfHGQWc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 12:22:32 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-190-jOEo8AM4MeKjlt6Gfd49KQ-1; Wed, 07 Aug 2019 17:22:27 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Wed, 7 Aug 2019 17:22:26 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 7 Aug 2019 17:22:26 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Mika Westerberg' <mika.westerberg@linux.intel.com>
+CC:     'Yehezkel Bernat' <yehezkelshb@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
+        Mario Limonciello <Mario.Limonciello@dell.com>,
+        "Anthony Wong" <anthony.wong@canonical.com>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
+Subject: RE: [PATCH 3/8] thunderbolt: Use 32-bit writes when writing ring
+ producer/consumer
+Thread-Topic: [PATCH 3/8] thunderbolt: Use 32-bit writes when writing ring
+ producer/consumer
+Thread-Index: AQHVMyIznn3HI+p3CEuvWWeqi0Ulhqa8L0swgDPP6oCAABFywA==
+Date:   Wed, 7 Aug 2019 16:22:26 +0000
+Message-ID: <79616dd147864771b0b74901e77f2607@AcuMS.aculab.com>
+References: <20190705095800.43534-1-mika.westerberg@linux.intel.com>
+ <20190705095800.43534-4-mika.westerberg@linux.intel.com>
+ <CA+CmpXtMBEtyh77fcrhX2BU8esiit56CWfZmey6LYEHZVUxf8A@mail.gmail.com>
+ <0f3a47d8133945b181d623ea6e0d53f2@AcuMS.aculab.com>
+ <20190807161359.GT2716@lahna.fi.intel.com>
+In-Reply-To: <20190807161359.GT2716@lahna.fi.intel.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b57e809d-e5fa-bda2-ee81-e86116bb2856@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Wed, 07 Aug 2019 16:21:15 +0000 (UTC)
+X-MC-Unique: jOEo8AM4MeKjlt6Gfd49KQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/07, Dmitry Safonov wrote:
+From: Mika Westerberg
+> Sent: 07 August 2019 17:14
+> To: David Laight
 > 
-> On 8/7/19 4:48 PM, Oleg Nesterov wrote:
-> > On 08/06, Adrian Reber wrote:
-> >>
-> >> @@ -2530,12 +2530,14 @@ noinline static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
-> >>  					      struct clone_args __user *uargs,
-> >>  					      size_t size)
-> >>  {
-> >> +	struct pid_namespace *pid_ns = task_active_pid_ns(current);
-> >>  	struct clone_args args;
-> >>  
-> >>  	if (unlikely(size > PAGE_SIZE))
-> >>  		return -E2BIG;
-> >>  
-> >> -	if (unlikely(size < sizeof(struct clone_args)))
-> >> +	/* The struct needs to be at least the size of the original struct. */
-> >> +	if (size < (sizeof(struct clone_args) - sizeof(__aligned_u64)))
-> >>  		return -EINVAL;
-> > 
-> > slightly off-topic, but with or without this patch I do not understand
-> > -EINVAL. Can't we replace this check with
-> > 
-> > 	if (size < sizeof(struct clone_args))
-> > 		memset((void*)&args + size, sizeof(struct clone_args) - size, 0);
-> > 
-> > ?
-> > 
-> > this way we can new members at the end of clone_args and this matches
-> > the "if (size > sizeof(struct clone_args))" block below which promises
-> > that whatever we add into clone_args a zero value should work.
->
-> What if the size is lesser than offsetof(struct clone_args, stack_size)?
-> Probably, there should be still a check that it's not lesser than what's
-> the required minimum..
+> On Fri, Jul 05, 2019 at 04:04:19PM +0000, David Laight wrote:
+> > > Really a matter of taste, but maybe you want to consider having a single
+> > > function, with a 3rd parameter, bool is_tx.
+> > > The calls here will be unified to:
+> > >         ring_iowrite(ring, ring->head, ring->is_tx);
+> > > (No condition is needed here).
+> > >
+> > > The implementation uses the new parameter to decide which part of the register
+> > > to mask, reducing the code duplication (in my eyes):
+> > >
+> > >         val = ioread32(ring_desc_base(ring) + 8);
+> > >         if (is_tx) {
+> > >                 val &= 0x0000ffff;
+> > >                 val |= value << 16;
+> > >         } else {
+> > >                 val &= 0xffff0000;
+> > >                 val |= value;
+> > >         }
+> > >         iowrite32(val, ring_desc_base(ring) + 8);
+> > >
+> > > I'm not sure if it improves the readability or makes it worse. Your call.
+> >
+> > Gah, that is all horrid beyond belief.
+> > If a 32bit write is valid then the hardware must not be updating
+> > the other 16 bits.
+> > In which case the driver knows what they should be.
+> > So it can do a single 32bit write of the required value.
+> 
+> I'm not entirely sure I understand what you say above. Can you shed some
+> light on this by a concrete example how it should look like? :-)
 
-Not sure I understand... I mean, this doesn't differ from the case when
-size == sizeof(clone_args) but uargs->stack == NULL ?
+The driver must know both the tx and rx ring values, so:
+	iowrite32(tx_val << 16 | rx_val, ring_desc_base(ring) + 8);
 
-> Also note, that (kargs) and (args) are a bit different beasts in this
-> context..
-> kargs lies on the stack and might want to be with zero-initializer
-> :	struct kernel_clone_args kargs = {};
+The ioread32() is likely to be very slow - you only want to do them
+if absolutely necessary.
+The speed of the iowrite32() doesn't matter (much) since it is almost
+certainly 'posted' and execution continues while the bus cycle is
+in progress.
 
-I don't think so. Lets consider this patch which adds the new set_tid
-into clone_args and kernel_clone_args. copy_clone_args_from_user() does
+	David
 
-	*kargs = (struct kernel_clone_args){
-		.flags		= args.flags,
-		.pidfd		= u64_to_user_ptr(args.pidfd),
-		.child_tid	= u64_to_user_ptr(args.child_tid),
-		.parent_tid	= u64_to_user_ptr(args.parent_tid),
-		.exit_signal	= args.exit_signal,
-		.stack		= args.stack,
-		.stack_size	= args.stack_size,
-		.tls		= args.tls,
-	};
-
-so this patch should simply add
-
-		.set_tid	= args.set_tid;
-
-at the end. No?
-
-Oleg.
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
