@@ -2,185 +2,226 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BCDCC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 17:57:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB2BBC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 17:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4B6522296
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 17:57:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565200624;
-	bh=yPeef3j6LhNS2VOHbDy8pZkEquwI+YA09pIQwpAJn7c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iWgXPVne6jhVbOi5Puz2fkBIykBpJAef6nBYjRvPyc0optkHh+JETX0Figi0B4qmk
-	 A7xXv/i60gBA9Jiy/M5Z+roTJ4L1Wj4pb42540zUzH5Hzj5RAt250CG53Eikl/jZ8v
-	 UJMv0+eDzSTABnN17r6Ynyw3pRCJwRKBrZjCvaPI=
+	by mail.kernel.org (Postfix) with ESMTP id B84582231F
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 17:57:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389064AbfHGR5D (ORCPT
+        id S2389093AbfHGR5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 13:57:03 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:58896 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387952AbfHGR5D (ORCPT
+        Wed, 7 Aug 2019 13:57:19 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:55238 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387952AbfHGR5T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 13:57:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=dEwiILabVzzTIYb/658XogkvnQOQeMh6Hr9+QcEFNQw=; b=Ph36o3U8a75Pt13+eK/wAbf6A
-        VV0kmEhBB9qEVHgLcYjl5W8oR0fPnwTTJAhQkGsMSL4+QkuMcdOoCCJZ1ng+qCnnL8H26nOKTBkb8
-        0xH5iKbozYBzPRcG02sCY4dHMkClvyqkI6fVDQYP1royVPVx377Df8yrtOyQq1ARGj8Ik=;
-Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1hvQB5-0008Le-Vg; Wed, 07 Aug 2019 17:56:48 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id D80DB2742B9E; Wed,  7 Aug 2019 18:56:46 +0100 (BST)
-Date:   Wed, 7 Aug 2019 18:56:46 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>, Takashi Iwai <tiwai@suse.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-        jank@cadence.com, Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: Re: [alsa-devel] [PATCH] soundwire: fix regmap dependencies and
- align with other serial links
-Message-ID: <20190807175646.GK4048@sirena.co.uk>
-References: <20190718230215.18675-1-pierre-louis.bossart@linux.intel.com>
- <CAJZ5v0g5Hk9JYLvRXfLk5-o=n_RVPKtWD=QONpiimCWyQOFELQ@mail.gmail.com>
- <52a2cb0c-92a6-59d5-72da-832edd6481f3@linux.intel.com>
+        Wed, 7 Aug 2019 13:57:19 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: koike)
+        with ESMTPSA id 9580428C73D
+Subject: Re: [PATCH v8 00/14] Rockchip ISP1 Driver
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de,
+        jacob2.chen@rock-chips.com, jeffy.chen@rock-chips.com,
+        zyc@rock-chips.com, linux-kernel@vger.kernel.org,
+        tfiga@chromium.org, hans.verkuil@cisco.com,
+        laurent.pinchart@ideasonboard.com, kernel@collabora.com,
+        ezequiel@collabora.com, linux-media@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, zhengsq@rock-chips.com
+References: <20190730184256.30338-1-helen.koike@collabora.com>
+ <20190807153759.GP21370@paasikivi.fi.intel.com>
+From:   Helen Koike <helen.koike@collabora.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=helen.koike@collabora.com; keydata=
+ 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
+Message-ID: <6a65a050-6c97-a2d2-2bf2-85d5071dfe7f@collabora.com>
+Date:   Wed, 7 Aug 2019 14:57:02 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="5dNcufZ4prhark0F"
-Content-Disposition: inline
-In-Reply-To: <52a2cb0c-92a6-59d5-72da-832edd6481f3@linux.intel.com>
-X-Cookie: Dammit Jim, I'm an actor, not a doctor.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190807153759.GP21370@paasikivi.fi.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---5dNcufZ4prhark0F
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Aug 07, 2019 at 10:09:27AM -0500, Pierre-Louis Bossart wrote:
+On 8/7/19 12:37 PM, Sakari Ailus wrote:
+> On Tue, Jul 30, 2019 at 03:42:42PM -0300, Helen Koike wrote:
+>> Hello,
+>>
+>> I'm re-sending a new version of ISP(Camera) v4l2 driver for rockchip
+>> rk3399 SoC.
+>>
+>> I didn't change much from the last version, just applying the
+>> suggestions made in the previous one.
+>>
+>> This patchset is also available at:
+>> https://gitlab.collabora.com/koike/linux/tree/rockchip/isp/v8
+>>
+>> Libcamera patched to work with this version:
+>> https://gitlab.collabora.com/koike/libcamera
+>> (also sent to the mailing list)
+>>
+>> I tested on the rockpi 4 with a rpi v1.3 sensor and also with the
+>> Scarlet Chromebook.
+> 
+> Could you also post media-ctl -p printout e.g. as a reply to the cover
+> letter?
+> 
+> Thanks.
+> 
 
-> Vinod, Mark, any feedback?
+Yes, I had posted in v7 and I forgot to add it in subsequent cover letters:
 
-> There will be a set of SoundWire codec drivers provided upstream soonish =
-and
-> we'll get a number of kbuild errors without this patch.
+media-ctl --print-dot -> file available at: http://ix.io/1NIH
 
-I think I'm missing context here, I've basically been zoning out all the
-soundwire stuff - the patch series are huge and generate a bunch of
-discusion.  Is the patch below the full thing?  I don't see any obvious
-problems.
+root@rockpi:~# media-ctl -p
+Media controller API version 5.3.0
 
->=20
-> >=20
-> > > ---
-> > >   drivers/base/regmap/Kconfig | 2 +-
-> > >   drivers/soundwire/Kconfig   | 7 +------
-> > >   drivers/soundwire/Makefile  | 2 +-
-> > >   3 files changed, 3 insertions(+), 8 deletions(-)
-> > >=20
-> > > diff --git a/drivers/base/regmap/Kconfig b/drivers/base/regmap/Kconfig
-> > > index 6ad5ef48b61e..8cd2ac650b50 100644
-> > > --- a/drivers/base/regmap/Kconfig
-> > > +++ b/drivers/base/regmap/Kconfig
-> > > @@ -44,7 +44,7 @@ config REGMAP_IRQ
-> > >=20
-> > >   config REGMAP_SOUNDWIRE
-> > >          tristate
-> > > -       depends on SOUNDWIRE_BUS
-> > > +       depends on SOUNDWIRE
-> > >=20
-> > >   config REGMAP_SCCB
-> > >          tristate
-> > > diff --git a/drivers/soundwire/Kconfig b/drivers/soundwire/Kconfig
-> > > index 3a01cfd70fdc..f518273cfbe3 100644
-> > > --- a/drivers/soundwire/Kconfig
-> > > +++ b/drivers/soundwire/Kconfig
-> > > @@ -4,7 +4,7 @@
-> > >   #
-> > >=20
-> > >   menuconfig SOUNDWIRE
-> > > -       bool "SoundWire support"
-> > > +       tristate "SoundWire support"
-> > >          help
-> > >            SoundWire is a 2-Pin interface with data and clock line ra=
-tified
-> > >            by the MIPI Alliance. SoundWire is used for transporting d=
-ata
-> > > @@ -17,17 +17,12 @@ if SOUNDWIRE
-> > >=20
-> > >   comment "SoundWire Devices"
-> > >=20
-> > > -config SOUNDWIRE_BUS
-> > > -       tristate
-> > > -       select REGMAP_SOUNDWIRE
-> > > -
-> > >   config SOUNDWIRE_CADENCE
-> > >          tristate
-> > >=20
-> > >   config SOUNDWIRE_INTEL
-> > >          tristate "Intel SoundWire Master driver"
-> > >          select SOUNDWIRE_CADENCE
-> > > -       select SOUNDWIRE_BUS
-> > >          depends on X86 && ACPI && SND_SOC
-> > >          help
-> > >            SoundWire Intel Master driver.
-> > > diff --git a/drivers/soundwire/Makefile b/drivers/soundwire/Makefile
-> > > index fd99a831b92a..45b7e5001653 100644
-> > > --- a/drivers/soundwire/Makefile
-> > > +++ b/drivers/soundwire/Makefile
-> > > @@ -5,7 +5,7 @@
-> > >=20
-> > >   #Bus Objs
-> > >   soundwire-bus-objs :=3D bus_type.o bus.o slave.o mipi_disco.o strea=
-m.o
-> > > -obj-$(CONFIG_SOUNDWIRE_BUS) +=3D soundwire-bus.o
-> > > +obj-$(CONFIG_SOUNDWIRE) +=3D soundwire-bus.o
-> > >=20
-> > >   #Cadence Objs
-> > >   soundwire-cadence-objs :=3D cadence_master.o
-> > > --
-> > > 2.20.1
-> > >=20
-> > _______________________________________________
-> > Alsa-devel mailing list
-> > Alsa-devel@alsa-project.org
-> > https://mailman.alsa-project.org/mailman/listinfo/alsa-devel
-> >=20
+Media device information
+------------------------
+driver          rkisp1
+model           rkisp1
+serial
+bus info        platform: rkisp1
+hw revision     0x0
+driver version  5.3.0
 
---5dNcufZ4prhark0F
-Content-Type: application/pgp-signature; name="signature.asc"
+Device topology
+- entity 1: rkisp1-isp-subdev (4 pads, 5 links)
+            type V4L2 subdev subtype Unknown flags 0
+            device node name /dev/v4l-subdev0
+        pad0: Sink
+                [fmt:SBGGR10_1X10/800x600 field:none
+                 crop.bounds:(0,0)/800x600
+                 crop:(0,0)/800x600]
+                <- "ov5647 4-0036":0 [ENABLED]
+        pad1: Sink
+                [fmt:FIXED/800x600 field:none]
+                <- "rkisp1-input-params":0 [ENABLED]
+        pad2: Source
+                [fmt:YUYV8_2X8/800x600 field:none
+                 crop.bounds:(0,0)/800x600
+                 crop:(0,0)/800x600]
+                -> "rkisp1_selfpath":0 [ENABLED]
+                -> "rkisp1_mainpath":0 [ENABLED]
+        pad3: Source
+                [fmt:FIXED/800x600 field:none]
+                -> "rkisp1-statistics":0 [ENABLED]
 
------BEGIN PGP SIGNATURE-----
+- entity 6: rkisp1_mainpath (1 pad, 1 link)
+            type Node subtype V4L flags 0
+            device node name /dev/video0
+        pad0: Sink
+                <- "rkisp1-isp-subdev":2 [ENABLED]
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1LEN0ACgkQJNaLcl1U
-h9Doowf+Pqtbwv8TKH7n1SWpm5BzFI61YcWAq17CFzAwcyo9WP/KgUvxQuOPbkhE
-BLh0VrJ0TjoAk1hFmJjOiiteW2VCD0GuSwLLta/bIuRPRVfzNbo7hhEMk9StQOzZ
-IyyPf272g43ClAZI0BWc7MxKnx7Kc2Tfr+DJNlOe40TXKqQ3e9EPrZvqQjczZuLl
-LgqWERVy/CAf7McruEyKoWsR9F89dmQUjYjsxXn8+vXjmYJ4KoSFpnXa65U9k3f9
-dq86ylDSeaYDpuFP9HdYzn74boq8u3C+svgAcv7z6q62Pa8RDifXSnMAr84Q6Nn1
-3ScPBYV/GzO3k5FLqxGL5GizewOQyw==
-=9z/t
------END PGP SIGNATURE-----
+- entity 10: rkisp1_selfpath (1 pad, 1 link)
+             type Node subtype V4L flags 0
+             device node name /dev/video1
+        pad0: Sink
+                <- "rkisp1-isp-subdev":2 [ENABLED]
 
---5dNcufZ4prhark0F--
+- entity 14: rkisp1-statistics (1 pad, 1 link)
+             type Node subtype V4L flags 0
+             device node name /dev/video2
+        pad0: Sink
+                <- "rkisp1-isp-subdev":3 [ENABLED]
+
+- entity 18: rkisp1-input-params (1 pad, 1 link)
+             type Node subtype V4L flags 0
+             device node name /dev/video3
+        pad0: Source
+                -> "rkisp1-isp-subdev":1 [ENABLED]
+
+- entity 22: ov5647 4-0036 (1 pad, 1 link)
+             type V4L2 subdev subtype Sensor flags 0
+             device node name /dev/v4l-subdev1
+        pad0: Source
+                [fmt:SBGGR8_1X8/1280x960 field:none]
+                -> "rkisp1-isp-subdev":0 [ENABLED]
+
+
+Thanks
+Helen
