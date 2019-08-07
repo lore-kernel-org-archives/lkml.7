@@ -2,127 +2,103 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B47C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 12:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B9BC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 12:38:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08D8A21BF6
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 12:35:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="glORLVbY"
+	by mail.kernel.org (Postfix) with ESMTP id 8E3AE21BF2
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 12:38:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729907AbfHGMfj (ORCPT
+        id S1729802AbfHGMiN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 08:35:39 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40553 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728235AbfHGMfe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 08:35:34 -0400
-Received: by mail-ot1-f65.google.com with SMTP id l15so46305408oth.7;
-        Wed, 07 Aug 2019 05:35:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=JZuZZafG9InRZg3sJah2SsLACCwnR/QLsffrqIQ7qL0=;
-        b=glORLVbYNymQGAs3xP0KTC+NCDkOT1lxa/Tg/4OpDl26lLqhmoSdG5rG9V3OEQyxNa
-         yXFnPuNy6AWAL46d+3oqCPuOBdI1amlFJG9rC5FJqOPneFt+kpvM5h7aHqkjGXeh4WDu
-         9dDatCOn8xre84uStfHjyPOuxaDyPHkauwGc27TwGbdXuH5LXG9hlfxv/5NCGfMLNtIX
-         cUIJj3BIVzo0goNUabxInYbqPN/ryf7PYKVD//RNAGKHHwZJDEDxc50yxUg3SfXYFM2t
-         FlcA6x5rx9AY1sXvW958b3lAN39XIQVACJ0K+kA1njsgVCDXYscYZDx5agcpILlW+WY2
-         T30A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JZuZZafG9InRZg3sJah2SsLACCwnR/QLsffrqIQ7qL0=;
-        b=OKSqIM3PNGPW5wympclP+S+e3FhH4kLTrXOomKomWokMuqOaKHEQkRqEMcfqZwXnfI
-         4WQQiR/yE/U3ry6JoZGXw0modh6gyc48GNblHdznsI/16ppx6BkGfcNRJ5arQHfzMqjp
-         dfzcZuicAP5Y2EgP4x1DhTFhuz8Vkz/EWkKwF+HU4v3+ksbKqayDfwJbLpz41RGXZybX
-         JeyvRusSOn57GrQURquxd3xpgZhrQg3VylzcgUOe9M9IW2/UZiPC2ltc2Yjn/J/LO9MV
-         Ra+GT9rZvpuKO9LSRtiWzvZOhjlGHxJuZPTjNiWh/oZOPJphuJvdxOfg33/PtuP1cGHd
-         TH/Q==
-X-Gm-Message-State: APjAAAWXJ9GeORiAXOchugKT1ICGt3F/krPRc+NeEyZ1/DZRsNJeDYcG
-        Dj8IOyVKHQzGg9DDn4Wudt/StqhR
-X-Google-Smtp-Source: APXvYqwP1RK8Zqg9ji5PjaAzKucKfNeMU+zgSW+ITvubMhN8EPG91EFKUnjM4+9DDCkInCzknGuqoQ==
-X-Received: by 2002:a05:6830:11d4:: with SMTP id v20mr7171768otq.121.1565181333422;
-        Wed, 07 Aug 2019 05:35:33 -0700 (PDT)
-Received: from JosephdeMacBook-Pro.local ([205.204.117.7])
-        by smtp.gmail.com with ESMTPSA id m21sm28662136otl.70.2019.08.07.05.35.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 07 Aug 2019 05:35:32 -0700 (PDT)
-Subject: Re: [PATCH][ocfs2-next] ocfs2: ensure ret is set to zero before
- returning
-To:     Colin King <colin.king@canonical.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Wed, 7 Aug 2019 08:38:13 -0400
+Received: from foss.arm.com ([217.140.110.172]:47614 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726773AbfHGMiN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 08:38:13 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3757F28;
+        Wed,  7 Aug 2019 05:38:12 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 358E03F575;
+        Wed,  7 Aug 2019 05:38:10 -0700 (PDT)
+Date:   Wed, 7 Aug 2019 13:38:08 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Rob Clark <robdclark@chromium.org>
+Cc:     Christoph Hellwig <hch@lst.de>, Rob Clark <robdclark@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Allison Randal <allison@lohutok.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        ocfs2-devel@oss.oracle.com
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190807121929.28918-1-colin.king@canonical.com>
-From:   Joseph Qi <jiangqi903@gmail.com>
-Message-ID: <fb3d7441-93ea-b619-52fc-00da950c9201@gmail.com>
-Date:   Wed, 7 Aug 2019 20:35:26 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] drm: add cache support for arm64
+Message-ID: <20190807123807.GD54191@lakrids.cambridge.arm.com>
+References: <20190805211451.20176-1-robdclark@gmail.com>
+ <20190806084821.GA17129@lst.de>
+ <CAJs_Fx6eh1w7c=crMoD5XyEOMzP6orLhqUewErE51cPGYmObBQ@mail.gmail.com>
+ <20190806143457.GF475@lakrids.cambridge.arm.com>
+ <CAJs_Fx4h6SWGmDTLBnV4nmWUFAs_Ge1inxd-dW9aDKgKqmc1eQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190807121929.28918-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJs_Fx4h6SWGmDTLBnV4nmWUFAs_Ge1inxd-dW9aDKgKqmc1eQ@mail.gmail.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 19/8/7 20:19, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
+On Tue, Aug 06, 2019 at 09:31:55AM -0700, Rob Clark wrote:
+> On Tue, Aug 6, 2019 at 7:35 AM Mark Rutland <mark.rutland@arm.com> wrote:
+> >
+> > On Tue, Aug 06, 2019 at 07:11:41AM -0700, Rob Clark wrote:
+> > > On Tue, Aug 6, 2019 at 1:48 AM Christoph Hellwig <hch@lst.de> wrote:
+> > > >
+> > > > This goes in the wrong direction.  drm_cflush_* are a bad API we need to
+> > > > get rid of, not add use of it.  The reason for that is two-fold:
+> > > >
+> > > >  a) it doesn't address how cache maintaince actually works in most
+> > > >     platforms.  When talking about a cache we three fundamental operations:
+> > > >
+> > > >         1) write back - this writes the content of the cache back to the
+> > > >            backing memory
+> > > >         2) invalidate - this remove the content of the cache
+> > > >         3) write back + invalidate - do both of the above
+> > >
+> > > Agreed that drm_cflush_* isn't a great API.  In this particular case
+> > > (IIUC), I need wb+inv so that there aren't dirty cache lines that drop
+> > > out to memory later, and so that I don't get a cache hit on
+> > > uncached/wc mmap'ing.
+> >
+> > Is there a cacheable alias lying around (e.g. the linear map), or are
+> > these addresses only mapped uncached/wc?
+> >
+> > If there's a cacheable alias, performing an invalidate isn't sufficient,
+> > since a CPU can allocate a new (clean) entry at any point in time (e.g.
+> > as a result of prefetching or arbitrary speculation).
 > 
-> A previous commit introduced a regression where variable ret was
-> originally being set from the return from a call to function
-> dlm_create_debugfs_subroot and this set was removed. Currently
-> ret is now uninitialized if no alloction errors are found which
-> may end up with a bogus check on ret < 0 on the 'leave:' return
-> path.  Fix this by setting ret to zero on a successful execution
-> path.
+> I *believe* that there are not alias mappings (that I don't control
+> myself) for pages coming from
+> shmem_file_setup()/shmem_read_mapping_page()..  
 
-Good catch.
-Or shall we just initialize 'ret' at first?
+AFAICT, that's regular anonymous memory, so there will be a cacheable
+alias in the linear/direct map.
 
-> 
-> Addresses-Coverity: ("Uninitialzed scalar variable")
+> digging around at what dma_sync_sg_* does under the hood, it looks
+> like it is just arch_sync_dma_for_cpu/device(), so I guess that should
+> be sufficient for what I need.
 
-Typo here. 
+I don't think that's the case, per the example I gave above.
 
 Thanks,
-Joseph
-
-> Fixes: cba322160ef0 ("ocfs2: further debugfs cleanups")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  fs/ocfs2/dlm/dlmdomain.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/fs/ocfs2/dlm/dlmdomain.c b/fs/ocfs2/dlm/dlmdomain.c
-> index 5c4218d66dd2..ee6f459f9770 100644
-> --- a/fs/ocfs2/dlm/dlmdomain.c
-> +++ b/fs/ocfs2/dlm/dlmdomain.c
-> @@ -2052,6 +2052,7 @@ static struct dlm_ctxt *dlm_alloc_ctxt(const char *domain,
->  	mlog(0, "context init: refcount %u\n",
->  		  kref_read(&dlm->dlm_refs));
->  
-> +	ret = 0;
->  leave:
->  	if (ret < 0 && dlm) {
->  		if (dlm->master_hash)
-> 
+Mark.
