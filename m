@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0E22C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D49C5C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3828621E6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:33:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C7E521E6C
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:33:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VvGs+yU2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Uk3yXCZX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388444AbfHGNbW (ORCPT
+        id S2388387AbfHGNbG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 09:31:22 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:60518 "EHLO
+        Wed, 7 Aug 2019 09:31:06 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:60204 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388242AbfHGNbS (ORCPT
+        with ESMTP id S2388270AbfHGNbC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 09:31:18 -0400
+        Wed, 7 Aug 2019 09:31:02 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=ACRDaMf+pG5C3sDpkHi0A1ijrglFCj5ApnVHo3a7YRU=; b=VvGs+yU2ukqApIp/f9gAnNmoWE
-        H94cmKZ8x6RzoAKqB8TONxzGO+jII90v2GWUDDWAdX6Wnz1sUz/85hAA4M5NgpJOguL+mfQb4VDlT
-        lQpZBeRAXM+hniVvWfMh2PjHFIyelwqHs5wx32p6bi/nt5rjTeSLIT1zymJxQKb9HJZMCQWb6Rplk
-        3cby0jo4pLMdNk1zjty7ymnLw3WPt399nUGy2Vn+9ld3nPyK2QRlmy1qNt6t5+ZtIsl1mY++rvB5P
-        50xeLzRdvWkvhBPg3eQWxaHzdOO6XqO57jD+oe5lHxEaOApn9swz2QY+ETRN8qDrk+TgCEUju93gR
-        NOEpJUjg==;
+        bh=6uN6U5oiirn5R2m1a8VqkcPDz/fhGlAHOn+fQI2hsgw=; b=Uk3yXCZXfRc6wqoRMVs4jUuu4u
+        bo7fCjDO0K4AsF11TWVcETneKRYqQFsAR60jIdN9tSX2HEEO8PdEIc5eiDPnNIWZ4RB6A7Oascy+C
+        s2MusxrWMMxKQacEVeZDe4P7bMtuG2kB4anhgAAGZHFerBQAaQ9sGC0oNbqugh2CpsDvZ+fN06/BF
+        eRqfidHeGjJR01/vHagDBDMoErzP23wcelO9BepX93ZCvcHdZwaMyTKJHfYD2U9lY2lurwP5KN8mU
+        f9ba+uotBIZLEKjlDaCYhJul+jbhxq4IEs3LyKjohs4eMbKIrzgo/lmLIIMszt/yLppxd5OeYc7yI
+        l0Gck55w==;
 Received: from [195.167.85.94] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hvM27-00084S-DV; Wed, 07 Aug 2019 13:31:16 +0000
+        id 1hvM1r-0007zS-K4; Wed, 07 Aug 2019 13:31:00 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>
 Cc:     Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 07/29] tty/serial: remove the ioc4_serial driver
-Date:   Wed,  7 Aug 2019 16:30:27 +0300
-Message-Id: <20190807133049.20893-8-hch@lst.de>
+Subject: [PATCH 02/29] char: remove the SGI tiocx/mbcs driver
+Date:   Wed,  7 Aug 2019 16:30:22 +0300
+Message-Id: <20190807133049.20893-3-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190807133049.20893-1-hch@lst.de>
 References: <20190807133049.20893-1-hch@lst.de>
@@ -62,3031 +62,2063 @@ depends on the SN2 support.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- arch/ia64/configs/generic_defconfig   |    1 -
- arch/ia64/configs/gensparse_defconfig |    1 -
- drivers/tty/serial/Kconfig            |    9 -
- drivers/tty/serial/Makefile           |    1 -
- drivers/tty/serial/ioc4_serial.c      | 2955 -------------------------
- 5 files changed, 2967 deletions(-)
- delete mode 100644 drivers/tty/serial/ioc4_serial.c
+ arch/ia64/configs/generic_defconfig   |   2 -
+ arch/ia64/configs/gensparse_defconfig |   2 -
+ arch/ia64/sn/kernel/Makefile          |   1 -
+ arch/ia64/sn/kernel/tiocx.c           | 569 ------------------
+ drivers/char/Kconfig                  |  14 -
+ drivers/char/Makefile                 |   1 -
+ drivers/char/mbcs.c                   | 831 --------------------------
+ drivers/char/mbcs.h                   | 553 -----------------
+ 8 files changed, 1973 deletions(-)
+ delete mode 100644 arch/ia64/sn/kernel/tiocx.c
+ delete mode 100644 drivers/char/mbcs.c
+ delete mode 100644 drivers/char/mbcs.h
 
 diff --git a/arch/ia64/configs/generic_defconfig b/arch/ia64/configs/generic_defconfig
-index 62698ea5d3f2..8dd921dce4b5 100644
+index 22b98ddc9913..1fc4d5a77e0d 100644
 --- a/arch/ia64/configs/generic_defconfig
 +++ b/arch/ia64/configs/generic_defconfig
-@@ -94,7 +94,6 @@ CONFIG_SERIAL_8250_CONSOLE=y
+@@ -90,8 +90,6 @@ CONFIG_IGB=y
+ # CONFIG_SERIO_SERPORT is not set
+ CONFIG_GAMEPORT=m
+ CONFIG_SERIAL_NONSTANDARD=y
+-CONFIG_SGI_TIOCX=y
+-CONFIG_SGI_MBCS=m
+ CONFIG_SERIAL_8250=y
+ CONFIG_SERIAL_8250_CONSOLE=y
  CONFIG_SERIAL_8250_NR_UARTS=6
- CONFIG_SERIAL_8250_EXTENDED=y
- CONFIG_SERIAL_8250_SHARE_IRQ=y
--CONFIG_SERIAL_SGI_IOC4=y
- # CONFIG_HW_RANDOM is not set
- CONFIG_EFI_RTC=y
- CONFIG_RAW_DRIVER=m
 diff --git a/arch/ia64/configs/gensparse_defconfig b/arch/ia64/configs/gensparse_defconfig
-index b910318f2348..6e450a4fc93e 100644
+index 1d230c0a90bd..289ed714ad8b 100644
 --- a/arch/ia64/configs/gensparse_defconfig
 +++ b/arch/ia64/configs/gensparse_defconfig
-@@ -83,7 +83,6 @@ CONFIG_SERIAL_8250_CONSOLE=y
+@@ -79,8 +79,6 @@ CONFIG_E1000=y
+ # CONFIG_SERIO_SERPORT is not set
+ CONFIG_GAMEPORT=m
+ CONFIG_SERIAL_NONSTANDARD=y
+-CONFIG_SGI_TIOCX=y
+-CONFIG_SGI_MBCS=m
+ CONFIG_SERIAL_8250=y
+ CONFIG_SERIAL_8250_CONSOLE=y
  CONFIG_SERIAL_8250_NR_UARTS=6
- CONFIG_SERIAL_8250_EXTENDED=y
- CONFIG_SERIAL_8250_SHARE_IRQ=y
--CONFIG_SERIAL_SGI_IOC4=y
- CONFIG_SERIAL_SGI_IOC3=y
- # CONFIG_HW_RANDOM is not set
- CONFIG_EFI_RTC=y
-diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-index e9930af78acc..d33bd894b9f2 100644
---- a/drivers/tty/serial/Kconfig
-+++ b/drivers/tty/serial/Kconfig
-@@ -972,15 +972,6 @@ config SERIAL_JSM
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called jsm.
- 
--config SERIAL_SGI_IOC4
--	tristate "SGI IOC4 controller serial support"
--	depends on (IA64_GENERIC || IA64_SGI_SN2) && SGI_IOC4
--	select SERIAL_CORE
--	help
--		If you have an SGI Altix with an IOC4 based Base IO card
--		and wish to use the serial ports on this card, say Y.
--		Otherwise, say N.
--
- config SERIAL_SGI_IOC3
- 	tristate "SGI Altix IOC3 serial support"
- 	depends on (IA64_GENERIC || IA64_SGI_SN2) && SGI_IOC3
-diff --git a/drivers/tty/serial/Makefile b/drivers/tty/serial/Makefile
-index caa978980a6e..df8f9a8f7651 100644
---- a/drivers/tty/serial/Makefile
-+++ b/drivers/tty/serial/Makefile
-@@ -52,7 +52,6 @@ obj-$(CONFIG_SERIAL_SC16IS7XX_CORE) += sc16is7xx.o
- obj-$(CONFIG_SERIAL_JSM) += jsm/
- obj-$(CONFIG_SERIAL_TXX9) += serial_txx9.o
- obj-$(CONFIG_SERIAL_VR41XX) += vr41xx_siu.o
--obj-$(CONFIG_SERIAL_SGI_IOC4) += ioc4_serial.o
- obj-$(CONFIG_SERIAL_SGI_IOC3) += ioc3_serial.o
- obj-$(CONFIG_SERIAL_ATMEL) += atmel_serial.o
- obj-$(CONFIG_SERIAL_UARTLITE) += uartlite.o
-diff --git a/drivers/tty/serial/ioc4_serial.c b/drivers/tty/serial/ioc4_serial.c
+diff --git a/arch/ia64/sn/kernel/Makefile b/arch/ia64/sn/kernel/Makefile
+index 9c349dd23265..2f580603370d 100644
+--- a/arch/ia64/sn/kernel/Makefile
++++ b/arch/ia64/sn/kernel/Makefile
+@@ -14,5 +14,4 @@ obj-y				+= setup.o bte.o bte_error.o irq.o mca.o idle.o \
+ 				   io_init.o iomv.o klconflib.o pio_phys.o \
+ 				   sn2/
+ obj-$(CONFIG_IA64_GENERIC)      += machvec.o
+-obj-$(CONFIG_SGI_TIOCX)		+= tiocx.o
+ obj-$(CONFIG_PCI_MSI)		+= msi_sn.o
+diff --git a/arch/ia64/sn/kernel/tiocx.c b/arch/ia64/sn/kernel/tiocx.c
 deleted file mode 100644
-index db5b979e5a0c..000000000000
---- a/drivers/tty/serial/ioc4_serial.c
+index 32d0380eb72e..000000000000
+--- a/arch/ia64/sn/kernel/tiocx.c
 +++ /dev/null
-@@ -1,2955 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
+@@ -1,569 +0,0 @@
 -/*
-- * Copyright (C) 2003-2006 Silicon Graphics, Inc.  All Rights Reserved.
+- * This file is subject to the terms and conditions of the GNU General Public
+- * License.  See the file "COPYING" in the main directory of this archive
+- * for more details.
+- *
+- * Copyright (c) 2005 Silicon Graphics, Inc.  All rights reserved.
 - */
 -
--
--/*
-- * This file contains a module version of the ioc4 serial driver. This
-- * includes all the support functions needed (support functions, etc.)
-- * and the serial driver itself.
-- */
--#include <linux/errno.h>
--#include <linux/tty.h>
--#include <linux/tty_flip.h>
--#include <linux/serial.h>
--#include <linux/circ_buf.h>
--#include <linux/serial_reg.h>
 -#include <linux/module.h>
--#include <linux/pci.h>
--#include <linux/ioc4.h>
--#include <linux/serial_core.h>
+-#include <linux/kernel.h>
 -#include <linux/slab.h>
+-#include <linux/spinlock.h>
+-#include <linux/proc_fs.h>
+-#include <linux/capability.h>
+-#include <linux/device.h>
+-#include <linux/delay.h>
+-#include <linux/uaccess.h>
+-#include <asm/sn/sn_sal.h>
+-#include <asm/sn/addrs.h>
+-#include <asm/sn/io.h>
+-#include <asm/sn/types.h>
+-#include <asm/sn/shubio.h>
+-#include <asm/sn/tiocx.h>
+-#include <asm/sn/l1.h>
+-#include <asm/sn/module.h>
+-#include "tio.h"
+-#include "xtalk/xwidgetdev.h"
+-#include "xtalk/hubdev.h"
 -
--/*
-- * interesting things about the ioc4
-- */
+-#define CX_DEV_NONE 0
+-#define DEVICE_NAME "tiocx"
+-#define WIDGET_ID 0
+-#define TIOCX_DEBUG 0
 -
--#define IOC4_NUM_SERIAL_PORTS	4	/* max ports per card */
--#define IOC4_NUM_CARDS		8	/* max cards per partition */
--
--#define	GET_SIO_IR(_n)	(_n == 0) ? (IOC4_SIO_IR_S0) : \
--				(_n == 1) ? (IOC4_SIO_IR_S1) : \
--				(_n == 2) ? (IOC4_SIO_IR_S2) : \
--				(IOC4_SIO_IR_S3)
--
--#define	GET_OTHER_IR(_n)  (_n == 0) ? (IOC4_OTHER_IR_S0_MEMERR) : \
--				(_n == 1) ? (IOC4_OTHER_IR_S1_MEMERR) : \
--				(_n == 2) ? (IOC4_OTHER_IR_S2_MEMERR) : \
--				(IOC4_OTHER_IR_S3_MEMERR)
--
--
--/*
-- * All IOC4 registers are 32 bits wide.
-- */
--
--/*
-- * PCI Memory Space Map
-- */
--#define IOC4_PCI_ERR_ADDR_L     0x000	/* Low Error Address */
--#define IOC4_PCI_ERR_ADDR_VLD	        (0x1 << 0)
--#define IOC4_PCI_ERR_ADDR_MST_ID_MSK    (0xf << 1)
--#define IOC4_PCI_ERR_ADDR_MST_NUM_MSK   (0xe << 1)
--#define IOC4_PCI_ERR_ADDR_MST_TYP_MSK   (0x1 << 1)
--#define IOC4_PCI_ERR_ADDR_MUL_ERR       (0x1 << 5)
--#define IOC4_PCI_ERR_ADDR_ADDR_MSK      (0x3ffffff << 6)
--
--/* Interrupt types */
--#define	IOC4_SIO_INTR_TYPE	0
--#define	IOC4_OTHER_INTR_TYPE	1
--#define	IOC4_NUM_INTR_TYPES	2
--
--/* Bitmasks for IOC4_SIO_IR, IOC4_SIO_IEC, and IOC4_SIO_IES  */
--#define IOC4_SIO_IR_S0_TX_MT	   0x00000001	/* Serial port 0 TX empty */
--#define IOC4_SIO_IR_S0_RX_FULL	   0x00000002	/* Port 0 RX buf full */
--#define IOC4_SIO_IR_S0_RX_HIGH	   0x00000004	/* Port 0 RX hiwat */
--#define IOC4_SIO_IR_S0_RX_TIMER	   0x00000008	/* Port 0 RX timeout */
--#define IOC4_SIO_IR_S0_DELTA_DCD   0x00000010	/* Port 0 delta DCD */
--#define IOC4_SIO_IR_S0_DELTA_CTS   0x00000020	/* Port 0 delta CTS */
--#define IOC4_SIO_IR_S0_INT	   0x00000040	/* Port 0 pass-thru intr */
--#define IOC4_SIO_IR_S0_TX_EXPLICIT 0x00000080	/* Port 0 explicit TX thru */
--#define IOC4_SIO_IR_S1_TX_MT	   0x00000100	/* Serial port 1 */
--#define IOC4_SIO_IR_S1_RX_FULL	   0x00000200	/* */
--#define IOC4_SIO_IR_S1_RX_HIGH	   0x00000400	/* */
--#define IOC4_SIO_IR_S1_RX_TIMER	   0x00000800	/* */
--#define IOC4_SIO_IR_S1_DELTA_DCD   0x00001000	/* */
--#define IOC4_SIO_IR_S1_DELTA_CTS   0x00002000	/* */
--#define IOC4_SIO_IR_S1_INT	   0x00004000	/* */
--#define IOC4_SIO_IR_S1_TX_EXPLICIT 0x00008000	/* */
--#define IOC4_SIO_IR_S2_TX_MT	   0x00010000	/* Serial port 2 */
--#define IOC4_SIO_IR_S2_RX_FULL	   0x00020000	/* */
--#define IOC4_SIO_IR_S2_RX_HIGH	   0x00040000	/* */
--#define IOC4_SIO_IR_S2_RX_TIMER	   0x00080000	/* */
--#define IOC4_SIO_IR_S2_DELTA_DCD   0x00100000	/* */
--#define IOC4_SIO_IR_S2_DELTA_CTS   0x00200000	/* */
--#define IOC4_SIO_IR_S2_INT	   0x00400000	/* */
--#define IOC4_SIO_IR_S2_TX_EXPLICIT 0x00800000	/* */
--#define IOC4_SIO_IR_S3_TX_MT	   0x01000000	/* Serial port 3 */
--#define IOC4_SIO_IR_S3_RX_FULL	   0x02000000	/* */
--#define IOC4_SIO_IR_S3_RX_HIGH	   0x04000000	/* */
--#define IOC4_SIO_IR_S3_RX_TIMER	   0x08000000	/* */
--#define IOC4_SIO_IR_S3_DELTA_DCD   0x10000000	/* */
--#define IOC4_SIO_IR_S3_DELTA_CTS   0x20000000	/* */
--#define IOC4_SIO_IR_S3_INT	   0x40000000	/* */
--#define IOC4_SIO_IR_S3_TX_EXPLICIT 0x80000000	/* */
--
--/* Per device interrupt masks */
--#define IOC4_SIO_IR_S0		(IOC4_SIO_IR_S0_TX_MT | \
--				 IOC4_SIO_IR_S0_RX_FULL | \
--				 IOC4_SIO_IR_S0_RX_HIGH | \
--				 IOC4_SIO_IR_S0_RX_TIMER | \
--				 IOC4_SIO_IR_S0_DELTA_DCD | \
--				 IOC4_SIO_IR_S0_DELTA_CTS | \
--				 IOC4_SIO_IR_S0_INT | \
--				 IOC4_SIO_IR_S0_TX_EXPLICIT)
--#define IOC4_SIO_IR_S1		(IOC4_SIO_IR_S1_TX_MT | \
--				 IOC4_SIO_IR_S1_RX_FULL | \
--				 IOC4_SIO_IR_S1_RX_HIGH | \
--				 IOC4_SIO_IR_S1_RX_TIMER | \
--				 IOC4_SIO_IR_S1_DELTA_DCD | \
--				 IOC4_SIO_IR_S1_DELTA_CTS | \
--				 IOC4_SIO_IR_S1_INT | \
--				 IOC4_SIO_IR_S1_TX_EXPLICIT)
--#define IOC4_SIO_IR_S2		(IOC4_SIO_IR_S2_TX_MT | \
--				 IOC4_SIO_IR_S2_RX_FULL | \
--				 IOC4_SIO_IR_S2_RX_HIGH | \
--				 IOC4_SIO_IR_S2_RX_TIMER | \
--				 IOC4_SIO_IR_S2_DELTA_DCD | \
--				 IOC4_SIO_IR_S2_DELTA_CTS | \
--				 IOC4_SIO_IR_S2_INT | \
--				 IOC4_SIO_IR_S2_TX_EXPLICIT)
--#define IOC4_SIO_IR_S3		(IOC4_SIO_IR_S3_TX_MT | \
--				 IOC4_SIO_IR_S3_RX_FULL | \
--				 IOC4_SIO_IR_S3_RX_HIGH | \
--				 IOC4_SIO_IR_S3_RX_TIMER | \
--				 IOC4_SIO_IR_S3_DELTA_DCD | \
--				 IOC4_SIO_IR_S3_DELTA_CTS | \
--				 IOC4_SIO_IR_S3_INT | \
--				 IOC4_SIO_IR_S3_TX_EXPLICIT)
--
--/* Bitmasks for IOC4_OTHER_IR, IOC4_OTHER_IEC, and IOC4_OTHER_IES  */
--#define IOC4_OTHER_IR_ATA_INT		0x00000001  /* ATAPI intr pass-thru */
--#define IOC4_OTHER_IR_ATA_MEMERR	0x00000002  /* ATAPI DMA PCI error */
--#define IOC4_OTHER_IR_S0_MEMERR		0x00000004  /* Port 0 PCI error */
--#define IOC4_OTHER_IR_S1_MEMERR		0x00000008  /* Port 1 PCI error */
--#define IOC4_OTHER_IR_S2_MEMERR		0x00000010  /* Port 2 PCI error */
--#define IOC4_OTHER_IR_S3_MEMERR		0x00000020  /* Port 3 PCI error */
--#define IOC4_OTHER_IR_KBD_INT		0x00000040  /* Keyboard/mouse */
--#define IOC4_OTHER_IR_RESERVED		0x007fff80  /* Reserved */
--#define IOC4_OTHER_IR_RT_INT		0x00800000  /* INT_OUT section output */
--#define IOC4_OTHER_IR_GEN_INT		0xff000000  /* Generic pins */
--
--#define IOC4_OTHER_IR_SER_MEMERR (IOC4_OTHER_IR_S0_MEMERR | IOC4_OTHER_IR_S1_MEMERR | \
--				  IOC4_OTHER_IR_S2_MEMERR | IOC4_OTHER_IR_S3_MEMERR)
--
--/* Bitmasks for IOC4_SIO_CR */
--#define IOC4_SIO_CR_CMD_PULSE_SHIFT              0  /* byte bus strobe shift */
--#define IOC4_SIO_CR_ARB_DIAG_TX0	0x00000000
--#define IOC4_SIO_CR_ARB_DIAG_RX0	0x00000010
--#define IOC4_SIO_CR_ARB_DIAG_TX1	0x00000020
--#define IOC4_SIO_CR_ARB_DIAG_RX1	0x00000030
--#define IOC4_SIO_CR_ARB_DIAG_TX2	0x00000040
--#define IOC4_SIO_CR_ARB_DIAG_RX2	0x00000050
--#define IOC4_SIO_CR_ARB_DIAG_TX3	0x00000060
--#define IOC4_SIO_CR_ARB_DIAG_RX3	0x00000070
--#define IOC4_SIO_CR_SIO_DIAG_IDLE	0x00000080  /* 0 -> active request among
--							   serial ports (ro) */
--/* Defs for some of the generic I/O pins */
--#define IOC4_GPCR_UART0_MODESEL	   0x10	/* Pin is output to port 0
--						   mode sel */
--#define IOC4_GPCR_UART1_MODESEL	   0x20	/* Pin is output to port 1
--						   mode sel */
--#define IOC4_GPCR_UART2_MODESEL	   0x40	/* Pin is output to port 2
--						   mode sel */
--#define IOC4_GPCR_UART3_MODESEL	   0x80	/* Pin is output to port 3
--						   mode sel */
--
--#define IOC4_GPPR_UART0_MODESEL_PIN   4	/* GIO pin controlling
--					   uart 0 mode select */
--#define IOC4_GPPR_UART1_MODESEL_PIN   5	/* GIO pin controlling
--					   uart 1 mode select */
--#define IOC4_GPPR_UART2_MODESEL_PIN   6	/* GIO pin controlling
--					   uart 2 mode select */
--#define IOC4_GPPR_UART3_MODESEL_PIN   7	/* GIO pin controlling
--					   uart 3 mode select */
--
--/* Bitmasks for serial RX status byte */
--#define IOC4_RXSB_OVERRUN       0x01	/* Char(s) lost */
--#define IOC4_RXSB_PAR_ERR	0x02	/* Parity error */
--#define IOC4_RXSB_FRAME_ERR	0x04	/* Framing error */
--#define IOC4_RXSB_BREAK	        0x08	/* Break character */
--#define IOC4_RXSB_CTS	        0x10	/* State of CTS */
--#define IOC4_RXSB_DCD	        0x20	/* State of DCD */
--#define IOC4_RXSB_MODEM_VALID   0x40	/* DCD, CTS, and OVERRUN are valid */
--#define IOC4_RXSB_DATA_VALID    0x80	/* Data byte, FRAME_ERR PAR_ERR
--					 * & BREAK valid */
--
--/* Bitmasks for serial TX control byte */
--#define IOC4_TXCB_INT_WHEN_DONE 0x20	/* Interrupt after this byte is sent */
--#define IOC4_TXCB_INVALID	0x00	/* Byte is invalid */
--#define IOC4_TXCB_VALID	        0x40	/* Byte is valid */
--#define IOC4_TXCB_MCR	        0x80	/* Data<7:0> to modem control reg */
--#define IOC4_TXCB_DELAY	        0xc0	/* Delay data<7:0> mSec */
--
--/* Bitmasks for IOC4_SBBR_L */
--#define IOC4_SBBR_L_SIZE	0x00000001  /* 0 == 1KB rings, 1 == 4KB rings */
--
--/* Bitmasks for IOC4_SSCR_<3:0> */
--#define IOC4_SSCR_RX_THRESHOLD  0x000001ff  /* Hiwater mark */
--#define IOC4_SSCR_TX_TIMER_BUSY 0x00010000  /* TX timer in progress */
--#define IOC4_SSCR_HFC_EN	0x00020000  /* Hardware flow control enabled */
--#define IOC4_SSCR_RX_RING_DCD   0x00040000  /* Post RX record on delta-DCD */
--#define IOC4_SSCR_RX_RING_CTS   0x00080000  /* Post RX record on delta-CTS */
--#define IOC4_SSCR_DIAG	        0x00200000  /* Bypass clock divider for sim */
--#define IOC4_SSCR_RX_DRAIN	0x08000000  /* Drain RX buffer to memory */
--#define IOC4_SSCR_DMA_EN	0x10000000  /* Enable ring buffer DMA */
--#define IOC4_SSCR_DMA_PAUSE	0x20000000  /* Pause DMA */
--#define IOC4_SSCR_PAUSE_STATE   0x40000000  /* Sets when PAUSE takes effect */
--#define IOC4_SSCR_RESET	        0x80000000  /* Reset DMA channels */
--
--/* All producer/consumer pointers are the same bitfield */
--#define IOC4_PROD_CONS_PTR_4K   0x00000ff8	/* For 4K buffers */
--#define IOC4_PROD_CONS_PTR_1K   0x000003f8	/* For 1K buffers */
--#define IOC4_PROD_CONS_PTR_OFF           3
--
--/* Bitmasks for IOC4_SRCIR_<3:0> */
--#define IOC4_SRCIR_ARM	        0x80000000	/* Arm RX timer */
--
--/* Bitmasks for IOC4_SHADOW_<3:0> */
--#define IOC4_SHADOW_DR	 0x00000001	/* Data ready */
--#define IOC4_SHADOW_OE	 0x00000002	/* Overrun error */
--#define IOC4_SHADOW_PE	 0x00000004	/* Parity error */
--#define IOC4_SHADOW_FE	 0x00000008	/* Framing error */
--#define IOC4_SHADOW_BI	 0x00000010	/* Break interrupt */
--#define IOC4_SHADOW_THRE 0x00000020	/* Xmit holding register empty */
--#define IOC4_SHADOW_TEMT 0x00000040	/* Xmit shift register empty */
--#define IOC4_SHADOW_RFCE 0x00000080	/* Char in RX fifo has an error */
--#define IOC4_SHADOW_DCTS 0x00010000	/* Delta clear to send */
--#define IOC4_SHADOW_DDCD 0x00080000	/* Delta data carrier detect */
--#define IOC4_SHADOW_CTS	 0x00100000	/* Clear to send */
--#define IOC4_SHADOW_DCD	 0x00800000	/* Data carrier detect */
--#define IOC4_SHADOW_DTR	 0x01000000	/* Data terminal ready */
--#define IOC4_SHADOW_RTS	 0x02000000	/* Request to send */
--#define IOC4_SHADOW_OUT1 0x04000000	/* 16550 OUT1 bit */
--#define IOC4_SHADOW_OUT2 0x08000000	/* 16550 OUT2 bit */
--#define IOC4_SHADOW_LOOP 0x10000000	/* Loopback enabled */
--
--/* Bitmasks for IOC4_SRTR_<3:0> */
--#define IOC4_SRTR_CNT	        0x00000fff	/* Reload value for RX timer */
--#define IOC4_SRTR_CNT_VAL	0x0fff0000	/* Current value of RX timer */
--#define IOC4_SRTR_CNT_VAL_SHIFT         16
--#define IOC4_SRTR_HZ                 16000	/* SRTR clock frequency */
--
--/* Serial port register map used for DMA and PIO serial I/O */
--struct ioc4_serialregs {
--	uint32_t sscr;
--	uint32_t stpir;
--	uint32_t stcir;
--	uint32_t srpir;
--	uint32_t srcir;
--	uint32_t srtr;
--	uint32_t shadow;
--};
--
--/* IOC4 UART register map */
--struct ioc4_uartregs {
--	char i4u_lcr;
--	union {
--		char iir;	/* read only */
--		char fcr;	/* write only */
--	} u3;
--	union {
--		char ier;	/* DLAB == 0 */
--		char dlm;	/* DLAB == 1 */
--	} u2;
--	union {
--		char rbr;	/* read only, DLAB == 0 */
--		char thr;	/* write only, DLAB == 0 */
--		char dll;	/* DLAB == 1 */
--	} u1;
--	char i4u_scr;
--	char i4u_msr;
--	char i4u_lsr;
--	char i4u_mcr;
--};
--
--/* short names */
--#define i4u_dll u1.dll
--#define i4u_ier u2.ier
--#define i4u_dlm u2.dlm
--#define i4u_fcr u3.fcr
--
--/* Serial port registers used for DMA serial I/O */
--struct ioc4_serial {
--	uint32_t sbbr01_l;
--	uint32_t sbbr01_h;
--	uint32_t sbbr23_l;
--	uint32_t sbbr23_h;
--
--	struct ioc4_serialregs port_0;
--	struct ioc4_serialregs port_1;
--	struct ioc4_serialregs port_2;
--	struct ioc4_serialregs port_3;
--	struct ioc4_uartregs uart_0;
--	struct ioc4_uartregs uart_1;
--	struct ioc4_uartregs uart_2;
--	struct ioc4_uartregs uart_3;
--};
--
--/* UART clock speed */
--#define IOC4_SER_XIN_CLK_66     66666667
--#define IOC4_SER_XIN_CLK_33     33333333
--
--#define IOC4_W_IES		0
--#define IOC4_W_IEC		1
--
--typedef void ioc4_intr_func_f(void *, uint32_t);
--typedef ioc4_intr_func_f *ioc4_intr_func_t;
--
--static unsigned int Num_of_ioc4_cards;
--
--/* defining this will get you LOTS of great debug info */
--//#define DEBUG_INTERRUPTS
--#define DPRINT_CONFIG(_x...)	;
--//#define DPRINT_CONFIG(_x...)	printk _x
--
--/* number of characters left in xmit buffer before we ask for more */
--#define WAKEUP_CHARS	256
--
--/* number of characters we want to transmit to the lower level at a time */
--#define IOC4_MAX_CHARS	256
--#define IOC4_FIFO_CHARS	255
--
--/* Device name we're using */
--#define DEVICE_NAME_RS232  "ttyIOC"
--#define DEVICE_NAME_RS422  "ttyAIOC"
--#define DEVICE_MAJOR	   204
--#define DEVICE_MINOR_RS232 50
--#define DEVICE_MINOR_RS422 84
--
--
--/* register offsets */
--#define IOC4_SERIAL_OFFSET	0x300
--
--/* flags for next_char_state */
--#define NCS_BREAK	0x1
--#define NCS_PARITY	0x2
--#define NCS_FRAMING	0x4
--#define NCS_OVERRUN	0x8
--
--/* cause we need SOME parameters ... */
--#define MIN_BAUD_SUPPORTED	1200
--#define MAX_BAUD_SUPPORTED	115200
--
--/* protocol types supported */
--#define PROTO_RS232	3
--#define PROTO_RS422	7
--
--/* Notification types */
--#define N_DATA_READY	0x01
--#define N_OUTPUT_LOWAT	0x02
--#define N_BREAK		0x04
--#define N_PARITY_ERROR	0x08
--#define N_FRAMING_ERROR	0x10
--#define N_OVERRUN_ERROR	0x20
--#define N_DDCD		0x40
--#define N_DCTS		0x80
--
--#define N_ALL_INPUT	(N_DATA_READY | N_BREAK |			\
--			 N_PARITY_ERROR | N_FRAMING_ERROR |		\
--			 N_OVERRUN_ERROR | N_DDCD | N_DCTS)
--
--#define N_ALL_OUTPUT	N_OUTPUT_LOWAT
--
--#define N_ALL_ERRORS	(N_PARITY_ERROR | N_FRAMING_ERROR | N_OVERRUN_ERROR)
--
--#define N_ALL		(N_DATA_READY | N_OUTPUT_LOWAT | N_BREAK |	\
--			 N_PARITY_ERROR | N_FRAMING_ERROR |		\
--			 N_OVERRUN_ERROR | N_DDCD | N_DCTS)
--
--#define SER_DIVISOR(_x, clk)		(((clk) + (_x) * 8) / ((_x) * 16))
--#define DIVISOR_TO_BAUD(div, clk)	((clk) / 16 / (div))
--
--/* Some masks */
--#define LCR_MASK_BITS_CHAR	(UART_LCR_WLEN5 | UART_LCR_WLEN6 \
--					| UART_LCR_WLEN7 | UART_LCR_WLEN8)
--#define LCR_MASK_STOP_BITS	(UART_LCR_STOP)
--
--#define PENDING(_p)	(readl(&(_p)->ip_mem->sio_ir.raw) & _p->ip_ienb)
--#define READ_SIO_IR(_p) readl(&(_p)->ip_mem->sio_ir.raw)
--
--/* Default to 4k buffers */
--#ifdef IOC4_1K_BUFFERS
--#define RING_BUF_SIZE 1024
--#define IOC4_BUF_SIZE_BIT 0
--#define PROD_CONS_MASK IOC4_PROD_CONS_PTR_1K
+-#if TIOCX_DEBUG
+-#define DBG(fmt...)    printk(KERN_ALERT fmt)
 -#else
--#define RING_BUF_SIZE 4096
--#define IOC4_BUF_SIZE_BIT IOC4_SBBR_L_SIZE
--#define PROD_CONS_MASK IOC4_PROD_CONS_PTR_4K
+-#define DBG(fmt...)
 -#endif
 -
--#define TOTAL_RING_BUF_SIZE (RING_BUF_SIZE * 4)
+-struct device_attribute dev_attr_cxdev_control;
 -
--/*
-- * This is the entry saved by the driver - one per card
+-/**
+- * tiocx_match - Try to match driver id list with device.
+- * @dev: device pointer
+- * @drv: driver pointer
+- *
+- * Returns 1 if match, 0 otherwise.
 - */
--
--#define UART_PORT_MIN		0
--#define UART_PORT_RS232		UART_PORT_MIN
--#define UART_PORT_RS422		1
--#define UART_PORT_COUNT		2	/* one for each mode */
--
--struct ioc4_control {
--	int ic_irq;
--	struct {
--		/* uart ports are allocated here - 1 for rs232, 1 for rs422 */
--		struct uart_port icp_uart_port[UART_PORT_COUNT];
--		/* Handy reference material */
--		struct ioc4_port *icp_port;
--	} ic_port[IOC4_NUM_SERIAL_PORTS];
--	struct ioc4_soft *ic_soft;
--};
--
--/*
-- * per-IOC4 data structure
-- */
--#define MAX_IOC4_INTR_ENTS	(8 * sizeof(uint32_t))
--struct ioc4_soft {
--	struct ioc4_misc_regs __iomem *is_ioc4_misc_addr;
--	struct ioc4_serial __iomem *is_ioc4_serial_addr;
--
--	/* Each interrupt type has an entry in the array */
--	struct ioc4_intr_type {
--
--		/*
--		 * Each in-use entry in this array contains at least
--		 * one nonzero bit in sd_bits; no two entries in this
--		 * array have overlapping sd_bits values.
--		 */
--		struct ioc4_intr_info {
--			uint32_t sd_bits;
--			ioc4_intr_func_f *sd_intr;
--			void *sd_info;
--		} is_intr_info[MAX_IOC4_INTR_ENTS];
--
--		/* Number of entries active in the above array */
--		atomic_t is_num_intrs;
--	} is_intr_type[IOC4_NUM_INTR_TYPES];
--
--	/* is_ir_lock must be held while
--	 * modifying sio_ie values, so
--	 * we can be sure that sio_ie is
--	 * not changing when we read it
--	 * along with sio_ir.
--	 */
--	spinlock_t is_ir_lock;	/* SIO_IE[SC] mod lock */
--};
--
--/* Local port info for each IOC4 serial ports */
--struct ioc4_port {
--	struct uart_port *ip_port;	/* current active port ptr */
--	/* Ptrs for all ports */
--	struct uart_port *ip_all_ports[UART_PORT_COUNT];
--	/* Back ptrs for this port */
--	struct ioc4_control *ip_control;
--	struct pci_dev *ip_pdev;
--	struct ioc4_soft *ip_ioc4_soft;
--
--	/* pci mem addresses */
--	struct ioc4_misc_regs __iomem *ip_mem;
--	struct ioc4_serial __iomem *ip_serial;
--	struct ioc4_serialregs __iomem *ip_serial_regs;
--	struct ioc4_uartregs __iomem *ip_uart_regs;
--
--	/* Ring buffer page for this port */
--	dma_addr_t ip_dma_ringbuf;
--	/* vaddr of ring buffer */
--	struct ring_buffer *ip_cpu_ringbuf;
--
--	/* Rings for this port */
--	struct ring *ip_inring;
--	struct ring *ip_outring;
--
--	/* Hook to port specific values */
--	struct hooks *ip_hooks;
--
--	spinlock_t ip_lock;
--
--	/* Various rx/tx parameters */
--	int ip_baud;
--	int ip_tx_lowat;
--	int ip_rx_timeout;
--
--	/* Copy of notification bits */
--	int ip_notify;
--
--	/* Shadow copies of various registers so we don't need to PIO
--	 * read them constantly
--	 */
--	uint32_t ip_ienb;	/* Enabled interrupts */
--	uint32_t ip_sscr;
--	uint32_t ip_tx_prod;
--	uint32_t ip_rx_cons;
--	int ip_pci_bus_speed;
--	unsigned char ip_flags;
--};
--
--/* tx low water mark.  We need to notify the driver whenever tx is getting
-- * close to empty so it can refill the tx buffer and keep things going.
-- * Let's assume that if we interrupt 1 ms before the tx goes idle, we'll
-- * have no trouble getting in more chars in time (I certainly hope so).
-- */
--#define TX_LOWAT_LATENCY      1000
--#define TX_LOWAT_HZ          (1000000 / TX_LOWAT_LATENCY)
--#define TX_LOWAT_CHARS(baud) (baud / 10 / TX_LOWAT_HZ)
--
--/* Flags per port */
--#define INPUT_HIGH	0x01
--#define DCD_ON		0x02
--#define LOWAT_WRITTEN	0x04
--#define READ_ABORTED	0x08
--#define PORT_ACTIVE	0x10
--#define PORT_INACTIVE	0	/* This is the value when "off" */
--
--
--/* Since each port has different register offsets and bitmasks
-- * for everything, we'll store those that we need in tables so we
-- * don't have to be constantly checking the port we are dealing with.
-- */
--struct hooks {
--	uint32_t intr_delta_dcd;
--	uint32_t intr_delta_cts;
--	uint32_t intr_tx_mt;
--	uint32_t intr_rx_timer;
--	uint32_t intr_rx_high;
--	uint32_t intr_tx_explicit;
--	uint32_t intr_dma_error;
--	uint32_t intr_clear;
--	uint32_t intr_all;
--	int rs422_select_pin;
--};
--
--static struct hooks hooks_array[IOC4_NUM_SERIAL_PORTS] = {
--	/* Values for port 0 */
--	{
--	 IOC4_SIO_IR_S0_DELTA_DCD, IOC4_SIO_IR_S0_DELTA_CTS,
--	 IOC4_SIO_IR_S0_TX_MT, IOC4_SIO_IR_S0_RX_TIMER,
--	 IOC4_SIO_IR_S0_RX_HIGH, IOC4_SIO_IR_S0_TX_EXPLICIT,
--	 IOC4_OTHER_IR_S0_MEMERR,
--	 (IOC4_SIO_IR_S0_TX_MT | IOC4_SIO_IR_S0_RX_FULL |
--	  IOC4_SIO_IR_S0_RX_HIGH | IOC4_SIO_IR_S0_RX_TIMER |
--	  IOC4_SIO_IR_S0_DELTA_DCD | IOC4_SIO_IR_S0_DELTA_CTS |
--	  IOC4_SIO_IR_S0_INT | IOC4_SIO_IR_S0_TX_EXPLICIT),
--	 IOC4_SIO_IR_S0, IOC4_GPPR_UART0_MODESEL_PIN,
--	 },
--
--	/* Values for port 1 */
--	{
--	 IOC4_SIO_IR_S1_DELTA_DCD, IOC4_SIO_IR_S1_DELTA_CTS,
--	 IOC4_SIO_IR_S1_TX_MT, IOC4_SIO_IR_S1_RX_TIMER,
--	 IOC4_SIO_IR_S1_RX_HIGH, IOC4_SIO_IR_S1_TX_EXPLICIT,
--	 IOC4_OTHER_IR_S1_MEMERR,
--	 (IOC4_SIO_IR_S1_TX_MT | IOC4_SIO_IR_S1_RX_FULL |
--	  IOC4_SIO_IR_S1_RX_HIGH | IOC4_SIO_IR_S1_RX_TIMER |
--	  IOC4_SIO_IR_S1_DELTA_DCD | IOC4_SIO_IR_S1_DELTA_CTS |
--	  IOC4_SIO_IR_S1_INT | IOC4_SIO_IR_S1_TX_EXPLICIT),
--	 IOC4_SIO_IR_S1, IOC4_GPPR_UART1_MODESEL_PIN,
--	 },
--
--	/* Values for port 2 */
--	{
--	 IOC4_SIO_IR_S2_DELTA_DCD, IOC4_SIO_IR_S2_DELTA_CTS,
--	 IOC4_SIO_IR_S2_TX_MT, IOC4_SIO_IR_S2_RX_TIMER,
--	 IOC4_SIO_IR_S2_RX_HIGH, IOC4_SIO_IR_S2_TX_EXPLICIT,
--	 IOC4_OTHER_IR_S2_MEMERR,
--	 (IOC4_SIO_IR_S2_TX_MT | IOC4_SIO_IR_S2_RX_FULL |
--	  IOC4_SIO_IR_S2_RX_HIGH | IOC4_SIO_IR_S2_RX_TIMER |
--	  IOC4_SIO_IR_S2_DELTA_DCD | IOC4_SIO_IR_S2_DELTA_CTS |
--	  IOC4_SIO_IR_S2_INT | IOC4_SIO_IR_S2_TX_EXPLICIT),
--	 IOC4_SIO_IR_S2, IOC4_GPPR_UART2_MODESEL_PIN,
--	 },
--
--	/* Values for port 3 */
--	{
--	 IOC4_SIO_IR_S3_DELTA_DCD, IOC4_SIO_IR_S3_DELTA_CTS,
--	 IOC4_SIO_IR_S3_TX_MT, IOC4_SIO_IR_S3_RX_TIMER,
--	 IOC4_SIO_IR_S3_RX_HIGH, IOC4_SIO_IR_S3_TX_EXPLICIT,
--	 IOC4_OTHER_IR_S3_MEMERR,
--	 (IOC4_SIO_IR_S3_TX_MT | IOC4_SIO_IR_S3_RX_FULL |
--	  IOC4_SIO_IR_S3_RX_HIGH | IOC4_SIO_IR_S3_RX_TIMER |
--	  IOC4_SIO_IR_S3_DELTA_DCD | IOC4_SIO_IR_S3_DELTA_CTS |
--	  IOC4_SIO_IR_S3_INT | IOC4_SIO_IR_S3_TX_EXPLICIT),
--	 IOC4_SIO_IR_S3, IOC4_GPPR_UART3_MODESEL_PIN,
--	 }
--};
--
--/* A ring buffer entry */
--struct ring_entry {
--	union {
--		struct {
--			uint32_t alldata;
--			uint32_t allsc;
--		} all;
--		struct {
--			char data[4];	/* data bytes */
--			char sc[4];	/* status/control */
--		} s;
--	} u;
--};
--
--/* Test the valid bits in any of the 4 sc chars using "allsc" member */
--#define RING_ANY_VALID \
--	((uint32_t)(IOC4_RXSB_MODEM_VALID | IOC4_RXSB_DATA_VALID) * 0x01010101)
--
--#define ring_sc     u.s.sc
--#define ring_data   u.s.data
--#define ring_allsc  u.all.allsc
--
--/* Number of entries per ring buffer. */
--#define ENTRIES_PER_RING (RING_BUF_SIZE / (int) sizeof(struct ring_entry))
--
--/* An individual ring */
--struct ring {
--	struct ring_entry entries[ENTRIES_PER_RING];
--};
--
--/* The whole enchilada */
--struct ring_buffer {
--	struct ring TX_0_OR_2;
--	struct ring RX_0_OR_2;
--	struct ring TX_1_OR_3;
--	struct ring RX_1_OR_3;
--};
--
--/* Get a ring from a port struct */
--#define RING(_p, _wh)	&(((struct ring_buffer *)((_p)->ip_cpu_ringbuf))->_wh)
--
--/* Infinite loop detection.
-- */
--#define MAXITER 10000000
--
--/* Prototypes */
--static void receive_chars(struct uart_port *);
--static void handle_intr(void *arg, uint32_t sio_ir);
--
--/*
-- * port_is_active - determines if this port is currently active
-- * @port: ptr to soft struct for this port
-- * @uart_port: uart port to test for
-- */
--static inline int port_is_active(struct ioc4_port *port,
--		struct uart_port *uart_port)
+-static int tiocx_match(struct device *dev, struct device_driver *drv)
 -{
--	if (port) {
--		if ((port->ip_flags & PORT_ACTIVE)
--					&& (port->ip_port == uart_port))
+-	struct cx_dev *cx_dev = to_cx_dev(dev);
+-	struct cx_drv *cx_drv = to_cx_driver(drv);
+-	const struct cx_device_id *ids = cx_drv->id_table;
+-
+-	if (!ids)
+-		return 0;
+-
+-	while (ids->part_num) {
+-		if (ids->part_num == cx_dev->cx_id.part_num)
 -			return 1;
+-		ids++;
 -	}
 -	return 0;
+-
 -}
 -
+-static int tiocx_uevent(struct device *dev, struct kobj_uevent_env *env)
+-{
+-	return -ENODEV;
+-}
+-
+-static void tiocx_bus_release(struct device *dev)
+-{
+-	kfree(to_cx_dev(dev));
+-}
 -
 -/**
-- * write_ireg - write the interrupt regs
-- * @ioc4_soft: ptr to soft struct for this port
-- * @val: value to write
-- * @which: which register
-- * @type: which ireg set
+- * cx_device_match - Find cx_device in the id table.
+- * @ids: id table from driver
+- * @cx_device: part/mfg id for the device
+- *
 - */
--static inline void
--write_ireg(struct ioc4_soft *ioc4_soft, uint32_t val, int which, int type)
+-static const struct cx_device_id *cx_device_match(const struct cx_device_id
+-						  *ids,
+-						  struct cx_dev *cx_device)
 -{
--	struct ioc4_misc_regs __iomem *mem = ioc4_soft->is_ioc4_misc_addr;
--	unsigned long flags;
--
--	spin_lock_irqsave(&ioc4_soft->is_ir_lock, flags);
--
--	switch (type) {
--	case IOC4_SIO_INTR_TYPE:
--		switch (which) {
--		case IOC4_W_IES:
--			writel(val, &mem->sio_ies.raw);
--			break;
--
--		case IOC4_W_IEC:
--			writel(val, &mem->sio_iec.raw);
--			break;
--		}
--		break;
--
--	case IOC4_OTHER_INTR_TYPE:
--		switch (which) {
--		case IOC4_W_IES:
--			writel(val, &mem->other_ies.raw);
--			break;
--
--		case IOC4_W_IEC:
--			writel(val, &mem->other_iec.raw);
--			break;
--		}
--		break;
--
--	default:
--		break;
+-	/*
+-	 * NOTES: We may want to check for CX_ANY_ID too.
+-	 *        Do we want to match against nasid too?
+-	 *        CX_DEV_NONE == 0, if the driver tries to register for
+-	 *        part/mfg == 0 we should return no-match (NULL) here.
+-	 */
+-	while (ids->part_num && ids->mfg_num) {
+-		if (ids->part_num == cx_device->cx_id.part_num &&
+-		    ids->mfg_num == cx_device->cx_id.mfg_num)
+-			return ids;
+-		ids++;
 -	}
--	spin_unlock_irqrestore(&ioc4_soft->is_ir_lock, flags);
--}
 -
--/**
-- * set_baud - Baud rate setting code
-- * @port: port to set
-- * @baud: baud rate to use
-- */
--static int set_baud(struct ioc4_port *port, int baud)
--{
--	int actual_baud;
--	int diff;
--	int lcr;
--	unsigned short divisor;
--	struct ioc4_uartregs __iomem *uart;
--
--	divisor = SER_DIVISOR(baud, port->ip_pci_bus_speed);
--	if (!divisor)
--		return 1;
--	actual_baud = DIVISOR_TO_BAUD(divisor, port->ip_pci_bus_speed);
--
--	diff = actual_baud - baud;
--	if (diff < 0)
--		diff = -diff;
--
--	/* If we're within 1%, we've found a match */
--	if (diff * 100 > actual_baud)
--		return 1;
--
--	uart = port->ip_uart_regs;
--	lcr = readb(&uart->i4u_lcr);
--	writeb(lcr | UART_LCR_DLAB, &uart->i4u_lcr);
--	writeb((unsigned char)divisor, &uart->i4u_dll);
--	writeb((unsigned char)(divisor >> 8), &uart->i4u_dlm);
--	writeb(lcr, &uart->i4u_lcr);
--	return 0;
--}
--
--
--/**
-- * get_ioc4_port - given a uart port, return the control structure
-- * @port: uart port
-- * @set: set this port as current
-- */
--static struct ioc4_port *get_ioc4_port(struct uart_port *the_port, int set)
--{
--	struct ioc4_driver_data *idd = dev_get_drvdata(the_port->dev);
--	struct ioc4_control *control = idd->idd_serial_data;
--	struct ioc4_port *port;
--	int port_num, port_type;
--
--	if (control) {
--		for ( port_num = 0; port_num < IOC4_NUM_SERIAL_PORTS;
--							port_num++ ) {
--			port = control->ic_port[port_num].icp_port;
--			if (!port)
--				continue;
--			for (port_type = UART_PORT_MIN;
--						port_type < UART_PORT_COUNT;
--						port_type++) {
--				if (the_port == port->ip_all_ports
--							[port_type]) {
--					/* set local copy */
--					if (set) {
--						port->ip_port = the_port;
--					}
--					return port;
--				}
--			}
--		}
--	}
 -	return NULL;
 -}
 -
--/* The IOC4 hardware provides no atomic way to determine if interrupts
-- * are pending since two reads are required to do so.  The handler must
-- * read the SIO_IR and the SIO_IES, and take the logical and of the
-- * two.  When this value is zero, all interrupts have been serviced and
-- * the handler may return.
-- *
-- * This has the unfortunate "hole" that, if some other CPU or
-- * some other thread or some higher level interrupt manages to
-- * modify SIO_IE between our reads of SIO_IR and SIO_IE, we may
-- * think we have observed SIO_IR&SIO_IE==0 when in fact this
-- * condition never really occurred.
-- *
-- * To solve this, we use a simple spinlock that must be held
-- * whenever modifying SIO_IE; holding this lock while observing
-- * both SIO_IR and SIO_IE guarantees that we do not falsely
-- * conclude that no enabled interrupts are pending.
+-/**
+- * cx_device_probe - Look for matching device.
+- *			Call driver probe routine if found.
+- * @cx_driver: driver table (cx_drv struct) from driver
+- * @cx_device: part/mfg id for the device
 - */
--
--static inline uint32_t
--pending_intrs(struct ioc4_soft *soft, int type)
+-static int cx_device_probe(struct device *dev)
 -{
--	struct ioc4_misc_regs __iomem *mem = soft->is_ioc4_misc_addr;
--	unsigned long flag;
--	uint32_t intrs = 0;
+-	const struct cx_device_id *id;
+-	struct cx_drv *cx_drv = to_cx_driver(dev->driver);
+-	struct cx_dev *cx_dev = to_cx_dev(dev);
+-	int error = 0;
 -
--	BUG_ON(!((type == IOC4_SIO_INTR_TYPE)
--	       || (type == IOC4_OTHER_INTR_TYPE)));
--
--	spin_lock_irqsave(&soft->is_ir_lock, flag);
--
--	switch (type) {
--	case IOC4_SIO_INTR_TYPE:
--		intrs = readl(&mem->sio_ir.raw) & readl(&mem->sio_ies.raw);
--		break;
--
--	case IOC4_OTHER_INTR_TYPE:
--		intrs = readl(&mem->other_ir.raw) & readl(&mem->other_ies.raw);
--
--		/* Don't process any ATA interrupte */
--		intrs &= ~(IOC4_OTHER_IR_ATA_INT | IOC4_OTHER_IR_ATA_MEMERR);
--		break;
--
--	default:
--		break;
+-	if (!cx_dev->driver && cx_drv->probe) {
+-		id = cx_device_match(cx_drv->id_table, cx_dev);
+-		if (id) {
+-			if ((error = cx_drv->probe(cx_dev, id)) < 0)
+-				return error;
+-			else
+-				cx_dev->driver = cx_drv;
+-		}
 -	}
--	spin_unlock_irqrestore(&soft->is_ir_lock, flag);
--	return intrs;
+-
+-	return error;
 -}
 -
 -/**
-- * port_init - Initialize the sio and ioc4 hardware for a given port
-- *			called per port from attach...
-- * @port: port to initialize
+- * cx_driver_remove - Remove driver from device struct.
+- * @dev: device
 - */
--static inline int port_init(struct ioc4_port *port)
+-static int cx_driver_remove(struct device *dev)
 -{
--	uint32_t sio_cr;
--	struct hooks *hooks = port->ip_hooks;
--	struct ioc4_uartregs __iomem *uart;
+-	struct cx_dev *cx_dev = to_cx_dev(dev);
+-	struct cx_drv *cx_drv = cx_dev->driver;
+-	if (cx_drv->remove)
+-		cx_drv->remove(cx_dev);
+-	cx_dev->driver = NULL;
+-	return 0;
+-}
 -
--	/* Idle the IOC4 serial interface */
--	writel(IOC4_SSCR_RESET, &port->ip_serial_regs->sscr);
+-struct bus_type tiocx_bus_type = {
+-	.name = "tiocx",
+-	.match = tiocx_match,
+-	.uevent = tiocx_uevent,
+-	.probe = cx_device_probe,
+-	.remove = cx_driver_remove,
+-};
 -
--	/* Wait until any pending bus activity for this port has ceased */
--	do
--		sio_cr = readl(&port->ip_mem->sio_cr.raw);
--	while (!(sio_cr & IOC4_SIO_CR_SIO_DIAG_IDLE));
+-/**
+- * cx_driver_register - Register the driver.
+- * @cx_driver: driver table (cx_drv struct) from driver
+- * 
+- * Called from the driver init routine to register a driver.
+- * The cx_drv struct contains the driver name, a pointer to
+- * a table of part/mfg numbers and a pointer to the driver's
+- * probe/attach routine.
+- */
+-int cx_driver_register(struct cx_drv *cx_driver)
+-{
+-	cx_driver->driver.name = cx_driver->name;
+-	cx_driver->driver.bus = &tiocx_bus_type;
 -
--	/* Finish reset sequence */
--	writel(0, &port->ip_serial_regs->sscr);
+-	return driver_register(&cx_driver->driver);
+-}
 -
--	/* Once RESET is done, reload cached tx_prod and rx_cons values
--	 * and set rings to empty by making prod == cons
--	 */
--	port->ip_tx_prod = readl(&port->ip_serial_regs->stcir) & PROD_CONS_MASK;
--	writel(port->ip_tx_prod, &port->ip_serial_regs->stpir);
--	port->ip_rx_cons = readl(&port->ip_serial_regs->srpir) & PROD_CONS_MASK;
--	writel(port->ip_rx_cons | IOC4_SRCIR_ARM, &port->ip_serial_regs->srcir);
--
--	/* Disable interrupts for this 16550 */
--	uart = port->ip_uart_regs;
--	writeb(0, &uart->i4u_lcr);
--	writeb(0, &uart->i4u_ier);
--
--	/* Set the default baud */
--	set_baud(port, port->ip_baud);
--
--	/* Set line control to 8 bits no parity */
--	writeb(UART_LCR_WLEN8 | 0, &uart->i4u_lcr);
--					/* UART_LCR_STOP == 1 stop */
--
--	/* Enable the FIFOs */
--	writeb(UART_FCR_ENABLE_FIFO, &uart->i4u_fcr);
--	/* then reset 16550 FIFOs */
--	writeb(UART_FCR_ENABLE_FIFO | UART_FCR_CLEAR_RCVR | UART_FCR_CLEAR_XMIT,
--			&uart->i4u_fcr);
--
--	/* Clear modem control register */
--	writeb(0, &uart->i4u_mcr);
--
--	/* Clear deltas in modem status register */
--	readb(&uart->i4u_msr);
--
--	/* Only do this once per port pair */
--	if (port->ip_hooks == &hooks_array[0]
--			    || port->ip_hooks == &hooks_array[2]) {
--		unsigned long ring_pci_addr;
--		uint32_t __iomem *sbbr_l;
--		uint32_t __iomem *sbbr_h;
--
--		if (port->ip_hooks == &hooks_array[0]) {
--			sbbr_l = &port->ip_serial->sbbr01_l;
--			sbbr_h = &port->ip_serial->sbbr01_h;
--		} else {
--			sbbr_l = &port->ip_serial->sbbr23_l;
--			sbbr_h = &port->ip_serial->sbbr23_h;
--		}
--
--		ring_pci_addr = (unsigned long __iomem)port->ip_dma_ringbuf;
--		DPRINT_CONFIG(("%s: ring_pci_addr 0x%lx\n",
--					__func__, ring_pci_addr));
--
--		writel((unsigned int)((uint64_t)ring_pci_addr >> 32), sbbr_h);
--		writel((unsigned int)ring_pci_addr | IOC4_BUF_SIZE_BIT, sbbr_l);
--	}
--
--	/* Set the receive timeout value to 10 msec */
--	writel(IOC4_SRTR_HZ / 100, &port->ip_serial_regs->srtr);
--
--	/* Set rx threshold, enable DMA */
--	/* Set high water mark at 3/4 of full ring */
--	port->ip_sscr = (ENTRIES_PER_RING * 3 / 4);
--	writel(port->ip_sscr, &port->ip_serial_regs->sscr);
--
--	/* Disable and clear all serial related interrupt bits */
--	write_ireg(port->ip_ioc4_soft, hooks->intr_clear,
--		       IOC4_W_IEC, IOC4_SIO_INTR_TYPE);
--	port->ip_ienb &= ~hooks->intr_clear;
--	writel(hooks->intr_clear, &port->ip_mem->sio_ir.raw);
+-/**
+- * cx_driver_unregister - Unregister the driver.
+- * @cx_driver: driver table (cx_drv struct) from driver
+- */
+-int cx_driver_unregister(struct cx_drv *cx_driver)
+-{
+-	driver_unregister(&cx_driver->driver);
 -	return 0;
 -}
 -
 -/**
-- * handle_dma_error_intr - service any pending DMA error interrupts for the
-- *			given port - 2nd level called via sd_intr
-- * @arg: handler arg
-- * @other_ir: ioc4regs
+- * cx_device_register - Register a device.
+- * @nasid: device's nasid
+- * @part_num: device's part number
+- * @mfg_num: device's manufacturer number
+- * @hubdev: hub info associated with this device
+- * @bt: board type of the device
+- *
 - */
--static void handle_dma_error_intr(void *arg, uint32_t other_ir)
+-int
+-cx_device_register(nasid_t nasid, int part_num, int mfg_num,
+-		   struct hubdev_info *hubdev, int bt)
 -{
--	struct ioc4_port *port = (struct ioc4_port *)arg;
--	struct hooks *hooks = port->ip_hooks;
--	unsigned long flags;
+-	struct cx_dev *cx_dev;
+-	int r;
 -
--	spin_lock_irqsave(&port->ip_lock, flags);
+-	cx_dev = kzalloc(sizeof(struct cx_dev), GFP_KERNEL);
+-	DBG("cx_dev= 0x%p\n", cx_dev);
+-	if (cx_dev == NULL)
+-		return -ENOMEM;
 -
--	/* ACK the interrupt */
--	writel(hooks->intr_dma_error, &port->ip_mem->other_ir.raw);
+-	cx_dev->cx_id.part_num = part_num;
+-	cx_dev->cx_id.mfg_num = mfg_num;
+-	cx_dev->cx_id.nasid = nasid;
+-	cx_dev->hubdev = hubdev;
+-	cx_dev->bt = bt;
 -
--	if (readl(&port->ip_mem->pci_err_addr_l.raw) & IOC4_PCI_ERR_ADDR_VLD) {
--		printk(KERN_ERR
--			"PCI error address is 0x%llx, "
--				"master is serial port %c %s\n",
--		     (((uint64_t)readl(&port->ip_mem->pci_err_addr_h)
--							 << 32)
--				| readl(&port->ip_mem->pci_err_addr_l.raw))
--					& IOC4_PCI_ERR_ADDR_ADDR_MSK, '1' +
--		     ((char)(readl(&port->ip_mem->pci_err_addr_l.raw) &
--			     IOC4_PCI_ERR_ADDR_MST_NUM_MSK) >> 1),
--		     (readl(&port->ip_mem->pci_err_addr_l.raw)
--				& IOC4_PCI_ERR_ADDR_MST_TYP_MSK)
--				? "RX" : "TX");
+-	cx_dev->dev.parent = NULL;
+-	cx_dev->dev.bus = &tiocx_bus_type;
+-	cx_dev->dev.release = tiocx_bus_release;
+-	dev_set_name(&cx_dev->dev, "%d", cx_dev->cx_id.nasid);
+-	r = device_register(&cx_dev->dev);
+-	if (r) {
+-		kfree(cx_dev);
+-		return r;
+-	}
+-	get_device(&cx_dev->dev);
 -
--		if (readl(&port->ip_mem->pci_err_addr_l.raw)
--						& IOC4_PCI_ERR_ADDR_MUL_ERR) {
--			printk(KERN_ERR
--				"Multiple errors occurred\n");
+-	device_create_file(&cx_dev->dev, &dev_attr_cxdev_control);
+-
+-	return 0;
+-}
+-
+-/**
+- * cx_device_unregister - Unregister a device.
+- * @cx_dev: part/mfg id for the device
+- */
+-int cx_device_unregister(struct cx_dev *cx_dev)
+-{
+-	put_device(&cx_dev->dev);
+-	device_unregister(&cx_dev->dev);
+-	return 0;
+-}
+-
+-/**
+- * cx_device_reload - Reload the device.
+- * @nasid: device's nasid
+- * @part_num: device's part number
+- * @mfg_num: device's manufacturer number
+- *
+- * Remove the device associated with 'nasid' from device list and then
+- * call device-register with the given part/mfg numbers.
+- */
+-static int cx_device_reload(struct cx_dev *cx_dev)
+-{
+-	cx_device_unregister(cx_dev);
+-	return cx_device_register(cx_dev->cx_id.nasid, cx_dev->cx_id.part_num,
+-				  cx_dev->cx_id.mfg_num, cx_dev->hubdev,
+-				  cx_dev->bt);
+-}
+-
+-static inline u64 tiocx_intr_alloc(nasid_t nasid, int widget,
+-					u64 sn_irq_info,
+-					int req_irq, nasid_t req_nasid,
+-					int req_slice)
+-{
+-	struct ia64_sal_retval rv;
+-	rv.status = 0;
+-	rv.v0 = 0;
+-
+-	ia64_sal_oemcall_nolock(&rv, SN_SAL_IOIF_INTERRUPT,
+-				SAL_INTR_ALLOC, nasid,
+-				widget, sn_irq_info, req_irq,
+-				req_nasid, req_slice);
+-	return rv.status;
+-}
+-
+-static inline void tiocx_intr_free(nasid_t nasid, int widget,
+-				   struct sn_irq_info *sn_irq_info)
+-{
+-	struct ia64_sal_retval rv;
+-	rv.status = 0;
+-	rv.v0 = 0;
+-
+-	ia64_sal_oemcall_nolock(&rv, SN_SAL_IOIF_INTERRUPT,
+-				SAL_INTR_FREE, nasid,
+-				widget, sn_irq_info->irq_irq,
+-				sn_irq_info->irq_cookie, 0, 0);
+-}
+-
+-struct sn_irq_info *tiocx_irq_alloc(nasid_t nasid, int widget, int irq,
+-				    nasid_t req_nasid, int slice)
+-{
+-	struct sn_irq_info *sn_irq_info;
+-	int status;
+-	int sn_irq_size = sizeof(struct sn_irq_info);
+-
+-	if ((nasid & 1) == 0)
+-		return NULL;
+-
+-	sn_irq_info = kzalloc(sn_irq_size, GFP_KERNEL);
+-	if (sn_irq_info == NULL)
+-		return NULL;
+-
+-	status = tiocx_intr_alloc(nasid, widget, __pa(sn_irq_info), irq,
+-				  req_nasid, slice);
+-	if (status) {
+-		kfree(sn_irq_info);
+-		return NULL;
+-	} else {
+-		return sn_irq_info;
+-	}
+-}
+-
+-void tiocx_irq_free(struct sn_irq_info *sn_irq_info)
+-{
+-	u64 bridge = (u64) sn_irq_info->irq_bridge;
+-	nasid_t nasid = NASID_GET(bridge);
+-	int widget;
+-
+-	if (nasid & 1) {
+-		widget = TIO_SWIN_WIDGETNUM(bridge);
+-		tiocx_intr_free(nasid, widget, sn_irq_info);
+-		kfree(sn_irq_info);
+-	}
+-}
+-
+-u64 tiocx_dma_addr(u64 addr)
+-{
+-	return PHYS_TO_TIODMA(addr);
+-}
+-
+-u64 tiocx_swin_base(int nasid)
+-{
+-	return TIO_SWIN_BASE(nasid, TIOCX_CORELET);
+-}
+-
+-EXPORT_SYMBOL(cx_driver_register);
+-EXPORT_SYMBOL(cx_driver_unregister);
+-EXPORT_SYMBOL(cx_device_register);
+-EXPORT_SYMBOL(cx_device_unregister);
+-EXPORT_SYMBOL(tiocx_irq_alloc);
+-EXPORT_SYMBOL(tiocx_irq_free);
+-EXPORT_SYMBOL(tiocx_bus_type);
+-EXPORT_SYMBOL(tiocx_dma_addr);
+-EXPORT_SYMBOL(tiocx_swin_base);
+-
+-static void tio_conveyor_set(nasid_t nasid, int enable_flag)
+-{
+-	u64 ice_frz;
+-	u64 disable_cb = (1ull << 61);
+-
+-	if (!(nasid & 1))
+-		return;
+-
+-	ice_frz = REMOTE_HUB_L(nasid, TIO_ICE_FRZ_CFG);
+-	if (enable_flag) {
+-		if (!(ice_frz & disable_cb))	/* already enabled */
+-			return;
+-		ice_frz &= ~disable_cb;
+-	} else {
+-		if (ice_frz & disable_cb)	/* already disabled */
+-			return;
+-		ice_frz |= disable_cb;
+-	}
+-	DBG(KERN_ALERT "TIO_ICE_FRZ_CFG= 0x%lx\n", ice_frz);
+-	REMOTE_HUB_S(nasid, TIO_ICE_FRZ_CFG, ice_frz);
+-}
+-
+-#define tio_conveyor_enable(nasid) tio_conveyor_set(nasid, 1)
+-#define tio_conveyor_disable(nasid) tio_conveyor_set(nasid, 0)
+-
+-static void tio_corelet_reset(nasid_t nasid, int corelet)
+-{
+-	if (!(nasid & 1))
+-		return;
+-
+-	REMOTE_HUB_S(nasid, TIO_ICE_PMI_TX_CFG, 1 << corelet);
+-	udelay(2000);
+-	REMOTE_HUB_S(nasid, TIO_ICE_PMI_TX_CFG, 0);
+-	udelay(2000);
+-}
+-
+-static int is_fpga_tio(int nasid, int *bt)
+-{
+-	u16 uninitialized_var(ioboard_type);	/* GCC be quiet */
+-	long rc;
+-
+-	rc = ia64_sn_sysctl_ioboard_get(nasid, &ioboard_type);
+-	if (rc) {
+-		printk(KERN_WARNING "ia64_sn_sysctl_ioboard_get failed: %ld\n",
+-		       rc);
+-		return 0;
+-	}
+-
+-	switch (ioboard_type) {
+-	case L1_BRICKTYPE_SA:
+-	case L1_BRICKTYPE_ATHENA:
+-	case L1_BOARDTYPE_DAYTONA:
+-		*bt = ioboard_type;
+-		return 1;
+-	}
+-
+-	return 0;
+-}
+-
+-static int bitstream_loaded(nasid_t nasid)
+-{
+-	u64 cx_credits;
+-
+-	cx_credits = REMOTE_HUB_L(nasid, TIO_ICE_PMI_TX_DYN_CREDIT_STAT_CB3);
+-	cx_credits &= TIO_ICE_PMI_TX_DYN_CREDIT_STAT_CB3_CREDIT_CNT_MASK;
+-	DBG("cx_credits= 0x%lx\n", cx_credits);
+-
+-	return (cx_credits == 0xf) ? 1 : 0;
+-}
+-
+-static int tiocx_reload(struct cx_dev *cx_dev)
+-{
+-	int part_num = CX_DEV_NONE;
+-	int mfg_num = CX_DEV_NONE;
+-	nasid_t nasid = cx_dev->cx_id.nasid;
+-
+-	if (bitstream_loaded(nasid)) {
+-		u64 cx_id;
+-		int rv;
+-
+-		rv = ia64_sn_sysctl_tio_clock_reset(nasid);
+-		if (rv) {
+-			printk(KERN_ALERT "CX port JTAG reset failed.\n");
+-		} else {
+-			cx_id = *(volatile u64 *)
+-				(TIO_SWIN_BASE(nasid, TIOCX_CORELET) +
+-					  WIDGET_ID);
+-			part_num = XWIDGET_PART_NUM(cx_id);
+-			mfg_num = XWIDGET_MFG_NUM(cx_id);
+-			DBG("part= 0x%x, mfg= 0x%x\n", part_num, mfg_num);
+-			/* just ignore it if it's a CE */
+-			if (part_num == TIO_CE_ASIC_PARTNUM)
+-				return 0;
 -		}
 -	}
--	spin_unlock_irqrestore(&port->ip_lock, flags);
 -
--	/* Re-enable DMA error interrupts */
--	write_ireg(port->ip_ioc4_soft, hooks->intr_dma_error, IOC4_W_IES,
--						IOC4_OTHER_INTR_TYPE);
+-	cx_dev->cx_id.part_num = part_num;
+-	cx_dev->cx_id.mfg_num = mfg_num;
+-
+-	/*
+-	 * Delete old device and register the new one.  It's ok if
+-	 * part_num/mfg_num == CX_DEV_NONE.  We want to register
+-	 * devices in the table even if a bitstream isn't loaded.
+-	 * That allows use to see that a bitstream isn't loaded via
+-	 * TIOCX_IOCTL_DEV_LIST.
+-	 */
+-	return cx_device_reload(cx_dev);
 -}
 -
--/**
-- * intr_connect - interrupt connect function
-- * @soft: soft struct for this card
-- * @type: interrupt type
-- * @intrbits: bit pattern to set
-- * @intr: handler function
-- * @info: handler arg
-- */
--static void
--intr_connect(struct ioc4_soft *soft, int type,
--		  uint32_t intrbits, ioc4_intr_func_f * intr, void *info)
+-static ssize_t show_cxdev_control(struct device *dev, struct device_attribute *attr, char *buf)
 -{
--	int i;
--	struct ioc4_intr_info *intr_ptr;
+-	struct cx_dev *cx_dev = to_cx_dev(dev);
 -
--	BUG_ON(!((type == IOC4_SIO_INTR_TYPE)
--	       || (type == IOC4_OTHER_INTR_TYPE)));
--
--	i = atomic_inc_return(&soft-> is_intr_type[type].is_num_intrs) - 1;
--	BUG_ON(!(i < MAX_IOC4_INTR_ENTS || (printk("i %d\n", i), 0)));
--
--	/* Save off the lower level interrupt handler */
--	intr_ptr = &soft->is_intr_type[type].is_intr_info[i];
--	intr_ptr->sd_bits = intrbits;
--	intr_ptr->sd_intr = intr;
--	intr_ptr->sd_info = info;
+-	return sprintf(buf, "0x%x 0x%x 0x%x 0x%x\n",
+-		       cx_dev->cx_id.nasid,
+-		       cx_dev->cx_id.part_num, cx_dev->cx_id.mfg_num,
+-		       cx_dev->bt);
 -}
 -
--/**
-- * ioc4_intr - Top level IOC4 interrupt handler.
-- * @irq: irq value
-- * @arg: handler arg
-- */
--
--static irqreturn_t ioc4_intr(int irq, void *arg)
+-static ssize_t store_cxdev_control(struct device *dev, struct device_attribute *attr, const char *buf,
+-				   size_t count)
 -{
--	struct ioc4_soft *soft;
--	uint32_t this_ir, this_mir;
--	int xx, num_intrs = 0;
--	int intr_type;
--	int handled = 0;
--	struct ioc4_intr_info *intr_info;
+-	int n;
+-	struct cx_dev *cx_dev = to_cx_dev(dev);
 -
--	soft = arg;
--	for (intr_type = 0; intr_type < IOC4_NUM_INTR_TYPES; intr_type++) {
--		num_intrs = (int)atomic_read(
--				&soft->is_intr_type[intr_type].is_num_intrs);
--
--		this_mir = this_ir = pending_intrs(soft, intr_type);
--
--		/* Farm out the interrupt to the various drivers depending on
--		 * which interrupt bits are set.
--		 */
--		for (xx = 0; xx < num_intrs; xx++) {
--			intr_info = &soft->is_intr_type[intr_type].is_intr_info[xx];
--			this_mir = this_ir & intr_info->sd_bits;
--			if (this_mir) {
--				/* Disable owned interrupts, call handler */
--				handled++;
--				write_ireg(soft, intr_info->sd_bits, IOC4_W_IEC,
--								intr_type);
--				intr_info->sd_intr(intr_info->sd_info, this_mir);
--				this_ir &= ~this_mir;
--			}
--		}
--	}
--#ifdef DEBUG_INTERRUPTS
--	{
--		struct ioc4_misc_regs __iomem *mem = soft->is_ioc4_misc_addr;
--		unsigned long flag;
--
--		spin_lock_irqsave(&soft->is_ir_lock, flag);
--		printk ("%s : %d : mem 0x%p sio_ir 0x%x sio_ies 0x%x "
--				"other_ir 0x%x other_ies 0x%x mask 0x%x\n",
--		     __func__, __LINE__,
--		     (void *)mem, readl(&mem->sio_ir.raw),
--		     readl(&mem->sio_ies.raw),
--		     readl(&mem->other_ir.raw),
--		     readl(&mem->other_ies.raw),
--		     IOC4_OTHER_IR_ATA_INT | IOC4_OTHER_IR_ATA_MEMERR);
--		spin_unlock_irqrestore(&soft->is_ir_lock, flag);
--	}
--#endif
--	return handled ? IRQ_HANDLED : IRQ_NONE;
--}
--
--/**
-- * ioc4_attach_local - Device initialization.
-- *			Called at *_attach() time for each
-- *			IOC4 with serial ports in the system.
-- * @idd: Master module data for this IOC4
-- */
--static inline int ioc4_attach_local(struct ioc4_driver_data *idd)
--{
--	struct ioc4_port *port;
--	struct ioc4_port *ports[IOC4_NUM_SERIAL_PORTS];
--	int port_number;
--	uint16_t ioc4_revid_min = 62;
--	uint16_t ioc4_revid;
--	struct pci_dev *pdev = idd->idd_pdev;
--	struct ioc4_control* control = idd->idd_serial_data;
--	struct ioc4_soft *soft = control->ic_soft;
--	void __iomem *ioc4_misc = idd->idd_misc_regs;
--	void __iomem *ioc4_serial = soft->is_ioc4_serial_addr;
--
--	/* IOC4 firmware must be at least rev 62 */
--	pci_read_config_word(pdev, PCI_COMMAND_SPECIAL, &ioc4_revid);
--
--	printk(KERN_INFO "IOC4 firmware revision %d\n", ioc4_revid);
--	if (ioc4_revid < ioc4_revid_min) {
--		printk(KERN_WARNING
--		    "IOC4 serial not supported on firmware rev %d, "
--				"please upgrade to rev %d or higher\n",
--				ioc4_revid, ioc4_revid_min);
+-	if (!capable(CAP_SYS_ADMIN))
 -		return -EPERM;
--	}
--	BUG_ON(ioc4_misc == NULL);
--	BUG_ON(ioc4_serial == NULL);
 -
--	/* Create port structures for each port */
--	for (port_number = 0; port_number < IOC4_NUM_SERIAL_PORTS;
--							port_number++) {
--		port = kzalloc(sizeof(struct ioc4_port), GFP_KERNEL);
--		if (!port) {
--			printk(KERN_WARNING
--				"IOC4 serial memory not available for port\n");
--			goto free;
--		}
--		spin_lock_init(&port->ip_lock);
--
--		/* we need to remember the previous ones, to point back to
--		 * them farther down - setting up the ring buffers.
--		 */
--		ports[port_number] = port;
--
--		/* Allocate buffers and jumpstart the hardware.  */
--		control->ic_port[port_number].icp_port = port;
--		port->ip_ioc4_soft = soft;
--		port->ip_pdev = pdev;
--		port->ip_ienb = 0;
--		/* Use baud rate calculations based on detected PCI
--		 * bus speed.  Simply test whether the PCI clock is
--		 * running closer to 66MHz or 33MHz.
--		 */
--		if (idd->count_period/IOC4_EXTINT_COUNT_DIVISOR < 20) {
--			port->ip_pci_bus_speed = IOC4_SER_XIN_CLK_66;
--		} else {
--			port->ip_pci_bus_speed = IOC4_SER_XIN_CLK_33;
--		}
--		port->ip_baud = 9600;
--		port->ip_control = control;
--		port->ip_mem = ioc4_misc;
--		port->ip_serial = ioc4_serial;
--
--		/* point to the right hook */
--		port->ip_hooks = &hooks_array[port_number];
--
--		/* Get direct hooks to the serial regs and uart regs
--		 * for this port
--		 */
--		switch (port_number) {
--		case 0:
--			port->ip_serial_regs = &(port->ip_serial->port_0);
--			port->ip_uart_regs = &(port->ip_serial->uart_0);
--			break;
--		case 1:
--			port->ip_serial_regs = &(port->ip_serial->port_1);
--			port->ip_uart_regs = &(port->ip_serial->uart_1);
--			break;
--		case 2:
--			port->ip_serial_regs = &(port->ip_serial->port_2);
--			port->ip_uart_regs = &(port->ip_serial->uart_2);
--			break;
--		default:
--		case 3:
--			port->ip_serial_regs = &(port->ip_serial->port_3);
--			port->ip_uart_regs = &(port->ip_serial->uart_3);
--			break;
--		}
--
--		/* ring buffers are 1 to a pair of ports */
--		if (port_number && (port_number & 1)) {
--			/* odd use the evens buffer */
--			port->ip_dma_ringbuf =
--					ports[port_number - 1]->ip_dma_ringbuf;
--			port->ip_cpu_ringbuf =
--					ports[port_number - 1]->ip_cpu_ringbuf;
--			port->ip_inring = RING(port, RX_1_OR_3);
--			port->ip_outring = RING(port, TX_1_OR_3);
--
--		} else {
--			if (port->ip_dma_ringbuf == 0) {
--				port->ip_cpu_ringbuf = pci_alloc_consistent
--					(pdev, TOTAL_RING_BUF_SIZE,
--					&port->ip_dma_ringbuf);
--
--			}
--			BUG_ON(!((((int64_t)port->ip_dma_ringbuf) &
--				(TOTAL_RING_BUF_SIZE - 1)) == 0));
--			DPRINT_CONFIG(("%s : ip_cpu_ringbuf 0x%p "
--						"ip_dma_ringbuf 0x%p\n",
--					__func__,
--					(void *)port->ip_cpu_ringbuf,
--					(void *)port->ip_dma_ringbuf));
--			port->ip_inring = RING(port, RX_0_OR_2);
--			port->ip_outring = RING(port, TX_0_OR_2);
--		}
--		DPRINT_CONFIG(("%s : port %d [addr 0x%p] control 0x%p",
--				__func__,
--				port_number, (void *)port, (void *)control));
--		DPRINT_CONFIG((" ip_serial_regs 0x%p ip_uart_regs 0x%p\n",
--				(void *)port->ip_serial_regs,
--				(void *)port->ip_uart_regs));
--
--		/* Initialize the hardware for IOC4 */
--		port_init(port);
--
--		DPRINT_CONFIG(("%s: port_number %d port 0x%p inring 0x%p "
--						"outring 0x%p\n",
--				__func__,
--				port_number, (void *)port,
--				(void *)port->ip_inring,
--				(void *)port->ip_outring));
--
--		/* Attach interrupt handlers */
--		intr_connect(soft, IOC4_SIO_INTR_TYPE,
--				GET_SIO_IR(port_number),
--				handle_intr, port);
--
--		intr_connect(soft, IOC4_OTHER_INTR_TYPE,
--				GET_OTHER_IR(port_number),
--				handle_dma_error_intr, port);
--	}
--	return 0;
--
--free:
--	while (port_number)
--		kfree(ports[--port_number]);
--	return -ENOMEM;
--}
--
--/**
-- * enable_intrs - enable interrupts
-- * @port: port to enable
-- * @mask: mask to use
-- */
--static void enable_intrs(struct ioc4_port *port, uint32_t mask)
--{
--	struct hooks *hooks = port->ip_hooks;
--
--	if ((port->ip_ienb & mask) != mask) {
--		write_ireg(port->ip_ioc4_soft, mask, IOC4_W_IES,
--						IOC4_SIO_INTR_TYPE);
--		port->ip_ienb |= mask;
--	}
--
--	if (port->ip_ienb)
--		write_ireg(port->ip_ioc4_soft, hooks->intr_dma_error,
--				IOC4_W_IES, IOC4_OTHER_INTR_TYPE);
--}
--
--/**
-- * local_open - local open a port
-- * @port: port to open
-- */
--static inline int local_open(struct ioc4_port *port)
--{
--	int spiniter = 0;
--
--	port->ip_flags = PORT_ACTIVE;
--
--	/* Pause the DMA interface if necessary */
--	if (port->ip_sscr & IOC4_SSCR_DMA_EN) {
--		writel(port->ip_sscr | IOC4_SSCR_DMA_PAUSE,
--			&port->ip_serial_regs->sscr);
--		while((readl(&port->ip_serial_regs-> sscr)
--				& IOC4_SSCR_PAUSE_STATE) == 0) {
--			spiniter++;
--			if (spiniter > MAXITER) {
--				port->ip_flags = PORT_INACTIVE;
--				return -1;
--			}
--		}
--	}
--
--	/* Reset the input fifo.  If the uart received chars while the port
--	 * was closed and DMA is not enabled, the uart may have a bunch of
--	 * chars hanging around in its rx fifo which will not be discarded
--	 * by rclr in the upper layer. We must get rid of them here.
--	 */
--	writeb(UART_FCR_ENABLE_FIFO | UART_FCR_CLEAR_RCVR,
--				&port->ip_uart_regs->i4u_fcr);
--
--	writeb(UART_LCR_WLEN8, &port->ip_uart_regs->i4u_lcr);
--					/* UART_LCR_STOP == 1 stop */
--
--	/* Re-enable DMA, set default threshold to intr whenever there is
--	 * data available.
--	 */
--	port->ip_sscr &= ~IOC4_SSCR_RX_THRESHOLD;
--	port->ip_sscr |= 1;	/* default threshold */
--
--	/* Plug in the new sscr.  This implicitly clears the DMA_PAUSE
--	 * flag if it was set above
--	 */
--	writel(port->ip_sscr, &port->ip_serial_regs->sscr);
--	port->ip_tx_lowat = 1;
--	return 0;
--}
--
--/**
-- * set_rx_timeout - Set rx timeout and threshold values.
-- * @port: port to use
-- * @timeout: timeout value in ticks
-- */
--static inline int set_rx_timeout(struct ioc4_port *port, int timeout)
--{
--	int threshold;
--
--	port->ip_rx_timeout = timeout;
--
--	/* Timeout is in ticks.  Let's figure out how many chars we
--	 * can receive at the current baud rate in that interval
--	 * and set the rx threshold to that amount.  There are 4 chars
--	 * per ring entry, so we'll divide the number of chars that will
--	 * arrive in timeout by 4.
--	 * So .... timeout * baud / 10 / HZ / 4, with HZ = 100.
--	 */
--	threshold = timeout * port->ip_baud / 4000;
--	if (threshold == 0)
--		threshold = 1;	/* otherwise we'll intr all the time! */
--
--	if ((unsigned)threshold > (unsigned)IOC4_SSCR_RX_THRESHOLD)
--		return 1;
--
--	port->ip_sscr &= ~IOC4_SSCR_RX_THRESHOLD;
--	port->ip_sscr |= threshold;
--
--	writel(port->ip_sscr, &port->ip_serial_regs->sscr);
--
--	/* Now set the rx timeout to the given value
--	 * again timeout * IOC4_SRTR_HZ / HZ
--	 */
--	timeout = timeout * IOC4_SRTR_HZ / 100;
--	if (timeout > IOC4_SRTR_CNT)
--		timeout = IOC4_SRTR_CNT;
--
--	writel(timeout, &port->ip_serial_regs->srtr);
--	return 0;
--}
--
--/**
-- * config_port - config the hardware
-- * @port: port to config
-- * @baud: baud rate for the port
-- * @byte_size: data size
-- * @stop_bits: number of stop bits
-- * @parenb: parity enable ?
-- * @parodd: odd parity ?
-- */
--static inline int
--config_port(struct ioc4_port *port,
--	    int baud, int byte_size, int stop_bits, int parenb, int parodd)
--{
--	char lcr, sizebits;
--	int spiniter = 0;
--
--	DPRINT_CONFIG(("%s: baud %d byte_size %d stop %d parenb %d parodd %d\n",
--		__func__, baud, byte_size, stop_bits, parenb, parodd));
--
--	if (set_baud(port, baud))
--		return 1;
--
--	switch (byte_size) {
--	case 5:
--		sizebits = UART_LCR_WLEN5;
--		break;
--	case 6:
--		sizebits = UART_LCR_WLEN6;
--		break;
--	case 7:
--		sizebits = UART_LCR_WLEN7;
--		break;
--	case 8:
--		sizebits = UART_LCR_WLEN8;
--		break;
--	default:
--		return 1;
--	}
--
--	/* Pause the DMA interface if necessary */
--	if (port->ip_sscr & IOC4_SSCR_DMA_EN) {
--		writel(port->ip_sscr | IOC4_SSCR_DMA_PAUSE,
--			&port->ip_serial_regs->sscr);
--		while((readl(&port->ip_serial_regs->sscr)
--						& IOC4_SSCR_PAUSE_STATE) == 0) {
--			spiniter++;
--			if (spiniter > MAXITER)
--				return -1;
--		}
--	}
--
--	/* Clear relevant fields in lcr */
--	lcr = readb(&port->ip_uart_regs->i4u_lcr);
--	lcr &= ~(LCR_MASK_BITS_CHAR | UART_LCR_EPAR |
--		 UART_LCR_PARITY | LCR_MASK_STOP_BITS);
--
--	/* Set byte size in lcr */
--	lcr |= sizebits;
--
--	/* Set parity */
--	if (parenb) {
--		lcr |= UART_LCR_PARITY;
--		if (!parodd)
--			lcr |= UART_LCR_EPAR;
--	}
--
--	/* Set stop bits */
--	if (stop_bits)
--		lcr |= UART_LCR_STOP /* 2 stop bits */ ;
--
--	writeb(lcr, &port->ip_uart_regs->i4u_lcr);
--
--	/* Re-enable the DMA interface if necessary */
--	if (port->ip_sscr & IOC4_SSCR_DMA_EN) {
--		writel(port->ip_sscr, &port->ip_serial_regs->sscr);
--	}
--	port->ip_baud = baud;
--
--	/* When we get within this number of ring entries of filling the
--	 * entire ring on tx, place an EXPLICIT intr to generate a lowat
--	 * notification when output has drained.
--	 */
--	port->ip_tx_lowat = (TX_LOWAT_CHARS(baud) + 3) / 4;
--	if (port->ip_tx_lowat == 0)
--		port->ip_tx_lowat = 1;
--
--	set_rx_timeout(port, 2);
--
--	return 0;
--}
--
--/**
-- * do_write - Write bytes to the port.  Returns the number of bytes
-- *			actually written. Called from transmit_chars
-- * @port: port to use
-- * @buf: the stuff to write
-- * @len: how many bytes in 'buf'
-- */
--static inline int do_write(struct ioc4_port *port, char *buf, int len)
--{
--	int prod_ptr, cons_ptr, total = 0;
--	struct ring *outring;
--	struct ring_entry *entry;
--	struct hooks *hooks = port->ip_hooks;
--
--	BUG_ON(!(len >= 0));
--
--	prod_ptr = port->ip_tx_prod;
--	cons_ptr = readl(&port->ip_serial_regs->stcir) & PROD_CONS_MASK;
--	outring = port->ip_outring;
--
--	/* Maintain a 1-entry red-zone.  The ring buffer is full when
--	 * (cons - prod) % ring_size is 1.  Rather than do this subtraction
--	 * in the body of the loop, I'll do it now.
--	 */
--	cons_ptr = (cons_ptr - (int)sizeof(struct ring_entry)) & PROD_CONS_MASK;
--
--	/* Stuff the bytes into the output */
--	while ((prod_ptr != cons_ptr) && (len > 0)) {
--		int xx;
--
--		/* Get 4 bytes (one ring entry) at a time */
--		entry = (struct ring_entry *)((caddr_t) outring + prod_ptr);
--
--		/* Invalidate all entries */
--		entry->ring_allsc = 0;
--
--		/* Copy in some bytes */
--		for (xx = 0; (xx < 4) && (len > 0); xx++) {
--			entry->ring_data[xx] = *buf++;
--			entry->ring_sc[xx] = IOC4_TXCB_VALID;
--			len--;
--			total++;
--		}
--
--		/* If we are within some small threshold of filling up the
--		 * entire ring buffer, we must place an EXPLICIT intr here
--		 * to generate a lowat interrupt in case we subsequently
--		 * really do fill up the ring and the caller goes to sleep.
--		 * No need to place more than one though.
--		 */
--		if (!(port->ip_flags & LOWAT_WRITTEN) &&
--			((cons_ptr - prod_ptr) & PROD_CONS_MASK)
--				<= port->ip_tx_lowat
--					* (int)sizeof(struct ring_entry)) {
--			port->ip_flags |= LOWAT_WRITTEN;
--			entry->ring_sc[0] |= IOC4_TXCB_INT_WHEN_DONE;
--		}
--
--		/* Go on to next entry */
--		prod_ptr += sizeof(struct ring_entry);
--		prod_ptr &= PROD_CONS_MASK;
--	}
--
--	/* If we sent something, start DMA if necessary */
--	if (total > 0 && !(port->ip_sscr & IOC4_SSCR_DMA_EN)) {
--		port->ip_sscr |= IOC4_SSCR_DMA_EN;
--		writel(port->ip_sscr, &port->ip_serial_regs->sscr);
--	}
--
--	/* Store the new producer pointer.  If tx is disabled, we stuff the
--	 * data into the ring buffer, but we don't actually start tx.
--	 */
--	if (!uart_tx_stopped(port->ip_port)) {
--		writel(prod_ptr, &port->ip_serial_regs->stpir);
--
--		/* If we are now transmitting, enable tx_mt interrupt so we
--		 * can disable DMA if necessary when the tx finishes.
--		 */
--		if (total > 0)
--			enable_intrs(port, hooks->intr_tx_mt);
--	}
--	port->ip_tx_prod = prod_ptr;
--	return total;
--}
--
--/**
-- * disable_intrs - disable interrupts
-- * @port: port to enable
-- * @mask: mask to use
-- */
--static void disable_intrs(struct ioc4_port *port, uint32_t mask)
--{
--	struct hooks *hooks = port->ip_hooks;
--
--	if (port->ip_ienb & mask) {
--		write_ireg(port->ip_ioc4_soft, mask, IOC4_W_IEC,
--					IOC4_SIO_INTR_TYPE);
--		port->ip_ienb &= ~mask;
--	}
--
--	if (!port->ip_ienb)
--		write_ireg(port->ip_ioc4_soft, hooks->intr_dma_error,
--				IOC4_W_IEC, IOC4_OTHER_INTR_TYPE);
--}
--
--/**
-- * set_notification - Modify event notification
-- * @port: port to use
-- * @mask: events mask
-- * @set_on: set ?
-- */
--static int set_notification(struct ioc4_port *port, int mask, int set_on)
--{
--	struct hooks *hooks = port->ip_hooks;
--	uint32_t intrbits, sscrbits;
--
--	BUG_ON(!mask);
--
--	intrbits = sscrbits = 0;
--
--	if (mask & N_DATA_READY)
--		intrbits |= (hooks->intr_rx_timer | hooks->intr_rx_high);
--	if (mask & N_OUTPUT_LOWAT)
--		intrbits |= hooks->intr_tx_explicit;
--	if (mask & N_DDCD) {
--		intrbits |= hooks->intr_delta_dcd;
--		sscrbits |= IOC4_SSCR_RX_RING_DCD;
--	}
--	if (mask & N_DCTS)
--		intrbits |= hooks->intr_delta_cts;
--
--	if (set_on) {
--		enable_intrs(port, intrbits);
--		port->ip_notify |= mask;
--		port->ip_sscr |= sscrbits;
--	} else {
--		disable_intrs(port, intrbits);
--		port->ip_notify &= ~mask;
--		port->ip_sscr &= ~sscrbits;
--	}
--
--	/* We require DMA if either DATA_READY or DDCD notification is
--	 * currently requested. If neither of these is requested and
--	 * there is currently no tx in progress, DMA may be disabled.
--	 */
--	if (port->ip_notify & (N_DATA_READY | N_DDCD))
--		port->ip_sscr |= IOC4_SSCR_DMA_EN;
--	else if (!(port->ip_ienb & hooks->intr_tx_mt))
--		port->ip_sscr &= ~IOC4_SSCR_DMA_EN;
--
--	writel(port->ip_sscr, &port->ip_serial_regs->sscr);
--	return 0;
--}
--
--/**
-- * set_mcr - set the master control reg
-- * @the_port: port to use
-- * @mask1: mcr mask
-- * @mask2: shadow mask
-- */
--static inline int set_mcr(struct uart_port *the_port,
--		int mask1, int mask2)
--{
--	struct ioc4_port *port = get_ioc4_port(the_port, 0);
--	uint32_t shadow;
--	int spiniter = 0;
--	char mcr;
--
--	if (!port)
--		return -1;
--
--	/* Pause the DMA interface if necessary */
--	if (port->ip_sscr & IOC4_SSCR_DMA_EN) {
--		writel(port->ip_sscr | IOC4_SSCR_DMA_PAUSE,
--			&port->ip_serial_regs->sscr);
--		while ((readl(&port->ip_serial_regs->sscr)
--					& IOC4_SSCR_PAUSE_STATE) == 0) {
--			spiniter++;
--			if (spiniter > MAXITER)
--				return -1;
--		}
--	}
--	shadow = readl(&port->ip_serial_regs->shadow);
--	mcr = (shadow & 0xff000000) >> 24;
--
--	/* Set new value */
--	mcr |= mask1;
--	shadow |= mask2;
--
--	writeb(mcr, &port->ip_uart_regs->i4u_mcr);
--	writel(shadow, &port->ip_serial_regs->shadow);
--
--	/* Re-enable the DMA interface if necessary */
--	if (port->ip_sscr & IOC4_SSCR_DMA_EN) {
--		writel(port->ip_sscr, &port->ip_serial_regs->sscr);
--	}
--	return 0;
--}
--
--/**
-- * ioc4_set_proto - set the protocol for the port
-- * @port: port to use
-- * @proto: protocol to use
-- */
--static int ioc4_set_proto(struct ioc4_port *port, int proto)
--{
--	struct hooks *hooks = port->ip_hooks;
--
--	switch (proto) {
--	case PROTO_RS232:
--		/* Clear the appropriate GIO pin */
--		writel(0, (&port->ip_mem->gppr[hooks->rs422_select_pin].raw));
--		break;
--
--	case PROTO_RS422:
--		/* Set the appropriate GIO pin */
--		writel(1, (&port->ip_mem->gppr[hooks->rs422_select_pin].raw));
--		break;
--
--	default:
--		return 1;
--	}
--	return 0;
--}
--
--/**
-- * transmit_chars - upper level write, called with ip_lock
-- * @the_port: port to write
-- */
--static void transmit_chars(struct uart_port *the_port)
--{
--	int xmit_count, tail, head;
--	int result;
--	char *start;
--	struct tty_struct *tty;
--	struct ioc4_port *port = get_ioc4_port(the_port, 0);
--	struct uart_state *state;
--
--	if (!the_port)
--		return;
--	if (!port)
--		return;
--
--	state = the_port->state;
--	tty = state->port.tty;
--
--	if (uart_circ_empty(&state->xmit) || uart_tx_stopped(the_port)) {
--		/* Nothing to do or hw stopped */
--		set_notification(port, N_ALL_OUTPUT, 0);
--		return;
--	}
--
--	head = state->xmit.head;
--	tail = state->xmit.tail;
--	start = (char *)&state->xmit.buf[tail];
--
--	/* write out all the data or until the end of the buffer */
--	xmit_count = (head < tail) ? (UART_XMIT_SIZE - tail) : (head - tail);
--	if (xmit_count > 0) {
--		result = do_write(port, start, xmit_count);
--		if (result > 0) {
--			/* booking */
--			xmit_count -= result;
--			the_port->icount.tx += result;
--			/* advance the pointers */
--			tail += result;
--			tail &= UART_XMIT_SIZE - 1;
--			state->xmit.tail = tail;
--			start = (char *)&state->xmit.buf[tail];
--		}
--	}
--	if (uart_circ_chars_pending(&state->xmit) < WAKEUP_CHARS)
--		uart_write_wakeup(the_port);
--
--	if (uart_circ_empty(&state->xmit)) {
--		set_notification(port, N_OUTPUT_LOWAT, 0);
--	} else {
--		set_notification(port, N_OUTPUT_LOWAT, 1);
--	}
--}
--
--/**
-- * ioc4_change_speed - change the speed of the port
-- * @the_port: port to change
-- * @new_termios: new termios settings
-- * @old_termios: old termios settings
-- */
--static void
--ioc4_change_speed(struct uart_port *the_port,
--		  struct ktermios *new_termios, struct ktermios *old_termios)
--{
--	struct ioc4_port *port = get_ioc4_port(the_port, 0);
--	int baud, bits;
--	unsigned cflag, iflag;
--	int new_parity = 0, new_parity_enable = 0, new_stop = 0, new_data = 8;
--	struct uart_state *state = the_port->state;
--
--	cflag = new_termios->c_cflag;
--	iflag = new_termios->c_iflag;
--
--	switch (cflag & CSIZE) {
--	case CS5:
--		new_data = 5;
--		bits = 7;
--		break;
--	case CS6:
--		new_data = 6;
--		bits = 8;
--		break;
--	case CS7:
--		new_data = 7;
--		bits = 9;
--		break;
--	case CS8:
--		new_data = 8;
--		bits = 10;
--		break;
--	default:
--		/* cuz we always need a default ... */
--		new_data = 5;
--		bits = 7;
--		break;
--	}
--	if (cflag & CSTOPB) {
--		bits++;
--		new_stop = 1;
--	}
--	if (cflag & PARENB) {
--		bits++;
--		new_parity_enable = 1;
--		if (cflag & PARODD)
--			new_parity = 1;
--	}
--	baud = uart_get_baud_rate(the_port, new_termios, old_termios,
--				MIN_BAUD_SUPPORTED, MAX_BAUD_SUPPORTED);
--	DPRINT_CONFIG(("%s: returned baud %d\n", __func__, baud));
--
--	/* default is 9600 */
--	if (!baud)
--		baud = 9600;
--
--	if (!the_port->fifosize)
--		the_port->fifosize = IOC4_FIFO_CHARS;
--	the_port->timeout = ((the_port->fifosize * HZ * bits) / (baud / 10));
--	the_port->timeout += HZ / 50;	/* Add .02 seconds of slop */
--
--	the_port->ignore_status_mask = N_ALL_INPUT;
--
--	state->port.low_latency = 1;
--
--	if (iflag & IGNPAR)
--		the_port->ignore_status_mask &= ~(N_PARITY_ERROR
--						| N_FRAMING_ERROR);
--	if (iflag & IGNBRK) {
--		the_port->ignore_status_mask &= ~N_BREAK;
--		if (iflag & IGNPAR)
--			the_port->ignore_status_mask &= ~N_OVERRUN_ERROR;
--	}
--	if (!(cflag & CREAD)) {
--		/* ignore everything */
--		the_port->ignore_status_mask &= ~N_DATA_READY;
--	}
--
--	if (cflag & CRTSCTS) {
--		port->ip_sscr |= IOC4_SSCR_HFC_EN;
--	}
--	else {
--		port->ip_sscr &= ~IOC4_SSCR_HFC_EN;
--	}
--	writel(port->ip_sscr, &port->ip_serial_regs->sscr);
--
--	/* Set the configuration and proper notification call */
--	DPRINT_CONFIG(("%s : port 0x%p cflag 0%o "
--		"config_port(baud %d data %d stop %d p enable %d parity %d),"
--		" notification 0x%x\n",
--	     __func__, (void *)port, cflag, baud, new_data, new_stop,
--	     new_parity_enable, new_parity, the_port->ignore_status_mask));
--
--	if ((config_port(port, baud,		/* baud */
--			 new_data,		/* byte size */
--			 new_stop,		/* stop bits */
--			 new_parity_enable,	/* set parity */
--			 new_parity)) >= 0) {	/* parity 1==odd */
--		set_notification(port, the_port->ignore_status_mask, 1);
--	}
--}
--
--/**
-- * ic4_startup_local - Start up the serial port - returns >= 0 if no errors
-- * @the_port: Port to operate on
-- */
--static inline int ic4_startup_local(struct uart_port *the_port)
--{
--	struct ioc4_port *port;
--	struct uart_state *state;
--
--	if (!the_port)
--		return -1;
--
--	port = get_ioc4_port(the_port, 0);
--	if (!port)
--		return -1;
--
--	state = the_port->state;
--
--	local_open(port);
--
--	/* set the protocol - mapbase has the port type */
--	ioc4_set_proto(port, the_port->mapbase);
--
--	/* set the speed of the serial port */
--	ioc4_change_speed(the_port, &state->port.tty->termios,
--			  (struct ktermios *)0);
--
--	return 0;
--}
--
--/*
-- * ioc4_cb_output_lowat - called when the output low water mark is hit
-- * @the_port: port to output
-- */
--static void ioc4_cb_output_lowat(struct uart_port *the_port)
--{
--	unsigned long pflags;
--
--	/* ip_lock is set on the call here */
--	if (the_port) {
--		spin_lock_irqsave(&the_port->lock, pflags);
--		transmit_chars(the_port);
--		spin_unlock_irqrestore(&the_port->lock, pflags);
--	}
--}
--
--/**
-- * handle_intr - service any interrupts for the given port - 2nd level
-- *			called via sd_intr
-- * @arg: handler arg
-- * @sio_ir: ioc4regs
-- */
--static void handle_intr(void *arg, uint32_t sio_ir)
--{
--	struct ioc4_port *port = (struct ioc4_port *)arg;
--	struct hooks *hooks = port->ip_hooks;
--	unsigned int rx_high_rd_aborted = 0;
--	unsigned long flags;
--	struct uart_port *the_port;
--	int loop_counter;
--
--	/* Possible race condition here: The tx_mt interrupt bit may be
--	 * cleared without the intervention of the interrupt handler,
--	 * e.g. by a write.  If the top level interrupt handler reads a
--	 * tx_mt, then some other processor does a write, starting up
--	 * output, then we come in here, see the tx_mt and stop DMA, the
--	 * output started by the other processor will hang.  Thus we can
--	 * only rely on tx_mt being legitimate if it is read while the
--	 * port lock is held.  Therefore this bit must be ignored in the
--	 * passed in interrupt mask which was read by the top level
--	 * interrupt handler since the port lock was not held at the time
--	 * it was read.  We can only rely on this bit being accurate if it
--	 * is read while the port lock is held.  So we'll clear it for now,
--	 * and reload it later once we have the port lock.
--	 */
--	sio_ir &= ~(hooks->intr_tx_mt);
--
--	spin_lock_irqsave(&port->ip_lock, flags);
--
--	loop_counter = MAXITER;	/* to avoid hangs */
--
--	do {
--		uint32_t shadow;
--
--		if ( loop_counter-- <= 0 ) {
--			printk(KERN_WARNING "IOC4 serial: "
--					"possible hang condition/"
--					"port stuck on interrupt.\n");
--			break;
--		}
--
--		/* Handle a DCD change */
--		if (sio_ir & hooks->intr_delta_dcd) {
--			/* ACK the interrupt */
--			writel(hooks->intr_delta_dcd,
--				&port->ip_mem->sio_ir.raw);
--
--			shadow = readl(&port->ip_serial_regs->shadow);
--
--			if ((port->ip_notify & N_DDCD)
--					&& (shadow & IOC4_SHADOW_DCD)
--					&& (port->ip_port)) {
--				the_port = port->ip_port;
--				the_port->icount.dcd = 1;
--				wake_up_interruptible
--					    (&the_port->state->port.delta_msr_wait);
--			} else if ((port->ip_notify & N_DDCD)
--					&& !(shadow & IOC4_SHADOW_DCD)) {
--				/* Flag delta DCD/no DCD */
--				port->ip_flags |= DCD_ON;
--			}
--		}
--
--		/* Handle a CTS change */
--		if (sio_ir & hooks->intr_delta_cts) {
--			/* ACK the interrupt */
--			writel(hooks->intr_delta_cts,
--					&port->ip_mem->sio_ir.raw);
--
--			shadow = readl(&port->ip_serial_regs->shadow);
--
--			if ((port->ip_notify & N_DCTS)
--					&& (port->ip_port)) {
--				the_port = port->ip_port;
--				the_port->icount.cts =
--					(shadow & IOC4_SHADOW_CTS) ? 1 : 0;
--				wake_up_interruptible
--					(&the_port->state->port.delta_msr_wait);
--			}
--		}
--
--		/* rx timeout interrupt.  Must be some data available.  Put this
--		 * before the check for rx_high since servicing this condition
--		 * may cause that condition to clear.
--		 */
--		if (sio_ir & hooks->intr_rx_timer) {
--			/* ACK the interrupt */
--			writel(hooks->intr_rx_timer,
--				&port->ip_mem->sio_ir.raw);
--
--			if ((port->ip_notify & N_DATA_READY)
--					&& (port->ip_port)) {
--				/* ip_lock is set on call here */
--				receive_chars(port->ip_port);
--			}
--		}
--
--		/* rx high interrupt. Must be after rx_timer.  */
--		else if (sio_ir & hooks->intr_rx_high) {
--			/* Data available, notify upper layer */
--			if ((port->ip_notify & N_DATA_READY)
--						&& port->ip_port) {
--				/* ip_lock is set on call here */
--				receive_chars(port->ip_port);
--			}
--
--			/* We can't ACK this interrupt.  If receive_chars didn't
--			 * cause the condition to clear, we'll have to disable
--			 * the interrupt until the data is drained.
--			 * If the read was aborted, don't disable the interrupt
--			 * as this may cause us to hang indefinitely.  An
--			 * aborted read generally means that this interrupt
--			 * hasn't been delivered to the cpu yet anyway, even
--			 * though we see it as asserted when we read the sio_ir.
--			 */
--			if ((sio_ir = PENDING(port)) & hooks->intr_rx_high) {
--				if ((port->ip_flags & READ_ABORTED) == 0) {
--					port->ip_ienb &= ~hooks->intr_rx_high;
--					port->ip_flags |= INPUT_HIGH;
--				} else {
--					rx_high_rd_aborted++;
--				}
--			}
--		}
--
--		/* We got a low water interrupt: notify upper layer to
--		 * send more data.  Must come before tx_mt since servicing
--		 * this condition may cause that condition to clear.
--		 */
--		if (sio_ir & hooks->intr_tx_explicit) {
--			port->ip_flags &= ~LOWAT_WRITTEN;
--
--			/* ACK the interrupt */
--			writel(hooks->intr_tx_explicit,
--					&port->ip_mem->sio_ir.raw);
--
--			if (port->ip_notify & N_OUTPUT_LOWAT)
--				ioc4_cb_output_lowat(port->ip_port);
--		}
--
--		/* Handle tx_mt.  Must come after tx_explicit.  */
--		else if (sio_ir & hooks->intr_tx_mt) {
--			/* If we are expecting a lowat notification
--			 * and we get to this point it probably means that for
--			 * some reason the tx_explicit didn't work as expected
--			 * (that can legitimately happen if the output buffer is
--			 * filled up in just the right way).
--			 * So send the notification now.
--			 */
--			if (port->ip_notify & N_OUTPUT_LOWAT) {
--				ioc4_cb_output_lowat(port->ip_port);
--
--				/* We need to reload the sio_ir since the lowat
--				 * call may have caused another write to occur,
--				 * clearing the tx_mt condition.
--				 */
--				sio_ir = PENDING(port);
--			}
--
--			/* If the tx_mt condition still persists even after the
--			 * lowat call, we've got some work to do.
--			 */
--			if (sio_ir & hooks->intr_tx_mt) {
--
--				/* If we are not currently expecting DMA input,
--				 * and the transmitter has just gone idle,
--				 * there is no longer any reason for DMA, so
--				 * disable it.
--				 */
--				if (!(port->ip_notify
--						& (N_DATA_READY | N_DDCD))) {
--					BUG_ON(!(port->ip_sscr
--							& IOC4_SSCR_DMA_EN));
--					port->ip_sscr &= ~IOC4_SSCR_DMA_EN;
--					writel(port->ip_sscr,
--					   &port->ip_serial_regs->sscr);
--				}
--
--				/* Prevent infinite tx_mt interrupt */
--				port->ip_ienb &= ~hooks->intr_tx_mt;
--			}
--		}
--		sio_ir = PENDING(port);
--
--		/* if the read was aborted and only hooks->intr_rx_high,
--		 * clear hooks->intr_rx_high, so we do not loop forever.
--		 */
--
--		if (rx_high_rd_aborted && (sio_ir == hooks->intr_rx_high)) {
--			sio_ir &= ~hooks->intr_rx_high;
--		}
--	} while (sio_ir & hooks->intr_all);
--
--	spin_unlock_irqrestore(&port->ip_lock, flags);
--
--	/* Re-enable interrupts before returning from interrupt handler.
--	 * Getting interrupted here is okay.  It'll just v() our semaphore, and
--	 * we'll come through the loop again.
--	 */
--
--	write_ireg(port->ip_ioc4_soft, port->ip_ienb, IOC4_W_IES,
--							IOC4_SIO_INTR_TYPE);
--}
--
--/*
-- * ioc4_cb_post_ncs - called for some basic errors
-- * @port: port to use
-- * @ncs: event
-- */
--static void ioc4_cb_post_ncs(struct uart_port *the_port, int ncs)
--{
--	struct uart_icount *icount;
--
--	icount = &the_port->icount;
--
--	if (ncs & NCS_BREAK)
--		icount->brk++;
--	if (ncs & NCS_FRAMING)
--		icount->frame++;
--	if (ncs & NCS_OVERRUN)
--		icount->overrun++;
--	if (ncs & NCS_PARITY)
--		icount->parity++;
--}
--
--/**
-- * do_read - Read in bytes from the port.  Return the number of bytes
-- *			actually read.
-- * @the_port: port to use
-- * @buf: place to put the stuff we read
-- * @len: how big 'buf' is
-- */
--
--static inline int do_read(struct uart_port *the_port, unsigned char *buf,
--				int len)
--{
--	int prod_ptr, cons_ptr, total;
--	struct ioc4_port *port = get_ioc4_port(the_port, 0);
--	struct ring *inring;
--	struct ring_entry *entry;
--	struct hooks *hooks;
--	int byte_num;
--	char *sc;
--	int loop_counter;
--
--	BUG_ON(!(len >= 0));
--	BUG_ON(!port);
--	hooks = port->ip_hooks;
--
--	/* There is a nasty timing issue in the IOC4. When the rx_timer
--	 * expires or the rx_high condition arises, we take an interrupt.
--	 * At some point while servicing the interrupt, we read bytes from
--	 * the ring buffer and re-arm the rx_timer.  However the rx_timer is
--	 * not started until the first byte is received *after* it is armed,
--	 * and any bytes pending in the rx construction buffers are not drained
--	 * to memory until either there are 4 bytes available or the rx_timer
--	 * expires.  This leads to a potential situation where data is left
--	 * in the construction buffers forever - 1 to 3 bytes were received
--	 * after the interrupt was generated but before the rx_timer was
--	 * re-armed. At that point as long as no subsequent bytes are received
--	 * the timer will never be started and the bytes will remain in the
--	 * construction buffer forever.  The solution is to execute a DRAIN
--	 * command after rearming the timer.  This way any bytes received before
--	 * the DRAIN will be drained to memory, and any bytes received after
--	 * the DRAIN will start the TIMER and be drained when it expires.
--	 * Luckily, this only needs to be done when the DMA buffer is empty
--	 * since there is no requirement that this function return all
--	 * available data as long as it returns some.
--	 */
--	/* Re-arm the timer */
--	writel(port->ip_rx_cons | IOC4_SRCIR_ARM, &port->ip_serial_regs->srcir);
--
--	prod_ptr = readl(&port->ip_serial_regs->srpir) & PROD_CONS_MASK;
--	cons_ptr = port->ip_rx_cons;
--
--	if (prod_ptr == cons_ptr) {
--		int reset_dma = 0;
--
--		/* Input buffer appears empty, do a flush. */
--
--		/* DMA must be enabled for this to work. */
--		if (!(port->ip_sscr & IOC4_SSCR_DMA_EN)) {
--			port->ip_sscr |= IOC4_SSCR_DMA_EN;
--			reset_dma = 1;
--		}
--
--		/* Potential race condition: we must reload the srpir after
--		 * issuing the drain command, otherwise we could think the rx
--		 * buffer is empty, then take a very long interrupt, and when
--		 * we come back it's full and we wait forever for the drain to
--		 * complete.
--		 */
--		writel(port->ip_sscr | IOC4_SSCR_RX_DRAIN,
--				&port->ip_serial_regs->sscr);
--		prod_ptr = readl(&port->ip_serial_regs->srpir)
--				& PROD_CONS_MASK;
--
--		/* We must not wait for the DRAIN to complete unless there are
--		 * at least 8 bytes (2 ring entries) available to receive the
--		 * data otherwise the DRAIN will never complete and we'll
--		 * deadlock here.
--		 * In fact, to make things easier, I'll just ignore the flush if
--		 * there is any data at all now available.
--		 */
--		if (prod_ptr == cons_ptr) {
--			loop_counter = 0;
--			while (readl(&port->ip_serial_regs->sscr) &
--						IOC4_SSCR_RX_DRAIN) {
--				loop_counter++;
--				if (loop_counter > MAXITER)
--					return -1;
--			}
--
--			/* SIGH. We have to reload the prod_ptr *again* since
--			 * the drain may have caused it to change
--			 */
--			prod_ptr = readl(&port->ip_serial_regs->srpir)
--							& PROD_CONS_MASK;
--		}
--		if (reset_dma) {
--			port->ip_sscr &= ~IOC4_SSCR_DMA_EN;
--			writel(port->ip_sscr, &port->ip_serial_regs->sscr);
--		}
--	}
--	inring = port->ip_inring;
--	port->ip_flags &= ~READ_ABORTED;
--
--	total = 0;
--	loop_counter = 0xfffff;	/* to avoid hangs */
--
--	/* Grab bytes from the hardware */
--	while ((prod_ptr != cons_ptr) && (len > 0)) {
--		entry = (struct ring_entry *)((caddr_t)inring + cons_ptr);
--
--		if ( loop_counter-- <= 0 ) {
--			printk(KERN_WARNING "IOC4 serial: "
--					"possible hang condition/"
--					"port stuck on read.\n");
--			break;
--		}
--
--		/* According to the producer pointer, this ring entry
--		 * must contain some data.  But if the PIO happened faster
--		 * than the DMA, the data may not be available yet, so let's
--		 * wait until it arrives.
--		 */
--		if ((entry->ring_allsc & RING_ANY_VALID) == 0) {
--			/* Indicate the read is aborted so we don't disable
--			 * the interrupt thinking that the consumer is
--			 * congested.
--			 */
--			port->ip_flags |= READ_ABORTED;
--			len = 0;
--			break;
--		}
--
--		/* Load the bytes/status out of the ring entry */
--		for (byte_num = 0; byte_num < 4 && len > 0; byte_num++) {
--			sc = &(entry->ring_sc[byte_num]);
--
--			/* Check for change in modem state or overrun */
--			if ((*sc & IOC4_RXSB_MODEM_VALID)
--						&& (port->ip_notify & N_DDCD)) {
--				/* Notify upper layer if DCD dropped */
--
--				if ((port->ip_flags & DCD_ON)
--						&& !(*sc & IOC4_RXSB_DCD)) {
--
--					/* If we have already copied some data,
--					 * return it.  We'll pick up the carrier
--					 * drop on the next pass.  That way we
--					 * don't throw away the data that has
--					 * already been copied back to
--					 * the caller's buffer.
--					 */
--					if (total > 0) {
--						len = 0;
--						break;
--					}
--					port->ip_flags &= ~DCD_ON;
--
--					/* Turn off this notification so the
--					 * carrier drop protocol won't see it
--					 * again when it does a read.
--					 */
--					*sc &= ~IOC4_RXSB_MODEM_VALID;
--
--					/* To keep things consistent, we need
--					 * to update the consumer pointer so
--					 * the next reader won't come in and
--					 * try to read the same ring entries
--					 * again. This must be done here before
--					 * the dcd change.
--					 */
--
--					if ((entry->ring_allsc & RING_ANY_VALID)
--									== 0) {
--						cons_ptr += (int)sizeof
--							(struct ring_entry);
--						cons_ptr &= PROD_CONS_MASK;
--					}
--					writel(cons_ptr,
--						&port->ip_serial_regs->srcir);
--					port->ip_rx_cons = cons_ptr;
--
--					/* Notify upper layer of carrier drop */
--					if ((port->ip_notify & N_DDCD)
--						   && port->ip_port) {
--						the_port->icount.dcd = 0;
--						wake_up_interruptible
--						    (&the_port->state->
--							port.delta_msr_wait);
--					}
--
--					/* If we had any data to return, we
--					 * would have returned it above.
--					 */
--					return 0;
--				}
--			}
--			if (*sc & IOC4_RXSB_MODEM_VALID) {
--				/* Notify that an input overrun occurred */
--				if ((*sc & IOC4_RXSB_OVERRUN)
--				    && (port->ip_notify & N_OVERRUN_ERROR)) {
--					ioc4_cb_post_ncs(the_port, NCS_OVERRUN);
--				}
--				/* Don't look at this byte again */
--				*sc &= ~IOC4_RXSB_MODEM_VALID;
--			}
--
--			/* Check for valid data or RX errors */
--			if ((*sc & IOC4_RXSB_DATA_VALID) &&
--					((*sc & (IOC4_RXSB_PAR_ERR
--							| IOC4_RXSB_FRAME_ERR
--							| IOC4_RXSB_BREAK))
--					&& (port->ip_notify & (N_PARITY_ERROR
--							| N_FRAMING_ERROR
--							| N_BREAK)))) {
--				/* There is an error condition on the next byte.
--				 * If we have already transferred some bytes,
--				 * we'll stop here. Otherwise if this is the
--				 * first byte to be read, we'll just transfer
--				 * it alone after notifying the
--				 * upper layer of its status.
--				 */
--				if (total > 0) {
--					len = 0;
--					break;
--				} else {
--					if ((*sc & IOC4_RXSB_PAR_ERR) &&
--					   (port->ip_notify & N_PARITY_ERROR)) {
--						ioc4_cb_post_ncs(the_port,
--								NCS_PARITY);
--					}
--					if ((*sc & IOC4_RXSB_FRAME_ERR) &&
--					   (port->ip_notify & N_FRAMING_ERROR)){
--						ioc4_cb_post_ncs(the_port,
--								NCS_FRAMING);
--					}
--					if ((*sc & IOC4_RXSB_BREAK)
--					    && (port->ip_notify & N_BREAK)) {
--							ioc4_cb_post_ncs
--								    (the_port,
--								     NCS_BREAK);
--					}
--					len = 1;
--				}
--			}
--			if (*sc & IOC4_RXSB_DATA_VALID) {
--				*sc &= ~IOC4_RXSB_DATA_VALID;
--				*buf = entry->ring_data[byte_num];
--				buf++;
--				len--;
--				total++;
--			}
--		}
--
--		/* If we used up this entry entirely, go on to the next one,
--		 * otherwise we must have run out of buffer space, so
--		 * leave the consumer pointer here for the next read in case
--		 * there are still unread bytes in this entry.
--		 */
--		if ((entry->ring_allsc & RING_ANY_VALID) == 0) {
--			cons_ptr += (int)sizeof(struct ring_entry);
--			cons_ptr &= PROD_CONS_MASK;
--		}
--	}
--
--	/* Update consumer pointer and re-arm rx timer interrupt */
--	writel(cons_ptr, &port->ip_serial_regs->srcir);
--	port->ip_rx_cons = cons_ptr;
--
--	/* If we have now dipped below the rx high water mark and we have
--	 * rx_high interrupt turned off, we can now turn it back on again.
--	 */
--	if ((port->ip_flags & INPUT_HIGH) && (((prod_ptr - cons_ptr)
--			& PROD_CONS_MASK) < ((port->ip_sscr &
--				IOC4_SSCR_RX_THRESHOLD)
--					<< IOC4_PROD_CONS_PTR_OFF))) {
--		port->ip_flags &= ~INPUT_HIGH;
--		enable_intrs(port, hooks->intr_rx_high);
--	}
--	return total;
--}
--
--/**
-- * receive_chars - upper level read. Called with ip_lock.
-- * @the_port: port to read from
-- */
--static void receive_chars(struct uart_port *the_port)
--{
--	unsigned char ch[IOC4_MAX_CHARS];
--	int read_count, request_count = IOC4_MAX_CHARS;
--	struct uart_icount *icount;
--	struct uart_state *state = the_port->state;
--	unsigned long pflags;
--
--	/* Make sure all the pointers are "good" ones */
--	if (!state)
--		return;
--
--	spin_lock_irqsave(&the_port->lock, pflags);
--
--	request_count = tty_buffer_request_room(&state->port, IOC4_MAX_CHARS);
--
--	if (request_count > 0) {
--		icount = &the_port->icount;
--		read_count = do_read(the_port, ch, request_count);
--		if (read_count > 0) {
--			tty_insert_flip_string(&state->port, ch, read_count);
--			icount->rx += read_count;
--		}
--	}
--
--	spin_unlock_irqrestore(&the_port->lock, pflags);
--
--	tty_flip_buffer_push(&state->port);
--}
--
--/**
-- * ic4_type - What type of console are we?
-- * @port: Port to operate with (we ignore since we only have one port)
-- *
-- */
--static const char *ic4_type(struct uart_port *the_port)
--{
--	if (the_port->mapbase == PROTO_RS232)
--		return "SGI IOC4 Serial [rs232]";
--	else
--		return "SGI IOC4 Serial [rs422]";
--}
--
--/**
-- * ic4_tx_empty - Is the transmitter empty?
-- * @port: Port to operate on
-- *
-- */
--static unsigned int ic4_tx_empty(struct uart_port *the_port)
--{
--	struct ioc4_port *port = get_ioc4_port(the_port, 0);
--	unsigned int ret = 0;
--
--	if (port_is_active(port, the_port)) {
--		if (readl(&port->ip_serial_regs->shadow) & IOC4_SHADOW_TEMT)
--			ret = TIOCSER_TEMT;
--	}
--	return ret;
--}
--
--/**
-- * ic4_stop_tx - stop the transmitter
-- * @port: Port to operate on
-- *
-- */
--static void ic4_stop_tx(struct uart_port *the_port)
--{
--	struct ioc4_port *port = get_ioc4_port(the_port, 0);
--
--	if (port_is_active(port, the_port))
--		set_notification(port, N_OUTPUT_LOWAT, 0);
--}
--
--/**
-- * null_void_function -
-- * @port: Port to operate on
-- *
-- */
--static void null_void_function(struct uart_port *the_port)
--{
--}
--
--/**
-- * ic4_shutdown - shut down the port - free irq and disable
-- * @port: Port to shut down
-- *
-- */
--static void ic4_shutdown(struct uart_port *the_port)
--{
--	unsigned long port_flags;
--	struct ioc4_port *port;
--	struct uart_state *state;
--
--	port = get_ioc4_port(the_port, 0);
--	if (!port)
--		return;
--
--	state = the_port->state;
--	port->ip_port = NULL;
--
--	wake_up_interruptible(&state->port.delta_msr_wait);
--
--	if (state->port.tty)
--		set_bit(TTY_IO_ERROR, &state->port.tty->flags);
--
--	spin_lock_irqsave(&the_port->lock, port_flags);
--	set_notification(port, N_ALL, 0);
--	port->ip_flags = PORT_INACTIVE;
--	spin_unlock_irqrestore(&the_port->lock, port_flags);
--}
--
--/**
-- * ic4_set_mctrl - set control lines (dtr, rts, etc)
-- * @port: Port to operate on
-- * @mctrl: Lines to set/unset
-- *
-- */
--static void ic4_set_mctrl(struct uart_port *the_port, unsigned int mctrl)
--{
--	unsigned char mcr = 0;
--	struct ioc4_port *port;
--
--	port = get_ioc4_port(the_port, 0);
--	if (!port_is_active(port, the_port))
--		return;
--
--	if (mctrl & TIOCM_RTS)
--		mcr |= UART_MCR_RTS;
--	if (mctrl & TIOCM_DTR)
--		mcr |= UART_MCR_DTR;
--	if (mctrl & TIOCM_OUT1)
--		mcr |= UART_MCR_OUT1;
--	if (mctrl & TIOCM_OUT2)
--		mcr |= UART_MCR_OUT2;
--	if (mctrl & TIOCM_LOOP)
--		mcr |= UART_MCR_LOOP;
--
--	set_mcr(the_port, mcr, IOC4_SHADOW_DTR);
--}
--
--/**
-- * ic4_get_mctrl - get control line info
-- * @port: port to operate on
-- *
-- */
--static unsigned int ic4_get_mctrl(struct uart_port *the_port)
--{
--	struct ioc4_port *port = get_ioc4_port(the_port, 0);
--	uint32_t shadow;
--	unsigned int ret = 0;
--
--	if (!port_is_active(port, the_port))
+-	if (count <= 0)
 -		return 0;
 -
--	shadow = readl(&port->ip_serial_regs->shadow);
--	if (shadow & IOC4_SHADOW_DCD)
--		ret |= TIOCM_CAR;
--	if (shadow & IOC4_SHADOW_DR)
--		ret |= TIOCM_DSR;
--	if (shadow & IOC4_SHADOW_CTS)
--		ret |= TIOCM_CTS;
--	return ret;
--}
+-	n = simple_strtoul(buf, NULL, 0);
 -
--/**
-- * ic4_start_tx - Start transmitter, flush any output
-- * @port: Port to operate on
-- *
-- */
--static void ic4_start_tx(struct uart_port *the_port)
--{
--	struct ioc4_port *port = get_ioc4_port(the_port, 0);
--
--	if (port_is_active(port, the_port)) {
--		set_notification(port, N_OUTPUT_LOWAT, 1);
--		enable_intrs(port, port->ip_hooks->intr_tx_mt);
--	}
--}
--
--/**
-- * ic4_break_ctl - handle breaks
-- * @port: Port to operate on
-- * @break_state: Break state
-- *
-- */
--static void ic4_break_ctl(struct uart_port *the_port, int break_state)
--{
--}
--
--/**
-- * ic4_startup - Start up the serial port
-- * @port: Port to operate on
-- *
-- */
--static int ic4_startup(struct uart_port *the_port)
--{
--	int retval;
--	struct ioc4_port *port;
--	struct ioc4_control *control;
--	struct uart_state *state;
--	unsigned long port_flags;
--
--	if (!the_port)
--		return -ENODEV;
--	port = get_ioc4_port(the_port, 1);
--	if (!port)
--		return -ENODEV;
--	state = the_port->state;
--
--	control = port->ip_control;
--	if (!control) {
--		port->ip_port = NULL;
--		return -ENODEV;
+-	switch (n) {
+-	case 1:
+-		tio_corelet_reset(cx_dev->cx_id.nasid, TIOCX_CORELET);
+-		tiocx_reload(cx_dev);
+-		break;
+-	case 2:
+-		tiocx_reload(cx_dev);
+-		break;
+-	case 3:
+-		tio_corelet_reset(cx_dev->cx_id.nasid, TIOCX_CORELET);
+-		break;
+-	default:
+-		break;
 -	}
 -
--	/* Start up the serial port */
--	spin_lock_irqsave(&the_port->lock, port_flags);
--	retval = ic4_startup_local(the_port);
--	spin_unlock_irqrestore(&the_port->lock, port_flags);
--	return retval;
+-	return count;
 -}
 -
--/**
-- * ic4_set_termios - set termios stuff
-- * @port: port to operate on
-- * @termios: New settings
-- * @termios: Old
-- *
-- */
--static void
--ic4_set_termios(struct uart_port *the_port,
--		struct ktermios *termios, struct ktermios *old_termios)
+-DEVICE_ATTR(cxdev_control, 0644, show_cxdev_control, store_cxdev_control);
+-
+-static int __init tiocx_init(void)
 -{
--	unsigned long port_flags;
+-	cnodeid_t cnodeid;
+-	int found_tiocx_device = 0;
+-	int err;
 -
--	spin_lock_irqsave(&the_port->lock, port_flags);
--	ioc4_change_speed(the_port, termios, old_termios);
--	spin_unlock_irqrestore(&the_port->lock, port_flags);
--}
--
--/**
-- * ic4_request_port - allocate resources for port - no op....
-- * @port: port to operate on
-- *
-- */
--static int ic4_request_port(struct uart_port *port)
--{
--	return 0;
--}
--
--/* Associate the uart functions above - given to serial core */
--
--static const struct uart_ops ioc4_ops = {
--	.tx_empty	= ic4_tx_empty,
--	.set_mctrl	= ic4_set_mctrl,
--	.get_mctrl	= ic4_get_mctrl,
--	.stop_tx	= ic4_stop_tx,
--	.start_tx	= ic4_start_tx,
--	.stop_rx	= null_void_function,
--	.break_ctl	= ic4_break_ctl,
--	.startup	= ic4_startup,
--	.shutdown	= ic4_shutdown,
--	.set_termios	= ic4_set_termios,
--	.type		= ic4_type,
--	.release_port	= null_void_function,
--	.request_port	= ic4_request_port,
--};
--
--/*
-- * Boot-time initialization code
-- */
--
--static struct uart_driver ioc4_uart_rs232 = {
--	.owner		= THIS_MODULE,
--	.driver_name	= "ioc4_serial_rs232",
--	.dev_name	= DEVICE_NAME_RS232,
--	.major		= DEVICE_MAJOR,
--	.minor		= DEVICE_MINOR_RS232,
--	.nr		= IOC4_NUM_CARDS * IOC4_NUM_SERIAL_PORTS,
--};
--
--static struct uart_driver ioc4_uart_rs422 = {
--	.owner		= THIS_MODULE,
--	.driver_name	= "ioc4_serial_rs422",
--	.dev_name	= DEVICE_NAME_RS422,
--	.major		= DEVICE_MAJOR,
--	.minor		= DEVICE_MINOR_RS422,
--	.nr		= IOC4_NUM_CARDS * IOC4_NUM_SERIAL_PORTS,
--};
--
--
--/**
-- * ioc4_serial_remove_one - detach function
-- *
-- * @idd: IOC4 master module data for this IOC4
-- */
--
--static int ioc4_serial_remove_one(struct ioc4_driver_data *idd)
--{
--	int port_num, port_type;
--	struct ioc4_control *control;
--	struct uart_port *the_port;
--	struct ioc4_port *port;
--	struct ioc4_soft *soft;
--
--	/* If serial driver did not attach, don't try to detach */
--	control = idd->idd_serial_data;
--	if (!control)
+-	if (!ia64_platform_is("sn2"))
 -		return 0;
 -
--	for (port_num = 0; port_num < IOC4_NUM_SERIAL_PORTS; port_num++) {
--		for (port_type = UART_PORT_MIN;
--					port_type < UART_PORT_COUNT;
--					port_type++) {
--			the_port = &control->ic_port[port_num].icp_uart_port
--							[port_type];
--			if (the_port) {
--				switch (port_type) {
--				case UART_PORT_RS422:
--					uart_remove_one_port(&ioc4_uart_rs422,
--							the_port);
--					break;
--				default:
--				case UART_PORT_RS232:
--					uart_remove_one_port(&ioc4_uart_rs232,
--							the_port);
--					break;
--				}
--			}
--		}
--		port = control->ic_port[port_num].icp_port;
--		/* we allocate in pairs */
--		if (!(port_num & 1) && port) {
--			pci_free_consistent(port->ip_pdev,
--					TOTAL_RING_BUF_SIZE,
--					port->ip_cpu_ringbuf,
--					port->ip_dma_ringbuf);
--			kfree(port);
+-	err = bus_register(&tiocx_bus_type);
+-	if (err)
+-		return err;
+-
+-	for (cnodeid = 0; cnodeid < num_cnodes; cnodeid++) {
+-		nasid_t nasid;
+-		int bt;
+-
+-		nasid = cnodeid_to_nasid(cnodeid);
+-
+-		if ((nasid & 0x1) && is_fpga_tio(nasid, &bt)) {
+-			struct hubdev_info *hubdev;
+-			struct xwidget_info *widgetp;
+-
+-			DBG("Found TIO at nasid 0x%x\n", nasid);
+-
+-			hubdev =
+-			    (struct hubdev_info *)(NODEPDA(cnodeid)->pdinfo);
+-
+-			widgetp = &hubdev->hdi_xwidget_info[TIOCX_CORELET];
+-
+-			/* The CE hangs off of the CX port but is not an FPGA */
+-			if (widgetp->xwi_hwid.part_num == TIO_CE_ASIC_PARTNUM)
+-				continue;
+-
+-			tio_corelet_reset(nasid, TIOCX_CORELET);
+-			tio_conveyor_enable(nasid);
+-
+-			if (cx_device_register
+-			    (nasid, widgetp->xwi_hwid.part_num,
+-			     widgetp->xwi_hwid.mfg_num, hubdev, bt) < 0)
+-				return -ENXIO;
+-			else
+-				found_tiocx_device++;
 -		}
 -	}
--	soft = control->ic_soft;
--	if (soft) {
--		free_irq(control->ic_irq, soft);
--		if (soft->is_ioc4_serial_addr) {
--			iounmap(soft->is_ioc4_serial_addr);
--			release_mem_region((unsigned long)
--			     soft->is_ioc4_serial_addr,
--				sizeof(struct ioc4_serial));
--		}
--		kfree(soft);
--	}
--	kfree(control);
--	idd->idd_serial_data = NULL;
+-
+-	/* It's ok if we find zero devices. */
+-	DBG("found_tiocx_device= %d\n", found_tiocx_device);
 -
 -	return 0;
 -}
 -
--
--/**
-- * ioc4_serial_core_attach_rs232 - register with serial core
-- *		This is done during pci probing
-- * @pdev: handle for this card
-- */
--static inline int
--ioc4_serial_core_attach(struct pci_dev *pdev, int port_type)
+-static int cx_remove_device(struct device * dev, void * data)
 -{
--	struct ioc4_port *port;
--	struct uart_port *the_port;
--	struct ioc4_driver_data *idd = pci_get_drvdata(pdev);
--	struct ioc4_control *control = idd->idd_serial_data;
--	int port_num;
--	int port_type_idx;
--	struct uart_driver *u_driver;
--
--
--	DPRINT_CONFIG(("%s: attach pdev 0x%p - control 0x%p\n",
--			__func__, pdev, (void *)control));
--
--	if (!control)
--		return -ENODEV;
--
--	port_type_idx = (port_type == PROTO_RS232) ? UART_PORT_RS232
--						: UART_PORT_RS422;
--
--	u_driver = (port_type == PROTO_RS232)	? &ioc4_uart_rs232
--						: &ioc4_uart_rs422;
--
--	/* once around for each port on this card */
--	for (port_num = 0; port_num < IOC4_NUM_SERIAL_PORTS; port_num++) {
--		the_port = &control->ic_port[port_num].icp_uart_port
--							[port_type_idx];
--		port = control->ic_port[port_num].icp_port;
--		port->ip_all_ports[port_type_idx] = the_port;
--
--		DPRINT_CONFIG(("%s: attach the_port 0x%p / port 0x%p : type %s\n",
--				__func__, (void *)the_port,
--				(void *)port,
--				port_type == PROTO_RS232 ? "rs232" : "rs422"));
--
--		/* membase, iobase and mapbase just need to be non-0 */
--		the_port->membase = (unsigned char __iomem *)1;
--		the_port->iobase = (pdev->bus->number << 16) |  port_num;
--		the_port->line = (Num_of_ioc4_cards << 2) | port_num;
--		the_port->mapbase = port_type;
--		the_port->type = PORT_16550A;
--		the_port->fifosize = IOC4_FIFO_CHARS;
--		the_port->ops = &ioc4_ops;
--		the_port->irq = control->ic_irq;
--		the_port->dev = &pdev->dev;
--		spin_lock_init(&the_port->lock);
--		if (uart_add_one_port(u_driver, the_port) < 0) {
--			printk(KERN_WARNING
--		           "%s: unable to add port %d bus %d\n",
--			       __func__, the_port->line, pdev->bus->number);
--		} else {
--			DPRINT_CONFIG(
--			    ("IOC4 serial port %d irq = %d, bus %d\n",
--			       the_port->line, the_port->irq, pdev->bus->number));
--		}
--	}
+-	struct cx_dev *cx_dev = to_cx_dev(dev);
+-	device_remove_file(dev, &dev_attr_cxdev_control);
+-	cx_device_unregister(cx_dev);
 -	return 0;
 -}
 -
--/**
-- * ioc4_serial_attach_one - register attach function
-- *		called per card found from IOC4 master module.
-- * @idd: Master module data for this IOC4
-- */
--static int
--ioc4_serial_attach_one(struct ioc4_driver_data *idd)
+-static void __exit tiocx_exit(void)
 -{
--	unsigned long tmp_addr1;
--	struct ioc4_serial __iomem *serial;
--	struct ioc4_soft *soft;
--	struct ioc4_control *control;
--	int ret = 0;
+-	DBG("tiocx_exit\n");
 -
--
--	DPRINT_CONFIG(("%s (0x%p, 0x%p)\n", __func__, idd->idd_pdev,
--							idd->idd_pci_id));
--
--	/* PCI-RT does not bring out serial connections.
--	 * Do not attach to this particular IOC4.
+-	/*
+-	 * Unregister devices.
 -	 */
--	if (idd->idd_variant == IOC4_VARIANT_PCI_RT)
--		return 0;
--
--	/* request serial registers */
--	tmp_addr1 = idd->idd_bar0 + IOC4_SERIAL_OFFSET;
--
--	if (!request_mem_region(tmp_addr1, sizeof(struct ioc4_serial),
--					"sioc4_uart")) {
--		printk(KERN_WARNING
--			"ioc4 (%p): unable to get request region for "
--				"uart space\n", (void *)idd->idd_pdev);
--		ret = -ENODEV;
--		goto out1;
--	}
--	serial = ioremap(tmp_addr1, sizeof(struct ioc4_serial));
--	if (!serial) {
--		printk(KERN_WARNING
--			 "ioc4 (%p) : unable to remap ioc4 serial register\n",
--				(void *)idd->idd_pdev);
--		ret = -ENODEV;
--		goto out2;
--	}
--	DPRINT_CONFIG(("%s : mem 0x%p, serial 0x%p\n",
--				__func__, (void *)idd->idd_misc_regs,
--				(void *)serial));
--
--	/* Get memory for the new card */
--	control = kzalloc(sizeof(struct ioc4_control), GFP_KERNEL);
--
--	if (!control) {
--		printk(KERN_WARNING "ioc4_attach_one"
--		       ": unable to get memory for the IOC4\n");
--		ret = -ENOMEM;
--		goto out2;
--	}
--	idd->idd_serial_data = control;
--
--	/* Allocate the soft structure */
--	soft = kzalloc(sizeof(struct ioc4_soft), GFP_KERNEL);
--	if (!soft) {
--		printk(KERN_WARNING
--		       "ioc4 (%p): unable to get memory for the soft struct\n",
--		       (void *)idd->idd_pdev);
--		ret = -ENOMEM;
--		goto out3;
--	}
--
--	spin_lock_init(&soft->is_ir_lock);
--	soft->is_ioc4_misc_addr = idd->idd_misc_regs;
--	soft->is_ioc4_serial_addr = serial;
--
--	/* Init the IOC4 */
--	writel(0xf << IOC4_SIO_CR_CMD_PULSE_SHIFT,
--	       &idd->idd_misc_regs->sio_cr.raw);
--
--	/* Enable serial port mode select generic PIO pins as outputs */
--	writel(IOC4_GPCR_UART0_MODESEL | IOC4_GPCR_UART1_MODESEL
--		| IOC4_GPCR_UART2_MODESEL | IOC4_GPCR_UART3_MODESEL,
--		&idd->idd_misc_regs->gpcr_s.raw);
--
--	/* Clear and disable all serial interrupts */
--	write_ireg(soft, ~0, IOC4_W_IEC, IOC4_SIO_INTR_TYPE);
--	writel(~0, &idd->idd_misc_regs->sio_ir.raw);
--	write_ireg(soft, IOC4_OTHER_IR_SER_MEMERR, IOC4_W_IEC,
--		   IOC4_OTHER_INTR_TYPE);
--	writel(IOC4_OTHER_IR_SER_MEMERR, &idd->idd_misc_regs->other_ir.raw);
--	control->ic_soft = soft;
--
--	/* Hook up interrupt handler */
--	if (!request_irq(idd->idd_pdev->irq, ioc4_intr, IRQF_SHARED,
--				"sgi-ioc4serial", soft)) {
--		control->ic_irq = idd->idd_pdev->irq;
--	} else {
--		printk(KERN_WARNING
--		    "%s : request_irq fails for IRQ 0x%x\n ",
--			__func__, idd->idd_pdev->irq);
--	}
--	ret = ioc4_attach_local(idd);
--	if (ret)
--		goto out4;
--
--	/* register port with the serial core - 1 rs232, 1 rs422 */
--
--	ret = ioc4_serial_core_attach(idd->idd_pdev, PROTO_RS232);
--	if (ret)
--		goto out4;
--
--	ret = ioc4_serial_core_attach(idd->idd_pdev, PROTO_RS422);
--	if (ret)
--		goto out5;
--
--	Num_of_ioc4_cards++;
--
--	return ret;
--
--	/* error exits that give back resources */
--out5:
--	ioc4_serial_remove_one(idd);
--	return ret;
--out4:
--	kfree(soft);
--out3:
--	kfree(control);
--out2:
--	if (serial)
--		iounmap(serial);
--	release_mem_region(tmp_addr1, sizeof(struct ioc4_serial));
--out1:
--
--	return ret;
+-	bus_for_each_dev(&tiocx_bus_type, NULL, NULL, cx_remove_device);
+-	bus_unregister(&tiocx_bus_type);
 -}
 -
+-fs_initcall(tiocx_init);
+-module_exit(tiocx_exit);
 -
--static struct ioc4_submodule ioc4_serial_submodule = {
--	.is_name = "IOC4_serial",
--	.is_owner = THIS_MODULE,
--	.is_probe = ioc4_serial_attach_one,
--	.is_remove = ioc4_serial_remove_one,
--};
--
--/**
-- * ioc4_serial_init - module init
-- */
--static int __init ioc4_serial_init(void)
--{
--	int ret;
--
--	/* register with serial core */
--	if ((ret = uart_register_driver(&ioc4_uart_rs232)) < 0) {
--		printk(KERN_WARNING
--			"%s: Couldn't register rs232 IOC4 serial driver\n",
--			__func__);
--		goto out;
--	}
--	if ((ret = uart_register_driver(&ioc4_uart_rs422)) < 0) {
--		printk(KERN_WARNING
--			"%s: Couldn't register rs422 IOC4 serial driver\n",
--			__func__);
--		goto out_uart_rs232;
--	}
--
--	/* register with IOC4 main module */
--	ret = ioc4_register_submodule(&ioc4_serial_submodule);
--	if (ret)
--		goto out_uart_rs422;
--	return 0;
--
--out_uart_rs422:
--	uart_unregister_driver(&ioc4_uart_rs422);
--out_uart_rs232:
--	uart_unregister_driver(&ioc4_uart_rs232);
--out:
--	return ret;
--}
--
--static void __exit ioc4_serial_exit(void)
--{
--	ioc4_unregister_submodule(&ioc4_serial_submodule);
--	uart_unregister_driver(&ioc4_uart_rs232);
--	uart_unregister_driver(&ioc4_uart_rs422);
--}
--
--late_initcall(ioc4_serial_init); /* Call only after tty init is done */
--module_exit(ioc4_serial_exit);
--
--MODULE_AUTHOR("Pat Gefre - Silicon Graphics Inc. (SGI) <pfg@sgi.com>");
--MODULE_DESCRIPTION("Serial PCI driver module for SGI IOC4 Base-IO Card");
+-/************************************************************************
+- * Module licensing and description
+- ************************************************************************/
 -MODULE_LICENSE("GPL");
+-MODULE_AUTHOR("Bruce Losure <blosure@sgi.com>");
+-MODULE_DESCRIPTION("TIOCX module");
+-MODULE_SUPPORTED_DEVICE(DEVICE_NAME);
+diff --git a/drivers/char/Kconfig b/drivers/char/Kconfig
+index c9fbbc6a3967..96156c729a31 100644
+--- a/drivers/char/Kconfig
++++ b/drivers/char/Kconfig
+@@ -26,20 +26,6 @@ config DEVKMEM
+ 	  kind of kernel debugging operations.
+ 	  When in doubt, say "N".
+ 
+-config SGI_TIOCX
+-       bool "SGI TIO CX driver support"
+-       depends on (IA64_SGI_SN2 || IA64_GENERIC)
+-       help
+-         If you have an SGI Altix and you have fpga devices attached
+-         to your TIO, say Y here, otherwise say N.
+-
+-config SGI_MBCS
+-       tristate "SGI FPGA Core Services driver support"
+-       depends on SGI_TIOCX
+-       help
+-         If you have an SGI Altix with an attached SABrick
+-         say Y or M here, otherwise say N.
+-
+ source "drivers/tty/serial/Kconfig"
+ source "drivers/tty/serdev/Kconfig"
+ 
+diff --git a/drivers/char/Makefile b/drivers/char/Makefile
+index 50835d420471..7c5ea6f9df14 100644
+--- a/drivers/char/Makefile
++++ b/drivers/char/Makefile
+@@ -12,7 +12,6 @@ obj-$(CONFIG_RAW_DRIVER)	+= raw.o
+ obj-$(CONFIG_MSPEC)		+= mspec.o
+ obj-$(CONFIG_UV_MMTIMER)	+= uv_mmtimer.o
+ obj-$(CONFIG_IBM_BSR)		+= bsr.o
+-obj-$(CONFIG_SGI_MBCS)		+= mbcs.o
+ 
+ obj-$(CONFIG_PRINTER)		+= lp.o
+ 
+diff --git a/drivers/char/mbcs.c b/drivers/char/mbcs.c
+deleted file mode 100644
+index 0a31b60bee7b..000000000000
+--- a/drivers/char/mbcs.c
++++ /dev/null
+@@ -1,831 +0,0 @@
+-/*
+- * This file is subject to the terms and conditions of the GNU General Public
+- * License.  See the file "COPYING" in the main directory of this archive
+- * for more details.
+- *
+- * Copyright (c) 2005 Silicon Graphics, Inc.  All rights reserved.
+- */
+-
+-/*
+- *	MOATB Core Services driver.
+- */
+-
+-#include <linux/interrupt.h>
+-#include <linux/module.h>
+-#include <linux/moduleparam.h>
+-#include <linux/types.h>
+-#include <linux/ioport.h>
+-#include <linux/kernel.h>
+-#include <linux/notifier.h>
+-#include <linux/reboot.h>
+-#include <linux/init.h>
+-#include <linux/fs.h>
+-#include <linux/delay.h>
+-#include <linux/device.h>
+-#include <linux/mm.h>
+-#include <linux/uio.h>
+-#include <linux/mutex.h>
+-#include <linux/slab.h>
+-#include <linux/pagemap.h>
+-#include <asm/io.h>
+-#include <linux/uaccess.h>
+-#include <asm/pgtable.h>
+-#include <asm/sn/addrs.h>
+-#include <asm/sn/intr.h>
+-#include <asm/sn/tiocx.h>
+-#include "mbcs.h"
+-
+-#define MBCS_DEBUG 0
+-#if MBCS_DEBUG
+-#define DBG(fmt...)    printk(KERN_ALERT fmt)
+-#else
+-#define DBG(fmt...)
+-#endif
+-static DEFINE_MUTEX(mbcs_mutex);
+-static int mbcs_major;
+-
+-static LIST_HEAD(soft_list);
+-
+-/*
+- * file operations
+- */
+-static const struct file_operations mbcs_ops = {
+-	.owner = THIS_MODULE,
+-	.open = mbcs_open,
+-	.llseek = mbcs_sram_llseek,
+-	.read = mbcs_sram_read,
+-	.write = mbcs_sram_write,
+-	.mmap = mbcs_gscr_mmap,
+-};
+-
+-struct mbcs_callback_arg {
+-	int minor;
+-	struct cx_dev *cx_dev;
+-};
+-
+-static inline void mbcs_getdma_init(struct getdma *gdma)
+-{
+-	memset(gdma, 0, sizeof(struct getdma));
+-	gdma->DoneIntEnable = 1;
+-}
+-
+-static inline void mbcs_putdma_init(struct putdma *pdma)
+-{
+-	memset(pdma, 0, sizeof(struct putdma));
+-	pdma->DoneIntEnable = 1;
+-}
+-
+-static inline void mbcs_algo_init(struct algoblock *algo_soft)
+-{
+-	memset(algo_soft, 0, sizeof(struct algoblock));
+-}
+-
+-static inline void mbcs_getdma_set(void *mmr,
+-		       uint64_t hostAddr,
+-		       uint64_t localAddr,
+-		       uint64_t localRamSel,
+-		       uint64_t numPkts,
+-		       uint64_t amoEnable,
+-		       uint64_t intrEnable,
+-		       uint64_t peerIO,
+-		       uint64_t amoHostDest,
+-		       uint64_t amoModType, uint64_t intrHostDest,
+-		       uint64_t intrVector)
+-{
+-	union dma_control rdma_control;
+-	union dma_amo_dest amo_dest;
+-	union intr_dest intr_dest;
+-	union dma_localaddr local_addr;
+-	union dma_hostaddr host_addr;
+-
+-	rdma_control.dma_control_reg = 0;
+-	amo_dest.dma_amo_dest_reg = 0;
+-	intr_dest.intr_dest_reg = 0;
+-	local_addr.dma_localaddr_reg = 0;
+-	host_addr.dma_hostaddr_reg = 0;
+-
+-	host_addr.dma_sys_addr = hostAddr;
+-	MBCS_MMR_SET(mmr, MBCS_RD_DMA_SYS_ADDR, host_addr.dma_hostaddr_reg);
+-
+-	local_addr.dma_ram_addr = localAddr;
+-	local_addr.dma_ram_sel = localRamSel;
+-	MBCS_MMR_SET(mmr, MBCS_RD_DMA_LOC_ADDR, local_addr.dma_localaddr_reg);
+-
+-	rdma_control.dma_op_length = numPkts;
+-	rdma_control.done_amo_en = amoEnable;
+-	rdma_control.done_int_en = intrEnable;
+-	rdma_control.pio_mem_n = peerIO;
+-	MBCS_MMR_SET(mmr, MBCS_RD_DMA_CTRL, rdma_control.dma_control_reg);
+-
+-	amo_dest.dma_amo_sys_addr = amoHostDest;
+-	amo_dest.dma_amo_mod_type = amoModType;
+-	MBCS_MMR_SET(mmr, MBCS_RD_DMA_AMO_DEST, amo_dest.dma_amo_dest_reg);
+-
+-	intr_dest.address = intrHostDest;
+-	intr_dest.int_vector = intrVector;
+-	MBCS_MMR_SET(mmr, MBCS_RD_DMA_INT_DEST, intr_dest.intr_dest_reg);
+-
+-}
+-
+-static inline void mbcs_putdma_set(void *mmr,
+-		       uint64_t hostAddr,
+-		       uint64_t localAddr,
+-		       uint64_t localRamSel,
+-		       uint64_t numPkts,
+-		       uint64_t amoEnable,
+-		       uint64_t intrEnable,
+-		       uint64_t peerIO,
+-		       uint64_t amoHostDest,
+-		       uint64_t amoModType,
+-		       uint64_t intrHostDest, uint64_t intrVector)
+-{
+-	union dma_control wdma_control;
+-	union dma_amo_dest amo_dest;
+-	union intr_dest intr_dest;
+-	union dma_localaddr local_addr;
+-	union dma_hostaddr host_addr;
+-
+-	wdma_control.dma_control_reg = 0;
+-	amo_dest.dma_amo_dest_reg = 0;
+-	intr_dest.intr_dest_reg = 0;
+-	local_addr.dma_localaddr_reg = 0;
+-	host_addr.dma_hostaddr_reg = 0;
+-
+-	host_addr.dma_sys_addr = hostAddr;
+-	MBCS_MMR_SET(mmr, MBCS_WR_DMA_SYS_ADDR, host_addr.dma_hostaddr_reg);
+-
+-	local_addr.dma_ram_addr = localAddr;
+-	local_addr.dma_ram_sel = localRamSel;
+-	MBCS_MMR_SET(mmr, MBCS_WR_DMA_LOC_ADDR, local_addr.dma_localaddr_reg);
+-
+-	wdma_control.dma_op_length = numPkts;
+-	wdma_control.done_amo_en = amoEnable;
+-	wdma_control.done_int_en = intrEnable;
+-	wdma_control.pio_mem_n = peerIO;
+-	MBCS_MMR_SET(mmr, MBCS_WR_DMA_CTRL, wdma_control.dma_control_reg);
+-
+-	amo_dest.dma_amo_sys_addr = amoHostDest;
+-	amo_dest.dma_amo_mod_type = amoModType;
+-	MBCS_MMR_SET(mmr, MBCS_WR_DMA_AMO_DEST, amo_dest.dma_amo_dest_reg);
+-
+-	intr_dest.address = intrHostDest;
+-	intr_dest.int_vector = intrVector;
+-	MBCS_MMR_SET(mmr, MBCS_WR_DMA_INT_DEST, intr_dest.intr_dest_reg);
+-
+-}
+-
+-static inline void mbcs_algo_set(void *mmr,
+-		     uint64_t amoHostDest,
+-		     uint64_t amoModType,
+-		     uint64_t intrHostDest,
+-		     uint64_t intrVector, uint64_t algoStepCount)
+-{
+-	union dma_amo_dest amo_dest;
+-	union intr_dest intr_dest;
+-	union algo_step step;
+-
+-	step.algo_step_reg = 0;
+-	intr_dest.intr_dest_reg = 0;
+-	amo_dest.dma_amo_dest_reg = 0;
+-
+-	amo_dest.dma_amo_sys_addr = amoHostDest;
+-	amo_dest.dma_amo_mod_type = amoModType;
+-	MBCS_MMR_SET(mmr, MBCS_ALG_AMO_DEST, amo_dest.dma_amo_dest_reg);
+-
+-	intr_dest.address = intrHostDest;
+-	intr_dest.int_vector = intrVector;
+-	MBCS_MMR_SET(mmr, MBCS_ALG_INT_DEST, intr_dest.intr_dest_reg);
+-
+-	step.alg_step_cnt = algoStepCount;
+-	MBCS_MMR_SET(mmr, MBCS_ALG_STEP, step.algo_step_reg);
+-}
+-
+-static inline int mbcs_getdma_start(struct mbcs_soft *soft)
+-{
+-	void *mmr_base;
+-	struct getdma *gdma;
+-	uint64_t numPkts;
+-	union cm_control cm_control;
+-
+-	mmr_base = soft->mmr_base;
+-	gdma = &soft->getdma;
+-
+-	/* check that host address got setup */
+-	if (!gdma->hostAddr)
+-		return -1;
+-
+-	numPkts =
+-	    (gdma->bytes + (MBCS_CACHELINE_SIZE - 1)) / MBCS_CACHELINE_SIZE;
+-
+-	/* program engine */
+-	mbcs_getdma_set(mmr_base, tiocx_dma_addr(gdma->hostAddr),
+-		   gdma->localAddr,
+-		   (gdma->localAddr < MB2) ? 0 :
+-		   (gdma->localAddr < MB4) ? 1 :
+-		   (gdma->localAddr < MB6) ? 2 : 3,
+-		   numPkts,
+-		   gdma->DoneAmoEnable,
+-		   gdma->DoneIntEnable,
+-		   gdma->peerIO,
+-		   gdma->amoHostDest,
+-		   gdma->amoModType,
+-		   gdma->intrHostDest, gdma->intrVector);
+-
+-	/* start engine */
+-	cm_control.cm_control_reg = MBCS_MMR_GET(mmr_base, MBCS_CM_CONTROL);
+-	cm_control.rd_dma_go = 1;
+-	MBCS_MMR_SET(mmr_base, MBCS_CM_CONTROL, cm_control.cm_control_reg);
+-
+-	return 0;
+-
+-}
+-
+-static inline int mbcs_putdma_start(struct mbcs_soft *soft)
+-{
+-	void *mmr_base;
+-	struct putdma *pdma;
+-	uint64_t numPkts;
+-	union cm_control cm_control;
+-
+-	mmr_base = soft->mmr_base;
+-	pdma = &soft->putdma;
+-
+-	/* check that host address got setup */
+-	if (!pdma->hostAddr)
+-		return -1;
+-
+-	numPkts =
+-	    (pdma->bytes + (MBCS_CACHELINE_SIZE - 1)) / MBCS_CACHELINE_SIZE;
+-
+-	/* program engine */
+-	mbcs_putdma_set(mmr_base, tiocx_dma_addr(pdma->hostAddr),
+-		   pdma->localAddr,
+-		   (pdma->localAddr < MB2) ? 0 :
+-		   (pdma->localAddr < MB4) ? 1 :
+-		   (pdma->localAddr < MB6) ? 2 : 3,
+-		   numPkts,
+-		   pdma->DoneAmoEnable,
+-		   pdma->DoneIntEnable,
+-		   pdma->peerIO,
+-		   pdma->amoHostDest,
+-		   pdma->amoModType,
+-		   pdma->intrHostDest, pdma->intrVector);
+-
+-	/* start engine */
+-	cm_control.cm_control_reg = MBCS_MMR_GET(mmr_base, MBCS_CM_CONTROL);
+-	cm_control.wr_dma_go = 1;
+-	MBCS_MMR_SET(mmr_base, MBCS_CM_CONTROL, cm_control.cm_control_reg);
+-
+-	return 0;
+-
+-}
+-
+-static inline int mbcs_algo_start(struct mbcs_soft *soft)
+-{
+-	struct algoblock *algo_soft = &soft->algo;
+-	void *mmr_base = soft->mmr_base;
+-	union cm_control cm_control;
+-
+-	if (mutex_lock_interruptible(&soft->algolock))
+-		return -ERESTARTSYS;
+-
+-	atomic_set(&soft->algo_done, 0);
+-
+-	mbcs_algo_set(mmr_base,
+-		 algo_soft->amoHostDest,
+-		 algo_soft->amoModType,
+-		 algo_soft->intrHostDest,
+-		 algo_soft->intrVector, algo_soft->algoStepCount);
+-
+-	/* start algorithm */
+-	cm_control.cm_control_reg = MBCS_MMR_GET(mmr_base, MBCS_CM_CONTROL);
+-	cm_control.alg_done_int_en = 1;
+-	cm_control.alg_go = 1;
+-	MBCS_MMR_SET(mmr_base, MBCS_CM_CONTROL, cm_control.cm_control_reg);
+-
+-	mutex_unlock(&soft->algolock);
+-
+-	return 0;
+-}
+-
+-static inline ssize_t
+-do_mbcs_sram_dmawrite(struct mbcs_soft *soft, uint64_t hostAddr,
+-		      size_t len, loff_t * off)
+-{
+-	int rv = 0;
+-
+-	if (mutex_lock_interruptible(&soft->dmawritelock))
+-		return -ERESTARTSYS;
+-
+-	atomic_set(&soft->dmawrite_done, 0);
+-
+-	soft->putdma.hostAddr = hostAddr;
+-	soft->putdma.localAddr = *off;
+-	soft->putdma.bytes = len;
+-
+-	if (mbcs_putdma_start(soft) < 0) {
+-		DBG(KERN_ALERT "do_mbcs_sram_dmawrite: "
+-					"mbcs_putdma_start failed\n");
+-		rv = -EAGAIN;
+-		goto dmawrite_exit;
+-	}
+-
+-	if (wait_event_interruptible(soft->dmawrite_queue,
+-					atomic_read(&soft->dmawrite_done))) {
+-		rv = -ERESTARTSYS;
+-		goto dmawrite_exit;
+-	}
+-
+-	rv = len;
+-	*off += len;
+-
+-dmawrite_exit:
+-	mutex_unlock(&soft->dmawritelock);
+-
+-	return rv;
+-}
+-
+-static inline ssize_t
+-do_mbcs_sram_dmaread(struct mbcs_soft *soft, uint64_t hostAddr,
+-		     size_t len, loff_t * off)
+-{
+-	int rv = 0;
+-
+-	if (mutex_lock_interruptible(&soft->dmareadlock))
+-		return -ERESTARTSYS;
+-
+-	atomic_set(&soft->dmawrite_done, 0);
+-
+-	soft->getdma.hostAddr = hostAddr;
+-	soft->getdma.localAddr = *off;
+-	soft->getdma.bytes = len;
+-
+-	if (mbcs_getdma_start(soft) < 0) {
+-		DBG(KERN_ALERT "mbcs_strategy: mbcs_getdma_start failed\n");
+-		rv = -EAGAIN;
+-		goto dmaread_exit;
+-	}
+-
+-	if (wait_event_interruptible(soft->dmaread_queue,
+-					atomic_read(&soft->dmaread_done))) {
+-		rv = -ERESTARTSYS;
+-		goto dmaread_exit;
+-	}
+-
+-	rv = len;
+-	*off += len;
+-
+-dmaread_exit:
+-	mutex_unlock(&soft->dmareadlock);
+-
+-	return rv;
+-}
+-
+-static int mbcs_open(struct inode *ip, struct file *fp)
+-{
+-	struct mbcs_soft *soft;
+-	int minor;
+-
+-	mutex_lock(&mbcs_mutex);
+-	minor = iminor(ip);
+-
+-	/* Nothing protects access to this list... */
+-	list_for_each_entry(soft, &soft_list, list) {
+-		if (soft->nasid == minor) {
+-			fp->private_data = soft->cxdev;
+-			mutex_unlock(&mbcs_mutex);
+-			return 0;
+-		}
+-	}
+-
+-	mutex_unlock(&mbcs_mutex);
+-	return -ENODEV;
+-}
+-
+-static ssize_t mbcs_sram_read(struct file * fp, char __user *buf, size_t len, loff_t * off)
+-{
+-	struct cx_dev *cx_dev = fp->private_data;
+-	struct mbcs_soft *soft = cx_dev->soft;
+-	uint64_t hostAddr;
+-	int rv = 0;
+-
+-	hostAddr = __get_dma_pages(GFP_KERNEL, get_order(len));
+-	if (hostAddr == 0)
+-		return -ENOMEM;
+-
+-	rv = do_mbcs_sram_dmawrite(soft, hostAddr, len, off);
+-	if (rv < 0)
+-		goto exit;
+-
+-	if (copy_to_user(buf, (void *)hostAddr, len))
+-		rv = -EFAULT;
+-
+-      exit:
+-	free_pages(hostAddr, get_order(len));
+-
+-	return rv;
+-}
+-
+-static ssize_t
+-mbcs_sram_write(struct file * fp, const char __user *buf, size_t len, loff_t * off)
+-{
+-	struct cx_dev *cx_dev = fp->private_data;
+-	struct mbcs_soft *soft = cx_dev->soft;
+-	uint64_t hostAddr;
+-	int rv = 0;
+-
+-	hostAddr = __get_dma_pages(GFP_KERNEL, get_order(len));
+-	if (hostAddr == 0)
+-		return -ENOMEM;
+-
+-	if (copy_from_user((void *)hostAddr, buf, len)) {
+-		rv = -EFAULT;
+-		goto exit;
+-	}
+-
+-	rv = do_mbcs_sram_dmaread(soft, hostAddr, len, off);
+-
+-      exit:
+-	free_pages(hostAddr, get_order(len));
+-
+-	return rv;
+-}
+-
+-static loff_t mbcs_sram_llseek(struct file * filp, loff_t off, int whence)
+-{
+-	return generic_file_llseek_size(filp, off, whence, MAX_LFS_FILESIZE,
+-					MBCS_SRAM_SIZE);
+-}
+-
+-static uint64_t mbcs_pioaddr(struct mbcs_soft *soft, uint64_t offset)
+-{
+-	uint64_t mmr_base;
+-
+-	mmr_base = (uint64_t) (soft->mmr_base + offset);
+-
+-	return mmr_base;
+-}
+-
+-static void mbcs_debug_pioaddr_set(struct mbcs_soft *soft)
+-{
+-	soft->debug_addr = mbcs_pioaddr(soft, MBCS_DEBUG_START);
+-}
+-
+-static void mbcs_gscr_pioaddr_set(struct mbcs_soft *soft)
+-{
+-	soft->gscr_addr = mbcs_pioaddr(soft, MBCS_GSCR_START);
+-}
+-
+-static int mbcs_gscr_mmap(struct file *fp, struct vm_area_struct *vma)
+-{
+-	struct cx_dev *cx_dev = fp->private_data;
+-	struct mbcs_soft *soft = cx_dev->soft;
+-
+-	if (vma->vm_pgoff != 0)
+-		return -EINVAL;
+-
+-	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
+-
+-	/* Remap-pfn-range will mark the range VM_IO */
+-	if (remap_pfn_range(vma,
+-			    vma->vm_start,
+-			    __pa(soft->gscr_addr) >> PAGE_SHIFT,
+-			    PAGE_SIZE,
+-			    vma->vm_page_prot))
+-		return -EAGAIN;
+-
+-	return 0;
+-}
+-
+-/**
+- * mbcs_completion_intr_handler - Primary completion handler.
+- * @irq: irq
+- * @arg: soft struct for device
+- *
+- */
+-static irqreturn_t
+-mbcs_completion_intr_handler(int irq, void *arg)
+-{
+-	struct mbcs_soft *soft = (struct mbcs_soft *)arg;
+-	void *mmr_base;
+-	union cm_status cm_status;
+-	union cm_control cm_control;
+-
+-	mmr_base = soft->mmr_base;
+-	cm_status.cm_status_reg = MBCS_MMR_GET(mmr_base, MBCS_CM_STATUS);
+-
+-	if (cm_status.rd_dma_done) {
+-		/* stop dma-read engine, clear status */
+-		cm_control.cm_control_reg =
+-		    MBCS_MMR_GET(mmr_base, MBCS_CM_CONTROL);
+-		cm_control.rd_dma_clr = 1;
+-		MBCS_MMR_SET(mmr_base, MBCS_CM_CONTROL,
+-			     cm_control.cm_control_reg);
+-		atomic_set(&soft->dmaread_done, 1);
+-		wake_up(&soft->dmaread_queue);
+-	}
+-	if (cm_status.wr_dma_done) {
+-		/* stop dma-write engine, clear status */
+-		cm_control.cm_control_reg =
+-		    MBCS_MMR_GET(mmr_base, MBCS_CM_CONTROL);
+-		cm_control.wr_dma_clr = 1;
+-		MBCS_MMR_SET(mmr_base, MBCS_CM_CONTROL,
+-			     cm_control.cm_control_reg);
+-		atomic_set(&soft->dmawrite_done, 1);
+-		wake_up(&soft->dmawrite_queue);
+-	}
+-	if (cm_status.alg_done) {
+-		/* clear status */
+-		cm_control.cm_control_reg =
+-		    MBCS_MMR_GET(mmr_base, MBCS_CM_CONTROL);
+-		cm_control.alg_done_clr = 1;
+-		MBCS_MMR_SET(mmr_base, MBCS_CM_CONTROL,
+-			     cm_control.cm_control_reg);
+-		atomic_set(&soft->algo_done, 1);
+-		wake_up(&soft->algo_queue);
+-	}
+-
+-	return IRQ_HANDLED;
+-}
+-
+-/**
+- * mbcs_intr_alloc - Allocate interrupts.
+- * @dev: device pointer
+- *
+- */
+-static int mbcs_intr_alloc(struct cx_dev *dev)
+-{
+-	struct sn_irq_info *sn_irq;
+-	struct mbcs_soft *soft;
+-	struct getdma *getdma;
+-	struct putdma *putdma;
+-	struct algoblock *algo;
+-
+-	soft = dev->soft;
+-	getdma = &soft->getdma;
+-	putdma = &soft->putdma;
+-	algo = &soft->algo;
+-
+-	soft->get_sn_irq = NULL;
+-	soft->put_sn_irq = NULL;
+-	soft->algo_sn_irq = NULL;
+-
+-	sn_irq = tiocx_irq_alloc(dev->cx_id.nasid, TIOCX_CORELET, -1, -1, -1);
+-	if (sn_irq == NULL)
+-		return -EAGAIN;
+-	soft->get_sn_irq = sn_irq;
+-	getdma->intrHostDest = sn_irq->irq_xtalkaddr;
+-	getdma->intrVector = sn_irq->irq_irq;
+-	if (request_irq(sn_irq->irq_irq,
+-			(void *)mbcs_completion_intr_handler, IRQF_SHARED,
+-			"MBCS get intr", (void *)soft)) {
+-		tiocx_irq_free(soft->get_sn_irq);
+-		return -EAGAIN;
+-	}
+-
+-	sn_irq = tiocx_irq_alloc(dev->cx_id.nasid, TIOCX_CORELET, -1, -1, -1);
+-	if (sn_irq == NULL) {
+-		free_irq(soft->get_sn_irq->irq_irq, soft);
+-		tiocx_irq_free(soft->get_sn_irq);
+-		return -EAGAIN;
+-	}
+-	soft->put_sn_irq = sn_irq;
+-	putdma->intrHostDest = sn_irq->irq_xtalkaddr;
+-	putdma->intrVector = sn_irq->irq_irq;
+-	if (request_irq(sn_irq->irq_irq,
+-			(void *)mbcs_completion_intr_handler, IRQF_SHARED,
+-			"MBCS put intr", (void *)soft)) {
+-		tiocx_irq_free(soft->put_sn_irq);
+-		free_irq(soft->get_sn_irq->irq_irq, soft);
+-		tiocx_irq_free(soft->get_sn_irq);
+-		return -EAGAIN;
+-	}
+-
+-	sn_irq = tiocx_irq_alloc(dev->cx_id.nasid, TIOCX_CORELET, -1, -1, -1);
+-	if (sn_irq == NULL) {
+-		free_irq(soft->put_sn_irq->irq_irq, soft);
+-		tiocx_irq_free(soft->put_sn_irq);
+-		free_irq(soft->get_sn_irq->irq_irq, soft);
+-		tiocx_irq_free(soft->get_sn_irq);
+-		return -EAGAIN;
+-	}
+-	soft->algo_sn_irq = sn_irq;
+-	algo->intrHostDest = sn_irq->irq_xtalkaddr;
+-	algo->intrVector = sn_irq->irq_irq;
+-	if (request_irq(sn_irq->irq_irq,
+-			(void *)mbcs_completion_intr_handler, IRQF_SHARED,
+-			"MBCS algo intr", (void *)soft)) {
+-		tiocx_irq_free(soft->algo_sn_irq);
+-		free_irq(soft->put_sn_irq->irq_irq, soft);
+-		tiocx_irq_free(soft->put_sn_irq);
+-		free_irq(soft->get_sn_irq->irq_irq, soft);
+-		tiocx_irq_free(soft->get_sn_irq);
+-		return -EAGAIN;
+-	}
+-
+-	return 0;
+-}
+-
+-/**
+- * mbcs_intr_dealloc - Remove interrupts.
+- * @dev: device pointer
+- *
+- */
+-static void mbcs_intr_dealloc(struct cx_dev *dev)
+-{
+-	struct mbcs_soft *soft;
+-
+-	soft = dev->soft;
+-
+-	free_irq(soft->get_sn_irq->irq_irq, soft);
+-	tiocx_irq_free(soft->get_sn_irq);
+-	free_irq(soft->put_sn_irq->irq_irq, soft);
+-	tiocx_irq_free(soft->put_sn_irq);
+-	free_irq(soft->algo_sn_irq->irq_irq, soft);
+-	tiocx_irq_free(soft->algo_sn_irq);
+-}
+-
+-static inline int mbcs_hw_init(struct mbcs_soft *soft)
+-{
+-	void *mmr_base = soft->mmr_base;
+-	union cm_control cm_control;
+-	union cm_req_timeout cm_req_timeout;
+-	uint64_t err_stat;
+-
+-	cm_req_timeout.cm_req_timeout_reg =
+-	    MBCS_MMR_GET(mmr_base, MBCS_CM_REQ_TOUT);
+-
+-	cm_req_timeout.time_out = MBCS_CM_CONTROL_REQ_TOUT_MASK;
+-	MBCS_MMR_SET(mmr_base, MBCS_CM_REQ_TOUT,
+-		     cm_req_timeout.cm_req_timeout_reg);
+-
+-	mbcs_gscr_pioaddr_set(soft);
+-	mbcs_debug_pioaddr_set(soft);
+-
+-	/* clear errors */
+-	err_stat = MBCS_MMR_GET(mmr_base, MBCS_CM_ERR_STAT);
+-	MBCS_MMR_SET(mmr_base, MBCS_CM_CLR_ERR_STAT, err_stat);
+-	MBCS_MMR_ZERO(mmr_base, MBCS_CM_ERROR_DETAIL1);
+-
+-	/* enable interrupts */
+-	/* turn off 2^23 (INT_EN_PIO_REQ_ADDR_INV) */
+-	MBCS_MMR_SET(mmr_base, MBCS_CM_ERR_INT_EN, 0x3ffffff7e00ffUL);
+-
+-	/* arm status regs and clear engines */
+-	cm_control.cm_control_reg = MBCS_MMR_GET(mmr_base, MBCS_CM_CONTROL);
+-	cm_control.rearm_stat_regs = 1;
+-	cm_control.alg_clr = 1;
+-	cm_control.wr_dma_clr = 1;
+-	cm_control.rd_dma_clr = 1;
+-
+-	MBCS_MMR_SET(mmr_base, MBCS_CM_CONTROL, cm_control.cm_control_reg);
+-
+-	return 0;
+-}
+-
+-static ssize_t show_algo(struct device *dev, struct device_attribute *attr, char *buf)
+-{
+-	struct cx_dev *cx_dev = to_cx_dev(dev);
+-	struct mbcs_soft *soft = cx_dev->soft;
+-	uint64_t debug0;
+-
+-	/*
+-	 * By convention, the first debug register contains the
+-	 * algorithm number and revision.
+-	 */
+-	debug0 = *(uint64_t *) soft->debug_addr;
+-
+-	return sprintf(buf, "0x%x 0x%x\n",
+-		       upper_32_bits(debug0), lower_32_bits(debug0));
+-}
+-
+-static ssize_t store_algo(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
+-{
+-	int n;
+-	struct cx_dev *cx_dev = to_cx_dev(dev);
+-	struct mbcs_soft *soft = cx_dev->soft;
+-
+-	if (count <= 0)
+-		return 0;
+-
+-	n = simple_strtoul(buf, NULL, 0);
+-
+-	if (n == 1) {
+-		mbcs_algo_start(soft);
+-		if (wait_event_interruptible(soft->algo_queue,
+-					atomic_read(&soft->algo_done)))
+-			return -ERESTARTSYS;
+-	}
+-
+-	return count;
+-}
+-
+-DEVICE_ATTR(algo, 0644, show_algo, store_algo);
+-
+-/**
+- * mbcs_probe - Initialize for device
+- * @dev: device pointer
+- * @device_id: id table pointer
+- *
+- */
+-static int mbcs_probe(struct cx_dev *dev, const struct cx_device_id *id)
+-{
+-	struct mbcs_soft *soft;
+-
+-	dev->soft = NULL;
+-
+-	soft = kzalloc(sizeof(struct mbcs_soft), GFP_KERNEL);
+-	if (soft == NULL)
+-		return -ENOMEM;
+-
+-	soft->nasid = dev->cx_id.nasid;
+-	list_add(&soft->list, &soft_list);
+-	soft->mmr_base = (void *)tiocx_swin_base(dev->cx_id.nasid);
+-	dev->soft = soft;
+-	soft->cxdev = dev;
+-
+-	init_waitqueue_head(&soft->dmawrite_queue);
+-	init_waitqueue_head(&soft->dmaread_queue);
+-	init_waitqueue_head(&soft->algo_queue);
+-
+-	mutex_init(&soft->dmawritelock);
+-	mutex_init(&soft->dmareadlock);
+-	mutex_init(&soft->algolock);
+-
+-	mbcs_getdma_init(&soft->getdma);
+-	mbcs_putdma_init(&soft->putdma);
+-	mbcs_algo_init(&soft->algo);
+-
+-	mbcs_hw_init(soft);
+-
+-	/* Allocate interrupts */
+-	mbcs_intr_alloc(dev);
+-
+-	device_create_file(&dev->dev, &dev_attr_algo);
+-
+-	return 0;
+-}
+-
+-static int mbcs_remove(struct cx_dev *dev)
+-{
+-	if (dev->soft) {
+-		mbcs_intr_dealloc(dev);
+-		kfree(dev->soft);
+-	}
+-
+-	device_remove_file(&dev->dev, &dev_attr_algo);
+-
+-	return 0;
+-}
+-
+-static const struct cx_device_id mbcs_id_table[] = {
+-	{
+-	 .part_num = MBCS_PART_NUM,
+-	 .mfg_num = MBCS_MFG_NUM,
+-	 },
+-	{
+-	 .part_num = MBCS_PART_NUM_ALG0,
+-	 .mfg_num = MBCS_MFG_NUM,
+-	 },
+-	{0, 0}
+-};
+-
+-MODULE_DEVICE_TABLE(cx, mbcs_id_table);
+-
+-static struct cx_drv mbcs_driver = {
+-	.name = DEVICE_NAME,
+-	.id_table = mbcs_id_table,
+-	.probe = mbcs_probe,
+-	.remove = mbcs_remove,
+-};
+-
+-static void __exit mbcs_exit(void)
+-{
+-	unregister_chrdev(mbcs_major, DEVICE_NAME);
+-	cx_driver_unregister(&mbcs_driver);
+-}
+-
+-static int __init mbcs_init(void)
+-{
+-	int rv;
+-
+-	if (!ia64_platform_is("sn2"))
+-		return -ENODEV;
+-
+-	// Put driver into chrdevs[].  Get major number.
+-	rv = register_chrdev(mbcs_major, DEVICE_NAME, &mbcs_ops);
+-	if (rv < 0) {
+-		DBG(KERN_ALERT "mbcs_init: can't get major number. %d\n", rv);
+-		return rv;
+-	}
+-	mbcs_major = rv;
+-
+-	return cx_driver_register(&mbcs_driver);
+-}
+-
+-module_init(mbcs_init);
+-module_exit(mbcs_exit);
+-
+-MODULE_AUTHOR("Bruce Losure <blosure@sgi.com>");
+-MODULE_DESCRIPTION("Driver for MOATB Core Services");
+-MODULE_LICENSE("GPL");
+diff --git a/drivers/char/mbcs.h b/drivers/char/mbcs.h
+deleted file mode 100644
+index 1a36884c48b5..000000000000
+--- a/drivers/char/mbcs.h
++++ /dev/null
+@@ -1,553 +0,0 @@
+-/*
+- * This file is subject to the terms and conditions of the GNU General Public
+- * License.  See the file "COPYING" in the main directory of this archive
+- * for more details.
+- *
+- * Copyright (c) 2005 Silicon Graphics, Inc.  All rights reserved.
+- */
+-
+-#ifndef __MBCS_H__
+-#define __MBCS_H__
+-
+-/*
+- * General macros
+- */
+-#define MB	(1024*1024)
+-#define MB2	(2*MB)
+-#define MB4	(4*MB)
+-#define MB6	(6*MB)
+-
+-/*
+- * Offsets and masks
+- */
+-#define MBCS_CM_ID		0x0000	/* Identification */
+-#define MBCS_CM_STATUS		0x0008	/* Status */
+-#define MBCS_CM_ERROR_DETAIL1	0x0010	/* Error Detail1 */
+-#define MBCS_CM_ERROR_DETAIL2	0x0018	/* Error Detail2 */
+-#define MBCS_CM_CONTROL		0x0020	/* Control */
+-#define MBCS_CM_REQ_TOUT	0x0028	/* Request Time-out */
+-#define MBCS_CM_ERR_INT_DEST	0x0038	/* Error Interrupt Destination */
+-#define MBCS_CM_TARG_FL		0x0050	/* Target Flush */
+-#define MBCS_CM_ERR_STAT	0x0060	/* Error Status */
+-#define MBCS_CM_CLR_ERR_STAT	0x0068	/* Clear Error Status */
+-#define MBCS_CM_ERR_INT_EN	0x0070	/* Error Interrupt Enable */
+-#define MBCS_RD_DMA_SYS_ADDR	0x0100	/* Read DMA System Address */
+-#define MBCS_RD_DMA_LOC_ADDR	0x0108	/* Read DMA Local Address */
+-#define MBCS_RD_DMA_CTRL	0x0110	/* Read DMA Control */
+-#define MBCS_RD_DMA_AMO_DEST	0x0118	/* Read DMA AMO Destination */
+-#define MBCS_RD_DMA_INT_DEST	0x0120	/* Read DMA Interrupt Destination */
+-#define MBCS_RD_DMA_AUX_STAT	0x0130	/* Read DMA Auxiliary Status */
+-#define MBCS_WR_DMA_SYS_ADDR	0x0200	/* Write DMA System Address */
+-#define MBCS_WR_DMA_LOC_ADDR	0x0208	/* Write DMA Local Address */
+-#define MBCS_WR_DMA_CTRL	0x0210	/* Write DMA Control */
+-#define MBCS_WR_DMA_AMO_DEST	0x0218	/* Write DMA AMO Destination */
+-#define MBCS_WR_DMA_INT_DEST	0x0220	/* Write DMA Interrupt Destination */
+-#define MBCS_WR_DMA_AUX_STAT	0x0230	/* Write DMA Auxiliary Status */
+-#define MBCS_ALG_AMO_DEST	0x0300	/* Algorithm AMO Destination */
+-#define MBCS_ALG_INT_DEST	0x0308	/* Algorithm Interrupt Destination */
+-#define MBCS_ALG_OFFSETS	0x0310
+-#define MBCS_ALG_STEP		0x0318	/* Algorithm Step */
+-
+-#define MBCS_GSCR_START		0x0000000
+-#define MBCS_DEBUG_START	0x0100000
+-#define MBCS_RAM0_START		0x0200000
+-#define MBCS_RAM1_START		0x0400000
+-#define MBCS_RAM2_START		0x0600000
+-
+-#define MBCS_CM_CONTROL_REQ_TOUT_MASK 0x0000000000ffffffUL
+-//#define PIO_BASE_ADDR_BASE_OFFSET_MASK 0x00fffffffff00000UL
+-
+-#define MBCS_SRAM_SIZE		(1024*1024)
+-#define MBCS_CACHELINE_SIZE	128
+-
+-/*
+- * MMR get's and put's
+- */
+-#define MBCS_MMR_ADDR(mmr_base, offset)((uint64_t *)(mmr_base + offset))
+-#define MBCS_MMR_SET(mmr_base, offset, value) {			\
+-	uint64_t *mbcs_mmr_set_u64p, readback;				\
+-	mbcs_mmr_set_u64p = (uint64_t *)(mmr_base + offset);	\
+-	*mbcs_mmr_set_u64p = value;					\
+-	readback = *mbcs_mmr_set_u64p; \
+-}
+-#define MBCS_MMR_GET(mmr_base, offset) *(uint64_t *)(mmr_base + offset)
+-#define MBCS_MMR_ZERO(mmr_base, offset) MBCS_MMR_SET(mmr_base, offset, 0)
+-
+-/*
+- * MBCS mmr structures
+- */
+-union cm_id {
+-	uint64_t cm_id_reg;
+-	struct {
+-		uint64_t always_one:1,	// 0
+-		 mfg_id:11,	// 11:1
+-		 part_num:16,	// 27:12
+-		 bitstream_rev:8,	// 35:28
+-		:28;		// 63:36
+-	};
+-};
+-
+-union cm_status {
+-	uint64_t cm_status_reg;
+-	struct {
+-		uint64_t pending_reads:8,	// 7:0
+-		 pending_writes:8,	// 15:8
+-		 ice_rsp_credits:8,	// 23:16
+-		 ice_req_credits:8,	// 31:24
+-		 cm_req_credits:8,	// 39:32
+-		:1,		// 40
+-		 rd_dma_in_progress:1,	// 41
+-		 rd_dma_done:1,	// 42
+-		:1,		// 43
+-		 wr_dma_in_progress:1,	// 44
+-		 wr_dma_done:1,	// 45
+-		 alg_waiting:1,	// 46
+-		 alg_pipe_running:1,	// 47
+-		 alg_done:1,	// 48
+-		:3,		// 51:49
+-		 pending_int_reqs:8,	// 59:52
+-		:3,		// 62:60
+-		 alg_half_speed_sel:1;	// 63
+-	};
+-};
+-
+-union cm_error_detail1 {
+-	uint64_t cm_error_detail1_reg;
+-	struct {
+-		uint64_t packet_type:4,	// 3:0
+-		 source_id:2,	// 5:4
+-		 data_size:2,	// 7:6
+-		 tnum:8,	// 15:8
+-		 byte_enable:8,	// 23:16
+-		 gfx_cred:8,	// 31:24
+-		 read_type:2,	// 33:32
+-		 pio_or_memory:1,	// 34
+-		 head_cw_error:1,	// 35
+-		:12,		// 47:36
+-		 head_error_bit:1,	// 48
+-		 data_error_bit:1,	// 49
+-		:13,		// 62:50
+-		 valid:1;	// 63
+-	};
+-};
+-
+-union cm_error_detail2 {
+-	uint64_t cm_error_detail2_reg;
+-	struct {
+-		uint64_t address:56,	// 55:0
+-		:8;		// 63:56
+-	};
+-};
+-
+-union cm_control {
+-	uint64_t cm_control_reg;
+-	struct {
+-		uint64_t cm_id:2,	// 1:0
+-		:2,		// 3:2
+-		 max_trans:5,	// 8:4
+-		:3,		// 11:9
+-		 address_mode:1,	// 12
+-		:7,		// 19:13
+-		 credit_limit:8,	// 27:20
+-		:5,		// 32:28
+-		 rearm_stat_regs:1,	// 33
+-		 prescalar_byp:1,	// 34
+-		 force_gap_war:1,	// 35
+-		 rd_dma_go:1,	// 36
+-		 wr_dma_go:1,	// 37
+-		 alg_go:1,	// 38
+-		 rd_dma_clr:1,	// 39
+-		 wr_dma_clr:1,	// 40
+-		 alg_clr:1,	// 41
+-		:2,		// 43:42
+-		 alg_wait_step:1,	// 44
+-		 alg_done_amo_en:1,	// 45
+-		 alg_done_int_en:1,	// 46
+-		:1,		// 47
+-		 alg_sram0_locked:1,	// 48
+-		 alg_sram1_locked:1,	// 49
+-		 alg_sram2_locked:1,	// 50
+-		 alg_done_clr:1,	// 51
+-		:12;		// 63:52
+-	};
+-};
+-
+-union cm_req_timeout {
+-	uint64_t cm_req_timeout_reg;
+-	struct {
+-		uint64_t time_out:24,	// 23:0
+-		:40;		// 63:24
+-	};
+-};
+-
+-union intr_dest {
+-	uint64_t intr_dest_reg;
+-	struct {
+-		uint64_t address:56,	// 55:0
+-		 int_vector:8;	// 63:56
+-	};
+-};
+-
+-union cm_error_status {
+-	uint64_t cm_error_status_reg;
+-	struct {
+-		uint64_t ecc_sbe:1,	// 0
+-		 ecc_mbe:1,	// 1
+-		 unsupported_req:1,	// 2
+-		 unexpected_rsp:1,	// 3
+-		 bad_length:1,	// 4
+-		 bad_datavalid:1,	// 5
+-		 buffer_overflow:1,	// 6
+-		 request_timeout:1,	// 7
+-		:8,		// 15:8
+-		 head_inv_data_size:1,	// 16
+-		 rsp_pactype_inv:1,	// 17
+-		 head_sb_err:1,	// 18
+-		 missing_head:1,	// 19
+-		 head_inv_rd_type:1,	// 20
+-		 head_cmd_err_bit:1,	// 21
+-		 req_addr_align_inv:1,	// 22
+-		 pio_req_addr_inv:1,	// 23
+-		 req_range_dsize_inv:1,	// 24
+-		 early_term:1,	// 25
+-		 early_tail:1,	// 26
+-		 missing_tail:1,	// 27
+-		 data_flit_sb_err:1,	// 28
+-		 cm2hcm_req_cred_of:1,	// 29
+-		 cm2hcm_rsp_cred_of:1,	// 30
+-		 rx_bad_didn:1,	// 31
+-		 rd_dma_err_rsp:1,	// 32
+-		 rd_dma_tnum_tout:1,	// 33
+-		 rd_dma_multi_tnum_tou:1,	// 34
+-		 wr_dma_err_rsp:1,	// 35
+-		 wr_dma_tnum_tout:1,	// 36
+-		 wr_dma_multi_tnum_tou:1,	// 37
+-		 alg_data_overflow:1,	// 38
+-		 alg_data_underflow:1,	// 39
+-		 ram0_access_conflict:1,	// 40
+-		 ram1_access_conflict:1,	// 41
+-		 ram2_access_conflict:1,	// 42
+-		 ram0_perr:1,	// 43
+-		 ram1_perr:1,	// 44
+-		 ram2_perr:1,	// 45
+-		 int_gen_rsp_err:1,	// 46
+-		 int_gen_tnum_tout:1,	// 47
+-		 rd_dma_prog_err:1,	// 48
+-		 wr_dma_prog_err:1,	// 49
+-		:14;		// 63:50
+-	};
+-};
+-
+-union cm_clr_error_status {
+-	uint64_t cm_clr_error_status_reg;
+-	struct {
+-		uint64_t clr_ecc_sbe:1,	// 0
+-		 clr_ecc_mbe:1,	// 1
+-		 clr_unsupported_req:1,	// 2
+-		 clr_unexpected_rsp:1,	// 3
+-		 clr_bad_length:1,	// 4
+-		 clr_bad_datavalid:1,	// 5
+-		 clr_buffer_overflow:1,	// 6
+-		 clr_request_timeout:1,	// 7
+-		:8,		// 15:8
+-		 clr_head_inv_data_siz:1,	// 16
+-		 clr_rsp_pactype_inv:1,	// 17
+-		 clr_head_sb_err:1,	// 18
+-		 clr_missing_head:1,	// 19
+-		 clr_head_inv_rd_type:1,	// 20
+-		 clr_head_cmd_err_bit:1,	// 21
+-		 clr_req_addr_align_in:1,	// 22
+-		 clr_pio_req_addr_inv:1,	// 23
+-		 clr_req_range_dsize_i:1,	// 24
+-		 clr_early_term:1,	// 25
+-		 clr_early_tail:1,	// 26
+-		 clr_missing_tail:1,	// 27
+-		 clr_data_flit_sb_err:1,	// 28
+-		 clr_cm2hcm_req_cred_o:1,	// 29
+-		 clr_cm2hcm_rsp_cred_o:1,	// 30
+-		 clr_rx_bad_didn:1,	// 31
+-		 clr_rd_dma_err_rsp:1,	// 32
+-		 clr_rd_dma_tnum_tout:1,	// 33
+-		 clr_rd_dma_multi_tnum:1,	// 34
+-		 clr_wr_dma_err_rsp:1,	// 35
+-		 clr_wr_dma_tnum_tout:1,	// 36
+-		 clr_wr_dma_multi_tnum:1,	// 37
+-		 clr_alg_data_overflow:1,	// 38
+-		 clr_alg_data_underflo:1,	// 39
+-		 clr_ram0_access_confl:1,	// 40
+-		 clr_ram1_access_confl:1,	// 41
+-		 clr_ram2_access_confl:1,	// 42
+-		 clr_ram0_perr:1,	// 43
+-		 clr_ram1_perr:1,	// 44
+-		 clr_ram2_perr:1,	// 45
+-		 clr_int_gen_rsp_err:1,	// 46
+-		 clr_int_gen_tnum_tout:1,	// 47
+-		 clr_rd_dma_prog_err:1,	// 48
+-		 clr_wr_dma_prog_err:1,	// 49
+-		:14;		// 63:50
+-	};
+-};
+-
+-union cm_error_intr_enable {
+-	uint64_t cm_error_intr_enable_reg;
+-	struct {
+-		uint64_t int_en_ecc_sbe:1,	// 0
+-		 int_en_ecc_mbe:1,	// 1
+-		 int_en_unsupported_re:1,	// 2
+-		 int_en_unexpected_rsp:1,	// 3
+-		 int_en_bad_length:1,	// 4
+-		 int_en_bad_datavalid:1,	// 5
+-		 int_en_buffer_overflo:1,	// 6
+-		 int_en_request_timeou:1,	// 7
+-		:8,		// 15:8
+-		 int_en_head_inv_data_:1,	// 16
+-		 int_en_rsp_pactype_in:1,	// 17
+-		 int_en_head_sb_err:1,	// 18
+-		 int_en_missing_head:1,	// 19
+-		 int_en_head_inv_rd_ty:1,	// 20
+-		 int_en_head_cmd_err_b:1,	// 21
+-		 int_en_req_addr_align:1,	// 22
+-		 int_en_pio_req_addr_i:1,	// 23
+-		 int_en_req_range_dsiz:1,	// 24
+-		 int_en_early_term:1,	// 25
+-		 int_en_early_tail:1,	// 26
+-		 int_en_missing_tail:1,	// 27
+-		 int_en_data_flit_sb_e:1,	// 28
+-		 int_en_cm2hcm_req_cre:1,	// 29
+-		 int_en_cm2hcm_rsp_cre:1,	// 30
+-		 int_en_rx_bad_didn:1,	// 31
+-		 int_en_rd_dma_err_rsp:1,	// 32
+-		 int_en_rd_dma_tnum_to:1,	// 33
+-		 int_en_rd_dma_multi_t:1,	// 34
+-		 int_en_wr_dma_err_rsp:1,	// 35
+-		 int_en_wr_dma_tnum_to:1,	// 36
+-		 int_en_wr_dma_multi_t:1,	// 37
+-		 int_en_alg_data_overf:1,	// 38
+-		 int_en_alg_data_under:1,	// 39
+-		 int_en_ram0_access_co:1,	// 40
+-		 int_en_ram1_access_co:1,	// 41
+-		 int_en_ram2_access_co:1,	// 42
+-		 int_en_ram0_perr:1,	// 43
+-		 int_en_ram1_perr:1,	// 44
+-		 int_en_ram2_perr:1,	// 45
+-		 int_en_int_gen_rsp_er:1,	// 46
+-		 int_en_int_gen_tnum_t:1,	// 47
+-		 int_en_rd_dma_prog_er:1,	// 48
+-		 int_en_wr_dma_prog_er:1,	// 49
+-		:14;		// 63:50
+-	};
+-};
+-
+-struct cm_mmr {
+-	union cm_id id;
+-	union cm_status status;
+-	union cm_error_detail1 err_detail1;
+-	union cm_error_detail2 err_detail2;
+-	union cm_control control;
+-	union cm_req_timeout req_timeout;
+-	uint64_t reserved1[1];
+-	union intr_dest int_dest;
+-	uint64_t reserved2[2];
+-	uint64_t targ_flush;
+-	uint64_t reserved3[1];
+-	union cm_error_status err_status;
+-	union cm_clr_error_status clr_err_status;
+-	union cm_error_intr_enable int_enable;
+-};
+-
+-union dma_hostaddr {
+-	uint64_t dma_hostaddr_reg;
+-	struct {
+-		uint64_t dma_sys_addr:56,	// 55:0
+-		:8;		// 63:56
+-	};
+-};
+-
+-union dma_localaddr {
+-	uint64_t dma_localaddr_reg;
+-	struct {
+-		uint64_t dma_ram_addr:21,	// 20:0
+-		 dma_ram_sel:2,	// 22:21
+-		:41;		// 63:23
+-	};
+-};
+-
+-union dma_control {
+-	uint64_t dma_control_reg;
+-	struct {
+-		uint64_t dma_op_length:16,	// 15:0
+-		:18,		// 33:16
+-		 done_amo_en:1,	// 34
+-		 done_int_en:1,	// 35
+-		:1,		// 36
+-		 pio_mem_n:1,	// 37
+-		:26;		// 63:38
+-	};
+-};
+-
+-union dma_amo_dest {
+-	uint64_t dma_amo_dest_reg;
+-	struct {
+-		uint64_t dma_amo_sys_addr:56,	// 55:0
+-		 dma_amo_mod_type:3,	// 58:56
+-		:5;		// 63:59
+-	};
+-};
+-
+-union rdma_aux_status {
+-	uint64_t rdma_aux_status_reg;
+-	struct {
+-		uint64_t op_num_pacs_left:17,	// 16:0
+-		:5,		// 21:17
+-		 lrsp_buff_empty:1,	// 22
+-		:17,		// 39:23
+-		 pending_reqs_left:6,	// 45:40
+-		:18;		// 63:46
+-	};
+-};
+-
+-struct rdma_mmr {
+-	union dma_hostaddr host_addr;
+-	union dma_localaddr local_addr;
+-	union dma_control control;
+-	union dma_amo_dest amo_dest;
+-	union intr_dest intr_dest;
+-	union rdma_aux_status aux_status;
+-};
+-
+-union wdma_aux_status {
+-	uint64_t wdma_aux_status_reg;
+-	struct {
+-		uint64_t op_num_pacs_left:17,	// 16:0
+-		:4,		// 20:17
+-		 lreq_buff_empty:1,	// 21
+-		:18,		// 39:22
+-		 pending_reqs_left:6,	// 45:40
+-		:18;		// 63:46
+-	};
+-};
+-
+-struct wdma_mmr {
+-	union dma_hostaddr host_addr;
+-	union dma_localaddr local_addr;
+-	union dma_control control;
+-	union dma_amo_dest amo_dest;
+-	union intr_dest intr_dest;
+-	union wdma_aux_status aux_status;
+-};
+-
+-union algo_step {
+-	uint64_t algo_step_reg;
+-	struct {
+-		uint64_t alg_step_cnt:16,	// 15:0
+-		:48;		// 63:16
+-	};
+-};
+-
+-struct algo_mmr {
+-	union dma_amo_dest amo_dest;
+-	union intr_dest intr_dest;
+-	union {
+-		uint64_t algo_offset_reg;
+-		struct {
+-			uint64_t sram0_offset:7,	// 6:0
+-			reserved0:1,	// 7
+-			sram1_offset:7,	// 14:8
+-			reserved1:1,	// 15
+-			sram2_offset:7,	// 22:16
+-			reserved2:14;	// 63:23
+-		};
+-	} sram_offset;
+-	union algo_step step;
+-};
+-
+-struct mbcs_mmr {
+-	struct cm_mmr cm;
+-	uint64_t reserved1[17];
+-	struct rdma_mmr rdDma;
+-	uint64_t reserved2[25];
+-	struct wdma_mmr wrDma;
+-	uint64_t reserved3[25];
+-	struct algo_mmr algo;
+-	uint64_t reserved4[156];
+-};
+-
+-/*
+- * defines
+- */
+-#define DEVICE_NAME "mbcs"
+-#define MBCS_PART_NUM 0xfff0
+-#define MBCS_PART_NUM_ALG0 0xf001
+-#define MBCS_MFG_NUM  0x1
+-
+-struct algoblock {
+-	uint64_t amoHostDest;
+-	uint64_t amoModType;
+-	uint64_t intrHostDest;
+-	uint64_t intrVector;
+-	uint64_t algoStepCount;
+-};
+-
+-struct getdma {
+-	uint64_t hostAddr;
+-	uint64_t localAddr;
+-	uint64_t bytes;
+-	uint64_t DoneAmoEnable;
+-	uint64_t DoneIntEnable;
+-	uint64_t peerIO;
+-	uint64_t amoHostDest;
+-	uint64_t amoModType;
+-	uint64_t intrHostDest;
+-	uint64_t intrVector;
+-};
+-
+-struct putdma {
+-	uint64_t hostAddr;
+-	uint64_t localAddr;
+-	uint64_t bytes;
+-	uint64_t DoneAmoEnable;
+-	uint64_t DoneIntEnable;
+-	uint64_t peerIO;
+-	uint64_t amoHostDest;
+-	uint64_t amoModType;
+-	uint64_t intrHostDest;
+-	uint64_t intrVector;
+-};
+-
+-struct mbcs_soft {
+-	struct list_head list;
+-	struct cx_dev *cxdev;
+-	int major;
+-	int nasid;
+-	void *mmr_base;
+-	wait_queue_head_t dmawrite_queue;
+-	wait_queue_head_t dmaread_queue;
+-	wait_queue_head_t algo_queue;
+-	struct sn_irq_info *get_sn_irq;
+-	struct sn_irq_info *put_sn_irq;
+-	struct sn_irq_info *algo_sn_irq;
+-	struct getdma getdma;
+-	struct putdma putdma;
+-	struct algoblock algo;
+-	uint64_t gscr_addr;	// pio addr
+-	uint64_t ram0_addr;	// pio addr
+-	uint64_t ram1_addr;	// pio addr
+-	uint64_t ram2_addr;	// pio addr
+-	uint64_t debug_addr;	// pio addr
+-	atomic_t dmawrite_done;
+-	atomic_t dmaread_done;
+-	atomic_t algo_done;
+-	struct mutex dmawritelock;
+-	struct mutex dmareadlock;
+-	struct mutex algolock;
+-};
+-
+-static int mbcs_open(struct inode *ip, struct file *fp);
+-static ssize_t mbcs_sram_read(struct file *fp, char __user *buf, size_t len,
+-			      loff_t * off);
+-static ssize_t mbcs_sram_write(struct file *fp, const char __user *buf, size_t len,
+-			       loff_t * off);
+-static loff_t mbcs_sram_llseek(struct file *filp, loff_t off, int whence);
+-static int mbcs_gscr_mmap(struct file *fp, struct vm_area_struct *vma);
+-
+-#endif				// __MBCS_H__
 -- 
 2.20.1
 
