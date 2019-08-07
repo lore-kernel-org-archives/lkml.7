@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D789C31E40
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:36:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B71DCC31E40
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:36:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74B0A205C9
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:36:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A850205C9
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:36:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WuyyNqtp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L6PrjOsr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730410AbfHGBgd (ORCPT
+        id S1729840AbfHGBef (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 21:36:33 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:42637 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729676AbfHGBek (ORCPT
+        Tue, 6 Aug 2019 21:34:35 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:47054 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729738AbfHGBeb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 21:34:40 -0400
-Received: by mail-pl1-f193.google.com with SMTP id ay6so38635695plb.9;
-        Tue, 06 Aug 2019 18:34:39 -0700 (PDT)
+        Tue, 6 Aug 2019 21:34:31 -0400
+Received: by mail-pg1-f196.google.com with SMTP id w3so5333781pgt.13;
+        Tue, 06 Aug 2019 18:34:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=46lxAY1z81U+mrrESVpVIrQ+fWJc6iHl4OExj8KwBEA=;
-        b=WuyyNqtpvvlvZwulsOSyl6jjDfFZFL7/Zx5rMnqGOdxDRsEuGcdgN1IewvAvlX+Ui3
-         X7btLnm2F40F8RrpBhgVrMU3HOKje9DtE5nK+fpNzyjny+e0S7JZDS2kjkLoxOZDXhQl
-         8/grXg9y3uP/GW5F5PAwd4bWzrVFH3BCp78Eig9BKFd6aIXye5gDuBBhD5viuX1OApXQ
-         9VIP+L4AUKM2VFr2nldHjLjmSVNA49QX09uR5xAkxNN9xQUujG5Q/Q0AKTjDZbsxdlOq
-         g4tQx0EnIYd52Zy5p9V4faNYnaj9xyaWhFJDGaxmSVhObIkgzad4uex02Ars3KOUlzef
-         YWIw==
+        bh=uQGOdku7Vl3REPvOJ8nTMNJxS9zoi9IIquO7PYdcYIA=;
+        b=L6PrjOsrS6boUIN/DOymS83vV7YlAKPpT9Xdrfk7ax1OcCgE7PAsCiB8I3wTJde6P0
+         jWSZSVN0MQGqPFzlI9I6nQdqRL1oXS8MVgrMBG2RUC/9SCRR/2JXuxH0Bc1AbFhAasOV
+         xWwwBWKfNUqmzHZ9usEoeFIoZA0TFhsqfa1vxdEBmkB+UHsGh6j98UqgUEfpOkZ8azEw
+         XctfU3/I30ArTXSEYH2C9KRaAbt0v2hqFYnx8WGIkLVSjGqesnYt/lo+Nif4WusFAWAo
+         kwn89YnMjOOYX9/SsgW6zCkgnnE6VjyidKN7erx1BI5f02v6uid8cXohhKk4FwCmi1FI
+         cYgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=46lxAY1z81U+mrrESVpVIrQ+fWJc6iHl4OExj8KwBEA=;
-        b=C7ZFyjjb0YV18GgLJ6nThE66O7R63akxZeghvqF5mHMGVUU1mDfQ3ncSp/E7n6jY3g
-         tc7CgM5RjrMQ61VDt67hR/LH42dgVUIet1lraP2dk9yNiYQ2wiOUehl5ynbP0wKrF7qs
-         mE/lB3LozvMt0dVeX7PvcciL/TFwF9iBqKO5UYXAD5sdxHq1LhvmbTowrdWLueu63EX9
-         +PF9HBp6fNY6f55qZBi9vSKdulvKFO4reL0p4rzHRPDZSpR75iZ8vFcL+hJfK/LhkvyN
-         XH0iDlqlEVAuDFithRSjDKdeY2w10wYKYOovW8faz8Bj7JgQNcdCkYjgaL5mSOhW79IX
-         165Q==
-X-Gm-Message-State: APjAAAUqNbqQ01MFRyNpyAejWoyoAuQQdmRMj2c1VbKlja7r3HEzsJnX
-        GzgdsUwezCb9oSKsIAogyXA=
-X-Google-Smtp-Source: APXvYqxeu3U+gXlTZOXb8hdX/T/5F9QSVWlhZwpRfNn+ISG+GmBUrBJWAvgFajanndvmV9JUd/JHZg==
-X-Received: by 2002:a17:902:a606:: with SMTP id u6mr5434497plq.275.1565141679262;
-        Tue, 06 Aug 2019 18:34:39 -0700 (PDT)
+        bh=uQGOdku7Vl3REPvOJ8nTMNJxS9zoi9IIquO7PYdcYIA=;
+        b=AtcMSFh0U5imUlPpqf0ap4oYH36SIPatoRKBWM5yfrx8+GMT6KCYpi+5NP7X8dQxNl
+         7LjYWToA6DOAmXj4Y69ul4+XRDOZWIM4wxhwtc27Bu8w1TEhpf5hh8SRmTD6EQaWU7Vg
+         sJfVA64SAsXf/W/accrUAu8fXUyBpMZY+e4SNTMN9a/TKhJLpVdo0tW42YsycQ9cVhz8
+         p0oOF0qTY5YandeaN2Q1ujLdXC62PIR/FN4M0bw3h/pcL54LA5I2EfkitClFLwERM9FB
+         G9he6Hm0IN+U4qi6bvvhz8uzCHVEQmuSZJ3Wgrs44HJMk7aS5K3AuBJNwYQW0sZCO8uv
+         TWqg==
+X-Gm-Message-State: APjAAAWrf23IMcXMEe8XgwlDmhmMJ7iLp0Qzip40a+qksGKnbUGgsNDg
+        GODeM7hhMQKp7kOC/xPDUgI=
+X-Google-Smtp-Source: APXvYqyaoKmDNdUJQD7xvZFSQjCmYuVY+zKJwqcOsFMJXKJ76CQxjmhpKXdBBVyw94JCP/lkY4QWYw==
+X-Received: by 2002:aa7:8f2c:: with SMTP id y12mr6988234pfr.38.1565141669837;
+        Tue, 06 Aug 2019 18:34:29 -0700 (PDT)
 Received: from blueforge.nvidia.com (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id u69sm111740800pgu.77.2019.08.06.18.34.37
+        by smtp.gmail.com with ESMTPSA id u69sm111740800pgu.77.2019.08.06.18.34.28
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 06 Aug 2019 18:34:38 -0700 (PDT)
+        Tue, 06 Aug 2019 18:34:29 -0700 (PDT)
 From:   john.hubbard@gmail.com
 X-Google-Original-From: jhubbard@nvidia.com
 To:     Andrew Morton <akpm@linux-foundation.org>
@@ -80,11 +80,15 @@ Cc:     Christoph Hellwig <hch@infradead.org>,
         netdev@vger.kernel.org, rds-devel@oss.oracle.com,
         sparclinux@vger.kernel.org, x86@kernel.org,
         xen-devel@lists.xenproject.org, John Hubbard <jhubbard@nvidia.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Roman Kiryanov <rkir@google.com>
-Subject: [PATCH v3 34/41] goldfish_pipe: convert put_page() to put_user_page*()
-Date:   Tue,  6 Aug 2019 18:33:33 -0700
-Message-Id: <20190807013340.9706-35-jhubbard@nvidia.com>
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH v3 28/41] mm/gup_benchmark.c: convert put_page() to put_user_page*()
+Date:   Tue,  6 Aug 2019 18:33:27 -0700
+Message-Id: <20190807013340.9706-29-jhubbard@nvidia.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190807013340.9706-1-jhubbard@nvidia.com>
 References: <20190807013340.9706-1-jhubbard@nvidia.com>
@@ -105,46 +109,32 @@ release_pages().
 This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
 ("mm: introduce put_user_page*(), placeholder versions").
 
-Note that this effectively changes the code's behavior in
-qp_release_pages(): it now ultimately calls set_page_dirty_lock(),
-instead of set_page_dirty(). This is probably more accurate.
+Reviewed-by: Keith Busch <keith.busch@intel.com>
 
-As Christoph Hellwig put it, "set_page_dirty() is only safe if we are
-dealing with a file backed page where we have reference on the inode it
-hangs off." [1]
-
-[1] https://lore.kernel.org/r/20190723153640.GB720@lst.de
-
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Roman Kiryanov <rkir@google.com>
+Cc: Keith Busch <keith.busch@intel.com>
+Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Cc: Michael S. Tsirkin <mst@redhat.com>
+Cc: YueHaibing <yuehaibing@huawei.com>
 Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 ---
- drivers/platform/goldfish/goldfish_pipe.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ mm/gup_benchmark.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/goldfish/goldfish_pipe.c b/drivers/platform/goldfish/goldfish_pipe.c
-index cef0133aa47a..2bd21020e288 100644
---- a/drivers/platform/goldfish/goldfish_pipe.c
-+++ b/drivers/platform/goldfish/goldfish_pipe.c
-@@ -288,15 +288,12 @@ static int pin_user_pages(unsigned long first_page,
- static void release_user_pages(struct page **pages, int pages_count,
- 			       int is_write, s32 consumed_size)
- {
--	int i;
-+	bool dirty = !is_write && consumed_size > 0;
- 
--	for (i = 0; i < pages_count; i++) {
--		if (!is_write && consumed_size > 0)
--			set_page_dirty(pages[i]);
+diff --git a/mm/gup_benchmark.c b/mm/gup_benchmark.c
+index 7dd602d7f8db..515ac8eeb6ee 100644
+--- a/mm/gup_benchmark.c
++++ b/mm/gup_benchmark.c
+@@ -79,7 +79,7 @@ static int __gup_benchmark_ioctl(unsigned int cmd,
+ 	for (i = 0; i < nr_pages; i++) {
+ 		if (!pages[i])
+ 			break;
 -		put_page(pages[i]);
--	}
-+	put_user_pages_dirty_lock(pages, pages_count, dirty);
- }
- 
-+
- /* Populate the call parameters, merging adjacent pages together */
- static void populate_rw_params(struct page **pages,
- 			       int pages_count,
++		put_user_page(pages[i]);
+ 	}
+ 	end_time = ktime_get();
+ 	gup->put_delta_usec = ktime_us_delta(end_time, start_time);
 -- 
 2.22.0
 
