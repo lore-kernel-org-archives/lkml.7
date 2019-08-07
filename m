@@ -8,25 +8,25 @@ X-Spam-Status: No, score=-9.0 required=3.0
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C219C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 22:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4ED6C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 22:27:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEB20214C6
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 22:27:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59B37214C6
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 22:27:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389582AbfHGW1p (ORCPT
+        id S2389600AbfHGW1v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 18:27:45 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:51847 "EHLO
+        Wed, 7 Aug 2019 18:27:51 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:51855 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388848AbfHGW1n (ORCPT
+        with ESMTP id S2389581AbfHGW1u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 18:27:43 -0400
+        Wed, 7 Aug 2019 18:27:50 -0400
 Received: from [5.158.153.52] (helo=g2noscherz.tec.linutronix.de.)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
         (Exim 4.80)
         (envelope-from <john.ogness@linutronix.de>)
-        id 1hvUOx-0007mg-JO; Thu, 08 Aug 2019 00:27:24 +0200
+        id 1hvUP2-0007mg-V2; Thu, 08 Aug 2019 00:27:31 +0200
 From:   John Ogness <john.ogness@linutronix.de>
 To:     linux-kernel@vger.kernel.org
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -39,9 +39,9 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
         Brendan Higgins <brendanhiggins@google.com>
-Subject: [RFC PATCH v4 8/9] printk-rb: new functionality to support printk
-Date:   Thu,  8 Aug 2019 00:32:33 +0206
-Message-Id: <20190807222634.1723-9-john.ogness@linutronix.de>
+Subject: [RFC PATCH v4 9/9] printk: use a new ringbuffer implementation
+Date:   Thu,  8 Aug 2019 00:32:34 +0206
+Message-Id: <20190807222634.1723-10-john.ogness@linutronix.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190807222634.1723-1-john.ogness@linutronix.de>
 References: <20190807222634.1723-1-john.ogness@linutronix.de>
@@ -52,566 +52,1401 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the following functions needed to support printk features.
+This is a major change because the API (and underlying workings)
+of the new ringbuffer are completely different than the previous
+ringbuffer. Since there are several components of the printk
+infrastructure that use the ringbuffer API (console, /dev/kmsg,
+syslog, kmsg_dump), there are quite a few changes throughout the
+printk implementation.
 
-dataring:
-dataring_unused() - return free bytes
+This is also a conservative change because it continues to use the
+logbuf_lock raw spinlock even though the new ringbuffer is lockless.
 
-ringbuffer:
-prb_init() - dynamically initialize a ringbuffer
-prb_iter_seek() - seek to an entry in the committed list
-prb_iter_wait_next_valid_entry() - blocking reader function
-prb_iter_copy() - duplicate an iterator
-prb_iter_entry() - get the entry of an iterator
-prb_unused() - wrapper for dataring_unused()
-prb_wait_queue() - get the ringbuffer wait queue
-DECLARE_PRINTKRB_SEQENTRY() - declare entry for only seq reading
+The externally visible changes are:
 
-Also modify prb_iter_peek_next_entry() to optionally return the
-sequence number previous to the next entry.
+1. The exported vmcore info has changed:
+
+    - VMCOREINFO_SYMBOL(log_buf);
+    - VMCOREINFO_SYMBOL(log_buf_len);
+    - VMCOREINFO_SYMBOL(log_first_idx);
+    - VMCOREINFO_SYMBOL(clear_idx);
+    - VMCOREINFO_SYMBOL(log_next_idx);
+    + VMCOREINFO_SYMBOL(printk_rb_static);
+    + VMCOREINFO_SYMBOL(printk_rb_dynamic);
+
+2. For the CONFIG_PPC_POWERNV powerpc platform, kernel log buffer
+   registration is no longer available because there is no longer
+   a single contigous block of memory to represent all of the
+   ringbuffer.
 
 Signed-off-by: John Ogness <john.ogness@linutronix.de>
 ---
- kernel/printk/dataring.c   |  29 ++++
- kernel/printk/dataring.h   |   3 +-
- kernel/printk/ringbuffer.c | 292 +++++++++++++++++++++++++++++++++++--
- kernel/printk/ringbuffer.h |  46 +++++-
- 4 files changed, 354 insertions(+), 16 deletions(-)
+ arch/powerpc/platforms/powernv/opal.c |  22 +-
+ include/linux/kmsg_dump.h             |   6 +-
+ include/linux/printk.h                |  12 -
+ kernel/printk/printk.c                | 745 ++++++++++++++------------
+ kernel/printk/ringbuffer.h            |  24 +
+ 5 files changed, 415 insertions(+), 394 deletions(-)
 
-diff --git a/kernel/printk/dataring.c b/kernel/printk/dataring.c
-index 712842f2dc04..e48069dc27bc 100644
---- a/kernel/printk/dataring.c
-+++ b/kernel/printk/dataring.c
-@@ -489,6 +489,35 @@ static bool get_new_lpos(struct dataring *dr, unsigned long size,
- 	}
+diff --git a/arch/powerpc/platforms/powernv/opal.c b/arch/powerpc/platforms/powernv/opal.c
+index aba443be7daa..8c4b894b6663 100644
+--- a/arch/powerpc/platforms/powernv/opal.c
++++ b/arch/powerpc/platforms/powernv/opal.c
+@@ -806,30 +806,10 @@ static void opal_export_attrs(void)
+ 
+ static void __init opal_dump_region_init(void)
+ {
+-	void *addr;
+-	uint64_t size;
+-	int rc;
+-
+ 	if (!opal_check_token(OPAL_REGISTER_DUMP_REGION))
+ 		return;
+ 
+-	/* Register kernel log buffer */
+-	addr = log_buf_addr_get();
+-	if (addr == NULL)
+-		return;
+-
+-	size = log_buf_len_get();
+-	if (size == 0)
+-		return;
+-
+-	rc = opal_register_dump_region(OPAL_DUMP_REGION_LOG_BUF,
+-				       __pa(addr), size);
+-	/* Don't warn if this is just an older OPAL that doesn't
+-	 * know about that call
+-	 */
+-	if (rc && rc != OPAL_UNSUPPORTED)
+-		pr_warn("DUMP: Failed to register kernel log buffer. "
+-			"rc = %d\n", rc);
++	pr_warn("DUMP: This kernel does not support kernel log buffer registration.\n");
  }
  
-+/**
-+ * dataring_unused() - Determine the unused bytes available for pushing.
-+ *
-+ * @dr: The data ringbuffer to check.
-+ *
-+ * Determine the largest possible push size that can be performed without
-+ * invalidating existing data.
-+ *
-+ * Return: The number of unused bytes available for pushing.
-+ */
-+unsigned long dataring_unused(struct dataring *dr)
-+{
-+	unsigned long head_lpos;
-+	unsigned long tail_lpos;
-+	unsigned long size = 0;
-+	unsigned long diff;
-+
-+	to_db_size(&size);
-+
-+	tail_lpos = atomic_long_read(&dr->tail_lpos);
-+	head_lpos = atomic_long_read(&dr->head_lpos);
-+
-+	diff = DATA_SIZE(dr) + tail_lpos - head_lpos;
-+	if (diff <= size)
-+		return 0;
-+
-+	return (diff - size);
-+}
-+
- /**
-  * dataring_desc_init() - Initialize a descriptor to be permanently invalid.
-  *
-diff --git a/kernel/printk/dataring.h b/kernel/printk/dataring.h
-index c566ce228abe..896a7f855d9f 100644
---- a/kernel/printk/dataring.h
-+++ b/kernel/printk/dataring.h
-@@ -91,13 +91,14 @@ struct dataring {
+ static void opal_pdev_init(const char *compatible)
+diff --git a/include/linux/kmsg_dump.h b/include/linux/kmsg_dump.h
+index 2e7a1e032c71..d9b721347742 100644
+--- a/include/linux/kmsg_dump.h
++++ b/include/linux/kmsg_dump.h
+@@ -46,10 +46,8 @@ struct kmsg_dumper {
+ 	bool registered;
+ 
+ 	/* private state of the kmsg iterator */
+-	u32 cur_idx;
+-	u32 next_idx;
+-	u64 cur_seq;
+-	u64 next_seq;
++	u64 last_seq;
++	u64 until_seq;
  };
  
- bool dataring_checksize(struct dataring *dr, unsigned long size);
-+unsigned long dataring_unused(struct dataring *dr);
+ #ifdef CONFIG_PRINTK
+diff --git a/include/linux/printk.h b/include/linux/printk.h
+index cefd374c47b1..fd3007659cfb 100644
+--- a/include/linux/printk.h
++++ b/include/linux/printk.h
+@@ -194,8 +194,6 @@ devkmsg_sysctl_set_loglvl(struct ctl_table *table, int write, void __user *buf,
  
- bool dataring_pop(struct dataring *dr);
- char *dataring_push(struct dataring *dr, unsigned long size,
- 		    struct dr_desc *desc, unsigned long id);
+ extern void wake_up_klogd(void);
+ 
+-char *log_buf_addr_get(void);
+-u32 log_buf_len_get(void);
+ void log_buf_vmcoreinfo_setup(void);
+ void __init setup_log_buf(int early);
+ __printf(1, 2) void dump_stack_set_arch_desc(const char *fmt, ...);
+@@ -235,16 +233,6 @@ static inline void wake_up_klogd(void)
+ {
+ }
+ 
+-static inline char *log_buf_addr_get(void)
+-{
+-	return NULL;
+-}
 -
- void dataring_datablock_setid(struct dataring *dr, struct dr_desc *desc,
- 			      unsigned long id);
-+
- struct dr_datablock *dataring_getdatablock(struct dataring *dr,
- 					   struct dr_desc *desc, int *size);
- bool dataring_datablock_isvalid(struct dataring *dr, struct dr_desc *desc);
-diff --git a/kernel/printk/ringbuffer.c b/kernel/printk/ringbuffer.c
-index 053622151447..e727d9d72f65 100644
---- a/kernel/printk/ringbuffer.c
-+++ b/kernel/printk/ringbuffer.c
-@@ -3,6 +3,7 @@
- #include <linux/kernel.h>
- #include <linux/irqflags.h>
- #include <linux/string.h>
-+#include <linux/sched.h>
- #include <linux/err.h>
- #include "ringbuffer.h"
- 
-@@ -530,6 +531,24 @@ void prb_commit(struct prb_reserved_entry *e)
+-static inline u32 log_buf_len_get(void)
+-{
+-	return 0;
+-}
+-
+ static inline void log_buf_vmcoreinfo_setup(void)
+ {
  }
- EXPORT_SYMBOL(prb_commit);
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 1888f6a3b694..1a50e0c43775 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -56,6 +56,7 @@
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/printk.h>
  
-+/**
-+ * prb_unused() - Determine the unused bytes available for reserving.
-+ *
-+ * @rb: The ringbuffer to check.
-+ *
-+ * This is the public function available to writer to determine the largest
-+ * possible reserve size that can be performed without invalidating old
-+ * entries.
-+ *
-+ * Context: Any context.
-+ * Return: The number of unused bytes available for reserving.
++#include "ringbuffer.h"
+ #include "console_cmdline.h"
+ #include "braille.h"
+ #include "internal.h"
+@@ -409,28 +410,38 @@ DEFINE_RAW_SPINLOCK(logbuf_lock);
+ 
+ #ifdef CONFIG_PRINTK
+ DECLARE_WAIT_QUEUE_HEAD(log_wait);
+-/* the next printk record to read by syslog(READ) or /proc/kmsg */
+-static u64 syslog_seq;
+-static u32 syslog_idx;
+-static size_t syslog_partial;
+-static bool syslog_time;
+ 
+-/* index and sequence number of the first record stored in the buffer */
+-static u64 log_first_seq;
+-static u32 log_first_idx;
++/*
++ * Define the average message size. This only affects the number of
++ * descriptors that will be available. Underestimating is better than
++ * overestimating (too many available descriptors is better than not enough).
 + */
-+unsigned long prb_unused(struct printk_ringbuffer *rb)
-+{
-+	return dataring_unused(&rb->dr);
-+}
-+EXPORT_SYMBOL(prb_unused);
++#define PRB_AVGBITS 6
 +
- /**
-  * prb_iter_init() - Initialize an iterator.
-  *
-@@ -543,7 +562,7 @@ EXPORT_SYMBOL(prb_commit);
-  *
-  * As an alternative, DECLARE_PRINTKRB_ITER() can be used.
-  *
-- * The interator is initialized to the beginning of the committed list (the
-+ * The iterator is initialized to the beginning of the committed list (the
-  * oldest committed entry).
-  *
-  * Context: Any context.
-@@ -575,10 +594,10 @@ static void reset_iter(struct prb_iterator *iter)
- 	iter->last_seq = last_seq - 1;
++DECLARE_PRINTKRB(printk_rb_static, PRB_AVGBITS,
++		 CONFIG_LOG_BUF_SHIFT - PRB_AVGBITS, &log_wait);
++
++static struct printk_ringbuffer printk_rb_dynamic;
  
+-/* index and sequence number of the next record to store in the buffer */
+-static u64 log_next_seq;
+-static u32 log_next_idx;
++static struct printk_ringbuffer *prb = &printk_rb_static;
+ 
+-/* the next printk record to write to the console */
+-static u64 console_seq;
+-static u32 console_idx;
++/* the last printk record read by syslog(READ) or /proc/kmsg */
++static u64 syslog_last_seq;
++DECLARE_PRINTKRB_ENTRY(syslog_entry,
++	sizeof(struct printk_log) + CONSOLE_EXT_LOG_MAX);
++DECLARE_PRINTKRB_ITER(syslog_iter, &printk_rb_static, &syslog_entry);
++static size_t syslog_partial;
++static bool syslog_time;
++
++/* the last printk record written to the console */
++static u64 console_last_seq;
++DECLARE_PRINTKRB_ENTRY(console_entry,
++	sizeof(struct printk_log) + CONSOLE_EXT_LOG_MAX);
++DECLARE_PRINTKRB_ITER(console_iter, &printk_rb_static, &console_entry);
+ static u64 exclusive_console_stop_seq;
+ 
+-/* the next printk record to read after the last 'clear' command */
+-static u64 clear_seq;
+-static u32 clear_idx;
++/* the last printk record read before the last 'clear' command */
++static u64 clear_last_seq;
+ 
+ #ifdef CONFIG_PRINTK_CALLER
+ #define PREFIX_MAX		48
+@@ -446,22 +457,8 @@ static u32 clear_idx;
+ #define LOG_ALIGN __alignof__(struct printk_log)
+ #define __LOG_BUF_LEN (1 << CONFIG_LOG_BUF_SHIFT)
+ #define LOG_BUF_LEN_MAX (u32)(1 << 31)
+-static char __log_buf[__LOG_BUF_LEN] __aligned(LOG_ALIGN);
+-static char *log_buf = __log_buf;
+ static u32 log_buf_len = __LOG_BUF_LEN;
+ 
+-/* Return log buffer address */
+-char *log_buf_addr_get(void)
+-{
+-	return log_buf;
+-}
+-
+-/* Return log buffer size */
+-u32 log_buf_len_get(void)
+-{
+-	return log_buf_len;
+-}
+-
+ /* human readable text of the record */
+ static char *log_text(const struct printk_log *msg)
+ {
+@@ -474,92 +471,12 @@ static char *log_dict(const struct printk_log *msg)
+ 	return (char *)msg + sizeof(struct printk_log) + msg->text_len;
+ }
+ 
+-/* get record by index; idx must point to valid msg */
+-static struct printk_log *log_from_idx(u32 idx)
+-{
+-	struct printk_log *msg = (struct printk_log *)(log_buf + idx);
+-
+-	/*
+-	 * A length == 0 record is the end of buffer marker. Wrap around and
+-	 * read the message at the start of the buffer.
+-	 */
+-	if (!msg->len)
+-		return (struct printk_log *)log_buf;
+-	return msg;
+-}
+-
+-/* get next record; idx must point to valid msg */
+-static u32 log_next(u32 idx)
+-{
+-	struct printk_log *msg = (struct printk_log *)(log_buf + idx);
+-
+-	/* length == 0 indicates the end of the buffer; wrap */
+-	/*
+-	 * A length == 0 record is the end of buffer marker. Wrap around and
+-	 * read the message at the start of the buffer as *this* one, and
+-	 * return the one after that.
+-	 */
+-	if (!msg->len) {
+-		msg = (struct printk_log *)log_buf;
+-		return msg->len;
+-	}
+-	return idx + msg->len;
+-}
+-
+-/*
+- * Check whether there is enough free space for the given message.
+- *
+- * The same values of first_idx and next_idx mean that the buffer
+- * is either empty or full.
+- *
+- * If the buffer is empty, we must respect the position of the indexes.
+- * They cannot be reset to the beginning of the buffer.
+- */
+-static int logbuf_has_space(u32 msg_size, bool empty)
+-{
+-	u32 free;
+-
+-	if (log_next_idx > log_first_idx || empty)
+-		free = max(log_buf_len - log_next_idx, log_first_idx);
+-	else
+-		free = log_first_idx - log_next_idx;
+-
+-	/*
+-	 * We need space also for an empty header that signalizes wrapping
+-	 * of the buffer.
+-	 */
+-	return free >= msg_size + sizeof(struct printk_log);
+-}
+-
+-static int log_make_free_space(u32 msg_size)
+-{
+-	while (log_first_seq < log_next_seq &&
+-	       !logbuf_has_space(msg_size, false)) {
+-		/* drop old messages until we have enough contiguous space */
+-		log_first_idx = log_next(log_first_idx);
+-		log_first_seq++;
+-	}
+-
+-	if (clear_seq < log_first_seq) {
+-		clear_seq = log_first_seq;
+-		clear_idx = log_first_idx;
+-	}
+-
+-	/* sequence numbers are equal, so the log buffer is empty */
+-	if (logbuf_has_space(msg_size, log_first_seq == log_next_seq))
+-		return 0;
+-
+-	return -ENOMEM;
+-}
+-
+-/* compute the message size including the padding bytes */
+-static u32 msg_used_size(u16 text_len, u16 dict_len, u32 *pad_len)
++/* compute the message size */
++static u32 msg_used_size(u16 text_len, u16 dict_len)
+ {
+ 	u32 size;
+ 
+ 	size = sizeof(struct printk_log) + text_len + dict_len;
+-	*pad_len = (-size) & (LOG_ALIGN - 1);
+-	size += *pad_len;
+ 
+ 	return size;
+ }
+@@ -573,21 +490,39 @@ static u32 msg_used_size(u16 text_len, u16 dict_len, u32 *pad_len)
+ static const char trunc_msg[] = "<truncated>";
+ 
+ static u32 truncate_msg(u16 *text_len, u16 *trunc_msg_len,
+-			u16 *dict_len, u32 *pad_len)
++			u16 *dict_len)
+ {
  	/*
--	 * @last_id is only significant in EOL situations, when it is equal to
--	 * @next_id and the iterator wants to read the entry after @last_id as
--	 * the next entry. Set @last_id to something other than @next_id. So
--	 * that the iterator will read @next_id as the next entry.
-+	 * @last_id is only significant in EOL situations, when it is equal
-+	 * to @next_id, in which case it reads the entry after @last_id. Set
-+	 * @last_id to something other than @next_id so that the iterator
-+	 * will read @next_id as the next entry.
+ 	 * The message should not take the whole buffer. Otherwise, it might
+ 	 * get removed too soon.
  	 */
- 	iter->last_id = iter->next_id - 1;
- }
-@@ -696,8 +715,12 @@ int prb_iter_next_valid_entry(struct prb_iterator *iter)
- 			e->seq = seq;
- 
- 			db = dataring_getdatablock(dr, &desc, &size);
--			memcpy(&e->buffer[0], &db->data[0],
--			       size > e->buffer_size ? e->buffer_size : size);
+ 	u32 max_text_len = log_buf_len / MAX_LOG_TAKE_PART;
++	unsigned long max_available;
 +
-+			if (e->buffer && e->buffer_size) {
-+				memcpy(&e->buffer[0], &db->data[0],
-+				       size > e->buffer_size ?
-+				       e->buffer_size : size);
-+			}
- 
- 			/*
- 			 * mD:
-@@ -726,6 +749,39 @@ int prb_iter_next_valid_entry(struct prb_iterator *iter)
- }
- EXPORT_SYMBOL(prb_iter_next_valid_entry);
- 
++	/* determine available text space in the ringbuffer */
++	max_available = prb_unused(prb);
++	if (max_available <= sizeof(struct printk_log))
++		return 0;
++	max_available -= sizeof(struct printk_log);
 +
-+/**
-+ * prb_iter_wait_next_valid_entry() - Blocking traverse and read.
-+ *
-+ * @iter: The iterator used for list traversal.
-+ *
-+ * This is the public function available to readers to traverse the committed
-+ * entry list. It is the same as prb_iter_next_valid_entry() except that it
-+ * blocks (interruptible) if the end of the commit list is reached. See
-+ * prb_iter_next_valid_entry() for traversal/read/size details.
-+ *
-+ * Context: Process context. Sleeps if the end of the commit list reached.
-+ * Return: The size of the entry data or -ERESTARTSYS if interrupted.
-+ */
-+int prb_iter_wait_next_valid_entry(struct prb_iterator *iter)
++	if (max_available < max_text_len)
++		max_text_len = max_available;
++
+ 	if (*text_len > max_text_len)
+ 		*text_len = max_text_len;
+-	/* enable the warning message */
++
++	/* enable the warning message (if there is room) */
+ 	*trunc_msg_len = strlen(trunc_msg);
++	if (*text_len >= *trunc_msg_len)
++		*text_len -= *trunc_msg_len;
++	else
++		*trunc_msg_len = 0;
++
+ 	/* disable the "dict" completely */
+ 	*dict_len = 0;
++
+ 	/* compute the size again, count also the warning message */
+-	return msg_used_size(*text_len + *trunc_msg_len, 0, pad_len);
++	return msg_used_size(*text_len + *trunc_msg_len, 0);
+ }
+ 
+ /* insert record into the buffer, discard old ones, update heads */
+@@ -596,34 +531,26 @@ static int log_store(u32 caller_id, int facility, int level,
+ 		     const char *dict, u16 dict_len,
+ 		     const char *text, u16 text_len)
+ {
++	struct prb_reserved_entry res_entry;
+ 	struct printk_log *msg;
+-	u32 size, pad_len;
+ 	u16 trunc_msg_len = 0;
++	char *rbuf;
++	u32 size;
+ 
+-	/* number of '\0' padding bytes to next message */
+-	size = msg_used_size(text_len, dict_len, &pad_len);
++	size = msg_used_size(text_len, dict_len);
+ 
+-	if (log_make_free_space(size)) {
++	rbuf = prb_reserve(&res_entry, prb, size);
++	if (IS_ERR(rbuf)) {
+ 		/* truncate the message if it is too long for empty buffer */
+-		size = truncate_msg(&text_len, &trunc_msg_len,
+-				    &dict_len, &pad_len);
++		size = truncate_msg(&text_len, &trunc_msg_len, &dict_len);
+ 		/* survive when the log buffer is too small for trunc_msg */
+-		if (log_make_free_space(size))
++		rbuf = prb_reserve(&res_entry, prb, size);
++		if (IS_ERR(rbuf))
+ 			return 0;
+ 	}
+ 
+-	if (log_next_idx + size + sizeof(struct printk_log) > log_buf_len) {
+-		/*
+-		 * This message + an additional empty header does not fit
+-		 * at the end of the buffer. Add an empty header with len == 0
+-		 * to signify a wrap around.
+-		 */
+-		memset(log_buf + log_next_idx, 0, sizeof(struct printk_log));
+-		log_next_idx = 0;
+-	}
+-
+ 	/* fill message */
+-	msg = (struct printk_log *)(log_buf + log_next_idx);
++	msg = (struct printk_log *)rbuf;
+ 	memcpy(log_text(msg), text, text_len);
+ 	msg->text_len = text_len;
+ 	if (trunc_msg_len) {
+@@ -642,14 +569,13 @@ static int log_store(u32 caller_id, int facility, int level,
+ #ifdef CONFIG_PRINTK_CALLER
+ 	msg->caller_id = caller_id;
+ #endif
+-	memset(log_dict(msg) + dict_len, 0, pad_len);
+ 	msg->len = size;
+ 
+ 	/* insert message */
+-	log_next_idx += msg->len;
+-	log_next_seq++;
++	prb_commit(&res_entry);
+ 
+-	return msg->text_len;
++	/* msg is no longer valid, return the local copy */
++	return text_len;
+ }
+ 
+ int dmesg_restrict = IS_ENABLED(CONFIG_SECURITY_DMESG_RESTRICT);
+@@ -770,13 +696,18 @@ static ssize_t msg_print_ext_body(char *buf, size_t size,
+ 	return p - buf;
+ }
+ 
++#define PRINTK_RECORD_MAX (sizeof(struct printk_log) + \
++			   CONSOLE_EXT_LOG_MAX + LOG_LINE_MAX + PREFIX_MAX)
++
+ /* /dev/kmsg - userspace message inject/listen interface */
+ struct devkmsg_user {
+-	u64 seq;
+-	u32 idx;
++	u64 last_seq;
++	struct prb_iterator iter;
+ 	struct ratelimit_state rs;
+ 	struct mutex lock;
+ 	char buf[CONSOLE_EXT_LOG_MAX];
++	struct prb_entry entry;
++	char msgbuf[PRINTK_RECORD_MAX];
+ };
+ 
+ static __printf(3, 4) __cold
+@@ -859,6 +790,7 @@ static ssize_t devkmsg_read(struct file *file, char __user *buf,
+ 			    size_t count, loff_t *ppos)
+ {
+ 	struct devkmsg_user *user = file->private_data;
++	struct prb_iterator backup_iter;
+ 	struct printk_log *msg;
+ 	size_t len;
+ 	ssize_t ret;
+@@ -871,7 +803,11 @@ static ssize_t devkmsg_read(struct file *file, char __user *buf,
+ 		return ret;
+ 
+ 	logbuf_lock_irq();
+-	while (user->seq == log_next_seq) {
++
++	/* make a backup copy in case there is a problem */
++	prb_iter_copy(&backup_iter, &user->iter);
++
++	if (prb_iter_next_valid_entry(&user->iter) == 0) {
+ 		if (file->f_flags & O_NONBLOCK) {
+ 			ret = -EAGAIN;
+ 			logbuf_unlock_irq();
+@@ -879,43 +815,53 @@ static ssize_t devkmsg_read(struct file *file, char __user *buf,
+ 		}
+ 
+ 		logbuf_unlock_irq();
+-		ret = wait_event_interruptible(log_wait,
+-					       user->seq != log_next_seq);
+-		if (ret)
++		ret = prb_iter_wait_next_valid_entry(&user->iter);
++		if (ret < 0)
+ 			goto out;
+ 		logbuf_lock_irq();
+ 	}
+ 
+-	if (user->seq < log_first_seq) {
+-		/* our last seen message is gone, return error and reset */
+-		user->idx = log_first_idx;
+-		user->seq = log_first_seq;
+-		ret = -EPIPE;
+-		logbuf_unlock_irq();
+-		goto out;
++	if (user->entry.seq - user->last_seq != 1) {
++		DECLARE_PRINTKRB_SEQENTRY(e);
++		DECLARE_PRINTKRB_ITER(i, prb, &e);
++		u64 last_seq;
++
++		prb_iter_peek_next_entry(&i, &last_seq);
++		if (last_seq > user->last_seq) {
++			/* a record was missed, return error and reset */
++			prb_iter_sync(&user->iter, &i);
++			user->last_seq = last_seq;
++			ret = -EPIPE;
++			logbuf_unlock_irq();
++			goto out;
++		}
+ 	}
+ 
+-	msg = log_from_idx(user->idx);
++	user->last_seq = user->entry.seq;
++
++	msg = (struct printk_log *)&user->entry.buffer[0];
+ 	len = msg_print_ext_header(user->buf, sizeof(user->buf),
+-				   msg, user->seq);
++				   msg, user->last_seq);
+ 	len += msg_print_ext_body(user->buf + len, sizeof(user->buf) - len,
+ 				  log_dict(msg), msg->dict_len,
+ 				  log_text(msg), msg->text_len);
+ 
+-	user->idx = log_next(user->idx);
+-	user->seq++;
+ 	logbuf_unlock_irq();
+ 
+ 	if (len > count) {
+ 		ret = -EINVAL;
+-		goto out;
++		goto restore_out;
+ 	}
+ 
+ 	if (copy_to_user(buf, user->buf, len)) {
+ 		ret = -EFAULT;
+-		goto out;
++		goto restore_out;
+ 	}
+ 	ret = len;
++	goto out;
++restore_out:
++	prb_iter_copy(&user->iter, &backup_iter);
++	user->last_seq = user->entry.seq - 1;
+ out:
+ 	mutex_unlock(&user->lock);
+ 	return ret;
+@@ -935,8 +881,7 @@ static loff_t devkmsg_llseek(struct file *file, loff_t offset, int whence)
+ 	switch (whence) {
+ 	case SEEK_SET:
+ 		/* the first record */
+-		user->idx = log_first_idx;
+-		user->seq = log_first_seq;
++		user->last_seq = prb_iter_seek(&user->iter, 0);
+ 		break;
+ 	case SEEK_DATA:
+ 		/*
+@@ -944,13 +889,11 @@ static loff_t devkmsg_llseek(struct file *file, loff_t offset, int whence)
+ 		 * like issued by 'dmesg -c'. Reading /dev/kmsg itself
+ 		 * changes no global state, and does not clear anything.
+ 		 */
+-		user->idx = clear_idx;
+-		user->seq = clear_seq;
++		user->last_seq = prb_iter_seek(&user->iter, clear_last_seq);
+ 		break;
+ 	case SEEK_END:
+ 		/* after the last record */
+-		user->idx = log_next_idx;
+-		user->seq = log_next_seq;
++		user->last_seq = prb_iter_seek(&user->iter, -1);
+ 		break;
+ 	default:
+ 		ret = -EINVAL;
+@@ -963,19 +906,39 @@ static __poll_t devkmsg_poll(struct file *file, poll_table *wait)
+ {
+ 	struct devkmsg_user *user = file->private_data;
+ 	__poll_t ret = 0;
++	u64 last_seq;
+ 
+ 	if (!user)
+ 		return EPOLLERR|EPOLLNVAL;
+ 
+-	poll_wait(file, &log_wait, wait);
++	poll_wait(file, prb_wait_queue(prb), wait);
+ 
+ 	logbuf_lock_irq();
+-	if (user->seq < log_next_seq) {
+-		/* return error when data has vanished underneath us */
+-		if (user->seq < log_first_seq)
+-			ret = EPOLLIN|EPOLLRDNORM|EPOLLERR|EPOLLPRI;
+-		else
+-			ret = EPOLLIN|EPOLLRDNORM;
++	if (prb_iter_peek_next_entry(&user->iter, &last_seq)) {
++		ret = EPOLLIN|EPOLLRDNORM;
++		if (last_seq - user->last_seq != 1) {
++			DECLARE_PRINTKRB_SEQENTRY(e);
++			DECLARE_PRINTKRB_ITER(i, prb, &e);
++			u64 last_seq;
++
++			/*
++			 * The sequence number has jumped. This might mean
++			 * that the ringbuffer has overtaken the reader,
++			 * which would mean that the sequence number previous
++			 * the first entry will now be later than the last
++			 * entry the reader has seen.
++			 *
++			 * If instead the sequence number jump is due to
++			 * iterating over invalid entries, there is no error.
++			 */
++
++			/* get the sequence number previous the first entry */
++			prb_iter_peek_next_entry(&i, &last_seq);
++
++			/* return error when data has vanished underneath us */
++			if (last_seq > user->last_seq)
++				ret |= EPOLLERR|EPOLLPRI;
++		}
+ 	}
+ 	logbuf_unlock_irq();
+ 
+@@ -1008,8 +971,10 @@ static int devkmsg_open(struct inode *inode, struct file *file)
+ 	mutex_init(&user->lock);
+ 
+ 	logbuf_lock_irq();
+-	user->idx = log_first_idx;
+-	user->seq = log_first_seq;
++	user->entry.buffer = &user->msgbuf[0];
++	user->entry.buffer_size = sizeof(user->msgbuf);
++	prb_iter_init(&user->iter, prb, &user->entry);
++	prb_iter_peek_next_entry(&user->iter, &user->last_seq);
+ 	logbuf_unlock_irq();
+ 
+ 	file->private_data = user;
+@@ -1050,11 +1015,8 @@ const struct file_operations kmsg_fops = {
+  */
+ void log_buf_vmcoreinfo_setup(void)
+ {
+-	VMCOREINFO_SYMBOL(log_buf);
+-	VMCOREINFO_SYMBOL(log_buf_len);
+-	VMCOREINFO_SYMBOL(log_first_idx);
+-	VMCOREINFO_SYMBOL(clear_idx);
+-	VMCOREINFO_SYMBOL(log_next_idx);
++	VMCOREINFO_SYMBOL(printk_rb_static);
++	VMCOREINFO_SYMBOL(printk_rb_dynamic);
+ 	/*
+ 	 * Export struct printk_log size and field offsets. User space tools can
+ 	 * parse it and detect any changes to structure down the line.
+@@ -1136,13 +1098,36 @@ static void __init log_buf_add_cpu(void)
+ static inline void log_buf_add_cpu(void) {}
+ #endif /* CONFIG_SMP */
+ 
++static void __init add_to_rb(struct printk_ringbuffer *rb,
++			     struct prb_entry *e)
 +{
-+	int ret;
++	struct printk_log *msg = (struct printk_log *)&e->buffer[0];
++	struct prb_reserved_entry re;
++	int size;
++	char *b;
++
++	size = sizeof(*msg) + msg->text_len + msg->dict_len;
++
++	b = prb_reserve(&re, rb, size);
++	if (!IS_ERR(b)) {
++		memcpy(b, msg, size);
++		prb_commit(&re);
++	}
++}
++
++static char setup_buf[PRINTK_RECORD_MAX] __initdata;
++
+ void __init setup_log_buf(int early)
+ {
++	struct prb_desc *new_descs;
++	struct prb_iterator i;
+ 	unsigned long flags;
++	struct prb_entry e;
+ 	char *new_log_buf;
+ 	unsigned int free;
++	int l;
+ 
+-	if (log_buf != __log_buf)
++	if (prb != &printk_rb_static)
+ 		return;
+ 
+ 	if (!early && !new_log_buf_len)
+@@ -1151,19 +1136,47 @@ void __init setup_log_buf(int early)
+ 	if (!new_log_buf_len)
+ 		return;
+ 
++	if (!is_power_of_2(new_log_buf_len))
++		return;
++
+ 	new_log_buf = memblock_alloc(new_log_buf_len, LOG_ALIGN);
+ 	if (unlikely(!new_log_buf)) {
+-		pr_err("log_buf_len: %lu bytes not available\n",
+-			new_log_buf_len);
++		pr_err("log_buf_len: %lu data bytes not available\n",
++		       new_log_buf_len);
++		return;
++	}
++
++	new_descs = memblock_alloc((new_log_buf_len >> PRB_AVGBITS) *
++				   sizeof(struct prb_desc), LOG_ALIGN);
++	if (unlikely(!new_descs)) {
++		pr_err("log_buf_len: %lu desc bytes not available\n",
++		       new_log_buf_len >> PRB_AVGBITS);
++		memblock_free(__pa(new_log_buf), new_log_buf_len);
+ 		return;
+ 	}
+ 
++	e.buffer = &setup_buf[0];
++	e.buffer_size = sizeof(setup_buf);
++
+ 	logbuf_lock_irqsave(flags);
+-	log_buf_len = new_log_buf_len;
+-	log_buf = new_log_buf;
+-	new_log_buf_len = 0;
+-	free = __LOG_BUF_LEN - log_next_idx;
+-	memcpy(log_buf, __log_buf, __LOG_BUF_LEN);
++
++	prb_init(&printk_rb_dynamic, new_log_buf,
++		 bits_per(new_log_buf_len) - 1, new_descs,
++		 (bits_per(new_log_buf_len) - 1) - PRB_AVGBITS, &log_wait);
++
++	free = __LOG_BUF_LEN;
++	prb_for_each_entry(&i, &printk_rb_static, &e, l) {
++		add_to_rb(&printk_rb_dynamic, &e);
++		free -= l;
++	}
++
++	prb_iter_init(&syslog_iter, &printk_rb_dynamic, &syslog_entry);
++	prb_iter_init(&console_iter, &printk_rb_dynamic, &console_entry);
++
++	prb_iter_seek(&console_iter, e.seq);
++
++	prb = &printk_rb_dynamic;
++
+ 	logbuf_unlock_irqrestore(flags);
+ 
+ 	pr_info("log_buf_len: %u bytes\n", log_buf_len);
+@@ -1340,29 +1353,43 @@ static size_t msg_print_text(const struct printk_log *msg, bool syslog,
+ static int syslog_print(char __user *buf, int size)
+ {
+ 	char *text;
++	struct prb_iterator iter;
+ 	struct printk_log *msg;
++	struct prb_entry e;
++	char *msgbuf;
+ 	int len = 0;
+ 
+ 	text = kmalloc(LOG_LINE_MAX + PREFIX_MAX, GFP_KERNEL);
+ 	if (!text)
+ 		return -ENOMEM;
++	msgbuf = kmalloc(PRINTK_RECORD_MAX, GFP_KERNEL);
++	if (!msgbuf) {
++		kfree(text);
++		return -ENOMEM;
++	}
++
++	e.buffer = msgbuf;
++	e.buffer_size = PRINTK_RECORD_MAX;
++	prb_iter_init(&iter, prb, &e);
++	msg = (struct printk_log *)msgbuf;
+ 
+ 	while (size > 0) {
+ 		size_t n;
+ 		size_t skip;
+ 
+ 		logbuf_lock_irq();
+-		if (syslog_seq < log_first_seq) {
+-			/* messages are gone, move to first one */
+-			syslog_seq = log_first_seq;
+-			syslog_idx = log_first_idx;
+-			syslog_partial = 0;
+-		}
+-		if (syslog_seq == log_next_seq) {
++		prb_iter_sync(&iter, &syslog_iter);
++		if (prb_iter_next_valid_entry(&iter) == 0) {
+ 			logbuf_unlock_irq();
+ 			break;
+ 		}
+ 
++		if (e.seq - syslog_last_seq != 1) {
++			/* messages are gone, move to first one */
++			syslog_last_seq = e.seq - 1;
++			syslog_partial = 0;
++		}
++
+ 		/*
+ 		 * To keep reading/counting partial line consistent,
+ 		 * use printk_time value as of the beginning of a line.
+@@ -1371,16 +1398,15 @@ static int syslog_print(char __user *buf, int size)
+ 			syslog_time = printk_time;
+ 
+ 		skip = syslog_partial;
+-		msg = log_from_idx(syslog_idx);
+ 		n = msg_print_text(msg, true, syslog_time, text,
+ 				   LOG_LINE_MAX + PREFIX_MAX);
+ 		if (n - syslog_partial <= size) {
+ 			/* message fits into buffer, move forward */
+-			syslog_idx = log_next(syslog_idx);
+-			syslog_seq++;
++			prb_iter_sync(&syslog_iter, &iter);
++			syslog_last_seq++;
+ 			n -= syslog_partial;
+ 			syslog_partial = 0;
+-		} else if (!len){
++		} else if (!len) {
+ 			/* partial read(), remember position */
+ 			n = size;
+ 			syslog_partial += n;
+@@ -1402,22 +1428,73 @@ static int syslog_print(char __user *buf, int size)
+ 		buf += n;
+ 	}
+ 
++	kfree(msgbuf);
+ 	kfree(text);
+ 	return len;
+ }
+ 
++/**
++ * count_remaining() - Count the text bytes in following entries.
++ *
++ * @iter:      The iterator to use for counting.
++ *
++ * @until_seq: A sequence number to stop counting at.
++ *             The entry with this sequence number is not counted.
++ *
++ * Note that although this function will not modify @iter, it does make
++ * use of the prb_entry of @iter.
++ *
++ * Return: The number of bytes of text counted.
++ */
++static int count_remaining(struct prb_iterator *iter, const u64 until_seq)
++{
++	bool time = syslog_partial ? syslog_time : printk_time;
++	struct printk_log *msg;
++	struct prb_iterator i;
++	struct prb_entry *e;
++	int len = 0;
++
++	prb_iter_copy(&i, iter);
++	e = prb_iter_entry(&i);
++	msg = (struct printk_log *)&e->buffer[0];
 +
 +	for (;;) {
-+		ret = wait_event_interruptible(*(iter->rb->wq),
-+					prb_iter_peek_next_entry(iter, NULL));
-+		if (ret < 0)
++		if (prb_iter_next_valid_entry(&i) == 0)
 +			break;
 +
-+		ret = prb_iter_next_valid_entry(iter);
-+		if (ret > 0)
++		if (e->seq >= until_seq)
 +			break;
++
++		len += msg_print_text(msg, true, time, NULL, 0);
++		time = printk_time;
 +	}
 +
-+	return ret;
++	return len;
 +}
-+EXPORT_SYMBOL(prb_iter_wait_next_valid_entry);
 +
- /**
-  * prb_iter_sync() - Position an iterator to that of another iterator.
-  *
-@@ -764,10 +820,41 @@ void prb_iter_sync(struct prb_iterator *dst, struct prb_iterator *src)
- }
- EXPORT_SYMBOL(prb_iter_sync);
- 
-+/**
-+ * prb_iter_copy() - Copy all iterator information to another iterator.
-+ *
-+ * @dst: The iterator to modify.
-+ *
-+ * @src: The iterator to copy from.
-+ *
-+ * This is the public function available to readers to copy all iterator
-+ * information of another iterator. After calling this function, @dst will
-+ * be using the same entry and traverse the same ringbuffer, from the
-+ * same committed entry as @src.
-+ *
-+ * It is not necessary for @dst to be previously initialized.
-+ *
-+ * Context: Any context.
-+ *
-+ * It is safe to call this function from any context and state. But note
-+ * that this function is not atomic. Callers must not sync iterators that
-+ * can be accessed by other tasks/contexts unless proper synchronization is
-+ * used.
-+ */
-+void prb_iter_copy(struct prb_iterator *dst, struct prb_iterator *src)
-+{
-+	dst->e = src->e;
-+	prb_iter_sync(dst, src);
-+}
-+EXPORT_SYMBOL(prb_iter_copy);
-+
- /**
-  * prb_iter_peek_next_entry() - Check if there is a next (newer) entry.
-  *
-- * @iter: The iterator used for list traversal.
-+ * @iter:     The iterator used for list traversal.
-+ *
-+ * @last_seq: A pointer to a variable to store the last seen sequence number.
-+ *            This may be NULL if the caller is not interested in this value.
-  *
-  * This is the public function available to readers to check if a newer
-  * entry is available.
-@@ -775,14 +862,23 @@ EXPORT_SYMBOL(prb_iter_sync);
-  * Context: Any context.
-  * Return: true if there is a next entry, otherwise false.
-  */
--bool prb_iter_peek_next_entry(struct prb_iterator *iter)
-+bool prb_iter_peek_next_entry(struct prb_iterator *iter, u64 *last_seq)
+ static int syslog_print_all(char __user *buf, int size, bool clear)
  {
--	DECLARE_PRINTKRB_ENTRY(e, 1);
-+	DECLARE_PRINTKRB_SEQENTRY(e);
- 	DECLARE_PRINTKRB_ITER(iter_copy, iter->rb, &e);
++	struct prb_iterator iter;
++	struct printk_log *msg;
++	struct prb_entry e;
++	char *msgbuf;
++	int textlen;
+ 	char *text;
+ 	int len = 0;
+-	u64 next_seq;
+-	u64 seq;
+-	u32 idx;
+ 	bool time;
  
- 	prb_iter_sync(&iter_copy, iter);
- 
--	return (prb_iter_next_valid_entry(&iter_copy) != 0);
-+	if (prb_iter_next_valid_entry(&iter_copy) == 0) {
-+		if (last_seq)
-+			*last_seq = iter_copy.last_seq;
-+		return false;
+ 	text = kmalloc(LOG_LINE_MAX + PREFIX_MAX, GFP_KERNEL);
+ 	if (!text)
+ 		return -ENOMEM;
++	msgbuf = kmalloc(PRINTK_RECORD_MAX, GFP_KERNEL);
++	if (!msgbuf) {
++		kfree(text);
++		return -ENOMEM;
 +	}
 +
-+	/* Pretend to have seen the previous entry. */
-+	if (last_seq)
-+		*last_seq = iter_copy.last_seq - 1;
-+	return true;
- }
- EXPORT_SYMBOL(prb_iter_peek_next_entry);
++	e.buffer = msgbuf;
++	e.buffer_size = PRINTK_RECORD_MAX;
++	msg = (struct printk_log *)msgbuf;
  
-@@ -807,3 +903,177 @@ unsigned long prb_getfail(struct printk_ringbuffer *rb)
- 	return atomic_long_read(&rb->fail);
- }
- EXPORT_SYMBOL(prb_getfail);
-+
-+/**
-+ * prb_iter_seek() - Reposition an iterator based on the sequence number.
-+ *
-+ * @iter:     The iterator used for list traversal.
-+ *
-+ * @last_seq: The sequence number that the iterator will have seen last.
-+ *            Use 0 to position for reading the oldest commit list entry and
-+ *            -1 to position beyond the newest commit list entry.
-+ *
-+ * This is the public function available to readers to reposition an iterator
-+ * based on the commit list entry sequence number.
-+ *
-+ * If @last_seq exists, the iterator is positioned such that a following read
-+ * will read the entry with the next higher sequence number.
-+ *
-+ * If @last_seq does not exist but a higher (newer) sequence number exists,
-+ * the iterator is positioned such that a following read will read that
-+ * higher entry.
-+ *
-+ * If @last_seq does not exist and no higher (newer) sequence number exists,
-+ * the iterator is positioned at the end of the commit list such that a
-+ * following read will read the next (not yet existent) entry.
-+ *
-+ * Context: Any context.
-+ * Return: The last seen sequence number.
-+ *
-+ * From the return value (and the value of @last_seq) the caller can identify
-+ * which of the above described scenarios occurred.
-+ */
-+u64 prb_iter_seek(struct prb_iterator *iter, u64 last_seq)
-+{
-+	DECLARE_PRINTKRB_SEQENTRY(e);
-+	DECLARE_PRINTKRB_ITER(i, iter->rb, &e);
-+	int l;
-+
-+	/* Seek to the beginning? */
-+	if (last_seq == 0) {
-+		reset_iter(iter);
-+		goto out;
-+	}
-+
-+	/* Iterator already where it should be? */
-+	if (iter->last_seq == last_seq)
-+		goto out;
-+
-+	/*
-+	 * Backward seeking is not possible. Reset the iterator to the
-+	 * beginning and seek forwards.
-+	 */
-+	if (last_seq < iter->last_seq)
-+		reset_iter(iter);
-+
-+	/*
-+	 * Seek using a local copy and only sync with the iterator when it
-+	 * is known that the seek has not gone too far, for example when
-+	 * the desired last_seq was an invalid entry or does not exist.
-+	 */
-+	prb_iter_sync(&i, iter);
-+
-+	prb_for_each_entry_continue(&i, l) {
-+		if (e.seq > last_seq)
+ 	time = printk_time;
+ 	logbuf_lock_irq();
+@@ -1425,73 +1502,65 @@ static int syslog_print_all(char __user *buf, int size, bool clear)
+ 	 * Find first record that fits, including all following records,
+ 	 * into the user-provided buffer for this dump.
+ 	 */
+-	seq = clear_seq;
+-	idx = clear_idx;
+-	while (seq < log_next_seq) {
+-		struct printk_log *msg = log_from_idx(idx);
+-
+-		len += msg_print_text(msg, true, time, NULL, 0);
+-		idx = log_next(idx);
+-		seq++;
+-	}
++	prb_iter_init(&iter, prb, &e);
++	prb_iter_seek(&iter, clear_last_seq);
++	len = count_remaining(&iter, -1);
+ 
+-	/* move first record forward until length fits into the buffer */
+-	seq = clear_seq;
+-	idx = clear_idx;
+-	while (len > size && seq < log_next_seq) {
+-		struct printk_log *msg = log_from_idx(idx);
++	/* move iterator forward until text fits into the buffer */
++	while (len > size) {
++		if (prb_iter_next_valid_entry(&iter) == 0)
++			break;
+ 
+ 		len -= msg_print_text(msg, true, time, NULL, 0);
+-		idx = log_next(idx);
+-		seq++;
+ 	}
+ 
+-	/* last message fitting into this dump */
+-	next_seq = log_next_seq;
+-
++	/* copy the rest of the messages into the buffer */
+ 	len = 0;
+-	while (len >= 0 && seq < next_seq) {
+-		struct printk_log *msg = log_from_idx(idx);
+-		int textlen = msg_print_text(msg, true, time, text,
+-					     LOG_LINE_MAX + PREFIX_MAX);
++	for (;;) {
++		if (prb_iter_next_valid_entry(&iter) == 0)
 +			break;
 +
-+		prb_iter_sync(iter, &i);
-+		if (e.seq == last_seq)
++		textlen = msg_print_text(msg, true, time, text,
++					 LOG_LINE_MAX + PREFIX_MAX);
+ 
+-		idx = log_next(idx);
+-		seq++;
++		if (len + textlen > size)
 +			break;
-+	}
-+out:
-+	return iter->last_seq;
-+}
-+EXPORT_SYMBOL(prb_iter_seek);
+ 
+ 		logbuf_unlock_irq();
+-		if (copy_to_user(buf + len, text, textlen))
++		if (copy_to_user(buf + len, text, textlen)) {
+ 			len = -EFAULT;
+-		else
+-			len += textlen;
++			logbuf_lock_irq();
++			break;
++		}
+ 		logbuf_lock_irq();
+ 
+-		if (seq < log_first_seq) {
+-			/* messages are gone, move to next one */
+-			seq = log_first_seq;
+-			idx = log_first_idx;
+-		}
+-	}
++		len += textlen;
+ 
+-	if (clear) {
+-		clear_seq = log_next_seq;
+-		clear_idx = log_next_idx;
++		if (clear)
++			clear_last_seq = e.seq;
+ 	}
+ 	logbuf_unlock_irq();
+ 
++	kfree(msgbuf);
+ 	kfree(text);
+ 	return len;
+ }
+ 
+ static void syslog_clear(void)
+ {
++	DECLARE_PRINTKRB_SEQENTRY(e);
++	DECLARE_PRINTKRB_ITER(i, prb, &e);
 +
-+/**
-+ * prb_init() - Initialize a ringbuffer.
-+ *
-+ * @rb:               The ringbuffer to initialize.
-+ *
-+ * @data:             A pointer to a byte array for raw entry storage.
-+ *
-+ * @data_size_bits:   The power-of-2 size fo @data.
-+ *
-+ * @descs:            A pointer to a prb_desc array for descriptor storage.
-+ *
-+ * @desc_count_bits:  The power-of-2 count of descriptors in @descs.
-+ *
-+ * @waitq:            A wait queue to use for blocking readers.
-+ *
-+ * This is the public function available to initialize a ringbuffer. It
-+ * allows the caller to provide the internal buffers, thus allowing the
-+ * buffers to be allocated dynamically.
-+ *
-+ * As per numlist requirement of always having at least one node in the list,
-+ * the ringbuffer structures are initialized such that:
-+ *
-+ * * the numlist head and tail point to descriptor 0
-+ * * descriptor 0 has an invalid data block and is the terminating node
-+ * * descriptor 1 will be the next descriptor
-+ *
-+ * As an alternative, DECLARE_PRINTKRB() can be used.
-+ *
-+ * Context: Any context.
-+ */
-+void prb_init(struct printk_ringbuffer *rb, char *data, int data_size_bits,
-+	      struct prb_desc *descs, int desc_count_bits,
-+	      struct wait_queue_head *waitq)
-+{
-+	struct dataring *dr = &rb->dr;
-+	struct numlist *nl = &rb->nl;
+ 	logbuf_lock_irq();
+-	clear_seq = log_next_seq;
+-	clear_idx = log_next_idx;
++	prb_iter_sync(&i, &syslog_iter);
++	clear_last_seq = prb_iter_seek(&i, -1);
+ 	logbuf_unlock_irq();
+ }
+ 
+ int do_syslog(int type, char __user *buf, int len, int source)
+ {
++	DECLARE_PRINTKRB_SEQENTRY(e);
++	DECLARE_PRINTKRB_ITER(iter, prb, &e);
+ 	bool clear = false;
+ 	static int saved_console_loglevel = LOGLEVEL_DEFAULT;
+ 	int error;
+@@ -1512,10 +1581,15 @@ int do_syslog(int type, char __user *buf, int len, int source)
+ 			return 0;
+ 		if (!access_ok(buf, len))
+ 			return -EFAULT;
+-		error = wait_event_interruptible(log_wait,
+-						 syslog_seq != log_next_seq);
+-		if (error)
 +
-+	rb->desc_count_bits = desc_count_bits;
-+	rb->descs = descs;
-+	atomic_long_set(&descs[0].id, 0);
-+	descs[0].desc.begin_lpos = 1;
-+	descs[0].desc.next_lpos = 1;
-+	atomic_set(&rb->desc_next_unused, 1);
++		logbuf_lock_irq();
++		prb_iter_sync(&iter, &syslog_iter);
++		logbuf_unlock_irq();
 +
-+	atomic_long_set(&nl->head_id, 0);
-+	atomic_long_set(&nl->tail_id, 0);
-+	nl->node = prb_desc_node;
-+	nl->node_arg = rb;
-+	nl->busy = prb_desc_busy;
-+	nl->busy_arg = rb;
++		error = prb_iter_wait_next_valid_entry(&iter);
++		if (error < 0)
+ 			return error;
 +
-+	dr->size_bits = data_size_bits;
-+	dr->data = data;
-+	atomic_long_set(&dr->head_lpos, -111 * sizeof(long));
-+	atomic_long_set(&dr->tail_lpos, -111 * sizeof(long));
-+	dr->getdesc = prb_getdesc;
-+	dr->getdesc_arg = rb;
+ 		error = syslog_print(buf, len);
+ 		break;
+ 	/* Read/clear last kernel messages */
+@@ -1562,33 +1636,15 @@ int do_syslog(int type, char __user *buf, int len, int source)
+ 	/* Number of chars in the log buffer */
+ 	case SYSLOG_ACTION_SIZE_UNREAD:
+ 		logbuf_lock_irq();
+-		if (syslog_seq < log_first_seq) {
+-			/* messages are gone, move to first one */
+-			syslog_seq = log_first_seq;
+-			syslog_idx = log_first_idx;
+-			syslog_partial = 0;
+-		}
+ 		if (source == SYSLOG_FROM_PROC) {
+ 			/*
+ 			 * Short-cut for poll(/"proc/kmsg") which simply checks
+-			 * for pending data, not the size; return the count of
+-			 * records, not the length.
++			 * for pending data, not the size; return true if there
++			 * is a pending record
+ 			 */
+-			error = log_next_seq - syslog_seq;
++			error = prb_iter_peek_next_entry(&syslog_iter, NULL);
+ 		} else {
+-			u64 seq = syslog_seq;
+-			u32 idx = syslog_idx;
+-			bool time = syslog_partial ? syslog_time : printk_time;
+-
+-			while (seq < log_next_seq) {
+-				struct printk_log *msg = log_from_idx(idx);
+-
+-				error += msg_print_text(msg, true, time, NULL,
+-							0);
+-				time = printk_time;
+-				idx = log_next(idx);
+-				seq++;
+-			}
++			error = count_remaining(&syslog_iter, -1);
+ 			error -= syslog_partial;
+ 		}
+ 		logbuf_unlock_irq();
+@@ -1948,7 +2004,6 @@ asmlinkage int vprintk_emit(int facility, int level,
+ 	int printed_len;
+ 	bool in_sched = false, pending_output;
+ 	unsigned long flags;
+-	u64 curr_log_seq;
+ 
+ 	/* Suppress unimportant messages after panic happens */
+ 	if (unlikely(suppress_printk))
+@@ -1964,9 +2019,8 @@ asmlinkage int vprintk_emit(int facility, int level,
+ 
+ 	/* This stops the holder of console_sem just where we want him */
+ 	logbuf_lock_irqsave(flags);
+-	curr_log_seq = log_next_seq;
+ 	printed_len = vprintk_store(facility, level, dict, dictlen, fmt, args);
+-	pending_output = (curr_log_seq != log_next_seq);
++	pending_output = prb_iter_peek_next_entry(&console_iter, NULL);
+ 	logbuf_unlock_irqrestore(flags);
+ 
+ 	/* If called from the scheduler, we can not call up(). */
+@@ -2056,18 +2110,15 @@ EXPORT_SYMBOL(printk);
+ #define PREFIX_MAX		0
+ #define printk_time		false
+ 
+-static u64 syslog_seq;
+-static u32 syslog_idx;
+-static u64 console_seq;
+-static u32 console_idx;
++DECLARE_PRINTKRB_SEQENTRY(syslog_entry);
++DECLARE_PRINTKRB_ITER(syslog_iter, NULL, NULL);
++DECLARE_PRINTKRB_SEQENTRY(console_entry);
++DECLARE_PRINTKRB_ITER(console_iter, NULL, NULL);
 +
-+	atomic_long_set(&rb->fail, 0);
++static u64 console_last_seq;
+ static u64 exclusive_console_stop_seq;
+-static u64 log_first_seq;
+-static u32 log_first_idx;
+-static u64 log_next_seq;
+ static char *log_text(const struct printk_log *msg) { return NULL; }
+ static char *log_dict(const struct printk_log *msg) { return NULL; }
+-static struct printk_log *log_from_idx(u32 idx) { return NULL; }
+-static u32 log_next(u32 idx) { return 0; }
+ static ssize_t msg_print_ext_header(char *buf, size_t size,
+ 				    struct printk_log *msg,
+ 				    u64 seq) { return 0; }
+@@ -2402,36 +2453,32 @@ void console_unlock(void)
+ 
+ 		printk_safe_enter_irqsave(flags);
+ 		raw_spin_lock(&logbuf_lock);
+-		if (console_seq < log_first_seq) {
+-			len = sprintf(text,
+-				      "** %llu printk messages dropped **\n",
+-				      log_first_seq - console_seq);
++skip:
++		if (prb_iter_next_valid_entry(&console_iter) == 0)
++			break;
+ 
+-			/* messages are gone, move to first one */
+-			console_seq = log_first_seq;
+-			console_idx = log_first_idx;
++		if (console_entry.seq - console_last_seq != 1) {
++			len = sprintf(text,
++				"** %llu printk messages dropped **\n",
++				console_entry.seq - (console_last_seq + 1));
+ 		} else {
+ 			len = 0;
+ 		}
+-skip:
+-		if (console_seq == log_next_seq)
+-			break;
++		console_last_seq = console_entry.seq;
+ 
+-		msg = log_from_idx(console_idx);
++		msg = (struct printk_log *)&console_entry.buffer[0];
+ 		if (suppress_message_printing(msg->level)) {
+ 			/*
+ 			 * Skip record we have buffered and already printed
+ 			 * directly to the console when we received it, and
+ 			 * record that has level above the console loglevel.
+ 			 */
+-			console_idx = log_next(console_idx);
+-			console_seq++;
+ 			goto skip;
+ 		}
+ 
+ 		/* Output to all consoles once old messages replayed. */
+ 		if (unlikely(exclusive_console &&
+-			     console_seq >= exclusive_console_stop_seq)) {
++			     console_last_seq > exclusive_console_stop_seq)) {
+ 			exclusive_console = NULL;
+ 		}
+ 
+@@ -2441,14 +2488,12 @@ void console_unlock(void)
+ 		if (nr_ext_console_drivers) {
+ 			ext_len = msg_print_ext_header(ext_text,
+ 						sizeof(ext_text),
+-						msg, console_seq);
++						msg, console_last_seq);
+ 			ext_len += msg_print_ext_body(ext_text + ext_len,
+ 						sizeof(ext_text) - ext_len,
+ 						log_dict(msg), msg->dict_len,
+ 						log_text(msg), msg->text_len);
+ 		}
+-		console_idx = log_next(console_idx);
+-		console_seq++;
+ 		raw_spin_unlock(&logbuf_lock);
+ 
+ 		/*
+@@ -2487,7 +2532,7 @@ void console_unlock(void)
+ 	 * flush, no worries.
+ 	 */
+ 	raw_spin_lock(&logbuf_lock);
+-	retry = console_seq != log_next_seq;
++	retry = prb_iter_peek_next_entry(&console_iter, NULL);
+ 	raw_spin_unlock(&logbuf_lock);
+ 	printk_safe_exit_irqrestore(flags);
+ 
+@@ -2556,8 +2601,8 @@ void console_flush_on_panic(enum con_flush_mode mode)
+ 		unsigned long flags;
+ 
+ 		logbuf_lock_irqsave(flags);
+-		console_seq = log_first_seq;
+-		console_idx = log_first_idx;
++		console_last_seq = 0;
++		prb_iter_seek(&console_iter, 0);
+ 		logbuf_unlock_irqrestore(flags);
+ 	}
+ 	console_unlock();
+@@ -2760,8 +2805,7 @@ void register_console(struct console *newcon)
+ 		 * for us.
+ 		 */
+ 		logbuf_lock_irqsave(flags);
+-		console_seq = syslog_seq;
+-		console_idx = syslog_idx;
++		prb_iter_sync(&console_iter, &syslog_iter);
+ 		/*
+ 		 * We're about to replay the log buffer.  Only do this to the
+ 		 * just-registered console to avoid excessive message spam to
+@@ -2772,7 +2816,8 @@ void register_console(struct console *newcon)
+ 		 * ignores console_lock.
+ 		 */
+ 		exclusive_console = newcon;
+-		exclusive_console_stop_seq = console_seq;
++		exclusive_console_stop_seq = console_last_seq;
++		console_last_seq = 0;
+ 		logbuf_unlock_irqrestore(flags);
+ 	}
+ 	console_unlock();
+@@ -3033,6 +3078,8 @@ EXPORT_SYMBOL(printk_timed_ratelimit);
+ static DEFINE_SPINLOCK(dump_list_lock);
+ static LIST_HEAD(dump_list);
+ 
++static char kmsg_dump_msgbuf[PRINTK_RECORD_MAX];
 +
-+	rb->wq = waitq;
-+}
-+EXPORT_SYMBOL(prb_init);
+ /**
+  * kmsg_dump_register - register a kernel log dumper.
+  * @dumper: pointer to the kmsg_dumper structure
+@@ -3102,7 +3149,6 @@ module_param_named(always_kmsg_dump, always_kmsg_dump, bool, S_IRUGO | S_IWUSR);
+ void kmsg_dump(enum kmsg_dump_reason reason)
+ {
+ 	struct kmsg_dumper *dumper;
+-	unsigned long flags;
+ 
+ 	if ((reason > KMSG_DUMP_OOPS) && !always_kmsg_dump)
+ 		return;
+@@ -3115,12 +3161,7 @@ void kmsg_dump(enum kmsg_dump_reason reason)
+ 		/* initialize iterator with data about the stored records */
+ 		dumper->active = true;
+ 
+-		logbuf_lock_irqsave(flags);
+-		dumper->cur_seq = clear_seq;
+-		dumper->cur_idx = clear_idx;
+-		dumper->next_seq = log_next_seq;
+-		dumper->next_idx = log_next_idx;
+-		logbuf_unlock_irqrestore(flags);
++		kmsg_dump_rewind(dumper);
+ 
+ 		/* invoke dumper which will iterate over records */
+ 		dumper->dump(dumper, reason);
+@@ -3153,28 +3194,27 @@ void kmsg_dump(enum kmsg_dump_reason reason)
+ bool kmsg_dump_get_line_nolock(struct kmsg_dumper *dumper, bool syslog,
+ 			       char *line, size_t size, size_t *len)
+ {
+-	struct printk_log *msg;
++	struct prb_entry e = {
++		.buffer		= &kmsg_dump_msgbuf[0],
++		.buffer_size	= sizeof(kmsg_dump_msgbuf),
++	};
++	DECLARE_PRINTKRB_ITER(i, prb, &e);
++	struct printk_log *msg = (struct printk_log *)&e.buffer[0];
+ 	size_t l = 0;
+ 	bool ret = false;
+ 
+ 	if (!dumper->active)
+ 		goto out;
+ 
+-	if (dumper->cur_seq < log_first_seq) {
+-		/* messages are gone, move to first available one */
+-		dumper->cur_seq = log_first_seq;
+-		dumper->cur_idx = log_first_idx;
+-	}
++	dumper->last_seq = prb_iter_seek(&i, dumper->last_seq);
+ 
+ 	/* last entry */
+-	if (dumper->cur_seq >= log_next_seq)
++	if (prb_iter_next_valid_entry(&i) == 0)
+ 		goto out;
+ 
+-	msg = log_from_idx(dumper->cur_idx);
+ 	l = msg_print_text(msg, syslog, printk_time, line, size);
+ 
+-	dumper->cur_idx = log_next(dumper->cur_idx);
+-	dumper->cur_seq++;
++	dumper->last_seq = e.seq;
+ 	ret = true;
+ out:
+ 	if (len)
+@@ -3235,11 +3275,14 @@ EXPORT_SYMBOL_GPL(kmsg_dump_get_line);
+ bool kmsg_dump_get_buffer(struct kmsg_dumper *dumper, bool syslog,
+ 			  char *buf, size_t size, size_t *len)
+ {
++	struct prb_entry e = {
++		.buffer		= &kmsg_dump_msgbuf[0],
++		.buffer_size	= sizeof(kmsg_dump_msgbuf),
++	};
++	DECLARE_PRINTKRB_ITER(i, prb, &e);
++	struct printk_log *msg = (struct printk_log *)&e.buffer[0];
+ 	unsigned long flags;
+-	u64 seq;
+-	u32 idx;
+-	u64 next_seq;
+-	u32 next_idx;
++	u64 next_until_seq;
+ 	size_t l = 0;
+ 	bool ret = false;
+ 	bool time = printk_time;
+@@ -3248,55 +3291,45 @@ bool kmsg_dump_get_buffer(struct kmsg_dumper *dumper, bool syslog,
+ 		goto out;
+ 
+ 	logbuf_lock_irqsave(flags);
+-	if (dumper->cur_seq < log_first_seq) {
+-		/* messages are gone, move to first available one */
+-		dumper->cur_seq = log_first_seq;
+-		dumper->cur_idx = log_first_idx;
+-	}
 +
-+/**
-+ * prb_wait_queue() - Get the wait queue of blocking readers.
-+ *
-+ * @rb: The ringbuffer containing the wait queue.
-+ *
-+ * This is the public function available to readers to get the wait queue
-+ * associated with a ringbuffer. All waiters on this wait queue are woken
-+ * each time a new entry is committed. This allows a reader to implement
-+ * their own blocking read/poll function.
-+ *
-+ * Context: Any context.
-+ * Return: The ringbuffer wait queue.
-+ */
-+struct wait_queue_head *prb_wait_queue(struct printk_ringbuffer *rb)
-+{
-+	return rb->wq;
-+}
-+EXPORT_SYMBOL(prb_wait_queue);
++	if (!dumper->until_seq)
++		dumper->until_seq = -1;
 +
-+/**
-+ * prb_iter_entry() - Get the prb_entry associated with an iterator.
-+ *
-+ * @iter: The iterator to get the entry from.
-+ *
-+ * This is the public function to allow readers to get the prb_entry
-+ * structure associated with an iterator. Readers need an iterator's
-+ * prb_entry in order to process the read data. This function is useful in
-+ * case a caller only has an iterator, but not the associated prb_entry.
-+ *
-+ * Context: Any context.
-+ * Return: The prb_entry used by @iter.
-+ */
-+struct prb_entry *prb_iter_entry(struct prb_iterator *iter)
-+{
-+	return iter->e;
-+}
-+EXPORT_SYMBOL(prb_iter_entry);
++	dumper->last_seq = prb_iter_seek(&i, dumper->last_seq);
+ 
+ 	/* last entry */
+-	if (dumper->cur_seq >= dumper->next_seq) {
++	if (!prb_iter_peek_next_entry(&i, NULL)) {
+ 		logbuf_unlock_irqrestore(flags);
+ 		goto out;
+ 	}
+ 
+ 	/* calculate length of entire buffer */
+-	seq = dumper->cur_seq;
+-	idx = dumper->cur_idx;
+-	while (seq < dumper->next_seq) {
+-		struct printk_log *msg = log_from_idx(idx);
++	l = count_remaining(&i, dumper->until_seq);
+ 
+-		l += msg_print_text(msg, true, time, NULL, 0);
+-		idx = log_next(idx);
+-		seq++;
+-	}
+-
+-	/* move first record forward until length fits into the buffer */
+-	seq = dumper->cur_seq;
+-	idx = dumper->cur_idx;
+-	while (l > size && seq < dumper->next_seq) {
+-		struct printk_log *msg = log_from_idx(idx);
++	if (l <= size) {
++		/* last message in next iteration */
++		next_until_seq = dumper->last_seq;
++	} else {
++		/* move iterator forward until text fits into the buffer */
++		while (l > size) {
++			prb_iter_next_valid_entry(&i);
++			l -= msg_print_text(msg, true, time, NULL, 0);
++		}
+ 
+-		l -= msg_print_text(msg, true, time, NULL, 0);
+-		idx = log_next(idx);
+-		seq++;
++		/* last message in next iteration */
++		next_until_seq = e.seq + 1;
+ 	}
+ 
+-	/* last message in next interation */
+-	next_seq = seq;
+-	next_idx = idx;
+-
++	/* copy messages to buffer */
+ 	l = 0;
+-	while (seq < dumper->next_seq) {
+-		struct printk_log *msg = log_from_idx(idx);
+-
++	for (;;) {
++		prb_iter_next_valid_entry(&i);
++		if (e.seq >= dumper->until_seq)
++			break;
+ 		l += msg_print_text(msg, syslog, time, buf + l, size - l);
+-		idx = log_next(idx);
+-		seq++;
+ 	}
+ 
+-	dumper->next_seq = next_seq;
+-	dumper->next_idx = next_idx;
++	dumper->until_seq = next_until_seq;
+ 	ret = true;
+ 	logbuf_unlock_irqrestore(flags);
+ out:
+@@ -3318,10 +3351,8 @@ EXPORT_SYMBOL_GPL(kmsg_dump_get_buffer);
+  */
+ void kmsg_dump_rewind_nolock(struct kmsg_dumper *dumper)
+ {
+-	dumper->cur_seq = clear_seq;
+-	dumper->cur_idx = clear_idx;
+-	dumper->next_seq = log_next_seq;
+-	dumper->next_idx = log_next_idx;
++	dumper->last_seq = clear_last_seq;
++	dumper->until_seq = 0;
+ }
+ 
+ /**
 diff --git a/kernel/printk/ringbuffer.h b/kernel/printk/ringbuffer.h
-index ec7bb21abac2..70cb9ad284d4 100644
+index 70cb9ad284d4..02b4c53e287e 100644
 --- a/kernel/printk/ringbuffer.h
 +++ b/kernel/printk/ringbuffer.h
-@@ -4,6 +4,7 @@
- #define _LINUX_PRINTK_RINGBUFFER_H
- 
- #include <linux/atomic.h>
-+#include <linux/wait.h>
- #include "numlist.h"
- #include "dataring.h"
- 
-@@ -48,6 +49,8 @@ struct prb_desc {
-  *                    descriptor. Failure due to not being able to reserve
-  *                    space in the dataring is not counted because readers
-  *                    will notice a lost sequence number in that case.
-+ *
-+ * @wq:               The wait queue used by blocking readers.
-  */
- struct printk_ringbuffer {
- 	/* private */
-@@ -60,6 +63,8 @@ struct printk_ringbuffer {
- 	struct dataring		dr;
- 
- 	atomic_long_t		fail;
-+
-+	struct wait_queue_head	*wq;
+@@ -134,6 +134,8 @@ struct prb_iterator {
+ 	unsigned long			next_id;
  };
  
- /**
-@@ -138,13 +143,22 @@ void prb_commit(struct prb_reserved_entry *e);
- void prb_iter_init(struct prb_iterator *iter, struct printk_ringbuffer *rb,
- 		   struct prb_entry *e);
- int prb_iter_next_valid_entry(struct prb_iterator *iter);
--void prb_iter_sync(struct prb_iterator *dest, struct prb_iterator *src);
--bool prb_iter_peek_next_entry(struct prb_iterator *iter);
-+int prb_iter_wait_next_valid_entry(struct prb_iterator *iter);
-+void prb_iter_sync(struct prb_iterator *dst, struct prb_iterator *src);
-+void prb_iter_copy(struct prb_iterator *dst, struct prb_iterator *src);
-+bool prb_iter_peek_next_entry(struct prb_iterator *iter, u64 *last_seq);
-+u64 prb_iter_seek(struct prb_iterator *iter, u64 last_seq);
-+struct wait_queue_head *prb_wait_queue(struct printk_ringbuffer *rb);
-+struct prb_entry *prb_iter_entry(struct prb_iterator *iter);
- 
- /* utility functions */
- unsigned long prb_getfail(struct printk_ringbuffer *rb);
-+void prb_init(struct printk_ringbuffer *rb, char *data, int data_size_bits,
-+	      struct prb_desc *descs, int desc_count_bits,
-+	      struct wait_queue_head *waitq);
-+unsigned long prb_unused(struct printk_ringbuffer *rb);
- 
--/* prototypes for callbacks used by numlist and dataring, respectively */
-+/* callbacks used by numlist and dataring, respectively */
- struct nl_node *prb_desc_node(unsigned long id, void *arg);
++#ifdef CONFIG_PRINTK
++
+ /* writer interface */
+ char *prb_reserve(struct prb_reserved_entry *e, struct printk_ringbuffer *rb,
+ 		  unsigned long size);
+@@ -163,6 +165,28 @@ struct nl_node *prb_desc_node(unsigned long id, void *arg);
  bool prb_desc_busy(unsigned long id, void *arg);
  struct dr_desc *prb_getdesc(unsigned long id, void *arg);
-@@ -164,6 +178,8 @@ struct dr_desc *prb_getdesc(unsigned long id, void *arg);
-  *
-  * @descbits:    The power-of-2 maximum amount of descriptors allowed.
-  *
-+ * @waitq:       A wait queue to use for blocking readers.
-+ *
-  * The size of the data array will be the average data size multiplied by the
-  * maximum amount of descriptors.
-  *
-@@ -173,8 +189,12 @@ struct dr_desc *prb_getdesc(unsigned long id, void *arg);
-  * * the numlist head and tail point to descriptor 0
-  * * descriptor 0 has an invalid data block and is the terminating node
-  * * descriptor 1 will be the next descriptor
-+ *
-+ * This macro is particularly useful for static ringbuffers that should be
-+ * immediately available and initialized. It is an alternative to
-+ * manually initializing a ringbuffer with prb_init().
-  */
--#define DECLARE_PRINTKRB(name, avgdatabits, descbits)			\
-+#define DECLARE_PRINTKRB(name, avgdatabits, descbits, waitq)		\
- char _##name##_data[1 << ((avgdatabits) + (descbits))]			\
- 	__aligned(__alignof__(long));					\
- struct prb_desc _##name##_descs[1 << (descbits)] = {			\
-@@ -206,6 +226,7 @@ struct printk_ringbuffer name = {					\
- 		.getdesc_arg	= &name,				\
- 	},								\
- 	.fail			= ATOMIC_LONG_INIT(0),			\
-+	.wq			= waitq,				\
- }
  
- /**
-@@ -231,6 +252,23 @@ struct prb_entry name = {						\
- 	.buffer_size	= size,						\
- }
- 
-+/**
-+ * DECLARE_PRINTKRB_SEQENTRY() - Declare an entry structure for sequences.
-+ *
-+ * @name: The name for the entry structure variable.
-+ *
-+ * This macro is declares and initializes an entry structure without any
-+ * buffer. This is useful if an iterator is only interested in sequence
-+ * numbers and so does not need to read the entry data. Also, because of
-+ * its small size, it is safe to put on the stack.
-+ */
-+#define DECLARE_PRINTKRB_SEQENTRY(name)					\
-+struct prb_entry name = {						\
-+	.seq		= 0,						\
-+	.buffer		= NULL,						\
-+	.buffer_size	= 0,						\
-+}
++#else /* CONFIG_PRINTK */
++
++#define prb_reserve(e, rb, size) NULL
++#define prb_commit(e)
++#define prb_iter_init(iter, rb, e)
++#define prb_iter_next_valid_entry(iter) 0
++#define prb_iter_wait_next_valid_entry(iter) -ERESTARTSYS
++#define prb_iter_sync(dst, src)
++#define prb_iter_copy(dst, src)
++#define prb_iter_peek_next_entry(iter, last_seq) false
++#define prb_iter_seek(iter, last_seq) 0
++#define prb_wait_queue(rb) NULL
++#define prb_iter_entry(iter) NULL
++#define prb_getfail(rb) 0
++#define prb_init(rb, data, data_size_bits, descs, desc_count_bits, waitq)
++#define prb_unused(rb) 0
++#define prb_desc_node NULL
++#define prb_desc_busy NULL
++#define prb_getdesc NULL
++
++#endif /* CONFIG_PRINTK */
 +
  /**
-  * DECLARE_PRINTKRB_ITER() - Declare an iterator for readers.
+  * DECLARE_PRINTKRB() - Declare a printk ringbuffer.
   *
 -- 
 2.20.1
