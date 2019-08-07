@@ -2,224 +2,174 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E3BC31E40
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D37C31E40
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:49:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB325217D9
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:46:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4647621743
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:49:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="EmTpCuI6"
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="LLvPBe19"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729110AbfHGBqP (ORCPT
+        id S1728562AbfHGBtL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 21:46:15 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:35728 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728866AbfHGBqN (ORCPT
+        Tue, 6 Aug 2019 21:49:11 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:39619 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727653AbfHGBtK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 21:46:13 -0400
-Received: by mail-qk1-f195.google.com with SMTP id r21so64654193qke.2
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 18:46:12 -0700 (PDT)
+        Tue, 6 Aug 2019 21:49:10 -0400
+Received: by mail-pg1-f193.google.com with SMTP id u17so42560988pgi.6
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 18:49:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=Wak8i9w6OdTRtUHqAOC/FqYb378e6DnxD7J6RLwSEUg=;
-        b=EmTpCuI6DV/r0JoivFYBORLewXyG7wQLx21/h+hNHHsnynGNqExf1mPCB9IABaQel+
-         XSn2AHfcUWLL5pxz9MVNDNJMckEO+K88WjLZZUwocO8EWp/vC6srPSZR8Bk40iCD/sN1
-         OadKoIfBJx6Pqe8jZpzJqLY97pk+ZVcmjRBLVcTV9nmJctJ5ma0gRbMks2hrZbvCAVGJ
-         xEeNsW/eRdw/HJWzIHZy99TlMDtf6ZiXOGU7lwVjDWP9l58LWrUrq0RngcQX0kbpoU6L
-         8+u0x8qiD23Blp6wfRGMZG/VXmZPUzPAeuAbbrOzF66WGm9arDZTRtHyA15bUJL1L/Q6
-         h7kw==
+        d=android.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HJ3esN1ahDfJjJR96PwcK66MyhHcH/NFW9YKUR9reys=;
+        b=LLvPBe19SlIAKDxSydDNUKqZo39qYY7Zz0vT6YLucgwG+eoxjBfX+EKClzNpe3dKwE
+         4LF0GUohOhBGJrcAaYR/kKUv/9oEFSGR3skjgiVvxDmAQgLNZKlLgRGJRe/iwZLijHJl
+         qT+JKc2MATdQBg04Zo3UldAUBqfYoS2QJBUO5w7slCaF0sQ+Xdn+EIE848oNeEXt+bv3
+         nRmP+4+d97EAvfvCNPTTPdwZ5A4X1yIMOkD+KtSYF9zBNp13/tLSqhSZRraiX5FNpewo
+         0nN8F1hAUrAwegEPNiyAFzmht0Ti8ObhdYMQxfS3MGueMltWqTuFdad/ySORLXyaCPe0
+         wiEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=Wak8i9w6OdTRtUHqAOC/FqYb378e6DnxD7J6RLwSEUg=;
-        b=psxDEHs+ODqJq1qLt47hwDTMq9Sq7+WIFHJjKfBpCSXHXBRSZ8S0unjoeJQk+S5jaj
-         Y5xzbCtsHkGFTXo8B+ticJpqolBquS7EpDffVjdewE1BFzpvRGVRXiZKzRlmEFO/6tb9
-         fLoFuuu1euMDwseAziATNx9KHBxsvRFVNNvSRr1wZKspjOZX+h1Ahkkfl0IHdp5xkmnV
-         CfnC3hNL+tIsqcK8pNB7hUwFg5aXMQf3uf4ciKc18FEXil7AwthHxi8FVwxXBk1+R/mV
-         NDC6sgIrJA+hZ8/VeNStMDQD1TvWQKOYbwapYflZXKZI6JjihWbBuZE2imY3Ye3Bexj9
-         XMYg==
-X-Gm-Message-State: APjAAAXmoDyS8Y0pOIljASHKxUYHslT8zltwU+e33SOLRnSqK+b/xOWx
-        bKsxefoop0d4uhVEfFmvIfBkCg==
-X-Google-Smtp-Source: APXvYqyC6LA+bqlva3FUGwWlV3SdgLm8b4r0Krlol+e/Qtpe8z+9hnyRtScFTS4qnBl9M41IYjG9iQ==
-X-Received: by 2002:a37:490c:: with SMTP id w12mr6156780qka.327.1565142372411;
-        Tue, 06 Aug 2019 18:46:12 -0700 (PDT)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id u18sm36912167qkj.98.2019.08.06.18.46.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 06 Aug 2019 18:46:11 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: "of/platform: Pause/resume sync state during init and
- of_platform_populate()" with a warning on arm64
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <CAGETcx_TYxgohR7C5SRRbSmfKNhS90i64KjtA38N19g_Kz3euA@mail.gmail.com>
-Date:   Tue, 6 Aug 2019 21:46:10 -0400
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <6326D2D1-8641-48D1-BDD5-4F4B8BADB286@lca.pw>
-References: <B4B0AD7F-FA0F-4DA0-9A8B-EAE1CEE11759@lca.pw>
- <CAGETcx_TYxgohR7C5SRRbSmfKNhS90i64KjtA38N19g_Kz3euA@mail.gmail.com>
-To:     Saravana Kannan <saravanak@google.com>
-X-Mailer: Apple Mail (2.3445.104.11)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HJ3esN1ahDfJjJR96PwcK66MyhHcH/NFW9YKUR9reys=;
+        b=K/d8OCqT0YJLeMtxdktd970494Xva3TXFZTcuitZgYjRDu6HM3iglNraAQe2wfNUaU
+         xV32ooxdHSgfyQEWusd2xKI+OupOPWpds0HELAM+ndOrLRVCctST6aRQl0g+2hrR527L
+         lmEgtz4/qPRvtuMxDRLQ2I1UEvG8blX1pDfKUl0Kzh97u2wRKsLlse8/E/2kS+8jpnlA
+         9ycPp2q5LVkK276g6XUCY1qJASwxJkNsglFV2gzWf5Y9VDHaZahy+DunV3suAFVAxsUy
+         5RKqxGKVVi6oEczJzFWcVQv9vG6lIJj//oxWTdCeGyrGkvWb1hIHbhiZf2YMjR/5bemF
+         B2Vg==
+X-Gm-Message-State: APjAAAUrNJ7JAYZXMAN+2aTK2L3aaPwj3rIbOhLAyg/JMVIHrEw4f1su
+        C5Eur039v+AUQNEcz/P+K1QujA==
+X-Google-Smtp-Source: APXvYqwJ2vVO50mw2/ZIMUTOHrmqILOhGYNKOygNOKtBD8NdIMY0sirHAWCpVwGH8KQdH1oLAGh1Pw==
+X-Received: by 2002:a62:8c81:: with SMTP id m123mr6738728pfd.240.1565142549655;
+        Tue, 06 Aug 2019 18:49:09 -0700 (PDT)
+Received: from trong0.mtv.corp.google.com ([2620:15c:211:0:469:982a:29da:f29b])
+        by smtp.gmail.com with ESMTPSA id q1sm104159076pfg.84.2019.08.06.18.49.08
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 06 Aug 2019 18:49:09 -0700 (PDT)
+From:   Tri Vo <trong@android.com>
+To:     rjw@rjwysocki.net, gregkh@linuxfoundation.org,
+        viresh.kumar@linaro.org
+Cc:     rafael@kernel.org, hridya@google.com, sspatil@google.com,
+        kaleshsingh@google.com, ravisadineni@chromium.org,
+        swboyd@chromium.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, kernel-team@android.com,
+        Tri Vo <trong@android.com>
+Subject: [PATCH v8 0/3] PM / wakeup: Show wakeup sources stats in sysfs
+Date:   Tue,  6 Aug 2019 18:48:43 -0700
+Message-Id: <20190807014846.143949-1-trong@android.com>
+X-Mailer: git-send-email 2.22.0.770.g0f2c4a37fd-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Userspace can use wakeup_sources debugfs node to plot history of suspend
+blocking wakeup sources over device's boot cycle. This information can
+then be used (1) for power-specific bug reporting and (2) towards
+attributing battery consumption to specific processes over a period of
+time.
 
+However, debugfs doesn't have stable ABI. For this reason, create a
+'struct device' to expose wakeup sources statistics in sysfs under
+/sys/class/wakeup/wakeup<ID>/*.
 
-> On Aug 6, 2019, at 9:22 PM, Saravana Kannan <saravanak@google.com> =
-wrote:
->=20
-> On Tue, Aug 6, 2019 at 5:46 PM Qian Cai <cai@lca.pw> wrote:
->>=20
->> It looks like the linux-next commit =E2=80=9Cof/platform: =
-Pause/resume sync state during init and of_platform_populate()=E2=80=9D =
-[1]
->> Introduced a warning while booting arm64.
->>=20
->> [1] =
-https://lore.kernel.org/lkml/20190731221721.187713-6-saravanak@google.com/=
+Patch 1 and 2 do some cleanup to simplify our changes to how wakeup sources are
+created. Patch 3 implements wakeup sources stats in sysfs.
 
->>=20
->> [   93.449300][    T1] arm-smmu-v3 arm-smmu-v3.4.auto: ias 44-bit, =
-oas 44-bit (features 0x0000170d)
->> [   93.464873][    T1] arm-smmu-v3 arm-smmu-v3.4.auto: allocated =
-524288 entries for cmdq
->> [   93.485481][    T1] arm-smmu-v3 arm-smmu-v3.4.auto: allocated =
-524288 entries for evtq
->> [   93.496320][    T1] arm-smmu-v3 arm-smmu-v3.5.auto: option mask =
-0x2
->> [   93.502917][    T1] arm-smmu-v3 arm-smmu-v3.5.auto: ias 44-bit, =
-oas 44-bit (features 0x0000170d)
->> [   93.621818][    T1] arm-smmu-v3 arm-smmu-v3.5.auto: allocated =
-524288 entries for cmdq
->> [   93.643000][    T1] arm-smmu-v3 arm-smmu-v3.5.auto: allocated =
-524288 entries for evtq
->> [   94.519445][    T1] libphy: Fixed MDIO Bus: probed
->> [   94.524649][    T1] EFI Variables Facility v0.08 2004-May-17
->> [   94.601166][    T1] NET: Registered protocol family 17
->> [   94.766008][    T1] zswap: loaded using pool lzo/zbud
->> [   94.774745][    T1] kmemleak: Kernel memory leak detector =
-initialized (mempool size: 16384)
->> [   94.774756][ T1699] kmemleak: Automatic memory scanning thread =
-started
->> [   94.812338][ T1368] pcieport 0000:0f:00.0: Adding to iommu group 0
->> [   94.984466][    T1] ------------[ cut here ]------------
->> [   94.989827][    T1] Unmatched sync_state pause/resume!
->> [   94.989894][    T1] WARNING: CPU: 25 PID: 1 at =
-drivers/base/core.c:691 =
-device_links_supplier_sync_state_resume+0x100/0x128
->> [   95.006062][    T1] Modules linked in:
->> [   95.009815][    T1] CPU: 25 PID: 1 Comm: swapper/0 Not tainted =
-5.3.0-rc3-next-20190806+ #11
->> [   95.018161][    T1] Hardware name: HPE Apollo 70             =
-/C01_APACHE_MB         , BIOS L50_5.13_1.11 06/18/2019
->> [   95.028593][    T1] pstate: 60400009 (nZCv daif +PAN -UAO)
->> [   95.034077][    T1] pc : =
-device_links_supplier_sync_state_resume+0x100/0x128
->> [   95.041124][    T1] lr : =
-device_links_supplier_sync_state_resume+0x100/0x128
->> [   95.048167][    T1] sp : 34ff800806e6fbc0
->> [   95.052172][    T1] x29: 34ff800806e6fc00 x28: 0000000000000000
->> [   95.058177][    T1] x27: 0000000000000000 x26: 0000000000000000
->> [   95.064181][    T1] x25: 0000000000000038 x24: 0000000000000000
->> [   95.070185][    T1] x23: 0000000000000000 x22: 0000000000000019
->> [   95.076189][    T1] x21: 0000000000000000 x20: f9ff808b804e6c50
->> [   95.082193][    T1] x19: ffff100014a6e600 x18: 0000000000000040
->> [   95.088197][    T1] x17: 0000000000000000 x16: 86ff80099d581b50
->> [   95.094201][    T1] x15: 0000000000000000 x14: ffff100010086d1c
->> [   95.100205][    T1] x13: ffff1000109d8688 x12: ffffffffffffffff
->> [   95.106209][    T1] x11: 00000000000000f9 x10: ffff0808b804e6c6
->> [   95.112213][    T1] x9 : 4b71ad522c851d00 x8 : 4b71ad522c851d00
->> [   95.118217][    T1] x7 : 6170206574617473 x6 : ffff100014076972
->> [   95.124221][    T1] x5 : 34ff800806e6f8f0 x4 : 000000000000000f
->> [   95.130225][    T1] x3 : ffff1000101bfa5c x2 : 0000000000000001
->> [   95.136229][    T1] x1 : 0000000000000001 x0 : 0000000000000022
->> [   95.142233][    T1] Call trace:
->> [   95.145374][    T1]  =
-device_links_supplier_sync_state_resume+0x100/0x128
->> [   95.152074][    T1]  of_platform_sync_state_init+0x10/0x1c
->> [   95.157557][    T1]  do_one_initcall+0x2f8/0x600
->> [   95.162172][    T1]  do_initcall_level+0x37c/0x3fc
->> [   95.166959][    T1]  do_basic_setup+0x34/0x4c
->> [   95.171313][    T1]  kernel_init_freeable+0x188/0x24c
->> [   95.176363][    T1]  kernel_init+0x18/0x334
->> [   95.180543][    T1]  ret_from_fork+0x10/0x18
->> [   95.184809][    T1] ---[ end trace a9ea68c902540fe5 ]---
->> [   95.269085][    T1] Freeing unused kernel memory: 28672K
->> [  101.069860][    T1] Checked W+X mappings: passed, no W+X pages =
-found
->> [  101.076265][    T1] Run /init as init process
->> [  101.186359][    T1] systemd[1]: System time before build time, =
-advancing clock.
->=20
->=20
-> I tested it again on my device (on an older kernel) and I don't see
-> this warning. Is this on an ARM64 target without a populated DT?
+Tri Vo (3):
+  PM / wakeup: Drop wakeup_source_init(), wakeup_source_prepare()
+  PM / wakeup: Use wakeup_source_register() in wakelock.c
+  PM / wakeup: Show wakeup sources stats in sysfs
 
-Probably, /sys/firmware/devicetree is all empty.
+ Documentation/ABI/testing/sysfs-class-wakeup |  76 +++++++
+ drivers/acpi/device_pm.c                     |   3 +-
+ drivers/base/power/Makefile                  |   2 +-
+ drivers/base/power/power.h                   |   9 +
+ drivers/base/power/wakeup.c                  |  59 +++---
+ drivers/base/power/wakeup_stats.c            | 203 +++++++++++++++++++
+ fs/eventpoll.c                               |   4 +-
+ include/linux/pm_wakeup.h                    |  21 +-
+ kernel/power/autosleep.c                     |   2 +-
+ kernel/power/wakelock.c                      |  32 +--
+ kernel/time/alarmtimer.c                     |   2 +-
+ 11 files changed, 358 insertions(+), 55 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-wakeup
+ create mode 100644 drivers/base/power/wakeup_stats.c
 
-> That's the only thing I can see that could cause this warning.
->=20
-> This is literally the code with the matching pause/resume. I can't
-> think of any other way the pause/resume could have ended up not
-> matching.
->=20
-> static int __init of_platform_default_populate_init(void)
-> {
->        struct device_node *node;
->=20
->        if (!of_have_populated_dt())
->                return -ENODEV;
->=20
->        platform_bus_type.add_links =3D of_link_to_suppliers;
->        device_links_supplier_sync_state_pause(); <=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D PAUSE
->        /*
->         * Handle certain compatibles explicitly, since we don't want =
-to create
->         * platform_devices for every node in /reserved-memory with a
->         * "compatible",
->         */
->        for_each_matching_node(node, reserved_mem_matches)
->                of_platform_device_create(node, NULL, NULL);
->=20
->        node =3D of_find_node_by_path("/firmware");
->        if (node) {
->                of_platform_populate(node, NULL, NULL, NULL);
->                of_node_put(node);
->        }
->=20
->        /* Populate everything else. */
->        of_platform_default_populate(NULL, NULL, NULL);
->=20
->        return 0;
-> }
-> arch_initcall_sync(of_platform_default_populate_init);
->=20
-> static int __init of_platform_sync_state_init(void)
-> {
->        device_links_supplier_sync_state_resume(); <=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D RESUME
->        return 0;
-> }
-> late_initcall_sync(of_platform_sync_state_init);
->=20
-> Thanks,
-> Saravana
+v2:
+- Updated Documentation/ABI/, as per Greg.
+- Removed locks in attribute functions, as per Greg.
+- Lifetimes of struct wakelock and struck wakeup_source are now different due to
+  the latter embedding a refcounted kobject. Changed it so that struct wakelock
+  only has a pointer to struct wakeup_source, instead of embedding it.
+- Added CONFIG_PM_SLEEP_STATS that enables/disables wakeup source statistics in
+  sysfs.
+
+v3:
+Changes by Greg:
+- Reworked code to use 'struct device' instead of raw kobjects.
+- Updated documentation file.
+- Only link wakeup_stats.o when CONFIG_PM_SLEEP_STATS is enabled.
+Changes by Tri:
+- Reverted changes to kernel/power/wakelock.c. 'struct device' hides kobject
+  operations. So no need to handle lifetimes in wakelock.c
+
+v4:
+- Added 'Co-developed-by:' and 'Tested-by:' fields to commit message.
+- Moved new documentation to a separate file
+  Documentation/ABI/testing/sysfs-class-wakeup, as per Greg.
+- Fixed copyright header in drivers/base/power/wakeup_stats.c, as per Greg.
+
+v5:
+- Removed CONFIG_PM_SLEEP_STATS
+- Used PTR_ERR_OR_ZERO instead of if(IS_ERR(...)) + PTR_ERR, reported by
+  kbuild test robot <lkp@intel.com>
+- Stephen reported that a call to device_init_wakeup() and writing 'enabled' to
+  that device's power/wakeup file results in multiple wakeup source being
+  allocated for that device.  Changed device_wakeup_enable() to check if device
+  wakeup was previously enabled.
+Changes by Stephen:
+- Changed stats location from /sys/class/wakeup/<name>/* to
+  /sys/class/wakeup/wakeup<ID>/*, where ID is an IDA-allocated integer. This
+  avoids name collisions in /sys/class/wakeup/ directory.
+- Added a "name" attribute to wakeup sources, and updated documentation.
+- Device registering the wakeup source is now the parent of the wakeup source.
+  Updated wakeup_source_register()'s signature and its callers accordingly.
+
+v6:
+- Changed stats location to /sys/class/wakeup/ws<ID>/*
+- Replaced ida_simple_get()/ida_simple_remove() with ida_alloc()/ida_free() as
+  the former is deprecated.
+- Reverted changes to device_init_wakeup(). Rafael is preparing a patch to deal
+  with extra wakeup source allocation in a separate patch.
+
+v7:
+- Removed wakeup_source_init(), wakeup_source_prepare().
+- Removed duplicate wakeup source creation code from  kernel/power/wakelock.
+- Moved ID allocation to wakeup source object creation time.
+- Changed stats location back to /sys/class/wakeup/wakeup<ID>/*
+- Remove wakeup source device's "power" attributes.
+
+v8:
+- Updated commit message on patch 1 to indicate change of behavior of
+  wakeup_source_create(), as per Stephen.
+- Included headers for used symbols, as per Stephen.
+- Added a function to create wakeup source devices to use
+  device_set_pm_not_required() to skip power management for such devices, as per
+  Stephen.
+
+--
+2.22.0.770.g0f2c4a37fd-goog
 
