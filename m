@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 533C4C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:34:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23103C41532
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:34:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2645A2173C
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:34:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8DA2217D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:34:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hGadGekT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eabm6eV7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730030AbfHGBep (ORCPT
+        id S1730220AbfHGBez (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 21:34:45 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:41343 "EHLO
+        Tue, 6 Aug 2019 21:34:55 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33457 "EHLO
         mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729743AbfHGBei (ORCPT
+        with ESMTP id S1730091AbfHGBev (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 21:34:38 -0400
-Received: by mail-pf1-f195.google.com with SMTP id m30so42508301pff.8;
-        Tue, 06 Aug 2019 18:34:38 -0700 (PDT)
+        Tue, 6 Aug 2019 21:34:51 -0400
+Received: by mail-pf1-f195.google.com with SMTP id g2so42502899pfq.0;
+        Tue, 06 Aug 2019 18:34:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=66nLgLSrAAtLnk7heFQOXwTIycZbzywZGh2gpdUQtHA=;
-        b=hGadGekT36tWWF2x+rPXatg5Phju1cJkPhVohpTnvU9xcLgSYz3c/H9JfBuvb/eqpQ
-         gJm9ULhd1h25PBFy4ZlpC+tAGAEAzuKiPxwK1X6/dMDelBe1FYe+sUe691h23Hpm09qn
-         NtkXw7G9BBhwySB0UzQpKOHO5RlAvdX8JQycevy+XDQPWxcX8dLLfHqYFlfiIf28POCQ
-         XQLWbzezNK3qTnHI7eGrMbtyoSKY/W2T3jkcfT5nC0QYcZ+CMjkTw7ZL3pOdyAZGwJLx
-         tXBADMMsq1ukRK67JdNPKq0uGvf0IBEzyL0wmcyHhzZLuqxNXwAHA+z0PFrP2wNDYOQy
-         6sYA==
+        bh=iyBF/TunLLNE9m64WGZW5xnvl+XVp1Tkb/4cWK4Q28U=;
+        b=eabm6eV7x6nJ3H6jB3OWHKTAjJ5hccshhWRSvyF8YaL4Xb3kcN3FPSj+mrT7hdf1FM
+         0MWhm5PqlQFyy6zw76EwLtyOlQEQTOAPUCRq2cKY8d4yFrfincU70ZRfebLbmlijIWR2
+         wTENuQ2R1ycfB8EIZdvDLYgUy7fahn8NbpOFjvcP7wPItsW4fy1klzu0bIomS6ZhLV9L
+         FATmBTkmPO3bz1bBRYsOrrqOVmLfRrGMChgnyEYGXYwKFOo3GWkjWYe147H72f0kIcVc
+         Tr73f17ZMCrLU+eCYt8HTv90LoBSVz+pg0lUMLNh1TQmkPNzI1sbpCYBSoNZ3shE6svq
+         cn7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=66nLgLSrAAtLnk7heFQOXwTIycZbzywZGh2gpdUQtHA=;
-        b=p2hgyYE49GJQtLUSoDuvLkCqPl0q/qdp6hVPxKnYY7dwpZ8evgmoD8wl5dw9k514jN
-         fzMnauhhUIuhHMG3qNOOQ40dLdOAJ6SZZQPOupdbiHX8MnKP2SUjJIPlzQPjkW1HV+Zr
-         7FtyTgblSFKEeDDFy4yz/IiQPNwbxPqUNzTkJG4/QXXUbiSDmfoPuMaEwBo0WnIlz0pS
-         BTY9ZVQhrbCKoOo9pPFuYA8SykjvKC8S40EQyy4dREzveE03XGpHfJB4GEJgrqx8l+aO
-         bunJNAR5Or1UBCpN5G8gLIXZcgiJwO+Gz13nwikg9C6Bn5spBnNYpPbzM0eDZ78Ixnuj
-         BRXw==
-X-Gm-Message-State: APjAAAXeMEFGyAFdCJTakNWlvl+omKR+07+FVBnH/0z7J1trPOBeqLsg
-        sTQXggNaOu9CV8oCcQYC66Y=
-X-Google-Smtp-Source: APXvYqxVqy6uPNA5pMhiCuVlDYKPDVYd5IZkwA2Cp9U8q1WFZ9BX6VmEjp+QCN9e6zqU7bkXXXxyWA==
-X-Received: by 2002:aa7:9197:: with SMTP id x23mr6650509pfa.95.1565141677758;
-        Tue, 06 Aug 2019 18:34:37 -0700 (PDT)
+        bh=iyBF/TunLLNE9m64WGZW5xnvl+XVp1Tkb/4cWK4Q28U=;
+        b=jxYZj1IpMxFlnfyQjbmcVYmRAXDbrRGaNsQo9KLj8UPFM2Ztimt9SzcQ8VejwQ6hp2
+         xEXXqR2TF1GpEHbubXsItY8AhqKbh5b3qieKSkp515efhI8Zau7JqkWpqdhRaVu/oqob
+         eFsa8R0hyqah/ymi78AMJzw3fiGee7JI0Eymws7uBpBioQsAK2JnkiazHRDM37h/GQt2
+         hUPZYVXOO37HMLZwy+BUoqxAHCl9GaC+IqC+dVzatOML7FSfN4dVLpEo4orzkIQ9cj7M
+         NW2ySjvlawz5T9H0ymhkxcj1KZceDmWjjhsELqj6NyZHranAzHZXU7DS2Wm1rDVG0ifX
+         aCsQ==
+X-Gm-Message-State: APjAAAUAR0O0DWusQDC1+F81F8nf6AV1eO3KwLs0Hw8lnA976z/M95EM
+        g28VuVh/pAEiCrIMZRLyr6Y=
+X-Google-Smtp-Source: APXvYqz3mrxPCB1S0CW+dxLuweNihe5G+Md2rLL8K5hOTJIrjMzyu1ZdPrsndXXUg8jjoSZHHVCyxA==
+X-Received: by 2002:a62:14c4:: with SMTP id 187mr6515801pfu.241.1565141690166;
+        Tue, 06 Aug 2019 18:34:50 -0700 (PDT)
 Received: from blueforge.nvidia.com (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id u69sm111740800pgu.77.2019.08.06.18.34.36
+        by smtp.gmail.com with ESMTPSA id u69sm111740800pgu.77.2019.08.06.18.34.48
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 06 Aug 2019 18:34:37 -0700 (PDT)
+        Tue, 06 Aug 2019 18:34:49 -0700 (PDT)
 From:   john.hubbard@gmail.com
 X-Google-Original-From: jhubbard@nvidia.com
 To:     Andrew Morton <akpm@linux-foundation.org>
@@ -80,16 +80,17 @@ Cc:     Christoph Hellwig <hch@infradead.org>,
         netdev@vger.kernel.org, rds-devel@oss.oracle.com,
         sparclinux@vger.kernel.org, x86@kernel.org,
         xen-devel@lists.xenproject.org, John Hubbard <jhubbard@nvidia.com>,
-        Calum Mackay <calum.mackay@oracle.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>
-Subject: [PATCH v3 33/41] fs/nfs: convert put_page() to put_user_page*()
-Date:   Tue,  6 Aug 2019 18:33:32 -0700
-Message-Id: <20190807013340.9706-34-jhubbard@nvidia.com>
+        Daniel Black <daniel@linux.ibm.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>
+Subject: [PATCH v3 41/41] mm/ksm: convert put_page() to put_user_page*()
+Date:   Tue,  6 Aug 2019 18:33:40 -0700
+Message-Id: <20190807013340.9706-42-jhubbard@nvidia.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190807013340.9706-1-jhubbard@nvidia.com>
 References: <20190807013340.9706-1-jhubbard@nvidia.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-NVConfidentiality: public
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -106,52 +107,79 @@ release_pages().
 This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
 ("mm: introduce put_user_page*(), placeholder versions").
 
-Reviewed-by: Calum Mackay <calum.mackay@oracle.com>
-
-Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc: Anna Schumaker <anna.schumaker@netapp.com>
-Cc: linux-nfs@vger.kernel.org
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Daniel Black <daniel@linux.ibm.com>
+Cc: Jan Kara <jack@suse.cz>
+Cc: Jérôme Glisse <jglisse@redhat.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Mike Kravetz <mike.kravetz@oracle.com>
 Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 ---
- fs/nfs/direct.c | 11 ++---------
- 1 file changed, 2 insertions(+), 9 deletions(-)
+ mm/ksm.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
-index 0cb442406168..c0c1b9f2c069 100644
---- a/fs/nfs/direct.c
-+++ b/fs/nfs/direct.c
-@@ -276,13 +276,6 @@ ssize_t nfs_direct_IO(struct kiocb *iocb, struct iov_iter *iter)
- 	return nfs_file_direct_write(iocb, iter);
- }
+diff --git a/mm/ksm.c b/mm/ksm.c
+index 3dc4346411e4..e10ee4d5fdd8 100644
+--- a/mm/ksm.c
++++ b/mm/ksm.c
+@@ -456,7 +456,7 @@ static inline bool ksm_test_exit(struct mm_struct *mm)
+  * We use break_ksm to break COW on a ksm page: it's a stripped down
+  *
+  *	if (get_user_pages(addr, 1, 1, 1, &page, NULL) == 1)
+- *		put_page(page);
++ *		put_user_page(page);
+  *
+  * but taking great care only to touch a ksm page, in a VM_MERGEABLE vma,
+  * in case the application has unmapped and remapped mm,addr meanwhile.
+@@ -483,7 +483,7 @@ static int break_ksm(struct vm_area_struct *vma, unsigned long addr)
+ 					FAULT_FLAG_WRITE | FAULT_FLAG_REMOTE);
+ 		else
+ 			ret = VM_FAULT_WRITE;
+-		put_page(page);
++		put_user_page(page);
+ 	} while (!(ret & (VM_FAULT_WRITE | VM_FAULT_SIGBUS | VM_FAULT_SIGSEGV | VM_FAULT_OOM)));
+ 	/*
+ 	 * We must loop because handle_mm_fault() may back out if there's
+@@ -568,7 +568,7 @@ static struct page *get_mergeable_page(struct rmap_item *rmap_item)
+ 		flush_anon_page(vma, page, addr);
+ 		flush_dcache_page(page);
+ 	} else {
+-		put_page(page);
++		put_user_page(page);
+ out:
+ 		page = NULL;
+ 	}
+@@ -1974,10 +1974,10 @@ struct rmap_item *unstable_tree_search_insert(struct rmap_item *rmap_item,
  
--static void nfs_direct_release_pages(struct page **pages, unsigned int npages)
--{
--	unsigned int i;
--	for (i = 0; i < npages; i++)
--		put_page(pages[i]);
--}
--
- void nfs_init_cinfo_from_dreq(struct nfs_commit_info *cinfo,
- 			      struct nfs_direct_req *dreq)
- {
-@@ -512,7 +505,7 @@ static ssize_t nfs_direct_read_schedule_iovec(struct nfs_direct_req *dreq,
- 			pos += req_len;
- 			dreq->bytes_left -= req_len;
- 		}
--		nfs_direct_release_pages(pagevec, npages);
-+		put_user_pages(pagevec, npages);
- 		kvfree(pagevec);
- 		if (result < 0)
- 			break;
-@@ -935,7 +928,7 @@ static ssize_t nfs_direct_write_schedule_iovec(struct nfs_direct_req *dreq,
- 			pos += req_len;
- 			dreq->bytes_left -= req_len;
- 		}
--		nfs_direct_release_pages(pagevec, npages);
-+		put_user_pages(pagevec, npages);
- 		kvfree(pagevec);
- 		if (result < 0)
- 			break;
+ 		parent = *new;
+ 		if (ret < 0) {
+-			put_page(tree_page);
++			put_user_page(tree_page);
+ 			new = &parent->rb_left;
+ 		} else if (ret > 0) {
+-			put_page(tree_page);
++			put_user_page(tree_page);
+ 			new = &parent->rb_right;
+ 		} else if (!ksm_merge_across_nodes &&
+ 			   page_to_nid(tree_page) != nid) {
+@@ -1986,7 +1986,7 @@ struct rmap_item *unstable_tree_search_insert(struct rmap_item *rmap_item,
+ 			 * it will be flushed out and put in the right unstable
+ 			 * tree next time: only merge with it when across_nodes.
+ 			 */
+-			put_page(tree_page);
++			put_user_page(tree_page);
+ 			return NULL;
+ 		} else {
+ 			*tree_pagep = tree_page;
+@@ -2328,7 +2328,7 @@ static struct rmap_item *scan_get_next_rmap_item(struct page **page)
+ 							&rmap_item->rmap_list;
+ 					ksm_scan.address += PAGE_SIZE;
+ 				} else
+-					put_page(*page);
++					put_user_page(*page);
+ 				up_read(&mm->mmap_sem);
+ 				return rmap_item;
+ 			}
 -- 
 2.22.0
 
