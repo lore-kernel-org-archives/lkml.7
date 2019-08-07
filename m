@@ -2,124 +2,85 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F405C32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 12:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FAACC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 12:50:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42AE321E6A
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 12:46:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aSwBKfGp"
+	by mail.kernel.org (Postfix) with ESMTP id 5550721BF6
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 12:50:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387824AbfHGMqp (ORCPT
+        id S2387884AbfHGMuZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 08:46:45 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:41258 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387845AbfHGMqn (ORCPT
+        Wed, 7 Aug 2019 08:50:25 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:47076 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729712AbfHGMuY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 08:46:43 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x77CkfSv013152;
-        Wed, 7 Aug 2019 07:46:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1565182001;
-        bh=6j1tOWSB2UPgBl42npaD6Kf9DQxoOqSNF3OrDL024iw=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=aSwBKfGp1HOoYHwfIjeet7kcE/DmNvsL3bMsOIHG1wmq8EIZji+mAfUjettcDGuPi
-         cVyyx8wyM+eXxRftD2MpZorNJ1zjfgtMV96PH5aD8/s7G/KnfMhkZQ7G9pQeeisv0G
-         lwHABsJlbHWeSojgtR/uRQ2H95s0PEkYUd9qqXv4=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x77CkfFO046199
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 7 Aug 2019 07:46:41 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 7 Aug
- 2019 07:46:41 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 7 Aug 2019 07:46:41 -0500
-Received: from gomoku.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x77CkVoK016945;
-        Wed, 7 Aug 2019 07:46:39 -0500
-From:   Tero Kristo <t-kristo@ti.com>
-To:     <linux-omap@vger.kernel.org>, <tony@atomide.com>, <s-anna@ti.com>
-CC:     <linux-kernel@vger.kernel.org>
-Subject: [PATCH 3/3] bus: ti-sysc: allow reset sharing across devices
-Date:   Wed, 7 Aug 2019 15:46:05 +0300
-Message-ID: <1565181965-21039-4-git-send-email-t-kristo@ti.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1565181965-21039-1-git-send-email-t-kristo@ti.com>
-References: <1565181965-21039-1-git-send-email-t-kristo@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Wed, 7 Aug 2019 08:50:24 -0400
+Received: from mail-pl1-f197.google.com ([209.85.214.197])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1hvLOY-0007ex-LZ
+        for linux-kernel@vger.kernel.org; Wed, 07 Aug 2019 12:50:22 +0000
+Received: by mail-pl1-f197.google.com with SMTP id o6so51762000plk.23
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 05:50:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:content-transfer-encoding:mime-version
+         :subject:message-id:date:cc:to;
+        bh=uW0MrXbB3BW7ZtLsIKXuNS6TLMaCGNiLsqZ7mbvjEew=;
+        b=EMQwkT6OhHcpBV1zgUuF5gD73O5/A26kyDsfuhYQj1HkdO2qGJa2sBSnEIeTWytU0z
+         QKMLm9E0xU8agzI0ICP+0OV92bBqrO/QsXZQVUV6w8sI6oqQH3AsR9+JtYbAo/SXLZ3y
+         EqlsNsidO/v8v2YakJ7LORPBv2SjkK5s9v0eC8NI19eX0Ftb90pBKqcJ2aSqeG6pet7o
+         bCb8TiTRG1CBnuqIqgLGVwZFv0hIz9t7FR1vwREXTqZAE2jIOUgeEJfPGU720w6kgODC
+         v2IjK95tNZ57GWxDGJOh9bufUZO2YnzzAYxUs8nBFdCZXL5hUk2gVccl6dyOHBr0HH2W
+         gt0g==
+X-Gm-Message-State: APjAAAWNtQCChA0yZnH4ITzHVw+R8Awgenkq7DFGV/G1TzNrAQ2PQH+x
+        IjPKO38xIj1uL4mm2FH+ds4Bl2pyAar8Zh08W0Ol5hUCgjFTWynRA4EeLc+ADsBqrZpdm1MuMro
+        ib9+/aWa9fz5AKP7jbg50APQSPMHn7Rt6RlbIJHesbg==
+X-Received: by 2002:a17:902:2ea2:: with SMTP id r31mr8140590plb.200.1565182221406;
+        Wed, 07 Aug 2019 05:50:21 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyP0mQsPRLO2O4uMJVwX5RbRxIPKKkBUk5N/K6JMpdRXjIw0uJRlI9ss9Nu1lLF3yZ0bhwyuw==
+X-Received: by 2002:a17:902:2ea2:: with SMTP id r31mr8140558plb.200.1565182221045;
+        Wed, 07 Aug 2019 05:50:21 -0700 (PDT)
+Received: from 2001-b011-380f-37d3-744a-8654-5394-196d.dynamic-ip6.hinet.net (2001-b011-380f-37d3-744a-8654-5394-196d.dynamic-ip6.hinet.net. [2001:b011:380f:37d3:744a:8654:5394:196d])
+        by smtp.gmail.com with ESMTPSA id o129sm68613198pfg.1.2019.08.07.05.50.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Aug 2019 05:50:20 -0700 (PDT)
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+Content-Type: text/plain;
+        charset=utf-8;
+        delsp=yes;
+        format=flowed
+Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: [Regression] "drm/amdgpu: enable gfxoff again on raven series (v2)"
+Message-Id: <3EB0E920-31D7-4C91-A360-DBFB4417AC2F@canonical.com>
+Date:   Wed, 7 Aug 2019 20:50:17 +0800
+Cc:     "Deucher, Alexander" <alexander.deucher@amd.com>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Chunming Zhou <David1.Zhou@amd.com>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        dri-devel@lists.freedesktop.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Anthony Wong <anthony.wong@canonical.com>
+To:     Huang Rui <ray.huang@amd.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some devices need to share their reset signals, like DSP MMUs, thus drop
-the exclusive notation from reset request. Also, balance the init time
-reset count, otherwise the resets will never be applied post boot.
+Hi,
 
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
----
- drivers/bus/ti-sysc.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+After commit 005440066f92 ("drm/amdgpu: enable gfxoff again on raven series  
+(v2)”), browsers on Raven Ridge systems cause serious corruption like this:
+https://launchpadlibrarian.net/436319772/Screenshot%20from%202019-08-07%2004-20-34.png
 
-diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
-index e08125a..b30eb05 100644
---- a/drivers/bus/ti-sysc.c
-+++ b/drivers/bus/ti-sysc.c
-@@ -502,7 +502,7 @@ static void sysc_clkdm_allow_idle(struct sysc *ddata)
- static int sysc_init_resets(struct sysc *ddata)
- {
- 	ddata->rsts =
--		devm_reset_control_get_optional(ddata->dev, "rstctrl");
-+		devm_reset_control_get_optional_shared(ddata->dev, "rstctrl");
- 	if (IS_ERR(ddata->rsts))
- 		return PTR_ERR(ddata->rsts);
- 
-@@ -1527,7 +1527,7 @@ static int sysc_legacy_init(struct sysc *ddata)
-  */
- static int sysc_rstctrl_reset_deassert(struct sysc *ddata, bool reset)
- {
--	int error, val;
-+	int error;
- 
- 	if (!ddata->rsts)
- 		return 0;
-@@ -1538,7 +1538,9 @@ static int sysc_rstctrl_reset_deassert(struct sysc *ddata, bool reset)
- 			return error;
- 	}
- 
--	return reset_control_deassert(ddata->rsts);
-+	reset_control_deassert(ddata->rsts);
-+
-+	return 0;
- }
- 
- /*
-@@ -2418,6 +2420,10 @@ static int sysc_probe(struct platform_device *pdev)
- 		goto unprepare;
- 	}
- 
-+	/* Balance reset counts */
-+	if (ddata->rsts)
-+		reset_control_assert(ddata->rsts);
-+
- 	sysc_show_registers(ddata);
- 
- 	ddata->dev->type = &sysc_device_type;
--- 
-1.9.1
+Firmwares for Raven Ridge is up-to-date.
 
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Kai-Heng
