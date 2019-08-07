@@ -2,94 +2,166 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A8CC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 10:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 984C2C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 10:52:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0463E21E6E
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 10:51:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565175095;
-	bh=WxYKmhU/d5C298A+QtBpNasoo7mco0vHhZ0d36pXWmI=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=gMhVcEYtZxXp3OW/uLD5cvFJd8E1/I8vSwY+G/a5Qdtu/kQ4qGZ+vCvmHHhqTFrtQ
-	 sVWEEaU6Ec2CVduahHFw+9qbZAPzp/ic25Kn84MAIqLa9oFZuxwxv4YTy/QiG/WKkB
-	 TaCOAy554f4191NtTGDRO9KWfse/5+C8ofWrH/4o=
+	by mail.kernel.org (Postfix) with ESMTP id 63C8A21E6E
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 10:52:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oInXtVfQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729525AbfHGKvc (ORCPT
+        id S1729073AbfHGKwi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 06:51:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55190 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729160AbfHGKv3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 06:51:29 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6AC7E21E6E;
-        Wed,  7 Aug 2019 10:51:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565175088;
-        bh=WxYKmhU/d5C298A+QtBpNasoo7mco0vHhZ0d36pXWmI=;
-        h=Date:From:To:Subject:References:In-Reply-To:From;
-        b=S0RRfBTRawE6q8RXJDyAjSHYILuXDbyvegg0dkISG3juePwVznQWaSGWPC+Ga9en4
-         12hNxlMT7eLaennWRaH/xK2EyAw9Kc45Jpq+//XWvPanG7w8UgeB93w9Vjlj9vz5tt
-         lFWjghhhY1rhRW03ghl1JK7ifWKZPcBRCOdDD7Fg=
-Date:   Wed, 7 Aug 2019 12:51:26 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     dsterba@suse.cz, Sasha Levin <sashal@kernel.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        David Sterba <dsterba@suse.com>,
-        Filipe Manana <fdmanana@suse.com>, linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 4.19 12/32] Btrfs: fix deadlock between fiemap
- and transaction commits
-Message-ID: <20190807105126.GA14880@kroah.com>
-References: <20190806213522.19859-1-sashal@kernel.org>
- <20190806213522.19859-12-sashal@kernel.org>
- <20190807094759.GQ28208@suse.cz>
+        Wed, 7 Aug 2019 06:52:38 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:52032 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727185AbfHGKwh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 06:52:37 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x77AqSth072276;
+        Wed, 7 Aug 2019 05:52:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1565175148;
+        bh=qGpYq60jQ2NH9fBRpbUSq/G1IypjQ7Iiz5/2WFr7+kc=;
+        h=From:To:CC:Subject:Date;
+        b=oInXtVfQqbXi76bY0xZ89lfpnztbY+y4mxuP2HsSugtTqATcWnrsS2vGDITWGh806
+         TglItvv2reZ0lfkRuNJQ/s8jY/ThRZx9PzBxkX+VwTTzEaeiXFSbwOImhoZxCFiS0S
+         ZA3VC6QKp2C9MQe+Hb725H+MbOhxp8ZZxhgzOMSg=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x77AqSd2014341
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 7 Aug 2019 05:52:28 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 7 Aug
+ 2019 05:52:28 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 7 Aug 2019 05:52:28 -0500
+Received: from a0230074-OptiPlex-7010.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x77AqPid031639;
+        Wed, 7 Aug 2019 05:52:26 -0500
+From:   Faiz Abbas <faiz_abbas@ti.com>
+To:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>
+CC:     <mark.rutland@arm.com>, <robh+dt@kernel.org>, <tony@atomide.com>,
+        <bcousson@baylibre.com>, <kishon@ti.com>, <faiz_abbas@ti.com>
+Subject: [PATCH] ARM: dts: dra74x: Fix iodelay configuration for mmc3
+Date:   Wed, 7 Aug 2019 16:22:38 +0530
+Message-ID: <20190807105238.21131-1-faiz_abbas@ti.com>
+X-Mailer: git-send-email 2.19.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190807094759.GQ28208@suse.cz>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 07, 2019 at 11:47:59AM +0200, David Sterba wrote:
-> On Tue, Aug 06, 2019 at 05:35:00PM -0400, Sasha Levin wrote:
-> > From: Filipe Manana <fdmanana@suse.com>
-> > 
-> > [ Upstream commit a6d155d2e363f26290ffd50591169cb96c2a609e ]
-> > 
-> > Fixes: 03628cdbc64db6 ("Btrfs: do not start a transaction during fiemap")
-> 
-> The commit is a regression fix during the 5.2 cycle, how it could end up
-> in a 4.19 stable candidate?
-> 
-> $ git describe  03628cdbc64db6
-> v5.1-rc7-201-g03628cdbc64d
-> 
-> $ git describe --contains 03628cdbc64db6
-> v5.2-rc1~163^2~26
-> 
-> And it does not belong to 5.2 either, git cherry-pick on top of 5.2
-> fails.
-> 
-> I think such sanity check can be done automatically so the patches don't
-> accidentally land in trees where don't belong.
+According to the latest am572x[1] and dra74x[2] data manuals, mmc3
+default, hs, sdr12 and sdr25 modes use iodelay values given in
+MMC3_MANUAL1. Set the MODE_SELECT bit for these so that manual mode is
+selected and correct iodelay values can be configured.
 
+[1] http://www.ti.com/lit/ds/symlink/am5728.pdf
+[2] http://www.ti.com/lit/ds/symlink/dra746.pdf
 
-Commit 03628cdbc64d ("Btrfs: do not start a transaction during fiemap")
-was tagged for the stable trees, and ended up in the following releases:
-	4.14.121 4.19.45 5.0.18 5.1.4 5.2
-so yes, it does need to go back to all of those locations if this patch
-really does fix the issue there.
+Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+---
+ arch/arm/boot/dts/dra74x-mmc-iodelay.dtsi | 50 +++++++++++------------
+ 1 file changed, 25 insertions(+), 25 deletions(-)
 
-thanks,
+diff --git a/arch/arm/boot/dts/dra74x-mmc-iodelay.dtsi b/arch/arm/boot/dts/dra74x-mmc-iodelay.dtsi
+index 28ebb4eb884a..214b9e6de2c3 100644
+--- a/arch/arm/boot/dts/dra74x-mmc-iodelay.dtsi
++++ b/arch/arm/boot/dts/dra74x-mmc-iodelay.dtsi
+@@ -32,7 +32,7 @@
+  *
+  * Datamanual Revisions:
+  *
+- * AM572x Silicon Revision 2.0: SPRS953B, Revised November 2016
++ * AM572x Silicon Revision 2.0: SPRS953F, Revised May 2019
+  * AM572x Silicon Revision 1.1: SPRS915R, Revised November 2016
+  *
+  */
+@@ -229,45 +229,45 @@
+ 
+ 	mmc3_pins_default: mmc3_pins_default {
+ 		pinctrl-single,pins = <
+-			DRA7XX_CORE_IOPAD(0x377c, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_clk.mmc3_clk */
+-			DRA7XX_CORE_IOPAD(0x3780, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_cmd.mmc3_cmd */
+-			DRA7XX_CORE_IOPAD(0x3784, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat0.mmc3_dat0 */
+-			DRA7XX_CORE_IOPAD(0x3788, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat1.mmc3_dat1 */
+-			DRA7XX_CORE_IOPAD(0x378c, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat2.mmc3_dat2 */
+-			DRA7XX_CORE_IOPAD(0x3790, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat3.mmc3_dat3 */
++			DRA7XX_CORE_IOPAD(0x377c, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_clk.mmc3_clk */
++			DRA7XX_CORE_IOPAD(0x3780, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_cmd.mmc3_cmd */
++			DRA7XX_CORE_IOPAD(0x3784, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat0.mmc3_dat0 */
++			DRA7XX_CORE_IOPAD(0x3788, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat1.mmc3_dat1 */
++			DRA7XX_CORE_IOPAD(0x378c, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat2.mmc3_dat2 */
++			DRA7XX_CORE_IOPAD(0x3790, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat3.mmc3_dat3 */
+ 		>;
+ 	};
+ 
+ 	mmc3_pins_hs: mmc3_pins_hs {
+ 		pinctrl-single,pins = <
+-			DRA7XX_CORE_IOPAD(0x377c, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_clk.mmc3_clk */
+-			DRA7XX_CORE_IOPAD(0x3780, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_cmd.mmc3_cmd */
+-			DRA7XX_CORE_IOPAD(0x3784, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat0.mmc3_dat0 */
+-			DRA7XX_CORE_IOPAD(0x3788, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat1.mmc3_dat1 */
+-			DRA7XX_CORE_IOPAD(0x378c, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat2.mmc3_dat2 */
+-			DRA7XX_CORE_IOPAD(0x3790, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat3.mmc3_dat3 */
++			DRA7XX_CORE_IOPAD(0x377c, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_clk.mmc3_clk */
++			DRA7XX_CORE_IOPAD(0x3780, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_cmd.mmc3_cmd */
++			DRA7XX_CORE_IOPAD(0x3784, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat0.mmc3_dat0 */
++			DRA7XX_CORE_IOPAD(0x3788, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat1.mmc3_dat1 */
++			DRA7XX_CORE_IOPAD(0x378c, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat2.mmc3_dat2 */
++			DRA7XX_CORE_IOPAD(0x3790, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat3.mmc3_dat3 */
+ 		>;
+ 	};
+ 
+ 	mmc3_pins_sdr12: mmc3_pins_sdr12 {
+ 		pinctrl-single,pins = <
+-			DRA7XX_CORE_IOPAD(0x377c, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_clk.mmc3_clk */
+-			DRA7XX_CORE_IOPAD(0x3780, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_cmd.mmc3_cmd */
+-			DRA7XX_CORE_IOPAD(0x3784, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat0.mmc3_dat0 */
+-			DRA7XX_CORE_IOPAD(0x3788, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat1.mmc3_dat1 */
+-			DRA7XX_CORE_IOPAD(0x378c, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat2.mmc3_dat2 */
+-			DRA7XX_CORE_IOPAD(0x3790, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat3.mmc3_dat3 */
++			DRA7XX_CORE_IOPAD(0x377c, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_clk.mmc3_clk */
++			DRA7XX_CORE_IOPAD(0x3780, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_cmd.mmc3_cmd */
++			DRA7XX_CORE_IOPAD(0x3784, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat0.mmc3_dat0 */
++			DRA7XX_CORE_IOPAD(0x3788, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat1.mmc3_dat1 */
++			DRA7XX_CORE_IOPAD(0x378c, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat2.mmc3_dat2 */
++			DRA7XX_CORE_IOPAD(0x3790, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat3.mmc3_dat3 */
+ 		>;
+ 	};
+ 
+ 	mmc3_pins_sdr25: mmc3_pins_sdr25 {
+ 		pinctrl-single,pins = <
+-			DRA7XX_CORE_IOPAD(0x377c, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_clk.mmc3_clk */
+-			DRA7XX_CORE_IOPAD(0x3780, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_cmd.mmc3_cmd */
+-			DRA7XX_CORE_IOPAD(0x3784, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat0.mmc3_dat0 */
+-			DRA7XX_CORE_IOPAD(0x3788, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat1.mmc3_dat1 */
+-			DRA7XX_CORE_IOPAD(0x378c, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat2.mmc3_dat2 */
+-			DRA7XX_CORE_IOPAD(0x3790, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat3.mmc3_dat3 */
++			DRA7XX_CORE_IOPAD(0x377c, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_clk.mmc3_clk */
++			DRA7XX_CORE_IOPAD(0x3780, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_cmd.mmc3_cmd */
++			DRA7XX_CORE_IOPAD(0x3784, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat0.mmc3_dat0 */
++			DRA7XX_CORE_IOPAD(0x3788, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat1.mmc3_dat1 */
++			DRA7XX_CORE_IOPAD(0x378c, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat2.mmc3_dat2 */
++			DRA7XX_CORE_IOPAD(0x3790, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat3.mmc3_dat3 */
+ 		>;
+ 	};
+ 
+-- 
+2.19.2
 
-greg k-h
