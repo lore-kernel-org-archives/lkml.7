@@ -2,103 +2,116 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 491B1C19759
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 06:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CED67C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 06:25:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B3DD2199C
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 06:22:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gU1EKsK1"
+	by mail.kernel.org (Postfix) with ESMTP id A95D9214C6
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 06:25:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727019AbfHGGWq (ORCPT
+        id S1727054AbfHGGZv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 02:22:46 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:45616 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726734AbfHGGWq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 02:22:46 -0400
-Received: by mail-pl1-f196.google.com with SMTP id y8so39122151plr.12;
-        Tue, 06 Aug 2019 23:22:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id;
-        bh=kPrp8nG0QEUeUMz0Ak8tH6QVQCe9QZAzvRu9tkMhvlo=;
-        b=gU1EKsK1Xyi6hcBW6jyVX8/FHdkfrg/w6z63scbu08I6eQ7OAaNRJPgW9ruJX4/Y+K
-         z2IlG3Rg9ftGpfxRuzTtAeQiZn7z1cPxoumMQSsF6F6cXwXGtDx0m2VWa0lB2BbfwNfM
-         u+iuU7VF0waiurTMx7rL876gKo4yT7AH1UDdc87OwayRN3VGyzsKdHylvAzzEGOk740i
-         +ctWa4dcQsWKWHqdhTApg7mhRAsV0llo6gh24iycRdfyuq5NKMAYTVx4EL0RK6exYjYg
-         HN71UKBcPweK27Vas50YA4tT3EVPrWkvFVuokAZck0OFCvTgYcp9/gGNZ2mQR99SXUjQ
-         XHbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id;
-        bh=kPrp8nG0QEUeUMz0Ak8tH6QVQCe9QZAzvRu9tkMhvlo=;
-        b=V200gw/fB0GtTWgenOQe0NLO607rf6IBAbastK0cqO4QQlAk85VuzAnsVPIeGAfy2c
-         5KxrdevuhdzTCFIEHuKup/pUw4J0iBjnmcRt2bapa8uaBp21OBjQ94b46Mlfbh6395Vx
-         nX2tfWhKTOON+LkGKXyem63fNL9RI8rBAUPah127z7baD74/+Pe+K+JmNbKggXxUQDPj
-         NvdDJFY7f/Kxb14ZQKEhzlGCnzbYG/kcWxt86ecuL5McjWMVMpQSLtBv/9vq3mIg/V+S
-         XRg0xcneDKC3xW6USMbunrXuYk1Vloju8cBO/XNXcVhjBzx1kJ3JB2yrZxdiXlXtKEum
-         8nIg==
-X-Gm-Message-State: APjAAAWqeWSMzpWTowb4AhraqCgmj3znVwR+rAPgJppw9CEQoSCpVyzG
-        nWfV0ioqbiSfbOSbJeEJU1U=
-X-Google-Smtp-Source: APXvYqxSbOLXgQl6/SQk96QnmwJwXxYdXa/z4z0jNJd2HaSUW02GPmODddxX9YrVdZTnTWGGTmJC1w==
-X-Received: by 2002:aa7:81d9:: with SMTP id c25mr7795660pfn.255.1565158965373;
-        Tue, 06 Aug 2019 23:22:45 -0700 (PDT)
-Received: from localhost.localdomain (unknown-224-80.windriver.com. [147.11.224.80])
-        by smtp.gmail.com with ESMTPSA id 85sm95310585pfv.130.2019.08.06.23.22.44
-        (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Tue, 06 Aug 2019 23:22:44 -0700 (PDT)
-From:   Bin Meng <bmeng.cn@gmail.com>
-To:     Albert Ou <aou@eecs.berkeley.edu>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Subject: [PATCH] riscv: dts: sifive: Add missing "clock-frequency" to cpu0/cpu1 nodes
-Date:   Tue,  6 Aug 2019 23:22:40 -0700
-Message-Id: <1565158960-12240-1-git-send-email-bmeng.cn@gmail.com>
-X-Mailer: git-send-email 1.7.1
+        Wed, 7 Aug 2019 02:25:51 -0400
+Received: from verein.lst.de ([213.95.11.211]:34817 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726734AbfHGGZv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 02:25:51 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id D947B68B05; Wed,  7 Aug 2019 08:25:45 +0200 (CEST)
+Date:   Wed, 7 Aug 2019 08:25:45 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Rob Clark <robdclark@chromium.org>
+Cc:     Christoph Hellwig <hch@lst.de>, Rob Clark <robdclark@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] drm: add cache support for arm64
+Message-ID: <20190807062545.GF6627@lst.de>
+References: <20190805211451.20176-1-robdclark@gmail.com> <20190806084821.GA17129@lst.de> <CAJs_Fx6eh1w7c=crMoD5XyEOMzP6orLhqUewErE51cPGYmObBQ@mail.gmail.com> <20190806155044.GC25050@lst.de> <CAJs_Fx6uztwDy2PqRy3Tc9p12k8r_ovS2tAcsMV6HqnAp=Ggug@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJs_Fx6uztwDy2PqRy3Tc9p12k8r_ovS2tAcsMV6HqnAp=Ggug@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the missing "clock-frequency" property to the cpu0/cpu1 nodes
-for consistency with other cpu nodes.
+On Tue, Aug 06, 2019 at 09:23:51AM -0700, Rob Clark wrote:
+> On Tue, Aug 6, 2019 at 8:50 AM Christoph Hellwig <hch@lst.de> wrote:
+> >
+> > On Tue, Aug 06, 2019 at 07:11:41AM -0700, Rob Clark wrote:
+> > > Agreed that drm_cflush_* isn't a great API.  In this particular case
+> > > (IIUC), I need wb+inv so that there aren't dirty cache lines that drop
+> > > out to memory later, and so that I don't get a cache hit on
+> > > uncached/wc mmap'ing.
+> >
+> > So what is the use case here?  Allocate pages using the page allocator
+> > (or CMA for that matter), and then mmaping them to userspace and never
+> > touching them again from the kernel?
+> 
+> Currently, it is pages coming from tmpfs.  Ideally we want pages that
+> are swappable when unpinned.
 
-Signed-off-by: Bin Meng <bmeng.cn@gmail.com>
----
+tmpfs is basically a (complicated) frontend for alloc pages as far
+as page allocation is concerned.
 
- arch/riscv/boot/dts/sifive/fu540-c000.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+> CPU mappings are *mostly* just mapping to userspace.  There are a few
+> exceptions that are vmap'd (fbcon, and ringbuffer).
 
-diff --git a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-index 42b5ec2..4befc70 100644
---- a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-+++ b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-@@ -22,6 +22,7 @@
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 		cpu0: cpu@0 {
-+			clock-frequency = <0>;
- 			compatible = "sifive,e51", "sifive,rocket0", "riscv";
- 			device_type = "cpu";
- 			i-cache-block-size = <64>;
-@@ -37,6 +38,7 @@
- 			};
- 		};
- 		cpu1: cpu@1 {
-+			clock-frequency = <0>;
- 			compatible = "sifive,u54-mc", "sifive,rocket0", "riscv";
- 			d-cache-block-size = <64>;
- 			d-cache-sets = <64>;
--- 
-2.7.4
+And those use the same backend?
 
+> (Eventually I'd like to support pages passed in from userspace.. but
+> that is down the road.)
+
+Eww.  Please talk to the iommu list before starting on that.
+
+> > > Tying it in w/ iommu seems a bit weird to me.. but maybe that is just
+> > > me, I'm certainly willing to consider proposals or to try things and
+> > > see how they work out.
+> >
+> > This was just my through as the fit seems easy.  But maybe you'll
+> > need to explain your use case(s) a bit more so that we can figure out
+> > what a good high level API is.
+> 
+> Tying it to iommu_map/unmap would be awkward, as we could need to
+> setup cpu mmap before it ends up mapped to iommu.  And the plan to
+> support per-process pagetables involved creating an iommu_domain per
+> userspace gl context.. some buffers would end up mapped into multiple
+> contexts/iommu_domains.
+> 
+> If the cache operation was detached from iommu_map/unmap, then it
+> would seem weird to be part of the iommu API.
+> 
+> I guess I'm not entirely sure what you had in mind, but this is why
+> iommu seemed to me like a bad fit.
+
+So back to the question, I'd like to understand your use case (and
+maybe hear from the other drm folks if that is common):
+
+ - you allocate pages from shmem (why shmem, btw?  if this is done by
+   other drm drivers how do they guarantee addressability without an
+   iommu?)
+ - then the memory is either mapped to userspace or vmapped (or even
+   both, althrough the lack of aliasing you mentioned would speak
+   against it) as writecombine (aka arm v6+ normal uncached).  Does
+   the mapping live on until the memory is freed?
+ - as you mention swapping - how do you guarantee there are no
+   aliases in the kernel direct mapping after the page has been swapped
+   in?
+ - then the memory is potentially mapped to the iommu.  Is it using
+   a long-living mapping, or does get unmapped/remapped repeatedly?
+ 
