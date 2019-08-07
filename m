@@ -2,103 +2,127 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BECF7C32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 18:17:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 434A2C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 18:17:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C68D21E70
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 18:17:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0278F22305
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 18:17:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="XVrvAlpr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389262AbfHGSRW (ORCPT
+        id S2389302AbfHGSRn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 14:17:22 -0400
-Received: from mga17.intel.com ([192.55.52.151]:32943 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388612AbfHGSRW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 14:17:22 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Aug 2019 11:17:21 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,358,1559545200"; 
-   d="scan'208";a="165424309"
-Received: from mwdryfus-mobl.amr.corp.intel.com (HELO [10.254.191.107]) ([10.254.191.107])
-  by orsmga007.jf.intel.com with ESMTP; 07 Aug 2019 11:17:20 -0700
-Subject: Re: [alsa-devel] [PATCH] soundwire: fix regmap dependencies and align
- with other serial links
-To:     Mark Brown <broonie@kernel.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>, Takashi Iwai <tiwai@suse.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-        jank@cadence.com, Sanyog Kale <sanyog.r.kale@intel.com>
-References: <20190718230215.18675-1-pierre-louis.bossart@linux.intel.com>
- <CAJZ5v0g5Hk9JYLvRXfLk5-o=n_RVPKtWD=QONpiimCWyQOFELQ@mail.gmail.com>
- <52a2cb0c-92a6-59d5-72da-832edd6481f3@linux.intel.com>
- <20190807175646.GK4048@sirena.co.uk>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <5a7473a2-83c0-1a09-0cab-31fcc5b21302@linux.intel.com>
-Date:   Wed, 7 Aug 2019 13:17:20 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190807175646.GK4048@sirena.co.uk>
-Content-Type: text/plain; charset=windows-1252; format=flowed
+        Wed, 7 Aug 2019 14:17:43 -0400
+Received: from mail-eopbgr00040.outbound.protection.outlook.com ([40.107.0.40]:49742
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2389158AbfHGSRn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 14:17:43 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DQje8g+Ju47ImkZwiBuVOtSQHMkxvF0Wci+I/rnWd4JZ8GxXH78Brlpty7+pmS/s0wq56AcUeNT3AltTxYJfVReWuMYDi/LXp3qYWjfNWuLjaUO66wCW0USMFIRwa8FuP5UEg/2qnORN/7VbyJJc2NBAr17to8XHJ+WGQCNVfwLX0eccIgNOtx9kgve19yZRnpGWn79MXTIHPdTtDFmkjgovl6IDR2SCIng/RjiwHACrha4/THw4eb3XBSLnpMVnqe4vN1uW+lcvlMXi9zQeSdGooit6i0g3aZs8b63+rY52g7MLCjL6u5KDZC1qJbOWp3qM98sWV9plI3jOHUPdbQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2EXPUC9MWpnXQilcdUkMQeiZeh83FjcLgirnjUQqTlo=;
+ b=VHq4j2uISXpKY39PO7d5XO2QvgjsSja0yPAs75Ph/HgBFSb4Wf7GWNc5nLRUHbTfKlKc68UZXWA5Q/pABCwEWRzrSekHIAFdUkEDiTrtqfLvG6D3iFI6pY/BVmibVaOt5TbFpFy6bI0mrP9Sb1oS8JqIRIJoqLBCx5lcZwijjeEw99lektl21mAa7wZpwLDGXns093ggStamS7b1erQHGrYC6Rng/nP70WA/0Gv0dte4uTsPSrYLm+F2o+kvqUgm+zf4S3ixIuhogx69QWXMcKF2CApciwkInJMoD2oqL1/2XixaOFH0duMYFbv283SMyfRvvIvhnDvRhl/vg9QHXw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=mellanox.com;dmarc=pass action=none
+ header.from=mellanox.com;dkim=pass header.d=mellanox.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2EXPUC9MWpnXQilcdUkMQeiZeh83FjcLgirnjUQqTlo=;
+ b=XVrvAlprNK3yw7vO6hrlpoO7EMfq+IJe+Brm5elZxCR+n5Abs7XT34Xt7xU0KbaCm3SCTY7LmfWiTzQNDLU1HxCt5IRHqPEv4YfNvu2VSd6os3pyMbstgtcKDaTBL3joAOx29+r7m8x10HZNoP486tAU6SrllQnvTbLaL4idbfo=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB6461.eurprd05.prod.outlook.com (20.179.24.213) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2136.16; Wed, 7 Aug 2019 18:17:39 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::5c6f:6120:45cd:2880]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::5c6f:6120:45cd:2880%4]) with mapi id 15.20.2136.018; Wed, 7 Aug 2019
+ 18:17:39 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Christoph Hellwig <hch@lst.de>, John Hubbard <jhubbard@nvidia.com>
+CC:     =?utf-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: hmm cleanups, v2
+Thread-Topic: hmm cleanups, v2
+Thread-Index: AQHVTHDXDUnAIZqjmEOq1Yke5EzQp6bv/+GA
+Date:   Wed, 7 Aug 2019 18:17:39 +0000
+Message-ID: <20190807181733.GL1571@mellanox.com>
+References: <20190806160554.14046-1-hch@lst.de>
+In-Reply-To: <20190806160554.14046-1-hch@lst.de>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: YT1PR01CA0004.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01::17)
+ To VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [156.34.55.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b9004f64-56d0-4808-36e5-08d71b6387c7
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB6461;
+x-ms-traffictypediagnostic: VI1PR05MB6461:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <VI1PR05MB646181193F251A672B9334EDCFD40@VI1PR05MB6461.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 01221E3973
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(366004)(346002)(376002)(136003)(199004)(189003)(966005)(6116002)(53936002)(229853002)(8676002)(6486002)(33656002)(7736002)(71190400001)(476003)(26005)(8936002)(81156014)(81166006)(486006)(71200400001)(36756003)(256004)(2616005)(305945005)(446003)(3846002)(2906002)(11346002)(14454004)(6506007)(4326008)(66946007)(66476007)(6246003)(54906003)(86362001)(386003)(66556008)(64756008)(66446008)(5660300002)(99286004)(478600001)(6306002)(6512007)(102836004)(68736007)(7416002)(186003)(1076003)(316002)(76176011)(6436002)(52116002)(110136005)(25786009)(66066001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB6461;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: evQ9V92IoJTtn2zv2EdFZ9MNnfJPb2jedbASOg3TsWMb6M6dSvkP4p/klz0PwZ4o44H6NWNbOVS+G54hOrPtmpy6hqKzKV3Zp+0ciGNSFKpNdqWp50tSKaUBzE8aGYos4X5xC7Azbrl16BzFBJC6GFbIbD8VVYM4S1xXr9vlaZBHMoORPochpoM95SMZ8Y2+84yQpxmSK0stvOu3wHH64J6INsj0YzE5ws0AoXuOrwj2tx/ttYvAIsyBPvpoXOXjHMDUGTrOXoFUtKLqn6orpS/QMtNTdnIleogvsVDRCBC2HAJkfw0X8WuTxaJ3bKrV3kIEiJUrDDzaxDndXaaReZ/2U5EwdogoSOpXOYkpFyy9TsaDX4GDMuJwd6QTPa2PAYJCcx9edMWxz7k3iqZ0LGiJH8Q+9Dq2NGk6d+QSVRk=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B71F314D18668A44A07719FC1462D90A@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b9004f64-56d0-4808-36e5-08d71b6387c7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Aug 2019 18:17:39.1325
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6461
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
-
-> 
->> Vinod, Mark, any feedback?
-> 
->> There will be a set of SoundWire codec drivers provided upstream soonish and
->> we'll get a number of kbuild errors without this patch.
-> 
-> I think I'm missing context here, I've basically been zoning out all the
-> soundwire stuff - the patch series are huge and generate a bunch of
-> discusion.  Is the patch below the full thing?  I don't see any obvious
-> problems.
-
-Here's a bit of context:
-
-This patch is really independent from the 40-odd fixes I pushed about 10 
-days ago. I provided an initial version back in April ('[PATCH v2 2/2] 
-regmap: soundwire: fix Kconfig select/depend issue') during the first 
-batch of updates. At the time, the suggested solution for the 
-compilation issues was not agreed on, so the build errors remained - not 
-a big deal they only show-up with codec drivers that were not upstreamed 
-so far. It took me a while to come back to it but that was the first in 
-my TODO list after my Summer break and now that we are almost ready to 
-upstream those codec drivers it's a good time to revisit this issue.
-
-Your initial feedback was:
-
-"This now makes _SOUNDWIRE different to all the other bus types; if this
-is a good change then surely the same thing should be done for all the
-other bus types. "
-
-and
-
-"Alignment is a requirement.  If you want to optimize
-this then it'd be better to optimize all the bus types rather than just
-having the one weird bus type that does something different for no
-documented reason."
-
-I don't have the knowledge or means to test what I suggested initially 
-for the other buses, and the optimization was minimal anyways, so this 
-patch takes the path of least resistance and aligns with others.
-
-if there are no objections it's probably easier to push this patch 
-through the SoundWire tree, with the relevant Acks.
+T24gVHVlLCBBdWcgMDYsIDIwMTkgYXQgMDc6MDU6MzhQTSArMDMwMCwgQ2hyaXN0b3BoIEhlbGx3
+aWcgd3JvdGU6DQo+IA0KPiBIaSBKw6lyw7RtZSwgQmVuLCBGZWxpeCBhbmQgSmFzb24sDQo+IA0K
+PiBiZWxvdyBpcyBhIHNlcmllcyBhZ2FpbnN0IHRoZSBobW0gdHJlZSB3aGljaCBjbGVhbnMgdXAg
+dmFyaW91cyBtaW5vcg0KPiBiaXRzIGFuZCBhbGxvd3MgSE1NX01JUlJPUiB0byBiZSBidWlsdCBv
+biBhbGwgYXJjaGl0ZWN0dXJlcy4NCj4gDQo+IERpZmZzdGF0Og0KPiANCj4gICAgIDExIGZpbGVz
+IGNoYW5nZWQsIDk0IGluc2VydGlvbnMoKyksIDIxMCBkZWxldGlvbnMoLSkNCj4gDQo+IEEgZ2l0
+IHRyZWUgaXMgYWxzbyBhdmFpbGFibGUgYXQ6DQo+IA0KPiAgICAgZ2l0Oi8vZ2l0LmluZnJhZGVh
+ZC5vcmcvdXNlcnMvaGNoL21pc2MuZ2l0IGhtbS1jbGVhbnVwcy4yDQo+IA0KPiBHaXR3ZWI6DQo+
+IA0KPiAgICAgaHR0cDovL2dpdC5pbmZyYWRlYWQub3JnL3VzZXJzL2hjaC9taXNjLmdpdC9zaG9y
+dGxvZy9yZWZzL2hlYWRzL2htbS1jbGVhbnVwcy4yDQo+IA0KPiBDaGFuZ2VzIHNpbmNlIHYxOg0K
+PiAgLSBmaXggdGhlIGNvdmVyIGxldHRlciBzdWJqZWN0DQo+ICAtIGltcHJvdmUgdmFyaW91cyBw
+YXRjaCBkZXNjcmlwdGlvbnMNCj4gIC0gdXNlIHN2bW0tPm1tIGluIG5vdXZlYXVfcmFuZ2VfZmF1
+bHQNCj4gIC0gaW52ZXJzZSB0aGUgaG1hc2sgZmllbGQgd2hlbiB1c2luZyBpdA0KPiAgLSBzZWxl
+Y3QgSE1NX01JUlJPUiBpbnN0ZWFkIG9mIG1ha2luZyBpdCBhIHVzZXIgdmlzaWJsZSBvcHRpb24N
+CiANCkkgdGhpbmsgaXQgaXMgc3RyYWlnaHRmb3J3YXJkIGVub3VnaCB0byBtb3ZlIGludG8gLW5l
+eHQsIHNvIGFwcGxpZWQgdG8NCnRoZSBobW0uZ2l0IGxldHMgZ2V0IHNvbWUgbW9yZSByZXZpZXdl
+ZC1ieXMvdGVzdGVkLWJ5IHRob3VnaC4NCg0KRm9yIG5vdyBJIGRyb3BwZWQgJ3JlbW92ZSB0aGUg
+cGdtYXAgZmllbGQgZnJvbSBzdHJ1Y3QgaG1tX3ZtYV93YWxrJw0KanVzdCB0byBoZWFyIHRoZSBm
+b2xsb3d1cCBhbmQgJ2FtZGdwdTogcmVtb3ZlDQpDT05GSUdfRFJNX0FNREdQVV9VU0VSUFRSJyB1
+bnRpbCB0aGUgQU1EIHRlYW0gQWNrcw0KDQpUaGFua3MsDQpKYXNvbg0K
