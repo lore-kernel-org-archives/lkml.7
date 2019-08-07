@@ -5,41 +5,41 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5704C19759
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:03:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B619C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7928822C7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:03:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A8E722BED
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:03:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="F9vR/BZS"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="eelwJjBI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728802AbfHGIDl (ORCPT
+        id S2387652AbfHGIDd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 04:03:41 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:33746 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-OK)
-        by vger.kernel.org with ESMTP id S2387643AbfHGIDc (ORCPT
+        Wed, 7 Aug 2019 04:03:33 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:33640 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727603AbfHGID3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 04:03:32 -0400
+        Wed, 7 Aug 2019 04:03:29 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 97C0DC0BC4;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id EB7E8C1211;
         Wed,  7 Aug 2019 08:03:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1565165011; bh=sq8GBRsZGUnu+NV6bjA2tE3kNHAzMkv/GEpMGvoHDaI=;
+        t=1565165008; bh=xKwJ+hZtvU62s+HKwMkb08m3Vw//JbbbEQN450g/tV0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=F9vR/BZS+EV8ZuHlSvtUdVNcEAxX9yH7AuNM/EssKoBpjQ8XJTDG2+zDpFYvmFDTn
-         GAcETfZ8N45VCUqXD/GrCyGrvYe8RKlLm/VAdG8SE0PyLGTeTP9ajVYo6EyNKN0KQN
-         ZFsGABPGm9OMvlY6dGd7mzaibvN8bIfd1sj6js1BS72+OniwbPtVIvQPtuka7iT5VG
-         d7Hgv0uXWElkXzQ+b71AfENzPAt3nKYc9Y+URBqwDXXTJviW2NifnZ+4TwYNQiOU9A
-         EU7LI4w1+Ys4GhgfKe0CVWokMC77vF7HIpF0rODAO+Th3cCoipsdDmc6UyHVSPZEzp
-         0/Z0riC8guzQw==
+        b=eelwJjBIA0WowIrOVW4SrQMWtf6fZWpjbA8LJVV9tFTAm3X2SfSmBpj/snkPEhdMu
+         At41qVl2f+DUZ++eoDnoeGEWF6khxzFz6V0+T5rORDfFNxtYkT6TBlTas8ZNQ47Zfb
+         2dexMybNUmncvy3fSQWqMleBlw7ND3XOF+Sy7RrM5g1w6pUxw+70dsUwyZZ6rIQri9
+         BenNDUuiY1J3Rk3RPws7L4nSkalAEicl9ozkIRA1AVu9kTNLSBrhb2agj8hqCc87Ju
+         dpC0+j95gOIqPC/PAgD8tRJPvU2G2lblq1rqj0ZhYCakKyCjwPA9keuSZDkjJTWaUe
+         B3DlLrS+R75qw==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 127AFA0062;
+        by mailhost.synopsys.com (Postfix) with ESMTP id A6FBEA0075;
         Wed,  7 Aug 2019 08:03:26 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
@@ -51,9 +51,9 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v3 01/10] net: stmmac: xgmac: Implement MMC counters
-Date:   Wed,  7 Aug 2019 10:03:09 +0200
-Message-Id: <92a5b19fd421c99db7c36128e6118b824d9ed746.1565164729.git.joabreu@synopsys.com>
+Subject: [PATCH net-next v3 08/10] net: stmmac: Implement Safety Features in XGMAC core
+Date:   Wed,  7 Aug 2019 10:03:16 +0200
+Message-Id: <183329795e779423d1cff55185083583eb15a5f0.1565164730.git.joabreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1565164729.git.joabreu@synopsys.com>
 References: <cover.1565164729.git.joabreu@synopsys.com>
@@ -64,7 +64,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement the MMC counters feature in XGMAC core.
+XGMAC also supports Safety Features. This patch implements the
+configuration and handling of this feature in XGMAC core.
 
 Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 
@@ -79,324 +80,376 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h     |   1 +
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c |   1 +
- drivers/net/ethernet/stmicro/stmmac/hwif.c         |   4 +-
- drivers/net/ethernet/stmicro/stmmac/hwif.h         |   1 +
- drivers/net/ethernet/stmicro/stmmac/mmc.h          |   9 +
- drivers/net/ethernet/stmicro/stmmac/mmc_core.c     | 192 +++++++++++++++++++++
- .../net/ethernet/stmicro/stmmac/stmmac_ethtool.c   |   6 +
- 7 files changed, 212 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h     |  26 ++
+ .../net/ethernet/stmicro/stmmac/dwxgmac2_core.c    | 281 +++++++++++++++++++++
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c |   4 +
+ 3 files changed, 311 insertions(+)
 
 diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-index 3174b701aa90..86a42bc39d21 100644
+index bae0b01000cc..34a53f2141dc 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
 +++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-@@ -84,6 +84,7 @@
- #define XGMAC_HWFEAT_AVSEL		BIT(11)
- #define XGMAC_HWFEAT_RAVSEL		BIT(10)
- #define XGMAC_HWFEAT_ARPOFFSEL		BIT(9)
-+#define XGMAC_HWFEAT_MMCSEL		BIT(8)
- #define XGMAC_HWFEAT_MGKSEL		BIT(7)
- #define XGMAC_HWFEAT_RWKSEL		BIT(6)
- #define XGMAC_HWFEAT_GMIISEL		BIT(1)
+@@ -110,6 +110,12 @@
+ #define XGMAC_HWFEAT_RXCHCNT		GENMASK(15, 12)
+ #define XGMAC_HWFEAT_TXQCNT		GENMASK(9, 6)
+ #define XGMAC_HWFEAT_RXQCNT		GENMASK(3, 0)
++#define XGMAC_HW_FEATURE3		0x00000128
++#define XGMAC_HWFEAT_ASP		GENMASK(15, 14)
++#define XGMAC_MAC_DPP_FSM_INT_STATUS	0x00000150
++#define XGMAC_MAC_FSM_CONTROL		0x00000158
++#define XGMAC_PRTYEN			BIT(1)
++#define XGMAC_TMOUTEN			BIT(0)
+ #define XGMAC_MDIO_ADDR			0x00000200
+ #define XGMAC_MDIO_DATA			0x00000204
+ #define XGMAC_MDIO_C22P			0x00000220
+@@ -154,6 +160,16 @@
+ #define XGMAC_TC_PRTY_MAP1		0x00001044
+ #define XGMAC_PSTC(x)			GENMASK((x) * 8 + 7, (x) * 8)
+ #define XGMAC_PSTC_SHIFT(x)		((x) * 8)
++#define XGMAC_MTL_ECC_CONTROL		0x000010c0
++#define XGMAC_MTL_SAFETY_INT_STATUS	0x000010c4
++#define XGMAC_MEUIS			BIT(1)
++#define XGMAC_MECIS			BIT(0)
++#define XGMAC_MTL_ECC_INT_ENABLE	0x000010c8
++#define XGMAC_RPCEIE			BIT(12)
++#define XGMAC_ECEIE			BIT(8)
++#define XGMAC_RXCEIE			BIT(4)
++#define XGMAC_TXCEIE			BIT(0)
++#define XGMAC_MTL_ECC_INT_STATUS	0x000010cc
+ #define XGMAC_MTL_TXQ_OPMODE(x)		(0x00001100 + (0x80 * (x)))
+ #define XGMAC_TQS			GENMASK(25, 16)
+ #define XGMAC_TQS_SHIFT			16
+@@ -218,6 +234,16 @@
+ #define XGMAC_TDPS			GENMASK(29, 0)
+ #define XGMAC_RX_EDMA_CTRL		0x00003044
+ #define XGMAC_RDPS			GENMASK(29, 0)
++#define XGMAC_DMA_SAFETY_INT_STATUS	0x00003064
++#define XGMAC_MCSIS			BIT(31)
++#define XGMAC_MSUIS			BIT(29)
++#define XGMAC_MSCIS			BIT(28)
++#define XGMAC_DEUIS			BIT(1)
++#define XGMAC_DECIS			BIT(0)
++#define XGMAC_DMA_ECC_INT_ENABLE	0x00003068
++#define XGMAC_DCEIE			BIT(1)
++#define XGMAC_TCEIE			BIT(0)
++#define XGMAC_DMA_ECC_INT_STATUS	0x0000306c
+ #define XGMAC_DMA_CH_CONTROL(x)		(0x00003100 + (0x80 * (x)))
+ #define XGMAC_PBLx8			BIT(16)
+ #define XGMAC_DMA_CH_TX_CONTROL(x)	(0x00003104 + (0x80 * (x)))
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
+index e2dbebeb59e9..19dfb72cab11 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
+@@ -530,6 +530,284 @@ static void dwxgmac2_update_vlan_hash(struct mac_device_info *hw, u32 hash,
+ 	}
+ }
+ 
++struct dwxgmac3_error_desc {
++	bool valid;
++	const char *desc;
++	const char *detailed_desc;
++};
++
++#define STAT_OFF(field)		offsetof(struct stmmac_safety_stats, field)
++
++static void dwxgmac3_log_error(struct net_device *ndev, u32 value, bool corr,
++			       const char *module_name,
++			       const struct dwxgmac3_error_desc *desc,
++			       unsigned long field_offset,
++			       struct stmmac_safety_stats *stats)
++{
++	unsigned long loc, mask;
++	u8 *bptr = (u8 *)stats;
++	unsigned long *ptr;
++
++	ptr = (unsigned long *)(bptr + field_offset);
++
++	mask = value;
++	for_each_set_bit(loc, &mask, 32) {
++		netdev_err(ndev, "Found %s error in %s: '%s: %s'\n", corr ?
++				"correctable" : "uncorrectable", module_name,
++				desc[loc].desc, desc[loc].detailed_desc);
++
++		/* Update counters */
++		ptr[loc]++;
++	}
++}
++
++static const struct dwxgmac3_error_desc dwxgmac3_mac_errors[32]= {
++	{ true, "ATPES", "Application Transmit Interface Parity Check Error" },
++	{ true, "DPES", "Descriptor Cache Data Path Parity Check Error" },
++	{ true, "TPES", "TSO Data Path Parity Check Error" },
++	{ true, "TSOPES", "TSO Header Data Path Parity Check Error" },
++	{ true, "MTPES", "MTL Data Path Parity Check Error" },
++	{ true, "MTSPES", "MTL TX Status Data Path Parity Check Error" },
++	{ true, "MTBUPES", "MAC TBU Data Path Parity Check Error" },
++	{ true, "MTFCPES", "MAC TFC Data Path Parity Check Error" },
++	{ true, "ARPES", "Application Receive Interface Data Path Parity Check Error" },
++	{ true, "MRWCPES", "MTL RWC Data Path Parity Check Error" },
++	{ true, "MRRCPES", "MTL RCC Data Path Parity Check Error" },
++	{ true, "CWPES", "CSR Write Data Path Parity Check Error" },
++	{ true, "ASRPES", "AXI Slave Read Data Path Parity Check Error" },
++	{ true, "TTES", "TX FSM Timeout Error" },
++	{ true, "RTES", "RX FSM Timeout Error" },
++	{ true, "CTES", "CSR FSM Timeout Error" },
++	{ true, "ATES", "APP FSM Timeout Error" },
++	{ true, "PTES", "PTP FSM Timeout Error" },
++	{ false, "UNKNOWN", "Unknown Error" }, /* 18 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 19 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 20 */
++	{ true, "MSTTES", "Master Read/Write Timeout Error" },
++	{ true, "SLVTES", "Slave Read/Write Timeout Error" },
++	{ true, "ATITES", "Application Timeout on ATI Interface Error" },
++	{ true, "ARITES", "Application Timeout on ARI Interface Error" },
++	{ true, "FSMPES", "FSM State Parity Error" },
++	{ false, "UNKNOWN", "Unknown Error" }, /* 26 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 27 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 28 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 29 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 30 */
++	{ true, "CPI", "Control Register Parity Check Error" },
++};
++
++static void dwxgmac3_handle_mac_err(struct net_device *ndev,
++				    void __iomem *ioaddr, bool correctable,
++				    struct stmmac_safety_stats *stats)
++{
++	u32 value;
++
++	value = readl(ioaddr + XGMAC_MAC_DPP_FSM_INT_STATUS);
++	writel(value, ioaddr + XGMAC_MAC_DPP_FSM_INT_STATUS);
++
++	dwxgmac3_log_error(ndev, value, correctable, "MAC",
++			   dwxgmac3_mac_errors, STAT_OFF(mac_errors), stats);
++}
++
++static const struct dwxgmac3_error_desc dwxgmac3_mtl_errors[32]= {
++	{ true, "TXCES", "MTL TX Memory Error" },
++	{ true, "TXAMS", "MTL TX Memory Address Mismatch Error" },
++	{ true, "TXUES", "MTL TX Memory Error" },
++	{ false, "UNKNOWN", "Unknown Error" }, /* 3 */
++	{ true, "RXCES", "MTL RX Memory Error" },
++	{ true, "RXAMS", "MTL RX Memory Address Mismatch Error" },
++	{ true, "RXUES", "MTL RX Memory Error" },
++	{ false, "UNKNOWN", "Unknown Error" }, /* 7 */
++	{ true, "ECES", "MTL EST Memory Error" },
++	{ true, "EAMS", "MTL EST Memory Address Mismatch Error" },
++	{ true, "EUES", "MTL EST Memory Error" },
++	{ false, "UNKNOWN", "Unknown Error" }, /* 11 */
++	{ true, "RPCES", "MTL RX Parser Memory Error" },
++	{ true, "RPAMS", "MTL RX Parser Memory Address Mismatch Error" },
++	{ true, "RPUES", "MTL RX Parser Memory Error" },
++	{ false, "UNKNOWN", "Unknown Error" }, /* 15 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 16 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 17 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 18 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 19 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 20 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 21 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 22 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 23 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 24 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 25 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 26 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 27 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 28 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 29 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 30 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 31 */
++};
++
++static void dwxgmac3_handle_mtl_err(struct net_device *ndev,
++				    void __iomem *ioaddr, bool correctable,
++				    struct stmmac_safety_stats *stats)
++{
++	u32 value;
++
++	value = readl(ioaddr + XGMAC_MTL_ECC_INT_STATUS);
++	writel(value, ioaddr + XGMAC_MTL_ECC_INT_STATUS);
++
++	dwxgmac3_log_error(ndev, value, correctable, "MTL",
++			   dwxgmac3_mtl_errors, STAT_OFF(mtl_errors), stats);
++}
++
++static const struct dwxgmac3_error_desc dwxgmac3_dma_errors[32]= {
++	{ true, "TCES", "DMA TSO Memory Error" },
++	{ true, "TAMS", "DMA TSO Memory Address Mismatch Error" },
++	{ true, "TUES", "DMA TSO Memory Error" },
++	{ false, "UNKNOWN", "Unknown Error" }, /* 3 */
++	{ true, "DCES", "DMA DCACHE Memory Error" },
++	{ true, "DAMS", "DMA DCACHE Address Mismatch Error" },
++	{ true, "DUES", "DMA DCACHE Memory Error" },
++	{ false, "UNKNOWN", "Unknown Error" }, /* 7 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 8 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 9 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 10 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 11 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 12 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 13 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 14 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 15 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 16 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 17 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 18 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 19 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 20 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 21 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 22 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 23 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 24 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 25 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 26 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 27 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 28 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 29 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 30 */
++	{ false, "UNKNOWN", "Unknown Error" }, /* 31 */
++};
++
++static void dwxgmac3_handle_dma_err(struct net_device *ndev,
++				    void __iomem *ioaddr, bool correctable,
++				    struct stmmac_safety_stats *stats)
++{
++	u32 value;
++
++	value = readl(ioaddr + XGMAC_DMA_ECC_INT_STATUS);
++	writel(value, ioaddr + XGMAC_DMA_ECC_INT_STATUS);
++
++	dwxgmac3_log_error(ndev, value, correctable, "DMA",
++			   dwxgmac3_dma_errors, STAT_OFF(dma_errors), stats);
++}
++
++static int dwxgmac3_safety_feat_config(void __iomem *ioaddr, unsigned int asp)
++{
++	u32 value;
++
++	if (!asp)
++		return -EINVAL;
++
++	/* 1. Enable Safety Features */
++	writel(0x0, ioaddr + XGMAC_MTL_ECC_CONTROL);
++
++	/* 2. Enable MTL Safety Interrupts */
++	value = readl(ioaddr + XGMAC_MTL_ECC_INT_ENABLE);
++	value |= XGMAC_RPCEIE; /* RX Parser Memory Correctable Error */
++	value |= XGMAC_ECEIE; /* EST Memory Correctable Error */
++	value |= XGMAC_RXCEIE; /* RX Memory Correctable Error */
++	value |= XGMAC_TXCEIE; /* TX Memory Correctable Error */
++	writel(value, ioaddr + XGMAC_MTL_ECC_INT_ENABLE);
++
++	/* 3. Enable DMA Safety Interrupts */
++	value = readl(ioaddr + XGMAC_DMA_ECC_INT_ENABLE);
++	value |= XGMAC_DCEIE; /* Descriptor Cache Memory Correctable Error */
++	value |= XGMAC_TCEIE; /* TSO Memory Correctable Error */
++	writel(value, ioaddr + XGMAC_DMA_ECC_INT_ENABLE);
++
++	/* Only ECC Protection for External Memory feature is selected */
++	if (asp <= 0x1)
++		return 0;
++
++	/* 4. Enable Parity and Timeout for FSM */
++	value = readl(ioaddr + XGMAC_MAC_FSM_CONTROL);
++	value |= XGMAC_PRTYEN; /* FSM Parity Feature */
++	value |= XGMAC_TMOUTEN; /* FSM Timeout Feature */
++	writel(value, ioaddr + XGMAC_MAC_FSM_CONTROL);
++
++	return 0;
++}
++
++static int dwxgmac3_safety_feat_irq_status(struct net_device *ndev,
++					   void __iomem *ioaddr,
++					   unsigned int asp,
++					   struct stmmac_safety_stats *stats)
++{
++	bool err, corr;
++	u32 mtl, dma;
++	int ret = 0;
++
++	if (!asp)
++		return -EINVAL;
++
++	mtl = readl(ioaddr + XGMAC_MTL_SAFETY_INT_STATUS);
++	dma = readl(ioaddr + XGMAC_DMA_SAFETY_INT_STATUS);
++
++	err = (mtl & XGMAC_MCSIS) || (dma & XGMAC_MCSIS);
++	corr = false;
++	if (err) {
++		dwxgmac3_handle_mac_err(ndev, ioaddr, corr, stats);
++		ret |= !corr;
++	}
++
++	err = (mtl & (XGMAC_MEUIS | XGMAC_MECIS)) ||
++	      (dma & (XGMAC_MSUIS | XGMAC_MSCIS));
++	corr = (mtl & XGMAC_MECIS) || (dma & XGMAC_MSCIS);
++	if (err) {
++		dwxgmac3_handle_mtl_err(ndev, ioaddr, corr, stats);
++		ret |= !corr;
++	}
++
++	err = dma & (XGMAC_DEUIS | XGMAC_DECIS);
++	corr = dma & XGMAC_DECIS;
++	if (err) {
++		dwxgmac3_handle_dma_err(ndev, ioaddr, corr, stats);
++		ret |= !corr;
++	}
++
++	return ret;
++}
++
++static const struct dwxgmac3_error {
++	const struct dwxgmac3_error_desc *desc;
++} dwxgmac3_all_errors[] = {
++	{ dwxgmac3_mac_errors },
++	{ dwxgmac3_mtl_errors },
++	{ dwxgmac3_dma_errors },
++};
++
++static int dwxgmac3_safety_feat_dump(struct stmmac_safety_stats *stats,
++				     int index, unsigned long *count,
++				     const char **desc)
++{
++	int module = index / 32, offset = index % 32;
++	unsigned long *ptr = (unsigned long *)stats;
++
++	if (module >= ARRAY_SIZE(dwxgmac3_all_errors))
++		return -EINVAL;
++	if (!dwxgmac3_all_errors[module].desc[offset].valid)
++		return -EINVAL;
++	if (count)
++		*count = *(ptr + index);
++	if (desc)
++		*desc = dwxgmac3_all_errors[module].desc[offset].desc;
++	return 0;
++}
++
+ const struct stmmac_ops dwxgmac210_ops = {
+ 	.core_init = dwxgmac2_core_init,
+ 	.set_mac = dwxgmac2_set_mac,
+@@ -559,6 +837,9 @@ const struct stmmac_ops dwxgmac210_ops = {
+ 	.pcs_get_adv_lp = NULL,
+ 	.debug = NULL,
+ 	.set_filter = dwxgmac2_set_filter,
++	.safety_feat_config = dwxgmac3_safety_feat_config,
++	.safety_feat_irq_status = dwxgmac3_safety_feat_irq_status,
++	.safety_feat_dump = dwxgmac3_safety_feat_dump,
+ 	.set_mac_loopback = dwxgmac2_set_mac_loopback,
+ 	.rss_configure = dwxgmac2_rss_configure,
+ 	.update_vlan_hash = dwxgmac2_update_vlan_hash,
 diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
-index a4f236e3593e..0f1c772e892a 100644
+index b50e275e76c2..e4a1c877f2e1 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
 +++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
-@@ -356,6 +356,7 @@ static void dwxgmac2_get_hw_feature(void __iomem *ioaddr,
- 	dma_cap->atime_stamp = (hw_cap & XGMAC_HWFEAT_TSSEL) >> 12;
- 	dma_cap->av = (hw_cap & XGMAC_HWFEAT_AVSEL) >> 11;
- 	dma_cap->av &= (hw_cap & XGMAC_HWFEAT_RAVSEL) >> 10;
-+	dma_cap->rmon = (hw_cap & XGMAC_HWFEAT_MMCSEL) >> 8;
- 	dma_cap->pmt_magic_frame = (hw_cap & XGMAC_HWFEAT_MGKSEL) >> 7;
- 	dma_cap->pmt_remote_wake_up = (hw_cap & XGMAC_HWFEAT_RWKSEL) >> 6;
- 	dma_cap->mbps_1000 = (hw_cap & XGMAC_HWFEAT_GMIISEL) >> 1;
-diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.c b/drivers/net/ethernet/stmicro/stmmac/hwif.c
-index 6c61b753b55e..3af2e5015245 100644
---- a/drivers/net/ethernet/stmicro/stmmac/hwif.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/hwif.c
-@@ -201,7 +201,7 @@ static const struct stmmac_hwif_entry {
- 		.min_id = DWXGMAC_CORE_2_10,
- 		.regs = {
- 			.ptp_off = PTP_XGMAC_OFFSET,
--			.mmc_off = 0,
-+			.mmc_off = MMC_XGMAC_OFFSET,
- 		},
- 		.desc = &dwxgmac210_desc_ops,
- 		.dma = &dwxgmac210_dma_ops,
-@@ -209,7 +209,7 @@ static const struct stmmac_hwif_entry {
- 		.hwtimestamp = &stmmac_ptp,
- 		.mode = NULL,
- 		.tc = &dwmac510_tc_ops,
--		.mmc = NULL,
-+		.mmc = &dwxgmac_mmc_ops,
- 		.setup = dwxgmac2_setup,
- 		.quirks = NULL,
- 	},
-diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.h b/drivers/net/ethernet/stmicro/stmmac/hwif.h
-index 278c0dbec9d9..00539a09d1db 100644
---- a/drivers/net/ethernet/stmicro/stmmac/hwif.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/hwif.h
-@@ -503,6 +503,7 @@ extern const struct stmmac_ops dwxgmac210_ops;
- extern const struct stmmac_dma_ops dwxgmac210_dma_ops;
- extern const struct stmmac_desc_ops dwxgmac210_desc_ops;
- extern const struct stmmac_mmc_ops dwmac_mmc_ops;
-+extern const struct stmmac_mmc_ops dwxgmac_mmc_ops;
+@@ -399,6 +399,10 @@ static void dwxgmac2_get_hw_feature(void __iomem *ioaddr,
+ 		((hw_cap & XGMAC_HWFEAT_TXQCNT) >> 6) + 1;
+ 	dma_cap->number_rx_queues =
+ 		((hw_cap & XGMAC_HWFEAT_RXQCNT) >> 0) + 1;
++
++	/* MAC HW feature 3 */
++	hw_cap = readl(ioaddr + XGMAC_HW_FEATURE3);
++	dma_cap->asp = (hw_cap & XGMAC_HWFEAT_ASP) >> 14;
+ }
  
- #define GMAC_VERSION		0x00000020	/* GMAC CORE Version */
- #define GMAC4_VERSION		0x00000110	/* GMAC4+ CORE Version */
-diff --git a/drivers/net/ethernet/stmicro/stmmac/mmc.h b/drivers/net/ethernet/stmicro/stmmac/mmc.h
-index 3587ceb9faf5..a0c05925883e 100644
---- a/drivers/net/ethernet/stmicro/stmmac/mmc.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/mmc.h
-@@ -24,6 +24,7 @@
- 
- #define MMC_GMAC4_OFFSET		0x700
- #define MMC_GMAC3_X_OFFSET		0x100
-+#define MMC_XGMAC_OFFSET		0x800
- 
- struct stmmac_counters {
- 	unsigned int mmc_tx_octetcount_gb;
-@@ -116,6 +117,14 @@ struct stmmac_counters {
- 	unsigned int mmc_rx_tcp_err_octets;
- 	unsigned int mmc_rx_icmp_gd_octets;
- 	unsigned int mmc_rx_icmp_err_octets;
-+
-+	/* FPE */
-+	unsigned int mmc_tx_fpe_fragment_cntr;
-+	unsigned int mmc_tx_hold_req_cntr;
-+	unsigned int mmc_rx_packet_assembly_err_cntr;
-+	unsigned int mmc_rx_packet_smd_err_cntr;
-+	unsigned int mmc_rx_packet_assembly_ok_cntr;
-+	unsigned int mmc_rx_fpe_fragment_cntr;
- };
- 
- #endif /* __MMC_H__ */
-diff --git a/drivers/net/ethernet/stmicro/stmmac/mmc_core.c b/drivers/net/ethernet/stmicro/stmmac/mmc_core.c
-index a471db6d7b11..a223584f5f9a 100644
---- a/drivers/net/ethernet/stmicro/stmmac/mmc_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/mmc_core.c
-@@ -119,6 +119,64 @@
- #define MMC_RX_ICMP_GD_OCTETS		0x180
- #define MMC_RX_ICMP_ERR_OCTETS		0x184
- 
-+/* XGMAC MMC Registers */
-+#define MMC_XGMAC_TX_OCTET_GB		0x14
-+#define MMC_XGMAC_TX_PKT_GB		0x1c
-+#define MMC_XGMAC_TX_BROAD_PKT_G	0x24
-+#define MMC_XGMAC_TX_MULTI_PKT_G	0x2c
-+#define MMC_XGMAC_TX_64OCT_GB		0x34
-+#define MMC_XGMAC_TX_65OCT_GB		0x3c
-+#define MMC_XGMAC_TX_128OCT_GB		0x44
-+#define MMC_XGMAC_TX_256OCT_GB		0x4c
-+#define MMC_XGMAC_TX_512OCT_GB		0x54
-+#define MMC_XGMAC_TX_1024OCT_GB		0x5c
-+#define MMC_XGMAC_TX_UNI_PKT_GB		0x64
-+#define MMC_XGMAC_TX_MULTI_PKT_GB	0x6c
-+#define MMC_XGMAC_TX_BROAD_PKT_GB	0x74
-+#define MMC_XGMAC_TX_UNDER		0x7c
-+#define MMC_XGMAC_TX_OCTET_G		0x84
-+#define MMC_XGMAC_TX_PKT_G		0x8c
-+#define MMC_XGMAC_TX_PAUSE		0x94
-+#define MMC_XGMAC_TX_VLAN_PKT_G		0x9c
-+#define MMC_XGMAC_TX_LPI_USEC		0xa4
-+#define MMC_XGMAC_TX_LPI_TRAN		0xa8
-+
-+#define MMC_XGMAC_RX_PKT_GB		0x100
-+#define MMC_XGMAC_RX_OCTET_GB		0x108
-+#define MMC_XGMAC_RX_OCTET_G		0x110
-+#define MMC_XGMAC_RX_BROAD_PKT_G	0x118
-+#define MMC_XGMAC_RX_MULTI_PKT_G	0x120
-+#define MMC_XGMAC_RX_CRC_ERR		0x128
-+#define MMC_XGMAC_RX_RUNT_ERR		0x130
-+#define MMC_XGMAC_RX_JABBER_ERR		0x134
-+#define MMC_XGMAC_RX_UNDER		0x138
-+#define MMC_XGMAC_RX_OVER		0x13c
-+#define MMC_XGMAC_RX_64OCT_GB		0x140
-+#define MMC_XGMAC_RX_65OCT_GB		0x148
-+#define MMC_XGMAC_RX_128OCT_GB		0x150
-+#define MMC_XGMAC_RX_256OCT_GB		0x158
-+#define MMC_XGMAC_RX_512OCT_GB		0x160
-+#define MMC_XGMAC_RX_1024OCT_GB		0x168
-+#define MMC_XGMAC_RX_UNI_PKT_G		0x170
-+#define MMC_XGMAC_RX_LENGTH_ERR		0x178
-+#define MMC_XGMAC_RX_RANGE		0x180
-+#define MMC_XGMAC_RX_PAUSE		0x188
-+#define MMC_XGMAC_RX_FIFOOVER_PKT	0x190
-+#define MMC_XGMAC_RX_VLAN_PKT_GB	0x198
-+#define MMC_XGMAC_RX_WATCHDOG_ERR	0x1a0
-+#define MMC_XGMAC_RX_LPI_USEC		0x1a4
-+#define MMC_XGMAC_RX_LPI_TRAN		0x1a8
-+#define MMC_XGMAC_RX_DISCARD_PKT_GB	0x1ac
-+#define MMC_XGMAC_RX_DISCARD_OCT_GB	0x1b4
-+#define MMC_XGMAC_RX_ALIGN_ERR_PKT	0x1bc
-+
-+#define MMC_XGMAC_TX_FPE_FRAG		0x208
-+#define MMC_XGMAC_TX_HOLD_REQ		0x20c
-+#define MMC_XGMAC_RX_PKT_ASSEMBLY_ERR	0x228
-+#define MMC_XGMAC_RX_PKT_SMD_ERR	0x22c
-+#define MMC_XGMAC_RX_PKT_ASSEMBLY_OK	0x230
-+#define MMC_XGMAC_RX_FPE_FRAG		0x234
-+
- static void dwmac_mmc_ctrl(void __iomem *mmcaddr, unsigned int mode)
- {
- 	u32 value = readl(mmcaddr + MMC_CNTRL);
-@@ -263,3 +321,137 @@ const struct stmmac_mmc_ops dwmac_mmc_ops = {
- 	.intr_all_mask = dwmac_mmc_intr_all_mask,
- 	.read = dwmac_mmc_read,
- };
-+
-+static void dwxgmac_mmc_ctrl(void __iomem *mmcaddr, unsigned int mode)
-+{
-+	u32 value = readl(mmcaddr + MMC_CNTRL);
-+
-+	value |= (mode & 0x3F);
-+
-+	writel(value, mmcaddr + MMC_CNTRL);
-+}
-+
-+static void dwxgmac_mmc_intr_all_mask(void __iomem *mmcaddr)
-+{
-+	writel(MMC_DEFAULT_MASK, mmcaddr + MMC_RX_INTR_MASK);
-+	writel(MMC_DEFAULT_MASK, mmcaddr + MMC_TX_INTR_MASK);
-+}
-+
-+static void dwxgmac_read_mmc_reg(void __iomem *addr, u32 reg, u32 *dest)
-+{
-+	u64 tmp = 0;
-+
-+	tmp += readl(addr + reg);
-+	tmp += ((u64 )readl(addr + reg + 0x4)) << 32;
-+	if (tmp > GENMASK(31, 0))
-+		*dest = ~0x0;
-+	else
-+		*dest = *dest + tmp;
-+}
-+
-+/* This reads the MAC core counters (if actaully supported).
-+ * by default the MMC core is programmed to reset each
-+ * counter after a read. So all the field of the mmc struct
-+ * have to be incremented.
-+ */
-+static void dwxgmac_mmc_read(void __iomem *mmcaddr, struct stmmac_counters *mmc)
-+{
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_OCTET_GB,
-+			     &mmc->mmc_tx_octetcount_gb);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_PKT_GB,
-+			     &mmc->mmc_tx_framecount_gb);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_BROAD_PKT_G,
-+			     &mmc->mmc_tx_broadcastframe_g);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_MULTI_PKT_G,
-+			     &mmc->mmc_tx_multicastframe_g);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_64OCT_GB,
-+			     &mmc->mmc_tx_64_octets_gb);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_65OCT_GB,
-+			     &mmc->mmc_tx_65_to_127_octets_gb);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_128OCT_GB,
-+			     &mmc->mmc_tx_128_to_255_octets_gb);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_256OCT_GB,
-+			     &mmc->mmc_tx_256_to_511_octets_gb);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_512OCT_GB,
-+			     &mmc->mmc_tx_512_to_1023_octets_gb);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_1024OCT_GB,
-+			     &mmc->mmc_tx_1024_to_max_octets_gb);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_UNI_PKT_GB,
-+			     &mmc->mmc_tx_unicast_gb);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_MULTI_PKT_GB,
-+			     &mmc->mmc_tx_multicast_gb);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_BROAD_PKT_GB,
-+			     &mmc->mmc_tx_broadcast_gb);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_UNDER,
-+			     &mmc->mmc_tx_underflow_error);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_OCTET_G,
-+			     &mmc->mmc_tx_octetcount_g);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_PKT_G,
-+			     &mmc->mmc_tx_framecount_g);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_PAUSE,
-+			     &mmc->mmc_tx_pause_frame);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_VLAN_PKT_G,
-+			     &mmc->mmc_tx_vlan_frame_g);
-+
-+	/* MMC RX counter registers */
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_PKT_GB,
-+			     &mmc->mmc_rx_framecount_gb);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_OCTET_GB,
-+			     &mmc->mmc_rx_octetcount_gb);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_OCTET_G,
-+			     &mmc->mmc_rx_octetcount_g);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_BROAD_PKT_G,
-+			     &mmc->mmc_rx_broadcastframe_g);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_MULTI_PKT_G,
-+			     &mmc->mmc_rx_multicastframe_g);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_CRC_ERR,
-+			     &mmc->mmc_rx_crc_error);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_CRC_ERR,
-+			     &mmc->mmc_rx_crc_error);
-+	mmc->mmc_rx_run_error += readl(mmcaddr + MMC_XGMAC_RX_RUNT_ERR);
-+	mmc->mmc_rx_jabber_error += readl(mmcaddr + MMC_XGMAC_RX_JABBER_ERR);
-+	mmc->mmc_rx_undersize_g += readl(mmcaddr + MMC_XGMAC_RX_UNDER);
-+	mmc->mmc_rx_oversize_g += readl(mmcaddr + MMC_XGMAC_RX_OVER);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_64OCT_GB,
-+			     &mmc->mmc_rx_64_octets_gb);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_65OCT_GB,
-+			     &mmc->mmc_rx_65_to_127_octets_gb);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_128OCT_GB,
-+			     &mmc->mmc_rx_128_to_255_octets_gb);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_256OCT_GB,
-+			     &mmc->mmc_rx_256_to_511_octets_gb);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_512OCT_GB,
-+			     &mmc->mmc_rx_512_to_1023_octets_gb);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_1024OCT_GB,
-+			     &mmc->mmc_rx_1024_to_max_octets_gb);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_UNI_PKT_G,
-+			     &mmc->mmc_rx_unicast_g);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_LENGTH_ERR,
-+			     &mmc->mmc_rx_length_error);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_RANGE,
-+			     &mmc->mmc_rx_autofrangetype);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_PAUSE,
-+			     &mmc->mmc_rx_pause_frames);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_FIFOOVER_PKT,
-+			     &mmc->mmc_rx_fifo_overflow);
-+	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_VLAN_PKT_GB,
-+			     &mmc->mmc_rx_vlan_frames_gb);
-+	mmc->mmc_rx_watchdog_error += readl(mmcaddr + MMC_XGMAC_RX_WATCHDOG_ERR);
-+
-+	mmc->mmc_tx_fpe_fragment_cntr += readl(mmcaddr + MMC_XGMAC_TX_FPE_FRAG);
-+	mmc->mmc_tx_hold_req_cntr += readl(mmcaddr + MMC_XGMAC_TX_HOLD_REQ);
-+	mmc->mmc_rx_packet_assembly_err_cntr +=
-+		readl(mmcaddr + MMC_XGMAC_RX_PKT_ASSEMBLY_ERR);
-+	mmc->mmc_rx_packet_smd_err_cntr +=
-+		readl(mmcaddr + MMC_XGMAC_RX_PKT_SMD_ERR);
-+	mmc->mmc_rx_packet_assembly_ok_cntr +=
-+		readl(mmcaddr + MMC_XGMAC_RX_PKT_ASSEMBLY_OK);
-+	mmc->mmc_rx_fpe_fragment_cntr +=
-+		readl(mmcaddr + MMC_XGMAC_RX_FPE_FRAG);
-+}
-+
-+const struct stmmac_mmc_ops dwxgmac_mmc_ops = {
-+	.ctrl = dwxgmac_mmc_ctrl,
-+	.intr_all_mask = dwxgmac_mmc_intr_all_mask,
-+	.read = dwxgmac_mmc_read,
-+};
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
-index 6efb66820d4c..d294590cba27 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
-@@ -243,6 +243,12 @@ static const struct stmmac_stats stmmac_mmc[] = {
- 	STMMAC_MMC_STAT(mmc_rx_tcp_err_octets),
- 	STMMAC_MMC_STAT(mmc_rx_icmp_gd_octets),
- 	STMMAC_MMC_STAT(mmc_rx_icmp_err_octets),
-+	STMMAC_MMC_STAT(mmc_tx_fpe_fragment_cntr),
-+	STMMAC_MMC_STAT(mmc_tx_hold_req_cntr),
-+	STMMAC_MMC_STAT(mmc_rx_packet_assembly_err_cntr),
-+	STMMAC_MMC_STAT(mmc_rx_packet_smd_err_cntr),
-+	STMMAC_MMC_STAT(mmc_rx_packet_assembly_ok_cntr),
-+	STMMAC_MMC_STAT(mmc_rx_fpe_fragment_cntr),
- };
- #define STMMAC_MMC_STATS_LEN ARRAY_SIZE(stmmac_mmc)
- 
+ static void dwxgmac2_rx_watchdog(void __iomem *ioaddr, u32 riwt, u32 nchan)
 -- 
 2.7.4
 
