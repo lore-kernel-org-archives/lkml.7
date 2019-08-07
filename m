@@ -2,106 +2,111 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB85C32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 10:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C05C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 10:05:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B9A821E6A
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 10:04:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B58021E6C
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 10:05:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729427AbfHGKEq (ORCPT
+        id S1729444AbfHGKFm convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 06:04:46 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51040 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728138AbfHGKEp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 06:04:45 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7D95DAD20;
-        Wed,  7 Aug 2019 10:04:44 +0000 (UTC)
-Subject: Re: [PATCH] mm/compaction: remove unnecessary zone parameter in
- isolate_migratepages()
-To:     Pengfei Li <lpf.vector@gmail.com>, akpm@linux-foundation.org
-Cc:     mgorman@techsingularity.net, cai@lca.pw, aryabinin@virtuozzo.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20190806151616.21107-1-lpf.vector@gmail.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <5d07663b-3915-b6a4-4886-fc78dc3ef209@suse.cz>
-Date:   Wed, 7 Aug 2019 12:04:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 7 Aug 2019 06:05:42 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:41917 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728202AbfHGKFl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 06:05:41 -0400
+X-Originating-IP: 86.250.200.211
+Received: from xps13 (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 689B1240002;
+        Wed,  7 Aug 2019 10:05:38 +0000 (UTC)
+Date:   Wed, 7 Aug 2019 12:05:37 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     shiva.linuxworks@gmail.com
+Cc:     Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Frieder Schrempf <frieder.schrempf@kontron.de>,
+        Shivamurthy Shastri <sshivamurthy@micron.com>,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Jeff Kletsky <git-commits@allycomm.com>,
+        Chuanhong Guo <gch981213@gmail.com>,
+        liaoweixiong <liaoweixiong@allwinnertech.com>
+Subject: Re: [PATCH 7/8] mtd: spinand: micron: Fix read failure in Micron
+ M70A flashes
+Message-ID: <20190807120537.733b6e6d@xps13>
+In-Reply-To: <20190722055621.23526-8-sshivamurthy@micron.com>
+References: <20190722055621.23526-1-sshivamurthy@micron.com>
+        <20190722055621.23526-8-sshivamurthy@micron.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190806151616.21107-1-lpf.vector@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/6/19 5:16 PM, Pengfei Li wrote:
-> Like commit 40cacbcb3240 ("mm, compaction: remove unnecessary zone
-> parameter in some instances"), remove unnecessary zone parameter.
-> 
-> No functional change.
-> 
-> Signed-off-by: Pengfei Li <lpf.vector@gmail.com>
+Hi Shiva,
 
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
+shiva.linuxworks@gmail.com wrote on Mon, 22 Jul 2019 07:56:20 +0200:
 
+> From: Shivamurthy Shastri <sshivamurthy@micron.com>
+> 
+> M70A series flashes by default enable continuous read feature (BIT0 in
+> configuration register). This feature will not expose the ECC to host
+> and causing read failure.
+
+This is not readable enough, can you rephrase? Besides that you can add
+my 
+
+Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
+
+> 
+> Signed-off-by: Shivamurthy Shastri <sshivamurthy@micron.com>
 > ---
->  mm/compaction.c | 13 ++++++-------
->  1 file changed, 6 insertions(+), 7 deletions(-)
+>  drivers/mtd/nand/spi/micron.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 > 
-> diff --git a/mm/compaction.c b/mm/compaction.c
-> index 952dc2fb24e5..685c3e3d0a0f 100644
-> --- a/mm/compaction.c
-> +++ b/mm/compaction.c
-> @@ -1737,8 +1737,7 @@ static unsigned long fast_find_migrateblock(struct compact_control *cc)
->   * starting at the block pointed to by the migrate scanner pfn within
->   * compact_control.
->   */
-> -static isolate_migrate_t isolate_migratepages(struct zone *zone,
-> -					struct compact_control *cc)
-> +static isolate_migrate_t isolate_migratepages(struct compact_control *cc)
+> diff --git a/drivers/mtd/nand/spi/micron.c b/drivers/mtd/nand/spi/micron.c
+> index 6fde93ec23a1..1e28ea3d1362 100644
+> --- a/drivers/mtd/nand/spi/micron.c
+> +++ b/drivers/mtd/nand/spi/micron.c
+> @@ -127,6 +127,15 @@ static int micron_spinand_detect(struct spinand_device *spinand)
+>  	return 1;
+>  }
+>  
+> +static int micron_spinand_init(struct spinand_device *spinand)
+> +{
+> +	/*
+> +	 * Some of the Micron flashes enable this BIT by default,
+> +	 * and there is a chance of read failure due to this.
+> +	 */
+> +	return spinand_upd_cfg(spinand, CFG_QUAD_ENABLE, 0);
+> +}
+> +
+>  static void micron_fixup_param_page(struct spinand_device *spinand,
+>  				    struct nand_onfi_params *p)
 >  {
->  	unsigned long block_start_pfn;
->  	unsigned long block_end_pfn;
-> @@ -1756,8 +1755,8 @@ static isolate_migrate_t isolate_migratepages(struct zone *zone,
->  	 */
->  	low_pfn = fast_find_migrateblock(cc);
->  	block_start_pfn = pageblock_start_pfn(low_pfn);
-> -	if (block_start_pfn < zone->zone_start_pfn)
-> -		block_start_pfn = zone->zone_start_pfn;
-> +	if (block_start_pfn < cc->zone->zone_start_pfn)
-> +		block_start_pfn = cc->zone->zone_start_pfn;
+> @@ -150,6 +159,7 @@ static void micron_fixup_param_page(struct spinand_device *spinand,
 >  
->  	/*
->  	 * fast_find_migrateblock marks a pageblock skipped so to avoid
-> @@ -1787,8 +1786,8 @@ static isolate_migrate_t isolate_migratepages(struct zone *zone,
->  		if (!(low_pfn % (SWAP_CLUSTER_MAX * pageblock_nr_pages)))
->  			cond_resched();
+>  static const struct spinand_manufacturer_ops micron_spinand_manuf_ops = {
+>  	.detect = micron_spinand_detect,
+> +	.init = micron_spinand_init,
+>  	.fixup_param_page = micron_fixup_param_page,
+>  };
 >  
-> -		page = pageblock_pfn_to_page(block_start_pfn, block_end_pfn,
-> -									zone);
-> +		page = pageblock_pfn_to_page(block_start_pfn,
-> +						block_end_pfn, cc->zone);
->  		if (!page)
->  			continue;
->  
-> @@ -2158,7 +2157,7 @@ compact_zone(struct compact_control *cc, struct capture_control *capc)
->  			cc->rescan = true;
->  		}
->  
-> -		switch (isolate_migratepages(cc->zone, cc)) {
-> +		switch (isolate_migratepages(cc)) {
->  		case ISOLATE_ABORT:
->  			ret = COMPACT_CONTENDED;
->  			putback_movable_pages(&cc->migratepages);
-> 
 
+
+Thanks,
+Miquèl
