@@ -2,134 +2,114 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D785DC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 18:20:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F26C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 18:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B17B021E70
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 18:20:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 269B421E71
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 18:22:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="CYNek6kN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389270AbfHGSUi (ORCPT
+        id S2389312AbfHGSWI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 14:20:38 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:59615 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387999AbfHGSUi (ORCPT
+        Wed, 7 Aug 2019 14:22:08 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:43386 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389043AbfHGSWI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 14:20:38 -0400
-Received: from c-67-180-61-213.hsd1.ca.comcast.net ([67.180.61.213] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1hvQY1-0000pd-Hq; Wed, 07 Aug 2019 18:20:30 +0000
-Date:   Wed, 7 Aug 2019 20:20:24 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     Adrian Reber <areber@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelianov <xemul@virtuozzo.com>,
-        Jann Horn <jannh@google.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        linux-kernel@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>
-Subject: Re: [PATCH v3 1/2] fork: extend clone3() to support CLONE_SET_TID
-Message-ID: <20190807182023.ut6dg4pfdcaw7m6k@wittgenstein>
-References: <20190806191551.22192-1-areber@redhat.com>
- <20190807154828.GD24112@redhat.com>
+        Wed, 7 Aug 2019 14:22:08 -0400
+Received: by mail-qk1-f196.google.com with SMTP id m2so2301625qkd.10
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 11:22:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=8YCZW1nCWkhUCnbT+gGC+VgekshYKuG5HsTIw4CfnXs=;
+        b=CYNek6kNuhPECMxVcoFZkR4x+/i7TpMbbHYGRxCkTuhhbSELP9iE+d5GfCQM80n727
+         C73sseXo7dWNu5DIvicVUTlvIU7LiUCj5R2c79YbsyOXgszrzYwtL8NtIm4a19EjmQic
+         LQVaz6tYhl+anExo46prvpwWceTbh8d6mTlFViZ/52u1xVXviXlrIrKaiquiW0cnYupt
+         RUZJrQvP7EyfIxNQlyQL5xIKi0fDBRRD5GTh3J/F2W8netpVFrI+oorXMCFEvKroQIeK
+         GAeNcq5aFCTFy3+b8pJLifT0vcPc2CL1ZoSiRVRm9IuA481w8f5O4fPumcJpugnQXGwQ
+         0XDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=8YCZW1nCWkhUCnbT+gGC+VgekshYKuG5HsTIw4CfnXs=;
+        b=XRDqwFRIzlkkrGcZF1dCZAZBivwUo5eHqHLwIA9nZewKjiAPb3LQlQolQSPnMRYHEG
+         sJfmljC4SYVk79AjxDDgLBmXY5Zv9hV2Ko15+JdJ+x24gttpvBiO9oIGrfkAGKes8rFd
+         j2nLlfUKiQGbk7s5AHIDv0y1kQAle74c5+aq03ku5RPZOPsL7nAo8753z5+f5P38sLsk
+         vtpTMNx5CCvWkl7md8SFhIWcTpyjHETzWmEk+/L5Lrhd8BiIF50DWsiWMs0BFC+XkBYE
+         QgPcJmubVK332HnWha4aKdQY+W2mXxmluvDCCsBCzLYJ9XFWWVguGBdN/EA5pGx4gr5V
+         N5OQ==
+X-Gm-Message-State: APjAAAWeQXBYHhJ820oLkU6/rHcOrXb5Fh5HfRF9nBm5lEk63Z8ezAdm
+        FWL2yCKZgdzgBpDCA9J9zJ//JEILt50=
+X-Google-Smtp-Source: APXvYqxLiJEoHXaO+qTFTbHn7VKcosbwrx21LONY6cRI/1DSZz1QuXvP+o5kbhMO0a7CEvXtfuUmbQ==
+X-Received: by 2002:a37:6dc3:: with SMTP id i186mr121541qkc.376.1565202127476;
+        Wed, 07 Aug 2019 11:22:07 -0700 (PDT)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id t76sm40871746qke.79.2019.08.07.11.22.06
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 07 Aug 2019 11:22:07 -0700 (PDT)
+Date:   Wed, 7 Aug 2019 11:21:39 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Hayes Wang <hayeswang@realtek.com>
+Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        nic_swsd <nic_swsd@realtek.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+Subject: Re: [PATCH net-next 2/5] r8152: replace array with linking list for
+ rx information
+Message-ID: <20190807112139.3eb53313@cakuba.netronome.com>
+In-Reply-To: <0835B3720019904CB8F7AA43166CEEB2F18D04FA@RTITMBSVM03.realtek.com.tw>
+References: <1394712342-15778-289-albertk@realtek.com>
+        <1394712342-15778-291-albertk@realtek.com>
+        <20190806125342.4620a94f@cakuba.netronome.com>
+        <0835B3720019904CB8F7AA43166CEEB2F18D04FA@RTITMBSVM03.realtek.com.tw>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190807154828.GD24112@redhat.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 07, 2019 at 05:48:29PM +0200, Oleg Nesterov wrote:
-> On 08/06, Adrian Reber wrote:
-> >
-> > @@ -2530,12 +2530,14 @@ noinline static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
-> >  					      struct clone_args __user *uargs,
-> >  					      size_t size)
-> >  {
-> > +	struct pid_namespace *pid_ns = task_active_pid_ns(current);
-> >  	struct clone_args args;
-> >  
-> >  	if (unlikely(size > PAGE_SIZE))
-> >  		return -E2BIG;
-> >  
-> > -	if (unlikely(size < sizeof(struct clone_args)))
-> > +	/* The struct needs to be at least the size of the original struct. */
-> > +	if (size < (sizeof(struct clone_args) - sizeof(__aligned_u64)))
-> >  		return -EINVAL;
+On Wed, 7 Aug 2019 04:34:24 +0000, Hayes Wang wrote:
+> Jakub Kicinski [mailto:jakub.kicinski@netronome.com]
+> > >  static int rtl_stop_rx(struct r8152 *tp)
+> > >  {
+> > > -	int i;
+> > > +	struct list_head *cursor, *next, tmp_list;
+> > > +	unsigned long flags;
+> > > +
+> > > +	INIT_LIST_HEAD(&tmp_list);
+> > >
+> > > -	for (i = 0; i < RTL8152_MAX_RX; i++)
+> > > -		usb_kill_urb(tp->rx_info[i].urb);
+> > > +	/* The usb_kill_urb() couldn't be used in atomic.
+> > > +	 * Therefore, move the list of rx_info to a tmp one.
+> > > +	 * Then, list_for_each_safe could be used without
+> > > +	 * spin lock.
+> > > +	 */  
+> > 
+> > Would you mind explaining in a little more detail why taking the
+> > entries from the list for a brief period of time is safe?  
 > 
-> slightly off-topic, but with or without this patch I do not understand
-> -EINVAL. Can't we replace this check with
+> Usually, it needs the spin lock before accessing the entry
+> of the list "tp->rx_info". However, for some reasons,
+> if we want to access the entry without spin lock, we
+> cloud move all entries to a local list temporally. Then,
+> we could make sure no other one could access the entries
+> included in the temporal local list.
 > 
-> 	if (size < sizeof(struct clone_args))
-> 		memset((void*)&args + size, sizeof(struct clone_args) - size, 0);
-> 
-> ?
-> 
-> this way we can new members at the end of clone_args and this matches
-> the "if (size > sizeof(struct clone_args))" block below which promises
-> that whatever we add into clone_args a zero value should work.
+> For this case, when I move all entries to a temporal 
+> local list, no other one could access them. Therefore,
+> I could access the entries included in the temporal local
+> list without spin lock.
 
-Hm, I actually think we should define:
-
-#define CLONE3_ARGS_SIZE_V0 64
-#define CLONE3_ARGS_SIZE_V1 ...
-and then later on for future extensions
-#define CLONE3_ARGS_SIZE_V2 ...
-
-then do
-if (size < CLONE3_ARGS_SIZE_V0)
-	return -EINVAL;
-
-then do what you suggested:
-
-if (size < sizeof(struct clone_args))
-	memset((void*)&args + size, sizeof(struct clone_args) - size, 0);
-
-> 
-> 
-> And if we do this
-> 
-> > +	if (size == sizeof(struct clone_args)) {
-> > +		/* Only check permissions if set_tid is actually set. */
-> > +		if (args.set_tid &&
-> > +			!ns_capable(pid_ns->user_ns, CAP_SYS_ADMIN))
-> > +			return -EPERM;
-> > +		kargs->set_tid = args.set_tid;
-> > +	}
-> 
-> we can move this check into clone3_args_valid() or even copy_process()
-> 
-> 	if (kargs->set_tid) {
-> 		if (!ns_capable(...))
-> 			return -EPERM;
-> 	}
-> 
-> 
-> Either way,
-> 
-> > @@ -2585,6 +2595,10 @@ static bool clone3_args_valid(const struct kernel_clone_args *kargs)
-> >  	if (kargs->flags & ~CLONE_LEGACY_FLAGS)
-> >  		return false;
-> >
-> > +	/* Fail if set_tid is invalid */
-> > +	if (kargs->set_tid < 0)
-> > +		return false;
-> 
-> I think it would be more clean to do this along with ns_capable() check,
-> or along with the "set_tid >= pid_max" check in alloc_pid().
-> 
-> I won't insist, but I do not really like the fact we check set_tid 3 times
-> in copy_clone_args_from_user(), clone3_args_valid(), and alloc_pid().
-
-Agreed on that part.
+I see, thanks for the explanation.
