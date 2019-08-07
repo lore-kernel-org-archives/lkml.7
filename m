@@ -2,164 +2,222 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A36A9C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:58:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1843C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 09:01:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80D2F22305
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:58:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF27822305
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 09:01:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="oy0YgJ1N";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="oQ9881fu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbfHGI6t (ORCPT
+        id S1727665AbfHGJBJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 04:58:49 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58740 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725940AbfHGI6t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 04:58:49 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9589EAC20;
-        Wed,  7 Aug 2019 08:58:45 +0000 (UTC)
-Message-ID: <eec72c2d533b7600c63de3c8001cc6ab9e915afe.camel@suse.com>
-Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
-From:   Dario Faggioli <dfaggioli@suse.com>
-To:     Julien Desfossez <jdesfossez@digitalocean.com>,
-        "Li, Aubrey" <aubrey.li@linux.intel.com>
-Cc:     Aaron Lu <aaron.lu@linux.alibaba.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        =?ISO-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Date:   Wed, 07 Aug 2019 10:58:40 +0200
-In-Reply-To: <20190802153715.GA18075@sinkpad>
-References: <20190612163345.GB26997@sinkpad>
-         <635c01b0-d8f3-561b-5396-10c75ed03712@oracle.com>
-         <20190613032246.GA17752@sinkpad>
-         <CAERHkrsMFjjBpPZS7jDhzbob4PSmiPj83OfqEeiKgaDAU3ajOA@mail.gmail.com>
-         <20190619183302.GA6775@sinkpad> <20190718100714.GA469@aaronlu>
-         <CAERHkrtvLKxrpvfw04urAuougsYOWnNw4-H1vUDFx27Dvy0=Ww@mail.gmail.com>
-         <20190725143003.GA992@aaronlu> <20190726152101.GA27884@sinkpad>
-         <7dc86e3c-aa3f-905f-3745-01181a3b0dac@linux.intel.com>
-         <20190802153715.GA18075@sinkpad>
-Organization: SUSE
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-4tYvlZYzl693s5My87+b"
-User-Agent: Evolution 3.32.4 
+        Wed, 7 Aug 2019 05:01:09 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:19136 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726498AbfHGJBJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 05:01:09 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x77907Qc025138;
+        Wed, 7 Aug 2019 02:00:56 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=NIPQXsaf/SP718cKpLwy1xTHWu2XRxVgRWTteWA6iQI=;
+ b=oy0YgJ1N8ExdkCO9Y2ZtQGrPrf/Ya7cazg8/eftGS+KpH0ebpcFE1zhZTdaVYq2DVX/g
+ QP2C34o+u3NgRfxXwmVriZjSz+8aCnBywXKsiIXMvzP43yk83q3eeFYSEubPJF6dw5Rf
+ Y1KM6xySo723TeHqm94spj7Vbc3LnQZ299iSRzb4WU/LvxaZNH2FTEYpTu1MuMkECN+M
+ zTcuSywJHMBqFiSccBP4djejt3RX/R0jPuL7nKzPfMsa9U8sU3mZcMwgmL9M0vKWwi+N
+ HRpVuMYIWa86lBid2/FMEQf8Shqtr41arutS/fYARvOZ6CpOUHWWdaFHmqYRnpA5RwsX XA== 
+Received: from sc-exch02.marvell.com ([199.233.58.182])
+        by mx0a-0016f401.pphosted.com with ESMTP id 2u57mr7agn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 07 Aug 2019 02:00:56 -0700
+Received: from SC-EXCH03.marvell.com (10.93.176.83) by SC-EXCH02.marvell.com
+ (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Wed, 7 Aug
+ 2019 02:00:55 -0700
+Received: from NAM03-CO1-obe.outbound.protection.outlook.com (104.47.40.51) by
+ SC-EXCH03.marvell.com (10.93.176.83) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Wed, 7 Aug 2019 02:00:55 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jkc92ylwsXTAyoYQTa2EVmQDuf3zzFkBOZQFCLav7xUKGarEkZhSvuHV5zdehvWObA+vsmO/0z2JyYrj1IDrxnnkkYg55jh73xDI3ynhyqD1optTya7A+WYDhRX+hoEQCV3QaRQ7oz6vSYtVatqwyXTctoqZPbDjF5f/XxNxyHmNFA8bHgV4WKtxthLLgZSYXOXNNcCCS2tKem9qgK+8StD9enOOm9tgU16BhFACzap2Oa2omMVOVm6CzYdqD8EPCpP6zxeRGG27Moc8Od7VYfkn/rO0tj5/13uayB82F2eb8hqLGEftEOGByA/7g29eKYs8UxjAieNBzQVoJ76vzA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NIPQXsaf/SP718cKpLwy1xTHWu2XRxVgRWTteWA6iQI=;
+ b=P8lEPqg7phWaKOcuY6Q3GtI1HHAyZBW2F4uwEWN+NoXqunzFV6FiTw2K3Cvq3pJdOacjydZ1lLgZiL6mv1JIRckD6ObcfI81uivfOVas4Nd+AEH5GkgUHZwD0Njgkqr1LEUlxNljSuuz8J02XEM5KESmHy+WMAqz7Zr8dFAORxn/9/URQbNYARwLr1lZXlTLl6WCYWLOK3lreqJb+SnqXaL/07gv0b4ZAT/pbZ3k2CqdXTr5bvqIHfyhckAnzoX3wu0l731F5XwuntVeLDa0GB6g1638TEe7nja0oKk0UZE0P90+5FjlYc2Sqgf7GacrLIwdsiA1zAkrR1Ptd2uZlw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NIPQXsaf/SP718cKpLwy1xTHWu2XRxVgRWTteWA6iQI=;
+ b=oQ9881fuE+F8w2NQ2DkUhD3yWbvhyqrPn/226GK6mxmaRa8uHgzxElv/UvwKxOB/IsOfm8W+I3jA5pZvydHLcJ3sNpuflUHeHohYk4apsACwAiTxIVHXA8PWd6DinUSM5Lovo6+ORwH3R9oHn4FPkZ7rypouN4euxWOTNXDbZmQ=
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com (10.255.238.217) by
+ MN2PR18MB3136.namprd18.prod.outlook.com (10.255.236.17) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.15; Wed, 7 Aug 2019 09:00:54 +0000
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::1b3:8b34:63fe:aad2]) by MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::1b3:8b34:63fe:aad2%6]) with mapi id 15.20.2157.015; Wed, 7 Aug 2019
+ 09:00:53 +0000
+From:   Robert Richter <rrichter@marvell.com>
+To:     James Morse <james.morse@arm.com>
+CC:     Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 03/24] EDAC, ghes: Remove pvt->detail_location string
+Thread-Topic: [PATCH v2 03/24] EDAC, ghes: Remove pvt->detail_location string
+Thread-Index: AQHVTP6eYTzHu+XjvEy3xRwejTLs+w==
+Date:   Wed, 7 Aug 2019 09:00:53 +0000
+Message-ID: <20190807090021.4w4a3f4wvyuszgj2@rric.localdomain>
+References: <20190624150758.6695-1-rrichter@marvell.com>
+ <20190624150758.6695-4-rrichter@marvell.com>
+ <abbab8fd-d87e-d37d-b077-9f43474beaf8@arm.com>
+In-Reply-To: <abbab8fd-d87e-d37d-b077-9f43474beaf8@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1PR1001CA0004.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:3:f7::14) To MN2PR18MB3408.namprd18.prod.outlook.com
+ (2603:10b6:208:16c::25)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [31.208.96.227]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8cf573db-a8f2-426f-2ff8-08d71b15c09d
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR18MB3136;
+x-ms-traffictypediagnostic: MN2PR18MB3136:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <MN2PR18MB31363DE5980648E8A518F28AD9D40@MN2PR18MB3136.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3826;
+x-forefront-prvs: 01221E3973
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(346002)(136003)(366004)(396003)(189003)(199004)(66066001)(305945005)(478600001)(8676002)(86362001)(7736002)(71200400001)(71190400001)(14454004)(966005)(6116002)(3846002)(486006)(53546011)(6486002)(6506007)(2906002)(5660300002)(66946007)(99286004)(66476007)(66556008)(64756008)(66446008)(54906003)(446003)(11346002)(386003)(316002)(102836004)(52116002)(76176011)(476003)(6436002)(6246003)(229853002)(9686003)(6306002)(1076003)(81156014)(81166006)(53936002)(4326008)(186003)(8936002)(14444005)(256004)(26005)(6916009)(68736007)(25786009)(6512007);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB3136;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: scsX8Ud5LSBSZo+i6aI85NkNKxjxSS+P0tQKyFVf6RpUNyUdwJThKcGn9ZZMre4jUsvGxngEV6uj1m/gR1GbjV8rwcIh+YwBgGa2OlgtlBdBrcnEsM5xwGVlPEmDZnaZ9cTT/768pC7thH6ASY75WVizSak+jlM5Ukdu4/A1uC78er1ssDwPKYhV77IHb3WHz2L4S/Q9lBpZ2jNCgoAqKozcUyBzjegcCbthBg3bQCbjJnR7Dr4oDAhsIVeVlz/ayBQ8KEtTP0zAYiAfP61nZSaDj2hfeJ/z5PCSzOWZZLMTdzAWsbJS4/cVrVDRqs50eKWfuTcRuj3NrMZbnrZU2ARn1jPOgdSh2X6yktFMClNI2M7xIqLtx90rJBLLZpP+fT5fB5DK5Prf7qepeL/CeRoBJOtD1qDdXmwddWnW11c=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <C795A8FBE79FCD41A86F7B221F1DE4C3@namprd18.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8cf573db-a8f2-426f-2ff8-08d71b15c09d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Aug 2019 09:00:53.8263
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: MrhWG3kiB32YqsCjTxt6jLkkfO13wpVKTaGNaiTqsTfN0C78Y8tMtnLzZ9wRtnieep7Sz5xcb76hVJZKwK2bYQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB3136
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:5.22.84,1.0.8
+ definitions=2019-08-07_02:2019-08-05,2019-08-07 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 02.08.19 18:04:46, James Morse wrote:
+> On 24/06/2019 16:08, Robert Richter wrote:
+> > The detail_location[] string in struct ghes_edac_pvt is complete
+> > useless and data is just copied around. Put everything into
+> > e->other_detail from the beginning.
 
---=-4tYvlZYzl693s5My87+b
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+I am updating the description here to clarify it is only the internal
+buffer that is removed. The other_detail[] string still provides a
+decoded information of the apei error record.
 
-Hello everyone,
-
-This is Dario, from SUSE. I'm also interesting in core-scheduling, and
-using it in virtualization use cases.
-
-Just for context, I'm working in virt since a few years, mostly on Xen,
-but I've done Linux stuff before, and I am getting back at it.
-
-For now, I've been looking at the core-scheduling code, and run some
-benchmarks myself.
-
-On Fri, 2019-08-02 at 11:37 -0400, Julien Desfossez wrote:
-> We tested both Aaron's and Tim's patches and here are our results.
+> >=20
+> > Signed-off-by: Robert Richter <rrichter@marvell.com>
+> > ---
 >=20
-> Test setup:
-> - 2 1-thread sysbench, one running the cpu benchmark, the other one
-> the
->   mem benchmark
-> - both started at the same time
-> - both are pinned on the same core (2 hardware threads)
-> - 10 30-seconds runs
-> - test script: https://paste.debian.net/plainh/834cf45c
-> - only showing the CPU events/sec (higher is better)
-> - tested 4 tag configurations:
->   - no tag
->   - sysbench mem untagged, sysbench cpu tagged
->   - sysbench mem tagged, sysbench cpu untagged
->   - both tagged with a different tag
-> - "Alone" is the sysbench CPU running alone on the core, no tag
-> - "nosmt" is both sysbench pinned on the same hardware thread, no tag
-> - "Tim's full patchset + sched" is an experiment with Tim's patchset
->   combined with Aaron's "hack patch" to get rid of the remaining deep
->   idle cases
-> - In all test cases, both tasks can run simultaneously (which was not
->   the case without those patches), but the standard deviation is a
->   pretty good indicator of the fairness/consistency.
 >=20
-This, and of course the numbers below too, is very interesting.
+> > diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
+> > index d095d98d6a8d..049de73c3bad 100644
+> > --- a/drivers/edac/ghes_edac.c
+> > +++ b/drivers/edac/ghes_edac.c
+> > @@ -21,8 +21,7 @@ struct ghes_edac_pvt {
+> >  	struct mem_ctl_info *mci;
+> > =20
+> >  	/* Buffers for the error handling routine */
+> > -	char detail_location[240];
+> > -	char other_detail[160];
+> > +	char other_detail[400];
+> >  	char msg[80];
+> >  };
+> > =20
+> > @@ -224,13 +223,14 @@ void ghes_edac_report_mem_error(int sev, struct c=
+per_sec_mem_err *mem_err)
+> >  	e->error_count =3D 1;
+> >  	e->grain =3D 1;
+> >  	strcpy(e->label, "unknown label");
+> > -	e->msg =3D pvt->msg;
+> > -	e->other_detail =3D pvt->other_detail;
+> >  	e->top_layer =3D -1;
+> >  	e->mid_layer =3D -1;
+> >  	e->low_layer =3D -1;
+> > -	*pvt->other_detail =3D '\0';
+> > +	e->msg =3D pvt->msg;
+> > +	e->other_detail =3D pvt->other_detail;
+> > +
+> >  	*pvt->msg =3D '\0';
+> > +	*pvt->other_detail =3D '\0';
 
-So, here comes my question: I've done a benchmarking campaign (yes,
-I'll post numbers soon) using this branch:
+There are not code changes here, just a reordering for better
+comparization with its counterpart in edac_mc.c. However, I am
+removing this hunk here.
 
-https://github.com/digitalocean/linux-coresched.git  vpillai/coresched-v3-v=
-5.1.5-test
-https://github.com/digitalocean/linux-coresched/tree/vpillai/coresched-v3-v=
-5.1.5-test
+> > =20
+> >  	switch (sev) {
+> >  	case GHES_SEV_CORRECTED:
+> > @@ -361,6 +361,8 @@ void ghes_edac_report_mem_error(int sev, struct cpe=
+r_sec_mem_err *mem_err)
+> > =20
+> >  	/* All other fields are mapped on e->other_detail */
+> >  	p =3D pvt->other_detail;
+> > +	p +=3D snprintf(p, sizeof(pvt->other_detail),
+> > +		"APEI location: %s ", e->location);
+> >  	if (mem_err->validation_bits & CPER_MEM_VALID_ERROR_STATUS) {
+> >  		u64 status =3D mem_err->error_status;
+> > =20
+> > @@ -443,12 +445,10 @@ void ghes_edac_report_mem_error(int sev, struct c=
+per_sec_mem_err *mem_err)
+> >  	grain_bits =3D fls_long(e->grain - 1);
+> > =20
+> >  	/* Generate the trace event */
+> > -	snprintf(pvt->detail_location, sizeof(pvt->detail_location),
+> > -		 "APEI location: %s %s", e->location, e->other_detail);
+> >  	trace_mc_event(type, e->msg, e->label, e->error_count,
+> >  		       mci->mc_idx, e->top_layer, e->mid_layer, e->low_layer,
+> >  		       (e->page_frame_number << PAGE_SHIFT) | e->offset_in_page,
+> > -		       grain_bits, e->syndrome, pvt->detail_location);
+> > +		       grain_bits, e->syndrome, e->other_detail);
+> > =20
+> >  	edac_raw_mc_handle_error(type, mci, e);
+> >  	spin_unlock_irqrestore(&ghes_lock, flags);
+>=20
+> After a game of spot-the-difference: you added a newline.
+> Reviewed-by: James Morse <james.morse@arm.com>
+>=20
+> Previously here:
+> https://lore.kernel.org/linux-edac/7017c91e-8923-c8d2-26ca-875328ab855a@a=
+rm.com/
+>=20
+> Please pick up tags when posting a new version.
 
-Last commit:
-7feb1007f274 "Fix stalling of untagged processes competing with tagged
-processes"
+Let me know what you mean with this, I would like to ease review for
+you. I tried to describe changes for v2 as detailed as possible.
 
-Since I see that, in this thread, there are various patches being
-proposed and discussed... should I rerun my benchmarks with them
-applied? If yes, which ones? And is there, by any chance, one (or maybe
-more than one) updated git branch(es)?
+Thank you.
 
-Thanks in advance and Regards
---=20
-Dario Faggioli, Ph.D
-http://about.me/dario.faggioli
-Virtualization Software Engineer
-SUSE Labs, SUSE https://www.suse.com/
--------------------------------------------------------------------
-<<This happens because _I_ choose it to happen!>> (Raistlin Majere)
-
-
---=-4tYvlZYzl693s5My87+b
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEES5ssOj3Vhr0WPnOLFkJ4iaW4c+4FAl1KksEACgkQFkJ4iaW4
-c+5h2xAA33JxoIgaoAyjD7w2D8stxoH8YVy+eeWBr4oACLGpAhK3ioijR0RN03h3
-w+AA8GWrfWlU0tGOFqsdbHyqf8MA2KhoWQmN/7BUJdYAR8WiX2BwhMFSP5J1YB7A
-DHD3xN2MMRUioStiKbCKukgvIW2wwmZ9N6uhIdJIywdQtwRZMsvCT8kEqeOrJmRS
-h3xV1kl5NNpqz73FxWltecI4YL2N5h4L6mFupiKvc+rUhuJNax/K2QgIYmZga2eC
-DyZ+q/jDVF98SFmJ+NIAqcC517w8s6Ovcw/3SMWkorIl1t0Aszgrcq2eGTCQWA74
-Gr5FI5dkUZL0o32g/s2xVYKRKDPm/C211sbz51TRq0RfGRpFlRUZ5V2Xe8ux/SQJ
-D3i2GXn/xc3NksdqJpPjHY1Btln3iQUEL3ZsVsyZeLZW2ASqUNuaukBhBRw+Eemh
-rgoDKrtYCNKWztITHe/mrQzu0tDDvF+6vGxuaWdGbVJOXmvpiZ9BMijWN0OseJ5s
-25K1n2JXIqDlYBV9W6yGDiLBIk6NLy8qtkpK/EtvpJORTovJFiISge1mhZw7RjgH
-dRRQmoNELIJQku7AEVXPviTp6iAx9mKWoqYts7oio7A4n8X6Pr8e8MCi62Mx9lPX
-ExZs8wF93EiVZ3yWAl0vtzJbPx8Lc8etMF8sRWxBOtWoRyawdXc=
-=LKN2
------END PGP SIGNATURE-----
-
---=-4tYvlZYzl693s5My87+b--
-
+-Robert
