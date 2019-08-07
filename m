@@ -2,134 +2,281 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57011C32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 19:18:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB17C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 19:19:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24A8221BF2
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 19:18:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF54C21BF2
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 19:19:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PtVNRjJ4"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NcHhucRs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730400AbfHGTSi (ORCPT
+        id S2389421AbfHGTT1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 15:18:38 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:35156 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730363AbfHGTSi (ORCPT
+        Wed, 7 Aug 2019 15:19:27 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:38750 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730363AbfHGTT1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 15:18:38 -0400
-Received: by mail-wm1-f66.google.com with SMTP id l2so8914wmg.0;
-        Wed, 07 Aug 2019 12:18:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=dq3DdDTvPFuZUDp0cjn4nr/nlDjCZ+WE+PuSO4ucy3M=;
-        b=PtVNRjJ46TYNpqSF+eVH0bsJRIiG+x3mHhTN66EWRy5IKlUEZlK124J12FKEcBes71
-         GBOfHNBoJFxWCwDaet7h3tckXA1VVY7ImUdlavzGZxizbMSKaqdWAyVRAt6Vwc/0sIcm
-         i7dWHmQpv3liF69Mscq2lrVWMmxUQxmu3mIPdqa213iQX4MVvlsjGiuut7x1z4FBoO+f
-         V9eQ88ddyoCXRSw2oI0CtH5r22w1M0eNBxzR2cG4lZ7UkyY30a5g5dw4jsEXANniiSp0
-         yWPfjKpuvMVVNv/H7+Q7mhECIBIwvV3EgdR4Z1YUbTN8yVQDHxq8iVWHHACpeBPF/9rI
-         kGmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dq3DdDTvPFuZUDp0cjn4nr/nlDjCZ+WE+PuSO4ucy3M=;
-        b=RBZLnkQoz8v0cxXm4Vrj+2dspWyLe4TkhRw0y7rWfZB0mVpVQpkWubYBN1EE8JYNKU
-         2zcIWHTKb9iJ6Ejo2uA3FlfaedYj+tfnMduL5MZOnmTV/6LOqsQ+3S5MnTonPL0YKswJ
-         GPd9ffAP8hRJBwi1DWRRTdTvkisimO0ObRS07NPjBPpZCXM5mOEcuEHNMf4KJeDzglxg
-         fI1/k7aBytourUbxuT9HQb8/W7PuJbroH2+GAnTbkqUKVGS8Uy3liWQGNskqr0q7oyPN
-         7ILExxyit83AprDj+ehXIYjmX4PLerCH5SVHwg6Q+agBwsE8V9dc7A1ahD6sVHJQDxZP
-         GyJg==
-X-Gm-Message-State: APjAAAXQM+1DneHaotRl/Bfv+FizWe0R72mXHkXx88uKX0XcC/J1m8B3
-        V1oVlRM+NDU8kDqvkQfCk8s=
-X-Google-Smtp-Source: APXvYqxT79/zZlyJ7m/7OQRHIi2Ga4eTnMIdlRq2ogHvMMmVvyxmm6qJqNgK/lITl1w0bLa5rBTqSg==
-X-Received: by 2002:a05:600c:1007:: with SMTP id c7mr1187277wmc.161.1565205516123;
-        Wed, 07 Aug 2019 12:18:36 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f2f:3200:c422:a07f:e697:f900? (p200300EA8F2F3200C422A07FE697F900.dip0.t-ipconnect.de. [2003:ea:8f2f:3200:c422:a07f:e697:f900])
-        by smtp.googlemail.com with ESMTPSA id w24sm548141wmc.30.2019.08.07.12.18.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 07 Aug 2019 12:18:35 -0700 (PDT)
-Subject: Re: [PATCH net-next v4 2/2] net: phy: broadcom: add 1000Base-X
- support for BCM54616S
-To:     Tao Ren <taoren@fb.com>, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Arun Parameswaran <arun.parameswaran@broadcom.com>,
-        Justin Chen <justinpopo6@gmail.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>
-References: <20190806210931.3723590-1-taoren@fb.com>
- <fe0d39ea-91f3-0cac-f13b-3d46ea1748a3@fb.com>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <cfd6e14e-a447-aedb-5bd6-bf65b4b6f98a@gmail.com>
-Date:   Wed, 7 Aug 2019 21:18:28 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 7 Aug 2019 15:19:27 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x77JJMq6018547;
+        Wed, 7 Aug 2019 14:19:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1565205562;
+        bh=I5l7tZpOLVvaDo0sBDjPB0O3mDYenNENMAEUJH7tedU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=NcHhucRsHKo0wH4KS9iUq7GD/Cd8VzjMK1W0Xg/XNMGwI4FAyc1wJurAf3YIC1bhO
+         gr80njb6TeM/mDIdAvCyou469DU5xhGpiG5j9UvJpVGUKek6bcFNN7zQRP4eSQbmrO
+         SsFQHKlaWHXXMjpOCipQF43lYZB0lLDhDzZdsr9Q=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x77JJMNi004877
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 7 Aug 2019 14:19:22 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 7 Aug
+ 2019 14:19:22 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 7 Aug 2019 14:19:22 -0500
+Received: from [128.247.58.153] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x77JJM3P066406;
+        Wed, 7 Aug 2019 14:19:22 -0500
+Subject: Re: [PATCH 1/9] remoteproc: qcom: Introduce driver to store pil info
+ in IMEM
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>
+CC:     Andy Gross <agross@kernel.org>, Sibi Sankar <sibis@codeaurora.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>
+References: <20190807053942.9836-1-bjorn.andersson@linaro.org>
+ <20190807053942.9836-2-bjorn.andersson@linaro.org>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <1ad356a7-760b-fb1d-076a-a70e238acd97@ti.com>
+Date:   Wed, 7 Aug 2019 14:19:22 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <fe0d39ea-91f3-0cac-f13b-3d46ea1748a3@fb.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190807053942.9836-2-bjorn.andersson@linaro.org>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06.08.2019 23:42, Tao Ren wrote:
-> Hi Andrew / Heiner / Vladimir,
+On 8/7/19 12:39 AM, Bjorn Andersson wrote:
+> A region in IMEM is used to communicate load addresses of remoteproc to
+> post mortem debug tools. Implement a driver that can be used to store
+> this information in order to enable these tools to process collected
+> ramdumps.
 > 
-> On 8/6/19 2:09 PM, Tao Ren wrote:
->> The BCM54616S PHY cannot work properly in RGMII->1000Base-KX mode (for
->> example, on Facebook CMM BMC platform), mainly because genphy functions
->> are designed for copper links, and 1000Base-X (clause 37) auto negotiation
->> needs to be handled differently.
->>
->> This patch enables 1000Base-X support for BCM54616S by customizing 3
->> driver callbacks:
->>
->>   - probe: probe callback detects PHY's operation mode based on
->>     INTERF_SEL[1:0] pins and 1000X/100FX selection bit in SerDES 100-FX
->>     Control register.
->>
->>   - config_aneg: bcm54616s_config_aneg_1000bx function is added for auto
->>     negotiation in 1000Base-X mode.
->>
->>   - read_status: BCM54616S and BCM5482 PHY share the same read_status
->>     callback which manually set link speed and duplex mode in 1000Base-X
->>     mode.
->>
->> Signed-off-by: Tao Ren <taoren@fb.com>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  drivers/remoteproc/Kconfig         |   3 +
+>  drivers/remoteproc/Makefile        |   1 +
+>  drivers/remoteproc/qcom_pil_info.c | 139 +++++++++++++++++++++++++++++
+>  drivers/remoteproc/qcom_pil_info.h |   6 ++
+>  4 files changed, 149 insertions(+)
+>  create mode 100644 drivers/remoteproc/qcom_pil_info.c
+>  create mode 100644 drivers/remoteproc/qcom_pil_info.h
 > 
-> I customized config_aneg function for BCM54616S 1000Base-X mode and link-down issue is also fixed: the patch is tested on Facebook CMM and Minipack BMC and everything looks normal. Please kindly review when you have bandwidth and let me know if you have further suggestions.
-> 
-> BTW, I would be happy to help if we decide to add a set of genphy functions for clause 37, although that may mean I need more help/guidance from you :-)
+> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+> index 28ed306982f7..3984bd16e670 100644
+> --- a/drivers/remoteproc/Kconfig
+> +++ b/drivers/remoteproc/Kconfig
+> @@ -85,6 +85,9 @@ config KEYSTONE_REMOTEPROC
+>  	  It's safe to say N here if you're not interested in the Keystone
+>  	  DSPs or just want to use a bare minimum kernel.
+>  
+> +config QCOM_PIL_INFO
+> +	tristate
+> +
+>  config QCOM_RPROC_COMMON
+>  	tristate
+>  
+> diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
+> index 00f09e658cb3..c1b46e9033cb 100644
+> --- a/drivers/remoteproc/Makefile
+> +++ b/drivers/remoteproc/Makefile
+> @@ -14,6 +14,7 @@ obj-$(CONFIG_OMAP_REMOTEPROC)		+= omap_remoteproc.o
+>  obj-$(CONFIG_WKUP_M3_RPROC)		+= wkup_m3_rproc.o
+>  obj-$(CONFIG_DA8XX_REMOTEPROC)		+= da8xx_remoteproc.o
+>  obj-$(CONFIG_KEYSTONE_REMOTEPROC)	+= keystone_remoteproc.o
+> +obj-$(CONFIG_QCOM_PIL_INFO)		+= qcom_pil_info.o
+>  obj-$(CONFIG_QCOM_RPROC_COMMON)		+= qcom_common.o
+>  obj-$(CONFIG_QCOM_Q6V5_COMMON)		+= qcom_q6v5.o
+>  obj-$(CONFIG_QCOM_Q6V5_ADSP)		+= qcom_q6v5_adsp.o
+> diff --git a/drivers/remoteproc/qcom_pil_info.c b/drivers/remoteproc/qcom_pil_info.c
+> new file mode 100644
+> index 000000000000..aa42732016f3
+> --- /dev/null
+> +++ b/drivers/remoteproc/qcom_pil_info.c
+> @@ -0,0 +1,139 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2019 Linaro Ltd.
+> + */
+> +#include <linux/module.h>
+> +#include <linux/kernel.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/mutex.h>
+> +#include <linux/regmap.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/slab.h>
+> +
+> +struct pil_reloc_entry {
+> +	char name[8];
+> +	__le64 base;
+> +	__le32 size;
+> +} __packed;
+> +
+> +#define PIL_INFO_SIZE	200
+> +#define PIL_INFO_ENTRIES (PIL_INFO_SIZE / sizeof(struct pil_reloc_entry))
+> +
+> +struct pil_reloc {
+> +	struct device *dev;
+> +	struct regmap *map;
+> +	u32 offset;
+> +	int val_bytes;
+> +
+> +	struct pil_reloc_entry entries[PIL_INFO_ENTRIES];
+> +};
+> +
+> +static struct pil_reloc *_reloc;
+> +static DEFINE_MUTEX(reloc_mutex);
+> +
+> +/**
+> + * qcom_pil_info_store() - store PIL information of image in IMEM
+> + * @image:	name of the image
+> + * @base:	base address of the loaded image
+> + * @size:	size of the loaded image
+> + */
+> +void qcom_pil_info_store(const char *image, phys_addr_t base, size_t size)
+> +{
+> +	struct pil_reloc_entry *entry;
+> +	int idx = -1;
+> +	int i;
+> +
+> +	mutex_lock(&reloc_mutex);
+> +	if (!_reloc)
+> +		goto unlock;
+> +
+> +	for (i = 0; i < PIL_INFO_ENTRIES; i++) {
+> +		if (!_reloc->entries[i].name[0]) {
+> +			if (idx == -1)
+> +				idx = i;
+> +			continue;
+> +		}
+> +
+> +		if (!strncmp(_reloc->entries[i].name, image, 8)) {
+> +			idx = i;
+> +			goto found;
+> +		}
+> +	}
+> +
+> +	if (idx) {
+> +		dev_warn(_reloc->dev, "insufficient PIL info slots\n");
+> +		goto unlock;
+> +	}
+> +
+> +found:
+> +	entry = &_reloc->entries[idx];
+> +	stracpy(entry->name, image);
+> +	entry->base = base;
+> +	entry->size = size;
+> +
+> +	regmap_bulk_write(_reloc->map, _reloc->offset + idx * sizeof(*entry),
+> +			  entry, sizeof(*entry) / _reloc->val_bytes);
+> +
+> +unlock:
+> +	mutex_unlock(&reloc_mutex);
+> +}
+> +EXPORT_SYMBOL_GPL(qcom_pil_info_store);
+> +
+> +static int pil_reloc_probe(struct platform_device *pdev)
+> +{
+> +	struct pil_reloc *reloc;
+> +
+> +	reloc = devm_kzalloc(&pdev->dev, sizeof(*reloc), GFP_KERNEL);
+> +	if (!reloc)
+> +		return -ENOMEM;
+> +
+> +	reloc->dev = &pdev->dev;
+> +	reloc->map = syscon_node_to_regmap(pdev->dev.parent->of_node);
+> +	if (IS_ERR(reloc->map))
+> +		return PTR_ERR(reloc->map);
+> +
+> +	if (of_property_read_u32(pdev->dev.of_node, "offset", &reloc->offset))
+> +		return -EINVAL;
+> +
+> +	reloc->val_bytes = regmap_get_val_bytes(reloc->map);
+> +	if (reloc->val_bytes < 0)
+> +		return -EINVAL;
+> +
+> +	regmap_bulk_write(reloc->map, reloc->offset, reloc->entries,
+> +			  sizeof(reloc->entries) / reloc->val_bytes);
+> +
+> +	mutex_lock(&reloc_mutex);
+> +	_reloc = reloc;
+> +	mutex_unlock(&reloc_mutex);
+> +
+> +	return 0;
+> +}
+> +
+> +static int pil_reloc_remove(struct platform_device *pdev)
+> +{
+> +	mutex_lock(&reloc_mutex);
+> +	_reloc = NULL;
+> +	mutex_unlock(&reloc_mutex);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id pil_reloc_of_match[] = {
+> +	{ .compatible = "qcom,pil-reloc-info" },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, pil_reloc_of_match);
+> +
+> +static struct platform_driver pil_reloc_driver = {
+> +	.probe = pil_reloc_probe,
+> +	.remove = pil_reloc_remove,
+> +	.driver = {
+> +		.name = "qcom-pil-reloc-info",
+> +		.of_match_table = pil_reloc_of_match,
+> +	},
+> +};
+> +module_platform_driver(pil_reloc_driver);
+> +
+> +MODULE_DESCRIPTION("Qualcomm PIL relocation info");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/remoteproc/qcom_pil_info.h b/drivers/remoteproc/qcom_pil_info.h
+> new file mode 100644
+> index 000000000000..c30c186b665d
+> --- /dev/null
+> +++ b/drivers/remoteproc/qcom_pil_info.h
+> @@ -0,0 +1,6 @@
 
-You want to have standard clause 37 aneg and this should be generic in phylib.
-I hacked together a first version that is compile-tested only:
-https://patchwork.ozlabs.org/patch/1143631/
-It supports fixed mode too.
+Please add a SPDX license identifier.
 
-It doesn't support half duplex mode because phylib doesn't know 1000BaseX HD yet.
-Not sure whether half duplex mode is used at all in reality.
+regards
+Suman
 
-You could test the new core functions in your own config_aneg and read_status
-callback implementations.
+> +#ifndef __QCOM_PIL_INFO_H__
+> +#define __QCOM_PIL_INFO_H__
+> +
+> +void qcom_pil_info_store(const char *image, phys_addr_t base, size_t size);
+> +
+> +#endif
+> 
 
-> 
-> 
-> Cheers,
-> 
-> Tao
-> 
-Heiner
