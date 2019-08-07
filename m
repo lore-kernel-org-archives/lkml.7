@@ -2,93 +2,108 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C1A0C31E40
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 02:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62750C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 02:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A70221743
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 02:38:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565145492;
-	bh=W5nsUZDTO0AqSSaVtlsS+i6EdJob7D409bMHK7rbsMw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=y9kTRraRO9KIjSWUFdGhSt695OEjZuOiEbjcOoG4no9f0Yh1+S4B48Aq3uhgBRGPh
-	 0xJIcD2hY18rGSVHYvDij1j2FZNBGHv+39x43ZO+biyQyFtWV9QQGiVPLDNfgFX+90
-	 XuVLCbGDZLpG7/iyxKHaWuoMcgjhzjVVVK6//StY=
+	by mail.kernel.org (Postfix) with ESMTP id 4159821743
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 02:38:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727569AbfHGCiL (ORCPT
+        id S1727788AbfHGCiY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 22:38:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39762 "EHLO mail.kernel.org"
+        Tue, 6 Aug 2019 22:38:24 -0400
+Received: from mga11.intel.com ([192.55.52.93]:39432 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726331AbfHGCiL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 22:38:11 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B72A521743;
-        Wed,  7 Aug 2019 02:38:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565145490;
-        bh=W5nsUZDTO0AqSSaVtlsS+i6EdJob7D409bMHK7rbsMw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XOQM/dkmUt+UV3+/cGe+O7uNKBjdx/sc9Ox51IjW6WH0X8JU9QaGum/sN9BZ3b5jG
-         LCSv89jjjheB9JKxCQF8VQj56HNDg/iqpf/AJOcpCPO3sVmRVOmwnFS4pOO+PElxKf
-         NPKopJqW3oBLrgBwPgrmbnigvmFwrl/M1N8oNphY=
-Date:   Tue, 6 Aug 2019 22:38:08 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        syzbot+d952e5e28f5fb7718d23@syzkaller.appspotmail.com,
-        Takashi Iwai <tiwai@suse.de>
-Subject: Re: [PATCH 5.2 03/20] ALSA: usb-audio: Sanity checks for each pipe
- and EP types
-Message-ID: <20190807023808.GS17747@sasha-vm>
-References: <20190802092055.131876977@linuxfoundation.org>
- <20190802092058.248343532@linuxfoundation.org>
- <20190802134828.GA797@sasha-vm>
- <20190802155154.GA28398@kroah.com>
+        id S1726238AbfHGCiY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 22:38:24 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 19:38:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,353,1559545200"; 
+   d="scan'208";a="374254553"
+Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
+  by fmsmga006.fm.intel.com with ESMTP; 06 Aug 2019 19:38:22 -0700
+Date:   Wed, 7 Aug 2019 10:21:14 +0800
+From:   Wu Hao <hao.wu@intel.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-doc@vger.kernel.org, atull@kernel.org,
+        Xu Yilun <yilun.xu@intel.com>
+Subject: Re: [PATCH v4 06/12] fpga: dfl: afu: export __port_enable/disable
+ function.
+Message-ID: <20190807022114.GB24158@hao-dev>
+References: <1564914022-3710-1-git-send-email-hao.wu@intel.com>
+ <1564914022-3710-7-git-send-email-hao.wu@intel.com>
+ <20190805155240.GB8107@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190802155154.GA28398@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190805155240.GB8107@kroah.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 02, 2019 at 05:51:54PM +0200, Greg Kroah-Hartman wrote:
->On Fri, Aug 02, 2019 at 09:48:28AM -0400, Sasha Levin wrote:
->> On Fri, Aug 02, 2019 at 11:39:57AM +0200, Greg Kroah-Hartman wrote:
->> > From: Takashi Iwai <tiwai@suse.de>
->> >
->> > commit 801ebf1043ae7b182588554cc9b9ad3c14bc2ab5 upstream.
->> >
->> > The recent USB core code performs sanity checks for the given pipe and
->> > EP types, and it can be hit by manipulated USB descriptors by syzbot.
->> > For making syzbot happier, this patch introduces a local helper for a
->> > sanity check in the driver side and calls it at each place before the
->> > message handling, so that we can avoid the WARNING splats.
->> >
->> > Reported-by: syzbot+d952e5e28f5fb7718d23@syzkaller.appspotmail.com
->> > Signed-off-by: Takashi Iwai <tiwai@suse.de>
->> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>
->> This commit has a fix: 5d78e1c2b7f4b ("ALSA: usb-audio: Fix gpf in
->> snd_usb_pipe_sanity_check") which was not pulled by Linus yet.
->>
->> I'm going to drop this commit and re-queue it together with it's fix
->> once it makes it upstream.
->
->Ah, thanks for doing that.
+On Mon, Aug 05, 2019 at 05:52:40PM +0200, Greg KH wrote:
+> On Sun, Aug 04, 2019 at 06:20:16PM +0800, Wu Hao wrote:
+> > As these two functions are used by other private features. e.g.
+> > in error reporting private feature, it requires to check port status
+> > and reset port for error clearing.
+> > 
+> > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> > Signed-off-by: Wu Hao <hao.wu@intel.com>
+> > Acked-by: Moritz Fischer <mdf@kernel.org>
+> > Acked-by: Alan Tull <atull@kernel.org>
+> > Signed-off-by: Moritz Fischer <mdf@kernel.org>
+> > ---
+> > v2: rebased
+> > ---
+> >  drivers/fpga/dfl-afu-main.c | 25 ++++++++++++++-----------
+> >  drivers/fpga/dfl-afu.h      |  3 +++
+> >  2 files changed, 17 insertions(+), 11 deletions(-)
+> > 
+> > diff --git a/drivers/fpga/dfl-afu-main.c b/drivers/fpga/dfl-afu-main.c
+> > index e013afb..e312179 100644
+> > --- a/drivers/fpga/dfl-afu-main.c
+> > +++ b/drivers/fpga/dfl-afu-main.c
+> > @@ -22,14 +22,16 @@
+> >  #include "dfl-afu.h"
+> >  
+> >  /**
+> > - * port_enable - enable a port
+> > + * __port_enable - enable a port
+> >   * @pdev: port platform device.
+> >   *
+> >   * Enable Port by clear the port soft reset bit, which is set by default.
+> >   * The AFU is unable to respond to any MMIO access while in reset.
+> > - * port_enable function should only be used after port_disable function.
+> > + * __port_enable function should only be used after __port_disable function.
+> > + *
+> > + * The caller needs to hold lock for protection.
+> >   */
+> > -static void port_enable(struct platform_device *pdev)
+> > +void __port_enable(struct platform_device *pdev)
+> 
+> worst global function name ever.
+> 
+> Don't polute the global namespace like this for a single driver.  If you
+> REALLY need it, then use a prefix that shows it is your individual
+> dfl_special_sauce_platform_device_only type thing.
 
-Now queued these two commits for 5.2.
+Oh.. Sure.. Let me fix the naming in the next version.
 
---
-Thanks,
-Sasha
+Thanks
+Hao
+
+> 
+> thanks,
+> 
+> greg k-h
