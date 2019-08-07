@@ -2,124 +2,116 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86152C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 21:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDAD3C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 21:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6241F217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 21:03:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D0E8217D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 21:08:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="jhH9sYqX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730331AbfHGVDF (ORCPT
+        id S2388777AbfHGVI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 17:03:05 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:44122 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729960AbfHGVDE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 17:03:04 -0400
-Received: from ip5f5a6044.dynamic.kabel-deutschland.de ([95.90.96.68] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1hvT5G-0003Vr-GS; Wed, 07 Aug 2019 23:02:58 +0200
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Nathan Chancellor <natechancellor@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        "kernelci . org bot" <bot@kernelci.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH] phy-rockchip-inno-hdmi: Fix RK3328_TERM_RESISTOR_CALIB_SPEED_7_0's third value
-Date:   Wed, 07 Aug 2019 23:02:57 +0200
-Message-ID: <5866399.zOWMQKR7fF@diego>
-In-Reply-To: <20190807192305.6604-1-natechancellor@gmail.com>
-References: <20190807192305.6604-1-natechancellor@gmail.com>
+        Wed, 7 Aug 2019 17:08:58 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:46620 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729938AbfHGVI6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 17:08:58 -0400
+Received: by mail-ed1-f67.google.com with SMTP id z51so417654edz.13
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 14:08:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WpTDnBLeqBpcYNuMO5Xr6VDSfxDLcJKI+RhmNC+qR/Y=;
+        b=jhH9sYqXSIeaEgzW9lYzfUAsV3IrDrnPPFjc71xyUEl4quoeszK4MgSZc9aBaWgQDf
+         8ghApR686Up9F3+XSDUzxuVAJEdDHE9NGNsNn+Tgx4sP02ojcRfTBLA2jsKD19FSaZCB
+         wQRB+UgitG9AcZUeXsclkykHoGQhX2PDe0cIw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=WpTDnBLeqBpcYNuMO5Xr6VDSfxDLcJKI+RhmNC+qR/Y=;
+        b=KEwqpbpsHRiH1WFfd0/8ao5b/3i/zPeXxhnfloz7KuBZYg7THx33prj5jM+MwAmH6F
+         EWiACdP6aCR8uY6rEljLeF3ZKSuRtQwEZkikQM/1NpgXRd7HWmOXaZFT4G0lIcjY7dTu
+         iwOyT7KBf2Hp7PLHJ0UsrYeJStrYXHB3rT3/znfDhUjH2RK2bABCXsS/7+SW5Y2g7FPJ
+         oplqQVBCT2K2RmM9RyCI2I5ZndSw9QDsR8To0b7Hh6eKtZ8N95s6MDdQs0NQosLd/TiK
+         kocnyvMe42xApNsLmbffp7vOvePm9Z0Tt4JExTBuy1+ltU5GbSf1dt208T9rOLDvY9Hp
+         2jew==
+X-Gm-Message-State: APjAAAXsz7W4pxJsk2ov3XdZhcl62QvbyZ4D7PZmmzXmfsaZF7769l0u
+        nnrkM94LnLF6nD71ieiMGvciMw==
+X-Google-Smtp-Source: APXvYqwYhHrKa/ZKokZeoyh60e4i9idWNZLhHZkuYpLqSrcSTTyodDnby+NikOVHFnxDt+H4l3KAlA==
+X-Received: by 2002:a50:c94b:: with SMTP id p11mr12117139edh.301.1565212136312;
+        Wed, 07 Aug 2019 14:08:56 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id z24sm29268edc.65.2019.08.07.14.08.54
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 07 Aug 2019 14:08:55 -0700 (PDT)
+Date:   Wed, 7 Aug 2019 23:08:53 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/3] drm: add gem ttm helpers
+Message-ID: <20190807210853.GH7444@phenom.ffwll.local>
+Mail-Followup-To: Gerd Hoffmann <kraxel@redhat.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190806133454.8254-1-kraxel@redhat.com>
+ <20190806133454.8254-2-kraxel@redhat.com>
+ <20190806135426.GA7444@phenom.ffwll.local>
+ <20190807072654.arqvx37p4yxhegcu@sirius.home.kraxel.org>
+ <CAKMK7uFyKd71w4H8nFk=WPSHL3KMwQ6kLwAMXTd_TAkrkJ++KQ@mail.gmail.com>
+ <20190807103649.aedmac63eop6ktlk@sirius.home.kraxel.org>
+ <CAKMK7uHNXjSsuUTkxzVbeDNP4ESFBObHZe6xxJYEHE1-QyKqhQ@mail.gmail.com>
+ <20190807115133.gkr2svqlvq366mub@sirius.home.kraxel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190807115133.gkr2svqlvq366mub@sirius.home.kraxel.org>
+X-Operating-System: Linux phenom 4.19.0-5-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Mittwoch, 7. August 2019, 21:23:05 CEST schrieb Nathan Chancellor:
-> After commit "linux/bits.h: Add compile time sanity check of GENMASK
-> inputs" [1], arm64 defconfig builds started failing:
+On Wed, Aug 07, 2019 at 01:51:33PM +0200, Gerd Hoffmann wrote:
+>   Hi,
 > 
-> In file included from ../include/linux/bits.h:22,
->                  from ../include/linux/bitops.h:5,
->                  from ../include/linux/kernel.h:12,
->                  from ../include/linux/clk.h:13,
->                  from ../drivers/phy/rockchip/phy-rockchip-inno-hdmi.c:9:
-> ../drivers/phy/rockchip/phy-rockchip-inno-hdmi.c: In function 'inno_hdmi_phy_rk3328_power_on':
-> ../include/linux/build_bug.h:16:45: error: negative width in bit-field '<anonymous>'
->    16 | #define BUILD_BUG_ON_ZERO(e) (sizeof(struct { int:(-!!(e)); }))
->       |                                             ^
-> ../include/linux/bits.h:24:18: note: in expansion of macro 'BUILD_BUG_ON_ZERO'
->    24 |  ((unsigned long)BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
->       |                  ^~~~~~~~~~~~~~~~~
-> ../include/linux/bits.h:39:3: note: in expansion of macro 'GENMASK_INPUT_CHECK'
->    39 |  (GENMASK_INPUT_CHECK(high, low) + __GENMASK(high, low))
->       |   ^~~~~~~~~~~~~~~~~~~
-> ../drivers/phy/rockchip/phy-rockchip-inno-hdmi.c:24:42: note: in expansion of macro 'GENMASK'
->    24 | #define UPDATE(x, h, l)  (((x) << (l)) & GENMASK((h), (l)))
->       |                                          ^~~~~~~
-> ../drivers/phy/rockchip/phy-rockchip-inno-hdmi.c:201:50: note: in expansion of macro 'UPDATE'
->   201 | #define RK3328_TERM_RESISTOR_CALIB_SPEED_7_0(x)  UPDATE(x, 7, 9)
->       |                                                  ^~~~~~
-> ../drivers/phy/rockchip/phy-rockchip-inno-hdmi.c:1046:26: note: in expansion of macro 'RK3328_TERM_RESISTOR_CALIB_SPEED_7_0'
->  1046 |   inno_write(inno, 0xc6, RK3328_TERM_RESISTOR_CALIB_SPEED_7_0(v));
->       |                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > > > > I don't think so.  drm_gem_dumb_map_offset() calls
+> > > > > drm_gem_create_mmap_offset(), which I think is not correct for ttm
+> > > > > objects because ttm_bo_init() handles vma_node initialization.
 > 
-> As pointed out by Robin and Guenter, inno_write's val argument is an
-> 8-bit value so having a mask larger than that doesn't make sense. This
-> also matches the rest of the *_7_0 macros in this driver.
+> > Ok I looked again, and your ttm version seems to exactly match
+> > drm_gem_dumb_map_offset(),
 > 
-> [1]: https://lore.kernel.org/lkml/20190801230358.4193-2-rikard.falkeborn@gmail.com/
-> 
-> Reported-by: Andrzej Hajda <a.hajda@samsung.com>
-> Reported-by: Guenter Roeck <linux@roeck-us.net>
-> Reported-by: kernelci.org bot <bot@kernelci.org>
-> Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-> Suggested-by: Guenter Roeck <linux@roeck-us.net>
-> Suggested-by: Robin Murphy <robin.murphy@arm.com>
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> ---
+> No.  The difference outlined above is still there.  See also v2 which
+> adds an comment saying so.
 
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+Creating an mmap offset is idempotent. Otherwise the gem version would
+already blow up real bad, since it's getting called multiple times by
+userspace already.
 
-on a rk3328-rock64 hdmi output still works
-Tested-by: Heiko Stuebner <heiko@sntech.de>
-
-@Kishon: Would probably be good to get this fast into 5.3-rc.
-
-
-Heiko
-
-
->  drivers/phy/rockchip/phy-rockchip-inno-hdmi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c b/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c
-> index b10a84cab4a7..2b97fb1185a0 100644
-> --- a/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c
-> +++ b/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c
-> @@ -198,7 +198,7 @@
->  #define RK3328_BYPASS_TERM_RESISTOR_CALIB		BIT(7)
->  #define RK3328_TERM_RESISTOR_CALIB_SPEED_14_8(x)	UPDATE((x) >> 8, 6, 0)
->  /* REG:0xc6 */
-> -#define RK3328_TERM_RESISTOR_CALIB_SPEED_7_0(x)		UPDATE(x, 7, 9)
-> +#define RK3328_TERM_RESISTOR_CALIB_SPEED_7_0(x)		UPDATE(x, 7, 0)
->  /* REG:0xc7 */
->  #define RK3328_TERM_RESISTOR_50				UPDATE(0, 2, 1)
->  #define RK3328_TERM_RESISTOR_62_5			UPDATE(1, 2, 1)
-> 
-
-
-
-
+So I still think ttm isn't special here, how did this blow up when you
+tried?
+-Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
