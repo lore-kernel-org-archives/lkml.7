@@ -2,90 +2,136 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2CB9C19759
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:10:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C6E0C19759
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:17:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7607A229EC
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:10:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30694229EB
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:17:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lw+MGCG5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728541AbfHGIKh (ORCPT
+        id S1728766AbfHGIRv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 04:10:37 -0400
-Received: from smtp.domeneshop.no ([194.63.252.55]:48476 "EHLO
-        smtp.domeneshop.no" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727603AbfHGIKh (ORCPT
+        Wed, 7 Aug 2019 04:17:51 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:35987 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728567AbfHGIRu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 04:10:37 -0400
-Received: from [2a02:fe0:c700:2:4c:6167:f6e4:67af] (port=49648)
-        by smtp.domeneshop.no with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.84_2)
-        (envelope-from <YCaer@odenixdev.eu>)
-        id 1hvH1m-0005b9-BG
-        for linux-kernel@vger.kernel.org; Wed, 07 Aug 2019 10:10:34 +0200
-Subject: Re: Fw: Looking for Odenix developers.
-References: <cGfJg7TFZvhOez5qwwXlkmOso5p7wIlOvjRbYDilmtzi5t--e7AyWuklvpj_c1Of-ESDhsgYW0nT6kuJueeE87DFsJaLDfeEYuwmQYTrFA4=@protonmail.com>
- <5EH-nW5ERUZi1kd2NDJfheI37jFOpIahjUTdKzOkGGxa3ZKvMcfCmo5V0OJ7WbIovt7yUZMKKGdbXRzdJFkDow46RQxmQokLp_awshE6Is0=@protonmail.com>
-To:     linux-kernel@vger.kernel.org
-From:   =?UTF-8?Q?Ywe_C=c3=a6rlyn?= <YCaer@odenixdev.eu>
-Message-ID: <1c706000-c713-bcff-b61c-bf709149e66d@odenixdev.eu>
-Date:   Wed, 7 Aug 2019 10:10:26 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 7 Aug 2019 04:17:50 -0400
+Received: by mail-lj1-f196.google.com with SMTP id i21so5374144ljj.3
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 01:17:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=uZ71/IjfnhtwBPFF6THZcvtecPOI1brQIp9ai2NeI1k=;
+        b=lw+MGCG53qlHD6l00B/7Hr2jQ5KNOzTe/Gk4nJidoMcAM/PCuqYZNE5tCopKN5tIB9
+         ybdrmwbQq5dr9qON9O8J8tGMHldp8JlCb68Ac2C0JgrkXcGwvDALxCGgpGaA82m0RYXA
+         zDX6S/ynK0N53ICsuuEg/6wrYFCVbJ2HCDDXtR42Frjtd5oq48/dnaIr00RzlNlkR7gP
+         Dui88b7Dhs5Iyz7jNvscReYjqxYvEeRM5v4NIkWqclUCYLi2XkMxH0PRxVxOG9bZJv2L
+         5QY+LkAUXXOj7VzSwILoN2j9w6heWQ+OyEsdpqqgtZUaF4YL1FkoK0LlSOT4PJM4xtNO
+         sGGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=uZ71/IjfnhtwBPFF6THZcvtecPOI1brQIp9ai2NeI1k=;
+        b=PcN9A9kOo83AtUiJ7Cmn7sBD3VuaGi4gDlQAZNVJa91h1gVPxDi1Bpjb52EIItiVKj
+         pN8gd8mbFgS8nKtGb8Ia9emzxjALto0sSVOkURh8tfYcwckFuFVg20lxXAt9bi8iyUDz
+         yTertKTQ0oqFxVj1jPlpl5zzx91eB48g1qYlVJE40cwE36EoNVNgsgMDSWKdvMl1aKfY
+         2eQc9BZLB0659E8KzS5Ug1jVYjtI57FZODgKaHTidsJSTkfdfapp8oEbA3/oJbndIat/
+         q+5aQHAq25fPq92wad21zZs03LRu5gHMcWsJlgKcRZIs4NxPUJs6Yw5N9Dtn4ZtNRY4Y
+         Ndhg==
+X-Gm-Message-State: APjAAAUfOkAQCwWNJywObnZWJ9/EXtIvYrbp1IVX1litpTAg06UlyPhL
+        1iYCyl1ffdsW97VkRZzZ1I0Gn0Yq+9V4iHJuXqVg0Q==
+X-Google-Smtp-Source: APXvYqwBt9zZPEZS9Zv/S7dA7gva1bRM0PXxxk+aEKCKsKDg9IuOsBbotspesjzG8OPcsmVa9uK3w9BCohv4bn1xoHc=
+X-Received: by 2002:a2e:87d0:: with SMTP id v16mr4116786ljj.24.1565165868639;
+ Wed, 07 Aug 2019 01:17:48 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <5EH-nW5ERUZi1kd2NDJfheI37jFOpIahjUTdKzOkGGxa3ZKvMcfCmo5V0OJ7WbIovt7yUZMKKGdbXRzdJFkDow46RQxmQokLp_awshE6Is0=@protonmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 7 Aug 2019 13:47:37 +0530
+Message-ID: <CA+G9fYus+cW4775Y2_Xqpc+G6YP_KfjGeCMzoSQq6o2yVY8Q3w@mail.gmail.com>
+Subject: next-20190806: arm64: adv7511 3-0039: failed to find dsi host
+To:     Linux-Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Hans Verkuil <hans.verkuil@cisco.com>, mchehab@kernel.org,
+        robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        linux-media@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, agross@kernel.org,
+        david.brown@linaro.org, lkft-triage@lists.linaro.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I now also have a new mail, at my new domain OdenixDev.eu. Which we´ll 
-see if maybe some more things get installed on the server there. 
-Particulary something less macho than text-only mailing list.. ;)
+arm64 devices dragonboard 410c (QC410E) and hi6220-hikey running Linux
+next-20190806 loading modules causing floods of kernel messages.
 
-I see Thunderbird  team is asking for donations aswell on their page. 
-This is all solved with Odenix Net-Trade Patchclass, fair labour 
-compliant, and well-grounded in sound philosophy, and accepted fair 
-labour politics, going all the way back to Odenic Intercultural Trade, 
-with the same principles.
+We have enabled few extra kernel configs for testing.
+CONFIG_DRM_I2C_ADV7511=m
+CONFIG_DRM_I2C_ADV7511_CEC=y
+...
 
-Peace (Go With Thee).
-Ywe Cærlyn
-Odenix Net-Trade Patchclass for BSD.
-https://www.youtube.com/channel/UCR3gmLVjHS5A702wo4bol_Q
+Please find below boot log and config file link.
 
-Den 07.08.2019 10:00, skrev Ywe Cærlyn:
-> 
-> 
-> 
-> Sent with ProtonMail Secure Email.
-> 
-> ‐‐‐‐‐‐‐ Original Message ‐‐‐‐‐‐‐
-> On Saturday 3. August 2019 kl. 12:33, Ywe Cærlyn <ywecrn@protonmail.com> wrote:
-> 
->> Hello.
->>
->> I am Ywe Cærlyn, from Norway, known in the Indie Computer Usergroup Scene, since the early 90s with top results. Now as part of my research, that was top 1% on academia.edu, I suggest a Fair Labour compliant patchclass for BSD, with integrated online currency, for those with netjob skills.
->>
->> Meaning for instance finely presented news, where reporters can upload their media, set attributes for re-use and not, and get royalites automatically, and everyone potentially could be part of this, and all content creators.
->>
->> Representing a universalized and well indexed file directory for all files published:
->>
->> OTTP://Category/Subcategory/Country/15.000km2 zone/Person/Groupings(can be several) (Odenic Transfer Text Protocol)
->>
->> With pop statistics pr. folder, and file information field with commentary option, neatly presented.
->>
->> Supporting 4K (8K subpixel precise), small form factor, 24bit audio, low-jitter I/O (200uS max OS jitter).
->>
->> Peace (Go With Thee).
->> Ywe Cærlyn
->> Odenix Net-Trade Patchclass for BSD.
->> https://www.youtube.com/channel/UCR3gmLVjHS5A702wo4bol_Q
-> 
-> 
-> 
+[    0.000000] Linux version 5.3.0-rc3-next-20190806 (oe-user@oe-host)
+(gcc version 7.3.0 (GCC)) #1 SMP PREEMPT Tue Aug 6 05:49:36 UTC 2019
+[    0.000000] Machine model: Qualcomm Technologies, Inc. APQ 8016 SBC
+....
+[   10.051193] adv7511 3-0039: 3-0039 supply dvdd not found, using
+dummy regulator
+[   10.051633] adv7511 3-0039: 3-0039 supply pvdd not found, using
+dummy regulator
+[   10.076257] adreno 1c00000.gpu: Adding to iommu group 0
+[   10.090929] adv7511 3-0039: 3-0039 supply a2vdd not found, using
+dummy regulator
+[   10.101703] msm_mdp 1a01000.mdp: Adding to iommu group 1
+[   10.102563] msm_mdp 1a01000.mdp: No interconnect support may cause
+display underflows!
+[   10.139492] adv7511 3-0039: failed to find dsi host
+...
+[   33.065744] adv7511 3-0039: failed to find dsi host
+[   33.076721] msm 1a00000.mdss: 1a00000.mdss supply vdd not found,
+using dummy regulator
+[   33.078344] msm_mdp 1a01000.mdp: [drm:mdp5_bind [msm]] MDP5 version v1.6
+[   33.083862] msm 1a00000.mdss: bound 1a01000.mdp (ops mdp5_ops [msm])
+[   33.090892] msm_dsi 1a98000.dsi: 1a98000.dsi supply gdsc not found,
+using dummy regulator
+[   33.097756] msm_dsi 1a98000.dsi: 1a98000.dsi supply gdsc not found,
+using dummy regulator
+[   33.106606] msm_dsi_manager_register: failed to register mipi dsi
+host for DSI 0
+[   33.114579] msm 1a00000.mdss: failed to bind 1a98000.dsi (ops
+dsi_ops [msm]): -517
+[   33.121263] msm 1a00000.mdss: master bind failed: -517
+[   33.135547] adv7511 3-0039: 3-0039 supply dvdd not found, using
+dummy regulator
+[   33.139360] adv7511 3-0039: 3-0039 supply pvdd not found, using
+dummy regulator
+[   33.143646] adv7511 3-0039: 3-0039 supply a2vdd not found, using
+dummy regulator
+
+Full test log
+https://lkft.validation.linaro.org/scheduler/job/860208#L956
+
+metadata:
+  git branch: master
+  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+  git commit: 958eb4327c1761c609bde8e9f7c04e9d1c6fbb96
+  git describe: next-20190806
+  make_kernelversion: 5.3.0-rc3
+  kernel-config:
+http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/dragonboard-410c/lkft/linux-next/579/config
+  kernel-defconfig:
+http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/dragonboard-410c/lkft/linux-next/579/defconfig
+  build-location:
+http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/dragonboard-410c/lkft/linux-next/579
+
+Best regards
+Naresh Kamboju
