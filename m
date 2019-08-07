@@ -2,189 +2,905 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 424FDC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:39:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84343C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F3F72199C
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:39:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51F3821E73
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:39:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="JHfd9vMP";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="NQQ3zu7l"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="czwo4pMg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388228AbfHGOjW (ORCPT
+        id S2388307AbfHGOje (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 10:39:22 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:19896 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388190AbfHGOjV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 10:39:21 -0400
-Received: from pps.filterd (m0044008.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x77EY2PG007767;
-        Wed, 7 Aug 2019 07:39:10 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=CZLCIXm0lzKIapCSMcVoxQb6gZk0W1dxHHjKD0Lsor0=;
- b=JHfd9vMP8yMy6ABhpYAKIhqwk4O8mPmPIGUQ2pmtVXcTFbz90AXo7De2GNy0eNTjauU/
- o7T012A2n3vlu74BxbuIB3Mhml4v04EsamzlTn3JImqEUp4mnimSgckCntZvpDRYWQP1
- yNYEgdebIs/LIdeXdSp4JNeMXqOvZKDMoTE= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2u7y8b8ax0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Wed, 07 Aug 2019 07:39:10 -0700
-Received: from ash-exhub103.TheFacebook.com (2620:10d:c0a8:82::c) by
- ash-exhub103.TheFacebook.com (2620:10d:c0a8:82::c) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 7 Aug 2019 07:39:09 -0700
-Received: from NAM04-CO1-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.174) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Wed, 7 Aug 2019 07:39:08 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ok4xqSEBEAgBmHyNvZSMNcfKljrMhWqr3tZaqakbuDWqRrcQrUwh5DHVXmdCnluxeLpylPrn7uNaT8+i9MsZoXdg8taXBijaLdH6WP4ur5TCb2eI+fM9Xed0uqIwY7O+lLQxu5JWhrUTzMUBgCiWJvVNHwZ6OOPkzu3T3jtd+BuJmLLD7h30uKRZyle2yG6jq8VPGn72CCnHDmktpWE/gVMd84mHDCuaLrS+xJg4Ubia6+JvR2uqap9KgYGfrZDbokdHMUycRoukRdbKmNO+FPcqIocUh5hfKC0Ju73sFjd+LMdWYeJQU4XpQ66Y/dvcOnhR3tqlL8Rpy8FQjb3DsQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CZLCIXm0lzKIapCSMcVoxQb6gZk0W1dxHHjKD0Lsor0=;
- b=Htv079Gdu5HHgrFSKc3JzLIctWQyRuszfsLofzIcw1cv5whF3mCLk7wFndQemWcLsYm5FI3zUPaQNWSOkUiIf9/wW0qu9mvWnCAEK6LDpPWoW2Cr5IQK2XAh7Gx3bzLCuTGIe9c13gnOKn5MAlcMQznWAkIX/AP9Z0FPtI8Y1nMrh2Khs+yItgTIjuqfUyjdiPgvogsnVpp7gPFi5LmTw5JpE1Flkpz3Aom0ZSa5MW4kdeSMadYjXJS9NjsYMUQ/LTZzboItbpmOxQXLEhZ4rzSLfJgxvrw6RZnzt5klmjx89CS4T/qvYlLRZ3lB3nmTLQPMEZP+crshQeFQdSActA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CZLCIXm0lzKIapCSMcVoxQb6gZk0W1dxHHjKD0Lsor0=;
- b=NQQ3zu7lQdPsev7sfwklnnIc9kU0QfoSLUL2CsjIdTndr/pQCGPhBb0vBfZXYLJEtVHddKf/aAKrXYZptUwoQJRQ+Rq9sqHGlluKKhx+T9uqh8QfepDXoW9beH6fuq3U97Ih4xH8GmjCdnoVLBUQYawNpEwyNihup3lU8DUZcHk=
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.3.22) by
- MWHPR15MB1519.namprd15.prod.outlook.com (10.173.234.9) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.14; Wed, 7 Aug 2019 14:39:07 +0000
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::79c8:442d:b528:802d]) by MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::79c8:442d:b528:802d%9]) with mapi id 15.20.2136.018; Wed, 7 Aug 2019
- 14:39:07 +0000
-From:   Song Liu <songliubraving@fb.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the akpm-current tree
-Thread-Topic: linux-next: build failure after merge of the akpm-current tree
-Thread-Index: AQHVTPFGz58J8esAUk2Rc5LSbmvQQabvwdgA
-Date:   Wed, 7 Aug 2019 14:39:07 +0000
-Message-ID: <36F5AB83-D816-45D4-BDBB-2D9E1B713AB3@fb.com>
-References: <20190807172454.2e887f7c@canb.auug.org.au>
-In-Reply-To: <20190807172454.2e887f7c@canb.auug.org.au>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3445.104.11)
-x-originating-ip: [2620:10d:c090:180::3b47]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 211abc35-fee2-43b8-075f-08d71b4500ec
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR15MB1519;
-x-ms-traffictypediagnostic: MWHPR15MB1519:
-x-ms-exchange-purlcount: 3
-x-microsoft-antispam-prvs: <MWHPR15MB1519109646F9A3925B9FC59DB3D40@MWHPR15MB1519.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:800;
-x-forefront-prvs: 01221E3973
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(346002)(396003)(376002)(136003)(39860400002)(189003)(199004)(53754006)(51914003)(66476007)(186003)(5660300002)(76176011)(316002)(53936002)(46003)(71200400001)(71190400001)(6486002)(305945005)(478600001)(81166006)(81156014)(7736002)(25786009)(99286004)(6306002)(6916009)(66556008)(486006)(66446008)(64756008)(33656002)(6436002)(53546011)(11346002)(6506007)(446003)(2616005)(476003)(76116006)(6512007)(66946007)(54906003)(86362001)(966005)(14454004)(229853002)(57306001)(256004)(6116002)(102836004)(4326008)(68736007)(2906002)(8676002)(36756003)(8936002)(6246003)(50226002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1519;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: mYW/Azy4LzhZPR0XKRMcDIzund50DsZ5gY3gPKMiK+oaqJEMUCLGc/y0XyQOwbwnnoGQTVA2sXi7HuRAOJ74WlBTliulZ6Yuos/L/A2Flg8uSeQDE8CRBJIcJOKM/d/qx88rvnwQ9bIw1MCAgVCPV/rZN9E4FV2Ou5FaFkXTNtzDJAMuE1Ohle+UKBe72vI2x9/nqVcIA7PjpHUPRGlhElEqB3lhdsKJDy7Ys7ncx2AENodSyQhOTUWPtA1HdXRcHm/xlzk1YHG8me5W3MrseSsmullq0H7Ce6SP3tgkvy/mNwEaPPyP6Plh29swWfitjlIrHtPGchBoD4hd6ARfoN6kVqBn7n3NX3imzY98CH8deoFcPAfEroiaP3uccd+6DhpWBuLP61uM1I1RDOoIFpzf2mPmuKP166HdN7HqKL0=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <002F3BD9B3A3B14488CD43D10B7EAB25@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Wed, 7 Aug 2019 10:39:34 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:40980 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388190AbfHGOjd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 10:39:33 -0400
+Received: from zn.tnic (p200300EC2F0D500028F05A6F4E0B83B6.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:5000:28f0:5a6f:4e0b:83b6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DD6501EC09A0;
+        Wed,  7 Aug 2019 16:39:30 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1565188771;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=nF6cS8dYCXOzkgCQitn5cIcoXPPja3pzy1FzUBaF/uk=;
+        b=czwo4pMgDFc25SHYFvPFRbMvHa9CuLDxUhDgZinKmxrLxpHcULMdco87XYNyzEB+kwJ4Ze
+        UK1Fqo+XbHn1mnoij2Iu68joLT4zLA47teYFEnhxd1RBsLEBrun1Nz/AK4qaOD+aq85LVE
+        6R98glsx8hGKZyQjzGqUJN5PeQRk564=
+Date:   Wed, 7 Aug 2019 16:40:16 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Lei Wang <leiwang_git@outlook.com>
+Cc:     "james.morse@arm.com" <james.morse@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "hangl@microsoft.com" <hangl@microsoft.com>,
+        "lewan@microsoft.com" <lewan@microsoft.com>,
+        "ruizhao@microsoft.com" <ruizhao@microsoft.com>
+Subject: Re: [PATCH v5 2/2] EDAC: add EDAC driver for DMC520
+Message-ID: <20190807144016.GA24328@zn.tnic>
+References: <BN6PR04MB1107CE3C2D666A806E62851B86C10@BN6PR04MB1107.namprd04.prod.outlook.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 211abc35-fee2-43b8-075f-08d71b4500ec
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Aug 2019 14:39:07.7066
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: songliubraving@fb.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1519
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-07_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908070156
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <BN6PR04MB1107CE3C2D666A806E62851B86C10@BN6PR04MB1107.namprd04.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,=20
+On Thu, Jul 25, 2019 at 12:49:27AM +0000, Lei Wang wrote:
+> New driver supports error detection and correction on the devices with ARM
+> DMC-520 memory controller.
+> 
+> Signed-off-by: Lei Wang <leiwang_git@outlook.com>
+> Reviewed-by: James Morse <james.morse@arm.com>
+> ---
+>     Changes in v5:
+>         - When enable configured interrupts, do not potentially disable
+>           other irrelevant interrupts.
+>         - fix return type of dmc520_get_scrub_type to enum scrub_type
+>         - Use capital letters for enum
+>         - Retrieve memory width from dmc register format_control
+>         - use cheaper spin_lock API.
+>         - Remove compatible line for "brcm,dmc-520"
+>         - Add James' Reviewed-by
+> ---
+>  MAINTAINERS                |   6 +
+>  drivers/edac/Kconfig       |   7 +
+>  drivers/edac/Makefile      |   1 +
+>  drivers/edac/dmc520_edac.c | 632 +++++++++++++++++++++++++++++++++++++
+>  4 files changed, 646 insertions(+)
+>  create mode 100644 drivers/edac/dmc520_edac.c
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 77eae44bf5de..7c1ac8bc8ea1 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -5703,6 +5703,12 @@ F:	Documentation/driver-api/edac.rst
+>  F:	drivers/edac/
+>  F:	include/linux/edac.h
+>  
+> +EDAC-DMC520
+> +M:	Lei Wang <lewan@microsoft.com>
+> +L:	linux-edac@vger.kernel.org
+> +S:	Supported
+> +F:	drivers/edac/dmc520_edac.c
+> +
+>  EDAC-E752X
+>  M:	Mark Gross <mark.gross@intel.com>
+>  L:	linux-edac@vger.kernel.org
+> diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
+> index 200c04ce5b0e..7fde5aea0c1a 100644
+> --- a/drivers/edac/Kconfig
+> +++ b/drivers/edac/Kconfig
+> @@ -510,4 +510,11 @@ config EDAC_ASPEED
+>  	  First, ECC must be configured in the bootloader. Then, this driver
+>  	  will expose error counters via the EDAC kernel framework.
+>  
+> +config EDAC_DMC520
+> +       tristate "ARM DMC-520 ECC"
+> +       depends on ARM64
+> +       help
+> +         Support for error detection and correction on the
+> +         SoCs with ARM DMC-520 DRAM controller.
+> +
+>  endif # EDAC
+> diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
+> index 165ca65e1a3a..e0d98f5b2045 100644
+> --- a/drivers/edac/Makefile
+> +++ b/drivers/edac/Makefile
+> @@ -85,3 +85,4 @@ obj-$(CONFIG_EDAC_XGENE)		+= xgene_edac.o
+>  obj-$(CONFIG_EDAC_TI)			+= ti_edac.o
+>  obj-$(CONFIG_EDAC_QCOM)			+= qcom_edac.o
+>  obj-$(CONFIG_EDAC_ASPEED)		+= aspeed_edac.o
+> +obj-$(CONFIG_EDAC_DMC520)		+= dmc520_edac.o
+> diff --git a/drivers/edac/dmc520_edac.c b/drivers/edac/dmc520_edac.c
+> new file mode 100644
+> index 000000000000..aeb8d84405cf
+> --- /dev/null
+> +++ b/drivers/edac/dmc520_edac.c
+> @@ -0,0 +1,632 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/* EDAC driver for DMC-520 */
 
-> On Aug 7, 2019, at 12:24 AM, Stephen Rothwell <sfr@canb.auug.org.au> wrot=
-e:
->=20
-> Hi all,
->=20
-> After merging the akpm-current tree, today's linux-next build (arm
-> multi_v7_defconfig) failed like this:
->=20
-> In file included from include/linux/kernel.h:11,
->                 from kernel/events/uprobes.c:12:
-> kernel/events/uprobes.c: In function 'uprobe_write_opcode':
-> include/linux/compiler.h:350:38: error: call to '__compiletime_assert_557=
-' declared with attribute error: BUILD_BUG failed
->  _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
->                                      ^
-> include/linux/compiler.h:331:4: note: in definition of macro '__compileti=
-me_assert'
->    prefix ## suffix();    \
->    ^~~~~~
-> include/linux/compiler.h:350:2: note: in expansion of macro '_compiletime=
-_assert'
->  _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
->  ^~~~~~~~~~~~~~~~~~~
-> include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime=
-_assert'
-> #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
->                                     ^~~~~~~~~~~~~~~~~~
-> include/linux/build_bug.h:59:21: note: in expansion of macro 'BUILD_BUG_O=
-N_MSG'
-> #define BUILD_BUG() BUILD_BUG_ON_MSG(1, "BUILD_BUG failed")
->                     ^~~~~~~~~~~~~~~~
-> include/linux/huge_mm.h:272:27: note: in expansion of macro 'BUILD_BUG'
-> #define HPAGE_PMD_MASK ({ BUILD_BUG(); 0; })
->                           ^~~~~~~~~
-> kernel/events/uprobes.c:557:39: note: in expansion of macro 'HPAGE_PMD_MA=
-SK'
->   collapse_pte_mapped_thp(mm, vaddr & HPAGE_PMD_MASK);
->                                       ^~~~~~~~~~~~~~
->=20
-> Caused by commit
->=20
->  9cc0b998b380 ("uprobe: collapse THP pmd after removing all uprobes")
->=20
-> I have reverted that commit for today.
+That comment is kinda useless.
 
-Thanks for the heads-up.=20
+> +#include <linux/bitfield.h>
+> +#include <linux/edac.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/spinlock.h>
+> +#include "edac_mc.h"
+> +
+> +/* DMC-520 registers */
+> +#define REG_OFFSET_FEATURE_CONFIG		0x130
+> +#define REG_OFFSET_ECC_ERRC_COUNT_31_00		0x158
+> +#define REG_OFFSET_ECC_ERRC_COUNT_63_32		0x15C
+> +#define REG_OFFSET_ECC_ERRD_COUNT_31_00		0x160
+> +#define REG_OFFSET_ECC_ERRD_COUNT_63_32		0x164
+> +#define REG_OFFSET_INTERRUPT_CONTROL		0x500
+> +#define REG_OFFSET_INTERRUPT_CLR		0x508
+> +#define REG_OFFSET_INTERRUPT_STATUS		0x510
+> +#define REG_OFFSET_DRAM_ECC_ERRC_INT_INFO_31_00	0x528
+> +#define REG_OFFSET_DRAM_ECC_ERRC_INT_INFO_63_32	0x52C
+> +#define REG_OFFSET_DRAM_ECC_ERRD_INT_INFO_31_00	0x530
+> +#define REG_OFFSET_DRAM_ECC_ERRD_INT_INFO_63_32	0x534
+> +#define REG_OFFSET_ADDRESS_CONTROL_NOW		0x1010
+> +#define REG_OFFSET_MEMORY_TYPE_NOW		0x1128
+> +#define REG_OFFSET_SCRUB_CONTROL0_NOW		0x1170
+> +#define REG_OFFSET_FORMAT_CONTROL	0x18
+> +
+> +/* DMC-520 types, masks and bitfields */
+> +#define DRAM_ECC_INT_CE_BIT			BIT(2)
+> +#define DRAM_ECC_INT_UE_BIT			BIT(3)
+> +#define ALL_INT_MASK				GENMASK(9, 0)
+> +#define MEMORY_WIDTH_MASK			GENMASK(1, 0)
+> +#define SCRUB_TRIGGER0_NEXT_MASK		GENMASK(1, 0)
+> +#define REG_FIELD_DRAM_ECC_ENABLED		GENMASK(1, 0)
+> +#define REG_FIELD_MEMORY_TYPE			GENMASK(2, 0)
+> +#define REG_FIELD_DEVICE_WIDTH			GENMASK(9, 8)
+> +#define REG_FIELD_ADDRESS_CONTROL_COL		GENMASK(2, 0)
+> +#define REG_FIELD_ADDRESS_CONTROL_ROW		GENMASK(10, 8)
+> +#define REG_FIELD_ADDRESS_CONTROL_BANK		GENMASK(18, 16)
+> +#define REG_FIELD_ADDRESS_CONTROL_RANK		GENMASK(25, 24)
+> +#define REG_FIELD_ERR_INFO_LOW_VALID		BIT(0)
+> +#define REG_FIELD_ERR_INFO_LOW_COL		GENMASK(10, 1)
+> +#define REG_FIELD_ERR_INFO_LOW_ROW		GENMASK(28, 11)
+> +#define REG_FIELD_ERR_INFO_LOW_RANK		GENMASK(31, 29)
+> +#define REG_FIELD_ERR_INFO_HIGH_BANK		GENMASK(3, 0)
+> +#define REG_FIELD_ERR_INFO_HIGH_VALID		BIT(31)
+> +
+> +#define DRAM_ADDRESS_CONTROL_MIN_COL_BITS	8
+> +#define DRAM_ADDRESS_CONTROL_MIN_ROW_BITS	11
+> +
+> +#define DMC520_SCRUB_TRIGGER_ERR_DETECT		2
+> +#define DMC520_SCRUB_TRIGGER_IDLE			3
 
-This looks like v3 of the patchset. I have fixed this issue in v4:
+One tab too many. Keep them all vertically aligned.
 
-https://lkml.org/lkml/2019/8/2/1587
-https://lkml.org/lkml/2019/8/2/1588
-https://lkml.org/lkml/2019/8/2/1589
+> +
+> +/* Driver settings */
+> +/* The max-length message would be: "rank:7 bank:15 row:262143 col:1023".
+> + * Max length is 34. Using a 40-size buffer is enough.
+> + */
+> +#define EDAC_MSG_BUF_SIZE			40
 
-Is this sufficient? Or shall I submit fixes on top of v3?
+That define is driver-local only. Prefix it with "DMC520_" or so, not
+with "EDAC_".
 
-Thanks,
-Song
+> +#define EDAC_MOD_NAME				"dmc520-edac"
+> +#define EDAC_CTL_NAME				"dmc520"
+> +
+> +/* the data bus width for the attached memory chips. */
+> +enum dmc520_mem_width {
+> +	MEM_WIDTH_X32 = 2,
+> +	MEM_WIDTH_X64 = 3
+> +};
+> +
+> +/* memory type */
+> +enum dmc520_mem_type {
+> +	MEM_TYPE_DDR3 = 1,
+> +	MEM_TYPE_DDR4 = 2
+> +};
+> +
+> +/* memory device width */
+> +enum dmc520_dev_width {
+> +	DEV_WIDTH_X4 = 0,
+> +	DEV_WIDTH_X8 = 1,
+> +	DEV_WIDTH_X16 = 2
+> +};
+> +
+> +struct ecc_error_info {
+> +	u32 col;
+> +	u32 row;
+> +	u32 bank;
+> +	u32 rank;
+> +};
+> +
+> +/* The EDAC driver private data */
+> +struct dmc520_edac {
+> +	void __iomem *reg_base;
+> +	u32 nintr;
+> +	u32 interrupt_mask_all;
+> +	spinlock_t ecc_lock;
+> +	u32 interrupt_masks[0];
+> +};
+> +
+> +static int dmc520_mc_idx;
+> +
+> +static irqreturn_t
+> +dmc520_edac_dram_all_isr(int irq, struct mem_ctl_info *mci, u32 interrupt_mask);
+> +
+> +#define DECLARE_ISR(index) \
+> +static irqreturn_t dmc520_isr_##index (int irq, void *data) \
+
+Please integrate scripts/checkpatch.pl into your patch creation
+workflow. Some of the warnings/errors *actually* make sense.
+
+WARNING: space prohibited between function name and open parenthesis '('
+#200: FILE: drivers/edac/dmc520_edac.c:108:
++static irqreturn_t dmc520_isr_##index (int irq, void *data) \
+
+
+> +{ \
+> +	struct mem_ctl_info *mci; \
+> +	struct dmc520_edac *edac; \
+> +	mci = data; \
+> +	edac = mci->pvt_info; \
+> +	return dmc520_edac_dram_all_isr(irq, mci, edac->interrupt_masks[index]); \
+> +}
+> +
+> +DECLARE_ISR(0)
+> +DECLARE_ISR(1)
+> +/* More DECLARE_ISR(index) can be added to support more interrupt lines. */
+> +
+> +irq_handler_t dmc520_isr_array[] = {
+> +	dmc520_isr_0,
+> +	dmc520_isr_1
+> +	/* More dmc520_isr_index can be added to support more interrupt lines. */
+
+What are those comments really for?
+
+> +};
+> +
+> +static u32 dmc520_read_reg(struct dmc520_edac *edac, u32 offset)
+> +{
+> +	return readl(edac->reg_base + offset);
+> +}
+> +
+> +static void dmc520_write_reg(struct dmc520_edac *edac, u32 val, u32 offset)
+> +{
+> +	writel(val, edac->reg_base + offset);
+> +}
+> +
+> +static u32 dmc520_calc_dram_ecc_error(u32 value)
+> +{
+> +	u32 total = 0;
+> +
+> +	/* Each rank's error counter takes one byte */
+> +	while (value > 0) {
+> +		total += (value & 0xFF);
+> +		value >>= 8;
+> +	}
+> +	return total;
+> +}
+> +
+> +static u32 dmc520_get_dram_ecc_error_count(struct dmc520_edac *edac,
+> +					   bool is_ce)
+> +{
+> +	u32 reg_offset_low, reg_offset_high;
+> +	u32 err_low, err_high;
+> +	u32 err_count;
+> +
+> +	reg_offset_low = is_ce ? REG_OFFSET_ECC_ERRC_COUNT_31_00 :
+> +				 REG_OFFSET_ECC_ERRD_COUNT_31_00;
+> +	reg_offset_high = is_ce ? REG_OFFSET_ECC_ERRC_COUNT_63_32 :
+> +				  REG_OFFSET_ECC_ERRD_COUNT_63_32;
+> +
+> +	err_low = dmc520_read_reg(edac, reg_offset_low);
+> +	err_high = dmc520_read_reg(edac, reg_offset_high);
+> +	/* Reset error counters */
+> +	dmc520_write_reg(edac, 0, reg_offset_low);
+> +	dmc520_write_reg(edac, 0, reg_offset_high);
+> +
+> +	err_count = dmc520_calc_dram_ecc_error(err_low) +
+> +		   dmc520_calc_dram_ecc_error(err_high);
+> +
+> +	return err_count;
+> +}
+> +
+> +static void dmc520_get_dram_ecc_error_info(struct dmc520_edac *edac,
+> +					   bool is_ce,
+> +					   struct ecc_error_info *info)
+> +{
+> +	u32 reg_offset_low, reg_offset_high;
+> +	u32 reg_val_low, reg_val_high;
+> +	bool valid;
+> +
+> +	reg_offset_low = is_ce ? REG_OFFSET_DRAM_ECC_ERRC_INT_INFO_31_00 :
+> +				 REG_OFFSET_DRAM_ECC_ERRD_INT_INFO_31_00;
+> +	reg_offset_high = is_ce ? REG_OFFSET_DRAM_ECC_ERRC_INT_INFO_63_32 :
+> +				  REG_OFFSET_DRAM_ECC_ERRD_INT_INFO_63_32;
+> +
+> +	reg_val_low = dmc520_read_reg(edac, reg_offset_low);
+> +	reg_val_high = dmc520_read_reg(edac, reg_offset_high);
+> +
+> +	valid = (FIELD_GET(REG_FIELD_ERR_INFO_LOW_VALID, reg_val_low) != 0) &&
+> +		(FIELD_GET(REG_FIELD_ERR_INFO_HIGH_VALID, reg_val_high) != 0);
+> +
+> +	if (valid) {
+> +		info->col = FIELD_GET(REG_FIELD_ERR_INFO_LOW_COL, reg_val_low);
+> +		info->row = FIELD_GET(REG_FIELD_ERR_INFO_LOW_ROW, reg_val_low);
+> +		info->rank = FIELD_GET(REG_FIELD_ERR_INFO_LOW_RANK, reg_val_low);
+> +		info->bank = FIELD_GET(REG_FIELD_ERR_INFO_HIGH_BANK, reg_val_high);
+> +	} else {
+> +		memset(info, 0, sizeof(struct ecc_error_info));
+> +	}
+> +}
+> +
+> +static bool dmc520_is_ecc_enabled(void __iomem *reg_base)
+> +{
+> +	u32 reg_val = readl(reg_base + REG_OFFSET_FEATURE_CONFIG);
+> +
+> +	return (FIELD_GET(REG_FIELD_DRAM_ECC_ENABLED, reg_val) != 0);
+
+No need for that " != 0" at the end.
+
+> +}
+> +
+> +static enum scrub_type dmc520_get_scrub_type(struct dmc520_edac *edac)
+> +{
+> +	enum scrub_type type = SCRUB_NONE;
+> +	u32 reg_val, scrub_cfg;
+> +
+> +	reg_val = dmc520_read_reg(edac, REG_OFFSET_SCRUB_CONTROL0_NOW);
+> +	scrub_cfg = FIELD_GET(SCRUB_TRIGGER0_NEXT_MASK, reg_val);
+> +
+> +	if (DMC520_SCRUB_TRIGGER_ERR_DETECT == scrub_cfg ||
+> +		DMC520_SCRUB_TRIGGER_IDLE == scrub_cfg)
+> +		type = SCRUB_HW_PROG;
+
+More from checkpatch:
+
+WARNING: Comparisons should place the constant on the right side of the test
+#309: FILE: drivers/edac/dmc520_edac.c:217:
++       if (DMC520_SCRUB_TRIGGER_ERR_DETECT == scrub_cfg ||
+
+WARNING: Comparisons should place the constant on the right side of the test
+#310: FILE: drivers/edac/dmc520_edac.c:218:
++               DMC520_SCRUB_TRIGGER_IDLE == scrub_cfg)
+
+
+> +
+> +	return type;
+> +}
+> +
+> +/* Get the memory data bus width, in number of bytes. */
+> +static u32 dmc520_get_memory_width(struct dmc520_edac *edac)
+> +{
+> +	static u32 mem_width;
+> +	u32 reg_val;
+> +	enum dmc520_mem_width mem_width_field;
+
+Please sort function local variables declaration in a reverse christmas
+tree order:
+
+	<type A> longest_variable_name;
+	<type B> shorter_var_name;
+	<type C> even_shorter;
+	<type D> i;
+
+Here and in the other functions.
+
+> +
+> +	if (mem_width == 0) {
+
+Flip that check and save yourself an indentation level:
+
+	if (mem_width)
+		return;
+
+	reg_val = ...
 
 
 
+> +		reg_val = dmc520_read_reg(edac, REG_OFFSET_FORMAT_CONTROL);
+> +		mem_width_field = FIELD_GET(MEMORY_WIDTH_MASK, reg_val);
+> +
+> +		if (mem_width_field == MEM_WIDTH_X32)
+> +			mem_width = 4; /* 32-bits, 4 bytes */
+> +		else if (mem_width_field == MEM_WIDTH_X64)
+> +			mem_width = 8; /* 64-bits, 8 bytes */
+
+Please no side-comments. And those you can directly remove as they're
+useless - your defines and variables should be named properly so that
+there is no need for a comment here additionally.
+
+> +	}
+> +
+> +	return mem_width;
+> +}
+> +
+> +static enum mem_type dmc520_get_mtype(struct dmc520_edac *edac)
+> +{
+> +	enum mem_type mt = MEM_UNKNOWN;
+> +	u32 reg_val;
+> +	enum dmc520_mem_type type;
+> +
+> +	reg_val = dmc520_read_reg(edac, REG_OFFSET_MEMORY_TYPE_NOW);
+> +	type = FIELD_GET(REG_FIELD_MEMORY_TYPE, reg_val);
+> +
+> +	switch (type) {
+> +	case MEM_TYPE_DDR3:
+> +		mt = MEM_DDR3;
+> +		break;
+> +
+> +	case MEM_TYPE_DDR4:
+> +		mt = MEM_DDR4;
+> +		break;
+> +	}
+> +
+> +	return mt;
+> +}
+> +
+> +static enum dev_type dmc520_get_dtype(struct dmc520_edac *edac)
+> +{
+> +	enum dev_type dt = DEV_UNKNOWN;
+> +	u32 reg_val;
+> +	enum dmc520_dev_width device_width;
+> +
+> +	reg_val = dmc520_read_reg(edac, REG_OFFSET_MEMORY_TYPE_NOW);
+> +	device_width = FIELD_GET(REG_FIELD_DEVICE_WIDTH, reg_val);
+> +
+> +	switch (device_width) {
+> +	case DEV_WIDTH_X4:
+> +		dt = DEV_X4;
+> +		break;
+> +
+> +	case DEV_WIDTH_X8:
+> +		dt = DEV_X8;
+> +		break;
+> +
+> +	case DEV_WIDTH_X16:
+> +		dt = DEV_X16;
+> +		break;
+> +	}
+> +
+> +	return dt;
+> +}
+> +
+> +static u32 dmc520_get_rank_count(void __iomem *reg_base)
+> +{
+> +	u32 reg_val, rank_bits;
+> +
+> +	reg_val = readl(reg_base + REG_OFFSET_ADDRESS_CONTROL_NOW);
+> +	rank_bits = FIELD_GET(REG_FIELD_ADDRESS_CONTROL_RANK, reg_val);
+> +
+> +	return (1 << rank_bits);
+
+	return BIT(rank_bits);
+
+> +}
+> +
+> +static u64 dmc520_get_rank_size(struct dmc520_edac *edac)
+> +{
+> +	u32 reg_val, col_bits, row_bits, bank_bits;
+> +
+> +	reg_val = dmc520_read_reg(edac, REG_OFFSET_ADDRESS_CONTROL_NOW);
+> +
+> +	col_bits = FIELD_GET(REG_FIELD_ADDRESS_CONTROL_COL, reg_val) +
+> +		   DRAM_ADDRESS_CONTROL_MIN_COL_BITS;
+> +	row_bits = FIELD_GET(REG_FIELD_ADDRESS_CONTROL_ROW, reg_val) +
+> +		   DRAM_ADDRESS_CONTROL_MIN_ROW_BITS;
+> +	bank_bits = FIELD_GET(REG_FIELD_ADDRESS_CONTROL_BANK, reg_val);
+> +
+> +	return (u64)dmc520_get_memory_width(edac) << (col_bits + row_bits + bank_bits);
+> +}
+> +
+> +static void dmc520_handle_dram_ecc_errors(struct mem_ctl_info *mci,
+> +					  bool is_ce)
+> +{
+> +	struct ecc_error_info info;
+> +	struct dmc520_edac *edac;
+> +	u32 cnt;
+> +	char message[EDAC_MSG_BUF_SIZE];
+> +
+> +	edac = mci->pvt_info;
+> +	dmc520_get_dram_ecc_error_info(edac, is_ce, &info);
+> +
+> +	cnt = dmc520_get_dram_ecc_error_count(edac, is_ce);
+> +
+> +	if (cnt > 0) {
+
+Save an indentation level:
+
+	if (!cnt)
+		return;
+
+	snprintf...
+
+> +		snprintf(message, ARRAY_SIZE(message),
+> +			 "rank:%d bank:%d row:%d col:%d",
+> +			 info.rank, info.bank,
+> +			 info.row, info.col);
+> +
+> +		spin_lock(&edac->ecc_lock);
+> +		edac_mc_handle_error((is_ce ? HW_EVENT_ERR_CORRECTED :
+> +				     HW_EVENT_ERR_UNCORRECTED),
+> +				     mci, cnt, 0, 0, 0, info.rank, -1, -1,
+> +				     message, "");
+> +		spin_unlock(&edac->ecc_lock);
+> +	}
+> +}
+> +
+> +static irqreturn_t dmc520_edac_dram_ecc_isr(int irq, struct mem_ctl_info *mci, bool is_ce)
+> +{
+> +	u32 i_mask;
+> +	struct dmc520_edac *edac;
+> +
+> +	edac = mci->pvt_info;
+> +
+> +	i_mask = is_ce ? DRAM_ECC_INT_CE_BIT : DRAM_ECC_INT_UE_BIT;
+> +
+> +	dmc520_handle_dram_ecc_errors(mci, is_ce);
+> +
+> +	dmc520_write_reg(edac, i_mask, REG_OFFSET_INTERRUPT_CLR);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static irqreturn_t
+> +dmc520_edac_dram_all_isr(int irq, struct mem_ctl_info *mci, u32 interrupt_mask)
+> +{
+> +	struct dmc520_edac *edac;
+> +	u32 status;
+> +	irqreturn_t irq_ret = IRQ_NONE;
+> +
+> +	edac = mci->pvt_info;
+> +
+> +	status = dmc520_read_reg(edac, REG_OFFSET_INTERRUPT_STATUS);
+> +
+> +	if ((interrupt_mask & DRAM_ECC_INT_CE_BIT) &&
+> +		(status & DRAM_ECC_INT_CE_BIT))
+> +		irq_ret = dmc520_edac_dram_ecc_isr(irq, mci, true);
+> +
+> +	if ((interrupt_mask & DRAM_ECC_INT_UE_BIT) &&
+> +		(status & DRAM_ECC_INT_UE_BIT))
+> +		irq_ret = dmc520_edac_dram_ecc_isr(irq, mci, false);
+> +
+> +	/* If in the future there are more supported interrupts in a different
+> +	 * platform, more condition statements can be added here for each
+> +	 * interrupt flag, together with its corresponding isr implementations.
+> +	 */
+
+This comment above is useless.
+
+Also, kernel comments style is:
+
+	/*
+	 * A sentence ending with a full-stop.
+	 * Another sentence. ...
+	 * More sentences. ...
+	 */
+
+> +
+> +	return irq_ret;
+> +}
+> +
+> +static void dmc520_init_csrow(struct mem_ctl_info *mci)
+> +{
+> +	struct csrow_info *csi;
+> +	struct dimm_info *dimm;
+> +	int row, ch;
+> +	enum dev_type dt;
+> +	enum mem_type mt;
+> +	u64 rs;
+> +	u32 pages_per_rank;
+> +	struct dmc520_edac *edac = mci->pvt_info;
+> +
+> +	dt = dmc520_get_dtype(edac);
+> +	mt = dmc520_get_mtype(edac);
+> +	rs = dmc520_get_rank_size(edac);
+> +	pages_per_rank = rs >> PAGE_SHIFT;
+> +
+> +	for (row = 0; row < mci->nr_csrows; row++) {
+> +		csi = mci->csrows[row];
+> +
+> +		for (ch = 0; ch < csi->nr_channels; ch++) {
+> +			dimm		= csi->channels[ch]->dimm;
+> +			dimm->grain	= dmc520_get_memory_width(edac);
+> +			dimm->dtype	= dt;
+> +			dimm->mtype	= mt;
+> +			dimm->edac_mode	= EDAC_FLAG_SECDED;
+> +			dimm->nr_pages	= pages_per_rank / csi->nr_channels;
+> +		}
+> +	}
+> +}
+> +
+> +static int dmc520_edac_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev;
+> +	struct dmc520_edac *edac;
+> +	struct mem_ctl_info *mci;
+> +	struct edac_mc_layer layers[1];
+> +	int ret, intr_index, nintr, nintr_registered = 0;
+> +	struct resource *res;
+> +	void __iomem *reg_base;
+> +	u32 reg_val;
+> +
+> +	/* Parsing the device node */
+> +	dev = &pdev->dev;
+> +
+> +	nintr = of_property_count_u32_elems(dev->of_node, "interrupt-config");
+> +	if (nintr <= 0) {
+> +		edac_printk(KERN_ERR, EDAC_MOD_NAME,
+> +			"Invalid device node configuration: at least one interrupt "
+> +			"line & config is expected.\n");
+
+More from checkpatch:
+
+WARNING: quoted string split across lines
+#528: FILE: drivers/edac/dmc520_edac.c:436:
++                       "Invalid device node configuration: at least one interrupt "
++                       "line & config is expected.\n");
+
+WARNING: quoted string split across lines
+#535: FILE: drivers/edac/dmc520_edac.c:443:
++                       "Invalid device node configuration: # of interrupt config "
++                       "elements (%d) can not exceed %ld.\n",
+
+WARNING: quoted string split across lines
+#579: FILE: drivers/edac/dmc520_edac.c:487:
++                               "interrupt-config error: "
++                               "element %d's interrupt mask %d has overlap.\n",
+
+WARNING: quoted string split across lines
+#590: FILE: drivers/edac/dmc520_edac.c:498:
++                       "interrupt-config warning: "
++                       "interrupt mask (0x%x) is not supported by dmc520 (0x%lx).\n",
+
+
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (nintr > ARRAY_SIZE(dmc520_isr_array)) {
+> +		edac_printk(KERN_ERR, EDAC_MOD_NAME,
+> +			"Invalid device node configuration: # of interrupt config "
+> +			"elements (%d) can not exceed %ld.\n",
+> +			nintr, ARRAY_SIZE(dmc520_isr_array));
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* Initialize dmc520 edac */
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	reg_base = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(reg_base))
+> +		return PTR_ERR(reg_base);
+> +
+> +	if (!dmc520_is_ecc_enabled(reg_base))
+> +		return -ENXIO;
+> +
+> +	layers[0].type = EDAC_MC_LAYER_CHIP_SELECT;
+> +	layers[0].size = dmc520_get_rank_count(reg_base);
+> +	layers[0].is_virt_csrow = true;
+> +
+> +	mci = edac_mc_alloc(dmc520_mc_idx++, ARRAY_SIZE(layers), layers,
+> +			    sizeof(struct dmc520_edac) + sizeof(u32) * nintr);
+> +	if (!mci) {
+> +		edac_printk(KERN_ERR, EDAC_MOD_NAME,
+> +			    "Failed to allocate memory for mc instance\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	edac = mci->pvt_info;
+> +	edac->reg_base = reg_base;
+> +	edac->nintr = nintr;
+> +	edac->interrupt_mask_all = 0;
+> +	spin_lock_init(&edac->ecc_lock);
+
+Move that checking...
+
+> +
+> +	ret = of_property_read_u32_array(dev->of_node, "interrupt-config",
+> +			edac->interrupt_masks, nintr);
+> +	if (ret) {
+> +		edac_printk(KERN_ERR, EDAC_MOD_NAME,
+> +			"Failed to get interrupt-config arrays.\n");
+> +		goto err_free_mc;
+> +	}
+> +
+> +	for (intr_index = 0; intr_index < nintr; ++intr_index) {
+> +		if (edac->interrupt_mask_all & edac->interrupt_masks[intr_index]) {
+> +			edac_printk(KERN_ERR, EDAC_MC,
+> +				"interrupt-config error: "
+> +				"element %d's interrupt mask %d has overlap.\n",
+> +				intr_index, edac->interrupt_masks[intr_index]);
+> +			goto err_free_mc;
+> +		}
+> +
+> +		edac->interrupt_mask_all |= edac->interrupt_masks[intr_index];
+> +	}
+> +
+> +	if ((edac->interrupt_mask_all | ALL_INT_MASK) != ALL_INT_MASK) {
+> +		edac_printk(KERN_WARNING, EDAC_MOD_NAME,
+> +			"interrupt-config warning: "
+> +			"interrupt mask (0x%x) is not supported by dmc520 (0x%lx).\n",
+> +			edac->interrupt_mask_all, ALL_INT_MASK);
+> +	}
+> +	edac->interrupt_mask_all &= ALL_INT_MASK;
+> +
+> +	platform_set_drvdata(pdev, mci);
+
+... up-to-here before the edac_mc_alloc() call so that you don't have to
+needlessly goto err_free_mc and free the memory you just allocated if
+any of those properties reading fails. IOW, do all your hw init first
+and then call edac_mc_alloc(), when you have everything needed.
+
+> +
+> +	mci->pdev = dev;
+> +	mci->mtype_cap = MEM_FLAG_DDR3 | MEM_FLAG_DDR4;
+> +	mci->edac_ctl_cap = EDAC_FLAG_NONE | EDAC_FLAG_SECDED;
+> +	mci->edac_cap = EDAC_FLAG_SECDED;
+> +	mci->scrub_cap = SCRUB_FLAG_HW_SRC;
+> +	mci->scrub_mode = dmc520_get_scrub_type(edac);
+> +	mci->ctl_name = EDAC_CTL_NAME;
+> +	mci->dev_name = dev_name(mci->pdev);
+> +	mci->mod_name = EDAC_MOD_NAME;
+> +	mci->ctl_page_to_phys = NULL;
+> +
+> +	edac_op_state = EDAC_OPSTATE_INT;
+> +
+> +	dmc520_init_csrow(mci);
+> +
+> +	ret = edac_mc_add_mc(mci);
+> +	if (ret) {
+> +		edac_printk(KERN_ERR, EDAC_MOD_NAME,
+> +			"Failed to register with EDAC core\n");
+> +		goto err_free_mc;
+> +	}
+> +
+> +	/* Clear interrupts, not affecting other unrelated interrupts */
+> +	reg_val = dmc520_read_reg(edac, REG_OFFSET_INTERRUPT_CONTROL);
+> +	dmc520_write_reg(edac, reg_val & (~(edac->interrupt_mask_all)),
+> +			REG_OFFSET_INTERRUPT_CONTROL);
+> +	dmc520_write_reg(edac, edac->interrupt_mask_all,
+> +			REG_OFFSET_INTERRUPT_CLR);
+> +
+> +	for (intr_index = 0; intr_index < nintr; ++intr_index) {
+> +		int irq_id = platform_get_irq(pdev, intr_index);
+> +
+> +		if (irq_id < 0) {
+> +			edac_printk(KERN_ERR, EDAC_MC,
+> +				    "Failed to get irq #%d\n", intr_index);
+> +			ret = -ENODEV;
+> +			goto err_free_irq;
+> +		}
+> +
+> +		ret = devm_request_irq(&pdev->dev, irq_id,
+> +				dmc520_isr_array[intr_index], IRQF_SHARED,
+> +				dev_name(&pdev->dev), mci);
+> +		if (ret < 0) {
+> +			edac_printk(KERN_ERR, EDAC_MC,
+> +				    "Failed to request irq %d\n", irq_id);
+> +			goto err_free_irq;
+> +		}
+> +
+> +		++nintr_registered;
+> +	}
+
+The same with this IRQ requesting and you'll save yourself the err_free_irq too.
+
+> +
+> +	/* Reset DRAM CE/UE counters */
+> +	if (edac->interrupt_mask_all & DRAM_ECC_INT_CE_BIT)
+> +		dmc520_get_dram_ecc_error_count(edac, true);
+> +
+> +	if (edac->interrupt_mask_all & DRAM_ECC_INT_UE_BIT)
+> +		dmc520_get_dram_ecc_error_count(edac, false);
+> +
+> +	/* Enable interrupts, not affecting other unrelated interrupts */
+> +	dmc520_write_reg(edac,
+> +		reg_val | edac->interrupt_mask_all,
+> +		REG_OFFSET_INTERRUPT_CONTROL);
+
+Align at opening brace:
+
+	dmc520_write_reg(edac, reg_val | edac->interrupt_mask_all,
+			 REG_OFFSET_INTERRUPT_CONTROL);
+
+> +
+> +	return 0;
+> +
+> +err_free_irq:
+> +	for (intr_index = 0; intr_index < nintr_registered; ++intr_index) {
+> +		int irq_id = platform_get_irq(pdev, intr_index);
+> +
+> +		devm_free_irq(&pdev->dev, irq_id, mci);
+> +	}
+> +	edac_mc_del_mc(&pdev->dev);
+> +err_free_mc:
+> +	edac_mc_free(mci);
+> +
+> +	return ret;
+> +}
+> +
+> +static int dmc520_edac_remove(struct platform_device *pdev)
+> +{
+> +	struct dmc520_edac *edac;
+> +	struct mem_ctl_info *mci;
+> +	u32 reg_val, intr_index;
+> +
+> +	mci = platform_get_drvdata(pdev);
+> +	edac = mci->pvt_info;
+> +
+> +	/* Disable interrupts */
+> +	reg_val = dmc520_read_reg(edac, REG_OFFSET_INTERRUPT_CONTROL);
+> +	dmc520_write_reg(edac, reg_val & (~(edac->interrupt_mask_all)),
+> +			REG_OFFSET_INTERRUPT_CONTROL);
+> +
+> +	/* free irq's */
+> +	for (intr_index = 0; intr_index < edac->nintr; ++intr_index) {
+> +		int irq_id = platform_get_irq(pdev, intr_index);
+> +
+> +		devm_free_irq(&pdev->dev, irq_id, mci);
+> +	}
+> +
+> +	edac_mc_del_mc(&pdev->dev);
+> +	edac_mc_free(mci);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id dmc520_edac_driver_id[] = {
+> +	{ .compatible = "arm,dmc-520", },
+> +	{ /* end of table */ }
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, dmc520_edac_driver_id);
+> +
+> +static struct platform_driver dmc520_edac_driver = {
+> +	.driver = {
+> +		.name = "dmc520",
+> +		.of_match_table = dmc520_edac_driver_id,
+> +	},
+> +
+> +	.probe = dmc520_edac_probe,
+> +	.remove = dmc520_edac_remove
+> +};
+> +
+> +module_platform_driver(dmc520_edac_driver);
+> +
+> +MODULE_AUTHOR(
+
+No linebreaks like that - let it stick out over 80 cols.
+
+> +	"Rui Zhao <ruizhao@microsoft.com>, Lei Wang <lewan@microsoft.com>");
+> +MODULE_DESCRIPTION("DMC-520 ECC driver");
+> +MODULE_LICENSE("GPL v2");
+> -- 
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
