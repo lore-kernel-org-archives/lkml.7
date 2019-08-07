@@ -2,182 +2,281 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BCAAC32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47DCAC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:56:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E341E21E6E
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:56:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F84821E6E
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:56:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387927AbfHGN4C (ORCPT
+        id S2387991AbfHGN4X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 09:56:02 -0400
-Received: from mail-ot1-f72.google.com ([209.85.210.72]:50330 "EHLO
-        mail-ot1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387484AbfHGN4B (ORCPT
+        Wed, 7 Aug 2019 09:56:23 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:50125 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387952AbfHGN4W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 09:56:01 -0400
-Received: by mail-ot1-f72.google.com with SMTP id a21so54933554otk.17
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 06:56:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=Bk+2r34Stl2rUBhRx5Gcygsy2Z7wB8nfPpt4MphB9xU=;
-        b=eFHOe2DuPQyMoGO2r0wihGmy5LvXd1COkoXfiIk78NxMxyciQ1XLge2ZCk2IDUepxt
-         pZcjEy2x5ow8qne5uRI3MXyKW25VH5RVvgUlQwJY7ZAbwq1K+5wWdxRVCCaDna9tKvYb
-         m7cuS/hvygm5ioAusmeOtdmtwoYqNUpsghZN65dHPfLmQTThE/DoIlSK8rYqh47YWj4s
-         7zDPN0P0HDArHjiJQ9kvEQPNmMyZMhBgKUw8k0uWqFuOfxElsm1l+rMKxwOs27I8RpP/
-         kfoRnlf3U0EjYbieJxxWE5ZxXtd+/jjULhKnWk6vVJIr6R8ZhKxp97XGdsajPUkz/ofs
-         KNyQ==
-X-Gm-Message-State: APjAAAVx/CSdowMW0wTJ3Q5etrRgHXN5a1XlDNpHaUSdiQDL6gFyvjn4
-        qf925K5ZRFtqSDixQMKR9LJbO4Aph5PYCR5KtBFfIM8JlXow
-X-Google-Smtp-Source: APXvYqz9nLua2ezFhBEBS/7mQaa0WuGqbxesIHCg0yzqzhVCeqS0n/CSMvTS+LmlmuK/6ZRJZNEbJm6WQPnpQIDiuEk1W+eOhdu0
+        Wed, 7 Aug 2019 09:56:22 -0400
+Received: from p200300ddd742df588d2c07822b9f4274.dip0.t-ipconnect.de ([2003:dd:d742:df58:8d2c:782:2b9f:4274])
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hvMQL-0002qL-Cq; Wed, 07 Aug 2019 15:56:17 +0200
+Date:   Wed, 7 Aug 2019 15:56:11 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Megha Dey <megha.dey@intel.com>
+cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, marc.zyngier@arm.com,
+        ashok.raj@intel.com, jacob.jun.pan@linux.intel.com
+Subject: Re: [RFC V1 RESEND 2/6] PCI/MSI: Dynamic allocation of MSI-X vectors
+ by group
+In-Reply-To: <1565118316.2401.112.camel@intel.com>
+Message-ID: <alpine.DEB.2.21.1908071525390.24014@nanos.tec.linutronix.de>
+References: <1561162778-12669-1-git-send-email-megha.dey@linux.intel.com>  <1561162778-12669-3-git-send-email-megha.dey@linux.intel.com>  <alpine.DEB.2.21.1906280739100.32342@nanos.tec.linutronix.de> <1565118316.2401.112.camel@intel.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-X-Received: by 2002:a6b:3b03:: with SMTP id i3mr9381073ioa.302.1565186160323;
- Wed, 07 Aug 2019 06:56:00 -0700 (PDT)
-Date:   Wed, 07 Aug 2019 06:56:00 -0700
-In-Reply-To: <CAAeHK+zDVmxgjkZ6dR-sk1=99-Aj=Z4wwxaRCaOXeuYYG3-bUw@mail.gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000017f30b058f874dc2@google.com>
-Subject: Re: KASAN: use-after-free Read in device_release_driver_internal
-From:   syzbot <syzbot+1b2449b7b5dc240d107a@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, oneukum@suse.com,
-        stern@rowland.harvard.edu, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: multipart/mixed; boundary="8323329-1787049046-1565186177=:24014"
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-syzbot has tested the proposed patch but the reproducer still triggered  
-crash:
-KASAN: use-after-free Read in device_release_driver_internal
+--8323329-1787049046-1565186177=:24014
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
-usb 4-1: USB disconnect, device number 2
-==================================================================
-BUG: KASAN: use-after-free in __lock_acquire+0x3a5d/0x5340  
-kernel/locking/lockdep.c:3665
-Read of size 8 at addr ffff8881d4a54510 by task kworker/0:3/2876
+Megha,
 
-CPU: 0 PID: 2876 Comm: kworker/0:3 Not tainted 5.2.0-rc6+ #1
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e lib/dump_stack.c:113
-  print_address_description+0x67/0x231 mm/kasan/report.c:188
-  __kasan_report.cold+0x1a/0x32 mm/kasan/report.c:317
-  kasan_report+0xe/0x20 mm/kasan/common.c:614
-  __lock_acquire+0x3a5d/0x5340 kernel/locking/lockdep.c:3665
-  lock_acquire+0x100/0x2b0 kernel/locking/lockdep.c:4303
-  __mutex_lock_common kernel/locking/mutex.c:926 [inline]
-  __mutex_lock+0xf9/0x12b0 kernel/locking/mutex.c:1073
-  device_release_driver_internal+0x23/0x4c0 drivers/base/dd.c:1109
-  bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:556
-  device_del+0x460/0xb80 drivers/base/core.c:2274
-  usb_disable_device+0x211/0x690 drivers/usb/core/message.c:1237
-  usb_disconnect+0x284/0x830 drivers/usb/core/hub.c:2199
-  hub_port_connect drivers/usb/core/hub.c:4949 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
-  port_event drivers/usb/core/hub.c:5359 [inline]
-  hub_event+0x13bd/0x3550 drivers/usb/core/hub.c:5441
-  process_one_work+0x905/0x1570 kernel/workqueue.c:2269
-  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
-  kthread+0x30b/0x410 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+On Tue, 6 Aug 2019, Megha Dey wrote:
+> On Sat, 2019-06-29 at 09:59 +0200, Thomas Gleixner wrote:
+> > On Fri, 21 Jun 2019, Megha Dey wrote:
+> 
+> Totally agreed. The request to add a dynamic MSI-X infrastructure came
+> from some driver teams internally and currently they do not have
+> bandwidth to come up with relevant test cases. <sigh>
 
-Allocated by task 22:
-  save_stack+0x1b/0x80 mm/kasan/common.c:71
-  set_track mm/kasan/common.c:79 [inline]
-  __kasan_kmalloc mm/kasan/common.c:489 [inline]
-  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:462
-  kmalloc include/linux/slab.h:547 [inline]
-  kzalloc include/linux/slab.h:742 [inline]
-  usb_set_configuration+0x2c4/0x1670 drivers/usb/core/message.c:1846
-  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
-  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
-  really_probe+0x281/0x660 drivers/base/dd.c:509
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
-  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:843
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2111
-  usb_new_device.cold+0x6a4/0xe61 drivers/usb/core/hub.c:2536
-  hub_port_connect drivers/usb/core/hub.c:5098 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
-  port_event drivers/usb/core/hub.c:5359 [inline]
-  hub_event+0x1abd/0x3550 drivers/usb/core/hub.c:5441
-  process_one_work+0x905/0x1570 kernel/workqueue.c:2269
-  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
-  kthread+0x30b/0x410 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Hahahaha.
 
-Freed by task 2876:
-  save_stack+0x1b/0x80 mm/kasan/common.c:71
-  set_track mm/kasan/common.c:79 [inline]
-  __kasan_slab_free+0x130/0x180 mm/kasan/common.c:451
-  slab_free_hook mm/slub.c:1421 [inline]
-  slab_free_freelist_hook mm/slub.c:1448 [inline]
-  slab_free mm/slub.c:2994 [inline]
-  kfree+0xd7/0x280 mm/slub.c:3949
-  device_release+0x71/0x200 drivers/base/core.c:1064
-  kobject_cleanup lib/kobject.c:691 [inline]
-  kobject_release lib/kobject.c:720 [inline]
-  kref_put include/linux/kref.h:65 [inline]
-  kobject_put+0x171/0x280 lib/kobject.c:737
-  put_device+0x1b/0x30 drivers/base/core.c:2210
-  klist_put+0xce/0x170 lib/klist.c:221
-  bus_remove_device+0x3a4/0x4a0 drivers/base/bus.c:552
-  device_del+0x460/0xb80 drivers/base/core.c:2274
-  usb_disable_device+0x211/0x690 drivers/usb/core/message.c:1237
-  usb_disconnect+0x284/0x830 drivers/usb/core/hub.c:2199
-  hub_port_connect drivers/usb/core/hub.c:4949 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
-  port_event drivers/usb/core/hub.c:5359 [inline]
-  hub_event+0x13bd/0x3550 drivers/usb/core/hub.c:5441
-  process_one_work+0x905/0x1570 kernel/workqueue.c:2269
-  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
-  kthread+0x30b/0x410 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+> But we hope that this patch set could serve as a precursor to the
+> interrupt message store (IMS) patch set, and we can use this patch set
+> as the baseline for the IMS patches.
 
-The buggy address belongs to the object at ffff8881d4a54400
-  which belongs to the cache kmalloc-2k of size 2048
-The buggy address is located 272 bytes inside of
-  2048-byte region [ffff8881d4a54400, ffff8881d4a54c00)
-The buggy address belongs to the page:
-page:ffffea0007529400 refcount:1 mapcount:0 mapping:ffff8881dac02800  
-index:0x0 compound_mapcount: 0
-flags: 0x200000000010200(slab|head)
-raw: 0200000000010200 ffffea000753da00 0000000500000005 ffff8881dac02800
-raw: 0000000000000000 00000000000f000f 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
+If IMS needs the same functionality, then we need to think about it
+slightly differently because IMS is not necessarily tied to PCI.
+ 
+IMS has some similarity to the ARM GIC ITS stuff IIRC, which already
+provides these things outside of PCI. Marc?
 
-Memory state around the buggy address:
-  ffff8881d4a54400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8881d4a54480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ffff8881d4a54500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                          ^
-  ffff8881d4a54580: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8881d4a54600: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
+We probably need some generic infrastructure for this so PCI and everything
+else can use it.
 
+> > > +		/*
+> > > +		 * Save the pointer to the first msi_desc entry of
+> > > every
+> > > +		 * MSI-X group. This pointer is used by other
+> > > functions
+> > > +		 * as the starting point to iterate through each
+> > > of the
+> > > +		 * entries in that particular group.
+> > > +		 */
+> > > +		if (!i)
+> > > +			dev->dev.grp_first_desc = list_last_entry
+> > > +			(dev_to_msi_list(&dev->dev), struct
+> > > msi_desc, list);
+> > How is that supposed to work? The pointer gets overwritten on every
+> > invocation of that interface. I assume this is merily an intermediate
+> > storage for setup. Shudder.
+> > 
+> 
+> Yes, you are right.
+> 
+> The grp_first_desc is simply a temporary storage to store the
+> first msi_desc entry of every group, which can be used by other
+> functions to iterate through the entries belonging to that group only,
+> using the for_each_pci_msi_entry/ for_each_msi_entry_from macro. It is
+> not the cleanest of solutions, I agree.
 
-Tested on:
+Yeah, it's too ugly to exist.
 
-commit:         6a3599ce usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git
-console output: https://syzkaller.appspot.com/x/log.txt?x=132aca2c600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=700ca426ab83faae
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> With your proposal of supporting a separate group list, I don't think
+> there will be a need to use this kind of temporary storage variable.
 
+Exactly.
+
+> > > -	for_each_pci_msi_entry(entry, dev) {
+> > > +	for_each_pci_msi_entry_from(entry, dev) {
+> >   > +/* Iterate through MSI entries of device dev starting from a
+> > given desc */
+> >   > +#define for_each_msi_entry_from(desc,
+> > dev)                             \
+> >   > +       desc =
+> > (*dev).grp_first_desc;                                   \
+> >   > +       list_for_each_entry_from((desc), dev_to_msi_list((dev)),
+> > list)  \
+> > 
+> > So this hides the whole group stuff behind a hideous iterator.
+> > 
+> > for_each_pci_msi_entry_from() ? from what? from the device? Sane
+> > iterators
+> > which have a _from naming, have also a from argument.
+> > 
+> 
+> This was meant to be "iterate over all the entries belonging to a
+> group", sorry if that was not clear. 
+> 
+> The current 'for_each_pci_msi_entry' macro iterates through all the
+> msi_desc entries belonging to a particular device. Since we have a
+> piecewise allocation of the MSI-X vectors with this change, we would
+> want to iterate only through the newly added entries, i.e the entries
+> allocated to the current group.
+
+I understand that, but please make macros and function names so they are
+halfways self explaining and intuitive.
+
+ > In V2, I will introduce a new macro, 'for_each_pci_msi_entry_group',
+> which will only iterate through the msi_desc entries belonging to a
+> particular group.
+
+for_each_pci_msi_entry_group()
+
+is ambiguous. It could mean to iterate over the groups. 
+
+for_each_pci_msi_entry_in_group()
+
+avoids that.
+ 
+> > > -	ret = msix_setup_entries(dev, base, entries, nvec, affd);
+> > > +	ret = msix_setup_entries(dev, dev->base, entries, nvec,
+> > > affd, group);
+> > >  	if (ret)
+> > >  		return ret;
+> > Any error exit in this function will leave MSIx disabled. That means
+> > if
+> > this is a subsequent group allocation which fails for whatever
+> > reason, this
+> > will render all existing and possibly already in use interrupts
+> > unusable.
+> > 
+> 
+> Hmmm yeah, I hadn't thought about this!
+> 
+> So according to the code, we must 'Ensure MSI-X is disabled while it is
+> set up'. MSI-X would be disabled until the setup of the new vectors is
+> complete, even if we do not take the error exit right?
+> 
+> Earlier this was not a problem since we disable the MSI-X, setup all
+> the vectors at once, and then enable the MSI-X once and for all. 
+> 
+> I am not sure how to avoid disabling of MSI-X here.
+
+The problem with your code is that is keeps it disabled in case of an
+error, which makes all existing users (groups) starve.
+
+But, yes there is also the question what happens during the time when
+interrupts are raised on already configured devices exactly during the time
+where MSI-X is disabled temporarily to setup a new group. I fear that will
+end up with lost interrupts and/or spurious interrupts via the legacy
+INT[ABCD]. That really needs to be investigated _before_ we go there.
+
+> > >  static int __pci_enable_msix_range(struct pci_dev *dev,
+> > >  				   struct msix_entry *entries, int
+> > > minvec,
+> > > -				   int maxvec, struct irq_affinity
+> > > *affd)
+> > > +				   int maxvec, struct irq_affinity
+> > > *affd,
+> > > +				   bool one_shot, int group)
+> > >  {
+> > >  	int rc, nvec = maxvec;
+> > >  
+> > >  	if (maxvec < minvec)
+> > >  		return -ERANGE;
+> > >  
+> > > -	if (WARN_ON_ONCE(dev->msix_enabled))
+> > > -		return -EINVAL;
+> > So any misbehaving PCI driver can now call into this without being
+> > caught.
+> > 
+> 
+> I do not understand what misbehaving PCI driver means :(
+
+The one which calls into that interface _AFTER_ msix is enabled. We catch
+that right now and reject it.
+
+> Basically this statement is what denies multiple MSI-X vector
+> allocations, and I wanted to remove it so that we could do just that.
+>
+> Please let me know how I could change this.
+
+There are several ways to do that, but it needs to be made conditionally on
+things like 'device has group mode support' ...
+ 
+> > If you want to support group based allocations, then the PCI/MSI
+> > facility
+> > has to be refactored from ground up.
+> > 
+> >   1) Introduce the concept of groups by adding a group list head to
+> > struct
+> >      pci_dev. Ideally you create a new struct pci_dev_msi or whatever
+> > where
+> >      all this muck goes into.
+> > 
+> 
+> I think we can use the existing list_head 'msi_list' in the struct
+> device for this, instead of having a new list_head for the group. So
+> now instead of msi_list being a list of all the msi_desc entries, it
+> will have a list of the different groups associated with the device.
+> 
+> IMHO, since IMS is non PCI compliant, having this group_list_head would
+> be better off in struct device than struct pci_dev, which would enable
+> code reuse.
+
+Sure, but then we really need to look at the IMS requirements in order not
+to rewrite this whole thing over and over.
+
+> >   2) Change the existing code to treat the current allocation mode as
+> > a
+> >      group allocation. Keep the entries in a new struct
+> > msi_entry_group and
+> >      have a group id, list head and the entries in there.
+> > 
+> 
+> I am thinking of something like this, please let me know if this is
+> what you are suggesting:
+> 
+> 1. Introduce a new msi_entry_group struct:
+> struct msi_entry_grp {
+>   int group_id; // monotonically increasing group_id
+>   int num_vecs; // number of msi_desc entries per group
+>   struct list_head group_list; // Added to msi_list in struct device
+>   struct list_head entry_list; // list of msi_desc entries for this grp
+> }
+
+Looks about right.
+ 
+> 2. Add a new 'for_each_pci_msi_entry_group' macro. This macro should
+> only iterate through the msi_desc entries belonging to a group.
+
+See above.
+ 
+> 3. The existing for_each_pci_msi_entry, needs to be modified so that it
+> is backward compatible. This macro should still be able to iterate
+> through all the entries in all the groups. 
+
+I'm not sure. It might be just the thing which iterates over group 0, which
+is the default for all devices which do not use/support group mode, but
+let's see.
+ 
+Thanks,
+
+	tglx
+--8323329-1787049046-1565186177=:24014--
