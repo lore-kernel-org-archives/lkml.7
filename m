@@ -2,158 +2,114 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F272C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 16:43:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A15C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 16:45:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AA642229C
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 16:43:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9A6D2229C
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 16:45:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388960AbfHGQnf (ORCPT
+        id S1730299AbfHGQp1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 12:43:35 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:34134 "EHLO inva021.nxp.com"
+        Wed, 7 Aug 2019 12:45:27 -0400
+Received: from mga03.intel.com ([134.134.136.65]:6866 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388713AbfHGQnU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 12:43:20 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id B1CDD2007B9;
-        Wed,  7 Aug 2019 18:43:17 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A3FFD2002E8;
-        Wed,  7 Aug 2019 18:43:17 +0200 (CEST)
-Received: from fsr-ub1864-103.ea.freescale.net (fsr-ub1864-103.ea.freescale.net [10.171.82.17])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id D078B205E5;
-        Wed,  7 Aug 2019 18:43:16 +0200 (CEST)
-From:   Daniel Baluta <daniel.baluta@nxp.com>
-To:     daniel.baluta@nxp.com, shawnguo@kernel.org
-Cc:     aisheng.dong@nxp.com, anson.huang@nxp.com,
-        devicetree@vger.kernel.org, festevam@gmail.com,
-        kernel@pengutronix.de, leonard.crestez@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org, m.felsch@pengutronix.de,
-        mark.rutland@arm.com, paul.olaru@nxp.com, peng.fan@nxp.com,
-        robh+dt@kernel.org, shengjiu.wang@nxp.com,
-        sound-open-firmware@alsa-project.org,
-        pierre-louis.bossart@linux.intel.com, l.stach@pengutronix.de
-Subject: [PATCH v3 5/5] dt-bindings: dsp: fsl: Add DSP core binding support
-Date:   Wed,  7 Aug 2019 19:42:58 +0300
-Message-Id: <20190807164258.8306-6-daniel.baluta@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190807164258.8306-1-daniel.baluta@nxp.com>
-References: <20190807164258.8306-1-daniel.baluta@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1730036AbfHGQp1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 12:45:27 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Aug 2019 09:36:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,357,1559545200"; 
+   d="scan'208";a="192946806"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 07 Aug 2019 09:36:29 -0700
+Received: by lahna (sSMTP sendmail emulation); Wed, 07 Aug 2019 19:36:29 +0300
+Date:   Wed, 7 Aug 2019 19:36:29 +0300
+From:   'Mika Westerberg' <mika.westerberg@linux.intel.com>
+To:     David Laight <David.Laight@aculab.com>
+Cc:     'Yehezkel Bernat' <yehezkelshb@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
+        Mario Limonciello <Mario.Limonciello@dell.com>,
+        Anthony Wong <anthony.wong@canonical.com>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
+Subject: Re: [PATCH 3/8] thunderbolt: Use 32-bit writes when writing ring
+ producer/consumer
+Message-ID: <20190807163629.GV2716@lahna.fi.intel.com>
+References: <20190705095800.43534-1-mika.westerberg@linux.intel.com>
+ <20190705095800.43534-4-mika.westerberg@linux.intel.com>
+ <CA+CmpXtMBEtyh77fcrhX2BU8esiit56CWfZmey6LYEHZVUxf8A@mail.gmail.com>
+ <0f3a47d8133945b181d623ea6e0d53f2@AcuMS.aculab.com>
+ <20190807161359.GT2716@lahna.fi.intel.com>
+ <79616dd147864771b0b74901e77f2607@AcuMS.aculab.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <79616dd147864771b0b74901e77f2607@AcuMS.aculab.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This describes the DSP device tree node.
+On Wed, Aug 07, 2019 at 04:22:26PM +0000, David Laight wrote:
+> From: Mika Westerberg
+> > Sent: 07 August 2019 17:14
+> > To: David Laight
+> > 
+> > On Fri, Jul 05, 2019 at 04:04:19PM +0000, David Laight wrote:
+> > > > Really a matter of taste, but maybe you want to consider having a single
+> > > > function, with a 3rd parameter, bool is_tx.
+> > > > The calls here will be unified to:
+> > > >         ring_iowrite(ring, ring->head, ring->is_tx);
+> > > > (No condition is needed here).
+> > > >
+> > > > The implementation uses the new parameter to decide which part of the register
+> > > > to mask, reducing the code duplication (in my eyes):
+> > > >
+> > > >         val = ioread32(ring_desc_base(ring) + 8);
+> > > >         if (is_tx) {
+> > > >                 val &= 0x0000ffff;
+> > > >                 val |= value << 16;
+> > > >         } else {
+> > > >                 val &= 0xffff0000;
+> > > >                 val |= value;
+> > > >         }
+> > > >         iowrite32(val, ring_desc_base(ring) + 8);
+> > > >
+> > > > I'm not sure if it improves the readability or makes it worse. Your call.
+> > >
+> > > Gah, that is all horrid beyond belief.
+> > > If a 32bit write is valid then the hardware must not be updating
+> > > the other 16 bits.
+> > > In which case the driver knows what they should be.
+> > > So it can do a single 32bit write of the required value.
+> > 
+> > I'm not entirely sure I understand what you say above. Can you shed some
+> > light on this by a concrete example how it should look like? :-)
+> 
+> The driver must know both the tx and rx ring values, so:
+> 	iowrite32(tx_val << 16 | rx_val, ring_desc_base(ring) + 8);
+>
 
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/dsp/fsl,dsp.yaml      | 88 +++++++++++++++++++
- 1 file changed, 88 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dsp/fsl,dsp.yaml
+I see. However, prod or cons side gets updated by the hardware as it
+processes buffers and other side is only updated by the driver. I'm not
+sure the above works here.
 
-diff --git a/Documentation/devicetree/bindings/dsp/fsl,dsp.yaml b/Documentation/devicetree/bindings/dsp/fsl,dsp.yaml
-new file mode 100644
-index 000000000000..24b9fd64e3eb
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dsp/fsl,dsp.yaml
-@@ -0,0 +1,88 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/dsp/fsl,dsp.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: NXP i.MX8 DSP core
-+
-+maintainers:
-+  - Daniel Baluta <daniel.baluta@nxp.com>
-+
-+description: |
-+  Some boards from i.MX8 family contain a DSP core used for
-+  advanced pre- and post- audio processing.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - fsl,imx8qxp-dsp
-+
-+  reg:
-+    description: Should contain register location and length
-+
-+  clocks:
-+    items:
-+      - description: ipg clock
-+      - description: ocram clock
-+      - description: core clock
-+
-+  clock-names:
-+    items:
-+      - const: ipg
-+      - const: ocram
-+      - const: core
-+
-+  power-domains:
-+    description:
-+      List of phandle and PM domain specifier as documented in
-+      Documentation/devicetree/bindings/power/power_domain.txt
-+    maxItems: 4
-+
-+  mboxes:
-+    description:
-+      List of <&phandle type channel> - 2 channels for TXDB, 2 channels for RXDB
-+      (see mailbox/fsl,mu.txt)
-+    maxItems: 4
-+
-+  mbox-names:
-+    items:
-+      - const: txdb0
-+      - const: txdb1
-+      - const: rxdb0
-+      - const: rxdb1
-+
-+  memory-region:
-+    description:
-+       phandle to a node describing reserved memory (System RAM memory)
-+       used by DSP (see bindings/reserved-memory/reserved-memory.txt)
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - power-domains
-+  - mboxes
-+  - mbox-names
-+  - memory-region
-+
-+examples:
-+  - |
-+    #include <dt-bindings/firmware/imx/rsrc.h>
-+    #include <dt-bindings/clock/imx8-clock.h>
-+    dsp@596e8000 {
-+        compatbile = "fsl,imx8qxp-dsp";
-+        reg = <0x596e8000 0x88000>;
-+        clocks = <&adma_lpcg IMX_ADMA_LPCG_DSP_IPG_CLK>,
-+                 <&adma_lpcg IMX_ADMA_LPCG_OCRAM_IPG_CLK>,
-+                 <&adma_lpcg IMX_ADMA_LPCG_DSP_CORE_CLK>;
-+        clock-names = "ipg", "ocram", "core";
-+        power-domains = <&pd IMX_SC_R_MU_13A>,
-+                        <&pd IMX_SC_R_MU_13B>,
-+                        <&pd IMX_SC_R_DSP>,
-+                        <&pd IMX_SC_R_DSP_RAM>;
-+        mbox-names = "txdb0", "txdb1", "rxdb0", "rxdb1";
-+        mboxes = <&lsio_mu13 2 0>, <&lsio_mu13 2 1>, <&lsio_mu13 3 0>, <&lsio_mu13 3 1>;
-+    };
--- 
-2.17.1
+> The ioread32() is likely to be very slow - you only want to do them
+> if absolutely necessary.
+> The speed of the iowrite32() doesn't matter (much) since it is almost
+> certainly 'posted' and execution continues while the bus cycle is
+> in progress.
 
+OK thanks for the explanation.
