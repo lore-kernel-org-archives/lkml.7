@@ -2,111 +2,399 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9502AC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 09:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A7B8C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 09:23:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71B4921BE6
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 09:18:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8AE821922
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 09:23:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="P8H3y32F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387566AbfHGJSM (ORCPT
+        id S1727501AbfHGJXq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 05:18:12 -0400
-Received: from smtprelay0094.hostedemail.com ([216.40.44.94]:55584 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727987AbfHGJSL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 05:18:11 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id EFB30180A76DC;
-        Wed,  7 Aug 2019 09:18:09 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: joke88_46ef5e8f7f662
-X-Filterd-Recvd-Size: 3395
-Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf07.hostedemail.com (Postfix) with ESMTPA;
-        Wed,  7 Aug 2019 09:18:07 +0000 (UTC)
-Message-ID: <e8054867214be2e12f1bbf2c21b62ac041b6cccb.camel@perches.com>
-Subject: Re: [PATCH -next] iwlwifi: dbg: work around clang bug by marking
- debug strings static
-From:   Joe Perches <joe@perches.com>
-To:     Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Johannes Berg <johannes@sipsolutions.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Shahar S Matityahu <shahar.s.matityahu@intel.com>,
-        Sara Sharon <sara.sharon@intel.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Date:   Wed, 07 Aug 2019 02:18:06 -0700
-In-Reply-To: <20190807051516.GA117639@archlinux-threadripper>
-References: <20190712001708.170259-1-ndesaulniers@google.com>
-         <874l31r88y.fsf@concordia.ellerman.id.au>
-         <3a2b6d4f9356d54ab8e83fbf25ba9c5f50181f0d.camel@sipsolutions.net>
-         <CAKwvOdmBeB1BezsGh=cK=U9m8goKzZnngDRzNM7B1voZfh8yWg@mail.gmail.com>
-         <20190807051516.GA117639@archlinux-threadripper>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+        Wed, 7 Aug 2019 05:23:46 -0400
+Received: from mail-eopbgr40066.outbound.protection.outlook.com ([40.107.4.66]:30337
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726529AbfHGJXq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 05:23:46 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZG4ZbDuSCaqlwUByH1eL42YH53RwNcWnNXS307eEhxePgWfIQj2zaKIKSZ4Im8bc8h1JA0ak3YNY0MRHhELwBIhWflCu4RjXrKKSUTbxSQ/dxE5uhf4vMW2BGh/Kx1J4Gc3pLuOma92BJZs+l7OHNYEuqZPT1NWrGgI9r5jWMHwpzY6fg9fBnUj35IqyDLYVMtkdYJfy280fpVnBW0X75pttOVp5sOwlbrJZ5e2GMXkqyzgd/TNqD7PXwI+mumPasssRf4HqFvSZGpaLhsxWgi8/En49+m86633JeT9y6XL38Ym/s5eGGzXRDfX/86C0nvZwz9rVtpwAWuOVNNGmeg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lolJSBZgfKdyXWTm8wWlWT6hl3ZOpJVe8EXIEQ7iZFY=;
+ b=hsn5jQDlkeDPKdWx1J2jh8TrHKsI71nbbF2szq64vhQ4QPZ1MG8x3JGWkSlqr9dY/U1b7CyZ6OjEMf54grutbBzqeUe+QNStMwPJp/8cP2sJt0cSQm7fnCWgkXaMqpweFPhre+ofWX5yeYVNFD5eySz54wTlFHDxc1ZROmubebcsYns1qx8yCdL4xm9zLwP4kUKbXBzWpPvsEAlB9oBZ+rTFjPn+ilsfGojj9vSo7vUfcvxFA8clFDkOTTL5jBbShIY4k3taCAMEa8L4KrmoVjtBWR5cBZKzs2O97sZ13vTcTBm9DJCblE+DzOfs+mMZGVtq/QLuPwlwOHHXsuSuxw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lolJSBZgfKdyXWTm8wWlWT6hl3ZOpJVe8EXIEQ7iZFY=;
+ b=P8H3y32FHrCbDGTj61QGR62fSeYGI8doLrGEqSgZKE8cxwWg13IpQIjpy0a289w2/7QS1C5+5LkCbUgF3ecZodbiGPFFRGNql3wEp7MxWQt56WObQfIDmKDYVAmg2EC6lmeEJR6didijusW6kDViIHrpF3LWCc+c7HbsePxbp98=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB6449.eurprd04.prod.outlook.com (20.179.253.159) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.14; Wed, 7 Aug 2019 09:23:41 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::5d98:e1f4:aa72:16b4]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::5d98:e1f4:aa72:16b4%4]) with mapi id 15.20.2115.017; Wed, 7 Aug 2019
+ 09:23:41 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     Sudeep Holla <sudeep.holla@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bo Zhang <bozhang.zhang@broadcom.com>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        Volodymyr Babchuk <volodymyr_babchuk@epam.com>,
+        Gaku Inami <gaku.inami.xh@renesas.com>,
+        "aidapala@qti.qualcomm.com" <aidapala@qti.qualcomm.com>,
+        "pajay@qti.qualcomm.com" <pajay@qti.qualcomm.com>,
+        Etienne Carriere <etienne.carriere@linaro.org>,
+        Souvik Chakravarty <Souvik.Chakravarty@arm.com>,
+        "wesleys@xilinx.com" <wesleys@xilinx.com>,
+        Felix Burton <fburton@xilinx.com>,
+        Saeed Nowshadi <saeed.nowshadi@xilinx.com>,
+        Ionela Voinescu <Ionela.Voinescu@arm.com>,
+        Chris Redpath <Chris.Redpath@arm.com>,
+        Quentin Perret <Quentin.Perret@arm.com>
+Subject: RE: [PATCH v2 1/5] firmware: arm_scmi: Add discovery of SCMI v2.0
+ performance fastchannels
+Thread-Topic: [PATCH v2 1/5] firmware: arm_scmi: Add discovery of SCMI v2.0
+ performance fastchannels
+Thread-Index: AQHVTHi3HY5NFbDe5kuKtUFEt88FDqbvan6Q
+Date:   Wed, 7 Aug 2019 09:23:41 +0000
+Message-ID: <AM0PR04MB4481BA101A13A0E45DA50E9088D40@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <20190806170208.6787-1-sudeep.holla@arm.com>
+ <20190806170208.6787-2-sudeep.holla@arm.com>
+In-Reply-To: <20190806170208.6787-2-sudeep.holla@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-originating-ip: [119.31.174.71]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6f3a9d2a-bd1f-4c0e-04c1-08d71b18f01c
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB6449;
+x-ms-traffictypediagnostic: AM0PR04MB6449:
+x-microsoft-antispam-prvs: <AM0PR04MB64499EA7AEB5314AB9E11B0888D40@AM0PR04MB6449.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3383;
+x-forefront-prvs: 01221E3973
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(136003)(396003)(39860400002)(366004)(199004)(189003)(66476007)(66946007)(476003)(14444005)(64756008)(66446008)(256004)(66556008)(54906003)(76116006)(486006)(52536014)(7736002)(305945005)(44832011)(110136005)(6116002)(2501003)(316002)(8676002)(186003)(3846002)(68736007)(74316002)(53936002)(81166006)(33656002)(81156014)(6246003)(71200400001)(71190400001)(478600001)(25786009)(446003)(11346002)(7416002)(6506007)(8936002)(55016002)(9686003)(7696005)(14454004)(5660300002)(86362001)(6436002)(99286004)(2906002)(66066001)(229853002)(76176011)(4326008)(26005)(102836004);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6449;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 74humZJPNOOURBmajbAl1m1yzVpAG3jxsTeNlq7fNJlmSR4a+4sl79upUNZ64YjszzWOqNQ9Qe+A8HwoTHPghO9AUxVCzCWz8zwkmJfJjZqywVDbsauongmq+GfT5LTFptR6C+BUwELEXHO26KvqfyzMCKuX9agPg/TPiE0eqyIjM9szAY6hIx8UZUX77QR78eGctPa9prjB1Tu/s4SQD+eH9nPeY2sRAIvfpMZuWcLIP7S6mnUwFRWuVEIkk4f9q1N1h2OEtG21K2k3USnGZOxVgRyfLM91DQ2m0ET3QUKuz4mx5BFL8IXqC5KlDP698e5hOlRShsXbYeV4UhFVSQcjWW/GYDwh5CMIYSp//sw8miEg+ktGBYmI1D16NbJUl0MIWNiSkUeIea08D2X30XTkWs8/Opsjk5oe2NWOPjQ=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6f3a9d2a-bd1f-4c0e-04c1-08d71b18f01c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Aug 2019 09:23:41.6708
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: peng.fan@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6449
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-08-06 at 22:15 -0700, Nathan Chancellor wrote:
-> Just for everyone else (since I commented on our issue tracker), this is
-> now fixed in Linus's tree as of commit  1f6607250331 ("iwlwifi: dbg_ini:
-> fix compile time assert build errors").
+> Subject: [PATCH v2 1/5] firmware: arm_scmi: Add discovery of SCMI v2.0
+> performance fastchannels
+>=20
+> SCMI v2.0 adds support for "FastChannel", a lightweight unidirectional
+> channel that is dedicated to a single SCMI message type for controlling a
+> specific platform resource. They do not use a message header as they are
+> specialized for a single message.
+>=20
+> Only PERFORMANCE_LIMITS_{SET,GET} and
+> PERFORMANCE_LEVEL_{SET,GET} commands are supported over
+> fastchannels. As they are optional, they need to be discovered by
+> PERFORMANCE_DESCRIBE_FASTCHANNEL command.
+> Further {LIMIT,LEVEL}_SET commands can have optional doorbell support.
+>=20
+> Add support for discovery of these fastchannels.
+>=20
+> Cc: Ionela Voinescu <Ionela.Voinescu@arm.com>
+> Cc: Chris Redpath <Chris.Redpath@arm.com>
+> Cc: Quentin Perret <Quentin.Perret@arm.com>
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> ---
+>  drivers/firmware/arm_scmi/perf.c | 153
+> ++++++++++++++++++++++++++++++-
+>  1 file changed, 149 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/firmware/arm_scmi/perf.c
+> b/drivers/firmware/arm_scmi/perf.c
+> index 3c8ae7cc35de..6cce3e82e81e 100644
+> --- a/drivers/firmware/arm_scmi/perf.c
+> +++ b/drivers/firmware/arm_scmi/perf.c
+> @@ -5,7 +5,9 @@
+>   * Copyright (C) 2018 ARM Ltd.
+>   */
+>=20
+> +#include <linux/bits.h>
+>  #include <linux/of.h>
+> +#include <linux/io.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/pm_opp.h>
+>  #include <linux/sort.h>
+> @@ -21,6 +23,7 @@ enum scmi_performance_protocol_cmd {
+>  	PERF_LEVEL_GET =3D 0x8,
+>  	PERF_NOTIFY_LIMITS =3D 0x9,
+>  	PERF_NOTIFY_LEVEL =3D 0xa,
+> +	PERF_DESCRIBE_FASTCHANNEL =3D 0xb,
+>  };
+>=20
+>  struct scmi_opp {
+> @@ -44,6 +47,7 @@ struct scmi_msg_resp_perf_domain_attributes {
+>  #define SUPPORTS_SET_PERF_LVL(x)	((x) & BIT(30))
+>  #define SUPPORTS_PERF_LIMIT_NOTIFY(x)	((x) & BIT(29))
+>  #define SUPPORTS_PERF_LEVEL_NOTIFY(x)	((x) & BIT(28))
+> +#define SUPPORTS_PERF_FASTCHANNELS(x)	((x) & BIT(27))
+>  	__le32 rate_limit_us;
+>  	__le32 sustained_freq_khz;
+>  	__le32 sustained_perf_level;
+> @@ -87,17 +91,56 @@ struct scmi_msg_resp_perf_describe_levels {
+>  	} opp[0];
+>  };
+>=20
+> +struct scmi_perf_get_fc_info {
+> +	__le32 domain;
+> +	__le32 message_id;
+> +};
+> +
+> +struct scmi_msg_resp_perf_desc_fc {
+> +	__le32 attr;
+> +#define SUPPORTS_DOORBELL(x)		((x) & BIT(0))
+> +#define DOORBELL_REG_WIDTH(x)		FIELD_GET(GENMASK(2, 1), (x))
+> +	__le32 rate_limit;
+> +	__le32 chan_addr_low;
+> +	__le32 chan_addr_high;
+> +	__le32 chan_size;
+> +	__le32 db_addr_low;
+> +	__le32 db_addr_high;
+> +	__le32 db_set_lmask;
+> +	__le32 db_set_hmask;
+> +	__le32 db_preserve_lmask;
+> +	__le32 db_preserve_hmask;
+> +};
+> +
+> +struct scmi_fc_db_info {
+> +	int width;
+> +	u64 set;
+> +	u64 mask;
+> +	void __iomem *addr;
+> +};
+> +
+> +struct scmi_fc_info {
+> +	void __iomem *level_set_addr;
+> +	void __iomem *limit_set_addr;
+> +	void __iomem *level_get_addr;
+> +	void __iomem *limit_get_addr;
+> +	struct scmi_fc_db_info *level_set_db;
+> +	struct scmi_fc_db_info *limit_set_db;
+> +};
+> +
+>  struct perf_dom_info {
+>  	bool set_limits;
+>  	bool set_perf;
+>  	bool perf_limit_notify;
+>  	bool perf_level_notify;
+> +	bool perf_fastchannels;
+>  	u32 opp_count;
+>  	u32 sustained_freq_khz;
+>  	u32 sustained_perf_level;
+>  	u32 mult_factor;
+>  	char name[SCMI_MAX_STR_SIZE];
+>  	struct scmi_opp opp[MAX_OPPS];
+> +	struct scmi_fc_info *fc_info;
+>  };
+>=20
+>  struct scmi_perf_info {
+> @@ -162,6 +205,7 @@ scmi_perf_domain_attributes_get(const struct
+> scmi_handle *handle, u32 domain,
+>  		dom_info->set_perf =3D SUPPORTS_SET_PERF_LVL(flags);
+>  		dom_info->perf_limit_notify =3D
+> SUPPORTS_PERF_LIMIT_NOTIFY(flags);
+>  		dom_info->perf_level_notify =3D
+> SUPPORTS_PERF_LEVEL_NOTIFY(flags);
+> +		dom_info->perf_fastchannels =3D
+> SUPPORTS_PERF_FASTCHANNELS(flags);
+>  		dom_info->sustained_freq_khz =3D
+>  					le32_to_cpu(attr->sustained_freq_khz);
+>  		dom_info->sustained_perf_level =3D
+> @@ -250,7 +294,7 @@ scmi_perf_describe_levels_get(const struct
+> scmi_handle *handle, u32 domain,  }
+>=20
+>  static int scmi_perf_limits_set(const struct scmi_handle *handle, u32
+> domain,
+> -				u32 max_perf, u32 min_perf)
+> +				   u32 max_perf, u32 min_perf)
+>  {
+>  	int ret;
+>  	struct scmi_xfer *t;
+> @@ -273,7 +317,7 @@ static int scmi_perf_limits_set(const struct
+> scmi_handle *handle, u32 domain,  }
+>=20
+>  static int scmi_perf_limits_get(const struct scmi_handle *handle, u32
+> domain,
+> -				u32 *max_perf, u32 *min_perf)
+> +				   u32 *max_perf, u32 *min_perf)
+>  {
+>  	int ret;
+>  	struct scmi_xfer *t;
+> @@ -299,7 +343,7 @@ static int scmi_perf_limits_get(const struct
+> scmi_handle *handle, u32 domain,  }
+>=20
+>  static int scmi_perf_level_set(const struct scmi_handle *handle, u32
+> domain,
+> -			       u32 level, bool poll)
+> +				  u32 level, bool poll)
+>  {
+>  	int ret;
+>  	struct scmi_xfer *t;
+> @@ -322,7 +366,7 @@ static int scmi_perf_level_set(const struct
+> scmi_handle *handle, u32 domain,  }
+>=20
+>  static int scmi_perf_level_get(const struct scmi_handle *handle, u32
+> domain,
+> -			       u32 *level, bool poll)
+> +				  u32 *level, bool poll)
+>  {
+>  	int ret;
+>  	struct scmi_xfer *t;
+> @@ -343,6 +387,104 @@ static int scmi_perf_level_get(const struct
+> scmi_handle *handle, u32 domain,
+>  	return ret;
+>  }
+>=20
+> +static bool scmi_perf_fc_size_is_valid(u32 msg, u32 size) {
+> +	if ((msg =3D=3D PERF_LEVEL_GET || msg =3D=3D PERF_LEVEL_SET) && size =
+=3D=3D 4)
+> +		return true;
+> +	if ((msg =3D=3D PERF_LIMITS_GET || msg =3D=3D PERF_LIMITS_SET) && size =
+=3D=3D 8)
+> +		return true;
+> +	return false;
+> +}
+> +
+> +static void
+> +scmi_perf_domain_desc_fc(const struct scmi_handle *handle, u32 domain,
+> +			 u32 message_id, void __iomem **p_addr,
+> +			 struct scmi_fc_db_info **p_db)
+> +{
+> +	int ret;
+> +	u32 flags;
+> +	u64 phys_addr;
+> +	u8 size;
+> +	void __iomem *addr;
+> +	struct scmi_xfer *t;
+> +	struct scmi_fc_db_info *db;
+> +	struct scmi_perf_get_fc_info *info;
+> +	struct scmi_msg_resp_perf_desc_fc *resp;
+> +
+> +	if (!p_addr)
+> +		return;
+> +
+> +	ret =3D scmi_xfer_get_init(handle, PERF_DESCRIBE_FASTCHANNEL,
+> +				 SCMI_PROTOCOL_PERF,
+> +				 sizeof(*info), sizeof(*resp), &t);
+> +	if (ret)
+> +		return;
+> +
+> +	info =3D t->tx.buf;
+> +	info->domain =3D cpu_to_le32(domain);
+> +	info->message_id =3D cpu_to_le32(message_id);
+> +
+> +	ret =3D scmi_do_xfer(handle, t);
+> +	if (ret)
+> +		goto err_xfer;
+> +
+> +	resp =3D t->rx.buf;
+> +	flags =3D le32_to_cpu(resp->attr);
+> +	size =3D le32_to_cpu(resp->chan_size);
+> +	if (!scmi_perf_fc_size_is_valid(message_id, size))
+> +		goto err_xfer;
+> +
+> +	phys_addr =3D le32_to_cpu(resp->chan_addr_low);
+> +	phys_addr |=3D (u64)le32_to_cpu(resp->chan_addr_high) << 32;
+> +	addr =3D devm_ioremap(handle->dev, phys_addr, size);
+> +	if (!addr)
+> +		goto err_xfer;
+> +	*p_addr =3D addr;
+> +
+> +	if (p_db && SUPPORTS_DOORBELL(flags)) {
+> +		db =3D devm_kzalloc(handle->dev, sizeof(*db), GFP_KERNEL);
+> +		if (!db)
+> +			goto err_xfer;
+> +
+> +		size =3D 1 << DOORBELL_REG_WIDTH(flags);
+> +		phys_addr =3D le32_to_cpu(resp->db_addr_low);
+> +		phys_addr |=3D (u64)le32_to_cpu(resp->db_addr_high) << 32;
+> +		addr =3D devm_ioremap(handle->dev, phys_addr, size);
+> +		if (!addr)
+> +			goto err_xfer;
+> +
+> +		db->addr =3D addr;
+> +		db->width =3D size;
+> +		db->set =3D le32_to_cpu(resp->db_set_lmask);
+> +		db->set |=3D (u64)le32_to_cpu(resp->db_set_hmask) << 32;
+> +		db->mask =3D le32_to_cpu(resp->db_preserve_lmask);
+> +		db->mask |=3D (u64)le32_to_cpu(resp->db_preserve_hmask) << 32;
+> +		*p_db =3D db;
+> +	}
+> +err_xfer:
+> +	scmi_xfer_put(handle, t);
+> +}
+> +
+> +static void scmi_perf_domain_init_fc(const struct scmi_handle *handle,
+> +				     u32 domain, struct scmi_fc_info **p_fc) {
+> +	struct scmi_fc_info *fc;
+> +
+> +	fc =3D devm_kzalloc(handle->dev, sizeof(*fc), GFP_KERNEL);
+> +	if (!fc)
+> +		return;
+> +
+> +	scmi_perf_domain_desc_fc(handle, domain, PERF_LEVEL_SET,
+> +				 &fc->level_set_addr, &fc->level_set_db);
+> +	scmi_perf_domain_desc_fc(handle, domain, PERF_LEVEL_GET,
+> +				 &fc->level_get_addr, NULL);
+> +	scmi_perf_domain_desc_fc(handle, domain, PERF_LIMITS_SET,
+> +				 &fc->limit_set_addr, &fc->limit_set_db);
+> +	scmi_perf_domain_desc_fc(handle, domain, PERF_LIMITS_GET,
+> +				 &fc->limit_get_addr, NULL);
+> +	*p_fc =3D fc;
+> +}
+> +
+>  /* Device specific ops */
+>  static int scmi_dev_domain_id(struct device *dev)  { @@ -494,6 +636,9
+> @@ static int scmi_perf_protocol_init(struct scmi_handle *handle)
+>=20
+>  		scmi_perf_domain_attributes_get(handle, domain, dom);
+>  		scmi_perf_describe_levels_get(handle, domain, dom);
+> +
+> +		if (dom->perf_fastchannels)
+> +			scmi_perf_domain_init_fc(handle, domain, &dom->fc_info);
+>  	}
+>=20
+>  	handle->perf_ops =3D &perf_ops;
 
-I think this change is incomplete and suggest you add this
-to remove the use of another const char * format.
+Reviewed-by: Peng Fan <peng.fan@nxp.com>
 
----
- drivers/net/wireless/intel/iwlwifi/fw/dbg.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/net/wireless/intel/iwlwifi/fw/dbg.c b/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
-index 4d81776f576d..6b15e2e8cd37 100644
---- a/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
-+++ b/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
-@@ -2593,20 +2593,20 @@ static void iwl_fw_dbg_update_regions(struct iwl_fw_runtime *fwrt,
- {
- 	void *iter = (void *)tlv->region_config;
- 	int i, size = le32_to_cpu(tlv->num_regions);
--	const char *err_st =
--		"WRT: ext=%d. Invalid region %s %d for apply point %d\n";
- 
- 	for (i = 0; i < size; i++) {
- 		struct iwl_fw_ini_region_cfg *reg = iter, **active;
- 		int id = le32_to_cpu(reg->region_id);
- 		u32 type = le32_to_cpu(reg->region_type);
- 
--		if (WARN(id >= ARRAY_SIZE(fwrt->dump.active_regs), err_st, ext,
--			 "id", id, pnt))
-+		if (WARN(id >= ARRAY_SIZE(fwrt->dump.active_regs),
-+			 "WRT: ext=%d. Invalid region id %d for apply point %d\n",
-+			 ext, id, pnt))
- 			break;
- 
--		if (WARN(type == 0 || type >= IWL_FW_INI_REGION_NUM, err_st,
--			 ext, "type", type, pnt))
-+		if (WARN(type == 0 || type >= IWL_FW_INI_REGION_NUM,
-+			 "WRT: ext=%d. Invalid region type %d for apply point %d\n",
-+			 ext, type, pnt))
- 			break;
- 
- 		active = &fwrt->dump.active_regs[id];
-
+> --
+> 2.17.1
 
