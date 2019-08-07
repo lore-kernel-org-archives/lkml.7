@@ -2,120 +2,202 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61222C32756
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADD08C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:43:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3649422293
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:40:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565188805;
-	bh=hSstj7xmNsV586xUFColzstwf5/C5WzlkNPW3r/mkiE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Kyw0HXUqUYmJ1nH0+jFVziy05AfOxlCSALwQmX7LGGvyDfqcwNkvgdNZBwx6XlrOn
-	 9/1h8fCV77k3YpLKJ0RYpe9LbPeb7fhJDcJSHVzWZpQ+3oZx7ILoM3TGjuK2LaxdN+
-	 vHmiFZ8Q4pV9o1U10+hHB54tiemRbVzWgL52rtoM=
+	by mail.kernel.org (Postfix) with ESMTP id 846E42199C
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:43:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="YwsL5UZm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730103AbfHGOkE (ORCPT
+        id S1729992AbfHGOnu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 10:40:04 -0400
-Received: from mga04.intel.com ([192.55.52.120]:56257 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729516AbfHGOkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 10:40:03 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Aug 2019 07:40:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,357,1559545200"; 
-   d="scan'208";a="165338496"
-Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
-  by orsmga007.jf.intel.com with ESMTP; 07 Aug 2019 07:40:01 -0700
-Date:   Wed, 7 Aug 2019 08:37:34 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Mario Limonciello <Mario.Limonciello@dell.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        "Busch, Keith" <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH] nvme-pci: Do not prevent PCI bus-level PM from being used
-Message-ID: <20190807143733.GA25621@localhost.localdomain>
-References: <47415939.KV5G6iaeJG@kreacher>
- <20190730144134.GA12844@localhost.localdomain>
- <100ba4aff1c6434a81e47774ab4acddc@AUSX13MPC105.AMER.DELL.COM>
- <8246360B-F7D9-42EB-94FC-82995A769E28@canonical.com>
- <20190730191934.GD13948@localhost.localdomain>
- <7d3e0b8ba1444194a153c93faa1cabb3@AUSX13MPC105.AMER.DELL.COM>
- <20190730213114.GK13948@localhost.localdomain>
- <CAJZ5v0gxfeMN8eCNRjcXmUOkReVsdozb3EccaYMpnmSHu3771g@mail.gmail.com>
- <20190731221956.GB15795@localhost.localdomain>
- <1893355.EP2830DdO9@kreacher>
+        Wed, 7 Aug 2019 10:43:50 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:16422 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729602AbfHGOnu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 10:43:50 -0400
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x77Ehc96019415;
+        Wed, 7 Aug 2019 23:43:39 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x77Ehc96019415
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1565189019;
+        bh=/JMuf66dpHQpVrx+iK6cRZpErJQAF9lLb6RxvsazUgA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=YwsL5UZmFZC3ZmQtxhLoNnylQFyn8FmOcasacZpCoJxrJPW/dAY/qNEpAo3AC5nXy
+         d0f0zX0roDfvicCJEg1FqEvitmYDY5K/hFcqB2nIXU0WcuZcB7z7zX4FJp8s/ZEc1x
+         LiX8mnDpLKAa+dWUtfImodjktINSElddVCt6m0KPHnbUyJ9h3N3YvMhLTr3kDKt1zr
+         itK3Dk6sdrK+IDZZ7MuKGQcyq6qT/S4mztdqHoRbM6zQWhflMzSRQO/N5nhg2RofU1
+         3EbCi2qq2R6TJE1zK6mFanzUbh1E/WFZshZuYKVrBLq9yoQsglwRKd1zx1N1uq4Ljn
+         pJrK+g21IhmBw==
+X-Nifty-SrcIP: [209.85.222.47]
+Received: by mail-ua1-f47.google.com with SMTP id v18so35105981uad.12;
+        Wed, 07 Aug 2019 07:43:39 -0700 (PDT)
+X-Gm-Message-State: APjAAAVLzFm0yggh/EdGUHPLPEK+Ttlz8iHdQEom8b2vPvQUhh4hHgL1
+        5I4pm8W2uZBDOJ0V1czm7nj2UQhjuxab1r30jpg=
+X-Google-Smtp-Source: APXvYqxDqotVqYCy/FwyuhXBsoxhmVR3P/BOmsY+Y15m7Zcsx9D2cLdaYutFF/3Y6PkkMQQkVkMWbWP/8P9Wkt8hYc0=
+X-Received: by 2002:a9f:2265:: with SMTP id 92mr6134889uad.121.1565189018195;
+ Wed, 07 Aug 2019 07:43:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1893355.EP2830DdO9@kreacher>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+References: <20190807095022.0314e2fc@canb.auug.org.au> <CAMn1gO6P_VfDRjGZb67ZS4Kh0wjTEQi0cbOkmibTokHQOgP7qw@mail.gmail.com>
+ <20190807114614.ubzlkulk7aidws3p@willie-the-truck>
+In-Reply-To: <20190807114614.ubzlkulk7aidws3p@willie-the-truck>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Wed, 7 Aug 2019 23:43:02 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASr8mbGDbWikr2P8Pc_6WEpMyXuK-xkgypYOzkWw_6LUw@mail.gmail.com>
+Message-ID: <CAK7LNASr8mbGDbWikr2P8Pc_6WEpMyXuK-xkgypYOzkWw_6LUw@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the arm64 tree
+To:     Will Deacon <will@kernel.org>
+Cc:     Peter Collingbourne <pcc@google.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 07, 2019 at 02:53:44AM -0700, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> 
-> One of the modifications made by commit d916b1be94b6 ("nvme-pci: use
-> host managed power state for suspend") was adding a pci_save_state()
-> call to nvme_suspend() in order to prevent the PCI bus-level PM from
-> being applied to the suspended NVMe devices, but if ASPM is not
-> enabled for the target NVMe device, that causes its PCIe link to stay
-> up and the platform may not be able to get into its optimum low-power
-> state because of that.
-> 
-> For example, if ASPM is disabled for the NVMe drive (PC401 NVMe SK
-> hynix 256GB) in my Dell XPS13 9380, leaving it in D0 during
-> suspend-to-idle prevents the SoC from reaching package idle states
-> deeper than PC3, which is way insufficient for system suspend.
-> 
-> To address this shortcoming, make nvme_suspend() check if ASPM is
-> enabled for the target device and fall back to full device shutdown
-> and PCI bus-level PM if that is not the case.
-> 
-> Fixes: d916b1be94b6 ("nvme-pci: use host managed power state for suspend")
-> Link: https://lore.kernel.org/linux-pm/2763495.NmdaWeg79L@kreacher/T/#t
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Hi.
 
-Thanks for tracking down the cause. Sounds like your earlier assumption
-on ASPM's involvement was spot on.
+On Wed, Aug 7, 2019 at 8:46 PM Will Deacon <will@kernel.org> wrote:
+>
+> Hi Peter,
+>
+> On Tue, Aug 06, 2019 at 07:34:36PM -0700, Peter Collingbourne wrote:
+> > On Tue, Aug 6, 2019 at 4:50 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> > > After merging the arm64 tree, today's linux-next build (powerpc
+> > > ppc64_defconfig) was just spinning in make - it executing some scripts,
+> > > but it was hard to catch just what.
+> > >
+> > > Apparently caused by commit
+> > >
+> > >   5cf896fb6be3 ("arm64: Add support for relocating the kernel with RELR relocations")
+> > >
+> > > I have not idea why, but reverting the above commit allows to build
+> > > to finish.
+> >
+> > Okay, I can reproduce with:
+>
+> Likewise.
+>
+> > That leads me to ask what is special about $(NM) + powerpc? It turns
+> > out to be this fragment of arch/powerpc/Makefile:
+> >
+> > ifdef CONFIG_PPC64
+> > new_nm := $(shell if $(NM) --help 2>&1 | grep -- '--synthetic' >
+> > /dev/null; then echo y; else echo n; fi)
+> >
+> > ifeq ($(new_nm),y)
+> > NM              := $(NM) --synthetic
+> > endif
+> > endif
+> >
+> > We're setting NM to something else based on a config option, which I
+> > presume sets up some sort of circular dependency that confuses
+> > Kconfig. Removing this fragment of the makefile (or appending
+> > --synthetic unconditionally) also makes the problem go away.
 
-> +/*
-> + * pcie_aspm_enabled - Return the mask of enabled ASPM link states.
-> + * @pci_device: Target device.
-> + */
-> +u32 pcie_aspm_enabled(struct pci_dev *pci_device)
-> +{
-> +	struct pci_dev *bridge = pci_device->bus->self;
+Exactly. This makes a circular dependency.
+Kconfig determines the environment variable 'NM' has been changed,
+and re-runs.
 
-You may want use pci_upstream_bridge() instead, just in case someone
-calls this on a virtual function's pci_dev.
 
-> +	u32 aspm_enabled;
-> +
-> +	mutex_lock(&aspm_lock);
-> +	aspm_enabled = bridge->link_state ? bridge->link_state->aspm_enabled : 0;
-> +	mutex_unlock(&aspm_lock);
-> +
-> +	return aspm_enabled;
-> +}
+
+> Yes, I think you're right. The lack of something like KBUILD_NMFLAGS means
+> that architectures are forced to override NM entirely if they want to pass
+> any specific options. Making that conditional on a Kconfig option appears
+> to send the entire thing recursive.
+
+Adding KBUILD_NMFLAGS is probably the right thing to do.
+(Is there somebody who wants to volunteer for this?)
+
+But, for this particular case, I vote for
+the entire removal of --synthetic.
+
+This dates back to 2004, and the commit message
+did not clearly explain why it was needed.
+
+The PowerPC maintainers should re-evaluate
+whether or not this flag is necessary.
+
+ppc32 is working without --synthetic,
+so probably ppc64 would be ...
+
+
+
+>
+> > So I guess we have a couple of possible quick fixes (assuming that the
+> > Kconfig issue can't be solved somehow): either stop passing --synthetic on
+> > powerpc and lose a couple of symbols in 64-bit kernels, or start passing
+> > it unconditionally on powerpc (it doesn't seem to make a difference to the
+> > nm output on a ppc64_defconfig kernel with CONFIG_PPC64=n). I'm cc'ing the
+> > powerpc maintainers for their opinion on what to do. While this is being
+> > resolved we should probably back out my patch from -next.
+>
+> Although Alpha, Itanic and PowerPC all override NM, only PowerPC does it
+> conditionally so I agree with you that passing '--synthetic' unconditionally
+> would resolve the problem and is certainly my preferred approach if mpe is
+> ok with it.
+>
+> In the meantime, it seems a shame to revert your patch, so I'll bodge it
+> as below and we can revert the bodge if PowerPC manages to remove the
+> conditional NM override. Sound ok to you?
+>
+> Cheers,
+>
+> Will
+>
+> --->8
+>
+> diff --git a/init/Kconfig b/init/Kconfig
+> index d96127ebc44e..a38027a06b79 100644
+> --- a/init/Kconfig
+> +++ b/init/Kconfig
+> @@ -31,7 +31,7 @@ config CC_HAS_ASM_GOTO
+>         def_bool $(success,$(srctree)/scripts/gcc-goto.sh $(CC))
+>
+>  config TOOLS_SUPPORT_RELR
+> -       def_bool $(success,env "CC=$(CC)" "LD=$(LD)" "NM=$(NM)" "OBJCOPY=$(OBJCOPY)" $(srctree)/scripts/tools-support-relr.sh)
+> +       def_bool $(success,env "CC=$(CC)" "LD=$(LD)" "NM=$(CROSS_COMPILE)nm" "OBJCOPY=$(OBJCOPY)" $(srctree)/scripts/tools-support-relr.sh)
+>
+>  config CC_HAS_WARN_MAYBE_UNINITIALIZED
+>         def_bool $(cc-option,-Wmaybe-uninitialized)
+
+Maybe,
+
+def_bool $(success,env "CC=$(CC)" "LD=$(LD)" "OBJCOPY=$(OBJCOPY)"
+$(srctree)/scripts/tools-support-relr.sh)
+
+will work.
+
+
+Or more simply
+
+def_bool $(success,$(srctree)/scripts/tools-support-relr.sh)
+
+
+
+CC, LD, OBJCOPY, NM are environment variables,
+so I think tools-support-relr.sh can directly use them.
+
+
+However, this bypasses the detection of environment variable changes.
+If a user passes NM= from the command line, Kconfig will no longer
+notice the change of NM.
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
