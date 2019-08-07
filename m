@@ -2,205 +2,149 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D7FC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:32:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8999EC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:32:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AC0A21E6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:32:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55FC921E6C
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:32:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="M6crtf8b"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="q2gUSUFq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388608AbfHGNcH (ORCPT
+        id S2388691AbfHGNci (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 09:32:07 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:60734 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388586AbfHGNcA (ORCPT
+        Wed, 7 Aug 2019 09:32:38 -0400
+Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:34824 "EHLO
+        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388123AbfHGNcf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 09:32:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=jZpUDmTOUfjlabnlELyDHxkM2xeqc2FxDEcnqQJbBsM=; b=M6crtf8b8PlDGBRQWw/uVJgWYc
-        KjhvgsZE5SVTGnlNIP7zNIfjgMZmszbV0t+uUqDKhObug+cMj6fMiMzNlJyGbImCBQq3PXFV89mm5
-        EMH06Kf8jYFL9XYYM+zLFZtyxg2zxhdfmj7+9Cnb8en0RzORfF1b5q5MmIhTUb8A48Q1EIwF3pHl9
-        SIJ1m7kKoMQiSaoekVq6AqjZoRcLT2aor5sVPyLlS85FbklVKQQmMzVugpCfJda7/0mBmQDKTOhYW
-        NxOW5NNjYiM1TCe/eIrBq6HelTbztgXjSTqGdhgHaQ03hvu5Dd/F6xQ2K6RdQJs8nuvssmWoNYVwP
-        QvRKySjQ==;
-Received: from [195.167.85.94] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hvM2p-0008CU-55; Wed, 07 Aug 2019 13:31:59 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 21/29] ia64: remove the SGI UV simulator support
-Date:   Wed,  7 Aug 2019 16:30:41 +0300
-Message-Id: <20190807133049.20893-22-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190807133049.20893-1-hch@lst.de>
-References: <20190807133049.20893-1-hch@lst.de>
+        Wed, 7 Aug 2019 09:32:35 -0400
+Received: from pps.filterd (m0167091.ppops.net [127.0.0.1])
+        by mx0b-00128a01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x77DS392029236;
+        Wed, 7 Aug 2019 09:31:59 -0400
+Received: from nam01-by2-obe.outbound.protection.outlook.com (mail-by2nam01lp2053.outbound.protection.outlook.com [104.47.34.53])
+        by mx0b-00128a01.pphosted.com with ESMTP id 2u7wxfgatk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 07 Aug 2019 09:31:58 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Sopc7JJd5zK9F+0Fvk+BbPEqBjPVn7T47oYaQePWQXUvFfx8gc28N1IK0Hk/HW+HUnJHVlUFHKnwnERcsHhTzv8ekmOZ8PFtMXArv4rNpuGsyV43QD/E/oLS3XRaQbX0qbhVNpKLdtigzmmMA/QOadqYOWwhnh+/NTwdCsJYReEmvlqc8EpD1crCZfWh5AZUPVw/fClwnWVtfx7oFHqxXqAnzNX0EFbvzIPc0udMNVv+7DXXgkWl2NzaJkdjsFv3QPQajAdOoi7JMAtY0/IwTxQktIlRoHnEvyz8dE7zLrvMViIK4kX46RebHJajYrZqbb7o35aT/AbsDW44vFhKsw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oETMkr97yzEp1xU4FUK7lcoSoEr6Bt8FHYMUiwCJUl4=;
+ b=J74h99af7IahM9SMGY0RC7zmxIijDGUg9lgE9bsw9fGXPqMf2YvPH8SPuFgaQhX74vh/9jX9F4/Z8MV6mr6EzXnoCGZPAH62uD/GPqBuaH4J0D9SKecK/oOaZ2fFEHRqiNral5U2JJUPnCUTLHuqDess/0rIkruAjTdm0m2w413IolKZw9knBliW5c3Rc87vaEdfYp+eixSuVjNjY2ifbeB88JA0sWU+e4n7b6BAiyjm/SvXhdlSBtftNrQ21byYd/ffkpoYBh/X4XZfiB8cMR0m4/2dvXDgRgfCrUFO3FeTu2F1K/AgQ/pIWqhNGic43pvKTj7/LAq5pG82DBaCIw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 137.71.25.55) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=analog.com;
+ dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oETMkr97yzEp1xU4FUK7lcoSoEr6Bt8FHYMUiwCJUl4=;
+ b=q2gUSUFq+kCIBY4e4/EJzbBmgFf8/NDM8RqxihtD5IPdCulY4llATpmEkGp0gLkxkEvfo7cls9jUBHAEkk1rRzznY+e1Do4ing3JIqNZLluaOUW+28mu39VzYFRCWQi7clsEQqdV2nQQ3bXnyldW2oTpCPXp+65WD+fwMXh3r1Y=
+Received: from MWHPR03CA0004.namprd03.prod.outlook.com (2603:10b6:300:117::14)
+ by BN7PR03MB4468.namprd03.prod.outlook.com (2603:10b6:408:d::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2157.16; Wed, 7 Aug
+ 2019 13:31:56 +0000
+Received: from SN1NAM02FT050.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::200) by MWHPR03CA0004.outlook.office365.com
+ (2603:10b6:300:117::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2157.15 via Frontend
+ Transport; Wed, 7 Aug 2019 13:31:55 +0000
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
+Received: from nwd2mta1.analog.com (137.71.25.55) by
+ SN1NAM02FT050.mail.protection.outlook.com (10.152.72.128) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2157.15
+ via Frontend Transport; Wed, 7 Aug 2019 13:31:54 +0000
+Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
+        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id x77DVp4e028935
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Wed, 7 Aug 2019 06:31:51 -0700
+Received: from ben-Latitude-E6540.ad.analog.com (10.48.65.163) by
+ NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
+ 14.3.408.0; Wed, 7 Aug 2019 09:31:53 -0400
+From:   Beniamin Bia <beniamin.bia@analog.com>
+To:     <jic23@kernel.org>
+CC:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
+        <knaack.h@gmx.de>, <pmeerw@pmeerw.net>,
+        <gregkh@linuxfoundation.org>, <linux-iio@vger.kernel.org>,
+        <devel@driverdev.osuosl.org>, <linux-kernel@vger.kernel.org>,
+        <mark.rutland@arm.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>, <paulmck@linux.ibm.com>,
+        <mchehab+samsung@kernel.org>, <linus.walleij@linaro.org>,
+        <nicolas.ferre@microchip.com>, <biabeniamin@outlook.com>,
+        Beniamin Bia <beniamin.bia@analog.com>
+Subject: [PATCH v2 2/4] MAINTAINERS: Add Beniamin Bia for AD7606 driver
+Date:   Wed, 7 Aug 2019 16:31:35 +0300
+Message-ID: <20190807133137.11185-2-beniamin.bia@analog.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190807133137.11185-1-beniamin.bia@analog.com>
+References: <20190807133137.11185-1-beniamin.bia@analog.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(396003)(136003)(346002)(376002)(39860400002)(2980300002)(199004)(189003)(246002)(16586007)(7416002)(8936002)(356004)(6666004)(48376002)(6916009)(70206006)(70586007)(50226002)(47776003)(76176011)(8676002)(966005)(5660300002)(7696005)(4326008)(51416003)(316002)(2351001)(36756003)(107886003)(26005)(2906002)(186003)(86362001)(106002)(446003)(2616005)(11346002)(476003)(426003)(336012)(6306002)(54906003)(44832011)(7636002)(126002)(305945005)(478600001)(50466002)(4744005)(486006)(1076003);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR03MB4468;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 8d5d2b24-d1a0-45ab-c7e9-08d71b3b9d82
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:BN7PR03MB4468;
+X-MS-TrafficTypeDiagnostic: BN7PR03MB4468:
+X-MS-Exchange-PUrlCount: 1
+X-Microsoft-Antispam-PRVS: <BN7PR03MB4468D6A2EBF90F579AD0ACA5F0D40@BN7PR03MB4468.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1303;
+X-Forefront-PRVS: 01221E3973
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: UjOzTci4BphNBjW6FyUClOroEHjk35yFDcAEhbetukQ1g6Df8ZsRMBp+FtxwuAWwDJU/fTtNUma7YgwlTprCmlLJazVbcYHykBDu+6u2vZqM6Yem4H6qFR5eRinMTQHVKf6E7RYYHqKBNFuZlRI4VZ0y/yqJFbcC4MtUU0Gv+DiTM1f4Mpt5tNu5lcj3xPQU1wdd+P2+V6/wuNpLx/J5ZSd3HCcoFaVnThq7qoLpo/XDD3Q67E52SY40y4O4QYMVSVCM2f9cNodmSXm0PbR9ZBZLKG9kqUIC28ACJ8ukTLbu27pPu4g2EypvJnnT35QsJjCg53iiPwjdr+wr5Ks4lT+BR7veRnl8g97zpWfSIFiNLoW/OY4mFPI3dbjY7wUz16ILKBvg5kEorfu+xIOHgbpJPnlScaIiGD1dC+Iv9Sk=
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Aug 2019 13:31:54.8562
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8d5d2b24-d1a0-45ab-c7e9-08d71b3b9d82
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR03MB4468
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-07_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908070147
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The simulator support was marked as temporary since the initial commit,
-so drop it more than 10 years later.
+Add Beniamin Bia as maintainer for AD7606 driver.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
 ---
- arch/ia64/include/asm/sn/simulator.h | 25 ----------------------
- arch/ia64/include/asm/sn/sn_sal.h    | 10 ---------
- arch/ia64/include/asm/uv/uv.h        |  4 +---
- arch/ia64/uv/kernel/setup.c          | 31 +++++-----------------------
- 4 files changed, 6 insertions(+), 64 deletions(-)
- delete mode 100644 arch/ia64/include/asm/sn/simulator.h
+Changes in v2:
+-nothing changed
 
-diff --git a/arch/ia64/include/asm/sn/simulator.h b/arch/ia64/include/asm/sn/simulator.h
-deleted file mode 100644
-index 3e4557df3b7c..000000000000
---- a/arch/ia64/include/asm/sn/simulator.h
-+++ /dev/null
-@@ -1,25 +0,0 @@
--/*
-- * This file is subject to the terms and conditions of the GNU General Public
-- * License.  See the file "COPYING" in the main directory of this archive
-- * for more details.
-- * Copyright (C) 2000-2004 Silicon Graphics, Inc. All rights reserved.
-- */
--
--#ifndef _ASM_IA64_SN_SIMULATOR_H
--#define _ASM_IA64_SN_SIMULATOR_H
--
--#if defined(CONFIG_IA64_GENERIC) || defined(CONFIG_IA64_SGI_UV)
--#define SNMAGIC 0xaeeeeeee8badbeefL
--#define IS_MEDUSA()			({long sn; asm("mov %0=cpuid[%1]" : "=r"(sn) : "r"(2)); sn == SNMAGIC;})
--
--#define SIMULATOR_SLEEP()		asm("nop.i 0x8beef")
--#define IS_RUNNING_ON_SIMULATOR()	(sn_prom_type)
--#define IS_RUNNING_ON_FAKE_PROM()	(sn_prom_type == 2)
--extern int sn_prom_type;		/* 0=hardware, 1=medusa/realprom, 2=medusa/fakeprom */
--#else
--#define IS_MEDUSA()			0
--#define SIMULATOR_SLEEP()
--#define IS_RUNNING_ON_SIMULATOR()	0
--#endif
--
--#endif /* _ASM_IA64_SN_SIMULATOR_H */
-diff --git a/arch/ia64/include/asm/sn/sn_sal.h b/arch/ia64/include/asm/sn/sn_sal.h
-index 48b88d0807db..d437aa43343b 100644
---- a/arch/ia64/include/asm/sn/sn_sal.h
-+++ b/arch/ia64/include/asm/sn/sn_sal.h
-@@ -30,8 +30,6 @@
- #define SALRET_INVALID_ARG	(-2)
- #define SALRET_ERROR		(-3)
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ad498428b38c..052d7a8591fb 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -895,6 +895,7 @@ F:	Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt
  
--#define SN_SAL_FAKE_PROM			   0x02009999
--
- /*
-  * Returns the physical address of the partition's reserved page through
-  * an iterative number of calls.
-@@ -81,14 +79,6 @@ sn_change_memprotect(u64 paddr, u64 len, u64 perms, u64 *nasid_array)
- #define SN_MEMPROT_ACCESS_CLASS_6		0x084080
- #define SN_MEMPROT_ACCESS_CLASS_7		0x021080
- 
--static inline int
--ia64_sn_is_fake_prom(void)
--{
--	struct ia64_sal_retval rv;
--	SAL_CALL_NOLOCK(rv, SN_SAL_FAKE_PROM, 0, 0, 0, 0, 0, 0, 0);
--	return (rv.status == 0);
--}
--
- union sn_watchlist_u {
- 	u64     val;
- 	struct {
-diff --git a/arch/ia64/include/asm/uv/uv.h b/arch/ia64/include/asm/uv/uv.h
-index 71df93ee3bc0..502cf1c56369 100644
---- a/arch/ia64/include/asm/uv/uv.h
-+++ b/arch/ia64/include/asm/uv/uv.h
-@@ -2,12 +2,10 @@
- #ifndef _ASM_IA64_UV_UV_H
- #define _ASM_IA64_UV_UV_H
- 
--#include <asm/sn/simulator.h>
--
- static inline int is_uv_system(void)
- {
- 	/* temporary support for running on hardware simulator */
--	return IS_MEDUSA() || ia64_platform_is("uv");
-+	return ia64_platform_is("uv");
- }
- 
- #endif	/* _ASM_IA64_UV_UV_H */
-diff --git a/arch/ia64/uv/kernel/setup.c b/arch/ia64/uv/kernel/setup.c
-index 11478d2d863d..6ac4bd314d92 100644
---- a/arch/ia64/uv/kernel/setup.c
-+++ b/arch/ia64/uv/kernel/setup.c
-@@ -10,14 +10,12 @@
- 
- #include <linux/module.h>
- #include <linux/percpu.h>
--#include <asm/sn/simulator.h>
- #include <asm/uv/uv_mmrs.h>
- #include <asm/uv/uv_hub.h>
- 
- DEFINE_PER_CPU(struct uv_hub_info_s, __uv_hub_info);
- EXPORT_PER_CPU_SYMBOL_GPL(__uv_hub_info);
- 
--int sn_prom_type;
- long sn_coherency_id;
- EXPORT_SYMBOL_GPL(sn_coherency_id);
- 
-@@ -60,30 +58,11 @@ void __init uv_setup(char **cmdline_p)
- 	int nid, cpu, m_val, n_val;
- 	unsigned long mmr_base, lowmem_redir_base, lowmem_redir_size;
- 
--	if (IS_MEDUSA()) {
--		lowmem_redir_base = 0;
--		lowmem_redir_size = 0;
--		node_id.v = 0;
--		m_n_config.s.m_skt = 37;
--		m_n_config.s.n_skt = 0;
--		mmr_base = 0;
--#if 0
--		/* Need BIOS calls - TDB */
--		if (!ia64_sn_is_fake_prom())
--			sn_prom_type = 1;
--		else
--#endif
--			sn_prom_type = 2;
--		printk(KERN_INFO "Running on medusa with %s PROM\n",
--					(sn_prom_type == 1) ? "real" : "fake");
--	} else {
--		get_lowmem_redirect(&lowmem_redir_base, &lowmem_redir_size);
--		node_id.v = uv_read_local_mmr(UVH_NODE_ID);
--		m_n_config.v = uv_read_local_mmr(UVH_SI_ADDR_MAP_CONFIG);
--		mmr_base =
--			uv_read_local_mmr(UVH_RH_GAM_MMR_OVERLAY_CONFIG_MMR) &
--				~UV_MMR_ENABLE;
--	}
-+	get_lowmem_redirect(&lowmem_redir_base, &lowmem_redir_size);
-+	node_id.v = uv_read_local_mmr(UVH_NODE_ID);
-+	m_n_config.v = uv_read_local_mmr(UVH_SI_ADDR_MAP_CONFIG);
-+	mmr_base = uv_read_local_mmr(UVH_RH_GAM_MMR_OVERLAY_CONFIG_MMR) &
-+			~UV_MMR_ENABLE;
- 
- 	m_val = m_n_config.s.m_skt;
- 	n_val = m_n_config.s.n_skt;
+ ANALOG DEVICES INC AD7606 DRIVER
+ M:	Stefan Popa <stefan.popa@analog.com>
++M:	Beniamin Bia <beniamin.bia@analog.com>
+ L:	linux-iio@vger.kernel.org
+ W:	http://ez.analog.com/community/linux-device-drivers
+ S:	Supported
 -- 
-2.20.1
+2.17.1
 
