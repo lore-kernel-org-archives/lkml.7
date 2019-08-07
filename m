@@ -2,87 +2,97 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EABEAC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 12:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5874BC32754
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 12:44:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0A1621BF6
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 12:44:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EBE921BF6
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 12:44:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SyTkcf8d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387875AbfHGMoI (ORCPT
+        id S2387896AbfHGMon (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 08:44:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48656 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387777AbfHGMoH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 08:44:07 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B5E05AC64;
-        Wed,  7 Aug 2019 12:44:05 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 617BDDA7D7; Wed,  7 Aug 2019 14:44:37 +0200 (CEST)
-Date:   Wed, 7 Aug 2019 14:44:37 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     dsterba@suse.cz, Sasha Levin <sashal@kernel.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        David Sterba <dsterba@suse.com>,
-        Filipe Manana <fdmanana@suse.com>, linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 4.19 12/32] Btrfs: fix deadlock between fiemap
- and transaction commits
-Message-ID: <20190807124437.GT28208@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, Greg KH <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, David Sterba <dsterba@suse.com>,
-        Filipe Manana <fdmanana@suse.com>, linux-btrfs@vger.kernel.org
-References: <20190806213522.19859-1-sashal@kernel.org>
- <20190806213522.19859-12-sashal@kernel.org>
- <20190807094759.GQ28208@suse.cz>
- <20190807105126.GA14880@kroah.com>
+        Wed, 7 Aug 2019 08:44:43 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:44533 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729722AbfHGMom (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 08:44:42 -0400
+Received: by mail-lj1-f194.google.com with SMTP id k18so85315945ljc.11
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 05:44:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9qAcXQ74wnq9lBV8xI9DKWSAH0H5RLjm/S1lKOmaMBg=;
+        b=SyTkcf8dDd/qJ1huE2tGq5vti9WUJZR3c6pp88zP25SXfE+qr2KqpJJ9EnCu/6TW0i
+         pi/EIkp0XiLke82zXZTC9ZdinmSM5ek00WFxEbo5FcJDxK4L82VQk2N+LlNRyXQnq2g4
+         Sf69bBUT7mBcpzqievikQZqqrefRNeLI/r3CF3jMQ1dO2+cFCJrGhkaJIbrwe6egMhHv
+         jYN2htDTwwTy1gjLmP5I8KWpk1BoxLQyIBVZCC7Fn+JaAOzLSh2vy/7Tr0ovkid1ZQAJ
+         UZGx886EoY98kJdFo+JuBpTVWRCnmp5zRNE3mNzGeRp719fnJ8K8BU0xtAIKh3XexF47
+         YZzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9qAcXQ74wnq9lBV8xI9DKWSAH0H5RLjm/S1lKOmaMBg=;
+        b=Nnthj6sLjc0Ee+i+pnkqNFEBdASfzsmMwRmwyaHEUybjiJCcg0huSWeBIMBU6OG/86
+         cJFaoEonFNQAxeDRIqh/TO3mo+OCEV4xMEbL5fDtU2TTPz2GmPn3lFul8ylSK6y8jc/i
+         8FANEegQKz/awBbcXtY+47GdxqhGZHvh/EESU7pu57tOmzQuDykp78wOHDCLWVQjBz/o
+         O/k+uN5IrOnxI4LmZXMJEgUbm8LZhLB/r1k+C7+1NszqlxVwbVnjvSNpJiq86HaJUFai
+         cqPLDWq++VCD5Kr7GTx+xgkNR1i+vCumaOnpCef/0fUl5xt4XZtic/KF+v+RuyAtwL57
+         f3mA==
+X-Gm-Message-State: APjAAAWWOlXrKVxaKVAm7QrotU/t7LccrCBncWipa8TeY9S0Gy9T1pUH
+        J37W7we1jeh+7mBW7iUNpqKFJWAFM5fylqW03B1txw6m
+X-Google-Smtp-Source: APXvYqw0QLiekY2Wd3n7wub8yhIsoTVDzI2YudUSicPG1Sk8vAgOz3VhLcQ5SkSAoa5cDuQiW4DnULWNGV5eM841Z+Y=
+X-Received: by 2002:a2e:2c14:: with SMTP id s20mr4756592ljs.54.1565181880879;
+ Wed, 07 Aug 2019 05:44:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190807105126.GA14880@kroah.com>
-User-Agent: Mutt/1.5.23.1 (2014-03-12)
+References: <20190806060536.18094-1-rnayak@codeaurora.org> <20190806060536.18094-2-rnayak@codeaurora.org>
+In-Reply-To: <20190806060536.18094-2-rnayak@codeaurora.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 7 Aug 2019 14:44:29 +0200
+Message-ID: <CACRpkdbUqZ+Jz1c2eS1s4Hen5mzDfrkN_Hn=U_0u3nOo43bCAw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] pinctrl: qcom: Add SC7180 pinctrl driver
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jitendra Sharma <shajit@codeaurora.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Vinod Koul <vkoul@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 07, 2019 at 12:51:26PM +0200, Greg KH wrote:
-> On Wed, Aug 07, 2019 at 11:47:59AM +0200, David Sterba wrote:
-> > On Tue, Aug 06, 2019 at 05:35:00PM -0400, Sasha Levin wrote:
-> > > From: Filipe Manana <fdmanana@suse.com>
-> > > 
-> > > [ Upstream commit a6d155d2e363f26290ffd50591169cb96c2a609e ]
-> > > 
-> > > Fixes: 03628cdbc64db6 ("Btrfs: do not start a transaction during fiemap")
-> > 
-> > The commit is a regression fix during the 5.2 cycle, how it could end up
-> > in a 4.19 stable candidate?
-> > 
-> > $ git describe  03628cdbc64db6
-> > v5.1-rc7-201-g03628cdbc64d
-> > 
-> > $ git describe --contains 03628cdbc64db6
-> > v5.2-rc1~163^2~26
-> > 
-> > And it does not belong to 5.2 either, git cherry-pick on top of 5.2
-> > fails.
-> > 
-> > I think such sanity check can be done automatically so the patches don't
-> > accidentally land in trees where don't belong.
-> 
-> 
-> Commit 03628cdbc64d ("Btrfs: do not start a transaction during fiemap")
-> was tagged for the stable trees, and ended up in the following releases:
-> 	4.14.121 4.19.45 5.0.18 5.1.4 5.2
-> so yes, it does need to go back to all of those locations if this patch
-> really does fix the issue there.
+On Tue, Aug 6, 2019 at 8:05 AM Rajendra Nayak <rnayak@codeaurora.org> wrote:
 
-You're right, I did not notice the CC tag when examining the patches.
+> From: Jitendra Sharma <shajit@codeaurora.org>
+>
+> Add initial pinctrl driver to support pin configuration with
+> pinctrl framework for SC7180
+>
+> Signed-off-by: Jitendra Sharma <shajit@codeaurora.org>
+> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+> [rnayak: modify to use upstream tile support
+>          sort and squash some functions]
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Reviewed-by: Vinod Koul <vkoul@kernel.org>
+
+Patch applied!
+
+Yours,
+Linus Walleij
