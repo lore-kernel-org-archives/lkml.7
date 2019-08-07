@@ -2,118 +2,73 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9313CC32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:20:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB704C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:20:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63DEB21E6E
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:20:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VHHxvIM/"
+	by mail.kernel.org (Postfix) with ESMTP id 9EED221E70
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:20:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388246AbfHGNT7 (ORCPT
+        id S2388263AbfHGNUK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 09:19:59 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:41546 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387957AbfHGNT7 (ORCPT
+        Wed, 7 Aug 2019 09:20:10 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:49726 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387957AbfHGNUK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 09:19:59 -0400
-Received: by mail-ed1-f68.google.com with SMTP id p15so86154260eds.8;
-        Wed, 07 Aug 2019 06:19:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VsS99LwnBC3iQ8HWvvQz+DMgbBjpR0gNdAlatU6bOeA=;
-        b=VHHxvIM/f0VQ9SJFvUdoIzgQy3iZlKRCaxFeEfrXRUlstF9eR1j3imfN5H74UiMmja
-         7EhgHjidOeKuIzTjJ1/poY+/a6aM+vjU1LzNOCvbe1ajrJNz3qljEqpqSR7bXSGHfKNP
-         LRtAl1bu6KGV3wpPLV2htTq1o69HqEFFDyb80rJ1J35re6JSpGVvbO7cCNmL0XendxtC
-         Z5BvqumswsLxdr805Pkp7RSXIRK6+3uSdQ4IWTO0stjuq539ejVARGrdiWfjrioEia5D
-         mzw4iNY6pBJPYiMLNRcEy2rRvE1xblZqJ9jOqJKsAKZKXPoGEwefJ7PMcsEpvqUtBxRu
-         SfYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VsS99LwnBC3iQ8HWvvQz+DMgbBjpR0gNdAlatU6bOeA=;
-        b=CQkB+3DBIBmVMd5GTBLYd+8kWAmlM0D/OIx2b8gbxU7HhE7iSLlBHe3bXtg26GfZWG
-         K22mLvYkJ2BR/HBgfjyGYW0O2PKrm0ompdWfsJ47zQkhVKMLcZ9QvHxu+YD7pRWOUzTe
-         NzF7XdM2FHzMqZjgMKcTkEyMsQSL8rLVyzu9wt47XV2sSaw+AY9SpQpEykqPEGSZX2t0
-         /7RLKiUgl6XE9dUBdgDvDB8/XqdbJcsEh3p2diEWAL9GIuEqLdFGzl8JHOrPU5BElAO8
-         OgHnzegxRLMzfQAH7NzDeHnolTeX9+94FMM6MEfiQhX5l1wAqhcxmJeg5r2qsy20+op5
-         oWOw==
-X-Gm-Message-State: APjAAAVZiA4x37AZMkSP3OJVACUYPih2iKn+1vhWGbS2+AadLm3Y4Mr+
-        lKXbhkD7i39e2uW8sBpMgiZugb7SPzUioxcN074=
-X-Google-Smtp-Source: APXvYqx0eZkI6QO0WgJDZP9/db3DJXaNcEwIkkpd0jQp9gcp+BcQMHgWwwXO26vqbFfQLU0aCXszTwzgZHd0I1WabI0=
-X-Received: by 2002:a17:906:c459:: with SMTP id ck25mr8135070ejb.32.1565183997044;
- Wed, 07 Aug 2019 06:19:57 -0700 (PDT)
+        Wed, 7 Aug 2019 09:20:10 -0400
+Received: from p200300ddd742df588d2c07822b9f4274.dip0.t-ipconnect.de ([2003:dd:d742:df58:8d2c:782:2b9f:4274])
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hvLrE-0001XK-Eh; Wed, 07 Aug 2019 15:20:00 +0200
+Date:   Wed, 7 Aug 2019 15:19:54 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Marc Zyngier <maz@kernel.org>
+cc:     Linus Walleij <linusw@kernel.org>, Imre Kaloz <kaloz@openwrt.org>,
+        Krzysztof Halasa <khalasa@piap.pl>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/8] irqdomain/debugfs: Fix uses of
+ irq_domain_alloc_fwnode
+In-Reply-To: <20190806145716.125421-1-maz@kernel.org>
+Message-ID: <alpine.DEB.2.21.1908071519410.24014@nanos.tec.linutronix.de>
+References: <20190806145716.125421-1-maz@kernel.org>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <20190807130856.60792-1-yuehaibing@huawei.com>
-In-Reply-To: <20190807130856.60792-1-yuehaibing@huawei.com>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Wed, 7 Aug 2019 16:19:45 +0300
-Message-ID: <CA+h21hrrWGrw4kiTfjowWvQ-B6sNPLAcgTaaadA02ZAmYw1SjQ@mail.gmail.com>
-Subject: Re: [PATCH net-next] net: dsa: sja1105: remove set but not used
- variables 'tx_vid' and 'rx_vid'
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 7 Aug 2019 at 16:09, YueHaibing <yuehaibing@huawei.com> wrote:
->
-> Fixes gcc '-Wunused-but-set-variable' warning:
->
-> drivers/net/dsa/sja1105/sja1105_main.c: In function sja1105_fdb_dump:
-> drivers/net/dsa/sja1105/sja1105_main.c:1226:14: warning:
->  variable tx_vid set but not used [-Wunused-but-set-variable]
-> drivers/net/dsa/sja1105/sja1105_main.c:1226:6: warning:
->  variable rx_vid set but not used [-Wunused-but-set-variable]
->
-> They are not used since commit 6d7c7d948a2e ("net: dsa:
-> sja1105: Fix broken learning with vlan_filtering disabled")
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
+On Tue, 6 Aug 2019, Marc Zyngier wrote:
 
-Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
+> I recently noticed that all irq_domain_alloc_fwnode were passing a VA
+> to it, which is unfortunate as this is designed to appear in debugfs
+> (and we don't like to leak VAs). Disaster was avoided thanks to our
+> ____ptrval____ friend, but it remains that the whole thing is pretty
+> useless if you have more than a single domain (they all have the same
+> name and creation fails).
+> 
+> In order to sort it out, change all users of irq_domain_alloc_fwnode
+> to pass the PA of the irqchip the domain will be associated with. One
+> notable exception is the HyperV PCI controller driver which has no PA
+> to associate with. This is solved by using a named fwnode instead,
+> using the device GUID.
+> 
+> Finally, irq_domain_alloc_fwnode() is changed to pa a pionter to a PA,
+> which can be safely advertised in debugfs.
 
->  drivers/net/dsa/sja1105/sja1105_main.c | 4 ----
->  1 file changed, 4 deletions(-)
->
-> diff --git a/drivers/net/dsa/sja1105/sja1105_main.c b/drivers/net/dsa/sja1105/sja1105_main.c
-> index d073baf..df976b25 100644
-> --- a/drivers/net/dsa/sja1105/sja1105_main.c
-> +++ b/drivers/net/dsa/sja1105/sja1105_main.c
-> @@ -1223,12 +1223,8 @@ static int sja1105_fdb_dump(struct dsa_switch *ds, int port,
->  {
->         struct sja1105_private *priv = ds->priv;
->         struct device *dev = ds->dev;
-> -       u16 rx_vid, tx_vid;
->         int i;
->
-> -       rx_vid = dsa_8021q_rx_vid(ds, port);
-> -       tx_vid = dsa_8021q_tx_vid(ds, port);
-> -
->         for (i = 0; i < SJA1105_MAX_L2_LOOKUP_COUNT; i++) {
->                 struct sja1105_l2_lookup_entry l2_lookup = {0};
->                 u8 macaddr[ETH_ALEN];
-> --
-> 2.7.4
->
->
+Acked-by: Thomas Gleixner <tglx@linutronix.de>
