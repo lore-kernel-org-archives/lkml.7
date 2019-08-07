@@ -2,152 +2,148 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 551D1C32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 15:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF58C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 15:09:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36E9521E70
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 15:07:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 930EE21BF2
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 15:09:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nvkeGDsL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730159AbfHGPHA (ORCPT
+        id S1730186AbfHGPJA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 11:07:00 -0400
-Received: from foss.arm.com ([217.140.110.172]:49938 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727213AbfHGPG7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 11:06:59 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C2FD1344;
-        Wed,  7 Aug 2019 08:06:58 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 39A073F706;
-        Wed,  7 Aug 2019 08:06:57 -0700 (PDT)
-Date:   Wed, 7 Aug 2019 16:06:54 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Sasha Levin <sashal@kernel.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jake Oshins <jakeo@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Dexuan Cui <decui@microsoft.com>
-Subject: Re: [PATCH] PCI: pci-hyperv: fix build errors on non-SYSFS config
-Message-ID: <20190807150654.GB16214@e121166-lin.cambridge.arm.com>
-References: <abbe8012-1e6f-bdea-1454-5c59ccbced3d@infradead.org>
- <DM6PR21MB133723E9D1FA8BA0006E06FECAF20@DM6PR21MB1337.namprd21.prod.outlook.com>
- <20190713150353.GF10104@sasha-vm>
- <20190723212107.GB9742@google.com>
+        Wed, 7 Aug 2019 11:09:00 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:42404 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727213AbfHGPI7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 11:08:59 -0400
+Received: by mail-pl1-f193.google.com with SMTP id ay6so41312063plb.9
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 08:08:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=t/hLsT4EXBDYDLUNlEDS8Qu1vGcsBVLNnv5gyx3YUfM=;
+        b=nvkeGDsLdWVPsjklRpkbfoZpU4s6SMvCEGjVgVTAuJ3EUtw/C0g5ZluW+Nql/WZv5d
+         QOv9b+Hq3E8tZisqRjfZxKf92t0fcxNDKtegWJDGRGDctpgHeFuO3mkD9deai9P5MM2N
+         KLYce3iGyWR0oKmALQpC8w+41vSy8OGOtgtzoCoz5z7s03bwDGPCR6yRPYUxpwHiQXwf
+         OgHIt5Hhpt9aDuYzPQxXVGg1OxzxeL9V1c2/PnHPGU+NIUscScrzMTYosAeOYRiu9Bnz
+         DXu9UZBvjThgZK/eoFBnQstjo0c8eKkaG6qpM5by7OW8Kb5tBUmAHDh6KMFR6yh3ASKz
+         24GQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=t/hLsT4EXBDYDLUNlEDS8Qu1vGcsBVLNnv5gyx3YUfM=;
+        b=U7imGVV1mgUF9i0vKvMcFciI8Cdkzq7qJr0Nfp1ClmDMzRUD1f1N75ZK9mwldnlEqi
+         Cu3otS1QLRjghvidPihDx7aLBscsup8R4Wa6hCJ7rSfA5urhaFOf5GGJI6LZw484Ej35
+         +UvOu+Zybt6mAqEE9CWu9sKIi5qQBenk8etHf2/4MKwjL1Ot4T+9cOpY3cezrFZ3s1gO
+         P07ox88VI6Zua3FCCioJdytrZOcE3aJ/HPnX2axpHRyLF5Bc/9/FEciT/NJxKciSasry
+         ISsidys+8gbf6DTNfkDZmbuP3bN8LFjyYoVSUhZ2XTJ9jy1JosxsP+JJViwrWAcheb6Q
+         SFxA==
+X-Gm-Message-State: APjAAAX9WlHejI6j5EFFswrzz8q2kDaeamkETDlBqzSIoOV7A3jFSkjp
+        QkSBvQXr9hEKIh4K/YdmHBLYUrLcxlsHa0IMqkRDSvkRZws=
+X-Google-Smtp-Source: APXvYqxcS+qsf/tUclfqaIrEonj3RN2UKG5MxCmh1aMRExZY6Vu2L6RIFUZOEVBrbNYA9Dlx9GmviMnN7VuUDq/mZWo=
+X-Received: by 2002:a63:3006:: with SMTP id w6mr8196542pgw.440.1565190538781;
+ Wed, 07 Aug 2019 08:08:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190723212107.GB9742@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <CAAeHK+yAY_ov4yH7n-R8ppnxc1ux33A-SEdxx18ywU1SyLGwug@mail.gmail.com>
+ <Pine.LNX.4.44L0.1908071033440.1514-100000@iolanthe.rowland.org>
+In-Reply-To: <Pine.LNX.4.44L0.1908071033440.1514-100000@iolanthe.rowland.org>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Wed, 7 Aug 2019 17:08:47 +0200
+Message-ID: <CAAeHK+wP4LXkfdw1gLDAV_xCmcd8JVRJ+TGS7tUtk2fvH2FmMw@mail.gmail.com>
+Subject: Re: possible deadlock in open_rio
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     syzbot <syzbot+7bbcbe9c9ff0cd49592a@syzkaller.appspotmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        Cesar Miquel <miquel@df.uba.ar>,
+        rio500-users@lists.sourceforge.net,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 04:21:07PM -0500, Bjorn Helgaas wrote:
-> On Sat, Jul 13, 2019 at 11:03:53AM -0400, Sasha Levin wrote:
-> > On Fri, Jul 12, 2019 at 04:04:17PM +0000, Haiyang Zhang wrote:
-> > > > -----Original Message-----
-> > > > From: Randy Dunlap <rdunlap@infradead.org>
-> > > > Sent: Friday, July 12, 2019 11:53 AM
-> > > > To: linux-pci <linux-pci@vger.kernel.org>; LKML <linux-
-> > > > kernel@vger.kernel.org>
-> > > > Cc: Matthew Wilcox <willy@infradead.org>; Jake Oshins
-> > > > <jakeo@microsoft.com>; KY Srinivasan <kys@microsoft.com>; Haiyang
-> > > > Zhang <haiyangz@microsoft.com>; Stephen Hemminger
-> > > > <sthemmin@microsoft.com>; Stephen Hemminger
-> > > > <stephen@networkplumber.org>; Sasha Levin <sashal@kernel.org>; Bjorn
-> > > > Helgaas <bhelgaas@google.com>; Dexuan Cui <decui@microsoft.com>
-> > > > Subject: [PATCH] PCI: pci-hyperv: fix build errors on non-SYSFS config
-> 
-> Whoever merges this (see below), please update the subject line to
-> match:
-> 
->   $ git log --oneline drivers/pci/controller/pci-hyperv.c | head -5
->   4df591b20b80 PCI: hv: Fix a use-after-free bug in hv_eject_device_work()
->   340d45569940 PCI: hv: Add pci_destroy_slot() in pci_devices_present_work(), if necessary
->   15becc2b56c6 PCI: hv: Add hv_pci_remove_slots() when we unload the driver
->   05f151a73ec2 PCI: hv: Fix a memory leak in hv_eject_device_work()
->   c8ccf7599dda PCI: hv: Refactor hv_irq_unmask() to use cpumask_to_vpset()
-> 
-> > > > From: Randy Dunlap <rdunlap@infradead.org>
-> > > > 
-> > > > Fix build errors when building almost-allmodconfig but with SYSFS
-> > > > not set (not enabled).  Fixes these build errors:
-> > > > 
-> > > > ERROR: "pci_destroy_slot" [drivers/pci/controller/pci-hyperv.ko] undefined!
-> > > > ERROR: "pci_create_slot" [drivers/pci/controller/pci-hyperv.ko] undefined!
-> > > > 
-> > > > drivers/pci/slot.o is only built when SYSFS is enabled, so
-> > > > pci-hyperv.o has an implicit dependency on SYSFS.
-> > > > Make that explicit.
-> > > > 
-> > > > Also, depending on X86 && X86_64 is not needed, so just change that
-> > > > to depend on X86_64.
-> > > > 
-> > > > Fixes: a15f2c08c708 ("PCI: hv: support reporting serial number as slot
-> > > > information")
-> > > > 
-> > > > Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> > > > Cc: Matthew Wilcox <willy@infradead.org>
-> > > > Cc: Jake Oshins <jakeo@microsoft.com>
-> > > > Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-> > > > Cc: Haiyang Zhang <haiyangz@microsoft.com>
-> > > > Cc: Stephen Hemminger <sthemmin@microsoft.com>
-> > > > Cc: Stephen Hemminger <stephen@networkplumber.org>
-> > > > Cc: Sasha Levin <sashal@kernel.org>
-> > > > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > > > Cc: linux-pci@vger.kernel.org
-> > > > Cc: linux-hyperv@vger.kernel.org
-> > > > Cc: Dexuan Cui <decui@microsoft.com>
-> > > > ---
-> > > > v3: corrected Fixes: tag [Dexuan Cui <decui@microsoft.com>]
-> > > >     This is the Microsoft-preferred version of the patch.
-> > > > 
-> > > >  drivers/pci/Kconfig |    2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > 
-> > > > --- lnx-52.orig/drivers/pci/Kconfig
-> > > > +++ lnx-52/drivers/pci/Kconfig
-> > > > @@ -181,7 +181,7 @@ config PCI_LABEL
-> > > > 
-> > > >  config PCI_HYPERV
-> > > >          tristate "Hyper-V PCI Frontend"
-> > > > -        depends on X86 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN
-> > > > && X86_64
-> > > > +        depends on X86_64 && HYPERV && PCI_MSI &&
-> > > > PCI_MSI_IRQ_DOMAIN && SYSFS
-> > > >          help
-> > > >            The PCI device frontend driver allows the kernel to import arbitrary
-> > > >            PCI devices from a PCI backend to support PCI driver domains.
-> > > > 
-> > > 
-> > > Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-> > 
-> > Queued up for hyperv-fixes, thank you!
-> 
-> What merge strategy do you envision for this?  Previous
-> drivers/pci/controller/pci-hyperv.c changes have generally been merged
-> by Lorenzo and incorporated into my PCI tree.
-> 
-> This particular patch doesn't actually touch pci-hyperv.c; it touches
-> drivers/pci/Kconfig, so should somehow be coordinated with me.
-> 
-> Does this need to be tagged for stable?  a15f2c08c708 appeared in
-> v4.19, so my first guess is that it's not stable material.
+On Wed, Aug 7, 2019 at 4:39 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+>
+> On Wed, 7 Aug 2019, Andrey Konovalov wrote:
+>
+> > On Wed, Aug 7, 2019 at 4:01 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+> > >
+> > > On Wed, 7 Aug 2019, Andrey Konovalov wrote:
+> > >
+> > > > On Tue, Aug 6, 2019 at 9:13 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+> > > > >
+> > > > > On Thu, 1 Aug 2019, syzbot wrote:
+> > > > >
+> > > > > > Hello,
+> > > > > >
+> > > > > > syzbot found the following crash on:
+> > > > > >
+> > > > > > HEAD commit:    7f7867ff usb-fuzzer: main usb gadget fuzzer driver
+> > > > > > git tree:       https://github.com/google/kasan.git usb-fuzzer
+> > > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=136b6aec600000
+> > > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=792eb47789f57810
+> > > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=7bbcbe9c9ff0cd49592a
+> > > > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > > > > >
+> > > > > > Unfortunately, I don't have any reproducer for this crash yet.
+> > > > > >
+> > > > > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > > > > > Reported-by: syzbot+7bbcbe9c9ff0cd49592a@syzkaller.appspotmail.com
+> > > > > >
+> > > > > > ======================================================
+> > > > > > WARNING: possible circular locking dependency detected
+> > > > > > 5.3.0-rc2+ #23 Not tainted
+> > > > > > ------------------------------------------------------
+> > > > >
+> > > > > Andrey:
+> > > > >
+> > > > > This should be completely reproducible, since it's a simple ABBA
+> > > > > locking violation.  Maybe just introducing a time delay (to avoid races
+> > > > > and give the open() call time to run) between the gadget creation and
+> > > > > gadget removal would be enough to do it.
+> > > >
+> > > > I've tried some simple approaches to reproducing this, but failed.
+> > > > Should this require two rio500 devices to trigger?
+> > >
+> > > No, one device should be enough.  Just plug it in and then try to open
+> > > the character device file.
+> >
+> > OK, I've reproduced it, so I can test a patch manually. The reason
+> > syzbot couldn't do that, is because it doesn't open character devices.
+> > Right now the USB fuzzing instance only opens /dev/input*,
+> > /dev/hidraw* and /dev/usb/hiddev* (only the devices that are created
+> > by USB HID devices as I've been working on adding USB HID targeted
+> > fuzzing support lately).
+> >
+> > I guess we should open /dev/chr/* as well. The problem is that there
+> > 300+ devices there even without connecting USB devices and opening
+> > them blindly probably won't work. Is there a way to know which
+> > character devices are created by USB devices? Maybe they are exposed
+> > over /sys/bus/usb or via some other way?
+>
+> I don't have any devices that use this API, so I can't be certain.
+> However, I believe the devices do get registered under /sys/class/usb/.
+> (Note that this directory doesn't exist when there aren't any USB class
+> files.)
+>
+> In any case, the USB character device files all have their major
+> numbers set to 180 (USB_MAJOR defined in include/linux/usb.h), so you
+> can identify them that way.
 
-AFAIC Bjorn's question still stands. Who will pick this patch up ?
+This should work! I'll enable fuzzing of /dev/char/180:*, thanks!
 
-Thanks,
-Lorenzo
+>
+> Alan Stern
+>
