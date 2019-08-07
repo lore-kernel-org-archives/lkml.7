@@ -2,165 +2,591 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7893AC32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 12:24:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32BFAC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 12:26:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EC4B21BF6
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 12:24:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mWgy2PeN"
+	by mail.kernel.org (Postfix) with ESMTP id E7FC421BF6
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 12:26:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729552AbfHGMY6 (ORCPT
+        id S1729675AbfHGM0e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 08:24:58 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:43073 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726873AbfHGMY6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 08:24:58 -0400
-Received: by mail-qk1-f195.google.com with SMTP id m2so1299377qkd.10;
-        Wed, 07 Aug 2019 05:24:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=7X0yZPiK0CmblcVv+60AtbIMucDi3no6ED/lbcTJmnI=;
-        b=mWgy2PeN2RCsv921hDBXJc08yjGTBzs4jDWwYLhpdvbxubjiU3EDqB3fMlgkBcpqVn
-         srU8r08aZsZLtqbeuE6KmlmkhT4QD3i+Dz8EZm+7DmzzM0nQQCYiKyEmmN8QvsWBCJMe
-         zP/Z2QNyUd6gxPFB843GQB2ixsN5vtVw1yOrKLhYM9+A7X6I/ZiqfSNcqeQQ4eFTSmYq
-         tvUP2/P2yb2MIHrNXq40QoMLiwabql0RTdB29ki3VQ5tWKQyDs1+XU/VLzNTx3iCbV9q
-         PteZbC9HgY0vwSJOdqV9lJVUFHTX+xooG1rwdO/VAZ003eT/TicOw14OgQzQJqkzERgk
-         Sr7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=7X0yZPiK0CmblcVv+60AtbIMucDi3no6ED/lbcTJmnI=;
-        b=Fy8A4JvOxF5QANyQz9QxfUHNPks2cZJoFmK4zR4joUwyg9a4Mbd2ZI5XUvLuh7wr/z
-         QfDlB6AOyEo2Do0MLRB0Z/fuPp7kMQUxTdddF0xVRctVfURkHpZnQetcMor2O/nEi4hd
-         Qp6ZDOd9noM5a8sn0XQ8r8welbwnfi7O0H8fwLQJnKdnAXK8rO0j4RPBHd1vY6jfDqrD
-         HRYXPGF0Uk9bbYQLaHMRWNdML4x2w66v8svQY0FJV3EJLO1PR6xhR0yRAUAniJJxV9UH
-         E2ZDAUXaKX/rYpr8RGLgogRkagF2AVDVp3p9vyAYatrfCvkVwR7AcONdoMM9zz0RShl6
-         HhdA==
-X-Gm-Message-State: APjAAAXtQaMlH7Pp7IqP/snCute1fqVDRHEIQ/mCCl+G95wCD804WduB
-        tZt5KMbGJi2sTP8QN0QXc9cJbFkZu4o0C3TYoUw=
-X-Google-Smtp-Source: APXvYqwqsFHEcZDERySG6AIpkdo7jvwF6qobKkft0EzYglda2HmzDLCdX8wVENf4gc2WnCvRthOz9KcNFRy5+9Gv1lI=
-X-Received: by 2002:a37:bcc7:: with SMTP id m190mr7561197qkf.433.1565180696307;
- Wed, 07 Aug 2019 05:24:56 -0700 (PDT)
+        Wed, 7 Aug 2019 08:26:34 -0400
+Received: from mga09.intel.com ([134.134.136.24]:35299 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726873AbfHGM0d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 08:26:33 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Aug 2019 05:26:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,357,1559545200"; 
+   d="scan'208";a="203164526"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.122]) ([10.237.72.122])
+  by fmsmga002.fm.intel.com with ESMTP; 07 Aug 2019 05:26:30 -0700
+Subject: Re: [PATCH v2 2/2] mmc: sdhci: sdhci-pci-core: Add Genesis Logic
+ GL975x support
+To:     "Michael K. Johnson" <johnsonm@danlj.org>, ulf.hansson@linaro.org
+Cc:     linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
+        Ben Chuang <ben.chuang@genesyslogic.com.tw>
+References: <20190726020754.GA12078@people.danlj.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <62a756ff-6432-fd43-5e90-038eb28045cd@intel.com>
+Date:   Wed, 7 Aug 2019 15:25:25 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190719135352.GF4240@sasha-vm> <20190807114649.fjfaj4oytcxaua7o@linutronix.de>
-In-Reply-To: <20190807114649.fjfaj4oytcxaua7o@linutronix.de>
-From:   Austin Kim <austindh.kim@gmail.com>
-Date:   Wed, 7 Aug 2019 21:24:48 +0900
-Message-ID: <CADLLry6a9a0TKOEEPxOW_DS+XXwk5qUuaH+W9cmbLwvudXAV8A@mail.gmail.com>
-Subject: Re: NULL ptr deref in wq_worker_sleeping on 4.19
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Sasha Levin <sashal@kernel.org>, tglx@linutronix.de,
-        peterz@infradead.org, mingo@kernel.org, tj@kernel.org,
-        jiangshanlai@gmail.com, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190726020754.GA12078@people.danlj.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I wonder what kinds of workqueue is used in case of this panic.
+On 26/07/19 5:07 AM, Michael K. Johnson wrote:
+> Add support for the GL9750 and GL9755 chipsets.
+> 
+> Signed-off-by: Ben Chuang <ben.chuang@genesyslogic.com.tw>
+> Co-developed-by: Michael K Johnson <johnsonm@danlj.org>
+> Signed-off-by: Michael K Johnson <johnsonm@danlj.org>
+> 
+> diff --git a/drivers/mmc/host/sdhci-gli.h b/drivers/mmc/host/sdhci-gli.h
 
-If system workqueue(system_wq) is used for this case, it would be a
-help to replace it with high priority workqueue(system_highpri_wq). If
-panic disappers with high priority workqueue(system_highpri_wq), we
-would think about another scenario.
+I suggest creating sdhci-pci-gli.c and putting definitions there.  Have a
+look at sdhci-pci-arasan.c, sdhci-pci-dwc-mshc.c or sdhci-pci-o2micro.c
 
-BR,
-Guillermo Austin Kim
+> new file mode 100644
+> index 000000000000..0acd35b6d3e2
+> --- /dev/null
+> +++ b/drivers/mmc/host/sdhci-gli.h
+> @@ -0,0 +1,27 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+> +#ifndef __SDHCI_GLI_H
+> +#define __SDHCI_GLI_H
+> +
+> +/* the define PCI_VENDOR_ID_GLI may put in kernel/include/linux/pci_ids.h */
+> +#ifndef PCI_VENDOR_ID_GLI
+> +#define PCI_VENDOR_ID_GLI		0x17a0
+> +#endif
 
-2019=EB=85=84 8=EC=9B=94 7=EC=9D=BC (=EC=88=98) =EC=98=A4=ED=9B=84 8:48, Se=
-bastian Andrzej Siewior <bigeasy@linutronix.de>=EB=8B=98=EC=9D=B4 =EC=9E=91=
-=EC=84=B1:
->
-> On 2019-07-19 09:53:52 [-0400], Sasha Levin wrote:
-> > Hi folks,
-> Hi,
->
-> > We're seeing a rare panic on boot in wq_worker_sleeping() on boot in
-> > 4.19 kernels. I wasn't able to reproduce this with 5.2, but I'm not sur=
-e
-> > whether it's because the issue is fixed, or I was just unlucky.
-> >
-> > The panic looks like this:
-> >
-> > [    0.852791] BUG: unable to handle kernel NULL pointer dereference at=
- 0000000000000010
-> > [    0.853260] PGD 0 P4D 0 [    0.853260] Oops: 0000 [#1] SMP PTI
-> > [    0.853260] CPU: 7 PID: 49 Comm:  Not tainted 4.19.52-9858d02fd940 #=
-1
-> > [    0.853260] Hardware name: Microsoft Corporation Virtual Machine/Vir=
-tual Machine, BIOS 090007  06/02/2017
-> > [    0.853260] RIP: 0010:kthread_data+0x12/0x30
-> > [    0.853260] Code: 83 7f 58 00 74 02 0f 0b e9 bb 2d 19 00 0f 0b eb e2=
- 0f 1f 80 00 00 00 00 0f 1f 44 00 00 f6 47 26 20 74 0c 48 8b 87 98 05 00 00=
- <48> 8b 40 10 c3 0f 0b 48 8b 87 98 05 00 00 48 8b 40 10 c3 90 66 2e
-> > [    0.853260] RSP: 0000:ffffc900036abe38 EFLAGS: 00010002
-> > [    0.853260] RAX: 0000000000000000 RBX: ffff8887bfbe17c0 RCX: 0000000=
-000000000
-> > [    0.853260] RDX: 0000000000000001 RSI: 000000000000000a RDI: ffff888=
-7bbb4bb00
-> > [    0.853260] RBP: ffffc900036abea0 R08: 0000000000000000 R09: 0000000=
-000000000
-> > [    0.853260] R10: ffffc9000368bd90 R11: 0000000000000000 R12: ffff888=
-7bbb4bb00
-> > [    0.853260] R13: 0000000000000000 R14: ffffc900036abe60 R15: 0000000=
-000000000
-> > [    0.853260] FS:  0000000000000000(0000) GS:ffff8887bfbc0000(0000) kn=
-lGS:0000000000000000
-> > [    0.853260] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > [    0.853260] CR2: 0000000000000068 CR3: 00000007df40a000 CR4: 0000000=
-0001406e0
-> > [    0.853260] Call Trace:
-> > [    0.853260]  wq_worker_sleeping+0xa/0x60
-> > [    0.853260]  __schedule+0x571/0x8c0
-> > [    0.853260]  schedule+0x32/0x80
-> > [    0.853260]  worker_thread+0xc7/0x440
-> > [    0.853260]  kthread+0xf8/0x130
-> > [    0.853260]  ret_from_fork+0x35/0x40
-> > [    0.853260] Modules linked in:
-> > [    0.853260] CR2: 0000000000000010
-> > [    0.853260] ---[ end trace 160fda44361ab977 ]---
-> >
-> > I see that this area was recently touched by 6d25be5782e4 ("sched/core,
-> > workqueues: Distangle worker accounting from rq lock") but I'm not sure
-> > if it's related.
->
-> The change should just move code outside of the scheduler and not lead
-> to any changed behaviour (except the small detail mentioned in the
-> changelog, nothing explaining what you have here).
->
-> The way the call chain looks is, kthread() allocated the struct kthread
-> (self) and saved it in current->set_child_tid and this pointer is not
-> NULL. Everything works out and `threadfn' is invoked which is
-> worker_thread().
-> The first thing it does, is to set the special kworker flag via
-> set_pf_worker() which enables the additional code in the scheduler. Then
-> it has nothing to do and invokes schedule() which then gets us to
-> wq_worker_sleeping(). Here it invokes wq_worker_sleeping() which is what
-> explodes.
-> Based on the register dump and code dump, RAX is NULL which is
-> current->set_child_tid (from the begin of ktread()). It adds 0x10 for
-> the ->date pointer and OOPSes while reading from 0x10.
->
-> So everything looks fine, except that `set_child_tid' seems to be zeroed
-> out. Also, task_struct has a few lines after `set_child_tid' the `comm'
-> member which seems to contain also 0x00 because the trace contains no
-> task name. At this point I would have expected "kworker/=E2=80=A6".
->
-> Based on this two hints it looks like something zeroed that memory area
-> shortly after it was occupied by the task (aka use after free).
->
-> Sebastian
+If it is in include/linux/pci_ids.h then this code should be removed
+
+> +
+> +/*  Genesys Logic extra registers */
+> +#define SDHCI_GLI_9750_WT         0x800
+> +#define SDHCI_GLI_9750_DRIVING    0x860
+> +#define SDHCI_GLI_9750_PLL        0x864
+> +#define SDHCI_GLI_9750_SW_CTRL    0x874
+> +#define SDHCI_GLI_9750_MISC       0x878
+> +
+> +#define SDHCI_GLI_9750_TUNING_CONTROL		0x540
+> +#define SDHCI_GLI_9750_TUNING_PARAMETERS	0x544
+> +
+> +#define GLI_9755_DRIVER_VER      "Genesys Logic (GL9755 v0.9.0-y190703)"
+> +#define GLI_9750_DRIVER_VER      "Genesys Logic (GL9750 v0.9.0-y190703)"
+> +
+> +#define GLI_MAX_TUNING_LOOP 40
+> +
+> +void gli_set_9750(struct sdhci_host *host);
+> +
+> +#endif /* __SDHCI_GLI_H */
+> diff --git a/drivers/mmc/host/sdhci-pci-core.c b/drivers/mmc/host/sdhci-pci-core.c
+> index 4154ee11b47d..b5c28df39de1 100644
+> --- a/drivers/mmc/host/sdhci-pci-core.c
+> +++ b/drivers/mmc/host/sdhci-pci-core.c
+> @@ -35,6 +35,7 @@
+>  
+>  #include "sdhci.h"
+>  #include "sdhci-pci.h"
+> +#include "sdhci-gli.h"
+>  
+>  static void sdhci_pci_hw_reset(struct sdhci_host *host);
+>  
+> @@ -1453,6 +1454,223 @@ static const struct sdhci_pci_fixes sdhci_rtsx = {
+>  	.probe_slot	= rtsx_probe_slot,
+>  };
+>  
+> +/* Genesys Logic chipset */
+> +static int gli_probe_slot_gl9755(struct sdhci_pci_slot *slot)
+> +{
+> +	struct sdhci_host *host = slot->host;
+> +
+> +	slot->host->mmc->caps2 |= MMC_CAP2_NO_SDIO;
+> +	dev_info(&slot->chip->pdev->dev, "%s\n", GLI_9755_DRIVER_VER);
+> +	sdhci_enable_v4_mode(host);
+> +
+> +	return 0;
+> +}
+> +
+> +static void gli_set_9750_rx_inv(struct sdhci_host *host, bool b)
+> +{
+> +	u32 wt_value = sdhci_readl(host, SDHCI_GLI_9750_WT);
+> +	u32 misc_value = sdhci_readl(host, SDHCI_GLI_9750_MISC);
+> +
+> +	if ((wt_value & 0x1) == 0) {
+> +		wt_value |= 0x1;
+> +		sdhci_writel(host, wt_value, SDHCI_GLI_9750_WT);
+> +	}
+> +
+> +	misc_value = sdhci_readl(host, SDHCI_GLI_9750_MISC);
+> +	if (b) {
+> +		misc_value |= 0x8;
+> +		sdhci_writel(host, misc_value, SDHCI_GLI_9750_MISC);
+> +	} else {
+> +		misc_value &= ~0x8;
+> +		sdhci_writel(host, misc_value, SDHCI_GLI_9750_MISC);
+> +	}
+> +
+> +	wt_value = sdhci_readl(host, SDHCI_GLI_9750_WT);
+> +	wt_value &= ~0x1;
+> +	sdhci_writel(host, wt_value, SDHCI_GLI_9750_WT);
+> +}
+> +
+> +static int __sdhci_execute_tuning_9750(struct sdhci_host *host, u32 opcode)
+> +{
+> +	int i;
+> +	int rx_inv = 0;
+> +
+> +	for (rx_inv = 0; rx_inv < 2; rx_inv++) {
+> +		if (rx_inv & 0x1)
+> +			gli_set_9750_rx_inv(host, true);
+> +		else
+> +			gli_set_9750_rx_inv(host, false);
+> +
+> +		sdhci_start_tuning(host);
+> +
+> +		for (i = 0; i < GLI_MAX_TUNING_LOOP; i++) {
+> +			u16 ctrl;
+> +
+> +			sdhci_send_tuning(host, opcode);
+> +
+> +			if (!host->tuning_done) {
+> +				if (rx_inv == 1) {
+> +					pr_info("%s: Tuning timeout, falling back to fixed sampling clock\n",
+> +						mmc_hostname(host->mmc));
+> +					sdhci_abort_tuning(host, opcode);
+> +					return -ETIMEDOUT;
+> +				}
+> +				pr_info("%s: Tuning timeout, try next tuning\n",
+> +					mmc_hostname(host->mmc));
+> +				sdhci_abort_tuning(host, opcode);
+> +				break;
+> +			}
+> +
+> +			ctrl = sdhci_readw(host, SDHCI_HOST_CONTROL2);
+> +			if (!(ctrl & SDHCI_CTRL_EXEC_TUNING)) {
+> +				if (ctrl & SDHCI_CTRL_TUNED_CLK) {
+> +					pr_info("%s: Tuning successful\n",
+> +						mmc_hostname(host->mmc));
+> +					return 0; /* Success! */
+> +				}
+> +				break;
+> +			}
+> +		}
+> +	}
+> +
+> +	pr_info("%s: Tuning failed, falling back to fixed sampling clock\n",
+> +		mmc_hostname(host->mmc));
+> +	sdhci_reset_tuning(host);
+> +	return -EAGAIN;
+> +}
+> +
+> +static int gl9750_execute_tuning(struct mmc_host *mmc, u32 opcode)
+> +{
+> +	struct sdhci_host *host = mmc_priv(mmc);
+> +	int err = 0;
+> +	unsigned int tuning_count = 0;
+> +	bool hs400_tuning;
+> +
+> +	hs400_tuning = host->flags & SDHCI_HS400_TUNING;
+> +
+> +	if (host->tuning_mode == SDHCI_TUNING_MODE_1)
+> +		tuning_count = host->tuning_count;
+> +
+> +	/*
+> +	 * The Host Controller needs tuning in case of SDR104 and DDR50
+> +	 * mode, and for SDR50 mode when Use Tuning for SDR50 is set in
+> +	 * the Capabilities register.
+> +	 * If the Host Controller supports the HS200 mode then the
+> +	 * tuning function has to be executed.
+> +	 */
+> +	switch (host->timing) {
+> +	/* HS400 tuning is done in HS200 mode */
+> +	case MMC_TIMING_MMC_HS400:
+> +		err = -EINVAL;
+> +		goto out;
+> +
+> +	case MMC_TIMING_MMC_HS200:
+> +		/*
+> +		 * Periodic re-tuning for HS400 is not expected to be needed, so
+> +		 * disable it here.
+> +		 */
+> +		if (hs400_tuning)
+> +			tuning_count = 0;
+> +		break;
+> +
+> +	case MMC_TIMING_UHS_SDR104:
+> +	case MMC_TIMING_UHS_DDR50:
+> +		break;
+> +
+> +	case MMC_TIMING_UHS_SDR50:
+> +		if (host->flags & SDHCI_SDR50_NEEDS_TUNING)
+> +			break;
+> +		/* FALLTHROUGH */
+> +
+> +	default:
+> +		goto out;
+> +	}
+> +
+> +	if (host->ops->platform_execute_tuning) {
+> +		err = host->ops->platform_execute_tuning(host, opcode);
+> +		goto out;
+> +	}
+> +
+> +	host->mmc->retune_period = tuning_count;
+> +
+> +	if (host->tuning_delay < 0)
+> +		host->tuning_delay = opcode == MMC_SEND_TUNING_BLOCK;
+> +
+> +	gli_set_9750(host);
+> +	host->tuning_err = __sdhci_execute_tuning_9750(host, opcode);
+> +
+> +	sdhci_end_tuning(host);
+> +out:
+> +	host->flags &= ~SDHCI_HS400_TUNING;
+> +
+> +	return err;
+> +}
+> +
+> +static int gli_probe_slot_gl9750(struct sdhci_pci_slot *slot)
+> +{
+> +	struct sdhci_host *host = slot->host;
+> +	struct mmc_host_ops *ops = &host->mmc_host_ops;
+> +
+> +	u32 gli_wt = sdhci_readl(host, SDHCI_GLI_9750_WT);
+> +
+> +	dev_info(&slot->chip->pdev->dev, "%s\n", GLI_9750_DRIVER_VER);
+> +	slot->host->mmc->caps2 |= MMC_CAP2_NO_SDIO;
+> +
+> +	if ((gli_wt & 0x1) == 0) {
+> +		gli_wt |= 0x1;
+> +		sdhci_writel(host, gli_wt, SDHCI_GLI_9750_WT);
+> +	}
+> +
+> +	gli_wt = sdhci_readl(host, SDHCI_GLI_9750_WT);
+> +	gli_wt &= ~0x1;
+> +	sdhci_writel(host, gli_wt, SDHCI_GLI_9750_WT);
+> +
+> +	sdhci_enable_v4_mode(host);
+> +
+> +	ops->execute_tuning = gl9750_execute_tuning;
+> +
+> +	return 0;
+> +}
+> +
+> +static void sdhci_gli_voltage_switch(struct sdhci_host *host)
+> +{
+> +	usleep_range(5000, 5500);
+> +}
+> +
+> +static const struct sdhci_ops sdhci_gl9755_ops = {
+> +	.set_clock			= sdhci_set_clock,
+> +	.enable_dma			= sdhci_pci_enable_dma,
+> +	.set_bus_width			= sdhci_set_bus_width,
+> +	.reset				= sdhci_reset,
+> +	.set_uhs_signaling		= sdhci_set_uhs_signaling,
+> +	.hw_reset			= sdhci_pci_hw_reset,
+> +	.voltage_switch			= sdhci_gli_voltage_switch,
+> +};
+> +
+> +static const struct sdhci_pci_fixes sdhci_gl9755 = {
+> +	.quirks		= SDHCI_QUIRK_NO_ENDATTR_IN_NOPDESC,
+> +	.quirks2	= SDHCI_QUIRK2_BROKEN_DDR50,
+> +	.probe_slot	= gli_probe_slot_gl9755,
+> +	.ops            = &sdhci_gl9755_ops,
+> +};
+> +
+> +static const struct sdhci_ops sdhci_gl9750_ops = {
+> +	.set_clock			= sdhci_set_clock,
+> +	.enable_dma			= sdhci_pci_enable_dma,
+> +	.set_bus_width			= sdhci_set_bus_width,
+> +	.reset				= sdhci_reset,
+> +	.set_uhs_signaling		= sdhci_set_uhs_signaling,
+> +	.hw_reset			= sdhci_pci_hw_reset,
+> +	.voltage_switch			= sdhci_gli_voltage_switch,
+> +};
+> +
+> +static const struct sdhci_pci_fixes sdhci_gl9750 = {
+> +	.quirks		= SDHCI_QUIRK_NO_ENDATTR_IN_NOPDESC,
+> +	.quirks2	= SDHCI_QUIRK2_BROKEN_DDR50,
+> +	.probe_slot	= gli_probe_slot_gl9750,
+> +	.ops            = &sdhci_gl9750_ops,
+> +};
+> +
+>  /*AMD chipset generation*/
+>  enum amd_chipset_gen {
+>  	AMD_CHIPSET_BEFORE_ML,
+> @@ -1682,6 +1900,8 @@ static const struct pci_device_id pci_ids[] = {
+>  	SDHCI_PCI_DEVICE(O2, SEABIRD1, o2),
+>  	SDHCI_PCI_DEVICE(ARASAN, PHY_EMMC, arasan),
+>  	SDHCI_PCI_DEVICE(SYNOPSYS, DWC_MSHC, snps),
+> +	SDHCI_PCI_DEVICE(GLI, 9755, gl9755),
+> +	SDHCI_PCI_DEVICE(GLI, 9750, gl9750),
+>  	SDHCI_PCI_DEVICE_CLASS(AMD, SYSTEM_SDHCI, PCI_CLASS_MASK, amd),
+>  	/* Generic SD host controller */
+>  	{PCI_DEVICE_CLASS(SYSTEM_SDHCI, PCI_CLASS_MASK)},
+> diff --git a/drivers/mmc/host/sdhci-pci.h b/drivers/mmc/host/sdhci-pci.h
+> index e5dc6e44c7a4..78e6b631e252 100644
+> --- a/drivers/mmc/host/sdhci-pci.h
+> +++ b/drivers/mmc/host/sdhci-pci.h
+> @@ -65,6 +65,9 @@
+>  
+>  #define PCI_DEVICE_ID_SYNOPSYS_DWC_MSHC 0xc202
+>  
+> +#define PCI_DEVICE_ID_GLI_9755		0x9755
+> +#define PCI_DEVICE_ID_GLI_9750		0x9750
+> +
+>  /*
+>   * PCI device class and mask
+>   */
+> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+> index 14957578bf2e..1ccf1b692d04 100644
+> --- a/drivers/mmc/host/sdhci.c
+> +++ b/drivers/mmc/host/sdhci.c
+> @@ -25,6 +25,8 @@
+>  
+>  #include <linux/leds.h>
+>  
+> +#include <linux/pci.h>
+> +
+>  #include <linux/mmc/mmc.h>
+>  #include <linux/mmc/host.h>
+>  #include <linux/mmc/card.h>
+> @@ -32,6 +34,8 @@
+>  #include <linux/mmc/slot-gpio.h>
+>  
+>  #include "sdhci.h"
+> +#include "sdhci-pci.h"
+> +#include "sdhci-gli.h"
+
+Vendor specific changes do not belong in sdhci.c
+
+>  
+>  #define DRIVER_NAME "sdhci"
+>  
+> @@ -50,6 +54,8 @@ static void sdhci_finish_data(struct sdhci_host *);
+>  
+>  static void sdhci_enable_preset_value(struct sdhci_host *host, bool enable);
+>  
+> +static bool gli_is_9750(struct sdhci_host *);
+> +
+>  void sdhci_dumpregs(struct sdhci_host *host)
+>  {
+>  	SDHCI_DUMP("============ SDHCI REGISTER DUMP ===========\n");
+> @@ -328,6 +334,8 @@ static void sdhci_init(struct sdhci_host *host, int soft)
+>  
+>  	host->cqe_on = false;
+>  
+> +	gli_set_9750(host);
+
+Maybe look at using the sdhci_ops ->reset() callback.
+
+> +
+>  	if (soft) {
+>  		/* force clock reconfiguration */
+>  		host->clock = 0;
+> @@ -2326,7 +2334,7 @@ void sdhci_reset_tuning(struct sdhci_host *host)
+>  }
+>  EXPORT_SYMBOL_GPL(sdhci_reset_tuning);
+>  
+> -static void sdhci_abort_tuning(struct sdhci_host *host, u32 opcode)
+> +void sdhci_abort_tuning(struct sdhci_host *host, u32 opcode)
+>  {
+>  	sdhci_reset_tuning(host);
+>  
+> @@ -2337,6 +2345,7 @@ static void sdhci_abort_tuning(struct sdhci_host *host, u32 opcode)
+>  
+>  	mmc_abort_tuning(host->mmc, opcode);
+>  }
+> +EXPORT_SYMBOL_GPL(sdhci_abort_tuning);
+
+If you need to export sdhci_abort_tuning, then please make it a separate patch.
+
+>  
+>  /*
+>   * We use sdhci_send_tuning() because mmc_send_tuning() is not a good fit. SDHCI
+> @@ -2493,9 +2502,7 @@ int sdhci_execute_tuning(struct mmc_host *mmc, u32 opcode)
+>  		host->tuning_delay = opcode == MMC_SEND_TUNING_BLOCK;
+>  
+>  	sdhci_start_tuning(host);
+> -
+>  	host->tuning_err = __sdhci_execute_tuning(host, opcode);
+> -
+>  	sdhci_end_tuning(host);
+>  out:
+>  	host->flags &= ~SDHCI_HS400_TUNING;
+> @@ -4090,6 +4097,12 @@ int sdhci_setup_host(struct sdhci_host *host)
+>  	 * value.
+>  	 */
+>  	max_current_caps = sdhci_readl(host, SDHCI_MAX_CURRENT);
+> +
+> +	if (gli_is_9750(host)) {
+> +		if (!(max_current_caps & 0xff))
+> +			max_current_caps |= 0xc8;
+> +	}
+
+Vendor specific changes do not belong in sdhci.c
+
+Look at using sdhci I/O accessors (refer CONFIG_MMC_SDHCI_IO_ACCESSORS)
+instead
+
+> +
+>  	if (!max_current_caps && !IS_ERR(mmc->supply.vmmc)) {
+>  		int curr = regulator_get_current_limit(mmc->supply.vmmc);
+>  		if (curr > 0) {
+> @@ -4269,6 +4282,106 @@ void sdhci_cleanup_host(struct sdhci_host *host)
+>  }
+>  EXPORT_SYMBOL_GPL(sdhci_cleanup_host);
+>  
+> +// for Genesys Logic
+> +void gli_set_9750(struct sdhci_host *host)
+> +{
+> +	u32 wt_value = 0;
+> +	u32 driving_value = 0;
+> +	u32 pll_value = 0;
+> +	u32 sw_ctrl_value = 0;
+> +	u32 misc_value = 0;
+> +	u32 parameter_value = 0;
+> +	u32 control_value = 0;
+> +
+> +	u16 ctrl2 = 0;
+> +
+> +	if (!gli_is_9750(host))
+> +		return;
+> +
+> +	wt_value = sdhci_readl(host, SDHCI_GLI_9750_WT);
+> +	if ((wt_value & 0x1) == 0) {
+> +		wt_value |= 0x1;
+> +		sdhci_writel(host, wt_value, SDHCI_GLI_9750_WT);
+> +	}
+> +
+> +	driving_value = sdhci_readl(host, SDHCI_GLI_9750_DRIVING);
+> +	pll_value = sdhci_readl(host, SDHCI_GLI_9750_PLL);
+> +	sw_ctrl_value = sdhci_readl(host, SDHCI_GLI_9750_SW_CTRL);
+> +	misc_value = sdhci_readl(host, SDHCI_GLI_9750_MISC);
+> +	parameter_value = sdhci_readl(host, SDHCI_GLI_9750_TUNING_PARAMETERS);
+> +	control_value = sdhci_readl(host, SDHCI_GLI_9750_TUNING_CONTROL);
+> +
+> +	driving_value &= ~(0x0C000FFF);
+> +	driving_value |= 0x0C000FFF;
+> +	sdhci_writel(host, driving_value, SDHCI_GLI_9750_DRIVING);
+> +
+> +	sw_ctrl_value |= 0xc0;
+> +	sdhci_writel(host, sw_ctrl_value, SDHCI_GLI_9750_SW_CTRL);
+> +
+> +	// reset the tuning flow after reinit and before starting tuning
+> +	pll_value |= 0x800000; // bit23-1
+> +	pll_value &= ~(0x00700000); // bit22:20-0
+> +
+> +	misc_value &= ~(0x8); // bit3-0
+> +	misc_value &= ~(0x4); // bit2-0
+> +
+> +	misc_value &= ~(0x70); // bit6:4-0
+> +	misc_value |= 0x50; // bit6:4-5
+> +
+> +	parameter_value &= ~(0x7); // bit2:0-0
+> +	parameter_value |= 0x1; // bit2:0-1
+> +
+> +	control_value &= ~(0x190000); // bit20:19-0, bit16-0
+> +	control_value |=   0x110000; // bit20:19-b10, bit16-1
+> +
+> +	sdhci_writel(host, pll_value, SDHCI_GLI_9750_PLL);
+> +	sdhci_writel(host, misc_value, SDHCI_GLI_9750_MISC);
+> +
+> +	// disable tuned clk
+> +	ctrl2 = sdhci_readw(host, SDHCI_HOST_CONTROL2);
+> +	ctrl2 &= ~SDHCI_CTRL_TUNED_CLK;
+> +	sdhci_writew(host, ctrl2, SDHCI_HOST_CONTROL2);
+> +
+> +	// 540 enable tuning parameters control
+> +	control_value |= 0x10;
+> +	sdhci_writel(host, control_value, SDHCI_GLI_9750_TUNING_CONTROL);
+> +
+> +	// write 544 tuning parameters
+> +	sdhci_writel(host, parameter_value, SDHCI_GLI_9750_TUNING_PARAMETERS);
+> +
+> +	// 540 disable tuning parameters control
+> +	control_value &= ~0x10;
+> +	sdhci_writel(host, control_value, SDHCI_GLI_9750_TUNING_CONTROL);
+> +
+> +	// clear tuned clk
+> +	ctrl2 = sdhci_readw(host, SDHCI_HOST_CONTROL2);
+> +	ctrl2 &= ~SDHCI_CTRL_TUNED_CLK;
+> +	sdhci_writew(host, ctrl2, SDHCI_HOST_CONTROL2);
+> +
+> +	udelay(1);
+> +	wt_value = sdhci_readl(host, SDHCI_GLI_9750_WT);
+> +	wt_value &= ~0x1;
+> +	sdhci_writel(host, wt_value, SDHCI_GLI_9750_WT);
+> +}
+> +EXPORT_SYMBOL_GPL(gli_set_9750);
+> +
+> +bool gli_is_9750(struct sdhci_host *host)
+> +{
+> +	struct sdhci_pci_slot *slot = sdhci_priv(host);
+> +	struct sdhci_pci_chip *chip;
+> +	struct pci_dev *pdev;
+> +
+> +	chip = slot->chip;
+> +	pdev = chip->pdev;
+> +
+> +	if (pdev->vendor == PCI_VENDOR_ID_GLI &&
+> +	    pdev->device == PCI_DEVICE_ID_GLI_9750) {
+> +		return true;
+> +	}
+> +
+> +	return false;
+> +}
+> +
+
+Vendor specific changes do not belong in sdhci.c
+
+>  int __sdhci_add_host(struct sdhci_host *host)
+>  {
+>  	unsigned int flags = WQ_UNBOUND | WQ_MEM_RECLAIM | WQ_HIGHPRI;
+> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+> index 72601a4d2e95..437bab3af195 100644
+> --- a/drivers/mmc/host/sdhci.h
+> +++ b/drivers/mmc/host/sdhci.h
+> @@ -797,5 +797,6 @@ void sdhci_start_tuning(struct sdhci_host *host);
+>  void sdhci_end_tuning(struct sdhci_host *host);
+>  void sdhci_reset_tuning(struct sdhci_host *host);
+>  void sdhci_send_tuning(struct sdhci_host *host, u32 opcode);
+> +void sdhci_abort_tuning(struct sdhci_host *host, u32 opcode);
+>  
+>  #endif /* __SDHCI_HW_H */
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 70e86148cb1e..e668da5c8df5 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -2403,6 +2403,7 @@
+>  #define PCI_DEVICE_ID_RDC_R6061		0x6061
+>  #define PCI_DEVICE_ID_RDC_D1010		0x1010
+>  
+> +#define PCI_VENDOR_ID_GLI		0x17a0
+
+Better as a separate patch.
+
+>  #define PCI_VENDOR_ID_LENOVO		0x17aa
+>  
+>  #define PCI_VENDOR_ID_QCOM		0x17cb
+> 
+
