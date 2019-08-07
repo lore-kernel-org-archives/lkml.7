@@ -2,108 +2,138 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62750C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 02:38:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59630C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 02:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4159821743
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 02:38:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A92421743
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 02:41:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="aj9oX8mR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727788AbfHGCiY (ORCPT
+        id S1727844AbfHGClA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 22:38:24 -0400
-Received: from mga11.intel.com ([192.55.52.93]:39432 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726238AbfHGCiY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 22:38:24 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 19:38:23 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,353,1559545200"; 
-   d="scan'208";a="374254553"
-Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
-  by fmsmga006.fm.intel.com with ESMTP; 06 Aug 2019 19:38:22 -0700
-Date:   Wed, 7 Aug 2019 10:21:14 +0800
-From:   Wu Hao <hao.wu@intel.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-doc@vger.kernel.org, atull@kernel.org,
-        Xu Yilun <yilun.xu@intel.com>
-Subject: Re: [PATCH v4 06/12] fpga: dfl: afu: export __port_enable/disable
- function.
-Message-ID: <20190807022114.GB24158@hao-dev>
-References: <1564914022-3710-1-git-send-email-hao.wu@intel.com>
- <1564914022-3710-7-git-send-email-hao.wu@intel.com>
- <20190805155240.GB8107@kroah.com>
+        Tue, 6 Aug 2019 22:41:00 -0400
+Received: from gateway36.websitewelcome.com ([192.185.184.18]:35030 "EHLO
+        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727087AbfHGClA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 22:41:00 -0400
+X-Greylist: delayed 1220 seconds by postgrey-1.27 at vger.kernel.org; Tue, 06 Aug 2019 22:40:59 EDT
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway36.websitewelcome.com (Postfix) with ESMTP id 138C8400DD465
+        for <linux-kernel@vger.kernel.org>; Tue,  6 Aug 2019 20:45:12 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id vBZ6hGNKy2qH7vBZ6hH9GX; Tue, 06 Aug 2019 21:20:36 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=pUxBPsNGWxsRsB7NDgN9eNAS2Hr1pQIZdhHSWzXdg+w=; b=aj9oX8mRps4i4Vhhlaip9MvCwH
+        n2TJQa2tPHp0yCeXUx7ubaJqt3ATHJtoTvFuL15E4IgEQMGX/PUeO4iP2SW4oYPRJz4KKxuJEZdSb
+        sRxpyrEXo+RfUuXFO88hjlGQaiccBvOoaFSfdwUU49SrzJPQINVdQ5IV6DnsvV/0j6EluduHYoxlp
+        iDhS4kdR+KGwXgABQZOCgh9Q/LiCk64Woy0YKhLO6A1C0x1NQMdvxcUU0op67QdgkTtP7ayZCBHCt
+        OF1DBsN5XDVz5WAqzoMDYhuq1E2CKQzs2DzEd60lRzXakFzJc2RUogetxMCSFhJoS2JMGE5IaXAFS
+        hrNBd60A==;
+Received: from [187.192.11.120] (port=51758 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hvBZ4-001ybs-Ge; Tue, 06 Aug 2019 21:20:35 -0500
+Date:   Tue, 6 Aug 2019 21:20:33 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Zhi Wang <zhi.a.wang@intel.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Xiong Zhang <xiong.y.zhang@intel.com>
+Cc:     intel-gvt-dev@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] drm/i915/gvt: Fix use-after-free in
+ intel_vgpu_create_workload
+Message-ID: <20190807022033.GA22623@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190805155240.GB8107@kroah.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.192.11.120
+X-Source-L: No
+X-Exim-ID: 1hvBZ4-001ybs-Ge
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [187.192.11.120]:51758
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 12
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 05, 2019 at 05:52:40PM +0200, Greg KH wrote:
-> On Sun, Aug 04, 2019 at 06:20:16PM +0800, Wu Hao wrote:
-> > As these two functions are used by other private features. e.g.
-> > in error reporting private feature, it requires to check port status
-> > and reset port for error clearing.
-> > 
-> > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> > Signed-off-by: Wu Hao <hao.wu@intel.com>
-> > Acked-by: Moritz Fischer <mdf@kernel.org>
-> > Acked-by: Alan Tull <atull@kernel.org>
-> > Signed-off-by: Moritz Fischer <mdf@kernel.org>
-> > ---
-> > v2: rebased
-> > ---
-> >  drivers/fpga/dfl-afu-main.c | 25 ++++++++++++++-----------
-> >  drivers/fpga/dfl-afu.h      |  3 +++
-> >  2 files changed, 17 insertions(+), 11 deletions(-)
-> > 
-> > diff --git a/drivers/fpga/dfl-afu-main.c b/drivers/fpga/dfl-afu-main.c
-> > index e013afb..e312179 100644
-> > --- a/drivers/fpga/dfl-afu-main.c
-> > +++ b/drivers/fpga/dfl-afu-main.c
-> > @@ -22,14 +22,16 @@
-> >  #include "dfl-afu.h"
-> >  
-> >  /**
-> > - * port_enable - enable a port
-> > + * __port_enable - enable a port
-> >   * @pdev: port platform device.
-> >   *
-> >   * Enable Port by clear the port soft reset bit, which is set by default.
-> >   * The AFU is unable to respond to any MMIO access while in reset.
-> > - * port_enable function should only be used after port_disable function.
-> > + * __port_enable function should only be used after __port_disable function.
-> > + *
-> > + * The caller needs to hold lock for protection.
-> >   */
-> > -static void port_enable(struct platform_device *pdev)
-> > +void __port_enable(struct platform_device *pdev)
-> 
-> worst global function name ever.
-> 
-> Don't polute the global namespace like this for a single driver.  If you
-> REALLY need it, then use a prefix that shows it is your individual
-> dfl_special_sauce_platform_device_only type thing.
+kmem_cache_free() frees *workload*, hence there is a use-after-free bug
+when calling function gvt_vgpu_err().
 
-Oh.. Sure.. Let me fix the naming in the next version.
+Fix this by storing the value of workload->wa_ctx.indirect_ctx.guest_gma
+and workload->wa_ctx.per_ctx.guest_gma into automatic variable
+guest_gma before freeing *workload*, for its further use.
 
-Thanks
-Hao
+Addresses-Coverity-ID: 1452235 ("Read from pointer after free")
+Fixes: 2089a76ade90 ("drm/i915/gvt: Checking workload's gma earlier")
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/gpu/drm/i915/gvt/scheduler.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-> 
-> thanks,
-> 
-> greg k-h
+diff --git a/drivers/gpu/drm/i915/gvt/scheduler.c b/drivers/gpu/drm/i915/gvt/scheduler.c
+index 32ae6b5b7e16..c8cdb4a309f6 100644
+--- a/drivers/gpu/drm/i915/gvt/scheduler.c
++++ b/drivers/gpu/drm/i915/gvt/scheduler.c
+@@ -1525,9 +1525,11 @@ intel_vgpu_create_workload(struct intel_vgpu *vgpu, int ring_id,
+ 			if (!intel_gvt_ggtt_validate_range(vgpu,
+ 				workload->wa_ctx.indirect_ctx.guest_gma,
+ 				workload->wa_ctx.indirect_ctx.size)) {
++				unsigned long guest_gma =
++				       workload->wa_ctx.indirect_ctx.guest_gma;
+ 				kmem_cache_free(s->workloads, workload);
+ 				gvt_vgpu_err("invalid wa_ctx at: 0x%lx\n",
+-				    workload->wa_ctx.indirect_ctx.guest_gma);
++					     guest_gma);
+ 				return ERR_PTR(-EINVAL);
+ 			}
+ 		}
+@@ -1539,9 +1541,11 @@ intel_vgpu_create_workload(struct intel_vgpu *vgpu, int ring_id,
+ 			if (!intel_gvt_ggtt_validate_range(vgpu,
+ 				workload->wa_ctx.per_ctx.guest_gma,
+ 				CACHELINE_BYTES)) {
++				unsigned long guest_gma =
++					workload->wa_ctx.per_ctx.guest_gma;
+ 				kmem_cache_free(s->workloads, workload);
+ 				gvt_vgpu_err("invalid per_ctx at: 0x%lx\n",
+-					workload->wa_ctx.per_ctx.guest_gma);
++					     guest_gma);
+ 				return ERR_PTR(-EINVAL);
+ 			}
+ 		}
+-- 
+2.22.0
+
