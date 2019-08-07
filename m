@@ -2,108 +2,118 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFAA0C32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 15:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B0CC32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 15:24:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 925C32199C
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 15:23:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="lmAqeyU+"
+	by mail.kernel.org (Postfix) with ESMTP id 6624A2199C
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 15:24:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388525AbfHGPXs (ORCPT
+        id S2388540AbfHGPYX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 11:23:48 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:59102 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387815AbfHGPXs (ORCPT
+        Wed, 7 Aug 2019 11:24:23 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:42421 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387815AbfHGPYW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 11:23:48 -0400
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id x77FNY1K003485;
-        Thu, 8 Aug 2019 00:23:35 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x77FNY1K003485
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1565191415;
-        bh=wFWSdnHhhR866OyYCPW9IWXeSZAAJvixLLy0jEH3CE0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=lmAqeyU+QRcTgEl82MNkJq7VA9QTQkcBQJ/l5Ru2JMz8vypyZti/dtg9iftmgejkY
-         XOdARYRlREF9DLQxNz4ORqw54VD/liXeUMVlWx/NYODfgv5Brk07QK13W22KtdS3s9
-         bYSVCGtdlHI7BqxuH6sBtxmtk4L1jbZU9HIAuM843Fob5R4HO1JdOY8cFESTmZQbEw
-         uTBdq4eb1vULFYjHnkznz5MgZI2cuRPsLcdxMMNnk+ViWn0jZ/6xIwqPQppSC5/Lxt
-         sguKAw8Bc85I7z0looTBJRGEQ5GgVghN6c2u05LZe52zUFnjOp5eF+/qbcF04ce+le
-         BWXLbYQX/It4A==
-X-Nifty-SrcIP: [209.85.217.47]
-Received: by mail-vs1-f47.google.com with SMTP id r3so60914111vsr.13;
-        Wed, 07 Aug 2019 08:23:34 -0700 (PDT)
-X-Gm-Message-State: APjAAAWTzgBWSNdS9xMjvdAMMZ0Gar/kzzepDHaGJh18oUYAwA/7rx9T
-        YDIhqNqaaFWPAGpEZlHnBuMluf95571XomEyWbE=
-X-Google-Smtp-Source: APXvYqz4m8SEKmVKatmTXXMW930rk7p7FgeOrFskfw79bfFiwL8uO/9L662iCT7VtluawVIppxs6iCsR9gIeLe7J9ik=
-X-Received: by 2002:a67:8e0a:: with SMTP id q10mr6284995vsd.215.1565191413811;
- Wed, 07 Aug 2019 08:23:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190806100323.22919-1-yamada.masahiro@socionext.com>
-In-Reply-To: <20190806100323.22919-1-yamada.masahiro@socionext.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 8 Aug 2019 00:22:57 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASUNw8pdg3WYmoZzpz=9tu0c=O+Fyzu228kSLYOhUq81g@mail.gmail.com>
-Message-ID: <CAK7LNASUNw8pdg3WYmoZzpz=9tu0c=O+Fyzu228kSLYOhUq81g@mail.gmail.com>
-Subject: Re: [PATCH 1/3] kbuild: fix false-positive need-builtin
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Jan Kiszka <jan.kiszka@siemens.com>,
-        Tom Stonecypher <thomas.edwardx.stonecypher@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>
+        Wed, 7 Aug 2019 11:24:22 -0400
+Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1hvNnX-00089B-00; Wed, 07 Aug 2019 17:24:19 +0200
+Message-ID: <1565191457.2323.41.camel@pengutronix.de>
+Subject: Re: Regression due to d98849aff879 (dma-direct: handle
+ DMA_ATTR_NO_KERNEL_MAPPING in common code)
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>
+Date:   Wed, 07 Aug 2019 17:24:17 +0200
+In-Reply-To: <20190806154403.GA25050@lst.de>
+References: <1565082809.2323.24.camel@pengutronix.de>
+         <20190806113318.GA20215@lst.de>
+         <41cc93b1-62b5-7fb6-060d-01982e68503b@amd.com>
+         <20190806140408.GA22902@lst.de> <1565100418.2323.32.camel@pengutronix.de>
+         <20190806154403.GA25050@lst.de>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 6, 2019 at 7:03 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> The current implementation of need-builtin is false-positive,
-> for example, in the following Makefile:
->
->   obj-m := foo/
->   obj-y := foo/bar/
->
-> ..., where foo/built-in.a is not required.
->
-> Fixes: f7adc3124da0 ("kbuild: create built-in.o automatically if parent directory wants it")
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
-
-Series, applied to linux-kbuild.
-
-
->
->  scripts/Makefile.build | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-> index 0d434d0afc0b..3fe0c73e002c 100644
-> --- a/scripts/Makefile.build
-> +++ b/scripts/Makefile.build
-> @@ -487,7 +487,8 @@ targets += $(call intermediate_targets, .asn1.o, .asn1.c .asn1.h) \
->
->  PHONY += $(subdir-ym)
->  $(subdir-ym):
-> -       $(Q)$(MAKE) $(build)=$@ need-builtin=$(if $(findstring $@,$(subdir-obj-y)),1)
-> +       $(Q)$(MAKE) $(build)=$@ \
-> +       need-builtin=$(if $(filter $@/built-in.a, $(subdir-obj-y)),1)
->
->  # Add FORCE to the prequisites of a target to force it to be always rebuilt.
->  # ---------------------------------------------------------------------------
+Am Dienstag, den 06.08.2019, 17:44 +0200 schrieb Christoph Hellwig:
+> On Tue, Aug 06, 2019 at 04:06:58PM +0200, Lucas Stach wrote:
+> > 
+> > dma_direct_free_pages() then needs the same check, as otherwise the cpu
+> > address is treated as a cookie instead of a real address and the
+> > encryption needs to be re-enabled.
+> 
+> Ok, lets try this one instead:
+> 
 > --
-> 2.17.1
->
+> From 3a7aa9fe38a5eae5d879831b4f8c1032e735a0b6 Mon Sep 17 00:00:00 2001
+> From: Christoph Hellwig <hch@lst.de>
+> Date: Tue, 6 Aug 2019 14:33:23 +0300
+> Subject: dma-direct: fix DMA_ATTR_NO_KERNEL_MAPPING
+> 
+> The new DMA_ATTR_NO_KERNEL_MAPPING needs to actually assign
+> a dma_addr to work.  Also skip it if the architecture needs
+> forced decryption handling, as that needs a kernel virtual
+> address.
+> 
+> Fixes: d98849aff879 (dma-direct: handle DMA_ATTR_NO_KERNEL_MAPPING in common code)
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  kernel/dma/direct.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+> index 59bdceea3737..4c211c87a719 100644
+> --- a/kernel/dma/direct.c
+> +++ b/kernel/dma/direct.c
+> @@ -130,11 +130,13 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
+>  	if (!page)
+>  		return NULL;
+>  
+> -	if (attrs & DMA_ATTR_NO_KERNEL_MAPPING) {
+> +	if ((attrs & DMA_ATTR_NO_KERNEL_MAPPING) &&
+> +	    !force_dma_unencrypted(dev)) {
+>  		/* remove any dirty cache lines on the kernel alias */
+>  		if (!PageHighMem(page))
+>  			arch_dma_prep_coherent(page, size);
+>  		/* return the page pointer as the opaque cookie */
+> +		*dma_handle = phys_to_dma(dev, page_to_phys(page));
+
+I would suggest to place this line above the comment, as the comment
+only really applies to the return value. Other than this nitpick, this
+matches my understanding of the required changes, so:
+
+Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
 
 
--- 
-Best Regards
-Masahiro Yamada
+>  		return page;
+>  	}
+>  
+> @@ -178,7 +180,8 @@ void dma_direct_free_pages(struct device *dev, size_t size, void *cpu_addr,
+>  {
+>  	unsigned int page_order = get_order(size);
+>  
+> -	if (attrs & DMA_ATTR_NO_KERNEL_MAPPING) {
+> +	if ((attrs & DMA_ATTR_NO_KERNEL_MAPPING) &&
+> +	    !force_dma_unencrypted(dev)) {
+>  		/* cpu_addr is a struct page cookie, not a kernel address */
+>  		__dma_direct_free_pages(dev, size, cpu_addr);
+>  		return;
