@@ -2,176 +2,104 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A949C32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:19:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB178C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:19:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3488021E6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:19:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="RkOGCASf"
+	by mail.kernel.org (Postfix) with ESMTP id B976B21E6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:19:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388189AbfHGNTT (ORCPT
+        id S2388202AbfHGNTW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 09:19:19 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:43121 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387970AbfHGNTS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 09:19:18 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x77DJBf72695406
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 7 Aug 2019 06:19:11 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x77DJBf72695406
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1565183952;
-        bh=MnPPyHF/3DqdV3ltYydc8rzca+L7XLy3cRk7ClNghso=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=RkOGCASfqMd0l1Fi/Z/ojE/MbkM9vDdcu4/U7qhKNrUPtIytylR8uK0Yy8Yx6NW+I
-         alDS3PRZmz0Wb59H84znfKjbjnC1tp9RZpFSXsNKFnHua0jFewZBozOEicfXyNp5dh
-         1VTgXjHQoI3wTm2gzcehL12hUOs1czXC/zw1GpX7x++Fmn3DRkqcnWHpOVnN4YxZnt
-         kgikS5Sx2OzPJ1N1vU7nCtUEwZvPryu0Be9miGRffrknSvmrWvKQew80B+QRe9zHgH
-         hs/Ndmh4yUw+DTQ3Mk4yWLeJOdhdzSeoLoXLOd42OUy59C/RrhHYAhnqpW6xqXsza2
-         dwyc0mQzTOXRQ==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x77DJAs62695403;
-        Wed, 7 Aug 2019 06:19:10 -0700
-Date:   Wed, 7 Aug 2019 06:19:10 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for John Hubbard <tipbot@zytor.com>
-Message-ID: <tip-610666f0581557944c3abec93a7c125b8303442c@git.kernel.org>
-Cc:     mingo@kernel.org, jhubbard@nvidia.com, tglx@linutronix.de,
-        linux-kernel@vger.kernel.org, hpa@zytor.com
-Reply-To: linux-kernel@vger.kernel.org, hpa@zytor.com, tglx@linutronix.de,
-          jhubbard@nvidia.com, mingo@kernel.org
-In-Reply-To: <20190731054627.5627-2-jhubbard@nvidia.com>
-References: <20190731054627.5627-2-jhubbard@nvidia.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/boot] x86/boot: Save fields explicitly, zero out
- everything else
-Git-Commit-ID: 610666f0581557944c3abec93a7c125b8303442c
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Wed, 7 Aug 2019 09:19:22 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4187 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387970AbfHGNTW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 09:19:22 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 4E29BCB498AC983FF2B8;
+        Wed,  7 Aug 2019 21:19:20 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Wed, 7 Aug 2019
+ 21:19:13 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <mb@lightnvm.io>, <hans@owltronix.com>, <hch@lst.de>,
+        <axboe@kernel.dk>
+CC:     <linux-kernel@vger.kernel.org>, <linux-block@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] lightnvm: remove set but not used variables 'data_len' and 'rq_len'
+Date:   Wed, 7 Aug 2019 21:18:47 +0800
+Message-ID: <20190807131847.62412-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  610666f0581557944c3abec93a7c125b8303442c
-Gitweb:     https://git.kernel.org/tip/610666f0581557944c3abec93a7c125b8303442c
-Author:     John Hubbard <jhubbard@nvidia.com>
-AuthorDate: Tue, 30 Jul 2019 22:46:27 -0700
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Wed, 7 Aug 2019 15:16:04 +0200
+drivers/lightnvm/pblk-read.c: In function pblk_submit_read_gc:
+drivers/lightnvm/pblk-read.c:423:6: warning: variable data_len set but not used [-Wunused-but-set-variable]
+drivers/lightnvm/pblk-recovery.c: In function pblk_recov_scan_oob:
+drivers/lightnvm/pblk-recovery.c:368:15: warning: variable rq_len set but not used [-Wunused-but-set-variable]
 
-x86/boot: Save fields explicitly, zero out everything else
+They are not used since commit 48e5da725581 ("lightnvm:
+move metadata mapping to lower level driver")
 
-Recent gcc compilers (gcc 9.1) generate warnings about an
-out of bounds memset, if you trying memset across several fields
-of a struct. This generated a couple of warnings on x86_64 builds.
-
-Fix this by explicitly saving the fields in struct boot_params
-that are intended to be preserved, and zeroing all the rest.
-
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-Suggested-by: H. Peter Anvin <hpa@zytor.com>
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190731054627.5627-2-jhubbard@nvidia.com
-
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- arch/x86/include/asm/bootparam_utils.h | 63 ++++++++++++++++++++++++++--------
- 1 file changed, 48 insertions(+), 15 deletions(-)
+ drivers/lightnvm/pblk-read.c     | 2 --
+ drivers/lightnvm/pblk-recovery.c | 3 +--
+ 2 files changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/arch/x86/include/asm/bootparam_utils.h b/arch/x86/include/asm/bootparam_utils.h
-index 101eb944f13c..f5e90a849bca 100644
---- a/arch/x86/include/asm/bootparam_utils.h
-+++ b/arch/x86/include/asm/bootparam_utils.h
-@@ -18,6 +18,20 @@
-  * Note: efi_info is commonly left uninitialized, but that field has a
-  * private magic, so it is better to leave it unchanged.
-  */
-+
-+#define sizeof_mbr(type, member) ({ sizeof(((type *)0)->member); })
-+
-+#define BOOT_PARAM_PRESERVE(struct_member)				\
-+	{								\
-+		.start = offsetof(struct boot_params, struct_member),	\
-+		.len   = sizeof_mbr(struct boot_params, struct_member),	\
-+	}
-+
-+struct boot_params_to_save {
-+	unsigned int start;
-+	unsigned int len;
-+};
-+
- static void sanitize_boot_params(struct boot_params *boot_params)
- {
- 	/* 
-@@ -35,21 +49,40 @@ static void sanitize_boot_params(struct boot_params *boot_params)
- 	 * problems again.
- 	 */
- 	if (boot_params->sentinel) {
--		/* fields in boot_params are left uninitialized, clear them */
--		boot_params->acpi_rsdp_addr = 0;
--		memset(&boot_params->ext_ramdisk_image, 0,
--		       (char *)&boot_params->efi_info -
--			(char *)&boot_params->ext_ramdisk_image);
--		memset(&boot_params->kbd_status, 0,
--		       (char *)&boot_params->hdr -
--		       (char *)&boot_params->kbd_status);
--		memset(&boot_params->_pad7[0], 0,
--		       (char *)&boot_params->edd_mbr_sig_buffer[0] -
--			(char *)&boot_params->_pad7[0]);
--		memset(&boot_params->_pad8[0], 0,
--		       (char *)&boot_params->eddbuf[0] -
--			(char *)&boot_params->_pad8[0]);
--		memset(&boot_params->_pad9[0], 0, sizeof(boot_params->_pad9));
-+		static struct boot_params scratch;
-+		char *bp_base = (char *)boot_params;
-+		char *save_base = (char *)&scratch;
-+		int i;
-+
-+		const struct boot_params_to_save to_save[] = {
-+			BOOT_PARAM_PRESERVE(screen_info),
-+			BOOT_PARAM_PRESERVE(apm_bios_info),
-+			BOOT_PARAM_PRESERVE(tboot_addr),
-+			BOOT_PARAM_PRESERVE(ist_info),
-+			BOOT_PARAM_PRESERVE(acpi_rsdp_addr),
-+			BOOT_PARAM_PRESERVE(hd0_info),
-+			BOOT_PARAM_PRESERVE(hd1_info),
-+			BOOT_PARAM_PRESERVE(sys_desc_table),
-+			BOOT_PARAM_PRESERVE(olpc_ofw_header),
-+			BOOT_PARAM_PRESERVE(efi_info),
-+			BOOT_PARAM_PRESERVE(alt_mem_k),
-+			BOOT_PARAM_PRESERVE(scratch),
-+			BOOT_PARAM_PRESERVE(e820_entries),
-+			BOOT_PARAM_PRESERVE(eddbuf_entries),
-+			BOOT_PARAM_PRESERVE(edd_mbr_sig_buf_entries),
-+			BOOT_PARAM_PRESERVE(edd_mbr_sig_buffer),
-+			BOOT_PARAM_PRESERVE(e820_table),
-+			BOOT_PARAM_PRESERVE(eddbuf),
-+		};
-+
-+		memset(&scratch, 0, sizeof(scratch));
-+
-+		for (i = 0; i < ARRAY_SIZE(to_save); i++) {
-+			memcpy(save_base + to_save[i].start,
-+			       bp_base + to_save[i].start, to_save[i].len);
-+		}
-+
-+		memcpy(boot_params, save_base, sizeof(*boot_params));
- 	}
- }
+diff --git a/drivers/lightnvm/pblk-read.c b/drivers/lightnvm/pblk-read.c
+index d572d45..0cdc48f 100644
+--- a/drivers/lightnvm/pblk-read.c
++++ b/drivers/lightnvm/pblk-read.c
+@@ -420,7 +420,6 @@ int pblk_submit_read_gc(struct pblk *pblk, struct pblk_gc_rq *gc_rq)
+ 	struct nvm_tgt_dev *dev = pblk->dev;
+ 	struct nvm_geo *geo = &dev->geo;
+ 	struct nvm_rq rqd;
+-	int data_len;
+ 	int ret = NVM_IO_OK;
  
+ 	memset(&rqd, 0, sizeof(struct nvm_rq));
+@@ -445,7 +444,6 @@ int pblk_submit_read_gc(struct pblk *pblk, struct pblk_gc_rq *gc_rq)
+ 	if (!(gc_rq->secs_to_gc))
+ 		goto out;
+ 
+-	data_len = (gc_rq->secs_to_gc) * geo->csecs;
+ 	rqd.opcode = NVM_OP_PREAD;
+ 	rqd.nr_ppas = gc_rq->secs_to_gc;
+ 
+diff --git a/drivers/lightnvm/pblk-recovery.c b/drivers/lightnvm/pblk-recovery.c
+index d5e210c..299ef47 100644
+--- a/drivers/lightnvm/pblk-recovery.c
++++ b/drivers/lightnvm/pblk-recovery.c
+@@ -365,7 +365,7 @@ static int pblk_recov_scan_oob(struct pblk *pblk, struct pblk_line *line,
+ 	__le64 *lba_list;
+ 	u64 paddr = pblk_line_smeta_start(pblk, line) + lm->smeta_sec;
+ 	bool padded = false;
+-	int rq_ppas, rq_len;
++	int rq_ppas;
+ 	int i, j;
+ 	int ret;
+ 	u64 left_ppas = pblk_sec_in_open_line(pblk, line) - lm->smeta_sec;
+@@ -388,7 +388,6 @@ static int pblk_recov_scan_oob(struct pblk *pblk, struct pblk_line *line,
+ 	rq_ppas = pblk_calc_secs(pblk, left_ppas, 0, false);
+ 	if (!rq_ppas)
+ 		rq_ppas = pblk->min_write_pgs;
+-	rq_len = rq_ppas * geo->csecs;
+ 
+ retry_rq:
+ 	rqd->bio = NULL;
+-- 
+2.7.4
+
+
