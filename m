@@ -2,142 +2,232 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82285C32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 20:09:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA056C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 20:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6162921922
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 20:09:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 739BE21922
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 20:09:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="oGyCbyvK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389208AbfHGUJI (ORCPT
+        id S2389243AbfHGUJt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 16:09:08 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35772 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388554AbfHGUJH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 16:09:07 -0400
-Received: by mail-wr1-f65.google.com with SMTP id k2so6743061wrq.2
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 13:09:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=B4SZgwl/qCV8DOS3DiN8urgpbd3u1AoDxbn9aPznbyk=;
-        b=Z7iyyVifhSUw9PwLfbgae2n6sDM/js7zvpXlv4eoYpETtCzfPQ+/VdrBytiRwqjCPJ
-         2TzbbCjcLPy2ixdYmtk0UWQEVvyuDIwRQk6GI+nCQTxH6wWJ+AqVGEax6Tt1wmW3qjcQ
-         hHEbBmNFBsya1b/aLoMQAFDvrGHbUpvNyo/6HpVzHsa/+wSRLcC0hfqfHnvCMWretNwQ
-         P0VlzZL4HcIlHFJk0B9H2kKIQs0g434q6V/MvYE0wP9hcrKxcwFSqZKBsP2u/n4dSkgd
-         AMEh7BDaqe0JhwmDymmfCYQArLq5xanqxndud8MUPP7Dr8c5E3TnvQWQA04BVUwwM1B+
-         K+pg==
-X-Gm-Message-State: APjAAAXvaABd9B2JRjZO6UAW7pgPT9tVyYkVl5SI2L+2T0YEToDEqfWo
-        40Lqe4waG1jsSxdLRGId65dJACmzXhdjjg==
-X-Google-Smtp-Source: APXvYqzBRo3CYTFQe4giwdi6nAFwuh8jFzMIZ5ZJD0e+DuwaiLHg0MDSZlCf/S35yeXMs+6d7TEGlw==
-X-Received: by 2002:adf:8183:: with SMTP id 3mr12621646wra.181.1565208544995;
-        Wed, 07 Aug 2019 13:09:04 -0700 (PDT)
-Received: from [192.168.10.150] ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id o11sm63655wmh.37.2019.08.07.13.09.03
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 07 Aug 2019 13:09:04 -0700 (PDT)
-Subject: Re: [PATCH v4 00/20] KVM RISC-V Support
-To:     Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Radim K <rkrcmar@redhat.com>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Anup Patel <anup@brainfault.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190807122726.81544-1-anup.patel@wdc.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <4a991aa3-154a-40b2-a37d-9ee4a4c7a2ca@redhat.com>
-Date:   Wed, 7 Aug 2019 22:09:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190807122726.81544-1-anup.patel@wdc.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 7 Aug 2019 16:09:49 -0400
+Received: from vern.gendns.com ([98.142.107.122]:48790 "EHLO vern.gendns.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729934AbfHGUJt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 16:09:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=lechnology.com; s=default; h=Message-Id:Date:Subject:Cc:To:From:Sender:
+        Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=cnOGeIS4UKyIsT7kCTSHaKO72kTJ1Z3bUf3TbMUBO6A=; b=oGyCbyvKP7eEAFPePScjoAwZhZ
+        M//yl0Sho3FPLHfYg3pn54YbABOC/BI4P8HlSHfcnNvUuF2rDEi36JYHfYsn4SUjWleZ/2oTlr4rG
+        U3OlHRmyS8amozcjA/Yui961iLKrNIptamC/+qOI/I1F15aO0dnhOe0a6K0aBlYpOirb33MJ/6XMI
+        lfMT6MMNgLj+wUSCHYrSU82cHxEFj7LmRtARSiQnXKwajuqO9ERqRE9M+DOsh9uf7mkZy5GybIciF
+        7ZerSqT1Ue29IqW/Dq6lHixUC3wqfyjn3QnC6q5ibnwU9f0+QDWidgJAUJDPlEZ1zdVCw/LA8PrZ3
+        aNkQRLcQ==;
+Received: from 108-198-5-147.lightspeed.okcbok.sbcglobal.net ([108.198.5.147]:32962 helo=freyr.lechnology.com)
+        by vern.gendns.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <david@lechnology.com>)
+        id 1hvSFm-00043m-2g; Wed, 07 Aug 2019 16:09:46 -0400
+From:   David Lechner <david@lechnology.com>
+To:     linux-omap@vger.kernel.org
+Cc:     David Lechner <david@lechnology.com>,
+        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Robert Nelson <robertcnelson@gmail.com>
+Subject: [PATCH v2] ARM: dts: am335x-boneblue: Use of am335x-osd335x-common.dtsi
+Date:   Wed,  7 Aug 2019 15:09:34 -0500
+Message-Id: <20190807200934.25173-1-david@lechnology.com>
+X-Mailer: git-send-email 2.17.1
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - vern.gendns.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lechnology.com
+X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/08/19 14:27, Anup Patel wrote:
-> This series adds initial KVM RISC-V support. Currently, we are able to boot
-> RISC-V 64bit Linux Guests with multiple VCPUs.
+This makes use of the am335x-osd335x-common.dtsi file that contains the
+common device tree components for Octavo Systems AM335x System-in-
+Package that is used on the BeagleBone Blue.
 
-Looks good to me!  Still need an Acked-by from arch/riscv folks if I
-have to merge it, otherwise they can take care of the initial merge.
+This has two minor side-effects:
+1. pinmux_i2c0_pins is renamed to pinmux-i2c0-pins
+2. the 1000MHz cpufreq operating point is enabled
 
-Paolo
+Cc: Robert Nelson <robertcnelson@gmail.com>
+Signed-off-by: David Lechner <david@lechnology.com>
+---
 
-> Few key aspects of KVM RISC-V added by this series are:
-> 1. Minimal possible KVM world-switch which touches only GPRs and few CSRs.
-> 2. Full Guest/VM switch is done via vcpu_get/vcpu_put infrastructure.
-> 3. KVM ONE_REG interface for VCPU register access from user-space.
-> 4. PLIC emulation is done in user-space. In-kernel PLIC emulation, will
->    be added in future.
-> 5. Timer and IPI emuation is done in-kernel.
-> 6. MMU notifiers supported.
-> 7. FP lazy save/restore supported.
-> 8. SBI v0.1 emulation for KVM Guest available.
-> 
-> Here's a brief TODO list which we will work upon after this series:
-> 1. Handle trap from unpriv access in reading Guest instruction
-> 2. Handle trap from unpriv access in SBI v0.1 emulation
-> 3. Implement recursive stage2 page table programing
-> 4. SBI v0.2 emulation in-kernel
-> 5. SBI v0.2 hart hotplug emulation in-kernel
-> 6. In-kernel PLIC emulation
-> 7. ..... and more .....
-> 
-> This series can be found in riscv_kvm_v4 branch at:
-> https//github.com/avpatel/linux.git
-> 
-> Our work-in-progress KVMTOOL RISC-V port can be found in riscv_v1 branch at:
-> https//github.com/avpatel/kvmtool.git
-> 
-> We need OpenSBI with RISC-V hypervisor extension support which can be
-> found in hyp_ext_changes_v1 branch at:
-> https://github.com/riscv/opensbi.git
-> 
-> The QEMU RISC-V hypervisor emulation is done by Alistair and is available
-> in riscv-hyp-work.next branch at:
-> https://github.com/alistair23/qemu.git
-> 
-> To play around with KVM RISC-V, here are few reference commands:
-> 1) To cross-compile KVMTOOL:
->    $ make lkvm-static
-> 2) To launch RISC-V Host Linux:
->    $ qemu-system-riscv64 -monitor null -cpu rv64,h=true -M virt \
->    -m 512M -display none -serial mon:stdio \
->    -kernel opensbi/build/platform/qemu/virt/firmware/fw_jump.elf \
->    -device loader,file=build-riscv64/arch/riscv/boot/Image,addr=0x80200000 \
->    -initrd ./rootfs_kvm_riscv64.img \
->    -append "root=/dev/ram rw console=ttyS0 earlycon=sbi"
-> 3) To launch RISC-V Guest Linux with 9P rootfs:
->    $ ./apps/lkvm-static run -m 128 -c2 --console serial \
->    -p "console=ttyS0 earlycon=uart8250,mmio,0x3f8" -k ./apps/Image --debug
-> 4) To launch RISC-V Guest Linux with initrd:
->    $ ./apps/lkvm-static run -m 128 -c2 --console serial \
->    -p "console=ttyS0 earlycon=uart8250,mmio,0x3f8" -k ./apps/Image \
->    -i ./apps/rootfs.img --debug
-> 
-> Changes since v3:
-> - Moved patch for ISA bitmap from KVM prep series to this series
-> - Make vsip_shadow as run-time percpu variable instead of compile-time
-> - Flush Guest TLBs on all Host CPUs whenever we run-out of VMIDs
+v2 changes:
+- fix typo s/1MHz/1000MHz/ in commit message
+
+ arch/arm/boot/dts/am335x-boneblue.dts | 92 +--------------------------
+ 1 file changed, 2 insertions(+), 90 deletions(-)
+
+diff --git a/arch/arm/boot/dts/am335x-boneblue.dts b/arch/arm/boot/dts/am335x-boneblue.dts
+index df3978ce061c..cde8dd4320b0 100644
+--- a/arch/arm/boot/dts/am335x-boneblue.dts
++++ b/arch/arm/boot/dts/am335x-boneblue.dts
+@@ -5,23 +5,13 @@
+ /dts-v1/;
+ 
+ #include "am33xx.dtsi"
++#include "am335x-osd335x-common.dtsi"
+ #include <dt-bindings/interrupt-controller/irq.h>
+ 
+ / {
+ 	model = "TI AM335x BeagleBone Blue";
+ 	compatible = "ti,am335x-bone-blue", "ti,am33xx";
+ 
+-	cpus {
+-		cpu@0 {
+-			cpu0-supply = <&dcdc2_reg>;
+-		};
+-	};
+-
+-	memory@80000000 {
+-		device_type = "memory";
+-		reg = <0x80000000 0x20000000>; /* 512 MB */
+-	};
+-
+ 	chosen {
+ 		stdout-path = &uart0;
+ 	};
+@@ -142,13 +132,6 @@
+ 		>;
+ 	};
+ 
+-	i2c0_pins: pinmux_i2c0_pins {
+-		pinctrl-single,pins = <
+-			AM33XX_PADCONF(AM335X_PIN_I2C0_SDA, PIN_INPUT_PULLUP, MUX_MODE0)	/* (C17) I2C0_SDA.I2C0_SDA */
+-			AM33XX_PADCONF(AM335X_PIN_I2C0_SCL, PIN_INPUT_PULLUP, MUX_MODE0)	/* (C16) I2C0_SCL.I2C0_SCL */
+-		>;
+-	};
+-
+ 	i2c2_pins: pinmux_i2c2_pins {
+ 		pinctrl-single,pins = <
+ 			AM33XX_PADCONF(AM335X_PIN_UART1_CTSN, PIN_INPUT_PULLUP, MUX_MODE3)	/* (D18) uart1_ctsn.I2C2_SDA */
+@@ -352,16 +335,6 @@
+ };
+ 
+ &i2c0 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&i2c0_pins>;
+-
+-	status = "okay";
+-	clock-frequency = <400000>;
+-
+-	tps: tps@24 {
+-		reg = <0x24>;
+-	};
+-
+ 	baseboard_eeprom: baseboard_eeprom@50 {
+ 		compatible = "atmel,24c256";
+ 		reg = <0x50>;
+@@ -405,66 +378,13 @@
+ /include/ "tps65217.dtsi"
+ 
+ &tps {
+-	interrupts = <7>; /* NMI */
+-	interrupt-parent = <&intc>;
++	/delete-property/ ti,pmic-shutdown-controller;
+ 
+ 	charger {
+ 		interrupts = <0>, <1>;
+ 		interrupt-names = "USB", "AC";
+ 		status = "okay";
+ 	};
+-
+-	pwrbutton {
+-		interrupts = <2>;
+-		status = "okay";
+-	};
+-
+-	regulators {
+-		dcdc1_reg: regulator@0 {
+-			regulator-name = "vdds_dpr";
+-			regulator-always-on;
+-		};
+-
+-		dcdc2_reg: regulator@1 {
+-			/* VDD_MPU voltage limits 0.95V - 1.26V with +/-4% tolerance */
+-			regulator-name = "vdd_mpu";
+-			regulator-min-microvolt = <925000>;
+-			regulator-max-microvolt = <1351500>;
+-			regulator-boot-on;
+-			regulator-always-on;
+-		};
+-
+-		dcdc3_reg: regulator@2 {
+-			/* VDD_CORE voltage limits 0.95V - 1.1V with +/-4% tolerance */
+-			regulator-name = "vdd_core";
+-			regulator-min-microvolt = <925000>;
+-			regulator-max-microvolt = <1150000>;
+-			regulator-boot-on;
+-			regulator-always-on;
+-		};
+-
+-		ldo1_reg: regulator@3 {
+-			regulator-name = "vio,vrtc,vdds";
+-			regulator-always-on;
+-		};
+-
+-		ldo2_reg: regulator@4 {
+-			regulator-name = "vdd_3v3aux";
+-			regulator-always-on;
+-		};
+-
+-		ldo3_reg: regulator@5 {
+-			regulator-name = "vdd_1v8";
+-			regulator-min-microvolt = <1800000>;
+-			regulator-max-microvolt = <1800000>;
+-			regulator-always-on;
+-		};
+-
+-		ldo4_reg: regulator@6 {
+-			regulator-name = "vdd_3v3a";
+-			regulator-always-on;
+-		};
+-	};
+ };
+ 
+ &mmc1 {
+@@ -526,14 +446,6 @@
+ 	};
+ };
+ 
+-&aes {
+-	status = "okay";
+-};
+-
+-&sham {
+-	status = "okay";
+-};
+-
+ &rtc {
+ 	system-power-controller;
+ 	clocks = <&clk_32768_ck>, <&clk_24mhz_clkctrl AM3_CLK_24MHZ_CLKDIV32K_CLKCTRL 0>;
+-- 
+2.17.1
 
