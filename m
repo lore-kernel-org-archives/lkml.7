@@ -2,73 +2,86 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63607C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 09:47:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F2DBC32754
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 09:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4490C222FC
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 09:47:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65EA5222FC
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 09:48:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728691AbfHGJr3 (ORCPT
+        id S1728939AbfHGJsg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 05:47:29 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44850 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726612AbfHGJr2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 05:47:28 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7F98EB0B6;
-        Wed,  7 Aug 2019 09:47:27 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 4F512DA7D7; Wed,  7 Aug 2019 11:47:59 +0200 (CEST)
-Date:   Wed, 7 Aug 2019 11:47:59 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        David Sterba <dsterba@suse.com>,
-        Filipe Manana <fdmanana@suse.com>, linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 4.19 12/32] Btrfs: fix deadlock between fiemap
- and transaction commits
-Message-ID: <20190807094759.GQ28208@suse.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, Sasha Levin <sashal@kernel.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        David Sterba <dsterba@suse.com>, Filipe Manana <fdmanana@suse.com>,
-        linux-btrfs@vger.kernel.org
-References: <20190806213522.19859-1-sashal@kernel.org>
- <20190806213522.19859-12-sashal@kernel.org>
+        Wed, 7 Aug 2019 05:48:36 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:50927 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726529AbfHGJsg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 05:48:36 -0400
+Received: from 79.184.254.29.ipv4.supernova.orange.pl (79.184.254.29) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.275)
+ id d7bf4b4fc498339b; Wed, 7 Aug 2019 11:48:33 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Keith Busch <kbusch@kernel.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Mario Limonciello <Mario.Limonciello@dell.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rajat Jain <rajatja@google.com>
+Subject: Re: [Regression] Commit "nvme/pci: Use host managed power state for suspend" has problems
+Date:   Wed, 07 Aug 2019 11:48:33 +0200
+Message-ID: <2763495.NmdaWeg79L@kreacher>
+In-Reply-To: <20190731221956.GB15795@localhost.localdomain>
+References: <4323ed84dd07474eab65699b4d007aaf@AUSX13MPC105.AMER.DELL.COM> <CAJZ5v0gxfeMN8eCNRjcXmUOkReVsdozb3EccaYMpnmSHu3771g@mail.gmail.com> <20190731221956.GB15795@localhost.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190806213522.19859-12-sashal@kernel.org>
-User-Agent: Mutt/1.5.23.1 (2014-03-12)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 05:35:00PM -0400, Sasha Levin wrote:
-> From: Filipe Manana <fdmanana@suse.com>
+On Thursday, August 1, 2019 12:19:56 AM CEST Keith Busch wrote:
+> On Wed, Jul 31, 2019 at 11:25:51PM +0200, Rafael J. Wysocki wrote:
+> > 
+> > A couple of remarks if you will.
+> > 
+> > First, we don't know which case is the majority at this point.  For
+> > now, there is one example of each, but it may very well turn out that
+> > the SK Hynix BC501 above needs to be quirked.
+> > 
+> > Second, the reference here really is 5.2, so if there are any systems
+> > that are not better off with 5.3-rc than they were with 5.2, well, we
+> > have not made progress.  However, if there are systems that are worse
+> > off with 5.3, that's bad.  In the face of the latest findings the only
+> > way to avoid that is to be backwards compatible with 5.2 and that's
+> > where my patch is going.  That cannot be achieved by quirking all
+> > cases that are reported as "bad", because there still may be
+> > unreported ones.
 > 
-> [ Upstream commit a6d155d2e363f26290ffd50591169cb96c2a609e ]
-> 
-> Fixes: 03628cdbc64db6 ("Btrfs: do not start a transaction during fiemap")
+> I have to agree. I think your proposal may allow PCI D3cold, in which
+> case we do need to reintroduce the HMB handling.
 
-The commit is a regression fix during the 5.2 cycle, how it could end up
-in a 4.19 stable candidate?
+So I think I know what the problem is here.
 
-$ git describe  03628cdbc64db6
-v5.1-rc7-201-g03628cdbc64d
+If ASPM is disabled for the NVMe device (which is the case on my machine by default),
+skipping the bus-level PM in nvme_suspend() causes the PCIe link of it to stay up and
+that prevents the SoC from getting into deeper package C-states.
 
-$ git describe --contains 03628cdbc64db6
-v5.2-rc1~163^2~26
+If I change the ASPM policy to "powersave" (through the module parameter in there),
+ASPM gets enabled for the NVMe drive and I can get into PC10 via S2Idle with plain 5.3-rc3.
 
-And it does not belong to 5.2 either, git cherry-pick on top of 5.2
-fails.
+However, that's a bit less than straightforward, so I'm going to post a patch to make
+nvme_suspend() fall back to the "old ways" if ASPM is not enabled for the target device.
 
-I think such sanity check can be done automatically so the patches don't
-accidentally land in trees where don't belong.
+Cheers!
+
+
+
