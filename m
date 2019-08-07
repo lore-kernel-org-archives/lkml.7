@@ -2,92 +2,95 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C2B3C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 07:10:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4273FC19759
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 07:10:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35CEF2199C
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 07:10:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18FF0219BE
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 07:10:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="VJRiFr8d";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="VvgeK5Ju"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728425AbfHGHKk (ORCPT
+        id S1728529AbfHGHKn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 03:10:40 -0400
-Received: from ajax.cs.uga.edu ([128.192.4.6]:45264 "EHLO ajax.cs.uga.edu"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727914AbfHGHKj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 03:10:39 -0400
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-        (authenticated bits=0)
-        by ajax.cs.uga.edu (8.14.4/8.14.4) with ESMTP id x777AajM061015
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL)
-        for <linux-kernel@vger.kernel.org>; Wed, 7 Aug 2019 03:10:37 -0400
-Received: by mail-lj1-f179.google.com with SMTP id t28so84456541lje.9
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 00:10:37 -0700 (PDT)
-X-Gm-Message-State: APjAAAVXiswFLtgrBOM7Cr9rOrI/6JBvC8YDNlN5tAGH0wbv+se3XcRS
-        nZNHktfKJeOMjitHOPLolfOZx/UbCtnBnpcGUgk=
-X-Google-Smtp-Source: APXvYqwTvZanyI0YZ9uQfaH1U+yBWhv+RJAwn5jJTqCGs8BDn7kVZC6l4H9aknl4nymRLzxWK49L4da/xdA1y1Rxk4s=
-X-Received: by 2002:a2e:8892:: with SMTP id k18mr4034234lji.239.1565161835957;
- Wed, 07 Aug 2019 00:10:35 -0700 (PDT)
+        Wed, 7 Aug 2019 03:10:43 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:48196 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727914AbfHGHKl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 03:10:41 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 6763561424; Wed,  7 Aug 2019 07:10:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1565161840;
+        bh=heNe+iqrOyeQV3Ms255wL/v9OpwrJ6sfppxJL1Inl5o=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=VJRiFr8d4HebJtAgnBPoOtqzgfrzERikNusurS7ud1s/wsVNhDUMdEQFDTw7QvysT
+         fZVvRwQ63oTrvW9J91+G2qqzOkTEhrHn1/j4lcpJIV/1pK7DK4jdVVKj2QCojU+ycH
+         VHXY+Q9rCUpFAI5eSEU7p3xJbWSpBjw6Muv91BWg=
+Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D89256133A;
+        Wed,  7 Aug 2019 07:10:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1565161836;
+        bh=heNe+iqrOyeQV3Ms255wL/v9OpwrJ6sfppxJL1Inl5o=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=VvgeK5JuygQAXq5VgIRFikHihV2rZ1xO1ptQXkrni8SQZlf5WiZBQuAVJiGyFkMJS
+         NbN872uCLg0o1JmevUou8RpMe3qFt6vg8JpiHY4Op0rjoyLmZe9Lqwzf1Ij4pSBJAR
+         OBrCxH1PLdvCSenUW6fyeR7aPB15l5GADiSRpHw4=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D89256133A
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     bjorn.andersson@linaro.org, robh+dt@kernel.org, vkoul@kernel.org,
+        aneela@codeaurora.org
+Cc:     mark.rutland@arm.com, agross@kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, jassisinghbrar@gmail.com,
+        clew@codeaurora.org, Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH v2 5/7] mailbox: qcom: Add support for Qualcomm SM8150 and SC7180 SoCs
+Date:   Wed,  7 Aug 2019 12:39:55 +0530
+Message-Id: <20190807070957.30655-6-sibis@codeaurora.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190807070957.30655-1-sibis@codeaurora.org>
+References: <20190807070957.30655-1-sibis@codeaurora.org>
 MIME-Version: 1.0
-From:   Wenwen Wang <wenwen@cs.uga.edu>
-Date:   Wed, 7 Aug 2019 03:09:59 -0400
-X-Gmail-Original-Message-ID: <CAAa=b7dkPm4JqF4_cPwJo_6_aoobr6OyezCb2A9-aAFHNWffeQ@mail.gmail.com>
-Message-ID: <CAAa=b7dkPm4JqF4_cPwJo_6_aoobr6OyezCb2A9-aAFHNWffeQ@mail.gmail.com>
-Subject: [PATCH v2] ALSA: pcm: fix multiple memory leak bugs
-To:     Wenwen Wang <wenwen@cs.uga.edu>
-Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "moderated list:SOUND" <alsa-devel@alsa-project.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In hiface_pcm_init(), 'rt' is firstly allocated through kzalloc(). Later
-on, hiface_pcm_init_urb() is invoked to initialize 'rt->out_urbs[i]'. In
-hiface_pcm_init_urb(), 'rt->out_urbs[i].buffer' is allocated through
-kzalloc().  However, if hiface_pcm_init_urb() fails, both 'rt' and
-'rt->out_urbs[i].buffer' are not deallocated, leading to memory leak bugs.
-Also, 'rt->out_urbs[i].buffer' is not deallocated if snd_pcm_new() fails.
+Add the corresponding APSS shared offset for SM8150 and SC7180 SoCs.
 
-To fix the above issues, free 'rt' and 'rt->out_urbs[i].buffer'.
-
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 ---
- sound/usb/hiface/pcm.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/mailbox/qcom-apcs-ipc-mailbox.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/sound/usb/hiface/pcm.c b/sound/usb/hiface/pcm.c
-index 14fc1e1..9b132aa 100644
---- a/sound/usb/hiface/pcm.c
-+++ b/sound/usb/hiface/pcm.c
-@@ -599,12 +599,18 @@ int hiface_pcm_init(struct hiface_chip *chip, u8
-extra_freq)
-        for (i = 0; i < PCM_N_URBS; i++) {
-                ret = hiface_pcm_init_urb(&rt->out_urbs[i], chip, OUT_EP,
-                                    hiface_pcm_out_urb_handler);
--               if (ret < 0)
-+               if (ret < 0) {
-+                       for (; i >= 0; i--)
-+                               kfree(rt->out_urbs[i].buffer);
-+                       kfree(rt);
-                        return ret;
-+               }
-        }
-
-        ret = snd_pcm_new(chip->card, "USB-SPDIF Audio", 0, 1, 0, &pcm);
-        if (ret < 0) {
-+               for (i = 0; i < PCM_N_URBS; i++)
-+                       kfree(rt->out_urbs[i].buffer);
-                kfree(rt);
-                dev_err(&chip->dev->dev, "Cannot create pcm instance\n");
-                return ret;
+diff --git a/drivers/mailbox/qcom-apcs-ipc-mailbox.c b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+index 705e17a5479cc..2dfd288fe720d 100644
+--- a/drivers/mailbox/qcom-apcs-ipc-mailbox.c
++++ b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+@@ -118,7 +118,9 @@ static const struct of_device_id qcom_apcs_ipc_of_match[] = {
+ 	{ .compatible = "qcom,msm8996-apcs-hmss-global", .data = (void *)16 },
+ 	{ .compatible = "qcom,msm8998-apcs-hmss-global", .data = (void *)8 },
+ 	{ .compatible = "qcom,qcs404-apcs-apps-global", .data = (void *)8 },
++	{ .compatible = "qcom,sc7180-apss-shared", .data = (void *)12 },
+ 	{ .compatible = "qcom,sdm845-apss-shared", .data = (void *)12 },
++	{ .compatible = "qcom,sm8150-apss-shared", .data = (void *)12 },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, qcom_apcs_ipc_of_match);
 -- 
-2.7.4
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
