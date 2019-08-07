@@ -2,102 +2,94 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE27C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:15:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C7A4C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:15:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3F7021E6C
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:15:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F37E421E71
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:15:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fl04xyXZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Im9mrtlT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730008AbfHGOPW (ORCPT
+        id S2388075AbfHGOP5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 10:15:22 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58940 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729408AbfHGOPW (ORCPT
+        Wed, 7 Aug 2019 10:15:57 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:40927 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729408AbfHGOP5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 10:15:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=hlfBT6TXSUpnllA47N2HUtHetiSK58in3jxlr+iv0pw=; b=fl04xyXZ1MF4FV7R7c9+2e3mc
-        BnEgn9ziqhqIJRRcqRGXr5xuLz626V4rw1XP31jZzwq1IoksUtAYJUgps0z8pBhH0+FMZFkhISBNx
-        Q5YRJDQd0C6WBWV3zqHiLbtLFAMgbBa3U9JSXYKyw8RJ5M3Pf9JUD8STq452o7t/3toUUCeipkl05
-        eu2Tihzhn0ue6tHKKThBIn0XkdjBi368CTpA9WdpKwBsxHwpN/izSGN7a10VxkbqlHcs7rNxywvMq
-        PH89XHFpzIT7ys9UqwBp/TiaY+4/2uzjtzf9xtC9fXhtVE6Gk44R+jhXza0R4NTl71C4x7lJJ1jUD
-        VaWCGWKzw==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hvMij-0000L4-QT; Wed, 07 Aug 2019 14:15:17 +0000
-Date:   Wed, 7 Aug 2019 07:15:17 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas =?iso-8859-1?Q?Hellstr=F6m_=28VMware=29?= 
-        <thomas@shipmail.org>, Dave Airlie <airlied@gmail.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Price <steven.price@arm.com>,
-        Linux-MM <linux-mm@kvack.org>
-Subject: Re: drm pull for v5.3-rc1
-Message-ID: <20190807141517.GA5482@bombadil.infradead.org>
-References: <CAPM=9twvwhm318btWy_WkQxOcpRCzjpok52R8zPQxQrnQ8QzwQ@mail.gmail.com>
- <CAHk-=wjC3VX5hSeGRA1SCLjT+hewPbbG4vSJPFK7iy26z4QAyw@mail.gmail.com>
- <CAHk-=wiD6a189CXj-ugRzCxA9r1+siSCA0eP_eoZ_bk_bLTRMw@mail.gmail.com>
- <48890b55-afc5-ced8-5913-5a755ce6c1ab@shipmail.org>
- <CAHk-=whwcMLwcQZTmWgCnSn=LHpQG+EBbWevJEj5YTKMiE_-oQ@mail.gmail.com>
- <CAHk-=wghASUU7QmoibQK7XS09na7rDRrjSrWPwkGz=qLnGp_Xw@mail.gmail.com>
- <20190806073831.GA26668@infradead.org>
- <CAHk-=wi7L0MDG7DY39Hx6v8jUMSq3ZCE3QTnKKirba_8KAFNyw@mail.gmail.com>
- <20190806190937.GD30179@bombadil.infradead.org>
- <20190807064000.GC6002@infradead.org>
+        Wed, 7 Aug 2019 10:15:57 -0400
+Received: by mail-qt1-f196.google.com with SMTP id a15so88416405qtn.7;
+        Wed, 07 Aug 2019 07:15:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:message-id:from:to:cc:subject:in-reply-to:references
+         :mime-version:content-disposition:content-transfer-encoding;
+        bh=0eo1cuSOLKuBc/AsDSL5J5wiBJZGR8gnSw3Z4l9sYKg=;
+        b=Im9mrtlTccOuh5BHDB3W0jR5+YFOCS3dAR/vurzp0zUwWD3deG7I3VvqCr4VpQDmXi
+         P+ooIZ1TGApur+GvetVeZhJTUPkSdL5sDU0ukclRHTAd5+PWsFyf5OW41Ju4UFJ0hQBB
+         QRVO4vHvNYIFSMvHufATTbNo4oGS4LaWnZx5kmzYxPF+UAp5hFx9e1zSnpKC2y40ZvYU
+         u0aA7UEyZWdoeb+BOXirmvhYvWki1F61qRMNAa+VeKZk5KFFA/FNXE2QOvNw04R8MyDq
+         sVMSv6PRU4adQ0gHCPJ46/+aaBgIuFfXt5pBZGcwzH8yTLjjBuxdBNamwEaOhUEIVS/d
+         Cbbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:from:to:cc:subject:in-reply-to
+         :references:mime-version:content-disposition
+         :content-transfer-encoding;
+        bh=0eo1cuSOLKuBc/AsDSL5J5wiBJZGR8gnSw3Z4l9sYKg=;
+        b=KDRAFcFvnBj+oyb2jgUHem6fPGwJvzcs7bIyHa2bl9uRVuM3DuAsG41SarxzEZ9cYd
+         GJhF9HPD+NP70jIqbV7wsgWWtqAmlJ5NafRYWrLdGh7rSIeUvkDsNLkkCc/fYGVf9yUn
+         aivEkMzruAr2N2R9D4rmPCwlHL8ICn6486RAl2I0xmLAOMukhJhJajeMg2yqr6S0/jg5
+         S+o10b3Wl6ixXpeb54UoBTx8Ht9dyZKcs1ZZe7mClJVmjy3cVsA/aAWLCN/hqa9TAp3B
+         uz/8SmkpS+urYwnmU9OSvwxCrLwu/gpzS9J3JoWHNOsQiB1cb5iujfZngX/u9LLksEGP
+         nX5g==
+X-Gm-Message-State: APjAAAWnyY+sZbAKPGQlX5Ov0SW/mm3mYVQFaBnPN0M+aoPZQZDLqi86
+        OAXTj9Nw5rF8i5awxi9zz0g=
+X-Google-Smtp-Source: APXvYqydE9t34RMj3FOIIR4MbocPd8wGG7Iei7oVN0TZfy1vRak54eQ+8JyghnZbB35clnwG48ajYg==
+X-Received: by 2002:ac8:42d4:: with SMTP id g20mr8356709qtm.78.1565187355949;
+        Wed, 07 Aug 2019 07:15:55 -0700 (PDT)
+Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
+        by smtp.gmail.com with ESMTPSA id x14sm2482778qkj.95.2019.08.07.07.15.54
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 07 Aug 2019 07:15:55 -0700 (PDT)
+Date:   Wed, 7 Aug 2019 10:15:54 -0400
+Message-ID: <20190807101554.GB29535@t480s.localdomain>
+From:   Vivien Didelot <vivien.didelot@gmail.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     davem@davemloft.net, olteanv@gmail.com, andrew@lunn.ch,
+        f.fainelli@gmail.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>
+Subject: Re: [PATCH net-next] net: dsa: sja1105: remove set but not used
+ variables 'tx_vid' and 'rx_vid'
+In-Reply-To: <20190807130856.60792-1-yuehaibing@huawei.com>
+References: <20190807130856.60792-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190807064000.GC6002@infradead.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 11:40:00PM -0700, Christoph Hellwig wrote:
-> On Tue, Aug 06, 2019 at 12:09:38PM -0700, Matthew Wilcox wrote:
-> > Has anyone looked at turning the interface inside-out?  ie something like:
-> > 
-> > 	struct mm_walk_state state = { .mm = mm, .start = start, .end = end, };
-> > 
-> > 	for_each_page_range(&state, page) {
-> > 		... do something with page ...
-> > 	}
-> > 
-> > with appropriate macrology along the lines of:
-> > 
-> > #define for_each_page_range(state, page)				\
-> > 	while ((page = page_range_walk_next(state)))
-> > 
-> > Then you don't need to package anything up into structs that are shared
-> > between the caller and the iterated function.
+On Wed, 7 Aug 2019 21:08:56 +0800, YueHaibing <yuehaibing@huawei.com> wrote:
+> Fixes gcc '-Wunused-but-set-variable' warning:
 > 
-> I'm not an all that huge fan of super magic macro loops.  But in this
-> case I don't see how it could even work, as we get special callbacks
-> for huge pages and holes, and people are trying to add a few more ops
-> as well.
+> drivers/net/dsa/sja1105/sja1105_main.c: In function sja1105_fdb_dump:
+> drivers/net/dsa/sja1105/sja1105_main.c:1226:14: warning:
+>  variable tx_vid set but not used [-Wunused-but-set-variable]
+> drivers/net/dsa/sja1105/sja1105_main.c:1226:6: warning:
+>  variable rx_vid set but not used [-Wunused-but-set-variable]
+> 
+> They are not used since commit 6d7c7d948a2e ("net: dsa:
+> sja1105: Fix broken learning with vlan_filtering disabled")
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-We could have bits in the mm_walk_state which indicate what things to return
-and what things to skip.  We could (and probably should) also use different
-iterator names if people actually want to iterate different things.  eg
-for_each_pte_range(&state, pte) as well as for_each_page_range().
-
+Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
