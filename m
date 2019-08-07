@@ -2,111 +2,167 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D14D9C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:08:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5854C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B28FA21E6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:08:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B27EF21E6E
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:09:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729901AbfHGNIS (ORCPT
+        id S2388082AbfHGNJK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 09:08:18 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:49650 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726873AbfHGNIS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 09:08:18 -0400
-Received: from p200300ddd742df588d2c07822b9f4274.dip0.t-ipconnect.de ([2003:dd:d742:df58:8d2c:782:2b9f:4274])
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hvLfH-0000vJ-Ia; Wed, 07 Aug 2019 15:07:39 +0200
-Date:   Wed, 7 Aug 2019 15:07:33 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Pingfan Liu <kernelfans@gmail.com>
-cc:     Dave Young <dyoung@redhat.com>, Andy Lutomirski <luto@kernel.org>,
-        x86@kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>, Qian Cai <cai@lca.pw>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Daniel Drake <drake@endlessm.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        linux-kernel@vger.kernel.org, Baoquan He <bhe@redhat.com>,
-        kexec@lists.infradead.org, tony.luck@intel.com,
-        Xunlei Pang <xlpang@linux.alibaba.com>
-Subject: Re: [PATCH 0/4] x86/mce: protect nr_cpus from rebooting by broadcast
- mce
-In-Reply-To: <20190807075226.GA10392@mypc>
-Message-ID: <alpine.DEB.2.21.1908071504310.24014@nanos.tec.linutronix.de>
-References: <1564995539-29609-1-git-send-email-kernelfans@gmail.com> <20190807025843.GA4776@dhcp-128-65.nay.redhat.com> <20190807075226.GA10392@mypc>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 7 Aug 2019 09:09:10 -0400
+Received: from mga12.intel.com ([192.55.52.136]:46241 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387982AbfHGNJK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 09:09:10 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Aug 2019 06:09:09 -0700
+X-IronPort-AV: E=Sophos;i="5.64,357,1559545200"; 
+   d="scan'208";a="185988522"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Aug 2019 06:09:04 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id 9F4DC20355; Wed,  7 Aug 2019 16:09:08 +0300 (EEST)
+Date:   Wed, 7 Aug 2019 16:09:08 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Helen Koike <helen.koike@collabora.com>
+Cc:     linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de,
+        jacob2.chen@rock-chips.com, jeffy.chen@rock-chips.com,
+        zyc@rock-chips.com, linux-kernel@vger.kernel.org,
+        tfiga@chromium.org, hans.verkuil@cisco.com,
+        laurent.pinchart@ideasonboard.com, kernel@collabora.com,
+        ezequiel@collabora.com, linux-media@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, zhengsq@rock-chips.com,
+        Jacob Chen <jacob-chen@rock-chips.com>
+Subject: Re: [PATCH v8 02/14] media: doc: add document for rkisp1 meta buffer
+ format
+Message-ID: <20190807130908.GM21370@paasikivi.fi.intel.com>
+References: <20190730184256.30338-1-helen.koike@collabora.com>
+ <20190730184256.30338-3-helen.koike@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190730184256.30338-3-helen.koike@collabora.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 7 Aug 2019, Pingfan Liu wrote:
-> On Wed, Aug 07, 2019 at 11:00:41AM +0800, Dave Young wrote:
-> > Add Tony and Xunlei in cc.
-> > On 08/05/19 at 04:58pm, Pingfan Liu wrote:
-> > > This series include two related groups:
-> > > [1-3/4]: protect nr_cpus from rebooting by broadcast mce
-> > > [4/4]: improve "kexec -l" robustness against broadcast mce
-> > > 
-> > > When I tried to fix [1], Thomas raised concern about the nr_cpus' vulnerability
-> > > to unexpected rebooting by broadcast mce. After analysis, I think only the
-> > > following first case suffers from the rebooting by broadcast mce. [1-3/4] aims
-> > > to fix that issue.
-> > 
-> > I did not understand and read the MCE details, but we previously had a
-> > MCE problem, Xunlei fixed in below commit:
-> > commit 5bc329503e8191c91c4c40836f062ef771d8ba83
-> > Author: Xunlei Pang <xlpang@redhat.com>
-> > Date:   Mon Mar 13 10:50:19 2017 +0100
-> > 
-> >     x86/mce: Handle broadcasted MCE gracefully with kexec
-> > 
-> > I wonder if this is same issue or not. Also the old discussion is in
-> > below thread:
-> > https://lore.kernel.org/patchwork/patch/753530/
-> > 
-> > Tony raised similar questions, but I'm not sure if it is still a problem
-> > or it has been fixed.
-> > 
->
-> Xunlei's patch is the precondition of the stability for the case 2: boot
-> up by "kexec -p nr_cpus="
+Hi Helen,
 
-Correct. The only dangerous issue which is then left is that an MCE hits
-_before_ all CPUs have CR.MCE=1 set. That's a general issue also for cold
-boot. Thanks to the brilliant hardware design, all we can do is pray....
-
-> For case1/3, extra effort is needed.
+On Tue, Jul 30, 2019 at 03:42:44PM -0300, Helen Koike wrote:
+> From: Jacob Chen <jacob2.chen@rock-chips.com>
 > 
-> Thanks,
-> 	Pingfan
-> > > 
-> > > *** Back ground ***
-> > > 
-> > > On x86 it's required to have all logical CPUs set CR4.MCE=1. Otherwise, a
-> > > broadcast MCE observing CR4.MCE=0b on any core will shutdown the machine.
+> This commit add document for rkisp1 meta buffer format
+> 
+> Signed-off-by: Jacob Chen <jacob-chen@rock-chips.com>
+> Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
+> [update for upstream]
+> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> 
+> ---
+> 
+> Changes in v8:
+> - Add SPDX in the header
+> - Remove emacs configs
+> - Fix doc style
+> 
+> Changes in v7:
+> - s/correspond/corresponding
+> - s/use/uses
+> - s/docuemnt/document
+> 
+>  Documentation/media/uapi/v4l/meta-formats.rst |  2 ++
+>  .../uapi/v4l/pixfmt-meta-rkisp1-params.rst    | 23 +++++++++++++++++++
+>  .../uapi/v4l/pixfmt-meta-rkisp1-stat.rst      | 22 ++++++++++++++++++
+>  3 files changed, 47 insertions(+)
+>  create mode 100644 Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
+>  create mode 100644 Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
+> 
+> diff --git a/Documentation/media/uapi/v4l/meta-formats.rst b/Documentation/media/uapi/v4l/meta-formats.rst
+> index b10ca9ee3968..5de621fea3cc 100644
+> --- a/Documentation/media/uapi/v4l/meta-formats.rst
+> +++ b/Documentation/media/uapi/v4l/meta-formats.rst
+> @@ -24,3 +24,5 @@ These formats are used for the :ref:`metadata` interface only.
+>      pixfmt-meta-uvc
+>      pixfmt-meta-vsp1-hgo
+>      pixfmt-meta-vsp1-hgt
+> +    pixfmt-meta-rkisp1-params
+> +    pixfmt-meta-rkisp1-stat
+> diff --git a/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst b/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
+> new file mode 100644
+> index 000000000000..103b5cb79b7c
+> --- /dev/null
+> +++ b/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
+> @@ -0,0 +1,23 @@
+> +.. SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +
+> +.. _v4l2-meta-fmt-rkisp1-params:
+> +
+> +============================
+> +V4L2_META_FMT_RK_ISP1_PARAMS
+> +============================
+> +
+> +Rockchip ISP1 Parameters Data
+> +
+> +Description
+> +===========
+> +
+> +This format describes input parameters for the Rockchip ISP1.
+> +
+> +It uses c-struct :c:type:`rkisp1_isp_params_cfg`, which is defined in
+> +the ``linux/rkisp1-config.h`` header file.
 
-Pingfan, please trim your replies and remove the useless gunk after your answer.
+Do you have an insight on in which order the device executes the processing
+steps for the image data? The pipeline may not be entirely linear either
+(statistics, for instance). This should be included in the documentation.
 
-Thanks,
+> +
+> +The parameters consist of multiple modules.
+> +The module won't be updated if the corresponding bit was not set in module_*_update.
+> +
+> +.. kernel-doc:: include/uapi/linux/rkisp1-config.h
+> +   :functions: rkisp1_isp_params_cfg
+> diff --git a/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst b/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
+> new file mode 100644
+> index 000000000000..4ad303f96421
+> --- /dev/null
+> +++ b/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
+> @@ -0,0 +1,22 @@
+> +.. SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +
+> +.. _v4l2-meta-fmt-rkisp1-stat:
+> +
+> +=============================
+> +V4L2_META_FMT_RK_ISP1_STAT_3A
+> +=============================
+> +
+> +
+> +Rockchip ISP1 Statistics Data
+> +
+> +Description
+> +===========
+> +
+> +This format describes image color statistics information generated by the Rockchip
+> +ISP1.
+> +
+> +It uses c-struct :c:type:`rkisp1_stat_buffer`, which is defined in
+> +the ``linux/rkisp1-config.h`` header file.
+> +
+> +.. kernel-doc:: include/uapi/linux/rkisp1-config.h
+> +   :functions: rkisp1_stat_buffer
 
-	tglx
+-- 
+Kind regards,
+
+Sakari Ailus
+sakari.ailus@linux.intel.com
