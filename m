@@ -2,120 +2,185 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6116DC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:27:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F04C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:27:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3107321E70
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:27:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7412621E70
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:27:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hS5LL+NG"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="JMgKFIJr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730059AbfHGO1b (ORCPT
+        id S1730091AbfHGO1l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 10:27:31 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:39757 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729408AbfHGO1b (ORCPT
+        Wed, 7 Aug 2019 10:27:41 -0400
+Received: from mail.efficios.com ([167.114.142.138]:52094 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730060AbfHGO1k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 10:27:31 -0400
-Received: by mail-pl1-f196.google.com with SMTP id b7so41143316pls.6
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 07:27:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=IV7gifFQp46H49cWxTh6Sk3Kt080hJvg+0jA2D4xXnE=;
-        b=hS5LL+NGFi//l32zDr7/d4gdqMuQNQp6fYVDtPgmCS5+FWaojRhi7mQBadVXt2jSWr
-         nCD9Vb7FDEsqrD5n6dTT+rwsAuXDcVDC/zbMokC7n/B5Q/v6Qth7bRSy3hXjsY3JF8L3
-         Lib2tdyE46UPxzXwu2m0HqEbRFYvOuyDh3MK/Y1W7ypvskdDDuEjsFezE7FnxVOYGRZq
-         kL0YtVYd6VofFPbqaOKONSccqHVDT+Qe3Zb7qox2szC0ATZANJnuNt46WaK2RymkxT+h
-         2w94dwwEcxTJa1UGoMrXcKrQYprzY2GUkK9XrgUQbRJlAs/EKi4Z5PYXbJL2KKLrtD6H
-         e8eA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=IV7gifFQp46H49cWxTh6Sk3Kt080hJvg+0jA2D4xXnE=;
-        b=OTYM4z1XS9zyIfzq58bWz0y6VIZi4GC7s/B+cNvVguwgrXpRhx6FFUTASwpu/P6HM+
-         iQVFsKOiCJWKYJDCFS+V6NpIKZk5eromcMEkjMSr04Rr4BweNbTOryvE40z7YhU24B8U
-         du3JGibe/q1ItJlU8CjPt7KqKlCdE0v9Q31kMlRtnfcewaNTWjoLbmDZFJWTesFDY0NK
-         rGKk9VzA2sk/wR7qcUCsdOXdjG51nxUWRaF4rnaSNApqBm4df2JBBJ9NQOv6rVz3X5zx
-         8K2PS53iIyHNrkzPylmbmGLiBPnv9WeakUXaiqJH+DKjkh7okHPCnCnuQBVJOBWMDMMr
-         vVIQ==
-X-Gm-Message-State: APjAAAX+TpbJmqnt5RQbWfc9FxD1p2ca4XDv8D5NiaTLNLJgV2BzYEl0
-        BiSaZMzYYuakb+y7CNwtVtY=
-X-Google-Smtp-Source: APXvYqwABYsvD2fMWNSqpSO1K8R0xRbmhMcHQlPTDPGh+bvWvNczgIhCV6XMnNVWCUQNOYBbsBj7xg==
-X-Received: by 2002:a17:90a:bd8c:: with SMTP id z12mr255701pjr.60.1565188050812;
-        Wed, 07 Aug 2019 07:27:30 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id j15sm123281384pfn.150.2019.08.07.07.27.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 07 Aug 2019 07:27:29 -0700 (PDT)
-Date:   Wed, 7 Aug 2019 07:27:28 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Cc:     akpm@linux-foundation.org, joe@perches.com,
-        johannes@sipsolutions.net, linux-kernel@vger.kernel.org,
-        yamada.masahiro@socionext.com
-Subject: Re: [PATCH v2 2/2] linux/bits.h: Add compile time sanity check of
- GENMASK inputs
-Message-ID: <20190807142728.GA16360@roeck-us.net>
-References: <20190731190309.19909-1-rikard.falkeborn@gmail.com>
- <20190801230358.4193-1-rikard.falkeborn@gmail.com>
- <20190801230358.4193-2-rikard.falkeborn@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190801230358.4193-2-rikard.falkeborn@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Wed, 7 Aug 2019 10:27:40 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 358242B7449;
+        Wed,  7 Aug 2019 10:27:39 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id 76rKU0sWKJGH; Wed,  7 Aug 2019 10:27:38 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id BC7B92B7440;
+        Wed,  7 Aug 2019 10:27:38 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com BC7B92B7440
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1565188058;
+        bh=qjuvPAl+BEtk3SOiP/PvYJFmEZ6RzNWr2mWNiUedIkY=;
+        h=From:To:Date:Message-Id;
+        b=JMgKFIJrsiMM+MS5RTYJpuvBu5kdN3hAtatFwURHhLKxvI/WP/0xGFNDW5jSxMRja
+         x7f6pqEjFgHXlsxHt3T2fiAnfeVvaYbmZ/mj6IKut3pDhUJq9DArwZnQXsb5Qu5P0C
+         vlr2B7Mvhds35/TlQIUQVQXuLL/YAD4K13BhznFNanpqhaBz6YbAx2tkYR3M4QsL4W
+         Sr8lUEkuG9Rhmm7G5Ln4slTGkDvCdibRDU/7fcKVedgyYq2ia6ICUVtRfP98+eCNuO
+         pBuKQyhkxk0ril45E2kp3f0IugM/7+abAgqKGvi3k51LXu7XNn5F48yyJpauvG1gyg
+         2bPi9khcnxI3Q==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id rFcg9313HV1h; Wed,  7 Aug 2019 10:27:38 -0400 (EDT)
+Received: from localhost.localdomain (192-222-181-218.qc.cable.ebox.net [192.222.181.218])
+        by mail.efficios.com (Postfix) with ESMTPSA id 759D92B7420;
+        Wed,  7 Aug 2019 10:27:38 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Carlos O'Donell <carlos@redhat.com>
+Cc:     Florian Weimer <fweimer@redhat.com>,
+        Joseph Myers <joseph@codesourcery.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha@sourceware.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ben Maurer <bmaurer@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
+Subject: [PATCH glibc 2.31 2/5] glibc: sched_getcpu(): use rseq cpu_id TLS on Linux (v5)
+Date:   Wed,  7 Aug 2019 10:27:23 -0400
+Message-Id: <20190807142726.2579-3-mathieu.desnoyers@efficios.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190807142726.2579-1-mathieu.desnoyers@efficios.com>
+References: <20190807142726.2579-1-mathieu.desnoyers@efficios.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 02, 2019 at 01:03:58AM +0200, Rikard Falkeborn wrote:
-> GENMASK() and GENMASK_ULL() are supposed to be called with the high bit
-> as the first argument and the low bit as the second argument. Mixing
-> them will return a mask with zero bits set.
-> 
-> Recent commits show getting this wrong is not uncommon, see e.g.
-> commit aa4c0c9091b0 ("net: stmmac: Fix misuses of GENMASK macro") and
-> commit 9bdd7bb3a844 ("clocksource/drivers/npcm: Fix misuse of GENMASK
-> macro").
-> 
-> To prevent such mistakes from appearing again, add compile time sanity
-> checking to the arguments of GENMASK() and GENMASK_ULL(). If both the
-> arguments are known at compile time, and the low bit is higher than the
-> high bit, break the build to detect the mistake immediately.
-> 
-> Since GENMASK() is used in declarations, BUILD_BUG_ON_ZERO() must be
-> used instead of BUILD_BUG_ON(), and __is_constexpr() must be used instead
-> of __builtin_constant_p().
-> 
-> If successful, BUILD_BUG_OR_ZERO() returns 0 of type size_t. To avoid
-> problems with implicit conversions, cast the result of BUILD_BUG_OR_ZERO
-> to unsigned long.
-> 
-> Since both BUILD_BUG_ON_ZERO() and __is_constexpr() only uses sizeof()
-> on the arguments passed to them, neither of them evaluate the expression
-> unless it is a VLA. Therefore, GENMASK(1, x++) still behaves as
-> expected.
-> 
-> Commit 95b980d62d52 ("linux/bits.h: make BIT(), GENMASK(), and friends
-> available in assembly") made the macros in linux/bits.h available in
-> assembly. Since neither BUILD_BUG_OR_ZERO() or __is_constexpr() are asm
-> compatible, disable the checks if the file is included in an asm file.
-> 
+When available, use the cpu_id field from __rseq_abi on Linux to
+implement sched_getcpu(). Fall-back on the vgetcpu vDSO if unavailable.
 
-Who is going to fix the fallout ? For example, arm64:defconfig no longer
-compiles with this patch applied.
+Benchmarks:
 
-It seems to me that the benefit of catching misuses of GENMASK is much
-less than the fallout from no longer compiling kernels, since those
-kernels won't get any test coverage at all anymore.
+x86-64: Intel E5-2630 v3@2.40GHz, 16-core, hyperthreading
 
-Guenter
+glibc sched_getcpu():                     13.7 ns (baseline)
+glibc sched_getcpu() using rseq:           2.5 ns (speedup:  5.5x)
+inline load cpuid from __rseq_abi TLS:     0.8 ns (speedup: 17.1x)
+
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+CC: Carlos O'Donell <carlos@redhat.com>
+CC: Florian Weimer <fweimer@redhat.com>
+CC: Joseph Myers <joseph@codesourcery.com>
+CC: Szabolcs Nagy <szabolcs.nagy@arm.com>
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: Ben Maurer <bmaurer@fb.com>
+CC: Peter Zijlstra <peterz@infradead.org>
+CC: "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
+CC: Boqun Feng <boqun.feng@gmail.com>
+CC: Will Deacon <will.deacon@arm.com>
+CC: Dave Watson <davejwatson@fb.com>
+CC: Paul Turner <pjt@google.com>
+CC: libc-alpha@sourceware.org
+CC: linux-kernel@vger.kernel.org
+CC: linux-api@vger.kernel.org
+---
+Changes since v1:
+- rseq is only used if both __NR_rseq and RSEQ_SIG are defined.
+
+Changes since v2:
+- remove duplicated __rseq_abi extern declaration.
+
+Changes since v3:
+- update ChangeLog.
+
+Changes since v4:
+- Use atomic_load_relaxed to load the __rseq_abi.cpu_id field, a
+  consequence of the fact that __rseq_abi is not volatile anymore.
+- Include atomic.h which provides atomic_load_relaxed.
+---
+ ChangeLog                              |  5 +++++
+ sysdeps/unix/sysv/linux/sched_getcpu.c | 25 +++++++++++++++++++++++--
+ 2 files changed, 28 insertions(+), 2 deletions(-)
+
+diff --git a/ChangeLog b/ChangeLog
+index 9a1930248f..128a7b4baa 100644
+--- a/ChangeLog
++++ b/ChangeLog
+@@ -1,3 +1,8 @@
++2019-08-06  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
++
++	* sysdeps/unix/sysv/linux/sched_getcpu.c: use rseq cpu_id TLS on
++	Linux.
++
+ 2019-08-06  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+ 
+ 	* NEWS: Add Restartable Sequences feature description.
+diff --git a/sysdeps/unix/sysv/linux/sched_getcpu.c b/sysdeps/unix/sysv/linux/sched_getcpu.c
+index fb0d317f83..01a818f5b0 100644
+--- a/sysdeps/unix/sysv/linux/sched_getcpu.c
++++ b/sysdeps/unix/sysv/linux/sched_getcpu.c
+@@ -18,14 +18,15 @@
+ #include <errno.h>
+ #include <sched.h>
+ #include <sysdep.h>
++#include <atomic.h>
+ 
+ #ifdef HAVE_GETCPU_VSYSCALL
+ # define HAVE_VSYSCALL
+ #endif
+ #include <sysdep-vdso.h>
+ 
+-int
+-sched_getcpu (void)
++static int
++vsyscall_sched_getcpu (void)
+ {
+ #ifdef __NR_getcpu
+   unsigned int cpu;
+@@ -37,3 +38,23 @@ sched_getcpu (void)
+   return -1;
+ #endif
+ }
++
++#ifdef __NR_rseq
++#include <sys/rseq.h>
++#endif
++
++#if defined __NR_rseq && defined RSEQ_SIG
++int
++sched_getcpu (void)
++{
++  int cpu_id = atomic_load_relaxed (&__rseq_abi.cpu_id);
++
++  return cpu_id >= 0 ? cpu_id : vsyscall_sched_getcpu ();
++}
++#else
++int
++sched_getcpu (void)
++{
++  return vsyscall_sched_getcpu ();
++}
++#endif
+-- 
+2.17.1
+
