@@ -2,278 +2,124 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51CBBC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 18:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC5D0C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 18:03:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DA2B22305
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 18:02:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9B2F22305
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 18:03:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="YaKWW1V2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389100AbfHGSCj (ORCPT
+        id S2389139AbfHGSDr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 14:02:39 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:34782 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388163AbfHGSCj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 14:02:39 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x77Huxn1093733;
-        Wed, 7 Aug 2019 13:56:59 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u83g7g026-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 07 Aug 2019 13:56:59 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x77HuxB8093674;
-        Wed, 7 Aug 2019 13:56:59 -0400
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u83g7g01d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 07 Aug 2019 13:56:59 -0400
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x77HnsSg024862;
-        Wed, 7 Aug 2019 17:56:57 GMT
-Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
-        by ppma03wdc.us.ibm.com with ESMTP id 2u51w63uen-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 07 Aug 2019 17:56:57 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x77Huvrn51511580
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 7 Aug 2019 17:56:57 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4F56DB2081;
-        Wed,  7 Aug 2019 17:56:57 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 208F0B2079;
-        Wed,  7 Aug 2019 17:56:57 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed,  7 Aug 2019 17:56:57 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id C856516C5DA7; Wed,  7 Aug 2019 10:56:57 -0700 (PDT)
-Date:   Wed, 7 Aug 2019 10:56:57 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, max.byungchul.park@gmail.com,
-        byungchul.park@lge.com, Davidlohr Bueso <dave@stgolabs.net>,
-        Josh Triplett <josh@joshtriplett.org>, kernel-team@android.com,
-        kernel-team@lge.com, Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Rao Shoaib <rao.shoaib@oracle.com>, rcu@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH RFC v1 2/2] rcuperf: Add kfree_rcu performance Tests
-Message-ID: <20190807175657.GF28441@linux.ibm.com>
-Reply-To: paulmck@linux.ibm.com
-References: <20190806212041.118146-1-joel@joelfernandes.org>
- <20190806212041.118146-2-joel@joelfernandes.org>
- <20190807002915.GV28441@linux.ibm.com>
- <20190807102213.GD169551@google.com>
+        Wed, 7 Aug 2019 14:03:47 -0400
+Received: from mail-eopbgr40070.outbound.protection.outlook.com ([40.107.4.70]:50595
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388615AbfHGSDq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 14:03:46 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aS1PwG88N8RoB1Xq4Zvr7xywoouYcdJJPjXjv1ypPj+xP42vVQf+93nKJJXWq3n9NUki+YBBmin32LksKsyHSinShNx/hiW9C3MldniAMT1BF0sPPZzzEUTHKQx/c3RwNTvnhzmrhMJAZdPcpHJmRYnLbn15fGJKv+FzU/VqKB5uIlV3E6Go/SrwFA+TRAAPQh9Dusu+ZhfyudBWXTM5JhlnLOB7KKxZDxdNELZkAh2kZG7hW/DJzsCeJxFWiZ5nWJAEA+jGbbR6r06IaSe0yLpPQMOIHRW3ZbtjlbDz/RrM7eTlG3j/gtHM2PXUyzv40sgf4/gpBIg6IutLkyXapw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SI6nb2QZ1MqUqDT8AuAEVo37tXYGehTDI32GiVLgBhY=;
+ b=TTkMBWIdS8+klmJsXtviP0aIyasMNMVaFgYLBC/TPS5GWxs3WNXW+rSKxLlbeTrgSZYSP3aCgCddprU1pHEeLi3RU+su2LG3S4MUjtB/VM9Hda2SFGw4HCI472QHi9qnQ50Yjt88MUX6G9K2zHELjapanvDviwrAAXPB0uLOR4PeQEcy9poQQO0XJYbJFnfL5Ovl/J3aHTncuLvcT5XwDeGVjhCD8HkqnJPBqyaB6qjlJwm2NCw8A77lr92YgG1UTDyIwpSzvRvX+iMVqfbSOi8qrpEH8eSwm5Vq9FmosS5axDn/xQqfzXWHVW+FbzNFy4XMLqqqa5swGy1SCEPG6Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SI6nb2QZ1MqUqDT8AuAEVo37tXYGehTDI32GiVLgBhY=;
+ b=YaKWW1V2JMy4zyTeT3NcGwTdj4622Y6tZltg0qQE/yHiwiAjdyw7PfRZ3KRue3JSz7O9SfP7AYP0dJ8Ba+9bWBPhaDSZ/t7g0djO9oGhQIvNQhIRfWqPCpwccOiG445NPrDP1Sy6kDTpsqzx4XHAcxGmckY0abctbjajMlf6aXc=
+Received: from DB6PR0501MB2759.eurprd05.prod.outlook.com (10.172.227.7) by
+ DB6PR0501MB2520.eurprd05.prod.outlook.com (10.168.74.8) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.14; Wed, 7 Aug 2019 18:03:43 +0000
+Received: from DB6PR0501MB2759.eurprd05.prod.outlook.com
+ ([fe80::3c28:c77d:55b0:15b2]) by DB6PR0501MB2759.eurprd05.prod.outlook.com
+ ([fe80::3c28:c77d:55b0:15b2%5]) with mapi id 15.20.2136.018; Wed, 7 Aug 2019
+ 18:03:43 +0000
+From:   Saeed Mahameed <saeedm@mellanox.com>
+To:     "leon@kernel.org" <leon@kernel.org>
+CC:     "jgg@ziepe.ca" <jgg@ziepe.ca>,
+        "dledford@redhat.com" <dledford@redhat.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "hslester96@gmail.com" <hslester96@gmail.com>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [PATCH v3] mlx5: Use refcount_t for refcount
+Thread-Topic: [PATCH v3] mlx5: Use refcount_t for refcount
+Thread-Index: AQHVS/qqPWmA6k0y9U2jqPKx2/PeLKbullCAgABu9oCAAPeogA==
+Date:   Wed, 7 Aug 2019 18:03:43 +0000
+Message-ID: <71b2d9688834a69d8db587dd01f92088fd9bf497.camel@mellanox.com>
+References: <20190806015950.18167-1-hslester96@gmail.com>
+         <cbea99e74a1f70b1a67357aaf2afdb55655cd2bd.camel@mellanox.com>
+         <20190807031717.GB4832@mtr-leonro.mtl.com>
+In-Reply-To: <20190807031717.GB4832@mtr-leonro.mtl.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=saeedm@mellanox.com; 
+x-originating-ip: [209.116.155.178]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 47d0efe7-3671-40b7-f2ee-08d71b619600
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB6PR0501MB2520;
+x-ms-traffictypediagnostic: DB6PR0501MB2520:
+x-microsoft-antispam-prvs: <DB6PR0501MB2520CB478DFDC7D57A81E17FBED40@DB6PR0501MB2520.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4303;
+x-forefront-prvs: 01221E3973
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(136003)(39860400002)(376002)(346002)(189003)(199004)(186003)(1730700003)(6506007)(26005)(102836004)(6512007)(53936002)(6246003)(71190400001)(71200400001)(4326008)(25786009)(256004)(54906003)(58126008)(446003)(316002)(81156014)(8936002)(81166006)(486006)(14444005)(2351001)(11346002)(476003)(6436002)(2616005)(2906002)(5640700003)(6916009)(68736007)(36756003)(66066001)(229853002)(2501003)(478600001)(66446008)(14454004)(99286004)(7736002)(4744005)(6116002)(3846002)(76176011)(8676002)(86362001)(118296001)(305945005)(66946007)(66556008)(5660300002)(6486002)(91956017)(66476007)(64756008)(76116006);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR0501MB2520;H:DB6PR0501MB2759.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: lwYWm2NFspCbVGVQPud9832ZRda2JvYLoPKY4K+/WWTyj86bGhIieraCW2dKGtHkaTTVBJW5KXaDXwD9MwanEYRjlJPYDZ22d00z7DGhBbW1goz+ZwsAegaV+hRMCjdlMBMp6yROr/kHQ6LMRt8EXZjR4tUX2eqAS6trrXJYHvyrHw2SWEDGuwDM3pPqTyKcKadlZ7Iwsi2LovVrx0GFwYraurarKmQrb1lWtTez8ZK4b7OglqldoPbb+Ti+HtiTd9GgrzavoYRe8nobPdlxOGNBq1wSiX9OjQ6zZfS5TJKYhQgGhtYSe6cdgTIxq1rVYL2uquJOC68zy4om0NCBJtTNuA6sAo5Wm78b4MwNf1aYgJhVSuDKpQhPNoXdgj4ARw0RUNLh1RxjaQfFGGJtF66GqvSHuyvGnXZ+T8Xvs9A=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <2E597FA60F51BC42BDFA7D14A1056932@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190807102213.GD169551@google.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-07_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908070168
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 47d0efe7-3671-40b7-f2ee-08d71b619600
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Aug 2019 18:03:43.6857
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: saeedm@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0501MB2520
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 07, 2019 at 06:22:13AM -0400, Joel Fernandes wrote:
-> On Tue, Aug 06, 2019 at 05:29:15PM -0700, Paul E. McKenney wrote:
-> > On Tue, Aug 06, 2019 at 05:20:41PM -0400, Joel Fernandes (Google) wrote:
-> > > This test runs kfree_rcu in a loop to measure performance of the new
-> > > kfree_rcu, with and without patch.
-> > > 
-> > > To see improvement, run with boot parameters:
-> > > rcuperf.kfree_loops=2000 rcuperf.kfree_alloc_num=100 rcuperf.perf_type=kfree
-> > > 
-> > > Without patch, test runs in 6.9 seconds.
-> > > With patch, test runs in 6.1 seconds (+13% improvement)
-> > > 
-> > > If it is desired to run the test but with the traditional (non-batched)
-> > > kfree_rcu, for example to compare results, then you could pass along the
-> > > rcuperf.kfree_no_batch=1 boot parameter.
-> > 
-> > You lost me on this one.  You ran two runs, with rcuperf.kfree_no_batch=1
-> > and without?  Or you ran this patch both with and without the earlier
-> > patch, and could have run with the patch and rcuperf.kfree_no_batch=1?
-> 
-> I always run the rcutorture test with patch because the patch doesn't really
-> do anything if rcuperf.kfree_no_batch=0. This parameter is added so that in
-> the future folks can compare effect of non-batching with that of the
-> batching. However, I can also remove the patch itself and run this test
-> again.
-> 
-> > If the latter, it would be good to try all three.
-> 
-> Ok, sure.
-
-Very good!  And please make the commit log more clear.  ;-)
-
-> [snip] 
-> > > ---
-> > >  kernel/rcu/rcuperf.c | 169 ++++++++++++++++++++++++++++++++++++++++++-
-> > >  1 file changed, 168 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/kernel/rcu/rcuperf.c b/kernel/rcu/rcuperf.c
-> > > index 7a6890b23c5f..34658760da5e 100644
-> > > --- a/kernel/rcu/rcuperf.c
-> > > +++ b/kernel/rcu/rcuperf.c
-> > > @@ -89,7 +89,7 @@ torture_param(int, writer_holdoff, 0, "Holdoff (us) between GPs, zero to disable
-> > >  
-> > >  static char *perf_type = "rcu";
-> > >  module_param(perf_type, charp, 0444);
-> > > -MODULE_PARM_DESC(perf_type, "Type of RCU to performance-test (rcu, rcu_bh, ...)");
-> > > +MODULE_PARM_DESC(perf_type, "Type of RCU to performance-test (rcu, rcu_bh, kfree,...)");
-> > >  
-> > >  static int nrealreaders;
-> > >  static int nrealwriters;
-> > > @@ -592,6 +592,170 @@ rcu_perf_shutdown(void *arg)
-> > >  	return -EINVAL;
-> > >  }
-> > >  
-> > > +/*
-> > > + * kfree_rcu performance tests: Start a kfree_rcu loop on all CPUs for number
-> > > + * of iterations and measure total time for all iterations to complete.
-> > > + */
-> > > +
-> > > +torture_param(int, kfree_nthreads, -1, "Number of RCU reader threads");
-> > > +torture_param(int, kfree_alloc_num, 8000, "Number of allocations and frees done by a thread");
-> > > +torture_param(int, kfree_alloc_size, 16,  "Size of each allocation");
-> > 
-> > Is this used?  How does it relate to KFREE_OBJ_BYTES?
-> 
-> You're right, I had added this before but it is unused now. Sorry about that,
-> I will remove it.
-> 
-> > > +torture_param(int, kfree_loops, 10, "Size of each allocation");
-> > 
-> > I suspect that this kfree_loops string is out of date.
-> 
-> Yes, complete screw up, will update it.
-> 
-> > > +torture_param(int, kfree_no_batch, 0, "Use the non-batching (slower) version of kfree_rcu");
-> > 
-> > All of these need to be added to kernel-parameters.txt.  Along with
-> > any added by the earlier patch, for that matter.
-> 
-> Sure, should I split that into a separate patch?
-
-Your choice.
-
-> > > +static struct task_struct **kfree_reader_tasks;
-> > > +static int kfree_nrealthreads;
-> > > +static atomic_t n_kfree_perf_thread_started;
-> > > +static atomic_t n_kfree_perf_thread_ended;
-> > > +
-> > > +#define KFREE_OBJ_BYTES 8
-> > > +
-> > > +struct kfree_obj {
-> > > +	char kfree_obj[KFREE_OBJ_BYTES];
-> > > +	struct rcu_head rh;
-> > > +};
-> > > +
-> > > +void kfree_call_rcu_nobatch(struct rcu_head *head, rcu_callback_t func);
-> > > +
-> > > +static int
-> > > +kfree_perf_thread(void *arg)
-> > > +{
-> > > +	int i, l = 0;
-> > 
-> > It is really easy to confuse "l" and "1" in some fonts, so please use
-> > a different name.  (From the "showing my age" department:  On typical
-> > 1970s typewriters, there was no numeral "1" -- you typed the letter
-> > "l" instead, thus anticipating at least the first digit of "1337".)
-> 
-> :-D Ok, I will improve the names.
-> 
-> > > +	long me = (long)arg;
-> > > +	struct kfree_obj **alloc_ptrs;
-> > > +	u64 start_time, end_time;
-> > > +
-> > > +	VERBOSE_PERFOUT_STRING("kfree_perf_thread task started");
-> > > +	set_cpus_allowed_ptr(current, cpumask_of(me % nr_cpu_ids));
-> > > +	set_user_nice(current, MAX_NICE);
-> > > +	atomic_inc(&n_kfree_perf_thread_started);
-> > > +
-> > > +	alloc_ptrs = (struct kfree_obj **)kmalloc(sizeof(struct kfree_obj *) * kfree_alloc_num,
-> > > +						  GFP_KERNEL);
-> > > +	if (!alloc_ptrs)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	start_time = ktime_get_mono_fast_ns();
-> > 
-> > Don't you want to announce that you started here rather than above in
-> > order to avoid (admittedly slight) measurement inaccuracies?
-> 
-> I did not follow, are you referring to the measurement inaccuracy related to
-> the "kfree_perf_thread task started" string print?  Or, are you saying that
-> ktime_get_mono_fast_ns() has to start earlier than over here?
-
-I am referring to the atomic_inc().
-
-> > > +	do {
-> > > +		for (i = 0; i < kfree_alloc_num; i++) {
-> > > +			alloc_ptrs[i] = kmalloc(sizeof(struct kfree_obj), GFP_KERNEL);
-> > > +			if (!alloc_ptrs[i])
-> > > +				return -ENOMEM;
-> > > +		}
-> > > +
-> > > +		for (i = 0; i < kfree_alloc_num; i++) {
-> > > +			if (!kfree_no_batch) {
-> > > +				kfree_rcu(alloc_ptrs[i], rh);
-> > > +			} else {
-> > > +				rcu_callback_t cb;
-> > > +
-> > > +				cb = (rcu_callback_t)(unsigned long)offsetof(struct kfree_obj, rh);
-> > > +				kfree_call_rcu_nobatch(&(alloc_ptrs[i]->rh), cb);
-> > > +			}
-> > > +		}
-> > > +
-> > > +		schedule_timeout_uninterruptible(2);
-> > 
-> > Why the two-jiffy wait in the middle of a timed test?  Yes, you need
-> > a cond_resched() and maybe more here, but a two-jiffy wait?  I don't
-> > see how this has any chance of getting valid measurements.
-> > 
-> > What am I missing here?
-> 
-> I am getting pretty reliable and repeatable results with this test.
-
-That is a good thing, but you might not be measuring what you think you
-are measuring.
-
->                                                                     The sleep
-> was mostly just to give the system a chance to scheduler other tasks. I can
-> remove the schedule and also try with just cond_resched().
-
-Please do!  This can be a bit fiddly, but there is example code in
-current rcutorture on -rcu.
-
-> The other reason for the schedule call was also to give the test a longer
-> running time and help with easier measurement as a result, since the test
-> would run otherwise for a very shortwhile. Agreed there might be a better way
-> to handle this issue.
-
-Easy!  Do more kmalloc()/kfree_rcu() pairs!  ;-)
-
-> (I will reply to the rest of the comments below in a bit, I am going to a
-> hospital now to visit a sick relative and will be back a bit later.)
-
-Ouch!!!  I hope that goes as well as it possibly can!  And please don't
-neglect your relative on RCU's account!!!
-
-							Thanx, Paul
+T24gV2VkLCAyMDE5LTA4LTA3IGF0IDA2OjE3ICswMzAwLCBMZW9uIFJvbWFub3Zza3kgd3JvdGU6
+DQo+IE9uIFR1ZSwgQXVnIDA2LCAyMDE5IGF0IDA4OjQwOjExUE0gKzAwMDAsIFNhZWVkIE1haGFt
+ZWVkIHdyb3RlOg0KPiA+IE9uIFR1ZSwgMjAxOS0wOC0wNiBhdCAwOTo1OSArMDgwMCwgQ2h1aG9u
+ZyBZdWFuIHdyb3RlOg0KPiA+ID4gUmVmZXJlbmNlIGNvdW50ZXJzIGFyZSBwcmVmZXJyZWQgdG8g
+dXNlIHJlZmNvdW50X3QgaW5zdGVhZCBvZg0KPiA+ID4gYXRvbWljX3QuDQo+ID4gPiBUaGlzIGlz
+IGJlY2F1c2UgdGhlIGltcGxlbWVudGF0aW9uIG9mIHJlZmNvdW50X3QgY2FuIHByZXZlbnQNCj4g
+PiA+IG92ZXJmbG93cyBhbmQgZGV0ZWN0IHBvc3NpYmxlIHVzZS1hZnRlci1mcmVlLg0KPiA+ID4g
+U28gY29udmVydCBhdG9taWNfdCByZWYgY291bnRlcnMgdG8gcmVmY291bnRfdC4NCj4gPiA+IA0K
+PiA+ID4gU2lnbmVkLW9mZi1ieTogQ2h1aG9uZyBZdWFuIDxoc2xlc3Rlcjk2QGdtYWlsLmNvbT4N
+Cj4gPiA+IC0tLQ0KPiA+ID4gQ2hhbmdlcyBpbiB2MzoNCj4gPiA+ICAgLSBNZXJnZSB2MiBwYXRj
+aGVzIHRvZ2V0aGVyLg0KPiA+ID4gDQo+ID4gPiAgZHJpdmVycy9pbmZpbmliYW5kL2h3L21seDUv
+c3JxX2NtZC5jICAgICAgICAgfCA2ICsrKy0tLQ0KPiA+ID4gIGRyaXZlcnMvbmV0L2V0aGVybmV0
+L21lbGxhbm94L21seDUvY29yZS9xcC5jIHwgNiArKystLS0NCj4gPiA+ICBpbmNsdWRlL2xpbnV4
+L21seDUvZHJpdmVyLmggICAgICAgICAgICAgICAgICB8IDMgKystDQo+ID4gPiAgMyBmaWxlcyBj
+aGFuZ2VkLCA4IGluc2VydGlvbnMoKyksIDcgZGVsZXRpb25zKC0pDQo+ID4gPiANCj4gPiANCj4g
+PiBMR1RNLCBMZW9uLCBsZXQgbWUga25vdyBpZiB5b3UgYXJlIGhhcHB5IHdpdGggdGhpcyB2ZXJz
+aW9uLA0KPiA+IHRoaXMgc2hvdWxkIGdvIHRvIG1seDUtbmV4dC4NCj4gDQo+IFRoYW5rcywNCj4g
+QWNrZWQtYnk6IExlb24gUm9tYW5vdnNreSA8bGVvbnJvQG1lbGxhbm94LmNvbT4NCg0KQXBwbGll
+ZCB0byBtbHg1LW5leHQuDQoNClRoYW5rcyAhDQo=
