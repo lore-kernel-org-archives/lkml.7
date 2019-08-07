@@ -2,155 +2,97 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 301BCC31E40
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 00:08:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24955C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 00:10:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 043912089E
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 00:08:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565136519;
-	bh=FhChKXsPPb1L8MSYtmcGqA0kOKtJaeO7DrzVbRT1MXs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=eKgjZBV8Eg6FcQOdemOvnRAis0LSGuSMajpmEmOl1DWnGqJvUI+nC4bp1t+4zH2Kw
-	 WgBAFYFycEIG9sXIJlvslycapZjySaobiAE/FS8C/o8AwFMBHZwT77w/5mhAX0iR+c
-	 f3fIbsWXwW33gEnf/sOcRrtLEdxtqV/xUFNLTJA0=
+	by mail.kernel.org (Postfix) with ESMTP id E804D2089E
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 00:10:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UNuxmD35"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727477AbfHGAIV (ORCPT
+        id S1727439AbfHGAKR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 20:08:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60338 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726085AbfHGAIU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 20:08:20 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED7FA2089E;
-        Wed,  7 Aug 2019 00:08:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565136499;
-        bh=FhChKXsPPb1L8MSYtmcGqA0kOKtJaeO7DrzVbRT1MXs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=TAeG++7BBNLdzsT8EeUACw88fONFc1pQcT8EUvAlKq8EqeLzcGZIz0ceLh4nYgX84
-         xTRDE/BvbyzWZvQYIvI12bG0fb2Hr+ia9Vz72+zfUolIsY7N4a0uoRfA30sNdV3zwc
-         LDnEWEZxfNuA7Zo/uTF7X1Z/DVFpbZNzGS5Nb8/c=
-Date:   Wed, 7 Aug 2019 09:08:11 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-arch@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH v2 0/3] arm/arm64: Add support for function error
- injection
-Message-Id: <20190807090811.1e50eb3e1d5a7b85743748e7@kernel.org>
-In-Reply-To: <20190806100015.11256-1-leo.yan@linaro.org>
-References: <20190806100015.11256-1-leo.yan@linaro.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 6 Aug 2019 20:10:17 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:44734 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726133AbfHGAKR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 20:10:17 -0400
+Received: by mail-qt1-f195.google.com with SMTP id 44so55496432qtg.11
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 17:10:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zPy6c5lKRqWhHCVvQSPB2eQWatU5KxqafbBHRjUyLkQ=;
+        b=UNuxmD35ivjOkCYHrqTH0HW+EZ+v5dZqTwX/rMaL4yahcfN+wstqI4yahnZhsMjyIj
+         LlIQ5vfVc7AoFHUsTFbpWP8TDNqdDG+akh8ocNQchufv1r8XlMxmsi+xmJadKkqwKFAw
+         T3zqGrCYTBTK3z9NpTfHSM2EMoingc0tBCzgboXl/yUZUzY2nl7SQpKxHV4bvix99Ppr
+         bJ6dD5W2dAJgc8VGTy6+6G8WKfQw7/RrLWLUKtKf1M+rFwzO6mAEghVmAxkqPlbVwig9
+         aL3e64WDjjwtnbTcP0R9euiCEZa8LsSWBXbR02Fbi6kIIPl7T/lNEjahq+vTOCBzcjO4
+         KwiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zPy6c5lKRqWhHCVvQSPB2eQWatU5KxqafbBHRjUyLkQ=;
+        b=mVGtI5BGIswKr0g6Cn9aGAgbAoWV9o0AkLH+bcADZvcvMP+529wrL2sGIECC3LfQzO
+         scx9wqmjLNOAYyLpl6DlPR5rdR1SSa+ppI3vHQxtZAqkI7rBqVQIkdnemlPstA+R0Fma
+         RcxLgnDWTnrIkBrvXYdkdrMVB6XtzXlq8HQ0Nuz+YgQsKtTV+rvCvY1NKm6EodHuhQV8
+         vXEH7oUxK2UTPkIP8CF1kLuo/u25z0w+18lsq3Kf5WUPBW5RS+dMub0WS8yucMjLTr/j
+         ZkwwmKmLys4RpmnpM4NsQ97YY0UfStLBeTYvLH7+fcpd3bfLnSR+w4/uXXmW6gFbtd/J
+         XRGA==
+X-Gm-Message-State: APjAAAUIPl/un7VHOQu4xrg2++uvxj0proAit3DozjrDhaTCfIFF7Hwm
+        bKj5mMtOh0+PYR9ZFzwlONx9jdF5QGJK5Nq8pzK/kQ==
+X-Google-Smtp-Source: APXvYqz/nvrAaowmmB6Sf6BQPwa8pIwGZJehvQrUhjTHgaVF+oOAaZlaFz27zN20fk8bETO2PikPaehedJix77hWPb0=
+X-Received: by 2002:a0c:ae5a:: with SMTP id z26mr5561475qvc.65.1565136616288;
+ Tue, 06 Aug 2019 17:10:16 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190806220524.251404-1-balsini@android.com> <CAJWu+oq9JLnbGdqy+362JZUzjv6PvuRTNwiarTQiEfizsY32hQ@mail.gmail.com>
+ <20190806235708.GA10161@google.com>
+In-Reply-To: <20190806235708.GA10161@google.com>
+From:   Joel Fernandes <joelaf@google.com>
+Date:   Tue, 6 Aug 2019 20:10:05 -0400
+Message-ID: <CAJWu+oo=GrZ+SbA6=bboM4==TKXBsTRWkTrkWiZ55pqhJtgQqQ@mail.gmail.com>
+Subject: Re: [PATCH] loop: Add LOOP_SET_DIRECT_IO in compat ioctl
+To:     Alessio Balsini <balsini@android.com>
+Cc:     "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, dvander@gmail.com,
+        Yifan Hong <elsk@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  6 Aug 2019 18:00:12 +0800
-Leo Yan <leo.yan@linaro.org> wrote:
+On Tue, Aug 6, 2019 at 7:57 PM Alessio Balsini <balsini@android.com> wrote:
+>
+> Hi Joel,
+>
+> I was considering the rationale for this patch totally straightforward:
+> it enables Direct I/O ioctl to 32 bit processes running on 64 bit
+> systems for compatibility reasons, as for all the other lo_compat_ioctl
+> commands.
+> Also the reason why someone would decide to use Direct I/O with loop
+> devices is well known, that is why the feature exists :) So I thought
+> this was another redundant information to put in the commit message and
+> decided to omit it.
 
-> This small patch set is to add support for function error injection;
-> this can be used to eanble more advanced debugging feature, e.g.
-> CONFIG_BPF_KPROBE_OVERRIDE.
-> 
-> The patch 01/03 is to consolidate the function definition which can be
-> suared cross architectures, patches 02,03/03 are used for enabling
-> function error injection on arm64 and arm architecture respectively.
-> 
-> I tested on arm64 platform Juno-r2 and one of my laptop with x86
-> architecture with below steps; I don't test for Arm architecture so
-> only pass compilation.
-> 
-> - Enable kernel configuration:
->   CONFIG_BPF_KPROBE_OVERRIDE
->   CONFIG_BTRFS_FS
->   CONFIG_BPF_EVENTS=y
->   CONFIG_KPROBES=y
->   CONFIG_KPROBE_EVENTS=y
->   CONFIG_BPF_KPROBE_OVERRIDE=y
-> 
-> - Build samples/bpf on with Debian rootFS:
->   # cd $kernel
->   # make headers_install
->   # make samples/bpf/ LLC=llc-7 CLANG=clang-7
-> 
-> - Run the sample tracex7:
->   # dd if=/dev/zero of=testfile.img bs=1M seek=1000 count=1
->   # DEVICE=$(losetup --show -f testfile.img)
->   # mkfs.btrfs -f $DEVICE
->   # ./tracex7 testfile.img
->   [ 1975.211781] BTRFS error (device (efault)): open_ctree failed
->   mount: /mnt/linux-kernel/linux-cs-dev/samples/bpf/tmpmnt: mount(2) system call failed: Cannot allocate memory.
-> 
-> Changes from v1:
-> * Consolidated the function definition into asm-generic header (Will);
-> * Used APIs to access pt_regs elements (Will);
-> * Fixed typos in the comments (Will).
+No objections from me if maintainers are Ok with it.
 
-This looks good to me.
+> If you still think that I should update the commit message with this
+> information, I will do so.
 
-Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+I think you should.
 
-Thank you!
+thanks,
 
-> 
-> 
-> Leo Yan (3):
->   error-injection: Consolidate override function definition
->   arm64: Add support for function error injection
->   arm: Add support for function error injection
-> 
->  arch/arm/Kconfig                           |  1 +
->  arch/arm/include/asm/ptrace.h              |  5 +++++
->  arch/arm/lib/Makefile                      |  2 ++
->  arch/arm/lib/error-inject.c                | 19 +++++++++++++++++++
->  arch/arm64/Kconfig                         |  1 +
->  arch/arm64/include/asm/ptrace.h            |  5 +++++
->  arch/arm64/lib/Makefile                    |  2 ++
->  arch/arm64/lib/error-inject.c              | 18 ++++++++++++++++++
->  arch/powerpc/include/asm/error-injection.h | 13 -------------
->  arch/x86/include/asm/error-injection.h     | 13 -------------
->  include/asm-generic/error-injection.h      |  6 ++++++
->  include/linux/error-injection.h            |  6 +++---
->  12 files changed, 62 insertions(+), 29 deletions(-)
->  create mode 100644 arch/arm/lib/error-inject.c
->  create mode 100644 arch/arm64/lib/error-inject.c
->  delete mode 100644 arch/powerpc/include/asm/error-injection.h
->  delete mode 100644 arch/x86/include/asm/error-injection.h
-> 
-> -- 
-> 2.17.1
-> 
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+ - Joel
