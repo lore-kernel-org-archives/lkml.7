@@ -2,122 +2,126 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 071D5C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 15:48:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D6CC32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 15:50:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAEA322293
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 15:48:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6A6C22297
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 15:50:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="LNwTSjV8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388786AbfHGPsc (ORCPT
+        id S2388808AbfHGPuH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 11:48:32 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48516 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388769AbfHGPsc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 11:48:32 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D8177EC529;
-        Wed,  7 Aug 2019 15:48:31 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.136])
-        by smtp.corp.redhat.com (Postfix) with SMTP id DAE0960BE1;
-        Wed,  7 Aug 2019 15:48:29 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Wed,  7 Aug 2019 17:48:31 +0200 (CEST)
-Date:   Wed, 7 Aug 2019 17:48:29 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Adrian Reber <areber@redhat.com>
-Cc:     Christian Brauner <christian@brauner.io>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelianov <xemul@virtuozzo.com>,
-        Jann Horn <jannh@google.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        linux-kernel@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>
-Subject: Re: [PATCH v3 1/2] fork: extend clone3() to support CLONE_SET_TID
-Message-ID: <20190807154828.GD24112@redhat.com>
-References: <20190806191551.22192-1-areber@redhat.com>
+        Wed, 7 Aug 2019 11:50:07 -0400
+Received: from gateway34.websitewelcome.com ([192.185.148.200]:44834 "EHLO
+        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388758AbfHGPuH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 11:50:07 -0400
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway34.websitewelcome.com (Postfix) with ESMTP id 4AFBF186DFF
+        for <linux-kernel@vger.kernel.org>; Wed,  7 Aug 2019 10:50:06 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id vOCUhv1D8iQervOCUhIPnL; Wed, 07 Aug 2019 10:50:06 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=tGMQ51Rv13b6vHV2oX8Kb0ED7YORM826dwEjbUekOns=; b=LNwTSjV8My84CdgkaXczARzvrX
+        UHAo3XaZryYeWhTPD7qQLqrPm/zUzk5NJ8hESaNYsGKe9v8Non74I1z9UW9YBBmVe9/swYSBzeUzt
+        NtWiiAVMXZiwTR6aGfeFgQmp07LMpibLgqHIgTOwghKDLZzabbqhR9J+dtN+MnvDu86vDqPzh2u8i
+        WB/5imINiv3daPFrCToZcg3TPtRj6FZUtVKB2tNDzIKLAiZrlO0oOlCOPkFIL2TsQ5fUczGeJGT0s
+        CAdWltZNS7YRL026+eRGnVGFTewIQ2hw1fbctkZgAcm/kzt4CdAhYZqZvJ8BiatnLuKLXJQjKL2dS
+        80bBHKvg==;
+Received: from 187-162-252-62.static.axtel.net ([187.162.252.62]:45282 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hvOCT-000Og7-9Q; Wed, 07 Aug 2019 10:50:05 -0500
+Date:   Wed, 7 Aug 2019 10:50:02 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Ben Skeggs <bskeggs@redhat.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] drm/nouveau/nvif/mmu: Use struct_size() helper
+Message-ID: <20190807155002.GA25502@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190806191551.22192-1-areber@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Wed, 07 Aug 2019 15:48:32 +0000 (UTC)
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.252.62
+X-Source-L: No
+X-Exim-ID: 1hvOCT-000Og7-9Q
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-252-62.static.axtel.net (embeddedor) [187.162.252.62]:45282
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 15
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/06, Adrian Reber wrote:
->
-> @@ -2530,12 +2530,14 @@ noinline static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
->  					      struct clone_args __user *uargs,
->  					      size_t size)
->  {
-> +	struct pid_namespace *pid_ns = task_active_pid_ns(current);
->  	struct clone_args args;
->  
->  	if (unlikely(size > PAGE_SIZE))
->  		return -E2BIG;
->  
-> -	if (unlikely(size < sizeof(struct clone_args)))
-> +	/* The struct needs to be at least the size of the original struct. */
-> +	if (size < (sizeof(struct clone_args) - sizeof(__aligned_u64)))
->  		return -EINVAL;
+One of the more common cases of allocation size calculations is finding
+the size of a structure that has a zero-sized array at the end, along
+with memory for some number of elements for that array. For example:
 
-slightly off-topic, but with or without this patch I do not understand
--EINVAL. Can't we replace this check with
-
-	if (size < sizeof(struct clone_args))
-		memset((void*)&args + size, sizeof(struct clone_args) - size, 0);
-
-?
-
-this way we can new members at the end of clone_args and this matches
-the "if (size > sizeof(struct clone_args))" block below which promises
-that whatever we add into clone_args a zero value should work.
+struct nvif_mmu_kind_v0 {
+	...
+        __u8  data[];
+};
 
 
-And if we do this
+Make use of the struct_size() helper instead of an open-coded version
+in order to avoid any potential type mistakes.
 
-> +	if (size == sizeof(struct clone_args)) {
-> +		/* Only check permissions if set_tid is actually set. */
-> +		if (args.set_tid &&
-> +			!ns_capable(pid_ns->user_ns, CAP_SYS_ADMIN))
-> +			return -EPERM;
-> +		kargs->set_tid = args.set_tid;
-> +	}
+So, replace the following form:
 
-we can move this check into clone3_args_valid() or even copy_process()
+sizeof(*kind) + sizeof(*kind->data) * mmu->kind_nr
 
-	if (kargs->set_tid) {
-		if (!ns_capable(...))
-			return -EPERM;
-	}
+with:
 
+struct_size(kind, data, mmu->kind_nr)
 
-Either way,
+This code was detected with the help of Coccinelle.
 
-> @@ -2585,6 +2595,10 @@ static bool clone3_args_valid(const struct kernel_clone_args *kargs)
->  	if (kargs->flags & ~CLONE_LEGACY_FLAGS)
->  		return false;
->
-> +	/* Fail if set_tid is invalid */
-> +	if (kargs->set_tid < 0)
-> +		return false;
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/gpu/drm/nouveau/nvif/mmu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I think it would be more clean to do this along with ns_capable() check,
-or along with the "set_tid >= pid_max" check in alloc_pid().
-
-I won't insist, but I do not really like the fact we check set_tid 3 times
-in copy_clone_args_from_user(), clone3_args_valid(), and alloc_pid().
-
-Oleg.
+diff --git a/drivers/gpu/drm/nouveau/nvif/mmu.c b/drivers/gpu/drm/nouveau/nvif/mmu.c
+index ae08a1ca8044..5641bda2046d 100644
+--- a/drivers/gpu/drm/nouveau/nvif/mmu.c
++++ b/drivers/gpu/drm/nouveau/nvif/mmu.c
+@@ -110,7 +110,7 @@ nvif_mmu_init(struct nvif_object *parent, s32 oclass, struct nvif_mmu *mmu)
+ 
+ 	if (mmu->kind_nr) {
+ 		struct nvif_mmu_kind_v0 *kind;
+-		u32 argc = sizeof(*kind) + sizeof(*kind->data) * mmu->kind_nr;
++		size_t argc = struct_size(kind, data, mmu->kind_nr);
+ 
+ 		if (ret = -ENOMEM, !(kind = kmalloc(argc, GFP_KERNEL)))
+ 			goto done;
+-- 
+2.22.0
 
