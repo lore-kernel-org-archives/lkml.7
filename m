@@ -6,75 +6,92 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE1CC32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 17:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 236B4C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 17:08:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C499B2235C
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 17:08:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E90E721EF2
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 17:08:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388814AbfHGRIN (ORCPT
+        id S2388998AbfHGRIW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 13:08:13 -0400
-Received: from foss.arm.com ([217.140.110.172]:52162 "EHLO foss.arm.com"
+        Wed, 7 Aug 2019 13:08:22 -0400
+Received: from foss.arm.com ([217.140.110.172]:52174 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729278AbfHGRIN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 13:08:13 -0400
+        id S1729278AbfHGRIV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 13:08:21 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3C10F344;
-        Wed,  7 Aug 2019 10:08:12 -0700 (PDT)
-Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8AEBD3F575;
-        Wed,  7 Aug 2019 10:08:11 -0700 (PDT)
-Date:   Wed, 7 Aug 2019 18:08:09 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH] firmware: arm_scmi: Use {get,put}_unaligned_le32
- accessors
-Message-ID: <20190807170808.GD27278@e107155-lin>
-References: <20190807130038.26878-1-sudeep.holla@arm.com>
- <4102ce79ef7a4f5ba819663d072bccc8@AcuMS.aculab.com>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1F3C0344;
+        Wed,  7 Aug 2019 10:08:21 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 01E8F3F575;
+        Wed,  7 Aug 2019 10:08:19 -0700 (PDT)
+Date:   Wed, 7 Aug 2019 18:08:14 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Jiping Ma <jiping.ma2@windriver.com>, mingo@redhat.com,
+        catalin.marinas@arm.com, will.deacon@arm.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 0/2] tracing/arm: Fix the stack tracer when LR is saved
+ after local storage
+Message-ID: <20190807170814.GA45351@lakrids.cambridge.arm.com>
+References: <20190807163401.570339297@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4102ce79ef7a4f5ba819663d072bccc8@AcuMS.aculab.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190807163401.570339297@goodmis.org>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 07, 2019 at 03:18:59PM +0000, David Laight wrote:
-> From: Sudeep Holla
-> > Sent: 07 August 2019 14:01
-> >
-> > Instead of type-casting the {tx,rx}.buf all over the place while
-> > accessing them to read/write __le32 from/to the firmware, let's use
-> > the nice existing {get,put}_unaligned_le32 accessors to hide all the
-> > type cast ugliness.
->
-> Why the 'unaligned' accessors?
->
+Hi Steve,
 
-Since the firmware run in LE, we do byte-swapping anyways.
+On Wed, Aug 07, 2019 at 12:34:01PM -0400, Steven Rostedt wrote:
+> As arm64 saves the link register after a function's local variables are
+> stored, it causes the max stack tracer to be off by one in its output
+> of which function has the bloated stack frame.
 
-> > -	*(__le32 *)t->tx.buf = cpu_to_le32(id);
-> > +	put_unaligned_le32(id, t->tx.buf);
->
+For reference, it's a bit more complex than that. :/
 
-If you look at the generic definition for put_unaligned_le32, it's
-exactly the same as what I am replacing with the call. So nothing
-changes IIUC. In fact, I see that all the helper in unaligned/access_ok.h
-just do the byte-swapping.
+Our procedure call standard (the AAPCS) says that the frame record may
+be placed anywhere within a stackframe, so we don't have a guarantee as
+to where the saved lr will fall w.r.t local variables.
 
-> These will be expensive if the cpu doesn't support them.
+Today, GCC happens to create the stack frame by creating the stack
+record, so the LR is saved at a lower addresss than the local variables.
 
-The SCMI is currently used only on ARM platforms which have
-HAVE_EFFICIENT_UNALIGNED_ACCESS defined.
+However, I am aware that there are reasons why a compiler may choose to
+place the frame record at a different locations, e.g. using pointer
+authentication to provide an implicit stack canary, so this could change
+in future, or potentially differ across functions.
 
---
-Regards,
-Sudeep
+Maybe that's a bridge we'll have to cross in future.
+
+Thanks,
+Mark.
+
+> 
+> The first patch fixes this by creating a ARCH_RET_ADDR_BEFORE_LOCAL_VARS
+> define that an achitecture (arm64) may set in asm/ftrace.h, and this
+> will cause the stack tracer to make the shift.
+> 
+> As it has been proven that the stack tracer isn't the most trivial
+> algorithm to understand by staring at the code, the second patch adds
+> comments to the code to explain the algorithm with and without the
+> ARCH_RET_ADDR_BEFORE_LOCAL_VARS.
+> 
+> Hmm, should this be sent to stable (and for inclusion now?)
+> 
+> -- Steve
+> 
+> Steven Rostedt (VMware) (2):
+>       tracing/arm64: Have max stack tracer handle the case of return address after data
+>       tracing: Document the stack trace algorithm in the comments
+> 
+> ----
+>  arch/arm64/include/asm/ftrace.h |   1 +
+>  kernel/trace/trace_stack.c      | 112 ++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 113 insertions(+)
