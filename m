@@ -2,172 +2,153 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E0B0C19759
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C04FC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:28:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4700B229F3
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:27:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11FCB229F3
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:28:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="amESVJa6"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="QK21tnj2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387856AbfHGI1g (ORCPT
+        id S2387860AbfHGI2N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 04:27:36 -0400
-Received: from mail-eopbgr40137.outbound.protection.outlook.com ([40.107.4.137]:35606
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729231AbfHGI0c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 04:26:32 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PiUb4S9edtFMLS/yB2cSbdPDawY9ZistdDPqBgC5+wt+l7kA5fi52Si5NGh4HKBlxTh09xRG50PUlxMw6O2lJEkrh9WVgnFtPsItF+f+5Z1uqcGtX93hwPts2WenuHOfWP/J/uZNgsLLXAOkEbjnP+ZkWuSfMget6x/0VKuBK+NAyTnON8wYdzliQ0UdcdXWGujE00KcqZ47QyLduTsg2fstDFHFo0gpwePAeoePdjnPPDb8YiCzclGrS0lVp7yDNvRqjZxKGHLB61jAkys07PAIGAFDcr3lD1rb3Gp8D96gzA8ap+e5bs2zuFgw9qgMS+CZ7ayo1WEmP8iHyav2+w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zcMg9D60rr4+Qz+Y2bprLMSlQAzjTTM5n6+jhZBerZY=;
- b=C2gVz0z7QhHmSxITO2//JYmhW6/FrxDtD9dp5DO9DMtnScBif1oQaM4LHrH63wEcqn+dvOftY7aAvoA+kB13oTrgUSwNQrkh0GCiGr++RVGS6orp3KeJE6Ngyyxx6Kw/O11jabe6uiJ4Uur8lU91lqP30JMov9mgIcqvQ94D2+zOYj6jTOdtsdBL3ExvRvsPm+d7HPk6SImAICi9Qzss4sa6kFOYFebrk8knGsfHy8zv8tMsSbyxRm947q50tD3r1nFtOxbZQvX7wZ0P0wpMwomFkM2odTpzHOpBRUFRvQg46qLO3oBiO4/pMROBb+jo1tnX6Lyad1n6Sk68jv9Wzg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=toradex.com;dmarc=pass action=none
- header.from=toradex.com;dkim=pass header.d=toradex.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zcMg9D60rr4+Qz+Y2bprLMSlQAzjTTM5n6+jhZBerZY=;
- b=amESVJa6QroO/hGgXxBnuKjIEx4pw0rbOL0O9mMzSg/jMqms1aZsXAWYrYnQ2PbdIHAR98sw/YTBEN1/MxxqdmA0c2j/eP/1meC4kWYw6qvyUO0dhqjs3D+xqb01z2YoUSYzpChOGfMdrTBnkq6iAv26rjKbfmM7QIMHLkCV4E0=
-Received: from VI1PR0502MB3965.eurprd05.prod.outlook.com (52.134.17.157) by
- VI1PR0502MB3614.eurprd05.prod.outlook.com (52.134.7.25) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2136.16; Wed, 7 Aug 2019 08:26:21 +0000
-Received: from VI1PR0502MB3965.eurprd05.prod.outlook.com
- ([fe80::8405:5b51:b25d:39a2]) by VI1PR0502MB3965.eurprd05.prod.outlook.com
- ([fe80::8405:5b51:b25d:39a2%6]) with mapi id 15.20.2157.015; Wed, 7 Aug 2019
- 08:26:21 +0000
-From:   Philippe Schenker <philippe.schenker@toradex.com>
-To:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Max Krummenacher <max.krummenacher@toradex.com>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?iso-8859-2?Q?Michal_Vok=E1=E8?= <michal.vokac@ysoft.com>,
-        Fabio Estevam <festevam@gmail.com>
-CC:     Philippe Schenker <philippe.schenker@toradex.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>
-Subject: [PATCH v3 08/21] ARM: dts: imx7-colibri: Add touch controllers
-Thread-Topic: [PATCH v3 08/21] ARM: dts: imx7-colibri: Add touch controllers
-Thread-Index: AQHVTPnLaoMcHBqrIk2/6SgfkciIaw==
-Date:   Wed, 7 Aug 2019 08:26:21 +0000
-Message-ID: <20190807082556.5013-9-philippe.schenker@toradex.com>
-References: <20190807082556.5013-1-philippe.schenker@toradex.com>
-In-Reply-To: <20190807082556.5013-1-philippe.schenker@toradex.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM4PR0101CA0044.eurprd01.prod.exchangelabs.com
- (2603:10a6:200:41::12) To VI1PR0502MB3965.eurprd05.prod.outlook.com
- (2603:10a6:803:23::29)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=philippe.schenker@toradex.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.22.0
-x-originating-ip: [46.140.72.82]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6b772d64-59c8-4732-b6f9-08d71b10ed82
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:VI1PR0502MB3614;
-x-ms-traffictypediagnostic: VI1PR0502MB3614:
-x-microsoft-antispam-prvs: <VI1PR0502MB36148C2D34EC847EC845F83AF4D40@VI1PR0502MB3614.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:252;
-x-forefront-prvs: 01221E3973
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(376002)(396003)(39850400004)(136003)(366004)(199004)(189003)(305945005)(14444005)(6116002)(26005)(81156014)(76176011)(36756003)(3846002)(6486002)(86362001)(6512007)(478600001)(25786009)(71190400001)(2906002)(7416002)(81166006)(256004)(316002)(71200400001)(2201001)(44832011)(53936002)(7736002)(110136005)(8936002)(54906003)(52116002)(66446008)(64756008)(14454004)(99286004)(476003)(102836004)(8676002)(6436002)(1076003)(66556008)(5660300002)(6506007)(2501003)(4326008)(66946007)(486006)(446003)(11346002)(66066001)(68736007)(50226002)(186003)(66476007)(2616005)(386003);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR0502MB3614;H:VI1PR0502MB3965.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: toradex.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: wyT8GRznMqjXoPlr/eZRsLH55OP9zuXl79eMnlIq35fBM8f5I/1YOMcVBIWarA+t9sqVoTV/cPvbZLRRMOjqB9OVF197D9IIWE+fydpXgAUvtlx+r635GHbZo8w6hfVR67sVTjgbW1a65FNGAVe5y7UJCmml8OaANWb1jAvhvg6fjTl6un0nawWI0/0GoarbPv8N4q9TQB0qyCaRt1YSChdYYGJa2x4OxsXdgrE99VZCfnyIsJU73JUHhMfXGdhhvgt+gzLTsk1NhoJM1VPcUo3uu8lRRwrmnR0FRl7W01o2RGfHdAbsSNsxPJINUCcD3UpueS/Uk1qAE+o7LSGbHcdP77vQDBk2GBonJmzqaqIblTeN1PF5cZ3FVCkte52hB+/jUz884Vsiu5+DIrYmvPmL123B0BZijiskgWuvb7I=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 7 Aug 2019 04:28:13 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:34486 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387414AbfHGI2M (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 04:28:12 -0400
+Received: by mail-ot1-f65.google.com with SMTP id n5so101148832otk.1
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 01:28:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6VqkYW5Pb9NPAUWAJ1Hm+13eBgHLhXTSOzj6pGDrWaE=;
+        b=QK21tnj2wA2WAGFXzboom94BfRwn1VGhGTG6G9qemB4Z1SDyDwLhNic25qBROeA+AO
+         Otpbp/+1Z5xkFz2u3hnoNZl/7sxTpen5B6V3/zwbN6d3y8xKK5XCIRXb4BBm3yOt9/uk
+         dmBZXigpTm+moy+wJpK9MV+2TKlKA3eVZ91iM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6VqkYW5Pb9NPAUWAJ1Hm+13eBgHLhXTSOzj6pGDrWaE=;
+        b=on6h78Lyt0algPISmgjNBgJrObcnE3UjT+VnYrSiA+uhIQqifAatMkHlbOrg1ggJmv
+         BLmHH0rph2bz3wDYRlYRs+D1/L4AfasOCJg7qxYGy1gDAxYZl1wJFJY06zDXzpYwPXm/
+         jsU28YlbS8XLoixEePMtHtb6PIwD9aCRsDz6wAWElPAUZ+WrbE5N5oICFie54BqVgqET
+         Nv7cxsnjj2FOUbG0TGFoSPU8I0+mm5Tj7RtjqSqRIgQv2vrc0ptBbIr58xMpNIUnaIoU
+         LxX1XV9fT9XMV+QA36OfSHvwfF5rBDae4kaXk/LEFMzOO7FlL4HgQbMCyQMr1o0/bL/W
+         qKwA==
+X-Gm-Message-State: APjAAAW39yu92NWKPJdYgCEew3Gu38Grp+GTMXqiFKh/buPdQeMK7d6s
+        DffHHfwKGjdMHqWTARMyasQM5gr+Iiu2g+Gs9+Mn0Q==
+X-Google-Smtp-Source: APXvYqymZlQCH2slZ+gCrcXV1SxxswvEQuyAECRxiL0EEkmtaR83NXQNrJ+EDazQrKj4+NEKCBEgfpvvPGGKw6+EC7A=
+X-Received: by 2002:a05:6808:118:: with SMTP id b24mr4623781oie.128.1565166491437;
+ Wed, 07 Aug 2019 01:28:11 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6b772d64-59c8-4732-b6f9-08d71b10ed82
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Aug 2019 08:26:21.6736
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: IHPUjvh8doV/7qzqsgu3FMrXMLboLN0vUvy0xEzl4wD5qUpj3YYBznSbR8094HE8CYvNLSzLLWb5z+Fr+5pi/+AZxt1VXgxsnkq9R3SNPAk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0502MB3614
+References: <20190806133454.8254-1-kraxel@redhat.com> <20190806133454.8254-2-kraxel@redhat.com>
+ <20190806135426.GA7444@phenom.ffwll.local> <20190807072654.arqvx37p4yxhegcu@sirius.home.kraxel.org>
+In-Reply-To: <20190807072654.arqvx37p4yxhegcu@sirius.home.kraxel.org>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Wed, 7 Aug 2019 10:28:00 +0200
+Message-ID: <CAKMK7uFyKd71w4H8nFk=WPSHL3KMwQ6kLwAMXTd_TAkrkJ++KQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3] drm: add gem ttm helpers
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add touch controller that is connected over an I2C bus.
+On Wed, Aug 7, 2019 at 9:29 AM Gerd Hoffmann <kraxel@redhat.com> wrote:
+>
+> > > +/**
+> > > + * drm_gem_ttm_mmap_offset() - Returns a GEM ttm object's mmap offset
+> > > + * @gbo:   the GEM ttm object
+> > > + *
+> > > + * See drm_vma_node_offset_addr() for more information.
+> > > + *
+> > > + * Returns:
+> > > + * The buffer object's offset for userspace mappings on success, or
+> > > + * 0 if no offset is allocated.
+> > > + */
+> > > +u64 drm_gem_ttm_mmap_offset(struct ttm_buffer_object *bo)
+> > > +{
+> > > +   return drm_vma_node_offset_addr(&bo->base.vma_node);
+> >
+> > Why do we need a new one here, can't we use the existing gem
+> > implementation for this (there really should only be one I hope, but I
+> > didn't check).
+>
+> Havn't found one.
 
-Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+It got reverted out again:
 
----
+commit 415d2e9e07574d3de63b8df77dc686e0ebf64865
+Author: Rob Herring <robh@kernel.org>
+Date:   Wed Jul 3 16:38:50 2019 -0600
 
-Changes in v3:
-- Fix commit message
+    Revert "drm/gem: Rename drm_gem_dumb_map_offset() to drm_gem_map_offset()"
 
-Changes in v2:
-- Deleted touchrevolution downstream stuff
-- Use generic node name
-- Better comment
 
- arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi | 24 +++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+> But maybe we don't need this as separate function and can simply move
+> the drm_vma_node_offset_addr() call into
+> drm_gem_ttm_driver_dumb_mmap_offset().
+>
+> > > +int drm_gem_ttm_driver_dumb_mmap_offset(struct drm_file *file,
+> > > +                                    struct drm_device *dev,
+> > > +                                    uint32_t handle, uint64_t *offset)
+> > > +{
+> > > +   struct drm_gem_object *gem;
+> > > +   struct ttm_buffer_object *bo;
+> > > +
+> > > +   gem = drm_gem_object_lookup(file, handle);
+> > > +   if (!gem)
+> > > +           return -ENOENT;
+> > > +
+> > > +   bo = drm_gem_ttm_of_gem(gem);
+> > > +   *offset = drm_gem_ttm_mmap_offset(bo);
+> > > +
+> > > +   drm_gem_object_put_unlocked(gem);
+> > > +
+> > > +   return 0;
+> > > +}
+> > > +EXPORT_SYMBOL(drm_gem_ttm_driver_dumb_mmap_offset);
+> >
+> > Same for this, you're just upcasting to ttm_bo and then downcasting to
+> > gem_bo again ... I think just a series to roll out the existing gem
+> > helpers everywhere should work?
+>
+> I don't think so.  drm_gem_dumb_map_offset() calls
+> drm_gem_create_mmap_offset(), which I think is not correct for ttm
+> objects because ttm_bo_init() handles vma_node initialization.
 
-diff --git a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi b/arch/arm/boot/dt=
-s/imx7-colibri-eval-v3.dtsi
-index d4dbc4fc1adf..576dec9ff81c 100644
---- a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
-+++ b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
-@@ -145,6 +145,21 @@
- &i2c4 {
- 	status =3D "okay";
-=20
-+	/*
-+	 * Touchscreen is using SODIMM 28/30, also used for PWM<B>, PWM<C>,
-+	 * aka pwm2, pwm3. so if you enable touchscreen, disable the pwms
-+	 */
-+	touchscreen@4a {
-+		compatible =3D "atmel,maxtouch";
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&pinctrl_gpiotouch>;
-+		reg =3D <0x4a>;
-+		interrupt-parent =3D <&gpio1>;
-+		interrupts =3D <9 IRQ_TYPE_EDGE_FALLING>;		/* SODIMM 28 */
-+		reset-gpios =3D <&gpio1 10 GPIO_ACTIVE_HIGH>;	/* SODIMM 30 */
-+		status =3D "disabled";
-+	};
-+
- 	/* M41T0M6 real time clock on carrier board */
- 	rtc: m41t0m6@68 {
- 		compatible =3D "st,m41t0";
-@@ -200,3 +215,12 @@
- 	vmmc-supply =3D <&reg_3v3>;
- 	status =3D "okay";
- };
-+
-+&iomuxc {
-+	pinctrl_gpiotouch: touchgpios {
-+		fsl,pins =3D <
-+			MX7D_PAD_GPIO1_IO09__GPIO1_IO9		0x74
-+			MX7D_PAD_GPIO1_IO10__GPIO1_IO10		0x14
-+		>;
-+	};
-+};
---=20
-2.22.0
+More code to unify first? This should work exactly the same way for
+all gem based drivers I think ... Only tricky bit is making sure
+vmwgfx keeps working correctly.
+-Daniel
 
+>
+> cheers,
+>   Gerd
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
