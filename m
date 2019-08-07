@@ -2,182 +2,141 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 188ACC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 23:47:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86226C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 23:51:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5689214C6
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 23:47:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59D5F214C6
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 23:51:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hhTHm5Nw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389152AbfHGXr0 (ORCPT
+        id S2389192AbfHGXvN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 19:47:26 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42476 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388906AbfHGXrY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 19:47:24 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D1C92EE58F;
-        Wed,  7 Aug 2019 23:47:23 +0000 (UTC)
-Received: from whitewolf.redhat.com (ovpn-121-222.rdu2.redhat.com [10.10.121.222])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 800E35D9E1;
-        Wed,  7 Aug 2019 23:47:22 +0000 (UTC)
-From:   Lyude Paul <lyude@redhat.com>
-To:     nouveau@lists.freedesktop.org
-Cc:     Ben Skeggs <bskeggs@redhat.com>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Karol Herbst <karolherbst@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Ilia Mirkin <imirkin@alum.mit.edu>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] drm/nouveau/dispnv50: Fix runtime PM ref tracking for non-blocking modesets
-Date:   Wed,  7 Aug 2019 19:47:06 -0400
-Message-Id: <20190807234709.6076-3-lyude@redhat.com>
-In-Reply-To: <20190807234709.6076-1-lyude@redhat.com>
-References: <20190807234709.6076-1-lyude@redhat.com>
+        Wed, 7 Aug 2019 19:51:13 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:33603 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388123AbfHGXvN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 19:51:13 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n9so93153309wru.0;
+        Wed, 07 Aug 2019 16:51:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=81W60zVYjF0WkGNMIxtxV/QpHZxdSDjYkRGFZyoC9NQ=;
+        b=hhTHm5Nw3iub40WKb4H1rqVluoBt3pHck0QiywNeJGfgGNfnNjbzVrBPozkC5g8j9g
+         8aab+mE+4ulrI+yy3QFobs6H3wCMogQfTTEjQ5LK3wee/MLE5uYV9hg9P3EWlEO24S4A
+         GGcRJ0l3FkefLaW5R2D6+IUs60CB3RRjd630LA8qt65E0pXuyLQuHc03dYbuendzW8it
+         7nEsYz/9xvm9+lK46TAYUqXDRS06we3dkaQ4lBBiwYFZJ6UCQRLZ6KAyHmrnHas1Yv09
+         Fsrqehj9A5Sp6lSVWLuV7I3FdqXigC8Jlton0NbJR+TCmrH+wznz/IqijdnDjUtkTRZ5
+         s6aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=81W60zVYjF0WkGNMIxtxV/QpHZxdSDjYkRGFZyoC9NQ=;
+        b=LKpF5+OiYEksh0PzBiWhy7Q1YNJ4NDKSKTUKT7gNlVSHI8hph8oLR9dU06xGQgQM1w
+         t0drqBh0ZUkrio4CxDhmsVfs2nxI2z/YqYE+Wr/u9vuBFuhZBwUQnLBkiuKWOk4NRzMN
+         Ud16RCNUsRS/usoAS03J7mUAQg2EZgf2/H6wXY27CNqyCZuncmnEzSgQSHKV2jLmO9bv
+         1oFGSyR6NEd9a11C8Ou4U3LM++6tteTlXhTBa0XmueQAUY53Xw91j0YZyKPM9OEVEr7w
+         6nDVTVW7tkfTvENZqB2y8+soGujoKx5SGRC4LJu89pHBwowfyI6RkYZMV2xlkuEuueTV
+         383w==
+X-Gm-Message-State: APjAAAX7oRodd1yh/CXhAjj92nTqVKybRtVWCm5tBMoTtSWfzCgPNffW
+        6YfOa0BiMRsHns5A1Fr7HgSH8brNicnipIN3T8Q=
+X-Google-Smtp-Source: APXvYqwt7F5BkB58H5wD984WMZT43ugAcQRwg0VeBjol0Scsm8pOYOWjbYcauyyRwVif41pglTfX8hitoIVSFX1lIAs=
+X-Received: by 2002:adf:f088:: with SMTP id n8mr13084998wro.58.1565221870134;
+ Wed, 07 Aug 2019 16:51:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Wed, 07 Aug 2019 23:47:23 +0000 (UTC)
+References: <20190805011906.5020-1-ming.lei@redhat.com>
+In-Reply-To: <20190805011906.5020-1-ming.lei@redhat.com>
+From:   Ming Lei <tom.leiming@gmail.com>
+Date:   Thu, 8 Aug 2019 07:50:59 +0800
+Message-ID: <CACVXFVNn9wu2sU=47csi+stvzN0TnOV4E8xBHYknxo9uDksMuQ@mail.gmail.com>
+Subject: Re: [PATCH] genirq/affinity: create affinity mask for single vector
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Jens Axboe <axboe@kernel.dk>,
+        Keith Busch <keith.busch@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Marc Zyngier <marc.zyngier@arm.com>, linux-pci@vger.kernel.org,
+        Shivasharan Srikanteshwara 
+        <shivasharan.srikanteshwara@broadcom.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Kashyap Desai <kashyap.desai@broadcom.com>,
+        Christoph Hellwig <hch@lst.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is something that got noticed a while ago back when I was fixing a
-large number of runtime PM related issues in nouveau, but never got
-fixed:
+Hello Thomas and Guys,
 
-https://patchwork.freedesktop.org/series/46815/#rev7
+On Mon, Aug 5, 2019 at 9:19 AM Ming Lei <ming.lei@redhat.com> wrote:
+>
+> Since commit c66d4bd110a1f8 ("genirq/affinity: Add new callback for
+> (re)calculating interrupt sets"), irq_create_affinity_masks() returns
+> NULL in case of single vector. This change has caused regression on some
+> drivers, such as lpfc.
+>
+> The problem is that single vector may be triggered in some generic cases:
+> 1) kdump kernel 2) irq vectors resource is close to exhaustion.
+>
+> If we don't create affinity mask for single vector, almost every caller
+> has to handle the special case.
+>
+> So still create affinity mask for single vector, since irq_create_affinity_masks()
+> is capable of handling that.
+>
+> Cc: Marc Zyngier <marc.zyngier@arm.com>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Bjorn Helgaas <helgaas@kernel.org>
+> Cc: Jens Axboe <axboe@kernel.dk>
+> Cc: linux-block@vger.kernel.org
+> Cc: Sagi Grimberg <sagi@grimberg.me>
+> Cc: linux-nvme@lists.infradead.org
+> Cc: linux-pci@vger.kernel.org
+> Cc: Keith Busch <keith.busch@intel.com>
+> Cc: Sumit Saxena <sumit.saxena@broadcom.com>
+> Cc: Kashyap Desai <kashyap.desai@broadcom.com>
+> Cc: Shivasharan Srikanteshwara <shivasharan.srikanteshwara@broadcom.com>
+> Fixes: c66d4bd110a1f8 ("genirq/affinity: Add new callback for (re)calculating interrupt sets")
+> Signed-off-by: Ming Lei <ming.lei@redhat.com>
+> ---
+>  kernel/irq/affinity.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+>
+> diff --git a/kernel/irq/affinity.c b/kernel/irq/affinity.c
+> index 4352b08ae48d..6fef48033f96 100644
+> --- a/kernel/irq/affinity.c
+> +++ b/kernel/irq/affinity.c
+> @@ -251,11 +251,9 @@ irq_create_affinity_masks(unsigned int nvecs, struct irq_affinity *affd)
+>          * Determine the number of vectors which need interrupt affinities
+>          * assigned. If the pre/post request exhausts the available vectors
+>          * then nothing to do here except for invoking the calc_sets()
+> -        * callback so the device driver can adjust to the situation. If there
+> -        * is only a single vector, then managing the queue is pointless as
+> -        * well.
+> +        * callback so the device driver can adjust to the situation.
+>          */
+> -       if (nvecs > 1 && nvecs > affd->pre_vectors + affd->post_vectors)
+> +       if (nvecs > affd->pre_vectors + affd->post_vectors)
+>                 affvecs = nvecs - affd->pre_vectors - affd->post_vectors;
+>         else
+>                 affvecs = 0;
 
-It's not safe to iterate the entire list of CRTCs in
-nv50_disp_atomic_commit(), as we could be doing a non-blocking modeset
-on one CRTC in parallel with one or more other CRTCs. Likewise, this
-means it's also not safe to do so in order to track runtime PM state.
-While this code is certainly wrong, so far the only issues I've seen
-this cause in the wild is the occasional PM ref unbalance after an
-atomic check failure + module reloading (since the PCI device will
-outlive nouveau in such scenarios).
+Without this patch, kdump kernel may not work, so could you take a look
+at this patch?
 
-So, do this far more elegantly: grab a runtime PM ref across the modeset
-and commit tail, then grab/put references for each CRTC enable/disable.
-This also ends up being much simpler then the previous broken solution
-we had.
-
-Finally, since we've removed all it's users: get rid of
-nouveau_drm->have_disp_power_ref.
-
-Signed-off-by: Lyude Paul <lyude@redhat.com>
----
- drivers/gpu/drm/nouveau/dispnv50/disp.c | 38 +++++++++++--------------
- drivers/gpu/drm/nouveau/nouveau_drv.h   |  3 --
- 2 files changed, 17 insertions(+), 24 deletions(-)
-
-diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c b/drivers/gpu/drm/nouveau/dispnv50/disp.c
-index 126703816794..659e6fa645cb 100644
---- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
-+++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
-@@ -1826,8 +1826,11 @@ nv50_disp_atomic_commit_tail(struct drm_atomic_state *state)
- 
- 		NV_ATOMIC(drm, "%s: clr %04x (set %04x)\n", crtc->name,
- 			  asyh->clr.mask, asyh->set.mask);
--		if (old_crtc_state->active && !new_crtc_state->active)
-+
-+		if (old_crtc_state->active && !new_crtc_state->active) {
-+			pm_runtime_put_noidle(dev->dev);
- 			drm_crtc_vblank_off(crtc);
-+		}
- 
- 		if (asyh->clr.mask) {
- 			nv50_head_flush_clr(head, asyh, atom->flush_disable);
-@@ -1913,8 +1916,10 @@ nv50_disp_atomic_commit_tail(struct drm_atomic_state *state)
- 		}
- 
- 		if (new_crtc_state->active) {
--			if (!old_crtc_state->active)
-+			if (!old_crtc_state->active) {
- 				drm_crtc_vblank_on(crtc);
-+				pm_runtime_get_noresume(dev->dev);
-+			}
- 			if (new_crtc_state->event)
- 				drm_crtc_vblank_get(crtc);
- 		}
-@@ -1979,6 +1984,10 @@ nv50_disp_atomic_commit_tail(struct drm_atomic_state *state)
- 	drm_atomic_helper_cleanup_planes(dev, state);
- 	drm_atomic_helper_commit_cleanup_done(state);
- 	drm_atomic_state_put(state);
-+
-+	/* Drop the RPM ref we got from nv50_disp_atomic_commit() */
-+	pm_runtime_mark_last_busy(dev->dev);
-+	pm_runtime_put_autosuspend(dev->dev);
- }
- 
- static void
-@@ -1993,11 +2002,8 @@ static int
- nv50_disp_atomic_commit(struct drm_device *dev,
- 			struct drm_atomic_state *state, bool nonblock)
- {
--	struct nouveau_drm *drm = nouveau_drm(dev);
- 	struct drm_plane_state *new_plane_state;
- 	struct drm_plane *plane;
--	struct drm_crtc *crtc;
--	bool active = false;
- 	int ret, i;
- 
- 	ret = pm_runtime_get_sync(dev->dev);
-@@ -2034,27 +2040,17 @@ nv50_disp_atomic_commit(struct drm_device *dev,
- 
- 	drm_atomic_state_get(state);
- 
-+	/*
-+	 * Grab another RPM ref for the commit tail, which will release the
-+	 * ref when it's finished
-+	 */
-+	pm_runtime_get_noresume(dev->dev);
-+
- 	if (nonblock)
- 		queue_work(system_unbound_wq, &state->commit_work);
- 	else
- 		nv50_disp_atomic_commit_tail(state);
- 
--	drm_for_each_crtc(crtc, dev) {
--		if (crtc->state->active) {
--			if (!drm->have_disp_power_ref) {
--				drm->have_disp_power_ref = true;
--				return 0;
--			}
--			active = true;
--			break;
--		}
--	}
--
--	if (!active && drm->have_disp_power_ref) {
--		pm_runtime_put_autosuspend(dev->dev);
--		drm->have_disp_power_ref = false;
--	}
--
- err_cleanup:
- 	if (ret)
- 		drm_atomic_helper_cleanup_planes(dev, state);
-diff --git a/drivers/gpu/drm/nouveau/nouveau_drv.h b/drivers/gpu/drm/nouveau/nouveau_drv.h
-index aae035816383..411352dd5390 100644
---- a/drivers/gpu/drm/nouveau/nouveau_drv.h
-+++ b/drivers/gpu/drm/nouveau/nouveau_drv.h
-@@ -204,9 +204,6 @@ struct nouveau_drm {
- 	/* led management */
- 	struct nouveau_led *led;
- 
--	/* display power reference */
--	bool have_disp_power_ref;
--
- 	struct dev_pm_domain vga_pm_domain;
- 
- 	struct nouveau_svm *svm;
--- 
-2.21.0
-
+Thanks,
+Ming Lei
