@@ -2,79 +2,70 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B7CC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 06:55:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2875C19759
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 06:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F43F2086D
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 06:55:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 831EB2086D
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 06:55:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727359AbfHGGzB (ORCPT
+        id S1727588AbfHGGzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 02:55:01 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33962 "EHLO mx1.redhat.com"
+        Wed, 7 Aug 2019 02:55:06 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41430 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726883AbfHGGzB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 02:55:01 -0400
+        id S1726883AbfHGGzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 02:55:04 -0400
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 58CDC8EA41;
-        Wed,  7 Aug 2019 06:55:01 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2297C9B28F;
+        Wed,  7 Aug 2019 06:55:04 +0000 (UTC)
 Received: from hp-dl380pg8-01.lab.eng.pek2.redhat.com (hp-dl380pg8-01.lab.eng.pek2.redhat.com [10.73.8.10])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9C5081000324;
-        Wed,  7 Aug 2019 06:54:55 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CB6001001281;
+        Wed,  7 Aug 2019 06:55:01 +0000 (UTC)
 From:   Jason Wang <jasowang@redhat.com>
 To:     mst@redhat.com, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org, jgg@ziepe.ca,
-        Jason Wang <jasowang@redhat.com>
-Subject: [PATCH V3 00/10] Fixes for metadata accelreation
-Date:   Wed,  7 Aug 2019 02:54:39 -0400
-Message-Id: <20190807065449.23373-1-jasowang@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org, jgg@ziepe.ca
+Subject: [PATCH V3 01/10] vhost: disable metadata prefetch optimization
+Date:   Wed,  7 Aug 2019 02:54:40 -0400
+Message-Id: <20190807065449.23373-2-jasowang@redhat.com>
+In-Reply-To: <20190807065449.23373-1-jasowang@redhat.com>
+References: <20190807065449.23373-1-jasowang@redhat.com>
 X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Wed, 07 Aug 2019 06:55:01 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Wed, 07 Aug 2019 06:55:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all:
+From: "Michael S. Tsirkin" <mst@redhat.com>
 
-This series try to fix several issues introduced by meta data
-accelreation series. Please review.
+This seems to cause guest and host memory corruption.
+Disable for now until we get a better handle on that.
 
-Changes from V2:
-- use seqlck helper to synchronize MMU notifier with vhost worker
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+---
+ drivers/vhost/vhost.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Changes from V1:
-
-- try not use RCU to syncrhonize MMU notifier with vhost worker
-- set dirty pages after no readers
-- return -EAGAIN only when we find the range is overlapped with
-  metadata
-
-Jason Wang (9):
-  vhost: don't set uaddr for invalid address
-  vhost: validate MMU notifier registration
-  vhost: fix vhost map leak
-  vhost: reset invalidate_count in vhost_set_vring_num_addr()
-  vhost: mark dirty pages during map uninit
-  vhost: don't do synchronize_rcu() in vhost_uninit_vq_maps()
-  vhost: do not use RCU to synchronize MMU notifier with worker
-  vhost: correctly set dirty pages in MMU notifiers callback
-  vhost: do not return -EAGAIN for non blocking invalidation too early
-
-Michael S. Tsirkin (1):
-  vhost: disable metadata prefetch optimization
-
- drivers/vhost/vhost.c | 228 +++++++++++++++++++++++++++---------------
- drivers/vhost/vhost.h |  10 +-
- 2 files changed, 151 insertions(+), 87 deletions(-)
-
+diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+index 819296332913..42a8c2a13ab1 100644
+--- a/drivers/vhost/vhost.h
++++ b/drivers/vhost/vhost.h
+@@ -96,7 +96,7 @@ struct vhost_uaddr {
+ };
+ 
+ #if defined(CONFIG_MMU_NOTIFIER) && ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE == 0
+-#define VHOST_ARCH_CAN_ACCEL_UACCESS 1
++#define VHOST_ARCH_CAN_ACCEL_UACCESS 0
+ #else
+ #define VHOST_ARCH_CAN_ACCEL_UACCESS 0
+ #endif
 -- 
 2.18.1
 
