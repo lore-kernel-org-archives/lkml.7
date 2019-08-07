@@ -2,171 +2,155 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3821C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:20:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8552FC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:22:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADA17229ED
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:20:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E122217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:22:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ecoBMQgZ"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="oj4RFKJj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728773AbfHGIUg (ORCPT
+        id S2387588AbfHGIWV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 04:20:36 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33316 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727914AbfHGIUg (ORCPT
+        Wed, 7 Aug 2019 04:22:21 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:50276 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387515AbfHGIWV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 04:20:36 -0400
-Received: by mail-wr1-f65.google.com with SMTP id n9so90527563wru.0
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 01:20:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qdCQFtNUgHP+6yIK7X9t8PJLgU8SCqT4PsGVjU2PxUo=;
-        b=ecoBMQgZujpXDcJ69aYRBmwDzOwFQ+9qfZpM+8+DWDI732pnZLU4LudirXDVP0rAAo
-         fYSDIq2JevgyS3jBT0xDrA3IwZYvcvfehgJsi3iT1ZdJZx9QGgQJwKdHThJO1E2qAJqN
-         wU5n09Kv3zx6h4gLzhizK8/sxK6X26T020KzTEa6YSmvHvGl4pDICdCDdM4MH5HGcJ8X
-         jI0YCiEshRq+6q26aN/yhMIoYPnkgKKdVEw1jmZSjdn8VM06MrC4UrmOZRNCspFz8edj
-         sO+897kXdqFbYl5Yv0asIE9V85/Z7JUEB2PNBhnhxoqQdurczVv/mNVoQjuGM+h1kdzv
-         mdoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=qdCQFtNUgHP+6yIK7X9t8PJLgU8SCqT4PsGVjU2PxUo=;
-        b=SoZh5wGGo4pY1+CNYkb+lqLgVufRYuZsECjfMSh44JNSTqMvZOOMf5cOgNvTifQcrS
-         gLqH2wd1tK+ki2HxmRJCuHcyXvG9cA4knnhhyfkapo8ozYW0RF9o1b0+kDg8+nPSWLCN
-         a4AF3tV+txq4uR00NUZA1U8IzIki4xAFMu6tDYDVHbKFpejZulUbZf0vb1Jv1Q0m1Y7v
-         EdjVpAKlsllISzdVnIkeBQ8BI30ScjenULApgiwux61r/jDHSEKzx5kvgCNQwDWLaFDn
-         JCdeTqi+9Caj7Fn87UemkkRuX5dV4S2V3Hl/BCttDVT1hscDOXQjTKQDTJ08gKANIWi7
-         3l+A==
-X-Gm-Message-State: APjAAAVmR/dpGR32bgIbeW2ZEm/D89/YqDqPuCmEBudJaLno+h8ku+c+
-        JDgXRk0W6IUKSlFAnCh6GDc47A==
-X-Google-Smtp-Source: APXvYqwR8Nenl80GfTSMPHA1t28TOlW7UevK9q5o18FheQ+4hPF2SlPe+RQ6r1t4sdPqeO4D11xBLg==
-X-Received: by 2002:adf:c003:: with SMTP id z3mr9536873wre.243.1565166033630;
-        Wed, 07 Aug 2019 01:20:33 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:a920:eb8d:e571:a6d0? ([2a01:e34:ed2f:f020:a920:eb8d:e571:a6d0])
-        by smtp.googlemail.com with ESMTPSA id c1sm204477734wrh.1.2019.08.07.01.20.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 07 Aug 2019 01:20:33 -0700 (PDT)
-Subject: Re: [PATCH 2/6] ARM: cpuidle: Remove overzealous error logging
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pm@vger.kernel.org
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        LAKML <linux-arm-kernel@lists.infradead.org>
-References: <20190722153745.32446-1-lorenzo.pieralisi@arm.com>
- <20190722153745.32446-3-lorenzo.pieralisi@arm.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <c2ee64b7-0c77-ca5a-ce1e-d156111dace9@linaro.org>
-Date:   Wed, 7 Aug 2019 10:20:32 +0200
+        Wed, 7 Aug 2019 04:22:21 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190807082218euoutp01c590e38de21aa05b4f1ca0dff82ba1c0~4lk_RLoci0916609166euoutp01X
+        for <linux-kernel@vger.kernel.org>; Wed,  7 Aug 2019 08:22:18 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190807082218euoutp01c590e38de21aa05b4f1ca0dff82ba1c0~4lk_RLoci0916609166euoutp01X
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1565166139;
+        bh=TUOJee1KmaVqHr7sp1XDmCcAg4SfEnN4KsZm2vPUxeU=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=oj4RFKJj6zYexdRMKkDPwRVVzJZjXUghoxAQKcrpIqnPSsfjmMBRz3RP9o8ByWwPA
+         ADijWFXnVBQnabpEpEmaHL7oMiAS6eA5VXVOuMPBlg0M36SzF71osAmrIAEp8cm+sW
+         yijDFQF+kdMY4fs2bR4y64LiX6SUrV2Af/rV/5Xs=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190807082218eucas1p2101e26b7b20195803ee174dea6d6a957~4lk9nU0Cf2777127771eucas1p2y;
+        Wed,  7 Aug 2019 08:22:18 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 3C.E9.04374.93A8A4D5; Wed,  7
+        Aug 2019 09:22:18 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190807082217eucas1p1902bf3e6dbdc180efb15dcffd2c569f9~4lk80b8Zj1455014550eucas1p1L;
+        Wed,  7 Aug 2019 08:22:17 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190807082217eusmtrp11a1f46affb6a93550c7ff2bb842e8c37~4lk8mAQtD1982319823eusmtrp1J;
+        Wed,  7 Aug 2019 08:22:17 +0000 (GMT)
+X-AuditID: cbfec7f5-4f7ff70000001116-85-5d4a8a393be9
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 9E.44.04166.93A8A4D5; Wed,  7
+        Aug 2019 09:22:17 +0100 (BST)
+Received: from [106.120.51.75] (unknown [106.120.51.75]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190807082216eusmtip2ddaf1592eedc20faa8a53d54b471ffc7~4lk8B9sv31759417594eusmtip2X;
+        Wed,  7 Aug 2019 08:22:16 +0000 (GMT)
+Subject: Re: Odroid-XU4 sound issue after suspend-resume
+To:     Jaafar Ali <jaafarkhalaf@gmail.com>
+Cc:     linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kgene@kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
+        sam@ravnborg.org, linux-clk@vger.kernel.org
+From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
+Message-ID: <24165241-1f65-fafa-0c59-b85cf89bc5bb@samsung.com>
+Date:   Wed, 7 Aug 2019 10:22:14 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190722153745.32446-3-lorenzo.pieralisi@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <CAF-0O_4xOQNkX5ZyyVz7zZDAP9XBeUKv65T0cd+oAAV1ahLQ9Q@mail.gmail.com>
+Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUhTYRiGez1nO2fD2evUfDBRGEIoNZOMTiaiEDT7EUoIYUgtd5iWm7L5
+        kfZHFKzM8qs0p6SEpNvIwtLUTGym0wTNb8VSUUvLTPMjHIXl8Sj573ru+7m53wdempA+EbjR
+        sdpEVqdVxsmEYrK+w9ZzJCD7bNTRt8eZ1i8DBJM7s0Awvb3PKeZnzoSAGWgqEzIPe1vsmGpb
+        HQqmFI2GT5Si1nRbqKgsGhIqVms9wshIcaCKjYtNZnW+QZfFMW8yfhAJU/bXlzs6iXRUJs5G
+        IhqwPzyYXxFkIzEtxdUICquzKH5YQ2CzlewMqwjMX9eFu5HcvlYhb1QhKOkupDhDihcRmO6H
+        cOyEGRheGd8OOOND8Llx1I4LEPgpgrGaFyRnCLEf3G2/hziW4CDoLzcLOCaxF7waWdnWXfAF
+        eP/uEcnvOEJXyew2i3A4lC/d3C4msCtkrBkFPHtCZl0pwZUBrqGgdKGB5J99GpbaflE8O8E3
+        68sddofuwhySD2QiyHk9TvFDHoJJawXit05Bm7Vvq4LeqvCGZ02+vBwCy+uDiJMBO8DooiP/
+        CAcoqC8meFkCt7Kk/LYX/DYV2/HsBndm/5J5SGbYc5phzzmGPecY/vdWINKEXNkkvUbN6o9p
+        2RS5XqnRJ2nV8uh4TS3a+j3dm9b1BtTy54oFYRrJ7CVMdmiUVKBM1qdqLAhoQuYsmUjekiQq
+        ZWoaq4u/pEuKY/UWdJAmZa6SG/umLkqxWpnIXmPZBFa369rRIrd01CYa83RWB5CZ6Lt7szFM
+        Kx1NMc6sDp4Pc/dK66qMnAj2Lxpppn02p6sM5v6IiBNncszR8vzp8I+qcz0iX6x6fKBgSjA/
+        edi7S95uqT05XD0n2iBcNqq8ehPCiheo/KFEVWdUVUtobKh3xtUZ84dOb0XQiG2gb44KXJLv
+        N3rISH2M0s+H0OmV/wB8zpNVOQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrJIsWRmVeSWpSXmKPExsVy+t/xe7qWXV6xBmdecVkceHaZ2aL/8Wtm
+        i/PnN7BbfOy5x2pxedccNosZ5/cxWaz4uZXRgd1j56y77B6bVnWyeSyZdpXN4/MmuQCWKD2b
+        ovzSklSFjPziElulaEMLIz1DSws9IxNLPUNj81grI1MlfTublNSczLLUIn27BL2MvU3vmAse
+        8FR8OHaCuYFxDlcXIyeHhICJRP/FA2xdjFwcQgJLGSU+Nc5j6WLkAEpIScxvUYKoEZb4c60L
+        quY1o8Tff3uYQBLCAhYS1z7dZgOxRQTUJZ7uvMEEUsQssJZR4nTPXCaIjiWMEjOXn2cBqWIT
+        MJToPdrHCGLzCthJXJq/mhXEZhFQkdh+/RNYXFQgQmLStZ0sEDWCEidnPgGzOQUCJea/b2cH
+        sZmBtv2Zd4kZwhaXaPqykhXClpdo3jqbeQKj0Cwk7bOQtMxC0jILScsCRpZVjCKppcW56bnF
+        hnrFibnFpXnpesn5uZsYgdG27djPzTsYL20MPsQowMGoxMM7occzVog1say4MvcQowQHs5II
+        770yoBBvSmJlVWpRfnxRaU5q8SFGU6DnJjJLiSbnAxNBXkm8oamhuYWlobmxubGZhZI4b4fA
+        wRghgfTEktTs1NSC1CKYPiYOTqkGRqul3D5u/X4vJ194Wrgko1BxwY7unwyP/uvGTWaUvRyg
+        OTc3J2ni/+xj7QkL/69ekfhO8KzGIpkFRdx7JM0YGk+7B9tErWhIZT8xY0PiZ7mvVZVOuw+K
+        T2dJ7va6efv/00rtqtvZjluK+vf9FPNLEdG9NTe6RVJhxWLr42WM7HL5W59w2qUGKrEUZyQa
+        ajEXFScCAL5kDh/MAgAA
+X-CMS-MailID: 20190807082217eucas1p1902bf3e6dbdc180efb15dcffd2c569f9
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190805133249epcas2p3aea30967f18f03f7fc1ed9dc7cbcb1d5
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190805133249epcas2p3aea30967f18f03f7fc1ed9dc7cbcb1d5
+References: <CGME20190805133249epcas2p3aea30967f18f03f7fc1ed9dc7cbcb1d5@epcas2p3.samsung.com>
+        <CAF-0O_4xOQNkX5ZyyVz7zZDAP9XBeUKv65T0cd+oAAV1ahLQ9Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/07/2019 17:37, Lorenzo Pieralisi wrote:
-> CPUidle back-end operations are not implemented in some platforms
-> but this should not be considered an error serious enough to be
-> logged. Check the arm_cpuidle_init() return value to detect whether
-> the failure must be reported or not in the kernel log and do
-> not log it if the platform does not support CPUidle operations.
+Hi Jaafar, 
+
+On 8/5/19 15:27, Jaafar Ali wrote:
+> Dear All,
+> Kernel 5.3-rc1
+> OS: ubuntu 18.04
+> Hardware: Odroid-XU4
+> The sound of Odroid-XU4 after suspend/resume cycle is choppy and slow. 
+> I have found a workaround, the I2SMOD register value should be set to 
+> zero after resume to force using internal codec clock (cdclkcon bit = 0),
+> also the rclk_srcrate which is obtained from the function 
+> *clk_get_rate(rclksrc) *inside *hw_params* function is not correct and 
+> must be divided by 2 to obtain proper value, i2s_resume function 
+> is modified to:
 > 
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Cc: Sudeep Holla <sudeep.holla@arm.com>
-> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-
+> static int i2s_resume(struct snd_soc_dai *dai)
+> {
+>         struct samsung_i2s_priv *priv = dev_get_drvdata(dai->dev);
+>         priv->suspend_i2smod = 0;//workaround-1 ,
+>         return pm_runtime_force_resume(dai->dev);
+> 
+> }
+> 
+> inside hw_params function, the rclk_srcrate must be halved to solve 
+> unknown problem of clock shift, so before return from hw_params we 
+> must insert:
+> if(mod == 0){
+> 	priv->rclk_srcrate = priv->rclk_srcrate / 2; //workaround-2, 
+> }
+> 
+> With these two workaround sound issue was solved, but I hope we can 
+> get concrete fix.
+Thank you for the bug report. I spent some time on debugging this and
+it turned out that there is a clock mux between EPLL and the audio 
+subsystem which looses its configuration during suspend/resume cycle.
+So we end up with the I2S controller clocked from the main oscillator
+clock (24 MHz) rather than the EPLL (196.608 MHz) after system suspend/
+resume. I will post a patch for clk-exynos5420 driver shortly.
 
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+Regards,
+Sylwester
