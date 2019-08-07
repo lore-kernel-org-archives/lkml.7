@@ -2,113 +2,120 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C231C32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61222C32756
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:40:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69C522199C
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:39:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3649422293
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:40:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565188805;
+	bh=hSstj7xmNsV586xUFColzstwf5/C5WzlkNPW3r/mkiE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Kyw0HXUqUYmJ1nH0+jFVziy05AfOxlCSALwQmX7LGGvyDfqcwNkvgdNZBwx6XlrOn
+	 9/1h8fCV77k3YpLKJ0RYpe9LbPeb7fhJDcJSHVzWZpQ+3oZx7ILoM3TGjuK2LaxdN+
+	 vHmiFZ8Q4pV9o1U10+hHB54tiemRbVzWgL52rtoM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388346AbfHGOjj (ORCPT
+        id S1730103AbfHGOkE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 10:39:39 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:42620 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S2388190AbfHGOjh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 10:39:37 -0400
-Received: (qmail 18918 invoked by uid 2102); 7 Aug 2019 10:39:36 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 7 Aug 2019 10:39:36 -0400
-Date:   Wed, 7 Aug 2019 10:39:36 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Andrey Konovalov <andreyknvl@google.com>
-cc:     syzbot <syzbot+7bbcbe9c9ff0cd49592a@syzkaller.appspotmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Cesar Miquel <miquel@df.uba.ar>,
-        <rio500-users@lists.sourceforge.net>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: possible deadlock in open_rio
-In-Reply-To: <CAAeHK+yAY_ov4yH7n-R8ppnxc1ux33A-SEdxx18ywU1SyLGwug@mail.gmail.com>
-Message-ID: <Pine.LNX.4.44L0.1908071033440.1514-100000@iolanthe.rowland.org>
+        Wed, 7 Aug 2019 10:40:04 -0400
+Received: from mga04.intel.com ([192.55.52.120]:56257 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729516AbfHGOkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 10:40:03 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Aug 2019 07:40:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,357,1559545200"; 
+   d="scan'208";a="165338496"
+Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
+  by orsmga007.jf.intel.com with ESMTP; 07 Aug 2019 07:40:01 -0700
+Date:   Wed, 7 Aug 2019 08:37:34 -0600
+From:   Keith Busch <kbusch@kernel.org>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Mario Limonciello <Mario.Limonciello@dell.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        "Busch, Keith" <keith.busch@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rajat Jain <rajatja@google.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH] nvme-pci: Do not prevent PCI bus-level PM from being used
+Message-ID: <20190807143733.GA25621@localhost.localdomain>
+References: <47415939.KV5G6iaeJG@kreacher>
+ <20190730144134.GA12844@localhost.localdomain>
+ <100ba4aff1c6434a81e47774ab4acddc@AUSX13MPC105.AMER.DELL.COM>
+ <8246360B-F7D9-42EB-94FC-82995A769E28@canonical.com>
+ <20190730191934.GD13948@localhost.localdomain>
+ <7d3e0b8ba1444194a153c93faa1cabb3@AUSX13MPC105.AMER.DELL.COM>
+ <20190730213114.GK13948@localhost.localdomain>
+ <CAJZ5v0gxfeMN8eCNRjcXmUOkReVsdozb3EccaYMpnmSHu3771g@mail.gmail.com>
+ <20190731221956.GB15795@localhost.localdomain>
+ <1893355.EP2830DdO9@kreacher>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1893355.EP2830DdO9@kreacher>
+User-Agent: Mutt/1.9.1 (2017-09-22)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 7 Aug 2019, Andrey Konovalov wrote:
-
-> On Wed, Aug 7, 2019 at 4:01 PM Alan Stern <stern@rowland.harvard.edu> wrote:
-> >
-> > On Wed, 7 Aug 2019, Andrey Konovalov wrote:
-> >
-> > > On Tue, Aug 6, 2019 at 9:13 PM Alan Stern <stern@rowland.harvard.edu> wrote:
-> > > >
-> > > > On Thu, 1 Aug 2019, syzbot wrote:
-> > > >
-> > > > > Hello,
-> > > > >
-> > > > > syzbot found the following crash on:
-> > > > >
-> > > > > HEAD commit:    7f7867ff usb-fuzzer: main usb gadget fuzzer driver
-> > > > > git tree:       https://github.com/google/kasan.git usb-fuzzer
-> > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=136b6aec600000
-> > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=792eb47789f57810
-> > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=7bbcbe9c9ff0cd49592a
-> > > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > > >
-> > > > > Unfortunately, I don't have any reproducer for this crash yet.
-> > > > >
-> > > > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > > > Reported-by: syzbot+7bbcbe9c9ff0cd49592a@syzkaller.appspotmail.com
-> > > > >
-> > > > > ======================================================
-> > > > > WARNING: possible circular locking dependency detected
-> > > > > 5.3.0-rc2+ #23 Not tainted
-> > > > > ------------------------------------------------------
-> > > >
-> > > > Andrey:
-> > > >
-> > > > This should be completely reproducible, since it's a simple ABBA
-> > > > locking violation.  Maybe just introducing a time delay (to avoid races
-> > > > and give the open() call time to run) between the gadget creation and
-> > > > gadget removal would be enough to do it.
-> > >
-> > > I've tried some simple approaches to reproducing this, but failed.
-> > > Should this require two rio500 devices to trigger?
-> >
-> > No, one device should be enough.  Just plug it in and then try to open
-> > the character device file.
+On Wed, Aug 07, 2019 at 02:53:44AM -0700, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > 
-> OK, I've reproduced it, so I can test a patch manually. The reason
-> syzbot couldn't do that, is because it doesn't open character devices.
-> Right now the USB fuzzing instance only opens /dev/input*,
-> /dev/hidraw* and /dev/usb/hiddev* (only the devices that are created
-> by USB HID devices as I've been working on adding USB HID targeted
-> fuzzing support lately).
+> One of the modifications made by commit d916b1be94b6 ("nvme-pci: use
+> host managed power state for suspend") was adding a pci_save_state()
+> call to nvme_suspend() in order to prevent the PCI bus-level PM from
+> being applied to the suspended NVMe devices, but if ASPM is not
+> enabled for the target NVMe device, that causes its PCIe link to stay
+> up and the platform may not be able to get into its optimum low-power
+> state because of that.
 > 
-> I guess we should open /dev/chr/* as well. The problem is that there
-> 300+ devices there even without connecting USB devices and opening
-> them blindly probably won't work. Is there a way to know which
-> character devices are created by USB devices? Maybe they are exposed
-> over /sys/bus/usb or via some other way?
+> For example, if ASPM is disabled for the NVMe drive (PC401 NVMe SK
+> hynix 256GB) in my Dell XPS13 9380, leaving it in D0 during
+> suspend-to-idle prevents the SoC from reaching package idle states
+> deeper than PC3, which is way insufficient for system suspend.
+> 
+> To address this shortcoming, make nvme_suspend() check if ASPM is
+> enabled for the target device and fall back to full device shutdown
+> and PCI bus-level PM if that is not the case.
+> 
+> Fixes: d916b1be94b6 ("nvme-pci: use host managed power state for suspend")
+> Link: https://lore.kernel.org/linux-pm/2763495.NmdaWeg79L@kreacher/T/#t
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-I don't have any devices that use this API, so I can't be certain.  
-However, I believe the devices do get registered under /sys/class/usb/.  
-(Note that this directory doesn't exist when there aren't any USB class 
-files.)
+Thanks for tracking down the cause. Sounds like your earlier assumption
+on ASPM's involvement was spot on.
 
-In any case, the USB character device files all have their major
-numbers set to 180 (USB_MAJOR defined in include/linux/usb.h), so you
-can identify them that way.
+> +/*
+> + * pcie_aspm_enabled - Return the mask of enabled ASPM link states.
+> + * @pci_device: Target device.
+> + */
+> +u32 pcie_aspm_enabled(struct pci_dev *pci_device)
+> +{
+> +	struct pci_dev *bridge = pci_device->bus->self;
 
-Alan Stern
+You may want use pci_upstream_bridge() instead, just in case someone
+calls this on a virtual function's pci_dev.
 
+> +	u32 aspm_enabled;
+> +
+> +	mutex_lock(&aspm_lock);
+> +	aspm_enabled = bridge->link_state ? bridge->link_state->aspm_enabled : 0;
+> +	mutex_unlock(&aspm_lock);
+> +
+> +	return aspm_enabled;
+> +}
