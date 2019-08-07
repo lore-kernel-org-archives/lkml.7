@@ -2,84 +2,125 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F7ADC32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 10:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C5EC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 10:16:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5716821E6C
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 10:14:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3A2121E6C
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 10:16:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728091AbfHGKOL (ORCPT
+        id S1728466AbfHGKQE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 06:14:11 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:49060 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725991AbfHGKOL (ORCPT
+        Wed, 7 Aug 2019 06:16:04 -0400
+Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:33083 "EHLO
+        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726685AbfHGKQE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 06:14:11 -0400
-Received: from 79.184.254.29.ipv4.supernova.orange.pl (79.184.254.29) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.275)
- id 015a7a6c70140c25; Wed, 7 Aug 2019 12:14:08 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     Mario Limonciello <Mario.Limonciello@dell.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH] nvme-pci: Do not prevent PCI bus-level PM from being used
-Date:   Wed, 07 Aug 2019 12:14:08 +0200
-Message-ID: <2081634.8PS0KMhuBW@kreacher>
-In-Reply-To: <1893355.EP2830DdO9@kreacher>
-References: <4323ed84dd07474eab65699b4d007aaf@AUSX13MPC105.AMER.DELL.COM> <20190731221956.GB15795@localhost.localdomain> <1893355.EP2830DdO9@kreacher>
+        Wed, 7 Aug 2019 06:16:04 -0400
+Received: from [IPv6:2001:983:e9a7:1:9c05:4bbc:890e:7747] ([IPv6:2001:983:e9a7:1:9c05:4bbc:890e:7747])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id vIz9hkTa7AffAvIzBh7ksg; Wed, 07 Aug 2019 12:16:01 +0200
+Subject: Re: [PATCH v4 0/3] DCMI bridge support
+To:     Hugues Fruchet <hugues.fruchet@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Yannick Fertre <yannick.fertre@st.com>,
+        Philippe CORNU <philippe.cornu@st.com>,
+        Mickael GUENE <mickael.guene@st.com>
+References: <1564577783-18627-1-git-send-email-hugues.fruchet@st.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <28a2a9ac-d5b9-a312-616a-620e0385cf66@xs4all.nl>
+Date:   Wed, 7 Aug 2019 12:15:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <1564577783-18627-1-git-send-email-hugues.fruchet@st.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfCP9LqKEIJwW0pIhFdbw6tGpB9o9mbS/qErOZQWhGe5Bzq7r6mVey37KBsvPv5vRS+rwW4N5qvZSOS4HYAHC9TbGd7KxoLiLiXGiTEb4+kK7x5xBPXQF
+ BEKx6sgrIvZ0Uk2csPHS/u6dM4/EZ5RzZJMoc3sSL2Ftnd5D30a8380raWQ37PDsgqgo+XwyUsC8ecezUORYKUaiu8AlQFpK7NcZ2kqkqGNoNRUqkL5lv6/E
+ 6rGGcxbPLAgjVmhsp7xtoJB/0/1nhlIxo/nNlOLvN8hVjXTEb7mxhtCkYIC4PnrI0k7Uco9RR/DSvYRlVtiOp0g8QbNMcYWGmMKQMmlbdATwpMwb6+o9/PKB
+ 0f7OS+bm6jQC/JXUbtu66bq5e6dE+yd97Z+6+FMEUJMTDM6wT3RRAIFhkLAiFFivFkidzKEf81ZgWil9qupnniOLQrlviMaJxsrpGfXVuc/yafzDWGVoJxqP
+ D3R2drlaxdCqAOIL1KqFuKS83fDDdoqFITo/xflSSwF5DDCAWnMaPTA/NzI97hMd3xRm78K1xATAN3zdgSDiuBna7qJ7k6d/keAn6jL4hVk/lTEMkAb4f45i
+ 2MTqZy5jWM31PmqA90PGPUrXraELt3plhtT7xGq0dbSWVDd8k3RdHKG0EZyFASMtmNcJXDWCzo/KHUDfoovEGU1MmAHiSUcGg8zzov+mAvBSslhhkZbWLqGt
+ AVIwa0VN8r0=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday, August 7, 2019 11:53:44 AM CEST Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Hi Hugues,
+
+Can you provide the output of the most recent v4l2-compliance?
+
+Use 'v4l2-compliance -s'.
+
+Also, just to confirm, with this v4 there are no /dev/mediaX or
+/dev/v4l-subdevX devices created anymore, right?
+
+This v4 looks good to me, I just want to have these final checks
+done.
+
+Regards,
+
+	Hans
+
+On 7/31/19 2:56 PM, Hugues Fruchet wrote:
+> This patch serie allows to connect non-parallel camera sensor to
+> DCMI thanks to a bridge connected in between such as STMIPID02 [1].
 > 
-> One of the modifications made by commit d916b1be94b6 ("nvme-pci: use
-> host managed power state for suspend") was adding a pci_save_state()
-> call to nvme_suspend() in order to prevent the PCI bus-level PM from
-> being applied to the suspended NVMe devices, but if ASPM is not
-> enabled for the target NVMe device, that causes its PCIe link to stay
-> up and the platform may not be able to get into its optimum low-power
-> state because of that.
+> Media controller support is introduced first, then support of
+> several sub-devices within pipeline with dynamic linking
+> between them.
+> In order to keep backward compatibility with applications
+> relying on V4L2 interface only, format set on video node
+> is propagated to all sub-devices connected to camera interface.
 > 
-> For example, if ASPM is disabled for the NVMe drive (PC401 NVMe SK
-> hynix 256GB) in my Dell XPS13 9380, leaving it in D0 during
-> suspend-to-idle prevents the SoC from reaching package idle states
-> deeper than PC3, which is way insufficient for system suspend.
+> [1] https://www.spinics.net/lists/devicetree/msg278002.html
 > 
-> To address this shortcoming, make nvme_suspend() check if ASPM is
-> enabled for the target device and fall back to full device shutdown
-> and PCI bus-level PM if that is not the case.
+> ===========
+> = history =
+> ===========
+> version 4:
+>   - Also drop subdev nodes registry as suggested by Hans:
+>     https://www.spinics.net/lists/arm-kernel/msg743375.html
 > 
-> Fixes: d916b1be94b6 ("nvme-pci: use host managed power state for suspend")
-> Link: https://lore.kernel.org/linux-pm/2763495.NmdaWeg79L@kreacher/T/#t
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
-
-I should have used a better subject for this patch.
-
-I'll resend it with a changed subject later, but for now I would like to collect
-opinions about it (if any).
-
-Cheers!
-
-
+> version 3:
+>   - Drop media device registry to not expose media controller
+>     interface to userspace as per Laurent' suggestion:
+>     https://www.spinics.net/lists/linux-media/msg153417.html
+>   - Prefer "source" instead of "sensor" and keep it in 
+>     dcmi_graph_entity struct, move asd as first member
+>     of struct as per Sakari' suggestion:
+>     https://www.spinics.net/lists/linux-media/msg153119.html
+>   - Drop dcmi_graph_deinit() as per Sakari' suggestion:
+>     https://www.spinics.net/lists/linux-media/msg153417.html
+> 
+> version 2:
+>   - Fix bus_info not consistent between media and V4L:
+>     https://www.spinics.net/lists/arm-kernel/msg717676.html
+>   - Propagation of format set on video node to the sub-devices
+>     chain connected on camera interface
+> 
+> version 1:
+>   - Initial submission
+> 
+> Hugues Fruchet (3):
+>   media: stm32-dcmi: improve sensor subdev naming
+>   media: stm32-dcmi: add media controller support
+>   media: stm32-dcmi: add support of several sub-devices
+> 
+>  drivers/media/platform/Kconfig            |   2 +-
+>  drivers/media/platform/stm32/stm32-dcmi.c | 283 +++++++++++++++++++++++++-----
+>  2 files changed, 236 insertions(+), 49 deletions(-)
+> 
 
