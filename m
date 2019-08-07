@@ -2,146 +2,269 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03E3BC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 16:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4673C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 16:13:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFE6D222FC
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 16:13:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BB102229C
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 16:13:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ytvRKMU4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cNuljisi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388523AbfHGQNF (ORCPT
+        id S2388984AbfHGQNq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 12:13:05 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:51786 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388257AbfHGQNF (ORCPT
+        Wed, 7 Aug 2019 12:13:46 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:46796 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388257AbfHGQNq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 12:13:05 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x77GBRYs022104;
-        Wed, 7 Aug 2019 16:12:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2018-07-02; bh=ZAW+qcuaCE1QOFrpMarNcFKwi4miSTEyYBSJ1Z1pMMo=;
- b=ytvRKMU4JrdLH+P2Qpr5e/GAf+QNJfpkol+hG4wyPdle5/EBnL2xO8+zS1R9VJErqz4a
- jwu3KuyWqAMyWFsaFmq4Ym0e642N/SrYSnnEjSUbVxuQvXfnU/IImCp4LPu6bqRZwACz
- mggOyJY34FIVI8XFRUdAKqr821vlRndnF+nKSQNLSknXLnovBqzxvuGGur6yTHFrVPvQ
- bhx/V9SFnQYtxN/VOl7i2f1Yz5iT9bAaZLuckIxJat7FIBfZP1vRD6Wo4auTOLuw5vAB
- BQrnqUJVM5fCVGRsgN2AVya8QenCb0819QeuBoOmxK9/SEYDViKivoH/kKvJGPG/MvOo eg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2u52wrdbth-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 07 Aug 2019 16:12:46 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x77G3KaH158235;
-        Wed, 7 Aug 2019 16:12:46 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2u7578384q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 07 Aug 2019 16:12:46 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x77GCgiY023566;
-        Wed, 7 Aug 2019 16:12:42 GMT
-Received: from [192.168.0.110] (/73.243.10.6)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 07 Aug 2019 09:12:42 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3570.1\))
-Subject: Re: [PATCH v3 2/2] mm,thp: Add experimental config option
- RO_EXEC_FILEMAP_HUGE_FAULT_THP
-From:   William Kucharski <william.kucharski@oracle.com>
-In-Reply-To: <20190806111210.7xpmjsd4hq54vuml@box>
-Date:   Wed, 7 Aug 2019 10:12:35 -0600
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Bob Kasten <robert.a.kasten@intel.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Chad Mynhier <chad.mynhier@oracle.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Johannes Weiner <jweiner@fb.com>,
-        Matthew Wilcox <willy@infradead.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <452E819C-894D-40C5-B680-CC5A02C599AA@oracle.com>
-References: <20190731082513.16957-1-william.kucharski@oracle.com>
- <20190731082513.16957-3-william.kucharski@oracle.com>
- <20190801123658.enpchkjkqt7cdkue@box>
- <c8d02a3b-e1ad-2b95-ce15-13d3ed4cca87@oracle.com>
- <20190805132854.5dnqkfaajmstpelm@box.shutemov.name>
- <19A86A16-B440-4B73-98FE-922A09484DFD@oracle.com>
- <20190806111210.7xpmjsd4hq54vuml@box>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-X-Mailer: Apple Mail (2.3570.1)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9342 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908070163
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9342 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908070163
+        Wed, 7 Aug 2019 12:13:46 -0400
+Received: by mail-pl1-f195.google.com with SMTP id c2so41490796plz.13
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 09:13:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=9+XnFxrbKnwmwfUUFWf6AnoL73X81odkVu4GG6vHh/A=;
+        b=cNuljisiTxyMoRpKbeMwF1S9SIq6RtEhIILG0hoDi1vHXKFwByQWLrUxbRO9gn/4ks
+         jsyUyQuc0o+tKA1+1T3diEmoTTEBlyF+YG+rx2G7wXtvw4QoZcqzKWRxgknpiCPSnoHM
+         i5+ADA3dlxIyGBw6ZigFHCOT7Cf3tB63bfc/e+o2UVI0++yY4aCGAxPqO9t+1vR0R0d2
+         UmgV6aWu//ZTm6yAlbE91Z8BmKnc/r7XHne4FA9LC0Ar0jO8gk3At6QG67kaMONTkkeP
+         upq4+5XmsCkEiSe1igUnl16g/qc7egF6zUHCMHoF60JnCQ/Byyue9kOIqyis/a9zWGsZ
+         Zjfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=9+XnFxrbKnwmwfUUFWf6AnoL73X81odkVu4GG6vHh/A=;
+        b=DUb+bIfzFzJ2FyvcZWLHO7jwqrqTx6ygU45dV5Oskf2E7Mp079+Ot0LQJA5siyKJaK
+         qOokfOI6qM3jsErNgIXgXFNPh+xJmLAQGahvGTPn8OPe2dNJLF4Z8Iia5szrOoKFDu2F
+         6pzO2hM4VSpqnW2cjDtjwr24pytD4XqVDUJhHxbAjknBhMulzZDTS71cwXWyiE0Ml4XI
+         poxfIXNsQwNWNtJ8xdduQe2YYHlin2zhJXu3bcwWML6zb6vMYYd8XXntFgYdxCcDb1li
+         +rykqDLdEEHDVE3WChv6iFZkn5sEA3PYLf+2yCMao6n6Mn2b8fQAEN/n4/No3olVK86G
+         wNkg==
+X-Gm-Message-State: APjAAAWvnPaZFFeKvglboYOezZHqHN+x39a5kI1BzQMtP4rD4YXBTXcy
+        mJfqClQtdWOEiSLqrU1heEQ=
+X-Google-Smtp-Source: APXvYqzBA3uxA+zRTXVSzdBfRe3Ka9/bQig0VTnz8oRTEfPsKXRmG/iJPj5ldF/8nZ7nJpHz18jejw==
+X-Received: by 2002:a17:90a:dac3:: with SMTP id g3mr681382pjx.45.1565194425368;
+        Wed, 07 Aug 2019 09:13:45 -0700 (PDT)
+Received: from localhost.localdomain (unknown-224-80.windriver.com. [147.11.224.80])
+        by smtp.gmail.com with ESMTPSA id t9sm100808650pgj.89.2019.08.07.09.13.44
+        (version=TLS1 cipher=AES128-SHA bits=128/128);
+        Wed, 07 Aug 2019 09:13:44 -0700 (PDT)
+From:   Bin Meng <bmeng.cn@gmail.com>
+To:     Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <Anup.Patel@wdc.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Cc:     Andreas Schwab <schwab@suse.de>, Christoph Hellwig <hch@lst.de>
+Subject: [PATCH v3] riscv: Using CSR numbers to access CSRs
+Date:   Wed,  7 Aug 2019 09:13:38 -0700
+Message-Id: <1565194418-9672-1-git-send-email-bmeng.cn@gmail.com>
+X-Mailer: git-send-email 1.7.1
+In-Reply-To: <1565184656-4282-1-git-send-email-bmeng.cn@gmail.com>
+References: <1565184656-4282-1-git-send-email-bmeng.cn@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Since commit a3182c91ef4e ("RISC-V: Access CSRs using CSR numbers"),
+we should prefer accessing CSRs using their CSR numbers, but there
+are several leftovers like sstatus / sptbr we missed.
 
+Signed-off-by: Bin Meng <bmeng.cn@gmail.com>
+Reviewed-by: Anup Patel <anup@brainfault.org>
 
-> On Aug 6, 2019, at 5:12 AM, Kirill A. Shutemov <kirill@shutemov.name> =
-wrote:
->=20
-> IIUC, you are missing ->vm_pgoff from the picture. The newly allocated
-> page must land into page cache aligned on HPAGE_PMD_NR boundary. In =
-other
-> word you cannout have huge page with ->index, let say, 1.
->=20
-> VMA is only suitable for at least one file-THP page if:
->=20
-> - (vma->vm_start >> PAGE_SHIFT) % (HPAGE_PMD_NR - 1) is equal to
->    vma->vm_pgoff % (HPAGE_PMD_NR - 1)
->=20
->    This guarantees right alignment in the backing page cache.
->=20
-> - *and* vma->vm_end - round_up(vma->vm_start, HPAGE_PMD_SIZE) is equal =
-or
->   greater than HPAGE_PMD_SIZE.
->=20
-> Does it make sense?
+---
 
-It makes sense, but what I am thinking was say a vma->vm_start of =
-0x1ff000
-and vma->vm_end of 0x400000.
+Changes in v3:
+- remove the SoB tag per request
 
-Assuming x86, that can be mapped with a PAGESIZE page at 0x1ff000 then a
-PMD page mapping 0x200000 - 0x400000.
+Changes in v2:
+- add SoB tag of Christoph Hellwig and Andreas Schwab
+- change CSR_SATP in mm/init.c that was recently changed after v1 patch
 
-That doesn't mean a vma IS or COULD ever be configured that way, so you =
-are
-correct with your comment, and I will change my check accordingly.
+ arch/riscv/kernel/entry.S |  6 +++---
+ arch/riscv/kernel/fpu.S   |  8 ++++----
+ arch/riscv/kernel/head.S  |  2 +-
+ arch/riscv/lib/uaccess.S  | 12 ++++++------
+ arch/riscv/mm/context.c   |  7 +------
+ arch/riscv/mm/init.c      |  2 +-
+ 6 files changed, 16 insertions(+), 21 deletions(-)
 
->> In the current code, it's assumed it is not exposed, because a single =
-read
->> of a large page that does no readahead before the page is inserted =
-into the
->> cache means there are no external users of the page.
->=20
-> You've exposed the page to the filesystem once you call ->readpage().
-> It *may* track the page somehow after the call.
-
-OK, thanks again.
-
-I'll try to have a V4 available with these changes soon.
-
+diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
+index bc7a56e..74ccfd4 100644
+--- a/arch/riscv/kernel/entry.S
++++ b/arch/riscv/kernel/entry.S
+@@ -167,7 +167,7 @@ ENTRY(handle_exception)
+ 	tail do_IRQ
+ 1:
+ 	/* Exceptions run with interrupts enabled */
+-	csrs sstatus, SR_SIE
++	csrs CSR_SSTATUS, SR_SIE
+ 
+ 	/* Handle syscalls */
+ 	li t0, EXC_SYSCALL
+@@ -222,7 +222,7 @@ ret_from_syscall:
+ 
+ ret_from_exception:
+ 	REG_L s0, PT_SSTATUS(sp)
+-	csrc sstatus, SR_SIE
++	csrc CSR_SSTATUS, SR_SIE
+ 	andi s0, s0, SR_SPP
+ 	bnez s0, resume_kernel
+ 
+@@ -265,7 +265,7 @@ work_pending:
+ 	bnez s1, work_resched
+ work_notifysig:
+ 	/* Handle pending signals and notify-resume requests */
+-	csrs sstatus, SR_SIE /* Enable interrupts for do_notify_resume() */
++	csrs CSR_SSTATUS, SR_SIE /* Enable interrupts for do_notify_resume() */
+ 	move a0, sp /* pt_regs */
+ 	move a1, s0 /* current_thread_info->flags */
+ 	tail do_notify_resume
+diff --git a/arch/riscv/kernel/fpu.S b/arch/riscv/kernel/fpu.S
+index 1defb06..631d315 100644
+--- a/arch/riscv/kernel/fpu.S
++++ b/arch/riscv/kernel/fpu.S
+@@ -23,7 +23,7 @@ ENTRY(__fstate_save)
+ 	li  a2,  TASK_THREAD_F0
+ 	add a0, a0, a2
+ 	li t1, SR_FS
+-	csrs sstatus, t1
++	csrs CSR_SSTATUS, t1
+ 	frcsr t0
+ 	fsd f0,  TASK_THREAD_F0_F0(a0)
+ 	fsd f1,  TASK_THREAD_F1_F0(a0)
+@@ -58,7 +58,7 @@ ENTRY(__fstate_save)
+ 	fsd f30, TASK_THREAD_F30_F0(a0)
+ 	fsd f31, TASK_THREAD_F31_F0(a0)
+ 	sw t0, TASK_THREAD_FCSR_F0(a0)
+-	csrc sstatus, t1
++	csrc CSR_SSTATUS, t1
+ 	ret
+ ENDPROC(__fstate_save)
+ 
+@@ -67,7 +67,7 @@ ENTRY(__fstate_restore)
+ 	add a0, a0, a2
+ 	li t1, SR_FS
+ 	lw t0, TASK_THREAD_FCSR_F0(a0)
+-	csrs sstatus, t1
++	csrs CSR_SSTATUS, t1
+ 	fld f0,  TASK_THREAD_F0_F0(a0)
+ 	fld f1,  TASK_THREAD_F1_F0(a0)
+ 	fld f2,  TASK_THREAD_F2_F0(a0)
+@@ -101,6 +101,6 @@ ENTRY(__fstate_restore)
+ 	fld f30, TASK_THREAD_F30_F0(a0)
+ 	fld f31, TASK_THREAD_F31_F0(a0)
+ 	fscsr t0
+-	csrc sstatus, t1
++	csrc CSR_SSTATUS, t1
+ 	ret
+ ENDPROC(__fstate_restore)
+diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
+index 0f1ba17..86049ae 100644
+--- a/arch/riscv/kernel/head.S
++++ b/arch/riscv/kernel/head.S
+@@ -61,7 +61,7 @@ _start_kernel:
+ 	 * floating point in kernel space
+ 	 */
+ 	li t0, SR_FS
+-	csrc sstatus, t0
++	csrc CSR_SSTATUS, t0
+ 
+ 	/* Pick one hart to run the main boot sequence */
+ 	la a3, hart_lottery
+diff --git a/arch/riscv/lib/uaccess.S b/arch/riscv/lib/uaccess.S
+index 399e6f0..ed2696c 100644
+--- a/arch/riscv/lib/uaccess.S
++++ b/arch/riscv/lib/uaccess.S
+@@ -18,7 +18,7 @@ ENTRY(__asm_copy_from_user)
+ 
+ 	/* Enable access to user memory */
+ 	li t6, SR_SUM
+-	csrs sstatus, t6
++	csrs CSR_SSTATUS, t6
+ 
+ 	add a3, a1, a2
+ 	/* Use word-oriented copy only if low-order bits match */
+@@ -47,7 +47,7 @@ ENTRY(__asm_copy_from_user)
+ 
+ 3:
+ 	/* Disable access to user memory */
+-	csrc sstatus, t6
++	csrc CSR_SSTATUS, t6
+ 	li a0, 0
+ 	ret
+ 4: /* Edge case: unalignment */
+@@ -72,7 +72,7 @@ ENTRY(__clear_user)
+ 
+ 	/* Enable access to user memory */
+ 	li t6, SR_SUM
+-	csrs sstatus, t6
++	csrs CSR_SSTATUS, t6
+ 
+ 	add a3, a0, a1
+ 	addi t0, a0, SZREG-1
+@@ -94,7 +94,7 @@ ENTRY(__clear_user)
+ 
+ 3:
+ 	/* Disable access to user memory */
+-	csrc sstatus, t6
++	csrc CSR_SSTATUS, t6
+ 	li a0, 0
+ 	ret
+ 4: /* Edge case: unalignment */
+@@ -114,11 +114,11 @@ ENDPROC(__clear_user)
+ 	/* Fixup code for __copy_user(10) and __clear_user(11) */
+ 10:
+ 	/* Disable access to user memory */
+-	csrs sstatus, t6
++	csrs CSR_SSTATUS, t6
+ 	mv a0, a2
+ 	ret
+ 11:
+-	csrs sstatus, t6
++	csrs CSR_SSTATUS, t6
+ 	mv a0, a1
+ 	ret
+ 	.previous
+diff --git a/arch/riscv/mm/context.c b/arch/riscv/mm/context.c
+index 89ceb3c..beeb5d7 100644
+--- a/arch/riscv/mm/context.c
++++ b/arch/riscv/mm/context.c
+@@ -57,12 +57,7 @@ void switch_mm(struct mm_struct *prev, struct mm_struct *next,
+ 	cpumask_clear_cpu(cpu, mm_cpumask(prev));
+ 	cpumask_set_cpu(cpu, mm_cpumask(next));
+ 
+-	/*
+-	 * Use the old spbtr name instead of using the current satp
+-	 * name to support binutils 2.29 which doesn't know about the
+-	 * privileged ISA 1.10 yet.
+-	 */
+-	csr_write(sptbr, virt_to_pfn(next->pgd) | SATP_MODE);
++	csr_write(CSR_SATP, virt_to_pfn(next->pgd) | SATP_MODE);
+ 	local_flush_tlb_all();
+ 
+ 	flush_icache_deferred(next);
+diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+index 42bf939..238fc41 100644
+--- a/arch/riscv/mm/init.c
++++ b/arch/riscv/mm/init.c
+@@ -435,7 +435,7 @@ static void __init setup_vm_final(void)
+ 	clear_fixmap(FIX_PMD);
+ 
+ 	/* Move to swapper page table */
+-	csr_write(sptbr, PFN_DOWN(__pa(swapper_pg_dir)) | SATP_MODE);
++	csr_write(CSR_SATP, PFN_DOWN(__pa(swapper_pg_dir)) | SATP_MODE);
+ 	local_flush_tlb_all();
+ }
+ 
+-- 
+2.7.4
 
