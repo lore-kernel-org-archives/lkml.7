@@ -5,65 +5,65 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48471C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 05:40:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BA25C19759
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 05:40:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20C1521C38
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 05:40:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AFB221C38
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 05:40:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BN1iYmX3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ev0gn7hc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727481AbfHGFkL (ORCPT
+        id S1727143AbfHGFju (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 01:40:11 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:37740 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727178AbfHGFjw (ORCPT
+        Wed, 7 Aug 2019 01:39:50 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:33222 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727102AbfHGFjs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 01:39:52 -0400
-Received: by mail-pl1-f195.google.com with SMTP id b3so38973107plr.4
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 22:39:52 -0700 (PDT)
+        Wed, 7 Aug 2019 01:39:48 -0400
+Received: by mail-pl1-f193.google.com with SMTP id c14so38853575plo.0
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 22:39:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=LuR1ky4R+W8DnJlClr7ItKCcIJSpq5BHTgJG+rP0wz4=;
-        b=BN1iYmX3VS7iNjW36GRLTazm6lrD0RRsFwt3TRZMMqbhiC7X6+9Uzi4RYwPKB60hQn
-         4nS2QQ4CVKBocbEcvJEM7OOGQcV7THez5IHf0FQiGx7UInJSEoH3dELsSjvHwx0Jg2JJ
-         eJgm6W9JJfX0M5zOEKyX3dQj5qdXRl6ruoNTm2zdwPcLNEq4xOoe7o3FKadQa8TJZRHv
-         dFFgTWSlwiRuxq20DKWLdBaPUkkHgfoyJrhSienE5+enZLqZzBFOdQGx/z7+54x9dfFP
-         llaWNYh0YsFjxuK9DISr6aso0211Ps+SesAbVPKLemIq78WkV4K1X++La0IY9sSuR84O
-         QkSA==
+        bh=VrnrHGkgnpRnail7FR0yXmhVfImCqH1AKJenb0HTXUk=;
+        b=Ev0gn7hc6T6RQfu0MYvWNGkczGBxYOX2l3keLxAhbp/IkAeape8SKPwzf++pPc4NyO
+         rNbfA/E67xIWJq8YxTaHEvFumAA2Zue/KgD2T3bxbYFTdhJZtMo63qeRVb4A+MDJlgWj
+         l+OVYBfA70JtOtHPeXefuSTdZQda/vkdrgqv6JPHwi/u6OTkkQr8Rw0Cx33GlLybvr7Z
+         ql44GsVlcF3Mmcwl4Fc96CRAIpLUDuXAML9DupedbLEDWaBcfKmbolVtfPSWnTjP5cLN
+         zeYa0KZT2zmv/3Re3I97tweFQ/GPYgGBXGBb4UJtZEIpNbms0dFDhU9IwUHHJTH6g6Bv
+         ATDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=LuR1ky4R+W8DnJlClr7ItKCcIJSpq5BHTgJG+rP0wz4=;
-        b=FrAD//5QWnP9CLYVuR7SmLOi+KuBYGZObGj+5oxFMOIIB8/4y0B8TBjco85lbq1jPz
-         Zn+b8U5Xii3+KL9Pn9c8pCBInOFUIHigTc/X6dP4pSNmUzFG6bgS74PUMCOY9sLBNLos
-         4Tpc37Kyxn0KuK1TM9ESvIFYC8weu7CYd0dV8oZOYKG1eAcTRFp/zrpUfZgtgZS44OwO
-         sMJivG2hDUCm4ThLJGp+pnNCj+xkYaM5TIFsj1hXgDAq1YQG3I4p2eGs7nwQhmCVBs29
-         1PrYM0AhO3qj+lrwUDwdVkgvaHx0RX0qPckcRzUaZz1x5c2Mvk1wWyzWH66pci50obes
-         7zxQ==
-X-Gm-Message-State: APjAAAXFkuYVm8TtAR7qQd/Kd6lDa+OLNnBfSTqRduj2niGz4FTj8cuj
-        41cHNXn0hQJhnpjWovl8YkScGQ==
-X-Google-Smtp-Source: APXvYqwteeE9q8f83hjRPGYATCdDy8cEXcbkYjbkT24pE6lGFv27jx/C08Js6EVAX5W6MsCH9hmiMA==
-X-Received: by 2002:a17:902:7612:: with SMTP id k18mr6498473pll.48.1565156391829;
-        Tue, 06 Aug 2019 22:39:51 -0700 (PDT)
+        bh=VrnrHGkgnpRnail7FR0yXmhVfImCqH1AKJenb0HTXUk=;
+        b=FMaGc+zFCVxNNf0wL1Osaxh/qSZVmbCsU7TBQffhK8idvKGwKxt/H1P7mjGpsIqkk8
+         S764GZ8lCyKhVHKoHEQE48DCc1cbeTC6DMfgkdbJu7kyjjkQqE7d7Zx60TcuLCbJ5kjR
+         CcC2xaRVvcKUQ9IifBpBdiZjwfT+A66KdmmYD2sj4EkrjsGI5Kug/hV2HMjpDrZmxStt
+         HmuSnpasO+v7bSlkgFXDMCyBOmCjtsznNo9EAHECR50XFwipha2lfP7n3YMtZdhF2iyo
+         zU0BEy+l3coE0mtAxvHBEVasnMi7Kd2KXuuaoOP3Z3ZHvl615cU8dDBoZD4n/yODRSmX
+         T1/g==
+X-Gm-Message-State: APjAAAVL7Dg5sOA7LZrI16MjMpsRN+V+K3xQczuraJ2X0mo0EbOde6Cd
+        uAgxXQSivXyAQK/kP9ScZbztlQ==
+X-Google-Smtp-Source: APXvYqxO5Mdc9kifnW5FwNDwgTCwI4hDaC9MaKZPp9skC/H9/Pkz8fh1+4h5DM79ZWvXkx2aGxoLbQ==
+X-Received: by 2002:a17:902:d890:: with SMTP id b16mr6445015plz.315.1565156387325;
+        Tue, 06 Aug 2019 22:39:47 -0700 (PDT)
 Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id u7sm86070777pfm.96.2019.08.06.22.39.50
+        by smtp.gmail.com with ESMTPSA id u7sm86070777pfm.96.2019.08.06.22.39.46
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 06 Aug 2019 22:39:51 -0700 (PDT)
+        Tue, 06 Aug 2019 22:39:46 -0700 (PDT)
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Andy Gross <agross@kernel.org>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Sibi Sankar <sibis@codeaurora.org>,
+To:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>, Sibi Sankar <sibis@codeaurora.org>,
         linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-remoteproc@vger.kernel.org
-Subject: [PATCH 5/9] arm64: dts: qcom: qcs404: Add IMEM and PIL info region
-Date:   Tue,  6 Aug 2019 22:39:38 -0700
-Message-Id: <20190807053942.9836-6-bjorn.andersson@linaro.org>
+Subject: [PATCH 1/9] remoteproc: qcom: Introduce driver to store pil info in IMEM
+Date:   Tue,  6 Aug 2019 22:39:34 -0700
+Message-Id: <20190807053942.9836-2-bjorn.andersson@linaro.org>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <20190807053942.9836-1-bjorn.andersson@linaro.org>
 References: <20190807053942.9836-1-bjorn.andersson@linaro.org>
@@ -72,36 +72,204 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a simple-mfd representing IMEM on QCS404 and define the PIL
-relocation info region, so that post mortem tools will be able to locate
-the loaded remoteprocs.
+A region in IMEM is used to communicate load addresses of remoteproc to
+post mortem debug tools. Implement a driver that can be used to store
+this information in order to enable these tools to process collected
+ramdumps.
 
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/qcs404.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/remoteproc/Kconfig         |   3 +
+ drivers/remoteproc/Makefile        |   1 +
+ drivers/remoteproc/qcom_pil_info.c | 139 +++++++++++++++++++++++++++++
+ drivers/remoteproc/qcom_pil_info.h |   6 ++
+ 4 files changed, 149 insertions(+)
+ create mode 100644 drivers/remoteproc/qcom_pil_info.c
+ create mode 100644 drivers/remoteproc/qcom_pil_info.h
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-index 3d0789775009..1604a9697832 100644
---- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-@@ -845,6 +845,16 @@
- 			status = "disabled";
- 		};
+diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+index 28ed306982f7..3984bd16e670 100644
+--- a/drivers/remoteproc/Kconfig
++++ b/drivers/remoteproc/Kconfig
+@@ -85,6 +85,9 @@ config KEYSTONE_REMOTEPROC
+ 	  It's safe to say N here if you're not interested in the Keystone
+ 	  DSPs or just want to use a bare minimum kernel.
  
-+		imem@8600000 {
-+			compatible = "syscon", "simple-mfd";
-+			reg = <0x08600000 0x1000>;
++config QCOM_PIL_INFO
++	tristate
 +
-+			pil-reloc {
-+				compatible ="qcom,pil-reloc-info";
-+				offset = <0x94c>;
-+			};
-+		};
+ config QCOM_RPROC_COMMON
+ 	tristate
+ 
+diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
+index 00f09e658cb3..c1b46e9033cb 100644
+--- a/drivers/remoteproc/Makefile
++++ b/drivers/remoteproc/Makefile
+@@ -14,6 +14,7 @@ obj-$(CONFIG_OMAP_REMOTEPROC)		+= omap_remoteproc.o
+ obj-$(CONFIG_WKUP_M3_RPROC)		+= wkup_m3_rproc.o
+ obj-$(CONFIG_DA8XX_REMOTEPROC)		+= da8xx_remoteproc.o
+ obj-$(CONFIG_KEYSTONE_REMOTEPROC)	+= keystone_remoteproc.o
++obj-$(CONFIG_QCOM_PIL_INFO)		+= qcom_pil_info.o
+ obj-$(CONFIG_QCOM_RPROC_COMMON)		+= qcom_common.o
+ obj-$(CONFIG_QCOM_Q6V5_COMMON)		+= qcom_q6v5.o
+ obj-$(CONFIG_QCOM_Q6V5_ADSP)		+= qcom_q6v5_adsp.o
+diff --git a/drivers/remoteproc/qcom_pil_info.c b/drivers/remoteproc/qcom_pil_info.c
+new file mode 100644
+index 000000000000..aa42732016f3
+--- /dev/null
++++ b/drivers/remoteproc/qcom_pil_info.c
+@@ -0,0 +1,139 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (c) 2019 Linaro Ltd.
++ */
++#include <linux/module.h>
++#include <linux/kernel.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/mutex.h>
++#include <linux/regmap.h>
++#include <linux/mfd/syscon.h>
++#include <linux/slab.h>
 +
- 		intc: interrupt-controller@b000000 {
- 			compatible = "qcom,msm-qgic2";
- 			interrupt-controller;
++struct pil_reloc_entry {
++	char name[8];
++	__le64 base;
++	__le32 size;
++} __packed;
++
++#define PIL_INFO_SIZE	200
++#define PIL_INFO_ENTRIES (PIL_INFO_SIZE / sizeof(struct pil_reloc_entry))
++
++struct pil_reloc {
++	struct device *dev;
++	struct regmap *map;
++	u32 offset;
++	int val_bytes;
++
++	struct pil_reloc_entry entries[PIL_INFO_ENTRIES];
++};
++
++static struct pil_reloc *_reloc;
++static DEFINE_MUTEX(reloc_mutex);
++
++/**
++ * qcom_pil_info_store() - store PIL information of image in IMEM
++ * @image:	name of the image
++ * @base:	base address of the loaded image
++ * @size:	size of the loaded image
++ */
++void qcom_pil_info_store(const char *image, phys_addr_t base, size_t size)
++{
++	struct pil_reloc_entry *entry;
++	int idx = -1;
++	int i;
++
++	mutex_lock(&reloc_mutex);
++	if (!_reloc)
++		goto unlock;
++
++	for (i = 0; i < PIL_INFO_ENTRIES; i++) {
++		if (!_reloc->entries[i].name[0]) {
++			if (idx == -1)
++				idx = i;
++			continue;
++		}
++
++		if (!strncmp(_reloc->entries[i].name, image, 8)) {
++			idx = i;
++			goto found;
++		}
++	}
++
++	if (idx) {
++		dev_warn(_reloc->dev, "insufficient PIL info slots\n");
++		goto unlock;
++	}
++
++found:
++	entry = &_reloc->entries[idx];
++	stracpy(entry->name, image);
++	entry->base = base;
++	entry->size = size;
++
++	regmap_bulk_write(_reloc->map, _reloc->offset + idx * sizeof(*entry),
++			  entry, sizeof(*entry) / _reloc->val_bytes);
++
++unlock:
++	mutex_unlock(&reloc_mutex);
++}
++EXPORT_SYMBOL_GPL(qcom_pil_info_store);
++
++static int pil_reloc_probe(struct platform_device *pdev)
++{
++	struct pil_reloc *reloc;
++
++	reloc = devm_kzalloc(&pdev->dev, sizeof(*reloc), GFP_KERNEL);
++	if (!reloc)
++		return -ENOMEM;
++
++	reloc->dev = &pdev->dev;
++	reloc->map = syscon_node_to_regmap(pdev->dev.parent->of_node);
++	if (IS_ERR(reloc->map))
++		return PTR_ERR(reloc->map);
++
++	if (of_property_read_u32(pdev->dev.of_node, "offset", &reloc->offset))
++		return -EINVAL;
++
++	reloc->val_bytes = regmap_get_val_bytes(reloc->map);
++	if (reloc->val_bytes < 0)
++		return -EINVAL;
++
++	regmap_bulk_write(reloc->map, reloc->offset, reloc->entries,
++			  sizeof(reloc->entries) / reloc->val_bytes);
++
++	mutex_lock(&reloc_mutex);
++	_reloc = reloc;
++	mutex_unlock(&reloc_mutex);
++
++	return 0;
++}
++
++static int pil_reloc_remove(struct platform_device *pdev)
++{
++	mutex_lock(&reloc_mutex);
++	_reloc = NULL;
++	mutex_unlock(&reloc_mutex);
++
++	return 0;
++}
++
++static const struct of_device_id pil_reloc_of_match[] = {
++	{ .compatible = "qcom,pil-reloc-info" },
++	{}
++};
++MODULE_DEVICE_TABLE(of, pil_reloc_of_match);
++
++static struct platform_driver pil_reloc_driver = {
++	.probe = pil_reloc_probe,
++	.remove = pil_reloc_remove,
++	.driver = {
++		.name = "qcom-pil-reloc-info",
++		.of_match_table = pil_reloc_of_match,
++	},
++};
++module_platform_driver(pil_reloc_driver);
++
++MODULE_DESCRIPTION("Qualcomm PIL relocation info");
++MODULE_LICENSE("GPL v2");
+diff --git a/drivers/remoteproc/qcom_pil_info.h b/drivers/remoteproc/qcom_pil_info.h
+new file mode 100644
+index 000000000000..c30c186b665d
+--- /dev/null
++++ b/drivers/remoteproc/qcom_pil_info.h
+@@ -0,0 +1,6 @@
++#ifndef __QCOM_PIL_INFO_H__
++#define __QCOM_PIL_INFO_H__
++
++void qcom_pil_info_store(const char *image, phys_addr_t base, size_t size);
++
++#endif
 -- 
 2.18.0
 
