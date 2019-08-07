@@ -2,175 +2,436 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D270C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 20:46:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46FC5C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 20:51:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7265520880
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 20:46:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F37F62173C
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 20:51:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jWK9JgU9"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="hM0waElW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389496AbfHGUqw (ORCPT
+        id S2389121AbfHGUvo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 16:46:52 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:36498 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730045AbfHGUqv (ORCPT
+        Wed, 7 Aug 2019 16:51:44 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:35221 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727213AbfHGUvn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 16:46:51 -0400
-Received: by mail-ot1-f66.google.com with SMTP id r6so109741297oti.3
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 13:46:50 -0700 (PDT)
+        Wed, 7 Aug 2019 16:51:43 -0400
+Received: by mail-pl1-f194.google.com with SMTP id w24so42536392plp.2
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 13:51:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1drnZsNJ30h8VB1p7exPq6Ba5yiKi2dka+MQPDhn2UQ=;
-        b=jWK9JgU9V08mGULS627pv+JWIbES/c1ddmqDJQCSA18TSPZ65qxQOlPswgfzd06XFf
-         DRuWrk80lcdXWpPZRX+lIiOY93ECSJoiQCGKN/wDU+EHHTbLZ8A9wjLZy2dhklRZT0SV
-         ykhyFs4wnZb/eB8ScZ1OXkw5hUNFhxlruQsR0XTMfWapA9vp6BDhr992fOZ3AEoL2FLA
-         lTbqUyJLr0fHXCfTQ5bhr8BrSoe2tf84CsXyxhWG3n/xTeJIcF9wZwunMgBBHsjHoYc3
-         1k3vEGC/zWh0DYG+xWHddiDWHVd0EVvrz8u2z/NZYuLxsh34HPkSdCGcEmk1//SEwzBY
-         GK7A==
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=i7ClekkPGepVxD3IJPcd6nXsvOMQkTnLWQBUn/hhYN0=;
+        b=hM0waElWla1uPDwv/IChB2zxvTbUYV4cxG0+9R8IUeY2a3xnfxRGkrAdRwzRVOqb6t
+         A8CPaj+spzqobqkMa+MiKRRm8PZRerrnf8P6eF5TiBzQrOKsuoB/QE21GZHQ/mx1FywY
+         fA6rZ+hNtsNb7XIf/mM6h+EZqCCdvYH/CWXx4RAuAE/lGhcN/P73SpHom9u3yr/7xGYJ
+         HV4TY/gou3db7NWuKAI+liu2Raw7yu5p+Y/sm9kR9Xrmt0r1KFDBqOOV8/DuR/aL7aGn
+         fAJs6u1B2hU6CXxyc5cMGfEgluAMv/t+5EJ9veKzap4BWeOSmLRZqPWhyzgrFxoZu4DI
+         U7/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1drnZsNJ30h8VB1p7exPq6Ba5yiKi2dka+MQPDhn2UQ=;
-        b=uB2aKxNFRvVMJTTl1+5C/4wKTeGpo/Paj2uALmKVtUXzu5MJwwTOJhNOGJo1H9rJ/i
-         CnUfOPfsT69zCE52dlamNqIZnzCGaQpZ5jvhK8fz0qUUM/HUNNahoNPS3Z/+5/uX6Vbn
-         82jrA+Gg9z9OgFIrhb2W99ja5Pbe3l3DfjcjDpvLh0zkO5qU038HxiZcCYzKAsp8OR2R
-         xvON7a7HFXkQlMdcPKdlJQdhN1WeSOOU/E6MXA0Xgl3O1CJcJfcRDmtNKH1uJ8uNnHLO
-         kLafsIS0hvKZbVks8rlFWPPd0UsQwr+ngEk/FtuicGyVjOGiwSGRz2AtyK7fG2U0n5iY
-         AdPw==
-X-Gm-Message-State: APjAAAXJ71QK6DQRPjcUJFAqGcEpPezaL5D8LurCoXUzPKpju1XiOZCv
-        hZx9aJYsbHhtVYOK5SPx+1Gywz43GkfyjPPNWv2r4g==
-X-Google-Smtp-Source: APXvYqwL+5I/uBwlSg65FPxVLioe2KXP4DO+byd51b7MUvPmh84Vp0qaLSYhdhuW8vbescgu2ff0lZyh/Irbvl1/Cbc=
-X-Received: by 2002:a9d:6256:: with SMTP id i22mr9805438otk.139.1565210810189;
- Wed, 07 Aug 2019 13:46:50 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=i7ClekkPGepVxD3IJPcd6nXsvOMQkTnLWQBUn/hhYN0=;
+        b=dTUVMgfmbUvL3mUV5108YjH4kMNcRE3t+PG+816ICME/SojfZq8XFkUubVQ0FnzdVJ
+         ERBpT+LKu6kCElztEwy2Z4nxVA2iv8Yb93ODnEWZ4PLz0GVTEXgvrbBFPItfNi3C1D84
+         r1+vM5Hh/ENlWMddbnP/jJZdJolbLrcufpPrBH9XGJW2epGr+GY03+ijQyJZh3yFboi8
+         J0gqsWEoOW5rz8KoSK8MwhpRaNL5pJAdGBNo3AmSD9o1uL3UadBXedvkBU1p3ozpybWM
+         qQHRNhfqTILp5MHIThKKV8agvbVm0SSJVmjp2jxx+nv4gWmR03GbHaKSgq1iOZLjAJke
+         s0bw==
+X-Gm-Message-State: APjAAAX/MbM8mHszgJpW7mqB3gG19ikmQ/go71/SwnHsUWTn4JLaDeu6
+        3XhRSMpeCoZegjurewwe8WpbGA==
+X-Google-Smtp-Source: APXvYqxA0GLU/h6gpLjrYUOOfUL8MeH0DOteSmOnyr4IKmHoccam/pRYuZp7yfaWkPWiADG/Lajw0w==
+X-Received: by 2002:a17:90a:a116:: with SMTP id s22mr309327pjp.47.1565211102350;
+        Wed, 07 Aug 2019 13:51:42 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::1:f7c1])
+        by smtp.gmail.com with ESMTPSA id z6sm63165803pgk.18.2019.08.07.13.51.40
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 07 Aug 2019 13:51:40 -0700 (PDT)
+Date:   Wed, 7 Aug 2019 16:51:38 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Suren Baghdasaryan <surenb@google.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Artem S. Tashkinov" <aros@gmx.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>
+Subject: Re: Let's talk about the elephant in the room - the Linux kernel's
+ inability to gracefully handle low memory pressure
+Message-ID: <20190807205138.GA24222@cmpxchg.org>
+References: <d9802b6a-949b-b327-c4a6-3dbca485ec20@gmx.com>
+ <ce102f29-3adc-d0fd-41ee-e32c1bcd7e8d@suse.cz>
+ <20190805193148.GB4128@cmpxchg.org>
+ <CAJuCfpHhR+9ybt9ENzxMbdVUd_8rJN+zFbDm+5CeE2Desu82Gg@mail.gmail.com>
+ <398f31f3-0353-da0c-fc54-643687bb4774@suse.cz>
+ <20190806142728.GA12107@cmpxchg.org>
+ <20190806143608.GE11812@dhcp22.suse.cz>
+ <CAJuCfpFmOzj-gU1NwoQFmS_pbDKKd2XN=CS1vUV4gKhYCJOUtw@mail.gmail.com>
+ <20190806220150.GA22516@cmpxchg.org>
+ <20190807075927.GO11812@dhcp22.suse.cz>
 MIME-Version: 1.0
-References: <20190726231558.175130-1-saravanak@google.com> <20190726231558.175130-3-saravanak@google.com>
- <fc8e4a77-5544-0dd7-f103-147f87e44a28@linaro.org>
-In-Reply-To: <fc8e4a77-5544-0dd7-f103-147f87e44a28@linaro.org>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Wed, 7 Aug 2019 13:46:14 -0700
-Message-ID: <CAGETcx8n_YfPH1Fbvb2ay5A=AqG60V6nvtfE0s1OAJMhVQjDmA@mail.gmail.com>
-Subject: Re: [PATCH v4 2/3] OPP: Add support for bandwidth OPP tables
-To:     Georgi Djakov <georgi.djakov@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "Sweeney, Sean" <seansw@qti.qualcomm.com>,
-        David Dai <daidavid1@codeaurora.org>, adharmap@codeaurora.org,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Evan Green <evgreen@chromium.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190807075927.GO11812@dhcp22.suse.cz>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 7, 2019 at 5:53 AM Georgi Djakov <georgi.djakov@linaro.org> wrote:
->
-> Hi Saravana,
->
-> On 7/27/19 02:15, Saravana Kannan wrote:
-> > Not all devices quantify their performance points in terms of frequency.
-> > Devices like interconnects quantify their performance points in terms of
-> > bandwidth. We need a way to represent these bandwidth levels in OPP. So,
-> > add support for parsing bandwidth OPPs from DT.
-> >
-> > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > ---
-> >  drivers/opp/of.c  | 41 ++++++++++++++++++++++++++++++++---------
-> >  drivers/opp/opp.h |  4 +++-
-> >  2 files changed, 35 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-> > index b313aca9894f..ac73512f4416 100644
-> > --- a/drivers/opp/of.c
-> > +++ b/drivers/opp/of.c
-> > @@ -523,6 +523,35 @@ void dev_pm_opp_of_remove_table(struct device *dev)
-> >  }
-> >  EXPORT_SYMBOL_GPL(dev_pm_opp_of_remove_table);
-> >
-> > +static int _read_opp_key(struct dev_pm_opp *new_opp, struct device_node *np)
-> > +{
-> > +     int ret;
-> > +     u64 rate;
-> > +     u32 bw;
-> > +
-> > +     ret = of_property_read_u64(np, "opp-hz", &rate);
-> > +     if (!ret) {
-> > +             /*
-> > +              * Rate is defined as an unsigned long in clk API, and so
-> > +              * casting explicitly to its type. Must be fixed once rate is 64
-> > +              * bit guaranteed in clk API.
-> > +              */
-> > +             new_opp->rate = (unsigned long)rate;
-> > +             return 0;
->
-> So we can't have a single OPP table with both frequency and bandwidth?
+On Wed, Aug 07, 2019 at 09:59:27AM +0200, Michal Hocko wrote:
+> On Tue 06-08-19 18:01:50, Johannes Weiner wrote:
+> > On Tue, Aug 06, 2019 at 09:27:05AM -0700, Suren Baghdasaryan wrote:
+> [...]
+> > > > > I'm not sure 10s is the perfect value here, but I do think the kernel
+> > > > > should try to get out of such a state, where interacting with the
+> > > > > system is impossible, within a reasonable amount of time.
+> > > > >
+> > > > > It could be a little too short for non-interactive number-crunching
+> > > > > systems...
+> > > >
+> > > > Would it be possible to have a module with tunning knobs as parameters
+> > > > and hook into the PSI infrastructure? People can play with the setting
+> > > > to their need, we wouldn't really have think about the user visible API
+> > > > for the tuning and this could be easily adopted as an opt-in mechanism
+> > > > without a risk of regressions.
+> > 
+> > It's relatively easy to trigger a livelock that disables the entire
+> > system for good, as a regular user. It's a little weird to make the
+> > bug fix for that an opt-in with an extensive configuration interface.
+> 
+> Yes, I definitely do agree that this is a bug fix more than a
+> feature. The thing is that we do not know what the proper default is for
+> a wide variety of workloads so some way of configurability is needed
+> (level and period).  If making this a module would require a lot of
+> additional code then we need a kernel command line parameter at least.
+> 
+> A module would have a nice advantage that you can change your
+> configuration without rebooting. The same can be achieved by a sysfs on
+> the other hand.
 
-Right, because we can have only 1 "key" for the OPP table. Having more
-than one "key" for an OPP table makes a lot of things pretty messy.
-Most of the helper functions need to be rewritten to say which key is
-being referred to when searching. A lot of the error checking when
-creating OPP tables becomes convoluted -- can we allow more than one
-OPP entry with the same frequency just because the opp-peak-kBps is
-different? Etc. Seems like a lot of code change for something that I
-don't think is a very useful.
+That's reasonable. How about my initial patch, but behind a config
+option and the level and period configurable?
 
-Also, an OPP table is either going to represent performance levels of
-a clock domain (opp-hz) or the performance levels of an interconnect
-path (opp-peak-kBps) or an OPP table for genpd. Mixing them all up is
-just going to make it convoluted with not enough benefit or use case
-that can't be handled as is (separate BW and freq OPP tables).
+---
+From 9efda85451062dea4ea287a886e515efefeb1545 Mon Sep 17 00:00:00 2001
+From: Johannes Weiner <hannes@cmpxchg.org>
+Date: Mon, 5 Aug 2019 13:15:16 -0400
+Subject: [PATCH] psi: trigger the OOM killer on severe thrashing
 
-> > +     }
-> > +
-> > +     ret = of_property_read_u32(np, "opp-peak-KBps", &bw);
-> > +     if (ret)
-> > +             return ret;
-> > +     new_opp->rate = (unsigned long) bw;
-> > +
-> > +     ret = of_property_read_u32(np, "opp-avg-KBps", &bw);
-> > +     if (!ret)
-> > +             new_opp->avg_bw = (unsigned long) bw;
-> > +
-> > +     return 0;
-> > +}
-> > +
-> >  /**
-> >   * _opp_add_static_v2() - Allocate static OPPs (As per 'v2' DT bindings)
-> >   * @opp_table:       OPP table
-> > @@ -560,22 +589,16 @@ static struct dev_pm_opp *_opp_add_static_v2(struct opp_table *opp_table,
-> >       if (!new_opp)
-> >               return ERR_PTR(-ENOMEM);
-> >
-> > -     ret = of_property_read_u64(np, "opp-hz", &rate);
-> > +     ret = _read_opp_key(new_opp, np);
-> >       if (ret < 0) {
-> >               /* "opp-hz" is optional for devices like power domains. */
-> >               if (!opp_table->is_genpd) {
-> > -                     dev_err(dev, "%s: opp-hz not found\n", __func__);
-> > +                     dev_err(dev, "%s: opp-hz or opp-peak-bw not found\n",
->
-> s/opp-peak-bw/opp-peak-kBps/
+Over the last few years we have had many reports that the kernel can
+enter an extended livelock situation under sufficient memory
+pressure. The system becomes unresponsive and fully IO bound for
+indefinite periods of time, and often the user has no choice but to
+reboot. Even though the system is clearly struggling with a shortage
+of memory, the OOM killer is not engaging reliably.
 
-Thanks. Will fix.
+The reason is that with bigger RAM, and in particular with faster
+SSDs, page reclaim does not necessarily fail in the traditional sense
+anymore. In the time it takes the CPU to run through the vast LRU
+lists, there are almost always some cache pages that have finished
+reading in and can be reclaimed, even before userspace had a chance to
+access them. As a result, reclaim is nominally succeeding, but
+userspace is refault-bound and not making significant progress.
 
--Saravana
+While this is clearly noticable to human beings, the kernel could not
+actually determine this state with the traditional memory event
+counters. We might see a certain rate of reclaim activity or refaults,
+but how long, or whether at all, userspace is unproductive because of
+it depends on IO speed, readahead efficiency, as well as memory access
+patterns and concurrency of the userspace applications. The same
+number of the VM events could be unnoticed in one system / workload
+combination, and result in an indefinite lockup in a different one.
+
+However, eb414681d5a0 ("psi: pressure stall information for CPU,
+memory, and IO") introduced a memory pressure metric that quantifies
+the share of wallclock time in which userspace waits on reclaim,
+refaults, swapins. By using absolute time, it encodes all the above
+mentioned variables of hardware capacity and workload behavior. When
+memory pressure is 40%, it means that 40% of the time the workload is
+stalled on memory, period. This is the actual measure for the lack of
+forward progress that users can experience. It's also something they
+expect the kernel to manage and remedy if it becomes non-existent.
+
+To accomplish this, this patch implements a thrashing cutoff for the
+OOM killer. If the kernel determines a sustained high level of memory
+pressure, and thus a lack of forward progress in userspace, it will
+trigger the OOM killer to reduce memory contention.
+
+Per default, the OOM killer will engage after 15 seconds of at least
+80% memory pressure. These values are tunable via sysctls
+vm.thrashing_oom_period and vm.thrashing_oom_level.
+
+Ideally, this would be standard behavior for the kernel, but since it
+involves a new metric and OOM killing, let's be safe and make it an
+opt-in via CONFIG_THRASHING_OOM. Setting vm.thrashing_oom_level to 0
+also disables the feature at runtime.
+
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+Reported-by: "Artem S. Tashkinov" <aros@gmx.com>
+---
+ Documentation/admin-guide/sysctl/vm.rst | 24 ++++++++
+ include/linux/psi.h                     |  5 ++
+ include/linux/psi_types.h               |  6 ++
+ kernel/sched/psi.c                      | 74 +++++++++++++++++++++++++
+ kernel/sysctl.c                         | 20 +++++++
+ mm/Kconfig                              | 20 +++++++
+ 6 files changed, 149 insertions(+)
+
+diff --git a/Documentation/admin-guide/sysctl/vm.rst b/Documentation/admin-guide/sysctl/vm.rst
+index 64aeee1009ca..0332cb52bcfc 100644
+--- a/Documentation/admin-guide/sysctl/vm.rst
++++ b/Documentation/admin-guide/sysctl/vm.rst
+@@ -66,6 +66,8 @@ files can be found in mm/swap.c.
+ - stat_interval
+ - stat_refresh
+ - numa_stat
++- thrashing_oom_level
++- thrashing_oom_period
+ - swappiness
+ - unprivileged_userfaultfd
+ - user_reserve_kbytes
+@@ -825,6 +827,28 @@ When page allocation performance is not a bottleneck and you want all
+ 	echo 1 > /proc/sys/vm/numa_stat
+ 
+ 
++thrashing_oom_level
++===================
++
++This defines the memory pressure level for severe thrashing at which
++the OOM killer will be engaged.
++
++The default is 80. This means the system is considered to be thrashing
++severely when all active tasks are collectively stalled on memory
++(waiting for page reclaim, refaults, swapins etc) for 80% of the time.
++
++A setting of 0 will disable thrashing-based OOM killing.
++
++
++thrashing_oom_period
++===================
++
++This defines the number of seconds the system must sustain severe
++thrashing at thrashing_oom_level before the OOM killer is invoked.
++
++The default is 15.
++
++
+ swappiness
+ ==========
+ 
+diff --git a/include/linux/psi.h b/include/linux/psi.h
+index 7b3de7321219..661ce45900f9 100644
+--- a/include/linux/psi.h
++++ b/include/linux/psi.h
+@@ -37,6 +37,11 @@ __poll_t psi_trigger_poll(void **trigger_ptr, struct file *file,
+ 			poll_table *wait);
+ #endif
+ 
++#ifdef CONFIG_THRASHING_OOM
++extern unsigned int sysctl_thrashing_oom_level;
++extern unsigned int sysctl_thrashing_oom_period;
++#endif
++
+ #else /* CONFIG_PSI */
+ 
+ static inline void psi_init(void) {}
+diff --git a/include/linux/psi_types.h b/include/linux/psi_types.h
+index 07aaf9b82241..7c57d7e5627e 100644
+--- a/include/linux/psi_types.h
++++ b/include/linux/psi_types.h
+@@ -162,6 +162,12 @@ struct psi_group {
+ 	u64 polling_total[NR_PSI_STATES - 1];
+ 	u64 polling_next_update;
+ 	u64 polling_until;
++
++#ifdef CONFIG_THRASHING_OOM
++	/* Severe thrashing state tracking */
++	bool oom_pressure;
++	u64 oom_pressure_start;
++#endif
+ };
+ 
+ #else /* CONFIG_PSI */
+diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
+index f28342dc65ec..4b1b620d6359 100644
+--- a/kernel/sched/psi.c
++++ b/kernel/sched/psi.c
+@@ -139,6 +139,7 @@
+ #include <linux/ctype.h>
+ #include <linux/file.h>
+ #include <linux/poll.h>
++#include <linux/oom.h>
+ #include <linux/psi.h>
+ #include "sched.h"
+ 
+@@ -177,6 +178,14 @@ struct psi_group psi_system = {
+ 	.pcpu = &system_group_pcpu,
+ };
+ 
++#ifdef CONFIG_THRASHING_OOM
++static void psi_oom_tick(struct psi_group *group, u64 now);
++#else
++static inline void psi_oom_tick(struct psi_group *group, u64 now)
++{
++}
++#endif
++
+ static void psi_avgs_work(struct work_struct *work);
+ 
+ static void group_init(struct psi_group *group)
+@@ -403,6 +412,8 @@ static u64 update_averages(struct psi_group *group, u64 now)
+ 		calc_avgs(group->avg[s], missed_periods, sample, period);
+ 	}
+ 
++	psi_oom_tick(group, now);
++
+ 	return avg_next_update;
+ }
+ 
+@@ -1280,3 +1291,66 @@ static int __init psi_proc_init(void)
+ 	return 0;
+ }
+ module_init(psi_proc_init);
++
++#ifdef CONFIG_THRASHING_OOM
++/*
++ * Trigger the OOM killer when detecting severe thrashing.
++ *
++ * Per default we define severe thrashing as 15 seconds of 80% memory
++ * pressure (i.e. all active tasks are collectively stalled on memory
++ * 80% of the time).
++ */
++unsigned int sysctl_thrashing_oom_level = 80;
++unsigned int sysctl_thrashing_oom_period = 15;
++
++static void psi_oom_tick(struct psi_group *group, u64 now)
++{
++	struct oom_control oc = {
++		.order = 0,
++	};
++	unsigned long pressure;
++	bool high;
++
++	/* Disabled at runtime */
++	if (!sysctl_thrashing_oom_level)
++		return;
++
++	/*
++	 * Protect the system from livelocking due to thrashing. Leave
++	 * per-cgroup policies to oomd, lmkd etc.
++	 */
++	if (group != &psi_system)
++		return;
++
++	pressure = LOAD_INT(group->avg[PSI_MEM_FULL][0]);
++	high = pressure >= sysctl_thrashing_oom_level;
++
++	if (!group->oom_pressure && !high)
++		return;
++
++	if (!group->oom_pressure && high) {
++		group->oom_pressure = true;
++		group->oom_pressure_start = now;
++		return;
++	}
++
++	if (group->oom_pressure && !high) {
++		group->oom_pressure = false;
++		return;
++	}
++
++	if (now < group->oom_pressure_start +
++	    (u64)sysctl_thrashing_oom_period * NSEC_PER_SEC)
++		return;
++
++	pr_warn("Severe thrashing detected! (%ds of %d%% memory pressure)\n",
++		sysctl_thrashing_oom_period, sysctl_thrashing_oom_level);
++
++	group->oom_pressure = false;
++
++	if (!mutex_trylock(&oom_lock))
++		return;
++	out_of_memory(&oc);
++	mutex_unlock(&oom_lock);
++}
++#endif /* CONFIG_THRASHING_OOM */
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index f12888971d66..3b9b3deb1836 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -68,6 +68,7 @@
+ #include <linux/bpf.h>
+ #include <linux/mount.h>
+ #include <linux/userfaultfd_k.h>
++#include <linux/psi.h>
+ 
+ #include "../lib/kstrtox.h"
+ 
+@@ -1746,6 +1747,25 @@ static struct ctl_table vm_table[] = {
+ 		.extra1		= SYSCTL_ZERO,
+ 		.extra2		= SYSCTL_ONE,
+ 	},
++#endif
++#ifdef CONFIG_THRASHING_OOM
++	{
++		.procname	= "thrashing_oom_level",
++		.data		= &sysctl_thrashing_oom_level,
++		.maxlen		= sizeof(unsigned int),
++		.mode		= 0644,
++		.proc_handler	= proc_dointvec_minmax,
++		.extra1		= SYSCTL_ZERO,
++		.extra2		= &one_hundred,
++	},
++	{
++		.procname	= "thrashing_oom_period",
++		.data		= &sysctl_thrashing_oom_period,
++		.maxlen		= sizeof(unsigned int),
++		.mode		= 0644,
++		.proc_handler	= proc_dointvec_minmax,
++		.extra1		= SYSCTL_ZERO,
++	},
+ #endif
+ 	{ }
+ };
+diff --git a/mm/Kconfig b/mm/Kconfig
+index 56cec636a1fc..cef13b423beb 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -736,4 +736,24 @@ config ARCH_HAS_PTE_SPECIAL
+ config ARCH_HAS_HUGEPD
+ 	bool
+ 
++config THRASHING_OOM
++	bool "Trigger the OOM killer on severe thrashing"
++	select PSI
++	help
++	  Under memory pressure, the kernel can enter severe thrashing
++	  or swap storms during which the system is fully IO-bound and
++	  does not respond to any user input. The OOM killer does not
++	  always engage because page reclaim manages to make nominal
++	  forward progress, but the system is effectively livelocked.
++
++	  This feature uses pressure stall information (PSI) to detect
++	  severe thrashing and trigger the OOM killer.
++
++	  The OOM killer will be engaged when the system sustains a
++	  memory pressure level of 80% for 15 seconds. This can be
++	  adjusted using the vm.thrashing_oom_[level|period] sysctls.
++
++	  Say Y if you have observed your system becoming unresponsive
++	  for extended periods under memory pressure.
++
+ endmenu
+-- 
+2.22.0
+
