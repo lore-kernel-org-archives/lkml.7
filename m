@@ -2,237 +2,132 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CBF7C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 16:45:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E7EC32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 16:47:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C66A2229C
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 16:45:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 337C82229C
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 16:47:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fortanix.onmicrosoft.com header.i=@fortanix.onmicrosoft.com header.b="VPwi3nv5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I8a/KDP9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730322AbfHGQpd (ORCPT
+        id S2388598AbfHGQrW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 12:45:33 -0400
-Received: from mail-eopbgr710092.outbound.protection.outlook.com ([40.107.71.92]:54912
-        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729712AbfHGQp3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 12:45:29 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=V4tPY7qM64Pa15KvSV7JiebBzmZWiqTYWvH+EsDTbeEzZpBWn33fGagKOVEh4Ha/EdTbIwA5J0zKGP7W8WAj8xRoLt+Q4u+/WjBAvAyOiyYH44CwoxjldN9awQo1HdAQA6ekkhK94tBc6JAoDEx7MeQA0O30lOu68zNXJkfBXkiekMm8F2m7f3QSq81pMZe1hO4JmC52IlnDdz3rSPDqaJsAIQSuJps6sb40nfSouehr+buyEpwAINWuVFmzlSb43LUrTb5YS8Len1zp+08FIRL+fdDjXr3B0qBad+rQKtFl+35ASSpa57Q90OswxLqGHlNM8QvsQdOWX09EFIbfWQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bEoPWy2hZqOPe34Ri/ZNMVQORZQ0fJFx8eFq6pArZN0=;
- b=FIbBsnVnZUK/VTLxFiitXPB5SS3x1BRMyeGAWzqsrofV8fDpwaTjCF36QQOmR4nx2g3olgMpyd90GwWUS1e64sT5GgGYNkZoEuxDm0q47MgaX4tlhYOui95sgByZFHkD+Sk0mtw2BPwMla5ZsZC/2MG8xe6Er8+VZkQCGldtAVbi8iVzMz8B2xDKsM3i7KkEBCkVH89II10rQ33QoPYC199cG/KH0pCj9tITUZDi0x8GU6y7QdO1IbIXRdm/ftRjUp0ArdFUBoh0YzAJRcjqJUdmfEy2TkeXGRG8Ah6D8b+EfP4y+h4CPOedSvEH8eh84vCmHdTCebycHg44Jqzt5g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fortanix.com; dmarc=pass action=none header.from=fortanix.com;
- dkim=pass header.d=fortanix.com; arc=none
+        Wed, 7 Aug 2019 12:47:22 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51435 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727213AbfHGQrV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 12:47:21 -0400
+Received: by mail-wm1-f66.google.com with SMTP id 207so722738wma.1;
+        Wed, 07 Aug 2019 09:47:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=fortanix.onmicrosoft.com; s=selector2-fortanix-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bEoPWy2hZqOPe34Ri/ZNMVQORZQ0fJFx8eFq6pArZN0=;
- b=VPwi3nv5mQgi+g1MPVdrg8tEoLDT/c2WdpF8J3OdNnEtTWw1vN1VcRzYibHcnt/hM0QV4lw002d7BYHzWwYjDHUsyMCreWO8lSbO4RZBcUjFMWTtTpQYSOAa8MiIfNlJK+lMGPL/qB6B8mnMlIErQlFQw7B0/zZYn5asfKzDxho=
-Received: from SN6PR11MB3167.namprd11.prod.outlook.com (52.135.109.144) by
- SN6PR11MB2990.namprd11.prod.outlook.com (52.135.124.213) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.16; Wed, 7 Aug 2019 16:45:22 +0000
-Received: from SN6PR11MB3167.namprd11.prod.outlook.com
- ([fe80::bd32:8938:dba:9379]) by SN6PR11MB3167.namprd11.prod.outlook.com
- ([fe80::bd32:8938:dba:9379%5]) with mapi id 15.20.2136.018; Wed, 7 Aug 2019
- 16:45:22 +0000
-From:   Jethro Beekman <jethro@fortanix.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "Svahn, Kai" <kai.svahn@intel.com>, "bp@alien8.de" <bp@alien8.de>,
-        "josh@joshtriplett.org" <josh@joshtriplett.org>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        "rientjes@google.com" <rientjes@google.com>,
-        "Xing, Cedric" <cedric.xing@intel.com>
-Subject: Re: [PATCH v21 16/28] x86/sgx: Add the Linux SGX Enclave Driver
-Thread-Topic: [PATCH v21 16/28] x86/sgx: Add the Linux SGX Enclave Driver
-Thread-Index: AQHVOZ3969OCNEhpdUygrX4Zp0euc6bhi0+AgA5n17qAABinAA==
-Date:   Wed, 7 Aug 2019 16:45:22 +0000
-Message-ID: <3cd0a591-8f30-93c1-41c7-4c74b6c3e5d2@fortanix.com>
-References: <20190713170804.2340-1-jarkko.sakkinen@linux.intel.com>
- <20190713170804.2340-17-jarkko.sakkinen@linux.intel.com>
- <88B7642769729B409B4A93D7C5E0C5E7C65ABB8D@hasmsx108.ger.corp.intel.com>
- <20190807151534.kxsletvhbn3lno6w@linux.intel.com>
- <20190807151705.su6kxgr7ou45mk3p@linux.intel.com>
-In-Reply-To: <20190807151705.su6kxgr7ou45mk3p@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: yes
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BN6PR10CA0022.namprd10.prod.outlook.com
- (2603:10b6:405:1::32) To SN6PR11MB3167.namprd11.prod.outlook.com
- (2603:10b6:805:c4::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jethro@fortanix.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [172.58.35.210]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f88e37da-bb6e-4a7c-c6e6-08d71b56a3c4
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600148)(711020)(4605104)(1401327)(2017052603328)(49563074)(7193020);SRVR:SN6PR11MB2990;
-x-ms-traffictypediagnostic: SN6PR11MB2990:
-x-microsoft-antispam-prvs: <SN6PR11MB2990329E716C1F9B3F548A28AAD40@SN6PR11MB2990.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 01221E3973
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(396003)(366004)(136003)(39840400004)(376002)(199004)(189003)(102836004)(26005)(256004)(486006)(6116002)(4326008)(316002)(7416002)(3846002)(110136005)(66066001)(229853002)(186003)(76176011)(2906002)(31696002)(71190400001)(52116002)(71200400001)(31686004)(99286004)(68736007)(8676002)(476003)(81156014)(5660300002)(6486002)(25786009)(14454004)(66556008)(66476007)(66616009)(66946007)(2616005)(53936002)(36756003)(66446008)(64756008)(6246003)(305945005)(86362001)(6436002)(7736002)(6512007)(508600001)(6506007)(11346002)(386003)(81166006)(446003)(53546011)(8936002)(99936001)(54906003);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR11MB2990;H:SN6PR11MB3167.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fortanix.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: liUAJTtyZecTk5Tb0gUrkE3pIpX86AmGzElfNdcogOoPlBCZi9GgBlWrqCvjFQIozmdpN87PDNKoQWg9XP6U1OROtcOR0Of4QHrvpRG4DpW8vVhPWve5tbpT6nvR126/tcqWjSajQv4/CmN4dXzDn5/sbnyA452k+IcunSNOFyzi9PpoQwAdY/awNeyAWK3swFyvyita7/MVSnzsjWe6e23ciWlfe+ykP+eaWYF5sBnf1rNOn81GSMZk7p3hEFGGIjg8ASDH7HbiyqYMBazKVBpta+tjAZwq1LirchKRn4XEobbOlut21Tes9fof6xwFx7f/tefndiFhD1FotEguJ+s2dBciQHWJUP4uiHJzXAnt5QtVHh2FpqF5g3svczuyfVdUTy6P3o56wGAM+TSqF1UjC3mkuvpOa2PhjwJmbWw=
-x-ms-exchange-transport-forked: True
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms070100070604050809040909"
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=akLvufD3EkGjHJTFV1gz/uYhaLH62lK4qFV6ud8HiEw=;
+        b=I8a/KDP93d/rbkNxHq4aDhLqc8vBR3gtRg8BFmAiGGFV2EjE61sHIc2RA6ry9xW3XR
+         av8SgzYu1TsjhP5noZ6c3RiU4Cj5JRKJn4JZH2iCLO/NvOY1L9PpHx9hvejGbB+nlxEY
+         1Q6sa6BRN35DRWB+QmGI+UwUu9GYJgprhoV6mmH1pRkcY3ID5AJAF55GilXpkVwCpayb
+         CW6RPiVowEE3YHJkre3dGMiSB6n44l8r3DiJ/uDAlRrMJKmKzVUQ3TTlvxfQ4fGAev6Z
+         sqbcNSxXlF41I/n/lUM+Tf7R4HGOEONh8ux9YLJVCAgdGXssuxSbUAPKF2HIdAcgq8DL
+         b3rA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=akLvufD3EkGjHJTFV1gz/uYhaLH62lK4qFV6ud8HiEw=;
+        b=GraPpCqqvPOvfOpAdHzL5DS2OWpoYTMW0TJdV4p3+fbfg04S8QMu1bOzIem4w59ueI
+         kP38YTNr1Ct3rYHRuy1mSCFeyvKcr5xdeyRLfZGYXRExvMaBC7Tt9YeaDIIAGmAX7oY+
+         FykVJ0MwfIePYKDqoW61+P/yrCEenWt8QMeSf4Py5bmXucR9i3ERxyuaRL4ACoCS4kwx
+         aEFugoSfjPCizWZsz7WhvREN/tLt+eqN+/upA9gGTMEGrc+HmKZiGEa00fF7eWcOdkF8
+         WFSH9DohMQLJqByRMQrBGJo9bW6baxCYYiAYSMo+ur3ZKjDALusH8I6OyKo4n8X7GkTD
+         Whkg==
+X-Gm-Message-State: APjAAAXFoleltL+muxD1DellZGXrtmFPfgr57/wdsMGFy3gXiqyISZm8
+        omuE5qxAyHORimim0zstgSMXlr/c
+X-Google-Smtp-Source: APXvYqwb+InCsQeyKw/kTeV4kPspqtZ0bOwlPhVYzCValMnY81scF3HtYoNXtEphDhBvxzBRMLIOug==
+X-Received: by 2002:a1c:a8c9:: with SMTP id r192mr834222wme.43.1565196439338;
+        Wed, 07 Aug 2019 09:47:19 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f05:8600:b42b:6698:8ac6:22d3? (p200300EA8F058600B42B66988AC622D3.dip0.t-ipconnect.de. [2003:ea:8f05:8600:b42b:6698:8ac6:22d3])
+        by smtp.googlemail.com with ESMTPSA id p13sm17489432wrw.90.2019.08.07.09.47.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Aug 2019 09:47:18 -0700 (PDT)
+Subject: Re: [PATCH net] net: phy: rtl8211f: do a double read to get real time
+ link status
+To:     Yonglong Liu <liuyonglong@huawei.com>, davem@davemloft.net,
+        andrew@lunn.ch
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxarm@huawei.com, salil.mehta@huawei.com,
+        yisen.zhuang@huawei.com, shiju.jose@huawei.com
+References: <1565183772-44268-1-git-send-email-liuyonglong@huawei.com>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <d67831ab-8902-a653-3db9-b2f55adacabd@gmail.com>
+Date:   Wed, 7 Aug 2019 18:47:12 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: fortanix.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f88e37da-bb6e-4a7c-c6e6-08d71b56a3c4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Aug 2019 16:45:22.6623
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: de7becae-4883-43e8-82c7-7dbdbb988ae6
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jethro@fortanix.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR11MB2990
+In-Reply-To: <1565183772-44268-1-git-send-email-liuyonglong@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---------------ms070100070604050809040909
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+On 07.08.2019 15:16, Yonglong Liu wrote:
+> [   27.232781] hns3 0000:bd:00.3 eth7: net open
+> [   27.237303] 8021q: adding VLAN 0 to HW filter on device eth7
+> [   27.242972] IPv6: ADDRCONF(NETDEV_CHANGE): eth7: link becomes ready
+> [   27.244449] hns3 0000:bd:00.3: invalid speed (-1)
+> [   27.253904] hns3 0000:bd:00.3 eth7: failed to adjust link.
+> [   27.259379] RTL8211F Gigabit Ethernet mii-0000:bd:00.3:07: PHY state change UP -> RUNNING
+> [   27.924903] hns3 0000:bd:00.3 eth7: link up
+> [   28.280479] RTL8211F Gigabit Ethernet mii-0000:bd:00.3:07: PHY state change RUNNING -> NOLINK
+> [   29.208452] hns3 0000:bd:00.3 eth7: link down
+> [   32.376745] RTL8211F Gigabit Ethernet mii-0000:bd:00.3:07: PHY state change NOLINK -> RUNNING
+> [   33.208448] hns3 0000:bd:00.3 eth7: link up
+> [   35.253821] hns3 0000:bd:00.3 eth7: net stop
+> [   35.258270] hns3 0000:bd:00.3 eth7: link down
+> 
+> When using rtl8211f in polling mode, may get a invalid speed,
+> because of reading a fake link up and autoneg complete status
+> immediately after starting autoneg:
+> 
+>         ifconfig-1176  [007] ....    27.232763: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x00 val:0x1040
+>   kworker/u257:1-670   [015] ....    27.232805: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x04 val:0x01e1
+>   kworker/u257:1-670   [015] ....    27.232815: mdio_access: mii-0000:bd:00.3 write phy:0x07 reg:0x04 val:0x05e1
+>   kworker/u257:1-670   [015] ....    27.232869: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x01 val:0x79ad
+>   kworker/u257:1-670   [015] ....    27.232904: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x09 val:0x0200
+>   kworker/u257:1-670   [015] ....    27.232940: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x00 val:0x1040
+>   kworker/u257:1-670   [015] ....    27.232949: mdio_access: mii-0000:bd:00.3 write phy:0x07 reg:0x00 val:0x1240
+>   kworker/u257:1-670   [015] ....    27.233003: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x01 val:0x79ad
+>   kworker/u257:1-670   [015] ....    27.233039: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x0a val:0x3002
+>   kworker/u257:1-670   [015] ....    27.233074: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x09 val:0x0200
+>   kworker/u257:1-670   [015] ....    27.233110: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x05 val:0x0000
+>   kworker/u257:1-670   [000] ....    28.280475: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x01 val:0x7989
+>   kworker/u257:1-670   [000] ....    29.304471: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x01 val:0x7989
+> 
+> According to the datasheet of rtl8211f, to get the real time
+> link status, need to read MII_BMSR twice.
+> 
+> This patch add a read_status hook for rtl8211f, and do a fake
+> phy_read before genphy_read_status(), so that can get real link
+> status in genphy_read_status().
+> 
+> Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+> ---
+>  drivers/net/phy/realtek.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+Is this an accidental resubmit? Because we discussed this in
+https://marc.info/?t=156413509900003&r=1&w=2 and a fix has
+been applied already.
 
-ECPM permissions are mentioned in SDM EADD instruction operation. PTE I=20
-don't know.
-
---
-Jethro Beekman | Fortanix
-
-On 2019-08-07 08:17, Jarkko Sakkinen wrote:
-> On Wed, Aug 07, 2019 at 06:15:34PM +0300, Jarkko Sakkinen wrote:
->> On Mon, Jul 29, 2019 at 11:17:57AM +0000, Ayoun, Serge wrote:
->>>> +	/* TCS pages need to be RW in the PTEs, but can be 0 in the EPCM. =
-*/
->>>> +	if ((secinfo.flags & SGX_SECINFO_PAGE_TYPE_MASK) =3D=3D
->>>> SGX_SECINFO_TCS)
->>>> +		prot |=3D PROT_READ | PROT_WRITE;
->>>
->>> For TCS pages you add both RD and WR maximum protection bits.
->>> For the enclave to be able to run, user mode will have to change the
->>> "vma->vm_flags" from PROT_NONE to PROT_READ | PROT_WRITE (otherwise
->>> eenter fails).  This is exactly what your selftest  does.
->>
->> Recap where the TCS requirements came from? Why does it need
->> RW in PTEs and can be 0 in the EPCM? The comment should explain
->> it rather leave it as a claim IMHO.
->=20
-> I mean after ~3 weeks of not looking into SGX (because being
-> on vacation etc.) I cannot remember details of this.
->=20
-> /Jarkko
->=20
-
-
---------------ms070100070604050809040909
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCC
-Cx8wggUxMIIEGaADAgECAhBdZC9mIseKJlmxx1xn+g00MA0GCSqGSIb3DQEBCwUAMIGXMQsw
-CQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxm
-b3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RPIFJTQSBD
-bGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQTAeFw0xODA5MTUwMDAw
-MDBaFw0xOTA5MTUyMzU5NTlaMCQxIjAgBgkqhkiG9w0BCQEWE2pldGhyb0Bmb3J0YW5peC5j
-b20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDRQDOQsroKjy2xAQCXLyqryJt4
-Xwj8hcweJCzOnjILKHIoWlOQ0b9yIbFLIWBRt/9zdxlE5ZabDVHnkIyhcVgtU/BA73e78Wx2
-LOObdg0wfs9U2CVRYhz2EPHFjGvkYKihItt69ye91hj1w7RKCrYC8KZGSZ/+sbkJzQdXVy32
-lxmiNEt17GNRebpkJCaFnznd6C2a8tBAS2Fa/UNyFdEs4eoRoYSKswclRhbe81aVhqY2hjcd
-O6puyyaYp5hkmau2UPih6OpRSOhbe6Tuebceg1yvumoVX3OZtGPS1VdQ+p0bxB0RE6gNs140
-ZKUhrvAJDETuGaaQD4A2/6ksLunjAgMBAAGjggHpMIIB5TAfBgNVHSMEGDAWgBSCr2yM+MX+
-lmF86B89K3FIXsSLwDAdBgNVHQ4EFgQUsFUcmGtaJBU7/52LyTYHC/M+LscwDgYDVR0PAQH/
-BAQDAgWgMAwGA1UdEwEB/wQCMAAwIAYDVR0lBBkwFwYIKwYBBQUHAwQGCysGAQQBsjEBAwUC
-MBEGCWCGSAGG+EIBAQQEAwIFIDBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEBATArMCkGCCsG
-AQUFBwIBFh1odHRwczovL3NlY3VyZS5jb21vZG8ubmV0L0NQUzBaBgNVHR8EUzBRME+gTaBL
-hklodHRwOi8vY3JsLmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlv
-bmFuZFNlY3VyZUVtYWlsQ0EuY3JsMIGLBggrBgEFBQcBAQR/MH0wVQYIKwYBBQUHMAKGSWh0
-dHA6Ly9jcnQuY29tb2RvY2EuY29tL0NPTU9ET1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5k
-U2VjdXJlRW1haWxDQS5jcnQwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNv
-bTAeBgNVHREEFzAVgRNqZXRocm9AZm9ydGFuaXguY29tMA0GCSqGSIb3DQEBCwUAA4IBAQB6
-v3tFEUSGv9+yY4wUjvcMyz3126nJrX5LkfEvrnCEpEiImECuoYvxOYNLYYynell7BQGtTaZg
-shMfDvwpy2isoi3w1AWAfbn6npnSKLzu0BMRvcCPWY8VPmePPizTqXoPkLwgTJfSaWkxMP1u
-rfL9S5NeRdkjwjHklX5IWuwwDu1hsKVZrxSSY2unCtvq67UHWz+z6rG1JQrP2YDfb98xun3y
-eLBNe/LFBNnGISbkT5q6D+e5c0bgzoH9nH4bsw3t8aDqJTfT3BqQdWr4pF05ODzzeOmEqeYE
-qGlD9hIL2AbmTZLjunAnARr6Fv7Sfqt23ptsGkmoZ9ZQNjT3TlwvMIIF5jCCA86gAwIBAgIQ
-apvhODv/K2ufAdXZuKdSVjANBgkqhkiG9w0BAQwFADCBhTELMAkGA1UEBhMCR0IxGzAZBgNV
-BAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09N
-T0RPIENBIExpbWl0ZWQxKzApBgNVBAMTIkNPTU9ETyBSU0EgQ2VydGlmaWNhdGlvbiBBdXRo
-b3JpdHkwHhcNMTMwMTEwMDAwMDAwWhcNMjgwMTA5MjM1OTU5WjCBlzELMAkGA1UEBhMCR0Ix
-GzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UE
-ChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhl
-bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAw
-ggEKAoIBAQC+s55XrCh2dUAWxzgDmNPGGHYhUPMleQtMtaDRfTpYPpynMS6n9jR22YRq2tA9
-NEjk6vW7rN/5sYFLIP1of3l0NKZ6fLWfF2VgJ5cijKYy/qlAckY1wgOkUMgzKlWlVJGyK+Ul
-NEQ1/5ErCsHq9x9aU/x1KwTdF/LCrT03Rl/FwFrf1XTCwa2QZYL55AqLPikFlgqOtzk06kb2
-qvGlnHJvijjI03BOrNpo+kZGpcHsgyO1/u1OZTaOo8wvEU17VVeP1cHWse9tGKTDyUGg2hJZ
-jrqck39UIm/nKbpDSZ0JsMoIw/JtOOg0JC56VzQgBo7ictReTQE5LFLG3yQK+xS1AgMBAAGj
-ggE8MIIBODAfBgNVHSMEGDAWgBS7r34CPfqm8TyEjq3uOJjs2TIy1DAdBgNVHQ4EFgQUgq9s
-jPjF/pZhfOgfPStxSF7Ei8AwDgYDVR0PAQH/BAQDAgGGMBIGA1UdEwEB/wQIMAYBAf8CAQAw
-EQYDVR0gBAowCDAGBgRVHSAAMEwGA1UdHwRFMEMwQaA/oD2GO2h0dHA6Ly9jcmwuY29tb2Rv
-Y2EuY29tL0NPTU9ET1JTQUNlcnRpZmljYXRpb25BdXRob3JpdHkuY3JsMHEGCCsGAQUFBwEB
-BGUwYzA7BggrBgEFBQcwAoYvaHR0cDovL2NydC5jb21vZG9jYS5jb20vQ09NT0RPUlNBQWRk
-VHJ1c3RDQS5jcnQwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTANBgkq
-hkiG9w0BAQwFAAOCAgEAeFyygSg0TzzuX1bOn5dW7I+iaxf28/ZJCAbU2C81zd9A/tNx4+js
-QgwRGiHjZrAYayZrrm78hOx7aEpkfNPQIHGG6Fvq3EzWf/Lvx7/hk6zSPwIal9v5IkDcZoFD
-7f3iT7PdkHJY9B51csvU50rxpEg1OyOT8fk2zvvPBuM4qQNqbGWlnhMpIMwpWZT89RY0wpJO
-+2V6eXEGGHsROs3njeP9DqqqAJaBa4wBeKOdGCWn1/Jp2oY6dyNmNppI4ZNMUH4Tam85S1j6
-E95u4+1Nuru84OrMIzqvISE2HN/56ebTOWlcrurffade2022O/tUU1gb4jfWCcyvB8czm12F
-gX/y/lRjmDbEA08QJNB2729Y+io1IYO3ztveBdvUCIYZojTq/OCR6MvnzS6X72HP0PRLRTiO
-SEmIDsS5N5w/8IW1Hva5hEFy6fDAfd9yI+O+IMMAj1KcL/Zo9jzJ16HO5m60ttl1Enk8MQkz
-/W3JlHaeI5iKFn4UJu1/cP2YHXYPiWf2JyBzsLBrGk1II+3yL8aorYew6CQvdVifC3HtwlSa
-m9V1niiCfOBe2C12TdKGu05LWIA3ZkFcWJGaNXOZ6Ggyh/TqvXG5v7zmEVDNXFnHn9tFpMpO
-UvxhcsjycBtH0dZ0WrNw6gH+HF8TIhCnH3+zzWuDN0Rk6h9KVkfKehIxggQ1MIIEMQIBATCB
-rDCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
-BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9E
-TyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0ECEF1kL2Yi
-x4omWbHHXGf6DTQwDQYJYIZIAWUDBAIBBQCgggJZMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0B
-BwEwHAYJKoZIhvcNAQkFMQ8XDTE5MDgwNzE2NDUyOFowLwYJKoZIhvcNAQkEMSIEILekozDk
-RqzvR2l6fUKlNMPwP9W3dwulOmoTdPP7jd3gMGwGCSqGSIb3DQEJDzFfMF0wCwYJYIZIAWUD
-BAEqMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzAOBggqhkiG9w0DAgICAIAwDQYIKoZIhvcN
-AwICAUAwBwYFKw4DAgcwDQYIKoZIhvcNAwICASgwgb0GCSsGAQQBgjcQBDGBrzCBrDCBlzEL
-MAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2Fs
-Zm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0Eg
-Q2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0ECEF1kL2Yix4omWbHH
-XGf6DTQwgb8GCyqGSIb3DQEJEAILMYGvoIGsMIGXMQswCQYDVQQGEwJHQjEbMBkGA1UECBMS
-R3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01PRE8g
-Q0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RPIFJTQSBDbGllbnQgQXV0aGVudGljYXRpb24g
-YW5kIFNlY3VyZSBFbWFpbCBDQQIQXWQvZiLHiiZZscdcZ/oNNDANBgkqhkiG9w0BAQEFAASC
-AQAU4c/RjsopedEw9HvBaxNed3OL7udwfYJMFG72PBynP0Cl1YZoRMRF74OP9l2b8rs+AAfn
-AOxuSBjX9X4D5LvHIwfxvpcOM6eF2z6gxnUuAMn0i//0EbGdLSLtI8u4IHeCedAmPmUiLuh5
-fatrVhiW4BHcdfejhilcdIbxbOqkQvnyq3ed2rR/0+uzLSy5q1VcAnSf1dRhrzN3TP5WNFTs
-D7RO21APdb7J3Ab0e0xoQN0QJjZv6kWcUmvaBlr9DQqYvmGHjI57t10ZeqA1gEA5JNXB7Vea
-7Bqa2oD8X5tWAhIMl6aOJ//Q/oEJNBVHG9Y3NHsGgrGDe+PR0zkcO29uAAAAAAAA
-
---------------ms070100070604050809040909--
+Heiner
