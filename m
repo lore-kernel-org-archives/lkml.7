@@ -2,93 +2,123 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E20C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89CB8C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:21:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63EAD21E6E
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:21:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6075A21E6E
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:21:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mAq5BtUh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388287AbfHGNVC (ORCPT
+        id S2388301AbfHGNVE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 7 Aug 2019 09:21:04 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:44134 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388059AbfHGNVC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 7 Aug 2019 09:21:02 -0400
-Received: from mga06.intel.com ([134.134.136.31]:20092 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388079AbfHGNVC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 09:21:02 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Aug 2019 06:21:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,357,1559545200"; 
-   d="scan'208";a="374406771"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
-  by fmsmga006.fm.intel.com with ESMTP; 07 Aug 2019 06:20:58 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1hvLs8-0002b6-FI; Wed, 07 Aug 2019 16:20:56 +0300
-Date:   Wed, 7 Aug 2019 16:20:56 +0300
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Cc:     linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        jslaby@suse.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        qi-ming.wu@intel.com, cheol.yong.kim@intel.com,
-        rahul.tanwar@intel.com
-Subject: Re: [PATCH 2/5] serial: lantiq: Use proper DT compatible string
-Message-ID: <20190807132056.GX30120@smile.fi.intel.com>
-References: <cover.1565160764.git.rahul.tanwar@linux.intel.com>
- <12c3029f406ca1fedf14154154f7082e358f0473.1565160764.git.rahul.tanwar@linux.intel.com>
+Received: by mail-ed1-f68.google.com with SMTP id k8so86166315edr.11;
+        Wed, 07 Aug 2019 06:21:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=o7gDnBpDuDwXcYQ6QlYY8efn/08+76Px3igT9oXiK5k=;
+        b=mAq5BtUhI3z8QjtUP5eyHqp1lRL4rZsr/asLgLulVustVZihkiAI2jA/936C7Ne/Ed
+         +xw/1ApoAaKYMSgiUNBNjXo2CB+CdcNkkNBURfQpUUq+UP0tFevI/h82lw+gaAPp7c8S
+         CKxixq506MTIMdNj/oi6+ck/B1WkHpBKKjeO+T0z3AGtCcwQgua98Bzsi8QbSvWdVGEx
+         VerZihDR9aiEfl3sdyDR9h8+g96A8ucnrauVnkL+4u/bf2waTqhRWO11a2nNqQJ4WNHR
+         OvlarePLz5a2++24v8FYro2WWIMz2kQJIkBt2//lDo34fG0oqRghVDuWHYj+Jb5PTL2D
+         R/ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=o7gDnBpDuDwXcYQ6QlYY8efn/08+76Px3igT9oXiK5k=;
+        b=ujj0mpFg3nG3BbA1sJ6girzUrXNwTU+qxnIJI3kE32lKtuGBrAYRawTOZatd3JKIwd
+         1LA7h1uULi7ca62v4dhdQW8NnOfQiDvcP69bUhXJF65XydteCH4E1hIXnbckAl4bguID
+         k8ALTNR2IJiBNWGbqmlZZ/pfxzp0L6qC6OeXlff9QyaqTSyM+gIr2ZppMQ5KHUnmKkLS
+         SEa4lIXrW0Bk7EI4mTWYRC636jY35aNZzSvT4JHw0VJ6qYsUWx1bdsy9tzw7f5FHr2JY
+         Dv/A1reeR+kgWMD5XMN9O+F7j5EkmzudfrrrW7AGfVHbWEAE7ZmwFbGu6OY0csl2BZ9V
+         Aqww==
+X-Gm-Message-State: APjAAAUrc8H3IboR0rnbo0jSjg878TBOQsumrCGyEGQunZ92+qhvA6yO
+        vzDNUCDE9z3qtNlekGkSbEt6mVJhuBRvWNuvUXi0dw==
+X-Google-Smtp-Source: APXvYqzlJc+LZ/CNeaxM3+J0/iEtUaUJ17IdZUeXr/6iVQDtk6kNp4wINoAEOPiTbMG5Rvj71glBbrpO1B+cBWZPyzM=
+X-Received: by 2002:a17:906:b7d8:: with SMTP id fy24mr8450496ejb.230.1565184060594;
+ Wed, 07 Aug 2019 06:21:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <12c3029f406ca1fedf14154154f7082e358f0473.1565160764.git.rahul.tanwar@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190807130856.60792-1-yuehaibing@huawei.com> <CA+h21hrrWGrw4kiTfjowWvQ-B6sNPLAcgTaaadA02ZAmYw1SjQ@mail.gmail.com>
+In-Reply-To: <CA+h21hrrWGrw4kiTfjowWvQ-B6sNPLAcgTaaadA02ZAmYw1SjQ@mail.gmail.com>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Wed, 7 Aug 2019 16:20:49 +0300
+Message-ID: <CA+h21hpt1UghzkdQ-x5k37T=SZ8Hc1euV11WyHPrYVCF-rq+Uw@mail.gmail.com>
+Subject: Re: [PATCH net-next] net: dsa: sja1105: remove set but not used
+ variables 'tx_vid' and 'rx_vid'
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 07, 2019 at 05:21:32PM +0800, Rahul Tanwar wrote:
-> The patch adds change to use explicit string instead of a macro for
-> DT compatible string.
+On Wed, 7 Aug 2019 at 16:19, Vladimir Oltean <olteanv@gmail.com> wrote:
+>
+> On Wed, 7 Aug 2019 at 16:09, YueHaibing <yuehaibing@huawei.com> wrote:
+> >
+> > Fixes gcc '-Wunused-but-set-variable' warning:
+> >
+> > drivers/net/dsa/sja1105/sja1105_main.c: In function sja1105_fdb_dump:
+> > drivers/net/dsa/sja1105/sja1105_main.c:1226:14: warning:
+> >  variable tx_vid set but not used [-Wunused-but-set-variable]
+> > drivers/net/dsa/sja1105/sja1105_main.c:1226:6: warning:
+> >  variable rx_vid set but not used [-Wunused-but-set-variable]
+> >
+> > They are not used since commit 6d7c7d948a2e ("net: dsa:
+> > sja1105: Fix broken learning with vlan_filtering disabled")
+> >
+> > Reported-by: Hulk Robot <hulkci@huawei.com>
+> > Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> > ---
+>
+> Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
 
-For consistency you may need to convert OF_EARLYCON_DECLARE() as well.
+This patch should also go to the "net" tree.
 
-Perhaps commit message should explain the rationale, i.e. the following patches
-will add another compatible string and thus it makes sense to have them
-explicitly mentioned.
-
-> Suggested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
-> ---
->  drivers/tty/serial/lantiq.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/tty/serial/lantiq.c b/drivers/tty/serial/lantiq.c
-> index 42e27b48e9cc..1116261c973e 100644
-> --- a/drivers/tty/serial/lantiq.c
-> +++ b/drivers/tty/serial/lantiq.c
-> @@ -792,7 +792,7 @@ lqasc_probe(struct platform_device *pdev)
->  }
->  
->  static const struct of_device_id ltq_asc_match[] = {
-> -	{ .compatible = DRVNAME },
-> +	{ .compatible = "lantiq,asc" },
->  	{},
->  };
->  
-> -- 
-> 2.11.0
-> 
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+>
+> >  drivers/net/dsa/sja1105/sja1105_main.c | 4 ----
+> >  1 file changed, 4 deletions(-)
+> >
+> > diff --git a/drivers/net/dsa/sja1105/sja1105_main.c b/drivers/net/dsa/sja1105/sja1105_main.c
+> > index d073baf..df976b25 100644
+> > --- a/drivers/net/dsa/sja1105/sja1105_main.c
+> > +++ b/drivers/net/dsa/sja1105/sja1105_main.c
+> > @@ -1223,12 +1223,8 @@ static int sja1105_fdb_dump(struct dsa_switch *ds, int port,
+> >  {
+> >         struct sja1105_private *priv = ds->priv;
+> >         struct device *dev = ds->dev;
+> > -       u16 rx_vid, tx_vid;
+> >         int i;
+> >
+> > -       rx_vid = dsa_8021q_rx_vid(ds, port);
+> > -       tx_vid = dsa_8021q_tx_vid(ds, port);
+> > -
+> >         for (i = 0; i < SJA1105_MAX_L2_LOOKUP_COUNT; i++) {
+> >                 struct sja1105_l2_lookup_entry l2_lookup = {0};
+> >                 u8 macaddr[ETH_ALEN];
+> > --
+> > 2.7.4
+> >
+> >
