@@ -2,591 +2,294 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32BFAC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 12:26:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69C44C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 12:28:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7FC421BF6
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 12:26:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1307621BF6
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 12:28:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="gTOa0OgT";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="sTywNUPU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729675AbfHGM0e (ORCPT
+        id S2387556AbfHGM2C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 08:26:34 -0400
-Received: from mga09.intel.com ([134.134.136.24]:35299 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726873AbfHGM0d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 08:26:33 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Aug 2019 05:26:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,357,1559545200"; 
-   d="scan'208";a="203164526"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.122]) ([10.237.72.122])
-  by fmsmga002.fm.intel.com with ESMTP; 07 Aug 2019 05:26:30 -0700
-Subject: Re: [PATCH v2 2/2] mmc: sdhci: sdhci-pci-core: Add Genesis Logic
- GL975x support
-To:     "Michael K. Johnson" <johnsonm@danlj.org>, ulf.hansson@linaro.org
-Cc:     linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
-        Ben Chuang <ben.chuang@genesyslogic.com.tw>
-References: <20190726020754.GA12078@people.danlj.org>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <62a756ff-6432-fd43-5e90-038eb28045cd@intel.com>
-Date:   Wed, 7 Aug 2019 15:25:25 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190726020754.GA12078@people.danlj.org>
-Content-Type: text/plain; charset=utf-8
+        Wed, 7 Aug 2019 08:28:02 -0400
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:37696 "EHLO
+        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726873AbfHGM2C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 08:28:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1565180881; x=1596716881;
+  h=from:to:cc:subject:date:message-id:
+   content-transfer-encoding:mime-version;
+  bh=hswRFwDPh2S7i/7z7hGTBdSR6j2cn0nCVznBMkLNxyk=;
+  b=gTOa0OgTtGqXEQuR72sGEieMl4N2HPNxTgx+C1fzlvNeLCbaKAY7Moh1
+   EAaLer28dwr4BB60obTl0k/5QYwm9GyAqnJFlyEdzEuaR2Ll4M14v4eMn
+   /zIL/88jemX8Hbu6EJDUdJEDtyoWAcdyrOJU77jsEp7/3LcCsMqqTS0sG
+   kh0NLEyZ7RejWkBCW37VwZp/ezMmWvo5woon3C9QU2i9xZqXCnHZZa9ds
+   L5EQXkxEQPTrLnndmhlv9owto3Z0mDTmtUovFGfxv1J9ZanRBU7E2gKBg
+   GyF17HOCkVwzR1+8HnXm5E59g0kync66YWeJ3Q1yOIKI93+buPv4wc2YA
+   A==;
+IronPort-SDR: XKI3gmO1+ue51oTGKOBjKzb+8eRZhKLDrB8TMur11sK3Zo9ANRA8kjiLsYrx39Azlv9oxucyAn
+ QZ2oGFxXoJ14RBqrU3q6zZKk7cCiUgzTp9N4WAwYe5L5gDpTCll4mB/MY86qDB6vfY2gtMk9uR
+ UqD6yZJ2rnZTpBhsDYVpfwP9cCK86qUApbE8dvuX+0+KkmIYA4HAeLsNPfNC1b0Csx2GjugIqp
+ bKeOt9wKZkx4dwaxCP5gtxaoc44DPcSCy2Ndf+BjfTIGnN0Wvfgl0LSsHXRwhVZZVew3MDjr2S
+ R2Y=
+X-IronPort-AV: E=Sophos;i="5.64,357,1559491200"; 
+   d="scan'208";a="119865500"
+Received: from mail-co1nam05lp2055.outbound.protection.outlook.com (HELO NAM05-CO1-obe.outbound.protection.outlook.com) ([104.47.48.55])
+  by ob1.hgst.iphmx.com with ESMTP; 07 Aug 2019 20:27:59 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FC4MmVN6HLLxJE06riv75koWOa7jgeKw8henEZcz7aYQYe8v/ZyqwY+7raGCbkJFllaA+ZhU8P9xUfJxTRi6SBGjD6fOKqxogr8QG4C7R7iXXAPh+l9yPdoEsPcBq+lDB5laQ7gjPYoiHYjvrZCCbsDpyEjJKVtlYKhlFenMOe/v9atR+QydRKtpoCXM76M+jzhdbsGY6lKB+UEjhCUKiNx6N/01lZTJI4onQFYnT7y6qZ8ysHGv93UBK8dSjQajwld8X/l44ouwqtwoTYdYf5hGD3eiAF+tulLnL6NLJsHO6AcEQC2EfzVmjYkiBg+ROaXTXnH9aqq2IW3s4w+3MQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cmHAzztA/9iTy1ph6vyPPuUExnQNyKAK2TJd2EhiwYk=;
+ b=eHvyC27j7Mr/WoI73HnNeX9dVwcEqG2yPg6OCS+1OLZoBO+4EV73quqBqFqfOT0TYBDk6EtwO8WuOiGRrjrxCQT8agXr+y2FhJq+aIrz3eZgvJ+MS5cidRwdKlkeCvc+uLBvVmcI69VPQfqh3Fczp6InBeOAFPI05AVfxEl5iYpFImcmQoh38yf6/k/Wzwha+oPYMiyggqilq87vjP/G3x7Ga7/MK8myTgWKGKWEFbrWFeQvlyQtjmfKbvzX0bv7eBbomfD6MRkdmsCoP5Qg3xxFsSgufVMWclK8Ni1+vww2o34yYCpu8EOq5Hp359+Z5/65xkwCtNxDbsaqrurLFA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=wdc.com;dmarc=pass action=none header.from=wdc.com;dkim=pass
+ header.d=wdc.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cmHAzztA/9iTy1ph6vyPPuUExnQNyKAK2TJd2EhiwYk=;
+ b=sTywNUPUckkWIDlxdPAKKHouvSqN+Z+fvb8oV49egYmVwArYNRL+nCmokytUujtCovQoqGFNm0RIRZR0KwQCCs9Me3nDoJGtG4VbquafMTwFWxLshz775hkSTjO20Xf0V7/KJJ2YhlLKGfxofSLz8GL5eEOSXsZkLEFMkVHDmZs=
+Received: from MN2PR04MB6061.namprd04.prod.outlook.com (20.178.246.15) by
+ MN2PR04MB6736.namprd04.prod.outlook.com (10.141.117.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2136.17; Wed, 7 Aug 2019 12:27:57 +0000
+Received: from MN2PR04MB6061.namprd04.prod.outlook.com
+ ([fe80::a815:e61a:b4aa:60c8]) by MN2PR04MB6061.namprd04.prod.outlook.com
+ ([fe80::a815:e61a:b4aa:60c8%7]) with mapi id 15.20.2157.015; Wed, 7 Aug 2019
+ 12:27:57 +0000
+From:   Anup Patel <Anup.Patel@wdc.com>
+To:     Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim K <rkrcmar@redhat.com>
+CC:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Anup Patel <anup@brainfault.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Anup Patel <Anup.Patel@wdc.com>
+Subject: [PATCH v4 00/20] KVM RISC-V Support
+Thread-Topic: [PATCH v4 00/20] KVM RISC-V Support
+Thread-Index: AQHVTRuK1feDNMU6CUGzNrLluIxZVw==
+Date:   Wed, 7 Aug 2019 12:27:56 +0000
+Message-ID: <20190807122726.81544-1-anup.patel@wdc.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: PN1PR01CA0097.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c00::13)
+ To MN2PR04MB6061.namprd04.prod.outlook.com (2603:10b6:208:d8::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Anup.Patel@wdc.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [49.207.52.255]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7b1fa3b6-044c-4f40-5595-08d71b32ad2d
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:MN2PR04MB6736;
+x-ms-traffictypediagnostic: MN2PR04MB6736:
+x-ms-exchange-purlcount: 2
+x-microsoft-antispam-prvs: <MN2PR04MB6736E88BDD0B8F4EAE46C1768DD40@MN2PR04MB6736.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:1360;
+x-forefront-prvs: 01221E3973
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(366004)(136003)(376002)(346002)(39860400002)(199004)(189003)(386003)(1076003)(3846002)(86362001)(186003)(26005)(52116002)(36756003)(54906003)(6506007)(102836004)(55236004)(2616005)(478600001)(44832011)(66066001)(966005)(110136005)(7416002)(476003)(486006)(8676002)(6436002)(6486002)(6512007)(4326008)(81166006)(6306002)(81156014)(316002)(66476007)(66556008)(305945005)(68736007)(2906002)(53936002)(25786009)(256004)(5660300002)(14454004)(50226002)(7736002)(71190400001)(99286004)(66446008)(6116002)(64756008)(8936002)(71200400001)(66946007)(14444005);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB6736;H:MN2PR04MB6061.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Lrn1gSlHnElTIqNShrEFge0JdIrk3VFXl9KPsGf4zszAnNZIBOKSXK/LDE/4MNJUsiF2ByBipJF79QglZVEdQ5f+Nxs9kwNkxdlqxjWGFVo/TkZZyF06X8WXLeTOQEoClt8/2rpUyep3g2TJBZ0FhSWs1FQp5J7eB1dYVXH22zv9itNlug+XH1vJCU4zOWO+HkE/wRJ5BnKWli1s+73NzRtgT0Yb5FgVGhZX9UE7AbEEn9pIOqlmDQbHQeI9t6Emk4L+XvXqw1ikxx3l2ScIN9z7dM1ZlziyrAbcvIAlRV2ei+RC3sQVU5po4EUBeogtc54ElkTbo2rcrSHxaWaTUxNAheu3zR/y6/FZ+qwzovEWikUWcWv3+thX8U0FG6cafCKnbvHTJ2YTD6YBHsIIYrJv/LflDAcMs2/Ma8O+zAc=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7b1fa3b6-044c-4f40-5595-08d71b32ad2d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Aug 2019 12:27:57.0904
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: G3U8IaZ7vDJILiNxTcODh3NKJtKHwkFLQvEUr57ViSuZCodwZZZG7o4OjVXOA5maFgssj6KtU/s0Y5GrHk/a0w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6736
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/07/19 5:07 AM, Michael K. Johnson wrote:
-> Add support for the GL9750 and GL9755 chipsets.
-> 
-> Signed-off-by: Ben Chuang <ben.chuang@genesyslogic.com.tw>
-> Co-developed-by: Michael K Johnson <johnsonm@danlj.org>
-> Signed-off-by: Michael K Johnson <johnsonm@danlj.org>
-> 
-> diff --git a/drivers/mmc/host/sdhci-gli.h b/drivers/mmc/host/sdhci-gli.h
+This series adds initial KVM RISC-V support. Currently, we are able to boot
+RISC-V 64bit Linux Guests with multiple VCPUs.
 
-I suggest creating sdhci-pci-gli.c and putting definitions there.  Have a
-look at sdhci-pci-arasan.c, sdhci-pci-dwc-mshc.c or sdhci-pci-o2micro.c
+Few key aspects of KVM RISC-V added by this series are:
+1. Minimal possible KVM world-switch which touches only GPRs and few CSRs.
+2. Full Guest/VM switch is done via vcpu_get/vcpu_put infrastructure.
+3. KVM ONE_REG interface for VCPU register access from user-space.
+4. PLIC emulation is done in user-space. In-kernel PLIC emulation, will
+   be added in future.
+5. Timer and IPI emuation is done in-kernel.
+6. MMU notifiers supported.
+7. FP lazy save/restore supported.
+8. SBI v0.1 emulation for KVM Guest available.
 
-> new file mode 100644
-> index 000000000000..0acd35b6d3e2
-> --- /dev/null
-> +++ b/drivers/mmc/host/sdhci-gli.h
-> @@ -0,0 +1,27 @@
-> +/* SPDX-License-Identifier: GPL-2.0+ */
-> +#ifndef __SDHCI_GLI_H
-> +#define __SDHCI_GLI_H
-> +
-> +/* the define PCI_VENDOR_ID_GLI may put in kernel/include/linux/pci_ids.h */
-> +#ifndef PCI_VENDOR_ID_GLI
-> +#define PCI_VENDOR_ID_GLI		0x17a0
-> +#endif
+Here's a brief TODO list which we will work upon after this series:
+1. Handle trap from unpriv access in reading Guest instruction
+2. Handle trap from unpriv access in SBI v0.1 emulation
+3. Implement recursive stage2 page table programing
+4. SBI v0.2 emulation in-kernel
+5. SBI v0.2 hart hotplug emulation in-kernel
+6. In-kernel PLIC emulation
+7. ..... and more .....
 
-If it is in include/linux/pci_ids.h then this code should be removed
+This series can be found in riscv_kvm_v4 branch at:
+https//github.com/avpatel/linux.git
 
-> +
-> +/*  Genesys Logic extra registers */
-> +#define SDHCI_GLI_9750_WT         0x800
-> +#define SDHCI_GLI_9750_DRIVING    0x860
-> +#define SDHCI_GLI_9750_PLL        0x864
-> +#define SDHCI_GLI_9750_SW_CTRL    0x874
-> +#define SDHCI_GLI_9750_MISC       0x878
-> +
-> +#define SDHCI_GLI_9750_TUNING_CONTROL		0x540
-> +#define SDHCI_GLI_9750_TUNING_PARAMETERS	0x544
-> +
-> +#define GLI_9755_DRIVER_VER      "Genesys Logic (GL9755 v0.9.0-y190703)"
-> +#define GLI_9750_DRIVER_VER      "Genesys Logic (GL9750 v0.9.0-y190703)"
-> +
-> +#define GLI_MAX_TUNING_LOOP 40
-> +
-> +void gli_set_9750(struct sdhci_host *host);
-> +
-> +#endif /* __SDHCI_GLI_H */
-> diff --git a/drivers/mmc/host/sdhci-pci-core.c b/drivers/mmc/host/sdhci-pci-core.c
-> index 4154ee11b47d..b5c28df39de1 100644
-> --- a/drivers/mmc/host/sdhci-pci-core.c
-> +++ b/drivers/mmc/host/sdhci-pci-core.c
-> @@ -35,6 +35,7 @@
->  
->  #include "sdhci.h"
->  #include "sdhci-pci.h"
-> +#include "sdhci-gli.h"
->  
->  static void sdhci_pci_hw_reset(struct sdhci_host *host);
->  
-> @@ -1453,6 +1454,223 @@ static const struct sdhci_pci_fixes sdhci_rtsx = {
->  	.probe_slot	= rtsx_probe_slot,
->  };
->  
-> +/* Genesys Logic chipset */
-> +static int gli_probe_slot_gl9755(struct sdhci_pci_slot *slot)
-> +{
-> +	struct sdhci_host *host = slot->host;
-> +
-> +	slot->host->mmc->caps2 |= MMC_CAP2_NO_SDIO;
-> +	dev_info(&slot->chip->pdev->dev, "%s\n", GLI_9755_DRIVER_VER);
-> +	sdhci_enable_v4_mode(host);
-> +
-> +	return 0;
-> +}
-> +
-> +static void gli_set_9750_rx_inv(struct sdhci_host *host, bool b)
-> +{
-> +	u32 wt_value = sdhci_readl(host, SDHCI_GLI_9750_WT);
-> +	u32 misc_value = sdhci_readl(host, SDHCI_GLI_9750_MISC);
-> +
-> +	if ((wt_value & 0x1) == 0) {
-> +		wt_value |= 0x1;
-> +		sdhci_writel(host, wt_value, SDHCI_GLI_9750_WT);
-> +	}
-> +
-> +	misc_value = sdhci_readl(host, SDHCI_GLI_9750_MISC);
-> +	if (b) {
-> +		misc_value |= 0x8;
-> +		sdhci_writel(host, misc_value, SDHCI_GLI_9750_MISC);
-> +	} else {
-> +		misc_value &= ~0x8;
-> +		sdhci_writel(host, misc_value, SDHCI_GLI_9750_MISC);
-> +	}
-> +
-> +	wt_value = sdhci_readl(host, SDHCI_GLI_9750_WT);
-> +	wt_value &= ~0x1;
-> +	sdhci_writel(host, wt_value, SDHCI_GLI_9750_WT);
-> +}
-> +
-> +static int __sdhci_execute_tuning_9750(struct sdhci_host *host, u32 opcode)
-> +{
-> +	int i;
-> +	int rx_inv = 0;
-> +
-> +	for (rx_inv = 0; rx_inv < 2; rx_inv++) {
-> +		if (rx_inv & 0x1)
-> +			gli_set_9750_rx_inv(host, true);
-> +		else
-> +			gli_set_9750_rx_inv(host, false);
-> +
-> +		sdhci_start_tuning(host);
-> +
-> +		for (i = 0; i < GLI_MAX_TUNING_LOOP; i++) {
-> +			u16 ctrl;
-> +
-> +			sdhci_send_tuning(host, opcode);
-> +
-> +			if (!host->tuning_done) {
-> +				if (rx_inv == 1) {
-> +					pr_info("%s: Tuning timeout, falling back to fixed sampling clock\n",
-> +						mmc_hostname(host->mmc));
-> +					sdhci_abort_tuning(host, opcode);
-> +					return -ETIMEDOUT;
-> +				}
-> +				pr_info("%s: Tuning timeout, try next tuning\n",
-> +					mmc_hostname(host->mmc));
-> +				sdhci_abort_tuning(host, opcode);
-> +				break;
-> +			}
-> +
-> +			ctrl = sdhci_readw(host, SDHCI_HOST_CONTROL2);
-> +			if (!(ctrl & SDHCI_CTRL_EXEC_TUNING)) {
-> +				if (ctrl & SDHCI_CTRL_TUNED_CLK) {
-> +					pr_info("%s: Tuning successful\n",
-> +						mmc_hostname(host->mmc));
-> +					return 0; /* Success! */
-> +				}
-> +				break;
-> +			}
-> +		}
-> +	}
-> +
-> +	pr_info("%s: Tuning failed, falling back to fixed sampling clock\n",
-> +		mmc_hostname(host->mmc));
-> +	sdhci_reset_tuning(host);
-> +	return -EAGAIN;
-> +}
-> +
-> +static int gl9750_execute_tuning(struct mmc_host *mmc, u32 opcode)
-> +{
-> +	struct sdhci_host *host = mmc_priv(mmc);
-> +	int err = 0;
-> +	unsigned int tuning_count = 0;
-> +	bool hs400_tuning;
-> +
-> +	hs400_tuning = host->flags & SDHCI_HS400_TUNING;
-> +
-> +	if (host->tuning_mode == SDHCI_TUNING_MODE_1)
-> +		tuning_count = host->tuning_count;
-> +
-> +	/*
-> +	 * The Host Controller needs tuning in case of SDR104 and DDR50
-> +	 * mode, and for SDR50 mode when Use Tuning for SDR50 is set in
-> +	 * the Capabilities register.
-> +	 * If the Host Controller supports the HS200 mode then the
-> +	 * tuning function has to be executed.
-> +	 */
-> +	switch (host->timing) {
-> +	/* HS400 tuning is done in HS200 mode */
-> +	case MMC_TIMING_MMC_HS400:
-> +		err = -EINVAL;
-> +		goto out;
-> +
-> +	case MMC_TIMING_MMC_HS200:
-> +		/*
-> +		 * Periodic re-tuning for HS400 is not expected to be needed, so
-> +		 * disable it here.
-> +		 */
-> +		if (hs400_tuning)
-> +			tuning_count = 0;
-> +		break;
-> +
-> +	case MMC_TIMING_UHS_SDR104:
-> +	case MMC_TIMING_UHS_DDR50:
-> +		break;
-> +
-> +	case MMC_TIMING_UHS_SDR50:
-> +		if (host->flags & SDHCI_SDR50_NEEDS_TUNING)
-> +			break;
-> +		/* FALLTHROUGH */
-> +
-> +	default:
-> +		goto out;
-> +	}
-> +
-> +	if (host->ops->platform_execute_tuning) {
-> +		err = host->ops->platform_execute_tuning(host, opcode);
-> +		goto out;
-> +	}
-> +
-> +	host->mmc->retune_period = tuning_count;
-> +
-> +	if (host->tuning_delay < 0)
-> +		host->tuning_delay = opcode == MMC_SEND_TUNING_BLOCK;
-> +
-> +	gli_set_9750(host);
-> +	host->tuning_err = __sdhci_execute_tuning_9750(host, opcode);
-> +
-> +	sdhci_end_tuning(host);
-> +out:
-> +	host->flags &= ~SDHCI_HS400_TUNING;
-> +
-> +	return err;
-> +}
-> +
-> +static int gli_probe_slot_gl9750(struct sdhci_pci_slot *slot)
-> +{
-> +	struct sdhci_host *host = slot->host;
-> +	struct mmc_host_ops *ops = &host->mmc_host_ops;
-> +
-> +	u32 gli_wt = sdhci_readl(host, SDHCI_GLI_9750_WT);
-> +
-> +	dev_info(&slot->chip->pdev->dev, "%s\n", GLI_9750_DRIVER_VER);
-> +	slot->host->mmc->caps2 |= MMC_CAP2_NO_SDIO;
-> +
-> +	if ((gli_wt & 0x1) == 0) {
-> +		gli_wt |= 0x1;
-> +		sdhci_writel(host, gli_wt, SDHCI_GLI_9750_WT);
-> +	}
-> +
-> +	gli_wt = sdhci_readl(host, SDHCI_GLI_9750_WT);
-> +	gli_wt &= ~0x1;
-> +	sdhci_writel(host, gli_wt, SDHCI_GLI_9750_WT);
-> +
-> +	sdhci_enable_v4_mode(host);
-> +
-> +	ops->execute_tuning = gl9750_execute_tuning;
-> +
-> +	return 0;
-> +}
-> +
-> +static void sdhci_gli_voltage_switch(struct sdhci_host *host)
-> +{
-> +	usleep_range(5000, 5500);
-> +}
-> +
-> +static const struct sdhci_ops sdhci_gl9755_ops = {
-> +	.set_clock			= sdhci_set_clock,
-> +	.enable_dma			= sdhci_pci_enable_dma,
-> +	.set_bus_width			= sdhci_set_bus_width,
-> +	.reset				= sdhci_reset,
-> +	.set_uhs_signaling		= sdhci_set_uhs_signaling,
-> +	.hw_reset			= sdhci_pci_hw_reset,
-> +	.voltage_switch			= sdhci_gli_voltage_switch,
-> +};
-> +
-> +static const struct sdhci_pci_fixes sdhci_gl9755 = {
-> +	.quirks		= SDHCI_QUIRK_NO_ENDATTR_IN_NOPDESC,
-> +	.quirks2	= SDHCI_QUIRK2_BROKEN_DDR50,
-> +	.probe_slot	= gli_probe_slot_gl9755,
-> +	.ops            = &sdhci_gl9755_ops,
-> +};
-> +
-> +static const struct sdhci_ops sdhci_gl9750_ops = {
-> +	.set_clock			= sdhci_set_clock,
-> +	.enable_dma			= sdhci_pci_enable_dma,
-> +	.set_bus_width			= sdhci_set_bus_width,
-> +	.reset				= sdhci_reset,
-> +	.set_uhs_signaling		= sdhci_set_uhs_signaling,
-> +	.hw_reset			= sdhci_pci_hw_reset,
-> +	.voltage_switch			= sdhci_gli_voltage_switch,
-> +};
-> +
-> +static const struct sdhci_pci_fixes sdhci_gl9750 = {
-> +	.quirks		= SDHCI_QUIRK_NO_ENDATTR_IN_NOPDESC,
-> +	.quirks2	= SDHCI_QUIRK2_BROKEN_DDR50,
-> +	.probe_slot	= gli_probe_slot_gl9750,
-> +	.ops            = &sdhci_gl9750_ops,
-> +};
-> +
->  /*AMD chipset generation*/
->  enum amd_chipset_gen {
->  	AMD_CHIPSET_BEFORE_ML,
-> @@ -1682,6 +1900,8 @@ static const struct pci_device_id pci_ids[] = {
->  	SDHCI_PCI_DEVICE(O2, SEABIRD1, o2),
->  	SDHCI_PCI_DEVICE(ARASAN, PHY_EMMC, arasan),
->  	SDHCI_PCI_DEVICE(SYNOPSYS, DWC_MSHC, snps),
-> +	SDHCI_PCI_DEVICE(GLI, 9755, gl9755),
-> +	SDHCI_PCI_DEVICE(GLI, 9750, gl9750),
->  	SDHCI_PCI_DEVICE_CLASS(AMD, SYSTEM_SDHCI, PCI_CLASS_MASK, amd),
->  	/* Generic SD host controller */
->  	{PCI_DEVICE_CLASS(SYSTEM_SDHCI, PCI_CLASS_MASK)},
-> diff --git a/drivers/mmc/host/sdhci-pci.h b/drivers/mmc/host/sdhci-pci.h
-> index e5dc6e44c7a4..78e6b631e252 100644
-> --- a/drivers/mmc/host/sdhci-pci.h
-> +++ b/drivers/mmc/host/sdhci-pci.h
-> @@ -65,6 +65,9 @@
->  
->  #define PCI_DEVICE_ID_SYNOPSYS_DWC_MSHC 0xc202
->  
-> +#define PCI_DEVICE_ID_GLI_9755		0x9755
-> +#define PCI_DEVICE_ID_GLI_9750		0x9750
-> +
->  /*
->   * PCI device class and mask
->   */
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index 14957578bf2e..1ccf1b692d04 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -25,6 +25,8 @@
->  
->  #include <linux/leds.h>
->  
-> +#include <linux/pci.h>
-> +
->  #include <linux/mmc/mmc.h>
->  #include <linux/mmc/host.h>
->  #include <linux/mmc/card.h>
-> @@ -32,6 +34,8 @@
->  #include <linux/mmc/slot-gpio.h>
->  
->  #include "sdhci.h"
-> +#include "sdhci-pci.h"
-> +#include "sdhci-gli.h"
+Our work-in-progress KVMTOOL RISC-V port can be found in riscv_v1 branch at=
+:
+https//github.com/avpatel/kvmtool.git
 
-Vendor specific changes do not belong in sdhci.c
+We need OpenSBI with RISC-V hypervisor extension support which can be
+found in hyp_ext_changes_v1 branch at:
+https://github.com/riscv/opensbi.git
 
->  
->  #define DRIVER_NAME "sdhci"
->  
-> @@ -50,6 +54,8 @@ static void sdhci_finish_data(struct sdhci_host *);
->  
->  static void sdhci_enable_preset_value(struct sdhci_host *host, bool enable);
->  
-> +static bool gli_is_9750(struct sdhci_host *);
-> +
->  void sdhci_dumpregs(struct sdhci_host *host)
->  {
->  	SDHCI_DUMP("============ SDHCI REGISTER DUMP ===========\n");
-> @@ -328,6 +334,8 @@ static void sdhci_init(struct sdhci_host *host, int soft)
->  
->  	host->cqe_on = false;
->  
-> +	gli_set_9750(host);
+The QEMU RISC-V hypervisor emulation is done by Alistair and is available
+in riscv-hyp-work.next branch at:
+https://github.com/alistair23/qemu.git
 
-Maybe look at using the sdhci_ops ->reset() callback.
+To play around with KVM RISC-V, here are few reference commands:
+1) To cross-compile KVMTOOL:
+   $ make lkvm-static
+2) To launch RISC-V Host Linux:
+   $ qemu-system-riscv64 -monitor null -cpu rv64,h=3Dtrue -M virt \
+   -m 512M -display none -serial mon:stdio \
+   -kernel opensbi/build/platform/qemu/virt/firmware/fw_jump.elf \
+   -device loader,file=3Dbuild-riscv64/arch/riscv/boot/Image,addr=3D0x80200=
+000 \
+   -initrd ./rootfs_kvm_riscv64.img \
+   -append "root=3D/dev/ram rw console=3DttyS0 earlycon=3Dsbi"
+3) To launch RISC-V Guest Linux with 9P rootfs:
+   $ ./apps/lkvm-static run -m 128 -c2 --console serial \
+   -p "console=3DttyS0 earlycon=3Duart8250,mmio,0x3f8" -k ./apps/Image --de=
+bug
+4) To launch RISC-V Guest Linux with initrd:
+   $ ./apps/lkvm-static run -m 128 -c2 --console serial \
+   -p "console=3DttyS0 earlycon=3Duart8250,mmio,0x3f8" -k ./apps/Image \
+   -i ./apps/rootfs.img --debug
 
-> +
->  	if (soft) {
->  		/* force clock reconfiguration */
->  		host->clock = 0;
-> @@ -2326,7 +2334,7 @@ void sdhci_reset_tuning(struct sdhci_host *host)
->  }
->  EXPORT_SYMBOL_GPL(sdhci_reset_tuning);
->  
-> -static void sdhci_abort_tuning(struct sdhci_host *host, u32 opcode)
-> +void sdhci_abort_tuning(struct sdhci_host *host, u32 opcode)
->  {
->  	sdhci_reset_tuning(host);
->  
-> @@ -2337,6 +2345,7 @@ static void sdhci_abort_tuning(struct sdhci_host *host, u32 opcode)
->  
->  	mmc_abort_tuning(host->mmc, opcode);
->  }
-> +EXPORT_SYMBOL_GPL(sdhci_abort_tuning);
+Changes since v3:
+- Moved patch for ISA bitmap from KVM prep series to this series
+- Make vsip_shadow as run-time percpu variable instead of compile-time
+- Flush Guest TLBs on all Host CPUs whenever we run-out of VMIDs
 
-If you need to export sdhci_abort_tuning, then please make it a separate patch.
+Changes since v2:
+- Removed references of KVM_REQ_IRQ_PENDING from all patches
+- Use kvm->srcu within in-kernel KVM run loop
+- Added percpu vsip_shadow to track last value programmed in VSIP CSR
+- Added comments about irqs_pending and irqs_pending_mask
+- Used kvm_arch_vcpu_runnable() in-place-of kvm_riscv_vcpu_has_interrupt()
+  in system_opcode_insn()
+- Removed unwanted smp_wmb() in kvm_riscv_stage2_vmid_update()
+- Use kvm_flush_remote_tlbs() in kvm_riscv_stage2_vmid_update()
+- Use READ_ONCE() in kvm_riscv_stage2_update_hgatp() for vmid
 
->  
->  /*
->   * We use sdhci_send_tuning() because mmc_send_tuning() is not a good fit. SDHCI
-> @@ -2493,9 +2502,7 @@ int sdhci_execute_tuning(struct mmc_host *mmc, u32 opcode)
->  		host->tuning_delay = opcode == MMC_SEND_TUNING_BLOCK;
->  
->  	sdhci_start_tuning(host);
-> -
->  	host->tuning_err = __sdhci_execute_tuning(host, opcode);
-> -
->  	sdhci_end_tuning(host);
->  out:
->  	host->flags &= ~SDHCI_HS400_TUNING;
-> @@ -4090,6 +4097,12 @@ int sdhci_setup_host(struct sdhci_host *host)
->  	 * value.
->  	 */
->  	max_current_caps = sdhci_readl(host, SDHCI_MAX_CURRENT);
-> +
-> +	if (gli_is_9750(host)) {
-> +		if (!(max_current_caps & 0xff))
-> +			max_current_caps |= 0xc8;
-> +	}
+Changes since v1:
+- Fixed compile errors in building KVM RISC-V as module
+- Removed unused kvm_riscv_halt_guest() and kvm_riscv_resume_guest()
+- Set KVM_CAP_SYNC_MMU capability only after MMU notifiers are implemented
+- Made vmid_version as unsigned long instead of atomic
+- Renamed KVM_REQ_UPDATE_PGTBL to KVM_REQ_UPDATE_HGATP
+- Renamed kvm_riscv_stage2_update_pgtbl() to kvm_riscv_stage2_update_hgatp(=
+)
+- Configure HIDELEG and HEDELEG in kvm_arch_hardware_enable()
+- Updated ONE_REG interface for CSR access to user-space
+- Removed irqs_pending_lock and use atomic bitops instead
+- Added separate patch for FP ONE_REG interface
+- Added separate patch for updating MAINTAINERS file
 
-Vendor specific changes do not belong in sdhci.c
+Anup Patel (15):
+  KVM: RISC-V: Add KVM_REG_RISCV for ONE_REG interface
+  RISC-V: Add bitmap reprensenting ISA features common across CPUs
+  RISC-V: Add hypervisor extension related CSR defines
+  RISC-V: Add initial skeletal KVM support
+  RISC-V: KVM: Implement VCPU create, init and destroy functions
+  RISC-V: KVM: Implement VCPU interrupts and requests handling
+  RISC-V: KVM: Implement KVM_GET_ONE_REG/KVM_SET_ONE_REG ioctls
+  RISC-V: KVM: Implement VCPU world-switch
+  RISC-V: KVM: Handle MMIO exits for VCPU
+  RISC-V: KVM: Handle WFI exits for VCPU
+  RISC-V: KVM: Implement VMID allocator
+  RISC-V: KVM: Implement stage2 page table programming
+  RISC-V: KVM: Implement MMU notifiers
+  RISC-V: Enable VIRTIO drivers in RV64 and RV32 defconfig
+  RISC-V: KVM: Add MAINTAINERS entry
 
-Look at using sdhci I/O accessors (refer CONFIG_MMC_SDHCI_IO_ACCESSORS)
-instead
+Atish Patra (5):
+  RISC-V: Export few kernel symbols
+  RISC-V: KVM: Add timer functionality
+  RISC-V: KVM: FP lazy save/restore
+  RISC-V: KVM: Implement ONE REG interface for FP registers
+  RISC-V: KVM: Add SBI v0.1 support
 
-> +
->  	if (!max_current_caps && !IS_ERR(mmc->supply.vmmc)) {
->  		int curr = regulator_get_current_limit(mmc->supply.vmmc);
->  		if (curr > 0) {
-> @@ -4269,6 +4282,106 @@ void sdhci_cleanup_host(struct sdhci_host *host)
->  }
->  EXPORT_SYMBOL_GPL(sdhci_cleanup_host);
->  
-> +// for Genesys Logic
-> +void gli_set_9750(struct sdhci_host *host)
-> +{
-> +	u32 wt_value = 0;
-> +	u32 driving_value = 0;
-> +	u32 pll_value = 0;
-> +	u32 sw_ctrl_value = 0;
-> +	u32 misc_value = 0;
-> +	u32 parameter_value = 0;
-> +	u32 control_value = 0;
-> +
-> +	u16 ctrl2 = 0;
-> +
-> +	if (!gli_is_9750(host))
-> +		return;
-> +
-> +	wt_value = sdhci_readl(host, SDHCI_GLI_9750_WT);
-> +	if ((wt_value & 0x1) == 0) {
-> +		wt_value |= 0x1;
-> +		sdhci_writel(host, wt_value, SDHCI_GLI_9750_WT);
-> +	}
-> +
-> +	driving_value = sdhci_readl(host, SDHCI_GLI_9750_DRIVING);
-> +	pll_value = sdhci_readl(host, SDHCI_GLI_9750_PLL);
-> +	sw_ctrl_value = sdhci_readl(host, SDHCI_GLI_9750_SW_CTRL);
-> +	misc_value = sdhci_readl(host, SDHCI_GLI_9750_MISC);
-> +	parameter_value = sdhci_readl(host, SDHCI_GLI_9750_TUNING_PARAMETERS);
-> +	control_value = sdhci_readl(host, SDHCI_GLI_9750_TUNING_CONTROL);
-> +
-> +	driving_value &= ~(0x0C000FFF);
-> +	driving_value |= 0x0C000FFF;
-> +	sdhci_writel(host, driving_value, SDHCI_GLI_9750_DRIVING);
-> +
-> +	sw_ctrl_value |= 0xc0;
-> +	sdhci_writel(host, sw_ctrl_value, SDHCI_GLI_9750_SW_CTRL);
-> +
-> +	// reset the tuning flow after reinit and before starting tuning
-> +	pll_value |= 0x800000; // bit23-1
-> +	pll_value &= ~(0x00700000); // bit22:20-0
-> +
-> +	misc_value &= ~(0x8); // bit3-0
-> +	misc_value &= ~(0x4); // bit2-0
-> +
-> +	misc_value &= ~(0x70); // bit6:4-0
-> +	misc_value |= 0x50; // bit6:4-5
-> +
-> +	parameter_value &= ~(0x7); // bit2:0-0
-> +	parameter_value |= 0x1; // bit2:0-1
-> +
-> +	control_value &= ~(0x190000); // bit20:19-0, bit16-0
-> +	control_value |=   0x110000; // bit20:19-b10, bit16-1
-> +
-> +	sdhci_writel(host, pll_value, SDHCI_GLI_9750_PLL);
-> +	sdhci_writel(host, misc_value, SDHCI_GLI_9750_MISC);
-> +
-> +	// disable tuned clk
-> +	ctrl2 = sdhci_readw(host, SDHCI_HOST_CONTROL2);
-> +	ctrl2 &= ~SDHCI_CTRL_TUNED_CLK;
-> +	sdhci_writew(host, ctrl2, SDHCI_HOST_CONTROL2);
-> +
-> +	// 540 enable tuning parameters control
-> +	control_value |= 0x10;
-> +	sdhci_writel(host, control_value, SDHCI_GLI_9750_TUNING_CONTROL);
-> +
-> +	// write 544 tuning parameters
-> +	sdhci_writel(host, parameter_value, SDHCI_GLI_9750_TUNING_PARAMETERS);
-> +
-> +	// 540 disable tuning parameters control
-> +	control_value &= ~0x10;
-> +	sdhci_writel(host, control_value, SDHCI_GLI_9750_TUNING_CONTROL);
-> +
-> +	// clear tuned clk
-> +	ctrl2 = sdhci_readw(host, SDHCI_HOST_CONTROL2);
-> +	ctrl2 &= ~SDHCI_CTRL_TUNED_CLK;
-> +	sdhci_writew(host, ctrl2, SDHCI_HOST_CONTROL2);
-> +
-> +	udelay(1);
-> +	wt_value = sdhci_readl(host, SDHCI_GLI_9750_WT);
-> +	wt_value &= ~0x1;
-> +	sdhci_writel(host, wt_value, SDHCI_GLI_9750_WT);
-> +}
-> +EXPORT_SYMBOL_GPL(gli_set_9750);
-> +
-> +bool gli_is_9750(struct sdhci_host *host)
-> +{
-> +	struct sdhci_pci_slot *slot = sdhci_priv(host);
-> +	struct sdhci_pci_chip *chip;
-> +	struct pci_dev *pdev;
-> +
-> +	chip = slot->chip;
-> +	pdev = chip->pdev;
-> +
-> +	if (pdev->vendor == PCI_VENDOR_ID_GLI &&
-> +	    pdev->device == PCI_DEVICE_ID_GLI_9750) {
-> +		return true;
-> +	}
-> +
-> +	return false;
-> +}
-> +
+ MAINTAINERS                             |  10 +
+ arch/riscv/Kconfig                      |   2 +
+ arch/riscv/Makefile                     |   2 +
+ arch/riscv/configs/defconfig            |  13 +
+ arch/riscv/configs/rv32_defconfig       |  13 +
+ arch/riscv/include/asm/csr.h            |  58 ++
+ arch/riscv/include/asm/hwcap.h          |  26 +
+ arch/riscv/include/asm/kvm_host.h       | 246 ++++++
+ arch/riscv/include/asm/kvm_vcpu_timer.h |  32 +
+ arch/riscv/include/asm/pgtable-bits.h   |   1 +
+ arch/riscv/include/uapi/asm/kvm.h       |  98 +++
+ arch/riscv/kernel/asm-offsets.c         | 148 ++++
+ arch/riscv/kernel/cpufeature.c          |  79 +-
+ arch/riscv/kernel/smp.c                 |   2 +-
+ arch/riscv/kernel/time.c                |   1 +
+ arch/riscv/kvm/Kconfig                  |  34 +
+ arch/riscv/kvm/Makefile                 |  14 +
+ arch/riscv/kvm/main.c                   |  92 +++
+ arch/riscv/kvm/mmu.c                    | 905 ++++++++++++++++++++++
+ arch/riscv/kvm/tlb.S                    |  43 ++
+ arch/riscv/kvm/vcpu.c                   | 989 ++++++++++++++++++++++++
+ arch/riscv/kvm/vcpu_exit.c              | 556 +++++++++++++
+ arch/riscv/kvm/vcpu_sbi.c               | 119 +++
+ arch/riscv/kvm/vcpu_switch.S            | 368 +++++++++
+ arch/riscv/kvm/vcpu_timer.c             | 106 +++
+ arch/riscv/kvm/vm.c                     |  86 +++
+ arch/riscv/kvm/vmid.c                   | 123 +++
+ drivers/clocksource/timer-riscv.c       |   8 +
+ include/clocksource/timer-riscv.h       |  16 +
+ include/uapi/linux/kvm.h                |   1 +
+ 30 files changed, 4187 insertions(+), 4 deletions(-)
+ create mode 100644 arch/riscv/include/asm/kvm_host.h
+ create mode 100644 arch/riscv/include/asm/kvm_vcpu_timer.h
+ create mode 100644 arch/riscv/include/uapi/asm/kvm.h
+ create mode 100644 arch/riscv/kvm/Kconfig
+ create mode 100644 arch/riscv/kvm/Makefile
+ create mode 100644 arch/riscv/kvm/main.c
+ create mode 100644 arch/riscv/kvm/mmu.c
+ create mode 100644 arch/riscv/kvm/tlb.S
+ create mode 100644 arch/riscv/kvm/vcpu.c
+ create mode 100644 arch/riscv/kvm/vcpu_exit.c
+ create mode 100644 arch/riscv/kvm/vcpu_sbi.c
+ create mode 100644 arch/riscv/kvm/vcpu_switch.S
+ create mode 100644 arch/riscv/kvm/vcpu_timer.c
+ create mode 100644 arch/riscv/kvm/vm.c
+ create mode 100644 arch/riscv/kvm/vmid.c
+ create mode 100644 include/clocksource/timer-riscv.h
 
-Vendor specific changes do not belong in sdhci.c
-
->  int __sdhci_add_host(struct sdhci_host *host)
->  {
->  	unsigned int flags = WQ_UNBOUND | WQ_MEM_RECLAIM | WQ_HIGHPRI;
-> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-> index 72601a4d2e95..437bab3af195 100644
-> --- a/drivers/mmc/host/sdhci.h
-> +++ b/drivers/mmc/host/sdhci.h
-> @@ -797,5 +797,6 @@ void sdhci_start_tuning(struct sdhci_host *host);
->  void sdhci_end_tuning(struct sdhci_host *host);
->  void sdhci_reset_tuning(struct sdhci_host *host);
->  void sdhci_send_tuning(struct sdhci_host *host, u32 opcode);
-> +void sdhci_abort_tuning(struct sdhci_host *host, u32 opcode);
->  
->  #endif /* __SDHCI_HW_H */
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index 70e86148cb1e..e668da5c8df5 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -2403,6 +2403,7 @@
->  #define PCI_DEVICE_ID_RDC_R6061		0x6061
->  #define PCI_DEVICE_ID_RDC_D1010		0x1010
->  
-> +#define PCI_VENDOR_ID_GLI		0x17a0
-
-Better as a separate patch.
-
->  #define PCI_VENDOR_ID_LENOVO		0x17aa
->  
->  #define PCI_VENDOR_ID_QCOM		0x17cb
-> 
-
+--
+2.17.1
