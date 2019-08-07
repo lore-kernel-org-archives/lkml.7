@@ -2,121 +2,118 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E43C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 02:30:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DEFDC31E40
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 02:33:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08BF6208C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 02:30:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B119208C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 02:33:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="UDOJPO3z"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="xsA3mEa4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729131AbfHGCa1 (ORCPT
+        id S1729232AbfHGCdH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 22:30:27 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:40447 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727653AbfHGCa1 (ORCPT
+        Tue, 6 Aug 2019 22:33:07 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:37472 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727653AbfHGCdH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 22:30:27 -0400
-Received: by mail-ot1-f67.google.com with SMTP id l15so41044472oth.7
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 19:30:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
-        bh=fcElZ7wudLl4OkkEiYYbZc12nuQcPIrxhzg+jbUkCuA=;
-        b=UDOJPO3zORas6F4lihQxqeo6VOtTY+/Xof7TmRXnf8qQUc4oez8VQ/ykzcGIVigsL4
-         GJUsYrn9ctOdXiLvrCEuuAkVfhfbC/4RNOx9O8f6r+ALL9lk0XaWiEZefw8Gikyg70j7
-         YWiReY8nHjjs37lp24se6ySXefKSqFwgxZet5atWG7LwNkf+o46yRjA8XmKuXrDs803m
-         FdwKFQGlB8fMBtl/0FCegXzTLcqfvF5Oyy0NpUDd07EwRJtE3wSUgBSj+3/xGh07JVBe
-         m7mO//rTcZJzlpA1SlT7YukYp28nav+zwLLex55kBNQfGLdHK2CB9TjxYd93qXzYdjGp
-         op3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
-         :mime-version;
-        bh=fcElZ7wudLl4OkkEiYYbZc12nuQcPIrxhzg+jbUkCuA=;
-        b=od3IbtXF0b4bEiHw5MizJfqp+ePQpOLujqIIm5A7Nz65GyF2Q5UvPAsUKsYD7a9qub
-         Odh4aWTUqvjuA4epCHAYei4TrvJCAI3rQFR6O5pHT1MpbbBF7ZYlzLtEBjnqvnqtKEDz
-         NyNU259SY8msO/JzlkF4Tq3JtIfGPyis9ZBg8m2JDX98wgjwjRgknYZE7RzCv743Zqjr
-         pLaI4bodVlJgkU52QiLr+LNseGIYXHkzXCzroIHYxA2H4ENIqVpViMOrouS0ctQBE9fT
-         iFzk5OGt/NxuIHcPP/EdxfY18heUaq3KHUUohMgr2qoJmFZ+At4RenqFzB884d1wS2wZ
-         w6rA==
-X-Gm-Message-State: APjAAAUB7XsWtYF67iq8PWHMoIltZvfw3MYSK34v6ZGgSZpwnJhUwu3e
-        u2lVKWn9adp3LvqCk5HuPbrNTKkPBDc=
-X-Google-Smtp-Source: APXvYqy5awZKyZbsdh5g/oDEBb/x5E1IQyxC8xQ0M2N6V6fiNDKO+jW2FnJkWzfnrjdoiyAlwXiY8Q==
-X-Received: by 2002:a05:6638:40c:: with SMTP id q12mr7740016jap.17.1565145026561;
-        Tue, 06 Aug 2019 19:30:26 -0700 (PDT)
-Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
-        by smtp.gmail.com with ESMTPSA id y20sm73451455ion.77.2019.08.06.19.30.25
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 06 Aug 2019 19:30:25 -0700 (PDT)
-Date:   Tue, 6 Aug 2019 19:30:24 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     linux-riscv@lists.infradead.org
-cc:     linux-kernel@vger.kernel.org, atish.patra@wdc.com
-Subject: [PATCH] riscv: kbuild: drop CONFIG_RISCV_ISA_C
-Message-ID: <alpine.DEB.2.21.9999.1908061929230.19468@viisi.sifive.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Tue, 6 Aug 2019 22:33:07 -0400
+Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id x772WfV2001484;
+        Wed, 7 Aug 2019 11:32:41 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x772WfV2001484
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1565145162;
+        bh=73kK1zWf1zgSwM0Qiy8U03aVhSxNqlnQVY5Ux1NQO3A=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=xsA3mEa4VKVjPFBbXOP85KOSrfs+Bwd2wmwDOml+JjQXbQsJhB/4gfZIebQt5HXH/
+         g0RKLJvLgNv76ZVCPkzUk0KZ5ZxAFR3HY1BXndORyxLdZ9LK0wWJlWZy/HKwkcv+e0
+         7g7I58QEg5f7BAktz8piEvE9f9KLO7VWn8vwFhQzKZVg38O+jnRdRbynI+Pb6Y39sH
+         OFIuTYFuFyMRW8EyXlwpGERtyzGPbBqFu+Y6liuSaIipKhdFD0Bc+t2JcoHi9yhW9m
+         Rl27ELwBUzSxtTzZi3sp+F9M7jFC7xglVsk8AD1IiD/8pAaV4lWe/+fgowDo0ajmVz
+         Uf3baqUm1y9tA==
+X-Nifty-SrcIP: [209.85.221.178]
+Received: by mail-vk1-f178.google.com with SMTP id w186so9337225vkd.11;
+        Tue, 06 Aug 2019 19:32:41 -0700 (PDT)
+X-Gm-Message-State: APjAAAWv6ZGuNbakw17NyLZEw78644vtRzK3MdO7Md+W2fhdmvedvxjK
+        OzQQEkDmf6aiV85IJBk48CYq3FV8x0TXXJ/TO4Y=
+X-Google-Smtp-Source: APXvYqyGqId2Qj7KwwDJabGigaJ8qRGHoZt3xyNuEqSZQt8KtGUb4MqYlY+M0DddltyN4T2Qox3VF0ncm0dd4N4vlCc=
+X-Received: by 2002:a1f:4107:: with SMTP id o7mr2629240vka.34.1565145160504;
+ Tue, 06 Aug 2019 19:32:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <patch-1.thread-2257a1.git-188f5a3d81d5.your-ad-here.call-01565088755-ext-5120@work.hours>
+In-Reply-To: <patch-1.thread-2257a1.git-188f5a3d81d5.your-ad-here.call-01565088755-ext-5120@work.hours>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Wed, 7 Aug 2019 11:32:04 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATL8aGReDm+BYk74tH1EdK1NKVgaWF6sJ7m1NtBL1kqkw@mail.gmail.com>
+Message-ID: <CAK7LNATL8aGReDm+BYk74tH1EdK1NKVgaWF6sJ7m1NtBL1kqkw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] kbuild: add OBJSIZE variable for the size tool
+To:     Vasily Gorbik <gor@linux.ibm.com>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi.
 
-The baseline ISA support requirement for the RISC-V Linux kernel
-mandates compressed instructions, so it doesn't make sense for
-compressed instruction support to be configurable.
+On Tue, Aug 6, 2019 at 7:56 PM Vasily Gorbik <gor@linux.ibm.com> wrote:
+>
+> Define and export OBJSIZE variable for "size" tool from binutils to be
+> used in architecture specific Makefiles (naming the variable just "SIZE"
+> would be too risky). In particular this tool is useful to perform checks
+> that early boot code is not using bss section (which might have not been
+> zeroed yet or intersects with initrd or other files boot loader might
+> have put right after the linux kernel).
+>
+> Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 
-Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: Atish Patra <atish.patra@wdc.com>
+I think you want to apply both to the s390 tree. If so,
 
----
- arch/riscv/Kconfig  | 10 ----------
- arch/riscv/Makefile |  2 +-
- 2 files changed, 1 insertion(+), 11 deletions(-)
+Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 59a4727ecd6c..8c5b9329ec46 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -197,16 +197,6 @@ config TUNE_GENERIC
- 
- endchoice
- 
--config RISCV_ISA_C
--	bool "Emit compressed instructions when building Linux"
--	default y
--	help
--	   Adds "C" to the ISA subsets that the toolchain is allowed to emit
--	   when building Linux, which results in compressed instructions in the
--	   Linux binary.
--
--	   If you don't know what to do here, say Y.
--
- menu "supported PMU type"
- 	depends on PERF_EVENTS
- 
-diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
-index 7a117be8297c..e23e066c55e2 100644
---- a/arch/riscv/Makefile
-+++ b/arch/riscv/Makefile
-@@ -38,7 +38,7 @@ endif
- riscv-march-$(CONFIG_ARCH_RV32I)	:= rv32ima
- riscv-march-$(CONFIG_ARCH_RV64I)	:= rv64ima
- riscv-march-$(CONFIG_FPU)		:= $(riscv-march-y)fd
--riscv-march-$(CONFIG_RISCV_ISA_C)	:= $(riscv-march-y)c
-+riscv-march-y				:= $(riscv-march-y)c
- KBUILD_CFLAGS += -march=$(subst fd,,$(riscv-march-y))
- KBUILD_AFLAGS += -march=$(riscv-march-y)
- 
+Thanks.
+
+> ---
+>  Makefile | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+>
+> diff --git a/Makefile b/Makefile
+> index fa0fbe7851ea..ff4cff29fe46 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -419,6 +419,7 @@ NM          = $(CROSS_COMPILE)nm
+>  STRIP          = $(CROSS_COMPILE)strip
+>  OBJCOPY                = $(CROSS_COMPILE)objcopy
+>  OBJDUMP                = $(CROSS_COMPILE)objdump
+> +OBJSIZE                = $(CROSS_COMPILE)size
+>  PAHOLE         = pahole
+>  LEX            = flex
+>  YACC           = bison
+> @@ -474,9 +475,9 @@ KBUILD_LDFLAGS :=
+>  GCC_PLUGINS_CFLAGS :=
+>
+>  export ARCH SRCARCH CONFIG_SHELL HOSTCC KBUILD_HOSTCFLAGS CROSS_COMPILE AS LD CC
+> -export CPP AR NM STRIP OBJCOPY OBJDUMP PAHOLE KBUILD_HOSTLDFLAGS KBUILD_HOSTLDLIBS
+> -export MAKE LEX YACC AWK INSTALLKERNEL PERL PYTHON PYTHON2 PYTHON3 UTS_MACHINE
+> -export HOSTCXX KBUILD_HOSTCXXFLAGS LDFLAGS_MODULE CHECK CHECKFLAGS
+> +export CPP AR NM STRIP OBJCOPY OBJDUMP OBJSIZE PAHOLE LEX YACC AWK INSTALLKERNEL
+> +export PERL PYTHON PYTHON2 PYTHON3 CHECK CHECKFLAGS MAKE UTS_MACHINE HOSTCXX
+> +export KBUILD_HOSTCXXFLAGS KBUILD_HOSTLDFLAGS KBUILD_HOSTLDLIBS LDFLAGS_MODULE
+>
+>  export KBUILD_CPPFLAGS NOSTDINC_FLAGS LINUXINCLUDE OBJCOPYFLAGS KBUILD_LDFLAGS
+>  export KBUILD_CFLAGS CFLAGS_KERNEL CFLAGS_MODULE
+> --
+> 2.21.0
+>
+
+
 -- 
-2.22.0
-
+Best Regards
+Masahiro Yamada
