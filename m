@@ -2,101 +2,86 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D00C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34044C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACE9121E6C
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:07:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="PJh2pZx1"
+	by mail.kernel.org (Postfix) with ESMTP id 0718322293
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:09:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388121AbfHGOHq (ORCPT
+        id S2388148AbfHGOJe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 10:07:46 -0400
-Received: from onstation.org ([52.200.56.107]:42714 "EHLO onstation.org"
+        Wed, 7 Aug 2019 10:09:34 -0400
+Received: from smtp4-g21.free.fr ([212.27.42.4]:61588 "EHLO smtp4-g21.free.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726773AbfHGOHq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 10:07:46 -0400
-Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id BA57E3E951;
-        Wed,  7 Aug 2019 14:07:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1565186865;
-        bh=6WKzOMIrRhn+HZ7Ye4fD0m71zD/5MBx+bsdK86Uuj2c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PJh2pZx1sesHz3Pw1IeyqA+GVWbYfJ/w8c7srPHO3nDhOIha6mDNXfDJs6HHIfAjM
-         CiXOvgEDhoMJYJEGRjJPE4brU1fDnmAqM60bKD9D20iVuIvBNLfFPQ3sn4nRUezk7d
-         wQ6YdoznMAubLi/7Re6c8szg+FIep7LAAvM4XQtw=
-Date:   Wed, 7 Aug 2019 10:07:44 -0400
-From:   Brian Masney <masneyb@onstation.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Bitan Biswas <bbiswas@nvidia.com>, linux-tegra@vger.kernel.org,
-        David Daney <david.daney@cavium.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/4] gpio: hierarchical IRQ improvements
-Message-ID: <20190807140744.GA18224@onstation.org>
-References: <20190708110138.24657-1-masneyb@onstation.org>
- <CACRpkdYQhyh1BW789OcxGTomMkC3e8hMr8sodbWz-z1=5s9fDw@mail.gmail.com>
+        id S2387670AbfHGOJd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 10:09:33 -0400
+Received: from [192.168.1.91] (unknown [77.207.133.132])
+        (Authenticated sender: marc.w.gonzalez)
+        by smtp4-g21.free.fr (Postfix) with ESMTPSA id 8BEB719F4C8;
+        Wed,  7 Aug 2019 16:09:10 +0200 (CEST)
+Subject: Re: [PATCH v6 31/57] pci: Remove dev_err() usage after
+ platform_get_irq()
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mans Rullgard <mans@mansr.com>, Marc Zyngier <maz@kernel.org>
+References: <20190730181557.90391-1-swboyd@chromium.org>
+ <20190730181557.90391-32-swboyd@chromium.org>
+ <20190730215626.GA151852@google.com>
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+Message-ID: <fece42c0-f511-173a-b16a-5b1f3a1c1a4e@free.fr>
+Date:   Wed, 7 Aug 2019 16:09:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdYQhyh1BW789OcxGTomMkC3e8hMr8sodbWz-z1=5s9fDw@mail.gmail.com>
+In-Reply-To: <20190730215626.GA151852@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 07, 2019 at 03:41:05PM +0200, Linus Walleij wrote:
-> On Mon, Jul 8, 2019 at 1:01 PM Brian Masney <masneyb@onstation.org> wrote:
-> 
-> > This builds on top of Linus Walleij's existing patches that adds
-> > hierarchical IRQ support to the GPIO core [1] so that Qualcomm's
-> > spmi-gpio and ssbi-gpio can be converted to use these new helpers.
-> >
-> > Linus: Feel free to squash these into your existing patches if you'd
-> > like to use any of this code. Just give me some kind of mention in the
-> > commit description.
-> >
-> > [1] https://lore.kernel.org/linux-gpio/20190624132531.6184-1-linus.walleij@linaro.org/
-> >
-> > Brian Masney (4):
-> >   gpio: introduce gpiochip_populate_parent_fwspec_{two,four}cell
-> >     functions
-> >   gpio: allow customizing hierarchical IRQ chips
-> >   gpio: use handler in gpio_irq_chip instead of handle_bad_irq
-> >   qcom: spmi-gpio: convert to hierarchical IRQ helpers in gpio core
-> 
-> I solved things like this:
-> 
-> - I kept patches 1 & 4 as-is
-> - I squashed patches 2 and 3 into the main patch with minor modifications.
-> - I added Co-developed-by: for your contributions
-> 
-> Now I need to address Masahiro's comments on top and let's see if the
-> result looks acceptable!
+On 30/07/2019 23:56, Bjorn Helgaas wrote:
 
-> Ooops had to squash patch 1 as well...
+>> diff --git a/drivers/pci/controller/pcie-tango.c b/drivers/pci/controller/pcie-tango.c
+>> index 21a208da3f59..b87aa9041480 100644
+>> --- a/drivers/pci/controller/pcie-tango.c
+>> +++ b/drivers/pci/controller/pcie-tango.c
+>> @@ -273,10 +273,8 @@ static int tango_pcie_probe(struct platform_device *pdev)
+>>  		writel_relaxed(0, pcie->base + SMP8759_ENABLE + offset);
+>>  
+>>  	virq = platform_get_irq(pdev, 1);
+>> -	if (virq <= 0) {
+>> -		dev_err(dev, "Failed to map IRQ\n");
+>> +	if (virq <= 0)
+>>  		return -ENXIO;
+>
+> Why <= 0 and -ENXIO?
 
-All of this sounds good. I'll retest once you send out the updated
-series.
+Smirk. I remember discussing this in the past...
+Here it is:
 
-Brian
+	https://patchwork.kernel.org/patch/10006651/
+
+A) AFAIU platform_get_irq() = 0 signals an error.
+
+	https://yarchive.net/comp/linux/zero.html
+	https://lkml.org/lkml/2016/2/9/212
+	https://patchwork.ozlabs.org/patch/486056/
+
+B) I don't remember why I picked ENXIO.
+Perhaps it made more sense to me (at the time) than EINVAL or ENODEV.
+
+Regards.
