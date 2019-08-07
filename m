@@ -2,94 +2,92 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47454C32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 20:16:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3977C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 20:17:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1909821922
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 20:16:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="MkjcNjs3"
+	by mail.kernel.org (Postfix) with ESMTP id BA74021BF6
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 20:17:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565209021;
+	bh=9jrCLwX3LNqceRPrIp1jyjebmoHx3o9gZO1ZatQ4skM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=oDgIGsrflwEePKb8blNh1YZV2gXzLdwYj8SQEGs9i1j+zB53Z4lVcmaQikz4nYLgf
+	 XmLcoXpc8pYXl8irW+qbrR26j3tVdW0Ipmp38qNhsTeHV3ue8QqLQ0Tsk3PnO2LnqP
+	 W6+5/lAISBmbrm1ynqIQDbzxmm+qGxyBY6m3cUaY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389382AbfHGUQM (ORCPT
+        id S2389399AbfHGURA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 16:16:12 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:33166 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387969AbfHGUQM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 16:16:12 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x77KG9Yb080819;
-        Wed, 7 Aug 2019 15:16:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1565208969;
-        bh=Gg3//kSYxZ3hfasGJ09OzX75vf31+tbuVhHl8sgo9LM=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=MkjcNjs3K4sFjoAq2DXmIu7gOyxrc9EAzIb/RvRJbvGnqeER5J7DPS+a3D7j1X6b9
-         ThT+nJ5vC0E3KVAKpIpHF3VRLRA9Bia61YX/EFUtXJqtqyA/R+BmfvsrkOONbCTAYh
-         +okTFSCKFZZytuJfqZEybd097/YJmUwDJeEU2UXY=
-Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x77KG90h047223
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 7 Aug 2019 15:16:09 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 7 Aug
- 2019 15:16:09 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 7 Aug 2019 15:16:09 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x77KG9Ia025291;
-        Wed, 7 Aug 2019 15:16:09 -0500
-Date:   Wed, 7 Aug 2019 15:16:09 -0500
-From:   Bin Liu <b-liu@ti.com>
-To:     Jia-Ju Bai <baijiaju1990@gmail.com>
-CC:     <gregkh@linuxfoundation.org>, <linux-usb@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] usb: musb: Fix a possible null-pointer dereference in
- musb_handle_intr_connect()
-Message-ID: <20190807201609.GD14027@uda0271908>
-Mail-Followup-To: Bin Liu <b-liu@ti.com>,
-        Jia-Ju Bai <baijiaju1990@gmail.com>, gregkh@linuxfoundation.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190729090428.29508-1-baijiaju1990@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20190729090428.29508-1-baijiaju1990@gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Wed, 7 Aug 2019 16:17:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50316 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387969AbfHGURA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 16:17:00 -0400
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2EAC82199C;
+        Wed,  7 Aug 2019 20:16:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565209019;
+        bh=9jrCLwX3LNqceRPrIp1jyjebmoHx3o9gZO1ZatQ4skM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=sEN1paERUMluEqczWXfNlPMKbSdmYQaq4T7rTni0CxSxEnrjjHKQ765sgQWu8A8s0
+         QKx24YVdqUtvGPcVbdAJxRFJMxYJyV6Ah+0UPLJtP5uaP8snDxXhkkuBKnRyRw75Aq
+         iNGGe6IBLOd1dbfd+9eQdQKz0RAljH5GsNO+CLMo=
+Date:   Wed, 7 Aug 2019 13:16:58 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Steven Price <steven.price@arm.com>
+Cc:     Mark Rutland <Mark.Rutland@arm.com>, x86@kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        =?ISO-8859-1?Q?J=E9r=F4me?= Glisse <jglisse@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        James Morse <james.morse@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        "Liang, Kan" <kan.liang@linux.intel.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCH v10 20/22] x86: mm: Convert dump_pagetables to use
+ walk_page_range
+Message-Id: <20190807131658.08793793a97fa4310af4f495@linux-foundation.org>
+In-Reply-To: <066fa4ca-5a46-ba86-607f-9c3e16f79cde@arm.com>
+References: <20190731154603.41797-1-steven.price@arm.com>
+        <20190731154603.41797-21-steven.price@arm.com>
+        <20190806165823.3f735b45a7c4163aca20a767@linux-foundation.org>
+        <066fa4ca-5a46-ba86-607f-9c3e16f79cde@arm.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 05:04:28PM +0800, Jia-Ju Bai wrote:
-> In musb_handle_intr_connect(), there is an if statement on line 783 to
-> check whether musb->hcd is NULL:
->     if (musb->hcd)
-> 
-> When musb->hcd is NULL, it is used on line 797:
->     musb_host_poke_root_hub(musb);
->         if (musb->hcd->status_urb)
-> 
-> Thus, a possible null-pointer dereference may occur.
-> 
-> To fix this bug, musb->hcd is checked before calling
-> musb_host_poke_root_hub().
-> 
-> This bug is found by a static analysis tool STCheck written by us.
-> 
-> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+On Wed, 7 Aug 2019 13:58:21 +0100 Steven Price <steven.price@arm.com> wrote:
 
-Applied. Thanks.
+> > ./arch/x86/include/asm/pgtable_64_types.h:56:22: error: initializer element is not constant
+> >  #define PTRS_PER_PGD 512
+> >                       ^
+> 
+> This is very unhelpful of GCC - it's actually PTRS_PER_P4D which isn't
+> constant!
 
--Bin.
+Well.  You had every right to assume that an all-caps macro is a
+compile-time constant.
 
+We are innocent victims of Kirill's c65e774fb3f6af2 ("x86/mm: Make
+PGDIR_SHIFT and PTRS_PER_P4D variable") which lazily converted these
+macros into runtime-only, under some Kconfig settings.  It should have
+changed those macros into static inlined lower-case functions.
