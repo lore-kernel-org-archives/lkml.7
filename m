@@ -2,90 +2,175 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15B7DC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B258CC32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:28:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA65921BE3
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:25:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C86321E6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:28:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="YFcefxxu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388295AbfHGNZy (ORCPT
+        id S2388268AbfHGN2X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 09:25:54 -0400
-Received: from skedge04.snt-world.com ([91.208.41.69]:56654 "EHLO
-        skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388268AbfHGNZv (ORCPT
+        Wed, 7 Aug 2019 09:28:23 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:56939 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388172AbfHGN2W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 09:25:51 -0400
-Received: from sntmail10s.snt-is.com (unknown [10.203.32.183])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by skedge04.snt-world.com (Postfix) with ESMTPS id 6FFF967F489;
-        Wed,  7 Aug 2019 15:25:49 +0200 (CEST)
-Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail10s.snt-is.com
- (10.203.32.183) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Wed, 7 Aug 2019
- 15:25:49 +0200
-Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
- sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1713.004; Wed, 7 Aug 2019 15:25:49 +0200
-From:   Schrempf Frieder <frieder.schrempf@kontron.de>
-To:     Fabio Estevam <festevam@gmail.com>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        Ioana Radulescu <ruxandra.radulescu@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        Yangbo Lu <yangbo.lu@nxp.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] net: fec: Allow the driver to be built for ARM64 SoCs
- such as i.MX8
-Thread-Topic: [PATCH] net: fec: Allow the driver to be built for ARM64 SoCs
- such as i.MX8
-Thread-Index: AQHVTRVujOeFcyg/q0+D2PWjkrvdsabveUKAgAASSwA=
-Date:   Wed, 7 Aug 2019 13:25:49 +0000
-Message-ID: <4041e43f-cab2-0ec9-53fa-2e36ba1220cf@kontron.de>
-References: <20190807114332.13312-1-frieder.schrempf@kontron.de>
- <20190807114332.13312-2-frieder.schrempf@kontron.de>
- <CAOMZO5C61NjX5=7FJj7WpQW=cSvBRi4ADKonUp3CRXtUkSqwCQ@mail.gmail.com>
-In-Reply-To: <CAOMZO5C61NjX5=7FJj7WpQW=cSvBRi4ADKonUp3CRXtUkSqwCQ@mail.gmail.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.25.9.193]
-x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A44EF76706086247BA82CECAD8E4242C@snt-world.com>
-Content-Transfer-Encoding: base64
+        Wed, 7 Aug 2019 09:28:22 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x77DSEfm2699315
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Wed, 7 Aug 2019 06:28:14 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x77DSEfm2699315
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1565184495;
+        bh=V1LLR+ahDFpMwCEKlzp5Zaz0cWKllC31+XDp4QdxRMk=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=YFcefxxuSruRTDrU9BU0TptZbLj+/PefQBff5N5rseyHa1JDQhdcSqUryplYmsCLI
+         S44KKdy1CWSK+nvsOlIL5yh77E063uxDV7mWa84UO4VwgittJLMmAKEEQ8ks/ihStf
+         owl08OC91QBNco7j5UIYTbDfMm+qw/ufLLHH+fKm1uKYSbkBQcHH00UxcGgJmXozeW
+         zb6jkLPjjkxRbDwoXSS5v+JJrn9jPz3PhkB8t+Zom1JOkHd5jPIUwztqb0gb9CZNgG
+         87bJdqhn8ws62mHfA/OjF9TSE2jo/8XbRBy7PYzQ/TPmi5CoxbYi6O2N8gxcLTy/mz
+         EfZBrVbaZct3Q==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x77DSEs72699312;
+        Wed, 7 Aug 2019 06:28:14 -0700
+Date:   Wed, 7 Aug 2019 06:28:14 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for John Hubbard <tipbot@zytor.com>
+Message-ID: <tip-a156cadef2fe445ac423670eace517b39a01ccd0@git.kernel.org>
+Cc:     jhubbard@nvidia.com, linux-kernel@vger.kernel.org, hpa@zytor.com,
+        tglx@linutronix.de, mingo@kernel.org
+Reply-To: jhubbard@nvidia.com, linux-kernel@vger.kernel.org,
+          tglx@linutronix.de, mingo@kernel.org, hpa@zytor.com
+In-Reply-To: <20190731054627.5627-2-jhubbard@nvidia.com>
+References: <20190731054627.5627-2-jhubbard@nvidia.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/boot] x86/boot: Save fields explicitly, zero out
+ everything else
+Git-Commit-ID: a156cadef2fe445ac423670eace517b39a01ccd0
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: 6FFF967F489.A07A2
-X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
-X-SnT-MailScanner-SpamCheck: 
-X-SnT-MailScanner-From: frieder.schrempf@kontron.de
-X-SnT-MailScanner-To: claudiu.manoil@nxp.com, davem@davemloft.net,
-        festevam@gmail.com, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, ruxandra.radulescu@nxp.com,
-        tglx@linutronix.de, yangbo.lu@nxp.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMDcuMDguMTkgMTQ6MjAsIEZhYmlvIEVzdGV2YW0gd3JvdGU6DQo+IEhpIEZyaWVkZXIsDQo+
-IA0KPiBPbiBXZWQsIEF1ZyA3LCAyMDE5IGF0IDk6MDQgQU0gU2NocmVtcGYgRnJpZWRlcg0KPiA8
-ZnJpZWRlci5zY2hyZW1wZkBrb250cm9uLmRlPiB3cm90ZToNCj4+DQo+PiBGcm9tOiBGcmllZGVy
-IFNjaHJlbXBmIDxmcmllZGVyLnNjaHJlbXBmQGtvbnRyb24uZGU+DQo+Pg0KPj4gVGhlIEZFQyBl
-dGhlcm5ldCBjb250cm9sbGVyIGlzIHVzZWQgaW4gc29tZSBBUk02NCBTb0NzIHN1Y2ggYXMgaS5N
-WDguDQo+PiBUbyBtYWtlIHVzZSBvZiBpdCwgYXBwZW5kIEFSTTY0IHRvIHRoZSBsaXN0IG9mIGRl
-cGVuZGVuY2llcy4NCj4gDQo+IEFSQ0hfTVhDIGlzIGFsc28gdXNlZCBieSBpLk1YOCwgc28gdGhl
-cmUgaXMgbm8gbmVlZCBmb3Igc3VjaCBjaGFuZ2UuDQoNCllvdSdyZSByaWdodCBvZiBjb3Vyc2Uu
-IEkgc29tZWhvdyBtYW5hZ2VkIHRvIG1lc3MgdXAgbXkgZGVmY29uZmlnLiBJIA0Kc3RhcnRlZCBv
-dmVyIHdpdGggYSBjbGVhbiBjb25maWcgZnJvbSBhcmNoL2FybTY0L2NvbmZpZ3MvZGVmY29uZmln
-IGFuZCANCmV2ZXJ5dGhpbmcgc2VlbXMgZmluZSBub3cuIFNvcnJ5IGZvciB0aGUgbm9pc2UuDQoN
-Cj4gDQo+IEJ5IHRoZSB3YXk6IGFyY2gvYXJtNjQvY29uZmlncy9kZWZjb25maWcgaGFzIENPTkZJ
-R19GRUM9eSBieSBkZWZhdWx0Lg0KPiA=
+Commit-ID:  a156cadef2fe445ac423670eace517b39a01ccd0
+Gitweb:     https://git.kernel.org/tip/a156cadef2fe445ac423670eace517b39a01ccd0
+Author:     John Hubbard <jhubbard@nvidia.com>
+AuthorDate: Tue, 30 Jul 2019 22:46:27 -0700
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Wed, 7 Aug 2019 15:22:53 +0200
+
+x86/boot: Save fields explicitly, zero out everything else
+
+Recent gcc compilers (gcc 9.1) generate warnings about an out of bounds
+memset, if the memset goes accross several fields of a struct. This
+generated a couple of warnings on x86_64 builds in sanitize_boot_params().
+
+Fix this by explicitly saving the fields in struct boot_params
+that are intended to be preserved, and zeroing all the rest.
+
+Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+Suggested-by: H. Peter Anvin <hpa@zytor.com>
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190731054627.5627-2-jhubbard@nvidia.com
+---
+ arch/x86/include/asm/bootparam_utils.h | 63 ++++++++++++++++++++++++++--------
+ 1 file changed, 48 insertions(+), 15 deletions(-)
+
+diff --git a/arch/x86/include/asm/bootparam_utils.h b/arch/x86/include/asm/bootparam_utils.h
+index 101eb944f13c..f5e90a849bca 100644
+--- a/arch/x86/include/asm/bootparam_utils.h
++++ b/arch/x86/include/asm/bootparam_utils.h
+@@ -18,6 +18,20 @@
+  * Note: efi_info is commonly left uninitialized, but that field has a
+  * private magic, so it is better to leave it unchanged.
+  */
++
++#define sizeof_mbr(type, member) ({ sizeof(((type *)0)->member); })
++
++#define BOOT_PARAM_PRESERVE(struct_member)				\
++	{								\
++		.start = offsetof(struct boot_params, struct_member),	\
++		.len   = sizeof_mbr(struct boot_params, struct_member),	\
++	}
++
++struct boot_params_to_save {
++	unsigned int start;
++	unsigned int len;
++};
++
+ static void sanitize_boot_params(struct boot_params *boot_params)
+ {
+ 	/* 
+@@ -35,21 +49,40 @@ static void sanitize_boot_params(struct boot_params *boot_params)
+ 	 * problems again.
+ 	 */
+ 	if (boot_params->sentinel) {
+-		/* fields in boot_params are left uninitialized, clear them */
+-		boot_params->acpi_rsdp_addr = 0;
+-		memset(&boot_params->ext_ramdisk_image, 0,
+-		       (char *)&boot_params->efi_info -
+-			(char *)&boot_params->ext_ramdisk_image);
+-		memset(&boot_params->kbd_status, 0,
+-		       (char *)&boot_params->hdr -
+-		       (char *)&boot_params->kbd_status);
+-		memset(&boot_params->_pad7[0], 0,
+-		       (char *)&boot_params->edd_mbr_sig_buffer[0] -
+-			(char *)&boot_params->_pad7[0]);
+-		memset(&boot_params->_pad8[0], 0,
+-		       (char *)&boot_params->eddbuf[0] -
+-			(char *)&boot_params->_pad8[0]);
+-		memset(&boot_params->_pad9[0], 0, sizeof(boot_params->_pad9));
++		static struct boot_params scratch;
++		char *bp_base = (char *)boot_params;
++		char *save_base = (char *)&scratch;
++		int i;
++
++		const struct boot_params_to_save to_save[] = {
++			BOOT_PARAM_PRESERVE(screen_info),
++			BOOT_PARAM_PRESERVE(apm_bios_info),
++			BOOT_PARAM_PRESERVE(tboot_addr),
++			BOOT_PARAM_PRESERVE(ist_info),
++			BOOT_PARAM_PRESERVE(acpi_rsdp_addr),
++			BOOT_PARAM_PRESERVE(hd0_info),
++			BOOT_PARAM_PRESERVE(hd1_info),
++			BOOT_PARAM_PRESERVE(sys_desc_table),
++			BOOT_PARAM_PRESERVE(olpc_ofw_header),
++			BOOT_PARAM_PRESERVE(efi_info),
++			BOOT_PARAM_PRESERVE(alt_mem_k),
++			BOOT_PARAM_PRESERVE(scratch),
++			BOOT_PARAM_PRESERVE(e820_entries),
++			BOOT_PARAM_PRESERVE(eddbuf_entries),
++			BOOT_PARAM_PRESERVE(edd_mbr_sig_buf_entries),
++			BOOT_PARAM_PRESERVE(edd_mbr_sig_buffer),
++			BOOT_PARAM_PRESERVE(e820_table),
++			BOOT_PARAM_PRESERVE(eddbuf),
++		};
++
++		memset(&scratch, 0, sizeof(scratch));
++
++		for (i = 0; i < ARRAY_SIZE(to_save); i++) {
++			memcpy(save_base + to_save[i].start,
++			       bp_base + to_save[i].start, to_save[i].len);
++		}
++
++		memcpy(boot_params, save_base, sizeof(*boot_params));
+ 	}
+ }
+ 
