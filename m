@@ -2,95 +2,124 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A6FCC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 21:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86152C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 21:03:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF8E9217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 21:01:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565211694;
-	bh=+qBbfBSMAH7Y3GHuWbe+rylHpzCgkxGkF76I78EmJxY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=zLtIArH1ovfoMfY6HPRujLXgdqLM+G3M68+xaXloQGehs+n4+SNFDdSKZrQbpyMyd
-	 9a2JnXDT0IQJgy9FG7TaYGiapqqqMjJHsDjvu3SuYtaB1owYp8jpRWExUbbAQe+IKf
-	 tGUqGC5Rihui9OcEDGgkDwDYXral604/XfKY76Nk=
+	by mail.kernel.org (Postfix) with ESMTP id 6241F217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 21:03:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730261AbfHGVBc (ORCPT
+        id S1730331AbfHGVDF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 17:01:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59286 "EHLO mail.kernel.org"
+        Wed, 7 Aug 2019 17:03:05 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:44122 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729934AbfHGVBc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 17:01:32 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42E452173C;
-        Wed,  7 Aug 2019 21:01:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565211691;
-        bh=+qBbfBSMAH7Y3GHuWbe+rylHpzCgkxGkF76I78EmJxY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=oVKMpM2eI1851tBovePX/3oFkhm0jedmWGpX0lOJRCyhVvcrHTCVgDWE9WFHNn1rP
-         WFubGz9PQLZVC6YbI6q6EFc8Pfl349VJXeEIbnTNvRnETpfhuKci6P9uqPrkNuoWI2
-         OZaLmDlzO29vPnGG+m4zGuD1EldUfhdTABKXMH6k=
-Date:   Wed, 7 Aug 2019 14:01:30 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Artem S. Tashkinov" <aros@gmx.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>
-Subject: Re: Let's talk about the elephant in the room - the Linux kernel's
- inability to gracefully handle low memory pressure
-Message-Id: <20190807140130.7418e783654a9c53e6b6cd1b@linux-foundation.org>
-In-Reply-To: <20190807205138.GA24222@cmpxchg.org>
-References: <d9802b6a-949b-b327-c4a6-3dbca485ec20@gmx.com>
-        <ce102f29-3adc-d0fd-41ee-e32c1bcd7e8d@suse.cz>
-        <20190805193148.GB4128@cmpxchg.org>
-        <CAJuCfpHhR+9ybt9ENzxMbdVUd_8rJN+zFbDm+5CeE2Desu82Gg@mail.gmail.com>
-        <398f31f3-0353-da0c-fc54-643687bb4774@suse.cz>
-        <20190806142728.GA12107@cmpxchg.org>
-        <20190806143608.GE11812@dhcp22.suse.cz>
-        <CAJuCfpFmOzj-gU1NwoQFmS_pbDKKd2XN=CS1vUV4gKhYCJOUtw@mail.gmail.com>
-        <20190806220150.GA22516@cmpxchg.org>
-        <20190807075927.GO11812@dhcp22.suse.cz>
-        <20190807205138.GA24222@cmpxchg.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1729960AbfHGVDE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 17:03:04 -0400
+Received: from ip5f5a6044.dynamic.kabel-deutschland.de ([95.90.96.68] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1hvT5G-0003Vr-GS; Wed, 07 Aug 2019 23:02:58 +0200
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Nathan Chancellor <natechancellor@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        "kernelci . org bot" <bot@kernelci.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH] phy-rockchip-inno-hdmi: Fix RK3328_TERM_RESISTOR_CALIB_SPEED_7_0's third value
+Date:   Wed, 07 Aug 2019 23:02:57 +0200
+Message-ID: <5866399.zOWMQKR7fF@diego>
+In-Reply-To: <20190807192305.6604-1-natechancellor@gmail.com>
+References: <20190807192305.6604-1-natechancellor@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 7 Aug 2019 16:51:38 -0400 Johannes Weiner <hannes@cmpxchg.org> wrote:
-
-> However, eb414681d5a0 ("psi: pressure stall information for CPU,
-> memory, and IO") introduced a memory pressure metric that quantifies
-> the share of wallclock time in which userspace waits on reclaim,
-> refaults, swapins. By using absolute time, it encodes all the above
-> mentioned variables of hardware capacity and workload behavior. When
-> memory pressure is 40%, it means that 40% of the time the workload is
-> stalled on memory, period. This is the actual measure for the lack of
-> forward progress that users can experience. It's also something they
-> expect the kernel to manage and remedy if it becomes non-existent.
+Am Mittwoch, 7. August 2019, 21:23:05 CEST schrieb Nathan Chancellor:
+> After commit "linux/bits.h: Add compile time sanity check of GENMASK
+> inputs" [1], arm64 defconfig builds started failing:
 > 
-> To accomplish this, this patch implements a thrashing cutoff for the
-> OOM killer. If the kernel determines a sustained high level of memory
-> pressure, and thus a lack of forward progress in userspace, it will
-> trigger the OOM killer to reduce memory contention.
+> In file included from ../include/linux/bits.h:22,
+>                  from ../include/linux/bitops.h:5,
+>                  from ../include/linux/kernel.h:12,
+>                  from ../include/linux/clk.h:13,
+>                  from ../drivers/phy/rockchip/phy-rockchip-inno-hdmi.c:9:
+> ../drivers/phy/rockchip/phy-rockchip-inno-hdmi.c: In function 'inno_hdmi_phy_rk3328_power_on':
+> ../include/linux/build_bug.h:16:45: error: negative width in bit-field '<anonymous>'
+>    16 | #define BUILD_BUG_ON_ZERO(e) (sizeof(struct { int:(-!!(e)); }))
+>       |                                             ^
+> ../include/linux/bits.h:24:18: note: in expansion of macro 'BUILD_BUG_ON_ZERO'
+>    24 |  ((unsigned long)BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
+>       |                  ^~~~~~~~~~~~~~~~~
+> ../include/linux/bits.h:39:3: note: in expansion of macro 'GENMASK_INPUT_CHECK'
+>    39 |  (GENMASK_INPUT_CHECK(high, low) + __GENMASK(high, low))
+>       |   ^~~~~~~~~~~~~~~~~~~
+> ../drivers/phy/rockchip/phy-rockchip-inno-hdmi.c:24:42: note: in expansion of macro 'GENMASK'
+>    24 | #define UPDATE(x, h, l)  (((x) << (l)) & GENMASK((h), (l)))
+>       |                                          ^~~~~~~
+> ../drivers/phy/rockchip/phy-rockchip-inno-hdmi.c:201:50: note: in expansion of macro 'UPDATE'
+>   201 | #define RK3328_TERM_RESISTOR_CALIB_SPEED_7_0(x)  UPDATE(x, 7, 9)
+>       |                                                  ^~~~~~
+> ../drivers/phy/rockchip/phy-rockchip-inno-hdmi.c:1046:26: note: in expansion of macro 'RK3328_TERM_RESISTOR_CALIB_SPEED_7_0'
+>  1046 |   inno_write(inno, 0xc6, RK3328_TERM_RESISTOR_CALIB_SPEED_7_0(v));
+>       |                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 > 
-> Per default, the OOM killer will engage after 15 seconds of at least
-> 80% memory pressure. These values are tunable via sysctls
-> vm.thrashing_oom_period and vm.thrashing_oom_level.
+> As pointed out by Robin and Guenter, inno_write's val argument is an
+> 8-bit value so having a mask larger than that doesn't make sense. This
+> also matches the rest of the *_7_0 macros in this driver.
+> 
+> [1]: https://lore.kernel.org/lkml/20190801230358.4193-2-rikard.falkeborn@gmail.com/
+> 
+> Reported-by: Andrzej Hajda <a.hajda@samsung.com>
+> Reported-by: Guenter Roeck <linux@roeck-us.net>
+> Reported-by: kernelci.org bot <bot@kernelci.org>
+> Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+> Suggested-by: Guenter Roeck <linux@roeck-us.net>
+> Suggested-by: Robin Murphy <robin.murphy@arm.com>
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
 
-Could be implemented in userspace?
-</troll>
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+
+on a rk3328-rock64 hdmi output still works
+Tested-by: Heiko Stuebner <heiko@sntech.de>
+
+@Kishon: Would probably be good to get this fast into 5.3-rc.
+
+
+Heiko
+
+
+>  drivers/phy/rockchip/phy-rockchip-inno-hdmi.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c b/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c
+> index b10a84cab4a7..2b97fb1185a0 100644
+> --- a/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c
+> +++ b/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c
+> @@ -198,7 +198,7 @@
+>  #define RK3328_BYPASS_TERM_RESISTOR_CALIB		BIT(7)
+>  #define RK3328_TERM_RESISTOR_CALIB_SPEED_14_8(x)	UPDATE((x) >> 8, 6, 0)
+>  /* REG:0xc6 */
+> -#define RK3328_TERM_RESISTOR_CALIB_SPEED_7_0(x)		UPDATE(x, 7, 9)
+> +#define RK3328_TERM_RESISTOR_CALIB_SPEED_7_0(x)		UPDATE(x, 7, 0)
+>  /* REG:0xc7 */
+>  #define RK3328_TERM_RESISTOR_50				UPDATE(0, 2, 1)
+>  #define RK3328_TERM_RESISTOR_62_5			UPDATE(1, 2, 1)
+> 
+
+
+
+
