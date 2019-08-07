@@ -6,38 +6,37 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF9FCC32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 17:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3DA1C32754
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 17:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B886A2231F
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 17:29:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 935C02231F
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 17:29:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388924AbfHGR3J (ORCPT
+        id S2389010AbfHGR3K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 13:29:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59316 "EHLO mail.kernel.org"
+        Wed, 7 Aug 2019 13:29:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388697AbfHGR3I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 13:29:08 -0400
+        id S2388701AbfHGR3K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 13:29:10 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20D90222FC;
+        by mail.kernel.org (Postfix) with ESMTPSA id 48C7322305;
         Wed,  7 Aug 2019 17:29:08 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.92)
         (envelope-from <rostedt@goodmis.org>)
-        id 1hvPkJ-0007zT-8a; Wed, 07 Aug 2019 13:29:07 -0400
-Message-Id: <20190807172907.155165959@goodmis.org>
+        id 1hvPkJ-0007zy-De; Wed, 07 Aug 2019 13:29:07 -0400
+Message-Id: <20190807172907.310138647@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Wed, 07 Aug 2019 13:28:27 -0400
+Date:   Wed, 07 Aug 2019 13:28:28 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Joel Fernandes <joel@joelfernandes.org>,
         Jiping Ma <jiping.ma2@windriver.com>, mingo@redhat.com,
         catalin.marinas@arm.com, will.deacon@arm.com,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 1/2 v2] tracing/arm64: Have max stack tracer handle the case of return
- address after data
+Subject: [PATCH 2/2 v2] tracing: Document the stack trace algorithm in the comments
 References: <20190807172826.352574408@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -48,79 +47,127 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-Most archs (well at least x86) store the function call return address on the
-stack before storing the local variables for the function. The max stack
-tracer depends on this in its algorithm to display the stack size of each
-function it finds in the back trace.
+As the max stack tracer algorithm is not that easy to understand from the
+code, add comments that explain the algorithm and mentions how
+ARCH_RET_ADDR_AFTER_LOCAL_VARS affects it.
 
-Some archs (arm64), may store the return address (from its link register)
-just before calling a nested function. There's no reason to save the link
-register on leaf functions, as it wont be updated. This breaks the algorithm
-of the max stack tracer.
+Link: http://lkml.kernel.org/r/20190806123455.487ac02b@gandalf.local.home
 
-Add a new define ARCH_RET_ADDR_AFTER_LOCAL_VARS that an architecture may set
-if it stores the return address (link register) after it stores the
-function's local variables, and have the stack trace shift the values of the
-mapped stack size to the appropriate functions.
-
-Link: 20190802094103.163576-1-jiping.ma2@windriver.com
-
-Reported-by: Jiping Ma <jiping.ma2@windriver.com>
+Suggested-by: Joel Fernandes <joel@joelfernandes.org>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- arch/arm64/include/asm/ftrace.h | 13 +++++++++++++
- kernel/trace/trace_stack.c      | 14 ++++++++++++++
- 2 files changed, 27 insertions(+)
+ kernel/trace/trace_stack.c | 98 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 98 insertions(+)
 
-diff --git a/arch/arm64/include/asm/ftrace.h b/arch/arm64/include/asm/ftrace.h
-index 5ab5200b2bdc..961e98618db4 100644
---- a/arch/arm64/include/asm/ftrace.h
-+++ b/arch/arm64/include/asm/ftrace.h
-@@ -14,6 +14,19 @@
- #define MCOUNT_ADDR		((unsigned long)_mcount)
- #define MCOUNT_INSN_SIZE	AARCH64_INSN_SIZE
- 
-+/*
-+ * Currently, gcc tends to save the link register after the local variables
-+ * on the stack. This causes the max stack tracer to report the function
-+ * frame sizes for the wrong functions. By defining
-+ * ARCH_RET_ADDR_AFTER_LOCAL_VARS, it will tell the stack tracer to expect
-+ * to find the return address on the stack after the local variables have
-+ * been set up.
-+ *
-+ * Note, this may change in the future, and we will need to deal with that
-+ * if it were to happen.
-+ */
-+#define ARCH_RET_ADDR_AFTER_LOCAL_VARS 1
-+
- #ifndef __ASSEMBLY__
- #include <linux/compat.h>
- 
 diff --git a/kernel/trace/trace_stack.c b/kernel/trace/trace_stack.c
-index 5d16f73898db..40e4a88eea8f 100644
+index 40e4a88eea8f..f94a2fc567de 100644
 --- a/kernel/trace/trace_stack.c
 +++ b/kernel/trace/trace_stack.c
-@@ -158,6 +158,20 @@ static void check_stack(unsigned long ip, unsigned long *stack)
- 			i++;
+@@ -53,6 +53,104 @@ static void print_max_stack(void)
  	}
+ }
  
-+#ifdef ARCH_RET_ADDR_AFTER_LOCAL_VARS
-+	/*
-+	 * Some archs will store the link register before calling
-+	 * nested functions. This means the saved return address
-+	 * comes after the local storage, and we need to shift
-+	 * for that.
-+	 */
-+	if (x > 1) {
-+		memmove(&stack_trace_index[0], &stack_trace_index[1],
-+			sizeof(stack_trace_index[0]) * (x - 1));
-+		x--;
-+	}
-+#endif
-+
- 	stack_trace_nr_entries = x;
- 
- 	if (task_stack_end_corrupted(current)) {
++/*
++ * The stack tracer looks for a maximum stack at each call from a function. It
++ * registers a callback from ftrace, and in that callback it examines the stack
++ * size. It determines the stack size from the variable passed in, which is the
++ * address of a local variable in the stack_trace_call() callback function.
++ * The stack size is calculated by the address of the local variable to the top
++ * of the current stack. If that size is smaller than the currently saved max
++ * stack size, nothing more is done.
++ *
++ * If the size of the stack is greater than the maximum recorded size, then the
++ * following algorithm takes place.
++ *
++ * For architectures (like x86) that store the function's return address before
++ * saving the function's local variables, the stack will look something like
++ * this:
++ *
++ *   [ top of stack ]
++ *    0: sys call entry frame
++ *   10: return addr to entry code
++ *   11: start of sys_foo frame
++ *   20: return addr to sys_foo
++ *   21: start of kernel_func_bar frame
++ *   30: return addr to kernel_func_bar
++ *   31: [ do trace stack here ]
++ *
++ * The save_stack_trace() is called returning all the functions it finds in the
++ * current stack. Which would be (from the bottom of the stack to the top):
++ *
++ *   return addr to kernel_func_bar
++ *   return addr to sys_foo
++ *   return addr to entry code
++ *
++ * Now to figure out how much each of these functions' local variable size is,
++ * a search of the stack is made to find these values. When a match is made, it
++ * is added to the stack_dump_trace[] array. The offset into the stack is saved
++ * in the stack_trace_index[] array. The above example would show:
++ *
++ *        stack_dump_trace[]        |   stack_trace_index[]
++ *        ------------------        +   -------------------
++ *  return addr to kernel_func_bar  |          30
++ *  return addr to sys_foo          |          20
++ *  return addr to entry            |          10
++ *
++ * The print_max_stack() function above, uses these values to print the size of
++ * each function's portion of the stack.
++ *
++ *  for (i = 0; i < nr_entries; i++) {
++ *     size = i == nr_entries - 1 ? stack_trace_index[i] :
++ *                    stack_trace_index[i] - stack_trace_index[i+1]
++ *     print "%d %d %d %s\n", i, stack_trace_index[i], size, stack_dump_trace[i]);
++ *  }
++ *
++ * The above shows
++ *
++ *     depth size  location
++ *     ----- ----  --------
++ *  0    30   10   kernel_func_bar
++ *  1    20   10   sys_foo
++ *  2    10   10   entry code
++ *
++ * Now for architectures that might save the return address after the functions
++ * local variables (saving the link register before calling nested functions),
++ * this will cause the stack to look a little different:
++ *
++ * [ top of stack ]
++ *  0: sys call entry frame
++ * 10: start of sys_foo_frame
++ * 19: return addr to entry code << lr saved before calling kernel_func_bar
++ * 20: start of kernel_func_bar frame
++ * 29: return addr to sys_foo_frame << lr saved before calling next function
++ * 30: [ do trace stack here ]
++ *
++ * Although the functions returned by save_stack_trace() may be the same, the
++ * placement in the stack will be different. Using the same algorithm as above
++ * would yield:
++ *
++ *        stack_dump_trace[]        |   stack_trace_index[]
++ *        ------------------        +   -------------------
++ *  return addr to kernel_func_bar  |          30
++ *  return addr to sys_foo          |          29
++ *  return addr to entry            |          19
++ *
++ * Where the mapping is off by one:
++ *
++ *   kernel_func_bar stack frame size is 29 - 19 not 30 - 29!
++ *
++ * To fix this, if the architecture sets ARCH_RET_ADDR_AFTER_LOCAL_VARS the
++ * values in stack_trace_index[] are shifted by one to and the number of
++ * stack trace entries is decremented by one.
++ *
++ *        stack_dump_trace[]        |   stack_trace_index[]
++ *        ------------------        +   -------------------
++ *  return addr to kernel_func_bar  |          29
++ *  return addr to sys_foo          |          19
++ *
++ * Although the entry function is not displayed, the first function (sys_foo)
++ * will still include the stack size of it.
++ */
+ static void check_stack(unsigned long ip, unsigned long *stack)
+ {
+ 	unsigned long this_size, flags; unsigned long *p, *top, *start;
 -- 
 2.20.1
 
