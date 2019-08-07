@@ -2,99 +2,104 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B66D1C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 02:06:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9247C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 02:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A02E214C6
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 02:06:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95E3A20665
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 02:07:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Kl5CEiJl"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="JC4fDjkU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728863AbfHGCGE (ORCPT
+        id S1729070AbfHGCHI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 22:06:04 -0400
-Received: from mail-pl1-f201.google.com ([209.85.214.201]:34123 "EHLO
-        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728547AbfHGCGE (ORCPT
+        Tue, 6 Aug 2019 22:07:08 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35839 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727651AbfHGCHI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 22:06:04 -0400
-Received: by mail-pl1-f201.google.com with SMTP id 71so49474016pld.1
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 19:06:04 -0700 (PDT)
+        Tue, 6 Aug 2019 22:07:08 -0400
+Received: by mail-ot1-f67.google.com with SMTP id j19so21451137otq.2
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 19:07:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=bdbKWZyjXxZ8gdygSGa9lktCzX8kxlzXL6a6uqaX3bg=;
-        b=Kl5CEiJl/MaPfmQJRxpS2c1fPM5g/w735FsApDzzZzR56wnn0csvwjboJv9Jbjz6HU
-         vULA/nOTL4J4BJHrQftcA5iZOBear0d0K+loneShngKG8oeNAQuDxzwMKm1WisYQt+bT
-         TfB1p2/qViJhOuUXXbCYyBckBgngIgMdLbnJBHq6gDAG3/oAHyA7PT0r5upuG9zuUFT2
-         Uh2jMJhH1OR0iTVbYZOqnGrUHeA4q+AEZq8T+tELAUzKJhpyHiw1EAs5RE6tv+80w1d5
-         mhDvo5Gw65tAIC6BvkdzOdnOmeVyQTjv5vOEt/cktNZ2pwNHbN/kH1xN5qdmBgHTU780
-         4bHg==
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
+        bh=MuFa6tZ7vFSe1LOVI7ekbYPMVwhBLKkDTybz3Yw3r44=;
+        b=JC4fDjkU965cDljrf9f9H+35WfdDcOLRBf4d4ck2STxWjiyn613K80IfbXIV3yjt8F
+         TaxsxQSVs/4+2cFoiO+YzykT21aoLXLSG3wELNAjtQAbQqwTVS6vp8AZpXutrzNEtHs2
+         03mhxA0YfSdoqbgMZdbgIGx/odmQ/pVngBPraMDIe2T8BLV5G/b2yzLMgkELXP4+AXmA
+         fstCg3FK/zG6HxmSpCXsLx0aDbBr0a4c0CUgL7QlbAVN+Lpdg4RpMokPM66xLHO9o9V0
+         3tkCHFklHn3oMNZz3aI/azdbQ/aY+d3txBL9HIzwxyqlEEpCPhJP1ZGIdLenH6lvgwI2
+         b4qQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=bdbKWZyjXxZ8gdygSGa9lktCzX8kxlzXL6a6uqaX3bg=;
-        b=abn9ikNQo+dM5bQN9KGkrAL2vB6TXyu0dGBY3RnuVOKRle5kjFHvPbgnL1aGb6A+qE
-         EnDqkW2Q5Y7+jtvdiwdRl7mx6Tm4SZTiD/QpwSK2RWDTvynhUnTCS2UeQM+6yRPh0v77
-         Z+Wj9JpGomZwMB/ULMfUv4derv0yCEc6wUWHIA+9nzFHi7gWUBh7e/iF/KurjnIDSpHs
-         dkRKtn0af127yk8BlD2BntIVKO2lFCldAP6+Uq7lZxILopr+wnoWmQvEWFrRgjcuMbX6
-         hG39T8uEvNF9LiWqZC3TdxuU22OJLCjuSp4adXdoYx1Eb40MvJOXnz6goNTpgcXGoThc
-         Q+eg==
-X-Gm-Message-State: APjAAAWl3ouyrjAJffedTTo6bsDiwE6DjPhpvLe1/COoroOq8mBVGK09
-        oZrsGalIwXgDNBysbY2zWEus5oyQ2h6apRg=
-X-Google-Smtp-Source: APXvYqxcuEsLSdZXABfbaGLaPekdX0qCbxv3NGBtyC6zvs/T/8g2c6CDTAef9YrNBjb4Nx8tt8f2dLmZFckRn/4=
-X-Received: by 2002:a63:f07:: with SMTP id e7mr5914306pgl.238.1565143563303;
- Tue, 06 Aug 2019 19:06:03 -0700 (PDT)
-Date:   Tue,  6 Aug 2019 19:05:58 -0700
-Message-Id: <20190807020559.74458-1-saravanak@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
-Subject: [PATCH] of/platform: Fix device_links_supplier_sync_state_resume() warning
-From:   Saravana Kannan <saravanak@google.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     Saravana Kannan <saravanak@google.com>, Qian Cai <cai@lca.pw>,
-        kernel-team@android.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
+         :mime-version;
+        bh=MuFa6tZ7vFSe1LOVI7ekbYPMVwhBLKkDTybz3Yw3r44=;
+        b=uimWofHU5ueFonSOtPnLSgzMSGR4P2hBl9HB92vYngFxCqzIyQYCrOmlYA5+CsCBqq
+         yEriv5cIDQMu+KT9KZnfz4gJwY77CFsnqqSJBInehZeILbjdCJZEPIsdf9snITBrXh21
+         3PojNaarGEHRPoMKerZXUMbkZQBfqT2L612ZmXEhwmINAGnKvcTGECWFrPUqTG002M/+
+         EWZbDzNWIbAHjPcb/sDsbX/KyqDZnrlFZphitpI/eOBZIXSqq4h/9Hd5TzRV4GSFWcyf
+         jNU5ZvPliukfaidTPD8zHfistia5vK7HAzxqsFriJalcnDG6j/vGKeOA8pUmlb48q1PO
+         NZEQ==
+X-Gm-Message-State: APjAAAXGQaLACUo/CwDZLRzOfeVwrUnrMjImFjofJdO8qKV3gNBQ526N
+        LGvYrHZTBOB9JF68a3GauSTjGQ==
+X-Google-Smtp-Source: APXvYqyRjgjRUfPtCrkI5GZQR86YZZs4UWw3xYp+cV8dbhHh18X0tcLi4UP7kagxmb+VJst8/pQJ1A==
+X-Received: by 2002:a02:1441:: with SMTP id 62mr7791725jag.21.1565143627162;
+        Tue, 06 Aug 2019 19:07:07 -0700 (PDT)
+Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
+        by smtp.gmail.com with ESMTPSA id h18sm69825603iob.80.2019.08.06.19.07.06
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 06 Aug 2019 19:07:06 -0700 (PDT)
+Date:   Tue, 6 Aug 2019 19:07:06 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     linux-riscv@lists.infradead.org
+cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] riscv: delay: use do_div() instead of __udivdi3()
+Message-ID: <alpine.DEB.2.21.9999.1908061906240.25231@viisi.sifive.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In platforms/devices which have CONFIG_OF turned on but don't have a
-populated DT, the calls to device_links_supplier_sync_state_pause() and
-device_links_supplier_sync_state_resume() can get mismatched. This will
-cause a warning during boot. Fix the warning by making sure the calls are
-matched even in that case.
 
-Reported-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Saravana Kannan <saravanak@google.com>
+In preparation for removing __udivdi3() from the RISC-V
+architecture-specific files, convert its one user to use do_div().
+This avoids breaking the RV32 build after __udivdi3() is removed.
+
+Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
 ---
- drivers/of/platform.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/riscv/lib/delay.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index a2a4e4b79d43..e5f7e40df439 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -723,7 +723,8 @@ arch_initcall_sync(of_platform_default_populate_init);
- 
- static int __init of_platform_sync_state_init(void)
+diff --git a/arch/riscv/lib/delay.c b/arch/riscv/lib/delay.c
+index 87ff89e88f2c..8c686934e0f6 100644
+--- a/arch/riscv/lib/delay.c
++++ b/arch/riscv/lib/delay.c
+@@ -81,9 +81,14 @@ EXPORT_SYMBOL(__delay);
+ void udelay(unsigned long usecs)
  {
--	device_links_supplier_sync_state_resume();
-+	if (of_have_populated_dt())
-+		device_links_supplier_sync_state_resume();
- 	return 0;
- }
- late_initcall_sync(of_platform_sync_state_init);
+ 	u64 ucycles = (u64)usecs * lpj_fine * UDELAY_MULT;
++	u64 n;
++	u32 rem;
+ 
+ 	if (unlikely(usecs > MAX_UDELAY_US)) {
+-		__delay((u64)usecs * riscv_timebase / 1000000ULL);
++		n = (u64)usecs * riscv_timebase;
++		rem = do_div(n, 1000000);
++
++		__delay(n);
+ 		return;
+ 	}
+ 
 -- 
-2.23.0.rc1.153.gdeed80330f-goog
+2.22.0
 
