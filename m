@@ -6,79 +6,81 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A19C7C19759
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 06:04:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A0EC32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 06:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 808A2229ED
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 06:04:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A4D1229ED
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 06:04:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727144AbfHGGEe (ORCPT
+        id S1727178AbfHGGEl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 02:04:34 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:47758 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726511AbfHGGEd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 02:04:33 -0400
-Received: from p200300ddd742df588d2c07822b9f4274.dip0.t-ipconnect.de ([2003:dd:d742:df58:8d2c:782:2b9f:4274])
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hvF3Z-0006g6-5p; Wed, 07 Aug 2019 08:04:17 +0200
-Date:   Wed, 7 Aug 2019 08:04:10 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Dmitry Safonov <dima@arista.com>
-cc:     linux-kernel@vger.kernel.org,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@gmail.com>,
-        Adrian Reber <adrian@lisas.de>,
-        Andrei Vagin <avagin@openvz.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        containers@lists.linux-foundation.org, criu@openvz.org,
-        linux-api@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCHv5 06/37] alarmtimer: Provide get_timespec() callback
-In-Reply-To: <20190729215758.28405-7-dima@arista.com>
-Message-ID: <alpine.DEB.2.21.1908070803030.24014@nanos.tec.linutronix.de>
-References: <20190729215758.28405-1-dima@arista.com> <20190729215758.28405-7-dima@arista.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 7 Aug 2019 02:04:41 -0400
+Received: from verein.lst.de ([213.95.11.211]:34678 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726511AbfHGGEk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 02:04:40 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id BFD0A68CEE; Wed,  7 Aug 2019 08:04:33 +0200 (CEST)
+Date:   Wed, 7 Aug 2019 08:04:32 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Shawn Anastasio <shawn@anastas.io>
+Cc:     Christoph Hellwig <hch@lst.de>, iommu@lists.linux-foundation.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Gavin Li <git@thegavinli.com>
+Subject: Re: [PATCH 1/2] dma-mapping: fix page attributes for dma_mmap_*
+Message-ID: <20190807060432.GD6627@lst.de>
+References: <20190805080145.5694-1-hch@lst.de> <20190805080145.5694-2-hch@lst.de> <7df95ffb-6df3-b118-284c-ee32cad81199@anastas.io>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7df95ffb-6df3-b118-284c-ee32cad81199@anastas.io>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Jul 2019, Dmitry Safonov wrote:
->  /**
-> @@ -869,8 +871,10 @@ static int __init alarmtimer_init(void)
->  	/* Initialize alarm bases */
->  	alarm_bases[ALARM_REALTIME].base_clockid = CLOCK_REALTIME;
->  	alarm_bases[ALARM_REALTIME].get_ktime = &ktime_get_real;
-> +	alarm_bases[ALARM_REALTIME].get_timespec = posix_get_timespec,
+On Tue, Aug 06, 2019 at 09:39:06PM +0200, Shawn Anastasio wrote:
+>> -#ifdef CONFIG_ARCH_HAS_DMA_MMAP_PGPROT
+>>   pgprot_t arch_dma_mmap_pgprot(struct device *dev, pgprot_t prot,
+>>   		unsigned long attrs);
+>> -#else
+>> -# define arch_dma_mmap_pgprot(dev, prot, attrs)	pgprot_noncached(prot)
+>> -#endif
+>
+> Nit, but maybe the prototype should still be ifdef'd here? It at least
+> could prevent a reader from incorrectly thinking that the function is
+> always present.
 
-That's just wrong:
+Actually it is typical modern Linux style to just provide a prototype
+and then use "if (IS_ENABLED(CONFIG_FOO))" to guard the call(s) to it.
 
->  /*
->   * Get monotonic time for posix timers
->   */
-> -static int posix_get_timespec(clockid_t which_clock, struct timespec64 *tp)
-> +int posix_get_timespec(clockid_t which_clock, struct timespec64 *tp)
->  {
->  	ktime_get_ts64(tp);
->  	return 0;
+>
+> Also, like Will mentioned earlier, the function name isn't entirely
+> accurate anymore. I second the suggestion of using something like
+> arch_dma_noncoherent_pgprot().
 
-Using a proper function name would have avoided this.
+As mentioned I plan to remove arch_dma_mmap_pgprot for 5.4, so I'd
+rather avoid churn for the short period of time.
 
+> As for your idea of defining
+> pgprot_dmacoherent for all architectures as
+>
+> #ifndef pgprot_dmacoherent
+> #define pgprot_dmacoherent pgprot_noncached
+> #endif
+>
+> I think that the name here is kind of misleading too, since this
+> definition will only be used when there is no support for proper
+> DMA coherency.
+
+Do you have a suggestion for a better name?  I'm pretty bad at naming,
+so just reusing the arm name seemed like a good way to avoid having
+to make naming decisions myself.
