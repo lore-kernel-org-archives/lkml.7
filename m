@@ -2,104 +2,260 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9247C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 02:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8AF4C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 02:18:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95E3A20665
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 02:07:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="JC4fDjkU"
+	by mail.kernel.org (Postfix) with ESMTP id B769F21743
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 02:18:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729070AbfHGCHI (ORCPT
+        id S1728951AbfHGCSQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 22:07:08 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:35839 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727651AbfHGCHI (ORCPT
+        Tue, 6 Aug 2019 22:18:16 -0400
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:45037 "EHLO
+        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728667AbfHGCSQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 22:07:08 -0400
-Received: by mail-ot1-f67.google.com with SMTP id j19so21451137otq.2
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 19:07:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
-        bh=MuFa6tZ7vFSe1LOVI7ekbYPMVwhBLKkDTybz3Yw3r44=;
-        b=JC4fDjkU965cDljrf9f9H+35WfdDcOLRBf4d4ck2STxWjiyn613K80IfbXIV3yjt8F
-         TaxsxQSVs/4+2cFoiO+YzykT21aoLXLSG3wELNAjtQAbQqwTVS6vp8AZpXutrzNEtHs2
-         03mhxA0YfSdoqbgMZdbgIGx/odmQ/pVngBPraMDIe2T8BLV5G/b2yzLMgkELXP4+AXmA
-         fstCg3FK/zG6HxmSpCXsLx0aDbBr0a4c0CUgL7QlbAVN+Lpdg4RpMokPM66xLHO9o9V0
-         3tkCHFklHn3oMNZz3aI/azdbQ/aY+d3txBL9HIzwxyqlEEpCPhJP1ZGIdLenH6lvgwI2
-         b4qQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
-         :mime-version;
-        bh=MuFa6tZ7vFSe1LOVI7ekbYPMVwhBLKkDTybz3Yw3r44=;
-        b=uimWofHU5ueFonSOtPnLSgzMSGR4P2hBl9HB92vYngFxCqzIyQYCrOmlYA5+CsCBqq
-         yEriv5cIDQMu+KT9KZnfz4gJwY77CFsnqqSJBInehZeILbjdCJZEPIsdf9snITBrXh21
-         3PojNaarGEHRPoMKerZXUMbkZQBfqT2L612ZmXEhwmINAGnKvcTGECWFrPUqTG002M/+
-         EWZbDzNWIbAHjPcb/sDsbX/KyqDZnrlFZphitpI/eOBZIXSqq4h/9Hd5TzRV4GSFWcyf
-         jNU5ZvPliukfaidTPD8zHfistia5vK7HAzxqsFriJalcnDG6j/vGKeOA8pUmlb48q1PO
-         NZEQ==
-X-Gm-Message-State: APjAAAXGQaLACUo/CwDZLRzOfeVwrUnrMjImFjofJdO8qKV3gNBQ526N
-        LGvYrHZTBOB9JF68a3GauSTjGQ==
-X-Google-Smtp-Source: APXvYqyRjgjRUfPtCrkI5GZQR86YZZs4UWw3xYp+cV8dbhHh18X0tcLi4UP7kagxmb+VJst8/pQJ1A==
-X-Received: by 2002:a02:1441:: with SMTP id 62mr7791725jag.21.1565143627162;
-        Tue, 06 Aug 2019 19:07:07 -0700 (PDT)
-Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
-        by smtp.gmail.com with ESMTPSA id h18sm69825603iob.80.2019.08.06.19.07.06
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 06 Aug 2019 19:07:06 -0700 (PDT)
-Date:   Tue, 6 Aug 2019 19:07:06 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     linux-riscv@lists.infradead.org
-cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] riscv: delay: use do_div() instead of __udivdi3()
-Message-ID: <alpine.DEB.2.21.9999.1908061906240.25231@viisi.sifive.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Tue, 6 Aug 2019 22:18:16 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0TYr3obk_1565144286;
+Received: from e19h19392.et15sqa.tbsite.net(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TYr3obk_1565144286)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 07 Aug 2019 10:18:13 +0800
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+To:     kirill.shutemov@linux.intel.com, ktkhai@virtuozzo.com,
+        hannes@cmpxchg.org, mhocko@suse.com, hughd@google.com,
+        shakeelb@google.com, rientjes@google.com, cai@lca.pw,
+        akpm@linux-foundation.org
+Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [v5 PATCH 1/4] mm: thp: extract split_queue_* into a struct
+Date:   Wed,  7 Aug 2019 10:17:54 +0800
+Message-Id: <1565144277-36240-2-git-send-email-yang.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1565144277-36240-1-git-send-email-yang.shi@linux.alibaba.com>
+References: <1565144277-36240-1-git-send-email-yang.shi@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Put split_queue, split_queue_lock and split_queue_len into a struct in
+order to reduce code duplication when we convert deferred_split to memcg
+aware in the later patches.
 
-In preparation for removing __udivdi3() from the RISC-V
-architecture-specific files, convert its one user to use do_div().
-This avoids breaking the RV32 build after __udivdi3() is removed.
-
-Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+Suggested-by: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Hugh Dickins <hughd@google.com>
+Cc: Shakeel Butt <shakeelb@google.com>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Qian Cai <cai@lca.pw>
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
 ---
- arch/riscv/lib/delay.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ include/linux/mmzone.h | 12 +++++++++---
+ mm/huge_memory.c       | 45 +++++++++++++++++++++++++--------------------
+ mm/page_alloc.c        |  8 +++++---
+ 3 files changed, 39 insertions(+), 26 deletions(-)
 
-diff --git a/arch/riscv/lib/delay.c b/arch/riscv/lib/delay.c
-index 87ff89e88f2c..8c686934e0f6 100644
---- a/arch/riscv/lib/delay.c
-+++ b/arch/riscv/lib/delay.c
-@@ -81,9 +81,14 @@ EXPORT_SYMBOL(__delay);
- void udelay(unsigned long usecs)
- {
- 	u64 ucycles = (u64)usecs * lpj_fine * UDELAY_MULT;
-+	u64 n;
-+	u32 rem;
+diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+index d77d717..d8ec773 100644
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -676,6 +676,14 @@ struct zonelist {
+ extern struct page *mem_map;
+ #endif
  
- 	if (unlikely(usecs > MAX_UDELAY_US)) {
--		__delay((u64)usecs * riscv_timebase / 1000000ULL);
-+		n = (u64)usecs * riscv_timebase;
-+		rem = do_div(n, 1000000);
++#ifdef CONFIG_TRANSPARENT_HUGEPAGE
++struct deferred_split {
++	spinlock_t split_queue_lock;
++	struct list_head split_queue;
++	unsigned long split_queue_len;
++};
++#endif
 +
-+		__delay(n);
- 		return;
+ /*
+  * On NUMA machines, each NUMA node would have a pg_data_t to describe
+  * it's memory layout. On UMA machines there is a single pglist_data which
+@@ -755,9 +763,7 @@ struct zonelist {
+ #endif /* CONFIG_DEFERRED_STRUCT_PAGE_INIT */
+ 
+ #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+-	spinlock_t split_queue_lock;
+-	struct list_head split_queue;
+-	unsigned long split_queue_len;
++	struct deferred_split deferred_split_queue;
+ #endif
+ 
+ 	/* Fields commonly accessed by the page reclaim scanner */
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 1334ede..e0d8e08 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -2658,6 +2658,7 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
+ {
+ 	struct page *head = compound_head(page);
+ 	struct pglist_data *pgdata = NODE_DATA(page_to_nid(head));
++	struct deferred_split *ds_queue = &pgdata->deferred_split_queue;
+ 	struct anon_vma *anon_vma = NULL;
+ 	struct address_space *mapping = NULL;
+ 	int count, mapcount, extra_pins, ret;
+@@ -2744,17 +2745,17 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
  	}
  
+ 	/* Prevent deferred_split_scan() touching ->_refcount */
+-	spin_lock(&pgdata->split_queue_lock);
++	spin_lock(&ds_queue->split_queue_lock);
+ 	count = page_count(head);
+ 	mapcount = total_mapcount(head);
+ 	if (!mapcount && page_ref_freeze(head, 1 + extra_pins)) {
+ 		if (!list_empty(page_deferred_list(head))) {
+-			pgdata->split_queue_len--;
++			ds_queue->split_queue_len--;
+ 			list_del(page_deferred_list(head));
+ 		}
+ 		if (mapping)
+ 			__dec_node_page_state(page, NR_SHMEM_THPS);
+-		spin_unlock(&pgdata->split_queue_lock);
++		spin_unlock(&ds_queue->split_queue_lock);
+ 		__split_huge_page(page, list, end, flags);
+ 		if (PageSwapCache(head)) {
+ 			swp_entry_t entry = { .val = page_private(head) };
+@@ -2771,7 +2772,7 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
+ 			dump_page(page, "total_mapcount(head) > 0");
+ 			BUG();
+ 		}
+-		spin_unlock(&pgdata->split_queue_lock);
++		spin_unlock(&ds_queue->split_queue_lock);
+ fail:		if (mapping)
+ 			xa_unlock(&mapping->i_pages);
+ 		spin_unlock_irqrestore(&pgdata->lru_lock, flags);
+@@ -2794,52 +2795,56 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
+ void free_transhuge_page(struct page *page)
+ {
+ 	struct pglist_data *pgdata = NODE_DATA(page_to_nid(page));
++	struct deferred_split *ds_queue = &pgdata->deferred_split_queue;
+ 	unsigned long flags;
+ 
+-	spin_lock_irqsave(&pgdata->split_queue_lock, flags);
++	spin_lock_irqsave(&ds_queue->split_queue_lock, flags);
+ 	if (!list_empty(page_deferred_list(page))) {
+-		pgdata->split_queue_len--;
++		ds_queue->split_queue_len--;
+ 		list_del(page_deferred_list(page));
+ 	}
+-	spin_unlock_irqrestore(&pgdata->split_queue_lock, flags);
++	spin_unlock_irqrestore(&ds_queue->split_queue_lock, flags);
+ 	free_compound_page(page);
+ }
+ 
+ void deferred_split_huge_page(struct page *page)
+ {
+ 	struct pglist_data *pgdata = NODE_DATA(page_to_nid(page));
++	struct deferred_split *ds_queue = &pgdata->deferred_split_queue;
+ 	unsigned long flags;
+ 
+ 	VM_BUG_ON_PAGE(!PageTransHuge(page), page);
+ 
+-	spin_lock_irqsave(&pgdata->split_queue_lock, flags);
++	spin_lock_irqsave(&ds_queue->split_queue_lock, flags);
+ 	if (list_empty(page_deferred_list(page))) {
+ 		count_vm_event(THP_DEFERRED_SPLIT_PAGE);
+-		list_add_tail(page_deferred_list(page), &pgdata->split_queue);
+-		pgdata->split_queue_len++;
++		list_add_tail(page_deferred_list(page), &ds_queue->split_queue);
++		ds_queue->split_queue_len++;
+ 	}
+-	spin_unlock_irqrestore(&pgdata->split_queue_lock, flags);
++	spin_unlock_irqrestore(&ds_queue->split_queue_lock, flags);
+ }
+ 
+ static unsigned long deferred_split_count(struct shrinker *shrink,
+ 		struct shrink_control *sc)
+ {
+ 	struct pglist_data *pgdata = NODE_DATA(sc->nid);
+-	return READ_ONCE(pgdata->split_queue_len);
++	struct deferred_split *ds_queue = &pgdata->deferred_split_queue;
++	return READ_ONCE(ds_queue->split_queue_len);
+ }
+ 
+ static unsigned long deferred_split_scan(struct shrinker *shrink,
+ 		struct shrink_control *sc)
+ {
+ 	struct pglist_data *pgdata = NODE_DATA(sc->nid);
++	struct deferred_split *ds_queue = &pgdata->deferred_split_queue;
+ 	unsigned long flags;
+ 	LIST_HEAD(list), *pos, *next;
+ 	struct page *page;
+ 	int split = 0;
+ 
+-	spin_lock_irqsave(&pgdata->split_queue_lock, flags);
++	spin_lock_irqsave(&ds_queue->split_queue_lock, flags);
+ 	/* Take pin on all head pages to avoid freeing them under us */
+-	list_for_each_safe(pos, next, &pgdata->split_queue) {
++	list_for_each_safe(pos, next, &ds_queue->split_queue) {
+ 		page = list_entry((void *)pos, struct page, mapping);
+ 		page = compound_head(page);
+ 		if (get_page_unless_zero(page)) {
+@@ -2847,12 +2852,12 @@ static unsigned long deferred_split_scan(struct shrinker *shrink,
+ 		} else {
+ 			/* We lost race with put_compound_page() */
+ 			list_del_init(page_deferred_list(page));
+-			pgdata->split_queue_len--;
++			ds_queue->split_queue_len--;
+ 		}
+ 		if (!--sc->nr_to_scan)
+ 			break;
+ 	}
+-	spin_unlock_irqrestore(&pgdata->split_queue_lock, flags);
++	spin_unlock_irqrestore(&ds_queue->split_queue_lock, flags);
+ 
+ 	list_for_each_safe(pos, next, &list) {
+ 		page = list_entry((void *)pos, struct page, mapping);
+@@ -2866,15 +2871,15 @@ static unsigned long deferred_split_scan(struct shrinker *shrink,
+ 		put_page(page);
+ 	}
+ 
+-	spin_lock_irqsave(&pgdata->split_queue_lock, flags);
+-	list_splice_tail(&list, &pgdata->split_queue);
+-	spin_unlock_irqrestore(&pgdata->split_queue_lock, flags);
++	spin_lock_irqsave(&ds_queue->split_queue_lock, flags);
++	list_splice_tail(&list, &ds_queue->split_queue);
++	spin_unlock_irqrestore(&ds_queue->split_queue_lock, flags);
+ 
+ 	/*
+ 	 * Stop shrinker if we didn't split any page, but the queue is empty.
+ 	 * This can happen if pages were freed under us.
+ 	 */
+-	if (!split && list_empty(&pgdata->split_queue))
++	if (!split && list_empty(&ds_queue->split_queue))
+ 		return SHRINK_STOP;
+ 	return split;
+ }
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 272c6de..df02a88 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -6649,9 +6649,11 @@ static unsigned long __init calc_memmap_size(unsigned long spanned_pages,
+ #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+ static void pgdat_init_split_queue(struct pglist_data *pgdat)
+ {
+-	spin_lock_init(&pgdat->split_queue_lock);
+-	INIT_LIST_HEAD(&pgdat->split_queue);
+-	pgdat->split_queue_len = 0;
++	struct deferred_split *ds_queue = &pgdat->deferred_split_queue;
++
++	spin_lock_init(&ds_queue->split_queue_lock);
++	INIT_LIST_HEAD(&ds_queue->split_queue);
++	ds_queue->split_queue_len = 0;
+ }
+ #else
+ static void pgdat_init_split_queue(struct pglist_data *pgdat) {}
 -- 
-2.22.0
+1.8.3.1
 
