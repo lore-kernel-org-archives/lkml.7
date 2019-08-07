@@ -2,97 +2,67 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23219C32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 10:57:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78FAEC32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 10:57:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E03F421E6A
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 10:56:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565175420;
-	bh=E+jdnPAL8byjVs25HbPkNIC+Qlh+GYI7JlSAMKjNmOY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OVuitreKNVssTF0sZ3sf6bFQosrSbD6nUhp5gF3GlsSSKpXPKvCDoNx15IPiIALJS
-	 FRNcnqDKjcieoCEyYMps7VWluuW3u2C560sae0G2+U0C8Xn4ejBbQX6ongpHWrK8qe
-	 T7LtqfoBLuuNFYdgS3uzDzqIq5JBmF/2mjq91E+I=
+	by mail.kernel.org (Postfix) with ESMTP id 5A1AD21E6E
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 10:57:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727945AbfHGK46 (ORCPT
+        id S1729160AbfHGK5Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 06:56:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58498 "EHLO mail.kernel.org"
+        Wed, 7 Aug 2019 06:57:16 -0400
+Received: from foss.arm.com ([217.140.110.172]:46602 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725789AbfHGK46 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 06:56:58 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7796321E6A;
-        Wed,  7 Aug 2019 10:56:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565175417;
-        bh=E+jdnPAL8byjVs25HbPkNIC+Qlh+GYI7JlSAMKjNmOY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=j0v7RK71k0oqk5weJNib/8LBsqGyJuYACUDft4NB8ckJHk84Ro4o9VTusqDkVFveE
-         hInp6nbV+z6+c+eRkSZVJv21dWsErYP1VHjdJ7RmC2SBGYizMOpOtiO+ScxwmbGTe9
-         r4JvYQc42MzUUHLNSqnCb0q5hGDm1JjgcMaFR6GU=
-Date:   Wed, 7 Aug 2019 11:56:53 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     catalin.marinas@arm.com, mark.rutland@arm.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] arm64/cache: fix -Woverride-init compiler warnings
-Message-ID: <20190807105652.cyi3fou2rfsxhxrk@willie-the-truck>
-References: <20190806193434.965-1-cai@lca.pw>
+        id S1725789AbfHGK5Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 06:57:16 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7957628;
+        Wed,  7 Aug 2019 03:57:15 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E22BB3F575;
+        Wed,  7 Aug 2019 03:57:13 -0700 (PDT)
+Date:   Wed, 7 Aug 2019 11:57:09 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Jianjun Wang <jianjun.wang@mediatek.com>
+Cc:     Ryder Lee <ryder.lee@mediatek.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, youlin.pei@mediatek.com
+Subject: Re: [v2,0/2] PCI: mediatek: Add support for MT7629
+Message-ID: <20190807105709.GA16214@e121166-lin.cambridge.arm.com>
+References: <20190628073425.25165-1-jianjun.wang@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190806193434.965-1-cai@lca.pw>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190628073425.25165-1-jianjun.wang@mediatek.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 03:34:34PM -0400, Qian Cai wrote:
-> diff --git a/arch/arm64/kernel/cpuinfo.c b/arch/arm64/kernel/cpuinfo.c
-> index 876055e37352..a0c495a3f4fd 100644
-> --- a/arch/arm64/kernel/cpuinfo.c
-> +++ b/arch/arm64/kernel/cpuinfo.c
-> @@ -34,10 +34,7 @@ DEFINE_PER_CPU(struct cpuinfo_arm64, cpu_data);
->  static struct cpuinfo_arm64 boot_cpu_data;
->  
->  static char *icache_policy_str[] = {
-> -	[0 ... ICACHE_POLICY_PIPT]	= "RESERVED/UNKNOWN",
-> -	[ICACHE_POLICY_VIPT]		= "VIPT",
-> -	[ICACHE_POLICY_PIPT]		= "PIPT",
-> -	[ICACHE_POLICY_VPIPT]		= "VPIPT",
-> +	[0 ... ICACHE_POLICY_PIPT]	= "RESERVED/UNKNOWN"
->  };
->  
->  unsigned long __icache_flags;
-> @@ -310,13 +307,16 @@ static void cpuinfo_detect_icache_policy(struct cpuinfo_arm64 *info)
->  
->  	switch (l1ip) {
->  	case ICACHE_POLICY_PIPT:
-> +		icache_policy_str[ICACHE_POLICY_PIPT] = "PIPT";
->  		break;
->  	case ICACHE_POLICY_VPIPT:
-> +		icache_policy_str[ICACHE_POLICY_VPIPT] = "VPIPT";
->  		set_bit(ICACHEF_VPIPT, &__icache_flags);
->  		break;
->  	default:
->  		/* Fallthrough */
->  	case ICACHE_POLICY_VIPT:
-> +		icache_policy_str[ICACHE_POLICY_VIPT] = "VIPT";
->  		/* Assume aliasing */
->  		set_bit(ICACHEF_ALIASING, &__icache_flags);
+On Fri, Jun 28, 2019 at 03:34:23PM +0800, Jianjun Wang wrote:
+> These series patches modify pcie-mediatek.c and dt-bindings compatible
+> string to support MT7629 PCIe host.
+> 
+> Jianjun Wang (2):
+>   dt-bindings: PCI: Add support for MT7629
+>   PCI: mediatek: Add controller support for MT7629
+> 
+>  .../devicetree/bindings/pci/mediatek-pcie.txt  |  1 +
+>  drivers/pci/controller/pcie-mediatek.c         | 18 ++++++++++++++++++
+>  include/linux/pci_ids.h                        |  1 +
+>  3 files changed, 20 insertions(+)
 
-I still think this is worse than the code in mainline. I don't think
--Woverride-init should warn when overriding a field from a GCC range
-designated initialiser, since it makes them considerably less useful
-imo.
+Applied to pci/mediatek for v5.4.
 
-Will
+Thanks,
+Lorenzo
