@@ -2,123 +2,185 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7095AC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 03:09:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB155C31E40
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 03:16:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48252217D9
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 03:09:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="iVKjA1Ze"
+	by mail.kernel.org (Postfix) with ESMTP id 7776F20665
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 03:16:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727919AbfHGDJj (ORCPT
+        id S1727993AbfHGDQb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 23:09:39 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:50897 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726797AbfHGDJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 23:09:38 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 463Ggz26B2z9sDB;
-        Wed,  7 Aug 2019 13:09:34 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1565147376;
-        bh=hciMHCev9cGV0CU2CP0dmB9i++aefUkurPOQYyCCfQE=;
-        h=Date:From:To:Cc:Subject:From;
-        b=iVKjA1ZefpsAbshM9XdGUWDwHfmyOJk3pHRAdO+CCNvk4kDDIsjO/t+0VbOSPWjbL
-         e2hNF9/G3QtaK2l7T6LgseALRBgGPGB/VFzOzEPThg9RRyauhGDRpCEkfD2lx6VZ87
-         GJVN8hiwvSN4JIsUA6oGGBw2YkgJcKwafEqFGMcKngbQXV6cF5lhj560n1J0q5hN5Z
-         Itz0PyihNa9/rl0tTua/zLZomWCjYqIETv1KE+wePT/HVTYPBpOmjGwcQVLHz18EV4
-         F191H9RHBC5xRpShbLdPi7qGTC11Oq6d9YXtGa6dBnL09rpRyCKV0zh5kiwr7WezbV
-         nVKvqWEG4s37A==
-Date:   Wed, 7 Aug 2019 13:09:33 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        Alex Deucher <alexdeucher@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Gerd Hoffmann <kraxel@redhat.com>
-Subject: linux-next: manual merge of the drm-misc tree with the amdgpu tree
-Message-ID: <20190807130933.5491b647@canb.auug.org.au>
+        Tue, 6 Aug 2019 23:16:31 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:54958 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727359AbfHGDQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 23:16:30 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 10C93FA9AE40F21242A4;
+        Wed,  7 Aug 2019 11:16:28 +0800 (CST)
+Received: from [127.0.0.1] (10.177.96.203) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Wed, 7 Aug 2019
+ 11:16:20 +0800
+Subject: Re: [PATCH v4 07/10] powerpc/fsl_booke/32: randomize the kernel image
+ offset
+To:     Christophe Leroy <christophe.leroy@c-s.fr>, <mpe@ellerman.id.au>,
+        <linuxppc-dev@lists.ozlabs.org>, <diana.craciun@nxp.com>,
+        <benh@kernel.crashing.org>, <paulus@samba.org>,
+        <npiggin@gmail.com>, <keescook@chromium.org>,
+        <kernel-hardening@lists.openwall.com>
+CC:     <linux-kernel@vger.kernel.org>, <wangkefeng.wang@huawei.com>,
+        <yebin10@huawei.com>, <thunder.leizhen@huawei.com>,
+        <jingxiangfeng@huawei.com>, <fanchengyang@huawei.com>,
+        <zhaohongjiang@huawei.com>
+References: <20190805064335.19156-1-yanaijie@huawei.com>
+ <20190805064335.19156-8-yanaijie@huawei.com>
+ <3edec35b-8d61-07ff-558d-2d7e0c28a0e2@c-s.fr>
+From:   Jason Yan <yanaijie@huawei.com>
+Message-ID: <16e058a4-9794-6998-46e4-0e63b9fce7e3@huawei.com>
+Date:   Wed, 7 Aug 2019 11:16:19 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/A4XmEMqHWeGFkMo3c4SEgbH";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <3edec35b-8d61-07ff-558d-2d7e0c28a0e2@c-s.fr>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.177.96.203]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/A4XmEMqHWeGFkMo3c4SEgbH
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
 
-Today's linux-next merge of the drm-misc tree got a conflict in:
+On 2019/8/6 15:56, Christophe Leroy wrote:
+> 
+> 
+> Le 05/08/2019 à 08:43, Jason Yan a écrit :
+>> After we have the basic support of relocate the kernel in some
+>> appropriate place, we can start to randomize the offset now.
+>>
+>> Entropy is derived from the banner and timer, which will change every
+>> build and boot. This not so much safe so additionally the bootloader may
+>> pass entropy via the /chosen/kaslr-seed node in device tree.
+>>
+>> We will use the first 512M of the low memory to randomize the kernel
+>> image. The memory will be split in 64M zones. We will use the lower 8
+>> bit of the entropy to decide the index of the 64M zone. Then we chose a
+>> 16K aligned offset inside the 64M zone to put the kernel in.
+>>
+>>      KERNELBASE
+>>
+>>          |-->   64M   <--|
+>>          |               |
+>>          +---------------+    +----------------+---------------+
+>>          |               |....|    |kernel|    |               |
+>>          +---------------+    +----------------+---------------+
+>>          |                         |
+>>          |----->   offset    <-----|
+>>
+>>                                kimage_vaddr
+>>
+>> We also check if we will overlap with some areas like the dtb area, the
+>> initrd area or the crashkernel area. If we cannot find a proper area,
+>> kaslr will be disabled and boot from the original kernel.
+>>
+>> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+>> Cc: Diana Craciun <diana.craciun@nxp.com>
+>> Cc: Michael Ellerman <mpe@ellerman.id.au>
+>> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+>> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+>> Cc: Paul Mackerras <paulus@samba.org>
+>> Cc: Nicholas Piggin <npiggin@gmail.com>
+>> Cc: Kees Cook <keescook@chromium.org>
+>> Reviewed-by: Diana Craciun <diana.craciun@nxp.com>
+>> Tested-by: Diana Craciun <diana.craciun@nxp.com>
+> 
+> Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> 
 
-  drivers/gpu/drm/ttm/ttm_bo.c
+Thanks for your help,
 
-between commit:
+> One small comment below
+> 
+>> ---
+>>   arch/powerpc/kernel/kaslr_booke.c | 322 +++++++++++++++++++++++++++++-
+>>   1 file changed, 320 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/powerpc/kernel/kaslr_booke.c 
+>> b/arch/powerpc/kernel/kaslr_booke.c
+>> index 30f84c0321b2..97250cad71de 100644
+>> --- a/arch/powerpc/kernel/kaslr_booke.c
+>> +++ b/arch/powerpc/kernel/kaslr_booke.c
+>> @@ -23,6 +23,8 @@
+>>   #include <linux/delay.h>
+>>   #include <linux/highmem.h>
+>>   #include <linux/memblock.h>
+>> +#include <linux/libfdt.h>
+>> +#include <linux/crash_core.h>
+>>   #include <asm/pgalloc.h>
+>>   #include <asm/prom.h>
+>>   #include <asm/io.h>
+>> @@ -34,15 +36,329 @@
+>>   #include <asm/machdep.h>
+>>   #include <asm/setup.h>
+>>   #include <asm/paca.h>
+>> +#include <asm/kdump.h>
+>>   #include <mm/mmu_decl.h>
+>> +#include <generated/compile.h>
+>> +#include <generated/utsrelease.h>
+>> +
+>> +#ifdef DEBUG
+>> +#define DBG(fmt...) printk(KERN_ERR fmt)
+>> +#else
+>> +#define DBG(fmt...)
+>> +#endif
+>> +
+>> +struct regions {
+>> +    unsigned long pa_start;
+>> +    unsigned long pa_end;
+>> +    unsigned long kernel_size;
+>> +    unsigned long dtb_start;
+>> +    unsigned long dtb_end;
+>> +    unsigned long initrd_start;
+>> +    unsigned long initrd_end;
+>> +    unsigned long crash_start;
+>> +    unsigned long crash_end;
+>> +    int reserved_mem;
+>> +    int reserved_mem_addr_cells;
+>> +    int reserved_mem_size_cells;
+>> +};
+>>   extern int is_second_reloc;
+>> +/* Simplified build-specific string for starting entropy. */
+>> +static const char build_str[] = UTS_RELEASE " (" LINUX_COMPILE_BY "@"
+>> +        LINUX_COMPILE_HOST ") (" LINUX_COMPILER ") " UTS_VERSION;
+>> +
+>> +static __init void kaslr_get_cmdline(void *fdt)
+>> +{
+>> +    int node = fdt_path_offset(fdt, "/chosen");
+>> +
+>> +    early_init_dt_scan_chosen(node, "chosen", 1, boot_command_line);
+>> +}
+>> +
+>> +static unsigned long __init rotate_xor(unsigned long hash, const void 
+>> *area,
+>> +                       size_t size)
+>> +{
+>> +    size_t i;
+>> +    unsigned long *ptr = (unsigned long *)area;
+> 
+> As area is a void *, this cast shouldn't be necessary. Or maybe it is 
+> necessary because it discards the const ?
+> 
 
-  274840e54422 ("drm/ttm: Add release_notify callback to ttm_bo_driver")
+It's true the cast is not necessary. The ptr can be made const and then 
+remove the cast.
 
-from the amdgpu tree and commit:
+> Christophe
+> 
 
-  b96f3e7c8069 ("drm/ttm: use gem vma_node")
-
-from the drm-misc tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/gpu/drm/ttm/ttm_bo.c
-index 2070e8a57ed8,10a861a1690c..000000000000
---- a/drivers/gpu/drm/ttm/ttm_bo.c
-+++ b/drivers/gpu/drm/ttm/ttm_bo.c
-@@@ -671,10 -672,7 +672,10 @@@ static void ttm_bo_release(struct kref=20
-  	struct ttm_bo_device *bdev =3D bo->bdev;
-  	struct ttm_mem_type_manager *man =3D &bdev->man[bo->mem.mem_type];
- =20
- +	if (bo->bdev->driver->release_notify)
- +		bo->bdev->driver->release_notify(bo);
- +
-- 	drm_vma_offset_remove(&bdev->vma_manager, &bo->vma_node);
-+ 	drm_vma_offset_remove(&bdev->vma_manager, &bo->base.vma_node);
-  	ttm_mem_io_lock(man, false);
-  	ttm_mem_io_free_vm(bo);
-  	ttm_mem_io_unlock(man);
-
---Sig_/A4XmEMqHWeGFkMo3c4SEgbH
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1KQO0ACgkQAVBC80lX
-0GxX5gf9EiyGQuQKTqmoVHb32ms1y2mQHnrywmSJ2QEM4WDiAU/v5FZIMDujaYT1
-x4LN7JF1x9SmAXyilwUoiGS3hvdd1uxPbjG82fmPtzAwzmfTF7yyRqYssulWU7hS
-A+zXjCie/UMNC1RuqGbt5MCBVWklNZiKixuT5is9Mi7Onevxg2Iu0FeMW6VAGtfr
-vxLX3+uo1ckbtR7LI3CUn/znCxwPDbh18FSatMnhnDsdISY8LD++wB4eIOt/av1g
-uzNNHhD9nl1s/Dmosmv4YGkY2KlE6wrYIxS6tojLUfp9wVj8a01uyggmxl8FvnP1
-GEOK8g+4j0kebH1NGPOC74304eKmWg==
-=WAmQ
------END PGP SIGNATURE-----
-
---Sig_/A4XmEMqHWeGFkMo3c4SEgbH--
