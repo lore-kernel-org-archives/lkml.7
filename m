@@ -2,132 +2,141 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF06C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 15:22:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED0BC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 15:22:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B83062199C
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 15:22:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="SYidCb45"
+	by mail.kernel.org (Postfix) with ESMTP id 212042199C
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 15:22:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388452AbfHGPWE (ORCPT
+        id S2388472AbfHGPWP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 11:22:04 -0400
-Received: from mail-eopbgr770135.outbound.protection.outlook.com ([40.107.77.135]:37150
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387777AbfHGPWE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 11:22:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NHbRK73aVdXpnkLjoWxWqQqCasCWj8Vijq4YmmQOZm8cN6jtzDgmiehsXuQsaqNqHzYbwuPz5Q9Vx9f4+siZPVufgqZQgZ5yut+8nvfKYh7ntJ4mJ20QwJ/3nQB7UrxzY5QpC3v0J54LYR1lwtmZutSjhCMhW7EpbxxqvbjXNQPij8RwdbaaBotxhFSQmNytuh80lJNpuPZ3XWAHHnTY9wDOqEMxqJFd3eRXW6GFpd48EfTSHJtxC0IhQz9WJn7m8fMcrYpfrhRVtynzvUkGM352mD6tjnKIoUFmepGk90O34AszYVcYFFyy2R3imZJdSD/rPbi2Wpr6F+B7AV5M4Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wHb6KjBggRDFLA99hJqz38/vmkQyB5AJqcSNzEmnIyk=;
- b=RrviGORrqv/EYDV90/N0h5xDhi9l7ylvxoe3SJ4Y5j1Q+BugJYyt4PpFGPYUBTu0y5gotJwSy2DRgE24MkOsMnPcCIMYUA4MlBXse40pYhz8vty+mPIcWQ2d5t4CZ9SCX9WVkOg75W4JjE58D0phQujzGewJRIesqjQCygbOqIE52NIa+vWimwZPywfU8nAM8+4SgjQxEowZKEG9HDBBePfpZFnaoshTRZ9kftqhS145jXxApe+1hcroabEoc5Hx7PL2JmlA6iLSPWyuWc5xmdj6Jd4VAi9/HWwdDyppFSN9PFOOwxtYXTmFtuHCAfinc3FZSygwQYwetCfs+AMZLA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wHb6KjBggRDFLA99hJqz38/vmkQyB5AJqcSNzEmnIyk=;
- b=SYidCb45Qv9J/hv8fuzLBmQXfmXIyXuls0sSc8LQkGlv57x3sPQ61a5x2qVopdA7RgKFoZ5WXbtZLb5mQSF9AFuGt6EWUlCwFButItnZ4gTIekUvvubAcvKZnNwTiwMPYQs2Uf+mTZ8hKZ7fx1VGfMX0mVLWFKgSYrpD+dXe8kQ=
-Received: from DM5PR21MB0137.namprd21.prod.outlook.com (10.173.173.12) by
- DM5PR21MB0748.namprd21.prod.outlook.com (10.173.172.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.2; Wed, 7 Aug 2019 15:22:01 +0000
-Received: from DM5PR21MB0137.namprd21.prod.outlook.com
- ([fe80::9558:216:27ca:5dfd]) by DM5PR21MB0137.namprd21.prod.outlook.com
- ([fe80::9558:216:27ca:5dfd%2]) with mapi id 15.20.2157.011; Wed, 7 Aug 2019
- 15:22:01 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Dexuan Cui <decui@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2 5/7] Drivers: hv: vmbus: Ignore the offers when
- resuming from hibernation
-Thread-Topic: [PATCH v2 5/7] Drivers: hv: vmbus: Ignore the offers when
- resuming from hibernation
-Thread-Index: AQHVR8iqC69kTr/0FUeTlMMLeLsZzKbv1/tA
-Date:   Wed, 7 Aug 2019 15:22:01 +0000
-Message-ID: <DM5PR21MB0137166316B72AAEA5EFBB78D7D40@DM5PR21MB0137.namprd21.prod.outlook.com>
-References: <1564595464-56520-1-git-send-email-decui@microsoft.com>
- <1564595464-56520-6-git-send-email-decui@microsoft.com>
-In-Reply-To: <1564595464-56520-6-git-send-email-decui@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-07T15:22:00.0847515Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=90aee59d-cbce-4bd1-9797-46eaab2b1f4c;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:2:2e16:ac86:48d:60c1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8f4a5587-d66e-44d8-c7f2-08d71b4aff0b
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM5PR21MB0748;
-x-ms-traffictypediagnostic: DM5PR21MB0748:|DM5PR21MB0748:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR21MB07481C94490C5814AD6283B5D7D40@DM5PR21MB0748.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2000;
-x-forefront-prvs: 01221E3973
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(4636009)(136003)(376002)(396003)(366004)(346002)(39860400002)(189003)(199004)(6506007)(66946007)(7696005)(14444005)(186003)(229853002)(102836004)(76176011)(476003)(4326008)(86362001)(10090500001)(25786009)(10290500003)(6246003)(478600001)(446003)(2201001)(7736002)(22452003)(64756008)(6116002)(66446008)(110136005)(33656002)(46003)(8936002)(55016002)(74316002)(53936002)(4744005)(5660300002)(71190400001)(1511001)(68736007)(316002)(305945005)(9686003)(11346002)(76116006)(66476007)(14454004)(2501003)(66556008)(2906002)(71200400001)(486006)(256004)(81156014)(81166006)(8676002)(6436002)(99286004)(8990500004)(52536014)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR21MB0748;H:DM5PR21MB0137.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: tco1o57b/2pST1NaDCBZCKzGNRBIyPx8khSFMuXyqTKLzdYV6v0iPIrCijuhLRHcvnQ/oMIrMMEIx2QAx4XSoZS2B7g3XGHe2+BzVPIidd0zd2FYjmNgUskB3Wrj6JIqp3nYcK0+BP1Sd/XatUcc+nfCo9z0F735LY888ZgOxPHdU8wABF/eIZgz0keLlg5NSejGgV37MyXtLiJ51PJPob6ghPqkqv1TPXGkI/YsSQcNrYbL9MSO0qdsAc3JmtADI3qf1Gs0mI6uQ3s3U/Ic/PpWziRP/l1qPNEQtrkTh8OsGFYL41JjVjVU8xuwx28aWzKObDkmW0po5dP+ZqzZEBsHZMfdq6WueNfQ0SYec+yZjDg1qI1qqopD6/RqhuN2JbMfZKphJy4BaLqBs1neUlsLqGtUrIUVea+LB/e37DQ=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 7 Aug 2019 11:22:15 -0400
+Received: from mga18.intel.com ([134.134.136.126]:54844 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388257AbfHGPWO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 11:22:14 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Aug 2019 08:22:14 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,357,1559545200"; 
+   d="scan'208";a="373804945"
+Received: from knguye7-mobl.amr.corp.intel.com (HELO [10.255.81.127]) ([10.255.81.127])
+  by fmsmga005.fm.intel.com with ESMTP; 07 Aug 2019 08:22:12 -0700
+Subject: Re: [Sound-open-firmware] [PATCH v2 3/5] ASoC: SOF: Add DT DSP device
+ support
+To:     Daniel Baluta <daniel.baluta@gmail.com>
+Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>, Anson Huang <anson.huang@nxp.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Paul Olaru <paul.olaru@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        sound-open-firmware@alsa-project.org
+References: <20190723084104.12639-1-daniel.baluta@nxp.com>
+ <20190723084104.12639-4-daniel.baluta@nxp.com>
+ <d85909d6-c7cb-c64b-dfa9-6cee6c0da2cb@linux.intel.com>
+ <CAEnQRZDr+gj_eiESLNbVUVy1rreRE1nnDgtb3g=CjaRF5Aq9Vw@mail.gmail.com>
+ <CAEnQRZDctjdzQ2RjJXhQh+s=d0y_j3Taa51hDaR4bqJ62C=7iQ@mail.gmail.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <85b4a2c4-761e-bdcf-f05e-2fb16c06f11e@linux.intel.com>
+Date:   Wed, 7 Aug 2019 10:22:12 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8f4a5587-d66e-44d8-c7f2-08d71b4aff0b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Aug 2019 15:22:01.5936
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: OGs3ncdOi34WEPQltMjc0hFQBJVyw/lM5buDTeO4jg0C2aBmcLa75rF9iNmMKdvP0hnQNRYTeIphEviIeb+RmC7FkFt5a4G4a/TR7vJHCc0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR21MB0748
+In-Reply-To: <CAEnQRZDctjdzQ2RjJXhQh+s=d0y_j3Taa51hDaR4bqJ62C=7iQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dexuan Cui <decui@microsoft.com>  Sent: Wednesday, July 31, 2019 10:5=
-2 AM
->=20
-> When the VM resumes, the host re-sends the offers. We should not add the
-> offers to the global vmbus_connection.chn_list again.
->=20
-> Added some debug code, in case the host screws up the exact info related =
-to
-> the offers.
->=20
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> ---
->  drivers/hv/channel_mgmt.c | 29 ++++++++++++++++++++++++++++-
->  1 file changed, 28 insertions(+), 1 deletion(-)
->=20
 
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+>>>> +static int sof_dt_probe(struct platform_device *pdev)
+>>>> +{
+>>>> +     struct device *dev = &pdev->dev;
+>>>> +     const struct sof_dev_desc *desc;
+>>>> +     /*TODO: create a generic snd_soc_xxx_mach */
+>>>> +     struct snd_soc_acpi_mach *mach;
+>>>
+>>> I wonder if you really need to use the same structures. For Intel we get
+>>> absolutely zero info from the firmware so rely on an ACPI codec ID as a
+>>> key to find information on which firmware and topology to use, and which
+>>> machine driver to load. You could have all this information in a DT blob?
+>>
+>> Yes. I see your point. I will still need to make a generic structure for
+>> snd_soc_acpi_mach so that everyone can use sof_nocodec_setup function.
+>>
+>> Maybe something like this:
+>>
+>> struct snd_soc_mach {
+>>    union {
+>>    struct snd_soc_acpi_mach acpi_mach;
+>>    struct snd_soc_of_mach of_mach;
+>>    }
+>> };
+>>
+>> and then change the prototype of sof_nocodec_setup.
+> 
+> Hi Pierre,
+> 
+> I fixed all the comments except the one above. Replacing snd_soc_acpi_mach
+> with a generic snd_soc_mach is not trivial task.
+> 
+> I wonder if it is acceptable to get the initial patches as they are
+> now and later switch to
+> generic ACPI/OF abstraction.
+> 
+> Asking this because for the moment on the i.MX side I have only
+> implemented no codec
+> version and we don't probe any of the machine drivers we have.
+> 
+> So, there is this only one member of snd_soc_acpi_mach that imx
+> version is making use of:
+> 
+>    mach->drv_name = "sof-nocodec";
+> 
+> That's all.
+> 
+> I think the change as it is now is very clean and non-intrusive. Later
+> we will get options to
+> read firmware name and stuff from DT.
+> 
+> Anyhow, I don't think we can get rid of snd_dev_desc structure on
+> i.MX. This will be used
+> to store the information read from DT:
+> 
+> static struct sof_dev_desc sof_of_imx8qxp_desc = {
+> »       .default_fw_path = "imx/sof",
+> »       .default_tplg_path = "imx/sof-tplg",
+> »       .nocodec_fw_filename = "sof-imx8.ri",
+> »       .nocodec_tplg_filename = "sof-imx8-nocodec.tplg",
+> »       .ops = &sof_imx8_ops,
+> };
+> 
+> For the moment we will only use the default values.
+
+Yes, that's fine for now. If you don't have a real machine driver then 
+there's nothing urgent to change.
+
+Is the new version on GitHub?
+
+Thanks
+-Pierre
