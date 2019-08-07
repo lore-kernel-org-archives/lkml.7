@@ -2,74 +2,129 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B30C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 16:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C19C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 16:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D0CF222FC
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 16:40:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 331E22229C
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 16:41:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730171AbfHGQkQ (ORCPT
+        id S1730221AbfHGQle convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 12:40:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35516 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729891AbfHGQkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 12:40:16 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 638A72229C;
-        Wed,  7 Aug 2019 16:40:15 +0000 (UTC)
-Date:   Wed, 7 Aug 2019 12:40:13 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Jiping Ma <jiping.ma2@windriver.com>, mingo@redhat.com,
-        catalin.marinas@arm.com, will.deacon@arm.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/2] tracing: Document the stack trace algorithm in the
- comments
-Message-ID: <20190807124013.4ced2f81@gandalf.local.home>
-In-Reply-To: <20190807163454.392141426@goodmis.org>
-References: <20190807163401.570339297@goodmis.org>
-        <20190807163454.392141426@goodmis.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 7 Aug 2019 12:41:34 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:60254 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730010AbfHGQld (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 12:41:33 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-14--X1NSQzOPs25ES1Om5nzQw-1; Wed, 07 Aug 2019 17:41:30 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Wed, 7 Aug 2019 17:41:30 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 7 Aug 2019 17:41:30 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Mika Westerberg' <mika.westerberg@linux.intel.com>
+CC:     'Yehezkel Bernat' <yehezkelshb@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
+        Mario Limonciello <Mario.Limonciello@dell.com>,
+        "Anthony Wong" <anthony.wong@canonical.com>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
+Subject: RE: [PATCH 3/8] thunderbolt: Use 32-bit writes when writing ring
+ producer/consumer
+Thread-Topic: [PATCH 3/8] thunderbolt: Use 32-bit writes when writing ring
+ producer/consumer
+Thread-Index: AQHVMyIznn3HI+p3CEuvWWeqi0Ulhqa8L0swgDPP6oCAABFywP//9NeAgAAR0IA=
+Date:   Wed, 7 Aug 2019 16:41:30 +0000
+Message-ID: <91a579eb2f614739a9a1177bdde5513e@AcuMS.aculab.com>
+References: <20190705095800.43534-1-mika.westerberg@linux.intel.com>
+ <20190705095800.43534-4-mika.westerberg@linux.intel.com>
+ <CA+CmpXtMBEtyh77fcrhX2BU8esiit56CWfZmey6LYEHZVUxf8A@mail.gmail.com>
+ <0f3a47d8133945b181d623ea6e0d53f2@AcuMS.aculab.com>
+ <20190807161359.GT2716@lahna.fi.intel.com>
+ <79616dd147864771b0b74901e77f2607@AcuMS.aculab.com>
+ <20190807163629.GV2716@lahna.fi.intel.com>
+In-Reply-To: <20190807163629.GV2716@lahna.fi.intel.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-MC-Unique: -X1NSQzOPs25ES1Om5nzQw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 07 Aug 2019 12:34:03 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+From: 'Mika Westerberg' [mailto:mika.westerberg@linux.intel.com]
+> Sent: 07 August 2019 17:36
+> 
+> On Wed, Aug 07, 2019 at 04:22:26PM +0000, David Laight wrote:
+> > From: Mika Westerberg
+> > > Sent: 07 August 2019 17:14
+> > > To: David Laight
+> > >
+> > > On Fri, Jul 05, 2019 at 04:04:19PM +0000, David Laight wrote:
+> > > > > Really a matter of taste, but maybe you want to consider having a single
+> > > > > function, with a 3rd parameter, bool is_tx.
+> > > > > The calls here will be unified to:
+> > > > >         ring_iowrite(ring, ring->head, ring->is_tx);
+> > > > > (No condition is needed here).
+> > > > >
+> > > > > The implementation uses the new parameter to decide which part of the register
+> > > > > to mask, reducing the code duplication (in my eyes):
+> > > > >
+> > > > >         val = ioread32(ring_desc_base(ring) + 8);
+> > > > >         if (is_tx) {
+> > > > >                 val &= 0x0000ffff;
+> > > > >                 val |= value << 16;
+> > > > >         } else {
+> > > > >                 val &= 0xffff0000;
+> > > > >                 val |= value;
+> > > > >         }
+> > > > >         iowrite32(val, ring_desc_base(ring) + 8);
+> > > > >
+> > > > > I'm not sure if it improves the readability or makes it worse. Your call.
+> > > >
+> > > > Gah, that is all horrid beyond belief.
+> > > > If a 32bit write is valid then the hardware must not be updating
+> > > > the other 16 bits.
+> > > > In which case the driver knows what they should be.
+> > > > So it can do a single 32bit write of the required value.
+> > >
+> > > I'm not entirely sure I understand what you say above. Can you shed some
+> > > light on this by a concrete example how it should look like? :-)
+> >
+> > The driver must know both the tx and rx ring values, so:
+> > 	iowrite32(tx_val << 16 | rx_val, ring_desc_base(ring) + 8);
+> >
+> 
+> I see. However, prod or cons side gets updated by the hardware as it
+> processes buffers and other side is only updated by the driver. I'm not
+> sure the above works here.
 
-> From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+If the hardware updates the other half of the 32bit word it doesn't ever work.
+In that case you must do 16bit writes.
+If the hardware is ignoring the byte-enables it is broken and unusable.
 
-> + * To fix this, if the architecture sets ARCH_RET_ADDR_AFTER_LOCAL_VARS the
-> + * values in stack_trace_index[] are shifted by one to and the number of
-> + * stack trace entries is decremented by one.
-> + *
-> + *        stack_dump_trace[]        |   stack_trace_index[]
-> + *        ------------------        +   -------------------
-> + *  return addr to kernel_func_bar  |          20
+	David
 
-That should have been 29, not 20. I'll update it.
-
--- Steve
-
-
-> + *  return addr to sys_foo          |          19
-> + *
-> + * Although the entry function is not displayed, the first function (sys_foo)
-> + * will still include the stack size of it.
-> + */
->  static void check_stack(unsigned long ip, unsigned long *stack)
->  {
->  	unsigned long this_size, flags; unsigned long *p, *top, *start;
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
