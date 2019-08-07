@@ -2,108 +2,89 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E370C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 07:43:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32003C19759
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 07:49:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F82E217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 07:43:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TW3Gk/9L"
+	by mail.kernel.org (Postfix) with ESMTP id 11AD322BED
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 07:49:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387468AbfHGHnL (ORCPT
+        id S2387505AbfHGHtv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 03:43:11 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:43217 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727190AbfHGHnL (ORCPT
+        Wed, 7 Aug 2019 03:49:51 -0400
+Received: from 59-120-53-16.HINET-IP.hinet.net ([59.120.53.16]:39580 "EHLO
+        ATCSQR.andestech.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2387476AbfHGHtu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 03:43:11 -0400
-Received: by mail-pl1-f195.google.com with SMTP id 4so32472187pld.10;
-        Wed, 07 Aug 2019 00:43:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=xyR+lCbovY7DSpuUffdnrpU/87Hr2gUcwjUISUwCLJw=;
-        b=TW3Gk/9LpD+OFs4lahdlhV3I4MGtLWKreblCOq+Yo+EDbQ871srDL6vRjTPnvwgnrN
-         PeKcjrsnqECNYvuYzY0+6PlVfSyU9xYfJe16uFdkPVJ0Uxb7iz/vvv8QkvWVoSC0Mort
-         FVASEPQ6CdYeS6QWKvMQLaQIbsKGb0eJBom2KFxSf2IDl4gLeFVjnxZnczS5hXMXX5zI
-         r221oZAfChl8ebIdqbDCyS5MczleMi+RS0AFUdLsAkvnvTmB34bk7JbplGWG7gld/PiE
-         EK1MUM6m5G7hcvOHAKH8TZqc31OBACF9TZgoEDtBfMlO2eVuYjoXm68VbjvX6Hbj3Y6A
-         JhQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=xyR+lCbovY7DSpuUffdnrpU/87Hr2gUcwjUISUwCLJw=;
-        b=dkhuhdz4yEZ6yYTIcK1pSp0zzqWFRjYqo/PF86J6atUqu0EqwKc/A9hNlUp5Z6LZjy
-         3YFe1fGWs+UjqG3ERaJcGwFtKc5PekWEyiI63BsrlOCleUweiZcCQyheeFTL9/yLKIjd
-         n9tZEwQzuMUekJqle5X6wB9L5f5TZ+DyYd/m9obZL9vRsWTJ6lCNivrJ9vVuh0ZXOJIh
-         ZgbnFfZDQYrB+W2y/JRXMC2VfxX6lFCWBXZtik+x5DkqzR+xxhd5063dGv5Q5Cyn4RBG
-         fjH3QCoJCw0S4vrLlbKiP/fwzoAP4+0m4txTPCC4qbEil4BCjpeCfSi92Lf8UD72vbSR
-         t7eg==
-X-Gm-Message-State: APjAAAWsHDBQV8SJpO/fQj5awfyUqsQchzIxtbOTgMnr/hXITYaoDVWh
-        gC8UCF4k4z3thYTiaOBdo9Y=
-X-Google-Smtp-Source: APXvYqyc2fzP2b8R5VpfzEakKkrCvXr78uRPkaICsLFEGjveOsccUEADRRTbxq7djuWvsa2i98p6+Q==
-X-Received: by 2002:a62:874d:: with SMTP id i74mr7868817pfe.94.1565163790590;
-        Wed, 07 Aug 2019 00:43:10 -0700 (PDT)
-Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id f3sm146879233pfg.165.2019.08.07.00.43.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 07 Aug 2019 00:43:09 -0700 (PDT)
-From:   Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Fuqian Huang <huangfq.daxian@gmail.com>
-Subject: [PATCH] net: tundra: tsi108: use spin_lock_irqsave instead of spin_lock_irq in IRQ context
-Date:   Wed,  7 Aug 2019 15:43:00 +0800
-Message-Id: <20190807074300.23135-1-huangfq.daxian@gmail.com>
-X-Mailer: git-send-email 2.11.0
-To:     unlisted-recipients:; (no To-header on input)
+        Wed, 7 Aug 2019 03:49:50 -0400
+X-Greylist: delayed 1762 seconds by postgrey-1.27 at vger.kernel.org; Wed, 07 Aug 2019 03:49:50 EDT
+Received: from ATCSQR.andestech.com (localhost [127.0.0.2] (may be forged))
+        by ATCSQR.andestech.com with ESMTP id x7779Q7h027175
+        for <linux-kernel@vger.kernel.org>; Wed, 7 Aug 2019 15:09:26 +0800 (GMT-8)
+        (envelope-from nickhu@andestech.com)
+Received: from mail.andestech.com (atcpcs16.andestech.com [10.0.1.222])
+        by ATCSQR.andestech.com with ESMTP id x7778Nlw027022;
+        Wed, 7 Aug 2019 15:08:23 +0800 (GMT-8)
+        (envelope-from nickhu@andestech.com)
+Received: from atcsqa06.andestech.com (10.0.15.65) by ATCPCS16.andestech.com
+ (10.0.1.222) with Microsoft SMTP Server id 14.3.123.3; Wed, 7 Aug 2019
+ 15:19:21 +0800
+From:   Nick Hu <nickhu@andestech.com>
+To:     <alankao@andestech.com>, <paul.walmsley@sifive.com>,
+        <palmer@sifive.com>, <aou@eecs.berkeley.edu>, <green.hu@gmail.com>,
+        <deanbo422@gmail.com>, <tglx@linutronix.de>,
+        <linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <aryabinin@virtuozzo.com>, <glider@google.com>,
+        <dvyukov@google.com>, <Anup.Patel@wdc.com>,
+        <gregkh@linuxfoundation.org>, <alexios.zavras@intel.com>,
+        <atish.patra@wdc.com>, <zong@andestech.com>,
+        <kasan-dev@googlegroups.com>
+CC:     Nick Hu <nickhu@andestech.com>
+Subject: [PATCH 0/2] KASAN support for RISC-V
+Date:   Wed, 7 Aug 2019 15:19:13 +0800
+Message-ID: <cover.1565161957.git.nickhu@andestech.com>
+X-Mailer: git-send-email 2.7.4
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.0.15.65]
+X-DNSRBL: 
+X-MAIL: ATCSQR.andestech.com x7778Nlw027022
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As spin_unlock_irq will enable interrupts.
-Function tsi108_stat_carry is called from interrupt handler tsi108_irq.
-Interrupts are enabled in interrupt handler.
-Use spin_lock_irqsave/spin_unlock_irqrestore instead of spin_(un)lock_irq
-in IRQ context to avoid this.
+KASAN is an important runtime memory debugging feature
+in linux kernel which can detect use-after-free and out-of-
+bounds problems.
 
-Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
----
- drivers/net/ethernet/tundra/tsi108_eth.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+There are two patches in this letter:
+1. Porting the memmove string operation.
+2. Porting the feature KASAN.
 
-diff --git a/drivers/net/ethernet/tundra/tsi108_eth.c b/drivers/net/ethernet/tundra/tsi108_eth.c
-index 78a7de3fb622..14215979d07e 100644
---- a/drivers/net/ethernet/tundra/tsi108_eth.c
-+++ b/drivers/net/ethernet/tundra/tsi108_eth.c
-@@ -372,8 +372,9 @@ static void tsi108_stat_carry(struct net_device *dev)
- {
- 	struct tsi108_prv_data *data = netdev_priv(dev);
- 	u32 carry1, carry2;
-+	unsigned long flags;
- 
--	spin_lock_irq(&data->misclock);
-+	spin_lock_irqsave(&data->misclock, flags);
- 
- 	carry1 = TSI_READ(TSI108_STAT_CARRY1);
- 	carry2 = TSI_READ(TSI108_STAT_CARRY2);
-@@ -441,7 +442,7 @@ static void tsi108_stat_carry(struct net_device *dev)
- 			      TSI108_STAT_TXPAUSEDROP_CARRY,
- 			      &data->tx_pause_drop);
- 
--	spin_unlock_irq(&data->misclock);
-+	spin_unlock_irqrestore(&data->misclock, flags);
- }
- 
- /* Read a stat counter atomically with respect to carries.
--- 
-2.11.0
+Nick Hu (2):
+  riscv: Add memmove string operation.
+  riscv: Add KASAN support
+
+ arch/riscv/Kconfig                  |    2 +
+ arch/riscv/include/asm/kasan.h      |   26 +++++++++
+ arch/riscv/include/asm/pgtable-64.h |    5 ++
+ arch/riscv/include/asm/string.h     |   10 ++++
+ arch/riscv/kernel/head.S            |    3 +
+ arch/riscv/kernel/riscv_ksyms.c     |    4 ++
+ arch/riscv/kernel/setup.c           |    9 +++
+ arch/riscv/kernel/vmlinux.lds.S     |    1 +
+ arch/riscv/lib/Makefile             |    1 +
+ arch/riscv/lib/memcpy.S             |    5 +-
+ arch/riscv/lib/memmove.S            |   64 ++++++++++++++++++++++
+ arch/riscv/lib/memset.S             |    5 +-
+ arch/riscv/mm/Makefile              |    6 ++
+ arch/riscv/mm/kasan_init.c          |  102 +++++++++++++++++++++++++++++++++++
+ 14 files changed, 239 insertions(+), 4 deletions(-)
+ create mode 100644 arch/riscv/include/asm/kasan.h
+ create mode 100644 arch/riscv/lib/memmove.S
+ create mode 100644 arch/riscv/mm/kasan_init.c
 
