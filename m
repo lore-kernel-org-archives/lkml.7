@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD599C19759
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:19:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3821C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:20:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D1D6229ED
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:19:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADA17229ED
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:20:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uQsVaDLR"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ecoBMQgZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387481AbfHGITU (ORCPT
+        id S1728773AbfHGIUg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 04:19:20 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38687 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727914AbfHGITT (ORCPT
+        Wed, 7 Aug 2019 04:20:36 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:33316 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727914AbfHGIUg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 04:19:19 -0400
-Received: by mail-wr1-f68.google.com with SMTP id g17so90400076wrr.5
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 01:19:17 -0700 (PDT)
+        Wed, 7 Aug 2019 04:20:36 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n9so90527563wru.0
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 01:20:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=Afi/L72j963YISNahgxd8Ahp1QEr+bA4vXY3Tl6VcZU=;
-        b=uQsVaDLRpOfcBC2buJuUpgHMjyOS6QZwt0eCYxcJpwOGmEOQ9+VuHhFX37ppBR1qAI
-         nrwmYcI6Ee01uMX3N9ywiJsplKCn/+5uJYVHCVsaWQIRfsrGJsx0a8urdOzlgNtjBgQb
-         FW7mCbNUG4QNbRJxW1o35gRzUg/xmArJBde+LEVk4hFlU4KPTF67oxBX5dvBaemcZxuX
-         EEwYXtdXWsqbvra27nSNDi5N6Rs5/E7S1biwXKEkqhYyIJ6HAwn1+83T9nsbCS0nPtrc
-         BRgThXYVkiWEIMuQ6k9kdX7KdvrTg3tcGK+uusl7e4dEjjokKF77rKU0/1agV5BvhwYF
-         TS9g==
+        bh=qdCQFtNUgHP+6yIK7X9t8PJLgU8SCqT4PsGVjU2PxUo=;
+        b=ecoBMQgZujpXDcJ69aYRBmwDzOwFQ+9qfZpM+8+DWDI732pnZLU4LudirXDVP0rAAo
+         fYSDIq2JevgyS3jBT0xDrA3IwZYvcvfehgJsi3iT1ZdJZx9QGgQJwKdHThJO1E2qAJqN
+         wU5n09Kv3zx6h4gLzhizK8/sxK6X26T020KzTEa6YSmvHvGl4pDICdCDdM4MH5HGcJ8X
+         jI0YCiEshRq+6q26aN/yhMIoYPnkgKKdVEw1jmZSjdn8VM06MrC4UrmOZRNCspFz8edj
+         sO+897kXdqFbYl5Yv0asIE9V85/Z7JUEB2PNBhnhxoqQdurczVv/mNVoQjuGM+h1kdzv
+         mdoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=Afi/L72j963YISNahgxd8Ahp1QEr+bA4vXY3Tl6VcZU=;
-        b=fBvCRnKF+ajEFW2zKN4NN1bK1LFz7oUwlpsKx2dnwN+X/j4W0iJR9RRhxl5FaBXPAM
-         NQExuDkyO8x6AqdQbgJNn1b+WOtvHTOKWC7va6eZDKuuaxHgMCea4gfkfO5d8wZE9Bsv
-         RjrPUm/F/vvAEaMcMgbxqoq5xmyuR8DTex+LhPpCW9VMV2mUtoSulBMEH8rIWjAtnXdl
-         v7fbviWmdZgncerrQoGMROFh0Urj4oId9TjclQ4pTnV7SZgmPiNLavUp9dNsBEMswl25
-         PxlQXkwM7VS6wm8eFmDWQkTUhm8ZZxUNjoeYZgbDDNwRxmzQ+b3wNeUK51ZSs1qceRSa
-         /XHQ==
-X-Gm-Message-State: APjAAAWYT5rkgQFOnqJiFfb9I4np4aA9gTEL1ubKfv9/NZOFHVJxjlQp
-        xzRn5hszaT//203vbkdgf88dGA==
-X-Google-Smtp-Source: APXvYqyuSIIhPD3Oei4cgz+J441LvCaR42Ewr0CnVWlrOMU8CaN508+g1aYa20VCLRzH5YJ8pCPHPQ==
-X-Received: by 2002:adf:f14f:: with SMTP id y15mr3190888wro.28.1565165957000;
-        Wed, 07 Aug 2019 01:19:17 -0700 (PDT)
+        bh=qdCQFtNUgHP+6yIK7X9t8PJLgU8SCqT4PsGVjU2PxUo=;
+        b=SoZh5wGGo4pY1+CNYkb+lqLgVufRYuZsECjfMSh44JNSTqMvZOOMf5cOgNvTifQcrS
+         gLqH2wd1tK+ki2HxmRJCuHcyXvG9cA4knnhhyfkapo8ozYW0RF9o1b0+kDg8+nPSWLCN
+         a4AF3tV+txq4uR00NUZA1U8IzIki4xAFMu6tDYDVHbKFpejZulUbZf0vb1Jv1Q0m1Y7v
+         EdjVpAKlsllISzdVnIkeBQ8BI30ScjenULApgiwux61r/jDHSEKzx5kvgCNQwDWLaFDn
+         JCdeTqi+9Caj7Fn87UemkkRuX5dV4S2V3Hl/BCttDVT1hscDOXQjTKQDTJ08gKANIWi7
+         3l+A==
+X-Gm-Message-State: APjAAAVmR/dpGR32bgIbeW2ZEm/D89/YqDqPuCmEBudJaLno+h8ku+c+
+        JDgXRk0W6IUKSlFAnCh6GDc47A==
+X-Google-Smtp-Source: APXvYqwR8Nenl80GfTSMPHA1t28TOlW7UevK9q5o18FheQ+4hPF2SlPe+RQ6r1t4sdPqeO4D11xBLg==
+X-Received: by 2002:adf:c003:: with SMTP id z3mr9536873wre.243.1565166033630;
+        Wed, 07 Aug 2019 01:20:33 -0700 (PDT)
 Received: from ?IPv6:2a01:e34:ed2f:f020:a920:eb8d:e571:a6d0? ([2a01:e34:ed2f:f020:a920:eb8d:e571:a6d0])
-        by smtp.googlemail.com with ESMTPSA id n12sm1482533wrw.25.2019.08.07.01.19.15
+        by smtp.googlemail.com with ESMTPSA id c1sm204477734wrh.1.2019.08.07.01.20.32
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 07 Aug 2019 01:19:16 -0700 (PDT)
-Subject: Re: [PATCH 1/6] ARM: cpuidle: Remove useless header include
+        Wed, 07 Aug 2019 01:20:33 -0700 (PDT)
+Subject: Re: [PATCH 2/6] ARM: cpuidle: Remove overzealous error logging
 To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         linux-pm@vger.kernel.org
 Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
@@ -70,7 +70,7 @@ Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
         LKML <linux-kernel@vger.kernel.org>,
         LAKML <linux-arm-kernel@lists.infradead.org>
 References: <20190722153745.32446-1-lorenzo.pieralisi@arm.com>
- <20190722153745.32446-2-lorenzo.pieralisi@arm.com>
+ <20190722153745.32446-3-lorenzo.pieralisi@arm.com>
 From:   Daniel Lezcano <daniel.lezcano@linaro.org>
 Openpgp: preference=signencrypt
 Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
@@ -133,12 +133,12 @@ Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
  adkDXtr4MeL8BaB7Ij2oyRVjXUwhFQNKi5Z5Rve0a3zvGkkqw8Mz20BOksjSWjAF6g9byukl
  CUVjC03PdMSufNLK06x5hPc/c4tFR4J9cLrV+XxdCX7r0zGos9SzTPGNuIk1LK++S3EJhLFj
  4eoWtNhMWc1uiTf9ENza0ntqH9XBWEQ6IA1gubCniGG+Xg==
-Message-ID: <e16bb5ce-bab5-e91a-2c5a-b55896cc8f1f@linaro.org>
-Date:   Wed, 7 Aug 2019 10:19:15 +0200
+Message-ID: <c2ee64b7-0c77-ca5a-ce1e-d156111dace9@linaro.org>
+Date:   Wed, 7 Aug 2019 10:20:32 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190722153745.32446-2-lorenzo.pieralisi@arm.com>
+In-Reply-To: <20190722153745.32446-3-lorenzo.pieralisi@arm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -148,9 +148,11 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 22/07/2019 17:37, Lorenzo Pieralisi wrote:
-> The generic ARM CPUidle driver includes <linux/topology.h> by mistake.
-> 
-> Remove the topology header include.
+> CPUidle back-end operations are not implemented in some platforms
+> but this should not be considered an error serious enough to be
+> logged. Check the arm_cpuidle_init() return value to detect whether
+> the failure must be reported or not in the kernel log and do
+> not log it if the platform does not support CPUidle operations.
 > 
 > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 > Cc: Ulf Hansson <ulf.hansson@linaro.org>
@@ -159,7 +161,6 @@ On 22/07/2019 17:37, Lorenzo Pieralisi wrote:
 > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
 
 Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-
 
 
 -- 
