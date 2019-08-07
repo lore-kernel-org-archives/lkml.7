@@ -2,111 +2,471 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C05C32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 10:05:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F8CC32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 10:07:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B58021E6C
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 10:05:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59F7221E6C
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 10:07:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="KjfTH0bh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729444AbfHGKFm convert rfc822-to-8bit (ORCPT
+        id S1729484AbfHGKHy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 06:05:42 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:41917 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728202AbfHGKFl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 06:05:41 -0400
-X-Originating-IP: 86.250.200.211
-Received: from xps13 (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 689B1240002;
-        Wed,  7 Aug 2019 10:05:38 +0000 (UTC)
-Date:   Wed, 7 Aug 2019 12:05:37 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     shiva.linuxworks@gmail.com
-Cc:     Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Frieder Schrempf <frieder.schrempf@kontron.de>,
-        Shivamurthy Shastri <sshivamurthy@micron.com>,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Jeff Kletsky <git-commits@allycomm.com>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        liaoweixiong <liaoweixiong@allwinnertech.com>
-Subject: Re: [PATCH 7/8] mtd: spinand: micron: Fix read failure in Micron
- M70A flashes
-Message-ID: <20190807120537.733b6e6d@xps13>
-In-Reply-To: <20190722055621.23526-8-sshivamurthy@micron.com>
-References: <20190722055621.23526-1-sshivamurthy@micron.com>
-        <20190722055621.23526-8-sshivamurthy@micron.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 7 Aug 2019 06:07:54 -0400
+Received: from mail-eopbgr50064.outbound.protection.outlook.com ([40.107.5.64]:5187
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728202AbfHGKHx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 06:07:53 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=L5UUkHbzh/TsbVSISHNR/pQE8mRHnmt4RrtZYOP/1lxFJpjJOQphMiKigJFlYMka3ZPpWCqfFkfMqFhqsltdHLG46PgV8PPuA9nufCtu/WQGcb/G5OMCtojB2Z2Hm68p0lcu8O+YTy1wktSuSmdiZk+om2GJWPEB1ePVhYZZ+Fg7rw/ML4wzGaWUZIq6b12ydChup6NQlSxfJF37SrqUy+TpCKfH9nfeyKSrX025kJRLGxJS9TWzzAP+dJYf0a+Hpp6rgYqYWKIVCA7S40aeQXqGyvWoVTci0EKJ1NnryT0PGGhgOKd0AavRn7Cc2SYk3W57cxy1RpmeKGgYd8ReYQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wLPWB3tMly98/3gZiDbdiF/Jb1Z5gI5l9fsJ1yCMQbM=;
+ b=DP/RYEYuwKxNN40dpMaaDYGuuKJ+IMEcPuDT2Y+0KT7m05ZXGNBpgFOu5yBGKKH3kmWlUuF/U4tfLkppLPU9LReqaythwnEvyNyznL2YIEmoIy+sa+NBWdoM9F3486+e3NWkIW2V54Z7gykKfY47NeqnVyp6IaEPiHAI31l2GHBbGWLSs+5vJskhWL4ZtJMaP6vbOvCgGKTYErMzQayqXtkzjehZ4s5I7BqRX6+atD6ep+aVH4C5eAZq56zH85psvd46mcd++BRPnIsKm3GbxVK9EVkLojxmsNAzNT4jP3tOM1w9ghBSCD0QdObc3zGWVxx6BYUA5ZRYUbcV4m2e2A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wLPWB3tMly98/3gZiDbdiF/Jb1Z5gI5l9fsJ1yCMQbM=;
+ b=KjfTH0bhlYEnowcHpfzDnJWc4l7TlRFrr0yd+0bZiCVLXujxawQs+xba7M/vUersfb6vB0EWoT6iqhU2m/zRIqBFtM1ORtlAD13jX3LF6gBrJGkLacEGgvnzxfUdYc0XwmZ+e0RU2wpesdHvHhz4Mh+QCsFwKaAvLpCgt6UGhgY=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB6643.eurprd04.prod.outlook.com (20.179.252.25) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.16; Wed, 7 Aug 2019 10:07:46 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::5d98:e1f4:aa72:16b4]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::5d98:e1f4:aa72:16b4%4]) with mapi id 15.20.2115.017; Wed, 7 Aug 2019
+ 10:07:46 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     Sudeep Holla <sudeep.holla@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bo Zhang <bozhang.zhang@broadcom.com>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        Volodymyr Babchuk <volodymyr_babchuk@epam.com>,
+        Gaku Inami <gaku.inami.xh@renesas.com>,
+        "aidapala@qti.qualcomm.com" <aidapala@qti.qualcomm.com>,
+        "pajay@qti.qualcomm.com" <pajay@qti.qualcomm.com>,
+        Etienne Carriere <etienne.carriere@linaro.org>,
+        Souvik Chakravarty <Souvik.Chakravarty@arm.com>,
+        "wesleys@xilinx.com" <wesleys@xilinx.com>,
+        Felix Burton <fburton@xilinx.com>,
+        Saeed Nowshadi <saeed.nowshadi@xilinx.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Subject: RE: [PATCH v2 4/5] firmware: arm_scmi: Add RESET protocol in SCMI
+ v2.0
+Thread-Topic: [PATCH v2 4/5] firmware: arm_scmi: Add RESET protocol in SCMI
+ v2.0
+Thread-Index: AQHVTHi7Dd0kIROf60q6uqzNnkgq06bvdt3w
+Date:   Wed, 7 Aug 2019 10:07:46 +0000
+Message-ID: <AM0PR04MB4481CED65CDCFEBA2A45659C88D40@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <20190806170208.6787-1-sudeep.holla@arm.com>
+ <20190806170208.6787-5-sudeep.holla@arm.com>
+In-Reply-To: <20190806170208.6787-5-sudeep.holla@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-originating-ip: [119.31.174.71]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ab42b182-7c44-44fa-d323-08d71b1f18b6
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB6643;
+x-ms-traffictypediagnostic: AM0PR04MB6643:
+x-microsoft-antispam-prvs: <AM0PR04MB66432E33BB214EF1FACA98B088D40@AM0PR04MB6643.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 01221E3973
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(396003)(136003)(346002)(366004)(199004)(189003)(305945005)(30864003)(7736002)(5660300002)(6246003)(9686003)(53936002)(71190400001)(71200400001)(55016002)(8676002)(74316002)(7416002)(25786009)(52536014)(4326008)(86362001)(66066001)(476003)(68736007)(8936002)(11346002)(26005)(44832011)(33656002)(486006)(81156014)(81166006)(446003)(110136005)(54906003)(186003)(7696005)(76176011)(14454004)(3846002)(316002)(99286004)(6116002)(229853002)(102836004)(478600001)(66476007)(6506007)(76116006)(64756008)(66556008)(66446008)(66946007)(2501003)(2906002)(256004)(14444005)(6436002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6643;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: DtU77HvXUSndaXieJNwCq8f0magPS4NreH6P9PxG1hO1PHhTT54LKOuU+UdioBprLGLwcKSYQAXuKc1i0MisYTHPOkJ83gyBEn1CC23aZLs5MWBMZTeohNPUaXjMqxZEZBe6fKBTE2uNFV3AbZjGxTO/rw1RdCIsVGz8EnU0Ixg+Ylq1vT25sWUUCK6DuEDaFZoI9DyDVafRq08WLHeMgD9BvKBxXb6iH/vu8+sIGl8xfwtvw4/F1hlv9XDsIbk/yiTfvqGxkhQ15BW57aSo8iuiaJEivoycdLDhMejquU7O7vWjbhl2tAtTIJLL98Gy9mRZ8aG9oJSzg/oaKuYvIziusDUSGXmkSgmEYcP0SznJSDs0ZCBm86sTEocCNW8UNnaBICDW2q7xmz+7k99KbrOQYz0+ZdAqpVzx6KY6Pi8=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ab42b182-7c44-44fa-d323-08d71b1f18b6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Aug 2019 10:07:46.7955
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: peng.fan@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6643
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shiva,
-
-shiva.linuxworks@gmail.com wrote on Mon, 22 Jul 2019 07:56:20 +0200:
-
-> From: Shivamurthy Shastri <sshivamurthy@micron.com>
-> 
-> M70A series flashes by default enable continuous read feature (BIT0 in
-> configuration register). This feature will not expose the ECC to host
-> and causing read failure.
-
-This is not readable enough, can you rephrase? Besides that you can add
-my 
-
-Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
-
-> 
-> Signed-off-by: Shivamurthy Shastri <sshivamurthy@micron.com>
+> Subject: [PATCH v2 4/5] firmware: arm_scmi: Add RESET protocol in SCMI
+> v2.0
+>=20
+> SCMIv2.0 adds a new Reset Management Protocol to manage various reset
+> states a given device or domain can enter. Device(s) that can be collecti=
+vely
+> reset through a common reset signal constitute a reset domain for the
+> firmware.
+>=20
+> A reset domain can be reset autonomously or explicitly through assertion =
+and
+> de-assertion of the signal. When autonomous reset is chosen, the firmware=
+ is
+> responsible for taking the necessary steps to reset the domain and to
+> subsequently bring it out of reset. When explicit reset is chosen, the ca=
+ller has
+> to specifically assert and then de-assert the reset signal by issuing two
+> separate RESET commands.
+>=20
+> Add the basic SCMI reset infrastructure that can be used by Linux reset
+> controller driver.
+>=20
+> Cc: Philipp Zabel <p.zabel@pengutronix.de>
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 > ---
->  drivers/mtd/nand/spi/micron.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/drivers/mtd/nand/spi/micron.c b/drivers/mtd/nand/spi/micron.c
-> index 6fde93ec23a1..1e28ea3d1362 100644
-> --- a/drivers/mtd/nand/spi/micron.c
-> +++ b/drivers/mtd/nand/spi/micron.c
-> @@ -127,6 +127,15 @@ static int micron_spinand_detect(struct spinand_device *spinand)
->  	return 1;
->  }
->  
-> +static int micron_spinand_init(struct spinand_device *spinand)
+>  drivers/firmware/arm_scmi/Makefile |   2 +-
+>  drivers/firmware/arm_scmi/reset.c  | 231
+> +++++++++++++++++++++++++++++
+>  include/linux/scmi_protocol.h      |  26 ++++
+>  3 files changed, 258 insertions(+), 1 deletion(-)  create mode 100644
+> drivers/firmware/arm_scmi/reset.c
+>=20
+> diff --git a/drivers/firmware/arm_scmi/Makefile
+> b/drivers/firmware/arm_scmi/Makefile
+> index c47d28d556b6..5f298f00a82e 100644
+> --- a/drivers/firmware/arm_scmi/Makefile
+> +++ b/drivers/firmware/arm_scmi/Makefile
+> @@ -2,5 +2,5 @@
+>  obj-y	=3D scmi-bus.o scmi-driver.o scmi-protocols.o
+>  scmi-bus-y =3D bus.o
+>  scmi-driver-y =3D driver.o
+> -scmi-protocols-y =3D base.o clock.o perf.o power.o sensors.o
+> +scmi-protocols-y =3D base.o clock.o perf.o power.o reset.o sensors.o
+>  obj-$(CONFIG_ARM_SCMI_POWER_DOMAIN) +=3D scmi_pm_domain.o diff
+> --git a/drivers/firmware/arm_scmi/reset.c
+> b/drivers/firmware/arm_scmi/reset.c
+> new file mode 100644
+> index 000000000000..11cb8b5ccf34
+> --- /dev/null
+> +++ b/drivers/firmware/arm_scmi/reset.c
+> @@ -0,0 +1,231 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * System Control and Management Interface (SCMI) Reset Protocol
+> + *
+> + * Copyright (C) 2019 ARM Ltd.
+> + */
+> +
+> +#include "common.h"
+> +
+> +enum scmi_reset_protocol_cmd {
+> +	RESET_DOMAIN_ATTRIBUTES =3D 0x3,
+> +	RESET =3D 0x4,
+> +	RESET_NOTIFY =3D 0x5,
+> +};
+> +
+> +enum scmi_reset_protocol_notify {
+> +	RESET_ISSUED =3D 0x0,
+> +};
+> +
+> +#define NUM_RESET_DOMAIN_MASK	0xffff
+> +#define RESET_NOTIFY_ENABLE	BIT(0)
+> +
+> +struct scmi_msg_resp_reset_domain_attributes {
+> +	__le32 attributes;
+> +#define SUPPORTS_ASYNC_RESET(x)		((x) & BIT(31))
+> +#define SUPPORTS_NOTIFY_RESET(x)	((x) & BIT(30))
+> +	__le32 latency;
+> +	    u8 name[SCMI_MAX_STR_SIZE];
+> +};
+> +
+> +struct scmi_msg_reset_domain_reset {
+> +	__le32 domain_id;
+> +	__le32 flags;
+> +#define AUTONOMOUS_RESET	BIT(0)
+> +#define EXPLICIT_RESET_ASSERT	BIT(1)
+> +#define ASYNCHRONOUS_RESET	BIT(2)
+> +	__le32 reset_state;
+> +#define ARCH_RESET_TYPE		BIT(31)
+> +#define COLD_RESET_STATE	BIT(0)
+> +#define ARCH_COLD_RESET		(ARCH_RESET_TYPE |
+> COLD_RESET_STATE)
+> +};
+> +
+> +struct reset_dom_info {
+> +	bool async_reset;
+> +	bool reset_notify;
+> +	u32 latency_us;
+> +	char name[SCMI_MAX_STR_SIZE];
+> +};
+> +
+> +struct scmi_reset_info {
+> +	int num_domains;
+> +	struct reset_dom_info *dom_info;
+> +};
+> +
+> +static int scmi_reset_attributes_get(const struct scmi_handle *handle,
+> +				     struct scmi_reset_info *pi)
 > +{
-> +	/*
-> +	 * Some of the Micron flashes enable this BIT by default,
-> +	 * and there is a chance of read failure due to this.
-> +	 */
-> +	return spinand_upd_cfg(spinand, CFG_QUAD_ENABLE, 0);
+> +	int ret;
+> +	struct scmi_xfer *t;
+> +	u32 *attr;
+> +
+> +	ret =3D scmi_xfer_get_init(handle, PROTOCOL_ATTRIBUTES,
+> +				 SCMI_PROTOCOL_RESET, 0, sizeof(*attr), &t);
+> +	if (ret)
+> +		return ret;
+> +
+> +	attr =3D t->rx.buf;
+> +
+> +	ret =3D scmi_do_xfer(handle, t);
+> +	if (!ret)
+> +		pi->num_domains =3D le32_to_cpu(*attr) &
+> NUM_RESET_DOMAIN_MASK;
+> +
+> +	scmi_xfer_put(handle, t);
+> +	return ret;
 > +}
 > +
->  static void micron_fixup_param_page(struct spinand_device *spinand,
->  				    struct nand_onfi_params *p)
->  {
-> @@ -150,6 +159,7 @@ static void micron_fixup_param_page(struct spinand_device *spinand,
->  
->  static const struct spinand_manufacturer_ops micron_spinand_manuf_ops = {
->  	.detect = micron_spinand_detect,
-> +	.init = micron_spinand_init,
->  	.fixup_param_page = micron_fixup_param_page,
+> +static int
+> +scmi_reset_domain_attributes_get(const struct scmi_handle *handle, u32
+> domain,
+> +				 struct reset_dom_info *dom_info)
+> +{
+> +	int ret;
+> +	struct scmi_xfer *t;
+> +	struct scmi_msg_resp_reset_domain_attributes *attr;
+> +
+> +	ret =3D scmi_xfer_get_init(handle, RESET_DOMAIN_ATTRIBUTES,
+> +				 SCMI_PROTOCOL_RESET, sizeof(domain),
+> +				 sizeof(*attr), &t);
+> +	if (ret)
+> +		return ret;
+> +
+> +	*(__le32 *)t->tx.buf =3D cpu_to_le32(domain);
+> +	attr =3D t->rx.buf;
+> +
+> +	ret =3D scmi_do_xfer(handle, t);
+> +	if (!ret) {
+> +		u32 attributes =3D le32_to_cpu(attr->attributes);
+> +
+> +		dom_info->async_reset =3D SUPPORTS_ASYNC_RESET(attributes);
+> +		dom_info->reset_notify =3D SUPPORTS_NOTIFY_RESET(attributes);
+> +		dom_info->latency_us =3D le32_to_cpu(attr->latency);
+> +		if (dom_info->latency_us =3D=3D U32_MAX)
+> +			dom_info->latency_us =3D 0;
+> +		strlcpy(dom_info->name, attr->name, SCMI_MAX_STR_SIZE);
+> +	}
+> +
+> +	scmi_xfer_put(handle, t);
+> +	return ret;
+> +}
+> +
+> +static int scmi_reset_num_domains_get(const struct scmi_handle *handle)
+> +{
+> +	struct scmi_reset_info *pi =3D handle->reset_priv;
+> +
+> +	return pi->num_domains;
+> +}
+> +
+> +static char *scmi_reset_name_get(const struct scmi_handle *handle, u32
+> +domain) {
+> +	struct scmi_reset_info *pi =3D handle->reset_priv;
+> +	struct reset_dom_info *dom =3D pi->dom_info + domain;
+> +
+> +	return dom->name;
+> +}
+> +
+> +static int scmi_reset_latency_get(const struct scmi_handle *handle, u32
+> +domain) {
+> +	struct scmi_reset_info *pi =3D handle->reset_priv;
+> +	struct reset_dom_info *dom =3D pi->dom_info + domain;
+> +
+> +	return dom->latency_us;
+> +}
+> +
+> +static int scmi_domain_reset(const struct scmi_handle *handle, u32 domai=
+n,
+> +			     u32 flags, u32 state)
+> +{
+> +	int ret;
+> +	struct scmi_xfer *t;
+> +	struct scmi_msg_reset_domain_reset *dom;
+> +	struct scmi_reset_info *pi =3D handle->reset_priv;
+> +	struct reset_dom_info *rdom =3D pi->dom_info + domain;
+> +
+> +	if (rdom->async_reset)
+> +		flags |=3D ASYNCHRONOUS_RESET;
+> +
+> +	ret =3D scmi_xfer_get_init(handle, RESET, SCMI_PROTOCOL_RESET,
+> +				 sizeof(*dom), 0, &t);
+> +	if (ret)
+> +		return ret;
+> +
+> +	dom =3D t->tx.buf;
+> +	dom->domain_id =3D cpu_to_le32(domain);
+> +	dom->flags =3D cpu_to_le32(flags);
+> +	dom->domain_id =3D cpu_to_le32(state);
+> +
+> +	if (rdom->async_reset)
+> +		ret =3D scmi_do_xfer_with_response(handle, t);
+> +	else
+> +		ret =3D scmi_do_xfer(handle, t);
+> +
+> +	scmi_xfer_put(handle, t);
+> +	return ret;
+> +}
+> +
+> +static int scmi_reset_domain_reset(const struct scmi_handle *handle,
+> +u32 domain) {
+> +	return scmi_domain_reset(handle, domain, AUTONOMOUS_RESET,
+> +				 ARCH_COLD_RESET);
+> +}
+> +
+> +static int
+> +scmi_reset_domain_assert(const struct scmi_handle *handle, u32 domain)
+> +{
+> +	return scmi_domain_reset(handle, domain, EXPLICIT_RESET_ASSERT,
+> +				 ARCH_COLD_RESET);
+> +}
+> +
+> +static int
+> +scmi_reset_domain_deassert(const struct scmi_handle *handle, u32
+> +domain) {
+> +	return scmi_domain_reset(handle, domain, 0, ARCH_COLD_RESET); }
+> +
+> +static struct scmi_reset_ops reset_ops =3D {
+> +	.num_domains_get =3D scmi_reset_num_domains_get,
+> +	.name_get =3D scmi_reset_name_get,
+> +	.latency_get =3D scmi_reset_latency_get,
+> +	.reset =3D scmi_reset_domain_reset,
+> +	.assert =3D scmi_reset_domain_assert,
+> +	.deassert =3D scmi_reset_domain_deassert, };
+> +
+> +static int scmi_reset_protocol_init(struct scmi_handle *handle) {
+> +	int domain;
+> +	u32 version;
+> +	struct scmi_reset_info *pinfo;
+> +
+> +	scmi_version_get(handle, SCMI_PROTOCOL_RESET, &version);
+> +
+> +	dev_dbg(handle->dev, "Reset Version %d.%d\n",
+> +		PROTOCOL_REV_MAJOR(version),
+> PROTOCOL_REV_MINOR(version));
+> +
+> +	pinfo =3D devm_kzalloc(handle->dev, sizeof(*pinfo), GFP_KERNEL);
+> +	if (!pinfo)
+> +		return -ENOMEM;
+> +
+> +	scmi_reset_attributes_get(handle, pinfo);
+> +
+> +	pinfo->dom_info =3D devm_kcalloc(handle->dev, pinfo->num_domains,
+> +				       sizeof(*pinfo->dom_info), GFP_KERNEL);
+> +	if (!pinfo->dom_info)
+> +		return -ENOMEM;
+> +
+> +	for (domain =3D 0; domain < pinfo->num_domains; domain++) {
+> +		struct reset_dom_info *dom =3D pinfo->dom_info + domain;
+> +
+> +		scmi_reset_domain_attributes_get(handle, domain, dom);
+> +	}
+> +
+> +	handle->reset_ops =3D &reset_ops;
+> +	handle->reset_priv =3D pinfo;
+> +
+> +	return 0;
+> +}
+> +
+> +static int __init scmi_reset_init(void) {
+> +	return scmi_protocol_register(SCMI_PROTOCOL_RESET,
+> +				      &scmi_reset_protocol_init);
+> +}
+> +subsys_initcall(scmi_reset_init);
+> diff --git a/include/linux/scmi_protocol.h b/include/linux/scmi_protocol.=
+h
+> index f0f2b53a1dac..881fea47c83d 100644
+> --- a/include/linux/scmi_protocol.h
+> +++ b/include/linux/scmi_protocol.h
+> @@ -187,6 +187,26 @@ struct scmi_sensor_ops {
+>  			   u64 *value);
 >  };
->  
+>=20
+> +/**
+> + * struct scmi_reset_ops - represents the various operations provided
+> + *	by SCMI Reset Protocol
+> + *
+> + * @num_domains_get: get the count of reset domains provided by SCMI
+> + * @name_get: gets the name of a reset domain
+> + * @latency_get: gets the reset latency for the specified reset domain
+> + * @reset: resets the specified reset domain
+> + * @assert: explicitly assert reset signal of the specified reset
+> +domain
+> + * @deassert: explicitly deassert reset signal of the specified reset
+> +domain  */ struct scmi_reset_ops {
+> +	int (*num_domains_get)(const struct scmi_handle *handle);
+> +	char *(*name_get)(const struct scmi_handle *handle, u32 domain);
+> +	int (*latency_get)(const struct scmi_handle *handle, u32 domain);
+> +	int (*reset)(const struct scmi_handle *handle, u32 domain);
+> +	int (*assert)(const struct scmi_handle *handle, u32 domain);
+> +	int (*deassert)(const struct scmi_handle *handle, u32 domain); };
+> +
+>  /**
+>   * struct scmi_handle - Handle returned to ARM SCMI clients for usage.
+>   *
+> @@ -196,6 +216,7 @@ struct scmi_sensor_ops {
+>   * @perf_ops: pointer to set of performance protocol operations
+>   * @clk_ops: pointer to set of clock protocol operations
+>   * @sensor_ops: pointer to set of sensor protocol operations
+> + * @reset_ops: pointer to set of reset protocol operations
+>   * @perf_priv: pointer to private data structure specific to performance
+>   *	protocol(for internal use only)
+>   * @clk_priv: pointer to private data structure specific to clock @@ -20=
+4,6
+> +225,8 @@ struct scmi_sensor_ops {
+>   *	protocol(for internal use only)
+>   * @sensor_priv: pointer to private data structure specific to sensors
+>   *	protocol(for internal use only)
+> + * @reset_priv: pointer to private data structure specific to reset
+> + *	protocol(for internal use only)
+>   */
+>  struct scmi_handle {
+>  	struct device *dev;
+> @@ -212,11 +235,13 @@ struct scmi_handle {
+>  	struct scmi_clk_ops *clk_ops;
+>  	struct scmi_power_ops *power_ops;
+>  	struct scmi_sensor_ops *sensor_ops;
+> +	struct scmi_reset_ops *reset_ops;
+>  	/* for protocol internal use */
+>  	void *perf_priv;
+>  	void *clk_priv;
+>  	void *power_priv;
+>  	void *sensor_priv;
+> +	void *reset_priv;
+>  };
+>=20
+>  enum scmi_std_protocol {
+> @@ -226,6 +251,7 @@ enum scmi_std_protocol {
+>  	SCMI_PROTOCOL_PERF =3D 0x13,
+>  	SCMI_PROTOCOL_CLOCK =3D 0x14,
+>  	SCMI_PROTOCOL_SENSOR =3D 0x15,
+> +	SCMI_PROTOCOL_RESET =3D 0x16,
+>  };
 
+Reviewed-by: Peng Fan <peng.fan@nxp.com>
 
-Thanks,
-Miquèl
+>=20
+>  struct scmi_device {
+> --
+> 2.17.1
+
