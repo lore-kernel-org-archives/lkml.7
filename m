@@ -2,65 +2,114 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81D25C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 18:32:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6176CC32756
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 18:34:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63A9721E73
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 18:32:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38C5622305
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 18:34:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565202879;
+	bh=gs0snvvzVYbqQC/TRC1Ba3TeGuMo5+1TNgmkzbhXqs0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cXEM0NAgNrUh+e6kPCjyqx4pElb+IkJeb5LVJgmAf93WuWxQoE0gy9LBrxTq4Ni0E
+	 kWOe8vhSZ2J/AfaKYqvvJQHciAed6Y0d+G97cEMAXruKo6qxzw2vKoR68eOsRspvQa
+	 WnRztEbz9pRgqLTnzRTF0nzVLlo/kDB0esWpZmw8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389346AbfHGSb6 (ORCPT
+        id S2389336AbfHGSei (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 14:31:58 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:43014 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S2388428AbfHGSb4 (ORCPT
+        Wed, 7 Aug 2019 14:34:38 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:42146 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389041AbfHGSeh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 14:31:56 -0400
-Received: (qmail 22511 invoked by uid 2102); 7 Aug 2019 14:31:55 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 7 Aug 2019 14:31:55 -0400
-Date:   Wed, 7 Aug 2019 14:31:55 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     syzbot <syzbot+1b2449b7b5dc240d107a@syzkaller.appspotmail.com>
-cc:     andreyknvl@google.com, <linux-kernel@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <oneukum@suse.com>,
-        <syzkaller-bugs@googlegroups.com>
-Subject: Re: KASAN: use-after-free Read in device_release_driver_internal
-In-Reply-To: <000000000000f365b6058f8b07ca@google.com>
-Message-ID: <Pine.LNX.4.44L0.1908071431050.1514-100000@iolanthe.rowland.org>
+        Wed, 7 Aug 2019 14:34:37 -0400
+Received: by mail-qt1-f196.google.com with SMTP id t12so802982qtp.9;
+        Wed, 07 Aug 2019 11:34:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TEd6gatoycG7ZYK/wRTlCi/eISRx26y7juuHAC9jUEs=;
+        b=R644OPU+lCko3k9nDXGu9/A/vuDcJn94rJoMUPsDRCffxsG+isnp+BHBLQmc2K644e
+         66mQuGkZTGxAke75vOwmSvJK6B7tThNNgU17Mmy0pGVSIX7MQcF/72c5IwF+SVKe2+/9
+         3vXSRys0roMn1jdcB9qW6Ab8phv2F8C6FUUrmfEUu1zHhqC8meLDYyMaehtDUQwJF5bQ
+         Y8GRTNQsLFdruJQs1xnvhyznDmk+7799OjLS/bJHXjEXyrGCjSTajeSkhizcSbuqKREl
+         DPUrIKRtYKK8ndWxQKW2D8e2SYP9w65swXBr4FQtUapMvV0tAHkSYCN+X0SubrlfmUMZ
+         lRmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TEd6gatoycG7ZYK/wRTlCi/eISRx26y7juuHAC9jUEs=;
+        b=QJ79hqsYr+HHcFERWm8mXlWz4oDndHTd+m0ndPdjiNcsBYjnLJXRRoUFej/BXajkR1
+         qU4pEttm9HxbrwP56AcVXD4R5I8UAJHyZB7er9I+dmE7+BHAKiKCoVtDf8vL8HIsjFf8
+         /CLI2CTZnI9/aaNwKnhT94mT1XqJqbTaDoZS4sdEsrV6QT4ZNUwpg3gT/qnhkGJrPj0z
+         A/pyFD6GmBHUUebedKvbUq7To59X6ONCpOBF1Xdbq4/kk/AaRofUAuaVuW78PjeiOdLw
+         FwIAMksuvclmIVG1BhS62ER/Q4BZX68dNcxkCHKX4ZEZ8honHHV4qEoX7hk245LH3h11
+         0Xjg==
+X-Gm-Message-State: APjAAAUppIqmFAMOerg5k5ntmU/ae5TKfqO9DgreHsc9EsOs/XVQUn1z
+        VuqYk8A6khNb6oHMKoXzj1o=
+X-Google-Smtp-Source: APXvYqw/m3khFk3Yualfy2xpN4sanvEEAmz6JBxD6EOIZ0rs6tDT7YTG6mbRbwiCk+s0QUksrpFdBw==
+X-Received: by 2002:ac8:2439:: with SMTP id c54mr9364734qtc.160.1565202876678;
+        Wed, 07 Aug 2019 11:34:36 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::6ac7])
+        by smtp.gmail.com with ESMTPSA id i27sm37896195qkk.58.2019.08.07.11.34.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Aug 2019 11:34:36 -0700 (PDT)
+Date:   Wed, 7 Aug 2019 11:34:34 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     axboe@kernel.dk, jack@suse.cz, hannes@cmpxchg.org,
+        mhocko@kernel.org, vdavydov.dev@gmail.com, cgroups@vger.kernel.org,
+        linux-mm@kvack.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com, guro@fb.com
+Subject: Re: [PATCH 4/4] writeback, memcg: Implement foreign dirty flushing
+Message-ID: <20190807183434.GN136335@devbig004.ftw2.facebook.com>
+References: <20190803140155.181190-1-tj@kernel.org>
+ <20190803140155.181190-5-tj@kernel.org>
+ <20190806160306.5330bd4fdddf357db4b7086c@linux-foundation.org>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190806160306.5330bd4fdddf357db4b7086c@linux-foundation.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 7 Aug 2019, syzbot wrote:
+Hello,
 
-> Hello,
+On Tue, Aug 06, 2019 at 04:03:06PM -0700, Andrew Morton wrote:
+> > +	if (i < MEMCG_CGWB_FRN_CNT) {
+> > +		unsigned long update_intv =
+> > +			min_t(unsigned long, HZ,
+> > +			      msecs_to_jiffies(dirty_expire_interval * 10) / 8);
 > 
-> syzbot has tested the proposed patch and the reproducer did not trigger  
-> crash:
+> An explanation of what's going on here would be helpful.
 > 
-> Reported-and-tested-by:  
-> syzbot+1b2449b7b5dc240d107a@syzkaller.appspotmail.com
-> 
-> Tested on:
-> 
-> commit:         6a3599ce usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan.git
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=700ca426ab83faae
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> patch:          https://syzkaller.appspot.com/x/patch.diff?x=132eec8c600000
-> 
-> Note: testing is done by a robot and is best-effort only.
+> Why "* 1.25" and not, umm "* 1.24"?
 
-Andrey, is there any way to get the console output from this test?
+Just because /8 is cheaper.  It's likely that a fairly wide range of
+numbers are okay for the above.  I'll add some comment to explain that
+and why the specific constants are picked.
 
-Alan Stern
+> > +void mem_cgroup_flush_foreign(struct bdi_writeback *wb)
+> > +{
+> > +	struct mem_cgroup *memcg = mem_cgroup_from_css(wb->memcg_css);
+> > +	unsigned long intv = msecs_to_jiffies(dirty_expire_interval * 10);
+> 
+> Ditto.
 
+This is just dirty expiration.  If the dirty data has expired,
+writeback must already be in progress by its bdi_wb, so there's no
+reason to scheduler foreign writeback.  Will add a comment.
+
+Thanks.
+
+-- 
+tejun
