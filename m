@@ -2,174 +2,221 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ABFAC32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0ABEC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:21:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CCF621E6C
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:19:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B975D21E71
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:21:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="INI+Hycj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730110AbfHGOTG (ORCPT
+        id S2388089AbfHGOVY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 10:19:06 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56846 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730063AbfHGOTE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 10:19:04 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 74684B02C;
-        Wed,  7 Aug 2019 14:19:02 +0000 (UTC)
-Message-ID: <1565187539.15973.6.camel@suse.com>
-Subject: Re: WARNING in zd_mac_clear
-From:   Oliver Neukum <oneukum@suse.com>
-To:     Andrey Konovalov <andreyknvl@google.com>,
-        syzbot <syzbot+74c65761783d66a9c97c@syzkaller.appspotmail.com>,
-        USB list <linux-usb@vger.kernel.org>
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Ulrich Kunitz <kune@deine-taler.de>,
-        Daniel Drake <dsd@gentoo.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-wireless@vger.kernel.org, netdev <netdev@vger.kernel.org>
-Date:   Wed, 07 Aug 2019 16:18:59 +0200
-In-Reply-To: <CAAeHK+zW61WK67wcwhXVCuU0dx_PicpiXmbDCPtJzX-viQ2R0A@mail.gmail.com>
-References: <00000000000075a7a6058653d977@google.com>
-         <CAAeHK+zW61WK67wcwhXVCuU0dx_PicpiXmbDCPtJzX-viQ2R0A@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Wed, 7 Aug 2019 10:21:24 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:39438 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729814AbfHGOVX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 10:21:23 -0400
+Received: by mail-lj1-f194.google.com with SMTP id v18so85597603ljh.6
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 07:21:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ym3TWnNJEGFgpteRuO2hxD/LdHQA3MDsH07HbJofTfQ=;
+        b=INI+HycjT3+g4qBx9Ko5IoZjmKKYITZXt33h42PGL4N4OFmj4XRfzycycphtJLGrEr
+         hvhZ40Ag3dRe6Zqw6qglZV/I0D1HMs6W3oiJtQbJunhuUcivoYQpQRF7Io1n2yFLn4er
+         VDv+j3c2O6IruavHGhCEIEfI48WfWSLFarEAh3qELg1H3kYJVBE0O37FORW3scp+WAkx
+         gg0qVrUYF56BxCuDfSZgHcS6n0K/yUvYiSnTs8NfqRTxo3d+JOevUhhq4DH7ecvcHzzq
+         W1OLejawnQSEzC2/hozP0ETdmb+t3rCSzwOpHHXkdVO5KDQ4LTcWwzTNbhROzi8PjiGN
+         VY5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ym3TWnNJEGFgpteRuO2hxD/LdHQA3MDsH07HbJofTfQ=;
+        b=IcIE/ggWsixE9rmAebXQdRS07eXWb50/ZqXs1VMssnICM++UoWoCLlx/JnoO/c9v2j
+         4VMOP6nqkKpOuzub3dOM6vSO/mmDTMpusqWJCKv90XA9xhRlI6ivLm7AhRxnhuMkZWsc
+         UCftio8a/K35jkjkdCPkUzIYwjZ3MLIr/vS75ERCpQUjZTTw0v2Cao9WYUKV3gP8jvhK
+         emF7hzMMhHp0R/NHNIB+pIMjdsRKtWUziKO3A7DwloxcWAc9Td19KmnnauTI03gpP8O0
+         5fY3yATW6kTLlH5ipwHU3a1qmiiTRCrtQu8/bwWWyooUFD+0ptbMI5glbDaidzVAycvX
+         ZF3g==
+X-Gm-Message-State: APjAAAUCEYDBnfkcm3IYR5lGOeSQJpX6HtJ4nOYBiqyvVNOGlrrGHglg
+        s9H9ogIOQTgXza7HraITMF1qng==
+X-Google-Smtp-Source: APXvYqxcQ5lxNvBv2pxpv7dxod4WchOzutIsq7iwKp5scxXoeS4ecQlLYFiSdRaDVQjZg8kQ68gzuA==
+X-Received: by 2002:a2e:65ca:: with SMTP id e71mr5113463ljf.61.1565187679266;
+        Wed, 07 Aug 2019 07:21:19 -0700 (PDT)
+Received: from [10.44.66.8] ([212.45.67.2])
+        by smtp.googlemail.com with ESMTPSA id q17sm3417148lfa.82.2019.08.07.07.21.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Aug 2019 07:21:18 -0700 (PDT)
+Subject: Re: [RFC PATCH 09/11] devfreq: exynos-bus: Add interconnect
+ functionality to exynos-bus
+To:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc:     krzk@kernel.org, cw00.choi@samsung.com, myungjoo.ham@samsung.com,
+        inki.dae@samsung.com, sw0312.kim@samsung.com,
+        m.szyprowski@samsung.com,
+        =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= 
+        <b.zolnierkie@samsung.com>
+References: <20190723122016.30279-1-a.swigon@partner.samsung.com>
+ <CGME20190723122028eucas1p2eb75f35b810e71d6c590370aaff0997b@eucas1p2.samsung.com>
+ <20190723122016.30279-10-a.swigon@partner.samsung.com>
+ <6e8b2081-2fb3-9ab8-37d1-8b5fe5fd8e11@linaro.org>
+ <62557522be4924a01d3822d4734c30f2965c608b.camel@partner.samsung.com>
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
+ mQINBFjTuRcBEACyAOVzghvyN19Sa/Nit4LPBWkICi5W20p6bwiZvdjhtuh50H5q4ktyxJtp
+ 1+s8dMSa/j58hAWhrc2SNL3fttOCo+MM1bQWwe8uMBQJP4swgXf5ZUYkSssQlXxGKqBSbWLB
+ uFHOOBTzaQBaNgsdXo+mQ1h8UCgM0zQOmbs2ort8aHnH2i65oLs5/Xgv/Qivde/FcFtvEFaL
+ 0TZ7odM67u+M32VetH5nBVPESmnEDjRBPw/DOPhFBPXtal53ZFiiRr6Bm1qKVu3dOEYXHHDt
+ nF13gB+vBZ6x5pjl02NUEucSHQiuCc2Aaavo6xnuBc3lnd4z/xk6GLBqFP3P/eJ56eJv4d0B
+ 0LLgQ7c1T3fU4/5NDRRCnyk6HJ5+HSxD4KVuluj0jnXW4CKzFkKaTxOp7jE6ZD/9Sh74DM8v
+ etN8uwDjtYsM07I3Szlh/I+iThxe/4zVtUQsvgXjwuoOOBWWc4m4KKg+W4zm8bSCqrd1DUgL
+ f67WiEZgvN7tPXEzi84zT1PiUOM98dOnmREIamSpKOKFereIrKX2IcnZn8jyycE12zMkk+Sc
+ ASMfXhfywB0tXRNmzsywdxQFcJ6jblPNxscnGMh2VlY2rezmqJdcK4G4Lprkc0jOHotV/6oJ
+ mj9h95Ouvbq5TDHx+ERn8uytPygDBR67kNHs18LkvrEex/Z1cQARAQABtChHZW9yZ2kgRGph
+ a292IDxnZW9yZ2kuZGpha292QGxpbmFyby5vcmc+iQI+BBMBAgAoBQJY07kXAhsDBQkHhM4A
+ BgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRCyi/eZcnWWUuvsD/4miikUeAO6fU2Xy3fT
+ l7RUCeb2Uuh1/nxYoE1vtXcow6SyAvIVTD32kHXucJJfYy2zFzptWpvD6Sa0Sc58qe4iLY4j
+ M54ugOYK7XeRKkQHFqqR2T3g/toVG1BOLS2atooXEU+8OFbpLkBXbIdItqJ1M1SEw8YgKmmr
+ JlLAaKMq3hMb5bDQx9erq7PqEKOB/Va0nNu17IL58q+Q5Om7S1x54Oj6LiG/9kNOxQTklOQZ
+ t61oW1Ewjbl325fW0/Lk0QzmfLCrmGXXiedFEMRLCJbVImXVKdIt/Ubk6SAAUrA5dFVNBzm2
+ L8r+HxJcfDeEpdOZJzuwRyFnH96u1Xz+7X2V26zMU6Wl2+lhvr2Tj7spxjppR+nuFiybQq7k
+ MIwyEF0mb75RLhW33sdGStCZ/nBsXIGAUS7OBj+a5fm47vQKv6ekg60oRTHWysFSJm1mlRyq
+ exhI6GwUo5GM/vE36rIPSJFRRgkt6nynoba/1c4VXxfhok2rkP0x3CApJ5RimbvITTnINY0o
+ CU6f1ng1I0A1UTi2YcLjFq/gmCdOHExT4huywfu1DDf0p1xDyPA1FJaii/gJ32bBP3zK53hM
+ dj5S7miqN7F6ZpvGSGXgahQzkGyYpBR5pda0m0k8drV2IQn+0W8Qwh4XZ6/YdfI81+xyFlXc
+ CJjljqsMCJW6PdgEH7kCDQRY07kXARAAvupGd4Jdd8zRRiF+jMpv6ZGz8L55Di1fl1YRth6m
+ lIxYTLwGf0/p0oDLIRldKswena3fbWh5bbTMkJmRiOQ/hffhPSNSyyh+WQeLY2kzl6geiHxD
+ zbw37e2hd3rWAEfVFEXOLnmenaUeJFyhA3Wd8OLdRMuoV+RaLhNfeHctiEn1YGy2gLCq4VNb
+ 4Wj5hEzABGO7+LZ14hdw3hJIEGKtQC65Jh/vTayGD+qdwedhINnIqslk9tCQ33a+jPrCjXLW
+ X29rcgqigzsLHH7iVHWA9R5Aq7pCy5hSFsl4NBn1uV6UHlyOBUuiHBDVwTIAUnZ4S8EQiwgv
+ WQxEkXEWLM850V+G6R593yZndTr3yydPgYv0xEDACd6GcNLR/x8mawmHKzNmnRJoOh6Rkfw2
+ fSiVGesGo83+iYq0NZASrXHAjWgtZXO1YwjW9gCQ2jYu9RGuQM8zIPY1VDpQ6wJtjO/KaOLm
+ NehSR2R6tgBJK7XD9it79LdbPKDKoFSqxaAvXwWgXBj0Oz+Y0BqfClnAbxx3kYlSwfPHDFYc
+ R/ppSgnbR5j0Rjz/N6Lua3S42MDhQGoTlVkgAi1btbdV3qpFE6jglJsJUDlqnEnwf03EgjdJ
+ 6KEh0z57lyVcy5F/EUKfTAMZweBnkPo+BF2LBYn3Qd+CS6haZAWaG7vzVJu4W/mPQzsAEQEA
+ AYkCJQQYAQIADwUCWNO5FwIbDAUJB4TOAAAKCRCyi/eZcnWWUhlHD/0VE/2x6lKh2FGP+QHH
+ UTKmiiwtMurYKJsSJlQx0T+j/1f+zYkY3MDX+gXa0d0xb4eFv8WNlEjkcpSPFr+pQ7CiAI33
+ 99kAVMQEip/MwoTYvM9NXSMTpyRJ/asnLeqa0WU6l6Z9mQ41lLzPFBAJ21/ddT4xeBDv0dxM
+ GqaH2C6bSnJkhSfSja9OxBe+F6LIAZgCFzlogbmSWmUdLBg+sh3K6aiBDAdZPUMvGHzHK3fj
+ gHK4GqGCFK76bFrHQYgiBOrcR4GDklj4Gk9osIfdXIAkBvRGw8zg1zzUYwMYk+A6v40gBn00
+ OOB13qJe9zyKpReWMAhg7BYPBKIm/qSr82aIQc4+FlDX2Ot6T/4tGUDr9MAHaBKFtVyIqXBO
+ xOf0vQEokkUGRKWBE0uA3zFVRfLiT6NUjDQ0vdphTnsdA7h01MliZLQ2lLL2Mt5lsqU+6sup
+ Tfql1omgEpjnFsPsyFebzcKGbdEr6vySGa3Cof+miX06hQXKe99a5+eHNhtZJcMAIO89wZmj
+ 7ayYJIXFqjl/X0KBcCbiAl4vbdBw1bqFnO4zd1lMXKVoa29UHqby4MPbQhjWNVv9kqp8A39+
+ E9xw890l1xdERkjVKX6IEJu2hf7X3MMl9tOjBK6MvdOUxvh1bNNmXh7OlBL1MpJYY/ydIm3B
+ KEmKjLDvB0pePJkdTw==
+Message-ID: <4155482f-8f8f-a659-63ba-25701540b2c5@linaro.org>
+Date:   Wed, 7 Aug 2019 17:21:15 +0300
+MIME-Version: 1.0
+In-Reply-To: <62557522be4924a01d3822d4734c30f2965c608b.camel@partner.samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Mittwoch, den 07.08.2019, 16:07 +0200 schrieb Andrey Konovalov:
-> On Fri, Apr 12, 2019 at 1:46 PM syzbot
-> <syzbot+74c65761783d66a9c97c@syzkaller.appspotmail.com> wrote:
-> > 
-> > Hello,
-> > 
-> > syzbot found the following crash on:
-> > 
-> > HEAD commit:    9a33b369 usb-fuzzer: main usb gadget fuzzer driver
-> > git tree:       https://github.com/google/kasan/tree/usb-fuzzer
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=101a06dd200000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=23e37f59d94ddd15
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=74c65761783d66a9c97c
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1170c22d200000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1496adbb200000
-> > 
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+74c65761783d66a9c97c@syzkaller.appspotmail.com
-> > 
-> > usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
-> > usb 1-1: config 0 descriptor??
-> > usb 1-1: reset low-speed USB device number 2 using dummy_hcd
-> > usb 1-1: read over firmware interface failed: -71
-> > usb 1-1: reset low-speed USB device number 2 using dummy_hcd
-> > WARNING: CPU: 1 PID: 21 at drivers/net/wireless/zydas/zd1211rw/zd_mac.c:238
-> > zd_mac_clear+0xb0/0xe0 drivers/net/wireless/zydas/zd1211rw/zd_mac.c:238
-> > Kernel panic - not syncing: panic_on_warn set ...
-> > CPU: 1 PID: 21 Comm: kworker/1:1 Not tainted 5.1.0-rc4-319354-g9a33b36 #3
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > Google 01/01/2011
-> > Workqueue: usb_hub_wq hub_event
-> > Call Trace:
-> >   __dump_stack lib/dump_stack.c:77 [inline]
-> >   dump_stack+0xe8/0x16e lib/dump_stack.c:113
-> >   panic+0x29d/0x5f2 kernel/panic.c:214
-> >   __warn.cold+0x20/0x48 kernel/panic.c:571
-> >   report_bug+0x262/0x2a0 lib/bug.c:186
-> >   fixup_bug arch/x86/kernel/traps.c:179 [inline]
-> >   fixup_bug arch/x86/kernel/traps.c:174 [inline]
-> >   do_error_trap+0x130/0x1f0 arch/x86/kernel/traps.c:272
-> >   do_invalid_op+0x37/0x40 arch/x86/kernel/traps.c:291
-> >   invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:973
-> > RIP: 0010:zd_mac_clear+0xb0/0xe0
-> > drivers/net/wireless/zydas/zd1211rw/zd_mac.c:238
-> > Code: e8 85 d0 60 f8 48 8d bb f8 2b 00 00 be ff ff ff ff e8 54 5a 46 f8 31
-> > ff 89 c3 89 c6 e8 d9 d1 60 f8 85 db 75 d4 e8 60 d0 60 f8 <0f> 0b 5b 5d e9
-> > 57 d0 60 f8 48 c7 c7 58 05 cb 93 e8 fb e0 97 f8 eb
-> > RSP: 0018:ffff8880a85c7310 EFLAGS: 00010293
-> > RAX: ffff8880a84de200 RBX: 0000000000000000 RCX: ffffffff8910f507
-> > RDX: 0000000000000000 RSI: ffffffff8910f510 RDI: 0000000000000005
-> > RBP: 0000000000000001 R08: ffff8880a84de200 R09: ffffed1012f83a0b
-> > R10: ffffed1012f83a0a R11: ffff888097c1d057 R12: 00000000ffffffb9
-> > R13: ffff888097c18b20 R14: ffff888099456630 R15: ffffffff8f979398
-> >   probe+0x259/0x590 drivers/net/wireless/zydas/zd1211rw/zd_usb.c:1421
-> >   usb_probe_interface+0x31d/0x820 drivers/usb/core/driver.c:361
-> >   really_probe+0x2da/0xb10 drivers/base/dd.c:509
-> >   driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
-> >   __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
-> >   bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
-> >   __device_attach+0x223/0x3a0 drivers/base/dd.c:844
-> >   bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
-> >   device_add+0xad2/0x16e0 drivers/base/core.c:2106
-> >   usb_set_configuration+0xdf7/0x1740 drivers/usb/core/message.c:2021
-> >   generic_probe+0xa2/0xda drivers/usb/core/generic.c:210
-> >   usb_probe_device+0xc0/0x150 drivers/usb/core/driver.c:266
-> >   really_probe+0x2da/0xb10 drivers/base/dd.c:509
-> >   driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
-> >   __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
-> >   bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
-> >   __device_attach+0x223/0x3a0 drivers/base/dd.c:844
-> >   bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
-> >   device_add+0xad2/0x16e0 drivers/base/core.c:2106
-> >   usb_new_device.cold+0x537/0xccf drivers/usb/core/hub.c:2534
-> >   hub_port_connect drivers/usb/core/hub.c:5089 [inline]
-> >   hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
-> >   port_event drivers/usb/core/hub.c:5350 [inline]
-> >   hub_event+0x138e/0x3b00 drivers/usb/core/hub.c:5432
-> >   process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
-> >   worker_thread+0x9b/0xe20 kernel/workqueue.c:2415
-> >   kthread+0x313/0x420 kernel/kthread.c:253
-> >   ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-> > Kernel Offset: disabled
-> > Rebooting in 86400 seconds..
+Hi Artur,
+
+On 8/1/19 10:59, Artur Świgoń wrote:
+> Hi Georgi,
 > 
-> This USB bug is the second most frequently triggered one with over 10k
-> kernel crashes.
+> On Fri, 2019-07-26 at 11:05 +0300, Georgi Djakov wrote:
+>> Hi Artur,
+>>
+>> On 7/23/19 15:20, Artur Świgoń wrote:
+>>> This patch adds interconnect functionality to the exynos-bus devfreq
+>>> driver.
+>>>
+>>> The SoC topology is a graph (or, more specifically, a tree) and most of its
+>>> edges are taken from the devfreq parent-child hierarchy (cf.
+>>> Documentation/devicetree/bindings/devfreq/exynos-bus.txt). The previous
+>>> patch adds missing edges to the DT (under the name 'parent'). Due to
+>>> unspecified relative probing order, -EPROBE_DEFER may be propagated to
+>>> guarantee that a child is probed before its parent.
+>>>
+>>> Each bus is now an interconnect provider and an interconnect node as well
+>>> (cf. Documentation/interconnect/interconnect.rst), i.e. every bus registers
+>>> itself as a node. Node IDs are not hardcoded but rather assigned at
+>>> runtime, in probing order (subject to the above-mentioned exception
+>>> regarding relative order). This approach allows for using this driver with
+>>> various Exynos SoCs.
+>>
+>> I am not familiar with the Exynos bus topology, but it seems to me that it's not
+>> represented correctly. An interconnect provider with just a single node (port)
+>> is odd. I would expect that each provider consists of multiple master and slave
+>> nodes. This data would be used by a framework to understand what are the links
+>> and how the traffic flows between the IP blocks and through which buses.
+> 
+> To summarize the exynos-bus topology[1] used by the devfreq driver: There are
+> many data buses for data transfer in Samsung Exynos SoC. Every bus has its own
+> clock. Buses often share power lines, in which case one of the buses on the
+> power line is referred to as 'parent' (or as 'devfreq' in the DT). In the
+> particular case of Exynos4412[1][2], the topology can be expressed as follows:
+> 
+> bus_dmc
+> -- bus_acp
+> -- bus_c2c
+> 
+> bus_leftbus
+> -- bus_rightbus
+> -- bus_display
+> -- bus_fsys
+> -- bus_peri
+> -- bus_mfc
+> 
+> Where bus_dmc and bus_leftbus probably could be referred to as masters, and the
+> following indented nodes as slaves. Patch 08/11 of this RFC additionally adds
+> the following to the DT:
+> 
+> bus_dmc
+> -- bus_leftbus
+> 
+> Which makes the topology a valid tree.
+> 
+> The exynos-bus concept in devfreq[3] is designed in such a way that every bus is
+> probed separately as a platform device, and is a largely independent entity.
+>
+> This RFC proposes an extension to the existing devfreq driver that basically
+> provides a simple QoS to ensure minimum clock frequency for selected buses
+> (possibly overriding devfreq governor calculations) using the interconnect
+> framework.
+> 
+> The hierarchy is modelled in such a way that every bus is an interconnect node.
+> On the other hand, what is considered an interconnect provider here is quite
+> arbitrary, but for the reasons mentioned in the above paragraph, this RFC
+> assumes that every bus is a provider of itself as a node. Using an alternative
 
-As far as I can tell this is a false positive. Didn't I submit this
-upstream?
+IIUC, in case we want to transfer data between the display and the memory
+controller, the path would look like this:
 
-#syz test: https://github.com/google/kasan.git 9a33b369
+display --> bus_display --> bus_leftbus --> bus_dmc --> memory
 
-From ae999d5a437850b65497df7dcca3ffc10f75e697 Mon Sep 17 00:00:00 2001
-From: Oliver Neukum <oneukum@suse.com>
-Date: Tue, 30 Jul 2019 15:59:03 +0200
-Subject: [PATCH] zdnet: remove false assertion from zd_mac_clear()
+But the bus_display for example would have not one, but two nodes (ports),
+right?  One representing the link to the display controller and another one
+representing the link to bus_leftbus? So i think that all the buses should
+have at least two nodes, to represent each end of the wire.
 
-The function is called before the lock which is asserted was ever used.
-Just remove it.
+> singleton provider approach was deemed more complicated since the 'dev' field in
+> 'struct icc_provider' has to be set to something meaningful and we are tied to
+> the 'samsung,exynos-bus' compatible string in the driver (and multiple instances
+> of exynos-bus probed in indeterminate relative order).
+> 
 
-Reported-by: syzbot+74c65761783d66a9c97c@syzkaller.appspotmail.com
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
----
- drivers/net/wireless/zydas/zd1211rw/zd_mac.c | 1 -
- 1 file changed, 1 deletion(-)
+Sure, the rest makes sense to me.
 
-diff --git a/drivers/net/wireless/zydas/zd1211rw/zd_mac.c b/drivers/net/wireless/zydas/zd1211rw/zd_mac.c
-index da7e63fca9f5..a9999d10ae81 100644
---- a/drivers/net/wireless/zydas/zd1211rw/zd_mac.c
-+++ b/drivers/net/wireless/zydas/zd1211rw/zd_mac.c
-@@ -223,7 +223,6 @@ void zd_mac_clear(struct zd_mac *mac)
- {
- 	flush_workqueue(zd_workqueue);
- 	zd_chip_clear(&mac->chip);
--	lockdep_assert_held(&mac->lock);
- 	ZD_MEMCLEAR(mac, sizeof(struct zd_mac));
- }
- 
--- 
-2.16.4
-
+Thanks,
+Georgi
