@@ -2,103 +2,133 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C96A3C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 09:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3BBFC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 09:07:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8954F22305
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 09:05:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NsPlvCGa"
+	by mail.kernel.org (Postfix) with ESMTP id BD24321883
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 09:07:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728435AbfHGJFM (ORCPT
+        id S1728547AbfHGJHJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 05:05:12 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:35815 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726244AbfHGJFM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 05:05:12 -0400
-Received: by mail-pl1-f195.google.com with SMTP id w24so39799103plp.2
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 02:05:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=J4ZFvTXe+zTVR2M5ZBZS8AXmh/aoWceUxNcpzmTU7Uw=;
-        b=NsPlvCGahqKL6UxzvtvcHQ/HirhN9BDf2ppat0hC9TPHLVHpLY9s95fX53JbOZhIPv
-         Z5XqIT9H203n8G5v+pSp8n0/cBfYjp2MuhBO5wrt6xGk3Tfkrkx7ezxyYP2PEUC7ad0h
-         89yaIBfX97z/Gmvkc3MkqlFkxhhlVROqzzJ/N5yrKpCOFHGeKlvAYExc7qHGZ522Fi2U
-         Wd9eS+4FG6mg/W+Tw5mmnd3tJhOABj3QAEV8GuNja20qzp4WsEK1RiayBgMNBz6psTj4
-         1yu4jjzu/fWjMbycIl+hd3h3GJ3rXM7uJsTVcXiGvcxH5H3lFqGbwJzBKQiYBTkLjxhq
-         A+Vg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=J4ZFvTXe+zTVR2M5ZBZS8AXmh/aoWceUxNcpzmTU7Uw=;
-        b=VuQC2NOVgwUElagVNPNPpsH1F2oNBpUMbIus3+4nQbxiwuKWEIzZzbzsBxn2LAyxG5
-         T2aWgcnbAZP2yVhUNMAPAlhwHCRZKvxEZmfeawJq3jAvtS1V1gjv7cz6IyEroLn6UY/Q
-         lTUViRtUB7NjG1yD7iAS+kJ3FqkO0i4T3BhOpqG/lOPMuGVZKLrwSdcEfzyPKqMvB2UI
-         N5nfDPMyby4EoaZ/aiylhk10hlgoivwXE7eNVh2UEL+2yS3v9fcRrCdlPfg6MKd6BVch
-         CcjAN1m0ujc6raLwI2NOGgi9C13Rpcg/yby5ZwmdDeihtDhktkforcG9B4J3PWNgYCF2
-         fbEg==
-X-Gm-Message-State: APjAAAXocOEjJmrUjmChSRbF0xqd2Le7sozAVEcmutI5wl55vXyxwP01
-        t0KuHeQebmmlBXaDNNHEP8+Zlw==
-X-Google-Smtp-Source: APXvYqwfH6D7XhoDyWG2BYBL/s5POj834n5L7zMUmOgrJb8o7wh9ak/X/IpezahPVk9H4JXKtlfOkA==
-X-Received: by 2002:a65:68d9:: with SMTP id k25mr6855707pgt.337.1565168711202;
-        Wed, 07 Aug 2019 02:05:11 -0700 (PDT)
-Received: from localhost ([122.172.76.219])
-        by smtp.gmail.com with ESMTPSA id 33sm103194231pgy.22.2019.08.07.02.05.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 07 Aug 2019 02:05:10 -0700 (PDT)
-Date:   Wed, 7 Aug 2019 14:35:08 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Fabien Parent <fparent@baylibre.com>
-Cc:     rjw@rjwysocki.net, matthias.bgg@gmail.com,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH] cpufreq: mediatek-cpufreq: Add compatible for MT8516
-Message-ID: <20190807090508.vhc3o3jhmiooyr4m@vireshk-i7>
-References: <20190806095029.4758-1-fparent@baylibre.com>
+        Wed, 7 Aug 2019 05:07:09 -0400
+Received: from mga18.intel.com ([134.134.136.126]:26308 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726881AbfHGJHJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 05:07:09 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Aug 2019 02:07:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,357,1559545200"; 
+   d="scan'208";a="176131076"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.122]) ([10.237.72.122])
+  by fmsmga007.fm.intel.com with ESMTP; 07 Aug 2019 02:07:05 -0700
+Subject: Re: [PATCH v2 1/2] mmc: sdhci: Add PLL Enable support to internal
+ clock setup
+To:     "Michael K. Johnson" <johnsonm@danlj.org>, ulf.hansson@linaro.org
+Cc:     linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
+        Ben Chuang <ben.chuang@genesyslogic.com.tw>
+References: <20190726020746.GB12042@people.danlj.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <acc74e9e-ca41-a5dd-780a-615745d70101@intel.com>
+Date:   Wed, 7 Aug 2019 12:05:59 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190806095029.4758-1-fparent@baylibre.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20190726020746.GB12042@people.danlj.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06-08-19, 11:50, Fabien Parent wrote:
-> Add the compatible for MT8516 in order to take advantage of the
-> MediaTek CPUFreq driver for Mediatek's MT8516 SoC.
+On 26/07/19 5:07 AM, Michael K. Johnson wrote:
+> The GL9750 and GL9755 chipsets, and possibly others, require PLL Enable
+> setup as part of the internal clock setup as described in 3.2.1 Internal
+> Clock Setup Sequence of SD Host Controller Simplified Specification
+> Version 4.20.  This changes the timeouts to the new specification of
+> 150ms for each step and is documented as safe for "prior versions which
+> do not support PLL Enable."
 > 
-> Signed-off-by: Fabien Parent <fparent@baylibre.com>
-> ---
->  drivers/cpufreq/mediatek-cpufreq.c | 1 +
->  1 file changed, 1 insertion(+)
+> Signed-off-by: Ben Chuang <ben.chuang@genesyslogic.com.tw>
+> Co-developed-by: Michael K Johnson <johnsonm@danlj.org>
+> Signed-off-by: Michael K Johnson <johnsonm@danlj.org>
 > 
-> diff --git a/drivers/cpufreq/mediatek-cpufreq.c b/drivers/cpufreq/mediatek-cpufreq.c
-> index f14f3a85f2f7..10bc06f5dd45 100644
-> --- a/drivers/cpufreq/mediatek-cpufreq.c
-> +++ b/drivers/cpufreq/mediatek-cpufreq.c
-> @@ -535,6 +535,7 @@ static const struct of_device_id mtk_cpufreq_machines[] __initconst = {
->  	{ .compatible = "mediatek,mt817x", },
->  	{ .compatible = "mediatek,mt8173", },
->  	{ .compatible = "mediatek,mt8176", },
-> +	{ .compatible = "mediatek,mt8516", },
+> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+> index 59acf8e3331e..14957578bf2e 100644
+> --- a/drivers/mmc/host/sdhci.c
+> +++ b/drivers/mmc/host/sdhci.c
+> @@ -1636,8 +1636,8 @@ void sdhci_enable_clk(struct sdhci_host *host, u16 clk)
+>  	clk |= SDHCI_CLOCK_INT_EN;
+>  	sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
 >  
->  	{ }
->  };
+> -	/* Wait max 20 ms */
+> -	timeout = ktime_add_ms(ktime_get(), 20);
+> +	/* Wait max 150 ms */
+> +	timeout = ktime_add_ms(ktime_get(), 150);
+>  	while (1) {
+>  		bool timedout = ktime_after(ktime_get(), timeout);
+>  
+> @@ -1650,7 +1650,28 @@ void sdhci_enable_clk(struct sdhci_host *host, u16 clk)
+>  			sdhci_dumpregs(host);
+>  			return;
+>  		}
+> -		udelay(10);
+> +		usleep_range(10,15);
 
-Applied. Thanks.
+There is still one place that calls ->set_clock() under spinlock, so that
+needs to stay udelay(10) for now.
 
--- 
-viresh
+> +	}
+> +
+
+PLL Enable is only valid from v4.1 i.e.
+
+	if (host->version >= SDHCI_SPEC_410 && host->v4_mode)
+
+
+> +	clk |= SDHCI_CLOCK_PLL_EN;
+> +	clk &= ~SDHCI_CLOCK_INT_STABLE;
+> +	sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
+> +
+> +	/* Wait max 150 ms */
+> +	timeout = ktime_add_ms(ktime_get(), 150);
+> +	while (1) {
+> +		bool timedout = ktime_after(ktime_get(), timeout);
+> +
+> +		clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
+> +		if (clk & SDHCI_CLOCK_INT_STABLE)
+> +			break;
+> +		if (timedout) {
+> +			pr_err("%s: PLL clock never stabilised.\n",
+> +			       mmc_hostname(host->mmc));
+> +			sdhci_dumpregs(host);
+> +			return;
+> +		}
+> +		usleep_range(10,15);
+>  	}
+>  
+>  	clk |= SDHCI_CLOCK_CARD_EN;
+> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+> index 199712e7adbb..72601a4d2e95 100644
+> --- a/drivers/mmc/host/sdhci.h
+> +++ b/drivers/mmc/host/sdhci.h
+> @@ -114,6 +114,7 @@
+>  #define  SDHCI_DIV_HI_MASK	0x300
+>  #define  SDHCI_PROG_CLOCK_MODE	0x0020
+>  #define  SDHCI_CLOCK_CARD_EN	0x0004
+> +#define  SDHCI_CLOCK_PLL_EN	0x0008
+>  #define  SDHCI_CLOCK_INT_STABLE	0x0002
+>  #define  SDHCI_CLOCK_INT_EN	0x0001
+>  
+> 
+
