@@ -2,86 +2,124 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A0E0C32757
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 16:20:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE0DC32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 16:21:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D78D2229C
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 16:20:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="bpH/06Bn"
+	by mail.kernel.org (Postfix) with ESMTP id 8ACB32229C
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 16:21:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388815AbfHGQUT (ORCPT
+        id S2388821AbfHGQVQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 12:20:19 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:44668 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729278AbfHGQUS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 12:20:18 -0400
-Received: by mail-pl1-f196.google.com with SMTP id t14so41514918plr.11
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 09:20:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zdXpc4sHpuyR/XCLCaxASYs6IQPhe894MvifJxuUKDY=;
-        b=bpH/06BnzUA9+ZqA6qzS/B4qU+dimFzNTr0RlRGc0Fq5Yjf8acu9/+WDDP8WEknq/1
-         7d8FDcvJxbWPzS9GkQJxNtL9hZGohCKzlYwAZ6PABsqGCJtOsIhkzzEjx8IqVoSBMj1s
-         Iq7b1szOAHm4fqKd/MQBGj0vymGMzBQwYJECL66NjsHIo2sutCc+yeYAcyR7OOCzVaPR
-         BW20IA1YX/K/ZokGqK+Y2AF6L8fpj4PyQBsNa1OoNEpKDi0E/cOV+/BhZ+i2LSbp9xd4
-         RhfXZ/ZAKiwJBUaj1ZHqRGyiwXS+6YfGLioEg1fgRAypDF5N2KAMILLu8zDMiKoKfWnC
-         7w8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=zdXpc4sHpuyR/XCLCaxASYs6IQPhe894MvifJxuUKDY=;
-        b=aWFLuCPWwA2BR9x3zELv9Fpmrbum5Enj7gmdAomaleXoxRcAJmDAumBRHnfkb/4q7W
-         QQsWevmsvLY6spqOnuoKRmWhSP3kI3d30WQUxJ/KTa25uw5I3JNRTneI0BZglo06RlGX
-         Qam0hMY3TkQJSmC11OCYUyiY6nwHUVqlMm+9gCQonu5SGA/Udido79WxBs4CI2f2rxVC
-         NC3iEHoQLn5j7rUD3fjemmskqSq6m7ObHPO+EJDZUt+fjMeAzEW+aC4zxSx1b5XWE25K
-         PgZnX71yuZAP8WySOfcazX2VQVI5SB6G3Jcdy+MjVEgAXbysfIsIEdKji6jt0u0dm5Qo
-         2JHA==
-X-Gm-Message-State: APjAAAVX4HaqG/oNOHMVRlPtZMb/Z3Bg0QiGA2ZtppyEQgqx89gIecFE
-        5ANMEW/Ul/5CdNJGP5r3oGSlJ6+8dyy+8Q==
-X-Google-Smtp-Source: APXvYqyw1rQHbTCAjQdygvE0aT61eyJ0znZpiutYEO6zwfEI6liF+OCkSgzHqrTYT1bXmMChnjd6Kw==
-X-Received: by 2002:a62:f202:: with SMTP id m2mr10528831pfh.6.1565194818021;
-        Wed, 07 Aug 2019 09:20:18 -0700 (PDT)
-Received: from localhost ([12.206.222.5])
-        by smtp.gmail.com with ESMTPSA id g66sm90024297pfb.44.2019.08.07.09.20.16
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 07 Aug 2019 09:20:17 -0700 (PDT)
-Date:   Wed, 07 Aug 2019 09:20:17 -0700 (PDT)
-X-Google-Original-Date: Wed, 07 Aug 2019 09:13:52 PDT (-0700)
-Subject:     Re: [PATCH] riscv: kbuild: add virtual memory system selection
-In-Reply-To: <20190807151229.GA16432@infradead.org>
-CC:     alex@ghiti.fr, Christoph Hellwig <hch@infradead.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-From:   Palmer Dabbelt <palmer@sifive.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Message-ID: <mhng-5bc65289-4805-46a0-aa16-404b2be270fd@palmer-si-x1c4>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Wed, 7 Aug 2019 12:21:16 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33050 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387922AbfHGQVQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 12:21:16 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id BDF28641DA;
+        Wed,  7 Aug 2019 16:21:15 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.136])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 8A2B160852;
+        Wed,  7 Aug 2019 16:21:13 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Wed,  7 Aug 2019 18:21:15 +0200 (CEST)
+Date:   Wed, 7 Aug 2019 18:21:12 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Dmitry Safonov <0x7f454c46@gmail.com>
+Cc:     Adrian Reber <areber@redhat.com>,
+        Christian Brauner <christian@brauner.io>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Pavel Emelianov <xemul@virtuozzo.com>,
+        Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org,
+        Andrei Vagin <avagin@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Radostin Stoyanov <rstoyanov1@gmail.com>
+Subject: Re: [PATCH v3 1/2] fork: extend clone3() to support CLONE_SET_TID
+Message-ID: <20190807162112.GF24112@redhat.com>
+References: <20190806191551.22192-1-areber@redhat.com>
+ <20190807154828.GD24112@redhat.com>
+ <b57e809d-e5fa-bda2-ee81-e86116bb2856@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b57e809d-e5fa-bda2-ee81-e86116bb2856@gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Wed, 07 Aug 2019 16:21:15 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 07 Aug 2019 08:12:30 PDT (-0700), Christoph Hellwig wrote:
-> On Wed, Aug 07, 2019 at 09:04:40AM +0200, Alexandre Ghiti wrote:
->> I took a look at how x86 deals with 5-level page table: it allows to handle
->> 5-level and 4-level at runtime by folding the last page table level (cf
->> Documentation/x86/x86_64/5level-paging.rst). So we might want to be able to
->> do the same and deal with that at runtime.
+On 08/07, Dmitry Safonov wrote:
+> 
+> On 8/7/19 4:48 PM, Oleg Nesterov wrote:
+> > On 08/06, Adrian Reber wrote:
+> >>
+> >> @@ -2530,12 +2530,14 @@ noinline static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
+> >>  					      struct clone_args __user *uargs,
+> >>  					      size_t size)
+> >>  {
+> >> +	struct pid_namespace *pid_ns = task_active_pid_ns(current);
+> >>  	struct clone_args args;
+> >>  
+> >>  	if (unlikely(size > PAGE_SIZE))
+> >>  		return -E2BIG;
+> >>  
+> >> -	if (unlikely(size < sizeof(struct clone_args)))
+> >> +	/* The struct needs to be at least the size of the original struct. */
+> >> +	if (size < (sizeof(struct clone_args) - sizeof(__aligned_u64)))
+> >>  		return -EINVAL;
+> > 
+> > slightly off-topic, but with or without this patch I do not understand
+> > -EINVAL. Can't we replace this check with
+> > 
+> > 	if (size < sizeof(struct clone_args))
+> > 		memset((void*)&args + size, sizeof(struct clone_args) - size, 0);
+> > 
+> > ?
+> > 
+> > this way we can new members at the end of clone_args and this matches
+> > the "if (size > sizeof(struct clone_args))" block below which promises
+> > that whatever we add into clone_args a zero value should work.
 >
-> Yes, following the X86_5LEVEL model is the right thing.
+> What if the size is lesser than offsetof(struct clone_args, stack_size)?
+> Probably, there should be still a check that it's not lesser than what's
+> the required minimum..
 
-I poked around a bit with this last night, but our paging implemention is super
-ugly so it'd be better to clean all that up first.  No idea when I'll have time
-to do so...
+Not sure I understand... I mean, this doesn't differ from the case when
+size == sizeof(clone_args) but uargs->stack == NULL ?
+
+> Also note, that (kargs) and (args) are a bit different beasts in this
+> context..
+> kargs lies on the stack and might want to be with zero-initializer
+> :	struct kernel_clone_args kargs = {};
+
+I don't think so. Lets consider this patch which adds the new set_tid
+into clone_args and kernel_clone_args. copy_clone_args_from_user() does
+
+	*kargs = (struct kernel_clone_args){
+		.flags		= args.flags,
+		.pidfd		= u64_to_user_ptr(args.pidfd),
+		.child_tid	= u64_to_user_ptr(args.child_tid),
+		.parent_tid	= u64_to_user_ptr(args.parent_tid),
+		.exit_signal	= args.exit_signal,
+		.stack		= args.stack,
+		.stack_size	= args.stack_size,
+		.tls		= args.tls,
+	};
+
+so this patch should simply add
+
+		.set_tid	= args.set_tid;
+
+at the end. No?
+
+Oleg.
+
