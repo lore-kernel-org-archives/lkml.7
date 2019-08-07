@@ -2,383 +2,152 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FADCC32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 15:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 551D1C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 15:07:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5154721BF2
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 15:02:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="onI4no/d"
+	by mail.kernel.org (Postfix) with ESMTP id 36E9521E70
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 15:07:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730142AbfHGPCy (ORCPT
+        id S1730159AbfHGPHA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 11:02:54 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:2106 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727213AbfHGPCy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 11:02:54 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d4ae8270000>; Wed, 07 Aug 2019 08:03:03 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 07 Aug 2019 08:02:53 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 07 Aug 2019 08:02:53 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 7 Aug
- 2019 15:02:51 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 7 Aug 2019 15:02:51 +0000
-Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d4ae81b0001>; Wed, 07 Aug 2019 08:02:51 -0700
-From:   Ralph Campbell <rcampbell@nvidia.com>
-To:     <linux-mm@kvack.org>
-CC:     <linux-kernel@vger.kernel.org>, <amd-gfx@lists.freedesktop.org>,
-        <dri-devel@lists.freedesktop.org>, <nouveau@lists.freedesktop.org>,
-        "Ralph Campbell" <rcampbell@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Jason Gunthorpe" <jgg@mellanox.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>
-Subject: [PATCH] nouveau/hmm: map pages after migration
-Date:   Wed, 7 Aug 2019 08:02:14 -0700
-Message-ID: <20190807150214.3629-1-rcampbell@nvidia.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 7 Aug 2019 11:07:00 -0400
+Received: from foss.arm.com ([217.140.110.172]:49938 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727213AbfHGPG7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 11:06:59 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C2FD1344;
+        Wed,  7 Aug 2019 08:06:58 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 39A073F706;
+        Wed,  7 Aug 2019 08:06:57 -0700 (PDT)
+Date:   Wed, 7 Aug 2019 16:06:54 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Sasha Levin <sashal@kernel.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jake Oshins <jakeo@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Dexuan Cui <decui@microsoft.com>
+Subject: Re: [PATCH] PCI: pci-hyperv: fix build errors on non-SYSFS config
+Message-ID: <20190807150654.GB16214@e121166-lin.cambridge.arm.com>
+References: <abbe8012-1e6f-bdea-1454-5c59ccbced3d@infradead.org>
+ <DM6PR21MB133723E9D1FA8BA0006E06FECAF20@DM6PR21MB1337.namprd21.prod.outlook.com>
+ <20190713150353.GF10104@sasha-vm>
+ <20190723212107.GB9742@google.com>
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1565190183; bh=wGZQLypYopVpR2zcFxaVbPhYio/AUJ4Ba+D3g3fb9YU=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:X-NVConfidentiality:Content-Type:
-         Content-Transfer-Encoding;
-        b=onI4no/dzvK1PtPWj65mZ6yPUlwn8/J0b9uUMp9Gvf3H4GtcbOW+7/L5rdTHF2ETc
-         3YZGE3df9PSQ3bF5C7qx35edzqpGaNjgEh+YiPJ/NXmOL/oWRaSP2xl0vXnxKmTThp
-         VHowUrXZRgJXidLqcHRBgiTla88UXGmU5lb9ia4WCMGeX4t1n+W+RvCuG2kdqH2A/J
-         gjLkZmrb+Yp9FpC49MVJGEQRgCltJ9RxHwLF/DwVpMzcT3TVa8QX6pcReCIWmAxoJm
-         HndelJGx0uUj/+tU5oFE7rL9qW9N2BSYa2tT+tIWCAizkGKToV2vsiRQHZxHIt9l/H
-         dZv3+xu/Z+hTg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190723212107.GB9742@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When memory is migrated to the GPU it is likely to be accessed by GPU
-code soon afterwards. Instead of waiting for a GPU fault, map the
-migrated memory into the GPU page tables with the same access permissions
-as the source CPU page table entries. This preserves copy on write
-semantics.
+On Tue, Jul 23, 2019 at 04:21:07PM -0500, Bjorn Helgaas wrote:
+> On Sat, Jul 13, 2019 at 11:03:53AM -0400, Sasha Levin wrote:
+> > On Fri, Jul 12, 2019 at 04:04:17PM +0000, Haiyang Zhang wrote:
+> > > > -----Original Message-----
+> > > > From: Randy Dunlap <rdunlap@infradead.org>
+> > > > Sent: Friday, July 12, 2019 11:53 AM
+> > > > To: linux-pci <linux-pci@vger.kernel.org>; LKML <linux-
+> > > > kernel@vger.kernel.org>
+> > > > Cc: Matthew Wilcox <willy@infradead.org>; Jake Oshins
+> > > > <jakeo@microsoft.com>; KY Srinivasan <kys@microsoft.com>; Haiyang
+> > > > Zhang <haiyangz@microsoft.com>; Stephen Hemminger
+> > > > <sthemmin@microsoft.com>; Stephen Hemminger
+> > > > <stephen@networkplumber.org>; Sasha Levin <sashal@kernel.org>; Bjorn
+> > > > Helgaas <bhelgaas@google.com>; Dexuan Cui <decui@microsoft.com>
+> > > > Subject: [PATCH] PCI: pci-hyperv: fix build errors on non-SYSFS config
+> 
+> Whoever merges this (see below), please update the subject line to
+> match:
+> 
+>   $ git log --oneline drivers/pci/controller/pci-hyperv.c | head -5
+>   4df591b20b80 PCI: hv: Fix a use-after-free bug in hv_eject_device_work()
+>   340d45569940 PCI: hv: Add pci_destroy_slot() in pci_devices_present_work(), if necessary
+>   15becc2b56c6 PCI: hv: Add hv_pci_remove_slots() when we unload the driver
+>   05f151a73ec2 PCI: hv: Fix a memory leak in hv_eject_device_work()
+>   c8ccf7599dda PCI: hv: Refactor hv_irq_unmask() to use cpumask_to_vpset()
+> 
+> > > > From: Randy Dunlap <rdunlap@infradead.org>
+> > > > 
+> > > > Fix build errors when building almost-allmodconfig but with SYSFS
+> > > > not set (not enabled).  Fixes these build errors:
+> > > > 
+> > > > ERROR: "pci_destroy_slot" [drivers/pci/controller/pci-hyperv.ko] undefined!
+> > > > ERROR: "pci_create_slot" [drivers/pci/controller/pci-hyperv.ko] undefined!
+> > > > 
+> > > > drivers/pci/slot.o is only built when SYSFS is enabled, so
+> > > > pci-hyperv.o has an implicit dependency on SYSFS.
+> > > > Make that explicit.
+> > > > 
+> > > > Also, depending on X86 && X86_64 is not needed, so just change that
+> > > > to depend on X86_64.
+> > > > 
+> > > > Fixes: a15f2c08c708 ("PCI: hv: support reporting serial number as slot
+> > > > information")
+> > > > 
+> > > > Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> > > > Cc: Matthew Wilcox <willy@infradead.org>
+> > > > Cc: Jake Oshins <jakeo@microsoft.com>
+> > > > Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+> > > > Cc: Haiyang Zhang <haiyangz@microsoft.com>
+> > > > Cc: Stephen Hemminger <sthemmin@microsoft.com>
+> > > > Cc: Stephen Hemminger <stephen@networkplumber.org>
+> > > > Cc: Sasha Levin <sashal@kernel.org>
+> > > > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > > > Cc: linux-pci@vger.kernel.org
+> > > > Cc: linux-hyperv@vger.kernel.org
+> > > > Cc: Dexuan Cui <decui@microsoft.com>
+> > > > ---
+> > > > v3: corrected Fixes: tag [Dexuan Cui <decui@microsoft.com>]
+> > > >     This is the Microsoft-preferred version of the patch.
+> > > > 
+> > > >  drivers/pci/Kconfig |    2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > 
+> > > > --- lnx-52.orig/drivers/pci/Kconfig
+> > > > +++ lnx-52/drivers/pci/Kconfig
+> > > > @@ -181,7 +181,7 @@ config PCI_LABEL
+> > > > 
+> > > >  config PCI_HYPERV
+> > > >          tristate "Hyper-V PCI Frontend"
+> > > > -        depends on X86 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN
+> > > > && X86_64
+> > > > +        depends on X86_64 && HYPERV && PCI_MSI &&
+> > > > PCI_MSI_IRQ_DOMAIN && SYSFS
+> > > >          help
+> > > >            The PCI device frontend driver allows the kernel to import arbitrary
+> > > >            PCI devices from a PCI backend to support PCI driver domains.
+> > > > 
+> > > 
+> > > Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+> > 
+> > Queued up for hyperv-fixes, thank you!
+> 
+> What merge strategy do you envision for this?  Previous
+> drivers/pci/controller/pci-hyperv.c changes have generally been merged
+> by Lorenzo and incorporated into my PCI tree.
+> 
+> This particular patch doesn't actually touch pci-hyperv.c; it touches
+> drivers/pci/Kconfig, so should somehow be coordinated with me.
+> 
+> Does this need to be tagged for stable?  a15f2c08c708 appeared in
+> v4.19, so my first guess is that it's not stable material.
 
-Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Jason Gunthorpe <jgg@mellanox.com>
-Cc: "J=C3=A9r=C3=B4me Glisse" <jglisse@redhat.com>
-Cc: Ben Skeggs <bskeggs@redhat.com>
----
+AFAIC Bjorn's question still stands. Who will pick this patch up ?
 
-This patch is based on top of Christoph Hellwig's 9 patch series
-https://lore.kernel.org/linux-mm/20190729234611.GC7171@redhat.com/T/#u
-"turn the hmm migrate_vma upside down" but without patch 9
-"mm: remove the unused MIGRATE_PFN_WRITE" and adds a use for the flag.
-
-
- drivers/gpu/drm/nouveau/nouveau_dmem.c | 45 +++++++++-----
- drivers/gpu/drm/nouveau/nouveau_svm.c  | 86 ++++++++++++++++++++++++++
- drivers/gpu/drm/nouveau/nouveau_svm.h  | 19 ++++++
- 3 files changed, 133 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/gpu/drm/nouveau/nouveau_dmem.c b/drivers/gpu/drm/nouve=
-au/nouveau_dmem.c
-index ef9de82b0744..c83e6f118817 100644
---- a/drivers/gpu/drm/nouveau/nouveau_dmem.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_dmem.c
-@@ -25,11 +25,13 @@
- #include "nouveau_dma.h"
- #include "nouveau_mem.h"
- #include "nouveau_bo.h"
-+#include "nouveau_svm.h"
-=20
- #include <nvif/class.h>
- #include <nvif/object.h>
- #include <nvif/if500b.h>
- #include <nvif/if900b.h>
-+#include <nvif/if000c.h>
-=20
- #include <linux/sched/mm.h>
- #include <linux/hmm.h>
-@@ -560,11 +562,12 @@ nouveau_dmem_init(struct nouveau_drm *drm)
- }
-=20
- static unsigned long nouveau_dmem_migrate_copy_one(struct nouveau_drm *drm=
-,
--		struct vm_area_struct *vma, unsigned long addr,
--		unsigned long src, dma_addr_t *dma_addr)
-+		struct vm_area_struct *vma, unsigned long src,
-+		dma_addr_t *dma_addr, u64 *pfn)
- {
- 	struct device *dev =3D drm->dev->dev;
- 	struct page *dpage, *spage;
-+	unsigned long paddr;
-=20
- 	spage =3D migrate_pfn_to_page(src);
- 	if (!spage || !(src & MIGRATE_PFN_MIGRATE))
-@@ -572,17 +575,21 @@ static unsigned long nouveau_dmem_migrate_copy_one(st=
-ruct nouveau_drm *drm,
-=20
- 	dpage =3D nouveau_dmem_page_alloc_locked(drm);
- 	if (!dpage)
--		return 0;
-+		goto out;
-=20
- 	*dma_addr =3D dma_map_page(dev, spage, 0, PAGE_SIZE, DMA_BIDIRECTIONAL);
- 	if (dma_mapping_error(dev, *dma_addr))
- 		goto out_free_page;
-=20
-+	paddr =3D nouveau_dmem_page_addr(dpage);
- 	if (drm->dmem->migrate.copy_func(drm, 1, NOUVEAU_APER_VRAM,
--			nouveau_dmem_page_addr(dpage), NOUVEAU_APER_HOST,
--			*dma_addr))
-+			paddr, NOUVEAU_APER_HOST, *dma_addr))
- 		goto out_dma_unmap;
-=20
-+	*pfn =3D NVIF_VMM_PFNMAP_V0_V | NVIF_VMM_PFNMAP_V0_VRAM |
-+		((paddr >> PAGE_SHIFT) << NVIF_VMM_PFNMAP_V0_ADDR_SHIFT);
-+	if (src & MIGRATE_PFN_WRITE)
-+		*pfn |=3D NVIF_VMM_PFNMAP_V0_W;
- 	return migrate_pfn(page_to_pfn(dpage)) | MIGRATE_PFN_LOCKED;
-=20
- out_dma_unmap:
-@@ -590,18 +597,19 @@ static unsigned long nouveau_dmem_migrate_copy_one(st=
-ruct nouveau_drm *drm,
- out_free_page:
- 	nouveau_dmem_page_free_locked(drm, dpage);
- out:
-+	*pfn =3D NVIF_VMM_PFNMAP_V0_NONE;
- 	return 0;
- }
-=20
- static void nouveau_dmem_migrate_chunk(struct migrate_vma *args,
--		struct nouveau_drm *drm, dma_addr_t *dma_addrs)
-+		struct nouveau_drm *drm, dma_addr_t *dma_addrs, u64 *pfns)
- {
- 	struct nouveau_fence *fence;
- 	unsigned long addr =3D args->start, nr_dma =3D 0, i;
-=20
- 	for (i =3D 0; addr < args->end; i++) {
- 		args->dst[i] =3D nouveau_dmem_migrate_copy_one(drm, args->vma,
--				addr, args->src[i], &dma_addrs[nr_dma]);
-+				args->src[i], &dma_addrs[nr_dma], &pfns[i]);
- 		if (args->dst[i])
- 			nr_dma++;
- 		addr +=3D PAGE_SIZE;
-@@ -615,10 +623,6 @@ static void nouveau_dmem_migrate_chunk(struct migrate_=
-vma *args,
- 		dma_unmap_page(drm->dev->dev, dma_addrs[nr_dma], PAGE_SIZE,
- 				DMA_BIDIRECTIONAL);
- 	}
--	/*
--	 * FIXME optimization: update GPU page table to point to newly migrated
--	 * memory.
--	 */
- 	migrate_vma_finalize(args);
- }
-=20
-@@ -631,11 +635,12 @@ nouveau_dmem_migrate_vma(struct nouveau_drm *drm,
- 	unsigned long npages =3D (end - start) >> PAGE_SHIFT;
- 	unsigned long max =3D min(SG_MAX_SINGLE_ALLOC, npages);
- 	dma_addr_t *dma_addrs;
-+	u64 *pfns;
- 	struct migrate_vma args =3D {
- 		.vma		=3D vma,
- 		.start		=3D start,
- 	};
--	unsigned long c, i;
-+	unsigned long i;
- 	int ret =3D -ENOMEM;
-=20
- 	args.src =3D kcalloc(max, sizeof(args.src), GFP_KERNEL);
-@@ -649,19 +654,25 @@ nouveau_dmem_migrate_vma(struct nouveau_drm *drm,
- 	if (!dma_addrs)
- 		goto out_free_dst;
-=20
--	for (i =3D 0; i < npages; i +=3D c) {
--		c =3D min(SG_MAX_SINGLE_ALLOC, npages);
--		args.end =3D start + (c << PAGE_SHIFT);
-+	pfns =3D nouveau_pfns_alloc(max);
-+	if (!pfns)
-+		goto out_free_dma;
-+
-+	for (i =3D 0; i < npages; i +=3D max) {
-+		args.end =3D start + (max << PAGE_SHIFT);
- 		ret =3D migrate_vma_setup(&args);
- 		if (ret)
--			goto out_free_dma;
-+			goto out_free_pfns;
-=20
- 		if (args.cpages)
--			nouveau_dmem_migrate_chunk(&args, drm, dma_addrs);
-+			nouveau_dmem_migrate_chunk(&args, drm, dma_addrs,
-+						   pfns);
- 		args.start =3D args.end;
- 	}
-=20
- 	ret =3D 0;
-+out_free_pfns:
-+	nouveau_pfns_free(pfns);
- out_free_dma:
- 	kfree(dma_addrs);
- out_free_dst:
-diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.c b/drivers/gpu/drm/nouvea=
-u/nouveau_svm.c
-index a74530b5a523..3e6d7f226576 100644
---- a/drivers/gpu/drm/nouveau/nouveau_svm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_svm.c
-@@ -70,6 +70,12 @@ struct nouveau_svm {
- #define SVM_DBG(s,f,a...) NV_DEBUG((s)->drm, "svm: "f"\n", ##a)
- #define SVM_ERR(s,f,a...) NV_WARN((s)->drm, "svm: "f"\n", ##a)
-=20
-+struct nouveau_pfnmap_args {
-+	struct nvif_ioctl_v0 i;
-+	struct nvif_ioctl_mthd_v0 m;
-+	struct nvif_vmm_pfnmap_v0 p;
-+};
-+
- struct nouveau_ivmm {
- 	struct nouveau_svmm *svmm;
- 	u64 inst;
-@@ -734,6 +740,86 @@ nouveau_svm_fault(struct nvif_notify *notify)
- 	return NVIF_NOTIFY_KEEP;
- }
-=20
-+static inline struct nouveau_pfnmap_args *
-+nouveau_pfns_to_args(void *pfns)
-+{
-+	struct nvif_vmm_pfnmap_v0 *p =3D
-+		container_of(pfns, struct nvif_vmm_pfnmap_v0, phys);
-+
-+	return container_of(p, struct nouveau_pfnmap_args, p);
-+}
-+
-+u64 *
-+nouveau_pfns_alloc(unsigned long npages)
-+{
-+	struct nouveau_pfnmap_args *args;
-+
-+	args =3D kzalloc(sizeof(*args) + npages * sizeof(args->p.phys[0]),
-+			GFP_KERNEL);
-+	if (!args)
-+		return NULL;
-+
-+	args->i.type =3D NVIF_IOCTL_V0_MTHD;
-+	args->m.method =3D NVIF_VMM_V0_PFNMAP;
-+	args->p.page =3D PAGE_SHIFT;
-+
-+	return args->p.phys;
-+}
-+
-+void
-+nouveau_pfns_free(u64 *pfns)
-+{
-+	struct nouveau_pfnmap_args *args =3D nouveau_pfns_to_args(pfns);
-+
-+	kfree(args);
-+}
-+
-+static struct nouveau_svmm *
-+nouveau_find_svmm(struct nouveau_svm *svm, struct mm_struct *mm)
-+{
-+	struct nouveau_ivmm *ivmm;
-+
-+	list_for_each_entry(ivmm, &svm->inst, head) {
-+		if (ivmm->svmm->mm =3D=3D mm)
-+			return ivmm->svmm;
-+	}
-+	return NULL;
-+}
-+
-+void
-+nouveau_pfns_map(struct nouveau_drm *drm, struct mm_struct *mm,
-+		 unsigned long addr, u64 *pfns, unsigned long npages)
-+{
-+	struct nouveau_svm *svm =3D drm->svm;
-+	struct nouveau_svmm *svmm;
-+	struct nouveau_pfnmap_args *args;
-+	int ret;
-+
-+	if (!svm)
-+		return;
-+
-+	mutex_lock(&svm->mutex);
-+	svmm =3D nouveau_find_svmm(svm, mm);
-+	if (!svmm) {
-+		mutex_unlock(&svm->mutex);
-+		return;
-+	}
-+	mutex_unlock(&svm->mutex);
-+
-+	args =3D nouveau_pfns_to_args(pfns);
-+	args->p.addr =3D addr;
-+	args->p.size =3D npages << PAGE_SHIFT;
-+
-+	mutex_lock(&svmm->mutex);
-+
-+	svmm->vmm->vmm.object.client->super =3D true;
-+	ret =3D nvif_object_ioctl(&svmm->vmm->vmm.object, args, sizeof(*args) +
-+				npages * sizeof(args->p.phys[0]), NULL);
-+	svmm->vmm->vmm.object.client->super =3D false;
-+
-+	mutex_unlock(&svmm->mutex);
-+}
-+
- static void
- nouveau_svm_fault_buffer_fini(struct nouveau_svm *svm, int id)
- {
-diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.h b/drivers/gpu/drm/nouvea=
-u/nouveau_svm.h
-index e839d8189461..c00c177e51ed 100644
---- a/drivers/gpu/drm/nouveau/nouveau_svm.h
-+++ b/drivers/gpu/drm/nouveau/nouveau_svm.h
-@@ -18,6 +18,11 @@ void nouveau_svmm_fini(struct nouveau_svmm **);
- int nouveau_svmm_join(struct nouveau_svmm *, u64 inst);
- void nouveau_svmm_part(struct nouveau_svmm *, u64 inst);
- int nouveau_svmm_bind(struct drm_device *, void *, struct drm_file *);
-+
-+u64 *nouveau_pfns_alloc(unsigned long npages);
-+void nouveau_pfns_free(u64 *pfns);
-+void nouveau_pfns_map(struct nouveau_drm *drm, struct mm_struct *mm,
-+		      unsigned long addr, u64 *pfns, unsigned long npages);
- #else /* IS_ENABLED(CONFIG_DRM_NOUVEAU_SVM) */
- static inline void nouveau_svm_init(struct nouveau_drm *drm) {}
- static inline void nouveau_svm_fini(struct nouveau_drm *drm) {}
-@@ -44,5 +49,19 @@ static inline int nouveau_svmm_bind(struct drm_device *d=
-evice, void *p,
- {
- 	return -ENOSYS;
- }
-+
-+u64 *nouveau_pfns_alloc(unsigned long npages)
-+{
-+	return NULL;
-+}
-+
-+void nouveau_pfns_free(u64 *pfns)
-+{
-+}
-+
-+void nouveau_pfns_map(struct nouveau_drm *drm, struct mm_struct *mm,
-+		      unsigned long addr, u64 *pfns, unsigned long npages)
-+{
-+}
- #endif /* IS_ENABLED(CONFIG_DRM_NOUVEAU_SVM) */
- #endif
---=20
-2.20.1
-
+Thanks,
+Lorenzo
