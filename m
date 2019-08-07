@@ -2,121 +2,89 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA65BC32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 15:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45A0AC32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 15:17:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B899221E73
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 15:16:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="1ndkH8qL"
+	by mail.kernel.org (Postfix) with ESMTP id 1A06C21EF2
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 15:17:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730213AbfHGPQG (ORCPT
+        id S2388186AbfHGPRJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 11:16:06 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:16449 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726773AbfHGPQG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 11:16:06 -0400
-Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x77FFoT3029200;
-        Thu, 8 Aug 2019 00:15:51 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x77FFoT3029200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1565190951;
-        bh=zEpwwj/bLxz+9v/6upCujJWZYSqW9H3fcev3JpzI/Lk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=1ndkH8qLrLH/y7/wQBWdR5qFvKHGa+YEYg5TRffXkgI4M4GKz+viXQBUgY5T69QQc
-         81ZsxtR7yVQnsOUd3T8JJ3sV4Mtp8cLNVrjIHJqal8gAtml7qanNYNwOgJTg7VdQp3
-         Gqaa13bWQi/+4ZrbJLYGdr6gz8f4sYL09K0jtY3tLO7S9xgWjbrTMHGYwIwI5efqGl
-         hbMZiEVra3xHSvJ8vJ3pwEjSCAlzcqXudvqVaKQWVPvhR838mw4KSEjyJAZxRnBe+e
-         xCY2HFR8CbksU5xdfFkXjtlAtMZyQtnXcjKqC+hQecvCI2zior45kaoZ67xJWPVf7j
-         XT1O4FnUckGDg==
-X-Nifty-SrcIP: [209.85.222.43]
-Received: by mail-ua1-f43.google.com with SMTP id j2so8339776uaq.5;
-        Wed, 07 Aug 2019 08:15:50 -0700 (PDT)
-X-Gm-Message-State: APjAAAXsxl++yE53Mne1kKvgeR1i/02UdnEC+yFrr51KLcTjfFenqyvU
-        3YYNE7bpYNv3ncXnVX9rcykpFZTqZdu2wQYXKC0=
-X-Google-Smtp-Source: APXvYqwFYu/U4TpFFkpb/skM+8T6jsaqv8DLQN8+IzXjCk4Dx2idEiJDAP7lQQbSTzOXxT9ruzU/W1Rar1fg/eXgrR4=
-X-Received: by 2002:a9f:25e9:: with SMTP id 96mr6309131uaf.95.1565190949919;
- Wed, 07 Aug 2019 08:15:49 -0700 (PDT)
+        Wed, 7 Aug 2019 11:17:09 -0400
+Received: from mga05.intel.com ([192.55.52.43]:32606 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387777AbfHGPRJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 11:17:09 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Aug 2019 08:17:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,357,1559545200"; 
+   d="scan'208";a="373803652"
+Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.189])
+  by fmsmga005.fm.intel.com with ESMTP; 07 Aug 2019 08:17:04 -0700
+Date:   Wed, 7 Aug 2019 18:17:05 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     "Ayoun, Serge" <serge.ayoun@intel.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "Svahn, Kai" <kai.svahn@intel.com>, "bp@alien8.de" <bp@alien8.de>,
+        "josh@joshtriplett.org" <josh@joshtriplett.org>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        "rientjes@google.com" <rientjes@google.com>,
+        "Xing, Cedric" <cedric.xing@intel.com>
+Subject: Re: [PATCH v21 16/28] x86/sgx: Add the Linux SGX Enclave Driver
+Message-ID: <20190807151705.su6kxgr7ou45mk3p@linux.intel.com>
+References: <20190713170804.2340-1-jarkko.sakkinen@linux.intel.com>
+ <20190713170804.2340-17-jarkko.sakkinen@linux.intel.com>
+ <88B7642769729B409B4A93D7C5E0C5E7C65ABB8D@hasmsx108.ger.corp.intel.com>
+ <20190807151534.kxsletvhbn3lno6w@linux.intel.com>
 MIME-Version: 1.0
-References: <20190802102358.28408-1-yamada.masahiro@socionext.com>
-In-Reply-To: <20190802102358.28408-1-yamada.masahiro@socionext.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 8 Aug 2019 00:15:13 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASfBWBqmBtA9kpbFDJD21HZfoHYexwA25jaJgn5CpPw=A@mail.gmail.com>
-Message-ID: <CAK7LNASfBWBqmBtA9kpbFDJD21HZfoHYexwA25jaJgn5CpPw=A@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: revive single target %.ko
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Don Brace <don.brace@microsemi.com>,
-        Arend Van Spriel <arend.vanspriel@broadcom.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190807151534.kxsletvhbn3lno6w@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 2, 2019 at 7:24 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> I removed the single target %.ko in commit ff9b45c55b26 ("kbuild:
-> modpost: read modules.order instead of $(MODVERDIR)/*.mod") because
-> the modpost stage does not work reliably. For instance, the module
-> dependency, modversion, etc. do not work if we lack symbol information
-> from the other modules.
->
-> Yet, some people still want to build only one module in their interest,
-> and it may be still useful if it is used within those limitations.
->
-> Fixes: ff9b45c55b26 ("kbuild: modpost: read modules.order instead of $(MODVERDIR)/*.mod")
-> Reported-by: Don Brace <don.brace@microsemi.com>
-> Reported-by: Arend Van Spriel <arend.vanspriel@broadcom.com>
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
+On Wed, Aug 07, 2019 at 06:15:34PM +0300, Jarkko Sakkinen wrote:
+> On Mon, Jul 29, 2019 at 11:17:57AM +0000, Ayoun, Serge wrote:
+> > > +	/* TCS pages need to be RW in the PTEs, but can be 0 in the EPCM. */
+> > > +	if ((secinfo.flags & SGX_SECINFO_PAGE_TYPE_MASK) ==
+> > > SGX_SECINFO_TCS)
+> > > +		prot |= PROT_READ | PROT_WRITE;
+> > 
+> > For TCS pages you add both RD and WR maximum protection bits.
+> > For the enclave to be able to run, user mode will have to change the
+> > "vma->vm_flags" from PROT_NONE to PROT_READ | PROT_WRITE (otherwise
+> > eenter fails).  This is exactly what your selftest  does.
+> 
+> Recap where the TCS requirements came from? Why does it need
+> RW in PTEs and can be 0 in the EPCM? The comment should explain
+> it rather leave it as a claim IMHO.
 
-Applied to linux-kbuild/fixes.
+I mean after ~3 weeks of not looking into SGX (because being
+on vacation etc.) I cannot remember details of this.
 
->
->  Makefile | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/Makefile b/Makefile
-> index 571cf862d7a4..e4c7211f5a3b 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -997,6 +997,8 @@ endif
->
->  PHONY += prepare0
->
-> +export MODORDER := $(if $(KBUILD_EXTMOD),$(KBUILD_EXTMOD)/)modules.order
-> +
->  ifeq ($(KBUILD_EXTMOD),)
->  core-y         += kernel/ certs/ mm/ fs/ ipc/ security/ crypto/ block/
->
-> @@ -1766,6 +1768,10 @@ build-dir = $(patsubst %/,%,$(dir $(build-target)))
->         $(Q)$(MAKE) $(build)=$(build-dir) $(build-target)
->  %.symtypes: prepare FORCE
->         $(Q)$(MAKE) $(build)=$(build-dir) $(build-target)
-> +%.ko: prepare FORCE
-> +       $(Q)$(MAKE) $(build)=$(build-dir) $(build-target:.ko=.mod)
-> +       $(Q)echo $(build-target) > $(MODORDER)
-> +       $(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modpost || { rm -f $(MODORDER); false; }
->
->  # Modules
->  PHONY += /
-> --
-> 2.17.1
->
-
-
--- 
-Best Regards
-Masahiro Yamada
+/Jarkko
