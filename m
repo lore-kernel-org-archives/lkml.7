@@ -4,95 +4,206 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E59C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 16:09:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05AB7C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 16:10:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A22321BE6
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 16:09:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3F302229C
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 16:10:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="tHivpiIw"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BXAaSO0g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388956AbfHGQJJ (ORCPT
+        id S2388963AbfHGQKG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 12:09:09 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:47120 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727213AbfHGQJJ (ORCPT
+        Wed, 7 Aug 2019 12:10:06 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:33050 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729960AbfHGQKG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 12:09:09 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x77G4FDP083468;
-        Wed, 7 Aug 2019 16:09:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=S+9K2lIF+033jPwHdL6JaebTLAXp/BEK2P9DPkT2MB4=;
- b=tHivpiIw1bNgysYk0lyNW8KsRzDfiquxPencLz+RSs1EIqtMyhCEm6eBxlqC4vDx3gqI
- HB5UgtsU7Wo87+l4M1hlO9evOPc9TMJ8GSUOP5oVehuY+MSKEst7PasLUHRrF8yNhd0f
- Gjw13sUlFM8NmVfpdp2YHEsJxPG4kGamdrD0oAPhmRjIzkQYvF8UfieJm66w+YgvhMRt
- FYPMQDl3rg56GYcDHRG+LHzMCnVbmcaKHaRG69/rD4cmKHhgXAUas1g7ff7f0jRtpWuA
- vBmdTgqRDRjhRGWoA2Drl9ZfJyLAtOuRMuLWxozYMiqB9Uxifmn++c8sKExWbJO230TP WQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2u527pwafp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 07 Aug 2019 16:09:06 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x77G3JFB158155;
-        Wed, 7 Aug 2019 16:09:06 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2u7578359n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 07 Aug 2019 16:09:05 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x77G94WD021390;
-        Wed, 7 Aug 2019 16:09:04 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 07 Aug 2019 09:09:04 -0700
-To:     Junxiao Bi <junxiao.bi@oracle.com>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        axboe@kernel.dk, martin.petersen@oracle.com
-Subject: Re: [PATCH] block: fix RO partition with RW disk
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20190805200138.28098-1-junxiao.bi@oracle.com>
-        <b191908b-cc67-660a-468e-2f4164f430ba@oracle.com>
-Date:   Wed, 07 Aug 2019 12:09:02 -0400
-In-Reply-To: <b191908b-cc67-660a-468e-2f4164f430ba@oracle.com> (Junxiao Bi's
-        message of "Wed, 7 Aug 2019 08:59:27 -0700")
-Message-ID: <yq1v9v9ez4x.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Wed, 7 Aug 2019 12:10:06 -0400
+Received: by mail-ot1-f68.google.com with SMTP id q20so106339537otl.0
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 09:10:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wsthQu2QfAQEyfTgzCODadqkB3TT/99Z+5eL+7UiyVQ=;
+        b=BXAaSO0gMR6cIg4Fgcqgz5JRNjU0CWl9D7rFFlMWR9fYSw3fx70pTWQmqBu/TXrO/O
+         +2f67Q6wQjoZuqWpkqedEoIquPJYIU006KqDEvmmgFPiMRuCBxOUbVH+AjSnZeB10F58
+         nGsCwcW3m2h6lU6Ei6/vgorIrgyZLVvE29N2g=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wsthQu2QfAQEyfTgzCODadqkB3TT/99Z+5eL+7UiyVQ=;
+        b=Jf8S2R4dg4n+DG15k4BzKTosK3izY65N7F+klu8behChJUPL+YVEjE9++MFUaoKkAB
+         qIFFKG9Ol/XGHOFhSf2M9r5w6yoyKgOwr7CcM9NM7VVyDXY/4Xk+IRoE9jodUxP7sq5g
+         TCGyUcvJfg2mUBu8/8tFTo4RpQ4qDTkSinilR0F93i0ggtYs+kcRSlQf0WOPBQ8dHPze
+         +ZU4s8NzWR743nvlr2g5sirT4TBj/J0VZblihpRaw7+6BpvJF8JrcQzEhpfGOmWpA1eX
+         JO1dNmdr0mCys0pfpPbl1sFYNu7+xrrvGMdXExIV7ldAoDM4sUFWJsgf3GaN6knYUTpr
+         3AMA==
+X-Gm-Message-State: APjAAAXGuSBbEhWYBgWNGxjyAcTaOR56D9EtXzWAnKhl7kUb5j5piqO+
+        fmoYve+xGH205KFzEGdqfaBr+VzfM8+N5B0Lx60qyA==
+X-Google-Smtp-Source: APXvYqwojz9eSov1PXUTI/zpOp1ExSls/bfkUhbDuFqllq8EBa7KKJoLrr+LBs09AKnPc4X1TsiBh9hb7d2Dqng/bck=
+X-Received: by 2002:a02:c487:: with SMTP id t7mr10812421jam.99.1565194204750;
+ Wed, 07 Aug 2019 09:10:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9342 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=731
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908070163
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9342 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=798 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908070163
+References: <20190805211451.20176-1-robdclark@gmail.com> <20190806084821.GA17129@lst.de>
+ <CAJs_Fx6eh1w7c=crMoD5XyEOMzP6orLhqUewErE51cPGYmObBQ@mail.gmail.com>
+ <20190806155044.GC25050@lst.de> <CAJs_Fx6uztwDy2PqRy3Tc9p12k8r_ovS2tAcsMV6HqnAp=Ggug@mail.gmail.com>
+ <20190807062545.GF6627@lst.de>
+In-Reply-To: <20190807062545.GF6627@lst.de>
+From:   Rob Clark <robdclark@chromium.org>
+Date:   Wed, 7 Aug 2019 09:09:53 -0700
+Message-ID: <CAJs_Fx7tqbr_gqRdqJEwOcRFReP0DqZzOu11Dxhxkp8+PygUQw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] drm: add cache support for arm64
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Rob Clark <robdclark@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Aug 6, 2019 at 11:25 PM Christoph Hellwig <hch@lst.de> wrote:
+>
+> On Tue, Aug 06, 2019 at 09:23:51AM -0700, Rob Clark wrote:
+> > On Tue, Aug 6, 2019 at 8:50 AM Christoph Hellwig <hch@lst.de> wrote:
+> > >
+> > > On Tue, Aug 06, 2019 at 07:11:41AM -0700, Rob Clark wrote:
+> > > > Agreed that drm_cflush_* isn't a great API.  In this particular case
+> > > > (IIUC), I need wb+inv so that there aren't dirty cache lines that drop
+> > > > out to memory later, and so that I don't get a cache hit on
+> > > > uncached/wc mmap'ing.
+> > >
+> > > So what is the use case here?  Allocate pages using the page allocator
+> > > (or CMA for that matter), and then mmaping them to userspace and never
+> > > touching them again from the kernel?
+> >
+> > Currently, it is pages coming from tmpfs.  Ideally we want pages that
+> > are swappable when unpinned.
+>
+> tmpfs is basically a (complicated) frontend for alloc pages as far
+> as page allocation is concerned.
+>
+> > CPU mappings are *mostly* just mapping to userspace.  There are a few
+> > exceptions that are vmap'd (fbcon, and ringbuffer).
+>
+> And those use the same backend?
 
-Junxiao,
+yes
 
-> Anybody could help review this bug?
+> > (Eventually I'd like to support pages passed in from userspace.. but
+> > that is down the road.)
+>
+> Eww.  Please talk to the iommu list before starting on that.
 
-It's on my list. However, your patch is clashing with my general
-read-only handling changes so I'll probably need to roll your changes
-into mine.
+This is more of a long term goal, we can't do it until we have
+per-context/process pagetables, ofc.
 
-I'll try to look at this today.
+Getting a bit off topic, but I'm curious about what problems you are
+concerned about.  Userspace can shoot it's own foot, but if it is not
+sharing GPU pagetables with other processes, it can't shoot other's
+feet.  (I'm guessing you are concerned about non-page-aligned
+mappings?)
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+> > > > Tying it in w/ iommu seems a bit weird to me.. but maybe that is just
+> > > > me, I'm certainly willing to consider proposals or to try things and
+> > > > see how they work out.
+> > >
+> > > This was just my through as the fit seems easy.  But maybe you'll
+> > > need to explain your use case(s) a bit more so that we can figure out
+> > > what a good high level API is.
+> >
+> > Tying it to iommu_map/unmap would be awkward, as we could need to
+> > setup cpu mmap before it ends up mapped to iommu.  And the plan to
+> > support per-process pagetables involved creating an iommu_domain per
+> > userspace gl context.. some buffers would end up mapped into multiple
+> > contexts/iommu_domains.
+> >
+> > If the cache operation was detached from iommu_map/unmap, then it
+> > would seem weird to be part of the iommu API.
+> >
+> > I guess I'm not entirely sure what you had in mind, but this is why
+> > iommu seemed to me like a bad fit.
+>
+> So back to the question, I'd like to understand your use case (and
+> maybe hear from the other drm folks if that is common):
+>
+>  - you allocate pages from shmem (why shmem, btw?  if this is done by
+>    other drm drivers how do they guarantee addressability without an
+>    iommu?)
+
+shmem for swappable pages.  I don't unpin and let things get swapped
+out yet, but I'm told it starts to become important when you have 50
+browser tabs open ;-)
+
+There are some display-only drm drivers with no IOMMU, which use CMA
+rather than shmem.  Basically every real GPU has some form of MMU or
+IOMMU for memory protection.  (The couple exceptions do expensive
+kernel side cmdstream validation.)
+
+>  - then the memory is either mapped to userspace or vmapped (or even
+>    both, althrough the lack of aliasing you mentioned would speak
+>    against it) as writecombine (aka arm v6+ normal uncached).  Does
+>    the mapping live on until the memory is freed?
+
+(side note, *most* of the drm/msm supported devices are armv8, the
+exceptions are 8060 and 8064 which are armv7.. I don't think drm/msm
+will ever have to deal w/ armv6)
+
+Userspace keeps the userspace mmap around opportunistically (once it
+is mmap'd, not all buffers will be accessed from CPU).  In fact there
+is a userspace buffer cache, where we try to re-use buffers that are
+already allocated and possibly mmap'd, since allocation and setting up
+mmap is expensive.
+
+(There is an MADVISE ioctl so userspace can tell kernel about buffers
+in the cache, which are available to be purged by shrinker..  if a
+buffer is purged, it's userspace mmap is torn down... along with it's
+IOMMU map, ofc)
+
+>  - as you mention swapping - how do you guarantee there are no
+>    aliases in the kernel direct mapping after the page has been swapped
+>    in?
+
+Before unpinning and allowing pages to be swapped out, CPU and IOMMU
+maps would be torn down.  (I don't think we could unpin buffers w/ a
+vmap, but those are just a drop in the bucket.)
+
+Currently, the kernel always knows buffers associated w/ a submit
+(job) queued to the GPU, so it could bring pages back in and re-store
+iommu map.. the fault handler can be used to bring things back in for
+CPU access.  (For more free-form HMM style access to userspace memory,
+we'd need to be able to sleep in IOMMU fault handler before the IOMMU
+resumes translation.)
+
+As far as cache is concerned, it would be basically the same as newly
+allocated pages, ie. need to wb+inv the new pages.
+
+>  - then the memory is potentially mapped to the iommu.  Is it using
+>    a long-living mapping, or does get unmapped/remapped repeatedly?
+
+Similar to CPU maps, we keep the IOMMU map around as long as possible.
+
+(Side note, I was thinking batching unmaps could be useful to reduce
+IOMMU TLB inv overhead.. usually when we are freeing a buffer, we are
+freeing multiple, so we could unmap them all, then TLB inv, then free
+pages.)
+
+BR,
+-R
