@@ -2,112 +2,206 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DBAFC32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 21:12:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F40EC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 21:12:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37E88217D9
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 21:12:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37230217D9
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 21:12:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mKqlEAh/"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rAUbgR3z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389241AbfHGVMA (ORCPT
+        id S1730402AbfHGVM2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 17:12:00 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:47766 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729714AbfHGVMA (ORCPT
+        Wed, 7 Aug 2019 17:12:28 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:35306 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729714AbfHGVM1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 17:12:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=mjrrHZrSfKsYa+8uZouXNoh4pKm8BCq70Dh7kQvJcYo=; b=mKqlEAh/h5yQlexBHF1hWmoMK
-        T9W9/IXJ0KCoWv/9EacXdAIlGKUy1fgRMMO4XiR/i0oSyZ2YXXGxE1VLjOQvYKiX016sGZpJmHd7N
-        TaHQEg+/MW1InoskXhF6XT476X5sHP8BR3mpJryRm6IG2zChf8mM6XhAmd288QPaAigilB4y2hgFR
-        6AhgU2htD2QUIBb3ea7UFmaQNobtmRlyGB2Hp3XIt7iKHxzhrdFSp1e8YBrkSG2+UTtpMVG/tYMv2
-        FiUOTbqQzzH5xeCnKaP2bEVch3cFU8nZAqFr3gMMKJ5JQTuUK6cLktVNBiHMQVvZjmyzoQKtCpbll
-        h+aDIBqCQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hvTDm-0002nR-BG; Wed, 07 Aug 2019 21:11:46 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 86A689803B4; Wed,  7 Aug 2019 23:11:43 +0200 (CEST)
-Date:   Wed, 7 Aug 2019 23:11:43 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 4/7] perf: avoid a bounded set of visit_groups_merge
- iterators
-Message-ID: <20190807211143.GA15727@worktop.programming.kicks-ass.net>
-References: <20190724223746.153620-1-irogers@google.com>
- <20190724223746.153620-5-irogers@google.com>
+        Wed, 7 Aug 2019 17:12:27 -0400
+Received: by mail-pl1-f193.google.com with SMTP id w24so42565866plp.2
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 14:12:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fd+dofbpCV/6k5WcFl4oZMCWdF8fj4kR4/a+wjxKmsA=;
+        b=rAUbgR3zhEw1fjUVF8KM3rovMm6jms4eUTwDrpb/7hk+mJRmY+GevkEEjZ8jd9WxJ8
+         ebboqjF0o1XIe0OyOtHde46MsTIXqNDzKbfU14DIZd/Xg3c2k72+RFur9R2NQ6CghXkb
+         kvSyjMG5CjfRXi8FIkIWOq1aMaubFv5QFuFCjjJdeAsifVfE6p6WjJcnUmgtWFYkBGVZ
+         m1LPTv3MkQd6vdZv9sdS0bQAe2kA/7mk1TFwOGPkDQzcMC/5KjUC/P+kZhx2g/JMS5NV
+         /GJkm5fugsOWIlIhHvsuntFuhFO1K2oR3ulrDn3XIO2GAdfJxdQO/P+tKaNbuLtzqKRt
+         uosA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fd+dofbpCV/6k5WcFl4oZMCWdF8fj4kR4/a+wjxKmsA=;
+        b=cUr5f3yg/csAB/3LmfHdeOo5gpfjKSQGnVFVcKInPFodzT1j7uii/QzgOeTrjuqkkG
+         Ml6zutZexdw6evY7FJ+muIUyYTOqHjPV631dpqd0GrFMOW83Blav1B6DCZU4Qrpoq2wb
+         BXRsm+n9zmqaAB0oBFUQp+0zccwgO7xl7kwK/1CQ4nngeQVYMosOpkurimIOAY4VLezB
+         8TxdevGQKsD2x7xfpvz9BxM2k4CmHR6IuL4cU1Q7obA20Y/gYpQfO/wl1kwiZ4vCrgBZ
+         8Fl1hKv5lj8epfGErFjM8fIlns6tirUnxS8Ni93Omk1l6g9MQwIYYWe38r8JHeEgKzo6
+         E/LA==
+X-Gm-Message-State: APjAAAXGdrGFyN4mAQiRDxhTmHgiD3iNE37mhmjP3oTTDaDGYNQ8EvI7
+        0atOvbmsNXiBgCUPjLHyOtv0wHoDukTLfv9O4LK8wg==
+X-Google-Smtp-Source: APXvYqznwJRoAcnn7fVAEd4l+avqz5PXq39u3baHCNe66I0Lo+mKBr+Sgwoiq+RvXzYN4HtITPL6iOWmEQ73ykipzGY=
+X-Received: by 2002:a17:902:3363:: with SMTP id a90mr9572730plc.119.1565212346434;
+ Wed, 07 Aug 2019 14:12:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190724223746.153620-5-irogers@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190729211014.39333-1-ndesaulniers@google.com> <alpine.LFD.2.21.1907292302451.16059@eddie.linux-mips.org>
+In-Reply-To: <alpine.LFD.2.21.1907292302451.16059@eddie.linux-mips.org>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 7 Aug 2019 14:12:15 -0700
+Message-ID: <CAKwvOd==SCBrj=cZ7Ax5F87+-bPMS9AtGSxp+NWp_+yDCg4R-A@mail.gmail.com>
+Subject: Re: [PATCH] mips: avoid explicit UB in assignment of mips_io_port_base
+To:     "Maciej W. Rozycki" <macro@linux-mips.org>
+Cc:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Eli Friedman <efriedma@quicinc.com>,
+        Hassan Naveed <hnaveed@wavecomp.com>,
+        Stephen Kitt <steve@sk2.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>, linux-mips@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        regehr@cs.utah.edu, Philip Reames <listmail@philipreames.com>,
+        Alexander Potapenko <glider@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 03:37:43PM -0700, Ian Rogers wrote:
+Sorry for the delayed response, literally sent the patch then went on vacation.
 
-> @@ -2597,6 +2612,30 @@ static int  __perf_install_in_context(void *info)
->  		struct perf_cgroup *cgrp = perf_cgroup_from_task(current, ctx);
->  		reprogram = cgroup_is_descendant(cgrp->css.cgroup,
->  					event->cgrp->css.cgroup);
-> +
-> +		/*
-> +		 * Ensure space for visit_groups_merge iterator storage. With
-> +		 * cgroup profiling we may have an event at each depth plus
-> +		 * system wide events.
-> +		 */
-> +		max_iterators = perf_event_cgroup_depth(event) + 1;
-> +		if (max_iterators >
-> +		    cpuctx->visit_groups_merge_iterator_storage_size) {
-> +			struct perf_event **storage =
-> +			   krealloc(cpuctx->visit_groups_merge_iterator_storage,
-> +				    sizeof(struct perf_event *) * max_iterators,
-> +				    GFP_KERNEL);
-> +			if (storage) {
-> +				cpuctx->visit_groups_merge_iterator_storage
-> +						= storage;
-> +				cpuctx->visit_groups_merge_iterator_storage_size
-> +						= max_iterators;
-> +			} else {
-> +				WARN_ONCE(1, "Unable to increase iterator "
-> +					"storage for perf events with cgroups");
-> +				ret = -ENOMEM;
-> +			}
-> +		}
->  	}
->  #endif
+On Mon, Jul 29, 2019 at 3:16 PM Maciej W. Rozycki <macro@linux-mips.org> wrote:
+>
+> On Mon, 29 Jul 2019, Nick Desaulniers wrote:
+>
+> > The code in question is modifying a variable declared const through
+> > pointer manipulation.  Such code is explicitly undefined behavior, and
+> > is the lone issue preventing malta_defconfig from booting when built
+> > with Clang:
+> >
+> > If an attempt is made to modify an object defined with a const-qualified
+> > type through use of an lvalue with non-const-qualified type, the
+> > behavior is undefined.
+> >
+> > LLVM is removing such assignments. A simple fix is to not declare
+> > variables const that you plan on modifying.  Limiting the scope would be
+> > a better method of preventing unwanted writes to such a variable.
 
-This is completely insane and broken. You do not allocate memory from
-hardirq context while holding all sorts of locks.
+This is now documented in the LLVM release notes for Clang-9:
+https://github.com/llvm/llvm-project/commit/e39e79358fcdd5d8ad809defaa821f0bbfa809a5
 
-Also, the patches are still an unreadable mess, and they do far too much
-in a single patch.
+> >
+> > Further, the code in question mentions "compiler bugs" without any links
+> > to bug reports, so it is difficult to know if the issue is resolved in
+> > GCC. The patch was authored in 2006, which would have been GCC 4.0.3 or
+> > 4.1.1. The minimal supported version of GCC in the Linux kernel is
+> > currently 4.6.
+>
+>  It's somewhat older than that.  My investigation points to:
+>
+> commit c94e57dcd61d661749d53ee876ab265883b0a103
+> Author: Ralf Baechle <ralf@linux-mips.org>
+> Date:   Sun Nov 25 09:25:53 2001 +0000
+>
+>     Cleanup of include/asm-mips/io.h.  Now looks neat and harmless.
 
-Please have a look at the completely untested lot at:
+Oh indeed, great find!
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git perf/cgroup
+So it looks to me like the order of events is:
+1. https://github.com/jaaron/linux-mips-ip30/commit/c94e57dcd61d661749d53ee876ab265883b0a103
+in 2001 first introduces the UB.  mips_io_port_base is defined
+non-const in arch/mips/kernel/setup.c, but then declared extern const
+(and modified via UB) in include/asm-mips/io.h.  A setter is created,
+but not a getter (I'll revisit this below).  This appears to work (due
+to luck) for a few years until:
+2. https://github.com/mpe/linux-fullhistory/commit/966f4406d903a4214fdc74bec54710c6232a95b8
+in 2006 adds a compiler barrier (reload all variables) and this
+appears to work.  The commit message mentions that reads after
+modification of the const variable were buggy (likely GCC started
+taking advantage of the explicit UB around this time as well).  This
+isn't a fix for UB (more thoughts below), but appears to work.
+3. https://github.com/llvm/llvm-project/commit/b45631090220b732e614b5530bbd1d230eb9d38e
+in 2019 removes writes to const variables in LLVM as that's explicit
+UB.  We observe the boot failure in mips and narrow it down to this
+instance.
 
+I can see how throwing a compiler barrier in there made subsequent
+reads after UB writes appear to work, but that was more due to luck
+and implementation details of GCC than the heart of the issue (ie. not
+writing code that is explicitly undefined behavior)(and could change
+in future versions of GCC).  Stated another way, the fix for explicit
+UB is not hacks, but avoiding the UB by rewriting the problematic
+code.
 
+> However the purpose of the arrangement does not appear to me to be
+> particularly specific to a compiler version.
+>
+> > For what its worth, there was UB before the commit in question, it just
+> > added a barrier and got lucky IRT codegen. I don't think there's any
+> > actual compiler bugs related, just runtime bugs due to UB.
+>
+>  Does your solution preserves the original purpose of the hack though as
+> documented in the comment you propose to be removed?
+
+The function modified simply writes to a global variable.  It's not
+clear to my why the value about to be modified would EVER be loaded
+before modification.
+
+>  Clearly it was defined enough to work for almost 18 years, so it would be
+> good to keep the optimisation functionally by using different means that
+> do not rely on UB.
+
+"Defined enough" ???
+https://youtu.be/Aq_1l316ow8?t=17
+
+> This variable is assigned at most once throughout the
+> life of the kernel and then early on, so considering it r/w with all the
+> consequences for all accesses does not appear to me to be a good use of
+> it.
+
+Note: it's not possible to express the semantics of a "write once
+variable" in C short of static initialization (AFAIK, without explicit
+violation of UB, but Cunningham's Law may apply).
+
+(set_io_port_base is called in ~20 places)
+
+Thinking more about this while I was away, I think what this code has
+needed since 2001 is proper encapsulation.  If you want a variable
+that is written from one place only, but readable throughout, then the
+pattern I'd use is:
+
+1. declare a getter in a .h file.
+2. define/qualify `mips_io_port_base` as `static` and non-const in a
+.c file where it's modified.
+3. define the getter and setter in the above .c file.
+
+That would rely on linkage to limit the visibility of the symbol for
+modification.  But, we'd then need to export the getter, vs the symbol
+itself.  There's also on the order of ~20 call sites that would need
+to be changed to invoke the getter rather than read the raw variable.
+Also, it's unlikely the getter gets inlined across translation units
+(short of LTO, which the mainline kernel doesn't support today).
+
+I think my patch here (https://lkml.org/lkml/2019/7/29/1636) is
+minimally and much less invasive.
+
+>  Maybe a piece of inline asm to hide the initialisation or suchlike then?
+
+I think that would still be UB as the definition would not be changed;
+you'd still be modifying a variable declared const.
+-- 
+Thanks,
+~Nick Desaulniers
