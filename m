@@ -2,152 +2,118 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEA58C19759
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 06:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFEB8C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 07:04:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DAC921E6A
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 06:57:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B60AD219BE
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 07:04:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="v39ceR85"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gncW6+eU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727929AbfHGG52 (ORCPT
+        id S1727334AbfHGHEc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 02:57:28 -0400
-Received: from mail-eopbgr800071.outbound.protection.outlook.com ([40.107.80.71]:26144
-        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727285AbfHGG52 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 02:57:28 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hNP8H8yaNF9Yz2mkDaKAymI7B6H1roaYjQZ2YFl7gjAt8j2iuDGCyy5khC2QSY/mWgzGGv3xnXKqeqHc4oqrCNxWZAWZCdZKZdkia3dXxcNzs3y93Ndo9LqwPgNn7xXnDgkSjUQPWNvlos/++tse6atCvCdjvvalr2/SXGUhlmFcm2QaXp3ZQMT3MqtBYhfA3SNrXf7dUFBOc4jnA0+CgbzHXwXP0yRNG1Y7nK+XMdEaJzGMDZ/+wauXGJxj4Cs8dLD7sEXZN81roQcBVxLprSXjAZIX+1C0Jia6d2n7MXGPvXF79siqLHgFbwGCy03mUjdBpHXWlVnoPiz48S2D6w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oHO211pT3iSsIc5GQu9tV3fhX1wvXmg0iWBJcU790YU=;
- b=a4rpY3YZCaOiXC9XB8qqW1gsmNiHAMrty7lqdq3HR4OhxSe/Ld2mjp7wLXuhPXbhtSKwkxYywNDberNqOPrOPnCf90EDQZmPBqD+cvUGa5cEOnhP2I6uuQJoIdRKpMJAWqSsaIB63xuoURu9UIVsPyHPHCmJ2jRxj4N49CibT4hovCZdtvXJPLO6ZSnes5BJNvuVI8LLB3nVxfB4J+UvoglbTvjZ0uC7g33ocARHkEPSTl7pJ99T2NSTcbXWK/9KJEqfExBGPaxFmiAOxwb1cFSkGFOviPhRIC6Uy9EnW22MfBYhkCJbpWrwjuG94EiEt8XJf6OJD0jA9GCKrW8tlA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=amd.com;dmarc=pass action=none header.from=amd.com;dkim=pass
- header.d=amd.com;arc=none
+        Wed, 7 Aug 2019 03:04:32 -0400
+Received: from mail-yb1-f195.google.com ([209.85.219.195]:44378 "EHLO
+        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727173AbfHGHEb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 03:04:31 -0400
+Received: by mail-yb1-f195.google.com with SMTP id q203so733034ybg.11;
+        Wed, 07 Aug 2019 00:04:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oHO211pT3iSsIc5GQu9tV3fhX1wvXmg0iWBJcU790YU=;
- b=v39ceR85O4dBSQlEdyWZzbiYIqg/+yLFXgUMlWGpxk03Hx58gmgZ0tkDTvrqztJw1+VAXzHuBUsmxUQA3RrLIf4m0UwbEOUiElhQOaSQHj9zeJaCbgsNmMwkUgwOK5984mkQx5XwWef2kmP4Q9zcuH07psJaTKquhprnSyPlrf4=
-Received: from DM5PR12MB1546.namprd12.prod.outlook.com (10.172.36.23) by
- DM5PR12MB1516.namprd12.prod.outlook.com (10.172.34.140) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2136.17; Wed, 7 Aug 2019 06:57:24 +0000
-Received: from DM5PR12MB1546.namprd12.prod.outlook.com
- ([fe80::fc5f:ce01:e8c8:db89]) by DM5PR12MB1546.namprd12.prod.outlook.com
- ([fe80::fc5f:ce01:e8c8:db89%12]) with mapi id 15.20.2136.018; Wed, 7 Aug 2019
- 06:57:24 +0000
-From:   "Koenig, Christian" <Christian.Koenig@amd.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>,
-        Alex Deucher <alexdeucher@gmail.com>
-CC:     "Kuehling, Felix" <Felix.Kuehling@amd.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        =?utf-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>
-Subject: Re: [PATCH 15/15] amdgpu: remove CONFIG_DRM_AMDGPU_USERPTR
-Thread-Topic: [PATCH 15/15] amdgpu: remove CONFIG_DRM_AMDGPU_USERPTR
-Thread-Index: AQHVTHDu3MOrnAsG0k6xIfWlHrhaOqbuZFmAgAAB+ACAABLOAIAAEiYAgAC2igA=
-Date:   Wed, 7 Aug 2019 06:57:24 +0000
-Message-ID: <4a040a3f-8981-3e94-2436-8295a0caa534@amd.com>
-References: <20190806160554.14046-1-hch@lst.de>
- <20190806160554.14046-16-hch@lst.de> <20190806174437.GK11627@ziepe.ca>
- <587b1c3c-83c4-7de9-242f-6516528049f4@amd.com>
- <CADnq5_Puv-N=FVpNXhv7gOWZ8=tgBD2VjrKpVzEE0imWqJdD1A@mail.gmail.com>
- <20190806200356.GU11627@ziepe.ca>
-In-Reply-To: <20190806200356.GU11627@ziepe.ca>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-x-originating-ip: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
-x-clientproxiedby: PR1PR01CA0026.eurprd01.prod.exchangelabs.com
- (2603:10a6:102::39) To DM5PR12MB1546.namprd12.prod.outlook.com
- (2603:10b6:4:8::23)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Christian.Koenig@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a77d8ec9-efa7-4813-db10-08d71b048069
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM5PR12MB1516;
-x-ms-traffictypediagnostic: DM5PR12MB1516:
-x-microsoft-antispam-prvs: <DM5PR12MB1516E201064E60EB3F8CDEE983D40@DM5PR12MB1516.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 01221E3973
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(366004)(39860400002)(376002)(136003)(51444003)(76114002)(199004)(189003)(5660300002)(2906002)(53936002)(6436002)(6486002)(53546011)(229853002)(386003)(46003)(110136005)(86362001)(256004)(7416002)(68736007)(6506007)(99286004)(4326008)(54906003)(64126003)(31696002)(58126008)(81156014)(102836004)(316002)(81166006)(66946007)(71190400001)(66556008)(66476007)(64756008)(66446008)(8676002)(6246003)(65826007)(31686004)(71200400001)(486006)(8936002)(186003)(476003)(6116002)(305945005)(52116002)(7736002)(76176011)(6512007)(2616005)(11346002)(14454004)(25786009)(65956001)(478600001)(65806001)(36756003)(446003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1516;H:DM5PR12MB1546.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 8YGFqtGY7eIxOCfGaSZf53fsvPEb8t+YTjCvzhJOLdzYtc9BhXbN0gh1WnEi3qgzU7652PP9Ecke/dzqrHk1XkBSYzjmkx50qCKhiFJCDt2CLCfp14d73W1YuxfS3lDucSmloG9gkSnExOIRIZDrIPAfGLLB/QT/vTmGOmhPoKtxCmHVBGqtpPmMJ0dHBKDlBAvCFA3ys8IUjPdfwceG7wWqkyexTcVXXw2g+/huhVInqnuljI/VcJ5YVHBtvK7oKhBcF34EDtUUQf0MlOWk88+JOIwA76/QeEryrKTl4a9YqrOmhccwWxNNP4uouaYBd/oiMnBKjc6zonseSeZMPhIJq2qJ/FmB+fiq3WUOqp39WzJKK/FNzdcUm62C/ipDS3X+IYEk/YV/TSsEpsf01uDzm5djR8v4XD+oI4eHVCE=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <43772BFAF78A0B4E87A7805839F5F2C5@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=ESF14Tj/Iz5q41yFZf19ms0Um+JiDKtApGa5yGw41/8=;
+        b=gncW6+eU9mpF8r/ERuH+qecrfewjtuxt1iR6lwRBsa0/sgqMRTJgLXgSXizexNUPZA
+         PiUh+rzf1sOxvnpDyRxEk162QXSsIszHrg15j3E5hT3/S05uckMK8pH2NFyDi2NwFiEf
+         UdEI8WfWLCy71AFzmh3QMRIbFIrsaSX6SUeq6zeaDWwgB8tMBAjB1LypgMR5VBq5T0jn
+         0Palw89cRWLatrWR1toQUa3vc2S2STVoR7y/UEXDHoKM6HoFOeRzJCB1w90TmL27ql23
+         AANxYTMrbnVvu7ZwNzvAaT2C7DV+RuLOEkhRLdDfrOF/iMy7p92lwe4y3xomL0jAClEC
+         dcqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:content-transfer-encoding;
+        bh=ESF14Tj/Iz5q41yFZf19ms0Um+JiDKtApGa5yGw41/8=;
+        b=TZh3tMdjzyKblzF2ZLkGy/TcKkZnnkl5jeFCY8C/fGDM152Xe35UEvsn9U6ORgmNK7
+         FT0B7ed4c0Il57tYjDbMePWl10gk6lckSSH8q/qhescGPhhBpItyQ4V1LPDK8b/NjM9d
+         Ip30SKkGpD+tSGakZ5158GiOeWvxkvLuqQQNWYwYvnMm0rkSXPoLfdlwG4LSTO3b4UuA
+         /w57BoRzpU07sjLxGmTgt/TptdaY0GCHI5UjZI1ocC3JcUGTO3mdMWSebPNuiQNmb9ow
+         gXrlF5viKwAvQ/AUPXb2CpK2Nnn7wcjCtS5emtXf2SuRe8VxAtCiCIbrLXm/hxZiJ64j
+         gdFw==
+X-Gm-Message-State: APjAAAWy0zEdPA+85uxbCjsctjALfWdhPbBO4Z/NQkSolElb+QBSqBFn
+        SPGFZpCailkRbdEmDoaJ4iJ24WFE1s0OYn0Uy4o=
+X-Google-Smtp-Source: APXvYqwYCCYIEDgWJqgBcRn9OpeBkcbVwa/KTbxdvVd3hBaQMhq/hwLeAFxhGk9gICz9lQKOA23PKccKuXcpqaGjctg=
+X-Received: by 2002:a25:4542:: with SMTP id s63mr4994355yba.395.1565161470670;
+ Wed, 07 Aug 2019 00:04:30 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a77d8ec9-efa7-4813-db10-08d71b048069
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Aug 2019 06:57:24.7103
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ckoenig@amd.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1516
+References: <20190805123134.23199-1-huangfq.daxian@gmail.com> <20190807065111.GA17104@localhost.localdomain>
+In-Reply-To: <20190807065111.GA17104@localhost.localdomain>
+From:   Fuqian Huang <huangfq.daxian@gmail.com>
+Date:   Wed, 7 Aug 2019 15:04:19 +0800
+Message-ID: <CABXRUiRscm=b0=bS-Dcxr_7bE45vcqv98SzJCBVsO67cgJOByg@mail.gmail.com>
+Subject: Re: [PATCH] i2c: avoid sleep in IRQ context
+To:     "Adamski, Krzysztof (Nokia - PL/Wroclaw)" 
+        <krzysztof.adamski@nokia.com>, linux-i2c@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QW0gMDYuMDguMTkgdW0gMjI6MDMgc2NocmllYiBKYXNvbiBHdW50aG9ycGU6DQo+IE9uIFR1ZSwg
-QXVnIDA2LCAyMDE5IGF0IDAyOjU4OjU4UE0gLTA0MDAsIEFsZXggRGV1Y2hlciB3cm90ZToNCj4+
-IE9uIFR1ZSwgQXVnIDYsIDIwMTkgYXQgMTo1MSBQTSBLdWVobGluZywgRmVsaXggPEZlbGl4Lkt1
-ZWhsaW5nQGFtZC5jb20+IHdyb3RlOg0KPj4+IE9uIDIwMTktMDgtMDYgMTM6NDQsIEphc29uIEd1
-bnRob3JwZSB3cm90ZToNCj4+Pj4gT24gVHVlLCBBdWcgMDYsIDIwMTkgYXQgMDc6MDU6NTNQTSAr
-MDMwMCwgQ2hyaXN0b3BoIEhlbGx3aWcgd3JvdGU6DQo+Pj4+PiBUaGUgb3B0aW9uIGlzIGp1c3Qg
-dXNlZCB0byBzZWxlY3QgSE1NIG1pcnJvciBzdXBwb3J0IGFuZCBoYXMgYSB2ZXJ5DQo+Pj4+PiBj
-b25mdXNpbmcgaGVscCB0ZXh0LiAgSnVzdCBwdWxsIGluIHRoZSBITU0gbWlycm9yIGNvZGUgYnkg
-ZGVmYXVsdA0KPj4+Pj4gaW5zdGVhZC4NCj4+Pj4+DQo+Pj4+PiBTaWduZWQtb2ZmLWJ5OiBDaHJp
-c3RvcGggSGVsbHdpZyA8aGNoQGxzdC5kZT4NCj4+Pj4+ICAgIGRyaXZlcnMvZ3B1L2RybS9LY29u
-ZmlnICAgICAgICAgICAgICAgICB8ICAyICsrDQo+Pj4+PiAgICBkcml2ZXJzL2dwdS9kcm0vYW1k
-L2FtZGdwdS9LY29uZmlnICAgICAgfCAxMCAtLS0tLS0tLS0tDQo+Pj4+PiAgICBkcml2ZXJzL2dw
-dS9kcm0vYW1kL2FtZGdwdS9hbWRncHVfdHRtLmMgfCAgNiAtLS0tLS0NCj4+Pj4+ICAgIGRyaXZl
-cnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2FtZGdwdV90dG0uaCB8IDEyIC0tLS0tLS0tLS0tLQ0KPj4+
-Pj4gICAgNCBmaWxlcyBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKyksIDI4IGRlbGV0aW9ucygtKQ0K
-Pj4+PiBGZWxpeCwgd2FzIHRoaXMgYW4gZWZmb3J0IHRvIGF2b2lkIHRoZSBhcmNoIHJlc3RyaWN0
-aW9uIG9uIGhtbSBvcg0KPj4+PiBzb21ldGhpbmc/IEFsc28gY2FuJ3Qgc2VlIHdoeSB0aGlzIHdh
-cyBsaWtlIHRoaXMuDQo+Pj4gVGhpcyBvcHRpb24gcHJlZGF0ZXMgS0ZEJ3Mgc3VwcG9ydCBvZiB1
-c2VycHRycywgd2hpY2ggaW4gdHVybiBwcmVkYXRlcw0KPj4+IEhNTS4gUmFkZW9uIGhhcyB0aGUg
-c2FtZSBraW5kIG9mIG9wdGlvbiwgdGhvdWdoIGl0IGRvZXNuJ3QgYWZmZWN0IEhNTSBpbg0KPj4+
-IHRoYXQgY2FzZS4NCj4+Pg0KPj4+IEFsZXgsIENocmlzdGlhbiwgY2FuIHlvdSB0aGluayBvZiBh
-IGdvb2QgcmVhc29uIHRvIG1haW50YWluIHVzZXJwdHINCj4+PiBzdXBwb3J0IGFzIGFuIG9wdGlv
-biBpbiBhbWRncHU/IEkgc3VzcGVjdCBpdCB3YXMgb3JpZ2luYWxseSBtZWFudCBhcyBhDQo+Pj4g
-d2F5IHRvIGFsbG93IGtlcm5lbHMgd2l0aCBhbWRncHUgd2l0aG91dCBNTVUgbm90aWZpZXJzLiBO
-b3cgaXQgd291bGQNCj4+PiBhbGxvdyBhIGtlcm5lbCB3aXRoIGFtZGdwdSB3aXRob3V0IEhNTSBv
-ciBNTVUgbm90aWZpZXJzLiBJIGRvbid0IGtub3cgaWYNCj4+PiB0aGlzIGlzIGEgdXNlZnVsIHRo
-aW5nIHRvIGhhdmUuDQo+PiBSaWdodC4gIFRoZXJlIHdlcmUgcGVvcGxlIHRoYXQgZGlkbid0IGhh
-dmUgTU1VIG5vdGlmaWVycyB0aGF0IHdhbnRlZA0KPj4gc3VwcG9ydCBmb3IgdGhlIEdQVS4NCj4g
-Pz8gSXMgdGhhdCBldmVuIGEgcmVhbCB0aGluZz8gbW11X25vdGlmaWVyIGRvZXMgbm90IGhhdmUg
-bXVjaCBrY29uZmlnDQo+IGRlcGVuZGVuY3kuDQoNClllcywgdGhhdCB1c2VkIHRvIGJlIGEgdmVy
-eSByZWFsIHRoaW5nLg0KDQpJbml0aWFsbHkgYSBsb3Qgb2YgdXNlcnMgZGlkbid0IHdhbnRlZCBt
-bXUgbm90aWZpZXJzIHRvIGJlIGVuYWJsZWQgDQpiZWNhdXNlIG9mIHRoZSBwZXJmb3JtYW5jZSBv
-dmVyaGVhZCB0aGV5IGNvc3RzLg0KDQpUaGVuIHdlIGhhZCB0aGUgcHJvYmxlbSB0aGF0IEhNTSBt
-aXJyb3Igd2Fzbid0IGF2YWlsYWJsZSBvbiBhIGxvdCBvZiANCmFyY2hpdGVjdHVyZXMuDQoNCk5v
-dCBzdXJlIGlmIHdlIHN0aWxsIG5lZWQgaXQgc2VwYXJhdGVseSwgYnV0IEkgdGhpbmsgdGhhdCBp
-dCBzaG91bGRuJ3QgDQpiZSByZW1vdmVkIHdpdGhvdXQgYXNraW5nIGFyb3VuZCBpZiBzb21lYm9k
-eSBzdGlsbCBuZWVkcyB0aGF0Lg0KDQpDaHJpc3RpYW4uDQoNCj4NCj4gSmFzb24NCg0K
+Adamski, Krzysztof (Nokia - PL/Wroclaw) <krzysztof.adamski@nokia.com>
+=E6=96=BC 2019=E5=B9=B48=E6=9C=887=E6=97=A5=E9=80=B1=E4=B8=89 =E4=B8=8B=E5=
+=8D=882:51=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> On Mon, Aug 05, 2019 at 08:31:34PM +0800, Fuqian Huang wrote:
+> >i2c_pxa_handler -> i2c_pxa_irq_txempty ->
+> >i2c_pxa_reset -> i2c_pxa_set_slave -> i2c_pxa_wait_slave
+> >
+> >As i2c_pxa_handler is an interrupt handler, it will finally
+> >calls i2c_pxa_wait_slave which calls msleep.
+> >
+> >Add in_interrupt check before msleep to avoid sleep
+> >in IRQ context.
+> >
+> >Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+> >---
+> > drivers/i2c/busses/i2c-pxa.c | 2 ++
+> > 1 file changed, 2 insertions(+)
+> >
+> >diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
+> >index 2c3c3d6935c0..b35a0e8efcb2 100644
+> >--- a/drivers/i2c/busses/i2c-pxa.c
+> >+++ b/drivers/i2c/busses/i2c-pxa.c
+> >@@ -443,6 +443,8 @@ static int i2c_pxa_wait_slave(struct pxa_i2c *i2c)
+> >
+> >       show_state(i2c);
+> >
+> >+      if (in_interrupt())
+> >+              return 0;
+>
+> Sleeping in irq context is not good indeed but if you just return here,
+> an error will be printed from i2c_pxa_set_slave() and cleanup of ICR
+> will be skipped. Is that ok?
+Sorry for this mistake.
+Maybe it should be changed to mdelay.
+And the new patch is like this:
+if (in_interrupt()) {
+   mdelay(1);
+} else {
+   msleep(1);
+}
+>
+> >       while (time_before(jiffies, timeout)) {
+> >               if (i2c_debug > 1)
+> >                       dev_dbg(&i2c->adap.dev, "%s: %ld: ISR=3D%08x, ICR=
+=3D%08x, IBMR=3D%02x\n",
+>
