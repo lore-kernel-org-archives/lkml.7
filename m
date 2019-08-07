@@ -2,125 +2,150 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99BB8C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F26DC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:34:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76E7021E70
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:30:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0641B21E70
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:34:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sdsD+XG/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730063AbfHGOam (ORCPT
+        id S1730093AbfHGOen (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 10:30:42 -0400
-Received: from foss.arm.com ([217.140.110.172]:49438 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729808AbfHGOam (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 10:30:42 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5B8EE344;
-        Wed,  7 Aug 2019 07:30:41 -0700 (PDT)
-Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C3CB23F706;
-        Wed,  7 Aug 2019 07:30:39 -0700 (PDT)
-Subject: Re: drm pull for v5.3-rc1
-To:     Matthew Wilcox <willy@infradead.org>,
-        Christoph Hellwig <hch@infradead.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
-        <thomas@shipmail.org>, Dave Airlie <airlied@gmail.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux-MM <linux-mm@kvack.org>
-References: <CAPM=9twvwhm318btWy_WkQxOcpRCzjpok52R8zPQxQrnQ8QzwQ@mail.gmail.com>
- <CAHk-=wjC3VX5hSeGRA1SCLjT+hewPbbG4vSJPFK7iy26z4QAyw@mail.gmail.com>
- <CAHk-=wiD6a189CXj-ugRzCxA9r1+siSCA0eP_eoZ_bk_bLTRMw@mail.gmail.com>
- <48890b55-afc5-ced8-5913-5a755ce6c1ab@shipmail.org>
- <CAHk-=whwcMLwcQZTmWgCnSn=LHpQG+EBbWevJEj5YTKMiE_-oQ@mail.gmail.com>
- <CAHk-=wghASUU7QmoibQK7XS09na7rDRrjSrWPwkGz=qLnGp_Xw@mail.gmail.com>
- <20190806073831.GA26668@infradead.org>
- <CAHk-=wi7L0MDG7DY39Hx6v8jUMSq3ZCE3QTnKKirba_8KAFNyw@mail.gmail.com>
- <20190806190937.GD30179@bombadil.infradead.org>
- <20190807064000.GC6002@infradead.org>
- <20190807141517.GA5482@bombadil.infradead.org>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <62cbe523-e8a4-cdfd-90c2-80260cefa5de@arm.com>
-Date:   Wed, 7 Aug 2019 15:30:38 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 7 Aug 2019 10:34:43 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:36982 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726773AbfHGOem (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 10:34:42 -0400
+Received: by mail-pl1-f196.google.com with SMTP id b3so41154107plr.4
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 07:34:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lHwvH2IenI5I6BOpKEASSOSagsSSWPckINnb/r9Om0s=;
+        b=sdsD+XG/A62SVCrfeJ+B5ABp3mNeNNw+iPeD4Z8U5zgghaSEmlrouqOw3k4+sm5yuS
+         8fFQGgOH9HgiUauowsu1sHasF4j1K9RDOvUX+80x3BlGrp204ug3UieT2V5ATUM/1P31
+         LitFv435Co8Sw1F0PLaskW8JQStoJFuvimG3E0OKdw5pSWQuxB9G2S743r/VcnIFu+3g
+         s+O1d109GWMqh7CCMQWQVrFRcfJGns9pNxmIYtjjdP8vi25SqbRgZARFQ7XfUgp7vYtI
+         g4W0/+z9UG55JCx68K0ON1IZXuhdg0DOSTh1LThJrL7g4eEXMPwjPwh5xZa3KSSUKsMb
+         DtxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lHwvH2IenI5I6BOpKEASSOSagsSSWPckINnb/r9Om0s=;
+        b=mn/E8JNm3Wu/QQyVbdodNYfeJbeFplsnDolBB95ta4q7zwVZXDovOT9/JKN6NP6rn/
+         oPGbqV9I9wi27HtmhcMmtwD5/iXTS6U5fZny11FM2aT7ZWlbdJHZ2KG14fT/kmeLhvo4
+         +tos2Ay7h7cFjMdEgeGRdMkXJgpq7WDA7aWjcgH67/x2Mt+lgLvtScYD0Q06Uic8VO1u
+         7gaIBvYKgca0WmJXEcYd3o+bqjOmaBKrOAuc9j6hFfzs3fOeKDvKVBT7WSPz+cZoYJ/h
+         5XlfCoZNAWJbiVW/KD4OEO8Hf5sJOkncu9g5PIQBXxdUQsVcZG3zJePaygRMgZcIiqmz
+         /t5g==
+X-Gm-Message-State: APjAAAXTYVLZHIaH/gtspBc/Hjyh6kayblYa4mkSASPJe2S2Ho/I36Lt
+        Ae4c94ve2HhUJvnZDTmwcR5LbNbSxPabxncsZgCSiA==
+X-Google-Smtp-Source: APXvYqy5B07ywMWJX2Uml9bcmJ7I45WeRc12CCI8A9D4FmFbKsVYlV2+jjkpWWNkmEsxnuS7+xCsBs1+fZYql6Ton/c=
+X-Received: by 2002:a63:c442:: with SMTP id m2mr8183379pgg.286.1565188481270;
+ Wed, 07 Aug 2019 07:34:41 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190807141517.GA5482@bombadil.infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <CAAeHK+zLrYaE+Kt6AULPjKhBNknxPBWncfkTDmm3eFoLSpsffw@mail.gmail.com>
+ <Pine.LNX.4.44L0.1908071000560.1514-100000@iolanthe.rowland.org> <CAAeHK+yAY_ov4yH7n-R8ppnxc1ux33A-SEdxx18ywU1SyLGwug@mail.gmail.com>
+In-Reply-To: <CAAeHK+yAY_ov4yH7n-R8ppnxc1ux33A-SEdxx18ywU1SyLGwug@mail.gmail.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Wed, 7 Aug 2019 16:34:30 +0200
+Message-ID: <CAAeHK+xV3SgXvu7RsGLVtPH7scV9GZ0uwPzTu8N2bw1kt9i7aw@mail.gmail.com>
+Subject: Re: possible deadlock in open_rio
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     syzbot <syzbot+7bbcbe9c9ff0cd49592a@syzkaller.appspotmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        Cesar Miquel <miquel@df.uba.ar>,
+        rio500-users@lists.sourceforge.net,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/08/2019 15:15, Matthew Wilcox wrote:
-> On Tue, Aug 06, 2019 at 11:40:00PM -0700, Christoph Hellwig wrote:
->> On Tue, Aug 06, 2019 at 12:09:38PM -0700, Matthew Wilcox wrote:
->>> Has anyone looked at turning the interface inside-out?  ie something like:
->>>
->>> 	struct mm_walk_state state = { .mm = mm, .start = start, .end = end, };
->>>
->>> 	for_each_page_range(&state, page) {
->>> 		... do something with page ...
->>> 	}
->>>
->>> with appropriate macrology along the lines of:
->>>
->>> #define for_each_page_range(state, page)				\
->>> 	while ((page = page_range_walk_next(state)))
->>>
->>> Then you don't need to package anything up into structs that are shared
->>> between the caller and the iterated function.
->>
->> I'm not an all that huge fan of super magic macro loops.  But in this
->> case I don't see how it could even work, as we get special callbacks
->> for huge pages and holes, and people are trying to add a few more ops
->> as well.
-> 
-> We could have bits in the mm_walk_state which indicate what things to return
-> and what things to skip.  We could (and probably should) also use different
-> iterator names if people actually want to iterate different things.  eg
-> for_each_pte_range(&state, pte) as well as for_each_page_range().
-> 
+On Wed, Aug 7, 2019 at 4:24 PM Andrey Konovalov <andreyknvl@google.com> wrote:
+>
+> On Wed, Aug 7, 2019 at 4:01 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+> >
+> > On Wed, 7 Aug 2019, Andrey Konovalov wrote:
+> >
+> > > On Tue, Aug 6, 2019 at 9:13 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+> > > >
+> > > > On Thu, 1 Aug 2019, syzbot wrote:
+> > > >
+> > > > > Hello,
+> > > > >
+> > > > > syzbot found the following crash on:
+> > > > >
+> > > > > HEAD commit:    7f7867ff usb-fuzzer: main usb gadget fuzzer driver
+> > > > > git tree:       https://github.com/google/kasan.git usb-fuzzer
+> > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=136b6aec600000
+> > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=792eb47789f57810
+> > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=7bbcbe9c9ff0cd49592a
+> > > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > > > >
+> > > > > Unfortunately, I don't have any reproducer for this crash yet.
+> > > > >
+> > > > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > > > > Reported-by: syzbot+7bbcbe9c9ff0cd49592a@syzkaller.appspotmail.com
+> > > > >
+> > > > > ======================================================
+> > > > > WARNING: possible circular locking dependency detected
+> > > > > 5.3.0-rc2+ #23 Not tainted
+> > > > > ------------------------------------------------------
+> > > >
+> > > > Andrey:
+> > > >
+> > > > This should be completely reproducible, since it's a simple ABBA
+> > > > locking violation.  Maybe just introducing a time delay (to avoid races
+> > > > and give the open() call time to run) between the gadget creation and
+> > > > gadget removal would be enough to do it.
+> > >
+> > > I've tried some simple approaches to reproducing this, but failed.
+> > > Should this require two rio500 devices to trigger?
+> >
+> > No, one device should be enough.  Just plug it in and then try to open
+> > the character device file.
+>
+> OK, I've reproduced it, so I can test a patch manually. The reason
+> syzbot couldn't do that, is because it doesn't open character devices.
+> Right now the USB fuzzing instance only opens /dev/input*,
+> /dev/hidraw* and /dev/usb/hiddev* (only the devices that are created
+> by USB HID devices as I've been working on adding USB HID targeted
+> fuzzing support lately).
+>
+> I guess we should open /dev/chr/* as well. The problem is that there
+> 300+ devices there even without connecting USB devices and opening
+> them blindly probably won't work. Is there a way to know which
+> character devices are created by USB devices? Maybe they are exposed
+> over /sys/bus/usb or via some other way?
 
-The iterator approach could be awkward for the likes of my generic
-ptdump implementation[1]. It would require an iterator which returns all
-levels and allows skipping levels when required (to prevent KASAN
-slowing things down too much). So something like:
+Ah, OK, I see that it's also exposed as /dev/rio500 for this
+particular driver. This doesn't really help, as these names will
+differ for different drivers, and this will require custom syzkaller
+descriptions for each driver. I'm planning to add them for some
+widely-used (i.e. enabled on Android) drivers at some point, but it's
+too much work to do it for all the drivers enabled on e.g. Ubuntu.
 
-start_walk_range(&state);
-for_each_page_range(&state, page) {
-	switch(page->level) {
-	case PTE:
-		...
-	case PMD:
-		if (...)
-			skip_pmd(&state);
-		...
-	case HOLE:
-		....
-	...
-	}
-}
-end_walk_range(&state);
-
-It seems a little fragile - e.g. we wouldn't (easily) get type checking
-that you are actually treating a PTE as a pte_t. The state mutators like
-skip_pmd() also seem a bit clumsy.
-
-Steve
-
-[1]
-https://lore.kernel.org/lkml/20190731154603.41797-20-steven.price@arm.com/
+>
+> >
+> > Alan Stern
+> >
+> > > > Is there any way you can test this?
+> > >
+> > > Not yet.
+> > >
+> > > >
+> > > > Alan Stern
+> >
