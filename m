@@ -2,160 +2,206 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA873C32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 16:33:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7EB6C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 16:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2201222FC
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 16:33:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E87222297
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 16:33:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="eTmmzRkB"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sfdZuFVc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388678AbfHGQdQ (ORCPT
+        id S2388751AbfHGQdV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 12:33:16 -0400
-Received: from mail-eopbgr50058.outbound.protection.outlook.com ([40.107.5.58]:43271
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729278AbfHGQdP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 12:33:15 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fI8XiYNBWV1C1INFPS1B5Dqg78+26CDsSSgSHgGnjRETCzA8H0w6gzxUmh28sVIH1gRWqEFUhjDLXb61dRSaOS5XPKts9v4N0fIY+3rAK82ROD9881u8ZZI7ObIQ+aR+0zc0Bw7+AhutNgwf0WPYycL8nXn1G30Q5D20nETQczAy7c5Ah2xbjJKhhKFzcqQkMlYNPJtf/FLhqsxmrXfM3U+123cnHwfuKPnpQFsB0EKKFErrUYShV5urtplVYX3A0r/Mawjva5aDGML+DXB+5BaHkZU47hy8a2kYYDnZ5QnVJC1KeF/QekwxwmqKH4vEmWx3bv0JxIqfnlWoPOuhLA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=88w4gY0L3azL7ALEln6ts8I11ECPBG3XFvKFxQvLqpo=;
- b=WQLUVakQRAQv287SjHUXOYtXDK6lzLHsemacEMJBpItQaReYAxUDAD1Ql7Jw7UB7y9pvPK3OmGgXyHAWTjJmoGdB7YlZqCaMJu3KDL4iI5aRTbIesLtxPMq3Rp7RioM4XMcC/nfSGvfEiJ1Rw4khokJ6MCRX6BZqrok2e1DAKep2ncgnW0qcI1guJIWxBvna/i1jYZNg8R4iHFB8EYrl3cJ0DvZZ3jDHBMXrJbAgU0MYm8eO0uqxzAg2iyd6WVZwQASIUVEw6mfBFQNiq9sEFiI1ryfBtXSu5xeZcEb7BzUI5MKDpu6MBhYrstE5bpgOhMuHxTSI2/EhqTYoe2/idA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=88w4gY0L3azL7ALEln6ts8I11ECPBG3XFvKFxQvLqpo=;
- b=eTmmzRkB/2tz0aT/77gg8UGxIWguLKKIQWgMhnw9EDmtHRawueEeCIXhJXLp1uc8XRAn92dBpwp2cO32BQKLdlLcw3uU4eBSwFRDzgvqkIy5w971UqWL7o7X4yEk5N62dYHgFI+ZJx6POwsAnH3TTMLh61wNuGVlmiDWChyp6io=
-Received: from AM0PR05MB4866.eurprd05.prod.outlook.com (20.176.214.160) by
- AM0PR05MB4337.eurprd05.prod.outlook.com (52.134.93.150) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.13; Wed, 7 Aug 2019 16:33:11 +0000
-Received: from AM0PR05MB4866.eurprd05.prod.outlook.com
- ([fe80::216f:f548:1db0:41ea]) by AM0PR05MB4866.eurprd05.prod.outlook.com
- ([fe80::216f:f548:1db0:41ea%6]) with mapi id 15.20.2136.018; Wed, 7 Aug 2019
- 16:33:11 +0000
-From:   Parav Pandit <parav@mellanox.com>
-To:     Cornelia Huck <cohuck@redhat.com>
-CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "wankhede@nvidia.com" <wankhede@nvidia.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "cjia@nvidia.com" <cjia@nvidia.com>
-Subject: RE: [PATCH v1 2/2] vfio/mdev: Removed unused and redundant API for
- mdev UUID
-Thread-Topic: [PATCH v1 2/2] vfio/mdev: Removed unused and redundant API for
- mdev UUID
-Thread-Index: AQHVTGHewj+1neBmdkuk/1V2f0BrWKbvbAyAgAB0EUA=
-Date:   Wed, 7 Aug 2019 16:33:11 +0000
-Message-ID: <AM0PR05MB48664379F91C8FA3D0035B41D1D40@AM0PR05MB4866.eurprd05.prod.outlook.com>
-References: <20190802065905.45239-1-parav@mellanox.com>
-        <20190806141826.52712-1-parav@mellanox.com>
-        <20190806141826.52712-3-parav@mellanox.com>
- <20190807112801.6b2ceb36.cohuck@redhat.com>
-In-Reply-To: <20190807112801.6b2ceb36.cohuck@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=parav@mellanox.com; 
-x-originating-ip: [49.207.55.248]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7bee8c9f-da6a-489d-dc8c-08d71b54f02e
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:AM0PR05MB4337;
-x-ms-traffictypediagnostic: AM0PR05MB4337:
-x-microsoft-antispam-prvs: <AM0PR05MB43379EFCC5A8AEE45BD558E2D1D40@AM0PR05MB4337.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 01221E3973
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(136003)(376002)(396003)(346002)(189003)(199004)(54534003)(13464003)(51914003)(33656002)(6436002)(8936002)(305945005)(74316002)(446003)(7736002)(486006)(476003)(6246003)(52536014)(3846002)(2906002)(5660300002)(54906003)(6116002)(11346002)(55016002)(8676002)(9686003)(229853002)(6506007)(53546011)(55236004)(186003)(76116006)(316002)(66946007)(66476007)(66556008)(66446008)(6916009)(64756008)(66066001)(81166006)(81156014)(68736007)(256004)(4326008)(53936002)(71190400001)(71200400001)(102836004)(76176011)(26005)(86362001)(25786009)(7696005)(14454004)(14444005)(478600001)(99286004);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR05MB4337;H:AM0PR05MB4866.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: lD/TZbcRi0n3mPNnU8O5D1Y8DlnNbsmivONd1ehhM70rO7p+rG/YYVYEYZZtQ/nmyTOO+Mb8P3IGrOtQlRIHi2vHQ4a9q5t2oBVL2WPfOJMoY6ndxyTN4/g5FXChG9sNwdd7JqdXutDOpJ5ssidSi1Zwo5hinaqUa+rhmxghN/1Bhq7vrSJp+m70Exd8SJ8s1CQhNgW3q72UxNzG1R7lysWWPq8NTbSFuMRHeyYbHknr3JRo29W4nGNLPaMwWxWTfIph9ZPsO7Az2Hb4mvQ8Of+PcYjLSxG52B5Tc79tD9Bb87GrKcB7iuM4TTGQ1Ca+lyNwggyLyg61i3d/3H/BwlvNeL4N0M1g1vxItGTJkF3OTLOf8+ZUeYC3Wjg9E/7DAurMnliulxzDmijWutf20PM5xOOGDdYGn/4LpZVapHg=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 7 Aug 2019 12:33:21 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:38591 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388680AbfHGQdU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 12:33:20 -0400
+Received: by mail-ua1-f68.google.com with SMTP id j2so8439743uaq.5
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 09:33:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NqwCuUb3824NjSlV2+AsrTycJRPhzIvIEnU7QoSRAQg=;
+        b=sfdZuFVcKlzBkKxRpePhUULJN6CZvN7pT1eJO45Rr5oQgW0UItoswajIHXrFPBJaCg
+         Zrt3Bn+P1P1kuXyKBfY6n++OGHAq4qCYv4lD5VbxT0xUcFWfn2Cu9+E2hy4onmfvkNtz
+         Ps0g5obqwXc9YyYPWeEje00J3c8QIgXfycPbLTzGhE+RtiJRRPuWBhkRm8HAak4zJLm0
+         NG91Qp2Cz4MxpXO7vp/iPXgfc/FaDFLJ1c6Px9vENweo2vNhl9odpumalMSdvDjus+Pv
+         pS590+pBfoRopyl+yRlqLfXhP99+n+A3zPeLJbX+1jGqupL/DCg4PcegtoW+b5sI2ZZI
+         XkGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NqwCuUb3824NjSlV2+AsrTycJRPhzIvIEnU7QoSRAQg=;
+        b=olRYGkqByY3zNrUb/mxGcf56OKQ2qZlAd3H1XKF3Z3jsviUYm06U+SxtB5ZY3hRMGL
+         HEBgG647xTHc2fDuiZKPOWI66mKuNYBiQ5vIxWp7CwohNVl9vxVocjjHhn6DYHA6aRFL
+         ySWUTh0NcdfV+0ALMBpJDM90chHj4ai2noFs6aLmAGd1OU01zjx0U3scr9A8ZaPQZn5T
+         OIPDH6rDjnQ4Gu7mB3VqH//JSiUZa+I1b/4l//iGB/4/8dHYpdjpwn3FGvtMdfXR8+NY
+         EoBKpxRdaladh6+2uEN0aUxTERMcvj5UFLsYr+9nE5SbF/eFkLrnzmFxg8qvXGYWiZrP
+         UwHw==
+X-Gm-Message-State: APjAAAXqI9ZR8zbXtvyuQZmGWoGZvhxCHSETbJSZAQ/a8frH6cBkLIFY
+        OU6l/gF9unPV601EQ1W612ZBkvMwTgbdUJzb7zHPKA==
+X-Google-Smtp-Source: APXvYqwV+vUTxFOzNG1hQRbNg83yInzGpz3jt1R2oAaBMCNrBKlZPS6VruKmCKXsoaLNogat55WRdoSpFRMF0s1+p8Y=
+X-Received: by 2002:ab0:6e2:: with SMTP id g89mr6425837uag.56.1565195598785;
+ Wed, 07 Aug 2019 09:33:18 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7bee8c9f-da6a-489d-dc8c-08d71b54f02e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Aug 2019 16:33:11.6210
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: parav@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB4337
+References: <20190807095022.0314e2fc@canb.auug.org.au> <CAMn1gO6P_VfDRjGZb67ZS4Kh0wjTEQi0cbOkmibTokHQOgP7qw@mail.gmail.com>
+ <20190807114614.ubzlkulk7aidws3p@willie-the-truck> <CAK7LNASr8mbGDbWikr2P8Pc_6WEpMyXuK-xkgypYOzkWw_6LUw@mail.gmail.com>
+ <20190807152506.m2mzzjtb7kzjoiia@willie-the-truck>
+In-Reply-To: <20190807152506.m2mzzjtb7kzjoiia@willie-the-truck>
+From:   Peter Collingbourne <pcc@google.com>
+Date:   Wed, 7 Aug 2019 09:33:07 -0700
+Message-ID: <CAMn1gO65tjqHgWsX_gTB9eaerFRevWtWd6dkkEoHnjo+BG1m=w@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the arm64 tree
+To:     Will Deacon <will@kernel.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Cornelia Huck <cohuck@redhat.com>
-> Sent: Wednesday, August 7, 2019 2:58 PM
-> To: Parav Pandit <parav@mellanox.com>
-> Cc: kvm@vger.kernel.org; wankhede@nvidia.com; linux-
-> kernel@vger.kernel.org; alex.williamson@redhat.com; cjia@nvidia.com
-> Subject: Re: [PATCH v1 2/2] vfio/mdev: Removed unused and redundant API f=
-or
-> mdev UUID
->=20
-> On Tue,  6 Aug 2019 09:18:26 -0500
-> Parav Pandit <parav@mellanox.com> wrote:
->=20
-> > There is no single production driver who is interested in mdev device
-> > uuid. Currently UUID is mainly used to derive a device name.
-> > Additionally mdev device name is already available using core kernel
-> > API dev_name().
->=20
-> Well, the mdev code actually uses the uuid to check for duplicates before
-> registration with the driver core would fail... I'd just drop the two sen=
-tences
-Yes, it does the check. But its mainly used to derive a device name.
-And to ensure that there are no two devices with duplicate name, it compare=
-s with the uuid.
-
-Even this 16 bytes storage is redundant.
-Subsequently, I will submit a patch to get rid of storing this 16 bytes of =
-UUID too.
-Because for duplicate name check, device name itself is pretty good enough.
-
-Since I ran out of time and rc-4 is going on, I differed the 3rd simplifica=
-tion patch.
-
-Commit message actually came from the thoughts of 3rd patch, but I see that=
- without it, its not so intuitive.
-
-> talking about the device name, IMHO they don't really add useful informat=
-ion;
-> but I'll leave that decision to the maintainers.
->=20
+On Wed, Aug 7, 2019 at 8:25 AM Will Deacon <will@kernel.org> wrote:
+>
+> Hello Masahiro,
+>
+> On Wed, Aug 07, 2019 at 11:43:02PM +0900, Masahiro Yamada wrote:
+> > On Wed, Aug 7, 2019 at 8:46 PM Will Deacon <will@kernel.org> wrote:
+> > > On Tue, Aug 06, 2019 at 07:34:36PM -0700, Peter Collingbourne wrote:
+> > > > We're setting NM to something else based on a config option, which I
+> > > > presume sets up some sort of circular dependency that confuses
+> > > > Kconfig. Removing this fragment of the makefile (or appending
+> > > > --synthetic unconditionally) also makes the problem go away.
 > >
-> > Hence removed unused exported symbol.
+> > Exactly. This makes a circular dependency.
+> > Kconfig determines the environment variable 'NM' has been changed,
+> > and re-runs.
 > >
-> > Signed-off-by: Parav Pandit <parav@mellanox.com>
-> > ---
-> > Changelog:
-> > v0->v1:
-> >  - Updated commit log to address comments from Cornelia
-> > ---
-> >  drivers/vfio/mdev/mdev_core.c | 6 ------
-> >  include/linux/mdev.h          | 1 -
-> >  2 files changed, 7 deletions(-)
->=20
-> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Thanks for the review.
+> > > Yes, I think you're right. The lack of something like KBUILD_NMFLAGS means
+> > > that architectures are forced to override NM entirely if they want to pass
+> > > any specific options. Making that conditional on a Kconfig option appears
+> > > to send the entire thing recursive.
+> >
+> > Adding KBUILD_NMFLAGS is probably the right thing to do.
+> > (Is there somebody who wants to volunteer for this?)
+>
+> I don't think so ;) We don't do this for many other tools, and there's only
+> this one case that really seems to require it.
+>
+> > But, for this particular case, I vote for
+> > the entire removal of --synthetic.
+> >
+> > This dates back to 2004, and the commit message
+> > did not clearly explain why it was needed.
+> >
+> > The PowerPC maintainers should re-evaluate
+> > whether or not this flag is necessary.
+> >
+> > ppc32 is working without --synthetic,
+> > so probably ppc64 would be ...
+>
+> Again, this is up to the PPC maintainers.
+>
+> > > diff --git a/init/Kconfig b/init/Kconfig
+> > > index d96127ebc44e..a38027a06b79 100644
+> > > --- a/init/Kconfig
+> > > +++ b/init/Kconfig
+> > > @@ -31,7 +31,7 @@ config CC_HAS_ASM_GOTO
+> > >         def_bool $(success,$(srctree)/scripts/gcc-goto.sh $(CC))
+> > >
+> > >  config TOOLS_SUPPORT_RELR
+> > > -       def_bool $(success,env "CC=$(CC)" "LD=$(LD)" "NM=$(NM)" "OBJCOPY=$(OBJCOPY)" $(srctree)/scripts/tools-support-relr.sh)
+> > > +       def_bool $(success,env "CC=$(CC)" "LD=$(LD)" "NM=$(CROSS_COMPILE)nm" "OBJCOPY=$(OBJCOPY)" $(srctree)/scripts/tools-support-relr.sh)
+> > >
+> > >  config CC_HAS_WARN_MAYBE_UNINITIALIZED
+> > >         def_bool $(cc-option,-Wmaybe-uninitialized)
+> >
+> > Maybe,
+> >
+> > def_bool $(success,env "CC=$(CC)" "LD=$(LD)" "OBJCOPY=$(OBJCOPY)"
+> > $(srctree)/scripts/tools-support-relr.sh)
+> >
+> > will work.
+>
+> Oh yes, I prefer that. I've included the updated patch below, and I'll
+> put it into -next shortly so that we resolve the build breakage. Hopefully
+> we'll have a better fix once the ozlabs folks wake up.
+>
+> > Or more simply
+> >
+> > def_bool $(success,$(srctree)/scripts/tools-support-relr.sh)
+> >
+> > CC, LD, OBJCOPY, NM are environment variables,
+> > so I think tools-support-relr.sh can directly use them.
+>
+> Maybe, but the other scripts invoked here tend to pass $(CC) through as
+> an argument, and that helps with your observation below...:
+>
+> > However, this bypasses the detection of environment variable changes.
+> > If a user passes NM= from the command line, Kconfig will no longer
+> > notice the change of NM.
+>
+> ... but since my proposal also breaks this, then I think your idea of just
+> dropping $NM for now is best.
+
+Thanks Will, that sounds good to me as well. I verified that it fixes
+the hang in ppc64 on my end, and that we can still produce RELR
+relocations on arm64 by passing in llvm-nm as $NM.
+
+> Will
+>
+> --->8
+>
+> From 71c67a31f09fa8fdd1495dffd96a5f0d4cef2ede Mon Sep 17 00:00:00 2001
+> From: Will Deacon <will@kernel.org>
+> Date: Wed, 7 Aug 2019 12:48:33 +0100
+> Subject: [PATCH] init/Kconfig: Fix infinite Kconfig recursion on PPC
+>
+> Commit 5cf896fb6be3 ("arm64: Add support for relocating the kernel with
+> RELR relocations") introduced CONFIG_TOOLS_SUPPORT_RELR, which checks
+> for RELR support in the toolchain as part of the kernel configuration.
+> During this procedure, "$(NM)" is invoked to see if it supports the new
+> relocation format, however PowerPC conditionally overrides this variable
+> in the architecture Makefile in order to pass '--synthetic' when
+> targetting PPC64.
+>
+> This conditional override causes Kconfig to recurse forever, since
+> CONFIG_TOOLS_SUPPORT_RELR cannot be determined without $(NM) being
+> defined, but that in turn depends on CONFIG_PPC64:
+>
+>   $ make ARCH=powerpc CROSS_COMPILE=powerpc-linux-gnu-
+>   scripts/kconfig/conf  --syncconfig Kconfig
+>   scripts/kconfig/conf  --syncconfig Kconfig
+>   scripts/kconfig/conf  --syncconfig Kconfig
+>   [...]
+>
+> In this particular case, it looks like PowerPC may be able to pass
+> '--synthetic' unconditionally to nm or even drop it altogether. While
+> that is being resolved, let's just bodge the RELR check by picking up
+> $(NM) directly from the environment in whatever state it happens to be
+> in.
+>
+> Cc: Peter Collingbourne <pcc@google.com>
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Signed-off-by: Will Deacon <will@kernel.org>
+
+Tested-by: Peter Collingbourne <pcc@google.com>
+Reviewed-by: Peter Collingbourne <pcc@google.com>
+
+Peter
