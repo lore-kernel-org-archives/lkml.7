@@ -2,96 +2,120 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C62EC32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 23:29:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E25F9C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 23:31:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0BEB2173C
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 23:29:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1C2F2187F
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 23:31:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dQw8tgsv"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Q+skvyy7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388976AbfHGX3l (ORCPT
+        id S2389007AbfHGXbz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 19:29:41 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:37840 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387849AbfHGX3l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 19:29:41 -0400
-Received: by mail-pf1-f194.google.com with SMTP id 19so42940933pfa.4
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 16:29:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=msMiwPQbzw7bcXWIhwUZPrx/lErY0rUZloSGaKEVR2Y=;
-        b=dQw8tgsv0/uE1sOyWPobXmz8TiSNjzZ1p2z3Zy/LTUjE0E7HCLxHPb/RZLOtdH9OOK
-         Yb6jfTY0M9TTllw7vj/7gd9PnyCmcIHwQBV8/BWsD6kbkJI1ggapEGlKFsV3HOTbd/5d
-         vaFPOpaJq8xluZqxDKWrR0SiM6FS1EkhWJEiZUT8iW4pbwmWQTxvVpaLe7S6RomKLEHU
-         6kZGNjSdNFXAC2cZobyj6TCxRElNUK6J/6n0SjCOuG4mOWpIQPfxLMLG+5Yg1CiQ07O/
-         UtI9L7eB5HVVUIN73n3yy1Del+1p62SE9smSThWgYHzRmzN69t81XTRTliBYHb/3zIGH
-         BTKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=msMiwPQbzw7bcXWIhwUZPrx/lErY0rUZloSGaKEVR2Y=;
-        b=OKd+77Zjy9+sVmr44eC/tvUG4/d6zNNLRh9EpIeR/qbQ3s3/0oLApyGR2YGJmI2/2r
-         nObEyJBBY+om31R8Yn3ADUDbNFggoFFzBx8YcEdPU2rfuXI5CtaElbvBBrix8rdUXFHl
-         7D6+Bj25BCwxTlgJE627PmQfI7t8k7/gNiS1RbnutiSAlXdZf/FOkuRv8rpjNCrpO9OJ
-         YbfoXN2btFIrTbKX+7L/tpXlDy7FJ6awid0YMDGivfsU54S4HzJDuFImgnGXBKIrloTa
-         Qw58nBh4icGnAIzeVRAaPGQqb52C4dJgYSRxsk3QVRF5iqEoC4OZRB87fKzXoaN1BXnI
-         R3og==
-X-Gm-Message-State: APjAAAVQHNdiI8+U904XCAENXbqEsA5fAgHiO5I7D1uX4Xzo8aw9AWIr
-        w62/BpUEjw3pBgLEbJxzUUs=
-X-Google-Smtp-Source: APXvYqw9Rlet3GbehNJKN6v4ewaZ9N0yP4f2mhqz6Dh8+db7aQV0HqJ+Yq8Cm8wAeavrEGI+6npDcA==
-X-Received: by 2002:a65:6547:: with SMTP id a7mr9780248pgw.65.1565220580496;
-        Wed, 07 Aug 2019 16:29:40 -0700 (PDT)
-Received: from localhost.localdomain.localdomain ([218.189.25.30])
-        by smtp.gmail.com with ESMTPSA id a128sm105321815pfb.185.2019.08.07.16.29.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 07 Aug 2019 16:29:39 -0700 (PDT)
-From:   Xinpeng Liu <danielliu861@gmail.com>
-To:     rostedt@goodmis.org, mingo@redhat.com
-Cc:     linux-kernel@vger.kernel.org, Xinpeng Liu <danielliu861@gmail.com>
-Subject: [PATCH] tracing/probe: Fix null pointer dereference
-Date:   Thu,  8 Aug 2019 07:29:23 +0800
-Message-Id: <1565220563-980-1-git-send-email-danielliu861@gmail.com>
-X-Mailer: git-send-email 1.8.3.1
+        Wed, 7 Aug 2019 19:31:55 -0400
+Received: from ozlabs.org ([203.11.71.1]:36993 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387849AbfHGXbz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 19:31:55 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 463npJ4gNcz9sBF;
+        Thu,  8 Aug 2019 09:31:52 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1565220712;
+        bh=D4954wWJFIxeNOAVCijZOojKttQJdCVp6dAMHpHJBYk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Q+skvyy73bh+ueDzhcKMjKlRSYzXaCCxgrX6NDyy5Tzh9ghKs7cR3BymxbZCU5U6T
+         yAMsqZM92mMcarCtTU1k89qMQpoK40pguulgJmeyJN4prVl6NwY3ubv0Cald+An2yO
+         4R52Xqly490gOUTSYM0wH7inL7stWfH6VQ3WDNHsOdfJrnDpzeAjpCbfm7x3YCPIN7
+         rFZP0eQG5x4okmcQ7Gd/YtJzRINkvvm9BmEVQDjLNbYAnsClM0fUeiXbdoDoHkdGGe
+         4vtm+CcY+nfElk+5OXXcjhqMY1ZeoMe9t+XYBn/Gq9DJAl3cuT7fFSesAu5dEjKyNc
+         qajJef3XjxUdg==
+Date:   Thu, 8 Aug 2019 09:31:34 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build warning after merge of the akpm-current tree
+Message-ID: <20190808093134.1a5df132@canb.auug.org.au>
+In-Reply-To: <20190807112917.GA4624@rikard>
+References: <20190807180041.07f06dc0@canb.auug.org.au>
+        <20190807112917.GA4624@rikard>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/S1/XyKHC=Oh8eUWuEWK2PHJ";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-BUG: KASAN: null-ptr-deref in trace_probe_cleanup+0x8d/0xd0
-Read of size 8 at addr 0000000000000000 by task syz-executor.0/9746
-trace_probe_cleanup+0x8d/0xd0
-free_trace_kprobe.part.14+0x15/0x50
-alloc_trace_kprobe+0x23e/0x250
+--Sig_/S1/XyKHC=Oh8eUWuEWK2PHJ
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Xinpeng Liu <danielliu861@gmail.com>
----
- kernel/trace/trace_probe.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Hi Rikard,
 
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index dbef0d1..fb6bfbc 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -895,7 +895,8 @@ void trace_probe_cleanup(struct trace_probe *tp)
- 	for (i = 0; i < tp->nr_args; i++)
- 		traceprobe_free_probe_arg(&tp->args[i]);
- 
--	kfree(call->class->system);
-+	if (call->class)
-+		kfree(call->class->system);
- 	kfree(call->name);
- 	kfree(call->print_fmt);
- }
--- 
-1.8.3.1
+On Wed, 7 Aug 2019 13:29:17 +0200 Rikard Falkeborn <rikard.falkeborn@gmail.=
+com> wrote:
+>
+> Hi Stephen, Andrew
+>=20
+> On Wed, Aug 07, 2019 at 06:00:41PM +1000, Stephen Rothwell wrote:
+> > Hi all,
+> >=20
+> > After merging the akpm-current tree, today's linux-next build (x86_64
+> > allmodconfig) failed like this:
+> >=20
+> > In file included from include/linux/bits.h:22,
+> >                  from arch/x86/include/asm/msr-index.h:5,
+> >                  from arch/x86/boot/cpucheck.c:28:
+> > include/linux/build_bug.h:49: warning: "BUILD_BUG_ON" redefined
+> >  #define BUILD_BUG_ON(condition) \
+> > =20
+> > In file included from arch/x86/boot/cpucheck.c:22:
+> > arch/x86/boot/boot.h:31: note: this is the location of the previous def=
+inition
+> >  #define BUILD_BUG_ON(condition) ((void)sizeof(char[1 - 2*!!(condition)=
+]))
+> >=20
+> > Caused by commit
+> >=20
+> >   d72f2a993607 ("linux/bits.h: add compile time sanity check of GENMASK=
+ inputs")
+> >=20
+> > --=20
+> > Cheers,
+> > Stephen Rothwell =20
+>=20
+> Please drop this patch, it has additional issues that needs to be fixed
+> in another revision.
 
+I have removed it from linux-next for today.
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/S1/XyKHC=Oh8eUWuEWK2PHJ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1LX1YACgkQAVBC80lX
+0Gz1vQf/Vr+jSE3tZ3mO3nFRIABShN33fdZ8ctsctp2uCkjyX5JZmgQ04MRZZKCM
+V2XABQmTugkVJ5B2RK4Mgc4QYvsHDUUSO7f1sjA2c97uU7GxxbkmoNP+ZXGKe5YT
+DuH/I8pOmF4J0TAUURAhXgODc9j5fZ9qYFFt3u8l+6dXnlo5TxsEO9uaV4E36z2b
+v94ChOSTlHLLB6J5SxNAmSv5zFuMhBeQ5d23zub//ynN5Dp8hVUOxfi4Gww8YSPO
+lrjvvun84fRGi86j/NA1gYlGjX9FohRWJ3vVYtNQKOBtvm0oVB6R2nmH9IFFPRm8
+uTdWuigz1JdKRtTwKX0lnsB+TUfvRA==
+=An6g
+-----END PGP SIGNATURE-----
+
+--Sig_/S1/XyKHC=Oh8eUWuEWK2PHJ--
