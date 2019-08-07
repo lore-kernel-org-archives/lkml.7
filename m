@@ -5,41 +5,41 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4613BC32756
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:03:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D009C19759
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:03:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C72F22C97
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:03:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32F1622BED
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:03:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="YgAQBglM"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="kPNEpQMF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387665AbfHGIDg (ORCPT
+        id S2387675AbfHGIDj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 04:03:36 -0400
-Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:33728 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728235AbfHGID3 (ORCPT
+        Wed, 7 Aug 2019 04:03:39 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:33704 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728202AbfHGID3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 7 Aug 2019 04:03:29 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 9B944C0BC7;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id C2B04C0CA7;
         Wed,  7 Aug 2019 08:03:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1565165009; bh=A6oJ3xy+X62gQqMeT+1xG7LvX7bhvMEUhkdkX+YYtXg=;
+        t=1565165008; bh=71qpddnDyyC3uVi7GW+JRroufqoxTNi8shA1zrjJUW4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=YgAQBglMvUPpv/YlJ3KX/Z8ticroiUojCRdEnWVkkgf3uz8dsf99Eq3615Cfk3aW5
-         exi94PBNPiLiuMQwadQJPHfrK51PUz7PRZLKcyUUHOHlcjMpYpxGJrkq7yG3pQxxks
-         OYLMBvPrsZ8aEKEnyv4nPu10a8kBK3tK3Q1Q4cnb1LNfuUqL1rz3/7Rp1m1UWs2/kZ
-         mk3Msj/vv3icxN4KFDXYBfHqS9pcG96DAR6ozIrGX3xyjC+F4tTN0nHXJAQs5NdnrL
-         BUJhpjZC/7GVgYuzFbbGRdWmwpXmGRMxwinMK7eBdjEyF+ipz4CS7oeJQdvil1MKy4
-         gcMqSrxPt3b4w==
+        b=kPNEpQMFogGIlWyMtfOk+GaiNTE28aeLrm/GjpVmhSnChcAUv+Ojh0ygABtXdViI3
+         hfzv4IvTdlhJtnPLxzO3SlcA/p7oyPIa6LrKyuMocZIw8bJT1Fc2GSXp1J8VKVsXCT
+         hTnIk6+BWLHctpyZqTpYv8SelmAMIxrISLJMKO7PuAkqIGI81Kqibq5Hh4mHz5A46/
+         DID/VHr5WgYylojv8vuutaP5jY2snWbVgRI4pMeX/cGs+/5+Mmy9nqrHU0Q/w/KfF8
+         I95EY+CNQ4/9LZbjRkubWDoFpx4j+pnwWLsQyleKs27Zm/DqVLM8Dfb6cxP2cRQA5B
+         q96sv+8uWo/lA==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 29675A0066;
+        by mailhost.synopsys.com (Postfix) with ESMTP id 85E4CA006F;
         Wed,  7 Aug 2019 08:03:26 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
@@ -51,9 +51,9 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v3 02/10] net: stmmac: xgmac: Implement set_mtl_tx_queue_weight()
-Date:   Wed,  7 Aug 2019 10:03:10 +0200
-Message-Id: <c5b536e9eed3e0d8caa80e845a8ce508f8ef1b8f.1565164729.git.joabreu@synopsys.com>
+Subject: [PATCH net-next v3 06/10] net: stmmac: Implement VLAN Hash Filtering in XGMAC
+Date:   Wed,  7 Aug 2019 10:03:14 +0200
+Message-Id: <f261bc85af6cdda1439da9e57401fa4c5222c93e.1565164729.git.joabreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1565164729.git.joabreu@synopsys.com>
 References: <cover.1565164729.git.joabreu@synopsys.com>
@@ -64,8 +64,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement the TX Queue Weight callback. In order for this to be active
-we also need to set ETS algorithm when configuring Queue.
+Implement the VLAN Hash Filtering feature in XGMAC core.
 
 Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 
@@ -80,61 +79,280 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- .../net/ethernet/stmicro/stmmac/dwxgmac2_core.c    | 22 +++++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/stmicro/stmmac/common.h       |  1 +
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h     | 10 +++
+ .../net/ethernet/stmicro/stmmac/dwxgmac2_core.c    | 41 +++++++++++
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c |  1 +
+ drivers/net/ethernet/stmicro/stmmac/hwif.h         |  5 ++
+ drivers/net/ethernet/stmicro/stmmac/stmmac.h       |  2 +
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  | 79 ++++++++++++++++++++++
+ 7 files changed, 139 insertions(+)
 
+diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
+index 45a997fe571c..e1e6f67041ec 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/common.h
++++ b/drivers/net/ethernet/stmicro/stmmac/common.h
+@@ -355,6 +355,7 @@ struct dma_features {
+ 	unsigned int frpes;
+ 	unsigned int addr64;
+ 	unsigned int rssen;
++	unsigned int vlhash;
+ };
+ 
+ /* GMAC TX FIFO is 8K, Rx FIFO is 16K */
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
+index ed3a85f73a72..bae0b01000cc 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
+@@ -44,6 +44,7 @@
+ #define XGMAC_CORE_INIT_RX		0
+ #define XGMAC_PACKET_FILTER		0x00000008
+ #define XGMAC_FILTER_RA			BIT(31)
++#define XGMAC_FILTER_VTFE		BIT(16)
+ #define XGMAC_FILTER_HPF		BIT(10)
+ #define XGMAC_FILTER_PCF		BIT(7)
+ #define XGMAC_FILTER_PM			BIT(4)
+@@ -51,6 +52,14 @@
+ #define XGMAC_FILTER_PR			BIT(0)
+ #define XGMAC_HASH_TABLE(x)		(0x00000010 + (x) * 4)
+ #define XGMAC_MAX_HASH_TABLE		8
++#define XGMAC_VLAN_TAG			0x00000050
++#define XGMAC_VLAN_EDVLP		BIT(26)
++#define XGMAC_VLAN_VTHM			BIT(25)
++#define XGMAC_VLAN_DOVLTC		BIT(20)
++#define XGMAC_VLAN_ESVL			BIT(18)
++#define XGMAC_VLAN_ETV			BIT(16)
++#define XGMAC_VLAN_VID			GENMASK(15, 0)
++#define XGMAC_VLAN_HASH_TABLE		0x00000058
+ #define XGMAC_RXQ_CTRL0			0x000000a0
+ #define XGMAC_RXQEN(x)			GENMASK((x) * 2 + 1, (x) * 2)
+ #define XGMAC_RXQEN_SHIFT(x)		((x) * 2)
+@@ -87,6 +96,7 @@
+ #define XGMAC_HWFEAT_MMCSEL		BIT(8)
+ #define XGMAC_HWFEAT_MGKSEL		BIT(7)
+ #define XGMAC_HWFEAT_RWKSEL		BIT(6)
++#define XGMAC_HWFEAT_VLHASH		BIT(4)
+ #define XGMAC_HWFEAT_GMIISEL		BIT(1)
+ #define XGMAC_HW_FEATURE1		0x00000120
+ #define XGMAC_HWFEAT_RSSEN		BIT(20)
 diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-index 85c68b7ee8c6..ce6503dfc86d 100644
+index 04eec85acc59..e2dbebeb59e9 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
 +++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-@@ -144,7 +144,9 @@ static void dwxgmac2_prog_mtl_tx_algorithms(struct mac_device_info *hw,
- 					    u32 tx_alg)
- {
- 	void __iomem *ioaddr = hw->pcsr;
-+	bool ets = true;
- 	u32 value;
-+	int i;
+@@ -490,6 +490,46 @@ static int dwxgmac2_rss_configure(struct mac_device_info *hw,
+ 	return 0;
+ }
  
- 	value = readl(ioaddr + XGMAC_MTL_OPMODE);
- 	value &= ~XGMAC_ETSALG;
-@@ -160,10 +162,28 @@ static void dwxgmac2_prog_mtl_tx_algorithms(struct mac_device_info *hw,
- 		value |= XGMAC_DWRR;
- 		break;
- 	default:
-+		ets = false;
- 		break;
- 	}
- 
- 	writel(value, ioaddr + XGMAC_MTL_OPMODE);
-+
-+	/* Set ETS if desired */
-+	for (i = 0; i < MTL_MAX_TX_QUEUES; i++) {
-+		value = readl(ioaddr + XGMAC_MTL_TCx_ETS_CONTROL(i));
-+		value &= ~XGMAC_TSA;
-+		if (ets)
-+			value |= XGMAC_ETS;
-+		writel(value, ioaddr + XGMAC_MTL_TCx_ETS_CONTROL(i));
-+	}
-+}
-+
-+static void dwxgmac2_set_mtl_tx_queue_weight(struct mac_device_info *hw,
-+					     u32 weight, u32 queue)
++static void dwxgmac2_update_vlan_hash(struct mac_device_info *hw, u32 hash,
++				      bool is_double)
 +{
 +	void __iomem *ioaddr = hw->pcsr;
 +
-+	writel(weight, ioaddr + XGMAC_MTL_TCx_QUANTUM_WEIGHT(queue));
- }
++	writel(hash, ioaddr + XGMAC_VLAN_HASH_TABLE);
++
++	if (hash) {
++		u32 value = readl(ioaddr + XGMAC_PACKET_FILTER);
++
++		value |= XGMAC_FILTER_VTFE;
++
++		writel(value, ioaddr + XGMAC_PACKET_FILTER);
++
++		value |= XGMAC_VLAN_VTHM | XGMAC_VLAN_ETV;
++		if (is_double) {
++			value |= XGMAC_VLAN_EDVLP;
++			value |= XGMAC_VLAN_ESVL;
++			value |= XGMAC_VLAN_DOVLTC;
++		}
++
++		writel(value, ioaddr + XGMAC_VLAN_TAG);
++	} else {
++		u32 value = readl(ioaddr + XGMAC_PACKET_FILTER);
++
++		value &= ~XGMAC_FILTER_VTFE;
++
++		writel(value, ioaddr + XGMAC_PACKET_FILTER);
++
++		value = readl(ioaddr + XGMAC_VLAN_TAG);
++
++		value &= ~(XGMAC_VLAN_VTHM | XGMAC_VLAN_ETV);
++		value &= ~(XGMAC_VLAN_EDVLP | XGMAC_VLAN_ESVL);
++		value &= ~XGMAC_VLAN_DOVLTC;
++		value &= ~XGMAC_VLAN_VID;
++
++		writel(value, ioaddr + XGMAC_VLAN_TAG);
++	}
++}
++
+ const struct stmmac_ops dwxgmac210_ops = {
+ 	.core_init = dwxgmac2_core_init,
+ 	.set_mac = dwxgmac2_set_mac,
+@@ -521,6 +561,7 @@ const struct stmmac_ops dwxgmac210_ops = {
+ 	.set_filter = dwxgmac2_set_filter,
+ 	.set_mac_loopback = dwxgmac2_set_mac_loopback,
+ 	.rss_configure = dwxgmac2_rss_configure,
++	.update_vlan_hash = dwxgmac2_update_vlan_hash,
+ };
  
- static void dwxgmac2_map_mtl_to_dma(struct mac_device_info *hw, u32 queue,
-@@ -412,7 +432,7 @@ const struct stmmac_ops dwxgmac210_ops = {
- 	.rx_queue_routing = NULL,
- 	.prog_mtl_rx_algorithms = dwxgmac2_prog_mtl_rx_algorithms,
- 	.prog_mtl_tx_algorithms = dwxgmac2_prog_mtl_tx_algorithms,
--	.set_mtl_tx_queue_weight = NULL,
-+	.set_mtl_tx_queue_weight = dwxgmac2_set_mtl_tx_queue_weight,
- 	.map_mtl_to_dma = dwxgmac2_map_mtl_to_dma,
- 	.config_cbs = dwxgmac2_config_cbs,
- 	.dump_regs = NULL,
+ int dwxgmac2_setup(struct stmmac_priv *priv)
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
+index 45a6634ee397..b50e275e76c2 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
+@@ -359,6 +359,7 @@ static void dwxgmac2_get_hw_feature(void __iomem *ioaddr,
+ 	dma_cap->rmon = (hw_cap & XGMAC_HWFEAT_MMCSEL) >> 8;
+ 	dma_cap->pmt_magic_frame = (hw_cap & XGMAC_HWFEAT_MGKSEL) >> 7;
+ 	dma_cap->pmt_remote_wake_up = (hw_cap & XGMAC_HWFEAT_RWKSEL) >> 6;
++	dma_cap->vlhash = (hw_cap & XGMAC_HWFEAT_VLHASH) >> 4;
+ 	dma_cap->mbps_1000 = (hw_cap & XGMAC_HWFEAT_GMIISEL) >> 1;
+ 
+ 	/* MAC HW feature 1 */
+diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.h b/drivers/net/ethernet/stmicro/stmmac/hwif.h
+index bfe7efee9481..52fc2344b066 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/hwif.h
++++ b/drivers/net/ethernet/stmicro/stmmac/hwif.h
+@@ -336,6 +336,9 @@ struct stmmac_ops {
+ 	/* RSS */
+ 	int (*rss_configure)(struct mac_device_info *hw,
+ 			     struct stmmac_rss *cfg, u32 num_rxq);
++	/* VLAN */
++	void (*update_vlan_hash)(struct mac_device_info *hw, u32 hash,
++				 bool is_double);
+ };
+ 
+ #define stmmac_core_init(__priv, __args...) \
+@@ -408,6 +411,8 @@ struct stmmac_ops {
+ 	stmmac_do_void_callback(__priv, mac, set_mac_loopback, __args)
+ #define stmmac_rss_configure(__priv, __args...) \
+ 	stmmac_do_callback(__priv, mac, rss_configure, __args)
++#define stmmac_update_vlan_hash(__priv, __args...) \
++	stmmac_do_void_callback(__priv, mac, update_vlan_hash, __args)
+ 
+ /* PTP and HW Timer helpers */
+ struct stmmac_hwtimestamp {
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac.h b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
+index d2f6f56ae29c..4179559b11ad 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac.h
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
+@@ -13,6 +13,7 @@
+ #define DRV_MODULE_VERSION	"Jan_2016"
+ 
+ #include <linux/clk.h>
++#include <linux/if_vlan.h>
+ #include <linux/stmmac.h>
+ #include <linux/phylink.h>
+ #include <linux/pci.h>
+@@ -191,6 +192,7 @@ struct stmmac_priv {
+ 	spinlock_t ptp_lock;
+ 	void __iomem *mmcaddr;
+ 	void __iomem *ptpaddr;
++	unsigned long active_vlans[BITS_TO_LONGS(VLAN_N_VID)];
+ 
+ #ifdef CONFIG_DEBUG_FS
+ 	struct dentry *dbgfs_dir;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 404a0548f213..2274bb58eefa 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -4037,6 +4037,79 @@ static void stmmac_exit_fs(struct net_device *dev)
+ }
+ #endif /* CONFIG_DEBUG_FS */
+ 
++static u32 stmmac_vid_crc32_le(__le16 vid_le)
++{
++	unsigned char *data = (unsigned char *)&vid_le;
++	unsigned char data_byte = 0;
++	u32 crc = ~0x0;
++	u32 temp = 0;
++	int i, bits;
++
++	bits = get_bitmask_order(VLAN_VID_MASK);
++	for (i = 0; i < bits; i++) {
++		if ((i % 8) == 0)
++			data_byte = data[i / 8];
++
++		temp = ((crc & 1) ^ data_byte) & 1;
++		crc >>= 1;
++		data_byte >>= 1;
++
++		if (temp)
++			crc ^= 0xedb88320;
++	}
++
++	return crc;
++}
++
++static int stmmac_vlan_update(struct stmmac_priv *priv, bool is_double)
++{
++	u32 crc, hash = 0;
++	u16 vid;
++
++	for_each_set_bit(vid, priv->active_vlans, VLAN_N_VID) {
++		__le16 vid_le = cpu_to_le16(vid);
++		crc = bitrev32(~stmmac_vid_crc32_le(vid_le)) >> 28;
++		hash |= (1 << crc);
++	}
++
++	return stmmac_update_vlan_hash(priv, priv->hw, hash, is_double);
++}
++
++static int stmmac_vlan_rx_add_vid(struct net_device *ndev, __be16 proto, u16 vid)
++{
++	struct stmmac_priv *priv = netdev_priv(ndev);
++	bool is_double = false;
++	int ret;
++
++	if (!priv->dma_cap.vlhash)
++		return -EOPNOTSUPP;
++	if (be16_to_cpu(proto) == ETH_P_8021AD)
++		is_double = true;
++
++	set_bit(vid, priv->active_vlans);
++	ret = stmmac_vlan_update(priv, is_double);
++	if (ret) {
++		clear_bit(vid, priv->active_vlans);
++		return ret;
++	}
++
++	return ret;
++}
++
++static int stmmac_vlan_rx_kill_vid(struct net_device *ndev, __be16 proto, u16 vid)
++{
++	struct stmmac_priv *priv = netdev_priv(ndev);
++	bool is_double = false;
++
++	if (!priv->dma_cap.vlhash)
++		return -EOPNOTSUPP;
++	if (be16_to_cpu(proto) == ETH_P_8021AD)
++		is_double = true;
++
++	clear_bit(vid, priv->active_vlans);
++	return stmmac_vlan_update(priv, is_double);
++}
++
+ static const struct net_device_ops stmmac_netdev_ops = {
+ 	.ndo_open = stmmac_open,
+ 	.ndo_start_xmit = stmmac_xmit,
+@@ -4053,6 +4126,8 @@ static const struct net_device_ops stmmac_netdev_ops = {
+ 	.ndo_poll_controller = stmmac_poll_controller,
+ #endif
+ 	.ndo_set_mac_address = stmmac_set_mac_address,
++	.ndo_vlan_rx_add_vid = stmmac_vlan_rx_add_vid,
++	.ndo_vlan_rx_kill_vid = stmmac_vlan_rx_kill_vid,
+ };
+ 
+ static void stmmac_reset_subtask(struct stmmac_priv *priv)
+@@ -4307,6 +4382,10 @@ int stmmac_dvr_probe(struct device *device,
+ #ifdef STMMAC_VLAN_TAG_USED
+ 	/* Both mac100 and gmac support receive VLAN tag detection */
+ 	ndev->features |= NETIF_F_HW_VLAN_CTAG_RX | NETIF_F_HW_VLAN_STAG_RX;
++	if (priv->dma_cap.vlhash) {
++		ndev->features |= NETIF_F_HW_VLAN_CTAG_FILTER;
++		ndev->features |= NETIF_F_HW_VLAN_STAG_FILTER;
++	}
+ #endif
+ 	priv->msg_enable = netif_msg_init(debug, default_msg_level);
+ 
 -- 
 2.7.4
 
