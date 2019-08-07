@@ -5,60 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21555C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 22:31:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B80D2C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 22:31:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAB43216C8
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 22:31:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82E94216C8
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 22:31:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oG/h5CSE"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hcqK1rm2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389541AbfHGWbX (ORCPT
+        id S2389575AbfHGWb0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 18:31:23 -0400
-Received: from mail-qk1-f202.google.com ([209.85.222.202]:38444 "EHLO
-        mail-qk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389454AbfHGWbW (ORCPT
+        Wed, 7 Aug 2019 18:31:26 -0400
+Received: from mail-pg1-f201.google.com ([209.85.215.201]:56593 "EHLO
+        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389542AbfHGWb0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 18:31:22 -0400
-Received: by mail-qk1-f202.google.com with SMTP id n190so80643153qkd.5
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 15:31:21 -0700 (PDT)
+        Wed, 7 Aug 2019 18:31:26 -0400
+Received: by mail-pg1-f201.google.com with SMTP id h5so56454260pgq.23
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 15:31:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=f/5iyKYNpppjBF3zdaFLWaB9mtwpqzd2AKaKjPJxAWs=;
-        b=oG/h5CSE4Vl8m9nJpZKL2XmKPaShpcaKcKIvjDfvwRS9zUFnoyEJ3iouLQdGeCZq+E
-         hf9dKIkpZb9iIuxITVcANYzlRy6K7U+DS0F6TsUJOUjUBN39vlI6rEFj7nwKYnjH1jnX
-         6aSKpaBVNOrDAU8lFkxwVB4padlrh79dFWccl81oByzfLMik8LcjrwAAATm0E9k+bbVs
-         eKzqRFY+EYl5uV2uMKPbKLCMo93gdvytxJvjedgKr3PGKLN/s5CP10TvgN1jHHWZ58dc
-         VFrHN/eoabKXS5bZ03G+2CTZZeJfUJacXEtg2vO+jIsZWRl1Enxs5vUieQ0d0zVf+S+g
-         sIAA==
+        bh=DWjpwGhlXJQyl9FQAlOupUp/l9PizFz1wErEWTwJlag=;
+        b=hcqK1rm2Kc81+PcpjarLbrP8P4J7ecqPay/pLa2ERjLIRU6yaHy83GRzwH5twgmz77
+         p6ZlJr/qRukqde30IsHj5KuzdQD1+nQbX6inahTdo+X9XUkKQKQAxeRMNTPIh4uf+PKe
+         qGbHD86j7Qx3tpSx8Z/YKJ18+uSJXxnSMqkRxH41MDNar18DnUwL7cKQ6ANn7wa/rwPj
+         c0l7uSoYS6zqTeEr/4qNtDEOtZX1eVO/p6LpbU9jkd+99x2d5iwz4Uwj9RJWdBNSZ/LU
+         0a4XqqsHxy0B4SUTTVPu/R3tdbcI+WpwFbgGAskVzLsXhIYf2naq9yFuR5HNsF4448om
+         Z37w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=f/5iyKYNpppjBF3zdaFLWaB9mtwpqzd2AKaKjPJxAWs=;
-        b=Khw01Lx80diFEU/4dmgbHFLCCBvqSsrvpddjAMofcTIJXiUMAdXdQV6E8F0sfYPvL1
-         VTnIgphYXPszH3KVuswv4sWk5yiP54IlKf1bbTHI54xiAtq1z2/vGGLIlmyVacme2jno
-         YBnbWoY6JhqxUrEjYx0piqDXTWwaw87ztrgA4MYWECaWBhZorTDd3fF01vveEWvz2Fan
-         MY37Xjy/SmZjUVpKy3PIkTMCkMrJGfpsUFh3jgDEjzuhGa4JFLjxarvqEtERehAFpiIr
-         JDruGeA7XTv/JaSkMInuOxfk9blDDCd+PmadgOGhiJtF1fM7X8rk2LTdXt99CWFxoTRM
-         2iPg==
-X-Gm-Message-State: APjAAAW3FOnzmSdbspvihstafRqt+KATa8U8du0N+ZTgcygO6lJ0rDQM
-        jMRnBoUk6WX5eTt69B4diEjrAby2IjNnLCQ=
-X-Google-Smtp-Source: APXvYqz0a1du6BAb2n9zOY1TKTVI9Gg9OvB/aNzpeonZWxzlN/oxlG5fY68P9FEOHHUsq2e6wy1iV98PD6FTBF8=
-X-Received: by 2002:a0c:df12:: with SMTP id g18mr10126912qvl.34.1565217081340;
- Wed, 07 Aug 2019 15:31:21 -0700 (PDT)
-Date:   Wed,  7 Aug 2019 15:31:10 -0700
+        bh=DWjpwGhlXJQyl9FQAlOupUp/l9PizFz1wErEWTwJlag=;
+        b=J4IYMDfwmG3mINKMGjeejUpwRmSnCmRs9fVck6L1WfeSz8q8bGvr3P0O3uOUFEb70z
+         xH0mxbB4E8WGQXPxFzIOud/Z/j8eyNfDfR6DudRb4gEH+SUbdcRWuus++cXTmHkLxDr3
+         2YNLot+YzMwNdZsaE61+65HUImeT7MqpcNKWj/eIEpB+DYaALck+U9FMazA1MMLlMjA+
+         g8oDB1hIyUa2WfUMnt/OoIe79e7mMI2E95f4+8XQFfivsSp2NbCd46aXDXC6V7UDH0Pi
+         XY/Npx1SzIz7EDsCM6s9uJUEltG99qcoFmT25N1wNu/anfhWFf+wagSE6/hHcbx3owln
+         HROA==
+X-Gm-Message-State: APjAAAV9obwZ9ntQAYdE8kK52LSWcCDucayTAMejD82pZP0RVm+nbR5S
+        v1mxlyDiIt9zKhbCBMWjvt4cBkiv5wSiM2E=
+X-Google-Smtp-Source: APXvYqy/1aDhWc3+HFfJ/c7HXcYAOyJ1I9KCDVFdyCtC5/D4WfVyr1uqw90aRy9Chmq3OSW6+nY2hoQfBFxyOEw=
+X-Received: by 2002:a63:b102:: with SMTP id r2mr9553166pgf.370.1565217084491;
+ Wed, 07 Aug 2019 15:31:24 -0700 (PDT)
+Date:   Wed,  7 Aug 2019 15:31:11 -0700
 In-Reply-To: <20190807223111.230846-1-saravanak@google.com>
-Message-Id: <20190807223111.230846-3-saravanak@google.com>
+Message-Id: <20190807223111.230846-4-saravanak@google.com>
 Mime-Version: 1.0
 References: <20190807223111.230846-1-saravanak@google.com>
 X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
-Subject: [PATCH v5 2/3] OPP: Add support for bandwidth OPP tables
+Subject: [PATCH v5 3/3] OPP: Add helper function for bandwidth OPP tables
 From:   Saravana Kannan <saravanak@google.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -79,105 +79,147 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Not all devices quantify their performance points in terms of frequency.
-Devices like interconnects quantify their performance points in terms of
-bandwidth. We need a way to represent these bandwidth levels in OPP. So,
-add support for parsing bandwidth OPPs from DT.
+The frequency OPP tables have helper functions to search for entries in the
+table based on frequency and get the frequency values for a given (or
+suspend) OPP entry.
+
+Add similar helper functions for bandwidth OPP tables to search for entries
+in the table based on peak bandwidth and to get the peak and average
+bandwidth for a given (or suspend) OPP entry.
 
 Signed-off-by: Saravana Kannan <saravanak@google.com>
 ---
- drivers/opp/of.c  | 41 ++++++++++++++++++++++++++++++++---------
- drivers/opp/opp.h |  4 +++-
- 2 files changed, 35 insertions(+), 10 deletions(-)
+ drivers/opp/core.c     | 51 ++++++++++++++++++++++++++++++++++++++++++
+ include/linux/pm_opp.h | 19 ++++++++++++++++
+ 2 files changed, 70 insertions(+)
 
-diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-index 1813f5ad5fa2..e1750033fef9 100644
---- a/drivers/opp/of.c
-+++ b/drivers/opp/of.c
-@@ -523,6 +523,35 @@ void dev_pm_opp_of_remove_table(struct device *dev)
+diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+index 3b7ffd0234e9..22dcf22f908f 100644
+--- a/drivers/opp/core.c
++++ b/drivers/opp/core.c
+@@ -127,6 +127,29 @@ unsigned long dev_pm_opp_get_freq(struct dev_pm_opp *opp)
  }
- EXPORT_SYMBOL_GPL(dev_pm_opp_of_remove_table);
+ EXPORT_SYMBOL_GPL(dev_pm_opp_get_freq);
  
-+static int _read_opp_key(struct dev_pm_opp *new_opp, struct device_node *np)
++/**
++ * dev_pm_opp_get_bw() - Gets the bandwidth corresponding to an available opp
++ * @opp:	opp for which frequency has to be returned for
++ * @avg_bw:	Pointer where the corresponding average bandwidth is stored.
++ *		Can be NULL.
++ *
++ * Return: Peak bandwidth in kBps corresponding to the opp, else
++ * return 0
++ */
++unsigned long dev_pm_opp_get_bw(struct dev_pm_opp *opp, unsigned long *avg_bw)
 +{
-+	int ret;
-+	u64 rate;
-+	u32 bw;
-+
-+	ret = of_property_read_u64(np, "opp-hz", &rate);
-+	if (!ret) {
-+		/*
-+		 * Rate is defined as an unsigned long in clk API, and so
-+		 * casting explicitly to its type. Must be fixed once rate is 64
-+		 * bit guaranteed in clk API.
-+		 */
-+		new_opp->rate = (unsigned long)rate;
++	if (IS_ERR_OR_NULL(opp) || !opp->available) {
++		pr_err("%s: Invalid parameters\n", __func__);
 +		return 0;
 +	}
 +
-+	ret = of_property_read_u32(np, "opp-peak-kBps", &bw);
-+	if (ret)
-+		return ret;
-+	new_opp->rate = (unsigned long) bw;
++	if (avg_bw)
++		*avg_bw = opp->avg_bw;
 +
-+	ret = of_property_read_u32(np, "opp-avg-kBps", &bw);
-+	if (!ret)
-+		new_opp->avg_bw = (unsigned long) bw;
++	return opp->rate;
++}
++EXPORT_SYMBOL_GPL(dev_pm_opp_get_bw);
 +
+ /**
+  * dev_pm_opp_get_level() - Gets the level corresponding to an available opp
+  * @opp:	opp for which level value has to be returned for
+@@ -299,6 +322,34 @@ unsigned long dev_pm_opp_get_suspend_opp_freq(struct device *dev)
+ }
+ EXPORT_SYMBOL_GPL(dev_pm_opp_get_suspend_opp_freq);
+ 
++/**
++ * dev_pm_opp_get_suspend_opp_bw() - Get peak bandwidth of suspend opp in kBps
++ * @dev:	device for which we do this operation
++ * @avg_bw:	Pointer where the corresponding average bandwidth is stored.
++ *		Can be NULL.
++ *
++ * Return: This function returns the peak bandwidth of the OPP marked as
++ * suspend_opp if one is available, else returns 0;
++ */
++unsigned long dev_pm_opp_get_suspend_opp_bw(struct device *dev,
++					    unsigned long *avg_bw)
++{
++	struct opp_table *opp_table;
++	unsigned long peak_bw = 0;
++
++	opp_table = _find_opp_table(dev);
++	if (IS_ERR(opp_table))
++		return 0;
++
++	if (opp_table->suspend_opp && opp_table->suspend_opp->available)
++		peak_bw = dev_pm_opp_get_bw(opp_table->suspend_opp, avg_bw);
++
++	dev_pm_opp_put_opp_table(opp_table);
++
++	return peak_bw;
++}
++EXPORT_SYMBOL_GPL(dev_pm_opp_get_suspend_opp_bw);
++
+ int _get_opp_count(struct opp_table *opp_table)
+ {
+ 	struct dev_pm_opp *opp;
+diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
+index b8197ab014f2..f4e900f36414 100644
+--- a/include/linux/pm_opp.h
++++ b/include/linux/pm_opp.h
+@@ -82,6 +82,7 @@ void dev_pm_opp_put_opp_table(struct opp_table *opp_table);
+ unsigned long dev_pm_opp_get_voltage(struct dev_pm_opp *opp);
+ 
+ unsigned long dev_pm_opp_get_freq(struct dev_pm_opp *opp);
++unsigned long dev_pm_opp_get_bw(struct dev_pm_opp *opp, unsigned long *avg_bw);
+ 
+ unsigned int dev_pm_opp_get_level(struct dev_pm_opp *opp);
+ 
+@@ -92,6 +93,8 @@ unsigned long dev_pm_opp_get_max_clock_latency(struct device *dev);
+ unsigned long dev_pm_opp_get_max_volt_latency(struct device *dev);
+ unsigned long dev_pm_opp_get_max_transition_latency(struct device *dev);
+ unsigned long dev_pm_opp_get_suspend_opp_freq(struct device *dev);
++unsigned long dev_pm_opp_get_suspend_opp_bw(struct device *dev,
++					    unsigned long *avg_bw);
+ 
+ struct dev_pm_opp *dev_pm_opp_find_freq_exact(struct device *dev,
+ 					      unsigned long freq,
+@@ -160,6 +163,11 @@ static inline unsigned long dev_pm_opp_get_freq(struct dev_pm_opp *opp)
+ {
+ 	return 0;
+ }
++static inline unsigned long dev_pm_opp_get_bw(struct dev_pm_opp *opp,
++					      unsigned long *avg_bw)
++{
++	return 0;
++}
+ 
+ static inline unsigned int dev_pm_opp_get_level(struct dev_pm_opp *opp)
+ {
+@@ -196,6 +204,12 @@ static inline unsigned long dev_pm_opp_get_suspend_opp_freq(struct device *dev)
+ 	return 0;
+ }
+ 
++static inline unsigned long dev_pm_opp_get_suspend_opp_bw(struct device *dev,
++							  unsigned long *avg_bw)
++{
 +	return 0;
 +}
 +
- /**
-  * _opp_add_static_v2() - Allocate static OPPs (As per 'v2' DT bindings)
-  * @opp_table:	OPP table
-@@ -560,22 +589,16 @@ static struct dev_pm_opp *_opp_add_static_v2(struct opp_table *opp_table,
- 	if (!new_opp)
- 		return ERR_PTR(-ENOMEM);
+ static inline struct dev_pm_opp *dev_pm_opp_find_freq_exact(struct device *dev,
+ 					unsigned long freq, bool available)
+ {
+@@ -337,6 +351,11 @@ static inline void dev_pm_opp_cpumask_remove_table(const struct cpumask *cpumask
  
--	ret = of_property_read_u64(np, "opp-hz", &rate);
-+	ret = _read_opp_key(new_opp, np);
- 	if (ret < 0) {
- 		/* "opp-hz" is optional for devices like power domains. */
- 		if (!opp_table->is_genpd) {
--			dev_err(dev, "%s: opp-hz not found\n", __func__);
-+			dev_err(dev, "%s: opp-hz or opp-peak-kBps not found\n",
-+				__func__);
- 			goto free_opp;
- 		}
+ #endif		/* CONFIG_PM_OPP */
  
- 		rate_not_available = true;
--	} else {
--		/*
--		 * Rate is defined as an unsigned long in clk API, and so
--		 * casting explicitly to its type. Must be fixed once rate is 64
--		 * bit guaranteed in clk API.
--		 */
--		new_opp->rate = (unsigned long)rate;
- 	}
- 
- 	of_property_read_u32(np, "opp-level", &new_opp->level);
-diff --git a/drivers/opp/opp.h b/drivers/opp/opp.h
-index 01a500e2c40a..6bb238af9cac 100644
---- a/drivers/opp/opp.h
-+++ b/drivers/opp/opp.h
-@@ -56,7 +56,8 @@ extern struct list_head opp_tables;
-  * @turbo:	true if turbo (boost) OPP
-  * @suspend:	true if suspend OPP
-  * @pstate: Device's power domain's performance state.
-- * @rate:	Frequency in hertz
-+ * @rate:	Frequency in hertz OR Peak bandwidth in kilobytes per second
-+ * @avg_bw:	Average bandwidth in kilobytes per second
-  * @level:	Performance level
-  * @supplies:	Power supplies voltage/current values
-  * @clock_latency_ns: Latency (in nanoseconds) of switching to this OPP's
-@@ -78,6 +79,7 @@ struct dev_pm_opp {
- 	bool suspend;
- 	unsigned int pstate;
- 	unsigned long rate;
-+	unsigned long avg_bw;
- 	unsigned int level;
- 
- 	struct dev_pm_opp_supply *supplies;
++#define dev_pm_opp_find_peak_bw_exact	dev_pm_opp_find_freq_exact
++#define dev_pm_opp_find_peak_bw_floor	dev_pm_opp_find_freq_floor
++#define dev_pm_opp_find_peak_bw_ceil_by_volt dev_pm_opp_find_freq_ceil_by_volt
++#define dev_pm_opp_find_peak_bw_ceil	dev_pm_opp_find_freq_ceil
++
+ #if defined(CONFIG_PM_OPP) && defined(CONFIG_OF)
+ int dev_pm_opp_of_add_table(struct device *dev);
+ int dev_pm_opp_of_add_table_indexed(struct device *dev, int index);
 -- 
 2.23.0.rc1.153.gdeed80330f-goog
 
