@@ -2,115 +2,188 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE1C6C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 02:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B884C31E40
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 02:34:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E8E4208C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 02:34:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15216217D9
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 02:34:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="XR/rK36v"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F1SiR62u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbfHGCea (ORCPT
+        id S1727509AbfHGCeu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 22:34:30 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:27579 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726431AbfHGCe3 (ORCPT
+        Tue, 6 Aug 2019 22:34:50 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:43989 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726334AbfHGCet (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 22:34:29 -0400
-Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x772YGBx024672;
-        Wed, 7 Aug 2019 11:34:17 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x772YGBx024672
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1565145257;
-        bh=+Na/oaFlPFLzhHHyEv2bDd3O81VBBu2zQfuRfwJvQXw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=XR/rK36vh0u87Xwt/y65OytK2uSGxSVdUOpRXGuCh2V2j+xpQW7awgRGdu4gSypo1
-         60/d4Y6AxDIZ8irZTynu/TKj018yb408S7rFHdsVYCQodsoEMmk7HxcJ3JZOwUt2r8
-         dAiJHoaxI/n35llOtDwrOSh1TneMZMoGjMkL0dnZQvG+RhLVsfVNXUi8QEOEEu7d6s
-         e8kMLvv1ul6FYSoEQu9S7yfPpyXFXRsYM52IaGXbnPGNeoFI9Z0IQzUbyaf5fQZmZc
-         E5HJ8fIBPfcotetORay00H/2iRjNNUQDJxkVwFKYt22bU12RFXDKeY/DxBf8cpWyHL
-         yvwML97GZdeJA==
-X-Nifty-SrcIP: [209.85.217.53]
-Received: by mail-vs1-f53.google.com with SMTP id 2so59635461vso.8;
-        Tue, 06 Aug 2019 19:34:17 -0700 (PDT)
-X-Gm-Message-State: APjAAAU0NMJ2I/hbIZ2ir17Bzj9ADmQIiU+YYT2omy1c/EehMyndnVag
-        VwTehROxDwKx70FzOBbFIOLW7CW4ktvr8a6IMcQ=
-X-Google-Smtp-Source: APXvYqzAR/6xcUjB+iyJ4MYJeq0ddLIXMcTvItkNUaRF8fcH9f1uEUk3gJGXDCbRVBpXpGf6GvJXKbtx565Il2UT2zw=
-X-Received: by 2002:a67:8e0a:: with SMTP id q10mr4441385vsd.215.1565145256312;
- Tue, 06 Aug 2019 19:34:16 -0700 (PDT)
+        Tue, 6 Aug 2019 22:34:49 -0400
+Received: by mail-vs1-f66.google.com with SMTP id j26so59706003vsn.10
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 19:34:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vZySuVgDrMwYu72Sx/Yyym02kCpQXLkPK8PNQdvmdTs=;
+        b=F1SiR62uuCiYwaAFZHB76fCXVKxf7JXtPhpxtNgrVd7MyfyLkTV1DIeX/jAyXBunyv
+         RQrIlMkIGluKnySzfOF3GZSLDP6MveHIH7veoxvjvHiYv/WElwSO9Iwo0h0q9MtKrvfP
+         kL/UCJwy+siSLXnj0w9kxjQETAkg8eD5w50q97dB6F3z+72b41Wrzv2dgqkH/m1FOQ0i
+         V5bUDjsT76x73WZJYgzY4Vv9fR4a4k1cEIlUL/gbWQE/MJFoZtehpet47dSrdA/83Gqk
+         G38q97D0ZqJoZeASMBUD4lJMr2MlJPqrttFt4KV70TVWSDOfP/xerBtrtLdWIL4aCjIR
+         w0zA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vZySuVgDrMwYu72Sx/Yyym02kCpQXLkPK8PNQdvmdTs=;
+        b=DAWLYdv3eYP5paHn4ZiAG9OYt0aXbtI7a0lE462b9mgaUXjGanOrGKq6o8uSR6ly+a
+         Zy8PutirtPiPKFDDGPXTZQrjB/YcsvoS2zUYJ0pNRuVLOSPMRP8CoLSHU61gfyU9W5pL
+         tHiByK4nNQS7Cg2AIwvIo+6RzpUgbiklSuklePRq6+eJ8Oa4857vj2YTcQKo8XP5HRG+
+         XNtCj+I2ZYneUslZhouF5MaBqwd026EYYmNRiB1w2feAgiafONs0iCCH3XfhOOzb7R87
+         jxrvVMeTsYYppQvAKkMhD+PbX5kHa1PFxZkrzfnAdj6M7Gn0IwL8Jt0VEZESUwcXO+oL
+         kqCg==
+X-Gm-Message-State: APjAAAXdOn+10xFGyHXtmGz0MmQqq82HOY581n7KjrdS3K15PtKsM8DO
+        IWekq6pEuNYQ1vre9Vx4QaUR798XgG4jY9YGjPclcA==
+X-Google-Smtp-Source: APXvYqzMwsO5cKGxZ3JYDTOsPOYBmB+qZmPho1/Yle815I5CkBfbapDdnjT0eQA4Zv+lnRSJnerL6Wc4UY2iNLWlUpk=
+X-Received: by 2002:a67:ff0a:: with SMTP id v10mr4748856vsp.1.1565145287978;
+ Tue, 06 Aug 2019 19:34:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <patch-1.thread-2257a1.git-188f5a3d81d5.your-ad-here.call-01565088755-ext-5120@work.hours>
- <patch-2.thread-2257a1.git-2257a1c53d4a.your-ad-here.call-01565088755-ext-5120@work.hours>
-In-Reply-To: <patch-2.thread-2257a1.git-2257a1c53d4a.your-ad-here.call-01565088755-ext-5120@work.hours>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 7 Aug 2019 11:33:40 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATyNWjwVXdbgXt0mL+3R8jTGe_cq1vEW8_VvB250P4bdg@mail.gmail.com>
-Message-ID: <CAK7LNATyNWjwVXdbgXt0mL+3R8jTGe_cq1vEW8_VvB250P4bdg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] s390/build: use size command to perform empty .bss check
-To:     Vasily Gorbik <gor@linux.ibm.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190807095022.0314e2fc@canb.auug.org.au>
+In-Reply-To: <20190807095022.0314e2fc@canb.auug.org.au>
+From:   Peter Collingbourne <pcc@google.com>
+Date:   Tue, 6 Aug 2019 19:34:36 -0700
+Message-ID: <CAMn1gO6P_VfDRjGZb67ZS4Kh0wjTEQi0cbOkmibTokHQOgP7qw@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the arm64 tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 6, 2019 at 7:56 PM Vasily Gorbik <gor@linux.ibm.com> wrote:
+On Tue, Aug 6, 2019 at 4:50 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 >
-> Currently empty .bss checks performed do not pay attention to "common
-> objects" in object files which end up in .bss section eventually.
+> Hi all,
 >
-> The "size" tool is a part of binutils and since version 2.18 provides
-> "--common" command line option, which allows to account "common objects"
-> sizes in .bss section size. Utilize "size --common" to perform accurate
-> check that .bss section is unused. Besides that the size tool handles
-> object files without .bss section gracefully and doesn't require
-> additional objdump run.
+> After merging the arm64 tree, today's linux-next build (powerpc
+> ppc64_defconfig) was just spinning in make - it executing some scripts,
+> but it was hard to catch just what.
 >
-> The linux kernel requires binutils 2.20 since 4.13.
+> Apparently caused by commit
 >
-> Kbuild exports OBJSIZE to reference the right size tool.
+>   5cf896fb6be3 ("arm64: Add support for relocating the kernel with RELR relocations")
 >
-> Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-> ---
->  arch/s390/scripts/Makefile.chkbss | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
->
-> diff --git a/arch/s390/scripts/Makefile.chkbss b/arch/s390/scripts/Makefile.chkbss
-> index 884a9caff5fb..ba1d7a8a242f 100644
-> --- a/arch/s390/scripts/Makefile.chkbss
-> +++ b/arch/s390/scripts/Makefile.chkbss
-> @@ -11,8 +11,7 @@ chkbss: $(addprefix $(obj)/, $(chkbss-files))
->
->  quiet_cmd_chkbss = CHKBSS  $<
->        cmd_chkbss = \
-> -       if $(OBJDUMP) -h $< | grep -q "\.bss" && \
-> -          ! $(OBJDUMP) -j .bss -w -h $< | awk 'END { if ($$3) exit 1 }'; then \
-> +       if ! $(OBJSIZE) --common $< | awk 'END { if ($$3) exit 1 }'; then \
+> I have not idea why, but reverting the above commit allows to build
+> to finish.
 
-While you are touching this line,
-you may also want to replace 'awk' with $(AWK),
-which is defined in the top-level Makefile.
+Okay, I can reproduce with:
 
+$ make ARCH=powerpc CROSS_COMPILE=powerpc-linux-gnu- defconfig
+*** Default configuration is based on 'ppc64_defconfig'
+#
+# No change to .config
+#
+$ make ARCH=powerpc CROSS_COMPILE=powerpc-linux-gnu- -j72
+scripts/kconfig/conf  --syncconfig Kconfig
+scripts/kconfig/conf  --syncconfig Kconfig
+scripts/kconfig/conf  --syncconfig Kconfig
+[...]
 
+And confirmed that backing out my patch fixes it.
 
+The problem seems to come from the use of $(NM) in the Kconfig file.
+If I apply this diff:
 
->                 echo "error: $< .bss section is not empty" >&2; exit 1; \
->         fi; \
->         touch $@;
-> --
-> 2.21.0
->
+diff --git a/init/Kconfig b/init/Kconfig
+index d96127ebc44e0..177a95b323230 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -31,7 +31,7 @@ config CC_HAS_ASM_GOTO
+        def_bool $(success,$(srctree)/scripts/gcc-goto.sh $(CC))
 
+ config TOOLS_SUPPORT_RELR
+-       def_bool $(success,env "CC=$(CC)" "LD=$(LD)" "NM=$(NM)"
+"OBJCOPY=$(OBJCOPY)" $(srctree)/scripts/tools-support-relr.sh)
++       def_bool $(success,$(NM))
 
--- 
-Best Regards
-Masahiro Yamada
+ config CC_HAS_WARN_MAYBE_UNINITIALIZED
+        def_bool $(cc-option,-Wmaybe-uninitialized)
+
+I still see the hang. Replacing $(NM) with something else makes it go away.
+
+That leads me to ask what is special about $(NM) + powerpc? It turns
+out to be this fragment of arch/powerpc/Makefile:
+
+ifdef CONFIG_PPC64
+new_nm := $(shell if $(NM) --help 2>&1 | grep -- '--synthetic' >
+/dev/null; then echo y; else echo n; fi)
+
+ifeq ($(new_nm),y)
+NM              := $(NM) --synthetic
+endif
+endif
+
+We're setting NM to something else based on a config option, which I
+presume sets up some sort of circular dependency that confuses
+Kconfig. Removing this fragment of the makefile (or appending
+--synthetic unconditionally) also makes the problem go away.
+
+We should at least able to remove the test for a new-enough binutils.
+According to changes.rst we require binutils 2.21 which was released
+in 2011, and support for --synthetic was added to binutils in 2004:
+https://github.com/bminor/binutils-gdb/commit/0873df2aec48685715d2c5041c1f6f4ed43976c1
+
+But why are we passing --synthetic at all on ppc64? This behaviour
+seems to come from this commit from 2004:
+https://github.com/mpe/linux-fullhistory/commit/0e32679a4ea48a634d94e97355d47512ef14d71f
+which states: "On new toolchains we need to use nm --synthetic or we
+miss code symbols."
+
+But I only see a couple of missing symbols if I compare the output of
+nm with and without --synthetic on a powerpc64 kernel:
+
+$ diff -u <(powerpc-linux-gnu-nm --synthetic vmlinux)
+<(powerpc-linux-gnu-nm  vmlinux)
+--- /dev/fd/63 2019-08-06 18:48:56.127020621 -0700
++++ /dev/fd/62 2019-08-06 18:48:56.131020636 -0700
+@@ -74840,7 +74840,6 @@
+ c000000001901b10 D LZ4_decompress_fast
+ c0000000007819a0 T .LZ4_decompress_fast_continue
+ c000000001901b70 D LZ4_decompress_fast_continue
+-c0000000007811e0 t .LZ4_decompress_fast_extDict
+ c000000001901b40 d LZ4_decompress_fast_extDict
+ c000000000781960 T .LZ4_decompress_fast_usingDict
+ c000000001901b58 D LZ4_decompress_fast_usingDict
+@@ -74856,7 +74855,6 @@
+ c000000001901bd0 D LZ4_decompress_safe_usingDict
+ c0000000007822b0 T .LZ4_decompress_safe_withPrefix64k
+ c000000001901b88 D LZ4_decompress_safe_withPrefix64k
+-c000000000780c60 t .LZ4_decompress_safe_withSmallPrefix
+ c000000001901b28 d LZ4_decompress_safe_withSmallPrefix
+ c00000000077fbe0 T .LZ4_setStreamDecode
+ c000000001901ac8 D LZ4_setStreamDecode
+
+I guess the problem was worse back in 2004. It almost certainly didn't
+involve these particular symbols because they were added in commit
+2209fda323e2fd2a2d0885595fd5097717f8d2aa from 2018. So I guess we have
+a couple of possible quick fixes (assuming that the Kconfig issue
+can't be solved somehow): either stop passing --synthetic on powerpc
+and lose a couple of symbols in 64-bit kernels, or start passing it
+unconditionally on powerpc (it doesn't seem to make a difference to
+the nm output on a ppc64_defconfig kernel with CONFIG_PPC64=n). I'm
+cc'ing the powerpc maintainers for their opinion on what to do. While
+this is being resolved we should probably back out my patch from
+-next.
+
+Peter
