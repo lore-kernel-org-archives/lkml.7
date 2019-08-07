@@ -2,37 +2,36 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB3BDC32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 06:03:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC9BC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 06:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEC1B223B9
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 06:03:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EACF22324
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 06:03:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbfHGGDU (ORCPT
+        id S1727110AbfHGGDX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 02:03:20 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:50329 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726137AbfHGGDT (ORCPT
+        Wed, 7 Aug 2019 02:03:23 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:53955 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726872AbfHGGDU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 02:03:19 -0400
-X-UUID: 66379fd288374440afeac1fca168d612-20190807
-X-UUID: 66379fd288374440afeac1fca168d612-20190807
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        Wed, 7 Aug 2019 02:03:20 -0400
+X-UUID: e0a996c9a3a44907ba62ee4ddd8ead28-20190807
+X-UUID: e0a996c9a3a44907ba62ee4ddd8ead28-20190807
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
         (envelope-from <jitao.shi@mediatek.com>)
         (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 564144345; Wed, 07 Aug 2019 14:03:11 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33N1.mediatek.inc
- (172.27.4.75) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 7 Aug
- 2019 14:03:09 +0800
+        with ESMTP id 1543499440; Wed, 07 Aug 2019 14:03:06 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33N2.mediatek.inc
+ (172.27.4.76) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 7 Aug
+ 2019 14:03:02 +0800
 Received: from mszsdclx1018.gcn.mediatek.inc (172.27.4.253) by
  MTKCAS36.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
- 15.0.1395.4 via Frontend Transport; Wed, 7 Aug 2019 14:03:07 +0800
+ 15.0.1395.4 via Frontend Transport; Wed, 7 Aug 2019 14:03:01 +0800
 From:   Jitao Shi <jitao.shi@mediatek.com>
 To:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -58,116 +57,42 @@ CC:     Jitao Shi <jitao.shi@mediatek.com>,
         <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
         <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
         <ck.hu@mediatek.com>, <stonea168@163.com>
-Subject: [PATCH v5 4/4] drm/mediatek: control dpi pins dpi or gpio mode in on or off
-Date:   Wed, 7 Aug 2019 14:02:57 +0800
-Message-ID: <20190807060257.57007-5-jitao.shi@mediatek.com>
+Subject: [PATCH v5 0/4] add mt8183 dpi driver
+Date:   Wed, 7 Aug 2019 14:02:53 +0800
+Message-ID: <20190807060257.57007-1-jitao.shi@mediatek.com>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190807060257.57007-1-jitao.shi@mediatek.com>
-References: <20190807060257.57007-1-jitao.shi@mediatek.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
-X-TM-SNTS-SMTP: 1B2CA2D23DF96E5EB5B80F2CCDC9DF7A23B524F7C9EECA1DDDD30165E22A6FB52000:8
+X-TM-SNTS-SMTP: DCB0DFC6858284B6DFB1DC1FB7C2F36A5001F83DF042B729EFA399187E50DB232000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pull dpi pins low when dpi has nothing to display. Aovid leakage
-current from some dpi pins (Hsync Vsync DE ... ).
+Changes since v4:
+ - move pin mode control and dual edge control to deveice tree.
+ - update dt-bindings document for pin mode swap and dual edge control.
 
-Some chips have dpi pins, but there are some chip don't have pins.
-So this function is controlled by device tree.
+Changes since v3:
+ - add dpi pin mode control when dpi on or off.
+ - update dpi dual edge comment.
 
-Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
----
- drivers/gpu/drm/mediatek/mtk_dpi.c | 39 +++++++++++++++++++++++++++++-
- 1 file changed, 38 insertions(+), 1 deletion(-)
+Changes since v2:
+ - update dt-bindings document for mt8183 dpi.
+ - separate dual edge modfication as independent patch.
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
-index 4f2700cbfdb7..83fb0d753f72 100644
---- a/drivers/gpu/drm/mediatek/mtk_dpi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
-@@ -9,10 +9,12 @@
- #include <drm/drm_of.h>
- #include <linux/kernel.h>
- #include <linux/component.h>
--#include <linux/platform_device.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
-+#include <linux/of_gpio.h>
- #include <linux/of_graph.h>
-+#include <linux/pinctrl/consumer.h>
-+#include <linux/platform_device.h>
- #include <linux/interrupt.h>
- #include <linux/types.h>
- #include <linux/clk.h>
-@@ -71,8 +73,12 @@ struct mtk_dpi {
- 	enum mtk_dpi_out_yc_map yc_map;
- 	enum mtk_dpi_out_bit_num bit_num;
- 	enum mtk_dpi_out_channel_swap channel_swap;
-+	struct pinctrl *pinctrl;
-+	struct pinctrl_state *pins_gpio;
-+	struct pinctrl_state *pins_dpi;
- 	int refcount;
- 	bool dual_edge;
-+	bool dpi_pin_ctrl;
- };
- 
- static inline struct mtk_dpi *mtk_dpi_from_encoder(struct drm_encoder *e)
-@@ -384,6 +390,9 @@ static void mtk_dpi_power_off(struct mtk_dpi *dpi)
- 	if (--dpi->refcount != 0)
- 		return;
- 
-+	if (dpi->dpi_pin_ctrl)
-+		pinctrl_select_state(dpi->pinctrl, dpi->pins_gpio);
-+
- 	mtk_dpi_disable(dpi);
- 	clk_disable_unprepare(dpi->pixel_clk);
- 	clk_disable_unprepare(dpi->engine_clk);
-@@ -408,6 +417,9 @@ static int mtk_dpi_power_on(struct mtk_dpi *dpi)
- 		goto err_pixel;
- 	}
- 
-+	if (dpi->dpi_pin_ctrl)
-+		pinctrl_select_state(dpi->pinctrl, dpi->pins_dpi);
-+
- 	mtk_dpi_enable(dpi);
- 	return 0;
- 
-@@ -713,6 +725,31 @@ static int mtk_dpi_probe(struct platform_device *pdev)
- 	dpi->dev = dev;
- 	dpi->conf = (struct mtk_dpi_conf *)of_device_get_match_data(dev);
- 	dpi->dual_edge = of_property_read_bool(dev->of_node, "dpi_dual_edge");
-+	dpi->dpi_pin_ctrl = of_property_read_bool(dev->of_node,
-+						  "dpi_pin_mode_swap");
-+
-+	if (dpi->dpi_pin_ctrl) {
-+		dpi->pinctrl = devm_pinctrl_get(&pdev->dev);
-+		if (IS_ERR(dpi->pinctrl)) {
-+			dev_err(&pdev->dev, "Cannot find pinctrl!\n");
-+			return PTR_ERR(dpi->pinctrl);
-+		}
-+
-+		dpi->pins_gpio = pinctrl_lookup_state(dpi->pinctrl,
-+						      "gpiomode");
-+		if (IS_ERR(dpi->pins_gpio)) {
-+			dev_err(&pdev->dev, "Cannot find pinctrl gpiomode!\n");
-+			return PTR_ERR(dpi->pins_gpio);
-+		}
-+
-+		pinctrl_select_state(dpi->pinctrl, dpi->pins_gpio);
-+
-+		dpi->pins_dpi = pinctrl_lookup_state(dpi->pinctrl, "dpimode");
-+		if (IS_ERR(dpi->pins_dpi)) {
-+			dev_err(&pdev->dev, "Cannot find pinctrl dpimode!\n");
-+			return PTR_ERR(dpi->pins_dpi);
-+		}
-+	}
- 
- 	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	dpi->regs = devm_ioremap_resource(dev, mem);
+Jitao Shi (4):
+  dt-bindings: display: mediatek: update dpi  supported chips
+  drm/mediatek: dpi dual edge support
+  drm/mediatek: add mt8183 dpi clock factor
+  drm/mediatek: control dpi pins dpi or gpio mode in on or off
+
+ .../display/mediatek/mediatek,dpi.txt         | 11 +++
+ drivers/gpu/drm/mediatek/mtk_dpi.c            | 71 ++++++++++++++++++-
+ 2 files changed, 80 insertions(+), 2 deletions(-)
+
 -- 
 2.21.0
 
