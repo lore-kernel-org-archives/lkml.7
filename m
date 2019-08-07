@@ -2,232 +2,111 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBAF9C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:24:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 366D8C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:25:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B771521BE3
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:24:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JJ1xq3x9";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="OeQj1mMX"
+	by mail.kernel.org (Postfix) with ESMTP id 12A7421BE3
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:25:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388241AbfHGNY4 (ORCPT
+        id S2388267AbfHGNZv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 09:24:56 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:58320 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387982AbfHGNY4 (ORCPT
+        Wed, 7 Aug 2019 09:25:51 -0400
+Received: from skedge04.snt-world.com ([91.208.41.69]:56622 "EHLO
+        skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387981AbfHGNZu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 09:24:56 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 1225060CED; Wed,  7 Aug 2019 13:24:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1565184295;
-        bh=ThQJx0ARZjDaOIz+obf+3CgCKl8jAD/dWHE6IoU8QP4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JJ1xq3x9SYSa2IAvTkmJHm/ez/L1Nu1SzbQO2zSdc+nvWxkFkdRdXoPzwGJkTly1F
-         IvnyCmfVSZaw1UOSQRnbJneAaPmDkkSzUS/L+zXPAFQoSbWlwywSXyL8lbmflEWxlB
-         NyUnBVf2t4jdh+Ecyotbv6mEcflyL1iiD0b76Fyg=
-Received: from codeaurora.org (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        Wed, 7 Aug 2019 09:25:50 -0400
+Received: from sntmail11s.snt-is.com (unknown [10.203.32.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: stummala@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4640360CED;
-        Wed,  7 Aug 2019 13:24:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1565184294;
-        bh=ThQJx0ARZjDaOIz+obf+3CgCKl8jAD/dWHE6IoU8QP4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OeQj1mMX562gBzXaD6WONcJulpStikWTnNw/Cb5dOGGyj9ylVtF6Va2FzCeKbp5FP
-         WpYGCvLRe0tT6jFR5z7cHZ0jMc+mU/MDlwXMdsW2H5s2bGLc9QRUz2mhCuHt9FvBmX
-         4+Yf/TPm/3KETp+klmaKjUTwIGyKyS1XnYxtS82c=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4640360CED
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
-Date:   Wed, 7 Aug 2019 18:54:48 +0530
-From:   Sahitya Tummala <stummala@codeaurora.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     Jaegeuk Kim <jaegeuk@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, stummala@codeaurora.org
-Subject: Re: [PATCH v3] f2fs: Fix indefinite loop in f2fs_gc()
-Message-ID: <20190807132448.GK8289@codeaurora.org>
-References: <1565167927-23305-1-git-send-email-stummala@codeaurora.org>
- <196c97bf-e846-794f-f4fe-0d1523a74575@huawei.com>
+        by skedge04.snt-world.com (Postfix) with ESMTPS id 85EE367F489;
+        Wed,  7 Aug 2019 15:25:46 +0200 (CEST)
+Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail11s.snt-is.com
+ (10.203.32.181) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Wed, 7 Aug 2019
+ 15:25:46 +0200
+Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
+ sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
+ 15.01.1713.004; Wed, 7 Aug 2019 15:25:46 +0200
+From:   Schrempf Frieder <frieder.schrempf@kontron.de>
+To:     Alexander Stein <alexander.stein@mailbox.org>
+CC:     Wolfram Sang <wsa@the-dreams.de>, Jean Delvare <jdelvare@suse.de>,
+        "Jarkko Nikula" <jarkko.nikula@linux.intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Juergen Fitschen <jfi@ssv-embedded.de>,
+        Ajay Gupta <ajayg@nvidia.com>,
+        Shreesha Rajashekar <shreesha.rajashekar@broadcom.com>,
+        Vignesh R <vigneshr@ti.com>, Elie Morisse <syniurge@gmail.com>,
+        Stefan Roese <sr@denx.de>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] i2c: imx: Allow the driver to be built for ARM64 SoCs
+ such as i.MX8M
+Thread-Topic: [PATCH] i2c: imx: Allow the driver to be built for ARM64 SoCs
+ such as i.MX8M
+Thread-Index: AQHVTRVrY8XY4w2l80SM63DeuQxTsKbvdjUAgAAVVYA=
+Date:   Wed, 7 Aug 2019 13:25:45 +0000
+Message-ID: <552fae9f-a28d-3dd4-c169-ab860180e794@kontron.de>
+References: <20190807114332.13312-1-frieder.schrempf@kontron.de>
+ <2445092.UF1PKDTzN1@ws-140106>
+In-Reply-To: <2445092.UF1PKDTzN1@ws-140106>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.25.9.193]
+x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F7B35F894732B74CB18AF4C07EB70188@snt-world.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <196c97bf-e846-794f-f4fe-0d1523a74575@huawei.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+X-SnT-MailScanner-Information: Please contact the ISP for more information
+X-SnT-MailScanner-ID: 85EE367F489.AFBBA
+X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
+X-SnT-MailScanner-SpamCheck: 
+X-SnT-MailScanner-From: frieder.schrempf@kontron.de
+X-SnT-MailScanner-To: ajayg@nvidia.com, alexander.stein@mailbox.org,
+        f.fainelli@gmail.com, jarkko.nikula@linux.intel.com,
+        jdelvare@suse.de, jfi@ssv-embedded.de, kdasu.kdev@gmail.com,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        paul@crapouillou.net, shreesha.rajashekar@broadcom.com, sr@denx.de,
+        syniurge@gmail.com, vigneshr@ti.com, wsa@the-dreams.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chao,
-
-On Wed, Aug 07, 2019 at 05:29:24PM +0800, Chao Yu wrote:
-> On 2019/8/7 16:52, Sahitya Tummala wrote:
-> > Policy - Foreground GC, LFS and greedy GC mode.
-> > 
-> > Under this policy, f2fs_gc() loops forever to GC as it doesn't have
-> > enough free segements to proceed and thus it keeps calling gc_more
-> > for the same victim segment.  This can happen if the selected victim
-> > segment could not be GC'd due to failed blkaddr validity check i.e.
-> > is_alive() returns false for the blocks set in current validity map.
-> > 
-> > Fix this by keeping track of such invalid segments and skip those
-> > segments for selection in get_victim_by_default() to avoid endless
-> > GC loop under such error scenarios.
-> > 
-> > Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-> > ---
-> > v3: address Chao's comments and also add logic to clear invalid_segmap
-> 
-> Hi Sahitya,
-> 
-> I meant we could cover all invalid_segmap related codes w/ CONFIG_F2FS_CHECK_FS
-> in upstream code, like we did for sit_info.sit_bitmap_mir. In private code
-> (qualconn or others), if this issue happens frequently, we can enable it by
-> default before it is fixed.
-> 
-> How do you think?
-> 
-Sure, we can do it that way.
-
-> Btw, still no fsck log on broken image?
->
-I have requested customers to provide this log next time when the issue is
-reproduced again. I will update you once I get the log.
-
-Thanks,
-
-> Thanks,
-> 
-> > 
-> >  fs/f2fs/gc.c      | 25 +++++++++++++++++++++++--
-> >  fs/f2fs/segment.c | 10 +++++++++-
-> >  fs/f2fs/segment.h |  3 +++
-> >  3 files changed, 35 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
-> > index 8974672..f7b9602 100644
-> > --- a/fs/f2fs/gc.c
-> > +++ b/fs/f2fs/gc.c
-> > @@ -382,6 +382,14 @@ static int get_victim_by_default(struct f2fs_sb_info *sbi,
-> >  			nsearched++;
-> >  		}
-> >  
-> > +		/*
-> > +		 * skip selecting the invalid segno (that is failed due to block
-> > +		 * validity check failure during GC) to avoid endless GC loop in
-> > +		 * such cases.
-> > +		 */
-> > +		if (test_bit(segno, sm->invalid_segmap))
-> > +			goto next;
-> > +
-> >  		secno = GET_SEC_FROM_SEG(sbi, segno);
-> >  
-> >  		if (sec_usage_check(sbi, secno))
-> > @@ -602,8 +610,13 @@ static bool is_alive(struct f2fs_sb_info *sbi, struct f2fs_summary *sum,
-> >  {
-> >  	struct page *node_page;
-> >  	nid_t nid;
-> > -	unsigned int ofs_in_node;
-> > +	unsigned int ofs_in_node, segno;
-> >  	block_t source_blkaddr;
-> > +	unsigned long offset;
-> > +	struct sit_info *sit_i = SIT_I(sbi);
-> > +
-> > +	segno = GET_SEGNO(sbi, blkaddr);
-> > +	offset = GET_BLKOFF_FROM_SEG0(sbi, blkaddr);
-> >  
-> >  	nid = le32_to_cpu(sum->nid);
-> >  	ofs_in_node = le16_to_cpu(sum->ofs_in_node);
-> > @@ -627,8 +640,16 @@ static bool is_alive(struct f2fs_sb_info *sbi, struct f2fs_summary *sum,
-> >  	source_blkaddr = datablock_addr(NULL, node_page, ofs_in_node);
-> >  	f2fs_put_page(node_page, 1);
-> >  
-> > -	if (source_blkaddr != blkaddr)
-> > +	if (source_blkaddr != blkaddr) {
-> > +		if (unlikely(check_valid_map(sbi, segno, offset))) {
-> > +			if (!test_and_set_bit(segno, sit_i->invalid_segmap)) {
-> > +				f2fs_err(sbi, "mismatched blkaddr %u (source_blkaddr %u) in seg %u\n",
-> > +						blkaddr, source_blkaddr, segno);
-> > +				f2fs_bug_on(sbi, 1);
-> > +			}
-> > +		}
-> >  		return false;
-> > +	}
-> >  	return true;
-> >  }
-> >  
-> > diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> > index a661ac3..c3ba9e7 100644
-> > --- a/fs/f2fs/segment.c
-> > +++ b/fs/f2fs/segment.c
-> > @@ -806,6 +806,7 @@ static void __remove_dirty_segment(struct f2fs_sb_info *sbi, unsigned int segno,
-> >  		enum dirty_type dirty_type)
-> >  {
-> >  	struct dirty_seglist_info *dirty_i = DIRTY_I(sbi);
-> > +	struct sit_info *sit_i = SIT_I(sbi);
-> >  
-> >  	if (test_and_clear_bit(segno, dirty_i->dirty_segmap[dirty_type]))
-> >  		dirty_i->nr_dirty[dirty_type]--;
-> > @@ -817,9 +818,11 @@ static void __remove_dirty_segment(struct f2fs_sb_info *sbi, unsigned int segno,
-> >  		if (test_and_clear_bit(segno, dirty_i->dirty_segmap[t]))
-> >  			dirty_i->nr_dirty[t]--;
-> >  
-> > -		if (get_valid_blocks(sbi, segno, true) == 0)
-> > +		if (get_valid_blocks(sbi, segno, true) == 0) {
-> >  			clear_bit(GET_SEC_FROM_SEG(sbi, segno),
-> >  						dirty_i->victim_secmap);
-> > +			clear_bit(segno, sit_i->invalid_segmap);
-> > +		}
-> >  	}
-> >  }
-> >  
-> > @@ -4017,6 +4020,10 @@ static int build_sit_info(struct f2fs_sb_info *sbi)
-> >  		return -ENOMEM;
-> >  #endif
-> >  
-> > +	sit_i->invalid_segmap = f2fs_kvzalloc(sbi, bitmap_size, GFP_KERNEL);
-> > +	if (!sit_i->invalid_segmap)
-> > +		return -ENOMEM;
-> > +
-> >  	/* init SIT information */
-> >  	sit_i->s_ops = &default_salloc_ops;
-> >  
-> > @@ -4518,6 +4525,7 @@ static void destroy_sit_info(struct f2fs_sb_info *sbi)
-> >  #ifdef CONFIG_F2FS_CHECK_FS
-> >  	kvfree(sit_i->sit_bitmap_mir);
-> >  #endif
-> > +	kvfree(sit_i->invalid_segmap);
-> >  	kvfree(sit_i);
-> >  }
-> >  
-> > diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
-> > index b746028..3918155c 100644
-> > --- a/fs/f2fs/segment.h
-> > +++ b/fs/f2fs/segment.h
-> > @@ -246,6 +246,9 @@ struct sit_info {
-> >  	unsigned long long min_mtime;		/* min. modification time */
-> >  	unsigned long long max_mtime;		/* max. modification time */
-> >  
-> > +	/* bitmap of segments to be ignored by GC in case of errors */
-> > +	unsigned long *invalid_segmap;
-> > +
-> >  	unsigned int last_victim[MAX_GC_POLICY]; /* last victim segment # */
-> >  };
-> >  
-> > 
-
--- 
---
-Sent by a consultant of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
+T24gMDcuMDguMTkgMTQ6MDksIEFsZXhhbmRlciBTdGVpbiB3cm90ZToNCj4gT24gV2VkbmVzZGF5
+LCBBdWd1c3QgNywgMjAxOSwgMTo0NDowNiBQTSBDRVNUIFNjaHJlbXBmIEZyaWVkZXIgd3JvdGU6
+DQo+PiBGcm9tOiBGcmllZGVyIFNjaHJlbXBmIDxmcmllZGVyLnNjaHJlbXBmQGtvbnRyb24uZGU+
+DQo+Pg0KPj4gVGhlIGlteCBJMkMgY29udHJvbGxlciBpcyB1c2VkIGluIHNvbWUgQVJNNjQgU29D
+cyBzdWNoIGFzIGkuTVg4TS4NCj4+IFRvIG1ha2UgdXNlIG9mIGl0LCBhcHBlbmQgQVJNNjQgdG8g
+dGhlIGxpc3Qgb2YgZGVwZW5kZW5jaWVzLg0KPj4NCj4+IFNpZ25lZC1vZmYtYnk6IEZyaWVkZXIg
+U2NocmVtcGYgPGZyaWVkZXIuc2NocmVtcGZAa29udHJvbi5kZT4NCj4+IC0tLQ0KPj4gICBkcml2
+ZXJzL2kyYy9idXNzZXMvS2NvbmZpZyB8IDIgKy0NCj4+ICAgMSBmaWxlIGNoYW5nZWQsIDEgaW5z
+ZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pDQo+Pg0KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvaTJj
+L2J1c3Nlcy9LY29uZmlnIGIvZHJpdmVycy9pMmMvYnVzc2VzL0tjb25maWcNCj4+IGluZGV4IDA5
+MzY3ZmMwMTRjMy4uNDZiNjUzNjIxNTEzIDEwMDY0NA0KPj4gLS0tIGEvZHJpdmVycy9pMmMvYnVz
+c2VzL0tjb25maWcNCj4+ICsrKyBiL2RyaXZlcnMvaTJjL2J1c3Nlcy9LY29uZmlnDQo+PiBAQCAt
+NjY0LDcgKzY2NCw3IEBAIGNvbmZpZyBJMkNfSU1HDQo+PiAgIA0KPj4gICBjb25maWcgSTJDX0lN
+WA0KPj4gICAJdHJpc3RhdGUgIklNWCBJMkMgaW50ZXJmYWNlIg0KPj4gLQlkZXBlbmRzIG9uIEFS
+Q0hfTVhDIHx8IEFSQ0hfTEFZRVJTQ0FQRSB8fCBDT0xERklSRQ0KPj4gKwlkZXBlbmRzIG9uIEFS
+Q0hfTVhDIHx8IEFSQ0hfTEFZRVJTQ0FQRSB8fCBDT0xERklSRSB8fCBBUk02NA0KPiANCj4gSSBk
+b24ndCB0aGluayB0aGlzIHNob3VsZCBiZSBuZWNlc3NhcnkgYXQgYWxsIGFzIEFSQ0hfTVhDIGlz
+IGFsc28gYXZhaWxhYmxlIGZvciBhcm02NCwgc2VlIGh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHVi
+L3NjbS9saW51eC9rZXJuZWwvZ2l0L3RvcnZhbGRzL2xpbnV4LmdpdC90cmVlL2FyY2gvYXJtNjQv
+S2NvbmZpZy5wbGF0Zm9ybXMjbjE2Nw0KPiBJIHJhdGhlciB3b25kZXIgd2h5IEFSQ0hfTVhDIGlz
+IG5vdCBzZXQuIFNhbWUgZm9yIGZlYy4NCg0KWW91J3JlIHJpZ2h0IG9mIGNvdXJzZS4gSSBzb21l
+aG93IG1hbmFnZWQgdG8gbWVzcyB1cCBteSBkZWZjb25maWcuIEkgDQpzdGFydGVkIG92ZXIgd2l0
+aCBhIGNsZWFuIGNvbmZpZyBmcm9tIGFyY2gvYXJtNjQvY29uZmlncy9kZWZjb25maWcgYW5kIA0K
+ZXZlcnl0aGluZyBzZWVtcyBmaW5lIG5vdy4gU29ycnkgZm9yIHRoZSBub2lzZS4NCg0KPiANCj4+
+ICAgCWhlbHANCj4+ICAgCSAgU2F5IFkgaGVyZSBpZiB5b3Ugd2FudCB0byB1c2UgdGhlIElJQyBi
+dXMgY29udHJvbGxlciBvbg0KPj4gICAJICB0aGUgRnJlZXNjYWxlIGkuTVgvTVhDLCBMYXllcnNj
+YXBlIG9yIENvbGRGaXJlIHByb2Nlc3NvcnMuDQo+Pg0KPiANCj4gDQo+IA0KPiA=
