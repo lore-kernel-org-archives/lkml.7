@@ -6,71 +6,92 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26D69C32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 11:51:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31663C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 11:53:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3DB121BF6
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 11:51:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1321B21922
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 11:53:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729731AbfHGLvf (ORCPT
+        id S1729761AbfHGLxl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 07:51:35 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43470 "EHLO mx1.redhat.com"
+        Wed, 7 Aug 2019 07:53:41 -0400
+Received: from foss.arm.com ([217.140.110.172]:47138 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726873AbfHGLvf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 07:51:35 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0FFEA46660;
-        Wed,  7 Aug 2019 11:51:35 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-144.ams2.redhat.com [10.36.116.144])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A433460852;
-        Wed,  7 Aug 2019 11:51:34 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 85AE516E32; Wed,  7 Aug 2019 13:51:33 +0200 (CEST)
-Date:   Wed, 7 Aug 2019 13:51:33 +0200
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/3] drm: add gem ttm helpers
-Message-ID: <20190807115133.gkr2svqlvq366mub@sirius.home.kraxel.org>
-References: <20190806133454.8254-1-kraxel@redhat.com>
- <20190806133454.8254-2-kraxel@redhat.com>
- <20190806135426.GA7444@phenom.ffwll.local>
- <20190807072654.arqvx37p4yxhegcu@sirius.home.kraxel.org>
- <CAKMK7uFyKd71w4H8nFk=WPSHL3KMwQ6kLwAMXTd_TAkrkJ++KQ@mail.gmail.com>
- <20190807103649.aedmac63eop6ktlk@sirius.home.kraxel.org>
- <CAKMK7uHNXjSsuUTkxzVbeDNP4ESFBObHZe6xxJYEHE1-QyKqhQ@mail.gmail.com>
+        id S1726773AbfHGLxk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 07:53:40 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1CF6B28;
+        Wed,  7 Aug 2019 04:53:40 -0700 (PDT)
+Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4B3393F575;
+        Wed,  7 Aug 2019 04:53:39 -0700 (PDT)
+Subject: Re: [PATCH 4.19] Revert "initramfs: free initrd memory if opening
+ /initrd.image fails"
+To:     Stephen Boyd <swboyd@chromium.org>, Sasha Levin <sashal@kernel.org>
+Cc:     stable@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Christoph Hellwig <hch@lst.de>
+References: <20190806175940.156412-1-swboyd@chromium.org>
+ <20190806204752.GG17747@sasha-vm>
+ <5d49f2ee.1c69fb81.881ec.1cf7@mx.google.com>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <7d6ad3a2-8b73-a8f8-a9f7-7ffe72e7eb97@arm.com>
+Date:   Wed, 7 Aug 2019 12:53:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKMK7uHNXjSsuUTkxzVbeDNP4ESFBObHZe6xxJYEHE1-QyKqhQ@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Wed, 07 Aug 2019 11:51:35 +0000 (UTC)
+In-Reply-To: <5d49f2ee.1c69fb81.881ec.1cf7@mx.google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  Hi,
+On 06/08/2019 22:36, Stephen Boyd wrote:
+> Quoting Sasha Levin (2019-08-06 13:47:52)
+>> On Tue, Aug 06, 2019 at 10:59:40AM -0700, Stephen Boyd wrote:
+>>> This reverts commit 25511676362d8f7d4b8805730a3d29484ceab1ec in the 4.19
+>>> stable trees. From what I can tell this commit doesn't do anything to
+>>> improve the situation, mostly just reordering code to call free_initrd()
+>> >from one place instead of many. In doing that, it causes free_initrd()
+>>> to be called even in the case when there isn't an initrd present. That
+>>> leads to virtual memory bugs that manifest on arm64 devices.
+>>>
+>>> The fix has been merged upstream in commit 5d59aa8f9ce9 ("initramfs:
+>>> don't free a non-existent initrd"), but backporting that here is more
+>>> complicated because the patch is stacked upon this patch being reverted
+>>> along with more patches that rewrites the logic in this area.
+>>>
+>>> Let's just revert the patch from the stable tree instead of trying to
+>>> backport a collection of fixes to get the final fix from upstream.
+>>
+>> The only dependency for taking the fix, 5d59aa8f9ce9, into 4.19 is
+>> 23091e28735 ("initramfs: cleanup initrd freeing") which is not too
+>> scary.
+>>
+>> Is it the case that 25511676362d8 shouldn't have been backported to 4.19
+>> for some reason? If it fixes something on 4.19, I think it's better to
+>> take the dependency and the fix instead of reverting.
+>>
+> 
+> Ah thanks for taking a second look. I missed that we call free_initrd()
+> in one more case when unpack_to_rootfs() fails and goes into the else
+> statement. I suppose bringing in 23091e28735 ("initramfs: cleanup initrd
+> freeing") in addition to 5d59aa8f9ce9 works just as well, but I'll defer
+> to the persons working in this area.
+> 
 
-> > > > I don't think so.  drm_gem_dumb_map_offset() calls
-> > > > drm_gem_create_mmap_offset(), which I think is not correct for ttm
-> > > > objects because ttm_bo_init() handles vma_node initialization.
+25511676362d 'fixes' a (one-off) memory leak if the initrd setup is
+misconfigured. So not something that is likely to affect many systems,
+and a reasonably minor bug. But obviously that commit introduced a more
+serious regression which my later patch fixed.
 
-> Ok I looked again, and your ttm version seems to exactly match
-> drm_gem_dumb_map_offset(),
+As Sasha has pointed out there is only one extra dependency if you want
+to backport my fix.
 
-No.  The difference outlined above is still there.  See also v2 which
-adds an comment saying so.
+So I'm happy either way, the original patch was really more of a cleanup
+- I'm sorry I missed it when this was being picked up for stable!
 
-cheers,
-  Gerd
-
+Steve
