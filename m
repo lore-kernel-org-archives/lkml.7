@@ -4,87 +4,103 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C919AC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 11:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C932C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 11:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DAB721BF6
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 11:43:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0921A21E6A
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 11:44:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387763AbfHGLnZ (ORCPT
+        id S2387784AbfHGLoK convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 07:43:25 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52036 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726873AbfHGLnP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 07:43:15 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id CDF10AF25;
-        Wed,  7 Aug 2019 11:43:14 +0000 (UTC)
-From:   Jiri Slaby <jslaby@suse.cz>
-To:     axboe@kernel.dk
-Cc:     linux-kernel@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
-        linux-ide@vger.kernel.org,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v2 4/4] ata: sata_mv, avoid trigerrable BUG_ON
-Date:   Wed,  7 Aug 2019 13:43:12 +0200
-Message-Id: <20190807114312.20883-4-jslaby@suse.cz>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190807114312.20883-1-jslaby@suse.cz>
-References: <20190807114312.20883-1-jslaby@suse.cz>
+        Wed, 7 Aug 2019 07:44:10 -0400
+Received: from skedge04.snt-world.com ([91.208.41.69]:60162 "EHLO
+        skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726873AbfHGLoK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 07:44:10 -0400
+Received: from sntmail14r.snt-is.com (unknown [10.203.32.184])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by skedge04.snt-world.com (Postfix) with ESMTPS id 5673467A8CC;
+        Wed,  7 Aug 2019 13:44:07 +0200 (CEST)
+Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail14r.snt-is.com
+ (10.203.32.184) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Wed, 7 Aug 2019
+ 13:44:06 +0200
+Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
+ sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
+ 15.01.1713.004; Wed, 7 Aug 2019 13:44:06 +0200
+From:   Schrempf Frieder <frieder.schrempf@kontron.de>
+To:     Wolfram Sang <wsa@the-dreams.de>, Jean Delvare <jdelvare@suse.de>,
+        "Jarkko Nikula" <jarkko.nikula@linux.intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Juergen Fitschen <jfi@ssv-embedded.de>,
+        Ajay Gupta <ajayg@nvidia.com>,
+        Shreesha Rajashekar <shreesha.rajashekar@broadcom.com>,
+        Vignesh R <vigneshr@ti.com>, Elie Morisse <syniurge@gmail.com>,
+        Stefan Roese <sr@denx.de>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        Schrempf Frieder <frieder.schrempf@kontron.de>
+CC:     "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH] i2c: imx: Allow the driver to be built for ARM64 SoCs such as
+ i.MX8M
+Thread-Topic: [PATCH] i2c: imx: Allow the driver to be built for ARM64 SoCs
+ such as i.MX8M
+Thread-Index: AQHVTRVrY8XY4w2l80SM63DeuQxTsA==
+Date:   Wed, 7 Aug 2019 11:44:06 +0000
+Message-ID: <20190807114332.13312-1-frieder.schrempf@kontron.de>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [172.25.9.193]
+x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-SnT-MailScanner-Information: Please contact the ISP for more information
+X-SnT-MailScanner-ID: 5673467A8CC.AEADE
+X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
+X-SnT-MailScanner-SpamCheck: 
+X-SnT-MailScanner-From: frieder.schrempf@kontron.de
+X-SnT-MailScanner-To: ajayg@nvidia.com, f.fainelli@gmail.com,
+        jarkko.nikula@linux.intel.com, jdelvare@suse.de, jfi@ssv-embedded.de,
+        kdasu.kdev@gmail.com, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, paul@crapouillou.net,
+        shreesha.rajashekar@broadcom.com, sr@denx.de, syniurge@gmail.com,
+        vigneshr@ti.com, wsa@the-dreams.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are several reports that the BUG_ON on unsupported command in
-mv_qc_prep can be triggered under some circumstances:
-https://bugzilla.suse.com/show_bug.cgi?id=1110252
-https://serverfault.com/questions/888897/raid-problems-after-power-outage
-https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1652185
-https://bugs.centos.org/view.php?id=14998
+From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-Let sata_mv handle the failure gracefully: warn about that incl. the
-failed command number and return an AC_ERR_INVALID error. We can do that
-now thanks to the previous patch.
+The imx I2C controller is used in some ARM64 SoCs such as i.MX8M.
+To make use of it, append ARM64 to the list of dependencies.
 
-Remove also the long-standing FIXME.
-
-[v2] use %.2x as commands are defined as hexa.
-
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: linux-ide@vger.kernel.org
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
 ---
- drivers/ata/sata_mv.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ drivers/i2c/busses/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/ata/sata_mv.c b/drivers/ata/sata_mv.c
-index 084eefacc5db..3f181e1b9eba 100644
---- a/drivers/ata/sata_mv.c
-+++ b/drivers/ata/sata_mv.c
-@@ -2098,12 +2098,10 @@ static enum ata_completion_errors mv_qc_prep(struct ata_queued_cmd *qc)
- 		 * non-NCQ mode are: [RW] STREAM DMA and W DMA FUA EXT, none
- 		 * of which are defined/used by Linux.  If we get here, this
- 		 * driver needs work.
--		 *
--		 * FIXME: modify libata to give qc_prep a return value and
--		 * return error here.
- 		 */
--		BUG_ON(tf->command);
--		break;
-+		ata_port_err(ap, "%s: unsupported command: %.2x\n", __func__,
-+				tf->command);
-+		return AC_ERR_INVALID;
- 	}
- 	mv_crqb_pack_cmd(cw++, tf->nsect, ATA_REG_NSECT, 0);
- 	mv_crqb_pack_cmd(cw++, tf->hob_lbal, ATA_REG_LBAL, 0);
+diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+index 09367fc014c3..46b653621513 100644
+--- a/drivers/i2c/busses/Kconfig
++++ b/drivers/i2c/busses/Kconfig
+@@ -664,7 +664,7 @@ config I2C_IMG
+ 
+ config I2C_IMX
+ 	tristate "IMX I2C interface"
+-	depends on ARCH_MXC || ARCH_LAYERSCAPE || COLDFIRE
++	depends on ARCH_MXC || ARCH_LAYERSCAPE || COLDFIRE || ARM64
+ 	help
+ 	  Say Y here if you want to use the IIC bus controller on
+ 	  the Freescale i.MX/MXC, Layerscape or ColdFire processors.
 -- 
-2.22.0
-
+2.17.1
