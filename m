@@ -2,342 +2,203 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C184C32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 10:34:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEEDDC32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 10:35:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0940D2086D
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 10:34:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADA7E2086D
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 10:35:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727283AbfHGKeu (ORCPT
+        id S1728211AbfHGKfy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 06:34:50 -0400
-Received: from mga05.intel.com ([192.55.52.43]:11198 "EHLO mga05.intel.com"
+        Wed, 7 Aug 2019 06:35:54 -0400
+Received: from foss.arm.com ([217.140.110.172]:46188 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726788AbfHGKeu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 06:34:50 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Aug 2019 03:34:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,357,1559545200"; 
-   d="scan'208";a="203139598"
-Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
-  by fmsmga002.fm.intel.com with ESMTP; 07 Aug 2019 03:34:45 -0700
-From:   Felipe Balbi <felipe.balbi@linux.intel.com>
-To:     Pawel Laszczak <pawell@cadence.com>,
-        "devicetree\@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc:     "gregkh\@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-usb\@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "hdegoede\@redhat.com" <hdegoede@redhat.com>,
-        "heikki.krogerus\@linux.intel.com" <heikki.krogerus@linux.intel.com>,
-        "robh+dt\@kernel.org" <robh+dt@kernel.org>,
-        "rogerq\@ti.com" <rogerq@ti.com>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jbergsagel\@ti.com" <jbergsagel@ti.com>,
-        "nsekhar\@ti.com" <nsekhar@ti.com>, "nm\@ti.com" <nm@ti.com>,
-        Suresh Punnoose <sureshp@cadence.com>,
-        "peter.chen\@nxp.com" <peter.chen@nxp.com>,
-        Jayshri Dajiram Pawar <jpawar@cadence.com>,
-        Rahul Kumar <kurahul@cadence.com>
-Subject: RE: [PATCH v9 5/6] usb:cdns3 Add Cadence USB3 DRD Driver
-In-Reply-To: <BYAPR07MB4709152CB29B6B027ABEB688DDCF0@BYAPR07MB4709.namprd07.prod.outlook.com>
-References: <1562324238-16655-1-git-send-email-pawell@cadence.com> <1562324238-16655-6-git-send-email-pawell@cadence.com> <877e8tm25r.fsf@linux.intel.com> <BYAPR07MB4709152CB29B6B027ABEB688DDCF0@BYAPR07MB4709.namprd07.prod.outlook.com>
-Date:   Wed, 07 Aug 2019 13:34:45 +0300
-Message-ID: <8736idnu0q.fsf@gmail.com>
+        id S1726837AbfHGKfy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 06:35:54 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5050B1570;
+        Wed,  7 Aug 2019 03:35:53 -0700 (PDT)
+Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6AC853F575;
+        Wed,  7 Aug 2019 03:35:51 -0700 (PDT)
+Date:   Wed, 7 Aug 2019 11:35:49 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     linux-arm-kernel@lists.infradead.org, Peng Fan <peng.fan@nxp.com>,
+        linux-kernel@vger.kernel.org,
+        Bo Zhang <bozhang.zhang@broadcom.com>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        Volodymyr Babchuk <volodymyr_babchuk@epam.com>,
+        Gaku Inami <gaku.inami.xh@renesas.com>,
+        aidapala@qti.qualcomm.com, pajay@qti.qualcomm.com,
+        Etienne Carriere <etienne.carriere@linaro.org>,
+        Souvik Chakravarty <Souvik.Chakravarty@arm.com>,
+        wesleys@xilinx.com, Felix Burton <fburton@xilinx.com>,
+        Saeed Nowshadi <saeed.nowshadi@xilinx.com>
+Subject: Re: [PATCH v2 4/5] firmware: arm_scmi: Add RESET protocol in SCMI
+ v2.0
+Message-ID: <20190807103549.GI16546@e107155-lin>
+References: <20190806170208.6787-1-sudeep.holla@arm.com>
+ <20190806170208.6787-5-sudeep.holla@arm.com>
+ <1565165870.5048.4.camel@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1565165870.5048.4.camel@pengutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Aug 07, 2019 at 10:17:50AM +0200, Philipp Zabel wrote:
+> On Tue, 2019-08-06 at 18:02 +0100, Sudeep Holla wrote:
+> > SCMIv2.0 adds a new Reset Management Protocol to manage various reset
+> > states a given device or domain can enter. Device(s) that can be
+> > collectively reset through a common reset signal constitute a reset
+> > domain for the firmware.
+> > 
+> > A reset domain can be reset autonomously or explicitly through assertion
+> > and de-assertion of the signal. When autonomous reset is chosen, the
+> > firmware is responsible for taking the necessary steps to reset the
+> > domain and to subsequently bring it out of reset. When explicit reset is
+> > chosen, the caller has to specifically assert and then de-assert the
+> > reset signal by issuing two separate RESET commands.
+> > 
+> > Add the basic SCMI reset infrastructure that can be used by Linux
+> > reset controller driver.
+> > 
+> > Cc: Philipp Zabel <p.zabel@pengutronix.de>
+> > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> > ---
+> >  drivers/firmware/arm_scmi/Makefile |   2 +-
+> >  drivers/firmware/arm_scmi/reset.c  | 231 +++++++++++++++++++++++++++++
+> >  include/linux/scmi_protocol.h      |  26 ++++
+> >  3 files changed, 258 insertions(+), 1 deletion(-)
+> >  create mode 100644 drivers/firmware/arm_scmi/reset.c
+> > 
+> > diff --git a/drivers/firmware/arm_scmi/Makefile b/drivers/firmware/arm_scmi/Makefile
+> > index c47d28d556b6..5f298f00a82e 100644
+> > --- a/drivers/firmware/arm_scmi/Makefile
+> > +++ b/drivers/firmware/arm_scmi/Makefile
+> > @@ -2,5 +2,5 @@
+> >  obj-y	= scmi-bus.o scmi-driver.o scmi-protocols.o
+> >  scmi-bus-y = bus.o
+> >  scmi-driver-y = driver.o
+> > -scmi-protocols-y = base.o clock.o perf.o power.o sensors.o
+> > +scmi-protocols-y = base.o clock.o perf.o power.o reset.o sensors.o
+> >  obj-$(CONFIG_ARM_SCMI_POWER_DOMAIN) += scmi_pm_domain.o
+> > diff --git a/drivers/firmware/arm_scmi/reset.c b/drivers/firmware/arm_scmi/reset.c
+> > new file mode 100644
+> > index 000000000000..11cb8b5ccf34
+> > --- /dev/null
+> > +++ b/drivers/firmware/arm_scmi/reset.c
+> > @@ -0,0 +1,231 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * System Control and Management Interface (SCMI) Reset Protocol
+> > + *
+> > + * Copyright (C) 2019 ARM Ltd.
+> > + */
+> > +
+> > +#include "common.h"
+> > +
+> > +enum scmi_reset_protocol_cmd {
+> > +	RESET_DOMAIN_ATTRIBUTES = 0x3,
+> > +	RESET = 0x4,
+> > +	RESET_NOTIFY = 0x5,
+> > +};
+> > +
+> > +enum scmi_reset_protocol_notify {
+> > +	RESET_ISSUED = 0x0,
+> > +};
+> > +
+> > +#define NUM_RESET_DOMAIN_MASK	0xffff
+> > +#define RESET_NOTIFY_ENABLE	BIT(0)
+> > +
+> > +struct scmi_msg_resp_reset_domain_attributes {
+> > +	__le32 attributes;
+> > +#define SUPPORTS_ASYNC_RESET(x)		((x) & BIT(31))
+> > +#define SUPPORTS_NOTIFY_RESET(x)	((x) & BIT(30))
+> > +	__le32 latency;
+> > +	    u8 name[SCMI_MAX_STR_SIZE];
+> > +};
+> > +
+> > +struct scmi_msg_reset_domain_reset {
+> > +	__le32 domain_id;
+> > +	__le32 flags;
+> > +#define AUTONOMOUS_RESET	BIT(0)
+> > +#define EXPLICIT_RESET_ASSERT	BIT(1)
+> > +#define ASYNCHRONOUS_RESET	BIT(2)
+> > +	__le32 reset_state;
+> > +#define ARCH_RESET_TYPE		BIT(31)
+> > +#define COLD_RESET_STATE	BIT(0)
+> > +#define ARCH_COLD_RESET		(ARCH_RESET_TYPE | COLD_RESET_STATE)
+> > +};
+> > +
+> > +struct reset_dom_info {
+> > +	bool async_reset;
+> > +	bool reset_notify;
+> > +	u32 latency_us;
+> > +	char name[SCMI_MAX_STR_SIZE];
+> > +};
+> > +
+> > +struct scmi_reset_info {
+> > +	int num_domains;
+> > +	struct reset_dom_info *dom_info;
+> > +};
+> > +
+> > +static int scmi_reset_attributes_get(const struct scmi_handle *handle,
+> > +				     struct scmi_reset_info *pi)
+> > +{
+> > +	int ret;
+> > +	struct scmi_xfer *t;
+> > +	u32 *attr;
+> > +
+> > +	ret = scmi_xfer_get_init(handle, PROTOCOL_ATTRIBUTES,
+> > +				 SCMI_PROTOCOL_RESET, 0, sizeof(*attr), &t);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	attr = t->rx.buf;
+> > +
+> > +	ret = scmi_do_xfer(handle, t);
+> > +	if (!ret)
+> > +		pi->num_domains = le32_to_cpu(*attr) & NUM_RESET_DOMAIN_MASK;
+> > +
+> > +	scmi_xfer_put(handle, t);
+> > +	return ret;
+> > +}
+> > +
+> > +static int
+> > +scmi_reset_domain_attributes_get(const struct scmi_handle *handle, u32 domain,
+> > +				 struct reset_dom_info *dom_info)
+> > +{
+> > +	int ret;
+> > +	struct scmi_xfer *t;
+> > +	struct scmi_msg_resp_reset_domain_attributes *attr;
+> > +
+> > +	ret = scmi_xfer_get_init(handle, RESET_DOMAIN_ATTRIBUTES,
+> > +				 SCMI_PROTOCOL_RESET, sizeof(domain),
+> > +				 sizeof(*attr), &t);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	*(__le32 *)t->tx.buf = cpu_to_le32(domain);
+> 
+> Should this use
+> 	put_unaligned_le32(domain, t->tx.buf);
+> ? Either way,
+> 
 
-Hi,
+Ah, new function to me. I will take a look, may need more place to fix.
 
-Pawel Laszczak <pawell@cadence.com> writes:
->>> +static int cdns3_gadget_start(struct cdns3 *cdns)
->>> +{
->>> +	struct cdns3_device *priv_dev;
->>> +	u32 max_speed;
->>> +	int ret;
->>> +
->>> +	priv_dev = kzalloc(sizeof(*priv_dev), GFP_KERNEL);
->>> +	if (!priv_dev)
->>> +		return -ENOMEM;
->>> +
->>> +	cdns->gadget_dev = priv_dev;
->>> +	priv_dev->sysdev = cdns->dev;
->>> +	priv_dev->dev = cdns->dev;
->>> +	priv_dev->regs = cdns->dev_regs;
->>> +
->>> +	device_property_read_u16(priv_dev->dev, "cdns,on-chip-buff-size",
->>> +				 &priv_dev->onchip_buffers);
->>> +
->>> +	if (priv_dev->onchip_buffers <=  0) {
->>> +		u32 reg = readl(&priv_dev->regs->usb_cap2);
->>> +
->>> +		priv_dev->onchip_buffers = USB_CAP2_ACTUAL_MEM_SIZE(reg);
->>> +	}
->>> +
->>> +	if (!priv_dev->onchip_buffers)
->>> +		priv_dev->onchip_buffers = 256;
->>> +
->>> +	max_speed = usb_get_maximum_speed(cdns->dev);
->>> +
->>> +	/* Check the maximum_speed parameter */
->>> +	switch (max_speed) {
->>> +	case USB_SPEED_FULL:
->>> +	case USB_SPEED_HIGH:
->>> +	case USB_SPEED_SUPER:
->>> +		break;
->>> +	default:
->>> +		dev_err(cdns->dev, "invalid maximum_speed parameter %d\n",
->>> +			max_speed);
->>> +		/* fall through */
->>> +	case USB_SPEED_UNKNOWN:
->>> +		/* default to superspeed */
->>> +		max_speed = USB_SPEED_SUPER;
->>> +		break;
->>> +	}
->>> +
->>> +	/* fill gadget fields */
->>> +	priv_dev->gadget.max_speed = max_speed;
->>> +	priv_dev->gadget.speed = USB_SPEED_UNKNOWN;
->>> +	priv_dev->gadget.ops = &cdns3_gadget_ops;
->>> +	priv_dev->gadget.name = "usb-ss-gadget";
->>> +	priv_dev->gadget.sg_supported = 1;
->>> +
->>> +	spin_lock_init(&priv_dev->lock);
->>> +	INIT_WORK(&priv_dev->pending_status_wq,
->>> +		  cdns3_pending_setup_status_handler);
->>> +
->>> +	/* initialize endpoint container */
->>> +	INIT_LIST_HEAD(&priv_dev->gadget.ep_list);
->>> +	INIT_LIST_HEAD(&priv_dev->aligned_buf_list);
->>> +
->>> +	ret = cdns3_init_eps(priv_dev);
->>> +	if (ret) {
->>> +		dev_err(priv_dev->dev, "Failed to create endpoints\n");
->>> +		goto err1;
->>> +	}
->>> +
->>> +	/* allocate memory for setup packet buffer */
->>> +	priv_dev->setup_buf = dma_alloc_coherent(priv_dev->sysdev, 8,
->>> +						 &priv_dev->setup_dma, GFP_DMA);
->>> +	if (!priv_dev->setup_buf) {
->>> +		ret = -ENOMEM;
->>> +		goto err2;
->>> +	}
->>> +
->>> +	priv_dev->dev_ver = readl(&priv_dev->regs->usb_cap6);
->>> +
->>> +	dev_dbg(priv_dev->dev, "Device Controller version: %08x\n",
->>> +		readl(&priv_dev->regs->usb_cap6));
->>> +	dev_dbg(priv_dev->dev, "USB Capabilities:: %08x\n",
->>> +		readl(&priv_dev->regs->usb_cap1));
->>> +	dev_dbg(priv_dev->dev, "On-Chip memory cnfiguration: %08x\n",
->>> +		readl(&priv_dev->regs->usb_cap2));
->>> +
->>> +	priv_dev->dev_ver = GET_DEV_BASE_VERSION(priv_dev->dev_ver);
->>> +
->>> +	priv_dev->zlp_buf = kzalloc(CDNS3_EP_ZLP_BUF_SIZE, GFP_KERNEL);
->>> +	if (!priv_dev->zlp_buf) {
->>> +		ret = -ENOMEM;
->>> +		goto err3;
->>> +	}
->>> +
->>> +	/* add USB gadget device */
->>> +	ret = usb_add_gadget_udc(priv_dev->dev, &priv_dev->gadget);
->>> +	if (ret < 0) {
->>> +		dev_err(priv_dev->dev,
->>> +			"Failed to register USB device controller\n");
->>> +		goto err4;
->>> +	}
->>> +
->>> +	return 0;
->>> +err4:
->>> +	kfree(priv_dev->zlp_buf);
->>> +err3:
->>> +	dma_free_coherent(priv_dev->sysdev, 8, priv_dev->setup_buf,
->>> +			  priv_dev->setup_dma);
->>> +err2:
->>> +	cdns3_free_all_eps(priv_dev);
->>> +err1:
->>> +	cdns->gadget_dev = NULL;
->>> +	return ret;
->>> +}
->>> +
->>> +static int __cdns3_gadget_init(struct cdns3 *cdns)
->>> +{
->>> +	struct cdns3_device *priv_dev;
->>> +	int ret = 0;
->>> +
->>> +	cdns3_drd_switch_gadget(cdns, 1);
->>> +	pm_runtime_get_sync(cdns->dev);
->>> +
->>> +	ret = cdns3_gadget_start(cdns);
->>> +	if (ret)
->>> +		return ret;
->>> +
->>> +	priv_dev = cdns->gadget_dev;
->>> +	ret = devm_request_threaded_irq(cdns->dev, cdns->dev_irq,
->>> +					cdns3_device_irq_handler,
->>> +					cdns3_device_thread_irq_handler,
->>> +					IRQF_SHARED, dev_name(cdns->dev), cdns);
->>
->>copied handlers here for commenting. Note that you don't have
->>IRQF_ONESHOT:
+> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 >
-> I know, I can't use  IRQF_ ONESHOT flag in this case. I have implemented 
-> some code for masking/unmasking interrupts in cdns3_device_irq_handler.
->
-> Some priority interrupts should be handled ASAP so I can't blocked interrupt 
-> Line. 
 
-You're completely missing my comment. Your top half should be as short
-as possile. It should only check if current device generated
-interrupts. If it did, then you should wake the thread handler.
-
-This is to improve realtime behavior but not keeping preemption disabled
-for longer than necessary.
-
->>> +static irqreturn_t cdns3_device_irq_handler(int irq, void *data)
->>> +{
->>> +	struct cdns3_device *priv_dev;
->>> +	struct cdns3 *cdns = data;
->>> +	irqreturn_t ret = IRQ_NONE;
->>> +	unsigned long flags;
->>> +	u32 reg;
->>> +
->>> +	priv_dev = cdns->gadget_dev;
->>> +	spin_lock_irqsave(&priv_dev->lock, flags);
->>
->>the top half handler runs in hardirq context. You don't need any locks
->>here. Also IRQs are *already* disabled, you don't need to disable them again.
->
-> I will remove spin_lock_irqsave but I need to disable only some of the interrupts. 
-> I disable interrupts associated with USB endpoints. Handling of them can be 
-> deferred to thread handled.
-
-you should defer all of them to thread. Endpoints or otherwise.
-
->>> +
->>> +	/* check USB device interrupt */
->>> +	reg = readl(&priv_dev->regs->usb_ists);
->>> +
->>> +	if (reg) {
->>> +		writel(reg, &priv_dev->regs->usb_ists);
->>> +		cdns3_check_usb_interrupt_proceed(priv_dev, reg);
->>> +		ret = IRQ_HANDLED;
->>
->>now, because you _don't_ mask this interrupt, you're gonna have
->>issues. Say we actually get both device and endpoint interrupts while
->>the thread is already running with previous endpoint interrupts. Now
->>we're gonna reenter the top half, because device interrupts are *not*
->>masked, which will read usb_ists and handle it here.
->
-> Endpoint interrupts are masked in cdns3_device_irq_handler and stay masked
-> until they are not handled in threaded handler. 
-
-Quick question, then: these ISTS registers, are they masked interrupt
-status or raw interrupt status?
-
-> Of course, not all endpoint interrupts are masked, but only reported in ep_ists.
-> USB interrupt will be handled immediately. 
->
-> Also, I can get next endpoint interrupt from not masked endpoint and driver also again wake 
-> the thread. I saw such situation, but threaded interrupt handler has been working correct
-> in such situations.
->
-> In thread handler driver checks again which endpoint should be handled in ep_ists. 
->
-> I think that such situation should also occurs during our LPM enter/exit test. 
-> So, driver has  been tested for such case. During this test driver during 
-> transferring data generate a huge number of LPM interrupts which 
-> are usb interrupts.
->
-> I can't block usb interrupts interrupts because:
-> /*
->  * WORKAROUND: CDNS3 controller has issue with hardware resuming
->  * from L1. To fix it, if any DMA transfer is pending driver
->  * must starts driving resume signal immediately.
->  */
-
-I can't see why this would prevent you from defering handling to thread
-handler.
-
->>> +	if (priv_dev->run_garbage_colector) {
->>
->>wait, what?
->
-> DMA require data buffer aligned to 8 bytes. So, if buffer data is not aligned 
-> driver allocate aligned buffer for data and copy it from unaligned to 
-> Aligned.  
->
->>
->>ps: correct spelling is "collector" ;-)
->
-> Ok, thanks. 
->>
->>> +		struct cdns3_aligned_buf *buf, *tmp;
->>> +
->>> +		list_for_each_entry_safe(buf, tmp, &priv_dev->aligned_buf_list,
->>> +					 list) {
->>> +			if (!buf->in_use) {
->>> +				list_del(&buf->list);
->>> +
->>> +				spin_unlock_irqrestore(&priv_dev->lock, flags);
->>
->>creates the possibility of a race condition
-> Why? In this place the buf can't be used. 
-
-but you're reenabling interrupts, right?
-
->>> +				dma_free_coherent(priv_dev->sysdev, buf->size,
->>> +						  buf->buf,
->>> +						  buf->dma);
->>> +				spin_lock_irqsave(&priv_dev->lock, flags);
->>> +
->>> +				kfree(buf);
->>
->>why do you even need this "garbage collector"?
->
-> I need to free not used memory. The once allocated buffer will be associated with
-> request, but if request.length will be increased in usb_request then driver will  
-> must allocate the  bigger buffer. As I remember I couldn't call dma_free_coherent
-> in interrupt context so I had to move it to thread handled. This flag was used to avoid
-> going through whole  aligned_buf_list  every time. 
-> In most cases this part will never called int this place 
-
-Did you try, btw, setting the quirk flag which tells gadget drivers to
-always allocate buffers aligned to MaxPacketSize? Wouldn't that be enough?
-
->>> +	TP_printk("%s: req: %p, req buff %p, length: %u/%u %s%s%s, status: %d,"
->>> +		cd   " trb: [start:%d, end:%d: virt addr %pa], flags:%x ",
->>> +		__get_str(name), __entry->req, __entry->buf, __entry->actual,
->>> +		__entry->length,
->>> +		__entry->zero ? "zero | " : "",
->>> +		__entry->short_not_ok ? "short | " : "",
->>> +		__entry->no_interrupt ? "no int" : "",
->>
->>I guess you didn't really think the formatting through. Think about what
->>happens if you get a request with only zero flag or only short flag. How
->>will this log look like?
->
-> Like this:
-> cdns3_gadget_giveback: ep0: req: 0000000071a6a5f5, req buff 000000008d40c4db, length: 60/60 zero | , status: 0, trb: [start:0, end:0: virt addr (null)], flags:0
->
-> Is it something wrong with this?. Maybe one extra sign |.
-
-yes, the extra | :-)
-
-This is one reason why I switched to character flags where a lower case
-character means flag is cleared while uppercase means it's set.
-
--- 
-balbi
+Thanks,
+Sudeep
