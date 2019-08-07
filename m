@@ -2,87 +2,122 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 960B3C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 19:00:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3278BC32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 19:01:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E89721EF2
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 19:00:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565204441;
-	bh=H8GQL47oZOjHGMHt6mc7yPh3DyXvvruf/VfI2fdq1XA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=GyhmLerF3LskR6OcPiuNIt5MPzLVncps89Wzvg8TkNDVBxYhmAQfi5deoAuMTtQka
-	 3a1M2Y1HCk1pBMlfez8ntdqmHWy2F2PrgFCo8z5zkXKUsgfnuGE6BIMXHgPwUNGuO7
-	 lrOF48Q+rEWBSNFHbu2wXp9qciJ9fUrzjZ74o0KY=
+	by mail.kernel.org (Postfix) with ESMTP id 14F0121EF2
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 19:01:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730168AbfHGTAk (ORCPT
+        id S1730248AbfHGTBP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 15:00:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51858 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727213AbfHGTAk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 15:00:40 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        Wed, 7 Aug 2019 15:01:15 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:43186 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730178AbfHGTBP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 15:01:15 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8554B21EF2;
-        Wed,  7 Aug 2019 19:00:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565204438;
-        bh=H8GQL47oZOjHGMHt6mc7yPh3DyXvvruf/VfI2fdq1XA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=YlgkEarDGN0iPkWPaV/pbw5ncD7rQmx4yJoKPQ9nlm4ouA1+CTa9RxYW+98Vy24gI
-         qJ6E09hPzeZhxEQ6ywpXQDT2SLGtRgRNv3zVoSJY1Fz2VgEHGrOKuc89UnlAoTAMXS
-         uihlSf1Qg+aa309BG0I7DD0CeJ2fpdTb3Y3u8rXk=
-Date:   Wed, 7 Aug 2019 12:00:37 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     axboe@kernel.dk, jack@suse.cz, hannes@cmpxchg.org,
-        mhocko@kernel.org, vdavydov.dev@gmail.com, cgroups@vger.kernel.org,
-        linux-mm@kvack.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com, guro@fb.com
-Subject: Re: [PATCH 2/4] bdi: Add bdi->id
-Message-Id: <20190807120037.72018c136db40e88d89c05d1@linux-foundation.org>
-In-Reply-To: <20190807183151.GM136335@devbig004.ftw2.facebook.com>
-References: <20190803140155.181190-1-tj@kernel.org>
-        <20190803140155.181190-3-tj@kernel.org>
-        <20190806160102.11366694af6b56d9c4ca6ea3@linux-foundation.org>
-        <20190807183151.GM136335@devbig004.ftw2.facebook.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 93C9980486;
+        Wed,  7 Aug 2019 21:01:10 +0200 (CEST)
+Date:   Wed, 7 Aug 2019 21:01:09 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Rob Clark <robdclark@gmail.com>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        David Airlie <airlied@linux.ie>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Sean Paul <sean@poorly.run>
+Subject: Re: [Freedreno] [PATCH] drm/msm: Make DRM_MSM default to 'm'
+Message-ID: <20190807190109.GA32503@ravnborg.org>
+References: <1565198667-4300-1-git-send-email-jcrouse@codeaurora.org>
+ <20190807173838.GB30025@ravnborg.org>
+ <CAF6AEGv6EY5UBYF8D9tuSaMDvkdrBt+zvRxQA+V4PG6ZfKhUAg@mail.gmail.com>
+ <20190807184648.GA30521@jcrouse1-lnx.qualcomm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190807184648.GA30521@jcrouse1-lnx.qualcomm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8
+        a=LpQP-O61AAAA:8 a=-ipZeBXR2iWv2Qf4ONQA:9 a=CjuIK1q_8ugA:10
+        a=E9Po1WZjFZOl8hwRPBS3:22 a=pioyyrs4ZptJ924tMmac:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 7 Aug 2019 11:31:51 -0700 Tejun Heo <tj@kernel.org> wrote:
+Hi Jordan/Rob.
 
-> Hello,
-> 
-> On Tue, Aug 06, 2019 at 04:01:02PM -0700, Andrew Morton wrote:
-> > On Sat,  3 Aug 2019 07:01:53 -0700 Tejun Heo <tj@kernel.org> wrote:
-> > > There currently is no way to universally identify and lookup a bdi
-> > > without holding a reference and pointer to it.  This patch adds an
-> > > non-recycling bdi->id and implements bdi_get_by_id() which looks up
-> > > bdis by their ids.  This will be used by memcg foreign inode flushing.
+On Wed, Aug 07, 2019 at 12:46:49PM -0600, Jordan Crouse wrote:
+> On Wed, Aug 07, 2019 at 11:08:53AM -0700, Rob Clark wrote:
+> > On Wed, Aug 7, 2019 at 10:38 AM Sam Ravnborg <sam@ravnborg.org> wrote:
+> > >
+> > > Hi Jordan.
+> > > On Wed, Aug 07, 2019 at 11:24:27AM -0600, Jordan Crouse wrote:
+> > > > Most use cases for DRM_MSM will prefer to build both DRM and MSM_DRM as
+> > > > modules but there are some cases where DRM might be built in for whatever
+> > > > reason and in those situations it is preferable to still keep MSM as a
+> > > > module by default and let the user decide if they _really_ want to build
+> > > > it in.
+> > > >
+> > > > Additionally select QCOM_COMMAND_DB for ARCH_QCOM targets to make sure
+> > > > it doesn't get missed when we need it for a6xx tarets.
+> > > >
+> > > > Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> > > > ---
+> > > >
+> > > >  drivers/gpu/drm/msm/Kconfig | 3 ++-
+> > > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/gpu/drm/msm/Kconfig b/drivers/gpu/drm/msm/Kconfig
+> > > > index 9c37e4d..3b2334b 100644
+> > > > --- a/drivers/gpu/drm/msm/Kconfig
+> > > > +++ b/drivers/gpu/drm/msm/Kconfig
+> > > > @@ -14,11 +14,12 @@ config DRM_MSM
+> > > >       select SHMEM
+> > > >       select TMPFS
+> > > >       select QCOM_SCM if ARCH_QCOM
+> > > > +     select QCOM_COMMAND_DB if ARCH_QCOM
+> > > >       select WANT_DEV_COREDUMP
+> > > >       select SND_SOC_HDMI_CODEC if SND_SOC
+> > > >       select SYNC_FILE
+> > > >       select PM_OPP
+> > > > -     default y
+> > > > +     default m
+> > >
+> > > As a general comment the right thing would be to drop this default.
+> > > As it is now the Kconfig says that when DRM is selected then all of the
+> > > world would then also get DRM_MSM, which only a small part of this world
+> > > you see any benefit in.
+> > > So they now have to de-select MSM.
 > > 
-> > Why is the id non-recycling?  Presumably to address some
-> > lifetime/lookup issues, but what are they?
+> > If the default is dropped, it should probably be accompanied by adding
+> > CONFIG_DRM_MSM=m to defconfig's, I think
+That would be best. So the defconfigs end up with the same config as
+before.
+
 > 
-> The ID by itself is used to point to the bdi from cgroup and idr
-> recycles really aggressively.  Combined with, for example, loop device
-> based containers, stale pointing can become pretty common.  We're
-> having similar issues with cgroup IDs.
+> In general I prefer to not use a default but this is the only GPU driver for
+> ARCH_QCOM and I think its safe to stay that 99% of ARCH_QCOM users would select
+> this module and those that wouldn't will omit DRM entirely.
+> 
+> I feel it is net negative if we dropped the default but then had to turn around
+> and enable it in every defconfig.
+"in every" equals three defconfigs:
+$ git grep ARCH_QCOM | grep defconfig
+arch/arm/configs/multi_v7_defconfig:CONFIG_ARCH_QCOM=y
+arch/arm/configs/qcom_defconfig:CONFIG_ARCH_QCOM=y
+arch/arm64/configs/defconfig:CONFIG_ARCH_QCOM=y
 
-OK, but why is recycling a problem?  For example, file descriptors
-recycle as aggressively as is possible, and that doesn't cause any
-trouble.  Presumably recycling is a problem with cgroups because of
-some sort of stale reference problem?
-
-
+	Sam
