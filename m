@@ -2,111 +2,125 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 173E6C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84DFBC31E40
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:20:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC142214C6
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:17:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52534214C6
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:20:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MxghsRAG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727818AbfHGBRQ (ORCPT
+        id S1727745AbfHGBUV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 21:17:16 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:57774 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726340AbfHGBRQ (ORCPT
+        Tue, 6 Aug 2019 21:20:21 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:40380 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726340AbfHGBUU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 21:17:16 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x771GrIG018687
-        for <linux-kernel@vger.kernel.org>; Tue, 6 Aug 2019 21:17:14 -0400
-Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u7hukne79-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 21:17:14 -0400
-Received: from localhost
-        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Wed, 7 Aug 2019 02:17:14 +0100
-Received: from b01cxnp22034.gho.pok.ibm.com (9.57.198.24)
-        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 7 Aug 2019 02:17:08 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x771H7GJ50921926
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 7 Aug 2019 01:17:07 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8C000B205F;
-        Wed,  7 Aug 2019 01:17:07 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 69843B2064;
-        Wed,  7 Aug 2019 01:17:07 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.85.144.127])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed,  7 Aug 2019 01:17:07 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 15B2716C9A48; Tue,  6 Aug 2019 18:17:07 -0700 (PDT)
-Date:   Tue, 6 Aug 2019 18:17:07 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
-        oleg@redhat.com
-Subject: Re: [PATCH RFC tip/core/rcu 02/14] rcu/nocb: Add bypass callback
- queueing
-Reply-To: paulmck@linux.ibm.com
-References: <20190802151435.GA1081@linux.ibm.com>
- <20190802151501.13069-2-paulmck@linux.ibm.com>
- <20190807000313.GA161170@google.com>
- <20190807003501.GX28441@linux.ibm.com>
- <20190806204055.088ba246@gandalf.local.home>
+        Tue, 6 Aug 2019 21:20:20 -0400
+Received: by mail-ot1-f65.google.com with SMTP id l15so40538021oth.7;
+        Tue, 06 Aug 2019 18:20:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2h6gOAY3YgD8MOX44OfV8vPJGYNX/elEpaQ/VKNmceM=;
+        b=MxghsRAGFfqPvSB51oGFXysHGy1zHqGpjNmxCvowxoZlRlhQ2vSE1IkWtrsPqPS8M+
+         XUPiHQfnxmOVTkV1/nR/XKLMuLSKbEhTRE2UqPu+cqn5lfwLc9ZDHiTN/AO50LC/WvCr
+         RJw/2J6JcyDxfaZiRwS639smOUzWBt3TMb3ZUNylo9usZT2C+WhuI8TmjLJ0NmhiXZo3
+         2LGPh5IWSouJLwln0v74RqY0Gl8rflYRz03Hg6TNmWb7uTfRGgQKmn/kYzXINvs9KZ9E
+         nKlLU/HI/PDki9+BIDbFx+cc5CXlPPIw0mcugwFNnFMG5a8YihQinumS5dquZ9D4kdeF
+         ZkTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2h6gOAY3YgD8MOX44OfV8vPJGYNX/elEpaQ/VKNmceM=;
+        b=JYactO/nBsbnuZG9C7KBGYzDTZrs4e3/fyLzc6B9mxg9v1xi+c2zGuCctxU+9tqflC
+         WyByJmp+mcu9q0znUA0a251jr6JrK/3R6IhSDsafSCNPajrsJQSwq/vucRrqSCijpgWv
+         JEPyTB+POHB9yjsXbDOs1DATnLFPxCbQu035D2ZLZSrlhdmFRp7+BnroS3Ziu8zATYxc
+         0L1ueCAI/GgXwxlAOVmARFLY5TkFZHhD5MUWK7hb+mDiQBDl31s6f1CEwLpLX2bGUukZ
+         1E4ow/ZxMByRn6u9Pa512CKgrLpgWwNE6BaqzdvNWA9o4OSO4UP+Lq7g6m60IzIuL03c
+         Cv2A==
+X-Gm-Message-State: APjAAAXJV+vNygfhjvGBoJobm1Y0pnkyFLabL5ycTx1RcM8oHMiSMiEJ
+        mfR+MvKKFihBsdd0OA8XnSfDXTC10/yo088guSJFlgd1
+X-Google-Smtp-Source: APXvYqwh+o7bRSbeyxSOOO5j1tZb7YSn3BqkHPQf1tUh9RemZjk6jVzQA+RhZtN1lTV2+QTQnY+7SVTzAGJWbTgh5BE=
+X-Received: by 2002:a02:13c3:: with SMTP id 186mr7445332jaz.30.1565140818255;
+ Tue, 06 Aug 2019 18:20:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190806204055.088ba246@gandalf.local.home>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19080701-2213-0000-0000-000003B9D827
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011562; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000287; SDB=6.01243147; UDB=6.00655766; IPR=6.01024611;
- MB=3.00028074; MTD=3.00000008; XFM=3.00000015; UTC=2019-08-07 01:17:12
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19080701-2214-0000-0000-00005F8D473F
-Message-Id: <20190807011707.GZ28441@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-06_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908070010
+References: <20190805193243.18584-1-andrew.smirnov@gmail.com> <CAHp75VcjUwUj-6r+k2bTFhhr9hk942-ZEu=GhvhKNjfgEYf1Qw@mail.gmail.com>
+In-Reply-To: <CAHp75VcjUwUj-6r+k2bTFhhr9hk942-ZEu=GhvhKNjfgEYf1Qw@mail.gmail.com>
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+Date:   Tue, 6 Aug 2019 18:20:06 -0700
+Message-ID: <CAHQ1cqEHNq9jJfKWKrZ1utbsk8HG4gywuaxNNMFOgFZGULwyEw@mail.gmail.com>
+Subject: Re: [PATCH] tty: serial: Introduce uart_tx_stoppped_or_empty()
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, Chris Healy <cphealy@gmail.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 08:40:55PM -0400, Steven Rostedt wrote:
-> On Tue, 6 Aug 2019 17:35:01 -0700
-> "Paul E. McKenney" <paulmck@linux.ibm.com> wrote:
-> 
-> > > > +	// Don't use ->nocb_bypass during early boot.  
-> > > 
-> > > Very minor nit: comment style should be /* */  
-> > 
-> > I thought that Linus said that "//" was now OK.  Am I confused?
-> 
-> Have a link?
+On Mon, Aug 5, 2019 at 11:48 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Mon, Aug 5, 2019 at 10:36 PM Andrey Smirnov <andrew.smirnov@gmail.com> wrote:
+> >
+> > The vast majority of the serial drivers check for
+> >
+> >     uart_tx_stopped(&p->port) || uart_circ_empty(xmit)
+> >
+> > condition one or more times. Create a dedicated helper function and
+> > convert drivers to use it.
+>
+> Sometimes the arguments are swapped. It means that in case of first
+> being false the second is aslo going to be checked.
+> So, does ordering have any side effect?
+>
+> Please, elaborate this in the commit message.
+>
 
-https://lkml.org/lkml/2016/7/8/625
+Neither  uart_tx_stopped() nor uart_circ_empty() should have any side
+effects. I also didn't see any comments indicating that ordering is
+important. Is that enough of a justification?
 
-							Thanx, Paul
+> >  drivers/tty/serial/8250/8250_dma.c          |  2 +-
+> >  drivers/tty/serial/8250/8250_omap.c         |  7 +++----
+> >  drivers/tty/serial/sc16is7xx.c              |  2 +-
+>
+> For the drivers I care about (see above) I prefer to see conversion on
+> per driver basis. Of course, if Greg is okay with the current, I won't
+> object.
 
+I am more than happy to split this any way necessary.
+
+>
+> > -               if (uart_tx_stopped(&up->port) ||
+> > -                   uart_circ_empty(&up->port.state->xmit)) {
+> > +               if (uart_tx_stopped_or_empty(&up->port)) {
+>
+> Yes, it becomes one line, but...
+>
+> > -       if (!(dmacr & UART011_TXDMAE) || uart_tx_stopped(&uap->port) ||
+> > -           uart_circ_empty(&uap->port.state->xmit)) {
+> > +       if (!(dmacr & UART011_TXDMAE) ||
+> > +           uart_tx_stopped_or_empty(&uap->port)) {
+>
+> ...wouldn't be the case here as well? And perhaps in other places?
+
+Hmm, not sure I am reading this comment right. Are we talking purely
+about formatting here? If we are, yeah, I probably can make this into
+a single line. Not sure if there any other places like that,
+sirfsoc_uart.c perhaps?
+
+Thanks,
+Andrey Smirnov
