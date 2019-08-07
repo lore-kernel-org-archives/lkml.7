@@ -2,101 +2,122 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5C64C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 06:39:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0397AC19759
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 06:39:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A962520880
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 06:39:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D02D420880
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 06:39:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lkbaa7lY"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="md5e9IaR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727150AbfHGGjD (ORCPT
+        id S1727199AbfHGGjq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 02:39:03 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:38598 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726883AbfHGGjC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 02:39:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=YjFjhTuT30+WR+0Rz31alBwUHp7i7H4qDnAY2b1b5AI=; b=lkbaa7lYSH9aLDmp/+lta95zh
-        cYv/jqthqjDqOT8fXUYm4bNPNrq4LjLu6duEzAr59c4Q1saRdKjHYv5jAPsO+PfbXKgcSoHlWfJ39
-        Rmqo6lqvIEC5Egr/Muv2q81fQn4uh44OXRwLrfp3VxeEfEtOOc1+einn9Ek0W4a5SHXoxkmANfoSR
-        Rfs2qdAj4xYSMwCRG5vXvq5dgRhD6sg2od0wq3nFWZZHqZKonyo7j210O9TxiD+QMo5QZbXcmulkf
-        dv2uo2wVom57gdYdI76kbqD+6evjX+MYPgnUq6CAzlYA/w3YpamFdjf4YXV888k7fABQQNXnpyrBZ
-        0VuUHFHYw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hvFb6-0007II-Js; Wed, 07 Aug 2019 06:38:56 +0000
-Date:   Tue, 6 Aug 2019 23:38:56 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Thomas =?iso-8859-1?Q?Hellstr=F6m_=28VMware=29?= 
-        <thomas@shipmail.org>, Dave Airlie <airlied@gmail.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Price <steven.price@arm.com>,
-        Linux-MM <linux-mm@kvack.org>
-Subject: Re: drm pull for v5.3-rc1
-Message-ID: <20190807063856.GB6002@infradead.org>
-References: <CAPM=9tzJQ+26n_Df1eBPG1A=tXf4xNuVEjbG3aZj-aqYQ9nnAg@mail.gmail.com>
- <CAPM=9twvwhm318btWy_WkQxOcpRCzjpok52R8zPQxQrnQ8QzwQ@mail.gmail.com>
- <CAHk-=wjC3VX5hSeGRA1SCLjT+hewPbbG4vSJPFK7iy26z4QAyw@mail.gmail.com>
- <CAHk-=wiD6a189CXj-ugRzCxA9r1+siSCA0eP_eoZ_bk_bLTRMw@mail.gmail.com>
- <48890b55-afc5-ced8-5913-5a755ce6c1ab@shipmail.org>
- <CAHk-=whwcMLwcQZTmWgCnSn=LHpQG+EBbWevJEj5YTKMiE_-oQ@mail.gmail.com>
- <CAHk-=wghASUU7QmoibQK7XS09na7rDRrjSrWPwkGz=qLnGp_Xw@mail.gmail.com>
- <20190806073831.GA26668@infradead.org>
- <CAHk-=wi7L0MDG7DY39Hx6v8jUMSq3ZCE3QTnKKirba_8KAFNyw@mail.gmail.com>
+        Wed, 7 Aug 2019 02:39:46 -0400
+Received: from ozlabs.org ([203.11.71.1]:43863 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726657AbfHGGjq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 02:39:46 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 463MLR0dTsz9sBF;
+        Wed,  7 Aug 2019 16:39:42 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1565159984;
+        bh=0GEKGTSUc4dvmLeq8qcdD6/gYU+tU39PQ3kY6AgRwEw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=md5e9IaRhJGIQcn2l3vd6z1USqstbJG50opH5RiSYiljfSVZ1oOmWW1yAZOVA917x
+         MzZFdkDL3dJAlrCnpF4BNwgSHO+9SLmFryTf/Iy4OGsub1TNaqw25DMhjp1uCZOICz
+         JIRFHpbyxzv0hP4W/7pJ7bLaLBovGjFWig+vVuiXkYtUqO2mNznnC5wnWZEfwAVEET
+         GxDUwM4beSHJ2uHu/lc7rw7dwintA6EDtfMMRaqsO5fRWWIFx02X3KQg5bDXNX4MT8
+         TECrONQcuw62RGaWlvphJHkC198vtYyddXvRF0tyxmKCvBh3H12r1X9aq39zKtkEmo
+         sykYLKpqG9uYg==
+Date:   Wed, 7 Aug 2019 16:39:42 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexandre Ghiti <alex@ghiti.fr>
+Subject: linux-next: manual merge of the akpm-current tree with the arm64
+ tree
+Message-ID: <20190807163942.4f2018b2@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wi7L0MDG7DY39Hx6v8jUMSq3ZCE3QTnKKirba_8KAFNyw@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: multipart/signed; boundary="Sig_/t4o3uwHLkn7V0CflIBKoRww";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 11:50:42AM -0700, Linus Torvalds wrote:
-> 
-> In fact, I do note that a lot of the users don't actually use the
-> "void *private" argument at all - they just want the walker - and just
-> pass in a NULL private pointer. So we have things like this:
-> 
-> > +       if (walk_page_range(&init_mm, va, va + size, &set_nocache_walk_ops,
-> > +                       NULL)) {
-> 
-> and in a perfect world we'd have arguments with default values so that
-> we could skip those entirely for when people just don't need it.
-> 
-> I'm not a huge fan of C++ because of a lot of the complexity (and some
-> really bad decisions), but many of the _syntactic_ things in C++ would
-> be nice to use. This one doesn't seem to be one that the gcc people
-> have picked up as an extension ;(
-> 
-> Yes, yes, we could do it with a macro, I guess.
-> 
->    #define walk_page_range(mm, start,end, ops, ...) \
->        __walk_page_range(mm, start, end, (NULL , ## __VA_ARGS__))
-> 
-> but I'm not sure it's worthwhile.
+--Sig_/t4o3uwHLkn7V0CflIBKoRww
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Given that is is just a single argument I'm not to worried.  A simpler
-and a more complex variant seems more useful if we can skip a few
-arguments IMHO.
+Hi all,
+
+Today's linux-next merge of the akpm-current tree got a conflict in:
+
+  arch/arm64/include/asm/processor.h
+
+between commit:
+
+  b907b80d7ae7 ("arm64: remove pointless __KERNEL__ guards")
+
+from the arm64 tree and commit:
+
+  cd6ee3f76f64 ("arm64, mm: move generic mmap layout functions to mm")
+
+from the akpm-current tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc arch/arm64/include/asm/processor.h
+index ec70762519df,65e2de00913f..000000000000
+--- a/arch/arm64/include/asm/processor.h
++++ b/arch/arm64/include/asm/processor.h
+@@@ -280,8 -281,8 +280,6 @@@ static inline void spin_lock_prefetch(c
+  		     "nop") : : "p" (ptr));
+  }
+ =20
+- #define HAVE_ARCH_PICK_MMAP_LAYOUT
+ -#endif
+--
+  extern unsigned long __ro_after_init signal_minsigstksz; /* sigframe size=
+ */
+  extern void __init minsigstksz_setup(void);
+ =20
+
+--Sig_/t4o3uwHLkn7V0CflIBKoRww
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1Kci4ACgkQAVBC80lX
+0GxRSgf/fiaSAqgaP8A9eC7cQyoEhmn4Me58n5csUa+JmFtW39L2bwrthJcsYnJD
+Byxtbt/pWqmnxk+yNg0cwcxw/B5paOT8hSumjQDIzq32wMxdkhHUU/zBHa4/OHpR
+WlSqR4/76fHdgtFpgMnTNgxPK+XCGOA1OhcVeP0YOtxmrpqkadhZKZ8OkLduwHtH
+L7QsPnhKPc+5DTanIMxr2mx8B1V1WmR4NELp1d2KIyEkJ7PB9CNm1gS0xqgAgY6C
+6TYeYUI893y3Cg7DSiJ+GkExcThk3w/qt8gzSyCh3sMjW/YRb9x8EJc2Cro0tMw+
+tbGIJvQTeaGFfNHIpw3jGfri3IArbw==
+=nVuQ
+-----END PGP SIGNATURE-----
+
+--Sig_/t4o3uwHLkn7V0CflIBKoRww--
