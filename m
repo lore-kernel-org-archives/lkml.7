@@ -2,126 +2,104 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E41C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 19:43:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E0DC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 19:49:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5620022305
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 19:43:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03A0422296
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 19:49:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ogFF0d2w"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="F12ywx4O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388965AbfHGTnK (ORCPT
+        id S2388563AbfHGTtL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 15:43:10 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:11240 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388270AbfHGTnK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 15:43:10 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d4b29ce0000>; Wed, 07 Aug 2019 12:43:10 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 07 Aug 2019 12:43:09 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 07 Aug 2019 12:43:09 -0700
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 7 Aug
- 2019 19:43:08 +0000
-Subject: Re: [PATCH v2] x86/boot: save fields explicitly, zero out everything
- else
-To:     David Laight <David.Laight@ACULAB.COM>,
-        "H . Peter Anvin" <hpa@zytor.com>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "x86@kernel.org" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190731054627.5627-1-jhubbard@nvidia.com>
- <20190731054627.5627-2-jhubbard@nvidia.com>
- <531b38aaa15e4de79a5e27fd37c04351@AcuMS.aculab.com>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <1ee72eca-1a09-0b71-f202-b1a909ca85b7@nvidia.com>
-Date:   Wed, 7 Aug 2019 12:43:08 -0700
+        Wed, 7 Aug 2019 15:49:11 -0400
+Received: from vern.gendns.com ([98.142.107.122]:45794 "EHLO vern.gendns.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729976AbfHGTtL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 15:49:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Nst5tJBgYXLQSuO9ejqLVN2tX7w6xuinsTrxMZni18Y=; b=F12ywx4OqcdCCr+52KzFFqojPP
+        TvrXyYp7ya2oHkQUMdz9hzWp8XjT56wMs6V/qGogeJ3Nr+UUPX84DvMUPXWjObF7bBppZ56C+tmo1
+        5cacL+W4/mloc5Dmyy6Rqbc8HIOZKMHl0Q+xC2UthTqopxx9uZhXbu0liGIpMehSAHdrdDdwIa3e1
+        6c7pL3m2XXrXJA2Fprc/DS1r6jSWVV92kw8Gs7swIT3SvA1bw3ilgatTs3Y1Ym3w5HFP+oOqv6M53
+        Ajo4clGgDEg54z2a+AUgjSEY/S1HvFbw7L8DV1ykUelg6iVfX078vjKXnJsiXGmayl6KxCyNytUFt
+        iskpBEIg==;
+Received: from 108-198-5-147.lightspeed.okcbok.sbcglobal.net ([108.198.5.147]:60448 helo=[192.168.0.134])
+        by vern.gendns.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <david@lechnology.com>)
+        id 1hvRvp-0001Kq-1z; Wed, 07 Aug 2019 15:49:09 -0400
+Subject: Re: [PATCH v2 3/5] counter: new TI eQEP driver
+To:     linux-iio@vger.kernel.org, linux-omap@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org
+References: <20190807194023.15318-1-david@lechnology.com>
+ <20190807194023.15318-4-david@lechnology.com>
+From:   David Lechner <david@lechnology.com>
+Message-ID: <73c4b228-e3d0-ecb0-21b7-6101587481b3@lechnology.com>
+Date:   Wed, 7 Aug 2019 14:49:08 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <531b38aaa15e4de79a5e27fd37c04351@AcuMS.aculab.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20190807194023.15318-4-david@lechnology.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1565206990; bh=wV0TIhB96lEXdxg4ZAPSQCvLdj50VGvQwt3aeXxT47Y=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=ogFF0d2ww1f1FI7jm+ek1zbUaul8cBYZf8dEYS5iLyy2PncViRJnI6L1paYfjr6WR
-         vn8CvVZP1vTKFaOaL8GvV/v3Q8E/A9lH+b5gylKEUc2slbmFn6xqos9vSoZSdyfhrI
-         ndDZ+2ulEbzXjsSld1Cac8vBKZpCJaoWC5m4MXuh2ql7Tvsp7NkGbO/ulZjolI9Nw7
-         HSw5VWptsSNE0Cmtjpq8l8jL9x8b5G1UPf+CCDvlCyoy+v2baB+yy/PiR5FbSF+mm9
-         MqN/SlZLGjUtAVt/y2on2Pf4rKSUc3916oMsRCwHjqyyPAiWBBeHNao5nDduU9Y5gh
-         WMGv7AeZwDWqg==
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - vern.gendns.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lechnology.com
+X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/7/19 4:41 AM, David Laight wrote:
-> From: john.hubbard@gmail.com
->> Sent: 31 July 2019 06:46
-...
->>  	if (boot_params->sentinel) {
->> -		/* fields in boot_params are left uninitialized, clear them */
->> -		boot_params->acpi_rsdp_addr = 0;
->> -		memset(&boot_params->ext_ramdisk_image, 0,
->> -		       (char *)&boot_params->efi_info -
->> -			(char *)&boot_params->ext_ramdisk_image);
->> -		memset(&boot_params->kbd_status, 0,
->> -		       (char *)&boot_params->hdr -
->> -		       (char *)&boot_params->kbd_status);
->> -		memset(&boot_params->_pad7[0], 0,
->> -		       (char *)&boot_params->edd_mbr_sig_buffer[0] -
->> -			(char *)&boot_params->_pad7[0]);
->> -		memset(&boot_params->_pad8[0], 0,
->> -		       (char *)&boot_params->eddbuf[0] -
->> -			(char *)&boot_params->_pad8[0]);
->> -		memset(&boot_params->_pad9[0], 0, sizeof(boot_params->_pad9));
-> ...
-> 
-> How about replacing the above first using:
-> #define zero_struct_fields(ptr, from, to) memset(&ptr->from, 0, (char *)&ptr->to - (char *)&ptr->from)
-> 	zero_struct_fields(boot_params, ext_ramdisk_image, efi_info);
-> 	...
-> Which is absolutely identical to the original code.
-> 
-> The replacing the define with:
-> 	#define so(s, m) offsetof(typeof(*s), m)
-> 	#define zero_struct_fields(ptr, from, to) memset((char *)ptr + so(ptr, from), 0, so(ptr, to) - so(ptr, from))
-> which gcc probably doesn't complain about, but should generate identical code again.
-> There might be an existing define for so().
-> 
+On 8/7/19 2:40 PM, David Lechner wrote:
+> diff --git a/drivers/counter/Kconfig b/drivers/counter/Kconfig
+> index 2967d0a9ff91..7eeb310f0cda 100644
+> --- a/drivers/counter/Kconfig
+> +++ b/drivers/counter/Kconfig
+> @@ -49,6 +49,18 @@ config STM32_LPTIMER_CNT
+>   	  To compile this driver as a module, choose M here: the
+>   	  module will be called stm32-lptimer-cnt.
+>   
+> +config TI_EQEP
+> +	tristate "TI eQEP counter driver"
+> +	depends on (SOC_AM33XX || COMPILE_TEST)
+> +	select PWM
 
-Hi David,
+oops, missed removing `select PWM`. This line is no longer needed with
+patch 1/5.
 
-There was discussion about that [1], but preference ending up being to
-flip this around, in order to more closely match the original intent
-of this function (zero out everything except for certain carefully
-selected fields), and to therefore be more likely to keep working if 
-fields are added. 
-
-
-[1] https://lore.kernel.org/lkml/alpine.DEB.2.21.1907252358240.1791@nanos.tec.linutronix.de/
-
-thanks,
--- 
-John Hubbard
-NVIDIA
+> +	select REGMAP_MMIO
+> +	help
+> +	  Select this option to enable the Texas Instruments Enhanced Quadrature
+> +	  Encoder Pulse (eQEP) counter driver.
+> +
+> +	  To compile this driver as a module, choose M here: the module will be
+> +	  called ti-eqep.
+> +
+>   config FTM_QUADDEC
+>   	tristate "Flex Timer Module Quadrature decoder driver"
+>   	depends on HAS_IOMEM && OF
