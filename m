@@ -2,115 +2,81 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2135DC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 06:50:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB6F9C19759
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 06:51:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF52B21BF6
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 06:50:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6C8D21BF6
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 06:51:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="l243GXzH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727536AbfHGGuD (ORCPT
+        id S1727316AbfHGGvU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 02:50:03 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40112 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727272AbfHGGuD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 02:50:03 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2729730DDBD8;
-        Wed,  7 Aug 2019 06:50:03 +0000 (UTC)
-Received: from [10.72.12.139] (ovpn-12-139.pek2.redhat.com [10.72.12.139])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7BBF825263;
-        Wed,  7 Aug 2019 06:49:58 +0000 (UTC)
-Subject: Re: [PATCH V2 7/9] vhost: do not use RCU to synchronize MMU notifier
- with worker
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     mst@redhat.com, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <20190731084655.7024-1-jasowang@redhat.com>
- <20190731084655.7024-8-jasowang@redhat.com> <20190731123935.GC3946@ziepe.ca>
- <7555c949-ae6f-f105-6e1d-df21ddae9e4e@redhat.com>
- <20190731193057.GG3946@ziepe.ca>
- <a3bde826-6329-68e4-2826-8a9de4c5bd1e@redhat.com>
- <20190801141512.GB23899@ziepe.ca>
- <42ead87b-1749-4c73-cbe4-29dbeb945041@redhat.com>
- <20190802124613.GA11245@ziepe.ca>
- <11b2a930-eae4-522c-4132-3f8a2da05666@redhat.com>
- <20190806120416.GB11627@ziepe.ca>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <4b448aa5-2c92-a6ca-67d6-d30fad67254c@redhat.com>
-Date:   Wed, 7 Aug 2019 14:49:57 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 7 Aug 2019 02:51:20 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:39734 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727173AbfHGGvU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 02:51:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Qd4/AdtNUI7cbAZE/FUvXQ3ioTcAsFiO76sg1gler2A=; b=l243GXzHr/c7gKuu7GBJ0VpvX
+        uZZVn3OdCqjioHlawxkUeIjySIm7dyJmI66hYv2H3JlXpIzn5ISMGUS9PjdiV1oFhNTpGlQXWKVDX
+        DDGwTva4Cb3GYv3enbI3ECTEZ5JCio1PsomsgaSAiE4xa8hQdjlT1F4HW2tPgonGm5EaGDVyvzwzb
+        cpBxxQSb0gi3j/SG2b1RlHYJ2RBwt9vcWPM2s4XudCXtDGeMaoETLFnQRkIHXmsitcLZUzUCIi4xa
+        0OGf9/2kxWzdeeKG4N5loNPBTkSJKA2DY0kA7miJCd3lrHmHZZqJ4GxCr8DQJn/gVYTEboVjafVXR
+        th3YqXtCw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hvFn5-0003Gj-MH; Wed, 07 Aug 2019 06:51:19 +0000
+Date:   Tue, 6 Aug 2019 23:51:19 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Atish Patra <atish.patra@wdc.com>
+Cc:     linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Alan Kao <alankao@andestech.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Anup Patel <anup.patel@wdc.com>,
+        Johan Hovold <johan@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-riscv@lists.infradead.org, Enrico Weigelt <info@metux.net>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v4 2/4] RISC-V: Add riscv_isa reprensenting ISA features
+ common across CPUs
+Message-ID: <20190807065119.GA7825@infradead.org>
+References: <20190803042723.7163-1-atish.patra@wdc.com>
+ <20190803042723.7163-3-atish.patra@wdc.com>
 MIME-Version: 1.0
-In-Reply-To: <20190806120416.GB11627@ziepe.ca>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Wed, 07 Aug 2019 06:50:03 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190803042723.7163-3-atish.patra@wdc.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Aug 02, 2019 at 09:27:21PM -0700, Atish Patra wrote:
+> From: Anup Patel <anup.patel@wdc.com>
+> 
+> This patch adds riscv_isa integer to represent ISA features common
+> across all CPUs. The riscv_isa is not same as elf_hwcap because
+> elf_hwcap will only have ISA features relevant for user-space apps
+> whereas riscv_isa will have ISA features relevant to both kernel
+> and user-space apps.
+> 
+> One of the use case is KVM hypervisor where riscv_isa will be used
+> to do following operations:
 
-On 2019/8/6 下午8:04, Jason Gunthorpe wrote:
-> On Mon, Aug 05, 2019 at 12:20:45PM +0800, Jason Wang wrote:
->> On 2019/8/2 下午8:46, Jason Gunthorpe wrote:
->>> On Fri, Aug 02, 2019 at 05:40:07PM +0800, Jason Wang wrote:
->>>>> This must be a proper barrier, like a spinlock, mutex, or
->>>>> synchronize_rcu.
->>>> I start with synchronize_rcu() but both you and Michael raise some
->>>> concern.
->>> I've also idly wondered if calling synchronize_rcu() under the various
->>> mm locks is a deadlock situation.
->>
->> Maybe, that's why I suggest to use vhost_work_flush() which is much
->> lightweight can can achieve the same function. It can guarantee all previous
->> work has been processed after vhost_work_flush() return.
-> If things are already running in a work, then yes, you can piggyback
-> on the existing spinlocks inside the workqueue and be Ok
->
-> However, if that work is doing any copy_from_user, then the flush
-> becomes dependent on swap and it won't work again...
-
-
-Yes it do copy_from_user(), so we can't do this.
-
-
->
->>>> 1) spinlock: add lots of overhead on datapath, this leads 0 performance
->>>> improvement.
->>> I think the topic here is correctness not performance improvement>
->   
->> But the whole series is to speed up vhost.
-> So? Starting with a whole bunch of crazy, possibly broken, locking and
-> claiming a performance win is not reasonable.
-
-
-Yes, I admit this patch is tricky, I'm not going to push this. Will post 
-a V3.
-
-
->
->> Spinlock is correct but make the whole series meaningless consider it won't
->> bring any performance improvement.
-> You can't invent a faster spinlock by opencoding some wild
-> scheme. There is nothing special about the usage here, it needs a
-> blocking lock, plain and simple.
->
-> Jason
-
-
-Will post V3. Let's see if you are happy with that version.
-
-Thanks
-
-
+Please add this to the kvm series.  Right now this is just dead code.
