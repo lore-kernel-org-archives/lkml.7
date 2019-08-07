@@ -2,93 +2,152 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0946C32754
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 04:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2ADEC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 04:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8FE421743
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 04:13:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFA412089E
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 04:25:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Pr1TFTBP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726374AbfHGENJ (ORCPT
+        id S1726094AbfHGEZx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 00:13:09 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:59956 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726135AbfHGENI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 00:13:08 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 4D1E2200064;
-        Wed,  7 Aug 2019 06:13:06 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id CC4D92001EF;
-        Wed,  7 Aug 2019 06:13:00 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id C6FEB402B5;
-        Wed,  7 Aug 2019 12:12:53 +0800 (SGT)
-From:   fugang.duan@nxp.com
-To:     srinivas.kandagatla@linaro.org
-Cc:     robh@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
-        shawnguo@kernel.org, fugang.duan@nxp.com, kernel@pengutronix.de,
-        gregkh@linuxfoundation.org, festevam@gmail.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH nvmem v2 1/2] nvmem: imx: add i.MX8QM platform support
-Date:   Wed,  7 Aug 2019 12:03:19 +0800
-Message-Id: <20190807040320.1760-2-fugang.duan@nxp.com>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20190807040320.1760-1-fugang.duan@nxp.com>
-References: <20190807040320.1760-1-fugang.duan@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Wed, 7 Aug 2019 00:25:53 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:42443 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725801AbfHGEZx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 00:25:53 -0400
+Received: by mail-ot1-f67.google.com with SMTP id l15so99098790otn.9
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 21:25:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3ATctTDaGdbuSHTCGNV3yIygAvKI+PZ5Bx0qOvsrsdU=;
+        b=Pr1TFTBPQsPZQkpBl1gTXGD5ehedYAy5IgSiynzskrPnWdr4niMAIJVdzjNvrApE4r
+         FDSjtJCibdOlzOpQNWmdaIhwwiHAN9UkbuccdaCJxa2w4HVSoLB0X7putJWBQ4mziSpC
+         3/EHLm2TEeo4Ww++5N2jMzlt0GdyY86ZDUP2m5SSeqTTiIeUHaE7yGD4fNhJPwYiczEe
+         K9vDFUsmlQvuQP6kZY7H+E7TiWLayveSS1ece73bgYdl8HEu1O6B5pi+wybjZDOtRgi1
+         gxD3OKbAKL7L32rqu1b+yZOqR4ZYvwEd3dBvcmPEfDpf39eKu6wsYR1+4+huS8E+BjOK
+         4NXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3ATctTDaGdbuSHTCGNV3yIygAvKI+PZ5Bx0qOvsrsdU=;
+        b=mIM2iCZSw4oIJ2wnkjbbTUamQGrCP0hvoV7BmTkSaTchOvepH9SJIB9J+ep23/laYG
+         JrWYF/5oTNoIuHr+b7ckuqvE+Srkz2QNeVTWa8Qpg/6Ye4CEumq0W98JTOmaT0Sejm2k
+         3jVEyht4wiA5QIkS8+lUTKvDIbfyCkhl9tc4JYbyCROfNEdFPUspNGGcLjViPCD1aD7s
+         Y8bCBK+W59TZT/vSnuWaZzG5oy5RtH8oBsUaMumtAJjpgGHLwhkxu0NL/d2iMnzoE6Xu
+         szrRXXN8OdPXWX7CzEtQS3nAe4oSp6qwnZ/bRfPo+vrxwgwU7OUseE/OQ+51dRaXBAYz
+         GbBQ==
+X-Gm-Message-State: APjAAAXhDIJX81BlQ7xpGUMumTkXmx2ElQBlVX6lJ2kb1I/0Slv4c1RC
+        OCqYyake7MqKUyM5aGmzN0Crf0zgj5I6oPH+rae44g==
+X-Google-Smtp-Source: APXvYqyd/Zu0XywNS/VeNaLFP0dsw9hCkyh6Xki5zJ7X68h0qtL57F5zTIUSNPDvsC+fAUE8xwVCmn/m7vN3YCNliKg=
+X-Received: by 2002:a05:6638:303:: with SMTP id w3mr7848813jap.103.1565151952221;
+ Tue, 06 Aug 2019 21:25:52 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190807100803.63007737@canb.auug.org.au> <20190807022356.8502-1-bjorn.andersson@linaro.org>
+In-Reply-To: <20190807022356.8502-1-bjorn.andersson@linaro.org>
+From:   Vaishali Thakkar <vaishali.thakkar@linaro.org>
+Date:   Wed, 7 Aug 2019 09:55:41 +0530
+Message-ID: <CANNG1HVRCfQPk4pP37SbEcR+_Upx7+N_SH95TYUxAhiB+jNLHg@mail.gmail.com>
+Subject: Re: [PATCH v2] soc: qcom: socinfo: Annotate switch cases with fall through
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fugang Duan <fugang.duan@nxp.com>
+On Wed, 7 Aug 2019 at 07:54, Bjorn Andersson <bjorn.andersson@linaro.org> wrote:
+>
+> Introduce fall through annotations in the switch statements of
+> socinfo_debugfs_init() to silence compiler warnings.
 
-i.MX8QM efuse table has some difference with i.MX8QXP platform,
-so add i.MX8QM platform support.
+Oops, I missed this. Thanks for fixing it!
 
-Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
----
- drivers/nvmem/imx-ocotp-scu.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+> Fixes: 9c84c1e78634 ("soc: qcom: socinfo: Expose custom attributes")
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-diff --git a/drivers/nvmem/imx-ocotp-scu.c b/drivers/nvmem/imx-ocotp-scu.c
-index be2f5f0..0d78ab4 100644
---- a/drivers/nvmem/imx-ocotp-scu.c
-+++ b/drivers/nvmem/imx-ocotp-scu.c
-@@ -16,6 +16,7 @@
- 
- enum ocotp_devtype {
- 	IMX8QXP,
-+	IMX8QM,
- };
- 
- struct ocotp_devtype_data {
-@@ -39,6 +40,11 @@ static struct ocotp_devtype_data imx8qxp_data = {
- 	.nregs = 800,
- };
- 
-+static struct ocotp_devtype_data imx8qm_data = {
-+	.devtype = IMX8QM,
-+	.nregs = 800,
-+};
-+
- static int imx_sc_misc_otp_fuse_read(struct imx_sc_ipc *ipc, u32 word,
- 				     u32 *val)
- {
-@@ -118,6 +124,7 @@ static struct nvmem_config imx_scu_ocotp_nvmem_config = {
- 
- static const struct of_device_id imx_scu_ocotp_dt_ids[] = {
- 	{ .compatible = "fsl,imx8qxp-scu-ocotp", (void *)&imx8qxp_data },
-+	{ .compatible = "fsl,imx8qm-scu-ocotp", (void *)&imx8qm_data },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, imx_scu_ocotp_dt_ids);
--- 
-2.7.4
+Acked-by: Vaishali Thakkar <vaishali.thakkar@linaro.org>
 
+> ---
+>  drivers/soc/qcom/socinfo.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/drivers/soc/qcom/socinfo.c b/drivers/soc/qcom/socinfo.c
+> index 855353bed19e..a39ea5061dc5 100644
+> --- a/drivers/soc/qcom/socinfo.c
+> +++ b/drivers/soc/qcom/socinfo.c
+> @@ -323,6 +323,7 @@ static void socinfo_debugfs_init(struct qcom_socinfo *qcom_socinfo,
+>                 debugfs_create_x32("raw_device_number", 0400,
+>                                    qcom_socinfo->dbg_root,
+>                                    &qcom_socinfo->info.raw_device_num);
+> +               /* Fall through */
+>         case SOCINFO_VERSION(0, 11):
+>         case SOCINFO_VERSION(0, 10):
+>         case SOCINFO_VERSION(0, 9):
+> @@ -330,10 +331,12 @@ static void socinfo_debugfs_init(struct qcom_socinfo *qcom_socinfo,
+>
+>                 debugfs_create_u32("foundry_id", 0400, qcom_socinfo->dbg_root,
+>                                    &qcom_socinfo->info.foundry_id);
+> +               /* Fall through */
+>         case SOCINFO_VERSION(0, 8):
+>         case SOCINFO_VERSION(0, 7):
+>                 DEBUGFS_ADD(info, pmic_model);
+>                 DEBUGFS_ADD(info, pmic_die_rev);
+> +               /* Fall through */
+>         case SOCINFO_VERSION(0, 6):
+>                 qcom_socinfo->info.hw_plat_subtype =
+>                         __le32_to_cpu(info->hw_plat_subtype);
+> @@ -341,6 +344,7 @@ static void socinfo_debugfs_init(struct qcom_socinfo *qcom_socinfo,
+>                 debugfs_create_u32("hardware_platform_subtype", 0400,
+>                                    qcom_socinfo->dbg_root,
+>                                    &qcom_socinfo->info.hw_plat_subtype);
+> +               /* Fall through */
+>         case SOCINFO_VERSION(0, 5):
+>                 qcom_socinfo->info.accessory_chip =
+>                         __le32_to_cpu(info->accessory_chip);
+> @@ -348,23 +352,27 @@ static void socinfo_debugfs_init(struct qcom_socinfo *qcom_socinfo,
+>                 debugfs_create_u32("accessory_chip", 0400,
+>                                    qcom_socinfo->dbg_root,
+>                                    &qcom_socinfo->info.accessory_chip);
+> +               /* Fall through */
+>         case SOCINFO_VERSION(0, 4):
+>                 qcom_socinfo->info.plat_ver = __le32_to_cpu(info->plat_ver);
+>
+>                 debugfs_create_u32("platform_version", 0400,
+>                                    qcom_socinfo->dbg_root,
+>                                    &qcom_socinfo->info.plat_ver);
+> +               /* Fall through */
+>         case SOCINFO_VERSION(0, 3):
+>                 qcom_socinfo->info.hw_plat = __le32_to_cpu(info->hw_plat);
+>
+>                 debugfs_create_u32("hardware_platform", 0400,
+>                                    qcom_socinfo->dbg_root,
+>                                    &qcom_socinfo->info.hw_plat);
+> +               /* Fall through */
+>         case SOCINFO_VERSION(0, 2):
+>                 qcom_socinfo->info.raw_ver  = __le32_to_cpu(info->raw_ver);
+>
+>                 debugfs_create_u32("raw_version", 0400, qcom_socinfo->dbg_root,
+>                                    &qcom_socinfo->info.raw_ver);
+> +               /* Fall through */
+>         case SOCINFO_VERSION(0, 1):
+>                 DEBUGFS_ADD(info, build_id);
+>                 break;
+> --
+> 2.18.0
+>
