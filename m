@@ -2,153 +2,142 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC46C32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 20:08:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82285C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 20:09:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 494BA21922
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 20:08:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C+IVsyKj"
+	by mail.kernel.org (Postfix) with ESMTP id 6162921922
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 20:09:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389178AbfHGUIA (ORCPT
+        id S2389208AbfHGUJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 16:08:00 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:45975 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388210AbfHGUH7 (ORCPT
+        Wed, 7 Aug 2019 16:09:08 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35772 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388554AbfHGUJH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 16:07:59 -0400
-Received: by mail-lj1-f194.google.com with SMTP id m23so86578144lje.12
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 13:07:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=e6mJhABhQHvJEBAYgDnbQQku2ARSnWaho1xEKM71w0o=;
-        b=C+IVsyKjjmvjcsuCAiBwOsW88PYOcUy9oMPpHx48In+3NA3K60lFa7cyfGgUFDV0gp
-         VLZ+qClMfcDOf/tDowIrybHre/a+WioKIkoZ5uX2lZDxINo874lMvdhI23LtLhOhwL+P
-         Utj98Sl+VLxlLcZGPDPPrVZUeulZ7ktKKzHao1lztKROm7MsDHPiqtZT+m/HUdiBCzcV
-         k4PcKDZ1T1zPHm04LjbqIJDHsGF2zc4n54qn7fXpUUuOacqS+5UYNzw+OiOvyg2U9BJE
-         pEffk8cae4c5UCpwsI2b7yESq+UIyeCmvE9lM4mgjXrGMjs+5+SPNgxynVihkQSKc1mR
-         ZVGw==
+        Wed, 7 Aug 2019 16:09:07 -0400
+Received: by mail-wr1-f65.google.com with SMTP id k2so6743061wrq.2
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 13:09:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=e6mJhABhQHvJEBAYgDnbQQku2ARSnWaho1xEKM71w0o=;
-        b=rOnBYXw4Kyk0/Lq5ViWHjblIEaVUTLZ/Vs4ligl6g0wSALxjamITSah5m1EVaU+KFS
-         0NUpHla2c8LEoj57iEkDGIZEjxaIB7XtuxdGMmN0ahD7/KXhmuAfoXoF5yXMDi39Dj/U
-         BN9kKYORcIhuOzixXtuKMKzTjibb/33b/n+4rZ2h/FIESV5cmMblxYYUK1KDuGWwpqiL
-         yXVt/aUFj3+jS8vM2pa+vhEjbmGpGnvZY0Kuk+NWSMK/72aVZFGHIhiy5UdX9fS9c3OP
-         Qobj+49ebl3WSpyvt0QIuVvQEFvtz33sGgFTe4GLULm7JWpfL++l1wtQxAEAvcoZYA+5
-         udMw==
-X-Gm-Message-State: APjAAAUdFL+uYeYa2m2jqy23t7W0+E3nRhHqLhpVB3ki+CGOlAGHoSYe
-        z3TsWO/vlgv8MAX0N+omb6s=
-X-Google-Smtp-Source: APXvYqzYCZ4mYUZT+k0Or8Q2BIwP836lEJpyjVNHnO1WMUKMqz76SZkNz0iu54H/23Z9Wr/I7To7Mg==
-X-Received: by 2002:a2e:298a:: with SMTP id p10mr5869609ljp.74.1565208477643;
-        Wed, 07 Aug 2019 13:07:57 -0700 (PDT)
-Received: from rikard (h-158-174-186-115.NA.cust.bahnhof.se. [158.174.186.115])
-        by smtp.gmail.com with ESMTPSA id i62sm18295577lji.14.2019.08.07.13.07.56
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 07 Aug 2019 13:07:56 -0700 (PDT)
-From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
-X-Google-Original-From: Rikard Falkeborn <rikard.falkeborn>
-Date:   Wed, 7 Aug 2019 22:07:53 +0200
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Rikard Falkeborn <rikard.falkeborn@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Joe Perches <joe@perches.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] linux/bits.h: Add compile time sanity check of
- GENMASK inputs
-Message-ID: <20190807200753.GA14779@rikard>
-References: <20190731190309.19909-1-rikard.falkeborn@gmail.com>
- <20190801230358.4193-1-rikard.falkeborn@gmail.com>
- <20190801230358.4193-2-rikard.falkeborn@gmail.com>
- <20190807142728.GA16360@roeck-us.net>
- <CAK7LNATGuO0D0a-sTvWw5Pzkn5C7jrLiS=rCwiRsEqaS86KbuQ@mail.gmail.com>
- <d1bd1c05-3e92-1a7f-ebd3-3b26981a6f8e@roeck-us.net>
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=B4SZgwl/qCV8DOS3DiN8urgpbd3u1AoDxbn9aPznbyk=;
+        b=Z7iyyVifhSUw9PwLfbgae2n6sDM/js7zvpXlv4eoYpETtCzfPQ+/VdrBytiRwqjCPJ
+         2TzbbCjcLPy2ixdYmtk0UWQEVvyuDIwRQk6GI+nCQTxH6wWJ+AqVGEax6Tt1wmW3qjcQ
+         hHEbBmNFBsya1b/aLoMQAFDvrGHbUpvNyo/6HpVzHsa/+wSRLcC0hfqfHnvCMWretNwQ
+         P0VlzZL4HcIlHFJk0B9H2kKIQs0g434q6V/MvYE0wP9hcrKxcwFSqZKBsP2u/n4dSkgd
+         AMEh7BDaqe0JhwmDymmfCYQArLq5xanqxndud8MUPP7Dr8c5E3TnvQWQA04BVUwwM1B+
+         K+pg==
+X-Gm-Message-State: APjAAAXvaABd9B2JRjZO6UAW7pgPT9tVyYkVl5SI2L+2T0YEToDEqfWo
+        40Lqe4waG1jsSxdLRGId65dJACmzXhdjjg==
+X-Google-Smtp-Source: APXvYqzBRo3CYTFQe4giwdi6nAFwuh8jFzMIZ5ZJD0e+DuwaiLHg0MDSZlCf/S35yeXMs+6d7TEGlw==
+X-Received: by 2002:adf:8183:: with SMTP id 3mr12621646wra.181.1565208544995;
+        Wed, 07 Aug 2019 13:09:04 -0700 (PDT)
+Received: from [192.168.10.150] ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id o11sm63655wmh.37.2019.08.07.13.09.03
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Aug 2019 13:09:04 -0700 (PDT)
+Subject: Re: [PATCH v4 00/20] KVM RISC-V Support
+To:     Anup Patel <Anup.Patel@wdc.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Radim K <rkrcmar@redhat.com>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Anup Patel <anup@brainfault.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190807122726.81544-1-anup.patel@wdc.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <4a991aa3-154a-40b2-a37d-9ee4a4c7a2ca@redhat.com>
+Date:   Wed, 7 Aug 2019 22:09:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d1bd1c05-3e92-1a7f-ebd3-3b26981a6f8e@roeck-us.net>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190807122726.81544-1-anup.patel@wdc.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 07, 2019 at 09:52:33AM -0700, Guenter Roeck wrote:
-> On 8/7/19 7:55 AM, Masahiro Yamada wrote:
-> > On Wed, Aug 7, 2019 at 11:27 PM Guenter Roeck <linux@roeck-us.net> wrote:
-> > > 
-> > > On Fri, Aug 02, 2019 at 01:03:58AM +0200, Rikard Falkeborn wrote:
-> > > > GENMASK() and GENMASK_ULL() are supposed to be called with the high bit
-> > > > as the first argument and the low bit as the second argument. Mixing
-> > > > them will return a mask with zero bits set.
-> > > > 
-> > > > Recent commits show getting this wrong is not uncommon, see e.g.
-> > > > commit aa4c0c9091b0 ("net: stmmac: Fix misuses of GENMASK macro") and
-> > > > commit 9bdd7bb3a844 ("clocksource/drivers/npcm: Fix misuse of GENMASK
-> > > > macro").
-> > > > 
-> > > > To prevent such mistakes from appearing again, add compile time sanity
-> > > > checking to the arguments of GENMASK() and GENMASK_ULL(). If both the
-> > > > arguments are known at compile time, and the low bit is higher than the
-> > > > high bit, break the build to detect the mistake immediately.
-> > > > 
-> > > > Since GENMASK() is used in declarations, BUILD_BUG_ON_ZERO() must be
-> > > > used instead of BUILD_BUG_ON(), and __is_constexpr() must be used instead
-> > > > of __builtin_constant_p().
-> > > > 
-> > > > If successful, BUILD_BUG_OR_ZERO() returns 0 of type size_t. To avoid
-> > > > problems with implicit conversions, cast the result of BUILD_BUG_OR_ZERO
-> > > > to unsigned long.
-> > > > 
-> > > > Since both BUILD_BUG_ON_ZERO() and __is_constexpr() only uses sizeof()
-> > > > on the arguments passed to them, neither of them evaluate the expression
-> > > > unless it is a VLA. Therefore, GENMASK(1, x++) still behaves as
-> > > > expected.
-> > > > 
-> > > > Commit 95b980d62d52 ("linux/bits.h: make BIT(), GENMASK(), and friends
-> > > > available in assembly") made the macros in linux/bits.h available in
-> > > > assembly. Since neither BUILD_BUG_OR_ZERO() or __is_constexpr() are asm
-> > > > compatible, disable the checks if the file is included in an asm file.
-> > > > 
-> > > 
-> > > Who is going to fix the fallout ? For example, arm64:defconfig no longer
-> > > compiles with this patch applied.
-> > > 
-> > > It seems to me that the benefit of catching misuses of GENMASK is much
-> > > less than the fallout from no longer compiling kernels, since those
-> > > kernels won't get any test coverage at all anymore.
-> > 
-> > 
-> > We cannot apply this until we fix all errors.
-> > 
-> > I do not understand why Andrew picked up this so soon.
-> > 
+On 07/08/19 14:27, Anup Patel wrote:
+> This series adds initial KVM RISC-V support. Currently, we are able to boot
+> RISC-V 64bit Linux Guests with multiple VCPUs.
+
+Looks good to me!  Still need an Acked-by from arch/riscv folks if I
+have to merge it, otherwise they can take care of the initial merge.
+
+Paolo
+
+> Few key aspects of KVM RISC-V added by this series are:
+> 1. Minimal possible KVM world-switch which touches only GPRs and few CSRs.
+> 2. Full Guest/VM switch is done via vcpu_get/vcpu_put infrastructure.
+> 3. KVM ONE_REG interface for VCPU register access from user-space.
+> 4. PLIC emulation is done in user-space. In-kernel PLIC emulation, will
+>    be added in future.
+> 5. Timer and IPI emuation is done in-kernel.
+> 6. MMU notifiers supported.
+> 7. FP lazy save/restore supported.
+> 8. SBI v0.1 emulation for KVM Guest available.
 > 
-> The same was done with the fallthrough warning in mainline, which still results
-> in all "sh" builds failing there (and in -next, obviously). I don't understand
-> the logic either, but maybe it is the new normal.
+> Here's a brief TODO list which we will work upon after this series:
+> 1. Handle trap from unpriv access in reading Guest instruction
+> 2. Handle trap from unpriv access in SBI v0.1 emulation
+> 3. Implement recursive stage2 page table programing
+> 4. SBI v0.2 emulation in-kernel
+> 5. SBI v0.2 hart hotplug emulation in-kernel
+> 6. In-kernel PLIC emulation
+> 7. ..... and more .....
 > 
-> Guenter
+> This series can be found in riscv_kvm_v4 branch at:
+> https//github.com/avpatel/linux.git
+> 
+> Our work-in-progress KVMTOOL RISC-V port can be found in riscv_v1 branch at:
+> https//github.com/avpatel/kvmtool.git
+> 
+> We need OpenSBI with RISC-V hypervisor extension support which can be
+> found in hyp_ext_changes_v1 branch at:
+> https://github.com/riscv/opensbi.git
+> 
+> The QEMU RISC-V hypervisor emulation is done by Alistair and is available
+> in riscv-hyp-work.next branch at:
+> https://github.com/alistair23/qemu.git
+> 
+> To play around with KVM RISC-V, here are few reference commands:
+> 1) To cross-compile KVMTOOL:
+>    $ make lkvm-static
+> 2) To launch RISC-V Host Linux:
+>    $ qemu-system-riscv64 -monitor null -cpu rv64,h=true -M virt \
+>    -m 512M -display none -serial mon:stdio \
+>    -kernel opensbi/build/platform/qemu/virt/firmware/fw_jump.elf \
+>    -device loader,file=build-riscv64/arch/riscv/boot/Image,addr=0x80200000 \
+>    -initrd ./rootfs_kvm_riscv64.img \
+>    -append "root=/dev/ram rw console=ttyS0 earlycon=sbi"
+> 3) To launch RISC-V Guest Linux with 9P rootfs:
+>    $ ./apps/lkvm-static run -m 128 -c2 --console serial \
+>    -p "console=ttyS0 earlycon=uart8250,mmio,0x3f8" -k ./apps/Image --debug
+> 4) To launch RISC-V Guest Linux with initrd:
+>    $ ./apps/lkvm-static run -m 128 -c2 --console serial \
+>    -p "console=ttyS0 earlycon=uart8250,mmio,0x3f8" -k ./apps/Image \
+>    -i ./apps/rootfs.img --debug
+> 
+> Changes since v3:
+> - Moved patch for ISA bitmap from KVM prep series to this series
+> - Make vsip_shadow as run-time percpu variable instead of compile-time
+> - Flush Guest TLBs on all Host CPUs whenever we run-out of VMIDs
 
-Sorry about that. As Masahiro said, the patch was picked up too soon,
-I've asked Andrew and Stephen Rothwell to remove the patch in a separate
-email thread.
-
-FWIW, there seems to be a patch for the build failure already (all arm
-builds seems to have the same build error):
-
-https://lore.kernel.org/lkml/20190807192305.6604-1-natechancellor@gmail.com/T/#u
-
-Rikard
