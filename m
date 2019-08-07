@@ -2,125 +2,111 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E517C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 00:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A28B6C31E40
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 00:35:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF7E8214C6
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 00:33:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 758022173C
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 00:35:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="TnuDr/2h";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="NcXj2Y0X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727607AbfHGAdp (ORCPT
+        id S1727580AbfHGAfq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 20:33:45 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:35214 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726340AbfHGAdp (ORCPT
+        Tue, 6 Aug 2019 20:35:46 -0400
+Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:53151 "EHLO
+        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726419AbfHGAfp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 20:33:45 -0400
-X-UUID: 37262de7528f4ec0ae64e19c3aa12211-20190807
-X-UUID: 37262de7528f4ec0ae64e19c3aa12211-20190807
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
-        (envelope-from <miles.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
-        with ESMTP id 48035339; Wed, 07 Aug 2019 08:33:37 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs06n1.mediatek.inc (172.21.101.129) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 7 Aug 2019 08:33:37 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 7 Aug 2019 08:33:37 +0800
-From:   Miles Chen <miles.chen@mediatek.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
-        Miles Chen <miles.chen@mediatek.com>,
-        Mark Rutland <Mark.rutland@arm.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        James Morse <james.morse@arm.com>
-Subject: [PATCH v2] arm64: mm: print hexadecimal EC value in mem_abort_decode()
-Date:   Wed, 7 Aug 2019 08:33:36 +0800
-Message-ID: <20190807003336.28040-1-miles.chen@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-MIME-Version: 1.0
+        Tue, 6 Aug 2019 20:35:45 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.west.internal (Postfix) with ESMTP id 44A004C6;
+        Tue,  6 Aug 2019 20:35:44 -0400 (EDT)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Tue, 06 Aug 2019 20:35:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm3; bh=CZQ9fy4bGaBJTciSXCw5R8GomHrVEfV
+        S66D46ri1O50=; b=TnuDr/2hZoFEeTFZDsK5eI+/TF3Zr0olB70M6alI8oO6H9z
+        FdL40k4b/LQeUGml1uVNSzUk1eRXkBCe9M/uXTLSYbslTJ6yMdYTUnHQy2dmUNie
+        mrY0Mq3AT9SHV2unfYXodJ8JXy/u1zsL/0++aFr2XTBFSMX/15iZ5OsgOsrrnXad
+        +fKpiO6/IU+67QcwnbR1ADHt0HFCNHpqLR+UlAmlQweEY93Qt41ySoLEXZKezn+D
+        4XyzJ2A1GaPSqapSLW6insh0i0MbUUp5SFWK85wWzyjD9HOdkDIMZJf1+HyvZTAD
+        f8rIEHW86rNXmqJlx0gE+JpikIYE7hEru1M7rtw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=CZQ9fy
+        4bGaBJTciSXCw5R8GomHrVEfVS66D46ri1O50=; b=NcXj2Y0X3VwUuqjRP/4+z9
+        YPSTYXHY0jFM2wUiwFMMYwzaOqFjLSFcp2h9rCYxnMnST7qz7nq+uS6Qyqd8y21D
+        /oLvQvgc9on752SCnvPFI9VoYOC/N0e7irJe8aTpuTw41Lj9Ju8TganWV/zzdXnK
+        3hvU9lDOt5kHGm0w9VJJvo4MYYqnu8YeGyTNSMTOiHgkFbe5rMJRpeSLfjFEkgMW
+        hz7+zsYlzq0hHxdt9/1GMcAist1Xf26zQq1lmFRgu07QMjcNGSC6hTJbXK9ivO1T
+        gE/71SD75xfRNi5DOuygvXzgLyH6kb1+2IEXK1hBclYW1zZMANQP9R9+2pHQNDbA
+        ==
+X-ME-Sender: <xms:3hxKXQImpMul6c42CY4tIMPcYm4J44HTpMQ1095tL-vPyfoZNI6siQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudduuddgfeejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreerjeenucfhrhhomhepfdetnhgu
+    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecuffhomh
+    grihhnpehgihhthhhusgdrtghomhenucfrrghrrghmpehmrghilhhfrhhomheprghnughr
+    vgifsegrjhdrihgurdgruhenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:3hxKXZFZRuRPF8Frq_zT_iscIX8zlfIzjN6kBNokq0XrZtWbJyeqUg>
+    <xmx:3hxKXeDW0FfgKa1Qks8BB8DWLdSrBplsZlyO703kpmfdiBYghPpQJQ>
+    <xmx:3hxKXRFwFkqHfU3wU-h0YvAIrwXW_Yb1dar4V7jXKIIHAsN6fQIWPg>
+    <xmx:3xxKXdyPAINqAsQZUjaifWPOkzR80ZmlgOL4_DDtHUj2PulRsFsJCw>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id CE574E00A2; Tue,  6 Aug 2019 20:35:42 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.6-808-g930a1a1-fmstable-20190805v2
+Mime-Version: 1.0
+Message-Id: <0e4bf79c-0e35-4cf4-b375-a023aa2cd034@www.fastmail.com>
+In-Reply-To: <20190807003037.48457-1-natechancellor@gmail.com>
+References: <20190807003037.48457-1-natechancellor@gmail.com>
+Date:   Wed, 07 Aug 2019 10:06:00 +0930
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Nathan Chancellor" <natechancellor@gmail.com>,
+        "Linus Walleij" <linus.walleij@linaro.org>
+Cc:     "Joel Stanley" <joel@jms.id.au>, linux-aspeed@lists.ozlabs.org,
+        openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: =?UTF-8?Q?Re:_[PATCH]_pinctrl:_aspeed:_g6:_Remove_const_specifier_from_a?=
+ =?UTF-8?Q?speed=5Fg6=5Fsig=5Fexpr=5Fset's_ctx_parameter?=
 Content-Type: text/plain
-X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change prints the hexadecimal EC value in mem_abort_decode(),
-which makes it easier to lookup the corresponding EC in
-the ARM Architecture Reference Manual.
 
-The commit 1f9b8936f36f ("arm64: Decode information from ESR upon mem
-faults") prints useful information when memory abort occurs. It would
-be easier to lookup "0x25" instead of "DABT" in the document. Then we
-can check the corresponding ISS.
 
-For example:
-Current	info	  	Document
-		  	EC	Exception class
-"CP15 MCR/MRC"		0x3	"MCR or MRC access to CP15a..."
-"ASIMD"			0x7	"Access to SIMD or floating-point..."
-"DABT (current EL)" 	0x25	"Data Abort taken without..."
-...
+On Wed, 7 Aug 2019, at 10:02, Nathan Chancellor wrote:
+> clang errors:
+> 
+> drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c:2325:9: error: incompatible
+> pointer types initializing 'int (*)(struct aspeed_pinmux_data *, const
+> struct aspeed_sig_expr *, bool)' with an expression of type 'int (const
+> struct aspeed_pinmux_data *, const struct aspeed_sig_expr *, bool)'
+> [-Werror,-Wincompatible-pointer-types]
+>         .set = aspeed_g6_sig_expr_set,
+>                ^~~~~~~~~~~~~~~~~~~~~~
+> 1 error generated.
+> 
+> Commit 674fa8daa8c9 ("pinctrl: aspeed-g5: Delay acquisition of regmaps")
+> changed the set function pointer declaration and the g6 one wasn't
+> updated (I assume because it wasn't merged yet).
+> 
+> Fixes: 2eda1cdec49f ("pinctrl: aspeed: Add AST2600 pinmux support")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/632
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 
-Before:
-Unable to handle kernel paging request at virtual address 000000000000c000
-Mem abort info:
-  ESR = 0x96000046
-  Exception class = DABT (current EL), IL = 32 bits
-  SET = 0, FnV = 0
-  EA = 0, S1PTW = 0
-Data abort info:
-  ISV = 0, ISS = 0x00000046
-  CM = 0, WnR = 1
+That's exactly what happened. Thanks.
 
-After:
-Unable to handle kernel paging request at virtual address 000000000000c000
-Mem abort info:
-  ESR = 0x96000046
-  EC = 0x25: DABT (current EL), IL = 32 bits
-  SET = 0, FnV = 0
-  EA = 0, S1PTW = 0
-Data abort info:
-  ISV = 0, ISS = 0x00000046
-  CM = 0, WnR = 1
-
-Change since v1:
-print "EC" instead of "Exception class"
-print EC in fixwidth
-
-Cc: Mark Rutland <Mark.rutland@arm.com>
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: James Morse <james.morse@arm.com>
-Signed-off-by: Miles Chen <miles.chen@mediatek.com>
----
- arch/arm64/mm/fault.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
-index cfd65b63f36f..ad4980a27edb 100644
---- a/arch/arm64/mm/fault.c
-+++ b/arch/arm64/mm/fault.c
-@@ -86,8 +86,8 @@ static void mem_abort_decode(unsigned int esr)
- 	pr_alert("Mem abort info:\n");
- 
- 	pr_alert("  ESR = 0x%08x\n", esr);
--	pr_alert("  Exception class = %s, IL = %u bits\n",
--		 esr_get_class_string(esr),
-+	pr_alert("  EC = 0x%02lx: %s, IL = %u bits\n",
-+		 ESR_ELx_EC(esr), esr_get_class_string(esr),
- 		 (esr & ESR_ELx_IL) ? 32 : 16);
- 	pr_alert("  SET = %lu, FnV = %lu\n",
- 		 (esr & ESR_ELx_SET_MASK) >> ESR_ELx_SET_SHIFT,
--- 
-2.18.0
-
+Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
