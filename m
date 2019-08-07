@@ -2,202 +2,125 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08AA0C32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 18:23:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB0EC32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 18:24:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C42C721E70
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 18:23:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A7EF21E70
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 18:24:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Un+cInh5"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="G6r6HDwB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389328AbfHGSXh (ORCPT
+        id S2389339AbfHGSYs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 14:23:37 -0400
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:6617 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388163AbfHGSXh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 14:23:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1565202217; x=1596738217;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=ICuPazclqjqPUmwAWo1Qq1t08V25XRdrKY9dRhoRIRo=;
-  b=Un+cInh5H79gsRgn+7NFC9Bed/E11Kqd2PVy3Hy+5pBZ23I4asgEQu5/
-   ObsbJAtJwkEUw6IoCPDz6xhoaTydoDquWSXnIR4gwSwf/lP0sZyj/PdO7
-   fVTy4SNYtzXoMeC3IP7up4QO1VCEDa9BzwtIT8KNc25wgQwgwamx2DCof
-   t2I/gccxB6fzFyKOb6v6kLj2qSrys5njqVtTmxDFAFnQgTKVnsm06SHbv
-   c5cT02ySMvL76iOMJaLR/7Zkg2VcTTtWxpSWZvIioI5nG4og5LHCQsX/S
-   t/LIcbTCbhGh/5uP8eiEE4rpeSN2RTj8EwPl2/Xe788cP5lICATGy0cVy
-   w==;
-IronPort-SDR: DYtuRhsdf4NU9TifiHiNvAh2H4jw7bR3j5k0mNX6LlRcIlo66MIxC0gXyykCSqZtTRw+tEmkRl
- 97bWKuzFhir/4PzWj0YBNBaDq9/5K+yJ7movZL8M6drAqBW5jRUXloCK+//3sx3KUb9NSktv2q
- 36hemDDrCYYr/Neviq6wjQCF7M1hFqNQoP5VuSeDQIqIngujAfe0vmqKhUK4NpaD4L7YhVh9M2
- fd+UxnNxVNNoyISeld32k0aDDYkkEnuaVnpSTG0slH6Y9O1wEEVcgY3QP2ekx38Xu3hvHJy5uu
- axo=
-X-IronPort-AV: E=Sophos;i="5.64,358,1559491200"; 
-   d="scan'208";a="221758072"
-Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 08 Aug 2019 02:23:34 +0800
-IronPort-SDR: maTJYxjmdhKQiijJ18PfkMaWkwjQR0SwLEHHEcHwVY+VHoEfy5RgRWtEJ6Uhy6kP04q14qkODu
- gdGlPkbM7XI8Xf+wo/UGjJgSaK2NkAqVztzn3ypdAFAemD4SPqPBzVYo7g8LNgKJZncZkGiQtG
- nUjdfkqPWjGOrVR9YJhuPjz5u3ljLuSqllGWEdo6ZkWL8vbc+HKrpQA1PYKDQcVbOykn7ytxFb
- ULLNP8rWQpoH5l/bh8iKzHJAmHdXsyGGhtUxUTfe2kxG1oqG7Gzc0Ky7vqBWWkW+lRlTI5tbfw
- oo19FgKTIKcGUwoBwycRRhzm
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Aug 2019 11:21:22 -0700
-IronPort-SDR: kWXPYgAEnldKXrFkOQTNQqEhek82VjyuPfGLPZPYbZfci9wBXghJ3SstPS9IxHLBac3X5tuGV7
- ykSeVxDp9buS6mdP5V2BkKYHUcMzvedf2EssHjtOxqBoDAwubtjHQPifuIZnST7hXZylOrigjF
- sCoIiMmX2OtkIpSTV7Jo0fLlA+NmZILpYlVMI1E0ozmsB9C9WET442pNBr2BQeww2hoVFsfnIQ
- RXqSJ8k4A0kvLTOBj7Kc9K1tKEpOZDzYUDpj7QZsSV/qTVgHLVb5uXzQbU8dL/m8X6msL3GMve
- yMw=
-Received: from jedi-01.sdcorp.global.sandisk.com (HELO jedi-01.int.fusionio.com) ([10.11.143.218])
-  by uls-op-cesaip01.wdc.com with ESMTP; 07 Aug 2019 11:23:35 -0700
-From:   Atish Patra <atish.patra@wdc.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Atish Patra <atish.patra@wdc.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Anup Patel <anup@brainfault.org>,
-        Johan Hovold <johan@kernel.org>,
-        linux-riscv@lists.infradead.org,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-Subject: [v5 PATCH] RISC-V: Fix unsupported isa string info.
-Date:   Wed,  7 Aug 2019 11:23:16 -0700
-Message-Id: <20190807182316.28013-1-atish.patra@wdc.com>
-X-Mailer: git-send-email 2.21.0
+        Wed, 7 Aug 2019 14:24:48 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:41862 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389181AbfHGSYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 14:24:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=QJzG1RorDCaivT1FC6dyOT4S3y4JeEZ4xIz1y6EH+9o=; b=G6r6HDwBbRRDhcHKvqMPpMtF60
+        bywA4OV1mW9GymD3IcmN1DQb3tZF0hp5C4mvdX+jvg8hdFJxeEPNzDPTXBnV6tn1ueD83es3gVAUj
+        mUb3Q58SNkZeg6qYz8EUn9Ut5r8mH40bwRYUDTCgBAZ1ULpzxGGSg5ER3q9xD7M9tGSo=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hvQc6-0006uJ-AT; Wed, 07 Aug 2019 20:24:42 +0200
+Date:   Wed, 7 Aug 2019 20:24:42 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v5 4/4] net: phy: realtek: Add LED configuration support
+ for RTL8211E
+Message-ID: <20190807182442.GC26047@lunn.ch>
+References: <20190807170449.205378-1-mka@chromium.org>
+ <20190807170449.205378-5-mka@chromium.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190807170449.205378-5-mka@chromium.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, kernel prints a info warning if any of the extensions
-from "mafdcsu" is missing in device tree. Here are few issues with
-this approach.
+> +static int rtl8211e_config_led(struct phy_device *phydev, int led,
+> +			       struct phy_led_config *cfg)
+> +{
+> +	u16 lacr_bits = 0, lcr_bits = 0;
+> +	int oldpage, ret;
+> +
+> +	switch (cfg->trigger.t) {
+> +	case PHY_LED_TRIGGER_LINK:
+> +		lcr_bits = 7 << (led * 4);
+> +		break;
+> +
+> +	case PHY_LED_TRIGGER_LINK_10M:
+> +		lcr_bits = 1 << (led * 4);
+> +		break;
+> +
+> +	case PHY_LED_TRIGGER_LINK_100M:
+> +		lcr_bits = 2 << (led * 4);
+> +		break;
+> +
+> +	case PHY_LED_TRIGGER_LINK_1G:
+> +		lcr_bits |= 4 << (led * 4);
+> +		break;
+> +
+> +	case PHY_LED_TRIGGER_NONE:
+> +		break;
+> +
+> +	default:
+> +		phydev_warn(phydev,
+> +			    "unknown trigger for LED%d: %d\n",
+> +			    led, cfg->trigger.t);
 
-1. It is not entirely correct as Linux can boot with "f or d"
-extensions if kernel is configured accordingly.
-2. It will continue to print the info string for future extensions
-such as hypervisor as well which is completely misleading.
-3. As per the RISC-V user level specification, S extension
-can not exist in single letter extensions and must use multi-letter
-strings. There are no U extension defined at all.
-4. /proc/cpuinfo also doesn't print any other extensions except
-"mafdcsu".
+Lets do this once in the core, not in every driver.
 
-Fix this by making sure that info log is only printed only if kernel
-is configured to have any mandatory extensions but device tree doesn't
-describe it. All the extensions present in device tree and follow the
-order described in the RISC-V specification are printed via
-/proc/cpuinfo always.
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (cfg->trigger.activity)
+> +		lacr_bits = BIT(RLT8211E_LACR_LEDACTCTRL_SHIFT + led);
+> +
+> +	rtl8211e_disable_eee_led_mode(phydev);
+> +
+> +	oldpage = rtl8211x_select_ext_page(phydev, 0x2c);
+> +	if (oldpage < 0) {
+> +		phydev_err(phydev, "failed to select extended page: %d\n", oldpage);
+> +		return oldpage;
+> +	}
+> +
+> +	ret = __phy_modify(phydev, RTL8211E_LACR,
+> +			   LACR_MASK(led), lacr_bits);
+> +	if (ret) {
+> +		phydev_err(phydev, "failed to write LACR reg: %d\n",
+> +			   ret);
+> +		goto err;
+> +	}
+> +
+> +	ret = __phy_modify(phydev, RTL8211E_LCR,
+> +			   LCR_MASK(led), lcr_bits);
+> +	if (ret)
+> +		phydev_err(phydev, "failed to write LCR reg: %d\n",
+> +			   ret);
 
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
----
- arch/riscv/kernel/cpu.c | 49 +++++++++++++++++++++++++++++------------
- 1 file changed, 35 insertions(+), 14 deletions(-)
+That is a lot of phydev_err() calls. The rest of the driver does not
+use any. Also, mdio operations are very unlikely to fail. So i would
+just leave it to the layer above to report there is a problem.
 
-diff --git a/arch/riscv/kernel/cpu.c b/arch/riscv/kernel/cpu.c
-index 7da3c6a93abd..e521142e8ac3 100644
---- a/arch/riscv/kernel/cpu.c
-+++ b/arch/riscv/kernel/cpu.c
-@@ -7,6 +7,7 @@
- #include <linux/seq_file.h>
- #include <linux/of.h>
- #include <asm/smp.h>
-+#include <asm/hwcap.h>
- 
- /*
-  * Returns the hart ID of the given device tree node, or -ENODEV if the node
-@@ -46,11 +47,14 @@ int riscv_of_processor_hartid(struct device_node *node)
- 
- #ifdef CONFIG_PROC_FS
- 
--static void print_isa(struct seq_file *f, const char *orig_isa)
-+static void print_isa(struct seq_file *f, const char *orig_isa,
-+		      unsigned long cpuid)
- {
--	static const char *ext = "mafdcsu";
-+	static const char *mandatory_ext = "mafdc";
- 	const char *isa = orig_isa;
- 	const char *e;
-+	char unsupported_isa[26] = {0};
-+	int index = 0;
- 
- 	/*
- 	 * Linux doesn't support rv32e or rv128i, and we only support booting
-@@ -70,27 +74,44 @@ static void print_isa(struct seq_file *f, const char *orig_isa)
- 	isa += 5;
- 
- 	/*
--	 * Check the rest of the ISA string for valid extensions, printing those
--	 * we find.  RISC-V ISA strings define an order, so we only print the
--	 * extension bits when they're in order. Hide the supervisor (S)
--	 * extension from userspace as it's not accessible from there.
-+	 * RISC-V ISA strings define an order, so we only print all the
-+	 * extension bits when they're in order. Throw a warning only if
-+	 * any mandatory extensions are not available and kernel is
-+	 * configured to have that mandatory extensions.
- 	 */
--	for (e = ext; *e != '\0'; ++e) {
--		if (isa[0] == e[0]) {
--			if (isa[0] != 's')
--				seq_write(f, isa, 1);
--
-+	for (e = mandatory_ext; *e != '\0'; ++e) {
-+		if (isa[0] != e[0]) {
-+#if defined(CONFIG_FP)
-+			if ((isa[0] == 'f') || (isa[0] == 'd'))
-+				continue;
-+#endif
-+			unsupported_isa[index] = e[0];
-+			index++;
-+		}
-+		/* Only write if part of isa string */
-+		if (isa[0] != '\0') {
-+			seq_write(f, isa, 1);
- 			isa++;
- 		}
- 	}
-+	if (isa[0] != '\0') {
-+		/* Add remainging isa strings */
-+		for (e = isa; *e != '\0'; ++e) {
-+#if !defined(CONFIG_VIRTUALIZATION)
-+			if (e[0] != 'h')
-+#endif
-+				seq_write(f, e, 1);
-+		}
-+	}
- 	seq_puts(f, "\n");
- 
- 	/*
- 	 * If we were given an unsupported ISA in the device tree then print
- 	 * a bit of info describing what went wrong.
- 	 */
--	if (isa[0] != '\0')
--		pr_info("unsupported ISA \"%s\" in device tree\n", orig_isa);
-+	if (unsupported_isa[0])
-+		pr_info("unsupported ISA extensions \"%s\" in device tree for cpu [%ld]\n",
-+			unsupported_isa, cpuid);
- }
- 
- static void print_mmu(struct seq_file *f, const char *mmu_type)
-@@ -134,7 +155,7 @@ static int c_show(struct seq_file *m, void *v)
- 	seq_printf(m, "processor\t: %lu\n", cpu_id);
- 	seq_printf(m, "hart\t\t: %lu\n", cpuid_to_hartid_map(cpu_id));
- 	if (!of_property_read_string(node, "riscv,isa", &isa))
--		print_isa(m, isa);
-+		print_isa(m, isa, cpu_id);
- 	if (!of_property_read_string(node, "mmu-type", &mmu))
- 		print_mmu(m, mmu);
- 	if (!of_property_read_string(node, "compatible", &compat)
--- 
-2.21.0
-
+     Andrew
