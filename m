@@ -2,149 +2,152 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67398C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 06:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEA58C19759
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 06:57:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3278B2086D
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 06:56:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DAC921E6A
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 06:57:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="KVjos8LS"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="v39ceR85"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727803AbfHGG4j (ORCPT
+        id S1727929AbfHGG52 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 02:56:39 -0400
-Received: from mail-eopbgr1310100.outbound.protection.outlook.com ([40.107.131.100]:9136
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        Wed, 7 Aug 2019 02:57:28 -0400
+Received: from mail-eopbgr800071.outbound.protection.outlook.com ([40.107.80.71]:26144
+        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727281AbfHGG4i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 02:56:38 -0400
+        id S1727285AbfHGG52 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 02:57:28 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=T5g/3+yNxb/zgcMIO0AQ3RISiX8ssmFzCcreSK0VhEGdi7qXerowxsWDIEXAbORyTH9k26NGRMyzYUGF2dCI1lE3lZZvYp4zitE1s81pqQ4toRk+ztkU3O8vDPPR1bO6NoWc9thiMO1YucU/E9lXlHOFH/PcLxnyAK6TS8qbMXcM1qkZFfV0egg9NpaV0p142uNEOSI3nEczgynWnxOZ94AlNNLMvTndbMRBMUTPOLdUkK3uabwdMRNtU/7xYiXSN+DwvmsD02WA8DYBvl3MJzlLRa2vJTX91HLy7ZWHPIzGk55IzUlszrkEusv0AhKx+9GZTa8WoBubEsTU64bFDw==
+ b=hNP8H8yaNF9Yz2mkDaKAymI7B6H1roaYjQZ2YFl7gjAt8j2iuDGCyy5khC2QSY/mWgzGGv3xnXKqeqHc4oqrCNxWZAWZCdZKZdkia3dXxcNzs3y93Ndo9LqwPgNn7xXnDgkSjUQPWNvlos/++tse6atCvCdjvvalr2/SXGUhlmFcm2QaXp3ZQMT3MqtBYhfA3SNrXf7dUFBOc4jnA0+CgbzHXwXP0yRNG1Y7nK+XMdEaJzGMDZ/+wauXGJxj4Cs8dLD7sEXZN81roQcBVxLprSXjAZIX+1C0Jia6d2n7MXGPvXF79siqLHgFbwGCy03mUjdBpHXWlVnoPiz48S2D6w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NmuflkPpMi8zfU7PGiKZXEUyI9dC1fJj3eCZCsICeAE=;
- b=RuNV3saHbK9RKhYYJEedwoe5YaHj/TkkmIHWH0GCNf+Uy3bOKoILsUmk156I8YPs3MaTIG/aVt9AmNvHWK/gWJUJK5d//J9IQGLGZrUrZB5oCbjeWtgTmazBEoBLzVR039a7JV5z9rk+msoP5odccGJNDeujKdR4e6sOj4O0WPgzHbqpqbn8yM0k/XdObnR5qYSDyMC28SPG2dUEp0dPTSNe2hHXFlxVIf/zD8TL/bglAPUXHOANCS7JMfaRVDA5bccvbvdkGQeCUxBpWu8sGaBbbE7saH/QOh5uqMaP4Nw4cUZBFT2+VemE+b7bzJnbzkxi0Pn/Qba2AsSOQawzIg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
+ bh=oHO211pT3iSsIc5GQu9tV3fhX1wvXmg0iWBJcU790YU=;
+ b=a4rpY3YZCaOiXC9XB8qqW1gsmNiHAMrty7lqdq3HR4OhxSe/Ld2mjp7wLXuhPXbhtSKwkxYywNDberNqOPrOPnCf90EDQZmPBqD+cvUGa5cEOnhP2I6uuQJoIdRKpMJAWqSsaIB63xuoURu9UIVsPyHPHCmJ2jRxj4N49CibT4hovCZdtvXJPLO6ZSnes5BJNvuVI8LLB3nVxfB4J+UvoglbTvjZ0uC7g33ocARHkEPSTl7pJ99T2NSTcbXWK/9KJEqfExBGPaxFmiAOxwb1cFSkGFOviPhRIC6Uy9EnW22MfBYhkCJbpWrwjuG94EiEt8XJf6OJD0jA9GCKrW8tlA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=amd.com;dmarc=pass action=none header.from=amd.com;dkim=pass
+ header.d=amd.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NmuflkPpMi8zfU7PGiKZXEUyI9dC1fJj3eCZCsICeAE=;
- b=KVjos8LSIIDPxspPIbtbn/ErKa1O8tpzU4Q19eXyDKkxoLTfHc6g2Ch8MRYbg1eKjzfCa9vYTGX7ZQFIbw4mC8OlK7TuSO5YfPm8oJyzvYUvTT/GYunVEU5U3y7LFc9ElPVP0UuqZTFnrmZcP7mZwsLzRIw9bZKdr8NFWby0Ito=
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0153.APCP153.PROD.OUTLOOK.COM (10.170.188.143) with Microsoft SMTP
+ bh=oHO211pT3iSsIc5GQu9tV3fhX1wvXmg0iWBJcU790YU=;
+ b=v39ceR85O4dBSQlEdyWZzbiYIqg/+yLFXgUMlWGpxk03Hx58gmgZ0tkDTvrqztJw1+VAXzHuBUsmxUQA3RrLIf4m0UwbEOUiElhQOaSQHj9zeJaCbgsNmMwkUgwOK5984mkQx5XwWef2kmP4Q9zcuH07psJaTKquhprnSyPlrf4=
+Received: from DM5PR12MB1546.namprd12.prod.outlook.com (10.172.36.23) by
+ DM5PR12MB1516.namprd12.prod.outlook.com (10.172.34.140) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.2; Wed, 7 Aug 2019 06:56:12 +0000
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::d44e:57b7:d8fc:e91c]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::d44e:57b7:d8fc:e91c%7]) with mapi id 15.20.2157.001; Wed, 7 Aug 2019
- 06:56:12 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ 15.20.2136.17; Wed, 7 Aug 2019 06:57:24 +0000
+Received: from DM5PR12MB1546.namprd12.prod.outlook.com
+ ([fe80::fc5f:ce01:e8c8:db89]) by DM5PR12MB1546.namprd12.prod.outlook.com
+ ([fe80::fc5f:ce01:e8c8:db89%12]) with mapi id 15.20.2136.018; Wed, 7 Aug 2019
+ 06:57:24 +0000
+From:   "Koenig, Christian" <Christian.Koenig@amd.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>,
+        Alex Deucher <alexdeucher@gmail.com>
+CC:     "Kuehling, Felix" <Felix.Kuehling@amd.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        "apw@canonical.com" <apw@canonical.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        vkuznets <vkuznets@redhat.com>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>
-Subject: RE: [PATCH net] hv_netvsc: Fix a warning of suspicious RCU usage
-Thread-Topic: [PATCH net] hv_netvsc: Fix a warning of suspicious RCU usage
-Thread-Index: AdVMFVwGFODpycnVS02FuESxq+YKEgAdY+cAABfZVkA=
-Date:   Wed, 7 Aug 2019 06:56:12 +0000
-Message-ID: <PU1P153MB0169F8B31B25E995742CCB0BBFD40@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <PU1P153MB0169AECABF6094A3E7BEE381BFD50@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
- <20190806121242.141c2324@cakuba.netronome.com>
-In-Reply-To: <20190806121242.141c2324@cakuba.netronome.com>
-Accept-Language: en-US
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        =?utf-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>
+Subject: Re: [PATCH 15/15] amdgpu: remove CONFIG_DRM_AMDGPU_USERPTR
+Thread-Topic: [PATCH 15/15] amdgpu: remove CONFIG_DRM_AMDGPU_USERPTR
+Thread-Index: AQHVTHDu3MOrnAsG0k6xIfWlHrhaOqbuZFmAgAAB+ACAABLOAIAAEiYAgAC2igA=
+Date:   Wed, 7 Aug 2019 06:57:24 +0000
+Message-ID: <4a040a3f-8981-3e94-2436-8295a0caa534@amd.com>
+References: <20190806160554.14046-1-hch@lst.de>
+ <20190806160554.14046-16-hch@lst.de> <20190806174437.GK11627@ziepe.ca>
+ <587b1c3c-83c4-7de9-242f-6516528049f4@amd.com>
+ <CADnq5_Puv-N=FVpNXhv7gOWZ8=tgBD2VjrKpVzEE0imWqJdD1A@mail.gmail.com>
+ <20190806200356.GU11627@ziepe.ca>
+In-Reply-To: <20190806200356.GU11627@ziepe.ca>
+Accept-Language: de-DE, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-07T06:56:09.1298538Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=a5d92f6b-b5aa-4b3e-805f-73ee1cb38d23;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+x-originating-ip: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
+x-clientproxiedby: PR1PR01CA0026.eurprd01.prod.exchangelabs.com
+ (2603:10a6:102::39) To DM5PR12MB1546.namprd12.prod.outlook.com
+ (2603:10b6:4:8::23)
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2601:600:a280:1760:d40f:1221:5def:ae65]
+ smtp.mailfrom=Christian.Koenig@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1065dff6-d59e-45d1-ee93-08d71b04558f
+x-ms-office365-filtering-correlation-id: a77d8ec9-efa7-4813-db10-08d71b048069
 x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:PU1P153MB0153;
-x-ms-traffictypediagnostic: PU1P153MB0153:|PU1P153MB0153:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <PU1P153MB01531A97D333EC42C6A6FA09BFD40@PU1P153MB0153.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM5PR12MB1516;
+x-ms-traffictypediagnostic: DM5PR12MB1516:
+x-microsoft-antispam-prvs: <DM5PR12MB1516E201064E60EB3F8CDEE983D40@DM5PR12MB1516.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
 x-forefront-prvs: 01221E3973
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(136003)(366004)(396003)(376002)(346002)(199004)(189003)(446003)(14454004)(6246003)(9686003)(7416002)(53546011)(6506007)(486006)(229853002)(476003)(11346002)(14444005)(256004)(6436002)(102836004)(53936002)(55016002)(46003)(66446008)(64756008)(66946007)(68736007)(10090500001)(8990500004)(66556008)(66476007)(76116006)(5660300002)(186003)(4744005)(2906002)(74316002)(10290500003)(478600001)(7736002)(305945005)(33656002)(6116002)(7696005)(76176011)(8676002)(71190400001)(71200400001)(316002)(54906003)(1511001)(4326008)(25786009)(81156014)(81166006)(8936002)(99286004)(86362001)(110136005)(52536014)(22452003)(6636002);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0153;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(366004)(39860400002)(376002)(136003)(51444003)(76114002)(199004)(189003)(5660300002)(2906002)(53936002)(6436002)(6486002)(53546011)(229853002)(386003)(46003)(110136005)(86362001)(256004)(7416002)(68736007)(6506007)(99286004)(4326008)(54906003)(64126003)(31696002)(58126008)(81156014)(102836004)(316002)(81166006)(66946007)(71190400001)(66556008)(66476007)(64756008)(66446008)(8676002)(6246003)(65826007)(31686004)(71200400001)(486006)(8936002)(186003)(476003)(6116002)(305945005)(52116002)(7736002)(76176011)(6512007)(2616005)(11346002)(14454004)(25786009)(65956001)(478600001)(65806001)(36756003)(446003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1516;H:DM5PR12MB1546.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: YN/IsYnS09xEOV93iWlK5JwicLQJBnseLb3Tja37SeOxl0qsdbvRGgDDtVyuxZIZf8ivgzy1z7mPcFnzWtJo1uBybaBxI0duKif+YbPADph7zHvIAV78Znkak0Cxr/SpsB5dPXksadZfmyNp8cBvdwXAY+ZW1s3nwXKIfjtri5NVcn3z+XXQA17DdXXgaMKeh1OsHkkAJwUCd1WveKzbZEXJko/Y9nvIKF4Q004Ty0O2+q6C335puLP1FApqiwd0bcw1cRmo/jwJtbf9fmW4/RrZScrbGO98M57WJ9rzkpBBY9eOtV5bm6+8FFrOBxX7er86VXDWY3SF7pzOrL/Kn5WMJosWheS1R+ylkNMxOsn9BL4ZMIt6T+chDWFrRDd3A70PQfrc0BTp1Q6ZWNEBs1roFrz5pkPbeXVmp1RfYkg=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+x-microsoft-antispam-message-info: 8YGFqtGY7eIxOCfGaSZf53fsvPEb8t+YTjCvzhJOLdzYtc9BhXbN0gh1WnEi3qgzU7652PP9Ecke/dzqrHk1XkBSYzjmkx50qCKhiFJCDt2CLCfp14d73W1YuxfS3lDucSmloG9gkSnExOIRIZDrIPAfGLLB/QT/vTmGOmhPoKtxCmHVBGqtpPmMJ0dHBKDlBAvCFA3ys8IUjPdfwceG7wWqkyexTcVXXw2g+/huhVInqnuljI/VcJ5YVHBtvK7oKhBcF34EDtUUQf0MlOWk88+JOIwA76/QeEryrKTl4a9YqrOmhccwWxNNP4uouaYBd/oiMnBKjc6zonseSeZMPhIJq2qJ/FmB+fiq3WUOqp39WzJKK/FNzdcUm62C/ipDS3X+IYEk/YV/TSsEpsf01uDzm5djR8v4XD+oI4eHVCE=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <43772BFAF78A0B4E87A7805839F5F2C5@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1065dff6-d59e-45d1-ee93-08d71b04558f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Aug 2019 06:56:12.1132
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a77d8ec9-efa7-4813-db10-08d71b048069
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Aug 2019 06:57:24.7103
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ukUhvCu00a86KJybLZBjGEIUzP4JHT32gQerYAJFpfFzO4wop30Hny0puNqhpKhsKI3kmjy9CtIY8OeL7g7tfg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0153
+X-MS-Exchange-CrossTenant-userprincipalname: ckoenig@amd.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1516
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Jakub Kicinski <jakub.kicinski@netronome.com>
-> Sent: Tuesday, August 6, 2019 12:13 PM
-> To: Dexuan Cui <decui@microsoft.com>
->=20
-> On Tue, 6 Aug 2019 05:17:44 +0000, Dexuan Cui wrote:
-> > This fixes a warning of "suspicious rcu_dereference_check() usage"
-> > when nload runs.
-> >
-> > Signed-off-by: Stephen Hemminger <stephen@networkplumber.org>
-> > Signed-off-by: Dexuan Cui <decui@microsoft.com>
->=20
-> Minor change in behaviour would perhaps be worth acknowledging in the
-> commit message (since you check ndev for NULL later now), and a Fixes
-> tag would be good.
->=20
-> But the looks pretty straightforward and correct!
-
-Hi,
-Yeah, it looks the minor behavior change doesn't matter, because IMO the=20
-'nvdev' can only be NULL when the NIC is being removed, or the MTU is
-being changed, etc.
-
-The Fixes tag is:
-Fixes: 776e726bfb34 ("netvsc: fix RCU warning in get_stats")
-
-If I should send a v2, please let me know.
-
-Thanks,
--- Dexuan
-
+QW0gMDYuMDguMTkgdW0gMjI6MDMgc2NocmllYiBKYXNvbiBHdW50aG9ycGU6DQo+IE9uIFR1ZSwg
+QXVnIDA2LCAyMDE5IGF0IDAyOjU4OjU4UE0gLTA0MDAsIEFsZXggRGV1Y2hlciB3cm90ZToNCj4+
+IE9uIFR1ZSwgQXVnIDYsIDIwMTkgYXQgMTo1MSBQTSBLdWVobGluZywgRmVsaXggPEZlbGl4Lkt1
+ZWhsaW5nQGFtZC5jb20+IHdyb3RlOg0KPj4+IE9uIDIwMTktMDgtMDYgMTM6NDQsIEphc29uIEd1
+bnRob3JwZSB3cm90ZToNCj4+Pj4gT24gVHVlLCBBdWcgMDYsIDIwMTkgYXQgMDc6MDU6NTNQTSAr
+MDMwMCwgQ2hyaXN0b3BoIEhlbGx3aWcgd3JvdGU6DQo+Pj4+PiBUaGUgb3B0aW9uIGlzIGp1c3Qg
+dXNlZCB0byBzZWxlY3QgSE1NIG1pcnJvciBzdXBwb3J0IGFuZCBoYXMgYSB2ZXJ5DQo+Pj4+PiBj
+b25mdXNpbmcgaGVscCB0ZXh0LiAgSnVzdCBwdWxsIGluIHRoZSBITU0gbWlycm9yIGNvZGUgYnkg
+ZGVmYXVsdA0KPj4+Pj4gaW5zdGVhZC4NCj4+Pj4+DQo+Pj4+PiBTaWduZWQtb2ZmLWJ5OiBDaHJp
+c3RvcGggSGVsbHdpZyA8aGNoQGxzdC5kZT4NCj4+Pj4+ICAgIGRyaXZlcnMvZ3B1L2RybS9LY29u
+ZmlnICAgICAgICAgICAgICAgICB8ICAyICsrDQo+Pj4+PiAgICBkcml2ZXJzL2dwdS9kcm0vYW1k
+L2FtZGdwdS9LY29uZmlnICAgICAgfCAxMCAtLS0tLS0tLS0tDQo+Pj4+PiAgICBkcml2ZXJzL2dw
+dS9kcm0vYW1kL2FtZGdwdS9hbWRncHVfdHRtLmMgfCAgNiAtLS0tLS0NCj4+Pj4+ICAgIGRyaXZl
+cnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2FtZGdwdV90dG0uaCB8IDEyIC0tLS0tLS0tLS0tLQ0KPj4+
+Pj4gICAgNCBmaWxlcyBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKyksIDI4IGRlbGV0aW9ucygtKQ0K
+Pj4+PiBGZWxpeCwgd2FzIHRoaXMgYW4gZWZmb3J0IHRvIGF2b2lkIHRoZSBhcmNoIHJlc3RyaWN0
+aW9uIG9uIGhtbSBvcg0KPj4+PiBzb21ldGhpbmc/IEFsc28gY2FuJ3Qgc2VlIHdoeSB0aGlzIHdh
+cyBsaWtlIHRoaXMuDQo+Pj4gVGhpcyBvcHRpb24gcHJlZGF0ZXMgS0ZEJ3Mgc3VwcG9ydCBvZiB1
+c2VycHRycywgd2hpY2ggaW4gdHVybiBwcmVkYXRlcw0KPj4+IEhNTS4gUmFkZW9uIGhhcyB0aGUg
+c2FtZSBraW5kIG9mIG9wdGlvbiwgdGhvdWdoIGl0IGRvZXNuJ3QgYWZmZWN0IEhNTSBpbg0KPj4+
+IHRoYXQgY2FzZS4NCj4+Pg0KPj4+IEFsZXgsIENocmlzdGlhbiwgY2FuIHlvdSB0aGluayBvZiBh
+IGdvb2QgcmVhc29uIHRvIG1haW50YWluIHVzZXJwdHINCj4+PiBzdXBwb3J0IGFzIGFuIG9wdGlv
+biBpbiBhbWRncHU/IEkgc3VzcGVjdCBpdCB3YXMgb3JpZ2luYWxseSBtZWFudCBhcyBhDQo+Pj4g
+d2F5IHRvIGFsbG93IGtlcm5lbHMgd2l0aCBhbWRncHUgd2l0aG91dCBNTVUgbm90aWZpZXJzLiBO
+b3cgaXQgd291bGQNCj4+PiBhbGxvdyBhIGtlcm5lbCB3aXRoIGFtZGdwdSB3aXRob3V0IEhNTSBv
+ciBNTVUgbm90aWZpZXJzLiBJIGRvbid0IGtub3cgaWYNCj4+PiB0aGlzIGlzIGEgdXNlZnVsIHRo
+aW5nIHRvIGhhdmUuDQo+PiBSaWdodC4gIFRoZXJlIHdlcmUgcGVvcGxlIHRoYXQgZGlkbid0IGhh
+dmUgTU1VIG5vdGlmaWVycyB0aGF0IHdhbnRlZA0KPj4gc3VwcG9ydCBmb3IgdGhlIEdQVS4NCj4g
+Pz8gSXMgdGhhdCBldmVuIGEgcmVhbCB0aGluZz8gbW11X25vdGlmaWVyIGRvZXMgbm90IGhhdmUg
+bXVjaCBrY29uZmlnDQo+IGRlcGVuZGVuY3kuDQoNClllcywgdGhhdCB1c2VkIHRvIGJlIGEgdmVy
+eSByZWFsIHRoaW5nLg0KDQpJbml0aWFsbHkgYSBsb3Qgb2YgdXNlcnMgZGlkbid0IHdhbnRlZCBt
+bXUgbm90aWZpZXJzIHRvIGJlIGVuYWJsZWQgDQpiZWNhdXNlIG9mIHRoZSBwZXJmb3JtYW5jZSBv
+dmVyaGVhZCB0aGV5IGNvc3RzLg0KDQpUaGVuIHdlIGhhZCB0aGUgcHJvYmxlbSB0aGF0IEhNTSBt
+aXJyb3Igd2Fzbid0IGF2YWlsYWJsZSBvbiBhIGxvdCBvZiANCmFyY2hpdGVjdHVyZXMuDQoNCk5v
+dCBzdXJlIGlmIHdlIHN0aWxsIG5lZWQgaXQgc2VwYXJhdGVseSwgYnV0IEkgdGhpbmsgdGhhdCBp
+dCBzaG91bGRuJ3QgDQpiZSByZW1vdmVkIHdpdGhvdXQgYXNraW5nIGFyb3VuZCBpZiBzb21lYm9k
+eSBzdGlsbCBuZWVkcyB0aGF0Lg0KDQpDaHJpc3RpYW4uDQoNCj4NCj4gSmFzb24NCg0K
