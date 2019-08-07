@@ -2,73 +2,68 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB704C32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F2D7C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:20:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EED221E70
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:20:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E774C21E6E
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:20:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="TrO4rgDO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388263AbfHGNUK (ORCPT
+        id S2388282AbfHGNU3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 09:20:10 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:49726 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387957AbfHGNUK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 09:20:10 -0400
-Received: from p200300ddd742df588d2c07822b9f4274.dip0.t-ipconnect.de ([2003:dd:d742:df58:8d2c:782:2b9f:4274])
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hvLrE-0001XK-Eh; Wed, 07 Aug 2019 15:20:00 +0200
-Date:   Wed, 7 Aug 2019 15:19:54 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Marc Zyngier <maz@kernel.org>
-cc:     Linus Walleij <linusw@kernel.org>, Imre Kaloz <kaloz@openwrt.org>,
-        Krzysztof Halasa <khalasa@piap.pl>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/8] irqdomain/debugfs: Fix uses of
- irq_domain_alloc_fwnode
-In-Reply-To: <20190806145716.125421-1-maz@kernel.org>
-Message-ID: <alpine.DEB.2.21.1908071519410.24014@nanos.tec.linutronix.de>
-References: <20190806145716.125421-1-maz@kernel.org>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 7 Aug 2019 09:20:29 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:40982 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387957AbfHGNU2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 09:20:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=t8aqXvPw0q5E+uBD13OrFAzMjz9c4sMlYhrCXiVJ+Fg=; b=TrO4rgDO8G9WbuFurc3pU56kH8
+        QVrR8oeF35DVeaV4u77u9VHnRv7tmmgwDOMAmiU4xJ5o2gqvJC5OP9kEaQXzQtpILrtNRH1HMo1Xk
+        IG2b6BIy4ZlTuYAytzkkIEJaK3f2CBqeLEmW/GWA5pmFav7uRcBH0bKfDu50PaE16uJc=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hvLrX-0004qH-N1; Wed, 07 Aug 2019 15:20:19 +0200
+Date:   Wed, 7 Aug 2019 15:20:19 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Cc:     "davem@davemloft.net" <davem@davemloft.net>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+Subject: Re: [PATCH 06/16] net: phy: adin: support PHY mode converters
+Message-ID: <20190807132019.GL20422@lunn.ch>
+References: <20190805165453.3989-1-alexandru.ardelean@analog.com>
+ <20190805165453.3989-7-alexandru.ardelean@analog.com>
+ <20190805145105.GN24275@lunn.ch>
+ <15cf5732415c313a7bfe610e7039e7c97b987073.camel@analog.com>
+ <20190806153910.GB20422@lunn.ch>
+ <7747cb845a9122004b9565f444b4719170f74b35.camel@analog.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7747cb845a9122004b9565f444b4719170f74b35.camel@analog.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 6 Aug 2019, Marc Zyngier wrote:
+> Is it ok if we defer the solution for this drivers/patchset?
 
-> I recently noticed that all irq_domain_alloc_fwnode were passing a VA
-> to it, which is unfortunate as this is designed to appear in debugfs
-> (and we don't like to leak VAs). Disaster was avoided thanks to our
-> ____ptrval____ friend, but it remains that the whole thing is pretty
-> useless if you have more than a single domain (they all have the same
-> name and creation fails).
-> 
-> In order to sort it out, change all users of irq_domain_alloc_fwnode
-> to pass the PA of the irqchip the domain will be associated with. One
-> notable exception is the HyperV PCI controller driver which has no PA
-> to associate with. This is solved by using a named fwnode instead,
-> using the device GUID.
-> 
-> Finally, irq_domain_alloc_fwnode() is changed to pa a pionter to a PA,
-> which can be safely advertised in debugfs.
+Yes, not a problem if phy-mode means phy-mode.
 
-Acked-by: Thomas Gleixner <tglx@linutronix.de>
+     Andrew
