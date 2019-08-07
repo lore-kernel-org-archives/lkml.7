@@ -2,91 +2,79 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D587C32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 11:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D86B4C32754
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 11:10:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1199F21E6C
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 11:05:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="RfeGUizY"
+	by mail.kernel.org (Postfix) with ESMTP id A6E3821E6A
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 11:10:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565176203;
+	bh=Vq2npu9qMy3ZqaCzN2MnrJysGD5g2Rtrj7n/5e5Lct8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GyktvbNkEhcb2Ef0S1N6q1/IH00K96lUeNe+ioynv3V12bDszMRe52zXaSH9pUwPj
+	 K+wFxYyxWtVKzag1l6c+XtYJ5bl5aPhAYW0NsrKLSLxjgUakOxyrI73kg/8GqUU8+4
+	 O7iVMYFyn4trH3yqrzGKytp54zBp9p/CAotuYrdg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387594AbfHGLFt (ORCPT
+        id S1729051AbfHGLKC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 07:05:49 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:41570 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726418AbfHGLFs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 07:05:48 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x77B4aEJ010731;
-        Wed, 7 Aug 2019 11:05:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=+jU+hkuie9yP8XEiBvhE5hja72DYo/HF1oIOUxCq/6Y=;
- b=RfeGUizYtX7YjDmw6IcBOoDm8Xk5qQ3smjLmW3xhrkLCdJLvFRUMhNv9Hxr/ocifuVts
- iOOZLoz29GpSSPuh99+hMq5IzavlD0gAzaTulp2X++ImkDTt06vrAS1328YXgWUCGIV3
- eqG78yoLUcfNBznIzS9YqjoLFfo/Xup6PRMJhydPDkcgUnyy8fcnAyJxB5OZxbrZ9Ajo
- XUd3vxWlTNqwtimiyyBNZM68tKpqej3UCcW1JM3UR8fCM/gqV0DC3DIAWEOSYvTIU/Kn
- kN2KQOS8RaosxF0VfK/Euqo2pB9YzGQYE7ebdJRPRxjvVryC3gjZJ0uZnYJw2QUz103W Qw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2u527pujuk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 07 Aug 2019 11:05:39 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x77B3Qde083420;
-        Wed, 7 Aug 2019 11:05:38 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2u7667gugs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 07 Aug 2019 11:05:38 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x77B5VfA030034;
-        Wed, 7 Aug 2019 11:05:32 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 07 Aug 2019 04:05:31 -0700
-Date:   Wed, 7 Aug 2019 14:05:23 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Giridhar Prasath R <cristianoprasath@gmail.com>
-Cc:     isdn@linux-pingi.de, devel@driverdev.osuosl.org, arnd@arndb.de,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH] staging: isdn: hysdn_procconf_init() remove parantheses
- from return value
-Message-ID: <20190807110523.GN1974@kadam>
-References: <20190807020331.19729-1-cristianoprasath@gmail.com>
+        Wed, 7 Aug 2019 07:10:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36104 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726418AbfHGLKC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 07:10:02 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB9FB21922;
+        Wed,  7 Aug 2019 11:10:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565176201;
+        bh=Vq2npu9qMy3ZqaCzN2MnrJysGD5g2Rtrj7n/5e5Lct8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WUv84g6rvSfIfVN4nmM8/Fn817fqIm/npqcHrA8tLuIqk56sKKIUUkcBCFhZg7bqa
+         d8+RSFhPZZVIqfyVE+yzZ7H9RC8cNxaUdYTKrolgrSUkfXYEkwLUBapWLe5iDXW9YQ
+         s43IIo0ktgn5/Xq6JYRRklrWpVZld9z8yu+Q1bxk=
+Date:   Wed, 7 Aug 2019 13:09:59 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Tri Vo <trong@android.com>
+Cc:     rjw@rjwysocki.net, viresh.kumar@linaro.org, rafael@kernel.org,
+        hridya@google.com, sspatil@google.com, kaleshsingh@google.com,
+        ravisadineni@chromium.org, swboyd@chromium.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        kernel-team@android.com
+Subject: Re: [PATCH v8 1/3] PM / wakeup: Drop wakeup_source_init(),
+ wakeup_source_prepare()
+Message-ID: <20190807110959.GA16863@kroah.com>
+References: <20190807014846.143949-1-trong@android.com>
+ <20190807014846.143949-2-trong@android.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190807020331.19729-1-cristianoprasath@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9341 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=737
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908070123
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9341 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=799 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908070123
+In-Reply-To: <20190807014846.143949-2-trong@android.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This driver is going to be deleted soon so we aren't accepting cleanups.
+On Tue, Aug 06, 2019 at 06:48:44PM -0700, Tri Vo wrote:
+> wakeup_source_init() has no users. Remove it.
+> 
+> As a result, wakeup_source_prepare() is only called from
+> wakeup_source_create(). Merge wakeup_source_prepare() into
+> wakeup_source_create() and remove it.
+> 
+> Change wakeup_source_create() behavior so that assigning NULL to wakeup
+> source's name throws an error.
 
-Thanks!
+The kernel C code can not "throw" errors :)
 
-regards,
-dan carpenter
+Anyway, odd verbage asside, patch looks good to me:
+
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
