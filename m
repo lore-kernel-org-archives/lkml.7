@@ -2,112 +2,119 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6872C32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 00:30:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1199C31E40
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 00:31:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C46D217D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 00:30:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fqRhCbgm"
+	by mail.kernel.org (Postfix) with ESMTP id 90B73214C6
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 00:31:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728500AbfHGAaW (ORCPT
+        id S1727557AbfHGAb3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 20:30:22 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:39377 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728407AbfHGAaV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 20:30:21 -0400
-Received: by mail-lf1-f67.google.com with SMTP id x3so8861160lfn.6
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 17:30:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=04KeAaCHcaHA13etq10kb5eqtxQxSQGGJ3drhfuep0U=;
-        b=fqRhCbgmWE11EYy3WIsEPjq48dq2jzTQOhZT7z7UW8KW//nC8dYqObDWTiTfCLO1kp
-         kxxcmjUAd/qgJ4YzxnhotT/4QmTXeMCRqlRUH6vvg2rdYn3xcQosK24cTLIVKz6qhULf
-         VJVsUbuWu0FTrMtZ86g1CyNgtVWby+VNSNh5A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=04KeAaCHcaHA13etq10kb5eqtxQxSQGGJ3drhfuep0U=;
-        b=pHGcB4GKJJ7jSZx1iwbeSN7dqliJ+00mIMevPojhq9p3Jpirb2tG4wNNRzxoB//xEN
-         FApTIZZPAukMN9uzgEMQ/RLUiYwoMGuK8Ty0dDtIdWUxrWPIavr6ZdYXFGlO52+IIA9e
-         ko/hYmGmkPirrsUdOcVoGIlZODllOKaIHJafZiGxd+yqAlZ7UvH98GChiWf0LhJd6p+v
-         1wfk8V27enygz3JFzK1ZveUub3S74e7ZShsvO8W45QyFAX7jr2XBbi7ymX9qmtWOmCAs
-         H1MWcabnFJEMGejD2LJG0QD87b35OUqELuWvctsfgFfZ3Svk9+g0YpdWT1e2x+7DOseR
-         oJYw==
-X-Gm-Message-State: APjAAAXv2PIeZUAGzYIPzJThg5NK4rnzbVRx7czW+aCJskngH3vAYbPE
-        f+wRIMg9qUd/XdMWY5lpS1gZCaLXIFM=
-X-Google-Smtp-Source: APXvYqxddrywG6Y9pPCABUIv7/PzG8bi/6HgUqUlqK4xjEXuMWya+B+d0Swzv96kbGFlYH71fB9/gA==
-X-Received: by 2002:a19:ca4b:: with SMTP id h11mr3997174lfj.162.1565137819145;
-        Tue, 06 Aug 2019 17:30:19 -0700 (PDT)
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com. [209.85.167.53])
-        by smtp.gmail.com with ESMTPSA id q22sm18376953lje.75.2019.08.06.17.30.17
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 06 Aug 2019 17:30:18 -0700 (PDT)
-Received: by mail-lf1-f53.google.com with SMTP id z15so58362743lfh.13
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 17:30:17 -0700 (PDT)
-X-Received: by 2002:a19:ed11:: with SMTP id y17mr4205590lfy.141.1565137817348;
- Tue, 06 Aug 2019 17:30:17 -0700 (PDT)
+        Tue, 6 Aug 2019 20:31:29 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:50098 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726381AbfHGAb3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 20:31:29 -0400
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1hv9rD-0003gV-OL; Tue, 06 Aug 2019 18:31:12 -0600
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-rdma@vger.kernel.org,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Jens Axboe <axboe@fb.com>, Keith Busch <kbusch@kernel.org>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Stephen Bates <sbates@raithlin.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Eric Pilmore <epilmore@gigaio.com>,
+        Christoph Hellwig <hch@lst.de>
+References: <20190730163545.4915-1-logang@deltatee.com>
+ <20190806234439.GW151852@google.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <e31f13f8-5afd-6f38-a206-163e9f77c91a@deltatee.com>
+Date:   Tue, 6 Aug 2019 18:31:07 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <CAH040W7fdd-ND4-QG3DwGpFAPTMGB4zzuXYohMdfoSejV6XE_Q@mail.gmail.com>
-In-Reply-To: <CAH040W7fdd-ND4-QG3DwGpFAPTMGB4zzuXYohMdfoSejV6XE_Q@mail.gmail.com>
-From:   Brian Norris <briannorris@chromium.org>
-Date:   Tue, 6 Aug 2019 17:30:06 -0700
-X-Gmail-Original-Message-ID: <CA+ASDXM6Jz7YY9XUj6QKv5VJCED-BnQ5K1UZHNApB9p6qTWtgg@mail.gmail.com>
-Message-ID: <CA+ASDXM6Jz7YY9XUj6QKv5VJCED-BnQ5K1UZHNApB9p6qTWtgg@mail.gmail.com>
-Subject: Re: Realtek r8822be wireless card fails to work with new rtw88 kernel module
-To:     =?UTF-8?B?6rOg7KSA?= <gojun077@gmail.com>
-Cc:     linux-wireless <linux-wireless@vger.kernel.org>,
-        "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Tony Chuang <yhchuang@realtek.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190806234439.GW151852@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: hch@lst.de, epilmore@gigaio.com, dan.j.williams@intel.com, sbates@raithlin.com, jgg@mellanox.com, kbusch@kernel.org, axboe@fb.com, Christian.Koenig@amd.com, sagi@grimberg.me, linux-rdma@vger.kernel.org, linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, helgaas@kernel.org
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH v2 00/14] PCI/P2PDMA: Support transactions that hit the
+ host bridge
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ yhchuang
 
-On Tue, Aug 6, 2019 at 7:32 AM =EA=B3=A0=EC=A4=80 <gojun077@gmail.com> wrot=
-e:
->
-> Hello,
->
-> I recently reported a bug to Ubuntu regarding a regression in wireless
-> driver support for the Realtek r8822be wireless chipset. The issue
-> link on launchpad is:
->
-> https://bugs.launchpad.net/bugs/1838133
->
-> After Canonical developers triaged the bug they determined that the
-> problem lies upstream, and instructed me to send mails to the relevant
-> kernel module maintainers at Realtek and to the general kernel.org
-> mailing list.
->
-> I built kernel 5.3.0-rc1+ with the latest realtek drivers from
-> wireless-drivers-next but my Realtek r8822be doesn't work with
-> rtw88/rtwpci kernel modules.
->
-> Please let me know if there is any additional information I can
-> provide that would help in debugging this issue.
 
-Any chance this would help you?
+On 2019-08-06 5:44 p.m., Bjorn Helgaas wrote:
+> On Tue, Jul 30, 2019 at 10:35:31AM -0600, Logan Gunthorpe wrote:
+>> Here's v2 of the patchset. It doesn't sound like there's anything
+>> terribly controversial here so this version is mostly just some
+>> cleanup changes for clarity.
+>>
+>> Changes in v2:
+>>  * Rebase on v5.3-rc2 (No changes)
+>>  * Re-introduce the private pagemap structure and move the p2p-specific
+>>    elements out of the commond dev_pagemap (per Christoph)
+>>  * Use flags instead of bool in the whitelist (per Jason)
+>>  * Only store the mapping type in the xarray (instead of the distance
+>>    with flags) such that a function can return the mapping method
+>>    with a switch statement to decide how to map. (per Christoph)
+>>  * Drop find_parent_pci_dev() on the fast path and rely on the fact
+>>    that the struct device passed to the mapping functions *must* be
+>>    a PCI device and convert it directly. (per suggestions from
+>>    Christoph and Jason)
+>>  * Collected Christian's Reviewed-by's
+>> --
+>>
+>> As discussed on the list previously, in order to fully support the
+>> whitelist Christian added with the IOMMU, we must ensure that we
+>> map any buffer going through the IOMMU with an aprropriate dma_map
+>> call. This patchset accomplishes this by cleaning up the output of
+>> upstream_bridge_distance() to better indicate the mapping requirements,
+>> caching these requirements in an xarray, then looking them up at map
+>> time and applying the appropriate mapping method.
+>>
+>> After this patchset, it's possible to use the NVMe-of P2P support to
+>> transfer between devices without a switch on the whitelisted root
+>> complexes. A couple Intel device I have tested this on have also
+>> been added to the white list.
+>>
+>> Most of the changes are contained within the p2pdma.c, but there are
+>> a few minor touches to other subsystems, mostly to add support
+>> to call an unmap function.
+>>
+>> The final patch in this series demonstrates a possible
+>> pci_p2pdma_map_resource() function that I expect Christian will need
+>> but does not have any users at this time so I don't intend for it to be
+>> considered for merging.
+> 
+> I don't see pci_p2pdma_map_resource() in any of these patches.
 
-https://patchwork.kernel.org/patch/11065631/
+Oh, sorry, I removed that in v2 seeing there was some confusion over it.
+I guess I forgot to remove the reference in the cover letter.
 
-Somebody else was complaining about 8822be regressions that were fixed
-with that.
+> I tentatively applied these to pci/p2pdma with minor typographical
+> updates (below), but I'll update the branch if necessary.
 
-Brian
+Great, thanks! The typographical changes look good.
+
+I already have one very minor change queued up for these. Should I just
+send you a small patch against your branch for you to squash?
+
+Logan
+
