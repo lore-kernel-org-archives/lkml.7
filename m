@@ -2,135 +2,139 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB9D3C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 03:37:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B4D2C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 03:40:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E45820717
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 03:37:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 327EF20717
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 03:40:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="XQGDawLQ"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="BLRI9h7q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387395AbfHGDhv (ORCPT
+        id S1728048AbfHGDkv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 23:37:51 -0400
-Received: from mx0a-00190b01.pphosted.com ([67.231.149.131]:58876 "EHLO
-        mx0a-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726612AbfHGDhu (ORCPT
+        Tue, 6 Aug 2019 23:40:51 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:9400 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726612AbfHGDku (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 23:37:50 -0400
-Received: from pps.filterd (m0050095.ppops.net [127.0.0.1])
-        by m0050095.ppops.net-00190b01. (8.16.0.42/8.16.0.42) with SMTP id x773VawP026128;
-        Wed, 7 Aug 2019 04:36:27 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=jan2016.eng;
- bh=Vagb6QmnbXVI1op31baqpLQ8s4lzl7qHp9Urb7sEl8U=;
- b=XQGDawLQuneZD9fKvm9glLCNSAIvcs6qU2P41ybYatJDT1teQBXh3syLEA9wVsT30T/W
- CJkgD+bVODtexnyHdxPK+bzLL9lXOq+uC7XFUgejUqURxsQ8soZJWy5kPZyKlTkdXl+j
- 6LvvTlB4yMu4gyZPsUAcG8LGVlk7uEFFmOKrdzG0xsnZ8hYpM88dbl9E+vtUxEyXTRKm
- LLIfW3qPxXxRug9HrRBNH8dXnm9/spoVz1Ud8InGVwxe55ZQNeV2uNmmi6LZb2mjiQpZ
- J+DDEcjEimDfc8XBWM2R5BbEjwiuBwM1yFqyR5R+sqZjtkQdZ2XVyGM4n/67Q4v2sKra wQ== 
-Received: from prod-mail-ppoint2 (prod-mail-ppoint2.akamai.com [184.51.33.19] (may be forged))
-        by m0050095.ppops.net-00190b01. with ESMTP id 2u51t4hfbt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 07 Aug 2019 04:36:27 +0100
-Received: from pps.filterd (prod-mail-ppoint2.akamai.com [127.0.0.1])
-        by prod-mail-ppoint2.akamai.com (8.16.0.27/8.16.0.27) with SMTP id x773WPds002641;
-        Tue, 6 Aug 2019 23:36:26 -0400
-Received: from email.msg.corp.akamai.com ([172.27.123.32])
-        by prod-mail-ppoint2.akamai.com with ESMTP id 2u55kw9jj3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Tue, 06 Aug 2019 23:36:25 -0400
-Received: from USMA1EX-CAS3.msg.corp.akamai.com (172.27.123.32) by
- usma1ex-dag1mb1.msg.corp.akamai.com (172.27.123.101) with Microsoft SMTP
- Server (TLS) id 15.0.1473.3; Tue, 6 Aug 2019 23:36:25 -0400
-Received: from igorcastle.kendall.corp.akamai.com (172.29.170.135) by
- USMA1EX-CAS3.msg.corp.akamai.com (172.27.123.32) with Microsoft SMTP Server
- id 15.0.1473.3 via Frontend Transport; Tue, 6 Aug 2019 23:36:25 -0400
-Received: by igorcastle.kendall.corp.akamai.com (Postfix, from userid 29659)
-        id 0F0E461DB6; Tue,  6 Aug 2019 23:36:23 -0400 (EDT)
-From:   Igor Lubashev <ilubashe@akamai.com>
-To:     <linux-kernel@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>
-CC:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        James Morris <jmorris@namei.org>,
-        Igor Lubashev <ilubashe@akamai.com>
-Subject: [PATCH v2 4/4] perf: Use CAP_SYS_ADMIN instead of euid==0 with ftrace
-Date:   Tue, 6 Aug 2019 23:35:57 -0400
-Message-ID: <eb995d4d73fb58e6a1c1560803beec048cafb4d7.1565146171.git.ilubashe@akamai.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1565146171.git.ilubashe@akamai.com>
-References: <cover.1565146171.git.ilubashe@akamai.com>
+        Tue, 6 Aug 2019 23:40:50 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d4a48420002>; Tue, 06 Aug 2019 20:40:50 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 06 Aug 2019 20:40:49 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 06 Aug 2019 20:40:49 -0700
+Received: from [10.2.168.234] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 7 Aug
+ 2019 03:40:47 +0000
+Subject: Re: [PATCH v7 01/20] pinctrl: tegra: Add suspend and resume support
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        "Stephen Boyd" <sboyd@kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        <jckuo@nvidia.com>, "Joseph Lo" <josephl@nvidia.com>,
+        <talho@nvidia.com>, <linux-tegra@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Mikko Perttunen" <mperttunen@nvidia.com>, <spatra@nvidia.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        viresh kumar <viresh.kumar@linaro.org>,
+        Linux PM list <linux-pm@vger.kernel.org>
+References: <1564607463-28802-1-git-send-email-skomatineni@nvidia.com>
+ <1564607463-28802-2-git-send-email-skomatineni@nvidia.com>
+ <CACRpkdZVR-i1c5eATL2hSPbLXcX1sR8NgXwa4j259XXUi57xug@mail.gmail.com>
+ <a2fb3795-5ec1-1d03-f496-f151d1270e90@nvidia.com>
+Message-ID: <dadf0cc7-fba4-9ab5-6ac9-0c8699eb4401@nvidia.com>
+Date:   Tue, 6 Aug 2019 20:40:47 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-07_01:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908070034
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:5.22.84,1.0.8
- definitions=2019-08-07_01:2019-08-05,2019-08-07 signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 priorityscore=1501
- mlxscore=0 mlxlogscore=999 spamscore=0 clxscore=1015 adultscore=0
- phishscore=0 malwarescore=0 bulkscore=0 suspectscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1906280000
- definitions=main-1908070034
+In-Reply-To: <a2fb3795-5ec1-1d03-f496-f151d1270e90@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1565149250; bh=R1aWkHhQGEDFlMq3J3HvsOTVA4LJ2HzCFYLdH2+sUvw=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=BLRI9h7q5uMUyX7sQu/YuoHnLzETuXQV9ErKqBny0vCUcL8RLClZ9466K66AwBrMj
+         dr15JGaRNq9162+jZoTTbeQo4InXE+YXNZ8kz/AfjToy101DOXpLDwkVcahW2Keaex
+         69R9dtf0Uikm/C4AF8rC0SsbTzNBWID8e45ARmd4w2xxYtSETYPRwx3OmmL8jM7TPj
+         5U/0MSvKHadcF6LvbSyFTaB659bfuFQCQZuJtfp/9hn/a8/3tXDT0pgAvTKwwWOhyh
+         70sBra263MOy2F7zVG/8EWwv4tIXIVcRLnbTUE+WZyQJ3LYaBg5dKbOqn1sY7nb/HW
+         iUjF6vBEglSWw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kernel requires CAP_SYS_ADMIN instead of euid==0 to mount debugfs for ftrace.
-Make perf do the same.
 
-Signed-off-by: Igor Lubashev <ilubashe@akamai.com>
----
- tools/perf/builtin-ftrace.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+On 8/6/19 2:51 PM, Sowjanya Komatineni wrote:
+>
+> On 8/5/19 2:20 AM, Linus Walleij wrote:
+>> On Wed, Jul 31, 2019 at 11:11 PM Sowjanya Komatineni
+>> <skomatineni@nvidia.com> wrote:
+>>
+>>> This patch adds support for Tegra pinctrl driver suspend and resume.
+>>>
+>>> During suspend, context of all pinctrl registers are stored and
+>>> on resume they are all restored to have all the pinmux and pad
+>>> configuration for normal operation.
+>>>
+>>> Acked-by: Thierry Reding <treding@nvidia.com>
+>>> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>> Patch applied to the pinctrl tree.
+>>
+>> This patch seems finished.
+>>
+>> Also if the rest don't get merged for v5.4 then at least this is so
+>> your patch stack gets more shallow.
+>>
+>> I hope it's fine to merge this separately, else tell me and I'll
+>> pull it out.
+>>
+>> Yours,
+>> Linus Walleij
+>
+> Yes, this patch can be merged separately. But, there's latest feedback 
+> from Dmitry to add barrier after writes to make sure pinmux register 
+> writes happen.
+>
+> So will update this patch to add barrier in v8. So, need to wait for v8.
+>
+> Thanks
+>
+> Sowjanya
+>
+I see it merged. So will exclude suspend/resume patch and will add patch 
+for necessary write barrier fix in v8 version.
 
-diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-index ae1466aa3b26..d09eac8a6d57 100644
---- a/tools/perf/builtin-ftrace.c
-+++ b/tools/perf/builtin-ftrace.c
-@@ -13,6 +13,7 @@
- #include <signal.h>
- #include <fcntl.h>
- #include <poll.h>
-+#include <linux/capability.h>
- 
- #include "debug.h"
- #include <subcmd/parse-options.h>
-@@ -21,6 +22,7 @@
- #include "target.h"
- #include "cpumap.h"
- #include "thread_map.h"
-+#include "util/cap.h"
- #include "util/config.h"
- 
- 
-@@ -281,7 +283,7 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
- 		.events = POLLIN,
- 	};
- 
--	if (geteuid() != 0) {
-+	if (!perf_cap__capable(CAP_SYS_ADMIN)) {
- 		pr_err("ftrace only works for root!\n");
- 		return -1;
- 	}
--- 
-2.7.4
+Thanks
+
+Sowjanya
 
