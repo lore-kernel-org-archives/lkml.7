@@ -2,110 +2,137 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2110EC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 06:40:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E0B1C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 06:40:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01FC422297
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 06:40:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 418FA21E6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 06:40:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="cZhyddtf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727897AbfHGGkg (ORCPT
+        id S1728109AbfHGGkl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 7 Aug 2019 02:40:41 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:8123 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727846AbfHGGkg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 7 Aug 2019 02:40:36 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3772 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727308AbfHGGkK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 02:40:10 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 0DA08C934C20C18C1B1B;
-        Wed,  7 Aug 2019 14:40:08 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Wed, 7 Aug 2019
- 14:39:59 +0800
-From:   Jason Yan <yanaijie@huawei.com>
-To:     <mpe@ellerman.id.au>, <linuxppc-dev@lists.ozlabs.org>,
-        <diana.craciun@nxp.com>, <christophe.leroy@c-s.fr>,
-        <benh@kernel.crashing.org>, <paulus@samba.org>,
-        <npiggin@gmail.com>, <keescook@chromium.org>,
-        <kernel-hardening@lists.openwall.com>
-CC:     <linux-kernel@vger.kernel.org>, <wangkefeng.wang@huawei.com>,
-        <yebin10@huawei.com>, <thunder.leizhen@huawei.com>,
-        <jingxiangfeng@huawei.com>, <fanchengyang@huawei.com>,
-        <zhaohongjiang@huawei.com>, Jason Yan <yanaijie@huawei.com>
-Subject: [PATCH v5 05/10] powerpc/fsl_booke/32: introduce reloc_kernel_entry() helper
-Date:   Wed, 7 Aug 2019 14:57:01 +0800
-Message-ID: <20190807065706.11411-6-yanaijie@huawei.com>
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20190807065706.11411-1-yanaijie@huawei.com>
-References: <20190807065706.11411-1-yanaijie@huawei.com>
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d4a726c0000>; Tue, 06 Aug 2019 23:40:44 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 06 Aug 2019 23:40:34 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 06 Aug 2019 23:40:34 -0700
+Received: from [10.2.165.207] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 7 Aug
+ 2019 06:40:34 +0000
+Subject: Re: [PATCH 00/12] block/bio, fs: convert put_page() to
+ put_user_page*()
+To:     Christoph Hellwig <hch@infradead.org>
+CC:     <john.hubbard@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Eric Van Hensbergen <ericvh@gmail.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jason Wang <jasowang@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        Latchesar Ionkov <lucho@ionkov.net>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Matthew Wilcox <willy@infradead.org>, <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        <ceph-devel@vger.kernel.org>, <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-cifs@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-nfs@vger.kernel.org>,
+        <linux-rdma@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <samba-technical@lists.samba.org>,
+        <v9fs-developer@lists.sourceforge.net>,
+        <virtualization@lists.linux-foundation.org>
+References: <20190724042518.14363-1-jhubbard@nvidia.com>
+ <20190724061750.GA19397@infradead.org>
+ <c35aa2bf-c830-9e57-78ca-9ce6fb6cb53b@nvidia.com>
+ <20190807063448.GA6002@infradead.org>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <3ab1e69f-88c6-3e16-444d-cab78c3bf1d1@nvidia.com>
+Date:   Tue, 6 Aug 2019 23:38:59 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.124.28]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20190807063448.GA6002@infradead.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1565160044; bh=jn0FnBY7ADCh0laBLX/xGqPiB9Jg8oG9YEaLS2KH1Js=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=cZhyddtfeWnuDzmY91G/o97CceVB5RM0qm7xIS+BT+DJS1yACOaMbPnxtDPonJo3O
+         Ckk802AdQClg27dtVTwqZlP1rJ45uR/xJxU2tj1bAWtx6wGx8MnDwDr9/hAcMofdtY
+         YSzbF7dvdBOxPO1CMgg0kHDyQnZ9XI/sZkIaiXVixuZIn5BzSqRh7aOyfPS3OIiva2
+         EdoAoTR8kqTmNnuIpmqz0Mts9lp7nFil4TrfQHcFTrur14aYk9UOgpcZdRREzoyCup
+         0KYEKb/ZJNSFduxPI76a4ilG78VxY7/mJHog1LdnWqMnq4OYf6DhFN3qt02E1MzswR
+         TFH77+TyL//6w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a new helper reloc_kernel_entry() to jump back to the start of the
-new kernel. After we put the new kernel in a randomized place we can use
-this new helper to enter the kernel and begin to relocate again.
+On 8/6/19 11:34 PM, Christoph Hellwig wrote:
+> On Mon, Aug 05, 2019 at 03:54:35PM -0700, John Hubbard wrote:
+>> On 7/23/19 11:17 PM, Christoph Hellwig wrote:
+...
+>>> I think we can do this in a simple and better way.  We have 5 ITER_*
+>>> types.  Of those ITER_DISCARD as the name suggests never uses pages, so
+>>> we can skip handling it.  ITER_PIPE is rejected =D1=96n the direct I/O =
+path,
+>>> which leaves us with three.
+>>>
+>>
+>> Hi Christoph,
+>>
+>> Are you working on anything like this?
+>=20
+> I was hoping I could steer you towards it.  But if you don't want to do
+> it yourself I'll add it to my ever growing todo list.
+>=20
 
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
-Cc: Diana Craciun <diana.craciun@nxp.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Nicholas Piggin <npiggin@gmail.com>
-Cc: Kees Cook <keescook@chromium.org>
-Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Reviewed-by: Diana Craciun <diana.craciun@nxp.com>
-Tested-by: Diana Craciun <diana.craciun@nxp.com>
----
- arch/powerpc/kernel/head_fsl_booke.S | 13 +++++++++++++
- arch/powerpc/mm/mmu_decl.h           |  1 +
- 2 files changed, 14 insertions(+)
+Sure, I'm up for this. The bvec-related items are the next logical part
+of the gup/dma conversions to work on, and I just wanted to avoid solving t=
+he
+same problem if you were already in the code.
 
-diff --git a/arch/powerpc/kernel/head_fsl_booke.S b/arch/powerpc/kernel/head_fsl_booke.S
-index 04d124fee17d..2083382dd662 100644
---- a/arch/powerpc/kernel/head_fsl_booke.S
-+++ b/arch/powerpc/kernel/head_fsl_booke.S
-@@ -1143,6 +1143,19 @@ _GLOBAL(create_tlb_entry)
- 	sync
- 	blr
- 
-+/*
-+ * Return to the start of the relocated kernel and run again
-+ * r3 - virtual address of fdt
-+ * r4 - entry of the kernel
-+ */
-+_GLOBAL(reloc_kernel_entry)
-+	mfmsr	r7
-+	rlwinm	r7, r7, 0, ~(MSR_IS | MSR_DS)
-+
-+	mtspr	SPRN_SRR0,r4
-+	mtspr	SPRN_SRR1,r7
-+	rfi
-+
- /*
-  * Create a tlb entry with the same effective and physical address as
-  * the tlb entry used by the current running code. But set the TS to 1.
-diff --git a/arch/powerpc/mm/mmu_decl.h b/arch/powerpc/mm/mmu_decl.h
-index a09f89d3aa0f..804da298beb3 100644
---- a/arch/powerpc/mm/mmu_decl.h
-+++ b/arch/powerpc/mm/mmu_decl.h
-@@ -143,6 +143,7 @@ extern void adjust_total_lowmem(void);
- extern int switch_to_as1(void);
- extern void restore_to_as0(int esel, int offset, void *dt_ptr, int bootcpu);
- void create_tlb_entry(phys_addr_t phys, unsigned long virt, int entry);
-+void reloc_kernel_entry(void *fdt, int addr);
- #endif
- extern void loadcam_entry(unsigned int index);
- extern void loadcam_multi(int first_idx, int num, int tmp_idx);
--- 
-2.17.2
 
+>> Or on the put_user_bvec() idea?
+>=20
+> I have a prototype from two month ago:
+>=20
+> http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/gup-bvec
+>=20
+> but that only survived the most basic testing, so it'll need more work,
+> which I'm not sure when I'll find time for.
+>=20
+
+I'll take a peek, and probably pester you with a few questions if I get
+confused. :)
+
+thanks,
+--=20
+John Hubbard
+NVIDIA
