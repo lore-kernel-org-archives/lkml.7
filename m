@@ -2,281 +2,143 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47DCAC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:56:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE36C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:57:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F84821E6E
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:56:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FFBB22293
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:57:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="hxltUPay"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387991AbfHGN4X (ORCPT
+        id S2388040AbfHGN5S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 09:56:23 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:50125 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387952AbfHGN4W (ORCPT
+        Wed, 7 Aug 2019 09:57:18 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:39479 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388007AbfHGN5R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 09:56:22 -0400
-Received: from p200300ddd742df588d2c07822b9f4274.dip0.t-ipconnect.de ([2003:dd:d742:df58:8d2c:782:2b9f:4274])
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hvMQL-0002qL-Cq; Wed, 07 Aug 2019 15:56:17 +0200
-Date:   Wed, 7 Aug 2019 15:56:11 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Megha Dey <megha.dey@intel.com>
-cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, marc.zyngier@arm.com,
-        ashok.raj@intel.com, jacob.jun.pan@linux.intel.com
-Subject: Re: [RFC V1 RESEND 2/6] PCI/MSI: Dynamic allocation of MSI-X vectors
- by group
-In-Reply-To: <1565118316.2401.112.camel@intel.com>
-Message-ID: <alpine.DEB.2.21.1908071525390.24014@nanos.tec.linutronix.de>
-References: <1561162778-12669-1-git-send-email-megha.dey@linux.intel.com>  <1561162778-12669-3-git-send-email-megha.dey@linux.intel.com>  <alpine.DEB.2.21.1906280739100.32342@nanos.tec.linutronix.de> <1565118316.2401.112.camel@intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 7 Aug 2019 09:57:17 -0400
+Received: by mail-wr1-f67.google.com with SMTP id t16so1373737wra.6
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 06:57:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=JEGhf93f3Akg5xAiAZZbwAtjhXGTAB4HITGZRviUGbw=;
+        b=hxltUPayeYBh+lxDyHLGBFwRsdfIsK3H03jSxiT/X/jXjZlCUPV9CmHMKclSe/HCBm
+         /9zxcigUzAl1ZkmYidLc0CIWDPKORG4iM2/ni22+l3Z3ozLNU/92lKb2fwY989mKV0xy
+         FhKG/1rS1kcl/WZyFLqyXP6tGemSZliw1rdVCNGHoR4/hpanz+LBPKs+Ji+mYYDiHerH
+         YpfPI7LhoQlM8zBUon7PWChkmNIJKNakymjqeE1ftwmYJZ5q6/GHvXlsn2oeRH0rcO2f
+         mHco3Srg1/In/v+lui9YNh1XO06OPo33pXMavv92Uzpqdgy3ELs+LpY0BEn7yqRNm2GK
+         DTGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=JEGhf93f3Akg5xAiAZZbwAtjhXGTAB4HITGZRviUGbw=;
+        b=TKc4vxMWqEWBqbKtP3SrZVRYhNypZjZ90UL8TJpYGOMFwM8dtw+BhwwxmkySzHm6I6
+         n5gmdR3me811fv0OpHaF8VAZ9/F0LftSjGx8MU6bohP9JpTYl7lgqJY5g9f4z2LBFj8c
+         iqoIBD+4e9OmJqzmQ8YpIPiFx5CMvVjJBXq+H2s3iBr1sqWZUSagnWgciivRdJt6L46F
+         se7krO6YXPIVo9fqF7QkvYjhsMw/wiEdAfSkJW8ckWUIdxm/5oBmjHhSAxpeH39LmEqR
+         FUgeDSMSwBJutpkMsMEKCJFNzFzECe8KULb6Lj+/GFTaoSOSygFeH9yoOftzVOskADvL
+         hYeQ==
+X-Gm-Message-State: APjAAAWbiypH/y63oSG2Iw2JqlcV692Cw/8VA2x3jJjlnga9MSCbAoUa
+        S0YPBjl/fFn8zMMyC8MF2prjHQ==
+X-Google-Smtp-Source: APXvYqxNBWO6G3Xg9M6cSGKJ3YUVTSJRRAVQcoPT8gpOxFh3XGef3u6b9macerFbJF++7wbX6faRHw==
+X-Received: by 2002:adf:e2cb:: with SMTP id d11mr4614004wrj.66.1565186235445;
+        Wed, 07 Aug 2019 06:57:15 -0700 (PDT)
+Received: from localhost (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id k9sm26301161wrd.46.2019.08.07.06.57.14
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 07 Aug 2019 06:57:14 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>
+Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH 3/9] clk: meson: axg-audio: Don't reference clk_init_data after registration
+In-Reply-To: <20190806214852.DE14F216F4@mail.kernel.org>
+References: <20190731193517.237136-1-sboyd@kernel.org> <20190731193517.237136-4-sboyd@kernel.org> <1jwofqvftg.fsf@starbuckisacylon.baylibre.com> <20190806214852.DE14F216F4@mail.kernel.org>
+Date:   Wed, 07 Aug 2019 15:57:13 +0200
+Message-ID: <1j1rxxoz7q.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1787049046-1565186177=:24014"
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Tue 06 Aug 2019 at 14:48, Stephen Boyd <sboyd@kernel.org> wrote:
 
---8323329-1787049046-1565186177=:24014
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-
-Megha,
-
-On Tue, 6 Aug 2019, Megha Dey wrote:
-> On Sat, 2019-06-29 at 09:59 +0200, Thomas Gleixner wrote:
-> > On Fri, 21 Jun 2019, Megha Dey wrote:
-> 
-> Totally agreed. The request to add a dynamic MSI-X infrastructure came
-> from some driver teams internally and currently they do not have
-> bandwidth to come up with relevant test cases. <sigh>
-
-Hahahaha.
-
-> But we hope that this patch set could serve as a precursor to the
-> interrupt message store (IMS) patch set, and we can use this patch set
-> as the baseline for the IMS patches.
-
-If IMS needs the same functionality, then we need to think about it
-slightly differently because IMS is not necessarily tied to PCI.
- 
-IMS has some similarity to the ARM GIC ITS stuff IIRC, which already
-provides these things outside of PCI. Marc?
-
-We probably need some generic infrastructure for this so PCI and everything
-else can use it.
-
-> > > +		/*
-> > > +		 * Save the pointer to the first msi_desc entry of
-> > > every
-> > > +		 * MSI-X group. This pointer is used by other
-> > > functions
-> > > +		 * as the starting point to iterate through each
-> > > of the
-> > > +		 * entries in that particular group.
-> > > +		 */
-> > > +		if (!i)
-> > > +			dev->dev.grp_first_desc = list_last_entry
-> > > +			(dev_to_msi_list(&dev->dev), struct
-> > > msi_desc, list);
-> > How is that supposed to work? The pointer gets overwritten on every
-> > invocation of that interface. I assume this is merily an intermediate
-> > storage for setup. Shudder.
-> > 
-> 
-> Yes, you are right.
-> 
-> The grp_first_desc is simply a temporary storage to store the
-> first msi_desc entry of every group, which can be used by other
-> functions to iterate through the entries belonging to that group only,
-> using the for_each_pci_msi_entry/ for_each_msi_entry_from macro. It is
-> not the cleanest of solutions, I agree.
-
-Yeah, it's too ugly to exist.
-
-> With your proposal of supporting a separate group list, I don't think
-> there will be a need to use this kind of temporary storage variable.
-
-Exactly.
-
-> > > -	for_each_pci_msi_entry(entry, dev) {
-> > > +	for_each_pci_msi_entry_from(entry, dev) {
-> >   > +/* Iterate through MSI entries of device dev starting from a
-> > given desc */
-> >   > +#define for_each_msi_entry_from(desc,
-> > dev)                             \
-> >   > +       desc =
-> > (*dev).grp_first_desc;                                   \
-> >   > +       list_for_each_entry_from((desc), dev_to_msi_list((dev)),
-> > list)  \
-> > 
-> > So this hides the whole group stuff behind a hideous iterator.
-> > 
-> > for_each_pci_msi_entry_from() ? from what? from the device? Sane
-> > iterators
-> > which have a _from naming, have also a from argument.
-> > 
-> 
-> This was meant to be "iterate over all the entries belonging to a
-> group", sorry if that was not clear. 
-> 
-> The current 'for_each_pci_msi_entry' macro iterates through all the
-> msi_desc entries belonging to a particular device. Since we have a
-> piecewise allocation of the MSI-X vectors with this change, we would
-> want to iterate only through the newly added entries, i.e the entries
-> allocated to the current group.
-
-I understand that, but please make macros and function names so they are
-halfways self explaining and intuitive.
-
- > In V2, I will introduce a new macro, 'for_each_pci_msi_entry_group',
-> which will only iterate through the msi_desc entries belonging to a
-> particular group.
-
-for_each_pci_msi_entry_group()
-
-is ambiguous. It could mean to iterate over the groups. 
-
-for_each_pci_msi_entry_in_group()
-
-avoids that.
- 
-> > > -	ret = msix_setup_entries(dev, base, entries, nvec, affd);
-> > > +	ret = msix_setup_entries(dev, dev->base, entries, nvec,
-> > > affd, group);
-> > >  	if (ret)
-> > >  		return ret;
-> > Any error exit in this function will leave MSIx disabled. That means
-> > if
-> > this is a subsequent group allocation which fails for whatever
-> > reason, this
-> > will render all existing and possibly already in use interrupts
-> > unusable.
-> > 
-> 
-> Hmmm yeah, I hadn't thought about this!
-> 
-> So according to the code, we must 'Ensure MSI-X is disabled while it is
-> set up'. MSI-X would be disabled until the setup of the new vectors is
-> complete, even if we do not take the error exit right?
-> 
-> Earlier this was not a problem since we disable the MSI-X, setup all
-> the vectors at once, and then enable the MSI-X once and for all. 
-> 
-> I am not sure how to avoid disabling of MSI-X here.
-
-The problem with your code is that is keeps it disabled in case of an
-error, which makes all existing users (groups) starve.
-
-But, yes there is also the question what happens during the time when
-interrupts are raised on already configured devices exactly during the time
-where MSI-X is disabled temporarily to setup a new group. I fear that will
-end up with lost interrupts and/or spurious interrupts via the legacy
-INT[ABCD]. That really needs to be investigated _before_ we go there.
-
-> > >  static int __pci_enable_msix_range(struct pci_dev *dev,
-> > >  				   struct msix_entry *entries, int
-> > > minvec,
-> > > -				   int maxvec, struct irq_affinity
-> > > *affd)
-> > > +				   int maxvec, struct irq_affinity
-> > > *affd,
-> > > +				   bool one_shot, int group)
-> > >  {
-> > >  	int rc, nvec = maxvec;
-> > >  
-> > >  	if (maxvec < minvec)
-> > >  		return -ERANGE;
-> > >  
-> > > -	if (WARN_ON_ONCE(dev->msix_enabled))
-> > > -		return -EINVAL;
-> > So any misbehaving PCI driver can now call into this without being
-> > caught.
-> > 
-> 
-> I do not understand what misbehaving PCI driver means :(
-
-The one which calls into that interface _AFTER_ msix is enabled. We catch
-that right now and reject it.
-
-> Basically this statement is what denies multiple MSI-X vector
-> allocations, and I wanted to remove it so that we could do just that.
+> Quoting Jerome Brunet (2019-08-06 01:49:47)
+>> On Wed 31 Jul 2019 at 12:35, Stephen Boyd <sboyd@kernel.org> wrote:
+>> 
+>> > A future patch is going to change semantics of clk_register() so that
+>> > clk_hw::init is guaranteed to be NULL after a clk is registered. Avoid
+>> > referencing this member here so that we don't run into NULL pointer
+>> > exceptions.
+>> 
+>> Hi Stephen,
+>> 
+>> What to do you indend to do with this one ? Will you apply directly or
+>> should we take it ?
 >
-> Please let me know how I could change this.
+> I said below:
+>
+>  Please ack so I can take this through clk tree
+>
 
-There are several ways to do that, but it needs to be made conditionally on
-things like 'device has group mode support' ...
- 
-> > If you want to support group based allocations, then the PCI/MSI
-> > facility
-> > has to be refactored from ground up.
-> > 
-> >   1) Introduce the concept of groups by adding a group list head to
-> > struct
-> >      pci_dev. Ideally you create a new struct pci_dev_msi or whatever
-> > where
-> >      all this muck goes into.
-> > 
-> 
-> I think we can use the existing list_head 'msi_list' in the struct
-> device for this, instead of having a new list_head for the group. So
-> now instead of msi_list being a list of all the msi_desc entries, it
-> will have a list of the different groups associated with the device.
-> 
-> IMHO, since IMS is non PCI compliant, having this group_list_head would
-> be better off in struct device than struct pci_dev, which would enable
-> code reuse.
+Missed it, sorry.
 
-Sure, but then we really need to look at the IMS requirements in order not
-to rewrite this whole thing over and over.
+>> 
+>> We have several changes for the controller which may conflict with this
+>> one. It is nothing major but the sooner I know how this changes goes in,
+>> the sooner I can rebase the rest.
+>
+> Will it conflict? I can deal with conflicts.
 
-> >   2) Change the existing code to treat the current allocation mode as
-> > a
-> >      group allocation. Keep the entries in a new struct
-> > msi_entry_group and
-> >      have a group id, list head and the entries in there.
-> > 
-> 
-> I am thinking of something like this, please let me know if this is
-> what you are suggesting:
-> 
-> 1. Introduce a new msi_entry_group struct:
-> struct msi_entry_grp {
->   int group_id; // monotonically increasing group_id
->   int num_vecs; // number of msi_desc entries per group
->   struct list_head group_list; // Added to msi_list in struct device
->   struct list_head entry_list; // list of msi_desc entries for this grp
-> }
+I'll check to be sure and notify you in the PR if necessary
 
-Looks about right.
- 
-> 2. Add a new 'for_each_pci_msi_entry_group' macro. This macro should
-> only iterate through the msi_desc entries belonging to a group.
+>
+>> 
+>> Also, We were (re)using the init_data only on register failures.
+>> I understand that you want to guarantee .init is NULL when the clock is
+>> registered, but it this particular case, the registeration failed so the
+>> clock is not registered.
+>> 
+>> IMO, it would be better if devm_clk_hw_register() left the init_data
+>> untouched if the registration fails.
+>
+> Do you have other usage of the init_data besides printing out the
+> name?
 
-See above.
- 
-> 3. The existing for_each_pci_msi_entry, needs to be modified so that it
-> is backward compatible. This macro should still be able to iterate
-> through all the entries in all the groups. 
+No other use
 
-I'm not sure. It might be just the thing which iterates over group 0, which
-is the default for all devices which do not use/support group mode, but
-let's see.
- 
-Thanks,
+> I think we could have devm_clk_hw_register() print out the name of the
+> clk that failed to register instead, and get rid of more code in drivers
+> that way.
 
-	tglx
---8323329-1787049046-1565186177=:24014--
+Sure, why not.
+
+> Unless of course there are other uses of the init struct?
+
+I was just commenting on the fact that initialization function tends to
+rollback what they can in case of failures, usually.
+
+>
+>> 
+>> >
+>> > Cc: Neil Armstrong <narmstrong@baylibre.com>
+>> > Cc: Jerome Brunet <jbrunet@baylibre.com>
+>> > Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+>> > ---
+>> >
+>> > Please ack so I can take this through clk tree
+>> >
+>> >  drivers/clk/meson/axg-audio.c | 7 +++++--
+>> >  1 file changed, 5 insertions(+), 2 deletions(-)
+>> >
