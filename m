@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1750CC19759
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 06:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA757C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 06:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D664521E6E
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 06:40:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AB72214C6
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 06:40:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727669AbfHGGkP (ORCPT
+        id S1727689AbfHGGkS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 02:40:15 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3775 "EHLO huawei.com"
+        Wed, 7 Aug 2019 02:40:18 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3776 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727400AbfHGGkM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 02:40:12 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 19F0D5E3876602472AA1;
-        Wed,  7 Aug 2019 14:40:08 +0800 (CST)
+        id S1727587AbfHGGkO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 02:40:14 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id E5D9688616E9A5148282;
+        Wed,  7 Aug 2019 14:40:12 +0800 (CST)
 Received: from huawei.com (10.175.124.28) by DGGEMS412-HUB.china.huawei.com
  (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Wed, 7 Aug 2019
- 14:40:00 +0800
+ 14:40:04 +0800
 From:   Jason Yan <yanaijie@huawei.com>
 To:     <mpe@ellerman.id.au>, <linuxppc-dev@lists.ozlabs.org>,
         <diana.craciun@nxp.com>, <christophe.leroy@c-s.fr>,
@@ -35,9 +35,9 @@ CC:     <linux-kernel@vger.kernel.org>, <wangkefeng.wang@huawei.com>,
         <yebin10@huawei.com>, <thunder.leizhen@huawei.com>,
         <jingxiangfeng@huawei.com>, <fanchengyang@huawei.com>,
         <zhaohongjiang@huawei.com>, Jason Yan <yanaijie@huawei.com>
-Subject: [PATCH v5 06/10] powerpc/fsl_booke/32: implement KASLR infrastructure
-Date:   Wed, 7 Aug 2019 14:57:02 +0800
-Message-ID: <20190807065706.11411-7-yanaijie@huawei.com>
+Subject: [PATCH v5 10/10] powerpc/fsl_booke/kaslr: dump out kernel offset information on panic
+Date:   Wed, 7 Aug 2019 14:57:06 +0800
+Message-ID: <20190807065706.11411-11-yanaijie@huawei.com>
 X-Mailer: git-send-email 2.17.2
 In-Reply-To: <20190807065706.11411-1-yanaijie@huawei.com>
 References: <20190807065706.11411-1-yanaijie@huawei.com>
@@ -50,16 +50,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch add support to boot kernel from places other than KERNELBASE.
-Since CONFIG_RELOCATABLE has already supported, what we need to do is
-map or copy kernel to a proper place and relocate. Freescale Book-E
-parts expect lowmem to be mapped by fixed TLB entries(TLB1). The TLB1
-entries are not suitable to map the kernel directly in a randomized
-region, so we chose to copy the kernel to a proper place and restart to
-relocate.
-
-The offset of the kernel was not randomized yet(a fixed 64M is set). We
-will randomize it in the next patch.
+When kaslr is enabled, the kernel offset is different for every boot.
+This brings some difficult to debug the kernel. Dump out the kernel
+offset when panic so that we can easily debug the kernel.
 
 Signed-off-by: Jason Yan <yanaijie@huawei.com>
 Cc: Diana Craciun <diana.craciun@nxp.com>
@@ -69,278 +62,79 @@ Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 Cc: Paul Mackerras <paulus@samba.org>
 Cc: Nicholas Piggin <npiggin@gmail.com>
 Cc: Kees Cook <keescook@chromium.org>
-Tested-by: Diana Craciun <diana.craciun@nxp.com>
 Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Reviewed-by: Diana Craciun <diana.craciun@nxp.com>
+Tested-by: Diana Craciun <diana.craciun@nxp.com>
 ---
- arch/powerpc/Kconfig                          | 11 +++
- arch/powerpc/kernel/Makefile                  |  1 +
- arch/powerpc/kernel/early_32.c                |  2 +-
- arch/powerpc/kernel/fsl_booke_entry_mapping.S | 17 ++--
- arch/powerpc/kernel/head_fsl_booke.S          | 13 ++-
- arch/powerpc/kernel/kaslr_booke.c             | 84 +++++++++++++++++++
- arch/powerpc/mm/mmu_decl.h                    |  6 ++
- arch/powerpc/mm/nohash/fsl_booke.c            |  7 +-
- 8 files changed, 126 insertions(+), 15 deletions(-)
- create mode 100644 arch/powerpc/kernel/kaslr_booke.c
+ arch/powerpc/include/asm/page.h     |  5 +++++
+ arch/powerpc/kernel/machine_kexec.c |  1 +
+ arch/powerpc/kernel/setup-common.c  | 19 +++++++++++++++++++
+ 3 files changed, 25 insertions(+)
 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 77f6ebf97113..755378887912 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -548,6 +548,17 @@ config RELOCATABLE
- 	  setting can still be useful to bootwrappers that need to know the
- 	  load address of the kernel (eg. u-boot/mkimage).
+diff --git a/arch/powerpc/include/asm/page.h b/arch/powerpc/include/asm/page.h
+index 60a68d3a54b1..cd3ac530e58d 100644
+--- a/arch/powerpc/include/asm/page.h
++++ b/arch/powerpc/include/asm/page.h
+@@ -317,6 +317,11 @@ struct vm_area_struct;
  
-+config RANDOMIZE_BASE
-+	bool "Randomize the address of the kernel image"
-+	depends on (FSL_BOOKE && FLATMEM && PPC32)
-+	select RELOCATABLE
-+	help
-+	  Randomizes the virtual address at which the kernel image is
-+	  loaded, as a security feature that deters exploit attempts
-+	  relying on knowledge of the location of kernel internals.
+ extern unsigned long kimage_vaddr;
+ 
++static inline unsigned long kaslr_offset(void)
++{
++	return kimage_vaddr - KERNELBASE;
++}
 +
-+	  If unsure, say N.
-+
- config RELOCATABLE_TEST
- 	bool "Test relocatable kernel"
- 	depends on (PPC64 && RELOCATABLE)
-diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
-index ea0c69236789..32f6c5b99307 100644
---- a/arch/powerpc/kernel/Makefile
-+++ b/arch/powerpc/kernel/Makefile
-@@ -106,6 +106,7 @@ extra-$(CONFIG_PPC_8xx)		:= head_8xx.o
- extra-y				+= vmlinux.lds
- 
- obj-$(CONFIG_RELOCATABLE)	+= reloc_$(BITS).o
-+obj-$(CONFIG_RANDOMIZE_BASE)	+= kaslr_booke.o
- 
- obj-$(CONFIG_PPC32)		+= entry_32.o setup_32.o early_32.o
- obj-$(CONFIG_PPC64)		+= dma-iommu.o iommu.o
-diff --git a/arch/powerpc/kernel/early_32.c b/arch/powerpc/kernel/early_32.c
-index 3482118ffe76..fe8347cdc07d 100644
---- a/arch/powerpc/kernel/early_32.c
-+++ b/arch/powerpc/kernel/early_32.c
-@@ -32,5 +32,5 @@ notrace unsigned long __init early_init(unsigned long dt_ptr)
- 
- 	apply_feature_fixups();
- 
--	return KERNELBASE + offset;
-+	return kimage_vaddr + offset;
+ #include <asm-generic/memory_model.h>
+ #endif /* __ASSEMBLY__ */
+ #include <asm/slice.h>
+diff --git a/arch/powerpc/kernel/machine_kexec.c b/arch/powerpc/kernel/machine_kexec.c
+index c4ed328a7b96..078fe3d76feb 100644
+--- a/arch/powerpc/kernel/machine_kexec.c
++++ b/arch/powerpc/kernel/machine_kexec.c
+@@ -86,6 +86,7 @@ void arch_crash_save_vmcoreinfo(void)
+ 	VMCOREINFO_STRUCT_SIZE(mmu_psize_def);
+ 	VMCOREINFO_OFFSET(mmu_psize_def, shift);
+ #endif
++	vmcoreinfo_append_str("KERNELOFFSET=%lx\n", kaslr_offset());
  }
-diff --git a/arch/powerpc/kernel/fsl_booke_entry_mapping.S b/arch/powerpc/kernel/fsl_booke_entry_mapping.S
-index de0980945510..de7ee682bb4a 100644
---- a/arch/powerpc/kernel/fsl_booke_entry_mapping.S
-+++ b/arch/powerpc/kernel/fsl_booke_entry_mapping.S
-@@ -155,23 +155,22 @@ skpinv:	addi	r6,r6,1				/* Increment */
  
- #if defined(ENTRY_MAPPING_BOOT_SETUP)
- 
--/* 6. Setup KERNELBASE mapping in TLB1[0] */
-+/* 6. Setup kimage_vaddr mapping in TLB1[0] */
- 	lis	r6,0x1000		/* Set MAS0(TLBSEL) = TLB1(1), ESEL = 0 */
- 	mtspr	SPRN_MAS0,r6
- 	lis	r6,(MAS1_VALID|MAS1_IPROT)@h
- 	ori	r6,r6,(MAS1_TSIZE(BOOK3E_PAGESZ_64M))@l
- 	mtspr	SPRN_MAS1,r6
--	lis	r6,MAS2_VAL(PAGE_OFFSET, BOOK3E_PAGESZ_64M, M_IF_NEEDED)@h
--	ori	r6,r6,MAS2_VAL(PAGE_OFFSET, BOOK3E_PAGESZ_64M, M_IF_NEEDED)@l
--	mtspr	SPRN_MAS2,r6
-+	lis     r6,MAS2_EPN_MASK(BOOK3E_PAGESZ_64M)@h
-+	ori     r6,r6,MAS2_EPN_MASK(BOOK3E_PAGESZ_64M)@l
-+	and     r6,r6,r20
-+	ori	r6,r6,M_IF_NEEDED@l
-+	mtspr   SPRN_MAS2,r6
- 	mtspr	SPRN_MAS3,r8
- 	tlbwe
- 
--/* 7. Jump to KERNELBASE mapping */
--	lis	r6,(KERNELBASE & ~0xfff)@h
--	ori	r6,r6,(KERNELBASE & ~0xfff)@l
--	rlwinm	r7,r25,0,0x03ffffff
--	add	r6,r7,r6
-+/* 7. Jump to kimage_vaddr mapping */
-+	mr	r6,r20
- 
- #elif defined(ENTRY_MAPPING_KEXEC_SETUP)
  /*
-diff --git a/arch/powerpc/kernel/head_fsl_booke.S b/arch/powerpc/kernel/head_fsl_booke.S
-index 2083382dd662..aa55832e7506 100644
---- a/arch/powerpc/kernel/head_fsl_booke.S
-+++ b/arch/powerpc/kernel/head_fsl_booke.S
-@@ -155,6 +155,8 @@ _ENTRY(_start);
-  */
+diff --git a/arch/powerpc/kernel/setup-common.c b/arch/powerpc/kernel/setup-common.c
+index 1f8db666468d..064075f02837 100644
+--- a/arch/powerpc/kernel/setup-common.c
++++ b/arch/powerpc/kernel/setup-common.c
+@@ -715,12 +715,31 @@ static struct notifier_block ppc_panic_block = {
+ 	.priority = INT_MIN /* may not return; must be done last */
+ };
  
- _ENTRY(__early_start)
-+	LOAD_REG_ADDR_PIC(r20, kimage_vaddr)
-+	lwz     r20,0(r20)
- 
- #define ENTRY_MAPPING_BOOT_SETUP
- #include "fsl_booke_entry_mapping.S"
-@@ -277,8 +279,8 @@ set_ivor:
- 	ori	r6, r6, swapper_pg_dir@l
- 	lis	r5, abatron_pteptrs@h
- 	ori	r5, r5, abatron_pteptrs@l
--	lis	r4, KERNELBASE@h
--	ori	r4, r4, KERNELBASE@l
-+	lis     r3, kimage_vaddr@ha
-+	lwz     r4, kimage_vaddr@l(r3)
- 	stw	r5, 0(r4)	/* Save abatron_pteptrs at a fixed location */
- 	stw	r6, 0(r5)
- 
-@@ -1067,7 +1069,12 @@ __secondary_start:
- 	mr	r5,r25		/* phys kernel start */
- 	rlwinm	r5,r5,0,~0x3ffffff	/* aligned 64M */
- 	subf	r4,r5,r4	/* memstart_addr - phys kernel start */
--	li	r5,0		/* no device tree */
-+	lis	r7,KERNELBASE@h
-+	ori	r7,r7,KERNELBASE@l
-+	cmpw	r20,r7		/* if kimage_vaddr != KERNELBASE, randomized */
-+	beq	2f
-+	li	r4,0
-+2:	li	r5,0		/* no device tree */
- 	li	r6,0		/* not boot cpu */
- 	bl	restore_to_as0
- 
-diff --git a/arch/powerpc/kernel/kaslr_booke.c b/arch/powerpc/kernel/kaslr_booke.c
-new file mode 100644
-index 000000000000..30f84c0321b2
---- /dev/null
-+++ b/arch/powerpc/kernel/kaslr_booke.c
-@@ -0,0 +1,84 @@
-+// SPDX-License-Identifier: GPL-2.0-only
 +/*
-+ * Copyright (C) 2019 Jason Yan <yanaijie@huawei.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
++ * Dump out kernel offset information on panic.
 + */
-+
-+#include <linux/signal.h>
-+#include <linux/sched.h>
-+#include <linux/kernel.h>
-+#include <linux/errno.h>
-+#include <linux/string.h>
-+#include <linux/types.h>
-+#include <linux/ptrace.h>
-+#include <linux/mman.h>
-+#include <linux/mm.h>
-+#include <linux/swap.h>
-+#include <linux/stddef.h>
-+#include <linux/vmalloc.h>
-+#include <linux/init.h>
-+#include <linux/delay.h>
-+#include <linux/highmem.h>
-+#include <linux/memblock.h>
-+#include <asm/pgalloc.h>
-+#include <asm/prom.h>
-+#include <asm/io.h>
-+#include <asm/mmu_context.h>
-+#include <asm/pgtable.h>
-+#include <asm/mmu.h>
-+#include <linux/uaccess.h>
-+#include <asm/smp.h>
-+#include <asm/machdep.h>
-+#include <asm/setup.h>
-+#include <asm/paca.h>
-+#include <mm/mmu_decl.h>
-+
-+extern int is_second_reloc;
-+
-+static unsigned long __init kaslr_choose_location(void *dt_ptr, phys_addr_t size,
-+						  unsigned long kernel_sz)
++static int dump_kernel_offset(struct notifier_block *self, unsigned long v,
++			      void *p)
 +{
-+	/* return a fixed offset of 64M for now */
-+	return SZ_64M;
++	pr_emerg("Kernel Offset: 0x%lx from 0x%lx\n",
++		 kaslr_offset(), KERNELBASE);
++
++	return 0;
 +}
 +
-+/*
-+ * To see if we need to relocate the kernel to a random offset
-+ * void *dt_ptr - address of the device tree
-+ * phys_addr_t size - size of the first memory block
-+ */
-+notrace void __init kaslr_early_init(void *dt_ptr, phys_addr_t size)
-+{
-+	unsigned long tlb_virt;
-+	phys_addr_t tlb_phys;
-+	unsigned long offset;
-+	unsigned long kernel_sz;
++static struct notifier_block kernel_offset_notifier = {
++	.notifier_call = dump_kernel_offset
++};
 +
-+	kernel_sz = (unsigned long)_end - KERNELBASE;
-+
-+	offset = kaslr_choose_location(dt_ptr, size, kernel_sz);
-+
-+	if (offset == 0)
-+		return;
-+
-+	kimage_vaddr += offset;
-+	kernstart_addr += offset;
-+
-+	is_second_reloc = 1;
-+
-+	if (offset >= SZ_64M) {
-+		tlb_virt = round_down(kimage_vaddr, SZ_64M);
-+		tlb_phys = round_down(kernstart_addr, SZ_64M);
-+
-+		/* Create kernel map to relocate in */
-+		create_tlb_entry(tlb_phys, tlb_virt, 1);
-+	}
-+
-+	/* Copy the kernel to it's new location and run */
-+	memcpy((void *)kimage_vaddr, (void *)KERNELBASE, kernel_sz);
-+
-+	reloc_kernel_entry(dt_ptr, kimage_vaddr);
-+}
-diff --git a/arch/powerpc/mm/mmu_decl.h b/arch/powerpc/mm/mmu_decl.h
-index 804da298beb3..9332772c8a66 100644
---- a/arch/powerpc/mm/mmu_decl.h
-+++ b/arch/powerpc/mm/mmu_decl.h
-@@ -148,6 +148,12 @@ void reloc_kernel_entry(void *fdt, int addr);
- extern void loadcam_entry(unsigned int index);
- extern void loadcam_multi(int first_idx, int num, int tmp_idx);
- 
-+#ifdef CONFIG_RANDOMIZE_BASE
-+void kaslr_early_init(void *dt_ptr, phys_addr_t size);
-+#else
-+static inline void kaslr_early_init(void *dt_ptr, phys_addr_t size) {}
-+#endif
-+
- struct tlbcam {
- 	u32	MAS0;
- 	u32	MAS1;
-diff --git a/arch/powerpc/mm/nohash/fsl_booke.c b/arch/powerpc/mm/nohash/fsl_booke.c
-index 556e3cd52a35..8d25a8dc965f 100644
---- a/arch/powerpc/mm/nohash/fsl_booke.c
-+++ b/arch/powerpc/mm/nohash/fsl_booke.c
-@@ -263,7 +263,8 @@ void setup_initial_memory_limit(phys_addr_t first_memblock_base,
- int __initdata is_second_reloc;
- notrace void __init relocate_init(u64 dt_ptr, phys_addr_t start)
+ void __init setup_panic(void)
  {
--	unsigned long base = KERNELBASE;
-+	unsigned long base = kimage_vaddr;
-+	phys_addr_t size;
- 
- 	kernstart_addr = start;
- 	if (is_second_reloc) {
-@@ -291,7 +292,7 @@ notrace void __init relocate_init(u64 dt_ptr, phys_addr_t start)
- 	start &= ~0x3ffffff;
- 	base &= ~0x3ffffff;
- 	virt_phys_offset = base - start;
--	early_get_first_memblock_info(__va(dt_ptr), NULL);
-+	early_get_first_memblock_info(__va(dt_ptr), &size);
- 	/*
- 	 * We now get the memstart_addr, then we should check if this
- 	 * address is the same as what the PAGE_OFFSET map to now. If
-@@ -316,6 +317,8 @@ notrace void __init relocate_init(u64 dt_ptr, phys_addr_t start)
- 		/* We should never reach here */
- 		panic("Relocation error");
- 	}
-+
-+	kaslr_early_init(__va(dt_ptr), size);
+ 	/* PPC64 always does a hard irq disable in its panic handler */
+ 	if (!IS_ENABLED(CONFIG_PPC64) && !ppc_md.panic)
+ 		return;
+ 	atomic_notifier_chain_register(&panic_notifier_list, &ppc_panic_block);
++	if (IS_ENABLED(CONFIG_RANDOMIZE_BASE) && kaslr_offset() > 0)
++		atomic_notifier_chain_register(&panic_notifier_list,
++					       &kernel_offset_notifier);
  }
- #endif
- #endif
+ 
+ #ifdef CONFIG_CHECK_CACHE_COHERENCY
 -- 
 2.17.2
 
