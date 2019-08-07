@@ -2,121 +2,65 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF7BC32756
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 18:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81D25C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 18:32:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EE1722387
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 18:31:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565202717;
-	bh=WozeiTmyC8dbmEUais7vMDTGVQa623zzwQyYAaMOTe8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DfPruYdyJWf7BDI+M/28OGkuv0M2anH7NAwRCiTgMYyvCR3CkjvO2pCh7c1Lv2OzV
-	 IPt02GLErvVnzrnutE/WUljnOKr+GUYM8EnBNeUyzuTGpMfr+AGg5PkQW9y1X577BO
-	 DM4VLgJoTJ/XGF56IyUu0RuaDIribzdDEb78w1+I=
+	by mail.kernel.org (Postfix) with ESMTP id 63A9721E73
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 18:32:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389309AbfHGSb4 (ORCPT
+        id S2389346AbfHGSb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 14:31:56 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:37590 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388428AbfHGSbz (ORCPT
+        Wed, 7 Aug 2019 14:31:58 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:43014 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S2388428AbfHGSb4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 14:31:55 -0400
-Received: by mail-qk1-f196.google.com with SMTP id d15so66581096qkl.4;
-        Wed, 07 Aug 2019 11:31:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=9vz8o0/Fg9HbJyVE2ylEHY7Bd2jvJ9o7HmByhNCHje8=;
-        b=S/hC9pFyYsK3bBGpkS+QRQZx9iC78MlaFPdHy5dgV03bOA1Dd/SJhJT31pXIM/Vdpr
-         pTggs2ww4s5HKZ6Rl822jfjP1lfNILksJxMEIOa1T+LCO8oErZSfUgyFzQR31AWOeOSi
-         spJB4tB+m3qzO4p/d+Wyh9B9np+ZwkmgbeoAG2uGbxmQRjowE3F4Kc9wJwRI1Y52Qx9n
-         n5/nIcew9FwUxZ1EQwHSBCBD4d/V6vY5SsokAC80mHelGqNJlGBMJsesOifrtC+/Dpu6
-         5atcb/gJevn9CWlil28jn8uHgxtBr+UG4Ps4fouBx792PF2Ko3Zbv5IQY43ZLeBdoo6F
-         xdmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9vz8o0/Fg9HbJyVE2ylEHY7Bd2jvJ9o7HmByhNCHje8=;
-        b=l4bo27zyFJVyEqBM0j9QX7Zj7xbjvW8kZWZSZDTecmAPP0j8ztliLv7ssmqCSOPW76
-         0o8Uq3ZVVCJdaXU6pqXd/m6noMtl2yDxP+Dad1o2TLeFmL2CZD339UATVzshAdmW2qCq
-         4n2aM5yodDxgk4oB3mZej3DZrhkAt0ICLvlJjUfdLQfRX+eOi1sk9ex8ip36jfTZEJ2V
-         8GRsqlUgZ8pCXm0u8ny893lnDoVBVQpwrMgRFE0l88h8LUqIS0BTtMsgfnZ63JVi75OD
-         /fF5ZuVTUIxNLZeOUb0p/duDJ/IBScB3jBpd7VbiAy2IiXqT7CIvFBJsL7fvdKbeJ9XO
-         fS/A==
-X-Gm-Message-State: APjAAAVn6rKrcMF1h3Cs3D4/ACg4W+Koo5qTeCU9NIGPPADnNB8t9K9g
-        vMONz6FHAXZCXy+UycLbhjo=
-X-Google-Smtp-Source: APXvYqw2S8tifKu8V/Krxm/Xjt4iJUYrR46IiTCnMxoNFDowG4ynyeA1cuZ35IBd4uwpAyDAkgHk7A==
-X-Received: by 2002:a37:c247:: with SMTP id j7mr9721021qkm.94.1565202714521;
-        Wed, 07 Aug 2019 11:31:54 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::6ac7])
-        by smtp.gmail.com with ESMTPSA id k74sm44829295qke.53.2019.08.07.11.31.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 07 Aug 2019 11:31:53 -0700 (PDT)
-Date:   Wed, 7 Aug 2019 11:31:51 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     axboe@kernel.dk, jack@suse.cz, hannes@cmpxchg.org,
-        mhocko@kernel.org, vdavydov.dev@gmail.com, cgroups@vger.kernel.org,
-        linux-mm@kvack.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com, guro@fb.com
-Subject: Re: [PATCH 2/4] bdi: Add bdi->id
-Message-ID: <20190807183151.GM136335@devbig004.ftw2.facebook.com>
-References: <20190803140155.181190-1-tj@kernel.org>
- <20190803140155.181190-3-tj@kernel.org>
- <20190806160102.11366694af6b56d9c4ca6ea3@linux-foundation.org>
+        Wed, 7 Aug 2019 14:31:56 -0400
+Received: (qmail 22511 invoked by uid 2102); 7 Aug 2019 14:31:55 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 7 Aug 2019 14:31:55 -0400
+Date:   Wed, 7 Aug 2019 14:31:55 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     syzbot <syzbot+1b2449b7b5dc240d107a@syzkaller.appspotmail.com>
+cc:     andreyknvl@google.com, <linux-kernel@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <oneukum@suse.com>,
+        <syzkaller-bugs@googlegroups.com>
+Subject: Re: KASAN: use-after-free Read in device_release_driver_internal
+In-Reply-To: <000000000000f365b6058f8b07ca@google.com>
+Message-ID: <Pine.LNX.4.44L0.1908071431050.1514-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190806160102.11366694af6b56d9c4ca6ea3@linux-foundation.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, 7 Aug 2019, syzbot wrote:
 
-On Tue, Aug 06, 2019 at 04:01:02PM -0700, Andrew Morton wrote:
-> On Sat,  3 Aug 2019 07:01:53 -0700 Tejun Heo <tj@kernel.org> wrote:
-> > There currently is no way to universally identify and lookup a bdi
-> > without holding a reference and pointer to it.  This patch adds an
-> > non-recycling bdi->id and implements bdi_get_by_id() which looks up
-> > bdis by their ids.  This will be used by memcg foreign inode flushing.
+> Hello,
 > 
-> Why is the id non-recycling?  Presumably to address some
-> lifetime/lookup issues, but what are they?
-
-The ID by itself is used to point to the bdi from cgroup and idr
-recycles really aggressively.  Combined with, for example, loop device
-based containers, stale pointing can become pretty common.  We're
-having similar issues with cgroup IDs.
-
-> Why was the IDR code not used?
-
-Because of the rapid recycling.  In the longer term, I think we want
-IDR to be able to support non-recycling IDs, or at least less
-agressive recycling.
-
-> > +struct backing_dev_info *bdi_get_by_id(u64 id)
-> > +{
-> > +	struct backing_dev_info *bdi = NULL;
-> > +	struct rb_node **p;
-> > +
-> > +	spin_lock_irq(&bdi_lock);
+> syzbot has tested the proposed patch and the reproducer did not trigger  
+> crash:
 > 
-> Why irq-safe?  Everywhere else uses spin_lock_bh(&bdi_lock).
+> Reported-and-tested-by:  
+> syzbot+1b2449b7b5dc240d107a@syzkaller.appspotmail.com
+> 
+> Tested on:
+> 
+> commit:         6a3599ce usb-fuzzer: main usb gadget fuzzer driver
+> git tree:       https://github.com/google/kasan.git
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=700ca426ab83faae
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> patch:          https://syzkaller.appspot.com/x/patch.diff?x=132eec8c600000
+> 
+> Note: testing is done by a robot and is best-effort only.
 
-By mistake, I'll change them to bh.
+Andrey, is there any way to get the console output from this test?
 
-Thanks.
+Alan Stern
 
--- 
-tejun
