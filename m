@@ -2,373 +2,216 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE06AC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 02:52:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E69A3C31E40
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 02:55:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A15E021881
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 02:52:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 680EC208C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 02:55:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ericsson.com header.i=@ericsson.com header.b="opWH3gwP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727983AbfHGCw4 (ORCPT
+        id S1727898AbfHGCz5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 22:52:56 -0400
-Received: from mga12.intel.com ([192.55.52.136]:47594 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726518AbfHGCw4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 22:52:56 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 19:52:54 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,353,1559545200"; 
-   d="scan'208";a="192802685"
-Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
-  by fmsmga001.fm.intel.com with ESMTP; 06 Aug 2019 19:52:53 -0700
-Date:   Wed, 7 Aug 2019 10:35:45 +0800
-From:   Wu Hao <hao.wu@intel.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-doc@vger.kernel.org, atull@kernel.org,
-        Xu Yilun <yilun.xu@intel.com>
-Subject: Re: [PATCH v4 07/12] fpga: dfl: afu: add error reporting support.
-Message-ID: <20190807023545.GC24158@hao-dev>
-References: <1564914022-3710-1-git-send-email-hao.wu@intel.com>
- <1564914022-3710-8-git-send-email-hao.wu@intel.com>
- <20190805155437.GC8107@kroah.com>
+        Tue, 6 Aug 2019 22:55:57 -0400
+Received: from mail-eopbgr710066.outbound.protection.outlook.com ([40.107.71.66]:58512
+        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726518AbfHGCz4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 22:55:56 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BYeUUlhRWVmZ9xfH3PwMGkIoJYOMVI50LkkdJNBpocBpvcqYojmLFiDcWzwRmRUSD1Vm0VRTcnfdMYgxREH0uy2nVy93Mn3GztSQjs9/5dkSqGbA+MqtAdF4goIj8eF5Uol256LH7Vs2l/9RTqpHEvUxNFF4dEn85BxVzX4Hq/UhSsxB2eK8KAY615aLWvHe0Am8T6feYvvNfAVStJ4gRrdffOZp8xCtAeqUUbAK+PMfNXOMzlNjd1S1pBB7ruSjOpzY4XkRWN16HXeeQAYgUD7D3ZhZMc0+GSt++y/AN0L3ezjSOnXFaYjmUhNphYafDp6iTDE8VSliHj7GKT9tRA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WppfqCVJqwNBN2+zc62wPd6NKKvq7SDUv3AGXGjGq2g=;
+ b=CnnvfM8x+Fx1sAMRwVStAxS4uSsadewKaCuOg2aUK9kwXqCO2BR++lgsymv2rpEqrAA7bOeW9FByoGy+hk+Hss8WCetkpSngaP6Ly/8TXRaI0SbrGEV3oDchJR1zmYAwvWJzzqKDblDSKHcoy1GkNqqMipCYxh40kWRSVrfgoqbPiU67Rrhu/w8gCI8kgXs4b9GhspsUavDCLc8chBSYC/aryI15Y03f9IsGwgAvIbLnz/u2lt6Hnr0JmsxtqHgNJeb1AGI9eYmfXSSFspSSWlzV5HgUIO+UPBldVndVY+n2SFgaDS7u+QfqzdYHjXk7Vzmbzt6MvFuPbSD4ipRpBA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=ericsson.com;dmarc=pass action=none
+ header.from=ericsson.com;dkim=pass header.d=ericsson.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ericsson.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WppfqCVJqwNBN2+zc62wPd6NKKvq7SDUv3AGXGjGq2g=;
+ b=opWH3gwPcCghdShuPjXz9HEgR/2jngkDK9WyqChFln4gy0NcaVbsWF5AdOerICWvSCQRE9iOqVW0VvrpUANs2IcRGDgb97R599fg6aztg7QS2DMWZYnTLOtuMznxttbDbYGzOm6BdP+MQXRANRe5UH79icrgUqnOh3GTWFak86o=
+Received: from CH2PR15MB3575.namprd15.prod.outlook.com (10.255.156.17) by
+ CH2PR15MB3670.namprd15.prod.outlook.com (52.132.229.148) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2136.16; Wed, 7 Aug 2019 02:55:51 +0000
+Received: from CH2PR15MB3575.namprd15.prod.outlook.com
+ ([fe80::ecc4:bffd:8512:a8b6]) by CH2PR15MB3575.namprd15.prod.outlook.com
+ ([fe80::ecc4:bffd:8512:a8b6%2]) with mapi id 15.20.2136.018; Wed, 7 Aug 2019
+ 02:55:51 +0000
+From:   Jon Maloy <jon.maloy@ericsson.com>
+To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
+        "tipc-discussion@lists.sourceforge.net" 
+        <tipc-discussion@lists.sourceforge.net>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: Slowness forming TIPC cluster with explicit node addresses
+Thread-Topic: Slowness forming TIPC cluster with explicit node addresses
+Thread-Index: AQHVQ0Hkw5M86TmlWkazctTgG4cJIabc5XqAgALa5YCABtFugIAFBHpw//9MBoCABC4cMA==
+Date:   Wed, 7 Aug 2019 02:55:51 +0000
+Message-ID: <CH2PR15MB35759E27F2A01FAE59AB66809AD40@CH2PR15MB3575.namprd15.prod.outlook.com>
+References: <1564097836.11887.16.camel@alliedtelesis.co.nz>
+         <CH2PR15MB35754D65AB240A74AE488E719AC00@CH2PR15MB3575.namprd15.prod.outlook.com>
+         <1564347861.9737.25.camel@alliedtelesis.co.nz>
+         <1564722689.4914.27.camel@alliedtelesis.co.nz>
+         <CH2PR15MB3575BF6FC4001C19B8A789559ADB0@CH2PR15MB3575.namprd15.prod.outlook.com>
+ <1564959879.27215.18.camel@alliedtelesis.co.nz>
+In-Reply-To: <1564959879.27215.18.camel@alliedtelesis.co.nz>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jon.maloy@ericsson.com; 
+x-originating-ip: [71.190.216.107]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c7f43d45-76fe-4eed-ffd0-08d71ae2c227
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:CH2PR15MB3670;
+x-ms-traffictypediagnostic: CH2PR15MB3670:
+x-microsoft-antispam-prvs: <CH2PR15MB36707E10EA69AD923309E4579AD40@CH2PR15MB3670.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 01221E3973
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(136003)(396003)(39860400002)(366004)(346002)(199004)(189003)(13464003)(4326008)(55016002)(76116006)(2501003)(66556008)(25786009)(8936002)(14444005)(6436002)(64756008)(81166006)(305945005)(7736002)(256004)(8676002)(9686003)(81156014)(54906003)(53936002)(66446008)(66946007)(6246003)(478600001)(229853002)(68736007)(66476007)(6116002)(5660300002)(86362001)(6506007)(53546011)(76176011)(66066001)(102836004)(3846002)(7696005)(52536014)(99286004)(74316002)(26005)(71200400001)(14454004)(476003)(71190400001)(2906002)(110136005)(11346002)(44832011)(33656002)(486006)(186003)(316002)(446003);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR15MB3670;H:CH2PR15MB3575.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: ericsson.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 4/uzE/rvKqsoN5Irb5jVJAdhQs8pbhpGL8z19x+yGAu7BOxOUNlptNXknAKWddJt41lzJkz36EtNHdiizsCiCkm/v6dN5Eli6fNWoJf7vkSFQmtXtNb9rVRlh7lQgl1vYvjovmUnnXXYvPuVnZaRR0uh+TNy71r1PwnZWoGlHAYiWc3nWdyuKXRiYJXEIYpw6sj3W3L7x9iQOX5iWfspIrJhT/Sue5pkXhqCrcdYbNyQMFoZ9JP0VrGAth9UfiLiTBYa7aTK01Y/ATI8WVhNXolt1ZbTC0Lx+szIO53u+j8+7g/SRP8XpHkB0vTxsqAyWs1zH2cnpx9nVOduhouj2lz/jkYyHDbAvlaVaH/tgrzta+m5T9AroSH5CIlSpCIkyD1iKXNQdn9KRSo+BnInaA96AMPkhKFKqibORmDmkkw=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190805155437.GC8107@kroah.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-OriginatorOrg: ericsson.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c7f43d45-76fe-4eed-ffd0-08d71ae2c227
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Aug 2019 02:55:51.3119
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 92e84ceb-fbfd-47ab-be52-080c6b87953f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jon.maloy@ericsson.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR15MB3670
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 05, 2019 at 05:54:37PM +0200, Greg KH wrote:
-> On Sun, Aug 04, 2019 at 06:20:17PM +0800, Wu Hao wrote:
-> > Error reporting is one important private feature, it reports error
-> > detected on port and accelerated function unit (AFU). It introduces
-> > several sysfs interfaces to allow userspace to check and clear
-> > errors detected by hardware.
-> > 
-> > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> > Signed-off-by: Wu Hao <hao.wu@intel.com>
-> > Acked-by: Alan Tull <atull@kernel.org>
-> > Signed-off-by: Moritz Fischer <mdf@kernel.org>
-> > ---
-> > v2: switch to device_add/remove_group for sysfs.
-> > v3: update kernel version and date in sysfs doc
-> > v4: remove dev_dbg in init/uinit callback function.
-> > ---
-> >  Documentation/ABI/testing/sysfs-platform-dfl-port |  39 ++++
-> >  drivers/fpga/Makefile                             |   1 +
-> >  drivers/fpga/dfl-afu-error.c                      | 221 ++++++++++++++++++++++
-> >  drivers/fpga/dfl-afu-main.c                       |   4 +
-> >  drivers/fpga/dfl-afu.h                            |   4 +
-> >  5 files changed, 269 insertions(+)
-> >  create mode 100644 drivers/fpga/dfl-afu-error.c
-> > 
-> > diff --git a/Documentation/ABI/testing/sysfs-platform-dfl-port b/Documentation/ABI/testing/sysfs-platform-dfl-port
-> > index 5663441..3b6580b 100644
-> > --- a/Documentation/ABI/testing/sysfs-platform-dfl-port
-> > +++ b/Documentation/ABI/testing/sysfs-platform-dfl-port
-> > @@ -81,3 +81,42 @@ KernelVersion:	5.4
-> >  Contact:	Wu Hao <hao.wu@intel.com>
-> >  Description:	Read-only. Read this file to get the status of issued command
-> >  		to userclck_freqcntrcmd.
-> > +
-> > +What:		/sys/bus/platform/devices/dfl-port.0/errors/revision
-> > +Date:		August 2019
-> > +KernelVersion:	5.4
-> > +Contact:	Wu Hao <hao.wu@intel.com>
-> > +Description:	Read-only. Read this file to get the revision of this error
-> > +		reporting private feature.
-> 
-> Same revision question here that I had on an earlier patch.
-> 
-> 
-> > +
-> > +What:		/sys/bus/platform/devices/dfl-port.0/errors/errors
-> > +Date:		August 2019
-> > +KernelVersion:	5.4
-> > +Contact:	Wu Hao <hao.wu@intel.com>
-> > +Description:	Read-only. Read this file to get errors detected on port and
-> > +		Accelerated Function Unit (AFU).
-> > +
-> > +What:		/sys/bus/platform/devices/dfl-port.0/errors/first_error
-> > +Date:		August 2019
-> > +KernelVersion:	5.4
-> > +Contact:	Wu Hao <hao.wu@intel.com>
-> > +Description:	Read-only. Read this file to get the first error detected by
-> > +		hardware.
-> > +
-> > +What:		/sys/bus/platform/devices/dfl-port.0/errors/first_malformed_req
-> > +Date:		August 2019
-> > +KernelVersion:	5.4
-> > +Contact:	Wu Hao <hao.wu@intel.com>
-> > +Description:	Read-only. Read this file to get the first malformed request
-> > +		captured by hardware.
-> > +
-> > +What:		/sys/bus/platform/devices/dfl-port.0/errors/clear
-> > +Date:		August 2019
-> > +KernelVersion:	5.4
-> > +Contact:	Wu Hao <hao.wu@intel.com>
-> > +Description:	Write-only. Write error code to this file to clear errors.
-> > +		Write fails with -EINVAL if input parsing fails or input error
-> > +		code doesn't match.
-> > +		Write fails with -EBUSY or -ETIMEDOUT if error can't be cleared
-> > +		as hardware is in low power state (-EBUSY) or not responding
-> > +		(-ETIMEDOUT).
-> > diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
-> > index 312b937..7255891 100644
-> > --- a/drivers/fpga/Makefile
-> > +++ b/drivers/fpga/Makefile
-> > @@ -41,6 +41,7 @@ obj-$(CONFIG_FPGA_DFL_AFU)		+= dfl-afu.o
-> >  
-> >  dfl-fme-objs := dfl-fme-main.o dfl-fme-pr.o
-> >  dfl-afu-objs := dfl-afu-main.o dfl-afu-region.o dfl-afu-dma-region.o
-> > +dfl-afu-objs += dfl-afu-error.o
-> >  
-> >  # Drivers for FPGAs which implement DFL
-> >  obj-$(CONFIG_FPGA_DFL_PCI)		+= dfl-pci.o
-> > diff --git a/drivers/fpga/dfl-afu-error.c b/drivers/fpga/dfl-afu-error.c
-> > new file mode 100644
-> > index 0000000..c5e0efa
-> > --- /dev/null
-> > +++ b/drivers/fpga/dfl-afu-error.c
-> > @@ -0,0 +1,221 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Driver for FPGA Accelerated Function Unit (AFU) Error Reporting
-> > + *
-> > + * Copyright 2019 Intel Corporation, Inc.
-> > + *
-> > + * Authors:
-> > + *   Wu Hao <hao.wu@linux.intel.com>
-> > + *   Xiao Guangrong <guangrong.xiao@linux.intel.com>
-> > + *   Joseph Grecco <joe.grecco@intel.com>
-> > + *   Enno Luebbers <enno.luebbers@intel.com>
-> > + *   Tim Whisonant <tim.whisonant@intel.com>
-> > + *   Ananda Ravuri <ananda.ravuri@intel.com>
-> > + *   Mitchel Henry <henry.mitchel@intel.com>
-> > + */
-> > +
-> > +#include <linux/uaccess.h>
-> > +
-> > +#include "dfl-afu.h"
-> > +
-> > +#define PORT_ERROR_MASK		0x8
-> > +#define PORT_ERROR		0x10
-> > +#define PORT_FIRST_ERROR	0x18
-> > +#define PORT_MALFORMED_REQ0	0x20
-> > +#define PORT_MALFORMED_REQ1	0x28
-> > +
-> > +#define ERROR_MASK		GENMASK_ULL(63, 0)
-> > +
-> > +/* mask or unmask port errors by the error mask register. */
-> > +static void __port_err_mask(struct device *dev, bool mask)
-> > +{
-> > +	void __iomem *base;
-> > +
-> > +	base = dfl_get_feature_ioaddr_by_id(dev, PORT_FEATURE_ID_ERROR);
-> > +
-> > +	writeq(mask ? ERROR_MASK : 0, base + PORT_ERROR_MASK);
-> > +}
-> > +
-> > +/* clear port errors. */
-> > +static int __port_err_clear(struct device *dev, u64 err)
-> > +{
-> > +	struct platform_device *pdev = to_platform_device(dev);
-> > +	void __iomem *base_err, *base_hdr;
-> > +	int ret;
-> > +	u64 v;
-> > +
-> > +	base_err = dfl_get_feature_ioaddr_by_id(dev, PORT_FEATURE_ID_ERROR);
-> > +	base_hdr = dfl_get_feature_ioaddr_by_id(dev, PORT_FEATURE_ID_HEADER);
-> > +
-> > +	/*
-> > +	 * clear Port Errors
-> > +	 *
-> > +	 * - Check for AP6 State
-> > +	 * - Halt Port by keeping Port in reset
-> > +	 * - Set PORT Error mask to all 1 to mask errors
-> > +	 * - Clear all errors
-> > +	 * - Set Port mask to all 0 to enable errors
-> > +	 * - All errors start capturing new errors
-> > +	 * - Enable Port by pulling the port out of reset
-> > +	 */
-> > +
-> > +	/* if device is still in AP6 power state, can not clear any error. */
-> > +	v = readq(base_hdr + PORT_HDR_STS);
-> > +	if (FIELD_GET(PORT_STS_PWR_STATE, v) == PORT_STS_PWR_STATE_AP6) {
-> > +		dev_err(dev, "Could not clear errors, device in AP6 state.\n");
-> > +		return -EBUSY;
-> > +	}
-> > +
-> > +	/* Halt Port by keeping Port in reset */
-> > +	ret = __port_disable(pdev);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	/* Mask all errors */
-> > +	__port_err_mask(dev, true);
-> > +
-> > +	/* Clear errors if err input matches with current port errors.*/
-> > +	v = readq(base_err + PORT_ERROR);
-> > +
-> > +	if (v == err) {
-> > +		writeq(v, base_err + PORT_ERROR);
-> > +
-> > +		v = readq(base_err + PORT_FIRST_ERROR);
-> > +		writeq(v, base_err + PORT_FIRST_ERROR);
-> > +	} else {
-> > +		ret = -EINVAL;
-> > +	}
-> > +
-> > +	/* Clear mask */
-> > +	__port_err_mask(dev, false);
-> > +
-> > +	/* Enable the Port by clear the reset */
-> > +	__port_enable(pdev);
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static ssize_t revision_show(struct device *dev, struct device_attribute *attr,
-> > +			     char *buf)
-> > +{
-> > +	void __iomem *base;
-> > +
-> > +	base = dfl_get_feature_ioaddr_by_id(dev, PORT_FEATURE_ID_ERROR);
-> > +
-> > +	return sprintf(buf, "%u\n", dfl_feature_revision(base));
-> > +}
-> > +static DEVICE_ATTR_RO(revision);
-> > +
-> > +static ssize_t errors_show(struct device *dev, struct device_attribute *attr,
-> > +			   char *buf)
-> > +{
-> > +	struct dfl_feature_platform_data *pdata = dev_get_platdata(dev);
-> > +	void __iomem *base;
-> > +	u64 error;
-> > +
-> > +	base = dfl_get_feature_ioaddr_by_id(dev, PORT_FEATURE_ID_ERROR);
-> > +
-> > +	mutex_lock(&pdata->lock);
-> > +	error = readq(base + PORT_ERROR);
-> > +	mutex_unlock(&pdata->lock);
-> > +
-> > +	return sprintf(buf, "0x%llx\n", (unsigned long long)error);
-> > +}
-> > +static DEVICE_ATTR_RO(errors);
-> > +
-> > +static ssize_t first_error_show(struct device *dev,
-> > +				struct device_attribute *attr, char *buf)
-> > +{
-> > +	struct dfl_feature_platform_data *pdata = dev_get_platdata(dev);
-> > +	void __iomem *base;
-> > +	u64 error;
-> > +
-> > +	base = dfl_get_feature_ioaddr_by_id(dev, PORT_FEATURE_ID_ERROR);
-> > +
-> > +	mutex_lock(&pdata->lock);
-> > +	error = readq(base + PORT_FIRST_ERROR);
-> > +	mutex_unlock(&pdata->lock);
-> > +
-> > +	return sprintf(buf, "0x%llx\n", (unsigned long long)error);
-> > +}
-> > +static DEVICE_ATTR_RO(first_error);
-> > +
-> > +static ssize_t first_malformed_req_show(struct device *dev,
-> > +					struct device_attribute *attr,
-> > +					char *buf)
-> > +{
-> > +	struct dfl_feature_platform_data *pdata = dev_get_platdata(dev);
-> > +	void __iomem *base;
-> > +	u64 req0, req1;
-> > +
-> > +	base = dfl_get_feature_ioaddr_by_id(dev, PORT_FEATURE_ID_ERROR);
-> > +
-> > +	mutex_lock(&pdata->lock);
-> > +	req0 = readq(base + PORT_MALFORMED_REQ0);
-> > +	req1 = readq(base + PORT_MALFORMED_REQ1);
-> > +	mutex_unlock(&pdata->lock);
-> > +
-> > +	return sprintf(buf, "0x%016llx%016llx\n",
-> > +		       (unsigned long long)req1, (unsigned long long)req0);
-> > +}
-> > +static DEVICE_ATTR_RO(first_malformed_req);
-> > +
-> > +static ssize_t clear_store(struct device *dev, struct device_attribute *attr,
-> > +			   const char *buff, size_t count)
-> > +{
-> > +	struct dfl_feature_platform_data *pdata = dev_get_platdata(dev);
-> > +	u64 value;
-> > +	int ret;
-> > +
-> > +	if (kstrtou64(buff, 0, &value))
-> > +		return -EINVAL;
-> > +
-> > +	mutex_lock(&pdata->lock);
-> > +	ret = __port_err_clear(dev, value);
-> > +	mutex_unlock(&pdata->lock);
-> > +
-> > +	return ret ? ret : count;
-> > +}
-> > +static DEVICE_ATTR_WO(clear);
-> > +
-> > +static struct attribute *port_err_attrs[] = {
-> > +	&dev_attr_revision.attr,
-> > +	&dev_attr_errors.attr,
-> > +	&dev_attr_first_error.attr,
-> > +	&dev_attr_first_malformed_req.attr,
-> > +	&dev_attr_clear.attr,
-> > +	NULL,
-> > +};
-> > +
-> > +static struct attribute_group port_err_attr_group = {
-> > +	.attrs = port_err_attrs,
-> > +	.name = "errors",
-> > +};
-> > +
-> > +static int port_err_init(struct platform_device *pdev,
-> > +			 struct dfl_feature *feature)
-> > +{
-> > +	struct dfl_feature_platform_data *pdata = dev_get_platdata(&pdev->dev);
-> > +
-> > +	mutex_lock(&pdata->lock);
-> > +	__port_err_mask(&pdev->dev, false);
-> > +	mutex_unlock(&pdata->lock);
-> 
-> Locking one data structure and then modifying another one is up there
-> with "things never to do in the kernel unless you want a huge
-> headache!".
-
-Actually we always use the same lock for protection as other places, but
-the code may cause some misunderstanding, let me improve this part in
-the next version.
-
-> 
-> > +
-> > +	return device_add_group(&pdev->dev, &port_err_attr_group);
-> 
-> You raced userspace and lost :(
-
-Do you mind giving some more hints on this one? I guess I didn't fully
-understand this. :( Add handling if device_add_group failed here, or
-something else I should fix?
-
-Thanks
-Hao
-
-> 
-> thanks,
-> 
-> greg k-h
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQ2hyaXMgUGFja2hhbSA8
+Q2hyaXMuUGFja2hhbUBhbGxpZWR0ZWxlc2lzLmNvLm56Pg0KPiBTZW50OiA0LUF1Zy0xOSAxOTow
+NQ0KPiBUbzogSm9uIE1hbG95IDxqb24ubWFsb3lAZXJpY3Nzb24uY29tPjsgdGlwYy0NCj4gZGlz
+Y3Vzc2lvbkBsaXN0cy5zb3VyY2Vmb3JnZS5uZXQNCj4gQ2M6IG5ldGRldkB2Z2VyLmtlcm5lbC5v
+cmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogUmU6IFNsb3duZXNz
+IGZvcm1pbmcgVElQQyBjbHVzdGVyIHdpdGggZXhwbGljaXQgbm9kZSBhZGRyZXNzZXMNCj4gDQo+
+IE9uIFN1biwgMjAxOS0wOC0wNCBhdCAyMTo1MyArMDAwMCwgSm9uIE1hbG95IHdyb3RlOg0KPiA+
+DQo+ID4gPg0KPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZyb206IG5l
+dGRldi1vd25lckB2Z2VyLmtlcm5lbC5vcmcgPG5ldGRldi1vd25lckB2Z2VyLmtlcm5lbC5vcmc+
+DQo+IE9uDQo+ID4gPiBCZWhhbGYgT2YgQ2hyaXMgUGFja2hhbQ0KPiA+ID4gU2VudDogMi1BdWct
+MTkgMDE6MTENCj4gPiA+IFRvOiBKb24gTWFsb3kgPGpvbi5tYWxveUBlcmljc3Nvbi5jb20+OyB0
+aXBjLQ0KPiA+ID4gZGlzY3Vzc2lvbkBsaXN0cy5zb3VyY2Vmb3JnZS5uZXQNCj4gPiA+IENjOiBu
+ZXRkZXZAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+ID4g
+PiBTdWJqZWN0OiBSZTogU2xvd25lc3MgZm9ybWluZyBUSVBDIGNsdXN0ZXIgd2l0aCBleHBsaWNp
+dCBub2RlDQo+ID4gPiBhZGRyZXNzZXMNCj4gPiA+DQo+ID4gPiBPbiBNb24sIDIwMTktMDctMjkg
+YXQgMDk6MDQgKzEyMDAsIENocmlzIFBhY2toYW0gd3JvdGU6DQo+ID4gPiA+DQo+ID4gPiA+IE9u
+IEZyaSwgMjAxOS0wNy0yNiBhdCAxMzozMSArMDAwMCwgSm9uIE1hbG95IHdyb3RlOg0KPiA+ID4g
+PiA+DQo+ID4gPiA+ID4NCj4gPiA+ID4gPg0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+DQo+ID4g
+PiA+ID4gPg0KPiA+ID4gPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+ID4g
+PiA+IEZyb206IG5ldGRldi1vd25lckB2Z2VyLmtlcm5lbC5vcmcgPG5ldGRldi0NCj4gPiA+IG93
+bmVyQHZnZXIua2VybmVsLm9yZz4NCj4gPiA+ID4NCj4gPiA+ID4gPg0KPiA+ID4gPiA+ID4NCj4g
+PiA+ID4gPiA+IE9uIEJlaGFsZiBPZiBDaHJpcyBQYWNraGFtDQo+ID4gPiA+ID4gPiBTZW50OiAy
+NS1KdWwtMTkgMTk6MzcNCj4gPiA+ID4gPiA+IFRvOiB0aXBjLWRpc2N1c3Npb25AbGlzdHMuc291
+cmNlZm9yZ2UubmV0DQo+ID4gPiA+ID4gPiBDYzogbmV0ZGV2QHZnZXIua2VybmVsLm9yZzsgbGlu
+dXgta2VybmVsQHZnZXIua2VybmVsLm9yZw0KPiA+ID4gPiA+ID4gU3ViamVjdDogU2xvd25lc3Mg
+Zm9ybWluZyBUSVBDIGNsdXN0ZXIgd2l0aCBleHBsaWNpdCBub2RlDQo+ID4gPiA+ID4gPiBhZGRy
+ZXNzZXMNCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiBIaSwNCj4gPiA+ID4gPiA+DQo+ID4gPiA+
+ID4gPiBJJ20gaGF2aW5nIHByb2JsZW1zIGZvcm1pbmcgYSBUSVBDIGNsdXN0ZXIgYmV0d2VlbiAy
+IG5vZGVzLg0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IFRoaXMgaXMgdGhlIGJhc2ljIHN0ZXBz
+IEknbSBnb2luZyB0aHJvdWdoIG9uIGVhY2ggbm9kZS4NCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4g
+PiBtb2Rwcm9iZSB0aXBjDQo+ID4gPiA+ID4gPiBpcCBsaW5rIHNldCBldGgyIHVwDQo+ID4gPiA+
+ID4gPiB0aXBjIG5vZGUgc2V0IGFkZHIgMS4xLjUgIyBvciAxLjEuNiB0aXBjIGJlYXJlciBlbmFi
+bGUgbWVkaWENCj4gPiA+ID4gPiA+IGV0aCBkZXYgZXRoMA0KPiA+ID4gPiA+IGV0aDIsIEkgYXNz
+dW1lLi4uDQo+ID4gPiA+ID4NCj4gPiA+ID4gWWVzIHNvcnJ5IEkga2VlcCBzd2l0Y2hpbmcgYmV0
+d2VlbiBiZXR3ZWVuIEV0aGVybmV0IHBvcnRzIGZvcg0KPiA+ID4gPiB0ZXN0aW5nDQo+ID4gPiA+
+IHNvIEkgaGFuZCBlZGl0ZWQgdGhlIGVtYWlsLg0KPiA+ID4gPg0KPiA+ID4gPiA+DQo+ID4gPiA+
+ID4NCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+DQo+
+ID4gPiA+ID4gPiBUaGVuIHRvIGNvbmZpcm0gaWYgdGhlIGNsdXN0ZXIgaXMgZm9ybWVkIEkgdXNl
+wqB0aXBjIGxpbmsgbGlzdA0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IFtyb290QG5vZGUtNSB+
+XSMgdGlwYyBsaW5rIGxpc3QNCj4gPiA+ID4gPiA+IGJyb2FkY2FzdC1saW5rOiB1cA0KPiA+ID4g
+PiA+ID4gLi4uDQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gTG9va2luZyBhdCB0Y3BkdW1wIHRo
+ZSB0d28gbm9kZXMgYXJlIHNlbmRpbmcgcGFja2V0cw0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+
+IDIyOjMwOjA1Ljc4MjMyMCBUSVBDIHYyLjAgMS4xLjUgPiAwLjAuMCwgaGVhZGVybGVuZ3RoIDYw
+DQo+ID4gPiA+ID4gPiBieXRlcywNCj4gPiA+ID4gPiA+IE1lc3NhZ2VTaXplDQo+ID4gPiA+ID4g
+PiA3NiBieXRlcywgTmVpZ2hib3IgRGV0ZWN0aW9uIFByb3RvY29sIGludGVybmFsLCBtZXNzYWdl
+VHlwZQ0KPiA+ID4gPiA+ID4gTGluaw0KPiA+ID4gPiA+ID4gcmVxdWVzdA0KPiA+ID4gPiA+ID4g
+MjI6MzA6MDUuODYzNTU1IFRJUEMgdjIuMCAxLjEuNiA+IDAuMC4wLCBoZWFkZXJsZW5ndGggNjAN
+Cj4gPiA+ID4gPiA+IGJ5dGVzLA0KPiA+ID4gPiA+ID4gTWVzc2FnZVNpemUNCj4gPiA+ID4gPiA+
+IDc2IGJ5dGVzLCBOZWlnaGJvciBEZXRlY3Rpb24gUHJvdG9jb2wgaW50ZXJuYWwsIG1lc3NhZ2VU
+eXBlDQo+ID4gPiA+ID4gPiBMaW5rDQo+ID4gPiA+ID4gPiByZXF1ZXN0DQo+ID4gPiA+ID4gPg0K
+PiA+ID4gPiA+ID4gRXZlbnR1YWxseSAoYWZ0ZXIgYSBmZXcgbWludXRlcykgdGhlIGxpbmsgZG9l
+cyBjb21lIHVwDQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gW3Jvb3RAbm9kZS02wqB+XSMgdGlw
+YyBsaW5rIGxpc3QNCj4gPiA+ID4gPiA+IGJyb2FkY2FzdC1saW5rOiB1cA0KPiA+ID4gPiA+ID4g
+MTAwMTAwNjpldGgyLTEwMDEwMDU6ZXRoMjogdXANCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiBb
+cm9vdEBub2RlLTXCoH5dIyB0aXBjIGxpbmsgbGlzdA0KPiA+ID4gPiA+ID4gYnJvYWRjYXN0LWxp
+bms6IHVwDQo+ID4gPiA+ID4gPiAxMDAxMDA1OmV0aDItMTAwMTAwNjpldGgyOiB1cA0KPiA+ID4g
+PiA+ID4NCj4gPiA+ID4gPiA+IFdoZW4gSSByZW1vdmUgdGhlICJ0aXBjIG5vZGUgc2V0IGFkZHIi
+IHRoaW5ncyBzZWVtIHRvIGtpY2sNCj4gPiA+ID4gPiA+IGludG8NCj4gPiA+ID4gPiA+IGxpZmUg
+c3RyYWlnaHQgYXdheQ0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IFtyb290QG5vZGUtNSB+XSMg
+dGlwYyBsaW5rIGxpc3QNCj4gPiA+ID4gPiA+IGJyb2FkY2FzdC1saW5rOiB1cA0KPiA+ID4gPiA+
+ID4gMDA1MGI2MWJkMmFhOmV0aDItMDA1MGI2MWU2ZGZhOmV0aDI6IHVwDQo+ID4gPiA+ID4gPg0K
+PiA+ID4gPiA+ID4gU28gdGhlcmUgYXBwZWFycyB0byBiZSBzb21lIGRpZmZlcmVuY2UgaW4gYmVo
+YXZpb3VyIGJldHdlZW4NCj4gPiA+ID4gPiA+IGhhdmluZw0KPiA+ID4gPiA+ID4gYW4gZXhwbGlj
+aXQgbm9kZSBhZGRyZXNzIGFuZCB1c2luZyB0aGUgZGVmYXVsdC4gVW5mb3J0dW5hdGVseQ0KPiA+
+ID4gPiA+ID4gb3VyDQo+ID4gPiA+ID4gPiBhcHBsaWNhdGlvbiByZWxpZXMgb24gc2V0dGluZyB0
+aGUgbm9kZSBhZGRyZXNzZXMuDQo+ID4gPiA+ID4gSSBkbyB0aGlzIG1hbnkgdGltZXMgYSBkYXks
+IHdpdGhvdXQgYW55IHByb2JsZW1zLiBJZiB0aGVyZQ0KPiA+ID4gPiA+IHdvdWxkIGJlDQo+ID4g
+PiA+ID4gYW55IHRpbWUgZGlmZmVyZW5jZSwgSSB3b3VsZCBleHBlY3QgdGhlICdhdXRvIGNvbmZp
+Z3VyYWJsZScNCj4gPiA+ID4gPiB2ZXJzaW9uDQo+ID4gPiA+ID4gdG8gYmUgc2xvd2VyLCBiZWNh
+dXNlIGl0IGludm9sdmVzIGEgREFEIHN0ZXAuDQo+ID4gPiA+ID4gQXJlIHlvdSBzdXJlIHlvdSBk
+b24ndCBoYXZlIGFueSBvdGhlciBub2RlcyBydW5uaW5nIGluIHlvdXINCj4gPiA+ID4gPiBzeXN0
+ZW0/DQo+ID4gPiA+ID4NCj4gPiA+ID4gPiAvLy9qb24NCj4gPiA+ID4gPg0KPiA+ID4gPiBOb3Bl
+IHRoZSB0d28gbm9kZXMgYXJlIGNvbm5lY3RlZCBiYWNrIHRvIGJhY2suIERvZXMgdGhlIG51bWJl
+ciBvZg0KPiA+ID4gPiBFdGhlcm5ldCBpbnRlcmZhY2VzIG1ha2UgYSBkaWZmZXJlbmNlPyBBcyB5
+b3UgY2FuIHNlZSBJJ3ZlIGdvdCAzDQo+ID4gPiA+IG9uDQo+ID4gPiA+IGVhY2ggbm9kZS4gT25l
+IGlzIGNvbXBsZXRlbHkgZGlzY29ubmVjdGVkLCBvbmUgaXMgZm9yIGJvb3RpbmcNCj4gPiA+ID4g
+b3Zlcg0KPiA+ID4gPiBURlRQDQo+ID4gPiA+IMKgKG9ubHkgdXNlZCBieSBVLWJvb3QpIGFuZCB0
+aGUgb3RoZXIgaXMgdGhlIFVTQiBFdGhlcm5ldCBJJ20NCj4gPiA+ID4gdXNpbmcgZm9yDQo+ID4g
+PiA+IHRlc3RpbmcuDQo+ID4gPiA+DQo+ID4gPiBTbyBJIGNhbiBzdGlsbCByZXByb2R1Y2UgdGhp
+cyBvbiBub2RlcyB0aGF0IG9ubHkgaGF2ZSBvbmUgbmV0d29yaw0KPiA+ID4gaW50ZXJmYWNlIGFu
+ZA0KPiA+ID4gYXJlIHRoZSBvbmx5IHRoaW5ncyBjb25uZWN0ZWQuDQo+ID4gPg0KPiA+ID4gSSBk
+aWQgZmluZCBvbmUgdGhpbmcgdGhhdCBoZWxwcw0KPiA+ID4NCj4gPiA+IGRpZmYgLS1naXQgYS9u
+ZXQvdGlwYy9kaXNjb3Zlci5jIGIvbmV0L3RpcGMvZGlzY292ZXIuYyBpbmRleA0KPiA+ID4gYzEz
+OGQ2OGU4YTY5Li40OTkyMWRhZDQwNGEgMTAwNjQ0DQo+ID4gPiAtLS0gYS9uZXQvdGlwYy9kaXNj
+b3Zlci5jDQo+ID4gPiArKysgYi9uZXQvdGlwYy9kaXNjb3Zlci5jDQo+ID4gPiBAQCAtMzU4LDEw
+ICszNTgsMTAgQEAgaW50IHRpcGNfZGlzY19jcmVhdGUoc3RydWN0IG5ldCAqbmV0LCBzdHJ1Y3QN
+Cj4gPiA+IHRpcGNfYmVhcmVyICpiLA0KPiA+ID4gwqDCoMKgwqDCoMKgwqDCoHRpcGNfZGlzY19p
+bml0X21zZyhuZXQsIGQtPnNrYiwgRFNDX1JFUV9NU0csIGIpOw0KPiA+ID4NCj4gPiA+IMKgwqDC
+oMKgwqDCoMKgwqAvKiBEbyB3ZSBuZWVkIGFuIGFkZHJlc3MgdHJpYWwgcGVyaW9kIGZpcnN0ID8g
+Ki8NCj4gPiA+IC3CoMKgwqDCoMKgwqDCoGlmICghdGlwY19vd25fYWRkcihuZXQpKSB7DQo+ID4g
+PiArLy/CoMKgwqDCoMKgaWYgKCF0aXBjX293bl9hZGRyKG5ldCkpIHsNCj4gPiA+IMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgdG4tPmFkZHJfdHJpYWxfZW5kID0gamlmZmllcyArDQo+
+ID4gPiBtc2Vjc190b19qaWZmaWVzKDEwMDApOw0KPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqBtc2dfc2V0X3R5cGUoYnVmX21zZyhkLT5za2IpLCBEU0NfVFJJQUxfTVNHKTsN
+Cj4gPiA+IC3CoMKgwqDCoMKgwqDCoH0NCj4gPiA+ICsvL8KgwqDCoMKgwqB9DQo+ID4gPiDCoMKg
+wqDCoMKgwqDCoMKgbWVtY3B5KCZkLT5kZXN0LCBkZXN0LCBzaXplb2YoKmRlc3QpKTsNCj4gPiA+
+IMKgwqDCoMKgwqDCoMKgwqBkLT5uZXQgPSBuZXQ7DQo+ID4gPiDCoMKgwqDCoMKgwqDCoMKgZC0+
+YmVhcmVyX2lkID0gYi0+aWRlbnRpdHk7DQo+ID4gPg0KPiA+ID4gSSB0aGluayBiZWNhdXNlIHdp
+dGggcHJlLWNvbmZpZ3VyZWQgYWRkcmVzc2VzIHRoZSBkdXBsaWNhdGUgYWRkcmVzcw0KPiA+ID4g
+ZGV0ZWN0aW9uDQo+ID4gPiBpcyBza2lwcGVkIHRoZSBzaG9ydGVyIGluaXQgcGhhc2UgaXMgc2tp
+cHBlZC4gV291bGQgaXMgbWFrZSBzZW5zZQ0KPiA+ID4gdG8NCj4gPiA+IHVuY29uZGl0aW9uYWxs
+eSBkbyB0aGUgdHJpYWwgc3RlcD8gT3IgaXMgdGhlcmUgc29tZSBiZXR0ZXIgd2F5IHRvDQo+ID4g
+PiBnZXQgdGhpbmdzIHRvDQo+ID4gPiB0cmFuc2l0aW9uIHdpdGggcHJlLWFzc2lnbmVkIGFkZHJl
+c3Nlcy4NCj4gPg0KPiA+IEkgYW0gb24gdmFjYXRpb24gdW50aWwgdGhlIGVuZCBvZiBuZXh0LXdl
+ZWssIHNvIEkgY2FuJ3QgZ2l2ZSB5b3UgYW55DQo+ID4gZ29vZCBhbmFseXNpcyByaWdodCBub3cu
+DQo+IA0KPiBUaGFua3MgZm9yIHRha2luZyB0aGUgdGltZSB0byByZXNwb25kLg0KPiANCj4gPiBU
+byBkbyB0aGUgdHJpYWwgc3RlcCBkb2VzbuKAmXQgbWFrZSBtdWNoIHNlbnNlIHRvIG1lLCAtaXQg
+d291bGQgb25seQ0KPiA+IGRlbGF5IHRoZSBzZXR1cCB1bm5lY2Vzc2FyaWx5IChidXQgd2l0aCBv
+bmx5IDEgc2Vjb25kKS4NCj4gPiBDYW4geW91IGNoZWNrIHRoZSBpbml0aWFsIHZhbHVlIG9mIGFk
+ZHJfdHJpYWxfZW5kIHdoZW4gdGhlcmUgYSBwcmUtDQo+ID4gY29uZmlndXJlZCBhZGRyZXNzPw0K
+PiANCj4gSSBoYWQgdGhlIHNhbWUgdGhvdWdodC4gRm9yIGJvdGggbXkgZGV2aWNlcyAnYWRkcl90
+cmlhbF9lbmQgPSAwJyBzbyBJDQo+IHRoaW5rwqB0aXBjX2Rpc2NfYWRkcl90cmlhbF9tc2cgc2hv
+dWxkIGVuZCB1cCB3aXRoIHRyaWFsID09IGZhbHNlDQoNCkkgc3VnZ2VzdCB5b3UgdHJ5IGluaXRp
+YWxpemluZyBpdCB0byBqaWZmaWVzIGFuZCBzZWUgd2hhdCBoYXBwZW5zLg0KDQovLy9qb24NCg0K
+PiANCj4gPg0KPiA+IC8vL2pvbg0KPiA+DQo=
