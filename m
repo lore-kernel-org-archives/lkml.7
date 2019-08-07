@@ -2,151 +2,82 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD90C32754
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A15BC32756
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:21:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E6E221E73
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:21:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B87C21EF2
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:21:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388318AbfHGNVq (ORCPT
+        id S2388327AbfHGNVs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 7 Aug 2019 09:21:48 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:52751 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388059AbfHGNVq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 7 Aug 2019 09:21:46 -0400
-Received: from foss.arm.com ([217.140.110.172]:48374 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388213AbfHGNVo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 09:21:44 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8AC0128;
-        Wed,  7 Aug 2019 06:21:43 -0700 (PDT)
-Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B93843F706;
-        Wed,  7 Aug 2019 06:21:41 -0700 (PDT)
-Subject: Re: [PATCH 1/9] KVM: arm64: Document PV-time interface
-To:     Christophe de Dinechin <christophe.de.dinechin@gmail.com>
-Cc:     kvm@vger.kernel.org,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Suzuki K Pouloze <suzuki.poulose@arm.com>,
-        linux-doc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Marc Zyngier <maz@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Will Deacon <will@kernel.org>, kvmarm@lists.cs.columbia.edu,
-        Julien Thierry <julien.thierry.kdev@gmail.com>
-References: <20190802145017.42543-1-steven.price@arm.com>
- <20190802145017.42543-2-steven.price@arm.com> <m1mugnmv0x.fsf@dinechin.org>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <ff2d038d-d866-65fa-655d-b9865bf14016@arm.com>
-Date:   Wed, 7 Aug 2019 14:21:40 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=localhost.localdomain)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <r.czerwinski@pengutronix.de>)
+        id 1hvLsm-0002TB-34; Wed, 07 Aug 2019 15:21:36 +0200
+Message-ID: <5707aee16681065a975ed42a06069674c3127edb.camel@pengutronix.de>
+Subject: Re: [Tee-dev] [PATCH v8 0/2] fTPM: firmware TPM running in TEE
+From:   Rouven Czerwinski <r.czerwinski@pengutronix.de>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@microsoft.com, linux-doc@vger.kernel.org,
+        corbet@lwn.net, linux-kernel@vger.kernel.org,
+        thiruan@microsoft.com, tee-dev@lists.linaro.org, jgg@ziepe.ca,
+        ilias.apalodimas@linaro.org, rdunlap@infradead.org,
+        linux-integrity@vger.kernel.org, peterhuewe@gmx.de,
+        bryankel@microsoft.com
+Date:   Wed, 07 Aug 2019 15:21:33 +0200
+In-Reply-To: <20190711200858.xydm3wujikufxjcw@linux.intel.com>
+References: <20190705204746.27543-1-sashal@kernel.org>
+         <20190711200858.xydm3wujikufxjcw@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 
 MIME-Version: 1.0
-In-Reply-To: <m1mugnmv0x.fsf@dinechin.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: r.czerwinski@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/08/2019 17:40, Christophe de Dinechin wrote:
-> 
-> Steven Price writes:
-> 
->> Introduce a paravirtualization interface for KVM/arm64 based on the
->> "Arm Paravirtualized Time for Arm-Base Systems" specification DEN 0057A.
->>
->> This only adds the details about "Stolen Time" as the details of "Live
->> Physical Time" have not been fully agreed.
->>
-> [...]
-> 
->> +
->> +Stolen Time
->> +-----------
->> +
->> +The structure pointed to by the PV_TIME_ST hypercall is as follows:
->> +
->> +  Field       | Byte Length | Byte Offset | Description
->> +  ----------- | ----------- | ----------- | --------------------------
->> +  Revision    |      4      |      0      | Must be 0 for version 0.1
->> +  Attributes  |      4      |      4      | Must be 0
->> +  Stolen time |      8      |      8      | Stolen time in unsigned
->> +              |             |             | nanoseconds indicating how
->> +              |             |             | much time this VCPU thread
->> +              |             |             | was involuntarily not
->> +              |             |             | running on a physical CPU.
-> 
-> I know very little about the topic, but I don't understand how the spec
-> as proposed allows an accurate reading of the relation between physical
-> time and stolen time simultaneously. In other words, could you draw
-> Figure 1 of the spec from within the guest? Or is it a non-objective?
+Hi,
 
-Figure 1 is mostly attempting to explain Live Physical Time (LPT), which
-is not part of this patch series. But it does touch on stolen time by
-the difference between "live physical time" and "virtual time".
+I spent some time with the fTPM module and TA on a Nitrogen6X with the
+latest OP-TEE master. After stumbling through the "tee_supplicant no
+persistent storage" problem, my module now issues the following error
+message on module load:
 
-I'm not sure what you mean by "from within the guest". From the
-perspective of the guest the parts of the diagram where the guest isn't
-running don't exist (therefore there are discontinuities in the
-"physical time" and "live physical time" lines).
+[   34.633252] tpm tpm0: ftpm_tee_tpm_op_send: SUBMIT_COMMAND invoke error: 0xffff0006
+[   34.641035] tpm tpm0: tpm_try_transmit: send(): error -65530
+[   34.647008] tpm tpm0: ftpm_tee_tpm_op_send: SUBMIT_COMMAND invoke error: 0xffff0006
+[   34.654788] tpm tpm0: tpm_try_transmit: send(): error -65530
+[   34.660480] ftpm-tee ftpm: ftpm_tee_probe: tpm_chip_register failed with rc=-65530
+[   34.678087] ftpm-tee: probe of ftpm failed with error -65530
 
-This patch series doesn't attempt to provide the guest with a view of
-"physical time" (or LPT) - but it might be able to observe that by
-consulting something external (e.g. an NTP server, or an emulated RTC
-which reports wall-clock time).
+To me the TEE_ERROR_BAD_PARAMETERS indicates some ABI issue between the
+TA and the kernel module. Note that I built the TA from 
+https://github.com/microsoft/MSRSec.git with commit
+6bb57db632c424f87cbaf7ec6f9c89be7682b3c0. Maybe this is not the correct
+version, I had some problems building the module from the repository
+mentioned in the Patches
 
-What it does provide is a mechanism for obtaining the difference (as
-reported by the host) between "live physical time" and "virtual time" -
-this is reported in nanoseconds in the above structure.
+Regards,
+Rouven Czerwinski
+-- 
+Pengutronix e.K.                           |            		 |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 
-> For example, if you read the stolen time before you read CNTVCT_EL0,
-> isn't it possible for a lengthy event like a migration to occur between
-> the two reads, causing the stolen time to be obsolete and off by seconds?
-
-"Lengthy events" like migration are represented by the "paused" state in
-the diagram - i.e. it's the difference between "physical time" and "live
-physical time". So stolen time doesn't attempt to represent that.
-
-And yes, there is a race between reading CNTVCT_EL0 and reading stolen
-time - but in practice this doesn't really matter. The usual pseudo-code
-way of using stolen time is:
-
-  * scheduler captures stolen time from structure and CNTVCT_EL0:
-      before_timer = CNTVCT_EL0
-      before_stolen = stolen
-  * schedule in process
-  * process is pre-empted (or blocked in some way)
-  * scheduler captures stolen time from structure and CNTVCT_EL0:
-      after_timer = CNTVCT_EL0
-      after_stolen = stolen
-      time = to_nsecs(after_timer - before_timer) -
-             (after_stolen - before_stolen)
-
-The scheduler can then charge the process for "time" nanoseconds of
-time. This ensures that a process isn't unfairly penalised if the host
-doesn't schedule the VCPU while it is supposed to be running.
-
-The race is very small in comparison to the time the process is running,
-and in the worst case just means the process is charged slightly more
-(or less) than it should be.
-
-I guess if you're really worried about it, you could do a dance like:
-
-	do {
-		before = stolen
-		timer = CNTVCT_EL0
-		after = stolen
-	} while (before != after);
-
-But I don't see the need to have such an accurate view of elapsed time
-that the VCPU was scheduled. And of course at the moment (without this
-series) the guest has no idea about time stolen by the host.
-
-Steve
