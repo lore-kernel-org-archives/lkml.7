@@ -2,181 +2,155 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF032C31E40
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 00:08:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 301BCC31E40
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 00:08:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9477721871
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 00:08:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="tBPfN9hz"
+	by mail.kernel.org (Postfix) with ESMTP id 043912089E
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 00:08:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565136519;
+	bh=FhChKXsPPb1L8MSYtmcGqA0kOKtJaeO7DrzVbRT1MXs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=eKgjZBV8Eg6FcQOdemOvnRAis0LSGuSMajpmEmOl1DWnGqJvUI+nC4bp1t+4zH2Kw
+	 WgBAFYFycEIG9sXIJlvslycapZjySaobiAE/FS8C/o8AwFMBHZwT77w/5mhAX0iR+c
+	 f3fIbsWXwW33gEnf/sOcRrtLEdxtqV/xUFNLTJA0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726739AbfHGAII (ORCPT
+        id S1727477AbfHGAIV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 20:08:08 -0400
-Received: from ozlabs.org ([203.11.71.1]:55147 "EHLO ozlabs.org"
+        Tue, 6 Aug 2019 20:08:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726085AbfHGAIH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 20:08:07 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726085AbfHGAIU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 20:08:20 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 463BfX3gPVz9sBF;
-        Wed,  7 Aug 2019 10:08:04 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1565136484;
-        bh=oUBuz+X3wmfRoM27Gkv2AbxGFNP7LK8SMyYYVUvgjpY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=tBPfN9hzVRCTg2Nsf/dcDoSK9jqT4aVjnI53ZJocJo8o8GVy3sK992fgEEkMtROfJ
-         EGhFV2hjp10lYt9Odq77UGKBi0JN37ka/nKrr2yQWfTYaOYsQC/4A9MijlDpIpOlgx
-         Dvr+XEC6BnJw6Ygrp5m/2PH4fUeDd2snqy6XL+xwaFCy3xVUERHOocC0qfuE84ziWb
-         jnC8EruSQEYQszAesozdKb82PUX6+FRA56qTCY71PGaYEpluhJzFjwHbdSyG8CXTGd
-         i11mlpsR6AFfjwFzj3AwslnMJGrzXbxRCFrgqHpvF8gW6aO/Wsjf4L2lwOY8giKLJp
-         rl2l+loOuljbg==
-Date:   Wed, 7 Aug 2019 10:08:03 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andy Gross <agross@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Vaishali Thakkar <vaishali.thakkar@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: linux-next: build warning after merge of the qcom tree
-Message-ID: <20190807100803.63007737@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/f1XCtaBu3WKY_/7XRGdJe.4";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        by mail.kernel.org (Postfix) with ESMTPSA id ED7FA2089E;
+        Wed,  7 Aug 2019 00:08:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565136499;
+        bh=FhChKXsPPb1L8MSYtmcGqA0kOKtJaeO7DrzVbRT1MXs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=TAeG++7BBNLdzsT8EeUACw88fONFc1pQcT8EUvAlKq8EqeLzcGZIz0ceLh4nYgX84
+         xTRDE/BvbyzWZvQYIvI12bG0fb2Hr+ia9Vz72+zfUolIsY7N4a0uoRfA30sNdV3zwc
+         LDnEWEZxfNuA7Zo/uTF7X1Z/DVFpbZNzGS5Nb8/c=
+Date:   Wed, 7 Aug 2019 09:08:11 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-arch@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH v2 0/3] arm/arm64: Add support for function error
+ injection
+Message-Id: <20190807090811.1e50eb3e1d5a7b85743748e7@kernel.org>
+In-Reply-To: <20190806100015.11256-1-leo.yan@linaro.org>
+References: <20190806100015.11256-1-leo.yan@linaro.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/f1XCtaBu3WKY_/7XRGdJe.4
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue,  6 Aug 2019 18:00:12 +0800
+Leo Yan <leo.yan@linaro.org> wrote:
 
-Hi all,
+> This small patch set is to add support for function error injection;
+> this can be used to eanble more advanced debugging feature, e.g.
+> CONFIG_BPF_KPROBE_OVERRIDE.
+> 
+> The patch 01/03 is to consolidate the function definition which can be
+> suared cross architectures, patches 02,03/03 are used for enabling
+> function error injection on arm64 and arm architecture respectively.
+> 
+> I tested on arm64 platform Juno-r2 and one of my laptop with x86
+> architecture with below steps; I don't test for Arm architecture so
+> only pass compilation.
+> 
+> - Enable kernel configuration:
+>   CONFIG_BPF_KPROBE_OVERRIDE
+>   CONFIG_BTRFS_FS
+>   CONFIG_BPF_EVENTS=y
+>   CONFIG_KPROBES=y
+>   CONFIG_KPROBE_EVENTS=y
+>   CONFIG_BPF_KPROBE_OVERRIDE=y
+> 
+> - Build samples/bpf on with Debian rootFS:
+>   # cd $kernel
+>   # make headers_install
+>   # make samples/bpf/ LLC=llc-7 CLANG=clang-7
+> 
+> - Run the sample tracex7:
+>   # dd if=/dev/zero of=testfile.img bs=1M seek=1000 count=1
+>   # DEVICE=$(losetup --show -f testfile.img)
+>   # mkfs.btrfs -f $DEVICE
+>   # ./tracex7 testfile.img
+>   [ 1975.211781] BTRFS error (device (efault)): open_ctree failed
+>   mount: /mnt/linux-kernel/linux-cs-dev/samples/bpf/tmpmnt: mount(2) system call failed: Cannot allocate memory.
+> 
+> Changes from v1:
+> * Consolidated the function definition into asm-generic header (Will);
+> * Used APIs to access pt_regs elements (Will);
+> * Fixed typos in the comments (Will).
 
-After merging the qcom tree, today's linux-next build (x86_64
-allmodconfig) produced this warning:
+This looks good to me.
 
-drivers/soc/qcom/socinfo.c: In function 'socinfo_debugfs_init':
-drivers/soc/qcom/socinfo.c:323:3: warning: this statement may fall through =
-[-Wimplicit-fallthrough=3D]
-   debugfs_create_x32("raw_device_number", 0400,
-   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        qcom_socinfo->dbg_root,
-        ~~~~~~~~~~~~~~~~~~~~~~~
-        &qcom_socinfo->info.raw_device_num);
-        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/soc/qcom/socinfo.c:326:2: note: here
-  case SOCINFO_VERSION(0, 11):
-  ^~~~
-drivers/soc/qcom/socinfo.c:331:3: warning: this statement may fall through =
-[-Wimplicit-fallthrough=3D]
-   debugfs_create_u32("foundry_id", 0400, qcom_socinfo->dbg_root,
-   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        &qcom_socinfo->info.foundry_id);
-        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/soc/qcom/socinfo.c:333:2: note: here
-  case SOCINFO_VERSION(0, 8):
-  ^~~~
-drivers/soc/qcom/socinfo.c:231:2: warning: this statement may fall through =
-[-Wimplicit-fallthrough=3D]
-  debugfs_create_file(__stringify(name), 0400,   \
-  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        qcom_socinfo->dbg_root,   \
-        ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        info, &qcom_ ##name## _ops)
-        ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/soc/qcom/socinfo.c:336:3: note: in expansion of macro 'DEBUGFS_ADD'
-   DEBUGFS_ADD(info, pmic_die_rev);
-   ^~~~~~~~~~~
-drivers/soc/qcom/socinfo.c:337:2: note: here
-  case SOCINFO_VERSION(0, 6):
-  ^~~~
-drivers/soc/qcom/socinfo.c:341:3: warning: this statement may fall through =
-[-Wimplicit-fallthrough=3D]
-   debugfs_create_u32("hardware_platform_subtype", 0400,
-   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        qcom_socinfo->dbg_root,
-        ~~~~~~~~~~~~~~~~~~~~~~~
-        &qcom_socinfo->info.hw_plat_subtype);
-        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/soc/qcom/socinfo.c:344:2: note: here
-  case SOCINFO_VERSION(0, 5):
-  ^~~~
-drivers/soc/qcom/socinfo.c:348:3: warning: this statement may fall through =
-[-Wimplicit-fallthrough=3D]
-   debugfs_create_u32("accessory_chip", 0400,
-   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        qcom_socinfo->dbg_root,
-        ~~~~~~~~~~~~~~~~~~~~~~~
-        &qcom_socinfo->info.accessory_chip);
-        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/soc/qcom/socinfo.c:351:2: note: here
-  case SOCINFO_VERSION(0, 4):
-  ^~~~
-drivers/soc/qcom/socinfo.c:354:3: warning: this statement may fall through =
-[-Wimplicit-fallthrough=3D]
-   debugfs_create_u32("platform_version", 0400,
-   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        qcom_socinfo->dbg_root,
-        ~~~~~~~~~~~~~~~~~~~~~~~
-        &qcom_socinfo->info.plat_ver);
-        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/soc/qcom/socinfo.c:357:2: note: here
-  case SOCINFO_VERSION(0, 3):
-  ^~~~
-drivers/soc/qcom/socinfo.c:360:3: warning: this statement may fall through =
-[-Wimplicit-fallthrough=3D]
-   debugfs_create_u32("hardware_platform", 0400,
-   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        qcom_socinfo->dbg_root,
-        ~~~~~~~~~~~~~~~~~~~~~~~
-        &qcom_socinfo->info.hw_plat);
-        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/soc/qcom/socinfo.c:363:2: note: here
-  case SOCINFO_VERSION(0, 2):
-  ^~~~
-drivers/soc/qcom/socinfo.c:366:3: warning: this statement may fall through =
-[-Wimplicit-fallthrough=3D]
-   debugfs_create_u32("raw_version", 0400, qcom_socinfo->dbg_root,
-   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        &qcom_socinfo->info.raw_ver);
-        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/soc/qcom/socinfo.c:368:2: note: here
-  case SOCINFO_VERSION(0, 1):
-  ^~~~
+Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
 
-Introduced by commit
+Thank you!
 
-  9c84c1e78634 ("soc: qcom: socinfo: Expose custom attributes")
+> 
+> 
+> Leo Yan (3):
+>   error-injection: Consolidate override function definition
+>   arm64: Add support for function error injection
+>   arm: Add support for function error injection
+> 
+>  arch/arm/Kconfig                           |  1 +
+>  arch/arm/include/asm/ptrace.h              |  5 +++++
+>  arch/arm/lib/Makefile                      |  2 ++
+>  arch/arm/lib/error-inject.c                | 19 +++++++++++++++++++
+>  arch/arm64/Kconfig                         |  1 +
+>  arch/arm64/include/asm/ptrace.h            |  5 +++++
+>  arch/arm64/lib/Makefile                    |  2 ++
+>  arch/arm64/lib/error-inject.c              | 18 ++++++++++++++++++
+>  arch/powerpc/include/asm/error-injection.h | 13 -------------
+>  arch/x86/include/asm/error-injection.h     | 13 -------------
+>  include/asm-generic/error-injection.h      |  6 ++++++
+>  include/linux/error-injection.h            |  6 +++---
+>  12 files changed, 62 insertions(+), 29 deletions(-)
+>  create mode 100644 arch/arm/lib/error-inject.c
+>  create mode 100644 arch/arm64/lib/error-inject.c
+>  delete mode 100644 arch/powerpc/include/asm/error-injection.h
+>  delete mode 100644 arch/x86/include/asm/error-injection.h
+> 
+> -- 
+> 2.17.1
+> 
 
---=20
-Cheers,
-Stephen Rothwell
 
---Sig_/f1XCtaBu3WKY_/7XRGdJe.4
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1KFmMACgkQAVBC80lX
-0GwlTwf9GTzoAqWUB9zzB2Mz0W66AWZ4Gtl61ySnXtt7WzEU3isJENlLN/xkCJl/
-tGXLpA4uFpbcTgKW7OYhRdnQOYvrRyLBqk8U2YDkmbG8Ld22n8x0gc5J9zjvR75B
-ZmKuV//PLKCYg0oI6tUxGzZIo6cEWG6RqwjpsJf8Dfvp1VpdEz4ocYlS1LyW+FJk
-JWsSEjbIunDtj0JSq3aqF2yaBA4cV+bDaIu2Vnvs3PMcdWMbjoEL9vEftBtxja9z
-zv7IARHJR5DvbeVleiy0P4ylHjOgGTGrWcpqzOoSJMzbTozi3Ew4cZtYoTh4C/vZ
-LpVUhiuq7lrdtEvmfQIId6cD7KsMSg==
-=sXHz
------END PGP SIGNATURE-----
-
---Sig_/f1XCtaBu3WKY_/7XRGdJe.4--
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
