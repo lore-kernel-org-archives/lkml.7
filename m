@@ -2,118 +2,167 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A23C41514
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 02:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5B2DC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 02:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0A18217D9
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 02:46:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="siHGvn1B"
+	by mail.kernel.org (Postfix) with ESMTP id A2C11217D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 02:50:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727702AbfHGCqR (ORCPT
+        id S1727881AbfHGCuv convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 22:46:17 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:39401 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726542AbfHGCqQ (ORCPT
+        Tue, 6 Aug 2019 22:50:51 -0400
+Received: from m4a0040g.houston.softwaregrp.com ([15.124.2.86]:44458 "EHLO
+        m4a0040g.houston.softwaregrp.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726612AbfHGCuu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 22:46:16 -0400
-Received: by mail-pf1-f195.google.com with SMTP id f17so38599198pfn.6;
-        Tue, 06 Aug 2019 19:46:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=PrH45PB9RsMA7pyDP1csKVYDAqtxvNcn8nWcn6FbNjc=;
-        b=siHGvn1Bj4sIEYw5q5Gg20BGgu8x4a1UDeEVboEey9CPp5bwN7qRSX9PdbaORdYhKH
-         YkFcM8TpUuQwt6hsamQhz5DuOUHd74woX/sCdc4OzwKeHi1BwamkrTwX4FC3mMx+K6I9
-         GliEblk6tNZKXY+o7iNGHFMB3sd2XRWkiqmJ0SnmEyGAcqAvus0fi+m5oOCcpSOQ66N3
-         dDkKgbCtk9CMy9Fjaw9c5bPyAztNXN3LxHZMZBCJh267HKxdXSUsjyFxJocebohzrZuV
-         Xh2L7rAAuVYsLieEQNwEDnk/pHbhPGilXJtGs8lQwOV8Bav46NWW9TJnRpsWxVrpnF0t
-         2xqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=PrH45PB9RsMA7pyDP1csKVYDAqtxvNcn8nWcn6FbNjc=;
-        b=EiKHvei5aAd4PhXThGlJZLcg3oR9jx4rl+7or2uE4dkNOLju7dI5JlGH0hINXoNXQP
-         al+X9cxBMLDr2lSUUPHtcWB4zpyl/vM94XlP3aeoOPy2cEnUUasm4kAYwL4DmPM7X9a9
-         ogl1KMC+u7u6D0EeMfsYS9B7VtXiJkkbQvaMGIIf7pxM4cAH6GOlWXWI/75UQrxHZUQ2
-         EsLP24LinWjJelZOUVgmwu11pOF7E+SAeJEkXkdb+PLre7ELCEehv0bmghf2kTjz8EOh
-         Ituf2s5IaTy7UGlmRJ5O234ncBMuuD7VumCRrVIbQghEtYAgZHMnq9u9R+J86lIE/RyF
-         BpqQ==
-X-Gm-Message-State: APjAAAXfNT65/t1EgFEsU8kT4S9QWzyBvHS1bSTnIIqEURNcrHcuLIjj
-        4pS/4dXNHG4ylMBR1YUw4iY=
-X-Google-Smtp-Source: APXvYqyzxmGpPw6yQPMJeAM+1VC/2whsZsEv9hdon9qas9R0gYs75IBP5NVy2m9R9E/19rHgJjBrwQ==
-X-Received: by 2002:a63:2026:: with SMTP id g38mr5668729pgg.172.1565145975883;
-        Tue, 06 Aug 2019 19:46:15 -0700 (PDT)
-Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id q1sm104267950pfg.84.2019.08.06.19.46.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 06 Aug 2019 19:46:14 -0700 (PDT)
-From:   Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-ide@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Fuqian Huang <huangfq.daxian@gmail.com>
-Subject: [PATCH] libata-sff: use spin_lock_irqsave instead of spin_lock_irq in IRQ context.
-Date:   Wed,  7 Aug 2019 10:45:55 +0800
-Message-Id: <20190807024555.13770-1-huangfq.daxian@gmail.com>
-X-Mailer: git-send-email 2.11.0
-To:     unlisted-recipients:; (no To-header on input)
+        Tue, 6 Aug 2019 22:50:50 -0400
+Received: FROM m4a0040g.houston.softwaregrp.com (15.120.17.147) BY m4a0040g.houston.softwaregrp.com WITH ESMTP;
+ Wed,  7 Aug 2019 02:50:31 +0000
+Received: from M9W0067.microfocus.com (2002:f79:be::f79:be) by
+ M4W0335.microfocus.com (2002:f78:1193::f78:1193) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Wed, 7 Aug 2019 02:49:48 +0000
+Received: from NAM01-SN1-obe.outbound.protection.outlook.com (15.124.72.11) by
+ M9W0067.microfocus.com (15.121.0.190) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10 via Frontend Transport; Wed, 7 Aug 2019 02:49:47 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=huc/nwcaRr4lbs5ciZDuWkZ3pzzbampwc1sDftjJLEl4xNHbh76C7vuJoMB8E0mGKS+HryLAs2ccK4h2E72AKenN5Osp42eb1LnWw6oQdLeBeCAZbMFQRBUflfiAHvTJBg6j3kBf1uN8L4/oaAs9pYuJnSU9qVY6vqCxQuo9sFLiewGoD3u0layY1bVBfBQDPThlGMurj+7I2fXDfc4wajRDQEToSRoQLM7aKenSf/nXl2vAmIfGL0kd4robhvs+oN/S0HdYEZOVIL2m+MB1Q4MssB/b2FrBjz6sgzolwoAvIhfHJnWxW8s5NV6HIMiBz15jDYcVZg+3gJuhGBE3fg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EjA0KI7GnF7EgSCPDj+n1ygbaPRbKH9pXsE3/vpt56Y=;
+ b=RLnRDZAh7ghnFc+m/PubEJbO32z2ZCxDqHmEFg3Y1diRddz3YO9vMNc5lE6/eDo6lzPy0tNNxreOCie0jLAoug/IN3jvo+LeFarpg/PyVchizBbFuYhwcBfazHKBrkKrjFB0vLf32T2+TxMQvkuEiFEgjEDKh1dIsI8qsazUaMRDpH8Wk5bdFWPepPVnV0N0eCOXcjQflCrL44On3Zgq6ZEc9GMwrUkDNBbHoB3U6eIFpolsZLxj/VBnAsbCB9wOjtjx581ISxAU1Z9//X45GwV5JWwqdWrtx9bwhB7XQ4ZEusfzN87oDLJiEYMVNCZZ3DgHMnI0i4mSssYjlvVgpw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=suse.com;dmarc=pass action=none header.from=suse.com;dkim=pass
+ header.d=suse.com;arc=none
+Received: from BY5PR18MB3187.namprd18.prod.outlook.com (10.255.139.221) by
+ BY5PR18MB3169.namprd18.prod.outlook.com (10.255.139.213) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2136.14; Wed, 7 Aug 2019 02:49:45 +0000
+Received: from BY5PR18MB3187.namprd18.prod.outlook.com
+ ([fe80::103a:94a8:b58d:3eac]) by BY5PR18MB3187.namprd18.prod.outlook.com
+ ([fe80::103a:94a8:b58d:3eac%4]) with mapi id 15.20.2136.018; Wed, 7 Aug 2019
+ 02:49:45 +0000
+From:   Firo Yang <firo.yang@suse.com>
+To:     "davem@davemloft.net" <davem@davemloft.net>
+CC:     "alexander.h.duyck@linux.intel.com" 
+        <alexander.h.duyck@linux.intel.com>,
+        "jeffrey.t.kirsher@intel.com" <jeffrey.t.kirsher@intel.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Firo Yang <firo.yang@suse.com>
+Subject: [PATCH v2 1/1] ixgbe: sync the first fragment unconditionally
+Thread-Topic: [PATCH v2 1/1] ixgbe: sync the first fragment unconditionally
+Thread-Index: AQHVTMrFkDapNm+vukGfNKy6YOsjCg==
+Date:   Wed, 7 Aug 2019 02:49:45 +0000
+Message-ID: <20190807024917.27682-1-firo.yang@suse.com>
+Accept-Language: en-US, en-GB, zh-CN
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SG2PR06CA0088.apcprd06.prod.outlook.com
+ (2603:1096:3:14::14) To BY5PR18MB3187.namprd18.prod.outlook.com
+ (2603:10b6:a03:196::29)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=firo.yang@suse.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.16.4
+x-originating-ip: [45.122.156.254]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e738d238-4c73-4015-f681-08d71ae1e7b2
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BY5PR18MB3169;
+x-ms-traffictypediagnostic: BY5PR18MB3169:
+x-microsoft-antispam-prvs: <BY5PR18MB3169DB93B12EF9EEC59509C388D40@BY5PR18MB3169.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2089;
+x-forefront-prvs: 01221E3973
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(376002)(39860400002)(346002)(366004)(136003)(199004)(189003)(6116002)(3846002)(25786009)(5640700003)(6436002)(6506007)(386003)(99286004)(54906003)(26005)(478600001)(2906002)(6486002)(68736007)(44832011)(6512007)(107886003)(486006)(2616005)(476003)(186003)(36756003)(53936002)(6916009)(14454004)(102836004)(4326008)(86362001)(66476007)(50226002)(66946007)(66446008)(64756008)(66556008)(52116002)(81166006)(81156014)(1730700003)(8676002)(8936002)(7736002)(14444005)(256004)(5660300002)(305945005)(1076003)(66066001)(2501003)(71200400001)(71190400001)(2351001)(316002);DIR:OUT;SFP:1102;SCL:1;SRVR:BY5PR18MB3169;H:BY5PR18MB3187.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: suse.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: p8eXH/9hmixvlilwAvX2TpmqCf3nsS/mqFRTOPXapxykJjWFL8VCMrumfVZMg33vUlscJtKMOhiukfwZfUtjCAo0W3LL6o2UG/KGXIeVluSUgxDKTk/rAJ3YvmHewFClgx8WDnpZt89vdT4vOl5VVhmLxZLM7nFBaXUKwuPeSfRwd8h6bZkG/T1B4w34ph9+/lUrdYmnr2Bw817yleRQjmeuWL36H+yTos1bTl4TmbjQdRzzphoKmfGikMJQRAeB18ovgbvWgq9FSXxQ+ABoUzKguME4oMtbV1ULbL2dFkq5jY2jNTVEAaZBUkP06Sl5Rgsslchz/XbVuaWTme0MxUKNm38wx1u4evKhR9Tn6U14XsymekHqUvEYccjwPO8bWiahaW9dTgoIrGCgJtTXzwseN1DomLwI2Iw8NKRu7Ww=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: e738d238-4c73-4015-f681-08d71ae1e7b2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Aug 2019 02:49:45.6312
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 856b813c-16e5-49a5-85ec-6f081e13b527
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: firo.yang@suse.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR18MB3169
+X-OriginatorOrg: suse.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Function ata_sff_flush_pio_task use spin_lock_irq/spin_unlock_irq
-to protect shared data.
-spin_unlock_irq will enable interrupts.
+In Xen environment, if Xen-swiotlb is enabled, ixgbe driver
+could possibly allocate a page, DMA memory buffer, for the first
+fragment which is not suitable for Xen-swiotlb to do DMA operations.
+Xen-swiotlb have to internally allocate another page for doing DMA
+operations. It requires syncing between those two pages. However,
+since commit f3213d932173 ("ixgbe: Update driver to make use of DMA
+attributes in Rx path"), the unmap operation is performed with
+DMA_ATTR_SKIP_CPU_SYNC. As a result, the sync is not performed.
 
-In the interrupt handler nv_swncq_interrupt (./drivers/ata/sata_nv.c),
-when ap->link.sactive is true, nv_swncq_host_interrupt was called.
-nv_swncq_hotplug is called when NV_SWNCQ_IRQ_HOTPLUG is set.
-Then it will follow this chain:
-nv_swncq_hotplug -> sata_scr_read (./dirvers/ata/libata-core.c)
- -> sata_pmp_scr_read (./drivers/ata/libata-pmp.c)
- -> sata_pmp_read -> ata_exec_internal 
- -> ata_exec_internal_sg -> ata_sff_flush_pio_task
+To fix this problem, always sync before possibly performing a page
+unmap operation.
 
-Interrupts are enabled in interrupt handler.
-Use spin_lock_irqsave instead of spin_lock_irq to avoid this.
-
-Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+Fixes: f3213d932173 ("ixgbe: Update driver to make use of DMA
+attributes in Rx path")
+Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Signed-off-by: Firo Yang <firo.yang@suse.com>
 ---
- drivers/ata/libata-sff.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/ata/libata-sff.c b/drivers/ata/libata-sff.c
-index 10aa27882142..d3143e7e6ec0 100644
---- a/drivers/ata/libata-sff.c
-+++ b/drivers/ata/libata-sff.c
-@@ -1241,6 +1241,7 @@ EXPORT_SYMBOL_GPL(ata_sff_queue_pio_task);
- 
- void ata_sff_flush_pio_task(struct ata_port *ap)
+Changes from v1:
+ * Imporved the patch description.
+ * Added Reviewed-by: and Fixes: as suggested by Alexander Duyck
+
+ drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+index cbaf712d6529..200de9838096 100644
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+@@ -1825,13 +1825,7 @@ static void ixgbe_pull_tail(struct ixgbe_ring *rx_ring,
+ static void ixgbe_dma_sync_frag(struct ixgbe_ring *rx_ring,
+ 				struct sk_buff *skb)
  {
-+	unsigned long flags;
- 	DPRINTK("ENTER\n");
+-	/* if the page was released unmap it, else just sync our portion */
+-	if (unlikely(IXGBE_CB(skb)->page_released)) {
+-		dma_unmap_page_attrs(rx_ring->dev, IXGBE_CB(skb)->dma,
+-				     ixgbe_rx_pg_size(rx_ring),
+-				     DMA_FROM_DEVICE,
+-				     IXGBE_RX_DMA_ATTR);
+-	} else if (ring_uses_build_skb(rx_ring)) {
++	if (ring_uses_build_skb(rx_ring)) {
+ 		unsigned long offset = (unsigned long)(skb->data) & ~PAGE_MASK;
  
- 	cancel_delayed_work_sync(&ap->sff_pio_task);
-@@ -1253,9 +1254,9 @@ void ata_sff_flush_pio_task(struct ata_port *ap)
- 	 * __ata_sff_port_intr() checks for HSM_ST_IDLE and before it calls
- 	 * ata_sff_hsm_move() causing ata_sff_hsm_move() to BUG().
- 	 */
--	spin_lock_irq(ap->lock);
-+	spin_lock_irqsave(ap->lock, flags);
- 	ap->hsm_task_state = HSM_ST_IDLE;
--	spin_unlock_irq(ap->lock);
-+	spin_unlock_irqrestore(ap->lock, flags);
+ 		dma_sync_single_range_for_cpu(rx_ring->dev,
+@@ -1848,6 +1842,14 @@ static void ixgbe_dma_sync_frag(struct ixgbe_ring *rx_ring,
+ 					      skb_frag_size(frag),
+ 					      DMA_FROM_DEVICE);
+ 	}
++
++	/* If the page was released, just unmap it. */
++	if (unlikely(IXGBE_CB(skb)->page_released)) {
++		dma_unmap_page_attrs(rx_ring->dev, IXGBE_CB(skb)->dma,
++				     ixgbe_rx_pg_size(rx_ring),
++				     DMA_FROM_DEVICE,
++				     IXGBE_RX_DMA_ATTR);
++	}
+ }
  
- 	ap->sff_pio_task_link = NULL;
- 
+ /**
 -- 
-2.11.0
+2.16.4
 
