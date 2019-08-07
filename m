@@ -2,72 +2,87 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82BC3C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 18:59:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 960B3C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 19:00:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5840B22305
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 18:59:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E89721EF2
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 19:00:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565204441;
+	bh=H8GQL47oZOjHGMHt6mc7yPh3DyXvvruf/VfI2fdq1XA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=GyhmLerF3LskR6OcPiuNIt5MPzLVncps89Wzvg8TkNDVBxYhmAQfi5deoAuMTtQka
+	 3a1M2Y1HCk1pBMlfez8ntdqmHWy2F2PrgFCo8z5zkXKUsgfnuGE6BIMXHgPwUNGuO7
+	 lrOF48Q+rEWBSNFHbu2wXp9qciJ9fUrzjZ74o0KY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389447AbfHGS7a (ORCPT
+        id S1730168AbfHGTAk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 14:59:30 -0400
-Received: from mga18.intel.com ([134.134.136.126]:7649 "EHLO mga18.intel.com"
+        Wed, 7 Aug 2019 15:00:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727213AbfHGS73 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 14:59:29 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Aug 2019 11:59:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,358,1559545200"; 
-   d="scan'208";a="198766417"
-Received: from geyerral-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.37.199])
-  by fmsmga004.fm.intel.com with ESMTP; 07 Aug 2019 11:59:21 -0700
-Date:   Wed, 7 Aug 2019 21:59:21 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-crypto@vger.kernel.org,
-        linux-security-module@vger.kernel.org, dhowells@redhat.com,
-        herbert@gondor.apana.org.au, davem@davemloft.net,
-        peterhuewe@gmx.de, jgg@ziepe.ca, jejb@linux.ibm.com, arnd@arndb.de,
-        gregkh@linuxfoundation.org, zohar@linux.ibm.com, jmorris@namei.org,
-        serge@hallyn.com, casey@schaufler-ca.com,
-        ard.biesheuvel@linaro.org, daniel.thompson@linaro.org,
-        linux-kernel@vger.kernel.org, tee-dev@lists.linaro.org
-Subject: Re: [RFC/RFT v3 1/3] KEYS: trusted: create trusted keys subsystem
-Message-ID: <20190807185921.lhdt3ek6tphj33bo@linux.intel.com>
-References: <1565098640-12536-1-git-send-email-sumit.garg@linaro.org>
- <1565098640-12536-2-git-send-email-sumit.garg@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1565098640-12536-2-git-send-email-sumit.garg@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: NeoMutt/20180716
+        id S1727213AbfHGTAk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 15:00:40 -0400
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8554B21EF2;
+        Wed,  7 Aug 2019 19:00:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565204438;
+        bh=H8GQL47oZOjHGMHt6mc7yPh3DyXvvruf/VfI2fdq1XA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=YlgkEarDGN0iPkWPaV/pbw5ncD7rQmx4yJoKPQ9nlm4ouA1+CTa9RxYW+98Vy24gI
+         qJ6E09hPzeZhxEQ6ywpXQDT2SLGtRgRNv3zVoSJY1Fz2VgEHGrOKuc89UnlAoTAMXS
+         uihlSf1Qg+aa309BG0I7DD0CeJ2fpdTb3Y3u8rXk=
+Date:   Wed, 7 Aug 2019 12:00:37 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     axboe@kernel.dk, jack@suse.cz, hannes@cmpxchg.org,
+        mhocko@kernel.org, vdavydov.dev@gmail.com, cgroups@vger.kernel.org,
+        linux-mm@kvack.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com, guro@fb.com
+Subject: Re: [PATCH 2/4] bdi: Add bdi->id
+Message-Id: <20190807120037.72018c136db40e88d89c05d1@linux-foundation.org>
+In-Reply-To: <20190807183151.GM136335@devbig004.ftw2.facebook.com>
+References: <20190803140155.181190-1-tj@kernel.org>
+        <20190803140155.181190-3-tj@kernel.org>
+        <20190806160102.11366694af6b56d9c4ca6ea3@linux-foundation.org>
+        <20190807183151.GM136335@devbig004.ftw2.facebook.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 07:07:18PM +0530, Sumit Garg wrote:
-> Move existing code to trusted keys subsystem. Also, rename files with
-> "tpm" as suffix which provides the underlying implementation.
+On Wed, 7 Aug 2019 11:31:51 -0700 Tejun Heo <tj@kernel.org> wrote:
+
+> Hello,
 > 
-> Suggested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> On Tue, Aug 06, 2019 at 04:01:02PM -0700, Andrew Morton wrote:
+> > On Sat,  3 Aug 2019 07:01:53 -0700 Tejun Heo <tj@kernel.org> wrote:
+> > > There currently is no way to universally identify and lookup a bdi
+> > > without holding a reference and pointer to it.  This patch adds an
+> > > non-recycling bdi->id and implements bdi_get_by_id() which looks up
+> > > bdis by their ids.  This will be used by memcg foreign inode flushing.
+> > 
+> > Why is the id non-recycling?  Presumably to address some
+> > lifetime/lookup issues, but what are they?
+> 
+> The ID by itself is used to point to the bdi from cgroup and idr
+> recycles really aggressively.  Combined with, for example, loop device
+> based containers, stale pointing can become pretty common.  We're
+> having similar issues with cgroup IDs.
 
-The name for should be still trusted.ko even if new backends are added.
-Must be done in order not to break user space.
+OK, but why is recycling a problem?  For example, file descriptors
+recycle as aggressively as is possible, and that doesn't cause any
+trouble.  Presumably recycling is a problem with cgroups because of
+some sort of stale reference problem?
 
-Situation is quite similar as when new backends were added to tpm_tis
-some time ago: MMIO backed implementation was kept as tpm_tis.ko, the
-core module was named as tpm_tis_core and SPI backed implementation was
-named as tpm_tis_spi.ko.
 
-/Jarkko
