@@ -2,129 +2,89 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C19C32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 16:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FBCCC32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 16:42:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 331E22229C
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 16:41:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D786F222FC
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 16:42:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="JmLeqOSp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730221AbfHGQle convert rfc822-to-8bit (ORCPT
+        id S1730272AbfHGQm3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 12:41:34 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:60254 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730010AbfHGQld (ORCPT
+        Wed, 7 Aug 2019 12:42:29 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:36464 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730010AbfHGQm3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 12:41:33 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-14--X1NSQzOPs25ES1Om5nzQw-1; Wed, 07 Aug 2019 17:41:30 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Wed, 7 Aug 2019 17:41:30 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Wed, 7 Aug 2019 17:41:30 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Mika Westerberg' <mika.westerberg@linux.intel.com>
-CC:     'Yehezkel Bernat' <yehezkelshb@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        Mario Limonciello <Mario.Limonciello@dell.com>,
-        "Anthony Wong" <anthony.wong@canonical.com>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
-Subject: RE: [PATCH 3/8] thunderbolt: Use 32-bit writes when writing ring
- producer/consumer
-Thread-Topic: [PATCH 3/8] thunderbolt: Use 32-bit writes when writing ring
- producer/consumer
-Thread-Index: AQHVMyIznn3HI+p3CEuvWWeqi0Ulhqa8L0swgDPP6oCAABFywP//9NeAgAAR0IA=
-Date:   Wed, 7 Aug 2019 16:41:30 +0000
-Message-ID: <91a579eb2f614739a9a1177bdde5513e@AcuMS.aculab.com>
-References: <20190705095800.43534-1-mika.westerberg@linux.intel.com>
- <20190705095800.43534-4-mika.westerberg@linux.intel.com>
- <CA+CmpXtMBEtyh77fcrhX2BU8esiit56CWfZmey6LYEHZVUxf8A@mail.gmail.com>
- <0f3a47d8133945b181d623ea6e0d53f2@AcuMS.aculab.com>
- <20190807161359.GT2716@lahna.fi.intel.com>
- <79616dd147864771b0b74901e77f2607@AcuMS.aculab.com>
- <20190807163629.GV2716@lahna.fi.intel.com>
-In-Reply-To: <20190807163629.GV2716@lahna.fi.intel.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Wed, 7 Aug 2019 12:42:29 -0400
+Received: by mail-ot1-f66.google.com with SMTP id r6so106837694oti.3
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 09:42:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=OgPFf4sieXg6FSqMl/7z/egdCX4CBj1LSh4wy9vZMd0=;
+        b=JmLeqOSpk6X4jyeXqVA19M/C3q/EQo3ixua/k4pXgGjJwizYMK6DOHHGeTu2QRx/pi
+         Ro6gORNTivgGAzBqKHMOi6pxTU6w9aBJvqX9Fb5Gld/zqQwBjnBNtdJLJLnJ52YmH3h7
+         3iMK1Jc5RYXTOjx4i6Sio2583eBQKPfXxxjPxdrEvbSa/sHg4qqiDQOHPqcz1oP0BYmg
+         FE3H1oEzL/VB6Aw0e6BRldwbFwDDMlhOYKZfdZhp3xQkRsxDQesVNcoAM4MsHJo6QJvo
+         CCQOw2mSAvxoEsAG0/vXJqzqrT6cEzp/+RPkNaviB0duB+yaeTDzaoLHoInsr3WUDZnR
+         dmyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=OgPFf4sieXg6FSqMl/7z/egdCX4CBj1LSh4wy9vZMd0=;
+        b=cIRa5sXf6Md0eMVPDmqj72gTUWlqhfhNZl0ko+PZXDqmwGbLFZHtHro4Neoxoq6qvl
+         rlvUD4quBrbnSQ6X4bfh9q6Pk+DtGbUAghjbatrges4ZgT/4GOnVDx1UsUf1aVlmI5mx
+         bK/IyuxugDtQl9ItnBbwGDTvXAMY+7X7DPiGUO1ZnA8LSeTvi3DOdsWP6zYxohF+pLMB
+         Auanx7i/+DmeiRtHlvV20FvwVtoXD86tNXWC3+YHAqlB/c1pV4gDb5YNK53wVdABpuxd
+         WGdNVq8tzV91c3RmuWk10/FYVK0KJ/IuaZDhy5a7lDEOUXLXzSSKMBwokH02ZYq53DaY
+         0aRw==
+X-Gm-Message-State: APjAAAXYiuqSzTY7RCRpBd/CDG7w4Xv2PDC/iAjvs7YRO89z0YbdFeQz
+        GWB/Wo+TcwkENU7pJA+PhVceVnroTDw=
+X-Google-Smtp-Source: APXvYqwm/dtouaS2YDkg4nuZf7fonnO8dwiBe2IToY4UY/xI3nlngfUW1dUQIVzDV+FS9qhrZgGcjA==
+X-Received: by 2002:a5e:9314:: with SMTP id k20mr10575140iom.235.1565196148444;
+        Wed, 07 Aug 2019 09:42:28 -0700 (PDT)
+Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
+        by smtp.gmail.com with ESMTPSA id n26sm66735984ioc.74.2019.08.07.09.42.27
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 07 Aug 2019 09:42:28 -0700 (PDT)
+Date:   Wed, 7 Aug 2019 09:42:27 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Alexandre Ghiti <alex@ghiti.fr>
+cc:     Christoph Hellwig <hch@infradead.org>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] riscv: kbuild: add virtual memory system selection
+In-Reply-To: <c331e389-5f33-634a-f62f-e48251ca4cfe@ghiti.fr>
+Message-ID: <alpine.DEB.2.21.9999.1908070940110.13971@viisi.sifive.com>
+References: <alpine.DEB.2.21.9999.1907261259420.26670@viisi.sifive.com> <20190802084453.GA1410@infradead.org> <alpine.DEB.2.21.9999.1908061648220.13971@viisi.sifive.com> <20190807054246.GB1398@infradead.org> <c331e389-5f33-634a-f62f-e48251ca4cfe@ghiti.fr>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-X-MC-Unique: -X1NSQzOPs25ES1Om5nzQw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: 'Mika Westerberg' [mailto:mika.westerberg@linux.intel.com]
-> Sent: 07 August 2019 17:36
-> 
-> On Wed, Aug 07, 2019 at 04:22:26PM +0000, David Laight wrote:
-> > From: Mika Westerberg
-> > > Sent: 07 August 2019 17:14
-> > > To: David Laight
-> > >
-> > > On Fri, Jul 05, 2019 at 04:04:19PM +0000, David Laight wrote:
-> > > > > Really a matter of taste, but maybe you want to consider having a single
-> > > > > function, with a 3rd parameter, bool is_tx.
-> > > > > The calls here will be unified to:
-> > > > >         ring_iowrite(ring, ring->head, ring->is_tx);
-> > > > > (No condition is needed here).
-> > > > >
-> > > > > The implementation uses the new parameter to decide which part of the register
-> > > > > to mask, reducing the code duplication (in my eyes):
-> > > > >
-> > > > >         val = ioread32(ring_desc_base(ring) + 8);
-> > > > >         if (is_tx) {
-> > > > >                 val &= 0x0000ffff;
-> > > > >                 val |= value << 16;
-> > > > >         } else {
-> > > > >                 val &= 0xffff0000;
-> > > > >                 val |= value;
-> > > > >         }
-> > > > >         iowrite32(val, ring_desc_base(ring) + 8);
-> > > > >
-> > > > > I'm not sure if it improves the readability or makes it worse. Your call.
-> > > >
-> > > > Gah, that is all horrid beyond belief.
-> > > > If a 32bit write is valid then the hardware must not be updating
-> > > > the other 16 bits.
-> > > > In which case the driver knows what they should be.
-> > > > So it can do a single 32bit write of the required value.
-> > >
-> > > I'm not entirely sure I understand what you say above. Can you shed some
-> > > light on this by a concrete example how it should look like? :-)
-> >
-> > The driver must know both the tx and rx ring values, so:
-> > 	iowrite32(tx_val << 16 | rx_val, ring_desc_base(ring) + 8);
-> >
-> 
-> I see. However, prod or cons side gets updated by the hardware as it
-> processes buffers and other side is only updated by the driver. I'm not
-> sure the above works here.
+On Wed, 7 Aug 2019, Alexandre Ghiti wrote:
 
-If the hardware updates the other half of the 32bit word it doesn't ever work.
-In that case you must do 16bit writes.
-If the hardware is ignoring the byte-enables it is broken and unusable.
+> And FYI my series and your patch are already in linux-next.
 
-	David
+Yes, I agree with Christoph that it would be preferable not to break 
+randconfig/allyesconfig.  So if you don't mind, could you respin the 
+RISC-V patch to drop the Sv48 portion, and simply assume Sv39 for RV64 as 
+we do for the rest of the RISC-V kernel code?  We can always add Sv48 
+back in later.
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+If you agree, then once you do that, I'll ask Andrew to drop the RISC-V 
+Kbuild patch that he's carrying.
 
+
+- Paul
