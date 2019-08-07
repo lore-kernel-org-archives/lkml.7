@@ -2,120 +2,112 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E25F9C32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 23:31:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1B23C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 23:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1C2F2187F
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 23:31:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F43521873
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 23:32:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Q+skvyy7"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="NrRvMjgZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389007AbfHGXbz (ORCPT
+        id S2389116AbfHGXcK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 19:31:55 -0400
-Received: from ozlabs.org ([203.11.71.1]:36993 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387849AbfHGXbz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 19:31:55 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 463npJ4gNcz9sBF;
-        Thu,  8 Aug 2019 09:31:52 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1565220712;
-        bh=D4954wWJFIxeNOAVCijZOojKttQJdCVp6dAMHpHJBYk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Q+skvyy73bh+ueDzhcKMjKlRSYzXaCCxgrX6NDyy5Tzh9ghKs7cR3BymxbZCU5U6T
-         yAMsqZM92mMcarCtTU1k89qMQpoK40pguulgJmeyJN4prVl6NwY3ubv0Cald+An2yO
-         4R52Xqly490gOUTSYM0wH7inL7stWfH6VQ3WDNHsOdfJrnDpzeAjpCbfm7x3YCPIN7
-         rFZP0eQG5x4okmcQ7Gd/YtJzRINkvvm9BmEVQDjLNbYAnsClM0fUeiXbdoDoHkdGGe
-         4vtm+CcY+nfElk+5OXXcjhqMY1ZeoMe9t+XYBn/Gq9DJAl3cuT7fFSesAu5dEjKyNc
-         qajJef3XjxUdg==
-Date:   Thu, 8 Aug 2019 09:31:34 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build warning after merge of the akpm-current tree
-Message-ID: <20190808093134.1a5df132@canb.auug.org.au>
-In-Reply-To: <20190807112917.GA4624@rikard>
-References: <20190807180041.07f06dc0@canb.auug.org.au>
-        <20190807112917.GA4624@rikard>
+        Wed, 7 Aug 2019 19:32:10 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:4118 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729624AbfHGXcJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 19:32:09 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d4b5f7a0000>; Wed, 07 Aug 2019 16:32:10 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 07 Aug 2019 16:32:08 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 07 Aug 2019 16:32:08 -0700
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 7 Aug
+ 2019 23:32:08 +0000
+Subject: Re: [PATCH 1/3] mm/mlock.c: convert put_page() to put_user_page*()
+To:     Michal Hocko <mhocko@kernel.org>, <john.hubbard@gmail.com>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jerome Glisse <jglisse@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-fsdevel@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Black <daniel@linux.ibm.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>
+References: <20190805222019.28592-1-jhubbard@nvidia.com>
+ <20190805222019.28592-2-jhubbard@nvidia.com>
+ <20190807110147.GT11812@dhcp22.suse.cz>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <01b5ed91-a8f7-6b36-a068-31870c05aad6@nvidia.com>
+Date:   Wed, 7 Aug 2019 16:32:08 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/S1/XyKHC=Oh8eUWuEWK2PHJ";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20190807110147.GT11812@dhcp22.suse.cz>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1565220730; bh=Vo6bQKtkk9LxLaQR6PE8mmqutIpc3NqGB6BA5P1fNgE=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=NrRvMjgZ026fJhY2X/UVob3ZUP7VbfQoX2fWC4rqAKy0rtWi8DdQ+dGpT9myh/Ups
+         oQZ4iC5DhOS8fMX9OAOKdFdxT2+r22p977v74zrvGliO+4rYDr3xwzKQhhiD8261DI
+         uWhhf3tl3zC3GIqtP7JRMFJvIf4rxZN5JgKREREk5KOERB6yo6bMNu88R4p5JniTVQ
+         Ax29c0PctE88ki6fi9CXmAw1JGVRX10gWo12j1SVWJZ5rPCcUjzZjJhHpqbg9efdQP
+         Kg7RC5y9sZF55OYmo73TeO6nKcqchTY2J4u2YycHEXaXJTEPbGcR6Y9t62fH1Tyy9A
+         GpxiBAiRmC1Dg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/S1/XyKHC=Oh8eUWuEWK2PHJ
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 8/7/19 4:01 AM, Michal Hocko wrote:
+> On Mon 05-08-19 15:20:17, john.hubbard@gmail.com wrote:
+>> From: John Hubbard <jhubbard@nvidia.com>
+>>
+>> For pages that were retained via get_user_pages*(), release those pages
+>> via the new put_user_page*() routines, instead of via put_page() or
+>> release_pages().
+> 
+> Hmm, this is an interesting code path. There seems to be a mix of pages
+> in the game. We get one page via follow_page_mask but then other pages
+> in the range are filled by __munlock_pagevec_fill and that does a direct
+> pte walk. Is using put_user_page correct in this case? Could you explain
+> why in the changelog?
+> 
 
-Hi Rikard,
+Actually, I think follow_page_mask() gets all the pages, right? And the
+get_page() in __munlock_pagevec_fill() is there to allow a pagevec_release() 
+later.
 
-On Wed, 7 Aug 2019 13:29:17 +0200 Rikard Falkeborn <rikard.falkeborn@gmail.=
-com> wrote:
->
-> Hi Stephen, Andrew
->=20
-> On Wed, Aug 07, 2019 at 06:00:41PM +1000, Stephen Rothwell wrote:
-> > Hi all,
-> >=20
-> > After merging the akpm-current tree, today's linux-next build (x86_64
-> > allmodconfig) failed like this:
-> >=20
-> > In file included from include/linux/bits.h:22,
-> >                  from arch/x86/include/asm/msr-index.h:5,
-> >                  from arch/x86/boot/cpucheck.c:28:
-> > include/linux/build_bug.h:49: warning: "BUILD_BUG_ON" redefined
-> >  #define BUILD_BUG_ON(condition) \
-> > =20
-> > In file included from arch/x86/boot/cpucheck.c:22:
-> > arch/x86/boot/boot.h:31: note: this is the location of the previous def=
-inition
-> >  #define BUILD_BUG_ON(condition) ((void)sizeof(char[1 - 2*!!(condition)=
-]))
-> >=20
-> > Caused by commit
-> >=20
-> >   d72f2a993607 ("linux/bits.h: add compile time sanity check of GENMASK=
- inputs")
-> >=20
-> > --=20
-> > Cheers,
-> > Stephen Rothwell =20
->=20
-> Please drop this patch, it has additional issues that needs to be fixed
-> in another revision.
+But I still think I mighthave missed an error case, because the pvec_putback
+in __munlock_pagevec() is never doing put_user_page() on the put-backed pages.
 
-I have removed it from linux-next for today.
---=20
-Cheers,
-Stephen Rothwell
+Let me sort through this one more time and maybe I'll need to actually
+change the code. And either way, comments and changelog will need some notes, 
+agreed.
 
---Sig_/S1/XyKHC=Oh8eUWuEWK2PHJ
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+thanks,
+-- 
+John Hubbard
+NVIDIA
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1LX1YACgkQAVBC80lX
-0Gz1vQf/Vr+jSE3tZ3mO3nFRIABShN33fdZ8ctsctp2uCkjyX5JZmgQ04MRZZKCM
-V2XABQmTugkVJ5B2RK4Mgc4QYvsHDUUSO7f1sjA2c97uU7GxxbkmoNP+ZXGKe5YT
-DuH/I8pOmF4J0TAUURAhXgODc9j5fZ9qYFFt3u8l+6dXnlo5TxsEO9uaV4E36z2b
-v94ChOSTlHLLB6J5SxNAmSv5zFuMhBeQ5d23zub//ynN5Dp8hVUOxfi4Gww8YSPO
-lrjvvun84fRGi86j/NA1gYlGjX9FohRWJ3vVYtNQKOBtvm0oVB6R2nmH9IFFPRm8
-uTdWuigz1JdKRtTwKX0lnsB+TUfvRA==
-=An6g
------END PGP SIGNATURE-----
-
---Sig_/S1/XyKHC=Oh8eUWuEWK2PHJ--
