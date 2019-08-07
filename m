@@ -2,83 +2,126 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC1CC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 17:41:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F5AC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 17:42:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C86C21E6E
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 17:41:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3A7821E6E
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 17:42:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389226AbfHGRlS (ORCPT
+        id S2389254AbfHGRmc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 13:41:18 -0400
-Received: from foss.arm.com ([217.140.110.172]:52528 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388369AbfHGRlP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 13:41:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DC26115A2;
-        Wed,  7 Aug 2019 10:41:14 -0700 (PDT)
-Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1BC853F575;
-        Wed,  7 Aug 2019 10:41:14 -0700 (PDT)
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org
-Subject: [PATCH 2/3] sched/fair: Prevent active LB from preempting higher sched classes
-Date:   Wed,  7 Aug 2019 18:40:25 +0100
-Message-Id: <20190807174026.31242-3-valentin.schneider@arm.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190807174026.31242-1-valentin.schneider@arm.com>
-References: <20190807174026.31242-1-valentin.schneider@arm.com>
-MIME-Version: 1.0
+        Wed, 7 Aug 2019 13:42:32 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:36702 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388363AbfHGRmc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 13:42:32 -0400
+Received: by mail-pl1-f194.google.com with SMTP id k8so41877311plt.3
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 10:42:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=/uiebD3btGZbv4vhWYrLmVJnJacov4IOPhmk60kkajg=;
+        b=HNcBAXnJzE6uUB8tIAUYgqvuEp7OTTfPSHB8SoTsSj6TdMtwzvLu6bF8L1r/I1gEhw
+         PWb2b7yxTVPfJVq+rS+uQK5zsO9WyKeBxjQdTp9SwMZwnR5yGKd/r/RnMiEPaGGFC+b6
+         WQizhkiuM9fEcEe13nigY5hBl9/ThWE3hi41FeycrwJya/FujyAUKhkIdjFb8uDrCsmO
+         6lo+s0+P+6dqdS3xRO8/cVA4Mina6J6ULuE869rGnqjw1aMnjGB8B+6g4PyiE6GXuAaC
+         Cn7o4VVpZAEGqmxHdE+XP4qHy+qrwEktYkEbxgFwb3y7HBV0nKIdYpRMpZzB+OGrq/oD
+         M+Xg==
+X-Gm-Message-State: APjAAAViB37ApGBWruUSZrjJ9bINiRvBW8OlCzcWuow6REdUjb/GFtD0
+        EwyG41o9ugcSpAk11YS4PG26czuhRQmtvw==
+X-Google-Smtp-Source: APXvYqw1JEMLevhf1LxZ3JskWiL2HpnAPmkA0NRBmwn1FJZT+5YEh83ZyPicXC8jCeVqb1RmwoO2Tw==
+X-Received: by 2002:a17:90a:2190:: with SMTP id q16mr989287pjc.23.1565199750802;
+        Wed, 07 Aug 2019 10:42:30 -0700 (PDT)
+Received: from localhost ([12.206.222.5])
+        by smtp.gmail.com with ESMTPSA id p187sm146508645pfg.89.2019.08.07.10.42.30
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 07 Aug 2019 10:42:30 -0700 (PDT)
+Date:   Wed, 07 Aug 2019 10:42:30 -0700 (PDT)
+X-Google-Original-Date: Wed, 07 Aug 2019 10:42:28 PDT (-0700)
+Subject:     Re: [PATCH v3 3/5] RISC-V: Fix unsupported isa string info.
+In-Reply-To: <a2795337bd86ff22ae9618d7ccae22e7482be332.camel@wdc.com>
+CC:     Paul Walmsley <paul.walmsley@sifive.com>, info@metux.net,
+        allison@lohutok.net, aou@eecs.berkeley.edu,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        tglx@linutronix.de, daniel.lezcano@linaro.org,
+        Anup Patel <Anup.Patel@wdc.com>, mark.rutland@arm.com,
+        johan@kernel.org, robh+dt@kernel.org,
+        Greg KH <gregkh@linuxfoundation.org>, tiny.windzz@gmail.com,
+        gary@garyguo.net, linux-riscv@lists.infradead.org
+From:   Palmer Dabbelt <palmer@sifive.com>
+To:     Atish Patra <Atish.Patra@wdc.com>
+Message-ID: <mhng-5befbd83-7239-4ee0-8c03-06e377e53f72@palmer-si-x1e>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The CFS load balancer can cause the cpu_stopper to run a function to
-try and steal a rq's currently running task. However, it so happens
-that while only CFS tasks will ever be migrated by that function, we
-can end up preempting higher sched class tasks, since it is executed
-by the cpu_stopper.
+On Wed, 07 Aug 2019 10:31:51 PDT (-0700), Atish Patra wrote:
+> On Tue, 2019-08-06 at 18:26 -0700, Paul Walmsley wrote:
+>> On Wed, 7 Aug 2019, Atish Patra wrote:
+>> 
+>> > On Tue, 2019-08-06 at 16:27 -0700, Paul Walmsley wrote:
+>> > 
+>> > > Seems like the "su" should be dropped from mandatory_ext.  What
+>> > > do you 
+>> > > think?
+>> > > 
+>> > 
+>> > Yup. As DT binding only mention imafdc, mandatory extensions should
+>> > contain only that and just consider "su" extensions are considered
+>> > as
+>> > implicit as we are running Linux. 
+>> 
+>> Discussing this with Andrew and Palmer, it looks like "su" is
+>> currently 
+>> non-compliant.  Section 22.6 of the user-level specification states
+>> that 
+>> the "s" character indicates that a longer standard supervisor
+>> extension 
+>> name will follow.  So far I don't think any of these have been
+>> defined.
+>> 
+>> > Do you think QEMU DT should be updated to reflect that ?
+>> 
+>> Yes.
+>> 
+>> > > There's no Kconfig option by this name, and we're requiring
+>> > > compressed 
+>> > 
+>> > Sorry. This was a typo. It should have been CONFIG_RISCV_ISA_C.
+>> > 
+>> > > instruction support as part of the RISC-V Linux baseline.  Could
+>> > > you 
+>> > > share the rationale behind this?
+>> > 
+>> > I think I added this check at the config file. Looking at the
+>> > Kconfig,
+>> > RISCV_ISA_C is always enabled. So we can drop this.
+>> 
+>> OK great.  Do you want to resend an updated patch, or would you like
+>> me to 
+>> fix it up here?
+>> 
+> 
+> I am sending the patch right now. We can remove the 'S' mode check as
+> palmer have already sent the QEMU patch as well, .
 
-I don't expect this to be exceedingly common: we still need to have
-had a busiest group in the first place, which needs
+Looks like I missed the boat for 4.1, though.
 
-  busiest->sum_nr_running != 0
-
-which is a cfs.h_nr_running sum, so we should have something to pull,
-but if we fail to pull anything and the remote rq is executing
-an RT/DL task we can hit this.
-
-Add an extra check to not trigger the cpu_stopper if the remote
-rq's running task isn't CFS.
-
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
----
- kernel/sched/fair.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index b56b8edee3d3..79bd6ead589c 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -8834,6 +8834,10 @@ static inline enum alb_status active_load_balance(struct lb_env *env)
- 
- 	raw_spin_lock_irqsave(&busiest->lock, flags);
- 
-+	/* Make sure we're not about to stop a task from a higher sched class */
-+	if (busiest->curr->sched_class != &fair_sched_class)
-+		goto unlock;
-+
- 	/*
- 	 * Don't kick the active_load_balance_cpu_stop, if the curr task on
- 	 * busiest CPU can't be moved to dst_cpu:
---
-2.22.0
-
+> 
+> Regards,
+> Atish
+>> I'll also send a patch to drop CONFIG_RISCV_ISA_C.
+>> 
+>> 
+>> - Paul
+> 
