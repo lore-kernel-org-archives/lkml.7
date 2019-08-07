@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D1D3C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 03:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFB3BC31E40
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 03:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C8BE217D9
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 03:36:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4A4C217D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 03:37:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="MbHh8OQZ"
+	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="TpFJPi2W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728270AbfHGDg4 (ORCPT
+        id S1728351AbfHGDhA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 23:36:56 -0400
-Received: from mx0b-00190b01.pphosted.com ([67.231.157.127]:61106 "EHLO
+        Tue, 6 Aug 2019 23:37:00 -0400
+Received: from mx0b-00190b01.pphosted.com ([67.231.157.127]:62826 "EHLO
         mx0b-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727359AbfHGDgy (ORCPT
+        by vger.kernel.org with ESMTP id S1727420AbfHGDgz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 23:36:54 -0400
-Received: from pps.filterd (m0050096.ppops.net [127.0.0.1])
-        by m0050096.ppops.net-00190b01. (8.16.0.42/8.16.0.42) with SMTP id x773VZ0V008716;
-        Wed, 7 Aug 2019 04:36:33 +0100
+        Tue, 6 Aug 2019 23:36:55 -0400
+Received: from pps.filterd (m0122331.ppops.net [127.0.0.1])
+        by mx0b-00190b01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x773VYYQ003028;
+        Wed, 7 Aug 2019 04:36:27 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-type; s=jan2016.eng;
- bh=vffPYkazUX63OOelAC2TpHBENEYOaE8kM+STi98FHrY=;
- b=MbHh8OQZ7vnU2WY4jQW2VAFrFXutzTL7KDzMIVZSDcIl9ooCTNxYs3DjvZ/Bgu0WM2Z6
- 3eU/pJUMLfCR8IIbSN9NCKrRlNXR1PL1BJNbtHCnoSebIJI8nJ157Psbzwyjt4C2ZLoT
- c6PnuUJOjwvhW10mUEsM9kEYZF+5QTwBJp6ELlG1gg6wOgYVc+wC+qLmwHC074lE7xKV
- sl/Joan0WwfusMkUnT8lYEw2Fdz0zTNSirFSZUP/G5wEBsFiG0GBqge0lbv8ITbr0/PW
- OaEDcr4gxR/EIY8o7IXM87ITvVK5Ff2SzZGAyQ9oBUjNtg9jOWkkKALCuEdESbMuvwPt JA== 
+ bh=edg0O2+ml5BYIcRbGIumUYTqya04hIZ6gRSWYDOfb7g=;
+ b=TpFJPi2Wzc8nfPiKoLs4+ViteCnMePxj5WBGfHCraQzrEmQRWsVWxXxovAub/afZ4xuR
+ 8g62IdolqJf0VPvhkCAFG+ioRZKlcRk4ZZHfmOU0KBE36fBXRlxXIzN7C5rLisQy64lv
+ 6VK3MwP24TapUSJFSWMquQpsLzVU3yTioYgQiVaVb0i6RoCrxAiCS4OQl1lThM20/vL+
+ KBO6Mhegb0XDJ4TJHAcnagsdASbTL1iDCWJ/cALVox8mTMUBTtJbx6EuPePrlO3/1kBI
+ JpG/OhUECVaLxHk4S3FVORUvd7TIpXTB1sMnpCCTc+18gzEKzDcCQetpzvLQdgspjW2Z wQ== 
 Received: from prod-mail-ppoint5 (prod-mail-ppoint5.akamai.com [184.51.33.60] (may be forged))
-        by m0050096.ppops.net-00190b01. with ESMTP id 2u52p8ftgh-1
+        by mx0b-00190b01.pphosted.com with ESMTP id 2u4y4tfn1g-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 07 Aug 2019 04:36:33 +0100
+        Wed, 07 Aug 2019 04:36:27 +0100
 Received: from pps.filterd (prod-mail-ppoint5.akamai.com [127.0.0.1])
-        by prod-mail-ppoint5.akamai.com (8.16.0.27/8.16.0.27) with SMTP id x773WhWs032205;
-        Tue, 6 Aug 2019 20:36:32 -0700
+        by prod-mail-ppoint5.akamai.com (8.16.0.27/8.16.0.27) with SMTP id x773WUQp031724;
+        Tue, 6 Aug 2019 20:36:26 -0700
 Received: from email.msg.corp.akamai.com ([172.27.123.57])
-        by prod-mail-ppoint5.akamai.com with ESMTP id 2u5888ebjv-1
+        by prod-mail-ppoint5.akamai.com with ESMTP id 2u5888ebjn-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Tue, 06 Aug 2019 20:36:32 -0700
+        Tue, 06 Aug 2019 20:36:26 -0700
 Received: from USMA1EX-DAG1MB5.msg.corp.akamai.com (172.27.123.105) by
- usma1ex-dag3mb4.msg.corp.akamai.com (172.27.123.56) with Microsoft SMTP
- Server (TLS) id 15.0.1473.3; Tue, 6 Aug 2019 23:36:31 -0400
-Received: from usma1ex-cas5.msg.corp.akamai.com (172.27.123.53) by
+ usma1ex-dag3mb6.msg.corp.akamai.com (172.27.123.54) with Microsoft SMTP
+ Server (TLS) id 15.0.1473.3; Tue, 6 Aug 2019 23:36:25 -0400
+Received: from USMA1EX-CAS1.msg.corp.akamai.com (172.27.123.30) by
  usma1ex-dag1mb5.msg.corp.akamai.com (172.27.123.105) with Microsoft SMTP
- Server (TLS) id 15.0.1473.3; Tue, 6 Aug 2019 23:36:31 -0400
+ Server (TLS) id 15.0.1473.3; Tue, 6 Aug 2019 23:36:25 -0400
 Received: from igorcastle.kendall.corp.akamai.com (172.29.170.135) by
- usma1ex-cas5.msg.corp.akamai.com (172.27.123.53) with Microsoft SMTP Server
- id 15.0.1473.3 via Frontend Transport; Tue, 6 Aug 2019 20:36:25 -0700
+ USMA1EX-CAS1.msg.corp.akamai.com (172.27.123.30) with Microsoft SMTP Server
+ id 15.0.1473.3 via Frontend Transport; Tue, 6 Aug 2019 23:36:25 -0400
 Received: by igorcastle.kendall.corp.akamai.com (Postfix, from userid 29659)
-        id 0E51561D78; Tue,  6 Aug 2019 23:36:23 -0400 (EDT)
+        id 0D6FE61D6C; Tue,  6 Aug 2019 23:36:23 -0400 (EDT)
 From:   Igor Lubashev <ilubashe@akamai.com>
 To:     <linux-kernel@vger.kernel.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -71,9 +71,9 @@ CC:     Peter Zijlstra <peterz@infradead.org>,
         <linux-arm-kernel@lists.infradead.org>,
         James Morris <jmorris@namei.org>,
         Igor Lubashev <ilubashe@akamai.com>
-Subject: [PATCH v2 3/4] perf: Use CAP_SYSLOG with kptr_restrict checks
-Date:   Tue, 6 Aug 2019 23:35:56 -0400
-Message-ID: <f739900dede057b83a6e6ac5dee5fffb67f16e97.1565146171.git.ilubashe@akamai.com>
+Subject: [PATCH v2 1/4] perf: Add capability-related utilities
+Date:   Tue, 6 Aug 2019 23:35:54 -0400
+Message-ID: <8a1e76cf5c7c9796d0d4d240fbaa85305298aafa.1565146171.git.ilubashe@akamai.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1565146171.git.ilubashe@akamai.com>
 References: <cover.1565146171.git.ilubashe@akamai.com>
@@ -81,82 +81,280 @@ MIME-Version: 1.0
 Content-Type: text/plain
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-07_01:,,
  signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1906280000 definitions=main-1908070034
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:5.22.84,1.0.8
  definitions=2019-08-07_01:2019-08-05,2019-08-07 signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 priorityscore=1501
- adultscore=0 lowpriorityscore=0 mlxscore=0 spamscore=0 mlxlogscore=999
- malwarescore=0 impostorscore=0 clxscore=1015 phishscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1906280000
- definitions=main-1908070034
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 priorityscore=1501
+ lowpriorityscore=0 impostorscore=0 adultscore=0 bulkscore=0
+ mlxlogscore=999 spamscore=0 mlxscore=0 suspectscore=2 phishscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1906280000 definitions=main-1908070034
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kernel is using CAP_SYSLOG capability instead of uid==0 and euid==0 when
-checking kptr_restrict. Make perf do the same.
-
-Also, the kernel is a more restrictive than "no restrictions" in case of
-kptr_restrict==0, so add the same logic to perf.
+Add utilities to help checking capabilities of the running procss.
+Make perf link with libcap, if it is available. If no libcap-dev[el],
+assume no capabilities.
 
 Signed-off-by: Igor Lubashev <ilubashe@akamai.com>
 ---
- tools/perf/util/symbol.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+ tools/build/Makefile.feature       |  2 ++
+ tools/build/feature/Makefile       |  4 ++++
+ tools/build/feature/test-libcap.c  | 20 ++++++++++++++++++++
+ tools/perf/Makefile.config         | 11 +++++++++++
+ tools/perf/Makefile.perf           |  2 ++
+ tools/perf/util/Build              |  2 ++
+ tools/perf/util/cap.c              | 29 +++++++++++++++++++++++++++++
+ tools/perf/util/cap.h              | 24 ++++++++++++++++++++++++
+ tools/perf/util/event.h            |  1 +
+ tools/perf/util/python-ext-sources |  1 +
+ tools/perf/util/util.c             |  9 +++++++++
+ 11 files changed, 105 insertions(+)
+ create mode 100644 tools/build/feature/test-libcap.c
+ create mode 100644 tools/perf/util/cap.c
+ create mode 100644 tools/perf/util/cap.h
 
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 173f3378aaa0..046271103499 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -4,6 +4,7 @@
- #include <stdlib.h>
- #include <stdio.h>
+diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+index 86b793dffbc4..8a19753cc26a 100644
+--- a/tools/build/Makefile.feature
++++ b/tools/build/Makefile.feature
+@@ -42,6 +42,7 @@ FEATURE_TESTS_BASIC :=                  \
+         gtk2-infobar                    \
+         libaudit                        \
+         libbfd                          \
++        libcap                          \
+         libelf                          \
+         libelf-getphdrnum               \
+         libelf-gelf_getnote             \
+@@ -110,6 +111,7 @@ FEATURE_DISPLAY ?=              \
+          gtk2                   \
+          libaudit               \
+          libbfd                 \
++         libcap                 \
+          libelf                 \
+          libnuma                \
+          numa_num_possible_cpus \
+diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+index 0658b8cd0e53..8499385365c0 100644
+--- a/tools/build/feature/Makefile
++++ b/tools/build/feature/Makefile
+@@ -20,6 +20,7 @@ FILES=                                          \
+          test-libbfd-liberty.bin                \
+          test-libbfd-liberty-z.bin              \
+          test-cplus-demangle.bin                \
++         test-libcap.bin			\
+          test-libelf.bin                        \
+          test-libelf-getphdrnum.bin             \
+          test-libelf-gelf_getnote.bin           \
+@@ -105,6 +106,9 @@ $(OUTPUT)test-fortify-source.bin:
+ $(OUTPUT)test-bionic.bin:
+ 	$(BUILD)
+ 
++$(OUTPUT)test-libcap.bin:
++	$(BUILD) -lcap
++
+ $(OUTPUT)test-libelf.bin:
+ 	$(BUILD) -lelf
+ 
+diff --git a/tools/build/feature/test-libcap.c b/tools/build/feature/test-libcap.c
+new file mode 100644
+index 000000000000..d2a2e152195f
+--- /dev/null
++++ b/tools/build/feature/test-libcap.c
+@@ -0,0 +1,20 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <sys/capability.h>
++#include <linux/capability.h>
++
++int main(void)
++{
++	cap_flag_value_t val;
++	cap_t caps = cap_get_proc();
++
++	if (!caps)
++		return 1;
++
++	if (cap_get_flag(caps, CAP_SYS_ADMIN, CAP_EFFECTIVE, &val) != 0)
++		return 1;
++
++	if (cap_free(caps) != 0)
++		return 1;
++
++	return 0;
++}
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index e4988f49ea79..9a06787fedc6 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -824,6 +824,17 @@ ifndef NO_LIBZSTD
+   endif
+ endif
+ 
++ifndef NO_LIBCAP
++  ifeq ($(feature-libcap), 1)
++    CFLAGS += -DHAVE_LIBCAP_SUPPORT
++    EXTLIBS += -lcap
++    $(call detected,CONFIG_LIBCAP)
++  else
++    msg := $(warning No libcap found, disables capability support, please install libcap-devel/libcap-dev);
++    NO_LIBCAP := 1
++  endif
++endif
++
+ ifndef NO_BACKTRACE
+   ifeq ($(feature-backtrace), 1)
+     CFLAGS += -DHAVE_BACKTRACE_SUPPORT
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 67512a12276b..f9807d8c005b 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -88,6 +88,8 @@ include ../scripts/utilities.mak
+ #
+ # Define NO_LIBBPF if you do not want BPF support
+ #
++# Define NO_LIBCAP if you do not want process capabilities considered by perf
++#
+ # Define NO_SDT if you do not want to define SDT event in perf tools,
+ # note that it doesn't disable SDT scanning support.
+ #
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index 7abf05131889..7cda749059a9 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -148,6 +148,8 @@ perf-$(CONFIG_ZLIB) += zlib.o
+ perf-$(CONFIG_LZMA) += lzma.o
+ perf-$(CONFIG_ZSTD) += zstd.o
+ 
++perf-$(CONFIG_LIBCAP) += cap.o
++
+ perf-y += demangle-java.o
+ perf-y += demangle-rust.o
+ 
+diff --git a/tools/perf/util/cap.c b/tools/perf/util/cap.c
+new file mode 100644
+index 000000000000..c3ba841bbf37
+--- /dev/null
++++ b/tools/perf/util/cap.c
+@@ -0,0 +1,29 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Capability utilities
++ */
++
++#ifdef HAVE_LIBCAP_SUPPORT
++
++#include "cap.h"
++#include <stdbool.h>
++#include <sys/capability.h>
++
++bool perf_cap__capable(cap_value_t cap)
++{
++	cap_flag_value_t val;
++	cap_t caps = cap_get_proc();
++
++	if (!caps)
++		return false;
++
++	if (cap_get_flag(caps, cap, CAP_EFFECTIVE, &val) != 0)
++		val = CAP_CLEAR;
++
++	if (cap_free(caps) != 0)
++		return false;
++
++	return val == CAP_SET;
++}
++
++#endif  /* HAVE_LIBCAP_SUPPORT */
+diff --git a/tools/perf/util/cap.h b/tools/perf/util/cap.h
+new file mode 100644
+index 000000000000..514b1f8992f6
+--- /dev/null
++++ b/tools/perf/util/cap.h
+@@ -0,0 +1,24 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __PERF_CAP_H
++#define __PERF_CAP_H
++
++#include <stdbool.h>
++#include <linux/capability.h>
++#include <linux/compiler.h>
++
++#ifdef HAVE_LIBCAP_SUPPORT
++
++#include <sys/capability.h>
++
++bool perf_cap__capable(cap_value_t cap);
++
++#else
++
++static inline bool perf_cap__capable(int cap __maybe_unused)
++{
++	return false;
++}
++
++#endif /* HAVE_LIBCAP_SUPPORT */
++
++#endif /* __PERF_CAP_H */
+diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
+index 70841d115349..0e164e8ae28d 100644
+--- a/tools/perf/util/event.h
++++ b/tools/perf/util/event.h
+@@ -851,6 +851,7 @@ void  cpu_map_data__synthesize(struct cpu_map_data *data, struct perf_cpu_map *m
+ void event_attr_init(struct perf_event_attr *attr);
+ 
+ int perf_event_paranoid(void);
++bool perf_event_paranoid_check(int max_level);
+ 
+ extern int sysctl_perf_event_max_stack;
+ extern int sysctl_perf_event_max_contexts_per_stack;
+diff --git a/tools/perf/util/python-ext-sources b/tools/perf/util/python-ext-sources
+index 235bd9803390..c6dd478956f1 100644
+--- a/tools/perf/util/python-ext-sources
++++ b/tools/perf/util/python-ext-sources
+@@ -7,6 +7,7 @@
+ 
+ util/python.c
+ ../lib/ctype.c
++util/cap.c
+ util/evlist.c
+ util/evsel.c
+ util/cpumap.c
+diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
+index 9c3c97697387..6fd130a5d8f2 100644
+--- a/tools/perf/util/util.c
++++ b/tools/perf/util/util.c
+@@ -16,10 +16,12 @@
  #include <string.h>
+ #include <errno.h>
+ #include <limits.h>
 +#include <linux/capability.h>
  #include <linux/kernel.h>
- #include <linux/mman.h>
+ #include <linux/log2.h>
  #include <linux/time64.h>
-@@ -15,8 +16,10 @@
- #include <inttypes.h>
- #include "annotate.h"
- #include "build-id.h"
+ #include <unistd.h>
 +#include "cap.h"
- #include "util.h"
- #include "debug.h"
-+#include "event.h"
- #include "machine.h"
- #include "map.h"
- #include "symbol.h"
-@@ -890,7 +893,11 @@ bool symbol__restricted_filename(const char *filename,
+ #include "strlist.h"
+ #include "string2.h"
+ 
+@@ -403,6 +405,13 @@ int perf_event_paranoid(void)
+ 
+ 	return value;
+ }
++
++bool perf_event_paranoid_check(int max_level)
++{
++	return perf_cap__capable(CAP_SYS_ADMIN) ||
++			perf_event_paranoid() <= max_level;
++}
++
+ static int
+ fetch_ubuntu_kernel_version(unsigned int *puint)
  {
- 	bool restricted = false;
- 
--	if (symbol_conf.kptr_restrict) {
-+	/* Per kernel/kallsyms.c:
-+	 * we also restrict when perf_event_paranoid > 1 w/o CAP_SYSLOG
-+	 */
-+	if (symbol_conf.kptr_restrict ||
-+	    (perf_event_paranoid() > 1 && !perf_cap__capable(CAP_SYSLOG))) {
- 		char *r = realpath(filename, NULL);
- 
- 		if (r != NULL) {
-@@ -2190,9 +2197,9 @@ static bool symbol__read_kptr_restrict(void)
- 		char line[8];
- 
- 		if (fgets(line, sizeof(line), fp) != NULL)
--			value = ((geteuid() != 0) || (getuid() != 0)) ?
--					(atoi(line) != 0) :
--					(atoi(line) == 2);
-+			value = perf_cap__capable(CAP_SYSLOG) ?
-+					(atoi(line) >= 2) :
-+					(atoi(line) != 0);
- 
- 		fclose(fp);
- 	}
 -- 
 2.7.4
 
