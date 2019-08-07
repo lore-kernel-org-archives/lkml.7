@@ -2,119 +2,118 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1199C31E40
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 00:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49AB9C31E40
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 00:31:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90B73214C6
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 00:31:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20CCA214C6
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 00:31:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727557AbfHGAb3 (ORCPT
+        id S1727938AbfHGAbe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 20:31:29 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:50098 "EHLO ale.deltatee.com"
+        Tue, 6 Aug 2019 20:31:34 -0400
+Received: from mga01.intel.com ([192.55.52.88]:58950 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726381AbfHGAb3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 20:31:29 -0400
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1hv9rD-0003gV-OL; Tue, 06 Aug 2019 18:31:12 -0600
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-rdma@vger.kernel.org,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Jens Axboe <axboe@fb.com>, Keith Busch <kbusch@kernel.org>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Stephen Bates <sbates@raithlin.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Eric Pilmore <epilmore@gigaio.com>,
-        Christoph Hellwig <hch@lst.de>
-References: <20190730163545.4915-1-logang@deltatee.com>
- <20190806234439.GW151852@google.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <e31f13f8-5afd-6f38-a206-163e9f77c91a@deltatee.com>
-Date:   Tue, 6 Aug 2019 18:31:07 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1726381AbfHGAbd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 20:31:33 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 17:31:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,353,1559545200"; 
+   d="scan'208";a="176033856"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by fmsmga007.fm.intel.com with ESMTP; 06 Aug 2019 17:31:31 -0700
+Date:   Wed, 7 Aug 2019 08:31:09 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>,
+        akpm@linux-foundation.org, mhocko@suse.com,
+        kirill.shutemov@linux.intel.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/mmap.c: refine data locality of find_vma_prev
+Message-ID: <20190807003109.GB24750@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <20190806081123.22334-1-richardw.yang@linux.intel.com>
+ <3e57ba64-732b-d5be-1ad6-eecc731ef405@suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <20190806234439.GW151852@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: hch@lst.de, epilmore@gigaio.com, dan.j.williams@intel.com, sbates@raithlin.com, jgg@mellanox.com, kbusch@kernel.org, axboe@fb.com, Christian.Koenig@amd.com, sagi@grimberg.me, linux-rdma@vger.kernel.org, linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, helgaas@kernel.org
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH v2 00/14] PCI/P2PDMA: Support transactions that hit the
- host bridge
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3e57ba64-732b-d5be-1ad6-eecc731ef405@suse.cz>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Aug 06, 2019 at 11:29:52AM +0200, Vlastimil Babka wrote:
+>On 8/6/19 10:11 AM, Wei Yang wrote:
+>> When addr is out of the range of the whole rb_tree, pprev will points to
+>> the biggest node. find_vma_prev gets is by going through the right most
+>
+>s/biggest/last/ ? or right-most?
+>
+>> node of the tree.
+>> 
+>> Since only the last node is the one it is looking for, it is not
+>> necessary to assign pprev to those middle stage nodes. By assigning
+>> pprev to the last node directly, it tries to improve the function
+>> locality a little.
+>
+>In the end, it will always write to the cacheline of pprev. The caller has most
+>likely have it on stack, so it's already hot, and there's no other CPU stealing
+>it. So I don't understand where the improved locality comes from. The compiler
+>can also optimize the patched code so the assembly is identical to the previous
+>code, or vice versa. Did you check for differences?
 
+Vlastimil
 
-On 2019-08-06 5:44 p.m., Bjorn Helgaas wrote:
-> On Tue, Jul 30, 2019 at 10:35:31AM -0600, Logan Gunthorpe wrote:
->> Here's v2 of the patchset. It doesn't sound like there's anything
->> terribly controversial here so this version is mostly just some
->> cleanup changes for clarity.
->>
->> Changes in v2:
->>  * Rebase on v5.3-rc2 (No changes)
->>  * Re-introduce the private pagemap structure and move the p2p-specific
->>    elements out of the commond dev_pagemap (per Christoph)
->>  * Use flags instead of bool in the whitelist (per Jason)
->>  * Only store the mapping type in the xarray (instead of the distance
->>    with flags) such that a function can return the mapping method
->>    with a switch statement to decide how to map. (per Christoph)
->>  * Drop find_parent_pci_dev() on the fast path and rely on the fact
->>    that the struct device passed to the mapping functions *must* be
->>    a PCI device and convert it directly. (per suggestions from
->>    Christoph and Jason)
->>  * Collected Christian's Reviewed-by's
->> --
->>
->> As discussed on the list previously, in order to fully support the
->> whitelist Christian added with the IOMMU, we must ensure that we
->> map any buffer going through the IOMMU with an aprropriate dma_map
->> call. This patchset accomplishes this by cleaning up the output of
->> upstream_bridge_distance() to better indicate the mapping requirements,
->> caching these requirements in an xarray, then looking them up at map
->> time and applying the appropriate mapping method.
->>
->> After this patchset, it's possible to use the NVMe-of P2P support to
->> transfer between devices without a switch on the whitelisted root
->> complexes. A couple Intel device I have tested this on have also
->> been added to the white list.
->>
->> Most of the changes are contained within the p2pdma.c, but there are
->> a few minor touches to other subsystems, mostly to add support
->> to call an unmap function.
->>
->> The final patch in this series demonstrates a possible
->> pci_p2pdma_map_resource() function that I expect Christian will need
->> but does not have any users at this time so I don't intend for it to be
->> considered for merging.
-> 
-> I don't see pci_p2pdma_map_resource() in any of these patches.
+Thanks for your comment.
 
-Oh, sorry, I removed that in v2 seeing there was some confusion over it.
-I guess I forgot to remove the reference in the cover letter.
+I believe you get a point. I may not use the word locality. This patch tries
+to reduce some unnecessary assignment of pprev.
 
-> I tentatively applied these to pci/p2pdma with minor typographical
-> updates (below), but I'll update the branch if necessary.
+Original code would assign the value on each node during iteration, this is
+what I want to reduce.
 
-Great, thanks! The typographical changes look good.
+The generated code looks different from my side. Would you mind sharing me how
+you compare the generated code?
 
-I already have one very minor change queued up for these. Should I just
-send you a small patch against your branch for you to squash?
+>
+>The previous code is somewhat more obvious to me, so unless I'm missing
+>something, readability and less churn suggests to not change.
+>
+>> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+>> ---
+>>  mm/mmap.c | 7 +++----
+>>  1 file changed, 3 insertions(+), 4 deletions(-)
+>> 
+>> diff --git a/mm/mmap.c b/mm/mmap.c
+>> index 7e8c3e8ae75f..284bc7e51f9c 100644
+>> --- a/mm/mmap.c
+>> +++ b/mm/mmap.c
+>> @@ -2271,11 +2271,10 @@ find_vma_prev(struct mm_struct *mm, unsigned long addr,
+>>  		*pprev = vma->vm_prev;
+>>  	} else {
+>>  		struct rb_node *rb_node = mm->mm_rb.rb_node;
+>> -		*pprev = NULL;
+>> -		while (rb_node) {
+>> -			*pprev = rb_entry(rb_node, struct vm_area_struct, vm_rb);
+>> +		while (rb_node && rb_node->rb_right)
+>>  			rb_node = rb_node->rb_right;
+>> -		}
+>> +		*pprev = rb_node ? NULL
+>> +			 : rb_entry(rb_node, struct vm_area_struct, vm_rb);
+>>  	}
+>>  	return vma;
+>>  }
+>> 
 
-Logan
-
+-- 
+Wei Yang
+Help you, Help me
