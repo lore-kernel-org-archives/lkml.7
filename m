@@ -2,211 +2,126 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFA2FC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 18:04:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B42DC32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 18:05:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF30022305
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 18:04:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="Hkqgbv8h"
+	by mail.kernel.org (Postfix) with ESMTP id 79F8922305
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 18:05:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389183AbfHGSEt (ORCPT
+        id S2389202AbfHGSFn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 14:04:49 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:38806 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389041AbfHGSEt (ORCPT
+        Wed, 7 Aug 2019 14:05:43 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:42962 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S2388669AbfHGSFn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 14:04:49 -0400
-Received: by mail-pl1-f194.google.com with SMTP id m12so3337258plt.5
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 11:04:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dilger-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
-         :references;
-        bh=c+psdm6pvDnX8dyBc4Cy/c4pQsOMzehzZXsXXjLyHjE=;
-        b=Hkqgbv8hZ+XxxwYQybA7A5S+54OG5Qr5zwrDp+yqEE3Yexv9ppnMZ8tB3Xtd0FvD2l
-         +0kfPrsTSZAcA605PElWGVDrO8JBQKPyMLsuD98CBsWEfcl3q/NKidhSdmkCcn+BseHx
-         wr6ZvSwAYnegb/4XK6eeMJ8ehFaZkBQ5PtDATgUdAk8oA+EYACiFIxjpvMai/FXhwy7e
-         LuIoCcVTNGkJj6RSF0cWrwjdYMb9YrT8NZEbGQC08gSChEQ3o4HzY9m9ljVOUAbSH0CM
-         Zo10RZVeJYzEqVYnT/sO9v7oTkeCcH8/2WIZttNR218xpAf/HF9EmxG/pSx6zSBdvBBE
-         jXmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:message-id:mime-version:subject:date
-         :in-reply-to:cc:to:references;
-        bh=c+psdm6pvDnX8dyBc4Cy/c4pQsOMzehzZXsXXjLyHjE=;
-        b=AB3zaJp3R1RPHgsV1qkdrWNWlPrRxoWXHq5+R2FQdbGt/YK4Ace2u/2HQIHOrSGm2k
-         B9vyxa+t/167sHngBTV9E1Q2YoNnYT7g5eKzYQBiTCSNhv/kgx7sqriTk1xUqp48bYth
-         nTzzPxG4zgjhXDquKq2LJACN5tF1G6p13BZaDJTTZfGuxYcWs0WDinEF2kokCqpfdPiA
-         JmABn0Flgxr5d0Km56zdMVW1pAYqmXshYGGJWAYxN5GroWXxvWvZMgT+Nq8AZCPviACu
-         hLtrI4JFNFTFo34cS3aNoFoTGT+ggSdmeeZCUgEB8TiZ7lcSK2k+1ABbfWC4zJBZVRQm
-         +xoQ==
-X-Gm-Message-State: APjAAAV7swBUjD0NPgWcBLQkDAfsfe0ffn/ser9J6+4c6VIEdvQNvQDO
-        ccgG6AnWmNW31M6Wm+g8E3F4/w==
-X-Google-Smtp-Source: APXvYqyKNvJRuoqJHT7zp4s4yyKagF58xy20LUmJGMO5Xp74ekq0e0mWnaeliyJ9QargqnhdGrxVpA==
-X-Received: by 2002:a17:902:b497:: with SMTP id y23mr9442334plr.68.1565201088236;
-        Wed, 07 Aug 2019 11:04:48 -0700 (PDT)
-Received: from cabot-wlan.adilger.int (S0106a84e3fe4b223.cg.shawcable.net. [70.77.216.213])
-        by smtp.gmail.com with ESMTPSA id o14sm533198pjp.19.2019.08.07.11.04.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 07 Aug 2019 11:04:47 -0700 (PDT)
-From:   Andreas Dilger <adilger@dilger.ca>
-Message-Id: <B4818187-623B-4A0C-8958-81E820E8F1E1@dilger.ca>
-Content-Type: multipart/signed;
- boundary="Apple-Mail=_4A322069-BD5B-4078-8B8E-F73516BB60D1";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Subject: Re: [PATCH 09/20] ext4: Initialize timestamps limits
-Date:   Wed, 7 Aug 2019 12:04:44 -0600
-In-Reply-To: <CAK8P3a0aTsz4f6FgXf7NSAG+aVpd1rhZvFU_E4v8AY_stvhJtQ@mail.gmail.com>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        y2038 Mailman List <y2038@lists.linaro.org>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-References: <20190730014924.2193-1-deepa.kernel@gmail.com>
- <20190730014924.2193-10-deepa.kernel@gmail.com>
- <20190731152609.GB7077@magnolia>
- <CABeXuvpiom9eQi0y7PAwAypUP1ezKKRfbh-Yqr8+Sbio=QtUJQ@mail.gmail.com>
- <20190801224344.GC17372@mit.edu>
- <CAK8P3a3nqmWBXBiFL1kGmJ7yQ_=5S4Kok0YVB3VMFVBuYjFGOQ@mail.gmail.com>
- <20190802154341.GB4308@mit.edu>
- <CAK8P3a1Z+nuvBA92K2ORpdjQ+i7KrjOXCFud7fFg4n73Fqx_8Q@mail.gmail.com>
- <20190802213944.GE4308@mit.edu>
- <CAK8P3a2z+ZpyONnC+KE1eDbtQ7m2m3xifDhfWe6JTCPPRB0S=g@mail.gmail.com>
- <20190803160257.GG4308@mit.edu>
- <CAK8P3a0aTsz4f6FgXf7NSAG+aVpd1rhZvFU_E4v8AY_stvhJtQ@mail.gmail.com>
-X-Mailer: Apple Mail (2.3273)
+        Wed, 7 Aug 2019 14:05:43 -0400
+Received: (qmail 22349 invoked by uid 2102); 7 Aug 2019 14:05:42 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 7 Aug 2019 14:05:42 -0400
+Date:   Wed, 7 Aug 2019 14:05:42 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     syzbot <syzbot+1b2449b7b5dc240d107a@syzkaller.appspotmail.com>
+cc:     andreyknvl@google.com, <linux-kernel@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <oneukum@suse.com>,
+        <syzkaller-bugs@googlegroups.com>
+Subject: Re: KASAN: use-after-free Read in device_release_driver_internal
+In-Reply-To: <00000000000085d6b4058f8a957a@google.com>
+Message-ID: <Pine.LNX.4.44L0.1908071402160.1514-100000@iolanthe.rowland.org>
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 7 Aug 2019, syzbot wrote:
 
---Apple-Mail=_4A322069-BD5B-4078-8B8E-F73516BB60D1
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain;
-	charset=us-ascii
-
-On Aug 3, 2019, at 2:24 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> Hello,
 > 
-> On Sat, Aug 3, 2019 at 6:03 PM Theodore Y. Ts'o <tytso@mit.edu> wrote:
->> 
->> On Sat, Aug 03, 2019 at 11:30:22AM +0200, Arnd Bergmann wrote:
->>> 
->>> I see in the ext4 code that we always try to expand i_extra_size
->>> to s_want_extra_isize in ext4_mark_inode_dirty(), and that
->>> s_want_extra_isize is always at least  s_min_extra_isize, so
->>> we constantly try to expand the inode to fit.
->> 
->> Yes, we *try*.  But we may not succeed.  There may actually be a
->> problem here if the cause is due to there simply is no space in the
->> external xattr block, so we might try and try every time we try to
->> modify that inode, and it would be a performance mess.  If it's due to
->> there being no room in the current transaction, then it's highly
->> likely it will succeed the next time.
->> 
->>> Did older versions of ext4 or ext3 ignore s_min_extra_isize
->>> when creating inodes despite
->>> EXT4_FEATURE_RO_COMPAT_EXTRA_ISIZE,
->>> or is there another possibility I'm missing?
->> 
->> s_min_extra_isize could get changed in order to make room for some new
->> file system feature --- such as extended timestamps.
+> syzbot has tested the proposed patch but the reproducer still triggered  
+> crash:
+> KASAN: use-after-free Read in device_release_driver_internal
+
+> Tested on:
 > 
-> Ok, that explains it. I assumed s_min_extra_isize was meant to
-> not be modifiable, and did not find a way to change it using the
-> kernel or tune2fs, but now I can see that debugfs can set it.
-> 
->> If you want to pretend that file systems never get upgraded, then life
->> is much simpler.  The general approach is that for less-sophisticated
->> customers (e.g., most people running enterprise distros) file system
->> upgrades are not a thing.  But for sophisticated users, we do try to
->> make thing work for people who are aware of the risks / caveats /
->> rough edges.  Google won't have been able to upgrade thousands and
->> thousands of servers in data centers all over the world if we limited
->> ourselves to Red Hat's support restrictions.  Backup / reformat /
->> restore really isn't a practical rollout strategy for many exabytes of
->> file systems.
->> 
->> It sounds like your safety checks / warnings are mostly targeted at
->> low-information customers, no?
-> 
-> Yes, that seems like a reasonable compromise: just warn based
-> on s_min_extra_isize, and assume that anyone who used debugfs
-> to set s_min_extra_isize to a higher value from an ext3 file system
-> during the migration to ext4 was aware of the risks already.
-> 
-> That leaves the question of what we should set the s_time_gran
-> and s_time_max to on a superblock with s_min_extra_isize<16
-> and s_want_extra_isize>=16.
-> 
-> If we base it on s_min_extra_isize, we never try to set a timestamp
-> later than 2038 and so will never fail, but anyone with a grandfathered
-> s_min_extra_isize from ext3 won't be able to set extended
-> timestamps on any files any more. Based on s_want_extra_isize
-> we would keep the current behavior, but could add a custom
-> warning in the ext4 code about the small s_min_extra_isize
-> indicating a theoretical problem.
+> commit:         6a3599ce usb-fuzzer: main usb gadget fuzzer driver
+> git tree:       https://github.com/google/kasan.git
+> console output: https://syzkaller.appspot.com/x/log.txt?x=142eec8c600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=700ca426ab83faae
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> patch:          https://syzkaller.appspot.com/x/patch.diff?x=15d95bf6600000
 
-I think it makes the most sense to always try to set timestamps on
-inodes that have enough space for them.  The chance of running into
-a filesystem with 256-byte inode size but *no* space in the inode to
-store an extended timestamp, but is *also* being modified by a new
-kernel after 2038 is vanishingly small.  This would require formatting
-the filesystem with non-default mke2fs for ext3, using the filesystem
-and storing enough xattrs on inodes that there isn't space for 12 bytes
-of extra isize, and using it for 30+ years without upgrading to use
-ext4 (which will also try to expand the inode to store the nsec
-timestamps) and then modifying the inode after 2038.
+The kernel log is pretty definite here:
 
-Rather than printing a warning at mount time (which may be confusing
-to users for a problem they may never see), it makes sense to only
-print such a warning in the vanishingly small case that someone actually
-tries to modify the inode timestamp but it doesn't fit, rather than on
-the theoretical case that may never happen.
+[   40.270346][   T89] cdc_acm 5-1:0.234: Refcount before probe: 3
+[   40.284514][   T89] cdc_acm 5-1:0.234: invalid descriptor buffer length
+[   40.284523][   T89] cdc_acm 5-1:0.234: No union descriptor, testing for castrated device
+[   40.285322][   T89] cdc_acm 5-1:0.234: Refcount after probe: 2
 
+2 < 3.  So let's combine the diagnostic patch with Oliver's proposed 
+solution.
 
-Cheers, Andreas
+Alan Stern
 
+#syz test: https://github.com/google/kasan.git 6a3599ce
 
+Index: usb-devel/drivers/usb/core/driver.c
+===================================================================
+--- usb-devel.orig/drivers/usb/core/driver.c
++++ usb-devel/drivers/usb/core/driver.c
+@@ -358,7 +358,11 @@ static int usb_probe_interface(struct de
+ 		intf->needs_altsetting0 = 0;
+ 	}
+ 
++	dev_info(&intf->dev, "Refcount before probe: %d\n",
++			refcount_read(&intf->dev.kobj.kref.refcount));
+ 	error = driver->probe(intf, id);
++	dev_info(&intf->dev, "Refcount after probe: %d\n",
++			refcount_read(&intf->dev.kobj.kref.refcount));
+ 	if (error)
+ 		goto err;
+ 
+Index: usb-devel/drivers/usb/class/cdc-acm.c
+===================================================================
+--- usb-devel.orig/drivers/usb/class/cdc-acm.c
++++ usb-devel/drivers/usb/class/cdc-acm.c
+@@ -1301,10 +1301,6 @@ made_compressed_probe:
+ 	tty_port_init(&acm->port);
+ 	acm->port.ops = &acm_port_ops;
+ 
+-	minor = acm_alloc_minor(acm);
+-	if (minor < 0)
+-		goto alloc_fail1;
+-
+ 	ctrlsize = usb_endpoint_maxp(epctrl);
+ 	readsize = usb_endpoint_maxp(epread) *
+ 				(quirks == SINGLE_RX_URB ? 1 : 2);
+@@ -1312,6 +1308,13 @@ made_compressed_probe:
+ 	acm->writesize = usb_endpoint_maxp(epwrite) * 20;
+ 	acm->control = control_interface;
+ 	acm->data = data_interface;
++
++	usb_get_intf(acm->control); /* undone in destroy() */
++
++	minor = acm_alloc_minor(acm);
++	if (minor < 0)
++		goto alloc_fail1;
++
+ 	acm->minor = minor;
+ 	acm->dev = usb_dev;
+ 	if (h.usb_cdc_acm_descriptor)
+@@ -1458,7 +1461,6 @@ skip_countries:
+ 	usb_driver_claim_interface(&acm_driver, data_interface, acm);
+ 	usb_set_intfdata(data_interface, acm);
+ 
+-	usb_get_intf(control_interface);
+ 	tty_dev = tty_port_register_device(&acm->port, acm_tty_driver, minor,
+ 			&control_interface->dev);
+ 	if (IS_ERR(tty_dev)) {
 
-
-
-
---Apple-Mail=_4A322069-BD5B-4078-8B8E-F73516BB60D1
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP
-
------BEGIN PGP SIGNATURE-----
-Comment: GPGTools - http://gpgtools.org
-
-iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAl1LEr0ACgkQcqXauRfM
-H+A+LQ/9Fq5j/fGRldiNeKqpnZ2jrnx4+eqCYfFqCoI02jN17/q+bWvHGtVbyBPP
-lVHE7xlJbiogbUUmNsfLLp5CngSCqjsYp7dV21YcPpsdd7k26PJMDMw8lkY41LGI
-AaDC948zRNF0Io+4ma8KXgLZWbFNEpPlCsKuMHbwAo7sQ/yuCauvJDengPA2IjLN
-H289WlD9j0H6hrMcJmazdGhdF21+hGSLvK3vZvCjGiDTWNTGydz8guXel/tFkYJs
-Flp7dD6dp7b2JnaiJTr5Hj9No2LfFgxBtNqGFuS8bA6waNlzfx8KzgeodeXWOPgo
-6Sg2uEc8pxaXlAXsldVykYvo640a/uQUiWPiabIIqSdSyj2g4K6wx0GbYr3j3GCP
-YheU5Khw1CtvAqDN+2CbQaon2WrLldJCqFo6KzQPmmlQnyLFQa6gT2kYrSXEzhIP
-eFYGQxV1TLoyyQ6b3ab9J8kZZHPteVWuK+EyqkIxONXnazRkz77QK3wzQUy+V6+T
-B403LR3x4JKOMYVKd41VAJMZHp8Uvf224oVxrxzovdJoRr3awWokvsBEr2+e+ihA
-/c3+2oSO/0acNGCLbzX3KC/PpWx9keHHx6CxJIgnF+7avtsrkAR54H48stVZ05en
-xr5H9dIZnce2CTM9Ylz3R7DerBaAuvEpl1sKpt8BE0OHyAzeffg=
-=Lnwv
------END PGP SIGNATURE-----
-
---Apple-Mail=_4A322069-BD5B-4078-8B8E-F73516BB60D1--
