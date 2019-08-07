@@ -2,256 +2,189 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBBE5C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 424FDC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:39:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A63E42199C
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:39:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F3F72199C
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:39:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B2l7rU7I"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="JHfd9vMP";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="NQQ3zu7l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388179AbfHGOjQ (ORCPT
+        id S2388228AbfHGOjW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 10:39:16 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:51304 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729550AbfHGOjQ (ORCPT
+        Wed, 7 Aug 2019 10:39:22 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:19896 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388190AbfHGOjV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 10:39:16 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 207so313769wma.1;
-        Wed, 07 Aug 2019 07:39:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=K3Yjg+xwVoamXkqxN6/Mo8Ar1gX/X1ON888J6lxpDb0=;
-        b=B2l7rU7IPu+JXRGMl8QfJUzpwZ28LjIHxm8XnVXNq0gwva0s9ictzM6X7F5r5lOaRh
-         W/9M+aS5PF/moOqTNrvL8PTWBrU1OChSRHHYD5Gl26UM2c/XJuQSj+zUSqeyx5mHw9KV
-         JxrV/PASdpePmtAV2LgSlO1jODiKVEaxrkvNE2zyoUpKD+57HAIz9G0Vt+cbffnZAB8y
-         KMOyQ4wYUJL7Jx8aRRqsfh5HCuPKEioi/X+yVVB2YYKKRmop624g3uv1OSnQn1OiZcbN
-         X7xXbq5SabV5/H+oo/rTqQLcX1gftqHyjyL3W23xdeYYUU5gpEjxvNqmpl2XC+ZUVEHH
-         O57g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=K3Yjg+xwVoamXkqxN6/Mo8Ar1gX/X1ON888J6lxpDb0=;
-        b=LAdtyg3usgfdDS3poRyY/OauNQ74eMXhcHlYLT+urFEZaJ3Aqm1M7GAHDMqRGB7l9d
-         9CoQDVeD3XXRrHm4ZankySwXpy2dE1i9fWGS+qM9NigS6uUPIgDYEHctwO0BodrKFoP7
-         rdlsS4iEmxSIoGFsE6LAErXknVVGXNExsCPlnlU+QXTJu1QzotIzwCdGFT1Ru6rMdTqD
-         1orGUXSTfxESwC/El7YPmADTvu+qta325KLsCocvGrCW92UWfUYqkSpH5YgaNUCB2mEl
-         S2kjlzkzmdc4QXoQx8BOz+xQXu+qf7ORSGbkFUPV3uFb7lFvI6EiWjCbIDBzn0tU4EB5
-         RuDg==
-X-Gm-Message-State: APjAAAXXA6YJ5TpIgE33qv7OuRew4g393DU4cMD8AXQLMdSFzdqdnLWW
-        6pARjaB6+PWE2LMKc9oHmHK85Lgiuvg6nNo6vfBLnRzKALo=
-X-Google-Smtp-Source: APXvYqwZNSmFBi3BN7qPlFo9Y+mrgNDxC+IKDcfat8O3sJ6OJz8/ng2g2yNHMqSIvOfg0Ag2R+8W+Stu5hZuRd9Xt3k=
-X-Received: by 2002:a7b:c051:: with SMTP id u17mr290648wmc.25.1565188753002;
- Wed, 07 Aug 2019 07:39:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190723084104.12639-1-daniel.baluta@nxp.com> <20190723084104.12639-4-daniel.baluta@nxp.com>
- <d85909d6-c7cb-c64b-dfa9-6cee6c0da2cb@linux.intel.com> <CAEnQRZDr+gj_eiESLNbVUVy1rreRE1nnDgtb3g=CjaRF5Aq9Vw@mail.gmail.com>
-In-Reply-To: <CAEnQRZDr+gj_eiESLNbVUVy1rreRE1nnDgtb3g=CjaRF5Aq9Vw@mail.gmail.com>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Wed, 7 Aug 2019 17:39:00 +0300
-Message-ID: <CAEnQRZDctjdzQ2RjJXhQh+s=d0y_j3Taa51hDaR4bqJ62C=7iQ@mail.gmail.com>
-Subject: Re: [Sound-open-firmware] [PATCH v2 3/5] ASoC: SOF: Add DT DSP device support
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>, Anson Huang <anson.huang@nxp.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Paul Olaru <paul.olaru@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        sound-open-firmware@alsa-project.org
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 7 Aug 2019 10:39:21 -0400
+Received: from pps.filterd (m0044008.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x77EY2PG007767;
+        Wed, 7 Aug 2019 07:39:10 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=CZLCIXm0lzKIapCSMcVoxQb6gZk0W1dxHHjKD0Lsor0=;
+ b=JHfd9vMP8yMy6ABhpYAKIhqwk4O8mPmPIGUQ2pmtVXcTFbz90AXo7De2GNy0eNTjauU/
+ o7T012A2n3vlu74BxbuIB3Mhml4v04EsamzlTn3JImqEUp4mnimSgckCntZvpDRYWQP1
+ yNYEgdebIs/LIdeXdSp4JNeMXqOvZKDMoTE= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2u7y8b8ax0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Wed, 07 Aug 2019 07:39:10 -0700
+Received: from ash-exhub103.TheFacebook.com (2620:10d:c0a8:82::c) by
+ ash-exhub103.TheFacebook.com (2620:10d:c0a8:82::c) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 7 Aug 2019 07:39:09 -0700
+Received: from NAM04-CO1-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.174) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Wed, 7 Aug 2019 07:39:08 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ok4xqSEBEAgBmHyNvZSMNcfKljrMhWqr3tZaqakbuDWqRrcQrUwh5DHVXmdCnluxeLpylPrn7uNaT8+i9MsZoXdg8taXBijaLdH6WP4ur5TCb2eI+fM9Xed0uqIwY7O+lLQxu5JWhrUTzMUBgCiWJvVNHwZ6OOPkzu3T3jtd+BuJmLLD7h30uKRZyle2yG6jq8VPGn72CCnHDmktpWE/gVMd84mHDCuaLrS+xJg4Ubia6+JvR2uqap9KgYGfrZDbokdHMUycRoukRdbKmNO+FPcqIocUh5hfKC0Ju73sFjd+LMdWYeJQU4XpQ66Y/dvcOnhR3tqlL8Rpy8FQjb3DsQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CZLCIXm0lzKIapCSMcVoxQb6gZk0W1dxHHjKD0Lsor0=;
+ b=Htv079Gdu5HHgrFSKc3JzLIctWQyRuszfsLofzIcw1cv5whF3mCLk7wFndQemWcLsYm5FI3zUPaQNWSOkUiIf9/wW0qu9mvWnCAEK6LDpPWoW2Cr5IQK2XAh7Gx3bzLCuTGIe9c13gnOKn5MAlcMQznWAkIX/AP9Z0FPtI8Y1nMrh2Khs+yItgTIjuqfUyjdiPgvogsnVpp7gPFi5LmTw5JpE1Flkpz3Aom0ZSa5MW4kdeSMadYjXJS9NjsYMUQ/LTZzboItbpmOxQXLEhZ4rzSLfJgxvrw6RZnzt5klmjx89CS4T/qvYlLRZ3lB3nmTLQPMEZP+crshQeFQdSActA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CZLCIXm0lzKIapCSMcVoxQb6gZk0W1dxHHjKD0Lsor0=;
+ b=NQQ3zu7lQdPsev7sfwklnnIc9kU0QfoSLUL2CsjIdTndr/pQCGPhBb0vBfZXYLJEtVHddKf/aAKrXYZptUwoQJRQ+Rq9sqHGlluKKhx+T9uqh8QfepDXoW9beH6fuq3U97Ih4xH8GmjCdnoVLBUQYawNpEwyNihup3lU8DUZcHk=
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.3.22) by
+ MWHPR15MB1519.namprd15.prod.outlook.com (10.173.234.9) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.14; Wed, 7 Aug 2019 14:39:07 +0000
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::79c8:442d:b528:802d]) by MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::79c8:442d:b528:802d%9]) with mapi id 15.20.2136.018; Wed, 7 Aug 2019
+ 14:39:07 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the akpm-current tree
+Thread-Topic: linux-next: build failure after merge of the akpm-current tree
+Thread-Index: AQHVTPFGz58J8esAUk2Rc5LSbmvQQabvwdgA
+Date:   Wed, 7 Aug 2019 14:39:07 +0000
+Message-ID: <36F5AB83-D816-45D4-BDBB-2D9E1B713AB3@fb.com>
+References: <20190807172454.2e887f7c@canb.auug.org.au>
+In-Reply-To: <20190807172454.2e887f7c@canb.auug.org.au>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3445.104.11)
+x-originating-ip: [2620:10d:c090:180::3b47]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 211abc35-fee2-43b8-075f-08d71b4500ec
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR15MB1519;
+x-ms-traffictypediagnostic: MWHPR15MB1519:
+x-ms-exchange-purlcount: 3
+x-microsoft-antispam-prvs: <MWHPR15MB1519109646F9A3925B9FC59DB3D40@MWHPR15MB1519.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:800;
+x-forefront-prvs: 01221E3973
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(346002)(396003)(376002)(136003)(39860400002)(189003)(199004)(53754006)(51914003)(66476007)(186003)(5660300002)(76176011)(316002)(53936002)(46003)(71200400001)(71190400001)(6486002)(305945005)(478600001)(81166006)(81156014)(7736002)(25786009)(99286004)(6306002)(6916009)(66556008)(486006)(66446008)(64756008)(33656002)(6436002)(53546011)(11346002)(6506007)(446003)(2616005)(476003)(76116006)(6512007)(66946007)(54906003)(86362001)(966005)(14454004)(229853002)(57306001)(256004)(6116002)(102836004)(4326008)(68736007)(2906002)(8676002)(36756003)(8936002)(6246003)(50226002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1519;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: mYW/Azy4LzhZPR0XKRMcDIzund50DsZ5gY3gPKMiK+oaqJEMUCLGc/y0XyQOwbwnnoGQTVA2sXi7HuRAOJ74WlBTliulZ6Yuos/L/A2Flg8uSeQDE8CRBJIcJOKM/d/qx88rvnwQ9bIw1MCAgVCPV/rZN9E4FV2Ou5FaFkXTNtzDJAMuE1Ohle+UKBe72vI2x9/nqVcIA7PjpHUPRGlhElEqB3lhdsKJDy7Ys7ncx2AENodSyQhOTUWPtA1HdXRcHm/xlzk1YHG8me5W3MrseSsmullq0H7Ce6SP3tgkvy/mNwEaPPyP6Plh29swWfitjlIrHtPGchBoD4hd6ARfoN6kVqBn7n3NX3imzY98CH8deoFcPAfEroiaP3uccd+6DhpWBuLP61uM1I1RDOoIFpzf2mPmuKP166HdN7HqKL0=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <002F3BD9B3A3B14488CD43D10B7EAB25@namprd15.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 211abc35-fee2-43b8-075f-08d71b4500ec
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Aug 2019 14:39:07.7066
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: songliubraving@fb.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1519
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-07_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908070156
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 10:04 AM Daniel Baluta <daniel.baluta@gmail.com> wr=
-ote:
->
-> On Tue, Jul 23, 2019 at 6:19 PM Pierre-Louis Bossart
-> <pierre-louis.bossart@linux.intel.com> wrote:
-> >
-> >
-> > > diff --git a/sound/soc/sof/Kconfig b/sound/soc/sof/Kconfig
-> > > index 61b97fc55bb2..2aa3a1cdf60c 100644
-> > > --- a/sound/soc/sof/Kconfig
-> > > +++ b/sound/soc/sof/Kconfig
-> > > @@ -36,6 +36,15 @@ config SND_SOC_SOF_ACPI
-> > >         Say Y if you need this option
-> > >         If unsure select "N".
-> > >
-> > > +config SND_SOC_SOF_DT
-> > > +     tristate "SOF DT enumeration support"
-> > > +     select SND_SOC_SOF
-> > > +     select SND_SOC_SOF_OPTIONS
-> > > +     help
-> > > +       This adds support for Device Tree enumeration. This option is
-> > > +       required to enable i.MX8 devices.
-> > > +       Say Y if you need this option. If unsure select "N".
-> > > +
-> >
-> > [snip]
-> >
-> > > diff --git a/sound/soc/sof/imx/Kconfig b/sound/soc/sof/imx/Kconfig
-> > > index fff64a9970f0..fa35994a79c4 100644
-> > > --- a/sound/soc/sof/imx/Kconfig
-> > > +++ b/sound/soc/sof/imx/Kconfig
-> > > @@ -12,6 +12,7 @@ if SND_SOC_SOF_IMX_TOPLEVEL
-> > >
-> > >   config SND_SOC_SOF_IMX8
-> > >       tristate "SOF support for i.MX8"
-> > > +     select SND_SOC_SOF_DT
-> >
-> > This looks upside down. You should select SOF_DT first then include the
-> > NXP stuff.
-> >
-> > >       help
-> > >             This adds support for Sound Open Firmware for NXP i.MX8 p=
-latforms
-> > >             Say Y if you have such a device.
-> > > diff --git a/sound/soc/sof/sof-dt-dev.c b/sound/soc/sof/sof-dt-dev.c
-> > > new file mode 100644
-> > > index 000000000000..31429bbb5c7e
-> > > --- /dev/null
-> > > +++ b/sound/soc/sof/sof-dt-dev.c
-> > > @@ -0,0 +1,159 @@
-> > > +// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
-> > > +//
-> > > +// Copyright 2019 NXP
-> > > +//
-> > > +// Author: Daniel Baluta <daniel.baluta@nxp.com>
-> > > +//
-> > > +
-> > > +#include <linux/firmware.h>
-> > > +#include <linux/module.h>
-> > > +#include <linux/pm_runtime.h>
-> > > +#include <sound/sof.h>
-> > > +
-> > > +#include "ops.h"
-> > > +
-> > > +extern struct snd_sof_dsp_ops sof_imx8_ops;
-> > > +
-> > > +static char *fw_path;
-> > > +module_param(fw_path, charp, 0444);
-> > > +MODULE_PARM_DESC(fw_path, "alternate path for SOF firmware.");
-> > > +
-> > > +static char *tplg_path;
-> > > +module_param(tplg_path, charp, 0444);
-> > > +MODULE_PARM_DESC(tplg_path, "alternate path for SOF topology.");
-> > > +
-> > > +/* platform specific devices */
-> > > +#if IS_ENABLED(CONFIG_SND_SOC_SOF_IMX8)
-> > > +static struct sof_dev_desc sof_dt_imx8qxp_desc =3D {
-> > > +     .default_fw_path =3D "imx/sof",
-> > > +     .default_tplg_path =3D "imx/sof-tplg",
-> > > +     .nocodec_fw_filename =3D "sof-imx8.ri",
-> > > +     .nocodec_tplg_filename =3D "sof-imx8-nocodec.tplg",
-> > > +     .ops =3D &sof_imx8_ops,
-> > > +};
-> > > +#endif
-> > > +
-> > > +static const struct dev_pm_ops sof_dt_pm =3D {
-> > > +     SET_SYSTEM_SLEEP_PM_OPS(snd_sof_suspend, snd_sof_resume)
-> > > +     SET_RUNTIME_PM_OPS(snd_sof_runtime_suspend, snd_sof_runtime_res=
-ume,
-> > > +                        NULL)
-> > > +};
-> > > +
-> > > +static void sof_dt_probe_complete(struct device *dev)
-> > > +{
-> > > +     /* allow runtime_pm */
-> > > +     pm_runtime_set_autosuspend_delay(dev, SND_SOF_SUSPEND_DELAY_MS)=
-;
-> > > +     pm_runtime_use_autosuspend(dev);
-> > > +     pm_runtime_enable(dev);
-> > > +}
-> > > +
-> > > +static int sof_dt_probe(struct platform_device *pdev)
-> > > +{
-> > > +     struct device *dev =3D &pdev->dev;
-> > > +     const struct sof_dev_desc *desc;
-> > > +     /*TODO: create a generic snd_soc_xxx_mach */
-> > > +     struct snd_soc_acpi_mach *mach;
-> >
-> > I wonder if you really need to use the same structures. For Intel we ge=
-t
-> > absolutely zero info from the firmware so rely on an ACPI codec ID as a
-> > key to find information on which firmware and topology to use, and whic=
-h
-> > machine driver to load. You could have all this information in a DT blo=
-b?
->
-> Yes. I see your point. I will still need to make a generic structure for
-> snd_soc_acpi_mach so that everyone can use sof_nocodec_setup function.
->
-> Maybe something like this:
->
-> struct snd_soc_mach {
->   union {
->   struct snd_soc_acpi_mach acpi_mach;
->   struct snd_soc_of_mach of_mach;
->   }
-> };
->
-> and then change the prototype of sof_nocodec_setup.
+Hi Stephen,=20
 
-Hi Pierre,
+> On Aug 7, 2019, at 12:24 AM, Stephen Rothwell <sfr@canb.auug.org.au> wrot=
+e:
+>=20
+> Hi all,
+>=20
+> After merging the akpm-current tree, today's linux-next build (arm
+> multi_v7_defconfig) failed like this:
+>=20
+> In file included from include/linux/kernel.h:11,
+>                 from kernel/events/uprobes.c:12:
+> kernel/events/uprobes.c: In function 'uprobe_write_opcode':
+> include/linux/compiler.h:350:38: error: call to '__compiletime_assert_557=
+' declared with attribute error: BUILD_BUG failed
+>  _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
+>                                      ^
+> include/linux/compiler.h:331:4: note: in definition of macro '__compileti=
+me_assert'
+>    prefix ## suffix();    \
+>    ^~~~~~
+> include/linux/compiler.h:350:2: note: in expansion of macro '_compiletime=
+_assert'
+>  _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
+>  ^~~~~~~~~~~~~~~~~~~
+> include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime=
+_assert'
+> #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+>                                     ^~~~~~~~~~~~~~~~~~
+> include/linux/build_bug.h:59:21: note: in expansion of macro 'BUILD_BUG_O=
+N_MSG'
+> #define BUILD_BUG() BUILD_BUG_ON_MSG(1, "BUILD_BUG failed")
+>                     ^~~~~~~~~~~~~~~~
+> include/linux/huge_mm.h:272:27: note: in expansion of macro 'BUILD_BUG'
+> #define HPAGE_PMD_MASK ({ BUILD_BUG(); 0; })
+>                           ^~~~~~~~~
+> kernel/events/uprobes.c:557:39: note: in expansion of macro 'HPAGE_PMD_MA=
+SK'
+>   collapse_pte_mapped_thp(mm, vaddr & HPAGE_PMD_MASK);
+>                                       ^~~~~~~~~~~~~~
+>=20
+> Caused by commit
+>=20
+>  9cc0b998b380 ("uprobe: collapse THP pmd after removing all uprobes")
+>=20
+> I have reverted that commit for today.
 
-I fixed all the comments except the one above. Replacing snd_soc_acpi_mach
-with a generic snd_soc_mach is not trivial task.
+Thanks for the heads-up.=20
 
-I wonder if it is acceptable to get the initial patches as they are
-now and later switch to
-generic ACPI/OF abstraction.
+This looks like v3 of the patchset. I have fixed this issue in v4:
 
-Asking this because for the moment on the i.MX side I have only
-implemented no codec
-version and we don't probe any of the machine drivers we have.
+https://lkml.org/lkml/2019/8/2/1587
+https://lkml.org/lkml/2019/8/2/1588
+https://lkml.org/lkml/2019/8/2/1589
 
-So, there is this only one member of snd_soc_acpi_mach that imx
-version is making use of:
+Is this sufficient? Or shall I submit fixes on top of v3?
 
-  mach->drv_name =3D "sof-nocodec";
+Thanks,
+Song
 
-That's all.
 
-I think the change as it is now is very clean and non-intrusive. Later
-we will get options to
-read firmware name and stuff from DT.
 
-Anyhow, I don't think we can get rid of snd_dev_desc structure on
-i.MX. This will be used
-to store the information read from DT:
-
-static struct sof_dev_desc sof_of_imx8qxp_desc =3D {
-=C2=BB       .default_fw_path =3D "imx/sof",
-=C2=BB       .default_tplg_path =3D "imx/sof-tplg",
-=C2=BB       .nocodec_fw_filename =3D "sof-imx8.ri",
-=C2=BB       .nocodec_tplg_filename =3D "sof-imx8-nocodec.tplg",
-=C2=BB       .ops =3D &sof_imx8_ops,
-};
-
-For the moment we will only use the default values.
-
-thanks,
-Daniel.
