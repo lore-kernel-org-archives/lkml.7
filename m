@@ -2,137 +2,174 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C41E1C32754
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:19:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ABFAC32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CD6A21E71
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:19:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CCF621E6C
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:19:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730069AbfHGOTD (ORCPT
+        id S1730110AbfHGOTG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 10:19:03 -0400
-Received: from foss.arm.com ([217.140.110.172]:49276 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729722AbfHGOTC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 10:19:02 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 079CA344;
-        Wed,  7 Aug 2019 07:19:01 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1BE423F706;
-        Wed,  7 Aug 2019 07:19:00 -0700 (PDT)
-Subject: Re: [RFC V1 RESEND 2/6] PCI/MSI: Dynamic allocation of MSI-X vectors
- by group
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Megha Dey <megha.dey@intel.com>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ashok.raj@intel.com,
-        jacob.jun.pan@linux.intel.com
-References: <1561162778-12669-1-git-send-email-megha.dey@linux.intel.com>
- <1561162778-12669-3-git-send-email-megha.dey@linux.intel.com>
- <alpine.DEB.2.21.1906280739100.32342@nanos.tec.linutronix.de>
- <1565118316.2401.112.camel@intel.com>
- <alpine.DEB.2.21.1908071525390.24014@nanos.tec.linutronix.de>
-From:   Marc Zyngier <marc.zyngier@arm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
- 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
- Z46HaNmN2hZS/oJ69c1DI5Rcww==
-Organization: ARM Ltd
-Message-ID: <48a44ffc-4b5b-5eef-73de-020f1710c41e@arm.com>
-Date:   Wed, 7 Aug 2019 15:18:59 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1908071525390.24014@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Wed, 7 Aug 2019 10:19:06 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56846 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730063AbfHGOTE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 10:19:04 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 74684B02C;
+        Wed,  7 Aug 2019 14:19:02 +0000 (UTC)
+Message-ID: <1565187539.15973.6.camel@suse.com>
+Subject: Re: WARNING in zd_mac_clear
+From:   Oliver Neukum <oneukum@suse.com>
+To:     Andrey Konovalov <andreyknvl@google.com>,
+        syzbot <syzbot+74c65761783d66a9c97c@syzkaller.appspotmail.com>,
+        USB list <linux-usb@vger.kernel.org>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Ulrich Kunitz <kune@deine-taler.de>,
+        Daniel Drake <dsd@gentoo.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-wireless@vger.kernel.org, netdev <netdev@vger.kernel.org>
+Date:   Wed, 07 Aug 2019 16:18:59 +0200
+In-Reply-To: <CAAeHK+zW61WK67wcwhXVCuU0dx_PicpiXmbDCPtJzX-viQ2R0A@mail.gmail.com>
+References: <00000000000075a7a6058653d977@google.com>
+         <CAAeHK+zW61WK67wcwhXVCuU0dx_PicpiXmbDCPtJzX-viQ2R0A@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/08/2019 14:56, Thomas Gleixner wrote:
-> Megha,
+Am Mittwoch, den 07.08.2019, 16:07 +0200 schrieb Andrey Konovalov:
+> On Fri, Apr 12, 2019 at 1:46 PM syzbot
+> <syzbot+74c65761783d66a9c97c@syzkaller.appspotmail.com> wrote:
+> > 
+> > Hello,
+> > 
+> > syzbot found the following crash on:
+> > 
+> > HEAD commit:    9a33b369 usb-fuzzer: main usb gadget fuzzer driver
+> > git tree:       https://github.com/google/kasan/tree/usb-fuzzer
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=101a06dd200000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=23e37f59d94ddd15
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=74c65761783d66a9c97c
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1170c22d200000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1496adbb200000
+> > 
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+74c65761783d66a9c97c@syzkaller.appspotmail.com
+> > 
+> > usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+> > usb 1-1: config 0 descriptor??
+> > usb 1-1: reset low-speed USB device number 2 using dummy_hcd
+> > usb 1-1: read over firmware interface failed: -71
+> > usb 1-1: reset low-speed USB device number 2 using dummy_hcd
+> > WARNING: CPU: 1 PID: 21 at drivers/net/wireless/zydas/zd1211rw/zd_mac.c:238
+> > zd_mac_clear+0xb0/0xe0 drivers/net/wireless/zydas/zd1211rw/zd_mac.c:238
+> > Kernel panic - not syncing: panic_on_warn set ...
+> > CPU: 1 PID: 21 Comm: kworker/1:1 Not tainted 5.1.0-rc4-319354-g9a33b36 #3
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > Google 01/01/2011
+> > Workqueue: usb_hub_wq hub_event
+> > Call Trace:
+> >   __dump_stack lib/dump_stack.c:77 [inline]
+> >   dump_stack+0xe8/0x16e lib/dump_stack.c:113
+> >   panic+0x29d/0x5f2 kernel/panic.c:214
+> >   __warn.cold+0x20/0x48 kernel/panic.c:571
+> >   report_bug+0x262/0x2a0 lib/bug.c:186
+> >   fixup_bug arch/x86/kernel/traps.c:179 [inline]
+> >   fixup_bug arch/x86/kernel/traps.c:174 [inline]
+> >   do_error_trap+0x130/0x1f0 arch/x86/kernel/traps.c:272
+> >   do_invalid_op+0x37/0x40 arch/x86/kernel/traps.c:291
+> >   invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:973
+> > RIP: 0010:zd_mac_clear+0xb0/0xe0
+> > drivers/net/wireless/zydas/zd1211rw/zd_mac.c:238
+> > Code: e8 85 d0 60 f8 48 8d bb f8 2b 00 00 be ff ff ff ff e8 54 5a 46 f8 31
+> > ff 89 c3 89 c6 e8 d9 d1 60 f8 85 db 75 d4 e8 60 d0 60 f8 <0f> 0b 5b 5d e9
+> > 57 d0 60 f8 48 c7 c7 58 05 cb 93 e8 fb e0 97 f8 eb
+> > RSP: 0018:ffff8880a85c7310 EFLAGS: 00010293
+> > RAX: ffff8880a84de200 RBX: 0000000000000000 RCX: ffffffff8910f507
+> > RDX: 0000000000000000 RSI: ffffffff8910f510 RDI: 0000000000000005
+> > RBP: 0000000000000001 R08: ffff8880a84de200 R09: ffffed1012f83a0b
+> > R10: ffffed1012f83a0a R11: ffff888097c1d057 R12: 00000000ffffffb9
+> > R13: ffff888097c18b20 R14: ffff888099456630 R15: ffffffff8f979398
+> >   probe+0x259/0x590 drivers/net/wireless/zydas/zd1211rw/zd_usb.c:1421
+> >   usb_probe_interface+0x31d/0x820 drivers/usb/core/driver.c:361
+> >   really_probe+0x2da/0xb10 drivers/base/dd.c:509
+> >   driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
+> >   __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
+> >   bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
+> >   __device_attach+0x223/0x3a0 drivers/base/dd.c:844
+> >   bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
+> >   device_add+0xad2/0x16e0 drivers/base/core.c:2106
+> >   usb_set_configuration+0xdf7/0x1740 drivers/usb/core/message.c:2021
+> >   generic_probe+0xa2/0xda drivers/usb/core/generic.c:210
+> >   usb_probe_device+0xc0/0x150 drivers/usb/core/driver.c:266
+> >   really_probe+0x2da/0xb10 drivers/base/dd.c:509
+> >   driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
+> >   __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
+> >   bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
+> >   __device_attach+0x223/0x3a0 drivers/base/dd.c:844
+> >   bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
+> >   device_add+0xad2/0x16e0 drivers/base/core.c:2106
+> >   usb_new_device.cold+0x537/0xccf drivers/usb/core/hub.c:2534
+> >   hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+> >   hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+> >   port_event drivers/usb/core/hub.c:5350 [inline]
+> >   hub_event+0x138e/0x3b00 drivers/usb/core/hub.c:5432
+> >   process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
+> >   worker_thread+0x9b/0xe20 kernel/workqueue.c:2415
+> >   kthread+0x313/0x420 kernel/kthread.c:253
+> >   ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+> > Kernel Offset: disabled
+> > Rebooting in 86400 seconds..
 > 
-> On Tue, 6 Aug 2019, Megha Dey wrote:
->> On Sat, 2019-06-29 at 09:59 +0200, Thomas Gleixner wrote:
->>> On Fri, 21 Jun 2019, Megha Dey wrote:
->>
->> Totally agreed. The request to add a dynamic MSI-X infrastructure came
->> from some driver teams internally and currently they do not have
->> bandwidth to come up with relevant test cases. <sigh>
-> 
-> Hahahaha.
-> 
->> But we hope that this patch set could serve as a precursor to the
->> interrupt message store (IMS) patch set, and we can use this patch set
->> as the baseline for the IMS patches.
-> 
-> If IMS needs the same functionality, then we need to think about it
-> slightly differently because IMS is not necessarily tied to PCI.
->  
-> IMS has some similarity to the ARM GIC ITS stuff IIRC, which already
-> provides these things outside of PCI. Marc?
+> This USB bug is the second most frequently triggered one with over 10k
+> kernel crashes.
 
-Indeed. We have MSI-like functionality almost everywhere, and make heavy
-use of the generic MSI framework. Platform-MSI is probably the most
-generic example we have (it's the Far West transposed to MSIs).
+As far as I can tell this is a false positive. Didn't I submit this
+upstream?
 
-> We probably need some generic infrastructure for this so PCI and everything
-> else can use it.
+#syz test: https://github.com/google/kasan.git 9a33b369
 
-Indeed. Overall, I'd like the concept of MSI on whatever bus to have one
-single behaviour across the board, as long as it makes sense for that
-bus (nobody needs another PCI MultiMSI, for example).
+From ae999d5a437850b65497df7dcca3ffc10f75e697 Mon Sep 17 00:00:00 2001
+From: Oliver Neukum <oneukum@suse.com>
+Date: Tue, 30 Jul 2019 15:59:03 +0200
+Subject: [PATCH] zdnet: remove false assertion from zd_mac_clear()
 
-Thanks,
+The function is called before the lock which is asserted was ever used.
+Just remove it.
 
-	M.
+Reported-by: syzbot+74c65761783d66a9c97c@syzkaller.appspotmail.com
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+---
+ drivers/net/wireless/zydas/zd1211rw/zd_mac.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/drivers/net/wireless/zydas/zd1211rw/zd_mac.c b/drivers/net/wireless/zydas/zd1211rw/zd_mac.c
+index da7e63fca9f5..a9999d10ae81 100644
+--- a/drivers/net/wireless/zydas/zd1211rw/zd_mac.c
++++ b/drivers/net/wireless/zydas/zd1211rw/zd_mac.c
+@@ -223,7 +223,6 @@ void zd_mac_clear(struct zd_mac *mac)
+ {
+ 	flush_workqueue(zd_workqueue);
+ 	zd_chip_clear(&mac->chip);
+-	lockdep_assert_held(&mac->lock);
+ 	ZD_MEMCLEAR(mac, sizeof(struct zd_mac));
+ }
+ 
 -- 
-Jazz is not dead. It just smells funny...
+2.16.4
+
