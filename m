@@ -2,132 +2,91 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90291C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52B65C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72E51229FA
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:34:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 339E5229F7
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:34:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387632AbfHGIem convert rfc822-to-8bit (ORCPT
+        id S2387692AbfHGIer (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 04:34:42 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:57557 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727426AbfHGIem (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 04:34:42 -0400
-X-Originating-IP: 86.250.200.211
-Received: from xps13 (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 1263A1BF205;
-        Wed,  7 Aug 2019 08:34:37 +0000 (UTC)
-Date:   Wed, 7 Aug 2019 10:34:37 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     shiva.linuxworks@gmail.com
-Cc:     Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Frieder Schrempf <frieder.schrempf@kontron.de>,
-        Shivamurthy Shastri <sshivamurthy@micron.com>,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Jeff Kletsky <git-commits@allycomm.com>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        liaoweixiong <liaoweixiong@allwinnertech.com>
-Subject: Re: [PATCH 1/8] mtd: nand: move ONFI related functions to onfi.h
-Message-ID: <20190807103437.36abb59b@xps13>
-In-Reply-To: <20190722055621.23526-2-sshivamurthy@micron.com>
-References: <20190722055621.23526-1-sshivamurthy@micron.com>
-        <20190722055621.23526-2-sshivamurthy@micron.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 7 Aug 2019 04:34:47 -0400
+Received: from mga05.intel.com ([192.55.52.43]:2100 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387637AbfHGIeq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 04:34:46 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Aug 2019 01:34:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,356,1559545200"; 
+   d="scan'208";a="168558382"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 07 Aug 2019 01:34:43 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1hvHP9-0005t0-2O; Wed, 07 Aug 2019 16:34:43 +0800
+Date:   Wed, 7 Aug 2019 16:34:35 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc:     kbuild-all@01.org,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Allison Randal <allison@lohutok.net>,
+        Enrico Weigelt <info@metux.net>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] net: fix semicolon.cocci warnings
+Message-ID: <20190807083435.xhbc77vzwmyzgwj7@48261080c7f1>
+References: <201908071628.H05RbOmY%lkp@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201908071628.H05RbOmY%lkp@intel.com>
+X-Patchwork-Hint: ignore
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shiva,
+From: kbuild test robot <lkp@intel.com>
 
-shiva.linuxworks@gmail.com wrote on Mon, 22 Jul 2019 07:56:14 +0200:
+drivers/target/iscsi/cxgbit/cxgbit_target.c:1451:47-48: Unneeded semicolon
 
-> From: Shivamurthy Shastri <sshivamurthy@micron.com>
-> 
-> These functions will be used by both raw NAND and SPI NAND, which
-> supports ONFI like standards.
 
-This is not exactly what you do. Why not:
+ Remove unneeded semicolon.
 
-mtd: nand: export ONFI related functions to onfi.h
+Generated by: scripts/coccinelle/misc/semicolon.cocci
 
-These functions can be used by all flavors of NAND chips (raw, SPI)
-which may all follow ONFI standards. Export the related functions in
-the onfi.h generic file.
+Fixes: d7840976e391 ("net: Use skb accessors in network drivers")
+CC: Matthew Wilcox (Oracle) <willy@infradead.org>
+Signed-off-by: kbuild test robot <lkp@intel.com>
+---
 
-> 
-> Signed-off-by: Shivamurthy Shastri <sshivamurthy@micron.com>
-> ---
->  drivers/mtd/nand/raw/internals.h | 1 -
->  include/linux/mtd/onfi.h         | 9 +++++++++
->  2 files changed, 9 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mtd/nand/raw/internals.h b/drivers/mtd/nand/raw/internals.h
-> index cba6fe7dd8c4..ed323087d884 100644
-> --- a/drivers/mtd/nand/raw/internals.h
-> +++ b/drivers/mtd/nand/raw/internals.h
-> @@ -140,7 +140,6 @@ void nand_legacy_adjust_cmdfunc(struct nand_chip *chip);
->  int nand_legacy_check_hooks(struct nand_chip *chip);
->  
->  /* ONFI functions */
-> -u16 onfi_crc16(u16 crc, u8 const *p, size_t len);
->  int nand_onfi_detect(struct nand_chip *chip);
->  
->  /* JEDEC functions */
-> diff --git a/include/linux/mtd/onfi.h b/include/linux/mtd/onfi.h
-> index 339ac798568e..2c8a05a02bb0 100644
-> --- a/include/linux/mtd/onfi.h
-> +++ b/include/linux/mtd/onfi.h
-> @@ -10,6 +10,7 @@
->  #ifndef __LINUX_MTD_ONFI_H
->  #define __LINUX_MTD_ONFI_H
->  
-> +#include <linux/mtd/nand.h>
+tree:   https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git master
+head:   958eb4327c1761c609bde8e9f7c04e9d1c6fbb96
+commit: d7840976e3915669382c62ddd1700960f348328e [1656/4974] net: Use skb accessors in network drivers
 
-This should be removed, or at least not added at this moment.
+ cxgbit_target.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->  #include <linux/types.h>
->  
->  /* ONFI version bits */
-> @@ -175,4 +176,12 @@ struct onfi_params {
->  	u8 vendor[88];
->  };
->  
-> +/* ONFI functions */
-> +u16 onfi_crc16(u16 crc, u8 const *p, size_t len);
-> +void nand_bit_wise_majority(const void **srcbufs,
-> +			    unsigned int nsrcbufs,
-> +			    void *dstbuf,
-> +			    unsigned int bufsize);
-
-Don't export this function while you don't use it from elsewhere.
-
-> +void sanitize_string(u8 *s, size_t len);
-
-This one is used by jedec code and has no onfi-related logic, so you
-may want to export it (only when you will use it) in another header
-like linux/mtd/nand.h
-
-> +
->  #endif /* __LINUX_MTD_ONFI_H */
-
-Thanks,
-Miquèl
+--- a/drivers/target/iscsi/cxgbit/cxgbit_target.c
++++ b/drivers/target/iscsi/cxgbit/cxgbit_target.c
+@@ -1448,7 +1448,7 @@ cxgbit_lro_skb_merge(struct cxgbit_sock
+ 		hpdu_cb->frags++;
+ 		hpdu_cb->hfrag_idx = hfrag_idx;
+ 
+-		len = skb_frag_size(&hssi->frags[hfrag_idx]);;
++		len = skb_frag_size(&hssi->frags[hfrag_idx]);
+ 		hskb->len += len;
+ 		hskb->data_len += len;
+ 		hskb->truesize += len;
