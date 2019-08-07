@@ -2,76 +2,79 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14FFCC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 21:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 218BBC32754
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 21:20:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D825E2186A
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 21:15:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1FA921872
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 21:20:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565212543;
-	bh=mPs5ZRxH/plyzQCc3mZVnB4VCrN6NeDkFyiCjTFTVtE=;
+	s=default; t=1565212832;
+	bh=H6IRZcxzKndx5zx8Pkv7nOJGJAfsgtBu+QGrgi9asLw=;
 	h=In-Reply-To:References:Cc:From:Subject:To:Date:List-ID:From;
-	b=H1qRD4+j8rgcnuHUEMSHOOq9vePGFR3f1gUN4rFXhFQgqFA9AT11tiVJfJoDcDXFy
-	 42rkrZ05nbDHPIW/HjLXl82C/jb6b2eVxc3FQBcEaQ2CCK5Dp/kCdTppqE0y5OHLlw
-	 3ICCbZq1w9sTmIEC8/duKnv9GpzLRKBZR4GOW0EM=
+	b=ms3OLjvNbp/daWqF8taBXHpQvjGVVbHXfMFh4CLFmCpiozvakGv1qTnl5woHBHh6Q
+	 ghhGpJVZkiKRThdP8vuKHTZpbglfTGAXYw9ameyZ2RHgSt6fgWVFQZ1zR4qHi/tDWj
+	 3AC8sLCtYxksYyCY5qfotpdsgq7rmCnfI/ZLhnJE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389340AbfHGVPm (ORCPT
+        id S2389427AbfHGVUa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 17:15:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35540 "EHLO mail.kernel.org"
+        Wed, 7 Aug 2019 17:20:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727213AbfHGVPm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 17:15:42 -0400
+        id S2389207AbfHGVUa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 17:20:30 -0400
 Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D6B0217D9;
-        Wed,  7 Aug 2019 21:15:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5E902184E;
+        Wed,  7 Aug 2019 21:20:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565212541;
-        bh=mPs5ZRxH/plyzQCc3mZVnB4VCrN6NeDkFyiCjTFTVtE=;
+        s=default; t=1565212829;
+        bh=H6IRZcxzKndx5zx8Pkv7nOJGJAfsgtBu+QGrgi9asLw=;
         h=In-Reply-To:References:Cc:From:Subject:To:Date:From;
-        b=evVShKsELYA/qJL/FotSY8uoAWZf/EbpbypuGS9QvppQIIUWYxHHjl70dzSqeF2/s
-         BHZw3OUEZ0Nq7db9hOloZhWWBoVvcnV8fWciveKFPCSnX38Rq6WajRrhfbyJ1Zx9Gc
-         1jmyIRmeSDb4mjzAWhRtKj/hmThM7QY0q3pyKpO8=
+        b=2F2JZEh7amLOi00ZrGHzAGDa1Xgnd+Y8dNSOOg7G+qeIbhpl9ly23IS/Ctb8Faooy
+         Z8PF75foc4+NqT5l/t5AGzY4M1FUIEYmmoCvtmZ7DAurL1JszCdBt5ovPL/DPhkhCr
+         XwIGH/i/t2ttuHcvHceMPI+CFchPCtba57rgdnuw=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190710141009.20651-1-andrew@aj.id.au>
-References: <20190710141009.20651-1-andrew@aj.id.au>
-Cc:     Joel Stanley <joel@jms.id.au>, mturquette@baylibre.com,
-        ryanchen.aspeed@gmail.com, linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Andrew Jeffery <andrew@aj.id.au>
+In-Reply-To: <20190627220642.78575-1-nhuck@google.com>
+References: <20190627220642.78575-1-nhuck@google.com>
+Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Nathan Huckleberry <nhuck@google.com>,
+        clang-built-linux@googlegroups.com
 From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH] clk: aspeed: Add SDIO gate
-To:     Andrew Jeffery <andrew@aj.id.au>, linux-clk@vger.kernel.org
+Subject: Re: [PATCH] clk: qoriq: Fix -Wunused-const-variable
+To:     Nathan Huckleberry <nhuck@google.com>, mturquette@baylibre.com,
+        oss@buserror.net, yogeshnarayan.gaur@nxp.com
 User-Agent: alot/0.8.1
-Date:   Wed, 07 Aug 2019 14:15:40 -0700
-Message-Id: <20190807211541.5D6B0217D9@mail.kernel.org>
+Date:   Wed, 07 Aug 2019 14:20:28 -0700
+Message-Id: <20190807212029.A5E902184E@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Andrew Jeffery (2019-07-10 07:10:09)
-> From: Joel Stanley <joel@jms.id.au>
+Quoting Nathan Huckleberry (2019-06-27 15:06:42)
+> drivers/clk/clk-qoriq.c:138:38: warning: unused variable
+> 'p5020_cmux_grp1' [-Wunused-const-variable] static const struct
+> clockgen_muxinfo p5020_cmux_grp1
 >=20
-> The clock divisor comes with an enable bit (gate). This was not
-> implemented as we didn't have access to SD hardware when writing the
-> driver. Now that we can test it, add the gate as a parent to the
-> divisor.
+> drivers/clk/clk-qoriq.c:146:38: warning: unused variable
+> 'p5020_cmux_grp2' [-Wunused-const-variable] static const struct
+> clockgen_muxinfo p5020_cmux_grp2
 >=20
-> There is no reason to expose the gate separately, so users will enable
-> it by turning on the ASPEED_CLK_SDIO divisor.
+> In the definition of the p5020 chip, the p2041 chip's info was used
+> instead.  The p5020 and p2041 chips have different info. This is most
+> likely a typo.
 >=20
-> Signed-off-by: Joel Stanley <joel@jms.id.au>
-> [aj: Minor style cleanup]
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> Link: https://github.com/ClangBuiltLinux/linux/issues/525
+> Cc: clang-built-linux@googlegroups.com
+> Signed-off-by: Nathan Huckleberry <nhuck@google.com>
 > ---
 
 Applied to clk-next
