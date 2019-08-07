@@ -2,218 +2,147 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39CDAC31E40
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 00:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B21C31E40
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 00:29:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFD012173C
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 00:27:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="aRgkvqOZ"
+	by mail.kernel.org (Postfix) with ESMTP id 463CB2173C
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 00:29:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727321AbfHGA1d (ORCPT
+        id S1727726AbfHGA3d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 20:27:33 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52123 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726334AbfHGA1d (ORCPT
+        Tue, 6 Aug 2019 20:29:33 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:36669 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727617AbfHGA3c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 20:27:33 -0400
-Received: by mail-wm1-f68.google.com with SMTP id 207so79960150wma.1
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 17:27:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=cDIr3JODYU7FS0xjE/N2Ulu9ZMmr6z8UFiq2vRQunkU=;
-        b=aRgkvqOZypFL1/+cRARkYeVzqMhWIzxt01DgyFAQb995klAsM66uzb5etRCvcV8RAa
-         YcLX99lx7OWiF7ZiiZXRAQijNuxGijp4f0Mx2yCgx0WYIdnE1rOVZqR0UL66u/mJ85LH
-         vj3/1wmGb5dYM+72+JvRgod6AnaecJnTOZ5/VBivyjVpPRQmlLF91JHR4djNZLXeQ6rv
-         f4q6T28H9Rv38HUhqXiQ3dMzIZi0SkF1ewfwxxAyopJ9eKDlezX8Jn69s6ysE7DSvNeL
-         vu0NftliOnuX8yzPWg3i1SDvHhiF3zicfRkQdRuo4IP+itZYz8SbQo99ZvVY7sSzlKJ2
-         9iCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=cDIr3JODYU7FS0xjE/N2Ulu9ZMmr6z8UFiq2vRQunkU=;
-        b=IIWmmeZ5Z/xrFGy575zuOWnzz5d9OffLD8NlC1OHjeSF9jOWgmpChgkgXLEs7pdyeg
-         /tVBBCPTmfuPuW0bo5w2N1SXoyTlTgAlG24exoW7HDUWoRokdFwY09irCZOrupR7v+0B
-         eUzhqBxAQfMR/VGWUecFWPoDaWn+7W0duWNETB758KjRAEGc/djCtgDvYSFczHp7i9rM
-         +BdIz9+lYzBQFt34Z8i486P2KcTiMW1jO2rfV9Qz6+9CAIA/WECcnOQ9vY7ZX35a7djp
-         hBTsXJ4yk8iHtkDbFz6usqJwYV0FYfC3rmdVBgnIhiOeBf4YOtpUbLBmUOyXZmrQbEDU
-         tx7Q==
-X-Gm-Message-State: APjAAAV6k15F64za650KTcAFRcr6/RcZeQZrAfl+J3UvRXkbbCbxhZEt
-        1M3KB22LXc1ruDbhKh0YX9jXHlXkcBzmTw5hKNUtFiaQnFWQ6mZ8mtBvuTu6fhngv82L0kdgLdO
-        czHJk3rAOQJ51MuZtBC9W+tikW8YfoEdrfU+LpWpc36mRwMFlKmh4ymC0JbjEP6OAqxnTlixaUX
-        X10q/OSSVoClW8/Hq6VJXGFciGTY5KZDHvNg==
-X-Google-Smtp-Source: APXvYqzoEPr4la8SIJDIRJK5slHoshwb6Ys904nvCBSvuJG6JnLwyA5lE7lMsxWDNwQcy2ehturhOg==
-X-Received: by 2002:a1c:f115:: with SMTP id p21mr6281128wmh.134.1565137650594;
-        Tue, 06 Aug 2019 17:27:30 -0700 (PDT)
-Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id y6sm121847291wmd.16.2019.08.06.17.27.29
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 06 Aug 2019 17:27:29 -0700 (PDT)
-From:   Dmitry Safonov <dima@arista.com>
-To:     dima@arista.com
-Cc:     0x7f454c46@gmail.com, adrian@lisas.de, arnd@arndb.de,
-        avagin@gmail.com, avagin@openvz.org, christian.brauner@ubuntu.com,
-        containers@lists.linux-foundation.org, criu@openvz.org,
-        ebiederm@xmission.com, gorcunov@openvz.org, hpa@zytor.com,
-        jannh@google.com, jdike@addtoit.com, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org, luto@kernel.org, mingo@redhat.com,
-        oleg@redhat.com, shuah@kernel.org, tglx@linutronix.de,
-        vincenzo.frascino@arm.com, x86@kernel.org, xemul@virtuozzo.com
-Subject: [PATCHv6 25/37] x86/vdso: Switch image on setns()/clone()
-Date:   Wed,  7 Aug 2019 01:27:28 +0100
-Message-Id: <20190807002728.19743-1-dima@arista.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190729215758.28405-26-dima@arista.com>
-References: <20190729215758.28405-26-dima@arista.com>
+        Tue, 6 Aug 2019 20:29:32 -0400
+X-UUID: 8b691bcbe4874fa9937b0efe4dee114f-20190807
+X-UUID: 8b691bcbe4874fa9937b0efe4dee114f-20190807
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
+        (envelope-from <miles.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
+        with ESMTP id 1562935432; Wed, 07 Aug 2019 08:29:21 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 7 Aug 2019 08:29:21 +0800
+Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 7 Aug 2019 08:29:21 +0800
+Message-ID: <1565137761.18034.1.camel@mtkswgap22>
+Subject: Re: [PATCH] arm64: mm: print hexadecimal EC value in
+ mem_abort_decode()
+From:   Miles Chen <miles.chen@mediatek.com>
+To:     Mark Rutland <mark.rutland@arm.com>
+CC:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        James Morse <james.morse@arm.com>
+Date:   Wed, 7 Aug 2019 08:29:21 +0800
+In-Reply-To: <20190806123450.GE475@lakrids.cambridge.arm.com>
+References: <20190806112948.4357-1-miles.chen@mediatek.com>
+         <20190806123450.GE475@lakrids.cambridge.arm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CLOUD-SEC-AV-Info: arista,google_mail,monitor
-X-CLOUD-SEC-AV-Sent: true
-X-Gm-Spam: 0
-X-Gm-Phishy: 0
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As it has been discussed on timens RFC, adding a new conditional branch
-`if (inside_time_ns)` on VDSO for all processes is undesirable.
-It will add a penalty for everybody as branch predictor may mispredict
-the jump. Also there are instruction cache lines wasted on cmp/jmp.
+On Tue, 2019-08-06 at 13:34 +0100, Mark Rutland wrote:
+> On Tue, Aug 06, 2019 at 07:29:48PM +0800, Miles Chen wrote:
+> > This change prints the hexadecimal EC value in mem_abort_decode(),
+> > which makes it easier to lookup the corresponding EC in
+> > the ARM Architecture Reference Manual.
+> > 
+> > The commit 1f9b8936f36f ("arm64: Decode information from ESR upon mem
+> > faults") prints useful information when memory abort occurs. It would
+> > be easier to lookup "0x25" instead of "DABT" in the document. Then we
+> > can check the corresponding ISS.
+> > 
+> > For example:
+> > Current	info	  	Document
+> > 		  	EC	Exception class
+> > "CP15 MCR/MRC"		0x3	"MCR or MRC access to CP15a..."
+> > "ASIMD"			0x7	"Access to SIMD or floating-point..."
+> > "DABT (current EL)" 	0x25	"Data Abort taken without..."
+> > ...
+> > 
+> > Before:
+> > Unable to handle kernel paging request at virtual address 000000000000c000
+> > Mem abort info:
+> >   ESR = 0x96000046
+> >   Exception class = DABT (current EL), IL = 32 bits
+> >   SET = 0, FnV = 0
+> >   EA = 0, S1PTW = 0
+> > Data abort info:
+> >   ISV = 0, ISS = 0x00000046
+> >   CM = 0, WnR = 1
+> > 
+> > After:
+> > Unable to handle kernel paging request at virtual address 000000000000c000
+> > Mem abort info:
+> >   ESR = 0x96000046
+> >   EC = 0x25, Exception class = DABT (current EL), IL = 32 bits
+> >   SET = 0, FnV = 0
+> >   EA = 0, S1PTW = 0
+> > Data abort info:
+> >   ISV = 0, ISS = 0x00000046
+> >   CM = 0, WnR = 1
+> > 
+> > Cc: Mark Rutland <Mark.rutland@arm.com>
+> > Cc: Anshuman Khandual <anshuman.khandual@arm.com>
+> > Cc: James Morse <james.morse@arm.com>
+> > Signed-off-by: Miles Chen <miles.chen@mediatek.com>
+> > ---
+> >  arch/arm64/mm/fault.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
+> > index cfd65b63f36f..afb6041e25e6 100644
+> > --- a/arch/arm64/mm/fault.c
+> > +++ b/arch/arm64/mm/fault.c
+> > @@ -86,8 +86,8 @@ static void mem_abort_decode(unsigned int esr)
+> >  	pr_alert("Mem abort info:\n");
+> >  
+> >  	pr_alert("  ESR = 0x%08x\n", esr);
+> > -	pr_alert("  Exception class = %s, IL = %u bits\n",
+> > -		 esr_get_class_string(esr),
+> > +	pr_alert("  EC = 0x%lx, Exception class = %s, IL = %u bits\n",
+> > +		 ESR_ELx_EC(esr), esr_get_class_string(esr),
+> 
+> Could we make this:
+> 
+> 	pr_alert("  EC = 0x%02lx: %s, IL = %u bits\n",
+> 		 ESR_ELx_EC(esr), esr_get_class_string(esr));
+> 
+> We don't need to spell out "Exception Class" if we say "EC", and we
+> should print the EC hex value with a consistent width as we do for the
+> ISS.
 
-Those effects of introducing time namespace are very much unwanted
-having in mind how much work have been spent on micro-optimisation
-vdso code.
+Thanks for the advise.
+It looks better this way. I'll send patch v2.
 
-Addressing those problems, there are two versions of VDSO's .so:
-for host tasks (without any penalty) and for processes inside of time
-namespace with clk_to_ns() that subtracts offsets from host's time.
 
-Whenever a user does setns() or unshare(CLONE_TIMENS) followed
-by clone(), change VDSO image in mm and zap VVAR/VDSO page tables.
-They will be re-faulted with corresponding image and VVAR offsets.
 
-Co-developed-by: Andrei Vagin <avagin@gmail.com>
-Signed-off-by: Andrei Vagin <avagin@gmail.com>
-Signed-off-by: Dmitry Safonov <dima@arista.com>
----
-v5..v6 Change:
-  Rebased over current_is_single_threaded() change in the first patch.
+Miles
 
- arch/x86/entry/vdso/vma.c   | 23 +++++++++++++++++++++++
- arch/x86/include/asm/vdso.h |  1 +
- kernel/time_namespace.c     | 11 +++++++++++
- 3 files changed, 35 insertions(+)
+> 
+> With that:
+> 
+> Acked-by: Mark Rutland <mark.rutland@arm.com>
+> 
+> Thanks,
+> Mark.
 
-diff --git a/arch/x86/entry/vdso/vma.c b/arch/x86/entry/vdso/vma.c
-index 8a8211fd4cfc..91cf5a5c8c9e 100644
---- a/arch/x86/entry/vdso/vma.c
-+++ b/arch/x86/entry/vdso/vma.c
-@@ -25,6 +25,7 @@
- #include <asm/cpufeature.h>
- #include <clocksource/hyperv_timer.h>
- #include <asm/page.h>
-+#include <asm/tlb.h>
- 
- #if defined(CONFIG_X86_64)
- unsigned int __read_mostly vdso64_enabled = 1;
-@@ -266,6 +267,28 @@ static const struct vm_special_mapping vvar_mapping = {
- 	.mremap = vvar_mremap,
- };
- 
-+#ifdef CONFIG_TIME_NS
-+int vdso_join_timens(struct task_struct *task)
-+{
-+	struct mm_struct *mm = task->mm;
-+	struct vm_area_struct *vma;
-+
-+	if (down_write_killable(&mm->mmap_sem))
-+		return -EINTR;
-+
-+	for (vma = mm->mmap; vma; vma = vma->vm_next) {
-+		unsigned long size = vma->vm_end - vma->vm_start;
-+
-+		if (vma_is_special_mapping(vma, &vvar_mapping) ||
-+		    vma_is_special_mapping(vma, &vdso_mapping))
-+			zap_page_range(vma, vma->vm_start, size);
-+	}
-+
-+	up_write(&mm->mmap_sem);
-+	return 0;
-+}
-+#endif
-+
- /*
-  * Add vdso and vvar mappings to current process.
-  * @image          - blob to map
-diff --git a/arch/x86/include/asm/vdso.h b/arch/x86/include/asm/vdso.h
-index 03f468c63a24..ccf89dedd04f 100644
---- a/arch/x86/include/asm/vdso.h
-+++ b/arch/x86/include/asm/vdso.h
-@@ -45,6 +45,7 @@ extern struct vdso_image vdso_image_32;
- extern void __init init_vdso_image(struct vdso_image *image);
- 
- extern int map_vdso_once(const struct vdso_image *image, unsigned long addr);
-+extern int vdso_join_timens(struct task_struct *task);
- 
- #endif /* __ASSEMBLER__ */
- 
-diff --git a/kernel/time_namespace.c b/kernel/time_namespace.c
-index cdfa1b75bd0d..2e7e0af44f04 100644
---- a/kernel/time_namespace.c
-+++ b/kernel/time_namespace.c
-@@ -15,6 +15,7 @@
- #include <linux/cred.h>
- #include <linux/err.h>
- #include <linux/mm.h>
-+#include <asm/vdso.h>
- 
- ktime_t do_timens_ktime_to_host(clockid_t clockid, ktime_t tim,
- 				struct timens_offsets *ns_offsets)
-@@ -199,6 +200,7 @@ static void timens_put(struct ns_common *ns)
- static int timens_install(struct nsproxy *nsproxy, struct ns_common *new)
- {
- 	struct time_namespace *ns = to_time_ns(new);
-+	int ret;
- 
- 	if (!current_is_single_threaded())
- 		return -EUSERS;
-@@ -207,6 +209,10 @@ static int timens_install(struct nsproxy *nsproxy, struct ns_common *new)
- 	    !ns_capable(current_user_ns(), CAP_SYS_ADMIN))
- 		return -EPERM;
- 
-+	ret = vdso_join_timens(current);
-+	if (ret)
-+		return ret;
-+
- 	get_time_ns(ns);
- 	get_time_ns(ns);
- 	put_time_ns(nsproxy->time_ns);
-@@ -221,10 +227,15 @@ int timens_on_fork(struct nsproxy *nsproxy, struct task_struct *tsk)
- {
- 	struct ns_common *nsc = &nsproxy->time_ns_for_children->ns;
- 	struct time_namespace *ns = to_time_ns(nsc);
-+	int ret;
- 
- 	if (nsproxy->time_ns == nsproxy->time_ns_for_children)
- 		return 0;
- 
-+	ret = vdso_join_timens(tsk);
-+	if (ret)
-+		return ret;
-+
- 	get_time_ns(ns);
- 	put_time_ns(nsproxy->time_ns);
- 	nsproxy->time_ns = ns;
--- 
-2.22.0
 
