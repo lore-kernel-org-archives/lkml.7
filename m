@@ -4,101 +4,115 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 673FAC32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 22:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 143A3C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 23:07:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 471E72186A
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 22:59:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDAA820880
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 23:06:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730354AbfHGW7j (ORCPT
+        id S2388637AbfHGXG6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 18:59:39 -0400
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:59242 "EHLO
-        omr2.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729938AbfHGW7i (ORCPT
+        Wed, 7 Aug 2019 19:06:58 -0400
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:33146 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729624AbfHGXG6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 18:59:38 -0400
-Received: from mr1.cc.vt.edu (mr1.cc.ipv6.vt.edu [IPv6:2607:b400:92:8300:0:31:1732:8aa4])
-        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x77MxbdF029678
-        for <linux-kernel@vger.kernel.org>; Wed, 7 Aug 2019 18:59:37 -0400
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-        by mr1.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x77MxWS5023922
-        for <linux-kernel@vger.kernel.org>; Wed, 7 Aug 2019 18:59:37 -0400
-Received: by mail-qk1-f197.google.com with SMTP id s25so80435975qkj.18
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 15:59:37 -0700 (PDT)
+        Wed, 7 Aug 2019 19:06:58 -0400
+Received: by mail-ua1-f67.google.com with SMTP id g11so8865136uak.0
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 16:06:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:mime-version:date
-         :message-id;
-        bh=4WYp0sFtiquOnD7XFesrru7HLnSgpz+A8nRbXA9HLg4=;
-        b=g9BADXek+jiNiChzWzeuhQaI5Ad4Uu1CdS6cBLP5955A4GBEA2tyLG3WQnyAOdzGmH
-         tK2Otsb+X3Wo2qCMCADuHs7Io3ZQPIti2olMYehMQIKi9K1sq/9tM/ENbGDZ/M2i02E+
-         H1oYrzCNmx+/c+tWJWwwhE7D4HDZ5SA49WhToxfvHzZmbjkwymR1j+gjax/4JAY7RUQJ
-         rPId5JEiWOHypAbHPE61nFaWmeKrHWVNl9WrjKM7kVmen2/3Cfxo4JiKyDnYdvsi5Kqc
-         PXLztS/xFgxlMSLs+OjgCFDAOoMdQKqcalED9bzLcrbyzGMuOveFssBLPF61gMtITxVI
-         mbcA==
-X-Gm-Message-State: APjAAAVZekNXI7JxvJvmNCFIWqHPw+cVFBKAwqgNdX0BSitlP9Nwwzvg
-        R271xHhpPTsgwVeOB1ZwjbLtH5+sScBd4Mog/UJRI07ajGo1Ajv1b6Ii3caL/k0qGaiPEAM3umY
-        mMbTaRJUo16mvocC15T7Jveq4sLmZ312pfeQ=
-X-Received: by 2002:a05:6214:10ea:: with SMTP id q10mr10566673qvt.4.1565218771720;
-        Wed, 07 Aug 2019 15:59:31 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqw7F2Hr9hT2NBDVe2YHVe7q0mBNo/npy18I5/nmkItyMv2lMne1h0RZ53W+4zzzlkquIcAqwg==
-X-Received: by 2002:a05:6214:10ea:: with SMTP id q10mr10566668qvt.4.1565218771488;
-        Wed, 07 Aug 2019 15:59:31 -0700 (PDT)
-Received: from turing-police ([2601:5c0:c001:4341::359])
-        by smtp.gmail.com with ESMTPSA id h4sm39655853qkk.39.2019.08.07.15.59.30
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 07 Aug 2019 15:59:30 -0700 (PDT)
-From:   "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>
-cc:     linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] drivers/ras/debugfs.c - fix prototype warnings
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Date:   Wed, 07 Aug 2019 18:59:29 -0400
-Message-ID: <7168.1565218769@turing-police>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=43Aq/YF2tIrtqKgn8oFkjtKlQy3xXtGroSwKLL+Qp8Y=;
+        b=RSGVb23Bs6PTqhrjGx31obuC1fxUrcITEAp6DNnn2+bNNAGV3jZ91cxZmNzUG+hoQg
+         K/ivdrqE4/BrYvW86PEgM4APFzswz7PZgoUQwKSf8SFSRHPhSRWrc1jUiqLAYTlUwpla
+         l6FxHd99VZLC5Bq8CW3OmMZw0KWH70rUl0BlLn6GX9dPOlPvijSutxC6EdB7RmUfcxXX
+         NLK1V6Nsg7ak3vhbQAwwMxte+PUIJUxOgVE9ZZ2OLckkabnbWTSoJi5f+/hLmtlRW7CA
+         jyTfLzikcZ0ojj2pt37x+QJ7M2o6FItK5CQIaG88uV4q1Seax3+gBz2dU5agIaoikCOT
+         5ang==
+X-Gm-Message-State: APjAAAWMUVjUrtCcSw9uUeAylpALNtS1tHHw3mIb77MYV8pk+nPcw6Rw
+        85EnByup5UWF0+qvioj8SIsgW7RsFA+lUE/vJ2Ap5A==
+X-Google-Smtp-Source: APXvYqzl3orDNzE16cYGmE/BexM9QmyfXaTvVHHuwOpUJstgexY+yev1lKWaixib7dLSKn4WM7oScOY1S3ixUusR4VI=
+X-Received: by 2002:ab0:7848:: with SMTP id y8mr7729807uaq.58.1565219217606;
+ Wed, 07 Aug 2019 16:06:57 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190807213304.9255-1-lyude@redhat.com> <20190807213304.9255-2-lyude@redhat.com>
+ <20190807215508.GK7444@phenom.ffwll.local>
+In-Reply-To: <20190807215508.GK7444@phenom.ffwll.local>
+From:   Ilia Mirkin <imirkin@alum.mit.edu>
+Date:   Wed, 7 Aug 2019 19:06:46 -0400
+Message-ID: <CAKb7UviCg7jeEyWqsHxygfPuqTg4ybFgTH8cRdx2O==tTEUD9Q@mail.gmail.com>
+Subject: Re: [PATCH 1/2] drm/nouveau/dispnv04: Grab/put runtime PM refs on
+ DPMS on/off
+To:     Lyude Paul <lyude@redhat.com>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Daniel Vetter <daniel@ffwll.ch>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When building with C=2 and/or W=1, legitimate warnings are issued
-about missing prototypes.  Provide the proper includes.
+On Wed, Aug 7, 2019 at 5:55 PM Daniel Vetter <daniel@ffwll.ch> wrote:
+>
+> On Wed, Aug 07, 2019 at 05:33:00PM -0400, Lyude Paul wrote:
+> > The code claims to grab a runtime PM ref when at least one CRTC is
+> > active, but that's not actually the case as we grab a runtime PM ref
+> > whenever a CRTC is enabled regardless of it's DPMS state. Meaning that
+> > we can end up keeping the GPU awake when there are no screens enabled,
+> > something we don't really want to do.
+> >
+> > Note that we fixed this same issue for nv50 a while ago in:
+> >
+> > commit e5d54f193572 ("drm/nouveau/drm/nouveau: Fix runtime PM leak in
+> > nv50_disp_atomic_commit()")
+> >
+> > Since we're about to remove nouveau_drm->have_disp_power_ref in the next
+> > commit, let's also simplify the RPM code here while we're at it: grab a
+> > ref during a modeset, grab additional RPM refs for each CRTC enabled by
+> > said modeset, and drop an RPM ref for each CRTC disabled by said
+> > modeset. This allows us to keep the GPU awake whenever screens are
+> > turned on, without needing to use nouveau_drm->have_disp_power_ref.
+> >
+> > Signed-off-by: Lyude Paul <lyude@redhat.com>
+> > ---
+> >  drivers/gpu/drm/nouveau/dispnv04/crtc.c | 18 ++++--------------
+> >  1 file changed, 4 insertions(+), 14 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/nouveau/dispnv04/crtc.c b/drivers/gpu/drm/nouveau/dispnv04/crtc.c
+> > index f22f01020625..08ad8e3b9cd2 100644
+> > --- a/drivers/gpu/drm/nouveau/dispnv04/crtc.c
+> > +++ b/drivers/gpu/drm/nouveau/dispnv04/crtc.c
+> > @@ -183,6 +183,10 @@ nv_crtc_dpms(struct drm_crtc *crtc, int mode)
+> >               return;
+> >
+> >       nv_crtc->last_dpms = mode;
+> > +     if (mode == DRM_MODE_DPMS_ON)
+> > +             pm_runtime_get_noresume(dev->dev);
+> > +     else
+> > +             pm_runtime_put_noidle(dev->dev);
+>
+> it's after we filter out duplicate operations, so that part looks good.
+> But not all of nouveau's legacy helper crtc callbacks go throuh ->dpms I
+> think: nv_crtc_disable doesn't, and crtc helpers use that in preference
+> over ->dpms in some cases.
+>
+> I think the only way to actually hit that path is if you switch an active
+> connector from an active CRTC to an inactive one. This implicitly disables
+> the crtc (well, should, nv_crtc_disable doesn't seem to shut down hw), and
+> I think would leak your runtime PM reference here. At least temporarily.
+>
+> No idea how to best fix that. Aside from "use atomic" :-)
 
-  CHECK   drivers/ras/debugfs.c
-drivers/ras/debugfs.c:4:15: warning: symbol 'ras_debugfs_dir' was not declared. Should it be static?
-drivers/ras/debugfs.c:8:5: warning: symbol 'ras_userspace_consumers' was not declared. Should it be static?
-drivers/ras/debugfs.c:38:12: warning: symbol 'ras_add_daemon_trace' was not declared. Should it be static?
-drivers/ras/debugfs.c:54:13: warning: symbol 'ras_debugfs_init' was not declared. Should it be static?
-  CC      drivers/ras/debugfs.o
-drivers/ras/debugfs.c:8:5: warning: no previous prototype for 'ras_userspace_consumers' [-Wmissing-prototypes]
-    8 | int ras_userspace_consumers(void)
-      |     ^~~~~~~~~~~~~~~~~~~~~~~
-drivers/ras/debugfs.c:38:12: warning: no previous prototype for 'ras_add_daemon_trace' [-Wmissing-prototypes]
-   38 | int __init ras_add_daemon_trace(void)
-      |            ^~~~~~~~~~~~~~~~~~~~
-drivers/ras/debugfs.c:54:13: warning: no previous prototype for 'ras_debugfs_init' [-Wmissing-prototypes]
-   54 | void __init ras_debugfs_init(void)
-      |             ^~~~~~~~~~~~~~~~
+Not sure if this is relevant to the discussion at hand, but I'd like
+to point out that dispnv04 is for pre-nv50 things, which definitely
+didn't support any kind of ACPI-based runtime suspend.
 
-Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-
-diff --git a/drivers/ras/debugfs.c b/drivers/ras/debugfs.c
-index 9c1b717efad8..0d4f985afbf3 100644
---- a/drivers/ras/debugfs.c
-+++ b/drivers/ras/debugfs.c
-@@ -1,5 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0-only
- #include <linux/debugfs.h>
-+#include <linux/ras.h>
-+#include "debugfs.h"
- 
- struct dentry *ras_debugfs_dir;
- 
-
-
-
+  -ilia
