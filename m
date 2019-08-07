@@ -2,127 +2,99 @@ Return-Path: <SRS0=vI2Y=WC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DATE_IN_FUTURE_03_06,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF830C31E40
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 20:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D43AC31E40
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 20:33:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BACB620578
-	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 20:33:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1A5020578
+	for <linux-kernel@archiver.kernel.org>; Tue,  6 Aug 2019 20:33:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z5R+Ui20"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbfHFUdR (ORCPT
+        id S1726551AbfHFUda (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 16:33:17 -0400
-Received: from sauhun.de ([88.99.104.3]:36534 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726009AbfHFUdR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 16:33:17 -0400
-Received: from localhost (p54B3324E.dip0.t-ipconnect.de [84.179.50.78])
-        by pokefinder.org (Postfix) with ESMTPSA id 0B67E2C290E;
-        Tue,  6 Aug 2019 22:33:15 +0200 (CEST)
-Date:   Tue, 6 Aug 2019 22:33:14 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Anders Roxell <anders.roxell@linaro.org>
-Cc:     mika.westerberg@linux.intel.com, linux-i2c@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] i2c: core: remove unused function
-Message-ID: <20190806203314.GB911@ninjato>
-References: <20190731105642.29664-1-anders.roxell@linaro.org>
+        Tue, 6 Aug 2019 16:33:30 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40557 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725973AbfHFUda (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 16:33:30 -0400
+Received: by mail-pf1-f193.google.com with SMTP id p184so42126884pfp.7;
+        Tue, 06 Aug 2019 13:33:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=F/hl3E6xWSgLOYfC8vQfPuiPfVoRw6t9KqdsSlnrZOY=;
+        b=Z5R+Ui20vWbz3pMtD8McxT1ePXqXSB0K/nOqoMdMCmQ54UG2cbXg0U2lg3pA41ZebR
+         AWP4t0iEnQHvj+V/sU2PxHCB1JkqD5nBObV4zaJ3p9exwVBeu/4LLhKjE0eRA0/ESoYx
+         Lg92tiFsdOBVW2vzv1I6MWUgnwHvo1EAHa+Te0ARTKC4tIYigDDYm84NOJGx+dnaW+BD
+         GK306WLqw5xIU3JkrCmpkC7bS0Fn/AKMmrmteRAIJ4h9dE18XoppYipulUZhCqWalbGh
+         PDe0mETwoudiO+wQO9BtTKFmZavBvyd33Oec6Gpllw0x3VqMgFQCmJ58noLJUWaynmjY
+         9UCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=F/hl3E6xWSgLOYfC8vQfPuiPfVoRw6t9KqdsSlnrZOY=;
+        b=bCQP5FE95DXMiNOOKN6Q3fVzplnju2pItBwXQiahl6Tuq61CODaFBt1XS0luQyvg/D
+         UAPmZKjpUNqt6enFF9QXdKzVI5uBC/q5bnvSKagONSaSP+1bIK6+FlQtMH+wzuqGedXK
+         p6IKdF0wLkxaHns9VeohVKVha0dQ/uxUwP14YRZ6fSAQjbV96aXqW1cYc2bzB7J9qkS0
+         NliofdcoOTjI0xht5IxVArLBDwj1wN2ikHQDTx10AaOJ9d8xm7jtAKACHUeCNL5UbjZm
+         viIgr+mMetCoxFZCCMl4VjANturPhmuLqvmEzmQ4WKGbtd3N/UDS7VkyOFmm6FwUlhqW
+         fpyw==
+X-Gm-Message-State: APjAAAUHbxAsO+Ko2QBHtc1Huit4pFoTpvDHB2Ed85Lo5ecunCoJ5gS5
+        kMhu5AhRqzcgOle6s5aI9h4=
+X-Google-Smtp-Source: APXvYqydVmi8Htm7y9SQXaN5mFjwL7oDna3ZTCjzJMqqWRRTTBYIPYefxSK8iUvA8rJh0bYbcIpRcg==
+X-Received: by 2002:a17:90a:fa18:: with SMTP id cm24mr4837085pjb.120.1565123609378;
+        Tue, 06 Aug 2019 13:33:29 -0700 (PDT)
+Received: from localhost.localdomain ([27.7.7.163])
+        by smtp.gmail.com with ESMTPSA id x9sm62823174pgp.75.2019.08.06.13.33.25
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 06 Aug 2019 13:33:28 -0700 (PDT)
+From:   Giridhar Prasath R <cristianoprasath@gmail.com>
+To:     isdn@linux-pingi.de
+Cc:     gregkh@linuxfoundation.org, arnd@arndb.de,
+        cristianoprasath@gmail.com, netdev@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: isdn: hysdn_procconf_init() remove parantheses from return value
+Date:   Wed,  7 Aug 2019 07:33:31 +0530
+Message-Id: <20190807020331.19729-1-cristianoprasath@gmail.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="1LKvkjL3sHcu1TtY"
-Content-Disposition: inline
-In-Reply-To: <20190731105642.29664-1-anders.roxell@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+ERROR: return is not a function, parentheses are not required
+FILE: git/kernels/staging/drivers/staging/isdn/hysdn/hysdn_procconf.c:385
++       return (0);
 
---1LKvkjL3sHcu1TtY
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Giridhar Prasath R <cristianoprasath@gmail.com>
+---
+ drivers/staging/isdn/hysdn/hysdn_procconf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Hi Anders,
+diff --git a/drivers/staging/isdn/hysdn/hysdn_procconf.c b/drivers/staging/isdn/hysdn/hysdn_procconf.c
+index 73079213ec94..48afd9f5316e 100644
+--- a/drivers/staging/isdn/hysdn/hysdn_procconf.c
++++ b/drivers/staging/isdn/hysdn/hysdn_procconf.c
+@@ -382,7 +382,7 @@ hysdn_procconf_init(void)
+ 	}
+ 
+ 	printk(KERN_NOTICE "HYSDN: procfs initialised\n");
+-	return (0);
++	return 0;
+ }				/* hysdn_procconf_init */
+ 
+ /*************************************************************************************/
+-- 
+2.22.0
 
-On Wed, Jul 31, 2019 at 12:56:42PM +0200, Anders Roxell wrote:
-> GCC warns taht function 'i2c_acpi_find_match_adapter()' is not used.
->=20
-> ../drivers/i2c/i2c-core-acpi.c:347:12: warning:
->   =E2=80=98i2c_acpi_find_match_adapter=E2=80=99 defined but not used [-Wu=
-nused-function]
->  static int i2c_acpi_find_match_adapter(struct device *dev, const void *d=
-ata)
->             ^~~~~~~~~~~~~~~~~~~~~~~~~~~
->=20
-> Rework to remove the function 'i2c_acpi_find_match_adapter()'.
->=20
-> Fixes: 00500147cbd3 ("drivers: Introduce device lookup variants by ACPI_C=
-OMPANION device")
-> Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
-
-Can you resend with gkh and "Suzuki K Poulose <suzuki.poulose@arm.com>"
-added to CC? Greg maintains a branch with device_lookup changes and
-Suzuki is the author of it.
-
-Kind regards,
-
-   Wolfram
-
-> ---
->  drivers/i2c/i2c-core-acpi.c | 11 -----------
->  1 file changed, 11 deletions(-)
->=20
-> diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
-> index bc80aafb521f..bb6b39fe343a 100644
-> --- a/drivers/i2c/i2c-core-acpi.c
-> +++ b/drivers/i2c/i2c-core-acpi.c
-> @@ -344,17 +344,6 @@ u32 i2c_acpi_find_bus_speed(struct device *dev)
->  }
->  EXPORT_SYMBOL_GPL(i2c_acpi_find_bus_speed);
-> =20
-> -static int i2c_acpi_find_match_adapter(struct device *dev, const void *d=
-ata)
-> -{
-> -	struct i2c_adapter *adapter =3D i2c_verify_adapter(dev);
-> -
-> -	if (!adapter)
-> -		return 0;
-> -
-> -	return ACPI_HANDLE(dev) =3D=3D (acpi_handle)data;
-> -}
-> -
-> -
->  struct i2c_adapter *i2c_acpi_find_adapter_by_handle(acpi_handle handle)
->  {
->  	struct device *dev =3D bus_find_device_by_acpi_dev(&i2c_bus_type, handl=
-e);
-> --=20
-> 2.20.1
->=20
-
---1LKvkjL3sHcu1TtY
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1J5AoACgkQFA3kzBSg
-KbZDTQ/6AmedFvfIwu9NlIhayf2vJHURysQINDdu+Qak547nivAllwlq4TQwhgW9
-yjifC0GCgdJZeSxkipNDgwQK+l0EgR4NuMypA1lqcH/r/0RoemNZRzM5kaR1leYl
-+jx2AJdLsH8Jg4TJtxL5xnpNQmowDs6z2CtlkO7k6APCw8PE9ki2xhPVaR9VcSVk
-SZJhlnUQlVJUN7i/Y6ittUAMDxS/XM/+CmO74e+aFZa2snpQyoEJ2WhPzHUnbfHv
-gJjuZz6TyBSWCfNjDPcwUQkT0nTbq4XiGp5c3murLXkvFXPBI43MwNZRkyNyqyZy
-E0gk18rL5242nprX4ffsvfz5biO+Ab+WgZk1r670XlETLs25S1x/374fSSDRYHXk
-P1bKROABD829y5o0MlCt4T3vB7P/HFdmsaqJGePH0RUh0DL+yPHF3MXdGTxzwaC0
-ADtGRJ1jXfEeq+vGtDkCExfUJOM6xVIFW6g9zwvHN9gHsoTM2gbnmfxHDNqfNBEN
-foMxnzIZymeDgk0ZcYT0HNpD2OIBvfrtsQG1x9mbxew4CQU/6GgyVaFE4gHPzK9y
-5vLZw31J0fOfWhLgAr9upR1qWQ9zDZQytQ4AFGTRv64EJoAGTMPzlFBGDzszV5L6
-44Wn+sQjErHw2eIpaaeqJiRtv3f2NUxmwWzQDzxUIM/+7W8kgBM=
-=I0Kb
------END PGP SIGNATURE-----
-
---1LKvkjL3sHcu1TtY--
