@@ -2,122 +2,140 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9470C32754
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 11:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A99C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 11:46:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7B3B21BF6
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 11:46:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8124E21E6A
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 11:46:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565178381;
+	bh=71XmBvCa/h7frFTi6KSxetoEQBU7S+V7meKhHdKgYvs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hzk188SNjiy2Q4AeZqUfQX3BuSUZobptZAuB7SghsSunrcZXYvQpKphX7/0sOTLKN
+	 2cI4bi7s9j0IR8EXfTp2fW44U4hHLTorH5oM+hEn0uWeGxWoaVD2z86WsY1+6uYayE
+	 bNM1wOGCcXa0DJb3UNTf402WUpQHXTBfo34NIs5s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729818AbfHGLqG (ORCPT
+        id S1729825AbfHGLqU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 07:46:06 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55502 "EHLO mx1.redhat.com"
+        Wed, 7 Aug 2019 07:46:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728592AbfHGLqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 07:46:06 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1728235AbfHGLqU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 07:46:20 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B877881103;
-        Wed,  7 Aug 2019 11:46:05 +0000 (UTC)
-Received: from krava (unknown [10.43.17.81])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 7681B5DC1E;
-        Wed,  7 Aug 2019 11:46:03 +0000 (UTC)
-Date:   Wed, 7 Aug 2019 13:46:02 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Igor Lubashev <ilubashe@akamai.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        James Morris <jmorris@namei.org>
-Subject: Re: [PATCH v2 2/4] perf: Use CAP_SYS_ADMIN with perf_event_paranoid
- checks
-Message-ID: <20190807114602.GB9605@krava>
-References: <cover.1565146171.git.ilubashe@akamai.com>
- <70ce92d9c252bbafa883a6b5b3c96cf10d1a5b31.1565146171.git.ilubashe@akamai.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A27B21BF6;
+        Wed,  7 Aug 2019 11:46:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565178378;
+        bh=71XmBvCa/h7frFTi6KSxetoEQBU7S+V7meKhHdKgYvs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ed+R3e9wNoY92TmQ657ha+wnFgD1UIo2ZLDBrvrUZOP6WjiF7MKkOEFOa+j3B1xWq
+         L4KcAXcpqZmPDFTab7KcC55liscX7STUJYodVKILYbbyzrwM6Ff+lzpdzbgrqsi+/Z
+         5l7CCbWoctc3XKBh2Xu3jZtN0Onj8WGrM/RjYElI=
+Date:   Wed, 7 Aug 2019 12:46:14 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Peter Collingbourne <pcc@google.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au
+Subject: Re: linux-next: build failure after merge of the arm64 tree
+Message-ID: <20190807114614.ubzlkulk7aidws3p@willie-the-truck>
+References: <20190807095022.0314e2fc@canb.auug.org.au>
+ <CAMn1gO6P_VfDRjGZb67ZS4Kh0wjTEQi0cbOkmibTokHQOgP7qw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <70ce92d9c252bbafa883a6b5b3c96cf10d1a5b31.1565146171.git.ilubashe@akamai.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Wed, 07 Aug 2019 11:46:05 +0000 (UTC)
+In-Reply-To: <CAMn1gO6P_VfDRjGZb67ZS4Kh0wjTEQi0cbOkmibTokHQOgP7qw@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 11:35:55PM -0400, Igor Lubashev wrote:
-> The kernel is using CAP_SYS_ADMIN instead of euid==0 to override
-> perf_event_paranoid check. Make perf do the same.
+Hi Peter,
+
+On Tue, Aug 06, 2019 at 07:34:36PM -0700, Peter Collingbourne wrote:
+> On Tue, Aug 6, 2019 at 4:50 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> > After merging the arm64 tree, today's linux-next build (powerpc
+> > ppc64_defconfig) was just spinning in make - it executing some scripts,
+> > but it was hard to catch just what.
+> >
+> > Apparently caused by commit
+> >
+> >   5cf896fb6be3 ("arm64: Add support for relocating the kernel with RELR relocations")
+> >
+> > I have not idea why, but reverting the above commit allows to build
+> > to finish.
 > 
-> Signed-off-by: Igor Lubashev <ilubashe@akamai.com>
-> ---
->  tools/perf/arch/arm/util/cs-etm.c    | 3 ++-
->  tools/perf/arch/arm64/util/arm-spe.c | 4 ++--
->  tools/perf/arch/x86/util/intel-bts.c | 3 ++-
->  tools/perf/arch/x86/util/intel-pt.c  | 2 +-
->  tools/perf/util/evsel.c              | 2 +-
->  5 files changed, 8 insertions(+), 6 deletions(-)
+> Okay, I can reproduce with:
+
+Likewise.
+
+> That leads me to ask what is special about $(NM) + powerpc? It turns
+> out to be this fragment of arch/powerpc/Makefile:
 > 
-> diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
-> index 5cb07e8cb296..b87a1ca2968f 100644
-> --- a/tools/perf/arch/arm/util/cs-etm.c
-> +++ b/tools/perf/arch/arm/util/cs-etm.c
-> @@ -18,6 +18,7 @@
->  #include "../../perf.h"
->  #include "../../util/auxtrace.h"
->  #include "../../util/cpumap.h"
-> +#include "../../util/event.h"
->  #include "../../util/evlist.h"
->  #include "../../util/evsel.h"
->  #include "../../util/pmu.h"
-> @@ -254,7 +255,7 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
->  	struct perf_pmu *cs_etm_pmu = ptr->cs_etm_pmu;
->  	struct evsel *evsel, *cs_etm_evsel = NULL;
->  	struct perf_cpu_map *cpus = evlist->core.cpus;
-> -	bool privileged = (geteuid() == 0 || perf_event_paranoid() < 0);
-> +	bool privileged = perf_event_paranoid_check(-1);
->  	int err = 0;
->  
->  	ptr->evlist = evlist;
-> diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
-> index 00915b8fd05b..200bc973371b 100644
-> --- a/tools/perf/arch/arm64/util/arm-spe.c
-> +++ b/tools/perf/arch/arm64/util/arm-spe.c
-> @@ -12,6 +12,7 @@
->  #include <time.h>
->  
->  #include "../../util/cpumap.h"
-> +#include "../../util/event.h"
->  #include "../../util/evsel.h"
->  #include "../../util/evlist.h"
->  #include "../../util/session.h"
-> @@ -65,8 +66,7 @@ static int arm_spe_recording_options(struct auxtrace_record *itr,
->  	struct arm_spe_recording *sper =
->  			container_of(itr, struct arm_spe_recording, itr);
->  	struct perf_pmu *arm_spe_pmu = sper->arm_spe_pmu;
-> -	struct evsel *evsel, *arm_spe_evsel = NULL;
+> ifdef CONFIG_PPC64
+> new_nm := $(shell if $(NM) --help 2>&1 | grep -- '--synthetic' >
+> /dev/null; then echo y; else echo n; fi)
+> 
+> ifeq ($(new_nm),y)
+> NM              := $(NM) --synthetic
+> endif
+> endif
+> 
+> We're setting NM to something else based on a config option, which I
+> presume sets up some sort of circular dependency that confuses
+> Kconfig. Removing this fragment of the makefile (or appending
+> --synthetic unconditionally) also makes the problem go away.
 
-wouldn't this removal break the compilation on arm?
+Yes, I think you're right. The lack of something like KBUILD_NMFLAGS means
+that architectures are forced to override NM entirely if they want to pass
+any specific options. Making that conditional on a Kconfig option appears
+to send the entire thing recursive.
 
-jirka
+> So I guess we have a couple of possible quick fixes (assuming that the
+> Kconfig issue can't be solved somehow): either stop passing --synthetic on
+> powerpc and lose a couple of symbols in 64-bit kernels, or start passing
+> it unconditionally on powerpc (it doesn't seem to make a difference to the
+> nm output on a ppc64_defconfig kernel with CONFIG_PPC64=n). I'm cc'ing the
+> powerpc maintainers for their opinion on what to do. While this is being
+> resolved we should probably back out my patch from -next.
 
-> -	bool privileged = geteuid() == 0 || perf_event_paranoid() < 0;
-> +	bool privileged = perf_event_paranoid_check(-1);
->  	struct evsel *tracking_evsel;
->  	int err;
+Although Alpha, Itanic and PowerPC all override NM, only PowerPC does it
+conditionally so I agree with you that passing '--synthetic' unconditionally
+would resolve the problem and is certainly my preferred approach if mpe is
+ok with it.
 
-SNIP
+In the meantime, it seems a shame to revert your patch, so I'll bodge it
+as below and we can revert the bodge if PowerPC manages to remove the
+conditional NM override. Sound ok to you?
+
+Cheers,
+
+Will
+
+--->8
+
+diff --git a/init/Kconfig b/init/Kconfig
+index d96127ebc44e..a38027a06b79 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -31,7 +31,7 @@ config CC_HAS_ASM_GOTO
+ 	def_bool $(success,$(srctree)/scripts/gcc-goto.sh $(CC))
+ 
+ config TOOLS_SUPPORT_RELR
+-	def_bool $(success,env "CC=$(CC)" "LD=$(LD)" "NM=$(NM)" "OBJCOPY=$(OBJCOPY)" $(srctree)/scripts/tools-support-relr.sh)
++	def_bool $(success,env "CC=$(CC)" "LD=$(LD)" "NM=$(CROSS_COMPILE)nm" "OBJCOPY=$(OBJCOPY)" $(srctree)/scripts/tools-support-relr.sh)
+ 
+ config CC_HAS_WARN_MAYBE_UNINITIALIZED
+ 	def_bool $(cc-option,-Wmaybe-uninitialized)
