@@ -2,93 +2,100 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9850AC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 07:59:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90841C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62B8B22BED
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 07:59:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565164770;
-	bh=JSAC7j45OZ1kfTJjr0BQxIkmYCewz4OwdGdDy8NKI6w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YcQh/bJoDIYKrIBF344tSzWZtHcV7NePROr3U3tFtDCeHWywa6nLw6YukVcR72v2/
-	 bi5WF7/RcqNt/bZ0dHYW+lpLBSZVmJcd3vfnjP+vCuLk4yrYTUOZX6nJzKNCUyyqBt
-	 lbRxyLwGk+77GGx2a7r74VCjpxwY25Gm/YK2eLVY=
+	by mail.kernel.org (Postfix) with ESMTP id 5EAEE22C7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:00:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QxIgrBO2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728200AbfHGH73 (ORCPT
+        id S2387519AbfHGIAr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 03:59:29 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37626 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727413AbfHGH73 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 03:59:29 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E3C77ACC6;
-        Wed,  7 Aug 2019 07:59:27 +0000 (UTC)
-Date:   Wed, 7 Aug 2019 09:59:27 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Suren Baghdasaryan <surenb@google.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Artem S. Tashkinov" <aros@gmx.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>
-Subject: Re: Let's talk about the elephant in the room - the Linux kernel's
- inability to gracefully handle low memory pressure
-Message-ID: <20190807075927.GO11812@dhcp22.suse.cz>
-References: <d9802b6a-949b-b327-c4a6-3dbca485ec20@gmx.com>
- <ce102f29-3adc-d0fd-41ee-e32c1bcd7e8d@suse.cz>
- <20190805193148.GB4128@cmpxchg.org>
- <CAJuCfpHhR+9ybt9ENzxMbdVUd_8rJN+zFbDm+5CeE2Desu82Gg@mail.gmail.com>
- <398f31f3-0353-da0c-fc54-643687bb4774@suse.cz>
- <20190806142728.GA12107@cmpxchg.org>
- <20190806143608.GE11812@dhcp22.suse.cz>
- <CAJuCfpFmOzj-gU1NwoQFmS_pbDKKd2XN=CS1vUV4gKhYCJOUtw@mail.gmail.com>
- <20190806220150.GA22516@cmpxchg.org>
+        Wed, 7 Aug 2019 04:00:47 -0400
+Received: from ozlabs.org ([203.11.71.1]:38141 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727331AbfHGIAr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 04:00:47 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 463P7w243wz9sBF;
+        Wed,  7 Aug 2019 18:00:44 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1565164844;
+        bh=nWUso8Mumq9hEJIjbu03nhZTrk9SBdkWYlP1sbRhN5M=;
+        h=Date:From:To:Cc:Subject:From;
+        b=QxIgrBO2ExGCMZCIZKvY8d1NW3Q3GDzjaF7x3aOpfEgSAW4JpabnrWLQz9ls8iBzS
+         inhSbvYI6FK2QdAUn/y6DSMxh0UaODdKZ5yrwl3lUSaE+4DYC8EzV4oFjkuAnW/C/b
+         dh+7U03tnWvNBHs/HD//qW4nnuc6YW5s+fQrQZh+972NsFUsSm3mPpOp3da9PMDRXd
+         Gplsq7FDVlyThyxp84rq2uBimCH+/s9G1f56H81KqDPoj0DvAhlNLioyVvqCjxqWkg
+         osErTt4dcpb/j6+LBdSKKulxpIhlFTu6cZy6ENxMPI3DHcFuz0YJGcQGfrD0teuxqc
+         j1Qog2S1jIZjA==
+Date:   Wed, 7 Aug 2019 18:00:41 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Subject: linux-next: build warning after merge of the akpm-current tree
+Message-ID: <20190807180041.07f06dc0@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190806220150.GA22516@cmpxchg.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; boundary="Sig_/Cat9BKs_Cts05iNlLKlEe7i";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 06-08-19 18:01:50, Johannes Weiner wrote:
-> On Tue, Aug 06, 2019 at 09:27:05AM -0700, Suren Baghdasaryan wrote:
-[...]
-> > > > I'm not sure 10s is the perfect value here, but I do think the kernel
-> > > > should try to get out of such a state, where interacting with the
-> > > > system is impossible, within a reasonable amount of time.
-> > > >
-> > > > It could be a little too short for non-interactive number-crunching
-> > > > systems...
-> > >
-> > > Would it be possible to have a module with tunning knobs as parameters
-> > > and hook into the PSI infrastructure? People can play with the setting
-> > > to their need, we wouldn't really have think about the user visible API
-> > > for the tuning and this could be easily adopted as an opt-in mechanism
-> > > without a risk of regressions.
-> 
-> It's relatively easy to trigger a livelock that disables the entire
-> system for good, as a regular user. It's a little weird to make the
-> bug fix for that an opt-in with an extensive configuration interface.
+--Sig_/Cat9BKs_Cts05iNlLKlEe7i
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Yes, I definitely do agree that this is a bug fix more than a
-feature. The thing is that we do not know what the proper default is for
-a wide variety of workloads so some way of configurability is needed
-(level and period).  If making this a module would require a lot of
-additional code then we need a kernel command line parameter at least.
+Hi all,
 
-A module would have a nice advantage that you can change your
-configuration without rebooting. The same can be achieved by a sysfs on
-the other hand.
--- 
-Michal Hocko
-SUSE Labs
+After merging the akpm-current tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
+
+In file included from include/linux/bits.h:22,
+                 from arch/x86/include/asm/msr-index.h:5,
+                 from arch/x86/boot/cpucheck.c:28:
+include/linux/build_bug.h:49: warning: "BUILD_BUG_ON" redefined
+ #define BUILD_BUG_ON(condition) \
+=20
+In file included from arch/x86/boot/cpucheck.c:22:
+arch/x86/boot/boot.h:31: note: this is the location of the previous definit=
+ion
+ #define BUILD_BUG_ON(condition) ((void)sizeof(char[1 - 2*!!(condition)]))
+
+Caused by commit
+
+  d72f2a993607 ("linux/bits.h: add compile time sanity check of GENMASK inp=
+uts")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/Cat9BKs_Cts05iNlLKlEe7i
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1KhSkACgkQAVBC80lX
+0Gz7QQf8DhiCZO/C8/QZInhLi1DwLpET6DdkpBHvLXhlusorqCcnsoeEBs+lDYWV
+aZN24E4DMzezlUIbKBEDozQGPeWYMyjVjdtST4l4if1Z4Ak1rcxfKd20MulPX04Z
+KeZZKZuqCHavtC3s5Ozuw81gXvwPc/z6z+bVSIZD4WxH0ZvZ42Jw08ZDOkZAY6Iw
+I65aEUZSH++2+8d3VEZw8drMXIrXvtsG+cZdRaCXmbuwoXhsoLozjkzpMEvMfE8K
+vz1mMcjFuIouSXBLkl8JW1ODWXr/o0UW/FYVKtMDFXkqM1wlhytN619LxGHcYYj/
+iMV5PewDOvbv4frMdoNG8msAg9m9gg==
+=55Mv
+-----END PGP SIGNATURE-----
+
+--Sig_/Cat9BKs_Cts05iNlLKlEe7i--
