@@ -2,78 +2,137 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94EB7C32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 20:40:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8134C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 20:44:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D4CA217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 20:40:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565210438;
-	bh=dEVWiMcN/i+5g27FiRG8nl9VL8HoSbDNVvUAKixHmrg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=zRY7fACjU414NqV2KbJB0GEyBK3ct6nr0z2JrdcyK9jDf1ulSJyDt2Uu8o5QykI1Y
-	 PAadPcHDXtth+AeTV26x2sM1bP9Npfp85yFiO9w0pCk5NClWj2zgFnQwInpFVErJgv
-	 M+8Do5e+QIdpAevE9usSi0HLyvswh1Z7l4jTnmkQ=
+	by mail.kernel.org (Postfix) with ESMTP id 8B4D720880
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 20:44:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="cvR0USsq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389297AbfHGUkh (ORCPT
+        id S2389168AbfHGUox (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 16:40:37 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:36047 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388428AbfHGUkg (ORCPT
+        Wed, 7 Aug 2019 16:44:53 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:32865 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729934AbfHGUox (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 16:40:36 -0400
-Received: by mail-ot1-f66.google.com with SMTP id r6so109675680oti.3;
-        Wed, 07 Aug 2019 13:40:35 -0700 (PDT)
+        Wed, 7 Aug 2019 16:44:53 -0400
+Received: by mail-pl1-f196.google.com with SMTP id c14so42433443plo.0
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 13:44:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=itaaHUuDhcUmWvWTJL4zW8mOnytMPij6pAOeeM3m1Hg=;
+        b=cvR0USsq4TrVGI/7AHhxTvBLliSSP311yfq2eMIv0HZPy5zvZSgUkA9hOQuqwUwOmK
+         tW59Vs41S3Z4cN2lbD7CBiabk1kuZyNcNbwelUz8x6sT4Q/qw4los5KJ1TsmL/bCkQ6a
+         NbDSeg5PosKj8KNSTPFRKtihsP13TwsNRRQSw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Hsr+7IuYZ22l7OIvx3fQa1mKuz2z9lcudCb1f5vrKBw=;
-        b=lEhV3X4YTQyW9sc35BXtfzvcHrJqfkUliJ6bzuDTWcGFqYi21PFP5dHOqusDQW0vxL
-         EJ/p2Gs3LKGEdSskQdd0La2eCtnAEvM6sgv9lyylrCIYr3xREzaFMyzjho0xzBBK5uxH
-         F5J1oIfXhau/C0scn76ub9QbaZC/i7H4rQdPZq9z8fA5tV3G5Z/hS6uJQJ6jYkM+lS45
-         BA+UR6JnjLjrtjUwmxGz8HxZeNm/24qzjZZiDqIpc9NfSwH25p0G8nwJY36EqR291AmS
-         C+PNEbObw2vKTWcEiHRQ+G492FRFGHDp89DiA0rmFKYlf+/8SPuYnLKIokTxxZ9yj7fg
-         VWGg==
-X-Gm-Message-State: APjAAAUvSVkwbV2m2iy3NlgogmgwXqcPcQ/BaWXIoYXYxgf4X0XwryQP
-        O8+L4Lr5ZFZTy3q83p/u927sTZn0MNXNWejgxms=
-X-Google-Smtp-Source: APXvYqwbzYP+gDUmu7cbwPvt0vp7/DQxqVeeAZBEikWiVadypsE38JfE9Mz9EtZXqcgJs9TJ1uyeDx8pGAkHEMmP/og=
-X-Received: by 2002:a9d:6b96:: with SMTP id b22mr9983761otq.262.1565210435206;
- Wed, 07 Aug 2019 13:40:35 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190807153340.11516-1-douglas.raillard@arm.com>
-In-Reply-To: <20190807153340.11516-1-douglas.raillard@arm.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 7 Aug 2019 22:40:23 +0200
-Message-ID: <CAJZ5v0gqqoOzjUMhUgqKzaj8tCegddJphr+MHj5HD2_VAc1QYQ@mail.gmail.com>
-Subject: Re: [PATCH] sched/cpufreq: Align trace event behavior of fast switching
-To:     Douglas RAILLARD <douglas.raillard@arm.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=itaaHUuDhcUmWvWTJL4zW8mOnytMPij6pAOeeM3m1Hg=;
+        b=rMIBOBfxDzTew06fEYchXHDArvYG1jsTtphhY+k+F4S5gw6PdmEgAbpE5oc64zsxqI
+         i4ugT/7tqko1BfpAd8vM6miwqf7lwKbMuiF+iPkNUqAYOgaVUwOi41/+AX+WnUa5AflK
+         GAkSesd1DikyQgKK3qbP1xSA/H82viBgni9JHN2GNBrQBnpsyhIIowdZoItdijQ4ldvv
+         RhKz7i4uxbHzg4B5BQXVkxnWxegP4ad7LUasWBVxe8pbf/UtJ0ROZDZc0zE3JE7ZkGKd
+         +7ETcTWaOnafAxdGnoaevTXgtePb60qarXqfvpZshGR1wn+9+wDAXlXKoVaskdK5TyKo
+         m33w==
+X-Gm-Message-State: APjAAAX5Dfeptvw/bcMaOJfi2m0Tm2UG4zQtDuisPW6Rt3P5MtEW4JLl
+        5jvrOO6M2ighFGb9vJXA9zhTDg==
+X-Google-Smtp-Source: APXvYqzxGRsJN8tg0/I87Pfq2FlyH6V5p4w6lM9eq6TQXsCKYWlpRWdYAkMSEIlSnT6YRM40KG3l1w==
+X-Received: by 2002:a17:90a:bb8a:: with SMTP id v10mr319911pjr.78.1565210692050;
+        Wed, 07 Aug 2019 13:44:52 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id j1sm126143263pgl.12.2019.08.07.13.44.50
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 07 Aug 2019 13:44:51 -0700 (PDT)
+Date:   Wed, 7 Aug 2019 16:44:49 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Brendan Gregg <bgregg@netflix.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christian Hansen <chansen3@cisco.com>, dancol@google.com,
+        fmayer@google.com, "H. Peter Anvin" <hpa@zytor.com>,
         Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
+        linux-api@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Rapoport <rppt@linux.ibm.com>, minchan@kernel.org,
+        namhyung@google.com, paulmck@linux.ibm.com,
+        Robin Murphy <robin.murphy@arm.com>,
+        Roman Gushchin <guro@fb.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>, surenb@google.com,
+        Thomas Gleixner <tglx@linutronix.de>, tkjos@google.com,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Will Deacon <will@kernel.org>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>
+Subject: Re: [PATCH v4 1/5] mm/page_idle: Add per-pid idle page tracking
+ using virtual indexing
+Message-ID: <20190807204449.GA90900@google.com>
+References: <20190805170451.26009-1-joel@joelfernandes.org>
+ <20190806151921.edec128271caccb5214fc1bd@linux-foundation.org>
+ <20190807100013.GC169551@google.com>
+ <20190807130122.f148548c05ec07e7b716457e@linux-foundation.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190807130122.f148548c05ec07e7b716457e@linux-foundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 7, 2019 at 5:34 PM Douglas RAILLARD
-<douglas.raillard@arm.com> wrote:
->
-> Fast switching path only emits an event for the CPU of interest, whereas the
-> regular path emits an event for all the CPUs that had their frequency changed,
-> i.e. all the CPUs sharing the same policy.
->
-> With the current behavior, looking at cpu_frequency event for a given CPU that
-> is using the fast switching path will not give the correct frequency signal.
+On Wed, Aug 07, 2019 at 01:01:22PM -0700, Andrew Morton wrote:
+> On Wed, 7 Aug 2019 06:00:13 -0400 Joel Fernandes <joel@joelfernandes.org> wrote:
+> 
+> > > > 8 files changed, 376 insertions(+), 45 deletions(-)
+> > > 
+> > > Quite a lot of new code unconditionally added to major architectures. 
+> > > Are we confident that everyone will want this feature?
+> > 
+> > I did not follow, could you clarify more? All of this diff stat is not to
+> > architecture code:
+> 
+> 
+> My point is that the patchset adds a lot of new code with no way in
+> which users can opt out.  Almost everyone gets a fatter kernel - how
+> many of those users will actually benefit from it?
+> 
+> If "not many" then shouldn't we be making it Kconfigurable?
 
-Do you actually have any systems where that is a problem?  If so, then
-what are they?
+Almost all of this code is already configurable with
+CONFIG_IDLE_PAGE_TRACKING. If you disable it, then all of this code gets
+disabled.
+
+Or are you referring to something else that needs to be made configurable?
+
+> Are there userspace tools which present this info to users or which
+> provide monitoring of some form?  Do major distros ship those tools? 
+> Do people use them?  etcetera.
+> 
+
+Android's heapprofd is what I was working on which is already using it (patch
+is not yet upstreamed). There is working set tracking which Sandeep (also
+from Android) said he wants to use. Minchan plans to use this in combination
+with ZRAM-based idle tracking. Mike Rappoport also showed some interest, but
+I am not sure where/how he is using it. These are just some of the usecases I
+am aware off. I am pretty sure more will come as well.
+
+thanks,
+
+ - Joel
+
