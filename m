@@ -2,136 +2,126 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E271DC32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 16:02:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88EFEC32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 16:06:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFDD422296
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 16:02:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F8B421871
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 16:06:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rHZRSP4M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730088AbfHGQCI (ORCPT
+        id S2388894AbfHGQGZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 12:02:08 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59892 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727213AbfHGQCH (ORCPT
+        Wed, 7 Aug 2019 12:06:25 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:45306 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387626AbfHGQGY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 12:02:07 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x77FkX28096892
-        for <linux-kernel@vger.kernel.org>; Wed, 7 Aug 2019 12:02:06 -0400
-Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2u81k28qu2-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 12:02:05 -0400
-Received: from localhost
-        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Wed, 7 Aug 2019 17:02:05 +0100
-Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
-        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 7 Aug 2019 17:01:59 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x77G1wH135651914
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 7 Aug 2019 16:01:58 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 98533B2068;
-        Wed,  7 Aug 2019 16:01:58 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7ABFDB2066;
-        Wed,  7 Aug 2019 16:01:58 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed,  7 Aug 2019 16:01:58 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id C2E4F16C9A3D; Wed,  7 Aug 2019 09:01:58 -0700 (PDT)
-Date:   Wed, 7 Aug 2019 09:01:58 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Andrea Parri <parri.andrea@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Akira Yokosawa <akiyks@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>
-Subject: Re: [PATCH] MAINTAINERS: Update e-mail address for Andrea Parri
-Reply-To: paulmck@linux.ibm.com
-References: <20190805121517.4734-1-parri.andrea@gmail.com>
+        Wed, 7 Aug 2019 12:06:24 -0400
+Received: by mail-ot1-f66.google.com with SMTP id x21so13099080otq.12;
+        Wed, 07 Aug 2019 09:06:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AOfNJoVis4tu5FW/x4K5fd3Kb4BI9lC9c+PcHuGbSJI=;
+        b=rHZRSP4Mj7U/HkytF9Zva56bn+5Sg4odmEri/N7n+ITRLCyiUj2eMmCJlHy4XlLYsc
+         7gJIN/GF3DAsUHa4BH7V0W2QaOPem6U3rgj0srz/w+BOfWwZ+8s7urdEe+Z3nXeAP9o6
+         6+oCplvH6V5cloglseO3mDXC06ioD25CV2idliDu8whCh8Py2B8HSijwVJ4l/U3wzT/e
+         2PI/Sf1UElctkc8X8QP9CZGa6RbSuvH81uctJMqTFtQhvbRtItLQ5e4wLnXl8N3jSmuI
+         E0FWZ/m5t803vlXqBH1l4W/l02psddI0zSf8Vq/2EzBEDcA8/sbkzk7IYRug/6obhO5Q
+         MI3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AOfNJoVis4tu5FW/x4K5fd3Kb4BI9lC9c+PcHuGbSJI=;
+        b=f8r64OV/fk/WlgkfqMqSEgiUXYv3muVCAOZJrjj8H1j1lKbOG6nSlVnOoGe6fp1LD4
+         TCacV1ixcT6qwXfynZByFjErAGeO1pxPXk28YKHUT9UOXHsRZu/08G1U2wuplTbsLYlH
+         SMtLlM6jEzs3I6mh1nvieO2i1ItKNOyZihAb9nPWMHYH0AjUemAMdrB0bNcCOFjl30sa
+         6GMhSgkYnOOeYmIjBOUtnpMtjjwFfWRYFSTTQza7+p4hQYpRPgepweyRpWh/bY4W37aT
+         QPmWEfu9T9sm3/dciLpQHVFQFzrDQ7Hz3oRDmKR9i/XmOydaqHHEb4V0jbnReSrMdNBr
+         zCAQ==
+X-Gm-Message-State: APjAAAU8Y8ae2gFUKJ1k1X/zo7JCWe9Ss0VSPmHbhnbisNhvf0kgEq4i
+        NJFDuhyVeRfgNp4O16/7wfEg6ssQIP1H9/q1SLc=
+X-Google-Smtp-Source: APXvYqwVvjHIkuTBZZW6ETURsPt3jc50m2JDUoKCPRZ5XBlEz5RskqQ9NfuypJ8JlV4IerpOHeGb3SA1EexymMe2UPE=
+X-Received: by 2002:a6b:dd18:: with SMTP id f24mr9312803ioc.97.1565193983972;
+ Wed, 07 Aug 2019 09:06:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190805121517.4734-1-parri.andrea@gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19080716-0052-0000-0000-000003E90D08
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011566; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000287; SDB=6.01243437; UDB=6.00655942; IPR=6.01024906;
- MB=3.00028080; MTD=3.00000008; XFM=3.00000015; UTC=2019-08-07 16:02:03
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19080716-0053-0000-0000-000062026859
-Message-Id: <20190807160158.GA15313@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-07_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908070162
+References: <20190807024917.27682-1-firo.yang@suse.com> <85aaefdf-d454-1823-5840-d9e2f71ffb19@oracle.com>
+ <20190807083831.GA6811@linux-6qg8> <20190807160853.00001d71@gmail.com>
+In-Reply-To: <20190807160853.00001d71@gmail.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Wed, 7 Aug 2019 09:06:12 -0700
+Message-ID: <CAKgT0UfEh8cvTht3yceyXqwReJOQkcpJV8j0vHSJwookTWhn_Q@mail.gmail.com>
+Subject: Re: [Intel-wired-lan] [PATCH v2 1/1] ixgbe: sync the first fragment unconditionally
+To:     Maciej Fijalkowski <maciejromanfijalkowski@gmail.com>
+Cc:     Firo Yang <firo.yang@suse.com>, Netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
+        Jacob Wen <jian.w.wen@oracle.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 05, 2019 at 02:15:17PM +0200, Andrea Parri wrote:
-> My @amarulasolutions.com address stopped working this July, so update
-> to my @gmail.com address where you'll still be able to reach me.
-> 
-> Signed-off-by: Andrea Parri <parri.andrea@gmail.com>
+On Wed, Aug 7, 2019 at 7:09 AM Maciej Fijalkowski
+<maciejromanfijalkowski@gmail.com> wrote:
+>
+> On Wed, 7 Aug 2019 08:38:43 +0000
+> Firo Yang <firo.yang@suse.com> wrote:
+>
+> > The 08/07/2019 15:56, Jacob Wen wrote:
+> > > I think the description is not correct. Consider using something like below.
+> > Thank you for comments.
+> >
+> > >
+> > > In Xen environment, due to memory fragmentation ixgbe may allocate a 'DMA'
+> > > buffer with pages that are not physically contiguous.
+> > Actually, I didn't look into the reason why ixgbe got a DMA buffer which
+> > was mapped to Xen-swiotlb area.
+>
+> I think that neither of these descriptions are telling us what was truly
+> broken. They lack what Alexander wrote on v1 thread of this patch.
+>
+> ixgbe_dma_sync_frag is called only on case when the current descriptor has EOP
+> bit set, skb was already allocated and you'll be adding a current buffer as a
+> frag. DMA unmapping for the first frag was intentionally skipped and we will be
+> unmapping it here, in ixgbe_dma_sync_frag. As Alex said, we're using the
+> DMA_ATTR_SKIP_CPU_SYNC attribute which obliges us to perform a sync manually
+> and it was missing.
+>
+> So IMHO the commit description should include descriptions from both xen and
+> ixgbe worlds, the v2 lacks info about ixgbe case.
+>
+> BTW Alex, what was the initial reason for holding off with unmapping the first
+> buffer? Asking because IIRC the i40e and ice behave a bit different here. We
+> don't look there for EOP at all when building/constructing skb and not delaying
+> the unmap of non-eop buffers.
+>
+> Thanks,
+> Maciej
 
-Queued for the v5.4 merge window, thank you!
+The reason why we have to hold off on unmapping the first buffer is
+because in the case of Receive Side Coalescing (RSC), also known as Large
+Receive Offload (LRO), the header of the packet is updated for each
+additional frame that is added. As such you can end up with the device
+writing data, header, data, header, data, header where each data write
+would update a new descriptor, but the header will only ever update the
+first descriptor in the chain. As such if we unmapped it earlier it would
+result in an IOMMU fault because the device would be rewriting the header
+after it had been unmapped.
 
-							Thanx, Paul
+The devices supported by the ixgbe driver are the only ones that have
+RSC/LRO support. As such this behavior is present for ixgbe, but not for
+other Intel NIC drivers including igb, igbvf, ixgbevf, i40e, etc.
 
-> Cc: Alan Stern <stern@rowland.harvard.edu>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Boqun Feng <boqun.feng@gmail.com>
-> Cc: Nicholas Piggin <npiggin@gmail.com>
-> Cc: David Howells <dhowells@redhat.com>
-> Cc: Jade Alglave <j.alglave@ucl.ac.uk>
-> Cc: Luc Maranget <luc.maranget@inria.fr>
-> Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
-> Cc: Akira Yokosawa <akiyks@gmail.com>
-> Cc: Daniel Lustig <dlustig@nvidia.com>
-> ---
->  MAINTAINERS | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 6426db5198f05..527317026492f 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -9326,7 +9326,7 @@ F:	drivers/misc/lkdtm/*
->  
->  LINUX KERNEL MEMORY CONSISTENCY MODEL (LKMM)
->  M:	Alan Stern <stern@rowland.harvard.edu>
-> -M:	Andrea Parri <andrea.parri@amarulasolutions.com>
-> +M:	Andrea Parri <parri.andrea@gmail.com>
->  M:	Will Deacon <will@kernel.org>
->  M:	Peter Zijlstra <peterz@infradead.org>
->  M:	Boqun Feng <boqun.feng@gmail.com>
-> -- 
-> 2.17.1
-> 
-
+- Alex
