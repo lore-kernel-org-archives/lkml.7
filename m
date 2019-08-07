@@ -6,53 +6,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C932C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 11:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 327ABC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 11:44:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0921A21E6A
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 11:44:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0909021BF6
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 11:44:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387784AbfHGLoK convert rfc822-to-8bit (ORCPT
+        id S1729736AbfHGLoP convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 07:44:10 -0400
-Received: from skedge04.snt-world.com ([91.208.41.69]:60162 "EHLO
+        Wed, 7 Aug 2019 07:44:15 -0400
+Received: from skedge04.snt-world.com ([91.208.41.69]:60206 "EHLO
         skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726873AbfHGLoK (ORCPT
+        with ESMTP id S1726873AbfHGLoP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 07:44:10 -0400
+        Wed, 7 Aug 2019 07:44:15 -0400
 Received: from sntmail14r.snt-is.com (unknown [10.203.32.184])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by skedge04.snt-world.com (Postfix) with ESMTPS id 5673467A8CC;
-        Wed,  7 Aug 2019 13:44:07 +0200 (CEST)
+        by skedge04.snt-world.com (Postfix) with ESMTPS id 3C1BC67A7C5;
+        Wed,  7 Aug 2019 13:44:13 +0200 (CEST)
 Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail14r.snt-is.com
  (10.203.32.184) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Wed, 7 Aug 2019
- 13:44:06 +0200
+ 13:44:12 +0200
 Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
  sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1713.004; Wed, 7 Aug 2019 13:44:06 +0200
+ 15.01.1713.004; Wed, 7 Aug 2019 13:44:12 +0200
 From:   Schrempf Frieder <frieder.schrempf@kontron.de>
-To:     Wolfram Sang <wsa@the-dreams.de>, Jean Delvare <jdelvare@suse.de>,
-        "Jarkko Nikula" <jarkko.nikula@linux.intel.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Juergen Fitschen <jfi@ssv-embedded.de>,
-        Ajay Gupta <ajayg@nvidia.com>,
-        Shreesha Rajashekar <shreesha.rajashekar@broadcom.com>,
-        Vignesh R <vigneshr@ti.com>, Elie Morisse <syniurge@gmail.com>,
-        Stefan Roese <sr@denx.de>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        Schrempf Frieder <frieder.schrempf@kontron.de>
-CC:     "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+To:     "David S. Miller" <davem@davemloft.net>,
+        Ioana Radulescu <ruxandra.radulescu@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        Yangbo Lu <yangbo.lu@nxp.com>,
+        "Schrempf Frieder" <frieder.schrempf@kontron.de>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH] i2c: imx: Allow the driver to be built for ARM64 SoCs such as
- i.MX8M
-Thread-Topic: [PATCH] i2c: imx: Allow the driver to be built for ARM64 SoCs
- such as i.MX8M
-Thread-Index: AQHVTRVrY8XY4w2l80SM63DeuQxTsA==
-Date:   Wed, 7 Aug 2019 11:44:06 +0000
-Message-ID: <20190807114332.13312-1-frieder.schrempf@kontron.de>
+Subject: [PATCH] net: fec: Allow the driver to be built for ARM64 SoCs such as
+ i.MX8
+Thread-Topic: [PATCH] net: fec: Allow the driver to be built for ARM64 SoCs
+ such as i.MX8
+Thread-Index: AQHVTRVujOeFcyg/q0+D2PWjkrvdsQ==
+Date:   Wed, 7 Aug 2019 11:44:12 +0000
+Message-ID: <20190807114332.13312-2-frieder.schrempf@kontron.de>
+References: <20190807114332.13312-1-frieder.schrempf@kontron.de>
+In-Reply-To: <20190807114332.13312-1-frieder.schrempf@kontron.de>
 Accept-Language: de-DE, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -64,16 +61,13 @@ Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
 X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: 5673467A8CC.AEADE
+X-SnT-MailScanner-ID: 3C1BC67A7C5.AEB1D
 X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
 X-SnT-MailScanner-SpamCheck: 
 X-SnT-MailScanner-From: frieder.schrempf@kontron.de
-X-SnT-MailScanner-To: ajayg@nvidia.com, f.fainelli@gmail.com,
-        jarkko.nikula@linux.intel.com, jdelvare@suse.de, jfi@ssv-embedded.de,
-        kdasu.kdev@gmail.com, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, paul@crapouillou.net,
-        shreesha.rajashekar@broadcom.com, sr@denx.de, syniurge@gmail.com,
-        vigneshr@ti.com, wsa@the-dreams.de
+X-SnT-MailScanner-To: claudiu.manoil@nxp.com, davem@davemloft.net,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        ruxandra.radulescu@nxp.com, tglx@linutronix.de, yangbo.lu@nxp.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -81,26 +75,26 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-The imx I2C controller is used in some ARM64 SoCs such as i.MX8M.
+The FEC ethernet controller is used in some ARM64 SoCs such as i.MX8.
 To make use of it, append ARM64 to the list of dependencies.
 
 Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
 ---
- drivers/i2c/busses/Kconfig | 2 +-
+ drivers/net/ethernet/freescale/Kconfig | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-index 09367fc014c3..46b653621513 100644
---- a/drivers/i2c/busses/Kconfig
-+++ b/drivers/i2c/busses/Kconfig
-@@ -664,7 +664,7 @@ config I2C_IMG
- 
- config I2C_IMX
- 	tristate "IMX I2C interface"
--	depends on ARCH_MXC || ARCH_LAYERSCAPE || COLDFIRE
-+	depends on ARCH_MXC || ARCH_LAYERSCAPE || COLDFIRE || ARM64
- 	help
- 	  Say Y here if you want to use the IIC bus controller on
- 	  the Freescale i.MX/MXC, Layerscape or ColdFire processors.
+diff --git a/drivers/net/ethernet/freescale/Kconfig b/drivers/net/ethernet/freescale/Kconfig
+index 6a7e8993119f..f7f4e073d955 100644
+--- a/drivers/net/ethernet/freescale/Kconfig
++++ b/drivers/net/ethernet/freescale/Kconfig
+@@ -23,7 +23,7 @@ if NET_VENDOR_FREESCALE
+ config FEC
+ 	tristate "FEC ethernet controller (of ColdFire and some i.MX CPUs)"
+ 	depends on (M523x || M527x || M5272 || M528x || M520x || M532x || \
+-		   ARCH_MXC || SOC_IMX28 || COMPILE_TEST)
++		   ARCH_MXC || ARM64 || SOC_IMX28 || COMPILE_TEST)
+ 	default ARCH_MXC || SOC_IMX28 if ARM
+ 	select PHYLIB
+ 	imply PTP_1588_CLOCK
 -- 
 2.17.1
