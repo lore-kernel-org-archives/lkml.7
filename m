@@ -2,118 +2,116 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49AB9C31E40
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 00:31:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42BF8C31E40
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 00:32:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20CCA214C6
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 00:31:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 194D1214C6
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 00:32:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="az+UmsXm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727938AbfHGAbe (ORCPT
+        id S1728172AbfHGAcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 20:31:34 -0400
-Received: from mga01.intel.com ([192.55.52.88]:58950 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726381AbfHGAbd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 20:31:33 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 17:31:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,353,1559545200"; 
-   d="scan'208";a="176033856"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by fmsmga007.fm.intel.com with ESMTP; 06 Aug 2019 17:31:31 -0700
-Date:   Wed, 7 Aug 2019 08:31:09 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>,
-        akpm@linux-foundation.org, mhocko@suse.com,
-        kirill.shutemov@linux.intel.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/mmap.c: refine data locality of find_vma_prev
-Message-ID: <20190807003109.GB24750@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <20190806081123.22334-1-richardw.yang@linux.intel.com>
- <3e57ba64-732b-d5be-1ad6-eecc731ef405@suse.cz>
+        Tue, 6 Aug 2019 20:32:07 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34353 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726381AbfHGAcG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 20:32:06 -0400
+Received: by mail-wr1-f68.google.com with SMTP id 31so89615216wrm.1;
+        Tue, 06 Aug 2019 17:32:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GGs8MT6FGlCkbNNH7TTlHmnRq/ZZmT2kM4HCkC2iAKw=;
+        b=az+UmsXmDuq0cUhWJaho5IgfxSfXKToHUabQ1qKX5d/vT3zH87nkJ2i5gDs/K+jCy1
+         DQefVcwEeK7GXtQWtwnU8isjUoMThDEhn5YvyURbVwRC1ppp23CPg+idSb4c2+qqZABJ
+         vI5QmFWHBrhwxE1ebD2Ahhi/8ItA4cw8m7cWaYspTCRxUwI8yEbX6XN7SFoQFZz+Pv+2
+         +owVGTu2fr3Rt4XaTdrV9JScsafyA9POwGXWsmRNVDCqDiNsSLuDlc/zPwusE/2JERCZ
+         9oWK3+0Aoz1yhxW5n58r5gNe3ZPPJfE8XXIAwnRzZjNnwy4nAg8osT246qbwoYnNP3Z9
+         yKNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GGs8MT6FGlCkbNNH7TTlHmnRq/ZZmT2kM4HCkC2iAKw=;
+        b=hRwF8Bmw7WDcf2ZKwKmZXQuJqEAHhza3jZZK7mRymz3z/8wTZaaEA+iY53SKTn7VU2
+         MQIKBdXaCVCUOiOSUMqQXsvpPWYPg8Ls7PbLu3QQMBvIiwFhsBFyk6ho8DDkUQ0xEaBB
+         nRE4Ts4ek8ufyMiUNvdUKZM+MrkwjdLYDKBJcEuYMXt5IU5KMdXGoAqT0SR6wDmdHGCv
+         c8XTw66NooRA4mj4+uqyXZClTOxzXxT5JZC+klWlOrKD4gdYq7NHWQA5bITVxhIcoEuE
+         UA6k6K8PRB0rlh69GVO8erPQi96jL3P4r2VUbj6Rr2CMg7h8OkHv6IkiHqoXJlXKp2vB
+         1mAQ==
+X-Gm-Message-State: APjAAAXxHsxQv96MLj843IwQ2dU0QWqPcEOF20mUV9TW0G0RMQvDkX1+
+        bmo//fUkrgNCa3qq+B7yY9k=
+X-Google-Smtp-Source: APXvYqynFI9yVSwY6UqnrCwxba4J2DyfeETuCPqf8QdPoeXnlnppBxsfHbIvGeLFeGUQTKIz3twsdA==
+X-Received: by 2002:adf:f646:: with SMTP id x6mr7256533wrp.18.1565137923815;
+        Tue, 06 Aug 2019 17:32:03 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id 91sm183684963wrp.3.2019.08.06.17.32.02
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 06 Aug 2019 17:32:03 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Andrew Jeffery <andrew@aj.id.au>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Joel Stanley <joel@jms.id.au>, linux-aspeed@lists.ozlabs.org,
+        openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] pinctrl: aspeed: g6: Remove const specifier from aspeed_g6_sig_expr_set's ctx parameter
+Date:   Tue,  6 Aug 2019 17:30:37 -0700
+Message-Id: <20190807003037.48457-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.23.0.rc1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3e57ba64-732b-d5be-1ad6-eecc731ef405@suse.cz>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 11:29:52AM +0200, Vlastimil Babka wrote:
->On 8/6/19 10:11 AM, Wei Yang wrote:
->> When addr is out of the range of the whole rb_tree, pprev will points to
->> the biggest node. find_vma_prev gets is by going through the right most
->
->s/biggest/last/ ? or right-most?
->
->> node of the tree.
->> 
->> Since only the last node is the one it is looking for, it is not
->> necessary to assign pprev to those middle stage nodes. By assigning
->> pprev to the last node directly, it tries to improve the function
->> locality a little.
->
->In the end, it will always write to the cacheline of pprev. The caller has most
->likely have it on stack, so it's already hot, and there's no other CPU stealing
->it. So I don't understand where the improved locality comes from. The compiler
->can also optimize the patched code so the assembly is identical to the previous
->code, or vice versa. Did you check for differences?
+clang errors:
 
-Vlastimil
+drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c:2325:9: error: incompatible
+pointer types initializing 'int (*)(struct aspeed_pinmux_data *, const
+struct aspeed_sig_expr *, bool)' with an expression of type 'int (const
+struct aspeed_pinmux_data *, const struct aspeed_sig_expr *, bool)'
+[-Werror,-Wincompatible-pointer-types]
+        .set = aspeed_g6_sig_expr_set,
+               ^~~~~~~~~~~~~~~~~~~~~~
+1 error generated.
 
-Thanks for your comment.
+Commit 674fa8daa8c9 ("pinctrl: aspeed-g5: Delay acquisition of regmaps")
+changed the set function pointer declaration and the g6 one wasn't
+updated (I assume because it wasn't merged yet).
 
-I believe you get a point. I may not use the word locality. This patch tries
-to reduce some unnecessary assignment of pprev.
+Fixes: 2eda1cdec49f ("pinctrl: aspeed: Add AST2600 pinmux support")
+Link: https://github.com/ClangBuiltLinux/linux/issues/632
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Original code would assign the value on each node during iteration, this is
-what I want to reduce.
-
-The generated code looks different from my side. Would you mind sharing me how
-you compare the generated code?
-
->
->The previous code is somewhat more obvious to me, so unless I'm missing
->something, readability and less churn suggests to not change.
->
->> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
->> ---
->>  mm/mmap.c | 7 +++----
->>  1 file changed, 3 insertions(+), 4 deletions(-)
->> 
->> diff --git a/mm/mmap.c b/mm/mmap.c
->> index 7e8c3e8ae75f..284bc7e51f9c 100644
->> --- a/mm/mmap.c
->> +++ b/mm/mmap.c
->> @@ -2271,11 +2271,10 @@ find_vma_prev(struct mm_struct *mm, unsigned long addr,
->>  		*pprev = vma->vm_prev;
->>  	} else {
->>  		struct rb_node *rb_node = mm->mm_rb.rb_node;
->> -		*pprev = NULL;
->> -		while (rb_node) {
->> -			*pprev = rb_entry(rb_node, struct vm_area_struct, vm_rb);
->> +		while (rb_node && rb_node->rb_right)
->>  			rb_node = rb_node->rb_right;
->> -		}
->> +		*pprev = rb_node ? NULL
->> +			 : rb_entry(rb_node, struct vm_area_struct, vm_rb);
->>  	}
->>  	return vma;
->>  }
->> 
-
+diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
+index 6012d7d4a22a..648ddb7f038a 100644
+--- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
++++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
+@@ -2267,7 +2267,7 @@ static const struct aspeed_pin_function aspeed_g6_functions[] = {
+  * Return: 0 if the expression is configured as requested and a negative error
+  * code otherwise
+  */
+-static int aspeed_g6_sig_expr_set(const struct aspeed_pinmux_data *ctx,
++static int aspeed_g6_sig_expr_set(struct aspeed_pinmux_data *ctx,
+ 				  const struct aspeed_sig_expr *expr,
+ 				  bool enable)
+ {
 -- 
-Wei Yang
-Help you, Help me
+2.23.0.rc1
+
