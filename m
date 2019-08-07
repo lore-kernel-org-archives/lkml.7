@@ -2,113 +2,192 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA60C32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 22:39:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD51C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 22:41:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EF4821743
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 22:39:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7058521743
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 22:41:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YaA1+UJg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389468AbfHGWja (ORCPT
+        id S2389284AbfHGWlo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 18:39:30 -0400
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:57478 "EHLO
-        omr2.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730117AbfHGWj3 (ORCPT
+        Wed, 7 Aug 2019 18:41:44 -0400
+Received: from mail-pl1-f170.google.com ([209.85.214.170]:34872 "EHLO
+        mail-pl1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727213AbfHGWlo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 18:39:29 -0400
-Received: from mr1.cc.vt.edu (mr1.cc.ipv6.vt.edu [IPv6:2607:b400:92:8300:0:31:1732:8aa4])
-        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x77MdSq8026839
-        for <linux-kernel@vger.kernel.org>; Wed, 7 Aug 2019 18:39:28 -0400
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-        by mr1.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x77MdNG3009139
-        for <linux-kernel@vger.kernel.org>; Wed, 7 Aug 2019 18:39:28 -0400
-Received: by mail-qk1-f199.google.com with SMTP id x17so80691228qkf.14
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 15:39:28 -0700 (PDT)
+        Wed, 7 Aug 2019 18:41:44 -0400
+Received: by mail-pl1-f170.google.com with SMTP id w24so42643916plp.2;
+        Wed, 07 Aug 2019 15:41:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:date:message-id:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=DhnaK+E+cD1d4FfpxlhTEJTkSE09JujNXjxgkkK1vJE=;
+        b=YaA1+UJgWbYYhzA5ckir1hw+FEk6ooMKk5sxW19z4hdcLO5udpPEh6tEyudLebcAh0
+         MaJd6MzePwU7wnzaxsP0a64TSWwNqTyFyeAwyl1D1NoqtTRncdFx8aUDn0dfXCSy9eKl
+         I7IfSH7OCmiI0YC0cRS7u+3iq3zZI/Xr9eI5XrlJPEzCMOYxnjWJ6InRCvDlg0Fj2DaJ
+         n7G1IjpFBmmjnby80AzF0kphE4Mi7Fk3w0JsxZP1ba35MgtcO0st+cBjrAgGn0qax68M
+         YhBozEOk83Yi9BF45fZ7GdGo/VgkR+3f4M9vrLTdVHp48FFvvaHV49CXioDsGSy2HYPa
+         6SEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:mime-version:date
-         :message-id;
-        bh=r0uwyFJeFvH4bAs10mxKtLGquaNY41+jLpUXPC0EZek=;
-        b=LVyATuWCsG4HZAb3LPqyjA4ccNkEXbwoYgjYqKJoUD0BEdwYttjhhhbYhna423mPzS
-         wfIuWTjFLl9zi9eS84YwEhvBkqZiQSFlakgUWuxv4BbTIu4A1V43MP9HDE18y7nXjzh4
-         PTcOiAolLp7h8Fp6SBMzlxN16JCrUacQ6MTE+HSEToYAEiyXuO0WIyEjKNaUFs4uTfbv
-         dOdqje9yVmtpkAtcvgcLHxLx6nglHWJtH+UDBgkWZn0a60s8EjQEv8wRRXeDkaIMDEWf
-         q4nSZRDy+adkSgu/sOOuO+RWNBqrCQ/YVc6oZft5qD0YcccDrw1PVOorhGUBB/Qqos5W
-         1EaA==
-X-Gm-Message-State: APjAAAVb84VOtaDwAuPhYnR+M/UDeyA/BZq9c13HBjkQVQHjg+mbOzHS
-        ysb8xeQqXPY6knO1yaz1mHe75o4qDUW37p5+G6G8nDnUzNZyTz8sbDIvVJ+ESUO2armMawZHaRL
-        Hr2r72c4B61/ye3BTfshBVlik2F5ohyo47YA=
-X-Received: by 2002:ac8:38a8:: with SMTP id f37mr10506217qtc.150.1565217562214;
-        Wed, 07 Aug 2019 15:39:22 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyq2M4kYBk/DP7a4+BlSJvKHDCJm1Prg2gLCqkUE118sy7EEDEjeDyH6Ho3jOyIRsTfF2KH2g==
-X-Received: by 2002:ac8:38a8:: with SMTP id f37mr10506192qtc.150.1565217561898;
-        Wed, 07 Aug 2019 15:39:21 -0700 (PDT)
-Received: from turing-police ([2601:5c0:c001:4341::359])
-        by smtp.gmail.com with ESMTPSA id w24sm54135617qtb.35.2019.08.07.15.39.20
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 07 Aug 2019 15:39:20 -0700 (PDT)
-From:   "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     Ping-Ke Shih <pkshih@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>
-cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] Fix non-kerneldoc comment in realtek/rtlwifi/usb.c
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Date:   Wed, 07 Aug 2019 18:39:20 -0400
-Message-ID: <5924.1565217560@turing-police>
+        h=x-gm-message-state:subject:from:to:cc:date:message-id:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=DhnaK+E+cD1d4FfpxlhTEJTkSE09JujNXjxgkkK1vJE=;
+        b=IaXugj9WVEUpwsZoFPcbjL57UFzhHD5rt0+w4PwavUTpLL0B4PinGUnZUyXe76bo6U
+         OUI01+OmQrV9zd+TAMr/1g4PJgV/T3pnWNc7teNE7MtvqnWIt4VOwyhmMEXsV9TyOCN8
+         QOnvc4GF/HF1pDQFs2/xrEiu/P9bdO2ufLETKxbnJcw+G/IJvTRF7wyAU9K6XV2XqyEv
+         FwV0D7/HHdjH2dFIftcP0J9AhDpKmlx0xxnQerDu5dVLztkZg2kzMCnq0VQZP39+xh8G
+         C/UhXyLUzDI40JYOmjLStzGQvIBldXTY32kW9G+APKAl0KGZGf5RTX66NGk8Q9dSifT9
+         E+KA==
+X-Gm-Message-State: APjAAAUACSRhrHgH0a/YyBvNScp5L9k2x6Kivei5ysQwYmUlCF2y56Mg
+        /J17K79KWQJkh2miVoODYG0=
+X-Google-Smtp-Source: APXvYqxLZr/16PeXJ4PFdN305ipuBBLeLVoDqSoS42N/o1FnkzSdt4bS8MHl+GGCe3JLu7QffAnFZg==
+X-Received: by 2002:a17:902:8bc1:: with SMTP id r1mr10433713plo.42.1565217702846;
+        Wed, 07 Aug 2019 15:41:42 -0700 (PDT)
+Received: from localhost.localdomain ([2001:470:b:9c3:9e5c:8eff:fe4f:f2d0])
+        by smtp.gmail.com with ESMTPSA id e189sm80104548pgc.15.2019.08.07.15.41.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Aug 2019 15:41:42 -0700 (PDT)
+Subject: [PATCH v4 0/6] mm / virtio: Provide support for unused page
+ reporting
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+To:     nitesh@redhat.com, kvm@vger.kernel.org, david@redhat.com,
+        mst@redhat.com, dave.hansen@intel.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org
+Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com, riel@surriel.com,
+        konrad.wilk@oracle.com, willy@infradead.org,
+        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
+        pbonzini@redhat.com, dan.j.williams@intel.com,
+        alexander.h.duyck@linux.intel.com
+Date:   Wed, 07 Aug 2019 15:41:41 -0700
+Message-ID: <20190807224037.6891.53512.stgit@localhost.localdomain>
+User-Agent: StGit/0.17.1-dirty
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix spurious warning message when building with W=1:
+This series provides an asynchronous means of reporting to a hypervisor
+that a guest page is no longer in use and can have the data associated
+with it dropped. To do this I have implemented functionality that allows
+for what I am referring to as unused page reporting
 
-  CC [M]  drivers/net/wireless/realtek/rtlwifi/usb.o
-drivers/net/wireless/realtek/rtlwifi/usb.c:243: warning: Cannot understand  * on line 243 - I thought it was a doc line
-drivers/net/wireless/realtek/rtlwifi/usb.c:760: warning: Cannot understand  * on line 760 - I thought it was a doc line
-drivers/net/wireless/realtek/rtlwifi/usb.c:790: warning: Cannot understand  * on line 790 - I thought it was a doc line
+The functionality for this is fairly simple. When enabled it will allocate
+statistics to track the number of reported pages in a given free area.
+When the number of free pages exceeds this value plus a high water value,
+currently 32, it will begin performing page reporting which consists of
+pulling pages off of free list and placing them into a scatter list. The
+scatterlist is then given to the page reporting device and it will perform
+the required action to make the pages "reported", in the case of
+virtio-balloon this results in the pages being madvised as MADV_DONTNEED
+and as such they are forced out of the guest. After this they are placed
+back on the free list, and an additional bit is added if they are not
+merged indicating that they are a reported buddy page instead of a
+standard buddy page. The cycle then repeats with additional non-reported
+pages being pulled until the free areas all consist of reported pages.
 
-Change the comment so gcc doesn't think it's a kerneldoc comment block
+I am leaving a number of things hard-coded such as limiting the lowest
+order processed to PAGEBLOCK_ORDER, and have left it up to the guest to
+determine what the limit is on how many pages it wants to allocate to
+process the hints. The upper limit for this is based on the size of the
+queue used to store the scattergather list.
 
-Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+My primary testing has just been to verify the memory is being freed after
+allocation by running memhog 40g on a 40g guest and watching the total
+free memory via /proc/meminfo on the host. With this I have verified most
+of the memory is freed after each iteration. As far as performance I have
+been mainly focusing on the will-it-scale/page_fault1 test running with
+16 vcpus. I have modified it to use Transparent Huge Pages. With this I
+see almost no difference, -0.08%, with the patches applied and the feature
+disabled. I see a regression of -0.86% with the feature enabled, but the
+madvise disabled in the hypervisor due to a device being assigned. With
+the feature fully enabled I see a regression of -3.27% versus the baseline
+without these patches applied. In my testing I found that most of the
+overhead was due to the page zeroing that comes as a result of the pages
+having to be faulted back into the guest.
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/usb.c b/drivers/net/wireless/realtek/rtlwifi/usb.c
-index e24fda5e9087..9478cc0d4f8b 100644
---- a/drivers/net/wireless/realtek/rtlwifi/usb.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/usb.c
-@@ -239,7 +239,7 @@ static void _rtl_usb_io_handler_release(struct ieee80211_hw *hw)
- 	mutex_destroy(&rtlpriv->io.bb_mutex);
- }
- 
--/**
-+/*
-  *
-  *	Default aggregation handler. Do nothing and just return the oldest skb.
-  */
-@@ -756,7 +756,7 @@ static int rtl_usb_start(struct ieee80211_hw *hw)
- 	return err;
- }
- 
--/**
-+/*
-  *
-  *
-  */
-@@ -786,7 +786,7 @@ static void rtl_usb_cleanup(struct ieee80211_hw *hw)
- 	usb_kill_anchored_urbs(&rtlusb->tx_submitted);
- }
- 
--/**
-+/*
-  *
-  * We may add some struct into struct rtl_usb later. Do deinit here.
-  *
+One side effect of these patches is that the guest becomes much more
+resilient in terms of NUMA locality. With the pages being freed and then
+reallocated when used it allows for the pages to be much closer to the
+active thread, and as a result there can be situations where this patch
+set will out-perform the stock kernel when the guest memory is not local
+to the guest vCPUs. To avoid that in my testing I set the affinity of all
+the vCPUs and QEMU instance to the same node.
 
+Changes from the RFC:
+https://lore.kernel.org/lkml/20190530215223.13974.22445.stgit@localhost.localdomain/
+Moved aeration requested flag out of aerator and into zone->flags.
+Moved boundary out of free_area and into local variables for aeration.
+Moved aeration cycle out of interrupt and into workqueue.
+Left nr_free as total pages instead of splitting it between raw and aerated.
+Combined size and physical address values in virtio ring into one 64b value.
+
+Changes from v1:
+https://lore.kernel.org/lkml/20190619222922.1231.27432.stgit@localhost.localdomain/
+Dropped "waste page treatment" in favor of "page hinting"
+Renamed files and functions from "aeration" to "page_hinting"
+Moved from page->lru list to scatterlist
+Replaced wait on refcnt in shutdown with RCU and cancel_delayed_work_sync
+Virtio now uses scatterlist directly instead of intermediate array
+Moved stats out of free_area, now in separate area and pointed to from zone
+Merged patch 5 into patch 4 to improve review-ability
+Updated various code comments throughout
+
+Changes from v2:
+https://lore.kernel.org/lkml/20190724165158.6685.87228.stgit@localhost.localdomain/
+Dropped "page hinting" in favor of "page reporting"
+Renamed files from "hinting" to "reporting"
+Replaced "Hinted" page type with "Reported" page flag
+Added support for page poisoning while hinting is active
+Add QEMU patch that implements PAGE_POISON feature
+
+Changes from v3:
+https://lore.kernel.org/lkml/20190801222158.22190.96964.stgit@localhost.localdomain/
+Added mutex lock around page reporting startup and shutdown
+Fixed reference to "page aeration" in patch 2
+Split page reporting function bit out into separate QEMU patch
+Limited capacity of scatterlist to vq size - 1 instead of vq size
+Added exception handling for case of virtio descriptor allocation failure
+
+---
+
+Alexander Duyck (6):
+      mm: Adjust shuffle code to allow for future coalescing
+      mm: Move set/get_pcppage_migratetype to mmzone.h
+      mm: Use zone and order instead of free area in free_list manipulators
+      mm: Introduce Reported pages
+      virtio-balloon: Pull page poisoning config out of free page hinting
+      virtio-balloon: Add support for providing unused page reports to host
+
+
+ drivers/virtio/Kconfig              |    1 
+ drivers/virtio/virtio_balloon.c     |   84 +++++++++
+ include/linux/mmzone.h              |  116 ++++++++-----
+ include/linux/page-flags.h          |   11 +
+ include/linux/page_reporting.h      |  138 +++++++++++++++
+ include/uapi/linux/virtio_balloon.h |    1 
+ mm/Kconfig                          |    5 +
+ mm/Makefile                         |    1 
+ mm/internal.h                       |   18 ++
+ mm/memory_hotplug.c                 |    1 
+ mm/page_alloc.c                     |  238 +++++++++++++++++++--------
+ mm/page_reporting.c                 |  313 +++++++++++++++++++++++++++++++++++
+ mm/shuffle.c                        |   24 ---
+ mm/shuffle.h                        |   32 ++++
+ 14 files changed, 844 insertions(+), 139 deletions(-)
+ create mode 100644 include/linux/page_reporting.h
+ create mode 100644 mm/page_reporting.c
+
+--
