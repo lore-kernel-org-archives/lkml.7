@@ -2,139 +2,153 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E09C19759
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:41:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B11B6C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5271F229F3
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:41:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 895F42238C
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:41:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kQ0RgEnp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OlUPUw8O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728870AbfHGIlm (ORCPT
+        id S2387589AbfHGIlp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 04:41:42 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:41649 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728202AbfHGIll (ORCPT
+        Wed, 7 Aug 2019 04:41:45 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:37179 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728202AbfHGIlm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 04:41:41 -0400
-Received: by mail-lj1-f195.google.com with SMTP id d24so84670887ljg.8;
-        Wed, 07 Aug 2019 01:41:40 -0700 (PDT)
+        Wed, 7 Aug 2019 04:41:42 -0400
+Received: by mail-pl1-f193.google.com with SMTP id b3so39740310plr.4
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 01:41:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eYs/hQ3Y9LNfDGfBwcEVi7jKWGv89xUHBEJ8ouLAv+k=;
-        b=kQ0RgEnpAFC5CMzVJfhYi9nPHrh0w5+cXUjSBBYDhgTZ8497vE2tCTzV/bQ4HlC8LS
-         vHu8ar8KSPjGI3fz819BSYQjXu9sLeuNcK1JCyLfeNOEEl5gUo3uq4l9Spc3SZ0qNLWX
-         RRKcRRPsHVI8ZrWf6KgQ49/PH6BslLzpM8MEUWsM7IyrAMHmXOcwIJ+k4Vp8x1A6q4db
-         wjnA9URJbuaAhiO93dKv6xhmv2gI73DPxoJG2a11fDNkS8YzmV+6ihxCHs1s6F/RUKy6
-         pPtVh3AyTgL5MzM9xqRJv6KlPtsQdJQmPOEmoJjPro5Zf1h9wziybDyGzc/1y49nqCZG
-         Ay6Q==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=EyvgUT/mHFqMk636dxzLzzgFDS37eM5CM15yX+1C0h4=;
+        b=OlUPUw8OMiKKCWaFUHD6Ldd8xeESIBSCde7fJSBGlkMgtMtAXAF0V5RYNm/uBNjNWk
+         SccP1cbUdZ1EMPUBm8h4Wqkr76glmchV0EXc+DlVxTNTNUWLZ2ZuSIcm2KyNqzBmoR53
+         CANTzvzY66eGU1DHo0OhI/Pna9FHVKCFPxPBSxoiMZNTSCn7Mi9iSqn/u4D3mVWELc07
+         g6J5hQQJK3EK5PAUyg3ZNM4KKjC/cfggdgAjUhK8PwHfdyjNAk8tCfyfAOhWZLkIdqBB
+         P3RBckcsZrkxQEJ925kS0ZzxNlibQDNST4aGHHnFvSj7lYJsBj5VAhRVhwO8nRdeveDd
+         Ytjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eYs/hQ3Y9LNfDGfBwcEVi7jKWGv89xUHBEJ8ouLAv+k=;
-        b=JUWb+01G7sWTqwAW33YTLEr89KTa7UFKaJz1RAxdqRP20t1YdiG1zoN2/n+F2V5GuF
-         zvJOGFg7SeKQgT6pS6eJG0QcqFiHQrLvG065oecAVaERoqEiMCUUX/3yOw2wusdZebe8
-         X1BUgnHV4dRvdf0hEch7I1ClgjkcqqGrYUzQ7YPUS0xiYGNd/ZNALVW/btwa1JkQhqtN
-         g6hBdukKwYHVbt+nYsnOrMESlfd77c9imr+C3AqufDNkIXxFMUVSkyyUq46muaKQpz4V
-         fuaFtR7xgKVVxIwNLtl6jVISpz9hhxmw8PxVxEfmA76gJ5tgk4SvzYpzYEUc95Wi7ANV
-         1/vA==
-X-Gm-Message-State: APjAAAVXnKP/WN/8kVdJb07JozyTSrHHfoLhZogt9aNr6zkY8CWljFx1
-        Mj0q23khzyhMBcErQ78T7PICKVL8KbTBK+gqBSQ=
-X-Google-Smtp-Source: APXvYqyVOVGtiZzZb0C8zEOAb896AFsHxLnvz2H4GMAhBW2sjDWWEslMf/XyRcI9iSzv92vqZUIs05pv6SdtEdUML4I=
-X-Received: by 2002:a2e:93cc:: with SMTP id p12mr4278994ljh.11.1565167299490;
- Wed, 07 Aug 2019 01:41:39 -0700 (PDT)
-MIME-Version: 1.0
-References: <1564515200-5020-1-git-send-email-jrdr.linux@gmail.com>
-In-Reply-To: <1564515200-5020-1-git-send-email-jrdr.linux@gmail.com>
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-Date:   Wed, 7 Aug 2019 14:11:27 +0530
-Message-ID: <CAFqt6zb5ySDbkHVpPkOKHTrF8jFuNh=dXtnwPKO6TuEHBCkYgg@mail.gmail.com>
-Subject: Re: [PATCH] video: fbdev:via: Remove dead code
-To:     FlorianSchandinat@gmx.de, b.zolnierkie@samsung.com
-Cc:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=EyvgUT/mHFqMk636dxzLzzgFDS37eM5CM15yX+1C0h4=;
+        b=ZWVmoyzV/m0lmW26Ivh4/Us71rTVecqF2EnXjS0Yw3PiZQhqF23f/p6VOpxUs7d0KG
+         PCGcWSzTguYUY4D2dlIXcqQPJfyS+6jK9V9q26qU3ZlA4e7FbBLZq2QB55dpexc9BDvP
+         RijR2ZbcCtl+DV6YRWNcYhyBMYNJIUV/FzL35TAq8mZaLhSw07AE0FL/ZxOHdKhSwZoH
+         PS+BS2G8cADpOhSkyO59Qy6ZkqxABqFJzB3kPofhc3H4WtMu56KvvLgtVcuH2iaSOtwQ
+         yEqAAFDRLKnrUG0RHj9AEZRehg4W+GfvJSHooAlr4P84Kow4tD2UFaK9R7/K8yQJmWlZ
+         xDtw==
+X-Gm-Message-State: APjAAAWn3AqgRw8I1VcP3hDhPoe4M8LzfzfmDTntBNln1yC30oSPPaXq
+        e9olvZQC87lFZiwTQNwuuA==
+X-Google-Smtp-Source: APXvYqw/n0QlPhHlhzhx9MFD9LDM+HAokHgsvQnV1xpG/W+ICmOn7xen/JNe40OAfwcvozRxSVEMcQ==
+X-Received: by 2002:a63:f048:: with SMTP id s8mr6613569pgj.26.1565167301983;
+        Wed, 07 Aug 2019 01:41:41 -0700 (PDT)
+Received: from mylaptop.redhat.com ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id f19sm135030521pfk.180.2019.08.07.01.41.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Aug 2019 01:41:41 -0700 (PDT)
+From:   Pingfan Liu <kernelfans@gmail.com>
+To:     linux-mm@kvack.org
+Cc:     Pingfan Liu <kernelfans@gmail.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Jan Kara <jack@suse.cz>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
         linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: [PATCHv2] mm/migrate: clean up useless code in migrate_vma_collect_pmd()
+Date:   Wed,  7 Aug 2019 16:41:12 +0800
+Message-Id: <1565167272-21453-1-git-send-email-kernelfans@gmail.com>
+X-Mailer: git-send-email 2.7.5
+In-Reply-To: <20190807052858.GA9749@mypc>
+References: <20190807052858.GA9749@mypc>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 12:59 AM Souptick Joarder <jrdr.linux@gmail.com> wrote:
->
-> This is dead code since 3.15. If there is no plan to use
-> it further, this can be removed forever.
->
+Clean up useless 'pfn' variable.
 
-Any comment on this patch ?
+Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+Cc: "Jérôme Glisse" <jglisse@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Cc: Jan Kara <jack@suse.cz>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Mike Kravetz <mike.kravetz@oracle.com>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+To: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org
+---
+ mm/migrate.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-> Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
-> ---
->  drivers/video/fbdev/via/via-core.c | 43 --------------------------------------
->  1 file changed, 43 deletions(-)
->
-> diff --git a/drivers/video/fbdev/via/via-core.c b/drivers/video/fbdev/via/via-core.c
-> index e2b2062..ffa2ca2 100644
-> --- a/drivers/video/fbdev/via/via-core.c
-> +++ b/drivers/video/fbdev/via/via-core.c
-> @@ -221,49 +221,6 @@ void viafb_release_dma(void)
->  }
->  EXPORT_SYMBOL_GPL(viafb_release_dma);
->
-> -
-> -#if 0
-> -/*
-> - * Copy a single buffer from FB memory, synchronously.  This code works
-> - * but is not currently used.
-> - */
-> -void viafb_dma_copy_out(unsigned int offset, dma_addr_t paddr, int len)
-> -{
-> -       unsigned long flags;
-> -       int csr;
-> -
-> -       mutex_lock(&viafb_dma_lock);
-> -       init_completion(&viafb_dma_completion);
-> -       /*
-> -        * Program the controller.
-> -        */
-> -       spin_lock_irqsave(&global_dev.reg_lock, flags);
-> -       viafb_mmio_write(VDMA_CSR0, VDMA_C_ENABLE|VDMA_C_DONE);
-> -       /* Enable ints; must happen after CSR0 write! */
-> -       viafb_mmio_write(VDMA_MR0, VDMA_MR_TDIE);
-> -       viafb_mmio_write(VDMA_MARL0, (int) (paddr & 0xfffffff0));
-> -       viafb_mmio_write(VDMA_MARH0, (int) ((paddr >> 28) & 0xfff));
-> -       /* Data sheet suggests DAR0 should be <<4, but it lies */
-> -       viafb_mmio_write(VDMA_DAR0, offset);
-> -       viafb_mmio_write(VDMA_DQWCR0, len >> 4);
-> -       viafb_mmio_write(VDMA_TMR0, 0);
-> -       viafb_mmio_write(VDMA_DPRL0, 0);
-> -       viafb_mmio_write(VDMA_DPRH0, 0);
-> -       viafb_mmio_write(VDMA_PMR0, 0);
-> -       csr = viafb_mmio_read(VDMA_CSR0);
-> -       viafb_mmio_write(VDMA_CSR0, VDMA_C_ENABLE|VDMA_C_START);
-> -       spin_unlock_irqrestore(&global_dev.reg_lock, flags);
-> -       /*
-> -        * Now we just wait until the interrupt handler says
-> -        * we're done.
-> -        */
-> -       wait_for_completion_interruptible(&viafb_dma_completion);
-> -       viafb_mmio_write(VDMA_MR0, 0); /* Reset int enable */
-> -       mutex_unlock(&viafb_dma_lock);
-> -}
-> -EXPORT_SYMBOL_GPL(viafb_dma_copy_out);
-> -#endif
-> -
->  /*
->   * Do a scatter/gather DMA copy from FB memory.  You must have done
->   * a successful call to viafb_request_dma() first.
-> --
-> 1.9.1
->
+diff --git a/mm/migrate.c b/mm/migrate.c
+index 8992741..d483a55 100644
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -2225,17 +2225,15 @@ static int migrate_vma_collect_pmd(pmd_t *pmdp,
+ 		pte_t pte;
+ 
+ 		pte = *ptep;
+-		pfn = pte_pfn(pte);
+ 
+ 		if (pte_none(pte)) {
+ 			mpfn = MIGRATE_PFN_MIGRATE;
+ 			migrate->cpages++;
+-			pfn = 0;
+ 			goto next;
+ 		}
+ 
+ 		if (!pte_present(pte)) {
+-			mpfn = pfn = 0;
++			mpfn = 0;
+ 
+ 			/*
+ 			 * Only care about unaddressable device page special
+@@ -2252,10 +2250,10 @@ static int migrate_vma_collect_pmd(pmd_t *pmdp,
+ 			if (is_write_device_private_entry(entry))
+ 				mpfn |= MIGRATE_PFN_WRITE;
+ 		} else {
++			pfn = pte_pfn(pte);
+ 			if (is_zero_pfn(pfn)) {
+ 				mpfn = MIGRATE_PFN_MIGRATE;
+ 				migrate->cpages++;
+-				pfn = 0;
+ 				goto next;
+ 			}
+ 			page = vm_normal_page(migrate->vma, addr, pte);
+@@ -2265,10 +2263,9 @@ static int migrate_vma_collect_pmd(pmd_t *pmdp,
+ 
+ 		/* FIXME support THP */
+ 		if (!page || !page->mapping || PageTransCompound(page)) {
+-			mpfn = pfn = 0;
++			mpfn = 0;
+ 			goto next;
+ 		}
+-		pfn = page_to_pfn(page);
+ 
+ 		/*
+ 		 * By getting a reference on the page we pin it and that blocks
+-- 
+2.7.5
+
