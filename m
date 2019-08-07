@@ -2,202 +2,135 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADD08C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A80C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:45:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 846E42199C
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:43:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A3252199C
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:45:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="YwsL5UZm"
+	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="SY7adnyK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729992AbfHGOnu (ORCPT
+        id S2387801AbfHGOpE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 10:43:50 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:16422 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729602AbfHGOnu (ORCPT
+        Wed, 7 Aug 2019 10:45:04 -0400
+Received: from mx0b-00190b01.pphosted.com ([67.231.157.127]:17824 "EHLO
+        mx0b-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729602AbfHGOpE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 10:43:50 -0400
-Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id x77Ehc96019415;
-        Wed, 7 Aug 2019 23:43:39 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x77Ehc96019415
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1565189019;
-        bh=/JMuf66dpHQpVrx+iK6cRZpErJQAF9lLb6RxvsazUgA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=YwsL5UZmFZC3ZmQtxhLoNnylQFyn8FmOcasacZpCoJxrJPW/dAY/qNEpAo3AC5nXy
-         d0f0zX0roDfvicCJEg1FqEvitmYDY5K/hFcqB2nIXU0WcuZcB7z7zX4FJp8s/ZEc1x
-         LiX8mnDpLKAa+dWUtfImodjktINSElddVCt6m0KPHnbUyJ9h3N3YvMhLTr3kDKt1zr
-         itK3Dk6sdrK+IDZZ7MuKGQcyq6qT/S4mztdqHoRbM6zQWhflMzSRQO/N5nhg2RofU1
-         3EbCi2qq2R6TJE1zK6mFanzUbh1E/WFZshZuYKVrBLq9yoQsglwRKd1zx1N1uq4Ljn
-         pJrK+g21IhmBw==
-X-Nifty-SrcIP: [209.85.222.47]
-Received: by mail-ua1-f47.google.com with SMTP id v18so35105981uad.12;
-        Wed, 07 Aug 2019 07:43:39 -0700 (PDT)
-X-Gm-Message-State: APjAAAVLzFm0yggh/EdGUHPLPEK+Ttlz8iHdQEom8b2vPvQUhh4hHgL1
-        5I4pm8W2uZBDOJ0V1czm7nj2UQhjuxab1r30jpg=
-X-Google-Smtp-Source: APXvYqxDqotVqYCy/FwyuhXBsoxhmVR3P/BOmsY+Y15m7Zcsx9D2cLdaYutFF/3Y6PkkMQQkVkMWbWP/8P9Wkt8hYc0=
-X-Received: by 2002:a9f:2265:: with SMTP id 92mr6134889uad.121.1565189018195;
- Wed, 07 Aug 2019 07:43:38 -0700 (PDT)
+        Wed, 7 Aug 2019 10:45:04 -0400
+Received: from pps.filterd (m0122330.ppops.net [127.0.0.1])
+        by mx0b-00190b01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x77EfxLS005168;
+        Wed, 7 Aug 2019 15:44:43 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=jan2016.eng;
+ bh=Vagb6QmnbXVI1op31baqpLQ8s4lzl7qHp9Urb7sEl8U=;
+ b=SY7adnyKax20V22NMXzHqPBPOMvsku8G4XA1bJTV2YgWHSD5Wx6DwzE+rnVeaz98vVE6
+ x7CqCf0sfuOjBPD/kTcr/6VM5OHhrj9zrtVdvV2vp/KBOwcaC6lub5lZZxx45Mf5cqV8
+ hF2e7yegeuz7H19gbC+rd8ayZy5FJdP2aJcy8yVIjE/nwyjUVO9upcOD8FbD49I9sZxT
+ NQfAB9QOpOZeggGXJebsSRGq1TT6IDEC3aMNMx5qP5SzPJv+F6r/OQZfmmGR//v1HXU2
+ ccj5AeVZMgGI6/R9w3INJIGElW3YfD75nMrXo7WD8hwCBLEOVt72xCmTx6kc4HgYU8PT +g== 
+Received: from prod-mail-ppoint8 (prod-mail-ppoint8.akamai.com [96.6.114.122] (may be forged))
+        by mx0b-00190b01.pphosted.com with ESMTP id 2u51wv175d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 07 Aug 2019 15:44:43 +0100
+Received: from pps.filterd (prod-mail-ppoint8.akamai.com [127.0.0.1])
+        by prod-mail-ppoint8.akamai.com (8.16.0.27/8.16.0.27) with SMTP id x77EWhDO031450;
+        Wed, 7 Aug 2019 10:44:43 -0400
+Received: from email.msg.corp.akamai.com ([172.27.123.53])
+        by prod-mail-ppoint8.akamai.com with ESMTP id 2u55kvc76c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 07 Aug 2019 10:44:42 -0400
+Received: from USMA1EX-CAS3.msg.corp.akamai.com (172.27.123.32) by
+ usma1ex-dag1mb4.msg.corp.akamai.com (172.27.123.104) with Microsoft SMTP
+ Server (TLS) id 15.0.1473.3; Wed, 7 Aug 2019 10:44:41 -0400
+Received: from igorcastle.kendall.corp.akamai.com (172.29.170.135) by
+ USMA1EX-CAS3.msg.corp.akamai.com (172.27.123.32) with Microsoft SMTP Server
+ id 15.0.1473.3 via Frontend Transport; Wed, 7 Aug 2019 10:44:41 -0400
+Received: by igorcastle.kendall.corp.akamai.com (Postfix, from userid 29659)
+        id 8A70461D6C; Wed,  7 Aug 2019 10:44:39 -0400 (EDT)
+From:   Igor Lubashev <ilubashe@akamai.com>
+To:     <linux-kernel@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>
+CC:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        James Morris <jmorris@namei.org>,
+        Igor Lubashev <ilubashe@akamai.com>
+Subject: [PATCH v3 4/4] perf: Use CAP_SYS_ADMIN instead of euid==0 with ftrace
+Date:   Wed, 7 Aug 2019 10:44:17 -0400
+Message-ID: <bd8763b72ed4d58d0b42d44fbc7eb474d32e53a3.1565188228.git.ilubashe@akamai.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1565188228.git.ilubashe@akamai.com>
+References: <cover.1565188228.git.ilubashe@akamai.com>
 MIME-Version: 1.0
-References: <20190807095022.0314e2fc@canb.auug.org.au> <CAMn1gO6P_VfDRjGZb67ZS4Kh0wjTEQi0cbOkmibTokHQOgP7qw@mail.gmail.com>
- <20190807114614.ubzlkulk7aidws3p@willie-the-truck>
-In-Reply-To: <20190807114614.ubzlkulk7aidws3p@willie-the-truck>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 7 Aug 2019 23:43:02 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASr8mbGDbWikr2P8Pc_6WEpMyXuK-xkgypYOzkWw_6LUw@mail.gmail.com>
-Message-ID: <CAK7LNASr8mbGDbWikr2P8Pc_6WEpMyXuK-xkgypYOzkWw_6LUw@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the arm64 tree
-To:     Will Deacon <will@kernel.org>
-Cc:     Peter Collingbourne <pcc@google.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-07_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908070155
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:5.22.84,1.0.8
+ definitions=2019-08-07_03:2019-08-07,2019-08-07 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 bulkscore=0
+ mlxlogscore=999 priorityscore=1501 adultscore=0 lowpriorityscore=0
+ mlxscore=0 spamscore=0 phishscore=0 clxscore=1015 suspectscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1906280000 definitions=main-1908070157
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi.
+Kernel requires CAP_SYS_ADMIN instead of euid==0 to mount debugfs for ftrace.
+Make perf do the same.
 
-On Wed, Aug 7, 2019 at 8:46 PM Will Deacon <will@kernel.org> wrote:
->
-> Hi Peter,
->
-> On Tue, Aug 06, 2019 at 07:34:36PM -0700, Peter Collingbourne wrote:
-> > On Tue, Aug 6, 2019 at 4:50 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> > > After merging the arm64 tree, today's linux-next build (powerpc
-> > > ppc64_defconfig) was just spinning in make - it executing some scripts,
-> > > but it was hard to catch just what.
-> > >
-> > > Apparently caused by commit
-> > >
-> > >   5cf896fb6be3 ("arm64: Add support for relocating the kernel with RELR relocations")
-> > >
-> > > I have not idea why, but reverting the above commit allows to build
-> > > to finish.
-> >
-> > Okay, I can reproduce with:
->
-> Likewise.
->
-> > That leads me to ask what is special about $(NM) + powerpc? It turns
-> > out to be this fragment of arch/powerpc/Makefile:
-> >
-> > ifdef CONFIG_PPC64
-> > new_nm := $(shell if $(NM) --help 2>&1 | grep -- '--synthetic' >
-> > /dev/null; then echo y; else echo n; fi)
-> >
-> > ifeq ($(new_nm),y)
-> > NM              := $(NM) --synthetic
-> > endif
-> > endif
-> >
-> > We're setting NM to something else based on a config option, which I
-> > presume sets up some sort of circular dependency that confuses
-> > Kconfig. Removing this fragment of the makefile (or appending
-> > --synthetic unconditionally) also makes the problem go away.
+Signed-off-by: Igor Lubashev <ilubashe@akamai.com>
+---
+ tools/perf/builtin-ftrace.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Exactly. This makes a circular dependency.
-Kconfig determines the environment variable 'NM' has been changed,
-and re-runs.
-
-
-
-> Yes, I think you're right. The lack of something like KBUILD_NMFLAGS means
-> that architectures are forced to override NM entirely if they want to pass
-> any specific options. Making that conditional on a Kconfig option appears
-> to send the entire thing recursive.
-
-Adding KBUILD_NMFLAGS is probably the right thing to do.
-(Is there somebody who wants to volunteer for this?)
-
-But, for this particular case, I vote for
-the entire removal of --synthetic.
-
-This dates back to 2004, and the commit message
-did not clearly explain why it was needed.
-
-The PowerPC maintainers should re-evaluate
-whether or not this flag is necessary.
-
-ppc32 is working without --synthetic,
-so probably ppc64 would be ...
-
-
-
->
-> > So I guess we have a couple of possible quick fixes (assuming that the
-> > Kconfig issue can't be solved somehow): either stop passing --synthetic on
-> > powerpc and lose a couple of symbols in 64-bit kernels, or start passing
-> > it unconditionally on powerpc (it doesn't seem to make a difference to the
-> > nm output on a ppc64_defconfig kernel with CONFIG_PPC64=n). I'm cc'ing the
-> > powerpc maintainers for their opinion on what to do. While this is being
-> > resolved we should probably back out my patch from -next.
->
-> Although Alpha, Itanic and PowerPC all override NM, only PowerPC does it
-> conditionally so I agree with you that passing '--synthetic' unconditionally
-> would resolve the problem and is certainly my preferred approach if mpe is
-> ok with it.
->
-> In the meantime, it seems a shame to revert your patch, so I'll bodge it
-> as below and we can revert the bodge if PowerPC manages to remove the
-> conditional NM override. Sound ok to you?
->
-> Cheers,
->
-> Will
->
-> --->8
->
-> diff --git a/init/Kconfig b/init/Kconfig
-> index d96127ebc44e..a38027a06b79 100644
-> --- a/init/Kconfig
-> +++ b/init/Kconfig
-> @@ -31,7 +31,7 @@ config CC_HAS_ASM_GOTO
->         def_bool $(success,$(srctree)/scripts/gcc-goto.sh $(CC))
->
->  config TOOLS_SUPPORT_RELR
-> -       def_bool $(success,env "CC=$(CC)" "LD=$(LD)" "NM=$(NM)" "OBJCOPY=$(OBJCOPY)" $(srctree)/scripts/tools-support-relr.sh)
-> +       def_bool $(success,env "CC=$(CC)" "LD=$(LD)" "NM=$(CROSS_COMPILE)nm" "OBJCOPY=$(OBJCOPY)" $(srctree)/scripts/tools-support-relr.sh)
->
->  config CC_HAS_WARN_MAYBE_UNINITIALIZED
->         def_bool $(cc-option,-Wmaybe-uninitialized)
-
-Maybe,
-
-def_bool $(success,env "CC=$(CC)" "LD=$(LD)" "OBJCOPY=$(OBJCOPY)"
-$(srctree)/scripts/tools-support-relr.sh)
-
-will work.
-
-
-Or more simply
-
-def_bool $(success,$(srctree)/scripts/tools-support-relr.sh)
-
-
-
-CC, LD, OBJCOPY, NM are environment variables,
-so I think tools-support-relr.sh can directly use them.
-
-
-However, this bypasses the detection of environment variable changes.
-If a user passes NM= from the command line, Kconfig will no longer
-notice the change of NM.
-
-
-
+diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+index ae1466aa3b26..d09eac8a6d57 100644
+--- a/tools/perf/builtin-ftrace.c
++++ b/tools/perf/builtin-ftrace.c
+@@ -13,6 +13,7 @@
+ #include <signal.h>
+ #include <fcntl.h>
+ #include <poll.h>
++#include <linux/capability.h>
+ 
+ #include "debug.h"
+ #include <subcmd/parse-options.h>
+@@ -21,6 +22,7 @@
+ #include "target.h"
+ #include "cpumap.h"
+ #include "thread_map.h"
++#include "util/cap.h"
+ #include "util/config.h"
+ 
+ 
+@@ -281,7 +283,7 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
+ 		.events = POLLIN,
+ 	};
+ 
+-	if (geteuid() != 0) {
++	if (!perf_cap__capable(CAP_SYS_ADMIN)) {
+ 		pr_err("ftrace only works for root!\n");
+ 		return -1;
+ 	}
 -- 
-Best Regards
-Masahiro Yamada
+2.7.4
+
