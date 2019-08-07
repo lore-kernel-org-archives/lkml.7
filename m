@@ -2,157 +2,83 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D87EFC32754
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 23:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6993BC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 23:42:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B747D20880
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 23:42:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F52520880
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 23:42:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565221354;
+	bh=AB0/GU2h6UDA8h5FXu3N6Lb3ksMEGrIp/OcfbfuwI5w=;
+	h=In-Reply-To:References:From:Cc:To:Subject:Date:List-ID:From;
+	b=x1h2qx/UuAeiqqU/thqUR/POv+chuwlIU7e1+iavSchi2hTvxJTbswPH/Wgb3GnyH
+	 tbjifjQR537/HflI1UZcerTNY/jft93H8KScDJjPnD+/NhYR/6Ri2h81k0L52rIaDz
+	 iiT9zq+RHX2G1Cy7sAhR52/dtea3pMsEzTrpdw5I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389232AbfHGXmB (ORCPT
+        id S2389376AbfHGXmd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 19:42:01 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49378 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388412AbfHGXmB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 19:42:01 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x77NadUW158861;
-        Wed, 7 Aug 2019 19:41:27 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2u87072xr7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 07 Aug 2019 19:41:27 -0400
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x77NdCMP164069;
-        Wed, 7 Aug 2019 19:41:26 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2u87072xqs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 07 Aug 2019 19:41:26 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x77Ne7Xr030667;
-        Wed, 7 Aug 2019 23:41:25 GMT
-Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma01dal.us.ibm.com with ESMTP id 2u51w7b4sc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 07 Aug 2019 23:41:25 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x77NfPBl44957986
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 7 Aug 2019 23:41:25 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1B3C6B2065;
-        Wed,  7 Aug 2019 23:41:25 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F1940B205F;
-        Wed,  7 Aug 2019 23:41:24 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed,  7 Aug 2019 23:41:24 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 08E1A16C9A4E; Wed,  7 Aug 2019 16:41:26 -0700 (PDT)
-Date:   Wed, 7 Aug 2019 16:41:25 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Ethan Hansen <1ethanhansen@gmail.com>
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dave@stgolabs.net, josh@joshtriplett.org, rostedt@goodmis.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        joel@joelfernandes.org
-Subject: Re: [PATCH tip/core/rcu 1/1] rcu: Remove unused variable
- rcu_perf_writer_state
-Message-ID: <20190807234125.GK28441@linux.ibm.com>
-Reply-To: paulmck@linux.ibm.com
-References: <1565220415-3070-1-git-send-email-1ethanhansen@gmail.com>
+        Wed, 7 Aug 2019 19:42:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48998 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387981AbfHGXmd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 19:42:33 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27AA720880;
+        Wed,  7 Aug 2019 23:42:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565221352;
+        bh=AB0/GU2h6UDA8h5FXu3N6Lb3ksMEGrIp/OcfbfuwI5w=;
+        h=In-Reply-To:References:From:Cc:To:Subject:Date:From;
+        b=g4jKpvg5O2bjHaVoG/3b91MBzydKjYsPJ2V0u9zxzG6GvKDjfXVeFp1uM+ImQHCyW
+         9SekbeHZnKbmLeUs0RGRBDVh1e0A5D8PCKq2ZbGyzc0O3hIPbBec02LHfya3GJcxIQ
+         wACvdtfptz19RL9raollDDdGq9xtTPTII5QVkuWw=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1565220415-3070-1-git-send-email-1ethanhansen@gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-07_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908070208
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1565037226-1684-1-git-send-email-jcrouse@codeaurora.org>
+References: <1565037226-1684-1-git-send-email-jcrouse@codeaurora.org>
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        linux-clk@vger.kernel.org, Taniya Das <tdas@codeaurora.org>
+To:     Jordan Crouse <jcrouse@codeaurora.org>,
+        freedreno@lists.freedesktop.org
+Subject: Re: [PATCH v2] drivers: qcom: Add BCM vote macro to header
+User-Agent: alot/0.8.1
+Date:   Wed, 07 Aug 2019 16:42:31 -0700
+Message-Id: <20190807234232.27AA720880@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 07, 2019 at 04:26:55PM -0700, Ethan Hansen wrote:
-> The variable rcu_perf_writer_state is declared and initialized,
-> but is never actually referenced. Remove it to clean code.
-> 
-> Signed-off-by: Ethan Hansen <1ethanhansen@gmail.com>
-
-Good eyes, thank you!  One question below.
-
-							Thanx, Paul
-
+Quoting Jordan Crouse (2019-08-05 13:33:46)
+> The macro to generate a Bus Controller Manager (BCM) TCS command is used
+> by the interconnect driver but might also be interesting to other
+> drivers that need to construct TCS commands for sub processors so move
+> it out of the sdm845 specific file and into the header.
+>=20
+> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
 > ---
->  kernel/rcu/rcuperf.c | 8 --------
->  1 file changed, 8 deletions(-)
-> 
-> diff --git a/kernel/rcu/rcuperf.c b/kernel/rcu/rcuperf.c
-> index 5a879d0..ff02936 100644
-> --- a/kernel/rcu/rcuperf.c
-> +++ b/kernel/rcu/rcuperf.c
-> @@ -109,7 +109,6 @@
->  static unsigned long b_rcu_perf_writer_finished;
->  static DEFINE_PER_CPU(atomic_t, n_async_inflight);
->  
-> -static int rcu_perf_writer_state;
->  #define RTWS_INIT		0
->  #define RTWS_ASYNC		1
->  #define RTWS_BARRIER		2
 
-Does removing this variable also mean that the RTWS_* C preprocessor
-macros are now unused?
+Acked-by: Stephen Boyd <sboyd@kernel.org>
 
-> @@ -404,25 +403,20 @@ static void rcu_perf_async_cb(struct rcu_head *rhp)
->  			if (!rhp)
->  				rhp = kmalloc(sizeof(*rhp), GFP_KERNEL);
->  			if (rhp && atomic_read(this_cpu_ptr(&n_async_inflight)) < gp_async_max) {
-> -				rcu_perf_writer_state = RTWS_ASYNC;
->  				atomic_inc(this_cpu_ptr(&n_async_inflight));
->  				cur_ops->async(rhp, rcu_perf_async_cb);
->  				rhp = NULL;
->  			} else if (!kthread_should_stop()) {
-> -				rcu_perf_writer_state = RTWS_BARRIER;
->  				cur_ops->gp_barrier();
->  				goto retry;
->  			} else {
->  				kfree(rhp); /* Because we are stopping. */
->  			}
->  		} else if (gp_exp) {
-> -			rcu_perf_writer_state = RTWS_EXP_SYNC;
->  			cur_ops->exp_sync();
->  		} else {
-> -			rcu_perf_writer_state = RTWS_SYNC;
->  			cur_ops->sync();
->  		}
-> -		rcu_perf_writer_state = RTWS_IDLE;
->  		t = ktime_get_mono_fast_ns();
->  		*wdp = t - *wdp;
->  		i_max = i;
-> @@ -463,10 +457,8 @@ static void rcu_perf_async_cb(struct rcu_head *rhp)
->  		rcu_perf_wait_shutdown();
->  	} while (!torture_must_stop());
->  	if (gp_async) {
-> -		rcu_perf_writer_state = RTWS_BARRIER;
->  		cur_ops->gp_barrier();
->  	}
-> -	rcu_perf_writer_state = RTWS_STOPPING;
->  	writer_n_durations[me] = i_max;
->  	torture_kthread_stopping("rcu_perf_writer");
->  	return 0;
-> -- 
-> 1.8.3.1
-> 
+Unless this is supposed to be applied by me?
+
+BTW, I wonder why we need an rpm clk driver much at all nowadays, except
+maybe for the XO clk state. The big user, from what I can tell, is the
+interconnect driver and we don't use any of the features of the clk
+framework besides the API to set a frequency. Maybe it would be better
+to just push push the bus frequency logic into interconnect code, then
+XO clk is the only thing we need to keep, and it can be a simple on/off
+thing.
+
