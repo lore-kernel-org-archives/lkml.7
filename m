@@ -2,83 +2,115 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF12C31E40
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 02:33:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE1C6C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 02:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59D3C208C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 02:33:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E8E4208C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 02:34:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="XR/rK36v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729631AbfHGCdg (ORCPT
+        id S1727940AbfHGCea (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 22:33:36 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:41763 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727653AbfHGCdg (ORCPT
+        Tue, 6 Aug 2019 22:34:30 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:27579 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726431AbfHGCe3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 22:33:36 -0400
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x772XQA2021696, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCAS12.realtek.com.tw[172.21.6.16])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x772XQA2021696
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 7 Aug 2019 10:33:26 +0800
-Received: from RTITMBSVM04.realtek.com.tw ([fe80::e404:880:2ef1:1aa1]) by
- RTITCAS12.realtek.com.tw ([::1]) with mapi id 14.03.0439.000; Wed, 7 Aug 2019
- 10:33:26 +0800
-From:   Tony Chuang <yhchuang@realtek.com>
-To:     Brian Norris <briannorris@chromium.org>,
-        =?utf-8?B?6rOg7KSA?= <gojun077@gmail.com>
-CC:     linux-wireless <linux-wireless@vger.kernel.org>,
-        "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Subject: RE: Realtek r8822be wireless card fails to work with new rtw88 kernel module
-Thread-Topic: Realtek r8822be wireless card fails to work with new rtw88
- kernel module
-Thread-Index: AQHVTGO9JaOOz1AO2EeBgyY27UJlXKbuT6EAgACnGPA=
-Date:   Wed, 7 Aug 2019 02:33:25 +0000
-Message-ID: <F7CD281DE3E379468C6D07993EA72F84D1889B04@RTITMBSVM04.realtek.com.tw>
-References: <CAH040W7fdd-ND4-QG3DwGpFAPTMGB4zzuXYohMdfoSejV6XE_Q@mail.gmail.com>
- <CA+ASDXM6Jz7YY9XUj6QKv5VJCED-BnQ5K1UZHNApB9p6qTWtgg@mail.gmail.com>
-In-Reply-To: <CA+ASDXM6Jz7YY9XUj6QKv5VJCED-BnQ5K1UZHNApB9p6qTWtgg@mail.gmail.com>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.21.68.183]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 6 Aug 2019 22:34:29 -0400
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id x772YGBx024672;
+        Wed, 7 Aug 2019 11:34:17 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x772YGBx024672
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1565145257;
+        bh=+Na/oaFlPFLzhHHyEv2bDd3O81VBBu2zQfuRfwJvQXw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=XR/rK36vh0u87Xwt/y65OytK2uSGxSVdUOpRXGuCh2V2j+xpQW7awgRGdu4gSypo1
+         60/d4Y6AxDIZ8irZTynu/TKj018yb408S7rFHdsVYCQodsoEMmk7HxcJ3JZOwUt2r8
+         dAiJHoaxI/n35llOtDwrOSh1TneMZMoGjMkL0dnZQvG+RhLVsfVNXUi8QEOEEu7d6s
+         e8kMLvv1ul6FYSoEQu9S7yfPpyXFXRsYM52IaGXbnPGNeoFI9Z0IQzUbyaf5fQZmZc
+         E5HJ8fIBPfcotetORay00H/2iRjNNUQDJxkVwFKYt22bU12RFXDKeY/DxBf8cpWyHL
+         yvwML97GZdeJA==
+X-Nifty-SrcIP: [209.85.217.53]
+Received: by mail-vs1-f53.google.com with SMTP id 2so59635461vso.8;
+        Tue, 06 Aug 2019 19:34:17 -0700 (PDT)
+X-Gm-Message-State: APjAAAU0NMJ2I/hbIZ2ir17Bzj9ADmQIiU+YYT2omy1c/EehMyndnVag
+        VwTehROxDwKx70FzOBbFIOLW7CW4ktvr8a6IMcQ=
+X-Google-Smtp-Source: APXvYqzAR/6xcUjB+iyJ4MYJeq0ddLIXMcTvItkNUaRF8fcH9f1uEUk3gJGXDCbRVBpXpGf6GvJXKbtx565Il2UT2zw=
+X-Received: by 2002:a67:8e0a:: with SMTP id q10mr4441385vsd.215.1565145256312;
+ Tue, 06 Aug 2019 19:34:16 -0700 (PDT)
 MIME-Version: 1.0
+References: <patch-1.thread-2257a1.git-188f5a3d81d5.your-ad-here.call-01565088755-ext-5120@work.hours>
+ <patch-2.thread-2257a1.git-2257a1c53d4a.your-ad-here.call-01565088755-ext-5120@work.hours>
+In-Reply-To: <patch-2.thread-2257a1.git-2257a1c53d4a.your-ad-here.call-01565088755-ext-5120@work.hours>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Wed, 7 Aug 2019 11:33:40 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATyNWjwVXdbgXt0mL+3R8jTGe_cq1vEW8_VvB250P4bdg@mail.gmail.com>
+Message-ID: <CAK7LNATyNWjwVXdbgXt0mL+3R8jTGe_cq1vEW8_VvB250P4bdg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] s390/build: use size command to perform empty .bss check
+To:     Vasily Gorbik <gor@linux.ibm.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiArIHloY2h1YW5nDQo+IA0KPiBPbiBUdWUsIEF1ZyA2LCAyMDE5IGF0IDc6MzIgQU0g6rOg7KSA
-IDxnb2p1bjA3N0BnbWFpbC5jb20+IHdyb3RlOg0KPiA+DQo+ID4gSGVsbG8sDQo+ID4NCj4gPiBJ
-IHJlY2VudGx5IHJlcG9ydGVkIGEgYnVnIHRvIFVidW50dSByZWdhcmRpbmcgYSByZWdyZXNzaW9u
-IGluIHdpcmVsZXNzDQo+ID4gZHJpdmVyIHN1cHBvcnQgZm9yIHRoZSBSZWFsdGVrIHI4ODIyYmUg
-d2lyZWxlc3MgY2hpcHNldC4gVGhlIGlzc3VlDQo+ID4gbGluayBvbiBsYXVuY2hwYWQgaXM6DQo+
-ID4NCj4gPiBodHRwczovL2J1Z3MubGF1bmNocGFkLm5ldC9idWdzLzE4MzgxMzMNCj4gPg0KPiA+
-IEFmdGVyIENhbm9uaWNhbCBkZXZlbG9wZXJzIHRyaWFnZWQgdGhlIGJ1ZyB0aGV5IGRldGVybWlu
-ZWQgdGhhdCB0aGUNCj4gPiBwcm9ibGVtIGxpZXMgdXBzdHJlYW0sIGFuZCBpbnN0cnVjdGVkIG1l
-IHRvIHNlbmQgbWFpbHMgdG8gdGhlIHJlbGV2YW50DQo+ID4ga2VybmVsIG1vZHVsZSBtYWludGFp
-bmVycyBhdCBSZWFsdGVrIGFuZCB0byB0aGUgZ2VuZXJhbCBrZXJuZWwub3JnDQo+ID4gbWFpbGlu
-ZyBsaXN0Lg0KPiA+DQo+ID4gSSBidWlsdCBrZXJuZWwgNS4zLjAtcmMxKyB3aXRoIHRoZSBsYXRl
-c3QgcmVhbHRlayBkcml2ZXJzIGZyb20NCj4gPiB3aXJlbGVzcy1kcml2ZXJzLW5leHQgYnV0IG15
-IFJlYWx0ZWsgcjg4MjJiZSBkb2Vzbid0IHdvcmsgd2l0aA0KPiA+IHJ0dzg4L3J0d3BjaSBrZXJu
-ZWwgbW9kdWxlcy4NCj4gPg0KPiA+IFBsZWFzZSBsZXQgbWUga25vdyBpZiB0aGVyZSBpcyBhbnkg
-YWRkaXRpb25hbCBpbmZvcm1hdGlvbiBJIGNhbg0KPiA+IHByb3ZpZGUgdGhhdCB3b3VsZCBoZWxw
-IGluIGRlYnVnZ2luZyB0aGlzIGlzc3VlLg0KPiANCj4gQW55IGNoYW5jZSB0aGlzIHdvdWxkIGhl
-bHAgeW91Pw0KPiANCj4gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMTA2NTYz
-MS8NCj4gDQo+IFNvbWVib2R5IGVsc2Ugd2FzIGNvbXBsYWluaW5nIGFib3V0IDg4MjJiZSByZWdy
-ZXNzaW9ucyB0aGF0IHdlcmUgZml4ZWQNCj4gd2l0aCB0aGF0Lg0KPiANCg0KSSBob3BlIGl0IGNv
-dWxkIGZpeCBpdC4NCg0KQW5kIGFzICJyODgyMmJlIiB3YXMgZHJvcHBlZCwgaXQgaXMgcHJlZmVy
-cmVkIHRvIHVzZSAicnR3ODgiIGluc3RlYWQuDQpJIGhhdmUgcmVjZWl2ZWQgdHdvIGtpbmRzIG9m
-IGZhaWx1cmVzIHRoYXQgY2F1c2UgZHJpdmVyIHN0b3Agd29ya2luZy4NCk9uZSBpcyB0aGUgTVNJ
-IGludGVycnVwdCBzaG91bGQgYmUgZW5hYmxlZCBvbiBjZXJ0YWluIHBsYXRmb3Jtcy4NCkFub3Ro
-ZXIgaXMgdGhlIFJGRSB0eXBlIG9mIHRoZSBjYXJkLCBjb3VsZCB5b3Ugc2VuZCBtb3JlIGRtZXNn
-IHRvIG1lPw0KDQpZYW4tSHN1YW4NCg0KDQo=
+On Tue, Aug 6, 2019 at 7:56 PM Vasily Gorbik <gor@linux.ibm.com> wrote:
+>
+> Currently empty .bss checks performed do not pay attention to "common
+> objects" in object files which end up in .bss section eventually.
+>
+> The "size" tool is a part of binutils and since version 2.18 provides
+> "--common" command line option, which allows to account "common objects"
+> sizes in .bss section size. Utilize "size --common" to perform accurate
+> check that .bss section is unused. Besides that the size tool handles
+> object files without .bss section gracefully and doesn't require
+> additional objdump run.
+>
+> The linux kernel requires binutils 2.20 since 4.13.
+>
+> Kbuild exports OBJSIZE to reference the right size tool.
+>
+> Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+> ---
+>  arch/s390/scripts/Makefile.chkbss | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/arch/s390/scripts/Makefile.chkbss b/arch/s390/scripts/Makefile.chkbss
+> index 884a9caff5fb..ba1d7a8a242f 100644
+> --- a/arch/s390/scripts/Makefile.chkbss
+> +++ b/arch/s390/scripts/Makefile.chkbss
+> @@ -11,8 +11,7 @@ chkbss: $(addprefix $(obj)/, $(chkbss-files))
+>
+>  quiet_cmd_chkbss = CHKBSS  $<
+>        cmd_chkbss = \
+> -       if $(OBJDUMP) -h $< | grep -q "\.bss" && \
+> -          ! $(OBJDUMP) -j .bss -w -h $< | awk 'END { if ($$3) exit 1 }'; then \
+> +       if ! $(OBJSIZE) --common $< | awk 'END { if ($$3) exit 1 }'; then \
+
+While you are touching this line,
+you may also want to replace 'awk' with $(AWK),
+which is defined in the top-level Makefile.
+
+
+
+
+>                 echo "error: $< .bss section is not empty" >&2; exit 1; \
+>         fi; \
+>         touch $@;
+> --
+> 2.21.0
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
