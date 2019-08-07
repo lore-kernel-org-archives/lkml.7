@@ -2,110 +2,138 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 967D6C32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 11:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8453FC41514
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 11:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7708521BF6
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 11:46:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E3D821BF6
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 11:48:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729874AbfHGLqz convert rfc822-to-8bit (ORCPT
+        id S2387567AbfHGLsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 07:46:55 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:49457 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727171AbfHGLqz (ORCPT
+        Wed, 7 Aug 2019 07:48:06 -0400
+Received: from mail-ot1-f71.google.com ([209.85.210.71]:55846 "EHLO
+        mail-ot1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727171AbfHGLsG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 07:46:55 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1hvKP3-00075L-NR; Wed, 07 Aug 2019 13:46:49 +0200
-Date:   Wed, 7 Aug 2019 13:46:49 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     tglx@linutronix.de, peterz@infradead.org, mingo@kernel.org,
-        tj@kernel.org, jiangshanlai@gmail.com,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: NULL ptr deref in wq_worker_sleeping on 4.19
-Message-ID: <20190807114649.fjfaj4oytcxaua7o@linutronix.de>
-References: <20190719135352.GF4240@sasha-vm>
+        Wed, 7 Aug 2019 07:48:06 -0400
+Received: by mail-ot1-f71.google.com with SMTP id p7so54213470otk.22
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 04:48:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=GoZRE87G5nmPn2K8yJgOw8W+FOPUWswgfdnrBbwx8HE=;
+        b=un4q5f5kCab0aT94kdk/GMoaOkPHO1VpaCCE8Fe7n2HwSBVDlrcBrj/SP8QQWa5nUW
+         DeZy/Me+0l59Vvwh3GekSG+mwCPXcmTr6QnkREq0E44UhuVhgbEoV2TFBY+bSDIhW5ls
+         nEYsZ5zLJsMaKFhqGPtFujKhqq9LXByv84fELSr1Vdr2jY2mOyLH57QSRN0LB8qrlzk7
+         U8SoTAGvM+C+hRZ9yxlihDDPYhK1UXZaFUsmScQ4LCebCfRLUnOrlgAtPU7L/BocTf93
+         1HtYSP71xyNAdSdRHFQ1vIHu2RO2KAJfCvhUjtcNcdCCk8oDM+rluBFSxPHvGXkQvTFS
+         nDIw==
+X-Gm-Message-State: APjAAAXmCKv6mG6QjD6T1Fk3Th8qvPWnyCNlnCgXY6SiwtSnPVhaR6s+
+        daQlYtlI8Lgvx5tzS3Srhw6lSACSc2vlzq28oYHPwOS2ORhO
+X-Google-Smtp-Source: APXvYqxNxE4YTZ+L2Gw7fd493v4JQnlEXMFWmmOWo0R8nRsooRqqZBNEK5vZN+wNttdNxrhC10CHlgomhtLGMzk/HML3NnGXpeMK
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20190719135352.GF4240@sasha-vm>
-User-Agent: NeoMutt/20180716
+X-Received: by 2002:a6b:6d08:: with SMTP id a8mr8669980iod.191.1565178485118;
+ Wed, 07 Aug 2019 04:48:05 -0700 (PDT)
+Date:   Wed, 07 Aug 2019 04:48:05 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000009d9e43058f85838c@google.com>
+Subject: KMSAN: uninit-value in smsc75xx_wait_eeprom
+From:   syzbot <syzbot+532222e4d7ddadadd1c8@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, glider@google.com,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org, steve.glendinning@shawell.net,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-07-19 09:53:52 [-0400], Sasha Levin wrote:
-> Hi folks,
-Hi,
+Hello,
 
-> We're seeing a rare panic on boot in wq_worker_sleeping() on boot in
-> 4.19 kernels. I wasn't able to reproduce this with 5.2, but I'm not sure
-> whether it's because the issue is fixed, or I was just unlucky.
-> 
-> The panic looks like this:
-> 
-> [    0.852791] BUG: unable to handle kernel NULL pointer dereference at 0000000000000010
-> [    0.853260] PGD 0 P4D 0 [    0.853260] Oops: 0000 [#1] SMP PTI
-> [    0.853260] CPU: 7 PID: 49 Comm:  Not tainted 4.19.52-9858d02fd940 #1
-> [    0.853260] Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS 090007  06/02/2017
-> [    0.853260] RIP: 0010:kthread_data+0x12/0x30
-> [    0.853260] Code: 83 7f 58 00 74 02 0f 0b e9 bb 2d 19 00 0f 0b eb e2 0f 1f 80 00 00 00 00 0f 1f 44 00 00 f6 47 26 20 74 0c 48 8b 87 98 05 00 00 <48> 8b 40 10 c3 0f 0b 48 8b 87 98 05 00 00 48 8b 40 10 c3 90 66 2e
-> [    0.853260] RSP: 0000:ffffc900036abe38 EFLAGS: 00010002
-> [    0.853260] RAX: 0000000000000000 RBX: ffff8887bfbe17c0 RCX: 0000000000000000
-> [    0.853260] RDX: 0000000000000001 RSI: 000000000000000a RDI: ffff8887bbb4bb00
-> [    0.853260] RBP: ffffc900036abea0 R08: 0000000000000000 R09: 0000000000000000
-> [    0.853260] R10: ffffc9000368bd90 R11: 0000000000000000 R12: ffff8887bbb4bb00
-> [    0.853260] R13: 0000000000000000 R14: ffffc900036abe60 R15: 0000000000000000
-> [    0.853260] FS:  0000000000000000(0000) GS:ffff8887bfbc0000(0000) knlGS:0000000000000000
-> [    0.853260] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [    0.853260] CR2: 0000000000000068 CR3: 00000007df40a000 CR4: 00000000001406e0
-> [    0.853260] Call Trace:
-> [    0.853260]  wq_worker_sleeping+0xa/0x60
-> [    0.853260]  __schedule+0x571/0x8c0
-> [    0.853260]  schedule+0x32/0x80
-> [    0.853260]  worker_thread+0xc7/0x440
-> [    0.853260]  kthread+0xf8/0x130
-> [    0.853260]  ret_from_fork+0x35/0x40
-> [    0.853260] Modules linked in:
-> [    0.853260] CR2: 0000000000000010
-> [    0.853260] ---[ end trace 160fda44361ab977 ]---
-> 
-> I see that this area was recently touched by 6d25be5782e4 ("sched/core,
-> workqueues: Distangle worker accounting from rq lock") but I'm not sure
-> if it's related.
+syzbot found the following crash on:
 
-The change should just move code outside of the scheduler and not lead
-to any changed behaviour (except the small detail mentioned in the
-changelog, nothing explaining what you have here).
+HEAD commit:    ae0c578a kmsan: include gfp.h from kmsan.h
+git tree:       kmsan
+console output: https://syzkaller.appspot.com/x/log.txt?x=10e4f474600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=27abc558ecb16a3b
+dashboard link: https://syzkaller.appspot.com/bug?extid=532222e4d7ddadadd1c8
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+80fee25776c2fb61e74c1ecb1a523375c2500b69)
 
-The way the call chain looks is, kthread() allocated the struct kthread
-(self) and saved it in current->set_child_tid and this pointer is not
-NULL. Everything works out and `threadfn' is invoked which is
-worker_thread().
-The first thing it does, is to set the special kworker flag via
-set_pf_worker() which enables the additional code in the scheduler. Then
-it has nothing to do and invokes schedule() which then gets us to
-wq_worker_sleeping(). Here it invokes wq_worker_sleeping() which is what
-explodes.
-Based on the register dump and code dump, RAX is NULL which is
-current->set_child_tid (from the begin of ktread()). It adds 0x10 for
-the ->date pointer and OOPSes while reading from 0x10.
+Unfortunately, I don't have any reproducer for this crash yet.
 
-So everything looks fine, except that `set_child_tid' seems to be zeroed
-out. Also, task_struct has a few lines after `set_child_tid' the `comm'
-member which seems to contain also 0x00 because the trace contains no
-task name. At this point I would have expected "kworker/…".
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+532222e4d7ddadadd1c8@syzkaller.appspotmail.com
 
-Based on this two hints it looks like something zeroed that memory area
-shortly after it was occupied by the task (aka use after free).
+usb 2-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+usb 2-1: config 0 descriptor??
+smsc75xx v1.0.0
+==================================================================
+BUG: KMSAN: uninit-value in smsc75xx_wait_eeprom+0x1fb/0x3d0  
+drivers/net/usb/smsc75xx.c:307
+CPU: 1 PID: 10983 Comm: kworker/1:5 Not tainted 5.3.0-rc3+ #16
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
+  kmsan_report+0x162/0x2d0 mm/kmsan/kmsan_report.c:109
+  __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:294
+  smsc75xx_wait_eeprom+0x1fb/0x3d0 drivers/net/usb/smsc75xx.c:307
+  smsc75xx_read_eeprom+0x3c2/0x920 drivers/net/usb/smsc75xx.c:364
+  smsc75xx_init_mac_address drivers/net/usb/smsc75xx.c:771 [inline]
+  smsc75xx_bind+0x675/0x12d0 drivers/net/usb/smsc75xx.c:1489
+  usbnet_probe+0x10ae/0x3960 drivers/net/usb/usbnet.c:1722
+  usb_probe_interface+0xd19/0x1310 drivers/usb/core/driver.c:361
+  really_probe+0x1373/0x1dc0 drivers/base/dd.c:552
+  driver_probe_device+0x1ba/0x510 drivers/base/dd.c:709
+  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:816
+  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
+  __device_attach+0x489/0x750 drivers/base/dd.c:882
+  device_initial_probe+0x4a/0x60 drivers/base/dd.c:929
+  bus_probe_device+0x131/0x390 drivers/base/bus.c:514
+  device_add+0x25b5/0x2df0 drivers/base/core.c:2114
+  usb_set_configuration+0x309f/0x3710 drivers/usb/core/message.c:2027
+  generic_probe+0xe7/0x280 drivers/usb/core/generic.c:210
+  usb_probe_device+0x146/0x200 drivers/usb/core/driver.c:266
+  really_probe+0x1373/0x1dc0 drivers/base/dd.c:552
+  driver_probe_device+0x1ba/0x510 drivers/base/dd.c:709
+  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:816
+  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
+  __device_attach+0x489/0x750 drivers/base/dd.c:882
+  device_initial_probe+0x4a/0x60 drivers/base/dd.c:929
+  bus_probe_device+0x131/0x390 drivers/base/bus.c:514
+  device_add+0x25b5/0x2df0 drivers/base/core.c:2114
+  usb_new_device+0x23e5/0x2fb0 drivers/usb/core/hub.c:2536
+  hub_port_connect drivers/usb/core/hub.c:5098 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+  port_event drivers/usb/core/hub.c:5359 [inline]
+  hub_event+0x581d/0x72f0 drivers/usb/core/hub.c:5441
+  process_one_work+0x1572/0x1ef0 kernel/workqueue.c:2269
+  worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
+  kthread+0x4b5/0x4f0 kernel/kthread.c:256
+  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
 
-Sebastian
+Local variable description: ----buf.i.i@smsc75xx_wait_eeprom
+Variable was created at:
+  __smsc75xx_read_reg drivers/net/usb/smsc75xx.c:83 [inline]
+  smsc75xx_read_reg drivers/net/usb/smsc75xx.c:147 [inline]
+  smsc75xx_wait_eeprom+0xb6/0x3d0 drivers/net/usb/smsc75xx.c:301
+  smsc75xx_read_eeprom+0x3c2/0x920 drivers/net/usb/smsc75xx.c:364
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
