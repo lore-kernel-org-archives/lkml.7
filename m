@@ -2,121 +2,90 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A852CC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 11:59:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D341C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 12:04:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A60A21BF6
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 11:59:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565179173;
-	bh=fE7YIYx8+y7MYU9u2RxYo4CVYhuKEipF0tinVVdo9Sc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=B/hpQOFvD/ZTNWDFvLcu0mGypU0HC3BeYPf4UMF0V9tlj8DKt3iIFQfbMm31auoyO
-	 bjFDR+apdQTKnod3r1NnX3EVf2IN3ZdBwNN+mv+AjxFrL2SQU2byKEPcCE9gZdZ4Tb
-	 IBTkdp2HacS396vZJPQe9cMda/gzmLwcERhqbj4I=
+	by mail.kernel.org (Postfix) with ESMTP id 17EAB219BE
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 12:04:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729767AbfHGL7c (ORCPT
+        id S1729681AbfHGMEt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 07:59:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58766 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726873AbfHGL7c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 07:59:32 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23123219BE;
-        Wed,  7 Aug 2019 11:59:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565179171;
-        bh=fE7YIYx8+y7MYU9u2RxYo4CVYhuKEipF0tinVVdo9Sc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fqIoWwnfxBbJUXf2BBa9wQdIyLyOhszNRhLtFcfUHw3NhQ4TmBvZyabOT6UVP27B9
-         ASkT5VvHTL+BACFrKajkYhPYPMaWw4LeiIWDNFMMdjZoj3r3C40mbgXXWCY+/JpS4S
-         mbeGy4GZOgpyBKGaBOoHZj8FeY5+lrEWDT1JjlwY=
-Date:   Wed, 7 Aug 2019 12:59:27 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] arm64/cache: fix -Woverride-init compiler warnings
-Message-ID: <20190807115926.np7izmaq36kgxzdg@willie-the-truck>
-References: <20190806193434.965-1-cai@lca.pw>
- <20190807105652.cyi3fou2rfsxhxrk@willie-the-truck>
- <D11F0810-A6D0-4835-B71A-9DDDC120423B@lca.pw>
+        Wed, 7 Aug 2019 08:04:49 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:35253 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726773AbfHGMEs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 08:04:48 -0400
+Received: from localhost (lpr83-1-88-168-111-231.fbx.proxad.net [88.168.111.231])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 7D6CD200002;
+        Wed,  7 Aug 2019 12:04:46 +0000 (UTC)
+Date:   Wed, 7 Aug 2019 14:04:45 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        devicetree@vger.kernel.org, netdev <netdev@vger.kernel.org>,
+        linux-amlogic@lists.infradead.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: net: snps,dwmac: update reg minItems
+ maxItems
+Message-ID: <20190807120445.yje57g6mwcmyztki@flea>
+References: <20190806125041.16105-1-narmstrong@baylibre.com>
+ <20190806125041.16105-2-narmstrong@baylibre.com>
+ <CAL_Jsq+6kCO8x53d1670VjgEjfs5opKY+R3OgsAo0WsXqq512Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <D11F0810-A6D0-4835-B71A-9DDDC120423B@lca.pw>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <CAL_Jsq+6kCO8x53d1670VjgEjfs5opKY+R3OgsAo0WsXqq512Q@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 07, 2019 at 07:50:43AM -0400, Qian Cai wrote:
-> 
-> 
-> > On Aug 7, 2019, at 6:56 AM, Will Deacon <will@kernel.org> wrote:
-> > 
-> > On Tue, Aug 06, 2019 at 03:34:34PM -0400, Qian Cai wrote:
-> >> diff --git a/arch/arm64/kernel/cpuinfo.c b/arch/arm64/kernel/cpuinfo.c
-> >> index 876055e37352..a0c495a3f4fd 100644
-> >> --- a/arch/arm64/kernel/cpuinfo.c
-> >> +++ b/arch/arm64/kernel/cpuinfo.c
-> >> @@ -34,10 +34,7 @@ DEFINE_PER_CPU(struct cpuinfo_arm64, cpu_data);
-> >> static struct cpuinfo_arm64 boot_cpu_data;
-> >> 
-> >> static char *icache_policy_str[] = {
-> >> -	[0 ... ICACHE_POLICY_PIPT]	= "RESERVED/UNKNOWN",
-> >> -	[ICACHE_POLICY_VIPT]		= "VIPT",
-> >> -	[ICACHE_POLICY_PIPT]		= "PIPT",
-> >> -	[ICACHE_POLICY_VPIPT]		= "VPIPT",
-> >> +	[0 ... ICACHE_POLICY_PIPT]	= "RESERVED/UNKNOWN"
-> >> };
-> >> 
-> >> unsigned long __icache_flags;
-> >> @@ -310,13 +307,16 @@ static void cpuinfo_detect_icache_policy(struct cpuinfo_arm64 *info)
-> >> 
-> >> 	switch (l1ip) {
-> >> 	case ICACHE_POLICY_PIPT:
-> >> +		icache_policy_str[ICACHE_POLICY_PIPT] = "PIPT";
-> >> 		break;
-> >> 	case ICACHE_POLICY_VPIPT:
-> >> +		icache_policy_str[ICACHE_POLICY_VPIPT] = "VPIPT";
-> >> 		set_bit(ICACHEF_VPIPT, &__icache_flags);
-> >> 		break;
-> >> 	default:
-> >> 		/* Fallthrough */
-> >> 	case ICACHE_POLICY_VIPT:
-> >> +		icache_policy_str[ICACHE_POLICY_VIPT] = "VIPT";
-> >> 		/* Assume aliasing */
-> >> 		set_bit(ICACHEF_ALIASING, &__icache_flags);
-> > 
-> > I still think this is worse than the code in mainline. I don't think
-> > -Woverride-init should warn when overriding a field from a GCC range
-> > designated initialiser, since it makes them considerably less useful
-> > imo.
-> 
-> Unfortunately, compiler people are moving into a different direction as
-> Clang would warn those kind of usage too.
-> 
-> It actually prove that those warnings are useful to find real issues. See,
-> 
-> Fae5e033d65a (“mfd: rk808: Fix RK818_IRQ_DISCHG_ILIM initializer”)
-> 32df34d875bb (“[media] rc: img-ir: jvc: Remove unused no-leader timings”)
-> 
-> Especially, to find redundant initializations in large structures. e.g.,
-> 
-> e6ea0b917875 (“[media] dvb_frontend: Don't declare values twice at a table”)
+Hi,
 
-None of these appear to use the range initialisers I was referring to, so I
-don't see why this is relevant to the discussion at hand.
+On Tue, Aug 06, 2019 at 09:22:12AM -0600, Rob Herring wrote:
+> +Maxime
+>
+> On Tue, Aug 6, 2019 at 6:50 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+> >
+> > The Amlogic Meson DWMAC glue bindings needs a second reg cells for the
+> > glue registers, thus update the reg minItems/maxItems to allow more
+> > than a single reg cell.
+> >
+> > Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> > ---
+> >  Documentation/devicetree/bindings/net/snps,dwmac.yaml | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> I haven't checked, but the derivative schema could be assuming this
+> schema enforced reg is 1 item.
 
-Will
+Yeah, we do for
+Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.yaml
+(but somehow not allwinner,sun8i-a83t-emac.yaml)
+
+Neil, can you add it to sun7i-a20-gmac?
+
+> I don't think that's a major issue
+> though.
+>
+> Acked-by: Rob Herring <robh@kernel.org>
+
+With that fixed,
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
