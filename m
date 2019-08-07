@@ -2,700 +2,151 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD0B1C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:39:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE46AC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:39:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 986F0216F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:39:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F3ED21743
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:39:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eL3MErGF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729708AbfHGBjI (ORCPT
+        id S1730230AbfHGBjT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 21:39:08 -0400
-Received: from aclms1.advantech.com.tw ([61.58.41.199]:58398 "EHLO
-        ACLMS1.advantech.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbfHGBjE (ORCPT
+        Tue, 6 Aug 2019 21:39:19 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36697 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729305AbfHGBeQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 21:39:04 -0400
-Received: from taipei08.ADVANTECH.CORP (unverified [172.20.0.235]) by ACLMS1.advantech.com.tw
- (Clearswift SMTPRS 5.6.0) with ESMTP id <Td977daeaa9ac14014b1940@ACLMS1.advantech.com.tw>;
- Wed, 7 Aug 2019 09:38:58 +0800
-From:   <Amy.Shih@advantech.com.tw>
-To:     <she90122@gmail.com>
-CC:     <amy.shih@advantech.com.tw>, <oakley.ding@advantech.com.tw>,
-        <jia.sui@advantech.com.cn>, Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [v5,1/1] hwmon: (nct7904) Add extra sysfs support for fan, voltage and temperature.
-Date:   Wed, 7 Aug 2019 01:38:41 +0000
-Message-ID: <20190807013842.24451-1-Amy.Shih@advantech.com.tw>
-X-Mailer: git-send-email 2.17.1
+        Tue, 6 Aug 2019 21:34:16 -0400
+Received: by mail-pg1-f194.google.com with SMTP id l21so42540274pgm.3;
+        Tue, 06 Aug 2019 18:34:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=1X33MY8P1PVcaLkCZcp6PkXiHV9wvPThIXgNE9TFbj4=;
+        b=eL3MErGFo1XqhdMwEg2Kjw8ppwk7Vahm6mgoNNA3cii/CVgkEKjt7vsL/U/CmyPRH+
+         vBu50G7ybGgkp7Hokph0DkgDWhI/CbhoDAa+AbddMqWT6ISLL60rYA89HWspc4xyz4Vp
+         5XWKqpmskK/zJd8DBYamJF8+Y0ROhmLz8Fdh4cz2AghIDfFUZCj9rMXq3aFWqKMWQAG2
+         HgrGAFAgdTFgMvzU7LHu/FiPYMdm8mLe8AL0h5BcC9G6165T14l59ud/pmRsQYRQ9HTJ
+         QDGVt3CGvwstyiOJQq9AlYZoAOTVBthJyf2RDDu2y6x+HTZ/VWBzsErS5Ba5fNi4EntP
+         9Gew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=1X33MY8P1PVcaLkCZcp6PkXiHV9wvPThIXgNE9TFbj4=;
+        b=Q2bx3PGIGBjk3vGib1wQlgB/lk3k9mJVHyJT1jb43MbGCuXvvEFIdKG8a0kUEDgw5y
+         20o7NyL/zKGxF4WN4hZaA8i/eXsuwE1RlrBhkMS3yCgZS6dTfF7NqCzZ0QEtDonn/KZI
+         TTydgqOEe+ExJVi8z+bY3qH1n4NKDYon7QdLa5tMdqCt1m01nbj7mWH7dzhhlls1ubHM
+         TOR7WJwQgRBRo4ejY48nVcUR3NvrNHhxmz1Bb/VoB82P6Zf147Kk12QxddKVhgkSJBbq
+         bZ6m5yxq7s3jVU+y8/DUozSXLLjB+P9lGBPvjzeL3fJDLbhbUybkXnVT9m9LZwLF6X5L
+         hA3g==
+X-Gm-Message-State: APjAAAVxzP5sDs5MyF70uQitHkOrPR08sapaBc/bUaQVLYomGqL1UhrE
+        dpIArGheXC/3zYTH1tHd1cA=
+X-Google-Smtp-Source: APXvYqzI59Ma7HfX7JZrmVs+MBRFW3wzbxtnFzHUxVGy1m1ZSRzZ7m9Bk2Hb9Owa8Q1RMoC2THAX6w==
+X-Received: by 2002:a63:c008:: with SMTP id h8mr5698079pgg.427.1565141655205;
+        Tue, 06 Aug 2019 18:34:15 -0700 (PDT)
+Received: from blueforge.nvidia.com (searspoint.nvidia.com. [216.228.112.21])
+        by smtp.gmail.com with ESMTPSA id u69sm111740800pgu.77.2019.08.06.18.34.13
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 06 Aug 2019 18:34:14 -0700 (PDT)
+From:   john.hubbard@gmail.com
+X-Google-Original-From: jhubbard@nvidia.com
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org, ceph-devel@vger.kernel.org,
+        devel@driverdev.osuosl.org, devel@lists.orangefs.org,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mm@kvack.org,
+        linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org, linux-xfs@vger.kernel.org,
+        netdev@vger.kernel.org, rds-devel@oss.oracle.com,
+        sparclinux@vger.kernel.org, x86@kernel.org,
+        xen-devel@lists.xenproject.org, John Hubbard <jhubbard@nvidia.com>,
+        Alex Williamson <alex.williamson@redhat.com>
+Subject: [PATCH v3 19/41] vfio: convert put_page() to put_user_page*()
+Date:   Tue,  6 Aug 2019 18:33:18 -0700
+Message-Id: <20190807013340.9706-20-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190807013340.9706-1-jhubbard@nvidia.com>
+References: <20190807013340.9706-1-jhubbard@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.17.10.28]
-X-ClientProxiedBy: ACLDAG.ADVANTECH.CORP (172.20.2.88) To
- taipei08.ADVANTECH.CORP (172.20.0.235)
-X-StopIT: No
+X-NVConfidentiality: public
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "amy.shih" <amy.shih@advantech.com.tw>
+From: John Hubbard <jhubbard@nvidia.com>
 
-NCT-7904D also supports reading of channel limitation registers
-and SMI status registers for fan, voltage and temperature monitoring,
-and also supports reading of temperature sensor type which is thermal diode,
-thermistor, AMD SB-TSI or Intel PECI, thus add below sysfs nodes:
+For pages that were retained via get_user_pages*(), release those pages
+via the new put_user_page*() routines, instead of via put_page() or
+release_pages().
 
--fan[1-*]_min
--fan[1-*]_alarm
--in[1-*]_min
--in[1-*]_max
--in[1-*]_alarm
--temp[1-*]_max
--temp[1-*]_max_hyst
--temp[1-*]_emergency
--temp[1-*]_emergency_hyst
--temp[1-*]_alarm
--temp[1-*]_type
+This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
+("mm: introduce put_user_page*(), placeholder versions").
 
-Signed-off-by: amy.shih <amy.shih@advantech.com.tw>
+Note that this effectively changes the code's behavior in
+qp_release_pages(): it now ultimately calls set_page_dirty_lock(),
+instead of set_page_dirty(). This is probably more accurate.
+
+As Christoph Hellwig put it, "set_page_dirty() is only safe if we are
+dealing with a file backed page where we have reference on the inode it
+hangs off." [1]
+
+[1] https://lore.kernel.org/r/20190723153640.GB720@lst.de
+
+Cc: Alex Williamson <alex.williamson@redhat.com>
+Cc: kvm@vger.kernel.org
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 ---
+ drivers/vfio/vfio_iommu_type1.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Changes in v5:
-- Squashed subsequent fixes of three patches into one patch.
-Changes in v4:
-- Fix the incorrect return value of case hwmon_fan_min in function "nct7904_write_fan".
-- Fix the confused calculation of case hwmon_fan_min in function
-Changes in v3:
-- Squashed subsequent fixes of patches into one patch.
-
--- Fix bad fallthrough in various switch statements.
--- Fix the wrong declared of tmp as u8 in nct7904_write_in, declared tmp to int.
--- Fix incorrect register setting of voltage.
--- Fix incorrect register bit mapping of temperature alarm.
--- Fix wrong return code 0x1fff in function nct7904_write_fan.
--- Delete wrong comment in function nct7904_write_in.
--- Fix wrong attribute names for temperature.
--- Fix wrong registers setting for temperature.
-
-Changes in v2:
-- Fix bad fallthrough in various switch statements.
-- Fix the wrong declared of tmp as u8 in nct7904_write_in, declared tmp to int.
----
- drivers/hwmon/nct7904.c | 469 ++++++++++++++++++++++++++++++++++++----
- 1 file changed, 424 insertions(+), 45 deletions(-)
-
-diff --git a/drivers/hwmon/nct7904.c b/drivers/hwmon/nct7904.c
-index 710c30562fc1..76372f20d71a 100644
---- a/drivers/hwmon/nct7904.c
-+++ b/drivers/hwmon/nct7904.c
-@@ -46,10 +46,33 @@
- #define DTS_T_CTRL1_REG		0x27
- #define VT_ADC_MD_REG		0x2E
- 
-+#define VSEN1_HV_LL_REG		0x02	/* Bank 1; 2 regs (HV/LV) per sensor */
-+#define VSEN1_LV_LL_REG		0x03	/* Bank 1; 2 regs (HV/LV) per sensor */
-+#define VSEN1_HV_HL_REG		0x00	/* Bank 1; 2 regs (HV/LV) per sensor */
-+#define VSEN1_LV_HL_REG		0x01	/* Bank 1; 2 regs (HV/LV) per sensor */
-+#define SMI_STS1_REG		0xC1	/* Bank 0; SMI Status Register */
-+#define SMI_STS5_REG		0xC5	/* Bank 0; SMI Status Register */
-+#define SMI_STS7_REG		0xC7	/* Bank 0; SMI Status Register */
-+#define SMI_STS8_REG		0xC8	/* Bank 0; SMI Status Register */
-+
- #define VSEN1_HV_REG		0x40	/* Bank 0; 2 regs (HV/LV) per sensor */
- #define TEMP_CH1_HV_REG		0x42	/* Bank 0; same as VSEN2_HV */
- #define LTD_HV_REG		0x62	/* Bank 0; 2 regs in VSEN range */
-+#define LTD_HV_HL_REG		0x44	/* Bank 1; 1 reg for LTD */
-+#define LTD_LV_HL_REG		0x45	/* Bank 1; 1 reg for LTD */
-+#define LTD_HV_LL_REG		0x46	/* Bank 1; 1 reg for LTD */
-+#define LTD_LV_LL_REG		0x47	/* Bank 1; 1 reg for LTD */
-+#define TEMP_CH1_CH_REG		0x05	/* Bank 1; 1 reg for LTD */
-+#define TEMP_CH1_W_REG		0x06	/* Bank 1; 1 reg for LTD */
-+#define TEMP_CH1_WH_REG		0x07	/* Bank 1; 1 reg for LTD */
-+#define TEMP_CH1_C_REG		0x04	/* Bank 1; 1 reg per sensor */
-+#define DTS_T_CPU1_C_REG	0x90	/* Bank 1; 1 reg per sensor */
-+#define DTS_T_CPU1_CH_REG	0x91	/* Bank 1; 1 reg per sensor */
-+#define DTS_T_CPU1_W_REG	0x92	/* Bank 1; 1 reg per sensor */
-+#define DTS_T_CPU1_WH_REG	0x93	/* Bank 1; 1 reg per sensor */
- #define FANIN1_HV_REG		0x80	/* Bank 0; 2 regs (HV/LV) per sensor */
-+#define FANIN1_HV_HL_REG	0x60	/* Bank 1; 2 regs (HV/LV) per sensor */
-+#define FANIN1_LV_HL_REG	0x61	/* Bank 1; 2 regs (HV/LV) per sensor */
- #define T_CPU1_HV_REG		0xA0	/* Bank 0; 2 regs (HV/LV) per sensor */
- 
- #define PRTS_REG		0x03	/* Bank 2 */
-@@ -58,6 +81,8 @@
- #define FANCTL1_FMR_REG		0x00	/* Bank 3; 1 reg per channel */
- #define FANCTL1_OUT_REG		0x10	/* Bank 3; 1 reg per channel */
- 
-+#define ENABLE_TSI	BIT(1)
-+
- static const unsigned short normal_i2c[] = {
- 	0x2d, 0x2e, I2C_CLIENT_END
- };
-@@ -72,6 +97,7 @@ struct nct7904_data {
- 	u8 fan_mode[FANCTL_MAX];
- 	u8 enable_dts;
- 	u8 has_dts;
-+	u8 temp_mode; /* 0: TR mode, 1: TD mode */
- };
- 
- /* Access functions */
-@@ -170,6 +196,25 @@ static int nct7904_read_fan(struct device *dev, u32 attr, int channel,
- 			rpm = 1350000 / cnt;
- 		*val = rpm;
- 		return 0;
-+	case hwmon_fan_min:
-+		ret = nct7904_read_reg16(data, BANK_1,
-+					 FANIN1_HV_HL_REG + channel * 2);
-+		if (ret < 0)
-+			return ret;
-+		cnt = ((ret & 0xff00) >> 3) | (ret & 0x1f);
-+		if (cnt == 0x1fff)
-+			rpm = 0;
-+		else
-+			rpm = 1350000 / cnt;
-+		*val = rpm;
-+		return 0;
-+	case hwmon_fan_alarm:
-+		ret = nct7904_read_reg(data, BANK_0,
-+				       SMI_STS7_REG + (channel >> 3));
-+		if (ret < 0)
-+			return ret;
-+		*val = (ret >> (channel & 0x07)) & 1;
-+		return 0;
- 	default:
- 		return -EOPNOTSUPP;
- 	}
-@@ -179,8 +224,20 @@ static umode_t nct7904_fan_is_visible(const void *_data, u32 attr, int channel)
+diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+index 054391f30fa8..5a5461a14299 100644
+--- a/drivers/vfio/vfio_iommu_type1.c
++++ b/drivers/vfio/vfio_iommu_type1.c
+@@ -320,9 +320,9 @@ static int put_pfn(unsigned long pfn, int prot)
  {
- 	const struct nct7904_data *data = _data;
- 
--	if (attr == hwmon_fan_input && data->fanin_mask & (1 << channel))
--		return 0444;
-+	switch (attr) {
-+	case hwmon_fan_input:
-+	case hwmon_fan_alarm:
-+		if (data->fanin_mask & (1 << channel))
-+			return 0444;
-+		break;
-+	case hwmon_fan_min:
-+		if (data->fanin_mask & (1 << channel))
-+			return 0644;
-+		break;
-+	default:
-+		break;
-+	}
+ 	if (!is_invalid_reserved_pfn(pfn)) {
+ 		struct page *page = pfn_to_page(pfn);
+-		if (prot & IOMMU_WRITE)
+-			SetPageDirty(page);
+-		put_page(page);
++		bool dirty = prot & IOMMU_WRITE;
 +
++		put_user_pages_dirty_lock(&page, 1, dirty);
+ 		return 1;
+ 	}
  	return 0;
- }
- 
-@@ -211,6 +268,37 @@ static int nct7904_read_in(struct device *dev, u32 attr, int channel,
- 			volt *= 6; /* 0.006V scale */
- 		*val = volt;
- 		return 0;
-+	case hwmon_in_min:
-+		ret = nct7904_read_reg16(data, BANK_1,
-+					 VSEN1_HV_LL_REG + index * 4);
-+		if (ret < 0)
-+			return ret;
-+		volt = ((ret & 0xff00) >> 5) | (ret & 0x7);
-+		if (index < 14)
-+			volt *= 2; /* 0.002V scale */
-+		else
-+			volt *= 6; /* 0.006V scale */
-+		*val = volt;
-+		return 0;
-+	case hwmon_in_max:
-+		ret = nct7904_read_reg16(data, BANK_1,
-+					 VSEN1_HV_HL_REG + index * 4);
-+		if (ret < 0)
-+			return ret;
-+		volt = ((ret & 0xff00) >> 5) | (ret & 0x7);
-+		if (index < 14)
-+			volt *= 2; /* 0.002V scale */
-+		else
-+			volt *= 6; /* 0.006V scale */
-+		*val = volt;
-+		return 0;
-+	case hwmon_in_alarm:
-+		ret = nct7904_read_reg(data, BANK_0,
-+				       SMI_STS1_REG + (index >> 3));
-+		if (ret < 0)
-+			return ret;
-+		*val = (ret >> (index & 0x07)) & 1;
-+		return 0;
- 	default:
- 		return -EOPNOTSUPP;
- 	}
-@@ -221,9 +309,20 @@ static umode_t nct7904_in_is_visible(const void *_data, u32 attr, int channel)
- 	const struct nct7904_data *data = _data;
- 	int index = nct7904_chan_to_index[channel];
- 
--	if (channel > 0 && attr == hwmon_in_input &&
--	    (data->vsen_mask & BIT(index)))
--		return 0444;
-+	switch (attr) {
-+	case hwmon_in_input:
-+	case hwmon_in_alarm:
-+		if (channel > 0 && (data->vsen_mask & BIT(index)))
-+			return 0444;
-+		break;
-+	case hwmon_in_min:
-+	case hwmon_in_max:
-+		if (channel > 0 && (data->vsen_mask & BIT(index)))
-+			return 0644;
-+		break;
-+	default:
-+		break;
-+	}
- 
- 	return 0;
- }
-@@ -233,6 +332,7 @@ static int nct7904_read_temp(struct device *dev, u32 attr, int channel,
- {
- 	struct nct7904_data *data = dev_get_drvdata(dev);
- 	int ret, temp;
-+	unsigned int reg1, reg2, reg3;
- 
- 	switch (attr) {
- 	case hwmon_temp_input:
-@@ -250,16 +350,100 @@ static int nct7904_read_temp(struct device *dev, u32 attr, int channel,
- 		temp = ((ret & 0xff00) >> 5) | (ret & 0x7);
- 		*val = sign_extend32(temp, 10) * 125;
- 		return 0;
-+	case hwmon_temp_alarm:
-+		if (channel < 5) {
-+			ret = nct7904_read_reg(data, BANK_0,
-+					       SMI_STS1_REG);
-+			if (ret < 0)
-+				return ret;
-+			*val = (ret >> (((channel * 2) + 1) & 0x07)) & 1;
-+		} else {
-+			if ((channel - 5) < 4) {
-+				ret = nct7904_read_reg(data, BANK_0,
-+						       SMI_STS7_REG +
-+						       ((channel - 5) >> 3));
-+				if (ret < 0)
-+					return ret;
-+				*val = (ret >> ((channel - 5) & 0x07)) & 1;
-+			} else {
-+				ret = nct7904_read_reg(data, BANK_0,
-+						       SMI_STS8_REG +
-+						       ((channel - 5) >> 3));
-+				if (ret < 0)
-+					return ret;
-+				*val = (ret >> (((channel - 5) & 0x07) - 4))
-+							& 1;
-+			}
-+		}
-+		return 0;
-+	case hwmon_temp_type:
-+		if (channel < 5) {
-+			if ((data->tcpu_mask >> channel) & 0x01) {
-+				if ((data->temp_mode >> channel) & 0x01)
-+					*val = 3; /* TD */
-+				else
-+					*val = 4; /* TR */
-+			} else {
-+				*val = 0;
-+			}
-+		} else {
-+			if ((data->has_dts >> (channel - 5)) & 0x01) {
-+				if (data->enable_dts & ENABLE_TSI)
-+					*val = 5; /* TSI */
-+				else
-+					*val = 6; /* PECI */
-+			} else {
-+				*val = 0;
-+			}
-+		}
-+		return 0;
-+	case hwmon_temp_max:
-+		reg1 = LTD_HV_HL_REG;
-+		reg2 = TEMP_CH1_W_REG;
-+		reg3 = DTS_T_CPU1_W_REG;
-+		break;
-+	case hwmon_temp_max_hyst:
-+		reg1 = LTD_LV_HL_REG;
-+		reg2 = TEMP_CH1_WH_REG;
-+		reg3 = DTS_T_CPU1_WH_REG;
-+		break;
-+	case hwmon_temp_crit:
-+		reg1 = LTD_HV_LL_REG;
-+		reg2 = TEMP_CH1_C_REG;
-+		reg3 = DTS_T_CPU1_C_REG;
-+		break;
-+	case hwmon_temp_crit_hyst:
-+		reg1 = LTD_LV_LL_REG;
-+		reg2 = TEMP_CH1_CH_REG;
-+		reg3 = DTS_T_CPU1_CH_REG;
-+		break;
- 	default:
- 		return -EOPNOTSUPP;
- 	}
-+
-+	if (channel == 4)
-+		ret = nct7904_read_reg(data, BANK_1, reg1);
-+	else if (channel < 5)
-+		ret = nct7904_read_reg(data, BANK_1,
-+				       reg2 + channel * 8);
-+	else
-+		ret = nct7904_read_reg(data, BANK_1,
-+				       reg3 + (channel - 5) * 4);
-+
-+	if (ret < 0)
-+		return ret;
-+	*val = ret * 1000;
-+	return 0;
- }
- 
- static umode_t nct7904_temp_is_visible(const void *_data, u32 attr, int channel)
- {
- 	const struct nct7904_data *data = _data;
- 
--	if (attr == hwmon_temp_input) {
-+	switch (attr) {
-+	case hwmon_temp_input:
-+	case hwmon_temp_alarm:
-+	case hwmon_temp_type:
- 		if (channel < 5) {
- 			if (data->tcpu_mask & BIT(channel))
- 				return 0444;
-@@ -267,6 +451,21 @@ static umode_t nct7904_temp_is_visible(const void *_data, u32 attr, int channel)
- 			if (data->has_dts & BIT(channel - 5))
- 				return 0444;
+@@ -356,7 +356,7 @@ static int vaddr_get_pfn(struct mm_struct *mm, unsigned long vaddr,
+ 		 */
+ 		if (ret > 0 && vma_is_fsdax(vmas[0])) {
+ 			ret = -EOPNOTSUPP;
+-			put_page(page[0]);
++			put_user_page(page[0]);
  		}
-+		break;
-+	case hwmon_temp_max:
-+	case hwmon_temp_max_hyst:
-+	case hwmon_temp_crit:
-+	case hwmon_temp_crit_hyst:
-+		if (channel < 5) {
-+			if (data->tcpu_mask & BIT(channel))
-+				return 0644;
-+		} else {
-+			if (data->has_dts & BIT(channel - 5))
-+				return 0644;
-+		}
-+		break;
-+	default:
-+		break;
  	}
- 
- 	return 0;
-@@ -297,6 +496,137 @@ static int nct7904_read_pwm(struct device *dev, u32 attr, int channel,
- 	}
- }
- 
-+static int nct7904_write_temp(struct device *dev, u32 attr, int channel,
-+			      long val)
-+{
-+	struct nct7904_data *data = dev_get_drvdata(dev);
-+	int ret;
-+	unsigned int reg1, reg2, reg3;
-+
-+	val = clamp_val(val / 1000, -128, 127);
-+
-+	switch (attr) {
-+	case hwmon_temp_max:
-+		reg1 = LTD_HV_HL_REG;
-+		reg2 = TEMP_CH1_W_REG;
-+		reg3 = DTS_T_CPU1_W_REG;
-+		break;
-+	case hwmon_temp_max_hyst:
-+		reg1 = LTD_LV_HL_REG;
-+		reg2 = TEMP_CH1_WH_REG;
-+		reg3 = DTS_T_CPU1_WH_REG;
-+		break;
-+	case hwmon_temp_crit:
-+		reg1 = LTD_HV_LL_REG;
-+		reg2 = TEMP_CH1_C_REG;
-+		reg3 = DTS_T_CPU1_C_REG;
-+		break;
-+	case hwmon_temp_crit_hyst:
-+		reg1 = LTD_LV_LL_REG;
-+		reg2 = TEMP_CH1_CH_REG;
-+		reg3 = DTS_T_CPU1_CH_REG;
-+		break;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+	if (channel == 4)
-+		ret = nct7904_write_reg(data, BANK_1, reg1, val);
-+	else if (channel < 5)
-+		ret = nct7904_write_reg(data, BANK_1,
-+					reg2 + channel * 8, val);
-+	else
-+		ret = nct7904_write_reg(data, BANK_1,
-+					reg3 + (channel - 5) * 4, val);
-+
-+	return ret;
-+}
-+
-+static int nct7904_write_fan(struct device *dev, u32 attr, int channel,
-+			     long val)
-+{
-+	struct nct7904_data *data = dev_get_drvdata(dev);
-+	int ret;
-+	u8 tmp;
-+
-+	switch (attr) {
-+	case hwmon_fan_min:
-+		if (val <= 0)
-+			return -EINVAL;
-+
-+		val = clamp_val(DIV_ROUND_CLOSEST(1350000, val), 1, 0x1fff);
-+		tmp = (val >> 5) & 0xff;
-+		ret = nct7904_write_reg(data, BANK_1,
-+					FANIN1_HV_HL_REG + channel * 2, tmp);
-+		if (ret < 0)
-+			return ret;
-+		tmp = val & 0x1f;
-+		ret = nct7904_write_reg(data, BANK_1,
-+					FANIN1_LV_HL_REG + channel * 2, tmp);
-+		return ret;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
-+static int nct7904_write_in(struct device *dev, u32 attr, int channel,
-+			    long val)
-+{
-+	struct nct7904_data *data = dev_get_drvdata(dev);
-+	int ret, index, tmp;
-+
-+	index = nct7904_chan_to_index[channel];
-+
-+	if (index < 14)
-+		val = val / 2; /* 0.002V scale */
-+	else
-+		val = val / 6; /* 0.006V scale */
-+
-+	val = clamp_val(val, 0, 0x7ff);
-+
-+	switch (attr) {
-+	case hwmon_in_min:
-+		tmp = nct7904_read_reg(data, BANK_1,
-+				       VSEN1_LV_LL_REG + index * 4);
-+		if (tmp < 0)
-+			return tmp;
-+		tmp &= ~0x7;
-+		tmp |= val & 0x7;
-+		ret = nct7904_write_reg(data, BANK_1,
-+					VSEN1_LV_LL_REG + index * 4, tmp);
-+		if (ret < 0)
-+			return ret;
-+		tmp = nct7904_read_reg(data, BANK_1,
-+				       VSEN1_HV_LL_REG + index * 4);
-+		if (tmp < 0)
-+			return tmp;
-+		tmp = (val >> 3) & 0xff;
-+		ret = nct7904_write_reg(data, BANK_1,
-+					VSEN1_HV_LL_REG + index * 4, tmp);
-+		return ret;
-+	case hwmon_in_max:
-+		tmp = nct7904_read_reg(data, BANK_1,
-+				       VSEN1_LV_HL_REG + index * 4);
-+		if (tmp < 0)
-+			return tmp;
-+		tmp &= ~0x7;
-+		tmp |= val & 0x7;
-+		ret = nct7904_write_reg(data, BANK_1,
-+					VSEN1_LV_HL_REG + index * 4, tmp);
-+		if (ret < 0)
-+			return ret;
-+		tmp = nct7904_read_reg(data, BANK_1,
-+				       VSEN1_HV_HL_REG + index * 4);
-+		if (tmp < 0)
-+			return tmp;
-+		tmp = (val >> 3) & 0xff;
-+		ret = nct7904_write_reg(data, BANK_1,
-+					VSEN1_HV_HL_REG + index * 4, tmp);
-+		return ret;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
- static int nct7904_write_pwm(struct device *dev, u32 attr, int channel,
- 			     long val)
- {
-@@ -354,8 +684,14 @@ static int nct7904_write(struct device *dev, enum hwmon_sensor_types type,
- 			 u32 attr, int channel, long val)
- {
- 	switch (type) {
-+	case hwmon_in:
-+		return nct7904_write_in(dev, attr, channel, val);
-+	case hwmon_fan:
-+		return nct7904_write_fan(dev, attr, channel, val);
- 	case hwmon_pwm:
- 		return nct7904_write_pwm(dev, attr, channel, val);
-+	case hwmon_temp:
-+		return nct7904_write_temp(dev, attr, channel, val);
- 	default:
- 		return -EOPNOTSUPP;
- 	}
-@@ -404,51 +740,91 @@ static int nct7904_detect(struct i2c_client *client,
- 
- static const struct hwmon_channel_info *nct7904_info[] = {
- 	HWMON_CHANNEL_INFO(in,
--			   HWMON_I_INPUT, /* dummy, skipped in is_visible */
--			   HWMON_I_INPUT,
--			   HWMON_I_INPUT,
--			   HWMON_I_INPUT,
--			   HWMON_I_INPUT,
--			   HWMON_I_INPUT,
--			   HWMON_I_INPUT,
--			   HWMON_I_INPUT,
--			   HWMON_I_INPUT,
--			   HWMON_I_INPUT,
--			   HWMON_I_INPUT,
--			   HWMON_I_INPUT,
--			   HWMON_I_INPUT,
--			   HWMON_I_INPUT,
--			   HWMON_I_INPUT,
--			   HWMON_I_INPUT,
--			   HWMON_I_INPUT,
--			   HWMON_I_INPUT,
--			   HWMON_I_INPUT,
--			   HWMON_I_INPUT,
--			   HWMON_I_INPUT),
-+			   /* dummy, skipped in is_visible */
-+			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
-+			   HWMON_I_ALARM,
-+			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
-+			   HWMON_I_ALARM,
-+			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
-+			   HWMON_I_ALARM,
-+			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
-+			   HWMON_I_ALARM,
-+			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
-+			   HWMON_I_ALARM,
-+			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
-+			   HWMON_I_ALARM,
-+			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
-+			   HWMON_I_ALARM,
-+			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
-+			   HWMON_I_ALARM,
-+			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
-+			   HWMON_I_ALARM,
-+			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
-+			   HWMON_I_ALARM,
-+			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
-+			   HWMON_I_ALARM,
-+			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
-+			   HWMON_I_ALARM,
-+			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
-+			   HWMON_I_ALARM,
-+			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
-+			   HWMON_I_ALARM,
-+			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
-+			   HWMON_I_ALARM,
-+			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
-+			   HWMON_I_ALARM,
-+			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
-+			   HWMON_I_ALARM,
-+			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
-+			   HWMON_I_ALARM,
-+			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
-+			   HWMON_I_ALARM,
-+			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
-+			   HWMON_I_ALARM,
-+			   HWMON_I_INPUT | HWMON_I_MIN | HWMON_I_MAX |
-+			   HWMON_I_ALARM),
- 	HWMON_CHANNEL_INFO(fan,
--			   HWMON_F_INPUT,
--			   HWMON_F_INPUT,
--			   HWMON_F_INPUT,
--			   HWMON_F_INPUT,
--			   HWMON_F_INPUT,
--			   HWMON_F_INPUT,
--			   HWMON_F_INPUT,
--			   HWMON_F_INPUT),
-+			   HWMON_F_INPUT | HWMON_F_MIN | HWMON_F_ALARM,
-+			   HWMON_F_INPUT | HWMON_F_MIN | HWMON_F_ALARM,
-+			   HWMON_F_INPUT | HWMON_F_MIN | HWMON_F_ALARM,
-+			   HWMON_F_INPUT | HWMON_F_MIN | HWMON_F_ALARM,
-+			   HWMON_F_INPUT | HWMON_F_MIN | HWMON_F_ALARM,
-+			   HWMON_F_INPUT | HWMON_F_MIN | HWMON_F_ALARM,
-+			   HWMON_F_INPUT | HWMON_F_MIN | HWMON_F_ALARM,
-+			   HWMON_F_INPUT | HWMON_F_MIN | HWMON_F_ALARM),
- 	HWMON_CHANNEL_INFO(pwm,
- 			   HWMON_PWM_INPUT | HWMON_PWM_ENABLE,
- 			   HWMON_PWM_INPUT | HWMON_PWM_ENABLE,
- 			   HWMON_PWM_INPUT | HWMON_PWM_ENABLE,
- 			   HWMON_PWM_INPUT | HWMON_PWM_ENABLE),
- 	HWMON_CHANNEL_INFO(temp,
--			   HWMON_T_INPUT,
--			   HWMON_T_INPUT,
--			   HWMON_T_INPUT,
--			   HWMON_T_INPUT,
--			   HWMON_T_INPUT,
--			   HWMON_T_INPUT,
--			   HWMON_T_INPUT,
--			   HWMON_T_INPUT,
--			   HWMON_T_INPUT),
-+			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
-+			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_CRIT |
-+			   HWMON_T_CRIT_HYST,
-+			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
-+			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_CRIT |
-+			   HWMON_T_CRIT_HYST,
-+			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
-+			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_CRIT |
-+			   HWMON_T_CRIT_HYST,
-+			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
-+			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_CRIT |
-+			   HWMON_T_CRIT_HYST,
-+			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
-+			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_CRIT |
-+			   HWMON_T_CRIT_HYST,
-+			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
-+			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_CRIT |
-+			   HWMON_T_CRIT_HYST,
-+			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
-+			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_CRIT |
-+			   HWMON_T_CRIT_HYST,
-+			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
-+			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_CRIT |
-+			   HWMON_T_CRIT_HYST,
-+			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
-+			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_CRIT |
-+			   HWMON_T_CRIT_HYST),
- 	NULL
- };
- 
-@@ -530,11 +906,14 @@ static int nct7904_probe(struct i2c_client *client,
- 	if (ret < 0)
- 		return ret;
- 
-+	data->temp_mode = 0;
- 	for (i = 0; i < 4; i++) {
- 		val = (ret & (0x03 << i)) >> (i * 2);
- 		bit = (1 << i);
- 		if (val == 0)
- 			data->tcpu_mask &= ~bit;
-+		else if (val == 0x1 || val == 0x2)
-+			data->temp_mode |= bit;
- 	}
- 
- 	/* PECI */
-@@ -557,7 +936,7 @@ static int nct7904_probe(struct i2c_client *client,
- 		if (ret < 0)
- 			return ret;
- 		data->has_dts = ret & 0xF;
--		if (data->enable_dts & 0x2) {
-+		if (data->enable_dts & ENABLE_TSI) {
- 			ret = nct7904_read_reg(data, BANK_0, DTS_T_CTRL1_REG);
- 			if (ret < 0)
- 				return ret;
+ 	up_read(&mm->mmap_sem);
 -- 
-2.17.1
+2.22.0
 
