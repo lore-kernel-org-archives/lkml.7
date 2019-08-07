@@ -2,109 +2,111 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25E96C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:23:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94753C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:25:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F265C217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:23:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="va83T/fR"
+	by mail.kernel.org (Postfix) with ESMTP id 6B1BC217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:25:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387605AbfHGIXV (ORCPT
+        id S1728559AbfHGIZg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 04:23:21 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:35812 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387498AbfHGIXU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 04:23:20 -0400
-Received: by mail-pl1-f193.google.com with SMTP id w24so39633540plp.2;
-        Wed, 07 Aug 2019 01:23:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=kyChUZTxJ04dQ6W7AFNvGVPrgZSmkOSamFppYF2sKlQ=;
-        b=va83T/fR5DeQzxnDrPIhn/Wqu4brcDIpmuElsedxn4N4LkWtaYiYzESaSZ3shnNKSY
-         s/MJS0E0U4qXPykgLS3AsoiukMjmHG3NKZUFuk83zofdpxZMCm7pq8ZbYhVEWsks1Y1D
-         9c+hIFIN5tQ457it494fO5Il9VWhTTRNnwBs705GPzguHs8ykZi7DFCdFRrE97JUuRXM
-         pAbGcTtdWfVjqE6+TNtWSpAfX9xJpf461LoiHB2kB6BO0odv61gtV+KoxfZJhITAct17
-         cLq2dMqsGCHY33gr9IJHrNebMheULSxjmQUwAJKTpzCsuPVkcbmRfqmy5tvKNSY6hTgc
-         Mb3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=kyChUZTxJ04dQ6W7AFNvGVPrgZSmkOSamFppYF2sKlQ=;
-        b=fqqdsDYw4YecBaaN78RJX1Uzml369g/HSapjVvAZCPIh+FfG/yHNW9QjrGL60ll6Dn
-         ZjeHo2EUash8sVjDLEXok+n3JaazYIsqmTCDPC3jCnMTAtlpFjeOI6uy+J5OgjGO1PPT
-         WdXOcmjmXS0mkMLw+xLAPlp31JmbkFy3XQ/77V7chAa5pee0KGlJAKMqZzkl7wHDN46w
-         FrCtCNdBRLIOu2uLdCyk9aN5DRvgyaDjzvTitpNRPRF6Xkrh93bZrCKBHpvhmIyQMaUC
-         H7KVlkwJnyjw0Od/IaYPLmo7PSsJONF52V1Jrf1pRw0xwyrhzZSHyfdtQpspJXKDIspt
-         x+xw==
-X-Gm-Message-State: APjAAAXrTNIr0APXN9IQYSmQEapUNZ8W6Tx810gJo1e6IInU2h84HV/s
-        KIZxltik5foDQhQQWXV9GB8=
-X-Google-Smtp-Source: APXvYqzSzQt+hVXfa+1nixNyhlwvgsnU4jzaHhSQFnA50JFdEuPPXu6przPhEzPRXZv8fftLLo2fjA==
-X-Received: by 2002:a17:902:449:: with SMTP id 67mr7251593ple.105.1565166200127;
-        Wed, 07 Aug 2019 01:23:20 -0700 (PDT)
-Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id h14sm117703513pfq.22.2019.08.07.01.23.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 07 Aug 2019 01:23:19 -0700 (PDT)
-From:   Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Fuqian Huang <huangfq.daxian@gmail.com>
-Subject: [PATCH] rtc: mxc: use spin_lock_irqsave instead of spin_lock_irq in IRQ context
-Date:   Wed,  7 Aug 2019 16:23:10 +0800
-Message-Id: <20190807082310.10135-1-huangfq.daxian@gmail.com>
-X-Mailer: git-send-email 2.11.0
-To:     unlisted-recipients:; (no To-header on input)
+        Wed, 7 Aug 2019 04:25:36 -0400
+Received: from mga14.intel.com ([192.55.52.115]:52954 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727842AbfHGIZg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 04:25:36 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Aug 2019 01:25:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,356,1559545200"; 
+   d="scan'208";a="374325732"
+Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
+  by fmsmga006.fm.intel.com with ESMTP; 07 Aug 2019 01:25:34 -0700
+Date:   Wed, 7 Aug 2019 16:08:25 +0800
+From:   Wu Hao <hao.wu@intel.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-doc@vger.kernel.org, atull@kernel.org,
+        Luwei Kang <luwei.kang@intel.com>,
+        Ananda Ravuri <ananda.ravuri@intel.com>,
+        Xu Yilun <yilun.xu@intel.com>
+Subject: Re: [PATCH v4 11/12] fpga: dfl: fme: add global error reporting
+ support
+Message-ID: <20190807080825.GA10344@hao-dev>
+References: <1564914022-3710-1-git-send-email-hao.wu@intel.com>
+ <1564914022-3710-12-git-send-email-hao.wu@intel.com>
+ <20190805155626.GD8107@kroah.com>
+ <20190807024521.GD24158@hao-dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190807024521.GD24158@hao-dev>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As spin_unlock_irq will enable interrupts.
-mxc_rtc_irq_enable is called from interrupt handler mxc_rtc_interrupt.
-Interrupts are enabled in interrupt handler.
-Use spin_lock_irqsave/spin_unlock_irqrestore instead of spin_(un)lock_irq
-in IRQ context to avoid this.
+On Wed, Aug 07, 2019 at 10:45:22AM +0800, Wu Hao wrote:
+> On Mon, Aug 05, 2019 at 05:56:26PM +0200, Greg KH wrote:
+> > On Sun, Aug 04, 2019 at 06:20:21PM +0800, Wu Hao wrote:
+> > > +static int fme_global_err_init(struct platform_device *pdev,
+> > > +			       struct dfl_feature *feature)
+> > > +{
+> > > +	struct device *dev;
+> > > +	int ret = 0;
+> > > +
+> > > +	dev = kzalloc(sizeof(*dev), GFP_KERNEL);
+> > > +	if (!dev)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	dev->parent = &pdev->dev;
+> > > +	dev->release = err_dev_release;
+> > > +	dev_set_name(dev, "errors");
+> > > +
+> > > +	fme_error_enable(feature);
+> > > +
+> > > +	ret = device_register(dev);
+> > > +	if (ret) {
+> > > +		put_device(dev);
+> > > +		return ret;
+> > > +	}
+> > > +
+> > > +	ret = device_add_groups(dev, error_groups);
+> > 
+> > cute, but no, you do not create a whole struct device for a subdir.  Use
+> > the attribute group name like you did on earlier patches.
+> 
+> Sure, let me fix it in the next version.
+> 
+> > 
+> > And again, you raced userspace and lost :(
+> 
+> Same here, could you please give some more hints here?
 
-Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
----
- drivers/rtc/rtc-mxc.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Oh.. I see..
 
-diff --git a/drivers/rtc/rtc-mxc.c b/drivers/rtc/rtc-mxc.c
-index e697e96612bb..902d57dcd0d4 100644
---- a/drivers/rtc/rtc-mxc.c
-+++ b/drivers/rtc/rtc-mxc.c
-@@ -184,8 +184,9 @@ static void mxc_rtc_irq_enable(struct device *dev, unsigned int bit,
- 	struct rtc_plat_data *pdata = dev_get_drvdata(dev);
- 	void __iomem *ioaddr = pdata->ioaddr;
- 	u32 reg;
-+	unsigned long flags;
- 
--	spin_lock_irq(&pdata->rtc->irq_lock);
-+	spin_lock_irqsave(&pdata->rtc->irq_lock, flags);
- 	reg = readw(ioaddr + RTC_RTCIENR);
- 
- 	if (enabled)
-@@ -194,7 +195,7 @@ static void mxc_rtc_irq_enable(struct device *dev, unsigned int bit,
- 		reg &= ~bit;
- 
- 	writew(reg, ioaddr + RTC_RTCIENR);
--	spin_unlock_irq(&pdata->rtc->irq_lock);
-+	spin_unlock_irqrestore(&pdata->rtc->irq_lock, flags);
- }
- 
- /* This function is the RTC interrupt service routine. */
--- 
-2.11.0
+I should follow [1] as this is a platform driver. I will fix it. Thanks!
 
+[PATCH 00/11] Platform drivers, provide a way to add sysfs groups easily
+
+[1]https://lkml.org/lkml/2019/7/4/181
+
+Hao
+
+> 
+> Thanks in advance.
+> Hao
+> 
+> > 
+> > thanks,
+> > 
+> > greg k-h
