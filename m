@@ -2,148 +2,120 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8932CC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 20:31:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE5CC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 20:34:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6209921BE3
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 20:31:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35F0F21BE3
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 20:34:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565210059;
+	bh=NhwCFDPz/7iaYt/Hrpi8PqkjLtu1AlWyBvTjjDwXQ64=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fZmU93OEQy+3exXH6DDl8217YjUhmmc4H6rHcyPRbTUF0Wq8DBYSFaZ6jbjkqIIa6
+	 HR1uq16NIYVzYzBsQ0xBN9NRreK8eVS8UpllJ8lthNqfzayZR0dZt5IMfXuvPhJGtL
+	 ve5VcNH9UKtgh2oQp6K3mkbWqOTAGv75HTW0jTKk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389407AbfHGUbe (ORCPT
+        id S2389440AbfHGUeS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 16:31:34 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:37119 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389079AbfHGUbd (ORCPT
+        Wed, 7 Aug 2019 16:34:18 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:34763 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389420AbfHGUeR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 16:31:33 -0400
-X-Originating-IP: 209.85.221.174
-Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
-        (Authenticated sender: pshelar@ovn.org)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id EE93D240002;
-        Wed,  7 Aug 2019 20:31:30 +0000 (UTC)
-Received: by mail-vk1-f174.google.com with SMTP id m17so18329110vkl.2;
-        Wed, 07 Aug 2019 13:31:30 -0700 (PDT)
-X-Gm-Message-State: APjAAAVcbxDHPtqhuDkWbLqHoK3XDZu04v1gyrYrlluhTdtNG3BHxSTq
-        bj0SpekyJqwIQsqViBmgJ3wq/PU92/YGoLSyMfU=
-X-Google-Smtp-Source: APXvYqzLIZg3NZan6L53I92NHzP9wEor6WTCAAsmzD1hD6JhV6I8I489qLTumtcPds3oThIv3GtsqqkyvL/duMokZ5Y=
-X-Received: by 2002:a1f:1b0a:: with SMTP id b10mr4289060vkb.19.1565209889563;
- Wed, 07 Aug 2019 13:31:29 -0700 (PDT)
+        Wed, 7 Aug 2019 16:34:17 -0400
+Received: by mail-qt1-f195.google.com with SMTP id k10so20638986qtq.1;
+        Wed, 07 Aug 2019 13:34:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=IC+13V8Mtk7y8HC7bnHIWtqIcy1I5HJyllIeTOClBTQ=;
+        b=gA2Gxo3VVUUiZocJ2EWD7FWO7YBQ8ft67UkLPK3AQg2nN2DoElFq/GksGEaLO+Xxs7
+         yBG49lmFjj6YiLTjAaIGIQ41gk0yijO+ArJDE8dr0MOM8hPWXP6zZJu4zTmZ5U0pgrQi
+         HknnD6KZRyK/MCSoGtYJTTYotU0YW8UoTRgeuRn+pC5MZtc7pzuYv6kj3xs5K4Iq01gZ
+         86PLHXMC6iInXVPSj6NydUiB8ADQvz4JihwAriUqmR/FNZBo1PmtDfw6VQ/NCCRIFgf2
+         ZxOvpizlKlGxc62Gw+giLRS40hco+rKNH4/JXvGmrSXjrc5JQOrAHKmp7zbC6NOQ0jDG
+         Tr4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=IC+13V8Mtk7y8HC7bnHIWtqIcy1I5HJyllIeTOClBTQ=;
+        b=WErBU2JVTnivnYok6uEqcbprxPiFogqS8RZo0a6+HyUTYt7ZZbdRdp7DjriLbZP9FM
+         hTLPCbPlWurgcPH4UQuOQVd2alH63aQta6EdWKthwa2RIhaphAjoRJkpf0RitAeerEu7
+         R8FrxQiJAG+JVEsqTEiT4FWHMonNIVX25Kb0S9/tEY3j2XV8pIGgidJzitJ6ON5L/jpH
+         2an+loySG7FaJuwm178kc5UC8ikuz9MwTgX2KlIg3W3rUxG9MBiO8ApECiYWNEeEoBQ9
+         dccOpuRq7hgYCUicWe5foiDPzzXPOYlaa/nDC/watiAdM65cFzNxh7YQkhBcv7EqTyuX
+         zq2Q==
+X-Gm-Message-State: APjAAAUW0fFX/ofCROSzuf0qY51pIgPG2w36AH2fe9W72nVeUmLyVeIJ
+        biKp/9TJmZm8lmf3W0Q0zO0=
+X-Google-Smtp-Source: APXvYqzu1jOsh0kIjF9dIWwpYxRpLf5Yj5gvt8IrWIJbtljX2Px5uBUwWjZwjoub/a03bW3NQndjfA==
+X-Received: by 2002:ac8:45d2:: with SMTP id e18mr9931619qto.258.1565210056622;
+        Wed, 07 Aug 2019 13:34:16 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::2:49ab])
+        by smtp.gmail.com with ESMTPSA id t11sm6284977qkt.85.2019.08.07.13.34.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Aug 2019 13:34:15 -0700 (PDT)
+Date:   Wed, 7 Aug 2019 13:34:14 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     axboe@kernel.dk, jack@suse.cz, hannes@cmpxchg.org,
+        mhocko@kernel.org, vdavydov.dev@gmail.com, cgroups@vger.kernel.org,
+        linux-mm@kvack.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com, guro@fb.com
+Subject: Re: [PATCH 2/4] bdi: Add bdi->id
+Message-ID: <20190807203414.GA554060@devbig004.ftw2.facebook.com>
+References: <20190803140155.181190-1-tj@kernel.org>
+ <20190803140155.181190-3-tj@kernel.org>
+ <20190806160102.11366694af6b56d9c4ca6ea3@linux-foundation.org>
+ <20190807183151.GM136335@devbig004.ftw2.facebook.com>
+ <20190807120037.72018c136db40e88d89c05d1@linux-foundation.org>
 MIME-Version: 1.0
-References: <20190806115932.3044-1-hdanton@sina.com>
-In-Reply-To: <20190806115932.3044-1-hdanton@sina.com>
-From:   Pravin Shelar <pshelar@ovn.org>
-Date:   Wed, 7 Aug 2019 13:32:40 -0700
-X-Gmail-Original-Message-ID: <CAOrHB_BmuAxdch-nbaTS-1eXN-0goUb5UXtYDr==0KeM9vVsRw@mail.gmail.com>
-Message-ID: <CAOrHB_BmuAxdch-nbaTS-1eXN-0goUb5UXtYDr==0KeM9vVsRw@mail.gmail.com>
-Subject: Re: memory leak in internal_dev_create
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     syzbot <syzbot+13210896153522fe1ee5@syzkaller.appspotmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        ovs dev <dev@openvswitch.org>, linux-kernel@vger.kernel.org,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190807120037.72018c136db40e88d89c05d1@linux-foundation.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 6, 2019 at 5:00 AM Hillf Danton <hdanton@sina.com> wrote:
->
->
-> On Tue, 06 Aug 2019 01:58:05 -0700
-> > Hello,
-> >
-> > syzbot found the following crash on:
-> >
+Hello,
 
-...
-> > BUG: memory leak
-> > unreferenced object 0xffff8881228ca500 (size 128):
-> >    comm "syz-executor032", pid 7015, jiffies 4294944622 (age 7.880s)
-> >    hex dump (first 32 bytes):
-> >      00 f0 27 18 81 88 ff ff 80 ac 8c 22 81 88 ff ff  ..'........"....
-> >      40 b7 23 17 81 88 ff ff 00 00 00 00 00 00 00 00  @.#.............
-> >    backtrace:
-> >      [<000000000eb78212>] kmemleak_alloc_recursive  include/linux/kmemleak.h:43 [inline]
-> >      [<000000000eb78212>] slab_post_alloc_hook mm/slab.h:522 [inline]
-> >      [<000000000eb78212>] slab_alloc mm/slab.c:3319 [inline]
-> >      [<000000000eb78212>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3548
-> >      [<00000000006ea6c6>] kmalloc include/linux/slab.h:552 [inline]
-> >      [<00000000006ea6c6>] kzalloc include/linux/slab.h:748 [inline]
-> >      [<00000000006ea6c6>] ovs_vport_alloc+0x37/0xf0  net/openvswitch/vport.c:130
-> >      [<00000000f9a04a7d>] internal_dev_create+0x24/0x1d0  net/openvswitch/vport-internal_dev.c:164
-> >      [<0000000056ee7c13>] ovs_vport_add+0x81/0x190  net/openvswitch/vport.c:199
-> >      [<000000005434efc7>] new_vport+0x19/0x80 net/openvswitch/datapath.c:194
-> >      [<00000000b7b253f1>] ovs_dp_cmd_new+0x22f/0x410  net/openvswitch/datapath.c:1614
-> >      [<00000000e0988518>] genl_family_rcv_msg+0x2ab/0x5b0  net/netlink/genetlink.c:629
-> >      [<00000000d0cc9347>] genl_rcv_msg+0x54/0x9c net/netlink/genetlink.c:654
-> >      [<000000006694b647>] netlink_rcv_skb+0x61/0x170  net/netlink/af_netlink.c:2477
-> >      [<0000000088381f37>] genl_rcv+0x29/0x40 net/netlink/genetlink.c:665
-> >      [<00000000dad42a47>] netlink_unicast_kernel  net/netlink/af_netlink.c:1302 [inline]
-> >      [<00000000dad42a47>] netlink_unicast+0x1ec/0x2d0  net/netlink/af_netlink.c:1328
-> >      [<0000000067e6b079>] netlink_sendmsg+0x270/0x480  net/netlink/af_netlink.c:1917
-> >      [<00000000aab08a47>] sock_sendmsg_nosec net/socket.c:637 [inline]
-> >      [<00000000aab08a47>] sock_sendmsg+0x54/0x70 net/socket.c:657
-> >      [<000000004cb7c11d>] ___sys_sendmsg+0x393/0x3c0 net/socket.c:2311
-> >      [<00000000c4901c63>] __sys_sendmsg+0x80/0xf0 net/socket.c:2356
-> >      [<00000000c10abb2d>] __do_sys_sendmsg net/socket.c:2365 [inline]
-> >      [<00000000c10abb2d>] __se_sys_sendmsg net/socket.c:2363 [inline]
-> >      [<00000000c10abb2d>] __x64_sys_sendmsg+0x23/0x30 net/socket.c:2363
->
->
-> Always free vport manually unless register_netdevice() succeeds.
->
-> --- a/net/openvswitch/vport-internal_dev.c
-> +++ b/net/openvswitch/vport-internal_dev.c
-> @@ -137,7 +137,7 @@ static void do_setup(struct net_device *
->         netdev->priv_flags |= IFF_LIVE_ADDR_CHANGE | IFF_OPENVSWITCH |
->                               IFF_NO_QUEUE;
->         netdev->needs_free_netdev = true;
-> -       netdev->priv_destructor = internal_dev_destructor;
-> +       netdev->priv_destructor = NULL;
->         netdev->ethtool_ops = &internal_dev_ethtool_ops;
->         netdev->rtnl_link_ops = &internal_dev_link_ops;
->
-> @@ -159,7 +159,6 @@ static struct vport *internal_dev_create
->         struct internal_dev *internal_dev;
->         struct net_device *dev;
->         int err;
-> -       bool free_vport = true;
->
->         vport = ovs_vport_alloc(0, &ovs_internal_vport_ops, parms);
->         if (IS_ERR(vport)) {
-> @@ -190,10 +189,9 @@ static struct vport *internal_dev_create
->
->         rtnl_lock();
->         err = register_netdevice(vport->dev);
-> -       if (err) {
-> -               free_vport = false;
-> +       if (err)
->                 goto error_unlock;
-> -       }
-> +       vport->dev->priv_destructor = internal_dev_destructor;
->
-I am not sure why have you moved this assignment out of do_setup().
+On Wed, Aug 07, 2019 at 12:00:37PM -0700, Andrew Morton wrote:
+> OK, but why is recycling a problem?  For example, file descriptors
+> recycle as aggressively as is possible, and that doesn't cause any
+> trouble.  Presumably recycling is a problem with cgroups because of
+> some sort of stale reference problem?
 
-Otherwise patch looks good to me.
+Oh, because there are use cases where the consumers are detached from
+the lifetime synchronization.  In this example, the benefit of using
+IDs is that memcgs don't need to pin foreign bdi_wb's and just look up
+and verify when it wants to flush them.  If we use pointers, we have
+to pin the objects which then requires either shooting down those
+references with timers or somehow doing reverse lookup to shoot them
+down when bdi_wb is taken offline.  If we use IDs which can be
+recycling aggressively, there can be pathological cases where remote
+flushes are issued on the wrong target possibly repeatedly, which may
+or may not be a real problem.
+
+For cgroup ID, the problem is more immediate.  We give out the IDs to
+userspace and there is no way to shoot those references down when the
+cgroup goes away and the ID gets recycled, so when the user comes back
+and asks "I want to attach this bpf program to the cgroup identified
+with this ID", we can end up attaching it to the wrong cgroup if we
+recycle IDs.  cgroup ended up with two separate IDs, which is kinda
+dumb.
+
+tl;dr is that it's either cumbersome or impossible to synchronize the
+users of these IDs, so if they get recycled, they end up identifying
+the wrong thing.
 
 Thanks.
->         dev_set_promiscuity(vport->dev, 1);
->         rtnl_unlock();
-> @@ -207,8 +205,7 @@ error_unlock:
->  error_free_netdev:
->         free_netdev(dev);
->  error_free_vport:
-> -       if (free_vport)
-> -               ovs_vport_free(vport);
-> +       ovs_vport_free(vport);
->  error:
->         return ERR_PTR(err);
->  }
-> --
->
+
+-- 
+tejun
