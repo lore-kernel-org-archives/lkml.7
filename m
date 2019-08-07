@@ -2,95 +2,107 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A0EC32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 12:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B31C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 12:44:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EC0121BF6
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 12:43:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8905F21BF6
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 12:44:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qkscwp0f"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uO63s1Lg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387766AbfHGMnm (ORCPT
+        id S2387842AbfHGMoC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 08:43:42 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:35349 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729712AbfHGMnl (ORCPT
+        Wed, 7 Aug 2019 08:44:02 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:36238 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387777AbfHGMoB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 08:43:41 -0400
-Received: by mail-lf1-f68.google.com with SMTP id p197so63887667lfa.2
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 05:43:40 -0700 (PDT)
+        Wed, 7 Aug 2019 08:44:01 -0400
+Received: by mail-pl1-f194.google.com with SMTP id k8so40680949plt.3;
+        Wed, 07 Aug 2019 05:44:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3yF1OuQ8WOJDwWnUlO01EbGsBbNmAnc6oHp1K7rziEs=;
-        b=Qkscwp0fMEP5YUts5kZ8mBnyK/OpngNCEOAidd5gDqm0omiSQCT3uXzqoJPoysQldz
-         4lgN3op4lyvYbnF7bj7XfuUgFO6pwFysEYZMaCCnrUJlzlPGxFwNFeauDS0cgSVcL7BY
-         pm4cXe7UqsCsczPq0q/Heh79nqUVbQTn9fVdGaphofDgpniehIo0S+O6IJLzZQyNyX+o
-         wIRGwN1AH7uLn2xcWDXs1OYlPr9AqlCmgjBvgMTBdNy3GC4ZQRXWorQnlqPRh63kFRTB
-         5zu+oi072EGWXe3id3Q7WIXYE8q7u98sy0ME0/BOW1lQMgBpriiH7N559fFPEU+BNVg5
-         WtzA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=qXLu3bh5aH4CnTaB9M6wXZJXk1SqGmlbkLW4YNgY6oY=;
+        b=uO63s1LgDEohVzd+s+Ls6Xzl9O4U1I29sT0C6XcSN8JV8xKV1TU5fq//mMMqfTRZVr
+         JGwKFyy5l2+I36IwKGzdYAtsBIBjxNzkqwHPl9lHCiQDx3vJSEDSJQFEcFAvduDyWzEn
+         TLb7Nw00zH/aGchFkEqu9RMRzd6MWH0hMVKHQF9ghBmL9HTaF3KhVPtNWUPYBBlcw+T9
+         BEOkq3W7/NxDInxBc5jCzd49OXRRaegnNg20vGbAxVy6c/gCFT9KWzXLDyIs1Ht5PLm6
+         Im5dJrQF/QT+qH3HHLi7Em/S/5aM1gesaCbRF7PBk/ZT0sjcWoIQLqgO8Mmj/diOL0or
+         tqFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3yF1OuQ8WOJDwWnUlO01EbGsBbNmAnc6oHp1K7rziEs=;
-        b=YqKzGTBd7Iy36XWdj2i0g3bAr6c9udF5NPeMngD2LTiivtznQpZe08fiFLBH1ITrlr
-         7/nlmo6pNAGDZkq/Bjh1k2DPg/vl2gy7MXyb3L/lRhm0ln/eCC8+4FDMry3bEap3mfpn
-         TAl38krESGyKSNxVHDnxv5rapwqQpjdtGBAqptO9BvbgCbzWkdLE2UmDOWPjOzM10QqJ
-         V+SLy8NgFqHHKXZpjG//Uecd1x7i1yUPN6SA7w2TFfGZcf75NfYx2V8PcyBnhx7stqJF
-         /O2CLj36my3pKlsCs6BmB5Tepiew2NYNY+NWZC1S+tAX2hfHtVGnBUlwg467STogg9Kc
-         rXpw==
-X-Gm-Message-State: APjAAAVuTJRBwb6DV7edqQKoZT4JJF5L1tUedwJxhrjVggpRnqkXNliK
-        zhV5Jvs38Cl6drZJ7DL8sPRO+dQ6HKaL/mxSk3gGew==
-X-Google-Smtp-Source: APXvYqyHcn+uEIkjeMH25oklHeb5+qGtHeaOrVJcVtMtUqMfkChzi4CWRJOO4SFcOgHxdBcv6Lm+gTNdGKL7HocbYwI=
-X-Received: by 2002:ac2:5939:: with SMTP id v25mr5930898lfi.115.1565181819882;
- Wed, 07 Aug 2019 05:43:39 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190806060536.18094-1-rnayak@codeaurora.org>
-In-Reply-To: <20190806060536.18094-1-rnayak@codeaurora.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 7 Aug 2019 14:43:28 +0200
-Message-ID: <CACRpkdYdVFR3CnC+bO0ZYP9FyXsuGQZAiBxMchSrhpQGtJnd9A@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: pinctrl: qcom: Add SC7180 pinctrl binding
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=qXLu3bh5aH4CnTaB9M6wXZJXk1SqGmlbkLW4YNgY6oY=;
+        b=UxSphfAFkxgwEeV4/Zkl5stNi/7/8eBTM2l/FZ1P+Tse55SpJyxz+IhoEuyMtrVsgZ
+         Px0RQvpatxzOh/o6inzu+wqAVrdl66Hsxu4ZC78KLf2uCJ8nqy40YQmH31+uodX8pNuF
+         mPlfjLs1oJWCaDHiGXrfvK6VpD+XItM2UwdMSLMsNjajeLTQ2ufWCzxS0/RfdwBqzagc
+         YhTXblXDxKbUzaApwraHn3XE4CGNveH+cnzYZ8AK0MXQAH2d8w6POTN5FYJoAYDnz8fK
+         NBwijO5BlbSVktac6c+YcezT+1OPGnoAOM7iao/Ucz3/f4mbxXN2Zru4cylG9dFEnFVI
+         l25Q==
+X-Gm-Message-State: APjAAAV3EqVNCE5mbkeokJE5sz+kxJrEMvxBe9LoyecUA84KIso/c/ij
+        uYHG1JvF0cSV78tTdHDlyEM=
+X-Google-Smtp-Source: APXvYqyMnVyQfkuz1/W7XkEFYZ1LgYgL+nfI12mHOHEEipu9E/uVDA0CzpYgULPkjh0rjOwuHcjBZw==
+X-Received: by 2002:a17:90a:ae12:: with SMTP id t18mr8440698pjq.32.1565181841043;
+        Wed, 07 Aug 2019 05:44:01 -0700 (PDT)
+Received: from localhost (fmdmzpr04-ext.fm.intel.com. [192.55.54.39])
+        by smtp.gmail.com with ESMTPSA id f14sm90917824pfn.53.2019.08.07.05.43.59
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 07 Aug 2019 05:44:00 -0700 (PDT)
+Date:   Wed, 7 Aug 2019 14:43:46 +0200
+From:   Maciej Fijalkowski <maciejromanfijalkowski@gmail.com>
+To:     Hayes Wang <hayeswang@realtek.com>
+Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        nic_swsd <nic_swsd@realtek.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jitendra Sharma <shajit@codeaurora.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Vinod Koul <vkoul@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+Subject: Re: [PATCH net-next 5/5] r8152: change rx_frag_head_sz and
+ rx_max_agg_num dynamically
+Message-ID: <20190807144346.00005d2b@gmail.com>
+In-Reply-To: <0835B3720019904CB8F7AA43166CEEB2F18D06C5@RTITMBSVM03.realtek.com.tw>
+References: <1394712342-15778-289-albertk@realtek.com>
+        <1394712342-15778-294-albertk@realtek.com>
+        <20190806151007.75a8dd2c@cakuba.netronome.com>
+        <0835B3720019904CB8F7AA43166CEEB2F18D06C5@RTITMBSVM03.realtek.com.tw>
+X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-w64-mingw32)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 6, 2019 at 8:05 AM Rajendra Nayak <rnayak@codeaurora.org> wrote:
+On Wed, 7 Aug 2019 07:12:32 +0000
+Hayes Wang <hayeswang@realtek.com> wrote:
 
-> From: Jitendra Sharma <shajit@codeaurora.org>
->
-> Add the binding for the TLMM pinctrl block found in the SC7180 platform
->
-> Signed-off-by: Jitendra Sharma <shajit@codeaurora.org>
-> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-> [rnayak: Fix some copy-paste issues, sort and fix functions]
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Reviewed-by: Vinod Koul <vkoul@kernel.org>
+> Jakub Kicinski [mailto:jakub.kicinski@netronome.com]
+> > Sent: Wednesday, August 07, 2019 6:10 AM  
+> [...]
+> > Please don't expose those via sysfs. Ethtool's copybreak and descriptor
+> > count should be applicable here, I think.  
+> 
+> Excuse me.
+> I find struct ethtool_tunable for ETHTOOL_RX_COPYBREAK.
+> How about the descriptor count?
 
-Patch applied.
+Look how drivers implement ethtool's set_ringparam ops.
 
-Yours,
-Linus Walleij
+Thanks,
+Maciej
+
+> 
+> 
+> Best Regards,
+> Hayes
+> 
+> 
+
