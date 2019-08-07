@@ -2,100 +2,182 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41049C32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 09:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3584C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 09:09:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 137D82231F
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 09:09:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565168978;
-	bh=XQaexSKpB8mjQkX9j2g2RC9xp05Rscu1DqTDQY3MAQ8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xhHJuPe+KUTgZ+HXJ8nlsObBSd/Da6d/8WQ5H8OuIvmNmo2WpRfak0fpyOLKx3LBu
-	 vlRtPwI8EFyi1OG72q7XTEwFpa8gbVePjExiJndHceNVRHFTFb2Wd0P0QZBjVy7EhM
-	 eKoGDfsRw8Ylaq6I3UjhVCYjQdhI0mMVGflZq+ME=
+	by mail.kernel.org (Postfix) with ESMTP id BDFAC21923
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 09:09:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728663AbfHGJJg (ORCPT
+        id S1728876AbfHGJJn convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 05:09:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34616 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726244AbfHGJJg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 05:09:36 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E123621923;
-        Wed,  7 Aug 2019 09:09:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565168975;
-        bh=XQaexSKpB8mjQkX9j2g2RC9xp05Rscu1DqTDQY3MAQ8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=paLu/T8/g5s29vdIji8xgfdeM6HRb3Plfvlozu0Sp2+Nov9i8Xb7jUQd6hEbec2SI
-         /8EEfcBFw9uoVcqjnxQa/qWawtSvSNBtU03i2qObDLVs2h2mmHaufhGwGA5Cn2vUPG
-         gWq+cBpa+fo539mrgFOn6BubxfBT7fkaE54UQcGI=
-Date:   Wed, 7 Aug 2019 10:09:29 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Jia He <justin.he@arm.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Punit Agrawal <punitagrawal@gmail.com>, Qian Cai <cai@lca.pw>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Jun Yao <yaojun8558363@gmail.com>,
-        Alex Van Brunt <avanbrunt@nvidia.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: mm: add missing PTE_SPECIAL in pte_mkdevmap on
- arm64
-Message-ID: <20190807090929.zsiupxyqop75uzkn@willie-the-truck>
-References: <20190807045851.10772-1-justin.he@arm.com>
+        Wed, 7 Aug 2019 05:09:43 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:53369 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728687AbfHGJJn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 05:09:43 -0400
+X-Originating-IP: 86.250.200.211
+Received: from xps13 (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 5C81E60010;
+        Wed,  7 Aug 2019 09:09:38 +0000 (UTC)
+Date:   Wed, 7 Aug 2019 11:09:37 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     shiva.linuxworks@gmail.com
+Cc:     Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Frieder Schrempf <frieder.schrempf@kontron.de>,
+        Shivamurthy Shastri <sshivamurthy@micron.com>,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Jeff Kletsky <git-commits@allycomm.com>,
+        Chuanhong Guo <gch981213@gmail.com>,
+        liaoweixiong <liaoweixiong@allwinnertech.com>
+Subject: Re: [PATCH 3/8] mtd: nand: create ONFI table parsing instance
+Message-ID: <20190807110937.4dfe1746@xps13>
+In-Reply-To: <20190722055621.23526-4-sshivamurthy@micron.com>
+References: <20190722055621.23526-1-sshivamurthy@micron.com>
+        <20190722055621.23526-4-sshivamurthy@micron.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190807045851.10772-1-justin.he@arm.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 07, 2019 at 12:58:51PM +0800, Jia He wrote:
-> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-> index 5fdcfe237338..e09760ece844 100644
-> --- a/arch/arm64/include/asm/pgtable.h
-> +++ b/arch/arm64/include/asm/pgtable.h
-> @@ -209,7 +209,7 @@ static inline pmd_t pmd_mkcont(pmd_t pmd)
->  
->  static inline pte_t pte_mkdevmap(pte_t pte)
->  {
-> -	return set_pte_bit(pte, __pgprot(PTE_DEVMAP));
-> +	return set_pte_bit(pte, __pgprot(PTE_DEVMAP | PTE_SPECIAL));
+Hi Shiva,
+
+shiva.linuxworks@gmail.com wrote on Mon, 22 Jul 2019 07:56:16 +0200:
+
+> From: Shivamurthy Shastri <sshivamurthy@micron.com>
+
+"Create one generic ONFI table parsing instance"
+
+> 
+> ONFI table parsing is common, as most of the variables are common
+> between raw and SPI NAND. The parsing function is instantiated in
+> onfi.c, which fills ONFI parameters into nand_memory_organization.
+
+... into nand_memory_organization just as before.
+
+> 
+> Signed-off-by: Shivamurthy Shastri <sshivamurthy@micron.com>
+> ---
+>  drivers/mtd/nand/onfi.c          | 32 ++++++++++++++++++++++++++++++++
+>  drivers/mtd/nand/raw/nand_onfi.c | 22 ++--------------------
+>  include/linux/mtd/onfi.h         |  2 ++
+>  3 files changed, 36 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/mtd/nand/onfi.c b/drivers/mtd/nand/onfi.c
+> index 7aaf36dfc5e0..e78700894aea 100644
+> --- a/drivers/mtd/nand/onfi.c
+> +++ b/drivers/mtd/nand/onfi.c
+> @@ -87,3 +87,35 @@ void sanitize_string(u8 *s, size_t len)
+>  	strim(s);
 >  }
->  
->  static inline void set_pte(pte_t *ptep, pte_t pte)
-> @@ -396,7 +396,10 @@ static inline int pmd_protnone(pmd_t pmd)
->  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
->  #define pmd_devmap(pmd)		pte_devmap(pmd_pte(pmd))
->  #endif
-> -#define pmd_mkdevmap(pmd)	pte_pmd(pte_mkdevmap(pmd_pte(pmd)))
-> +static inline pmd_t pmd_mkdevmap(pmd_t pmd)
+>  EXPORT_SYMBOL_GPL(sanitize_string);
+> +
+> +/**
+> + * fill_nand_memorg() - Parse ONFI table and fill memorg
+
+      ^ parse_onfi_params() - Parse an ONFI table and fill a memory
+      organization structure
+
+> + * @memorg: NAND memorg to be filled
+
+                    memory organization core structure to be filled
+
+> + * @p: ONFI table to be parsed
+> + *
+> + */
+> +void parse_onfi_params(struct nand_memory_organization *memorg,
+> +		       struct nand_onfi_params *p)
 > +{
-> +	return pte_pmd(set_pte_bit(pmd_pte(pmd), __pgprot(PTE_DEVMAP)));
+> +	memorg->pagesize = le32_to_cpu(p->byte_per_page);
+> +
+> +	/*
+> +	 * pages_per_block and blocks_per_lun may not be a power-of-2 size
+> +	 * (don't ask me who thought of this...). MTD assumes that these
+> +	 * dimensions will be power-of-2, so just truncate the remaining area.
+> +	 */
+> +	memorg->pages_per_eraseblock =
+> +			1 << (fls(le32_to_cpu(p->pages_per_block)) - 1);
+> +
+> +	memorg->oobsize = le16_to_cpu(p->spare_bytes_per_page);
+> +
+> +	memorg->luns_per_target = p->lun_count;
+> +	memorg->planes_per_lun = 1 << p->interleaved_bits;
+> +
+> +	/* See erasesize comment */
+> +	memorg->eraseblocks_per_lun =
+> +		1 << (fls(le32_to_cpu(p->blocks_per_lun)) - 1);
+> +	memorg->max_bad_eraseblocks_per_lun = le32_to_cpu(p->blocks_per_lun);
+> +	memorg->bits_per_cell = p->bits_per_cell;
 > +}
+> +EXPORT_SYMBOL_GPL(parse_onfi_params);
+> diff --git a/drivers/mtd/nand/raw/nand_onfi.c b/drivers/mtd/nand/raw/nand_onfi.c
+> index 2e8edfa636ef..263796d3298c 100644
+> --- a/drivers/mtd/nand/raw/nand_onfi.c
+> +++ b/drivers/mtd/nand/raw/nand_onfi.c
+> @@ -181,30 +181,12 @@ int nand_onfi_detect(struct nand_chip *chip)
+>  		goto free_onfi_param_page;
+>  	}
 >  
->  #define __pmd_to_phys(pmd)	__pte_to_phys(pmd_pte(pmd))
->  #define __phys_to_pmd_val(phys)	__phys_to_pte_val(phys)
+> -	memorg->pagesize = le32_to_cpu(p->byte_per_page);
+> -	mtd->writesize = memorg->pagesize;
+> +	parse_onfi_params(memorg, p);
+>  
+> -	/*
+> -	 * pages_per_block and blocks_per_lun may not be a power-of-2 size
+> -	 * (don't ask me who thought of this...). MTD assumes that these
+> -	 * dimensions will be power-of-2, so just truncate the remaining area.
+> -	 */
+> -	memorg->pages_per_eraseblock =
+> -			1 << (fls(le32_to_cpu(p->pages_per_block)) - 1);
+> +	mtd->writesize = memorg->pagesize;
+>  	mtd->erasesize = memorg->pages_per_eraseblock * memorg->pagesize;
+> -
+> -	memorg->oobsize = le16_to_cpu(p->spare_bytes_per_page);
+>  	mtd->oobsize = memorg->oobsize;
+>  
+> -	memorg->luns_per_target = p->lun_count;
+> -	memorg->planes_per_lun = 1 << p->interleaved_bits;
+> -
+> -	/* See erasesize comment */
+> -	memorg->eraseblocks_per_lun =
+> -		1 << (fls(le32_to_cpu(p->blocks_per_lun)) - 1);
+> -	memorg->max_bad_eraseblocks_per_lun = le32_to_cpu(p->blocks_per_lun);
+> -	memorg->bits_per_cell = p->bits_per_cell;
+> -
+>  	if (le16_to_cpu(p->features) & ONFI_FEATURE_16_BIT_BUS)
+>  		chip->options |= NAND_BUSWIDTH_16;
+>  
+> diff --git a/include/linux/mtd/onfi.h b/include/linux/mtd/onfi.h
+> index 2c8a05a02bb0..4cacf4e9db6d 100644
+> --- a/include/linux/mtd/onfi.h
+> +++ b/include/linux/mtd/onfi.h
+> @@ -183,5 +183,7 @@ void nand_bit_wise_majority(const void **srcbufs,
+>  			    void *dstbuf,
+>  			    unsigned int bufsize);
+>  void sanitize_string(u8 *s, size_t len);
+> +void parse_onfi_params(struct nand_memory_organization *memorg,
+> +		       struct nand_onfi_params *p);
+>  
+>  #endif /* __LINUX_MTD_ONFI_H */
 
-Acked-by: Will Deacon <will@kernel.org>
 
-I think Catalin can take this as a fix, although the commit message should
-probably be trimmed down a bit to remove the two call traces etc.
 
-Will
+
+Thanks,
+Miquèl
