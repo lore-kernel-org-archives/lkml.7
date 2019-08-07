@@ -2,84 +2,82 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B63A7C32754
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 15:18:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7484C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 15:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95BA121EF2
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 15:18:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2F3221E73
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 15:19:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388309AbfHGPS4 (ORCPT
+        id S2388355AbfHGPTE convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 11:18:56 -0400
-Received: from mga03.intel.com ([134.134.136.65]:64032 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387543AbfHGPS4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 11:18:56 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Aug 2019 08:15:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,357,1559545200"; 
-   d="scan'208";a="198698514"
-Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.189])
-  by fmsmga004.fm.intel.com with ESMTP; 07 Aug 2019 08:15:33 -0700
-Date:   Wed, 7 Aug 2019 18:15:34 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     "Ayoun, Serge" <serge.ayoun@intel.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "Svahn, Kai" <kai.svahn@intel.com>, "bp@alien8.de" <bp@alien8.de>,
-        "josh@joshtriplett.org" <josh@joshtriplett.org>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        "rientjes@google.com" <rientjes@google.com>,
-        "Xing, Cedric" <cedric.xing@intel.com>
-Subject: Re: [PATCH v21 16/28] x86/sgx: Add the Linux SGX Enclave Driver
-Message-ID: <20190807151534.kxsletvhbn3lno6w@linux.intel.com>
-References: <20190713170804.2340-1-jarkko.sakkinen@linux.intel.com>
- <20190713170804.2340-17-jarkko.sakkinen@linux.intel.com>
- <88B7642769729B409B4A93D7C5E0C5E7C65ABB8D@hasmsx108.ger.corp.intel.com>
+        Wed, 7 Aug 2019 11:19:04 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:26904 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387543AbfHGPTE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 11:19:04 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-58-vbBGLUz5N52_YU_A_1ip9w-1; Wed, 07 Aug 2019 16:19:00 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Wed, 7 Aug 2019 16:18:59 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 7 Aug 2019 16:18:59 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Sudeep Holla' <sudeep.holla@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Philipp Zabel" <p.zabel@pengutronix.de>
+Subject: RE: [PATCH] firmware: arm_scmi: Use {get,put}_unaligned_le32
+ accessors
+Thread-Topic: [PATCH] firmware: arm_scmi: Use {get,put}_unaligned_le32
+ accessors
+Thread-Index: AQHVTSAtyuEmH657y0Gt9ART6WUBkKbvzBcw
+Date:   Wed, 7 Aug 2019 15:18:59 +0000
+Message-ID: <4102ce79ef7a4f5ba819663d072bccc8@AcuMS.aculab.com>
+References: <20190807130038.26878-1-sudeep.holla@arm.com>
+In-Reply-To: <20190807130038.26878-1-sudeep.holla@arm.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <88B7642769729B409B4A93D7C5E0C5E7C65ABB8D@hasmsx108.ger.corp.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: NeoMutt/20180716
+X-MC-Unique: vbBGLUz5N52_YU_A_1ip9w-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 11:17:57AM +0000, Ayoun, Serge wrote:
-> > +	/* TCS pages need to be RW in the PTEs, but can be 0 in the EPCM. */
-> > +	if ((secinfo.flags & SGX_SECINFO_PAGE_TYPE_MASK) ==
-> > SGX_SECINFO_TCS)
-> > +		prot |= PROT_READ | PROT_WRITE;
+From: Sudeep Holla
+> Sent: 07 August 2019 14:01
 > 
-> For TCS pages you add both RD and WR maximum protection bits.
-> For the enclave to be able to run, user mode will have to change the
-> "vma->vm_flags" from PROT_NONE to PROT_READ | PROT_WRITE (otherwise
-> eenter fails).  This is exactly what your selftest  does.
+> Instead of type-casting the {tx,rx}.buf all over the place while
+> accessing them to read/write __le32 from/to the firmware, let's use
+> the nice existing {get,put}_unaligned_le32 accessors to hide all the
+> type cast ugliness.
 
-Recap where the TCS requirements came from? Why does it need
-RW in PTEs and can be 0 in the EPCM? The comment should explain
-it rather leave it as a claim IMHO.
+Why the 'unaligned' accessors?
 
-/Jarkko
+> -	*(__le32 *)t->tx.buf = cpu_to_le32(id);
+> +	put_unaligned_le32(id, t->tx.buf);
+
+These will be expensive if the cpu doesn't support them.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
