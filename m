@@ -2,152 +2,136 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A73EC32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 23:09:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8EA5C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 23:09:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E54DC2186A
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 23:09:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="mJ9tchdS"
+	by mail.kernel.org (Postfix) with ESMTP id A2D152184E
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 23:09:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388978AbfHGXJT (ORCPT
+        id S2389195AbfHGXJu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 19:09:19 -0400
-Received: from mail-eopbgr1310127.outbound.protection.outlook.com ([40.107.131.127]:7616
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730045AbfHGXJT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 19:09:19 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VVPQBitlct+SY61+UJ520X2VS3jTuq2YM1ABsVVQ6bFNVnmjI4wobi2TU2V814oABLZVhf8BMk6jzMmgjZQdwqE2AN4MFayjz1zv90Kj/Z5AIjQLQkI3C1rw1Ev7bVjRJoPWGbYLKQ/nRP+Bs67V8TaCpBrTsCRW4srTGI6k2nP13QgkNs/6Oe1EPZ3wFTHDfrlJ4elX2VUGbZReMlfVIOawp+EVcsrFqe/5pVnqW7pjZ0WGo45nlLu6uboX1E+W3a3GOx/95vLqhAQB8FmEUUSL/xCgVSiIWP9qlJaa5JD9CgNYMECTPkOwLXhFMBPIdyfj1aWI9e+rv598grCC8Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3736R5XI6RqQxT1T7d8oJzVjxtaznrze4mwemG3zp68=;
- b=j3fwtyyIrnXo4FsGIm8ttvQHI9aBoagJjs87NWFm7yTxTNPl4XcooyfFoW/Dq0fKVLLjRxf78UpxNfnv/JYMcuxY82MCalIxrTLQODfg4STZCD/CeJkiIp45pfAPk4COlFbGHDNWIXaQBifSzfsywd7CxbQwJcpRSwI73RzRcE7UzcZoeQyf7AMhkjBbM4iaryAS48RyI9sQptyPosRD4ZxTRDNjPLOg/KVS0QgmMrIrJ68OnDivovMJuURHadwC2zoXlLqTk4CYa/z+meBsO0hNJPlS25rlU53KUpeUc+fZ96TO0QJYxe1SEAsQuw3t9DQ4MqHNdt4a2leYqp1WUA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3736R5XI6RqQxT1T7d8oJzVjxtaznrze4mwemG3zp68=;
- b=mJ9tchdSjqIp0brmuaY/CulopE3qNd/RM+fASXeo94XnEiXYY/A3EZ6l6R9q8WIf8xXHKvABG/4aHLsoQIwA9JCkqeCbR2+CyU/yKDFv0OEPPmvSAZN4D/agzUvwPJ8qly+cmEnx6PqPH3GvSY/oUyFl11V9L2VGMBcPw9zjBrg=
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0156.APCP153.PROD.OUTLOOK.COM (10.170.189.12) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.2; Wed, 7 Aug 2019 23:09:10 +0000
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::d44e:57b7:d8fc:e91c]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::d44e:57b7:d8fc:e91c%7]) with mapi id 15.20.2157.001; Wed, 7 Aug 2019
- 23:09:10 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2 6/7] Drivers: hv: vmbus: Suspend/resume the vmbus
- itself for hibernation
-Thread-Topic: [PATCH v2 6/7] Drivers: hv: vmbus: Suspend/resume the vmbus
- itself for hibernation
-Thread-Index: AQHVR8it5keYZQsWuEumlWhe6zeYwabwVjjQ
-Date:   Wed, 7 Aug 2019 23:09:09 +0000
-Message-ID: <PU1P153MB01694BCFC735D4F625AB5E88BFD40@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <1564595464-56520-1-git-send-email-decui@microsoft.com>
- <1564595464-56520-7-git-send-email-decui@microsoft.com>
-In-Reply-To: <1564595464-56520-7-git-send-email-decui@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-07T23:09:07.6237200Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=4e858d71-0d86-400a-8da7-9aae3bb7ae09;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:f:e6c:c99b:1717:c966]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 93994cbd-60ff-49d9-886c-08d71b8c4167
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:PU1P153MB0156;
-x-ms-traffictypediagnostic: PU1P153MB0156:|PU1P153MB0156:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <PU1P153MB0156FA0B09F4C4D955DDD446BFD40@PU1P153MB0156.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 01221E3973
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(39860400002)(396003)(346002)(366004)(136003)(189003)(199004)(66446008)(10090500001)(22452003)(256004)(305945005)(53936002)(14444005)(15650500001)(66476007)(8990500004)(66946007)(4326008)(2906002)(10290500003)(316002)(64756008)(478600001)(1511001)(55016002)(66556008)(14454004)(9686003)(7696005)(7736002)(5660300002)(6436002)(110136005)(6246003)(76116006)(52536014)(81156014)(476003)(46003)(8676002)(74316002)(2501003)(6506007)(99286004)(33656002)(102836004)(6116002)(81166006)(486006)(86362001)(76176011)(53546011)(229853002)(71190400001)(25786009)(8936002)(71200400001)(186003)(11346002)(446003);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0156;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: UqxVCerTv4s2L31lV8oOuCPff3ZaiWbYfhUwc3os+KicDyJpNF9o59RzRqyCiaEp0KCSPKLuRo/g5SGhg6x7yDTxsB7mE4GmRHwWqzp8/6mSQ8/Tdt9zRUdV4eXnh7091Dg4mVNUHUQrgj9aCIqoef8kF4jRWajPjWi8khIQ7GA41g10t6R2CSZh+ciGm8VPfh9i8k48HaWxwJuC66z4yE8UbNRUuxDEzJYgYYapkZgf9DZ3Kz1dEYfngDbcKFI/OhtVVK0aEuwVCsp9TQ3IFM9xypjqyonJre7y9sFerv2slrwMPDsGsJbWu3e0ZpEyJFsymthYTSw2GnWnROSmbfENrzI/nEwxxTVSntdcmhvzpdI4DnGc3Gtvjaq2PX3G9G94/2sU7fw5M4dR0reJDnD+5I0mks1pQphbShpb0J0=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 7 Aug 2019 19:09:50 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:42270 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730045AbfHGXJu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 19:09:50 -0400
+Received: by mail-qt1-f194.google.com with SMTP id t12so1602301qtp.9
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 16:09:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:reply-to:to:cc:date
+         :in-reply-to:references:organization:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=UET7SY8fA8PxxfxiGjhHIWC769osh0HwkIUA8kcq50A=;
+        b=fZg43sYUUc9YWVSpf1REeIlVU0dNJrpIOsBTHTAGW3LePtdisOcmBCgaM5hJHpL4Jp
+         I92ssLwIQBhijjvDQH/Tnn0z8izsMHCYesDmqTZ4TistoX4Vr2XOEW3bpCZkj6o0NrGo
+         zfTt3ngoqhlWLOAS09hSDjQA8Ph445QgpBsWVJRFaNhOPHHlkve6ZWonf9Q39b7LW4WE
+         cByVjVjLzx5vAhuIXwbTRlu+UHlRGJ9VgELWy4jceEGx2Uinr5HXhE2TAOZEwUwR1ChL
+         VzlLzbvlfQiVpJ8ZJQlMkfEDagk6KhNbF5W8yijsxeP52Sfdb3LjmyxMkjujELO92da1
+         e5tg==
+X-Gm-Message-State: APjAAAXUWZWw7WQe5Q0KDHm2FiQGpGg4hNBYm6lN5aJdhawJojASWmRu
+        hpwncAeZmffQHj4XcviBTszsJVtNy0U=
+X-Google-Smtp-Source: APXvYqyPb2sxJrEPwD0S5bbm/JsGXpzEjIDHe5rBlBUk8ad3O/wvpazANeOwyUwov8yRaZ2XTtoH8A==
+X-Received: by 2002:ac8:1750:: with SMTP id u16mr10024185qtk.90.1565219389278;
+        Wed, 07 Aug 2019 16:09:49 -0700 (PDT)
+Received: from whitewolf.lyude.net (static-173-76-190-23.bstnma.ftas.verizon.net. [173.76.190.23])
+        by smtp.gmail.com with ESMTPSA id z19sm41926894qkg.28.2019.08.07.16.09.48
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 07 Aug 2019 16:09:48 -0700 (PDT)
+Message-ID: <2a454d971a6c2bc3da730333aacaa420ecddefd6.camel@redhat.com>
+Subject: Re: [PATCH 1/2] drm/nouveau/dispnv04: Grab/put runtime PM refs on
+ DPMS on/off
+From:   Lyude Paul <lyude@redhat.com>
+Reply-To: lyude@redhat.com
+To:     Ilia Mirkin <imirkin@alum.mit.edu>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Daniel Vetter <daniel@ffwll.ch>
+Date:   Wed, 07 Aug 2019 19:09:47 -0400
+In-Reply-To: <CAKb7UviCg7jeEyWqsHxygfPuqTg4ybFgTH8cRdx2O==tTEUD9Q@mail.gmail.com>
+References: <20190807213304.9255-1-lyude@redhat.com>
+         <20190807213304.9255-2-lyude@redhat.com>
+         <20190807215508.GK7444@phenom.ffwll.local>
+         <CAKb7UviCg7jeEyWqsHxygfPuqTg4ybFgTH8cRdx2O==tTEUD9Q@mail.gmail.com>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 93994cbd-60ff-49d9-886c-08d71b8c4167
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Aug 2019 23:09:09.9102
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: RR1Yj1S677//dX/3hp7Q6dagao+Tnobl1xUMBI36Z8K9/QPM55sBwJDnQ+mL2fjTUIZkbPM8qx9g5R5isnszKQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0156
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Dexuan Cui <decui@microsoft.com>
-> Sent: Wednesday, July 31, 2019 10:52 AM
-> To: linux-hyperv@vger.kernel.org; gregkh@linuxfoundation.org; Stephen
-> @@ -2050,6 +2095,10 @@ static int vmbus_acpi_add(struct acpi_device
-> *device)
->  };
->  MODULE_DEVICE_TABLE(acpi, vmbus_acpi_device_ids);
->=20
-> +static const struct dev_pm_ops vmbus_bus_pm =3D {
-> +	SET_SYSTEM_SLEEP_PM_OPS(vmbus_bus_suspend, vmbus_bus_resume)
-> +};
+On Wed, 2019-08-07 at 19:06 -0400, Ilia Mirkin wrote:
+> On Wed, Aug 7, 2019 at 5:55 PM Daniel Vetter <daniel@ffwll.ch> wrote:
+> > On Wed, Aug 07, 2019 at 05:33:00PM -0400, Lyude Paul wrote:
+> > > The code claims to grab a runtime PM ref when at least one CRTC is
+> > > active, but that's not actually the case as we grab a runtime PM ref
+> > > whenever a CRTC is enabled regardless of it's DPMS state. Meaning that
+> > > we can end up keeping the GPU awake when there are no screens enabled,
+> > > something we don't really want to do.
+> > > 
+> > > Note that we fixed this same issue for nv50 a while ago in:
+> > > 
+> > > commit e5d54f193572 ("drm/nouveau/drm/nouveau: Fix runtime PM leak in
+> > > nv50_disp_atomic_commit()")
+> > > 
+> > > Since we're about to remove nouveau_drm->have_disp_power_ref in the next
+> > > commit, let's also simplify the RPM code here while we're at it: grab a
+> > > ref during a modeset, grab additional RPM refs for each CRTC enabled by
+> > > said modeset, and drop an RPM ref for each CRTC disabled by said
+> > > modeset. This allows us to keep the GPU awake whenever screens are
+> > > turned on, without needing to use nouveau_drm->have_disp_power_ref.
+> > > 
+> > > Signed-off-by: Lyude Paul <lyude@redhat.com>
+> > > ---
+> > >  drivers/gpu/drm/nouveau/dispnv04/crtc.c | 18 ++++--------------
+> > >  1 file changed, 4 insertions(+), 14 deletions(-)
+> > > 
+> > > diff --git a/drivers/gpu/drm/nouveau/dispnv04/crtc.c
+> > > b/drivers/gpu/drm/nouveau/dispnv04/crtc.c
+> > > index f22f01020625..08ad8e3b9cd2 100644
+> > > --- a/drivers/gpu/drm/nouveau/dispnv04/crtc.c
+> > > +++ b/drivers/gpu/drm/nouveau/dispnv04/crtc.c
+> > > @@ -183,6 +183,10 @@ nv_crtc_dpms(struct drm_crtc *crtc, int mode)
+> > >               return;
+> > > 
+> > >       nv_crtc->last_dpms = mode;
+> > > +     if (mode == DRM_MODE_DPMS_ON)
+> > > +             pm_runtime_get_noresume(dev->dev);
+> > > +     else
+> > > +             pm_runtime_put_noidle(dev->dev);
+> > 
+> > it's after we filter out duplicate operations, so that part looks good.
+> > But not all of nouveau's legacy helper crtc callbacks go throuh ->dpms I
+> > think: nv_crtc_disable doesn't, and crtc helpers use that in preference
+> > over ->dpms in some cases.
+> > 
+> > I think the only way to actually hit that path is if you switch an active
+> > connector from an active CRTC to an inactive one. This implicitly disables
+> > the crtc (well, should, nv_crtc_disable doesn't seem to shut down hw), and
+> > I think would leak your runtime PM reference here. At least temporarily.
+> > 
+> > No idea how to best fix that. Aside from "use atomic" :-)
+> 
+> Not sure if this is relevant to the discussion at hand, but I'd like
+> to point out that dispnv04 is for pre-nv50 things, which definitely
+> didn't support any kind of ACPI-based runtime suspend.
 
-It turns out this " SET_SYSTEM_SLEEP_PM_OPS" should be changed to
-"SET_NOIRQ_SYSTEM_SLEEP_PM_OPS" to make NIC SR-IOV work with
-hibernation.
+I thought it was really suspicious that such an old chipset had any kind of
+runtime PM, but didn't question the code lol. I guess a more appropriate patch
+would be to just remove runtime PM support entirely for pre-nv50. Will respin
+soon and do this.
 
-This is because the "pci_dev_pm_ops" uses the "noirq" callbacks.=20
-In the resume path, the "noirq" restore callback runs before the non-noirq
-callbacks, meaning the vmbus_bus_resume() and the pci-hyperv's .resume()
-must also run via the "noirq" callbacks.
+> 
+>   -ilia
 
-Similarly, I also need to make the same change in this patch:
-[PATCH v2 7/7] Drivers: hv: vmbus: Implement suspend/resume for VSC drivers=
- for hibernation
-
-BTW, I'd like to change the print_hex_dump_debug() to print_hex_dump() in t=
-his patch:
-[PATCH v2 5/7] Drivers: hv: vmbus: Ignore the offers when resuming from hib=
-ernation
-
-print_hex_dump_debug() outputs nothing unless we enable the dyndbg.=20
-This is not good as we do want see the error messages here, if there is an =
-error.
-
-I'll do more tests and post a v3 of the patchset.
-
-Thanks,
--- Dexuan
