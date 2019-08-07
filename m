@@ -2,69 +2,111 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E6CC32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 11:16:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7398C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 11:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2BE621922
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 11:16:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4BB021922
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 11:17:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729679AbfHGLQv (ORCPT
+        id S2387534AbfHGLRM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 07:16:51 -0400
-Received: from foss.arm.com ([217.140.110.172]:46804 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726873AbfHGLQv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 07:16:51 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A08581570;
-        Wed,  7 Aug 2019 04:16:50 -0700 (PDT)
-Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 80FD03F575;
-        Wed,  7 Aug 2019 04:16:49 -0700 (PDT)
-Subject: Re: [PATCH v2 4/8] sched/fair: rework load_balance
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-kernel@vger.kernel.org, mingo@redhat.com,
-        peterz@infradead.org
-Cc:     pauld@redhat.com, srikar@linux.vnet.ibm.com,
-        quentin.perret@arm.com, dietmar.eggemann@arm.com,
-        Morten.Rasmussen@arm.com
-References: <1564670424-26023-1-git-send-email-vincent.guittot@linaro.org>
- <1564670424-26023-5-git-send-email-vincent.guittot@linaro.org>
- <74bb33d7-3ba4-aabe-c7a2-3865d5759281@arm.com>
-Message-ID: <a5388765-2392-fcfe-7a29-88f143e1025f@arm.com>
-Date:   Wed, 7 Aug 2019 12:16:46 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 7 Aug 2019 07:17:12 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55115 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729348AbfHGLRM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 07:17:12 -0400
+Received: by mail-wm1-f66.google.com with SMTP id p74so81388670wme.4
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 04:17:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=XOg+QHIo96GAzDA0CD3aVidRwvkjCkQ5NKE8IAqCCgI=;
+        b=juhmuiCtgJqpxtHPz44tLsKPmZYPojkhXzbFsuhDvSIc4shHnRAVvX109AYqZbB5j8
+         IzSwc6Fg/NIS0venrqoeYvCZWaohwPSK9RIu9icedMUOJtRb1p0OCwG3GE9H2ctYUsD2
+         B/GEXFnicP1uBf9YRIzuevdRO1lXPNABKXX39zUiBvsQISf5vYaVYGvDRxANdqqjyw4C
+         8xJpOElNDqRxD1pqpT5dpjmC1duu8Sl7hC7FwakQGWTamRIzq+n3/7o1eGu71F7swiia
+         nL6ZNBuSu5QOZemuBV6qYiL6AhizY1P/nUSj4hjpR51Fz9/zR5biEil8TE9L+hKgXsZh
+         biyQ==
+X-Gm-Message-State: APjAAAVRebjDvsBwtP8qSd2a91vo1Hpx3feJWfzg9YsOZw4d0xH/twfS
+        v/LFhgAp2DdrhXz9UBDKBMSO/A==
+X-Google-Smtp-Source: APXvYqxsoLykxcat2Ef7ObrQdb4zx24l0amhPhyKmBxACCVunXkLBsZ2cHced6gaEKmdUh3wtWpxVw==
+X-Received: by 2002:a1c:c542:: with SMTP id v63mr9999539wmf.97.1565176630200;
+        Wed, 07 Aug 2019 04:17:10 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id l8sm177977630wrg.40.2019.08.07.04.17.08
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 07 Aug 2019 04:17:09 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jim Mattson <jmattson@google.com>
+Subject: Re: [PATCH v2 2/5] x86: KVM: svm: avoid flooding logs when skip_emulated_instruction() fails
+In-Reply-To: <20190806154033.GD27766@linux.intel.com>
+References: <20190806060150.32360-1-vkuznets@redhat.com> <20190806060150.32360-3-vkuznets@redhat.com> <20190806154033.GD27766@linux.intel.com>
+Date:   Wed, 07 Aug 2019 13:17:08 +0200
+Message-ID: <87blx1dy2z.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <74bb33d7-3ba4-aabe-c7a2-3865d5759281@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/08/2019 18:17, Valentin Schneider wrote:
->> @@ -8765,7 +8942,7 @@ static int load_balance(int this_cpu, struct rq *this_rq,
->>  	env.src_rq = busiest;
->>  
->>  	ld_moved = 0;
->> -	if (busiest->cfs.h_nr_running > 1) {
->> +	if (busiest->nr_running > 1) {
-> 
-> Shouldn't that stay h_nr_running ? We can't do much if those aren't CFS
-> tasks.
-> 
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
-Wait, so that seems to be a correction of an over-zealous rename in patch
-2/8, but I think we actually *do* want it to be a cfs.h_nr_running check
-here.
+> On Tue, Aug 06, 2019 at 08:01:47AM +0200, Vitaly Kuznetsov wrote:
+>> When we're unable to skip instruction with kvm_emulate_instruction() we
+>> will not advance RIP and most likely the guest will get stuck as
+>> consequitive attempts to execute the same instruction will likely result
+>> in the same behavior.
+>> 
+>> As we're not supposed to see these messages under normal conditions, switch
+>> to pr_err_once().
+>> 
+>> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+>> Reviewed-by: Jim Mattson <jmattson@google.com>
+>> ---
+>>  arch/x86/kvm/svm.c | 3 ++-
+>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+>> index 7e843b340490..80f576e05112 100644
+>> --- a/arch/x86/kvm/svm.c
+>> +++ b/arch/x86/kvm/svm.c
+>> @@ -782,7 +782,8 @@ static void skip_emulated_instruction(struct kvm_vcpu *vcpu)
+>>  	if (!svm->next_rip) {
+>>  		if (kvm_emulate_instruction(vcpu, EMULTYPE_SKIP) !=
+>>  				EMULATE_DONE)
+>> -			printk(KERN_DEBUG "%s: NOP\n", __func__);
+>> +			pr_err_once("KVM: %s: unable to skip instruction\n",
+>> +				    __func__);
+>
+> IMO the proper fix would be to change skip_emulated_instruction() to
+> return an int so that emulation failure can be reported back up the stack.
+> It's a relatively minor change as there are a limited number of call sites
+> to skip_emulated_instruction() in SVM and VMX.
+>
 
-And actually this made me have a think about our active balance checks,
-I'm cooking something up in that regards.
+(I'm always wondering when is the right time to add "plus a bunch of
+miscellaneous fixes all over" to the PATCH0's Subject line :-)
+
+Will do in the next version, thanks!
+
+>>  		return;
+>>  	}
+>>  	if (svm->next_rip - kvm_rip_read(vcpu) > MAX_INST_SIZE)
+>> -- 
+>> 2.20.1
+>> 
+
+-- 
+Vitaly
