@@ -2,148 +2,106 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F421C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 15:40:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B52EC32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 15:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64E3121E6C
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 15:40:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40DD221E6C
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 15:41:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="pVTRdCSE"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="MpR6TPeY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388707AbfHGPk2 (ORCPT
+        id S2388721AbfHGPlB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 11:40:28 -0400
-Received: from gateway32.websitewelcome.com ([192.185.145.178]:39071 "EHLO
-        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387827AbfHGPk1 (ORCPT
+        Wed, 7 Aug 2019 11:41:01 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:41469 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387827AbfHGPlB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 11:40:27 -0400
-Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
-        by gateway32.websitewelcome.com (Postfix) with ESMTP id 39DCC15224
-        for <linux-kernel@vger.kernel.org>; Wed,  7 Aug 2019 10:40:26 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id vO38h8UVX2PzOvO38hBxGO; Wed, 07 Aug 2019 10:40:26 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=lueU+opXHzLjdjK1ms1P6rbYLeTw0Zgy9Rkh+ZkHbn4=; b=pVTRdCSEIsfwP+ugwbT6LDP+U7
-        SDMMgzgmOWKR8d18iEpDdpT+WXKjD7yRpDHGJh3nZmuEqSHZv7dR/TYogK0Dos9NJ28mOFMiOJA8E
-        086wqigig3+bWI2xgVMp9XGD5xw2BqSMD62ahDatsf+um0isX6JWUKbEHPQqgMR3274fWtUcJyd67
-        9dtC862liZy1PR093J9TI0CujU0ebAk5dQcnagn4vE9dTb0fKGLNlr5qLtCWE0AxIyPqGAh87+WDP
-        8vOo332JtRj1c5DXicDayI4OieihYn1x1+/B2reKqpWOk/aIYOFOx9T22Yrgs4XzAggAlSV2amICI
-        YG4bFdJg==;
-Received: from 187-162-252-62.static.axtel.net ([187.162.252.62]:43918 helo=[192.168.0.128])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hvO37-000Jew-QV; Wed, 07 Aug 2019 10:40:25 -0500
-Subject: Re: [PATCH] arm64: KVM: hyp: debug-sr: Mark expected switch
- fall-throughs
-To:     Marc Zyngier <maz@kernel.org>, James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-kernel@vger.kernel.org
-References: <20190807141857.GA4198@embeddedor>
- <b0b04024-9568-7b51-1bef-7030dd66f727@kernel.org>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <faae83d0-bc4b-b141-4cad-60448f86de4a@embeddedor.com>
-Date:   Wed, 7 Aug 2019 10:40:23 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 7 Aug 2019 11:41:01 -0400
+Received: by mail-ot1-f68.google.com with SMTP id o101so106065975ota.8
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 08:41:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=HAXloeaOD6Dgz0TeHmNMEkOukZ7q9iclSHb8TPMnnoM=;
+        b=MpR6TPeY9ksExXbV1M0WZ4jh4/JwJ9vWGRF9Q289lrNZt6ApwrI38CI+eNBR2DkMNa
+         Z7kScwuTmiRNYxUCmrhHLisuDE7Jq6jOB6Uy5ZU+gWd24CE2XuQKs/7HOsVWT5q4QYua
+         0uVXOCj7D12af1thKryyrhhJNQYJeGuHuo6mHxA3Em5MvzfobH7So0FWtWQRRIAv9cpK
+         SKGbb+p6Gx21xSqHvNDTgXbWQ6wLvI8lAggwhl53uqM/EKM/49TBSh42hrAepJq0swFZ
+         IrsJjSxAGrDjL7077HKRQ9LC6pgVFEbioMkeUxrVjzA6YqVgZD5u3o5nUM0Nz6aGTkLd
+         KPNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=HAXloeaOD6Dgz0TeHmNMEkOukZ7q9iclSHb8TPMnnoM=;
+        b=qzV/H6MDvTH77nzMU91ZRPiGeeHhnwrN7A/Mon9egmeS1qp3FrzUrCTCnb7dmHA9ZH
+         dpqPB3DTEqPuRJ2vxPNdtZMvDoJI3e8gwt2A1z3W1jyGdm6nWIeVXSv+bmjlPBSxQWkM
+         7MdRmlSHHAue3KJ5DEkAtKV/zq7sP/S/lvbj0MwZWseKtUx6SKbdfSPwsNW/sylBc8Ye
+         fnhFKfiLLvCRsu89v+lMrkn1M3wl3BpHp7gFaQP1zD+GoeoH5DudphSOo9NnMPgb/HvB
+         nBb97RiADltNsi3JhMDcDUD1ZHI06nNSWpIhDyKj9Uj8K9cEG7P2x2YU6vYPqHQrj5yp
+         OYsg==
+X-Gm-Message-State: APjAAAXJUX76lSMPqGVK5U5HOZjWBgzrs1VTKzA2hGnqPpNKNKSaTZlD
+        vm4/XzhJEefN0//W7STC4HbsQQ==
+X-Google-Smtp-Source: APXvYqwyIB1L+QiELH/YNHUY/Gf3N1VW1Uv2dDPLw4xrbndDgaWQH9vQgWS83jDCgfoU7TiFL406Bw==
+X-Received: by 2002:a5e:8e0d:: with SMTP id a13mr3602621ion.28.1565192459955;
+        Wed, 07 Aug 2019 08:40:59 -0700 (PDT)
+Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
+        by smtp.gmail.com with ESMTPSA id a1sm68914330ioo.5.2019.08.07.08.40.59
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 07 Aug 2019 08:40:59 -0700 (PDT)
+Date:   Wed, 7 Aug 2019 08:40:58 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Christoph Hellwig <hch@lst.de>
+cc:     Greg KH <gregkh@linuxfoundation.org>, arnd@arndb.de,
+        palmer@sifive.com, linux-kernel@vger.kernel.org,
+        james.morse@arm.com, linux-riscv@lists.infradead.org,
+        mchehab@kernel.org, linux-edac@vger.kernel.org
+Subject: Re: [PATCH] riscv: move sifive_l2_cache.c to drivers/misc
+In-Reply-To: <20190807152438.GA16495@lst.de>
+Message-ID: <alpine.DEB.2.21.9999.1908070832500.13971@viisi.sifive.com>
+References: <20190807151009.31971-1-hch@lst.de> <20190807152215.GA26690@kroah.com> <20190807152438.GA16495@lst.de>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-In-Reply-To: <b0b04024-9568-7b51-1bef-7030dd66f727@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.252.62
-X-Source-L: No
-X-Exim-ID: 1hvO37-000Jew-QV
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-252-62.static.axtel.net ([192.168.0.128]) [187.162.252.62]:43918
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 9
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 7 Aug 2019, Christoph Hellwig wrote:
 
-
-On 8/7/19 10:11 AM, Marc Zyngier wrote:
-
+> On Wed, Aug 07, 2019 at 05:22:15PM +0200, Greg KH wrote:
+> > > Fixes: a967a289f169 ("RISC-V: sifive_l2_cache: Add L2 cache controller driver for SiFive SoCs")
+> > > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > > ---
+> > >  arch/riscv/mm/Makefile                            | 1 -
+> > >  drivers/misc/Makefile                             | 1 +
+> > >  {arch/riscv/mm => drivers/misc}/sifive_l2_cache.c | 0
+> > >  3 files changed, 1 insertion(+), 1 deletion(-)
+> > >  rename {arch/riscv/mm => drivers/misc}/sifive_l2_cache.c (100%)
+> > 
+> > Why isn't this in drivers/edac/ ?
+> > why is this a misc driver?  Seems like it should sit next to the edac
+> > stuff.
 > 
-> Already fixed (together with all the other KVM/arm warnings/bugs), and
-> pull request sent to Paolo.
-> 
+> No idea.  EDAC maintainers, would you object to taking what is 
+> currently in arch/riscv/mm//sifive_l2_cache.c to drivers/edac/ ?
 
-Awesome. :)
+If this driver is moved out of arch/riscv/mm, it should ideally go into 
+some sort of common L2 cache controller driver directory, along 
+with other L2 cache controller drivers like arch/arm/mm/*l2c*. 
 
-Thanks, Marc.
---
-Gustavo
+Like many L2 cache controllers, this controller also supports cache 
+flushing operations and SoC-specific way operations.  We just don't use 
+those on RISC-V - yet.
+
+
+- Paul
