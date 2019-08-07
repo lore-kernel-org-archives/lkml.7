@@ -2,250 +2,102 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7728BC32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 17:37:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 689D3C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 17:38:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49AEF21E6E
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 17:37:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4958D21E6E
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 17:38:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389180AbfHGRhs (ORCPT
+        id S2389188AbfHGRio (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 13:37:48 -0400
-Received: from foss.arm.com ([217.140.110.172]:52442 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388640AbfHGRhr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 13:37:47 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C9F4328;
-        Wed,  7 Aug 2019 10:37:46 -0700 (PDT)
-Received: from usa.arm.com (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 23A043F575;
-        Wed,  7 Aug 2019 10:37:46 -0700 (PDT)
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Sudeep Holla <sudeep.holla@arm.com>, linux-kernel@vger.kernel.org,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH v2] firmware: arm_scmi: Use {get,put}_unaligned_le{32,64} accessors
-Date:   Wed,  7 Aug 2019 18:37:39 +0100
-Message-Id: <20190807173739.5939-1-sudeep.holla@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190807130038.26878-1-sudeep.holla@arm.com>
-References: <20190807130038.26878-1-sudeep.holla@arm.com>
+        Wed, 7 Aug 2019 13:38:44 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:35907 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387999AbfHGRin (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 13:38:43 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id F095020187;
+        Wed,  7 Aug 2019 19:38:39 +0200 (CEST)
+Date:   Wed, 7 Aug 2019 19:38:38 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Jordan Crouse <jcrouse@codeaurora.org>
+Cc:     freedreno@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, Sean Paul <sean@poorly.run>
+Subject: Re: [PATCH] drm/msm: Make DRM_MSM default to 'm'
+Message-ID: <20190807173838.GB30025@ravnborg.org>
+References: <1565198667-4300-1-git-send-email-jcrouse@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1565198667-4300-1-git-send-email-jcrouse@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=LpQP-O61AAAA:8
+        a=AFl41HnQPOZoGf6WJ1QA:9 a=CjuIK1q_8ugA:10 a=pioyyrs4ZptJ924tMmac:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of type-casting the {tx,rx}.buf all over the place while
-accessing them to read/write __le{32,64} from/to the firmware, let's
-use the existing {get,put}_unaligned_le{32,64} accessors to hide all
-the type cast ugliness.
+Hi Jordan.
+On Wed, Aug 07, 2019 at 11:24:27AM -0600, Jordan Crouse wrote:
+> Most use cases for DRM_MSM will prefer to build both DRM and MSM_DRM as
+> modules but there are some cases where DRM might be built in for whatever
+> reason and in those situations it is preferable to still keep MSM as a
+> module by default and let the user decide if they _really_ want to build
+> it in.
+> 
+> Additionally select QCOM_COMMAND_DB for ARCH_QCOM targets to make sure
+> it doesn't get missed when we need it for a6xx tarets.
+> 
+> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> ---
+> 
+>  drivers/gpu/drm/msm/Kconfig | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/Kconfig b/drivers/gpu/drm/msm/Kconfig
+> index 9c37e4d..3b2334b 100644
+> --- a/drivers/gpu/drm/msm/Kconfig
+> +++ b/drivers/gpu/drm/msm/Kconfig
+> @@ -14,11 +14,12 @@ config DRM_MSM
+>  	select SHMEM
+>  	select TMPFS
+>  	select QCOM_SCM if ARCH_QCOM
+> +	select QCOM_COMMAND_DB if ARCH_QCOM
+>  	select WANT_DEV_COREDUMP
+>  	select SND_SOC_HDMI_CODEC if SND_SOC
+>  	select SYNC_FILE
+>  	select PM_OPP
+> -	default y
+> +	default m
 
-Suggested-by: Philipp Zabel <p.zabel@pengutronix.de>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
----
- drivers/firmware/arm_scmi/base.c    |  2 +-
- drivers/firmware/arm_scmi/clock.c   | 12 ++++--------
- drivers/firmware/arm_scmi/common.h  |  2 ++
- drivers/firmware/arm_scmi/perf.c    |  8 ++++----
- drivers/firmware/arm_scmi/power.c   |  6 +++---
- drivers/firmware/arm_scmi/reset.c   |  2 +-
- drivers/firmware/arm_scmi/sensors.c | 17 ++++++-----------
- 7 files changed, 21 insertions(+), 28 deletions(-)
+As a general comment the right thing would be to drop this default.
+As it is now the Kconfig says that when DRM is selected then all of the
+world would then also get DRM_MSM, which only a small part of this world
+you see any benefit in.
+So they now have to de-select MSM.
 
-v1->v2:
-	- Dropped incorrect void ptr arithmetic and used unaligned_le64
-	  accessors instead
+Kconfig has:
+    depends on ARCH_QCOM || SOC_IMX5 || (ARM && COMPILE_TEST)
 
-diff --git a/drivers/firmware/arm_scmi/base.c b/drivers/firmware/arm_scmi/base.c
-index 204390297f4b..f804e8af6521 100644
---- a/drivers/firmware/arm_scmi/base.c
-+++ b/drivers/firmware/arm_scmi/base.c
-@@ -204,7 +204,7 @@ static int scmi_base_discover_agent_get(const struct scmi_handle *handle,
- 	if (ret)
- 		return ret;
+So maybe not all of the world but all QCOM or IMX5 users. Maybe they are all
+interested in MSM. Otherwise the default should rather be dropped.
+If there is any good hints then the help text could anyway use some
+love, and then add the info there.
 
--	*(__le32 *)t->tx.buf = cpu_to_le32(id);
-+	put_unaligned_le32(id, t->tx.buf);
+The other change with QCOM_COMMAND_DB seems on the other hand to make
+sense but then this is another patch.
 
- 	ret = scmi_do_xfer(handle, t);
- 	if (!ret)
-diff --git a/drivers/firmware/arm_scmi/clock.c b/drivers/firmware/arm_scmi/clock.c
-index 4a32ae1822a3..32526a793f3a 100644
---- a/drivers/firmware/arm_scmi/clock.c
-+++ b/drivers/firmware/arm_scmi/clock.c
-@@ -107,7 +107,7 @@ static int scmi_clock_attributes_get(const struct scmi_handle *handle,
- 	if (ret)
- 		return ret;
-
--	*(__le32 *)t->tx.buf = cpu_to_le32(clk_id);
-+	put_unaligned_le32(clk_id, t->tx.buf);
- 	attr = t->rx.buf;
-
- 	ret = scmi_do_xfer(handle, t);
-@@ -204,15 +204,11 @@ scmi_clock_rate_get(const struct scmi_handle *handle, u32 clk_id, u64 *value)
- 	if (ret)
- 		return ret;
-
--	*(__le32 *)t->tx.buf = cpu_to_le32(clk_id);
-+	put_unaligned_le32(clk_id, t->tx.buf);
-
- 	ret = scmi_do_xfer(handle, t);
--	if (!ret) {
--		__le32 *pval = t->rx.buf;
--
--		*value = le32_to_cpu(*pval);
--		*value |= (u64)le32_to_cpu(*(pval + 1)) << 32;
--	}
-+	if (!ret)
-+		*value = get_unaligned_le64(t->rx.buf);
-
- 	scmi_xfer_put(handle, t);
- 	return ret;
-diff --git a/drivers/firmware/arm_scmi/common.h b/drivers/firmware/arm_scmi/common.h
-index 43884e4ceac5..5237c2ff79fe 100644
---- a/drivers/firmware/arm_scmi/common.h
-+++ b/drivers/firmware/arm_scmi/common.h
-@@ -15,6 +15,8 @@
- #include <linux/scmi_protocol.h>
- #include <linux/types.h>
-
-+#include <asm/unaligned.h>
-+
- #define PROTOCOL_REV_MINOR_MASK	GENMASK(15, 0)
- #define PROTOCOL_REV_MAJOR_MASK	GENMASK(31, 16)
- #define PROTOCOL_REV_MAJOR(x)	(u16)(FIELD_GET(PROTOCOL_REV_MAJOR_MASK, (x)))
-diff --git a/drivers/firmware/arm_scmi/perf.c b/drivers/firmware/arm_scmi/perf.c
-index fb7f6cab2c11..9b338e66a24e 100644
---- a/drivers/firmware/arm_scmi/perf.c
-+++ b/drivers/firmware/arm_scmi/perf.c
-@@ -195,7 +195,7 @@ scmi_perf_domain_attributes_get(const struct scmi_handle *handle, u32 domain,
- 	if (ret)
- 		return ret;
-
--	*(__le32 *)t->tx.buf = cpu_to_le32(domain);
-+	put_unaligned_le32(domain, t->tx.buf);
- 	attr = t->rx.buf;
-
- 	ret = scmi_do_xfer(handle, t);
-@@ -380,7 +380,7 @@ static int scmi_perf_mb_limits_get(const struct scmi_handle *handle, u32 domain,
- 	if (ret)
- 		return ret;
-
--	*(__le32 *)t->tx.buf = cpu_to_le32(domain);
-+	put_unaligned_le32(domain, t->tx.buf);
-
- 	ret = scmi_do_xfer(handle, t);
- 	if (!ret) {
-@@ -459,11 +459,11 @@ static int scmi_perf_mb_level_get(const struct scmi_handle *handle, u32 domain,
- 		return ret;
-
- 	t->hdr.poll_completion = poll;
--	*(__le32 *)t->tx.buf = cpu_to_le32(domain);
-+	put_unaligned_le32(domain, t->tx.buf);
-
- 	ret = scmi_do_xfer(handle, t);
- 	if (!ret)
--		*level = le32_to_cpu(*(__le32 *)t->rx.buf);
-+		*level = get_unaligned_le32(t->rx.buf);
-
- 	scmi_xfer_put(handle, t);
- 	return ret;
-diff --git a/drivers/firmware/arm_scmi/power.c b/drivers/firmware/arm_scmi/power.c
-index 62f3401a1f01..5abef7079c0a 100644
---- a/drivers/firmware/arm_scmi/power.c
-+++ b/drivers/firmware/arm_scmi/power.c
-@@ -96,7 +96,7 @@ scmi_power_domain_attributes_get(const struct scmi_handle *handle, u32 domain,
- 	if (ret)
- 		return ret;
-
--	*(__le32 *)t->tx.buf = cpu_to_le32(domain);
-+	put_unaligned_le32(domain, t->tx.buf);
- 	attr = t->rx.buf;
-
- 	ret = scmi_do_xfer(handle, t);
-@@ -147,11 +147,11 @@ scmi_power_state_get(const struct scmi_handle *handle, u32 domain, u32 *state)
- 	if (ret)
- 		return ret;
-
--	*(__le32 *)t->tx.buf = cpu_to_le32(domain);
-+	put_unaligned_le32(domain, t->tx.buf);
-
- 	ret = scmi_do_xfer(handle, t);
- 	if (!ret)
--		*state = le32_to_cpu(*(__le32 *)t->rx.buf);
-+		*state = get_unaligned_le32(t->rx.buf);
-
- 	scmi_xfer_put(handle, t);
- 	return ret;
-diff --git a/drivers/firmware/arm_scmi/reset.c b/drivers/firmware/arm_scmi/reset.c
-index 11cb8b5ccf34..c1d67a2af12f 100644
---- a/drivers/firmware/arm_scmi/reset.c
-+++ b/drivers/firmware/arm_scmi/reset.c
-@@ -88,7 +88,7 @@ scmi_reset_domain_attributes_get(const struct scmi_handle *handle, u32 domain,
- 	if (ret)
- 		return ret;
-
--	*(__le32 *)t->tx.buf = cpu_to_le32(domain);
-+	put_unaligned_le32(domain, t->tx.buf);
- 	attr = t->rx.buf;
-
- 	ret = scmi_do_xfer(handle, t);
-diff --git a/drivers/firmware/arm_scmi/sensors.c b/drivers/firmware/arm_scmi/sensors.c
-index 7570308a16a0..a400ea805fc2 100644
---- a/drivers/firmware/arm_scmi/sensors.c
-+++ b/drivers/firmware/arm_scmi/sensors.c
-@@ -120,7 +120,7 @@ static int scmi_sensor_description_get(const struct scmi_handle *handle,
-
- 	do {
- 		/* Set the number of sensors to be skipped/already read */
--		*(__le32 *)t->tx.buf = cpu_to_le32(desc_index);
-+		put_unaligned_le32(desc_index, t->tx.buf);
-
- 		ret = scmi_do_xfer(handle, t);
- 		if (ret)
-@@ -217,7 +217,6 @@ static int scmi_sensor_reading_get(const struct scmi_handle *handle,
- 				   u32 sensor_id, u64 *value)
- {
- 	int ret;
--	__le32 *pval;
- 	struct scmi_xfer *t;
- 	struct scmi_msg_sensor_reading_get *sensor;
- 	struct sensors_info *si = handle->sensor_priv;
-@@ -229,24 +228,20 @@ static int scmi_sensor_reading_get(const struct scmi_handle *handle,
- 	if (ret)
- 		return ret;
-
--	pval = t->rx.buf;
- 	sensor = t->tx.buf;
- 	sensor->id = cpu_to_le32(sensor_id);
-
- 	if (s->async) {
- 		sensor->flags = cpu_to_le32(SENSOR_READ_ASYNC);
- 		ret = scmi_do_xfer_with_response(handle, t);
--		if (!ret) {
--			*value = le32_to_cpu(*(pval + 1));
--			*value |= (u64)le32_to_cpu(*(pval + 2)) << 32;
--		}
-+		if (!ret)
-+			*value = get_unaligned_le64((void *)
-+						    ((__le32 *)t->rx.buf + 1));
- 	} else {
- 		sensor->flags = cpu_to_le32(0);
- 		ret = scmi_do_xfer(handle, t);
--		if (!ret) {
--			*value = le32_to_cpu(*pval);
--			*value |= (u64)le32_to_cpu(*(pval + 1)) << 32;
--		}
-+		if (!ret)
-+			*value = get_unaligned_le64(t->rx.buf);
- 	}
-
- 	scmi_xfer_put(handle, t);
---
-2.17.1
-
+	Sam
