@@ -2,117 +2,145 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02C70C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 16:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E76CFC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 16:51:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCFE42229C
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 16:50:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAFB92229C
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 16:51:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BuXk+iT0"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TdBW40cd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388932AbfHGQuQ (ORCPT
+        id S2388968AbfHGQu7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 12:50:16 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:40052 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387967AbfHGQuN (ORCPT
+        Wed, 7 Aug 2019 12:50:59 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:44920 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387967AbfHGQu7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 12:50:13 -0400
-Received: by mail-pl1-f196.google.com with SMTP id a93so41599556pla.7
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 09:50:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=PTJzzkmcaFUIGPxJmALw8QsVth95UCeQqYyb4Gc4MR8=;
-        b=BuXk+iT0vwKIA0hX7V6EV5NP7jgQv2pWbqpiOPvZ8tYVZdY1rPXgJRtjJq5pUbk5XK
-         7U3DXrq/EEmpCYh8tFZONFErpTLxL11P6UPu9Xz4JN6LwwdvPFFCIZ1Ie535I3KKG4YI
-         oXTa+SFWTb5oV3Cg5xBVTAeBl1N6HO6jO+QKP1g+aT3PeViiZmmxS+S9PNPw7r3ODXjg
-         O2e9O037NvwQl/2n+2RdiS7DiRhbY+REzno7Q+UxlUYVuU5Y+7QCs/SByX/R8glOTHcB
-         YgXYIuwRNRMIy/WRhN+bk3Spz5SRvg91oDkMbovrVaf1+bh1zKmuPI7s8cf8hiaVqFXh
-         suYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=PTJzzkmcaFUIGPxJmALw8QsVth95UCeQqYyb4Gc4MR8=;
-        b=MHTdkBluYN7GOj71gMnQZPWKBAN1zKO4tmMpkq496T8X3NVJvCz3mqBfnH5VJ2Bf/0
-         6dVki7eHjU/wXH3CMVsokXxO/Tk0UZryTg2LzIN+lMkxmOXhCCeecMG3hRrIcDjqXZD3
-         KwiaqFh/VWAS5rZ/tz07OMNIb5Hh4VWK8+2Lw5gXvLCKF7rWGi2XxQYY2NBEOTZM9Cnk
-         rRMYbWh39NTUWByLGSnVPWFS6+wVOEyJrmd3D5cdMLX8XTTBjynaflS17t5Pe2W+8K47
-         cYf4I8CgUL8W6fF8BOGxU8+UbrC6ziYkv42MdhsW/3Z7Y6OkZfVo2hwP+sOwtgFGFFE1
-         mBgQ==
-X-Gm-Message-State: APjAAAXKPjWpZt1ElSggFQTNXB17fd6DAk0Jafb4yNz9RJFfWPUlBOWK
-        unK3f3QasXXCWw11gzlOlM7EPIjR
-X-Google-Smtp-Source: APXvYqxJq1PCxDZqWR+8/uL+AcoMjoR6UOChvu+pgMRi0ClmXRnnBHis3U2N9Jlnqgp4Tq7hPlMNUw==
-X-Received: by 2002:a63:2252:: with SMTP id t18mr8521998pgm.5.1565196612166;
-        Wed, 07 Aug 2019 09:50:12 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id o24sm170364577pfp.135.2019.08.07.09.50.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 07 Aug 2019 09:50:11 -0700 (PDT)
-Subject: Re: [PATCH] firmware: google: update vpd_decode from upstream
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Hung-Te Lin <hungte@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Anton Vasilyev <vasilyev@ispras.ru>,
-        Colin Ian King <colin.king@canonical.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Samuel Holland <samuel@sholland.org>,
-        Allison Randal <allison@lohutok.net>,
-        linux-kernel@vger.kernel.org
-References: <20190802082035.79316-1-hungte@chromium.org>
- <5d44b8eb.1c69fb81.6d1c1.7d80@mx.google.com>
- <20190807135834.GA12853@roeck-us.net>
- <5d4ae764.1c69fb81.f81f8.054c@mx.google.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <525c3cdd-ba15-5898-b9de-daaa42b4b87e@roeck-us.net>
-Date:   Wed, 7 Aug 2019 09:50:10 -0700
+        Wed, 7 Aug 2019 12:50:59 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x77Gotmx130524;
+        Wed, 7 Aug 2019 11:50:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1565196655;
+        bh=403rFY141+ngslfVmPOcoEAaGGO5wWhTHo7yhw07SPc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=TdBW40cd4WxBvmMMpoR5fQvlllMfy6scyNdWsz3gPHpjDreG3iVFJj7m6VsP8FF3s
+         Ko4geLeQVmn7WGPKzbTKFDSHA3H6JFC52rBMZ/RwVPvdw9tE79LG5a5f3yV9aUwjnR
+         qaad9+9In7iYYYE0TQnrOIqrgusEC0xPh7+3qHxg=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x77Gotfh094692
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 7 Aug 2019 11:50:55 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 7 Aug
+ 2019 11:50:54 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 7 Aug 2019 11:50:55 -0500
+Received: from [128.247.58.153] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x77GoscP123429;
+        Wed, 7 Aug 2019 11:50:54 -0500
+Subject: Re: [RESEND 1/2] remoteproc: replace bool from struct rproc by u8
+To:     Loic Pallardy <loic.pallardy@st.com>, <bjorn.andersson@linaro.org>,
+        <ohad@wizery.com>
+CC:     <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <arnaud.pouliquen@st.com>, <benjamin.gaignard@linaro.org>,
+        <fabien.dessenne@st.com>
+References: <1565170879-3185-1-git-send-email-loic.pallardy@st.com>
+ <1565170879-3185-2-git-send-email-loic.pallardy@st.com>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <5ef3cb58-76cf-512b-4c39-08f5b9e2d67f@ti.com>
+Date:   Wed, 7 Aug 2019 11:50:54 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <5d4ae764.1c69fb81.f81f8.054c@mx.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <1565170879-3185-2-git-send-email-loic.pallardy@st.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/7/19 7:59 AM, Stephen Boyd wrote:
-> Quoting Guenter Roeck (2019-08-07 06:58:34)
->> On Fri, Aug 02, 2019 at 03:27:54PM -0700, Stephen Boyd wrote:
->>> Quoting Hung-Te Lin (2019-08-02 01:20:31)
->>>>   
->>>> -static int vpd_section_attrib_add(const u8 *key, s32 key_len,
->>>> -                                 const u8 *value, s32 value_len,
->>>> +static int vpd_section_attrib_add(const u8 *key, u32 key_len,
->>>> +                                 const u8 *value, u32 value_len,
->>>>                                    void *arg)
->>>>   {
->>>>          int ret;
->>>> @@ -246,7 +246,7 @@ static int vpd_section_destroy(struct vpd_section *sec)
->>>>   
->>>>   static int vpd_sections_init(phys_addr_t physaddr)
->>>>   {
->>>> -       struct vpd_cbmem *temp;
->>>> +       struct vpd_cbmem __iomem *temp;
->>
->> The change to __iomem should also be a separate patch.
->>
-> 
-> Please don't change it back to __iomem. See commit ae21f41e1f56
-> ("firmware: vpd: Drop __iomem usage for memremap() memory") for why.
-> 
-> 
-Sorry, I didn't notice that part.
+Hi Loic,
 
-Guenter
+On 8/7/19 4:41 AM, Loic Pallardy wrote:
+> Post [1] and checkpatch tool indicate that usage of bool type
+> in structure is now no more allowed/advised.
+> This patch replaces bool by unsigned char (u8) and reorders
+> struct rproc fields to avoid padding.
+> 
+> [1] https://lkml.org/lkml/2017/11/21/384
+
+Btw, that checkpatch warning has been removed and documentation
+clarified in commit 7967656ffbfa ("coding-style: Clarify the
+expectations around bool") added in 5.1 kernel.
+
+I have actually switched to using bitfields on some of my patches
+downstream because of the same checkpatch message, since we seem to have
+a number of these fields, but that also requires updating all the field
+values in various drivers to use 0 or 1 instead of the boolean values.
+
+regards
+Suman
+
+> 
+> Signed-off-by: Loic Pallardy <loic.pallardy@st.com>
+> ---
+>  include/linux/remoteproc.h | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+> index 16ad66683ad0..8cd22fecea61 100644
+> --- a/include/linux/remoteproc.h
+> +++ b/include/linux/remoteproc.h
+> @@ -472,15 +472,15 @@ struct rproc_dump_segment {
+>   * @index: index of this rproc device
+>   * @crash_handler: workqueue for handling a crash
+>   * @crash_cnt: crash counter
+> - * @recovery_disabled: flag that state if recovery was disabled
+>   * @max_notifyid: largest allocated notify id.
+>   * @table_ptr: pointer to the resource table in effect
+>   * @cached_table: copy of the resource table
+>   * @table_sz: size of @cached_table
+> - * @has_iommu: flag to indicate if remote processor is behind an MMU
+> - * @auto_boot: flag to indicate if remote processor should be auto-started
+>   * @dump_segments: list of segments in the firmware
+>   * @nb_vdev: number of vdev currently handled by rproc
+> + * @recovery_disabled: flag that state if recovery was disabled
+> + * @has_iommu: flag to indicate if remote processor is behind an MMU
+> + * @auto_boot: flag to indicate if remote processor should be auto-started
+>   */
+>  struct rproc {
+>  	struct list_head node;
+> @@ -505,15 +505,15 @@ struct rproc {
+>  	int index;
+>  	struct work_struct crash_handler;
+>  	unsigned int crash_cnt;
+> -	bool recovery_disabled;
+>  	int max_notifyid;
+>  	struct resource_table *table_ptr;
+>  	struct resource_table *cached_table;
+>  	size_t table_sz;
+> -	bool has_iommu;
+> -	bool auto_boot;
+>  	struct list_head dump_segments;
+>  	int nb_vdev;
+> +	u8 recovery_disabled;
+> +	u8 has_iommu;
+> +	u8 auto_boot;
+>  };
+>  
+>  /**
+> 
 
