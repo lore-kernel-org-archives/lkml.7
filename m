@@ -2,188 +2,250 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD9EC32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 17:37:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7728BC32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 17:37:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC5E721E70
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 17:37:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="XxxT6fH6";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="Hf0a29Le"
+	by mail.kernel.org (Postfix) with ESMTP id 49AEF21E6E
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 17:37:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389170AbfHGRhI (ORCPT
+        id S2389180AbfHGRhs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 13:37:08 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:35422 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388760AbfHGRhI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 13:37:08 -0400
-Received: from pps.filterd (m0001255.ppops.net [127.0.0.1])
-        by mx0b-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x77HLkOX030419;
-        Wed, 7 Aug 2019 10:36:50 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : subject :
- date : message-id : content-type : content-id : content-transfer-encoding
- : mime-version; s=facebook;
- bh=4Tbrr8zmmoHCs1mVjo01WE4qubw+YYDUtcM4rt0cQ5s=;
- b=XxxT6fH6CsGQ61n3zJgNqdiAJh4RWopPqG9ftNkFBcdCyiK5KjW2BnbzADudYmkD6C+l
- IWQI/hRs0Zg1nOtAkaJSDlqXOBoJv/KRHzkczozOsIJoo86i8OdIEboPzquW3oIwrE6z
- 1jCcylUn7mH4CsHKPp0w1XPLnrCltpbjbIY= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0b-00082601.pphosted.com with ESMTP id 2u80f8rpgk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Wed, 07 Aug 2019 10:36:50 -0700
-Received: from ash-exopmbx101.TheFacebook.com (2620:10d:c0a8:82::b) by
- ash-exhub203.TheFacebook.com (2620:10d:c0a8:83::5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 7 Aug 2019 10:36:49 -0700
-Received: from ash-exhub103.TheFacebook.com (2620:10d:c0a8:82::c) by
- ash-exopmbx101.TheFacebook.com (2620:10d:c0a8:82::b) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 7 Aug 2019 10:36:49 -0700
-Received: from NAM01-BY2-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.174) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Wed, 7 Aug 2019 10:36:49 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JcN5WzC0kLyB3+tSQRJWVfnoTV1GMW1Ts/eeAIT60YJd5NVluOuzWR6uQsNk30plN6RHCNjq/PuCOCshVa9cNa2TtCYdoUwi0H85ptI42JqCkVMkkRsSiHIhALYFJ8CgExqzu67RItZU+aWTG8UNjRjOjyxuHWsQIKXUscvCYBtr9LuVoyeJICpPftZrxOLfow9aDBZvKOjrNJFvqOy4/4BibA/IxwGCn9d7iu9Zbpc+muGzvBUG47IqHu634g7LcVZnv79TETWU4NvS6M2J7QJsfuy3SdZPlX+xxdH8VBtH9y3LthQLDbL+Q52QkCUQJNUK9mnjMTHmO5h5xRSAfQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4Tbrr8zmmoHCs1mVjo01WE4qubw+YYDUtcM4rt0cQ5s=;
- b=M7r7B5I+AuXTtFjJ8LnvQxbcTZ3cEFYEw3/f5HTh/w+08y8gfMWozO3300M8oNorDkxZZHmyGFpcWECPtKlfp15xxgYOcO6HQoLY9Jc6/suWkXqXhGXcz43pfyHy5+eQ/jW8QXaMKeahJIv0xiu5MpRp5IwQK1PcdfQjAK0LCs6T1zWhz+nGYWrx00udNAVsAMGrjG9nZmh/cAiXoMFCRHUU/Sq/wGoinRQI/XdGbzFG+C1uAm3iLKA8bdKYngKCqQCG/iYN7ZCsLK/kQ8ULN4Bh0+7KmM+3T2q4VDjPwhA9UQ3tz1tM6Rb4Q6neD5C2cLfpzXwc4zM1fu2d7mPH9A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=fb.com;dmarc=pass action=none header.from=fb.com;dkim=pass
- header.d=fb.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4Tbrr8zmmoHCs1mVjo01WE4qubw+YYDUtcM4rt0cQ5s=;
- b=Hf0a29Le30oc3zzurpGEfW8DsyWmMYYaplDGxpW5GI3b3i+3uDkvk5wXlvi7Sindm4yMhQW4h1AGBDv585qUYifAojp+N+lRKYm3wHtc6MeCByAFF6T/BWTzKwNmrVxpgNmYM4JxUj9VJBcGn23MUxdgGYZHB0ki0eG0fI/VLKk=
-Received: from CY4PR15MB1269.namprd15.prod.outlook.com (10.172.177.11) by
- CY4PR15MB1717.namprd15.prod.outlook.com (10.174.54.138) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2136.20; Wed, 7 Aug 2019 17:36:47 +0000
-Received: from CY4PR15MB1269.namprd15.prod.outlook.com
- ([fe80::8c93:f913:124:8dd0]) by CY4PR15MB1269.namprd15.prod.outlook.com
- ([fe80::8c93:f913:124:8dd0%8]) with mapi id 15.20.2136.018; Wed, 7 Aug 2019
- 17:36:47 +0000
-From:   Vijay Khemka <vijaykhemka@fb.com>
-To:     Tao Ren <taoren@fb.com>,
-        Samuel Mendoza-Jonas <sam@mendozajonas.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
-        William Kennington <wak@google.com>,
-        Joel Stanley <joel@jms.id.au>
-Subject: Re:[PATCH net-next] net/ncsi: allow to customize BMC MAC Address
- offset
-Thread-Topic: [PATCH net-next] net/ncsi: allow to customize BMC MAC Address
- offset
-Thread-Index: AQHVTUaw7KvSLDhTGEGo9NvmPIPC2A==
-Date:   Wed, 7 Aug 2019 17:36:47 +0000
-Message-ID: <75DDAF9A-DABC-4670-BEC0-320185017642@fb.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [2620:10d:c090:200::3:5fd5]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 66638a1d-4475-42f4-31e5-08d71b5dd2cc
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:CY4PR15MB1717;
-x-ms-traffictypediagnostic: CY4PR15MB1717:
-x-microsoft-antispam-prvs: <CY4PR15MB1717B139B41046FB237CD45ADDD40@CY4PR15MB1717.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1227;
-x-forefront-prvs: 01221E3973
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(346002)(376002)(39860400002)(396003)(366004)(199004)(189003)(71190400001)(5660300002)(14454004)(14444005)(53936002)(256004)(71200400001)(91956017)(6512007)(7736002)(6506007)(66556008)(6486002)(66946007)(102836004)(478600001)(305945005)(66446008)(316002)(36756003)(64756008)(86362001)(33656002)(76116006)(486006)(2616005)(2501003)(99286004)(46003)(186003)(25786009)(2201001)(110136005)(68736007)(476003)(2906002)(66476007)(81166006)(6116002)(6436002)(8936002)(8676002)(81156014);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR15MB1717;H:CY4PR15MB1269.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: rsmxfkD7dCFssyN87lrZFOqjoptCd7zU6fgYEHzkdI07L7cUqN4RSeUkfazz6QaRy7uPZui88r6jXzsiQj1KZCezPFfPaKeHpuEW6XOWnTcRSIjJxywjp6FNahoLY+ypFSHKkwkNaa4W9jnCGNAbgmeRHC3kJK5Lbn8UyL0na0JT5ozp+prYD+vyytwWYWxlBJjYoJfB6xcIjwTHaS5YE/ddd1Hed0kfBy9cvyp10gV7lFZFJeGtUe9/SE6++cdJWB4ki2tJRct/etMo1UdBbEWHMuKGWdNvbkjGCw0PgyJ20aXzgrTgdYLDn1LnVVHEv1xURfFRQcE/LmaXzMnZbl76/UTzQw4iPVYfHh2zsIVZ+TspXDviENAv3w3lwR+eQC5YWIym5Y4JHP1Xzssh2f6L6wOqimzX6u3bVP/VDCQ=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <03BA4D1D80803B4EAB293595BDEE4EC3@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 66638a1d-4475-42f4-31e5-08d71b5dd2cc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Aug 2019 17:36:47.7890
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: vijaykhemka@fb.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR15MB1717
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-07_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=903 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908070167
-X-FB-Internal: deliver
+        Wed, 7 Aug 2019 13:37:48 -0400
+Received: from foss.arm.com ([217.140.110.172]:52442 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388640AbfHGRhr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 13:37:47 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C9F4328;
+        Wed,  7 Aug 2019 10:37:46 -0700 (PDT)
+Received: from usa.arm.com (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 23A043F575;
+        Wed,  7 Aug 2019 10:37:46 -0700 (PDT)
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Sudeep Holla <sudeep.holla@arm.com>, linux-kernel@vger.kernel.org,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH v2] firmware: arm_scmi: Use {get,put}_unaligned_le{32,64} accessors
+Date:   Wed,  7 Aug 2019 18:37:39 +0100
+Message-Id: <20190807173739.5939-1-sudeep.holla@arm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190807130038.26878-1-sudeep.holla@arm.com>
+References: <20190807130038.26878-1-sudeep.holla@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TGd0bSBleGNlcHQgb25lIHNtYWxsIGNvbW1lbnQgYmVsb3cuDQoNCu+7v09uIDgvNi8xOSwgNToy
-MiBQTSwgIm9wZW5ibWMgb24gYmVoYWxmIG9mIFRhbyBSZW4iIDxvcGVuYm1jLWJvdW5jZXMrdmlq
-YXlraGVta2E9ZmIuY29tQGxpc3RzLm96bGFicy5vcmcgb24gYmVoYWxmIG9mIHRhb3JlbkBmYi5j
-b20+IHdyb3RlOg0KDQogICAgQ3VycmVudGx5IEJNQydzIE1BQyBhZGRyZXNzIGlzIGNhbGN1bGF0
-ZWQgYnkgYWRkaW5nIDEgdG8gTkNTSSBOSUMncyBiYXNlDQogICAgTUFDIGFkZHJlc3Mgd2hlbiBD
-T05GSUdfTkNTSV9PRU1fQ01EX0dFVF9NQUMgb3B0aW9uIGlzIGVuYWJsZWQuIFRoZSBsb2dpYw0K
-ICAgIGRvZXNuJ3Qgd29yayBmb3IgcGxhdGZvcm1zIHdpdGggZGlmZmVyZW50IEJNQyBNQUMgb2Zm
-c2V0OiBmb3IgZXhhbXBsZSwNCiAgICBGYWNlYm9vayBZYW1wIEJNQydzIE1BQyBhZGRyZXNzIGlz
-IGNhbGN1bGF0ZWQgYnkgYWRkaW5nIDIgdG8gTklDJ3MgYmFzZQ0KICAgIE1BQyBhZGRyZXNzICgi
-QmFzZU1BQyArIDEiIGlzIHJlc2VydmVkIGZvciBIb3N0IHVzZSkuDQogICAgDQogICAgVGhpcyBw
-YXRjaCBhZGRzIE5FVF9OQ1NJX01DX01BQ19PRkZTRVQgY29uZmlnIG9wdGlvbiB0byBjdXN0b21p
-emUgb2Zmc2V0DQogICAgYmV0d2VlbiBOSUMncyBCYXNlIE1BQyBhZGRyZXNzIGFuZCBCTUMncyBN
-QUMgYWRkcmVzcy4gSXRzIGRlZmF1bHQgdmFsdWUgaXMNCiAgICBzZXQgdG8gMSB0byBhdm9pZCBi
-cmVha2luZyBleGlzdGluZyB1c2Vycy4NCiAgICANCiAgICBTaWduZWQtb2ZmLWJ5OiBUYW8gUmVu
-IDx0YW9yZW5AZmIuY29tPg0KICAgIC0tLQ0KICAgICBuZXQvbmNzaS9LY29uZmlnICAgIHwgIDgg
-KysrKysrKysNCiAgICAgbmV0L25jc2kvbmNzaS1yc3AuYyB8IDE1ICsrKysrKysrKysrKystLQ0K
-ICAgICAyIGZpbGVzIGNoYW5nZWQsIDIxIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQog
-ICAgDQogICAgZGlmZiAtLWdpdCBhL25ldC9uY3NpL0tjb25maWcgYi9uZXQvbmNzaS9LY29uZmln
-DQogICAgaW5kZXggMmYxZTU3NTZjMDNhLi5iZThlZmUxZWQ5OWUgMTAwNjQ0DQogICAgLS0tIGEv
-bmV0L25jc2kvS2NvbmZpZw0KICAgICsrKyBiL25ldC9uY3NpL0tjb25maWcNCiAgICBAQCAtMTcs
-MyArMTcsMTEgQEAgY29uZmlnIE5DU0lfT0VNX0NNRF9HRVRfTUFDDQogICAgIAktLS1oZWxwLS0t
-DQogICAgIAkgIFRoaXMgYWxsb3dzIHRvIGdldCBNQUMgYWRkcmVzcyBmcm9tIE5DU0kgZmlybXdh
-cmUgYW5kIHNldCB0aGVtIGJhY2sgdG8NCiAgICAgCQljb250cm9sbGVyLg0KICAgICtjb25maWcg
-TkVUX05DU0lfTUNfTUFDX09GRlNFVA0KICAgICsJaW50DQogICAgKwlwcm9tcHQgIk9mZnNldCBv
-ZiBNYW5hZ2VtZW50IENvbnRyb2xsZXIncyBNQUMgQWRkcmVzcyINCiAgICArCWRlcGVuZHMgb24g
-TkNTSV9PRU1fQ01EX0dFVF9NQUMNCiAgICArCWRlZmF1bHQgMQ0KICAgICsJaGVscA0KICAgICsJ
-ICBUaGlzIGRlZmluZXMgdGhlIG9mZnNldCBiZXR3ZWVuIE5ldHdvcmsgQ29udHJvbGxlcidzIChi
-YXNlKSBNQUMNCiAgICArCSAgYWRkcmVzcyBhbmQgTWFuYWdlbWVudCBDb250cm9sbGVyJ3MgTUFD
-IGFkZHJlc3MuDQogICAgZGlmZiAtLWdpdCBhL25ldC9uY3NpL25jc2ktcnNwLmMgYi9uZXQvbmNz
-aS9uY3NpLXJzcC5jDQogICAgaW5kZXggNzU4MWJmOTE5ODg1Li4yNGE3OTFmOWViZjUgMTAwNjQ0
-DQogICAgLS0tIGEvbmV0L25jc2kvbmNzaS1yc3AuYw0KICAgICsrKyBiL25ldC9uY3NpL25jc2kt
-cnNwLmMNCiAgICBAQCAtNjU2LDYgKzY1NiwxMSBAQCBzdGF0aWMgaW50IG5jc2lfcnNwX2hhbmRs
-ZXJfb2VtX2JjbV9nbWEoc3RydWN0IG5jc2lfcmVxdWVzdCAqbnIpDQogICAgIAlzdHJ1Y3QgbmNz
-aV9yc3Bfb2VtX3BrdCAqcnNwOw0KICAgICAJc3RydWN0IHNvY2thZGRyIHNhZGRyOw0KICAgICAJ
-aW50IHJldCA9IDA7DQogICAgKyNpZmRlZiBDT05GSUdfTkVUX05DU0lfTUNfTUFDX09GRlNFVA0K
-ICAgICsJaW50IG1hY19vZmZzZXQgPSBDT05GSUdfTkVUX05DU0lfTUNfTUFDX09GRlNFVDsNCiAg
-ICArI2Vsc2UNCiAgICArCWludCBtYWNfb2Zmc2V0ID0gMTsNCiAgICArI2VuZGlmDQogICAgIA0K
-ICAgICAJLyogR2V0IHRoZSByZXNwb25zZSBoZWFkZXIgKi8NCiAgICAgCXJzcCA9IChzdHJ1Y3Qg
-bmNzaV9yc3Bfb2VtX3BrdCAqKXNrYl9uZXR3b3JrX2hlYWRlcihuci0+cnNwKTsNCiAgICBAQCAt
-NjYzLDggKzY2OCwxNCBAQCBzdGF0aWMgaW50IG5jc2lfcnNwX2hhbmRsZXJfb2VtX2JjbV9nbWEo
-c3RydWN0IG5jc2lfcmVxdWVzdCAqbnIpDQogICAgIAlzYWRkci5zYV9mYW1pbHkgPSBuZGV2LT50
-eXBlOw0KICAgICAJbmRldi0+cHJpdl9mbGFncyB8PSBJRkZfTElWRV9BRERSX0NIQU5HRTsNCiAg
-ICAgCW1lbWNweShzYWRkci5zYV9kYXRhLCAmcnNwLT5kYXRhW0JDTV9NQUNfQUREUl9PRkZTRVRd
-LCBFVEhfQUxFTik7DQogICAgLQkvKiBJbmNyZWFzZSBtYWMgYWRkcmVzcyBieSAxIGZvciBCTUMn
-cyBhZGRyZXNzICovDQogICAgLQlldGhfYWRkcl9pbmMoKHU4ICopc2FkZHIuc2FfZGF0YSk7DQog
-ICAgKw0KICAgICsJLyogTWFuYWdlbWVudCBDb250cm9sbGVyJ3MgTUFDIGFkZHJlc3MgaXMgY2Fs
-Y3VsYXRlZCBieSBhZGRpbmcNCiAgICArCSAqIHRoZSBvZmZzZXQgdG8gTmV0d29yayBDb250cm9s
-bGVyJ3MgKGJhc2UpIE1BQyBhZGRyZXNzLg0KICAgICsJICogTm90ZTogbmVnYXRpdmUgb2Zmc2V0
-IGlzICJpZ25vcmVkIiwgYW5kIEJNQyB3aWxsIHVzZSB0aGUgQmFzZQ0KSnVzdCBtZW50aW9uIG5l
-Z2F0aXZlIGFuZCB6ZXJvIG9mZnNldCBpcyBpZ25vcmVkLiBBcyB5b3UgYXJlIGlnbm9yaW5nIDAg
-YXMgd2VsbC4NCg0KICAgICsJICogTUFDIGFkZHJlc3MgaW4gdGhpcyBjYXNlLg0KICAgICsJICov
-DQogICAgKwl3aGlsZSAobWFjX29mZnNldC0tID4gMCkNCiAgICArCQlldGhfYWRkcl9pbmMoKHU4
-ICopc2FkZHIuc2FfZGF0YSk7DQogICAgIAlpZiAoIWlzX3ZhbGlkX2V0aGVyX2FkZHIoKGNvbnN0
-IHU4ICopc2FkZHIuc2FfZGF0YSkpDQogICAgIAkJcmV0dXJuIC1FTlhJTzsNCiAgICAgDQogICAg
-LS0gDQogICAgMi4xNy4xDQogICAgDQogICAgDQoNCg==
+Instead of type-casting the {tx,rx}.buf all over the place while
+accessing them to read/write __le{32,64} from/to the firmware, let's
+use the existing {get,put}_unaligned_le{32,64} accessors to hide all
+the type cast ugliness.
+
+Suggested-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+---
+ drivers/firmware/arm_scmi/base.c    |  2 +-
+ drivers/firmware/arm_scmi/clock.c   | 12 ++++--------
+ drivers/firmware/arm_scmi/common.h  |  2 ++
+ drivers/firmware/arm_scmi/perf.c    |  8 ++++----
+ drivers/firmware/arm_scmi/power.c   |  6 +++---
+ drivers/firmware/arm_scmi/reset.c   |  2 +-
+ drivers/firmware/arm_scmi/sensors.c | 17 ++++++-----------
+ 7 files changed, 21 insertions(+), 28 deletions(-)
+
+v1->v2:
+	- Dropped incorrect void ptr arithmetic and used unaligned_le64
+	  accessors instead
+
+diff --git a/drivers/firmware/arm_scmi/base.c b/drivers/firmware/arm_scmi/base.c
+index 204390297f4b..f804e8af6521 100644
+--- a/drivers/firmware/arm_scmi/base.c
++++ b/drivers/firmware/arm_scmi/base.c
+@@ -204,7 +204,7 @@ static int scmi_base_discover_agent_get(const struct scmi_handle *handle,
+ 	if (ret)
+ 		return ret;
+
+-	*(__le32 *)t->tx.buf = cpu_to_le32(id);
++	put_unaligned_le32(id, t->tx.buf);
+
+ 	ret = scmi_do_xfer(handle, t);
+ 	if (!ret)
+diff --git a/drivers/firmware/arm_scmi/clock.c b/drivers/firmware/arm_scmi/clock.c
+index 4a32ae1822a3..32526a793f3a 100644
+--- a/drivers/firmware/arm_scmi/clock.c
++++ b/drivers/firmware/arm_scmi/clock.c
+@@ -107,7 +107,7 @@ static int scmi_clock_attributes_get(const struct scmi_handle *handle,
+ 	if (ret)
+ 		return ret;
+
+-	*(__le32 *)t->tx.buf = cpu_to_le32(clk_id);
++	put_unaligned_le32(clk_id, t->tx.buf);
+ 	attr = t->rx.buf;
+
+ 	ret = scmi_do_xfer(handle, t);
+@@ -204,15 +204,11 @@ scmi_clock_rate_get(const struct scmi_handle *handle, u32 clk_id, u64 *value)
+ 	if (ret)
+ 		return ret;
+
+-	*(__le32 *)t->tx.buf = cpu_to_le32(clk_id);
++	put_unaligned_le32(clk_id, t->tx.buf);
+
+ 	ret = scmi_do_xfer(handle, t);
+-	if (!ret) {
+-		__le32 *pval = t->rx.buf;
+-
+-		*value = le32_to_cpu(*pval);
+-		*value |= (u64)le32_to_cpu(*(pval + 1)) << 32;
+-	}
++	if (!ret)
++		*value = get_unaligned_le64(t->rx.buf);
+
+ 	scmi_xfer_put(handle, t);
+ 	return ret;
+diff --git a/drivers/firmware/arm_scmi/common.h b/drivers/firmware/arm_scmi/common.h
+index 43884e4ceac5..5237c2ff79fe 100644
+--- a/drivers/firmware/arm_scmi/common.h
++++ b/drivers/firmware/arm_scmi/common.h
+@@ -15,6 +15,8 @@
+ #include <linux/scmi_protocol.h>
+ #include <linux/types.h>
+
++#include <asm/unaligned.h>
++
+ #define PROTOCOL_REV_MINOR_MASK	GENMASK(15, 0)
+ #define PROTOCOL_REV_MAJOR_MASK	GENMASK(31, 16)
+ #define PROTOCOL_REV_MAJOR(x)	(u16)(FIELD_GET(PROTOCOL_REV_MAJOR_MASK, (x)))
+diff --git a/drivers/firmware/arm_scmi/perf.c b/drivers/firmware/arm_scmi/perf.c
+index fb7f6cab2c11..9b338e66a24e 100644
+--- a/drivers/firmware/arm_scmi/perf.c
++++ b/drivers/firmware/arm_scmi/perf.c
+@@ -195,7 +195,7 @@ scmi_perf_domain_attributes_get(const struct scmi_handle *handle, u32 domain,
+ 	if (ret)
+ 		return ret;
+
+-	*(__le32 *)t->tx.buf = cpu_to_le32(domain);
++	put_unaligned_le32(domain, t->tx.buf);
+ 	attr = t->rx.buf;
+
+ 	ret = scmi_do_xfer(handle, t);
+@@ -380,7 +380,7 @@ static int scmi_perf_mb_limits_get(const struct scmi_handle *handle, u32 domain,
+ 	if (ret)
+ 		return ret;
+
+-	*(__le32 *)t->tx.buf = cpu_to_le32(domain);
++	put_unaligned_le32(domain, t->tx.buf);
+
+ 	ret = scmi_do_xfer(handle, t);
+ 	if (!ret) {
+@@ -459,11 +459,11 @@ static int scmi_perf_mb_level_get(const struct scmi_handle *handle, u32 domain,
+ 		return ret;
+
+ 	t->hdr.poll_completion = poll;
+-	*(__le32 *)t->tx.buf = cpu_to_le32(domain);
++	put_unaligned_le32(domain, t->tx.buf);
+
+ 	ret = scmi_do_xfer(handle, t);
+ 	if (!ret)
+-		*level = le32_to_cpu(*(__le32 *)t->rx.buf);
++		*level = get_unaligned_le32(t->rx.buf);
+
+ 	scmi_xfer_put(handle, t);
+ 	return ret;
+diff --git a/drivers/firmware/arm_scmi/power.c b/drivers/firmware/arm_scmi/power.c
+index 62f3401a1f01..5abef7079c0a 100644
+--- a/drivers/firmware/arm_scmi/power.c
++++ b/drivers/firmware/arm_scmi/power.c
+@@ -96,7 +96,7 @@ scmi_power_domain_attributes_get(const struct scmi_handle *handle, u32 domain,
+ 	if (ret)
+ 		return ret;
+
+-	*(__le32 *)t->tx.buf = cpu_to_le32(domain);
++	put_unaligned_le32(domain, t->tx.buf);
+ 	attr = t->rx.buf;
+
+ 	ret = scmi_do_xfer(handle, t);
+@@ -147,11 +147,11 @@ scmi_power_state_get(const struct scmi_handle *handle, u32 domain, u32 *state)
+ 	if (ret)
+ 		return ret;
+
+-	*(__le32 *)t->tx.buf = cpu_to_le32(domain);
++	put_unaligned_le32(domain, t->tx.buf);
+
+ 	ret = scmi_do_xfer(handle, t);
+ 	if (!ret)
+-		*state = le32_to_cpu(*(__le32 *)t->rx.buf);
++		*state = get_unaligned_le32(t->rx.buf);
+
+ 	scmi_xfer_put(handle, t);
+ 	return ret;
+diff --git a/drivers/firmware/arm_scmi/reset.c b/drivers/firmware/arm_scmi/reset.c
+index 11cb8b5ccf34..c1d67a2af12f 100644
+--- a/drivers/firmware/arm_scmi/reset.c
++++ b/drivers/firmware/arm_scmi/reset.c
+@@ -88,7 +88,7 @@ scmi_reset_domain_attributes_get(const struct scmi_handle *handle, u32 domain,
+ 	if (ret)
+ 		return ret;
+
+-	*(__le32 *)t->tx.buf = cpu_to_le32(domain);
++	put_unaligned_le32(domain, t->tx.buf);
+ 	attr = t->rx.buf;
+
+ 	ret = scmi_do_xfer(handle, t);
+diff --git a/drivers/firmware/arm_scmi/sensors.c b/drivers/firmware/arm_scmi/sensors.c
+index 7570308a16a0..a400ea805fc2 100644
+--- a/drivers/firmware/arm_scmi/sensors.c
++++ b/drivers/firmware/arm_scmi/sensors.c
+@@ -120,7 +120,7 @@ static int scmi_sensor_description_get(const struct scmi_handle *handle,
+
+ 	do {
+ 		/* Set the number of sensors to be skipped/already read */
+-		*(__le32 *)t->tx.buf = cpu_to_le32(desc_index);
++		put_unaligned_le32(desc_index, t->tx.buf);
+
+ 		ret = scmi_do_xfer(handle, t);
+ 		if (ret)
+@@ -217,7 +217,6 @@ static int scmi_sensor_reading_get(const struct scmi_handle *handle,
+ 				   u32 sensor_id, u64 *value)
+ {
+ 	int ret;
+-	__le32 *pval;
+ 	struct scmi_xfer *t;
+ 	struct scmi_msg_sensor_reading_get *sensor;
+ 	struct sensors_info *si = handle->sensor_priv;
+@@ -229,24 +228,20 @@ static int scmi_sensor_reading_get(const struct scmi_handle *handle,
+ 	if (ret)
+ 		return ret;
+
+-	pval = t->rx.buf;
+ 	sensor = t->tx.buf;
+ 	sensor->id = cpu_to_le32(sensor_id);
+
+ 	if (s->async) {
+ 		sensor->flags = cpu_to_le32(SENSOR_READ_ASYNC);
+ 		ret = scmi_do_xfer_with_response(handle, t);
+-		if (!ret) {
+-			*value = le32_to_cpu(*(pval + 1));
+-			*value |= (u64)le32_to_cpu(*(pval + 2)) << 32;
+-		}
++		if (!ret)
++			*value = get_unaligned_le64((void *)
++						    ((__le32 *)t->rx.buf + 1));
+ 	} else {
+ 		sensor->flags = cpu_to_le32(0);
+ 		ret = scmi_do_xfer(handle, t);
+-		if (!ret) {
+-			*value = le32_to_cpu(*pval);
+-			*value |= (u64)le32_to_cpu(*(pval + 1)) << 32;
+-		}
++		if (!ret)
++			*value = get_unaligned_le64(t->rx.buf);
+ 	}
+
+ 	scmi_xfer_put(handle, t);
+--
+2.17.1
+
