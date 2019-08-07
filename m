@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8134C32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 20:44:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93448C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 20:45:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B4D720880
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 20:44:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6513E208C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 20:45:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="cvR0USsq"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="SKjwZ75o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389168AbfHGUox (ORCPT
+        id S2389487AbfHGUpd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 16:44:53 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:32865 "EHLO
+        Wed, 7 Aug 2019 16:45:33 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:43902 "EHLO
         mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729934AbfHGUox (ORCPT
+        with ESMTP id S2389358AbfHGUpd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 16:44:53 -0400
-Received: by mail-pl1-f196.google.com with SMTP id c14so42433443plo.0
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 13:44:52 -0700 (PDT)
+        Wed, 7 Aug 2019 16:45:33 -0400
+Received: by mail-pl1-f196.google.com with SMTP id 4so35518708pld.10
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 13:45:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=joelfernandes.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=itaaHUuDhcUmWvWTJL4zW8mOnytMPij6pAOeeM3m1Hg=;
-        b=cvR0USsq4TrVGI/7AHhxTvBLliSSP311yfq2eMIv0HZPy5zvZSgUkA9hOQuqwUwOmK
-         tW59Vs41S3Z4cN2lbD7CBiabk1kuZyNcNbwelUz8x6sT4Q/qw4los5KJ1TsmL/bCkQ6a
-         NbDSeg5PosKj8KNSTPFRKtihsP13TwsNRRQSw=
+        bh=nVq2Lrz4oly1cbME+ru7uC/EUuUzNyfifYdkSD+WXws=;
+        b=SKjwZ75o/bjl3P6himFnL+2MJNzMb2KlU9PecY9gL2OvoO+kAS5KzKleoxU5N6Eozn
+         KPw8Qn8ix5JOtTRWXYGTvhdvMcOzAtYMnblQFIQJIJh/bMOFzKoN5j4jAbdrYEbb6aWF
+         i4sTmbSnKu/H2O6vxlszhwMU0BMjebOmFC5TU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=itaaHUuDhcUmWvWTJL4zW8mOnytMPij6pAOeeM3m1Hg=;
-        b=rMIBOBfxDzTew06fEYchXHDArvYG1jsTtphhY+k+F4S5gw6PdmEgAbpE5oc64zsxqI
-         i4ugT/7tqko1BfpAd8vM6miwqf7lwKbMuiF+iPkNUqAYOgaVUwOi41/+AX+WnUa5AflK
-         GAkSesd1DikyQgKK3qbP1xSA/H82viBgni9JHN2GNBrQBnpsyhIIowdZoItdijQ4ldvv
-         RhKz7i4uxbHzg4B5BQXVkxnWxegP4ad7LUasWBVxe8pbf/UtJ0ROZDZc0zE3JE7ZkGKd
-         +7ETcTWaOnafAxdGnoaevTXgtePb60qarXqfvpZshGR1wn+9+wDAXlXKoVaskdK5TyKo
-         m33w==
-X-Gm-Message-State: APjAAAX5Dfeptvw/bcMaOJfi2m0Tm2UG4zQtDuisPW6Rt3P5MtEW4JLl
-        5jvrOO6M2ighFGb9vJXA9zhTDg==
-X-Google-Smtp-Source: APXvYqzxGRsJN8tg0/I87Pfq2FlyH6V5p4w6lM9eq6TQXsCKYWlpRWdYAkMSEIlSnT6YRM40KG3l1w==
-X-Received: by 2002:a17:90a:bb8a:: with SMTP id v10mr319911pjr.78.1565210692050;
-        Wed, 07 Aug 2019 13:44:52 -0700 (PDT)
+        bh=nVq2Lrz4oly1cbME+ru7uC/EUuUzNyfifYdkSD+WXws=;
+        b=rK/81lm/9ya0eN2bz2FyF5Ry3raWLmCWyFtUu352ldEqOJzyRQc+NKp7VTn7gbThBD
+         TSTYM7LEOIBPnsD+i+CJlL7NAcVj5vHYcASPZ3tPJMJYXDxWlPHcIT2l/rfsel7o2VWj
+         5i9QhHFs5Bks6ejM9udh+HtioIv3g/GNyW3WhruuDRdCGgYbw1kqg24lPamXvio5qlWa
+         AE1AX9+4DdKJ0njiwbekRu4ZjmCnA7FwLKz8dXmtWJISrbDmi36WMfOTdq/cjk5QFMU7
+         d8tKw5S+vQoaKnqQR4vxm0TZc+aUyi7ErKbTpn0YjmroZPGvRVPcH86HBz2hSSeGdW2v
+         gG9g==
+X-Gm-Message-State: APjAAAUsF9GEc+QORVhkTwwS6ru4c9Lahl6Fcc0JczN/1kbvZuI9Obw9
+        sKAgWUoOF1f/1zXNflUcPEsD1w==
+X-Google-Smtp-Source: APXvYqyVsQ2rxzfkbsU4s/td7a6F6w6wqVCgyV/YFH3HkbntL96f95eC7uJQ7+msGgxczb30VirUZA==
+X-Received: by 2002:a17:902:145:: with SMTP id 63mr10208710plb.55.1565210732270;
+        Wed, 07 Aug 2019 13:45:32 -0700 (PDT)
 Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id j1sm126143263pgl.12.2019.08.07.13.44.50
+        by smtp.gmail.com with ESMTPSA id s22sm99446893pfh.107.2019.08.07.13.45.31
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 07 Aug 2019 13:44:51 -0700 (PDT)
-Date:   Wed, 7 Aug 2019 16:44:49 -0400
+        Wed, 07 Aug 2019 13:45:31 -0700 (PDT)
+Date:   Wed, 7 Aug 2019 16:45:30 -0400
 From:   Joel Fernandes <joel@joelfernandes.org>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     linux-kernel@vger.kernel.org,
@@ -76,61 +76,44 @@ Cc:     linux-kernel@vger.kernel.org,
         Stephen Rothwell <sfr@canb.auug.org.au>, surenb@google.com,
         Thomas Gleixner <tglx@linutronix.de>, tkjos@google.com,
         Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Will Deacon <will@kernel.org>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>
-Subject: Re: [PATCH v4 1/5] mm/page_idle: Add per-pid idle page tracking
- using virtual indexing
-Message-ID: <20190807204449.GA90900@google.com>
-References: <20190805170451.26009-1-joel@joelfernandes.org>
- <20190806151921.edec128271caccb5214fc1bd@linux-foundation.org>
- <20190807100013.GC169551@google.com>
- <20190807130122.f148548c05ec07e7b716457e@linux-foundation.org>
+        Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v5 1/6] mm/page_idle: Add per-pid idle page tracking
+ using virtual index
+Message-ID: <20190807204530.GB90900@google.com>
+References: <20190807171559.182301-1-joel@joelfernandes.org>
+ <20190807130402.49c9ea8bf144d2f83bfeb353@linux-foundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190807130122.f148548c05ec07e7b716457e@linux-foundation.org>
+In-Reply-To: <20190807130402.49c9ea8bf144d2f83bfeb353@linux-foundation.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 07, 2019 at 01:01:22PM -0700, Andrew Morton wrote:
-> On Wed, 7 Aug 2019 06:00:13 -0400 Joel Fernandes <joel@joelfernandes.org> wrote:
+On Wed, Aug 07, 2019 at 01:04:02PM -0700, Andrew Morton wrote:
+> On Wed,  7 Aug 2019 13:15:54 -0400 "Joel Fernandes (Google)" <joel@joelfernandes.org> wrote:
 > 
-> > > > 8 files changed, 376 insertions(+), 45 deletions(-)
-> > > 
-> > > Quite a lot of new code unconditionally added to major architectures. 
-> > > Are we confident that everyone will want this feature?
-> > 
-> > I did not follow, could you clarify more? All of this diff stat is not to
-> > architecture code:
+> > In Android, we are using this for the heap profiler (heapprofd) which
+> > profiles and pin points code paths which allocates and leaves memory
+> > idle for long periods of time. This method solves the security issue
+> > with userspace learning the PFN, and while at it is also shown to yield
+> > better results than the pagemap lookup, the theory being that the window
+> > where the address space can change is reduced by eliminating the
+> > intermediate pagemap look up stage. In virtual address indexing, the
+> > process's mmap_sem is held for the duration of the access.
 > 
-> 
-> My point is that the patchset adds a lot of new code with no way in
-> which users can opt out.  Almost everyone gets a fatter kernel - how
-> many of those users will actually benefit from it?
-> 
-> If "not many" then shouldn't we be making it Kconfigurable?
+> So is heapprofd a developer-only thing?  Is heapprofd included in
+> end-user android loads?  If not then, again, wouldn't it be better to
+> make the feature Kconfigurable so that Android developers can enable it
+> during development then disable it for production kernels?
 
 Almost all of this code is already configurable with
 CONFIG_IDLE_PAGE_TRACKING. If you disable it, then all of this code gets
 disabled.
 
 Or are you referring to something else that needs to be made configurable?
-
-> Are there userspace tools which present this info to users or which
-> provide monitoring of some form?  Do major distros ship those tools? 
-> Do people use them?  etcetera.
-> 
-
-Android's heapprofd is what I was working on which is already using it (patch
-is not yet upstreamed). There is working set tracking which Sandeep (also
-from Android) said he wants to use. Minchan plans to use this in combination
-with ZRAM-based idle tracking. Mike Rappoport also showed some interest, but
-I am not sure where/how he is using it. These are just some of the usecases I
-am aware off. I am pretty sure more will come as well.
 
 thanks,
 
