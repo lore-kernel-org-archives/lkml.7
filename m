@@ -2,100 +2,122 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1299EC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:50:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55FA1C31E40
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:51:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEB2E217D9
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:50:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E06E21743
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:51:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="JbhrSn2j"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FAdBHtEi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730451AbfHGBus (ORCPT
+        id S1728790AbfHGBvp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 21:50:48 -0400
-Received: from ozlabs.org ([203.11.71.1]:45685 "EHLO ozlabs.org"
+        Tue, 6 Aug 2019 21:51:45 -0400
+Received: from ozlabs.org ([203.11.71.1]:34389 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729968AbfHGBur (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 21:50:47 -0400
+        id S1727710AbfHGBvp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 21:51:45 -0400
 Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 463Dx02dC1z9sDB;
-        Wed,  7 Aug 2019 11:50:44 +1000 (AEST)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 463Dy34Y5hz9sDB;
+        Wed,  7 Aug 2019 11:51:39 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1565142644;
-        bh=Vm8iaukqOL/IY8DFFB9QZrcBEKE3k7jhZco/mWO3qdA=;
+        s=201702; t=1565142702;
+        bh=VeIbhaZVUjebNvzkG6IBGnOOmwzkmjPxm/rSjwrHZoE=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=JbhrSn2jDqXOMaEdaPcHTnaSpvnLAxHqcrsUtR8zCo+OJfCC4llmm/Ljk0c/fUGOw
-         YD2igJWbHFhCRdF9gLa/9SIokSYPFZ2fxGS9Ucy3KzCGBsRHM+W/220cYDq5Xbf+YE
-         uTWFbsHl7PTMit0KCrjfFOg8Za3fObTKaJzocLDPvmF2fUJVRbQ+CkfjqMXCKr/oeb
-         jSE70bTTcwxitHdB+jd7d9IID32+pl6DBKIBczrp8g0SCj1ikYvp8wQHfFYckojgLi
-         ZHny7Z+M6Nf8348vaZSh4DMT0hkYKh6hYEKtNCcC525syK7QoOdfHINqLIpdv/C0xi
-         N2CsDNCh3CyBg==
-Date:   Wed, 7 Aug 2019 11:50:43 +1000
+        b=FAdBHtEiCRkCClZrOxjx+YjFKEl1GkEhZBHY4+noeXINNg9c4fSSuIWUHyFsbvT7P
+         2GSafOOi9fgWmJhVDT7GC/swkNz34D0kf4+MXvi1hWAmBVc9i8HVtDShBUNO95GKiq
+         p6fiqGtam/JgnziFJwNtN2WluqW48ERgyuvj21sgfYdRToBmTwQGEDqOqEWDMv9MEe
+         jZdqTkTHmps9kSeo4Jv5LgtnPhP5P6gmW/evpapYV4TdPBSmg3HNAWrnDSi+qmacM0
+         WCmpKDS5oWRNX/lpSR41iT7/bJgFgApDs/IlHyiDws6XHmmk+eHtM7R9czjotrwzJp
+         IG2ZxsH8954UQ==
+Date:   Wed, 7 Aug 2019 11:51:38 +1000
 From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: [PATCH] soc: qcom: socinfo: Annotate switch cases with fall
- through
-Message-ID: <20190807115043.2ff429c1@canb.auug.org.au>
-In-Reply-To: <20190807012457.16820-1-bjorn.andersson@linaro.org>
-References: <20190807100803.63007737@canb.auug.org.au>
-        <20190807012457.16820-1-bjorn.andersson@linaro.org>
+To:     Gao Xiang <hsiangkao@aol.com>
+Cc:     Gao Xiang <gaoxiang25@huawei.com>, devel@driverdev.osuosl.org,
+        linux-erofs@lists.ozlabs.org, Theodore Ts'o <tytso@mit.edu>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
+        Dave Chinner <david@fromorbit.com>,
+        David Sterba <dsterba@suse.cz>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Miao Xie <miaoxie@huawei.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Pavel Machek <pavel@denx.de>, linux-fsdevel@vger.kernel.org,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH RFC] erofs: move erofs out of staging
+Message-ID: <20190807115138.216fcb70@canb.auug.org.au>
+In-Reply-To: <20190806170252.GB29093@hsiangkao-HP-ZHAN-66-Pro-G1>
+References: <20190806094925.228906-1-gaoxiang25@huawei.com>
+        <20190807013423.02fd6990@canb.auug.org.au>
+        <20190806170252.GB29093@hsiangkao-HP-ZHAN-66-Pro-G1>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_//799VrEy/0lurErM4DPjHtu";
+Content-Type: multipart/signed; boundary="Sig_/gC.BuFJhkfrfyrKHDgetbAs";
  protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_//799VrEy/0lurErM4DPjHtu
+--Sig_/gC.BuFJhkfrfyrKHDgetbAs
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-Hi Bjorn,
+Hi Gao,
 
-On Tue,  6 Aug 2019 18:24:57 -0700 Bjorn Andersson <bjorn.andersson@linaro.=
-org> wrote:
+On Wed, 7 Aug 2019 01:02:58 +0800 Gao Xiang <hsiangkao@aol.com> wrote:
 >
->  				   qcom_socinfo->dbg_root,
->  				   &qcom_socinfo->info.raw_device_num);
-> +		/* Fall through */
->  	case SOCINFO_VERSION(0, 11):
-> +		/* Fall through */
->  	case SOCINFO_VERSION(0, 10):
-> +		/* Fall through */
->  	case SOCINFO_VERSION(0, 9):
+> On Wed, Aug 07, 2019 at 01:34:23AM +1000, Stephen Rothwell wrote:
+> >=20
+> > One small suggestion: just remove the file names from the comments at
+> > the top of the files rather than change them to reflect that they have
+> > moved.  We can usually tell the name of a file by its name :-) =20
+>=20
+> Thanks for your reply :)
+>=20
+> For this part, EROFS initially followed what ext4, f2fs, even fsverity do,
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/f=
+s/ext4/namei.c
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/f=
+s/f2fs/namei.c
+> https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git/tree/f=
+s/verity/verify.c?h=3Dfsverity
+>=20
+> I think I can remove these filenames as you suggested in the next version.
+> I thought these are some common practice and there is no obvious right or
+> wrong of this kind of stuffs.
 
-I don't think you need the comment between consecutive "case"s - just
-where there is actual code.
+Fair enough.
 
 --=20
 Cheers,
 Stephen Rothwell
 
---Sig_//799VrEy/0lurErM4DPjHtu
+--Sig_/gC.BuFJhkfrfyrKHDgetbAs
 Content-Type: application/pgp-signature
 Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1KLnMACgkQAVBC80lX
-0GyYUQgAgzzUeMJddV/IvgpdCqEA3DrLLwJkuL0zJW6B0gG6S6UusJz2JnB8oEO+
-fN5N0Pgva4PpbOV//MBuaC3ITwQBW2mTFAqysPl1dhQaQYRA1R7EvY/wbqZ2vZB2
-VOS4KyggeFeFe4PAVvhfzFp0BYUI/u4n4ZCCAhr5EMHgBnv4BXRpno2ufy9sQi+A
-7G/pnMqIBhz7p5JJnz2G3QQpFfohrM0ewG6gezNf0toi9Wxyes32+GGVRXWjeQ3H
-PWGJSvdZnrMAprePhDrcNzUH/OFlj3DnYMSTqA+JFoOK+bIVh5rfX/juSJ6tGzSx
-2G5iR0mdMAAPfXqrg58w3vBXiA+PXQ==
-=+k0V
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1KLqoACgkQAVBC80lX
+0Gxjdwf+K7Z5+Ja83AA54PTZcXIHB9g+PdWvrL3aangZfmAt86GXDFF91vO1NlYp
+QNmMTIr9j0lMhNdCseZUWB8ejrFfWSbrq654EtAo+1ydYSZXBmjGXQ5FQtWMhfpZ
+e+4IRlkrOybVtYgU9nRfI2CIfCh8Z9Ol53Jh1M2bxDJw94XrZJug1N1S2j4+0Mta
+jaV8MWN/niTb4SsWls1Uha3DwvvpVHqc9645UMwJ5yFqzvsk7tJ/ViQWHQNvjGFH
+XdUqEMv40XEYGt3HrC8wzMPfubVVpdke556Ou5aQuTgYbsNOU5bTblzNvpIG9jpX
+xRDrkTjcnjGG6jRyqHN4XMzVrdPtwQ==
+=iqs3
 -----END PGP SIGNATURE-----
 
---Sig_//799VrEy/0lurErM4DPjHtu--
+--Sig_/gC.BuFJhkfrfyrKHDgetbAs--
