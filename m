@@ -2,168 +2,356 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1848C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:45:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE16C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:46:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76D8321E73
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:45:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565189142;
-	bh=f1HrfA5UJA+9P1WwiXt0cKlp9OhG5kgjmIQYOpHTY0s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tTCrmNfUwxxbuN4aqV5BrUYTdAlLg7n6tyM+7Rdvj/A3rjavxIfi6jSt4l4YzXm+M
-	 6WuNaV/wCfSrPcX/wlokDuxhIcwfPyEhOv4OWxGVrPnuzxAGOMExWEay+eC9aAyN/q
-	 LsSTH4U0xZOYsfv8RsmaGTLt09ZjXwbx7tqs6fDQ=
+	by mail.kernel.org (Postfix) with ESMTP id CDADA2199C
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:46:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="YkNguruz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388096AbfHGOpl (ORCPT
+        id S2388159AbfHGOqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 10:45:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33182 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388025AbfHGOpk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 10:45:40 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 306FE2199C;
-        Wed,  7 Aug 2019 14:45:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565189139;
-        bh=f1HrfA5UJA+9P1WwiXt0cKlp9OhG5kgjmIQYOpHTY0s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YD7X9p1V+X4Vpu9bUuweXKMNUWT/yjjmK6ZUORvnYM0Li2JO/n4G54ahYchEr7jGX
-         NLVUvV/2RQXCO3H6BGC7mXc1niW39Sl7AzlQwnXvx3CII11tMtJqgbHmM/KNsmnb0R
-         3kHLhKJvl353SXUmjOn+mZ848JfOT8Rc4KFHXv3Q=
-Date:   Wed, 7 Aug 2019 15:45:34 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Oleg Nesterov <oleg@redhat.com>, Will Deacon <will@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, bigeasy@linutronix.de,
-        juri.lelli@redhat.com, williams@redhat.com, bristot@redhat.com,
-        longman@redhat.com, dave@stgolabs.net, jack@suse.com
-Subject: Re: [PATCH] locking/percpu_rwsem: Rewrite to not use rwsem
-Message-ID: <20190807144305.v55fohssujsqtegb@willie-the-truck>
-References: <20190805140241.GI2332@hirez.programming.kicks-ass.net>
+        Wed, 7 Aug 2019 10:46:03 -0400
+Received: from mx0a-00190b01.pphosted.com ([67.231.149.131]:20364 "EHLO
+        mx0a-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388025AbfHGOqD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 10:46:03 -0400
+Received: from pps.filterd (m0050095.ppops.net [127.0.0.1])
+        by m0050095.ppops.net-00190b01. (8.16.0.42/8.16.0.42) with SMTP id x77Eg0gs001381;
+        Wed, 7 Aug 2019 15:44:43 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=jan2016.eng;
+ bh=edg0O2+ml5BYIcRbGIumUYTqya04hIZ6gRSWYDOfb7g=;
+ b=YkNguruzg44I4mtshh4Zzai1KKNfXc0rzllx663yDUAdK3QoHAc5bDRqaGTv2mKTNV+C
+ DTGlkQsKDkaf8zTsLCKctabTecq3qwLfabuP9MfVqb5ZIDQAsCnqLrt/Bv/ylzt4B6wc
+ HbgUbtxwttoC0pg7gHRT8LTN1RggOr75eAGKLU8C6JvQPqXCJu6+NcYP5Igey5+F1tD7
+ xa1dyth5r8LN+wLNHXYAgaahKvxmpeEyE9+6gjKQN6kJT3UTeAggoRbEF+SieqES+Jo6
+ 0Vv+yOYUDkYWA3yeNaATMfp3U/KjiAn6ZKowqbthpZ+cpr9EogNik5ogtInt2Qm/1jnE +w== 
+Received: from prod-mail-ppoint5 (prod-mail-ppoint5.akamai.com [184.51.33.60] (may be forged))
+        by m0050095.ppops.net-00190b01. with ESMTP id 2u51t4kq31-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 07 Aug 2019 15:44:43 +0100
+Received: from pps.filterd (prod-mail-ppoint5.akamai.com [127.0.0.1])
+        by prod-mail-ppoint5.akamai.com (8.16.0.27/8.16.0.27) with SMTP id x77EX0XV003584;
+        Wed, 7 Aug 2019 07:44:42 -0700
+Received: from email.msg.corp.akamai.com ([172.27.123.34])
+        by prod-mail-ppoint5.akamai.com with ESMTP id 2u5888f6pr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 07 Aug 2019 07:44:42 -0700
+Received: from USMA1EX-CAS2.msg.corp.akamai.com (172.27.123.31) by
+ usma1ex-dag1mb1.msg.corp.akamai.com (172.27.123.101) with Microsoft SMTP
+ Server (TLS) id 15.0.1473.3; Wed, 7 Aug 2019 10:44:41 -0400
+Received: from igorcastle.kendall.corp.akamai.com (172.29.170.135) by
+ USMA1EX-CAS2.msg.corp.akamai.com (172.27.123.31) with Microsoft SMTP Server
+ id 15.0.1473.3 via Frontend Transport; Wed, 7 Aug 2019 10:44:41 -0400
+Received: by igorcastle.kendall.corp.akamai.com (Postfix, from userid 29659)
+        id 8BDE361DB6; Wed,  7 Aug 2019 10:44:39 -0400 (EDT)
+From:   Igor Lubashev <ilubashe@akamai.com>
+To:     <linux-kernel@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>
+CC:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        James Morris <jmorris@namei.org>,
+        Igor Lubashev <ilubashe@akamai.com>
+Subject: [PATCH v3 1/4] perf: Add capability-related utilities
+Date:   Wed, 7 Aug 2019 10:44:14 -0400
+Message-ID: <8a1e76cf5c7c9796d0d4d240fbaa85305298aafa.1565188228.git.ilubashe@akamai.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1565188228.git.ilubashe@akamai.com>
+References: <cover.1565188228.git.ilubashe@akamai.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190805140241.GI2332@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-07_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908070155
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:5.22.84,1.0.8
+ definitions=2019-08-07_03:2019-08-07,2019-08-07 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 priorityscore=1501
+ mlxscore=0 mlxlogscore=999 spamscore=0 clxscore=1015 adultscore=0
+ phishscore=0 malwarescore=0 bulkscore=0 suspectscore=2 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1906280000
+ definitions=main-1908070157
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
+Add utilities to help checking capabilities of the running procss.
+Make perf link with libcap, if it is available. If no libcap-dev[el],
+assume no capabilities.
 
-I've mostly been spared the joys of pcpu rwsem, but I took a look anyway.
-Comments of questionable quality below.
+Signed-off-by: Igor Lubashev <ilubashe@akamai.com>
+---
+ tools/build/Makefile.feature       |  2 ++
+ tools/build/feature/Makefile       |  4 ++++
+ tools/build/feature/test-libcap.c  | 20 ++++++++++++++++++++
+ tools/perf/Makefile.config         | 11 +++++++++++
+ tools/perf/Makefile.perf           |  2 ++
+ tools/perf/util/Build              |  2 ++
+ tools/perf/util/cap.c              | 29 +++++++++++++++++++++++++++++
+ tools/perf/util/cap.h              | 24 ++++++++++++++++++++++++
+ tools/perf/util/event.h            |  1 +
+ tools/perf/util/python-ext-sources |  1 +
+ tools/perf/util/util.c             |  9 +++++++++
+ 11 files changed, 105 insertions(+)
+ create mode 100644 tools/build/feature/test-libcap.c
+ create mode 100644 tools/perf/util/cap.c
+ create mode 100644 tools/perf/util/cap.h
 
-On Mon, Aug 05, 2019 at 04:02:41PM +0200, Peter Zijlstra wrote:
-> The filesystem freezer uses percpu_rwsem in a way that is effectively
-> write_non_owner() and achieves this with a few horrible hacks that
-> rely on the rwsem (!percpu) implementation.
-> 
-> When -RT re-implements rwsem this house of cards comes undone.
-> 
-> Re-implement percpu_rwsem without relying on rwsem.
-> 
-> Reported-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> Reported-by: Juri Lelli <juri.lelli@redhat.com>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Tested-by: Juri Lelli <juri.lelli@redhat.com>
-> Cc: Clark Williams <williams@redhat.com>
-> Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Waiman Long <longman@redhat.com>
-> Cc: Davidlohr Bueso <dave@stgolabs.net>
-> Cc: Oleg Nesterov <oleg@redhat.com>
-> Cc: jack@suse.com
-> ---
->  include/linux/percpu-rwsem.h  |   72 +++++++++++++-------------
->  include/linux/wait.h          |    3 +
->  kernel/cpu.c                  |    4 -
->  kernel/locking/percpu-rwsem.c |  116 +++++++++++++++++++++++++-----------------
->  4 files changed, 112 insertions(+), 83 deletions(-)
+diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+index 86b793dffbc4..8a19753cc26a 100644
+--- a/tools/build/Makefile.feature
++++ b/tools/build/Makefile.feature
+@@ -42,6 +42,7 @@ FEATURE_TESTS_BASIC :=                  \
+         gtk2-infobar                    \
+         libaudit                        \
+         libbfd                          \
++        libcap                          \
+         libelf                          \
+         libelf-getphdrnum               \
+         libelf-gelf_getnote             \
+@@ -110,6 +111,7 @@ FEATURE_DISPLAY ?=              \
+          gtk2                   \
+          libaudit               \
+          libbfd                 \
++         libcap                 \
+          libelf                 \
+          libnuma                \
+          numa_num_possible_cpus \
+diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+index 0658b8cd0e53..8499385365c0 100644
+--- a/tools/build/feature/Makefile
++++ b/tools/build/feature/Makefile
+@@ -20,6 +20,7 @@ FILES=                                          \
+          test-libbfd-liberty.bin                \
+          test-libbfd-liberty-z.bin              \
+          test-cplus-demangle.bin                \
++         test-libcap.bin			\
+          test-libelf.bin                        \
+          test-libelf-getphdrnum.bin             \
+          test-libelf-gelf_getnote.bin           \
+@@ -105,6 +106,9 @@ $(OUTPUT)test-fortify-source.bin:
+ $(OUTPUT)test-bionic.bin:
+ 	$(BUILD)
+ 
++$(OUTPUT)test-libcap.bin:
++	$(BUILD) -lcap
++
+ $(OUTPUT)test-libelf.bin:
+ 	$(BUILD) -lelf
+ 
+diff --git a/tools/build/feature/test-libcap.c b/tools/build/feature/test-libcap.c
+new file mode 100644
+index 000000000000..d2a2e152195f
+--- /dev/null
++++ b/tools/build/feature/test-libcap.c
+@@ -0,0 +1,20 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <sys/capability.h>
++#include <linux/capability.h>
++
++int main(void)
++{
++	cap_flag_value_t val;
++	cap_t caps = cap_get_proc();
++
++	if (!caps)
++		return 1;
++
++	if (cap_get_flag(caps, CAP_SYS_ADMIN, CAP_EFFECTIVE, &val) != 0)
++		return 1;
++
++	if (cap_free(caps) != 0)
++		return 1;
++
++	return 0;
++}
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index e4988f49ea79..9a06787fedc6 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -824,6 +824,17 @@ ifndef NO_LIBZSTD
+   endif
+ endif
+ 
++ifndef NO_LIBCAP
++  ifeq ($(feature-libcap), 1)
++    CFLAGS += -DHAVE_LIBCAP_SUPPORT
++    EXTLIBS += -lcap
++    $(call detected,CONFIG_LIBCAP)
++  else
++    msg := $(warning No libcap found, disables capability support, please install libcap-devel/libcap-dev);
++    NO_LIBCAP := 1
++  endif
++endif
++
+ ifndef NO_BACKTRACE
+   ifeq ($(feature-backtrace), 1)
+     CFLAGS += -DHAVE_BACKTRACE_SUPPORT
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 67512a12276b..f9807d8c005b 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -88,6 +88,8 @@ include ../scripts/utilities.mak
+ #
+ # Define NO_LIBBPF if you do not want BPF support
+ #
++# Define NO_LIBCAP if you do not want process capabilities considered by perf
++#
+ # Define NO_SDT if you do not want to define SDT event in perf tools,
+ # note that it doesn't disable SDT scanning support.
+ #
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index 7abf05131889..7cda749059a9 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -148,6 +148,8 @@ perf-$(CONFIG_ZLIB) += zlib.o
+ perf-$(CONFIG_LZMA) += lzma.o
+ perf-$(CONFIG_ZSTD) += zstd.o
+ 
++perf-$(CONFIG_LIBCAP) += cap.o
++
+ perf-y += demangle-java.o
+ perf-y += demangle-rust.o
+ 
+diff --git a/tools/perf/util/cap.c b/tools/perf/util/cap.c
+new file mode 100644
+index 000000000000..c3ba841bbf37
+--- /dev/null
++++ b/tools/perf/util/cap.c
+@@ -0,0 +1,29 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Capability utilities
++ */
++
++#ifdef HAVE_LIBCAP_SUPPORT
++
++#include "cap.h"
++#include <stdbool.h>
++#include <sys/capability.h>
++
++bool perf_cap__capable(cap_value_t cap)
++{
++	cap_flag_value_t val;
++	cap_t caps = cap_get_proc();
++
++	if (!caps)
++		return false;
++
++	if (cap_get_flag(caps, cap, CAP_EFFECTIVE, &val) != 0)
++		val = CAP_CLEAR;
++
++	if (cap_free(caps) != 0)
++		return false;
++
++	return val == CAP_SET;
++}
++
++#endif  /* HAVE_LIBCAP_SUPPORT */
+diff --git a/tools/perf/util/cap.h b/tools/perf/util/cap.h
+new file mode 100644
+index 000000000000..514b1f8992f6
+--- /dev/null
++++ b/tools/perf/util/cap.h
+@@ -0,0 +1,24 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __PERF_CAP_H
++#define __PERF_CAP_H
++
++#include <stdbool.h>
++#include <linux/capability.h>
++#include <linux/compiler.h>
++
++#ifdef HAVE_LIBCAP_SUPPORT
++
++#include <sys/capability.h>
++
++bool perf_cap__capable(cap_value_t cap);
++
++#else
++
++static inline bool perf_cap__capable(int cap __maybe_unused)
++{
++	return false;
++}
++
++#endif /* HAVE_LIBCAP_SUPPORT */
++
++#endif /* __PERF_CAP_H */
+diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
+index 70841d115349..0e164e8ae28d 100644
+--- a/tools/perf/util/event.h
++++ b/tools/perf/util/event.h
+@@ -851,6 +851,7 @@ void  cpu_map_data__synthesize(struct cpu_map_data *data, struct perf_cpu_map *m
+ void event_attr_init(struct perf_event_attr *attr);
+ 
+ int perf_event_paranoid(void);
++bool perf_event_paranoid_check(int max_level);
+ 
+ extern int sysctl_perf_event_max_stack;
+ extern int sysctl_perf_event_max_contexts_per_stack;
+diff --git a/tools/perf/util/python-ext-sources b/tools/perf/util/python-ext-sources
+index 235bd9803390..c6dd478956f1 100644
+--- a/tools/perf/util/python-ext-sources
++++ b/tools/perf/util/python-ext-sources
+@@ -7,6 +7,7 @@
+ 
+ util/python.c
+ ../lib/ctype.c
++util/cap.c
+ util/evlist.c
+ util/evsel.c
+ util/cpumap.c
+diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
+index 9c3c97697387..6fd130a5d8f2 100644
+--- a/tools/perf/util/util.c
++++ b/tools/perf/util/util.c
+@@ -16,10 +16,12 @@
+ #include <string.h>
+ #include <errno.h>
+ #include <limits.h>
++#include <linux/capability.h>
+ #include <linux/kernel.h>
+ #include <linux/log2.h>
+ #include <linux/time64.h>
+ #include <unistd.h>
++#include "cap.h"
+ #include "strlist.h"
+ #include "string2.h"
+ 
+@@ -403,6 +405,13 @@ int perf_event_paranoid(void)
+ 
+ 	return value;
+ }
++
++bool perf_event_paranoid_check(int max_level)
++{
++	return perf_cap__capable(CAP_SYS_ADMIN) ||
++			perf_event_paranoid() <= max_level;
++}
++
+ static int
+ fetch_ubuntu_kernel_version(unsigned int *puint)
+ {
+-- 
+2.7.4
 
-[...]
-
-> +/*
-> + * Called with preemption disabled, and returns with preemption disabled,
-> + * except when it fails the trylock.
-> + */
-> +bool __percpu_down_read(struct percpu_rw_semaphore *sem, bool try)
->  {
->  	/*
->  	 * Due to having preemption disabled the decrement happens on
->  	 * the same CPU as the increment, avoiding the
->  	 * increment-on-one-CPU-and-decrement-on-another problem.
->  	 *
-> -	 * If the reader misses the writer's assignment of readers_block, then
-> -	 * the writer is guaranteed to see the reader's increment.
-> +	 * If the reader misses the writer's assignment of sem->block, then the
-> +	 * writer is guaranteed to see the reader's increment.
->  	 *
->  	 * Conversely, any readers that increment their sem->read_count after
-> -	 * the writer looks are guaranteed to see the readers_block value,
-> -	 * which in turn means that they are guaranteed to immediately
-> -	 * decrement their sem->read_count, so that it doesn't matter that the
-> -	 * writer missed them.
-> +	 * the writer looks are guaranteed to see the sem->block value, which
-> +	 * in turn means that they are guaranteed to immediately decrement
-> +	 * their sem->read_count, so that it doesn't matter that the writer
-> +	 * missed them.
->  	 */
->  
-> +again:
->  	smp_mb(); /* A matches D */
->  
->  	/*
-> -	 * If !readers_block the critical section starts here, matched by the
-> +	 * If !sem->block the critical section starts here, matched by the
->  	 * release in percpu_up_write().
->  	 */
-> -	if (likely(!smp_load_acquire(&sem->readers_block)))
-> -		return 1;
-> +	if (likely(!atomic_read_acquire(&sem->block)))
-> +		return true;
->  
->  	/*
->  	 * Per the above comment; we still have preemption disabled and
->  	 * will thus decrement on the same CPU as we incremented.
->  	 */
-> -	__percpu_up_read(sem);
-> +	__percpu_up_read(sem); /* implies preempt_enable() */
-
-Irritatingly, it also implies an smp_mb() which I don't think we need here.
-
->  	if (try)
-> -		return 0;
-> +		return false;
->  
-> -	/*
-> -	 * We either call schedule() in the wait, or we'll fall through
-> -	 * and reschedule on the preempt_enable() in percpu_down_read().
-> -	 */
-> -	preempt_enable_no_resched();
-> +	wait_event(sem->waiters, !atomic_read_acquire(&sem->block));
-
-Why do you need acquire semantics here? Is the control dependency to the
-increment not enough?
-
-Talking of control dependencies, could we replace the smp_mb() in
-readers_active_check() with smp_acquire__after_ctrl_dep()? In fact, perhaps
-we could remove it altogether, given that our writes will be ordered by
-the dependency and I don't think we care about ordering our reads wrt
-previous readers. Hmm. Either way, clearly not for this patch.
-
-Anyway, general shape of the patch looks good to me.
-
-Will
