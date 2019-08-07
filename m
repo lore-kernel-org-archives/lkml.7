@@ -2,216 +2,247 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0C0FC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 04:59:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A458DC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 05:14:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 863B321743
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 04:59:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A1D82089E
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 05:14:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="kXXq4lms";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Sc5HEDwa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726135AbfHGE7J (ORCPT
+        id S1726310AbfHGFO6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 00:59:09 -0400
-Received: from foss.arm.com ([217.140.110.172]:42666 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725794AbfHGE7I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 00:59:08 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DF7D8344;
-        Tue,  6 Aug 2019 21:59:07 -0700 (PDT)
-Received: from localhost.localdomain (entos-thunderx2-02.shanghai.arm.com [10.169.40.54])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B07553F706;
-        Tue,  6 Aug 2019 21:59:04 -0700 (PDT)
-From:   Jia He <justin.he@arm.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        James Morse <james.morse@arm.com>
-Cc:     Christoffer Dall <christoffer.dall@arm.com>,
-        Punit Agrawal <punitagrawal@gmail.com>, Qian Cai <cai@lca.pw>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Jun Yao <yaojun8558363@gmail.com>,
-        Alex Van Brunt <avanbrunt@nvidia.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Jia He <justin.he@arm.com>
-Subject: [PATCH] arm64: mm: add missing PTE_SPECIAL in pte_mkdevmap on arm64
-Date:   Wed,  7 Aug 2019 12:58:51 +0800
-Message-Id: <20190807045851.10772-1-justin.he@arm.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 7 Aug 2019 01:14:58 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:54794 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725792AbfHGFO5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 01:14:57 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 515EB608D4; Wed,  7 Aug 2019 05:14:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1565154896;
+        bh=ez0bTbpDpuPBtcQ5H6/eqA/uGGQnkjV/1RrxwhZfFo8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kXXq4lmsF7O/FwTxcmMHNJxH43prALliIw6cL/MK51hvyl+VV8CyAfy68Hrm7Qj3Z
+         4+rZcTYle0yhjpxwEvYtK341bTpmWh94pQxSYJ36iZq/ZE9j7Nt4qKDuBnCd2/6qkX
+         TiLr6PODS1h8MtfIcGKQ8JnK8F5P+e5R/AMv6Fww=
+Received: from codeaurora.org (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: stummala@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8B7E5608A5;
+        Wed,  7 Aug 2019 05:14:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1565154895;
+        bh=ez0bTbpDpuPBtcQ5H6/eqA/uGGQnkjV/1RrxwhZfFo8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Sc5HEDwazQJF8wb/4wdkZZ7unmy8cLMMEWYTUNAjAayk8XuG2kLGGWvsBFA+jBcAV
+         a3yqEbpqfT87LqqdiwwRRGGGK1vTYQENeGdKMaNkXyU61U0Ptef6S6EaSuLffXMHxn
+         9l1Yzjd295fp9CnexEQ8iuZT6OH1taspEKt1FJzQ=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8B7E5608A5
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
+Date:   Wed, 7 Aug 2019 10:44:50 +0530
+From:   Sahitya Tummala <stummala@codeaurora.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     Jaegeuk Kim <jaegeuk@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, stummala@codeaurora.org
+Subject: Re: [PATCH v2] f2fs: Fix indefinite loop in f2fs_gc()
+Message-ID: <20190807051449.GJ8289@codeaurora.org>
+References: <1565090396-7263-1-git-send-email-stummala@codeaurora.org>
+ <8766875c-1e35-22dc-48d2-45b6776e4f38@huawei.com>
+ <20190807032458.GI8289@codeaurora.org>
+ <28512520-d8fe-839f-67ab-45f89f12968d@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <28512520-d8fe-839f-67ab-45f89f12968d@huawei.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Without this patch, the MAP_SYNC test case will cause a print_bad_pte
-warning on arm64 as follows:
-[   25.542693] BUG: Bad page map in process mapdax333
-pte:2e8000448800f53 pmd:41ff5f003
-[   25.546360] page:ffff7e0010220000 refcount:1 mapcount:-1
-mapping:ffff8003e29c7440 index:0x0
-[   25.550281] ext4_dax_aops
-[   25.550282] name:"__aaabbbcccddd__"
-[   25.551553] flags: 0x3ffff0000001002(referenced|reserved)
-[   25.555802] raw: 03ffff0000001002 ffff8003dfffa908 0000000000000000
-ffff8003e29c7440
-[   25.559446] raw: 0000000000000000 0000000000000000 00000001fffffffe
-0000000000000000
-[   25.563075] page dumped because: bad pte
-[   25.564938] addr:0000ffffbe05b000 vm_flags:208000fb
-anon_vma:0000000000000000 mapping:ffff8003e29c7440 index:0
-[   25.574272] file:__aaabbbcccddd__ fault:ext4_dax_fault
-mmmmap:ext4_file_mmap readpage:0x0
-[   25.578799] CPU: 1 PID: 1180 Comm: mapdax333 Not tainted 5.2.0+ #21
-[   25.581702] Hardware name: QEMU KVM Virtual Machine, BIOS 0.0.0
-02/06/2015
-[   25.585624] Call trace:
-[   25.587008]  dump_backtrace+0x0/0x178
-[   25.588799]  show_stack+0x24/0x30
-[   25.590328]  dump_stack+0xa8/0xcc
-[   25.591901]  print_bad_pte+0x18c/0x218
-[   25.593628]  unmap_page_range+0x778/0xc00
-[   25.595506]  unmap_single_vma+0x94/0xe8
-[   25.597304]  unmap_vmas+0x90/0x108
-[   25.598901]  unmap_region+0xc0/0x128
-[   25.600566]  __do_munmap+0x284/0x3f0
-[   25.602245]  __vm_munmap+0x78/0xe0
-[   25.603820]  __arm64_sys_munmap+0x34/0x48
-[   25.605709]  el0_svc_common.constprop.0+0x78/0x168
-[   25.607956]  el0_svc_handler+0x34/0x90
-[   25.609698]  el0_svc+0x8/0xc
-[   25.611103] Disabling lock debugging due to kernel taint
-[   25.613573] BUG: Bad page state in process mapdax333  pfn:448800
-[   25.616359] page:ffff7e0010220000 refcount:0 mapcount:-1
-mapping:ffff8003e29c7440 index:0x1
-[   25.620236] ext4_dax_aops
-[   25.620237] name:"__aaabbbcccddd__"
-[   25.621495] flags: 0x3ffff0000000000()
-[   25.624912] raw: 03ffff0000000000 dead000000000100 dead000000000200
-ffff8003e29c7440
-[   25.628502] raw: 0000000000000001 0000000000000000 00000000fffffffe
-0000000000000000
-[   25.632097] page dumped because: non-NULL mapping
-[...]
-[   25.656567] CPU: 1 PID: 1180 Comm: mapdax333 Tainted: G    B
-5.2.0+ #21
-[   25.660131] Hardware name: QEMU KVM Virtual Machine, BIOS 0.0.0
-02/06/2015
-[   25.663324] Call trace:
-[   25.664466]  dump_backtrace+0x0/0x178
-[   25.666163]  show_stack+0x24/0x30
-[   25.667721]  dump_stack+0xa8/0xcc
-[   25.669270]  bad_page+0xf0/0x150
-[   25.670772]  free_pages_check_bad+0x84/0xa0
-[   25.672724]  free_pcppages_bulk+0x45c/0x708
-[   25.674675]  free_unref_page_commit+0xcc/0x100
-[   25.676751]  free_unref_page_list+0x13c/0x200
-[   25.678801]  release_pages+0x350/0x420
-[   25.680539]  free_pages_and_swap_cache+0xf8/0x128
-[   25.682738]  tlb_flush_mmu+0x164/0x2b0
-[   25.684485]  unmap_page_range+0x648/0xc00
-[   25.686349]  unmap_single_vma+0x94/0xe8
-[   25.688131]  unmap_vmas+0x90/0x108
-[   25.689739]  unmap_region+0xc0/0x128
-[   25.691392]  __do_munmap+0x284/0x3f0
-[   25.693079]  __vm_munmap+0x78/0xe0
-[   25.694658]  __arm64_sys_munmap+0x34/0x48
-[   25.696530]  el0_svc_common.constprop.0+0x78/0x168
-[   25.698772]  el0_svc_handler+0x34/0x90
-[   25.700512]  el0_svc+0x8/0xc
+On Wed, Aug 07, 2019 at 11:37:22AM +0800, Chao Yu wrote:
+> Hi Sahitya,
+> 
+> On 2019/8/7 11:24, Sahitya Tummala wrote:
+> > Hi Chao,
+> > 
+> > On Wed, Aug 07, 2019 at 10:04:16AM +0800, Chao Yu wrote:
+> >> Hi Sahitya,
+> >>
+> >> On 2019/8/6 19:19, Sahitya Tummala wrote:
+> >>> Policy - Foreground GC, LFS and greedy GC mode.
+> >>>
+> >>> Under this policy, f2fs_gc() loops forever to GC as it doesn't have
+> >>> enough free segements to proceed and thus it keeps calling gc_more
+> >>> for the same victim segment.  This can happen if the selected victim
+> >>> segment could not be GC'd due to failed blkaddr validity check i.e.
+> >>> is_alive() returns false for the blocks set in current validity map.
+> >>>
+> >>> Fix this by keeping track of such invalid segments and skip those
+> >>> segments for selection in get_victim_by_default() to avoid endless
+> >>> GC loop under such error scenarios.
+> >>>
+> >>> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+> >>> ---
+> >>> v2: fix as per Chao's suggestion to handle this error case
+> >>>
+> >>>  fs/f2fs/gc.c      | 15 ++++++++++++++-
+> >>>  fs/f2fs/segment.c |  5 +++++
+> >>>  fs/f2fs/segment.h |  3 +++
+> >>>  3 files changed, 22 insertions(+), 1 deletion(-)
+> >>>
+> >>> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+> >>> index 8974672..321a78a 100644
+> >>> --- a/fs/f2fs/gc.c
+> >>> +++ b/fs/f2fs/gc.c
+> >>> @@ -382,6 +382,14 @@ static int get_victim_by_default(struct f2fs_sb_info *sbi,
+> >>>  			nsearched++;
+> >>>  		}
+> >>>  
+> >>> +		/*
+> >>> +		 * skip selecting the invalid segno (that is failed due to block
+> >>> +		 * validity check failed during GC) to avoid endless GC loop in
+> >>> +		 * such cases.
+> >>> +		 */
+> >>> +		if (test_bit(segno, sm->invalid_segmap))
+> >>> +			goto next;
+> >>> +
+> >>>  		secno = GET_SEC_FROM_SEG(sbi, segno);
+> >>>  
+> >>>  		if (sec_usage_check(sbi, secno))
+> >>> @@ -975,6 +983,7 @@ static int gc_data_segment(struct f2fs_sb_info *sbi, struct f2fs_summary *sum,
+> >>>  	int off;
+> >>>  	int phase = 0;
+> >>>  	int submitted = 0;
+> >>> +	struct sit_info *sit_i = SIT_I(sbi);
+> >>>  
+> >>>  	start_addr = START_BLOCK(sbi, segno);
+> >>>  
+> >>> @@ -1008,8 +1017,12 @@ static int gc_data_segment(struct f2fs_sb_info *sbi, struct f2fs_summary *sum,
+> >>>  		}
+> >>>  
+> >>>  		/* Get an inode by ino with checking validity */
+> >>> -		if (!is_alive(sbi, entry, &dni, start_addr + off, &nofs))
+> >>> +		if (!is_alive(sbi, entry, &dni, start_addr + off, &nofs)) {
+> >>> +			if (!test_and_set_bit(segno, sit_i->invalid_segmap))
+> >>> +				f2fs_err(sbi, "invalid blkaddr %u in seg %u is found\n",
+> >>> +						start_addr + off, segno);
+> >>
+> >> Oh, there is some normal cases in is_alive(), such as f2fs_get_node_page() or
+> >> f2fs_get_node_info() failure due to no memory, we should bypass such cases. I
+> > 
+> > Oh, yes, I have missed this point.
+> > 
+> >> guess something like this:
+> >>
+> >> if (source_blkaddr != blkaddr) {
+> >> 	if (unlikely(check_valid_map(sbi, segno, off))) {
+> > 
+> > check_valid_map() is validated before is_alive(). So I think this check again
+> > may not be needed. What do you think?
+> 
+> > race in between is_alive() and update_sit_entry()
+> 
+> There will be a race case:
+> 
+> gc_data_segment			f2fs_truncate_data_blocks_range
+> check_valid_map
+> 				f2fs_invalidate_blocks
+> 				update_sit_entry
+> 				f2fs_test_and_clear_bit(, se->cur_valid_map);
+> 				unlock_page(node_page)
+> is_alive
+> lock_page(node_page)
+> blkaddr should be NULL and not equal to source_blkaddr, I think this is a normal
+> case, right?
+> 
 
-The root cause is in _vm_normal_page, without the PTE_SPECIAL bit,
-the return value will be incorrectly set to pfn_to_page(pfn) instead
-of NULL. Besides, this patch also rewrite the pmd_mkdevmap to avoid
-setting PTE_SPECIAL for pmd
+Got it, thanks for the clarification.
 
-The MAP_SYNC test case is as follows(Provided by Yibo Cai)
-$#include <stdio.h>
-$#include <string.h>
-$#include <unistd.h>
-$#include <sys/file.h>
-$#include <sys/mman.h>
+> Thanks,
+> 
+> > 
+> >> 		if (!test_and_set_bit(segno, sit_i->invalid_segmap)) {
+> >> 			f2fs_err(sbi, "invalid blkaddr %u in seg %u is found\n",
+> >> 				start_addr + off, segno);
+> >> 			set_sbi_flag(sbi, SBI_NEED_FSCK);
+> >> 		}
+> >> 	}
+> >> 	return false;
+> >> }
+> >>
+> >> I think this will be safe to call check_valid_map(), because there should be no
+> >> race in between is_alive() and update_sit_entry() from all paths due to node
+> >> page lock dependence.
+> >>
+> >> One more concern is should we use this under CONFIG_F2FS_CHECK_FS? If there is
+> >> actually such a bug can cause data inconsistency, we'd better find the root
+> >> cause in debug version.
+> >>
+> > 
+> > Yes, I agree with you. I will include this under CONFIG_F2FS_CHECK_FS.
+> > 
+> > Thanks,
+> > 
+> >> Thanks,
+> >>
+> >>>  			continue;
+> >>> +		}
+> >>>  
+> >>>  		if (phase == 2) {
+> >>>  			f2fs_ra_node_page(sbi, dni.ino);
+> >>> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+> >>> index a661ac3..d45a1d3 100644
+> >>> --- a/fs/f2fs/segment.c
+> >>> +++ b/fs/f2fs/segment.c
+> >>> @@ -4017,6 +4017,10 @@ static int build_sit_info(struct f2fs_sb_info *sbi)
+> >>>  		return -ENOMEM;
+> >>>  #endif
+> >>>  
+> >>> +	sit_i->invalid_segmap = f2fs_kvzalloc(sbi, bitmap_size, GFP_KERNEL);
+> >>> +	if (!sit_i->invalid_segmap)
+> >>> +		return -ENOMEM;
+> >>> +
+> >>>  	/* init SIT information */
+> >>>  	sit_i->s_ops = &default_salloc_ops;
+> >>>  
+> >>> @@ -4518,6 +4522,7 @@ static void destroy_sit_info(struct f2fs_sb_info *sbi)
+> >>>  #ifdef CONFIG_F2FS_CHECK_FS
+> >>>  	kvfree(sit_i->sit_bitmap_mir);
+> >>>  #endif
+> >>> +	kvfree(sit_i->invalid_segmap);
+> >>>  	kvfree(sit_i);
+> >>>  }
+> >>>  
+> >>> diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
+> >>> index b746028..bc5dbe8 100644
+> >>> --- a/fs/f2fs/segment.h
+> >>> +++ b/fs/f2fs/segment.h
+> >>> @@ -246,6 +246,9 @@ struct sit_info {
+> >>>  	unsigned long long min_mtime;		/* min. modification time */
+> >>>  	unsigned long long max_mtime;		/* max. modification time */
+> >>>  
+> >>> +	/* list of segments to be ignored by GC in case of errors */
+> >>> +	unsigned long *invalid_segmap;
+> >>> +
+> >>>  	unsigned int last_victim[MAX_GC_POLICY]; /* last victim segment # */
+> >>>  };
+> >>>  
+> >>>
+> > 
 
-$#ifndef MAP_SYNC
-$#define MAP_SYNC 0x80000
-$#endif
-
-/* mount -o dax /dev/pmem0 /mnt */
-$#define F "/mnt/__aaabbbcccddd__"
-
-int main(void)
-{
-    int fd;
-    char buf[4096];
-    void *addr;
-
-    if ((fd = open(F, O_CREAT|O_TRUNC|O_RDWR, 0644)) < 0) {
-        perror("open1");
-        return 1;
-    }
-
-    if (write(fd, buf, 4096) != 4096) {
-        perror("lseek");
-        return 1;
-    }
-
-    addr = mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_SHARED|MAP_SYNC,
-fd, 0);
-    if (addr == MAP_FAILED) {
-        perror("mmap");
-        printf("did you mount with '-o dax'?\n");
-        return 1;
-    }
-
-    memset(addr, 0x55, 4096);
-
-    if (munmap(addr, 4096) == -1) {
-        perror("munmap");
-        return 1;
-    }
-
-    close(fd);
-
-    return 0;
-}
-
-Fixes: 73b20c84d42d ("arm64: mm: implement pte_devmap support")
-Reported-by: Yibo Cai <Yibo.Cai@arm.com>
-Signed-off-by: Jia He <justin.he@arm.com>
-Acked-by: Robin Murphy <Robin.Murphy@arm.com>
----
- arch/arm64/include/asm/pgtable.h | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index 5fdcfe237338..e09760ece844 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -209,7 +209,7 @@ static inline pmd_t pmd_mkcont(pmd_t pmd)
- 
- static inline pte_t pte_mkdevmap(pte_t pte)
- {
--	return set_pte_bit(pte, __pgprot(PTE_DEVMAP));
-+	return set_pte_bit(pte, __pgprot(PTE_DEVMAP | PTE_SPECIAL));
- }
- 
- static inline void set_pte(pte_t *ptep, pte_t pte)
-@@ -396,7 +396,10 @@ static inline int pmd_protnone(pmd_t pmd)
- #ifdef CONFIG_TRANSPARENT_HUGEPAGE
- #define pmd_devmap(pmd)		pte_devmap(pmd_pte(pmd))
- #endif
--#define pmd_mkdevmap(pmd)	pte_pmd(pte_mkdevmap(pmd_pte(pmd)))
-+static inline pmd_t pmd_mkdevmap(pmd_t pmd)
-+{
-+	return pte_pmd(set_pte_bit(pmd_pte(pmd), __pgprot(PTE_DEVMAP)));
-+}
- 
- #define __pmd_to_phys(pmd)	__pte_to_phys(pmd_pte(pmd))
- #define __phys_to_pmd_val(phys)	__phys_to_pte_val(phys)
 -- 
-2.17.1
-
+--
+Sent by a consultant of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
