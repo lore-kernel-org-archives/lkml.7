@@ -2,180 +2,298 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D39C32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CA90C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:29:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F11EF21E6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:29:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="1JXyZH8p"
+	by mail.kernel.org (Postfix) with ESMTP id 0069D21E6B
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:29:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388279AbfHGN3K (ORCPT
+        id S2388299AbfHGN3e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 09:29:10 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:46645 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387982AbfHGN3K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 09:29:10 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x77DT0tU2699386
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 7 Aug 2019 06:29:00 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x77DT0tU2699386
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1565184540;
-        bh=vlGMZafSUwhnnkknP0oAFVc3rI8uT6Wj0pvYag4NIWo=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=1JXyZH8pKN9j0GX5lGJjbgPAQzc93c+it7qlXJxN/y0GQ6dK84xX69UOAgaiIF/CE
-         Aps2HOd3qaQgx2sq5PKrqugHbMP8P6YmZbn2zQDUvfQAVUODhQl11tDUAySRqN1i86
-         NPXZdgzQH44fSgiAB/w3WewVNnguolGA6CvX7ytPQmNZMWy1sgcnVYIjFlEEjMCRwE
-         6N9a3FMxP3Cy4wT6eJMlgMbFzo09gTRI757ekySG9vx5tOH6wDWDDskO4dggonE+Qh
-         7xQZ+8czcO+yYutV/HmILoFnDUIG2MINlm6nEA+VrpghNFvarIr58kj9l4vbBYGZoH
-         iX66Z63vJNGnQ==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x77DSxGM2699383;
-        Wed, 7 Aug 2019 06:28:59 -0700
-Date:   Wed, 7 Aug 2019 06:28:59 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Sean Christopherson <tipbot@zytor.com>
-Message-ID: <tip-6444b40eeda4f78f57b255dd7ecb8d3e5936eea2@git.kernel.org>
-Cc:     sean.j.christopherson@intel.com, mingo@kernel.org,
-        linux-kernel@vger.kernel.org, hpa@zytor.com, tglx@linutronix.de
-Reply-To: mingo@kernel.org, sean.j.christopherson@intel.com, hpa@zytor.com,
-          tglx@linutronix.de, linux-kernel@vger.kernel.org
-In-Reply-To: <20190805212134.12001-1-sean.j.christopherson@intel.com>
-References: <20190805212134.12001-1-sean.j.christopherson@intel.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/apic] x86/apic: Annotate global config variables as
- "read-only after init"
-Git-Commit-ID: 6444b40eeda4f78f57b255dd7ecb8d3e5936eea2
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Wed, 7 Aug 2019 09:29:34 -0400
+Received: from muru.com ([72.249.23.125]:56732 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387982AbfHGN3e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 09:29:34 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 42A988116;
+        Wed,  7 Aug 2019 13:29:58 +0000 (UTC)
+Date:   Wed, 7 Aug 2019 06:29:28 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        ~@devbig004.ftw2.facebook.com, linux-kernel@vger.kernel.org,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCH] kernfs: fix memleak in kernel_ops_readdir()
+Message-ID: <20190807132928.GD5443@atomide.com>
+References: <20190805173404.GF136335@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20190805173404.GF136335@devbig004.ftw2.facebook.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  6444b40eeda4f78f57b255dd7ecb8d3e5936eea2
-Gitweb:     https://git.kernel.org/tip/6444b40eeda4f78f57b255dd7ecb8d3e5936eea2
-Author:     Sean Christopherson <sean.j.christopherson@intel.com>
-AuthorDate: Mon, 5 Aug 2019 14:21:34 -0700
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Wed, 7 Aug 2019 15:24:21 +0200
+Hi,
 
-x86/apic: Annotate global config variables as "read-only after init"
+* Tejun Heo <tj@kernel.org> [691231 23:00]:
+> From: Andrea Arcangeli <aarcange@redhat.com>
+> 
+> If getdents64 is killed or hits on segfault, it'll leave cgroups
+> directories in sysfs pinned leaking memory because the kernfs node
+> won't be freed on rmdir and the parent neither.
 
-Mark the APIC's global config variables that are constant after boot as
-__ro_after_init to help document that the majority of the APIC config is
-not changed at runtime, and to harden the kernel a smidge.
+Somehow this causes a regression in Linux next for me where I'm seeing
+lots of sysfs entries now missing under /sys/bus/platform/devices.
 
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190805212134.12001-1-sean.j.christopherson@intel.com
+For example, I now only see one .serial entry show up in sysfs.
+Things work again if I revert commit cc798c83898e ("kernfs: fix memleak
+inkernel_ops_readdir()"). Any ideas why that would be?
 
----
- arch/x86/kernel/apic/apic.c | 26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
+Below is a diff -u of ls /sys/bus/platform/devices for reference
+showing the missing entries with cc798c83898e.
 
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index 831274e3c09f..3a31875bd0a3 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -65,10 +65,10 @@ unsigned int num_processors;
- unsigned disabled_cpus;
- 
- /* Processor that is doing the boot up */
--unsigned int boot_cpu_physical_apicid = -1U;
-+unsigned int boot_cpu_physical_apicid __ro_after_init = -1U;
- EXPORT_SYMBOL_GPL(boot_cpu_physical_apicid);
- 
--u8 boot_cpu_apic_version;
-+u8 boot_cpu_apic_version __ro_after_init;
- 
- /*
-  * The highest APIC ID seen during enumeration.
-@@ -85,13 +85,13 @@ physid_mask_t phys_cpu_present_map;
-  * disable_cpu_apicid=<int>, mostly used for the kdump 2nd kernel to
-  * avoid undefined behaviour caused by sending INIT from AP to BSP.
-  */
--static unsigned int disabled_cpu_apicid __read_mostly = BAD_APICID;
-+static unsigned int disabled_cpu_apicid __ro_after_init = BAD_APICID;
- 
- /*
-  * This variable controls which CPUs receive external NMIs.  By default,
-  * external NMIs are delivered only to the BSP.
-  */
--static int apic_extnmi = APIC_EXTNMI_BSP;
-+static int apic_extnmi __ro_after_init = APIC_EXTNMI_BSP;
- 
- /*
-  * Map cpu index to physical APIC ID
-@@ -114,7 +114,7 @@ EXPORT_EARLY_PER_CPU_SYMBOL(x86_cpu_to_acpiid);
- DEFINE_EARLY_PER_CPU_READ_MOSTLY(int, x86_cpu_to_logical_apicid, BAD_APICID);
- 
- /* Local APIC was disabled by the BIOS and enabled by the kernel */
--static int enabled_via_apicbase;
-+static int enabled_via_apicbase __ro_after_init;
- 
- /*
-  * Handle interrupt mode configuration register (IMCR).
-@@ -172,23 +172,23 @@ static __init int setup_apicpmtimer(char *s)
- __setup("apicpmtimer", setup_apicpmtimer);
- #endif
- 
--unsigned long mp_lapic_addr;
--int disable_apic;
-+unsigned long mp_lapic_addr __ro_after_init;
-+int disable_apic __ro_after_init;
- /* Disable local APIC timer from the kernel commandline or via dmi quirk */
- static int disable_apic_timer __initdata;
- /* Local APIC timer works in C2 */
--int local_apic_timer_c2_ok;
-+int local_apic_timer_c2_ok __ro_after_init;
- EXPORT_SYMBOL_GPL(local_apic_timer_c2_ok);
- 
- /*
-  * Debug level, exported for io_apic.c
-  */
--int apic_verbosity;
-+int apic_verbosity __ro_after_init;
- 
--int pic_mode;
-+int pic_mode __ro_after_init;
- 
- /* Have we found an MP table */
--int smp_found_config;
-+int smp_found_config __ro_after_init;
- 
- static struct resource lapic_resource = {
- 	.name = "Local APIC",
-@@ -199,7 +199,7 @@ unsigned int lapic_timer_period = 0;
- 
- static void apic_pm_activate(void);
- 
--static unsigned long apic_phys;
-+static unsigned long apic_phys __ro_after_init;
- 
- /*
-  * Get the LAPIC version
-@@ -1278,7 +1278,7 @@ void __init sync_Arb_IDs(void)
- 			APIC_INT_LEVELTRIG | APIC_DM_INIT);
- }
- 
--enum apic_intr_mode_id apic_intr_mode;
-+enum apic_intr_mode_id apic_intr_mode __ro_after_init;
- 
- static int __init apic_intr_mode_select(void)
- {
+Regards,
+
+Tony
+
+8< -----------------------
+--- works
++++ fails
+@@ -1,227 +1,44 @@
+-2c000000.ethernet
+ 40100000.interconnect
+-40100000.interconnect:segment@0
+-40122000.mcbsp
+-4012208c.target-module
+-4012408c.target-module
+ 4012608c.target-module
+-40128000.target-module
+-4012c000.target-module
+-4012e000.target-module
+-40130000.target-module
+-40130000.wdt
+-40132000.target-module
+ 40138000.target-module
+-40138000.timer
+-4013a000.target-module
+-4013a000.timer
+-4013c000.target-module
+-4013c000.timer
+ 4013e000.target-module
+-4013e000.timer
+-401f1000.target-module
+-40304000.ocmcram
+-44000000.ocp
+-48000000.interconnect
+-48000000.interconnect:segment@0
+-48000000.interconnect:segment@200000
+-48020000.serial
+-48020050.target-module
+-48032000.target-module
+-48032000.timer
+-48034000.target-module
+-48034000.timer
+-48036000.target-module
+ 48036000.timer
+-4803e000.target-module
+-4803e000.timer
+ 48055000.gpio
+-48055000.target-module
+-48057000.gpio
+-48057000.target-module
+-48059000.gpio
+ 48059000.target-module
+-4805b000.gpio
+-4805b000.target-module
+-4805d000.gpio
+ 4805d000.target-module
+-48060000.i2c
+-48060000.target-module
+-4806a000.serial
+-4806a050.target-module
+-4806c000.serial
+-4806c050.target-module
+ 4806e000.serial
+ 4806e050.target-module
+-48070000.i2c
+ 48070000.i2c:twl@48:gpadc
+-48070000.i2c:twl@48:pwm
+-48070000.i2c:twl@48:pwmled
+-48070000.i2c:twl@48:regulator-v1v8
+-48070000.i2c:twl@48:regulator-v2v1
+ 48070000.i2c:twl@48:regulator-vana
+-48070000.i2c:twl@48:regulator-vaux1
+-48070000.i2c:twl@48:regulator-vaux2
+-48070000.i2c:twl@48:regulator-vaux3
+ 48070000.i2c:twl@48:regulator-vcxio
+-48070000.i2c:twl@48:regulator-vdac
+-48070000.i2c:twl@48:regulator-vmmc
+-48070000.i2c:twl@48:regulator-vpp
+-48070000.i2c:twl@48:regulator-vusb
+-48070000.i2c:twl@48:regulator-vusim
+-48070000.i2c:twl@48:rtc
+ 48070000.i2c:twl@48:usb-comparator
+-48070000.target-module
+-48072000.i2c
+-48072000.target-module
+-48076000.target-module
+-48078000.target-module
+-48086000.target-module
+ 48086000.timer
+-48088000.target-module
+-48088000.timer
+-4809608c.target-module
+-48098000.spi
+-48098000.target-module
+-4809a000.spi
+ 4809a000.target-module
+-4809c000.mmc
+ 4809c000.target-module
+-480a5000.des
+-480ad000.target-module
+-480b2000.1w
+-480b2000.target-module
+-480b4000.target-module
+ 480b8000.spi
+-480b8000.target-module
+-480ba000.spi
+-480ba000.target-module
+-480d1000.target-module
+ 480d5000.mmc
+-480d5000.target-module
+-48240600.local-timer
+ 48242000.l2-cache-controller
+-48350000.i2c
+-48350000.target-module
+-4a000000.interconnect
+-4a000000.interconnect:segment@0
+-4a000000.interconnect:segment@100000
+-4a000000.interconnect:segment@180000
+-4a000000.interconnect:segment@200000
+-4a000000.interconnect:segment@280000
+ 4a000000.interconnect:segment@300000
+ 4a000000.interconnect:segment@80000
+-4a002000.scm
+-4a002000.scm_conf
+-4a002000.target-module
+-4a002260.bandgap
+-4a002300.control-phy
+-4a00233c.control-phy
+-4a004000.cm1
+-4a004000.target-module
+-4a004300.mpuss_cm
+-4a004400.tesla_cm
+-4a004500.abe_cm
+-4a008000.cm2
+-4a008000.target-module
+-4a008600.l4_ao_cm
+-4a008700.l3_1_cm
+-4a008800.l3_2_cm
+-4a008900.ducati_cm
+-4a008a00.l3_dma_cm
+ 4a008b00.l3_emif_cm
+ 4a008c00.d2d_cm
+-4a008d00.l4_cfg_cm
+ 4a008e00.l3_instr_cm
+-4a008f00.ivahd_cm
+-4a009000.iss_cm
+-4a009100.l3_dss_cm
+-4a009200.l3_gfx_cm
+-4a009300.l3_init_cm
+-4a009400.l4_per_cm
+-4a056000.dma-controller
+ 4a056000.target-module
+-4a058000.hsi
+-4a058000.target-module
+ 4a062000.target-module
+-4a062000.usbhstll
+-4a064000.target-module
+ 4a064000.usbhshost
+ 4a064800.ohci
+-4a064c00.ehci
+-4a066000.mmu
+-4a0ab000.usb_otg_hs
+ 4a0ab400.target-module
+-4a0ad000.ocp2scp
+-4a0ad000.target-module
+ 4a0ad080.usb2phy
+-4a0d9000.smartreflex
+-4a0d9038.target-module
+ 4a0db000.smartreflex
+-4a0db038.target-module
+-4a0dd000.smartreflex
+-4a0dd038.target-module
+-4a0f4000.mailbox
+-4a0f4000.target-module
+-4a0f6000.spinlock
+-4a0f6000.target-module
+ 4a100000.target-module
+ 4a100040.pinmux
+-4a1005a0.omap4_padconf_global
+-4a100600.pbias_regulator
+-4a10a000.target-module
+-4a300000.interconnect
+-4a300000.interconnect:segment@0
+-4a300000.interconnect:segment@10000
+ 4a300000.interconnect:segment@20000
+-4a306000.prm
+-4a306000.target-module
+-4a307bd0.regulator-abb-mpu
+ 4a30a000.scrm
+-4a30a000.target-module
+-4a30c000.target-module
+ 4a30c000.target-module:scm@c000
+-4a310000.gpio
+-4a310000.target-module
+ 4a314000.target-module
+-4a314000.wdt
+-4a31c000.keypad
+-4a31c000.target-module
+-4a31e000.target-module
+-4a31e040.pinmux
+ 4b100000.sham
+-4b501000.aes
+ 4b701000.aes
+ 4c000000.emif
+-4d000000.emif
+-4e000000.dmm
+-50000000.gpmc
+-52000000.target-module
+-55082000.mmu
+-5601fc00.target-module
+-58000000.dss
+-Fixed MDIO bus.0
+-a0080000.ramoops
+-alarmtimer
+-connector
+-cpufreq-dt
+ gpio_keys
+-hsusb1_phy
+-leds
+-omap_dma_system.0
+-oprofile-perf.0
+-pmu
+ reg-dummy
+-regulator-vdd33a
+-regulator-vddvario
+-serial8250
+-soc
+-soc:dsp
+-soc:iva
+-soc:mpu
+-sound
+-twl
+-twl6040-codec
+-twl6040-gpo
+-twl6040-pdmclk
+ w2cbw0015_vmmc
