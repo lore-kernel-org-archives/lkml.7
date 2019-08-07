@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96030C32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:32:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5E04C32754
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:32:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 553A721E6C
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:32:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8241121E6C
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:32:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dpLhTY1+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aERjWunc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388596AbfHGNcC (ORCPT
+        id S2388584AbfHGNcA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 09:32:02 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:60722 "EHLO
+        Wed, 7 Aug 2019 09:32:00 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:60708 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388363AbfHGNb6 (ORCPT
+        with ESMTP id S2388563AbfHGNbz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 09:31:58 -0400
+        Wed, 7 Aug 2019 09:31:55 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=kJdtRWlyxBXoKs/UDZ276aiGtKgRKWBToff1R/6Uoqo=; b=dpLhTY1+AEMmbGuLg75gnBJKNt
-        JCb18PaUDxj39TcflbQPN0b2K59IkB2jRi5FFNwjzojFEHZ5zYwGdiWd0Vl/06fjXwcwbI/3D6EBf
-        JuQ5YoS2HIefPyagIHkbWyOO+UDRwE4lgji6C1IYhaC+rRjZxXqjjN0NRYftazc0L3wdEBm3Z3Rj7
-        ErlwjX3I4Lo7w3O0dTPXHCH7nT1QBxVOk+frqfh1Lx8/F6Wl/AsLuiN1RMloe8K9JroG4QwJtTxpe
-        hvGI1eCBaL/OcbJ3JNYVwJToxugYdnkMulzaVXYa8kP9AIBDdx5mfm4ZNUXan/0S9muvMDw1vbLw+
-        bBtB6IKQ==;
+        bh=+VDeQ25tgP8Lmr5cr3R/SYIemYERT1zBq6ZiCKZF+5Y=; b=aERjWuncV7pt63fMu1mP4XdPYl
+        wSXk06aRwFL77O25YE+pDkYh9KD8wv6TjtezakRbEI1AyNfntM7bCs221smUpnifF5OF9LDA/mdAJ
+        xsNh1YSqOUjfc7cn3ZNmwIQEb9AyMGKpY8U+ygxNVGKxpRqHcKJgWiTGocfbkwO1oAss5yUvO21p1
+        X/0kcMyNHzjeN5OKCE/Tv60Y0U6A0v49lFdeDQ55KGlPZk1iC37z2yfzkUyiXb7Vwwn2v/+8IM029
+        Xt+EP4mtaubM9abj4JoAVl/tN4Io+APjNv/owfZnlO9YeHiiGaIT+aKdyNy1A1k1MBxBfccv17FaJ
+        Q2n9oZ+w==;
 Received: from [195.167.85.94] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hvM2m-0008BX-CT; Wed, 07 Aug 2019 13:31:56 +0000
+        id 1hvM2j-0008Az-Mi; Wed, 07 Aug 2019 13:31:54 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>
 Cc:     Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 20/29] ia64: remove the zx1 swiotlb machvec
-Date:   Wed,  7 Aug 2019 16:30:40 +0300
-Message-Id: <20190807133049.20893-21-hch@lst.de>
+Subject: [PATCH 19/29] ia64: remove CONFIG_ACPI ifdefs
+Date:   Wed,  7 Aug 2019 16:30:39 +0300
+Message-Id: <20190807133049.20893-20-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190807133049.20893-1-hch@lst.de>
 References: <20190807133049.20893-1-hch@lst.de>
@@ -57,401 +57,249 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The aim of this machvec is to support devices with < 32-bit dma
-masks.  But given that ia64 only has a ZONE_DMA32 and not a ZONE_DMA
-that isn't supported by swiotlb either.
+Now that hpsim support is gone, CONFIG_ACPI is forced on for ia64, and
+we can remove a few ifdefs for it.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- .../admin-guide/kernel-parameters.txt         |  2 +-
- arch/ia64/Kconfig                             | 13 +---
- arch/ia64/Kconfig.debug                       |  2 +-
- arch/ia64/Makefile                            |  2 -
- arch/ia64/hp/common/Makefile                  |  2 -
- arch/ia64/hp/common/hwsw_iommu.c              | 60 -------------------
- arch/ia64/hp/common/sba_iommu.c               | 15 +----
- arch/ia64/hp/zx1/Makefile                     |  2 +-
- arch/ia64/hp/zx1/hpzx1_swiotlb_machvec.c      |  3 -
- arch/ia64/include/asm/acpi.h                  |  2 -
- arch/ia64/include/asm/dma-mapping.h           |  8 +--
- arch/ia64/include/asm/machvec.h               | 15 -----
- arch/ia64/include/asm/machvec_hpzx1_swiotlb.h | 20 -------
- arch/ia64/kernel/dma-mapping.c                |  6 --
- drivers/char/agp/Kconfig                      |  2 +-
- 15 files changed, 7 insertions(+), 147 deletions(-)
- delete mode 100644 arch/ia64/hp/common/hwsw_iommu.c
- delete mode 100644 arch/ia64/hp/zx1/hpzx1_swiotlb_machvec.c
- delete mode 100644 arch/ia64/include/asm/machvec_hpzx1_swiotlb.h
+ arch/ia64/include/asm/acpi.h |  4 ++--
+ arch/ia64/kernel/Makefile    |  4 ++--
+ arch/ia64/kernel/iosapic.c   |  2 --
+ arch/ia64/kernel/irq_ia64.c  |  2 --
+ arch/ia64/kernel/mca.c       | 18 ------------------
+ arch/ia64/kernel/setup.c     | 10 ++++------
+ arch/ia64/kernel/topology.c  |  4 ----
+ 7 files changed, 8 insertions(+), 36 deletions(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 47d981a86e2f..33ab47447ef1 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -2373,7 +2373,7 @@
- 
- 	machvec=	[IA-64] Force the use of a particular machine-vector
- 			(machvec) in a generic kernel.
--			Example: machvec=hpzx1_swiotlb
-+			Example: machvec=hpzx1
- 
- 	machtype=	[Loongson] Share the same kernel image file between different
- 			 yeeloong laptop.
-diff --git a/arch/ia64/Kconfig b/arch/ia64/Kconfig
-index 63db7a5378ac..a42ab41ee8ab 100644
---- a/arch/ia64/Kconfig
-+++ b/arch/ia64/Kconfig
-@@ -138,7 +138,6 @@ config IA64_GENERIC
- 	  DIG-compliant		For DIG ("Developer's Interface Guide") compliant systems
- 	  DIG+Intel+IOMMU	For DIG systems with Intel IOMMU
- 	  HP-zx1/sx1000		For HP systems
--	  HP-zx1/sx1000+swiotlb	For HP systems with (broken) DMA-constrained devices.
- 	  SGI-UV		For SGI UV systems
- 
- 	  If you don't know what to do, choose "generic".
-@@ -158,16 +157,6 @@ config IA64_HP_ZX1
- 	  Build a kernel that runs on HP zx1 and sx1000 systems.  This adds
- 	  support for the HP I/O MMU.
- 
--config IA64_HP_ZX1_SWIOTLB
--	bool "HP-zx1/sx1000 with software I/O TLB"
--	select SWIOTLB
--	help
--	  Build a kernel that runs on HP zx1 and sx1000 systems even when they
--	  have broken PCI devices which cannot DMA to full 32 bits.  Apart
--	  from support for the HP I/O MMU, this includes support for the software
--	  I/O TLB, which allows supporting the broken devices at the expense of
--	  wasting some kernel memory (about 2MB by default).
--
- config IA64_SGI_UV
- 	bool "SGI-UV"
- 	select NUMA
-@@ -350,7 +339,7 @@ config ARCH_SPARSEMEM_ENABLE
- 	select SPARSEMEM_VMEMMAP_ENABLE
- 
- config ARCH_DISCONTIGMEM_DEFAULT
--	def_bool y if (IA64_GENERIC || IA64_HP_ZX1 || IA64_HP_ZX1_SWIOTLB)
-+	def_bool y if (IA64_GENERIC || IA64_HP_ZX1)
- 	depends on ARCH_DISCONTIGMEM_ENABLE
- 
- config NUMA
-diff --git a/arch/ia64/Kconfig.debug b/arch/ia64/Kconfig.debug
-index 793a613c54ab..abf8d04ab6ab 100644
---- a/arch/ia64/Kconfig.debug
-+++ b/arch/ia64/Kconfig.debug
-@@ -14,7 +14,7 @@ config IA64_GRANULE_16MB
- 
- config IA64_GRANULE_64MB
- 	bool "64MB"
--	depends on !(IA64_GENERIC || IA64_HP_ZX1 || IA64_HP_ZX1_SWIOTLB)
-+	depends on !(IA64_GENERIC || IA64_HP_ZX1)
- 
- endchoice
- 
-diff --git a/arch/ia64/Makefile b/arch/ia64/Makefile
-index 54424415851c..d87e49a39171 100644
---- a/arch/ia64/Makefile
-+++ b/arch/ia64/Makefile
-@@ -48,12 +48,10 @@ core-$(CONFIG_IA64_DIG) 	+= arch/ia64/dig/
- core-$(CONFIG_IA64_DIG_VTD) 	+= arch/ia64/dig/
- core-$(CONFIG_IA64_GENERIC) 	+= arch/ia64/dig/
- core-$(CONFIG_IA64_HP_ZX1)	+= arch/ia64/dig/
--core-$(CONFIG_IA64_HP_ZX1_SWIOTLB) += arch/ia64/dig/
- core-$(CONFIG_IA64_SGI_UV)	+= arch/ia64/uv/
- 
- drivers-y			+= arch/ia64/pci/
- drivers-$(CONFIG_IA64_HP_ZX1)	+= arch/ia64/hp/common/ arch/ia64/hp/zx1/
--drivers-$(CONFIG_IA64_HP_ZX1_SWIOTLB) += arch/ia64/hp/common/ arch/ia64/hp/zx1/
- drivers-$(CONFIG_IA64_GENERIC)	+= arch/ia64/hp/common/ arch/ia64/hp/zx1/ arch/ia64/uv/
- drivers-$(CONFIG_OPROFILE)	+= arch/ia64/oprofile/
- 
-diff --git a/arch/ia64/hp/common/Makefile b/arch/ia64/hp/common/Makefile
-index 6026308f9a62..47c8f6ecb6f4 100644
---- a/arch/ia64/hp/common/Makefile
-+++ b/arch/ia64/hp/common/Makefile
-@@ -7,6 +7,4 @@
- #
- 
- obj-y := sba_iommu.o
--obj-$(CONFIG_IA64_HP_ZX1_SWIOTLB) += hwsw_iommu.o
--obj-$(CONFIG_IA64_GENERIC) += hwsw_iommu.o
- obj-$(CONFIG_IA64_HP_AML_NFW) += aml_nfw.o
-diff --git a/arch/ia64/hp/common/hwsw_iommu.c b/arch/ia64/hp/common/hwsw_iommu.c
-deleted file mode 100644
-index 8840ed97712f..000000000000
---- a/arch/ia64/hp/common/hwsw_iommu.c
-+++ /dev/null
-@@ -1,60 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--/*
-- * Copyright (c) 2004 Hewlett-Packard Development Company, L.P.
-- *   Contributed by David Mosberger-Tang <davidm@hpl.hp.com>
-- *
-- * This is a pseudo I/O MMU which dispatches to the hardware I/O MMU
-- * whenever possible.  We assume that the hardware I/O MMU requires
-- * full 32-bit addressability, as is the case, e.g., for HP zx1-based
-- * systems (there, the I/O MMU window is mapped at 3-4GB).  If a
-- * device doesn't provide full 32-bit addressability, we fall back on
-- * the sw I/O TLB.  This is good enough to let us support broken
-- * hardware such as soundcards which have a DMA engine that can
-- * address only 28 bits.
-- */
--
--#include <linux/device.h>
--#include <linux/dma-mapping.h>
--#include <linux/swiotlb.h>
--#include <linux/export.h>
--#include <asm/machvec.h>
--
--extern const struct dma_map_ops sba_dma_ops;
--
--/* swiotlb declarations & definitions: */
--extern int swiotlb_late_init_with_default_size (size_t size);
--
--/*
-- * Note: we need to make the determination of whether or not to use
-- * the sw I/O TLB based purely on the device structure.  Anything else
-- * would be unreliable or would be too intrusive.
-- */
--static inline int use_swiotlb(struct device *dev)
--{
--	return dev && dev->dma_mask &&
--		!sba_dma_ops.dma_supported(dev, *dev->dma_mask);
--}
--
--const struct dma_map_ops *hwsw_dma_get_ops(struct device *dev)
--{
--	if (use_swiotlb(dev))
--		return NULL;
--	return &sba_dma_ops;
--}
--EXPORT_SYMBOL(hwsw_dma_get_ops);
--
--void __init
--hwsw_init (void)
--{
--	/* default to a smallish 2MB sw I/O TLB */
--	if (swiotlb_late_init_with_default_size (2 * (1<<20)) != 0) {
--#ifdef CONFIG_IA64_GENERIC
--		/* Better to have normal DMA than panic */
--		printk(KERN_WARNING "%s: Failed to initialize software I/O TLB,"
--		       " reverting to hpzx1 platform vector\n", __func__);
--		machvec_init("hpzx1");
--#else
--		panic("Unable to initialize software I/O TLB services");
--#endif
--	}
--}
-diff --git a/arch/ia64/hp/common/sba_iommu.c b/arch/ia64/hp/common/sba_iommu.c
-index 18321ce8bfa0..215fa688b729 100644
---- a/arch/ia64/hp/common/sba_iommu.c
-+++ b/arch/ia64/hp/common/sba_iommu.c
-@@ -2059,7 +2059,7 @@ arch_initcall(acpi_sba_ioc_init_acpi);
- static int __init
- sba_init(void)
- {
--	if (!ia64_platform_is("hpzx1") && !ia64_platform_is("hpzx1_swiotlb"))
-+	if (!ia64_platform_is("hpzx1"))
- 		return 0;
- 
- #if defined(CONFIG_IA64_GENERIC)
-@@ -2102,19 +2102,6 @@ sba_init(void)
- 		return 0;
- 	}
- 
--#if defined(CONFIG_IA64_GENERIC) || defined(CONFIG_IA64_HP_ZX1_SWIOTLB)
--	/*
--	 * hpzx1_swiotlb needs to have a fairly small swiotlb bounce
--	 * buffer setup to support devices with smaller DMA masks than
--	 * sba_iommu can handle.
--	 */
--	if (ia64_platform_is("hpzx1_swiotlb")) {
--		extern void hwsw_init(void);
--
--		hwsw_init();
--	}
--#endif
--
- 	{
- 		struct pci_bus *b = NULL;
- 		while ((b = pci_find_next_bus(b)) != NULL)
-diff --git a/arch/ia64/hp/zx1/Makefile b/arch/ia64/hp/zx1/Makefile
-index 46b37d820b59..bea44b4ed173 100644
---- a/arch/ia64/hp/zx1/Makefile
-+++ b/arch/ia64/hp/zx1/Makefile
-@@ -6,4 +6,4 @@
- # Copyright (C) Alex Williamson (alex_williamson@hp.com)
- #
- 
--obj-$(CONFIG_IA64_GENERIC) += hpzx1_machvec.o hpzx1_swiotlb_machvec.o
-+obj-$(CONFIG_IA64_GENERIC) += hpzx1_machvec.o
-diff --git a/arch/ia64/hp/zx1/hpzx1_swiotlb_machvec.c b/arch/ia64/hp/zx1/hpzx1_swiotlb_machvec.c
-deleted file mode 100644
-index 4392a96b3c58..000000000000
---- a/arch/ia64/hp/zx1/hpzx1_swiotlb_machvec.c
-+++ /dev/null
-@@ -1,3 +0,0 @@
--#define MACHVEC_PLATFORM_NAME		hpzx1_swiotlb
--#define MACHVEC_PLATFORM_HEADER		<asm/machvec_hpzx1_swiotlb.h>
--#include <asm/machvec_init.h>
 diff --git a/arch/ia64/include/asm/acpi.h b/arch/ia64/include/asm/acpi.h
-index 01c1c269aa13..9e563df73038 100644
+index 0afb3bc4b4a1..01c1c269aa13 100644
 --- a/arch/ia64/include/asm/acpi.h
 +++ b/arch/ia64/include/asm/acpi.h
-@@ -39,8 +39,6 @@ static inline const char *acpi_get_sysname (void)
+@@ -17,7 +17,7 @@
+ #include <linux/numa.h>
+ #include <asm/numa.h>
+ 
+-#ifdef	CONFIG_ACPI
++
+ extern int acpi_lapic;
+ #define acpi_disabled 0	/* ACPI always enabled on IA64 */
+ #define acpi_noirq 0	/* ACPI always enabled on IA64 */
+@@ -28,7 +28,7 @@ static inline bool acpi_has_cpu_in_madt(void)
  {
- # if defined (CONFIG_IA64_HP_ZX1)
- 	return "hpzx1";
--# elif defined (CONFIG_IA64_HP_ZX1_SWIOTLB)
--	return "hpzx1_swiotlb";
- # elif defined (CONFIG_IA64_SGI_UV)
- 	return "uv";
- # elif defined (CONFIG_IA64_DIG)
-diff --git a/arch/ia64/include/asm/dma-mapping.h b/arch/ia64/include/asm/dma-mapping.h
-index f7ec71e4001e..a5d9d788eede 100644
---- a/arch/ia64/include/asm/dma-mapping.h
-+++ b/arch/ia64/include/asm/dma-mapping.h
-@@ -6,17 +6,11 @@
-  * Copyright (C) 2003-2004 Hewlett-Packard Co
-  *	David Mosberger-Tang <davidm@hpl.hp.com>
-  */
--#include <asm/machvec.h>
--#include <linux/scatterlist.h>
--#include <linux/dma-debug.h>
--
- extern const struct dma_map_ops *dma_ops;
--extern struct ia64_machine_vector ia64_mv;
--extern void set_iommu_machvec(void);
- 
- static inline const struct dma_map_ops *get_arch_dma_ops(struct bus_type *bus)
- {
--	return platform_dma_get_ops(NULL);
-+	return dma_ops;
+ 	return !!acpi_lapic;
  }
+-#endif
++
+ #define acpi_processor_cstate_check(x) (x) /* no idle limits on IA64 :) */
+ static inline void disable_acpi(void) { }
  
- #endif /* _ASM_IA64_DMA_MAPPING_H */
-diff --git a/arch/ia64/include/asm/machvec.h b/arch/ia64/include/asm/machvec.h
-index 5a9a8af79308..fa867e980d87 100644
---- a/arch/ia64/include/asm/machvec.h
-+++ b/arch/ia64/include/asm/machvec.h
-@@ -17,12 +17,6 @@ struct device;
+diff --git a/arch/ia64/kernel/Makefile b/arch/ia64/kernel/Makefile
+index 3ada440ff893..dbde36702cf2 100644
+--- a/arch/ia64/kernel/Makefile
++++ b/arch/ia64/kernel/Makefile
+@@ -12,9 +12,9 @@ extra-y	:= head.o vmlinux.lds
+ obj-y := entry.o efi.o efi_stub.o gate-data.o fsys.o ia64_ksyms.o irq.o irq_ia64.o	\
+ 	 irq_lsapic.o ivt.o machvec.o pal.o patch.o process.o perfmon.o ptrace.o sal.o		\
+ 	 salinfo.o setup.o signal.o sys_ia64.o time.o traps.o unaligned.o \
+-	 unwind.o mca.o mca_asm.o topology.o dma-mapping.o iosapic.o
++	 unwind.o mca.o mca_asm.o topology.o dma-mapping.o iosapic.o acpi.o \
++	 acpi-ext.o
  
- typedef void ia64_mv_setup_t (char **);
- typedef void ia64_mv_dma_init (void);
--typedef const struct dma_map_ops *ia64_mv_dma_get_ops(struct device *);
--
--static inline void
--machvec_noop (void)
--{
--}
+-obj-$(CONFIG_ACPI)		+= acpi.o acpi-ext.o
+ obj-$(CONFIG_IA64_BRL_EMU)	+= brl_emu.o
  
- extern void machvec_setup (char **);
+ obj-$(CONFIG_IA64_PALINFO)	+= palinfo.o
+diff --git a/arch/ia64/kernel/iosapic.c b/arch/ia64/kernel/iosapic.c
+index 9e49fd006859..2d25958a7ed7 100644
+--- a/arch/ia64/kernel/iosapic.c
++++ b/arch/ia64/kernel/iosapic.c
+@@ -643,10 +643,8 @@ get_target_cpu (unsigned int gsi, int irq)
+ 	if (!cpu_online(smp_processor_id()))
+ 		return cpu_physical_id(smp_processor_id());
  
-@@ -32,8 +26,6 @@ extern void machvec_setup (char **);
- #  include <asm/machvec_dig_vtd.h>
- # elif defined (CONFIG_IA64_HP_ZX1)
- #  include <asm/machvec_hpzx1.h>
--# elif defined (CONFIG_IA64_HP_ZX1_SWIOTLB)
--#  include <asm/machvec_hpzx1_swiotlb.h>
- # elif defined (CONFIG_IA64_SGI_UV)
- #  include <asm/machvec_uv.h>
- # elif defined (CONFIG_IA64_GENERIC)
-@@ -44,7 +36,6 @@ extern void machvec_setup (char **);
- #  define ia64_platform_name	ia64_mv.name
- #  define platform_setup	ia64_mv.setup
- #  define platform_dma_init		ia64_mv.dma_init
--#  define platform_dma_get_ops		ia64_mv.dma_get_ops
- # endif
- 
- /* __attribute__((__aligned__(16))) is required to make size of the
-@@ -56,7 +47,6 @@ struct ia64_machine_vector {
- 	const char *name;
- 	ia64_mv_setup_t *setup;
- 	ia64_mv_dma_init *dma_init;
--	ia64_mv_dma_get_ops *dma_get_ops;
- } __attribute__((__aligned__(16))); /* align attrib? see above comment */
- 
- #define MACHVEC_INIT(name)			\
-@@ -64,7 +54,6 @@ struct ia64_machine_vector {
- 	#name,					\
- 	platform_setup,				\
- 	platform_dma_init,			\
--	platform_dma_get_ops,			\
- }
- 
- extern struct ia64_machine_vector ia64_mv;
-@@ -76,7 +65,6 @@ extern void machvec_init_from_cmdline(const char *cmdline);
- # endif /* CONFIG_IA64_GENERIC */
- 
- extern void swiotlb_dma_init(void);
--extern const struct dma_map_ops *dma_get_ops(struct device *);
- 
- /*
-  * Define default versions so we can extend machvec for new platforms without having
-@@ -88,8 +76,5 @@ extern const struct dma_map_ops *dma_get_ops(struct device *);
- #ifndef platform_dma_init
- # define platform_dma_init		swiotlb_dma_init
- #endif
--#ifndef platform_dma_get_ops
--# define platform_dma_get_ops		dma_get_ops
+-#ifdef CONFIG_ACPI
+ 	if (cpe_vector > 0 && irq_to_vector(irq) == IA64_CPEP_VECTOR)
+ 		return get_cpei_target_cpu();
 -#endif
  
- #endif /* _ASM_IA64_MACHVEC_H */
-diff --git a/arch/ia64/include/asm/machvec_hpzx1_swiotlb.h b/arch/ia64/include/asm/machvec_hpzx1_swiotlb.h
-deleted file mode 100644
-index 5aec6a008c61..000000000000
---- a/arch/ia64/include/asm/machvec_hpzx1_swiotlb.h
-+++ /dev/null
-@@ -1,20 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--#ifndef _ASM_IA64_MACHVEC_HPZX1_SWIOTLB_h
--#define _ASM_IA64_MACHVEC_HPZX1_SWIOTLB_h
--
--extern ia64_mv_setup_t				dig_setup;
--extern ia64_mv_dma_get_ops			hwsw_dma_get_ops;
--
--/*
-- * This stuff has dual use!
-- *
-- * For a generic kernel, the macros are used to initialize the
-- * platform's machvec structure.  When compiling a non-generic kernel,
-- * the macros are used directly.
-- */
--#define ia64_platform_name			"hpzx1_swiotlb"
--#define platform_setup				dig_setup
--#define platform_dma_init			machvec_noop
--#define platform_dma_get_ops			hwsw_dma_get_ops
--
--#endif /* _ASM_IA64_MACHVEC_HPZX1_SWIOTLB_h */
-diff --git a/arch/ia64/kernel/dma-mapping.c b/arch/ia64/kernel/dma-mapping.c
-index ad7d9963de34..4be5ee04ccfa 100644
---- a/arch/ia64/kernel/dma-mapping.c
-+++ b/arch/ia64/kernel/dma-mapping.c
-@@ -9,12 +9,6 @@ int iommu_detected __read_mostly;
- const struct dma_map_ops *dma_ops;
- EXPORT_SYMBOL(dma_ops);
+ #ifdef CONFIG_NUMA
+ 	{
+diff --git a/arch/ia64/kernel/irq_ia64.c b/arch/ia64/kernel/irq_ia64.c
+index e3874734b149..b989731bbeac 100644
+--- a/arch/ia64/kernel/irq_ia64.c
++++ b/arch/ia64/kernel/irq_ia64.c
+@@ -633,9 +633,7 @@ ia64_native_register_ipi(void)
+ void __init
+ init_IRQ (void)
+ {
+-#ifdef CONFIG_ACPI
+ 	acpi_boot_init();
+-#endif
+ 	ia64_register_ipi();
+ 	register_percpu_irq(IA64_SPURIOUS_INT_VECTOR, NULL);
+ #ifdef CONFIG_SMP
+diff --git a/arch/ia64/kernel/mca.c b/arch/ia64/kernel/mca.c
+index f72b05fe918b..a7f05883935b 100644
+--- a/arch/ia64/kernel/mca.c
++++ b/arch/ia64/kernel/mca.c
+@@ -149,9 +149,7 @@ static ia64_mc_info_t		ia64_mc_info;
+ #define CPE_HISTORY_LENGTH    5
+ #define CMC_HISTORY_LENGTH    5
  
--const struct dma_map_ops *dma_get_ops(struct device *dev)
--{
--	return dma_ops;
--}
--EXPORT_SYMBOL(dma_get_ops);
--
- #ifdef CONFIG_SWIOTLB
- void *arch_dma_alloc(struct device *dev, size_t size,
- 		dma_addr_t *dma_handle, gfp_t gfp, unsigned long attrs)
-diff --git a/drivers/char/agp/Kconfig b/drivers/char/agp/Kconfig
-index be50d7a93f4c..42d45e97c2ae 100644
---- a/drivers/char/agp/Kconfig
-+++ b/drivers/char/agp/Kconfig
-@@ -118,7 +118,7 @@ config AGP_I460
+-#ifdef CONFIG_ACPI
+ static struct timer_list cpe_poll_timer;
+-#endif
+ static struct timer_list cmc_poll_timer;
+ /*
+  * This variable tells whether we are currently in polling mode.
+@@ -532,8 +530,6 @@ int mca_recover_range(unsigned long addr)
+ }
+ EXPORT_SYMBOL_GPL(mca_recover_range);
  
- config AGP_HP_ZX1
- 	tristate "HP ZX1 chipset AGP support"
--	depends on AGP && (IA64_HP_ZX1 || IA64_HP_ZX1_SWIOTLB || IA64_GENERIC)
-+	depends on AGP && (IA64_HP_ZX1 || IA64_GENERIC)
- 	help
- 	  This option gives you AGP GART support for the HP ZX1 chipset
- 	  for IA64 processors.
+-#ifdef CONFIG_ACPI
+-
+ int cpe_vector = -1;
+ int ia64_cpe_irq = -1;
+ 
+@@ -595,9 +591,6 @@ ia64_mca_cpe_int_handler (int cpe_irq, void *arg)
+ 	return IRQ_HANDLED;
+ }
+ 
+-#endif /* CONFIG_ACPI */
+-
+-#ifdef CONFIG_ACPI
+ /*
+  * ia64_mca_register_cpev
+  *
+@@ -625,7 +618,6 @@ ia64_mca_register_cpev (int cpev)
+ 	IA64_MCA_DEBUG("%s: corrected platform error "
+ 		       "vector %#x registered\n", __func__, cpev);
+ }
+-#endif /* CONFIG_ACPI */
+ 
+ /*
+  * ia64_mca_cmc_vector_setup
+@@ -1540,8 +1532,6 @@ ia64_mca_cmc_poll (struct timer_list *unused)
+  * Outputs
+  * 	handled
+  */
+-#ifdef CONFIG_ACPI
+-
+ static irqreturn_t
+ ia64_mca_cpe_int_caller(int cpe_irq, void *arg)
+ {
+@@ -1604,8 +1594,6 @@ ia64_mca_cpe_poll (struct timer_list *unused)
+ 							IA64_IPI_DM_INT, 0);
+ }
+ 
+-#endif /* CONFIG_ACPI */
+-
+ static int
+ default_monarch_init_process(struct notifier_block *self, unsigned long val, void *data)
+ {
+@@ -1799,7 +1787,6 @@ static struct irqaction mca_wkup_irqaction = {
+ 	.name =		"mca_wkup"
+ };
+ 
+-#ifdef CONFIG_ACPI
+ static struct irqaction mca_cpe_irqaction = {
+ 	.handler =	ia64_mca_cpe_int_handler,
+ 	.name =		"cpe_hndlr"
+@@ -1809,7 +1796,6 @@ static struct irqaction mca_cpep_irqaction = {
+ 	.handler =	ia64_mca_cpe_int_caller,
+ 	.name =		"cpe_poll"
+ };
+-#endif /* CONFIG_ACPI */
+ 
+ /* Minimal format of the MCA/INIT stacks.  The pseudo processes that run on
+  * these stacks can never sleep, they cannot return from the kernel to user
+@@ -2081,10 +2067,8 @@ void __init ia64_mca_irq_init(void)
+ 	/* Setup the MCA wakeup interrupt vector */
+ 	register_percpu_irq(IA64_MCA_WAKEUP_VECTOR, &mca_wkup_irqaction);
+ 
+-#ifdef CONFIG_ACPI
+ 	/* Setup the CPEI/P handler */
+ 	register_percpu_irq(IA64_CPEP_VECTOR, &mca_cpep_irqaction);
+-#endif
+ }
+ 
+ /*
+@@ -2112,7 +2096,6 @@ ia64_mca_late_init(void)
+ 			  ia64_mca_cpu_online, NULL);
+ 	IA64_MCA_DEBUG("%s: CMCI/P setup and enabled.\n", __func__);
+ 
+-#ifdef CONFIG_ACPI
+ 	/* Setup the CPEI/P vector and handler */
+ 	cpe_vector = acpi_request_vector(ACPI_INTERRUPT_CPEI);
+ 	timer_setup(&cpe_poll_timer, ia64_mca_cpe_poll, 0);
+@@ -2143,7 +2126,6 @@ ia64_mca_late_init(void)
+ 			IA64_MCA_DEBUG("%s: CPEP setup and enabled.\n", __func__);
+ 		}
+ 	}
+-#endif
+ 
+ 	return 0;
+ }
+diff --git a/arch/ia64/kernel/setup.c b/arch/ia64/kernel/setup.c
+index 42ef03ce2fd4..8d47836d932c 100644
+--- a/arch/ia64/kernel/setup.c
++++ b/arch/ia64/kernel/setup.c
+@@ -537,21 +537,19 @@ setup_arch (char **cmdline_p)
+ 	if (early_console_setup(*cmdline_p) == 0)
+ 		mark_bsp_online();
+ 
+-#ifdef CONFIG_ACPI
+ 	/* Initialize the ACPI boot-time table parser */
+ 	acpi_table_init();
+ 	early_acpi_boot_init();
+-# ifdef CONFIG_ACPI_NUMA
++#ifdef CONFIG_ACPI_NUMA
+ 	acpi_numa_init();
+ 	acpi_numa_fixup();
+-#  ifdef CONFIG_ACPI_HOTPLUG_CPU
++#ifdef CONFIG_ACPI_HOTPLUG_CPU
+ 	prefill_possible_map();
+-#  endif
++#endif
+ 	per_cpu_scan_finalize((cpumask_weight(&early_cpu_possible_map) == 0 ?
+ 		32 : cpumask_weight(&early_cpu_possible_map)),
+ 		additional_cpus > 0 ? additional_cpus : 0);
+-# endif
+-#endif /* CONFIG_APCI_BOOT */
++#endif /* CONFIG_ACPI_NUMA */
+ 
+ #ifdef CONFIG_SMP
+ 	smp_build_cpu_map();
+diff --git a/arch/ia64/kernel/topology.c b/arch/ia64/kernel/topology.c
+index e311ee13e61d..09fc385c2acd 100644
+--- a/arch/ia64/kernel/topology.c
++++ b/arch/ia64/kernel/topology.c
+@@ -42,7 +42,6 @@ EXPORT_SYMBOL_GPL(arch_fix_phys_package_id);
+ #ifdef CONFIG_HOTPLUG_CPU
+ int __ref arch_register_cpu(int num)
+ {
+-#ifdef CONFIG_ACPI
+ 	/*
+ 	 * If CPEI can be re-targeted or if this is not
+ 	 * CPEI target, then it is hotpluggable
+@@ -50,7 +49,6 @@ int __ref arch_register_cpu(int num)
+ 	if (can_cpei_retarget() || !is_cpu_cpei_target(num))
+ 		sysfs_cpus[num].cpu.hotpluggable = 1;
+ 	map_cpu_to_node(num, node_cpuid[num].nid);
+-#endif
+ 	return register_cpu(&sysfs_cpus[num].cpu, num);
+ }
+ EXPORT_SYMBOL(arch_register_cpu);
+@@ -58,9 +56,7 @@ EXPORT_SYMBOL(arch_register_cpu);
+ void __ref arch_unregister_cpu(int num)
+ {
+ 	unregister_cpu(&sysfs_cpus[num].cpu);
+-#ifdef CONFIG_ACPI
+ 	unmap_cpu_from_node(num, cpu_to_node(num));
+-#endif
+ }
+ EXPORT_SYMBOL(arch_unregister_cpu);
+ #else
 -- 
 2.20.1
 
