@@ -2,153 +2,472 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15B31C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:31:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B46FC32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:31:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6EF021E6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:31:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565184663;
-	bh=nxrTq08eV0QgbjIKI+azAC+TZQk+a3y7TNPBv3VHYUc=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=JAqxvZg5AFVsr4J0Fb1x3jxEK3caUe28CN4JUhC5XaSrI4E+VYRcr2OX/oR0Qc9wj
-	 cWE2BGbibczw4Fhhj53mR1BHhoP6QeH2/DZiQEVjGIbCnMYOZMTZIuhxV3fCTEzfm2
-	 Cmrlr/xdpLe7R88q/RffsohNUCH/M7d6V3JlTDTE=
+	by mail.kernel.org (Postfix) with ESMTP id 4866121E71
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:31:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OGCFYT19"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388373AbfHGNbD (ORCPT
+        id S2388397AbfHGNbH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 09:31:03 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35260 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387982AbfHGNa4 (ORCPT
+        Wed, 7 Aug 2019 09:31:07 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:60220 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388380AbfHGNbG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 09:30:56 -0400
+        Wed, 7 Aug 2019 09:31:06 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=2EbYTAqI4zLOFVUYBUHF/BE1UcTYirfxLUj8k3Q4Nh8=; b=rwRWB8D+EP/r
-        y2l2Zf6wdcIIFVMHu5VxN3NvzqClPMRV9k8tlI75E6a/+E6KdhGWSVLRHi8wFfR3UNcGD9PtNf/mX
-        649w19tiNe6iuBQ2IbRGAQfi0et1MFjpj99a+uxVnIqRR/Y/c5XhRhLk4QwPb4jpvlR7niSkKK5CU
-        vRi78=;
-Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1hvM1f-0007fA-LY; Wed, 07 Aug 2019 13:30:47 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 05EA42742B9E; Wed,  7 Aug 2019 14:30:46 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Daniel Baluta <daniel.baluta@nxp.com>
-Cc:     alsa-devel@alsa-project.org, angus@akkea.ca, broonie@kernel.org,
-        devicetree@vger.kernel.org, festevam@gmail.com,
-        kernel@pengutronix.de, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org, l.stach@pengutronix.de,
-        Mark Brown <broonie@kernel.org>, mihai.serban@gmail.com,
-        nicoleotsuka@gmail.com, Nicolin Chen <nicoleotsuka@gmail.com>,
-        robh@kernel.org, shengjiu.wang@nxp.com, timur@kernel.org,
-        tiwai@suse.com
-Subject: Applied "ASoC: fsl_sai: Update Tx/Rx channel enable mask" to the asoc tree
-In-Reply-To: <20190806151214.6783-3-daniel.baluta@nxp.com>
-X-Patchwork-Hint: ignore
-Message-Id: <20190807133047.05EA42742B9E@ypsilon.sirena.org.uk>
-Date:   Wed,  7 Aug 2019 14:30:46 +0100 (BST)
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
+        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=CS+ezjzkKTEfOqsL9OL+ba5pHMNosTvC9SwTRt1MZUs=; b=OGCFYT192WPXnfl64EwJ6VAgcy
+        CxAC0Yu/P7DaVmzjXiptnJ9Y8aTrbvn99H26TRs3g1m+TzyN5EjA+x8rg5AkK88byfY5xyLjgRv2C
+        S/UdJlEq/yyimnQjRCEZj//4699rVBDZi6XWa+vyhkGiO92wU6GzbzCuB3ldHv79vgBXM23+oaJzm
+        hvWU5HrHPfNZzeuE5QKKig5ExAanvwSlepw8FJx6kaI8kYm/By61mautwU3fxATdai6Z7y/aoUP3m
+        +AhftJSxypgczZYdPjlVM3ji/IDpoJzFPcmnMtJ1qYjeU+967StYRBcve53S3Y0Qjq69ozopzt7pB
+        5dwDMP7w==;
+Received: from [195.167.85.94] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hvM1w-00080T-7u; Wed, 07 Aug 2019 13:31:04 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 03/29] char/agp: remove the sgi-agp driver
+Date:   Wed,  7 Aug 2019 16:30:23 +0300
+Message-Id: <20190807133049.20893-4-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190807133049.20893-1-hch@lst.de>
+References: <20190807133049.20893-1-hch@lst.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+The SGI SN2 support is about to be removed.  Remove this driver that
+depends on the SN2 support.
 
-   ASoC: fsl_sai: Update Tx/Rx channel enable mask
-
-has been applied to the asoc tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From b84f50b0fcb497a62068926fca793d2d213c7dbd Mon Sep 17 00:00:00 2001
-From: Daniel Baluta <daniel.baluta@nxp.com>
-Date: Tue, 6 Aug 2019 18:12:11 +0300
-Subject: [PATCH] ASoC: fsl_sai: Update Tx/Rx channel enable mask
-
-Tx channel enable (TCE) / Rx channel enable (RCE) bits
-enable corresponding data channel for Tx/Rx operation.
-
-Because SAI supports up the 8 channels TCE/RCE occupy
-up the 8 bits inside TCR3/RCR3 registers we need to extend
-the mask to reflect this.
-
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Link: https://lore.kernel.org/r/20190806151214.6783-3-daniel.baluta@nxp.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- sound/soc/fsl/fsl_sai.c | 6 ++++--
- sound/soc/fsl/fsl_sai.h | 1 +
- 2 files changed, 5 insertions(+), 2 deletions(-)
+ arch/ia64/configs/generic_defconfig   |   1 -
+ arch/ia64/configs/gensparse_defconfig |   1 -
+ drivers/char/agp/Kconfig              |   7 -
+ drivers/char/agp/Makefile             |   1 -
+ drivers/char/agp/sgi-agp.c            | 338 --------------------------
+ 5 files changed, 348 deletions(-)
+ delete mode 100644 drivers/char/agp/sgi-agp.c
 
-diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
-index e4221f2a5ee3..f2698c94c9fe 100644
---- a/sound/soc/fsl/fsl_sai.c
-+++ b/sound/soc/fsl/fsl_sai.c
-@@ -599,7 +599,8 @@ static int fsl_sai_startup(struct snd_pcm_substream *substream,
- 	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
- 	int ret;
+diff --git a/arch/ia64/configs/generic_defconfig b/arch/ia64/configs/generic_defconfig
+index 1fc4d5a77e0d..79b88384c885 100644
+--- a/arch/ia64/configs/generic_defconfig
++++ b/arch/ia64/configs/generic_defconfig
+@@ -104,7 +104,6 @@ CONFIG_HPET=y
+ CONFIG_AGP=m
+ CONFIG_AGP_I460=m
+ CONFIG_AGP_HP_ZX1=m
+-CONFIG_AGP_SGI_TIOCA=m
+ CONFIG_DRM=m
+ CONFIG_DRM_TDFX=m
+ CONFIG_DRM_R128=m
+diff --git a/arch/ia64/configs/gensparse_defconfig b/arch/ia64/configs/gensparse_defconfig
+index 289ed714ad8b..f1490580ed69 100644
+--- a/arch/ia64/configs/gensparse_defconfig
++++ b/arch/ia64/configs/gensparse_defconfig
+@@ -94,7 +94,6 @@ CONFIG_HPET=y
+ CONFIG_AGP=m
+ CONFIG_AGP_I460=m
+ CONFIG_AGP_HP_ZX1=m
+-CONFIG_AGP_SGI_TIOCA=m
+ CONFIG_DRM=m
+ CONFIG_DRM_TDFX=m
+ CONFIG_DRM_R128=m
+diff --git a/drivers/char/agp/Kconfig b/drivers/char/agp/Kconfig
+index 6231714ef3c8..be50d7a93f4c 100644
+--- a/drivers/char/agp/Kconfig
++++ b/drivers/char/agp/Kconfig
+@@ -150,13 +150,6 @@ config AGP_EFFICEON
+ 	  This option gives you AGP support for the Transmeta Efficeon
+ 	  series processors with integrated northbridges.
  
--	regmap_update_bits(sai->regmap, FSL_SAI_xCR3(tx), FSL_SAI_CR3_TRCE,
-+	regmap_update_bits(sai->regmap, FSL_SAI_xCR3(tx),
-+			   FSL_SAI_CR3_TRCE_MASK,
- 			   FSL_SAI_CR3_TRCE);
- 
- 	ret = snd_pcm_hw_constraint_list(substream->runtime, 0,
-@@ -614,7 +615,8 @@ static void fsl_sai_shutdown(struct snd_pcm_substream *substream,
- 	struct fsl_sai *sai = snd_soc_dai_get_drvdata(cpu_dai);
- 	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
- 
--	regmap_update_bits(sai->regmap, FSL_SAI_xCR3(tx), FSL_SAI_CR3_TRCE, 0);
-+	regmap_update_bits(sai->regmap, FSL_SAI_xCR3(tx),
-+			   FSL_SAI_CR3_TRCE_MASK, 0);
- }
- 
- static const struct snd_soc_dai_ops fsl_sai_pcm_dai_ops = {
-diff --git a/sound/soc/fsl/fsl_sai.h b/sound/soc/fsl/fsl_sai.h
-index 4bb478041d67..20c5b9b1e8bc 100644
---- a/sound/soc/fsl/fsl_sai.h
-+++ b/sound/soc/fsl/fsl_sai.h
-@@ -110,6 +110,7 @@
- 
- /* SAI Transmit and Receive Configuration 3 Register */
- #define FSL_SAI_CR3_TRCE	BIT(16)
-+#define FSL_SAI_CR3_TRCE_MASK	GENMASK(23, 16)
- #define FSL_SAI_CR3_WDFL(x)	(x)
- #define FSL_SAI_CR3_WDFL_MASK	0x1f
- 
+-config AGP_SGI_TIOCA
+-        tristate "SGI TIO chipset AGP support"
+-        depends on AGP && (IA64_SGI_SN2 || IA64_GENERIC)
+-        help
+-          This option gives you AGP GART support for the SGI TIO chipset
+-          for IA64 processors.
+-
+ config INTEL_GTT
+ 	tristate
+ 	depends on X86 && PCI
+diff --git a/drivers/char/agp/Makefile b/drivers/char/agp/Makefile
+index 4a786ffd9dee..cb2497d157f6 100644
+--- a/drivers/char/agp/Makefile
++++ b/drivers/char/agp/Makefile
+@@ -16,7 +16,6 @@ obj-$(CONFIG_AGP_I460)		+= i460-agp.o
+ obj-$(CONFIG_AGP_INTEL)		+= intel-agp.o
+ obj-$(CONFIG_INTEL_GTT)		+= intel-gtt.o
+ obj-$(CONFIG_AGP_NVIDIA)	+= nvidia-agp.o
+-obj-$(CONFIG_AGP_SGI_TIOCA)	+= sgi-agp.o
+ obj-$(CONFIG_AGP_SIS)		+= sis-agp.o
+ obj-$(CONFIG_AGP_SWORKS)	+= sworks-agp.o
+ obj-$(CONFIG_AGP_UNINORTH)	+= uninorth-agp.o
+diff --git a/drivers/char/agp/sgi-agp.c b/drivers/char/agp/sgi-agp.c
+deleted file mode 100644
+index e7d5bdc02d93..000000000000
+--- a/drivers/char/agp/sgi-agp.c
++++ /dev/null
+@@ -1,338 +0,0 @@
+-/*
+- * This file is subject to the terms and conditions of the GNU General Public
+- * License.  See the file "COPYING" in the main directory of this archive
+- * for more details.
+- *
+- * Copyright (C) 2003-2005 Silicon Graphics, Inc.  All Rights Reserved.
+- */
+-
+-/*
+- * SGI TIOCA AGPGART routines.
+- *
+- */
+-
+-#include <linux/acpi.h>
+-#include <linux/module.h>
+-#include <linux/pci.h>
+-#include <linux/slab.h>
+-#include <linux/agp_backend.h>
+-#include <asm/sn/addrs.h>
+-#include <asm/sn/io.h>
+-#include <asm/sn/pcidev.h>
+-#include <asm/sn/pcibus_provider_defs.h>
+-#include <asm/sn/tioca_provider.h>
+-#include "agp.h"
+-
+-extern int agp_memory_reserved;
+-extern uint32_t tioca_gart_found;
+-extern struct list_head tioca_list;
+-static struct agp_bridge_data **sgi_tioca_agp_bridges;
+-
+-/*
+- * The aperature size and related information is set up at TIOCA init time.
+- * Values for this table will be extracted and filled in at
+- * sgi_tioca_fetch_size() time.
+- */
+-
+-static struct aper_size_info_fixed sgi_tioca_sizes[] = {
+-	{0, 0, 0},
+-};
+-
+-static struct page *sgi_tioca_alloc_page(struct agp_bridge_data *bridge)
+-{
+-	struct page *page;
+-	int nid;
+-	struct tioca_kernel *info =
+-	    (struct tioca_kernel *)bridge->dev_private_data;
+-
+-	nid = info->ca_closest_node;
+-	page = alloc_pages_node(nid, GFP_KERNEL, 0);
+-	if (!page)
+-		return NULL;
+-
+-	get_page(page);
+-	atomic_inc(&agp_bridge->current_memory_agp);
+-	return page;
+-}
+-
+-/*
+- * Flush GART tlb's.  Cannot selectively flush based on memory so the mem
+- * arg is ignored.
+- */
+-
+-static void sgi_tioca_tlbflush(struct agp_memory *mem)
+-{
+-	tioca_tlbflush(mem->bridge->dev_private_data);
+-}
+-
+-/*
+- * Given an address of a host physical page, turn it into a valid gart
+- * entry.
+- */
+-static unsigned long
+-sgi_tioca_mask_memory(struct agp_bridge_data *bridge, dma_addr_t addr,
+-		      int type)
+-{
+-	return tioca_physpage_to_gart(addr);
+-}
+-
+-static void sgi_tioca_agp_enable(struct agp_bridge_data *bridge, u32 mode)
+-{
+-	tioca_fastwrite_enable(bridge->dev_private_data);
+-}
+-
+-/*
+- * sgi_tioca_configure() doesn't have anything to do since the base CA driver
+- * has alreay set up the GART.
+- */
+-
+-static int sgi_tioca_configure(void)
+-{
+-	return 0;
+-}
+-
+-/*
+- * Determine gfx aperature size.  This has already been determined by the
+- * CA driver init, so just need to set agp_bridge values accordingly.
+- */
+-
+-static int sgi_tioca_fetch_size(void)
+-{
+-	struct tioca_kernel *info =
+-	    (struct tioca_kernel *)agp_bridge->dev_private_data;
+-
+-	sgi_tioca_sizes[0].size = info->ca_gfxap_size / MB(1);
+-	sgi_tioca_sizes[0].num_entries = info->ca_gfxgart_entries;
+-
+-	return sgi_tioca_sizes[0].size;
+-}
+-
+-static int sgi_tioca_create_gatt_table(struct agp_bridge_data *bridge)
+-{
+-	struct tioca_kernel *info =
+-	    (struct tioca_kernel *)bridge->dev_private_data;
+-
+-	bridge->gatt_table_real = (u32 *) info->ca_gfxgart;
+-	bridge->gatt_table = bridge->gatt_table_real;
+-	bridge->gatt_bus_addr = info->ca_gfxgart_base;
+-
+-	return 0;
+-}
+-
+-static int sgi_tioca_free_gatt_table(struct agp_bridge_data *bridge)
+-{
+-	return 0;
+-}
+-
+-static int sgi_tioca_insert_memory(struct agp_memory *mem, off_t pg_start,
+-				   int type)
+-{
+-	int num_entries;
+-	size_t i;
+-	off_t j;
+-	void *temp;
+-	struct agp_bridge_data *bridge;
+-	u64 *table;
+-
+-	bridge = mem->bridge;
+-	if (!bridge)
+-		return -EINVAL;
+-
+-	table = (u64 *)bridge->gatt_table;
+-
+-	temp = bridge->current_size;
+-
+-	switch (bridge->driver->size_type) {
+-	case U8_APER_SIZE:
+-		num_entries = A_SIZE_8(temp)->num_entries;
+-		break;
+-	case U16_APER_SIZE:
+-		num_entries = A_SIZE_16(temp)->num_entries;
+-		break;
+-	case U32_APER_SIZE:
+-		num_entries = A_SIZE_32(temp)->num_entries;
+-		break;
+-	case FIXED_APER_SIZE:
+-		num_entries = A_SIZE_FIX(temp)->num_entries;
+-		break;
+-	case LVL2_APER_SIZE:
+-		return -EINVAL;
+-	default:
+-		num_entries = 0;
+-		break;
+-	}
+-
+-	num_entries -= agp_memory_reserved / PAGE_SIZE;
+-	if (num_entries < 0)
+-		num_entries = 0;
+-
+-	if (type != 0 || mem->type != 0) {
+-		return -EINVAL;
+-	}
+-
+-	if ((pg_start + mem->page_count) > num_entries)
+-		return -EINVAL;
+-
+-	j = pg_start;
+-
+-	while (j < (pg_start + mem->page_count)) {
+-		if (table[j])
+-			return -EBUSY;
+-		j++;
+-	}
+-
+-	if (!mem->is_flushed) {
+-		bridge->driver->cache_flush();
+-		mem->is_flushed = true;
+-	}
+-
+-	for (i = 0, j = pg_start; i < mem->page_count; i++, j++) {
+-		table[j] =
+-		    bridge->driver->mask_memory(bridge,
+-						page_to_phys(mem->pages[i]),
+-						mem->type);
+-	}
+-
+-	bridge->driver->tlb_flush(mem);
+-	return 0;
+-}
+-
+-static int sgi_tioca_remove_memory(struct agp_memory *mem, off_t pg_start,
+-				   int type)
+-{
+-	size_t i;
+-	struct agp_bridge_data *bridge;
+-	u64 *table;
+-
+-	bridge = mem->bridge;
+-	if (!bridge)
+-		return -EINVAL;
+-
+-	if (type != 0 || mem->type != 0) {
+-		return -EINVAL;
+-	}
+-
+-	table = (u64 *)bridge->gatt_table;
+-
+-	for (i = pg_start; i < (mem->page_count + pg_start); i++) {
+-		table[i] = 0;
+-	}
+-
+-	bridge->driver->tlb_flush(mem);
+-	return 0;
+-}
+-
+-static void sgi_tioca_cache_flush(void)
+-{
+-}
+-
+-/*
+- * Cleanup.  Nothing to do as the CA driver owns the GART.
+- */
+-
+-static void sgi_tioca_cleanup(void)
+-{
+-}
+-
+-static struct agp_bridge_data *sgi_tioca_find_bridge(struct pci_dev *pdev)
+-{
+-	struct agp_bridge_data *bridge;
+-
+-	list_for_each_entry(bridge, &agp_bridges, list) {
+-		if (bridge->dev->bus == pdev->bus)
+-			break;
+-	}
+-	return bridge;
+-}
+-
+-const struct agp_bridge_driver sgi_tioca_driver = {
+-	.owner = THIS_MODULE,
+-	.size_type = U16_APER_SIZE,
+-	.configure = sgi_tioca_configure,
+-	.fetch_size = sgi_tioca_fetch_size,
+-	.cleanup = sgi_tioca_cleanup,
+-	.tlb_flush = sgi_tioca_tlbflush,
+-	.mask_memory = sgi_tioca_mask_memory,
+-	.agp_enable = sgi_tioca_agp_enable,
+-	.cache_flush = sgi_tioca_cache_flush,
+-	.create_gatt_table = sgi_tioca_create_gatt_table,
+-	.free_gatt_table = sgi_tioca_free_gatt_table,
+-	.insert_memory = sgi_tioca_insert_memory,
+-	.remove_memory = sgi_tioca_remove_memory,
+-	.alloc_by_type = agp_generic_alloc_by_type,
+-	.free_by_type = agp_generic_free_by_type,
+-	.agp_alloc_page = sgi_tioca_alloc_page,
+-	.agp_destroy_page = agp_generic_destroy_page,
+-	.agp_type_to_mask_type  = agp_generic_type_to_mask_type,
+-	.cant_use_aperture = true,
+-	.needs_scratch_page = false,
+-	.num_aperture_sizes = 1,
+-};
+-
+-static int agp_sgi_init(void)
+-{
+-	unsigned int j;
+-	struct tioca_kernel *info;
+-	struct pci_dev *pdev = NULL;
+-
+-	if (tioca_gart_found)
+-		printk(KERN_INFO PFX "SGI TIO CA GART driver initialized.\n");
+-	else
+-		return 0;
+-
+-	sgi_tioca_agp_bridges = kmalloc_array(tioca_gart_found,
+-					      sizeof(struct agp_bridge_data *),
+-					      GFP_KERNEL);
+-	if (!sgi_tioca_agp_bridges)
+-		return -ENOMEM;
+-
+-	j = 0;
+-	list_for_each_entry(info, &tioca_list, ca_list) {
+-		if (list_empty(info->ca_devices))
+-			continue;
+-		list_for_each_entry(pdev, info->ca_devices, bus_list) {
+-			u8 cap_ptr;
+-
+-			if (pdev->class != (PCI_CLASS_DISPLAY_VGA << 8))
+-				continue;
+-			cap_ptr = pci_find_capability(pdev, PCI_CAP_ID_AGP);
+-			if (!cap_ptr)
+-				continue;
+-		}
+-		sgi_tioca_agp_bridges[j] = agp_alloc_bridge();
+-		printk(KERN_INFO PFX "bridge %d = 0x%p\n", j,
+-		       sgi_tioca_agp_bridges[j]);
+-		if (sgi_tioca_agp_bridges[j]) {
+-			sgi_tioca_agp_bridges[j]->dev = pdev;
+-			sgi_tioca_agp_bridges[j]->dev_private_data = info;
+-			sgi_tioca_agp_bridges[j]->driver = &sgi_tioca_driver;
+-			sgi_tioca_agp_bridges[j]->gart_bus_addr =
+-			    info->ca_gfxap_base;
+-			sgi_tioca_agp_bridges[j]->mode = (0x7D << 24) |	/* 126 requests */
+-			    (0x1 << 9) |	/* SBA supported */
+-			    (0x1 << 5) |	/* 64-bit addresses supported */
+-			    (0x1 << 4) |	/* FW supported */
+-			    (0x1 << 3) |	/* AGP 3.0 mode */
+-			    0x2;	/* 8x transfer only */
+-			sgi_tioca_agp_bridges[j]->current_size =
+-			    sgi_tioca_agp_bridges[j]->previous_size =
+-			    (void *)&sgi_tioca_sizes[0];
+-			agp_add_bridge(sgi_tioca_agp_bridges[j]);
+-		}
+-		j++;
+-	}
+-
+-	agp_find_bridge = &sgi_tioca_find_bridge;
+-	return 0;
+-}
+-
+-static void agp_sgi_cleanup(void)
+-{
+-	kfree(sgi_tioca_agp_bridges);
+-	sgi_tioca_agp_bridges = NULL;
+-}
+-
+-module_init(agp_sgi_init);
+-module_exit(agp_sgi_cleanup);
+-
+-MODULE_LICENSE("GPL and additional rights");
 -- 
 2.20.1
 
