@@ -2,139 +2,184 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E47EBC19759
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D57E0C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:04:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAC3C22BED
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:04:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="d8E2LYX9"
+	by mail.kernel.org (Postfix) with ESMTP id AF57022BED
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:04:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387706AbfHGIEV (ORCPT
+        id S2387759AbfHGIEd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 04:04:21 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:33612 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727842AbfHGID2 (ORCPT
+        Wed, 7 Aug 2019 04:04:33 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:51051 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387546AbfHGIEb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 04:03:28 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 9F95EC0BD0;
-        Wed,  7 Aug 2019 08:03:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1565165008; bh=SAjBsqpaJXqi+dF6OXS+5et5v2cw5mG0s/Z67cMC8Sk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=d8E2LYX9KdolLg9JJltUZONxaPLYTp/Dcuiw9qT+94NeXo+GTIKb0+s396kLXURoQ
-         L7jib4NdMrHjZsxc9k4B7Ioe5e07gmuA/8X4BcjFlgPKAC1b81Q4V2sQ1QV7yrZLZH
-         Xhcqa7q+jIDyzUC+qWVNXWyfj4V6hn/EXquoyNVNGk+xfh3KtmEyW4VM/44rU4cHKM
-         dVlnpTPsklbabjdw09Py/19Sz9iw4rvrR6gL5v53fo05Sc0vQh+deucqLKysZRRBhl
-         PMCw0jHNdUgKZ0tKUljZoG4nqVojj2eqVSkV/06SXdF9FkdrW97+BEwmlLP7RaJOSf
-         JWnSQWhvw5WnA==
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 3E9D1A0067;
-        Wed,  7 Aug 2019 08:03:26 +0000 (UTC)
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     netdev@vger.kernel.org
-Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v3 03/10] net: stmmac: xgmac: Implement tx_queue_prio()
-Date:   Wed,  7 Aug 2019 10:03:11 +0200
-Message-Id: <ed0a5e81de71c28f2749698ccbf77ce0b19a6ad7.1565164729.git.joabreu@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1565164729.git.joabreu@synopsys.com>
-References: <cover.1565164729.git.joabreu@synopsys.com>
-In-Reply-To: <cover.1565164729.git.joabreu@synopsys.com>
-References: <cover.1565164729.git.joabreu@synopsys.com>
+        Wed, 7 Aug 2019 04:04:31 -0400
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1hvGvs-000855-EI; Wed, 07 Aug 2019 10:04:28 +0200
+Message-ID: <1565165066.5048.2.camel@pengutronix.de>
+Subject: Re: [PATCH v2 5/5] reset: Add support for resets provided by SCMI
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Sudeep Holla <sudeep.holla@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Peng Fan <peng.fan@nxp.com>, linux-kernel@vger.kernel.org,
+        Bo Zhang <bozhang.zhang@broadcom.com>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        Volodymyr Babchuk <volodymyr_babchuk@epam.com>,
+        Gaku Inami <gaku.inami.xh@renesas.com>,
+        aidapala@qti.qualcomm.com, pajay@qti.qualcomm.com,
+        Etienne Carriere <etienne.carriere@linaro.org>,
+        Souvik Chakravarty <Souvik.Chakravarty@arm.com>,
+        wesleys@xilinx.com, Felix Burton <fburton@xilinx.com>,
+        Saeed Nowshadi <saeed.nowshadi@xilinx.com>
+Date:   Wed, 07 Aug 2019 10:04:26 +0200
+In-Reply-To: <20190806170208.6787-6-sudeep.holla@arm.com>
+References: <20190806170208.6787-1-sudeep.holla@arm.com>
+         <20190806170208.6787-6-sudeep.holla@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement the TX Queue Priority callback in XGMAC core.
+On Tue, 2019-08-06 at 18:02 +0100, Sudeep Holla wrote:
+> On some ARM based systems, a separate Cortex-M based System Control
+> Processor(SCP) provides the overall power, clock, reset and system
+> control. System Control and Management Interface(SCMI) Message Protocol
+> is defined for the communication between the Application Cores(AP)
+> and the SCP.
+> 
+> Adds support for the resets provided using SCMI protocol for performing
+> reset management of various devices present on the SoC. Various reset
+> functionalities are achieved by the means of different ARM SCMI device
+> operations provided by the ARM SCMI framework.
+> 
+> Cc: Philipp Zabel <p.zabel@pengutronix.de>
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> ---
+>  MAINTAINERS                |   1 +
+>  drivers/reset/Kconfig      |  11 ++++
+>  drivers/reset/Makefile     |   1 +
+>  drivers/reset/reset-scmi.c | 126 +++++++++++++++++++++++++++++++++++++
+>  4 files changed, 139 insertions(+)
+>  create mode 100644 drivers/reset/reset-scmi.c
+> 
+> v1->v2:
+> 	- Renamed RESET_ARM_SCMI to RESET_SCMI and reworded Kconfig text
+> 	- Dropped unused struct device pointer from scmi_reset_data
+> 	- Added to_scmi_handle which helped to remove some repetitive code
+> 	- Fixed some doxygen comments
+> 	- Initialised rcdev.nr_resets
+> 	- Fixed MODULE_DESCRIPTION
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 6426db5198f0..f4af5c59c116 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -15545,6 +15545,7 @@ F:	drivers/clk/clk-sc[mp]i.c
+>  F:	drivers/cpufreq/sc[mp]i-cpufreq.c
+>  F:	drivers/firmware/arm_scpi.c
+>  F:	drivers/firmware/arm_scmi/
+> +F:	drivers/reset/reset-scmi.c
+>  F:	include/linux/sc[mp]i_protocol.h
+>  
+>  SYSTEM RESET/SHUTDOWN DRIVERS
+> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+> index 21efb7d39d62..4178ac11ba85 100644
+> --- a/drivers/reset/Kconfig
+> +++ b/drivers/reset/Kconfig
+> @@ -116,6 +116,17 @@ config RESET_QCOM_PDC
+>  	  to control reset signals provided by PDC for Modem, Compute,
+>  	  Display, GPU, Debug, AOP, Sensors, Audio, SP and APPS.
+>  
+> +config RESET_SCMI
+> +	tristate "Reset driver controlled via ARM SCMI interface"
+> +	depends on ARM_SCMI_PROTOCOL || COMPILE_TEST
+> +	default ARM_SCMI_PROTOCOL
+> +	help
+> +	  This driver provides support for reset signal/domains that are
+> +	  controlled by firmware that implements the SCMI interface.
+> +
+> +	  This driver uses SCMI Message Protocol to interact with the
+> +	  firmware controlling all the reset signals.
+> +
+>  config RESET_SIMPLE
+>  	bool "Simple Reset Controller Driver" if COMPILE_TEST
+>  	default ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX || ARCH_ASPEED || ARCH_BITMAIN
+> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+> index 61456b8f659c..cf60ce526064 100644
+> --- a/drivers/reset/Makefile
+> +++ b/drivers/reset/Makefile
+> @@ -18,6 +18,7 @@ obj-$(CONFIG_RESET_OXNAS) += reset-oxnas.o
+>  obj-$(CONFIG_RESET_PISTACHIO) += reset-pistachio.o
+>  obj-$(CONFIG_RESET_QCOM_AOSS) += reset-qcom-aoss.o
+>  obj-$(CONFIG_RESET_QCOM_PDC) += reset-qcom-pdc.o
+> +obj-$(CONFIG_RESET_SCMI) += reset-scmi.o
+>  obj-$(CONFIG_RESET_SIMPLE) += reset-simple.o
+>  obj-$(CONFIG_RESET_STM32MP157) += reset-stm32mp1.o
+>  obj-$(CONFIG_RESET_SOCFPGA) += reset-socfpga.o
+> diff --git a/drivers/reset/reset-scmi.c b/drivers/reset/reset-scmi.c
+> new file mode 100644
+> index 000000000000..5e976a02a6cc
+> --- /dev/null
+> +++ b/drivers/reset/reset-scmi.c
+> @@ -0,0 +1,126 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * ARM System Control and Management Interface (ARM SCMI) reset driver
+> + *
+> + * Copyright (C) 2019 ARM Ltd.
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
 
-Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+You can drop mutex.h, it is unused.
 
----
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Jose Abreu <joabreu@synopsys.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: netdev@vger.kernel.org
-Cc: linux-stm32@st-md-mailman.stormreply.com
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h      |  4 ++++
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c | 19 ++++++++++++++++++-
- 2 files changed, 22 insertions(+), 1 deletion(-)
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-index 86a42bc39d21..b77091161765 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-@@ -127,6 +127,10 @@
- #define XGMAC_MTL_RXQ_DMA_MAP1		0x00001034
- #define XGMAC_QxMDMACH(x)		GENMASK((x) * 8 + 3, (x) * 8)
- #define XGMAC_QxMDMACH_SHIFT(x)		((x) * 8)
-+#define XGMAC_TC_PRTY_MAP0		0x00001040
-+#define XGMAC_TC_PRTY_MAP1		0x00001044
-+#define XGMAC_PSTC(x)			GENMASK((x) * 8 + 7, (x) * 8)
-+#define XGMAC_PSTC_SHIFT(x)		((x) * 8)
- #define XGMAC_MTL_TXQ_OPMODE(x)		(0x00001100 + (0x80 * (x)))
- #define XGMAC_TQS			GENMASK(25, 16)
- #define XGMAC_TQS_SHIFT			16
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-index ce6503dfc86d..bfbd5ae11540 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-@@ -118,6 +118,23 @@ static void dwxgmac2_rx_queue_prio(struct mac_device_info *hw, u32 prio,
- 	writel(value, ioaddr + reg);
- }
- 
-+static void dwxgmac2_tx_queue_prio(struct mac_device_info *hw, u32 prio,
-+				   u32 queue)
-+{
-+	void __iomem *ioaddr = hw->pcsr;
-+	u32 value, reg;
-+
-+	reg = (queue < 4) ? XGMAC_TC_PRTY_MAP0 : XGMAC_TC_PRTY_MAP1;
-+	if (queue >= 4)
-+		queue -= 4;
-+
-+	value = readl(ioaddr + reg);
-+	value &= ~XGMAC_PSTC(queue);
-+	value |= (prio << XGMAC_PSTC_SHIFT(queue)) & XGMAC_PSTC(queue);
-+
-+	writel(value, ioaddr + reg);
-+}
-+
- static void dwxgmac2_prog_mtl_rx_algorithms(struct mac_device_info *hw,
- 					    u32 rx_alg)
- {
-@@ -428,7 +445,7 @@ const struct stmmac_ops dwxgmac210_ops = {
- 	.rx_ipc = dwxgmac2_rx_ipc,
- 	.rx_queue_enable = dwxgmac2_rx_queue_enable,
- 	.rx_queue_prio = dwxgmac2_rx_queue_prio,
--	.tx_queue_prio = NULL,
-+	.tx_queue_prio = dwxgmac2_tx_queue_prio,
- 	.rx_queue_routing = NULL,
- 	.prog_mtl_rx_algorithms = dwxgmac2_prog_mtl_rx_algorithms,
- 	.prog_mtl_tx_algorithms = dwxgmac2_prog_mtl_tx_algorithms,
--- 
-2.7.4
+This is not a platform device driver. Better replace this with
 
+#include <linux/device.h>
+
+> +#include <linux/reset-controller.h>
+> +#include <linux/scmi_protocol.h>
+> +
+> +/**
+> + * struct scmi_reset_data - reset controller information structure
+> + * @rcdev: reset controller entity
+> + * @handle: ARM SCMI handle used for communication with system controller
+> + * @dev: reset controller device pointer
+
+Drop this line, dev has been removed from struct scmi_reset_data.
+
+> + */
+> +struct scmi_reset_data {
+> +	struct reset_controller_dev rcdev;
+> +	const struct scmi_handle *handle;
+> +};
+> +
+> +#define to_scmi_reset_data(p)	container_of((p), struct scmi_reset_data, rcdev)
+> +#define to_scmi_handle(p)	(to_scmi_reset_data(p)->handle)
+[...]
+
+Apart from these,
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+
+regards
+Philipp
