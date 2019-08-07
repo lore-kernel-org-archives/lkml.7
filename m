@@ -2,109 +2,121 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E59E4C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 19:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DD29C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 19:17:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B914421BF2
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 19:09:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 716DF2229C
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 19:17:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565204974;
-	bh=CXHaHEJXstFHVGXsaMRkGDgj2vzdFlugILr5Qa0FLNM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JcI7Q7ObKueo5286Nt4hEsiK2GMaX+ficufXoYWxhIhFFFgazGPQ8J8Fc/p/k0LBr
-	 Cxgzga5vJti5bWq08UrhbWVna83E2uG/g5+8YbpP4mmcuNN4jL9Cf//YAPO2hdvC80
-	 X1DrfalfU2ubeZ4mbsm+AUcvJu8TizIwCgCgm1A0=
+	s=default; t=1565205434;
+	bh=Drv5Vx+DoYtkb5nLOKZO7gzSw+YbjPZhalGFZv0M3Lc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=b787F583XiTss1u/x8LQgIK0sPp7N/WEk+eOJvlr7buUsjnBEnvbCP+9nm6u6e0ut
+	 zNLnBz5dXQ9w3/j4XO90Gz+TCiYW4QYAPXhsPpcOwMwB/4r0VQLsCiL/tPvsEor6Tp
+	 9c0Rc4UbmHnYNfquEsoqJTGK/GtUIihuyyOrNKyY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389417AbfHGTJd (ORCPT
+        id S1730360AbfHGTRN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 15:09:33 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:39364 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730188AbfHGTJd (ORCPT
+        Wed, 7 Aug 2019 15:17:13 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:33503 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730145AbfHGTRN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 15:09:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=CXHaHEJXstFHVGXsaMRkGDgj2vzdFlugILr5Qa0FLNM=; b=ikBpsz+qWT62Q1D/1GPoL/kBv
-        /aykvlnfnzRjcqSuohssVwp4Qh9gS6S8wxtZVHM6ny9J/rLDJ4sIJpY9iCdLOKAwKlShFLH7WMXB2
-        qplis3TX0xH5vE9FSG03bESDuZdGb53FpxKbMjtUJH4Jv8qKWBnsDnPQTP5lojTBEHBHQ=;
-Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1hvRJH-0008SR-7z; Wed, 07 Aug 2019 19:09:19 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 9D0AB2742B9E; Wed,  7 Aug 2019 20:09:17 +0100 (BST)
-Date:   Wed, 7 Aug 2019 20:09:17 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>, Takashi Iwai <tiwai@suse.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-        jank@cadence.com, Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: Re: [alsa-devel] [PATCH] soundwire: fix regmap dependencies and
- align with other serial links
-Message-ID: <20190807190917.GL4048@sirena.co.uk>
-References: <20190718230215.18675-1-pierre-louis.bossart@linux.intel.com>
- <CAJZ5v0g5Hk9JYLvRXfLk5-o=n_RVPKtWD=QONpiimCWyQOFELQ@mail.gmail.com>
- <52a2cb0c-92a6-59d5-72da-832edd6481f3@linux.intel.com>
- <20190807175646.GK4048@sirena.co.uk>
- <5a7473a2-83c0-1a09-0cab-31fcc5b21302@linux.intel.com>
+        Wed, 7 Aug 2019 15:17:13 -0400
+Received: by mail-lf1-f65.google.com with SMTP id x3so64976975lfc.0
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 12:17:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IMxqo/U0nw6DmpEA9S3YJIdfMVgNoxeRFMQ95NzIcMY=;
+        b=QFLKrC5vkJW5FKE/Mdgg0Cdcp3sO/GQpVGltLV5Ca6yR5XaMmMWdxOVi8385PLpByn
+         E/O5WhMsHLvDBDcmUFvSEBG08jBSq6LjIkgwV1Bf+j33ocpUvmt4+vvljJI1lHX8UUqK
+         0knAjZ61PyQ7e0qOT6M/ZBN+bdOB8TBJJv+4A=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IMxqo/U0nw6DmpEA9S3YJIdfMVgNoxeRFMQ95NzIcMY=;
+        b=f2d7wxZrBYpRjlV3MTad9tRfsp8Z6IhyAtghytYIb3LBf6rzZZpySVXbPegw2lo8zP
+         xW1gXX71+eMdMW1+Z+8ZUpQYzGpssZVr7v37afcl6YVE+v+oWJb+tOKw0oC8cwnvjUl/
+         5y9+q5xJ87xNFGhTnEhJ721KDNG06VcBmqYqM3PFe7WVb3LnzY/1s+vO3wg243txuSQb
+         OnMwvgNCWhof95IV2kJurH6OStyoOrscUOkSQ2zLZ/IKzO05Mb2PlLIK4VpLboBL3hy+
+         5ap2siRc81MLe4zj5RSWu0djhYSbxic9ASP45+HWXJmzkMgoqcs5ZHlnhPeeis/uwslu
+         jXYQ==
+X-Gm-Message-State: APjAAAWzZOFIGH3JWDNrnUsDXzyYLQpGhGEMxjK3UpV6XyQBElw2VUjv
+        s1ZjxgXeddFTJ5ek76nYhyRKm94r6Lo=
+X-Google-Smtp-Source: APXvYqyE0zP/Q8LGoQKR6dNnJbwBRg+fQZ5O5b+JD/fijlCLwhocmWXsnoVHRNe9wRwNZDh35HAakg==
+X-Received: by 2002:ac2:4a6e:: with SMTP id q14mr6496524lfp.80.1565205430686;
+        Wed, 07 Aug 2019 12:17:10 -0700 (PDT)
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
+        by smtp.gmail.com with ESMTPSA id q4sm21075569lje.99.2019.08.07.12.17.09
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Aug 2019 12:17:09 -0700 (PDT)
+Received: by mail-lj1-f169.google.com with SMTP id r9so86524498ljg.5
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 12:17:09 -0700 (PDT)
+X-Received: by 2002:a2e:9b83:: with SMTP id z3mr5553524lji.84.1565205428980;
+ Wed, 07 Aug 2019 12:17:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="m+jEI8cDoTn6Mu9E"
-Content-Disposition: inline
-In-Reply-To: <5a7473a2-83c0-1a09-0cab-31fcc5b21302@linux.intel.com>
-X-Cookie: Dammit Jim, I'm an actor, not a doctor.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CAPM=9tzJQ+26n_Df1eBPG1A=tXf4xNuVEjbG3aZj-aqYQ9nnAg@mail.gmail.com>
+ <CAPM=9twvwhm318btWy_WkQxOcpRCzjpok52R8zPQxQrnQ8QzwQ@mail.gmail.com>
+ <CAHk-=wjC3VX5hSeGRA1SCLjT+hewPbbG4vSJPFK7iy26z4QAyw@mail.gmail.com>
+ <CAHk-=wiD6a189CXj-ugRzCxA9r1+siSCA0eP_eoZ_bk_bLTRMw@mail.gmail.com>
+ <48890b55-afc5-ced8-5913-5a755ce6c1ab@shipmail.org> <CAHk-=whwcMLwcQZTmWgCnSn=LHpQG+EBbWevJEj5YTKMiE_-oQ@mail.gmail.com>
+ <CAHk-=wghASUU7QmoibQK7XS09na7rDRrjSrWPwkGz=qLnGp_Xw@mail.gmail.com>
+ <20190806073831.GA26668@infradead.org> <CAHk-=wi7L0MDG7DY39Hx6v8jUMSq3ZCE3QTnKKirba_8KAFNyw@mail.gmail.com>
+ <20190806190937.GD30179@bombadil.infradead.org> <20190807064000.GC6002@infradead.org>
+In-Reply-To: <20190807064000.GC6002@infradead.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 7 Aug 2019 12:16:52 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgUO5hWJmMT7r8aCzP7DOkg9ADkv6AzZ=SrKLOoKxzD_g@mail.gmail.com>
+Message-ID: <CAHk-=wgUO5hWJmMT7r8aCzP7DOkg9ADkv6AzZ=SrKLOoKxzD_g@mail.gmail.com>
+Subject: Re: drm pull for v5.3-rc1
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        =?UTF-8?Q?Thomas_Hellstr=C3=B6m_=28VMware=29?= 
+        <thomas@shipmail.org>, Dave Airlie <airlied@gmail.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        LKML <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Steven Price <steven.price@arm.com>,
+        Linux-MM <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Aug 6, 2019 at 11:40 PM Christoph Hellwig <hch@infradead.org> wrote:
+>
+> I'm not an all that huge fan of super magic macro loops.  But in this
+> case I don't see how it could even work, as we get special callbacks
+> for huge pages and holes, and people are trying to add a few more ops
+> as well.
 
---m+jEI8cDoTn6Mu9E
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Yeah, in this case we definitely don't want to make some magic loop walker.
 
-On Wed, Aug 07, 2019 at 01:17:20PM -0500, Pierre-Louis Bossart wrote:
+Loops are certainly simpler than callbacks for most cases (and often
+faster because you don't have indirect calls which now are getting
+quite expensive), but the walker code really does end up having tons
+of different cases that you'd have to handle with magic complex
+conditionals or switch statements instead.
 
-> I don't have the knowledge or means to test what I suggested initially for
-> the other buses, and the optimization was minimal anyways, so this patch
-> takes the path of least resistance and aligns with others.
+So the "walk over range using this set of callbacks" is generally the
+right interface. If there is some particular case that might be very
+simple and the callback model is expensive due to indirect calls for
+each page, then such a case should probably use the normal page
+walking loops (that we *used* to have everywhere - the "walk_range()"
+interface is the "new" model for all the random odd special cases).
 
-> if there are no objections it's probably easier to push this patch through
-> the SoundWire tree, with the relevant Acks.
-
-Makes sense I think
-
-Acked-by: Mark Brown <broonie@kernel.org>
-
---m+jEI8cDoTn6Mu9E
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1LIdwACgkQJNaLcl1U
-h9DFBQf+KQtyCfkxOfIv1rEOZ7sfj9ypg/0DsSRjVwhmqS8DoTwcpPwzJlVJFRs1
-1Qg9wUYGxMpwhkiYJ66KhJs7Ugtb1XYdGiYzvhjAbxsB9YZ3z1kCK+h91jkMXxS+
-4DX6U8/hLEqR4DpwnBYTo91TAJnJi3Bj/xp8qsViOsacjECpiZG11E9FmYTSPUFi
-pKgyVB7nWj0kpL7aaEyweJJcSwrF7Fy7/+1KLgpVmewCepH1BooSaJI6ymEEz6+P
-RAAKwUwDIksuajG5KVJduJf0BsSTZ2GFLE3pomj8o+OuMMABvnzmwbYofQmWHu2n
-0/p+EPuDpS7b+n4obTY1DL0audj1HA==
-=Ercr
------END PGP SIGNATURE-----
-
---m+jEI8cDoTn6Mu9E--
+                Linus
