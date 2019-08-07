@@ -4,182 +4,127 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D57E0C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:04:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 692E2C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:07:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF57022BED
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:04:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49675229EC
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:07:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387759AbfHGIEd (ORCPT
+        id S2387616AbfHGIHU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 04:04:33 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:51051 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387546AbfHGIEb (ORCPT
+        Wed, 7 Aug 2019 04:07:20 -0400
+Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:35635 "EHLO
+        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727413AbfHGIHS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 04:04:31 -0400
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1hvGvs-000855-EI; Wed, 07 Aug 2019 10:04:28 +0200
-Message-ID: <1565165066.5048.2.camel@pengutronix.de>
-Subject: Re: [PATCH v2 5/5] reset: Add support for resets provided by SCMI
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Sudeep Holla <sudeep.holla@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Peng Fan <peng.fan@nxp.com>, linux-kernel@vger.kernel.org,
-        Bo Zhang <bozhang.zhang@broadcom.com>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        Volodymyr Babchuk <volodymyr_babchuk@epam.com>,
-        Gaku Inami <gaku.inami.xh@renesas.com>,
-        aidapala@qti.qualcomm.com, pajay@qti.qualcomm.com,
-        Etienne Carriere <etienne.carriere@linaro.org>,
-        Souvik Chakravarty <Souvik.Chakravarty@arm.com>,
-        wesleys@xilinx.com, Felix Burton <fburton@xilinx.com>,
-        Saeed Nowshadi <saeed.nowshadi@xilinx.com>
-Date:   Wed, 07 Aug 2019 10:04:26 +0200
-In-Reply-To: <20190806170208.6787-6-sudeep.holla@arm.com>
-References: <20190806170208.6787-1-sudeep.holla@arm.com>
-         <20190806170208.6787-6-sudeep.holla@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u2 
-Mime-Version: 1.0
+        Wed, 7 Aug 2019 04:07:18 -0400
+Received: from [IPv6:2001:983:e9a7:1:8cc6:9015:1548:23f3] ([IPv6:2001:983:e9a7:1:8cc6:9015:1548:23f3])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id vGyNhjeHgAffAvGyOh7CoE; Wed, 07 Aug 2019 10:07:15 +0200
+Subject: Re: [PATCH v3 11/41] media/v4l2-core/mm: convert put_page() to
+ put_user_page*()
+To:     john.hubbard@gmail.com, Andrew Morton <akpm@linux-foundation.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org, ceph-devel@vger.kernel.org,
+        devel@driverdev.osuosl.org, devel@lists.orangefs.org,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mm@kvack.org,
+        linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org, linux-xfs@vger.kernel.org,
+        netdev@vger.kernel.org, rds-devel@oss.oracle.com,
+        sparclinux@vger.kernel.org, x86@kernel.org,
+        xen-devel@lists.xenproject.org, John Hubbard <jhubbard@nvidia.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>
+References: <20190807013340.9706-1-jhubbard@nvidia.com>
+ <20190807013340.9706-12-jhubbard@nvidia.com>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <8a02b10a-507b-2eb3-19aa-1cb498c1a4af@xs4all.nl>
+Date:   Wed, 7 Aug 2019 10:07:02 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190807013340.9706-12-jhubbard@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-CMAE-Envelope: MS4wfLtFI4ThDBFuoSwFqT380PxkcC6q3XCYC9HO7bxya62SPesHUoWCzd0ksBMTGkppOn75d+WBKCLiUJL1JCKKzueS8vA20zMfsb357SuvaUy4TtJTFapt
+ x/bWCTcScAJNoSAViYa6NSlEx2FKBMG1ub01wuczTnbJurUSOB+vxv+m9yWKJM94dHdvARuWMkXZdmUldHpi22HuFtGEBhfQsDY52cLv9SRNbWMy30DrEJ0t
+ IZpNWziFzZ3evJ7mzLCVhbiK2kiOOXAk37J1rrkYGH2YtOIVmpGPTJw+iPQnS41ERf+BCjbaTp9dtSr4qdKvpCtCTPfnpCYMb9QEG7YIv4Bkl6jCBTx7G7/4
+ E+/Gcs1gOswCkbsVZkXHiYav454A3NZryrYeXwugbZcaQXzdLwQKX8vixuVBgbqFmyjLnuKfL1+c17HvE7YGvrxNLgEJHTveu7qGFUgiDp8Kxm2qaSU6Ln+T
+ ElUIz8bygLmP/ZaLM0W02XHdcvoF3n3t59CNY87n3tR3oXUf8LBXliPMUlUaTsd4sTe3FnbfHAUNwVeklfrjO7mwx/ZtuvdypniGohclf+1bp5fAUTyCCCrQ
+ 2HyNedUvC2lDdYTRuhJr04fafwrpC9JLhSLKJeMRBVwa4n0gqjUnzFBrEoDnP692PfkgpqcUzLJ3ou9bn9SXymgnoZ/su+Qto3UpDDWJiMsSJM83gtLeDDPU
+ 2LAMy4jSsugrfD7VC1dmYwzG8OWIPHuvJ7Tu8XU7oActSpAZS3c9skTdMjLehhV+5MHeC8g3tQLGrW2WL0nM2XSwHbo4mwTDcXTASOqE5niPTgs0jd+PPxdD
+ 6xGBJo3u/QbyQ3ajYSHTR7/iYO7MKvqve0YwbtTNR57pWM38fmVObjBWJ2Qb5+GQ3v2MdIxvVfz42j69SfAzoN+qm5pqDcKBwXhfBdG1NM3xlepenmsR9xg5
+ 62RVbClfekDh1mdFfuyj4KBmVBX0v1np3JjJ4vNebVx2IyoyHonzCgI/VeK3Xg6+xvyxhVW0lz7O9WmdlxWKcql5t0Yb5f0zsKtS1NvNqjdoMQPPDLlgqBkJ
+ zSwzmxMfYBhUca00uKQBlssFsG5QNKIC7fFgqtDFBmNtn6ipJvZKRC79Cw4QS6qRNMXKSaUQOSPYCvM4KmrZVW9w5s8hot0TfDYbj+oHiuzjCO1jmdtzXAbt
+ gWocxcFwf55hNfAhTODtYnIcQTTBxC/fmKLTijSmU3lfUSSSsnl8ef0xn1zUtoXXnyzz6mcZVljhvITEJx0jnOlTUGnl6EnAeCVrfPoD4WCRmPS4tIKMb0Sn
+ DjxDBO/HszoKfvVJZYTfTvPxU+6WAyaIoLGRNQX6ew6/T19LTZ7M+CVC1zczygV1hOTQJzIdJnWdrI7AWTB8dFsFHEUTylMp921VegrittBprwtssRQSETDt
+ w+WAy7sK++9/GONtwbizNl49IwU+D0GMpL0NbybeY6J7lGNNM2UtsFttBraN5pO3M9SU3xDoE5SqJiulL8VfDzJKyah60WIfPdhLbN00mLGEveLuRT0YQNVO
+ Ve41rvqKpgWWp9HPZO7QwGGi4muzZFJs6F8sgGua1ktJvh99nm3LVZHEV++X5Bous3oUMbzF6ihXBdgtubshPp+ElhOLvWLff7DQNQVzst9h3eqqPREvSJlB
+ 0+CfDkY+tvaCm6YXmIbg/FxzMGySzi98TfrQYNsvylv4MWX8pxKCyY/xfBN6o8zPRNMJNc0PX0kAdkxIJbJSRls4hOcOInlZ
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-08-06 at 18:02 +0100, Sudeep Holla wrote:
-> On some ARM based systems, a separate Cortex-M based System Control
-> Processor(SCP) provides the overall power, clock, reset and system
-> control. System Control and Management Interface(SCMI) Message Protocol
-> is defined for the communication between the Application Cores(AP)
-> and the SCP.
+On 8/7/19 3:33 AM, john.hubbard@gmail.com wrote:
+> From: John Hubbard <jhubbard@nvidia.com>
 > 
-> Adds support for the resets provided using SCMI protocol for performing
-> reset management of various devices present on the SoC. Various reset
-> functionalities are achieved by the means of different ARM SCMI device
-> operations provided by the ARM SCMI framework.
+> For pages that were retained via get_user_pages*(), release those pages
+> via the new put_user_page*() routines, instead of via put_page() or
+> release_pages().
 > 
-> Cc: Philipp Zabel <p.zabel@pengutronix.de>
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
+> ("mm: introduce put_user_page*(), placeholder versions").
+> 
+> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Hans Verkuil <hans.verkuil@cisco.com>
+> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Cc: Jan Kara <jack@suse.cz>
+> Cc: Robin Murphy <robin.murphy@arm.com>
+> Cc: Souptick Joarder <jrdr.linux@gmail.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: linux-media@vger.kernel.org
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+
+Acked-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+
 > ---
->  MAINTAINERS                |   1 +
->  drivers/reset/Kconfig      |  11 ++++
->  drivers/reset/Makefile     |   1 +
->  drivers/reset/reset-scmi.c | 126 +++++++++++++++++++++++++++++++++++++
->  4 files changed, 139 insertions(+)
->  create mode 100644 drivers/reset/reset-scmi.c
+>  drivers/media/v4l2-core/videobuf-dma-sg.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> v1->v2:
-> 	- Renamed RESET_ARM_SCMI to RESET_SCMI and reworded Kconfig text
-> 	- Dropped unused struct device pointer from scmi_reset_data
-> 	- Added to_scmi_handle which helped to remove some repetitive code
-> 	- Fixed some doxygen comments
-> 	- Initialised rcdev.nr_resets
-> 	- Fixed MODULE_DESCRIPTION
+> diff --git a/drivers/media/v4l2-core/videobuf-dma-sg.c b/drivers/media/v4l2-core/videobuf-dma-sg.c
+> index 66a6c6c236a7..d6eeb437ec19 100644
+> --- a/drivers/media/v4l2-core/videobuf-dma-sg.c
+> +++ b/drivers/media/v4l2-core/videobuf-dma-sg.c
+> @@ -349,8 +349,7 @@ int videobuf_dma_free(struct videobuf_dmabuf *dma)
+>  	BUG_ON(dma->sglen);
+>  
+>  	if (dma->pages) {
+> -		for (i = 0; i < dma->nr_pages; i++)
+> -			put_page(dma->pages[i]);
+> +		put_user_pages(dma->pages, dma->nr_pages);
+>  		kfree(dma->pages);
+>  		dma->pages = NULL;
+>  	}
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 6426db5198f0..f4af5c59c116 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -15545,6 +15545,7 @@ F:	drivers/clk/clk-sc[mp]i.c
->  F:	drivers/cpufreq/sc[mp]i-cpufreq.c
->  F:	drivers/firmware/arm_scpi.c
->  F:	drivers/firmware/arm_scmi/
-> +F:	drivers/reset/reset-scmi.c
->  F:	include/linux/sc[mp]i_protocol.h
->  
->  SYSTEM RESET/SHUTDOWN DRIVERS
-> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-> index 21efb7d39d62..4178ac11ba85 100644
-> --- a/drivers/reset/Kconfig
-> +++ b/drivers/reset/Kconfig
-> @@ -116,6 +116,17 @@ config RESET_QCOM_PDC
->  	  to control reset signals provided by PDC for Modem, Compute,
->  	  Display, GPU, Debug, AOP, Sensors, Audio, SP and APPS.
->  
-> +config RESET_SCMI
-> +	tristate "Reset driver controlled via ARM SCMI interface"
-> +	depends on ARM_SCMI_PROTOCOL || COMPILE_TEST
-> +	default ARM_SCMI_PROTOCOL
-> +	help
-> +	  This driver provides support for reset signal/domains that are
-> +	  controlled by firmware that implements the SCMI interface.
-> +
-> +	  This driver uses SCMI Message Protocol to interact with the
-> +	  firmware controlling all the reset signals.
-> +
->  config RESET_SIMPLE
->  	bool "Simple Reset Controller Driver" if COMPILE_TEST
->  	default ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX || ARCH_ASPEED || ARCH_BITMAIN
-> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-> index 61456b8f659c..cf60ce526064 100644
-> --- a/drivers/reset/Makefile
-> +++ b/drivers/reset/Makefile
-> @@ -18,6 +18,7 @@ obj-$(CONFIG_RESET_OXNAS) += reset-oxnas.o
->  obj-$(CONFIG_RESET_PISTACHIO) += reset-pistachio.o
->  obj-$(CONFIG_RESET_QCOM_AOSS) += reset-qcom-aoss.o
->  obj-$(CONFIG_RESET_QCOM_PDC) += reset-qcom-pdc.o
-> +obj-$(CONFIG_RESET_SCMI) += reset-scmi.o
->  obj-$(CONFIG_RESET_SIMPLE) += reset-simple.o
->  obj-$(CONFIG_RESET_STM32MP157) += reset-stm32mp1.o
->  obj-$(CONFIG_RESET_SOCFPGA) += reset-socfpga.o
-> diff --git a/drivers/reset/reset-scmi.c b/drivers/reset/reset-scmi.c
-> new file mode 100644
-> index 000000000000..5e976a02a6cc
-> --- /dev/null
-> +++ b/drivers/reset/reset-scmi.c
-> @@ -0,0 +1,126 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * ARM System Control and Management Interface (ARM SCMI) reset driver
-> + *
-> + * Copyright (C) 2019 ARM Ltd.
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
 
-You can drop mutex.h, it is unused.
-
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-
-This is not a platform device driver. Better replace this with
-
-#include <linux/device.h>
-
-> +#include <linux/reset-controller.h>
-> +#include <linux/scmi_protocol.h>
-> +
-> +/**
-> + * struct scmi_reset_data - reset controller information structure
-> + * @rcdev: reset controller entity
-> + * @handle: ARM SCMI handle used for communication with system controller
-> + * @dev: reset controller device pointer
-
-Drop this line, dev has been removed from struct scmi_reset_data.
-
-> + */
-> +struct scmi_reset_data {
-> +	struct reset_controller_dev rcdev;
-> +	const struct scmi_handle *handle;
-> +};
-> +
-> +#define to_scmi_reset_data(p)	container_of((p), struct scmi_reset_data, rcdev)
-> +#define to_scmi_handle(p)	(to_scmi_reset_data(p)->handle)
-[...]
-
-Apart from these,
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-
-regards
-Philipp
