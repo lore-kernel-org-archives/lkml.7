@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7FA2C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:38:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 825F7C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:38:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DD6121743
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:38:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 585E1205C9
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:38:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NDRrGTHq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iMIf7vv1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729845AbfHGBi1 (ORCPT
+        id S1730068AbfHGBix (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 21:38:27 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:36706 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729522AbfHGBeX (ORCPT
+        Tue, 6 Aug 2019 21:38:53 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:42330 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729433AbfHGBeU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 21:34:23 -0400
-Received: by mail-pg1-f193.google.com with SMTP id l21so42540418pgm.3;
-        Tue, 06 Aug 2019 18:34:22 -0700 (PDT)
+        Tue, 6 Aug 2019 21:34:20 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q10so42483274pff.9;
+        Tue, 06 Aug 2019 18:34:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=6GC3vp7Kgk6wrS2t1aIFSliRmKpmpPmHRVTf1Sq+2hE=;
-        b=NDRrGTHqLYH0GVc6uMIRr4mVyV40WfAqYn7w+X7B2+KxadDpBkUoDH1692sptrKq4y
-         C2b84L9+UrVSHeZfQfv6N2zieXkMMjWSuutP0ntWCNqq+OA3nS79IQYMOR/Bean1Ukkm
-         w7u/RLKab4ibriFSyZKOgsWuNa5tCFv8C2bD6EQGHf8xo4i0ZMfxDnYEz3SYXrEQ1CAQ
-         ph6xeZb31fEX0ILajRxBkvT5tnY8c7uU4gyqYPRAJWZF0hsMvVjXdHAtEuwcqejfTPc4
-         Etr29q0fUGsdTj13fryfrujh6CCSRKTL9s9VWAxoxYETeOz9px/+oFZuuGBV9dnVGiqV
-         vySQ==
+        bh=py067aGaFWqYQnWW3CrL2Yk9VWIyNl4WEpwUsrZ7LgI=;
+        b=iMIf7vv1OqjXs/pb2O80RbThn+V5BnR0qPinv0FzH0+g7xzprGLZVDhHDxqDtetcXv
+         SaFnJoqNzRoFcPTVGSdSF8TWmFRSDY6HyI/xKEnGPkkBlyCLQ6e2r6EYWiPfaVK2Vmzt
+         JZbyLYWCDWgBCgJU9imVgUMeONuNrElpVb025PXYsw4Ce7zDMpi0HqX5tsCmiW5ztLIV
+         YDzIY1y6BpKbNCZAoclL3hg7itbVU1NhtHk3aXipSm7TKgtN0MS2OckyNUh0niZVwB8z
+         njr19wA60AtVpgYuy80idYiGH3Z0ffMXU+t6KgBLR+IFYvULEDog7RhMgjNZybcJ+5TY
+         bmmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=6GC3vp7Kgk6wrS2t1aIFSliRmKpmpPmHRVTf1Sq+2hE=;
-        b=tCRLTh+bR3OqbuD0NA3YklVOaTgsUHrUmvuRb/o6ZPScJdVDv0xAynsJVVftwR49qG
-         5AwzbWLzAqk1tqE1tM9HxfhSFvRvvips0WFZLUbTcYSs4+HN6TsxjkVKMYDFFSVuTblr
-         dWYwe5cVbDCmmO0PYtATxTphlwIthNcVOxGZCGFdNdNVTnUiThd+gPXltT5fakCY+osz
-         oTzOhXaOkYwxsY6sND8cDG1H4XlDUuW3k0udTVnl/dVCfualte/duSxSs/qN4FBAerzl
-         F4klGi1v6NIk0YZreOBIGSLavvGYWAZzLogJ2+NCtMuEgiVFBzmjiszCxbnC683yKkYs
-         l9Jg==
-X-Gm-Message-State: APjAAAWoFkPpdF6qNbEolmVODBZ58qWExoIlZeVeg+ezsI8hHzrdQt96
-        Ieg9it6pmqMJF079w1QhlBM=
-X-Google-Smtp-Source: APXvYqwBJlH3d0L/1BSxFnL+vLT8aQU3g2pJmlFcXlcqO/GjIhh0NRs5+pZNe4h8FrEWDwW4ivgjRA==
-X-Received: by 2002:a63:124a:: with SMTP id 10mr5554258pgs.254.1565141661706;
-        Tue, 06 Aug 2019 18:34:21 -0700 (PDT)
+        bh=py067aGaFWqYQnWW3CrL2Yk9VWIyNl4WEpwUsrZ7LgI=;
+        b=CL00Eps7RqqtIKJhwmE4OQ0P+PIEzB/svl/5+6s9arHDJMtRkBgUwI4ZFzbWmFMvNk
+         H1DGyZRYhcy4EM3b1Q+R0gOVvEFA6f5YUuU6D4c/EeQPRsyIYFEudOAZlDJdxEalPtoh
+         zqi70KaUeoFPkiQLEIscdhPxIvqgL7PLrckkFcIxWtS7+Im42izHF4y5TY4ossRbGfFs
+         J8Qiw5VO5BFsCBRQFiSCAAgFy9y7ZLCLreMR1ZeprwBfx1/lcmQfi7zGRl5zF7zHL9Ja
+         QMc7R1T0qMZLfLtp05KBJt7Se+3ow090MLMtMDPWCw+l9ve86XWwhhhRmqbbBRqUjiN/
+         rrpQ==
+X-Gm-Message-State: APjAAAUE6WliiCQa+3j5AR3qVtbtq/Nx8ifP/SfnOG+49ulLgf8udGGh
+        OU3D7wnd0llTpRL9qFfd9Nc=
+X-Google-Smtp-Source: APXvYqzEjGdQT4zwHkPHC3zuchqcBixfKdrLByyRaCgYuUpeMBSsZZqsbT+G0enkm62MLPirbgVZ8A==
+X-Received: by 2002:a17:90a:fa07:: with SMTP id cm7mr5782148pjb.138.1565141658674;
+        Tue, 06 Aug 2019 18:34:18 -0700 (PDT)
 Received: from blueforge.nvidia.com (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id u69sm111740800pgu.77.2019.08.06.18.34.20
+        by smtp.gmail.com with ESMTPSA id u69sm111740800pgu.77.2019.08.06.18.34.17
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 06 Aug 2019 18:34:21 -0700 (PDT)
+        Tue, 06 Aug 2019 18:34:18 -0700 (PDT)
 From:   john.hubbard@gmail.com
 X-Google-Original-From: jhubbard@nvidia.com
 To:     Andrew Morton <akpm@linux-foundation.org>
@@ -80,10 +80,12 @@ Cc:     Christoph Hellwig <hch@infradead.org>,
         netdev@vger.kernel.org, rds-devel@oss.oracle.com,
         sparclinux@vger.kernel.org, x86@kernel.org,
         xen-devel@lists.xenproject.org, John Hubbard <jhubbard@nvidia.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Subject: [PATCH v3 23/41] fs/exec.c: convert put_page() to put_user_page*()
-Date:   Tue,  6 Aug 2019 18:33:22 -0700
-Message-Id: <20190807013340.9706-24-jhubbard@nvidia.com>
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Kees Cook <keescook@chromium.org>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v3 21/41] fsl_hypervisor: convert put_page() to put_user_page*()
+Date:   Tue,  6 Aug 2019 18:33:20 -0700
+Message-Id: <20190807013340.9706-22-jhubbard@nvidia.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190807013340.9706-1-jhubbard@nvidia.com>
 References: <20190807013340.9706-1-jhubbard@nvidia.com>
@@ -104,26 +106,37 @@ release_pages().
 This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
 ("mm: introduce put_user_page*(), placeholder versions").
 
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: linux-fsdevel@vger.kernel.org
+This changes the release code slightly, because each page slot in the
+page_list[] array is no longer checked for NULL. However, that check
+was wrong anyway, because the get_user_pages() pattern of usage here
+never allowed for NULL entries within a range of pinned pages.
+
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Rob Herring <robh@kernel.org>
 Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 ---
- fs/exec.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/virt/fsl_hypervisor.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/fs/exec.c b/fs/exec.c
-index f7f6a140856a..ee442151582f 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -227,7 +227,7 @@ static struct page *get_arg_page(struct linux_binprm *bprm, unsigned long pos,
+diff --git a/drivers/virt/fsl_hypervisor.c b/drivers/virt/fsl_hypervisor.c
+index 93d5bebf9572..a8f78d572c45 100644
+--- a/drivers/virt/fsl_hypervisor.c
++++ b/drivers/virt/fsl_hypervisor.c
+@@ -292,11 +292,8 @@ static long ioctl_memcpy(struct fsl_hv_ioctl_memcpy __user *p)
+ 		virt_to_phys(sg_list), num_pages);
  
- static void put_arg_page(struct page *page)
- {
--	put_page(page);
-+	put_user_page(page);
- }
+ exit:
+-	if (pages) {
+-		for (i = 0; i < num_pages; i++)
+-			if (pages[i])
+-				put_page(pages[i]);
+-	}
++	if (pages)
++		put_user_pages(pages, num_pages);
  
- static void free_arg_pages(struct linux_binprm *bprm)
+ 	kfree(sg_list_unaligned);
+ 	kfree(pages);
 -- 
 2.22.0
 
