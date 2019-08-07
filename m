@@ -2,104 +2,123 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB178C32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:19:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD84C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:19:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B976B21E6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:19:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F61D21E6E
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:19:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388202AbfHGNTW (ORCPT
+        id S2388217AbfHGNT3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 09:19:22 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4187 "EHLO huawei.com"
+        Wed, 7 Aug 2019 09:19:29 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4188 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387970AbfHGNTW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 09:19:22 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 4E29BCB498AC983FF2B8;
-        Wed,  7 Aug 2019 21:19:20 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Wed, 7 Aug 2019
- 21:19:13 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <mb@lightnvm.io>, <hans@owltronix.com>, <hch@lst.de>,
-        <axboe@kernel.dk>
-CC:     <linux-kernel@vger.kernel.org>, <linux-block@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] lightnvm: remove set but not used variables 'data_len' and 'rq_len'
-Date:   Wed, 7 Aug 2019 21:18:47 +0800
-Message-ID: <20190807131847.62412-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        id S2387970AbfHGNT2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 09:19:28 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 16225B1D52EED8DA34B7;
+        Wed,  7 Aug 2019 21:19:24 +0800 (CST)
+Received: from localhost.localdomain (10.67.165.24) by
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.439.0; Wed, 7 Aug 2019 21:19:14 +0800
+From:   Yonglong Liu <liuyonglong@huawei.com>
+To:     <davem@davemloft.net>, <andrew@lunn.ch>, <hkallweit1@gmail.com>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linuxarm@huawei.com>, <salil.mehta@huawei.com>,
+        <yisen.zhuang@huawei.com>, <shiju.jose@huawei.com>
+Subject: [PATCH net] net: phy: rtl8211f: do a double read to get real time link status
+Date:   Wed, 7 Aug 2019 21:16:12 +0800
+Message-ID: <1565183772-44268-1-git-send-email-liuyonglong@huawei.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
+X-Originating-IP: [10.67.165.24]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drivers/lightnvm/pblk-read.c: In function pblk_submit_read_gc:
-drivers/lightnvm/pblk-read.c:423:6: warning: variable data_len set but not used [-Wunused-but-set-variable]
-drivers/lightnvm/pblk-recovery.c: In function pblk_recov_scan_oob:
-drivers/lightnvm/pblk-recovery.c:368:15: warning: variable rq_len set but not used [-Wunused-but-set-variable]
+[   27.232781] hns3 0000:bd:00.3 eth7: net open
+[   27.237303] 8021q: adding VLAN 0 to HW filter on device eth7
+[   27.242972] IPv6: ADDRCONF(NETDEV_CHANGE): eth7: link becomes ready
+[   27.244449] hns3 0000:bd:00.3: invalid speed (-1)
+[   27.253904] hns3 0000:bd:00.3 eth7: failed to adjust link.
+[   27.259379] RTL8211F Gigabit Ethernet mii-0000:bd:00.3:07: PHY state change UP -> RUNNING
+[   27.924903] hns3 0000:bd:00.3 eth7: link up
+[   28.280479] RTL8211F Gigabit Ethernet mii-0000:bd:00.3:07: PHY state change RUNNING -> NOLINK
+[   29.208452] hns3 0000:bd:00.3 eth7: link down
+[   32.376745] RTL8211F Gigabit Ethernet mii-0000:bd:00.3:07: PHY state change NOLINK -> RUNNING
+[   33.208448] hns3 0000:bd:00.3 eth7: link up
+[   35.253821] hns3 0000:bd:00.3 eth7: net stop
+[   35.258270] hns3 0000:bd:00.3 eth7: link down
 
-They are not used since commit 48e5da725581 ("lightnvm:
-move metadata mapping to lower level driver")
+When using rtl8211f in polling mode, may get a invalid speed,
+because of reading a fake link up and autoneg complete status
+immediately after starting autoneg:
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+        ifconfig-1176  [007] ....    27.232763: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x00 val:0x1040
+  kworker/u257:1-670   [015] ....    27.232805: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x04 val:0x01e1
+  kworker/u257:1-670   [015] ....    27.232815: mdio_access: mii-0000:bd:00.3 write phy:0x07 reg:0x04 val:0x05e1
+  kworker/u257:1-670   [015] ....    27.232869: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x01 val:0x79ad
+  kworker/u257:1-670   [015] ....    27.232904: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x09 val:0x0200
+  kworker/u257:1-670   [015] ....    27.232940: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x00 val:0x1040
+  kworker/u257:1-670   [015] ....    27.232949: mdio_access: mii-0000:bd:00.3 write phy:0x07 reg:0x00 val:0x1240
+  kworker/u257:1-670   [015] ....    27.233003: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x01 val:0x79ad
+  kworker/u257:1-670   [015] ....    27.233039: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x0a val:0x3002
+  kworker/u257:1-670   [015] ....    27.233074: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x09 val:0x0200
+  kworker/u257:1-670   [015] ....    27.233110: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x05 val:0x0000
+  kworker/u257:1-670   [000] ....    28.280475: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x01 val:0x7989
+  kworker/u257:1-670   [000] ....    29.304471: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x01 val:0x7989
+
+According to the datasheet of rtl8211f, to get the real time
+link status, need to read MII_BMSR twice.
+
+This patch add a read_status hook for rtl8211f, and do a fake
+phy_read before genphy_read_status(), so that can get real link
+status in genphy_read_status().
+
+Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
 ---
- drivers/lightnvm/pblk-read.c     | 2 --
- drivers/lightnvm/pblk-recovery.c | 3 +--
- 2 files changed, 1 insertion(+), 4 deletions(-)
+ drivers/net/phy/realtek.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/lightnvm/pblk-read.c b/drivers/lightnvm/pblk-read.c
-index d572d45..0cdc48f 100644
---- a/drivers/lightnvm/pblk-read.c
-+++ b/drivers/lightnvm/pblk-read.c
-@@ -420,7 +420,6 @@ int pblk_submit_read_gc(struct pblk *pblk, struct pblk_gc_rq *gc_rq)
- 	struct nvm_tgt_dev *dev = pblk->dev;
- 	struct nvm_geo *geo = &dev->geo;
- 	struct nvm_rq rqd;
--	int data_len;
- 	int ret = NVM_IO_OK;
+diff --git a/drivers/net/phy/realtek.c b/drivers/net/phy/realtek.c
+index a669945..92e27d5 100644
+--- a/drivers/net/phy/realtek.c
++++ b/drivers/net/phy/realtek.c
+@@ -256,6 +256,18 @@ static int rtl8366rb_config_init(struct phy_device *phydev)
+ 	return ret;
+ }
  
- 	memset(&rqd, 0, sizeof(struct nvm_rq));
-@@ -445,7 +444,6 @@ int pblk_submit_read_gc(struct pblk *pblk, struct pblk_gc_rq *gc_rq)
- 	if (!(gc_rq->secs_to_gc))
- 		goto out;
- 
--	data_len = (gc_rq->secs_to_gc) * geo->csecs;
- 	rqd.opcode = NVM_OP_PREAD;
- 	rqd.nr_ppas = gc_rq->secs_to_gc;
- 
-diff --git a/drivers/lightnvm/pblk-recovery.c b/drivers/lightnvm/pblk-recovery.c
-index d5e210c..299ef47 100644
---- a/drivers/lightnvm/pblk-recovery.c
-+++ b/drivers/lightnvm/pblk-recovery.c
-@@ -365,7 +365,7 @@ static int pblk_recov_scan_oob(struct pblk *pblk, struct pblk_line *line,
- 	__le64 *lba_list;
- 	u64 paddr = pblk_line_smeta_start(pblk, line) + lm->smeta_sec;
- 	bool padded = false;
--	int rq_ppas, rq_len;
-+	int rq_ppas;
- 	int i, j;
- 	int ret;
- 	u64 left_ppas = pblk_sec_in_open_line(pblk, line) - lm->smeta_sec;
-@@ -388,7 +388,6 @@ static int pblk_recov_scan_oob(struct pblk *pblk, struct pblk_line *line,
- 	rq_ppas = pblk_calc_secs(pblk, left_ppas, 0, false);
- 	if (!rq_ppas)
- 		rq_ppas = pblk->min_write_pgs;
--	rq_len = rq_ppas * geo->csecs;
- 
- retry_rq:
- 	rqd->bio = NULL;
++static int rtl8211f_read_status(struct phy_device *phydev)
++{
++	int status;
++
++	/* do a fake read */
++	status = phy_read(phydev, MII_BMSR);
++	if (status < 0)
++		return status;
++
++	return genphy_read_status(phydev);
++}
++
+ static struct phy_driver realtek_drvs[] = {
+ 	{
+ 		PHY_ID_MATCH_EXACT(0x00008201),
+@@ -325,6 +337,7 @@ static struct phy_driver realtek_drvs[] = {
+ 		.resume		= genphy_resume,
+ 		.read_page	= rtl821x_read_page,
+ 		.write_page	= rtl821x_write_page,
++		.read_status	= rtl8211f_read_status,
+ 	}, {
+ 		PHY_ID_MATCH_EXACT(0x001cc800),
+ 		.name		= "Generic Realtek PHY",
 -- 
-2.7.4
-
+2.8.1
 
