@@ -2,167 +2,135 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D628C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 15:28:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13BB2C32754
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 15:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D343321BF6
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 15:28:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCE2921BF6
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 15:29:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pko8c1D1"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VpMFLl0A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388629AbfHGP2k (ORCPT
+        id S2388647AbfHGP3q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 11:28:40 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:34180 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387827AbfHGP2j (ORCPT
+        Wed, 7 Aug 2019 11:29:46 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52292 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387815AbfHGP3p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 11:28:39 -0400
-Received: by mail-wm1-f66.google.com with SMTP id e8so1612599wme.1;
-        Wed, 07 Aug 2019 08:28:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=J2AxcJjTu4Em2coCWWa3ZaD+BRTicwzIxGa7Qvvd3rw=;
-        b=pko8c1D1aNeK/Wvm+bO/5XEEt4y6uMaXC6vj+i+eNuI9tg6Uie6LjG7sAOcNEHYoOk
-         mYHbOpwvmIGq91Ky9OIaoq465kLZkBefxD2SuHoGpQ1wdbxLSizqITWpsjPzP/XQKLrQ
-         nDSvlTxMLqD5kUrn6FftauflqcjP4FXSt6T+d34I32aGNTctXvhgAbt/cFgv2HSiVHrO
-         lGjRV7s1wjwkbHTgciB7d23c+3ylZPOmAIY+p017qY3Ll2rcCkpZhVm8ONKBZd8irT7e
-         lIGabt0+pkI1YymwB+hZnffI/I8eDAYfYVLI6aFrMvsuYQqyO35K4yiJJKj1bt3fGasB
-         mouw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=J2AxcJjTu4Em2coCWWa3ZaD+BRTicwzIxGa7Qvvd3rw=;
-        b=Ul6oef+sR/lj72Dn8WRVsv9ncZ6BVbb59RSun0oI5CJ0aDRnJ7/5UL7BFdDDQ5Twkx
-         +1qCZTIcjZmM8FlK24GcU96c12NWa30umd3l9EdPb0/29E9McJnD2cBUzZhDb6WUxT+g
-         pv3VmrKzESjtQsNYRcUlYN2/6LcjRmgAY6MWcVaRM6lsuPAo+JarFdYqX6/y/cd75ugj
-         CA046X/eR8ot4uyt05sALBclHieMDqc8kYDDXvN7Ed9CWGyY/i241rY8yrh3MaNnCSKq
-         QVJ4jh867ji8W51tYI7g4ZcA/aF8FwsZ2xAlF7fDb3hFnJCPrCVYejhiu7ojHCEHHfM8
-         Kyyg==
-X-Gm-Message-State: APjAAAUjOZAiKV6gIDVyXXK/fmTpg6FBbA3weUpDqOruC7DWbIQOK0M5
-        jxVrqqxGJ1ijm1Pq/iEywiHFARABejcrwEep/5E=
-X-Google-Smtp-Source: APXvYqwW5WCgzinAjb7xq61mUOt92YHJ1JbOQnTpyr7Jy8pOLiPx/RMXO6UztD9op0ES3Y54p/AuIMtAs4mN+LKyH0E=
-X-Received: by 2002:a7b:c051:: with SMTP id u17mr496286wmc.25.1565191716999;
- Wed, 07 Aug 2019 08:28:36 -0700 (PDT)
+        Wed, 7 Aug 2019 11:29:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=oTLsonCa2JJCZquZIr02tCIa6cKQIoCJzf/6u+G0eLM=; b=VpMFLl0A1PNebanbYxVShplQ6
+        owR9HSB6WQhXM7FtQ1KBgyZTkRk+yHQ86qtMqsWD7hr1P1GIddyL7uHdtmbhh9J/rne41GOgTIuXb
+        QNcLmNfEz83irO95WBGPJwNxEL7VeTbBmn8rB2gok7N3zhLJpu93XP3shL9iRYPuvF7r8XEQhdYyT
+        UIVMdSeS457+iMuygc27wzDX/39tdKnOExx0nSZcn+NNwbkkzcKUHC5Huh98ImRDvsOxLsyuqkLd9
+        YhcgjlmrsTueF3dyb9g/ryQnaf9HSD4mYJu4PpPdV5c+JZX5myz+xgOkjcpg8KV0NVPnHQIdrXq4K
+        oqNJkdL/g==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=[192.168.1.17])
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hvNsn-0003gV-1L; Wed, 07 Aug 2019 15:29:45 +0000
+Subject: Re: linux-next: Tree for Aug 7
+ (net/bridge/netfilter/nf_conntrack_bridge.c)
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        bridge@lists.linux-foundation.org
+References: <20190807183606.372ca1a4@canb.auug.org.au>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <f54391d9-6259-d08b-8b5f-c844093071d8@infradead.org>
+Date:   Wed, 7 Aug 2019 08:29:44 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190723084104.12639-1-daniel.baluta@nxp.com> <20190723084104.12639-4-daniel.baluta@nxp.com>
- <d85909d6-c7cb-c64b-dfa9-6cee6c0da2cb@linux.intel.com> <CAEnQRZDr+gj_eiESLNbVUVy1rreRE1nnDgtb3g=CjaRF5Aq9Vw@mail.gmail.com>
- <CAEnQRZDctjdzQ2RjJXhQh+s=d0y_j3Taa51hDaR4bqJ62C=7iQ@mail.gmail.com> <85b4a2c4-761e-bdcf-f05e-2fb16c06f11e@linux.intel.com>
-In-Reply-To: <85b4a2c4-761e-bdcf-f05e-2fb16c06f11e@linux.intel.com>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Wed, 7 Aug 2019 18:28:25 +0300
-Message-ID: <CAEnQRZCE3mxorYpL_nPXiU4MezGDaqUfuFDx8ci0WdXzDa68JA@mail.gmail.com>
-Subject: Re: [Sound-open-firmware] [PATCH v2 3/5] ASoC: SOF: Add DT DSP device support
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>, Anson Huang <anson.huang@nxp.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Paul Olaru <paul.olaru@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        sound-open-firmware@alsa-project.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190807183606.372ca1a4@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 7, 2019 at 6:22 PM Pierre-Louis Bossart
-<pierre-louis.bossart@linux.intel.com> wrote:
->
->
-> >>>> +static int sof_dt_probe(struct platform_device *pdev)
-> >>>> +{
-> >>>> +     struct device *dev =3D &pdev->dev;
-> >>>> +     const struct sof_dev_desc *desc;
-> >>>> +     /*TODO: create a generic snd_soc_xxx_mach */
-> >>>> +     struct snd_soc_acpi_mach *mach;
-> >>>
-> >>> I wonder if you really need to use the same structures. For Intel we =
-get
-> >>> absolutely zero info from the firmware so rely on an ACPI codec ID as=
- a
-> >>> key to find information on which firmware and topology to use, and wh=
-ich
-> >>> machine driver to load. You could have all this information in a DT b=
-lob?
-> >>
-> >> Yes. I see your point. I will still need to make a generic structure f=
-or
-> >> snd_soc_acpi_mach so that everyone can use sof_nocodec_setup function.
-> >>
-> >> Maybe something like this:
-> >>
-> >> struct snd_soc_mach {
-> >>    union {
-> >>    struct snd_soc_acpi_mach acpi_mach;
-> >>    struct snd_soc_of_mach of_mach;
-> >>    }
-> >> };
-> >>
-> >> and then change the prototype of sof_nocodec_setup.
-> >
-> > Hi Pierre,
-> >
-> > I fixed all the comments except the one above. Replacing snd_soc_acpi_m=
-ach
-> > with a generic snd_soc_mach is not trivial task.
-> >
-> > I wonder if it is acceptable to get the initial patches as they are
-> > now and later switch to
-> > generic ACPI/OF abstraction.
-> >
-> > Asking this because for the moment on the i.MX side I have only
-> > implemented no codec
-> > version and we don't probe any of the machine drivers we have.
-> >
-> > So, there is this only one member of snd_soc_acpi_mach that imx
-> > version is making use of:
-> >
-> >    mach->drv_name =3D "sof-nocodec";
-> >
-> > That's all.
-> >
-> > I think the change as it is now is very clean and non-intrusive. Later
-> > we will get options to
-> > read firmware name and stuff from DT.
-> >
-> > Anyhow, I don't think we can get rid of snd_dev_desc structure on
-> > i.MX. This will be used
-> > to store the information read from DT:
-> >
-> > static struct sof_dev_desc sof_of_imx8qxp_desc =3D {
-> > =C2=BB       .default_fw_path =3D "imx/sof",
-> > =C2=BB       .default_tplg_path =3D "imx/sof-tplg",
-> > =C2=BB       .nocodec_fw_filename =3D "sof-imx8.ri",
-> > =C2=BB       .nocodec_tplg_filename =3D "sof-imx8-nocodec.tplg",
-> > =C2=BB       .ops =3D &sof_imx8_ops,
-> > };
-> >
-> > For the moment we will only use the default values.
->
-> Yes, that's fine for now. If you don't have a real machine driver then
-> there's nothing urgent to change.
->
-> Is the new version on GitHub?
+On 8/7/19 1:36 AM, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Changes since 20190806:
+> 
 
-Not yet, will push it today and ping you.
+on i386:
+when CONFIG_NF_TABLES is not set/enabled:
+
+  CC      net/bridge/netfilter/nf_conntrack_bridge.o
+In file included from ../net/bridge/netfilter/nf_conntrack_bridge.c:21:0:
+../include/net/netfilter/nf_tables.h: In function ‘nft_gencursor_next’:
+../include/net/netfilter/nf_tables.h:1224:14: error: ‘const struct net’ has no member named ‘nft’; did you mean ‘nf’?
+  return net->nft.gencursor + 1 == 1 ? 1 : 0;
+              ^~~
+              nf
+In file included from ../include/linux/export.h:45:0,
+                 from ../include/linux/linkage.h:7,
+                 from ../include/linux/kernel.h:8,
+                 from ../include/linux/skbuff.h:13,
+                 from ../include/linux/ip.h:16,
+                 from ../net/bridge/netfilter/nf_conntrack_bridge.c:3:
+../include/net/netfilter/nf_tables.h: In function ‘nft_genmask_cur’:
+../include/net/netfilter/nf_tables.h:1235:29: error: ‘const struct net’ has no member named ‘nft’; did you mean ‘nf’?
+  return 1 << READ_ONCE(net->nft.gencursor);
+                             ^
+../include/linux/compiler.h:261:17: note: in definition of macro ‘__READ_ONCE’
+  union { typeof(x) __val; char __c[1]; } __u;   \
+                 ^
+../include/net/netfilter/nf_tables.h:1235:14: note: in expansion of macro ‘READ_ONCE’
+  return 1 << READ_ONCE(net->nft.gencursor);
+              ^~~~~~~~~
+../include/net/netfilter/nf_tables.h:1235:29: error: ‘const struct net’ has no member named ‘nft’; did you mean ‘nf’?
+  return 1 << READ_ONCE(net->nft.gencursor);
+                             ^
+../include/linux/compiler.h:263:22: note: in definition of macro ‘__READ_ONCE’
+   __read_once_size(&(x), __u.__c, sizeof(x));  \
+                      ^
+../include/net/netfilter/nf_tables.h:1235:14: note: in expansion of macro ‘READ_ONCE’
+  return 1 << READ_ONCE(net->nft.gencursor);
+              ^~~~~~~~~
+../include/net/netfilter/nf_tables.h:1235:29: error: ‘const struct net’ has no member named ‘nft’; did you mean ‘nf’?
+  return 1 << READ_ONCE(net->nft.gencursor);
+                             ^
+../include/linux/compiler.h:263:42: note: in definition of macro ‘__READ_ONCE’
+   __read_once_size(&(x), __u.__c, sizeof(x));  \
+                                          ^
+../include/net/netfilter/nf_tables.h:1235:14: note: in expansion of macro ‘READ_ONCE’
+  return 1 << READ_ONCE(net->nft.gencursor);
+              ^~~~~~~~~
+../include/net/netfilter/nf_tables.h:1235:29: error: ‘const struct net’ has no member named ‘nft’; did you mean ‘nf’?
+  return 1 << READ_ONCE(net->nft.gencursor);
+                             ^
+../include/linux/compiler.h:265:30: note: in definition of macro ‘__READ_ONCE’
+   __read_once_size_nocheck(&(x), __u.__c, sizeof(x)); \
+                              ^
+../include/net/netfilter/nf_tables.h:1235:14: note: in expansion of macro ‘READ_ONCE’
+  return 1 << READ_ONCE(net->nft.gencursor);
+              ^~~~~~~~~
+../include/net/netfilter/nf_tables.h:1235:29: error: ‘const struct net’ has no member named ‘nft’; did you mean ‘nf’?
+  return 1 << READ_ONCE(net->nft.gencursor);
+                             ^
+../include/linux/compiler.h:265:50: note: in definition of macro ‘__READ_ONCE’
+   __read_once_size_nocheck(&(x), __u.__c, sizeof(x)); \
+                                                  ^
+../include/net/netfilter/nf_tables.h:1235:14: note: in expansion of macro ‘READ_ONCE’
+  return 1 << READ_ONCE(net->nft.gencursor);
+              ^~~~~~~~~
+make[4]: *** [../scripts/Makefile.build:273: net/bridge/netfilter/nf_conntrack_bridge.o] Error 1
+
+
+
+-- 
+~Randy
