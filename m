@@ -2,122 +2,156 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF3EC32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 10:08:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 102ACC32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 10:10:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB62621E6C
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 10:08:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4F8E21E6C
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 10:10:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729567AbfHGKIa convert rfc822-to-8bit (ORCPT
+        id S1726875AbfHGKKf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 06:08:30 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:54159 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729407AbfHGKIa (ORCPT
+        Wed, 7 Aug 2019 06:10:35 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:36720 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725991AbfHGKKf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 06:08:30 -0400
-X-Originating-IP: 86.250.200.211
-Received: from xps13 (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 9E20A240002;
-        Wed,  7 Aug 2019 10:08:27 +0000 (UTC)
-Date:   Wed, 7 Aug 2019 12:08:26 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     shiva.linuxworks@gmail.com
-Cc:     Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Frieder Schrempf <frieder.schrempf@kontron.de>,
-        Shivamurthy Shastri <sshivamurthy@micron.com>,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Jeff Kletsky <git-commits@allycomm.com>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        liaoweixiong <liaoweixiong@allwinnertech.com>
-Subject: Re: [PATCH 8/8] mtd: spinand: micron: Enable micron flashes with
- multi-die
-Message-ID: <20190807120826.3b9e43d6@xps13>
-In-Reply-To: <20190722055621.23526-9-sshivamurthy@micron.com>
-References: <20190722055621.23526-1-sshivamurthy@micron.com>
-        <20190722055621.23526-9-sshivamurthy@micron.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 7 Aug 2019 06:10:35 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 593DC8034F; Wed,  7 Aug 2019 12:10:20 +0200 (CEST)
+Date:   Wed, 7 Aug 2019 12:10:32 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     kernel list <linux-kernel@vger.kernel.org>,
+        paolo.valente@linaro.org, axboe@kernel.dk,
+        linux-block@vger.kernel.org, gregkh@linuxfoundation.org,
+        linux-usb@vger.kernel.org
+Subject: slab corruption in 5.3-rc3 while inserting an usb key
+Message-ID: <20190807101031.GA18652@amd>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="vtzGhvizbBRQ85DL"
+Content-Disposition: inline
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shiva,
 
-shiva.linuxworks@gmail.com wrote on Mon, 22 Jul 2019 07:56:21 +0200:
+--vtzGhvizbBRQ85DL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-"with multiple dies" in the title
+Hi!
 
-> From: Shivamurthy Shastri <sshivamurthy@micron.com>
-> 
-> Some of the Micron flashes has multi-die, and need to select the die
-                             have multiple dies and
-> each time while accessing it.
-> 
-> Signed-off-by: Shivamurthy Shastri <sshivamurthy@micron.com>
-> ---
->  drivers/mtd/nand/spi/micron.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> diff --git a/drivers/mtd/nand/spi/micron.c b/drivers/mtd/nand/spi/micron.c
-> index 1e28ea3d1362..fa2b43caf39d 100644
-> --- a/drivers/mtd/nand/spi/micron.c
-> +++ b/drivers/mtd/nand/spi/micron.c
-> @@ -90,6 +90,19 @@ static int micron_ecc_get_status(struct spinand_device *spinand,
->  	return -EINVAL;
->  }
->  
+Machine is thinkpad x220. BFQ related?
 
-Please explain in a comment what you do here, like in the commit title.
+=09
 
-> +static int micron_select_target(struct spinand_device *spinand,
-> +				unsigned int target)
-> +{
-> +	struct spi_mem_op op = SPINAND_SET_FEATURE_OP(0xd0,
-> +						      spinand->scratchbuf);
-> +
-> +	if (target == 1)
-> +		target = 0x40;
-> +
-> +	*spinand->scratchbuf = target;
+[ 8224.904413] usb 2-1.1.4: Product: Intenso Twister Line
+[ 8224.904421] usb 2-1.1.4: Manufacturer: Alcor Tech
+[ 8224.904428] usb 2-1.1.4: SerialNumber: 12102500210755
+[ 8224.905778] usb-storage 2-1.1.4:1.0: USB Mass Storage device
+detected
+[ 8224.906519] scsi host6: usb-storage 2-1.1.4:1.0
+[ 8225.938476] scsi 6:0:0:0: Direct-Access     Intenso  Twister Line
+8.07 PQ: 0 ANSI: 4
+[ 8225.941857] sd 6:0:0:0: Attached scsi generic sg2 type 0
+[ 8225.944342] sd 6:0:0:0: [sdc] 15257600 512-byte logical blocks:
+(7.81 GB/7.28 GiB)
+[ 8225.945541] sd 6:0:0:0: [sdc] Write Protect is off
+[ 8225.945551] sd 6:0:0:0: [sdc] Mode Sense: 23 00 00 00
+[ 8225.946669] sd 6:0:0:0: [sdc] Write cache: disabled, read cache:
+enabled, doesn't support DPO or FUA
+[ 8225.961509]  sdc: sdc1
+[ 8225.966286] sd 6:0:0:0: [sdc] Attached SCSI removable disk
+[ 8226.351785] FAT-fs (sdc1): Volume was not properly unmounted. Some
+data may be corrupt. Please run fsck.
+[ 8685.026976] perf: interrupt took too long (3142 > 3141), lowering
+kernel.perf_event_max_sample_rate to 63500
+[ 8710.270064] Slab corruption (Not tainted): bfq_queue
+start=3Dffff8880befb0cd8, len=3D512
+[ 8710.270073] Redzone: 0x9f911029d74e35b/0x9f911029d74e35b
+[ 8710.270081] Last user: (bfq_put_queue+0xb0/0xe0)
+[ 8710.270085] 1f0: 18 e5 44 93 81 88 ff ff 6b 6b 6b 6b 6b 6b 6b a5
+=2E.D.....kkkkkkk.
+[ 8710.270092] Prev obj: start=3Dffff8880befb0ac0, len=3D512
+[ 8710.270097] Redzone: 0xd84156c5635688c0/0xd84156c5635688c0
+[ 8710.270102] Last user: (bfq_get_queue+0x13a/0x290)
+[ 8710.270105] 000: 02 00 00 00 00 00 00 00 00 38 a6 95 81 88 ff ff
+=2E........8......
+[ 8710.270110] 010: 07 00 03 00 07 00 03 00 00 00 00 00 00 00 00 00
+=2E...............
+[ 8711.077572] Slab corruption (Not tainted): bfq_queue
+start=3Dffff8880c20b7710, len=3D512
+[ 8711.077577] Redzone: 0x9f911029d74e35b/0x9f911029d74e35b
+[ 8711.077584] Last user: (bfq_put_queue+0xb0/0xe0)
+[ 8711.077586] 1f0: 6b 6b 6b 6b 6b 6b 6b 6b 00 00 00 00 00 00 00 00
+kkkkkkkk........
+[ 8711.077591] Prev obj: start=3Dffff8880c20b74f8, len=3D512
+[ 8711.077593] Redzone: 0x9f911029d74e35b/0x9f911029d74e35b
+[ 8711.077596] Last user: (bfq_put_queue+0xb0/0xe0)
+[ 8711.077598] 000: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+kkkkkkkkkkkkkkkk
+[ 8711.077601] 010: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+kkkkkkkkkkkkkkkk
+[ 8711.077604] Next obj: start=3Dffff8880c20b7928, len=3D512
+[ 8711.077606] Redzone: 0x9f911029d74e35b/0x9f911029d74e35b
+[ 8711.077609] Last user: (bfq_put_queue+0xb0/0xe0)
+[ 8711.077611] 000: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+kkkkkkkkkkkkkkkk
+[ 8711.077614] 010: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+kkkkkkkkkkkkkkkk
+[ 8764.014525] Slab corruption (Not tainted): bfq_queue
+start=3Dffff888049b0c108, len=3D512
+[ 8764.014534] Redzone: 0x9f911029d74e35b/0x9f911029d74e35b
+[ 8764.014542] Last user: (bfq_put_queue+0xb0/0xe0)
+[ 8764.014546] 1f0: 6b 6b 6b 6b 6b 6b 6b 6b 00 00 00 00 00 00 00 00
+kkkkkkkk........
+[ 8764.014553] Next obj: start=3Dffff888049b0c320, len=3D512
+[ 8764.014558] Redzone: 0xd84156c5635688c0/0xd84156c5635688c0
+[ 8764.014562] Last user: (bfq_get_queue+0x13a/0x290)
+[ 8764.014566] 000: 01 00 00 00 00 00 00 00 00 50 df 96 81 88 ff ff
+=2E........P......
+[ 8764.014571] 010: 04 00 02 00 04 00 02 00 00 00 00 00 00 00 00 00
+=2E...............
+[10593.478355] perf: interrupt took too long (3936 > 3927), lowering
+kernel.perf_event_max_sample_rate to 50750
+[10745.055650] Slab corruption (Not tainted): bfq_queue
+start=3Dffff88818f6a9088, len=3D512
+[10745.055660] Redzone: 0x9f911029d74e35b/0x9f911029d74e35b
+[10745.055670] Last user: (bfq_put_queue+0xb0/0xe0)
+[10745.055675] 1f0: a0 f6 71 d4 80 88 ff ff 6b 6b 6b 6b 6b 6b 6b a5
+=2E.q.....kkkkkkk.
+[10745.055683] Next obj: start=3Dffff88818f6a92a0, len=3D512
+[10745.055688] Redzone: 0xd84156c5635688c0/0xd84156c5635688c0
+[10745.055693] Last user: (bfq_get_queue+0x13a/0x290)
+[10745.055698] 000: 01 00 00 00 00 00 00 00 00 38 a6 95 81 88 ff ff
+=2E........8......
+[10745.055704] 010: 04 00 02 00 04 00 02 00 00 00 00 00 00 00 00 00
+=2E...............
+[12141.101100] usb 2-1.1.4: USB disconnect, device number 8
+pavel@duo:/data/l/linux-olpc$
 
-if (target == 1)
-        *spinand->scratchbuf = 0x40
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-space
+--vtzGhvizbBRQ85DL
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> +	return spi_mem_exec_op(spinand->spimem, &op);
-> +}
-> +
->  static int micron_spinand_detect(struct spinand_device *spinand)
->  {
->  	const struct spi_mem_op *op;
-> @@ -105,6 +118,7 @@ static int micron_spinand_detect(struct spinand_device *spinand)
->  	spinand->flags = 0;
->  	spinand->eccinfo.get_status = micron_ecc_get_status;
->  	spinand->eccinfo.ooblayout = &micron_ooblayout_ops;
-> +	spinand->select_target = micron_select_target;
->  
->  	op = spinand_select_op_variant(spinand,
->  				       &read_cache_variants);
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
+iEYEARECAAYFAl1Ko5cACgkQMOfwapXb+vLXrgCgrNpwkvTY9XC6mfglSc4kqxCK
+DsEAoLKklQ9aswxRDYmTPJoev5KGYEXo
+=TCiE
+-----END PGP SIGNATURE-----
 
-
-
-Thanks,
-Miquèl
+--vtzGhvizbBRQ85DL--
