@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AAE1C32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:31:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCBEDC32754
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:31:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C76C821E6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:31:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A8E421EF2
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:31:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hMcgEHKx"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="e0XvKeV+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388409AbfHGNbK (ORCPT
+        id S2388423AbfHGNbO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 09:31:10 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:60236 "EHLO
+        Wed, 7 Aug 2019 09:31:14 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:60372 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388380AbfHGNbI (ORCPT
+        with ESMTP id S2388380AbfHGNbL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 09:31:08 -0400
+        Wed, 7 Aug 2019 09:31:11 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=2TWbhhl2LAlCGPgVDVZf1/2nM9NMXeFRfLqZwHts8K4=; b=hMcgEHKx2Nw7y4aISfNadRqCSW
-        PZKLSybhbwlnHYHe/MoDBqlqU9l2X9XQBuEb1mN+VaMAtIdIxCYf5pebETCZTSvViCUoIXlH2YE66
-        XrXMDFxDrWNZza6SQeBSUNZ2RZHEXxt4CvyEQUQeMTYm7VQqqst4WMmt4Sf8w2jZ2KGHZNXpdviqM
-        In+8NmuOO6rzcBF1dRskh069QAZqgSWFinX1MSHcWTwrjPYEwSd6f5VZyFibUJG0o1HJztQQg/K84
-        HVvf9QFW4h8nnLtRtrgPrwaRo/D9XVzvqQ2a7GsNwPeVjmdUTymrKFUeOBbQNScIJAoKE5uD3aIKN
-        v3LcYfrQ==;
+        bh=OjylB7vTSBwoqsWZlXTFpvn4sVDuHvPB8r+V3DC4Dgc=; b=e0XvKeV+l+IdfYjoeW/dI/F9gb
+        zMIP0LosfgXpFJ4g+CUI25qOZ6OzixKd1mRaSj8+IS7nn+wkhrL/2xN/seMc7gcYfWuBeKGmEwc4x
+        xGlO96w+SLMR8MOg9RUBrg5uksvqQH+adlxpUXzxlEHD1ils+yLehth4Tbn9198Gzo1t/y+3BbIf7
+        FazJJiRZdJvHKC+mzge67LhHFaWXByvbXA+nr2YhIbkSvhBq53H5rOgQphEOZYKzMVzjjY4OrSeBk
+        7djpRZcoiVpT6+biSdm9P15CtZ94eZIsFAwW/m1dQC4XGrRoGGgj0rs/8+G6u7kRnVKIsYZ1/3c7N
+        a0GFZCHQ==;
 Received: from [195.167.85.94] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hvM1z-00080d-3E; Wed, 07 Aug 2019 13:31:07 +0000
+        id 1hvM21-00081V-OT; Wed, 07 Aug 2019 13:31:10 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>
 Cc:     Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 04/29] ide: remove the sgiioc4 driver
-Date:   Wed,  7 Aug 2019 16:30:24 +0300
-Message-Id: <20190807133049.20893-5-hch@lst.de>
+Subject: [PATCH 05/29] PCI/hotplug: remove the sgi_hotplug driver
+Date:   Wed,  7 Aug 2019 16:30:25 +0300
+Message-Id: <20190807133049.20893-6-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190807133049.20893-1-hch@lst.de>
 References: <20190807133049.20893-1-hch@lst.de>
@@ -62,720 +62,750 @@ depends on the SN2 support.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- arch/ia64/configs/generic_defconfig   |   1 -
- arch/ia64/configs/gensparse_defconfig |   1 -
- drivers/Kconfig                       |   2 -
- drivers/ide/Kconfig                   |   9 -
- drivers/ide/Makefile                  |   1 -
- drivers/ide/sgiioc4.c                 | 630 --------------------------
- 6 files changed, 644 deletions(-)
- delete mode 100644 drivers/ide/sgiioc4.c
+ drivers/pci/hotplug/Kconfig       |   9 -
+ drivers/pci/hotplug/Makefile      |   1 -
+ drivers/pci/hotplug/sgi_hotplug.c | 700 ------------------------------
+ 3 files changed, 710 deletions(-)
+ delete mode 100644 drivers/pci/hotplug/sgi_hotplug.c
 
-diff --git a/arch/ia64/configs/generic_defconfig b/arch/ia64/configs/generic_defconfig
-index 79b88384c885..a41afb3ef209 100644
---- a/arch/ia64/configs/generic_defconfig
-+++ b/arch/ia64/configs/generic_defconfig
-@@ -51,7 +51,6 @@ CONFIG_BLK_DEV_IDECD=y
- CONFIG_BLK_DEV_GENERIC=y
- CONFIG_BLK_DEV_CMD64X=y
- CONFIG_BLK_DEV_PIIX=y
--CONFIG_BLK_DEV_SGIIOC4=y
- CONFIG_BLK_DEV_SD=y
- CONFIG_CHR_DEV_ST=m
- CONFIG_BLK_DEV_SR=m
-diff --git a/arch/ia64/configs/gensparse_defconfig b/arch/ia64/configs/gensparse_defconfig
-index f1490580ed69..07484aa6f16f 100644
---- a/arch/ia64/configs/gensparse_defconfig
-+++ b/arch/ia64/configs/gensparse_defconfig
-@@ -44,7 +44,6 @@ CONFIG_IDE_GENERIC=y
- CONFIG_BLK_DEV_GENERIC=y
- CONFIG_BLK_DEV_CMD64X=y
- CONFIG_BLK_DEV_PIIX=y
--CONFIG_BLK_DEV_SGIIOC4=y
- CONFIG_SCSI=y
- CONFIG_BLK_DEV_SD=y
- CONFIG_CHR_DEV_ST=m
-diff --git a/drivers/Kconfig b/drivers/Kconfig
-index 61cf4ea2c229..477d63d0364d 100644
---- a/drivers/Kconfig
-+++ b/drivers/Kconfig
-@@ -30,8 +30,6 @@ source "drivers/block/Kconfig"
+diff --git a/drivers/pci/hotplug/Kconfig b/drivers/pci/hotplug/Kconfig
+index e9f78eb390d2..e7b493c22bf3 100644
+--- a/drivers/pci/hotplug/Kconfig
++++ b/drivers/pci/hotplug/Kconfig
+@@ -147,15 +147,6 @@ config HOTPLUG_PCI_RPA_DLPAR
  
- source "drivers/nvme/Kconfig"
+ 	  When in doubt, say N.
  
--# misc before ide - BLK_DEV_SGIIOC4 depends on SGI_IOC4
--
- source "drivers/misc/Kconfig"
- 
- source "drivers/ide/Kconfig"
-diff --git a/drivers/ide/Kconfig b/drivers/ide/Kconfig
-index 9eada392df15..1c227ea8ecd3 100644
---- a/drivers/ide/Kconfig
-+++ b/drivers/ide/Kconfig
-@@ -567,15 +567,6 @@ config BLK_DEV_SVWKS
- 	  This driver adds PIO/(U)DMA support for the ServerWorks OSB4/CSB5
- 	  chipsets.
- 
--config BLK_DEV_SGIIOC4
--	tristate "Silicon Graphics IOC4 chipset ATA/ATAPI support"
--	depends on (IA64_SGI_SN2 || IA64_GENERIC) && SGI_IOC4
--	select BLK_DEV_IDEDMA_PCI
+-config HOTPLUG_PCI_SGI
+-	tristate "SGI PCI Hotplug Support"
+-	depends on IA64_SGI_SN2 || IA64_GENERIC
 -	help
--	  This driver adds PIO & MultiMode DMA-2 support for the SGI IOC4
--	  chipset, which has one channel and can support two devices.
--	  Please say Y here if you have an Altix System from SGI.
+-	  Say Y here if you want to use the SGI Altix Hotplug
+-	  Driver for PCI devices.
 -
- config BLK_DEV_SIIMAGE
- 	tristate "Silicon Image chipset support"
- 	select BLK_DEV_IDEDMA_PCI
-diff --git a/drivers/ide/Makefile b/drivers/ide/Makefile
-index 9f617a77970f..cac02db4098d 100644
---- a/drivers/ide/Makefile
-+++ b/drivers/ide/Makefile
-@@ -59,7 +59,6 @@ obj-$(CONFIG_BLK_DEV_PDC202XX_NEW)	+= pdc202xx_new.o
- obj-$(CONFIG_BLK_DEV_PIIX)		+= piix.o
- obj-$(CONFIG_BLK_DEV_RZ1000)		+= rz1000.o
- obj-$(CONFIG_BLK_DEV_SVWKS)		+= serverworks.o
--obj-$(CONFIG_BLK_DEV_SGIIOC4)		+= sgiioc4.o
- obj-$(CONFIG_BLK_DEV_SIIMAGE)		+= siimage.o
- obj-$(CONFIG_BLK_DEV_SIS5513)		+= sis5513.o
- obj-$(CONFIG_BLK_DEV_SL82C105)		+= sl82c105.o
-diff --git a/drivers/ide/sgiioc4.c b/drivers/ide/sgiioc4.c
+-	  When in doubt, say N.
+-
+ config HOTPLUG_PCI_S390
+ 	bool "System z PCI Hotplug Support"
+ 	depends on S390 && 64BIT
+diff --git a/drivers/pci/hotplug/Makefile b/drivers/pci/hotplug/Makefile
+index 7e3331603714..5196983220df 100644
+--- a/drivers/pci/hotplug/Makefile
++++ b/drivers/pci/hotplug/Makefile
+@@ -18,7 +18,6 @@ obj-$(CONFIG_HOTPLUG_PCI_SHPC)		+= shpchp.o
+ obj-$(CONFIG_HOTPLUG_PCI_POWERNV)	+= pnv-php.o
+ obj-$(CONFIG_HOTPLUG_PCI_RPA)		+= rpaphp.o
+ obj-$(CONFIG_HOTPLUG_PCI_RPA_DLPAR)	+= rpadlpar_io.o
+-obj-$(CONFIG_HOTPLUG_PCI_SGI)		+= sgi_hotplug.o
+ obj-$(CONFIG_HOTPLUG_PCI_ACPI)		+= acpiphp.o
+ obj-$(CONFIG_HOTPLUG_PCI_S390)		+= s390_pci_hpc.o
+ 
+diff --git a/drivers/pci/hotplug/sgi_hotplug.c b/drivers/pci/hotplug/sgi_hotplug.c
 deleted file mode 100644
-index 2d35e9f7516f..000000000000
---- a/drivers/ide/sgiioc4.c
+index 231f5bdd3d2d..000000000000
+--- a/drivers/pci/hotplug/sgi_hotplug.c
 +++ /dev/null
-@@ -1,630 +0,0 @@
+@@ -1,700 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
 -/*
-- * Copyright (c) 2003-2006 Silicon Graphics, Inc.  All Rights Reserved.
-- * Copyright (C) 2008-2009 MontaVista Software, Inc.
+- * Copyright (C) 2005-2006 Silicon Graphics, Inc. All rights reserved.
 - *
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms of version 2 of the GNU General Public License
-- * as published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it would be useful, but
-- * WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-- *
-- * You should have received a copy of the GNU General Public
-- * License along with this program; if not, write the Free Software
-- * Foundation, Inc., 59 Temple Place - Suite 330, Boston MA 02111-1307, USA.
-- *
-- * For further information regarding this notice, see:
-- *
-- * http://oss.sgi.com/projects/GenInfo/NoticeExplan
+- * This work was based on the 2.4/2.6 kernel development by Dick Reigner.
+- * Work to add BIOS PROM support was completed by Mike Habeck.
 - */
 -
--#include <linux/module.h>
--#include <linux/types.h>
--#include <linux/pci.h>
--#include <linux/delay.h>
+-#include <linux/acpi.h>
 -#include <linux/init.h>
 -#include <linux/kernel.h>
--#include <linux/ioport.h>
--#include <linux/blkdev.h>
--#include <linux/scatterlist.h>
--#include <linux/ioc4.h>
--#include <linux/io.h>
--#include <linux/ide.h>
+-#include <linux/module.h>
+-#include <linux/pci.h>
+-#include <linux/pci_hotplug.h>
+-#include <linux/proc_fs.h>
+-#include <linux/slab.h>
+-#include <linux/types.h>
+-#include <linux/mutex.h>
 -
--#define DRV_NAME "SGIIOC4"
+-#include <asm/sn/addrs.h>
+-#include <asm/sn/geo.h>
+-#include <asm/sn/l1.h>
+-#include <asm/sn/module.h>
+-#include <asm/sn/pcibr_provider.h>
+-#include <asm/sn/pcibus_provider_defs.h>
+-#include <asm/sn/pcidev.h>
+-#include <asm/sn/sn_feature_sets.h>
+-#include <asm/sn/sn_sal.h>
+-#include <asm/sn/types.h>
+-#include <asm/sn/acpi.h>
 -
--/* IOC4 Specific Definitions */
--#define IOC4_CMD_OFFSET		0x100
--#define IOC4_CTRL_OFFSET	0x120
--#define IOC4_DMA_OFFSET		0x140
--#define IOC4_INTR_OFFSET	0x0
+-#include "../pci.h"
 -
--#define IOC4_TIMING		0x00
--#define IOC4_DMA_PTR_L		0x01
--#define IOC4_DMA_PTR_H		0x02
--#define IOC4_DMA_ADDR_L		0x03
--#define IOC4_DMA_ADDR_H		0x04
--#define IOC4_BC_DEV		0x05
--#define IOC4_BC_MEM		0x06
--#define	IOC4_DMA_CTRL		0x07
--#define	IOC4_DMA_END_ADDR	0x08
+-MODULE_LICENSE("GPL");
+-MODULE_AUTHOR("SGI (prarit@sgi.com, dickie@sgi.com, habeck@sgi.com)");
+-MODULE_DESCRIPTION("SGI Altix Hot Plug PCI Controller Driver");
 -
--/* Bits in the IOC4 Control/Status Register */
--#define	IOC4_S_DMA_START	0x01
--#define	IOC4_S_DMA_STOP		0x02
--#define	IOC4_S_DMA_DIR		0x04
--#define	IOC4_S_DMA_ACTIVE	0x08
--#define	IOC4_S_DMA_ERROR	0x10
--#define	IOC4_ATA_MEMERR		0x02
 -
--/* Read/Write Directions */
--#define	IOC4_DMA_WRITE		0x04
--#define	IOC4_DMA_READ		0x00
+-/* SAL call error codes. Keep in sync with prom header io/include/pcibr.h */
+-#define PCI_SLOT_ALREADY_UP		2	/* slot already up */
+-#define PCI_SLOT_ALREADY_DOWN		3	/* slot already down */
+-#define PCI_L1_ERR			7	/* L1 console command error */
+-#define PCI_EMPTY_33MHZ			15	/* empty 33 MHz bus */
 -
--/* Interrupt Register Offsets */
--#define IOC4_INTR_REG		0x03
--#define	IOC4_INTR_SET		0x05
--#define	IOC4_INTR_CLEAR		0x07
 -
--#define IOC4_IDE_CACHELINE_SIZE	128
--#define IOC4_CMD_CTL_BLK_SIZE	0x20
--#define IOC4_SUPPORTED_FIRMWARE_REV 46
+-#define PCIIO_ASIC_TYPE_TIOCA		4
+-#define PCI_L1_QSIZE			128	/* our L1 message buffer size */
+-#define SN_MAX_HP_SLOTS			32	/* max hotplug slots */
+-#define SN_SLOT_NAME_SIZE		33	/* size of name string */
 -
--struct ioc4_dma_regs {
--	u32 timing_reg0;
--	u32 timing_reg1;
--	u32 low_mem_ptr;
--	u32 high_mem_ptr;
--	u32 low_mem_addr;
--	u32 high_mem_addr;
--	u32 dev_byte_count;
--	u32 mem_byte_count;
--	u32 status;
+-/* internal list head */
+-static struct list_head sn_hp_list;
+-
+-/* hotplug_slot struct's private pointer */
+-struct slot {
+-	int device_num;
+-	struct pci_bus *pci_bus;
+-	/* this struct for glue internal only */
+-	struct hotplug_slot hotplug_slot;
+-	struct list_head hp_list;
+-	char physical_path[SN_SLOT_NAME_SIZE];
 -};
 -
--/* Each Physical Region Descriptor Entry size is 16 bytes (2 * 64 bits) */
--/* IOC4 has only 1 IDE channel */
--#define IOC4_PRD_BYTES		16
--#define IOC4_PRD_ENTRIES	(PAGE_SIZE / (4 * IOC4_PRD_BYTES))
+-struct pcibr_slot_enable_resp {
+-	int resp_sub_errno;
+-	char resp_l1_msg[PCI_L1_QSIZE + 1];
+-};
 -
+-struct pcibr_slot_disable_resp {
+-	int resp_sub_errno;
+-	char resp_l1_msg[PCI_L1_QSIZE + 1];
+-};
 -
--static void sgiioc4_init_hwif_ports(struct ide_hw *hw,
--				    unsigned long data_port,
--				    unsigned long ctrl_port,
--				    unsigned long irq_port)
+-enum sn_pci_req_e {
+-	PCI_REQ_SLOT_ELIGIBLE,
+-	PCI_REQ_SLOT_DISABLE
+-};
+-
+-static int enable_slot(struct hotplug_slot *slot);
+-static int disable_slot(struct hotplug_slot *slot);
+-static inline int get_power_status(struct hotplug_slot *slot, u8 *value);
+-
+-static const struct hotplug_slot_ops sn_hotplug_slot_ops = {
+-	.enable_slot            = enable_slot,
+-	.disable_slot           = disable_slot,
+-	.get_power_status       = get_power_status,
+-};
+-
+-static DEFINE_MUTEX(sn_hotplug_mutex);
+-
+-static struct slot *to_slot(struct hotplug_slot *bss_hotplug_slot)
 -{
--	unsigned long reg = data_port;
--	int i;
--
--	/* Registers are word (32 bit) aligned */
--	for (i = 0; i <= 7; i++)
--		hw->io_ports_array[i] = reg + i * 4;
--
--	hw->io_ports.ctl_addr = ctrl_port;
--	hw->io_ports.irq_addr = irq_port;
+-	return container_of(bss_hotplug_slot, struct slot, hotplug_slot);
 -}
 -
--static int sgiioc4_checkirq(ide_hwif_t *hwif)
+-static ssize_t path_show(struct pci_slot *pci_slot, char *buf)
 -{
--	unsigned long intr_addr = hwif->io_ports.irq_addr + IOC4_INTR_REG * 4;
+-	int retval = -ENOENT;
+-	struct slot *slot = to_slot(pci_slot->hotplug);
 -
--	if (readl((void __iomem *)intr_addr) & 0x03)
--		return 1;
+-	if (!slot)
+-		return retval;
+-
+-	retval = sprintf(buf, "%s\n", slot->physical_path);
+-	return retval;
+-}
+-
+-static struct pci_slot_attribute sn_slot_path_attr = __ATTR_RO(path);
+-
+-static int sn_pci_slot_valid(struct pci_bus *pci_bus, int device)
+-{
+-	struct pcibus_info *pcibus_info;
+-	u16 busnum, segment, ioboard_type;
+-
+-	pcibus_info = SN_PCIBUS_BUSSOFT_INFO(pci_bus);
+-
+-	/* Check to see if this is a valid slot on 'pci_bus' */
+-	if (!(pcibus_info->pbi_valid_devices & (1 << device)))
+-		return -EPERM;
+-
+-	ioboard_type = sn_ioboard_to_pci_bus(pci_bus);
+-	busnum = pcibus_info->pbi_buscommon.bs_persist_busnum;
+-	segment = pci_domain_nr(pci_bus) & 0xf;
+-
+-	/* Do not allow hotplug operations on base I/O cards */
+-	if ((ioboard_type == L1_BRICKTYPE_IX ||
+-	     ioboard_type == L1_BRICKTYPE_IA) &&
+-	    (segment == 1 && busnum == 0 && device != 1))
+-		return -EPERM;
+-
+-	return 1;
+-}
+-
+-static int sn_pci_bus_valid(struct pci_bus *pci_bus)
+-{
+-	struct pcibus_info *pcibus_info;
+-	u32 asic_type;
+-	u16 ioboard_type;
+-
+-	/* Don't register slots hanging off the TIOCA bus */
+-	pcibus_info = SN_PCIBUS_BUSSOFT_INFO(pci_bus);
+-	asic_type = pcibus_info->pbi_buscommon.bs_asic_type;
+-	if (asic_type == PCIIO_ASIC_TYPE_TIOCA)
+-		return -EPERM;
+-
+-	/* Only register slots in I/O Bricks that support hotplug */
+-	ioboard_type = sn_ioboard_to_pci_bus(pci_bus);
+-	switch (ioboard_type) {
+-		case L1_BRICKTYPE_IX:
+-		case L1_BRICKTYPE_PX:
+-		case L1_BRICKTYPE_IA:
+-		case L1_BRICKTYPE_PA:
+-		case L1_BOARDTYPE_PCIX3SLOT:
+-			return 1;
+-			break;
+-		default:
+-			return -EPERM;
+-			break;
+-	}
+-
+-	return -EIO;
+-}
+-
+-static int sn_hp_slot_private_alloc(struct hotplug_slot **bss_hotplug_slot,
+-				    struct pci_bus *pci_bus, int device,
+-				    char *name)
+-{
+-	struct pcibus_info *pcibus_info;
+-	struct slot *slot;
+-
+-	pcibus_info = SN_PCIBUS_BUSSOFT_INFO(pci_bus);
+-
+-	slot = kzalloc(sizeof(*slot), GFP_KERNEL);
+-	if (!slot)
+-		return -ENOMEM;
+-
+-	slot->device_num = device;
+-	slot->pci_bus = pci_bus;
+-	sprintf(name, "%04x:%02x:%02x",
+-		pci_domain_nr(pci_bus),
+-		((u16)pcibus_info->pbi_buscommon.bs_persist_busnum),
+-		device + 1);
+-
+-	sn_generate_path(pci_bus, slot->physical_path);
+-
+-	list_add(&slot->hp_list, &sn_hp_list);
+-	*bss_hotplug_slot = &slot->hotplug_slot;
 -
 -	return 0;
 -}
 -
--static u8 sgiioc4_read_status(ide_hwif_t *);
--
--static int sgiioc4_clearirq(ide_drive_t *drive)
+-static struct hotplug_slot *sn_hp_destroy(void)
 -{
--	u32 intr_reg;
--	ide_hwif_t *hwif = drive->hwif;
--	struct ide_io_ports *io_ports = &hwif->io_ports;
--	unsigned long other_ir = io_ports->irq_addr + (IOC4_INTR_REG << 2);
+-	struct slot *slot;
+-	struct pci_slot *pci_slot;
+-	struct hotplug_slot *bss_hotplug_slot = NULL;
 -
--	/* Code to check for PCI error conditions */
--	intr_reg = readl((void __iomem *)other_ir);
--	if (intr_reg & 0x03) { /* Valid IOC4-IDE interrupt */
--		/*
--		 * Using sgiioc4_read_status to read the Status register has a
--		 * side effect of clearing the interrupt.  The first read should
--		 * clear it if it is set.  The second read should return
--		 * a "clear" status if it got cleared.  If not, then spin
--		 * for a bit trying to clear it.
--		 */
--		u8 stat = sgiioc4_read_status(hwif);
--		int count = 0;
--
--		stat = sgiioc4_read_status(hwif);
--		while ((stat & ATA_BUSY) && (count++ < 100)) {
--			udelay(1);
--			stat = sgiioc4_read_status(hwif);
--		}
--
--		if (intr_reg & 0x02) {
--			struct pci_dev *dev = to_pci_dev(hwif->dev);
--			/* Error when transferring DMA data on PCI bus */
--			u32 pci_err_addr_low, pci_err_addr_high,
--			    pci_stat_cmd_reg;
--
--			pci_err_addr_low =
--				readl((void __iomem *)io_ports->irq_addr);
--			pci_err_addr_high =
--				readl((void __iomem *)(io_ports->irq_addr + 4));
--			pci_read_config_dword(dev, PCI_COMMAND,
--					      &pci_stat_cmd_reg);
--			printk(KERN_ERR "%s(%s): PCI Bus Error when doing DMA: "
--			       "status-cmd reg is 0x%x\n",
--			       __func__, drive->name, pci_stat_cmd_reg);
--			printk(KERN_ERR "%s(%s): PCI Error Address is 0x%x%x\n",
--			       __func__, drive->name,
--			       pci_err_addr_high, pci_err_addr_low);
--			/* Clear the PCI Error indicator */
--			pci_write_config_dword(dev, PCI_COMMAND, 0x00000146);
--		}
--
--		/* Clear the Interrupt, Error bits on the IOC4 */
--		writel(0x03, (void __iomem *)other_ir);
--
--		intr_reg = readl((void __iomem *)other_ir);
+-	list_for_each_entry(slot, &sn_hp_list, hp_list) {
+-		bss_hotplug_slot = &slot->hotplug_slot;
+-		pci_slot = bss_hotplug_slot->pci_slot;
+-		list_del(&slot->hp_list);
+-		sysfs_remove_file(&pci_slot->kobj,
+-				  &sn_slot_path_attr.attr);
+-		break;
 -	}
--
--	return intr_reg & 3;
+-	return bss_hotplug_slot;
 -}
 -
--static void sgiioc4_dma_start(ide_drive_t *drive)
+-static void sn_bus_free_data(struct pci_dev *dev)
 -{
--	ide_hwif_t *hwif = drive->hwif;
--	unsigned long ioc4_dma_addr = hwif->dma_base + IOC4_DMA_CTRL * 4;
--	unsigned int reg = readl((void __iomem *)ioc4_dma_addr);
--	unsigned int temp_reg = reg | IOC4_S_DMA_START;
+-	struct pci_bus *subordinate_bus;
+-	struct pci_dev *child;
 -
--	writel(temp_reg, (void __iomem *)ioc4_dma_addr);
--}
--
--static u32 sgiioc4_ide_dma_stop(ide_hwif_t *hwif, u64 dma_base)
--{
--	unsigned long ioc4_dma_addr = dma_base + IOC4_DMA_CTRL * 4;
--	u32	ioc4_dma;
--	int	count;
--
--	count = 0;
--	ioc4_dma = readl((void __iomem *)ioc4_dma_addr);
--	while ((ioc4_dma & IOC4_S_DMA_STOP) && (count++ < 200)) {
--		udelay(1);
--		ioc4_dma = readl((void __iomem *)ioc4_dma_addr);
+-	/* Recursively clean up sn_irq_info structs */
+-	if (dev->subordinate) {
+-		subordinate_bus = dev->subordinate;
+-		list_for_each_entry(child, &subordinate_bus->devices, bus_list)
+-			sn_bus_free_data(child);
 -	}
--	return ioc4_dma;
--}
--
--/* Stops the IOC4 DMA Engine */
--static int sgiioc4_dma_end(ide_drive_t *drive)
--{
--	u32 ioc4_dma, bc_dev, bc_mem, num, valid = 0, cnt = 0;
--	ide_hwif_t *hwif = drive->hwif;
--	unsigned long dma_base = hwif->dma_base;
--	int dma_stat = 0;
--	unsigned long *ending_dma = ide_get_hwifdata(hwif);
--
--	writel(IOC4_S_DMA_STOP, (void __iomem *)(dma_base + IOC4_DMA_CTRL * 4));
--
--	ioc4_dma = sgiioc4_ide_dma_stop(hwif, dma_base);
--
--	if (ioc4_dma & IOC4_S_DMA_STOP) {
--		printk(KERN_ERR
--		       "%s(%s): IOC4 DMA STOP bit is still 1 :"
--		       "ioc4_dma_reg 0x%x\n",
--		       __func__, drive->name, ioc4_dma);
--		dma_stat = 1;
--	}
--
 -	/*
--	 * The IOC4 will DMA 1's to the ending DMA area to indicate that
--	 * previous data DMA is complete.  This is necessary because of relaxed
--	 * ordering between register reads and DMA writes on the Altix.
+-	 * Some drivers may use dma accesses during the
+-	 * driver remove function. We release the sysdata
+-	 * areas after the driver remove functions have
+-	 * been called.
 -	 */
--	while ((cnt++ < 200) && (!valid)) {
--		for (num = 0; num < 16; num++) {
--			if (ending_dma[num]) {
--				valid = 1;
--				break;
--			}
--		}
--		udelay(1);
--	}
--	if (!valid) {
--		printk(KERN_ERR "%s(%s) : DMA incomplete\n", __func__,
--		       drive->name);
--		dma_stat = 1;
--	}
--
--	bc_dev = readl((void __iomem *)(dma_base + IOC4_BC_DEV * 4));
--	bc_mem = readl((void __iomem *)(dma_base + IOC4_BC_MEM * 4));
--
--	if ((bc_dev & 0x01FF) || (bc_mem & 0x1FF)) {
--		if (bc_dev > bc_mem + 8) {
--			printk(KERN_ERR
--			       "%s(%s): WARNING!! byte_count_dev %d "
--			       "!= byte_count_mem %d\n",
--			       __func__, drive->name, bc_dev, bc_mem);
--		}
--	}
--
--	return dma_stat;
+-	sn_bus_store_sysdata(dev);
+-	sn_pci_unfixup_slot(dev);
 -}
 -
--static void sgiioc4_set_dma_mode(ide_hwif_t *hwif, ide_drive_t *drive)
+-static int sn_slot_enable(struct hotplug_slot *bss_hotplug_slot,
+-			  int device_num, char **ssdt)
 -{
--}
--
--/* Returns 1 if DMA IRQ issued, 0 otherwise */
--static int sgiioc4_dma_test_irq(ide_drive_t *drive)
--{
--	return sgiioc4_checkirq(drive->hwif);
--}
--
--static void sgiioc4_dma_host_set(ide_drive_t *drive, int on)
--{
--	if (!on)
--		sgiioc4_clearirq(drive);
--}
--
--static void sgiioc4_resetproc(ide_drive_t *drive)
--{
--	struct ide_cmd *cmd = &drive->hwif->cmd;
--
--	sgiioc4_dma_end(drive);
--	ide_dma_unmap_sg(drive, cmd);
--	sgiioc4_clearirq(drive);
--}
--
--static void sgiioc4_dma_lost_irq(ide_drive_t *drive)
--{
--	sgiioc4_resetproc(drive);
--
--	ide_dma_lost_irq(drive);
--}
--
--static u8 sgiioc4_read_status(ide_hwif_t *hwif)
--{
--	unsigned long port = hwif->io_ports.status_addr;
--	u8 reg = (u8) readb((void __iomem *) port);
--
--	if (!(reg & ATA_BUSY)) {	/* Not busy... check for interrupt */
--		unsigned long other_ir = port - 0x110;
--		unsigned int intr_reg = (u32) readl((void __iomem *) other_ir);
--
--		/* Clear the Interrupt, Error bits on the IOC4 */
--		if (intr_reg & 0x03) {
--			writel(0x03, (void __iomem *) other_ir);
--			intr_reg = (u32) readl((void __iomem *) other_ir);
--		}
--	}
--
--	return reg;
--}
--
--/* Creates a DMA map for the scatter-gather list entries */
--static int ide_dma_sgiioc4(ide_hwif_t *hwif, const struct ide_port_info *d)
--{
--	struct pci_dev *dev = to_pci_dev(hwif->dev);
--	unsigned long dma_base = pci_resource_start(dev, 0) + IOC4_DMA_OFFSET;
--	int num_ports = sizeof(struct ioc4_dma_regs);
--	void *pad;
--
--	printk(KERN_INFO "    %s: MMIO-DMA\n", hwif->name);
--
--	if (request_mem_region(dma_base, num_ports, hwif->name) == NULL) {
--		printk(KERN_ERR "%s(%s) -- ERROR: addresses 0x%08lx to 0x%08lx "
--		       "already in use\n", __func__, hwif->name,
--		       dma_base, dma_base + num_ports - 1);
--		return -1;
--	}
--
--	hwif->dma_base = (unsigned long)hwif->io_ports.irq_addr +
--			 IOC4_DMA_OFFSET;
--
--	hwif->sg_max_nents = IOC4_PRD_ENTRIES;
--
--	hwif->prd_max_nents = IOC4_PRD_ENTRIES;
--	hwif->prd_ent_size = IOC4_PRD_BYTES;
--
--	if (ide_allocate_dma_engine(hwif))
--		goto dma_pci_alloc_failure;
--
--	pad = dma_alloc_coherent(&dev->dev, IOC4_IDE_CACHELINE_SIZE,
--				   (dma_addr_t *)&hwif->extra_base, GFP_KERNEL);
--	if (pad) {
--		ide_set_hwifdata(hwif, pad);
--		return 0;
--	}
--
--	ide_release_dma_engine(hwif);
--
--	printk(KERN_ERR "%s(%s) -- ERROR: Unable to allocate DMA maps\n",
--	       __func__, hwif->name);
--	printk(KERN_INFO "%s: changing from DMA to PIO mode", hwif->name);
--
--dma_pci_alloc_failure:
--	release_mem_region(dma_base, num_ports);
--
--	return -1;
--}
--
--/* Initializes the IOC4 DMA Engine */
--static void sgiioc4_configure_for_dma(int dma_direction, ide_drive_t *drive)
--{
--	u32 ioc4_dma;
--	ide_hwif_t *hwif = drive->hwif;
--	unsigned long dma_base = hwif->dma_base;
--	unsigned long ioc4_dma_addr = dma_base + IOC4_DMA_CTRL * 4;
--	u32 dma_addr, ending_dma_addr;
--
--	ioc4_dma = readl((void __iomem *)ioc4_dma_addr);
--
--	if (ioc4_dma & IOC4_S_DMA_ACTIVE) {
--		printk(KERN_WARNING "%s(%s): Warning!! DMA from previous "
--		       "transfer was still active\n", __func__, drive->name);
--		writel(IOC4_S_DMA_STOP, (void __iomem *)ioc4_dma_addr);
--		ioc4_dma = sgiioc4_ide_dma_stop(hwif, dma_base);
--
--		if (ioc4_dma & IOC4_S_DMA_STOP)
--			printk(KERN_ERR "%s(%s): IOC4 DMA STOP bit is "
--			       "still 1\n", __func__, drive->name);
--	}
--
--	ioc4_dma = readl((void __iomem *)ioc4_dma_addr);
--	if (ioc4_dma & IOC4_S_DMA_ERROR) {
--		printk(KERN_WARNING "%s(%s): Warning!! DMA Error during "
--		       "previous transfer, status 0x%x\n",
--		       __func__, drive->name, ioc4_dma);
--		writel(IOC4_S_DMA_STOP, (void __iomem *)ioc4_dma_addr);
--		ioc4_dma = sgiioc4_ide_dma_stop(hwif, dma_base);
--
--		if (ioc4_dma & IOC4_S_DMA_STOP)
--			printk(KERN_ERR "%s(%s): IOC4 DMA STOP bit is "
--			       "still 1\n", __func__, drive->name);
--	}
--
--	/* Address of the Scatter Gather List */
--	dma_addr = cpu_to_le32(hwif->dmatable_dma);
--	writel(dma_addr, (void __iomem *)(dma_base + IOC4_DMA_PTR_L * 4));
--
--	/* Address of the Ending DMA */
--	memset(ide_get_hwifdata(hwif), 0, IOC4_IDE_CACHELINE_SIZE);
--	ending_dma_addr = cpu_to_le32(hwif->extra_base);
--	writel(ending_dma_addr, (void __iomem *)(dma_base +
--						 IOC4_DMA_END_ADDR * 4));
--
--	writel(dma_direction, (void __iomem *)ioc4_dma_addr);
--}
--
--/* IOC4 Scatter Gather list Format					 */
--/* 128 Bit entries to support 64 bit addresses in the future		 */
--/* The Scatter Gather list Entry should be in the BIG-ENDIAN Format	 */
--/* --------------------------------------------------------------------- */
--/* | Upper 32 bits - Zero	    |		Lower 32 bits- address | */
--/* --------------------------------------------------------------------- */
--/* | Upper 32 bits - Zero	    |EOL| 15 unused     | 16 Bit Length| */
--/* --------------------------------------------------------------------- */
--/* Creates the scatter gather list, DMA Table				 */
--
--static int sgiioc4_build_dmatable(ide_drive_t *drive, struct ide_cmd *cmd)
--{
--	ide_hwif_t *hwif = drive->hwif;
--	unsigned int *table = hwif->dmatable_cpu;
--	unsigned int count = 0, i = cmd->sg_nents;
--	struct scatterlist *sg = hwif->sg_table;
--
--	while (i && sg_dma_len(sg)) {
--		dma_addr_t cur_addr;
--		int cur_len;
--		cur_addr = sg_dma_address(sg);
--		cur_len = sg_dma_len(sg);
--
--		while (cur_len) {
--			if (count++ >= IOC4_PRD_ENTRIES) {
--				printk(KERN_WARNING
--				       "%s: DMA table too small\n",
--				       drive->name);
--				return 0;
--			} else {
--				u32 bcount =
--				    0x10000 - (cur_addr & 0xffff);
--
--				if (bcount > cur_len)
--					bcount = cur_len;
--
--				/*
--				 * Put the address, length in
--				 * the IOC4 dma-table format
--				 */
--				*table = 0x0;
--				table++;
--				*table = cpu_to_be32(cur_addr);
--				table++;
--				*table = 0x0;
--				table++;
--
--				*table = cpu_to_be32(bcount);
--				table++;
--
--				cur_addr += bcount;
--				cur_len -= bcount;
--			}
--		}
--
--		sg = sg_next(sg);
--		i--;
--	}
--
--	if (count) {
--		table--;
--		*table |= cpu_to_be32(0x80000000);
--		return count;
--	}
--
--	return 0;		/* revert to PIO for this request */
--}
--
--static int sgiioc4_dma_setup(ide_drive_t *drive, struct ide_cmd *cmd)
--{
--	int ddir;
--	u8 write = !!(cmd->tf_flags & IDE_TFLAG_WRITE);
--
--	if (sgiioc4_build_dmatable(drive, cmd) == 0)
--		/* try PIO instead of DMA */
--		return 1;
--
--	if (write)
--		/* Writes TO the IOC4 FROM Main Memory */
--		ddir = IOC4_DMA_READ;
--	else
--		/* Writes FROM the IOC4 TO Main Memory */
--		ddir = IOC4_DMA_WRITE;
--
--	sgiioc4_configure_for_dma(ddir, drive);
--
--	return 0;
--}
--
--static const struct ide_tp_ops sgiioc4_tp_ops = {
--	.exec_command		= ide_exec_command,
--	.read_status		= sgiioc4_read_status,
--	.read_altstatus		= ide_read_altstatus,
--	.write_devctl		= ide_write_devctl,
--
--	.dev_select		= ide_dev_select,
--	.tf_load		= ide_tf_load,
--	.tf_read		= ide_tf_read,
--
--	.input_data		= ide_input_data,
--	.output_data		= ide_output_data,
--};
--
--static const struct ide_port_ops sgiioc4_port_ops = {
--	.set_dma_mode		= sgiioc4_set_dma_mode,
--	/* reset DMA engine, clear IRQs */
--	.resetproc		= sgiioc4_resetproc,
--};
--
--static const struct ide_dma_ops sgiioc4_dma_ops = {
--	.dma_host_set		= sgiioc4_dma_host_set,
--	.dma_setup		= sgiioc4_dma_setup,
--	.dma_start		= sgiioc4_dma_start,
--	.dma_end		= sgiioc4_dma_end,
--	.dma_test_irq		= sgiioc4_dma_test_irq,
--	.dma_lost_irq		= sgiioc4_dma_lost_irq,
--};
--
--static const struct ide_port_info sgiioc4_port_info = {
--	.name			= DRV_NAME,
--	.chipset		= ide_pci,
--	.init_dma		= ide_dma_sgiioc4,
--	.tp_ops			= &sgiioc4_tp_ops,
--	.port_ops		= &sgiioc4_port_ops,
--	.dma_ops		= &sgiioc4_dma_ops,
--	.host_flags		= IDE_HFLAG_MMIO,
--	.irq_flags		= IRQF_SHARED,
--	.mwdma_mask		= ATA_MWDMA2_ONLY,
--};
--
--static int sgiioc4_ide_setup_pci_device(struct pci_dev *dev)
--{
--	unsigned long cmd_base, irqport;
--	unsigned long bar0, cmd_phys_base, ctl;
--	void __iomem *virt_base;
--	struct ide_hw hw, *hws[] = { &hw };
+-	struct slot *slot = to_slot(bss_hotplug_slot);
+-	struct pcibus_info *pcibus_info;
+-	struct pcibr_slot_enable_resp resp;
 -	int rc;
 -
--	/* Get the CmdBlk and CtrlBlk base registers */
--	bar0 = pci_resource_start(dev, 0);
--	virt_base = pci_ioremap_bar(dev, 0);
--	if (virt_base == NULL) {
--		printk(KERN_ERR "%s: Unable to remap BAR 0 address: 0x%lx\n",
--				DRV_NAME, bar0);
--		return -ENOMEM;
--	}
--	cmd_base = (unsigned long)virt_base + IOC4_CMD_OFFSET;
--	ctl = (unsigned long)virt_base + IOC4_CTRL_OFFSET;
--	irqport = (unsigned long)virt_base + IOC4_INTR_OFFSET;
+-	pcibus_info = SN_PCIBUS_BUSSOFT_INFO(slot->pci_bus);
 -
--	cmd_phys_base = bar0 + IOC4_CMD_OFFSET;
--	if (request_mem_region(cmd_phys_base, IOC4_CMD_CTL_BLK_SIZE,
--			       DRV_NAME) == NULL) {
--		printk(KERN_ERR "%s %s -- ERROR: addresses 0x%08lx to 0x%08lx "
--		       "already in use\n", DRV_NAME, pci_name(dev),
--		       cmd_phys_base, cmd_phys_base + IOC4_CMD_CTL_BLK_SIZE);
--		rc = -EBUSY;
--		goto req_mem_rgn_err;
+-	/*
+-	 * Power-on and initialize the slot in the SN
+-	 * PCI infrastructure.
+-	 */
+-	rc = sal_pcibr_slot_enable(pcibus_info, device_num, &resp, ssdt);
+-
+-
+-	if (rc == PCI_SLOT_ALREADY_UP) {
+-		pci_dbg(slot->pci_bus->self, "is already active\n");
+-		return 1; /* return 1 to user */
 -	}
 -
--	/* Initialize the IO registers */
--	memset(&hw, 0, sizeof(hw));
--	sgiioc4_init_hwif_ports(&hw, cmd_base, ctl, irqport);
--	hw.irq = dev->irq;
--	hw.dev = &dev->dev;
+-	if (rc == PCI_L1_ERR) {
+-		pci_dbg(slot->pci_bus->self, "L1 failure %d with message: %s",
+-			resp.resp_sub_errno, resp.resp_l1_msg);
+-		return -EPERM;
+-	}
 -
--	/* Initialize chipset IRQ registers */
--	writel(0x03, (void __iomem *)(irqport + IOC4_INTR_SET * 4));
+-	if (rc) {
+-		pci_dbg(slot->pci_bus->self, "insert failed with error %d sub-error %d\n",
+-			rc, resp.resp_sub_errno);
+-		return -EIO;
+-	}
 -
--	rc = ide_host_add(&sgiioc4_port_info, hws, 1, NULL);
--	if (!rc)
+-	pcibus_info = SN_PCIBUS_BUSSOFT_INFO(slot->pci_bus);
+-	pcibus_info->pbi_enabled_devices |= (1 << device_num);
+-
+-	return 0;
+-}
+-
+-static int sn_slot_disable(struct hotplug_slot *bss_hotplug_slot,
+-			   int device_num, int action)
+-{
+-	struct slot *slot = to_slot(bss_hotplug_slot);
+-	struct pcibus_info *pcibus_info;
+-	struct pcibr_slot_disable_resp resp;
+-	int rc;
+-
+-	pcibus_info = SN_PCIBUS_BUSSOFT_INFO(slot->pci_bus);
+-
+-	rc = sal_pcibr_slot_disable(pcibus_info, device_num, action, &resp);
+-
+-	if ((action == PCI_REQ_SLOT_ELIGIBLE) &&
+-	    (rc == PCI_SLOT_ALREADY_DOWN)) {
+-		pci_dbg(slot->pci_bus->self, "Slot %s already inactive\n", slot->physical_path);
+-		return 1; /* return 1 to user */
+-	}
+-
+-	if ((action == PCI_REQ_SLOT_ELIGIBLE) && (rc == PCI_EMPTY_33MHZ)) {
+-		pci_dbg(slot->pci_bus->self, "Cannot remove last 33MHz card\n");
+-		return -EPERM;
+-	}
+-
+-	if ((action == PCI_REQ_SLOT_ELIGIBLE) && (rc == PCI_L1_ERR)) {
+-		pci_dbg(slot->pci_bus->self, "L1 failure %d with message \n%s\n",
+-			resp.resp_sub_errno, resp.resp_l1_msg);
+-		return -EPERM;
+-	}
+-
+-	if ((action == PCI_REQ_SLOT_ELIGIBLE) && rc) {
+-		pci_dbg(slot->pci_bus->self, "remove failed with error %d sub-error %d\n",
+-			rc, resp.resp_sub_errno);
+-		return -EIO;
+-	}
+-
+-	if ((action == PCI_REQ_SLOT_ELIGIBLE) && !rc)
 -		return 0;
 -
--	release_mem_region(cmd_phys_base, IOC4_CMD_CTL_BLK_SIZE);
--req_mem_rgn_err:
--	iounmap(virt_base);
+-	if ((action == PCI_REQ_SLOT_DISABLE) && !rc) {
+-		pcibus_info = SN_PCIBUS_BUSSOFT_INFO(slot->pci_bus);
+-		pcibus_info->pbi_enabled_devices &= ~(1 << device_num);
+-		pci_dbg(slot->pci_bus->self, "remove successful\n");
+-		return 0;
+-	}
+-
+-	if ((action == PCI_REQ_SLOT_DISABLE) && rc) {
+-		pci_dbg(slot->pci_bus->self, "remove failed rc = %d\n", rc);
+-	}
+-
 -	return rc;
 -}
 -
--static unsigned int pci_init_sgiioc4(struct pci_dev *dev)
+-/*
+- * Power up and configure the slot via a SAL call to PROM.
+- * Scan slot (and any children), do any platform specific fixup,
+- * and find device driver.
+- */
+-static int enable_slot(struct hotplug_slot *bss_hotplug_slot)
 -{
--	int ret;
+-	struct slot *slot = to_slot(bss_hotplug_slot);
+-	struct pci_bus *new_bus = NULL;
+-	struct pci_dev *dev;
+-	int num_funcs;
+-	int new_ppb = 0;
+-	int rc;
+-	char *ssdt = NULL;
+-	void pcibios_fixup_device_resources(struct pci_dev *);
 -
--	printk(KERN_INFO "%s: IDE controller at PCI slot %s, revision %d\n",
--			 DRV_NAME, pci_name(dev), dev->revision);
+-	/* Serialize the Linux PCI infrastructure */
+-	mutex_lock(&sn_hotplug_mutex);
 -
--	if (dev->revision < IOC4_SUPPORTED_FIRMWARE_REV) {
--		printk(KERN_ERR "Skipping %s IDE controller in slot %s: "
--				"firmware is obsolete - please upgrade to "
--				"revision46 or higher\n",
--				DRV_NAME, pci_name(dev));
--		ret = -EAGAIN;
--		goto out;
--	}
--	ret = sgiioc4_ide_setup_pci_device(dev);
--out:
--	return ret;
--}
--
--static int ioc4_ide_attach_one(struct ioc4_driver_data *idd)
--{
 -	/*
--	 * PCI-RT does not bring out IDE connection.
--	 * Do not attach to this particular IOC4.
+-	 * Power-on and initialize the slot in the SN
+-	 * PCI infrastructure. Also, retrieve the ACPI SSDT
+-	 * table for the slot (if ACPI capable PROM).
 -	 */
--	if (idd->idd_variant == IOC4_VARIANT_PCI_RT)
--		return 0;
+-	rc = sn_slot_enable(bss_hotplug_slot, slot->device_num, &ssdt);
+-	if (rc) {
+-		mutex_unlock(&sn_hotplug_mutex);
+-		return rc;
+-	}
 -
--	return pci_init_sgiioc4(idd->idd_pdev);
+-	if (ssdt)
+-		ssdt = __va(ssdt);
+-	/* Add the new SSDT for the slot to the ACPI namespace */
+-	if (SN_ACPI_BASE_SUPPORT() && ssdt) {
+-		acpi_status ret;
+-
+-		ret = acpi_load_table((struct acpi_table_header *)ssdt);
+-		if (ACPI_FAILURE(ret)) {
+-			printk(KERN_ERR "%s: acpi_load_table failed (0x%x)\n",
+-			       __func__, ret);
+-			/* try to continue on */
+-		}
+-	}
+-
+-	num_funcs = pci_scan_slot(slot->pci_bus,
+-				  PCI_DEVFN(slot->device_num + 1, 0));
+-	if (!num_funcs) {
+-		pci_dbg(slot->pci_bus->self, "no device in slot\n");
+-		mutex_unlock(&sn_hotplug_mutex);
+-		return -ENODEV;
+-	}
+-
+-	/*
+-	 * Map SN resources for all functions on the card
+-	 * to the Linux PCI interface and tell the drivers
+-	 * about them.
+-	 */
+-	list_for_each_entry(dev, &slot->pci_bus->devices, bus_list) {
+-		if (PCI_SLOT(dev->devfn) != slot->device_num + 1)
+-			continue;
+-
+-		/* Need to do slot fixup on PPB before fixup of children
+-		 * (PPB's pcidev_info needs to be in pcidev_info list
+-		 * before child's SN_PCIDEV_INFO() call to setup
+-		 * pdi_host_pcidev_info).
+-		 */
+-		pcibios_fixup_device_resources(dev);
+-		if (SN_ACPI_BASE_SUPPORT())
+-			sn_acpi_slot_fixup(dev);
+-		else
+-			sn_io_slot_fixup(dev);
+-		if (dev->hdr_type == PCI_HEADER_TYPE_BRIDGE) {
+-			pci_hp_add_bridge(dev);
+-			if (dev->subordinate) {
+-				new_bus = dev->subordinate;
+-				new_ppb = 1;
+-			}
+-		}
+-	}
+-
+-	/*
+-	 * Add the slot's devices to the ACPI infrastructure */
+-	if (SN_ACPI_BASE_SUPPORT() && ssdt) {
+-		unsigned long long adr;
+-		struct acpi_device *pdevice;
+-		acpi_handle phandle;
+-		acpi_handle chandle = NULL;
+-		acpi_handle rethandle;
+-		acpi_status ret;
+-
+-		phandle = acpi_device_handle(PCI_CONTROLLER(slot->pci_bus)->companion);
+-
+-		if (acpi_bus_get_device(phandle, &pdevice)) {
+-			pci_dbg(slot->pci_bus->self, "no parent device, assuming NULL\n");
+-			pdevice = NULL;
+-		}
+-
+-		acpi_scan_lock_acquire();
+-		/*
+-		 * Walk the rootbus node's immediate children looking for
+-		 * the slot's device node(s). There can be more than
+-		 * one for multifunction devices.
+-		 */
+-		for (;;) {
+-			rethandle = NULL;
+-			ret = acpi_get_next_object(ACPI_TYPE_DEVICE,
+-						   phandle, chandle,
+-						   &rethandle);
+-
+-			if (ret == AE_NOT_FOUND || rethandle == NULL)
+-				break;
+-
+-			chandle = rethandle;
+-
+-			ret = acpi_evaluate_integer(chandle, METHOD_NAME__ADR,
+-						    NULL, &adr);
+-
+-			if (ACPI_SUCCESS(ret) &&
+-			    (adr>>16) == (slot->device_num + 1)) {
+-
+-				ret = acpi_bus_scan(chandle);
+-				if (ACPI_FAILURE(ret)) {
+-					printk(KERN_ERR "%s: acpi_bus_scan failed (0x%x) for slot %d func %d\n",
+-					       __func__, ret, (int)(adr>>16),
+-					       (int)(adr&0xffff));
+-					/* try to continue on */
+-				}
+-			}
+-		}
+-		acpi_scan_lock_release();
+-	}
+-
+-	pci_lock_rescan_remove();
+-
+-	/* Call the driver for the new device */
+-	pci_bus_add_devices(slot->pci_bus);
+-	/* Call the drivers for the new devices subordinate to PPB */
+-	if (new_ppb)
+-		pci_bus_add_devices(new_bus);
+-
+-	pci_unlock_rescan_remove();
+-	mutex_unlock(&sn_hotplug_mutex);
+-
+-	if (rc == 0)
+-		pci_dbg(slot->pci_bus->self, "insert operation successful\n");
+-	else
+-		pci_dbg(slot->pci_bus->self, "insert operation failed rc = %d\n", rc);
+-
+-	return rc;
 -}
 -
--static struct ioc4_submodule ioc4_ide_submodule = {
--	.is_name = "IOC4_ide",
--	.is_owner = THIS_MODULE,
--	.is_probe = ioc4_ide_attach_one,
--};
--
--static int __init ioc4_ide_init(void)
+-static int disable_slot(struct hotplug_slot *bss_hotplug_slot)
 -{
--	return ioc4_register_submodule(&ioc4_ide_submodule);
+-	struct slot *slot = to_slot(bss_hotplug_slot);
+-	struct pci_dev *dev, *temp;
+-	int rc;
+-	acpi_handle ssdt_hdl = NULL;
+-
+-	/* Acquire update access to the bus */
+-	mutex_lock(&sn_hotplug_mutex);
+-
+-	/* is it okay to bring this slot down? */
+-	rc = sn_slot_disable(bss_hotplug_slot, slot->device_num,
+-			     PCI_REQ_SLOT_ELIGIBLE);
+-	if (rc)
+-		goto leaving;
+-
+-	/* free the ACPI resources for the slot */
+-	if (SN_ACPI_BASE_SUPPORT() &&
+-		PCI_CONTROLLER(slot->pci_bus)->companion) {
+-		unsigned long long adr;
+-		struct acpi_device *device;
+-		acpi_handle phandle;
+-		acpi_handle chandle = NULL;
+-		acpi_handle rethandle;
+-		acpi_status ret;
+-
+-		/* Get the rootbus node pointer */
+-		phandle = acpi_device_handle(PCI_CONTROLLER(slot->pci_bus)->companion);
+-
+-		acpi_scan_lock_acquire();
+-		/*
+-		 * Walk the rootbus node's immediate children looking for
+-		 * the slot's device node(s). There can be more than
+-		 * one for multifunction devices.
+-		 */
+-		for (;;) {
+-			rethandle = NULL;
+-			ret = acpi_get_next_object(ACPI_TYPE_DEVICE,
+-						   phandle, chandle,
+-						   &rethandle);
+-
+-			if (ret == AE_NOT_FOUND || rethandle == NULL)
+-				break;
+-
+-			chandle = rethandle;
+-
+-			ret = acpi_evaluate_integer(chandle,
+-						    METHOD_NAME__ADR,
+-						    NULL, &adr);
+-			if (ACPI_SUCCESS(ret) &&
+-			    (adr>>16) == (slot->device_num + 1)) {
+-				/* retain the owner id */
+-				ssdt_hdl = chandle;
+-
+-				ret = acpi_bus_get_device(chandle,
+-							  &device);
+-				if (ACPI_SUCCESS(ret))
+-					acpi_bus_trim(device);
+-			}
+-		}
+-		acpi_scan_lock_release();
+-	}
+-
+-	pci_lock_rescan_remove();
+-	/* Free the SN resources assigned to the Linux device.*/
+-	list_for_each_entry_safe(dev, temp, &slot->pci_bus->devices, bus_list) {
+-		if (PCI_SLOT(dev->devfn) != slot->device_num + 1)
+-			continue;
+-
+-		pci_dev_get(dev);
+-		sn_bus_free_data(dev);
+-		pci_stop_and_remove_bus_device(dev);
+-		pci_dev_put(dev);
+-	}
+-	pci_unlock_rescan_remove();
+-
+-	/* Remove the SSDT for the slot from the ACPI namespace */
+-	if (SN_ACPI_BASE_SUPPORT() && ssdt_hdl) {
+-		acpi_status ret;
+-		ret = acpi_unload_parent_table(ssdt_hdl);
+-		if (ACPI_FAILURE(ret)) {
+-			acpi_handle_err(ssdt_hdl,
+-					"%s: acpi_unload_parent_table failed (0x%x)\n",
+-					__func__, ret);
+-			/* try to continue on */
+-		}
+-	}
+-
+-	/* free the collected sysdata pointers */
+-	sn_bus_free_sysdata();
+-
+-	/* Deactivate slot */
+-	rc = sn_slot_disable(bss_hotplug_slot, slot->device_num,
+-			     PCI_REQ_SLOT_DISABLE);
+- leaving:
+-	/* Release the bus lock */
+-	mutex_unlock(&sn_hotplug_mutex);
+-
+-	return rc;
 -}
 -
--late_initcall(ioc4_ide_init); /* Call only after IDE init is done */
+-static inline int get_power_status(struct hotplug_slot *bss_hotplug_slot,
+-				   u8 *value)
+-{
+-	struct slot *slot = to_slot(bss_hotplug_slot);
+-	struct pcibus_info *pcibus_info;
+-	u32 power;
 -
--MODULE_AUTHOR("Aniket Malatpure/Jeremy Higdon");
--MODULE_DESCRIPTION("IDE PCI driver module for SGI IOC4 Base-IO Card");
--MODULE_LICENSE("GPL");
+-	pcibus_info = SN_PCIBUS_BUSSOFT_INFO(slot->pci_bus);
+-	mutex_lock(&sn_hotplug_mutex);
+-	power = pcibus_info->pbi_enabled_devices & (1 << slot->device_num);
+-	*value = power ? 1 : 0;
+-	mutex_unlock(&sn_hotplug_mutex);
+-	return 0;
+-}
+-
+-static void sn_release_slot(struct hotplug_slot *bss_hotplug_slot)
+-{
+-	kfree(to_slot(bss_hotplug_slot));
+-}
+-
+-static int sn_hotplug_slot_register(struct pci_bus *pci_bus)
+-{
+-	int device;
+-	struct pci_slot *pci_slot;
+-	struct hotplug_slot *bss_hotplug_slot;
+-	char name[SN_SLOT_NAME_SIZE];
+-	int rc = 0;
+-
+-	/*
+-	 * Currently only four devices are supported,
+-	 * in the future there maybe more -- up to 32.
+-	 */
+-
+-	for (device = 0; device < SN_MAX_HP_SLOTS ; device++) {
+-		if (sn_pci_slot_valid(pci_bus, device) != 1)
+-			continue;
+-
+-		if (sn_hp_slot_private_alloc(&bss_hotplug_slot,
+-					     pci_bus, device, name)) {
+-			rc = -ENOMEM;
+-			goto alloc_err;
+-		}
+-		bss_hotplug_slot->ops = &sn_hotplug_slot_ops;
+-
+-		rc = pci_hp_register(bss_hotplug_slot, pci_bus, device, name);
+-		if (rc)
+-			goto register_err;
+-
+-		pci_slot = bss_hotplug_slot->pci_slot;
+-		rc = sysfs_create_file(&pci_slot->kobj,
+-				       &sn_slot_path_attr.attr);
+-		if (rc)
+-			goto alloc_err;
+-	}
+-	pci_dbg(pci_bus->self, "Registered bus with hotplug\n");
+-	return rc;
+-
+-register_err:
+-	pci_dbg(pci_bus->self, "bus failed to register with err = %d\n",
+-		rc);
+-
+-	/* destroy THIS element */
+-	sn_hp_destroy();
+-	sn_release_slot(bss_hotplug_slot);
+-
+-alloc_err:
+-	/* destroy anything else on the list */
+-	while ((bss_hotplug_slot = sn_hp_destroy())) {
+-		pci_hp_deregister(bss_hotplug_slot);
+-		sn_release_slot(bss_hotplug_slot);
+-	}
+-
+-	return rc;
+-}
+-
+-static int __init sn_pci_hotplug_init(void)
+-{
+-	struct pci_bus *pci_bus = NULL;
+-	int rc;
+-	int registered = 0;
+-
+-	if (!sn_prom_feature_available(PRF_HOTPLUG_SUPPORT)) {
+-		printk(KERN_ERR "%s: PROM version does not support hotplug.\n",
+-		       __func__);
+-		return -EPERM;
+-	}
+-
+-	INIT_LIST_HEAD(&sn_hp_list);
+-
+-	while ((pci_bus = pci_find_next_bus(pci_bus))) {
+-		if (!pci_bus->sysdata)
+-			continue;
+-
+-		rc = sn_pci_bus_valid(pci_bus);
+-		if (rc != 1) {
+-			pci_dbg(pci_bus->self, "not a valid hotplug bus\n");
+-			continue;
+-		}
+-		pci_dbg(pci_bus->self, "valid hotplug bus\n");
+-
+-		rc = sn_hotplug_slot_register(pci_bus);
+-		if (!rc) {
+-			registered = 1;
+-		} else {
+-			registered = 0;
+-			break;
+-		}
+-	}
+-
+-	return registered == 1 ? 0 : -ENODEV;
+-}
+-
+-static void __exit sn_pci_hotplug_exit(void)
+-{
+-	struct hotplug_slot *bss_hotplug_slot;
+-
+-	while ((bss_hotplug_slot = sn_hp_destroy())) {
+-		pci_hp_deregister(bss_hotplug_slot);
+-		sn_release_slot(bss_hotplug_slot);
+-	}
+-
+-	if (!list_empty(&sn_hp_list))
+-		printk(KERN_ERR "%s: internal list is not empty\n", __FILE__);
+-}
+-
+-module_init(sn_pci_hotplug_init);
+-module_exit(sn_pci_hotplug_exit);
 -- 
 2.20.1
 
