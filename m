@@ -2,168 +2,193 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17142C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E00AC32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:24:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E25F121E70
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:23:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E86E621E70
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 14:24:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="fBsaSif4";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="hf3M+D7Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388160AbfHGOXM (ORCPT
+        id S2388212AbfHGOYd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 10:23:12 -0400
-Received: from foss.arm.com ([217.140.110.172]:49352 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729278AbfHGOXM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 10:23:12 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1AFCB344;
-        Wed,  7 Aug 2019 07:23:11 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 672423F706;
-        Wed,  7 Aug 2019 07:23:10 -0700 (PDT)
-Subject: Re: [PATCH v6 23/57] irqchip: Remove dev_err() usage after
- platform_get_irq()
-To:     Stephen Boyd <swboyd@chromium.org>, linux-kernel@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <20190730181557.90391-1-swboyd@chromium.org>
- <20190730181557.90391-24-swboyd@chromium.org>
-From:   Marc Zyngier <marc.zyngier@arm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
- 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
- Z46HaNmN2hZS/oJ69c1DI5Rcww==
-Organization: ARM Ltd
-Message-ID: <c850747f-095d-a33c-c276-f1ee7166671a@arm.com>
-Date:   Wed, 7 Aug 2019 15:23:09 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 7 Aug 2019 10:24:33 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:47336 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387523AbfHGOYd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 10:24:33 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 4988D60D35; Wed,  7 Aug 2019 14:24:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1565187872;
+        bh=TqtXjvA2wys2lfRDwlvy5cmn7QfUdRI/dG4BW9afB0U=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=fBsaSif4hsdkDInR7tBbq2VjdMzqZKU7kTiZu2qzNwRbsGlgRK5QT3rynx1fFKe/S
+         6EfEGf9I77lNahiT6WYmQfVkB9iqYp59Rma31Md6DmKZF95PaW6tNP4EmXqh71Uyt7
+         E6BzQ1phFFpUeffZDaXZyrVLSq3v9j8g0igtbL0s=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D8EBA60A50;
+        Wed,  7 Aug 2019 14:24:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1565187861;
+        bh=TqtXjvA2wys2lfRDwlvy5cmn7QfUdRI/dG4BW9afB0U=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=hf3M+D7QOGDj0cYAxjj2gENhaH8OaWy82MwWW7LeLwU5+g8fRv6xDaRGQU6ZKBTGf
+         PMaeTDnua2YdCpLJawSv/LDwwQrDZtlTvW1r/6EJ8q7bfov1NJbMrd9XyaBkviNjco
+         Ho2MdKAdvSgmD65eob0Sx5Fm+gGkT3xAv6TRZaVc=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D8EBA60A50
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Oliver Neukum <oneukum@suse.com>
+Cc:     Andrey Konovalov <andreyknvl@google.com>,
+        syzbot <syzbot+74c65761783d66a9c97c@syzkaller.appspotmail.com>,
+        USB list <linux-usb@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Ulrich Kunitz <kune@deine-taler.de>,
+        Daniel Drake <dsd@gentoo.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-wireless@vger.kernel.org, netdev <netdev@vger.kernel.org>
+Subject: Re: WARNING in zd_mac_clear
+References: <00000000000075a7a6058653d977@google.com>
+        <CAAeHK+zW61WK67wcwhXVCuU0dx_PicpiXmbDCPtJzX-viQ2R0A@mail.gmail.com>
+        <1565187539.15973.6.camel@suse.com>
+Date:   Wed, 07 Aug 2019 17:24:16 +0300
+In-Reply-To: <1565187539.15973.6.camel@suse.com> (Oliver Neukum's message of
+        "Wed, 07 Aug 2019 16:18:59 +0200")
+Message-ID: <87lfw5dpf3.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20190730181557.90391-24-swboyd@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+Oliver Neukum <oneukum@suse.com> writes:
 
-On 30/07/2019 19:15, Stephen Boyd wrote:
-> We don't need dev_err() messages when platform_get_irq() fails now that
-> platform_get_irq() prints an error message itself when something goes
-> wrong. Let's remove these prints with a simple semantic patch.
-> 
-> // <smpl>
-> @@
-> expression ret;
-> struct platform_device *E;
-> @@
-> 
-> ret =
-> (
-> platform_get_irq(E, ...)
-> |
-> platform_get_irq_byname(E, ...)
-> );
-> 
-> if ( \( ret < 0 \| ret <= 0 \) )
-> {
-> (
-> -if (ret != -EPROBE_DEFER)
-> -{ ...
-> -dev_err(...);
-> -... }
-> |
-> ...
-> -dev_err(...);
-> )
-> ...
-> }
-> // </smpl>
-> 
-> While we're here, remove braces on if statements that only have one
-> statement (manually).
-> 
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Jason Cooper <jason@lakedaemon.net>
-> Cc: Marc Zyngier <marc.zyngier@arm.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> ---
-> 
-> Please apply directly to subsystem trees
-> 
->  drivers/irqchip/irq-imgpdc.c        | 8 ++------
->  drivers/irqchip/irq-keystone.c      | 4 +---
->  drivers/irqchip/qcom-irq-combiner.c | 4 +---
->  3 files changed, 4 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/irqchip/irq-imgpdc.c b/drivers/irqchip/irq-imgpdc.c
-> index d00489a4b54f..698d07f48fed 100644
-> --- a/drivers/irqchip/irq-imgpdc.c
-> +++ b/drivers/irqchip/irq-imgpdc.c
-> @@ -362,10 +362,8 @@ static int pdc_intc_probe(struct platform_device *pdev)
->  	}
->  	for (i = 0; i < priv->nr_perips; ++i) {
->  		irq = platform_get_irq(pdev, 1 + i);
-> -		if (irq < 0) {
-> -			dev_err(&pdev->dev, "cannot find perip IRQ #%u\n", i);
-> +		if (irq < 0)
+> Am Mittwoch, den 07.08.2019, 16:07 +0200 schrieb Andrey Konovalov:
+>> On Fri, Apr 12, 2019 at 1:46 PM syzbot
+>> <syzbot+74c65761783d66a9c97c@syzkaller.appspotmail.com> wrote:
+>> > 
+>> > Hello,
+>> > 
+>> > syzbot found the following crash on:
+>> > 
+>> > HEAD commit:    9a33b369 usb-fuzzer: main usb gadget fuzzer driver
+>> > git tree:       https://github.com/google/kasan/tree/usb-fuzzer
+>> > console output: https://syzkaller.appspot.com/x/log.txt?x=101a06dd200000
+>> > kernel config:  https://syzkaller.appspot.com/x/.config?x=23e37f59d94ddd15
+>> > dashboard link: https://syzkaller.appspot.com/bug?extid=74c65761783d66a9c97c
+>> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+>> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1170c22d200000
+>> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1496adbb200000
+>> > 
+>> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+>> > Reported-by: syzbot+74c65761783d66a9c97c@syzkaller.appspotmail.com
+>> > 
+>> > usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+>> > usb 1-1: config 0 descriptor??
+>> > usb 1-1: reset low-speed USB device number 2 using dummy_hcd
+>> > usb 1-1: read over firmware interface failed: -71
+>> > usb 1-1: reset low-speed USB device number 2 using dummy_hcd
+>> > WARNING: CPU: 1 PID: 21 at drivers/net/wireless/zydas/zd1211rw/zd_mac.c:238
+>> > zd_mac_clear+0xb0/0xe0 drivers/net/wireless/zydas/zd1211rw/zd_mac.c:238
+>> > Kernel panic - not syncing: panic_on_warn set ...
+>> > CPU: 1 PID: 21 Comm: kworker/1:1 Not tainted 5.1.0-rc4-319354-g9a33b36 #3
+>> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+>> > Google 01/01/2011
+>> > Workqueue: usb_hub_wq hub_event
+>> > Call Trace:
+>> >   __dump_stack lib/dump_stack.c:77 [inline]
+>> >   dump_stack+0xe8/0x16e lib/dump_stack.c:113
+>> >   panic+0x29d/0x5f2 kernel/panic.c:214
+>> >   __warn.cold+0x20/0x48 kernel/panic.c:571
+>> >   report_bug+0x262/0x2a0 lib/bug.c:186
+>> >   fixup_bug arch/x86/kernel/traps.c:179 [inline]
+>> >   fixup_bug arch/x86/kernel/traps.c:174 [inline]
+>> >   do_error_trap+0x130/0x1f0 arch/x86/kernel/traps.c:272
+>> >   do_invalid_op+0x37/0x40 arch/x86/kernel/traps.c:291
+>> >   invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:973
+>> > RIP: 0010:zd_mac_clear+0xb0/0xe0
+>> > drivers/net/wireless/zydas/zd1211rw/zd_mac.c:238
+>> > Code: e8 85 d0 60 f8 48 8d bb f8 2b 00 00 be ff ff ff ff e8 54 5a 46 f8 31
+>> > ff 89 c3 89 c6 e8 d9 d1 60 f8 85 db 75 d4 e8 60 d0 60 f8 <0f> 0b 5b 5d e9
+>> > 57 d0 60 f8 48 c7 c7 58 05 cb 93 e8 fb e0 97 f8 eb
+>> > RSP: 0018:ffff8880a85c7310 EFLAGS: 00010293
+>> > RAX: ffff8880a84de200 RBX: 0000000000000000 RCX: ffffffff8910f507
+>> > RDX: 0000000000000000 RSI: ffffffff8910f510 RDI: 0000000000000005
+>> > RBP: 0000000000000001 R08: ffff8880a84de200 R09: ffffed1012f83a0b
+>> > R10: ffffed1012f83a0a R11: ffff888097c1d057 R12: 00000000ffffffb9
+>> > R13: ffff888097c18b20 R14: ffff888099456630 R15: ffffffff8f979398
+>> >   probe+0x259/0x590 drivers/net/wireless/zydas/zd1211rw/zd_usb.c:1421
+>> >   usb_probe_interface+0x31d/0x820 drivers/usb/core/driver.c:361
+>> >   really_probe+0x2da/0xb10 drivers/base/dd.c:509
+>> >   driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
+>> >   __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
+>> >   bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
+>> >   __device_attach+0x223/0x3a0 drivers/base/dd.c:844
+>> >   bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
+>> >   device_add+0xad2/0x16e0 drivers/base/core.c:2106
+>> >   usb_set_configuration+0xdf7/0x1740 drivers/usb/core/message.c:2021
+>> >   generic_probe+0xa2/0xda drivers/usb/core/generic.c:210
+>> >   usb_probe_device+0xc0/0x150 drivers/usb/core/driver.c:266
+>> >   really_probe+0x2da/0xb10 drivers/base/dd.c:509
+>> >   driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
+>> >   __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
+>> >   bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
+>> >   __device_attach+0x223/0x3a0 drivers/base/dd.c:844
+>> >   bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
+>> >   device_add+0xad2/0x16e0 drivers/base/core.c:2106
+>> >   usb_new_device.cold+0x537/0xccf drivers/usb/core/hub.c:2534
+>> >   hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+>> >   hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+>> >   port_event drivers/usb/core/hub.c:5350 [inline]
+>> >   hub_event+0x138e/0x3b00 drivers/usb/core/hub.c:5432
+>> >   process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
+>> >   worker_thread+0x9b/0xe20 kernel/workqueue.c:2415
+>> >   kthread+0x313/0x420 kernel/kthread.c:253
+>> >   ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+>> > Kernel Offset: disabled
+>> > Rebooting in 86400 seconds..
+>> 
+>> This USB bug is the second most frequently triggered one with over 10k
+>> kernel crashes.
+>
+> As far as I can tell this is a false positive. Didn't I submit this
+> upstream?
+>
+> #syz test: https://github.com/google/kasan.git 9a33b369
+>
+> From ae999d5a437850b65497df7dcca3ffc10f75e697 Mon Sep 17 00:00:00 2001
+> From: Oliver Neukum <oneukum@suse.com>
+> Date: Tue, 30 Jul 2019 15:59:03 +0200
+> Subject: [PATCH] zdnet: remove false assertion from zd_mac_clear()
+>
+> The function is called before the lock which is asserted was ever used.
+> Just remove it.
+>
+> Reported-by: syzbot+74c65761783d66a9c97c@syzkaller.appspotmail.com
+> Signed-off-by: Oliver Neukum <oneukum@suse.com>
 
-There's a bug here. irq == 0 *is* an error. Same thing for the next two
-hunks. Nothing wrong with your patch though.
+Neither google nor patchwork[1] can find the patch. If you think the
+patch should be applied, please resubmit it to linux-wireless so
+patchwork sees it. Also the title prefix should be "zd1211rw:", not
+"zdnet:".
 
-I guess I'll fix it on top as I apply it.
+[1] https://patchwork.kernel.org/project/linux-wireless/list/
 
-Thanks,
-
-	M.
 -- 
-Jazz is not dead. It just smells funny...
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
