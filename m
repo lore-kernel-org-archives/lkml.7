@@ -2,102 +2,167 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 362A2C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:39:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E281FC31E40
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:40:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A924205C9
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:39:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9C7D21743
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:40:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K76IQ8Uc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a57ErTyt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730491AbfHGBjs (ORCPT
+        id S1729896AbfHGBkQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 21:39:48 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:37800 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729380AbfHGBjn (ORCPT
+        Tue, 6 Aug 2019 21:40:16 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:43248 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729144AbfHGBeJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 21:39:43 -0400
-Received: by mail-wm1-f68.google.com with SMTP id f17so78246218wme.2;
-        Tue, 06 Aug 2019 18:39:42 -0700 (PDT)
+        Tue, 6 Aug 2019 21:34:09 -0400
+Received: by mail-pf1-f193.google.com with SMTP id i189so42499259pfg.10;
+        Tue, 06 Aug 2019 18:34:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MRGHhYFTRmS6ThghCzMlHBCCluvRIS5WKEjM9Zj/Oi0=;
-        b=K76IQ8Uckf1ZSmTdM0fjpVm4GXZbhtGAQtHES1wlaPV9imsJRJX1pFQCvDaZAVkOoQ
-         sur/mJytGkWLtj+2qFHOulrszTQfnmogSlbeIzROwwa9actS/uIFSM7d7sc5bROU8VKR
-         ogmCOQM2dw40A5p0hijAetDrfeZcmeKv4ILKmW69mNyVo8VfqwN25Vl5zGXip/aOUP/Z
-         qnRdq9ULFEQ3WtdpTrYCFcWCzi3Fit/e4x0XdPMlTO/dUYHTvB5xouGHiBpTKCtWgMyc
-         2A12s4KsfrT67t3zreYh7+kocTyvgYik5EX/ex/wIoidUtYJt94AvVFU9tJlA/Z87gZY
-         TmbA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=60C6UutqWDg70MnmR2wOYRHcozVv05mGJual4EWfkd0=;
+        b=a57ErTytVAxkauYkEPzZRHeGlc0u/A4U5ejAgWPi4ESjwpiFFk6hlPoBGFaPNr39C+
+         Kh0xSgXuJrsK4KZTKR2yEzoaLeUoioeGoUgaErqheNBeKc06PHRqwui84Q8EBbD2l+tL
+         nX9d4d0RSUpPYxjPCjQnBkDN0+Zv6eOTSEhKauRBsgQJexRHp+YFYc3bVaLsL+EpeITh
+         /oPeL3Ga9GujoFOOg6Eq3QUGMLurJ7MLYFEtSSTI2Z3ruqYxpiTRqopLyKlPWxV9WtYJ
+         j/nNcaVxSU6fzyomhmIYzgCq04OEkW1OTZBrVWiS6qgJ9uqJ806PfvtCbg/QGSrKMhpY
+         gQvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MRGHhYFTRmS6ThghCzMlHBCCluvRIS5WKEjM9Zj/Oi0=;
-        b=Zi95dvSSb+NxKLmbcyM7+n60H0lttpMgffOfjpkr0SCkY8XUtum9zIFq1BZoOQQbWW
-         gim3NM0/AFAjvXw9hRIiK00ocZc2Puimx2IGE4IeYne8L940hveIyjcvc5XuN2gQNvBS
-         tf7leu+epXTkwa3Di9y+3rWjiuIg/xxxGuzjINXIrmXSzJMXfVhJJC+LvTCVq7J9ASns
-         NWmZzOp8dinuIXiaBSLWPzT09AP/A2tDQjoSbDVoviwNLFgzEO5sHlVL2jFpTHJFWTHB
-         Ivc8tmwz5T1wVvDvZMYqdGb3zROixZJS6RTF69I9lZrSbvUehqo0D72csmkulI4NV/cP
-         +0lg==
-X-Gm-Message-State: APjAAAXo8tACwYmehLYdTfOK3ZntBUnc+PsayxPenYwFskSumUwPSl2D
-        FY9v96Wpp5yhWDGos3zYhMxb8BQpEdiDi92EscOTBAF1TavoaQ==
-X-Google-Smtp-Source: APXvYqx0acCsydZ58mqegE8RiOYTsCCQ1bEgdXz6IJYvIOmCYhJ9OaK7eAh/VmI8XcJ4D+a87XOBayZLGwIFu9IHLDw=
-X-Received: by 2002:a1c:a985:: with SMTP id s127mr6914821wme.163.1565141981380;
- Tue, 06 Aug 2019 18:39:41 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=60C6UutqWDg70MnmR2wOYRHcozVv05mGJual4EWfkd0=;
+        b=H+JehYMJzp2Qkflf6COAw+gFETGI+RpnOwpPq+huarvV0r2jet6wsZOW7KEQc30U1C
+         eBAUmcqi5VuxWzEOxjGOzPTVj7IljkqMCPz5r/G6FQM7v+/zdpbHNz++2G7u6gUHcWYX
+         cf2o3GUi6ymMptU/a6NtASbZbEkmI6pqVkl3feuwNYwnhlUoN4mnbZdD0Sig41cBEl2K
+         T8KizDyvQpQ8WDTXXklsZP0BeHQD1oXS4x8AgY1z6fWu/EN8ZbXlrUKiJhiz1pvPqQ+1
+         6IOAKfuNBQy2UiOzPWXEcYJ+lM5hWxsj2IRbqA3Pbiah3HMIxqfnfe1corgQd6rlsCyG
+         Waog==
+X-Gm-Message-State: APjAAAW/JQP9V2RHAcYyZ/ZJJMxRKQ9UOvmpgurfmy+h3+TEEAwNjp3v
+        iFmYaqVrKYWKKtpwgc2CSug=
+X-Google-Smtp-Source: APXvYqzZ9ri0aFEivC8E1vtnTLu0Xt+gGlbh6d5zu26K18i0vLRAS3fRLqoUWVmE7o4ev8ojfCHrHg==
+X-Received: by 2002:a17:90a:ad41:: with SMTP id w1mr5931335pjv.52.1565141648506;
+        Tue, 06 Aug 2019 18:34:08 -0700 (PDT)
+Received: from blueforge.nvidia.com (searspoint.nvidia.com. [216.228.112.21])
+        by smtp.gmail.com with ESMTPSA id u69sm111740800pgu.77.2019.08.06.18.34.06
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 06 Aug 2019 18:34:08 -0700 (PDT)
+From:   john.hubbard@gmail.com
+X-Google-Original-From: jhubbard@nvidia.com
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org, ceph-devel@vger.kernel.org,
+        devel@driverdev.osuosl.org, devel@lists.orangefs.org,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mm@kvack.org,
+        linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org, linux-xfs@vger.kernel.org,
+        netdev@vger.kernel.org, rds-devel@oss.oracle.com,
+        sparclinux@vger.kernel.org, x86@kernel.org,
+        xen-devel@lists.xenproject.org, John Hubbard <jhubbard@nvidia.com>,
+        Matt Porter <mporter@kernel.crashing.org>,
+        Alexandre Bounine <alex.bou9@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Ioan Nicu <ioan.nicu.ext@nokia.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+Subject: [PATCH v3 15/41] rapidio: convert put_page() to put_user_page*()
+Date:   Tue,  6 Aug 2019 18:33:14 -0700
+Message-Id: <20190807013340.9706-16-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190807013340.9706-1-jhubbard@nvidia.com>
+References: <20190807013340.9706-1-jhubbard@nvidia.com>
 MIME-Version: 1.0
-References: <20190801220941.19615-1-jsmart2021@gmail.com> <CACVXFVO7vmGJj_N_MT7roZDmWNHbEGR=MsOqkpb7NTptF3=DOw@mail.gmail.com>
- <227b2bc2-9778-6d38-a68b-26a799a0caeb@gmail.com>
-In-Reply-To: <227b2bc2-9778-6d38-a68b-26a799a0caeb@gmail.com>
-From:   Ming Lei <tom.leiming@gmail.com>
-Date:   Wed, 7 Aug 2019 09:39:29 +0800
-Message-ID: <CACVXFVM7sdY_rHZCsi3uTkyOme4rmNERk41754kW-yjNFN4FXQ@mail.gmail.com>
-Subject: Re: [PATCH v2] lpfc: Mitigate high memory pre-allocation by SCSI-MQ
-To:     James Smart <jsmart2021@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Linux SCSI List <linux-scsi@vger.kernel.org>,
-        Dick Kennedy <dick.kennedy@broadcom.com>
-Content-Type: text/plain; charset="UTF-8"
+X-NVConfidentiality: public
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 7, 2019 at 1:13 AM James Smart <jsmart2021@gmail.com> wrote:
->
-> On 8/5/2019 6:09 PM, Ming Lei wrote:
-> >
-> > I am wondering why you use 2 * num_possible_nodes() as the limit instead of
-> > num_possible_nodes(), could you explain it a bit?
->
-> The number comes from most systems being dual socket systems, thus a
-> numa node count of 2. Some of these dual socket systems can be high cpu
-> counts per socket. We did see a difference, on different architectures
-> and where cpu counts were high per socket, that more hwqs per socket did
-> help. So if there can be more than 1 hwq per socket then I think that is
-> goodness.
+From: John Hubbard <jhubbard@nvidia.com>
 
-I guess it isn't related with CPU cores per socket, what matters is number of
-sockets, given each CPU core in same socket is in same position wrt. RW
-preformance on same shared memory, so looks the following way is what
-we need:
+For pages that were retained via get_user_pages*(), release those pages
+via the new put_user_page*() routines, instead of via put_page() or
+release_pages().
 
- shost->nr_hw_queues = max_t(int,  num_possible_nodes(),
-                                          nr_processor_sockets);
+This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
+("mm: introduce put_user_page*(), placeholder versions").
 
-However, I don't know how to retrieve 'nr_processor_sockets' in kernel.
-Maybe topology_max_packages() can be used for x86, not see how to
-read it for other ARCHs.
+Cc: Matt Porter <mporter@kernel.crashing.org>
+Cc: Alexandre Bounine <alex.bou9@gmail.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Logan Gunthorpe <logang@deltatee.com>
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: Ioan Nicu <ioan.nicu.ext@nokia.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+---
+ drivers/rapidio/devices/rio_mport_cdev.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-Cc Thomas and linux-kernel list.
+diff --git a/drivers/rapidio/devices/rio_mport_cdev.c b/drivers/rapidio/devices/rio_mport_cdev.c
+index 8155f59ece38..0e8ea0e5a89e 100644
+--- a/drivers/rapidio/devices/rio_mport_cdev.c
++++ b/drivers/rapidio/devices/rio_mport_cdev.c
+@@ -572,14 +572,12 @@ static void dma_req_free(struct kref *ref)
+ 	struct mport_dma_req *req = container_of(ref, struct mport_dma_req,
+ 			refcount);
+ 	struct mport_cdev_priv *priv = req->priv;
+-	unsigned int i;
+ 
+ 	dma_unmap_sg(req->dmach->device->dev,
+ 		     req->sgt.sgl, req->sgt.nents, req->dir);
+ 	sg_free_table(&req->sgt);
+ 	if (req->page_list) {
+-		for (i = 0; i < req->nr_pages; i++)
+-			put_page(req->page_list[i]);
++		put_user_pages(req->page_list, req->nr_pages);
+ 		kfree(req->page_list);
+ 	}
+ 
+@@ -815,7 +813,7 @@ rio_dma_transfer(struct file *filp, u32 transfer_mode,
+ 	struct mport_dma_req *req;
+ 	struct mport_dev *md = priv->md;
+ 	struct dma_chan *chan;
+-	int i, ret;
++	int ret;
+ 	int nents;
+ 
+ 	if (xfer->length == 0)
+@@ -946,8 +944,7 @@ rio_dma_transfer(struct file *filp, u32 transfer_mode,
+ 
+ err_pg:
+ 	if (!req->page_list) {
+-		for (i = 0; i < nr_pages; i++)
+-			put_page(page_list[i]);
++		put_user_pages(page_list, nr_pages);
+ 		kfree(page_list);
+ 	}
+ err_req:
+-- 
+2.22.0
 
-Thanks,
-Ming Lei
