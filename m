@@ -2,121 +2,145 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0
+	tests=BUG6152_INVALID_DATE_TZ_ABSURD,HEADER_FROM_DIFFERENT_DOMAINS,
+	INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE881C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 22:21:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E67C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 22:27:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C322921874
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 22:21:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="gAH10Z9j";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="YCBPHDtU"
+	by mail.kernel.org (Postfix) with ESMTP id B0FEC217D9
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 22:27:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389391AbfHGWV6 (ORCPT
+        id S2389365AbfHGW1C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 18:21:58 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:38272 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389150AbfHGWV4 (ORCPT
+        Wed, 7 Aug 2019 18:27:02 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:51797 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388848AbfHGW1C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 18:21:56 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id D35126090F; Wed,  7 Aug 2019 22:21:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1565216515;
-        bh=V2MOW7b4CUVhygGGVaa1wzt2YduOq9ESSFH7yL59gh0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gAH10Z9jO0qPNwfNSX3DNnSbcXr0urrU/G7r1IHR8VjyqrWgwCSfjWab2v2kSObgx
-         K7l5vrXtJopOEgUK6nmshK4YE3AwG1Z7JIAQTBGjvmKXtGgdV4SMpE3vEs5nel/4Ew
-         aMgPaVjHgICDgeo6vO+te6DoYKr6261Dyiad3GT4=
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D67C46090F;
-        Wed,  7 Aug 2019 22:21:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1565216508;
-        bh=V2MOW7b4CUVhygGGVaa1wzt2YduOq9ESSFH7yL59gh0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YCBPHDtUPurdyKZZfpBRRfq/JJw9kwWNNS2y/AGWUNciNkNOSznkrzR2oOGovZ5N0
-         ReynarRaHNZmERQJcmNSSypbBOAIv5Gt3CjPg1cjyNkCP2f1goXjghA4j+VyOHrCdX
-         djOwH/NDrReRX7RKsXlGL58MJyDoTAApdxp57ado=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D67C46090F
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     freedreno@lists.freedesktop.org
-Cc:     jean-philippe.brucker@arm.com, linux-arm-msm@vger.kernel.org,
-        robin.murphy@arm.com, Will Deacon <will@kernel.org>,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v3 2/2] iommu/arm-smmu: Add support for Adreno GPU pagetable formats
-Date:   Wed,  7 Aug 2019 16:21:40 -0600
-Message-Id: <1565216500-28506-3-git-send-email-jcrouse@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1565216500-28506-1-git-send-email-jcrouse@codeaurora.org>
-References: <1565216500-28506-1-git-send-email-jcrouse@codeaurora.org>
+        Wed, 7 Aug 2019 18:27:02 -0400
+Received: from [5.158.153.52] (helo=g2noscherz.tec.linutronix.de.)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
+        (Exim 4.80)
+        (envelope-from <john.ogness@linutronix.de>)
+        id 1hvUON-0007mg-B2; Thu, 08 Aug 2019 00:26:48 +0200
+From:   John Ogness <john.ogness@linutronix.de>
+To:     linux-kernel@vger.kernel.org
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Brendan Higgins <brendanhiggins@google.com>
+Subject: [RFC PATCH v4 0/9] printk: new ringbuffer implementation
+Date:   Thu,  8 Aug 2019 00:32:25 +0206
+Message-Id: <20190807222634.1723-1-john.ogness@linutronix.de>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for an Adreno GPU variant of the arm-smmu device to enable
-a special pagetable format that enables TTBR1 and leaves TTBR0 free
-to be switched by the GPU hardware.
+Hello,
 
-Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
----
+This is a follow-up RFC on the work to re-implement much of
+the core of printk. The threads for the previous RFC versions
+are here: v1[0], v2[1], v3[2].
 
- drivers/iommu/arm-smmu.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+This series only builds upon v3 (i.e. the first part of this
+series is exactly v3). The main purpose of this series is to
+replace the current printk ringbuffer with the new
+ringbuffer. As was discussed[3], this is a conservative
+first step to rework printk. For example, all logbuf_lock
+usage is kept even though the new ringbuffer does not
+require it. This avoids any side-effect bugs in case the
+logbuf_lock is (unintentionally) synchronizing more than
+just the ringbuffer. However, this also means that the
+series does not bring any improvements, just swapping out
+implementations. A future patch will remove the logbuf_lock.
 
-diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-index aa06498..129ac83 100644
---- a/drivers/iommu/arm-smmu.c
-+++ b/drivers/iommu/arm-smmu.c
-@@ -124,6 +124,7 @@ enum arm_smmu_implementation {
- 	ARM_MMU500,
- 	CAVIUM_SMMUV2,
- 	QCOM_SMMUV2,
-+	ADRENO_SMMUV2,
- };
- 
- struct arm_smmu_s2cr {
-@@ -832,7 +833,10 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
- 		ias = smmu->va_size;
- 		oas = smmu->ipa_size;
- 		if (cfg->fmt == ARM_SMMU_CTX_FMT_AARCH64) {
--			fmt = ARM_64_LPAE_S1;
-+			if (smmu->model == ADRENO_SMMUV2)
-+				fmt = ARM_ADRENO_GPU_LPAE;
-+			else
-+				fmt = ARM_64_LPAE_S1;
- 		} else if (cfg->fmt == ARM_SMMU_CTX_FMT_AARCH32_L) {
- 			fmt = ARM_32_LPAE_S1;
- 			ias = min(ias, 32UL);
-@@ -2030,6 +2034,7 @@ ARM_SMMU_MATCH_DATA(arm_mmu401, ARM_SMMU_V1_64K, GENERIC_SMMU);
- ARM_SMMU_MATCH_DATA(arm_mmu500, ARM_SMMU_V2, ARM_MMU500);
- ARM_SMMU_MATCH_DATA(cavium_smmuv2, ARM_SMMU_V2, CAVIUM_SMMUV2);
- ARM_SMMU_MATCH_DATA(qcom_smmuv2, ARM_SMMU_V2, QCOM_SMMUV2);
-+ARM_SMMU_MATCH_DATA(adreno_smmuv2, ARM_SMMU_V2, ADRENO_SMMUV2);
- 
- static const struct of_device_id arm_smmu_of_match[] = {
- 	{ .compatible = "arm,smmu-v1", .data = &smmu_generic_v1 },
-@@ -2039,6 +2044,7 @@ static const struct of_device_id arm_smmu_of_match[] = {
- 	{ .compatible = "arm,mmu-500", .data = &arm_mmu500 },
- 	{ .compatible = "cavium,smmu-v2", .data = &cavium_smmuv2 },
- 	{ .compatible = "qcom,smmu-v2", .data = &qcom_smmuv2 },
-+	{ .compatible = "qcom,adreno-smmu-v2", .data = &adreno_smmuv2 },
- 	{ },
- };
- 
+Except for the test module (patches 2 and 6), the rest may
+already be interesting for mainline as is. I have tested
+the various interfaces (console, /dev/kmsg, syslog,
+kmsg_dump) and their features and all looks good AFAICT.
+
+The patches can be broken down as follows:
+
+1-2: the previously posted RFCv3
+
+3-7: addresses minor issues from RFCv3
+
+8:   adds new high-level ringbuffer functions to support
+     printk (nothing involving new memory barriers)
+
+9:   replace the ringbuffer usage in printk.c
+
+One important thing to know (as is mentioned in the commit
+message of patch 9), there are 2 externally visible
+changes:
+
+    - vmcore info changes
+
+    - powerpc powernv/opal memdump of log discontinued
+
+I have no idea how acceptable these changes are.
+
+I will not be posting any further printk patches until I
+have received some feedback on this. I appreciate all the
+help so far. I realize that this is a lot of code to go
+through.
+
+The series is based on 5.3-rc3. I would encourage people to
+apply the series and give it a run. I expect that you
+will not notice any difference with your printk behaviour.
+
+John Ogness
+
+[0] https://lkml.kernel.org/r/20190212143003.48446-1-john.ogness@linutronix.de
+[1] https://lkml.kernel.org/r/20190607162349.18199-1-john.ogness@linutronix.de
+[2] https://lkml.kernel.org/r/20190727013333.11260-1-john.ogness@linutronix.de
+[3] https://lkml.kernel.org/r/87y35hn6ih.fsf@linutronix.de
+
+John Ogness (9):
+  printk-rb: add a new printk ringbuffer implementation
+  printk-rb: add test module
+  printk-rb: fix missing includes/exports
+  printk-rb: initialize new descriptors as invalid
+  printk-rb: remove extra data buffer size allocation
+  printk-rb: adjust test module ringbuffer sizes
+  printk-rb: increase size of seq and size variables
+  printk-rb: new functionality to support printk
+  printk: use a new ringbuffer implementation
+
+ arch/powerpc/platforms/powernv/opal.c |   22 +-
+ include/linux/kmsg_dump.h             |    6 +-
+ include/linux/printk.h                |   12 -
+ kernel/printk/Makefile                |    5 +
+ kernel/printk/dataring.c              |  809 ++++++++++++++++++
+ kernel/printk/dataring.h              |  108 +++
+ kernel/printk/numlist.c               |  376 +++++++++
+ kernel/printk/numlist.h               |   72 ++
+ kernel/printk/printk.c                |  745 +++++++++--------
+ kernel/printk/ringbuffer.c            | 1079 +++++++++++++++++++++++++
+ kernel/printk/ringbuffer.h            |  354 ++++++++
+ kernel/printk/test_prb.c              |  256 ++++++
+ 12 files changed, 3450 insertions(+), 394 deletions(-)
+ create mode 100644 kernel/printk/dataring.c
+ create mode 100644 kernel/printk/dataring.h
+ create mode 100644 kernel/printk/numlist.c
+ create mode 100644 kernel/printk/numlist.h
+ create mode 100644 kernel/printk/ringbuffer.c
+ create mode 100644 kernel/printk/ringbuffer.h
+ create mode 100644 kernel/printk/test_prb.c
+
 -- 
-2.7.4
+2.20.1
 
