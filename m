@@ -2,530 +2,401 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1EE8C32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6539AC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:32:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94F0521E6B
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:32:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2488921E6C
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:32:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gBrHBJJO"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="jDgJrLLd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388696AbfHGNcm (ORCPT
+        id S2388710AbfHGNct (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 09:32:42 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:60754 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388603AbfHGNcG (ORCPT
+        Wed, 7 Aug 2019 09:32:49 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:3350 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388393AbfHGNcq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 09:32:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=5+COvgfLNjXajoMqSNYCsy07kIqj5epbvI1ur5QduYs=; b=gBrHBJJOGcXzqyMWTU8r8Frc5Q
-        Bqn5KYToIa73AoA7Ivxo+s2MqfRDxlX/usoM2I3j+y3DQh41cV3RannY9vy4sxqP9FXj4uYoWRnIz
-        zbp0wtSGatu5Gu+sr9/PrtaoQ7fc9oyptUT4AmjxeuS6wV3JkHauCYgtVcNrgWfKrKGaSYVhrp5Xf
-        6hahhhcRO2Bk1iW5jZ1WO+29dlxm5itbIzX5WL4rfT5tTDdEk0NpxbZXlZAj5Y/Kxru5iJBuTlSZC
-        D9BdkwvgQcTXtnYg51ISaoiaaUH0oJ+DdynmL714hZesAWUUUm5WDngR0FO9zQjfwg2hJftwR09NZ
-        4T5DjJHg==;
-Received: from [195.167.85.94] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hvM2u-0008D9-VR; Wed, 07 Aug 2019 13:32:05 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 23/29] ia64: rework iommu probing
-Date:   Wed,  7 Aug 2019 16:30:43 +0300
-Message-Id: <20190807133049.20893-24-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190807133049.20893-1-hch@lst.de>
-References: <20190807133049.20893-1-hch@lst.de>
+        Wed, 7 Aug 2019 09:32:46 -0400
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x77DS0Jl029504;
+        Wed, 7 Aug 2019 09:31:53 -0400
+Received: from nam02-sn1-obe.outbound.protection.outlook.com (mail-sn1nam02lp2053.outbound.protection.outlook.com [104.47.36.53])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2u7bcx3bd0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 07 Aug 2019 09:31:53 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WqpJjcEXe8+X8QpN6ZcUwaSZWCWzLAMHKA9LuVOuJxfypXXFN0ZVqy0ZOvZdCmaGqW6Alq0xkKfG91c0TyGDQaQLal+WJxBIzsvrN6uZjhD0e0ZHrHWE/4OFrI9Nxi91bQ46Tq1OfnI4ywzOAN017C6meb7n3OPnyeR79PUlmOug+kx6cdsljvT8KbUPznfj1zxyi2Uo8M1sZFSafmYGoDJxWBpw/VWdpT8p1lNMeWReOK0y0jTHrMwUAiDWBOVbV9i9JXKAhHmr0RplE0gqZ3di1qrYGFRld2588DFCTzr4rd5CWDthGSzkkiAn9S+oZhWgQbPhdL1mViN0CZYJcw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zjKxyIUqHuAIlhPJ0Vfy27zwmRxNJnbxhGJ71ylOYgw=;
+ b=O/chVLoSM0D1qnCaGwuYCINaiUKZ0xfp+BqaLuwVwHkMSgR7zWMKL5wDKIo9VJQPAB5SN4TNI1meHK0ey2juNajx2KsmgraHqFuc2LaPNR8TM61zAr2jH/qp1tiAybd5Okl60LwAQvMygRF8UGtURlMyd6pWGyhsQCk+jL+SE2Dre485kZ4vGlKl0c3o0GoMKAmA0yFQvlzhuZ3SBpx/75K7sZRzyGD99FxSiqDIvkBLwKtgpGWFcNteTpkk3uBAJzOa2B6Tzi1z8VGixWa6OYoKIPlnwQ602oX8OZIjbXLIp+6hypQjtNMsW50jFzdfbVgm3fgN7UuXZ+vmz2W1tg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 137.71.25.55) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=analog.com;
+ dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zjKxyIUqHuAIlhPJ0Vfy27zwmRxNJnbxhGJ71ylOYgw=;
+ b=jDgJrLLdl8OcZp4hw4G6NMtwC5ILtgCh1bCiXW5ucTxY4CHPWB30Zr6qpXMMueB0YFqikchkJjdAE9zPL8MnHWovMZbetVXU6KAlOSpzdsptOWsemLSw1FwZSpuNEOJ23bdyEFHjYT1oTcpPi4pS9C9JqJV3R6IBeKF/nZhFgKQ=
+Received: from DM6PR03CA0056.namprd03.prod.outlook.com (2603:10b6:5:100::33)
+ by MWHPR03MB2429.namprd03.prod.outlook.com (2603:10b6:300:b::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2157.14; Wed, 7 Aug
+ 2019 13:31:50 +0000
+Received: from CY1NAM02FT041.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e45::201) by DM6PR03CA0056.outlook.office365.com
+ (2603:10b6:5:100::33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2136.16 via Frontend
+ Transport; Wed, 7 Aug 2019 13:31:50 +0000
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
+Received: from nwd2mta1.analog.com (137.71.25.55) by
+ CY1NAM02FT041.mail.protection.outlook.com (10.152.74.156) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2157.15
+ via Frontend Transport; Wed, 7 Aug 2019 13:31:48 +0000
+Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
+        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id x77DVi0O028918
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Wed, 7 Aug 2019 06:31:44 -0700
+Received: from ben-Latitude-E6540.ad.analog.com (10.48.65.163) by
+ NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
+ 14.3.408.0; Wed, 7 Aug 2019 09:31:47 -0400
+From:   Beniamin Bia <beniamin.bia@analog.com>
+To:     <jic23@kernel.org>
+CC:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
+        <knaack.h@gmx.de>, <pmeerw@pmeerw.net>,
+        <gregkh@linuxfoundation.org>, <linux-iio@vger.kernel.org>,
+        <devel@driverdev.osuosl.org>, <linux-kernel@vger.kernel.org>,
+        <mark.rutland@arm.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>, <paulmck@linux.ibm.com>,
+        <mchehab+samsung@kernel.org>, <linus.walleij@linaro.org>,
+        <nicolas.ferre@microchip.com>, <biabeniamin@outlook.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Beniamin Bia <beniamin.bia@analog.com>
+Subject: [PATCH v2 1/4] iio: adc: ad7606: Add support for AD7606B ADC
+Date:   Wed, 7 Aug 2019 16:31:34 +0300
+Message-ID: <20190807133137.11185-1-beniamin.bia@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(136003)(39860400002)(396003)(346002)(376002)(2980300002)(189003)(199004)(4326008)(246002)(50466002)(7636002)(36756003)(305945005)(478600001)(2870700001)(106002)(86362001)(7416002)(186003)(47776003)(1076003)(26005)(6916009)(8676002)(2906002)(14444005)(2351001)(44832011)(336012)(50226002)(2616005)(8936002)(54906003)(107886003)(5660300002)(476003)(6666004)(356004)(426003)(126002)(5820100001)(70586007)(70206006)(7696005)(23676004)(316002)(486006);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR03MB2429;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: b7fd00ec-97a8-4ce0-1214-08d71b3b9a1c
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:MWHPR03MB2429;
+X-MS-TrafficTypeDiagnostic: MWHPR03MB2429:
+X-Microsoft-Antispam-PRVS: <MWHPR03MB2429F4D055996FC52C694AE9F0D40@MWHPR03MB2429.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 01221E3973
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: XstJhy1cuVOu6GBa8nJgQ+D6Rv5ZUJZrkTDY5kFaU/J3RU12nipF2EKxLS/hsJoMxQQv0HBAdxY8Ja1fHvf7DTRBTdCA1akjjPYsDQ2iFlSbAQtr5bE/UfzzO5MXNzi/k0Zir9VBs+8BtAZ9fovrh069135/+DqBDOZfJUVbIuopBOkhNe3J9tLBaoBIrsP4DWnlELyYPLOKH5SlwkSItKWVy2YPpyJJGdWanrE8HyiSvxVQS8xzqTI2YhUMmxl5VVV+x0GpkmixbX8zY5DadeSiOaCbdY/vjw4vKsdBBH92QP7gRpA9NkD2qlGKO6woAKybHlmDUoEcrAuqrcmTquvb/HMK/VhYZH+akS+ZAAbSarb84fhE9EwnDykm6YIibLqgAwSoHtOHVlipXSYp0KtMXlFUS++QbYyA+ftykKE=
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Aug 2019 13:31:48.8237
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b7fd00ec-97a8-4ce0-1214-08d71b3b9a1c
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR03MB2429
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-07_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908070147
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ia64 currently organizes the iommu probing along machves, which isn't
-very helpful.  Instead just try to probe for Intel IOMMUs in mem_init
-as they are properly described in ACPI and if none was found initialize
-the swiotlb buffer.  The HP SBA handling is then only done delayed when
-the actual hardware is probed. Only in the case that we actually found
-usable IOMMUs we then set up the DMA ops and free the not needed
-swiotlb buffer.  This scheme gets rid of the need for the dma_init
-machvec operation, and the dig_vtd machvec.
+From: Stefan Popa <stefan.popa@analog.com>
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+The AD7606B is a 16-bit ADC that supports simultaneous sampling of 8
+channels. It is pin compatible to AD7606, but adds extra modes by
+writing to the register map.
+
+The AD7606B can be configured to work in software mode by setting all
+oversampling pins to high. This mode is selected by default.
+The oversampling ratio is configured from the OS_MODE register (address
+0x08) with the addition of OS=128 and OS=256 that were not available in
+hardware mode.
+
+The device is configured to output data on a single spi channel, but this
+configuration must be done right after restart. That is why the delay was
+removed for devices which doesn't require it.
+
+Moreover, in software mode, the range gpio has no longer its function.
+Instead, the scale can be configured individually for each channel from
+the RANGE_CH registers (address 0x03 to 0x06). Besides the already
+supported ±10 V and ±5 V ranges, software mode can also accommodate the
+±2.5 V range.
+
+Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+Co-developed-by: Beniamin Bia <beniamin.bia@analog.com>
+Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
+Acked-by: Jonathan Cameron <jic23@kernel.org>
 ---
- arch/ia64/Kconfig                       |  5 --
- arch/ia64/Makefile                      |  1 -
- arch/ia64/dig/Makefile                  |  5 --
- arch/ia64/dig/machvec_vtd.c             |  3 -
- arch/ia64/hp/common/sba_iommu.c         | 82 +++++++++----------------
- arch/ia64/include/asm/acpi.h            |  2 -
- arch/ia64/include/asm/machvec.h         | 11 ----
- arch/ia64/include/asm/machvec_dig_vtd.h | 19 ------
- arch/ia64/include/asm/machvec_hpzx1.h   |  2 -
- arch/ia64/include/asm/pci.h             |  3 -
- arch/ia64/kernel/acpi.c                 | 15 -----
- arch/ia64/kernel/dma-mapping.c          |  6 --
- arch/ia64/kernel/pci-dma.c              | 21 -------
- arch/ia64/mm/init.c                     | 13 ++--
- 14 files changed, 37 insertions(+), 151 deletions(-)
- delete mode 100644 arch/ia64/dig/machvec_vtd.c
- delete mode 100644 arch/ia64/include/asm/machvec_dig_vtd.h
+Changes in v2:
+-nothing changed
 
-diff --git a/arch/ia64/Kconfig b/arch/ia64/Kconfig
-index a42ab41ee8ab..9a8c7ec60cfc 100644
---- a/arch/ia64/Kconfig
-+++ b/arch/ia64/Kconfig
-@@ -146,11 +146,6 @@ config IA64_DIG
- 	bool "DIG-compliant"
- 	select SWIOTLB
+ drivers/iio/adc/ad7606.c     |  13 ++++-
+ drivers/iio/adc/ad7606.h     |   4 ++
+ drivers/iio/adc/ad7606_spi.c | 107 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 122 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
+index ed2d08437e5d..f5ba94c03a8d 100644
+--- a/drivers/iio/adc/ad7606.c
++++ b/drivers/iio/adc/ad7606.c
+@@ -410,12 +410,19 @@ static const struct ad7606_chip_info ad7606_chip_info_tbl[] = {
+ 		.oversampling_avail = ad7606_oversampling_avail,
+ 		.oversampling_num = ARRAY_SIZE(ad7606_oversampling_avail),
+ 	},
++	[ID_AD7606B] = {
++		.channels = ad7606_channels,
++		.num_channels = 9,
++		.oversampling_avail = ad7606_oversampling_avail,
++		.oversampling_num = ARRAY_SIZE(ad7606_oversampling_avail),
++	},
+ 	[ID_AD7616] = {
+ 		.channels = ad7616_channels,
+ 		.num_channels = 17,
+ 		.oversampling_avail = ad7616_oversampling_avail,
+ 		.oversampling_num = ARRAY_SIZE(ad7616_oversampling_avail),
+ 		.os_req_reset = true,
++		.init_delay_ms = 15,
+ 	},
+ };
  
--config IA64_DIG_VTD
--	bool "DIG+Intel+IOMMU"
--	select INTEL_IOMMU
--	select PCI_MSI
--
- config IA64_HP_ZX1
- 	bool "HP-zx1/sx1000"
- 	help
-diff --git a/arch/ia64/Makefile b/arch/ia64/Makefile
-index d87e49a39171..172dd884b4d7 100644
---- a/arch/ia64/Makefile
-+++ b/arch/ia64/Makefile
-@@ -45,7 +45,6 @@ head-y := arch/ia64/kernel/head.o
- libs-y				+= arch/ia64/lib/
- core-y				+= arch/ia64/kernel/ arch/ia64/mm/
- core-$(CONFIG_IA64_DIG) 	+= arch/ia64/dig/
--core-$(CONFIG_IA64_DIG_VTD) 	+= arch/ia64/dig/
- core-$(CONFIG_IA64_GENERIC) 	+= arch/ia64/dig/
- core-$(CONFIG_IA64_HP_ZX1)	+= arch/ia64/dig/
- core-$(CONFIG_IA64_SGI_UV)	+= arch/ia64/uv/
-diff --git a/arch/ia64/dig/Makefile b/arch/ia64/dig/Makefile
-index e7f830825470..5c2f638c31f4 100644
---- a/arch/ia64/dig/Makefile
-+++ b/arch/ia64/dig/Makefile
-@@ -7,9 +7,4 @@
- #
+@@ -631,8 +638,10 @@ int ad7606_probe(struct device *dev, int irq, void __iomem *base_address,
+ 		dev_warn(st->dev, "failed to RESET: no RESET GPIO specified\n");
  
- obj-y := setup.o
--ifeq ($(CONFIG_INTEL_IOMMU), y)
--obj-$(CONFIG_IA64_GENERIC) += machvec.o machvec_vtd.o
--else
- obj-$(CONFIG_IA64_GENERIC) += machvec.o
--endif
--
-diff --git a/arch/ia64/dig/machvec_vtd.c b/arch/ia64/dig/machvec_vtd.c
-deleted file mode 100644
-index 7cd3eb471cad..000000000000
---- a/arch/ia64/dig/machvec_vtd.c
-+++ /dev/null
-@@ -1,3 +0,0 @@
--#define MACHVEC_PLATFORM_NAME		dig_vtd
--#define MACHVEC_PLATFORM_HEADER		<asm/machvec_dig_vtd.h>
--#include <asm/machvec_init.h>
-diff --git a/arch/ia64/hp/common/sba_iommu.c b/arch/ia64/hp/common/sba_iommu.c
-index 215fa688b729..a7eff5e6d260 100644
---- a/arch/ia64/hp/common/sba_iommu.c
-+++ b/arch/ia64/hp/common/sba_iommu.c
-@@ -35,6 +35,7 @@
- #include <linux/iommu-helper.h>
- #include <linux/dma-mapping.h>
- #include <linux/prefetch.h>
-+#include <linux/swiotlb.h>
+ 	/* AD7616 requires al least 15ms to reconfigure after a reset */
+-	if (msleep_interruptible(15))
+-		return -ERESTARTSYS;
++	if (st->chip_info->init_delay_ms) {
++		if (msleep_interruptible(st->chip_info->init_delay_ms))
++			return -ERESTARTSYS;
++	}
  
- #include <asm/delay.h>		/* ia64_get_itc() */
- #include <asm/io.h>
-@@ -43,8 +44,6 @@
+ 	st->write_scale = ad7606_write_scale_hw;
+ 	st->write_os = ad7606_write_os_hw;
+diff --git a/drivers/iio/adc/ad7606.h b/drivers/iio/adc/ad7606.h
+index eeaaa8b905db..9350ef1f63b5 100644
+--- a/drivers/iio/adc/ad7606.h
++++ b/drivers/iio/adc/ad7606.h
+@@ -46,6 +46,8 @@
+  *			oversampling ratios.
+  * @oversampling_num	number of elements stored in oversampling_avail array
+  * @os_req_reset	some devices require a reset to update oversampling
++ * @init_delay_ms	required delay in miliseconds for initialization
++ *			after a restart
+  */
+ struct ad7606_chip_info {
+ 	const struct iio_chan_spec	*channels;
+@@ -53,6 +55,7 @@ struct ad7606_chip_info {
+ 	const unsigned int		*oversampling_avail;
+ 	unsigned int			oversampling_num;
+ 	bool				os_req_reset;
++	unsigned long			init_delay_ms;
+ };
  
- #include <asm/acpi-ext.h>
+ /**
+@@ -155,6 +158,7 @@ enum ad7606_supported_device_ids {
+ 	ID_AD7606_8,
+ 	ID_AD7606_6,
+ 	ID_AD7606_4,
++	ID_AD7606B,
+ 	ID_AD7616,
+ };
  
--extern int swiotlb_late_init_with_default_size (size_t size);
--
- #define PFX "IOC: "
- 
- /*
-@@ -2056,27 +2055,33 @@ static int __init acpi_sba_ioc_init_acpi(void)
- /* This has to run before acpi_scan_init(). */
- arch_initcall(acpi_sba_ioc_init_acpi);
- 
-+static int sba_dma_supported (struct device *dev, u64 mask)
-+{
-+	/* make sure it's at least 32bit capable */
-+	return ((mask & 0xFFFFFFFFUL) == 0xFFFFFFFFUL);
-+}
+diff --git a/drivers/iio/adc/ad7606_spi.c b/drivers/iio/adc/ad7606_spi.c
+index 98ed52b74507..070ee7e31e2c 100644
+--- a/drivers/iio/adc/ad7606_spi.c
++++ b/drivers/iio/adc/ad7606_spi.c
+@@ -31,6 +31,20 @@
+ /* The range of the channel is stored on 2 bits*/
+ #define AD7616_RANGE_CH_MSK(ch)		(0b11 << (((ch) & 0b11) * 2))
+ #define AD7616_RANGE_CH_MODE(ch, mode)	((mode) << ((((ch) & 0b11)) * 2))
 +
-+static const struct dma_map_ops sba_dma_ops = {
-+	.alloc			= sba_alloc_coherent,
-+	.free			= sba_free_coherent,
-+	.map_page		= sba_map_page,
-+	.unmap_page		= sba_unmap_page,
-+	.map_sg			= sba_map_sg_attrs,
-+	.unmap_sg		= sba_unmap_sg_attrs,
-+	.dma_supported		= sba_dma_supported,
++#define AD7606_CONFIGURATION_REGISTER	0x02
++#define AD7606_SINGLE_DOUT		0x0
++
++/*
++ * Range for AD7606B channels are stored in registers starting with address 0x3.
++ * Each register stores range for 2 channels(4 bits per channel).
++ */
++#define AD7606_RANGE_CH_MSK(ch)		(GENMASK(3, 0) << (4 * ((ch) & 0x1)))
++#define AD7606_RANGE_CH_MODE(ch, mode)	\
++	((GENMASK(3, 0) & mode) << (4 * ((ch) & 0x1)))
++#define AD7606_RANGE_CH_ADDR(ch)	(0x03 + ((ch) >> 1))
++#define AD7606_OS_MODE			0x08
++
+ static const struct iio_chan_spec ad7616_sw_channels[] = {
+ 	IIO_CHAN_SOFT_TIMESTAMP(16),
+ 	AD7616_CHANNEL(0),
+@@ -51,6 +65,22 @@ static const struct iio_chan_spec ad7616_sw_channels[] = {
+ 	AD7616_CHANNEL(15),
+ };
+ 
++static const struct iio_chan_spec ad7606B_sw_channels[] = {
++	IIO_CHAN_SOFT_TIMESTAMP(8),
++	AD7616_CHANNEL(0),
++	AD7616_CHANNEL(1),
++	AD7616_CHANNEL(2),
++	AD7616_CHANNEL(3),
++	AD7616_CHANNEL(4),
++	AD7616_CHANNEL(5),
++	AD7616_CHANNEL(6),
++	AD7616_CHANNEL(7),
 +};
 +
- static int __init
- sba_init(void)
- {
--	if (!ia64_platform_is("hpzx1"))
--		return 0;
--
--#if defined(CONFIG_IA64_GENERIC)
--	/* If we are booting a kdump kernel, the sba_iommu will
--	 * cause devices that were not shutdown properly to MCA
--	 * as soon as they are turned back on.  Our only option for
--	 * a successful kdump kernel boot is to use the swiotlb.
-+	/*
-+	 * If we are booting a kdump kernel, the sba_iommu will cause devices
-+	 * that were not shutdown properly to MCA as soon as they are turned
-+	 * back on.  Our only option for a successful kdump kernel boot is to
-+	 * use swiotlb.
- 	 */
--	if (is_kdump_kernel()) {
--		dma_ops = NULL;
--		if (swiotlb_late_init_with_default_size(64 * (1<<20)) != 0)
--			panic("Unable to initialize software I/O TLB:"
--				  " Try machvec=dig boot option");
--		machvec_init("dig");
-+	if (is_kdump_kernel())
- 		return 0;
--	}
--#endif
- 
- 	/*
- 	 * ioc_found should be populated by the acpi_sba_ioc_handler's .attach()
-@@ -2085,22 +2090,8 @@ sba_init(void)
- 	while (ioc_found)
- 		acpi_sba_ioc_add(ioc_found);
- 
--	if (!ioc_list) {
--#ifdef CONFIG_IA64_GENERIC
--		/*
--		 * If we didn't find something sba_iommu can claim, we
--		 * need to setup the swiotlb and switch to the dig machvec.
--		 */
--		dma_ops = NULL;
--		if (swiotlb_late_init_with_default_size(64 * (1<<20)) != 0)
--			panic("Unable to find SBA IOMMU or initialize "
--			      "software I/O TLB: Try machvec=dig boot option");
--		machvec_init("dig");
--#else
--		panic("Unable to find SBA IOMMU: Try a generic or DIG kernel");
--#endif
-+	if (!ioc_list)
- 		return 0;
--	}
- 
- 	{
- 		struct pci_bus *b = NULL;
-@@ -2108,6 +2099,10 @@ sba_init(void)
- 			sba_connect_bus(b);
- 	}
- 
-+	/* no need for swiotlb with the iommu */
-+	swiotlb_exit();
-+	dma_ops = &sba_dma_ops;
++static const unsigned int ad7606B_oversampling_avail[9] = {
++	1, 2, 4, 8, 16, 32, 64, 128, 256
++};
 +
- #ifdef CONFIG_PROC_FS
- 	ioc_proc_init();
- #endif
-@@ -2123,12 +2118,6 @@ nosbagart(char *str)
- 	return 1;
- }
- 
--static int sba_dma_supported (struct device *dev, u64 mask)
--{
--	/* make sure it's at least 32bit capable */
--	return ((mask & 0xFFFFFFFFUL) == 0xFFFFFFFFUL);
--}
--
- __setup("nosbagart", nosbagart);
- 
- static int __init
-@@ -2153,18 +2142,3 @@ sba_page_override(char *str)
- }
- 
- __setup("sbapagesize=",sba_page_override);
--
--const struct dma_map_ops sba_dma_ops = {
--	.alloc			= sba_alloc_coherent,
--	.free			= sba_free_coherent,
--	.map_page		= sba_map_page,
--	.unmap_page		= sba_unmap_page,
--	.map_sg			= sba_map_sg_attrs,
--	.unmap_sg		= sba_unmap_sg_attrs,
--	.dma_supported		= sba_dma_supported,
--};
--
--void sba_dma_init(void)
--{
--	dma_ops = &sba_dma_ops;
--}
-diff --git a/arch/ia64/include/asm/acpi.h b/arch/ia64/include/asm/acpi.h
-index 9e563df73038..be6bf3e499a6 100644
---- a/arch/ia64/include/asm/acpi.h
-+++ b/arch/ia64/include/asm/acpi.h
-@@ -43,8 +43,6 @@ static inline const char *acpi_get_sysname (void)
- 	return "uv";
- # elif defined (CONFIG_IA64_DIG)
- 	return "dig";
--# elif defined(CONFIG_IA64_DIG_VTD)
--	return "dig_vtd";
- # else
- #	error Unknown platform.  Fix acpi.c.
- # endif
-diff --git a/arch/ia64/include/asm/machvec.h b/arch/ia64/include/asm/machvec.h
-index fa867e980d87..b22d0499b58c 100644
---- a/arch/ia64/include/asm/machvec.h
-+++ b/arch/ia64/include/asm/machvec.h
-@@ -16,14 +16,11 @@
- struct device;
- 
- typedef void ia64_mv_setup_t (char **);
--typedef void ia64_mv_dma_init (void);
- 
- extern void machvec_setup (char **);
- 
- # if defined (CONFIG_IA64_DIG)
- #  include <asm/machvec_dig.h>
--# elif defined(CONFIG_IA64_DIG_VTD)
--#  include <asm/machvec_dig_vtd.h>
- # elif defined (CONFIG_IA64_HP_ZX1)
- #  include <asm/machvec_hpzx1.h>
- # elif defined (CONFIG_IA64_SGI_UV)
-@@ -35,7 +32,6 @@ extern void machvec_setup (char **);
- # else
- #  define ia64_platform_name	ia64_mv.name
- #  define platform_setup	ia64_mv.setup
--#  define platform_dma_init		ia64_mv.dma_init
- # endif
- 
- /* __attribute__((__aligned__(16))) is required to make size of the
-@@ -46,14 +42,12 @@ extern void machvec_setup (char **);
- struct ia64_machine_vector {
- 	const char *name;
- 	ia64_mv_setup_t *setup;
--	ia64_mv_dma_init *dma_init;
- } __attribute__((__aligned__(16))); /* align attrib? see above comment */
- 
- #define MACHVEC_INIT(name)			\
- {						\
- 	#name,					\
- 	platform_setup,				\
--	platform_dma_init,			\
- }
- 
- extern struct ia64_machine_vector ia64_mv;
-@@ -64,8 +58,6 @@ extern void machvec_init_from_cmdline(const char *cmdline);
- #  error Unknown configuration.  Update arch/ia64/include/asm/machvec.h.
- # endif /* CONFIG_IA64_GENERIC */
- 
--extern void swiotlb_dma_init(void);
--
- /*
-  * Define default versions so we can extend machvec for new platforms without having
-  * to update the machvec files for all existing platforms.
-@@ -73,8 +65,5 @@ extern void swiotlb_dma_init(void);
- #ifndef platform_setup
- # define platform_setup			machvec_setup
- #endif
--#ifndef platform_dma_init
--# define platform_dma_init		swiotlb_dma_init
--#endif
- 
- #endif /* _ASM_IA64_MACHVEC_H */
-diff --git a/arch/ia64/include/asm/machvec_dig_vtd.h b/arch/ia64/include/asm/machvec_dig_vtd.h
-deleted file mode 100644
-index bb44eb9039dd..000000000000
---- a/arch/ia64/include/asm/machvec_dig_vtd.h
-+++ /dev/null
-@@ -1,19 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--#ifndef _ASM_IA64_MACHVEC_DIG_VTD_h
--#define _ASM_IA64_MACHVEC_DIG_VTD_h
--
--extern ia64_mv_setup_t			dig_setup;
--extern ia64_mv_dma_init			pci_iommu_alloc;
--
--/*
-- * This stuff has dual use!
-- *
-- * For a generic kernel, the macros are used to initialize the
-- * platform's machvec structure.  When compiling a non-generic kernel,
-- * the macros are used directly.
-- */
--#define ia64_platform_name			"dig_vtd"
--#define platform_setup				dig_setup
--#define platform_dma_init			pci_iommu_alloc
--
--#endif /* _ASM_IA64_MACHVEC_DIG_VTD_h */
-diff --git a/arch/ia64/include/asm/machvec_hpzx1.h b/arch/ia64/include/asm/machvec_hpzx1.h
-index 5299ac38bfb6..7d37998ffdbf 100644
---- a/arch/ia64/include/asm/machvec_hpzx1.h
-+++ b/arch/ia64/include/asm/machvec_hpzx1.h
-@@ -3,7 +3,6 @@
- #define _ASM_IA64_MACHVEC_HPZX1_h
- 
- extern ia64_mv_setup_t			dig_setup;
--extern ia64_mv_dma_init			sba_dma_init;
- 
- /*
-  * This stuff has dual use!
-@@ -14,6 +13,5 @@ extern ia64_mv_dma_init			sba_dma_init;
-  */
- #define ia64_platform_name			"hpzx1"
- #define platform_setup				dig_setup
--#define platform_dma_init			sba_dma_init
- 
- #endif /* _ASM_IA64_MACHVEC_HPZX1_h */
-diff --git a/arch/ia64/include/asm/pci.h b/arch/ia64/include/asm/pci.h
-index ef91b780a3f2..8c163d1d0189 100644
---- a/arch/ia64/include/asm/pci.h
-+++ b/arch/ia64/include/asm/pci.h
-@@ -69,7 +69,4 @@ static inline int pci_get_legacy_ide_irq(struct pci_dev *dev, int channel)
- 	return channel ? isa_irq_to_vector(15) : isa_irq_to_vector(14);
- }
- 
--#ifdef CONFIG_INTEL_IOMMU
--extern void pci_iommu_alloc(void);
--#endif
- #endif /* _ASM_IA64_PCI_H */
-diff --git a/arch/ia64/kernel/acpi.c b/arch/ia64/kernel/acpi.c
-index a63e472f5317..644f34e4342e 100644
---- a/arch/ia64/kernel/acpi.c
-+++ b/arch/ia64/kernel/acpi.c
-@@ -65,9 +65,6 @@ acpi_get_sysname(void)
- 	struct acpi_table_rsdp *rsdp;
- 	struct acpi_table_xsdt *xsdt;
- 	struct acpi_table_header *hdr;
--#ifdef CONFIG_INTEL_IOMMU
--	u64 i, nentries;
--#endif
- 
- 	rsdp_phys = acpi_find_rsdp();
- 	if (!rsdp_phys) {
-@@ -98,18 +95,6 @@ acpi_get_sysname(void)
- 			return "uv";
- 	}
- 
--#ifdef CONFIG_INTEL_IOMMU
--	/* Look for Intel IOMMU */
--	nentries = (hdr->length - sizeof(*hdr)) /
--			 sizeof(xsdt->table_offset_entry[0]);
--	for (i = 0; i < nentries; i++) {
--		hdr = __va(xsdt->table_offset_entry[i]);
--		if (strncmp(hdr->signature, ACPI_SIG_DMAR,
--			sizeof(ACPI_SIG_DMAR) - 1) == 0)
--			return "dig_vtd";
--	}
--#endif
--
- 	return "dig";
- }
- #endif /* CONFIG_IA64_GENERIC */
-diff --git a/arch/ia64/kernel/dma-mapping.c b/arch/ia64/kernel/dma-mapping.c
-index 4be5ee04ccfa..53aaa8597920 100644
---- a/arch/ia64/kernel/dma-mapping.c
-+++ b/arch/ia64/kernel/dma-mapping.c
-@@ -1,6 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/dma-direct.h>
--#include <linux/swiotlb.h>
- #include <linux/export.h>
- 
- /* Set this to 1 if there is a HW IOMMU in the system */
-@@ -27,9 +26,4 @@ long arch_dma_coherent_to_pfn(struct device *dev, void *cpu_addr,
+ static u16 ad7616_spi_rd_wr_cmd(int addr, char isWriteOp)
  {
- 	return page_to_pfn(virt_to_page(cpu_addr));
- }
--
--void __init swiotlb_dma_init(void)
--{
--	swiotlb_init(1);
--}
- #endif
-diff --git a/arch/ia64/kernel/pci-dma.c b/arch/ia64/kernel/pci-dma.c
-index fe988c49f01c..c5a8df9e77d0 100644
---- a/arch/ia64/kernel/pci-dma.c
-+++ b/arch/ia64/kernel/pci-dma.c
-@@ -34,24 +34,3 @@ static int __init pci_iommu_init(void)
- 
- /* Must execute after PCI subsystem */
- fs_initcall(pci_iommu_init);
--
--void __init pci_iommu_alloc(void)
--{
--	/*
--	 * The order of these functions is important for
--	 * fall-back/fail-over reasons
--	 */
--	detect_intel_iommu();
--
--#ifdef CONFIG_SWIOTLB
--	if (!iommu_detected) {
--#ifdef CONFIG_IA64_GENERIC
--		printk(KERN_INFO "PCI-DMA: Re-initialize machine vector.\n");
--		machvec_init("dig");
--		swiotlb_dma_init();
--#else
--		panic("Unable to find Intel IOMMU");
--#endif /* CONFIG_IA64_GENERIC */
--	}
--#endif /* CONFIG_SWIOTLB */
--}
-diff --git a/arch/ia64/mm/init.c b/arch/ia64/mm/init.c
-index 9a4a16439900..bc4d05064c25 100644
---- a/arch/ia64/mm/init.c
-+++ b/arch/ia64/mm/init.c
-@@ -9,6 +9,7 @@
- #include <linux/init.h>
- 
- #include <linux/dma-noncoherent.h>
-+#include <linux/dmar.h>
- #include <linux/efi.h>
- #include <linux/elf.h>
- #include <linux/memblock.h>
-@@ -23,6 +24,7 @@
- #include <linux/proc_fs.h>
- #include <linux/bitops.h>
- #include <linux/kexec.h>
-+#include <linux/swiotlb.h>
- 
- #include <asm/dma.h>
- #include <asm/io.h>
-@@ -633,11 +635,14 @@ mem_init (void)
- 	BUG_ON(PTRS_PER_PTE * sizeof(pte_t) != PAGE_SIZE);
- 
  	/*
--	 * This needs to be called _after_ the command line has been parsed but _before_
--	 * any drivers that may need the PCI DMA interface are initialized or bootmem has
--	 * been freed.
-+	 * This needs to be called _after_ the command line has been parsed but
-+	 * _before_ any drivers that may need the PCI DMA interface are
-+	 * initialized or bootmem has been freed.
- 	 */
--	platform_dma_init();
-+	if (IS_ENABLED(CONFIG_INTEL_IOMMU))
-+		detect_intel_iommu();
-+	if (!iommu_detected)
-+		swiotlb_init(1);
+@@ -60,6 +90,16 @@ static u16 ad7616_spi_rd_wr_cmd(int addr, char isWriteOp)
+ 	return ((addr & 0x7F) << 1) | ((isWriteOp & 0x1) << 7);
+ }
  
- #ifdef CONFIG_FLATMEM
- 	BUG_ON(!mem_map);
++static u16 ad7606B_spi_rd_wr_cmd(int addr, char isWriteOp)
++{
++	/*
++	 * The address of register consists of one bit which
++	 * specifies a read command placed bit 6, followed by
++	 * 6 bits of address.
++	 */
++	return (addr & 0x3F) | (((~isWriteOp) & 0x1) << 6);
++}
++
+ static int ad7606_spi_read_block(struct device *dev,
+ 				 int count, void *buf)
+ {
+@@ -169,6 +209,23 @@ static int ad7616_write_os_sw(struct iio_dev *indio_dev, int val)
+ 				     AD7616_OS_MASK, val << 2);
+ }
+ 
++static int ad7606_write_scale_sw(struct iio_dev *indio_dev, int ch, int val)
++{
++	struct ad7606_state *st = iio_priv(indio_dev);
++
++	return ad7606_spi_write_mask(st,
++				     AD7606_RANGE_CH_ADDR(ch),
++				     AD7606_RANGE_CH_MSK(ch),
++				     AD7606_RANGE_CH_MODE(ch, val));
++}
++
++static int ad7606_write_os_sw(struct iio_dev *indio_dev, int val)
++{
++	struct ad7606_state *st = iio_priv(indio_dev);
++
++	return ad7606_spi_reg_write(st, AD7606_OS_MODE, val);
++}
++
+ static int ad7616_sw_mode_config(struct iio_dev *indio_dev)
+ {
+ 	struct ad7606_state *st = iio_priv(indio_dev);
+@@ -189,6 +246,42 @@ static int ad7616_sw_mode_config(struct iio_dev *indio_dev)
+ 			      AD7616_BURST_MODE | AD7616_SEQEN_MODE);
+ }
+ 
++static int ad7606B_sw_mode_config(struct iio_dev *indio_dev)
++{
++	struct ad7606_state *st = iio_priv(indio_dev);
++	unsigned long os[3] = {1};
++
++	/*
++	 * Software mode is enabled when all three oversampling
++	 * pins are set to high. If oversampling gpios are defined
++	 * in the device tree, then they need to be set to high,
++	 * otherwise, they must be hardwired to VDD
++	 */
++	if (st->gpio_os) {
++		gpiod_set_array_value(ARRAY_SIZE(os),
++				      st->gpio_os->desc, st->gpio_os->info, os);
++	}
++	/* OS of 128 and 256 are available only in software mode */
++	st->oversampling_avail = ad7606B_oversampling_avail;
++	st->num_os_ratios = ARRAY_SIZE(ad7606B_oversampling_avail);
++
++	st->write_scale = ad7606_write_scale_sw;
++	st->write_os = &ad7606_write_os_sw;
++
++	/* Configure device spi to output on a single channel */
++	st->bops->reg_write(st,
++			    AD7606_CONFIGURATION_REGISTER,
++			    AD7606_SINGLE_DOUT);
++
++	/*
++	 * Scale can be configured individually for each channel
++	 * in software mode.
++	 */
++	indio_dev->channels = ad7606B_sw_channels;
++
++	return 0;
++}
++
+ static const struct ad7606_bus_ops ad7606_spi_bops = {
+ 	.read_block = ad7606_spi_read_block,
+ };
+@@ -202,6 +295,15 @@ static const struct ad7606_bus_ops ad7616_spi_bops = {
+ 	.sw_mode_config = ad7616_sw_mode_config,
+ };
+ 
++static const struct ad7606_bus_ops ad7606B_spi_bops = {
++	.read_block = ad7606_spi_read_block,
++	.reg_read = ad7606_spi_reg_read,
++	.reg_write = ad7606_spi_reg_write,
++	.write_mask = ad7606_spi_write_mask,
++	.rd_wr_cmd = ad7606B_spi_rd_wr_cmd,
++	.sw_mode_config = ad7606B_sw_mode_config,
++};
++
+ static int ad7606_spi_probe(struct spi_device *spi)
+ {
+ 	const struct spi_device_id *id = spi_get_device_id(spi);
+@@ -211,6 +313,9 @@ static int ad7606_spi_probe(struct spi_device *spi)
+ 	case ID_AD7616:
+ 		bops = &ad7616_spi_bops;
+ 		break;
++	case ID_AD7606B:
++		bops = &ad7606B_spi_bops;
++		break;
+ 	default:
+ 		bops = &ad7606_spi_bops;
+ 		break;
+@@ -226,6 +331,7 @@ static const struct spi_device_id ad7606_id_table[] = {
+ 	{ "ad7606-4", ID_AD7606_4 },
+ 	{ "ad7606-6", ID_AD7606_6 },
+ 	{ "ad7606-8", ID_AD7606_8 },
++	{ "ad7606b",  ID_AD7606B },
+ 	{ "ad7616",   ID_AD7616 },
+ 	{}
+ };
+@@ -236,6 +342,7 @@ static const struct of_device_id ad7606_of_match[] = {
+ 	{ .compatible = "adi,ad7606-4" },
+ 	{ .compatible = "adi,ad7606-6" },
+ 	{ .compatible = "adi,ad7606-8" },
++	{ .compatible = "adi,ad7606b" },
+ 	{ .compatible = "adi,ad7616" },
+ 	{ },
+ };
 -- 
-2.20.1
+2.17.1
 
