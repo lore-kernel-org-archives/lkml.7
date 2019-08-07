@@ -2,139 +2,119 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AECDDC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 02:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE050C31E40
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 02:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79430216F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 02:57:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="ixitzC75"
+	by mail.kernel.org (Postfix) with ESMTP id 81FF2216F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 02:58:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565146698;
+	bh=OPOWWv3mB9DdFvmoTfWyNb6+ibWx2Cp4rvzwe+QrP9Q=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=c3AppRMz+XgPEdEckRG7Rv1SMQa/swvvAW0BHzgk6slZeJza9YqHBqg/fXsV+ve6B
+	 S333Nvbr3iFg7V7EBR4h3nX/CvZVmGxXvuohD84ShLCJiTGHwh6VBiVePpMWiXNxkh
+	 cmnTham1tcLpnZCvR7A19qNqRlBVfhME2fe/liNM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728014AbfHGC5G (ORCPT
+        id S1728030AbfHGC6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 22:57:06 -0400
-Received: from mail-eopbgr690072.outbound.protection.outlook.com ([40.107.69.72]:5091
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726518AbfHGC5G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 22:57:06 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WMtRy9bIEv7vhDZSBz1usOPfFNjsxBYYF/dUKA1eKa0wDz9VlL/VtkPfVgU9+fwLVtinDa5w6smwAy0ikRZpQu3KMYEgyM52NUXEy8Hy/loAOI+T5RPrhf0932ZGuT3QRtLB/1irU/TloVvB7/RPudbBceJKt0UgNK7wGvlPIFqTezvpncpvRGbp7fG7x7E/a397WvtXGyLkdtL47qWYFagoPlBEfTVMPfQNkfeaYAIFUb/mVDB0lxgNPnY8kllkVlB9Y3UjTmQIaDzak0flTqTjB0nK7xlmFiHQ1HfYPDm2UaoZXNVr8M4DIDC/UZivtZfrEgC4D8T80a94zHdpWg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5SV7p2HbKqhsggjH+c6/wSuycDWDCizFjC6dGRc+Cx0=;
- b=lC0n97ouri5h0BUBgWskJk3ftUgJygfVvJm2+kNOzRSzXq36QEQNge9sh3dRLYyizTj2JfFXqL4g4n0y4JZVLMB+TAgrqLhx4bRdn30ve1vtZ6JEZ5buhVik5wpxqs1hgSc+zEtsMsUdEDf+I9+8mKkhis0Yj2ErOHLovYXQWcqjmVkLv8RBIbqeHL0dBO6tMtWC6kKle9suNvjeqwxi3W6ikC3vB1ngXhKN9IblSuNc37QeI/Xp0zSia18WEnPmo0D7grJSZydTmhJYgIKB9yFvAtu5HNONRnV0v8RvS+tsprrnTMMyMUzIpU+7BGWlOizqIkaDq8E4IGOypA3eiw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5SV7p2HbKqhsggjH+c6/wSuycDWDCizFjC6dGRc+Cx0=;
- b=ixitzC754LN94WmBDEuK0sveqWZK2wSEeHqGtLLU5qCdrWVg1rI0VSMjbTnwZyzmE1507JktuW3vScY6jZ8quatXfjXTephFebr6+K5QtkRbumONS9EDXi1KI6CFSLrgbDgUv2Hh+QXVyxf1zRavqf+Ppncb0FqWFN0ZsDZoD6c=
-Received: from MN2PR12MB3344.namprd12.prod.outlook.com (20.178.241.74) by
- MN2PR12MB3343.namprd12.prod.outlook.com (20.178.240.159) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.14; Wed, 7 Aug 2019 02:57:02 +0000
-Received: from MN2PR12MB3344.namprd12.prod.outlook.com
- ([fe80::6cae:3314:7799:3077]) by MN2PR12MB3344.namprd12.prod.outlook.com
- ([fe80::6cae:3314:7799:3077%6]) with mapi id 15.20.2157.011; Wed, 7 Aug 2019
- 02:57:02 +0000
-From:   "Quan, Evan" <Evan.Quan@amd.com>
-To:     Colin King <colin.king@canonical.com>, Rex Zhu <rex.zhu@amd.com>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>,
-        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-CC:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH][drm-next] drm/amd/powerplay: remove redundant duplicated
- return check
-Thread-Topic: [PATCH][drm-next] drm/amd/powerplay: remove redundant duplicated
- return check
-Thread-Index: AQHVS3i06UQfxzn0xkWMQUs9QU/PAabvAHxA
-Date:   Wed, 7 Aug 2019 02:57:02 +0000
-Message-ID: <MN2PR12MB334491A28234DD9F23CA8843E4D40@MN2PR12MB3344.namprd12.prod.outlook.com>
-References: <20190805102940.26024-1-colin.king@canonical.com>
-In-Reply-To: <20190805102940.26024-1-colin.king@canonical.com>
-Accept-Language: en-US, zh-CN
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Evan.Quan@amd.com; 
-x-originating-ip: [180.167.199.189]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 23af2274-709a-4b0f-170f-08d71ae2ec36
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:MN2PR12MB3343;
-x-ms-traffictypediagnostic: MN2PR12MB3343:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR12MB3343982AEA71B307D429B2D0E4D40@MN2PR12MB3343.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4125;
-x-forefront-prvs: 01221E3973
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(136003)(396003)(366004)(346002)(189003)(199004)(13464003)(76116006)(14454004)(54906003)(66446008)(66946007)(86362001)(66556008)(66476007)(64756008)(229853002)(25786009)(2501003)(76176011)(305945005)(316002)(7736002)(5660300002)(3846002)(7696005)(52536014)(74316002)(478600001)(110136005)(99286004)(6116002)(446003)(11346002)(486006)(26005)(102836004)(186003)(33656002)(71190400001)(71200400001)(53546011)(6506007)(66066001)(6246003)(2906002)(8676002)(55016002)(68736007)(476003)(2201001)(6436002)(4326008)(81156014)(9686003)(256004)(14444005)(81166006)(8936002)(53936002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB3343;H:MN2PR12MB3344.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: bGBapyqINqTMkZ8JCkneuGJSu1BKwedboIhjewaeEF5ToOXjdtbiXXDePfj+gagUiBwRH84jpTcugEP1PtZRSeNG3x0wSiEnUmahSVMVLaMIJCq0XVpFUzyEoqAaxoSKkzHFvA37luxyBUlIl90+PMsHuBk3wYZHicDXEvNIpt7g5BbDx5hqozQVptVUvmqUsP51RBGITNWykSV4178o4O6d3AEWzmR7ws4oMhCJfUQ2VuKOaZC+ar4BqefwlMcJcrIOc4/RlRv9CzyEeEl87mUkEtulH8bQ+lhaO7PfPziKGKhnimHQnSnvUyAMFwi/hwlOlI2yLgi9QS37ddBFZoZuRfFKlA7q8mse1Tpgkygz5oZiL5ISO6DGCHXgmLjUluPqg136jIUems/adZklVM8oVvS7Sb38/Kh0ReJP4s8=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 6 Aug 2019 22:58:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50088 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726518AbfHGC6R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 22:58:17 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDF1E216F4;
+        Wed,  7 Aug 2019 02:58:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565146696;
+        bh=OPOWWv3mB9DdFvmoTfWyNb6+ibWx2Cp4rvzwe+QrP9Q=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=dAMu82L1H4gYf7vcB3Oepw/fLNMFjH/D8hsdYAwj07TBSuID1R+955J5MHqmTlh9Q
+         I2zKNtguWEetSnJxJNuI5INcBJ23ypyNW0Ash7Cfi2QbfmLBi1B1Ylvb0NV1I/DY8u
+         DlIuhqxyixoi2IHKGM01Sj7kNZQ0H8fdJHV5B0LM=
+Date:   Tue, 6 Aug 2019 19:58:14 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     David Howells <dhowells@redhat.com>, keyrings@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] KEYS: Replace uid/gid/perm permissions checking with
+ an ACL
+Message-ID: <20190807025814.GA1167@sol.localdomain>
+Mail-Followup-To: David Howells <dhowells@redhat.com>,
+        keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <155862710003.24863.11807972177275927370.stgit@warthog.procyon.org.uk>
+ <155862710731.24863.14013725058582750710.stgit@warthog.procyon.org.uk>
+ <20190710011559.GA7973@sol.localdomain>
+ <20190730034956.GB1966@sol.localdomain>
+ <20190731011614.GA687@sol.localdomain>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 23af2274-709a-4b0f-170f-08d71ae2ec36
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Aug 2019 02:57:02.3463
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: n9WlL1VkjJT9Qq7+aK5zJSIE+Lzeje//OWEZ312EZkPg1MMnlhkhR7FUG/acjcHD
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3343
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190731011614.GA687@sol.localdomain>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhhbmtzISBSZXZpZXdlZC1ieTogRXZhbiBRdWFuIDxldmFuLnF1YW5AYW1kLmNvbT4NCg0KPiAt
-LS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBDb2xpbiBLaW5nIDxjb2xpbi5raW5n
-QGNhbm9uaWNhbC5jb20+DQo+IFNlbnQ6IE1vbmRheSwgQXVndXN0IDA1LCAyMDE5IDY6MzAgUE0N
-Cj4gVG86IFJleCBaaHUgPHJleC56aHVAYW1kLmNvbT47IFF1YW4sIEV2YW4gPEV2YW4uUXVhbkBh
-bWQuY29tPjsNCj4gRGV1Y2hlciwgQWxleGFuZGVyIDxBbGV4YW5kZXIuRGV1Y2hlckBhbWQuY29t
-PjsgS29lbmlnLCBDaHJpc3RpYW4NCj4gPENocmlzdGlhbi5Lb2VuaWdAYW1kLmNvbT47IFpob3Us
-IERhdmlkKENodW5NaW5nKQ0KPiA8RGF2aWQxLlpob3VAYW1kLmNvbT47IERhdmlkIEFpcmxpZSA8
-YWlybGllZEBsaW51eC5pZT47IERhbmllbCBWZXR0ZXINCj4gPGRhbmllbEBmZndsbC5jaD47IGFt
-ZC1nZnhAbGlzdHMuZnJlZWRlc2t0b3Aub3JnOyBkcmktDQo+IGRldmVsQGxpc3RzLmZyZWVkZXNr
-dG9wLm9yZw0KPiBDYzoga2VybmVsLWphbml0b3JzQHZnZXIua2VybmVsLm9yZzsgbGludXgta2Vy
-bmVsQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBbUEFUQ0hdW2RybS1uZXh0XSBkcm0vYW1k
-L3Bvd2VycGxheTogcmVtb3ZlIHJlZHVuZGFudA0KPiBkdXBsaWNhdGVkIHJldHVybiBjaGVjaw0K
-PiANCj4gRnJvbTogQ29saW4gSWFuIEtpbmcgPGNvbGluLmtpbmdAY2Fub25pY2FsLmNvbT4NCj4g
-DQo+IFRoZSBjaGVjayBvbiByZXQgaXMgZHVwbGljYXRlZCBpbiB0d28gcGxhY2VzLCBpdCBpcyBy
-ZWR1bmRhbnQgY29kZS4NCj4gUmVtb3ZlIGl0Lg0KPiANCj4gQWRkcmVzc2VzLUNvdmVyaXR5OiAo
-IkxvZ2ljYWxseSBkZWFkIGNvZGUiKQ0KPiBGaXhlczogYjk0YWZiNjFjZGFlICgiZHJtL2FtZC9w
-b3dlcnBsYXk6IGhvbm9yIGh3IGxpbWl0IG9uIGZldGNoaW5nDQo+IG1ldHJpY3MgZGF0YSBmb3Ig
-bmF2aTEwIikNCj4gU2lnbmVkLW9mZi1ieTogQ29saW4gSWFuIEtpbmcgPGNvbGluLmtpbmdAY2Fu
-b25pY2FsLmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL2dwdS9kcm0vYW1kL3Bvd2VycGxheS9uYXZp
-MTBfcHB0LmMgfCA0IC0tLS0NCj4gIDEgZmlsZSBjaGFuZ2VkLCA0IGRlbGV0aW9ucygtKQ0KPiAN
-Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9hbWQvcG93ZXJwbGF5L25hdmkxMF9wcHQu
-Yw0KPiBiL2RyaXZlcnMvZ3B1L2RybS9hbWQvcG93ZXJwbGF5L25hdmkxMF9wcHQuYw0KPiBpbmRl
-eCBkNjJjMjc4NGIxMDIuLmIyNzJjOGRjOGY3OSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9ncHUv
-ZHJtL2FtZC9wb3dlcnBsYXkvbmF2aTEwX3BwdC5jDQo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9h
-bWQvcG93ZXJwbGF5L25hdmkxMF9wcHQuYw0KPiBAQCAtOTQxLDggKzk0MSw2IEBAIHN0YXRpYyBp
-bnQgbmF2aTEwX2dldF9ncHVfcG93ZXIoc3RydWN0IHNtdV9jb250ZXh0DQo+ICpzbXUsIHVpbnQz
-Ml90ICp2YWx1ZSkNCj4gIAlyZXQgPSBuYXZpMTBfZ2V0X21ldHJpY3NfdGFibGUoc211LCAmbWV0
-cmljcyk7DQo+ICAJaWYgKHJldCkNCj4gIAkJcmV0dXJuIHJldDsNCj4gLQlpZiAocmV0KQ0KPiAt
-CQlyZXR1cm4gcmV0Ow0KPiANCj4gIAkqdmFsdWUgPSBtZXRyaWNzLkF2ZXJhZ2VTb2NrZXRQb3dl
-ciA8PCA4Ow0KPiANCj4gQEAgLTEwMDEsOCArOTk5LDYgQEAgc3RhdGljIGludCBuYXZpMTBfZ2V0
-X2Zhbl9zcGVlZF9ycG0oc3RydWN0DQo+IHNtdV9jb250ZXh0ICpzbXUsDQo+ICAJcmV0ID0gbmF2
-aTEwX2dldF9tZXRyaWNzX3RhYmxlKHNtdSwgJm1ldHJpY3MpOw0KPiAgCWlmIChyZXQpDQo+ICAJ
-CXJldHVybiByZXQ7DQo+IC0JaWYgKHJldCkNCj4gLQkJcmV0dXJuIHJldDsNCj4gDQo+ICAJKnNw
-ZWVkID0gbWV0cmljcy5DdXJyRmFuU3BlZWQ7DQo+IA0KPiAtLQ0KPiAyLjIwLjENCg0K
+On Tue, Jul 30, 2019 at 06:16:14PM -0700, Eric Biggers wrote:
+> On Mon, Jul 29, 2019 at 08:49:56PM -0700, Eric Biggers wrote:
+> > Hi David,
+> > 
+> > On Tue, Jul 09, 2019 at 06:16:01PM -0700, Eric Biggers wrote:
+> > > On Thu, May 23, 2019 at 04:58:27PM +0100, David Howells wrote:
+> > > > Replace the uid/gid/perm permissions checking on a key with an ACL to allow
+> > > > the SETATTR and SEARCH permissions to be split.  This will also allow a
+> > > > greater range of subjects to represented.
+> > > > 
+> > > 
+> > > This patch broke 'keyctl new_session', and hence broke all the fscrypt tests:
+> > > 
+> > > $ keyctl new_session
+> > > keyctl_session_to_parent: Permission denied
+> > > 
+> > > Output of 'keyctl show' is
+> > > 
+> > > $ keyctl show
+> > > Session Keyring
+> > >  605894913 --alswrv      0     0  keyring: _ses
+> > >  189223103 ----s-rv      0     0   \_ user: invocation_id
+> > > 
+> > > - Eric
+> > 
+> > This bug is still present in next-20190729.
+> > 
+> > - Eric
+> 
+> This fixes it:
+> 
+> diff --git a/security/keys/process_keys.c b/security/keys/process_keys.c
+> index aa3bfcadbc660..519c94f1cc3c2 100644
+> --- a/security/keys/process_keys.c
+> +++ b/security/keys/process_keys.c
+> @@ -58,7 +58,7 @@ static struct key_acl session_keyring_acl = {
+>  	.possessor_viewable = true,
+>  	.nr_ace	= 2,
+>  	.aces = {
+> -		KEY_POSSESSOR_ACE(KEY_ACE__PERMS & ~KEY_ACE_JOIN),
+> +		KEY_POSSESSOR_ACE(KEY_ACE__PERMS),
+>  		KEY_OWNER_ACE(KEY_ACE_VIEW | KEY_ACE_READ),
+>  	}
+>  };
+> 
+> 
+> The old permissions were KEY_POS_ALL | KEY_USR_VIEW | KEY_USR_READ, so
+> I'm not sure why JOIN permission was removed?
+> 
+> - Eric
+
+Ping.  This is still broken in linux-next.
+
+- Eric
