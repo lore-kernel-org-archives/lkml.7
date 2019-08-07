@@ -7,56 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F53C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 17:16:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37975C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 17:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1702421EF2
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 17:16:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09B1D22324
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 17:16:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="mD9C8IKc"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="HcPjW0Di"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388999AbfHGRQO (ORCPT
+        id S2389049AbfHGRQS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 13:16:14 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:43242 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388843AbfHGRQN (ORCPT
+        Wed, 7 Aug 2019 13:16:18 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:37591 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389006AbfHGRQR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 13:16:13 -0400
-Received: by mail-pl1-f196.google.com with SMTP id 4so34764390pld.10
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 10:16:12 -0700 (PDT)
+        Wed, 7 Aug 2019 13:16:17 -0400
+Received: by mail-pl1-f194.google.com with SMTP id b3so41801793plr.4
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 10:16:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=joelfernandes.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=P5X7WGyKIvWzv40/K4oiDqLDCW/4zY9Hm3MOMY58jQs=;
-        b=mD9C8IKc4XKpcbSYfwPnZKRldyQiL1dBx81QYoVmJDdux8Iep7i59/JSHFJYHk+XrJ
-         vrMJi8Xp2bdjRbFDtFrhqEh5Yc3Oopi7lxX7lQLO8r3AEgEvgNhzwo8UcjWMEY04/AC8
-         JYsHF/E+aVAAZwpyg1/P7F6EoLQTnU39+G9fc=
+        bh=1UeFCEkBe8WB1WXsCYwcP/7nKnryRnwhqxRiHu1oF/s=;
+        b=HcPjW0DivADdEfHkyp4B3Mi8RU+x160HluTp+508rUVD+SzJgBrJq6t1BUOsPiC8sf
+         fsTMIHTi5sb49Zvfxvz+q0a3vrz9N1UySTOGDCYAfcU7uD8iy1sWRdXzXXFJ6HB9lday
+         L8GmF1g24wM+UOHJXMd0arOKopP7Q91uFDxtM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=P5X7WGyKIvWzv40/K4oiDqLDCW/4zY9Hm3MOMY58jQs=;
-        b=NMbUYVG/o3kdtbZuS0BsLmExFwuywr8Tz5q/Eu2EBn15WIFZx6yg/fneiM+ZEnpjxF
-         6KWI79VYzodbhRXqsXCsHROOFB3KZiy+fmFsXzVMszKjqRgL54cykNwHsS5C7I5bHgCu
-         kDWV1jl2oy+CLFyYC8guw9+lOtlS/38YGnJ5eE825Q71vvEpuOuTsZRx+BUVpfnEqTRV
-         qAQ0aDWDf8kGcK+W+qVjRbgvl4IxXuAKf+ZAfdXtXesiSQvE7QhEXzTwG6+3gFrMmgay
-         m+i54ICUb9M+qmxqSykQwWohOTMjW2zYQWxcU+mNQnRQFNlVG84g9kwCimO+sOI4hLXG
-         jdqQ==
-X-Gm-Message-State: APjAAAXzCYrTQw+hDDax24xNWqSL4XgJxhIPiM0zkRAeEeLqmrBDaORv
-        rYygvdgzCFp9C/mosaY9GcuVsGelXX8=
-X-Google-Smtp-Source: APXvYqy2HYLAn0m4KciMvOj56Jnl+GhF3rHn4PDJ2pDxkWs47lImKTGAEMqQOwqhhdZJFZxyaLa3aQ==
-X-Received: by 2002:a62:1ac9:: with SMTP id a192mr10254306pfa.260.1565198172140;
-        Wed, 07 Aug 2019 10:16:12 -0700 (PDT)
+        bh=1UeFCEkBe8WB1WXsCYwcP/7nKnryRnwhqxRiHu1oF/s=;
+        b=NmgQqSw6k1uz54FiZ6mGFmS+R1VPiq0vd+6/ZhdUWUX6Avk/sYgrR4wC6xR+obxP68
+         2jTQ0hLu2bFXrYsXazl+fySNg96Ngpd63iz5gWa/98MRfXWWUoEcxpFZTTPuuuBmcwNu
+         NAY5oZrn2A45ql9obIwU5cZcKBQL5FLdCNP7EOhyWV7fqKeps/tmKrC/RIuETUg5CGaU
+         KcsrFWVpFT9RmavIaY55m1pCbTfhwipfdZFM93wt5Sk4OX1ABmF3+3B39fpL+shT4eJK
+         r5KYuhot1LOaR5I4XnJR0i0uSmNZf/cK71GAoI66piR51RQ/wP3DnK7PsSrnNvoPG3d0
+         4rkw==
+X-Gm-Message-State: APjAAAVoAm18pYGB4eQ58svmoe1PA6+hjFyYhe/XzQj5/0Xoe4gxh0YP
+        7WOSWPCjNi6ZJM1cNapbJ/YsgpUGDhY=
+X-Google-Smtp-Source: APXvYqwHVvygOlXUtIZKyi/92023MeWzg0pU1BdqY1xO4rXhd1tufTZGiEHLR2SPeSZbDPbxKba8KQ==
+X-Received: by 2002:aa7:8817:: with SMTP id c23mr10572797pfo.146.1565198175976;
+        Wed, 07 Aug 2019 10:16:15 -0700 (PDT)
 Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id a1sm62692130pgh.61.2019.08.07.10.16.08
+        by smtp.gmail.com with ESMTPSA id a1sm62692130pgh.61.2019.08.07.10.16.12
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 07 Aug 2019 10:16:11 -0700 (PDT)
+        Wed, 07 Aug 2019 10:16:15 -0700 (PDT)
 From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Minchan Kim <minchan@kernel.org>,
         Alexey Dobriyan <adobriyan@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Borislav Petkov <bp@alien8.de>,
@@ -70,16 +69,17 @@ Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
         linux-api@vger.kernel.org, linux-doc@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
         Michal Hocko <mhocko@suse.com>,
-        Mike Rapoport <rppt@linux.ibm.com>, namhyung@google.com,
-        paulmck@linux.ibm.com, Robin Murphy <robin.murphy@arm.com>,
+        Mike Rapoport <rppt@linux.ibm.com>, minchan@kernel.org,
+        namhyung@google.com, paulmck@linux.ibm.com,
+        Robin Murphy <robin.murphy@arm.com>,
         Roman Gushchin <guro@fb.com>,
         Stephen Rothwell <sfr@canb.auug.org.au>, surenb@google.com,
         Thomas Gleixner <tglx@linutronix.de>, tkjos@google.com,
         Vladimir Davydov <vdavydov.dev@gmail.com>,
         Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>
-Subject: [PATCH v5 2/6] mm/page_idle: Add support for handling swapped PG_Idle pages
-Date:   Wed,  7 Aug 2019 13:15:55 -0400
-Message-Id: <20190807171559.182301-2-joel@joelfernandes.org>
+Subject: [PATCH v5 3/6] [RFC] x86: Add support for idle bit in swap PTE
+Date:   Wed,  7 Aug 2019 13:15:56 -0400
+Message-Id: <20190807171559.182301-3-joel@joelfernandes.org>
 X-Mailer: git-send-email 2.22.0.770.g0f2c4a37fd-goog
 In-Reply-To: <20190807171559.182301-1-joel@joelfernandes.org>
 References: <20190807171559.182301-1-joel@joelfernandes.org>
@@ -90,142 +90,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Idle page tracking currently does not work well in the following
-scenario:
- 1. mark page-A idle which was present at that time.
- 2. run workload
- 3. page-A is not touched by workload
- 4. *sudden* memory pressure happen so finally page A is finally swapped out
- 5. now see the page A - it appears as if it was accessed (pte unmapped
-    so idle bit not set in output) - but it's incorrect.
+This bit will be used by idle page tracking code to correctly identify
+if a page that was swapped out was idle before it got swapped out.
+Without this PTE bit, we lose information about if a page is idle or not
+since the page frame gets unmapped and the page gets freed.
 
-To fix this, we store the idle information into a new idle bit of the
-swap PTE during swapping of anonymous pages.
+Bits 2-6 are unused in the swap PTE (see the comment in
+arch/x86/include/asm/pgtable_64.h). Bit 2 corresponds to _PAGE_USER. Use
+it for swap PTE purposes.
 
-Also in the future, madvise extensions will allow a system process
-manager (like Android's ActivityManager) to swap pages out of a process
-that it knows will be cold. To an external process like a heap profiler
-that is doing idle tracking on another process, this procedure will
-interfere with the idle page tracking similar to the above steps.
-
-Suggested-by: Minchan Kim <minchan@kernel.org>
 Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 ---
- arch/Kconfig                  |  3 +++
- include/asm-generic/pgtable.h |  6 ++++++
- mm/page_idle.c                | 26 ++++++++++++++++++++++++--
- mm/rmap.c                     |  2 ++
- 4 files changed, 35 insertions(+), 2 deletions(-)
+ arch/x86/Kconfig                     |  1 +
+ arch/x86/include/asm/pgtable.h       | 15 +++++++++++++++
+ arch/x86/include/asm/pgtable_types.h |  6 ++++++
+ 3 files changed, 22 insertions(+)
 
-diff --git a/arch/Kconfig b/arch/Kconfig
-index a7b57dd42c26..3aa121ce824e 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -575,6 +575,9 @@ config ARCH_WANT_HUGE_PMD_SHARE
- config HAVE_ARCH_SOFT_DIRTY
- 	bool
- 
-+config HAVE_ARCH_PTE_SWP_PGIDLE
-+	bool
-+
- config HAVE_MOD_ARCH_SPECIFIC
- 	bool
- 	help
-diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
-index 75d9d68a6de7..6d51d0a355a7 100644
---- a/include/asm-generic/pgtable.h
-+++ b/include/asm-generic/pgtable.h
-@@ -712,6 +712,12 @@ static inline void ptep_modify_prot_commit(struct vm_area_struct *vma,
- #define arch_start_context_switch(prev)	do {} while (0)
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 222855cc0158..728f22370f17 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -139,6 +139,7 @@ config X86
+ 	select HAVE_ARCH_MMAP_RND_COMPAT_BITS	if MMU && COMPAT
+ 	select HAVE_ARCH_COMPAT_MMAP_BASES	if MMU && COMPAT
+ 	select HAVE_ARCH_PREL32_RELOCATIONS
++	select HAVE_ARCH_PTE_SWP_PGIDLE
+ 	select HAVE_ARCH_SECCOMP_FILTER
+ 	select HAVE_ARCH_THREAD_STRUCT_WHITELIST
+ 	select HAVE_ARCH_STACKLEAK
+diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
+index 0bc530c4eb13..ef3e662cee4a 100644
+--- a/arch/x86/include/asm/pgtable.h
++++ b/arch/x86/include/asm/pgtable.h
+@@ -1371,6 +1371,21 @@ static inline pmd_t pmd_swp_clear_soft_dirty(pmd_t pmd)
+ #endif
  #endif
  
-+#ifndef CONFIG_HAVE_ARCH_PTE_SWP_PGIDLE
-+static inline pte_t pte_swp_mkpage_idle(pte_t pte) { return pte; }
-+static inline int pte_swp_page_idle(pte_t pte) { return 0; }
-+static inline pte_t pte_swp_clear_mkpage_idle(pte_t pte) { return pte; }
++static inline pte_t pte_swp_mkpage_idle(pte_t pte)
++{
++	return pte_set_flags(pte, _PAGE_SWP_PGIDLE);
++}
++
++static inline int pte_swp_page_idle(pte_t pte)
++{
++	return pte_flags(pte) & _PAGE_SWP_PGIDLE;
++}
++
++static inline pte_t pte_swp_clear_mkpage_idle(pte_t pte)
++{
++	return pte_clear_flags(pte, _PAGE_SWP_PGIDLE);
++}
++
+ #define PKRU_AD_BIT 0x1
+ #define PKRU_WD_BIT 0x2
+ #define PKRU_BITS_PER_PKEY 2
+diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
+index b5e49e6bac63..6739cba4c900 100644
+--- a/arch/x86/include/asm/pgtable_types.h
++++ b/arch/x86/include/asm/pgtable_types.h
+@@ -100,6 +100,12 @@
+ #define _PAGE_SWP_SOFT_DIRTY	(_AT(pteval_t, 0))
+ #endif
+ 
++#ifdef CONFIG_IDLE_PAGE_TRACKING
++#define _PAGE_SWP_PGIDLE	_PAGE_USER
++#else
++#define _PAGE_SWP_PGIDLE	(_AT(pteval_t, 0))
 +#endif
 +
- #ifdef CONFIG_HAVE_ARCH_SOFT_DIRTY
- #ifndef CONFIG_ARCH_ENABLE_THP_MIGRATION
- static inline pmd_t pmd_swp_mksoft_dirty(pmd_t pmd)
-diff --git a/mm/page_idle.c b/mm/page_idle.c
-index 9de4f4c67a8c..2766d4ab348c 100644
---- a/mm/page_idle.c
-+++ b/mm/page_idle.c
-@@ -276,7 +276,7 @@ struct page_idle_proc_priv {
- };
- 
- /*
-- * Add page to list to be set as idle later.
-+ * Set a page as idle or add it to a list to be set as idle later.
-  */
- static void pte_page_idle_proc_add(struct page *page,
- 			       unsigned long addr, struct mm_walk *walk)
-@@ -303,6 +303,13 @@ static void pte_page_idle_proc_add(struct page *page,
- 		page_get = page_idle_get_page(page);
- 		if (!page_get)
- 			return;
-+	} else {
-+		/* For swapped pages, set output bit as idle */
-+		frames = (addr - priv->start_addr) >> PAGE_SHIFT;
-+		bit = frames % BITMAP_CHUNK_BITS;
-+		chunk = &chunk[frames / BITMAP_CHUNK_BITS];
-+		*chunk |= (1 << bit);
-+		return;
- 	}
- 
- 	/*
-@@ -323,6 +330,7 @@ static int pte_page_idle_proc_range(pmd_t *pmd, unsigned long addr,
- 	spinlock_t *ptl;
- 	struct page *page;
- 	struct vm_area_struct *vma = walk->vma;
-+	struct page_idle_proc_priv *priv = walk->private;
- 
- 	ptl = pmd_trans_huge_lock(pmd, vma);
- 	if (ptl) {
-@@ -341,6 +349,19 @@ static int pte_page_idle_proc_range(pmd_t *pmd, unsigned long addr,
- 
- 	pte = pte_offset_map_lock(vma->vm_mm, pmd, addr, &ptl);
- 	for (; addr != end; pte++, addr += PAGE_SIZE) {
-+		/* For swap_pte handling, we use an idle bit in the swap pte. */
-+		if (is_swap_pte(*pte)) {
-+			if (priv->write) {
-+				set_pte_at(walk->mm, addr, pte,
-+					   pte_swp_mkpage_idle(*pte));
-+			} else {
-+				/* If swap pte has idle bit set, report it as idle */
-+				if (pte_swp_page_idle(*pte))
-+					pte_page_idle_proc_add(NULL, addr, walk);
-+			}
-+			continue;
-+		}
-+
- 		if (!pte_present(*pte))
- 			continue;
- 
-@@ -432,7 +453,8 @@ ssize_t page_idle_proc_generic(struct file *file, char __user *ubuff,
- 				set_page_idle(page);
- 			}
- 		} else {
--			if (page_idle_pte_check(page)) {
-+			/* If page is NULL, it was swapped out */
-+			if (!page || page_idle_pte_check(page)) {
- 				off = ((cur->addr) >> PAGE_SHIFT) - start_frame;
- 				bit = off % BITMAP_CHUNK_BITS;
- 				index = off / BITMAP_CHUNK_BITS;
-diff --git a/mm/rmap.c b/mm/rmap.c
-index e5dfe2ae6b0d..4bd618aab402 100644
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -1629,6 +1629,8 @@ static bool try_to_unmap_one(struct page *page, struct vm_area_struct *vma,
- 			swp_pte = swp_entry_to_pte(entry);
- 			if (pte_soft_dirty(pteval))
- 				swp_pte = pte_swp_mksoft_dirty(swp_pte);
-+			if (page_is_idle(page))
-+				swp_pte = pte_swp_mkpage_idle(swp_pte);
- 			set_pte_at(mm, address, pvmw.pte, swp_pte);
- 			/* Invalidate as we cleared the pte */
- 			mmu_notifier_invalidate_range(mm, address,
+ #if defined(CONFIG_X86_64) || defined(CONFIG_X86_PAE)
+ #define _PAGE_NX	(_AT(pteval_t, 1) << _PAGE_BIT_NX)
+ #define _PAGE_DEVMAP	(_AT(u64, 1) << _PAGE_BIT_DEVMAP)
 -- 
 2.22.0.770.g0f2c4a37fd-goog
 
