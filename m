@@ -2,125 +2,203 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84DFBC31E40
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:20:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA602C31E40
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:23:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52534214C6
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:20:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D79A21738
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:23:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MxghsRAG"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GNTmRKLx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727745AbfHGBUV (ORCPT
+        id S1727748AbfHGBXh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 21:20:21 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40380 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726340AbfHGBUU (ORCPT
+        Tue, 6 Aug 2019 21:23:37 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:45921 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727541AbfHGBXh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 21:20:20 -0400
-Received: by mail-ot1-f65.google.com with SMTP id l15so40538021oth.7;
-        Tue, 06 Aug 2019 18:20:19 -0700 (PDT)
+        Tue, 6 Aug 2019 21:23:37 -0400
+Received: by mail-ot1-f67.google.com with SMTP id x21so4502946otq.12
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 18:23:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2h6gOAY3YgD8MOX44OfV8vPJGYNX/elEpaQ/VKNmceM=;
-        b=MxghsRAGFfqPvSB51oGFXysHGy1zHqGpjNmxCvowxoZlRlhQ2vSE1IkWtrsPqPS8M+
-         XUPiHQfnxmOVTkV1/nR/XKLMuLSKbEhTRE2UqPu+cqn5lfwLc9ZDHiTN/AO50LC/WvCr
-         RJw/2J6JcyDxfaZiRwS639smOUzWBt3TMb3ZUNylo9usZT2C+WhuI8TmjLJ0NmhiXZo3
-         2LGPh5IWSouJLwln0v74RqY0Gl8rflYRz03Hg6TNmWb7uTfRGgQKmn/kYzXINvs9KZ9E
-         nKlLU/HI/PDki9+BIDbFx+cc5CXlPPIw0mcugwFNnFMG5a8YihQinumS5dquZ9D4kdeF
-         ZkTQ==
+         :cc:content-transfer-encoding;
+        bh=XOc3tRY+4s8d0XfiWvvs/QPATLaAozAh84PcRQxEWLM=;
+        b=GNTmRKLx1mTu+C0+yD8oGiYEgpN8Ed2VrTeqTvsha4J6+EThN6gPct+RjsZktOSHUG
+         3NGWefoJBoKXoeVgkcEu1O1LbM2wO2HG0QK6Xk9KvnOFIwQnY8FBjDCz+HyzSyl0H9Vo
+         sjkHKA5WdxWcEVaiYYa5OpDjZxbC4bdRy0yBBtGGR+c1NQuJ4ade/5UXQ6kIUbA+OTwP
+         59K5GpuNKKo+7onbGHvl8pLzddN3iBFdh3I2za6eU8Z42YwuQhG0l1cuGuY5dm2bn89d
+         UmP9+QPE1Bqx3jat6AG543f01KQVPwWGGuU1/bmhABU1rjSTdudpx3/le/8fgit0/W3j
+         g7Bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2h6gOAY3YgD8MOX44OfV8vPJGYNX/elEpaQ/VKNmceM=;
-        b=JYactO/nBsbnuZG9C7KBGYzDTZrs4e3/fyLzc6B9mxg9v1xi+c2zGuCctxU+9tqflC
-         WyByJmp+mcu9q0znUA0a251jr6JrK/3R6IhSDsafSCNPajrsJQSwq/vucRrqSCijpgWv
-         JEPyTB+POHB9yjsXbDOs1DATnLFPxCbQu035D2ZLZSrlhdmFRp7+BnroS3Ziu8zATYxc
-         0L1ueCAI/GgXwxlAOVmARFLY5TkFZHhD5MUWK7hb+mDiQBDl31s6f1CEwLpLX2bGUukZ
-         1E4ow/ZxMByRn6u9Pa512CKgrLpgWwNE6BaqzdvNWA9o4OSO4UP+Lq7g6m60IzIuL03c
-         Cv2A==
-X-Gm-Message-State: APjAAAXJV+vNygfhjvGBoJobm1Y0pnkyFLabL5ycTx1RcM8oHMiSMiEJ
-        mfR+MvKKFihBsdd0OA8XnSfDXTC10/yo088guSJFlgd1
-X-Google-Smtp-Source: APXvYqwh+o7bRSbeyxSOOO5j1tZb7YSn3BqkHPQf1tUh9RemZjk6jVzQA+RhZtN1lTV2+QTQnY+7SVTzAGJWbTgh5BE=
-X-Received: by 2002:a02:13c3:: with SMTP id 186mr7445332jaz.30.1565140818255;
- Tue, 06 Aug 2019 18:20:18 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=XOc3tRY+4s8d0XfiWvvs/QPATLaAozAh84PcRQxEWLM=;
+        b=gj/u4cW/YagcJju+atsEDaqhnYzMxlJ55g3slWxmm25meKhCZHG1fuBHIs5/qDSvFC
+         JsxTf8CGufuHZnbPMeEkg5jdgQXQO4EfA4Xn2QsUmgU7UlKlgicL8CqXbpdCJtPn58tg
+         UCV+mq6pM+v9WdQK4Ksa4sDv0oD6qeyCjxbDTEmsDdSpWYaflC/bhFeziKuG+j00ukFt
+         GdXpFdfZE8GvBAEwALvYN5tXOxnH4vuluyCvVaY1aj6NuXrkkYOdikUhkiF33aRzO6PG
+         +25gGRmqA0Zwf2zG+RscLAB8NaeuLtE/ETYwmU3DVSi2dTFtDBNDan2648D87HOZeTMC
+         jjrQ==
+X-Gm-Message-State: APjAAAWKubPFX7GUZUYtcvKtXfAvgW6GSoP3XCD/vj27LxJjYWMl81AW
+        3ztHGDFL3emZjWsmiKqpOL91zwdxzE4xs2hxHiuPUA==
+X-Google-Smtp-Source: APXvYqxCEkZVgFa/uggGj84VI91P8SXI1u46BMoeb4gqY/9Gn1ikNdM9oD0yuntjY1a5IparwEFqAzJi0sUX8EKXfCk=
+X-Received: by 2002:aca:d8c2:: with SMTP id p185mr3847116oig.30.1565141015214;
+ Tue, 06 Aug 2019 18:23:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190805193243.18584-1-andrew.smirnov@gmail.com> <CAHp75VcjUwUj-6r+k2bTFhhr9hk942-ZEu=GhvhKNjfgEYf1Qw@mail.gmail.com>
-In-Reply-To: <CAHp75VcjUwUj-6r+k2bTFhhr9hk942-ZEu=GhvhKNjfgEYf1Qw@mail.gmail.com>
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-Date:   Tue, 6 Aug 2019 18:20:06 -0700
-Message-ID: <CAHQ1cqEHNq9jJfKWKrZ1utbsk8HG4gywuaxNNMFOgFZGULwyEw@mail.gmail.com>
-Subject: Re: [PATCH] tty: serial: Introduce uart_tx_stoppped_or_empty()
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+References: <B4B0AD7F-FA0F-4DA0-9A8B-EAE1CEE11759@lca.pw>
+In-Reply-To: <B4B0AD7F-FA0F-4DA0-9A8B-EAE1CEE11759@lca.pw>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Tue, 6 Aug 2019 18:22:59 -0700
+Message-ID: <CAGETcx_TYxgohR7C5SRRbSmfKNhS90i64KjtA38N19g_Kz3euA@mail.gmail.com>
+Subject: Re: "of/platform: Pause/resume sync state during init and
+ of_platform_populate()" with a warning on arm64
+To:     Qian Cai <cai@lca.pw>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, Chris Healy <cphealy@gmail.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 5, 2019 at 11:48 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
+On Tue, Aug 6, 2019 at 5:46 PM Qian Cai <cai@lca.pw> wrote:
 >
-> On Mon, Aug 5, 2019 at 10:36 PM Andrey Smirnov <andrew.smirnov@gmail.com> wrote:
-> >
-> > The vast majority of the serial drivers check for
-> >
-> >     uart_tx_stopped(&p->port) || uart_circ_empty(xmit)
-> >
-> > condition one or more times. Create a dedicated helper function and
-> > convert drivers to use it.
+> It looks like the linux-next commit =E2=80=9Cof/platform: Pause/resume sy=
+nc state during init and of_platform_populate()=E2=80=9D [1]
+> Introduced a warning while booting arm64.
 >
-> Sometimes the arguments are swapped. It means that in case of first
-> being false the second is aslo going to be checked.
-> So, does ordering have any side effect?
+> [1] https://lore.kernel.org/lkml/20190731221721.187713-6-saravanak@google=
+.com/
 >
-> Please, elaborate this in the commit message.
->
+> [   93.449300][    T1] arm-smmu-v3 arm-smmu-v3.4.auto: ias 44-bit, oas 44=
+-bit (features 0x0000170d)
+> [   93.464873][    T1] arm-smmu-v3 arm-smmu-v3.4.auto: allocated 524288 e=
+ntries for cmdq
+> [   93.485481][    T1] arm-smmu-v3 arm-smmu-v3.4.auto: allocated 524288 e=
+ntries for evtq
+> [   93.496320][    T1] arm-smmu-v3 arm-smmu-v3.5.auto: option mask 0x2
+> [   93.502917][    T1] arm-smmu-v3 arm-smmu-v3.5.auto: ias 44-bit, oas 44=
+-bit (features 0x0000170d)
+> [   93.621818][    T1] arm-smmu-v3 arm-smmu-v3.5.auto: allocated 524288 e=
+ntries for cmdq
+> [   93.643000][    T1] arm-smmu-v3 arm-smmu-v3.5.auto: allocated 524288 e=
+ntries for evtq
+> [   94.519445][    T1] libphy: Fixed MDIO Bus: probed
+> [   94.524649][    T1] EFI Variables Facility v0.08 2004-May-17
+> [   94.601166][    T1] NET: Registered protocol family 17
+> [   94.766008][    T1] zswap: loaded using pool lzo/zbud
+> [   94.774745][    T1] kmemleak: Kernel memory leak detector initialized =
+(mempool size: 16384)
+> [   94.774756][ T1699] kmemleak: Automatic memory scanning thread started
+> [   94.812338][ T1368] pcieport 0000:0f:00.0: Adding to iommu group 0
+> [   94.984466][    T1] ------------[ cut here ]------------
+> [   94.989827][    T1] Unmatched sync_state pause/resume!
+> [   94.989894][    T1] WARNING: CPU: 25 PID: 1 at drivers/base/core.c:691=
+ device_links_supplier_sync_state_resume+0x100/0x128
+> [   95.006062][    T1] Modules linked in:
+> [   95.009815][    T1] CPU: 25 PID: 1 Comm: swapper/0 Not tainted 5.3.0-r=
+c3-next-20190806+ #11
+> [   95.018161][    T1] Hardware name: HPE Apollo 70             /C01_APAC=
+HE_MB         , BIOS L50_5.13_1.11 06/18/2019
+> [   95.028593][    T1] pstate: 60400009 (nZCv daif +PAN -UAO)
+> [   95.034077][    T1] pc : device_links_supplier_sync_state_resume+0x100=
+/0x128
+> [   95.041124][    T1] lr : device_links_supplier_sync_state_resume+0x100=
+/0x128
+> [   95.048167][    T1] sp : 34ff800806e6fbc0
+> [   95.052172][    T1] x29: 34ff800806e6fc00 x28: 0000000000000000
+> [   95.058177][    T1] x27: 0000000000000000 x26: 0000000000000000
+> [   95.064181][    T1] x25: 0000000000000038 x24: 0000000000000000
+> [   95.070185][    T1] x23: 0000000000000000 x22: 0000000000000019
+> [   95.076189][    T1] x21: 0000000000000000 x20: f9ff808b804e6c50
+> [   95.082193][    T1] x19: ffff100014a6e600 x18: 0000000000000040
+> [   95.088197][    T1] x17: 0000000000000000 x16: 86ff80099d581b50
+> [   95.094201][    T1] x15: 0000000000000000 x14: ffff100010086d1c
+> [   95.100205][    T1] x13: ffff1000109d8688 x12: ffffffffffffffff
+> [   95.106209][    T1] x11: 00000000000000f9 x10: ffff0808b804e6c6
+> [   95.112213][    T1] x9 : 4b71ad522c851d00 x8 : 4b71ad522c851d00
+> [   95.118217][    T1] x7 : 6170206574617473 x6 : ffff100014076972
+> [   95.124221][    T1] x5 : 34ff800806e6f8f0 x4 : 000000000000000f
+> [   95.130225][    T1] x3 : ffff1000101bfa5c x2 : 0000000000000001
+> [   95.136229][    T1] x1 : 0000000000000001 x0 : 0000000000000022
+> [   95.142233][    T1] Call trace:
+> [   95.145374][    T1]  device_links_supplier_sync_state_resume+0x100/0x1=
+28
+> [   95.152074][    T1]  of_platform_sync_state_init+0x10/0x1c
+> [   95.157557][    T1]  do_one_initcall+0x2f8/0x600
+> [   95.162172][    T1]  do_initcall_level+0x37c/0x3fc
+> [   95.166959][    T1]  do_basic_setup+0x34/0x4c
+> [   95.171313][    T1]  kernel_init_freeable+0x188/0x24c
+> [   95.176363][    T1]  kernel_init+0x18/0x334
+> [   95.180543][    T1]  ret_from_fork+0x10/0x18
+> [   95.184809][    T1] ---[ end trace a9ea68c902540fe5 ]---
+> [   95.269085][    T1] Freeing unused kernel memory: 28672K
+> [  101.069860][    T1] Checked W+X mappings: passed, no W+X pages found
+> [  101.076265][    T1] Run /init as init process
+> [  101.186359][    T1] systemd[1]: System time before build time, advanci=
+ng clock.
 
-Neither  uart_tx_stopped() nor uart_circ_empty() should have any side
-effects. I also didn't see any comments indicating that ordering is
-important. Is that enough of a justification?
 
-> >  drivers/tty/serial/8250/8250_dma.c          |  2 +-
-> >  drivers/tty/serial/8250/8250_omap.c         |  7 +++----
-> >  drivers/tty/serial/sc16is7xx.c              |  2 +-
->
-> For the drivers I care about (see above) I prefer to see conversion on
-> per driver basis. Of course, if Greg is okay with the current, I won't
-> object.
+I tested it again on my device (on an older kernel) and I don't see
+this warning. Is this on an ARM64 target without a populated DT?
+That's the only thing I can see that could cause this warning.
 
-I am more than happy to split this any way necessary.
+This is literally the code with the matching pause/resume. I can't
+think of any other way the pause/resume could have ended up not
+matching.
 
->
-> > -               if (uart_tx_stopped(&up->port) ||
-> > -                   uart_circ_empty(&up->port.state->xmit)) {
-> > +               if (uart_tx_stopped_or_empty(&up->port)) {
->
-> Yes, it becomes one line, but...
->
-> > -       if (!(dmacr & UART011_TXDMAE) || uart_tx_stopped(&uap->port) ||
-> > -           uart_circ_empty(&uap->port.state->xmit)) {
-> > +       if (!(dmacr & UART011_TXDMAE) ||
-> > +           uart_tx_stopped_or_empty(&uap->port)) {
->
-> ...wouldn't be the case here as well? And perhaps in other places?
+static int __init of_platform_default_populate_init(void)
+{
+        struct device_node *node;
 
-Hmm, not sure I am reading this comment right. Are we talking purely
-about formatting here? If we are, yeah, I probably can make this into
-a single line. Not sure if there any other places like that,
-sirfsoc_uart.c perhaps?
+        if (!of_have_populated_dt())
+                return -ENODEV;
+
+        platform_bus_type.add_links =3D of_link_to_suppliers;
+        device_links_supplier_sync_state_pause(); <=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D PAUSE
+        /*
+         * Handle certain compatibles explicitly, since we don't want to cr=
+eate
+         * platform_devices for every node in /reserved-memory with a
+         * "compatible",
+         */
+        for_each_matching_node(node, reserved_mem_matches)
+                of_platform_device_create(node, NULL, NULL);
+
+        node =3D of_find_node_by_path("/firmware");
+        if (node) {
+                of_platform_populate(node, NULL, NULL, NULL);
+                of_node_put(node);
+        }
+
+        /* Populate everything else. */
+        of_platform_default_populate(NULL, NULL, NULL);
+
+        return 0;
+}
+arch_initcall_sync(of_platform_default_populate_init);
+
+static int __init of_platform_sync_state_init(void)
+{
+        device_links_supplier_sync_state_resume(); <=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D RESUME
+        return 0;
+}
+late_initcall_sync(of_platform_sync_state_init);
 
 Thanks,
-Andrey Smirnov
+Saravana
