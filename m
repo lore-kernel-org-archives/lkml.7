@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D009C19759
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:03:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5704C19759
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:03:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32F1622BED
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:03:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7928822C7C
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:03:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="kPNEpQMF"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="F9vR/BZS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387675AbfHGIDj (ORCPT
+        id S1728802AbfHGIDl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 04:03:39 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:33704 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728202AbfHGID3 (ORCPT
+        Wed, 7 Aug 2019 04:03:41 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:33746 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-OK)
+        by vger.kernel.org with ESMTP id S2387643AbfHGIDc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 04:03:29 -0400
+        Wed, 7 Aug 2019 04:03:32 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id C2B04C0CA7;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 97C0DC0BC4;
         Wed,  7 Aug 2019 08:03:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1565165008; bh=71qpddnDyyC3uVi7GW+JRroufqoxTNi8shA1zrjJUW4=;
+        t=1565165011; bh=sq8GBRsZGUnu+NV6bjA2tE3kNHAzMkv/GEpMGvoHDaI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=kPNEpQMFogGIlWyMtfOk+GaiNTE28aeLrm/GjpVmhSnChcAUv+Ojh0ygABtXdViI3
-         hfzv4IvTdlhJtnPLxzO3SlcA/p7oyPIa6LrKyuMocZIw8bJT1Fc2GSXp1J8VKVsXCT
-         hTnIk6+BWLHctpyZqTpYv8SelmAMIxrISLJMKO7PuAkqIGI81Kqibq5Hh4mHz5A46/
-         DID/VHr5WgYylojv8vuutaP5jY2snWbVgRI4pMeX/cGs+/5+Mmy9nqrHU0Q/w/KfF8
-         I95EY+CNQ4/9LZbjRkubWDoFpx4j+pnwWLsQyleKs27Zm/DqVLM8Dfb6cxP2cRQA5B
-         q96sv+8uWo/lA==
+        b=F9vR/BZS+EV8ZuHlSvtUdVNcEAxX9yH7AuNM/EssKoBpjQ8XJTDG2+zDpFYvmFDTn
+         GAcETfZ8N45VCUqXD/GrCyGrvYe8RKlLm/VAdG8SE0PyLGTeTP9ajVYo6EyNKN0KQN
+         ZFsGABPGm9OMvlY6dGd7mzaibvN8bIfd1sj6js1BS72+OniwbPtVIvQPtuka7iT5VG
+         d7Hgv0uXWElkXzQ+b71AfENzPAt3nKYc9Y+URBqwDXXTJviW2NifnZ+4TwYNQiOU9A
+         EU7LI4w1+Ys4GhgfKe0CVWokMC77vF7HIpF0rODAO+Th3cCoipsdDmc6UyHVSPZEzp
+         0/Z0riC8guzQw==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 85E4CA006F;
+        by mailhost.synopsys.com (Postfix) with ESMTP id 127AFA0062;
         Wed,  7 Aug 2019 08:03:26 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
@@ -51,9 +51,9 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v3 06/10] net: stmmac: Implement VLAN Hash Filtering in XGMAC
-Date:   Wed,  7 Aug 2019 10:03:14 +0200
-Message-Id: <f261bc85af6cdda1439da9e57401fa4c5222c93e.1565164729.git.joabreu@synopsys.com>
+Subject: [PATCH net-next v3 01/10] net: stmmac: xgmac: Implement MMC counters
+Date:   Wed,  7 Aug 2019 10:03:09 +0200
+Message-Id: <92a5b19fd421c99db7c36128e6118b824d9ed746.1565164729.git.joabreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1565164729.git.joabreu@synopsys.com>
 References: <cover.1565164729.git.joabreu@synopsys.com>
@@ -64,7 +64,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement the VLAN Hash Filtering feature in XGMAC core.
+Implement the MMC counters feature in XGMAC core.
 
 Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 
@@ -79,279 +79,323 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/net/ethernet/stmicro/stmmac/common.h       |  1 +
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h     | 10 +++
- .../net/ethernet/stmicro/stmmac/dwxgmac2_core.c    | 41 +++++++++++
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c |  1 +
- drivers/net/ethernet/stmicro/stmmac/hwif.h         |  5 ++
- drivers/net/ethernet/stmicro/stmmac/stmmac.h       |  2 +
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  | 79 ++++++++++++++++++++++
- 7 files changed, 139 insertions(+)
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h     |   1 +
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c |   1 +
+ drivers/net/ethernet/stmicro/stmmac/hwif.c         |   4 +-
+ drivers/net/ethernet/stmicro/stmmac/hwif.h         |   1 +
+ drivers/net/ethernet/stmicro/stmmac/mmc.h          |   9 +
+ drivers/net/ethernet/stmicro/stmmac/mmc_core.c     | 192 +++++++++++++++++++++
+ .../net/ethernet/stmicro/stmmac/stmmac_ethtool.c   |   6 +
+ 7 files changed, 212 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
-index 45a997fe571c..e1e6f67041ec 100644
---- a/drivers/net/ethernet/stmicro/stmmac/common.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/common.h
-@@ -355,6 +355,7 @@ struct dma_features {
- 	unsigned int frpes;
- 	unsigned int addr64;
- 	unsigned int rssen;
-+	unsigned int vlhash;
- };
- 
- /* GMAC TX FIFO is 8K, Rx FIFO is 16K */
 diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-index ed3a85f73a72..bae0b01000cc 100644
+index 3174b701aa90..86a42bc39d21 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
 +++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-@@ -44,6 +44,7 @@
- #define XGMAC_CORE_INIT_RX		0
- #define XGMAC_PACKET_FILTER		0x00000008
- #define XGMAC_FILTER_RA			BIT(31)
-+#define XGMAC_FILTER_VTFE		BIT(16)
- #define XGMAC_FILTER_HPF		BIT(10)
- #define XGMAC_FILTER_PCF		BIT(7)
- #define XGMAC_FILTER_PM			BIT(4)
-@@ -51,6 +52,14 @@
- #define XGMAC_FILTER_PR			BIT(0)
- #define XGMAC_HASH_TABLE(x)		(0x00000010 + (x) * 4)
- #define XGMAC_MAX_HASH_TABLE		8
-+#define XGMAC_VLAN_TAG			0x00000050
-+#define XGMAC_VLAN_EDVLP		BIT(26)
-+#define XGMAC_VLAN_VTHM			BIT(25)
-+#define XGMAC_VLAN_DOVLTC		BIT(20)
-+#define XGMAC_VLAN_ESVL			BIT(18)
-+#define XGMAC_VLAN_ETV			BIT(16)
-+#define XGMAC_VLAN_VID			GENMASK(15, 0)
-+#define XGMAC_VLAN_HASH_TABLE		0x00000058
- #define XGMAC_RXQ_CTRL0			0x000000a0
- #define XGMAC_RXQEN(x)			GENMASK((x) * 2 + 1, (x) * 2)
- #define XGMAC_RXQEN_SHIFT(x)		((x) * 2)
-@@ -87,6 +96,7 @@
- #define XGMAC_HWFEAT_MMCSEL		BIT(8)
+@@ -84,6 +84,7 @@
+ #define XGMAC_HWFEAT_AVSEL		BIT(11)
+ #define XGMAC_HWFEAT_RAVSEL		BIT(10)
+ #define XGMAC_HWFEAT_ARPOFFSEL		BIT(9)
++#define XGMAC_HWFEAT_MMCSEL		BIT(8)
  #define XGMAC_HWFEAT_MGKSEL		BIT(7)
  #define XGMAC_HWFEAT_RWKSEL		BIT(6)
-+#define XGMAC_HWFEAT_VLHASH		BIT(4)
  #define XGMAC_HWFEAT_GMIISEL		BIT(1)
- #define XGMAC_HW_FEATURE1		0x00000120
- #define XGMAC_HWFEAT_RSSEN		BIT(20)
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-index 04eec85acc59..e2dbebeb59e9 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-@@ -490,6 +490,46 @@ static int dwxgmac2_rss_configure(struct mac_device_info *hw,
- 	return 0;
- }
- 
-+static void dwxgmac2_update_vlan_hash(struct mac_device_info *hw, u32 hash,
-+				      bool is_double)
-+{
-+	void __iomem *ioaddr = hw->pcsr;
-+
-+	writel(hash, ioaddr + XGMAC_VLAN_HASH_TABLE);
-+
-+	if (hash) {
-+		u32 value = readl(ioaddr + XGMAC_PACKET_FILTER);
-+
-+		value |= XGMAC_FILTER_VTFE;
-+
-+		writel(value, ioaddr + XGMAC_PACKET_FILTER);
-+
-+		value |= XGMAC_VLAN_VTHM | XGMAC_VLAN_ETV;
-+		if (is_double) {
-+			value |= XGMAC_VLAN_EDVLP;
-+			value |= XGMAC_VLAN_ESVL;
-+			value |= XGMAC_VLAN_DOVLTC;
-+		}
-+
-+		writel(value, ioaddr + XGMAC_VLAN_TAG);
-+	} else {
-+		u32 value = readl(ioaddr + XGMAC_PACKET_FILTER);
-+
-+		value &= ~XGMAC_FILTER_VTFE;
-+
-+		writel(value, ioaddr + XGMAC_PACKET_FILTER);
-+
-+		value = readl(ioaddr + XGMAC_VLAN_TAG);
-+
-+		value &= ~(XGMAC_VLAN_VTHM | XGMAC_VLAN_ETV);
-+		value &= ~(XGMAC_VLAN_EDVLP | XGMAC_VLAN_ESVL);
-+		value &= ~XGMAC_VLAN_DOVLTC;
-+		value &= ~XGMAC_VLAN_VID;
-+
-+		writel(value, ioaddr + XGMAC_VLAN_TAG);
-+	}
-+}
-+
- const struct stmmac_ops dwxgmac210_ops = {
- 	.core_init = dwxgmac2_core_init,
- 	.set_mac = dwxgmac2_set_mac,
-@@ -521,6 +561,7 @@ const struct stmmac_ops dwxgmac210_ops = {
- 	.set_filter = dwxgmac2_set_filter,
- 	.set_mac_loopback = dwxgmac2_set_mac_loopback,
- 	.rss_configure = dwxgmac2_rss_configure,
-+	.update_vlan_hash = dwxgmac2_update_vlan_hash,
- };
- 
- int dwxgmac2_setup(struct stmmac_priv *priv)
 diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
-index 45a6634ee397..b50e275e76c2 100644
+index a4f236e3593e..0f1c772e892a 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
 +++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
-@@ -359,6 +359,7 @@ static void dwxgmac2_get_hw_feature(void __iomem *ioaddr,
- 	dma_cap->rmon = (hw_cap & XGMAC_HWFEAT_MMCSEL) >> 8;
+@@ -356,6 +356,7 @@ static void dwxgmac2_get_hw_feature(void __iomem *ioaddr,
+ 	dma_cap->atime_stamp = (hw_cap & XGMAC_HWFEAT_TSSEL) >> 12;
+ 	dma_cap->av = (hw_cap & XGMAC_HWFEAT_AVSEL) >> 11;
+ 	dma_cap->av &= (hw_cap & XGMAC_HWFEAT_RAVSEL) >> 10;
++	dma_cap->rmon = (hw_cap & XGMAC_HWFEAT_MMCSEL) >> 8;
  	dma_cap->pmt_magic_frame = (hw_cap & XGMAC_HWFEAT_MGKSEL) >> 7;
  	dma_cap->pmt_remote_wake_up = (hw_cap & XGMAC_HWFEAT_RWKSEL) >> 6;
-+	dma_cap->vlhash = (hw_cap & XGMAC_HWFEAT_VLHASH) >> 4;
  	dma_cap->mbps_1000 = (hw_cap & XGMAC_HWFEAT_GMIISEL) >> 1;
- 
- 	/* MAC HW feature 1 */
+diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.c b/drivers/net/ethernet/stmicro/stmmac/hwif.c
+index 6c61b753b55e..3af2e5015245 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/hwif.c
++++ b/drivers/net/ethernet/stmicro/stmmac/hwif.c
+@@ -201,7 +201,7 @@ static const struct stmmac_hwif_entry {
+ 		.min_id = DWXGMAC_CORE_2_10,
+ 		.regs = {
+ 			.ptp_off = PTP_XGMAC_OFFSET,
+-			.mmc_off = 0,
++			.mmc_off = MMC_XGMAC_OFFSET,
+ 		},
+ 		.desc = &dwxgmac210_desc_ops,
+ 		.dma = &dwxgmac210_dma_ops,
+@@ -209,7 +209,7 @@ static const struct stmmac_hwif_entry {
+ 		.hwtimestamp = &stmmac_ptp,
+ 		.mode = NULL,
+ 		.tc = &dwmac510_tc_ops,
+-		.mmc = NULL,
++		.mmc = &dwxgmac_mmc_ops,
+ 		.setup = dwxgmac2_setup,
+ 		.quirks = NULL,
+ 	},
 diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.h b/drivers/net/ethernet/stmicro/stmmac/hwif.h
-index bfe7efee9481..52fc2344b066 100644
+index 278c0dbec9d9..00539a09d1db 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/hwif.h
 +++ b/drivers/net/ethernet/stmicro/stmmac/hwif.h
-@@ -336,6 +336,9 @@ struct stmmac_ops {
- 	/* RSS */
- 	int (*rss_configure)(struct mac_device_info *hw,
- 			     struct stmmac_rss *cfg, u32 num_rxq);
-+	/* VLAN */
-+	void (*update_vlan_hash)(struct mac_device_info *hw, u32 hash,
-+				 bool is_double);
+@@ -503,6 +503,7 @@ extern const struct stmmac_ops dwxgmac210_ops;
+ extern const struct stmmac_dma_ops dwxgmac210_dma_ops;
+ extern const struct stmmac_desc_ops dwxgmac210_desc_ops;
+ extern const struct stmmac_mmc_ops dwmac_mmc_ops;
++extern const struct stmmac_mmc_ops dwxgmac_mmc_ops;
+ 
+ #define GMAC_VERSION		0x00000020	/* GMAC CORE Version */
+ #define GMAC4_VERSION		0x00000110	/* GMAC4+ CORE Version */
+diff --git a/drivers/net/ethernet/stmicro/stmmac/mmc.h b/drivers/net/ethernet/stmicro/stmmac/mmc.h
+index 3587ceb9faf5..a0c05925883e 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/mmc.h
++++ b/drivers/net/ethernet/stmicro/stmmac/mmc.h
+@@ -24,6 +24,7 @@
+ 
+ #define MMC_GMAC4_OFFSET		0x700
+ #define MMC_GMAC3_X_OFFSET		0x100
++#define MMC_XGMAC_OFFSET		0x800
+ 
+ struct stmmac_counters {
+ 	unsigned int mmc_tx_octetcount_gb;
+@@ -116,6 +117,14 @@ struct stmmac_counters {
+ 	unsigned int mmc_rx_tcp_err_octets;
+ 	unsigned int mmc_rx_icmp_gd_octets;
+ 	unsigned int mmc_rx_icmp_err_octets;
++
++	/* FPE */
++	unsigned int mmc_tx_fpe_fragment_cntr;
++	unsigned int mmc_tx_hold_req_cntr;
++	unsigned int mmc_rx_packet_assembly_err_cntr;
++	unsigned int mmc_rx_packet_smd_err_cntr;
++	unsigned int mmc_rx_packet_assembly_ok_cntr;
++	unsigned int mmc_rx_fpe_fragment_cntr;
  };
  
- #define stmmac_core_init(__priv, __args...) \
-@@ -408,6 +411,8 @@ struct stmmac_ops {
- 	stmmac_do_void_callback(__priv, mac, set_mac_loopback, __args)
- #define stmmac_rss_configure(__priv, __args...) \
- 	stmmac_do_callback(__priv, mac, rss_configure, __args)
-+#define stmmac_update_vlan_hash(__priv, __args...) \
-+	stmmac_do_void_callback(__priv, mac, update_vlan_hash, __args)
+ #endif /* __MMC_H__ */
+diff --git a/drivers/net/ethernet/stmicro/stmmac/mmc_core.c b/drivers/net/ethernet/stmicro/stmmac/mmc_core.c
+index a471db6d7b11..a223584f5f9a 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/mmc_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/mmc_core.c
+@@ -119,6 +119,64 @@
+ #define MMC_RX_ICMP_GD_OCTETS		0x180
+ #define MMC_RX_ICMP_ERR_OCTETS		0x184
  
- /* PTP and HW Timer helpers */
- struct stmmac_hwtimestamp {
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac.h b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
-index d2f6f56ae29c..4179559b11ad 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
-@@ -13,6 +13,7 @@
- #define DRV_MODULE_VERSION	"Jan_2016"
- 
- #include <linux/clk.h>
-+#include <linux/if_vlan.h>
- #include <linux/stmmac.h>
- #include <linux/phylink.h>
- #include <linux/pci.h>
-@@ -191,6 +192,7 @@ struct stmmac_priv {
- 	spinlock_t ptp_lock;
- 	void __iomem *mmcaddr;
- 	void __iomem *ptpaddr;
-+	unsigned long active_vlans[BITS_TO_LONGS(VLAN_N_VID)];
- 
- #ifdef CONFIG_DEBUG_FS
- 	struct dentry *dbgfs_dir;
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 404a0548f213..2274bb58eefa 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -4037,6 +4037,79 @@ static void stmmac_exit_fs(struct net_device *dev)
- }
- #endif /* CONFIG_DEBUG_FS */
- 
-+static u32 stmmac_vid_crc32_le(__le16 vid_le)
-+{
-+	unsigned char *data = (unsigned char *)&vid_le;
-+	unsigned char data_byte = 0;
-+	u32 crc = ~0x0;
-+	u32 temp = 0;
-+	int i, bits;
++/* XGMAC MMC Registers */
++#define MMC_XGMAC_TX_OCTET_GB		0x14
++#define MMC_XGMAC_TX_PKT_GB		0x1c
++#define MMC_XGMAC_TX_BROAD_PKT_G	0x24
++#define MMC_XGMAC_TX_MULTI_PKT_G	0x2c
++#define MMC_XGMAC_TX_64OCT_GB		0x34
++#define MMC_XGMAC_TX_65OCT_GB		0x3c
++#define MMC_XGMAC_TX_128OCT_GB		0x44
++#define MMC_XGMAC_TX_256OCT_GB		0x4c
++#define MMC_XGMAC_TX_512OCT_GB		0x54
++#define MMC_XGMAC_TX_1024OCT_GB		0x5c
++#define MMC_XGMAC_TX_UNI_PKT_GB		0x64
++#define MMC_XGMAC_TX_MULTI_PKT_GB	0x6c
++#define MMC_XGMAC_TX_BROAD_PKT_GB	0x74
++#define MMC_XGMAC_TX_UNDER		0x7c
++#define MMC_XGMAC_TX_OCTET_G		0x84
++#define MMC_XGMAC_TX_PKT_G		0x8c
++#define MMC_XGMAC_TX_PAUSE		0x94
++#define MMC_XGMAC_TX_VLAN_PKT_G		0x9c
++#define MMC_XGMAC_TX_LPI_USEC		0xa4
++#define MMC_XGMAC_TX_LPI_TRAN		0xa8
 +
-+	bits = get_bitmask_order(VLAN_VID_MASK);
-+	for (i = 0; i < bits; i++) {
-+		if ((i % 8) == 0)
-+			data_byte = data[i / 8];
++#define MMC_XGMAC_RX_PKT_GB		0x100
++#define MMC_XGMAC_RX_OCTET_GB		0x108
++#define MMC_XGMAC_RX_OCTET_G		0x110
++#define MMC_XGMAC_RX_BROAD_PKT_G	0x118
++#define MMC_XGMAC_RX_MULTI_PKT_G	0x120
++#define MMC_XGMAC_RX_CRC_ERR		0x128
++#define MMC_XGMAC_RX_RUNT_ERR		0x130
++#define MMC_XGMAC_RX_JABBER_ERR		0x134
++#define MMC_XGMAC_RX_UNDER		0x138
++#define MMC_XGMAC_RX_OVER		0x13c
++#define MMC_XGMAC_RX_64OCT_GB		0x140
++#define MMC_XGMAC_RX_65OCT_GB		0x148
++#define MMC_XGMAC_RX_128OCT_GB		0x150
++#define MMC_XGMAC_RX_256OCT_GB		0x158
++#define MMC_XGMAC_RX_512OCT_GB		0x160
++#define MMC_XGMAC_RX_1024OCT_GB		0x168
++#define MMC_XGMAC_RX_UNI_PKT_G		0x170
++#define MMC_XGMAC_RX_LENGTH_ERR		0x178
++#define MMC_XGMAC_RX_RANGE		0x180
++#define MMC_XGMAC_RX_PAUSE		0x188
++#define MMC_XGMAC_RX_FIFOOVER_PKT	0x190
++#define MMC_XGMAC_RX_VLAN_PKT_GB	0x198
++#define MMC_XGMAC_RX_WATCHDOG_ERR	0x1a0
++#define MMC_XGMAC_RX_LPI_USEC		0x1a4
++#define MMC_XGMAC_RX_LPI_TRAN		0x1a8
++#define MMC_XGMAC_RX_DISCARD_PKT_GB	0x1ac
++#define MMC_XGMAC_RX_DISCARD_OCT_GB	0x1b4
++#define MMC_XGMAC_RX_ALIGN_ERR_PKT	0x1bc
 +
-+		temp = ((crc & 1) ^ data_byte) & 1;
-+		crc >>= 1;
-+		data_byte >>= 1;
++#define MMC_XGMAC_TX_FPE_FRAG		0x208
++#define MMC_XGMAC_TX_HOLD_REQ		0x20c
++#define MMC_XGMAC_RX_PKT_ASSEMBLY_ERR	0x228
++#define MMC_XGMAC_RX_PKT_SMD_ERR	0x22c
++#define MMC_XGMAC_RX_PKT_ASSEMBLY_OK	0x230
++#define MMC_XGMAC_RX_FPE_FRAG		0x234
 +
-+		if (temp)
-+			crc ^= 0xedb88320;
-+	}
-+
-+	return crc;
-+}
-+
-+static int stmmac_vlan_update(struct stmmac_priv *priv, bool is_double)
-+{
-+	u32 crc, hash = 0;
-+	u16 vid;
-+
-+	for_each_set_bit(vid, priv->active_vlans, VLAN_N_VID) {
-+		__le16 vid_le = cpu_to_le16(vid);
-+		crc = bitrev32(~stmmac_vid_crc32_le(vid_le)) >> 28;
-+		hash |= (1 << crc);
-+	}
-+
-+	return stmmac_update_vlan_hash(priv, priv->hw, hash, is_double);
-+}
-+
-+static int stmmac_vlan_rx_add_vid(struct net_device *ndev, __be16 proto, u16 vid)
-+{
-+	struct stmmac_priv *priv = netdev_priv(ndev);
-+	bool is_double = false;
-+	int ret;
-+
-+	if (!priv->dma_cap.vlhash)
-+		return -EOPNOTSUPP;
-+	if (be16_to_cpu(proto) == ETH_P_8021AD)
-+		is_double = true;
-+
-+	set_bit(vid, priv->active_vlans);
-+	ret = stmmac_vlan_update(priv, is_double);
-+	if (ret) {
-+		clear_bit(vid, priv->active_vlans);
-+		return ret;
-+	}
-+
-+	return ret;
-+}
-+
-+static int stmmac_vlan_rx_kill_vid(struct net_device *ndev, __be16 proto, u16 vid)
-+{
-+	struct stmmac_priv *priv = netdev_priv(ndev);
-+	bool is_double = false;
-+
-+	if (!priv->dma_cap.vlhash)
-+		return -EOPNOTSUPP;
-+	if (be16_to_cpu(proto) == ETH_P_8021AD)
-+		is_double = true;
-+
-+	clear_bit(vid, priv->active_vlans);
-+	return stmmac_vlan_update(priv, is_double);
-+}
-+
- static const struct net_device_ops stmmac_netdev_ops = {
- 	.ndo_open = stmmac_open,
- 	.ndo_start_xmit = stmmac_xmit,
-@@ -4053,6 +4126,8 @@ static const struct net_device_ops stmmac_netdev_ops = {
- 	.ndo_poll_controller = stmmac_poll_controller,
- #endif
- 	.ndo_set_mac_address = stmmac_set_mac_address,
-+	.ndo_vlan_rx_add_vid = stmmac_vlan_rx_add_vid,
-+	.ndo_vlan_rx_kill_vid = stmmac_vlan_rx_kill_vid,
+ static void dwmac_mmc_ctrl(void __iomem *mmcaddr, unsigned int mode)
+ {
+ 	u32 value = readl(mmcaddr + MMC_CNTRL);
+@@ -263,3 +321,137 @@ const struct stmmac_mmc_ops dwmac_mmc_ops = {
+ 	.intr_all_mask = dwmac_mmc_intr_all_mask,
+ 	.read = dwmac_mmc_read,
  };
- 
- static void stmmac_reset_subtask(struct stmmac_priv *priv)
-@@ -4307,6 +4382,10 @@ int stmmac_dvr_probe(struct device *device,
- #ifdef STMMAC_VLAN_TAG_USED
- 	/* Both mac100 and gmac support receive VLAN tag detection */
- 	ndev->features |= NETIF_F_HW_VLAN_CTAG_RX | NETIF_F_HW_VLAN_STAG_RX;
-+	if (priv->dma_cap.vlhash) {
-+		ndev->features |= NETIF_F_HW_VLAN_CTAG_FILTER;
-+		ndev->features |= NETIF_F_HW_VLAN_STAG_FILTER;
-+	}
- #endif
- 	priv->msg_enable = netif_msg_init(debug, default_msg_level);
++
++static void dwxgmac_mmc_ctrl(void __iomem *mmcaddr, unsigned int mode)
++{
++	u32 value = readl(mmcaddr + MMC_CNTRL);
++
++	value |= (mode & 0x3F);
++
++	writel(value, mmcaddr + MMC_CNTRL);
++}
++
++static void dwxgmac_mmc_intr_all_mask(void __iomem *mmcaddr)
++{
++	writel(MMC_DEFAULT_MASK, mmcaddr + MMC_RX_INTR_MASK);
++	writel(MMC_DEFAULT_MASK, mmcaddr + MMC_TX_INTR_MASK);
++}
++
++static void dwxgmac_read_mmc_reg(void __iomem *addr, u32 reg, u32 *dest)
++{
++	u64 tmp = 0;
++
++	tmp += readl(addr + reg);
++	tmp += ((u64 )readl(addr + reg + 0x4)) << 32;
++	if (tmp > GENMASK(31, 0))
++		*dest = ~0x0;
++	else
++		*dest = *dest + tmp;
++}
++
++/* This reads the MAC core counters (if actaully supported).
++ * by default the MMC core is programmed to reset each
++ * counter after a read. So all the field of the mmc struct
++ * have to be incremented.
++ */
++static void dwxgmac_mmc_read(void __iomem *mmcaddr, struct stmmac_counters *mmc)
++{
++	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_OCTET_GB,
++			     &mmc->mmc_tx_octetcount_gb);
++	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_PKT_GB,
++			     &mmc->mmc_tx_framecount_gb);
++	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_BROAD_PKT_G,
++			     &mmc->mmc_tx_broadcastframe_g);
++	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_MULTI_PKT_G,
++			     &mmc->mmc_tx_multicastframe_g);
++	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_64OCT_GB,
++			     &mmc->mmc_tx_64_octets_gb);
++	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_65OCT_GB,
++			     &mmc->mmc_tx_65_to_127_octets_gb);
++	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_128OCT_GB,
++			     &mmc->mmc_tx_128_to_255_octets_gb);
++	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_256OCT_GB,
++			     &mmc->mmc_tx_256_to_511_octets_gb);
++	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_512OCT_GB,
++			     &mmc->mmc_tx_512_to_1023_octets_gb);
++	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_1024OCT_GB,
++			     &mmc->mmc_tx_1024_to_max_octets_gb);
++	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_UNI_PKT_GB,
++			     &mmc->mmc_tx_unicast_gb);
++	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_MULTI_PKT_GB,
++			     &mmc->mmc_tx_multicast_gb);
++	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_BROAD_PKT_GB,
++			     &mmc->mmc_tx_broadcast_gb);
++	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_UNDER,
++			     &mmc->mmc_tx_underflow_error);
++	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_OCTET_G,
++			     &mmc->mmc_tx_octetcount_g);
++	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_PKT_G,
++			     &mmc->mmc_tx_framecount_g);
++	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_PAUSE,
++			     &mmc->mmc_tx_pause_frame);
++	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_TX_VLAN_PKT_G,
++			     &mmc->mmc_tx_vlan_frame_g);
++
++	/* MMC RX counter registers */
++	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_PKT_GB,
++			     &mmc->mmc_rx_framecount_gb);
++	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_OCTET_GB,
++			     &mmc->mmc_rx_octetcount_gb);
++	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_OCTET_G,
++			     &mmc->mmc_rx_octetcount_g);
++	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_BROAD_PKT_G,
++			     &mmc->mmc_rx_broadcastframe_g);
++	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_MULTI_PKT_G,
++			     &mmc->mmc_rx_multicastframe_g);
++	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_CRC_ERR,
++			     &mmc->mmc_rx_crc_error);
++	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_CRC_ERR,
++			     &mmc->mmc_rx_crc_error);
++	mmc->mmc_rx_run_error += readl(mmcaddr + MMC_XGMAC_RX_RUNT_ERR);
++	mmc->mmc_rx_jabber_error += readl(mmcaddr + MMC_XGMAC_RX_JABBER_ERR);
++	mmc->mmc_rx_undersize_g += readl(mmcaddr + MMC_XGMAC_RX_UNDER);
++	mmc->mmc_rx_oversize_g += readl(mmcaddr + MMC_XGMAC_RX_OVER);
++	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_64OCT_GB,
++			     &mmc->mmc_rx_64_octets_gb);
++	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_65OCT_GB,
++			     &mmc->mmc_rx_65_to_127_octets_gb);
++	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_128OCT_GB,
++			     &mmc->mmc_rx_128_to_255_octets_gb);
++	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_256OCT_GB,
++			     &mmc->mmc_rx_256_to_511_octets_gb);
++	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_512OCT_GB,
++			     &mmc->mmc_rx_512_to_1023_octets_gb);
++	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_1024OCT_GB,
++			     &mmc->mmc_rx_1024_to_max_octets_gb);
++	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_UNI_PKT_G,
++			     &mmc->mmc_rx_unicast_g);
++	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_LENGTH_ERR,
++			     &mmc->mmc_rx_length_error);
++	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_RANGE,
++			     &mmc->mmc_rx_autofrangetype);
++	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_PAUSE,
++			     &mmc->mmc_rx_pause_frames);
++	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_FIFOOVER_PKT,
++			     &mmc->mmc_rx_fifo_overflow);
++	dwxgmac_read_mmc_reg(mmcaddr, MMC_XGMAC_RX_VLAN_PKT_GB,
++			     &mmc->mmc_rx_vlan_frames_gb);
++	mmc->mmc_rx_watchdog_error += readl(mmcaddr + MMC_XGMAC_RX_WATCHDOG_ERR);
++
++	mmc->mmc_tx_fpe_fragment_cntr += readl(mmcaddr + MMC_XGMAC_TX_FPE_FRAG);
++	mmc->mmc_tx_hold_req_cntr += readl(mmcaddr + MMC_XGMAC_TX_HOLD_REQ);
++	mmc->mmc_rx_packet_assembly_err_cntr +=
++		readl(mmcaddr + MMC_XGMAC_RX_PKT_ASSEMBLY_ERR);
++	mmc->mmc_rx_packet_smd_err_cntr +=
++		readl(mmcaddr + MMC_XGMAC_RX_PKT_SMD_ERR);
++	mmc->mmc_rx_packet_assembly_ok_cntr +=
++		readl(mmcaddr + MMC_XGMAC_RX_PKT_ASSEMBLY_OK);
++	mmc->mmc_rx_fpe_fragment_cntr +=
++		readl(mmcaddr + MMC_XGMAC_RX_FPE_FRAG);
++}
++
++const struct stmmac_mmc_ops dwxgmac_mmc_ops = {
++	.ctrl = dwxgmac_mmc_ctrl,
++	.intr_all_mask = dwxgmac_mmc_intr_all_mask,
++	.read = dwxgmac_mmc_read,
++};
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
+index 6efb66820d4c..d294590cba27 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
+@@ -243,6 +243,12 @@ static const struct stmmac_stats stmmac_mmc[] = {
+ 	STMMAC_MMC_STAT(mmc_rx_tcp_err_octets),
+ 	STMMAC_MMC_STAT(mmc_rx_icmp_gd_octets),
+ 	STMMAC_MMC_STAT(mmc_rx_icmp_err_octets),
++	STMMAC_MMC_STAT(mmc_tx_fpe_fragment_cntr),
++	STMMAC_MMC_STAT(mmc_tx_hold_req_cntr),
++	STMMAC_MMC_STAT(mmc_rx_packet_assembly_err_cntr),
++	STMMAC_MMC_STAT(mmc_rx_packet_smd_err_cntr),
++	STMMAC_MMC_STAT(mmc_rx_packet_assembly_ok_cntr),
++	STMMAC_MMC_STAT(mmc_rx_fpe_fragment_cntr),
+ };
+ #define STMMAC_MMC_STATS_LEN ARRAY_SIZE(stmmac_mmc)
  
 -- 
 2.7.4
