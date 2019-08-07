@@ -2,67 +2,125 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78FAEC32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 10:57:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAFE2C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 11:01:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A1AD21E6E
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 10:57:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF37421E6C
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 11:01:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565175710;
+	bh=v09SEtBDik3MXCHxl5FPyA2X3BzRugiFxp9Nyl9eGP8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LHQlA5vKQBfffeMU3F4GIo8KruxUv3qoYkwTV2UIZa/jGaByz6g+wJv9H3wqBKZnx
+	 0cAJQYbV8uAwGprK5xdm+hwBfyjbNonE+WwkC5wOT2hZuYGWfb7moy5ChszWnIkawC
+	 Jx3tx6gBU/we77BueIdUAyFO57aqfLeAXvpGyne0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729160AbfHGK5Q (ORCPT
+        id S1728795AbfHGLBt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 06:57:16 -0400
-Received: from foss.arm.com ([217.140.110.172]:46602 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725789AbfHGK5Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 06:57:16 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7957628;
-        Wed,  7 Aug 2019 03:57:15 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E22BB3F575;
-        Wed,  7 Aug 2019 03:57:13 -0700 (PDT)
-Date:   Wed, 7 Aug 2019 11:57:09 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Jianjun Wang <jianjun.wang@mediatek.com>
-Cc:     Ryder Lee <ryder.lee@mediatek.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, youlin.pei@mediatek.com
-Subject: Re: [v2,0/2] PCI: mediatek: Add support for MT7629
-Message-ID: <20190807105709.GA16214@e121166-lin.cambridge.arm.com>
-References: <20190628073425.25165-1-jianjun.wang@mediatek.com>
+        Wed, 7 Aug 2019 07:01:49 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39552 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726269AbfHGLBt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 07:01:49 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id F3BFCAE48;
+        Wed,  7 Aug 2019 11:01:47 +0000 (UTC)
+Date:   Wed, 7 Aug 2019 13:01:47 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     john.hubbard@gmail.com
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jerome Glisse <jglisse@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Black <daniel@linux.ibm.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>
+Subject: Re: [PATCH 1/3] mm/mlock.c: convert put_page() to put_user_page*()
+Message-ID: <20190807110147.GT11812@dhcp22.suse.cz>
+References: <20190805222019.28592-1-jhubbard@nvidia.com>
+ <20190805222019.28592-2-jhubbard@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190628073425.25165-1-jianjun.wang@mediatek.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190805222019.28592-2-jhubbard@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 03:34:23PM +0800, Jianjun Wang wrote:
-> These series patches modify pcie-mediatek.c and dt-bindings compatible
-> string to support MT7629 PCIe host.
+On Mon 05-08-19 15:20:17, john.hubbard@gmail.com wrote:
+> From: John Hubbard <jhubbard@nvidia.com>
 > 
-> Jianjun Wang (2):
->   dt-bindings: PCI: Add support for MT7629
->   PCI: mediatek: Add controller support for MT7629
+> For pages that were retained via get_user_pages*(), release those pages
+> via the new put_user_page*() routines, instead of via put_page() or
+> release_pages().
+
+Hmm, this is an interesting code path. There seems to be a mix of pages
+in the game. We get one page via follow_page_mask but then other pages
+in the range are filled by __munlock_pagevec_fill and that does a direct
+pte walk. Is using put_user_page correct in this case? Could you explain
+why in the changelog?
+
+> This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
+> ("mm: introduce put_user_page*(), placeholder versions").
 > 
->  .../devicetree/bindings/pci/mediatek-pcie.txt  |  1 +
->  drivers/pci/controller/pcie-mediatek.c         | 18 ++++++++++++++++++
->  include/linux/pci_ids.h                        |  1 +
->  3 files changed, 20 insertions(+)
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Daniel Black <daniel@linux.ibm.com>
+> Cc: Jan Kara <jack@suse.cz>
+> Cc: Jérôme Glisse <jglisse@redhat.com>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: Mike Kravetz <mike.kravetz@oracle.com>
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+> ---
+>  mm/mlock.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/mm/mlock.c b/mm/mlock.c
+> index a90099da4fb4..b980e6270e8a 100644
+> --- a/mm/mlock.c
+> +++ b/mm/mlock.c
+> @@ -345,7 +345,7 @@ static void __munlock_pagevec(struct pagevec *pvec, struct zone *zone)
+>  				get_page(page); /* for putback_lru_page() */
+>  				__munlock_isolated_page(page);
+>  				unlock_page(page);
+> -				put_page(page); /* from follow_page_mask() */
+> +				put_user_page(page); /* from follow_page_mask() */
+>  			}
+>  		}
+>  	}
+> @@ -467,7 +467,7 @@ void munlock_vma_pages_range(struct vm_area_struct *vma,
+>  		if (page && !IS_ERR(page)) {
+>  			if (PageTransTail(page)) {
+>  				VM_BUG_ON_PAGE(PageMlocked(page), page);
+> -				put_page(page); /* follow_page_mask() */
+> +				put_user_page(page); /* follow_page_mask() */
+>  			} else if (PageTransHuge(page)) {
+>  				lock_page(page);
+>  				/*
+> @@ -478,7 +478,7 @@ void munlock_vma_pages_range(struct vm_area_struct *vma,
+>  				 */
+>  				page_mask = munlock_vma_page(page);
+>  				unlock_page(page);
+> -				put_page(page); /* follow_page_mask() */
+> +				put_user_page(page); /* follow_page_mask() */
+>  			} else {
+>  				/*
+>  				 * Non-huge pages are handled in batches via
+> -- 
+> 2.22.0
 
-Applied to pci/mediatek for v5.4.
-
-Thanks,
-Lorenzo
+-- 
+Michal Hocko
+SUSE Labs
