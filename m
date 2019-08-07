@@ -2,129 +2,90 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 692E2C32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:07:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2CB9C19759
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:10:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49675229EC
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:07:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7607A229EC
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:10:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387616AbfHGIHU (ORCPT
+        id S1728541AbfHGIKh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 04:07:20 -0400
-Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:35635 "EHLO
-        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727413AbfHGIHS (ORCPT
+        Wed, 7 Aug 2019 04:10:37 -0400
+Received: from smtp.domeneshop.no ([194.63.252.55]:48476 "EHLO
+        smtp.domeneshop.no" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727603AbfHGIKh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 04:07:18 -0400
-Received: from [IPv6:2001:983:e9a7:1:8cc6:9015:1548:23f3] ([IPv6:2001:983:e9a7:1:8cc6:9015:1548:23f3])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id vGyNhjeHgAffAvGyOh7CoE; Wed, 07 Aug 2019 10:07:15 +0200
-Subject: Re: [PATCH v3 11/41] media/v4l2-core/mm: convert put_page() to
- put_user_page*()
-To:     john.hubbard@gmail.com, Andrew Morton <akpm@linux-foundation.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, ceph-devel@vger.kernel.org,
-        devel@driverdev.osuosl.org, devel@lists.orangefs.org,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mm@kvack.org,
-        linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org, linux-xfs@vger.kernel.org,
-        netdev@vger.kernel.org, rds-devel@oss.oracle.com,
-        sparclinux@vger.kernel.org, x86@kernel.org,
-        xen-devel@lists.xenproject.org, John Hubbard <jhubbard@nvidia.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>
-References: <20190807013340.9706-1-jhubbard@nvidia.com>
- <20190807013340.9706-12-jhubbard@nvidia.com>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <8a02b10a-507b-2eb3-19aa-1cb498c1a4af@xs4all.nl>
-Date:   Wed, 7 Aug 2019 10:07:02 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 7 Aug 2019 04:10:37 -0400
+Received: from [2a02:fe0:c700:2:4c:6167:f6e4:67af] (port=49648)
+        by smtp.domeneshop.no with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.84_2)
+        (envelope-from <YCaer@odenixdev.eu>)
+        id 1hvH1m-0005b9-BG
+        for linux-kernel@vger.kernel.org; Wed, 07 Aug 2019 10:10:34 +0200
+Subject: Re: Fw: Looking for Odenix developers.
+References: <cGfJg7TFZvhOez5qwwXlkmOso5p7wIlOvjRbYDilmtzi5t--e7AyWuklvpj_c1Of-ESDhsgYW0nT6kuJueeE87DFsJaLDfeEYuwmQYTrFA4=@protonmail.com>
+ <5EH-nW5ERUZi1kd2NDJfheI37jFOpIahjUTdKzOkGGxa3ZKvMcfCmo5V0OJ7WbIovt7yUZMKKGdbXRzdJFkDow46RQxmQokLp_awshE6Is0=@protonmail.com>
+To:     linux-kernel@vger.kernel.org
+From:   =?UTF-8?Q?Ywe_C=c3=a6rlyn?= <YCaer@odenixdev.eu>
+Message-ID: <1c706000-c713-bcff-b61c-bf709149e66d@odenixdev.eu>
+Date:   Wed, 7 Aug 2019 10:10:26 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190807013340.9706-12-jhubbard@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfLtFI4ThDBFuoSwFqT380PxkcC6q3XCYC9HO7bxya62SPesHUoWCzd0ksBMTGkppOn75d+WBKCLiUJL1JCKKzueS8vA20zMfsb357SuvaUy4TtJTFapt
- x/bWCTcScAJNoSAViYa6NSlEx2FKBMG1ub01wuczTnbJurUSOB+vxv+m9yWKJM94dHdvARuWMkXZdmUldHpi22HuFtGEBhfQsDY52cLv9SRNbWMy30DrEJ0t
- IZpNWziFzZ3evJ7mzLCVhbiK2kiOOXAk37J1rrkYGH2YtOIVmpGPTJw+iPQnS41ERf+BCjbaTp9dtSr4qdKvpCtCTPfnpCYMb9QEG7YIv4Bkl6jCBTx7G7/4
- E+/Gcs1gOswCkbsVZkXHiYav454A3NZryrYeXwugbZcaQXzdLwQKX8vixuVBgbqFmyjLnuKfL1+c17HvE7YGvrxNLgEJHTveu7qGFUgiDp8Kxm2qaSU6Ln+T
- ElUIz8bygLmP/ZaLM0W02XHdcvoF3n3t59CNY87n3tR3oXUf8LBXliPMUlUaTsd4sTe3FnbfHAUNwVeklfrjO7mwx/ZtuvdypniGohclf+1bp5fAUTyCCCrQ
- 2HyNedUvC2lDdYTRuhJr04fafwrpC9JLhSLKJeMRBVwa4n0gqjUnzFBrEoDnP692PfkgpqcUzLJ3ou9bn9SXymgnoZ/su+Qto3UpDDWJiMsSJM83gtLeDDPU
- 2LAMy4jSsugrfD7VC1dmYwzG8OWIPHuvJ7Tu8XU7oActSpAZS3c9skTdMjLehhV+5MHeC8g3tQLGrW2WL0nM2XSwHbo4mwTDcXTASOqE5niPTgs0jd+PPxdD
- 6xGBJo3u/QbyQ3ajYSHTR7/iYO7MKvqve0YwbtTNR57pWM38fmVObjBWJ2Qb5+GQ3v2MdIxvVfz42j69SfAzoN+qm5pqDcKBwXhfBdG1NM3xlepenmsR9xg5
- 62RVbClfekDh1mdFfuyj4KBmVBX0v1np3JjJ4vNebVx2IyoyHonzCgI/VeK3Xg6+xvyxhVW0lz7O9WmdlxWKcql5t0Yb5f0zsKtS1NvNqjdoMQPPDLlgqBkJ
- zSwzmxMfYBhUca00uKQBlssFsG5QNKIC7fFgqtDFBmNtn6ipJvZKRC79Cw4QS6qRNMXKSaUQOSPYCvM4KmrZVW9w5s8hot0TfDYbj+oHiuzjCO1jmdtzXAbt
- gWocxcFwf55hNfAhTODtYnIcQTTBxC/fmKLTijSmU3lfUSSSsnl8ef0xn1zUtoXXnyzz6mcZVljhvITEJx0jnOlTUGnl6EnAeCVrfPoD4WCRmPS4tIKMb0Sn
- DjxDBO/HszoKfvVJZYTfTvPxU+6WAyaIoLGRNQX6ew6/T19LTZ7M+CVC1zczygV1hOTQJzIdJnWdrI7AWTB8dFsFHEUTylMp921VegrittBprwtssRQSETDt
- w+WAy7sK++9/GONtwbizNl49IwU+D0GMpL0NbybeY6J7lGNNM2UtsFttBraN5pO3M9SU3xDoE5SqJiulL8VfDzJKyah60WIfPdhLbN00mLGEveLuRT0YQNVO
- Ve41rvqKpgWWp9HPZO7QwGGi4muzZFJs6F8sgGua1ktJvh99nm3LVZHEV++X5Bous3oUMbzF6ihXBdgtubshPp+ElhOLvWLff7DQNQVzst9h3eqqPREvSJlB
- 0+CfDkY+tvaCm6YXmIbg/FxzMGySzi98TfrQYNsvylv4MWX8pxKCyY/xfBN6o8zPRNMJNc0PX0kAdkxIJbJSRls4hOcOInlZ
+In-Reply-To: <5EH-nW5ERUZi1kd2NDJfheI37jFOpIahjUTdKzOkGGxa3ZKvMcfCmo5V0OJ7WbIovt7yUZMKKGdbXRzdJFkDow46RQxmQokLp_awshE6Is0=@protonmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/7/19 3:33 AM, john.hubbard@gmail.com wrote:
-> From: John Hubbard <jhubbard@nvidia.com>
-> 
-> For pages that were retained via get_user_pages*(), release those pages
-> via the new put_user_page*() routines, instead of via put_page() or
-> release_pages().
-> 
-> This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
-> ("mm: introduce put_user_page*(), placeholder versions").
-> 
-> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Hans Verkuil <hans.verkuil@cisco.com>
-> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-> Cc: Jan Kara <jack@suse.cz>
-> Cc: Robin Murphy <robin.murphy@arm.com>
-> Cc: Souptick Joarder <jrdr.linux@gmail.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: linux-media@vger.kernel.org
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+I now also have a new mail, at my new domain OdenixDev.eu. Which we´ll 
+see if maybe some more things get installed on the server there. 
+Particulary something less macho than text-only mailing list.. ;)
 
-Acked-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+I see Thunderbird  team is asking for donations aswell on their page. 
+This is all solved with Odenix Net-Trade Patchclass, fair labour 
+compliant, and well-grounded in sound philosophy, and accepted fair 
+labour politics, going all the way back to Odenic Intercultural Trade, 
+with the same principles.
 
-> ---
->  drivers/media/v4l2-core/videobuf-dma-sg.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/media/v4l2-core/videobuf-dma-sg.c b/drivers/media/v4l2-core/videobuf-dma-sg.c
-> index 66a6c6c236a7..d6eeb437ec19 100644
-> --- a/drivers/media/v4l2-core/videobuf-dma-sg.c
-> +++ b/drivers/media/v4l2-core/videobuf-dma-sg.c
-> @@ -349,8 +349,7 @@ int videobuf_dma_free(struct videobuf_dmabuf *dma)
->  	BUG_ON(dma->sglen);
->  
->  	if (dma->pages) {
-> -		for (i = 0; i < dma->nr_pages; i++)
-> -			put_page(dma->pages[i]);
-> +		put_user_pages(dma->pages, dma->nr_pages);
->  		kfree(dma->pages);
->  		dma->pages = NULL;
->  	}
-> 
+Peace (Go With Thee).
+Ywe Cærlyn
+Odenix Net-Trade Patchclass for BSD.
+https://www.youtube.com/channel/UCR3gmLVjHS5A702wo4bol_Q
 
+Den 07.08.2019 10:00, skrev Ywe Cærlyn:
+> 
+> 
+> 
+> Sent with ProtonMail Secure Email.
+> 
+> ‐‐‐‐‐‐‐ Original Message ‐‐‐‐‐‐‐
+> On Saturday 3. August 2019 kl. 12:33, Ywe Cærlyn <ywecrn@protonmail.com> wrote:
+> 
+>> Hello.
+>>
+>> I am Ywe Cærlyn, from Norway, known in the Indie Computer Usergroup Scene, since the early 90s with top results. Now as part of my research, that was top 1% on academia.edu, I suggest a Fair Labour compliant patchclass for BSD, with integrated online currency, for those with netjob skills.
+>>
+>> Meaning for instance finely presented news, where reporters can upload their media, set attributes for re-use and not, and get royalites automatically, and everyone potentially could be part of this, and all content creators.
+>>
+>> Representing a universalized and well indexed file directory for all files published:
+>>
+>> OTTP://Category/Subcategory/Country/15.000km2 zone/Person/Groupings(can be several) (Odenic Transfer Text Protocol)
+>>
+>> With pop statistics pr. folder, and file information field with commentary option, neatly presented.
+>>
+>> Supporting 4K (8K subpixel precise), small form factor, 24bit audio, low-jitter I/O (200uS max OS jitter).
+>>
+>> Peace (Go With Thee).
+>> Ywe Cærlyn
+>> Odenix Net-Trade Patchclass for BSD.
+>> https://www.youtube.com/channel/UCR3gmLVjHS5A702wo4bol_Q
+> 
+> 
+> 
