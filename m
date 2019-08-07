@@ -2,68 +2,93 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F2D7C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:20:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E20C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:21:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E774C21E6E
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:20:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="TrO4rgDO"
+	by mail.kernel.org (Postfix) with ESMTP id 63EAD21E6E
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 13:21:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388282AbfHGNU3 (ORCPT
+        id S2388287AbfHGNVC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 09:20:29 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:40982 "EHLO vps0.lunn.ch"
+        Wed, 7 Aug 2019 09:21:02 -0400
+Received: from mga06.intel.com ([134.134.136.31]:20092 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387957AbfHGNU2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 09:20:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=t8aqXvPw0q5E+uBD13OrFAzMjz9c4sMlYhrCXiVJ+Fg=; b=TrO4rgDO8G9WbuFurc3pU56kH8
-        QVrR8oeF35DVeaV4u77u9VHnRv7tmmgwDOMAmiU4xJ5o2gqvJC5OP9kEaQXzQtpILrtNRH1HMo1Xk
-        IG2b6BIy4ZlTuYAytzkkIEJaK3f2CBqeLEmW/GWA5pmFav7uRcBH0bKfDu50PaE16uJc=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hvLrX-0004qH-N1; Wed, 07 Aug 2019 15:20:19 +0200
-Date:   Wed, 7 Aug 2019 15:20:19 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Cc:     "davem@davemloft.net" <davem@davemloft.net>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-Subject: Re: [PATCH 06/16] net: phy: adin: support PHY mode converters
-Message-ID: <20190807132019.GL20422@lunn.ch>
-References: <20190805165453.3989-1-alexandru.ardelean@analog.com>
- <20190805165453.3989-7-alexandru.ardelean@analog.com>
- <20190805145105.GN24275@lunn.ch>
- <15cf5732415c313a7bfe610e7039e7c97b987073.camel@analog.com>
- <20190806153910.GB20422@lunn.ch>
- <7747cb845a9122004b9565f444b4719170f74b35.camel@analog.com>
+        id S2388079AbfHGNVC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 09:21:02 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Aug 2019 06:21:00 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,357,1559545200"; 
+   d="scan'208";a="374406771"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
+  by fmsmga006.fm.intel.com with ESMTP; 07 Aug 2019 06:20:58 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1hvLs8-0002b6-FI; Wed, 07 Aug 2019 16:20:56 +0300
+Date:   Wed, 7 Aug 2019 16:20:56 +0300
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Cc:     linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        jslaby@suse.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        qi-ming.wu@intel.com, cheol.yong.kim@intel.com,
+        rahul.tanwar@intel.com
+Subject: Re: [PATCH 2/5] serial: lantiq: Use proper DT compatible string
+Message-ID: <20190807132056.GX30120@smile.fi.intel.com>
+References: <cover.1565160764.git.rahul.tanwar@linux.intel.com>
+ <12c3029f406ca1fedf14154154f7082e358f0473.1565160764.git.rahul.tanwar@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7747cb845a9122004b9565f444b4719170f74b35.camel@analog.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <12c3029f406ca1fedf14154154f7082e358f0473.1565160764.git.rahul.tanwar@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Is it ok if we defer the solution for this drivers/patchset?
+On Wed, Aug 07, 2019 at 05:21:32PM +0800, Rahul Tanwar wrote:
+> The patch adds change to use explicit string instead of a macro for
+> DT compatible string.
 
-Yes, not a problem if phy-mode means phy-mode.
+For consistency you may need to convert OF_EARLYCON_DECLARE() as well.
 
-     Andrew
+Perhaps commit message should explain the rationale, i.e. the following patches
+will add another compatible string and thus it makes sense to have them
+explicitly mentioned.
+
+> Suggested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+> ---
+>  drivers/tty/serial/lantiq.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/tty/serial/lantiq.c b/drivers/tty/serial/lantiq.c
+> index 42e27b48e9cc..1116261c973e 100644
+> --- a/drivers/tty/serial/lantiq.c
+> +++ b/drivers/tty/serial/lantiq.c
+> @@ -792,7 +792,7 @@ lqasc_probe(struct platform_device *pdev)
+>  }
+>  
+>  static const struct of_device_id ltq_asc_match[] = {
+> -	{ .compatible = DRVNAME },
+> +	{ .compatible = "lantiq,asc" },
+>  	{},
+>  };
+>  
+> -- 
+> 2.11.0
+> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
