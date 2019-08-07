@@ -2,129 +2,134 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC73C32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 18:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D785DC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 18:20:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C12A21E70
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 18:19:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="CnHHSfPZ"
+	by mail.kernel.org (Postfix) with ESMTP id B17B021E70
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 18:20:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389308AbfHGSTF (ORCPT
+        id S2389270AbfHGSUi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 14:19:05 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:41838 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389042AbfHGSTF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 14:19:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=L8qDtsZIqu76z78+U7dJxEVIPxF+4lyLrjcD8AHguKI=; b=CnHHSfPZSVro3x4/5FBtFhfzq9
-        ItF9KgHUo8zSD74cXXLzMacYyTspybjuZyZ+/9MsuQdm1ZsFuyyTKEDNDWCxVfD2yfAfkGwpi4Yka
-        HFc1Ui7yiDyU/cAPpOx6Qn565u4WtnyNDtjTKtx11RSKtNZF03RCQdY0liVTDXeAUZlU=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hvQWY-0006rZ-I9; Wed, 07 Aug 2019 20:18:58 +0200
-Date:   Wed, 7 Aug 2019 20:18:58 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v5 2/4] net: phy: Add support for generic LED
- configuration through the DT
-Message-ID: <20190807181858.GB26047@lunn.ch>
-References: <20190807170449.205378-1-mka@chromium.org>
- <20190807170449.205378-3-mka@chromium.org>
+        Wed, 7 Aug 2019 14:20:38 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:59615 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387999AbfHGSUi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 14:20:38 -0400
+Received: from c-67-180-61-213.hsd1.ca.comcast.net ([67.180.61.213] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1hvQY1-0000pd-Hq; Wed, 07 Aug 2019 18:20:30 +0000
+Date:   Wed, 7 Aug 2019 20:20:24 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     Adrian Reber <areber@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Pavel Emelianov <xemul@virtuozzo.com>,
+        Jann Horn <jannh@google.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        linux-kernel@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Radostin Stoyanov <rstoyanov1@gmail.com>
+Subject: Re: [PATCH v3 1/2] fork: extend clone3() to support CLONE_SET_TID
+Message-ID: <20190807182023.ut6dg4pfdcaw7m6k@wittgenstein>
+References: <20190806191551.22192-1-areber@redhat.com>
+ <20190807154828.GD24112@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190807170449.205378-3-mka@chromium.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190807154828.GD24112@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +static void of_phy_config_leds(struct phy_device *phydev)
-> +{
-> +	struct device_node *np, *child;
-> +	struct phy_led_config cfg;
-> +	const char *trigger;
-> +	int ret;
-> +
-> +	if (!IS_ENABLED(CONFIG_OF_MDIO) || !phydev->drv->config_led)
-> +		return;
-> +
-> +	np = of_find_node_by_name(phydev->mdio.dev.of_node, "leds");
-> +	if (!np)
-> +		return;
-> +
-> +	for_each_child_of_node(np, child) {
-> +		u32 led;
-> +
-> +		if (of_property_read_u32(child, "reg", &led))
-> +			goto skip_config;
-> +
-> +		ret = of_property_read_string(child, "linux,default-trigger",
-> +					      &trigger);
-> +		if (ret)
-> +			trigger = "none";
-> +
-> +		memset(&cfg, 0, sizeof(cfg));
-> +
-> +		if (!strcmp(trigger, "none")) {
-> +			cfg.trigger.t = PHY_LED_TRIGGER_NONE;
-> +		} else if (!strcmp(trigger, "phy-link")) {
-> +			cfg.trigger.t = PHY_LED_TRIGGER_LINK;
-> +		} else if (!strcmp(trigger, "phy-link-10m")) {
-> +			cfg.trigger.t = PHY_LED_TRIGGER_LINK_10M;
-> +		} else if (!strcmp(trigger, "phy-link-100m")) {
-> +			cfg.trigger.t = PHY_LED_TRIGGER_LINK_100M;
-> +		} else if (!strcmp(trigger, "phy-link-1g")) {
-> +			cfg.trigger.t = PHY_LED_TRIGGER_LINK_1G;
-> +		} else if (!strcmp(trigger, "phy-link-10g")) {
-> +			cfg.trigger.t = PHY_LED_TRIGGER_LINK_10G;
-> +		} else if (!strcmp(trigger, "phy-link-activity")) {
-> +			cfg.trigger.t = PHY_LED_TRIGGER_LINK;
-> +			cfg.trigger.activity = true;
-> +		} else if (!strcmp(trigger, "phy-link-10m-activity")) {
-> +			cfg.trigger.t = PHY_LED_TRIGGER_LINK_10M;
-> +			cfg.trigger.activity = true;
-> +		} else if (!strcmp(trigger, "phy-link-100m-activity")) {
-> +			cfg.trigger.t = PHY_LED_TRIGGER_LINK_100M;
-> +			cfg.trigger.activity = true;
-> +		} else if (!strcmp(trigger, "phy-link-1g-activity")) {
-> +			cfg.trigger.t = PHY_LED_TRIGGER_LINK_1G;
-> +			cfg.trigger.activity = true;
-> +		} else if (!strcmp(trigger, "phy-link-10g-activity")) {
-> +			cfg.trigger.t = PHY_LED_TRIGGER_LINK_10G;
-> +			cfg.trigger.activity = true;
-> +		} else {
-> +			phydev_warn(phydev, "trigger '%s' for LED%d is invalid\n",
-> +				    trigger, led);
-> +			goto skip_config;
-> +		}
-> +
-> +		phydev->drv->config_led(phydev, led, &cfg);
+On Wed, Aug 07, 2019 at 05:48:29PM +0200, Oleg Nesterov wrote:
+> On 08/06, Adrian Reber wrote:
+> >
+> > @@ -2530,12 +2530,14 @@ noinline static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
+> >  					      struct clone_args __user *uargs,
+> >  					      size_t size)
+> >  {
+> > +	struct pid_namespace *pid_ns = task_active_pid_ns(current);
+> >  	struct clone_args args;
+> >  
+> >  	if (unlikely(size > PAGE_SIZE))
+> >  		return -E2BIG;
+> >  
+> > -	if (unlikely(size < sizeof(struct clone_args)))
+> > +	/* The struct needs to be at least the size of the original struct. */
+> > +	if (size < (sizeof(struct clone_args) - sizeof(__aligned_u64)))
+> >  		return -EINVAL;
+> 
+> slightly off-topic, but with or without this patch I do not understand
+> -EINVAL. Can't we replace this check with
+> 
+> 	if (size < sizeof(struct clone_args))
+> 		memset((void*)&args + size, sizeof(struct clone_args) - size, 0);
+> 
+> ?
+> 
+> this way we can new members at the end of clone_args and this matches
+> the "if (size > sizeof(struct clone_args))" block below which promises
+> that whatever we add into clone_args a zero value should work.
 
-We should not ignore the return value. I expect drivers will return
--EINVAL, or EOPNOTSUPP if asked to configure an LED in a way they
-don't support. We need to report this. So i would add a phydev_warn:
+Hm, I actually think we should define:
 
-> +			phydev_warn(phydev, "trigger '%s' for LED%d not supported\n",
-> +				    trigger, led);
+#define CLONE3_ARGS_SIZE_V0 64
+#define CLONE3_ARGS_SIZE_V1 ...
+and then later on for future extensions
+#define CLONE3_ARGS_SIZE_V2 ...
 
-  Andrew
+then do
+if (size < CLONE3_ARGS_SIZE_V0)
+	return -EINVAL;
+
+then do what you suggested:
+
+if (size < sizeof(struct clone_args))
+	memset((void*)&args + size, sizeof(struct clone_args) - size, 0);
+
+> 
+> 
+> And if we do this
+> 
+> > +	if (size == sizeof(struct clone_args)) {
+> > +		/* Only check permissions if set_tid is actually set. */
+> > +		if (args.set_tid &&
+> > +			!ns_capable(pid_ns->user_ns, CAP_SYS_ADMIN))
+> > +			return -EPERM;
+> > +		kargs->set_tid = args.set_tid;
+> > +	}
+> 
+> we can move this check into clone3_args_valid() or even copy_process()
+> 
+> 	if (kargs->set_tid) {
+> 		if (!ns_capable(...))
+> 			return -EPERM;
+> 	}
+> 
+> 
+> Either way,
+> 
+> > @@ -2585,6 +2595,10 @@ static bool clone3_args_valid(const struct kernel_clone_args *kargs)
+> >  	if (kargs->flags & ~CLONE_LEGACY_FLAGS)
+> >  		return false;
+> >
+> > +	/* Fail if set_tid is invalid */
+> > +	if (kargs->set_tid < 0)
+> > +		return false;
+> 
+> I think it would be more clean to do this along with ns_capable() check,
+> or along with the "set_tid >= pid_max" check in alloc_pid().
+> 
+> I won't insist, but I do not really like the fact we check set_tid 3 times
+> in copy_clone_args_from_user(), clone3_args_valid(), and alloc_pid().
+
+Agreed on that part.
