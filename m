@@ -2,128 +2,80 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DDC8C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 03:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0241DC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 03:22:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BF1E217D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 03:22:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D540A217D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 03:22:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728242AbfHGDWa (ORCPT
+        id S1728300AbfHGDWs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 23:22:30 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:42358 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726334AbfHGDWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 23:22:30 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id E7D4756A99E4D96D9800;
-        Wed,  7 Aug 2019 11:22:24 +0800 (CST)
-Received: from [127.0.0.1] (10.177.96.203) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Wed, 7 Aug 2019
- 11:22:16 +0800
-Subject: Re: [PATCH v4 09/10] powerpc/fsl_booke/kaslr: support nokaslr cmdline
- parameter
-To:     Christophe Leroy <christophe.leroy@c-s.fr>, <mpe@ellerman.id.au>,
-        <linuxppc-dev@lists.ozlabs.org>, <diana.craciun@nxp.com>,
-        <benh@kernel.crashing.org>, <paulus@samba.org>,
-        <npiggin@gmail.com>, <keescook@chromium.org>,
-        <kernel-hardening@lists.openwall.com>
-CC:     <linux-kernel@vger.kernel.org>, <wangkefeng.wang@huawei.com>,
-        <yebin10@huawei.com>, <thunder.leizhen@huawei.com>,
-        <jingxiangfeng@huawei.com>, <fanchengyang@huawei.com>,
-        <zhaohongjiang@huawei.com>
-References: <20190805064335.19156-1-yanaijie@huawei.com>
- <20190805064335.19156-10-yanaijie@huawei.com>
- <e7703798-c2e2-c75f-1001-46c01db88238@c-s.fr>
-From:   Jason Yan <yanaijie@huawei.com>
-Message-ID: <3a83c812-ac14-3e89-241e-eeade105d23e@huawei.com>
-Date:   Wed, 7 Aug 2019 11:22:14 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        Tue, 6 Aug 2019 23:22:48 -0400
+Received: from ajax.cs.uga.edu ([128.192.4.6]:43394 "EHLO ajax.cs.uga.edu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726334AbfHGDWs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 23:22:48 -0400
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+        (authenticated bits=0)
+        by ajax.cs.uga.edu (8.14.4/8.14.4) with ESMTP id x773MjL1057164
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL)
+        for <linux-kernel@vger.kernel.org>; Tue, 6 Aug 2019 23:22:46 -0400
+Received: by mail-lf1-f41.google.com with SMTP id c19so62874256lfm.10
+        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 20:22:46 -0700 (PDT)
+X-Gm-Message-State: APjAAAV5BbwZnQEzqrmdgbllVBfcfBXhkNn9ebln8bz5MBcrSoy/JTJC
+        L3kxHMEN7Bh2zuYw14BxIvdd/kkMf/0UCfGbfIM=
+X-Google-Smtp-Source: APXvYqw3KascRBJeThGdIl1eMlrfY0MLn4+tPhdJYMi19pdSHHihKN0uMyQrgJJQBMdEzA/lLNkO+DuQuoIITtTaakI=
+X-Received: by 2002:ac2:442f:: with SMTP id w15mr4617610lfl.9.1565148165415;
+ Tue, 06 Aug 2019 20:22:45 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <e7703798-c2e2-c75f-1001-46c01db88238@c-s.fr>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.177.96.203]
-X-CFilter-Loop: Reflected
+From:   Wenwen Wang <wenwen@cs.uga.edu>
+Date:   Tue, 6 Aug 2019 23:22:09 -0400
+X-Gmail-Original-Message-ID: <CAAa=b7ebEkQZhPCbJPK=dVC+cR8_pTE3OOxX+PV+MNx7-Y25Cw@mail.gmail.com>
+Message-ID: <CAAa=b7ebEkQZhPCbJPK=dVC+cR8_pTE3OOxX+PV+MNx7-Y25Cw@mail.gmail.com>
+Subject: [PATCH] ALSA: usb-midi: fix a memory leak bug
+To:     Wenwen Wang <wenwen@cs.uga.edu>
+Cc:     Clemens Ladisch <clemens@ladisch.de>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        "moderated list:SOUND" <alsa-devel@alsa-project.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+In __snd_usbmidi_create(), a MIDI streaming interface structure is
+allocated through kzalloc() and the pointer is saved to 'umidi'. Later on,
+the endpoint structures are created by invoking
+snd_usbmidi_create_endpoints_midiman() or snd_usbmidi_create_endpoints(),
+depending on the type of the audio quirk type. However, if the creation
+fails, the allocated 'umidi' is not deallocated, leading to a memory leak
+bug.
 
+To fix the above issue, free 'umidi' before returning the error.
 
-On 2019/8/6 15:59, Christophe Leroy wrote:
-> 
-> 
-> Le 05/08/2019 à 08:43, Jason Yan a écrit :
->> One may want to disable kaslr when boot, so provide a cmdline parameter
->> 'nokaslr' to support this.
->>
->> Signed-off-by: Jason Yan <yanaijie@huawei.com>
->> Cc: Diana Craciun <diana.craciun@nxp.com>
->> Cc: Michael Ellerman <mpe@ellerman.id.au>
->> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
->> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
->> Cc: Paul Mackerras <paulus@samba.org>
->> Cc: Nicholas Piggin <npiggin@gmail.com>
->> Cc: Kees Cook <keescook@chromium.org>
->> Reviewed-by: Diana Craciun <diana.craciun@nxp.com>
->> Tested-by: Diana Craciun <diana.craciun@nxp.com>
-> 
-> Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> 
-> Tiny comment below.
-> 
->> ---
->>   arch/powerpc/kernel/kaslr_booke.c | 14 ++++++++++++++
->>   1 file changed, 14 insertions(+)
->>
->> diff --git a/arch/powerpc/kernel/kaslr_booke.c 
->> b/arch/powerpc/kernel/kaslr_booke.c
->> index 4b3f19a663fc..7c3cb41e7122 100644
->> --- a/arch/powerpc/kernel/kaslr_booke.c
->> +++ b/arch/powerpc/kernel/kaslr_booke.c
->> @@ -361,6 +361,18 @@ static unsigned long __init 
->> kaslr_choose_location(void *dt_ptr, phys_addr_t size
->>       return kaslr_offset;
->>   }
->> +static inline __init bool kaslr_disabled(void)
->> +{
->> +    char *str;
->> +
->> +    str = strstr(boot_command_line, "nokaslr");
->> +    if ((str == boot_command_line) ||
->> +        (str > boot_command_line && *(str - 1) == ' '))
->> +        return true;
-> 
-> I don't think additional () are needed for the left part 'str == 
-> boot_command_line'
-> 
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+---
+ sound/usb/midi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Agree.
+diff --git a/sound/usb/midi.c b/sound/usb/midi.c
+index b737f0e..22db37f 100644
+--- a/sound/usb/midi.c
++++ b/sound/usb/midi.c
+@@ -2476,7 +2476,7 @@ int __snd_usbmidi_create(struct snd_card *card,
+        else
+                err = snd_usbmidi_create_endpoints(umidi, endpoints);
+        if (err < 0)
+-               goto exit;
++               goto free_midi;
 
->> +
->> +    return false;
->> +}
->> +
->>   /*
->>    * To see if we need to relocate the kernel to a random offset
->>    * void *dt_ptr - address of the device tree
->> @@ -376,6 +388,8 @@ notrace void __init kaslr_early_init(void *dt_ptr, 
->> phys_addr_t size)
->>       kernel_sz = (unsigned long)_end - KERNELBASE;
->>       kaslr_get_cmdline(dt_ptr);
->> +    if (kaslr_disabled())
->> +        return;
->>       offset = kaslr_choose_location(dt_ptr, size, kernel_sz);
->>
-> 
-> .
-> 
+        usb_autopm_get_interface_no_resume(umidi->iface);
 
+-- 
+2.7.4
