@@ -2,106 +2,97 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 323D1C41514
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 00:50:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7142AC31E40
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 00:58:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 087012173C
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 00:50:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="RFvhDhAz"
+	by mail.kernel.org (Postfix) with ESMTP id 4EED9208C3
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 00:58:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727591AbfHGAuq (ORCPT
+        id S1727617AbfHGA6K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 20:50:46 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34663 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726238AbfHGAuq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 20:50:46 -0400
-Received: by mail-wr1-f65.google.com with SMTP id 31so89640455wrm.1
-        for <linux-kernel@vger.kernel.org>; Tue, 06 Aug 2019 17:50:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=z5+rKbwY4FKqVWmbsGvvdEeOmqTq+9PbufWY+vIRJyY=;
-        b=RFvhDhAzsEGmP3R8DL+pcMrzIbrq7k+polU6BnPglD2j6Ds3u6BvfSCwQrHN/oSbUo
-         ZQWbBRIwhTDubauU1tBRlsnHba4NQW5MFP6x+0n71sG6JIBHQJ6CgdFofTEp2E//sVeZ
-         2NN6sWNnuDOyl6ehYH4jFJ28qsVckaeA4MhqeNCBtmdooWzBz4xpyCmIduZtAplwogqH
-         oibugB4zkY5h7pF5VSgR1yDskxbQF74yap84y6xXHY1Sd1Q7fzyVWEeLuH+v9Q3yXMJV
-         W0auuFW6rZErNPQflCH6ojmh9PLMuBUEvYpGu/yt49vkEevA1XB5Ks+baotLc5FA64Yb
-         ENIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=z5+rKbwY4FKqVWmbsGvvdEeOmqTq+9PbufWY+vIRJyY=;
-        b=hg+xc++Z6oqw8c65vpb9fuKf+N4rGu1x2riFvvGceUg4Pvi44M39GaQVgS0njTx72+
-         j6B/rIWE/0R/KpFdwLa4Qjm2oeCrVx21ErHkFbMgtR4MpkInSEnPWc8F6JpOznS9gC3b
-         /B2OAZ+iZ9fvFQsgvWBYnNswFXgT3/PA00me6I4egiSuRf7qg9M6pRwGLF8kuOqa8OnW
-         vojN0zFYEi4xLgShqNRov+Bia6sSIe8lekK/sRTgLBv71QBIF3Dh4/ztV+kKif5aimRv
-         6ut+GXa3V51tKc3xDHYi1GslOD1nnYDYjNEkqQ6nk0gkb37/lmfZff2dOGkS0t/sznMn
-         yDLQ==
-X-Gm-Message-State: APjAAAVm7TfPlcbkR0qdOQUlbmFb9lJoUcIOb/vF3h9zZIhy4R439cWI
-        Qm35vo5txw3YgV4d+c3gtrvJUg==
-X-Google-Smtp-Source: APXvYqy8KQjeNNxOIH8SeUbJwgyA5CS+DhnMMoQmPDKz4PGFRVmsXJYIn35yv5oyM8mLa/a/mW6Dow==
-X-Received: by 2002:adf:e8c8:: with SMTP id k8mr6854010wrn.285.1565139044280;
-        Tue, 06 Aug 2019 17:50:44 -0700 (PDT)
-Received: from balsini.lon.corp.google.com ([2a00:79e0:d:210:e751:37a0:1e95:e65d])
-        by smtp.gmail.com with ESMTPSA id h8sm99831846wmf.12.2019.08.06.17.50.43
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 06 Aug 2019 17:50:43 -0700 (PDT)
-From:   Alessio Balsini <balsini@android.com>
-To:     linux-block@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, axboe@kernel.dk, dvander@gmail.com,
-        elsk@google.com, gregkh@linuxfoundation.org, joelaf@google.com,
-        kernel-team@android.com
-Subject: [PATCH v2] loop: Add LOOP_SET_DIRECT_IO to compat ioctl
-Date:   Wed,  7 Aug 2019 01:48:28 +0100
-Message-Id: <20190807004828.28059-1-balsini@android.com>
-X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
-In-Reply-To: <CAJWu+oo=GrZ+SbA6=bboM4==TKXBsTRWkTrkWiZ55pqhJtgQqQ@mail.gmail.com>
-References: <CAJWu+oo=GrZ+SbA6=bboM4==TKXBsTRWkTrkWiZ55pqhJtgQqQ@mail.gmail.com>
+        Tue, 6 Aug 2019 20:58:10 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4181 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726340AbfHGA6J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 20:58:09 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 91ABC144364FA1DEF3CB;
+        Wed,  7 Aug 2019 08:58:07 +0800 (CST)
+Received: from [127.0.0.1] (10.133.217.137) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Wed, 7 Aug 2019
+ 08:58:03 +0800
+Subject: Re: [PATCH] mm/mempolicy.c: Remove unnecessary nodemask check in
+ kernel_migrate_pages()
+To:     Vlastimil Babka <vbabka@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Andrea Arcangeli <aarcange@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Oscar Salvador <osalvador@suse.de>, <linux-mm@kvack.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        "linux-man@vger.kernel.org" <linux-man@vger.kernel.org>
+References: <20190806023634.55356-1-wangkefeng.wang@huawei.com>
+ <80f8da83-f425-1aab-f47e-8da41ec6dcbf@suse.cz>
+From:   Kefeng Wang <wangkefeng.wang@huawei.com>
+Message-ID: <34880869-49a1-86c6-9345-2a01da7fbb9b@huawei.com>
+Date:   Wed, 7 Aug 2019 08:58:03 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <80f8da83-f425-1aab-f47e-8da41ec6dcbf@suse.cz>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.217.137]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enabling Direct I/O with loop devices helps reducing memory usage by
-avoiding double caching.  32 bit applications running on 64 bits systems
-are currently not able to request direct I/O because is missing from the
-lo_compat_ioctl.
 
-This patch fixes the compatibility issue mentioned above by exporting
-LOOP_SET_DIRECT_IO as additional lo_compat_ioctl() entry.
-The input argument for this ioctl is a single long converted to a 1-bit
-boolean, so compatibility is preserved.
 
-Cc: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Alessio Balsini <balsini@android.com>
----
- drivers/block/loop.c | 1 +
- 1 file changed, 1 insertion(+)
+On 2019/8/6 16:36, Vlastimil Babka wrote:
+> On 8/6/19 4:36 AM, Kefeng Wang wrote:
+[...]
+>>
+>> [QUESTION]
+>>
+>> SYSCALL_DEFINE4(migrate_pages, pid_t, pid, unsigned long, maxnode,
+>>                 const unsigned long __user *, old_nodes,
+>>                 const unsigned long __user *, new_nodes)
+>> {
+>>         return kernel_migrate_pages(pid, maxnode, old_nodes, new_nodes);
+>> }
+>>
+>> The migrate_pages() takes pid argument, witch is the ID of the process
+>> whose pages are to be moved. should the cpuset_mems_allowed(current) be
+>> cpuset_mems_allowed(task)?
+> 
+> The check for cpuset_mems_allowed(task) is just above the code you change, so
+> the new nodes have to be subset of the target task's cpuset.
+> But they also have to be allowed by the calling task's cpuset. In manpage of
+> migrate_pages(2), this is hinted by the NOTES "Use get_mempolicy(2) with the
+> MPOL_F_MEMS_ALLOWED flag to obtain the set of nodes that are allowed by the
+> calling process's cpuset..."
+> 
+> But perhaps the manpage should be better clarified:
+> 
+> - the EINVAL case includes "Or, none of the node IDs specified by new_nodes are
+> on-line and allowed by the process's current cpuset context, or none of the
+> specified nodes contain memory." - this should probably say "calling process" to
+> disambiguate
+> - the EPERM case should mention that new_nodes have to be subset of the target
+> process' cpuset context. The caller should also have CAP_SYS_NICE and
+> ptrace_may_access()
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 44c9985f352ab..2e2193f754ab0 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -1753,6 +1753,7 @@ static int lo_compat_ioctl(struct block_device *bdev, fmode_t mode,
- 	case LOOP_SET_FD:
- 	case LOOP_CHANGE_FD:
- 	case LOOP_SET_BLOCK_SIZE:
-+	case LOOP_SET_DIRECT_IO:
- 		err = lo_ioctl(bdev, mode, cmd, arg);
- 		break;
- 	default:
--- 
-2.23.0.rc1.153.gdeed80330f-goog
+Get it, thanks for your detail explanation.
+
+> 
+
 
