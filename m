@@ -2,121 +2,111 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36117C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 10:51:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA42C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 10:51:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0839221E6A
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 10:51:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="xlFdWUxH"
+	by mail.kernel.org (Postfix) with ESMTP id ED49921E6A
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 10:51:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728975AbfHGKvO (ORCPT
+        id S1729242AbfHGKv3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 06:51:14 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:59694 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726418AbfHGKvO (ORCPT
+        Wed, 7 Aug 2019 06:51:29 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:33389 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbfHGKv2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 06:51:14 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x77AmwP2126290;
-        Wed, 7 Aug 2019 10:50:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=E62+7VTE7UonCrlCnPHNWi4RPE8HkU4TSMt2nyRommM=;
- b=xlFdWUxH2bW6rVoJdPVh8EmDH2mfU1vnFm9PJAVMX1GY1g4vFfaS2bTEvO9EPcxA9Qh9
- LykHvi6D8SLCJCiPlWRB7HTLjRRXHqMqLYzusGmGc8zFybMied62OZBr8n8h0RiiU0HE
- 7zTdmCsIddY8AYKUk8c/JzBjZFAIT2DroZKIES13ewnsxyOJLLTwJsjZOOTwYKDwFb6H
- U+LZf2RU4u9REcByD2U1cwKC3QKp8V0f0ZkeXH5iw6VU0iojWSZY8bvczok3ho4l23sz
- ui/KZ0bRAetVvRKcsFqYQNbeJYcEUXkflyZQDMukDaI166KHs0B2ZyEvXytNwFasIJtr oA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2u52wrbhm5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 07 Aug 2019 10:50:53 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x77Alums162550;
-        Wed, 7 Aug 2019 10:50:52 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2u75bwaw44-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 07 Aug 2019 10:50:52 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x77AooQk002351;
-        Wed, 7 Aug 2019 10:50:51 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 07 Aug 2019 03:50:50 -0700
-Date:   Wed, 7 Aug 2019 13:50:42 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Oliver Hartkopp <socketcan@hartkopp.net>,
-        Patrick Bellasi <patrick.bellasi@arm.com>,
-        linux-sparse@vger.kernel.org
-Cc:     Mao Wenan <maowenan@huawei.com>, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH net-next] net: can: Fix compiling warning
-Message-ID: <20190807105042.GK1974@kadam>
-References: <20190802033643.84243-1-maowenan@huawei.com>
- <0050efdb-af9f-49b9-8d83-f574b3d46a2e@hartkopp.net>
- <20190806135231.GJ1974@kadam>
- <6e1c5aa0-8ed3-eec3-a34d-867ea8f54e9d@hartkopp.net>
+        Wed, 7 Aug 2019 06:51:28 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hvJXD-0003D2-0T; Wed, 07 Aug 2019 12:51:11 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hvJX9-0007T7-MT; Wed, 07 Aug 2019 12:51:07 +0200
+Date:   Wed, 7 Aug 2019 12:51:07 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Philippe Schenker <philippe.schenker@toradex.com>
+Cc:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Max Krummenacher <max.krummenacher@toradex.com>,
+        "stefan@agner.ch" <stefan@agner.ch>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3 09/21] ARM: dts: imx6qdl-colibri: add phy to fec
+Message-ID: <20190807105107.nqqltv64tjxprow6@pengutronix.de>
+References: <20190807082556.5013-1-philippe.schenker@toradex.com>
+ <20190807082556.5013-10-philippe.schenker@toradex.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <6e1c5aa0-8ed3-eec3-a34d-867ea8f54e9d@hartkopp.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9341 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=969
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908070120
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9341 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908070120
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190807082556.5013-10-philippe.schenker@toradex.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 06:41:44PM +0200, Oliver Hartkopp wrote:
-> I compiled the code (the original version), but I do not get that "Should it
-> be static?" warning:
+On Wed, Aug 07, 2019 at 08:26:23AM +0000, Philippe Schenker wrote:
+> Add the phy-node and mdio bus to the fec-node, represented as is on
+> hardware.
+> This commit includes micrel,led-mode that is set to the default
+> value, prepared for someone who wants to change this.
 > 
-> user@box:~/net-next$ make C=1
->   CALL    scripts/checksyscalls.sh
->   CALL    scripts/atomic/check-atomics.sh
->   DESCEND  objtool
->   CHK     include/generated/compile.h
->   CHECK   net/can/af_can.c
-> ./include/linux/sched.h:609:43: error: bad integer constant expression
-> ./include/linux/sched.h:609:73: error: invalid named zero-width bitfield
-> `value'
-> ./include/linux/sched.h:610:43: error: bad integer constant expression
-> ./include/linux/sched.h:610:67: error: invalid named zero-width bitfield
-> `bucket_id'
->   CC [M]  net/can/af_can.o
+> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+> ---
+> 
+> Changes in v3: None
+> Changes in v2: None
+> 
+>  arch/arm/boot/dts/imx6qdl-colibri.dtsi | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx6qdl-colibri.dtsi b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
+> index 1beac22266ed..019dda6b88ad 100644
+> --- a/arch/arm/boot/dts/imx6qdl-colibri.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
+> @@ -140,7 +140,18 @@
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pinctrl_enet>;
+>  	phy-mode = "rmii";
+> +	phy-handle = <&ethphy>;
+>  	status = "okay";
+> +
+> +	mdio {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		ethphy: ethernet-phy@0 {
+> +			reg = <0>;
+> +			micrel,led-mode = <0>;
 
-The sched.h errors suppress Sparse warnings so it's broken/useless now.
-The code looks like this:
+Doesn't that need a compatible entry to be actually used?
 
-include/linux/sched.h
-   613  struct uclamp_se {
-   614          unsigned int value              : bits_per(SCHED_CAPACITY_SCALE);
-   615          unsigned int bucket_id          : bits_per(UCLAMP_BUCKETS);
-   616          unsigned int active             : 1;
-   617          unsigned int user_defined       : 1;
-   618  };
+Best regards
+Uwe
+> 
+> 
 
-bits_per() is zero and Sparse doesn't like zero sized bitfields.
-
-regards,
-dan carpenter
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
