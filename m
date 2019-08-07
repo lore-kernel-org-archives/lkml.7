@@ -2,122 +2,77 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3278BC32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 19:01:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F215C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 19:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14F0121EF2
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 19:01:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 574A421EF2
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 19:03:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730248AbfHGTBP (ORCPT
+        id S1730314AbfHGTDv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 15:01:15 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:43186 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730178AbfHGTBP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 15:01:15 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 93C9980486;
-        Wed,  7 Aug 2019 21:01:10 +0200 (CEST)
-Date:   Wed, 7 Aug 2019 21:01:09 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Rob Clark <robdclark@gmail.com>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        David Airlie <airlied@linux.ie>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Sean Paul <sean@poorly.run>
-Subject: Re: [Freedreno] [PATCH] drm/msm: Make DRM_MSM default to 'm'
-Message-ID: <20190807190109.GA32503@ravnborg.org>
-References: <1565198667-4300-1-git-send-email-jcrouse@codeaurora.org>
- <20190807173838.GB30025@ravnborg.org>
- <CAF6AEGv6EY5UBYF8D9tuSaMDvkdrBt+zvRxQA+V4PG6ZfKhUAg@mail.gmail.com>
- <20190807184648.GA30521@jcrouse1-lnx.qualcomm.com>
+        Wed, 7 Aug 2019 15:03:51 -0400
+Received: from mga12.intel.com ([192.55.52.136]:12147 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730262AbfHGTDu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 15:03:50 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Aug 2019 12:03:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,358,1559545200"; 
+   d="scan'208";a="177059674"
+Received: from geyerral-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.37.199])
+  by orsmga003.jf.intel.com with ESMTP; 07 Aug 2019 12:03:44 -0700
+Date:   Wed, 7 Aug 2019 22:03:44 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-crypto@vger.kernel.org,
+        linux-security-module@vger.kernel.org, dhowells@redhat.com,
+        herbert@gondor.apana.org.au, davem@davemloft.net,
+        peterhuewe@gmx.de, jgg@ziepe.ca, jejb@linux.ibm.com, arnd@arndb.de,
+        gregkh@linuxfoundation.org, zohar@linux.ibm.com, jmorris@namei.org,
+        serge@hallyn.com, casey@schaufler-ca.com,
+        ard.biesheuvel@linaro.org, daniel.thompson@linaro.org,
+        linux-kernel@vger.kernel.org, tee-dev@lists.linaro.org
+Subject: Re: [RFC/RFT v3 2/3] KEYS: trusted: move tpm2 trusted keys code
+Message-ID: <20190807190320.th4sbnsnmwb7myzx@linux.intel.com>
+References: <1565098640-12536-1-git-send-email-sumit.garg@linaro.org>
+ <1565098640-12536-3-git-send-email-sumit.garg@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190807184648.GA30521@jcrouse1-lnx.qualcomm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8
-        a=LpQP-O61AAAA:8 a=-ipZeBXR2iWv2Qf4ONQA:9 a=CjuIK1q_8ugA:10
-        a=E9Po1WZjFZOl8hwRPBS3:22 a=pioyyrs4ZptJ924tMmac:22
+In-Reply-To: <1565098640-12536-3-git-send-email-sumit.garg@linaro.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jordan/Rob.
+On Tue, Aug 06, 2019 at 07:07:19PM +0530, Sumit Garg wrote:
+> Move TPM2 trusted keys code to trusted keys subsystem.
 
-On Wed, Aug 07, 2019 at 12:46:49PM -0600, Jordan Crouse wrote:
-> On Wed, Aug 07, 2019 at 11:08:53AM -0700, Rob Clark wrote:
-> > On Wed, Aug 7, 2019 at 10:38 AM Sam Ravnborg <sam@ravnborg.org> wrote:
-> > >
-> > > Hi Jordan.
-> > > On Wed, Aug 07, 2019 at 11:24:27AM -0600, Jordan Crouse wrote:
-> > > > Most use cases for DRM_MSM will prefer to build both DRM and MSM_DRM as
-> > > > modules but there are some cases where DRM might be built in for whatever
-> > > > reason and in those situations it is preferable to still keep MSM as a
-> > > > module by default and let the user decide if they _really_ want to build
-> > > > it in.
-> > > >
-> > > > Additionally select QCOM_COMMAND_DB for ARCH_QCOM targets to make sure
-> > > > it doesn't get missed when we need it for a6xx tarets.
-> > > >
-> > > > Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-> > > > ---
-> > > >
-> > > >  drivers/gpu/drm/msm/Kconfig | 3 ++-
-> > > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/drivers/gpu/drm/msm/Kconfig b/drivers/gpu/drm/msm/Kconfig
-> > > > index 9c37e4d..3b2334b 100644
-> > > > --- a/drivers/gpu/drm/msm/Kconfig
-> > > > +++ b/drivers/gpu/drm/msm/Kconfig
-> > > > @@ -14,11 +14,12 @@ config DRM_MSM
-> > > >       select SHMEM
-> > > >       select TMPFS
-> > > >       select QCOM_SCM if ARCH_QCOM
-> > > > +     select QCOM_COMMAND_DB if ARCH_QCOM
-> > > >       select WANT_DEV_COREDUMP
-> > > >       select SND_SOC_HDMI_CODEC if SND_SOC
-> > > >       select SYNC_FILE
-> > > >       select PM_OPP
-> > > > -     default y
-> > > > +     default m
-> > >
-> > > As a general comment the right thing would be to drop this default.
-> > > As it is now the Kconfig says that when DRM is selected then all of the
-> > > world would then also get DRM_MSM, which only a small part of this world
-> > > you see any benefit in.
-> > > So they now have to de-select MSM.
-> > 
-> > If the default is dropped, it should probably be accompanied by adding
-> > CONFIG_DRM_MSM=m to defconfig's, I think
-That would be best. So the defconfigs end up with the same config as
-before.
+Missing a long description. The reason is that it is better consolidate
+all trusted keys code to a single location so that it can be maintained
+sanely and it should be stated here.
 
-> 
-> In general I prefer to not use a default but this is the only GPU driver for
-> ARCH_QCOM and I think its safe to stay that 99% of ARCH_QCOM users would select
-> this module and those that wouldn't will omit DRM entirely.
-> 
-> I feel it is net negative if we dropped the default but then had to turn around
-> and enable it in every defconfig.
-"in every" equals three defconfigs:
-$ git grep ARCH_QCOM | grep defconfig
-arch/arm/configs/multi_v7_defconfig:CONFIG_ARCH_QCOM=y
-arch/arm/configs/qcom_defconfig:CONFIG_ARCH_QCOM=y
-arch/arm64/configs/defconfig:CONFIG_ARCH_QCOM=y
+> Suggested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
 
-	Sam
+I would suggest adding at least two commits before this:
+
+- A commit that just exports tpm_buf stuff and TPM2 constants to
+  include/linux
+- A commit that just changes the existing TPM 1.x trusted keys
+  code to use tpm_buf.
+
+These should be before the current 1/3 commit.
+
+/Jarkko
