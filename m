@@ -2,93 +2,88 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22397C32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 20:04:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F729C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 20:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E232F222FC
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 20:04:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565208246;
-	bh=bAnZKDOHa6S/AueqvOn27z8E6ylUixYsDkIKVgnZVKU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=HCTYREOX3yiIhASIYOEgkuw0TEGsbCZORZM1txIAOXLlHtDccHImdWEgr+TL7Sj/F
-	 d/Pg+Dj3zMS6UULLlcgE2qXU0pAQFO7yqI54X8bVC9XoI8LIlYX07MezviaVo5mOee
-	 6c/9iJ2fricdXKFAcX4VJEnZRbN2nLDhsSzrCAjA=
+	by mail.kernel.org (Postfix) with ESMTP id 4D51321902
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 20:07:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SZ4V3wNS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389034AbfHGUEE (ORCPT
+        id S2389067AbfHGUHP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 16:04:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46630 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729714AbfHGUEE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 16:04:04 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A4402229C;
-        Wed,  7 Aug 2019 20:04:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565208243;
-        bh=bAnZKDOHa6S/AueqvOn27z8E6ylUixYsDkIKVgnZVKU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=YVf9MEhf32W89lIFkjGgA88GCVZUVwxfcFmTKmPUg1Q1y6FDrsnr0QeqCQi2SxSAj
-         boCVYX0PmLYKtZPc0GeShN1mYQGBwDMs4u3zZmSSnElYlW9VIKtGrr+WQfA7EMdUZ7
-         l8JiW40t7+5cKUXM2gftIZQ0r8IJhj4wMos6tTo0=
-Date:   Wed, 7 Aug 2019 13:04:02 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Brendan Gregg <bgregg@netflix.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christian Hansen <chansen3@cisco.com>, dancol@google.com,
-        fmayer@google.com, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>, joelaf@google.com,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        linux-api@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Rapoport <rppt@linux.ibm.com>, minchan@kernel.org,
-        namhyung@google.com, paulmck@linux.ibm.com,
-        Robin Murphy <robin.murphy@arm.com>,
-        Roman Gushchin <guro@fb.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>, surenb@google.com,
-        Thomas Gleixner <tglx@linutronix.de>, tkjos@google.com,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v5 1/6] mm/page_idle: Add per-pid idle page tracking
- using virtual index
-Message-Id: <20190807130402.49c9ea8bf144d2f83bfeb353@linux-foundation.org>
-In-Reply-To: <20190807171559.182301-1-joel@joelfernandes.org>
-References: <20190807171559.182301-1-joel@joelfernandes.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 7 Aug 2019 16:07:15 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:45554 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388210AbfHGUHP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 16:07:15 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x77K7BuX031211;
+        Wed, 7 Aug 2019 15:07:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1565208431;
+        bh=v1xJ4QW2CbPvsjZynDNpO5ZE1SyBCjZArxFkQkhNH5A=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=SZ4V3wNSGHM5Ndp0peDd5pSEHfUpepv/G1zVezW4p5fyJR/1tYdrDGRy3HmgpHYNm
+         tpcK6FRDi7Wks1/ikO6ozijRfxE48Set2+2N2zDgWdl2FtFPhWFyhIvezaC2ieRiAh
+         Hi3NXyQnt0v63AyhOCGfdNW9I51csIwRIe70VWaY=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x77K7BSW035753
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 7 Aug 2019 15:07:11 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 7 Aug
+ 2019 15:07:11 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 7 Aug 2019 15:07:11 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x77K7ADP024682;
+        Wed, 7 Aug 2019 15:07:10 -0500
+Date:   Wed, 7 Aug 2019 15:07:10 -0500
+From:   Bin Liu <b-liu@ti.com>
+To:     Saurav Girepunje <saurav.girepunje@gmail.com>
+CC:     <gregkh@linuxfoundation.org>, <linux-usb@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <saurav.girepunje@hotmail.com>
+Subject: Re: [PATCH] usb: musb: musb_core.c: Update the function description
+Message-ID: <20190807200710.GC14027@uda0271908>
+Mail-Followup-To: Bin Liu <b-liu@ti.com>,
+        Saurav Girepunje <saurav.girepunje@gmail.com>;,
+        gregkh@linuxfoundation.org;, linux-usb@vger.kernel.org;,
+        linux-kernel@vger.kernel.org, saurav.girepunje@hotmail.com
+References: <20190805181318.GA8930@saurav>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190805181318.GA8930@saurav>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed,  7 Aug 2019 13:15:54 -0400 "Joel Fernandes (Google)" <joel@joelfernandes.org> wrote:
+On Mon, Aug 05, 2019 at 11:43:21PM +0530, Saurav Girepunje wrote:
+> Update the function description of musb_stage0_irq in musb_core.c
 
-> In Android, we are using this for the heap profiler (heapprofd) which
-> profiles and pin points code paths which allocates and leaves memory
-> idle for long periods of time. This method solves the security issue
-> with userspace learning the PFN, and while at it is also shown to yield
-> better results than the pagemap lookup, the theory being that the window
-> where the address space can change is reduced by eliminating the
-> intermediate pagemap look up stage. In virtual address indexing, the
-> process's mmap_sem is held for the duration of the access.
+I modified this to:
 
-So is heapprofd a developer-only thing?  Is heapprofd included in
-end-user android loads?  If not then, again, wouldn't it be better to
-make the feature Kconfigurable so that Android developers can enable it
-during development then disable it for production kernels?
+usb: musb: core: Update the function description
 
+Update the function description of musb_stage0_irq() to remove unused
+parameter.
+
+and applied to my tree. Thanks.
+
+> 
+> Signed-off-by: Saurav Girepunje <saurav.girepunje@gmail.com>
+
+-Bin.
