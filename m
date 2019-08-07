@@ -2,180 +2,159 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C71EEC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:46:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3310C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9701223A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:46:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBA772231F
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:46:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565167617;
+	bh=vvS0+eseD+S2MPZfq94XTqm/3eT89OOZLoZueDS081Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1UxvexL9cup9vcZ1NyBlQhWQ8J80EwzqkktmjXDMXPX1SmxezvptwKnJqxAh69Dbl
+	 H6sVC485anzJKKr9x4yHaGRxgJCMM/K4qWyYIV8GV27gnNwBrOkjdwhy9pbV5vjO6x
+	 UoZRWRR+lUtiW2h9XUyI63MZv5ZUF1c9Gm7oc/lc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387751AbfHGIqw (ORCPT
+        id S2387819AbfHGIq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 04:46:52 -0400
-Received: from albert.telenet-ops.be ([195.130.137.90]:40790 "EHLO
-        albert.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387711AbfHGIqq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 04:46:46 -0400
-Received: from ramsan ([84.194.98.4])
-        by albert.telenet-ops.be with bizsmtp
-        id m8mg2000205gfCL068mgMM; Wed, 07 Aug 2019 10:46:43 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hvHai-0002dt-0E; Wed, 07 Aug 2019 10:46:40 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hvHah-0006Im-UU; Wed, 07 Aug 2019 10:46:39 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Chris Brandt <Chris.Brandt@renesas.com>,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v3 2/3] clocksource/drivers/renesas-ostm: Fix probe error path
-Date:   Wed,  7 Aug 2019 10:46:34 +0200
-Message-Id: <20190807084635.24173-3-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190807084635.24173-1-geert+renesas@glider.be>
-References: <20190807084635.24173-1-geert+renesas@glider.be>
+        Wed, 7 Aug 2019 04:46:56 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55384 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387743AbfHGIqy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 04:46:54 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 8E81EAD29;
+        Wed,  7 Aug 2019 08:46:50 +0000 (UTC)
+Date:   Wed, 7 Aug 2019 10:46:49 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Jan Kara <jack@suse.cz>
+Cc:     John Hubbard <jhubbard@nvidia.com>,
+        Matthew Wilcox <willy@infradead.org>, john.hubbard@gmail.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org, ceph-devel@vger.kernel.org,
+        devel@driverdev.osuosl.org, devel@lists.orangefs.org,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mm@kvack.org,
+        linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org, linux-xfs@vger.kernel.org,
+        netdev@vger.kernel.org, rds-devel@oss.oracle.com,
+        sparclinux@vger.kernel.org, x86@kernel.org,
+        xen-devel@lists.xenproject.org
+Subject: Re: [PATCH 00/34] put_user_pages(): miscellaneous call sites
+Message-ID: <20190807084649.GQ11812@dhcp22.suse.cz>
+References: <20190802022005.5117-1-jhubbard@nvidia.com>
+ <20190802091244.GD6461@dhcp22.suse.cz>
+ <20190802124146.GL25064@quack2.suse.cz>
+ <20190802142443.GB5597@bombadil.infradead.org>
+ <20190802145227.GQ25064@quack2.suse.cz>
+ <076e7826-67a5-4829-aae2-2b90f302cebd@nvidia.com>
+ <20190807083726.GA14658@quack2.suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190807083726.GA14658@quack2.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix various issues in the error path of ostm_init():
-  1. Drop error message printing on of_iomap() failure, as the memory
-     allocation core already takes of that,
-  2. Handle irq_of_parse_and_map() failures correctly: it returns
-     unsigned int, hence make irq unsigned int, and zero is an error,
-  3. Propagate/return appropriate error codes instead of -EFAULT.
-  4. Add a missing clk_put(),
-  5. Split the single cleanup block in separate phases, to avoid
-     clk_put() calling WARN() when passed an error pointer.
+On Wed 07-08-19 10:37:26, Jan Kara wrote:
+> On Fri 02-08-19 12:14:09, John Hubbard wrote:
+> > On 8/2/19 7:52 AM, Jan Kara wrote:
+> > > On Fri 02-08-19 07:24:43, Matthew Wilcox wrote:
+> > > > On Fri, Aug 02, 2019 at 02:41:46PM +0200, Jan Kara wrote:
+> > > > > On Fri 02-08-19 11:12:44, Michal Hocko wrote:
+> > > > > > On Thu 01-08-19 19:19:31, john.hubbard@gmail.com wrote:
+> > > > > > [...]
+> > > > > > > 2) Convert all of the call sites for get_user_pages*(), to
+> > > > > > > invoke put_user_page*(), instead of put_page(). This involves dozens of
+> > > > > > > call sites, and will take some time.
+> > > > > > 
+> > > > > > How do we make sure this is the case and it will remain the case in the
+> > > > > > future? There must be some automagic to enforce/check that. It is simply
+> > > > > > not manageable to do it every now and then because then 3) will simply
+> > > > > > be never safe.
+> > > > > > 
+> > > > > > Have you considered coccinele or some other scripted way to do the
+> > > > > > transition? I have no idea how to deal with future changes that would
+> > > > > > break the balance though.
+> > 
+> > Hi Michal,
+> > 
+> > Yes, I've thought about it, and coccinelle falls a bit short (it's not smart
+> > enough to know which put_page()'s to convert). However, there is a debug
+> > option planned: a yet-to-be-posted commit [1] uses struct page extensions
+> > (obviously protected by CONFIG_DEBUG_GET_USER_PAGES_REFERENCES) to add
+> > a redundant counter. That allows:
+> > 
+> > void __put_page(struct page *page)
+> > {
+> > 	...
+> > 	/* Someone called put_page() instead of put_user_page() */
+> > 	WARN_ON_ONCE(atomic_read(&page_ext->pin_count) > 0);
+> > 
+> > > > > 
+> > > > > Yeah, that's why I've been suggesting at LSF/MM that we may need to create
+> > > > > a gup wrapper - say vaddr_pin_pages() - and track which sites dropping
+> > > > > references got converted by using this wrapper instead of gup. The
+> > > > > counterpart would then be more logically named as unpin_page() or whatever
+> > > > > instead of put_user_page().  Sure this is not completely foolproof (you can
+> > > > > create new callsite using vaddr_pin_pages() and then just drop refs using
+> > > > > put_page()) but I suppose it would be a high enough barrier for missed
+> > > > > conversions... Thoughts?
+> > 
+> > The debug option above is still a bit simplistic in its implementation
+> > (and maybe not taking full advantage of the data it has), but I think
+> > it's preferable, because it monitors the "core" and WARNs.
+> > 
+> > Instead of the wrapper, I'm thinking: documentation and the passage of
+> > time, plus the debug option (perhaps enhanced--probably once I post it
+> > someone will notice opportunities), yes?
+> 
+> So I think your debug option and my suggested renaming serve a bit
+> different purposes (and thus both make sense). If you do the renaming, you
+> can just grep to see unconverted sites. Also when someone merges new GUP
+> user (unaware of the new rules) while you switch GUP to use pins instead of
+> ordinary references, you'll get compilation error in case of renaming
+> instead of hard to debug refcount leak without the renaming. And such
+> conflict is almost bound to happen given the size of GUP patch set... Also
+> the renaming serves against the "coding inertia" - i.e., GUP is around for
+> ages so people just use it without checking any documentation or comments.
+> After switching how GUP works, what used to be correct isn't anymore so
+> renaming the function serves as a warning that something has really
+> changed.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v3:
-  - New.
----
- drivers/clocksource/renesas-ostm.c | 54 ++++++++++++++++--------------
- 1 file changed, 29 insertions(+), 25 deletions(-)
+Fully agreed!
 
-diff --git a/drivers/clocksource/renesas-ostm.c b/drivers/clocksource/renesas-ostm.c
-index 37c39b901bb12b38..1e22e54d7b0df40d 100644
---- a/drivers/clocksource/renesas-ostm.c
-+++ b/drivers/clocksource/renesas-ostm.c
-@@ -155,7 +155,7 @@ static irqreturn_t ostm_timer_interrupt(int irq, void *dev_id)
- 	return IRQ_HANDLED;
- }
- 
--static int __init ostm_init_clkevt(struct ostm_device *ostm, int irq,
-+static int __init ostm_init_clkevt(struct ostm_device *ostm, unsigned int irq,
- 			unsigned long rate)
- {
- 	struct clock_event_device *ced = &ostm->ced;
-@@ -185,11 +185,11 @@ static int __init ostm_init_clkevt(struct ostm_device *ostm, int irq,
- 
- static int __init ostm_init(struct device_node *np)
- {
--	struct ostm_device *ostm;
--	int ret = -EFAULT;
- 	struct clk *ostm_clk = NULL;
--	int irq;
-+	struct ostm_device *ostm;
- 	unsigned long rate;
-+	unsigned int irq;
-+	int ret;
- 
- 	ostm = kzalloc(sizeof(*ostm), GFP_KERNEL);
- 	if (!ostm)
-@@ -197,27 +197,29 @@ static int __init ostm_init(struct device_node *np)
- 
- 	ostm->base = of_iomap(np, 0);
- 	if (!ostm->base) {
--		pr_err("ostm: failed to remap I/O memory\n");
--		goto err;
-+		ret = -ENOMEM;
-+		goto err_free;
- 	}
- 
- 	irq = irq_of_parse_and_map(np, 0);
--	if (irq < 0) {
-+	if (!irq) {
- 		pr_err("ostm: Failed to get irq\n");
--		goto err;
-+		ret = -EINVAL;
-+		goto err_unmap;
- 	}
- 
- 	ostm_clk = of_clk_get(np, 0);
- 	if (IS_ERR(ostm_clk)) {
- 		pr_err("ostm: Failed to get clock\n");
- 		ostm_clk = NULL;
--		goto err;
-+		ret = PTR_ERR(ostm_clk);
-+		goto err_unmap;
- 	}
- 
- 	ret = clk_prepare_enable(ostm_clk);
- 	if (ret) {
- 		pr_err("ostm: Failed to enable clock\n");
--		goto err;
-+		goto err_clk_put;
- 	}
- 
- 	rate = clk_get_rate(ostm_clk);
-@@ -229,28 +231,30 @@ static int __init ostm_init(struct device_node *np)
- 	 */
- 	if (!system_clock) {
- 		ret = ostm_init_clksrc(ostm, rate);
-+		if (ret)
-+			goto err_clk_disable;
- 
--		if (!ret) {
--			ostm_init_sched_clock(ostm, rate);
--			pr_info("ostm: used for clocksource\n");
--		}
--
-+		ostm_init_sched_clock(ostm, rate);
-+		pr_info("ostm: used for clocksource\n");
- 	} else {
- 		ret = ostm_init_clkevt(ostm, irq, rate);
-+		if (ret)
-+			goto err_clk_disable;
- 
--		if (!ret)
--			pr_info("ostm: used for clock events\n");
--	}
--
--err:
--	if (ret) {
--		clk_disable_unprepare(ostm_clk);
--		iounmap(ostm->base);
--		kfree(ostm);
--		return ret;
-+		pr_info("ostm: used for clock events\n");
- 	}
- 
- 	return 0;
-+
-+err_clk_disable:
-+	clk_disable_unprepare(ostm_clk);
-+err_clk_put:
-+	clk_put(ostm_clk);
-+err_unmap:
-+	iounmap(ostm->base);
-+err_free:
-+	kfree(ostm);
-+	return ret;
- }
- 
- TIMER_OF_DECLARE(ostm, "renesas,ostm", ostm_init);
+> Your refcount debug patches are good to catch bugs in the conversions done
+> but that requires you to be able to excercise the code path in the first
+> place which may require particular HW or so, and you also have to enable
+> the debug option which means you already aim at verifying the GUP
+> references are treated properly.
+> 
+> 								Honza
+> 
+> -- 
+> Jan Kara <jack@suse.com>
+> SUSE Labs, CR
+
 -- 
-2.17.1
-
+Michal Hocko
+SUSE Labs
