@@ -2,115 +2,76 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA77AC32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 12:09:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76485C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 12:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AF0121BF2
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 12:09:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="msNk2qv0";
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="psdQRXuM"
+	by mail.kernel.org (Postfix) with ESMTP id 54C2521BF2
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 12:19:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729846AbfHGMJt (ORCPT
+        id S2387617AbfHGMTn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 08:09:49 -0400
-Received: from mx2.mailbox.org ([80.241.60.215]:16894 "EHLO mx2.mailbox.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726773AbfHGMJt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 08:09:49 -0400
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mx2.mailbox.org (Postfix) with ESMTPS id 4B090A10DC;
-        Wed,  7 Aug 2019 14:09:46 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mailbox.org; h=
-        content-type:content-type:content-transfer-encoding:mime-version
-        :references:in-reply-to:message-id:date:date:subject:subject
-        :from:from:received; s=mail20150812; t=1565179767; bh=rHCAZ074Uy
-        ZIuo+YOhlm7YH0Of6VHZ3w7JPuviszgG8=; b=msNk2qv0fNTuD4PX61ubg1jISG
-        qPJuJnrAKNt1IE/LEXBHmFsZHl9nSzfecmvWL692Td9+Ym9o4nclypzUpNDlSJJx
-        9pk+b6X+fvMYdr8bBDy4/rmb2BCIctwTxg6XR5rU4dJz4sZJ5efpuMSWkLCarzwf
-        WfYJKufSjPk8tc5W1NUboQaH1zchV8qws7kVQJBXkOUYqtHBe/IxFvnoIyXoeS6t
-        XBDp5Ih5DlSFpy5jcrYaI9CQCAIakf5v3ePIsdx2AEwx25GRCsLy9WlxBpF0qXqH
-        sGofhS16+sRtEcENUfy+U5YLKyubWwTi7rbo2bDDwlrLcPCB/TWYHwqT8o3Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-        t=1565179786; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=nIi2+dVFgNEqDAbNVFX5OQFfz6csuB3+TfgG3t4PX58=;
-        b=psdQRXuMdCNnuvjhag32JrP02RtOG2WT11a9nkp7lvgI3sQWpETzWnmuUSD/GD5wiL2fx1
-        5C/4IA3gMLqfG9i99VUFTqmb6IW7MvfmC1mftvJOAVBvjHVkHBejPAFNfhWshXYqA522xc
-        h2zoq+fpJRtpOS5YT8uBXMYyAxxlMzi3zIuPrXwdctiLkORXTqPSYpwR/j39Y6c98/Soj0
-        f1wE6LqI0/GPwyPh78LeQvv9GrixT5R8Q2yXz9FlEo/IxRkk/m72kAPVYxd3/6O7xALBO0
-        UUu5/+s+qPty7x8eizF+40ZarDlU7VeQnBjl/rT2Hs+J5SFA3QH/Fjiiwm3fmA==
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter01.heinlein-hosting.de (spamfilter01.heinlein-hosting.de [80.241.56.115]) (amavisd-new, port 10030)
-        with ESMTP id PIIso7cOiSde; Wed,  7 Aug 2019 14:09:27 +0200 (CEST)
-From:   Alexander Stein <alexander.stein@mailbox.org>
-To:     Schrempf Frieder <frieder.schrempf@kontron.de>
-Cc:     Wolfram Sang <wsa@the-dreams.de>, Jean Delvare <jdelvare@suse.de>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Juergen Fitschen <jfi@ssv-embedded.de>,
-        Ajay Gupta <ajayg@nvidia.com>,
-        Shreesha Rajashekar <shreesha.rajashekar@broadcom.com>,
-        Vignesh R <vigneshr@ti.com>, Elie Morisse <syniurge@gmail.com>,
-        Stefan Roese <sr@denx.de>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] i2c: imx: Allow the driver to be built for ARM64 SoCs such as i.MX8M
-Date:   Wed, 07 Aug 2019 14:09:24 +0200
-Message-ID: <2445092.UF1PKDTzN1@ws-140106>
-In-Reply-To: <20190807114332.13312-1-frieder.schrempf@kontron.de>
-References: <20190807114332.13312-1-frieder.schrempf@kontron.de>
+        Wed, 7 Aug 2019 08:19:43 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:45986 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726773AbfHGMTm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 08:19:42 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hvKuf-0004Os-Kr; Wed, 07 Aug 2019 12:19:29 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        ocfs2-devel@oss.oracle.com
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][ocfs2-next] ocfs2: ensure ret is set to zero before returning
+Date:   Wed,  7 Aug 2019 13:19:29 +0100
+Message-Id: <20190807121929.28918-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday, August 7, 2019, 1:44:06 PM CEST Schrempf Frieder wrote:
-> From: Frieder Schrempf <frieder.schrempf@kontron.de>
-> 
-> The imx I2C controller is used in some ARM64 SoCs such as i.MX8M.
-> To make use of it, append ARM64 to the list of dependencies.
-> 
-> Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-> ---
->  drivers/i2c/busses/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-> index 09367fc014c3..46b653621513 100644
-> --- a/drivers/i2c/busses/Kconfig
-> +++ b/drivers/i2c/busses/Kconfig
-> @@ -664,7 +664,7 @@ config I2C_IMG
->  
->  config I2C_IMX
->  	tristate "IMX I2C interface"
-> -	depends on ARCH_MXC || ARCH_LAYERSCAPE || COLDFIRE
-> +	depends on ARCH_MXC || ARCH_LAYERSCAPE || COLDFIRE || ARM64
+From: Colin Ian King <colin.king@canonical.com>
 
-I don't think this should be necessary at all as ARCH_MXC is also available for arm64, see https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/Kconfig.platforms#n167
-I rather wonder why ARCH_MXC is not set. Same for fec.
+A previous commit introduced a regression where variable ret was
+originally being set from the return from a call to function
+dlm_create_debugfs_subroot and this set was removed. Currently
+ret is now uninitialized if no alloction errors are found which
+may end up with a bogus check on ret < 0 on the 'leave:' return
+path.  Fix this by setting ret to zero on a successful execution
+path.
 
->  	help
->  	  Say Y here if you want to use the IIC bus controller on
->  	  the Freescale i.MX/MXC, Layerscape or ColdFire processors.
-> 
+Addresses-Coverity: ("Uninitialzed scalar variable")
+Fixes: cba322160ef0 ("ocfs2: further debugfs cleanups")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ fs/ocfs2/dlm/dlmdomain.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-
-
+diff --git a/fs/ocfs2/dlm/dlmdomain.c b/fs/ocfs2/dlm/dlmdomain.c
+index 5c4218d66dd2..ee6f459f9770 100644
+--- a/fs/ocfs2/dlm/dlmdomain.c
++++ b/fs/ocfs2/dlm/dlmdomain.c
+@@ -2052,6 +2052,7 @@ static struct dlm_ctxt *dlm_alloc_ctxt(const char *domain,
+ 	mlog(0, "context init: refcount %u\n",
+ 		  kref_read(&dlm->dlm_refs));
+ 
++	ret = 0;
+ leave:
+ 	if (ret < 0 && dlm) {
+ 		if (dlm->master_hash)
+-- 
+2.20.1
 
