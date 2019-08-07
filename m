@@ -2,95 +2,74 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E6BC19759
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 07:10:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5CFAC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 07:12:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48AF9219BE
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 07:10:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="B6PfnPPN";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="dL/Edy2X"
+	by mail.kernel.org (Postfix) with ESMTP id BFD2E2199C
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 07:12:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387423AbfHGHKz (ORCPT
+        id S1727930AbfHGHMi convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 03:10:55 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:48488 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727180AbfHGHKu (ORCPT
+        Wed, 7 Aug 2019 03:12:38 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:44791 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726697AbfHGHMi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 03:10:50 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 3E1D560FE9; Wed,  7 Aug 2019 07:10:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1565161849;
-        bh=5v0rL25xkQ3uOvxlExAXM64CUmGUj2TZ9oXn3PRjm4s=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B6PfnPPNAXnohzWG2mOplAuKtXv/AxK1sdYC/YJCcnMAXtOVaKcDJ/h7GIeahhsS4
-         FNlBn5rXHriqkQwaApCWHWc3KS1cXNhei9YgVYv5YEKHey1s2U3gkqej+yoX/iCl9h
-         zvf7REre97UJr4ERBOAMjtZaXG6mMeRUIPME2nyA=
-Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1134E614DB;
-        Wed,  7 Aug 2019 07:10:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1565161844;
-        bh=5v0rL25xkQ3uOvxlExAXM64CUmGUj2TZ9oXn3PRjm4s=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dL/Edy2XfLLno1O1vHFawg4Igdpc9o8XmYPXCaIukwtcEkt+EJ3LIf1BpwGoLDYi1
-         Hn6buKaCfA6dvQ2zAn2RKGt0kln8zGWBxvcpa1U23q5F53BqVFNiodX8EH1LV3fAy9
-         hrfpoKzeXjGVH5AsXHb+DYqlzDcsnemRP6G32U5c=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1134E614DB
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     bjorn.andersson@linaro.org, robh+dt@kernel.org, vkoul@kernel.org,
-        aneela@codeaurora.org
-Cc:     mark.rutland@arm.com, agross@kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, jassisinghbrar@gmail.com,
-        clew@codeaurora.org, Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v2 7/7] soc: qcom: aoss: Add AOSS QMP support
-Date:   Wed,  7 Aug 2019 12:39:57 +0530
-Message-Id: <20190807070957.30655-8-sibis@codeaurora.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190807070957.30655-1-sibis@codeaurora.org>
-References: <20190807070957.30655-1-sibis@codeaurora.org>
+        Wed, 7 Aug 2019 03:12:38 -0400
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x777CY7e001852, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x777CY7e001852
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Wed, 7 Aug 2019 15:12:34 +0800
+Received: from RTITMBSVM03.realtek.com.tw ([fe80::e1fe:b2c1:57ec:f8e1]) by
+ RTITCASV01.realtek.com.tw ([::1]) with mapi id 14.03.0439.000; Wed, 7 Aug
+ 2019 15:12:33 +0800
+From:   Hayes Wang <hayeswang@realtek.com>
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        nic_swsd <nic_swsd@realtek.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+Subject: RE: [PATCH net-next 5/5] r8152: change rx_frag_head_sz and rx_max_agg_num dynamically
+Thread-Topic: [PATCH net-next 5/5] r8152: change rx_frag_head_sz and
+ rx_max_agg_num dynamically
+Thread-Index: AQHVTEjAduvqUw50CkySh6Q/0oky4abuKLuAgAEYyLA=
+Date:   Wed, 7 Aug 2019 07:12:32 +0000
+Message-ID: <0835B3720019904CB8F7AA43166CEEB2F18D06C5@RTITMBSVM03.realtek.com.tw>
+References: <1394712342-15778-289-albertk@realtek.com>
+        <1394712342-15778-294-albertk@realtek.com>
+ <20190806151007.75a8dd2c@cakuba.netronome.com>
+In-Reply-To: <20190806151007.75a8dd2c@cakuba.netronome.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.21.177.214]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add AOSS QMP support for SM8150 and SC7180 SoCs.
+Jakub Kicinski [mailto:jakub.kicinski@netronome.com]
+> Sent: Wednesday, August 07, 2019 6:10 AM
+[...]
+> Please don't expose those via sysfs. Ethtool's copybreak and descriptor
+> count should be applicable here, I think.
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
- drivers/soc/qcom/qcom_aoss.c | 2 ++
- 1 file changed, 2 insertions(+)
+Excuse me.
+I find struct ethtool_tunable for ETHTOOL_RX_COPYBREAK.
+How about the descriptor count?
 
-diff --git a/drivers/soc/qcom/qcom_aoss.c b/drivers/soc/qcom/qcom_aoss.c
-index 5f885196f4d0f..6ae813837b74b 100644
---- a/drivers/soc/qcom/qcom_aoss.c
-+++ b/drivers/soc/qcom/qcom_aoss.c
-@@ -461,7 +461,9 @@ static int qmp_remove(struct platform_device *pdev)
- }
- 
- static const struct of_device_id qmp_dt_match[] = {
-+	{ .compatible = "qcom,sc7180-aoss-qmp", },
- 	{ .compatible = "qcom,sdm845-aoss-qmp", },
-+	{ .compatible = "qcom,sm8150-aoss-qmp", },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, qmp_dt_match);
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+
+Best Regards,
+Hayes
+
 
