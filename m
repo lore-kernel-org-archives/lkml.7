@@ -2,91 +2,90 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD8CC433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 17:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E8CDC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 17:21:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BB0422305
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 17:21:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FF1A21993
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 17:21:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aVGu/UBm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388643AbfHGRVC (ORCPT
+        id S1730164AbfHGRVZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 13:21:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55808 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729960AbfHGRVB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 13:21:01 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B813E22296;
-        Wed,  7 Aug 2019 17:21:00 +0000 (UTC)
-Date:   Wed, 7 Aug 2019 13:20:58 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jiping Ma <jiping.ma2@windriver.com>, mingo@redhat.com,
-        catalin.marinas@arm.com, will.deacon@arm.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 0/2] tracing/arm: Fix the stack tracer when LR is saved
- after local storage
-Message-ID: <20190807132058.37616e8f@gandalf.local.home>
-In-Reply-To: <20190807170814.GA45351@lakrids.cambridge.arm.com>
-References: <20190807163401.570339297@goodmis.org>
-        <20190807170814.GA45351@lakrids.cambridge.arm.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 7 Aug 2019 13:21:25 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33842 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729960AbfHGRVY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 13:21:24 -0400
+Received: by mail-wr1-f67.google.com with SMTP id 31so92198965wrm.1
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 10:21:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vuolA915AcWvE5yagNyuds+oSo4r9HGACr7hD1WRCQE=;
+        b=aVGu/UBmLHA3dykO7e+4EmsQhRJOA0iTHk9Hv8b1/TkhzjY2XnXdPVGN5sh9fbFjiS
+         Bbyqfc7wyg+5ijHYZ0MTMDxhuPymR44xiG5WiLbRa4O130QapZvSJEJlA1eu9N6hQzjH
+         Tpt8YbpS/RjiP+FV+83WVVugq7v18Ra0kXQwUFqJeaSw4/gOhhS4qWkzncLMHJQPxDFZ
+         OrfoL9ElwkluaiYnL8hoxCB87+xPKQgQu8kBiSkGhTojnAeuNnpddmCret/l28K9sLIg
+         37e8/nR8RH3+Df6QbB7Kqpm22JerKCGAB+gm8EY1VCW1SK2f5xM5cK3KY5zoYfhU1FpF
+         xOUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vuolA915AcWvE5yagNyuds+oSo4r9HGACr7hD1WRCQE=;
+        b=uIU3vapzGdrXvHhKyxqvUTtWEHzQxrO7+OzwLvemRPVb8gtVDwXxKds3hsm+GnEGVA
+         ncT7G8uJOVIO+L9Gv4sQCPEbJ27YQ7JH8WIBsIYMLmrpGa1ozPsPBRDMzWNSB3id3KLo
+         YbNTnNLvwjm8xzzH3oPwWHM9W9EmfYscAHnpDy3D48gBUM3B9hffpzUT+5bSsPKTHOmt
+         2N4Kv/hH39A6aCKCT8NSa0iaSUgogflqbpD8B1tNA9zgdEPO2PtkG/eNTMZkS6NUroxF
+         seUqMI13xTSz5ujc8y0snUqD2g2hMAyaGC/1MgoZYDWoHeKK81qCdUBZdt6QBtYf7LFt
+         XeAw==
+X-Gm-Message-State: APjAAAWcSX19xFngxIsSupnojAtUKRrzg5Bn57LerS8/WZprJZuCkxrk
+        mQbU1Xirke+2ZW84TjTfSmJKew==
+X-Google-Smtp-Source: APXvYqyzz1HmlUtRP/Bh8rrN0mY5HRxqSiSfvLupSZHWT8aG4tT1Ffd0nky4DLmmqD6ZHXnJtRAwSw==
+X-Received: by 2002:a5d:6911:: with SMTP id t17mr11676892wru.268.1565198483442;
+        Wed, 07 Aug 2019 10:21:23 -0700 (PDT)
+Received: from localhost.localdomain (88-147-66-140.dyn.eolo.it. [88.147.66.140])
+        by smtp.gmail.com with ESMTPSA id q193sm586773wme.8.2019.08.07.10.21.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Aug 2019 10:21:22 -0700 (PDT)
+From:   Paolo Valente <paolo.valente@linaro.org>
+To:     Jens Axboe <axboe@kernel.dk>, linux@roeck-us.net
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ulf.hansson@linaro.org, linus.walleij@linaro.org,
+        bfq-iosched@googlegroups.com, oleksandr@natalenko.name,
+        Paolo Valente <paolo.valente@linaro.org>
+Subject: [BUGFIX 0/1] handle NULL return value by bfq_init_rq()
+Date:   Wed,  7 Aug 2019 19:21:10 +0200
+Message-Id: <20190807172111.4718-1-paolo.valente@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 7 Aug 2019 18:08:14 +0100
-Mark Rutland <mark.rutland@arm.com> wrote:
+Hi Jens,
+this is a hopefully complete version of the fix proposed by Guenter [1].
 
-> Hi Steve,
-> 
-> On Wed, Aug 07, 2019 at 12:34:01PM -0400, Steven Rostedt wrote:
-> > As arm64 saves the link register after a function's local variables are
-> > stored, it causes the max stack tracer to be off by one in its output
-> > of which function has the bloated stack frame.  
-> 
-> For reference, it's a bit more complex than that. :/
+Thanks,
+Paolo
 
-Yeah, I know it is. ;-)
+[1] https://lkml.org/lkml/2019/7/22/824
 
-> 
-> Our procedure call standard (the AAPCS) says that the frame record may
-> be placed anywhere within a stackframe, so we don't have a guarantee as
-> to where the saved lr will fall w.r.t local variables.
+Paolo Valente (1):
+  block, bfq: handle NULL return value by bfq_init_rq()
 
-Yep.
+ block/bfq-iosched.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-> 
-> Today, GCC happens to create the stack frame by creating the stack
-> record, so the LR is saved at a lower addresss than the local variables.
-
-Which is what breaks the current algorithm (without this update).
-
-> 
-> However, I am aware that there are reasons why a compiler may choose to
-> place the frame record at a different locations, e.g. using pointer
-> authentication to provide an implicit stack canary, so this could change
-> in future, or potentially differ across functions.
-> 
-> Maybe that's a bridge we'll have to cross in future.
-
-OK, how about I update the change log and add a comment that states
-that this can change. But even if it does, it wont break anything but
-show the wrong stack size, which is usually only important for us
-kernel developers anyway ;-)
-
-Let me send a v2.
-
--- Steve
+--
+2.20.1
