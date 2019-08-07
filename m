@@ -2,199 +2,160 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AADB1C32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:52:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F00AC32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:52:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8348E229F3
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:52:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFB55223CB
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 08:52:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="efSOo94g";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="N8UzHViw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uSuLXbuo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729175AbfHGIw0 (ORCPT
+        id S1729212AbfHGIwb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 04:52:26 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:34568 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726747AbfHGIwZ (ORCPT
+        Wed, 7 Aug 2019 04:52:31 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38212 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726902AbfHGIw0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 04:52:25 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id EB88B6058E; Wed,  7 Aug 2019 08:52:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1565167944;
-        bh=JaEajRU+IxjI/7TzRSEFLT1wAK8wQcmKonkieOXdyf0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=efSOo94gALen372yW6OEvDuQpkfvM1gtCWwm6W8Wh4yYo5YtRjnrY+oSBZDQUckHq
-         PYZazUZqqu3rIWrAGtMgdgBDdyZgvYS5c8TWHOEvRwhPhPKcXf3hrewkwpE4Pd8nBl
-         3hxg/yVYsAVB1w8ZkP6/daZl4Foo/H6xQ3GxWRMs=
-Received: from codeaurora.org (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: stummala@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4EEDB6058E;
-        Wed,  7 Aug 2019 08:52:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1565167940;
-        bh=JaEajRU+IxjI/7TzRSEFLT1wAK8wQcmKonkieOXdyf0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=N8UzHViwD8VdUBwbH3A5B0CsirmWA1kNMdAVodKtfkYs2xd9v/23M7gnULVsk8OVH
-         wKG6F0il+kZmnfudRCe9e3AUXu3hHvWKp/6oBA1IgzE2wA8fnBmQzeVuSU0TTE/Ebo
-         hMS/JMlDDaigNjHbhWZzkBhSRiAFQJCi0qAHwg5s=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4EEDB6058E
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
-From:   Sahitya Tummala <stummala@codeaurora.org>
-To:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
-        linux-f2fs-devel@lists.sourceforge.net
-Cc:     Sahitya Tummala <stummala@codeaurora.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3] f2fs: Fix indefinite loop in f2fs_gc()
-Date:   Wed,  7 Aug 2019 14:22:07 +0530
-Message-Id: <1565167927-23305-1-git-send-email-stummala@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Wed, 7 Aug 2019 04:52:26 -0400
+Received: by mail-wm1-f65.google.com with SMTP id s15so57807667wmj.3
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 01:52:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=JV7hH1pgfjZ9d+HA6zEghhOBITBR93qI64GMKKSzuDk=;
+        b=uSuLXbuo/E2qWK2qtM/OMh+8vCLopUn/bGTIjZzKxKO0f9Z8KVeO50Wfoay96MyQPk
+         yhQsgq3fVRYaqeVa68o4Vqv31XhJhBJyd/Suor9JrnBh8dWo/G4GjYp92DooW7R7KwCI
+         rkZDJ3KgC11GkqPOABg3wlJtmIFOv3K+39Rs53h6C3gxP02iLeqz1rJelRhd9aIKbwLJ
+         zg4GzjbbWDXZZa7Oh137qd68oxGEFp0DoT16TbJEZ2k1vCCtKBI7GOT5hjhsAWtziHKY
+         9EVxCoSD088T/9bJYw0rPR2Tj13YOi6cFrXa3TflXVrqL0xMRECxIED3G5aB2snly+eX
+         WjIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=JV7hH1pgfjZ9d+HA6zEghhOBITBR93qI64GMKKSzuDk=;
+        b=nAg+rqkXphaZJCgWWb8Z+7UZ+xxoS/AJ08m8eYhbz8dByLqPCbApl93fjgnGz/At1k
+         LZLBylQgND3/Bc8ogkmbJxnx8DA3sMNPeq3fZdqyN8iLhPVlKyXEo0BNF0gCchRPN77c
+         b0NzdGCYSe5Tvl6EmaZXAUHFXUXHUMW7n9f1WM2UKmn8SDj13W1l5d6VRGxKbXyW7iJh
+         R1Bh7CATpCAlP1yV0XLzSBzAL0JynEsW55NsDqsOrLPUAf3RC1jv43GYP4pTo81H61Yf
+         EAhtRJFTY36WOLJUqXxFpQDzKlLZe6kSy5tv2zn9DoQgjlq+vS93fwsQ6NEPzIaGGHyT
+         ljPg==
+X-Gm-Message-State: APjAAAWb554mRHgtgxayM3Vf2S6h1qEWh2iI3+YkvhTEdCsaMkmpzcLx
+        8nojqKgGVQDe4gY27zPGVCOgR16C504=
+X-Google-Smtp-Source: APXvYqwMOukLR5PxkSYvIc8TBUL1jfSUBVol9YPjvmr1W1DiUmRB97hZaRZPuabb+6ra4BhZ49WXLg==
+X-Received: by 2002:a1c:44d7:: with SMTP id r206mr9668156wma.164.1565167943992;
+        Wed, 07 Aug 2019 01:52:23 -0700 (PDT)
+Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
+        by smtp.gmail.com with ESMTPSA id x24sm88519035wmh.5.2019.08.07.01.52.22
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 07 Aug 2019 01:52:23 -0700 (PDT)
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     gregkh@linuxfoundation.org, Ben Segal <bpsegal20@gmail.com>
+Subject: [PATCH 2/2] habanalabs: fix completion queue handling when host is BE
+Date:   Wed,  7 Aug 2019 11:52:17 +0300
+Message-Id: <20190807085217.28488-2-oded.gabbay@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190807085217.28488-1-oded.gabbay@gmail.com>
+References: <20190807085217.28488-1-oded.gabbay@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Policy - Foreground GC, LFS and greedy GC mode.
+From: Ben Segal <bpsegal20@gmail.com>
 
-Under this policy, f2fs_gc() loops forever to GC as it doesn't have
-enough free segements to proceed and thus it keeps calling gc_more
-for the same victim segment.  This can happen if the selected victim
-segment could not be GC'd due to failed blkaddr validity check i.e.
-is_alive() returns false for the blocks set in current validity map.
+This patch fix the CQ irq handler to work in hosts with BE architecture.
+It adds the correct endian-swapping macros around the relevant memory
+accesses.
 
-Fix this by keeping track of such invalid segments and skip those
-segments for selection in get_victim_by_default() to avoid endless
-GC loop under such error scenarios.
-
-Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+Signed-off-by: Ben Segal <bpsegal20@gmail.com>
+Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 ---
-v3: address Chao's comments and also add logic to clear invalid_segmap
+ drivers/misc/habanalabs/irq.c | 27 +++++++++++++--------------
+ 1 file changed, 13 insertions(+), 14 deletions(-)
 
- fs/f2fs/gc.c      | 25 +++++++++++++++++++++++--
- fs/f2fs/segment.c | 10 +++++++++-
- fs/f2fs/segment.h |  3 +++
- 3 files changed, 35 insertions(+), 3 deletions(-)
-
-diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
-index 8974672..f7b9602 100644
---- a/fs/f2fs/gc.c
-+++ b/fs/f2fs/gc.c
-@@ -382,6 +382,14 @@ static int get_victim_by_default(struct f2fs_sb_info *sbi,
- 			nsearched++;
+diff --git a/drivers/misc/habanalabs/irq.c b/drivers/misc/habanalabs/irq.c
+index ea9f72ff456c..199791b57caf 100644
+--- a/drivers/misc/habanalabs/irq.c
++++ b/drivers/misc/habanalabs/irq.c
+@@ -80,8 +80,7 @@ irqreturn_t hl_irq_handler_cq(int irq, void *arg)
+ 	struct hl_cs_job *job;
+ 	bool shadow_index_valid;
+ 	u16 shadow_index;
+-	u32 *cq_entry;
+-	u32 *cq_base;
++	struct hl_cq_entry *cq_entry, *cq_base;
+ 
+ 	if (hdev->disabled) {
+ 		dev_dbg(hdev->dev,
+@@ -90,29 +89,29 @@ irqreturn_t hl_irq_handler_cq(int irq, void *arg)
+ 		return IRQ_HANDLED;
+ 	}
+ 
+-	cq_base = (u32 *) (uintptr_t) cq->kernel_address;
++	cq_base = (struct hl_cq_entry *) (uintptr_t) cq->kernel_address;
+ 
+ 	while (1) {
+-		bool entry_ready = ((cq_base[cq->ci] & CQ_ENTRY_READY_MASK)
++		bool entry_ready = ((le32_to_cpu(cq_base[cq->ci].data) &
++					CQ_ENTRY_READY_MASK)
+ 						>> CQ_ENTRY_READY_SHIFT);
+ 
+ 		if (!entry_ready)
+ 			break;
+ 
+-		cq_entry = (u32 *) &cq_base[cq->ci];
++		cq_entry = (struct hl_cq_entry *) &cq_base[cq->ci];
+ 
+-		/*
+-		 * Make sure we read CQ entry contents after we've
++		/* Make sure we read CQ entry contents after we've
+ 		 * checked the ownership bit.
+ 		 */
+ 		dma_rmb();
+ 
+-		shadow_index_valid =
+-			((*cq_entry & CQ_ENTRY_SHADOW_INDEX_VALID_MASK)
++		shadow_index_valid = ((le32_to_cpu(cq_entry->data) &
++					CQ_ENTRY_SHADOW_INDEX_VALID_MASK)
+ 					>> CQ_ENTRY_SHADOW_INDEX_VALID_SHIFT);
+ 
+-		shadow_index = (u16)
+-			((*cq_entry & CQ_ENTRY_SHADOW_INDEX_MASK)
++		shadow_index = (u16) ((le32_to_cpu(cq_entry->data) &
++					CQ_ENTRY_SHADOW_INDEX_MASK)
+ 					>> CQ_ENTRY_SHADOW_INDEX_SHIFT);
+ 
+ 		queue = &hdev->kernel_queues[cq->hw_queue_id];
+@@ -122,8 +121,7 @@ irqreturn_t hl_irq_handler_cq(int irq, void *arg)
+ 			queue_work(hdev->cq_wq, &job->finish_work);
  		}
  
-+		/*
-+		 * skip selecting the invalid segno (that is failed due to block
-+		 * validity check failure during GC) to avoid endless GC loop in
-+		 * such cases.
-+		 */
-+		if (test_bit(segno, sm->invalid_segmap))
-+			goto next;
-+
- 		secno = GET_SEC_FROM_SEG(sbi, segno);
+-		/*
+-		 * Update ci of the context's queue. There is no
++		/* Update ci of the context's queue. There is no
+ 		 * need to protect it with spinlock because this update is
+ 		 * done only inside IRQ and there is a different IRQ per
+ 		 * queue
+@@ -131,7 +129,8 @@ irqreturn_t hl_irq_handler_cq(int irq, void *arg)
+ 		queue->ci = hl_queue_inc_ptr(queue->ci);
  
- 		if (sec_usage_check(sbi, secno))
-@@ -602,8 +610,13 @@ static bool is_alive(struct f2fs_sb_info *sbi, struct f2fs_summary *sum,
- {
- 	struct page *node_page;
- 	nid_t nid;
--	unsigned int ofs_in_node;
-+	unsigned int ofs_in_node, segno;
- 	block_t source_blkaddr;
-+	unsigned long offset;
-+	struct sit_info *sit_i = SIT_I(sbi);
-+
-+	segno = GET_SEGNO(sbi, blkaddr);
-+	offset = GET_BLKOFF_FROM_SEG0(sbi, blkaddr);
+ 		/* Clear CQ entry ready bit */
+-		cq_base[cq->ci] &= ~CQ_ENTRY_READY_MASK;
++		cq_entry->data = cpu_to_le32(le32_to_cpu(cq_entry->data) &
++						~CQ_ENTRY_READY_MASK);
  
- 	nid = le32_to_cpu(sum->nid);
- 	ofs_in_node = le16_to_cpu(sum->ofs_in_node);
-@@ -627,8 +640,16 @@ static bool is_alive(struct f2fs_sb_info *sbi, struct f2fs_summary *sum,
- 	source_blkaddr = datablock_addr(NULL, node_page, ofs_in_node);
- 	f2fs_put_page(node_page, 1);
- 
--	if (source_blkaddr != blkaddr)
-+	if (source_blkaddr != blkaddr) {
-+		if (unlikely(check_valid_map(sbi, segno, offset))) {
-+			if (!test_and_set_bit(segno, sit_i->invalid_segmap)) {
-+				f2fs_err(sbi, "mismatched blkaddr %u (source_blkaddr %u) in seg %u\n",
-+						blkaddr, source_blkaddr, segno);
-+				f2fs_bug_on(sbi, 1);
-+			}
-+		}
- 		return false;
-+	}
- 	return true;
- }
- 
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index a661ac3..c3ba9e7 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -806,6 +806,7 @@ static void __remove_dirty_segment(struct f2fs_sb_info *sbi, unsigned int segno,
- 		enum dirty_type dirty_type)
- {
- 	struct dirty_seglist_info *dirty_i = DIRTY_I(sbi);
-+	struct sit_info *sit_i = SIT_I(sbi);
- 
- 	if (test_and_clear_bit(segno, dirty_i->dirty_segmap[dirty_type]))
- 		dirty_i->nr_dirty[dirty_type]--;
-@@ -817,9 +818,11 @@ static void __remove_dirty_segment(struct f2fs_sb_info *sbi, unsigned int segno,
- 		if (test_and_clear_bit(segno, dirty_i->dirty_segmap[t]))
- 			dirty_i->nr_dirty[t]--;
- 
--		if (get_valid_blocks(sbi, segno, true) == 0)
-+		if (get_valid_blocks(sbi, segno, true) == 0) {
- 			clear_bit(GET_SEC_FROM_SEG(sbi, segno),
- 						dirty_i->victim_secmap);
-+			clear_bit(segno, sit_i->invalid_segmap);
-+		}
- 	}
- }
- 
-@@ -4017,6 +4020,10 @@ static int build_sit_info(struct f2fs_sb_info *sbi)
- 		return -ENOMEM;
- #endif
- 
-+	sit_i->invalid_segmap = f2fs_kvzalloc(sbi, bitmap_size, GFP_KERNEL);
-+	if (!sit_i->invalid_segmap)
-+		return -ENOMEM;
-+
- 	/* init SIT information */
- 	sit_i->s_ops = &default_salloc_ops;
- 
-@@ -4518,6 +4525,7 @@ static void destroy_sit_info(struct f2fs_sb_info *sbi)
- #ifdef CONFIG_F2FS_CHECK_FS
- 	kvfree(sit_i->sit_bitmap_mir);
- #endif
-+	kvfree(sit_i->invalid_segmap);
- 	kvfree(sit_i);
- }
- 
-diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
-index b746028..3918155c 100644
---- a/fs/f2fs/segment.h
-+++ b/fs/f2fs/segment.h
-@@ -246,6 +246,9 @@ struct sit_info {
- 	unsigned long long min_mtime;		/* min. modification time */
- 	unsigned long long max_mtime;		/* max. modification time */
- 
-+	/* bitmap of segments to be ignored by GC in case of errors */
-+	unsigned long *invalid_segmap;
-+
- 	unsigned int last_victim[MAX_GC_POLICY]; /* last victim segment # */
- };
+ 		cq->ci = hl_cq_inc_ptr(cq->ci);
  
 -- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+2.17.1
 
