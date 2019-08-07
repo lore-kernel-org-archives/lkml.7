@@ -2,79 +2,137 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D0C6C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 18:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 119ADC32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 18:09:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F290122305
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 18:05:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8558222FC
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 18:09:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QH+xHLDZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389220AbfHGSFz (ORCPT
+        id S2389164AbfHGSJG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 14:05:55 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:58961 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388207AbfHGSFy (ORCPT
+        Wed, 7 Aug 2019 14:09:06 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:46625 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387999AbfHGSJF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 14:05:54 -0400
-Received: from c-67-180-61-213.hsd1.ca.comcast.net ([67.180.61.213] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1hvQJf-00089A-92; Wed, 07 Aug 2019 18:05:39 +0000
-Date:   Wed, 7 Aug 2019 20:05:35 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     Adrian Reber <areber@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelianov <xemul@virtuozzo.com>,
-        Jann Horn <jannh@google.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        linux-kernel@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>
-Subject: Re: [PATCH v3 1/2] fork: extend clone3() to support CLONE_SET_TID
-Message-ID: <20190807180534.rhojrgy4j52n2eup@wittgenstein>
-References: <20190806191551.22192-1-areber@redhat.com>
- <20190807160856.GE24112@redhat.com>
+        Wed, 7 Aug 2019 14:09:05 -0400
+Received: by mail-ed1-f66.google.com with SMTP id d4so87334167edr.13;
+        Wed, 07 Aug 2019 11:09:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QwJtWVakiEP96kTbkFoUqxH1WvOLhFPnnG3gbiyDKlk=;
+        b=QH+xHLDZ8h7jAONg1Dh/3Ql+72SyGAQz1LfNGCnJM1+xeo9YGSGSpEq6CINv1ZUTN3
+         dnOcMxwTS4iNO2ND8CYtXDKVvgaEEQdThDijSve89oBokk0Wb4Uah/6vaWrFna1YhuD/
+         4Qlf+/g4khOYm7OxaOS8RNpOrq+qSFfhQnGyP3fOuaHAQMskx+PbHPGPbvGQSsMQsOrt
+         FtneiDcCb/ROHvOC3HduArDTEURsMp7O4n/AjqzUrqEPp5RWjOMO8iSY7uXwPQZhbEFi
+         cML2UlAqmv2BDOwrGrCAmSJ/vLrYvCdl7naVBPysHNWVoe0bxxqbdDdk0OgrXKMSKg9d
+         PuHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QwJtWVakiEP96kTbkFoUqxH1WvOLhFPnnG3gbiyDKlk=;
+        b=WSNs0Z76hmCDY7HVDY8XuqMqQtJyBJizi4cNRz8vHn2pkPMIKkIn4wzB1uqKkyFmHf
+         r4i5oDIROR1nMiPU/Z1CI60SgJZDuY269eYY98/SiAsCJGCg0CjQYS1W1T9J2cr+wUpV
+         T7RYTkX5XcKbJyvJPN6EKddLYSxRsvYnQ2WeesrsRsu+kZXV2O8poUyekc9Q1d4o6wfF
+         dEoaHnN3Ky0IONGCPLgLo9LeYC2uzmzbU+fyKVWx3Qr9ut1ou6LhiDTljBdmB1/c/i22
+         h3ht4E+EIFGRwUy4cfzEiDG4rO+GMXIZ5BG5ZbLKeRB8LYIco0oIzT4f+Yhy9EpTYhHu
+         qJ5A==
+X-Gm-Message-State: APjAAAWjlJHKW7yB4fzMWV4h+HrlKBoX8UGqLz7IUNV21LCZyE5Kdtih
+        /+zVoBKIvVUYf9tGcHH1UUcR9nEdKTzskvkWRAI=
+X-Google-Smtp-Source: APXvYqwNSW7qT7c14KaVkJ6ZlQvzKS1pNZqmXqcTIV2GCqWc+nIWGWtfR6JORaHchzzgwHd/UZI6g3dEbNkRdUCK5oQ=
+X-Received: by 2002:a17:906:e241:: with SMTP id gq1mr9491438ejb.265.1565201344021;
+ Wed, 07 Aug 2019 11:09:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190807160856.GE24112@redhat.com>
-User-Agent: NeoMutt/20180716
+References: <1565198667-4300-1-git-send-email-jcrouse@codeaurora.org> <20190807173838.GB30025@ravnborg.org>
+In-Reply-To: <20190807173838.GB30025@ravnborg.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Wed, 7 Aug 2019 11:08:53 -0700
+Message-ID: <CAF6AEGv6EY5UBYF8D9tuSaMDvkdrBt+zvRxQA+V4PG6ZfKhUAg@mail.gmail.com>
+Subject: Re: [Freedreno] [PATCH] drm/msm: Make DRM_MSM default to 'm'
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Jordan Crouse <jcrouse@codeaurora.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        David Airlie <airlied@linux.ie>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Sean Paul <sean@poorly.run>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 07, 2019 at 06:08:56PM +0200, Oleg Nesterov wrote:
-> On 08/06, Adrian Reber wrote:
+On Wed, Aug 7, 2019 at 10:38 AM Sam Ravnborg <sam@ravnborg.org> wrote:
+>
+> Hi Jordan.
+> On Wed, Aug 07, 2019 at 11:24:27AM -0600, Jordan Crouse wrote:
+> > Most use cases for DRM_MSM will prefer to build both DRM and MSM_DRM as
+> > modules but there are some cases where DRM might be built in for whatever
+> > reason and in those situations it is preferable to still keep MSM as a
+> > module by default and let the user decide if they _really_ want to build
+> > it in.
 > >
-> > @@ -2573,6 +2575,14 @@ noinline static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
-> >  		.tls		= args.tls,
-> >  	};
-> >  
-> > +	if (size == sizeof(struct clone_args)) {
-> > +		/* Only check permissions if set_tid is actually set. */
-> > +		if (args.set_tid &&
-> > +			!ns_capable(pid_ns->user_ns, CAP_SYS_ADMIN))
-> 
-> and I just noticed this uses pid_ns = task_active_pid_ns() ...
-> 
-> is it correct?
-> 
-> I feel I am totally confused, but should we use the same
-> p->nsproxy->pid_ns_for_children passed to alloc_pid?
+> > Additionally select QCOM_COMMAND_DB for ARCH_QCOM targets to make sure
+> > it doesn't get missed when we need it for a6xx tarets.
+> >
+> > Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> > ---
+> >
+> >  drivers/gpu/drm/msm/Kconfig | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/gpu/drm/msm/Kconfig b/drivers/gpu/drm/msm/Kconfig
+> > index 9c37e4d..3b2334b 100644
+> > --- a/drivers/gpu/drm/msm/Kconfig
+> > +++ b/drivers/gpu/drm/msm/Kconfig
+> > @@ -14,11 +14,12 @@ config DRM_MSM
+> >       select SHMEM
+> >       select TMPFS
+> >       select QCOM_SCM if ARCH_QCOM
+> > +     select QCOM_COMMAND_DB if ARCH_QCOM
+> >       select WANT_DEV_COREDUMP
+> >       select SND_SOC_HDMI_CODEC if SND_SOC
+> >       select SYNC_FILE
+> >       select PM_OPP
+> > -     default y
+> > +     default m
+>
+> As a general comment the right thing would be to drop this default.
+> As it is now the Kconfig says that when DRM is selected then all of the
+> world would then also get DRM_MSM, which only a small part of this world
+> you see any benefit in.
+> So they now have to de-select MSM.
 
-We need to have CAP_SYS_ADMIN in the owning user namespace of the target
-pidns for the pidns in which we spawn the new process. The value for
-pid_ns_for_children could've been altered by either passing CLONE_NEWPID
-or by having called unshare(CLONE_NEWPID) before. So yes,
-pid_ns_for_children is what we want.
+If the default is dropped, it should probably be accompanied by adding
+CONFIG_DRM_MSM=m to defconfig's, I think
 
-Sorry again for the delay in my responses. On vacation atm.
+BR,
+-R
 
-Christian
+> Kconfig has:
+>     depends on ARCH_QCOM || SOC_IMX5 || (ARM && COMPILE_TEST)
+>
+> So maybe not all of the world but all QCOM or IMX5 users. Maybe they are all
+> interested in MSM. Otherwise the default should rather be dropped.
+> If there is any good hints then the help text could anyway use some
+> love, and then add the info there.
+>
+> The other change with QCOM_COMMAND_DB seems on the other hand to make
+> sense but then this is another patch.
+>
+>         Sam
+> _______________________________________________
+> Freedreno mailing list
+> Freedreno@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/freedreno
