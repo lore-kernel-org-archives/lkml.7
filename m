@@ -2,147 +2,154 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F451C31E40
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 03:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C3EC433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 03:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49A8A214C6
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 03:21:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E5CE206A2
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 03:21:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="BTF6Qfq7"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Cr8l9KKS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727872AbfHGDVS (ORCPT
+        id S1728087AbfHGDV0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 23:21:18 -0400
-Received: from mail-eopbgr50064.outbound.protection.outlook.com ([40.107.5.64]:65454
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726334AbfHGDVR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 23:21:17 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Uq7JNUVlhtPj1j7Sa8pa+otGg9qpqoXUuPJZmHnSgVKJkSSvWfWs65lDUy0AF7rJ2g50SgTm/BSr8D1ZLN4oBOHchGETnehXYbv1E7RauZfNuRYpXPO45HeNGc8jp+AukQ23njTl3X7O+c8EQy8Aq/UfvqfB8kopG1Qhn0D7er2B15QfOkgC9iNYRKEwEgqxfpz0BdXYzTC/Kh4hvmPXbJRplr51ZXxsByU47wlRvgB4/TWm/SDEIb6yryNsqX7RubhSfTOoHNUAdJn56XLrO9jJMLOfklhdIWEg0WHto7FD4OHE/n4fT1+VshUT1Q17iZorYWC4kGyCRZF5VUMD4g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5RNGL38haLq9xZ5fbKBwegxXutRoBxKP/XZEJKWc4dQ=;
- b=JzPZWQJuUlqeebFHqDHQVx4M9ZPZwt+6l2Nv7+ECJeGvBHMPfIqnrNWGaan/kzhFjKs8f4VMTPHqeevta+XYWm/atJejfSWv/WQ/8QgEYyg9NhL3v57ypZ/m6kmmaF8PHvvJkz5uxyVVjGiYnt86SE5qK0u+6kPpXcYMp6VjLHspLaJNGwm7yxAR4wMUQI0rJVocpWxdEFeWs2xJbYXSQHCcMb/8Ce/x5NtUz2ufsntoH+Rl/C4CPYc/AJIelS/eTLzplfH++MwY7m1Z2+W3etW81sYGthPBM0jaQgnuMJaSd+6u4aWjlWgN186VMoQWZ9tqu3C8n3rW634uWBausA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5RNGL38haLq9xZ5fbKBwegxXutRoBxKP/XZEJKWc4dQ=;
- b=BTF6Qfq7K7LNslqbyspGbm0ZuzuUFyb7SvMN9ThHzpri/K888qwF3zDNpdD/+6/vc/Qi+CnAzeftllgFdGZ8xdPM2Hs+DVARqWH6eQBS8rFALJtlBjENRdBsm3kylF3pCLnYkzUlnEPPwOWtWTF8jfW6pxFsWa14EN7J2rbyGY8=
-Received: from AM4PR05MB3137.eurprd05.prod.outlook.com (10.171.188.155) by
- AM4PR05MB3410.eurprd05.prod.outlook.com (10.171.187.26) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.13; Wed, 7 Aug 2019 03:21:12 +0000
-Received: from AM4PR05MB3137.eurprd05.prod.outlook.com
- ([fe80::a1bc:70:4ca9:49f6]) by AM4PR05MB3137.eurprd05.prod.outlook.com
- ([fe80::a1bc:70:4ca9:49f6%7]) with mapi id 15.20.2157.011; Wed, 7 Aug 2019
- 03:21:12 +0000
-From:   Leon Romanovsky <leonro@mellanox.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Steven J. Magnani" <steve@digidescorp.com>,
-        Michal Simek <monstr@monstr.eu>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: Re: [PATCH] arch/microblaze: add support for get_user() of size 8
- bytes
-Thread-Topic: [PATCH] arch/microblaze: add support for get_user() of size 8
- bytes
-Thread-Index: AQHVTKduheAjE46eDEm4+HSiEFkSBKbvBPWA
-Date:   Wed, 7 Aug 2019 03:21:11 +0000
-Message-ID: <20190807032059.GC4832@mtr-leonro.mtl.com>
-References: <a6f97040-b021-c787-65da-9a10b7597238@infradead.org>
-In-Reply-To: <a6f97040-b021-c787-65da-9a10b7597238@infradead.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: LO2P265CA0136.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:9f::28) To AM4PR05MB3137.eurprd05.prod.outlook.com
- (2603:10a6:205:8::27)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=leonro@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [77.137.115.125]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2553813c-ea16-4ce0-c41b-08d71ae64c08
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM4PR05MB3410;
-x-ms-traffictypediagnostic: AM4PR05MB3410:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM4PR05MB34104121C639B06132ECD6F9B0D40@AM4PR05MB3410.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 01221E3973
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(366004)(376002)(396003)(136003)(189003)(199004)(476003)(486006)(256004)(8676002)(68736007)(1076003)(53936002)(6436002)(6512007)(9686003)(7736002)(86362001)(2906002)(229853002)(6486002)(6916009)(305945005)(81156014)(66066001)(5660300002)(102836004)(4326008)(14454004)(81166006)(11346002)(186003)(25786009)(6116002)(3846002)(99286004)(446003)(33656002)(52116002)(66946007)(64756008)(66476007)(66556008)(76176011)(66446008)(54906003)(386003)(478600001)(8936002)(6246003)(71200400001)(107886003)(316002)(26005)(71190400001)(6506007);DIR:OUT;SFP:1101;SCL:1;SRVR:AM4PR05MB3410;H:AM4PR05MB3137.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: GTKCP2HiNYuVstqSRRjgjxOu9Z/7LQA4HHfE0xZJD7j/6sjKkZ1yWzsnXWxDzeJ4zlwwq7VjvkBkmxNm6GAA8fy497wcXLc6R/9TIxQbT+QpN4bCIOK3Ro3yTl6dW05yI+E/+VwddrkZu/dC/ql0fgaR0SVTvtJ0Z++sOpDY3eFFE9mfg6/hzECMkzj3LflwnK5bqOf7zDh8mLvCkDGQ4ripVJEUVW9+2Uz760dkglnXJ/g9UYTF9GAawuXAYWcyf88yHVn4b9eG/F+n8xAYeLe8B4bVX45pi/fqjmCYCa4PBz8xx39Ypcp1fLz52vdibP49/gmjwX7pyU2Feie4eaOG53bsM7XJtivykWdY+KCzUkJGNgjNCsEX3Rh110jUFnXlm3xmWgOHYG/WWWxImF+kQzkdTGltVH4hwKZ9AmQ=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <C56246925B349B4CB8EA9A6F82897A40@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 6 Aug 2019 23:21:26 -0400
+Received: from ozlabs.org ([203.11.71.1]:56639 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726334AbfHGDV0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 6 Aug 2019 23:21:26 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 463GxZ5nJlz9sNm;
+        Wed,  7 Aug 2019 13:21:22 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1565148083;
+        bh=Zj56/N6J9SqSEYqx4TFSlTMJwiW/FCBC7anYs5vZGTE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Cr8l9KKSRD1cgAFy73xZ6XxjUMfZf0bzV6yACwmcV1XhGCyHVlNCxBhFw3gpar14Y
+         Nn4ZILYLnI64wGUrFMOnAxk75JU0XoQjDPDRA3aIUCH5Z0IsolOZIOUb8HtHw6GWBX
+         UL2ji/Z/KWyG2qH7HQRlAmfwjHP1cQYkEF0cyw8yffl8EsAVojwT0MYU0GbdoJR+Zt
+         Jm7PT5O5Pf1HqdRh2Y2I0Y+8+DCk9elrAZXpDcjC6CeC85EhOUFzIjscovAhAKMcGY
+         hAWjZY01KSl3Oectk9Niod6S5Giwj4V2MBi0+pWarxbCEX4k2S5j6w98pAzhV1NRTC
+         1Ojq2muakB/tg==
+Date:   Wed, 7 Aug 2019 13:21:22 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        Alex Deucher <alexdeucher@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Gerd Hoffmann <kraxel@redhat.com>
+Subject: linux-next: build failure after merge of the drm-misc tree
+Message-ID: <20190807132122.698277b3@canb.auug.org.au>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2553813c-ea16-4ce0-c41b-08d71ae64c08
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Aug 2019 03:21:11.8756
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: IyIUhWNlMViGIPkXlAXSYxY/Xqc+8lRcYR73RXuljXP0JrRKl4WZ2+juhCnjsxQB7fi4WWrry6OqqLu8uWO/4A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM4PR05MB3410
+Content-Type: multipart/signed; boundary="Sig_/CDHrW63E0.twJ01h6XrsSgb";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 03:36:37PM -0700, Randy Dunlap wrote:
-> From: Randy Dunlap <rdunlap@infradead.org>
->
-> arch/microblaze/ is missing support for get_user() of size 8 bytes,
-> so add it by using __copy_from_user().
->
-> Fixes these build errors:
->    drivers/infiniband/core/uverbs_main.o: In function `ib_uverbs_write':
->    drivers/infiniband/core/.tmp_gl_uverbs_main.o:(.text+0x13a4): undefine=
-d reference to `__user_bad'
->    drivers/android/binder.o: In function `binder_thread_write':
->    drivers/android/.tmp_gl_binder.o:(.text+0xda6c): undefined reference t=
-o `__user_bad'
->    drivers/android/.tmp_gl_binder.o:(.text+0xda98): undefined reference t=
-o `__user_bad'
->    drivers/android/.tmp_gl_binder.o:(.text+0xdf10): undefined reference t=
-o `__user_bad'
->    drivers/android/.tmp_gl_binder.o:(.text+0xe498): undefined reference t=
-o `__user_bad'
->    drivers/android/binder.o:drivers/android/.tmp_gl_binder.o:(.text+0xea7=
-8): more undefined references to `__user_bad' follow
->
-> 'make allmodconfig' now builds successfully for arch/microblaze/.
->
-> Fixes: 538722ca3b76 ("microblaze: fix get_user/put_user side-effects")
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Al Viro <viro@zeniv.linux.org.uk>
-> Cc: Steven J. Magnani <steve@digidescorp.com>
-> Cc: Michal Simek <monstr@monstr.eu>
-> Cc: Jason Gunthorpe <jgg@mellanox.com>
-> Cc: Leon Romanovsky <leonro@mellanox.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> ---
->  arch/microblaze/include/asm/uaccess.h |    6 ++++++
->  1 file changed, 6 insertions(+)
->
+--Sig_/CDHrW63E0.twJ01h6XrsSgb
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Thanks, it works for us.
-Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+Hi all,
+
+After merging the drm-misc tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
+
+drivers/gpu/drm/amd/amdgpu/amdgpu_object.c: In function 'amdgpu_bo_release_=
+notify':
+drivers/gpu/drm/amd/amdgpu/amdgpu_object.c:1245:28: error: 'struct ttm_buff=
+er_object' has no member named 'resv'
+  reservation_object_lock(bo->resv, NULL);
+                            ^~
+drivers/gpu/drm/amd/amdgpu/amdgpu_object.c:1247:47: error: 'struct ttm_buff=
+er_object' has no member named 'resv'
+  r =3D amdgpu_fill_buffer(abo, AMDGPU_POISON, bo->resv, &fence);
+                                               ^~
+drivers/gpu/drm/amd/amdgpu/amdgpu_object.c:1253:30: error: 'struct ttm_buff=
+er_object' has no member named 'resv'
+  reservation_object_unlock(bo->resv);
+                              ^~
+
+Caused by commit
+
+  5a5011a72489 ("drm/amdgpu: switch driver from bo->resv to bo->base.resv")
+
+interacting with commit
+
+  ab2f7a5c18b5 ("drm/amdgpu: Implement VRAM wipe on release")
+
+from the amdgpu tree.
+
+I have added the following patch for today:
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Wed, 7 Aug 2019 13:17:54 +1000
+Subject: [PATCH] drm/amdgpu: fix up for "drm/amdgpu: switch driver from bo-=
+>resv to bo->base.resv"
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_object.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c b/drivers/gpu/drm/a=
+md/amdgpu/amdgpu_object.c
+index b2c03be51c29..2d07f16f1789 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
+@@ -1242,15 +1242,15 @@ void amdgpu_bo_release_notify(struct ttm_buffer_obj=
+ect *bo)
+ 	    !(abo->flags & AMDGPU_GEM_CREATE_VRAM_WIPE_ON_RELEASE))
+ 		return;
+=20
+-	reservation_object_lock(bo->resv, NULL);
++	reservation_object_lock(bo->base.resv, NULL);
+=20
+-	r =3D amdgpu_fill_buffer(abo, AMDGPU_POISON, bo->resv, &fence);
++	r =3D amdgpu_fill_buffer(abo, AMDGPU_POISON, bo->base.resv, &fence);
+ 	if (!WARN_ON(r)) {
+ 		amdgpu_bo_fence(abo, fence, false);
+ 		dma_fence_put(fence);
+ 	}
+=20
+-	reservation_object_unlock(bo->resv);
++	reservation_object_unlock(bo->base.resv);
+ }
+=20
+ /**
+--=20
+2.20.1
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/CDHrW63E0.twJ01h6XrsSgb
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1KQ7IACgkQAVBC80lX
+0Gx9xQgAnT0UG7gTC4SWsKJsckbfUk5lxfcwSny+VZR29NGb3WjT4YzhiU/Xnbdw
+J5Ifvhnu8JGxHQgv+/0x/2tE1jfK7LssrRYXbzu/0KVfgOLIe1IGEJ3a+rxoIM7x
+QShhok2gWudajNFMdS3zD66JDVk/u/F0hvduM4SQSBES1fEwqFSbZWbQecol4OTm
+RSfLRGcyZhpvRqbuI2xTHloswHQHsRFSU6f3EGwaClQnEdYJFiUV2E7rGGROd7QP
+fXTY08hV0wUOdAuoBFRJRyNakaoAK/Qe1LprR4uG4FCyWo+Q/E6xOJ5AchhHCHC5
+onh3r3kitOFYGwOANgcbPldfVYHsuQ==
+=OTBj
+-----END PGP SIGNATURE-----
+
+--Sig_/CDHrW63E0.twJ01h6XrsSgb--
