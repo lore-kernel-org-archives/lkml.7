@@ -7,85 +7,89 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB53FC32751
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 12:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE14C32751
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 12:41:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9795021BF6
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 12:39:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19F7721E6A
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 12:41:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RAnrNzwG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qzA3Athg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729918AbfHGMjE (ORCPT
+        id S1729890AbfHGMlg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 08:39:04 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:34659 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726873AbfHGMjE (ORCPT
+        Wed, 7 Aug 2019 08:41:36 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:44178 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727213AbfHGMlg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 08:39:04 -0400
-Received: by mail-lf1-f68.google.com with SMTP id b29so56677661lfq.1
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 05:39:02 -0700 (PDT)
+        Wed, 7 Aug 2019 08:41:36 -0400
+Received: by mail-lj1-f195.google.com with SMTP id k18so85307400ljc.11
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 05:41:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=TF8WdIG/GBC2B0M9b1jzvI8C7ifY+jxxqdmdf35RJnQ=;
-        b=RAnrNzwG8H2/CmrBRYmjmwFER746NivQ+c3H6MAgOQTtgbdbE+plXLUg/Pb2VX8N8y
-         /3CSu6PD4n6Ow9WZorSa0EeqxxcUrrNYU2UVYRceVVXN2eSKtTEUc0ymFz1UPy+pX06p
-         sBOiBJOu07e0ijHIKNaReZOvn1hFP5ekYGjpt1XG3RFm7eH1Q+0H2mqNabivvavJXPq9
-         brvGtWglmmR8k+toTssfm/YbGEdkIoIsz6Ez8MZhSWd+8+20OGUUJciV91ZTyVkdraBI
-         0DtUooopmsUeGyVsj2TIEuzVTOPKomWIGT+2qCBFUUpZ1vtA7mVCIGJ8h+WGZkf9i9nG
-         eozA==
+        bh=RLO/b475rRpz9RyUfV1VHf/BilozL3MjKM9p1Cl7sdk=;
+        b=qzA3Athga7Gbe027N6GOUmETvhHSHnzhehrZqw/TiAXKjZMUn1eA4ZfaVEuTYX8nZ2
+         LFh8Qb0myCULRjPKG2WEqGKb/KwBuRwmorK9JfZDbZfolYxHmzBaVB0qPrOxpAyvdlkk
+         NeWkqKFAwmPOmXourJqh5hWUpW5ZBGXS6h++esPccHRF0NFpF0mMnAELWpAsKUz5Rdgz
+         fSHfPVULK1dVFn/PVbw1Lx1CkPoEL2YzONu9JiXXcJa36vse6eBYVHrHaI32S6DwN2cM
+         ZMHFKhe+giX/oQy2Z6lcISI123VSTCFO+VTrDsQwThwmtOJATMvCkQdWieWjVjpO+Lw3
+         bOug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=TF8WdIG/GBC2B0M9b1jzvI8C7ifY+jxxqdmdf35RJnQ=;
-        b=po19wFMJURHkcfpg5adFbYcD56aMrT5OjWND/7CN9fIxu9A6LSlI+Lz2ftizvsXwIT
-         TVTX6f5r4z0JwtS7/mRNCGyGTdlCgY3cGQW1ERWd+aPo5XWnLzuEkCoEhdwpak++nssW
-         sfch55z6Z8WwmbMMD+y7Wdc6KNtcxd5KWDSuhLNSCfUKALd6EGcXhz/zUvxuNRm/JBjV
-         negAMXt7HguXoDSMS+I1m21BhpvK5nvGmtr5zyQox87oLsd143FQVK8Y51iSewQ931EN
-         Z5wzKINB4Uw8IvdSRVJ/hhfscs0H8fJbMM8KQ3nq1A4c787Oi80o+tLU2jgKhSkIqAN/
-         uqYA==
-X-Gm-Message-State: APjAAAUQZ1a0dsrGm2Gvr1vhj2nkLsc08xkhYiT83EXndMMir6V3zYQJ
-        WsEW/99zMeOSt4RKwekJQgHvUkzESe0pPcf1OC+nmg==
-X-Google-Smtp-Source: APXvYqzj2koP6TS5ONHRZFw3kwuCVAqOEziE1cUAfaaag6Bc/wbf6kDZ6QI8ReWDq+/VrKEp+xB3gGAoMEXRhZU/e/Q=
-X-Received: by 2002:ac2:5c42:: with SMTP id s2mr5973751lfp.61.1565181542001;
- Wed, 07 Aug 2019 05:39:02 -0700 (PDT)
+        bh=RLO/b475rRpz9RyUfV1VHf/BilozL3MjKM9p1Cl7sdk=;
+        b=Cp+LVQWAZkocTPvr8BAkoJ9DLYr5r/KHQsduGumy6l6G3qlxFe8uUslTPtTepTfBUZ
+         U4fJXtbu5oMHz4YczHJfv0EN7lmsWthgTvddAjgkwIwL7aWSFxpM3Vq0PxlJe5nWuizF
+         FREXlBrpaB7n5W/i7af1uoHSTNTxrLKhslMwty2XIV0/KZZn7gtvstHO8wCnb2ZKcMtv
+         O1mPkP8rqLlAvCohA9zxiDNObp9/0Dycy9/LrXHXxyJF2iL0RlRVgKQST91A0BCkHBiB
+         3fc01oXnmwA62Uw4qVrulnr+gM/PD5VcvU6EHIOogzKxu+Iq9aONUtuGyiXGTN2RMdVb
+         /tLQ==
+X-Gm-Message-State: APjAAAV8FTULLusHwV9/kLnW6iKHewaxAOo7nApLgHWf3tF6y95HfZNB
+        wpC5SAKiUkTQRk/MAefNbMCxVFGLp/0qqPTsPZ7gZA==
+X-Google-Smtp-Source: APXvYqzTtmIjIjoa6hoWwCSMOWWHdKs00GB5hdlV+2HMLSnOtbZtK0udlhDTIR3s0F1OVFax3eGxg7fIA0va2AK0cts=
+X-Received: by 2002:a05:651c:28c:: with SMTP id b12mr4809273ljo.69.1565181694684;
+ Wed, 07 Aug 2019 05:41:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190807021254.49092-1-hui.song_1@nxp.com>
-In-Reply-To: <20190807021254.49092-1-hui.song_1@nxp.com>
+References: <20190806145716.125421-1-maz@kernel.org> <20190806145716.125421-7-maz@kernel.org>
+In-Reply-To: <20190806145716.125421-7-maz@kernel.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 7 Aug 2019 14:38:50 +0200
-Message-ID: <CACRpkdY5V9HGMciOq90RJzrMoc_gbyWKJ96sw2HOB5UMzGn1GA@mail.gmail.com>
-Subject: Re: [PATCH v3] gpio: mpc8xxx: Add new platforms GPIO DT node description
-To:     Hui Song <hui.song_1@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Date:   Wed, 7 Aug 2019 14:41:23 +0200
+Message-ID: <CACRpkdbTPetycRFCasG0CYHeiJetStcFV+qCUX2wa6c_FuBs6A@mail.gmail.com>
+Subject: Re: [PATCH 6/8] gpio/ixp4xx: Register the base PA instead of its VA
+ in fwnode
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Linus Walleij <linusw@kernel.org>,
+        Imre Kaloz <kaloz@openwrt.org>,
+        Krzysztof Halasa <khalasa@piap.pl>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 7, 2019 at 4:22 AM Hui Song <hui.song_1@nxp.com> wrote:
+On Tue, Aug 6, 2019 at 4:57 PM Marc Zyngier <maz@kernel.org> wrote:
 
-> From: Song Hui <hui.song_1@nxp.com>
+> Do not expose the base VA (it appears in debugfs). Instead,
+> record the PA, which at least can be used to precisely identify
+> the associated irqchip and domain.
 >
-> Update the NXP GPIO node dt-binding file for QorIQ and
-> Layerscape platforms, and add one more example with
-> ls1028a GPIO node.
->
-> Signed-off-by: Song Hui <hui.song_1@nxp.com>
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
 
-Patch applied!
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Thanks,
+Please apply this directly to the irq subsystem tree with
+the rest of the fixes.
+
+Yours,
 Linus Walleij
