@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF2A1C31E40
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:34:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC5BEC32756
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:34:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D5652173C
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:34:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3F01217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 01:34:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BG5A7Xtq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rAOpaTjU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729562AbfHGBeY (ORCPT
+        id S1729741AbfHGBeb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 6 Aug 2019 21:34:24 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39655 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729486AbfHGBeV (ORCPT
+        Tue, 6 Aug 2019 21:34:31 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34376 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729604AbfHGBe0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 6 Aug 2019 21:34:21 -0400
-Received: by mail-pg1-f196.google.com with SMTP id u17so42543853pgi.6;
-        Tue, 06 Aug 2019 18:34:20 -0700 (PDT)
+        Tue, 6 Aug 2019 21:34:26 -0400
+Received: by mail-pf1-f193.google.com with SMTP id b13so42497035pfo.1;
+        Tue, 06 Aug 2019 18:34:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=PTeNIVNtmjQFCjQxL5R5M/OrbQjiP2mk2OJMaygoDr4=;
-        b=BG5A7XtqqH4f15Klc4uU0q4X0R2Yv3wfhImw8oiXt1v6JO5KY1LfJ/FOOlCOXGnxrU
-         VariQ4IygIhND6FU5kQCuk9//LCB/lYGlYLJ8TWLMj0IGcKtGZaK7cHMiGMOL9oUoiZc
-         YswM2ntpv1sQkIcN3tEUtcv2aNlSoNXxcBOnTcDMk5HYtBIeSLrq5eWXN9nroLrC19Z/
-         C0ZG1Pu1hecBjOrW3c3xob4Zs7H7sVar9fXDnKdmBW1H5ACiR9/XADMiFFYI0P1SdPij
-         tJqcrXGje17KBWR1RldTVMzhM/TqzNCkMDLzOIHQRTxPFXZrOO5rIe3URKbbtNFMFJkR
-         bC8w==
+        bh=lKIFYbXGeRFczJ7GPuSawhtMV9YIx2+MYUTps7oOTAE=;
+        b=rAOpaTjUSe2mFnrvmhnJS8xKHHDfXHpmD+l4Uv9l8gmgovmdA6+wJqXqls9UsmJQBz
+         ep3JWBTwWzs2IRGwW41GCxQWL8zWFiSR6uy1gns5wXkfbjCngWqZazp0XVGWvkIrwV7K
+         z/fUXqz3btTykEGkC1n2yQAIcvStpMcGGmLYj4sdGhsYd7aWY+K2HM0TRDI35Ihws22z
+         bA5Wn1kxkVVUCZDFZU2yV7yqOW35XJ9lVNcA81nOyQ1MEO7P4qKnD+B4GkGo8p2H58WM
+         u5trmpjCembtTJLb3EXiFKzyKJTiFQRUI8DgENKYMdkcBAeXgiFZBUUnvfxQ+ER9+IzC
+         DzYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=PTeNIVNtmjQFCjQxL5R5M/OrbQjiP2mk2OJMaygoDr4=;
-        b=kRVJieXvImOixcfFLveXbK99FGO7xgUMCGKlHLH4esjlLpSulhjS86h0P2hM7mbmVe
-         o334t0YiA3MDisTQfOOcxiIIS9EGZ3Opq4zxG7L+IBERPFet9BN/gcVva9O28UPCpOmk
-         qO+fYW2twZcxq3AP3+Id+ydCivM0okMJOg/qpnHVAXA84++7gZYbQrvrzMzFoQaT+e7/
-         +uo9x2S7Iqc6OtX2lORuMHVQYVcxY5f/58Tq5O5cNClhEEGUZZsEv+NoSzBak2GfXmWx
-         JrweIG62ZfsIN7sO5/ufn6Wcw+on7TtjFVUbgDI+j8QkpZ+T1J+IMcBZrfh3tm8Bwl41
-         XRHw==
-X-Gm-Message-State: APjAAAUfP7Jr2mRlKMkonW4uVx5Srq6vayFqOxdbOZx7hdM5RE5YSjR/
-        s7HnxSlzjb11cb/fLdWEiDM=
-X-Google-Smtp-Source: APXvYqwNS1xrXhm+UjCuzC7PKxoGrXRgWDwKbPmsbF2Yg7VGgKZOnBNXO8oPa1127+JgtcA8HVibPw==
-X-Received: by 2002:a63:c055:: with SMTP id z21mr5455551pgi.380.1565141660136;
-        Tue, 06 Aug 2019 18:34:20 -0700 (PDT)
+        bh=lKIFYbXGeRFczJ7GPuSawhtMV9YIx2+MYUTps7oOTAE=;
+        b=SFA0llfQ5r7mgSC4trDhH2uPMJ+Q9RmJ/va71kDJSboAN8jWwRhq/Fo4ikBeFqbsl3
+         7YY491VbUgk4RFmYUZisNrblaXMhsQtljLr/n6axmwWGAzT1Z/vIKwHqi0nEUU72EpMq
+         7Pwohs1YRCMIBlVhI06d46A6mK4GkJqWbtSv6W8xJkou/PopmmM+zhhZ0iR8j6Af4DOv
+         AiVgU43VTGYNi7WbUZK0FUajIVaLBdMY7AtHTuk1S5K5dvjN8rXsJRuNEt+OEUIKlhQC
+         83rBmtwu7yJmfhbxwpF6Q8+Qb4fqdL30y4Tu1xfZ3WQLGGVX2Xcrf/UqaZ2nS0czcMOa
+         ePFQ==
+X-Gm-Message-State: APjAAAXfxrxqcyPWAAkLy91uyL31gSbsYfumJXFyR/OZb82KMxpC3O5c
+        zB447nGKw1LXOaROyD7fSJYdNzyz
+X-Google-Smtp-Source: APXvYqy16jzsEED+wwh8ENkTlGqxRvZ0RoyFpGJNp0G/IOpaWMDvDoKlXk8GjrxTBQC2gP0d6Cw0/w==
+X-Received: by 2002:a65:4205:: with SMTP id c5mr5563561pgq.267.1565141664948;
+        Tue, 06 Aug 2019 18:34:24 -0700 (PDT)
 Received: from blueforge.nvidia.com (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id u69sm111740800pgu.77.2019.08.06.18.34.18
+        by smtp.gmail.com with ESMTPSA id u69sm111740800pgu.77.2019.08.06.18.34.23
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 06 Aug 2019 18:34:19 -0700 (PDT)
+        Tue, 06 Aug 2019 18:34:24 -0700 (PDT)
 From:   john.hubbard@gmail.com
 X-Google-Original-From: jhubbard@nvidia.com
 To:     Andrew Morton <akpm@linux-foundation.org>
@@ -80,11 +80,15 @@ Cc:     Christoph Hellwig <hch@infradead.org>,
         netdev@vger.kernel.org, rds-devel@oss.oracle.com,
         sparclinux@vger.kernel.org, x86@kernel.org,
         xen-devel@lists.xenproject.org, John Hubbard <jhubbard@nvidia.com>,
-        Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Subject: [PATCH v3 22/41] xen: convert put_page() to put_user_page*()
-Date:   Tue,  6 Aug 2019 18:33:21 -0700
-Message-Id: <20190807013340.9706-23-jhubbard@nvidia.com>
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: [PATCH v3 25/41] uprobes: convert put_page() to put_user_page*()
+Date:   Tue,  6 Aug 2019 18:33:24 -0700
+Message-Id: <20190807013340.9706-26-jhubbard@nvidia.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190807013340.9706-1-jhubbard@nvidia.com>
 References: <20190807013340.9706-1-jhubbard@nvidia.com>
@@ -105,100 +109,48 @@ release_pages().
 This is part a tree-wide conversion, as described in commit fc1d8e7cca2d
 ("mm: introduce put_user_page*(), placeholder versions").
 
-This also handles pages[i] == NULL cases, thanks to an approach
-that is actually written by Juergen Gross.
-
-Signed-off-by: Juergen Gross <jgross@suse.com>
-
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: xen-devel@lists.xenproject.org
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 ---
- drivers/xen/privcmd.c | 32 +++++++++++---------------------
- 1 file changed, 11 insertions(+), 21 deletions(-)
+ kernel/events/uprobes.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/xen/privcmd.c b/drivers/xen/privcmd.c
-index c6070e70dd73..c7d0763ca8c2 100644
---- a/drivers/xen/privcmd.c
-+++ b/drivers/xen/privcmd.c
-@@ -582,10 +582,11 @@ static long privcmd_ioctl_mmap_batch(
- 
- static int lock_pages(
- 	struct privcmd_dm_op_buf kbufs[], unsigned int num,
--	struct page *pages[], unsigned int nr_pages)
-+	struct page *pages[], unsigned int *nr_pages)
- {
--	unsigned int i;
-+	unsigned int i, free = *nr_pages;
- 
-+	*nr_pages = 0;
- 	for (i = 0; i < num; i++) {
- 		unsigned int requested;
- 		int pinned;
-@@ -593,35 +594,22 @@ static int lock_pages(
- 		requested = DIV_ROUND_UP(
- 			offset_in_page(kbufs[i].uptr) + kbufs[i].size,
- 			PAGE_SIZE);
--		if (requested > nr_pages)
-+		if (requested > free)
- 			return -ENOSPC;
- 
- 		pinned = get_user_pages_fast(
- 			(unsigned long) kbufs[i].uptr,
--			requested, FOLL_WRITE, pages);
-+			requested, FOLL_WRITE, pages + *nr_pages);
- 		if (pinned < 0)
- 			return pinned;
- 
--		nr_pages -= pinned;
--		pages += pinned;
-+		free -= pinned;
-+		*nr_pages += pinned;
- 	}
- 
- 	return 0;
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index 84fa00497c49..4a575de8cec8 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -397,7 +397,7 @@ __update_ref_ctr(struct mm_struct *mm, unsigned long vaddr, short d)
+ 	ret = 0;
+ out:
+ 	kunmap_atomic(kaddr);
+-	put_page(page);
++	put_user_page(page);
+ 	return ret;
  }
  
--static void unlock_pages(struct page *pages[], unsigned int nr_pages)
--{
--	unsigned int i;
--
--	if (!pages)
--		return;
--
--	for (i = 0; i < nr_pages; i++) {
--		if (pages[i])
--			put_page(pages[i]);
--	}
--}
--
- static long privcmd_ioctl_dm_op(struct file *file, void __user *udata)
- {
- 	struct privcmd_data *data = file->private_data;
-@@ -681,11 +669,12 @@ static long privcmd_ioctl_dm_op(struct file *file, void __user *udata)
+@@ -504,7 +504,7 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
+ 	ret = __replace_page(vma, vaddr, old_page, new_page);
+ 	put_page(new_page);
+ put_old:
+-	put_page(old_page);
++	put_user_page(old_page);
  
- 	xbufs = kcalloc(kdata.num, sizeof(*xbufs), GFP_KERNEL);
- 	if (!xbufs) {
-+		nr_pages = 0;
- 		rc = -ENOMEM;
- 		goto out;
- 	}
+ 	if (unlikely(ret == -EAGAIN))
+ 		goto retry;
+@@ -1981,7 +1981,7 @@ static int is_trap_at_addr(struct mm_struct *mm, unsigned long vaddr)
+ 		return result;
  
--	rc = lock_pages(kbufs, kdata.num, pages, nr_pages);
-+	rc = lock_pages(kbufs, kdata.num, pages, &nr_pages);
- 	if (rc)
- 		goto out;
- 
-@@ -699,7 +688,8 @@ static long privcmd_ioctl_dm_op(struct file *file, void __user *udata)
- 	xen_preemptible_hcall_end();
- 
- out:
--	unlock_pages(pages, nr_pages);
-+	if (pages)
-+		put_user_pages(pages, nr_pages);
- 	kfree(xbufs);
- 	kfree(pages);
- 	kfree(kbufs);
+ 	copy_from_page(page, vaddr, &opcode, UPROBE_SWBP_INSN_SIZE);
+-	put_page(page);
++	put_user_page(page);
+  out:
+ 	/* This needs to return true for any variant of the trap insn */
+ 	return is_trap_insn(&opcode);
 -- 
 2.22.0
 
