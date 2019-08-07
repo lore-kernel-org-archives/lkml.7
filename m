@@ -2,166 +2,154 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 984C2C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 10:52:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F26C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 10:53:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63C8A21E6E
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 10:52:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oInXtVfQ"
+	by mail.kernel.org (Postfix) with ESMTP id E821421E6A
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 10:53:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729073AbfHGKwi (ORCPT
+        id S1729248AbfHGKxL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 06:52:38 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:52032 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727185AbfHGKwh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 06:52:37 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x77AqSth072276;
-        Wed, 7 Aug 2019 05:52:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1565175148;
-        bh=qGpYq60jQ2NH9fBRpbUSq/G1IypjQ7Iiz5/2WFr7+kc=;
-        h=From:To:CC:Subject:Date;
-        b=oInXtVfQqbXi76bY0xZ89lfpnztbY+y4mxuP2HsSugtTqATcWnrsS2vGDITWGh806
-         TglItvv2reZ0lfkRuNJQ/s8jY/ThRZx9PzBxkX+VwTTzEaeiXFSbwOImhoZxCFiS0S
-         ZA3VC6QKp2C9MQe+Hb725H+MbOhxp8ZZxhgzOMSg=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x77AqSd2014341
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 7 Aug 2019 05:52:28 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 7 Aug
- 2019 05:52:28 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 7 Aug 2019 05:52:28 -0500
-Received: from a0230074-OptiPlex-7010.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x77AqPid031639;
-        Wed, 7 Aug 2019 05:52:26 -0500
-From:   Faiz Abbas <faiz_abbas@ti.com>
-To:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>
-CC:     <mark.rutland@arm.com>, <robh+dt@kernel.org>, <tony@atomide.com>,
-        <bcousson@baylibre.com>, <kishon@ti.com>, <faiz_abbas@ti.com>
-Subject: [PATCH] ARM: dts: dra74x: Fix iodelay configuration for mmc3
-Date:   Wed, 7 Aug 2019 16:22:38 +0530
-Message-ID: <20190807105238.21131-1-faiz_abbas@ti.com>
-X-Mailer: git-send-email 2.19.2
+        Wed, 7 Aug 2019 06:53:11 -0400
+Received: from foss.arm.com ([217.140.110.172]:46520 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726663AbfHGKxL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 06:53:11 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 49F7828;
+        Wed,  7 Aug 2019 03:53:10 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7942A3F575;
+        Wed,  7 Aug 2019 03:53:09 -0700 (PDT)
+Date:   Wed, 7 Aug 2019 11:53:07 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     will@kernel.org, catalin.marinas@arm.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] arm64/cache: fix -Woverride-init compiler warnings
+Message-ID: <20190807105307.GB54191@lakrids.cambridge.arm.com>
+References: <20190806193434.965-1-cai@lca.pw>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190806193434.965-1-cai@lca.pw>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to the latest am572x[1] and dra74x[2] data manuals, mmc3
-default, hs, sdr12 and sdr25 modes use iodelay values given in
-MMC3_MANUAL1. Set the MODE_SELECT bit for these so that manual mode is
-selected and correct iodelay values can be configured.
+On Tue, Aug 06, 2019 at 03:34:34PM -0400, Qian Cai wrote:
+> The commit 155433cb365e ("arm64: cache: Remove support for ASID-tagged
+> VIVT I-caches") introduced some compiation warnings from GCC (and
+> Clang),
+> 
+> arch/arm64/kernel/cpuinfo.c:38:26: warning: initialized field
+> overwritten [-Woverride-init]
+>  [ICACHE_POLICY_VIPT]  = "VIPT",
+>                          ^~~~~~
+> arch/arm64/kernel/cpuinfo.c:38:26: note: (near initialization for
+> 'icache_policy_str[2]')
+> arch/arm64/kernel/cpuinfo.c:39:26: warning: initialized field
+> overwritten [-Woverride-init]
+>  [ICACHE_POLICY_PIPT]  = "PIPT",
+>                          ^~~~~~
+> arch/arm64/kernel/cpuinfo.c:39:26: note: (near initialization for
+> 'icache_policy_str[3]')
+> arch/arm64/kernel/cpuinfo.c:40:27: warning: initialized field
+> overwritten [-Woverride-init]
+>  [ICACHE_POLICY_VPIPT]  = "VPIPT",
+>                           ^~~~~~~
+> arch/arm64/kernel/cpuinfo.c:40:27: note: (near initialization for
+> 'icache_policy_str[0]')
+> 
+> because it initializes icache_policy_str[0 ... 3] twice. Since the array
+> is only used in cpuinfo_detect_icache_policy(), fix it by initializing
+> a specific field there just before using.
+> 
+> Fixes: 155433cb365e ("arm64: cache: Remove support for ASID-tagged VIVT I-caches")
+> Signed-off-by: Qian Cai <cai@lca.pw>
 
-[1] http://www.ti.com/lit/ds/symlink/am5728.pdf
-[2] http://www.ti.com/lit/ds/symlink/dra746.pdf
+Rather than trying to "fix" correct code like this (and making it harder
+to read), could you instead look into where/whether the warning is
+actually useful?
 
-Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
----
- arch/arm/boot/dts/dra74x-mmc-iodelay.dtsi | 50 +++++++++++------------
- 1 file changed, 25 insertions(+), 25 deletions(-)
+I had a look at an arm64 defconfig, where I see:
 
-diff --git a/arch/arm/boot/dts/dra74x-mmc-iodelay.dtsi b/arch/arm/boot/dts/dra74x-mmc-iodelay.dtsi
-index 28ebb4eb884a..214b9e6de2c3 100644
---- a/arch/arm/boot/dts/dra74x-mmc-iodelay.dtsi
-+++ b/arch/arm/boot/dts/dra74x-mmc-iodelay.dtsi
-@@ -32,7 +32,7 @@
-  *
-  * Datamanual Revisions:
-  *
-- * AM572x Silicon Revision 2.0: SPRS953B, Revised November 2016
-+ * AM572x Silicon Revision 2.0: SPRS953F, Revised May 2019
-  * AM572x Silicon Revision 1.1: SPRS915R, Revised November 2016
-  *
-  */
-@@ -229,45 +229,45 @@
- 
- 	mmc3_pins_default: mmc3_pins_default {
- 		pinctrl-single,pins = <
--			DRA7XX_CORE_IOPAD(0x377c, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_clk.mmc3_clk */
--			DRA7XX_CORE_IOPAD(0x3780, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_cmd.mmc3_cmd */
--			DRA7XX_CORE_IOPAD(0x3784, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat0.mmc3_dat0 */
--			DRA7XX_CORE_IOPAD(0x3788, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat1.mmc3_dat1 */
--			DRA7XX_CORE_IOPAD(0x378c, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat2.mmc3_dat2 */
--			DRA7XX_CORE_IOPAD(0x3790, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat3.mmc3_dat3 */
-+			DRA7XX_CORE_IOPAD(0x377c, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_clk.mmc3_clk */
-+			DRA7XX_CORE_IOPAD(0x3780, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_cmd.mmc3_cmd */
-+			DRA7XX_CORE_IOPAD(0x3784, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat0.mmc3_dat0 */
-+			DRA7XX_CORE_IOPAD(0x3788, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat1.mmc3_dat1 */
-+			DRA7XX_CORE_IOPAD(0x378c, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat2.mmc3_dat2 */
-+			DRA7XX_CORE_IOPAD(0x3790, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat3.mmc3_dat3 */
- 		>;
- 	};
- 
- 	mmc3_pins_hs: mmc3_pins_hs {
- 		pinctrl-single,pins = <
--			DRA7XX_CORE_IOPAD(0x377c, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_clk.mmc3_clk */
--			DRA7XX_CORE_IOPAD(0x3780, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_cmd.mmc3_cmd */
--			DRA7XX_CORE_IOPAD(0x3784, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat0.mmc3_dat0 */
--			DRA7XX_CORE_IOPAD(0x3788, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat1.mmc3_dat1 */
--			DRA7XX_CORE_IOPAD(0x378c, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat2.mmc3_dat2 */
--			DRA7XX_CORE_IOPAD(0x3790, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat3.mmc3_dat3 */
-+			DRA7XX_CORE_IOPAD(0x377c, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_clk.mmc3_clk */
-+			DRA7XX_CORE_IOPAD(0x3780, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_cmd.mmc3_cmd */
-+			DRA7XX_CORE_IOPAD(0x3784, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat0.mmc3_dat0 */
-+			DRA7XX_CORE_IOPAD(0x3788, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat1.mmc3_dat1 */
-+			DRA7XX_CORE_IOPAD(0x378c, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat2.mmc3_dat2 */
-+			DRA7XX_CORE_IOPAD(0x3790, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat3.mmc3_dat3 */
- 		>;
- 	};
- 
- 	mmc3_pins_sdr12: mmc3_pins_sdr12 {
- 		pinctrl-single,pins = <
--			DRA7XX_CORE_IOPAD(0x377c, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_clk.mmc3_clk */
--			DRA7XX_CORE_IOPAD(0x3780, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_cmd.mmc3_cmd */
--			DRA7XX_CORE_IOPAD(0x3784, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat0.mmc3_dat0 */
--			DRA7XX_CORE_IOPAD(0x3788, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat1.mmc3_dat1 */
--			DRA7XX_CORE_IOPAD(0x378c, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat2.mmc3_dat2 */
--			DRA7XX_CORE_IOPAD(0x3790, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat3.mmc3_dat3 */
-+			DRA7XX_CORE_IOPAD(0x377c, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_clk.mmc3_clk */
-+			DRA7XX_CORE_IOPAD(0x3780, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_cmd.mmc3_cmd */
-+			DRA7XX_CORE_IOPAD(0x3784, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat0.mmc3_dat0 */
-+			DRA7XX_CORE_IOPAD(0x3788, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat1.mmc3_dat1 */
-+			DRA7XX_CORE_IOPAD(0x378c, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat2.mmc3_dat2 */
-+			DRA7XX_CORE_IOPAD(0x3790, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat3.mmc3_dat3 */
- 		>;
- 	};
- 
- 	mmc3_pins_sdr25: mmc3_pins_sdr25 {
- 		pinctrl-single,pins = <
--			DRA7XX_CORE_IOPAD(0x377c, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_clk.mmc3_clk */
--			DRA7XX_CORE_IOPAD(0x3780, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_cmd.mmc3_cmd */
--			DRA7XX_CORE_IOPAD(0x3784, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat0.mmc3_dat0 */
--			DRA7XX_CORE_IOPAD(0x3788, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat1.mmc3_dat1 */
--			DRA7XX_CORE_IOPAD(0x378c, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat2.mmc3_dat2 */
--			DRA7XX_CORE_IOPAD(0x3790, (PIN_INPUT_PULLUP | MUX_MODE0)) /* mmc3_dat3.mmc3_dat3 */
-+			DRA7XX_CORE_IOPAD(0x377c, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_clk.mmc3_clk */
-+			DRA7XX_CORE_IOPAD(0x3780, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_cmd.mmc3_cmd */
-+			DRA7XX_CORE_IOPAD(0x3784, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat0.mmc3_dat0 */
-+			DRA7XX_CORE_IOPAD(0x3788, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat1.mmc3_dat1 */
-+			DRA7XX_CORE_IOPAD(0x378c, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat2.mmc3_dat2 */
-+			DRA7XX_CORE_IOPAD(0x3790, (PIN_INPUT_PULLUP | MODE_SELECT | MUX_MODE0)) /* mmc3_dat3.mmc3_dat3 */
- 		>;
- 	};
- 
--- 
-2.19.2
+[mark@lakrids:~/src/linux]% grep override-init err.log | grep -o '^[^[:space:]:]\+' | sort | uniq -c | sort -rn
+    434 arch/arm64/kernel/sys32.c			// all benign
+    291 arch/arm64/kernel/sys.c				// all benign
+     48 ./arch/arm64/include/asm/perf_event.h		// all benign
+     37 arch/arm64/kernel/traps.c			// all benign
+     21 arch/arm64/kvm/handle_exit.c			// all benign
+     12 drivers/ata/ahci.h				// all benign
+      6 arch/arm64/kernel/perf_event.c			// all benign
+      4 kernel/time/hrtimer.c				// all benign
+      3 arch/arm64/kernel/cpuinfo.c			// all benign
+      2 drivers/pinctrl/tegra/pinctrl-tegra194.c	// unclear to me
+      1 ./include/linux/blkdev.h			// all benign
+      1 drivers/gpu/drm/sun4i/sun4i_drv.c		// all benign
+      1 drivers/ata/sata_sil24.c			// all benign
+      1 ./arch/arm64/include/asm/mmu.h			// all benign
 
+... so that's 862 warnings where at least 860 are unhelpful (and I
+suspect those last two are also fine, but I haven't untangled the set of
+macros).
+
+Given that, what's the point in enabling this warning? It forces us to
+write worse code that's harder to maintain, and it doesn't spot anything
+useful.
+
+> ---
+> 
+> v2: Initialize a specific field in cpuinfo_detect_icache_policy().
+> 
+>  arch/arm64/kernel/cpuinfo.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/cpuinfo.c b/arch/arm64/kernel/cpuinfo.c
+> index 876055e37352..a0c495a3f4fd 100644
+> --- a/arch/arm64/kernel/cpuinfo.c
+> +++ b/arch/arm64/kernel/cpuinfo.c
+> @@ -34,10 +34,7 @@ DEFINE_PER_CPU(struct cpuinfo_arm64, cpu_data);
+>  static struct cpuinfo_arm64 boot_cpu_data;
+>  
+>  static char *icache_policy_str[] = {
+> -	[0 ... ICACHE_POLICY_PIPT]	= "RESERVED/UNKNOWN",
+> -	[ICACHE_POLICY_VIPT]		= "VIPT",
+> -	[ICACHE_POLICY_PIPT]		= "PIPT",
+> -	[ICACHE_POLICY_VPIPT]		= "VPIPT",
+> +	[0 ... ICACHE_POLICY_PIPT]	= "RESERVED/UNKNOWN"
+>  };
+>  
+>  unsigned long __icache_flags;
+> @@ -310,13 +307,16 @@ static void cpuinfo_detect_icache_policy(struct cpuinfo_arm64 *info)
+>  
+>  	switch (l1ip) {
+>  	case ICACHE_POLICY_PIPT:
+> +		icache_policy_str[ICACHE_POLICY_PIPT] = "PIPT";
+>  		break;
+>  	case ICACHE_POLICY_VPIPT:
+> +		icache_policy_str[ICACHE_POLICY_VPIPT] = "VPIPT";
+>  		set_bit(ICACHEF_VPIPT, &__icache_flags);
+>  		break;
+>  	default:
+>  		/* Fallthrough */
+>  	case ICACHE_POLICY_VIPT:
+> +		icache_policy_str[ICACHE_POLICY_VIPT] = "VIPT";
+>  		/* Assume aliasing */
+>  		set_bit(ICACHEF_ALIASING, &__icache_flags);
+
+NAK to this. Please leave this code as-is.
+
+Thanks,
+Mark.
+
+>  	}
+> -- 
+> 2.20.1 (Apple Git-117)
+> 
