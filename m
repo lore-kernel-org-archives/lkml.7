@@ -2,172 +2,156 @@ Return-Path: <SRS0=/Haq=WD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD44C433FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 09:53:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07181C433FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 09:57:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E20721BE6
-	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 09:53:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6ED321E6A
+	for <linux-kernel@archiver.kernel.org>; Wed,  7 Aug 2019 09:57:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729271AbfHGJxt (ORCPT
+        id S1729291AbfHGJ5P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 05:53:49 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:50406 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727541AbfHGJxt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 05:53:49 -0400
-Received: from 79.184.254.29.ipv4.supernova.orange.pl (79.184.254.29) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.275)
- id d905846234fd6b51; Wed, 7 Aug 2019 11:53:45 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     Mario Limonciello <Mario.Limonciello@dell.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Subject: [PATCH] nvme-pci: Do not prevent PCI bus-level PM from being used
-Date:   Wed, 07 Aug 2019 11:53:44 +0200
-Message-ID: <1893355.EP2830DdO9@kreacher>
-In-Reply-To: <20190731221956.GB15795@localhost.localdomain>
-References: <4323ed84dd07474eab65699b4d007aaf@AUSX13MPC105.AMER.DELL.COM> <CAJZ5v0iDQ4=kTUgW94tKGt7oJzA_3uVU_M6HAMbNCRXwp_do8A@mail.gmail.com> <47415939.KV5G6iaeJG@kreacher> <20190730144134.GA12844@localhost.localdomain> <100ba4aff1c6434a81e47774ab4acddc@AUSX13MPC105.AMER.DELL.COM> <8246360B-F7D9-42EB-94FC-82995A769E28@canonical.com> <20190730191934.GD13948@localhost.localdomain> <7d3e0b8ba1444194a153c93faa1cabb3@AUSX13MPC105.AMER.DELL.COM> <20190730213114.GK13948@localhost.localdomain> <CAJZ5v0gxfeMN8eCNRjcXmUOkReVsdozb3EccaYMpnmSHu3771g@mail.gmail.com> <20190731221956.GB15795@localhost.localdomain>
+        Wed, 7 Aug 2019 05:57:15 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35962 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727733AbfHGJ5P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 05:57:15 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id B4ADFC0718B8;
+        Wed,  7 Aug 2019 09:57:14 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.136])
+        by smtp.corp.redhat.com (Postfix) with SMTP id D71655D704;
+        Wed,  7 Aug 2019 09:56:58 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Wed,  7 Aug 2019 11:57:14 +0200 (CEST)
+Date:   Wed, 7 Aug 2019 11:56:58 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Will Deacon <will.deacon@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, bigeasy@linutronix.de,
+        juri.lelli@redhat.com, williams@redhat.com, bristot@redhat.com,
+        longman@redhat.com, dave@stgolabs.net, jack@suse.com
+Subject: Re: [PATCH] locking/percpu_rwsem: Rewrite to not use rwsem
+Message-ID: <20190807095657.GA24112@redhat.com>
+References: <20190805140241.GI2332@hirez.programming.kicks-ass.net>
+ <20190806161741.GC21454@redhat.com>
+ <20190806171515.GR2349@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190806171515.GR2349@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Wed, 07 Aug 2019 09:57:14 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On 08/06, Peter Zijlstra wrote:
+>
+> On Tue, Aug 06, 2019 at 06:17:42PM +0200, Oleg Nesterov wrote:
+>
+> > but this will also wake all the pending readers up. Every reader will burn
+> > CPU for no reason and likely delay the writer.
+> >
+> > In fact I'm afraid this can lead to live-lock, because every reader in turn
+> > will call __percpu_up_read().
+>
+> I didn't really consider that case important; because of how heavy the
+> write side is, it should be relatively rare.
 
-One of the modifications made by commit d916b1be94b6 ("nvme-pci: use
-host managed power state for suspend") was adding a pci_save_state()
-call to nvme_suspend() in order to prevent the PCI bus-level PM from
-being applied to the suspended NVMe devices, but if ASPM is not
-enabled for the target NVMe device, that causes its PCIe link to stay
-up and the platform may not be able to get into its optimum low-power
-state because of that.
+Well yes, but down_read() should not stress the system.
 
-For example, if ASPM is disabled for the NVMe drive (PC401 NVMe SK
-hynix 256GB) in my Dell XPS13 9380, leaving it in D0 during
-suspend-to-idle prevents the SoC from reaching package idle states
-deeper than PC3, which is way insufficient for system suspend.
+However I was wrong, it is not that bad as I thought, I forgot that the
+pending reader won't return from wait_event(sem->block) if another reader
+comes.
 
-To address this shortcoming, make nvme_suspend() check if ASPM is
-enabled for the target device and fall back to full device shutdown
-and PCI bus-level PM if that is not the case.
+Still I think we should try to avoid the unnecessary wakeups. See below.
 
-Fixes: d916b1be94b6 ("nvme-pci: use host managed power state for suspend")
-Link: https://lore.kernel.org/linux-pm/2763495.NmdaWeg79L@kreacher/T/#t
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- drivers/nvme/host/pci.c |   14 ++++++++++----
- drivers/pci/pcie/aspm.c |   17 +++++++++++++++++
- include/linux/pci.h     |    2 ++
- 3 files changed, 29 insertions(+), 4 deletions(-)
+> > How about 2 wait queues?
+>
+> That said, I can certainly try that.
 
-Index: linux-pm/drivers/nvme/host/pci.c
-===================================================================
---- linux-pm.orig/drivers/nvme/host/pci.c
-+++ linux-pm/drivers/nvme/host/pci.c
-@@ -2846,7 +2846,7 @@ static int nvme_resume(struct device *de
- 	struct nvme_dev *ndev = pci_get_drvdata(to_pci_dev(dev));
- 	struct nvme_ctrl *ctrl = &ndev->ctrl;
- 
--	if (pm_resume_via_firmware() || !ctrl->npss ||
-+	if (ndev->last_ps == U32_MAX ||
- 	    nvme_set_power_state(ctrl, ndev->last_ps) != 0)
- 		nvme_reset_ctrl(ctrl);
- 	return 0;
-@@ -2859,6 +2859,8 @@ static int nvme_suspend(struct device *d
- 	struct nvme_ctrl *ctrl = &ndev->ctrl;
- 	int ret = -EBUSY;
- 
-+	ndev->last_ps = U32_MAX;
-+
- 	/*
- 	 * The platform does not remove power for a kernel managed suspend so
- 	 * use host managed nvme power settings for lowest idle power if
-@@ -2866,8 +2868,13 @@ static int nvme_suspend(struct device *d
- 	 * shutdown.  But if the firmware is involved after the suspend or the
- 	 * device does not support any non-default power states, shut down the
- 	 * device fully.
-+	 *
-+	 * If ASPM is not enabled for the device, shut down the device and allow
-+	 * the PCI bus layer to put it into D3 in order to take the PCIe link
-+	 * down, so as to allow the platform to achieve its minimum low-power
-+	 * state (which may not be possible if the link is up).
- 	 */
--	if (pm_suspend_via_firmware() || !ctrl->npss) {
-+	if (pm_suspend_via_firmware() || !ctrl->npss || !pcie_aspm_enabled(pdev)) {
- 		nvme_dev_disable(ndev, true);
- 		return 0;
- 	}
-@@ -2880,9 +2887,8 @@ static int nvme_suspend(struct device *d
- 	    ctrl->state != NVME_CTRL_ADMIN_ONLY)
- 		goto unfreeze;
- 
--	ndev->last_ps = 0;
- 	ret = nvme_get_power_state(ctrl, &ndev->last_ps);
--	if (ret < 0)
-+	if (ret < 0 || ndev->last_ps == U32_MAX)
- 		goto unfreeze;
- 
- 	ret = nvme_set_power_state(ctrl, ctrl->npss);
-Index: linux-pm/drivers/pci/pcie/aspm.c
-===================================================================
---- linux-pm.orig/drivers/pci/pcie/aspm.c
-+++ linux-pm/drivers/pci/pcie/aspm.c
-@@ -1170,6 +1170,23 @@ static int pcie_aspm_get_policy(char *bu
- module_param_call(policy, pcie_aspm_set_policy, pcie_aspm_get_policy,
- 	NULL, 0644);
- 
-+/*
-+ * pcie_aspm_enabled - Return the mask of enabled ASPM link states.
-+ * @pci_device: Target device.
-+ */
-+u32 pcie_aspm_enabled(struct pci_dev *pci_device)
-+{
-+	struct pci_dev *bridge = pci_device->bus->self;
-+	u32 aspm_enabled;
-+
-+	mutex_lock(&aspm_lock);
-+	aspm_enabled = bridge->link_state ? bridge->link_state->aspm_enabled : 0;
-+	mutex_unlock(&aspm_lock);
-+
-+	return aspm_enabled;
-+}
-+
-+
- #ifdef CONFIG_PCIEASPM_DEBUG
- static ssize_t link_state_show(struct device *dev,
- 		struct device_attribute *attr,
-Index: linux-pm/include/linux/pci.h
-===================================================================
---- linux-pm.orig/include/linux/pci.h
-+++ linux-pm/include/linux/pci.h
-@@ -1567,8 +1567,10 @@ extern bool pcie_ports_native;
- 
- #ifdef CONFIG_PCIEASPM
- bool pcie_aspm_support_enabled(void);
-+u32 pcie_aspm_enabled(struct pci_dev *pci_device);
- #else
- static inline bool pcie_aspm_support_enabled(void) { return false; }
-+static inline u32 pcie_aspm_enabled(struct pci_dev *pci_device) { return 0; }
- #endif
- 
- #ifdef CONFIG_PCIEAER
+and either way, with or without 2 queues, what do you think about the code
+below?
 
+This way the new reader does wake_up() only in the very unlikely case when
+it races with the new writer which sets sem->block = 1 right after
+this_cpu_inc().
 
+Oleg.
+-------------------------------------------------------------------------------
+
+static inline void percpu_down_read(struct percpu_rw_semaphore *sem)
+{
+	might_sleep();
+	rwsem_acquire_read(&sem->dep_map, 0, 0, _RET_IP_);
+
+	preempt_disable();
+
+	if (likely(rcu_sync_is_idle(&sem->rss)))
+		__this_cpu_inc(*sem->read_count);
+	else
+		__percpu_down_read(sem, false);
+
+	preempt_enable();
+}
+
+static inline void percpu_up_read(struct percpu_rw_semaphore *sem)
+{
+	rwsem_release(&sem->dep_map, 1, _RET_IP_);
+
+	preempt_disable();
+
+	if (likely(rcu_sync_is_idle(&sem->rss)))
+		__this_cpu_dec(*sem->read_count);
+	else
+		__percpu_up_read(sem);
+
+	preempt_enable();
+}
+
+// both called and return with preemption disabled
+
+bool __percpu_down_read(struct percpu_rw_semaphore *sem, bool try)
+{
+
+	if (atomic_read_acquire(&sem->block)) {
+again:
+		preempt_enable();
+		__wait_event(sem->waiters, !atomic_read_acquire(&sem->block));
+		preempt_disable();
+	}
+
+	__this_cpu_inc(*sem->read_count);
+
+	smp_mb();
+
+	if (likely(!atomic_read_acquire(&sem->block)))
+		return true;
+
+	__percpu_up_read(sem);
+
+	if (try)
+		return false;
+
+	goto again;
+}
+
+void __percpu_up_read(struct percpu_rw_semaphore *sem)
+{
+	smp_mb();
+
+	__this_cpu_dec(*sem->read_count);
+
+	wake_up(&sem->waiters);
+}
 
