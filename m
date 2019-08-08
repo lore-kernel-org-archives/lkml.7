@@ -2,128 +2,129 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67EE2C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 716E1C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:19:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47723214C6
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:17:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4603B21743
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:19:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565291957;
+	bh=I85MDT/rKbkFPix7KBGWUeZg9LoqJU6dSIlhS3m8a5g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fiVVe2ZMiUda2fcoF4vabyeMZFh+EkteU6FsKyWMrg8XGoM8oUa/9sSoSY15tcYEt
+	 1QNs/VzG2KIfvLii1Dd/w1ff4tSZ10E8jKDFZnBwGv+A5Swktt5ChQu+oOQr6/Pea1
+	 NAEVeETqq7IrgHSPLqNsqJuBYMayeFkWj8Gzho5A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404306AbfHHTRe (ORCPT
+        id S2404418AbfHHTTQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:17:34 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:38896 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404590AbfHHTRc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 15:17:32 -0400
-Received: from [38.64.181.146] (helo=nyx.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:DHE_RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <jay.vosburgh@canonical.com>)
-        id 1hvnuj-0001El-Rv; Thu, 08 Aug 2019 19:17:30 +0000
-Received: by nyx.localdomain (Postfix, from userid 1000)
-        id CE64824091C; Thu,  8 Aug 2019 15:17:28 -0400 (EDT)
-Received: from nyx (localhost [127.0.0.1])
-        by nyx.localdomain (Postfix) with ESMTP id C943F280657;
-        Thu,  8 Aug 2019 15:17:28 -0400 (EDT)
-From:   Jay Vosburgh <jay.vosburgh@canonical.com>
-To:     "Felix" <fei.feng@linux.alibaba.com>
-cc:     "vfalico" <vfalico@gmail.com>, "andy" <andy@greyhouse.net>,
-        "netdev" <netdev@vger.kernel.org>,
-        "linux-kernel" <linux-kernel@vger.kernel.org>
-Subject: Re: [bonding][patch] Regarding a bonding lacp issue
-In-reply-to: <8799b243-36da-4baf-8c67-aeb5f978c34f.fei.feng@linux.alibaba.com>
-References: <8799b243-36da-4baf-8c67-aeb5f978c34f.fei.feng@linux.alibaba.com>
-Comments: In-reply-to "Felix" <fei.feng@linux.alibaba.com>
-   message dated "Thu, 08 Aug 2019 23:33:25 +0800."
-X-Mailer: MH-E 8.5+bzr; nmh 1.7.1-RC3; GNU Emacs 27.0.50
+        Thu, 8 Aug 2019 15:19:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49890 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404214AbfHHTTP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 15:19:15 -0400
+Received: from localhost (unknown [150.199.191.185])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC811214C6;
+        Thu,  8 Aug 2019 19:19:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565291955;
+        bh=I85MDT/rKbkFPix7KBGWUeZg9LoqJU6dSIlhS3m8a5g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vpDboZe/vRDL5+uvHLu9w2zQuVsD051Exm+FqXk436rp7K5xoYjKyulcfTeuL8yjC
+         sEIg4r0zhQrZhCELdFKxA94tDML8MTm3kLCdhxj9kNz5nYgIwfXikWQBhFLPNv//U7
+         vpQfbZpj3jEk3bfxfpq1LoEehzSSIGbZ7u5v0fPw=
+Date:   Thu, 8 Aug 2019 14:19:13 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "driverdev-devel@linuxdriverproject.org" 
+        <driverdev-devel@linuxdriverproject.org>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "jackm@mellanox.com" <jackm@mellanox.com>
+Subject: Re: [PATCH] PCI: PM: Also move to D0 before calling
+ pci_legacy_resume_early()
+Message-ID: <20190808191913.GI151852@google.com>
+References: <PU1P153MB01695867B01987A8C239A8CCBFD70@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <24903.1565291848.1@nyx>
-Date:   Thu, 08 Aug 2019 15:17:28 -0400
-Message-ID: <24904.1565291848@nyx>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PU1P153MB01695867B01987A8C239A8CCBFD70@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Felix <fei.feng@linux.alibaba.com> wrote:
+On Thu, Aug 08, 2019 at 06:46:51PM +0000, Dexuan Cui wrote:
+> 
+> In pci_legacy_suspend_late(), the device state is moved to PCI_UNKNOWN.
+> In pci_pm_thaw_noirq(), the state is supposed to be moved back to PCI_D0,
+> but the current code misses the pci_legacy_resume_early() path, so the
+> state remains in PCI_UNKNOWN in that path, and during hiberantion this
+> causes an error for the Mellanox VF driver, which fails to enable
+> MSI-X: pci_msi_supported() is false due to dev->current_state != PCI_D0:
 
->Dear Mainteners,
->
->Recently I hit a packet drop issue in bonding driver on Linux 4.9. Please
->see details below. Please take a look to see if my understanding is
->correct. Many thanks.
->
->What is the problem?
->The bonding driver starts to send packets even if the Partner(Switch)'s
->Collecting bit is not enabled yet. Partner would drop all packets until
->its Collecting bit is enabled.
->
->What is the root cuase?
->According to LACP spec, the Actor need to check Partner's Sync and
->Collecting bits before enable its Distributing bit and Distributing
->function. Please see the PIC below.
+s/hiberantion/hibernation/
 
-	The diagram you reference is found in 802.1AX-2014 figure 6-21,
-which shows the state diagram for an independent control implementation,
-i.e., collecting and distributing are managed independently.
+Actually, it sounds more like "during *resume*, this causes an error",
+so maybe you want s/hiberantion/resume/ instead?
 
-	However, Linux bonding implements coupled control, which is
-shown in figure 6-22.  Here, there is no Partner.Collecting requirement
-on the state transition from ATTACHED to COLLECTING_DISTRIBUTING.
-
-	To quote 802.1AX-2014 6.4.15:
-
-	As independent control is not possible, the coupled control
-	state machine does not wait for the Partner to signal that
-	collection has started before enabling both collection and
-	distribution.
-
-	Now, that said, I agree that what you're seeing is likely
-explained by this behavior, and your fix should resolve the immediate
-problem (that bonding sends packets before the peer has enabled
-COLLECTING).
-
-	However, your fix does put bonding out of compliance with the
-standard, as it does not really implement COLLECTING and DISTRIBUTING as
-discrete states.  In particular, if the peer in your case were to later
-clear Partner.Collecting, bonding will not react to this as a figure
-6-21 independent control implementation would (which isn't a change from
-current behavior, but currently this isn't expected).
-
-	So, in my opinion a patch like this should have a comment
-attached noting that we are deliberately not in compliance with the
-standard in this specific situation.  The proper fix is to implement
-figure 6-21 separate state.
-
-	Lastly, are you able to test and generate a patch against
-current upstream, instead of 4.9?
-
-	-J
-
->How to fix?
->Please see the diff as following. And the patch is attached.
->
->--- ../origin/linux-4.9.188/drivers/net/bonding/bond_3ad.c 2019-08-07
->00:29:42.000000000 +0800
->+++ drivers/net/bonding/bond_3ad.c 2019-08-08 23:13:29.015640197 +0800
->@@ -937,6 +937,7 @@
->     */
->    if ((port->sm_vars & AD_PORT_SELECTED) &&
->        (port->partner_oper.port_state & AD_STATE_SYNCHRONIZATION) &&
->+       (port->partner_oper.port_state & AD_STATE_COLLECTING) &&
->        !__check_agg_selection_timer(port)) {
->     if (port->aggregator->is_active)
->      port->sm_mux_state =
->
->------
->Thanks,
->Felix
-
----
-	-Jay Vosburgh, jay.vosburgh@canonical.com
+> mlx4_core a6d1:00:02.0: Detected virtual function - running in slave mode
+> mlx4_core a6d1:00:02.0: Sending reset
+> mlx4_core a6d1:00:02.0: Sending vhcr0
+> mlx4_core a6d1:00:02.0: HCA minimum page size:512
+> mlx4_core a6d1:00:02.0: Timestamping is not supported in slave mode
+> mlx4_core a6d1:00:02.0: INTx is not supported in multi-function mode, aborting
+> PM: dpm_run_callback(): pci_pm_thaw+0x0/0xd7 returns -95
+> PM: Device a6d1:00:02.0 failed to thaw: error -95
+> 
+> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> ---
+>  drivers/pci/pci-driver.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> index 36dbe960306b..27dfc68db9e7 100644
+> --- a/drivers/pci/pci-driver.c
+> +++ b/drivers/pci/pci-driver.c
+> @@ -1074,15 +1074,16 @@ static int pci_pm_thaw_noirq(struct device *dev)
+>  			return error;
+>  	}
+>  
+> -	if (pci_has_legacy_pm_support(pci_dev))
+> -		return pci_legacy_resume_early(dev);
+> -
+>  	/*
+>  	 * pci_restore_state() requires the device to be in D0 (because of MSI
+>  	 * restoration among other things), so force it into D0 in case the
+>  	 * driver's "freeze" callbacks put it into a low-power state directly.
+>  	 */
+>  	pci_set_power_state(pci_dev, PCI_D0);
+> +
+> +	if (pci_has_legacy_pm_support(pci_dev))
+> +		return pci_legacy_resume_early(dev);
+> +
+>  	pci_restore_state(pci_dev);
+>  
+>  	if (drv && drv->pm && drv->pm->thaw_noirq)
+> -- 
+> 2.19.1
+> 
