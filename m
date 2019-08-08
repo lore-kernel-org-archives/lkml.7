@@ -2,115 +2,114 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 222AEC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 10:35:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18429C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 10:38:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01C0621874
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 10:35:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8FF920820
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 10:38:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403819AbfHHKfm (ORCPT
+        id S2389806AbfHHKiM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 06:35:42 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:36822 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403806AbfHHKfk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 06:35:40 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 9E29B28C95C
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     linux-media@vger.kernel.org
-Cc:     kernel@collabora.com,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        linux-rockchip@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        fbuergisser@chromium.org, linux-kernel@vger.kernel.org,
-        Hertz Wong <hertz.wong@rock-chips.com>
-Subject: [PATCH v4 11/11] media: hantro: Enable H264 decoding on rk3288
-Date:   Thu,  8 Aug 2019 07:34:32 -0300
-Message-Id: <20190808103432.12062-12-ezequiel@collabora.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190808103432.12062-1-ezequiel@collabora.com>
-References: <20190808103432.12062-1-ezequiel@collabora.com>
+        Thu, 8 Aug 2019 06:38:12 -0400
+Received: from foss.arm.com ([217.140.110.172]:59796 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389565AbfHHKiM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 06:38:12 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C465028;
+        Thu,  8 Aug 2019 03:38:11 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D9D2F3F694;
+        Thu,  8 Aug 2019 03:38:10 -0700 (PDT)
+Date:   Thu, 8 Aug 2019 11:38:08 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     will@kernel.org, catalin.marinas@arm.com,
+        linux-arm-kernel@lists.infradead.org,
+        clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64/cache: silence -Woverride-init warnings
+Message-ID: <20190808103808.GC46901@lakrids.cambridge.arm.com>
+References: <20190808032916.879-1-cai@lca.pw>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190808032916.879-1-cai@lca.pw>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hertz Wong <hertz.wong@rock-chips.com>
+On Wed, Aug 07, 2019 at 11:29:16PM -0400, Qian Cai wrote:
+> The commit 155433cb365e ("arm64: cache: Remove support for ASID-tagged
+> VIVT I-caches") introduced some compiation warnings from GCC (and
+> Clang) with -Winitializer-overrides),
+> 
+> arch/arm64/kernel/cpuinfo.c:38:26: warning: initialized field
+> overwritten [-Woverride-init]
+> [ICACHE_POLICY_VIPT]  = "VIPT",
+>                         ^~~~~~
+> arch/arm64/kernel/cpuinfo.c:38:26: note: (near initialization for
+> 'icache_policy_str[2]')
+> arch/arm64/kernel/cpuinfo.c:39:26: warning: initialized field
+> overwritten [-Woverride-init]
+> [ICACHE_POLICY_PIPT]  = "PIPT",
+>                         ^~~~~~
+> arch/arm64/kernel/cpuinfo.c:39:26: note: (near initialization for
+> 'icache_policy_str[3]')
+> arch/arm64/kernel/cpuinfo.c:40:27: warning: initialized field
+> overwritten [-Woverride-init]
+> [ICACHE_POLICY_VPIPT]  = "VPIPT",
+>                          ^~~~~~~
+> arch/arm64/kernel/cpuinfo.c:40:27: note: (near initialization for
+> 'icache_policy_str[0]')
+> 
+> because it initializes icache_policy_str[0 ... 3] twice. Since
+> arm64 developers are keen to keep the style of initializing a static
+> array with a non-zero pattern first, just disable those warnings for
+> both GCC and Clang of this file.
+> 
+> Fixes: 155433cb365e ("arm64: cache: Remove support for ASID-tagged VIVT I-caches")
+> Signed-off-by: Qian Cai <cai@lca.pw>
 
-Now that the generic bits have been added, we can activate H264 decoding
-on rk3288.
+This is _not_ a fix, and should not require backporting to stable trees.
 
-Signed-off-by: Hertz Wong <hertz.wong@rock-chips.com>
-Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
----
-Changes in v4:
-* None.
----
- drivers/staging/media/hantro/rk3288_vpu_hw.c | 21 +++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+What about all the other instances that we have in mainline?
 
-diff --git a/drivers/staging/media/hantro/rk3288_vpu_hw.c b/drivers/staging/media/hantro/rk3288_vpu_hw.c
-index f1b573a006ae..6bfcc47d1e58 100644
---- a/drivers/staging/media/hantro/rk3288_vpu_hw.c
-+++ b/drivers/staging/media/hantro/rk3288_vpu_hw.c
-@@ -61,6 +61,19 @@ static const struct hantro_fmt rk3288_vpu_dec_fmts[] = {
- 		.fourcc = V4L2_PIX_FMT_NV12,
- 		.codec_mode = HANTRO_MODE_NONE,
- 	},
-+	{
-+		.fourcc = V4L2_PIX_FMT_H264_SLICE,
-+		.codec_mode = HANTRO_MODE_H264_DEC,
-+		.max_depth = 2,
-+		.frmsize = {
-+			.min_width = 48,
-+			.max_width = 3840,
-+			.step_width = H264_MB_DIM,
-+			.min_height = 48,
-+			.max_height = 2160,
-+			.step_height = H264_MB_DIM,
-+		},
-+	},
- 	{
- 		.fourcc = V4L2_PIX_FMT_MPEG2_SLICE,
- 		.codec_mode = HANTRO_MODE_MPEG2_DEC,
-@@ -162,6 +175,12 @@ static const struct hantro_codec_ops rk3288_vpu_codec_ops[] = {
- 		.init = hantro_jpeg_enc_init,
- 		.exit = hantro_jpeg_enc_exit,
- 	},
-+	[HANTRO_MODE_H264_DEC] = {
-+		.run = hantro_g1_h264_dec_run,
-+		.reset = rk3288_vpu_dec_reset,
-+		.init = hantro_h264_dec_init,
-+		.exit = hantro_h264_dec_exit,
-+	},
- 	[HANTRO_MODE_MPEG2_DEC] = {
- 		.run = hantro_g1_mpeg2_dec_run,
- 		.reset = rk3288_vpu_dec_reset,
-@@ -197,7 +216,7 @@ const struct hantro_variant rk3288_vpu_variant = {
- 	.dec_fmts = rk3288_vpu_dec_fmts,
- 	.num_dec_fmts = ARRAY_SIZE(rk3288_vpu_dec_fmts),
- 	.codec = HANTRO_JPEG_ENCODER | HANTRO_MPEG2_DECODER |
--		 HANTRO_VP8_DECODER,
-+		 HANTRO_VP8_DECODER | HANTRO_H264_DECODER,
- 	.codec_ops = rk3288_vpu_codec_ops,
- 	.irqs = rk3288_irqs,
- 	.num_irqs = ARRAY_SIZE(rk3288_irqs),
--- 
-2.22.0
+I really don't think that we need to go down this road; we're just going
+to end up adding this to every file that happens to include a header
+using this scheme...
 
+Please just turn this off by default for clang.
+
+If we want to enable this, we need a mechanism to permit overridable
+assignments as we use range initializers for.
+
+Thanks,
+Mark.
+
+> ---
+>  arch/arm64/kernel/Makefile | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
+> index 478491f07b4f..397ed5f7be1e 100644
+> --- a/arch/arm64/kernel/Makefile
+> +++ b/arch/arm64/kernel/Makefile
+> @@ -11,6 +11,9 @@ CFLAGS_REMOVE_ftrace.o = $(CC_FLAGS_FTRACE)
+>  CFLAGS_REMOVE_insn.o = $(CC_FLAGS_FTRACE)
+>  CFLAGS_REMOVE_return_address.o = $(CC_FLAGS_FTRACE)
+>  
+> +CFLAGS_cpuinfo.o += $(call cc-disable-warning, override-init)
+> +CFLAGS_cpuinfo.o += $(call cc-disable-warning, initializer-overrides)
+> +
+>  # Object file lists.
+>  obj-y			:= debug-monitors.o entry.o irq.o fpsimd.o		\
+>  			   entry-fpsimd.o process.o ptrace.o setup.o signal.o	\
+> -- 
+> 2.20.1 (Apple Git-117)
+> 
