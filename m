@@ -2,173 +2,113 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 508D4C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 22:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23956C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 22:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10BA52166E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 22:02:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAB882166E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 22:04:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390451AbfHHWCQ (ORCPT
+        id S2390484AbfHHWEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 18:02:16 -0400
-Received: from mga18.intel.com ([134.134.136.126]:63010 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730768AbfHHWCQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 18:02:16 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Aug 2019 15:02:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,363,1559545200"; 
-   d="scan'208";a="326447683"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga004.jf.intel.com with ESMTP; 08 Aug 2019 15:02:12 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1hvqU7-0001o2-N7; Fri, 09 Aug 2019 06:02:11 +0800
-Date:   Fri, 9 Aug 2019 06:01:20 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Zeng Tao <prime.zeng@hisilicon.com>
-Cc:     kbuild-all@01.org, prime.zeng@hisilicon.com, kishon@ti.com,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] phy: Change the configuration interface param to void*
- to make it more general
-Message-ID: <201908090527.lvf3vFhJ%lkp@intel.com>
-References: <1562868255-31467-1-git-send-email-prime.zeng@hisilicon.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1562868255-31467-1-git-send-email-prime.zeng@hisilicon.com>
-X-Patchwork-Hint: ignore
-User-Agent: NeoMutt/20170113 (1.7.2)
+        Thu, 8 Aug 2019 18:04:44 -0400
+Received: from outbound.smtp.vt.edu ([198.82.183.121]:53466 "EHLO
+        omr1.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728020AbfHHWEo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 18:04:44 -0400
+Received: from mr6.cc.vt.edu (mr6.cc.vt.edu [IPv6:2607:b400:92:8500:0:af:2d00:4488])
+        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x78M4gtQ010196
+        for <linux-kernel@vger.kernel.org>; Thu, 8 Aug 2019 18:04:42 -0400
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
+        by mr6.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x78M4bL7032145
+        for <linux-kernel@vger.kernel.org>; Thu, 8 Aug 2019 18:04:42 -0400
+Received: by mail-qt1-f198.google.com with SMTP id e22so21205292qtp.9
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 15:04:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :mime-version:content-transfer-encoding:date:message-id;
+        bh=TuPUW4uauKZvKtW12t0EYu+Ky+eWDM1YUZMuhx8X6Sc=;
+        b=ff1SvV6kSiFgFTbKE/+xhyrwe0QcqJwTPPdrDZ+jxi7kALlJtF9DwT6c+gIcxKaksX
+         LuXyhO9spFECeJvqXx7yilBcXpdT7gfDdG8j6ZYPt89lY7bs3sXj5IVGqLJu0lhUq7oe
+         OfoESIY0hbc+It2OJqZxHJEBHulNokIwJETXjFujGHGM0UlpgfCzKppz/RvxI1pgLBzx
+         LqsNXnC8mee/PBpsqVlQBn3/nJlNHfyo8+qCpfnA28LMdAceS1hfY5cs71uAKv5huLb5
+         TwSiRF9OhSLyD2hV/ZLiXmxPH8CHhQ1o5uxmNg2YRxtO1gNJeoR7i9gb3Fnql3Y51juI
+         lnFg==
+X-Gm-Message-State: APjAAAVZi98Si14m4IFMX2ahLp579zV/6y6SOKnICGWNGWleIUYHip8K
+        QmVtpZpcV/Oyt+d/9rMC5hgpkVUxm/3gOsTi/e6ukPSCRD9dUZm1JCHKqN2D4o9v3clZrqLtDzF
+        UBZB9TrREXQpOVXSmJSqFLmVtntL+21AJhsw=
+X-Received: by 2002:a37:a744:: with SMTP id q65mr15514314qke.151.1565301877416;
+        Thu, 08 Aug 2019 15:04:37 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqylW9odmQuabnL8zaJIVyfwISfEf8nn6NAGHAnPJMhlOL+krnoyx+GmOVKUb8WJfz1a8+/paw==
+X-Received: by 2002:a37:a744:: with SMTP id q65mr15514293qke.151.1565301877198;
+        Thu, 08 Aug 2019 15:04:37 -0700 (PDT)
+Received: from turing-police ([2601:5c0:c001:4341::359])
+        by smtp.gmail.com with ESMTPSA id j66sm40204505qkf.86.2019.08.08.15.04.35
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 08 Aug 2019 15:04:35 -0700 (PDT)
+From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
+X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
+X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Fenghua Yu <fenghua.yu@intel.com>
+Subject: Re: [PATCH] arch/x86/kernel/cpu/umwait.c - remove unused variable
+In-Reply-To: <alpine.DEB.2.21.1908082229010.2882@nanos.tec.linutronix.de>
+References: <79734.1565272329@turing-police> <alpine.DEB.2.21.1908082158580.2882@nanos.tec.linutronix.de> <141835.1565295884@turing-police>
+ <alpine.DEB.2.21.1908082229010.2882@nanos.tec.linutronix.de>
+Mime-Version: 1.0
+Content-Type: multipart/signed; boundary="==_Exmh_1565301874_4269P";
+         micalg=pgp-sha1; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 08 Aug 2019 18:04:34 -0400
+Message-ID: <147298.1565301874@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zeng,
+--==_Exmh_1565301874_4269P
+Content-Type: text/plain; charset=us-ascii
 
-Thank you for the patch! Perhaps something to improve:
+On Thu, 08 Aug 2019 22:32:38 +0200, Thomas Gleixner said:
 
-[auto build test WARNING on linus/master]
-[cannot apply to v5.3-rc3 next-20190808]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+> Care to resend the last few with fixed subject lines, so I don't have to
+> clean them up?
 
-url:    https://github.com/0day-ci/linux/commits/Zeng-Tao/phy-Change-the-configuration-interface-param-to-void-to-make-it-more-general/20190713-213420
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-rc1-7-g2b96cd8-dirty
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+Will do that later this evening...
 
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
+> The right thing to do is to have a cpu_offline callback which clears the
+> umwait MSR. That covers also the failure in the cpu hotplug setup. Then
+> handling an error return makes sense and keeps everything in a workable
+> shape.
 
+OK, in that case, toss the umwait patch for now....
 
-sparse warnings: (new ones prefixed by >>)
+--==_Exmh_1565301874_4269P
+Content-Type: application/pgp-signature
 
-   include/linux/sched.h:609:43: sparse: sparse: bad integer constant expression
-   include/linux/sched.h:609:73: sparse: sparse: invalid named zero-width bitfield `value'
-   include/linux/sched.h:610:43: sparse: sparse: bad integer constant expression
-   include/linux/sched.h:610:67: sparse: sparse: invalid named zero-width bitfield `bucket_id'
->> drivers/gpu/drm/bridge/cdns-dsi.c:609:73: sparse: sparse: using member 'mipi_dphy' in incomplete union phy_configure_opts
-   drivers/gpu/drm/bridge/cdns-dsi.c:784:73: sparse: sparse: using member 'mipi_dphy' in incomplete union phy_configure_opts
---
-   include/linux/sched.h:609:43: sparse: sparse: bad integer constant expression
-   include/linux/sched.h:609:73: sparse: sparse: invalid named zero-width bitfield `value'
-   include/linux/sched.h:610:43: sparse: sparse: bad integer constant expression
-   include/linux/sched.h:610:67: sparse: sparse: invalid named zero-width bitfield `bucket_id'
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:165:22: sparse: sparse: using member 'hs_clk_rate' in incomplete struct phy_configure_opts_mipi_dphy
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:169:30: sparse: sparse: using member 'hs_clk_rate' in incomplete struct phy_configure_opts_mipi_dphy
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:173:17: sparse: sparse: using member 'hs_clk_rate' in incomplete struct phy_configure_opts_mipi_dphy
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:200:17: sparse: sparse: using member 'hs_clk_rate' in incomplete struct phy_configure_opts_mipi_dphy
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:206:9: sparse: sparse: using member 'hs_clk_rate' in incomplete struct phy_configure_opts_mipi_dphy
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:211:9: sparse: sparse: using member 'lp_clk_rate' in incomplete struct phy_configure_opts_mipi_dphy
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:216:9: sparse: sparse: using member 'lp_clk_rate' in incomplete struct phy_configure_opts_mipi_dphy
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:220:26: sparse: sparse: using member 'hs_prepare' in incomplete struct phy_configure_opts_mipi_dphy
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:221:17: sparse: sparse: using member 'hs_prepare' in incomplete struct phy_configure_opts_mipi_dphy
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:227:22: sparse: sparse: using member 'hs_prepare' in incomplete struct phy_configure_opts_mipi_dphy
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:230:37: sparse: sparse: using member 'hs_prepare' in incomplete struct phy_configure_opts_mipi_dphy
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:237:26: sparse: sparse: using member 'clk_prepare' in incomplete struct phy_configure_opts_mipi_dphy
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:238:17: sparse: sparse: using member 'clk_prepare' in incomplete struct phy_configure_opts_mipi_dphy
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:244:43: sparse: sparse: using member 'clk_prepare' in incomplete struct phy_configure_opts_mipi_dphy
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:247:30: sparse: sparse: using member 'hs_clk_rate' in incomplete struct phy_configure_opts_mipi_dphy
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:251:29: sparse: sparse: using member 'hs_clk_rate' in incomplete struct phy_configure_opts_mipi_dphy
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:255:30: sparse: sparse: using member 'hs_clk_rate' in incomplete struct phy_configure_opts_mipi_dphy
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:264:22: sparse: sparse: using member 'hs_clk_rate' in incomplete struct phy_configure_opts_mipi_dphy
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:266:27: sparse: sparse: using member 'hs_clk_rate' in incomplete struct phy_configure_opts_mipi_dphy
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:268:27: sparse: sparse: using member 'hs_clk_rate' in incomplete struct phy_configure_opts_mipi_dphy
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:270:27: sparse: sparse: using member 'hs_clk_rate' in incomplete struct phy_configure_opts_mipi_dphy
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:272:27: sparse: sparse: using member 'hs_clk_rate' in incomplete struct phy_configure_opts_mipi_dphy
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:274:27: sparse: sparse: using member 'hs_clk_rate' in incomplete struct phy_configure_opts_mipi_dphy
->> drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:326:53: sparse: sparse: using member 'mipi_dphy' in incomplete union phy_configure_opts
-   drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:356:54: sparse: sparse: using member 'mipi_dphy' in incomplete union phy_configure_opts
+-----BEGIN PGP SIGNATURE-----
+Comment: Exmh version 2.9.0 11/07/2018
 
-vim +/mipi_dphy +609 drivers/gpu/drm/bridge/cdns-dsi.c
+iQIVAwUBXUyccgdmEQWDXROgAQKy0A//XOZgqtQLKHSpYvU3JNwuVsNWXXY2YDGE
+fz4Hz4jh0McUtMvQxB/CucNnu0k4fxNt317OrpUyi05/BHzeJ9sVwDbFAKUArzCB
+4PRL1ZR38FK7S0YQtGIOlFEu9SwpQVGd3gb0y/hR5AzFHwizGK134mvLMHHj5r3E
+00I1bmzlkFJ1TLuYEzsYQvfg6ybwZE6l5pXku7hhdEN0efr01Af5vfed8t8ZZZF+
+QTVTtlrgOHhUrVJhN8r1RZejB4KLMwpiqnRTMxb4sZwKxUkU+kLGnJ4F4yVQmS0l
+QubnTFujqlnHp/59CBmj3lzHAxrcoka5Il2WxtPC6CyAal31MYlb/IkuHAS/a3Ck
+/euRxdnxfr05xxtnBaBLGu/3yL0F9b8faH4t+tmGQbFVF98SbeAHd7H51tqfTv4k
+nrFH0nN0Dz/qgpbI27Bhey4ASeP5EOABPeTx1xv5v4E9DUoRuI78/GyzO3UjIQgx
+clveWJsQ4eooZ1z0NvvWY+O9FjJnsyGJfA8KD/M5a64QJdWuO7CgK/04zXk+4cI7
+O9p7Qf3SOofxuXC1sdH2RBnd1ntEPrr1dORLchYzYG0kNyem+07CqXwec92XN+Bv
+kp70QgGrFnd3HmB9/mqsWiV1DjvchJkWoW3cFCVRR91P1RS9iZ0GetAa3WK6lYEh
+77swpa305J0=
+=5blX
+-----END PGP SIGNATURE-----
 
-4dad3e7f12f702 Maxime Ripard   2019-01-21  602  
-4dad3e7f12f702 Maxime Ripard   2019-01-21  603  static int cdns_dsi_check_conf(struct cdns_dsi *dsi,
-4dad3e7f12f702 Maxime Ripard   2019-01-21  604  			       const struct drm_display_mode *mode,
-4dad3e7f12f702 Maxime Ripard   2019-01-21  605  			       struct cdns_dsi_cfg *dsi_cfg,
-4dad3e7f12f702 Maxime Ripard   2019-01-21  606  			       bool mode_valid_check)
-4dad3e7f12f702 Maxime Ripard   2019-01-21  607  {
-4dad3e7f12f702 Maxime Ripard   2019-01-21  608  	struct cdns_dsi_output *output = &dsi->output;
-fced5a364dee9d Maxime Ripard   2019-01-21 @609  	struct phy_configure_opts_mipi_dphy *phy_cfg = &output->phy_opts.mipi_dphy;
-4dad3e7f12f702 Maxime Ripard   2019-01-21  610  	unsigned long dsi_hss_hsa_hse_hbp;
-4dad3e7f12f702 Maxime Ripard   2019-01-21  611  	unsigned int nlanes = output->dev->lanes;
-4dad3e7f12f702 Maxime Ripard   2019-01-21  612  	int ret;
-4dad3e7f12f702 Maxime Ripard   2019-01-21  613  
-4dad3e7f12f702 Maxime Ripard   2019-01-21  614  	ret = cdns_dsi_mode2cfg(dsi, mode, dsi_cfg, mode_valid_check);
-4dad3e7f12f702 Maxime Ripard   2019-01-21  615  	if (ret)
-4dad3e7f12f702 Maxime Ripard   2019-01-21  616  		return ret;
-4dad3e7f12f702 Maxime Ripard   2019-01-21  617  
-fced5a364dee9d Maxime Ripard   2019-01-21  618  	phy_mipi_dphy_get_default_config(mode->crtc_clock * 1000,
-fced5a364dee9d Maxime Ripard   2019-01-21  619  					 mipi_dsi_pixel_format_to_bpp(output->dev->format),
-fced5a364dee9d Maxime Ripard   2019-01-21  620  					 nlanes, phy_cfg);
-fced5a364dee9d Maxime Ripard   2019-01-21  621  
-fced5a364dee9d Maxime Ripard   2019-01-21  622  	ret = cdns_dsi_adjust_phy_config(dsi, dsi_cfg, phy_cfg, mode, mode_valid_check);
-fced5a364dee9d Maxime Ripard   2019-01-21  623  	if (ret)
-fced5a364dee9d Maxime Ripard   2019-01-21  624  		return ret;
-fced5a364dee9d Maxime Ripard   2019-01-21  625  
-fced5a364dee9d Maxime Ripard   2019-01-21  626  	ret = phy_validate(dsi->dphy, PHY_MODE_MIPI_DPHY, 0, &output->phy_opts);
-4dad3e7f12f702 Maxime Ripard   2019-01-21  627  	if (ret)
-4dad3e7f12f702 Maxime Ripard   2019-01-21  628  		return ret;
-4dad3e7f12f702 Maxime Ripard   2019-01-21  629  
-4dad3e7f12f702 Maxime Ripard   2019-01-21  630  	dsi_hss_hsa_hse_hbp = dsi_cfg->hbp + DSI_HBP_FRAME_OVERHEAD;
-4dad3e7f12f702 Maxime Ripard   2019-01-21  631  	if (output->dev->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE)
-4dad3e7f12f702 Maxime Ripard   2019-01-21  632  		dsi_hss_hsa_hse_hbp += dsi_cfg->hsa + DSI_HSA_FRAME_OVERHEAD;
-e19233955d9e9a Boris Brezillon 2018-04-21  633  
-e19233955d9e9a Boris Brezillon 2018-04-21  634  	/*
-e19233955d9e9a Boris Brezillon 2018-04-21  635  	 * Make sure DPI(HFP) > DSI(HSS+HSA+HSE+HBP) to guarantee that the FIFO
-e19233955d9e9a Boris Brezillon 2018-04-21  636  	 * is empty before we start a receiving a new line on the DPI
-e19233955d9e9a Boris Brezillon 2018-04-21  637  	 * interface.
-e19233955d9e9a Boris Brezillon 2018-04-21  638  	 */
-fced5a364dee9d Maxime Ripard   2019-01-21  639  	if ((u64)phy_cfg->hs_clk_rate *
-4dad3e7f12f702 Maxime Ripard   2019-01-21  640  	    mode_to_dpi_hfp(mode, mode_valid_check) * nlanes <
-e19233955d9e9a Boris Brezillon 2018-04-21  641  	    (u64)dsi_hss_hsa_hse_hbp *
-e19233955d9e9a Boris Brezillon 2018-04-21  642  	    (mode_valid_check ? mode->clock : mode->crtc_clock) * 1000)
-e19233955d9e9a Boris Brezillon 2018-04-21  643  		return -EINVAL;
-e19233955d9e9a Boris Brezillon 2018-04-21  644  
-e19233955d9e9a Boris Brezillon 2018-04-21  645  	return 0;
-e19233955d9e9a Boris Brezillon 2018-04-21  646  }
-e19233955d9e9a Boris Brezillon 2018-04-21  647  
-
-:::::: The code at line 609 was first introduced by commit
-:::::: fced5a364dee9d3a3ed1e3290ea3b83984b78007 drm/bridge: cdns: Convert to phy framework
-
-:::::: TO: Maxime Ripard <maxime.ripard@bootlin.com>
-:::::: CC: Maxime Ripard <maxime.ripard@bootlin.com>
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+--==_Exmh_1565301874_4269P--
