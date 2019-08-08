@@ -2,93 +2,164 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A43C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 23:11:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDDEBC32754
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 23:13:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 627FD2173E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 23:11:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565305862;
-	bh=J0OjUsDDPinYrioy0E88jjWU3nkhlo1TIR2fdEwUiFw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=w6FVZlE/Qen4mGcJy6jwyL/0RltsPWVkjQqXRrYTC3ULqDSe3mfwo/IP5YLonRngU
-	 UKyeROR1DpypMACbEvr9ZGX0Zl3vlHTTScPg4QrBms2IHIblpTKor4S/BIYv3jKeJ9
-	 WS2SQjaKhd1BU9QOe6H568sK8DMI6tULcG2vpBU8=
+	by mail.kernel.org (Postfix) with ESMTP id B41D021743
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 23:13:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TMFjcZ4v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404754AbfHHXLB (ORCPT
+        id S2390503AbfHHXNx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 19:11:01 -0400
-Received: from mga03.intel.com ([134.134.136.65]:23089 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732375AbfHHXLA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 19:11:00 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Aug 2019 16:11:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,363,1559545200"; 
-   d="scan'208";a="169142712"
-Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
-  by orsmga008.jf.intel.com with ESMTP; 08 Aug 2019 16:10:59 -0700
-Date:   Thu, 8 Aug 2019 17:08:35 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     "Derrick, Jonathan" <jonathan.derrick@intel.com>
-Cc:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "ming.lei@redhat.com" <ming.lei@redhat.com>,
-        "hch@lst.de" <hch@lst.de>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] genirq/affinity: report extra vectors on uneven nodes
-Message-ID: <20190808230835.GB27570@localhost.localdomain>
-References: <20190807201051.32662-1-jonathan.derrick@intel.com>
- <alpine.DEB.2.21.1908080903360.2882@nanos.tec.linutronix.de>
- <20190808163224.GB27077@localhost.localdomain>
- <1a6ab898b8800c3e660054f77ac81bfc3921d45a.camel@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1a6ab898b8800c3e660054f77ac81bfc3921d45a.camel@intel.com>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+        Thu, 8 Aug 2019 19:13:53 -0400
+Received: from mail-vk1-f202.google.com ([209.85.221.202]:44516 "EHLO
+        mail-vk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732796AbfHHXNw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 19:13:52 -0400
+Received: by mail-vk1-f202.google.com with SMTP id m1so40939645vkl.11
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 16:13:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=wId29/KRlL3T3iL7X0HyROciU3enoTeQrmaI3uDvplM=;
+        b=TMFjcZ4vhBvh4e7isaMSjyShLhjqgNI9SS84mRQBUZq7giQJNsbMV9xB8o589wPJjG
+         ATqzdkESubrtjfyBEvm0HFq7aHibDZTA+VfHQqC1k82g6SeBBy3ZTDPxYWtdtsgA5gb2
+         BaRU8mj248iyCd1JsH8c8z3c/1h2TbfYGpCiSAfmctaAa6DGr8+fhUkhzZc2E+FF0zff
+         4oqJ0+yopnx6PrZt4GfyCNDb5JdmETVvW4BJCoi29CZ8EgWzd2MoiLzfjPs4BA70d/ap
+         1mA4DuppfOGpbfO7bbk50y9t/h43rXMwgeWryuxIKqhcmfIG6gPb9Ygmtl0pwmsfnGk7
+         iD5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=wId29/KRlL3T3iL7X0HyROciU3enoTeQrmaI3uDvplM=;
+        b=PQ7672tR+K8NL0v7Gnn9x8Sny3sK44kH5zosaFmnW5NT1rwZubOnVxKAuOqlV+EJro
+         wBvftQdWaFgICfSP5C7a5+osR4/HgXvRSdhvYN5ImYPZ0iyCGud6/gdBw4vryCaj7S/B
+         mB5Csq+xtLA4P86BS9OLu04xE2KY/2LbUFoYRKIJ07U2sEaV5mAlSGlIlzCWZdjpAY7y
+         LaP4pckn4NG5M7QrFUPSTTUztmyLRpyxWq1t9JQDavbJfayVqhC7OsvOKFiqmHohbWv2
+         RJJDl7lQZ47TlSA3/zqSHjH1P9DEbRAB1HVopU4Xy0wvlMSxAcrAzyKVrTf58o/lmGqt
+         8E9w==
+X-Gm-Message-State: APjAAAWFo1lce3Vco4oerg1YsyFcRvbDlfhtEtjuQ7jpkJvn2WFb5RrP
+        nmQDbvfvSMIJvvj2zF6PpvrDk6+UIE/HH7mcpA==
+X-Google-Smtp-Source: APXvYqzJjnEQKXMAlqlBk6hL4U4b6xmXEzBX0SnBKAOjCUKuT01y6ae1E3MP3SuI38xxfLnqA1lnQNJFkC1pyxj9Hg==
+X-Received: by 2002:a1f:5945:: with SMTP id n66mr6951132vkb.58.1565306031133;
+ Thu, 08 Aug 2019 16:13:51 -0700 (PDT)
+Date:   Thu,  8 Aug 2019 16:13:35 -0700
+Message-Id: <20190808231340.53601-1-almasrymina@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
+Subject: [RFC PATCH v2 0/5] hugetlb_cgroup: Add hugetlb_cgroup reservation limits
+From:   Mina Almasry <almasrymina@google.com>
+To:     mike.kravetz@oracle.com
+Cc:     shuah@kernel.org, almasrymina@google.com, rientjes@google.com,
+        shakeelb@google.com, gthelen@google.com, akpm@linux-foundation.org,
+        khalid.aziz@oracle.com, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 10:46:06PM +0000, Derrick, Jonathan wrote:
-> On Thu, 2019-08-08 at 10:32 -0600, Keith Busch wrote:
-> > 
-> > I think the real problem is the spread's vecs_per_node doesn't account
-> > which nodes contribute more CPUs than others. For example:
-> > 
-> >   Node 0 has 32 CPUs
-> >   Node 1 has 8 CPUs
-> >   Assign 32 vectors
-> > 
-> > The current algorithm assigns 16 vectors to node 0 because vecs_per_node
-> > is calculated as 32 vectors / 2 nodes on the first iteration. The
-> > subsequent iteration for node 1 gets 8 vectors because it has only 8
-> > CPUs, leaving 8 vectors unassigned.
-> > 
-> > A more fair spread would give node 0 the remaining 8 vectors. This
-> > optimization, however, is a bit more complex than the current algorithm,
-> > which is probably why it wasn't done, so I think the warning should just
-> > be removed.
-> 
-> It does get a bit complex for the rare scenario in this case
-> Maybe just an informational warning rather than a stackdumping warning
+Problem:
+Currently tasks attempting to allocate more hugetlb memory than is available get
+a failure at mmap/shmget time. This is thanks to Hugetlbfs Reservations [1].
+However, if a task attempts to allocate hugetlb memory only more than its
+hugetlb_cgroup limit allows, the kernel will allow the mmap/shmget call,
+but will SIGBUS the task when it attempts to fault the memory in.
 
-I think the easiest way to ensure all vectors are assigned is iterate
-the nodes in a sorted order from fewest CPUs to most. That should fix
-the warning, though it may not have the best possible assignment ratio
-(but better than what we're currently doing).
+We have developers interested in using hugetlb_cgroups, and they have expressed
+dissatisfaction regarding this behavior. We'd like to improve this
+behavior such that tasks violating the hugetlb_cgroup limits get an error on
+mmap/shmget time, rather than getting SIGBUS'd when they try to fault
+the excess memory in.
 
-Unfortunately the kernel's sort() doesn't take a 'void *priv' for the
-compare callback, so we wouldn't have all the information needed to weigh
-each node, but maybe we can fix that if there's agreement to iterate
-the nodes this way.
+The underlying problem is that today's hugetlb_cgroup accounting happens
+at hugetlb memory *fault* time, rather than at *reservation* time.
+Thus, enforcing the hugetlb_cgroup limit only happens at fault time, and
+the offending task gets SIGBUS'd.
+
+Proposed Solution:
+A new page counter named hugetlb.xMB.reservation_[limit|usage]_in_bytes. This
+counter has slightly different semantics than
+hugetlb.xMB.[limit|usage]_in_bytes:
+
+- While usage_in_bytes tracks all *faulted* hugetlb memory,
+reservation_usage_in_bytes tracks all *reserved* hugetlb memory.
+
+- If a task attempts to reserve more memory than limit_in_bytes allows,
+the kernel will allow it to do so. But if a task attempts to reserve
+more memory than reservation_limit_in_bytes, the kernel will fail this
+reservation.
+
+This proposal is implemented in this patch, with tests to verify
+functionality and show the usage.
+
+Alternatives considered:
+1. A new cgroup, instead of only a new page_counter attached to
+   the existing hugetlb_cgroup. Adding a new cgroup seemed like a lot of code
+   duplication with hugetlb_cgroup. Keeping hugetlb related page counters under
+   hugetlb_cgroup seemed cleaner as well.
+
+2. Instead of adding a new counter, we considered adding a sysctl that modifies
+   the behavior of hugetlb.xMB.[limit|usage]_in_bytes, to do accounting at
+   reservation time rather than fault time. Adding a new page_counter seems
+   better as userspace could, if it wants, choose to enforce different cgroups
+   differently: one via limit_in_bytes, and another via
+   reservation_limit_in_bytes. This could be very useful if you're
+   transitioning how hugetlb memory is partitioned on your system one
+   cgroup at a time, for example. Also, someone may find usage for both
+   limit_in_bytes and reservation_limit_in_bytes concurrently, and this
+   approach gives them the option to do so.
+
+Caveats:
+1. This support is implemented for cgroups-v1. I have not tried
+   hugetlb_cgroups with cgroups v2, and AFAICT it's not supported yet.
+   This is largely because we use cgroups-v1 for now. If required, I
+   can add hugetlb_cgroup support to cgroups v2 in this patch or
+   a follow up.
+2. Most complicated bit of this patch I believe is: where to store the
+   pointer to the hugetlb_cgroup to uncharge at unreservation time?
+   Normally the cgroup pointers hang off the struct page. But, with
+   hugetlb_cgroup reservations, one task can reserve a specific page and another
+   task may fault it in (I believe), so storing the pointer in struct
+   page is not appropriate. Proposed approach here is to store the pointer in
+   the resv_map. See patch for details.
+
+Signed-off-by: Mina Almasry <almasrymina@google.com>
+
+[1]: https://www.kernel.org/doc/html/latest/vm/hugetlbfs_reserv.html
+
+Changes in v2:
+- Split the patch into a 5 patch series.
+- Fixed patch subject.
+
+Mina Almasry (5):
+  hugetlb_cgroup: Add hugetlb_cgroup reservation counter
+  hugetlb_cgroup: add interface for charge/uncharge hugetlb reservations
+  hugetlb_cgroup: add reservation accounting for private mappings
+  hugetlb_cgroup: add accounting for shared mappings
+  hugetlb_cgroup: Add hugetlb_cgroup reservation tests
+
+ include/linux/hugetlb.h                       |  10 +-
+ include/linux/hugetlb_cgroup.h                |  19 +-
+ mm/hugetlb.c                                  | 256 ++++++++--
+ mm/hugetlb_cgroup.c                           | 153 +++++-
+ tools/testing/selftests/vm/.gitignore         |   1 +
+ tools/testing/selftests/vm/Makefile           |   4 +
+ .../selftests/vm/charge_reserved_hugetlb.sh   | 438 ++++++++++++++++++
+ .../selftests/vm/write_hugetlb_memory.sh      |  22 +
+ .../testing/selftests/vm/write_to_hugetlbfs.c | 252 ++++++++++
+ 9 files changed, 1087 insertions(+), 68 deletions(-)
+ create mode 100755 tools/testing/selftests/vm/charge_reserved_hugetlb.sh
+ create mode 100644 tools/testing/selftests/vm/write_hugetlb_memory.sh
+ create mode 100644 tools/testing/selftests/vm/write_to_hugetlbfs.c
+
+--
+2.23.0.rc1.153.gdeed80330f-goog
