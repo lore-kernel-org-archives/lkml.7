@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16730C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:15:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 385CFC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6DF0214C6
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:15:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C2F9214C6
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:15:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565291743;
-	bh=dQ6PS1WCEpBzXhZD5UEH0K4K783IqUu+5OPXTthOhBM=;
+	s=default; t=1565291748;
+	bh=uLl5H01r+k8IDY1DBXgejoGkOhkHH3VpZfJmjS8a4VQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vVIOxsKmYbTi/3pVGXpzjytGkxzHy9gJQX7k9NEMP39oHkZ2gXKxFdxMqXbZfLx1A
-	 1+JEqwIHYNYROT7X1j0+86MJz40r0uhgi9cq2i3x5+VSn7Lst9jdpZGamw2EIjdfBw
-	 ZMlAKdFzRSrQjN4ROp2tUnQVcCz6gy+qhSeNbQns=
+	b=LZF4zfQN5zxkQajf/2BrmbIJviYFbZvHO3dLsrvsQEs8ZiZ7v3CpOGDz8jt29dRxT
+	 nQRC8u/mMrMdwk/ct6E8XAJZo378+FKKynM4+fNxvD+KA6+CBuFYXCiPqvkQYe4rpc
+	 VFdbTSCyT/LiqUF17OPjs2vuKRE5e4EMgXKxxgcM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404496AbfHHTGn (ORCPT
+        id S2404519AbfHHTPq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:06:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40166 "EHLO mail.kernel.org"
+        Thu, 8 Aug 2019 15:15:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404475AbfHHTGi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 15:06:38 -0400
+        id S2404458AbfHHTGf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 15:06:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1083E214C6;
-        Thu,  8 Aug 2019 19:06:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E15F2184E;
+        Thu,  8 Aug 2019 19:06:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565291197;
-        bh=dQ6PS1WCEpBzXhZD5UEH0K4K783IqUu+5OPXTthOhBM=;
+        s=default; t=1565291194;
+        bh=uLl5H01r+k8IDY1DBXgejoGkOhkHH3VpZfJmjS8a4VQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oc0l8xSVHmIeW/ilxiDtOrbn/hHN/j//va8J4GvDMOvjFBTy2swsxTGkUQnZtZcE0
-         tC+DiKaf4KX+8j1X0yMUItpslCaZxZkiBTGtJG3fhJ+k3xv785mQ0rLMS3DwkW4BeT
-         u8219dxC/RRlGNTDuNahZ0/pHUfnxr/Ehs+8lBfo=
+        b=b8v3Cyr7pvkTQ9tw9GQUnMjbpQx76zbROYUchsHS302TQDGEEHbuzxiZ9Xhp8FroM
+         biuWxCPGIPThNLh9C5VYsktdIfdS28ztxqpqtDF2IeKF72IFJWtN0OY6IkgkUY0a0E
+         HjsMMvjOtwjvPg861LZGWqb6yM8APTOE047RIwB0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Parav Pandit <parav@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Mark Zhang <markz@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.2 23/56] net/mlx5: Use reversed order when unregister devices
-Date:   Thu,  8 Aug 2019 21:04:49 +0200
-Message-Id: <20190808190453.823001128@linuxfoundation.org>
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.2 22/56] net/mlx5e: always initialize frag->last_in_page
+Date:   Thu,  8 Aug 2019 21:04:48 +0200
+Message-Id: <20190808190453.775711815@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190808190452.867062037@linuxfoundation.org>
 References: <20190808190452.867062037@linuxfoundation.org>
@@ -61,43 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Zhang <markz@mellanox.com>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit 08aa5e7da6bce1a1963f63cf32c2e7ad434ad578 ]
+[ Upstream commit 60d60c8fbd8d1acf25b041ecd72ae4fa16e9405b ]
 
-When lag is active, which is controlled by the bonded mlx5e netdev, mlx5
-interface unregestering must happen in the reverse order where rdma is
-unregistered (unloaded) first, to guarantee all references to the lag
-context in hardware is removed, then remove mlx5e netdev interface which
-will cleanup the lag context from hardware.
+The commit 069d11465a80 ("net/mlx5e: RX, Enhance legacy Receive Queue
+memory scheme") introduced an undefined behaviour below due to
+"frag->last_in_page" is only initialized in mlx5e_init_frags_partition()
+when,
 
-Without this fix during destroy of LAG interface, we observed following
-errors:
- * mlx5_cmd_check:752:(pid 12556): DESTROY_LAG(0x843) op_mod(0x0) failed,
-   status bad parameter(0x3), syndrome (0xe4ac33)
- * mlx5_cmd_check:752:(pid 12556): DESTROY_LAG(0x843) op_mod(0x0) failed,
-   status bad parameter(0x3), syndrome (0xa5aee8).
+if (next_frag.offset + frag_info[f].frag_stride > PAGE_SIZE)
 
-Fixes: a31208b1e11d ("net/mlx5_core: New init and exit flow for mlx5_core")
-Reviewed-by: Parav Pandit <parav@mellanox.com>
-Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Mark Zhang <markz@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+or after bailed out the loop,
+
+for (i = 0; i < mlx5_wq_cyc_get_size(&rq->wqe.wq); i++)
+
+As the result, there could be some "frag" have uninitialized
+value of "last_in_page".
+
+Later, get_frag() obtains those "frag" and check "frag->last_in_page" in
+mlx5e_put_rx_frag() and triggers the error during boot. Fix it by always
+initializing "frag->last_in_page" to "false" in
+mlx5e_init_frags_partition().
+
+UBSAN: Undefined behaviour in
+drivers/net/ethernet/mellanox/mlx5/core/en_rx.c:325:12
+load of value 170 is not a valid value for type 'bool' (aka '_Bool')
+Call trace:
+ dump_backtrace+0x0/0x264
+ show_stack+0x20/0x2c
+ dump_stack+0xb0/0x104
+ __ubsan_handle_load_invalid_value+0x104/0x128
+ mlx5e_handle_rx_cqe+0x8e8/0x12cc [mlx5_core]
+ mlx5e_poll_rx_cq+0xca8/0x1a94 [mlx5_core]
+ mlx5e_napi_poll+0x17c/0xa30 [mlx5_core]
+ net_rx_action+0x248/0x940
+ __do_softirq+0x350/0x7b8
+ irq_exit+0x200/0x26c
+ __handle_domain_irq+0xc8/0x128
+ gic_handle_irq+0x138/0x228
+ el1_irq+0xb8/0x140
+ arch_cpu_idle+0x1a4/0x348
+ do_idle+0x114/0x1b0
+ cpu_startup_entry+0x24/0x28
+ rest_init+0x1ac/0x1dc
+ arch_call_rest_init+0x10/0x18
+ start_kernel+0x4d4/0x57c
+
+Fixes: 069d11465a80 ("net/mlx5e: RX, Enhance legacy Receive Queue memory scheme")
+Signed-off-by: Qian Cai <cai@lca.pw>
+Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/dev.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en_main.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/dev.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/dev.c
-@@ -213,7 +213,7 @@ void mlx5_unregister_device(struct mlx5_
- 	struct mlx5_interface *intf;
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+@@ -340,12 +340,11 @@ static inline u64 mlx5e_get_mpwqe_offset
  
- 	mutex_lock(&mlx5_intf_mutex);
--	list_for_each_entry(intf, &intf_list, list)
-+	list_for_each_entry_reverse(intf, &intf_list, list)
- 		mlx5_remove_device(intf, priv);
- 	list_del(&priv->dev_list);
- 	mutex_unlock(&mlx5_intf_mutex);
+ static void mlx5e_init_frags_partition(struct mlx5e_rq *rq)
+ {
+-	struct mlx5e_wqe_frag_info next_frag, *prev;
++	struct mlx5e_wqe_frag_info next_frag = {};
++	struct mlx5e_wqe_frag_info *prev = NULL;
+ 	int i;
+ 
+ 	next_frag.di = &rq->wqe.di[0];
+-	next_frag.offset = 0;
+-	prev = NULL;
+ 
+ 	for (i = 0; i < mlx5_wq_cyc_get_size(&rq->wqe.wq); i++) {
+ 		struct mlx5e_rq_frag_info *frag_info = &rq->wqe.info.arr[0];
 
 
