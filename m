@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1FECC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:10:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA146C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71F6D214C6
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:10:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5B3B2184E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:10:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565291448;
-	bh=O0f5Pt4HIUa7dEb4d5Nhtlzex2Tz1uwdpdNFd888Iwg=;
+	s=default; t=1565291451;
+	bh=qbNSV5LpJ6X8wxF5fQvOQNQbGWvO5R4qcdZoAG+IbbI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cYeY1vRYENTZig4HQZRNZSoV1DxN25h8jbTCV5lI0cXb/NletLKl6AuyS7gNkgD6l
-	 ZFHi4l0lTuIak6toKEeMB3aTG/dTdlrRPJq7/nANMSUxHidP8k8wp9dInrOSlKmL9e
-	 jCeTINojxBF+Uz+CFweKmUXir6vjfdlV2Thw0J0U=
+	b=oCNWk/s8VAKLvI7zG/CZqbmzgAEmDxjCTOKhyom1hMg5F+ieAMrysfcFdREfEBUej
+	 Q75xmnxWSTW3cMP58V7aEeMx/ofH+VWGRf2uKmNZQXluUQJ1iiMYAj/ezRnwWhUEWh
+	 7P6UAr3GTw4XqWhpRbWC0mSHve88GfvaU/lwEGas=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405359AbfHHTKq (ORCPT
+        id S2405370AbfHHTKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:10:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45130 "EHLO mail.kernel.org"
+        Thu, 8 Aug 2019 15:10:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405334AbfHHTKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 15:10:43 -0400
+        id S2405334AbfHHTKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 15:10:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B88FF214C6;
-        Thu,  8 Aug 2019 19:10:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF4762184E;
+        Thu,  8 Aug 2019 19:10:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565291442;
-        bh=O0f5Pt4HIUa7dEb4d5Nhtlzex2Tz1uwdpdNFd888Iwg=;
+        s=default; t=1565291447;
+        bh=qbNSV5LpJ6X8wxF5fQvOQNQbGWvO5R4qcdZoAG+IbbI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=at8hvezo3k5n7BJ4/v73ikfJ8ci6XQeExLUc4mJJSVk5kxqhAnXBVxMzFVuUPJeR/
-         LDEtn7hny1lMWkPXWWPfU7yr6Qs1TWrMRZhJocb/lyxDNt0MNkDiT83dznrx1P67Ag
-         azhyjxGPx+AmEAUV6gLx0LqDmDcePVhoe92Ucamg=
+        b=AoxtGh/TZXFcNVUzV9gDhiqdMtVMCo1W5qM0M9eeEW6w0xQU+GTZxOBiSYJpSL9KL
+         pm8XkLRk9vN7pgtnX4p1gY06ghCdYQ6tZeipa+e09Lv38kyR5AMr+g+dUHxPITYUOO
+         4dr94fri9YReEUZ/WbkTtyyx5vhM+HDwl2I9fp6o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 16/33] net: bridge: mcast: dont delete permanent entries when fast leave is enabled
-Date:   Thu,  8 Aug 2019 21:05:23 +0200
-Message-Id: <20190808190454.390531534@linuxfoundation.org>
+        stable@vger.kernel.org, Parav Pandit <parav@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Mark Zhang <markz@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 4.14 18/33] net/mlx5: Use reversed order when unregister devices
+Date:   Thu,  8 Aug 2019 21:05:25 +0200
+Message-Id: <20190808190454.512233020@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190808190453.582417307@linuxfoundation.org>
 References: <20190808190453.582417307@linuxfoundation.org>
@@ -60,58 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+From: Mark Zhang <markz@mellanox.com>
 
-[ Upstream commit 5c725b6b65067909548ac9ca9bc777098ec9883d ]
+[ Upstream commit 08aa5e7da6bce1a1963f63cf32c2e7ad434ad578 ]
 
-When permanent entries were introduced by the commit below, they were
-exempt from timing out and thus igmp leave wouldn't affect them unless
-fast leave was enabled on the port which was added before permanent
-entries existed. It shouldn't matter if fast leave is enabled or not
-if the user added a permanent entry it shouldn't be deleted on igmp
-leave.
+When lag is active, which is controlled by the bonded mlx5e netdev, mlx5
+interface unregestering must happen in the reverse order where rdma is
+unregistered (unloaded) first, to guarantee all references to the lag
+context in hardware is removed, then remove mlx5e netdev interface which
+will cleanup the lag context from hardware.
 
-Before:
-$ echo 1 > /sys/class/net/eth4/brport/multicast_fast_leave
-$ bridge mdb add dev br0 port eth4 grp 229.1.1.1 permanent
-$ bridge mdb show
-dev br0 port eth4 grp 229.1.1.1 permanent
+Without this fix during destroy of LAG interface, we observed following
+errors:
+ * mlx5_cmd_check:752:(pid 12556): DESTROY_LAG(0x843) op_mod(0x0) failed,
+   status bad parameter(0x3), syndrome (0xe4ac33)
+ * mlx5_cmd_check:752:(pid 12556): DESTROY_LAG(0x843) op_mod(0x0) failed,
+   status bad parameter(0x3), syndrome (0xa5aee8).
 
-< join and leave 229.1.1.1 on eth4 >
-
-$ bridge mdb show
-$
-
-After:
-$ echo 1 > /sys/class/net/eth4/brport/multicast_fast_leave
-$ bridge mdb add dev br0 port eth4 grp 229.1.1.1 permanent
-$ bridge mdb show
-dev br0 port eth4 grp 229.1.1.1 permanent
-
-< join and leave 229.1.1.1 on eth4 >
-
-$ bridge mdb show
-dev br0 port eth4 grp 229.1.1.1 permanent
-
-Fixes: ccb1c31a7a87 ("bridge: add flags to distinguish permanent mdb entires")
-Signed-off-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: a31208b1e11d ("net/mlx5_core: New init and exit flow for mlx5_core")
+Reviewed-by: Parav Pandit <parav@mellanox.com>
+Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Mark Zhang <markz@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/bridge/br_multicast.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/mellanox/mlx5/core/dev.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/bridge/br_multicast.c
-+++ b/net/bridge/br_multicast.c
-@@ -1593,6 +1593,9 @@ br_multicast_leave_group(struct net_brid
- 			if (!br_port_group_equal(p, port, src))
- 				continue;
+--- a/drivers/net/ethernet/mellanox/mlx5/core/dev.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/dev.c
+@@ -307,7 +307,7 @@ void mlx5_unregister_device(struct mlx5_
+ 	struct mlx5_interface *intf;
  
-+			if (p->flags & MDB_PG_FLAGS_PERMANENT)
-+				break;
-+
- 			rcu_assign_pointer(*pp, p->next);
- 			hlist_del_init(&p->mglist);
- 			del_timer(&p->timer);
+ 	mutex_lock(&mlx5_intf_mutex);
+-	list_for_each_entry(intf, &intf_list, list)
++	list_for_each_entry_reverse(intf, &intf_list, list)
+ 		mlx5_remove_device(intf, priv);
+ 	list_del(&priv->dev_list);
+ 	mutex_unlock(&mlx5_intf_mutex);
 
 
