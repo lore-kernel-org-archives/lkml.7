@@ -2,120 +2,139 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30216C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 103DDC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:58:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B0802187F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:53:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E13E52184E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:58:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731292AbfHHGxZ (ORCPT
+        id S1731098AbfHHG6j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 02:53:25 -0400
-Received: from ozlabs.org ([203.11.71.1]:60309 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730903AbfHHGxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 02:53:25 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 463zbk1Dm3z9sMr;
-        Thu,  8 Aug 2019 16:53:22 +1000 (AEST)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Segher Boessenkool <segher@kernel.crashing.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Alastair D'Silva <alastair@d-silva.org>
-Subject: powerpc flush_inval_dcache_range() was buggy until v5.3-rc1 (was Re: [PATCH 4/4] powerpc/64: reuse PPC32 static inline flush_dcache_range())
-References: <239d1c8f15b8bedc161a234f9f1a22a07160dbdf.1557824379.git.christophe.leroy@c-s.fr> <d6f628ffdeb9c7863da722a8f6ef2949e57bb360.1557824379.git.christophe.leroy@c-s.fr>
-Date:   Thu, 08 Aug 2019 16:53:21 +1000
-Message-ID: <87ef1wtafy.fsf@concordia.ellerman.id.au>
+        Thu, 8 Aug 2019 02:58:39 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:55677 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726187AbfHHG6j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 02:58:39 -0400
+X-UUID: bb2a2ddfaed84ef484bcb570e8928dcb-20190808
+X-UUID: bb2a2ddfaed84ef484bcb570e8928dcb-20190808
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
+        (envelope-from <miles.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
+        with ESMTP id 2119135432; Thu, 08 Aug 2019 14:58:29 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 8 Aug 2019 14:58:31 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 8 Aug 2019 14:58:30 +0800
+Message-ID: <1565247511.29066.1.camel@mtkswgap22>
+Subject: Re: [PATCH v2] arm64: mm: print hexadecimal EC value in
+ mem_abort_decode()
+From:   Miles Chen <miles.chen@mediatek.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+CC:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
+        Mark Rutland <Mark.rutland@arm.com>,
+        James Morse <james.morse@arm.com>
+Date:   Thu, 8 Aug 2019 14:58:31 +0800
+In-Reply-To: <256df022-6ad2-bae8-cc94-908adf409a07@arm.com>
+References: <20190807003336.28040-1-miles.chen@mediatek.com>
+         <98bdbcfb-24ed-fcd8-4b2c-f2c78b245dda@arm.com>
+         <1565244075.26350.3.camel@mtkswgap22>
+         <256df022-6ad2-bae8-cc94-908adf409a07@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ deliberately broke threading so this doesn't get buried ]
+On Thu, 2019-08-08 at 11:51 +0530, Anshuman Khandual wrote:
+> 
+> On 08/08/2019 11:31 AM, Miles Chen wrote:
+> > On Thu, 2019-08-08 at 11:19 +0530, Anshuman Khandual wrote:
+> >>
+> >> On 08/07/2019 06:03 AM, Miles Chen wrote:
+> >>> This change prints the hexadecimal EC value in mem_abort_decode(),
+> >>> which makes it easier to lookup the corresponding EC in
+> >>> the ARM Architecture Reference Manual.
+> >>>
+> >>> The commit 1f9b8936f36f ("arm64: Decode information from ESR upon mem
+> >>> faults") prints useful information when memory abort occurs. It would
+> >>> be easier to lookup "0x25" instead of "DABT" in the document. Then we
+> >>> can check the corresponding ISS.
+> >>>
+> >>> For example:
+> >>> Current	info	  	Document
+> >>> 		  	EC	Exception class
+> >>> "CP15 MCR/MRC"		0x3	"MCR or MRC access to CP15a..."
+> >>> "ASIMD"			0x7	"Access to SIMD or floating-point..."
+> >>> "DABT (current EL)" 	0x25	"Data Abort taken without..."
+> >>> ...
+> >>>
+> >>> Before:
+> >>> Unable to handle kernel paging request at virtual address 000000000000c000
+> >>> Mem abort info:
+> >>>   ESR = 0x96000046
+> >>>   Exception class = DABT (current EL), IL = 32 bits
+> >>>   SET = 0, FnV = 0
+> >>>   EA = 0, S1PTW = 0
+> >>> Data abort info:
+> >>>   ISV = 0, ISS = 0x00000046
+> >>>   CM = 0, WnR = 1
+> >>>
+> >>> After:
+> >>> Unable to handle kernel paging request at virtual address 000000000000c000
+> >>> Mem abort info:
+> >>>   ESR = 0x96000046
+> >>>   EC = 0x25: DABT (current EL), IL = 32 bits
+> >>>   SET = 0, FnV = 0
+> >>>   EA = 0, S1PTW = 0
+> >>> Data abort info:
+> >>>   ISV = 0, ISS = 0x00000046
+> >>>   CM = 0, WnR = 1
+> >>>
+> >>> Change since v1:
+> >>> print "EC" instead of "Exception class"
+> >>> print EC in fixwidth
+> >>>
+> >>> Cc: Mark Rutland <Mark.rutland@arm.com>
+> >>> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
+> >>> Cc: James Morse <james.morse@arm.com>
+> >>> Signed-off-by: Miles Chen <miles.chen@mediatek.com>
+> >>
+> >> This version implements the suggestion, hence it should have
+> >> also contained acked-by tag from Mark from earlier version.
+> >>
+> > 
+> > No problem. Sorry for not including the tag.
+> > I was not sure if I should add the acked-by tag from Mark in patch v2.
+> 
+> Yeah because V2 has now implemented the suggestion as required for
+> getting the tag per Mark in V1.
+> 
 
-Christophe Leroy <christophe.leroy@c-s.fr> writes:
-> diff --git a/arch/powerpc/kernel/misc_64.S b/arch/powerpc/kernel/misc_64.S
-> index a4fd536efb44..1b0a42c50ef1 100644
-> --- a/arch/powerpc/kernel/misc_64.S
-> +++ b/arch/powerpc/kernel/misc_64.S
-> @@ -115,35 +115,6 @@ _ASM_NOKPROBE_SYMBOL(flush_icache_range)
->  EXPORT_SYMBOL(flush_icache_range)
->  
->  /*
-> - * Like above, but only do the D-cache.
-> - *
-> - * flush_dcache_range(unsigned long start, unsigned long stop)
-> - *
-> - *    flush all bytes from start to stop-1 inclusive
-> - */
-> -
-> -_GLOBAL_TOC(flush_dcache_range)
-> - 	ld	r10,PPC64_CACHES@toc(r2)
-> -	lwz	r7,DCACHEL1BLOCKSIZE(r10)	/* Get dcache block size */
-> -	addi	r5,r7,-1
-> -	andc	r6,r3,r5		/* round low to line bdy */
-> -	subf	r8,r6,r4		/* compute length */
-> -	add	r8,r8,r5		/* ensure we get enough */
-> -	lwz	r9,DCACHEL1LOGBLOCKSIZE(r10)/* Get log-2 of dcache block size */
-> -	srw.	r8,r8,r9		/* compute line count */
-          ^
-> -	beqlr				/* nothing to do? */
-
-Alastair noticed that this was a 32-bit right shift.
-
-Meaning if you called flush_dcache_range() with a range larger than 4GB,
-it did nothing and returned.
-
-That code (which was previously called flush_inval_dcache_range()) was
-merged back in 2005:
-
-  https://github.com/mpe/linux-fullhistory/commit/faa5ee3743ff9b6df9f9a03600e34fdae596cfb2#diff-67c7ffa8e420c7d4206cae4a9e888e14
+Understood. thanks for the explanation
 
 
-Back then it was only used by the smu.c driver, which presumably wasn't
-flushing more than 4GB.
-
-Over time it grew more users:
-
-  v4.17 (Apr 2018): fb5924fddf9e ("powerpc/mm: Flush cache on memory hot(un)plug")
-  v4.15 (Nov 2017): 6c44741d75a2 ("powerpc/lib: Implement UACCESS_FLUSHCACHE API")
-  v4.15 (Nov 2017): 32ce3862af3c ("powerpc/lib: Implement PMEM API")
-  v4.8  (Jul 2016): c40785ad305b ("powerpc/dart: Use a cachable DART")
-
-The DART case doesn't matter, but the others probably could. I assume
-the lack of bug reports is due to the fact that pmem stuff is still in
-development and the lack of flushing usually doesn't actually matter? Or
-are people flushing/hotplugging < 4G at a time?
-
-Anyway we probably want to backport the fix below to various places?
-
-cheers
+> > 
+> >> Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> > 
+> > If I send patch v3, I should include acked-by tag from Mark and
+> > Reviewed-by tag from you, right?
+> 
+> Right.
 
 
-diff --git a/arch/powerpc/kernel/misc_64.S b/arch/powerpc/kernel/misc_64.S
-index 1ad4089dd110..802f5abbf061 100644
---- a/arch/powerpc/kernel/misc_64.S
-+++ b/arch/powerpc/kernel/misc_64.S
-@@ -148,7 +148,7 @@ _GLOBAL(flush_inval_dcache_range)
- 	subf	r8,r6,r4		/* compute length */
- 	add	r8,r8,r5		/* ensure we get enough */
- 	lwz	r9,DCACHEL1LOGBLOCKSIZE(r10)/* Get log-2 of dcache block size */
--	srw.	r8,r8,r9		/* compute line count */
-+	srd.	r8,r8,r9		/* compute line count */
- 	beqlr				/* nothing to do? */
- 	sync
- 	isync
+
