@@ -2,84 +2,134 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2219C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58853C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EA582173C
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:27:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 355292186A
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:27:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732236AbfHHJ1R (ORCPT
+        id S1732247AbfHHJ1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 05:27:17 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:42045 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732123AbfHHJ1R (ORCPT
+        Thu, 8 Aug 2019 05:27:50 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:38985 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730678AbfHHJ1t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 05:27:17 -0400
-Received: from [192.168.1.110] ([77.4.95.67]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MPXQi-1hhqu83dNy-00MZBc; Thu, 08 Aug 2019 11:27:14 +0200
-Subject: Re: Merge branch 'floppy'
-To:     Alex Henrie <alexhenrie24@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Denis Efremov <efremov@linux.com>
-References: <CAMMLpeQMPJjSx-hqZ75LCV0wC-kQBmqEe7wjb2oU5iq-pc5bfw@mail.gmail.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <976e78be-cfbc-0744-c04f-8a2361af0fa4@metux.net>
-Date:   Thu, 8 Aug 2019 11:27:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 8 Aug 2019 05:27:49 -0400
+Received: by mail-wm1-f67.google.com with SMTP id u25so1677383wmc.4
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 02:27:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=t+wAOarceN6JsDV9dX8Bi8ro/VvYkzelKra0BqUp7fk=;
+        b=k79BVL0RLZuNPDDfl1d/Hmjwe1STALtAk0BZfEZnF5hamR8MFLRg1uqcevpxgqP+Xh
+         f9gCRAhHUPUErwfKa+m3OVnSh2+e7ncX1H6z3sImuJvROgAk0tt6/UM5ki10CtNFjx/u
+         5HInzyOuZb/Sa1nAwIBCCDn/9TQrURRfPHmoTjbeBYZcOv82QU7uXHVEyC3sGLwMaKsA
+         QRzel/dF8mKKDOgiAIoHgfR81pYtOtyXjnJbVYXrXNKvNJ1ZEqLXjIu8ur9ocDRw75be
+         wJyqFQV7Yhnkdt1VOZWRVdBRcV3eJAEzcj8hLkLP+MEUq0hbL5Seg60ypiMLA6+SNdrS
+         Q5mg==
+X-Gm-Message-State: APjAAAWAc5Fz4Oc3NntYdTQ13sGLzgx1isceLSLuBpQmemh13jL4IT4+
+        OV1FoMob9sN9xRA987/2SbLvN99W1l0=
+X-Google-Smtp-Source: APXvYqwQdsbKOEE/PwWPci5LuNpGGpEsb0wwQP/KJOMVuD3lmgo5CC655/acl5e9fAwDuJ0Hx+fUDA==
+X-Received: by 2002:a7b:c1c1:: with SMTP id a1mr3395947wmj.31.1565256467228;
+        Thu, 08 Aug 2019 02:27:47 -0700 (PDT)
+Received: from localhost.localdomain ([151.29.237.107])
+        by smtp.gmail.com with ESMTPSA id k9sm29251813wrd.46.2019.08.08.02.27.45
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 08 Aug 2019 02:27:46 -0700 (PDT)
+Date:   Thu, 8 Aug 2019 11:27:44 +0200
+From:   Juri Lelli <juri.lelli@redhat.com>
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>, mingo@kernel.org,
+        linux-kernel@vger.kernel.org, luca.abeni@santannapisa.it,
+        bristot@redhat.com, balsini@android.com, dvyukov@google.com,
+        tglx@linutronix.de, vpillai@digitalocean.com, rostedt@goodmis.org
+Subject: Re: [RFC][PATCH 12/13] sched/deadline: Introduce deadline servers
+Message-ID: <20190808092744.GI29310@localhost.localdomain>
+References: <20190726145409.947503076@infradead.org>
+ <20190726161358.056107990@infradead.org>
+ <34710762-f813-3913-0e55-fde7c91c6c2d@arm.com>
+ <20190808075635.GB17205@worktop.programming.kicks-ass.net>
+ <20cc05d3-0d0f-a558-2bbe-3b72527dd9bc@arm.com>
+ <20190808084652.GG29310@localhost.localdomain>
+ <99a8339d-8e06-bff8-284b-1829d0683a7a@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <CAMMLpeQMPJjSx-hqZ75LCV0wC-kQBmqEe7wjb2oU5iq-pc5bfw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:W1Gb2S0ORtMZQoseDiCygcdXEwPwajKJPhGNrpcj3UBbCWA9o/k
- Mjn2L6SbwMVkTYW/gOFfJEJZzOxGLY+JToDgDtLgqmYbw19EyCM577m7vAgh9eM141kRiSw
- W+FHV6yYGFofGFWiXQdzPWvFzTcPwMsqW7+MpGhq324/vuercbnYdO7NTBL794+7Uux3+60
- qRp4T0d/y3/ueuGHlTWLw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:8mJVUKDtIeQ=:nTsNy0grwOgAWCHROrdqi6
- 1SOKO76NZ5WpgjOwLk0zM5OHI82/EnQg+1cnXlQXHmQ3SyboLVMeoOisU7FAqvmfdIpS5lxA0
- oCBSgvVnpZ6bwvZ/7dsp/fBtWfPAxgVI+Vi4WKgdeZGtSDPmj95XK+5yDh+uOGmS06YLL/qWE
- KXkHwoHBOlrPOYRJ+PxbPJkLwaV9iqcPUDqc2XGz/i1VhBVSnPArZxMCpRD51iwn0ae1kzr9V
- HZcbc/X+fcKFcesOHUZfZwnpX94PRr3o6mzcrHa3dpGTTenBtYzLYPtj8LdO77cCQt1yPDKso
- 4o67CaRuWnO482RUzX99C/y4S8JEEgLuwz4fOl4vDlbQw4Cppo4AcG0wRkswdg/LQXOALW6dE
- m6s37YVvvsmORekGxuaW9QVF0sNDIuBIb30CUbQBDqJjOKz4GBq7LAJMdHj/7hYRn3i9oK1sn
- dtG+RWMr3PMvtgBT0hWpurfqdrB8Ac3ZiZldSpBM+Ou0nVria4ywi0i/VPYnnVtYYUGU8+P2q
- WwX4KyUx2geyEifu8URWByCtNYS+GHtBynXWihcaxXVYm+fRs/vrl+oFDH1x6tmQYiln79lXl
- sDHy4RWcsu6RmqlO6a1Ou1vQ7dJidXpl6CGhWHaK+HdWwsbaVMGZN0Zuf5mM2iFBqx43OuGJf
- uEbEaMycEiW3ZS6+a0pzIf7NK4Jz94fdsMo7ukKvgbKr3byz1Gb1Os0Vutan5uZ4VnWyLpxvh
- y7Kit44BlavHC011CA3Bv7h5J4LVdW/OdIj4qfLtW8u5ZkUdUuqwqJL/6JE=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <99a8339d-8e06-bff8-284b-1829d0683a7a@arm.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 31.07.19 22:36, Alex Henrie wrote:
+On 08/08/19 10:57, Dietmar Eggemann wrote:
+> On 8/8/19 10:46 AM, Juri Lelli wrote:
+> > On 08/08/19 10:11, Dietmar Eggemann wrote:
+> >> On 8/8/19 9:56 AM, Peter Zijlstra wrote:
+> >>> On Wed, Aug 07, 2019 at 06:31:59PM +0200, Dietmar Eggemann wrote:
+> >>>> On 7/26/19 4:54 PM, Peter Zijlstra wrote:
+> >>>>>
+> >>>>>
+> >>>>> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> >>>>
+> >>>> [...]
+> >>>>
+> >>>>> @@ -889,6 +891,8 @@ static void update_curr(struct cfs_rq *c
+> >>>>>  		trace_sched_stat_runtime(curtask, delta_exec, curr->vruntime);
+> >>>>>  		cgroup_account_cputime(curtask, delta_exec);
+> >>>>>  		account_group_exec_runtime(curtask, delta_exec);
+> >>>>> +		if (curtask->server)
+> >>>>> +			dl_server_update(curtask->server, delta_exec);
+> >>>>>  	}
+> >>>>
+> >>>> I get a lockdep_assert_held(&rq->lock) related warning in start_dl_timer()
+> >>>> when running the full stack.
+> >>>
+> >>> That would seem to imply a stale curtask->server value; the hunk below:
+> >>>
+> >>> --- a/kernel/sched/core.c
+> >>> +++ b/kernel/sched/core.c
+> >>> @@ -3756,8 +3756,11 @@ pick_next_task(struct rq *rq, struct tas
+> >>>
+> >>>         for_each_class(class) {
+> >>>                 p = class->pick_next_task(rq, NULL, NULL);
+> >>> -               if (p)
+> >>> +               if (p) {
+> >>> +                       if (p->sched_class == class && p->server)
+> >>> +                               p->server = NULL;
+> >>>                         return p;
+> >>> +               }
+> >>>         }
+> >>>
+> >>>
+> >>> Was supposed to clear p->server, but clearly something is going 'funny'.
+> >>
+> >> What about the fast path in pick_next_task()?
+> >>
+> >> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> >> index bffe849b5a42..f1ea6ae16052 100644
+> >> --- a/kernel/sched/core.c
+> >> +++ b/kernel/sched/core.c
+> >> @@ -3742,6 +3742,9 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+> >>                 if (unlikely(!p))
+> >>                         p = idle_sched_class.pick_next_task(rq, prev, rf);
+> >>  
+> >> +               if (p->sched_class == &fair_sched_class && p->server)
+> >> +                       p->server = NULL;
+> >> +
+> > 
+> > Hummm, but then who sets it back to the correct server. AFAIU
+> > update_curr() needs a ->server to do the correct DL accounting?
+> 
+> Ah, OK, this would kill the whole functionality ;-)
+> 
 
-> Just for the record: I have an Ubuntu machine, still in daily use,
-> that has a floppy disk connector on the motherboard. The motherboard
-> was made in 2006 if I remember correctly and has a quad-core Intel
-> CPU. It has both a 3.5" and a 5.25" drive installed and they get used
-> every time somebody finds another pile of floppy disks in Grandpa's
-> garage.
-
-I also have a stack of floppy drives (3.5'' and 5.25'') in storage,
-and several machines with fdd ports (also classic ISA and IDE ports).
-Haven't turned them on for long time, but should still be working.
-
-If anyone's interested in the HW, just let me know.
-
-
---mtx
-
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+I'm thinking we could use &rq->fair_server. It seems to pass the point
+we are discussing about, but then virt box becomes unresponsive (busy
+loops).
