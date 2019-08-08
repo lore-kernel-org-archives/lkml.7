@@ -7,68 +7,69 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D5F0C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C005C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:32:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6BE421883
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:32:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CCE721883
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:32:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="0AXT48CT"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="QaEasZzo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390057AbfHHMcP (ORCPT
+        id S2389737AbfHHMat (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 08:32:15 -0400
-Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:19964 "EHLO
-        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732254AbfHHMax (ORCPT
+        Thu, 8 Aug 2019 08:30:49 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:45064 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728825AbfHHMat (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 08:30:53 -0400
-Received: from pps.filterd (m0167091.ppops.net [127.0.0.1])
-        by mx0b-00128a01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x78CSGhR002639;
-        Thu, 8 Aug 2019 08:30:45 -0400
-Received: from nam05-dm3-obe.outbound.protection.outlook.com (mail-dm3nam05lp2055.outbound.protection.outlook.com [104.47.49.55])
-        by mx0b-00128a01.pphosted.com with ESMTP id 2u7wxfkv4c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 08 Aug 2019 08:30:45 -0400
+        Thu, 8 Aug 2019 08:30:49 -0400
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x78CRm0q022426;
+        Thu, 8 Aug 2019 08:30:38 -0400
+Received: from nam05-dm3-obe.outbound.protection.outlook.com (mail-dm3nam05lp2057.outbound.protection.outlook.com [104.47.49.57])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2u7xkj3gvq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 08 Aug 2019 08:30:37 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LAL/Ln1xgBGTmDDm+EK6So737EW1IxFheTxyjoBZW36owY9ek0N8WCZLtt/S9J9+GmZNG4Ivt/NU0PbgAI0KPjH78sHFDDfDq9yBQ4bq4WOluhtuA3AsOmT5Gzu6nT7rFX8RGzhpiAAwUWARmIt9a5hrPh0SEJyv8PMdAdLjVCgqNcmUoeZjgVZ5lNEhi5/s4zQTiI49AWrw4FjUb3SICTAWrlGGGOrBy/8NvWqhr+nFWyCyaHABvnHkkeAktoFaDmtkqprxuPaqFEYN9japTYo7fqs6QqRcO9qPqwAEd2EJjj2PMD2BnEBRow9EN9VJ5p+H/4qU8289jXuYtr5ZKw==
+ b=ECDWJXXShblIFaqX2qEHXeEvpx7yBmv+vY11Q5jMYOKmiU3sWdynMRCA2cq8A01+LpbGhokHbALPIttthsGjG/95Gjsr8xRsda2QilgFO1s1QPrCKluKLVfD4Nmlk41Eh5bJR0sWsV2CUIKD0CXCMl7ahozL5/b1lzuwS+FA++1JpV3wthtFWH+Sf6STTC4peacsKLVP3LbikJnODKufiMTdw2YWzf5GG5rZfvDLRbbK2SpbblPtOwOn+uci66ukJElCGMCOyw+K6f8+KT5kUQefMBHL3gZ+2BhUlsKEk8KafQyv0Qt1fWi6mPxhD95yVqL8WfeeUPnnk6jymFQnGA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vvOl9aLNAIx4btKasL23JvR1dRgPmnqnr8INriFcIgA=;
- b=VCerY1bjEZMOXEaG6MxsYIx3Wbu3Ws6PPrl4+eL2RLvwoqAb8xuVRYTX7jpdfraqAUaoJ4uRbOF+GMpH7vOHsmLPvtnZMInF9EDxAlqHxi7/ybDtWqNVNSPxKftpDUxcHOFpphwxTm9j3NbGMa7geQBIAplxA34tZRk8qKe88GNNv68vZGlPYRbZAuCG0NeL8F+V8iIvV0uLiASxoKUoRDBz2fBvUYRwEHQdzzkonmeQaoi1kw2vVD1vsLOdSIGOfFtqW2HbiNVEO4gfgDUApkjlUnP/YT2WpxX/EtFazEfdb3a4AcLHd5Jia9fv12kL+h5+WMPFa72eg4jkxMEVtg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass (sender ip is
- 137.71.25.57) smtp.rcpttodomain=vger.kernel.org
- smtp.mailfrom=analog.com;dmarc=bestguesspass action=none
- header.from=analog.com;dkim=none (message not signed);arc=none
+ bh=HG1vGVMds4pKsnKaroZN0iMGz+tIIs+xl/fUtEsEAa0=;
+ b=nPwAHxhuokgI/yTB8Ii+G+2wu9DSgLXuDDFq9BEbWEgObVkbbGG9w3qCqkSq6WhfAN1BknJRnk7jYvylcbUR2bFxoE+YCVPVqWQJ+SfNPgCIL6U1BH3mYo01YdU9V3X5D0hMgk4nHLbVaqD2mwsg/5APRsUn+g6E5+x82mmoLC4GR8WUO8gjau3yDKTruQ5VMTBL/3YZwo7TEexw2QKWrGOMdHnaZHj3pn0ym8EeGf0LwnopGFzY9Chcap/fnAQazUiQrVf6mgYDeKKVbLo2MdHpoipwNazCw2pEpLWb5H6eo+LnVamMqRKa+S9x0grgydJKznqF5jNsNzqZwox5OQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 137.71.25.57) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=analog.com;
+ dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
+ not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vvOl9aLNAIx4btKasL23JvR1dRgPmnqnr8INriFcIgA=;
- b=0AXT48CTUwZR3WvAPcxLOZy5CLxqYxrXxAfdI8SeOWswUT0TZmMELbSZ912QN0Sr/hrnetShXG19fcEJ22dNVpz7RNRLSYjcTldVbW7hwu68Y6yPlb5bm5DbmsUf80gv6Je/gxlh5BhIFhLJKeFqr859A5uHlMydl/Pdyc0XYvk=
-Received: from DM3PR03CA0017.namprd03.prod.outlook.com (2603:10b6:0:50::27) by
- DM5PR03MB3163.namprd03.prod.outlook.com (2603:10b6:4:3c::36) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2136.12; Thu, 8 Aug 2019 12:30:43 +0000
-Received: from SN1NAM02FT037.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::209) by DM3PR03CA0017.outlook.office365.com
- (2603:10b6:0:50::27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2157.14 via Frontend
- Transport; Thu, 8 Aug 2019 12:30:43 +0000
+ bh=HG1vGVMds4pKsnKaroZN0iMGz+tIIs+xl/fUtEsEAa0=;
+ b=QaEasZzo4P7STLQ6Bu+hL/kpBtgd6np1TDHp8LjcTBYyQxl9j0Sfuo2+WJoHhbVgyhkV41CAmtKc07luSf/qvoT5WXe37uoWzTeVt1/3sqN7LzpdFRr4GDqYqwUr5zCvhhgpyeV/o4XN+XX7Kv7VbjUnvfC9oMkZwol9FaNAF/c=
+Received: from MWHPR03CA0026.namprd03.prod.outlook.com (2603:10b6:301:3b::15)
+ by BN6PR03MB3140.namprd03.prod.outlook.com (2603:10b6:405:47::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2157.14; Thu, 8 Aug
+ 2019 12:30:35 +0000
+Received: from CY1NAM02FT034.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e45::208) by MWHPR03CA0026.outlook.office365.com
+ (2603:10b6:301:3b::15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2157.15 via Frontend
+ Transport; Thu, 8 Aug 2019 12:30:35 +0000
 Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
  137.71.25.57 as permitted sender) receiver=protection.outlook.com;
  client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
 Received: from nwd2mta2.analog.com (137.71.25.57) by
- SN1NAM02FT037.mail.protection.outlook.com (10.152.72.89) with Microsoft SMTP
+ CY1NAM02FT034.mail.protection.outlook.com (10.152.75.190) with Microsoft SMTP
  Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2157.15
- via Frontend Transport; Thu, 8 Aug 2019 12:30:42 +0000
+ via Frontend Transport; Thu, 8 Aug 2019 12:30:34 +0000
 Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
-        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id x78CUgpn021217
+        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id x78CUXBq021106
         (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Thu, 8 Aug 2019 05:30:42 -0700
+        Thu, 8 Aug 2019 05:30:33 -0700
 Received: from saturn.ad.analog.com (10.48.65.113) by
  NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
- 14.3.408.0; Thu, 8 Aug 2019 08:30:41 -0400
+ 14.3.408.0; Thu, 8 Aug 2019 08:30:33 -0400
 From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
 To:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
@@ -76,9 +77,9 @@ CC:     <davem@davemloft.net>, <robh+dt@kernel.org>,
         <mark.rutland@arm.com>, <f.fainelli@gmail.com>,
         <hkallweit1@gmail.com>, <andrew@lunn.ch>,
         Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v2 05/15] net: phy: adin: add {write,read}_mmd hooks
-Date:   Thu, 8 Aug 2019 15:30:16 +0300
-Message-ID: <20190808123026.17382-6-alexandru.ardelean@analog.com>
+Subject: [PATCH v2 01/15] net: phy: adin: add support for Analog Devices PHYs
+Date:   Thu, 8 Aug 2019 15:30:12 +0300
+Message-ID: <20190808123026.17382-2-alexandru.ardelean@analog.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190808123026.17382-1-alexandru.ardelean@analog.com>
 References: <20190808123026.17382-1-alexandru.ardelean@analog.com>
@@ -88,134 +89,172 @@ Content-Type: text/plain
 X-ADIRoutedOnPrem: True
 X-EOPAttributedMessage: 0
 X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(39860400002)(346002)(136003)(376002)(396003)(2980300002)(189003)(199004)(478600001)(2906002)(7696005)(1076003)(4326008)(107886003)(14444005)(48376002)(50466002)(446003)(54906003)(110136005)(336012)(486006)(2616005)(476003)(426003)(11346002)(76176011)(186003)(356004)(6666004)(106002)(26005)(36756003)(51416003)(126002)(316002)(44832011)(2201001)(2870700001)(70586007)(86362001)(50226002)(8936002)(305945005)(246002)(7636002)(47776003)(70206006)(5660300002)(8676002)(142933001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR03MB3163;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;MX:1;A:1;
+X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(136003)(376002)(39860400002)(346002)(396003)(2980300002)(189003)(199004)(76176011)(356004)(50226002)(6666004)(7636002)(48376002)(478600001)(305945005)(966005)(316002)(2201001)(106002)(54906003)(110136005)(246002)(7696005)(51416003)(5660300002)(8936002)(8676002)(70206006)(86362001)(70586007)(336012)(446003)(4326008)(426003)(47776003)(6306002)(107886003)(126002)(486006)(2870700001)(11346002)(476003)(36756003)(2906002)(2616005)(50466002)(44832011)(1076003)(186003)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:BN6PR03MB3140;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;MX:1;A:1;
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: acfa6ad3-e4b4-4b34-cec5-08d71bfc3b22
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:DM5PR03MB3163;
-X-MS-TrafficTypeDiagnostic: DM5PR03MB3163:
-X-Microsoft-Antispam-PRVS: <DM5PR03MB3163C9738E788F61711D184FF9D70@DM5PR03MB3163.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-MS-Office365-Filtering-Correlation-Id: 79f022de-0cf0-4cb1-6938-08d71bfc3613
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:BN6PR03MB3140;
+X-MS-TrafficTypeDiagnostic: BN6PR03MB3140:
+X-MS-Exchange-PUrlCount: 3
+X-Microsoft-Antispam-PRVS: <BN6PR03MB31403A1C1AFA799D31434736F9D70@BN6PR03MB3140.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
 X-Forefront-PRVS: 012349AD1C
 X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: FNn279NMDWvn+7gS8Gvl3R5fVDKb+IEfCklfb1LRRyzIS5YEXcfOb53iWlScx0cVp5eLEH8N4AlaItEhaN9MWm+ugvBLuamS9+PVhKr5kCxT1WyDlUyfAtDVl/L37xNpl3nndmsiwxXxLmYyDW5H+XDThldwG3N3A3LFD2SLkS9IRMYI1reqVD14EAe/xgThV8vlE8vYBezI3xFb2Ynf71mpas3CFuaa8NBdfLwqTgEgTvFT2oU/tbzFKn+0ECeKU/k2i5BglpzBkkl7VM4M7expnZAFW1mNLuXjAmkNqtylfqu3sWuJq2MMvgJ4mdvvWzFkayWg7BLfuAf0LlOpEi0awn8TGEZOOOFn7NWC5+ToEse50OwokbxL02NEUgMLp6IrNi/xkpR0eVLTB53TcZBGGVUC07qBJUvWaqOOz+A=
+X-Microsoft-Antispam-Message-Info: fppj4IGllTd8ZZgZRYXQOhe3xAf/5VhuFmk1aeBvqZMM5mnwO1X3BgdjXKKbvkyKQhBISXSO0cMv3Q6gmcgjsRBzDmSyz6XElbcKUXZfgqz8Y09MTu4/y6ocnRJD0VShrNQeMy37C8+J32n5WIKTlXmCP7FJRA8kq9hBCEea8+iCq7CESsY7NlKcYOQ0JsQt9QU3sXQSfOfvB0/xd0CntqiIADf/A27cEzDmJfp/OWgy/8XHqk6E6r/aBamJj5DHHIyLn10cY1+fHFVh03DxJKecIuNP89hpFWYy3OZCsVJdE9fxaLG43az1hQD10N+gjywR5PNr/1CGpwJF98sA8A+w74bYHNo5cTFZu5z2GhFFAvd0bs6Rgjo5Hqb03Xub6fV/Jh0tMxTdb9K8v0TvCvAzaFvwUFfZ4cIUFvMvgGo=
 X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Aug 2019 12:30:42.8414
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Aug 2019 12:30:34.3510
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: acfa6ad3-e4b4-4b34-cec5-08d71bfc3b22
+X-MS-Exchange-CrossTenant-Network-Message-Id: 79f022de-0cf0-4cb1-6938-08d71bfc3613
 X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR03MB3163
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR03MB3140
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-08_06:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=951 adultscore=0 classifier=spam adjust=0 reason=mlx
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1906280000 definitions=main-1908080130
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Both ADIN1200 & ADIN1300 support Clause 45 access.
-The Extended Management Interface (EMI) registers are accessible via both
-Clause 45 (at register MDIO_MMD_VEND1) and using Clause 22.
+This change adds support for Analog Devices Industrial Ethernet PHYs.
+Particularly the PHYs this driver adds support for:
+ * ADIN1200 - Robust, Industrial, Low Power 10/100 Ethernet PHY
+ * ADIN1300 - Robust, Industrial, Low Latency 10/100/1000 Gigabit
+   Ethernet PHY
 
-However, the Clause 22 MMD access operations differ from the implementation
-in the kernel, in the sense that it uses registers ExtRegPtr (0x10) &
-ExtRegData (0x11) to access Clause 45 & EMI registers.
+The 2 chips are pin & register compatible with one another. The main
+difference being that ADIN1200 doesn't operate in gigabit mode.
 
-The indirect access is done via the following mechanism (for both R/W):
-1. Write the address of the register in the ExtRegPtr
-2. Read/write the value of the register (written at ExtRegPtr)
+The chips can be operated by the Generic PHY driver as well via the
+standard IEEE PHY registers (0x0000 - 0x000F) which are supported by the
+kernel as well. This assumes that configuration of the PHY has been done
+completely in HW, according to spec.
 
-This mechanism is needed to manage configuration of chip settings and to
-access EEE registers (via Clause 22).
+Configuration can also be done via registers, which will be supported by
+this driver.
+
+Datasheets:
+  https://www.analog.com/media/en/technical-documentation/data-sheets/ADIN1300.pdf
+  https://www.analog.com/media/en/technical-documentation/data-sheets/ADIN1200.pdf
 
 Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- drivers/net/phy/adin.c | 46 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
+ MAINTAINERS              |  7 ++++++
+ drivers/net/phy/Kconfig  |  9 ++++++++
+ drivers/net/phy/Makefile |  1 +
+ drivers/net/phy/adin.c   | 49 ++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 66 insertions(+)
+ create mode 100644 drivers/net/phy/adin.c
 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e352550a6895..e8aa8a667864 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -938,6 +938,13 @@ S:	Supported
+ F:	drivers/mux/adgs1408.c
+ F:	Documentation/devicetree/bindings/mux/adi,adgs1408.txt
+ 
++ANALOG DEVICES INC ADIN DRIVER
++M:	Alexandru Ardelean <alexaundru.ardelean@analog.com>
++L:	netdev@vger.kernel.org
++W:	http://ez.analog.com/community/linux-device-drivers
++S:	Supported
++F:	drivers/net/phy/adin.c
++
+ ANALOG DEVICES INC ADIS DRIVER LIBRARY
+ M:	Alexandru Ardelean <alexandru.ardelean@analog.com>
+ S:	Supported
+diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+index 48ca213c0ada..03be30cde552 100644
+--- a/drivers/net/phy/Kconfig
++++ b/drivers/net/phy/Kconfig
+@@ -257,6 +257,15 @@ config SFP
+ 	depends on HWMON || HWMON=n
+ 	select MDIO_I2C
+ 
++config ADIN_PHY
++	tristate "Analog Devices Industrial Ethernet PHYs"
++	help
++	  Adds support for the Analog Devices Industrial Ethernet PHYs.
++	  Currently supports the:
++	  - ADIN1200 - Robust,Industrial, Low Power 10/100 Ethernet PHY
++	  - ADIN1300 - Robust,Industrial, Low Latency 10/100/1000 Gigabit
++	    Ethernet PHY
++
+ config AMD_PHY
+ 	tristate "AMD PHYs"
+ 	---help---
+diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
+index ba07c27e4208..a03437e091f3 100644
+--- a/drivers/net/phy/Makefile
++++ b/drivers/net/phy/Makefile
+@@ -47,6 +47,7 @@ obj-$(CONFIG_SFP)		+= sfp.o
+ sfp-obj-$(CONFIG_SFP)		+= sfp-bus.o
+ obj-y				+= $(sfp-obj-y) $(sfp-obj-m)
+ 
++obj-$(CONFIG_ADIN_PHY)		+= adin.o
+ obj-$(CONFIG_AMD_PHY)		+= amd.o
+ aquantia-objs			+= aquantia_main.o
+ ifdef CONFIG_HWMON
 diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
-index 69000fb16704..a833e329be6f 100644
---- a/drivers/net/phy/adin.c
+new file mode 100644
+index 000000000000..6d7af4743957
+--- /dev/null
 +++ b/drivers/net/phy/adin.c
-@@ -14,6 +14,9 @@
- #define PHY_ID_ADIN1200				0x0283bc20
- #define PHY_ID_ADIN1300				0x0283bc30
- 
-+#define ADIN1300_MII_EXT_REG_PTR		0x0010
-+#define ADIN1300_MII_EXT_REG_DATA		0x0011
+@@ -0,0 +1,49 @@
++// SPDX-License-Identifier: GPL-2.0+
++/**
++ *  Driver for Analog Devices Industrial Ethernet PHYs
++ *
++ * Copyright 2019 Analog Devices Inc.
++ */
++#include <linux/kernel.h>
++#include <linux/errno.h>
++#include <linux/init.h>
++#include <linux/module.h>
++#include <linux/mii.h>
++#include <linux/phy.h>
 +
- #define ADIN1300_INT_MASK_REG			0x0018
- #define   ADIN1300_INT_MDIO_SYNC_EN		BIT(9)
- #define   ADIN1300_INT_ANEG_STAT_CHNG_EN	BIT(8)
-@@ -53,6 +56,45 @@ static int adin_phy_config_intr(struct phy_device *phydev)
- 			      ADIN1300_INT_MASK_EN);
- }
- 
-+static int adin_read_mmd(struct phy_device *phydev, int devad, u16 regnum)
++#define PHY_ID_ADIN1200				0x0283bc20
++#define PHY_ID_ADIN1300				0x0283bc30
++
++static int adin_config_init(struct phy_device *phydev)
 +{
-+	struct mii_bus *bus = phydev->mdio.bus;
-+	int phy_addr = phydev->mdio.addr;
-+	int err;
-+
-+	if (phydev->is_c45) {
-+		u32 addr = MII_ADDR_C45 | (devad << 16) | (regnum & 0xffff);
-+
-+		return __mdiobus_read(bus, phy_addr, addr);
-+	}
-+
-+	err = __mdiobus_write(bus, phy_addr, ADIN1300_MII_EXT_REG_PTR, regnum);
-+	if (err)
-+		return err;
-+
-+	return __mdiobus_read(bus, phy_addr, ADIN1300_MII_EXT_REG_DATA);
++	return genphy_config_init(phydev);
 +}
 +
-+static int adin_write_mmd(struct phy_device *phydev, int devad, u16 regnum,
-+			  u16 val)
-+{
-+	struct mii_bus *bus = phydev->mdio.bus;
-+	int phy_addr = phydev->mdio.addr;
-+	int err;
++static struct phy_driver adin_driver[] = {
++	{
++		PHY_ID_MATCH_MODEL(PHY_ID_ADIN1200),
++		.name		= "ADIN1200",
++		.config_init	= adin_config_init,
++		.config_aneg	= genphy_config_aneg,
++		.read_status	= genphy_read_status,
++	},
++	{
++		PHY_ID_MATCH_MODEL(PHY_ID_ADIN1300),
++		.name		= "ADIN1300",
++		.config_init	= adin_config_init,
++		.config_aneg	= genphy_config_aneg,
++		.read_status	= genphy_read_status,
++	},
++};
 +
-+	if (phydev->is_c45) {
-+		u32 addr = MII_ADDR_C45 | (devad << 16) | (regnum & 0xffff);
++module_phy_driver(adin_driver);
 +
-+		return __mdiobus_write(bus, phy_addr, addr, val);
-+	}
++static struct mdio_device_id __maybe_unused adin_tbl[] = {
++	{ PHY_ID_MATCH_MODEL(PHY_ID_ADIN1200) },
++	{ PHY_ID_MATCH_MODEL(PHY_ID_ADIN1300) },
++	{ }
++};
 +
-+	err = __mdiobus_write(bus, phy_addr, ADIN1300_MII_EXT_REG_PTR, regnum);
-+	if (err)
-+		return err;
-+
-+	return __mdiobus_write(bus, phy_addr, ADIN1300_MII_EXT_REG_DATA, val);
-+}
-+
- static struct phy_driver adin_driver[] = {
- 	{
- 		PHY_ID_MATCH_MODEL(PHY_ID_ADIN1200),
-@@ -65,6 +107,8 @@ static struct phy_driver adin_driver[] = {
- 		.config_intr	= adin_phy_config_intr,
- 		.resume		= genphy_resume,
- 		.suspend	= genphy_suspend,
-+		.read_mmd	= adin_read_mmd,
-+		.write_mmd	= adin_write_mmd,
- 	},
- 	{
- 		PHY_ID_MATCH_MODEL(PHY_ID_ADIN1300),
-@@ -77,6 +121,8 @@ static struct phy_driver adin_driver[] = {
- 		.config_intr	= adin_phy_config_intr,
- 		.resume		= genphy_resume,
- 		.suspend	= genphy_suspend,
-+		.read_mmd	= adin_read_mmd,
-+		.write_mmd	= adin_write_mmd,
- 	},
- };
- 
++MODULE_DEVICE_TABLE(mdio, adin_tbl);
++MODULE_DESCRIPTION("Analog Devices Industrial Ethernet PHY driver");
++MODULE_LICENSE("GPL");
 -- 
 2.20.1
 
