@@ -2,145 +2,101 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30670C32751
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 03:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 017F9C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 03:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 109AB216C8
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 03:10:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7EBE217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 03:17:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="mboaUkYS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389677AbfHHDKC (ORCPT
+        id S1728332AbfHHDRO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 23:10:02 -0400
-Received: from mail.windriver.com ([147.11.1.11]:57463 "EHLO
-        mail.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727984AbfHHDKC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 23:10:02 -0400
-Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
-        by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id x7839uuQ020218
-        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-        Wed, 7 Aug 2019 20:09:56 -0700 (PDT)
-Received: from pek-lpg-core2.corp.ad.wrs.com (128.224.153.41) by
- ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
- 14.3.468.0; Wed, 7 Aug 2019 20:09:56 -0700
-From:   <zhe.he@windriver.com>
-To:     <justin@coraid.com>, <axboe@kernel.dk>,
-        <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <zhe.he@windriver.com>
-Subject: [PATCH] block: aoe: Fix kernel crash due to atomic sleep when exiting
-Date:   Thu, 8 Aug 2019 11:09:54 +0800
-Message-ID: <1565233794-458496-1-git-send-email-zhe.he@windriver.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 7 Aug 2019 23:17:14 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:49705 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728019AbfHHDRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 23:17:13 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 463tpH13dNz9sDB;
+        Thu,  8 Aug 2019 13:17:11 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1565234231;
+        bh=wQ8LUczx1bTmAeS71uIbSOraHlg7fDj+0KAn+7hZw24=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=mboaUkYSXHvgShxY4XAlVUL0aG75IiWAT4Ac3lNxGM7O4Ej+BrVSzxTiXRLk0AEC4
+         yKaDhS9Doy03q9fzGCQgkFxMVInzhjzWlh1WouGNmnLfB5LWPges/W9bSCpFJjyh8w
+         X7GKokqvi80kndMDoB5fdk5ySxAXK+gKvdww85ck9gTixO75B4+fn/SwfdeuRCgPEi
+         kM0oqWJ6y3HCh+ZoY4k41sTCyfsZ2hvJ4DTSz4MmPBlOp5hquNy07wTFlmmXygLgQM
+         w+QFehs/vlTt1L2u38JOUvndvksP6lde33PbxUEBqcdHQWTBuJw5uOFInVjLmMkHvr
+         ecmDsLvpTtsVA==
+Date:   Thu, 8 Aug 2019 13:17:10 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chuhong Yuan <hslester96@gmail.com>
+Subject: Re: linux-next: build failure after merge of the crypto tree
+Message-ID: <20190808131710.7186de0c@canb.auug.org.au>
+In-Reply-To: <20190808030156.GA15782@gondor.apana.org.au>
+References: <20190805145736.2d39f95b@canb.auug.org.au>
+        <20190808115245.0c88c300@canb.auug.org.au>
+        <20190808030156.GA15782@gondor.apana.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; boundary="Sig_//gKyMvhNuKvScGnmk9J0sWf";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: He Zhe <zhe.he@windriver.com>
+--Sig_//gKyMvhNuKvScGnmk9J0sWf
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Since commit 3582dd291788 ("aoe: convert aoeblk to blk-mq"), aoedev_downdev
-has had the possibility of sleeping and causing the following crash.
+Hi Herbert,
 
-BUG: scheduling while atomic: rmmod/2242/0x00000003
-Modules linked in: aoe
-Preemption disabled at:
-[<ffffffffc01d95e5>] flush+0x95/0x4a0 [aoe]
-CPU: 7 PID: 2242 Comm: rmmod Tainted: G          I       5.2.3 #1
-Hardware name: Intel Corporation S5520HC/S5520HC, BIOS S5500.86B.01.10.0025.030220091519 03/02/2009
-Call Trace:
- dump_stack+0x4f/0x6a
- ? flush+0x95/0x4a0 [aoe]
- __schedule_bug.cold+0x44/0x54
- __schedule+0x44f/0x680
- schedule+0x44/0xd0
- blk_mq_freeze_queue_wait+0x46/0xb0
- ? wait_woken+0x80/0x80
- blk_mq_freeze_queue+0x1b/0x20
- aoedev_downdev+0x111/0x160 [aoe]
- flush+0xff/0x4a0 [aoe]
- aoedev_exit+0x23/0x30 [aoe]
- aoe_exit+0x35/0x948 [aoe]
- __se_sys_delete_module+0x183/0x210
- __x64_sys_delete_module+0x16/0x20
- do_syscall_64+0x4d/0x130
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x7f24e0043b07
-Code: 73 01 c3 48 8b 0d 89 73 0b 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f
-1f 84 00 00 00 00 00 0f 1f 44 00 00 b8 b0 00 00 00 0f 05 <48> 3d 01 f0 ff
-ff 73 01 c3 48 8b 0d 59 73 0b 00 f7 d8 64 89 01 48
-RSP: 002b:00007ffe18f7f1e8 EFLAGS: 00000206 ORIG_RAX: 00000000000000b0
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f24e0043b07
-RDX: 000000000000000a RSI: 0000000000000800 RDI: 0000555c3ecf87c8
-RBP: 00007ffe18f7f1f0 R08: 0000000000000000 R09: 0000000000000000
-R10: 00007f24e00b4ac0 R11: 0000000000000206 R12: 00007ffe18f7f238
-R13: 00007ffe18f7f410 R14: 00007ffe18f80e73 R15: 0000555c3ecf8760
+On Thu, 8 Aug 2019 13:01:57 +1000 Herbert Xu <herbert@gondor.apana.org.au> =
+wrote:
+>
+> Sorry, I forgot about your patch as it wasn't cced to the crypto
+> mailing list.  It should be out there now.
 
-This patch, handling in the same way of pass two, unlocks the locks and
-restart pass one after aoedev_downdev is done.
+Excellent, thanks.  Should I add the crypto mailing list as a contact
+for problems?  Mostly the emails are just reporting conflicts and only
+very occasionally do I actually send a useful patch.  If so, what is
+its address?
 
-Fixes: 3582dd291788 ("aoe: convert aoeblk to blk-mq")
-Signed-off-by: He Zhe <zhe.he@windriver.com>
----
- drivers/block/aoe/aoedev.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+> I've also added a compile test for this driver so at least it should
+> fail for me on x86 too.
 
-diff --git a/drivers/block/aoe/aoedev.c b/drivers/block/aoe/aoedev.c
-index 5b49f1b..e2ea235 100644
---- a/drivers/block/aoe/aoedev.c
-+++ b/drivers/block/aoe/aoedev.c
-@@ -323,10 +323,14 @@ flush(const char __user *str, size_t cnt, int exiting)
- 	}
- 
- 	flush_scheduled_work();
--	/* pass one: without sleeping, do aoedev_downdev */
-+	/* pass one: do aoedev_downdev, which might sleep */
-+restart1:
- 	spin_lock_irqsave(&devlist_lock, flags);
- 	for (d = devlist; d; d = d->next) {
- 		spin_lock(&d->lock);
-+		if (d->flags & DEVFL_TKILL)
-+			goto cont;
-+
- 		if (exiting) {
- 			/* unconditionally take each device down */
- 		} else if (specified) {
-@@ -338,8 +342,11 @@ flush(const char __user *str, size_t cnt, int exiting)
- 		|| d->ref)
- 			goto cont;
- 
-+		spin_unlock(&d->lock);
-+		spin_unlock_irqrestore(&devlist_lock, flags);
- 		aoedev_downdev(d);
- 		d->flags |= DEVFL_TKILL;
-+		goto restart1;
- cont:
- 		spin_unlock(&d->lock);
- 	}
-@@ -348,7 +355,7 @@ flush(const char __user *str, size_t cnt, int exiting)
- 	/* pass two: call freedev, which might sleep,
- 	 * for aoedevs marked with DEVFL_TKILL
- 	 */
--restart:
-+restart2:
- 	spin_lock_irqsave(&devlist_lock, flags);
- 	for (d = devlist; d; d = d->next) {
- 		spin_lock(&d->lock);
-@@ -357,7 +364,7 @@ flush(const char __user *str, size_t cnt, int exiting)
- 			spin_unlock(&d->lock);
- 			spin_unlock_irqrestore(&devlist_lock, flags);
- 			freedev(d);
--			goto restart;
-+			goto restart2;
- 		}
- 		spin_unlock(&d->lock);
- 	}
--- 
-2.7.4
+Even better! ;-)
 
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_//gKyMvhNuKvScGnmk9J0sWf
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1LlDYACgkQAVBC80lX
+0Gx27gf/VrQxJ4TRADi6SePgt4PtN5sAxgZUppgkQiuOhWIjaZT3aeJ82HwF/dD0
+AXhRjwMDImJ+t2TsrKLs2f7lGkh8fP8mqckH71BcSjbveyDdEkqQW/aMJ2zyo0xG
+t5+qxUtGhqqCaiWVI2rJuS9AnLs7EA8ML9i32Droq3GzVSAEK9bNr9q8cGmvMBeu
+hF0/y06oSVCfSqVgPnS7lCtVCPmNbg8qYIAniTWO3xEYhjvPm6rHUJtf4Y593Zuu
+5mq1pcSIQQ2DFclRbeRaQ8uc+54SiRkA+G2TifQjl3gL6vDgZrcwF5hU2b2A0DDy
+xo0JuoKj6uJkYIX0dWCxoDMj9UzzYQ==
+=/ZbL
+-----END PGP SIGNATURE-----
+
+--Sig_//gKyMvhNuKvScGnmk9J0sWf--
