@@ -6,83 +6,86 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26535C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE1BC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:00:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06A962184E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:59:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 349AA2187F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:00:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731223AbfHHG7h (ORCPT
+        id S1731267AbfHHHAB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 02:59:37 -0400
-Received: from verein.lst.de ([213.95.11.211]:43750 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725796AbfHHG7h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 02:59:37 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id D398268AEF; Thu,  8 Aug 2019 08:59:33 +0200 (CEST)
-Date:   Thu, 8 Aug 2019 08:59:33 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Jason Gunthorpe <jgg@mellanox.com>, Christoph Hellwig <hch@lst.de>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 04/15] mm: remove the pgmap field from struct
- hmm_vma_walk
-Message-ID: <20190808065933.GA29382@lst.de>
-References: <20190806160554.14046-1-hch@lst.de> <20190806160554.14046-5-hch@lst.de> <20190807174548.GJ1571@mellanox.com> <CAPcyv4hPCuHBLhSJgZZEh0CbuuJNPLFDA3f-79FX5uVOO0yubA@mail.gmail.com>
+        Thu, 8 Aug 2019 03:00:01 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:34815 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725796AbfHHHAB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 03:00:01 -0400
+Received: by mail-wm1-f68.google.com with SMTP id e8so2973248wme.1
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 00:00:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rpyM8r2mku1q3Z7OeG8NLWc6M46sqEuLs17+l7YtJBs=;
+        b=Ge1fLKUygaLTLXNmV9pSeiezE/gtGq6KfsuHiA1ttoflYkt8KqIq2w2q8tS+xMEd6P
+         wPuteGZru3kQtmTcRkYGee7d9yzoSN+z81EXErEGI8tGcpriP18Ek/GxiUsd0o7O8cG1
+         EgU39utXkgqtZo+UhUyKJ31m6znc+wW6wEOTru3RH4wTre5I3hJ1Y1PAsN88YQVr47os
+         hThykMetTNYkOnrAzk62AA3l369KgNFtR2Cg1zEod0O//o4pokOjTcQP7MhWottbwSPc
+         Z6drtwb4WlBYep3q03Jv27LEeyz0dIihIKuH4OkCLPqvYcytJ/S+ypxzVJz9HV9DLWft
+         qdpA==
+X-Gm-Message-State: APjAAAUNMV6/fe3yak5U2G0yrMAeGnEginVbYr+O0Xu/yFFu/34HgjoW
+        KsmpLNOW0a9SOasO76TO8zWQ/A==
+X-Google-Smtp-Source: APXvYqzMqJaRfhKYmSLwEKXe/5sJ8WrTMTaguUiOhRJi2Q9MPLJPHkR5e3iJUPDdrT63zqnXb891zQ==
+X-Received: by 2002:a1c:f511:: with SMTP id t17mr2413692wmh.53.1565247599806;
+        Wed, 07 Aug 2019 23:59:59 -0700 (PDT)
+Received: from localhost.localdomain ([151.29.237.107])
+        by smtp.gmail.com with ESMTPSA id w25sm1305257wmk.18.2019.08.07.23.59.58
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 07 Aug 2019 23:59:58 -0700 (PDT)
+Date:   Thu, 8 Aug 2019 08:59:56 +0200
+From:   Juri Lelli <juri.lelli@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org,
+        dietmar.eggemann@arm.com, luca.abeni@santannapisa.it,
+        bristot@redhat.com, balsini@android.com, dvyukov@google.com,
+        tglx@linutronix.de, vpillai@digitalocean.com, rostedt@goodmis.org
+Subject: Re: [RFC][PATCH 12/13] sched/deadline: Introduce deadline servers
+Message-ID: <20190808065956.GE29310@localhost.localdomain>
+References: <20190726145409.947503076@infradead.org>
+ <20190726161358.056107990@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAPcyv4hPCuHBLhSJgZZEh0CbuuJNPLFDA3f-79FX5uVOO0yubA@mail.gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20190726161358.056107990@infradead.org>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 07, 2019 at 11:47:22AM -0700, Dan Williams wrote:
-> > Unrelated to this patch, but what is the point of getting checking
-> > that the pgmap exists for the page and then immediately releasing it?
-> > This code has this pattern in several places.
-> >
-> > It feels racy
-> 
-> Agree, not sure what the intent is here. The only other reason call
-> get_dev_pagemap() is to just check in general if the pfn is indeed
-> owned by some ZONE_DEVICE instance, but if the intent is to make sure
-> the device is still attached/enabled that check is invalidated at
-> put_dev_pagemap().
-> 
-> If it's the former case, validating ZONE_DEVICE pfns, I imagine we can
-> do something cheaper with a helper that is on the order of the same
-> cost as pfn_valid(). I.e. replace PTE_DEVMAP with a mem_section flag
-> or something similar.
+Hi,
 
-The hmm literally never dereferences the pgmap, so validity checking is
-the only explanation for it.
+On 26/07/19 16:54, Peter Zijlstra wrote:
 
-> > +               /*
-> > +                * We do put_dev_pagemap() here so that we can leverage
-> > +                * get_dev_pagemap() optimization which will not re-take a
-> > +                * reference on a pgmap if we already have one.
-> > +                */
-> > +               if (hmm_vma_walk->pgmap)
-> > +                       put_dev_pagemap(hmm_vma_walk->pgmap);
-> > +
-> 
-> Seems ok, but only if the caller is guaranteeing that the range does
-> not span outside of a single pagemap instance. If that guarantee is
-> met why not just have the caller pass in a pinned pagemap? If that
-> guarantee is not met, then I think we're back to your race concern.
+[...]
 
-It iterates over multiple ptes in a non-huge pmd.  Is there any kind of
-limitations on different pgmap instances inside a pmd?  I can't think
-of one, so this might actually be a bug.
+> +void dl_server_init(struct sched_dl_entity *dl_se, struct rq *rq,
+> +		    dl_server_has_tasks_f has_tasks,
+> +		    dl_server_pick_f pick)
+> +{
+> +	dl_se->dl_server = 1;
+> +	dl_se->rq = rq;
+> +	dl_se->server_has_tasks = has_tasks;
+> +	dl_se->server_pick = pick;
+> +
+> +	setup_new_dl_entity(dl_se);
+
+I think we need to postpone calling setup_new_dl_entity() to when
+dl_server_start() is called for the first time. rq_clock() needs both
+a caller that holds rq lock (which we can add) and an updated clock
+(which I'm not sure we can do at this point in time, or maybe we can
+avoid/trick the debug check?).
+
+Thanks,
+
+Juri
