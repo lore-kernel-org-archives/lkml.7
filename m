@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 584A2C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F096C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:07:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DDA2218A4
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:07:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D83A12189D
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:07:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565291257;
-	bh=UPWNm89fVyI/H2Z+QI/QaH6Ahsgr7FbuohmiZ8pZtX4=;
+	s=default; t=1565291262;
+	bh=dBj3rOiVMKozMP5s+ljrpfpFrI7VYhQabjg66rnUpw8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wl3FtIrxth7nWnfA+kNgLXDisHtdt9EUF87C0ZatLVZgvO4s7sA+Z6cfmLO2RDDct
-	 jmi/sc5M9J41afd8IGKZjMDVy82LtHDa9ZdLDDSOcx04s7BAeHOn5alAKR4AoicqFj
-	 bCCev2z97AeM+Xw69maN1R8U/1Del4fgnAlh5UUs=
+	b=Go3uP4efzLOFJ2+asOwta44WdxRtAUYth/BE/tmUkUKN8F9Tr5Ny9Q1LgRkhvq/zO
+	 TuiGXp7xtlerKmwdGsGstvsDiXfNePsqH+J7dp9N2dX8EbQC8x8oVq7O9b/Q/EDnHw
+	 DAPCGTqmamucBnNk8hdIOHN86uegsxRJzmdrWF9w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404280AbfHHTHf (ORCPT
+        id S2404728AbfHHTHl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:07:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41262 "EHLO mail.kernel.org"
+        Thu, 8 Aug 2019 15:07:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404681AbfHHTHc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 15:07:32 -0400
+        id S2404713AbfHHTHj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 15:07:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BEA5214C6;
-        Thu,  8 Aug 2019 19:07:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D85BA218A4;
+        Thu,  8 Aug 2019 19:07:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565291251;
-        bh=UPWNm89fVyI/H2Z+QI/QaH6Ahsgr7FbuohmiZ8pZtX4=;
+        s=default; t=1565291259;
+        bh=dBj3rOiVMKozMP5s+ljrpfpFrI7VYhQabjg66rnUpw8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CBFWKLUfNyS/Tqcu8uIAtZ5aq4BGkYfpAVCx/Ke6RL4QSPqiFXh90x9riK92qRI+O
-         V0vl4ToZhwyWQqP+PcjiiawV7ueji9n3Vq2PyafSdMuwYm1DATSuptBKJnzNuZh46r
-         3Mr5i6okaPDPTIxIiVR7sQchwckHtp9/morfPJD4=
+        b=ePAvmAlJXttDJGB+3LJ1RyX/J8q6b8AK4Iockd8GBJqoBm36ZAB0qHvXbUVcX2Phv
+         uv8LOHUCY3IwXYlw9ZosERTAmP0WZf+bNicETpIEWxLM22Bj6ZQnDemRJfn+zfNoTz
+         guikWsCE5wlSPfO4dgfqhv1Q0Cil6wmpQiuFjb+w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Sudarsana Reddy Kalluru <skalluru@marvell.com>,
-        Manish Chopra <manishc@marvell.com>,
+        syzbot+bd8cc73d665590a1fcad@syzkaller.appspotmail.com,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        Karsten Graul <kgraul@linux.ibm.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 09/56] bnx2x: Disable multi-cos feature.
-Date:   Thu,  8 Aug 2019 21:04:35 +0200
-Message-Id: <20190808190453.239926499@linuxfoundation.org>
+Subject: [PATCH 5.2 48/56] net/smc: avoid fallback in case of non-blocking connect
+Date:   Thu,  8 Aug 2019 21:05:14 +0200
+Message-Id: <20190808190455.120071274@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190808190452.867062037@linuxfoundation.org>
 References: <20190808190452.867062037@linuxfoundation.org>
@@ -61,36 +62,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sudarsana Reddy Kalluru <skalluru@marvell.com>
+From: Ursula Braun <ubraun@linux.ibm.com>
 
-[ Upstream commit d1f0b5dce8fda09a7f5f04c1878f181d548e42f5 ]
+[ Upstream commit cd2063604ea6a8c2683b4eb9b5f4c4da74592d87 ]
 
-Commit 3968d38917eb ("bnx2x: Fix Multi-Cos.") which enabled multi-cos
-feature after prolonged time in driver added some regression causing
-numerous issues (sudden reboots, tx timeout etc.) reported by customers.
-We plan to backout this commit and submit proper fix once we have root
-cause of issues reported with this feature enabled.
+FASTOPEN is not possible with SMC. sendmsg() with msg_flag MSG_FASTOPEN
+triggers a fallback to TCP if the socket is in state SMC_INIT.
+But if a nonblocking connect is already started, fallback to TCP
+is no longer possible, even though the socket may still be in state
+SMC_INIT.
+And if a nonblocking connect is already started, a listen() call
+does not make sense.
 
-Fixes: 3968d38917eb ("bnx2x: Fix Multi-Cos.")
-Signed-off-by: Sudarsana Reddy Kalluru <skalluru@marvell.com>
-Signed-off-by: Manish Chopra <manishc@marvell.com>
+Reported-by: syzbot+bd8cc73d665590a1fcad@syzkaller.appspotmail.com
+Fixes: 50717a37db032 ("net/smc: nonblocking connect rework")
+Signed-off-by: Ursula Braun <ubraun@linux.ibm.com>
+Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ net/smc/af_smc.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
-@@ -1934,8 +1934,7 @@ u16 bnx2x_select_queue(struct net_device
- 	}
+--- a/net/smc/af_smc.c
++++ b/net/smc/af_smc.c
+@@ -253,7 +253,7 @@ static int smc_bind(struct socket *sock,
  
- 	/* select a non-FCoE queue */
--	return netdev_pick_tx(dev, skb, NULL) %
--	       (BNX2X_NUM_ETH_QUEUES(bp) * bp->max_cos);
-+	return netdev_pick_tx(dev, skb, NULL) % (BNX2X_NUM_ETH_QUEUES(bp));
- }
+ 	/* Check if socket is already active */
+ 	rc = -EINVAL;
+-	if (sk->sk_state != SMC_INIT)
++	if (sk->sk_state != SMC_INIT || smc->connect_nonblock)
+ 		goto out_rel;
  
- void bnx2x_set_num_queues(struct bnx2x *bp)
+ 	smc->clcsock->sk->sk_reuse = sk->sk_reuse;
+@@ -1399,7 +1399,8 @@ static int smc_listen(struct socket *soc
+ 	lock_sock(sk);
+ 
+ 	rc = -EINVAL;
+-	if ((sk->sk_state != SMC_INIT) && (sk->sk_state != SMC_LISTEN))
++	if ((sk->sk_state != SMC_INIT && sk->sk_state != SMC_LISTEN) ||
++	    smc->connect_nonblock)
+ 		goto out;
+ 
+ 	rc = 0;
+@@ -1527,7 +1528,7 @@ static int smc_sendmsg(struct socket *so
+ 		goto out;
+ 
+ 	if (msg->msg_flags & MSG_FASTOPEN) {
+-		if (sk->sk_state == SMC_INIT) {
++		if (sk->sk_state == SMC_INIT && !smc->connect_nonblock) {
+ 			smc_switch_to_fallback(smc);
+ 			smc->fallback_rsn = SMC_CLC_DECL_OPTUNSUPP;
+ 		} else {
 
 
