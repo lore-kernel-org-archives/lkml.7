@@ -4,46 +4,46 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A621AC32754
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:33:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D2E6C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:33:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 870E4217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:33:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E3AE217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:33:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732682AbfHHOd2 (ORCPT
+        id S1732738AbfHHOdd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 10:33:28 -0400
-Received: from mail-ot1-f70.google.com ([209.85.210.70]:51166 "EHLO
-        mail-ot1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732518AbfHHOd0 (ORCPT
+        Thu, 8 Aug 2019 10:33:33 -0400
+Received: from mail-ot1-f69.google.com ([209.85.210.69]:45911 "EHLO
+        mail-ot1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727096AbfHHOdZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 10:33:26 -0400
-Received: by mail-ot1-f70.google.com with SMTP id a21so62162764otk.17
+        Thu, 8 Aug 2019 10:33:25 -0400
+Received: by mail-ot1-f69.google.com with SMTP id b25so62018374otp.12
         for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 07:33:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
          :from:to:cc;
         bh=jZyCbcw3RWENZUjZ8q6u6MdFhvaB3V5am3DAxqvxROk=;
-        b=fK6H6uQMg3I2QjAoi7oKkeLgcXPTEG2BdO4ChD0a4BrcaS9xUoIz4AmZ3YyjAxJHfS
-         1rk3w2zfkkOdsNBdpWM7KvMe1vQrJ8OUnyOLE9AFDIAmC+BejcV0AzyS8s9LQSKW5sOY
-         mNTGJrWC2Eq97STyDPYm/CnlL8MUf7IyBssfQRrUL2NVZ9dBICmI8abOoT89XDcgr5Y+
-         O1MGItkA0lDPdjKdqeWW7HrtZblU6A6G6mfAoo9db+elIaW8KXn82JlG0MgExQG615Ts
-         3nwZi0n6vDAUWLnWZ+FmwJ0OxZ2ygVymcGVaV6REoxi+URYjENBuqomzlrGoywG2Ns+c
-         GvVg==
-X-Gm-Message-State: APjAAAVAbV/gTrY18KeiQnmU87Ft8JHMJ3I9lDJCzZaWq7iG2PmNriW0
-        GOymGbQlBUIMbivt+fFs2ozqp8+htb8HMt9rXgBiQuAVgM4T
-X-Google-Smtp-Source: APXvYqwLopKdzK6bl1Lg2PQ4S1kOQeFL7QoxNpjxwh3yVGIW3f6KnGwgVb1fz6n4pSt7APKNlW2nZpGXg09wteGep3RrNzKvUdB+
+        b=ENvDCDnk5E81g/cLK58s45BuqJRFrVDS5BHR655rsKsBp59ZxwSP2vYSZJw3TrxaGR
+         AW0llRuau27JqO2BQHqz0SoLbbJZb83fD3udV7S2ABwoxeTYpXY4cRuUSIq6UziY2yzm
+         Il7byJzjS3hwxayfpV3H7HLXcz4RoNqhdV1/jtTPwh2mLTciYlkFIuyGWom+rnnZe/ee
+         8AHaeB7MbSl1cNQWXl0HaV6O9EVcAGfVwbr7noFIOlN1GUaRrwtyhWWXEJ6gq75Bbdpx
+         VvdOulPdbEXZVZNksGLd3rKeG7BJcXtjlnj/UcwJEZWz41heOIPe+qpep6u3Wg7sOBh/
+         8Mog==
+X-Gm-Message-State: APjAAAVqa+ea0ilixwXT24H9n3xR1EAHYQLG2TTVpEwbNGEjnX4jfkuk
+        UiSrjTU17Uxn7b2Ed7l7vAv/HuLB3+EXtPq/sWF/nvcz2cOL
+X-Google-Smtp-Source: APXvYqyHOp2lVA12vv+ST29W9GrxgWuLhJZZhoi+joOmROWgcCD7PxanPpA2bipURq2utrM6+0wONAARKSHheq6iGCjCQwVOjSra
 MIME-Version: 1.0
-X-Received: by 2002:a5e:9b05:: with SMTP id j5mr15605328iok.75.1565274805299;
- Thu, 08 Aug 2019 07:33:25 -0700 (PDT)
-Date:   Thu, 08 Aug 2019 07:33:25 -0700
+X-Received: by 2002:a02:ad15:: with SMTP id s21mr17427026jan.47.1565274804827;
+ Thu, 08 Aug 2019 07:33:24 -0700 (PDT)
+Date:   Thu, 08 Aug 2019 07:33:24 -0700
 In-Reply-To: <Pine.LNX.4.44L0.1908081027560.1652-100000@iolanthe.rowland.org>
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000bef340058f9bf02b@google.com>
+Message-ID: <000000000000b7c096058f9bf071@google.com>
 Subject: Re: Re: possible deadlock in open_rio
 From:   syzbot <syzbot+7bbcbe9c9ff0cd49592a@syzkaller.appspotmail.com>
 To:     Alan Stern <stern@rowland.harvard.edu>
