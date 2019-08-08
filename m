@@ -2,173 +2,102 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 172C6C32751
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 03:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE78C32751
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 03:26:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA78121873
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 03:26:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0F0A21873
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 03:26:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uXn5OuCI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728390AbfHHD0G (ORCPT
+        id S1730382AbfHHD0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 23:26:06 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3779 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728019AbfHHD0F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 23:26:05 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 7AFC54D9EDB93D01F930;
-        Thu,  8 Aug 2019 11:26:01 +0800 (CST)
-Received: from [127.0.0.1] (10.177.96.203) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Thu, 8 Aug 2019
- 11:25:52 +0800
-Subject: Re: [PATCH v5 01/10] powerpc: unify definition of M_IF_NEEDED
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        <linuxppc-dev@lists.ozlabs.org>, <diana.craciun@nxp.com>,
-        <christophe.leroy@c-s.fr>, <benh@kernel.crashing.org>,
-        <paulus@samba.org>, <npiggin@gmail.com>, <keescook@chromium.org>,
-        <kernel-hardening@lists.openwall.com>
-CC:     <linux-kernel@vger.kernel.org>, <wangkefeng.wang@huawei.com>,
-        <yebin10@huawei.com>, <thunder.leizhen@huawei.com>,
-        <jingxiangfeng@huawei.com>, <fanchengyang@huawei.com>,
-        <zhaohongjiang@huawei.com>
-References: <20190807065706.11411-1-yanaijie@huawei.com>
- <20190807065706.11411-2-yanaijie@huawei.com>
- <87sgqdt8yc.fsf@concordia.ellerman.id.au>
-From:   Jason Yan <yanaijie@huawei.com>
-Message-ID: <bd2f943a-10fb-3473-5611-1a5bb3bedc5b@huawei.com>
-Date:   Thu, 8 Aug 2019 11:25:51 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        Wed, 7 Aug 2019 23:26:17 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:33384 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728019AbfHHD0R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 23:26:17 -0400
+Received: by mail-ed1-f65.google.com with SMTP id i11so25208106edq.0;
+        Wed, 07 Aug 2019 20:26:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=dFm+ntDkDYjpFiyYx8bMq6XtAhzvccojbCi+hTQfSAU=;
+        b=uXn5OuCIIHbX2C7G1bWWk4/YqWY9dH1yHAg+qSjrzNaGXt84cvn1eLurDBohQyqgKx
+         rRPX0sgRZACz7ksvHIZ0gdthaFudRWV7mClCkruVYWRgvisv+uwvmxNBPTO3CTHwaN4A
+         E1+BX7yaEQ/32Heu4OkiJSDTuWMN55CENjAyn54YBjDzSjBP7GqGeWmMDWokBGGZ1h7t
+         scBV+RnBTVYXIrVfMNd+SryRkRsjJ8PckHWiXQwA7/Ia+HEvDFvgcvvnSBFk0mIpbslk
+         KVfVCRPioBZmQdMK4sg3uwOLOIM/Yryq7T536RAlIEg8nBtK02+LjLjFWOnm2BJWMPC1
+         RBmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=dFm+ntDkDYjpFiyYx8bMq6XtAhzvccojbCi+hTQfSAU=;
+        b=d5RFXHL61h0z8PkO+fDQ+CZw2fA3JwZgAuD+jS85+8Dyov2+iCMmhudIB1eS7yYfdM
+         SvKfvHK2sF/EqVabP1dR5KnZ8azIFUqkniJ3MseuIvFgIm8Yop3XH/bspd7OL1VTpmtp
+         Il+bHDwNhId4LTtFnnlwXZCMHrAYbXe15y/vwwOplya4wZL0xPDcBzIDbqAg9Y22Rl05
+         x/RproFlyMNWZ8Z4OjqsT4wq8Sq447jzW25kpPbIjGY/bUY5T7tRq/3Wj0jVLVbE9FoO
+         GyBGBSI+BJvy+BgmcYkHbAKdCQSNYhSIREOEgJPWZWiyKu1cm+ua4xtd4GOUZGzwyBWL
+         UnQA==
+X-Gm-Message-State: APjAAAV/pLSi0FlNkTx0fbMojJO60QcRmWGKTOnncdfY7jZ4Z1+v73Ph
+        IS0va2fNfn8vdfmFrnveJGcJbHBJF1FEim/Obw8=
+X-Google-Smtp-Source: APXvYqwpSQ+XSI5DFDUtaGHNy0t0Mr97a8+cHVbmNIqfu6PXkhplyNXNb9dpwBBpIepkNcjpxfzv7yHjQTqfgfITjpE=
+X-Received: by 2002:aa7:d6d3:: with SMTP id x19mr13246758edr.119.1565234775342;
+ Wed, 07 Aug 2019 20:26:15 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <87sgqdt8yc.fsf@concordia.ellerman.id.au>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.96.203]
-X-CFilter-Loop: Reflected
+References: <1564306219-17439-1-git-send-email-bmeng.cn@gmail.com>
+ <1564306219-17439-2-git-send-email-bmeng.cn@gmail.com> <CAEUhbmVjELVPKwW6R+W+V2hQbZ_Zj_5j2ogjnTsuCwnK1pT-og@mail.gmail.com>
+In-Reply-To: <CAEUhbmVjELVPKwW6R+W+V2hQbZ_Zj_5j2ogjnTsuCwnK1pT-og@mail.gmail.com>
+From:   Bin Meng <bmeng.cn@gmail.com>
+Date:   Thu, 8 Aug 2019 11:26:03 +0800
+Message-ID: <CAEUhbmXHzK0Ho27nn+zMAxZfMQxcuN2Pe8fb6_uOEi7RVbJ=_Q@mail.gmail.com>
+Subject: Re: [PATCH 2/2] dt-bindings: pci: pci-msi: Correct the unit-address
+ of the pci node name
+To:     Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Aug 1, 2019 at 5:53 PM Bin Meng <bmeng.cn@gmail.com> wrote:
+>
+> On Sun, Jul 28, 2019 at 5:30 PM Bin Meng <bmeng.cn@gmail.com> wrote:
+> >
+> > The unit-address must match the first address specified in the
+> > reg property of the node.
+> >
+> > Signed-off-by: Bin Meng <bmeng.cn@gmail.com>
+> > ---
+> >
+> >  Documentation/devicetree/bindings/pci/pci-msi.txt | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/pci/pci-msi.txt b/Documentation/devicetree/bindings/pci/pci-msi.txt
+> > index 9b3cc81..b73d839 100644
+> > --- a/Documentation/devicetree/bindings/pci/pci-msi.txt
+> > +++ b/Documentation/devicetree/bindings/pci/pci-msi.txt
+> > @@ -201,7 +201,7 @@ Example (5)
+> >                 #msi-cells = <1>;
+> >         };
+> >
+> > -       pci: pci@c {
+> > +       pci: pci@f {
+> >                 reg = <0xf 0x1>;
+> >                 compatible = "vendor,pcie-root-complex";
+> >                 device_type = "pci";
+> > --
+>
+> Ping?
 
-
-On 2019/8/7 21:13, Michael Ellerman wrote:
-> Jason Yan <yanaijie@huawei.com> writes:
->> M_IF_NEEDED is defined too many times. Move it to a common place.
-> 
-> The name is not great, can you call it MAS2_M_IF_NEEDED, which at least
-> gives a clue what it's for?
-> 
-
-OK.
-
-> cheers
-> 
->> Signed-off-by: Jason Yan <yanaijie@huawei.com>
->> Cc: Diana Craciun <diana.craciun@nxp.com>
->> Cc: Michael Ellerman <mpe@ellerman.id.au>
->> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
->> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
->> Cc: Paul Mackerras <paulus@samba.org>
->> Cc: Nicholas Piggin <npiggin@gmail.com>
->> Cc: Kees Cook <keescook@chromium.org>
->> Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
->> Reviewed-by: Diana Craciun <diana.craciun@nxp.com>
->> Tested-by: Diana Craciun <diana.craciun@nxp.com>
->> ---
->>   arch/powerpc/include/asm/nohash/mmu-book3e.h  | 10 ++++++++++
->>   arch/powerpc/kernel/exceptions-64e.S          | 10 ----------
->>   arch/powerpc/kernel/fsl_booke_entry_mapping.S | 10 ----------
->>   arch/powerpc/kernel/misc_64.S                 |  5 -----
->>   4 files changed, 10 insertions(+), 25 deletions(-)
->>
->> diff --git a/arch/powerpc/include/asm/nohash/mmu-book3e.h b/arch/powerpc/include/asm/nohash/mmu-book3e.h
->> index 4c9777d256fb..0877362e48fa 100644
->> --- a/arch/powerpc/include/asm/nohash/mmu-book3e.h
->> +++ b/arch/powerpc/include/asm/nohash/mmu-book3e.h
->> @@ -221,6 +221,16 @@
->>   #define TLBILX_T_CLASS2			6
->>   #define TLBILX_T_CLASS3			7
->>   
->> +/*
->> + * The mapping only needs to be cache-coherent on SMP, except on
->> + * Freescale e500mc derivatives where it's also needed for coherent DMA.
->> + */
->> +#if defined(CONFIG_SMP) || defined(CONFIG_PPC_E500MC)
->> +#define M_IF_NEEDED	MAS2_M
->> +#else
->> +#define M_IF_NEEDED	0
->> +#endif
->> +
->>   #ifndef __ASSEMBLY__
->>   #include <asm/bug.h>
->>   
->> diff --git a/arch/powerpc/kernel/exceptions-64e.S b/arch/powerpc/kernel/exceptions-64e.S
->> index 1cfb3da4a84a..fd49ec07ce4a 100644
->> --- a/arch/powerpc/kernel/exceptions-64e.S
->> +++ b/arch/powerpc/kernel/exceptions-64e.S
->> @@ -1342,16 +1342,6 @@ skpinv:	addi	r6,r6,1				/* Increment */
->>   	sync
->>   	isync
->>   
->> -/*
->> - * The mapping only needs to be cache-coherent on SMP, except on
->> - * Freescale e500mc derivatives where it's also needed for coherent DMA.
->> - */
->> -#if defined(CONFIG_SMP) || defined(CONFIG_PPC_E500MC)
->> -#define M_IF_NEEDED	MAS2_M
->> -#else
->> -#define M_IF_NEEDED	0
->> -#endif
->> -
->>   /* 6. Setup KERNELBASE mapping in TLB[0]
->>    *
->>    * r3 = MAS0 w/TLBSEL & ESEL for the entry we started in
->> diff --git a/arch/powerpc/kernel/fsl_booke_entry_mapping.S b/arch/powerpc/kernel/fsl_booke_entry_mapping.S
->> index ea065282b303..de0980945510 100644
->> --- a/arch/powerpc/kernel/fsl_booke_entry_mapping.S
->> +++ b/arch/powerpc/kernel/fsl_booke_entry_mapping.S
->> @@ -153,16 +153,6 @@ skpinv:	addi	r6,r6,1				/* Increment */
->>   	tlbivax 0,r9
->>   	TLBSYNC
->>   
->> -/*
->> - * The mapping only needs to be cache-coherent on SMP, except on
->> - * Freescale e500mc derivatives where it's also needed for coherent DMA.
->> - */
->> -#if defined(CONFIG_SMP) || defined(CONFIG_PPC_E500MC)
->> -#define M_IF_NEEDED	MAS2_M
->> -#else
->> -#define M_IF_NEEDED	0
->> -#endif
->> -
->>   #if defined(ENTRY_MAPPING_BOOT_SETUP)
->>   
->>   /* 6. Setup KERNELBASE mapping in TLB1[0] */
->> diff --git a/arch/powerpc/kernel/misc_64.S b/arch/powerpc/kernel/misc_64.S
->> index b55a7b4cb543..26074f92d4bc 100644
->> --- a/arch/powerpc/kernel/misc_64.S
->> +++ b/arch/powerpc/kernel/misc_64.S
->> @@ -432,11 +432,6 @@ kexec_create_tlb:
->>   	rlwimi	r9,r10,16,4,15		/* Setup MAS0 = TLBSEL | ESEL(r9) */
->>   
->>   /* Set up a temp identity mapping v:0 to p:0 and return to it. */
->> -#if defined(CONFIG_SMP) || defined(CONFIG_PPC_E500MC)
->> -#define M_IF_NEEDED	MAS2_M
->> -#else
->> -#define M_IF_NEEDED	0
->> -#endif
->>   	mtspr	SPRN_MAS0,r9
->>   
->>   	lis	r9,(MAS1_VALID|MAS1_IPROT)@h
->> -- 
->> 2.17.2
-> 
-> .
-> 
-
+Ping?
