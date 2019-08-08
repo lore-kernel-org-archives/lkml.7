@@ -2,135 +2,80 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15ADDC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 11:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD142C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 11:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC0E921874
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 11:21:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="iCGTFksi"
+	by mail.kernel.org (Postfix) with ESMTP id B03B621880
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 11:24:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565263443;
+	bh=kGWv3F0MZ6VV9IXcBhJcDU1X/GIu/fiFKm60hLg1jl0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=N/3gUWNou2CDEdaJphSJEcTbrQy2Ti4P8CFjt+uXcjl2CMamP3IFGy/0UKgb5WUeV
+	 PTrQFiwbXO4Y0+upMJ4IqKVwp0oz7m3me75Kz47GrdNzvQqYjzl6x2z5O8NfIYPL+q
+	 VJkXV88fB0yFAoy4gc/MNv5VcatC81Y+ls80dGGY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732202AbfHHLVv (ORCPT
+        id S1732148AbfHHLYC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 07:21:51 -0400
-Received: from conuserg-07.nifty.com ([210.131.2.74]:37726 "EHLO
-        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730747AbfHHLVv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 07:21:51 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id x78BLEkO027157;
-        Thu, 8 Aug 2019 20:21:15 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com x78BLEkO027157
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1565263275;
-        bh=Y3joUPUMYoBzCVDWCYCkXvHGxBHe0Rsmx3YuHH4+91M=;
-        h=From:To:Cc:Subject:Date:From;
-        b=iCGTFksi3llJddT4lN0m7yPIlNGjS7AghbijE+hez0ISz3b3PLhEoWhe8ZzA0AQD1
-         tmuGow482ok/3d9oy/0PYpn+1SAfMT+duWTPJQBgh55L34l4wnb740DftNfP72p4bK
-         aVKdwDsT6xKeiIXY6if/cQyMi6kDX7o+z1dasan/d74TyZq2vmZdgJeo71cIXEwTro
-         iqtvX0k17GTKR4xWb7K4k/D8ZMkBB3hhnVx+hj9cJtujetuLZmPO8IkT27p6dP6HMb
-         uwYk3S0pCSmHXXn7Ttt/VrmKEz0l3WNU0cenS5Khc2kLclUhn33SlMDoN2Vlg58Ik9
-         oGL/0vdUIw4fg==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Jan Kiszka <jan.kiszka@siemens.com>,
-        Tom Stonecypher <thomas.edwardx.stonecypher@intel.com>,
-        linux-kernel@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>
-Subject: [PATCH v2] kbuild: show hint if subdir-y/m is used to visit module Makefile
-Date:   Thu,  8 Aug 2019 20:21:11 +0900
-Message-Id: <20190808112111.16159-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 8 Aug 2019 07:24:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46494 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726721AbfHHLYC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 07:24:02 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4030217F4;
+        Thu,  8 Aug 2019 11:24:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565263441;
+        bh=kGWv3F0MZ6VV9IXcBhJcDU1X/GIu/fiFKm60hLg1jl0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TPUlJbYE0CKDv6O2+2uWzaA2ka2pJoRB582LbPnviWR6DSUk79P/amJggh47IWOeY
+         W42uHkBJJTBD/oJM+7mAzVP6LDvdTNj48qKD/8gcFvIpHMNqeP98cF5ONlZPz9SN3R
+         g0i0T0FITrd17Ki8qLG3tW7+m9kDDvYsyOkk/y1A=
+Date:   Thu, 8 Aug 2019 13:23:58 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org
+Subject: Re: [PATCH] MAINTAINERS: mark wusbcore and UWB as obsolete
+Message-ID: <20190808112358.GA25286@kroah.com>
+References: <20190806101509.GA11280@kroah.com>
+ <b73f09c944625a40b2589e9bac7f8bd22a711ed3.camel@perches.com>
+ <20190806113501.GA18443@kroah.com>
+ <20190808092509.GA20173@kroah.com>
+ <20190808094158.GA22635@kroah.com>
+ <92ed89b0346a54fb06d3e08585a8d0b4175842f0.camel@perches.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <92ed89b0346a54fb06d3e08585a8d0b4175842f0.camel@perches.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit ff9b45c55b26 ("kbuild: modpost: read modules.order instead
-of $(MODVERDIR)/*.mod"), a module is no longer built in the following
-pattern:
+On Thu, Aug 08, 2019 at 04:15:44AM -0700, Joe Perches wrote:
+> On Thu, 2019-08-08 at 11:41 +0200, Greg Kroah-Hartman wrote:
+> > On Thu, Aug 08, 2019 at 11:25:09AM +0200, Greg Kroah-Hartman wrote:
+> > > Joe rightly points out that we should be using the "Obsolete" status for
+> > > these two subsystems.
+> > 
+> > Even with that change, I don't see get_maintainers.pl tell me I
+> > shouldn't be sending a patch in for this area:
+> 
+> Nor should you.  It's checkpatch that should warn.
 
-  [Makefile]
-  subdir-y := some-module
+Ah, wrong tool.  Yes, it does, let's see if anyone actually notices that
+when sending checkpatch changes for these files in the future :)
 
-  [some-module/Makefile]
-  obj-m := some-module.o
+thanks,
 
-You cannot write Makefile this way in upstream because modules.order is
-not correctly generated. subdir-y is used to descend to a sub-directory
-that builds tools, device trees, etc.
-
-For external modules, the modules order does not matter. So, the
-Makefile above was known to work.
-
-I believe the Makefile should be re-written as follows:
-
-  [Makefile]
-  obj-m := some-module/
-
-  [some-module/Makefile]
-  obj-m := some-module.o
-
-However, people will have no idea if their Makefile suddenly stops
-working. In fact, I received questions from multiple people.
-
-Show a warning if obj-m is specified in a Makefile visited by subdir-y
-or subdir-m.
-
-I touched the %/ rule to avoid false-positive warnings for the single
-target.
-
-Cc: Jan Kiszka <jan.kiszka@siemens.com>
-Cc: Tom Stonecypher <thomas.edwardx.stonecypher@intel.com>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
-Changes in v2:
- - fix false-positive warnings for single targets
-
- Makefile               | 2 +-
- scripts/Makefile.build | 7 +++++++
- 2 files changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/Makefile b/Makefile
-index 0e37ad2f77bf..fac25e279da6 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1783,7 +1783,7 @@ PHONY += /
- /: ./
- 
- %/: prepare FORCE
--	$(Q)$(MAKE) KBUILD_MODULES=1 $(build)=$(build-dir)
-+	$(Q)$(MAKE) KBUILD_MODULES=1 $(build)=$(build-dir) need-modorder=1
- 
- # FIXME Should go into a make.lib or something
- # ===========================================================================
-diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-index 37a1d2cd49d4..2f66ed388d1c 100644
---- a/scripts/Makefile.build
-+++ b/scripts/Makefile.build
-@@ -52,6 +52,13 @@ ifndef obj
- $(warning kbuild: Makefile.build is included improperly)
- endif
- 
-+ifeq ($(MAKECMDGOALS)$(need-modorder),)
-+ifneq ($(obj-m),)
-+$(warning $(patsubst %.o,'%.ko',$(obj-m)) will not be built even though obj-m is specified.)
-+$(warning You cannot use subdir-y/m to visit a module Makefile. Use obj-y/m instead.)
-+endif
-+endif
-+
- # ===========================================================================
- 
- ifneq ($(strip $(lib-y) $(lib-m) $(lib-)),)
--- 
-2.17.1
-
+greg k-h
