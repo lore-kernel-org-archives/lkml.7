@@ -2,170 +2,105 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF456C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:09:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D7CEC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9D032187F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:09:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38F872187F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:11:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731981AbfHHIJX (ORCPT
+        id S1731853AbfHHIL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 04:09:23 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:36346 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731658AbfHHIJX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 04:09:23 -0400
-Received: by mail-ot1-f67.google.com with SMTP id r6so115155113oti.3;
-        Thu, 08 Aug 2019 01:09:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NBFSdcaTcFoDPEtsfprZTWviaehhzIBA9CqQY+IL5/Y=;
-        b=QWLrJVSTN+oAbY8u6+JjSBfg0cXKMI3XZQ+gDdGFWHhrkwsl9UMHLw+kjxum9wPNqj
-         po2aXEKcWt+duY4vHH8tGpwKqF+8JveQabU8DwSDeo+MWwCXygSzgVATvRFx4qQntc2a
-         iScU8C3/TVj6s8+ne8ZRW1yE6W13qIiKh2OQjgy6/DM0t7OARwezeV8rIcqscI9NOM2B
-         z7B3Y11JYQINiifdtHm0vGhqqlAe8aJSAUMEJ69KkuR25/DsBxqQefrK9sPZtD37zzQW
-         mPRGtUyQ8pnvyVC96CT6zdfjUyAUqgjuMkyol2ybfin/SH2OkJn95/VzhG3Q8Gnj+jbF
-         /wJw==
-X-Gm-Message-State: APjAAAV+vhawgbnciT+KqBPPZgmWGfXfzWZyxQS/h9RCLJPbgH3Bd0qe
-        SqISaw6SF3H8g/KZBoxgKNPpCsYQoU7WrveP5FM=
-X-Google-Smtp-Source: APXvYqydNbKoEj5yccYRAI19XY287hgtCeiyoefADzGyalRGi0KNiysoeatvbVR35E7SB8lrJ1JjxbckO9DPGCuWlA0=
-X-Received: by 2002:a9d:529:: with SMTP id 38mr12094425otw.145.1565251762153;
- Thu, 08 Aug 2019 01:09:22 -0700 (PDT)
+        Thu, 8 Aug 2019 04:11:56 -0400
+Received: from foss.arm.com ([217.140.110.172]:57736 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726721AbfHHILz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 04:11:55 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DA44B337;
+        Thu,  8 Aug 2019 01:11:54 -0700 (PDT)
+Received: from [0.0.0.0] (e107985-lin.cambridge.arm.com [10.1.194.38])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0BA763F706;
+        Thu,  8 Aug 2019 01:11:52 -0700 (PDT)
+Subject: Re: [RFC][PATCH 12/13] sched/deadline: Introduce deadline servers
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     mingo@kernel.org, juri.lelli@redhat.com,
+        linux-kernel@vger.kernel.org, luca.abeni@santannapisa.it,
+        bristot@redhat.com, balsini@android.com, dvyukov@google.com,
+        tglx@linutronix.de, vpillai@digitalocean.com, rostedt@goodmis.org
+References: <20190726145409.947503076@infradead.org>
+ <20190726161358.056107990@infradead.org>
+ <34710762-f813-3913-0e55-fde7c91c6c2d@arm.com>
+ <20190808075635.GB17205@worktop.programming.kicks-ass.net>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <20cc05d3-0d0f-a558-2bbe-3b72527dd9bc@arm.com>
+Date:   Thu, 8 Aug 2019 10:11:51 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190730181557.90391-1-swboyd@chromium.org> <20190730181557.90391-42-swboyd@chromium.org>
-In-Reply-To: <20190730181557.90391-42-swboyd@chromium.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 8 Aug 2019 10:09:10 +0200
-Message-ID: <CAMuHMdWBFzNGhzAdEyFEbRE6nOWBKpCQ-5VXZfh3Bg+FMB7NXg@mail.gmail.com>
-Subject: Re: [PATCH v6 41/57] spi: Remove dev_err() usage after platform_get_irq()
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190808075635.GB17205@worktop.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+On 8/8/19 9:56 AM, Peter Zijlstra wrote:
+> On Wed, Aug 07, 2019 at 06:31:59PM +0200, Dietmar Eggemann wrote:
+>> On 7/26/19 4:54 PM, Peter Zijlstra wrote:
+>>>
+>>>
+>>> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+>>
+>> [...]
+>>
+>>> @@ -889,6 +891,8 @@ static void update_curr(struct cfs_rq *c
+>>>  		trace_sched_stat_runtime(curtask, delta_exec, curr->vruntime);
+>>>  		cgroup_account_cputime(curtask, delta_exec);
+>>>  		account_group_exec_runtime(curtask, delta_exec);
+>>> +		if (curtask->server)
+>>> +			dl_server_update(curtask->server, delta_exec);
+>>>  	}
+>>
+>> I get a lockdep_assert_held(&rq->lock) related warning in start_dl_timer()
+>> when running the full stack.
+> 
+> That would seem to imply a stale curtask->server value; the hunk below:
+> 
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -3756,8 +3756,11 @@ pick_next_task(struct rq *rq, struct tas
+> 
+>         for_each_class(class) {
+>                 p = class->pick_next_task(rq, NULL, NULL);
+> -               if (p)
+> +               if (p) {
+> +                       if (p->sched_class == class && p->server)
+> +                               p->server = NULL;
+>                         return p;
+> +               }
+>         }
+> 
+> 
+> Was supposed to clear p->server, but clearly something is going 'funny'.
 
-On Tue, Jul 30, 2019 at 8:19 PM Stephen Boyd <swboyd@chromium.org> wrote:
-> We don't need dev_err() messages when platform_get_irq() fails now that
-> platform_get_irq() prints an error message itself when something goes
-> wrong. Let's remove these prints with a simple semantic patch.
->
-> // <smpl>
-> @@
-> expression ret;
-> struct platform_device *E;
-> @@
->
-> ret =
-> (
-> platform_get_irq(E, ...)
-> |
-> platform_get_irq_byname(E, ...)
-> );
->
-> if ( \( ret < 0 \| ret <= 0 \) )
-> {
-> (
-> -if (ret != -EPROBE_DEFER)
-> -{ ...
-> -dev_err(...);
-> -... }
-> |
-> ...
-> -dev_err(...);
-> )
-> ...
-> }
-> // </smpl>
->
-> While we're here, remove braces on if statements that only have one
-> statement (manually).
->
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: linux-spi@vger.kernel.org
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> ---
->
-> Please apply directly to subsystem trees
->
->  drivers/spi/atmel-quadspi.c     |  1 -
->  drivers/spi/spi-armada-3700.c   |  1 -
->  drivers/spi/spi-bcm2835.c       |  1 -
->  drivers/spi/spi-bcm2835aux.c    |  1 -
->  drivers/spi/spi-bcm63xx-hsspi.c |  4 +---
->  drivers/spi/spi-bcm63xx.c       |  4 +---
->  drivers/spi/spi-cadence.c       |  1 -
->  drivers/spi/spi-dw-mmio.c       |  4 +---
->  drivers/spi/spi-efm32.c         |  4 +---
->  drivers/spi/spi-ep93xx.c        |  4 +---
->  drivers/spi/spi-fsl-dspi.c      |  1 -
->  drivers/spi/spi-fsl-qspi.c      |  4 +---
->  drivers/spi/spi-geni-qcom.c     |  4 +---
->  drivers/spi/spi-lantiq-ssc.c    | 12 +++---------
->  drivers/spi/spi-mt65xx.c        |  1 -
->  drivers/spi/spi-npcm-pspi.c     |  1 -
->  drivers/spi/spi-nuc900.c        |  1 -
->  drivers/spi/spi-nxp-fspi.c      |  4 +---
->  drivers/spi/spi-pic32-sqi.c     |  1 -
->  drivers/spi/spi-pic32.c         | 12 +++---------
->  drivers/spi/spi-qcom-qspi.c     |  4 +---
->  drivers/spi/spi-s3c24xx.c       |  1 -
->  drivers/spi/spi-sh-msiof.c      |  1 -
->  drivers/spi/spi-sh.c            |  4 +---
->  drivers/spi/spi-sifive.c        |  1 -
->  drivers/spi/spi-slave-mt27xx.c  |  1 -
->  drivers/spi/spi-sprd.c          |  4 +---
->  drivers/spi/spi-stm32-qspi.c    |  5 +----
->  drivers/spi/spi-sun4i.c         |  1 -
->  drivers/spi/spi-sun6i.c         |  1 -
->  drivers/spi/spi-synquacer.c     |  2 --
->  drivers/spi/spi-ti-qspi.c       |  1 -
->  drivers/spi/spi-uniphier.c      |  1 -
->  drivers/spi/spi-xlp.c           |  4 +---
->  drivers/spi/spi-zynq-qspi.c     |  1 -
->  drivers/spi/spi-zynqmp-gqspi.c  |  1 -
->  36 files changed, 19 insertions(+), 80 deletions(-)
+What about the fast path in pick_next_task()?
 
-Failed to catch
-drivers/spi/spi-rspi.c: ret = platform_get_irq_byname(pdev, "rx");
-drivers/spi/spi-rspi.c- if (ret < 0) {
-drivers/spi/spi-rspi.c:         ret = platform_get_irq_byname(pdev, "mux");
-drivers/spi/spi-rspi.c-         if (ret < 0)
-drivers/spi/spi-rspi.c:                 ret = platform_get_irq(pdev, 0);
-drivers/spi/spi-rspi.c-         if (ret >= 0)
-drivers/spi/spi-rspi.c-                 rspi->rx_irq = rspi->tx_irq = ret;
-drivers/spi/spi-rspi.c- } else {
-drivers/spi/spi-rspi.c-         rspi->rx_irq = ret;
-drivers/spi/spi-rspi.c:         ret = platform_get_irq_byname(pdev, "tx");
-drivers/spi/spi-rspi.c-         if (ret >= 0)
-drivers/spi/spi-rspi.c-                 rspi->tx_irq = ret;
-drivers/spi/spi-rspi.c- }
-drivers/spi/spi-rspi.c- if (ret < 0) {
-drivers/spi/spi-rspi.c:         dev_err(&pdev->dev, "platform_get_irq error\n");
-drivers/spi/spi-rspi.c-         goto error2;
-drivers/spi/spi-rspi.c- }
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index bffe849b5a42..f1ea6ae16052 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -3742,6 +3742,9 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+                if (unlikely(!p))
+                        p = idle_sched_class.pick_next_task(rq, prev, rf);
+ 
++               if (p->sched_class == &fair_sched_class && p->server)
++                       p->server = NULL;
++
+                return p;
+        }
