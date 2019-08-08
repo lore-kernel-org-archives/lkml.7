@@ -2,112 +2,94 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7EB9C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC44C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:16:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4BE621874
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:15:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DCDD217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:16:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="ihji1C0P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733028AbfHHNPg (ORCPT
+        id S1732997AbfHHNQz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 09:15:36 -0400
-Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:40655 "EHLO
-        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1733010AbfHHNPg (ORCPT
+        Thu, 8 Aug 2019 09:16:55 -0400
+Received: from mail.kmu-office.ch ([178.209.48.109]:48864 "EHLO
+        mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732808AbfHHNQz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 09:15:36 -0400
-Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
-        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id x78DEoSS024396;
-        Thu, 8 Aug 2019 16:14:50 +0300
-Received: by taln60.nuvoton.co.il (Postfix, from userid 10070)
-        id 3ACA862A57; Thu,  8 Aug 2019 16:14:50 +0300 (IDT)
-From:   Tomer Maimon <tmaimon77@gmail.com>
-To:     broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        vigneshr@ti.com, bbrezillon@kernel.org, avifishman70@gmail.com,
-        tali.perry1@gmail.com, venture@google.com, yuenn@google.com,
-        benjaminfair@google.com
-Cc:     linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Tomer Maimon <tmaimon77@gmail.com>
-Subject: [PATCH v2 1/2] dt-binding: spi: add NPCM FIU controller
-Date:   Thu,  8 Aug 2019 16:14:47 +0300
-Message-Id: <20190808131448.349161-2-tmaimon77@gmail.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20190808131448.349161-1-tmaimon77@gmail.com>
-References: <20190808131448.349161-1-tmaimon77@gmail.com>
+        Thu, 8 Aug 2019 09:16:55 -0400
+Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
+        by mail.kmu-office.ch (Postfix) with ESMTPSA id F38935C2324;
+        Thu,  8 Aug 2019 15:16:53 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
+        t=1565270214;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=AAyN24AzAzO1awwqHODdXPWc78B4O/mVcZTdCznoEes=;
+        b=ihji1C0POjshqOnHilzCuIJvCLQiIHTYUZvITc2HhVRGqAwz7VUPA7HyZnNVoj8M0cxJog
+        0o304WNpDEQmark5ttYGQwnbMGUwQnc854J8a+oymFH6jw8IuoNb96izgE5X3BZlI++rwL
+        nFxk2rEl1AJFBrbrXLmQMig+I+bNdJw=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 08 Aug 2019 15:16:53 +0200
+From:   Stefan Agner <stefan@agner.ch>
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org,
+        lgirdwood@gmail.com, perex@perex.cz,
+        Stefan Agner <stefan.agner@toradex.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ASoC: soc-core: remove error due to probe deferral
+In-Reply-To: <s5hftmbiyuc.wl-tiwai@suse.de>
+References: <20190808123655.31520-1-stefan@agner.ch>
+ <20190808124437.GD3795@sirena.co.uk> <s5hlfw3izhl.wl-tiwai@suse.de>
+ <20190808130217.GE3795@sirena.co.uk> <s5hftmbiyuc.wl-tiwai@suse.de>
+Message-ID: <cd3fd8b9ce6e4f9820197c70dfc42b67@agner.ch>
+X-Sender: stefan@agner.ch
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Added device tree binding documentation for Nuvoton BMC
-NPCM Flash Interface Unit(FIU) SPI master controller
-using SPI-MEM interface.
+On 2019-08-08 15:14, Takashi Iwai wrote:
+> On Thu, 08 Aug 2019 15:02:17 +0200,
+> Mark Brown wrote:
+>>
+>> On Thu, Aug 08, 2019 at 03:00:06PM +0200, Takashi Iwai wrote:
+>> > Mark Brown wrote:
+>>
+>> > > No, they absolutely should tell the user why they are deferring so the
+>> > > user has some information to go on when they're trying to figure out why
+>> > > their device isn't instantiating.
+>>
+>> > But it's no real error that *must* be printed on the console, either.
+>> > Maybe downgrading the printk level?
+>>
+>> Yes, downgrading can be OK though it does bloat the code.
+> 
+> I guess we can use dev_printk() with the conditional level choice.
+> 
 
-Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
----
- .../bindings/spi/nuvoton,npcm-fiu.txt         | 47 +++++++++++++++++++
- 1 file changed, 47 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spi/nuvoton,npcm-fiu.txt
+How about use dev_info always? We get a dev_err message from
+soc_init_dai_link in error cases...
 
-diff --git a/Documentation/devicetree/bindings/spi/nuvoton,npcm-fiu.txt b/Documentation/devicetree/bindings/spi/nuvoton,npcm-fiu.txt
-new file mode 100644
-index 000000000000..ab37aae91d19
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/nuvoton,npcm-fiu.txt
-@@ -0,0 +1,47 @@
-+* Nuvoton FLASH Interface Unit (FIU) SPI Controller
-+
-+NPCM FIU supports single, dual and quad communication interface.
-+
-+The NPCM7XX supports three FIU modules,
-+FIU0 and FIUx supports two chip selects,
-+FIU3 support four chip select.
-+
-+Required properties:
-+  - compatible : "nuvoton,npcm750-fiu" for the NPCM7XX BMC
-+  - #address-cells : should be 1.
-+  - #size-cells : should be 0.
-+  - reg : the first contains the register location and length,
-+          the second contains the memory mapping address and length
-+  - reg-names: Should contain the reg names "control" and "memory"
-+  - clocks : phandle of FIU reference clock.
-+
-+Required properties in case the pins can be muxed:
-+  - pinctrl-names : a pinctrl state named "default" must be defined.
-+  - pinctrl-0 : phandle referencing pin configuration of the device.
-+
-+Optional property:
-+  - spix-mode: enable spix-mode for an expansion bus to an ASIC or CPLD.
-+
-+Aliases:
-+- All the FIU controller nodes should be represented in the aliases node using
-+  the following format 'fiu{n}' where n is a unique number for the alias.
-+  In the NPCM7XX BMC:
-+  		fiu0 represent fiu 0 controller
-+  		fiu1 represent fiu 3 controller
-+  		fiu2 represent fiu x controller
-+
-+Example:
-+fiu3: fiu@c00000000 {
-+	compatible = "nuvoton,npcm750-fiu";
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	reg = <0xfb000000 0x1000>, <0x80000000 0x10000000>;
-+	reg-names = "control", "memory";
-+	clocks = <&clk NPCM7XX_CLK_AHB>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi3_pins>;
-+	spi-nor@0 {
-+			...
-+	};
-+};
-+
--- 
-2.18.0
+		ret = soc_init_dai_link(card, dai_link);
+		if (ret && ret != -EPROBE_DEFER) {
+			dev_info(card->dev, "ASoC: failed to init link %s: %d\n",
+				 dai_link->name, ret);
+		}
+		if (ret) {
+			soc_cleanup_platform(card);
+			mutex_unlock(&client_mutex);
+			return ret;
+		}
 
+--
+Stefan
