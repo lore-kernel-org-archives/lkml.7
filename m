@@ -2,166 +2,190 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F9F0C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF05C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:36:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59E39214C6
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:35:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="iW/dK8i0"
+	by mail.kernel.org (Postfix) with ESMTP id 1AA0E214C6
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:36:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732130AbfHHIfs (ORCPT
+        id S1731535AbfHHIgm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 04:35:48 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:43644 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730903AbfHHIfq (ORCPT
+        Thu, 8 Aug 2019 04:36:42 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:46339 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726187AbfHHIgl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 04:35:46 -0400
-Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
-  Eugen.Hristev@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Eugen.Hristev@microchip.com";
-  x-sender="Eugen.Hristev@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa3.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Eugen.Hristev@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa3.microchip.iphmx.com; spf=Pass smtp.mailfrom=Eugen.Hristev@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: RY3q2Q80RNwYERE2vCW4rQcaEFq380jsKHF2eOkpCKwXhnFdIs7CMGcn3MkKJdJdCfvGTX4GNa
- 84KvgoQ5tPKig0rbP4fi7valZ9srh+wwb+CVAwadGtSM8+n/wJvLoKTC0QeE8Nx3b6QOtNMkai
- Byb27KxFJ6ryXq9uloQJAPd1pIQaIwqoQDWcl7eVkNlmTB2z6Q88XG/anCByAqi5Q82rooMhwT
- SrTANv65yZcHNO1+UTkxC7hAoeJoqAlK5c6hbnKkbSvgniJQJXoQno5RjqgWWNjGzgQaKKJsvi
- 0lA=
-X-IronPort-AV: E=Sophos;i="5.64,360,1559545200"; 
-   d="scan'208";a="44412904"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 08 Aug 2019 01:35:44 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 8 Aug 2019 01:35:43 -0700
-Received: from NAM04-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Thu, 8 Aug 2019 01:35:43 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KS+dpHSD4lLXkWuvTeFdKLAgCwNQq7uXLUjbS1gyJcGxnbCX22ySGcoERSQKe7XApZgNos8gbIZN8RLIIwtFjLfdWirxRFXw5bwW1KzNJd+ALcwRzX7iGQFiqtwjGCYfaZW4zZKWbfvwxUwUivBzPi7ksTyDOL30LpWagxBeV7z4XLDtGyzDnrS0vSFVWKAHB6JWZ5izFY1T3mt/d9ud8G12ZNbJsOmGSJ3lZt9Tez/Jw/UBEVMbhzrS9/yLJ+oh4e7jzGU8BgqEQA2JfY5SMiyUc5riMMZ8K89G4KjLdemxrJY46bPJDDvrNDPnZOeOVc16FrSQTGeXB9WGSK1Ekg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pseR9+6/5NTqfa/7+d7WpjGM1Wn3kcpn9G4zGNTt9r0=;
- b=BhZyUberdFyeQzeXwzb6YN1c1VWpIa7iP2GJdiAKF12uTFhXVvohBiGDQqjU65SKqhQTnYPtRYKcCw5f+n99guTdx3d1+HvxmCmiUVJuIjyhych+VDUUT34OdTfGXu0Dzf1Pog5zr5V7JxzkPDoH/7z6er7zWLma8T0MgJL9EhDBInp/4Zh3X7vzwpwsoBLu2IPuB8cpZwh7KPUilejsvx2Kpjmbjxmpsg5FQu6GzlFHt3Mr10V0gBxyO2wOSpdp1QMh1cH2QLLZFPc7cjQfn1iNg3Sv9fgPjpxPr3GniAYjqe/hl4QIkPgPe9pcoMlz8Ummjruf+TXrRGup0DflKQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=microchip.com;dmarc=pass action=none
- header.from=microchip.com;dkim=pass header.d=microchip.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector1-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pseR9+6/5NTqfa/7+d7WpjGM1Wn3kcpn9G4zGNTt9r0=;
- b=iW/dK8i06zyXXoNRuGddCczG30iU0Xab3AELHBDqzCp3pUJ16DoxTlJY5mM6aIsNGitOnaq2vfS/2nwm8pL28XzDY9dibzjIBdkvXKAogLwSj3hs8jaNhPbAre19GE9u9mrUu0FHuO18AGEGtTPLTC+CJ5F0Di7Sn57Yx9hCsRA=
-Received: from DM5PR11MB1242.namprd11.prod.outlook.com (10.168.108.8) by
- DM5PR11MB1545.namprd11.prod.outlook.com (10.172.36.138) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2136.17; Thu, 8 Aug 2019 08:35:43 +0000
-Received: from DM5PR11MB1242.namprd11.prod.outlook.com
- ([fe80::c457:dc57:6e6f:f4f3]) by DM5PR11MB1242.namprd11.prod.outlook.com
- ([fe80::c457:dc57:6e6f:f4f3%10]) with mapi id 15.20.2157.015; Thu, 8 Aug 2019
- 08:35:43 +0000
-From:   <Eugen.Hristev@microchip.com>
-To:     <Nicolas.Ferre@microchip.com>, <Ludovic.Desroches@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <adrian.hunter@intel.com>,
-        <ulf.hansson@linaro.org>, <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mmc@vger.kernel.org>
-CC:     <Eugen.Hristev@microchip.com>
-Subject: [PATCH 2/2] ARM: dts: at91: sama5d27_som1_ek: add mmc capabilities
- for SDMMC0
-Thread-Topic: [PATCH 2/2] ARM: dts: at91: sama5d27_som1_ek: add mmc
- capabilities for SDMMC0
-Thread-Index: AQHVTcREWHJkbws9ckOkZIu1sPO5NQ==
-Date:   Thu, 8 Aug 2019 08:35:43 +0000
-Message-ID: <1565252928-28994-2-git-send-email-eugen.hristev@microchip.com>
-References: <1565252928-28994-1-git-send-email-eugen.hristev@microchip.com>
-In-Reply-To: <1565252928-28994-1-git-send-email-eugen.hristev@microchip.com>
-Accept-Language: en-US, ro-RO
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: VE1PR08CA0020.eurprd08.prod.outlook.com
- (2603:10a6:803:104::33) To DM5PR11MB1242.namprd11.prod.outlook.com
- (2603:10b6:3:14::8)
-x-mailer: git-send-email 2.7.4
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [94.177.32.154]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 16521185-323f-4cc1-2632-08d71bdb666d
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM5PR11MB1545;
-x-ms-traffictypediagnostic: DM5PR11MB1545:
-x-microsoft-antispam-prvs: <DM5PR11MB1545F838BF905C8AE809F660E8D70@DM5PR11MB1545.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2803;
-x-forefront-prvs: 012349AD1C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(396003)(366004)(39860400002)(136003)(189003)(199004)(26005)(66066001)(64756008)(66556008)(66476007)(66446008)(6116002)(3846002)(2501003)(2906002)(446003)(66946007)(11346002)(14454004)(256004)(36756003)(6486002)(2201001)(6436002)(86362001)(305945005)(7736002)(53936002)(81156014)(99286004)(81166006)(4326008)(478600001)(6512007)(76176011)(8676002)(316002)(52116002)(25786009)(486006)(2616005)(476003)(71200400001)(71190400001)(102836004)(107886003)(386003)(4744005)(50226002)(6506007)(186003)(5660300002)(8936002)(110136005);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR11MB1545;H:DM5PR11MB1242.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: u01LVk5+UmXthyMYPJGkwqT0hjHfsGrzrkcnZx6TQHi7yIGZZpxlkq4qzsLKCzfmYaNPvQ6vJxObFfCcmfsBXPAYbQRLV6wpn+MijFPfe1qtZcXCSXtyM/ywU20E5K99MiVjI9OgdPrss10z/DkdEn4IbBOXdPUy+lbXhZSINp/jG7O1XDQiqeq3dDnuSZTx/WclHbBpMtveG/wz88ONNxYQmE/mrGDcqQVAIWjkpjNdMPbQiBDeBVDJNB0eH36tCbiRaZq7G3n9EXR+g6hI5RfdLSj/j6sSvq1vJAJifCSEycTYSu6jSQGeZrodb7YjSssObBXul0D9HLBwQWQz0VP6FqwGr2x/UWyg8irG1U/JNmGjcuY6twps7ZqfblxRsEQBWK85TsNaYYQJ6/zEtCsxLFm7NY0y0z9jmj/bIFM=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 8 Aug 2019 04:36:41 -0400
+Received: from 79.184.254.29.ipv4.supernova.orange.pl (79.184.254.29) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.275)
+ id 20bffa7542b3d3cc; Thu, 8 Aug 2019 10:36:38 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     linux-nvme <linux-nvme@lists.infradead.org>
+Cc:     Keith Busch <kbusch@kernel.org>,
+        Mario Limonciello <Mario.Limonciello@dell.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rajat Jain <rajatja@google.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Subject: [PATCH] nvme-pci: Allow PCI bus-level PM to be used if ASPM is disabled
+Date:   Thu, 08 Aug 2019 10:36:37 +0200
+Message-ID: <2583975.4sIyE3leJj@kreacher>
+In-Reply-To: <20190731221956.GB15795@localhost.localdomain>
+References: <4323ed84dd07474eab65699b4d007aaf@AUSX13MPC105.AMER.DELL.COM> <CAJZ5v0iDQ4=kTUgW94tKGt7oJzA_3uVU_M6HAMbNCRXwp_do8A@mail.gmail.com> <47415939.KV5G6iaeJG@kreacher> <20190730144134.GA12844@localhost.localdomain> <100ba4aff1c6434a81e47774ab4acddc@AUSX13MPC105.AMER.DELL.COM> <8246360B-F7D9-42EB-94FC-82995A769E28@canonical.com> <20190730191934.GD13948@localhost.localdomain> <7d3e0b8ba1444194a153c93faa1cabb3@AUSX13MPC105.AMER.DELL.COM> <20190730213114.GK13948@localhost.localdomain> <CAJZ5v0gxfeMN8eCNRjcXmUOkReVsdozb3EccaYMpnmSHu3771g@mail.gmail.com> <20190731221956.GB15795@localhost.localdomain>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 16521185-323f-4cc1-2632-08d71bdb666d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Aug 2019 08:35:43.1299
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: AVfxCLiNiLFvo5r1vj2ojcupQWVSrJbfoHBkTvK/fbl3WbNR09p716FxBoOzIHZGQ+ElkLT97E5t4rZsiCBHJfQ1CIJnbWrCov7Q4yCXtic=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB1545
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugen Hristev <eugen.hristev@microchip.com>
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Add mmc capabilities for SDMMC0 for this board.
-With this enabled, eMMC connected card is detected as:
+One of the modifications made by commit d916b1be94b6 ("nvme-pci: use
+host managed power state for suspend") was adding a pci_save_state()
+call to nvme_suspend() in order to prevent the PCI bus-level PM from
+being applied to the suspended NVMe devices, but if ASPM is not
+enabled for the target NVMe device, that causes its PCIe link to stay
+up and the platform may not be able to get into its optimum low-power
+state because of that.
 
-mmc0: new DDR MMC card at address 0001
+For example, if ASPM is disabled for the NVMe drive (PC401 NVMe SK
+hynix 256GB) in my Dell XPS13 9380, leaving it in D0 during
+suspend-to-idle prevents the SoC from reaching package idle states
+deeper than PC3, which is way insufficient for system suspend.
 
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+To address this shortcoming, make nvme_suspend() check if ASPM is
+enabled for the target device and fall back to full device shutdown
+and PCI bus-level PM if that is not the case.
+
+Fixes: d916b1be94b6 ("nvme-pci: use host managed power state for suspend")
+Link: https://lore.kernel.org/linux-pm/2763495.NmdaWeg79L@kreacher/T/#t
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- arch/arm/boot/dts/at91-sama5d27_som1_ek.dts | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts b/arch/arm/boot/dt=
-s/at91-sama5d27_som1_ek.dts
-index 149e539..194b3a3 100644
---- a/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
-+++ b/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
-@@ -54,6 +54,7 @@
-=20
- 		sdmmc0: sdio-host@a0000000 {
- 			bus-width =3D <8>;
-+			mmc-ddr-3_3v;
- 			pinctrl-names =3D "default";
- 			pinctrl-0 =3D <&pinctrl_sdmmc0_default>;
- 			status =3D "okay";
---=20
-2.7.4
+This is an update of the following patch:
+
+https://patchwork.kernel.org/patch/11081791/
+
+going with the subject matching the changes in the patch.
+
+This also addresses style-related comments from Christoph and follows the
+Keith's advice to use pci_upstream_bridge() to get to the upstream bridge
+of the device.
+
+Thanks!
+
+---
+ drivers/nvme/host/pci.c |   15 +++++++++++----
+ drivers/pci/pcie/aspm.c |   20 ++++++++++++++++++++
+ include/linux/pci.h     |    2 ++
+ 3 files changed, 33 insertions(+), 4 deletions(-)
+
+Index: linux-pm/drivers/nvme/host/pci.c
+===================================================================
+--- linux-pm.orig/drivers/nvme/host/pci.c
++++ linux-pm/drivers/nvme/host/pci.c
+@@ -2846,7 +2846,7 @@ static int nvme_resume(struct device *de
+ 	struct nvme_dev *ndev = pci_get_drvdata(to_pci_dev(dev));
+ 	struct nvme_ctrl *ctrl = &ndev->ctrl;
+ 
+-	if (pm_resume_via_firmware() || !ctrl->npss ||
++	if (ndev->last_ps == U32_MAX ||
+ 	    nvme_set_power_state(ctrl, ndev->last_ps) != 0)
+ 		nvme_reset_ctrl(ctrl);
+ 	return 0;
+@@ -2859,6 +2859,8 @@ static int nvme_suspend(struct device *d
+ 	struct nvme_ctrl *ctrl = &ndev->ctrl;
+ 	int ret = -EBUSY;
+ 
++	ndev->last_ps = U32_MAX;
++
+ 	/*
+ 	 * The platform does not remove power for a kernel managed suspend so
+ 	 * use host managed nvme power settings for lowest idle power if
+@@ -2866,8 +2868,14 @@ static int nvme_suspend(struct device *d
+ 	 * shutdown.  But if the firmware is involved after the suspend or the
+ 	 * device does not support any non-default power states, shut down the
+ 	 * device fully.
++	 *
++	 * If ASPM is not enabled for the device, shut down the device and allow
++	 * the PCI bus layer to put it into D3 in order to take the PCIe link
++	 * down, so as to allow the platform to achieve its minimum low-power
++	 * state (which may not be possible if the link is up).
+ 	 */
+-	if (pm_suspend_via_firmware() || !ctrl->npss) {
++	if (pm_suspend_via_firmware() || !ctrl->npss ||
++	    !pcie_aspm_enabled(pdev)) {
+ 		nvme_dev_disable(ndev, true);
+ 		return 0;
+ 	}
+@@ -2880,9 +2888,8 @@ static int nvme_suspend(struct device *d
+ 	    ctrl->state != NVME_CTRL_ADMIN_ONLY)
+ 		goto unfreeze;
+ 
+-	ndev->last_ps = 0;
+ 	ret = nvme_get_power_state(ctrl, &ndev->last_ps);
+-	if (ret < 0)
++	if (ret < 0 || ndev->last_ps == U32_MAX)
+ 		goto unfreeze;
+ 
+ 	ret = nvme_set_power_state(ctrl, ctrl->npss);
+Index: linux-pm/drivers/pci/pcie/aspm.c
+===================================================================
+--- linux-pm.orig/drivers/pci/pcie/aspm.c
++++ linux-pm/drivers/pci/pcie/aspm.c
+@@ -1170,6 +1170,26 @@ static int pcie_aspm_get_policy(char *bu
+ module_param_call(policy, pcie_aspm_set_policy, pcie_aspm_get_policy,
+ 	NULL, 0644);
+ 
++/*
++ * pcie_aspm_enabled - Return the mask of enabled ASPM link states.
++ * @pci_device: Target device.
++ */
++u32 pcie_aspm_enabled(struct pci_dev *pci_device)
++{
++	struct pci_dev *bridge = pci_upstream_bridge(pci_device);
++	u32 ret;
++
++	if (!bridge)
++		return 0;
++
++	mutex_lock(&aspm_lock);
++	ret = bridge->link_state ? bridge->link_state->aspm_enabled : 0;
++	mutex_unlock(&aspm_lock);
++
++	return ret;
++}
++
++
+ #ifdef CONFIG_PCIEASPM_DEBUG
+ static ssize_t link_state_show(struct device *dev,
+ 		struct device_attribute *attr,
+Index: linux-pm/include/linux/pci.h
+===================================================================
+--- linux-pm.orig/include/linux/pci.h
++++ linux-pm/include/linux/pci.h
+@@ -1567,8 +1567,10 @@ extern bool pcie_ports_native;
+ 
+ #ifdef CONFIG_PCIEASPM
+ bool pcie_aspm_support_enabled(void);
++u32 pcie_aspm_enabled(struct pci_dev *pci_device);
+ #else
+ static inline bool pcie_aspm_support_enabled(void) { return false; }
++static inline u32 pcie_aspm_enabled(struct pci_dev *pci_device) { return 0; }
+ #endif
+ 
+ #ifdef CONFIG_PCIEAER
+
+
 
