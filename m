@@ -2,98 +2,67 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D55C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:13:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB0DC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:14:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 047A72184E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:13:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A65421874
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:14:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732976AbfHHNNN (ORCPT
+        id S1732966AbfHHNOG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 09:13:13 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:59231 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732375AbfHHNNN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 09:13:13 -0400
-Received: from [192.168.1.110] ([77.4.95.67]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1M3Upe-1hwGBc1pPm-000dS4; Thu, 08 Aug 2019 15:12:50 +0200
-Subject: Re: [PATCH RFC] modpost: Support I2C Aliases from OF tables
-To:     Javier Martinez Canillas <javierm@redhat.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Wolfram Sang <wsa@the-dreams.de>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>
-References: <20190710193918.31135-1-kieran.bingham+renesas@ideasonboard.com>
- <0e1b6e0b-1c94-4b00-7fda-c2a303ee3816@redhat.com>
- <20190731194419.GB4084@kunai>
- <f4a78e93-6aaa-bc72-cf94-06fc2574451c@redhat.com>
- <CAMuHMdUA-hjVqSP_c0cB=76cfrucF6xxRi3ymVoEsJ2hbkfT=A@mail.gmail.com>
- <51451f89-9193-2be6-e724-e9ca44a25f52@redhat.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <620e0aec-e3d8-7289-6525-b720013e8dfa@metux.net>
-Date:   Thu, 8 Aug 2019 15:12:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <51451f89-9193-2be6-e724-e9ca44a25f52@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:IBK9Xm7wYE6zK76e7iHZaERZwlA5HaihmNgKog9rl292nI0WqjF
- PtrGixDaNMcmx4CyY0g0HQuEYZ/9mduxkUv6RSCs3hYj5Z5Hh+F8N6xFGrfZaX2s3UPBmkJ
- oB+kot/By4XS+pGXba4sdeE9LvdMWIijTMwfqdOmigf9tUAw1ch5C3kq14jlJjw2D+apDZq
- CXntaM4+3eqXKMvkgxEyQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:3M+d3uKvZSs=:yLNYLCiuD+SNXAdiAMehjW
- GAhYqJo1pts5wjxmrfm3q9PHoTEl/auOnNIiUymU5nQ6kZegUv7OINe5y3jgIIwhyTtjgti63
- 3KQVZlS74z2HWDIiqmNcTAe24n0/KKjZoNstcoB8fTvdXc2x1MVHU/ybm7Vmqv/JF0bnBASfe
- A4q8igaAcDUoBlvUcu9F+Tma6qgYM+bz/iT2v6/0/Or/1/V8XyMnVEQFX6uiRBpQqDUSFZgui
- AvAZF8Ei7ft8focNVRd0A5eBMpyr/SbXyHunKNEotLF9t5nHx9AiBcU1oNvsw5h6kza7PNNH6
- pwTlUkq1ersEeabWvRtXk+CQqyrd+l3cdRJ7lSpEz/rs+NnrboMy0ccIzztuh0SAwdTwRAFLf
- JfdpyVssc3vMTsKYG2NJahpvi+DYB0afEumw12ItulLNSsjrEptmqZgWoWgq2aFevhC3K2ZAR
- XQJ9h2h6TIoS0Ax3y/WtBHDEXGoeoIOq43hBWPFz8XcKoU6pqoBhrY6U3VFaj1KXNwk6RfX4M
- S1MSdRzWrdpkpjDn4vje7kK05V4sswjCc2Qrn178RpmxgY2Py7/yRzOmVaY1UkWPKAG+PcIy7
- 4ahyHVKIev8jqVOgae1LucWtwwRnR5BbMGxw7B1nFEpHydFUjVFr5LVvwNQHYqnlXiAujVvGc
- ii1W0Hes3Krb8L6pP/wMi9ghqVDzYYLjzgsaq9noAOCeuZuIkqm+wYV5DjdApJsv5vEIjUYn8
- yQtdouzt0j2sv7nw1w76z98d5bIQSyrerypLiYTt4ERSWSCGggf846HsQPE=
+        Thu, 8 Aug 2019 09:14:06 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41028 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732375AbfHHNOF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 09:14:05 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7EE88AC51;
+        Thu,  8 Aug 2019 13:14:04 +0000 (UTC)
+Date:   Thu, 08 Aug 2019 15:14:03 +0200
+Message-ID: <s5hftmbiyuc.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Stefan Agner <stefan@agner.ch>, alsa-devel@alsa-project.org,
+        lgirdwood@gmail.com, perex@perex.cz,
+        Stefan Agner <stefan.agner@toradex.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ASoC: soc-core: remove error due to probe deferral
+In-Reply-To: <20190808130217.GE3795@sirena.co.uk>
+References: <20190808123655.31520-1-stefan@agner.ch>
+        <20190808124437.GD3795@sirena.co.uk>
+        <s5hlfw3izhl.wl-tiwai@suse.de>
+        <20190808130217.GE3795@sirena.co.uk>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06.08.19 19:12, Javier Martinez Canillas wrote:
+On Thu, 08 Aug 2019 15:02:17 +0200,
+Mark Brown wrote:
+> 
+> On Thu, Aug 08, 2019 at 03:00:06PM +0200, Takashi Iwai wrote:
+> > Mark Brown wrote:
+> 
+> > > No, they absolutely should tell the user why they are deferring so the
+> > > user has some information to go on when they're trying to figure out why
+> > > their device isn't instantiating.
+> 
+> > But it's no real error that *must* be printed on the console, either.
+> > Maybe downgrading the printk level?
+> 
+> Yes, downgrading can be OK though it does bloat the code.
 
-> Right, we could add a macro for that. Although it should probably be called
-> I2C_OF_MODULE_DEVICE_TABLE() or something like that since is specific to OF.
-
-At that point it should be completely noop when OF is disabled, so we
-also can get rid of many ifdef's.
-
-I've got some patch somewhere for introducing a MODULE_OF_TABLE() macro
-as replacement for many MODULE_DEVICE_TABLE(of, ...) cases, which noops
-when CONFIG_OF is disabled. (and similar ones for other table types).
-
-by the way: haven't followed whole discussion, just picked up some
-proposed table changes ... does that require userland upgrades ?
+I guess we can use dev_printk() with the conditional level choice.
 
 
---mtx
-
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+Takashi
