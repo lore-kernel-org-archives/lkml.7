@@ -2,91 +2,144 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EEEEC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:10:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC32C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBE422184E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:10:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E60B621743
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:12:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="aHd3BMPy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404132AbfHHQKz (ORCPT
+        id S2404143AbfHHQMl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 12:10:55 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:33963
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725535AbfHHQKz (ORCPT
+        Thu, 8 Aug 2019 12:12:41 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:39400 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404095AbfHHQMk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 12:10:55 -0400
-X-IronPort-AV: E=Sophos;i="5.64,362,1559512800"; 
-   d="scan'208";a="315952490"
-Received: from portablejulia.rsr.lip6.fr ([132.227.76.63])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Aug 2019 18:10:53 +0200
-Date:   Thu, 8 Aug 2019 18:10:53 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: julia@hadrien
-To:     Jonas Gorski <jonas.gorski@gmail.com>
-cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        Michael Turquette <mturquette@baylibre.com>,
-        Philippe Mathieu-Daud?? <f4bug@amsat.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org,
-        kbuild-all@01.org
-Subject: [PATCH] clk: fix devm_platform_ioremap_resource.cocci warnings
-Message-ID: <alpine.DEB.2.21.1908081809160.2995@hadrien>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 8 Aug 2019 12:12:40 -0400
+Received: by mail-pg1-f193.google.com with SMTP id u17so44304995pgi.6
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 09:12:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=GbKZkWdFW3/LathJiTmUB/es7Gx9lbtHm6GJXlHv5+E=;
+        b=aHd3BMPydi+5PV5TxAyyoXAB2//OlcpWaOb9Ulv9m4G+dGQDsVHyoJELks6vv29zZs
+         +l9YLHqxG6PA7RsVkwpwZLjgZzwTnKooalsTD+ERQtN8bpHaq1JEAX79Q/0Q4JFzQWqX
+         Zv7Za4X5k+/VUeEYrNZJJSLO7c+scqObfiMwnA2GipbI5hhnzUw2LCdhtgUFP2BnLpE2
+         et7yYRwFoml44eQaKQF8+SGCmFWcKVzwtMQTEXAtjYSre8zV7f3nMDxyKkS/3fiM3pd8
+         5g+VisQ2Yg7qdOQWYCT5hJZbqMllgcveePnnq+gYbnNhRPiHgqBwxulg0iqhWdshus0G
+         /Fjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=GbKZkWdFW3/LathJiTmUB/es7Gx9lbtHm6GJXlHv5+E=;
+        b=qmQCYttp+owNl22Nlt3UR+jIpDKJoSWO/xV5Z5CETkWzToqjK/haWpX960nGIXsBDh
+         okoA3Bqtv8I2O/GkDSPUNGDuAeCX443hvbfj2Tt3gyiI2Q2v2FCc/GaZ2N1j3UlLl/+8
+         NVi5iSZm/P8VyC4fFIvrpdehLChNYp/tr0nEvAcCC+irK9tUl2KjMHCke56c7/BKGuy2
+         PLxAoH7muLczSN4pKcCPMAM0bjJJveVgvfiRx5XsU4sqqiDnrHCcAsAY163Af1wCb0D3
+         XtnAiU358MxzA7t2OYROHNOXke2c9c8Rrm4r1zJDPKxVPB5BWnY6C8i5yzn32PVlQYlN
+         nvUQ==
+X-Gm-Message-State: APjAAAUlO2lmJakZSFsC/JOZLxeh0ASpCqr02iup/kYFvb+PS7Nlhehp
+        VkRXOPVBZhRCpbqGQDp+G0DKzQ==
+X-Google-Smtp-Source: APXvYqyiYb+knMp0JBJQrh+fcsfPoG9yFxitkP7TY7Atel9io4mNwiZe7WDGrcZe1yoOZtvrtpSkzA==
+X-Received: by 2002:a65:690e:: with SMTP id s14mr13663644pgq.47.1565280759945;
+        Thu, 08 Aug 2019 09:12:39 -0700 (PDT)
+Received: from ?IPv6:2605:e000:100e:83a1:4042:6c37:d29d:2320? ([2605:e000:100e:83a1:4042:6c37:d29d:2320])
+        by smtp.gmail.com with ESMTPSA id 196sm103224711pfy.167.2019.08.08.09.12.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 08 Aug 2019 09:12:38 -0700 (PDT)
+Subject: Re: [PATCH] loop: set PF_MEMALLOC_NOIO for the worker thread
+To:     Mikulas Patocka <mpatocka@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Mike Snitzer <msnitzer@redhat.com>, junxiao.bi@oracle.com,
+        dm-devel@redhat.com, Alasdair Kergon <agk@redhat.com>,
+        honglei.wang@oracle.com, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-block@vger.kernel.org
+References: <alpine.LRH.2.02.1908080540240.15519@file01.intranet.prod.int.rdu2.redhat.com>
+ <20190808135329.GG5482@bombadil.infradead.org>
+ <alpine.LRH.2.02.1908081113540.18950@file01.intranet.prod.int.rdu2.redhat.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <4625547c-f172-a0bf-720e-849fb7ff85a2@kernel.dk>
+Date:   Thu, 8 Aug 2019 09:12:37 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <alpine.LRH.2.02.1908081113540.18950@file01.intranet.prod.int.rdu2.redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: kbuild test robot <lkp@intel.com>
+On 8/8/19 8:17 AM, Mikulas Patocka wrote:
+> A deadlock with this stacktrace was observed.
+> 
+> The loop thread does a GFP_KERNEL allocation, it calls into dm-bufio
+> shrinker and the shrinker depends on I/O completion in the dm-bufio
+> subsystem.
+> 
+> In order to fix the deadlock (and other similar ones), we set the flag
+> PF_MEMALLOC_NOIO at loop thread entry.
+> 
+> PID: 474    TASK: ffff8813e11f4600  CPU: 10  COMMAND: "kswapd0"
+>     #0 [ffff8813dedfb938] __schedule at ffffffff8173f405
+>     #1 [ffff8813dedfb990] schedule at ffffffff8173fa27
+>     #2 [ffff8813dedfb9b0] schedule_timeout at ffffffff81742fec
+>     #3 [ffff8813dedfba60] io_schedule_timeout at ffffffff8173f186
+>     #4 [ffff8813dedfbaa0] bit_wait_io at ffffffff8174034f
+>     #5 [ffff8813dedfbac0] __wait_on_bit at ffffffff8173fec8
+>     #6 [ffff8813dedfbb10] out_of_line_wait_on_bit at ffffffff8173ff81
+>     #7 [ffff8813dedfbb90] __make_buffer_clean at ffffffffa038736f [dm_bufio]
+>     #8 [ffff8813dedfbbb0] __try_evict_buffer at ffffffffa0387bb8 [dm_bufio]
+>     #9 [ffff8813dedfbbd0] dm_bufio_shrink_scan at ffffffffa0387cc3 [dm_bufio]
+>    #10 [ffff8813dedfbc40] shrink_slab at ffffffff811a87ce
+>    #11 [ffff8813dedfbd30] shrink_zone at ffffffff811ad778
+>    #12 [ffff8813dedfbdc0] kswapd at ffffffff811ae92f
+>    #13 [ffff8813dedfbec0] kthread at ffffffff810a8428
+>    #14 [ffff8813dedfbf50] ret_from_fork at ffffffff81745242
+> 
+>    PID: 14127  TASK: ffff881455749c00  CPU: 11  COMMAND: "loop1"
+>     #0 [ffff88272f5af228] __schedule at ffffffff8173f405
+>     #1 [ffff88272f5af280] schedule at ffffffff8173fa27
+>     #2 [ffff88272f5af2a0] schedule_preempt_disabled at ffffffff8173fd5e
+>     #3 [ffff88272f5af2b0] __mutex_lock_slowpath at ffffffff81741fb5
+>     #4 [ffff88272f5af330] mutex_lock at ffffffff81742133
+>     #5 [ffff88272f5af350] dm_bufio_shrink_count at ffffffffa03865f9 [dm_bufio]
+>     #6 [ffff88272f5af380] shrink_slab at ffffffff811a86bd
+>     #7 [ffff88272f5af470] shrink_zone at ffffffff811ad778
+>     #8 [ffff88272f5af500] do_try_to_free_pages at ffffffff811adb34
+>     #9 [ffff88272f5af590] try_to_free_pages at ffffffff811adef8
+>    #10 [ffff88272f5af610] __alloc_pages_nodemask at ffffffff811a09c3
+>    #11 [ffff88272f5af710] alloc_pages_current at ffffffff811e8b71
+>    #12 [ffff88272f5af760] new_slab at ffffffff811f4523
+>    #13 [ffff88272f5af7b0] __slab_alloc at ffffffff8173a1b5
+>    #14 [ffff88272f5af880] kmem_cache_alloc at ffffffff811f484b
+>    #15 [ffff88272f5af8d0] do_blockdev_direct_IO at ffffffff812535b3
+>    #16 [ffff88272f5afb00] __blockdev_direct_IO at ffffffff81255dc3
+>    #17 [ffff88272f5afb30] xfs_vm_direct_IO at ffffffffa01fe3fc [xfs]
+>    #18 [ffff88272f5afb90] generic_file_read_iter at ffffffff81198994
+>    #19 [ffff88272f5afc50] __dta_xfs_file_read_iter_2398 at ffffffffa020c970 [xfs]
+>    #20 [ffff88272f5afcc0] lo_rw_aio at ffffffffa0377042 [loop]
+>    #21 [ffff88272f5afd70] loop_queue_work at ffffffffa0377c3b [loop]
+>    #22 [ffff88272f5afe60] kthread_worker_fn at ffffffff810a8a0c
+>    #23 [ffff88272f5afec0] kthread at ffffffff810a8428
+>    #24 [ffff88272f5aff50] ret_from_fork at ffffffff81745242
 
-drivers/clk/bcm/clk-bcm63xx-gate.c:174:1-9: WARNING: Use devm_platform_ioremap_resource for hw -> regs
+Applied, thanks.
 
- Use devm_platform_ioremap_resource helper which wraps
- platform_get_resource() and devm_ioremap_resource() together.
-
-Generated by: scripts/coccinelle/api/devm_platform_ioremap_resource.cocci
-
-Fixes: 1c099779c1e2 ("clk: add BCM63XX gated clock controller driver")
-CC: Jonas Gorski <jonas.gorski@gmail.com>
-Signed-off-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Julia Lawall <julia.lawall@lip6.fr>
----
-
-tree:   https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   ecb095bff5d4b8711a81968625b3b4a235d3e477
-commit: 1c099779c1e2e8e0e10cdb2aecd4b35f428e9f00 clk: add BCM63XX gated clock controller driver
-:::::: branch date: 15 hours ago
-:::::: commit date: 6 weeks ago
-
- clk-bcm63xx-gate.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
---- a/drivers/clk/bcm/clk-bcm63xx-gate.c
-+++ b/drivers/clk/bcm/clk-bcm63xx-gate.c
-@@ -146,7 +146,6 @@ static int clk_bcm63xx_probe(struct plat
- {
- 	const struct clk_bcm63xx_table_entry *entry, *table;
- 	struct clk_bcm63xx_hw *hw;
--	struct resource *r;
- 	u8 maxbit = 0;
- 	int i, ret;
-
-@@ -170,8 +169,7 @@ static int clk_bcm63xx_probe(struct plat
- 	for (i = 0; i < maxbit; i++)
- 		hw->data.hws[i] = ERR_PTR(-ENODEV);
-
--	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	hw->regs = devm_ioremap_resource(&pdev->dev, r);
-+	hw->regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(hw->regs))
- 		return PTR_ERR(hw->regs);
+-- 
+Jens Axboe
 
