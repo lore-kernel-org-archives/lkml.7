@@ -2,99 +2,96 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A22E7C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 17:19:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03007C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 17:22:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7964F214C6
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 17:19:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9EEA217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 17:22:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565284970;
+	bh=goDYQLYWzyP/I29xI6KE9eIk6wrBfRZGKb9lERIu32E=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=dnQhg+iZ73ATmlTdxgOqr3EGNhhLnmqS4q/USTN650PwYUXNRQeSAAYBm8dSMdaMg
+	 Txqc/YlP48jfVkbYUtvt7urDgitB3wD6UKN26QbKUqwNJ+uJ8NvgLCaJSEaLHeQXH7
+	 zEeZFwf2FmxpiAx1TdpoXNZ5Xfe7k4uGgchC49Nw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404275AbfHHRTw (ORCPT
+        id S2404291AbfHHRWt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 13:19:52 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54646 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2404098AbfHHRTw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 13:19:52 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 86A76AE48;
-        Thu,  8 Aug 2019 17:19:50 +0000 (UTC)
-Date:   Thu, 8 Aug 2019 19:19:49 +0200
-From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-To:     Patrick Bellasi <patrick.bellasi@arm.com>
-Cc:     Alessio Balsini <balsini@android.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Paul Turner <pjt@google.com>,
-        Steve Muckle <smuckle@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Todd Kjos <tkjos@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Tejun Heo <tj@kernel.org>,
-        VincentGuittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, cgroups@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v13 1/6] sched/core: uclamp: Extend CPU's cgroup
- controller
-Message-ID: <20190808171948.GF8617@blackbody.suse.cz>
-References: <20190802090853.4810-1-patrick.bellasi@arm.com>
- <20190802090853.4810-2-patrick.bellasi@arm.com>
- <20190806161133.GA18532@blackbody.suse.cz>
- <87imr74sfh.fsf@arm.com>
+        Thu, 8 Aug 2019 13:22:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41992 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728289AbfHHRWt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 13:22:49 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B2AC217F4;
+        Thu,  8 Aug 2019 17:22:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565284968;
+        bh=goDYQLYWzyP/I29xI6KE9eIk6wrBfRZGKb9lERIu32E=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=ua1MGXeQgpUilKwU9Lv6sFBtO5Ne3BfYuhBuC2bI/xL1c/K6rZ+GE5kbSBIAM9H73
+         2xuxIpKlQbsYUjWDPlQp6YqlPF4drvL4x1jkHEm+EhI1QRTuRhSdKoUqsEKHEv8bgP
+         aRFjcz2gknk+f1DC/RQI4SFJKyW1uuQr+QciRObU=
+Subject: Re: [PATCH v2] selftests: kvm: Adding config fragments
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>, pbonzini@redhat.com
+Cc:     linux-kernel@vger.kernel.org, drjones@redhat.com,
+        sean.j.christopherson@intel.com, linux-kselftest@vger.kernel.org,
+        kvm@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20190808123140.25583-1-naresh.kamboju@linaro.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <5a06389b-5996-b11d-1435-8f4667c1dc4b@kernel.org>
+Date:   Thu, 8 Aug 2019 11:22:46 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="w3uUfsyyY1Pqa/ej"
-Content-Disposition: inline
-In-Reply-To: <87imr74sfh.fsf@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190808123140.25583-1-naresh.kamboju@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 8/8/19 6:31 AM, Naresh Kamboju wrote:
+> selftests kvm all test cases need pre-required kernel configs for the
+> tests to get pass.
+> 
+> The KVM tests are skipped without these configs:
+> 
+>          dev_fd = open(KVM_DEV_PATH, O_RDONLY);
+>          if (dev_fd < 0)
+>                  exit(KSFT_SKIP);
+> 
 
---w3uUfsyyY1Pqa/ej
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thanks.
 
-On Thu, Aug 08, 2019 at 04:10:21PM +0100, Patrick Bellasi <patrick.bellasi@arm.com> wrote:
-> Not sure to get what you mean here: I'm currently exposing uclamp to
-> both v1 and v2 hierarchies.
-cpu controller has different API for v1 and v2 hierarchies. My question
-reworded is -- are the new knobs exposed in the legacy API
-intentionally/for a reason?
+> Signed-off-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+> ---
+>   tools/testing/selftests/kvm/config | 3 +++
+>   1 file changed, 3 insertions(+)
+>   create mode 100644 tools/testing/selftests/kvm/config
+> 
+> diff --git a/tools/testing/selftests/kvm/config b/tools/testing/selftests/kvm/config
+> new file mode 100644
+> index 000000000000..63ed533f73d6
+> --- /dev/null
+> +++ b/tools/testing/selftests/kvm/config
+> @@ -0,0 +1,3 @@
+> +CONFIG_KVM=y
+> +CONFIG_KVM_INTEL=y
+> +CONFIG_KVM_AMD=y
+> 
 
-Michal
+Acked-by: Shuah Khan <skhan@linuxfoundation.org>
 
---w3uUfsyyY1Pqa/ej
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+thanks,
+-- Shuah
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEEoQaUCWq8F2Id1tNia1+riC5qSgFAl1MWbQACgkQia1+riC5
-qSheLA/+K7nnjU6jLvL7D5MExUa3wdqwsunab8LGEYk4LMYktDs1F5j/xYnmae/Q
-iKPCSZhH+F4JDs3KlFhc4i7iroFAIdZXU7IArLa9vcTONhCYzt1EbmStW0QkjIQw
-92w4FH3iPYIveSqDGwsU7zJsiwYHKjLQBSbeIrUM3ylvk0cfioap1WdZNS7/GEKR
-XcAgoyT2by2VArF0cxF38q1NCtre+Ash2T2r/3zM59arQb5OuR7uaXjloGeBAHox
-LQR539L9WsYPUx7qxNGeQxBPjzIbEHpApxmW2zwpV7It3qbiQaCOdf0KBjweaRri
-uIzCCq3PlwPqI+2klp57SNFEffrVYAS8MaBfz5eKD5MPIFw0r8/CO3pFSaGtZIUB
-Bbkl9ditoSPcaVYgcVuxgEwQbRanoS1jy6QTKoL2HGQ0ag3ThQYdxx7YQBsv3BV3
-kjr988xDEi8dP15NEk83/eqrnUu5tbo2tOiN2THbhKlpFew6a/aYb7TIBzGUhKJN
-NouRmmvfp0fSo1lCsNuOjgp9rImU3jHgbhOUBavBPlt0GCGXk7CNtsuMCzjLw954
-9kmjP0lSh4k8Nmm0vsODdmKbI6JPj8tAwM/LPCPBGgY+wKlAfD84Dgx6STN5tlmv
-uXyjHfelyL0velgb7yHnwVW7sxvN9/q52X9dwe5TbCzWwB4g5ak=
-=qSBD
------END PGP SIGNATURE-----
-
---w3uUfsyyY1Pqa/ej--
