@@ -2,144 +2,68 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A99C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:52:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C1EAC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:52:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 514B9217D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:52:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F419217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:52:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731709AbfHHHwe (ORCPT
+        id S1731724AbfHHHwy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 03:52:34 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44772 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731637AbfHHHwX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 03:52:23 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x787qGaE021480
-        for <linux-kernel@vger.kernel.org>; Thu, 8 Aug 2019 03:52:22 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u8fa111k7-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 03:52:21 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Thu, 8 Aug 2019 08:52:20 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 8 Aug 2019 08:52:17 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x787qGeM33947662
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 8 Aug 2019 07:52:16 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 317B1AE053;
-        Thu,  8 Aug 2019 07:52:16 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 668F9AE051;
-        Thu,  8 Aug 2019 07:52:14 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.8.168])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu,  8 Aug 2019 07:52:14 +0000 (GMT)
-Received: by rapoport-lnx (sSMTP sendmail emulation); Thu, 08 Aug 2019 10:52:13 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Nicholas Piggin <npiggin@gmail.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        linux-arch@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-sh@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>
-Subject: [PATCH 2/3] ia64: switch to generic version of pte allocation
-Date:   Thu,  8 Aug 2019 10:52:07 +0300
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1565250728-21721-1-git-send-email-rppt@linux.ibm.com>
-References: <1565250728-21721-1-git-send-email-rppt@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19080807-4275-0000-0000-000003568A20
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19080807-4276-0000-0000-000038688E6D
-Message-Id: <1565250728-21721-3-git-send-email-rppt@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-08_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=870 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908080090
+        Thu, 8 Aug 2019 03:52:54 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54284 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731635AbfHHHwx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 03:52:53 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 79E08C08EC07;
+        Thu,  8 Aug 2019 07:52:53 +0000 (UTC)
+Received: from gondolin (dhcp-192-181.str.redhat.com [10.33.192.181])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1E74519C69;
+        Thu,  8 Aug 2019 07:52:51 +0000 (UTC)
+Date:   Thu, 8 Aug 2019 09:52:49 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] s390/mm: Use refcount_t for refcount
+Message-ID: <20190808095249.4fc40eb1.cohuck@redhat.com>
+In-Reply-To: <20190808071826.6649-1-hslester96@gmail.com>
+References: <20190808071826.6649-1-hslester96@gmail.com>
+Organization: Red Hat GmbH
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Thu, 08 Aug 2019 07:52:53 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ia64 implementation pte_alloc_one(), pte_alloc_one_kernel(),
-pte_free_kernel() and pte_free() is identical to the generic except of lack
-of __GFP_ACCOUNT for the user PTEs allocation.
+On Thu,  8 Aug 2019 15:18:26 +0800
+Chuhong Yuan <hslester96@gmail.com> wrote:
 
-Switch ia64 to use generic version of these functions.
+> Reference counters are preferred to use refcount_t instead of
+> atomic_t.
+> This is because the implementation of refcount_t can prevent
+> overflows and detect possible use-after-free.
+> So convert atomic_t ref counters to refcount_t.
+> 
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> ---
+>  arch/s390/include/asm/gmap.h |  4 +++-
+>  arch/s390/mm/gmap.c          | 10 +++++-----
+>  2 files changed, 8 insertions(+), 6 deletions(-)
 
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
----
- arch/ia64/include/asm/pgalloc.h | 32 ++------------------------------
- 1 file changed, 2 insertions(+), 30 deletions(-)
-
-diff --git a/arch/ia64/include/asm/pgalloc.h b/arch/ia64/include/asm/pgalloc.h
-index b03d993..f4c4910 100644
---- a/arch/ia64/include/asm/pgalloc.h
-+++ b/arch/ia64/include/asm/pgalloc.h
-@@ -20,6 +20,8 @@
- #include <linux/page-flags.h>
- #include <linux/threads.h>
- 
-+#include <asm-generic/pgalloc.h>
-+
- #include <asm/mmu_context.h>
- 
- static inline pgd_t *pgd_alloc(struct mm_struct *mm)
-@@ -82,36 +84,6 @@ pmd_populate_kernel(struct mm_struct *mm, pmd_t * pmd_entry, pte_t * pte)
- 	pmd_val(*pmd_entry) = __pa(pte);
- }
- 
--static inline pgtable_t pte_alloc_one(struct mm_struct *mm)
--{
--	struct page *page;
--
--	page = alloc_page(GFP_KERNEL | __GFP_ZERO);
--	if (!page)
--		return NULL;
--	if (!pgtable_page_ctor(page)) {
--		__free_page(page);
--		return NULL;
--	}
--	return page;
--}
--
--static inline pte_t *pte_alloc_one_kernel(struct mm_struct *mm)
--{
--	return (pte_t *)__get_free_page(GFP_KERNEL | __GFP_ZERO);
--}
--
--static inline void pte_free(struct mm_struct *mm, pgtable_t pte)
--{
--	pgtable_page_dtor(pte);
--	__free_page(pte);
--}
--
--static inline void pte_free_kernel(struct mm_struct *mm, pte_t *pte)
--{
--	free_page((unsigned long)pte);
--}
--
- #define __pte_free_tlb(tlb, pte, address)	pte_free((tlb)->mm, pte)
- 
- #endif				/* _ASM_IA64_PGALLOC_H */
--- 
-2.7.4
-
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
