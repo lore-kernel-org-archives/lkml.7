@@ -4,43 +4,43 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3782C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:53:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9164DC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:53:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 810692191F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:53:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65C0721882
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:53:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565294013;
-	bh=yKvzDmOwoP6ZRaTvyr3khS9aKMHNufX4h05g7GeRnKY=;
+	s=default; t=1565294017;
+	bh=zfX53Rehf53eUfIAVFAcv0jv9LkBWT66Wd3oX4Aor80=;
 	h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
 	 References:List-ID:From;
-	b=UtUwk/KzdpTluxy92ji5477LGEcMef/aWu2frRjleeXxtcL7gQOM1mYrbQysCCV6H
-	 +HvwyyYKk+Z0lDXKDrnF/8GmnlctVCJYXNP2NEki3yv+K/F3UvmaZFTrd9t48G0wih
-	 7lG0bPW8Nbc00+X+y/YRn14E3QjuxsDD+ZkclrxE=
+	b=P8YXwjWJ7fBDLRlmbiojuI1u3d4lxQ2YZuJ5DR9EjWxqGPkHjD5dB+hK01daoIv0G
+	 GhZmf7wrJTg7WZCKiU0JEnlW7hmS3cDawbW2BIu/S1AhjltLtpR3zghaDLTkrSmsnn
+	 2kD4F9E5L/K5FH01oqS7DDcxXwQSUoE0Kj3S7baE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404624AbfHHTxb (ORCPT
+        id S2404655AbfHHTxg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:53:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58088 "EHLO mail.kernel.org"
+        Thu, 8 Aug 2019 15:53:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404501AbfHHTxX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 15:53:23 -0400
+        id S2404572AbfHHTx1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 15:53:27 -0400
 Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B6CA218CD;
-        Thu,  8 Aug 2019 19:53:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AEA3218E0;
+        Thu,  8 Aug 2019 19:53:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565294002;
-        bh=yKvzDmOwoP6ZRaTvyr3khS9aKMHNufX4h05g7GeRnKY=;
+        s=default; t=1565294006;
+        bh=zfX53Rehf53eUfIAVFAcv0jv9LkBWT66Wd3oX4Aor80=;
         h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=RhQHbrdmDul4X7nAkYO7dst2+4yNtmYeQkDgmzUMpAk76lA2Pnj04yGM5zUIAz+X8
-         yI2xSZNFlrVfIbBFtl7Okl5a1Xjcd6KTRKHxVmuBFPkZTLLDoafQaQxBfTCk9NmUqS
-         1eJYCjgiVW35aJBGtDtYRB15CfJptUB+bftknERY=
+        b=xw36LW7dQdOUXvabj6qG9uFeNtiOMKvOpkvsJ+/hlUR9ZYqlBB2k2WtBt5gngbtyu
+         rf5/0Cz84YeuGsZnbeq5U30km4b7T4Ooo8EhJ7CD/cqU2Ie70nzwvaAhZFCYa44BMS
+         Z3l8azPEtrFsPx9QaZ9A4mFYGMDJKvhAyiPeMUDo=
 From:   zanussi@kernel.org
 To:     LKML <linux-kernel@vger.kernel.org>,
         linux-rt-users <linux-rt-users@vger.kernel.org>,
@@ -52,9 +52,9 @@ To:     LKML <linux-kernel@vger.kernel.org>,
         Daniel Wagner <wagi@monom.org>,
         Tom Zanussi <zanussi@kernel.org>,
         Julia Cartwright <julia@ni.com>
-Subject: [PATCH RT 13/19] Revert "futex: Fix bug on when a requeued RT task times out"
-Date:   Thu,  8 Aug 2019 14:52:41 -0500
-Message-Id: <050713a32b125bb79ad609c7de0de98fd52db92a.1565293934.git.zanussi@kernel.org>
+Subject: [PATCH RT 17/19] futex: Delay deallocation of pi_state
+Date:   Thu,  8 Aug 2019 14:52:45 -0500
+Message-Id: <76a278120523c1376fb32fca3ce295e109a1feac.1565293935.git.zanussi@kernel.org>
 X-Mailer: git-send-email 2.14.1
 In-Reply-To: <cover.1565293934.git.zanussi@kernel.org>
 References: <cover.1565293934.git.zanussi@kernel.org>
@@ -65,7 +65,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+From: Thomas Gleixner <tglx@linutronix.de>
 
 v4.14.137-rt65-rc1 stable review patch.
 If anyone has any objections, please let me know.
@@ -73,79 +73,180 @@ If anyone has any objections, please let me know.
 -----------
 
 
-[ Upstream commit f1a170cb3289a48df26cae3c60d77608f7a988bb ]
+[ Upstream commit d7c7cf8cb68b7df17e6e50be1f25f35d83e686c7 ]
 
-Drop the RT fixup, the futex code will be changed to avoid the need for
-the workaround.
+On -RT we can't invoke kfree() in a non-preemptible context.
 
+Defer the deallocation of pi_state to preemptible context.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Tom Zanussi <zanussi@kernel.org>
 ---
- kernel/locking/rtmutex.c        | 31 +------------------------------
- kernel/locking/rtmutex_common.h |  1 -
- 2 files changed, 1 insertion(+), 31 deletions(-)
+ kernel/futex.c | 55 ++++++++++++++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 44 insertions(+), 11 deletions(-)
 
-diff --git a/kernel/locking/rtmutex.c b/kernel/locking/rtmutex.c
-index 1177f2815040..62914dde3f1c 100644
---- a/kernel/locking/rtmutex.c
-+++ b/kernel/locking/rtmutex.c
-@@ -144,8 +144,7 @@ static void fixup_rt_mutex_waiters(struct rt_mutex *lock)
- 
- static int rt_mutex_real_waiter(struct rt_mutex_waiter *waiter)
+diff --git a/kernel/futex.c b/kernel/futex.c
+index 0548070cda89..5f1cfa2f02b6 100644
+--- a/kernel/futex.c
++++ b/kernel/futex.c
+@@ -822,13 +822,13 @@ static void get_pi_state(struct futex_pi_state *pi_state)
+  * Drops a reference to the pi_state object and frees or caches it
+  * when the last reference is gone.
+  */
+-static void put_pi_state(struct futex_pi_state *pi_state)
++static struct futex_pi_state *__put_pi_state(struct futex_pi_state *pi_state)
  {
--	return waiter && waiter != PI_WAKEUP_INPROGRESS &&
--		waiter != PI_REQUEUE_INPROGRESS;
-+	return waiter && waiter != PI_WAKEUP_INPROGRESS;
+ 	if (!pi_state)
+-		return;
++		return NULL;
+ 
+ 	if (!atomic_dec_and_test(&pi_state->refcount))
+-		return;
++		return NULL;
+ 
+ 	/*
+ 	 * If pi_state->owner is NULL, the owner is most probably dying
+@@ -848,9 +848,7 @@ static void put_pi_state(struct futex_pi_state *pi_state)
+ 		raw_spin_unlock_irq(&pi_state->pi_mutex.wait_lock);
+ 	}
+ 
+-	if (current->pi_state_cache) {
+-		kfree(pi_state);
+-	} else {
++	if (!current->pi_state_cache) {
+ 		/*
+ 		 * pi_state->list is already empty.
+ 		 * clear pi_state->owner.
+@@ -859,6 +857,30 @@ static void put_pi_state(struct futex_pi_state *pi_state)
+ 		pi_state->owner = NULL;
+ 		atomic_set(&pi_state->refcount, 1);
+ 		current->pi_state_cache = pi_state;
++		pi_state = NULL;
++	}
++	return pi_state;
++}
++
++static void put_pi_state(struct futex_pi_state *pi_state)
++{
++	kfree(__put_pi_state(pi_state));
++}
++
++static void put_pi_state_atomic(struct futex_pi_state *pi_state,
++				struct list_head *to_free)
++{
++	if (__put_pi_state(pi_state))
++		list_add(&pi_state->list, to_free);
++}
++
++static void free_pi_state_list(struct list_head *to_free)
++{
++	struct futex_pi_state *p, *next;
++
++	list_for_each_entry_safe(p, next, to_free, list) {
++		list_del(&p->list);
++		kfree(p);
+ 	}
  }
  
- /*
-@@ -2358,34 +2357,6 @@ int __rt_mutex_start_proxy_lock(struct rt_mutex *lock,
- 	if (try_to_take_rt_mutex(lock, task, NULL))
- 		return 1;
+@@ -893,6 +915,7 @@ void exit_pi_state_list(struct task_struct *curr)
+ 	struct futex_pi_state *pi_state;
+ 	struct futex_hash_bucket *hb;
+ 	union futex_key key = FUTEX_KEY_INIT;
++	LIST_HEAD(to_free);
  
--#ifdef CONFIG_PREEMPT_RT_FULL
--	/*
--	 * In PREEMPT_RT there's an added race.
--	 * If the task, that we are about to requeue, times out,
--	 * it can set the PI_WAKEUP_INPROGRESS. This tells the requeue
--	 * to skip this task. But right after the task sets
--	 * its pi_blocked_on to PI_WAKEUP_INPROGRESS it can then
--	 * block on the spin_lock(&hb->lock), which in RT is an rtmutex.
--	 * This will replace the PI_WAKEUP_INPROGRESS with the actual
--	 * lock that it blocks on. We *must not* place this task
--	 * on this proxy lock in that case.
--	 *
--	 * To prevent this race, we first take the task's pi_lock
--	 * and check if it has updated its pi_blocked_on. If it has,
--	 * we assume that it woke up and we return -EAGAIN.
--	 * Otherwise, we set the task's pi_blocked_on to
--	 * PI_REQUEUE_INPROGRESS, so that if the task is waking up
--	 * it will know that we are in the process of requeuing it.
--	 */
--	raw_spin_lock(&task->pi_lock);
--	if (task->pi_blocked_on) {
--		raw_spin_unlock(&task->pi_lock);
--		return -EAGAIN;
--	}
--	task->pi_blocked_on = PI_REQUEUE_INPROGRESS;
--	raw_spin_unlock(&task->pi_lock);
--#endif
--
- 	/* We enforce deadlock detection for futexes */
- 	ret = task_blocks_on_rt_mutex(lock, waiter, task,
- 				      RT_MUTEX_FULL_CHAINWALK);
-diff --git a/kernel/locking/rtmutex_common.h b/kernel/locking/rtmutex_common.h
-index 2a157c78e18c..53ca0242101a 100644
---- a/kernel/locking/rtmutex_common.h
-+++ b/kernel/locking/rtmutex_common.h
-@@ -132,7 +132,6 @@ enum rtmutex_chainwalk {
-  * PI-futex support (proxy locking functions, etc.):
-  */
- #define PI_WAKEUP_INPROGRESS	((struct rt_mutex_waiter *) 1)
--#define PI_REQUEUE_INPROGRESS	((struct rt_mutex_waiter *) 2)
+ 	if (!futex_cmpxchg_enabled)
+ 		return;
+@@ -937,7 +960,7 @@ void exit_pi_state_list(struct task_struct *curr)
+ 			/* retain curr->pi_lock for the loop invariant */
+ 			raw_spin_unlock(&pi_state->pi_mutex.wait_lock);
+ 			raw_spin_unlock(&hb->lock);
+-			put_pi_state(pi_state);
++			put_pi_state_atomic(pi_state, &to_free);
+ 			continue;
+ 		}
  
- extern struct task_struct *rt_mutex_next_owner(struct rt_mutex *lock);
- extern void rt_mutex_init_proxy_locked(struct rt_mutex *lock,
+@@ -956,6 +979,8 @@ void exit_pi_state_list(struct task_struct *curr)
+ 		raw_spin_lock_irq(&curr->pi_lock);
+ 	}
+ 	raw_spin_unlock_irq(&curr->pi_lock);
++
++	free_pi_state_list(&to_free);
+ }
+ 
+ #endif
+@@ -1938,6 +1963,7 @@ static int futex_requeue(u32 __user *uaddr1, unsigned int flags,
+ 	struct futex_hash_bucket *hb1, *hb2;
+ 	struct futex_q *this, *next;
+ 	DEFINE_WAKE_Q(wake_q);
++	LIST_HEAD(to_free);
+ 
+ 	if (nr_wake < 0 || nr_requeue < 0)
+ 		return -EINVAL;
+@@ -2175,7 +2201,7 @@ static int futex_requeue(u32 __user *uaddr1, unsigned int flags,
+ 				 * object.
+ 				 */
+ 				this->pi_state = NULL;
+-				put_pi_state(pi_state);
++				put_pi_state_atomic(pi_state, &to_free);
+ 				/*
+ 				 * We stop queueing more waiters and let user
+ 				 * space deal with the mess.
+@@ -2192,7 +2218,7 @@ static int futex_requeue(u32 __user *uaddr1, unsigned int flags,
+ 	 * in futex_proxy_trylock_atomic() or in lookup_pi_state(). We
+ 	 * need to drop it here again.
+ 	 */
+-	put_pi_state(pi_state);
++	put_pi_state_atomic(pi_state, &to_free);
+ 
+ out_unlock:
+ 	double_unlock_hb(hb1, hb2);
+@@ -2213,6 +2239,7 @@ static int futex_requeue(u32 __user *uaddr1, unsigned int flags,
+ out_put_key1:
+ 	put_futex_key(&key1);
+ out:
++	free_pi_state_list(&to_free);
+ 	return ret ? ret : task_count;
+ }
+ 
+@@ -2350,13 +2377,16 @@ static int unqueue_me(struct futex_q *q)
+ static void unqueue_me_pi(struct futex_q *q)
+ 	__releases(q->lock_ptr)
+ {
++	struct futex_pi_state *ps;
++
+ 	__unqueue_futex(q);
+ 
+ 	BUG_ON(!q->pi_state);
+-	put_pi_state(q->pi_state);
++	ps = __put_pi_state(q->pi_state);
+ 	q->pi_state = NULL;
+ 
+ 	raw_spin_unlock(q->lock_ptr);
++	kfree(ps);
+ }
+ 
+ static int fixup_pi_state_owner(u32 __user *uaddr, struct futex_q *q,
+@@ -3305,6 +3335,8 @@ static int futex_wait_requeue_pi(u32 __user *uaddr, unsigned int flags,
+ 		 * did a lock-steal - fix up the PI-state in that case.
+ 		 */
+ 		if (q.pi_state && (q.pi_state->owner != current)) {
++			struct futex_pi_state *ps_free;
++
+ 			raw_spin_lock(q.lock_ptr);
+ 			ret = fixup_pi_state_owner(uaddr2, &q, current);
+ 			if (ret && rt_mutex_owner(&q.pi_state->pi_mutex) == current) {
+@@ -3315,8 +3347,9 @@ static int futex_wait_requeue_pi(u32 __user *uaddr, unsigned int flags,
+ 			 * Drop the reference to the pi state which
+ 			 * the requeue_pi() code acquired for us.
+ 			 */
+-			put_pi_state(q.pi_state);
++			ps_free = __put_pi_state(q.pi_state);
+ 			raw_spin_unlock(q.lock_ptr);
++			kfree(ps_free);
+ 		}
+ 	} else {
+ 		struct rt_mutex *pi_mutex;
 -- 
 2.14.1
 
