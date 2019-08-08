@@ -2,134 +2,85 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58853C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D831CC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:30:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 355292186A
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:27:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADB022173C
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:30:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="n8L9ov26"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732247AbfHHJ1u (ORCPT
+        id S1732228AbfHHJaO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 05:27:50 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:38985 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730678AbfHHJ1t (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 05:27:49 -0400
-Received: by mail-wm1-f67.google.com with SMTP id u25so1677383wmc.4
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 02:27:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=t+wAOarceN6JsDV9dX8Bi8ro/VvYkzelKra0BqUp7fk=;
-        b=k79BVL0RLZuNPDDfl1d/Hmjwe1STALtAk0BZfEZnF5hamR8MFLRg1uqcevpxgqP+Xh
-         f9gCRAhHUPUErwfKa+m3OVnSh2+e7ncX1H6z3sImuJvROgAk0tt6/UM5ki10CtNFjx/u
-         5HInzyOuZb/Sa1nAwIBCCDn/9TQrURRfPHmoTjbeBYZcOv82QU7uXHVEyC3sGLwMaKsA
-         QRzel/dF8mKKDOgiAIoHgfR81pYtOtyXjnJbVYXrXNKvNJ1ZEqLXjIu8ur9ocDRw75be
-         wJyqFQV7Yhnkdt1VOZWRVdBRcV3eJAEzcj8hLkLP+MEUq0hbL5Seg60ypiMLA6+SNdrS
-         Q5mg==
-X-Gm-Message-State: APjAAAWAc5Fz4Oc3NntYdTQ13sGLzgx1isceLSLuBpQmemh13jL4IT4+
-        OV1FoMob9sN9xRA987/2SbLvN99W1l0=
-X-Google-Smtp-Source: APXvYqwQdsbKOEE/PwWPci5LuNpGGpEsb0wwQP/KJOMVuD3lmgo5CC655/acl5e9fAwDuJ0Hx+fUDA==
-X-Received: by 2002:a7b:c1c1:: with SMTP id a1mr3395947wmj.31.1565256467228;
-        Thu, 08 Aug 2019 02:27:47 -0700 (PDT)
-Received: from localhost.localdomain ([151.29.237.107])
-        by smtp.gmail.com with ESMTPSA id k9sm29251813wrd.46.2019.08.08.02.27.45
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 08 Aug 2019 02:27:46 -0700 (PDT)
-Date:   Thu, 8 Aug 2019 11:27:44 +0200
-From:   Juri Lelli <juri.lelli@redhat.com>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>, mingo@kernel.org,
-        linux-kernel@vger.kernel.org, luca.abeni@santannapisa.it,
-        bristot@redhat.com, balsini@android.com, dvyukov@google.com,
-        tglx@linutronix.de, vpillai@digitalocean.com, rostedt@goodmis.org
-Subject: Re: [RFC][PATCH 12/13] sched/deadline: Introduce deadline servers
-Message-ID: <20190808092744.GI29310@localhost.localdomain>
-References: <20190726145409.947503076@infradead.org>
- <20190726161358.056107990@infradead.org>
- <34710762-f813-3913-0e55-fde7c91c6c2d@arm.com>
- <20190808075635.GB17205@worktop.programming.kicks-ass.net>
- <20cc05d3-0d0f-a558-2bbe-3b72527dd9bc@arm.com>
- <20190808084652.GG29310@localhost.localdomain>
- <99a8339d-8e06-bff8-284b-1829d0683a7a@arm.com>
+        Thu, 8 Aug 2019 05:30:14 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:38982 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731038AbfHHJaN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 05:30:13 -0400
+Received: from zn.tnic (p200300EC2F0FD70068A09A673825513B.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:d700:68a0:9a67:3825:513b])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 69AA41EC0419;
+        Thu,  8 Aug 2019 11:30:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1565256612;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=C/kQJXHb2/y/WjXp3w/qhdx0nQQQmR2nc4/JBCbPe2s=;
+        b=n8L9ov26KIVJ1qvXIvQDTR5OFxSdqggYGzAeKeSmnNfI2OrCPMTi0KaLs3cAYSDkiq9vm2
+        TvthkEtoR+RPzFKd37zDQ+WRQm9l7ICq6TCcUa7fv8x9Wti9rZ6aRmeQXRzVRvQaLz8BZb
+        vJ7Dyk7tpMNzJ0OMfpDGHcUhHe96Anc=
+Date:   Thu, 8 Aug 2019 11:31:01 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>
+Cc:     Tony Luck <tony.luck@intel.com>, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] drivers/ras: Don't build debugfs.o if no debugfs
+ in config
+Message-ID: <20190808093101.GE20745@zn.tnic>
+References: <7053.1565218556@turing-police>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <99a8339d-8e06-bff8-284b-1829d0683a7a@arm.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7053.1565218556@turing-police>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/08/19 10:57, Dietmar Eggemann wrote:
-> On 8/8/19 10:46 AM, Juri Lelli wrote:
-> > On 08/08/19 10:11, Dietmar Eggemann wrote:
-> >> On 8/8/19 9:56 AM, Peter Zijlstra wrote:
-> >>> On Wed, Aug 07, 2019 at 06:31:59PM +0200, Dietmar Eggemann wrote:
-> >>>> On 7/26/19 4:54 PM, Peter Zijlstra wrote:
-> >>>>>
-> >>>>>
-> >>>>> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> >>>>
-> >>>> [...]
-> >>>>
-> >>>>> @@ -889,6 +891,8 @@ static void update_curr(struct cfs_rq *c
-> >>>>>  		trace_sched_stat_runtime(curtask, delta_exec, curr->vruntime);
-> >>>>>  		cgroup_account_cputime(curtask, delta_exec);
-> >>>>>  		account_group_exec_runtime(curtask, delta_exec);
-> >>>>> +		if (curtask->server)
-> >>>>> +			dl_server_update(curtask->server, delta_exec);
-> >>>>>  	}
-> >>>>
-> >>>> I get a lockdep_assert_held(&rq->lock) related warning in start_dl_timer()
-> >>>> when running the full stack.
-> >>>
-> >>> That would seem to imply a stale curtask->server value; the hunk below:
-> >>>
-> >>> --- a/kernel/sched/core.c
-> >>> +++ b/kernel/sched/core.c
-> >>> @@ -3756,8 +3756,11 @@ pick_next_task(struct rq *rq, struct tas
-> >>>
-> >>>         for_each_class(class) {
-> >>>                 p = class->pick_next_task(rq, NULL, NULL);
-> >>> -               if (p)
-> >>> +               if (p) {
-> >>> +                       if (p->sched_class == class && p->server)
-> >>> +                               p->server = NULL;
-> >>>                         return p;
-> >>> +               }
-> >>>         }
-> >>>
-> >>>
-> >>> Was supposed to clear p->server, but clearly something is going 'funny'.
-> >>
-> >> What about the fast path in pick_next_task()?
-> >>
-> >> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> >> index bffe849b5a42..f1ea6ae16052 100644
-> >> --- a/kernel/sched/core.c
-> >> +++ b/kernel/sched/core.c
-> >> @@ -3742,6 +3742,9 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
-> >>                 if (unlikely(!p))
-> >>                         p = idle_sched_class.pick_next_task(rq, prev, rf);
-> >>  
-> >> +               if (p->sched_class == &fair_sched_class && p->server)
-> >> +                       p->server = NULL;
-> >> +
-> > 
-> > Hummm, but then who sets it back to the correct server. AFAIU
-> > update_curr() needs a ->server to do the correct DL accounting?
+On Wed, Aug 07, 2019 at 06:55:56PM -0400, Valdis Klētnieks wrote:
+> There's no reason to build the debugfs.o if the kernel config doesn't
+> even include CONFIG_DEBUG_FS
 > 
-> Ah, OK, this would kill the whole functionality ;-)
+> Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
 > 
+> diff --git a/drivers/ras/Makefile b/drivers/ras/Makefile
+> index ef6777e14d3d..07a5c391cc23 100644
+> --- a/drivers/ras/Makefile
+> +++ b/drivers/ras/Makefile
+> @@ -1,3 +1,6 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+> -obj-$(CONFIG_RAS)	+= ras.o debugfs.o
+> +obj-$(CONFIG_RAS)	+= ras.o
+> +ifeq ($(CONFIG_DEBUG_FS),y)
+> +obj-$(CONFIG_RAS)	+= debugfs.o
+> +endif
+>  obj-$(CONFIG_RAS_CEC)	+= cec.o
 
-I'm thinking we could use &rq->fair_server. It seems to pass the point
-we are discussing about, but then virt box becomes unresponsive (busy
-loops).
+If this is not causing real trouble then I'd prefer to keep it this way
+because ras.c is pretty useless without the debugfs functionality.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
