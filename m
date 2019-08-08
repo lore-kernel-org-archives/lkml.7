@@ -5,71 +5,71 @@ X-Spam-Level:
 X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F3AC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:30:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31027C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:30:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7097E2171F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:30:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F11B121882
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:30:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="IpAUGYJn"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="M0MaN5Du"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389814AbfHHMax (ORCPT
+        id S1732423AbfHHMa5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 08:30:53 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:47936 "EHLO
+        Thu, 8 Aug 2019 08:30:57 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:53164 "EHLO
         mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727649AbfHHMav (ORCPT
+        by vger.kernel.org with ESMTP id S1727649AbfHHMa4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 08:30:51 -0400
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x78CRsML012779;
-        Thu, 8 Aug 2019 08:30:44 -0400
-Received: from nam03-dm3-obe.outbound.protection.outlook.com (mail-dm3nam03lp2052.outbound.protection.outlook.com [104.47.41.52])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2u820jjrux-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Thu, 08 Aug 2019 08:30:44 -0400
+        Thu, 8 Aug 2019 08:30:56 -0400
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x78CRm0s022426;
+        Thu, 8 Aug 2019 08:30:49 -0400
+Received: from nam04-co1-obe.outbound.protection.outlook.com (mail-co1nam04lp2057.outbound.protection.outlook.com [104.47.45.57])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2u7xkj3gw6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 08 Aug 2019 08:30:49 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=X/H6OhB8TbrSkt4WkRmO8oBdehhRxGNWSgZInrDa0ZlFnQfPoMZpIWPxtA+lz5nb2589/RsBI/B6omI/TGyJcuKlWzMHD9etJ/f0Yrrm5FTcmGjh2kJ5xYMOaOlzACtKdYCauQJVALzj0Q5p45Un8hb8L7V7O3Dh0527bizbH6GxOPjiHNzR2AM7iMC0pY55bKS//7a10weB8APX4daX96T8KxBc++VYZzEHO3PBrdudj43/QiqphtRKFuyLvg5Nh/mZx2TgEDl2h0jXdMAkRqYgSfKVSLq8w+6LtQE+eidLzx2m6YOsTDuQLndMJxIrHQEztpYrSXnNLnk1QZfUTA==
+ b=Tn6+eP5FG+V+noKLoQL4qrKHDS/kODN3LVPCe815Iq80N1Bu+e9zGq1j8rmDNUA+v6P/ADCLfKwr5sHj/knhm7DsNawWJhLvt19oqWEQlkglSQegJ/Ydfj63ZCQ7W+F8ljal4XxTDk3kgdKRbejHLUyQsd6TptkdbO87orG0LW9NSxrXPzUaaIBhWu1MokH/vwVUA3la4kL8jfZT36dsl6U7hV78ZqzmnNoL2LbcuY8+xHLv74ErehRT6XkF9t8EMQg+nU73Vve0fYvFRLWe/7tQmx1VYvR1GBW8FDBMycU1Q8ktmHJuJSANsVLK17/uWFtKeHV9vOSCGLQ4TjvkSA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eawoPnmHxZ2cC65gIdnjOchv1f8C9Iv6KcLaVi2/2p8=;
- b=NJ2wuJHE1B6ZH7DcwM6hSFYpeF+ijr170zEhZ2P91keM2ciSvGC7yYKOAsaFQbhC+kk1hdbPdpWJxKd+N4ru1mIRei9mCIYvtfjxhzU3q+04zsXNzLLdo0nx00KabuF/Ydw6fzVbXiDtgZxxbnG3xAqdyiSIsFiN2ZoLmarx0L9DPnG3xXslA45FDHJsYngTeCX0toYEP9BQMOd8ifwp4UuAsEV1H+fd0OLVzEZBvtBzNx16jYMWUFXMqokmjUS0MLQUZFC9TSkCAaneaW/WlW1VjCYGBOC1xzUl9QQmlo9LjCH7Xyabl9/wazmaMe4w9d3BL4UeRZGH6ee5lBMXWQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass (sender ip is
- 137.71.25.57) smtp.rcpttodomain=vger.kernel.org
- smtp.mailfrom=analog.com;dmarc=bestguesspass action=none
- header.from=analog.com;dkim=none (message not signed);arc=none
+ bh=PO5OkiX1WmTXvZvAt60yK0vtiIQQDEigJHhwCJ9cKmU=;
+ b=E4AeALOmT272vbOVSTe/bA5qDu8we9YRyiK2XWXKr5DDDLS1jFgElT60jvKRwoB80+qugq4YDNULN9oMTBmaH8zkJzkgCgMv4Ftsv8Vwj7ppM/sXo6xeORGau4avS0x9ap57zdRwpSo3xO5bpjy3MkDRJW8fMATmTT/WncHl/hr2oCHEBanT5+uZt2+sqs8HsYr5QJUsQKK4Iy154ghWgFcGx7YezKiX1B8f9n39OYCTmTDhlM2d3YqbfuKtT/HV7yWM6veAvrQK0ftc2JoPfurQFTju39oS4UAhVavBmRNMHjWoo5h31hUG18I3Wkp2yeEiar/nKCs8kS2LwBuxTw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 137.71.25.57) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=analog.com;
+ dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
+ not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eawoPnmHxZ2cC65gIdnjOchv1f8C9Iv6KcLaVi2/2p8=;
- b=IpAUGYJnLcpJXvWK00eHI2cBMRaDiRW61KhaJuwZho+i5Cl3q1/EyFPgCwDdgnLARBmOzMonXWoa8jLTGajFYAG3+jl290IA1r12f9SV91p90SRKrrIzlLRD575u7Ap219ZnsWkjKq1JiBmqfQp4xXuiCLYbyyFVtb9Ixu39cX4=
-Received: from DM6PR03CA0058.namprd03.prod.outlook.com (2603:10b6:5:100::35)
- by BYAPR03MB4213.namprd03.prod.outlook.com (2603:10b6:a03:7f::14) with
+ bh=PO5OkiX1WmTXvZvAt60yK0vtiIQQDEigJHhwCJ9cKmU=;
+ b=M0MaN5Du/8ncQ7OTIq37mrvYgBpmBAoSKGxYaCI1XBZrdJoSea5ML0PkJQOw4H1sxgfIjrKMYhkn5pzSQT9b+kQTmNDTEdT6oSB154zWgijlwt9GopWXqOUK1BszPiKjBZ/Oz0Zf9JubHyRMmzg0kiqW4pzyUlFjdOhNDEnqvac=
+Received: from BY5PR03CA0017.namprd03.prod.outlook.com (2603:10b6:a03:1e0::27)
+ by BY5PR03MB5249.namprd03.prod.outlook.com (2603:10b6:a03:21b::15) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2136.16; Thu, 8 Aug
- 2019 12:30:41 +0000
-Received: from SN1NAM02FT025.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::202) by DM6PR03CA0058.outlook.office365.com
- (2603:10b6:5:100::35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2157.16 via Frontend
- Transport; Thu, 8 Aug 2019 12:30:41 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2157.18; Thu, 8 Aug
+ 2019 12:30:47 +0000
+Received: from SN1NAM02FT029.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::208) by BY5PR03CA0017.outlook.office365.com
+ (2603:10b6:a03:1e0::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2157.15 via Frontend
+ Transport; Thu, 8 Aug 2019 12:30:47 +0000
 Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
  137.71.25.57 as permitted sender) receiver=protection.outlook.com;
  client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
 Received: from nwd2mta2.analog.com (137.71.25.57) by
- SN1NAM02FT025.mail.protection.outlook.com (10.152.72.87) with Microsoft SMTP
+ SN1NAM02FT029.mail.protection.outlook.com (10.152.72.110) with Microsoft SMTP
  Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2157.15
- via Frontend Transport; Thu, 8 Aug 2019 12:30:40 +0000
+ via Frontend Transport; Thu, 8 Aug 2019 12:30:46 +0000
 Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
-        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id x78CUetZ021214
+        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id x78CUknL021238
         (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Thu, 8 Aug 2019 05:30:40 -0700
+        Thu, 8 Aug 2019 05:30:46 -0700
 Received: from saturn.ad.analog.com (10.48.65.113) by
  NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
- 14.3.408.0; Thu, 8 Aug 2019 08:30:39 -0400
+ 14.3.408.0; Thu, 8 Aug 2019 08:30:45 -0400
 From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
 To:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
@@ -77,9 +77,9 @@ CC:     <davem@davemloft.net>, <robh+dt@kernel.org>,
         <mark.rutland@arm.com>, <f.fainelli@gmail.com>,
         <hkallweit1@gmail.com>, <andrew@lunn.ch>,
         Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v2 04/15] net: phy: adin: add support for interrupts
-Date:   Thu, 8 Aug 2019 15:30:15 +0300
-Message-ID: <20190808123026.17382-5-alexandru.ardelean@analog.com>
+Subject: [PATCH v2 07/15] net: phy: adin: make RGMII internal delays configurable
+Date:   Thu, 8 Aug 2019 15:30:18 +0300
+Message-ID: <20190808123026.17382-8-alexandru.ardelean@analog.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190808123026.17382-1-alexandru.ardelean@analog.com>
 References: <20190808123026.17382-1-alexandru.ardelean@analog.com>
@@ -89,112 +89,172 @@ Content-Type: text/plain
 X-ADIRoutedOnPrem: True
 X-EOPAttributedMessage: 0
 X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(346002)(396003)(39860400002)(376002)(136003)(2980300002)(189003)(199004)(26005)(86362001)(44832011)(246002)(2616005)(186003)(50226002)(11346002)(126002)(4326008)(107886003)(486006)(446003)(7696005)(36756003)(51416003)(476003)(336012)(8676002)(8936002)(70586007)(70206006)(76176011)(305945005)(426003)(7636002)(2906002)(356004)(316002)(5660300002)(6666004)(106002)(2870700001)(54906003)(478600001)(48376002)(50466002)(47776003)(14444005)(1076003)(110136005)(2201001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR03MB4213;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;MX:1;A:1;
+X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(376002)(136003)(396003)(39860400002)(346002)(2980300002)(199004)(189003)(44832011)(106002)(26005)(426003)(446003)(476003)(11346002)(2616005)(50226002)(8676002)(8936002)(186003)(51416003)(76176011)(478600001)(47776003)(7696005)(50466002)(4326008)(126002)(336012)(36756003)(316002)(110136005)(54906003)(486006)(1076003)(2201001)(305945005)(6666004)(86362001)(48376002)(107886003)(7636002)(356004)(70206006)(2870700001)(5660300002)(2906002)(246002)(70586007);DIR:OUT;SFP:1101;SCL:1;SRVR:BY5PR03MB5249;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;A:1;MX:1;
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 309aa98c-7017-4e0a-dba9-08d71bfc39d0
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:BYAPR03MB4213;
-X-MS-TrafficTypeDiagnostic: BYAPR03MB4213:
-X-Microsoft-Antispam-PRVS: <BYAPR03MB4213B23D48519D03FD788BFAF9D70@BYAPR03MB4213.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4941;
+X-MS-Office365-Filtering-Correlation-Id: a47065ec-8517-4584-a2ce-08d71bfc3d8b
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:BY5PR03MB5249;
+X-MS-TrafficTypeDiagnostic: BY5PR03MB5249:
+X-Microsoft-Antispam-PRVS: <BY5PR03MB5249757558B6457437A3CF92F9D70@BY5PR03MB5249.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2512;
 X-Forefront-PRVS: 012349AD1C
 X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: Hs7psfhTaecdqSDnmMJedxzXJ2zd3kgg7YePr1MQCCcH9P7dI5SfOLpASfFIHrvwZz2TTTIRqmwwTUUMfV9YSMDBmS7pzWRUwTcP+pApzVETnbJttk6Hlx760O49wC9NQAmQZ6K+Mb4xEUMZ40ffLKsEf6E7WxMKNYCN74FG+2AP8myViSLwbsLoBsMIl7pNfCGBc1hAskYM9StZ61x+O4orirL+nomirTkq9bvxkC64PkMhLF34yBpBi0bJYNodOhBhbAXCB1NKfIEpnGHGZWiUUqWvUL4VUMGR6wIB5ishdHhTYkMY/BpH5YgvzDwjrKkFz7i7zknRwrEl1CftDhjcORXGXil1YZJ1cp1rRlP0bGcytHQlqMyml8fNo7MGlvt4ylb3FM+4c+OMhlzqyPItfCNkKJEauJHatjNH9q4=
+X-Microsoft-Antispam-Message-Info: 7rJeujk6zBPRcjltFCHBvf60uajW1h1y6aNBpfYwTNc3tJ8E4prHLpq7S38DyXOi5E0aca5nI2FQO6RiDpo6uLq8sqhOqfNClvdgw/p3jQ/3iiwtvvKi9GHSFWahEoUpMbDOEkQbQeR9/irnF1b5s3y2FEjvTPWcp2L0g8T74difCrnH+tYZcOg5hTTT0d2MtZKbIGywaMZyCH79JUDzp1ExKrKFqbVwZyQ/WaRj2lKei3mHYeOZoN/tebbQqyms9C8tyTRz656EEoP2Waia65jyB2raKVO5IukhptgBjQX0afxRU+9u9DcmlZ9SUBx7Y0zVkhF8ASAqsMTx3JwISGbOb4E8fmxufRoRaYDCh+EYcv37MiProdkQnrw/K8MKyZaC2LxVBCoq9m30toWoVeUvqZMZxe+j8BEIg2IcFMU=
 X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Aug 2019 12:30:40.7518
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Aug 2019 12:30:46.9820
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 309aa98c-7017-4e0a-dba9-08d71bfc39d0
+X-MS-Exchange-CrossTenant-Network-Message-Id: a47065ec-8517-4584-a2ce-08d71bfc3d8b
 X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB4213
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR03MB5249
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-08_06:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ mlxlogscore=912 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1906280000 definitions=main-1908080130
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change adds support for enabling PHY interrupts that can be used by
-the PHY framework to get signal for link/speed/auto-negotiation changes.
+The internal delays for the RGMII are configurable for both RX & TX. This
+change adds support for configuring them via device-tree (or ACPI).
 
 Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- drivers/net/phy/adin.c | 38 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+ drivers/net/phy/adin.c | 82 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 82 insertions(+)
 
 diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
-index 45490fbe273b..69000fb16704 100644
+index 9169d6c08383..62c1268e55f7 100644
 --- a/drivers/net/phy/adin.c
 +++ b/drivers/net/phy/adin.c
-@@ -14,11 +14,45 @@
+@@ -5,11 +5,13 @@
+  * Copyright 2019 Analog Devices Inc.
+  */
+ #include <linux/kernel.h>
++#include <linux/bitfield.h>
+ #include <linux/errno.h>
+ #include <linux/init.h>
+ #include <linux/module.h>
+ #include <linux/mii.h>
+ #include <linux/phy.h>
++#include <linux/property.h>
+ 
  #define PHY_ID_ADIN1200				0x0283bc20
  #define PHY_ID_ADIN1300				0x0283bc30
+@@ -34,15 +36,83 @@
+ #define ADIN1300_INT_STATUS_REG			0x0019
  
-+#define ADIN1300_INT_MASK_REG			0x0018
-+#define   ADIN1300_INT_MDIO_SYNC_EN		BIT(9)
-+#define   ADIN1300_INT_ANEG_STAT_CHNG_EN	BIT(8)
-+#define   ADIN1300_INT_ANEG_PAGE_RX_EN		BIT(6)
-+#define   ADIN1300_INT_IDLE_ERR_CNT_EN		BIT(5)
-+#define   ADIN1300_INT_MAC_FIFO_OU_EN		BIT(4)
-+#define   ADIN1300_INT_RX_STAT_CHNG_EN		BIT(3)
-+#define   ADIN1300_INT_LINK_STAT_CHNG_EN	BIT(2)
-+#define   ADIN1300_INT_SPEED_CHNG_EN		BIT(1)
-+#define   ADIN1300_INT_HW_IRQ_EN		BIT(0)
-+#define ADIN1300_INT_MASK_EN	\
-+	(ADIN1300_INT_ANEG_STAT_CHNG_EN | ADIN1300_INT_ANEG_PAGE_RX_EN | \
-+	 ADIN1300_INT_LINK_STAT_CHNG_EN | ADIN1300_INT_SPEED_CHNG_EN | \
-+	 ADIN1300_INT_HW_IRQ_EN)
-+#define ADIN1300_INT_STATUS_REG			0x0019
+ #define ADIN1300_GE_RGMII_CFG_REG		0xff23
++#define   ADIN1300_GE_RGMII_RX_MSK		GENMASK(8, 6)
++#define   ADIN1300_GE_RGMII_RX_SEL(x)		\
++		FIELD_PREP(ADIN1300_GE_RGMII_RX_MSK, x)
++#define   ADIN1300_GE_RGMII_GTX_MSK		GENMASK(5, 3)
++#define   ADIN1300_GE_RGMII_GTX_SEL(x)		\
++		FIELD_PREP(ADIN1300_GE_RGMII_GTX_MSK, x)
+ #define   ADIN1300_GE_RGMII_RXID_EN		BIT(2)
+ #define   ADIN1300_GE_RGMII_TXID_EN		BIT(1)
+ #define   ADIN1300_GE_RGMII_EN			BIT(0)
+ 
++/* RGMII internal delay settings for rx and tx for ADIN1300 */
++#define ADIN1300_RGMII_1_60_NS			0x0001
++#define ADIN1300_RGMII_1_80_NS			0x0002
++#define	ADIN1300_RGMII_2_00_NS			0x0000
++#define	ADIN1300_RGMII_2_20_NS			0x0006
++#define	ADIN1300_RGMII_2_40_NS			0x0007
 +
- static int adin_config_init(struct phy_device *phydev)
+ #define ADIN1300_GE_RMII_CFG_REG		0xff24
+ #define   ADIN1300_GE_RMII_EN			BIT(0)
+ 
++/**
++ * struct adin_cfg_reg_map - map a config value to aregister value
++ * @cfg		value in device configuration
++ * @reg		value in the register
++ */
++struct adin_cfg_reg_map {
++	int cfg;
++	int reg;
++};
++
++static const struct adin_cfg_reg_map adin_rgmii_delays[] = {
++	{ 1600, ADIN1300_RGMII_1_60_NS },
++	{ 1800, ADIN1300_RGMII_1_80_NS },
++	{ 2000, ADIN1300_RGMII_2_00_NS },
++	{ 2200, ADIN1300_RGMII_2_20_NS },
++	{ 2400, ADIN1300_RGMII_2_40_NS },
++	{ },
++};
++
++static int adin_lookup_reg_value(const struct adin_cfg_reg_map *tbl, int cfg)
++{
++	size_t i;
++
++	for (i = 0; tbl[i].cfg; i++) {
++		if (tbl[i].cfg == cfg)
++			return tbl[i].reg;
++	}
++
++	return -EINVAL;
++}
++
++static u32 adin_get_reg_value(struct phy_device *phydev,
++			      const char *prop_name,
++			      const struct adin_cfg_reg_map *tbl,
++			      u32 dflt)
++{
++	struct device *dev = &phydev->mdio.dev;
++	u32 val;
++	int rc;
++
++	if (device_property_read_u32(dev, prop_name, &val))
++		return dflt;
++
++	rc = adin_lookup_reg_value(tbl, val);
++	if (rc < 0) {
++		phydev_warn(phydev,
++			    "Unsupported value %u for %s using default (%u)\n",
++			    val, prop_name, dflt);
++		return dflt;
++	}
++
++	return rc;
++}
++
+ static int adin_config_rgmii_mode(struct phy_device *phydev)
  {
- 	return genphy_config_init(phydev);
- }
++	u32 val;
+ 	int reg;
  
-+static int adin_phy_ack_intr(struct phy_device *phydev)
-+{
-+	/* Clear pending interrupts */
-+	int rc = phy_read(phydev, ADIN1300_INT_STATUS_REG);
+ 	if (!phy_interface_is_rgmii(phydev))
+@@ -59,6 +129,12 @@ static int adin_config_rgmii_mode(struct phy_device *phydev)
+ 	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
+ 	    phydev->interface == PHY_INTERFACE_MODE_RGMII_RXID) {
+ 		reg |= ADIN1300_GE_RGMII_RXID_EN;
 +
-+	return rc < 0 ? rc : 0;
-+}
++		val = adin_get_reg_value(phydev, "adi,rx-internal-delay-ps",
++					 adin_rgmii_delays,
++					 ADIN1300_RGMII_2_00_NS);
++		reg &= ~ADIN1300_GE_RGMII_RX_MSK;
++		reg |= ADIN1300_GE_RGMII_RX_SEL(val);
+ 	} else {
+ 		reg &= ~ADIN1300_GE_RGMII_RXID_EN;
+ 	}
+@@ -66,6 +142,12 @@ static int adin_config_rgmii_mode(struct phy_device *phydev)
+ 	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
+ 	    phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID) {
+ 		reg |= ADIN1300_GE_RGMII_TXID_EN;
 +
-+static int adin_phy_config_intr(struct phy_device *phydev)
-+{
-+	if (phydev->interrupts == PHY_INTERRUPT_ENABLED)
-+		return phy_set_bits(phydev, ADIN1300_INT_MASK_REG,
-+				    ADIN1300_INT_MASK_EN);
-+
-+	return phy_clear_bits(phydev, ADIN1300_INT_MASK_REG,
-+			      ADIN1300_INT_MASK_EN);
-+}
-+
- static struct phy_driver adin_driver[] = {
- 	{
- 		PHY_ID_MATCH_MODEL(PHY_ID_ADIN1200),
-@@ -27,6 +61,8 @@ static struct phy_driver adin_driver[] = {
- 		.config_aneg	= genphy_config_aneg,
- 		.read_status	= genphy_read_status,
- 		.get_features	= genphy_read_abilities,
-+		.ack_interrupt	= adin_phy_ack_intr,
-+		.config_intr	= adin_phy_config_intr,
- 		.resume		= genphy_resume,
- 		.suspend	= genphy_suspend,
- 	},
-@@ -37,6 +73,8 @@ static struct phy_driver adin_driver[] = {
- 		.config_aneg	= genphy_config_aneg,
- 		.read_status	= genphy_read_status,
- 		.get_features	= genphy_read_abilities,
-+		.ack_interrupt	= adin_phy_ack_intr,
-+		.config_intr	= adin_phy_config_intr,
- 		.resume		= genphy_resume,
- 		.suspend	= genphy_suspend,
- 	},
++		val = adin_get_reg_value(phydev, "adi,tx-internal-delay-ps",
++					 adin_rgmii_delays,
++					 ADIN1300_RGMII_2_00_NS);
++		reg &= ~ADIN1300_GE_RGMII_GTX_MSK;
++		reg |= ADIN1300_GE_RGMII_GTX_SEL(val);
+ 	} else {
+ 		reg &= ~ADIN1300_GE_RGMII_TXID_EN;
+ 	}
 -- 
 2.20.1
 
