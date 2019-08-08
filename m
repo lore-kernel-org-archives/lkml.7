@@ -4,55 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96C6FC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D12BC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:06:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 635022173E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:06:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D3572184E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:06:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565291161;
-	bh=Ct6yfhpM0EHnkzsIo0k2BPaUHmJED0DtYiZUiip0UzY=;
+	s=default; t=1565291165;
+	bh=+Av3d2kPZIsYYbULr+uL0eeswbcyrNwKWhD1JysRTp4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mPdB7XXIBaSR+SJEAjvaqOArDDZoa4R2eoM96pz2r9/vzrf2+nZXQmJjZXGs7kSBT
-	 3Cwi/FRENLduOiE+hWVH63X+4Q0Ne87GlSQSNsn8QkZUYXo35aQdHxuuS3znEDBwv9
-	 soQ15U2RRxwtH0JaZPHNPeZh/JHXQNb3QM15CWaI=
+	b=Xt6haKqt+tHGSOZEDXFWfzRGxddLTyPBuldrovAbUBmArsJxOHzn2nlhh+5TFThQZ
+	 eVcMMycZQIYRiPxbKYdR9yrXBRht+vsBSpJqwOH8Ohm2u6PxvazzDiqawSuYD90hLR
+	 XyViwf1UfY5ecVnePUpyb9uX9FlomJsyj2Ui7sGM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404138AbfHHTGA (ORCPT
+        id S2404192AbfHHTGE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:06:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39270 "EHLO mail.kernel.org"
+        Thu, 8 Aug 2019 15:06:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390203AbfHHTGA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 15:06:00 -0400
+        id S2404142AbfHHTGC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 15:06:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 655222173E;
-        Thu,  8 Aug 2019 19:05:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04EF321880;
+        Thu,  8 Aug 2019 19:06:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565291158;
-        bh=Ct6yfhpM0EHnkzsIo0k2BPaUHmJED0DtYiZUiip0UzY=;
+        s=default; t=1565291161;
+        bh=+Av3d2kPZIsYYbULr+uL0eeswbcyrNwKWhD1JysRTp4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fZe30Y4R33cVpioBdu+x8O3E14E17OvrDdfdoV5E9MTC/4NOCQd+EFUkZQDMwIhdA
-         BgohJ7vWxRqVDPYzVGJve1iSFRk6WZX6XkX6AGIvKgYVH3FQyC9KUnZtoTx12Tyk/+
-         Ae9bpTQHfnM07PG9sJdTsTiibS1LznsvxBy+/OAw=
+        b=hXbWJR7NKpoxfRo9QQNyaAjD0FleZCWmcthnHQiFD39NcaKt5steibH7dKlGoBOpM
+         zfEdZ5JZx2nZ4t+E1pTOO9MKsjy3Lv/5Pitrbcndx4B7/0u6tgB38/ecAJEaN2XX/K
+         X05eP8M0BssKL7SSiX7n6YT+IO4wFOBEvIhvkMzk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hannes Reinecke <hare@suse.de>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.2 01/56] scsi: fcoe: Embed fc_rport_priv in fcoe_rport structure
-Date:   Thu,  8 Aug 2019 21:04:27 +0200
-Message-Id: <20190808190452.926558107@linuxfoundation.org>
+        stable@vger.kernel.org, Arnaud Patard <arnaud.patard@rtp-net.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.2 10/56] drivers/net/ethernet/marvell/mvmdio.c: Fix non OF case
+Date:   Thu,  8 Aug 2019 21:04:36 +0200
+Message-Id: <20190808190453.280793067@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190808190452.867062037@linuxfoundation.org>
 References: <20190808190452.867062037@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,221 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hannes Reinecke <hare@suse.de>
+From: "Arnaud Patard (Rtp)" <arnaud.patard@rtp-net.org>
 
-commit 023358b136d490ca91735ac6490db3741af5a8bd upstream.
+[ Upstream commit d934423ac26ed373dfe089734d505dca5ff679b6 ]
 
-Gcc-9 complains for a memset across pointer boundaries, which happens as
-the code tries to allocate a flexible array on the stack.  Turns out we
-cannot do this without relying on gcc-isms, so with this patch we'll embed
-the fc_rport_priv structure into fcoe_rport, can use the normal
-'container_of' outcast, and will only have to do a memset over one
-structure.
+Orion5.x systems are still using machine files and not device-tree.
+Commit 96cb4342382290c9 ("net: mvmdio: allow up to three clocks to be
+specified for orion-mdio") has replaced devm_clk_get() with of_clk_get(),
+leading to a oops at boot and not working network, as reported in
+https://lists.debian.org/debian-arm/2019/07/msg00088.html and possibly in
+https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=908712.
 
-Signed-off-by: Hannes Reinecke <hare@suse.de>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Link: https://lists.debian.org/debian-arm/2019/07/msg00088.html
+Fixes: 96cb4342382290c9 ("net: mvmdio: allow up to three clocks to be specified for orion-mdio")
+Signed-off-by: Arnaud Patard <arnaud.patard@rtp-net.org>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/scsi/fcoe/fcoe_ctlr.c |   51 ++++++++++++++++--------------------------
- drivers/scsi/libfc/fc_rport.c |    5 +++-
- include/scsi/libfcoe.h        |    1 
- 3 files changed, 25 insertions(+), 32 deletions(-)
+ drivers/net/ethernet/marvell/mvmdio.c |   28 ++++++++++++++++++++++------
+ 1 file changed, 22 insertions(+), 6 deletions(-)
 
---- a/drivers/scsi/fcoe/fcoe_ctlr.c
-+++ b/drivers/scsi/fcoe/fcoe_ctlr.c
-@@ -2005,7 +2005,7 @@ EXPORT_SYMBOL_GPL(fcoe_wwn_from_mac);
-  */
- static inline struct fcoe_rport *fcoe_ctlr_rport(struct fc_rport_priv *rdata)
- {
--	return (struct fcoe_rport *)(rdata + 1);
-+	return container_of(rdata, struct fcoe_rport, rdata);
- }
+--- a/drivers/net/ethernet/marvell/mvmdio.c
++++ b/drivers/net/ethernet/marvell/mvmdio.c
+@@ -319,15 +319,31 @@ static int orion_mdio_probe(struct platf
  
- /**
-@@ -2269,7 +2269,7 @@ static void fcoe_ctlr_vn_start(struct fc
-  */
- static int fcoe_ctlr_vn_parse(struct fcoe_ctlr *fip,
- 			      struct sk_buff *skb,
--			      struct fc_rport_priv *rdata)
-+			      struct fcoe_rport *frport)
- {
- 	struct fip_header *fiph;
- 	struct fip_desc *desc = NULL;
-@@ -2277,16 +2277,12 @@ static int fcoe_ctlr_vn_parse(struct fco
- 	struct fip_wwn_desc *wwn = NULL;
- 	struct fip_vn_desc *vn = NULL;
- 	struct fip_size_desc *size = NULL;
--	struct fcoe_rport *frport;
- 	size_t rlen;
- 	size_t dlen;
- 	u32 desc_mask = 0;
- 	u32 dtype;
- 	u8 sub;
+ 	init_waitqueue_head(&dev->smi_busy_wait);
  
--	memset(rdata, 0, sizeof(*rdata) + sizeof(*frport));
--	frport = fcoe_ctlr_rport(rdata);
--
- 	fiph = (struct fip_header *)skb->data;
- 	frport->flags = ntohs(fiph->fip_flags);
- 
-@@ -2349,15 +2345,17 @@ static int fcoe_ctlr_vn_parse(struct fco
- 			if (dlen != sizeof(struct fip_wwn_desc))
- 				goto len_err;
- 			wwn = (struct fip_wwn_desc *)desc;
--			rdata->ids.node_name = get_unaligned_be64(&wwn->fd_wwn);
-+			frport->rdata.ids.node_name =
-+				get_unaligned_be64(&wwn->fd_wwn);
- 			break;
- 		case FIP_DT_VN_ID:
- 			if (dlen != sizeof(struct fip_vn_desc))
- 				goto len_err;
- 			vn = (struct fip_vn_desc *)desc;
- 			memcpy(frport->vn_mac, vn->fd_mac, ETH_ALEN);
--			rdata->ids.port_id = ntoh24(vn->fd_fc_id);
--			rdata->ids.port_name = get_unaligned_be64(&vn->fd_wwpn);
-+			frport->rdata.ids.port_id = ntoh24(vn->fd_fc_id);
-+			frport->rdata.ids.port_name =
-+				get_unaligned_be64(&vn->fd_wwpn);
- 			break;
- 		case FIP_DT_FC4F:
- 			if (dlen != sizeof(struct fip_fc4_feat))
-@@ -2738,10 +2736,7 @@ static int fcoe_ctlr_vn_recv(struct fcoe
- {
- 	struct fip_header *fiph;
- 	enum fip_vn2vn_subcode sub;
--	struct {
--		struct fc_rport_priv rdata;
--		struct fcoe_rport frport;
--	} buf;
-+	struct fcoe_rport frport = { };
- 	int rc, vlan_id = 0;
- 
- 	fiph = (struct fip_header *)skb->data;
-@@ -2757,7 +2752,7 @@ static int fcoe_ctlr_vn_recv(struct fcoe
- 		goto drop;
+-	for (i = 0; i < ARRAY_SIZE(dev->clk); i++) {
+-		dev->clk[i] = of_clk_get(pdev->dev.of_node, i);
+-		if (PTR_ERR(dev->clk[i]) == -EPROBE_DEFER) {
++	if (pdev->dev.of_node) {
++		for (i = 0; i < ARRAY_SIZE(dev->clk); i++) {
++			dev->clk[i] = of_clk_get(pdev->dev.of_node, i);
++			if (PTR_ERR(dev->clk[i]) == -EPROBE_DEFER) {
++				ret = -EPROBE_DEFER;
++				goto out_clk;
++			}
++			if (IS_ERR(dev->clk[i]))
++				break;
++			clk_prepare_enable(dev->clk[i]);
++		}
++
++		if (!IS_ERR(of_clk_get(pdev->dev.of_node,
++				       ARRAY_SIZE(dev->clk))))
++			dev_warn(&pdev->dev,
++				 "unsupported number of clocks, limiting to the first "
++				 __stringify(ARRAY_SIZE(dev->clk)) "\n");
++	} else {
++		dev->clk[0] = clk_get(&pdev->dev, NULL);
++		if (PTR_ERR(dev->clk[0]) == -EPROBE_DEFER) {
+ 			ret = -EPROBE_DEFER;
+ 			goto out_clk;
+ 		}
+-		if (IS_ERR(dev->clk[i]))
+-			break;
+-		clk_prepare_enable(dev->clk[i]);
++		if (!IS_ERR(dev->clk[0]))
++			clk_prepare_enable(dev->clk[0]);
  	}
  
--	rc = fcoe_ctlr_vn_parse(fip, skb, &buf.rdata);
-+	rc = fcoe_ctlr_vn_parse(fip, skb, &frport);
- 	if (rc) {
- 		LIBFCOE_FIP_DBG(fip, "vn_recv vn_parse error %d\n", rc);
- 		goto drop;
-@@ -2766,19 +2761,19 @@ static int fcoe_ctlr_vn_recv(struct fcoe
- 	mutex_lock(&fip->ctlr_mutex);
- 	switch (sub) {
- 	case FIP_SC_VN_PROBE_REQ:
--		fcoe_ctlr_vn_probe_req(fip, &buf.rdata);
-+		fcoe_ctlr_vn_probe_req(fip, &frport.rdata);
- 		break;
- 	case FIP_SC_VN_PROBE_REP:
--		fcoe_ctlr_vn_probe_reply(fip, &buf.rdata);
-+		fcoe_ctlr_vn_probe_reply(fip, &frport.rdata);
- 		break;
- 	case FIP_SC_VN_CLAIM_NOTIFY:
--		fcoe_ctlr_vn_claim_notify(fip, &buf.rdata);
-+		fcoe_ctlr_vn_claim_notify(fip, &frport.rdata);
- 		break;
- 	case FIP_SC_VN_CLAIM_REP:
--		fcoe_ctlr_vn_claim_resp(fip, &buf.rdata);
-+		fcoe_ctlr_vn_claim_resp(fip, &frport.rdata);
- 		break;
- 	case FIP_SC_VN_BEACON:
--		fcoe_ctlr_vn_beacon(fip, &buf.rdata);
-+		fcoe_ctlr_vn_beacon(fip, &frport.rdata);
- 		break;
- 	default:
- 		LIBFCOE_FIP_DBG(fip, "vn_recv unknown subcode %d\n", sub);
-@@ -2802,22 +2797,18 @@ drop:
-  */
- static int fcoe_ctlr_vlan_parse(struct fcoe_ctlr *fip,
- 			      struct sk_buff *skb,
--			      struct fc_rport_priv *rdata)
-+			      struct fcoe_rport *frport)
- {
- 	struct fip_header *fiph;
- 	struct fip_desc *desc = NULL;
- 	struct fip_mac_desc *macd = NULL;
- 	struct fip_wwn_desc *wwn = NULL;
--	struct fcoe_rport *frport;
- 	size_t rlen;
- 	size_t dlen;
- 	u32 desc_mask = 0;
- 	u32 dtype;
- 	u8 sub;
- 
--	memset(rdata, 0, sizeof(*rdata) + sizeof(*frport));
--	frport = fcoe_ctlr_rport(rdata);
--
- 	fiph = (struct fip_header *)skb->data;
- 	frport->flags = ntohs(fiph->fip_flags);
- 
-@@ -2871,7 +2862,8 @@ static int fcoe_ctlr_vlan_parse(struct f
- 			if (dlen != sizeof(struct fip_wwn_desc))
- 				goto len_err;
- 			wwn = (struct fip_wwn_desc *)desc;
--			rdata->ids.node_name = get_unaligned_be64(&wwn->fd_wwn);
-+			frport->rdata.ids.node_name =
-+				get_unaligned_be64(&wwn->fd_wwn);
- 			break;
- 		default:
- 			LIBFCOE_FIP_DBG(fip, "unexpected descriptor type %x "
-@@ -2982,22 +2974,19 @@ static int fcoe_ctlr_vlan_recv(struct fc
- {
- 	struct fip_header *fiph;
- 	enum fip_vlan_subcode sub;
--	struct {
--		struct fc_rport_priv rdata;
--		struct fcoe_rport frport;
--	} buf;
-+	struct fcoe_rport frport = { };
- 	int rc;
- 
- 	fiph = (struct fip_header *)skb->data;
- 	sub = fiph->fip_subcode;
--	rc = fcoe_ctlr_vlan_parse(fip, skb, &buf.rdata);
-+	rc = fcoe_ctlr_vlan_parse(fip, skb, &frport);
- 	if (rc) {
- 		LIBFCOE_FIP_DBG(fip, "vlan_recv vlan_parse error %d\n", rc);
- 		goto drop;
- 	}
- 	mutex_lock(&fip->ctlr_mutex);
- 	if (sub == FIP_SC_VL_REQ)
--		fcoe_ctlr_vlan_disc_reply(fip, &buf.rdata);
-+		fcoe_ctlr_vlan_disc_reply(fip, &frport.rdata);
- 	mutex_unlock(&fip->ctlr_mutex);
- 
- drop:
---- a/drivers/scsi/libfc/fc_rport.c
-+++ b/drivers/scsi/libfc/fc_rport.c
-@@ -128,6 +128,7 @@ EXPORT_SYMBOL(fc_rport_lookup);
- struct fc_rport_priv *fc_rport_create(struct fc_lport *lport, u32 port_id)
- {
- 	struct fc_rport_priv *rdata;
-+	size_t rport_priv_size = sizeof(*rdata);
- 
- 	lockdep_assert_held(&lport->disc.disc_mutex);
- 
-@@ -135,7 +136,9 @@ struct fc_rport_priv *fc_rport_create(st
- 	if (rdata)
- 		return rdata;
- 
--	rdata = kzalloc(sizeof(*rdata) + lport->rport_priv_size, GFP_KERNEL);
-+	if (lport->rport_priv_size > 0)
-+		rport_priv_size = lport->rport_priv_size;
-+	rdata = kzalloc(rport_priv_size, GFP_KERNEL);
- 	if (!rdata)
- 		return NULL;
- 
---- a/include/scsi/libfcoe.h
-+++ b/include/scsi/libfcoe.h
-@@ -229,6 +229,7 @@ struct fcoe_fcf {
-  * @vn_mac:	VN_Node assigned MAC address for data
-  */
- struct fcoe_rport {
-+	struct fc_rport_priv rdata;
- 	unsigned long time;
- 	u16 fcoe_len;
- 	u16 flags;
+ 	dev->err_interrupt = platform_get_irq(pdev, 0);
 
 
