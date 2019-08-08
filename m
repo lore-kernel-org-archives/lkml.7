@@ -6,86 +6,84 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE1BC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF62C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 349AA2187F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:00:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC19220665
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:03:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731267AbfHHHAB (ORCPT
+        id S1731089AbfHHHDb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 03:00:01 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:34815 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725796AbfHHHAB (ORCPT
+        Thu, 8 Aug 2019 03:03:31 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:52377 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725817AbfHHHDb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 03:00:01 -0400
-Received: by mail-wm1-f68.google.com with SMTP id e8so2973248wme.1
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 00:00:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rpyM8r2mku1q3Z7OeG8NLWc6M46sqEuLs17+l7YtJBs=;
-        b=Ge1fLKUygaLTLXNmV9pSeiezE/gtGq6KfsuHiA1ttoflYkt8KqIq2w2q8tS+xMEd6P
-         wPuteGZru3kQtmTcRkYGee7d9yzoSN+z81EXErEGI8tGcpriP18Ek/GxiUsd0o7O8cG1
-         EgU39utXkgqtZo+UhUyKJ31m6znc+wW6wEOTru3RH4wTre5I3hJ1Y1PAsN88YQVr47os
-         hThykMetTNYkOnrAzk62AA3l369KgNFtR2Cg1zEod0O//o4pokOjTcQP7MhWottbwSPc
-         Z6drtwb4WlBYep3q03Jv27LEeyz0dIihIKuH4OkCLPqvYcytJ/S+ypxzVJz9HV9DLWft
-         qdpA==
-X-Gm-Message-State: APjAAAUNMV6/fe3yak5U2G0yrMAeGnEginVbYr+O0Xu/yFFu/34HgjoW
-        KsmpLNOW0a9SOasO76TO8zWQ/A==
-X-Google-Smtp-Source: APXvYqzMqJaRfhKYmSLwEKXe/5sJ8WrTMTaguUiOhRJi2Q9MPLJPHkR5e3iJUPDdrT63zqnXb891zQ==
-X-Received: by 2002:a1c:f511:: with SMTP id t17mr2413692wmh.53.1565247599806;
-        Wed, 07 Aug 2019 23:59:59 -0700 (PDT)
-Received: from localhost.localdomain ([151.29.237.107])
-        by smtp.gmail.com with ESMTPSA id w25sm1305257wmk.18.2019.08.07.23.59.58
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 07 Aug 2019 23:59:58 -0700 (PDT)
-Date:   Thu, 8 Aug 2019 08:59:56 +0200
-From:   Juri Lelli <juri.lelli@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org,
-        dietmar.eggemann@arm.com, luca.abeni@santannapisa.it,
-        bristot@redhat.com, balsini@android.com, dvyukov@google.com,
-        tglx@linutronix.de, vpillai@digitalocean.com, rostedt@goodmis.org
-Subject: Re: [RFC][PATCH 12/13] sched/deadline: Introduce deadline servers
-Message-ID: <20190808065956.GE29310@localhost.localdomain>
-References: <20190726145409.947503076@infradead.org>
- <20190726161358.056107990@infradead.org>
+        Thu, 8 Aug 2019 03:03:31 -0400
+Received: from p200300ddd71876597e7a91fffec98e25.dip0.t-ipconnect.de ([2003:dd:d718:7659:7e7a:91ff:fec9:8e25])
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hvcRp-0001ck-0m; Thu, 08 Aug 2019 09:02:53 +0200
+Date:   Thu, 8 Aug 2019 09:02:47 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Christoph Hellwig <hch@infradead.org>
+cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Sebastian Siewior <bigeasy@linutronix.de>,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Julia Cartwright <julia@ni.com>, Jan Kara <jack@suse.cz>,
+        Theodore Tso <tytso@mit.edu>,
+        Matthew Wilcox <willy@infradead.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        Jan Kara <jack@suse.com>, Mark Fasheh <mark@fasheh.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Joel Becker <jlbec@evilplan.org>
+Subject: Re: [patch V2 0/7] fs: Substitute bit-spinlocks for PREEMPT_RT and
+ debugging
+In-Reply-To: <20190806061119.GA17492@infradead.org>
+Message-ID: <alpine.DEB.2.21.1908080858460.2882@nanos.tec.linutronix.de>
+References: <20190801010126.245731659@linutronix.de> <20190802075612.GA20962@infradead.org> <alpine.DEB.2.21.1908021107090.2285@nanos.tec.linutronix.de> <20190806061119.GA17492@infradead.org>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190726161358.056107990@infradead.org>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon, 5 Aug 2019, Christoph Hellwig wrote:
+> On Fri, Aug 02, 2019 at 11:07:53AM +0200, Thomas Gleixner wrote:
+> > Last time I did, there was resistance :)
+> 
+> Do you have a pointer?  Note that in the buffer head case maybe
+> a hash lock based on the page address is even better, as we only
+> ever use the lock in the first buffer head of a page anyway..
 
-On 26/07/19 16:54, Peter Zijlstra wrote:
+I need to search my archives, but I'm on a spotty and slow connection right
+now. Will do so when back home.
+ 
+> > What about the page lock?
+> > 
+> >   mm/slub.c:      bit_spin_lock(PG_locked, &page->flags);
+> 
+> One caller ouf of a gazillion that spins on the page lock instead of
+> sleepign on it like everyone else.  That should not have passed your
+> smell test to start with :)
 
-[...]
-
-> +void dl_server_init(struct sched_dl_entity *dl_se, struct rq *rq,
-> +		    dl_server_has_tasks_f has_tasks,
-> +		    dl_server_pick_f pick)
-> +{
-> +	dl_se->dl_server = 1;
-> +	dl_se->rq = rq;
-> +	dl_se->server_has_tasks = has_tasks;
-> +	dl_se->server_pick = pick;
-> +
-> +	setup_new_dl_entity(dl_se);
-
-I think we need to postpone calling setup_new_dl_entity() to when
-dl_server_start() is called for the first time. rq_clock() needs both
-a caller that holds rq lock (which we can add) and an updated clock
-(which I'm not sure we can do at this point in time, or maybe we can
-avoid/trick the debug check?).
+I surely stared at it, but that cannot sleep. It's in the middle of a
+preempt and interrupt disabled region and used on architectures which do
+not support CMPXCHG_DOUBLE and ALIGNED_STRUCT_PAGE ...
 
 Thanks,
 
-Juri
+	tglx
+
+
+
