@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15897C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 731B1C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:08:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE4BB21874
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:08:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45C4221874
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:08:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565291291;
-	bh=TwtygEeANJyww3dG6WqFMUcjgTZm7wPoqtvFZc+v78M=;
+	s=default; t=1565291294;
+	bh=CUF0Gohx7c3dZQvPvrbrwwn/4m6ke1fBY+li/C7lnTo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FC8plIP0GaOh470i/KXnoO4M2yoyb5j8jQLScnmqrN9RRpFUdFgPxwvkhdiJKJMf/
-	 xuAoJO+mJsRoGx/KyLe5lj35+e3H9ASSFMa9RacEAYnYeQwkcEj0rDkaYI6FHTrkCo
-	 ipLYNn9AZpMpKYPLXTn7210l5iohB1zhKz9Eqtz4=
+	b=e2rTmOda4fqBv5t22POhjh78Jd/iYZhnFlskkaFeOZYVPoEzN4YG0mXamGEW1C+Bi
+	 QXUsvXmHS1LfGGgnR+M1taHxomkgu60H+XxZxmaw9GvQT+FsawjWFB3AkfSakat3XI
+	 xd0GRacZ3mJPshmrRC7mm8vE4p/1UbPR4LKTTCRM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404846AbfHHTIK (ORCPT
+        id S2404856AbfHHTIN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:08:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42098 "EHLO mail.kernel.org"
+        Thu, 8 Aug 2019 15:08:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404831AbfHHTII (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 15:08:08 -0400
+        id S2404840AbfHHTIK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 15:08:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0EAC21874;
-        Thu,  8 Aug 2019 19:08:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B8CD2173E;
+        Thu,  8 Aug 2019 19:08:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565291287;
-        bh=TwtygEeANJyww3dG6WqFMUcjgTZm7wPoqtvFZc+v78M=;
+        s=default; t=1565291289;
+        bh=CUF0Gohx7c3dZQvPvrbrwwn/4m6ke1fBY+li/C7lnTo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jd6Ohm3fL2BsEE0E4SK0zDIyIrxuYPn4i0Cea316AULpAgROsgHcyhtoHkt9xS84L
-         8bmIwuriz8Wm6TRqqUf/R5QA7vgNLOIpURRHkLEoqJLWaHoxLyrM1XpKsYUXHZGXCQ
-         iDCXI+mfjq8gf/CGiaEnPLn48IstWiDWem4JihE4=
+        b=ybQDAcxluHpB+kI6U9gLb2XBhuIn3cIywVSvBWhgpFHl6P/4MtrAD3yoD9ArFGx3P
+         GbfpWNpv0AIM2c9oU7tyOWNpTUlnrtMiYvVSi/zwgfFkt75A42ehTEQU7ijk7lZmeg
+         SSFaDgXpWug/XqZv5S+uLqIZxM0U9ZWiGey0mbeU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Jesper Dangaard Brouer <brouer@redhat.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 42/56] bpf: fix XDP vlan selftests test_xdp_vlan.sh
-Date:   Thu,  8 Aug 2019 21:05:08 +0200
-Message-Id: <20190808190454.797303745@linuxfoundation.org>
+Subject: [PATCH 5.2 43/56] selftests/bpf: add wrapper scripts for test_xdp_vlan.sh
+Date:   Thu,  8 Aug 2019 21:05:09 +0200
+Message-Id: <20190808190454.847959086@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190808190452.867062037@linuxfoundation.org>
 References: <20190808190452.867062037@linuxfoundation.org>
@@ -61,125 +61,73 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jesper Dangaard Brouer <brouer@redhat.com>
 
-[ Upstream commit 4de9c89a4982431c4a02739743fd360dc5581f22 ]
+[ Upstream commit d35661fcf95d8818c1f9acc818a1bad23dda4e1c ]
 
-Change BPF selftest test_xdp_vlan.sh to (default) use generic XDP.
+In-order to test both native-XDP (xdpdrv) and generic-XDP (xdpgeneric)
+create two wrapper test scripts, that start the test_xdp_vlan.sh script
+with these modes.
 
-This selftest was created together with a fix for generic XDP, in commit
-297249569932 ("net: fix generic XDP to handle if eth header was
-mangled"). And was suppose to catch if generic XDP was broken again.
-
-The tests are using veth and assumed that veth driver didn't support
-native driver XDP, thus it used the (ip link set) 'xdp' attach that fell
-back to generic-XDP. But veth gained native-XDP support in 948d4f214fde
-("veth: Add driver XDP"), which caused this test script to use
-native-XDP.
-
-Fixes: 948d4f214fde ("veth: Add driver XDP")
-Fixes: 97396ff0bc2d ("selftests/bpf: add XDP selftests for modifying and popping VLAN headers")
 Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- tools/testing/selftests/bpf/test_xdp_vlan.sh |   42 +++++++++++++++++++++++----
- 1 file changed, 36 insertions(+), 6 deletions(-)
+ tools/testing/selftests/bpf/Makefile                      |    3 ++-
+ tools/testing/selftests/bpf/test_xdp_vlan.sh              |    5 ++++-
+ tools/testing/selftests/bpf/test_xdp_vlan_mode_generic.sh |    9 +++++++++
+ tools/testing/selftests/bpf/test_xdp_vlan_mode_native.sh  |    9 +++++++++
+ 4 files changed, 24 insertions(+), 2 deletions(-)
+ create mode 100755 tools/testing/selftests/bpf/test_xdp_vlan_mode_generic.sh
+ create mode 100755 tools/testing/selftests/bpf/test_xdp_vlan_mode_native.sh
 
+--- a/tools/testing/selftests/bpf/Makefile
++++ b/tools/testing/selftests/bpf/Makefile
+@@ -51,7 +51,8 @@ TEST_PROGS := test_kmod.sh \
+ 	test_lirc_mode2.sh \
+ 	test_skb_cgroup_id.sh \
+ 	test_flow_dissector.sh \
+-	test_xdp_vlan.sh \
++	test_xdp_vlan_mode_generic.sh \
++	test_xdp_vlan_mode_native.sh \
+ 	test_lwt_ip_encap.sh \
+ 	test_tcp_check_syncookie.sh \
+ 	test_tc_tunnel.sh \
 --- a/tools/testing/selftests/bpf/test_xdp_vlan.sh
 +++ b/tools/testing/selftests/bpf/test_xdp_vlan.sh
-@@ -1,7 +1,12 @@
- #!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Author: Jesper Dangaard Brouer <hawk@kernel.org>
+@@ -2,7 +2,10 @@
+ # SPDX-License-Identifier: GPL-2.0
+ # Author: Jesper Dangaard Brouer <hawk@kernel.org>
  
- TESTNAME=xdp_vlan
- 
-+# Default XDP mode
-+XDP_MODE=xdpgeneric
-+
- usage() {
-   echo "Testing XDP + TC eBPF VLAN manipulations: $TESTNAME"
-   echo ""
-@@ -9,9 +14,23 @@ usage() {
-   echo "  -v | --verbose : Verbose"
-   echo "  --flush        : Flush before starting (e.g. after --interactive)"
-   echo "  --interactive  : Keep netns setup running after test-run"
-+  echo "  --mode=XXX     : Choose XDP mode (xdp | xdpgeneric | xdpdrv)"
-   echo ""
- }
- 
-+valid_xdp_mode()
-+{
-+	local mode=$1
-+
-+	case "$mode" in
-+		xdpgeneric | xdpdrv | xdp)
-+			return 0
-+			;;
-+		*)
-+			return 1
-+	esac
-+}
-+
- cleanup()
- {
- 	local status=$?
-@@ -37,7 +56,7 @@ cleanup()
- 
- # Using external program "getopt" to get --long-options
- OPTIONS=$(getopt -o hvfi: \
--    --long verbose,flush,help,interactive,debug -- "$@")
-+    --long verbose,flush,help,interactive,debug,mode: -- "$@")
- if (( $? != 0 )); then
-     usage
-     echo "selftests: $TESTNAME [FAILED] Error calling getopt, unknown option?"
-@@ -60,6 +79,11 @@ while true; do
- 		cleanup
- 		shift
- 		;;
-+	    --mode )
-+		shift
-+		XDP_MODE=$1
-+		shift
-+		;;
- 	    -- )
- 		shift
- 		break
-@@ -81,8 +105,14 @@ if [ "$EUID" -ne 0 ]; then
- 	exit 1
- fi
- 
--ip link set dev lo xdp off 2>/dev/null > /dev/null
--if [ $? -ne 0 ];then
-+valid_xdp_mode $XDP_MODE
-+if [ $? -ne 0 ]; then
-+	echo "selftests: $TESTNAME [FAILED] unknown XDP mode ($XDP_MODE)"
-+	exit 1
+-TESTNAME=xdp_vlan
++# Allow wrapper scripts to name test
++if [ -z "$TESTNAME" ]; then
++    TESTNAME=xdp_vlan
 +fi
+ 
+ # Default XDP mode
+ XDP_MODE=xdpgeneric
+--- /dev/null
++++ b/tools/testing/selftests/bpf/test_xdp_vlan_mode_generic.sh
+@@ -0,0 +1,9 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
 +
-+ip link set dev lo xdpgeneric off 2>/dev/null > /dev/null
-+if [ $? -ne 0 ]; then
- 	echo "selftests: $TESTNAME [SKIP] need ip xdp support"
- 	exit 0
- fi
-@@ -166,7 +196,7 @@ export FILE=test_xdp_vlan.o
- 
- # First test: Remove VLAN by setting VLAN ID 0, using "xdp_vlan_change"
- export XDP_PROG=xdp_vlan_change
--ip netns exec ns1 ip link set $DEVNS1 xdp object $FILE section $XDP_PROG
-+ip netns exec ns1 ip link set $DEVNS1 $XDP_MODE object $FILE section $XDP_PROG
- 
- # In ns1: egress use TC to add back VLAN tag 4011
- #  (del cmd)
-@@ -187,8 +217,8 @@ ip netns exec ns1 ping -W 2 -c 3 $IPADDR
- # ETH_P_8021Q indication, and this cause overwriting of our changes.
- #
- export XDP_PROG=xdp_vlan_remove_outer2
--ip netns exec ns1 ip link set $DEVNS1 xdp off
--ip netns exec ns1 ip link set $DEVNS1 xdp object $FILE section $XDP_PROG
-+ip netns exec ns1 ip link set $DEVNS1 $XDP_MODE off
-+ip netns exec ns1 ip link set $DEVNS1 $XDP_MODE object $FILE section $XDP_PROG
- 
- # Now the namespaces should still be able reach each-other, test with ping:
- ip netns exec ns2 ping -W 2 -c 3 $IPADDR1
++# Exit on failure
++set -e
++
++# Wrapper script to test generic-XDP
++export TESTNAME=xdp_vlan_mode_generic
++./test_xdp_vlan.sh --mode=xdpgeneric
+--- /dev/null
++++ b/tools/testing/selftests/bpf/test_xdp_vlan_mode_native.sh
+@@ -0,0 +1,9 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++
++# Exit on failure
++set -e
++
++# Wrapper script to test native-XDP
++export TESTNAME=xdp_vlan_mode_native
++./test_xdp_vlan.sh --mode=xdpdrv
 
 
