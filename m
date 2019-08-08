@@ -2,138 +2,132 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B2F6C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:39:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9699BC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:43:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05F6A214C6
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:39:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68EE32173C
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:43:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RUwiyaIm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731167AbfHHIjk (ORCPT
+        id S1731149AbfHHIm7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 04:39:40 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4220 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726187AbfHHIjk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 04:39:40 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id E49C46160CF7EB186C3B;
-        Thu,  8 Aug 2019 16:39:37 +0800 (CST)
-Received: from [127.0.0.1] (10.177.96.203) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Thu, 8 Aug 2019
- 16:39:27 +0800
-Subject: Re: [PATCH v5 10/10] powerpc/fsl_booke/kaslr: dump out kernel offset
- information on panic
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        <linuxppc-dev@lists.ozlabs.org>, <diana.craciun@nxp.com>,
-        <christophe.leroy@c-s.fr>, <benh@kernel.crashing.org>,
-        <paulus@samba.org>, <npiggin@gmail.com>, <keescook@chromium.org>,
-        <kernel-hardening@lists.openwall.com>
-CC:     <linux-kernel@vger.kernel.org>, <wangkefeng.wang@huawei.com>,
-        <yebin10@huawei.com>, <thunder.leizhen@huawei.com>,
-        <jingxiangfeng@huawei.com>, <fanchengyang@huawei.com>,
-        <zhaohongjiang@huawei.com>
-References: <20190807065706.11411-1-yanaijie@huawei.com>
- <20190807065706.11411-11-yanaijie@huawei.com>
- <87zhklt9eg.fsf@concordia.ellerman.id.au>
-From:   Jason Yan <yanaijie@huawei.com>
-Message-ID: <9113cc5b-0e89-f423-712a-79220af82b92@huawei.com>
-Date:   Thu, 8 Aug 2019 16:39:26 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        Thu, 8 Aug 2019 04:42:59 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50668 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728289AbfHHIm7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 04:42:59 -0400
+Received: by mail-wm1-f66.google.com with SMTP id v15so1545778wml.0;
+        Thu, 08 Aug 2019 01:42:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=o0gY6GIOGxAdAcOqxh/7txJTZ7y4Fp96qJrFWzmJvJs=;
+        b=RUwiyaImbBGQoy18xa2BhqGI8xsDFamrbahqE96VfeFA6VE0a+pYf+hMqnuX0AZhmo
+         Z+mJc+SlQn5ApVviiHsgsXmnDePZl0YFD0+TWX2vDF/RUl2FiIq6m2KsXrM1v1C48xmJ
+         7nN6hfG9Sbn4S4s2FztFp25RDmu+C91Jv9V6VjynVMBYlaIypgm3v9xzgqJD/XOftZpj
+         Zg9jkrI1j2cnfDSgNsF/lHXvEW7hgX0WfokMqFvil8cKK9kyV4VWlV0o4m4J4Zj8OfVi
+         nhdoe7sl2TURQXr2WEzaXbScdo97ImFTTpXg5AfS0d60/mGaaYnDFL10jlkslAIjTZFK
+         lg7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=o0gY6GIOGxAdAcOqxh/7txJTZ7y4Fp96qJrFWzmJvJs=;
+        b=QGsHu+NSfXTBdUonyHAi+iP53h4sJAWo0KzHiqwn7+5LuSoTga181bu6tnSkPrC4eE
+         HsLsvMoWHXND5zz1FnfNcjYNeNjup/D2kZvQCA9aWtKbeij1w+rDanmALnbH7RHx0J/v
+         TsZoPyTumtzjvUDdQCqOG+gZyA4u4TcKw6m2EvVpfWIVXqG5FY6xo8D7CUwGTqbsU6fj
+         ZAEzFJAjkTTVmuEb/Dr2iMeXzCmCpwkKQsXzZB8HdXrEOaSWDo57kMHPQ8lXbziLkIr7
+         iuyo0+tmfr2wHWoiyRdsP6U536j3wuLtkVcJ3mTITzsU86oFddQmx13x/zhAtHS6mteI
+         ZZaw==
+X-Gm-Message-State: APjAAAVlqEEUKzXxpLHNAsscMq9GONnRcGewvpim/SeWHZ7J9iIradRS
+        sZvM8WuCWJMY5CB4vi5idmWN6Kko
+X-Google-Smtp-Source: APXvYqwlO+R71FW8BynOKwYku3Wp9gYOHeIIBZF6I/QjRTsEvLX/UseL7h//+kMmc+MbDlaAx5ji/g==
+X-Received: by 2002:a7b:c383:: with SMTP id s3mr2992226wmj.44.1565253776712;
+        Thu, 08 Aug 2019 01:42:56 -0700 (PDT)
+Received: from Red.localdomain ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id c1sm2059259wmc.40.2019.08.08.01.42.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 08 Aug 2019 01:42:56 -0700 (PDT)
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     mark.rutland@arm.com, mripard@kernel.org, robh+dt@kernel.org,
+        wens@csie.org
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: [PATCH] ARM64: dts: allwinner: Add devicetree for pine H64 modelA evaluation board
+Date:   Thu,  8 Aug 2019 10:42:53 +0200
+Message-Id: <20190808084253.10573-1-clabbe.montjoie@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <87zhklt9eg.fsf@concordia.ellerman.id.au>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.96.203]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch adds the evaluation variant of the model A of the PineH64.
+The model A has the same size of the pine64 and has a PCIE slot.
 
+The only devicetree difference with current pineH64, is the PHY
+regulator.
 
-On 2019/8/7 21:03, Michael Ellerman wrote:
-> Jason Yan <yanaijie@huawei.com> writes:
->> When kaslr is enabled, the kernel offset is different for every boot.
->> This brings some difficult to debug the kernel. Dump out the kernel
->> offset when panic so that we can easily debug the kernel.
-> 
-> Some of this is taken from the arm64 version right? Please say so when
-> you copy other people's code.
-> 
+Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+---
+ arch/arm64/boot/dts/allwinner/Makefile        |  1 +
+ .../sun50i-h6-pine-h64-modelA-eval.dts        | 26 +++++++++++++++++++
+ 2 files changed, 27 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-modelA-eval.dts
 
-No problem. Architectures like x86 or arm64 or s390 both have this
-similar code. I guess x86 is the first one.
-
->> diff --git a/arch/powerpc/kernel/machine_kexec.c b/arch/powerpc/kernel/machine_kexec.c
->> index c4ed328a7b96..078fe3d76feb 100644
->> --- a/arch/powerpc/kernel/machine_kexec.c
->> +++ b/arch/powerpc/kernel/machine_kexec.c
->> @@ -86,6 +86,7 @@ void arch_crash_save_vmcoreinfo(void)
->>   	VMCOREINFO_STRUCT_SIZE(mmu_psize_def);
->>   	VMCOREINFO_OFFSET(mmu_psize_def, shift);
->>   #endif
->> +	vmcoreinfo_append_str("KERNELOFFSET=%lx\n", kaslr_offset());
->>   }
-> 
-> There's no mention of that in the commit log.
-> 
-> Please split it into a separate patch and describe what you're doing and
-> why.
-
-OK
-
-> 
->> diff --git a/arch/powerpc/kernel/setup-common.c b/arch/powerpc/kernel/setup-common.c
->> index 1f8db666468d..064075f02837 100644
->> --- a/arch/powerpc/kernel/setup-common.c
->> +++ b/arch/powerpc/kernel/setup-common.c
->> @@ -715,12 +715,31 @@ static struct notifier_block ppc_panic_block = {
->>   	.priority = INT_MIN /* may not return; must be done last */
->>   };
->>   
->> +/*
->> + * Dump out kernel offset information on panic.
->> + */
->> +static int dump_kernel_offset(struct notifier_block *self, unsigned long v,
->> +			      void *p)
->> +{
->> +	pr_emerg("Kernel Offset: 0x%lx from 0x%lx\n",
->> +		 kaslr_offset(), KERNELBASE);
->> +
->> +	return 0;
->> +}
->> +
->> +static struct notifier_block kernel_offset_notifier = {
->> +	.notifier_call = dump_kernel_offset
->> +};
->> +
->>   void __init setup_panic(void)
->>   {
->>   	/* PPC64 always does a hard irq disable in its panic handler */
->>   	if (!IS_ENABLED(CONFIG_PPC64) && !ppc_md.panic)
->>   		return;
->>   	atomic_notifier_chain_register(&panic_notifier_list, &ppc_panic_block);
-> 
->> +	if (IS_ENABLED(CONFIG_RANDOMIZE_BASE) && kaslr_offset() > 0)
->> +		atomic_notifier_chain_register(&panic_notifier_list,
->> +					       &kernel_offset_notifier);
-> 
-> Don't you want to do that before the return above?
-> 
-
-Eagle eye. This should not affected by the conditions above.
-
->>   }
-> 
-> cheers
-> 
-> .
-> 
+diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
+index f6db0611cb85..9a02166cbf72 100644
+--- a/arch/arm64/boot/dts/allwinner/Makefile
++++ b/arch/arm64/boot/dts/allwinner/Makefile
+@@ -25,3 +25,4 @@ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-orangepi-3.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-orangepi-lite2.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-orangepi-one-plus.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-pine-h64.dtb
++dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-pine-h64-modelA-eval.dtb
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-modelA-eval.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-modelA-eval.dts
+new file mode 100644
+index 000000000000..d8ff02747efe
+--- /dev/null
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-modelA-eval.dts
+@@ -0,0 +1,26 @@
++// SPDX-License-Identifier: (GPL-2.0+ or MIT)
++/*
++ * Copyright (C) 2019 Corentin Labbe <clabbe.montjoie@gmail.com>
++ */
++
++#include "sun50i-h6-pine-h64.dts"
++
++/ {
++	model = "Pine H64 model A evaluation board";
++	compatible = "pine64,pine-h64-modelA-eval", "allwinner,sun50i-h6";
++
++	reg_gmac_3v3: gmac-3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc-gmac-3v3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		startup-delay-us = <100000>;
++		gpio = <&pio 2 16 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++
++};
++
++&emac {
++	phy-supply = <&reg_gmac_3v3>;
++};
+-- 
+2.21.0
 
