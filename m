@@ -2,92 +2,94 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E402FC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 01:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 081EBC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 01:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AED372186A
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 01:27:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565227669;
-	bh=lehgbmnKPTacIABDR4IO8Y7c9xvi/7dFVWE0LTUEGgI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZfA2lf/Dkx9MKVzXG13uEb0iO2caur7PW8p0upNgkiVuDL/3sZ0XNQ+fKhoxc8kuM
-	 ruexGLFCoHIpHpvtX0jDKmuoxd/zFFK7my+LoCUN+2St2XiTmm1PwNM4SKnYl11jZM
-	 Bl0xX4B8HJG1G4H3g5EXMz1Zt3enP89omcpClI38=
+	by mail.kernel.org (Postfix) with ESMTP id D204D21873
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 01:28:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="IV0Kfdu8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730653AbfHHB1s (ORCPT
+        id S1730680AbfHHB2A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 21:27:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39572 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730433AbfHHB1s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 21:27:48 -0400
-Received: from localhost (unknown [65.200.167.5])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBC5B217F4;
-        Thu,  8 Aug 2019 01:27:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565227667;
-        bh=lehgbmnKPTacIABDR4IO8Y7c9xvi/7dFVWE0LTUEGgI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cvJL/EwykCmxI7R4k/7nKJ9Q3igqHHPUh6gboKqbbPkq1tTpOZeiy7MZKs5VIdJtY
-         Uwg4XbcU8XcJ6o/xdUnLoHHDLk2+2Ut49LHOuod5Vjx/ElDwLZYAkIvZ72fj7nwFTD
-         LK/MM6vtZJY+Swm0huthhMczddlfUFX06i9C344s=
-Date:   Wed, 7 Aug 2019 21:27:45 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jake Oshins <jakeo@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Dexuan Cui <decui@microsoft.com>
-Subject: Re: [PATCH] PCI: pci-hyperv: fix build errors on non-SYSFS config
-Message-ID: <20190808012745.GV17747@sasha-vm>
-References: <abbe8012-1e6f-bdea-1454-5c59ccbced3d@infradead.org>
- <DM6PR21MB133723E9D1FA8BA0006E06FECAF20@DM6PR21MB1337.namprd21.prod.outlook.com>
- <20190713150353.GF10104@sasha-vm>
- <20190723212107.GB9742@google.com>
- <20190807150654.GB16214@e121166-lin.cambridge.arm.com>
+        Wed, 7 Aug 2019 21:28:00 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:43124 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730459AbfHHB17 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 21:27:59 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x781OIUb045363;
+        Thu, 8 Aug 2019 01:27:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2018-07-02;
+ bh=SMEScP/jvo2b4EcJaFhvsjBA1PqiD1E4MVP6+/D7Yl0=;
+ b=IV0Kfdu8wlLOPXxPTp1qW6FDs8juPfCi28IuxqfiDkH/bnbUcGPW1ZOOWyPeZmAPqUFO
+ nSzeaB3omFs8oF4a7LNlZHCayoLTnavoLfFbidw5cV9An+Ai76uj2m554cbr6mgykxGf
+ qI402hu8CZKyiYpC/PEmsD8bnTbT2CemTBZZW1g9UyJOq9T+Kf/0ZqoNzHy5aiswGUAx
+ YwojTxe3v/6c3a3zy9WnhC0vH6fC5s/k14MKbBx68XckikpvbGmYxTNix+Alnew1Y3ag
+ VEkXQx3qPGEAmireVQ49an/MFZOE1FwbUStwIGX6c2hSUZ4zVQv3no6kEuPP+RxNB+n3 XQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2u51pu7k62-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 08 Aug 2019 01:27:50 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x781MWxh084052;
+        Thu, 8 Aug 2019 01:27:50 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2u76689d2t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 08 Aug 2019 01:27:50 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x781Rlaa021948;
+        Thu, 8 Aug 2019 01:27:47 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 07 Aug 2019 18:27:47 -0700
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     <kashyap.desai@broadcom.com>, <sumit.saxena@broadcom.com>,
+        <shivasharan.srikanteshwara@broadcom.com>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>, <linux-kernel@vger.kernel.org>,
+        <linux-scsi@vger.kernel.org>, <megaraidlinux.pdl@broadcom.com>
+Subject: Re: [PATCH -next] scsi: megaraid_sas: Make a bunch of functions static
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20190726135540.48780-1-yuehaibing@huawei.com>
+Date:   Wed, 07 Aug 2019 21:27:44 -0400
+In-Reply-To: <20190726135540.48780-1-yuehaibing@huawei.com>
+        (yuehaibing@huawei.com's message of "Fri, 26 Jul 2019 21:55:40 +0800")
+Message-ID: <yq1v9v8e99r.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190807150654.GB16214@e121166-lin.cambridge.arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9342 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=817
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908080010
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9342 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=884 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908080010
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 07, 2019 at 04:06:54PM +0100, Lorenzo Pieralisi wrote:
->On Tue, Jul 23, 2019 at 04:21:07PM -0500, Bjorn Helgaas wrote:
->> On Sat, Jul 13, 2019 at 11:03:53AM -0400, Sasha Levin wrote:
->> > Queued up for hyperv-fixes, thank you!
->>
->> What merge strategy do you envision for this?  Previous
->> drivers/pci/controller/pci-hyperv.c changes have generally been merged
->> by Lorenzo and incorporated into my PCI tree.
->>
->> This particular patch doesn't actually touch pci-hyperv.c; it touches
->> drivers/pci/Kconfig, so should somehow be coordinated with me.
->>
->> Does this need to be tagged for stable?  a15f2c08c708 appeared in
->> v4.19, so my first guess is that it's not stable material.
->
->AFAIC Bjorn's question still stands. Who will pick this patch up ?
 
-Would it be easier if I just ignored Hyper-V PCI patches?
+YueHaibing,
 
---
-Thanks,
-Sasha
+> Fix sparse warnings:
+
+Applied to 5.4/scsi-queue, thanks!
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
