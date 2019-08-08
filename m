@@ -2,110 +2,144 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63FA4C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:04:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74416C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:06:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02D872173E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:04:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="ba5wD/BC";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="EDP/Uh9d"
+	by mail.kernel.org (Postfix) with ESMTP id 49AF12173E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:06:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565255192;
+	bh=dHpPGdPNMilk/AU/8OOMsHEz+PCLejmQn2z3m7PSKjA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=QQTxyGflgRsCdMpJ7bePKjkUpr09N3Ah82XOkJf2CGEkZ9aUDQWNQv2Odpx/q64cp
+	 BNjmo7Ba9JojDmjVoHlEPz9ilhP6ileCPTSy971OJsYAk7aaFahm4rkTCFEExNhTTu
+	 qC+oWD3JYRxDvMk3pfbXpsP70hAiW7598yIIoJj8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731686AbfHHJEL (ORCPT
+        id S1731569AbfHHJGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 05:04:11 -0400
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:41135 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731038AbfHHJEK (ORCPT
+        Thu, 8 Aug 2019 05:06:31 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:46646 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730777AbfHHJGa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 05:04:10 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id 0EA5821FB7;
-        Thu,  8 Aug 2019 05:04:09 -0400 (EDT)
-Received: from imap5 ([10.202.2.55])
-  by compute1.internal (MEProxy); Thu, 08 Aug 2019 05:04:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
-         h=mime-version:message-id:in-reply-to:references:date:from:to
-        :cc:subject:content-type; s=fm2; bh=UDxY0biEKiJkV/eKq0+tBQBLPV9S
-        8cgzUqiVh5nUXFg=; b=ba5wD/BCWuz96s1vBnUw02p43fsiVJqc9YiKZHXlKyXT
-        jhvCdrJE6pWbvtHiXtLsQOCH98bkZa7ZOVT9j3TP6h34tRGYBHn68g7JZ3hp8uwI
-        mczBVUM1FLlSWv9XMGES3MT4Gqp3lB273sAUkkrwBEe8fjcgBy9OVB+51ClJTFGp
-        ehY2fyuZhEPRsvfC8xZs7V+UF4N2kEKW9znbWzXE7zstfGVQIZULspIr126Vftvk
-        AqlAECJ5BNQFieCwAepTdcdexWZPccyH2vU52E7TNMOtEa1OCKA/iCPltMy5o7As
-        oQD/rBm/IpxaeJLYEvQVWbnscZhl93o+I2qNXiVg8w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=UDxY0b
-        iEKiJkV/eKq0+tBQBLPV9S8cgzUqiVh5nUXFg=; b=EDP/Uh9dw/lSheM3sSOAmP
-        HJLsLx02h9jie8yk25vTAWmYiM2MDTi+gSYrBt1JIWdZ5CLyFgO6/9m+TWZrNeAP
-        wlhoZowI+nghIOUHn3lvtwbBGyrlEOMyR5ivC+taAGZs5w53RTgm3jYhIMOKRjJk
-        mO1gD+fYmiyyaZMB4lBR6m/OATJ0973MfI/BjNTeu/UgXZYPO3l02MjiTWvLhdWD
-        VgJ0SSglAZRSRPrX6mG34WZCNq9+G0MmA4D9LBGpN5bT5uLhz/mOKGyuVJFQ7EHg
-        Uw2oMOO++zbGeUbOOcoUStW/bgr8BUvMTYIe9CO89QOGDHnIPV0ik0lAn1OJk+HA
-        ==
-X-ME-Sender: <xms:iOVLXcG7rA_7M_zbi7RPGRYVs7GxU1Vyo5FFfo5Ewm2ggeRKeMGlRw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudduhedguddvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdfvrghk
-    rghshhhiucfurghkrghmohhtohdfuceoohdqthgrkhgrshhhihesshgrkhgrmhhotggthh
-    hirdhjpheqnecurfgrrhgrmhepmhgrihhlfhhrohhmpehoqdhtrghkrghshhhisehsrghk
-    rghmohgttghhihdrjhhpnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:iOVLXcxO-QKzYQu_bfF8Wvp_KxmO9L0qkNpsMYGI16PQOoRj9AYu4w>
-    <xmx:iOVLXTjdfwG_pxjoP4g4CPrhI-PDb8cqedn0cNZcD2fjjRHwMGm6qg>
-    <xmx:iOVLXXwEnOwruQjMo3b9l0Yy4gZ1yMeeuHBn_Yqa1lcLeUT1AfMS7w>
-    <xmx:ieVLXd4qCunCQt9EOheq6iVPOAiHbBhvLs7D9QSGGG3K6MxTe3TchA>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 413805C0099; Thu,  8 Aug 2019 05:04:08 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.6-808-g930a1a1-fmstable-20190805v2
-Mime-Version: 1.0
-Message-Id: <ce36089b-7061-4cd1-8262-eb3393c753af@www.fastmail.com>
-In-Reply-To: <1565243458-2771-1-git-send-email-wenwen@cs.uga.edu>
-References: <1565243458-2771-1-git-send-email-wenwen@cs.uga.edu>
-Date:   Thu, 08 Aug 2019 18:04:03 +0900
-From:   "Takashi Sakamoto" <o-takashi@sakamocchi.jp>
-To:     "Wenwen Wang" <wenwen@cs.uga.edu>
-Cc:     "open list" <linux-kernel@vger.kernel.org>,
-        "moderated list:FIREWIRE AUDIO DRIVERS" <alsa-devel@alsa-project.org>,
-        "Clemens Ladisch" <clemens@ladisch.de>,
-        "Takashi Iwai" <tiwai@suse.com>
-Subject: Re: [alsa-devel] [PATCH] ALSA: firewire: fix a memory leak bug
-Content-Type: text/plain
+        Thu, 8 Aug 2019 05:06:30 -0400
+Received: by mail-ot1-f65.google.com with SMTP id z23so7467046ote.13;
+        Thu, 08 Aug 2019 02:06:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=34pNCA2fAatpNgW2gdL2L6PIclEzNScEt8bxwQ+wQhw=;
+        b=btZ7kWQQ7+ANtWZZv0B8Zmo7GHQyct0e5GJoz2SUmqFBw5okICc3X8pjW217ewd8rP
+         tX8Axugdb5ZczQ608pY0Z7daXPJMT9KZsbCp2IdJl5ciRBtQG4NYoC2Za59aboZYK99O
+         0kOHoQXfd/CnpLcAEBu6HdpPoi4hecd8Qduk7rqPjVuvpkaTXgbdQSSAKdD5IT1HzyI2
+         0DzkyAjb7FXgHYNzP0hGRwPxQV/mI3hh6rECqosAOoEKCWosPZ3eecsSsHJx3+Q/TJM2
+         kGxp9upFhpDnA+zA2EGwdP87XSiQgat2RxfE6AxG31947lVx+kepppOamFbdidxYrYoq
+         FBbw==
+X-Gm-Message-State: APjAAAXiwkCDbdsRixfuTrleg//Eq9wEOAqeVAlC0HSQzawBkx2yAlTA
+        JKQ4f5z5qsnFLVZHqhfMvzZZonZC9WPFGkfJl8c=
+X-Google-Smtp-Source: APXvYqzj3UqThCxDGgQPBMBDcNMHtdPq2BpaEuppJuuyxhOKl1E6sX2FzFWUaJgpE/jjcNezeJuicOhA12ciL3iufCI=
+X-Received: by 2002:aca:cdd3:: with SMTP id d202mr1665889oig.115.1565255189517;
+ Thu, 08 Aug 2019 02:06:29 -0700 (PDT)
+MIME-Version: 1.0
+References: <47415939.KV5G6iaeJG@kreacher> <20190730144134.GA12844@localhost.localdomain>
+ <100ba4aff1c6434a81e47774ab4acddc@AUSX13MPC105.AMER.DELL.COM>
+ <8246360B-F7D9-42EB-94FC-82995A769E28@canonical.com> <20190730191934.GD13948@localhost.localdomain>
+ <7d3e0b8ba1444194a153c93faa1cabb3@AUSX13MPC105.AMER.DELL.COM>
+ <20190730213114.GK13948@localhost.localdomain> <CAJZ5v0gxfeMN8eCNRjcXmUOkReVsdozb3EccaYMpnmSHu3771g@mail.gmail.com>
+ <20190731221956.GB15795@localhost.localdomain> <2583975.4sIyE3leJj@kreacher> <20190808084804.GA31404@lst.de>
+In-Reply-To: <20190808084804.GA31404@lst.de>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 8 Aug 2019 11:06:17 +0200
+Message-ID: <CAJZ5v0hTJKPi1zfB_RjuZ415-JjmK2nVP7mss3npqoB3+Xvy4w@mail.gmail.com>
+Subject: Re: [PATCH] nvme-pci: Allow PCI bus-level PM to be used if ASPM is disabled
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        Keith Busch <kbusch@kernel.org>,
+        Mario Limonciello <Mario.Limonciello@dell.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rajat Jain <rajatja@google.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, Aug 8, 2019 at 10:48 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+> > -     ndev->last_ps = 0;
+> >       ret = nvme_get_power_state(ctrl, &ndev->last_ps);
+> > -     if (ret < 0)
+> > +     if (ret < 0 || ndev->last_ps == U32_MAX)
+>
+> Is the intent of the magic U32_MAX check to see if the
+> nvme_get_power_state failed at the nvme level?  In that case just
+> checking for any non-zero return value from nvme_get_power_state might
+> be the easier and more clear way to do it.
 
-On Thu, Aug 8, 2019, at 14:53, Wenwen Wang wrote:
-> In iso_packets_buffer_init(), 'b->packets' is allocated through
-> kmalloc_array(). Then, the aligned packet size is checked. If it is
-> larger than PAGE_SIZE, -EINVAL will be returned to indicate the error.
-> However, the allocated 'b->packets' is not deallocated on this path,
-> leading to a memory leak.
-> 
-> To fix the above issue, free 'b->packets' before returning the error code.
-> 
-> Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-> ---
->  sound/firewire/packets-buffer.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Now that I think of that, it appears redundant.  I'll drop it.
 
-Reviewed-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+>
+> > Index: linux-pm/drivers/pci/pcie/aspm.c
+> > ===================================================================
+> > --- linux-pm.orig/drivers/pci/pcie/aspm.c
+> > +++ linux-pm/drivers/pci/pcie/aspm.c
+>
+> Shouldn't we split PCI vs nvme in two patches?
 
-And this bug exists till its first commit for v2.6.39.
+That can be done.
 
-Fixes: 31ef9134eb52 ("ALSA: add LaCie FireWire Speakers/Griffin FireWave Surround driver")
-Cc: <stable@vger.kernel.org> # v2.6.39+
+> > @@ -1170,6 +1170,26 @@ static int pcie_aspm_get_policy(char *bu
+> >  module_param_call(policy, pcie_aspm_set_policy, pcie_aspm_get_policy,
+> >       NULL, 0644);
+> >
+> > +/*
+> > + * pcie_aspm_enabled - Return the mask of enabled ASPM link states.
+> > + * @pci_device: Target device.
+> > + */
+> > +u32 pcie_aspm_enabled(struct pci_dev *pci_device)
+>
+> pcie_aspm_enabled sounds like it returns a boolean.  Shouldn't there be
+> a mask or so in the name better documenting what it returns?
 
+OK
 
-Thanks
+> > +{
+> > +     struct pci_dev *bridge = pci_upstream_bridge(pci_device);
+> > +     u32 ret;
+> > +
+> > +     if (!bridge)
+> > +             return 0;
+> > +
+> > +     mutex_lock(&aspm_lock);
+> > +     ret = bridge->link_state ? bridge->link_state->aspm_enabled : 0;
+> > +     mutex_unlock(&aspm_lock);
+> > +
+> > +     return ret;
+> > +}
+>
+> I think this will need a EXPORT_SYMBOL_GPL thrown in so that modular
+> nvme continues working.
 
-Takashi Sakamoto
+Right, sorry.
+
+> > +
+> > +
+> >  #ifdef CONFIG_PCIEASPM_DEBUG
+>
+> Nit: double blank line here.
+
+Overlooked, will fix.
+
+Thanks!
