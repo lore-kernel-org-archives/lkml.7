@@ -2,134 +2,100 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1538CC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:14:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8630C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:15:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD1C72187F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:14:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="Ce2XvcSy"
+	by mail.kernel.org (Postfix) with ESMTP id A4F6C2187F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:15:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732024AbfHHIO5 (ORCPT
+        id S1732031AbfHHIP5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 04:14:57 -0400
-Received: from mail-eopbgr720075.outbound.protection.outlook.com ([40.107.72.75]:19617
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731592AbfHHIO5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 04:14:57 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DMpwCw+HBIyfwGrqCDaPWaQ9lsoe0LvkfQnEmHdo97o37EtOSXRz6U+YATMeXiy+nN9YydYmRJzu3RLh7ogPwelqpE6R2VDGasNGWWeI63zBm8vC7Z9ttV21xP7cqu2tdRqqiZQmegwfi6pPTnwY8xHJ/CDs8DywszmSNfWhvDje7EEJ5g5+9B742T0ECzsN1t7OMQAF68nUg/f1i/hUJ8BICN6ui67AkP1D3WweU42hp3AZSWH4in4Zbq3F+2UBEhI1wHgpbI7sJ/lIRDxpIdnBJp6UVXcXQ+k25584b7XVElCY54PAc5Yhkh8GCEeadjhSu0k+S86hdR3AYjdOOA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5exiozIi2WvloqGfy6Rk/sN1LKnnCJvOrHGrcezcuZY=;
- b=f41ehTWE1Rmsc5x/ILX7x4Zq0940bLSNzP3ZEa4SLjmitwtklrH7liMtdccfJBoVyWI5ItdZTA/Z0KcphBb7qS1D7xO0LH55Uf92zbYbEx1Yp+razFSEuWHe1F98SVSvo7lwF+vaXplWQf60pDD++O1/tEq3rqHvN609OLn54VjANxuhZRZFPlOE7aSjnvCvCWs+NsL4CgaS115e8jDILXBS5l+6UMsnA96TA7zMcArJbphF0QWelQoS9vnv0RxVcD1AIYhAdVs568ZzuI5pdcsBzWBaUQgQqdjIJTHkPg/iMyEYXoqPpnyVsPyzovs9047a4MEe1Rq6QXRG7R94lg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5exiozIi2WvloqGfy6Rk/sN1LKnnCJvOrHGrcezcuZY=;
- b=Ce2XvcSyBTi1RiMh+DIANxtjPnlmYcZuX1Mbb35Pa79IqHHJUXexxjhlZlhewZ1iJSQhBOWBylod3ovqk5E1fX5m2qiOzYCbbMprh3R6AOyNzXz7J8SSSylSbnkU2CGHhEgSA9CnxF+yZOnT2zIT15l2cmojwu8qCnXekPBru8A=
-Received: from MN2PR12MB3309.namprd12.prod.outlook.com (20.179.83.157) by
- MN2PR12MB4093.namprd12.prod.outlook.com (52.135.51.203) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.16; Thu, 8 Aug 2019 08:14:54 +0000
-Received: from MN2PR12MB3309.namprd12.prod.outlook.com
- ([fe80::f821:f3f7:3ee3:8c5e]) by MN2PR12MB3309.namprd12.prod.outlook.com
- ([fe80::f821:f3f7:3ee3:8c5e%7]) with mapi id 15.20.2136.018; Thu, 8 Aug 2019
- 08:14:54 +0000
-From:   "Huang, Ray" <Ray.Huang@amd.com>
-To:     =?utf-8?B?TWljaGVsIETDpG56ZXI=?= <michel@daenzer.net>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        "Olsak, Marek" <Marek.Olsak@amd.com>
-CC:     "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        Thu, 8 Aug 2019 04:15:57 -0400
+Received: from mail.netline.ch ([148.251.143.178]:57153 "EHLO
+        netline-mail3.netline.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731891AbfHHIP5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 04:15:57 -0400
+X-Greylist: delayed 335 seconds by postgrey-1.27 at vger.kernel.org; Thu, 08 Aug 2019 04:15:55 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by netline-mail3.netline.ch (Postfix) with ESMTP id 8810C2AA156;
+        Thu,  8 Aug 2019 10:10:19 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at netline-mail3.netline.ch
+Received: from netline-mail3.netline.ch ([127.0.0.1])
+        by localhost (netline-mail3.netline.ch [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id d_GMqpSu42f8; Thu,  8 Aug 2019 10:10:19 +0200 (CEST)
+Received: from thor (116.245.63.188.dynamic.wline.res.cust.swisscom.ch [188.63.245.116])
+        by netline-mail3.netline.ch (Postfix) with ESMTPSA id C6F842AA0BD;
+        Thu,  8 Aug 2019 10:10:18 +0200 (CEST)
+Received: from localhost ([::1])
+        by thor with esmtp (Exim 4.92)
+        (envelope-from <michel@daenzer.net>)
+        id 1hvdV3-0005XJ-SO; Thu, 08 Aug 2019 10:10:17 +0200
+Subject: Re: [Regression] "drm/amdgpu: enable gfxoff again on raven series
+ (v2)"
+To:     "Huang, Ray" <Ray.Huang@amd.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
         LKML <linux-kernel@vger.kernel.org>,
         "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
         Anthony Wong <anthony.wong@canonical.com>,
         amd-gfx list <amd-gfx@lists.freedesktop.org>,
         "Deucher, Alexander" <Alexander.Deucher@amd.com>,
         "Koenig, Christian" <Christian.Koenig@amd.com>
-Subject: RE: [Regression] "drm/amdgpu: enable gfxoff again on raven series
- (v2)"
-Thread-Topic: [Regression] "drm/amdgpu: enable gfxoff again on raven series
- (v2)"
-Thread-Index: AQHVTR6vuXV/Jpmg0k2CW5FCQfHn8Kbv2GiqgAAc5ACAANUysIAAHLGAgAAANxA=
-Date:   Thu, 8 Aug 2019 08:14:53 +0000
-Message-ID: <MN2PR12MB3309A9960E429AA5B0A8AD19ECD70@MN2PR12MB3309.namprd12.prod.outlook.com>
 References: <3EB0E920-31D7-4C91-A360-DBFB4417AC2F@canonical.com>
  <MN2PR12MB330979BAFF5BCC758258D54CECD40@MN2PR12MB3309.namprd12.prod.outlook.com>
  <624BFB8F-B586-492E-BEA6-4B138DAEC831@canonical.com>
  <MN2PR12MB3309680845257BC66644133CECD70@MN2PR12MB3309.namprd12.prod.outlook.com>
- <615a4948-d0f9-46fc-f43e-2025455e9af6@daenzer.net>
-In-Reply-To: <615a4948-d0f9-46fc-f43e-2025455e9af6@daenzer.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Ray.Huang@amd.com; 
-x-originating-ip: [180.167.199.189]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5ab17bd3-4d55-4830-6fd9-08d71bd87e50
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:MN2PR12MB4093;
-x-ms-traffictypediagnostic: MN2PR12MB4093:
-x-ms-exchange-purlcount: 1
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR12MB4093DAA286C41C91A1BCC9D2ECD70@MN2PR12MB4093.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 012349AD1C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(396003)(136003)(376002)(366004)(13464003)(199004)(189003)(476003)(446003)(486006)(6306002)(4326008)(11346002)(66066001)(6246003)(316002)(53936002)(54906003)(186003)(81166006)(2906002)(81156014)(3846002)(26005)(14454004)(6506007)(33656002)(9686003)(8676002)(110136005)(7696005)(74316002)(6436002)(53546011)(55016002)(102836004)(71200400001)(5660300002)(64756008)(66946007)(76116006)(99286004)(76176011)(25786009)(71190400001)(229853002)(52536014)(66556008)(66476007)(66446008)(6636002)(8936002)(305945005)(86362001)(256004)(478600001)(6116002)(966005)(7736002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB4093;H:MN2PR12MB3309.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: UbDcNA6sai+hUsUerHwrUqd/k5ksqVStDeKb9D2+pciB6i1Sx4CByQJnRgpMsk9TBF3/Y8kO2nueDwTZ9FY4vC0pTyEkA8IhHB+tNmh/OXk7bBDDgzZwl03Rb+NzGAMpNa7+hvblmMuoOIejTItA/0XhRiiDTn7F4CY8CgCKJrvCZOxM7upM3cjxsNbDgX19c+pUVWFvFfov8xS+RXdGdbPLZwJR7KVHgAiBo+zBWAlU9XcuETB/s3gZS/ogiHWRir08mM0XO6rm8sqaXFDLVxaLY/RZ0k/zAvWhGNe3xH9YOY9lNo5GdK+Rrp3fIUNbFwIFx/MSrTT80qvkRuWA/07j7K3+AFWJK8RmvB01/l0DbBFA7KcQ3kDBox+SCe9b9jQphUCUPWiI0jc01OB9ZaE89HMnqaJBn5HVp4MwhoM=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From:   =?UTF-8?Q?Michel_D=c3=a4nzer?= <michel@daenzer.net>
+Openpgp: preference=signencrypt
+Autocrypt: addr=michel@daenzer.net; prefer-encrypt=mutual; keydata=
+ mQGiBDsehS8RBACbsIQEX31aYSIuEKxEnEX82ezMR8z3LG8ktv1KjyNErUX9Pt7AUC7W3W0b
+ LUhu8Le8S2va6hi7GfSAifl0ih3k6Bv1Itzgnd+7ZmSrvCN8yGJaHNQfAevAuEboIb+MaVHo
+ 9EMJj4ikOcRZCmQWw7evu/D9uQdtkCnRY9iJiAGxbwCguBHtpoGMxDOINCr5UU6qt+m4O+UD
+ /355ohBBzzyh49lTj0kTFKr0Ozd20G2FbcqHgfFL1dc1MPyigej2gLga2osu2QY0ObvAGkOu
+ WBi3LTY8Zs8uqFGDC4ZAwMPoFy3yzu3ne6T7d/68rJil0QcdQjzzHi6ekqHuhst4a+/+D23h
+ Za8MJBEcdOhRhsaDVGAJSFEQB1qLBACOs0xN+XblejO35gsDSVVk8s+FUUw3TSWJBfZa3Imp
+ V2U2tBO4qck+wqbHNfdnU/crrsHahjzBjvk8Up7VoY8oT+z03sal2vXEonS279xN2B92Tttr
+ AgwosujguFO/7tvzymWC76rDEwue8TsADE11ErjwaBTs8ZXfnN/uAANgPLQjTWljaGVsIERh
+ ZW56ZXIgPG1pY2hlbEBkYWVuemVyLm5ldD6IXgQTEQIAHgUCQFXxJgIbAwYLCQgHAwIDFQID
+ AxYCAQIeAQIXgAAKCRBaga+OatuyAIrPAJ9ykonXI3oQcX83N2qzCEStLNW47gCeLWm/QiPY
+ jqtGUnnSbyuTQfIySkK5AQ0EOx6FRRAEAJZkcvklPwJCgNiw37p0GShKmFGGqf/a3xZZEpjI
+ qNxzshFRFneZze4f5LhzbX1/vIm5+ZXsEWympJfZzyCmYPw86QcFxyZflkAxHx9LeD+89Elx
+ bw6wT0CcLvSv8ROfU1m8YhGbV6g2zWyLD0/naQGVb8e4FhVKGNY2EEbHgFBrAAMGA/0VktFO
+ CxFBdzLQ17RCTwCJ3xpyP4qsLJH0yCoA26rH2zE2RzByhrTFTYZzbFEid3ddGiHOBEL+bO+2
+ GNtfiYKmbTkj1tMZJ8L6huKONaVrASFzLvZa2dlc2zja9ZSksKmge5BOTKWgbyepEc5qxSju
+ YsYrX5xfLgTZC5abhhztpYhGBBgRAgAGBQI7HoVFAAoJEFqBr45q27IAlscAn2Ufk2d6/3p4
+ Cuyz/NX7KpL2dQ8WAJ9UD5JEakhfofed8PSqOM7jOO3LCA==
+Message-ID: <615a4948-d0f9-46fc-f43e-2025455e9af6@daenzer.net>
+Date:   Thu, 8 Aug 2019 10:10:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5ab17bd3-4d55-4830-6fd9-08d71bd87e50
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Aug 2019 08:14:53.9992
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ruihuang@amd.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4093
+In-Reply-To: <MN2PR12MB3309680845257BC66644133CECD70@MN2PR12MB3309.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBNaWNoZWwgRMOkbnplciA8bWlj
-aGVsQGRhZW56ZXIubmV0Pg0KPiBTZW50OiBUaHVyc2RheSwgQXVndXN0IDA4LCAyMDE5IDQ6MTAg
-UE0NCj4gVG86IEh1YW5nLCBSYXkgPFJheS5IdWFuZ0BhbWQuY29tPjsgS2FpLUhlbmcgRmVuZw0K
-PiA8a2FpLmhlbmcuZmVuZ0BjYW5vbmljYWwuY29tPg0KPiBDYzogWmhvdSwgRGF2aWQoQ2h1bk1p
-bmcpIDxEYXZpZDEuWmhvdUBhbWQuY29tPjsgTEtNTCA8bGludXgtDQo+IGtlcm5lbEB2Z2VyLmtl
-cm5lbC5vcmc+OyBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnOyBBbnRob255IFdvbmcN
-Cj4gPGFudGhvbnkud29uZ0BjYW5vbmljYWwuY29tPjsgYW1kLWdmeCBsaXN0IDxhbWQtDQo+IGdm
-eEBsaXN0cy5mcmVlZGVza3RvcC5vcmc+OyBEZXVjaGVyLCBBbGV4YW5kZXINCj4gPEFsZXhhbmRl
-ci5EZXVjaGVyQGFtZC5jb20+OyBLb2VuaWcsIENocmlzdGlhbg0KPiA8Q2hyaXN0aWFuLktvZW5p
-Z0BhbWQuY29tPg0KPiBTdWJqZWN0OiBSZTogW1JlZ3Jlc3Npb25dICJkcm0vYW1kZ3B1OiBlbmFi
-bGUgZ2Z4b2ZmIGFnYWluIG9uIHJhdmVuIHNlcmllcw0KPiAodjIpIg0KPiANCj4gT24gMjAxOS0w
-OC0wOCA4OjI5IGEubS4sIEh1YW5nLCBSYXkgd3JvdGU6DQo+ID4+IEZyb206IEthaS1IZW5nIEZl
-bmcgPGthaS5oZW5nLmZlbmdAY2Fub25pY2FsLmNvbT4gYXQgMDA6MDMsIEh1YW5nLA0KPiA+PiBS
-YXkgPFJheS5IdWFuZ0BhbWQuY29tPiB3cm90ZToNCj4gPj4NCj4gPj4+IE1heSBJIGtub3cgdGhl
-IGFsbCBmaXJtd2FyZSB2ZXJzaW9uIGluIHlvdXIgc3lzdGVtPw0KPiA+DQo+ID4gU2VlbXMgdG8g
-dGhlIGlzc3VlIHdlIGVuY291bnRlcmVkIHdpdGggSU9NTVUgZW5hYmxlZC4gQ291bGQgeW91DQo+
-IHBsZWFzZSBkaXNhYmxlIGlvbW11IGluIFNCSU9TIG9yIEdSVUI/DQo+IA0KPiBUaGUgZHJpdmVy
-IG5lZWRzIHRvIHdvcmsgd2l0aCB0aGUgSU9NTVUgZW5hYmxlZC4gSWYgbm90aGluZyBlbHNlLCBS
-T0NtDQo+IG9ubHkgd29ya3Mgd2l0aCBJT01NVSBJIHRoaW5rLg0KPiANCg0KWWVzLiBST0NtIGlu
-IEFQVSByZXF1aXJlZCBJT01NVSB2Mi4gU28gZmFyLCBJIGFtIGFza2luZyBLYWktSGVuZyB0byBk
-byBzb21lIHRlc3RzIHRvIG1ha2Ugc3VyZSB0aGUgaXNzdWUgdGhhdCB3YXMgZW5jb3VudGVyZWQg
-YnkgdXMgYmVmb3JlLiAoKyBNYXJlaykNCg0KVGhhbmtzLA0KUmF5DQoNCj4gDQo+IC0tDQo+IEVh
-cnRobGluZyBNaWNoZWwgRMOkbnplciAgICAgICAgICAgICAgIHwgICAgICAgICAgICAgIGh0dHBz
-Oi8vd3d3LmFtZC5jb20NCj4gTGlicmUgc29mdHdhcmUgZW50aHVzaWFzdCAgICAgICAgICAgICB8
-ICAgICAgICAgICAgIE1lc2EgYW5kIFggZGV2ZWxvcGVyDQo=
+On 2019-08-08 8:29 a.m., Huang, Ray wrote:
+>> From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+>> at 00:03, Huang, Ray <Ray.Huang@amd.com> wrote:
+>>
+>>> May I know the all firmware version in your system?
+> 
+> Seems to the issue we encountered with IOMMU enabled. Could you please disable iommu in SBIOS or GRUB?
+
+The driver needs to work with the IOMMU enabled. If nothing else, ROCm
+only works with IOMMU I think.
+
+
+-- 
+Earthling Michel Dänzer               |              https://www.amd.com
+Libre software enthusiast             |             Mesa and X developer
