@@ -2,253 +2,154 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6663EC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A7DDC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:50:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F9D72173E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:49:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E132721874
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:50:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Cw2cqikG"
+	dkim=pass (1024-bit key) header.d=ericsson.com header.i=@ericsson.com header.b="L4qerM9H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733130AbfHHOtp (ORCPT
+        id S2390092AbfHHOuC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 10:49:45 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:43681 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732906AbfHHOto (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 10:49:44 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190808144942euoutp013977f7c86d4cfe6b7894e7d614e97cc7~4_ggFK_J22022720227euoutp01-
-        for <linux-kernel@vger.kernel.org>; Thu,  8 Aug 2019 14:49:42 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190808144942euoutp013977f7c86d4cfe6b7894e7d614e97cc7~4_ggFK_J22022720227euoutp01-
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1565275782;
-        bh=ETe6mWTx7M+kQkPCq5ybQ2YGQUtzej8BOuaUy6CKQEk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cw2cqikGTx6W5x4puaxbxqlPNM1twAsSPJDbSmtEAvhWIcAhCd6ZfU+cUce7blhls
-         O6SAsHHNF/dgrSFRwENqON4Uc0J/kUYXgnqqcbCHb+QKbUCaeRshm4S2uhPaiXRLES
-         qdRsXbovTwhSCxQo0AgIZ1joAKJi3h0Orq6SDeCQ=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190808144942eucas1p2dc0c08a1daf05235e3128fd8bcc2db0a~4_gfaQadA0510205102eucas1p2M;
-        Thu,  8 Aug 2019 14:49:42 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 5E.7D.04374.5863C4D5; Thu,  8
-        Aug 2019 15:49:41 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190808144941eucas1p1b6ba7aadd0c31aedf765a0f90ed6213f~4_ges5nlY0291102911eucas1p1l;
-        Thu,  8 Aug 2019 14:49:41 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190808144941eusmtrp23edc51a0d2ecb2ecccbde6cef24b04f6~4_gee4gVi2304023040eusmtrp2U;
-        Thu,  8 Aug 2019 14:49:41 +0000 (GMT)
-X-AuditID: cbfec7f5-4f7ff70000001116-ff-5d4c3685bea5
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 48.2D.04117.5863C4D5; Thu,  8
-        Aug 2019 15:49:41 +0100 (BST)
-Received: from AMDC3061.DIGITAL.local (unknown [106.120.51.75]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190808144940eusmtip25d5b9b954ad7871ca208eddcac8c4fc0~4_geBYPf31427914279eusmtip22;
-        Thu,  8 Aug 2019 14:49:40 +0000 (GMT)
-From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
-To:     sboyd@kernel.org, mturquette@baylibre.com
-Cc:     linux@armlinux.org.uk, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        krzk@kernel.org, cw00.choi@samsung.com, m.szyprowski@samsung.com,
-        b.zolnierkie@samsung.com,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH v2 2/2] clk: samsung: exynos5800: Move MAU subsystem clocks
- to MAU sub-CMU
-Date:   Thu,  8 Aug 2019 16:49:29 +0200
-Message-Id: <20190808144929.18685-2-s.nawrocki@samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190808144929.18685-1-s.nawrocki@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupnleLIzCtJLcpLzFFi42LZduzned1WM59Yg01dxhYbZ6xntbj+5Tmr
-        xfnzG9gtPvbcY7W4vGsOm8WM8/uYLA5N3ctosfbIXXaLi6dcLQ6/aWe1+HdtI4sDt8flaxeZ
-        Pd7faGX32LSqk82jb8sqRo/Pm+QCWKO4bFJSczLLUov07RK4Mo48Ps1acFa3YnLbNtYGxttq
-        XYycHBICJhI7Xk1g7mLk4hASWMEo8WnPVjYI5wujxOHuhVDOZ0aJqT/+MsO07FkJ07KcUeJI
-        /w0WuJYV5y8xglSxCRhK9B7tA7NFBHQl2pftAxvFLNDCJHH1yyKwUcICMRK378xiA7FZBFQl
-        dp5cwgRi8wpYS5w7uYYNYp28xOoNB4DqOTg4BWwkvr4wB5kjIdDPLrFn/QyoGheJyReb2SFs
-        YYlXx7dA2TIS/3fOZ4JoaGaU6Nl9mx3CmcAocf/4AkaIKmuJw8cvsoJsYBbQlFi/Sx8i7Cix
-        7PJWRpCwhACfxI23giBhZiBz0rbpzBBhXomONiGIahWJ36umM0HYUhLdT/6zQNgeEgf3LgVb
-        JCTQzyhxYDXfBEb5WQi7FjAyrmIUTy0tzk1PLTbOSy3XK07MLS7NS9dLzs/dxAhMJqf/Hf+6
-        g3Hfn6RDjAIcjEo8vA2KPrFCrIllxZW5hxglOJiVRHjvlXnGCvGmJFZWpRblxxeV5qQWH2KU
-        5mBREuetZngQLSSQnliSmp2aWpBaBJNl4uCUamDMfPxhSj/72zMhdYxLkvkOnXHYxCL2aRLP
-        QbET6sdW7NI+Hn9gQrvK6oan+9Tm31gSelq9U4JlX1Z7lPAvfff3Nh4yzj7yZqHP2ANi3Nfc
-        DJy7oHXfaX+vcr0stq7XFzLXruNszNd8XO6hUBF5SSvFMs3c5PhHbuXknc/OJLvP2pbZW9hV
-        bavEUpyRaKjFXFScCABYLmvHIgMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrPLMWRmVeSWpSXmKPExsVy+t/xe7qtZj6xBivWs1tsnLGe1eL6l+es
-        FufPb2C3+Nhzj9Xi8q45bBYzzu9jsjg0dS+jxdojd9ktLp5ytTj8pp3V4t+1jSwO3B6Xr11k
-        9nh/o5XdY9OqTjaPvi2rGD0+b5ILYI3SsynKLy1JVcjILy6xVYo2tDDSM7S00DMysdQzNDaP
-        tTIyVdK3s0lJzcksSy3St0vQyzjy+DRrwVndislt21gbGG+rdTFyckgImEjsWTmBuYuRi0NI
-        YCmjxJ6W/exdjBxACSmJ+S1KEDXCEn+udbFB1HxilOhvOMkKkmATMJToPdrHCGKLCOhLTG7b
-        wAJSxCzQxyRx59YVsCJhgSiJv4vWMIHYLAKqEjtPLgGzeQWsJc6dXMMGsUFeYvWGA8wgizkF
-        bCS+vjAHCQsBlby7sZd9AiPfAkaGVYwiqaXFuem5xUZ6xYm5xaV56XrJ+bmbGIGBve3Yzy07
-        GLveBR9iFOBgVOLh1ZD3iRViTSwrrsw9xCjBwawkwnuvzDNWiDclsbIqtSg/vqg0J7X4EKMp
-        0E0TmaVEk/OBUZdXEm9oamhuYWlobmxubGahJM7bIXAwRkggPbEkNTs1tSC1CKaPiYNTqoHx
-        miD70cVBvAfzg11yov6d6endeJdPRibIYmZV0LTulVy/r+z/YBje4h2zxvCs6gEPu+JHEZuD
-        M98pnX9WtXH7p8dBbt23Dh9xaNrvG/VStWKiX512C/fTkHUGc0Un912ZweC7RaUv9YHEkpeh
-        ExIabp/iWmz+SvGOd11FeLNx4YJo6zTlv8VKLMUZiYZazEXFiQBeXJjXggIAAA==
-X-CMS-MailID: 20190808144941eucas1p1b6ba7aadd0c31aedf765a0f90ed6213f
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190808144941eucas1p1b6ba7aadd0c31aedf765a0f90ed6213f
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190808144941eucas1p1b6ba7aadd0c31aedf765a0f90ed6213f
-References: <20190808144929.18685-1-s.nawrocki@samsung.com>
-        <CGME20190808144941eucas1p1b6ba7aadd0c31aedf765a0f90ed6213f@eucas1p1.samsung.com>
+        Thu, 8 Aug 2019 10:50:02 -0400
+Received: from mail-eopbgr750071.outbound.protection.outlook.com ([40.107.75.71]:13134
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732901AbfHHOuC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 10:50:02 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HsjnyM5YzursRdLBKRr9N5sjmQNCRkHDQddWltcK+ZOCYYFlOWT9OIXnnTgPcfLFQNuTxvjFqmCuBKoIQgSKyRttTLlp2GGcOrYqQSlFGkI86dtbBTqG29jKTwVoVRj2fzsrLeDYYyB1JpJ4QbIvLwoSkjuk8xTsEh61ZEc7ldLQKKQLo/gX6eEUiYpVjCxDEk7UtakleqDbOa6JvYHEdZY+mEJhU3Xm7fwO+bJta7f9pAv/RJrYweoNxCDsNU430LU3v2mv8QDcpMcPKOif1KDq5VWKxqW1bLRw986b6tw+BqHAkJNeMPYqxHmuq4OAf7sRFkZxNcwTMIrPM+W2Gg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yL0nlJSeSM94CHyhyv86iXc4NfKp1W9+6UOQAB2lJSg=;
+ b=kdkEgb4vjtai36wGjr/VCR29RX96qDIkIPv1Km73AROAhgFjWeUZuR3Wihstm/LUFFH758VDsJfW/F02Tz8jNUDmid7XEaPdectuiGO3ixqp2qywf8CqlOx7Z0Bfss+X8ngFlMa8QilQWW54tqI9ac1rPNkxug8QF8MoT4vfTawdGunqbtqtqWQPsUBvBdd0F7uhADUpDStmC+oeFZqmkZHy9ESL9Rch4SPGBfUewdt7tIkEtKzn82j10fRBAFT9L35PVPgTce9PAKFLi1wtIK4fefyPYAV7oDrjjzmlWghHfemF4PIPOCwSqiZjBOxasycBG4jsUMrbhf0uH1kanQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=ericsson.com; dmarc=pass action=none header.from=ericsson.com;
+ dkim=pass header.d=ericsson.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ericsson.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yL0nlJSeSM94CHyhyv86iXc4NfKp1W9+6UOQAB2lJSg=;
+ b=L4qerM9HygZjvgAyZ5eNDfMG1GdDs7CqPSj2pb73laOHUk2hw4WASFv1fgJlsGaVsMzhsj2ewz/IjPOIOWxjhVHVSwNfijVon0ahiuglozsZeY+RAcCbMn7sk9zrzNL6/+zjHtSZdmqC+8LgpzQqj1A+QLBM0YhKLxJSWOptimc=
+Received: from MN2PR15MB3581.namprd15.prod.outlook.com (52.132.172.94) by
+ MN2PR15MB3104.namprd15.prod.outlook.com (20.178.252.10) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.14; Thu, 8 Aug 2019 14:49:59 +0000
+Received: from MN2PR15MB3581.namprd15.prod.outlook.com
+ ([fe80::a8a2:3747:eeff:2cfe]) by MN2PR15MB3581.namprd15.prod.outlook.com
+ ([fe80::a8a2:3747:eeff:2cfe%7]) with mapi id 15.20.2157.015; Thu, 8 Aug 2019
+ 14:49:59 +0000
+From:   Jon Maloy <jon.maloy@ericsson.com>
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        "ying.xue@windriver.com" <ying.xue@windriver.com>,
+        "davem@davemloft.net" <davem@davemloft.net>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "tipc-discussion@lists.sourceforge.net" 
+        <tipc-discussion@lists.sourceforge.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] tipc: set addr_trail_end when using explicit node
+ addresses
+Thread-Topic: [PATCH] tipc: set addr_trail_end when using explicit node
+ addresses
+Thread-Index: AQHVTNxmcyx4K5X64kCOEEbx4BfRSKbxVbDQ
+Date:   Thu, 8 Aug 2019 14:49:59 +0000
+Message-ID: <MN2PR15MB358160FE1011F0ED1C785A2E9AD70@MN2PR15MB3581.namprd15.prod.outlook.com>
+References: <20190807045543.28373-1-chris.packham@alliedtelesis.co.nz>
+In-Reply-To: <20190807045543.28373-1-chris.packham@alliedtelesis.co.nz>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jon.maloy@ericsson.com; 
+x-originating-ip: [75.146.241.189]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 72f0e3de-d39b-4a1d-1fc6-08d71c0fafd2
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR15MB3104;
+x-ms-traffictypediagnostic: MN2PR15MB3104:
+x-microsoft-antispam-prvs: <MN2PR15MB31040DA26616194FFC5B6EBB9AD70@MN2PR15MB3104.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 012349AD1C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(376002)(136003)(366004)(396003)(13464003)(189003)(199004)(102836004)(86362001)(81166006)(2201001)(53546011)(81156014)(6506007)(7736002)(14444005)(305945005)(256004)(26005)(2501003)(186003)(71200400001)(52536014)(11346002)(14454004)(99286004)(446003)(66446008)(64756008)(66556008)(486006)(5660300002)(476003)(4326008)(33656002)(76116006)(2906002)(66946007)(66476007)(7696005)(76176011)(44832011)(316002)(6116002)(3846002)(478600001)(8676002)(110136005)(53936002)(71190400001)(25786009)(74316002)(8936002)(66066001)(55016002)(229853002)(9686003)(6246003)(6436002)(54906003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR15MB3104;H:MN2PR15MB3581.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: ericsson.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: /ygghzORsSgFAz9KVoVG+3VypaDCZ9fRsv2oTYTn6sMVKa5HKhSVNcfCD8ED9PBTsY9o9ySU6/JFtqjBxCgTI++sk78psYVcNmxk8Lw0JidOquSgYISEVmlYBc5kbv1olx6ONSrbQJ/H/+1cU/MknSBDCx3ziI32x0rKzjIZ1/Q6ZJ33WjlyBeRnUC2j/wtod9dltflB4EHeo61lMPbdfG3uSC4sfpWfcsvLvScJsypfWI3TP7M3Er4B9wp54AHip4XCsXkd4cJ+5h/PgWC/nZwH28lQvJbGUPTeCVyAP6YxCI7sSVq/2BKPrx7lYbQt1SG9hDFp5FpA1JjsYdORKtVHzSeA6Y0eFf56FLx+IUrifiH3+zuEMaoU6DR23Ex7s9G212twKeluiTSNGt+RUaDBwOlpZ6VVN6jO9bvPH9I=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: ericsson.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 72f0e3de-d39b-4a1d-1fc6-08d71c0fafd2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Aug 2019 14:49:59.2647
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 92e84ceb-fbfd-47ab-be52-080c6b87953f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: lKde4D9ScGVGL4Dw2TxWMrYwGRN4fW/E6GVdZ0s+0K6KguQTsTGCUzSHX1ka65/u1GWU1bk35DoYd/XPeq1OYQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR15MB3104
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes broken sound on Exynos5422/5800 platforms after
-system/suspend resume cycle in cases where the audio root clock
-is derived from MAU_EPLL_CLK.
+You should rather set this one unconditionally in tipc_set_node_addr().
+The problems is not about the state machine, but that jiffies is close to t=
+he wrap-around time, so that it is perceived as being before the time "0".
 
-In order to preserve state of the USER_MUX_MAU_EPLL_CLK clock mux
-during system suspend/resume cycle for Exynos5800 we group the MAU
-block input clocks in "MAU" sub-CMU and add the clock mux control
-bit to .suspend_regs.  This ensures that user configuration of the mux
-is not lost after the PMU block changes the mux setting to OSC_DIV
-when switching off the MAU power domain.
+BR
+///jon
 
-Adding the SRC_TOP9 register to exynos5800_clk_regs[] array is not
-sufficient as at the time of the syscore_ops suspend call MAU power
-domain is already turned off and we already save and subsequently
-restore an incorrect register's value.
 
-Fixes: b06a532bf1fa ("clk: samsung: Add Exynos5 sub-CMU clock driver")
-Reported-by: Jaafar Ali <jaafarkhalaf@gmail.com>
-Suggested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Tested-by: Jaafar Ali <jaafarkhalaf@gmail.com>
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
----
-Changes since v1:
- - added comment to the exynos5800_mau_suspend_regs[] array entry
----
- drivers/clk/samsung/clk-exynos5420.c | 54 ++++++++++++++++++++++------
- 1 file changed, 43 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
-index fdb17c799aa5..2d18e1ae25d7 100644
---- a/drivers/clk/samsung/clk-exynos5420.c
-+++ b/drivers/clk/samsung/clk-exynos5420.c
-@@ -534,8 +534,6 @@ static const struct samsung_gate_clock exynos5800_gate_clks[] __initconst = {
- 				GATE_BUS_TOP, 24, 0, 0),
- 	GATE(CLK_ACLK432_SCALER, "aclk432_scaler", "mout_user_aclk432_scaler",
- 				GATE_BUS_TOP, 27, CLK_IS_CRITICAL, 0),
--	GATE(CLK_MAU_EPLL, "mau_epll", "mout_user_mau_epll",
--			SRC_MASK_TOP7, 20, CLK_SET_RATE_PARENT, 0),
- };
- 
- static const struct samsung_mux_clock exynos5420_mux_clks[] __initconst = {
-@@ -577,8 +575,13 @@ static const struct samsung_div_clock exynos5420_div_clks[] __initconst = {
- 
- static const struct samsung_gate_clock exynos5420_gate_clks[] __initconst = {
- 	GATE(CLK_SECKEY, "seckey", "aclk66_psgen", GATE_BUS_PERIS1, 1, 0, 0),
-+	/* Maudio Block */
- 	GATE(CLK_MAU_EPLL, "mau_epll", "mout_mau_epll_clk",
- 			SRC_MASK_TOP7, 20, CLK_SET_RATE_PARENT, 0),
-+	GATE(CLK_SCLK_MAUDIO0, "sclk_maudio0", "dout_maudio0",
-+		GATE_TOP_SCLK_MAU, 0, CLK_SET_RATE_PARENT, 0),
-+	GATE(CLK_SCLK_MAUPCM0, "sclk_maupcm0", "dout_maupcm0",
-+		GATE_TOP_SCLK_MAU, 1, CLK_SET_RATE_PARENT, 0),
- };
- 
- static const struct samsung_mux_clock exynos5x_mux_clks[] __initconst = {
-@@ -1017,12 +1020,6 @@ static const struct samsung_gate_clock exynos5x_gate_clks[] __initconst = {
- 	GATE(CLK_SCLK_DP1, "sclk_dp1", "dout_dp1",
- 			GATE_TOP_SCLK_DISP1, 20, CLK_SET_RATE_PARENT, 0),
- 
--	/* Maudio Block */
--	GATE(CLK_SCLK_MAUDIO0, "sclk_maudio0", "dout_maudio0",
--		GATE_TOP_SCLK_MAU, 0, CLK_SET_RATE_PARENT, 0),
--	GATE(CLK_SCLK_MAUPCM0, "sclk_maupcm0", "dout_maupcm0",
--		GATE_TOP_SCLK_MAU, 1, CLK_SET_RATE_PARENT, 0),
--
- 	/* FSYS Block */
- 	GATE(CLK_TSI, "tsi", "aclk200_fsys", GATE_BUS_FSYS0, 0, 0, 0),
- 	GATE(CLK_PDMA0, "pdma0", "aclk200_fsys", GATE_BUS_FSYS0, 1, 0, 0),
-@@ -1281,6 +1278,20 @@ static struct exynos5_subcmu_reg_dump exynos5x_mfc_suspend_regs[] = {
- 	{ DIV4_RATIO, 0, 0x3 },			/* DIV dout_mfc_blk */
- };
- 
-+
-+static const struct samsung_gate_clock exynos5800_mau_gate_clks[] __initconst = {
-+	GATE(CLK_MAU_EPLL, "mau_epll", "mout_user_mau_epll",
-+			SRC_MASK_TOP7, 20, CLK_SET_RATE_PARENT, 0),
-+	GATE(CLK_SCLK_MAUDIO0, "sclk_maudio0", "dout_maudio0",
-+		GATE_TOP_SCLK_MAU, 0, CLK_SET_RATE_PARENT, 0),
-+	GATE(CLK_SCLK_MAUPCM0, "sclk_maupcm0", "dout_maupcm0",
-+		GATE_TOP_SCLK_MAU, 1, CLK_SET_RATE_PARENT, 0),
-+};
-+
-+static struct exynos5_subcmu_reg_dump exynos5800_mau_suspend_regs[] = {
-+	{ SRC_TOP9, 0, BIT(8) },	/* MUX mout_user_mau_epll */
-+};
-+
- static const struct exynos5_subcmu_info exynos5x_disp_subcmu = {
- 	.div_clks	= exynos5x_disp_div_clks,
- 	.nr_div_clks	= ARRAY_SIZE(exynos5x_disp_div_clks),
-@@ -1311,12 +1322,27 @@ static const struct exynos5_subcmu_info exynos5x_mfc_subcmu = {
- 	.pd_name	= "MFC",
- };
- 
-+static const struct exynos5_subcmu_info exynos5800_mau_subcmu = {
-+	.gate_clks	= exynos5800_mau_gate_clks,
-+	.nr_gate_clks	= ARRAY_SIZE(exynos5800_mau_gate_clks),
-+	.suspend_regs	= exynos5800_mau_suspend_regs,
-+	.nr_suspend_regs = ARRAY_SIZE(exynos5800_mau_suspend_regs),
-+	.pd_name	= "MAU",
-+};
-+
- static const struct exynos5_subcmu_info *exynos5x_subcmus[] = {
- 	&exynos5x_disp_subcmu,
- 	&exynos5x_gsc_subcmu,
- 	&exynos5x_mfc_subcmu,
- };
- 
-+static const struct exynos5_subcmu_info *exynos5800_subcmus[] = {
-+	&exynos5x_disp_subcmu,
-+	&exynos5x_gsc_subcmu,
-+	&exynos5x_mfc_subcmu,
-+	&exynos5800_mau_subcmu,
-+};
-+
- static const struct samsung_pll_rate_table exynos5420_pll2550x_24mhz_tbl[] __initconst = {
- 	PLL_35XX_RATE(24 * MHZ, 2000000000, 250, 3, 0),
- 	PLL_35XX_RATE(24 * MHZ, 1900000000, 475, 6, 0),
-@@ -1547,11 +1573,17 @@ static void __init exynos5x_clk_init(struct device_node *np,
- 	samsung_clk_extended_sleep_init(reg_base,
- 		exynos5x_clk_regs, ARRAY_SIZE(exynos5x_clk_regs),
- 		exynos5420_set_clksrc, ARRAY_SIZE(exynos5420_set_clksrc));
--	if (soc == EXYNOS5800)
-+
-+	if (soc == EXYNOS5800) {
- 		samsung_clk_sleep_init(reg_base, exynos5800_clk_regs,
- 				       ARRAY_SIZE(exynos5800_clk_regs));
--	exynos5_subcmus_init(ctx, ARRAY_SIZE(exynos5x_subcmus),
--			     exynos5x_subcmus);
-+
-+		exynos5_subcmus_init(ctx, ARRAY_SIZE(exynos5800_subcmus),
-+				     exynos5800_subcmus);
-+	} else {
-+		exynos5_subcmus_init(ctx, ARRAY_SIZE(exynos5x_subcmus),
-+				     exynos5x_subcmus);
-+	}
- 
- 	samsung_clk_of_add_provider(np, ctx);
- }
--- 
-2.17.1
+> -----Original Message-----
+> From: netdev-owner@vger.kernel.org <netdev-owner@vger.kernel.org> On
+> Behalf Of Chris Packham
+> Sent: 7-Aug-19 00:56
+> To: Jon Maloy <jon.maloy@ericsson.com>; ying.xue@windriver.com;
+> davem@davemloft.net
+> Cc: netdev@vger.kernel.org; tipc-discussion@lists.sourceforge.net; linux-
+> kernel@vger.kernel.org; Chris Packham <chris.packham@alliedtelesis.co.nz>
+> Subject: [PATCH] tipc: set addr_trail_end when using explicit node addres=
+ses
+>=20
+> When tipc uses auto-generated node addresses it goes through a duplicate
+> address detection phase to ensure the address is unique.
+>=20
+> When using explicitly configured node names the DAD phase is skipped.
+> However addr_trail_end was being left set to 0 which causes parts of the =
+tipc
+> state machine to assume that the address is not yet valid and unnecessari=
+ly
+> delays the discovery phase. By setting addr_trail_end to jiffies when usi=
+ng
+> explicit addresses we ensure that we move straight to discovery.
+>=20
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> ---
+>  net/tipc/discover.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/net/tipc/discover.c b/net/tipc/discover.c index
+> c138d68e8a69..f83bfe8c9443 100644
+> --- a/net/tipc/discover.c
+> +++ b/net/tipc/discover.c
+> @@ -361,6 +361,8 @@ int tipc_disc_create(struct net *net, struct
+> tipc_bearer *b,
+>  	if (!tipc_own_addr(net)) {
+>  		tn->addr_trial_end =3D jiffies + msecs_to_jiffies(1000);
+>  		msg_set_type(buf_msg(d->skb), DSC_TRIAL_MSG);
+> +	} else {
+> +		tn->addr_trial_end =3D jiffies;
+>  	}
+>  	memcpy(&d->dest, dest, sizeof(*dest));
+>  	d->net =3D net;
+> --
+> 2.22.0
 
