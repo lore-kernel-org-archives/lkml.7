@@ -2,123 +2,75 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25AF3C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 04:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42866C41514
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 04:30:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE04C21743
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 04:29:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1879221743
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 04:30:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565238632;
+	bh=1+URRL/j1c6HgZHm2mFbkwJnj6VhhDQ/uYDMJL+bsww=;
+	h=In-Reply-To:References:From:Cc:To:Subject:Date:List-ID:From;
+	b=HVwZwSLpzsixxKJbmCoIDZUjUVWYqKl/ePluSCzMDHf+Q1HNtj/nnEyMS8zlabsoQ
+	 0RnfVMRcMTcu0s6b2v+moaWgRJx2JZ/NJz1kzQO2yClJk+c+tdwWTFwlGSZ+irafLC
+	 vJ+2SGq5j0TK4x3fljZ5/jyYbWQ+igmRWiM302Lc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726290AbfHHE3U (ORCPT
+        id S1728461AbfHHEab (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 00:29:20 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3780 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725446AbfHHE3U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 00:29:20 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 43D6FA41CF4B4EF45A55;
-        Thu,  8 Aug 2019 12:29:18 +0800 (CST)
-Received: from [127.0.0.1] (10.177.96.203) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Thu, 8 Aug 2019
- 12:29:10 +0800
-Subject: Re: [PATCH v5 03/10] powerpc: introduce kimage_vaddr to store the
- kernel base
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        <linuxppc-dev@lists.ozlabs.org>, <diana.craciun@nxp.com>,
-        <christophe.leroy@c-s.fr>, <benh@kernel.crashing.org>,
-        <paulus@samba.org>, <npiggin@gmail.com>, <keescook@chromium.org>,
-        <kernel-hardening@lists.openwall.com>
-CC:     <linux-kernel@vger.kernel.org>, <wangkefeng.wang@huawei.com>,
-        <yebin10@huawei.com>, <thunder.leizhen@huawei.com>,
-        <jingxiangfeng@huawei.com>, <fanchengyang@huawei.com>,
-        <zhaohongjiang@huawei.com>
-References: <20190807065706.11411-1-yanaijie@huawei.com>
- <20190807065706.11411-4-yanaijie@huawei.com>
- <8736idunz8.fsf@concordia.ellerman.id.au>
-From:   Jason Yan <yanaijie@huawei.com>
-Message-ID: <df60a486-d2ff-aeb2-f7fa-93e89026ae9a@huawei.com>
-Date:   Thu, 8 Aug 2019 12:29:08 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        Thu, 8 Aug 2019 00:30:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42394 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726749AbfHHEab (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 00:30:31 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 189CC21743;
+        Thu,  8 Aug 2019 04:30:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565238630;
+        bh=1+URRL/j1c6HgZHm2mFbkwJnj6VhhDQ/uYDMJL+bsww=;
+        h=In-Reply-To:References:From:Cc:To:Subject:Date:From;
+        b=AoK5J6tsBtjT5LrjB5/Jsz4NnqGOAmXU2c7HMrVwVV0s46E1oCl4zmmbpJcVu4MWP
+         2l109zLiFvNdiN6hlhITPkbrc3xfDEVhvVe6Pdun69359Ez4frtNuIT6+emDqpYVV6
+         bStOdoBTh+OK14xNqGIWQHOXZAGzurRJMu4rtSBc=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <8736idunz8.fsf@concordia.ellerman.id.au>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.96.203]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190722074348.29582-2-vkoul@kernel.org>
+References: <20190722074348.29582-1-vkoul@kernel.org> <20190722074348.29582-2-vkoul@kernel.org>
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Deepak Katragadda <dkatraga@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, Taniya Das <tdas@codeaurora.org>,
+        linux-kernel@vger.kernel.org
+To:     Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH v4 1/5] clk: qcom: clk-alpha-pll: Remove unnecessary cast
+User-Agent: alot/0.8.1
+Date:   Wed, 07 Aug 2019 21:30:29 -0700
+Message-Id: <20190808043030.189CC21743@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Quoting Vinod Koul (2019-07-22 00:43:44)
+> Commit 8f9fab480c7a ("linux/kernel.h: fix overflow for
+> DIV_ROUND_UP_ULL") fixed the overflow for DIV_ROUND_UP_ULL, so we no
+> longer need the cast for DIV_ROUND_UP_ULL, so remove the unnecessary
+> u64 casts.
+>=20
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
 
-
-On 2019/8/7 21:03, Michael Ellerman wrote:
-> Jason Yan <yanaijie@huawei.com> writes:
->> Now the kernel base is a fixed value - KERNELBASE. To support KASLR, we
->> need a variable to store the kernel base.
->>
->> Signed-off-by: Jason Yan <yanaijie@huawei.com>
->> Cc: Diana Craciun <diana.craciun@nxp.com>
->> Cc: Michael Ellerman <mpe@ellerman.id.au>
->> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
->> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
->> Cc: Paul Mackerras <paulus@samba.org>
->> Cc: Nicholas Piggin <npiggin@gmail.com>
->> Cc: Kees Cook <keescook@chromium.org>
->> Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
->> Reviewed-by: Diana Craciun <diana.craciun@nxp.com>
->> Tested-by: Diana Craciun <diana.craciun@nxp.com>
->> ---
->>   arch/powerpc/include/asm/page.h | 2 ++
->>   arch/powerpc/mm/init-common.c   | 2 ++
->>   2 files changed, 4 insertions(+)
->>
->> diff --git a/arch/powerpc/include/asm/page.h b/arch/powerpc/include/asm/page.h
->> index 0d52f57fca04..60a68d3a54b1 100644
->> --- a/arch/powerpc/include/asm/page.h
->> +++ b/arch/powerpc/include/asm/page.h
->> @@ -315,6 +315,8 @@ void arch_free_page(struct page *page, int order);
->>   
->>   struct vm_area_struct;
->>   
->> +extern unsigned long kimage_vaddr;
->> +
->>   #include <asm-generic/memory_model.h>
->>   #endif /* __ASSEMBLY__ */
->>   #include <asm/slice.h>
->> diff --git a/arch/powerpc/mm/init-common.c b/arch/powerpc/mm/init-common.c
->> index 152ae0d21435..d4801ce48dc5 100644
->> --- a/arch/powerpc/mm/init-common.c
->> +++ b/arch/powerpc/mm/init-common.c
->> @@ -25,6 +25,8 @@ phys_addr_t memstart_addr = (phys_addr_t)~0ull;
->>   EXPORT_SYMBOL_GPL(memstart_addr);
->>   phys_addr_t kernstart_addr;
->>   EXPORT_SYMBOL_GPL(kernstart_addr);
->> +unsigned long kimage_vaddr = KERNELBASE;
->> +EXPORT_SYMBOL_GPL(kimage_vaddr);
-> 
-> The names of the #defines and variables we use for these values are not
-> very consistent already, but using kimage_vaddr makes it worse I think.
-> 
-> Isn't this going to have the same value as kernstart_addr, but the
-> virtual rather than physical address?
-> 
-
-Yes, that's true.
-
-> If so kernstart_virt_addr would seem better.
-> 
-
-OK, I will take kernstart_virt_addr if no better name appears.
-
-> cheers
-> 
-> .
-> 
+Applied to clk-next
 
