@@ -2,237 +2,149 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD58C32754
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:32:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00300C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:32:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C37C7217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:32:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C93F52184E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:32:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="snfI2scr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731441AbfHHGcV (ORCPT
+        id S1731457AbfHHGcZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 02:32:21 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:49557 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725817AbfHHGcV (ORCPT
+        Thu, 8 Aug 2019 02:32:25 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:50087 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725817AbfHHGcX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 02:32:21 -0400
-X-Originating-IP: 79.86.19.127
-Received: from alex.numericable.fr (127.19.86.79.rev.sfr.net [79.86.19.127])
-        (Authenticated sender: alex@ghiti.fr)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id B4C8060004;
-        Thu,  8 Aug 2019 06:32:14 +0000 (UTC)
-From:   Alexandre Ghiti <alex@ghiti.fr>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Alexandre Ghiti <alex@ghiti.fr>
-Subject: [PATCH v6 13/14] mips: Use generic mmap top-down layout and brk randomization
-Date:   Thu,  8 Aug 2019 02:17:55 -0400
-Message-Id: <20190808061756.19712-14-alex@ghiti.fr>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190808061756.19712-1-alex@ghiti.fr>
-References: <20190808061756.19712-1-alex@ghiti.fr>
+        Thu, 8 Aug 2019 02:32:23 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x786W2rN3013649
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Wed, 7 Aug 2019 23:32:02 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x786W2rN3013649
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019071901; t=1565245923;
+        bh=VswMpHWj24ULQnUBPrNnj+j7MNQWdOP+qKX2/mk60D0=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=snfI2scraBP8d+ZCZQLgOfGvDiGnPQOl5xvoQ7enyUAjelJgfiM7pmwQABJG5qRB0
+         CUAUrzu2uiL+JRjEh36KTe9xNtIhFlewO4SmrlN6BmbcIqOUnNn6HhcTa+f/56Q3gR
+         ElBCl87MvNtmDK5xm2Amw6y9w6QvPoe2RJcetpBB7h6FoqIoPW/HHL0ypwwVWKFFGH
+         UVLeEY33j4/MyvN/BnTijMlREaoY2v0qv3BHHN9i2dx6UzWwbEUxI2qB0p/Hw+UnhM
+         LSaJKNK2Ya2K2YI3R5rsJm9tlbBF023uipSHtXM3oJ0xJUMgp3wsDrOETnmrNfJsJM
+         SCZPWeItg9pCQ==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x786W2XH3013646;
+        Wed, 7 Aug 2019 23:32:02 -0700
+Date:   Wed, 7 Aug 2019 23:32:02 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Nick Desaulniers <tipbot@zytor.com>
+Message-ID: <tip-b059f801a937d164e03b33c1848bb3dca67c0b04@git.kernel.org>
+Cc:     hpa@zytor.com, peterz@infradead.org, tglx@linutronix.de,
+        mingo@kernel.org, ndesaulniers@google.com,
+        linux-kernel@vger.kernel.org, vaibhavrustagi@google.com
+Reply-To: vaibhavrustagi@google.com, linux-kernel@vger.kernel.org,
+          ndesaulniers@google.com, mingo@kernel.org, tglx@linutronix.de,
+          peterz@infradead.org, hpa@zytor.com
+In-Reply-To: <20190807221539.94583-2-ndesaulniers@google.com>
+References: <20190807221539.94583-2-ndesaulniers@google.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/urgent] x86/purgatory: Use CFLAGS_REMOVE rather than reset
+ KBUILD_CFLAGS
+Git-Commit-ID: b059f801a937d164e03b33c1848bb3dca67c0b04
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mips uses a top-down layout by default that exactly fits the generic
-functions, so get rid of arch specific code and use the generic version
-by selecting ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT.
+Commit-ID:  b059f801a937d164e03b33c1848bb3dca67c0b04
+Gitweb:     https://git.kernel.org/tip/b059f801a937d164e03b33c1848bb3dca67c0b04
+Author:     Nick Desaulniers <ndesaulniers@google.com>
+AuthorDate: Wed, 7 Aug 2019 15:15:33 -0700
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Thu, 8 Aug 2019 08:25:53 +0200
 
-As ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT selects ARCH_HAS_ELF_RANDOMIZE,
-use the generic version of arch_randomize_brk since it also fits.
+x86/purgatory: Use CFLAGS_REMOVE rather than reset KBUILD_CFLAGS
 
-Note that this commit also removes the possibility for mips to have elf
-randomization and no MMU: without MMU, the security added by randomization
-is worth nothing.
+KBUILD_CFLAGS is very carefully built up in the top level Makefile,
+particularly when cross compiling or using different build tools.
+Resetting KBUILD_CFLAGS via := assignment is an antipattern.
 
-Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
-Acked-by: Paul Burton <paul.burton@mips.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+The comment above the reset mentions that -pg is problematic.  Other
+Makefiles use `CFLAGS_REMOVE_file.o = $(CC_FLAGS_FTRACE)` when
+CONFIG_FUNCTION_TRACER is set. Prefer that pattern to wiping out all of
+the important KBUILD_CFLAGS then manually having to re-add them. Seems
+also that __stack_chk_fail references are generated when using
+CONFIG_STACKPROTECTOR or CONFIG_STACKPROTECTOR_STRONG.
+
+Fixes: 8fc5b4d4121c ("purgatory: core purgatory functionality")
+Reported-by: Vaibhav Rustagi <vaibhavrustagi@google.com>
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Vaibhav Rustagi <vaibhavrustagi@google.com>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20190807221539.94583-2-ndesaulniers@google.com
+
 ---
- arch/mips/Kconfig                 |  2 +-
- arch/mips/include/asm/processor.h |  5 --
- arch/mips/mm/mmap.c               | 96 -------------------------------
- 3 files changed, 1 insertion(+), 102 deletions(-)
+ arch/x86/purgatory/Makefile | 33 ++++++++++++++++++++++++++++-----
+ 1 file changed, 28 insertions(+), 5 deletions(-)
 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index d50fafd7bf3a..4e85d7d2cf1a 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -5,7 +5,6 @@ config MIPS
- 	select ARCH_32BIT_OFF_T if !64BIT
- 	select ARCH_BINFMT_ELF_STATE if MIPS_FP_SUPPORT
- 	select ARCH_CLOCKSOURCE_DATA
--	select ARCH_HAS_ELF_RANDOMIZE
- 	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
- 	select ARCH_HAS_UBSAN_SANITIZE_ALL
- 	select ARCH_SUPPORTS_UPROBES
-@@ -13,6 +12,7 @@ config MIPS
- 	select ARCH_USE_CMPXCHG_LOCKREF if 64BIT
- 	select ARCH_USE_QUEUED_RWLOCKS
- 	select ARCH_USE_QUEUED_SPINLOCKS
-+	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT if MMU
- 	select ARCH_WANT_IPC_PARSE_VERSION
- 	select BUILDTIME_EXTABLE_SORT
- 	select CLONE_BACKWARDS
-diff --git a/arch/mips/include/asm/processor.h b/arch/mips/include/asm/processor.h
-index aca909bd7841..fba18d4a9190 100644
---- a/arch/mips/include/asm/processor.h
-+++ b/arch/mips/include/asm/processor.h
-@@ -29,11 +29,6 @@
+diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
+index 91ef244026d2..8901a1f89cf5 100644
+--- a/arch/x86/purgatory/Makefile
++++ b/arch/x86/purgatory/Makefile
+@@ -20,11 +20,34 @@ KCOV_INSTRUMENT := n
  
- extern unsigned int vced_count, vcei_count;
+ # Default KBUILD_CFLAGS can have -pg option set when FTRACE is enabled. That
+ # in turn leaves some undefined symbols like __fentry__ in purgatory and not
+-# sure how to relocate those. Like kexec-tools, use custom flags.
+-
+-KBUILD_CFLAGS := -fno-strict-aliasing -Wall -Wstrict-prototypes -fno-zero-initialized-in-bss -fno-builtin -ffreestanding -c -Os -mcmodel=large
+-KBUILD_CFLAGS += -m$(BITS)
+-KBUILD_CFLAGS += $(call cc-option,-fno-PIE)
++# sure how to relocate those.
++ifdef CONFIG_FUNCTION_TRACER
++CFLAGS_REMOVE_sha256.o		+= $(CC_FLAGS_FTRACE)
++CFLAGS_REMOVE_purgatory.o	+= $(CC_FLAGS_FTRACE)
++CFLAGS_REMOVE_string.o		+= $(CC_FLAGS_FTRACE)
++CFLAGS_REMOVE_kexec-purgatory.o	+= $(CC_FLAGS_FTRACE)
++endif
++
++ifdef CONFIG_STACKPROTECTOR
++CFLAGS_REMOVE_sha256.o		+= -fstack-protector
++CFLAGS_REMOVE_purgatory.o	+= -fstack-protector
++CFLAGS_REMOVE_string.o		+= -fstack-protector
++CFLAGS_REMOVE_kexec-purgatory.o	+= -fstack-protector
++endif
++
++ifdef CONFIG_STACKPROTECTOR_STRONG
++CFLAGS_REMOVE_sha256.o		+= -fstack-protector-strong
++CFLAGS_REMOVE_purgatory.o	+= -fstack-protector-strong
++CFLAGS_REMOVE_string.o		+= -fstack-protector-strong
++CFLAGS_REMOVE_kexec-purgatory.o	+= -fstack-protector-strong
++endif
++
++ifdef CONFIG_RETPOLINE
++CFLAGS_REMOVE_sha256.o		+= $(RETPOLINE_CFLAGS)
++CFLAGS_REMOVE_purgatory.o	+= $(RETPOLINE_CFLAGS)
++CFLAGS_REMOVE_string.o		+= $(RETPOLINE_CFLAGS)
++CFLAGS_REMOVE_kexec-purgatory.o	+= $(RETPOLINE_CFLAGS)
++endif
  
--/*
-- * MIPS does have an arch_pick_mmap_layout()
-- */
--#define HAVE_ARCH_PICK_MMAP_LAYOUT 1
--
- #ifdef CONFIG_32BIT
- #ifdef CONFIG_KVM_GUEST
- /* User space process size is limited to 1GB in KVM Guest Mode */
-diff --git a/arch/mips/mm/mmap.c b/arch/mips/mm/mmap.c
-index d5106c26ac6a..00fe90c6db3e 100644
---- a/arch/mips/mm/mmap.c
-+++ b/arch/mips/mm/mmap.c
-@@ -16,49 +16,10 @@
- #include <linux/random.h>
- #include <linux/sched/signal.h>
- #include <linux/sched/mm.h>
--#include <linux/sizes.h>
--#include <linux/compat.h>
- 
- unsigned long shm_align_mask = PAGE_SIZE - 1;	/* Sane caches */
- EXPORT_SYMBOL(shm_align_mask);
- 
--/* gap between mmap and stack */
--#define MIN_GAP		(128*1024*1024UL)
--#define MAX_GAP		((STACK_TOP)/6*5)
--#define STACK_RND_MASK	(0x7ff >> (PAGE_SHIFT - 12))
--
--static int mmap_is_legacy(struct rlimit *rlim_stack)
--{
--	if (current->personality & ADDR_COMPAT_LAYOUT)
--		return 1;
--
--	if (rlim_stack->rlim_cur == RLIM_INFINITY)
--		return 1;
--
--	return sysctl_legacy_va_layout;
--}
--
--static unsigned long mmap_base(unsigned long rnd, struct rlimit *rlim_stack)
--{
--	unsigned long gap = rlim_stack->rlim_cur;
--	unsigned long pad = stack_guard_gap;
--
--	/* Account for stack randomization if necessary */
--	if (current->flags & PF_RANDOMIZE)
--		pad += (STACK_RND_MASK << PAGE_SHIFT);
--
--	/* Values close to RLIM_INFINITY can overflow. */
--	if (gap + pad > gap)
--		gap += pad;
--
--	if (gap < MIN_GAP)
--		gap = MIN_GAP;
--	else if (gap > MAX_GAP)
--		gap = MAX_GAP;
--
--	return PAGE_ALIGN(STACK_TOP - gap - rnd);
--}
--
- #define COLOUR_ALIGN(addr, pgoff)				\
- 	((((addr) + shm_align_mask) & ~shm_align_mask) +	\
- 	 (((pgoff) << PAGE_SHIFT) & shm_align_mask))
-@@ -156,63 +117,6 @@ unsigned long arch_get_unmapped_area_topdown(struct file *filp,
- 			addr0, len, pgoff, flags, DOWN);
- }
- 
--unsigned long arch_mmap_rnd(void)
--{
--	unsigned long rnd;
--
--#ifdef CONFIG_COMPAT
--	if (TASK_IS_32BIT_ADDR)
--		rnd = get_random_long() & ((1UL << mmap_rnd_compat_bits) - 1);
--	else
--#endif /* CONFIG_COMPAT */
--		rnd = get_random_long() & ((1UL << mmap_rnd_bits) - 1);
--
--	return rnd << PAGE_SHIFT;
--}
--
--void arch_pick_mmap_layout(struct mm_struct *mm, struct rlimit *rlim_stack)
--{
--	unsigned long random_factor = 0UL;
--
--	if (current->flags & PF_RANDOMIZE)
--		random_factor = arch_mmap_rnd();
--
--	if (mmap_is_legacy(rlim_stack)) {
--		mm->mmap_base = TASK_UNMAPPED_BASE + random_factor;
--		mm->get_unmapped_area = arch_get_unmapped_area;
--	} else {
--		mm->mmap_base = mmap_base(random_factor, rlim_stack);
--		mm->get_unmapped_area = arch_get_unmapped_area_topdown;
--	}
--}
--
--static inline unsigned long brk_rnd(void)
--{
--	unsigned long rnd = get_random_long();
--
--	rnd = rnd << PAGE_SHIFT;
--	/* 32MB for 32bit, 1GB for 64bit */
--	if (!IS_ENABLED(CONFIG_64BIT) || is_compat_task())
--		rnd = rnd & (SZ_32M - 1);
--	else
--		rnd = rnd & (SZ_1G - 1);
--
--	return rnd;
--}
--
--unsigned long arch_randomize_brk(struct mm_struct *mm)
--{
--	unsigned long base = mm->brk;
--	unsigned long ret;
--
--	ret = PAGE_ALIGN(base + brk_rnd());
--
--	if (ret < mm->brk)
--		return mm->brk;
--
--	return ret;
--}
--
- bool __virt_addr_valid(const volatile void *kaddr)
- {
- 	unsigned long vaddr = (unsigned long)kaddr;
--- 
-2.20.1
-
+ $(obj)/purgatory.ro: $(PURGATORY_OBJS) FORCE
+ 		$(call if_changed,ld)
