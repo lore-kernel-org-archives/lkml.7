@@ -2,77 +2,89 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F35BAC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:29:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD29C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:30:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE3172173E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:29:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41F5221874
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:30:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565281822;
+	bh=Y3uN9pTmCxlKNY3HVkEXKnwavVansgR7KsRQWoVVlDU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NighSBzjTEoerL+fclI3B+AK0C/NF9slFgOyJRtPZ7CZYL7Ei94+NrQyW3rZ1HxsW
+	 TQIFyLazkP4Fey02BOOaJlvAXBw9S/WZVbAtNW/GDFQHCPa2hu4QSF6IdaVOtnI2fk
+	 +AOu2bJRV9KQLvUH5ySsN5okEhTqJcQn3KxhXbjo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732845AbfHHQ3U (ORCPT
+        id S1733246AbfHHQaU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 12:29:20 -0400
-Received: from mga07.intel.com ([134.134.136.100]:64301 "EHLO mga07.intel.com"
+        Thu, 8 Aug 2019 12:30:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725535AbfHHQ3U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 12:29:20 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Aug 2019 09:29:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,362,1559545200"; 
-   d="scan'208";a="203633797"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga002.fm.intel.com with ESMTP; 08 Aug 2019 09:29:19 -0700
-Received: from kyablokx-mobl.amr.corp.intel.com (unknown [10.251.19.34])
-        by linux.intel.com (Postfix) with ESMTP id 0EA5F58044F;
-        Thu,  8 Aug 2019 09:29:17 -0700 (PDT)
-Subject: Re: [alsa-devel] [PATCH v2 4/4] ASoC: codecs: add wsa881x amplifier
- support
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        vkoul@kernel.org, broonie@kernel.org
-Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        bgoswami@codeaurora.org, plai@codeaurora.org,
-        linux-kernel@vger.kernel.org, lgirdwood@gmail.com,
-        robh+dt@kernel.org
-References: <20190808144504.24823-1-srinivas.kandagatla@linaro.org>
- <20190808144504.24823-5-srinivas.kandagatla@linaro.org>
- <3ad15652-9d6c-11e4-7cc3-0f076c6841bb@linux.intel.com>
- <32516aae-8a43-6a74-c564-92dea8ff6e53@linaro.org>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <4e60b92f-a32e-671c-3b1b-9b1ccec4f9b5@linux.intel.com>
-Date:   Thu, 8 Aug 2019 11:29:20 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
+        id S1731278AbfHHQaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 12:30:19 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEFD62173E;
+        Thu,  8 Aug 2019 16:30:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565281818;
+        bh=Y3uN9pTmCxlKNY3HVkEXKnwavVansgR7KsRQWoVVlDU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=s33+JumSJA00EXmPFAAKKQs8NHVtwqO70GPV4+ZAHCxRXirXPa9Ci667SaWUM58qB
+         fWNjT3PmR2+LNeOfdGiZeCsqTHlKbypay+ukfl8+MEdgYLD7xS5EVftrIus8p96s6q
+         iqobkqw+4VjylAwQNwkUEZLBU+s8VQjSeiy+T8Tc=
+Date:   Thu, 8 Aug 2019 17:30:14 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Vivek Gautam <vivek.gautam@codeaurora.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        robh+dt <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v3 1/4] firmware: qcom_scm-64: Add atomic version of
+ qcom_scm_call
+Message-ID: <20190808163013.u5qbke54kj555oxn@willie-the-truck>
+References: <20190612071554.13573-1-vivek.gautam@codeaurora.org>
+ <20190612071554.13573-2-vivek.gautam@codeaurora.org>
+ <20190618175536.GI4270@fuggles.cambridge.arm.com>
+ <CAFp+6iEwN6jeEGNxKVU5_i5NxdEbuF2ZggegEJZ1Rq6F=H34jg@mail.gmail.com>
+ <20190805222755.GB2634@builder>
+ <CAFp+6iHhh9749dAV4YDeE_0w1nCiftecTBedW4Rf0aiaOJsN2A@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <32516aae-8a43-6a74-c564-92dea8ff6e53@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFp+6iHhh9749dAV4YDeE_0w1nCiftecTBedW4Rf0aiaOJsN2A@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
->>> +/* 4 ports */
->>> +static struct sdw_dpn_prop wsa_sink_dpn_prop[WSA881X_MAX_SWR_PORTS] = {
->>> +    {
->>> +        /* DAC */
->>> +        .num = 1,
->>> +        .type = SDW_DPN_SIMPLE,
->>
->> IIRC we added the REDUCED type in SoundWire 1.1 to cover the PDM case 
->> with channel packing (or was it grouping) used by Qualcomm. I am not 
->> sure the SIMPLE type works?
-> grouping I guess.
+On Thu, Aug 08, 2019 at 05:05:21PM +0530, Vivek Gautam wrote:
+> On Tue, Aug 6, 2019 at 3:58 AM Bjorn Andersson
+> <bjorn.andersson@linaro.org> wrote:
+> > Would you be able to respin this patch, so that we could unblock the
+> > introduction of the display nodes in the various device?
 > 
-> This is a simplified data port as there is no DPn_OffsetCtrl2 register 
-> implemented.
+> Will pointed [1] to the restructuring of arm-smmu to support
+> implementation specific details.
+> That hasn't been posted yet, and I haven't yet been able to work on that either.
+> I will be happy to respin this series with the comments addressed if
+> Will is okay to pull changes to unblock sdm845 devices. :)
+> 
+> [1] https://lore.kernel.org/patchwork/patch/1087457/
 
-ok, for the REDUCED type it's required to have BlockPackingMode and 
-OffsetCtrl2, so it does not apply here. Thanks for confirming.
+Just checked with Robin, and he's planning to post something tomorrow.
+
+Will
