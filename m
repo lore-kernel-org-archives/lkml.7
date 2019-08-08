@@ -2,183 +2,123 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92726C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 22:59:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2BD1C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 23:02:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6020F21743
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 22:59:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qK96gYx0"
+	by mail.kernel.org (Postfix) with ESMTP id 82FDD2173C
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 23:02:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404410AbfHHW7S (ORCPT
+        id S2390497AbfHHXCt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 18:59:18 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:10694 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390006AbfHHW7S (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 18:59:18 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d4ca94e0002>; Thu, 08 Aug 2019 15:59:26 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 08 Aug 2019 15:59:16 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 08 Aug 2019 15:59:16 -0700
-Received: from [10.110.48.28] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 8 Aug
- 2019 22:59:15 +0000
-Subject: Re: [PATCH 1/3] mm/mlock.c: convert put_page() to put_user_page*()
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     Vlastimil Babka <vbabka@suse.cz>, Michal Hocko <mhocko@kernel.org>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jerome Glisse <jglisse@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-fsdevel@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Black <daniel@linux.ibm.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>
-References: <20190805222019.28592-1-jhubbard@nvidia.com>
- <20190805222019.28592-2-jhubbard@nvidia.com>
- <20190807110147.GT11812@dhcp22.suse.cz>
- <01b5ed91-a8f7-6b36-a068-31870c05aad6@nvidia.com>
- <20190808062155.GF11812@dhcp22.suse.cz>
- <875dca95-b037-d0c7-38bc-4b4c4deea2c7@suse.cz>
- <306128f9-8cc6-761b-9b05-578edf6cce56@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <d1ecb0d4-ea6a-637d-7029-687b950b783f@nvidia.com>
-Date:   Thu, 8 Aug 2019 15:59:15 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 8 Aug 2019 19:02:49 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45758 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731914AbfHHXCt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 19:02:49 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9871930EF4A0;
+        Thu,  8 Aug 2019 23:02:48 +0000 (UTC)
+Received: from x1.home (ovpn-116-99.phx2.redhat.com [10.3.116.99])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1CA205D772;
+        Thu,  8 Aug 2019 23:02:48 +0000 (UTC)
+Date:   Thu, 8 Aug 2019 17:02:47 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Parav Pandit <parav@mellanox.com>
+Cc:     kvm@vger.kernel.org, kwankhede@nvidia.com,
+        linux-kernel@vger.kernel.org, cohuck@redhat.com, cjia@nvidia.com
+Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
+Message-ID: <20190808170247.1fc2c4c4@x1.home>
+In-Reply-To: <20190808141255.45236-1-parav@mellanox.com>
+References: <20190802065905.45239-1-parav@mellanox.com>
+        <20190808141255.45236-1-parav@mellanox.com>
+Organization: Red Hat
 MIME-Version: 1.0
-In-Reply-To: <306128f9-8cc6-761b-9b05-578edf6cce56@nvidia.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1565305166; bh=M49TAEp0rF+Rj/ENVh2GXbZ42kgeSpTrxkT20El97xE=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=qK96gYx06tpkH2q4CcpF6OFBCFRxcA8XFBMTGsGorSI049/l40m06bHRMJx1tJDS8
-         DAxdC1uODwBgaSWpMv4if5Iqt5i6qp+oDs/yhJULQwcTTRKfkWpB4SnYndw1nTt5km
-         1xsWvHi7FBF0yo5mOFnYaowlOnPQGpSB0fYDx8KBQ1ve/x25U7+7434V1pzCwlvZIk
-         g3hlON18SJuJ2D/c0ndQmqy+GqYV484LBuFviFDcSWUg4RE4xEoQGHJIHzlfkY/R0f
-         OLytPdbTTAL5LajiZx2D0leH8axGGC7GmnAFDCpEVhyRNyBbECyjZ/GMFaZn0/VRiJ
-         mrtUWi75zSo4g==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Thu, 08 Aug 2019 23:02:48 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/8/19 12:20 PM, John Hubbard wrote:
-> On 8/8/19 4:09 AM, Vlastimil Babka wrote:
->> On 8/8/19 8:21 AM, Michal Hocko wrote:
->>> On Wed 07-08-19 16:32:08, John Hubbard wrote:
->>>> On 8/7/19 4:01 AM, Michal Hocko wrote:
->>>>> On Mon 05-08-19 15:20:17, john.hubbard@gmail.com wrote:
->>>>>> From: John Hubbard <jhubbard@nvidia.com>
->>>> Actually, I think follow_page_mask() gets all the pages, right? And the
->>>> get_page() in __munlock_pagevec_fill() is there to allow a pagevec_release() 
->>>> later.
->>>
->>> Maybe I am misreading the code (looking at Linus tree) but munlock_vma_pages_range
->>> calls follow_page for the start address and then if not THP tries to
->>> fill up the pagevec with few more pages (up to end), do the shortcut
->>> via manual pte walk as an optimization and use generic get_page there.
->>
+On Thu,  8 Aug 2019 09:12:53 -0500
+Parav Pandit <parav@mellanox.com> wrote:
+
+> Currently mtty sample driver uses mdev state and UUID in convoluated way to
+> generate an interrupt.
+> It uses several translations from mdev_state to mdev_device to mdev uuid.
+> After which it does linear search of long uuid comparision to
+> find out mdev_state in mtty_trigger_interrupt().
+> mdev_state is already available while generating interrupt from which all
+> such translations are done to reach back to mdev_state.
 > 
-> Yes, I see it finally, thanks. :)  
+> This translations are done during interrupt generation path.
+> This is unnecessary and reduandant.
+
+Is the interrupt handling efficiency of this particular sample driver
+really relevant, or is its purpose more to illustrate the API and
+provide a proof of concept?  If we go to the trouble to optimize the
+sample driver and remove this interface from the API, what do we lose?
+
+This interface was added via commit:
+
+99e3123e3d72 vfio-mdev: Make mdev_device private and abstract interfaces
+
+Where the goal was to create a more formal interface and abstract
+driver access to the struct mdev_device.  In part this served to make
+out-of-tree mdev vendor drivers more supportable; the object is
+considered opaque and access is provided via an API rather than through
+direct structure fields.
+
+I believe that the NVIDIA GRID mdev driver does make use of this
+interface and it's likely included in the sample driver specifically so
+that there is an in-kernel user for it (ie. specifically to avoid it
+being removed so casually).  An interesting feature of the NVIDIA mdev
+driver is that I believe it has portions that run in userspace.  As we
+know, mdevs are named with a UUID, so I can imagine there are some
+efficiencies to be gained in having direct access to the UUID for a
+device when interacting with userspace, rather than repeatedly parsing
+it from a device name.  Is that really something we want to make more
+difficult in order to optimize a sample driver?  Knowing that an mdev
+device uses a UUID for it's name, as tools like libvirt and mdevctl
+expect, is it really worthwhile to remove such a trivial API?
+
+> Hence,
+> Patch-1 simplifies mtty sample driver to directly use mdev_state.
 > 
->> That's true. However, I'm not sure munlocking is where the
->> put_user_page() machinery is intended to be used anyway? These are
->> short-term pins for struct page manipulation, not e.g. dirtying of page
->> contents. Reading commit fc1d8e7cca2d I don't think this case falls
->> within the reasoning there. Perhaps not all GUP users should be
->> converted to the planned separate GUP tracking, and instead we should
->> have a GUP/follow_page_mask() variant that keeps using get_page/put_page?
->>  
+> Patch-2, Since no production driver uses mdev_uuid(), simplifies and
+> removes redandant mdev_uuid() exported symbol.
+
+s/no production driver/no in-kernel production driver/
+
+I'd be interested to hear how the NVIDIA folks make use of this API
+interface.  Thanks,
+
+Alex
+
+> ---
+> Changelog:
+> v1->v2:
+>  - Corrected email of Kirti
+>  - Updated cover letter commit log to address comment from Cornelia
+>  - Added Reviewed-by tag
+> v0->v1:
+>  - Updated commit log
 > 
-> Interesting. So far, the approach has been to get all the gup callers to
-> release via put_user_page(), but if we add in Jan's and Ira's vaddr_pin_pages()
-> wrapper, then maybe we could leave some sites unconverted.
+> Parav Pandit (2):
+>   vfio-mdev/mtty: Simplify interrupt generation
+>   vfio/mdev: Removed unused and redundant API for mdev UUID
 > 
-> However, in order to do so, we would have to change things so that we have
-> one set of APIs (gup) that do *not* increment a pin count, and another set
-> (vaddr_pin_pages) that do. 
-> 
-> Is that where we want to go...?
+>  drivers/vfio/mdev/mdev_core.c |  6 ------
+>  include/linux/mdev.h          |  1 -
+>  samples/vfio-mdev/mtty.c      | 39 +++++++----------------------------
+>  3 files changed, 8 insertions(+), 38 deletions(-)
 > 
 
-Oh, and meanwhile, I'm leaning toward a cheap fix: just use gup_fast() instead
-of get_page(), and also fix the releasing code. So this incremental patch, on
-top of the existing one, should do it:
-
-diff --git a/mm/mlock.c b/mm/mlock.c
-index b980e6270e8a..2ea272c6fee3 100644
---- a/mm/mlock.c
-+++ b/mm/mlock.c
-@@ -318,18 +318,14 @@ static void __munlock_pagevec(struct pagevec *pvec, struct zone *zone)
-                /*
-                 * We won't be munlocking this page in the next phase
-                 * but we still need to release the follow_page_mask()
--                * pin. We cannot do it under lru_lock however. If it's
--                * the last pin, __page_cache_release() would deadlock.
-+                * pin.
-                 */
--               pagevec_add(&pvec_putback, pvec->pages[i]);
-+               put_user_page(pages[i]);
-                pvec->pages[i] = NULL;
-        }
-        __mod_zone_page_state(zone, NR_MLOCK, delta_munlocked);
-        spin_unlock_irq(&zone->zone_pgdat->lru_lock);
- 
--       /* Now we can release pins of pages that we are not munlocking */
--       pagevec_release(&pvec_putback);
--
-        /* Phase 2: page munlock */
-        for (i = 0; i < nr; i++) {
-                struct page *page = pvec->pages[i];
-@@ -394,6 +390,8 @@ static unsigned long __munlock_pagevec_fill(struct pagevec *pvec,
-        start += PAGE_SIZE;
-        while (start < end) {
-                struct page *page = NULL;
-+               int ret;
-+
-                pte++;
-                if (pte_present(*pte))
-                        page = vm_normal_page(vma, start, *pte);
-@@ -411,7 +409,13 @@ static unsigned long __munlock_pagevec_fill(struct pagevec *pvec,
-                if (PageTransCompound(page))
-                        break;
- 
--               get_page(page);
-+               /*
-+                * Use get_user_pages_fast(), instead of get_page() so that the
-+                * releasing code can unconditionally call put_user_page().
-+                */
-+               ret = get_user_pages_fast(start, 1, 0, &page);
-+               if (ret != 1)
-+                       break;
-                /*
-                 * Increase the address that will be returned *before* the
-                 * eventual break due to pvec becoming full by adding the page
-
-
-thanks,
--- 
-John Hubbard
-NVIDIA
