@@ -2,100 +2,70 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D99F0C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:19:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D63BC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:23:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AD89214C6
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:19:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAD162173E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:23:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565267022;
+	bh=pYsFBGP3kI4gJG4u1PJaSdrgvkRbRuJZQ/c/jwcwI2U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lg4iNdYCM+ikqamfmRMC8hPIsEfdcIPM3/ujbyG9gsVFZwJ5cDlyRRP7xzB0ZdG9T
+	 HYZxVQlOXcP7Q/H3nL0jDSemW10XFmbH0xcL9KDx2sj1HSQqjmAD/umNcH6Rl/u6Nx
+	 4HC/j+4A/61fS9i5gp6faDk3yCCMbummCqdwPqUg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732353AbfHHMTZ (ORCPT
+        id S1732144AbfHHMXl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 08:19:25 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48468 "EHLO mx1.redhat.com"
+        Thu, 8 Aug 2019 08:23:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731788AbfHHMTZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 08:19:25 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726285AbfHHMXl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 08:23:41 -0400
+Received: from localhost (unknown [122.178.245.201])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3C4F27E426;
-        Thu,  8 Aug 2019 12:19:25 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2B9321001284;
-        Thu,  8 Aug 2019 12:19:25 +0000 (UTC)
-Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 08FA618089C8;
-        Thu,  8 Aug 2019 12:19:25 +0000 (UTC)
-Date:   Thu, 8 Aug 2019 08:19:24 -0400 (EDT)
-From:   Pankaj Gupta <pagupta@redhat.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     amit@kernel.org, mst@redhat.com, arnd@arndb.de,
-        virtualization@lists.linux-foundation.org, jasowang@redhat.com,
+        by mail.kernel.org (Postfix) with ESMTPSA id CD18E2171F;
+        Thu,  8 Aug 2019 12:23:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565267020;
+        bh=pYsFBGP3kI4gJG4u1PJaSdrgvkRbRuJZQ/c/jwcwI2U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZazE1taqA2r421KmDZVzNqPA+bSG3IjqBr4e1e/giVkNuwVgb3NEchPhztqU6QYfi
+         GPj2QapJuzXJNzKKXvtyEycNJFqG3H7dunkUvVt9cZ3HNVHFePggOQ1fy+IpY3o9Xq
+         C7ImPSlFTWh+CA67rXnQjQ9wy3ouO6RYu2i/nPpo=
+Date:   Thu, 8 Aug 2019 17:52:28 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Fuqian Huang <huangfq.daxian@gmail.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Message-ID: <1593246032.7424344.1565266764494.JavaMail.zimbra@redhat.com>
-In-Reply-To: <20190808115555.GA2015@kroah.com>
-References: <20190808113606.19504-1-pagupta@redhat.com> <20190808113606.19504-2-pagupta@redhat.com> <20190808115555.GA2015@kroah.com>
-Subject: Re: [PATCH v2 1/2] virtio_console: free unused buffers with port
- delete
+Subject: Re: [PATCH v3 03/24] dmaengine: imx-sdma: Remove call to memset
+ after dma_alloc_coherent
+Message-ID: <20190808122228.GP12733@vkoul-mobl.Dlink>
+References: <20190715031716.6328-1-huangfq.daxian@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.116.132, 10.4.195.30]
-Thread-Topic: virtio_console: free unused buffers with port delete
-Thread-Index: 3j1KCI3vfTqn3wC0i4fDgfcUSG+LwQ==
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Thu, 08 Aug 2019 12:19:25 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190715031716.6328-1-huangfq.daxian@gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 15-07-19, 11:17, Fuqian Huang wrote:
+> In commit 518a2f1925c3
+> ("dma-mapping: zero memory returned from dma_alloc_*"),
+> dma_alloc_coherent has already zeroed the memory.
+> So memset is not needed.
 
-> 
-> On Thu, Aug 08, 2019 at 05:06:05PM +0530, Pankaj Gupta wrote:
-> >   The commit a7a69ec0d8e4 ("virtio_console: free buffers after reset")
-> >   deferred detaching of unused buffer to virtio device unplug time.
-> > 
-> >   This causes unplug/replug of single port in virtio device with an
-> >   error "Error allocating inbufs\n". As we don't free the unused buffers
-> >   attached with the port. Re-plug the same port tries to allocate new
-> >   buffers in virtqueue and results in this error if queue is full.
-> > 
-> >   This patch removes the unused buffers in vq's when we unplug the port.
-> >   This is the best we can do as we cannot call device_reset because virtio
-> >   device is still active.
-> 
-> Why is this indented?
+Applied, thanks
 
-o.k. will remove the empty lines.
-
-> 
-> > 
-> > Reported-by: Xiaohui Li <xiaohli@redhat.com>
-> > Fixes: b3258ff1d6 ("virtio_console: free buffers after reset")
-> 
-> Fixes: b3258ff1d608 ("virtio: Decrement avail idx on buffer detach")
-> 
-> is the correct format to use.
-
-Sorry! for this. Commit it fixes is:
-a7a69ec0d8e4 ("virtio_console: free buffers after reset")
-
-> 
-> And given that this is from 2.6.39 (and 2.6.38.5), shouldn't it also be
-> backported for the stable kernels?
-
-Yes.
-
-Thanks,
-Pankaj
-
-> 
-> thanks,
-> 
-> greg k-h
-> 
+-- 
+~Vinod
