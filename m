@@ -2,74 +2,117 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC0FC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34BAFC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0C1121743
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:09:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07D6421743
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:09:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ipcnomnw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404094AbfHHQJG (ORCPT
+        id S2404114AbfHHQJz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 12:09:06 -0400
-Received: from smtprelay0141.hostedemail.com ([216.40.44.141]:57227 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732662AbfHHQJG (ORCPT
+        Thu, 8 Aug 2019 12:09:55 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:37761 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732662AbfHHQJy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 12:09:06 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 8CE79181D33FB;
-        Thu,  8 Aug 2019 16:09:04 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: hair31_4f1ae28119a43
-X-Filterd-Recvd-Size: 1962
-Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf04.hostedemail.com (Postfix) with ESMTPA;
-        Thu,  8 Aug 2019 16:09:03 +0000 (UTC)
-Message-ID: <77939c33095725515c73b04586e105916ce4b1e5.camel@perches.com>
-Subject: Re: [PATCH] MAINTAINERS: mark wusbcore and UWB as obsolete
-From:   Joe Perches <joe@perches.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org
-Date:   Thu, 08 Aug 2019 09:09:02 -0700
-In-Reply-To: <20190808112358.GA25286@kroah.com>
-References: <20190806101509.GA11280@kroah.com>
-         <b73f09c944625a40b2589e9bac7f8bd22a711ed3.camel@perches.com>
-         <20190806113501.GA18443@kroah.com> <20190808092509.GA20173@kroah.com>
-         <20190808094158.GA22635@kroah.com>
-         <92ed89b0346a54fb06d3e08585a8d0b4175842f0.camel@perches.com>
-         <20190808112358.GA25286@kroah.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+        Thu, 8 Aug 2019 12:09:54 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 19so44345238pfa.4;
+        Thu, 08 Aug 2019 09:09:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Ixs9LC/3zHycCEwdS0uClw8qkvA1XtxWo0xApcxIKeE=;
+        b=Ipcnomnw1fA9e3yDD0nP25KinbS/zFHRZf01ATCXFDWnS0nbCeRDLETiFooCm4vNmh
+         aJxTbUB1hLPIRPLNrHeprr7VohW9/Jg72WhviDZzHLbJnE913YhzPb4prCloIfwctBbB
+         Mo6x+DVM2tOm4848ewle86bSdSiEMlbUp/BSdGTDI7tFoMWzPLtzY1IoAYc1O8AaHobb
+         OILXtQMP8njZKdjPYpeeTtY1+/ijHSxwl0+eNFiDfG/IFANktY2Fuo6vXxJ72wZDrwWx
+         BTT2I+Bwv4xN8T7eHsD32BHb4Vc9AQ6N02QLM5oFJbD+7sBrXNIKJE+fmesJE4Ao2DE9
+         5g7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Ixs9LC/3zHycCEwdS0uClw8qkvA1XtxWo0xApcxIKeE=;
+        b=pWGn2JRDLnZ1n7eH9m/bHohqND0tkDTn2lw1pJl2g9suIR1V8IUqETaAMlfxlr66fi
+         9Qo9O8o8mtS9GIcHRjAhXKctWxfCihQaOBhrsOSo+HX3cV0T+m6RM9hy1ZmEIL9jeKbu
+         aErN9sqTlKLR7KS+Qf0Bg3GbvizyIKbZTFySYgHssTMToUZkvPNa1Ezk7QO+ccbFm1q9
+         cKwDbOr0471AXo65BMiw2aO5iHiT1/5kLl/rMUQiiTq8pT4lfgQWoSFKVDPi+u+h3rNv
+         40ZgoyRARN85ePX+7FTOS+PUoDSfp9l94Kjz3uJ1I06vOcl06VYCd2m9bC18AVt3WhMJ
+         xk5w==
+X-Gm-Message-State: APjAAAWG5kd4JvgCbQ11hbDE4cmfHHJCXHxu5pPq9ZbV8X6GEIreog2o
+        drR6bL1e0fONRu/m1VEtgIx0XAG8
+X-Google-Smtp-Source: APXvYqxtbRe/Wkfso0tvKa9FTBW3LS6O8vGQQoPLIygjOX9kmcIqyZRvL2v90isUMuTmaQKRPxdARQ==
+X-Received: by 2002:a17:90a:8d0c:: with SMTP id c12mr4679212pjo.140.1565280594061;
+        Thu, 08 Aug 2019 09:09:54 -0700 (PDT)
+Received: from [192.168.1.70] (c-73-231-235-122.hsd1.ca.comcast.net. [73.231.235.122])
+        by smtp.gmail.com with ESMTPSA id v12sm82918564pgr.86.2019.08.08.09.09.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 08 Aug 2019 09:09:53 -0700 (PDT)
+Subject: Re: [PATCH] of/platform: fix compilation warning of
+ of_link_property()
+To:     Anders Roxell <anders.roxell@linaro.org>, robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190808141818.22724-1-anders.roxell@linaro.org>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <a4c12db8-bac3-0093-1f3f-0bd325acb03a@gmail.com>
+Date:   Thu, 8 Aug 2019 09:09:52 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20190808141818.22724-1-anders.roxell@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-08-08 at 13:23 +0200, Greg Kroah-Hartman wrote:
-> On Thu, Aug 08, 2019 at 04:15:44AM -0700, Joe Perches wrote:
-> > On Thu, 2019-08-08 at 11:41 +0200, Greg Kroah-Hartman wrote:
-> > > On Thu, Aug 08, 2019 at 11:25:09AM +0200, Greg Kroah-Hartman wrote:
-> > > > Joe rightly points out that we should be using the "Obsolete" status for
-> > > > these two subsystems.
-> > > 
-> > > Even with that change, I don't see get_maintainers.pl tell me I
-> > > shouldn't be sending a patch in for this area:
-> > 
-> > Nor should you.  It's checkpatch that should warn.
+On 8/8/19 7:18 AM, Anders Roxell wrote:
+> GCC warns that a negative integer can be returned but the
+> of_link_property() function should return a boolean.
 > 
-> Ah, wrong tool.  Yes, it does, let's see if anyone actually notices that
-> when sending checkpatch changes for these files in the future :)
+> ../drivers/of/platform.c: In function ‘of_link_property’:
+> ../drivers/of/platform.c:650:18: warning: ?: using integer constants in boolean context [-Wint-in-bool-context]
+>   return done ? 0 : -ENODEV;
+> 
+> Rework so function of_link_property() return an integer instead of a boolean.
+> 
+> Fixes: 690ff7881b26 ("of/platform: Add functional dependency link from DT bindings")
+> Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+> ---
+>  drivers/of/platform.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> index 21838226d68a..86fb8ab8c012 100644
+> --- a/drivers/of/platform.c
+> +++ b/drivers/of/platform.c
+> @@ -625,7 +625,7 @@ static const struct supplier_bindings bindings[] = {
+>  	{ },
+>  };
+>  
+> -static bool of_link_property(struct device *dev, struct device_node *con_np,
+> +static int of_link_property(struct device *dev, struct device_node *con_np,
+>  			     const char *prop)
+>  {
+>  	struct device_node *phandle;
+> 
 
-Maybe mark the isdn block obsolete too.
+Hi Anders,
 
-https://lore.kernel.org/lkml/2ecfbf8dda354fe47912446bf5c3fe30ca905aa0.camel@perches.com/
+Thanks for catching this.
 
+Another patch was submitted to fix this just before your patch.
 
+-Frank
