@@ -2,95 +2,101 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA77C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 01:49:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B2BC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 01:51:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 307C2217F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 01:49:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10DD92173C
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 01:51:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Ucm0qWTX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389704AbfHHBto (ORCPT
+        id S2389706AbfHHBvZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 21:49:44 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:50112 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389618AbfHHBtn (ORCPT
+        Wed, 7 Aug 2019 21:51:25 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:54120 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730038AbfHHBvZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 21:49:43 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hvXYT-00010L-MQ; Thu, 08 Aug 2019 01:49:26 +0000
-Date:   Thu, 8 Aug 2019 02:49:25 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     syzbot <syzbot+3de312463756f656b47d@syzkaller.appspotmail.com>,
-        allison@lohutok.net, andreyknvl@google.com, cai@lca.pw,
-        gregkh@linuxfoundation.org, keescook@chromium.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, Jiri Kosina <jkosina@suse.cz>
-Subject: Re: BUG: bad usercopy in hidraw_ioctl
-Message-ID: <20190808014925.GL1131@ZenIV.linux.org.uk>
-References: <000000000000ce6527058f8bf0d0@google.com>
- <20190807195821.GD5482@bombadil.infradead.org>
+        Wed, 7 Aug 2019 21:51:25 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x781mxSG138309;
+        Thu, 8 Aug 2019 01:51:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2018-07-02;
+ bh=fqar6kzjg03/VcvUI5mP5RbL8vn7I1Tl9jgrXQ+77Ik=;
+ b=Ucm0qWTXP3Hk+ghOPnUvolTPNLw7JB1Tr+MCp0iOUlNK3BWq+r/Rb+PcpnJ+ha12yqo9
+ sDofcaYtd8guu+duCsNrVMUkAtxb6MZBEjUEaD1ry/8jl1M8x1Dd7Zo6A7kLpAwoNJWn
+ N/mCKHWwXEXouYBEOGG2o/bCMGTtsxPyYiIvAet2H/mwu9LcrVXP4OuFYLl3vLuc69si
+ GIvl75ZjSr0T0KWIj220JT1CtV5J143WlFDgMGKmkUeDUMf0TeLphJNP4+aU/j33YkbK
+ DqbDRpytYm7Gxq9vn1DxNHHF0Lv0Cs28Ct+dJaoGEixxxvdFr+BoF1mXdjRNLTuc+0ol iQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2u527pygxu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 08 Aug 2019 01:51:14 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x781lwuX143092;
+        Thu, 8 Aug 2019 01:51:13 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2u7668a0vv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 08 Aug 2019 01:51:13 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x781pAv9011890;
+        Thu, 8 Aug 2019 01:51:11 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 07 Aug 2019 18:51:09 -0700
+To:     Anil Varughese <aniljoy@cadence.com>
+Cc:     <alim.akhtar@samsung.com>, <avri.altman@wdc.com>,
+        <pedrom.sousa@synopsys.com>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>, <hare@suse.de>, <rafalc@cadence.com>,
+        <mparab@cadence.com>, <jank@cadence.com>, <pawell@cadence.com>,
+        <vigneshr@ti.com>, <linux-scsi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] scsi: ufs: Configure clock in .hce_enable_notify() in Cadence UFS
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20190802112112.18714-1-aniljoy@cadence.com>
+Date:   Wed, 07 Aug 2019 21:51:06 -0400
+In-Reply-To: <20190802112112.18714-1-aniljoy@cadence.com> (Anil Varughese's
+        message of "Fri, 2 Aug 2019 12:21:12 +0100")
+Message-ID: <yq1wofoctmd.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190807195821.GD5482@bombadil.infradead.org>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9342 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908080016
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9342 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908080016
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 07, 2019 at 12:58:21PM -0700, Matthew Wilcox wrote:
-> On Wed, Aug 07, 2019 at 12:28:06PM -0700, syzbot wrote:
-> > usercopy: Kernel memory exposure attempt detected from wrapped address
-> > (offset 0, size 0)!
-> > ------------[ cut here ]------------
-> > kernel BUG at mm/usercopy.c:98!
-> 
-> This report is confusing because the arguments to usercopy_abort() are wrong.
-> 
->         /* Reject if object wraps past end of memory. */
->         if (ptr + n < ptr)
->                 usercopy_abort("wrapped address", NULL, to_user, 0, ptr + n);
-> 
-> ptr + n is not 'size', it's what wrapped.  I don't know what 'offset'
-> should be set to, but 'size' should be 'n'.  Presumably we don't want to
-> report 'ptr' because it'll leak a kernel address ... reporting 'n' will
-> leak a range for a kernel address, but I think that's OK?  Admittedly an
-> attacker can pass in various values for 'n', but it'll be quite noisy
-> and leave a trace in the kernel logs for forensics to find afterwards.
-> 
-> > Call Trace:
-> >  check_bogus_address mm/usercopy.c:151 [inline]
-> >  __check_object_size mm/usercopy.c:260 [inline]
-> >  __check_object_size.cold+0xb2/0xba mm/usercopy.c:250
-> >  check_object_size include/linux/thread_info.h:119 [inline]
-> >  check_copy_size include/linux/thread_info.h:150 [inline]
-> >  copy_to_user include/linux/uaccess.h:151 [inline]
-> >  hidraw_ioctl+0x38c/0xae0 drivers/hid/hidraw.c:392
-> 
-> The root problem would appear to be:
-> 
->                                 else if (copy_to_user(user_arg + offsetof(
->                                         struct hidraw_report_descriptor,
->                                         value[0]),
->                                         dev->hid->rdesc,
->                                         min(dev->hid->rsize, len)))
-> 
-> That 'min' should surely be a 'max'?
 
-Surely not.  ->rsize is the amount of data available to copy out; len
-is the size of buffer supplied by userland to copy into.
+Anil,
 
-BTW, why is it playing those games with offsetof, anyway?  What's wrong
-with
-	struct hidraw_report_descriptor __user *p = user_arg;
-	...
-	get_user(&p->size)
-	...
-	copy_to_user(p->value, ...)
+> Configure CDNS_UFS_REG_HCLKDIV in .hce_enable_notify() instead of
+> .setup_clock() because if UFSHCD resets the controller ip because
+> of phy or device related errors then CDNS_UFS_REG_HCLKDIV is
+> reset to default value and .setup_clock() is not called later
+> in the sequence whereas .hce_enable_notify will be called everytime
+> controller is reenabled.
+
+Applied to 5.4/scsi-queue. Thanks!
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
