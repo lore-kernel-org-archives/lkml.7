@@ -2,127 +2,74 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C34C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:49:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0546AC32754
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:50:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 970B6218FC
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:49:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D955E218FC
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:50:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731612AbfHHHtM (ORCPT
+        id S1731615AbfHHHud (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 03:49:12 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35600 "EHLO mx1.redhat.com"
+        Thu, 8 Aug 2019 03:50:33 -0400
+Received: from verein.lst.de ([213.95.11.211]:44193 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726721AbfHHHtL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 03:49:11 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E4D0B30EA180;
-        Thu,  8 Aug 2019 07:49:10 +0000 (UTC)
-Received: from dhcp-128-65.nay.redhat.com (ovpn-12-94.pek2.redhat.com [10.72.12.94])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 484B95D70D;
-        Thu,  8 Aug 2019 07:49:08 +0000 (UTC)
-Date:   Thu, 8 Aug 2019 15:49:04 +0800
-From:   Dave Young <dyoung@redhat.com>
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        Kexec Mailing List <kexec@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        Bhupesh Sharma <bhsharma@redhat.com>
-Subject: Re: [PATCH] do not clean dummy variable in kexec path
-Message-ID: <20190808074904.GA5300@dhcp-128-65.nay.redhat.com>
-References: <20190805083553.GA27708@dhcp-128-65.nay.redhat.com>
- <CAKv+Gu-my6EpLfxBnbMn21be62oHrF6PKFu2rt-4Pqk9wG9SXA@mail.gmail.com>
+        id S1725796AbfHHHud (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 03:50:33 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 32BFA68B02; Thu,  8 Aug 2019 09:50:30 +0200 (CEST)
+Date:   Thu, 8 Aug 2019 09:50:29 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Paul Walmsley <paul.walmsley@sifive.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Greg KH <gregkh@linuxfoundation.org>, arnd@arndb.de,
+        palmer@sifive.com, linux-kernel@vger.kernel.org,
+        james.morse@arm.com, linux-riscv@lists.infradead.org,
+        mchehab@kernel.org, linux-edac@vger.kernel.org
+Subject: Re: [PATCH] riscv: move sifive_l2_cache.c to drivers/misc
+Message-ID: <20190808075029.GB30308@lst.de>
+References: <20190807151009.31971-1-hch@lst.de> <20190807152215.GA26690@kroah.com> <20190807152438.GA16495@lst.de> <alpine.DEB.2.21.9999.1908070832500.13971@viisi.sifive.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKv+Gu-my6EpLfxBnbMn21be62oHrF6PKFu2rt-4Pqk9wG9SXA@mail.gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 08 Aug 2019 07:49:11 +0000 (UTC)
+In-Reply-To: <alpine.DEB.2.21.9999.1908070832500.13971@viisi.sifive.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/05/19 at 06:55pm, Ard Biesheuvel wrote:
-> On Mon, 5 Aug 2019 at 11:36, Dave Young <dyoung@redhat.com> wrote:
-> >
-> > kexec reboot fails randomly in UEFI based kvm guest.  The firmware
-> > just reset while calling efi_delete_dummy_variable();  Unfortunately
-> > I don't know how to debug the firmware, it is also possible a potential
-> > problem on real hardware as well although nobody reproduced it.
-> >
-> > The intention of efi_delete_dummy_variable is to trigger garbage collection
-> > when entering virtual mode.  But SetVirtualAddressMap can only run once
-> > for each physical reboot, thus kexec_enter_virtual_mode is not necessarily
-> > a good place to clean dummy object.
-> >
+On Wed, Aug 07, 2019 at 08:40:58AM -0700, Paul Walmsley wrote:
+> On Wed, 7 Aug 2019, Christoph Hellwig wrote:
 > 
-> I would argue that this means it is not a good place to *create* the
-> dummy variable, and if we don't create it, we don't have to delete it
-> either.
+> > On Wed, Aug 07, 2019 at 05:22:15PM +0200, Greg KH wrote:
+> > > > Fixes: a967a289f169 ("RISC-V: sifive_l2_cache: Add L2 cache controller driver for SiFive SoCs")
+> > > > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > > > ---
+> > > >  arch/riscv/mm/Makefile                            | 1 -
+> > > >  drivers/misc/Makefile                             | 1 +
+> > > >  {arch/riscv/mm => drivers/misc}/sifive_l2_cache.c | 0
+> > > >  3 files changed, 1 insertion(+), 1 deletion(-)
+> > > >  rename {arch/riscv/mm => drivers/misc}/sifive_l2_cache.c (100%)
+> > > 
+> > > Why isn't this in drivers/edac/ ?
+> > > why is this a misc driver?  Seems like it should sit next to the edac
+> > > stuff.
+> > 
+> > No idea.  EDAC maintainers, would you object to taking what is 
+> > currently in arch/riscv/mm//sifive_l2_cache.c to drivers/edac/ ?
 > 
-> > Drop efi_delete_dummy_variable so that kexec reboot can work.
-> >
+> If this driver is moved out of arch/riscv/mm, it should ideally go into 
+> some sort of common L2 cache controller driver directory, along 
+> with other L2 cache controller drivers like arch/arm/mm/*l2c*. 
 > 
-> Creating it and not deleting it is bad, so please try and see if we
-> can omit the creation on this code path instead.
-> 
+> Like many L2 cache controllers, this controller also supports cache 
+> flushing operations and SoC-specific way operations.  We just don't use 
+> those on RISC-V - yet.
 
-Check the code for the dummy var, it is created only in below chunk:
-arch/x86/platform/efi/quirks.c:
-efi_query_variable_store():
-[snip]
-	/*
-	 * We account for that by refusing the write if permitting it would
-	 * reduce the available space to under 5KB. This figure was provided by
-	 * Samsung, so should be safe.
-	 */
-	if ((remaining_size - size < EFI_MIN_RESERVE) &&
-		!efi_no_storage_paranoia) {
-
-		/*
-		 * Triggering garbage collection may require that the firmware
-		 * generate a real EFI_OUT_OF_RESOURCES error. We can force
-		 * that by attempting to use more space than is available.
-		 */
-		unsigned long dummy_size = remaining_size + 1024;
-		void *dummy = kzalloc(dummy_size, GFP_KERNEL);
-
-		if (!dummy)
-			return EFI_OUT_OF_RESOURCES;
-
-		status = efi.set_variable((efi_char16_t *)efi_dummy_name,
-					  &EFI_DUMMY_GUID,
-					  EFI_VARIABLE_NON_VOLATILE |
-					  EFI_VARIABLE_BOOTSERVICE_ACCESS |
-					  EFI_VARIABLE_RUNTIME_ACCESS,
-					  dummy_size, dummy);
-
-		if (status == EFI_SUCCESS) {
-			/*
-			 * This should have failed, so if it didn't make sure
-			 * that we delete it...
-			 */
-			efi_delete_dummy_variable();
-		}
-
-[snip]
-
-So the dummy var only be created when the if condition matched, also
-once creating succeeded it is deleted.  The deleting while entering
-virtual mode is always deleting a non exist efi var.  Please correct me
-if I miss something. 
-
-If above is true, then at least in the kexec path can be dropped because
-we have a real bug which resets machine.
-
-Thanks
-Dave
+Well, another reason to not have it under arch/riscv/ as it is a SOC
+specific driver, which we all have somewhere else, just like arm64
+and new arm ports do.  And especially not unconditionally built.
