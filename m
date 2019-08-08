@@ -5,283 +5,197 @@ X-Spam-Level:
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66621C32754
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 00:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E75CC32751
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 00:08:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2612021873
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 00:08:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04EA021872
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 00:08:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CFneMqNi"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m+FRVkzT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389781AbfHHAIf (ORCPT
+        id S2389795AbfHHAIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 20:08:35 -0400
-Received: from mail-pg1-f201.google.com ([209.85.215.201]:46519 "EHLO
-        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389766AbfHHAIc (ORCPT
+        Wed, 7 Aug 2019 20:08:39 -0400
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:41410 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389777AbfHHAIf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 20:08:32 -0400
-Received: by mail-pg1-f201.google.com with SMTP id u1so56584053pgr.13
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 17:08:32 -0700 (PDT)
+        Wed, 7 Aug 2019 20:08:35 -0400
+Received: by mail-pf1-f202.google.com with SMTP id q14so57850714pff.8
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 17:08:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=ntXMs3tuU1WJWAT2FcG/TTitDVr73WJt0FGo+YbSY68=;
-        b=CFneMqNiJ9OrjNIQ8spvu4sz6eGRJcgaKvwI1rPo4D9clDhadqGsOSqFRFwjWgirY7
-         bOq4XK/V0/rZ2T5ARuyQfGXsAW7vFCWdDMAQpZjuAUE5AuZlWTYAV3yl+S0O0LXOS+6X
-         XT41HBcc6UGpNY0tgjZpiQ4V/UDTdkpzSdCxdqB932dUSJFofoHGCBvHMJd8Hyrg6gE/
-         uufPpvlKKzakljmTKGGS8+3/MjChfN7uSFDLO7oJD2bSwY+m5d9lQtFGu4xkeOyGg17+
-         RFgJwygZi6doYOuOdaYSmQcNq0PeNPM1xYgBouBoEPk6Vw3JA3HzON9cVr8HIX1Hdfpv
-         9mBg==
+        bh=lAGo2XEfN1Kmsxc7Q91nfXTi8fMC4u4EK30rK7PWIbE=;
+        b=m+FRVkzTTZecGp5G2Qtqu3b3ltj41jQE9rKyhJ7cPwHw1LSJx+WpoqIpl3R8tbpsEW
+         38V+0FKg5iE30T69xOt3/6X5K65cB4YpYkQGm37jtTAcSQbg+9LCEDOIRjOIEQtQ0tvW
+         J6rWvWVMM2meBMpilyHgCTvPR+17Rq9u6MRwlg9vzXChEpiovRni67ZOWfHEj8bF1tLv
+         lVh8A8W7SiilL6uPfEhj6miiT66NuBw8j18UBpg6QJA7nDJ+ZuthE4e6cOxWZpPVdbau
+         vAtr0tQrwVEPEYajDU1dXEbCF03VWoRTXXAXideAwL6ew9w+c42B94m7PjeWovUxscIF
+         hDJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=ntXMs3tuU1WJWAT2FcG/TTitDVr73WJt0FGo+YbSY68=;
-        b=LabfaJICtbK4mbWrWk/88XrJ05YcVDQRSWmCviT0f3v9cm6YNYpe0P6hRJ68siAy3J
-         YTnprYrXvik+a1EQcJiYnjwZHPboR5uuMHsIUcmevnFNQAtsX6zAj8h0B/jat7OTwslO
-         AM6Lsi8PEAZZI7hzq5S7g1IbwW6IvhjCgaxnJzqHwg64HqpsH+L2IkXOgklnWo8lp/Hf
-         7ak9GVAQIaTRbiI1wjnRc4cfsIDJPUNF8DYF84Cf/OgIjO6ggoEfWM/T7IQ615MVENYT
-         XgrNlbUlF43Gv2cPUGsZW9cm+6yYuO74R+22AOAcXzCiQnYn99erKxEf5mzZRj0lc+31
-         jV+Q==
-X-Gm-Message-State: APjAAAV0kx2GeZ4JIT+NcfcdSjX6ICu4erchLEVOhfwYmvltAy/Z83cU
-        L0K3iB1fRF5IqlZWe3CA+4C4/t5xwNpJWstu7RleQQ==
-X-Google-Smtp-Source: APXvYqxhTw0/9vwmNZBBg2HFtn2EcQgfcCUjP+04jbBIv7nnQKYPA/Dz0cf3aORrMACkdJVlfwK4BWSkChYLpoDxae1bzQ==
-X-Received: by 2002:a63:7a06:: with SMTP id v6mr10178668pgc.115.1565222911762;
- Wed, 07 Aug 2019 17:08:31 -0700 (PDT)
-Date:   Wed,  7 Aug 2019 17:07:18 -0700
+        bh=lAGo2XEfN1Kmsxc7Q91nfXTi8fMC4u4EK30rK7PWIbE=;
+        b=YJPsFrrWR/0YoWiZMjOSUVURMaJ237TSAKATaVJJC2CBd7DY5aI02oAglqj5Kx4q9Z
+         36n2GGPoLjF+mF+ph60jvMU2x9CRCksqbfSdnCWRXCoOhREaLDj4ArezaYZr0DrKESkV
+         0fIxduW7ZOlk1sxb37GRo/uDQ3Fn7ZCwkdw2a8CbNsdb27jRkpBBIOO8vDgthIAtw4Yd
+         Ve+fTRWapVN2ia6JBmUMO9x1pozSCZEv5r65CZU+2Mhx+6dFW9Ir9gS0qhjY3rEsUGyT
+         3rR2cju/EXX6EaX4jxacmv7lVnMxsFuGWYnKZ44e53CEWx8JQgDrjg+brUUb2er7ISSy
+         4vRA==
+X-Gm-Message-State: APjAAAUu37VDkGpywMuQi7GYoMXHz7BbVGPEmy5Pl7s8caCpARQOuzjz
+        4n5rdsEkkcdIWNn8lqoGRt2S7U6AAlo4IbtwM22GWw==
+X-Google-Smtp-Source: APXvYqx7OkuIfHCySJZprzWOfnAAQDKJEnIVhWIjflbWl0ZornABeBzNdt/8hnskuPnMxdBWG3gnzWDneFwwdFOWw9LhDg==
+X-Received: by 2002:a63:e807:: with SMTP id s7mr9723607pgh.194.1565222914450;
+ Wed, 07 Aug 2019 17:08:34 -0700 (PDT)
+Date:   Wed,  7 Aug 2019 17:07:19 -0700
 In-Reply-To: <20190808000721.124691-1-matthewgarrett@google.com>
-Message-Id: <20190808000721.124691-27-matthewgarrett@google.com>
+Message-Id: <20190808000721.124691-28-matthewgarrett@google.com>
 Mime-Version: 1.0
 References: <20190808000721.124691-1-matthewgarrett@google.com>
 X-Mailer: git-send-email 2.22.0.770.g0f2c4a37fd-goog
-Subject: [PATCH V38 26/29] debugfs: Restrict debugfs when the kernel is locked down
+Subject: [PATCH V38 27/29] tracefs: Restrict tracefs when the kernel is locked down
 From:   Matthew Garrett <matthewgarrett@google.com>
 To:     jmorris@namei.org
 Cc:     linux-security-module@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        David Howells <dhowells@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Greg KH <greg@kroah.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Matthew Garrett <matthewgarrett@google.com>
+        Matthew Garrett <matthewgarrett@google.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+Tracefs may release more information about the kernel than desirable, so
+restrict it when the kernel is locked down in confidentiality mode by
+preventing open().
 
-Disallow opening of debugfs files that might be used to muck around when
-the kernel is locked down as various drivers give raw access to hardware
-through debugfs.  Given the effort of auditing all 2000 or so files and
-manually fixing each one as necessary, I've chosen to apply a heuristic
-instead.  The following changes are made:
-
- (1) chmod and chown are disallowed on debugfs objects (though the root dir
-     can be modified by mount and remount, but I'm not worried about that).
-
- (2) When the kernel is locked down, only files with the following criteria
-     are permitted to be opened:
-
-	- The file must have mode 00444
-	- The file must not have ioctl methods
-	- The file must not have mmap
-
- (3) When the kernel is locked down, files may only be opened for reading.
-
-Normal device interaction should be done through configfs, sysfs or a
-miscdev, not debugfs.
-
-Note that this makes it unnecessary to specifically lock down show_dsts(),
-show_devs() and show_call() in the asus-wmi driver.
-
-I would actually prefer to lock down all files by default and have the
-the files unlocked by the creator.  This is tricky to manage correctly,
-though, as there are 19 creation functions and ~1600 call sites (some of
-them in loops scanning tables).
-
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-cc: acpi4asus-user@lists.sourceforge.net
-cc: platform-driver-x86@vger.kernel.org
-cc: Matthew Garrett <mjg59@srcf.ucam.org>
-cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Greg KH <greg@kroah.com>
-Cc: Rafael J. Wysocki <rafael@kernel.org>
-Signed-off-by: Matthew Garrett <matthewgarrett@google.com>
+Signed-off-by: Matthew Garrett <mjg59@google.com>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- fs/debugfs/file.c            | 30 ++++++++++++++++++++++++++++++
- fs/debugfs/inode.c           | 32 ++++++++++++++++++++++++++++++--
+ fs/tracefs/inode.c           | 40 +++++++++++++++++++++++++++++++++++-
  include/linux/security.h     |  1 +
  security/lockdown/lockdown.c |  1 +
- 4 files changed, 62 insertions(+), 2 deletions(-)
+ 3 files changed, 41 insertions(+), 1 deletion(-)
 
-diff --git a/fs/debugfs/file.c b/fs/debugfs/file.c
-index 93e4ca6b2ad7..87846aad594b 100644
---- a/fs/debugfs/file.c
-+++ b/fs/debugfs/file.c
-@@ -19,6 +19,7 @@
- #include <linux/atomic.h>
- #include <linux/device.h>
- #include <linux/poll.h>
-+#include <linux/security.h>
- 
- #include "internal.h"
- 
-@@ -136,6 +137,25 @@ void debugfs_file_put(struct dentry *dentry)
- }
- EXPORT_SYMBOL_GPL(debugfs_file_put);
- 
-+/*
-+ * Only permit access to world-readable files when the kernel is locked down.
-+ * We also need to exclude any file that has ways to write or alter it as root
-+ * can bypass the permissions check.
-+ */
-+static bool debugfs_is_locked_down(struct inode *inode,
-+				   struct file *filp,
-+				   const struct file_operations *real_fops)
-+{
-+	if ((inode->i_mode & 07777) == 0444 &&
-+	    !(filp->f_mode & FMODE_WRITE) &&
-+	    !real_fops->unlocked_ioctl &&
-+	    !real_fops->compat_ioctl &&
-+	    !real_fops->mmap)
-+		return false;
-+
-+	return security_locked_down(LOCKDOWN_DEBUGFS);
-+}
-+
- static int open_proxy_open(struct inode *inode, struct file *filp)
- {
- 	struct dentry *dentry = F_DENTRY(filp);
-@@ -147,6 +167,11 @@ static int open_proxy_open(struct inode *inode, struct file *filp)
- 		return r == -EIO ? -ENOENT : r;
- 
- 	real_fops = debugfs_real_fops(filp);
-+
-+	r = debugfs_is_locked_down(inode, filp, real_fops);
-+	if (r)
-+		goto out;
-+
- 	real_fops = fops_get(real_fops);
- 	if (!real_fops) {
- 		/* Huh? Module did not clean up after itself at exit? */
-@@ -272,6 +297,11 @@ static int full_proxy_open(struct inode *inode, struct file *filp)
- 		return r == -EIO ? -ENOENT : r;
- 
- 	real_fops = debugfs_real_fops(filp);
-+
-+	r = debugfs_is_locked_down(inode, filp, real_fops);
-+	if (r)
-+		goto out;
-+
- 	real_fops = fops_get(real_fops);
- 	if (!real_fops) {
- 		/* Huh? Module did not cleanup after itself at exit? */
-diff --git a/fs/debugfs/inode.c b/fs/debugfs/inode.c
-index ec5c197985ec..51ced4ae9280 100644
---- a/fs/debugfs/inode.c
-+++ b/fs/debugfs/inode.c
-@@ -27,6 +27,7 @@
+diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
+index 1387bcd96a79..12a325fb4cbd 100644
+--- a/fs/tracefs/inode.c
++++ b/fs/tracefs/inode.c
+@@ -21,6 +21,7 @@
  #include <linux/seq_file.h>
  #include <linux/magic.h>
  #include <linux/slab.h>
 +#include <linux/security.h>
  
- #include "internal.h"
+ #define TRACEFS_DEFAULT_MODE	0700
  
-@@ -36,6 +37,32 @@ static struct vfsmount *debugfs_mount;
- static int debugfs_mount_count;
- static bool debugfs_registered;
+@@ -28,6 +29,23 @@ static struct vfsmount *tracefs_mount;
+ static int tracefs_mount_count;
+ static bool tracefs_registered;
  
-+/*
-+ * Don't allow access attributes to be changed whilst the kernel is locked down
-+ * so that we can use the file mode as part of a heuristic to determine whether
-+ * to lock down individual files.
-+ */
-+static int debugfs_setattr(struct dentry *dentry, struct iattr *ia)
++static int default_open_file(struct inode *inode, struct file *filp)
 +{
-+	int ret = security_locked_down(LOCKDOWN_DEBUGFS);
++	struct dentry *dentry = filp->f_path.dentry;
++	struct file_operations *real_fops;
++	int ret;
 +
-+	if (ret && (ia->ia_valid & (ATTR_MODE | ATTR_UID | ATTR_GID)))
++	if (!dentry)
++		return -EINVAL;
++
++	ret = security_locked_down(LOCKDOWN_TRACEFS);
++	if (ret)
 +		return ret;
-+	return simple_setattr(dentry, ia);
++
++	real_fops = dentry->d_fsdata;
++	return real_fops->open(inode, filp);
 +}
 +
-+static const struct inode_operations debugfs_file_inode_operations = {
-+	.setattr	= debugfs_setattr,
-+};
-+static const struct inode_operations debugfs_dir_inode_operations = {
-+	.lookup		= simple_lookup,
-+	.setattr	= debugfs_setattr,
-+};
-+static const struct inode_operations debugfs_symlink_inode_operations = {
-+	.get_link	= simple_get_link,
-+	.setattr	= debugfs_setattr,
-+};
-+
- static struct inode *debugfs_get_inode(struct super_block *sb)
+ static ssize_t default_read_file(struct file *file, char __user *buf,
+ 				 size_t count, loff_t *ppos)
  {
- 	struct inode *inode = new_inode(sb);
-@@ -353,6 +380,7 @@ static struct dentry *__debugfs_create_file(const char *name, umode_t mode,
- 	inode->i_mode = mode;
- 	inode->i_private = data;
+@@ -210,6 +228,12 @@ static int tracefs_apply_options(struct super_block *sb)
+ 	return 0;
+ }
  
-+	inode->i_op = &debugfs_file_inode_operations;
- 	inode->i_fop = proxy_fops;
- 	dentry->d_fsdata = (void *)((unsigned long)real_fops |
- 				DEBUGFS_FSDATA_IS_REAL_FOPS_BIT);
-@@ -516,7 +544,7 @@ struct dentry *debugfs_create_dir(const char *name, struct dentry *parent)
- 	}
++static void tracefs_destroy_inode(struct inode *inode)
++{
++	if (S_ISREG(inode->i_mode))
++		kfree(inode->i_fop);
++}
++
+ static int tracefs_reconfigure(struct fs_context *fc)
+ {
+ 	struct super_block *sb = fc->root->d_sb;
+@@ -236,6 +260,7 @@ static int tracefs_show_options(struct seq_file *m, struct dentry *root)
  
- 	inode->i_mode = S_IFDIR | S_IRWXU | S_IRUGO | S_IXUGO;
--	inode->i_op = &simple_dir_inode_operations;
-+	inode->i_op = &debugfs_dir_inode_operations;
- 	inode->i_fop = &simple_dir_operations;
+ static const struct super_operations tracefs_super_operations = {
+ 	.statfs		= simple_statfs,
++	.destroy_inode  = tracefs_destroy_inode,
+ 	.show_options	= tracefs_show_options,
+ };
  
- 	/* directory inodes start off with i_nlink == 2 (for "." entry) */
-@@ -616,7 +644,7 @@ struct dentry *debugfs_create_symlink(const char *name, struct dentry *parent,
+@@ -372,6 +397,7 @@ struct dentry *tracefs_create_file(const char *name, umode_t mode,
+ 				   struct dentry *parent, void *data,
+ 				   const struct file_operations *fops)
+ {
++	struct file_operations *proxy_fops;
+ 	struct dentry *dentry;
+ 	struct inode *inode;
+ 
+@@ -387,8 +413,20 @@ struct dentry *tracefs_create_file(const char *name, umode_t mode,
+ 	if (unlikely(!inode))
  		return failed_creating(dentry);
- 	}
- 	inode->i_mode = S_IFLNK | S_IRWXUGO;
--	inode->i_op = &simple_symlink_inode_operations;
-+	inode->i_op = &debugfs_symlink_inode_operations;
- 	inode->i_link = link;
+ 
++	proxy_fops = kzalloc(sizeof(struct file_operations), GFP_KERNEL);
++	if (unlikely(!proxy_fops)) {
++		iput(inode);
++		return failed_creating(dentry);
++	}
++
++	if (!fops)
++		fops = &tracefs_file_operations;
++
++	dentry->d_fsdata = (void *)fops;
++	memcpy(proxy_fops, fops, sizeof(*proxy_fops));
++	proxy_fops->open = default_open_file;
+ 	inode->i_mode = mode;
+-	inode->i_fop = fops ? fops : &tracefs_file_operations;
++	inode->i_fop = proxy_fops;
+ 	inode->i_private = data;
  	d_instantiate(dentry, inode);
- 	return end_creating(dentry);
+ 	fsnotify_create(dentry->d_parent->d_inode, dentry);
 diff --git a/include/linux/security.h b/include/linux/security.h
-index 8ef366de70b0..d92323b44a3f 100644
+index d92323b44a3f..807dc0d24982 100644
 --- a/include/linux/security.h
 +++ b/include/linux/security.h
-@@ -115,6 +115,7 @@ enum lockdown_reason {
- 	LOCKDOWN_TIOCSSERIAL,
- 	LOCKDOWN_MODULE_PARAMETERS,
- 	LOCKDOWN_MMIOTRACE,
-+	LOCKDOWN_DEBUGFS,
- 	LOCKDOWN_INTEGRITY_MAX,
- 	LOCKDOWN_KCORE,
+@@ -121,6 +121,7 @@ enum lockdown_reason {
  	LOCKDOWN_KPROBES,
+ 	LOCKDOWN_BPF_READ,
+ 	LOCKDOWN_PERF,
++	LOCKDOWN_TRACEFS,
+ 	LOCKDOWN_CONFIDENTIALITY_MAX,
+ };
+ 
 diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
-index fb437a7ef5f2..88064ce1c844 100644
+index 88064ce1c844..173191562047 100644
 --- a/security/lockdown/lockdown.c
 +++ b/security/lockdown/lockdown.c
-@@ -30,6 +30,7 @@ static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
- 	[LOCKDOWN_TIOCSSERIAL] = "reconfiguration of serial port IO",
- 	[LOCKDOWN_MODULE_PARAMETERS] = "unsafe module parameters",
- 	[LOCKDOWN_MMIOTRACE] = "unsafe mmio",
-+	[LOCKDOWN_DEBUGFS] = "debugfs access",
- 	[LOCKDOWN_INTEGRITY_MAX] = "integrity",
- 	[LOCKDOWN_KCORE] = "/proc/kcore access",
+@@ -36,6 +36,7 @@ static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
  	[LOCKDOWN_KPROBES] = "use of kprobes",
+ 	[LOCKDOWN_BPF_READ] = "use of bpf to read kernel RAM",
+ 	[LOCKDOWN_PERF] = "unsafe use of perf",
++	[LOCKDOWN_TRACEFS] = "use of tracefs",
+ 	[LOCKDOWN_CONFIDENTIALITY_MAX] = "confidentiality",
+ };
+ 
 -- 
 2.22.0.770.g0f2c4a37fd-goog
 
