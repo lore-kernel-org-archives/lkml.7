@@ -2,138 +2,170 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3044C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:08:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF456C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9503F21881
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:08:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565251721;
-	bh=LEJBdGF3+zKiZ/gDRK/GSLC+1nib/flq+adxh2DDplc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=K5mi7GaypCbKNGJ8g8f2Hl+2nf4ko5d+t0RcPGcsmMAFc5AQdWiWmAy9UtjNpb5UP
-	 mLiObqTeYTF54iV3DbRox9gcW3GrudJh1XPgzMII/MrY3/uU9JY1WsRYZZioq24L5o
-	 4X7UKlHpRAKMjLfKNfaElBB/GIe4QLSeDZXC5UYo=
+	by mail.kernel.org (Postfix) with ESMTP id B9D032187F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:09:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731959AbfHHIIk (ORCPT
+        id S1731981AbfHHIJX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 04:08:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39312 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731658AbfHHIIk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 04:08:40 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 987222187F;
-        Thu,  8 Aug 2019 08:08:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565251719;
-        bh=LEJBdGF3+zKiZ/gDRK/GSLC+1nib/flq+adxh2DDplc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BOa6iG5SmZfPC3g1w7HTtZx+ntqjy7vtMoKRrOB40Y1IAJadxT/a1qUH7M1hcWNN7
-         W8qiRDWZYvufdHdGDu+qM1d8a1ZVlDor3TTEdzdRnqhOaZb7tBU7wRwv+eqaHSlT7g
-         lxSTZpDBXTzZEgo0HCx0IGQcI53ACbHG1ptXyEHE=
-Date:   Thu, 8 Aug 2019 09:08:33 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Stefan-gabriel Mirea <stefan-gabriel.mirea@nxp.com>
-Cc:     "corbet@lwn.net" <corbet@lwn.net>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "jslaby@suse.com" <jslaby@suse.com>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Cosmin Stefan Stoica <cosmin.stoica@nxp.com>,
-        Larisa Ileana Grigore <larisa.grigore@nxp.com>
-Subject: Re: [PATCH 5/6] tty: serial: Add linflexuart driver for S32V234
-Message-ID: <20190808080832.nleult5bknmzr3ze@willie-the-truck>
-References: <20190802194702.30249-1-stefan-gabriel.mirea@nxp.com>
- <20190802194702.30249-6-stefan-gabriel.mirea@nxp.com>
+        Thu, 8 Aug 2019 04:09:23 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:36346 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731658AbfHHIJX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 04:09:23 -0400
+Received: by mail-ot1-f67.google.com with SMTP id r6so115155113oti.3;
+        Thu, 08 Aug 2019 01:09:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NBFSdcaTcFoDPEtsfprZTWviaehhzIBA9CqQY+IL5/Y=;
+        b=QWLrJVSTN+oAbY8u6+JjSBfg0cXKMI3XZQ+gDdGFWHhrkwsl9UMHLw+kjxum9wPNqj
+         po2aXEKcWt+duY4vHH8tGpwKqF+8JveQabU8DwSDeo+MWwCXygSzgVATvRFx4qQntc2a
+         iScU8C3/TVj6s8+ne8ZRW1yE6W13qIiKh2OQjgy6/DM0t7OARwezeV8rIcqscI9NOM2B
+         z7B3Y11JYQINiifdtHm0vGhqqlAe8aJSAUMEJ69KkuR25/DsBxqQefrK9sPZtD37zzQW
+         mPRGtUyQ8pnvyVC96CT6zdfjUyAUqgjuMkyol2ybfin/SH2OkJn95/VzhG3Q8Gnj+jbF
+         /wJw==
+X-Gm-Message-State: APjAAAV+vhawgbnciT+KqBPPZgmWGfXfzWZyxQS/h9RCLJPbgH3Bd0qe
+        SqISaw6SF3H8g/KZBoxgKNPpCsYQoU7WrveP5FM=
+X-Google-Smtp-Source: APXvYqydNbKoEj5yccYRAI19XY287hgtCeiyoefADzGyalRGi0KNiysoeatvbVR35E7SB8lrJ1JjxbckO9DPGCuWlA0=
+X-Received: by 2002:a9d:529:: with SMTP id 38mr12094425otw.145.1565251762153;
+ Thu, 08 Aug 2019 01:09:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190802194702.30249-6-stefan-gabriel.mirea@nxp.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <20190730181557.90391-1-swboyd@chromium.org> <20190730181557.90391-42-swboyd@chromium.org>
+In-Reply-To: <20190730181557.90391-42-swboyd@chromium.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 8 Aug 2019 10:09:10 +0200
+Message-ID: <CAMuHMdWBFzNGhzAdEyFEbRE6nOWBKpCQ-5VXZfh3Bg+FMB7NXg@mail.gmail.com>
+Subject: Re: [PATCH v6 41/57] spi: Remove dev_err() usage after platform_get_irq()
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 02, 2019 at 07:47:23PM +0000, Stefan-gabriel Mirea wrote:
-> Introduce support for LINFlex driver, based on:
-> - the version of Freescale LPUART driver after commit b3e3bf2ef2c7 ("Merge
->   4.0-rc7 into tty-next");
-> - commit abf1e0a98083 ("tty: serial: fsl_lpuart: lock port on console
->   write").
-> In this basic version, the driver can be tested using initramfs and relies
-> on the clocks and pin muxing set up by U-Boot.
-> 
-> Remarks concerning the earlycon support:
-> 
-> - LinFlexD does not allow character transmissions in the INIT mode (see
->   section 47.4.2.1 in the reference manual[1]). Therefore, a mutual
->   exclusion between the first linflex_setup_watermark/linflex_set_termios
->   executions and linflex_earlycon_putchar was employed and the characters
->   normally sent to earlycon during initialization are kept in a buffer and
->   sent afterwards.
-> 
-> - Empirically, character transmission is also forbidden within the last 1-2
->   ms before entering the INIT mode, so we use an explicit timeout
->   (PREINIT_DELAY) between linflex_earlycon_putchar and the first call to
->   linflex_setup_watermark.
-> 
-> - U-Boot currently uses the UART FIFO mode, while this driver makes the
->   transition to the buffer mode. Therefore, the earlycon putchar function
->   matches the U-Boot behavior before initializations and the Linux behavior
->   after.
-> 
-> [1] https://www.nxp.com/webapp/Download?colCode=S32V234RM
-> 
-> Signed-off-by: Stoica Cosmin-Stefan <cosmin.stoica@nxp.com>
-> Signed-off-by: Adrian.Nitu <adrian.nitu@freescale.com>
-> Signed-off-by: Larisa Grigore <Larisa.Grigore@nxp.com>
-> Signed-off-by: Ana Nedelcu <B56683@freescale.com>
-> Signed-off-by: Mihaela Martinas <Mihaela.Martinas@freescale.com>
-> Signed-off-by: Matthew Nunez <matthew.nunez@nxp.com>
-> [stefan-gabriel.mirea@nxp.com: Reduced for upstreaming and implemented
->                                earlycon support]
-> Signed-off-by: Stefan-Gabriel Mirea <stefan-gabriel.mirea@nxp.com>
+Hi Stephen,
+
+On Tue, Jul 30, 2019 at 8:19 PM Stephen Boyd <swboyd@chromium.org> wrote:
+> We don't need dev_err() messages when platform_get_irq() fails now that
+> platform_get_irq() prints an error message itself when something goes
+> wrong. Let's remove these prints with a simple semantic patch.
+>
+> // <smpl>
+> @@
+> expression ret;
+> struct platform_device *E;
+> @@
+>
+> ret =
+> (
+> platform_get_irq(E, ...)
+> |
+> platform_get_irq_byname(E, ...)
+> );
+>
+> if ( \( ret < 0 \| ret <= 0 \) )
+> {
+> (
+> -if (ret != -EPROBE_DEFER)
+> -{ ...
+> -dev_err(...);
+> -... }
+> |
+> ...
+> -dev_err(...);
+> )
+> ...
+> }
+> // </smpl>
+>
+> While we're here, remove braces on if statements that only have one
+> statement (manually).
+>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: linux-spi@vger.kernel.org
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 > ---
->  .../admin-guide/kernel-parameters.txt         |   6 +
->  drivers/tty/serial/Kconfig                    |  15 +
->  drivers/tty/serial/Makefile                   |   1 +
->  drivers/tty/serial/fsl_linflexuart.c          | 956 ++++++++++++++++++
->  include/uapi/linux/serial_core.h              |   3 +
->  5 files changed, 981 insertions(+)
->  create mode 100644 drivers/tty/serial/fsl_linflexuart.c
-> 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 46b826fcb5ad..4d545732aadc 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -1090,6 +1090,12 @@
->  			the framebuffer, pass the 'ram' option so that it is
->  			mapped with the correct attributes.
->  
-> +		linflex,<addr>
-> +			Use early console provided by Freescale LinFlex UART
-> +			serial driver for NXP S32V234 SoCs. A valid base
-> +			address must be provided, and the serial port must
-> +			already be setup and configured.
+>
+> Please apply directly to subsystem trees
+>
+>  drivers/spi/atmel-quadspi.c     |  1 -
+>  drivers/spi/spi-armada-3700.c   |  1 -
+>  drivers/spi/spi-bcm2835.c       |  1 -
+>  drivers/spi/spi-bcm2835aux.c    |  1 -
+>  drivers/spi/spi-bcm63xx-hsspi.c |  4 +---
+>  drivers/spi/spi-bcm63xx.c       |  4 +---
+>  drivers/spi/spi-cadence.c       |  1 -
+>  drivers/spi/spi-dw-mmio.c       |  4 +---
+>  drivers/spi/spi-efm32.c         |  4 +---
+>  drivers/spi/spi-ep93xx.c        |  4 +---
+>  drivers/spi/spi-fsl-dspi.c      |  1 -
+>  drivers/spi/spi-fsl-qspi.c      |  4 +---
+>  drivers/spi/spi-geni-qcom.c     |  4 +---
+>  drivers/spi/spi-lantiq-ssc.c    | 12 +++---------
+>  drivers/spi/spi-mt65xx.c        |  1 -
+>  drivers/spi/spi-npcm-pspi.c     |  1 -
+>  drivers/spi/spi-nuc900.c        |  1 -
+>  drivers/spi/spi-nxp-fspi.c      |  4 +---
+>  drivers/spi/spi-pic32-sqi.c     |  1 -
+>  drivers/spi/spi-pic32.c         | 12 +++---------
+>  drivers/spi/spi-qcom-qspi.c     |  4 +---
+>  drivers/spi/spi-s3c24xx.c       |  1 -
+>  drivers/spi/spi-sh-msiof.c      |  1 -
+>  drivers/spi/spi-sh.c            |  4 +---
+>  drivers/spi/spi-sifive.c        |  1 -
+>  drivers/spi/spi-slave-mt27xx.c  |  1 -
+>  drivers/spi/spi-sprd.c          |  4 +---
+>  drivers/spi/spi-stm32-qspi.c    |  5 +----
+>  drivers/spi/spi-sun4i.c         |  1 -
+>  drivers/spi/spi-sun6i.c         |  1 -
+>  drivers/spi/spi-synquacer.c     |  2 --
+>  drivers/spi/spi-ti-qspi.c       |  1 -
+>  drivers/spi/spi-uniphier.c      |  1 -
+>  drivers/spi/spi-xlp.c           |  4 +---
+>  drivers/spi/spi-zynq-qspi.c     |  1 -
+>  drivers/spi/spi-zynqmp-gqspi.c  |  1 -
+>  36 files changed, 19 insertions(+), 80 deletions(-)
 
-Why isn't earlycon= sufficient for this?
+Failed to catch
+drivers/spi/spi-rspi.c: ret = platform_get_irq_byname(pdev, "rx");
+drivers/spi/spi-rspi.c- if (ret < 0) {
+drivers/spi/spi-rspi.c:         ret = platform_get_irq_byname(pdev, "mux");
+drivers/spi/spi-rspi.c-         if (ret < 0)
+drivers/spi/spi-rspi.c:                 ret = platform_get_irq(pdev, 0);
+drivers/spi/spi-rspi.c-         if (ret >= 0)
+drivers/spi/spi-rspi.c-                 rspi->rx_irq = rspi->tx_irq = ret;
+drivers/spi/spi-rspi.c- } else {
+drivers/spi/spi-rspi.c-         rspi->rx_irq = ret;
+drivers/spi/spi-rspi.c:         ret = platform_get_irq_byname(pdev, "tx");
+drivers/spi/spi-rspi.c-         if (ret >= 0)
+drivers/spi/spi-rspi.c-                 rspi->tx_irq = ret;
+drivers/spi/spi-rspi.c- }
+drivers/spi/spi-rspi.c- if (ret < 0) {
+drivers/spi/spi-rspi.c:         dev_err(&pdev->dev, "platform_get_irq error\n");
+drivers/spi/spi-rspi.c-         goto error2;
+drivers/spi/spi-rspi.c- }
 
-Will
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
