@@ -2,61 +2,62 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE90BC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:49:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6663EC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:49:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BA932173E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:49:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F9D72173E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:49:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="TtgAYNfg"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Cw2cqikG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390051AbfHHOtj (ORCPT
+        id S1733130AbfHHOtp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 10:49:39 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:43646 "EHLO
+        Thu, 8 Aug 2019 10:49:45 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:43681 "EHLO
         mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732815AbfHHOtj (ORCPT
+        with ESMTP id S1732906AbfHHOto (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 10:49:39 -0400
+        Thu, 8 Aug 2019 10:49:44 -0400
 Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190808144937euoutp0103672d36e6ae1a9ee8cc0bf49d6ba206~4_gbdBVIx1970319703euoutp01O
-        for <linux-kernel@vger.kernel.org>; Thu,  8 Aug 2019 14:49:37 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190808144937euoutp0103672d36e6ae1a9ee8cc0bf49d6ba206~4_gbdBVIx1970319703euoutp01O
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190808144942euoutp013977f7c86d4cfe6b7894e7d614e97cc7~4_ggFK_J22022720227euoutp01-
+        for <linux-kernel@vger.kernel.org>; Thu,  8 Aug 2019 14:49:42 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190808144942euoutp013977f7c86d4cfe6b7894e7d614e97cc7~4_ggFK_J22022720227euoutp01-
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1565275777;
-        bh=2ks9tmLm7Z/SWJU1b0Qco0DGAZfOgIqai21P2NmInLM=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=TtgAYNfgjE4Iv6MEfV1XU4Hx1c6Emk+P9BIeyf758pIUanDCN0xZg4tQsKlHQ0n+0
-         kPoP0+F0wTeYdVScc85DZ96cp62DMEwaokd+f25BA5A2EJsiFFqhstq0qfipQT95u1
-         d3EL5ECWxVAT1AhBi4c3XnOrxaQVADaS7GuRK5Mg=
+        s=mail20170921; t=1565275782;
+        bh=ETe6mWTx7M+kQkPCq5ybQ2YGQUtzej8BOuaUy6CKQEk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Cw2cqikGTx6W5x4puaxbxqlPNM1twAsSPJDbSmtEAvhWIcAhCd6ZfU+cUce7blhls
+         O6SAsHHNF/dgrSFRwENqON4Uc0J/kUYXgnqqcbCHb+QKbUCaeRshm4S2uhPaiXRLES
+         qdRsXbovTwhSCxQo0AgIZ1joAKJi3h0Orq6SDeCQ=
 Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
         eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190808144937eucas1p2e455616f70d817fab175d304282d2032~4_gaqQ3l20507405074eucas1p2a;
-        Thu,  8 Aug 2019 14:49:37 +0000 (GMT)
+        20190808144942eucas1p2dc0c08a1daf05235e3128fd8bcc2db0a~4_gfaQadA0510205102eucas1p2M;
+        Thu,  8 Aug 2019 14:49:42 +0000 (GMT)
 Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id EA.7D.04374.0863C4D5; Thu,  8
-        Aug 2019 15:49:36 +0100 (BST)
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 5E.7D.04374.5863C4D5; Thu,  8
+        Aug 2019 15:49:41 +0100 (BST)
 Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190808144936eucas1p2e65eddc3d970de35590cb84fe200b438~4_gZ4bJrk0504905049eucas1p2U;
-        Thu,  8 Aug 2019 14:49:36 +0000 (GMT)
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190808144941eucas1p1b6ba7aadd0c31aedf765a0f90ed6213f~4_ges5nlY0291102911eucas1p1l;
+        Thu,  8 Aug 2019 14:49:41 +0000 (GMT)
 Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
         eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190808144935eusmtrp2725b08c9b7c49172bf5d284ce662585f~4_gZqSZmM2303923039eusmtrp2L;
-        Thu,  8 Aug 2019 14:49:35 +0000 (GMT)
-X-AuditID: cbfec7f5-4ddff70000001116-f0-5d4c3680d14c
+        20190808144941eusmtrp23edc51a0d2ecb2ecccbde6cef24b04f6~4_gee4gVi2304023040eusmtrp2U;
+        Thu,  8 Aug 2019 14:49:41 +0000 (GMT)
+X-AuditID: cbfec7f5-4f7ff70000001116-ff-5d4c3685bea5
 Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 64.2D.04117.F763C4D5; Thu,  8
-        Aug 2019 15:49:35 +0100 (BST)
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 48.2D.04117.5863C4D5; Thu,  8
+        Aug 2019 15:49:41 +0100 (BST)
 Received: from AMDC3061.DIGITAL.local (unknown [106.120.51.75]) by
         eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190808144935eusmtip2f234b77e1a7843927a870a32b66242c4~4_gZIy8FQ1429614296eusmtip2g;
-        Thu,  8 Aug 2019 14:49:35 +0000 (GMT)
+        20190808144940eusmtip25d5b9b954ad7871ca208eddcac8c4fc0~4_geBYPf31427914279eusmtip22;
+        Thu,  8 Aug 2019 14:49:40 +0000 (GMT)
 From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
 To:     sboyd@kernel.org, mturquette@baylibre.com
 Cc:     linux@armlinux.org.uk, linux-clk@vger.kernel.org,
@@ -64,223 +65,190 @@ Cc:     linux@armlinux.org.uk, linux-clk@vger.kernel.org,
         krzk@kernel.org, cw00.choi@samsung.com, m.szyprowski@samsung.com,
         b.zolnierkie@samsung.com,
         Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH v2 1/2] clk: samsung: Change signature of
- exynos5_subcmus_init() function
-Date:   Thu,  8 Aug 2019 16:49:28 +0200
-Message-Id: <20190808144929.18685-1-s.nawrocki@samsung.com>
+Subject: [PATCH v2 2/2] clk: samsung: exynos5800: Move MAU subsystem clocks
+ to MAU sub-CMU
+Date:   Thu,  8 Aug 2019 16:49:29 +0200
+Message-Id: <20190808144929.18685-2-s.nawrocki@samsung.com>
 X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpileLIzCtJLcpLzFFi42LZduzned0GM59Yg6O/9Sw2zljPanH9y3NW
-        i/PnN7BbfOy5x2pxedccNosZ5/cxWRyaupfRYu2Ru+wWF0+5Whx+085q8e/aRhYHbo/L1y4y
-        e7y/0crusWlVJ5tH35ZVjB6fN8kFsEZx2aSk5mSWpRbp2yVwZUxsusla8Mak4suOXtYGxh86
-        XYycHBICJhK9x+4xdTFycQgJrGCU+D1nISOE84VR4vqT6ywQzmdGiX3fHwFlOMBajt3Ug4gv
-        Z5T4M2ciQse5lfOZQOayCRhK9B7tYwSxRQR0JdqX7WMDKWIWaGGSuPplETNIQlggWuLAmVVg
-        NouAqsTET42sIDavgLXEkn0tbBAHykus3nCAGaRZQuA7m8SmPy1MEAkXiZ0vZjFC2MISr45v
-        YYewZST+75zPBNHQzCjRs/s2O4QzgVHi/vEFUB3WEoePX2QFeYhZQFNi/S59iLCjxN/NP5kg
-        /uSTuPFWECTMDGRO2jadGSLMK9HRJgRRrSLxe9V0qHOkJLqf/GeBKPGQOP/JAyQsJBAr8e3t
-        a9YJjHKzEFYtYGRcxSieWlqcm55abJyXWq5XnJhbXJqXrpecn7uJEZgyTv87/nUH474/SYcY
-        BTgYlXh4GxR9YoVYE8uKK3MPMUpwMCuJ8N4r84wV4k1JrKxKLcqPLyrNSS0+xCjNwaIkzlvN
-        8CBaSCA9sSQ1OzW1ILUIJsvEwSnVwGh/68DkP4vuPzg96duLi91pN2RS7omVPvxsNGnKFQem
-        H1fNzL+puIuYPDTjmn9saZVJ7qTyMz/P+Xo+lEo7MdX2Z9Oz1lhvG69/AZoMkYIO1737VzrV
-        /Z6oeKp2dsBcpokPrU+LhbcltmS8zxW4uTCeuejP82NLJ949s2uHtdKUo4HrdhmH2OkpsRRn
-        JBpqMRcVJwIA2sgcGBUDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrKLMWRmVeSWpSXmKPExsVy+t/xe7r1Zj6xBu+Om1tsnLGe1eL6l+es
+In-Reply-To: <20190808144929.18685-1-s.nawrocki@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupnleLIzCtJLcpLzFFi42LZduzned1WM59Yg01dxhYbZ6xntbj+5Tmr
+        xfnzG9gtPvbcY7W4vGsOm8WM8/uYLA5N3ctosfbIXXaLi6dcLQ6/aWe1+HdtI4sDt8flaxeZ
+        Pd7faGX32LSqk82jb8sqRo/Pm+QCWKO4bFJSczLLUov07RK4Mo48Ps1acFa3YnLbNtYGxttq
+        XYycHBICJhI7Xk1g7mLk4hASWMEo8WnPVjYI5wujxOHuhVDOZ0aJqT/+MsO07FkJ07KcUeJI
+        /w0WuJYV5y8xglSxCRhK9B7tA7NFBHQl2pftAxvFLNDCJHH1yyKwUcICMRK378xiA7FZBFQl
+        dp5cwgRi8wpYS5w7uYYNYp28xOoNB4DqOTg4BWwkvr4wB5kjIdDPLrFn/QyoGheJyReb2SFs
+        YYlXx7dA2TIS/3fOZ4JoaGaU6Nl9mx3CmcAocf/4AkaIKmuJw8cvsoJsYBbQlFi/Sx8i7Cix
+        7PJWRpCwhACfxI23giBhZiBz0rbpzBBhXomONiGIahWJ36umM0HYUhLdT/6zQNgeEgf3LgVb
+        JCTQzyhxYDXfBEb5WQi7FjAyrmIUTy0tzk1PLTbOSy3XK07MLS7NS9dLzs/dxAhMJqf/Hf+6
+        g3Hfn6RDjAIcjEo8vA2KPrFCrIllxZW5hxglOJiVRHjvlXnGCvGmJFZWpRblxxeV5qQWH2KU
+        5mBREuetZngQLSSQnliSmp2aWpBaBJNl4uCUamDMfPxhSj/72zMhdYxLkvkOnXHYxCL2aRLP
+        QbET6sdW7NI+Hn9gQrvK6oan+9Tm31gSelq9U4JlX1Z7lPAvfff3Nh4yzj7yZqHP2ANi3Nfc
+        DJy7oHXfaX+vcr0stq7XFzLXruNszNd8XO6hUBF5SSvFMs3c5PhHbuXknc/OJLvP2pbZW9hV
+        bavEUpyRaKjFXFScCABYLmvHIgMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrPLMWRmVeSWpSXmKPExsVy+t/xe7qtZj6xBivWs1tsnLGe1eL6l+es
         FufPb2C3+Nhzj9Xi8q45bBYzzu9jsjg0dS+jxdojd9ktLp5ytTj8pp3V4t+1jSwO3B6Xr11k
         9nh/o5XdY9OqTjaPvi2rGD0+b5ILYI3SsynKLy1JVcjILy6xVYo2tDDSM7S00DMysdQzNDaP
-        tTIyVdK3s0lJzcksSy3St0vQy5jYdJO14I1JxZcdvawNjD90uhg5OCQETCSO3dTrYuTkEBJY
-        yijR+9YCIiwlMb9FCSQsISAs8edaF1sXIxdQySdGiYsfbjKBJNgEDCV6j/YxgtgiAvoSk9s2
-        sIAUMQv0MUncuXWFFWSQsECkxNYzviA1LAKqEhM/NbKC2LwC1hJL9rWwQSyQl1i94QDzBEae
-        BYwMqxhFUkuLc9Nzi430ihNzi0vz0vWS83M3MQKDdNuxn1t2MHa9Cz7EKMDBqMTDqyHvEyvE
-        mlhWXJl7iFGCg1lJhPdemWesEG9KYmVValF+fFFpTmrxIUZToOUTmaVEk/OBEZRXEm9oamhu
-        YWlobmxubGahJM7bIXAwRkggPbEkNTs1tSC1CKaPiYNTqoHx6ked9x9YpCpl/vVs73QS8nHs
-        K9k1R733lDG73LVDe59c6Qw6feFhxounbQfmbZH+ca3Dg+nbUo7vKkxRMU9mhgScStwuq6L5
-        b5V38qzIqaZzLlj4/bZh1LDc9015r8ZaHdVPfEeimipfb866lyL1V25L4H7jPd8O3Th2ae25
-        SC+FPXcfXgxdosRSnJFoqMVcVJwIAPf+8bFoAgAA
-X-CMS-MailID: 20190808144936eucas1p2e65eddc3d970de35590cb84fe200b438
+        tTIyVdK3s0lJzcksSy3St0vQyzjy+DRrwVndislt21gbGG+rdTFyckgImEjsWTmBuYuRi0NI
+        YCmjxJ6W/exdjBxACSmJ+S1KEDXCEn+udbFB1HxilOhvOMkKkmATMJToPdrHCGKLCOhLTG7b
+        wAJSxCzQxyRx59YVsCJhgSiJv4vWMIHYLAKqEjtPLgGzeQWsJc6dXMMGsUFeYvWGA8wgizkF
+        bCS+vjAHCQsBlby7sZd9AiPfAkaGVYwiqaXFuem5xUZ6xYm5xaV56XrJ+bmbGIGBve3Yzy07
+        GLveBR9iFOBgVOLh1ZD3iRViTSwrrsw9xCjBwawkwnuvzDNWiDclsbIqtSg/vqg0J7X4EKMp
+        0E0TmaVEk/OBUZdXEm9oamhuYWlobmxubGahJM7bIXAwRkggPbEkNTs1tSC1CKaPiYNTqoHx
+        miD70cVBvAfzg11yov6d6endeJdPRibIYmZV0LTulVy/r+z/YBje4h2zxvCs6gEPu+JHEZuD
+        M98pnX9WtXH7p8dBbt23Dh9xaNrvG/VStWKiX512C/fTkHUGc0Un912ZweC7RaUv9YHEkpeh
+        ExIabp/iWmz+SvGOd11FeLNx4YJo6zTlv8VKLMUZiYZazEXFiQBeXJjXggIAAA==
+X-CMS-MailID: 20190808144941eucas1p1b6ba7aadd0c31aedf765a0f90ed6213f
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190808144936eucas1p2e65eddc3d970de35590cb84fe200b438
+X-RootMTR: 20190808144941eucas1p1b6ba7aadd0c31aedf765a0f90ed6213f
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20190808144936eucas1p2e65eddc3d970de35590cb84fe200b438
-References: <CGME20190808144936eucas1p2e65eddc3d970de35590cb84fe200b438@eucas1p2.samsung.com>
+X-CMS-RootMailID: 20190808144941eucas1p1b6ba7aadd0c31aedf765a0f90ed6213f
+References: <20190808144929.18685-1-s.nawrocki@samsung.com>
+        <CGME20190808144941eucas1p1b6ba7aadd0c31aedf765a0f90ed6213f@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to make it easier in subsequent patch to create different subcmu
-lists for exynos5420 and exynos5800 SoCs the code is rewritten so we pass
-an array of pointers to the subcmus initialization function.
+This patch fixes broken sound on Exynos5422/5800 platforms after
+system/suspend resume cycle in cases where the audio root clock
+is derived from MAU_EPLL_CLK.
+
+In order to preserve state of the USER_MUX_MAU_EPLL_CLK clock mux
+during system suspend/resume cycle for Exynos5800 we group the MAU
+block input clocks in "MAU" sub-CMU and add the clock mux control
+bit to .suspend_regs.  This ensures that user configuration of the mux
+is not lost after the PMU block changes the mux setting to OSC_DIV
+when switching off the MAU power domain.
+
+Adding the SRC_TOP9 register to exynos5800_clk_regs[] array is not
+sufficient as at the time of the syscore_ops suspend call MAU power
+domain is already turned off and we already save and subsequently
+restore an incorrect register's value.
 
 Fixes: b06a532bf1fa ("clk: samsung: Add Exynos5 sub-CMU clock driver")
+Reported-by: Jaafar Ali <jaafarkhalaf@gmail.com>
+Suggested-by: Marek Szyprowski <m.szyprowski@samsung.com>
 Tested-by: Jaafar Ali <jaafarkhalaf@gmail.com>
 Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 ---
 Changes since v1:
- - added "Fixes" tag.
+ - added comment to the exynos5800_mau_suspend_regs[] array entry
 ---
- drivers/clk/samsung/clk-exynos5-subcmu.c | 16 +++----
- drivers/clk/samsung/clk-exynos5-subcmu.h |  2 +-
- drivers/clk/samsung/clk-exynos5250.c     |  7 ++-
- drivers/clk/samsung/clk-exynos5420.c     | 60 ++++++++++++++----------
- 4 files changed, 49 insertions(+), 36 deletions(-)
+ drivers/clk/samsung/clk-exynos5420.c | 54 ++++++++++++++++++++++------
+ 1 file changed, 43 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/clk/samsung/clk-exynos5-subcmu.c b/drivers/clk/samsung/clk-exynos5-subcmu.c
-index 91db7894125d..65c82d922b05 100644
---- a/drivers/clk/samsung/clk-exynos5-subcmu.c
-+++ b/drivers/clk/samsung/clk-exynos5-subcmu.c
-@@ -14,7 +14,7 @@
- #include "clk-exynos5-subcmu.h"
- 
- static struct samsung_clk_provider *ctx;
--static const struct exynos5_subcmu_info *cmu;
-+static const struct exynos5_subcmu_info **cmu;
- static int nr_cmus;
- 
- static void exynos5_subcmu_clk_save(void __iomem *base,
-@@ -56,17 +56,17 @@ static void exynos5_subcmu_defer_gate(struct samsung_clk_provider *ctx,
-  * when OF-core populates all device-tree nodes.
-  */
- void exynos5_subcmus_init(struct samsung_clk_provider *_ctx, int _nr_cmus,
--			  const struct exynos5_subcmu_info *_cmu)
-+			  const struct exynos5_subcmu_info **_cmu)
- {
- 	ctx = _ctx;
- 	cmu = _cmu;
- 	nr_cmus = _nr_cmus;
- 
- 	for (; _nr_cmus--; _cmu++) {
--		exynos5_subcmu_defer_gate(ctx, _cmu->gate_clks,
--					  _cmu->nr_gate_clks);
--		exynos5_subcmu_clk_save(ctx->reg_base, _cmu->suspend_regs,
--					_cmu->nr_suspend_regs);
-+		exynos5_subcmu_defer_gate(ctx, (*_cmu)->gate_clks,
-+					  (*_cmu)->nr_gate_clks);
-+		exynos5_subcmu_clk_save(ctx->reg_base, (*_cmu)->suspend_regs,
-+					(*_cmu)->nr_suspend_regs);
- 	}
- }
- 
-@@ -163,9 +163,9 @@ static int __init exynos5_clk_probe(struct platform_device *pdev)
- 		if (of_property_read_string(np, "label", &name) < 0)
- 			continue;
- 		for (i = 0; i < nr_cmus; i++)
--			if (strcmp(cmu[i].pd_name, name) == 0)
-+			if (strcmp(cmu[i]->pd_name, name) == 0)
- 				exynos5_clk_register_subcmu(&pdev->dev,
--							    &cmu[i], np);
-+							    cmu[i], np);
- 	}
- 	return 0;
- }
-diff --git a/drivers/clk/samsung/clk-exynos5-subcmu.h b/drivers/clk/samsung/clk-exynos5-subcmu.h
-index 755ee8aaa3de..9ae5356f25aa 100644
---- a/drivers/clk/samsung/clk-exynos5-subcmu.h
-+++ b/drivers/clk/samsung/clk-exynos5-subcmu.h
-@@ -21,6 +21,6 @@ struct exynos5_subcmu_info {
- };
- 
- void exynos5_subcmus_init(struct samsung_clk_provider *ctx, int nr_cmus,
--			  const struct exynos5_subcmu_info *cmu);
-+			  const struct exynos5_subcmu_info **cmu);
- 
- #endif
-diff --git a/drivers/clk/samsung/clk-exynos5250.c b/drivers/clk/samsung/clk-exynos5250.c
-index f2b896881768..931c70a4da19 100644
---- a/drivers/clk/samsung/clk-exynos5250.c
-+++ b/drivers/clk/samsung/clk-exynos5250.c
-@@ -681,6 +681,10 @@ static const struct exynos5_subcmu_info exynos5250_disp_subcmu = {
- 	.pd_name	= "DISP1",
- };
- 
-+static const struct exynos5_subcmu_info *exynos5250_subcmus[] = {
-+	&exynos5250_disp_subcmu,
-+};
-+
- static const struct samsung_pll_rate_table vpll_24mhz_tbl[] __initconst = {
- 	/* sorted in descending order */
- 	/* PLL_36XX_RATE(rate, m, p, s, k) */
-@@ -843,7 +847,8 @@ static void __init exynos5250_clk_init(struct device_node *np)
- 
- 	samsung_clk_sleep_init(reg_base, exynos5250_clk_regs,
- 			       ARRAY_SIZE(exynos5250_clk_regs));
--	exynos5_subcmus_init(ctx, 1, &exynos5250_disp_subcmu);
-+	exynos5_subcmus_init(ctx, ARRAY_SIZE(exynos5250_subcmus),
-+			     exynos5250_subcmus);
- 
- 	samsung_clk_of_add_provider(np, ctx);
- 
 diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
-index 01bca5a498b2..fdb17c799aa5 100644
+index fdb17c799aa5..2d18e1ae25d7 100644
 --- a/drivers/clk/samsung/clk-exynos5420.c
 +++ b/drivers/clk/samsung/clk-exynos5420.c
-@@ -1281,32 +1281,40 @@ static struct exynos5_subcmu_reg_dump exynos5x_mfc_suspend_regs[] = {
+@@ -534,8 +534,6 @@ static const struct samsung_gate_clock exynos5800_gate_clks[] __initconst = {
+ 				GATE_BUS_TOP, 24, 0, 0),
+ 	GATE(CLK_ACLK432_SCALER, "aclk432_scaler", "mout_user_aclk432_scaler",
+ 				GATE_BUS_TOP, 27, CLK_IS_CRITICAL, 0),
+-	GATE(CLK_MAU_EPLL, "mau_epll", "mout_user_mau_epll",
+-			SRC_MASK_TOP7, 20, CLK_SET_RATE_PARENT, 0),
+ };
+ 
+ static const struct samsung_mux_clock exynos5420_mux_clks[] __initconst = {
+@@ -577,8 +575,13 @@ static const struct samsung_div_clock exynos5420_div_clks[] __initconst = {
+ 
+ static const struct samsung_gate_clock exynos5420_gate_clks[] __initconst = {
+ 	GATE(CLK_SECKEY, "seckey", "aclk66_psgen", GATE_BUS_PERIS1, 1, 0, 0),
++	/* Maudio Block */
+ 	GATE(CLK_MAU_EPLL, "mau_epll", "mout_mau_epll_clk",
+ 			SRC_MASK_TOP7, 20, CLK_SET_RATE_PARENT, 0),
++	GATE(CLK_SCLK_MAUDIO0, "sclk_maudio0", "dout_maudio0",
++		GATE_TOP_SCLK_MAU, 0, CLK_SET_RATE_PARENT, 0),
++	GATE(CLK_SCLK_MAUPCM0, "sclk_maupcm0", "dout_maupcm0",
++		GATE_TOP_SCLK_MAU, 1, CLK_SET_RATE_PARENT, 0),
+ };
+ 
+ static const struct samsung_mux_clock exynos5x_mux_clks[] __initconst = {
+@@ -1017,12 +1020,6 @@ static const struct samsung_gate_clock exynos5x_gate_clks[] __initconst = {
+ 	GATE(CLK_SCLK_DP1, "sclk_dp1", "dout_dp1",
+ 			GATE_TOP_SCLK_DISP1, 20, CLK_SET_RATE_PARENT, 0),
+ 
+-	/* Maudio Block */
+-	GATE(CLK_SCLK_MAUDIO0, "sclk_maudio0", "dout_maudio0",
+-		GATE_TOP_SCLK_MAU, 0, CLK_SET_RATE_PARENT, 0),
+-	GATE(CLK_SCLK_MAUPCM0, "sclk_maupcm0", "dout_maupcm0",
+-		GATE_TOP_SCLK_MAU, 1, CLK_SET_RATE_PARENT, 0),
+-
+ 	/* FSYS Block */
+ 	GATE(CLK_TSI, "tsi", "aclk200_fsys", GATE_BUS_FSYS0, 0, 0, 0),
+ 	GATE(CLK_PDMA0, "pdma0", "aclk200_fsys", GATE_BUS_FSYS0, 1, 0, 0),
+@@ -1281,6 +1278,20 @@ static struct exynos5_subcmu_reg_dump exynos5x_mfc_suspend_regs[] = {
  	{ DIV4_RATIO, 0, 0x3 },			/* DIV dout_mfc_blk */
  };
  
--static const struct exynos5_subcmu_info exynos5x_subcmus[] = {
--	{
--		.div_clks	= exynos5x_disp_div_clks,
--		.nr_div_clks	= ARRAY_SIZE(exynos5x_disp_div_clks),
--		.gate_clks	= exynos5x_disp_gate_clks,
--		.nr_gate_clks	= ARRAY_SIZE(exynos5x_disp_gate_clks),
--		.suspend_regs	= exynos5x_disp_suspend_regs,
--		.nr_suspend_regs = ARRAY_SIZE(exynos5x_disp_suspend_regs),
--		.pd_name	= "DISP",
--	}, {
--		.div_clks	= exynos5x_gsc_div_clks,
--		.nr_div_clks	= ARRAY_SIZE(exynos5x_gsc_div_clks),
--		.gate_clks	= exynos5x_gsc_gate_clks,
--		.nr_gate_clks	= ARRAY_SIZE(exynos5x_gsc_gate_clks),
--		.suspend_regs	= exynos5x_gsc_suspend_regs,
--		.nr_suspend_regs = ARRAY_SIZE(exynos5x_gsc_suspend_regs),
--		.pd_name	= "GSC",
--	}, {
--		.div_clks	= exynos5x_mfc_div_clks,
--		.nr_div_clks	= ARRAY_SIZE(exynos5x_mfc_div_clks),
--		.gate_clks	= exynos5x_mfc_gate_clks,
--		.nr_gate_clks	= ARRAY_SIZE(exynos5x_mfc_gate_clks),
--		.suspend_regs	= exynos5x_mfc_suspend_regs,
--		.nr_suspend_regs = ARRAY_SIZE(exynos5x_mfc_suspend_regs),
--		.pd_name	= "MFC",
--	},
-+static const struct exynos5_subcmu_info exynos5x_disp_subcmu = {
-+	.div_clks	= exynos5x_disp_div_clks,
-+	.nr_div_clks	= ARRAY_SIZE(exynos5x_disp_div_clks),
-+	.gate_clks	= exynos5x_disp_gate_clks,
-+	.nr_gate_clks	= ARRAY_SIZE(exynos5x_disp_gate_clks),
-+	.suspend_regs	= exynos5x_disp_suspend_regs,
-+	.nr_suspend_regs = ARRAY_SIZE(exynos5x_disp_suspend_regs),
-+	.pd_name	= "DISP",
++
++static const struct samsung_gate_clock exynos5800_mau_gate_clks[] __initconst = {
++	GATE(CLK_MAU_EPLL, "mau_epll", "mout_user_mau_epll",
++			SRC_MASK_TOP7, 20, CLK_SET_RATE_PARENT, 0),
++	GATE(CLK_SCLK_MAUDIO0, "sclk_maudio0", "dout_maudio0",
++		GATE_TOP_SCLK_MAU, 0, CLK_SET_RATE_PARENT, 0),
++	GATE(CLK_SCLK_MAUPCM0, "sclk_maupcm0", "dout_maupcm0",
++		GATE_TOP_SCLK_MAU, 1, CLK_SET_RATE_PARENT, 0),
 +};
 +
-+static const struct exynos5_subcmu_info exynos5x_gsc_subcmu = {
-+	.div_clks	= exynos5x_gsc_div_clks,
-+	.nr_div_clks	= ARRAY_SIZE(exynos5x_gsc_div_clks),
-+	.gate_clks	= exynos5x_gsc_gate_clks,
-+	.nr_gate_clks	= ARRAY_SIZE(exynos5x_gsc_gate_clks),
-+	.suspend_regs	= exynos5x_gsc_suspend_regs,
-+	.nr_suspend_regs = ARRAY_SIZE(exynos5x_gsc_suspend_regs),
-+	.pd_name	= "GSC",
++static struct exynos5_subcmu_reg_dump exynos5800_mau_suspend_regs[] = {
++	{ SRC_TOP9, 0, BIT(8) },	/* MUX mout_user_mau_epll */
 +};
 +
-+static const struct exynos5_subcmu_info exynos5x_mfc_subcmu = {
-+	.div_clks	= exynos5x_mfc_div_clks,
-+	.nr_div_clks	= ARRAY_SIZE(exynos5x_mfc_div_clks),
-+	.gate_clks	= exynos5x_mfc_gate_clks,
-+	.nr_gate_clks	= ARRAY_SIZE(exynos5x_mfc_gate_clks),
-+	.suspend_regs	= exynos5x_mfc_suspend_regs,
-+	.nr_suspend_regs = ARRAY_SIZE(exynos5x_mfc_suspend_regs),
-+	.pd_name	= "MFC",
+ static const struct exynos5_subcmu_info exynos5x_disp_subcmu = {
+ 	.div_clks	= exynos5x_disp_div_clks,
+ 	.nr_div_clks	= ARRAY_SIZE(exynos5x_disp_div_clks),
+@@ -1311,12 +1322,27 @@ static const struct exynos5_subcmu_info exynos5x_mfc_subcmu = {
+ 	.pd_name	= "MFC",
+ };
+ 
++static const struct exynos5_subcmu_info exynos5800_mau_subcmu = {
++	.gate_clks	= exynos5800_mau_gate_clks,
++	.nr_gate_clks	= ARRAY_SIZE(exynos5800_mau_gate_clks),
++	.suspend_regs	= exynos5800_mau_suspend_regs,
++	.nr_suspend_regs = ARRAY_SIZE(exynos5800_mau_suspend_regs),
++	.pd_name	= "MAU",
 +};
 +
-+static const struct exynos5_subcmu_info *exynos5x_subcmus[] = {
+ static const struct exynos5_subcmu_info *exynos5x_subcmus[] = {
+ 	&exynos5x_disp_subcmu,
+ 	&exynos5x_gsc_subcmu,
+ 	&exynos5x_mfc_subcmu,
+ };
+ 
++static const struct exynos5_subcmu_info *exynos5800_subcmus[] = {
 +	&exynos5x_disp_subcmu,
 +	&exynos5x_gsc_subcmu,
 +	&exynos5x_mfc_subcmu,
- };
- 
++	&exynos5800_mau_subcmu,
++};
++
  static const struct samsung_pll_rate_table exynos5420_pll2550x_24mhz_tbl[] __initconst = {
+ 	PLL_35XX_RATE(24 * MHZ, 2000000000, 250, 3, 0),
+ 	PLL_35XX_RATE(24 * MHZ, 1900000000, 475, 6, 0),
+@@ -1547,11 +1573,17 @@ static void __init exynos5x_clk_init(struct device_node *np,
+ 	samsung_clk_extended_sleep_init(reg_base,
+ 		exynos5x_clk_regs, ARRAY_SIZE(exynos5x_clk_regs),
+ 		exynos5420_set_clksrc, ARRAY_SIZE(exynos5420_set_clksrc));
+-	if (soc == EXYNOS5800)
++
++	if (soc == EXYNOS5800) {
+ 		samsung_clk_sleep_init(reg_base, exynos5800_clk_regs,
+ 				       ARRAY_SIZE(exynos5800_clk_regs));
+-	exynos5_subcmus_init(ctx, ARRAY_SIZE(exynos5x_subcmus),
+-			     exynos5x_subcmus);
++
++		exynos5_subcmus_init(ctx, ARRAY_SIZE(exynos5800_subcmus),
++				     exynos5800_subcmus);
++	} else {
++		exynos5_subcmus_init(ctx, ARRAY_SIZE(exynos5x_subcmus),
++				     exynos5x_subcmus);
++	}
+ 
+ 	samsung_clk_of_add_provider(np, ctx);
+ }
 -- 
 2.17.1
 
