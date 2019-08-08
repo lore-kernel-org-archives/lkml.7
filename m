@@ -2,105 +2,114 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C6A1C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:28:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF8EC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6576021479
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:28:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3409214C6
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:29:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732140AbfHHI2h (ORCPT
+        id S1732089AbfHHI3h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 04:28:37 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:51743 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732086AbfHHI2h (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 04:28:37 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hvdmh-0001lV-Co; Thu, 08 Aug 2019 10:28:31 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hvdmf-00027y-3C; Thu, 08 Aug 2019 10:28:29 +0200
-Date:   Thu, 8 Aug 2019 10:28:29 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/6] dt-bindings: Remove unused compatible strings
-Message-ID: <20190808082829.i6enaout5ozvdnwj@pengutronix.de>
-References: <20190607154410.10633-1-paul@crapouillou.net>
- <20190607154410.10633-2-paul@crapouillou.net>
- <20190709020425.GA7984@bogus>
+        Thu, 8 Aug 2019 04:29:37 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60810 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731677AbfHHI3h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 04:29:37 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 29FD030A00AB;
+        Thu,  8 Aug 2019 08:29:37 +0000 (UTC)
+Received: from gondolin (dhcp-192-181.str.redhat.com [10.33.192.181])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A02C75C219;
+        Thu,  8 Aug 2019 08:29:33 +0000 (UTC)
+Date:   Thu, 8 Aug 2019 10:29:31 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Parav Pandit <parav@mellanox.com>
+Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "wankhede@nvidia.com" <wankhede@nvidia.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "cjia@nvidia.com" <cjia@nvidia.com>
+Subject: Re: [PATCH v1 2/2] vfio/mdev: Removed unused and redundant API for
+ mdev UUID
+Message-ID: <20190808102931.40c6b4ae.cohuck@redhat.com>
+In-Reply-To: <AM0PR05MB48664379F91C8FA3D0035B41D1D40@AM0PR05MB4866.eurprd05.prod.outlook.com>
+References: <20190802065905.45239-1-parav@mellanox.com>
+        <20190806141826.52712-1-parav@mellanox.com>
+        <20190806141826.52712-3-parav@mellanox.com>
+        <20190807112801.6b2ceb36.cohuck@redhat.com>
+        <AM0PR05MB48664379F91C8FA3D0035B41D1D40@AM0PR05MB4866.eurprd05.prod.outlook.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190709020425.GA7984@bogus>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Thu, 08 Aug 2019 08:29:37 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 08, 2019 at 08:04:25PM -0600, Rob Herring wrote:
-> On Fri, Jun 07, 2019 at 05:44:05PM +0200, Paul Cercueil wrote:
-> > Right now none of the Ingenic-based boards probe this driver from
-> > devicetree. This driver defined three compatible strings for the exact
-> > same behaviour. Before these strings are used, we can remove two of
-> > them.
+On Wed, 7 Aug 2019 16:33:11 +0000
+Parav Pandit <parav@mellanox.com> wrote:
+
+> > -----Original Message-----
+> > From: Cornelia Huck <cohuck@redhat.com>
+> > Sent: Wednesday, August 7, 2019 2:58 PM
+> > To: Parav Pandit <parav@mellanox.com>
+> > Cc: kvm@vger.kernel.org; wankhede@nvidia.com; linux-
+> > kernel@vger.kernel.org; alex.williamson@redhat.com; cjia@nvidia.com
+> > Subject: Re: [PATCH v1 2/2] vfio/mdev: Removed unused and redundant API for
+> > mdev UUID
 > > 
-> > Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> > ---
+> > On Tue,  6 Aug 2019 09:18:26 -0500
+> > Parav Pandit <parav@mellanox.com> wrote:
+> >   
+> > > There is no single production driver who is interested in mdev device
+> > > uuid. Currently UUID is mainly used to derive a device name.
+> > > Additionally mdev device name is already available using core kernel
+> > > API dev_name().  
 > > 
-> > Notes:
-> >     v2: Rebase on v5.2-rc3
-> > 
-> >  Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt | 5 +----
-> >  1 file changed, 1 insertion(+), 4 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt b/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt
-> > index 7d9d3f90641b..493bec80d59b 100644
-> > --- a/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt
-> > +++ b/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt
-> > @@ -2,10 +2,7 @@ Ingenic JZ47xx PWM Controller
-> >  =============================
-> >  
-> >  Required properties:
-> > -- compatible: One of:
-> > -  * "ingenic,jz4740-pwm"
-> > -  * "ingenic,jz4770-pwm"
-> > -  * "ingenic,jz4780-pwm"
-> > +- compatible: Should be "ingenic,jz4740-pwm"
+> > Well, the mdev code actually uses the uuid to check for duplicates before
+> > registration with the driver core would fail... I'd just drop the two sentences  
+> Yes, it does the check. But its mainly used to derive a device name.
+> And to ensure that there are no two devices with duplicate name, it compares with the uuid.
 > 
-> Are you sure all 3 chips are exactly the same features and bugs?
+> Even this 16 bytes storage is redundant.
+> Subsequently, I will submit a patch to get rid of storing this 16 bytes of UUID too.
+> Because for duplicate name check, device name itself is pretty good enough.
 > 
-> The correct thing to do here generally is the 4770 and 4780 would also 
-> have ingenic,jz4740-pwm as a fallback compatible. Then the driver can 
-> match on that until you find some difference and can use the more 
-> specific compatible.
+> Since I ran out of time and rc-4 is going on, I differed the 3rd simplification patch.
 
-Note that Thierry already applied this patch before your concern reached
-the mailing list. Is this bad enough to revert
-925488e8df4f396ad96ff008a84f5b14d8b73347?
+I'm not sure why we'd want to ditch the uuid; it's not like it is
+taking up huge amounts of space... and I see the device name being
+derived from the unique identifier that is the uuid, and not as the
+unique identifier itself.
 
-Best regards
-Uwe
+> 
+> Commit message actually came from the thoughts of 3rd patch, but I see that without it, its not so intuitive.
+> 
+> > talking about the device name, IMHO they don't really add useful information;
+> > but I'll leave that decision to the maintainers.
+> >   
+> > >
+> > > Hence removed unused exported symbol.
+> > >
+> > > Signed-off-by: Parav Pandit <parav@mellanox.com>
+> > > ---
+> > > Changelog:
+> > > v0->v1:
+> > >  - Updated commit log to address comments from Cornelia
+> > > ---
+> > >  drivers/vfio/mdev/mdev_core.c | 6 ------
+> > >  include/linux/mdev.h          | 1 -
+> > >  2 files changed, 7 deletions(-)  
+> > 
+> > Reviewed-by: Cornelia Huck <cohuck@redhat.com>  
+> Thanks for the review.
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
