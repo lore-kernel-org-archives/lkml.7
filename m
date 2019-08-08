@@ -2,53 +2,52 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C6F4C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:07:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E178C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:07:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15DD2214C6
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:07:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16980218A4
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:07:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565291250;
-	bh=wPU7qtU9xguWC0entMD6mZtTti9w3RNNQ+vEOPue/Xk=;
+	s=default; t=1565291254;
+	bh=MTFwszCrmSaCj63SpvMh7Xi8g7NApYngPDhIgzx0W1A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hed5AL/Hevoj0+l7X2oEcrFiPrpCcnRFFZ9+yJNWXiHTnsasmdhuar4yO+1DzC1va
-	 ZNlhobK5G/wD+Bus4xO3e49VxKeKwqwQLmPS2UfEw25lc/2gP8WTtWdXqS5pcIBtQj
-	 aW+i+3c6xXN5Z+RHrMS4Aivex5D0ztYAK8ao3wMo=
+	b=P9kTEvmezO+CcldTSjS+vaEwhz9d0mMMe63NO9qgZq5nOCbSPHFEnkomIBMHrauuf
+	 v8lArkDFrn+DERVil63BBwLGce6yZ1JzJtR/qzVk2XC/lsFYZ9TXvz9wqmwApgUWq3
+	 iPP3LFTLl6FBpYeAM6oAeXk7doaoKlz0cHeSmZyg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404675AbfHHTH3 (ORCPT
+        id S2404687AbfHHTHc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:07:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41092 "EHLO mail.kernel.org"
+        Thu, 8 Aug 2019 15:07:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404660AbfHHTHY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 15:07:24 -0400
+        id S2404250AbfHHTH3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 15:07:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66B3B21874;
-        Thu,  8 Aug 2019 19:07:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F6B62189D;
+        Thu,  8 Aug 2019 19:07:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565291243;
-        bh=wPU7qtU9xguWC0entMD6mZtTti9w3RNNQ+vEOPue/Xk=;
+        s=default; t=1565291249;
+        bh=MTFwszCrmSaCj63SpvMh7Xi8g7NApYngPDhIgzx0W1A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KPY1hiA5dL1/OvrqI0TWvJPh9OvCtgnDGrICLzM2rr0+dj4wGn2X5H9D31SL/0gSz
-         hv3u5snvbHuXr61RH9UQXtkAMNzMgXjPQLkTMT10wsjdkj8szleeaNEQJ68TU0uORG
-         I1MIGmi3I9ETmAnmGkyMFQPoR9G7CrVx3CvKkISQ=
+        b=CA1q8RhxX4ftsR2FGdhMjobLSwWUqWceFDeX2cYSswTSkq4r3LefiZ9fhVcs7dmW6
+         uzJGBe/3BZhr8bgroqvLeHhkmdkb56Y48Qy2SgZ3Jbco5WmdlKwO5VHq2umWBX42cB
+         AMIFi7LOq+cvsB/OfeJjSuSIce9mbdlPFfRFK9ow=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Aaron Armstrong Skomra <aaron.skomra@wacom.com>,
-        Ping Cheng <ping.cheng@wacom.com>,
-        Jiri Kosina <jkosina@suse.cz>
-Subject: [PATCH 5.2 06/56] HID: wacom: fix bit shift for Cintiq Companion 2
-Date:   Thu,  8 Aug 2019 21:04:32 +0200
-Message-Id: <20190808190453.115412526@linuxfoundation.org>
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.2 08/56] atm: iphase: Fix Spectre v1 vulnerability
+Date:   Thu,  8 Aug 2019 21:04:34 +0200
+Message-Id: <20190808190453.197021495@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190808190452.867062037@linuxfoundation.org>
 References: <20190808190452.867062037@linuxfoundation.org>
@@ -61,50 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aaron Armstrong Skomra <skomra@gmail.com>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 
-commit 693c3dab4e50403f91bca4b52fc6d8562a3180f6 upstream.
+[ Upstream commit ea443e5e98b5b74e317ef3d26bcaea54931ccdee ]
 
-The bit indicating BTN_6 on this device is overshifted
-by 2 bits, resulting in the incorrect button being
-reported.
+board is controlled by user-space, hence leading to a potential
+exploitation of the Spectre variant 1 vulnerability.
 
-Also fix copy-paste mistake in comments.
+This issue was detected with the help of Smatch:
 
-Signed-off-by: Aaron Armstrong Skomra <aaron.skomra@wacom.com>
-Reviewed-by: Ping Cheng <ping.cheng@wacom.com>
-Link: https://github.com/linuxwacom/xf86-input-wacom/issues/71
-Fixes: c7f0522a1ad1 ("HID: wacom: Slim down wacom_intuos_pad processing")
-Cc: <stable@vger.kernel.org> # v4.5+
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+drivers/atm/iphase.c:2765 ia_ioctl() warn: potential spectre issue 'ia_dev' [r] (local cap)
+drivers/atm/iphase.c:2774 ia_ioctl() warn: possible spectre second half.  'iadev'
+drivers/atm/iphase.c:2782 ia_ioctl() warn: possible spectre second half.  'iadev'
+drivers/atm/iphase.c:2816 ia_ioctl() warn: possible spectre second half.  'iadev'
+drivers/atm/iphase.c:2823 ia_ioctl() warn: possible spectre second half.  'iadev'
+drivers/atm/iphase.c:2830 ia_ioctl() warn: potential spectre issue '_ia_dev' [r] (local cap)
+drivers/atm/iphase.c:2845 ia_ioctl() warn: possible spectre second half.  'iadev'
+drivers/atm/iphase.c:2856 ia_ioctl() warn: possible spectre second half.  'iadev'
+
+Fix this by sanitizing board before using it to index ia_dev and _ia_dev
+
+Notice that given that speculation windows are large, the policy is
+to kill the speculation on the first load and not worry if it can be
+completed with a dependent load/store [1].
+
+[1] https://lore.kernel.org/lkml/20180423164740.GY17484@dhcp22.suse.cz/
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/hid/wacom_wac.c |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/atm/iphase.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/drivers/hid/wacom_wac.c
-+++ b/drivers/hid/wacom_wac.c
-@@ -533,14 +533,14 @@ static int wacom_intuos_pad(struct wacom
- 		 */
- 		buttons = (data[4] << 1) | (data[3] & 0x01);
- 	} else if (features->type == CINTIQ_COMPANION_2) {
--		/* d-pad right  -> data[4] & 0x10
--		 * d-pad up     -> data[4] & 0x20
--		 * d-pad left   -> data[4] & 0x40
--		 * d-pad down   -> data[4] & 0x80
--		 * d-pad center -> data[3] & 0x01
-+		/* d-pad right  -> data[2] & 0x10
-+		 * d-pad up     -> data[2] & 0x20
-+		 * d-pad left   -> data[2] & 0x40
-+		 * d-pad down   -> data[2] & 0x80
-+		 * d-pad center -> data[1] & 0x01
- 		 */
- 		buttons = ((data[2] >> 4) << 7) |
--		          ((data[1] & 0x04) << 6) |
-+		          ((data[1] & 0x04) << 4) |
- 		          ((data[2] & 0x0F) << 2) |
- 		          (data[1] & 0x03);
- 	} else if (features->type >= INTUOS5S && features->type <= INTUOSPL) {
+--- a/drivers/atm/iphase.c
++++ b/drivers/atm/iphase.c
+@@ -63,6 +63,7 @@
+ #include <asm/byteorder.h>  
+ #include <linux/vmalloc.h>
+ #include <linux/jiffies.h>
++#include <linux/nospec.h>
+ #include "iphase.h"		  
+ #include "suni.h"		  
+ #define swap_byte_order(x) (((x & 0xff) << 8) | ((x & 0xff00) >> 8))
+@@ -2760,8 +2761,11 @@ static int ia_ioctl(struct atm_dev *dev,
+    }
+    if (copy_from_user(&ia_cmds, arg, sizeof ia_cmds)) return -EFAULT; 
+    board = ia_cmds.status;
+-   if ((board < 0) || (board > iadev_count))
+-         board = 0;    
++
++	if ((board < 0) || (board > iadev_count))
++		board = 0;
++	board = array_index_nospec(board, iadev_count + 1);
++
+    iadev = ia_dev[board];
+    switch (ia_cmds.cmd) {
+    case MEMDUMP:
 
 
