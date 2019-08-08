@@ -2,106 +2,70 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69FF4C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 21:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D67E6C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 21:56:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D12B2166E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 21:55:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="eELnzwxY"
+	by mail.kernel.org (Postfix) with ESMTP id B37BF2089E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 21:56:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404244AbfHHVzy (ORCPT
+        id S2404301AbfHHV4g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 17:55:54 -0400
-Received: from ozlabs.org ([203.11.71.1]:59565 "EHLO ozlabs.org"
+        Thu, 8 Aug 2019 17:56:36 -0400
+Received: from verein.lst.de ([213.95.11.211]:49942 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732427AbfHHVzy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 17:55:54 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 464Md14DG8z9sNF;
-        Fri,  9 Aug 2019 07:55:49 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1565301351;
-        bh=0Ou22NT90/zxAm29hlbGDucgM9byIb1KYwf2gwqPCLw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=eELnzwxYuaaQaTqFFXzXFsHOcF4yd5L0ETzTOCSV5uw6wapbBnXBpT9YkIk1Xdia1
-         Qnbfln+lgG7Rocsye2iU0v20LdeZLuyFiNYKwepW5m4/KuD447TQjCkmZog2hKPN4G
-         CvSQt3Wt45E30EILN2A3pSbncGTfXomR5eNpvvDeNsvJBxS/V6UO6uDZOED/evk9uQ
-         a29st3+I1BUXcX6K45gWI7NzZGa9gtoIGWr7EHYC+uRNFIst2wCZ3th2uq6vrB/jz8
-         kQZl4AUGntZV1zGbUW7MW+vYWqm1ADazJSV5CPScrfmYoHdhnr71q90WUlcUy63vYh
-         IO2RV/K0ehTVg==
-Date:   Fri, 9 Aug 2019 07:55:47 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Alex Deucher <alexdeucher@gmail.com>,
-        Dave Airlie <airlied@linux.ie>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Joseph Greathouse <Joseph.Greathouse@amd.com>
-Subject: linux-next: manual merge of the amdgpu-fixes tree with the
- drm-fixes tree
-Message-ID: <20190809075547.679c0713@canb.auug.org.au>
+        id S1725785AbfHHV4g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 17:56:36 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 7D1DE68B02; Thu,  8 Aug 2019 23:56:32 +0200 (CEST)
+Date:   Thu, 8 Aug 2019 23:56:32 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas@shipmail.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Steven Price <steven.price@arm.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Subject: Re: cleanup the walk_page_range interface
+Message-ID: <20190808215632.GA12773@lst.de>
+References: <20190808154240.9384-1-hch@lst.de> <CAHk-=wh3jZnD3zaYJpW276WL=N0Vgo4KGW8M2pcFymHthwf0Vg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/0GEow4Lfw6PR50E2okImpXH";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wh3jZnD3zaYJpW276WL=N0Vgo4KGW8M2pcFymHthwf0Vg@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/0GEow4Lfw6PR50E2okImpXH
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Aug 08, 2019 at 10:50:37AM -0700, Linus Torvalds wrote:
+> > Note that both Thomas and Steven have series touching this area pending,
+> > and there are a couple consumer in flux too - the hmm tree already
+> > conflicts with this series, and I have potential dma changes on top of
+> > the consumers in Thomas and Steven's series, so we'll probably need a
+> > git tree similar to the hmm one to synchronize these updates.
+> 
+> I'd be willing to just merge this now, if that helps. The conversion
+> is mechanical, and my only slight worry would be that at least for my
+> original patch I didn't build-test the (few) non-x86
+> architecture-specific cases. But I did end up looking at them fairly
+> closely  (basically using some grep/sed scripts to see that the
+> conversions I did matched the same patterns). And your changes look
+> like obvious improvements too where any mistake would have been caught
+> by the compiler.
 
-Hi all,
+I did cross compile the s390 and powerpc bits, but I do not have an
+openrisc compiler.
 
-Today's linux-next merge of the amdgpu-fixes tree got conflicts in:
+> So I'm not all that worried from a functionality standpoint, and if
+> this will help the next merge window, I'll happily pull now.
 
-  drivers/gpu/drm/amd/amdkfd/kfd_chardev.c
-  include/uapi/linux/kfd_ioctl.h
-
-between commit:
-
-  4b3e30ed3ec7 ("Revert "drm/amdkfd: New IOCTL to allocate queue GWS"")
-
-from the drm-fixes tree and commit:
-
-  7e51b56cd5b8 ("drm/amdkfd: Remove GPU ID in GWS queue creation")
-
-from the amdgpu-fixes tree.
-
-I fixed it up (I just used the former) and can carry the fix as
-necessary. This is now fixed as far as linux-next is concerned, but any
-non trivial conflicts should be mentioned to your upstream maintainer
-when your tree is submitted for merging.  You may also want to consider
-cooperating with the maintainer of the conflicting tree to minimise any
-particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/0GEow4Lfw6PR50E2okImpXH
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1MmmMACgkQAVBC80lX
-0Gzm9Af/Tr4iPShzhGwvhE1Hflvd2O4Ad6Ivv7wYBf4kULwSx+n4LZAjYazP+526
-B4NZ5y/8z1GPhE4ZbmcaLyi7PLCNOA8XmD2u3bd7jlGlwyGfTFzrIsihPEjPsofV
-m///ZAZN6IrGfbekcr8+5divRQH4fHFLCR9vrIJn3KTMfSO7d4keqIpyFgdto/Z/
-29o4oDO4LAMMULeMJfPZSLiI58piSW6euxKLIy9nqyADh5GSuyPcjvJcTKWv/9Na
-Ct2VcrN1QAKKpJU62RSNG2ZgupY7yUoIbvD6I87g4GM6XZYfXXfvBFqjRu8eJrAL
-TpwpFSFdxhgkCaNQFffHs/sTV7cPdA==
-=c4nH
------END PGP SIGNATURE-----
-
---Sig_/0GEow4Lfw6PR50E2okImpXH--
+That would help with this series vs the others, but not with the other
+series vs each other.
