@@ -2,282 +2,102 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB7AAC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 22:22:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B25C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 22:23:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 763392173E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 22:22:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="mqW3TeB+"
+	by mail.kernel.org (Postfix) with ESMTP id 46E8C21743
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 22:23:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565303001;
+	bh=YP133fB9h1FWqw+YqmSEf1RM0EsyAIovSptY2wK/shM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TPxzMWVM4T3CirR3B3nubI4rmy1eG9LJYpu7PQm9/ToSCp7wSvWRERGMu5Osresmg
+	 Mn1CLG7dkcSiqFWWRpa38XcsXrxaexJ5r/Un9tZhiCBL++zg9i6E6bBjZn0Qq4Y/Q6
+	 HTUGtxacX9lydFSnWyCh5jNvAZovVRpf3fPtZuP4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404660AbfHHWWB (ORCPT
+        id S2404686AbfHHWXT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 18:22:01 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:33389 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404518AbfHHWWA (ORCPT
+        Thu, 8 Aug 2019 18:23:19 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45272 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404520AbfHHWXT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 18:22:00 -0400
-Received: by mail-ot1-f67.google.com with SMTP id q20so124954578otl.0
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 15:21:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
-        bh=eS96mV6ducJS5h+iACNl+AvdrHOnsDHfqSig0ry4nFQ=;
-        b=mqW3TeB+6HPnsUv6nkJeAjTeAtV2nKYBQGPQqDw0F30cwdgnsA4N6MWal7oMeaGZxY
-         s0HmYCwADnnEg1XomUKNqGVLWxfiROIvozuWNEoOtDFLAx1VBh/f2kDgURg5n/Zz/enK
-         2WC/O02+5pDIFu2M8naeWv/arRoKarrSqDrewAXq6Xsv4unSwaKVWmLtJ0SwtHQVgdU+
-         FO+amaW/cJZ8EKXvZlEOQrA5ZTru0ABUSWJzFDRMe8mtFtxefmZ0MmD2OHU9nWq3hcqW
-         dGqyZDiUy0CpBUbY29w+NtgDV1SF3QD3U/HbXFng5/WPL+fI2OFWsW8bEIbbkaOeVYQH
-         oK8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
-         :mime-version;
-        bh=eS96mV6ducJS5h+iACNl+AvdrHOnsDHfqSig0ry4nFQ=;
-        b=az3XMPXM9faAcTnL30CiWPc3cmyJYnsd2X2ak+sH/mp82tFSssxYdcIIxCpBbtx1Ow
-         H/aXNIwhhiZ3jhhDiYKe8F94EvTFIWHT5VRUtNfTmvDPTeFhwm1V0cRrAIi9lBnJ48RQ
-         0NALPR5OYiY4J31HIxBZLS9G7i6hqGBOD4fF2boy1KtStZPbJ0TiHyzjqWRHU9JQSV8i
-         SNxIsB87R2WcPNPRwLJF9Xb//PVDupbfH01yorbyU/hOsy+xMvkHPa4wMFWQNzGQQvvm
-         XMgTXlvDZa5g39qorUTTxPjMYQNjwVXG1p2GKcD8QlDkzITT2sXQ6Ur+DWzFh1rbt2T/
-         4HdQ==
-X-Gm-Message-State: APjAAAU+30jqbuPFseGQAdu+mn3F1scsl3RRPLe1IKzLPFeT3W108n1R
-        +dEXcAmP62BVnnSb/tPWd6ovjg==
-X-Google-Smtp-Source: APXvYqw9Fj3WTqn5BsMbmHDqBC6jwokH42iENqYuTEz+CcsFMrOe5X3lwXB5WVEr+mFc7iv6Kx33qQ==
-X-Received: by 2002:a02:ab99:: with SMTP id t25mr18777108jan.113.1565302919353;
-        Thu, 08 Aug 2019 15:21:59 -0700 (PDT)
-Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
-        by smtp.gmail.com with ESMTPSA id k3sm10702979ioq.18.2019.08.08.15.21.58
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 08 Aug 2019 15:21:58 -0700 (PDT)
-Date:   Thu, 8 Aug 2019 15:21:58 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     devicetree@vger.kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com
-cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: riscv: remove obsolete cpus.txt
-Message-ID: <alpine.DEB.2.21.9999.1908081520100.6414@viisi.sifive.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Thu, 8 Aug 2019 18:23:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=OQ7uhUWhALx9FlIxfrlo0dKV2Xrg6fiEJzG/KQjm6lE=; b=xH6Ik9e4UlkEMo4XQTFlS8ZTr
+        C3YvC4nMIlUlsAwCuex4dT6kivoBiG8ctXJpGiSueBRKjNrvETuwmnsmmKhmCWxJD8Pecp8kt9MSk
+        DCIGERWYSTeGppbxEq7HiTg02HQKaPGEdUAl8gB2TG0cclAAoCi+u24da3QHyTPtW99/g=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1hvqoV-0004Di-Vn; Thu, 08 Aug 2019 22:23:16 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 3148F2742BDD; Thu,  8 Aug 2019 23:23:15 +0100 (BST)
+Date:   Thu, 8 Aug 2019 23:23:15 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: Signed-off-by missing for commit in the sound-asoc
+ tree
+Message-ID: <20190808222315.GR3795@sirena.co.uk>
+References: <20190809074325.65a72962@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="8Bx+wEju+vH9ym24"
+Content-Disposition: inline
+In-Reply-To: <20190809074325.65a72962@canb.auug.org.au>
+X-Cookie: I think we're in trouble.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Remove the now-obsolete riscv/cpus.txt DT binding document, since we
-are using YAML binding documentation instead.
+--8Bx+wEju+vH9ym24
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-While doing so, transfer the explanatory text about 'harts' (with some
-edits) into the YAML file, at Rob's request.
+On Fri, Aug 09, 2019 at 07:43:25AM +1000, Stephen Rothwell wrote:
+> Hi all,
+>=20
+> Commit
+>=20
+>   c42d8cbee4c7 ("Merge branches from Takashi to ease Skylake development.=
+")
+>=20
+> is missing a Signed-off-by from its author and committer.
+>=20
+> Despite what the commit message says, this is not a merge commit.
 
-Link: https://lore.kernel.org/linux-riscv/CAL_JsqJs6MtvmuyAknsUxQymbmoV=G+=JfS1PQj9kNHV7fjC9g@mail.gmail.com/
-Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/riscv/cpus.txt        | 162 ------------------
- .../devicetree/bindings/riscv/cpus.yaml       |  12 ++
- 2 files changed, 12 insertions(+), 162 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/riscv/cpus.txt
+Rebuilt the merges now.
 
-diff --git a/Documentation/devicetree/bindings/riscv/cpus.txt b/Documentation/devicetree/bindings/riscv/cpus.txt
-deleted file mode 100644
-index adf7b7af5dc3..000000000000
---- a/Documentation/devicetree/bindings/riscv/cpus.txt
-+++ /dev/null
-@@ -1,162 +0,0 @@
--===================
--RISC-V CPU Bindings
--===================
--
--The device tree allows to describe the layout of CPUs in a system through
--the "cpus" node, which in turn contains a number of subnodes (ie "cpu")
--defining properties for every cpu.
--
--Bindings for CPU nodes follow the Devicetree Specification, available from:
--
--https://www.devicetree.org/specifications/
--
--with updates for 32-bit and 64-bit RISC-V systems provided in this document.
--
--===========
--Terminology
--===========
--
--This document uses some terminology common to the RISC-V community that is not
--widely used, the definitions of which are listed here:
--
--* hart: A hardware execution context, which contains all the state mandated by
--  the RISC-V ISA: a PC and some registers.  This terminology is designed to
--  disambiguate software's view of execution contexts from any particular
--  microarchitectural implementation strategy.  For example, my Intel laptop is
--  described as having one socket with two cores, each of which has two hyper
--  threads.  Therefore this system has four harts.
--
--=====================================
--cpus and cpu node bindings definition
--=====================================
--
--The RISC-V architecture, in accordance with the Devicetree Specification,
--requires the cpus and cpu nodes to be present and contain the properties
--described below.
--
--- cpus node
--
--        Description: Container of cpu nodes
--
--        The node name must be "cpus".
--
--        A cpus node must define the following properties:
--
--        - #address-cells
--                Usage: required
--                Value type: <u32>
--                Definition: must be set to 1
--        - #size-cells
--                Usage: required
--                Value type: <u32>
--                Definition: must be set to 0
--
--- cpu node
--
--        Description: Describes a hart context
--
--        PROPERTIES
--
--        - device_type
--                Usage: required
--                Value type: <string>
--                Definition: must be "cpu"
--        - reg
--                Usage: required
--                Value type: <u32>
--                Definition: The hart ID of this CPU node
--        - compatible:
--                Usage: required
--                Value type: <stringlist>
--                Definition: must contain "riscv", may contain one of
--                            "sifive,rocket0"
--        - mmu-type:
--                Usage: optional
--                Value type: <string>
--                Definition: Specifies the CPU's MMU type.  Possible values are
--                            "riscv,sv32"
--                            "riscv,sv39"
--                            "riscv,sv48"
--        - riscv,isa:
--                Usage: required
--                Value type: <string>
--                Definition: Contains the RISC-V ISA string of this hart.  These
--                            ISA strings are defined by the RISC-V ISA manual.
--
--Example: SiFive Freedom U540G Development Kit
-----------------------------------------------
--
--This system contains two harts: a hart marked as disabled that's used for
--low-level system tasks and should be ignored by Linux, and a second hart that
--Linux is allowed to run on.
--
--        cpus {
--                #address-cells = <1>;
--                #size-cells = <0>;
--                timebase-frequency = <1000000>;
--                cpu@0 {
--                        clock-frequency = <1600000000>;
--                        compatible = "sifive,rocket0", "riscv";
--                        device_type = "cpu";
--                        i-cache-block-size = <64>;
--                        i-cache-sets = <128>;
--                        i-cache-size = <16384>;
--                        next-level-cache = <&L15 &L0>;
--                        reg = <0>;
--                        riscv,isa = "rv64imac";
--                        status = "disabled";
--                        L10: interrupt-controller {
--                                #interrupt-cells = <1>;
--                                compatible = "riscv,cpu-intc";
--                                interrupt-controller;
--                        };
--                };
--                cpu@1 {
--                        clock-frequency = <1600000000>;
--                        compatible = "sifive,rocket0", "riscv";
--                        d-cache-block-size = <64>;
--                        d-cache-sets = <64>;
--                        d-cache-size = <32768>;
--                        d-tlb-sets = <1>;
--                        d-tlb-size = <32>;
--                        device_type = "cpu";
--                        i-cache-block-size = <64>;
--                        i-cache-sets = <64>;
--                        i-cache-size = <32768>;
--                        i-tlb-sets = <1>;
--                        i-tlb-size = <32>;
--                        mmu-type = "riscv,sv39";
--                        next-level-cache = <&L15 &L0>;
--                        reg = <1>;
--                        riscv,isa = "rv64imafdc";
--                        status = "okay";
--                        tlb-split;
--                        L13: interrupt-controller {
--                                #interrupt-cells = <1>;
--                                compatible = "riscv,cpu-intc";
--                                interrupt-controller;
--                        };
--                };
--        };
--
--Example: Spike ISA Simulator with 1 Hart
------------------------------------------
--
--This device tree matches the Spike ISA golden model as run with `spike -p1`.
--
--        cpus {
--                cpu@0 {
--                        device_type = "cpu";
--                        reg = <0x00000000>;
--                        status = "okay";
--                        compatible = "riscv";
--                        riscv,isa = "rv64imafdc";
--                        mmu-type = "riscv,sv48";
--                        clock-frequency = <0x3b9aca00>;
--                        interrupt-controller {
--                                #interrupt-cells = <0x00000001>;
--                                interrupt-controller;
--                                compatible = "riscv,cpu-intc";
--                        }
--                }
--        }
-diff --git a/Documentation/devicetree/bindings/riscv/cpus.yaml b/Documentation/devicetree/bindings/riscv/cpus.yaml
-index c899111aa5e3..5963af8c0c11 100644
---- a/Documentation/devicetree/bindings/riscv/cpus.yaml
-+++ b/Documentation/devicetree/bindings/riscv/cpus.yaml
-@@ -10,6 +10,18 @@ maintainers:
-   - Paul Walmsley <paul.walmsley@sifive.com>
-   - Palmer Dabbelt <palmer@sifive.com>
- 
-+description: |
-+  This document uses some terminology common to the RISC-V community
-+  that is not widely used, the definitions of which are listed here:
-+
-+  hart: A hardware execution context, which contains all the state
-+  mandated by the RISC-V ISA: a PC and some registers.  This
-+  terminology is designed to disambiguate software's view of execution
-+  contexts from any particular microarchitectural implementation
-+  strategy.  For example, an Intel laptop containing one socket with
-+  two cores, each of which has two hyperthreads, could be described as
-+  having four harts.
-+
- properties:
-   compatible:
-     items:
--- 
-2.22.0
+--8Bx+wEju+vH9ym24
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1MoNIACgkQJNaLcl1U
+h9Cmfwf/bdYZ9N+V5MaGXLgaC6NfsS9R4oWldWvU2feTg6jA/F7sE7pANkcmKtMV
+SD3ckMrC2lklvOlSmFf9e8qE2h8qVDlP/bX2K0iJJL2PTii/2y1GZBPTleLxRuqs
+0V6XvsdvC18LVz15ngUOhTCVcmAWeUNu6Idv/5nSlPyitDuDnBW0OHB28SZgr4KB
+kWMxgw4gkh8Otn1iYlvmaf97u3r8czb2RGKYDlfNocWieh27qWaSjL4vBNm9Ra+N
+ZwNwlTBeuLiln8Z7Xi6qF9LyNSEdXYCvXZKl5WcZMZyntJLPxoqmlVF55ctMoF0G
+cQW2zCp/2tsByo8qX9zkUJMxUY5c9Q==
+=3fjr
+-----END PGP SIGNATURE-----
+
+--8Bx+wEju+vH9ym24--
