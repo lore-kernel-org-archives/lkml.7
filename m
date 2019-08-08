@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66746C32754
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:53:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F04EFC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:53:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AD20218CA
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:53:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0C80218DA
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:53:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565294001;
-	bh=c1ssD/JpmDSoxjjPFn4KxCrYFahLskpnqkX549wisuU=;
+	s=default; t=1565294008;
+	bh=L7znTwJ30DixZpr8AixSBt+yPmHFg5k/O5GZecApfmg=;
 	h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
 	 References:List-ID:From;
-	b=X5clYziqpAR7+OZ4dM2V5HNbHTZ0nfk05Kl2oFWFET1bitoFsnhGUZtjo8VqW1xMR
-	 3J4kYZKV+B2eUAPsM7pAVtfGWNbAeu8HO7v6vck/UwHxdhATMDZ8t22WDg5hX6c/PI
-	 VoAh3hhrBmOQjpbfIHNyAnSITL9R4lA/7Ox/WKtU=
+	b=SN9Pqmga1BV/FtGr1O6IKged62PZbiSVHvoagEMgqRFP46a+1MUNtpXXQw+0etPAi
+	 nzVtJbodb42kNG+9nizDKEEy2q0ERJFKuLnJXg1dBw/ebXX2xZ4Q8Ehdxarz5eWkCg
+	 NEb0yLNvCr8A2VvTy7yeBSVB14YleIGigAUnB5Oo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404491AbfHHTxU (ORCPT
+        id S2404580AbfHHTx1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:53:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57944 "EHLO mail.kernel.org"
+        Thu, 8 Aug 2019 15:53:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404421AbfHHTxQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 15:53:16 -0400
+        id S2404488AbfHHTxV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 15:53:21 -0400
 Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61A19218A3;
-        Thu,  8 Aug 2019 19:53:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48A02218BE;
+        Thu,  8 Aug 2019 19:53:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565293995;
-        bh=c1ssD/JpmDSoxjjPFn4KxCrYFahLskpnqkX549wisuU=;
+        s=default; t=1565294000;
+        bh=L7znTwJ30DixZpr8AixSBt+yPmHFg5k/O5GZecApfmg=;
         h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=x2vKq/90KlvieQoztnf8yQ/AuVtGqbGtlTyDhiEZ7i74uf3tPvr08xjKH2uz3YSYa
-         3rpJc+BYZpUW2BdE4Kz/DSr405LQJlrWfRGShUM9djneLKM+MYv6Zxz9oSnQoaJ5JA
-         idEEnYP8/+qwhG/KTGsbmvXpz4ZjhjJo5LTDBPBM=
+        b=k1owMLkaD9GoVmyw7TDvOoYdW0XYV1AQcFERL/HenE/KAwD9h5+CVYy9fg/EtBCe1
+         hjqd2PkUm2KGNXCz5IqSGeqFzsbDjyZSmvZGFTKH7WCLj/OkhfYRIsvgMNHMaLg9Wg
+         TPE0v55tRcLhRb5pMqM8CJQNEVer3DUtS07F5snA=
 From:   zanussi@kernel.org
 To:     LKML <linux-kernel@vger.kernel.org>,
         linux-rt-users <linux-rt-users@vger.kernel.org>,
@@ -52,9 +52,9 @@ To:     LKML <linux-kernel@vger.kernel.org>,
         Daniel Wagner <wagi@monom.org>,
         Tom Zanussi <zanussi@kernel.org>,
         Julia Cartwright <julia@ni.com>
-Subject: [PATCH RT 06/19] sched/completion: Fix a lockup in wait_for_completion()
-Date:   Thu,  8 Aug 2019 14:52:34 -0500
-Message-Id: <8985311afa3c64a083d12c8460c582873d09aeef.1565293934.git.zanussi@kernel.org>
+Subject: [PATCH RT 11/19] sched/core: Drop a preempt_disable_rt() statement
+Date:   Thu,  8 Aug 2019 14:52:39 -0500
+Message-Id: <4739a43ec2cae31e82934622f4f63164f08bf03b.1565293934.git.zanussi@kernel.org>
 X-Mailer: git-send-email 2.14.1
 In-Reply-To: <cover.1565293934.git.zanussi@kernel.org>
 References: <cover.1565293934.git.zanussi@kernel.org>
@@ -65,7 +65,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Corey Minyard <cminyard@mvista.com>
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
 v4.14.137-rt65-rc1 stable review patch.
 If anyone has any objections, please let me know.
@@ -73,67 +73,50 @@ If anyone has any objections, please let me know.
 -----------
 
 
-[ Upstream commit f0837746a7e258abb35e65defc432ca66786347f ]
+[ Upstream commit 761126efdcbe3fa3e99c9079fa0ad6eca2f251f2 ]
 
-Consider following race:
+The caller holds a lock which already disables preemption.
+Drop the preempt_disable_rt() statement in get_nohz_timer_target().
 
-  T0                    T1                       T2
-  wait_for_completion()
-   do_wait_for_common()
-    __prepare_to_swait()
-     schedule()
-                        complete()
-                         x->done++ (0 -> 1)
-                         raw_spin_lock_irqsave()
-                         swake_up_locked()       wait_for_completion()
-                          wake_up_process(T0)
-                          list_del_init()
-                         raw_spin_unlock_irqrestore()
-                                                  raw_spin_lock_irq(&x->wait.lock)
-  raw_spin_lock_irq(&x->wait.lock)                x->done != UINT_MAX, 1 -> 0
-                                                  raw_spin_unlock_irq(&x->wait.lock)
-                                                  return 1
-   while (!x->done && timeout),
-   continue loop, not enqueued
-   on &x->wait
-
-Basically, the problem is that the original wait queues used in
-completions did not remove the item from the queue in the wakeup
-function, but swake_up_locked() does.
-
-Fix it by adding the thread to the wait queue inside the do loop.
-The design of swait detects if it is already in the list and doesn't
-do the list add again.
-
-Cc: stable-rt@vger.kernel.org
-Fixes: a04ff6b4ec4ee7e ("completion: Use simple wait queues")
-Signed-off-by: Corey Minyard <cminyard@mvista.com>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-[bigeasy: shorten commit message ]
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Tom Zanussi <zanussi@kernel.org>
----
- kernel/sched/completion.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/sched/completion.c b/kernel/sched/completion.c
-index 0fe2982e46a0..ac6d5efcd6ff 100644
---- a/kernel/sched/completion.c
-+++ b/kernel/sched/completion.c
-@@ -80,12 +80,12 @@ do_wait_for_common(struct completion *x,
- 	if (!x->done) {
- 		DECLARE_SWAITQUEUE(wait);
+ Conflicts:
+        kernel/sched/core.c
+---
+ kernel/sched/core.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
+
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 7d2cc0715114..17da1c1aba56 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -583,14 +583,11 @@ void resched_cpu(int cpu)
+  */
+ int get_nohz_timer_target(void)
+ {
+-	int i, cpu;
++	int i, cpu = smp_processor_id();
+ 	struct sched_domain *sd;
  
--		__prepare_to_swait(&x->wait, &wait);
- 		do {
- 			if (signal_pending_state(state, current)) {
- 				timeout = -ERESTARTSYS;
- 				break;
- 			}
-+			__prepare_to_swait(&x->wait, &wait);
- 			__set_current_state(state);
- 			raw_spin_unlock_irq(&x->wait.lock);
- 			timeout = action(timeout);
+-	preempt_disable_rt();
+-	cpu = smp_processor_id();
+-
+ 	if (!idle_cpu(cpu) && is_housekeeping_cpu(cpu))
+-		goto preempt_en_rt;
++		return cpu;
+ 
+ 	rcu_read_lock();
+ 	for_each_domain(cpu, sd) {
+@@ -609,8 +606,6 @@ int get_nohz_timer_target(void)
+ 		cpu = housekeeping_any_cpu();
+ unlock:
+ 	rcu_read_unlock();
+-preempt_en_rt:
+-	preempt_enable_rt();
+ 	return cpu;
+ }
+ 
 -- 
 2.14.1
 
