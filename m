@@ -2,205 +2,157 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B54E0C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:54:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D004C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:54:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61419217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:54:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17F8321874
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:54:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="ofRTJfZv"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mIYi4WLd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403945AbfHHPy3 (ORCPT
+        id S2390135AbfHHPyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 11:54:29 -0400
-Received: from gateway30.websitewelcome.com ([192.185.148.2]:42467 "EHLO
-        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728380AbfHHPy2 (ORCPT
+        Thu, 8 Aug 2019 11:54:37 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:33834 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390084AbfHHPyg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 11:54:28 -0400
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway30.websitewelcome.com (Postfix) with ESMTP id 3EA02C086
-        for <linux-kernel@vger.kernel.org>; Thu,  8 Aug 2019 10:54:27 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id vkkFhQeVK4FKpvkkFhYaMe; Thu, 08 Aug 2019 10:54:27 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=pj8C0rKSVTOTqd4oHkz2rQQO18GOmgV/gpPVALKLOPs=; b=ofRTJfZvfsQGXvNXxVwOooKtC2
-        wi6Bql/J5dMGnZ9MNlR/zRAlHN97ZF06irg81d3UB8nsEDG+H9LznPDbr9ASiHaZuIFMcTo4a8YCz
-        i81nEEW1XkvdHkq/EYy/vyfvP+n10AMNxnrQNqa64iO9OGv0AkK3yGxNfnOgtznRnX/GqLc/GDh+G
-        RalidODjD3tkvw1Fks0V44Sxcqv5za8S+qpB3LHzbPPjKECU6Jk613F9PRcEJPLlir9NQrPMF5SIs
-        uMoW42AwhICr52HF046el8iVMuxRRZAk8v8jNJuy/xw5OGXLfxYNXlcmYjp9SXjYAjGQ+365mGI32
-        y//oQV/A==;
-Received: from [187.192.11.120] (port=44130 helo=[192.168.43.131])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hvkkE-0048UV-MP; Thu, 08 Aug 2019 10:54:26 -0500
-Subject: Re: linux-next: Tree for Aug 7
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190807183606.372ca1a4@canb.auug.org.au>
- <87mugktf2a.fsf@concordia.ellerman.id.au>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <c993d973-a205-0a9f-bb75-f35e4d0f3a61@embeddedor.com>
-Date:   Thu, 8 Aug 2019 10:54:21 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 8 Aug 2019 11:54:36 -0400
+Received: by mail-ot1-f65.google.com with SMTP id n5so120604773otk.1
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 08:54:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=1sg8blSc4ktjYIlt+M6GsnZLOv8BJShN+hn4djS78FU=;
+        b=mIYi4WLdXWIumYUeDN6cnMSHjo105PssVlySrSrAVFJKfZh7TG7G1RZKLuO0anDBNn
+         Gpnfx6gn2opmmlvwQseCzMTgVv+uXDvkLCMriVnjJhLokn6wtZyLTMn2gOBWAr9LCuPf
+         G4kK+52fIKN7be4D1f3ZhgCD800bY35k9o3y+zvQd444Ef03+RM4DOdnt8SHstppzGiH
+         igaYPm42NustljaIDod+NbLxlQCR6takH+feS2j2eSO0d4pYYq7DYt5tQ6WSls8gUiD5
+         tMdLP7V8Dq+rN8oZTwJ0TW37Oc06Dcxd+8TDUXqz56XIavRmx6HCagDr9ou5ZZUJh1hz
+         e8Qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=1sg8blSc4ktjYIlt+M6GsnZLOv8BJShN+hn4djS78FU=;
+        b=WmXWoxx3K8KcPtSWb0zPbKAFMb/GOIJPOQwhOcs8GR+Jvh1N4CBQRXOJtaMXNKEj71
+         Cmi9Imu4v+TOfWHKR8D5t7/M/r0uafq8wLv0MIp/yEf/ubvG6be4BjRF90/p60rtvgBi
+         usiHmH3vFUMIOiZg5kWOcJ8Ra26M2Yhmxcj8e15CJI6qv0fLqZkempduakoLuy0Jnhth
+         9R6A573Joqm3xI0r1zvxQBipH5LGdxq+xoXIQpAvRZvhiYS/KSvek0YoYucmm2zt77Bg
+         uZPTQVMVc/eDcinxfjuC+RhigC3TU7t+5jL/W3pUJEfCNXXR81WOTJt5E+w1BKns6mI7
+         AoZw==
+X-Gm-Message-State: APjAAAVLnJQEZ9QWkvDtz4wD2GpjpycTi/V6XSH/0RbkxI9FH/CiuW0B
+        nyUxg2gqzxyHk+iobW9gCvvQlg==
+X-Google-Smtp-Source: APXvYqxx6/FJYqhLJnvLciidKkcc3FlpTPip8iGEIy8CrynVdPXCprALbLDJgDY0Mq5eplxkiyU7pQ==
+X-Received: by 2002:a9d:6150:: with SMTP id c16mr12962711otk.21.1565279675432;
+        Thu, 08 Aug 2019 08:54:35 -0700 (PDT)
+Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id q11sm29370290oij.16.2019.08.08.08.54.33
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 08 Aug 2019 08:54:34 -0700 (PDT)
+Date:   Thu, 8 Aug 2019 08:54:16 -0700 (PDT)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     Al Viro <viro@zeniv.linux.org.uk>
+cc:     Christoph Hellwig <hch@lst.de>, Hugh Dickins <hughd@google.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        David Howells <dhowells@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCHv2 2/3] i915: convert to new mount API
+In-Reply-To: <20190808012314.GK1131@ZenIV.linux.org.uk>
+Message-ID: <alpine.LSU.2.11.1908080813380.12321@eggly.anvils>
+References: <20190805160307.5418-1-sergey.senozhatsky@gmail.com> <20190805160307.5418-3-sergey.senozhatsky@gmail.com> <20190805181255.GH1131@ZenIV.linux.org.uk> <20190805182834.GI1131@ZenIV.linux.org.uk> <alpine.LSU.2.11.1908060007190.1941@eggly.anvils>
+ <20190807063002.GG6627@lst.de> <20190808012314.GK1131@ZenIV.linux.org.uk>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
 MIME-Version: 1.0
-In-Reply-To: <87mugktf2a.fsf@concordia.ellerman.id.au>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.192.11.120
-X-Source-L: No
-X-Exim-ID: 1hvkkE-0048UV-MP
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.131]) [187.192.11.120]:44130
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 4
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michael,
-
-On 8/8/19 12:13 AM, Michael Ellerman wrote:
+On Thu, 8 Aug 2019, Al Viro wrote:
+> On Wed, Aug 07, 2019 at 08:30:02AM +0200, Christoph Hellwig wrote:
+> > On Tue, Aug 06, 2019 at 12:50:10AM -0700, Hugh Dickins wrote:
+> > > Though personally I'm averse to managing "f"objects through
+> > > "m"interfaces, which can get ridiculous (notably, MADV_HUGEPAGE works
+> > > on the virtual address of a mapping, but the huge-or-not alignment of
+> > > that mapping must have been decided previously).  In Google we do use
+> > > fcntls F_HUGEPAGE and F_NOHUGEPAGE to override on a per-file basis -
+> > > one day I'll get to upstreaming those.
+> > 
+> > Such an interface seems very useful, although the two fcntls seem a bit
+> > odd.
+> > 
+> > But I think the point here is that the i915 has its own somewhat odd
+> > instance of tmpfs.  If we could pass the equivalent of the huge=*
+> > options to shmem_file_setup all that garbage (including the
+> > shmem_file_setup_with_mnt function) could go away.
 > 
-> This is still popping a few implicit fallthrough warnings, from various
-> configs:
-> 
->     arch/arm64/include/asm/kvm_hyp.h:31:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     arch/arm64/include/asm/sysreg.h:808:2: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     arch/arm64/kvm/hyp/debug-sr.c:20:19: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     arch/arm64/kvm/hyp/debug-sr.c:21:19: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     arch/arm64/kvm/hyp/debug-sr.c:22:19: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     arch/arm64/kvm/hyp/debug-sr.c:23:19: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     arch/arm64/kvm/hyp/debug-sr.c:24:19: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     arch/arm64/kvm/hyp/debug-sr.c:25:19: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     arch/arm64/kvm/hyp/debug-sr.c:26:18: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     arch/arm64/kvm/hyp/debug-sr.c:27:18: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     arch/arm64/kvm/hyp/debug-sr.c:28:18: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     arch/arm64/kvm/hyp/debug-sr.c:29:18: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     arch/arm64/kvm/hyp/debug-sr.c:30:18: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     arch/arm64/kvm/hyp/debug-sr.c:31:18: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     arch/arm64/kvm/hyp/debug-sr.c:32:18: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     arch/arm64/kvm/hyp/debug-sr.c:33:18: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     arch/arm64/kvm/hyp/debug-sr.c:34:18: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:351:24: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:353:24: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:361:24: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:363:24: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:384:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:386:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:394:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:396:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     arch/mips/include/asm/octeon/cvmx-sli-defs.h:47:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     arch/nds32/kernel/signal.c:315:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     arch/nds32/kernel/signal.c:362:20: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     drivers/gpu/drm/amd/amdgpu/amdgpu_device.c:279:3: error: implicit declaration of function 'readq' [-Werror=implicit-function-declaration]
->     drivers/gpu/drm/amd/amdgpu/amdgpu_device.c:279:9: error: implicit declaration of function 'readq'; did you mean 'readl'? [-Werror=implicit-function-declaration]
->     drivers/gpu/drm/amd/amdgpu/amdgpu_device.c:279:9: error: implicit declaration of function 'readq' [-Werror=implicit-function-declaration]
->     drivers/gpu/drm/amd/amdgpu/amdgpu_device.c:298:3: error: implicit declaration of function 'writeq'; did you mean 'writel'? [-Werror=implicit-function-declaration]
->     drivers/gpu/drm/amd/amdgpu/amdgpu_device.c:298:3: error: implicit declaration of function 'writeq' [-Werror=implicit-function-declaration]
->     drivers/gpu/drm/sun4i/sun4i_tcon.c:318:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c:993:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     drivers/iommu/arm-smmu-v3.c:1189:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     drivers/misc/lkdtm/bugs.c:279:8: error: implicit declaration of function 'native_read_cr4' [-Werror=implicit-function-declaration]
->     drivers/misc/lkdtm/bugs.c:288:2: error: implicit declaration of function 'native_write_cr4' [-Werror=implicit-function-declaration]
->     drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c:551:41: warning: overflow in implicit constant conversion [-Woverflow]
->     drivers/scsi/ncr53c8xx.c:3908:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     drivers/scsi/ncr53c8xx.c:3914:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     drivers/scsi/ncr53c8xx.c:3917:18: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     drivers/scsi/ncr53c8xx.c:6713:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     drivers/soc/qcom/socinfo.c:231:2: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     drivers/soc/qcom/socinfo.c:323:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     drivers/soc/qcom/socinfo.c:331:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     drivers/soc/qcom/socinfo.c:341:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     drivers/soc/qcom/socinfo.c:348:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     drivers/soc/qcom/socinfo.c:354:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     drivers/soc/qcom/socinfo.c:360:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     drivers/soc/qcom/socinfo.c:366:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     drivers/video/fbdev/sh_mobile_lcdcfb.c:1596:22: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     drivers/video/fbdev/sh_mobile_lcdcfb.c:2086:22: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     include/linux/printk.h:309:2: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     include/math-emu/op-common.h:310:11: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     include/math-emu/op-common.h:320:11: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     include/math-emu/op-common.h:417:11: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     include/math-emu/op-common.h:430:11: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     include/math-emu/soft-fp.h:124:8: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     mm/hmm.c:745:9: error: implicit declaration of function 'pud_pfn' [-Werror=implicit-function-declaration]
-> 
+> ... or follow shmem_file_super() with whatever that fcntl maps to
+> internally.  I would really love to get rid of that i915 kludge.
 
-There are already patches applied for the vast majority of these warnings. For some reason
-they haven't been included in -next yet.
+As to the immediate problem of i915_gemfs using remount_fs on linux-next,
+IIUC, all that is necessary at the moment is the deletions patch below
+(but I'd prefer that to come from the i915 folks).  Since gemfs has no
+need to change the huge option from its default to its default.
 
-Thank you for the report.
---
-Gustavo
+As to the future of when they get back to wanting huge pages in gemfs,
+yes, that can probably best be arranged by using the internals of an
+fcntl F_HUGEPAGE on those objects that would benefit from it.
+
+Though my intention there was that the "huge=never" default ought
+to continue to refuse to give huge pages, even when asked by fcntl.
+So a little hackery may still be required, to allow the i915_gemfs
+internal mount to get huge pages when a user mount would not.
+
+As to whether shmem_file_setup_with_mnt() needs to live: I've given
+that no thought, but accept that shm_mnt is such a ragbag of different
+usages, that i915 is right to prefer their own separate gemfs mount.
+
+Hugh
+
+--- mmotm/drivers/gpu/drm/i915/gem/i915_gemfs.c	2019-07-21 19:40:16.573703780 -0700
++++ linux/drivers/gpu/drm/i915/gem/i915_gemfs.c	2019-08-08 07:19:23.967689058 -0700
+@@ -24,28 +24,6 @@ int i915_gemfs_init(struct drm_i915_priv
+ 	if (IS_ERR(gemfs))
+ 		return PTR_ERR(gemfs);
+ 
+-	/*
+-	 * Enable huge-pages for objects that are at least HPAGE_PMD_SIZE, most
+-	 * likely 2M. Note that within_size may overallocate huge-pages, if say
+-	 * we allocate an object of size 2M + 4K, we may get 2M + 2M, but under
+-	 * memory pressure shmem should split any huge-pages which can be
+-	 * shrunk.
+-	 */
+-
+-	if (has_transparent_hugepage()) {
+-		struct super_block *sb = gemfs->mnt_sb;
+-		/* FIXME: Disabled until we get W/A for read BW issue. */
+-		char options[] = "huge=never";
+-		int flags = 0;
+-		int err;
+-
+-		err = sb->s_op->remount_fs(sb, &flags, options);
+-		if (err) {
+-			kern_unmount(gemfs);
+-			return err;
+-		}
+-	}
+-
+ 	i915->mm.gemfs = gemfs;
+ 
+ 	return 0;
