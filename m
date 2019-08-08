@@ -2,139 +2,98 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C59E6C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:12:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D55C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F3BC2184E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:12:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="LBJgE3sr"
+	by mail.kernel.org (Postfix) with ESMTP id 047A72184E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:13:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732922AbfHHNMG (ORCPT
+        id S1732976AbfHHNNN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 09:12:06 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:13801 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732645AbfHHNMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 09:12:06 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46480f6DSMz9v099;
-        Thu,  8 Aug 2019 15:12:02 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=LBJgE3sr; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id eJxpUM1MSBdv; Thu,  8 Aug 2019 15:12:02 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46480f51jZz9v098;
-        Thu,  8 Aug 2019 15:12:02 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1565269922; bh=FoHJwwJIf4eVtKRsj+ocx2lFK0iueulXt5jhefTGvrU=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=LBJgE3srgUmBzFYk/pZ6HqRFwW3ks9q0Y2eM2QmvCKlPCgNbkteSOS0Is5Oz/OjDy
-         wCt6V7EHscK4nxegfqG4DJ1kDEjwk9jj7U7nZWsrumbkSQtOGfX+SRiMAiiDEs0SiD
-         4H/ySf6RP0IhzJ9joCLbrWkLXBFerpG9pzHFkOGc=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 44F928B872;
-        Thu,  8 Aug 2019 15:12:04 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id Lj3Hc9lCWXDo; Thu,  8 Aug 2019 15:12:04 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id D32478B870;
-        Thu,  8 Aug 2019 15:12:03 +0200 (CEST)
-Subject: Re: SMP lockup at boot on Freescale/NXP T2080 (powerpc 64)
-To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
-        "npiggin@gmail.com" <npiggin@gmail.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Grant McEwan <grant.mcewan@alliedtelesis.co.nz>
-References: <1564970785.27215.29.camel@alliedtelesis.co.nz>
- <4525a16cd3e65f89741b50daf2ec259b6baaab78.camel@alliedtelesis.co.nz>
- <87wofqv8a0.fsf@concordia.ellerman.id.au>
- <1565135404.16914.5.camel@alliedtelesis.co.nz>
- <87o911vktx.fsf@concordia.ellerman.id.au>
- <1565141097.19352.12.camel@alliedtelesis.co.nz>
- <b0ad453c-3a2b-6dd5-7bfc-5e275aa7bf62@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <dcdaadb0-209c-605b-f117-fb6d872e2cd8@c-s.fr>
-Date:   Thu, 8 Aug 2019 15:12:03 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 8 Aug 2019 09:13:13 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:59231 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732375AbfHHNNN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 09:13:13 -0400
+Received: from [192.168.1.110] ([77.4.95.67]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1M3Upe-1hwGBc1pPm-000dS4; Thu, 08 Aug 2019 15:12:50 +0200
+Subject: Re: [PATCH RFC] modpost: Support I2C Aliases from OF tables
+To:     Javier Martinez Canillas <javierm@redhat.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Wolfram Sang <wsa@the-dreams.de>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>
+References: <20190710193918.31135-1-kieran.bingham+renesas@ideasonboard.com>
+ <0e1b6e0b-1c94-4b00-7fda-c2a303ee3816@redhat.com>
+ <20190731194419.GB4084@kunai>
+ <f4a78e93-6aaa-bc72-cf94-06fc2574451c@redhat.com>
+ <CAMuHMdUA-hjVqSP_c0cB=76cfrucF6xxRi3ymVoEsJ2hbkfT=A@mail.gmail.com>
+ <51451f89-9193-2be6-e724-e9ca44a25f52@redhat.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <620e0aec-e3d8-7289-6525-b720013e8dfa@metux.net>
+Date:   Thu, 8 Aug 2019 15:12:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <b0ad453c-3a2b-6dd5-7bfc-5e275aa7bf62@c-s.fr>
+In-Reply-To: <51451f89-9193-2be6-e724-e9ca44a25f52@redhat.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:IBK9Xm7wYE6zK76e7iHZaERZwlA5HaihmNgKog9rl292nI0WqjF
+ PtrGixDaNMcmx4CyY0g0HQuEYZ/9mduxkUv6RSCs3hYj5Z5Hh+F8N6xFGrfZaX2s3UPBmkJ
+ oB+kot/By4XS+pGXba4sdeE9LvdMWIijTMwfqdOmigf9tUAw1ch5C3kq14jlJjw2D+apDZq
+ CXntaM4+3eqXKMvkgxEyQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:3M+d3uKvZSs=:yLNYLCiuD+SNXAdiAMehjW
+ GAhYqJo1pts5wjxmrfm3q9PHoTEl/auOnNIiUymU5nQ6kZegUv7OINe5y3jgIIwhyTtjgti63
+ 3KQVZlS74z2HWDIiqmNcTAe24n0/KKjZoNstcoB8fTvdXc2x1MVHU/ybm7Vmqv/JF0bnBASfe
+ A4q8igaAcDUoBlvUcu9F+Tma6qgYM+bz/iT2v6/0/Or/1/V8XyMnVEQFX6uiRBpQqDUSFZgui
+ AvAZF8Ei7ft8focNVRd0A5eBMpyr/SbXyHunKNEotLF9t5nHx9AiBcU1oNvsw5h6kza7PNNH6
+ pwTlUkq1ersEeabWvRtXk+CQqyrd+l3cdRJ7lSpEz/rs+NnrboMy0ccIzztuh0SAwdTwRAFLf
+ JfdpyVssc3vMTsKYG2NJahpvi+DYB0afEumw12ItulLNSsjrEptmqZgWoWgq2aFevhC3K2ZAR
+ XQJ9h2h6TIoS0Ax3y/WtBHDEXGoeoIOq43hBWPFz8XcKoU6pqoBhrY6U3VFaj1KXNwk6RfX4M
+ S1MSdRzWrdpkpjDn4vje7kK05V4sswjCc2Qrn178RpmxgY2Py7/yRzOmVaY1UkWPKAG+PcIy7
+ 4ahyHVKIev8jqVOgae1LucWtwwRnR5BbMGxw7B1nFEpHydFUjVFr5LVvwNQHYqnlXiAujVvGc
+ ii1W0Hes3Krb8L6pP/wMi9ghqVDzYYLjzgsaq9noAOCeuZuIkqm+wYV5DjdApJsv5vEIjUYn8
+ yQtdouzt0j2sv7nw1w76z98d5bIQSyrerypLiYTt4ERSWSCGggf846HsQPE=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 06.08.19 19:12, Javier Martinez Canillas wrote:
+
+> Right, we could add a macro for that. Although it should probably be called
+> I2C_OF_MODULE_DEVICE_TABLE() or something like that since is specific to OF.
+
+At that point it should be completely noop when OF is disabled, so we
+also can get rid of many ifdef's.
+
+I've got some patch somewhere for introducing a MODULE_OF_TABLE() macro
+as replacement for many MODULE_DEVICE_TABLE(of, ...) cases, which noops
+when CONFIG_OF is disabled. (and similar ones for other table types).
+
+by the way: haven't followed whole discussion, just picked up some
+proposed table changes ... does that require userland upgrades ?
 
 
-Le 08/08/2019 à 10:46, Christophe Leroy a écrit :
-> 
-> 
-> Le 07/08/2019 à 03:24, Chris Packham a écrit :
->> On Wed, 2019-08-07 at 11:13 +1000, Michael Ellerman wrote:
->>> Chris Packham <Chris.Packham@alliedtelesis.co.nz> writes:
->>>>
->>>> On Tue, 2019-08-06 at 21:32 +1000, Michael Ellerman wrote:
->>>> The difference between a working and non working defconfig is
->>>> CONFIG_PREEMPT specifically CONFIG_PREEMPT=y makes my system hang
->>>> at
->>>> boot.
->>>>
->>>> Is that now intentionally prohibited on 64-bit powerpc?
->>> It's not prohibitied, but it probably should be because no one really
->>> tests it properly. I have a handful of IBM machines where I boot a
->>> PREEMPT kernel but that's about it.
->>>
->>> The corenet configs don't have PREEMPT enabled, which suggests it was
->>> never really supported on those machines.
->>>
->>> But maybe someone from NXP can tell me otherwise.
->>>
->>
->> I think our workloads need CONFIG_PREEMPT=y because our systems have
->> switch ASIC drivers implemented in userland and we need to be able to
->> react quickly to network events in order to prevent loops. We have seen
->> instances of this not happening simply because some other process is in
->> the middle of a syscall.
->>
->> One thing I am working on here is a setup with a few vendor boards and
->> some of our own kit that we can test the upstream kernels on. Hopefully
->> that'd make these kinds of reports more timely rather than just
->> whenever we decide to move to a new kernel version.
->>
->>
-> 
-> 
-> The defconfig also sets CONFIG_DEBUG_PREEMPT. Have you tried without 
-> CONFIG_DEBUG_PREEMPT ?
-> 
+--mtx
 
-Reproduced on QEMU. CONFIG_DEBUG_PREEMPT is the trigger. Due to 
-smp_processor_id() being called from early_init_this_mmu(), when 
-CONFIG_DEBUG_PREEMPT is set debug_smp_processor_id() is called instead 
-of raw_smp_processor_id(), but this is too early for 
-debug_smp_processor_id()
-
-As this call is useless, just drop it.
-
-Can you test patch at https://patchwork.ozlabs.org/patch/1144005/ ?
-
-Thanks
-Christophe
-
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
