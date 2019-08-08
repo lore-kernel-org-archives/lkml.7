@@ -2,91 +2,72 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46F99C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 10:24:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9412C32754
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 10:24:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 224142173E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 10:24:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F21D2173E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 10:24:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389962AbfHHKYP (ORCPT
+        id S2389972AbfHHKY5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 06:24:15 -0400
-Received: from foss.arm.com ([217.140.110.172]:59486 "EHLO foss.arm.com"
+        Thu, 8 Aug 2019 06:24:57 -0400
+Received: from verein.lst.de ([213.95.11.211]:45391 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389933AbfHHKYP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 06:24:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7E5E628;
-        Thu,  8 Aug 2019 03:24:14 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7C27C3F694;
-        Thu,  8 Aug 2019 03:24:12 -0700 (PDT)
-Date:   Thu, 8 Aug 2019 11:24:10 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Rob Clark <robdclark@chromium.org>,
-        Rob Clark <robdclark@gmail.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] drm: add cache support for arm64
-Message-ID: <20190808102410.GB46901@lakrids.cambridge.arm.com>
-References: <20190805211451.20176-1-robdclark@gmail.com>
- <20190806084821.GA17129@lst.de>
- <CAJs_Fx6eh1w7c=crMoD5XyEOMzP6orLhqUewErE51cPGYmObBQ@mail.gmail.com>
- <20190806143457.GF475@lakrids.cambridge.arm.com>
- <CAJs_Fx4h6SWGmDTLBnV4nmWUFAs_Ge1inxd-dW9aDKgKqmc1eQ@mail.gmail.com>
- <20190807123807.GD54191@lakrids.cambridge.arm.com>
- <CAJs_Fx5xU2-dn3iOVqWTzAjpTaQ8BBNP_Gn_iMc-eJpOX+iXoQ@mail.gmail.com>
- <20190807164958.GA44765@lakrids.cambridge.arm.com>
- <20190808075827.GD30308@lst.de>
- <20190808102053.GA46901@lakrids.cambridge.arm.com>
+        id S2389932AbfHHKY5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 06:24:57 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 3F93F227A81; Thu,  8 Aug 2019 12:24:52 +0200 (CEST)
+Date:   Thu, 8 Aug 2019 12:24:52 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     linux-mm@kvack.org, Andrea Arcangeli <aarcange@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        "Kuehling, Felix" <Felix.Kuehling@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        Dimitri Sivanich <sivanich@sgi.com>,
+        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        iommu@lists.linux-foundation.org, intel-gfx@lists.freedesktop.org,
+        Gavin Shan <shangw@linux.vnet.ibm.com>,
+        Andrea Righi <andrea@betterlinux.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH v3 hmm 01/11] mm/mmu_notifiers: hoist
+ do_mmu_notifier_register down_write to the caller
+Message-ID: <20190808102452.GA648@lst.de>
+References: <20190806231548.25242-1-jgg@ziepe.ca> <20190806231548.25242-2-jgg@ziepe.ca>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190808102053.GA46901@lakrids.cambridge.arm.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <20190806231548.25242-2-jgg@ziepe.ca>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 11:20:53AM +0100, Mark Rutland wrote:
-> On Thu, Aug 08, 2019 at 09:58:27AM +0200, Christoph Hellwig wrote:
-> > On Wed, Aug 07, 2019 at 05:49:59PM +0100, Mark Rutland wrote:
-> > > For arm64, we can tear down portions of the linear map, but that has to
-> > > be done explicitly, and this is only possible when using rodata_full. If
-> > > not using rodata_full, it is not possible to dynamically tear down the
-> > > cacheable alias.
-> > 
-> > Interesting.  For this or next merge window I plan to add support to the
-> > generic DMA code to remap pages as uncachable in place based on the
-> > openrisc code.  Aѕ far as I can tell the requirement for that is
-> > basically just that the kernel direct mapping doesn't use PMD or bigger
-> > mapping so that it supports changing protection bits on a per-PTE basis.
-> > Is that the case with arm64 + rodata_full?
+On Tue, Aug 06, 2019 at 08:15:38PM -0300, Jason Gunthorpe wrote:
+> From: Jason Gunthorpe <jgg@mellanox.com>
 > 
-> Yes, with the added case that on arm64 we can also have contiguous
-> entries at the PTE level, which we also have to disable.
+> This simplifies the code to not have so many one line functions and extra
+> logic. __mmu_notifier_register() simply becomes the entry point to
+> register the notifier, and the other one calls it under lock.
 > 
-> Our kernel page table creation code does that for rodata_full or
-> DEBUG_PAGEALLOC. See arch/arm64/mmu.c, in map_mem(), where we pass
-> NO_{BLOCK,CONT}_MAPPINGS down to our pagetable creation code.
+> Also add a lockdep_assert to check that the callers are holding the lock
+> as expected.
+> 
+> Suggested-by: Christoph Hellwig <hch@infradead.org>
+> Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 
-Whoops, that should be: arch/arm64/mm/mmu.c.
+Looks good:
 
-Mark.
+Reviewed-by: Christoph Hellwig <hch@lst.de>
