@@ -2,94 +2,90 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22AC4C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 18:09:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA5D3C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 18:11:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3171217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 18:09:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6736217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 18:11:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403849AbfHHSJz (ORCPT
+        id S2390147AbfHHSLT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 14:09:55 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55662 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727096AbfHHSJz (ORCPT
+        Thu, 8 Aug 2019 14:11:19 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:62210 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725785AbfHHSLT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 14:09:55 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x78I7JqT107920;
-        Thu, 8 Aug 2019 14:09:18 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2u8rep0u4j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 08 Aug 2019 14:09:18 -0400
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x78I7xED109690;
-        Thu, 8 Aug 2019 14:09:17 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2u8rep0u46-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 08 Aug 2019 14:09:17 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x78I5qZ1030151;
-        Thu, 8 Aug 2019 18:09:16 GMT
-Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
-        by ppma04dal.us.ibm.com with ESMTP id 2u51w78sa8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 08 Aug 2019 18:09:16 +0000
+        Thu, 8 Aug 2019 14:11:19 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x78I7cWY127018
+        for <linux-kernel@vger.kernel.org>; Thu, 8 Aug 2019 14:11:18 -0400
+Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2u8pg5duhm-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 14:11:17 -0400
+Received: from localhost
+        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Thu, 8 Aug 2019 19:11:16 +0100
+Received: from b01cxnp22036.gho.pok.ibm.com (9.57.198.26)
+        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 8 Aug 2019 19:11:12 +0100
 Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x78I9F2938011232
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x78IBB3x13697810
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 8 Aug 2019 18:09:15 GMT
+        Thu, 8 Aug 2019 18:11:11 GMT
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BE217B206A;
-        Thu,  8 Aug 2019 18:09:15 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 8F45FB206C;
+        Thu,  8 Aug 2019 18:11:11 +0000 (GMT)
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 90155B2066;
-        Thu,  8 Aug 2019 18:09:15 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 7A03EB2068;
+        Thu,  8 Aug 2019 18:11:11 +0000 (GMT)
 Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
         by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu,  8 Aug 2019 18:09:15 +0000 (GMT)
+        Thu,  8 Aug 2019 18:11:11 +0000 (GMT)
 Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id C150716C5DA7; Thu,  8 Aug 2019 11:09:16 -0700 (PDT)
-Date:   Thu, 8 Aug 2019 11:09:16 -0700
+        id AF7AF16C8EB1; Thu,  8 Aug 2019 11:11:12 -0700 (PDT)
+Date:   Thu, 8 Aug 2019 11:11:12 -0700
 From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Byungchul Park <max.byungchul.park@gmail.com>
+To:     Byungchul Park <byungchul.park@lge.com>
 Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Byungchul Park <byungchul.park@lge.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Rao Shoaib <rao.shoaib@oracle.com>, kernel-team@android.com,
-        kernel-team <kernel-team@lge.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
+        linux-kernel@vger.kernel.org, Rao Shoaib <rao.shoaib@oracle.com>,
+        max.byungchul.park@gmail.com, kernel-team@android.com,
+        kernel-team@lge.com, Davidlohr Bueso <dave@stgolabs.net>,
         Josh Triplett <josh@joshtriplett.org>,
         Lai Jiangshan <jiangshanlai@gmail.com>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        rcu <rcu@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
 Subject: Re: [PATCH RFC v1 1/2] rcu/tree: Add basic support for kfree_rcu
  batching
-Message-ID: <20190808180916.GP28441@linux.ibm.com>
 Reply-To: paulmck@linux.ibm.com
 References: <20190806212041.118146-1-joel@joelfernandes.org>
  <20190806235631.GU28441@linux.ibm.com>
  <20190807094504.GB169551@google.com>
- <20190807175215.GE28441@linux.ibm.com>
- <20190808095232.GA30401@X58A-UD3R>
- <20190808125607.GB261256@google.com>
- <CANrsvRPU_u6oKpjZ1368Evto+1hGboNYeOuMdbdzaOfXhSO=5g@mail.gmail.com>
+ <20190808102610.GA7227@X58A-UD3R>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CANrsvRPU_u6oKpjZ1368Evto+1hGboNYeOuMdbdzaOfXhSO=5g@mail.gmail.com>
+In-Reply-To: <20190808102610.GA7227@X58A-UD3R>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 X-TM-AS-GCONF: 00
+x-cbid: 19080818-0064-0000-0000-00000406E49F
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011571; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000287; SDB=6.01243948; UDB=6.00656251; IPR=6.01025426;
+ MB=3.00028095; MTD=3.00000008; XFM=3.00000015; UTC=2019-08-08 18:11:16
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19080818-0065-0000-0000-00003E98BA38
+Message-Id: <20190808181112.GQ28441@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-08_07:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
  mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1906280000 definitions=main-1908080162
@@ -98,153 +94,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 11:23:17PM +0900, Byungchul Park wrote:
-> On Thu, Aug 8, 2019 at 9:56 PM Joel Fernandes <joel@joelfernandes.org> wrote:
-> >
-> > On Thu, Aug 08, 2019 at 06:52:32PM +0900, Byungchul Park wrote:
-> > > On Wed, Aug 07, 2019 at 10:52:15AM -0700, Paul E. McKenney wrote:
-> > > > > > On Tue, Aug 06, 2019 at 05:20:40PM -0400, Joel Fernandes (Google) wrote:
-> > > > [ . . . ]
-> > > > > > > +     for (; head; head = next) {
-> > > > > > > +             next = head->next;
-> > > > > > > +             head->next = NULL;
-> > > > > > > +             __call_rcu(head, head->func, -1, 1);
-> > > > > >
-> > > > > > We need at least a cond_resched() here.  200,000 times through this loop
-> > > > > > in a PREEMPT=n kernel might not always be pretty.  Except that this is
-> > > > > > invoked directly from kfree_rcu() which might be invoked with interrupts
-> > > > > > disabled, which precludes calls to cond_resched().  So the realtime guys
-> > > > > > are not going to be at all happy with this loop.
-> > > > >
-> > > > > Ok, will add this here.
-> > > > >
-> > > > > > And this loop could be avoided entirely by having a third rcu_head list
-> > > > > > in the kfree_rcu_cpu structure.  Yes, some of the batches would exceed
-> > > > > > KFREE_MAX_BATCH, but given that they are invoked from a workqueue, that
-> > > > > > should be OK, or at least more OK than queuing 200,000 callbacks with
-> > > > > > interrupts disabled.  (If it turns out not to be OK, an array of rcu_head
-> > > > > > pointers can be used to reduce the probability of oversized batches.)
-> > > > > > This would also mean that the equality comparisons with KFREE_MAX_BATCH
-> > > > > > need to become greater-or-equal comparisons or some such.
-> > > > >
-> > > > > Yes, certainly we can do these kinds of improvements after this patch, and
-> > > > > then add more tests to validate the improvements.
-> > > >
-> > > > Out of pity for people bisecting, we need this fixed up front.
-> > > >
-> > > > My suggestion is to just allow ->head to grow until ->head_free becomes
-> > > > available.  That way you are looping with interrupts and preemption
-> > > > enabled in workqueue context, which is much less damaging than doing so
-> > > > with interrupts disabled, and possibly even from hard-irq context.
-> > >
-> > > Agree.
-> > >
-> > > Or after introducing another limit like KFREE_MAX_BATCH_FORCE(>=
-> > > KFREE_MAX_BATCH):
-> > >
-> > > 1. Try to drain it on hitting KFREE_MAX_BATCH as it does.
-> > >
-> > >    On success: Same as now.
-> > >    On fail: let ->head grow and drain if possible, until reaching to
-> > >             KFREE_MAX_BATCH_FORCE.
+On Thu, Aug 08, 2019 at 07:26:10PM +0900, Byungchul Park wrote:
+> On Wed, Aug 07, 2019 at 05:45:04AM -0400, Joel Fernandes wrote:
+> > On Tue, Aug 06, 2019 at 04:56:31PM -0700, Paul E. McKenney wrote:
 > 
-> I should've explain this in more detail. This actually mean:
+> [snip]
 > 
-> On fail: Let ->head grow and queue rcu_work when ->head_free == NULL,
->          until reaching to _FORCE.
+> > > On Tue, Aug 06, 2019 at 05:20:40PM -0400, Joel Fernandes (Google) wrote:
+> > > Of course, I am hoping that a later patch uses an array of pointers built
+> > > at kfree_rcu() time, similar to Rao's patch (with or without kfree_bulk)
+> > > in order to reduce per-object cache-miss overhead.  This would make it
+> > > easier for callback invocation to keep up with multi-CPU kfree_rcu()
+> > > floods.
+> > 
+> > I think Byungchul tried an experiment with array of pointers and wasn't
+> > immediately able to see a benefit. Perhaps his patch needs a bit more polish
+> > or another test-case needed to show benefit due to cache-misses, and the perf
+> > tool could be used to show if cache misses were reduced. For this initial
+> > pass, we decided to keep it without the array optimization.
 > 
-> > > 3. On hitting KFREE_MAX_BATCH_FORCE, give up batching but handle one by
-> > >    one from now on to prevent too many pending requests from being
-> > >    queued for batching work.
+> I'm still seeing no improvement with kfree_bulk().
 > 
-> This mean:
+> I've been thinking I could see improvement with kfree_bulk() because:
 > 
-> 3. On hitting KFREE_MAX_BATCH_FORCE, give up batching requests to be added
->    from now on but instead handle one by one to prevent too many
-> pending requests
->    from being queued. Of course, the requests already having been
-> queued in ->head
->    so far should be handled by rcu_work when it's possible which can
-> be checked by
->    the monitor or kfree_rcu() inside every call.
+>    1. As you guys said, the number of cache misses will be reduced.
+>    2. We can save (N - 1) irq-disable instructions while N kfrees.
+>    3. As Joel said, saving/restoring CPU status that kfree() does inside
+>       is not required.
+> 
+> But even with the following patch applied, the result was same as just
+> batching test. We might need to get kmalloc objects from random
+> addresses to maximize the result when using kfree_bulk() and this is
+> even closer to real practical world too.
+> 
+> And the second and third reasons doesn't seem to work as much as I
+> expected.
+> 
+> Do you have any idea? Or what do you think about it?
 
-But does this really help?  After all, the reason we have piled up a
-large number of additional callbacks is likely because the grace period
-is taking a long time, or because a huge number of callbacks has been
-queued up.  Sure, these callbacks might get a head start on the following
-grace period, but at the expense of still retaining the kfree_rcu()
-special cases in rcu_do_batch().
-
-Another potential issue is interaction with rcu_barrier().  Currently,
-rcu_barrier() waits for memory passed to prior kfree_rcu() calls to be
-freed.  This is useful to allow a large amount of memory be be completely
-freed before allocating large amounts more memory.  With the earlier
-version of the patch, an rcu_barrier() followed by a flush_workqueue().
-But #3 above would reorder the objects so that this approach might not
-wait for everything.
-
-We should therefore just let the second list grow.  If experience shows
-a need for callbacks to be sent up more quickly, it should be possible
-to provide an additional list, so that two lists on a given CPU can both
-be waiting for a grace period at the same time.
-
-> > I also agree. But this _FORCE thing will still not solve the issue Paul is
-> > raising which is doing this loop possibly in irq disabled / hardirq context.
-> 
-> I added more explanation above. What I suggested is a way to avoid not
-> only heavy
-> work within the irq-disabled region of a single kfree_rcu() but also
-> too many requests
-> to be queued into ->head.
-
-But let's start simple, please!
-
-> > We can't even cond_resched() here. In fact since _FORCE is larger, it will be
-> > even worse. Consider a real-time system with a lot of memory, in this case
-> > letting ->head grow large is Ok, but looping for long time in IRQ disabled
-> > would not be Ok.
-> 
-> Please check the explanation above.
-> 
-> > But I could make it something like:
-> > 1. Letting ->head grow if ->head_free busy
-> > 2. If head_free is busy, then just queue/requeue the monitor to try again.
-> 
-> This is exactly what Paul said. The problem with this is ->head can grow too
-> much. That's why I suggested the above one.
-
-It can grow quite large, but how do you know that limiting its size will
-really help?  Sure, you have limited the size, but does that really do
-anything for the larger problem of extreme kfree_rcu() rates on the one
-hand and a desire for more efficient handling of kfree_rcu() on the other?
+I would not expect kfree_batch() to help all that much unless the
+pre-grace-period kfree_rcu() code segregated the objects on a per-slab
+basis.
 
 							Thanx, Paul
 
-> > This would even improve performance, but will still risk going out of memory.
-> >
-> > Thoughts?
-> >
-> > thanks,
-> >
-> >  - Joel
-> >
-> > >
-> > > This way, we can avoid both:
-> > >
-> > > 1. too many requests being queued and
-> > > 2. __call_rcu() bunch of requests within a single kfree_rcu().
-> > >
-> > > Thanks,
-> > > Byungchul
-> > >
-> > > >
-> > > > But please feel free to come up with a better solution!
-> > > >
-> > > > [ . . . ]
-> 
-> 
-> 
-> -- 
 > Thanks,
 > Byungchul
 > 
+> -----8<-----
+> diff --git a/kernel/rcu/rcuperf.c b/kernel/rcu/rcuperf.c
+> index 988e1ae..6f2ab06 100644
+> --- a/kernel/rcu/rcuperf.c
+> +++ b/kernel/rcu/rcuperf.c
+> @@ -651,10 +651,10 @@ struct kfree_obj {
+>  				return -ENOMEM;
+>  		}
+>  
+> -		for (i = 0; i < kfree_alloc_num; i++) {
+> -			if (!kfree_no_batch) {
+> -				kfree_rcu(alloc_ptrs[i], rh);
+> -			} else {
+> +		if (!kfree_no_batch) {
+> +			kfree_bulk(kfree_alloc_num, (void **)alloc_ptrs);
+> +		} else {
+> +			for (i = 0; i < kfree_alloc_num; i++) {
+>  				rcu_callback_t cb;
+>  
+>  				cb = (rcu_callback_t)(unsigned long)offsetof(struct kfree_obj, rh);
+> 
+
