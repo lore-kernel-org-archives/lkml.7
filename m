@@ -8,64 +8,64 @@ X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91187C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:18:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E81BCC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:18:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A5222173C
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:18:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B30FB217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:18:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ofe+C/6D"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oJHYnIJo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731388AbfHHHSP (ORCPT
+        id S1731414AbfHHHSX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 03:18:15 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39684 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725817AbfHHHSO (ORCPT
+        Thu, 8 Aug 2019 03:18:23 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:39185 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725817AbfHHHSX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 03:18:14 -0400
-Received: by mail-pf1-f196.google.com with SMTP id f17so39582522pfn.6
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 00:18:14 -0700 (PDT)
+        Thu, 8 Aug 2019 03:18:23 -0400
+Received: by mail-pg1-f194.google.com with SMTP id u17so43563260pgi.6;
+        Thu, 08 Aug 2019 00:18:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=9QURP9tOX78OoV4YHCAVa4gci4kleUEql2IHdV0xtxs=;
-        b=ofe+C/6DddZyrlA676hoMNYEomzxlCl46Fw00Ol5KRPmYwLSXIvjNgpKXzEhKBFXx2
-         2eJVS8sdC7xB/JWrbk1vuYQF6/RJQnZCg/4Y7fncYaY2oQkxtMl2WeAurHsBvHCdQHSC
-         1pVhBxZU7PavnfiYxuOe53Hi/zm3kFxYxZHo429vz75VB9F+gZHSMAnSGVY3t73OyF0R
-         osXEriXi46YAOfRfkG8klF/r7ZnzhdXrlYSzHZXR2DNFGz3OI8i1oIFbzqMv6y1s7PaW
-         tF1v9G+h6WTLPfGytr1qSWojG0LiIfwXB9AhSY8xMMNc8nHJVuPUBCN4/KEX5qrjhxIx
-         GyjA==
+        bh=1zFoSskzKCZlza0GblOaMNM1s/A9U+UElWzjCW1f3zM=;
+        b=oJHYnIJo3jEzpDKrzYDhX1SzasWKocag1r5XRvIt88IMD9VZxELPtyWRZbPrxJbMsr
+         cKnNgsMc6MtGX68Me2qsU1DUZPFPnBM5WnPhgQLoMkIfbJlCqWcx1FcVZIWbZg03gXJI
+         epDDEBbZLL4rWkLp3dE6HEeytQu12R1V78WnshG96d61iLI6aUOQLdxYrj7syVia/0t0
+         8j7x2yRT6xUXeFn47tCFFcf6cDihBHcLpgj/JRPNWWadH4h6W1qsqmNYZ3u1/gpHCLJB
+         /F2+JJdA8nQLwYptc8rkmu08739CqCuxpH7aUINSUZsbrtVELL+jjorB+q+VZJjjoH4r
+         khdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=9QURP9tOX78OoV4YHCAVa4gci4kleUEql2IHdV0xtxs=;
-        b=BMITVoOsohepfHw1ZLnx8Vweqfj8Zjf4eZcFXOcxCXKRx/oWu4ShJMLghMs8MijNm4
-         8BkaUSJkqBdT0JtOwngvzZhrIrZPtyTggJdIfoBVbrfCSkg+GPrd99hLIvCLkg72HVBe
-         wq2MDAiKGoMhKQDnexLsX0qiBWA8rNJwUr1qiOTnaD9faXluu+la+Rf3NzhfiJfh5Dpk
-         3WOGog26umDMwwDekESBN8mWSh3siNcKGsgDhCvYiw2wR3nk+CG29VLfbjnKT2B7oMgA
-         +zpfkAdvt0Y8RePAKhprK+c/5oOO/YgtN9+zWEayho66rdwAc13Z7bsaAPA5WCsqKmul
-         l/oQ==
-X-Gm-Message-State: APjAAAUoxbWEISMLEQCuLtMnnZRw7Z8nLr1r7Da13CR5bd6k7pnBsLk5
-        jVM6hCoXp/+GsPg6imjeQ9sgftGLiNK/jA==
-X-Google-Smtp-Source: APXvYqxaB9L2RCswOePuUQM+DhSwxpmDjg2nAbPkGip2xWbLOC1BEw2+nSXFh6g4o27B11DrViofsw==
-X-Received: by 2002:a62:8f91:: with SMTP id n139mr11570927pfd.48.1565248693830;
-        Thu, 08 Aug 2019 00:18:13 -0700 (PDT)
+        bh=1zFoSskzKCZlza0GblOaMNM1s/A9U+UElWzjCW1f3zM=;
+        b=fMqZiS1LUsn0zJWfQytJip+Sr8wl7RtleodOB2JUb8Dx7gsbexEa5jJv1mg8E4wZqU
+         FV9JY/qdyLXBEz5b0F3kBezp+4l0VaDdJcGq3HYw1l7WD7k2txk96/+g4lm600y7esaQ
+         /AB+PBLyvMg92psAjLL0oQuH3U1LdnUZUoecZn3Wy5uYEO0Xzu11fRzZMCKPKjFgy4kD
+         yUFrZhRgxDi7+UniJrcyRDd7T6RmNMaov/5YXWlGpYZRTKfX+8LJf5Ct84CNff/FLUC2
+         1kb5UP6TqjC/xBwFo7BbZvqnbUfSKieFQ4VpR9OswkU7zcOuCVK7JSA/k5VmZ7LLl1gl
+         u9Kg==
+X-Gm-Message-State: APjAAAV3MERy+Y3UHEV/RCvi0f4DCIZ9bx3A3GG4GUnNliZoL3nPjP9D
+        e3WVvU/frDuyY9JonyOez51UBCPspXojOQ==
+X-Google-Smtp-Source: APXvYqxspEyMhp6Wqic4ECgzonGUU/A8WSGQNX2aRqJR6x+ORW1V8Yy4MmE67cC0eXKr+SZTN3JQ6w==
+X-Received: by 2002:a17:90a:360b:: with SMTP id s11mr2520806pjb.51.1565248702541;
+        Thu, 08 Aug 2019 00:18:22 -0700 (PDT)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id w22sm99435168pfi.175.2019.08.08.00.18.11
+        by smtp.gmail.com with ESMTPSA id s20sm105514644pfe.169.2019.08.08.00.18.19
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 08 Aug 2019 00:18:13 -0700 (PDT)
+        Thu, 08 Aug 2019 00:18:21 -0700 (PDT)
 From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
         Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] powerpc/mm: Use refcount_t for refcount
-Date:   Thu,  8 Aug 2019 15:18:08 +0800
-Message-Id: <20190808071808.6531-1-hslester96@gmail.com>
+Subject: [PATCH 1/2] s390/extmem: Use refcount_t for refcount
+Date:   Thu,  8 Aug 2019 15:18:17 +0800
+Message-Id: <20190808071817.6595-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -83,119 +83,66 @@ So convert atomic_t ref counters to refcount_t.
 
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- arch/powerpc/mm/book3s64/mmu_context.c | 2 +-
- arch/powerpc/mm/book3s64/pgtable.c     | 7 +++----
- arch/powerpc/mm/pgtable-frag.c         | 9 ++++-----
- include/linux/mm_types.h               | 3 ++-
- 4 files changed, 10 insertions(+), 11 deletions(-)
+ arch/s390/mm/extmem.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/arch/powerpc/mm/book3s64/mmu_context.c b/arch/powerpc/mm/book3s64/mmu_context.c
-index 2d0cb5ba9a47..f836fd5a6abc 100644
---- a/arch/powerpc/mm/book3s64/mmu_context.c
-+++ b/arch/powerpc/mm/book3s64/mmu_context.c
-@@ -231,7 +231,7 @@ static void pmd_frag_destroy(void *pmd_frag)
- 	/* drop all the pending references */
- 	count = ((unsigned long)pmd_frag & ~PAGE_MASK) >> PMD_FRAG_SIZE_SHIFT;
- 	/* We allow PTE_FRAG_NR fragments from a PTE page */
--	if (atomic_sub_and_test(PMD_FRAG_NR - count, &page->pt_frag_refcount)) {
-+	if (refcount_sub_and_test(PMD_FRAG_NR - count, &page->pt_frag_refcount)) {
- 		pgtable_pmd_page_dtor(page);
- 		__free_page(page);
- 	}
-diff --git a/arch/powerpc/mm/book3s64/pgtable.c b/arch/powerpc/mm/book3s64/pgtable.c
-index 7d0e0d0d22c4..40056896ce4e 100644
---- a/arch/powerpc/mm/book3s64/pgtable.c
-+++ b/arch/powerpc/mm/book3s64/pgtable.c
-@@ -277,7 +277,7 @@ static pmd_t *__alloc_for_pmdcache(struct mm_struct *mm)
- 		return NULL;
- 	}
- 
--	atomic_set(&page->pt_frag_refcount, 1);
-+	refcount_set(&page->pt_frag_refcount, 1);
- 
- 	ret = page_address(page);
- 	/*
-@@ -294,7 +294,7 @@ static pmd_t *__alloc_for_pmdcache(struct mm_struct *mm)
- 	 * count.
- 	 */
- 	if (likely(!mm->context.pmd_frag)) {
--		atomic_set(&page->pt_frag_refcount, PMD_FRAG_NR);
-+		refcount_set(&page->pt_frag_refcount, PMD_FRAG_NR);
- 		mm->context.pmd_frag = ret + PMD_FRAG_SIZE;
- 	}
- 	spin_unlock(&mm->page_table_lock);
-@@ -317,8 +317,7 @@ void pmd_fragment_free(unsigned long *pmd)
- {
- 	struct page *page = virt_to_page(pmd);
- 
--	BUG_ON(atomic_read(&page->pt_frag_refcount) <= 0);
--	if (atomic_dec_and_test(&page->pt_frag_refcount)) {
-+	if (refcount_dec_and_test(&page->pt_frag_refcount)) {
- 		pgtable_pmd_page_dtor(page);
- 		__free_page(page);
- 	}
-diff --git a/arch/powerpc/mm/pgtable-frag.c b/arch/powerpc/mm/pgtable-frag.c
-index a7b05214760c..4ef8231b677f 100644
---- a/arch/powerpc/mm/pgtable-frag.c
-+++ b/arch/powerpc/mm/pgtable-frag.c
-@@ -24,7 +24,7 @@ void pte_frag_destroy(void *pte_frag)
- 	/* drop all the pending references */
- 	count = ((unsigned long)pte_frag & ~PAGE_MASK) >> PTE_FRAG_SIZE_SHIFT;
- 	/* We allow PTE_FRAG_NR fragments from a PTE page */
--	if (atomic_sub_and_test(PTE_FRAG_NR - count, &page->pt_frag_refcount)) {
-+	if (refcount_sub_and_test(PTE_FRAG_NR - count, &page->pt_frag_refcount)) {
- 		pgtable_page_dtor(page);
- 		__free_page(page);
- 	}
-@@ -71,7 +71,7 @@ static pte_t *__alloc_for_ptecache(struct mm_struct *mm, int kernel)
- 			return NULL;
- 	}
- 
--	atomic_set(&page->pt_frag_refcount, 1);
-+	refcount_set(&page->pt_frag_refcount, 1);
- 
- 	ret = page_address(page);
- 	/*
-@@ -87,7 +87,7 @@ static pte_t *__alloc_for_ptecache(struct mm_struct *mm, int kernel)
- 	 * count.
- 	 */
- 	if (likely(!pte_frag_get(&mm->context))) {
--		atomic_set(&page->pt_frag_refcount, PTE_FRAG_NR);
-+		refcount_set(&page->pt_frag_refcount, PTE_FRAG_NR);
- 		pte_frag_set(&mm->context, ret + PTE_FRAG_SIZE);
- 	}
- 	spin_unlock(&mm->page_table_lock);
-@@ -110,8 +110,7 @@ void pte_fragment_free(unsigned long *table, int kernel)
- {
- 	struct page *page = virt_to_page(table);
- 
--	BUG_ON(atomic_read(&page->pt_frag_refcount) <= 0);
--	if (atomic_dec_and_test(&page->pt_frag_refcount)) {
-+	if (refcount_dec_and_test(&page->pt_frag_refcount)) {
- 		if (!kernel)
- 			pgtable_page_dtor(page);
- 		__free_page(page);
-diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index 3a37a89eb7a7..7fe23a3faf95 100644
---- a/include/linux/mm_types.h
-+++ b/include/linux/mm_types.h
-@@ -14,6 +14,7 @@
- #include <linux/uprobes.h>
- #include <linux/page-flags-layout.h>
- #include <linux/workqueue.h>
+diff --git a/arch/s390/mm/extmem.c b/arch/s390/mm/extmem.c
+index 0b5622714c12..78e801287c72 100644
+--- a/arch/s390/mm/extmem.c
++++ b/arch/s390/mm/extmem.c
+@@ -19,6 +19,7 @@
+ #include <linux/memblock.h>
+ #include <linux/ctype.h>
+ #include <linux/ioport.h>
 +#include <linux/refcount.h>
- 
- #include <asm/mmu.h>
- 
-@@ -147,7 +148,7 @@ struct page {
- 			unsigned long _pt_pad_2;	/* mapping */
- 			union {
- 				struct mm_struct *pt_mm; /* x86 pgds only */
--				atomic_t pt_frag_refcount; /* powerpc */
-+				refcount_t pt_frag_refcount; /* powerpc */
- 			};
- #if ALLOC_SPLIT_PTLOCKS
- 			spinlock_t *ptl;
+ #include <asm/diag.h>
+ #include <asm/page.h>
+ #include <asm/pgtable.h>
+@@ -64,7 +65,7 @@ struct dcss_segment {
+ 	char res_name[16];
+ 	unsigned long start_addr;
+ 	unsigned long end;
+-	atomic_t ref_count;
++	refcount_t ref_count;
+ 	int do_nonshared;
+ 	unsigned int vm_segtype;
+ 	struct qrange range[6];
+@@ -362,7 +363,7 @@ __segment_load (char *name, int do_nonshared, unsigned long *addr, unsigned long
+ 	seg->start_addr = start_addr;
+ 	seg->end = end_addr;
+ 	seg->do_nonshared = do_nonshared;
+-	atomic_set(&seg->ref_count, 1);
++	refcount_set(&seg->ref_count, 1);
+ 	list_add(&seg->list, &dcss_list);
+ 	*addr = seg->start_addr;
+ 	*end  = seg->end;
+@@ -422,7 +423,7 @@ segment_load (char *name, int do_nonshared, unsigned long *addr,
+ 		rc = __segment_load (name, do_nonshared, addr, end);
+ 	else {
+ 		if (do_nonshared == seg->do_nonshared) {
+-			atomic_inc(&seg->ref_count);
++			refcount_inc(&seg->ref_count);
+ 			*addr = seg->start_addr;
+ 			*end  = seg->end;
+ 			rc    = seg->vm_segtype;
+@@ -468,7 +469,7 @@ segment_modify_shared (char *name, int do_nonshared)
+ 		rc = 0;
+ 		goto out_unlock;
+ 	}
+-	if (atomic_read (&seg->ref_count) != 1) {
++	if (refcount_read(&seg->ref_count) != 1) {
+ 		pr_warn("DCSS %s is in use and cannot be reloaded\n", name);
+ 		rc = -EAGAIN;
+ 		goto out_unlock;
+@@ -544,7 +545,7 @@ segment_unload(char *name)
+ 		pr_err("Unloading unknown DCSS %s failed\n", name);
+ 		goto out_unlock;
+ 	}
+-	if (atomic_dec_return(&seg->ref_count) != 0)
++	if (!refcount_dec_and_test(&seg->ref_count))
+ 		goto out_unlock;
+ 	release_resource(seg->res);
+ 	kfree(seg->res);
 -- 
 2.20.1
 
