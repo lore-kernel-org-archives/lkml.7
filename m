@@ -2,125 +2,151 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D3DBC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:13:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DCBFC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:14:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13CA221882
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:13:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565252034;
-	bh=pCqAsK7vCDzgq+aah/F85uOpy8oS5/cFKKFhBnNjQkk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=a7w6wJewki97eh6jnFvjBWFfSLNTT1i2a4vx2PsBiR8l1O6PBftmBbQ10VJkCEtVX
-	 eN0FLI+NNWfn/wOpsqyakgUgHKh/Be8Hkrrold6FS5wGRgJpNvwf9iPPgNTKBh/eBb
-	 fB4EGO3D04Q9ZfA4jhNQ4CiOn+wCmTlt+6BM3LWc=
+	by mail.kernel.org (Postfix) with ESMTP id DF17D2187F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:14:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a289ZnMY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731991AbfHHINx (ORCPT
+        id S1732018AbfHHIOE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 04:13:53 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33204 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731781AbfHHINw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 04:13:52 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 68840AFFE;
-        Thu,  8 Aug 2019 08:13:49 +0000 (UTC)
-Date:   Thu, 8 Aug 2019 10:00:44 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Brendan Gregg <bgregg@netflix.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christian Hansen <chansen3@cisco.com>, dancol@google.com,
-        fmayer@google.com, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        linux-api@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Mike Rapoport <rppt@linux.ibm.com>, minchan@kernel.org,
-        namhyung@google.com, paulmck@linux.ibm.com,
-        Robin Murphy <robin.murphy@arm.com>,
-        Roman Gushchin <guro@fb.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>, surenb@google.com,
-        Thomas Gleixner <tglx@linutronix.de>, tkjos@google.com,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v5 1/6] mm/page_idle: Add per-pid idle page tracking
- using virtual index
-Message-ID: <20190808080044.GA18351@dhcp22.suse.cz>
-References: <20190807171559.182301-1-joel@joelfernandes.org>
- <20190807130402.49c9ea8bf144d2f83bfeb353@linux-foundation.org>
- <20190807204530.GB90900@google.com>
- <20190807135840.92b852e980a9593fe91fbf59@linux-foundation.org>
- <20190807213105.GA14622@google.com>
+        Thu, 8 Aug 2019 04:14:04 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:47052 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731781AbfHHIOE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 04:14:04 -0400
+Received: by mail-ot1-f66.google.com with SMTP id z23so6973880ote.13;
+        Thu, 08 Aug 2019 01:14:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=aYc/fc0DGbtltCecOiZ42Q6vOGrrQUgvpSTpwJEiq3I=;
+        b=a289ZnMYfQ/po7+vfNhUyM/J6ww22Y2jhZP0KOPGynknnV2NJiu0Pk7vrnRA+44rIN
+         FJKlDoFSoLeq4X087B2CjQKvUBBuoAqra7M0gQlVvFuMyXxkB5sfF2RrTGyt9ptr24Vu
+         /KMPX61+CBCa075MJJw+ZDqTRKLrL7PE9pf26b7s0rldnZLVI8FwdpH7S/k7ojR+BqSi
+         Jt9V1qKzRPUzOo0qaV8bsm7sFgY3KkLRWfhbG9xQcDU9U1GvSfEk35HuPwuFdJYz2jao
+         PyXy4H2SFwYvG1mxgokzISbk4BsUUk/gWWelumBCtPW3nF4C3v1zn7O0qmgdSMCIGORv
+         bRZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=aYc/fc0DGbtltCecOiZ42Q6vOGrrQUgvpSTpwJEiq3I=;
+        b=eQzCVPl+guuDPb6R36yUvKbtMSOj/g1xJBbwaXZ3QcrYRdEEhMxgL96nb5uyR1fQFL
+         NK9t18CMTIdS1AYtEl8LnfbAeU30uMOUp5a0wGhVbBJoTMKW0An5fwto1zdVd/Ijomgr
+         rGyW45cJ0M8l1mngYBjIfaZb1SmDVRWvexn7HfvzPFxoueFAPH26uPBRn0KBlqWhFDxj
+         nJzwTsH5IUgCCX2mo7OdkweBM4LLDgUPIDiG+Iel0cAKbbpiIZiiZxceOeljdETjeqVg
+         7mdycokrEfa9npwhQy60GgF6ftFnwC8Z+0r7yEx/SYbom4yDOD/y4Rd620gXNpQKUCZb
+         byiQ==
+X-Gm-Message-State: APjAAAUmAoWJYaBE+pP9pz9T5Cf6EZFydEvnBB5F2vjm21Tq6LqouaRY
+        4qBFTSL1F5HflTQEWEAFbUcJUNOt
+X-Google-Smtp-Source: APXvYqxzmR8GRo68Eu8Mczl6JKSliOBoEHOHcBKOcCXXTMVc0ZPd/qRDCCLbplRI+89NQJQj7HJQrA==
+X-Received: by 2002:a9d:7cd1:: with SMTP id r17mr12052163otn.356.1565252043247;
+        Thu, 08 Aug 2019 01:14:03 -0700 (PDT)
+Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
+        by smtp.gmail.com with ESMTPSA id d22sm31412123oig.38.2019.08.08.01.14.02
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 08 Aug 2019 01:14:02 -0700 (PDT)
+Subject: Re: [PATCH v2] Fix non-kerneldoc comment in realtek/rtlwifi/usb.c
+To:     Kalle Valo <kvalo@codeaurora.org>
+Cc:     =?UTF-8?Q?Valdis_Kl=c4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        Ping-Ke Shih <pkshih@realtek.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <34195.1565229118@turing-police>
+ <15df2564-8815-f351-8fb2-b46611a90234@lwfinger.net>
+ <877e7odte2.fsf@kamboji.qca.qualcomm.com>
+From:   Larry Finger <Larry.Finger@lwfinger.net>
+Message-ID: <01fcbe35-e004-a9bf-c180-3e75fa3ab427@lwfinger.net>
+Date:   Thu, 8 Aug 2019 03:14:01 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190807213105.GA14622@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <877e7odte2.fsf@kamboji.qca.qualcomm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 07-08-19 17:31:05, Joel Fernandes wrote:
-> On Wed, Aug 07, 2019 at 01:58:40PM -0700, Andrew Morton wrote:
-> > On Wed, 7 Aug 2019 16:45:30 -0400 Joel Fernandes <joel@joelfernandes.org> wrote:
-> > 
-> > > On Wed, Aug 07, 2019 at 01:04:02PM -0700, Andrew Morton wrote:
-> > > > On Wed,  7 Aug 2019 13:15:54 -0400 "Joel Fernandes (Google)" <joel@joelfernandes.org> wrote:
-> > > > 
-> > > > > In Android, we are using this for the heap profiler (heapprofd) which
-> > > > > profiles and pin points code paths which allocates and leaves memory
-> > > > > idle for long periods of time. This method solves the security issue
-> > > > > with userspace learning the PFN, and while at it is also shown to yield
-> > > > > better results than the pagemap lookup, the theory being that the window
-> > > > > where the address space can change is reduced by eliminating the
-> > > > > intermediate pagemap look up stage. In virtual address indexing, the
-> > > > > process's mmap_sem is held for the duration of the access.
-> > > > 
-> > > > So is heapprofd a developer-only thing?  Is heapprofd included in
-> > > > end-user android loads?  If not then, again, wouldn't it be better to
-> > > > make the feature Kconfigurable so that Android developers can enable it
-> > > > during development then disable it for production kernels?
-> > > 
-> > > Almost all of this code is already configurable with
-> > > CONFIG_IDLE_PAGE_TRACKING. If you disable it, then all of this code gets
-> > > disabled.
-> > > 
-> > > Or are you referring to something else that needs to be made configurable?
-> > 
-> > Yes - the 300+ lines of code which this patchset adds!
-> > 
-> > The impacted people will be those who use the existing
-> > idle-page-tracking feature but who will not use the new feature.  I
-> > guess we can assume this set is small...
+On 8/8/19 2:10 AM, Kalle Valo wrote:
+> Larry Finger <Larry.Finger@lwfinger.net> writes:
 > 
-> Yes, I think this set should be small. The code size increase of page_idle.o
-> is from ~1KB to ~2KB. Most of the extra space is consumed by
-> page_idle_proc_generic() function which this patch adds. I don't think adding
-> another CONFIG option to disable this while keeping existing
-> CONFIG_IDLE_PAGE_TRACKING enabled, is worthwhile but I am open to the
-> addition of such an option if anyone feels strongly about it. I believe that
-> once this patch is merged, most like this new interface being added is what
-> will be used more than the old interface (for some of the usecases) so it
-> makes sense to keep it alive with CONFIG_IDLE_PAGE_TRACKING.
+>> On 8/7/19 8:51 PM, Valdis Klētnieks wrote:
+>>> Fix spurious warning message when building with W=1:
+>>>
+>>>     CC [M]  drivers/net/wireless/realtek/rtlwifi/usb.o
+>>> drivers/net/wireless/realtek/rtlwifi/usb.c:243: warning: Cannot understand  * on line 243 - I thought it was a doc line
+>>> drivers/net/wireless/realtek/rtlwifi/usb.c:760: warning: Cannot understand  * on line 760 - I thought it was a doc line
+>>> drivers/net/wireless/realtek/rtlwifi/usb.c:790: warning: Cannot understand  * on line 790 - I thought it was a doc line
+>>>
+>>> Clean up the comment format.
+>>>
+>>> Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+>>>
+>>> ---
+>>> Changes since v1:  Larry Finger pointed out the patch wasn't checkpatch-clean.
+>>>
+>>> diff --git a/drivers/net/wireless/realtek/rtlwifi/usb.c b/drivers/net/wireless/realtek/rtlwifi/usb.c
+>>> index 34d68dbf4b4c..4b59f3b46b28 100644
+>>> --- a/drivers/net/wireless/realtek/rtlwifi/usb.c
+>>> +++ b/drivers/net/wireless/realtek/rtlwifi/usb.c
+>>> @@ -239,10 +239,7 @@ static void _rtl_usb_io_handler_release(struct ieee80211_hw *hw)
+>>>    	mutex_destroy(&rtlpriv->io.bb_mutex);
+>>>    }
+>>>    -/**
+>>> - *
+>>> - *	Default aggregation handler. Do nothing and just return the oldest skb.
+>>> - */
+>>> +/*	Default aggregation handler. Do nothing and just return the oldest skb.  */
+>>>    static struct sk_buff *_none_usb_tx_aggregate_hdl(struct ieee80211_hw *hw,
+>>>    						  struct sk_buff_head *list)
+>>>    {
+>>> @@ -756,11 +753,6 @@ static int rtl_usb_start(struct ieee80211_hw *hw)
+>>>    	return err;
+>>>    }
+>>>    -/**
+>>> - *
+>>> - *
+>>> - */
+>>> -
+>>>    /*=======================  tx =========================================*/
+>>>    static void rtl_usb_cleanup(struct ieee80211_hw *hw)
+>>>    {
+>>> @@ -786,11 +778,7 @@ static void rtl_usb_cleanup(struct ieee80211_hw *hw)
+>>>    	usb_kill_anchored_urbs(&rtlusb->tx_submitted);
+>>>    }
+>>>    -/**
+>>> - *
+>>> - * We may add some struct into struct rtl_usb later. Do deinit here.
+>>> - *
+>>> - */
+>>> +/* We may add some struct into struct rtl_usb later. Do deinit here.  */
+>>>    static void rtl_usb_deinit(struct ieee80211_hw *hw)
+>>>    {
+>>>    	rtl_usb_cleanup(hw);
+>>
+>> I missed that the subject line should be "rtwifi: Fix ....". Otherwise it is OK.
+> 
+> I can fix the subject during commit.
 
-I would tend to agree with Joel here. The functionality falls into an
-existing IDLE_PAGE_TRACKING config option quite nicely. If there really
-are users who want to save some space and this is standing in the way
-then they can easily add a new config option with some justification so
-the savings are clear. Without that an additional config simply adds to
-the already existing configurability complexity and balkanization.
--- 
-Michal Hocko
-SUSE Labs
+OK. Acked-by: Larry Finger<Larry.Finger@lwfinger.net>
+
+Thanks,
+
+Larry
+
+
