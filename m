@@ -2,174 +2,213 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97151C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 974E5C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:44:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6913221743
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:43:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565271839;
-	bh=33CZ8BCc/mP1hiNi8EJruOyKiaf5ldXoU8hbOOmln90=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bN58GpafsblIpwXdY7S9m3pw9B30cY2Hb7v5ub8O31Ksn6C9U9XFuVV2R2HXFygI+
-	 rSthFu8D8k3u41Jcp+OhRJhGS7dY2MpOWx7NGE7Wb7DlarMFNUkEKTzNXT0dLiq+mk
-	 dgjINar3k38lAzH4DkTT1y9MnoQyMK346qE0GJC4=
+	by mail.kernel.org (Postfix) with ESMTP id 72EB82171F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:44:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733219AbfHHNn6 (ORCPT
+        id S1733240AbfHHNoX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 09:43:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39560 "EHLO mail.kernel.org"
+        Thu, 8 Aug 2019 09:44:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:6607 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732297AbfHHNn6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 09:43:58 -0400
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1733223AbfHHNoW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 09:44:22 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 282CF2171F;
-        Thu,  8 Aug 2019 13:43:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565271837;
-        bh=33CZ8BCc/mP1hiNi8EJruOyKiaf5ldXoU8hbOOmln90=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jBGWMNbI+dfk1O1v2vrc4xhe2sxk55BGLecr95BrhBBrk8yReX3iy63K9/xXPIxfx
-         XHiLJ5BLVTBxFxUnsiDVOXkj2YITt6XXw0KAhxsT2DeGM1JpYGgm493RDtJubKrXrJ
-         riT9Oxg2+qwT4GGg9Hrm7srReHQpK75/WJheLbTA=
-Date:   Thu, 8 Aug 2019 08:43:56 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     linux-nvme <linux-nvme@lists.infradead.org>,
-        Keith Busch <kbusch@kernel.org>,
-        Mario Limonciello <Mario.Limonciello@dell.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] nvme-pci: Allow PCI bus-level PM to be used if
- ASPM is disabled
-Message-ID: <20190808134356.GF151852@google.com>
-References: <4323ed84dd07474eab65699b4d007aaf@AUSX13MPC105.AMER.DELL.COM>
- <20190731221956.GB15795@localhost.localdomain>
- <1921165.pTveHRX1Co@kreacher>
- <1870928.r7tBYyfqdz@kreacher>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1870928.r7tBYyfqdz@kreacher>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5AA3E30832E1;
+        Thu,  8 Aug 2019 13:44:22 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-144.ams2.redhat.com [10.36.116.144])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2ADDA60BE1;
+        Thu,  8 Aug 2019 13:44:19 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 7678F9D00; Thu,  8 Aug 2019 15:44:18 +0200 (CEST)
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     tzimmermann@suse.de, Gerd Hoffmann <kraxel@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, Jonathan Corbet <corbet@lwn.net>,
+        linux-doc@vger.kernel.org (open list:DOCUMENTATION),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v4 02/17] drm/ttm: add gem_ttm_bo_device_init()
+Date:   Thu,  8 Aug 2019 15:44:02 +0200
+Message-Id: <20190808134417.10610-3-kraxel@redhat.com>
+In-Reply-To: <20190808134417.10610-1-kraxel@redhat.com>
+References: <20190808134417.10610-1-kraxel@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Thu, 08 Aug 2019 13:44:22 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 12:10:06PM +0200, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> 
-> One of the modifications made by commit d916b1be94b6 ("nvme-pci: use
-> host managed power state for suspend") was adding a pci_save_state()
-> call to nvme_suspend() in order to prevent the PCI bus-level PM from
-> being applied to the suspended NVMe devices, but if ASPM is not
-> enabled for the target NVMe device, that causes its PCIe link to stay
-> up and the platform may not be able to get into its optimum low-power
-> state because of that.
-> 
-> For example, if ASPM is disabled for the NVMe drive (PC401 NVMe SK
-> hynix 256GB) in my Dell XPS13 9380, leaving it in D0 during
-> suspend-to-idle prevents the SoC from reaching package idle states
-> deeper than PC3, which is way insufficient for system suspend.
+Now with ttm_buffer_object being a subclass of drm_gem_object we can
+easily lookup ttm_buffer_object for a given drm_gem_object, which in
+turm allows to create common helper functions.
 
-Just curious: I assume the SoC you reference is some part of the NVMe
-drive?
+This patch starts off with a gem_ttm_bo_device_init() helper function
+which initializes ttm with the vma offset manager used by gem, to make
+sure gem and ttm have the same view on vma offsets.
 
-> To address this shortcoming, make nvme_suspend() check if ASPM is
-> enabled for the target device and fall back to full device shutdown
-> and PCI bus-level PM if that is not the case.
-> 
-> Fixes: d916b1be94b6 ("nvme-pci: use host managed power state for suspend")
-> Link: https://lore.kernel.org/linux-pm/2763495.NmdaWeg79L@kreacher/T/#t
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
-> 
-> -> v2:
->   * Move the PCI/PCIe ASPM changes to a separate patch.
->   * Do not add a redundant ndev->last_ps == U32_MAX check in nvme_suspend().
-> 
-> ---
->  drivers/nvme/host/pci.c |   13 ++++++++++---
->  1 file changed, 10 insertions(+), 3 deletions(-)
-> 
-> Index: linux-pm/drivers/nvme/host/pci.c
-> ===================================================================
-> --- linux-pm.orig/drivers/nvme/host/pci.c
-> +++ linux-pm/drivers/nvme/host/pci.c
-> @@ -2846,7 +2846,7 @@ static int nvme_resume(struct device *de
->  	struct nvme_dev *ndev = pci_get_drvdata(to_pci_dev(dev));
->  	struct nvme_ctrl *ctrl = &ndev->ctrl;
->  
-> -	if (pm_resume_via_firmware() || !ctrl->npss ||
-> +	if (ndev->last_ps == U32_MAX ||
->  	    nvme_set_power_state(ctrl, ndev->last_ps) != 0)
->  		nvme_reset_ctrl(ctrl);
->  	return 0;
-> @@ -2859,6 +2859,8 @@ static int nvme_suspend(struct device *d
->  	struct nvme_ctrl *ctrl = &ndev->ctrl;
->  	int ret = -EBUSY;
->  
-> +	ndev->last_ps = U32_MAX;
-> +
->  	/*
->  	 * The platform does not remove power for a kernel managed suspend so
->  	 * use host managed nvme power settings for lowest idle power if
-> @@ -2866,8 +2868,14 @@ static int nvme_suspend(struct device *d
->  	 * shutdown.  But if the firmware is involved after the suspend or the
->  	 * device does not support any non-default power states, shut down the
->  	 * device fully.
-> +	 *
-> +	 * If ASPM is not enabled for the device, shut down the device and allow
-> +	 * the PCI bus layer to put it into D3 in order to take the PCIe link
-> +	 * down, so as to allow the platform to achieve its minimum low-power
-> +	 * state (which may not be possible if the link is up).
->  	 */
-> -	if (pm_suspend_via_firmware() || !ctrl->npss) {
-> +	if (pm_suspend_via_firmware() || !ctrl->npss ||
-> +	    !pcie_aspm_enabled_mask(pdev)) {
+With that in place gem+ttm drivers don't need their private
+drm_driver.dumb_map_offset implementation any more.
 
-This seems like a layering violation, in the sense that ASPM is
-supposed to be hardware-autonomous and invisible to software.
+v3:
+ - complete rewrite
 
-IIUC the NVMe device will go to the desired package idle state if the
-link is in L0s or L1, but not if the link is in L0.  I don't
-understand that connection; AFAIK that would be something outside the
-scope of the PCIe spec.
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+---
+ include/drm/drm_gem_ttm_helper.h     | 30 +++++++++++++++++++++++
+ drivers/gpu/drm/drm_gem_ttm_helper.c | 36 ++++++++++++++++++++++++++++
+ Documentation/gpu/drm-mm.rst         | 12 ++++++++++
+ drivers/gpu/drm/Kconfig              |  7 ++++++
+ drivers/gpu/drm/Makefile             |  3 +++
+ 5 files changed, 88 insertions(+)
+ create mode 100644 include/drm/drm_gem_ttm_helper.h
+ create mode 100644 drivers/gpu/drm/drm_gem_ttm_helper.c
 
-The spec (PCIe r5.0, sec 5.4.1.1.1 for L0s, 5.4.1.2.1 for L1) is
-careful to say that when the conditions are right, devices "should"
-enter L0s but it is never mandatory, or "may" enter L1.
+diff --git a/include/drm/drm_gem_ttm_helper.h b/include/drm/drm_gem_ttm_helper.h
+new file mode 100644
+index 000000000000..43c9db3583cc
+--- /dev/null
++++ b/include/drm/drm_gem_ttm_helper.h
+@@ -0,0 +1,30 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++
++#ifndef DRM_GEM_TTM_HELPER_H
++#define DRM_GEM_TTM_HELPER_H
++
++#include <linux/kernel.h>
++
++#include <drm/drm_gem.h>
++#include <drm/drm_device.h>
++#include <drm/ttm/ttm_bo_api.h>
++#include <drm/ttm/ttm_bo_driver.h>
++
++/**
++ * Returns the container of type &struct ttm_buffer_object
++ * for field base.
++ * @gem:	the GEM object
++ * Returns:	The containing GEM VRAM object
++ */
++static inline struct ttm_buffer_object *drm_gem_ttm_of_gem(
++	struct drm_gem_object *gem)
++{
++	return container_of(gem, struct ttm_buffer_object, base);
++}
++
++int drm_gem_ttm_bo_device_init(struct drm_device *dev,
++			       struct ttm_bo_device *bdev,
++			       struct ttm_bo_driver *driver,
++			       bool need_dma32);
++
++#endif
+diff --git a/drivers/gpu/drm/drm_gem_ttm_helper.c b/drivers/gpu/drm/drm_gem_ttm_helper.c
+new file mode 100644
+index 000000000000..0c57e9fd50b9
+--- /dev/null
++++ b/drivers/gpu/drm/drm_gem_ttm_helper.c
+@@ -0,0 +1,36 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++
++#include <drm/drm_gem_ttm_helper.h>
++
++/**
++ * DOC: overview
++ *
++ * This library provides helper functions for gem objects backed by
++ * ttm.
++ */
++
++/**
++ * drm_gem_ttm_bo_device_init - ttm init for devices which use gem+ttm
++ *
++ * @dev: A pointer to a struct drm_device.
++ * @bdev: A pointer to a struct ttm_bo_device to initialize.
++ * @driver: A pointer to a struct ttm_bo_driver set up by the caller.
++ * @need_dma32: Whenever the device is limited to 32bit DMA.
++ *
++ * This initializes ttm with dev->vma_offset_manager, so gem and ttm
++ * fuction are working with the same vma_offset_manager.
++ *
++ * Returns:
++ * !0: Failure.
++ */
++int drm_gem_ttm_bo_device_init(struct drm_device *dev,
++			       struct ttm_bo_device *bdev,
++			       struct ttm_bo_driver *driver,
++			       bool need_dma32)
++{
++	return ttm_bo_device_init_with_vma_manager(bdev, driver,
++						   dev->anon_inode->i_mapping,
++						   dev->vma_offset_manager,
++						   need_dma32);
++}
++EXPORT_SYMBOL(drm_gem_ttm_bo_device_init);
+diff --git a/Documentation/gpu/drm-mm.rst b/Documentation/gpu/drm-mm.rst
+index b664f054c259..a70a1d9f30ec 100644
+--- a/Documentation/gpu/drm-mm.rst
++++ b/Documentation/gpu/drm-mm.rst
+@@ -412,6 +412,18 @@ VRAM MM Helper Functions Reference
+ .. kernel-doc:: drivers/gpu/drm/drm_vram_mm_helper.c
+    :export:
+ 
++GEM TTM Helper Functions Reference
++-----------------------------------
++
++.. kernel-doc:: drivers/gpu/drm/drm_gem_ttm_helper.c
++   :doc: overview
++
++.. kernel-doc:: include/drm/drm_gem_ttm_helper.h
++   :internal:
++
++.. kernel-doc:: drivers/gpu/drm/drm_gem_ttm_helper.c
++   :export:
++
+ VMA Offset Manager
+ ==================
+ 
+diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
+index e6f40fb54c9a..f7b25519f95c 100644
+--- a/drivers/gpu/drm/Kconfig
++++ b/drivers/gpu/drm/Kconfig
+@@ -172,6 +172,13 @@ config DRM_VRAM_HELPER
+ 	help
+ 	  Helpers for VRAM memory management
+ 
++config DRM_TTM_HELPER
++	tristate
++	depends on DRM
++	select DRM_TTM
++	help
++	  Helpers for ttm-based gem objects
++
+ config DRM_GEM_CMA_HELPER
+ 	bool
+ 	depends on DRM
+diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
+index 10f8329a8b71..545c61d6528b 100644
+--- a/drivers/gpu/drm/Makefile
++++ b/drivers/gpu/drm/Makefile
+@@ -37,6 +37,9 @@ drm_vram_helper-y := drm_gem_vram_helper.o \
+ 		     drm_vram_mm_helper.o
+ obj-$(CONFIG_DRM_VRAM_HELPER) += drm_vram_helper.o
+ 
++drm_ttm_helper-y := drm_gem_ttm_helper.o
++obj-$(CONFIG_DRM_TTM_HELPER) += drm_ttm_helper.o
++
+ drm_kms_helper-y := drm_crtc_helper.o drm_dp_helper.o drm_dsc.o drm_probe_helper.o \
+ 		drm_plane_helper.o drm_dp_mst_topology.o drm_atomic_helper.o \
+ 		drm_kms_helper_common.o drm_dp_dual_mode_helper.o \
+-- 
+2.18.1
 
-And this patch assumes that if ASPM is enabled, the link will
-eventually go to L0s or L1.  Because the PCIe spec doesn't mandate
-that transition, I think this patch makes the driver dependent on
-device-specific behavior.
-
->  		nvme_dev_disable(ndev, true);
->  		return 0;
->  	}
-> @@ -2880,7 +2888,6 @@ static int nvme_suspend(struct device *d
->  	    ctrl->state != NVME_CTRL_ADMIN_ONLY)
->  		goto unfreeze;
->  
-> -	ndev->last_ps = 0;
->  	ret = nvme_get_power_state(ctrl, &ndev->last_ps);
->  	if (ret < 0)
->  		goto unfreeze;
-> 
-> 
-> 
