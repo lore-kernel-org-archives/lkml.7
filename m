@@ -2,111 +2,95 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A712DC32754
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:27:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E2BAC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:27:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CA7A204EC
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:27:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pK2Jy2aJ"
+	by mail.kernel.org (Postfix) with ESMTP id 457BA204EC
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:27:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565267264;
+	bh=qcJpF5sH8EjTU2YAp6xLoeuP92UYj3QnPSPnYj1D+XE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ki0ZnZ8ZVC4pHpMJW34i87y92fteKgHTqTliuLE3wNukmsOvyeUd5Q1SOTqShN8bF
+	 sm13KFxCep89Ypw5GdfCFjSBKIbezcwkuuBe5q1kZNwMABzTxayXV8GBum0zXTVXNJ
+	 BaggeRgsp5MW622opCtZCl1ZPBnHWXSVLBTshuYQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732365AbfHHM1L (ORCPT
+        id S1732371AbfHHM1n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 08:27:11 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:45594 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731782AbfHHM1L (ORCPT
+        Thu, 8 Aug 2019 08:27:43 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:33058 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727096AbfHHM1m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 08:27:11 -0400
-Received: by mail-lj1-f194.google.com with SMTP id t3so162729ljj.12
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 05:27:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LJoQH6xbNoByXFD03CQzff1T1rg3XHHfexy4zm58VFs=;
-        b=pK2Jy2aJCqvL6Zbsse9R6qW+16L7rOEkySHszCEBs5F0VKRotPrPyu44jyyDIClbQQ
-         3DXllrjriP90L6RaVglWIEDATs2iioGY3o/+TzwopWNuXqtMPsTNpy1XfXKhSr8pH2AI
-         PmKanKd9U5CeLi80hdvEiobNCfwIbFdEuMJ60bzrJ9LAfk/2OYiAurZUw0qcixF4M5SE
-         YcUWAOtvqaMQSuC25S5dtrp2wI4qSjIkU4XQisSWyRh30It0AZ85X2drJbvJNBnGIRzL
-         Z6OeCrSjtn5x6V4mqIwHu4iZR4MPFncMiR6jAKvSTmHx2mMzGxStUZG6zRF4OiFk7FmD
-         /3Eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LJoQH6xbNoByXFD03CQzff1T1rg3XHHfexy4zm58VFs=;
-        b=o51tgP7dMi316R6lTjygLurJViugs/i+paVV75m3LSR/e2ZY17IwgVgXwl0QY+g+pj
-         UZ6DtIEpJKLFYihHKX0aWa963qKxTPkMY1iQ7zmDk5Loth0Yb8jHdS+BWrveHSTtf6ZJ
-         BX8Gmybtj8j3h+Ek+E8Dw4VkhGFUHKNyYjlXSgMB2maONlWbSW9YLmfcfMOdPZzjz1Qn
-         OCy6YD/kQUravMtMGVUmrV8baY8/5IXZaej2ADzA/Dv+hSlOq8zOWcCY4fKpeHmWV5So
-         991zxu+9PMlWlylA7OdkSai+Gq/OhgxWw5JcGUCZlgDNsM5S0UYMO0xhDCNLJtSb0OHY
-         UO/g==
-X-Gm-Message-State: APjAAAVlqilDI/Ge5VRZIkiPHCE+3Cvo/43c7vpYgxZrQppvXVRgC9RA
-        vuyH9zvu74xKHcpn7lOgjrXqfNISyQAYkYU63yXebA==
-X-Google-Smtp-Source: APXvYqynn5VMST3cneWTKIKRfdQOUrgp2WS4DuM61xZXzMCVt2m7Y/3Qm9PGybsLU6uCQeZXVn92r6kYkU7iqFaN4is=
-X-Received: by 2002:a2e:4b12:: with SMTP id y18mr7770792lja.238.1565267229165;
- Thu, 08 Aug 2019 05:27:09 -0700 (PDT)
+        Thu, 8 Aug 2019 08:27:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=XT7FXEAc0AKqvinWOlJDsKF/Qz/NIldOL1mI3L4QB6w=; b=dQNWJDy5YeLs+jkwEj4xpgq5/
+        DBI0WXibr+SB/gjDQXZ+l6h1euxjJ6uF5+sTVb1QZ789xvURbT8FKFWlwALhLBkSYua8BVjSh9nnE
+        uKaIbahAzf6bkNo2ADOyqHzZ8G+ZuH5GXiTL+TuTCUGUtYg27PhKmRAY4pY1og4FjyGHA=;
+Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1hvhW9-0002p0-HW; Thu, 08 Aug 2019 12:27:41 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 7E0CF2742BDD; Thu,  8 Aug 2019 13:27:40 +0100 (BST)
+Date:   Thu, 8 Aug 2019 13:27:40 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Nishka Dasgupta <nishkadg.linux@gmail.com>
+Cc:     lgirdwood@gmail.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] regulator: core: Add of_node_put() before return
+Message-ID: <20190808122740.GB3795@sirena.co.uk>
+References: <20190808070553.13097-1-nishkadg.linux@gmail.com>
 MIME-Version: 1.0
-References: <1565098640-12536-1-git-send-email-sumit.garg@linaro.org>
- <1565098640-12536-2-git-send-email-sumit.garg@linaro.org> <20190807185921.lhdt3ek6tphj33bo@linux.intel.com>
-In-Reply-To: <20190807185921.lhdt3ek6tphj33bo@linux.intel.com>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Thu, 8 Aug 2019 17:56:57 +0530
-Message-ID: <CAFA6WYPsNuN=F9y+Q0r8-6MQAGGZeKUtRheQgKv3HmE1ViyviA@mail.gmail.com>
-Subject: Re: [RFC/RFT v3 1/3] KEYS: trusted: create trusted keys subsystem
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        linux-security-module@vger.kernel.org, dhowells@redhat.com,
-        Herbert Xu <herbert@gondor.apana.org.au>, davem@davemloft.net,
-        peterhuewe@gmx.de, jgg@ziepe.ca, jejb@linux.ibm.com,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="oLBj+sq0vYjzfsbl"
+Content-Disposition: inline
+In-Reply-To: <20190808070553.13097-1-nishkadg.linux@gmail.com>
+X-Cookie: I think we're in trouble.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 8 Aug 2019 at 00:29, Jarkko Sakkinen
-<jarkko.sakkinen@linux.intel.com> wrote:
->
-> On Tue, Aug 06, 2019 at 07:07:18PM +0530, Sumit Garg wrote:
-> > Move existing code to trusted keys subsystem. Also, rename files with
-> > "tpm" as suffix which provides the underlying implementation.
-> >
-> > Suggested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
->
-> The name for should be still trusted.ko even if new backends are added.
-> Must be done in order not to break user space.
 
-Agree. I think I need to update Makefile as follows:
+--oLBj+sq0vYjzfsbl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-obj-$(CONFIG_TRUSTED_KEYS) += trusted.o
-trusted-y += trusted-tpm.o
+On Thu, Aug 08, 2019 at 12:35:53PM +0530, Nishka Dasgupta wrote:
+> In function of_get_child_regulator(), the loop for_each_child_of_node()
+> contains two mid-loop return statements. Ordinarily the loop gets the
+> node child at the beginning of every iteration and automatically puts
 
--Sumit
+Please do not submit new versions of already applied patches, please
+submit incremental updates to the existing code.  Modifying existing
+commits creates problems for other users building on top of those
+commits so it's best practice to only change pubished git commits if
+absolutely essential.
 
->
-> Situation is quite similar as when new backends were added to tpm_tis
-> some time ago: MMIO backed implementation was kept as tpm_tis.ko, the
-> core module was named as tpm_tis_core and SPI backed implementation was
-> named as tpm_tis_spi.ko.
->
-> /Jarkko
+--oLBj+sq0vYjzfsbl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1MFTsACgkQJNaLcl1U
+h9D/1gf+N9kCZcP5ptvF6gkwQDM3Ng9R3apuMcaULdoX0Tj+aZA9N8ZZfLlYjCTt
+pZVAX8UnDn2cQ6dvnA7SXTqtZ0vGTrNtxDmByJ8ju9vFJNsZCqMV30qR6Y+/fP0d
+tCP0hXz3EVitTLvxodW+OOfa6TJvem51rUj+q8lnjoIo3RohOE3mLwzS9/lv++4/
+IudlYN5WVDx7zOruh/FsR5HC7REU3Tf8erRjpeiRQOjptRaEEiNmWgNyL4TjdxBy
+UHTaQimMWk1EkVK4JaGpoFjmXRbMiO02asuNiTgLGVYXsGsrSV3bau+o/m18jBPY
+p7mb6utG0FXIFhjbODG4EPDGrsqUAQ==
+=+M4Q
+-----END PGP SIGNATURE-----
+
+--oLBj+sq0vYjzfsbl--
