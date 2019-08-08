@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D12BC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:06:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA8DC32754
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:06:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D3572184E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:06:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 827B321874
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:06:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565291165;
-	bh=+Av3d2kPZIsYYbULr+uL0eeswbcyrNwKWhD1JysRTp4=;
+	s=default; t=1565291170;
+	bh=WLBYh0GoRhp9dzJDdv30zfp8sCdMj1MIp8GArBRONlE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xt6haKqt+tHGSOZEDXFWfzRGxddLTyPBuldrovAbUBmArsJxOHzn2nlhh+5TFThQZ
-	 eVcMMycZQIYRiPxbKYdR9yrXBRht+vsBSpJqwOH8Ohm2u6PxvazzDiqawSuYD90hLR
-	 XyViwf1UfY5ecVnePUpyb9uX9FlomJsyj2Ui7sGM=
+	b=mvjcVqXBPiN3KLe3NSymIv0j8iBUJHvbuBCo/0D/DwXdQL0fLGl918nLZuGmRsCDI
+	 4/aOb6nG7PqSSDRELZPia5G16I+ImNvmFRQ0VTUYMheJ12CxZaS8HnLrBGXZwu3iY5
+	 vvgq07YqMElxPYsLSkPlUE9sZbLk+fwYh3U5TfkE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404192AbfHHTGE (ORCPT
+        id S2404292AbfHHTGJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:06:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39306 "EHLO mail.kernel.org"
+        Thu, 8 Aug 2019 15:06:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39442 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404142AbfHHTGC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 15:06:02 -0400
+        id S2404196AbfHHTGH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 15:06:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04EF321880;
-        Thu,  8 Aug 2019 19:06:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 352012184E;
+        Thu,  8 Aug 2019 19:06:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565291161;
-        bh=+Av3d2kPZIsYYbULr+uL0eeswbcyrNwKWhD1JysRTp4=;
+        s=default; t=1565291166;
+        bh=WLBYh0GoRhp9dzJDdv30zfp8sCdMj1MIp8GArBRONlE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hXbWJR7NKpoxfRo9QQNyaAjD0FleZCWmcthnHQiFD39NcaKt5steibH7dKlGoBOpM
-         zfEdZ5JZx2nZ4t+E1pTOO9MKsjy3Lv/5Pitrbcndx4B7/0u6tgB38/ecAJEaN2XX/K
-         X05eP8M0BssKL7SSiX7n6YT+IO4wFOBEvIhvkMzk=
+        b=kUSCDxGxn1EOFzUfm/HXow9Mf6GDPoJjzwk8FfaQMPfd+JN/oBoGC81B9MbfNZXqC
+         1EABAV/S5wRVYDIbaWAybs5H45prZe4ecaisPAyiL+JQGk006c3NPxGKunJITbhBfl
+         kTTTWhQrKVyFfUA+6IJpjYk+aw3Z/uNmXtTmY4VQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnaud Patard <arnaud.patard@rtp-net.org>,
-        Andrew Lunn <andrew@lunn.ch>,
+        stable@vger.kernel.org, William Tu <u9012063@gmail.com>,
+        Haishuang Yan <yanhaishuang@cmss.chinamobile.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 10/56] drivers/net/ethernet/marvell/mvmdio.c: Fix non OF case
-Date:   Thu,  8 Aug 2019 21:04:36 +0200
-Message-Id: <20190808190453.280793067@linuxfoundation.org>
+Subject: [PATCH 5.2 12/56] ip6_gre: reload ipv6h in prepare_ip6gre_xmit_ipv6
+Date:   Thu,  8 Aug 2019 21:04:38 +0200
+Message-Id: <20190808190453.354245914@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190808190452.867062037@linuxfoundation.org>
 References: <20190808190452.867062037@linuxfoundation.org>
@@ -60,66 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Arnaud Patard (Rtp)" <arnaud.patard@rtp-net.org>
+From: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
 
-[ Upstream commit d934423ac26ed373dfe089734d505dca5ff679b6 ]
+[ Upstream commit 3bc817d665ac6d9de89f59df522ad86f5b5dfc03 ]
 
-Orion5.x systems are still using machine files and not device-tree.
-Commit 96cb4342382290c9 ("net: mvmdio: allow up to three clocks to be
-specified for orion-mdio") has replaced devm_clk_get() with of_clk_get(),
-leading to a oops at boot and not working network, as reported in
-https://lists.debian.org/debian-arm/2019/07/msg00088.html and possibly in
-https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=908712.
+Since ip6_tnl_parse_tlv_enc_lim() can call pskb_may_pull()
+which may change skb->data, so we need to re-load ipv6h at
+the right place.
 
-Link: https://lists.debian.org/debian-arm/2019/07/msg00088.html
-Fixes: 96cb4342382290c9 ("net: mvmdio: allow up to three clocks to be specified for orion-mdio")
-Signed-off-by: Arnaud Patard <arnaud.patard@rtp-net.org>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Fixes: 898b29798e36 ("ip6_gre: Refactor ip6gre xmit codes")
+Cc: William Tu <u9012063@gmail.com>
+Signed-off-by: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
+Acked-by: William Tu <u9012063@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/marvell/mvmdio.c |   28 ++++++++++++++++++++++------
- 1 file changed, 22 insertions(+), 6 deletions(-)
+ net/ipv6/ip6_gre.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/marvell/mvmdio.c
-+++ b/drivers/net/ethernet/marvell/mvmdio.c
-@@ -319,15 +319,31 @@ static int orion_mdio_probe(struct platf
+--- a/net/ipv6/ip6_gre.c
++++ b/net/ipv6/ip6_gre.c
+@@ -660,12 +660,13 @@ static int prepare_ip6gre_xmit_ipv6(stru
+ 				    struct flowi6 *fl6, __u8 *dsfield,
+ 				    int *encap_limit)
+ {
+-	struct ipv6hdr *ipv6h = ipv6_hdr(skb);
++	struct ipv6hdr *ipv6h;
+ 	struct ip6_tnl *t = netdev_priv(dev);
+ 	__u16 offset;
  
- 	init_waitqueue_head(&dev->smi_busy_wait);
+ 	offset = ip6_tnl_parse_tlv_enc_lim(skb, skb_network_header(skb));
+ 	/* ip6_tnl_parse_tlv_enc_lim() might have reallocated skb->head */
++	ipv6h = ipv6_hdr(skb);
  
--	for (i = 0; i < ARRAY_SIZE(dev->clk); i++) {
--		dev->clk[i] = of_clk_get(pdev->dev.of_node, i);
--		if (PTR_ERR(dev->clk[i]) == -EPROBE_DEFER) {
-+	if (pdev->dev.of_node) {
-+		for (i = 0; i < ARRAY_SIZE(dev->clk); i++) {
-+			dev->clk[i] = of_clk_get(pdev->dev.of_node, i);
-+			if (PTR_ERR(dev->clk[i]) == -EPROBE_DEFER) {
-+				ret = -EPROBE_DEFER;
-+				goto out_clk;
-+			}
-+			if (IS_ERR(dev->clk[i]))
-+				break;
-+			clk_prepare_enable(dev->clk[i]);
-+		}
-+
-+		if (!IS_ERR(of_clk_get(pdev->dev.of_node,
-+				       ARRAY_SIZE(dev->clk))))
-+			dev_warn(&pdev->dev,
-+				 "unsupported number of clocks, limiting to the first "
-+				 __stringify(ARRAY_SIZE(dev->clk)) "\n");
-+	} else {
-+		dev->clk[0] = clk_get(&pdev->dev, NULL);
-+		if (PTR_ERR(dev->clk[0]) == -EPROBE_DEFER) {
- 			ret = -EPROBE_DEFER;
- 			goto out_clk;
- 		}
--		if (IS_ERR(dev->clk[i]))
--			break;
--		clk_prepare_enable(dev->clk[i]);
-+		if (!IS_ERR(dev->clk[0]))
-+			clk_prepare_enable(dev->clk[0]);
- 	}
- 
- 	dev->err_interrupt = platform_get_irq(pdev, 0);
+ 	if (offset > 0) {
+ 		struct ipv6_tlv_tnl_enc_lim *tel;
 
 
