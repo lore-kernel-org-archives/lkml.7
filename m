@@ -6,71 +6,101 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF80C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:26:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FFEEC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:27:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9257B21874
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:26:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DF012086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:27:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565270772;
-	bh=xOthRltc9QPDcvSfY6/4aGUZsvl14aXcUqTn5d6Zb0c=;
+	s=default; t=1565270870;
+	bh=7Lxp26KPlp/SSZ5GOibgte51ROVe+AKBvp105fpAipY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PsOB1J9xSMOCTd1kgxzwEXbb4+KxdnM/50L/t/McEFUAbTaWcysJ8/o9OBBRgEjhd
-	 Xuj5+ODqE0zyMHdIZAwnW2IPlYFagxkWHPb/bHLzq8JY+C6YNOvJTqR1Km2TQwi+6b
-	 4duJ8e7ABcMTYaVl8A6hiI/Q7pa8RGA3pyzLHVbg=
+	b=e5fs/J9URNXmC4HZRlkLiW4+9htofwBWSyKe3RnArTmEhRg7fJdQC4TB0+02U+0Ne
+	 D+MJf8dpMfBVz54CRqPUkf4R5qfiSV4vK4JnaEp0KhV2M06EXOX4UQ0e9DvDoO94Pj
+	 pvkcSVCK6TxGPRhKsCk+kpSOLOm4lkeeHMMxK8tY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733061AbfHHN0L (ORCPT
+        id S1733018AbfHHN1t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 09:26:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60560 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732643AbfHHN0L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 09:26:11 -0400
-Received: from localhost (unknown [122.178.245.201])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B37412171F;
-        Thu,  8 Aug 2019 13:26:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565270770;
-        bh=xOthRltc9QPDcvSfY6/4aGUZsvl14aXcUqTn5d6Zb0c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wdhiSMgEUzklpKCVFzekiTPw8B+at3lhPkMlMq4SDMz7bagefPWO/3Q+YcDzoHCPg
-         vY90keJnw2raAF5MHo3hox17C8WLQGi9gvALi+W9RX1r1qYdChpA4QJ93ZTn9d6Kam
-         koHNlTvuUSrcY+0LQUue/knLXIFACQjNVu0A19FU=
-Date:   Thu, 8 Aug 2019 18:54:56 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Jia-Ju Bai <baijiaju1990@gmail.com>
-Cc:     dan.j.williams@intel.com, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, dmaengine@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dma: stm32-mdma: Fix a possible null-pointer dereference
- in stm32_mdma_irq_handler()
-Message-ID: <20190808132456.GA12733@vkoul-mobl.Dlink>
-References: <20190729020849.17971-1-baijiaju1990@gmail.com>
+        Thu, 8 Aug 2019 09:27:49 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49282 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728327AbfHHN1t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 09:27:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=egMV3q9uEBW5xiJ68iYvqE6+ywPdvkHsBfVwqjoD4mc=; b=rQyhzfUBYPLZwvKm+PR5EX4zO
+        zq0eKrBDfmA2kQ1AA00oDjwN1lSG+ZeH8DGBC1KIZsgvcoERHOuS9Yog1x7aEoPEok2MYmrykWaNw
+        MOxo54qFXdL0FVZya2kLH4FS5OK/c2ewtxggnhYU+/8LASoTKYNq1fjICbyIdeVR1UQ4g=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1hviSD-000309-0I; Thu, 08 Aug 2019 13:27:41 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 1B7F82742B42; Thu,  8 Aug 2019 14:27:40 +0100 (BST)
+Date:   Thu, 8 Aug 2019 14:27:40 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Tomer Maimon <tmaimon77@gmail.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, vigneshr@ti.com,
+        bbrezillon@kernel.org, avifishman70@gmail.com,
+        tali.perry1@gmail.com, venture@google.com, yuenn@google.com,
+        benjaminfair@google.com, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, openbmc@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] spi: npcm-fiu: add NPCM FIU controller driver
+Message-ID: <20190808132740.GG3795@sirena.co.uk>
+References: <20190808131448.349161-1-tmaimon77@gmail.com>
+ <20190808131448.349161-3-tmaimon77@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="S5HS5MvDw4DmbRmb"
 Content-Disposition: inline
-In-Reply-To: <20190729020849.17971-1-baijiaju1990@gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190808131448.349161-3-tmaimon77@gmail.com>
+X-Cookie: I think we're in trouble.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29-07-19, 10:08, Jia-Ju Bai wrote:
-> In stm32_mdma_irq_handler(), chan is checked on line 1368.
-> When chan is NULL, it is still used on line 1369:
->     dev_err(chan2dev(chan), "MDMA channel not initialized\n");
-> 
-> Thus, a possible null-pointer dereference may occur.
-> 
-> To fix this bug, "dev_dbg(mdma2dev(dmadev), ...)" is used instead.
 
-Applied after changing subsystem name in patch title to dmaengine: ...,
-Also while fixing it helps to add Fixes tag, have added
+--S5HS5MvDw4DmbRmb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks
--- 
-~Vinod
+On Thu, Aug 08, 2019 at 04:14:48PM +0300, Tomer Maimon wrote:
+
+> +	ctrl->mode_bits =3D SPI_RX_DUAL | SPI_RX_QUAD
+> +		| SPI_TX_DUAL | SPI_TX_QUAD;
+> +	ctrl->setup =3D npcm_fiu_setup;
+
+I'm not seeing where we implement dual or quad modes in the driver?
+There's some=20
+
+> +	dev_info(dev, "NPCM %s probe succeed\n", fiu->info->name);
+
+Just remove this, it makes the log more verbose but doesn't really add
+any information.
+
+--S5HS5MvDw4DmbRmb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1MI0sACgkQJNaLcl1U
+h9Cu2wf9FI8ekzKOtKPknDdXJFSkW34/Y7Fa6IFFOzRNy/zJa/KK4039pd967txp
+uqy4z1++x9xd9hct1F2qFzJRRAAfKHxCQVjwfxfXKf5kwHLS/tP9Q3LQtI4Curae
+jmY4wrFeNsDTGDtA9BFQFdDbDUp1nNETnWzNPBijNo9cuzTlCsTEEhBpOM5HhhJS
+E5i/L3B/If5JDs18ULa4B7vsL4oqMxgHw6ztC2EwkxcNl0/8ymCTzHI8D1kpl/+c
+nJ/cX59A4kqGn42v5Zw/dt1zrqAL5lPTywW2RL/WbS7IiDjREsFoHrF4vtnKHJAJ
+VEB121JZAJjasaLrxwfT/dO0JDeQFw==
+=tVs8
+-----END PGP SIGNATURE-----
+
+--S5HS5MvDw4DmbRmb--
