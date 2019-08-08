@@ -2,140 +2,123 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0045CC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:56:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66156C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:00:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6556208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:56:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BnoKHeR5"
+	by mail.kernel.org (Postfix) with ESMTP id 40A452173E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:00:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389930AbfHHN4k (ORCPT
+        id S2389789AbfHHOAB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 09:56:40 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:40150 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732882AbfHHN4k (ORCPT
-        <rfc822;Linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 09:56:40 -0400
-Received: by mail-qk1-f193.google.com with SMTP id s145so68832711qke.7
-        for <Linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 06:56:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=fPpcBry2HdcdHyWE0YooFTbsmsPTHzKrgGgAZPQcj1U=;
-        b=BnoKHeR5aIXCoGFdQXnge4eTzTLcBUyB06hllb1KE5MHGZwkKArEDqQokIh2fIJaVT
-         tsvEINRAd0weAYWsNoc5VoH1QokLDCKBgbLlQR0jqDspzhdZ96W4HolyomchPAfSp7UX
-         ucJx0ljJWVfwN5vRDFjSqdwvdPbPsG6E7SoF+TghzG+4h3f6CPzOhvynnbdvol49bxwj
-         gpHl0HRy0syFEC59xbT0Hp24CDYuGsZBIkqy7iBcJJzLK83B3CzLlU+71dxJ3CAtrlE8
-         MXDqPZfGdxvG3wnJhqLPLQCT/mW/Zk+hNnvv6SR1fu/yuUywpEsv+ktPHGrza9WV8K8v
-         YkEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fPpcBry2HdcdHyWE0YooFTbsmsPTHzKrgGgAZPQcj1U=;
-        b=VWWdAVoTkfb8EmgPkavHEqxBSx5BPTSfhNJQaxNIKyAjPZmwoDwxrMK1Uzd+yPwY7j
-         WF522k417C265JdEiev+r4j0fx1a4oox17G7O9xvbBokRXgcfN0Uhj4fls5AATRJofIK
-         8jZRtu6a/2qFA05r/Nb1GGgtTJm9OjjIdjFENC18UaUMAoVrB1ykWcs+iXNP5J65MFom
-         FW+v8Lygc4V6KYhfKdzeKZA9gXcTTCMRG874HUDTjkutpImc2NR2yxBeJqFHMUUOWBIH
-         wnaKxsiNpIZltA/UfpCGp7HbjdhNpfQTtAg/S5RWGd/xqcNpBW/tkeQeAzpLvWBBH0ga
-         VdTQ==
-X-Gm-Message-State: APjAAAXP8wSWRYKY/zAZtHJlfUNJs1k531UMaonbaIMKnJj7xOApCWXR
-        Bl9wOq+YfgXzgr61kEo62gg=
-X-Google-Smtp-Source: APXvYqw6f/AyMYCN1DXJp6coIYfoBGKJ+ShpPcx0GsrfkPP8Xoy4Hoh4KKLnm6WHXkxAVIfnlvFCVg==
-X-Received: by 2002:ae9:efc6:: with SMTP id d189mr12968677qkg.323.1565272599403;
-        Thu, 08 Aug 2019 06:56:39 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id r40sm56849282qtk.2.2019.08.08.06.56.37
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 08 Aug 2019 06:56:38 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 1249540340; Thu,  8 Aug 2019 10:56:36 -0300 (-03)
-Date:   Thu, 8 Aug 2019 10:56:36 -0300
-To:     Jin Yao <yao.jin@linux.intel.com>
-Cc:     jolsa@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@linux.intel.com, Linux-kernel@vger.kernel.org,
-        ak@linux.intel.com, kan.liang@intel.com, yao.jin@intel.com
-Subject: Re: [PATCH] perf pmu-events: Fix the missing "cpu_clk_unhalted.core"
-Message-ID: <20190808135636.GI19444@kernel.org>
-References: <20190729072755.2166-1-yao.jin@linux.intel.com>
+        Thu, 8 Aug 2019 10:00:01 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:41750 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1733005AbfHHOAA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 10:00:00 -0400
+Received: (qmail 1781 invoked by uid 2102); 8 Aug 2019 09:59:59 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 8 Aug 2019 09:59:59 -0400
+Date:   Thu, 8 Aug 2019 09:59:59 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Andrey Konovalov <andreyknvl@google.com>
+cc:     Dmitry Vyukov <dvyukov@google.com>,
+        syzbot <syzbot+1b2449b7b5dc240d107a@syzkaller.appspotmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        Oliver Neukum <oneukum@suse.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Subject: Re: KASAN: use-after-free Read in device_release_driver_internal
+In-Reply-To: <CAAeHK+yPJR2kZ5Mkry+bGFVuedF9F76=5GdKkF1eLkr9FWyvqA@mail.gmail.com>
+Message-ID: <Pine.LNX.4.44L0.1908080958380.1652-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190729072755.2166-1-yao.jin@linux.intel.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, Jul 29, 2019 at 03:27:55PM +0800, Jin Yao escreveu:
-> The events defined in pmu-events JSON are parsed and added into
-> perf tool. For fixed counters, we handle the encodings between
-> JSON and perf by using a static array fixed[].
-> 
-> But the fixed[] has missed an important event "cpu_clk_unhalted.core".
-> 
-> For example, on tremont platform,
-> 
-> [root@localhost ~]# perf stat -e cpu_clk_unhalted.core -a
-> event syntax error: 'cpu_clk_unhalted.core'
->                      \___ parser error
-> 
-> With this patch, the event cpu_clk_unhalted.core can be parsed.
-> 
-> [root@localhost perf]# ./perf stat -e cpu_clk_unhalted.core -a -vvv
-> ------------------------------------------------------------
-> perf_event_attr:
->   type                             4
->   size                             112
->   config                           0x3c
->   sample_type                      IDENTIFIER
->   read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
->   disabled                         1
->   inherit                          1
->   exclude_guest                    1
-> ------------------------------------------------------------
+On Thu, 8 Aug 2019, Andrey Konovalov wrote:
 
-Thanks, applied, next time please do not add lines starting with ---,
-prefix it with two spaces so that git am scripts don't get confused.
-
-
-- Arnaldo
-
-> ...
+> On Thu, Aug 8, 2019 at 2:44 PM Dmitry Vyukov <dvyukov@google.com> wrote:
+> >
+> > On Thu, Aug 8, 2019 at 2:28 PM Andrey Konovalov <andreyknvl@google.com> wrote:
+> > >
+> > > On Wed, Aug 7, 2019 at 8:31 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+> > > >
+> > > > On Wed, 7 Aug 2019, syzbot wrote:
+> > > >
+> > > > > Hello,
+> > > > >
+> > > > > syzbot has tested the proposed patch and the reproducer did not trigger
+> > > > > crash:
+> > > > >
+> > > > > Reported-and-tested-by:
+> > > > > syzbot+1b2449b7b5dc240d107a@syzkaller.appspotmail.com
+> > > > >
+> > > > > Tested on:
+> > > > >
+> > > > > commit:         6a3599ce usb-fuzzer: main usb gadget fuzzer driver
+> > > > > git tree:       https://github.com/google/kasan.git
+> > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=700ca426ab83faae
+> > > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > > > > patch:          https://syzkaller.appspot.com/x/patch.diff?x=132eec8c600000
+> > > > >
+> > > > > Note: testing is done by a robot and is best-effort only.
+> > > >
+> > > > Andrey, is there any way to get the console output from this test?
+> > >
+> > > Dmitry, would it be possible to link console log for successful tests as well?
+> >
+> > Yes. Start by filing a feature request at
+> > https://github.com/google/syzkaller/issues
 > 
-> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-> ---
->  tools/perf/pmu-events/jevents.c | 1 +
->  1 file changed, 1 insertion(+)
+> Filed https://github.com/google/syzkaller/issues/1322
 > 
-> diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-> index 1a91a197cafb..d413761621b0 100644
-> --- a/tools/perf/pmu-events/jevents.c
-> +++ b/tools/perf/pmu-events/jevents.c
-> @@ -453,6 +453,7 @@ static struct fixed {
->  	{ "inst_retired.any_p", "event=0xc0" },
->  	{ "cpu_clk_unhalted.ref", "event=0x0,umask=0x03" },
->  	{ "cpu_clk_unhalted.thread", "event=0x3c" },
-> +	{ "cpu_clk_unhalted.core", "event=0x3c" },
->  	{ "cpu_clk_unhalted.thread_any", "event=0x3c,any=1" },
->  	{ NULL, NULL},
->  };
-> -- 
-> 2.17.1
+> Alan, for now I've applied your patch and run the reproducer manually:
+> 
+> [   90.844643][   T74] usb 1-1: new high-speed USB device number 2
+> using dummy_hcd
+> [   91.085789][   T74] usb 1-1: Using ep0 maxpacket: 16
+> [   91.204698][   T74] usb 1-1: config 0 has an invalid interface
+> number: 234 but max is 0
+> [   91.209137][   T74] usb 1-1: config 0 has no interface number 0
+> [   91.211599][   T74] usb 1-1: config 0 interface 234 altsetting 0
+> endpoint 0x8D has an inva1
+> [   91.216162][   T74] usb 1-1: config 0 interface 234 altsetting 0
+> endpoint 0x7 has invalid 4
+> [   91.218211][   T74] usb 1-1: config 0 interface 234 altsetting 0
+> bulk endpoint 0x7 has inv4
+> [   91.220131][   T74] usb 1-1: config 0 interface 234 altsetting 0
+> bulk endpoint 0x8F has in0
+> [   91.222052][   T74] usb 1-1: New USB device found, idVendor=0421,
+> idProduct=0486, bcdDevic7
+> [   91.223851][   T74] usb 1-1: New USB device strings: Mfr=0,
+> Product=0, SerialNumber=0
+> [   91.233180][   T74] usb 1-1: config 0 descriptor??
+> [   91.270222][   T74] rndis_wlan 1-1:0.234: Refcount before probe: 3
+> [   91.275464][   T74] rndis_wlan 1-1:0.234: invalid descriptor buffer length
+> [   91.277558][   T74] usb 1-1: bad CDC descriptors
+> [   91.279716][   T74] rndis_wlan 1-1:0.234: Refcount after probe: 3
+> [   91.281378][   T74] rndis_host 1-1:0.234: Refcount before probe: 3
+> [   91.283303][   T74] rndis_host 1-1:0.234: invalid descriptor buffer length
+> [   91.284724][   T74] usb 1-1: bad CDC descriptors
+> [   91.286004][   T74] rndis_host 1-1:0.234: Refcount after probe: 3
+> [   91.287318][   T74] cdc_acm 1-1:0.234: Refcount before probe: 3
+> [   91.288513][   T74] cdc_acm 1-1:0.234: invalid descriptor buffer length
+> [   91.289835][   T74] cdc_acm 1-1:0.234: No union descriptor, testing
+> for castrated device
+> [   91.291555][   T74] cdc_acm 1-1:0.234: Refcount after probe: 3
+> [   91.292766][   T74] cdc_acm: probe of 1-1:0.234 failed with error -12
+> [   92.001549][   T96] usb 1-1: USB disconnect, device number 2
 
--- 
+Ah, that looks right, thank you.  The patch worked correctly -- good
+work Oliver!
 
-- Arnaldo
+Alan Stern
+
