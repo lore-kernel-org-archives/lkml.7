@@ -2,55 +2,55 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CC2EC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 18:54:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8026FC32754
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 18:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0910E2184E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 18:54:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 552F92089E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 18:54:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565290481;
-	bh=BWkyOt3w2GSqFELRkanVFXYtpI7TId3wAEtO2IxtfwQ=;
+	s=default; t=1565290487;
+	bh=Ksk9bBTi0K/82H83qnY3FEVU8xsKq3i3dWb3DYJCFJo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cmKIsjxonwvv/Y+3MkkagA/BnDyhPdDlLPMw9LmenFs6HH9ET2yexmYqCifZFXqIl
-	 NnyThTTlTHh0csoeTSblXDfEg7MgcNGc5b+yM0z4O227E5r6r4GNURf0kmVxdNoLD0
-	 NZyNO2xRH9YKMwAULBk6QSEdUAgxtlASxvoYeYHQ=
+	b=y5IM7OcPMTMwWJjdKU9OWXL3OC8j9cC6Ft6pt99uDA2UTlRcDPmI4OEPFcz/Tz0+L
+	 aBJNMVZbSGpV94U/AXCZtBcCXJKSaWWMi9dHxcae40ro7BFSk+ZeZXsWm5ihxgJAuL
+	 C2IwqNRHZc4/CJi6YSRdBcaYCSyktxn5fTnp02eY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390299AbfHHSyk (ORCPT
+        id S2390310AbfHHSyq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 14:54:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35754 "EHLO mail.kernel.org"
+        Thu, 8 Aug 2019 14:54:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390228AbfHHSyj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 14:54:39 -0400
+        id S2390228AbfHHSyp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 14:54:45 -0400
 Received: from quaco.ghostprotocols.net (unknown [177.195.210.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8E242089E;
-        Thu,  8 Aug 2019 18:54:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54BA721881;
+        Thu,  8 Aug 2019 18:54:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565290478;
-        bh=BWkyOt3w2GSqFELRkanVFXYtpI7TId3wAEtO2IxtfwQ=;
+        s=default; t=1565290484;
+        bh=Ksk9bBTi0K/82H83qnY3FEVU8xsKq3i3dWb3DYJCFJo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RDrK8Ypg6ItVtSLguL+8MxewId+zuKKFrrHWf+MNmFfhu3Y8MYaCNdhUd4Xb4yWnO
-         0srxDW13HjyL726PZ6zBh2TbylYZ6sIRrDsPF7o7LdhFCT+vKk4DWNSXBY4Okg0xNM
-         MUwnQwg03dZQ6enJntAu7sx1MsVNL0E9MFLlFCVs=
+        b=waEc8rk3O1lZFNyHlCM393rtJw6+9PbKZvd40UBFN2qsxQ2x9HDuv+39FgBq3YuvF
+         jAYosNRH74nwo4oiJxPMzJ6JG/goi4KR+ZKr6wQeKg2GBUMNmzgHHlg4fgDm2MFjrb
+         5tOSNFo/lR5I3Umo20lchi+bG9g31fLspbWvElcU=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Song Liu <songliubraving@fb.com>
-Subject: [PATCH 02/10] perf annotate: Fix printing of unaugmented disassembled instructions from BPF
-Date:   Thu,  8 Aug 2019 15:53:50 -0300
-Message-Id: <20190808185358.20125-3-acme@kernel.org>
+        Jiri Olsa <jolsa@redhat.com>, stable@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 03/10] perf db-export: Fix thread__exec_comm()
+Date:   Thu,  8 Aug 2019 15:53:51 -0300
+Message-Id: <20190808185358.20125-4-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190808185358.20125-1-acme@kernel.org>
 References: <20190808185358.20125-1-acme@kernel.org>
@@ -61,56 +61,134 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-The code to disassemble BPF programs uses binutil's disassembling
-routines, and those use in turn fprintf to print to a memstream FILE,
-adding a newline at the end of each line, which ends up confusing the
-TUI routines called from:
+Threads synthesized from /proc have comms with a start time of zero, and
+not marked as "exec". Currently, there can be 2 such comms. The first is
+created by processing a synthesized fork event and is set to the
+parent's comm string, and the second by processing a synthesized comm
+event set to the thread's current comm string.
 
-  annotate_browser__write()
-    annotate_line__write()
-      annotate_browser__printf()
-        ui_browser__vprintf()
-          SLsmg_vprintf()
+In the absence of an "exec" comm, thread__exec_comm() picks the last
+(oldest) comm, which, in the case above, is the parent's comm string.
+For a main thread, that is very probably wrong. Use the second-to-last
+in that case.
 
-The SLsmg_vprintf() function in the slang library gets confused with the
-terminating newline, so make the disasm_line__parse() function that
-parses the lines produced by the BPF specific disassembler (that uses
-binutil's libopcodes) and the lines produced by the objdump based
-disassembler used for everything else (and that doesn't adds this
-terminating newline) trim the end of the line in addition of the
-beginning.
+This affects only db-export because it is the only user of
+thread__exec_comm().
 
-This way when disasm_line->ops.raw, i.e. for instructions without a
-special scnprintf() method, we'll not have that \n getting in the way of
-filling the screen right after the instruction with spaces to avoid
-leaving what was on the screen before and thus garbling the annotation
-screen, breaking scrolling, etc.
+Example:
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Song Liu <songliubraving@fb.com>
-Fixes: 6987561c9e86 ("perf annotate: Enable annotation of BPF programs")
-Link: https://lkml.kernel.org/n/tip-unbr5a5efakobfr6rhxq99ta@git.kernel.org
+  $ sudo perf record -a -o pt-a-sleep-1 -e intel_pt//u -- sleep 1
+  $ sudo chown ahunter pt-a-sleep-1
+
+Before:
+
+  $ perf script -i pt-a-sleep-1 --itrace=bep -s tools/perf/scripts/python/export-to-sqlite.py pt-a-sleep-1.db branches calls
+  $ sqlite3 -header -column pt-a-sleep-1.db 'select * from comm_threads_view'
+  comm_id     command     thread_id   pid         tid
+  ----------  ----------  ----------  ----------  ----------
+  1           swapper     1           0           0
+  2           rcu_sched   2           10          10
+  3           kthreadd    3           78          78
+  5           sudo        4           15180       15180
+  5           sudo        5           15180       15182
+  7           kworker/4:  6           10335       10335
+  8           kthreadd    7           55          55
+  10          systemd     8           865         865
+  10          systemd     9           865         875
+  13          perf        10          15181       15181
+  15          sleep       10          15181       15181
+  16          kworker/3:  11          14179       14179
+  17          kthreadd    12          29376       29376
+  19          systemd     13          746         746
+  21          systemd     14          401         401
+  23          systemd     15          879         879
+  23          systemd     16          879         945
+  25          kthreadd    17          556         556
+  27          kworker/u1  18          14136       14136
+  28          kworker/u1  19          15021       15021
+  29          kthreadd    20          509         509
+  31          systemd     21          836         836
+  31          systemd     22          836         967
+  33          systemd     23          1148        1148
+  33          systemd     24          1148        1163
+  35          kworker/2:  25          17988       17988
+  36          kworker/0:  26          13478       13478
+
+After:
+
+  $ perf script -i pt-a-sleep-1 --itrace=bep -s tools/perf/scripts/python/export-to-sqlite.py pt-a-sleep-1b.db branches calls
+  $ sqlite3 -header -column pt-a-sleep-1b.db 'select * from comm_threads_view'
+  comm_id     command     thread_id   pid         tid
+  ----------  ----------  ----------  ----------  ----------
+  1           swapper     1           0           0
+  2           rcu_sched   2           10          10
+  3           kswapd0     3           78          78
+  4           perf        4           15180       15180
+  4           perf        5           15180       15182
+  6           kworker/4:  6           10335       10335
+  7           kcompactd0  7           55          55
+  8           accounts-d  8           865         865
+  8           accounts-d  9           865         875
+  10          perf        10          15181       15181
+  12          sleep       10          15181       15181
+  13          kworker/3:  11          14179       14179
+  14          kworker/1:  12          29376       29376
+  15          haveged     13          746         746
+  16          systemd-jo  14          401         401
+  17          NetworkMan  15          879         879
+  17          NetworkMan  16          879         945
+  19          irq/131-iw  17          556         556
+  20          kworker/u1  18          14136       14136
+  21          kworker/u1  19          15021       15021
+  22          kworker/u1  20          509         509
+  23          thermald    21          836         836
+  23          thermald    22          836         967
+  25          unity-sett  23          1148        1148
+  25          unity-sett  24          1148        1163
+  27          kworker/2:  25          17988       17988
+  28          kworker/0:  26          13478       13478
+
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: stable@vger.kernel.org
+Fixes: 65de51f93ebf ("perf tools: Identify which comms are from exec")
+Link: http://lkml.kernel.org/r/20190808064823.14846-1-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/annotate.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/thread.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index ac9ad2330f93..163536720149 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -1122,7 +1122,7 @@ static int disasm_line__parse(char *line, const char **namep, char **rawp)
- 		goto out;
+diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
+index 873ab505ca80..590793cc5142 100644
+--- a/tools/perf/util/thread.c
++++ b/tools/perf/util/thread.c
+@@ -214,14 +214,24 @@ struct comm *thread__comm(const struct thread *thread)
  
- 	(*rawp)[0] = tmp;
--	*rawp = skip_spaces(*rawp);
-+	*rawp = strim(*rawp);
+ struct comm *thread__exec_comm(const struct thread *thread)
+ {
+-	struct comm *comm, *last = NULL;
++	struct comm *comm, *last = NULL, *second_last = NULL;
  
- 	return 0;
+ 	list_for_each_entry(comm, &thread->comm_list, list) {
+ 		if (comm->exec)
+ 			return comm;
++		second_last = last;
+ 		last = comm;
+ 	}
+ 
++	/*
++	 * 'last' with no start time might be the parent's comm of a synthesized
++	 * thread (created by processing a synthesized fork event). For a main
++	 * thread, that is very probably wrong. Prefer a later comm to avoid
++	 * that case.
++	 */
++	if (second_last && !last->start && thread->pid_ == thread->tid)
++		return second_last;
++
+ 	return last;
+ }
  
 -- 
 2.21.0
