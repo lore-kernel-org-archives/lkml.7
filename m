@@ -2,74 +2,92 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E80F6C32751
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 01:23:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E402FC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 01:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE2BF2186A
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 01:23:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AED372186A
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 01:27:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565227669;
+	bh=lehgbmnKPTacIABDR4IO8Y7c9xvi/7dFVWE0LTUEGgI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZfA2lf/Dkx9MKVzXG13uEb0iO2caur7PW8p0upNgkiVuDL/3sZ0XNQ+fKhoxc8kuM
+	 ruexGLFCoHIpHpvtX0jDKmuoxd/zFFK7my+LoCUN+2St2XiTmm1PwNM4SKnYl11jZM
+	 Bl0xX4B8HJG1G4H3g5EXMz1Zt3enP89omcpClI38=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730607AbfHHBXX (ORCPT
+        id S1730653AbfHHB1s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 21:23:23 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:49848 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730382AbfHHBXX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 21:23:23 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hvX98-0000RZ-U7; Thu, 08 Aug 2019 01:23:15 +0000
-Date:   Thu, 8 Aug 2019 02:23:14 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Hugh Dickins <hughd@google.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        David Howells <dhowells@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCHv2 2/3] i915: convert to new mount API
-Message-ID: <20190808012314.GK1131@ZenIV.linux.org.uk>
-References: <20190805160307.5418-1-sergey.senozhatsky@gmail.com>
- <20190805160307.5418-3-sergey.senozhatsky@gmail.com>
- <20190805181255.GH1131@ZenIV.linux.org.uk>
- <20190805182834.GI1131@ZenIV.linux.org.uk>
- <alpine.LSU.2.11.1908060007190.1941@eggly.anvils>
- <20190807063002.GG6627@lst.de>
+        Wed, 7 Aug 2019 21:27:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39572 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730433AbfHHB1s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 21:27:48 -0400
+Received: from localhost (unknown [65.200.167.5])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBC5B217F4;
+        Thu,  8 Aug 2019 01:27:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565227667;
+        bh=lehgbmnKPTacIABDR4IO8Y7c9xvi/7dFVWE0LTUEGgI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cvJL/EwykCmxI7R4k/7nKJ9Q3igqHHPUh6gboKqbbPkq1tTpOZeiy7MZKs5VIdJtY
+         Uwg4XbcU8XcJ6o/xdUnLoHHDLk2+2Ut49LHOuod5Vjx/ElDwLZYAkIvZ72fj7nwFTD
+         LK/MM6vtZJY+Swm0huthhMczddlfUFX06i9C344s=
+Date:   Wed, 7 Aug 2019 21:27:45 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jake Oshins <jakeo@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Dexuan Cui <decui@microsoft.com>
+Subject: Re: [PATCH] PCI: pci-hyperv: fix build errors on non-SYSFS config
+Message-ID: <20190808012745.GV17747@sasha-vm>
+References: <abbe8012-1e6f-bdea-1454-5c59ccbced3d@infradead.org>
+ <DM6PR21MB133723E9D1FA8BA0006E06FECAF20@DM6PR21MB1337.namprd21.prod.outlook.com>
+ <20190713150353.GF10104@sasha-vm>
+ <20190723212107.GB9742@google.com>
+ <20190807150654.GB16214@e121166-lin.cambridge.arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20190807063002.GG6627@lst.de>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <20190807150654.GB16214@e121166-lin.cambridge.arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 07, 2019 at 08:30:02AM +0200, Christoph Hellwig wrote:
-> On Tue, Aug 06, 2019 at 12:50:10AM -0700, Hugh Dickins wrote:
-> > Though personally I'm averse to managing "f"objects through
-> > "m"interfaces, which can get ridiculous (notably, MADV_HUGEPAGE works
-> > on the virtual address of a mapping, but the huge-or-not alignment of
-> > that mapping must have been decided previously).  In Google we do use
-> > fcntls F_HUGEPAGE and F_NOHUGEPAGE to override on a per-file basis -
-> > one day I'll get to upstreaming those.
-> 
-> Such an interface seems very useful, although the two fcntls seem a bit
-> odd.
-> 
-> But I think the point here is that the i915 has its own somewhat odd
-> instance of tmpfs.  If we could pass the equivalent of the huge=*
-> options to shmem_file_setup all that garbage (including the
-> shmem_file_setup_with_mnt function) could go away.
+On Wed, Aug 07, 2019 at 04:06:54PM +0100, Lorenzo Pieralisi wrote:
+>On Tue, Jul 23, 2019 at 04:21:07PM -0500, Bjorn Helgaas wrote:
+>> On Sat, Jul 13, 2019 at 11:03:53AM -0400, Sasha Levin wrote:
+>> > Queued up for hyperv-fixes, thank you!
+>>
+>> What merge strategy do you envision for this?  Previous
+>> drivers/pci/controller/pci-hyperv.c changes have generally been merged
+>> by Lorenzo and incorporated into my PCI tree.
+>>
+>> This particular patch doesn't actually touch pci-hyperv.c; it touches
+>> drivers/pci/Kconfig, so should somehow be coordinated with me.
+>>
+>> Does this need to be tagged for stable?  a15f2c08c708 appeared in
+>> v4.19, so my first guess is that it's not stable material.
+>
+>AFAIC Bjorn's question still stands. Who will pick this patch up ?
 
-... or follow shmem_file_super() with whatever that fcntl maps to
-internally.  I would really love to get rid of that i915 kludge.
+Would it be easier if I just ignored Hyper-V PCI patches?
+
+--
+Thanks,
+Sasha
