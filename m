@@ -2,99 +2,113 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4503C32754
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A47C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:04:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C1B92184E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:03:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565294636;
-	bh=XKTewYNW5u4u5EpWVDYYrn/auYfBYt+Fs75L4VKojK0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=os9Q7osDAkyoeto8m4yF+4dAe8V9goKf1kv6V/yDbcpvZKXKfYnBBSr9J0GPCzV6O
-	 Yel1d+P3h/IsCfg9sHwUHXwKXZrTeOE5S0Vh3VST/orrVtIGmXOgPmsGAqklQuoB8o
-	 dtMM/YxnoBENWB542kbxs6NnTXLGt+ZHKqK3kUzs=
+	by mail.kernel.org (Postfix) with ESMTP id 1C0A321743
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:04:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404207AbfHHUDz (ORCPT
+        id S2404271AbfHHUEV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 16:03:55 -0400
-Received: from mga11.intel.com ([192.55.52.93]:35369 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389883AbfHHUDz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 16:03:55 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Aug 2019 13:03:54 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,362,1559545200"; 
-   d="scan'208";a="165801725"
-Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
-  by orsmga007.jf.intel.com with ESMTP; 08 Aug 2019 13:03:53 -0700
-Date:   Thu, 8 Aug 2019 14:01:28 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        Mario Limonciello <Mario.Limonciello@dell.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] nvme-pci: Allow PCI bus-level PM to be used if
- ASPM is disabled
-Message-ID: <20190808200128.GC27077@localhost.localdomain>
-References: <4323ed84dd07474eab65699b4d007aaf@AUSX13MPC105.AMER.DELL.COM>
- <20190731221956.GB15795@localhost.localdomain>
- <1921165.pTveHRX1Co@kreacher>
- <1870928.r7tBYyfqdz@kreacher>
- <20190808134356.GF151852@google.com>
- <CAJZ5v0h=nz8yXwOOGBUB9m1GtJPOqBwtNK7zXPNMJjzPhMWd9w@mail.gmail.com>
- <20190808183954.GG151852@google.com>
+        Thu, 8 Aug 2019 16:04:21 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:54093 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732704AbfHHUEU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 16:04:20 -0400
+Received: from p200300ddd71876597e7a91fffec98e25.dip0.t-ipconnect.de ([2003:dd:d718:7659:7e7a:91ff:fec9:8e25])
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hvods-0007Hp-It; Thu, 08 Aug 2019 22:04:08 +0200
+Date:   Thu, 8 Aug 2019 22:04:03 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     =?UTF-8?Q?Valdis_Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>
+cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Fenghua Yu <fenghua.yu@intel.com>
+Subject: Re: [PATCH] arch/x86/kernel/cpu/umwait.c - remove unused variable
+In-Reply-To: <79734.1565272329@turing-police>
+Message-ID: <alpine.DEB.2.21.1908082158580.2882@nanos.tec.linutronix.de>
+References: <79734.1565272329@turing-police>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190808183954.GG151852@google.com>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+Content-Type: multipart/mixed; boundary="8323329-1191196002-1565294648=:2882"
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 01:39:54PM -0500, Bjorn Helgaas wrote:
-> On Thu, Aug 08, 2019 at 04:47:45PM +0200, Rafael J. Wysocki wrote:
-> > On Thu, Aug 8, 2019 at 3:43 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > 
-> > > IIUC the NVMe device will go to the desired package idle state if
-> > > the link is in L0s or L1, but not if the link is in L0.  I don't
-> > > understand that connection; AFAIK that would be something outside
-> > > the scope of the PCIe spec.
-> > 
-> > Yes, it is outside of the PCIe spec.
-> > 
-> > No, this is not about the NVMe device, it is about the Intel SoC
-> > (System-on-a-Chip) the platform is based on.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323329-1191196002-1565294648=:2882
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+
+Valdis,
+
+On Thu, 8 Aug 2019, Valdis Klētnieks wrote:
+
+I really appreciate your work, but can you please refrain from using file
+names as prefixes?
+
+git log $FILE gives you usually a pretty good hint what the proper prefix
+is:
+
+  bd9a0c97e53c ("x86/umwait: Add sysfs interface to control umwait maximum time")
+  ff4b353f2ef9 ("x86/umwait: Add sysfs interface to control umwait C0.2 state")
+  bd688c69b7e6 ("x86/umwait: Initialize umwait control values")
+
+See?
+
+> We get a warning when building with W=1:
+
+Please avoid 'We/I' in changelogs.
+ 
+>   CC      arch/x86/kernel/cpu/umwait.o
+> arch/x86/kernel/cpu/umwait.c: In function 'umwait_init':
+> arch/x86/kernel/cpu/umwait.c:183:6: warning: variable 'ret' set but not used [-Wunused-but-set-variable]
+>   183 |  int ret;
+>       |      ^~~
 > 
-> Ah.  So this problem could occur with any device, not just NVMe?  If
-> so, how do you address that?  Obviously you don't want to patch all
-> drivers this way.
+> And indeed, we don't do anything with it, so clean it  up.
 
-We discovered this when using an NVMe protocol specific power setting, so
-that part is driver specific. We just have to ensure device generic
-dependencies are met in order to achieve the our power target. So in
-that sense, I think you would need to patch all drivers if they're also
-using protocol specific settings incorrectly.
+Well, the question is whether removing the variable is the right thing to
+do.
+ 
+> Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+> 
+> diff --git a/arch/x86/kernel/cpu/umwait.c b/arch/x86/kernel/cpu/umwait.c
+> index 6a204e7336c1..3d1d3952774a 100644
+> --- a/arch/x86/kernel/cpu/umwait.c
+> +++ b/arch/x86/kernel/cpu/umwait.c
+> @@ -180,12 +180,11 @@ static struct attribute_group umwait_attr_group = {
+>  static int __init umwait_init(void)
+>  {
+>  	struct device *dev;
+> -	int ret;
+>  
+>  	if (!boot_cpu_has(X86_FEATURE_WAITPKG))
+>  		return -ENODEV;
+>  
+> -	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "umwait:online",
+> +	cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "umwait:online",
+>  				umwait_cpu_online, NULL);
 
-Granted, the NVMe specification doesn't detail what PCIe settings may
-prevent NVMe power management from hitting the objective, but I think
-ASPM enabled makes sense.
+If that fails then umwait is broken. So instead of removing it, this should
+actually check the return code and act accordingly. Fenghua?
+  
+>  	register_syscore_ops(&umwait_syscore_ops);
+
+Thanks,
+
+	tglx
+--8323329-1191196002-1565294648=:2882--
