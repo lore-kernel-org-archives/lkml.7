@@ -2,129 +2,132 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 716E1C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:19:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B526C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4603B21743
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:19:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565291957;
-	bh=I85MDT/rKbkFPix7KBGWUeZg9LoqJU6dSIlhS3m8a5g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fiVVe2ZMiUda2fcoF4vabyeMZFh+EkteU6FsKyWMrg8XGoM8oUa/9sSoSY15tcYEt
-	 1QNs/VzG2KIfvLii1Dd/w1ff4tSZ10E8jKDFZnBwGv+A5Swktt5ChQu+oOQr6/Pea1
-	 NAEVeETqq7IrgHSPLqNsqJuBYMayeFkWj8Gzho5A=
+	by mail.kernel.org (Postfix) with ESMTP id CDD6621743
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:20:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="fR5j9wfS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404418AbfHHTTQ (ORCPT
+        id S2404542AbfHHTUK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:19:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49890 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404214AbfHHTTP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 15:19:15 -0400
-Received: from localhost (unknown [150.199.191.185])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC811214C6;
-        Thu,  8 Aug 2019 19:19:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565291955;
-        bh=I85MDT/rKbkFPix7KBGWUeZg9LoqJU6dSIlhS3m8a5g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vpDboZe/vRDL5+uvHLu9w2zQuVsD051Exm+FqXk436rp7K5xoYjKyulcfTeuL8yjC
-         sEIg4r0zhQrZhCELdFKxA94tDML8MTm3kLCdhxj9kNz5nYgIwfXikWQBhFLPNv//U7
-         vpQfbZpj3jEk3bfxfpq1LoEehzSSIGbZ7u5v0fPw=
-Date:   Thu, 8 Aug 2019 14:19:13 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "driverdev-devel@linuxdriverproject.org" 
-        <driverdev-devel@linuxdriverproject.org>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        "apw@canonical.com" <apw@canonical.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        vkuznets <vkuznets@redhat.com>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "jackm@mellanox.com" <jackm@mellanox.com>
-Subject: Re: [PATCH] PCI: PM: Also move to D0 before calling
- pci_legacy_resume_early()
-Message-ID: <20190808191913.GI151852@google.com>
-References: <PU1P153MB01695867B01987A8C239A8CCBFD70@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+        Thu, 8 Aug 2019 15:20:10 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:18643 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404178AbfHHTUK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 15:20:10 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d4c75f30000>; Thu, 08 Aug 2019 12:20:19 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Thu, 08 Aug 2019 12:20:09 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Thu, 08 Aug 2019 12:20:09 -0700
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 8 Aug
+ 2019 19:20:08 +0000
+Subject: Re: [PATCH 1/3] mm/mlock.c: convert put_page() to put_user_page*()
+To:     Vlastimil Babka <vbabka@suse.cz>, Michal Hocko <mhocko@kernel.org>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jerome Glisse <jglisse@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-fsdevel@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Black <daniel@linux.ibm.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>
+References: <20190805222019.28592-1-jhubbard@nvidia.com>
+ <20190805222019.28592-2-jhubbard@nvidia.com>
+ <20190807110147.GT11812@dhcp22.suse.cz>
+ <01b5ed91-a8f7-6b36-a068-31870c05aad6@nvidia.com>
+ <20190808062155.GF11812@dhcp22.suse.cz>
+ <875dca95-b037-d0c7-38bc-4b4c4deea2c7@suse.cz>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <306128f9-8cc6-761b-9b05-578edf6cce56@nvidia.com>
+Date:   Thu, 8 Aug 2019 12:20:08 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PU1P153MB01695867B01987A8C239A8CCBFD70@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <875dca95-b037-d0c7-38bc-4b4c4deea2c7@suse.cz>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1565292019; bh=gyjAPj2n6Df+meBITnObLks8CStskxi0utl7evTCTTw=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=fR5j9wfSfwQnIbtxsXQwVx4m3yEG1GHbyByYyV5gBzEBx59m1WUifbcholhHCK1Wo
+         yqui8gxSIgvO77jrIShOyraDGi8GvTWgxnIzH9c7B1A2X+bMRJbWsF1PRMy/yqnhfu
+         nVLVHLIhW6NC78g+Pyp30UxKkteVz1hv6VkK3OjkudSDJPyBjdwXgHxeBp+f5b3edQ
+         ucC1fmBED476OuRsEuz+3ClDMQXqRciY6Ae22F230ne/YZWk4EgL+Skzzl5hlJvrho
+         7gV35HBjUQDHyt05Ls6FypCgMmDbJcqXz9Saz9CMNTsAWHln8fS3RvG8Q2UTphHb3Y
+         pKMkidlRP1ZQw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 06:46:51PM +0000, Dexuan Cui wrote:
+On 8/8/19 4:09 AM, Vlastimil Babka wrote:
+> On 8/8/19 8:21 AM, Michal Hocko wrote:
+>> On Wed 07-08-19 16:32:08, John Hubbard wrote:
+>>> On 8/7/19 4:01 AM, Michal Hocko wrote:
+>>>> On Mon 05-08-19 15:20:17, john.hubbard@gmail.com wrote:
+>>>>> From: John Hubbard <jhubbard@nvidia.com>
+>>> Actually, I think follow_page_mask() gets all the pages, right? And the
+>>> get_page() in __munlock_pagevec_fill() is there to allow a pagevec_release() 
+>>> later.
+>>
+>> Maybe I am misreading the code (looking at Linus tree) but munlock_vma_pages_range
+>> calls follow_page for the start address and then if not THP tries to
+>> fill up the pagevec with few more pages (up to end), do the shortcut
+>> via manual pte walk as an optimization and use generic get_page there.
 > 
-> In pci_legacy_suspend_late(), the device state is moved to PCI_UNKNOWN.
-> In pci_pm_thaw_noirq(), the state is supposed to be moved back to PCI_D0,
-> but the current code misses the pci_legacy_resume_early() path, so the
-> state remains in PCI_UNKNOWN in that path, and during hiberantion this
-> causes an error for the Mellanox VF driver, which fails to enable
-> MSI-X: pci_msi_supported() is false due to dev->current_state != PCI_D0:
 
-s/hiberantion/hibernation/
+Yes, I see it finally, thanks. :)  
 
-Actually, it sounds more like "during *resume*, this causes an error",
-so maybe you want s/hiberantion/resume/ instead?
-
-> mlx4_core a6d1:00:02.0: Detected virtual function - running in slave mode
-> mlx4_core a6d1:00:02.0: Sending reset
-> mlx4_core a6d1:00:02.0: Sending vhcr0
-> mlx4_core a6d1:00:02.0: HCA minimum page size:512
-> mlx4_core a6d1:00:02.0: Timestamping is not supported in slave mode
-> mlx4_core a6d1:00:02.0: INTx is not supported in multi-function mode, aborting
-> PM: dpm_run_callback(): pci_pm_thaw+0x0/0xd7 returns -95
-> PM: Device a6d1:00:02.0 failed to thaw: error -95
-> 
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> ---
->  drivers/pci/pci-driver.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> index 36dbe960306b..27dfc68db9e7 100644
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -1074,15 +1074,16 @@ static int pci_pm_thaw_noirq(struct device *dev)
->  			return error;
->  	}
+> That's true. However, I'm not sure munlocking is where the
+> put_user_page() machinery is intended to be used anyway? These are
+> short-term pins for struct page manipulation, not e.g. dirtying of page
+> contents. Reading commit fc1d8e7cca2d I don't think this case falls
+> within the reasoning there. Perhaps not all GUP users should be
+> converted to the planned separate GUP tracking, and instead we should
+> have a GUP/follow_page_mask() variant that keeps using get_page/put_page?
 >  
-> -	if (pci_has_legacy_pm_support(pci_dev))
-> -		return pci_legacy_resume_early(dev);
-> -
->  	/*
->  	 * pci_restore_state() requires the device to be in D0 (because of MSI
->  	 * restoration among other things), so force it into D0 in case the
->  	 * driver's "freeze" callbacks put it into a low-power state directly.
->  	 */
->  	pci_set_power_state(pci_dev, PCI_D0);
-> +
-> +	if (pci_has_legacy_pm_support(pci_dev))
-> +		return pci_legacy_resume_early(dev);
-> +
->  	pci_restore_state(pci_dev);
->  
->  	if (drv && drv->pm && drv->pm->thaw_noirq)
-> -- 
-> 2.19.1
-> 
+
+Interesting. So far, the approach has been to get all the gup callers to
+release via put_user_page(), but if we add in Jan's and Ira's vaddr_pin_pages()
+wrapper, then maybe we could leave some sites unconverted.
+
+However, in order to do so, we would have to change things so that we have
+one set of APIs (gup) that do *not* increment a pin count, and another set
+(vaddr_pin_pages) that do. 
+
+Is that where we want to go...?
+
+I have a tracking patch that only deals with gup/pup. I could post as an RFC,
+but I think it might just muddy the waters at this point, anyway it's this one:
+
+    
+https://github.com/johnhubbard/linux/commit/a0fb73ce0a39c74f0d1fb6bd9d866f660f762eae
+
+
+thanks,
+-- 
+John Hubbard
+NVIDIA 
