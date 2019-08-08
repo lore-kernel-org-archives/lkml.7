@@ -2,160 +2,159 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A7E3C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:05:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E58BCC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4F84217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:05:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="EkBVZSNZ";
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="plTG0uX6"
+	by mail.kernel.org (Postfix) with ESMTP id B7E7221743
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:08:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404092AbfHHQF4 (ORCPT
+        id S2404026AbfHHQIy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 12:05:56 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:47704 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732698AbfHHQF4 (ORCPT
+        Thu, 8 Aug 2019 12:08:54 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:33801
+        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732662AbfHHQIy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 12:05:56 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x78FuLm2155989;
-        Thu, 8 Aug 2019 16:05:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=corp-2019-08-05; bh=sBbOLnRj6Q0JgUUU4xmQw9W1HyJ1xIvokVeC4MhO0M4=;
- b=EkBVZSNZOgiRTalVvPCvhfNII+whsQ9eya8vyGPXljlLhy0E5gQur6667ImfbxiopkPX
- FktlhZxqaKlYd7leFTIOO5lJkw+YTUCLhz1q4dDwWVhNru3SuifOF0KCeE8Tx3Yk73Bs
- sqqj46k2bMNikPaQiMHmNX9cdduYX0v6r25eP47uapk7ngwxVBVEMCKUZLWRjkptlNAU
- cwOlaTnXiPI+585GbgHiyp9COLRJlBHWHzpJ4vOqFiQfNJ6rUAZoMLcMrIHq4eCswlsO
- lBNSLVRSFMRt9aRZn59EETuHVMGmhzawqhMOWetif8zkCyes6aypnLgZDdOOFOh1GIwt cQ== 
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=corp-2018-07-02; bh=sBbOLnRj6Q0JgUUU4xmQw9W1HyJ1xIvokVeC4MhO0M4=;
- b=plTG0uX62gkHXEYAU2IICb1SBJA0z17MXQg9bDZ4jcPqnUu4eqXH0H/AMcWtUxLPLw47
- eepVTj7ErVUSfV9ii3gEiUUE269GNfMu0Dc1s+OdgZ1Xvvk1krtc5i+KGXu7XTqQHhVs
- 3ODF56s0fbN/FbWY6mrM1T6CMW+LGa7Lc5Sb5Lax1FuRnh12j90jqZnzEVsy+TQJlmVA
- dSkM9Cn55Lss5ZJWt21k/V4mDYxQzLRkYduiByvG5wi8vNqrh0dlpqkv9O9KHeuP0oeW
- D88/thWhtSK5/z571LJY2rgMH0ep5Ld0Fdm3Cjn/6juYcLjIKiV4FJTdaq1578mMQr3S CA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2u8hgp27ya-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 08 Aug 2019 16:05:45 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x78FwA6j011668;
-        Thu, 8 Aug 2019 16:05:45 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2u763khenv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 08 Aug 2019 16:05:44 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x78G5gHB030447;
-        Thu, 8 Aug 2019 16:05:43 GMT
-Received: from localhost.localdomain (/73.60.114.248)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 08 Aug 2019 09:05:42 -0700
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>
-Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] padata: initialize pd->cpu with effective cpumask
-Date:   Thu,  8 Aug 2019 12:05:35 -0400
-Message-Id: <20190808160535.27219-1-daniel.m.jordan@oracle.com>
-X-Mailer: git-send-email 2.22.0
+        Thu, 8 Aug 2019 12:08:54 -0400
+X-IronPort-AV: E=Sophos;i="5.64,362,1559512800"; 
+   d="scan'208";a="315952275"
+Received: from portablejulia.rsr.lip6.fr ([132.227.76.63])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Aug 2019 18:08:50 +0200
+Date:   Thu, 8 Aug 2019 18:08:50 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@lip6.fr>
+X-X-Sender: julia@hadrien
+To:     Harshitha Ramamurthy <harshitha.ramamurthy@intel.com>
+cc:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        linux-kernel@vger.kernel.org, kbuild-all@01.org
+Subject: drivers/net/ethernet/intel/i40e/i40e_main.c:7089:35-37: ERROR:
+ invalid reference to the index variable of the iterator on line 7056 (fwd)
+Message-ID: <alpine.DEB.2.21.1908081806370.2995@hadrien>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9342 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908080151
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9342 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908080151
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Exercising CPU hotplug on a 5.2 kernel with recent padata fixes from
-cryptodev-2.6.git in an 8-CPU kvm guest...
+Hello,
 
-    # modprobe tcrypt alg="pcrypt(rfc4106(gcm(aes)))" type=3
-    # echo 0 > /sys/devices/system/cpu/cpu1/online
-    # echo c > /sys/kernel/pcrypt/pencrypt/parallel_cpumask
-    # modprobe tcrypt mode=215
+Is it guaranteed that the loop starting on line 7056 will eventually take
+the break?  If not, line 7089 will be performing an invalid dereference of
+ch.
 
-...caused the following crash:
+julia
 
-    BUG: kernel NULL pointer dereference, address: 0000000000000000
-    #PF: supervisor read access in kernel mode
-    #PF: error_code(0x0000) - not-present page
-    PGD 0 P4D 0
-    Oops: 0000 [#1] SMP PTI
-    CPU: 2 PID: 134 Comm: kworker/2:2 Not tainted 5.2.0-padata-base+ #7
-    Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-<snip>
-    Workqueue: pencrypt padata_parallel_worker
-    RIP: 0010:padata_reorder+0xcb/0x180
-    ...
-    Call Trace:
-     padata_do_serial+0x57/0x60
-     pcrypt_aead_enc+0x3a/0x50 [pcrypt]
-     padata_parallel_worker+0x9b/0xe0
-     process_one_work+0x1b5/0x3f0
-     worker_thread+0x4a/0x3c0
-     ...
+---------- Forwarded message ----------
+Date: Thu, 8 Aug 2019 21:31:53 +0800
+From: kbuild test robot <lkp@intel.com>
+To: kbuild@01.org
+Cc: Julia Lawall <julia.lawall@lip6.fr>
+Subject: drivers/net/ethernet/intel/i40e/i40e_main.c:7089:35-37: ERROR: invalid
+    reference to the index variable of the iterator on line 7056
 
-In padata_alloc_pd, pd->cpu is set using the user-supplied cpumask
-instead of the effective cpumask, and in this case cpumask_first picked
-an offline CPU.
+CC: kbuild-all@01.org
+CC: linux-kernel@vger.kernel.org
+TO: Harshitha Ramamurthy <harshitha.ramamurthy@intel.com>
+CC: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 
-The offline CPU's reorder->list.next is NULL in padata_reorder because
-the list wasn't initialized in padata_init_pqueues, which only operates
-on CPUs in the effective mask.
+tree:   https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   ecb095bff5d4b8711a81968625b3b4a235d3e477
+commit: 1d8d80b4e4ff641eefa5250cba324dfa5861a9f1 i40e: Add macvlan support on i40e
+date:   6 weeks ago
+:::::: branch date: 15 hours ago
+:::::: commit date: 6 weeks ago
 
-Fix by using the effective mask in padata_alloc_pd.
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: Julia Lawall <julia.lawall@lip6.fr>
 
-Fixes: 726e431130f3 ("padata: Replace delayed timer with immediate workqueue in padata_reorder")
-Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Steffen Klassert <steffen.klassert@secunet.com>
-Cc: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+>> drivers/net/ethernet/intel/i40e/i40e_main.c:7089:35-37: ERROR: invalid reference to the index variable of the iterator on line 7056
+
+git remote add linus https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux.git
+git remote update linus
+git checkout 1d8d80b4e4ff641eefa5250cba324dfa5861a9f1
+vim +7089 drivers/net/ethernet/intel/i40e/i40e_main.c
+
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7037
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7038  /**
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7039   * i40e_fwd_ring_up - bring the macvlan device up
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7040   * @vsi: the VSI we want to access
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7041   * @vdev: macvlan netdevice
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7042   * @fwd: the private fwd structure
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7043   */
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7044  static int i40e_fwd_ring_up(struct i40e_vsi *vsi, struct net_device *vdev,
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7045  			    struct i40e_fwd_adapter *fwd)
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7046  {
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7047  	int ret = 0, num_tc = 1,  i, aq_err;
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7048  	struct i40e_channel *ch, *ch_tmp;
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7049  	struct i40e_pf *pf = vsi->back;
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7050  	struct i40e_hw *hw = &pf->hw;
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7051
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7052  	if (list_empty(&vsi->macvlan_list))
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7053  		return -EINVAL;
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7054
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7055  	/* Go through the list and find an available channel */
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19 @7056  	list_for_each_entry_safe(ch, ch_tmp, &vsi->macvlan_list, list) {
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7057  		if (!i40e_is_channel_macvlan(ch)) {
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7058  			ch->fwd = fwd;
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7059  			/* record configuration for macvlan interface in vdev */
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7060  			for (i = 0; i < num_tc; i++)
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7061  				netdev_bind_sb_channel_queue(vsi->netdev, vdev,
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7062  							     i,
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7063  							     ch->num_queue_pairs,
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7064  							     ch->base_queue);
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7065  			for (i = 0; i < ch->num_queue_pairs; i++) {
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7066  				struct i40e_ring *tx_ring, *rx_ring;
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7067  				u16 pf_q;
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7068
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7069  				pf_q = ch->base_queue + i;
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7070
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7071  				/* Get to TX ring ptr */
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7072  				tx_ring = vsi->tx_rings[pf_q];
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7073  				tx_ring->ch = ch;
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7074
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7075  				/* Get the RX ring ptr */
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7076  				rx_ring = vsi->rx_rings[pf_q];
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7077  				rx_ring->ch = ch;
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7078  			}
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7079  			break;
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7080  		}
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7081  	}
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7082
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7083  	/* Guarantee all rings are updated before we update the
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7084  	 * MAC address filter.
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7085  	 */
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7086  	wmb();
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7087
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7088  	/* Add a mac filter */
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19 @7089  	ret = i40e_add_macvlan_filter(hw, ch->seid, vdev->dev_addr, &aq_err);
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7090  	if (ret) {
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7091  		/* if we cannot add the MAC rule then disable the offload */
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7092  		macvlan_release_l2fw_offload(vdev);
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7093  		for (i = 0; i < ch->num_queue_pairs; i++) {
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7094  			struct i40e_ring *rx_ring;
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7095  			u16 pf_q;
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7096
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7097  			pf_q = ch->base_queue + i;
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7098  			rx_ring = vsi->rx_rings[pf_q];
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7099  			rx_ring->netdev = NULL;
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7100  		}
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7101  		dev_info(&pf->pdev->dev,
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7102  			 "Error adding mac filter on macvlan err %s, aq_err %s\n",
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7103  			  i40e_stat_str(hw, ret),
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7104  			  i40e_aq_str(hw, aq_err));
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7105  		netdev_err(vdev, "L2fwd offload disabled to L2 filter error\n");
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7106  	}
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7107
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7108  	return ret;
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7109  }
+1d8d80b4e4ff64 Harshitha Ramamurthy 2019-06-19  7110
+
 ---
-
-Hi, not sure what the normal process is for fixing patches in cryptodev
-that haven't reached mainline yet.  Feel free to fold this in with the
-Fixes patch if preferred.
-
-Thanks,
-Daniel
-
- kernel/padata.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/padata.c b/kernel/padata.c
-index 7372fb45eeeb..b60cc3dcee58 100644
---- a/kernel/padata.c
-+++ b/kernel/padata.c
-@@ -426,7 +426,7 @@ static struct parallel_data *padata_alloc_pd(struct padata_instance *pinst,
- 	atomic_set(&pd->refcnt, 0);
- 	pd->pinst = pinst;
- 	spin_lock_init(&pd->lock);
--	pd->cpu = cpumask_first(pcpumask);
-+	pd->cpu = cpumask_first(pd->cpumask.pcpu);
- 	INIT_WORK(&pd->reorder_work, invoke_padata_reorder);
- 
- 	return pd;
--- 
-2.22.0
-
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
