@@ -2,202 +2,138 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5E52C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 17:07:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96FD1C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 17:09:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91858214C6
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 17:07:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565284032;
-	bh=4X1igFCWRlFEIuj1Xk1TEp1TYPYn9UcYdwh5BUy7MSU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Hi08q1XQU+rbArmZPMAyqwiXrGJoe+Ljbs5QaDBmgbXKS8K8z8mlv42IFK5tz1aV/
-	 9FHlSLDu2zJx3b46LLbWeuVu95SEqQ0f1C7A5qp7sGaJ72DbZpfAYmZp87YZuh0Gno
-	 TqBdzpUmjTEjQh0/YEB4Fti7ge0dxOnKbsH4C2Z0=
+	by mail.kernel.org (Postfix) with ESMTP id 5E3222184E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 17:09:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mYI6ER/m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404217AbfHHRHL (ORCPT
+        id S2404222AbfHHRJW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 13:07:11 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:37232 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404096AbfHHRHL (ORCPT
+        Thu, 8 Aug 2019 13:09:22 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35170 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404096AbfHHRJV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 13:07:11 -0400
-Received: by mail-ot1-f68.google.com with SMTP id s20so55968756otp.4;
-        Thu, 08 Aug 2019 10:07:10 -0700 (PDT)
+        Thu, 8 Aug 2019 13:09:21 -0400
+Received: by mail-wm1-f67.google.com with SMTP id l2so3161170wmg.0
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 10:09:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/RMqWJBZb+n91pADuicj3MI1Qevek2uTYFVfpzwwQYk=;
+        b=mYI6ER/mImkFZNM1JZSRimjLCk1m9yKBp7MFo6R2vJElLd5RBgIbnfTTSaK0TgOWZk
+         tgYU7T9y1cN2gH4spkcu8BdHVctmfrSUxPSubs2ouVJxh4yhBzYVE4QuOQRIz4f2RS/x
+         OMLLuqDfuBtGtn6fzFkUBpxoJ5om4DHo2yaE+CzEuqgzkx19P05vWedXWUjM9zVXi6u0
+         vTXFzlWiNpXP3UlRpIhE0a04ZajxbhGe14aCZV1VytgG2virlQL6fijO1C87nQiSDZ9H
+         uNa3v/9DnsRi6yTQazWZxdTH90mjFg16NX4Vj3AhkCc08BjYwgsTRVgbyj7OXNZ85+ro
+         fGJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ARqNURKzyY/2pv9kl0jf6GLnPWlYlVLfWEiji5JD+Cw=;
-        b=FuoNA2Pu7pxrGd6CMh9laavuH9jTKzi6GN8PcwxKNBB3xqHgP2ZEHkXFPXjqwM2Y0L
-         w5Sh9U5JXsoc87ocMygj2s/GVdnmvoqkVmfk2f6GZBIXuk9ZPyAgooePNYhDot7Guabb
-         81eEcgCOZ7ixJVGq+rfMAVXwT2lG3cMb67pSchhHtx4yQ8puS23plPRy6whUKb4Cb6bc
-         mv+69wFiTLcQ/KVi4KLojvCTYqlk4365qWpP8qbtyX6yo58LyJi6xJi0NCB4CMrOOfT3
-         8pSvj8OulyWZxoFtSoCvI9q1vjkw6hgXucPZJzVIFpZt1TMlj+23jzeJB4TxFG6VOPDl
-         ixkQ==
-X-Gm-Message-State: APjAAAWuxgkhZF1lvKggsskARkiiDME16xRkkAn1P3K6g7Xc3FeygTP5
-        oN1NqGPQVuOU65mPQPpjmwYBB9oLJrkO4cvmqxM=
-X-Google-Smtp-Source: APXvYqxKQjrWNqdYgtwv6uf02uNQamTdoSoBuHKNMXECbC/m2b9pI1UYwInAJhCmYRrXvoGGIyRPFzVsb7d/7r10wWc=
-X-Received: by 2002:aca:cdd3:: with SMTP id d202mr3044755oig.115.1565284029519;
- Thu, 08 Aug 2019 10:07:09 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/RMqWJBZb+n91pADuicj3MI1Qevek2uTYFVfpzwwQYk=;
+        b=dLUB0K9OIS54Y6dduC27dWx0iTftF6L41vlCe98angblx+jWNEIxz6XMmYxoSviw8Z
+         ScflcCFRou3Vf3qsfgdJbDVMgSyMq7A4Nc702zPrO78LjUAibkqHouMCH+Lv7+v41sm7
+         VDPVY9W6xBQi+5qdarJyQccAPOvV7JZsz9j+PLZEOY6sMgp85oaqE6DN7invTMYci4hR
+         1TGVpPi5UGfrmxE1WcR9dQvetDPADsE5N4jc+UIuVyr3h34KlgimpmTSKAio96GMMqUw
+         ztfe2bxCrHNim8x8wl/6s73Rpn6zYxU+PabXWzBbuXEDbTyIzrCHEUWYDGvDP/JQ9tVb
+         Mxgg==
+X-Gm-Message-State: APjAAAUqCCVTgz9D0oT3W65CPtHSB/mg1HwQMyafMJffxXHZ5kJQbCOv
+        zsvFOHQ2eIEFU6q4+ezIkKJEW/EiSoJVNg==
+X-Google-Smtp-Source: APXvYqzdP10PSpvSmqXcoaKhRQopyLLo13J5gwU1q/kfwSjlDon48+ds0qZsJzoRdvE4pJ2fwoicBA==
+X-Received: by 2002:a1c:f116:: with SMTP id p22mr5413792wmh.70.1565284159335;
+        Thu, 08 Aug 2019 10:09:19 -0700 (PDT)
+Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id c15sm22423803wrb.80.2019.08.08.10.09.18
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 08 Aug 2019 10:09:18 -0700 (PDT)
+Date:   Thu, 8 Aug 2019 10:09:16 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Qian Cai <cai@lca.pw>, will@kernel.org, catalin.marinas@arm.com,
+        linux-arm-kernel@lists.infradead.org,
+        clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64/cache: silence -Woverride-init warnings
+Message-ID: <20190808170916.GA32668@archlinux-threadripper>
+References: <20190808032916.879-1-cai@lca.pw>
+ <20190808103808.GC46901@lakrids.cambridge.arm.com>
 MIME-Version: 1.0
-References: <4323ed84dd07474eab65699b4d007aaf@AUSX13MPC105.AMER.DELL.COM>
- <20190731221956.GB15795@localhost.localdomain> <1921165.pTveHRX1Co@kreacher>
- <1870928.r7tBYyfqdz@kreacher> <20190808134356.GF151852@google.com> <CAJZ5v0h=nz8yXwOOGBUB9m1GtJPOqBwtNK7zXPNMJjzPhMWd9w@mail.gmail.com>
-In-Reply-To: <CAJZ5v0h=nz8yXwOOGBUB9m1GtJPOqBwtNK7zXPNMJjzPhMWd9w@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 8 Aug 2019 19:06:58 +0200
-Message-ID: <CAJZ5v0jJBceekiOmBUJsAJZRkLYgzuUjoNBpdO_uBoh0RY7EmQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] nvme-pci: Allow PCI bus-level PM to be used if
- ASPM is disabled
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-nvme <linux-nvme@lists.infradead.org>,
-        Keith Busch <kbusch@kernel.org>,
-        Mario Limonciello <Mario.Limonciello@dell.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190808103808.GC46901@lakrids.cambridge.arm.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 8, 2019 at 4:47 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Thu, Aug 8, 2019 at 3:43 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > On Thu, Aug 08, 2019 at 12:10:06PM +0200, Rafael J. Wysocki wrote:
-> > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > >
-> > > One of the modifications made by commit d916b1be94b6 ("nvme-pci: use
-> > > host managed power state for suspend") was adding a pci_save_state()
-> > > call to nvme_suspend() in order to prevent the PCI bus-level PM from
-> > > being applied to the suspended NVMe devices, but if ASPM is not
-> > > enabled for the target NVMe device, that causes its PCIe link to stay
-> > > up and the platform may not be able to get into its optimum low-power
-> > > state because of that.
-> > >
-> > > For example, if ASPM is disabled for the NVMe drive (PC401 NVMe SK
-> > > hynix 256GB) in my Dell XPS13 9380, leaving it in D0 during
-> > > suspend-to-idle prevents the SoC from reaching package idle states
-> > > deeper than PC3, which is way insufficient for system suspend.
-> >
-> > Just curious: I assume the SoC you reference is some part of the NVMe
-> > drive?
->
-> No, the SoC is what contains the Intel processor and PCH (formerly "chipset").
->
-> > > To address this shortcoming, make nvme_suspend() check if ASPM is
-> > > enabled for the target device and fall back to full device shutdown
-> > > and PCI bus-level PM if that is not the case.
-> > >
-> > > Fixes: d916b1be94b6 ("nvme-pci: use host managed power state for suspend")
-> > > Link: https://lore.kernel.org/linux-pm/2763495.NmdaWeg79L@kreacher/T/#t
-> > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > ---
-> > >
-> > > -> v2:
-> > >   * Move the PCI/PCIe ASPM changes to a separate patch.
-> > >   * Do not add a redundant ndev->last_ps == U32_MAX check in nvme_suspend().
-> > >
-> > > ---
-> > >  drivers/nvme/host/pci.c |   13 ++++++++++---
-> > >  1 file changed, 10 insertions(+), 3 deletions(-)
-> > >
-> > > Index: linux-pm/drivers/nvme/host/pci.c
-> > > ===================================================================
-> > > --- linux-pm.orig/drivers/nvme/host/pci.c
-> > > +++ linux-pm/drivers/nvme/host/pci.c
-> > > @@ -2846,7 +2846,7 @@ static int nvme_resume(struct device *de
-> > >       struct nvme_dev *ndev = pci_get_drvdata(to_pci_dev(dev));
-> > >       struct nvme_ctrl *ctrl = &ndev->ctrl;
-> > >
-> > > -     if (pm_resume_via_firmware() || !ctrl->npss ||
-> > > +     if (ndev->last_ps == U32_MAX ||
-> > >           nvme_set_power_state(ctrl, ndev->last_ps) != 0)
-> > >               nvme_reset_ctrl(ctrl);
-> > >       return 0;
-> > > @@ -2859,6 +2859,8 @@ static int nvme_suspend(struct device *d
-> > >       struct nvme_ctrl *ctrl = &ndev->ctrl;
-> > >       int ret = -EBUSY;
-> > >
-> > > +     ndev->last_ps = U32_MAX;
-> > > +
-> > >       /*
-> > >        * The platform does not remove power for a kernel managed suspend so
-> > >        * use host managed nvme power settings for lowest idle power if
-> > > @@ -2866,8 +2868,14 @@ static int nvme_suspend(struct device *d
-> > >        * shutdown.  But if the firmware is involved after the suspend or the
-> > >        * device does not support any non-default power states, shut down the
-> > >        * device fully.
-> > > +      *
-> > > +      * If ASPM is not enabled for the device, shut down the device and allow
-> > > +      * the PCI bus layer to put it into D3 in order to take the PCIe link
-> > > +      * down, so as to allow the platform to achieve its minimum low-power
-> > > +      * state (which may not be possible if the link is up).
-> > >        */
-> > > -     if (pm_suspend_via_firmware() || !ctrl->npss) {
-> > > +     if (pm_suspend_via_firmware() || !ctrl->npss ||
-> > > +         !pcie_aspm_enabled_mask(pdev)) {
-> >
-> > This seems like a layering violation, in the sense that ASPM is
-> > supposed to be hardware-autonomous and invisible to software.
->
-> But software has to enable it.
->
-> If it is not enabled, it will not be used, and that's what the check is about.
->
-> > IIUC the NVMe device will go to the desired package idle state if the
-> > link is in L0s or L1, but not if the link is in L0.  I don't
-> > understand that connection; AFAIK that would be something outside the
-> > scope of the PCIe spec.
->
-> Yes, it is outside of the PCIe spec.
->
-> No, this is not about the NVMe device, it is about the Intel SoC
-> (System-on-a-Chip) the platform is based on.
->
-> The background really is commit d916b1be94b6 and its changelog is kind
-> of misleading, unfortunately.  What it did, among other things, was to
-> cause the NVMe driver to prevent the PCI bus type from applying the
-> standard PCI PM to the devices handled by it in the suspend-to-idle
-> flow.  The reason for doing that was a (reportedly) widespread failure
-> to take the PCIe link down during D0 -> D3hot transitions of NVMe
-> devices, which then prevented the platform from going into a deep
-> enough low-power state while suspended (because it was not sure
-> whether or not the NVMe device was really "sufficiently" inactive).
-> [I guess I should mention that in the changelog of the $subject
-> patch.]  So the idea was to put the (NVMe) device into a low-power
-> state internally and then let ASPM take care of the PCIe link.
->
-> Of course, that can only work if ASPM is enabled at all for the device
-> in question, even though it may not be sufficient as you say below.
->
-> > The spec (PCIe r5.0, sec 5.4.1.1.1 for L0s, 5.4.1.2.1 for L1) is
-> > careful to say that when the conditions are right, devices "should"
-> > enter L0s but it is never mandatory, or "may" enter L1.
-> >
-> > And this patch assumes that if ASPM is enabled, the link will
-> > eventually go to L0s or L1.
->
-> No, it doesn't.
->
-> It avoids failure in the case in which it is guaranteed to happen
-> (disabled ASPM) and that's it.
+On Thu, Aug 08, 2019 at 11:38:08AM +0100, Mark Rutland wrote:
+> On Wed, Aug 07, 2019 at 11:29:16PM -0400, Qian Cai wrote:
+> > The commit 155433cb365e ("arm64: cache: Remove support for ASID-tagged
+> > VIVT I-caches") introduced some compiation warnings from GCC (and
+> > Clang) with -Winitializer-overrides),
+> > 
+> > arch/arm64/kernel/cpuinfo.c:38:26: warning: initialized field
+> > overwritten [-Woverride-init]
+> > [ICACHE_POLICY_VIPT]  = "VIPT",
+> >                         ^~~~~~
+> > arch/arm64/kernel/cpuinfo.c:38:26: note: (near initialization for
+> > 'icache_policy_str[2]')
+> > arch/arm64/kernel/cpuinfo.c:39:26: warning: initialized field
+> > overwritten [-Woverride-init]
+> > [ICACHE_POLICY_PIPT]  = "PIPT",
+> >                         ^~~~~~
+> > arch/arm64/kernel/cpuinfo.c:39:26: note: (near initialization for
+> > 'icache_policy_str[3]')
+> > arch/arm64/kernel/cpuinfo.c:40:27: warning: initialized field
+> > overwritten [-Woverride-init]
+> > [ICACHE_POLICY_VPIPT]  = "VPIPT",
+> >                          ^~~~~~~
+> > arch/arm64/kernel/cpuinfo.c:40:27: note: (near initialization for
+> > 'icache_policy_str[0]')
+> > 
+> > because it initializes icache_policy_str[0 ... 3] twice. Since
+> > arm64 developers are keen to keep the style of initializing a static
+> > array with a non-zero pattern first, just disable those warnings for
+> > both GCC and Clang of this file.
+> > 
+> > Fixes: 155433cb365e ("arm64: cache: Remove support for ASID-tagged VIVT I-caches")
+> > Signed-off-by: Qian Cai <cai@lca.pw>
+> 
+> This is _not_ a fix, and should not require backporting to stable trees.
+> 
+> What about all the other instances that we have in mainline?
+> 
+> I really don't think that we need to go down this road; we're just going
+> to end up adding this to every file that happens to include a header
+> using this scheme...
+> 
+> Please just turn this off by default for clang.
+> 
+> If we want to enable this, we need a mechanism to permit overridable
+> assignments as we use range initializers for.
+> 
+> Thanks,
+> Mark.
+> 
 
-IOW, after commit d916b1be94b6 and without this patch, nvme_suspend()
-*always* assumes ASPM to take the device's PCIe link down, which
-obviously is not going to happen if ASPM is disabled for that device.
+For what it's worth, this is disabled by default for clang in the
+kernel:
 
-The rationale for this patch is to avoid the obvious failure.
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/scripts/Makefile.extrawarn?h=v5.3-rc3#n69
+
+It only becomes visible with clang at W=1 because that section doesn't
+get applied. It becomes visible with GCC at W=1 because of -Wextra.
+
+Cheers,
+Nathan
