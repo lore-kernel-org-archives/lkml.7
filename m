@@ -2,83 +2,183 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C3F7C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 22:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92726C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 22:59:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DFB52173C
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 22:56:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565304999;
-	bh=1kgfg2u0VvSSAyVnDXUX0dXjWHTqsPHMjNRngfqfQUE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=sySdrnEaoUL3QnoL9AvIzymHiYAQCMO2aas50QweUeC7bR2E9iY+6HuO7QzkK6oHg
-	 2k+I2GsPb2HsTvGwUsSSz2/TIZvG549R/sS+B77UESRYdK1GMO9hyEuWzkInobNcZx
-	 pi4Bj3QYN1jH8eLNYNjZwYsFXXBg1UEr63FymCzw=
+	by mail.kernel.org (Postfix) with ESMTP id 6020F21743
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 22:59:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qK96gYx0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404183AbfHHW4i (ORCPT
+        id S2404410AbfHHW7S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 18:56:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43542 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390022AbfHHW4h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 18:56:37 -0400
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D458217F4;
-        Thu,  8 Aug 2019 22:56:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565304997;
-        bh=1kgfg2u0VvSSAyVnDXUX0dXjWHTqsPHMjNRngfqfQUE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=2tE2GpPB+BXu1EQhYHhOzd7Oa1T+eF4En1xo6N5XdddI0vuIDhoaro1Pf7S1ZKBr7
-         H03wDRobZTaSwytpEXymUOtsl6dmW9yyttdis0OZwThij26sBLCSnn99F7AjczHPPS
-         /O5LUCjyysvXArLpo7a/9XlCHdk4H7kPL1YKqHTI=
-Received: by mail-qk1-f170.google.com with SMTP id u190so6591790qkh.5;
-        Thu, 08 Aug 2019 15:56:37 -0700 (PDT)
-X-Gm-Message-State: APjAAAXuh2Yk5nypXTIXfoQY3/YpvTzMFWFTbb4iUH3Guzyth+6oIH9o
-        qTpeLytFK4xCL+SFdAAdGOqN049JQWW8mt17fA==
-X-Google-Smtp-Source: APXvYqyj2kUWAWCGeBwzaRUWZX1PPK9z+mXWtT1nM3BJRodHPwfRd4dExJVae9unAVJvhED59NF02Tnbg9U9rGFDZow=
-X-Received: by 2002:a37:a48e:: with SMTP id n136mr16025678qke.223.1565304996424;
- Thu, 08 Aug 2019 15:56:36 -0700 (PDT)
+        Thu, 8 Aug 2019 18:59:18 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:10694 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390006AbfHHW7S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 18:59:18 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d4ca94e0002>; Thu, 08 Aug 2019 15:59:26 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 08 Aug 2019 15:59:16 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 08 Aug 2019 15:59:16 -0700
+Received: from [10.110.48.28] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 8 Aug
+ 2019 22:59:15 +0000
+Subject: Re: [PATCH 1/3] mm/mlock.c: convert put_page() to put_user_page*()
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     Vlastimil Babka <vbabka@suse.cz>, Michal Hocko <mhocko@kernel.org>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jerome Glisse <jglisse@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-fsdevel@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Black <daniel@linux.ibm.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>
+References: <20190805222019.28592-1-jhubbard@nvidia.com>
+ <20190805222019.28592-2-jhubbard@nvidia.com>
+ <20190807110147.GT11812@dhcp22.suse.cz>
+ <01b5ed91-a8f7-6b36-a068-31870c05aad6@nvidia.com>
+ <20190808062155.GF11812@dhcp22.suse.cz>
+ <875dca95-b037-d0c7-38bc-4b4c4deea2c7@suse.cz>
+ <306128f9-8cc6-761b-9b05-578edf6cce56@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <d1ecb0d4-ea6a-637d-7029-687b950b783f@nvidia.com>
+Date:   Thu, 8 Aug 2019 15:59:15 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <alpine.DEB.2.21.9999.1908081520100.6414@viisi.sifive.com>
-In-Reply-To: <alpine.DEB.2.21.9999.1908081520100.6414@viisi.sifive.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 8 Aug 2019 16:56:25 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+db+_u47yutb+H7dcMqP27PF9jjwinsB2qgi609t9zWQ@mail.gmail.com>
-Message-ID: <CAL_Jsq+db+_u47yutb+H7dcMqP27PF9jjwinsB2qgi609t9zWQ@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: riscv: remove obsolete cpus.txt
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        linux-riscv@lists.infradead.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <306128f9-8cc6-761b-9b05-578edf6cce56@nvidia.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1565305166; bh=M49TAEp0rF+Rj/ENVh2GXbZ42kgeSpTrxkT20El97xE=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=qK96gYx06tpkH2q4CcpF6OFBCFRxcA8XFBMTGsGorSI049/l40m06bHRMJx1tJDS8
+         DAxdC1uODwBgaSWpMv4if5Iqt5i6qp+oDs/yhJULQwcTTRKfkWpB4SnYndw1nTt5km
+         1xsWvHi7FBF0yo5mOFnYaowlOnPQGpSB0fYDx8KBQ1ve/x25U7+7434V1pzCwlvZIk
+         g3hlON18SJuJ2D/c0ndQmqy+GqYV484LBuFviFDcSWUg4RE4xEoQGHJIHzlfkY/R0f
+         OLytPdbTTAL5LajiZx2D0leH8axGGC7GmnAFDCpEVhyRNyBbECyjZ/GMFaZn0/VRiJ
+         mrtUWi75zSo4g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 8, 2019 at 4:22 PM Paul Walmsley <paul.walmsley@sifive.com> wrote:
->
->
-> Remove the now-obsolete riscv/cpus.txt DT binding document, since we
-> are using YAML binding documentation instead.
->
-> While doing so, transfer the explanatory text about 'harts' (with some
-> edits) into the YAML file, at Rob's request.
->
-> Link: https://lore.kernel.org/linux-riscv/CAL_JsqJs6MtvmuyAknsUxQymbmoV=G+=JfS1PQj9kNHV7fjC9g@mail.gmail.com/
-> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-> Cc: Rob Herring <robh@kernel.org>
-> ---
->  .../devicetree/bindings/riscv/cpus.txt        | 162 ------------------
->  .../devicetree/bindings/riscv/cpus.yaml       |  12 ++
->  2 files changed, 12 insertions(+), 162 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/riscv/cpus.txt
+On 8/8/19 12:20 PM, John Hubbard wrote:
+> On 8/8/19 4:09 AM, Vlastimil Babka wrote:
+>> On 8/8/19 8:21 AM, Michal Hocko wrote:
+>>> On Wed 07-08-19 16:32:08, John Hubbard wrote:
+>>>> On 8/7/19 4:01 AM, Michal Hocko wrote:
+>>>>> On Mon 05-08-19 15:20:17, john.hubbard@gmail.com wrote:
+>>>>>> From: John Hubbard <jhubbard@nvidia.com>
+>>>> Actually, I think follow_page_mask() gets all the pages, right? And the
+>>>> get_page() in __munlock_pagevec_fill() is there to allow a pagevec_release() 
+>>>> later.
+>>>
+>>> Maybe I am misreading the code (looking at Linus tree) but munlock_vma_pages_range
+>>> calls follow_page for the start address and then if not THP tries to
+>>> fill up the pagevec with few more pages (up to end), do the shortcut
+>>> via manual pte walk as an optimization and use generic get_page there.
+>>
+> 
+> Yes, I see it finally, thanks. :)  
+> 
+>> That's true. However, I'm not sure munlocking is where the
+>> put_user_page() machinery is intended to be used anyway? These are
+>> short-term pins for struct page manipulation, not e.g. dirtying of page
+>> contents. Reading commit fc1d8e7cca2d I don't think this case falls
+>> within the reasoning there. Perhaps not all GUP users should be
+>> converted to the planned separate GUP tracking, and instead we should
+>> have a GUP/follow_page_mask() variant that keeps using get_page/put_page?
+>>  
+> 
+> Interesting. So far, the approach has been to get all the gup callers to
+> release via put_user_page(), but if we add in Jan's and Ira's vaddr_pin_pages()
+> wrapper, then maybe we could leave some sites unconverted.
+> 
+> However, in order to do so, we would have to change things so that we have
+> one set of APIs (gup) that do *not* increment a pin count, and another set
+> (vaddr_pin_pages) that do. 
+> 
+> Is that where we want to go...?
+> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Oh, and meanwhile, I'm leaning toward a cheap fix: just use gup_fast() instead
+of get_page(), and also fix the releasing code. So this incremental patch, on
+top of the existing one, should do it:
+
+diff --git a/mm/mlock.c b/mm/mlock.c
+index b980e6270e8a..2ea272c6fee3 100644
+--- a/mm/mlock.c
++++ b/mm/mlock.c
+@@ -318,18 +318,14 @@ static void __munlock_pagevec(struct pagevec *pvec, struct zone *zone)
+                /*
+                 * We won't be munlocking this page in the next phase
+                 * but we still need to release the follow_page_mask()
+-                * pin. We cannot do it under lru_lock however. If it's
+-                * the last pin, __page_cache_release() would deadlock.
++                * pin.
+                 */
+-               pagevec_add(&pvec_putback, pvec->pages[i]);
++               put_user_page(pages[i]);
+                pvec->pages[i] = NULL;
+        }
+        __mod_zone_page_state(zone, NR_MLOCK, delta_munlocked);
+        spin_unlock_irq(&zone->zone_pgdat->lru_lock);
+ 
+-       /* Now we can release pins of pages that we are not munlocking */
+-       pagevec_release(&pvec_putback);
+-
+        /* Phase 2: page munlock */
+        for (i = 0; i < nr; i++) {
+                struct page *page = pvec->pages[i];
+@@ -394,6 +390,8 @@ static unsigned long __munlock_pagevec_fill(struct pagevec *pvec,
+        start += PAGE_SIZE;
+        while (start < end) {
+                struct page *page = NULL;
++               int ret;
++
+                pte++;
+                if (pte_present(*pte))
+                        page = vm_normal_page(vma, start, *pte);
+@@ -411,7 +409,13 @@ static unsigned long __munlock_pagevec_fill(struct pagevec *pvec,
+                if (PageTransCompound(page))
+                        break;
+ 
+-               get_page(page);
++               /*
++                * Use get_user_pages_fast(), instead of get_page() so that the
++                * releasing code can unconditionally call put_user_page().
++                */
++               ret = get_user_pages_fast(start, 1, 0, &page);
++               if (ret != 1)
++                       break;
+                /*
+                 * Increase the address that will be returned *before* the
+                 * eventual break due to pvec becoming full by adding the page
+
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
