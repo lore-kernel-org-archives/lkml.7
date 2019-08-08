@@ -2,157 +2,138 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D004C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:54:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D2DC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:54:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17F8321874
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:54:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 393E1217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:54:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mIYi4WLd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DRqnUaHf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390135AbfHHPyh (ORCPT
+        id S2403989AbfHHPyx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 11:54:37 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:33834 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390084AbfHHPyg (ORCPT
+        Thu, 8 Aug 2019 11:54:53 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:33022 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732698AbfHHPyw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 11:54:36 -0400
-Received: by mail-ot1-f65.google.com with SMTP id n5so120604773otk.1
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 08:54:36 -0700 (PDT)
+        Thu, 8 Aug 2019 11:54:52 -0400
+Received: by mail-pg1-f196.google.com with SMTP id n190so3470199pgn.0;
+        Thu, 08 Aug 2019 08:54:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=1sg8blSc4ktjYIlt+M6GsnZLOv8BJShN+hn4djS78FU=;
-        b=mIYi4WLdXWIumYUeDN6cnMSHjo105PssVlySrSrAVFJKfZh7TG7G1RZKLuO0anDBNn
-         Gpnfx6gn2opmmlvwQseCzMTgVv+uXDvkLCMriVnjJhLokn6wtZyLTMn2gOBWAr9LCuPf
-         G4kK+52fIKN7be4D1f3ZhgCD800bY35k9o3y+zvQd444Ef03+RM4DOdnt8SHstppzGiH
-         igaYPm42NustljaIDod+NbLxlQCR6takH+feS2j2eSO0d4pYYq7DYt5tQ6WSls8gUiD5
-         tMdLP7V8Dq+rN8oZTwJ0TW37Oc06Dcxd+8TDUXqz56XIavRmx6HCagDr9ou5ZZUJh1hz
-         e8Qg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VyDwokBh+gB+QLTu7/5jPeaY9NH0VqDoEKwNk/RbWhI=;
+        b=DRqnUaHfOxk+ETyvJEDDHGkCxanT22pETczAlBqhhChYFsDcmlSAQXssX3qlQ8gu24
+         iInQMFtgNm2IoJsqLqZmy7uoAWNNl74yXXv/VRFcj9zZzm3OSPT6BuTME1fV7ZWylxnW
+         qb/mGllJLsLbCqlB7TzXNybSoWP6tJPk43C7wTB/ewsmlejDLbbVksbODiRJYs87uube
+         Ww5WBmTOxe0PO4uIS5qlEjklwfQUHl3m3aSPvM7TsWyZ2B4ROyHUoVMTOKOArUXCy7vZ
+         kucmt5wEr4WkMVHEpmjmAuQMfP8N+F1e0CpurDUT2cTlIlhI1AAO2nOZxb+HKDPFO5M6
+         2l1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=1sg8blSc4ktjYIlt+M6GsnZLOv8BJShN+hn4djS78FU=;
-        b=WmXWoxx3K8KcPtSWb0zPbKAFMb/GOIJPOQwhOcs8GR+Jvh1N4CBQRXOJtaMXNKEj71
-         Cmi9Imu4v+TOfWHKR8D5t7/M/r0uafq8wLv0MIp/yEf/ubvG6be4BjRF90/p60rtvgBi
-         usiHmH3vFUMIOiZg5kWOcJ8Ra26M2Yhmxcj8e15CJI6qv0fLqZkempduakoLuy0Jnhth
-         9R6A573Joqm3xI0r1zvxQBipH5LGdxq+xoXIQpAvRZvhiYS/KSvek0YoYucmm2zt77Bg
-         uZPTQVMVc/eDcinxfjuC+RhigC3TU7t+5jL/W3pUJEfCNXXR81WOTJt5E+w1BKns6mI7
-         AoZw==
-X-Gm-Message-State: APjAAAVLnJQEZ9QWkvDtz4wD2GpjpycTi/V6XSH/0RbkxI9FH/CiuW0B
-        nyUxg2gqzxyHk+iobW9gCvvQlg==
-X-Google-Smtp-Source: APXvYqxx6/FJYqhLJnvLciidKkcc3FlpTPip8iGEIy8CrynVdPXCprALbLDJgDY0Mq5eplxkiyU7pQ==
-X-Received: by 2002:a9d:6150:: with SMTP id c16mr12962711otk.21.1565279675432;
-        Thu, 08 Aug 2019 08:54:35 -0700 (PDT)
-Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
-        by smtp.gmail.com with ESMTPSA id q11sm29370290oij.16.2019.08.08.08.54.33
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 08 Aug 2019 08:54:34 -0700 (PDT)
-Date:   Thu, 8 Aug 2019 08:54:16 -0700 (PDT)
-From:   Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@eggly.anvils
-To:     Al Viro <viro@zeniv.linux.org.uk>
-cc:     Christoph Hellwig <hch@lst.de>, Hugh Dickins <hughd@google.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        David Howells <dhowells@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCHv2 2/3] i915: convert to new mount API
-In-Reply-To: <20190808012314.GK1131@ZenIV.linux.org.uk>
-Message-ID: <alpine.LSU.2.11.1908080813380.12321@eggly.anvils>
-References: <20190805160307.5418-1-sergey.senozhatsky@gmail.com> <20190805160307.5418-3-sergey.senozhatsky@gmail.com> <20190805181255.GH1131@ZenIV.linux.org.uk> <20190805182834.GI1131@ZenIV.linux.org.uk> <alpine.LSU.2.11.1908060007190.1941@eggly.anvils>
- <20190807063002.GG6627@lst.de> <20190808012314.GK1131@ZenIV.linux.org.uk>
-User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VyDwokBh+gB+QLTu7/5jPeaY9NH0VqDoEKwNk/RbWhI=;
+        b=bk/oYqefzQGcUergNTVslCoyE9U4eWGQWhpRRLR13nNtoujYDLtZQxMfC1vfdwxjtH
+         GXp+EGOYEpaoCym7T1IvvxiNCfsTDv5oTeByk2HKVmxkByaPRjIZ9Hj5y31f7Kaj3AOX
+         FqKL/p8huTVq0JnDAffXLI+nLRw8z/LILtEEedrGFUXjA/HQzKPNvIAJNGtdwFxCBSji
+         ro+HfKs7TKexh/IJltDelLSS6JG21wJusJotKcfYUszM/2Sad6n6lXMbKvKYXSfosjWE
+         Zxbac9NaKigNCO80PIK5De6bDNkJU2lZnlIG9ALusbiPKxRrFrgByzx/Ovk7HdmqwucT
+         pCdg==
+X-Gm-Message-State: APjAAAVu0BKWpk6VVwxS1h9b0v8M6IuqiIfwXpxgnNSoSxaCrLjD4qYN
+        X1w9rjujNBE1XZaBYx/NgwQ=
+X-Google-Smtp-Source: APXvYqw9ZQSQO7vlV6Y49qafIy9gSFCGZHMottQSp/lScMuom31vWWKU37bJ6r9q7/wIbeIM9G7CxQ==
+X-Received: by 2002:a63:2004:: with SMTP id g4mr12726284pgg.97.1565279691949;
+        Thu, 08 Aug 2019 08:54:51 -0700 (PDT)
+Received: from localhost.localdomain ([125.142.23.13])
+        by smtp.googlemail.com with ESMTPSA id c98sm3054805pje.1.2019.08.08.08.54.49
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 08 Aug 2019 08:54:51 -0700 (PDT)
+From:   Suwan Kim <suwan.kim027@gmail.com>
+To:     shuah@kernel.org, valentina.manea.m@gmail.com,
+        gregkh@linuxfoundation.org, stern@rowland.harvard.edu
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Suwan Kim <suwan.kim027@gmail.com>
+Subject: [PATCH v5 0/2] usbip: Implement SG support
+Date:   Fri,  9 Aug 2019 00:54:33 +0900
+Message-Id: <20190808155435.10050-1-suwan.kim027@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 8 Aug 2019, Al Viro wrote:
-> On Wed, Aug 07, 2019 at 08:30:02AM +0200, Christoph Hellwig wrote:
-> > On Tue, Aug 06, 2019 at 12:50:10AM -0700, Hugh Dickins wrote:
-> > > Though personally I'm averse to managing "f"objects through
-> > > "m"interfaces, which can get ridiculous (notably, MADV_HUGEPAGE works
-> > > on the virtual address of a mapping, but the huge-or-not alignment of
-> > > that mapping must have been decided previously).  In Google we do use
-> > > fcntls F_HUGEPAGE and F_NOHUGEPAGE to override on a per-file basis -
-> > > one day I'll get to upstreaming those.
-> > 
-> > Such an interface seems very useful, although the two fcntls seem a bit
-> > odd.
-> > 
-> > But I think the point here is that the i915 has its own somewhat odd
-> > instance of tmpfs.  If we could pass the equivalent of the huge=*
-> > options to shmem_file_setup all that garbage (including the
-> > shmem_file_setup_with_mnt function) could go away.
-> 
-> ... or follow shmem_file_super() with whatever that fcntl maps to
-> internally.  I would really love to get rid of that i915 kludge.
+There are bugs on vhci with usb 3.0 storage device. In USB, each SG
+list entry buffer should be divisible by the bulk max packet size.
+But with native SG support, this problem doesn't matter because the
+SG buffer is treated as contiguous buffer. But without native SG
+support, USB storage driver breaks SG list into several URBs and the
+error occurs because of a buffer size of URB that cannot be divided
+by the bulk max packet size. The error situation is as follows.
 
-As to the immediate problem of i915_gemfs using remount_fs on linux-next,
-IIUC, all that is necessary at the moment is the deletions patch below
-(but I'd prefer that to come from the i915 folks).  Since gemfs has no
-need to change the huge option from its default to its default.
+When USB Storage driver requests 31.5 KB data and has SG list which
+has 3584 bytes buffer followed by 7 4096 bytes buffer for some
+reason. USB Storage driver splits this SG list into several URBs
+because VHCI doesn't support SG and sends them separately. So the
+first URB buffer size is 3584 bytes. When receiving data from device,
+USB 3.0 device sends data packet of 1024 bytes size because the max
+packet size of BULK pipe is 1024 bytes. So device sends 4096 bytes.
+But the first URB buffer has only 3584 bytes buffer size. So host
+controller terminates the transfer even though there is more data to
+receive. So, vhci needs to support SG transfer to prevent this error.
 
-As to the future of when they get back to wanting huge pages in gemfs,
-yes, that can probably best be arranged by using the internals of an
-fcntl F_HUGEPAGE on those objects that would benefit from it.
+In this patch, vhci supports SG regardless of whether the server's
+host controller supports SG or not, because stub driver splits SG
+list into several URBs if the server's host controller doesn't
+support SG.
 
-Though my intention there was that the "huge=never" default ought
-to continue to refuse to give huge pages, even when asked by fcntl.
-So a little hackery may still be required, to allow the i915_gemfs
-internal mount to get huge pages when a user mount would not.
+To support SG, vhci_map_urb_for_dma() sets URB_DMA_MAP_SG flag in
+urb->transfer_flags if URB has SG list and this flag will tell stub
+driver to use SG list.
 
-As to whether shmem_file_setup_with_mnt() needs to live: I've given
-that no thought, but accept that shm_mnt is such a ragbag of different
-usages, that i915 is right to prefer their own separate gemfs mount.
+vhci sends each SG list entry to stub driver. Then, stub driver sees
+the total length of the buffer and allocates SG table and pages
+according to the total buffer length calling sgl_alloc(). After stub
+driver receives completed URB, it again sends each SG list entry to
+vhci.
 
-Hugh
+If the server's host controller doesn't support SG, stub driver
+breaks a single SG request into several URBs and submits them to
+the server's host controller. When all the split URBs are completed,
+stub driver reassembles the URBs into a single return command and
+sends it to vhci.
 
---- mmotm/drivers/gpu/drm/i915/gem/i915_gemfs.c	2019-07-21 19:40:16.573703780 -0700
-+++ linux/drivers/gpu/drm/i915/gem/i915_gemfs.c	2019-08-08 07:19:23.967689058 -0700
-@@ -24,28 +24,6 @@ int i915_gemfs_init(struct drm_i915_priv
- 	if (IS_ERR(gemfs))
- 		return PTR_ERR(gemfs);
- 
--	/*
--	 * Enable huge-pages for objects that are at least HPAGE_PMD_SIZE, most
--	 * likely 2M. Note that within_size may overallocate huge-pages, if say
--	 * we allocate an object of size 2M + 4K, we may get 2M + 2M, but under
--	 * memory pressure shmem should split any huge-pages which can be
--	 * shrunk.
--	 */
--
--	if (has_transparent_hugepage()) {
--		struct super_block *sb = gemfs->mnt_sb;
--		/* FIXME: Disabled until we get W/A for read BW issue. */
--		char options[] = "huge=never";
--		int flags = 0;
--		int err;
--
--		err = sb->s_op->remount_fs(sb, &flags, options);
--		if (err) {
--			kern_unmount(gemfs);
--			return err;
--		}
--	}
--
- 	i915->mm.gemfs = gemfs;
- 
- 	return 0;
+Alan fixed vhci bug with the USB 3.0 storage device by modifying
+USB storage driver.
+("usb-storage: Set virt_boundary_mask to avoid SG overflows")
+But the fundamental solution of it is to add SG support to vhci.
+
+This patch works well with the USB 3.0 storage devices without Alan's
+patch, and we can revert Alan's patch if it causes some troubles.
+
+Suwan Kim (2):
+  usbip: Skip DMA mapping and unmapping for urb at vhci
+  usbip: Implement SG support to vhci-hcd and stub driver
+
+ drivers/usb/usbip/stub.h         |   7 +-
+ drivers/usb/usbip/stub_main.c    |  57 ++++++---
+ drivers/usb/usbip/stub_rx.c      | 204 ++++++++++++++++++++++---------
+ drivers/usb/usbip/stub_tx.c      |  99 +++++++++++----
+ drivers/usb/usbip/usbip_common.c |  59 ++++++---
+ drivers/usb/usbip/vhci_hcd.c     |  34 +++++-
+ drivers/usb/usbip/vhci_tx.c      |  63 ++++++++--
+ 7 files changed, 396 insertions(+), 127 deletions(-)
+
+-- 
+2.20.1
+
