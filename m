@@ -2,89 +2,131 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6646BC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0403C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:34:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 312832173C
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:34:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="0hOmMEjL"
+	by mail.kernel.org (Postfix) with ESMTP id A77A12173C
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:34:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390414AbfHHUeU (ORCPT
+        id S2390350AbfHHUe4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 16:34:20 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:45646 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390399AbfHHUeT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 16:34:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=FlJZGarl3bbH3/pyryWmZ82ojdu1jbJlpm/J+vJz06E=; b=0hOmMEjLp44q+7Z8ZdVCOhSsF9
-        7CyBnLfLvJ1CyenbpGxPQMBPANu+U6FuuTVEuJJ5/LFOqLZdr3L2yhNMg+kPSgXIzGqa2kXPsmNdR
-        Fa+uXbdefu/j/qdkCPFepaJ65tYYDId6vPRGgjLEri+RhGRnBYgCeGAuu3voLKEVaaSk=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hvp71-0005sf-1V; Thu, 08 Aug 2019 22:34:15 +0200
-Date:   Thu, 8 Aug 2019 22:34:15 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Yonglong Liu <liuyonglong@huawei.com>, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxarm@huawei.com, salil.mehta@huawei.com,
-        yisen.zhuang@huawei.com, shiju.jose@huawei.com
-Subject: Re: [PATCH net] net: phy: rtl8211f: do a double read to get real
- time link status
-Message-ID: <20190808203415.GO27917@lunn.ch>
-References: <1565183772-44268-1-git-send-email-liuyonglong@huawei.com>
- <d67831ab-8902-a653-3db9-b2f55adacabd@gmail.com>
- <e663235c-93eb-702d-5a9c-8f781d631c42@huawei.com>
- <080b68c7-abe6-d142-da4b-26e8a7d4dc19@gmail.com>
- <c15f820b-cc80-9a93-4c48-1b60bc14f73a@huawei.com>
- <b1140603-f05b-2373-445f-c1d7a43ff012@gmail.com>
- <20190808194049.GM27917@lunn.ch>
- <26e2c5c9-915c-858b-d091-e5bfa7ab6a5b@gmail.com>
+        Thu, 8 Aug 2019 16:34:56 -0400
+Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:53004 "EHLO
+        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729780AbfHHUe4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 16:34:56 -0400
+Received: from pps.filterd (m0134421.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x78KQfvN011881;
+        Thu, 8 Aug 2019 20:33:26 GMT
+Received: from g4t3427.houston.hpe.com (g4t3427.houston.hpe.com [15.241.140.73])
+        by mx0b-002e3701.pphosted.com with ESMTP id 2u8rx0rsxn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 08 Aug 2019 20:33:26 +0000
+Received: from g9t2301.houston.hpecorp.net (g9t2301.houston.hpecorp.net [16.220.97.129])
+        by g4t3427.houston.hpe.com (Postfix) with ESMTP id 9B1C757;
+        Thu,  8 Aug 2019 20:33:25 +0000 (UTC)
+Received: from anatevka.americas.hpqcorp.net (anatevka.americas.hpqcorp.net [10.34.81.61])
+        by g9t2301.houston.hpecorp.net (Postfix) with ESMTP id 912AC4E;
+        Thu,  8 Aug 2019 20:33:24 +0000 (UTC)
+Date:   Thu, 8 Aug 2019 14:33:24 -0600
+From:   Jerry Hoemann <jerry.hoemann@hpe.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH] perf/x86/amd: Change NMI latency mitigation to use a
+ timestamp
+Message-ID: <20190808203324.GA21769@anatevka.americas.hpqcorp.net>
+Reply-To: Jerry.Hoemann@hpe.com
+References: <833ee307989ac6bfb45efe823c5eca4b2b80c7cf.1564685848.git.thomas.lendacky@amd.com>
+ <20190801211613.GB3578@hirez.programming.kicks-ass.net>
+ <b4597324-6eb8-31fa-e911-63f3b704c974@amd.com>
+ <alpine.DEB.2.21.1908012331550.1789@nanos.tec.linutronix.de>
+ <20190801214813.GB2332@hirez.programming.kicks-ass.net>
+ <alpine.DEB.2.21.1908012352390.1789@nanos.tec.linutronix.de>
+ <925c3458-aeae-a44b-ddd5-40a1e173a307@amd.com>
+ <20190802162015.GA2349@hirez.programming.kicks-ass.net>
+ <20190802163328.GB2349@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <26e2c5c9-915c-858b-d091-e5bfa7ab6a5b@gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190802163328.GB2349@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-08_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908080181
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 10:01:39PM +0200, Heiner Kallweit wrote:
-> On 08.08.2019 21:40, Andrew Lunn wrote:
-> >> @@ -568,6 +568,11 @@ int phy_start_aneg(struct phy_device *phydev)
-> >>  	if (err < 0)
-> >>  		goto out_unlock;
-> >>  
-> >> +	/* The PHY may not yet have cleared aneg-completed and link-up bit
-> >> +	 * w/o this delay when the following read is done.
-> >> +	 */
-> >> +	usleep_range(1000, 2000);
-> >> +
-> > 
-> > Hi Heiner
-> > 
-> > Does 802.3 C22 say anything about this?
-> > 
-> C22 says:
-> "The Auto-Negotiation process shall be restarted by setting bit 0.9 to a logic one. This bit is self-
-> clearing, and a PHY shall return a value of one in bit 0.9 until the Auto-Negotiation process has been
-> initiated."
+On Fri, Aug 02, 2019 at 06:33:28PM +0200, Peter Zijlstra wrote:
+> On Fri, Aug 02, 2019 at 06:20:15PM +0200, Peter Zijlstra wrote:
+> > On Fri, Aug 02, 2019 at 02:33:41PM +0000, Lendacky, Thomas wrote:
 > 
-> Maybe we should read bit 0.9 in genphy_update_link() after having read BMSR and report
-> aneg-complete and link-up as false (no matter of their current value) if 0.9 is set.
+> > > Talking to the hardware folks, they say setting CR8 is a serializing
+> > > instruction and has to communicate out to the APIC, so it's better to
+> > > use CLI/STI.
+> > 
+> > Bah; the Intel SDM states: "MOV CR* instructions, except for MOV CR8,
+> > are serializing instructions", which had given me a little hope.
+> > 
+> > At the same time, all these chips still have the APIC TPR field too, so
+> > much like how the TSC DEADLINE MSR is a hidden APIC write, so too is CR8
+> > I suppose :-(
+> > 
+> > I'll still finish the patches I started, just to see what it would look
+> > like.
+> 
+> Another 'fun' issue I ran into while doing these patches; STI has a 1
+> instruction shadow, which we rely on, MOV CR8 does not. So things like:
+> 
+> native_safe_halt:
+> 	sti
+> 	hlt
+> 
+> turn into:
+> 
+> native_safe_halt:
+> 	cli
+> 	movl $0, %rax
+> 	movq %rax, %cr8
+> 	sti
+> 	hlt
+> 
 
-Yes. That sounds sensible.
+Hi Peter,
 
-     Andrew
+What is our the next step here?
+
+Are you still looking to make this change?
+
+Do we want to pick up Tom Lendacky's patch on an interim basis while
+you're working on the bigger change?  (I can say we tested Tom's
+patch and it does address the issue we were seeing.)
+
+Thanks
+
+Jerry
+
+-- 
+
+-----------------------------------------------------------------------------
+Jerry Hoemann                  Software Engineer   Hewlett Packard Enterprise
+-----------------------------------------------------------------------------
