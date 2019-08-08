@@ -2,97 +2,147 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C0FC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 03:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7367C32754
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 03:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42F772086D
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 03:43:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C06A20880
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 03:46:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="caNdsK+H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389645AbfHHDnO (ORCPT
+        id S2389744AbfHHDqz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 23:43:14 -0400
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:44282 "EHLO
-        omr2.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728461AbfHHDnN (ORCPT
+        Wed, 7 Aug 2019 23:46:55 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:14417 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728167AbfHHDqy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 23:43:13 -0400
-Received: from mr3.cc.vt.edu (mr3.cc.ipv6.vt.edu [IPv6:2607:b400:92:8500:0:7f:b804:6b0a])
-        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x783hCLe020083
-        for <linux-kernel@vger.kernel.org>; Wed, 7 Aug 2019 23:43:12 -0400
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-        by mr3.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x783h7eg012959
-        for <linux-kernel@vger.kernel.org>; Wed, 7 Aug 2019 23:43:12 -0400
-Received: by mail-qk1-f197.google.com with SMTP id c207so81092828qkb.11
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 20:43:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:mime-version:date
-         :message-id;
-        bh=34FBdfks8oZeUDT01/sr/q7uElIvwz0ixxEG0Z2FOJY=;
-        b=ctjqTBprKJrdOxo5ztgmPU/DWzBEcAJc/rujBM+vAioZRRt+4WIXe0BKhT9a5brDQT
-         or2UPJzsWJQpZQac44iFbb3qx8i6DdOXbnCC3MT/YQaPc13BSREc8Wd094sd05mkXrK6
-         zXxS9DdHpvfQNYnaz+8sF3QifvXwI656p+9yhxYT+bntEeZxZWj/6vgMlg93knxbhoeA
-         rm7g+rkMO+FtmlBGl1LdEd01lxpBK/hsGEjEdCymDYKAIgxY4fGv1YPhEaYFi6H+inmI
-         +JeCZJKk2ALro+F7WpS8Ew0ZkVXvWi7G6gE/i1c25cI3ZvClhVsWbbKJ0sl5nj8WbjiV
-         XfQg==
-X-Gm-Message-State: APjAAAXYhEnBwZiCvuTkwoQjwK8pEMIQvBoZJDbt5fngEkIDohQ5BTmN
-        FGbMm6Wjn9A4TAo2A2ohEjlv3h9m8kMb79fecAQmgqSd314OGueaKQQhb48My3uicQ2GBwgtIqI
-        Zjogxk/6x/yI+ooxgwh28QL9xhwHA643qgiY=
-X-Received: by 2002:ac8:317a:: with SMTP id h55mr11297770qtb.105.1565235787116;
-        Wed, 07 Aug 2019 20:43:07 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqy5PD2Ou1paun3GU00mg+4b/y1jbdQOU9GJjJrghuNV+mDGp9JJIk4X6XbFfSKbMtfYOaUVuA==
-X-Received: by 2002:ac8:317a:: with SMTP id h55mr11297757qtb.105.1565235786872;
-        Wed, 07 Aug 2019 20:43:06 -0700 (PDT)
-Received: from turing-police ([2601:5c0:c001:4341::359])
-        by smtp.gmail.com with ESMTPSA id j50sm1361463qtj.30.2019.08.07.20.43.05
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 07 Aug 2019 20:43:05 -0700 (PDT)
-From:   "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     Andrew Morton <akpm@linux-foundation.org>
-cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] lib/extable.c - add missing prototypes.
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Date:   Wed, 07 Aug 2019 23:43:04 -0400
-Message-ID: <45574.1565235784@turing-police>
+        Wed, 7 Aug 2019 23:46:54 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d4b9b2c0000>; Wed, 07 Aug 2019 20:46:53 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 07 Aug 2019 20:46:51 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 07 Aug 2019 20:46:51 -0700
+Received: from ngvpn01-164-84.dyn.scz.us.nvidia.com (172.20.13.39) by
+ HQMAIL107.nvidia.com (172.20.187.13) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3; Thu, 8 Aug 2019 03:46:50 +0000
+Subject: Re: [PATCH 00/34] put_user_pages(): miscellaneous call sites
+To:     Ira Weiny <ira.weiny@intel.com>, Michal Hocko <mhocko@kernel.org>
+CC:     Jan Kara <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        <amd-gfx@lists.freedesktop.org>, <ceph-devel@vger.kernel.org>,
+        <devel@driverdev.osuosl.org>, <devel@lists.orangefs.org>,
+        <dri-devel@lists.freedesktop.org>,
+        <intel-gfx@lists.freedesktop.org>, <kvm@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-block@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
+        <linux-fbdev@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-nfs@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linux-rpi-kernel@lists.infradead.org>,
+        <linux-xfs@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <rds-devel@oss.oracle.com>, <sparclinux@vger.kernel.org>,
+        <x86@kernel.org>, <xen-devel@lists.xenproject.org>
+References: <20190802022005.5117-1-jhubbard@nvidia.com>
+ <20190802091244.GD6461@dhcp22.suse.cz>
+ <20190802124146.GL25064@quack2.suse.cz>
+ <20190802142443.GB5597@bombadil.infradead.org>
+ <20190802145227.GQ25064@quack2.suse.cz>
+ <076e7826-67a5-4829-aae2-2b90f302cebd@nvidia.com>
+ <20190807083726.GA14658@quack2.suse.cz>
+ <20190807084649.GQ11812@dhcp22.suse.cz>
+ <20190808023637.GA1508@iweiny-DESK2.sc.intel.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <e648a7f3-6a1b-c9ea-1121-7ab69b6b173d@nvidia.com>
+Date:   Wed, 7 Aug 2019 20:46:50 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190808023637.GA1508@iweiny-DESK2.sc.intel.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1565236013; bh=oa/UlzMF1BY8hfwSUK2E34E4BK86wv0rI2GL87o8kWQ=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=caNdsK+H718e8IaMHboxAo7N5kSDjdO0aPPP7qMD/uXC6LIuseTU5yocCYztoyhLS
+         A8theOeNn9DFbaKSyltNZVy/0B3VPZPEr/7HwHnfipqBI1W9E/1RXgk4cYboMCcd2v
+         K1AubOjDxM7RJmlTd1q1ZO/DARZkbUQqfdDa7AtzCGn8CgjUMfboXlhtit5supcfVJ
+         t3SF5BlWoOZ+ktHQ+Gy0QbysjhXaepl4K0zI9Pv3YsYauPp0cOOqMsTfKIdJYZp847
+         qDjXLEk745BEl9a58mwF6yYg4Z7StCZBL718mfzBDBCPCwNZsIoTbJbWCkazTDd50+
+         NvHzitKycTv2g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When building with W=1, a number of warnings are issued:
+On 8/7/19 7:36 PM, Ira Weiny wrote:
+> On Wed, Aug 07, 2019 at 10:46:49AM +0200, Michal Hocko wrote:
+>> On Wed 07-08-19 10:37:26, Jan Kara wrote:
+>>> On Fri 02-08-19 12:14:09, John Hubbard wrote:
+>>>> On 8/2/19 7:52 AM, Jan Kara wrote:
+>>>>> On Fri 02-08-19 07:24:43, Matthew Wilcox wrote:
+>>>>>> On Fri, Aug 02, 2019 at 02:41:46PM +0200, Jan Kara wrote:
+>>>>>>> On Fri 02-08-19 11:12:44, Michal Hocko wrote:
+>>>>>>>> On Thu 01-08-19 19:19:31, john.hubbard@gmail.com wrote:
+  [...]
+> Before I go on, I would like to say that the "imbalance" of get_user_pages()
+> and put_page() bothers me from a purist standpoint...  However, since this
+> discussion cropped up I went ahead and ported my work to Linus' current master
+> (5.3-rc3+) and in doing so I only had to steal a bit of Johns code...  Sorry
+> John...  :-(
+> 
+> I don't have the commit messages all cleaned up and I know there may be some
+> discussion on these new interfaces but I wanted to throw this series out there
+> because I think it may be what Jan and Michal are driving at (or at least in
+> that direction.
+> 
+> Right now only RDMA and DAX FS's are supported.  Other users of GUP will still
+> fail on a DAX file and regular files will still be at risk.[2]
+> 
+> I've pushed this work (based 5.3-rc3+ (33920f1ec5bf)) here[3]:
+> 
+> https://github.com/weiny2/linux-kernel/tree/linus-rdmafsdax-b0-v3
+> 
+> I think the most relevant patch to this conversation is:
+> 
+> https://github.com/weiny2/linux-kernel/commit/5d377653ba5cf11c3b716f904b057bee6641aaf6
+> 
 
-  CC      lib/extable.o
-lib/extable.c:63:6: warning: no previous prototype for 'sort_extable' [-Wmissing-prototypes]
-   63 | void sort_extable(struct exception_table_entry *start,
-      |      ^~~~~~~~~~~~
-lib/extable.c:75:6: warning: no previous prototype for 'trim_init_extable' [-Wmissing-prototypes]
-   75 | void trim_init_extable(struct module *m)
-      |      ^~~~~~~~~~~~~~~~~
-lib/extable.c:115:1: warning: no previous prototype for 'search_extable' [-Wmissing-prototypes]
-  115 | search_extable(const struct exception_table_entry *base,
-      | ^~~~~~~~~~~~~~
+ohhh...can you please avoid using the old __put_user_pages_dirty()
+function? I thought I'd caught things early enough to get away with
+the rename and deletion of that. You could either:
 
-Add the missing #include for the prototypes.
+a) open code an implementation of vaddr_put_pages_dirty_lock() that
+doesn't call any of the *put_user_pages_dirty*() variants, or
 
-Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+b) include my first patch ("") are part of your series, or
 
-diff --git a/lib/extable.c b/lib/extable.c
-index 25da4071122a..c3e59caf7ffa 100644
---- a/lib/extable.c
-+++ b/lib/extable.c
-@@ -10,6 +10,7 @@
- #include <linux/init.h>
- #include <linux/sort.h>
- #include <linux/uaccess.h>
-+#include <linux/extable.h>
- 
- #ifndef ARCH_HAS_RELATIVE_EXTABLE
- #define ex_to_insn(x)	((x)->insn)
+c) base this on Andrews's tree, which already has merged in my first patch.
 
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
