@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 407DFC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16730C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:15:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15A87214C6
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:15:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6DF0214C6
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:15:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565291739;
-	bh=P/54bSpCJpUwxgQUnW/OJbhwuoF+50j/V8zB5zTi/SE=;
+	s=default; t=1565291743;
+	bh=dQ6PS1WCEpBzXhZD5UEH0K4K783IqUu+5OPXTthOhBM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BqF/wucvg1zioZpAZksxagZHdAHBInmwzvjVNd5ucW/5jLtr1Wsc4t1qadg9CS4b+
-	 zC/1DO4zuU/yUqt6xkUgOQK+98CftRAK7eg+FdqxXZzPELVOHDgnUWfNyP7uzaq7Tx
-	 npdFtSRP0ziTVJmC8e4y3lA1AJIQE9pqQa94oQnk=
+	b=vVIOxsKmYbTi/3pVGXpzjytGkxzHy9gJQX7k9NEMP39oHkZ2gXKxFdxMqXbZfLx1A
+	 1+JEqwIHYNYROT7X1j0+86MJz40r0uhgi9cq2i3x5+VSn7Lst9jdpZGamw2EIjdfBw
+	 ZMlAKdFzRSrQjN4ROp2tUnQVcCz6gy+qhSeNbQns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405322AbfHHTPi (ORCPT
+        id S2404496AbfHHTGn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:15:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40406 "EHLO mail.kernel.org"
+        Thu, 8 Aug 2019 15:06:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404515AbfHHTGs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 15:06:48 -0400
+        id S2404475AbfHHTGi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 15:06:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5917421882;
-        Thu,  8 Aug 2019 19:06:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1083E214C6;
+        Thu,  8 Aug 2019 19:06:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565291207;
-        bh=P/54bSpCJpUwxgQUnW/OJbhwuoF+50j/V8zB5zTi/SE=;
+        s=default; t=1565291197;
+        bh=dQ6PS1WCEpBzXhZD5UEH0K4K783IqUu+5OPXTthOhBM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OgUbf2AGeSLivJt9yK/omvmAFz1S7xsDHWhatun/nR247jCIBaNL0mrvB4OZf3WA1
-         YbOxXulR9EIuMXzZrQFdWV0L2dq16h/xxsnJjI+ru4GpBvSJaHRBMjprSxQWEYv0ZO
-         HvjzCKwLhKNB9DjUwEYK8C1U0dLoc3Uq8V+QY0hY=
+        b=oc0l8xSVHmIeW/ilxiDtOrbn/hHN/j//va8J4GvDMOvjFBTy2swsxTGkUQnZtZcE0
+         tC+DiKaf4KX+8j1X0yMUItpslCaZxZkiBTGtJG3fhJ+k3xv785mQ0rLMS3DwkW4BeT
+         u8219dxC/RRlGNTDuNahZ0/pHUfnxr/Ehs+8lBfo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Schwab <schwab@suse.de>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 27/56] net: phy: mscc: initialize stats array
-Date:   Thu,  8 Aug 2019 21:04:53 +0200
-Message-Id: <20190808190454.020579894@linuxfoundation.org>
+        stable@vger.kernel.org, Parav Pandit <parav@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Mark Zhang <markz@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.2 23/56] net/mlx5: Use reversed order when unregister devices
+Date:   Thu,  8 Aug 2019 21:04:49 +0200
+Message-Id: <20190808190453.823001128@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190808190452.867062037@linuxfoundation.org>
 References: <20190808190452.867062037@linuxfoundation.org>
@@ -60,69 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Schwab <schwab@suse.de>
+From: Mark Zhang <markz@mellanox.com>
 
-[ Upstream commit f972037e71246c5e0916eef835174d58ffc517e4 ]
+[ Upstream commit 08aa5e7da6bce1a1963f63cf32c2e7ad434ad578 ]
 
-The memory allocated for the stats array may contain arbitrary data.
+When lag is active, which is controlled by the bonded mlx5e netdev, mlx5
+interface unregestering must happen in the reverse order where rdma is
+unregistered (unloaded) first, to guarantee all references to the lag
+context in hardware is removed, then remove mlx5e netdev interface which
+will cleanup the lag context from hardware.
 
-Fixes: e4f9ba642f0b ("net: phy: mscc: add support for VSC8514 PHY.")
-Fixes: 00d70d8e0e78 ("net: phy: mscc: add support for VSC8574 PHY")
-Fixes: a5afc1678044 ("net: phy: mscc: add support for VSC8584 PHY")
-Fixes: f76178dc5218 ("net: phy: mscc: add ethtool statistics counters")
-Signed-off-by: Andreas Schwab <schwab@suse.de>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Without this fix during destroy of LAG interface, we observed following
+errors:
+ * mlx5_cmd_check:752:(pid 12556): DESTROY_LAG(0x843) op_mod(0x0) failed,
+   status bad parameter(0x3), syndrome (0xe4ac33)
+ * mlx5_cmd_check:752:(pid 12556): DESTROY_LAG(0x843) op_mod(0x0) failed,
+   status bad parameter(0x3), syndrome (0xa5aee8).
+
+Fixes: a31208b1e11d ("net/mlx5_core: New init and exit flow for mlx5_core")
+Reviewed-by: Parav Pandit <parav@mellanox.com>
+Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Mark Zhang <markz@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/phy/mscc.c |   16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/dev.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/phy/mscc.c
-+++ b/drivers/net/phy/mscc.c
-@@ -2226,8 +2226,8 @@ static int vsc8514_probe(struct phy_devi
- 	vsc8531->supp_led_modes = VSC85XX_SUPP_LED_MODES;
- 	vsc8531->hw_stats = vsc85xx_hw_stats;
- 	vsc8531->nstats = ARRAY_SIZE(vsc85xx_hw_stats);
--	vsc8531->stats = devm_kmalloc_array(&phydev->mdio.dev, vsc8531->nstats,
--					    sizeof(u64), GFP_KERNEL);
-+	vsc8531->stats = devm_kcalloc(&phydev->mdio.dev, vsc8531->nstats,
-+				      sizeof(u64), GFP_KERNEL);
- 	if (!vsc8531->stats)
- 		return -ENOMEM;
+--- a/drivers/net/ethernet/mellanox/mlx5/core/dev.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/dev.c
+@@ -213,7 +213,7 @@ void mlx5_unregister_device(struct mlx5_
+ 	struct mlx5_interface *intf;
  
-@@ -2251,8 +2251,8 @@ static int vsc8574_probe(struct phy_devi
- 	vsc8531->supp_led_modes = VSC8584_SUPP_LED_MODES;
- 	vsc8531->hw_stats = vsc8584_hw_stats;
- 	vsc8531->nstats = ARRAY_SIZE(vsc8584_hw_stats);
--	vsc8531->stats = devm_kmalloc_array(&phydev->mdio.dev, vsc8531->nstats,
--					    sizeof(u64), GFP_KERNEL);
-+	vsc8531->stats = devm_kcalloc(&phydev->mdio.dev, vsc8531->nstats,
-+				      sizeof(u64), GFP_KERNEL);
- 	if (!vsc8531->stats)
- 		return -ENOMEM;
- 
-@@ -2281,8 +2281,8 @@ static int vsc8584_probe(struct phy_devi
- 	vsc8531->supp_led_modes = VSC8584_SUPP_LED_MODES;
- 	vsc8531->hw_stats = vsc8584_hw_stats;
- 	vsc8531->nstats = ARRAY_SIZE(vsc8584_hw_stats);
--	vsc8531->stats = devm_kmalloc_array(&phydev->mdio.dev, vsc8531->nstats,
--					    sizeof(u64), GFP_KERNEL);
-+	vsc8531->stats = devm_kcalloc(&phydev->mdio.dev, vsc8531->nstats,
-+				      sizeof(u64), GFP_KERNEL);
- 	if (!vsc8531->stats)
- 		return -ENOMEM;
- 
-@@ -2311,8 +2311,8 @@ static int vsc85xx_probe(struct phy_devi
- 	vsc8531->supp_led_modes = VSC85XX_SUPP_LED_MODES;
- 	vsc8531->hw_stats = vsc85xx_hw_stats;
- 	vsc8531->nstats = ARRAY_SIZE(vsc85xx_hw_stats);
--	vsc8531->stats = devm_kmalloc_array(&phydev->mdio.dev, vsc8531->nstats,
--					    sizeof(u64), GFP_KERNEL);
-+	vsc8531->stats = devm_kcalloc(&phydev->mdio.dev, vsc8531->nstats,
-+				      sizeof(u64), GFP_KERNEL);
- 	if (!vsc8531->stats)
- 		return -ENOMEM;
- 
+ 	mutex_lock(&mlx5_intf_mutex);
+-	list_for_each_entry(intf, &intf_list, list)
++	list_for_each_entry_reverse(intf, &intf_list, list)
+ 		mlx5_remove_device(intf, priv);
+ 	list_del(&priv->dev_list);
+ 	mutex_unlock(&mlx5_intf_mutex);
 
 
