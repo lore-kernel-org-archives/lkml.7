@@ -2,118 +2,193 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40960C32754
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:46:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 329EAC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17CA62171F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:46:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565282809;
-	bh=RAl1xiUcOkDuJBXujx8kYIktqB78d1Rw5+L/ibAySQ0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=BpMrpuNoBLU2LJpnEM0b4E1CkiM/ECFHoTu1v81/dAWbG1zdXUiJf/TiAjmOoIxAB
-	 QHc5xk4a9Zx8uQr9mcYztC7gRNfNziL2zpGr4k1wGf8nHKzINVIWHskga9k/PNsl3+
-	 c7DTsilFIY/0uBNBJROFCrFX9VmqgnIRm4bM5Uqc=
+	by mail.kernel.org (Postfix) with ESMTP id 057E421881
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:48:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404121AbfHHQqs (ORCPT
+        id S2404130AbfHHQsH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 12:46:48 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44567 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728289AbfHHQqr (ORCPT
+        Thu, 8 Aug 2019 12:48:07 -0400
+Received: from mail-ot1-f72.google.com ([209.85.210.72]:43683 "EHLO
+        mail-ot1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728289AbfHHQsG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 12:46:47 -0400
-Received: by mail-ot1-f68.google.com with SMTP id b7so70985605otl.11;
-        Thu, 08 Aug 2019 09:46:46 -0700 (PDT)
+        Thu, 8 Aug 2019 12:48:06 -0400
+Received: by mail-ot1-f72.google.com with SMTP id r2so62999871oti.10
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 09:48:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Gg6fUCiCEsxLN5L/xPRw12xlRpWyI1qROMx6U7rtlCU=;
-        b=ZeCWRsYvjTdCv/7V2ObGrr0K/NhPsbm8h+ICjP9pQ0Eh1QvDIiqnrTv1hih9AEllAm
-         R6vsMSBNVYELGWQnTtRMc850Xhb8J1EMIab+hvnIhnffqL/Cj6F+nibcuPwGFlqID6QI
-         BT4goBHxwTg50y47LL4EZUvIdG8/5QVoUPW1QcSatGj2ZURsYZYArbGg5nFj3di8BOTd
-         /Qn4By2OJFHGrMvcvVM+1jvPgABQgFURACVmJ2CuxZpFcpXGcxU3KXotHPFhwYRuOzvN
-         XPqR8oDsvLfJwthaUahdHIU8+7qMdwGlSdOS8YWKHgTMTlqkciKq+/nN0qrEyoz3yQf+
-         X5Qg==
-X-Gm-Message-State: APjAAAVP28900ZFLX/SoLA2a/UFh4CvwC94YVxV6/oSdfYJdaeDftZXX
-        M6oNZq0d+EhiW/bSKqKwHFh1wO83SU3khqBUCQ4=
-X-Google-Smtp-Source: APXvYqw/qRt2BmPlOiyuS5ZiKDdODeZAGYBGQnpdm2kcwkHNvMgf0/0HJVGQTjjEPvGqmXMzB00LhwTV0V7RwBQsYHs=
-X-Received: by 2002:a9d:6b96:: with SMTP id b22mr14373474otq.262.1565282806529;
- Thu, 08 Aug 2019 09:46:46 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=aZTT0yWwCLvofMIk/vDC+UDU3g6pGvtYwgnyGAaloQg=;
+        b=OoNP5lwBBDIOh3qpDFOIWNVKlk/EQ/n/RzgdSKSXFHimiCFALUJPdZ1vkhLyRcOP4Q
+         c4f0zOnSWv4Pph/wrapfwzZtW3GCV4DRKaNEZI1ZYHdW0s8QfL8qo6BHZxXB5WDT/R9o
+         y0AXxqBx6A2fYiqfCM4/9kif+2TW1W31Dzn7nqhyeWrzuELHUdpjYY72wLV/A5k6CwfI
+         SmETTxDT8Cszo2HciecwHM/cbNG0DVBdPqsqHEq804XbU8D641BWTeuUhIG2St9tgZWi
+         mou2LuT72/N5AfqceL82ncokyVV/0ApnbJ/jn+4mwnADJ0GLEUoMasaY4HJfH7QgXECX
+         oC3A==
+X-Gm-Message-State: APjAAAVygGnldipFlxPckNGQGrvRcf9VQg6F76z4kLmAYjgfol04E6fH
+        2cSHVWkTigt3sHVIPeK4mlFWfJ6mRUpwcLFO20BWyI0GnDtk
+X-Google-Smtp-Source: APXvYqytw9HqCH1DBUw67wrUkqUU8fJEGDnt8vZR6W2gnl4+Ka54Jb73f78Rhe/UFgBE7w2DUO6m9ZbJFc8S+UCKUKlRtodfp82z
 MIME-Version: 1.0
-References: <70fce19e43bb825c3b2546e1211d262a59ae7378.1565161495.git.viresh.kumar@linaro.org>
- <e789eceae3f32a66fff923daeb85b33b88f21fe1.1565161495.git.viresh.kumar@linaro.org>
- <000601d54e05$e93d0130$bbb70390$@net>
-In-Reply-To: <000601d54e05$e93d0130$bbb70390$@net>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 8 Aug 2019 18:46:35 +0200
-Message-ID: <CAJZ5v0hnMXUqJP62t1LYb0TRsi-HSg+Zk+DZGLr+5Yd=_wNBNQ@mail.gmail.com>
-Subject: Re: [PATCH V4 2/2] cpufreq: intel_pstate: Implement QoS supported
- freq constraints
-To:     Doug Smythies <dsmythies@telus.net>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rafael Wysocki <rjw@rjwysocki.net>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Len Brown <lenb@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a02:b713:: with SMTP id g19mr10752238jam.77.1565282885836;
+ Thu, 08 Aug 2019 09:48:05 -0700 (PDT)
+Date:   Thu, 08 Aug 2019 09:48:05 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000062292b058f9dd282@google.com>
+Subject: KASAN: use-after-free Read in __blkdev_direct_IO
+From:   syzbot <syzbot+a1fc36a4d12501564d34@syzkaller.appspotmail.com>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-, On Thu, Aug 8, 2019 at 6:25 PM Doug Smythies <dsmythies@telus.net> wrote:
->
-> On 2019.08.07 00:06 Viresh Kumar wrote:
->
-> Thanks for your work on this.
->
-> > Intel pstate driver exposes min_perf_pct and max_perf_pct sysfs files,
-> > which can be used to force a limit on the min/max P state of the driver.
-> > Though these files eventually control the min/max frequencies that the
-> > CPUs will run at, they don't make a change to policy->min/max values.
-> >
-> > When the values of these files are changed (in passive mode of the
-> > driver), it leads to calling ->limits() callback of the cpufreq
-> > governors, like schedutil. On a call to it the governors shall
-> > forcefully update the frequency to come within the limits. Since the
-> > limits, i.e.  policy->min/max, aren't updated by the driver, the
-> > governors fails to get the target freq within limit and sometimes aborts
-> > the update believing that the frequency is already set to the target
-> > value.
-> >
-> > This patch implements the QoS supported frequency constraints to update
-> > policy->min/max values whenever min_perf_pct or max_perf_pct files are
-> > updated. This is only done for the passive mode as of now, as the driver
-> > is already working fine in active mode.
-> >
-> > Fixes: ecd288429126 ("cpufreq: schedutil: Don't set next_freq to UINT_MAX")
-> > Reported-by: Doug Smythies <dsmythies@telus.net>
-> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
->
-> Tested by: Doug Smythies <dsmythies@telus.net>
-> Thermald seems to now be working O.K. for all the governors.
->
-> I do note that if one sets
-> /sys/devices/system/cpu/cpufreq/policy*/scaling_max_freq
-> It seems to override subsequent attempts via
-> /sys/devices/system/cpu/intel_pstate/max_perf_pct.
-> Myself, I find this confusing.
->
-> So the question becomes which one is the "master"?
+Hello,
 
-For the min freq limit, the max of (scaling_min_freq, re-scaled
-min_perf_pct) should be used.
+syzbot found the following crash on:
 
-For the max freq limit, the min of (scaling_max_freq, re-scaled
-max_perf_pct) should be used.
+HEAD commit:    629f8205 Merge tag 'for-linus-20190730' of git://git.kerne..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=13e50eb4600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e397351d2615e10
+dashboard link: https://syzkaller.appspot.com/bug?extid=a1fc36a4d12501564d34
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+80fee25776c2fb61e74c1ecb1a523375c2500b69)
 
-Overall, the setting that "wins" is the one that causes the set of
-available frequencies to be narrower.
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+a1fc36a4d12501564d34@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: use-after-free in __blkdev_direct_IO+0xb3d/0x1310  
+fs/block_dev.c:468
+Read of size 4 at addr ffff888037bc2028 by task syz-executor.0/5655
+
+CPU: 0 PID: 5655 Comm: syz-executor.0 Not tainted 5.3.0-rc2+ #56
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x1d8/0x2f8 lib/dump_stack.c:113
+  print_address_description+0x75/0x5b0 mm/kasan/report.c:351
+  __kasan_report+0x14b/0x1c0 mm/kasan/report.c:482
+  kasan_report+0x26/0x50 mm/kasan/common.c:612
+  __asan_report_load4_noabort+0x14/0x20 mm/kasan/generic_report.c:131
+  __blkdev_direct_IO+0xb3d/0x1310 fs/block_dev.c:468
+  blkdev_direct_IO+0xbe/0xd0 fs/block_dev.c:518
+  generic_file_direct_write+0x22e/0x440 mm/filemap.c:3230
+  __generic_file_write_iter+0x2af/0x520 mm/filemap.c:3413
+  blkdev_write_iter+0x2f2/0x420 fs/block_dev.c:1993
+  ? 0xffffffff81000000
+  call_write_iter include/linux/fs.h:1870 [inline]
+  new_sync_write fs/read_write.c:483 [inline]
+  __vfs_write+0x617/0x7d0 fs/read_write.c:496
+  vfs_write+0x275/0x590 fs/read_write.c:558
+  ksys_write+0x16b/0x2a0 fs/read_write.c:611
+  __do_sys_write fs/read_write.c:623 [inline]
+  __se_sys_write fs/read_write.c:620 [inline]
+  __x64_sys_write+0x7b/0x90 fs/read_write.c:620
+  do_syscall_64+0xfe/0x140 arch/x86/entry/common.c:296
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x459829
+Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f56f3b24c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459829
+RDX: 0000000052698b21 RSI: 0000000020000000 RDI: 0000000000000003
+RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f56f3b256d4
+R13: 00000000004c5db7 R14: 00000000004e00e0 R15: 00000000ffffffff
+
+Allocated by task 5655:
+  save_stack mm/kasan/common.c:69 [inline]
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_kmalloc+0x11c/0x1b0 mm/kasan/common.c:487
+  kasan_slab_alloc+0xf/0x20 mm/kasan/common.c:495
+  slab_post_alloc_hook mm/slab.h:520 [inline]
+  slab_alloc mm/slab.c:3319 [inline]
+  kmem_cache_alloc+0x1f5/0x2e0 mm/slab.c:3483
+  mempool_alloc_slab+0x4d/0x70 mm/mempool.c:513
+  mempool_alloc+0x15f/0x6c0 mm/mempool.c:393
+  bio_alloc_bioset+0x210/0x670 block/bio.c:477
+  bio_alloc include/linux/bio.h:400 [inline]
+  __blkdev_direct_IO+0xa29/0x1310 fs/block_dev.c:470
+  blkdev_direct_IO+0xbe/0xd0 fs/block_dev.c:518
+  generic_file_direct_write+0x22e/0x440 mm/filemap.c:3230
+  __generic_file_write_iter+0x2af/0x520 mm/filemap.c:3413
+  blkdev_write_iter+0x2f2/0x420 fs/block_dev.c:1993
+  call_write_iter include/linux/fs.h:1870 [inline]
+  new_sync_write fs/read_write.c:483 [inline]
+  __vfs_write+0x617/0x7d0 fs/read_write.c:496
+  vfs_write+0x275/0x590 fs/read_write.c:558
+  ksys_write+0x16b/0x2a0 fs/read_write.c:611
+  __do_sys_write fs/read_write.c:623 [inline]
+  __se_sys_write fs/read_write.c:620 [inline]
+  __x64_sys_write+0x7b/0x90 fs/read_write.c:620
+  do_syscall_64+0xfe/0x140 arch/x86/entry/common.c:296
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 9:
+  save_stack mm/kasan/common.c:69 [inline]
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_slab_free+0x12a/0x1e0 mm/kasan/common.c:449
+  kasan_slab_free+0xe/0x10 mm/kasan/common.c:457
+  __cache_free mm/slab.c:3425 [inline]
+  kmem_cache_free+0x81/0xf0 mm/slab.c:3693
+  mempool_free_slab+0x1d/0x30 mm/mempool.c:520
+  mempool_free+0xd5/0x350 mm/mempool.c:502
+  bio_put+0x35a/0x420 block/bio.c:253
+  blkdev_bio_end_io+0x336/0x430 fs/block_dev.c:333
+  bio_endio+0x4ff/0x570 block/bio.c:1830
+  req_bio_endio block/blk-core.c:239 [inline]
+  blk_update_request+0x385/0xf80 block/blk-core.c:1424
+  blk_mq_end_request+0x42/0x80 block/blk-mq.c:557
+  blk_flush_complete_seq+0x5e1/0xd10 block/blk-flush.c:196
+  flush_end_io+0x4d2/0x670 block/blk-flush.c:237
+  __blk_mq_end_request+0x38a/0x410 block/blk-mq.c:548
+  blk_mq_end_request+0x55/0x80 block/blk-mq.c:559
+  lo_complete_rq+0x13b/0x270 drivers/block/loop.c:485
+  blk_done_softirq+0x362/0x3e0 block/blk-softirq.c:37
+  __do_softirq+0x333/0x7c4 arch/x86/include/asm/paravirt.h:778
+
+The buggy address belongs to the object at ffff888037bc2000
+  which belongs to the cache bio-0 of size 192
+The buggy address is located 40 bytes inside of
+  192-byte region [ffff888037bc2000, ffff888037bc20c0)
+The buggy address belongs to the page:
+page:ffffea0000def080 refcount:1 mapcount:0 mapping:ffff88821ac91540  
+index:0x0
+flags: 0x1fffc0000000200(slab)
+raw: 01fffc0000000200 ffffea000167a2c8 ffffea0001e21ac8 ffff88821ac91540
+raw: 0000000000000000 ffff888037bc2000 0000000100000010 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff888037bc1f00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+  ffff888037bc1f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+> ffff888037bc2000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                   ^
+  ffff888037bc2080: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+  ffff888037bc2100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
