@@ -2,143 +2,92 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D8CCC32754
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 18:18:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD13C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 18:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7C1021743
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 18:18:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Ne1ScLdQ"
+	by mail.kernel.org (Postfix) with ESMTP id 79AD7217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 18:19:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390216AbfHHSSx (ORCPT
+        id S2390221AbfHHSTH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 14:18:53 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:14243 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731038AbfHHSSw (ORCPT
+        Thu, 8 Aug 2019 14:19:07 -0400
+Received: from outbound.smtp.vt.edu ([198.82.183.121]:52256 "EHLO
+        omr1.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731038AbfHHSTE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 14:18:52 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d4c678b0000>; Thu, 08 Aug 2019 11:18:52 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 08 Aug 2019 11:18:50 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 08 Aug 2019 11:18:50 -0700
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 8 Aug
- 2019 18:18:49 +0000
-Subject: Re: [PATCH 00/34] put_user_pages(): miscellaneous call sites
-To:     "Weiny, Ira" <ira.weiny@intel.com>,
-        Michal Hocko <mhocko@kernel.org>
-CC:     Jan Kara <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "devel@lists.orangefs.org" <devel@lists.orangefs.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-rpi-kernel@lists.infradead.org" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
-        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
-References: <20190802022005.5117-1-jhubbard@nvidia.com>
- <20190802091244.GD6461@dhcp22.suse.cz>
- <20190802124146.GL25064@quack2.suse.cz>
- <20190802142443.GB5597@bombadil.infradead.org>
- <20190802145227.GQ25064@quack2.suse.cz>
- <076e7826-67a5-4829-aae2-2b90f302cebd@nvidia.com>
- <20190807083726.GA14658@quack2.suse.cz>
- <20190807084649.GQ11812@dhcp22.suse.cz>
- <20190808023637.GA1508@iweiny-DESK2.sc.intel.com>
- <e648a7f3-6a1b-c9ea-1121-7ab69b6b173d@nvidia.com>
- <2807E5FD2F6FDA4886F6618EAC48510E79E79644@CRSMSX101.amr.corp.intel.com>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <b1b33292-d929-f9ff-dd75-02828228f35e@nvidia.com>
-Date:   Thu, 8 Aug 2019 11:18:49 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <2807E5FD2F6FDA4886F6618EAC48510E79E79644@CRSMSX101.amr.corp.intel.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1565288332; bh=JXH0z+PATu5ChINAttu0xw8NI7VYrjVhdTogRmB3Q5s=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=Ne1ScLdQ+tu5qOaISiLlk/MzD+D0tWGCUEcW8KATp/99KORz80qhTvSS0MA86k71v
-         1gG74XZNfpVRbFXyQsXs+wV66Ly/i7Omeym8buU22OwtUh/B674iBCJPOoXFe5hxmV
-         1e7OUBsDbdwXkl/h4Pjx1eOWT4qAVANZ24jESe93raeMkGLORABLpzcfJ+l/YUvFr/
-         bUBCYBUk9JXLyxcXRRJ6Qo5DLPNTbuOY1/JVx8JLOWf78tx+O5w4P2ZxYGmo4q53CG
-         aum+FjJWUhUsxhssDMyUyjXEHRPMBfcGtXYtpdJqmbhfodN4x0QDM6mw3fwyew2GF4
-         p5OXETBP5SbRg==
+        Thu, 8 Aug 2019 14:19:04 -0400
+Received: from mr2.cc.vt.edu (mr2.cc.ipv6.vt.edu [IPv6:2607:b400:92:8400:0:90:e077:bf22])
+        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x78IJ30D025399
+        for <linux-kernel@vger.kernel.org>; Thu, 8 Aug 2019 14:19:03 -0400
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
+        by mr2.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x78IIwmq028748
+        for <linux-kernel@vger.kernel.org>; Thu, 8 Aug 2019 14:19:03 -0400
+Received: by mail-qt1-f197.google.com with SMTP id j10so4136530qtl.23
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 11:19:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:mime-version:date
+         :message-id;
+        bh=BKPbzs/c+/DyQBCxHuXukcW7gypCNR/lx2Nn+xY4yL8=;
+        b=J25JnZb2MspKyuSC4TfsQf0bnD7US0EYBk+d00r/N8LV5X64ru6SStkU7GQq8PFzcs
+         uUGsUVZyrXTymuSCIyaUi95xwQITXke8nQLbRxPV1VksClIcQfolBhiIp7b0HPLlxMzH
+         6N0NE5LhPpzFu7kBSSdl96cALLW2oVAsBJv1/Pia6yV+T2pi3GZDr0/ohdVQa8d9xWh6
+         giPUGHg/kfKYSETt4hFkl6J96PB9KYAHK3sl41hnKCT6GzEWuAUeOTg3LUt3v7DDnNFL
+         NPyLni3IHLpmLyb3V8sY7PSSyybWyBo1w0Rky5xqvELlaDXoe+9lwcgR04nTVForJAkl
+         bEWQ==
+X-Gm-Message-State: APjAAAVQHpmbKHisGOdjQ0hXekWgrSwWBe4Rl8LcTrlvKQy2H78WqVsG
+        bEelD+6xYmYevvXpwpoGalJYAAISDY/tVDkuMSvxuA1nGNH4mvJnjtZ2OGqQwtrpB7bH+Ani8DX
+        IYe7nC0rXiRHxh5geJpAn9rQQRl3bs+A7sYM=
+X-Received: by 2002:ac8:4117:: with SMTP id q23mr5687989qtl.305.1565288337932;
+        Thu, 08 Aug 2019 11:18:57 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyyvRNY7cu8Qm3FAbdy+PiYVLMMtHKLtwbXgE9JDuk2/NJtSyx0DIcScHnxk8317Hz/bAT/zw==
+X-Received: by 2002:ac8:4117:: with SMTP id q23mr5687975qtl.305.1565288337656;
+        Thu, 08 Aug 2019 11:18:57 -0700 (PDT)
+Received: from turing-police ([2601:5c0:c001:4341::359])
+        by smtp.gmail.com with ESMTPSA id j78sm42577980qke.102.2019.08.08.11.18.56
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 08 Aug 2019 11:18:56 -0700 (PDT)
+From:   "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <valdis.kletnieks@vt.edu>
+X-Google-Original-From: "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <Valdis.Kletnieks@vt.edu>
+X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>
+cc:     linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: [PATCH] arch/x86/kernel/cpu/common.c - add proper prototypes
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Date:   Thu, 08 Aug 2019 14:18:55 -0400
+Message-ID: <131213.1565288335@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/8/19 9:25 AM, Weiny, Ira wrote:
->>
->> On 8/7/19 7:36 PM, Ira Weiny wrote:
->>> On Wed, Aug 07, 2019 at 10:46:49AM +0200, Michal Hocko wrote:
->>>> On Wed 07-08-19 10:37:26, Jan Kara wrote:
->>>>> On Fri 02-08-19 12:14:09, John Hubbard wrote:
->>>>>> On 8/2/19 7:52 AM, Jan Kara wrote:
->>>>>>> On Fri 02-08-19 07:24:43, Matthew Wilcox wrote:
->>>>>>>> On Fri, Aug 02, 2019 at 02:41:46PM +0200, Jan Kara wrote:
->>>>>>>>> On Fri 02-08-19 11:12:44, Michal Hocko wrote:
->>>>>>>>>> On Thu 01-08-19 19:19:31, john.hubbard@gmail.com wrote:
->>   [...]
-> Yep I can do this.  I did not realize that Andrew had accepted any of this work.  I'll check out his tree.  But I don't think he is going to accept this series through his tree.  So what is the ETA on that landing in Linus' tree?
-> 
+When building withW=1, we get a warning..
 
-I'd expect it to go into 5.4, according to my understanding of how
-the release cycles are arranged.
+  CC      arch/x86/kernel/cpu/common.o
+arch/x86/kernel/cpu/common.c:1952:6: warning: no previous prototype for 'arch_smt_update' [-Wmissing-prototypes]
+ 1952 | void arch_smt_update(void)
+      |      ^~~~~~~~~~~~~~~
 
+Provide the proper #include so the prototype is found.
 
-> To that point I'm still not sure who would take all this as I am now touching mm, procfs, rdma, ext4, and xfs.
-> 
-> I just thought I would chime in with my progress because I'm to a point where things are working and so I can submit the code but I'm not sure what I can/should depend on landing...  Also, now that 0day has run overnight it has found issues with this rebase so I need to clean those up...  Perhaps I will base on Andrew's tree prior to doing that...
+Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
 
-I'm certainly not the right person to answer, but in spite of that, I'd think
-Andrew's tree is a reasonable place for it. Sort of.
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index e0489d2860d3..b8ed6d8e55df 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -14,6 +14,7 @@
+ #include <linux/sched/mm.h>
+ #include <linux/sched/clock.h>
+ #include <linux/sched/task.h>
++#include <linux/sched/smt.h>
+ #include <linux/init.h>
+ #include <linux/kprobes.h>
+ #include <linux/kgdb.h>
 
-thanks,
--- 
-John Hubbard
-NVIDIA
