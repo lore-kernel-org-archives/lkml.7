@@ -2,68 +2,92 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACDE3C32754
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C63A9C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:35:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83DD9214C6
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:33:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565271199;
-	bh=ItdyOog//IGZbQXPEDS/rq8kS831yi3bvAZtUvSenv8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ueUAgJfkXya8G/8/928FInZeG6WQzWq5PHxw4ieEiJQpThcallUt49u73ppFNO7l2
-	 ndjaDjDX932MKwIe3VqGjirKleMmzGs0SpNg/9Zqo8pJkrF0j6VNzk6fHD33/kpxfF
-	 APc5faO/dJgXcCaNmwn5M+tvH6Zwe//y49Wi4Peo=
+	by mail.kernel.org (Postfix) with ESMTP id 8D86321479
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:35:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="GyfDnfPt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733166AbfHHNdS (ORCPT
+        id S1733150AbfHHNfC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 09:33:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34516 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733087AbfHHNdS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 09:33:18 -0400
-Received: from localhost (unknown [122.178.245.201])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEA1021479;
-        Thu,  8 Aug 2019 13:33:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565271197;
-        bh=ItdyOog//IGZbQXPEDS/rq8kS831yi3bvAZtUvSenv8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=c46Um6Va7v3CnH2hgePtURNEK1/WTamfNLKJyBSYedEYWEpP7GIVXXbfhIceURtJz
-         roB1fS8vKETVoGDhCU7XkpGSH6kdk8JUdHiMNF56bfum4v0LcMUUUZx7bOR4FzrIqc
-         bs8PZJIOc/5Lu9mocbm8zL4YHxslJ7pnEsj4O0lg=
-Date:   Thu, 8 Aug 2019 19:02:06 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     dmaengine@vger.kernel.org, Stefan Agner <stefan@agner.ch>,
-        Chris Healy <cphealy@gmail.com>, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: fsl-edma: implement .device_synchronize
- callback
-Message-ID: <20190808133206.GB12733@vkoul-mobl.Dlink>
-References: <20190731173659.14778-1-andrew.smirnov@gmail.com>
+        Thu, 8 Aug 2019 09:35:02 -0400
+Received: from mail-pg1-f172.google.com ([209.85.215.172]:36346 "EHLO
+        mail-pg1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732982AbfHHNfC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 09:35:02 -0400
+Received: by mail-pg1-f172.google.com with SMTP id l21so44083182pgm.3
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 06:35:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=GpmhOOhkjZn/xPUlAc0Il+1MLsQaxLxLhCEUVCkaXcY=;
+        b=GyfDnfPtZ50Yp5OLwkB9MAp59zkRYwuo2uowH34HWERv68pXqjexeZf/LiildrlfkG
+         SUWFQBm4VtFWSeVThF6R2fdBrOjnmJAwD3HBW+48GDXr4kpvnF44jBRpLCS4kBPr3YD0
+         HPWmUbWFP+ndfXLRh200lCvjlg5g54sN+Ok12oavsDAKYb8fxTfesCaRtW3zQO0beCo4
+         VDEcxrZWX9fC0vkkhDspzw9VWnSb8UoOUpZQ/7d/4ouPmgvHPNrPIIpDWidBUOuiL/gT
+         2SzOYPj/ggMeTsVyTgO+zGHSIDa+vhdvlUaFG7NFFMMh235WXPtAtUxr6RdzZP7/9J2o
+         eVUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=GpmhOOhkjZn/xPUlAc0Il+1MLsQaxLxLhCEUVCkaXcY=;
+        b=hDzzpTdkD6TOe/sy9WA5XCmk1T+Q6/USHyczPqp5G/ITunUXnz4wC+1sq2/A6oVE+q
+         Lt7w0E9dSSw0mMWmcXVihCBtpFT7DCCrQ9POe3CAxuYA8JKHVqQdah8ks5j+UlwIFOFl
+         4hSFL4wwgP3CULhgbNDNAs+tPVm2b78Vg/Hpu/9TeSVymMTZy+nkpJfmPEsbZi0Ob+Fz
+         KvpPouweHRjAKHlsRI+jgHAfoYZr3vD9p29jR3v7H4fCTBiqiue+3ExZ/+tFmMPvMn7N
+         rRG3qG6H+4j673GcGo0P2IV8+TwRM1t2jsxo2PJJ0rDPnjhx4mYzOdGEQAE9M82tKvRb
+         uNyg==
+X-Gm-Message-State: APjAAAXY9YSNXR3RrcUX8A4FOCdDxyjA9stijxANlMFJZvBQA0vl+oLG
+        idx/0h6IcBXhMK/DpbcvpvYkc/yis/FmOA==
+X-Google-Smtp-Source: APXvYqwuGRL9zpfvmjxOsypOQVucm/W3gHDymvkqRK/j43viONqdygL9QT+paQgK/bWk97ALxnOYMA==
+X-Received: by 2002:a63:6a81:: with SMTP id f123mr12979749pgc.348.1565271301170;
+        Thu, 08 Aug 2019 06:35:01 -0700 (PDT)
+Received: from ?IPv6:2605:e000:100e:83a1:186c:3a47:dc97:3ed1? ([2605:e000:100e:83a1:186c:3a47:dc97:3ed1])
+        by smtp.gmail.com with ESMTPSA id f19sm142886966pfk.180.2019.08.08.06.34.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 08 Aug 2019 06:35:00 -0700 (PDT)
+Subject: Re: [PATCH -next] lightnvm: remove set but not used variables
+ 'data_len' and 'rq_len'
+To:     YueHaibing <yuehaibing@huawei.com>, mb@lightnvm.io,
+        hans@owltronix.com, hch@lst.de
+Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
+References: <20190807131847.62412-1-yuehaibing@huawei.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <93b23b81-cc4e-4008-cffe-38f87da11481@kernel.dk>
+Date:   Thu, 8 Aug 2019 06:34:59 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190731173659.14778-1-andrew.smirnov@gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190807131847.62412-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 31-07-19, 10:36, Andrey Smirnov wrote:
-> Implement .device_synchronize callback in order to be able to use
-> dmaengine_terminate_sync() and other primitives relying on said
-> callback.
+On 8/7/19 6:18 AM, YueHaibing wrote:
+> drivers/lightnvm/pblk-read.c: In function pblk_submit_read_gc:
+> drivers/lightnvm/pblk-read.c:423:6: warning: variable data_len set but not used [-Wunused-but-set-variable]
+> drivers/lightnvm/pblk-recovery.c: In function pblk_recov_scan_oob:
+> drivers/lightnvm/pblk-recovery.c:368:15: warning: variable rq_len set but not used [-Wunused-but-set-variable]
+> 
+> They are not used since commit 48e5da725581 ("lightnvm:
+> move metadata mapping to lower level driver")
 
-Applied, thanks
+Applied, thanks.
 
 -- 
-~Vinod
+Jens Axboe
+
