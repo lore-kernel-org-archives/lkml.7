@@ -2,220 +2,104 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B69C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:44:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCAC1C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:44:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 375A12171F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:44:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B33D72171F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:44:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kcWgpNxu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732561AbfHHMoD (ORCPT
+        id S1732592AbfHHMoM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 08:44:03 -0400
-Received: from mga03.intel.com ([134.134.136.65]:38983 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732254AbfHHMoD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 08:44:03 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Aug 2019 05:43:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,361,1559545200"; 
-   d="asc'?scan'208";a="326298207"
-Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
-  by orsmga004.jf.intel.com with ESMTP; 08 Aug 2019 05:43:34 -0700
-From:   Felipe Balbi <felipe.balbi@linux.intel.com>
-To:     John Stultz <john.stultz@linaro.org>,
-        Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-Cc:     "fei.yang\@intel.com" <fei.yang@intel.com>,
-        "andrzej.p\@collabora.com" <andrzej.p@collabora.com>,
-        "linux-usb\@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "gregkh\@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "stable\@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH v3] usb: dwc3: gadget: trb_dequeue is not updated properly
-In-Reply-To: <CALAqxLURCLHf3UJsMWKZUirDE9bWNYEhv-sKb01g7cTfCz5tOg@mail.gmail.com>
-References: <1563497183-7114-1-git-send-email-fei.yang@intel.com> <CY4PR1201MB003708ADAD79BF4FD24D3445AACB0@CY4PR1201MB0037.namprd12.prod.outlook.com> <CALAqxLURCLHf3UJsMWKZUirDE9bWNYEhv-sKb01g7cTfCz5tOg@mail.gmail.com>
-Date:   Thu, 08 Aug 2019 15:43:30 +0300
-Message-ID: <87k1bnn7yl.fsf@gmail.com>
+        Thu, 8 Aug 2019 08:44:12 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:42986 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728289AbfHHMoM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 08:44:12 -0400
+Received: by mail-ot1-f68.google.com with SMTP id l15so117963996otn.9
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 05:44:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AqsGEn8rizmWX1sBUGJyfxqTVFx/hWSppDVhCUizhj0=;
+        b=kcWgpNxuLsqlIeN+bHKdSpfWQbrD8oiKypyumjK3k5/kzTNxb3AQoURhbCK39Sd6Tc
+         P5rMBeJI3GTVUEdTjw2Ifwpj3l/nEom6Jgx4X+YL156jCBD00jAI0I2cKV8c6i+6qb8F
+         vNHLcXmorSzI7Dfa7JznfKLTfoeHKpwe8gofHHK4eBqZtBBm8VahkRj+Vh+D34k1eqJ4
+         tzNdqSp5Eh5zcOp37YskGxl5BSW6zxhLQk2spv9GWA6zxBMUhk7zN6Cdx0tPNVpwYqwM
+         HoFcYMwR+DLfqXHfC+UrFEtIa4lsexeV32EEKVgcaTpQqHC2YOY6sHkyE1s3I9dbiFpR
+         PiMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AqsGEn8rizmWX1sBUGJyfxqTVFx/hWSppDVhCUizhj0=;
+        b=FphR4Z9vXoPaqu2n5Q8w7nTMjpdB52G1dPvJMNvc2pfOgQO0A1ffh6u8o646aSgKuI
+         NXWlFF7PbLfJlXxr1MSLeoaieNUwDhPdJ/bE5T3uysv0eaYX9GcvWeCorAbLQaknhomw
+         d/96s6qDKMz1pJjujEmvhkwLBSx+MFbYNtuj2BJJC2jYkHqE4bpXaP1wrKPZeUPkieEC
+         Djbw1HkJioBl9dcJG97wH0uUJW39r2RigLYva9W957PLQa9zcTm3SRrehFG61hMbo5eo
+         TX/vUr2Rtu0488Bck8xOi/7gLT7X7lyRBhby/BxRqx48AnFkW2nkG90estS9qzl8tHSi
+         dv6w==
+X-Gm-Message-State: APjAAAVtuNURjTr49XMoFh5P5ZoiSF59IeT8EeeUzxPeTsTOFcCyuxPo
+        4mOpcv5SRCNd1egI3CYYx1dgvT3W7SN5sOmTFoAj7Q==
+X-Google-Smtp-Source: APXvYqz+ugusoV+l//v8/73/4cQcyL006ICoTXboeoL3XHGwudUfJ2JN8AStIr71ZDFwWW7X8uEwNh8LaUB2KOzjzis=
+X-Received: by 2002:a5d:80d6:: with SMTP id h22mr15137157ior.231.1565268250720;
+ Thu, 08 Aug 2019 05:44:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+References: <000000000000f365b6058f8b07ca@google.com> <Pine.LNX.4.44L0.1908071431050.1514-100000@iolanthe.rowland.org>
+ <CAAeHK+xh6h=HBEpwPB7g2=a07+zZ9zS5Cuk0Tpo_+70Bf5j9Tw@mail.gmail.com>
+In-Reply-To: <CAAeHK+xh6h=HBEpwPB7g2=a07+zZ9zS5Cuk0Tpo_+70Bf5j9Tw@mail.gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Thu, 8 Aug 2019 14:43:57 +0200
+Message-ID: <CACT4Y+ZD=YYvLER5jDAvCbw3kBKcNkQJEJN5yFc7O6aLaFORDg@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Read in device_release_driver_internal
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        syzbot <syzbot+1b2449b7b5dc240d107a@syzkaller.appspotmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        Oliver Neukum <oneukum@suse.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-
-Hi,
-
-John Stultz <john.stultz@linaro.org> writes:
-> On Thu, Jul 18, 2019 at 6:12 PM Thinh Nguyen <Thinh.Nguyen@synopsys.com> =
-wrote:
->> fei.yang@intel.com wrote:
->> > From: Fei Yang <fei.yang@intel.com>
->> >
->> > If scatter-gather operation is allowed, a large USB request is split i=
-nto
->> > multiple TRBs. These TRBs are chained up by setting DWC3_TRB_CTRL_CHN =
-bit
->> > except the last one which has DWC3_TRB_CTRL_IOC bit set instead.
->> > Since only the last TRB has IOC set for the whole USB request, the
->> > dwc3_gadget_ep_reclaim_trb_sg() gets called only once after the last T=
-RB
->> > completes and all the TRBs allocated for this request are supposed to =
-be
->> > reclaimed. However that is not what the current code does.
->> >
->> > dwc3_gadget_ep_reclaim_trb_sg() is trying to reclaim all the TRBs in t=
-he
->> > following for-loop,
->> >       for_each_sg(sg, s, pending, i) {
->> >               trb =3D &dep->trb_pool[dep->trb_dequeue];
->> >
->> >                 if (trb->ctrl & DWC3_TRB_CTRL_HWO)
->> >                         break;
->> >
->> >                 req->sg =3D sg_next(s);
->> >                 req->num_pending_sgs--;
->> >
->> >                 ret =3D dwc3_gadget_ep_reclaim_completed_trb(dep, req,
->> >                                 trb, event, status, chain);
->> >                 if (ret)
->> >                         break;
->> >         }
->> > but since the interrupt comes only after the last TRB completes, the
->> > event->status has DEPEVT_STATUS_IOC bit set, so that the for-loop ends=
- for
->> > the first TRB due to dwc3_gadget_ep_reclaim_completed_trb() returns 1.
->> >       if (event->status & DEPEVT_STATUS_IOC)
->> >               return 1;
->> >
->> > This patch addresses the issue by checking each TRB in function
->> > dwc3_gadget_ep_reclaim_trb_sg() and maing sure the chained ones are pr=
-operly
->> > reclaimed. dwc3_gadget_ep_reclaim_completed_trb() will return 1 Only f=
-or the
->> > last TRB.
->> >
->> > Signed-off-by: Fei Yang <fei.yang@intel.com>
->> > Cc: stable <stable@vger.kernel.org>
->> > ---
->> > v2: Better solution is to reclaim chained TRBs in dwc3_gadget_ep_recla=
-im_trb_sg()
->> >     and leave the last TRB to the dwc3_gadget_ep_reclaim_completed_trb=
-().
->> > v3: Checking DWC3_TRB_CTRL_CHN bit for each TRB instead, and making su=
-re that
->> >     dwc3_gadget_ep_reclaim_completed_trb() returns 1 only for the last=
- TRB.
->> > ---
->> >  drivers/usb/dwc3/gadget.c | 11 ++++++++---
->> >  1 file changed, 8 insertions(+), 3 deletions(-)
->> >
->> > diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
->> > index 173f532..88eed49 100644
->> > --- a/drivers/usb/dwc3/gadget.c
->> > +++ b/drivers/usb/dwc3/gadget.c
->> > @@ -2394,7 +2394,7 @@ static int dwc3_gadget_ep_reclaim_completed_trb(=
-struct dwc3_ep *dep,
->> >       if (event->status & DEPEVT_STATUS_SHORT && !chain)
->> >               return 1;
->> >
->> > -     if (event->status & DEPEVT_STATUS_IOC)
->> > +     if (event->status & DEPEVT_STATUS_IOC && !chain)
->> >               return 1;
->> >
->> >       return 0;
->> > @@ -2404,11 +2404,12 @@ static int dwc3_gadget_ep_reclaim_trb_sg(struc=
-t dwc3_ep *dep,
->> >               struct dwc3_request *req, const struct dwc3_event_depevt=
- *event,
->> >               int status)
->> >  {
->> > -     struct dwc3_trb *trb =3D &dep->trb_pool[dep->trb_dequeue];
->> > +     struct dwc3_trb *trb;
->> >       struct scatterlist *sg =3D req->sg;
->> >       struct scatterlist *s;
->> >       unsigned int pending =3D req->num_pending_sgs;
->> >       unsigned int i;
->> > +     int chain =3D false;
->> >       int ret =3D 0;
->> >
->> >       for_each_sg(sg, s, pending, i) {
->> > @@ -2419,9 +2420,13 @@ static int dwc3_gadget_ep_reclaim_trb_sg(struct=
- dwc3_ep *dep,
->> >
->> >               req->sg =3D sg_next(s);
->> >               req->num_pending_sgs--;
->> > +             if (trb->ctrl & DWC3_TRB_CTRL_CHN)
->> > +                     chain =3D true;
->> > +             else
->> > +                     chain =3D false;
->> >
->> >               ret =3D dwc3_gadget_ep_reclaim_completed_trb(dep, req,
->> > -                             trb, event, status, true);
->> > +                             trb, event, status, chain);
->> >               if (ret)
->> >                       break;
->> >       }
->>
->> There was already a fix a long time ago by Anurag. But it never made it
->> to the kernel mainline. You can check this out:
->> https://patchwork.kernel.org/patch/10640137/
+On Thu, Aug 8, 2019 at 2:28 PM Andrey Konovalov <andreyknvl@google.com> wrote:
 >
-> So, back from a vacation last week, and just validated that both Fei's
-> patch and a forward ported version of this patch Thinh pointed out
-> both seem to resolve the usb stalls I've been seeing sinice 4.20 w/
-> dwc3 hardware on both hikey960 and dragonboard 845c.
+> On Wed, Aug 7, 2019 at 8:31 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+> >
+> > On Wed, 7 Aug 2019, syzbot wrote:
+> >
+> > > Hello,
+> > >
+> > > syzbot has tested the proposed patch and the reproducer did not trigger
+> > > crash:
+> > >
+> > > Reported-and-tested-by:
+> > > syzbot+1b2449b7b5dc240d107a@syzkaller.appspotmail.com
+> > >
+> > > Tested on:
+> > >
+> > > commit:         6a3599ce usb-fuzzer: main usb gadget fuzzer driver
+> > > git tree:       https://github.com/google/kasan.git
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=700ca426ab83faae
+> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > > patch:          https://syzkaller.appspot.com/x/patch.diff?x=132eec8c600000
+> > >
+> > > Note: testing is done by a robot and is best-effort only.
+> >
+> > Andrey, is there any way to get the console output from this test?
 >
-> Felipe: Does Anurag's patch above make more sense as a proper fix?
+> Dmitry, would it be possible to link console log for successful tests as well?
 
-I think it's enough to check only the TRB. We won't get events for bits
-we didn't enable on the TRB. The only problem here is when we get IOC
-event for multiple TRBs where only the last one has IOC.
-
-So, instead of checking:
-
-	if (event->status & IOC && trb->ctrl & IOC)
-
-It's probably enough to check:
-
-	if (tbc->ctrl & IOC)
-
-Could you check that?
-
-Cheers
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl1MGPIACgkQzL64meEa
-mQY12w//SoBl8a0P9l1wQvjbp66d9nq+DfniJ1P0ZR+OZ49AjsagOTTlGxTOUifR
-TGtVC346hs1OjMMElsrOIKkfyE8J3yzLxbYzLemDdDw6eY5b0rZjqiAfF5S/zZzq
-DyrEH1o+kwKyhCzNvjZIOP3Y/Ugy2XO1J/bDlBcNBtphX8TDpC9p1Dxg6swhRNvp
-vX0FQW/MsE+R6wIftW6XG63bYB5aAM+kqQH4j0MR64b2nFGYAWx7WXJsViMCeK58
-TnKYLEOtkMe4qXbpYFWwiIsIDTY/w4k9jNvVKreFfyTB/cmE4kL9PtgIg+LhUfK/
-phudV1NTCQ6qKeCrgK/zSoT3FLGs5ZxuB60bPL4NFa2PgHeAccC6iwmS+AoMyVK3
-FIWaU2HHqoJSV6M11dDHlXtgzvz/IRD5Uk6M1vdXEDMnG4PAD4IqOfinaWSd+s0y
-H4Bm+jJfH5y/QmbZhLj64ciybsu9VDGNTvgWWu1vr1dZIn2lvNKWl6jBoG9/1KWq
-RFtDWuCgp8cJSZlVHnnTf9q2fVO2DrNYi3WnGhUqp678bhyQjwqwTTQT0kwzrkHc
-m0rgfy5R+pTfJmfy8KIF+HdUMFMVeaKEl/GiVJK7JhUqTHyonv6JEssG1m5u2C8L
-uJn+WRM9wYpSy6Rjqc6PqlzabRppIPwXqWnoBFMbneUhtVt3YfI=
-=SP19
------END PGP SIGNATURE-----
---=-=-=--
+Yes. Start by filing a feature request at
+https://github.com/google/syzkaller/issues
