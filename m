@@ -8,118 +8,139 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D669AC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 00:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD7DC32751
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 00:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A814D21873
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 00:08:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C90B21873
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 00:08:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Kf/lJKUG"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FNie7NtB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389682AbfHHAIL (ORCPT
+        id S2389697AbfHHAIP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 20:08:11 -0400
-Received: from mail-pf1-f201.google.com ([209.85.210.201]:43261 "EHLO
-        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730302AbfHHAIG (ORCPT
+        Wed, 7 Aug 2019 20:08:15 -0400
+Received: from mail-pl1-f201.google.com ([209.85.214.201]:43006 "EHLO
+        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389676AbfHHAIL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 20:08:06 -0400
-Received: by mail-pf1-f201.google.com with SMTP id 6so57824680pfz.10
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 17:08:05 -0700 (PDT)
+        Wed, 7 Aug 2019 20:08:11 -0400
+Received: by mail-pl1-f201.google.com with SMTP id x1so11876533plm.9
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 17:08:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=Tmn4zMTjEPlUC2x7KbFrZqCSBZYi0Bx5tDyyMiSTkHI=;
-        b=Kf/lJKUGyFrHWv7boTRudlru1eDOO0jCqNVRU6s/zrZ4UBZ45Bbg1hHE2vw7Kquw/O
-         BtmrDHrQUguITMHZO1XRWt3qpTLuWh6bxlUqECbMiGx7OZtBnvpDBakjN0ycek+Ym0oT
-         VEE/nfvsA+clVcjyvYnP3yVfxBQ9QpNrgqiSN9iXWbQBKtZODoUBJE3gL1xgQP4vtAXo
-         kMtaA+zKROv6wnq4ugj/1KFMS84SGY1llsNh7tQgLT1xUYuAM/6MYMXMd0eGnvzRvPLX
-         JyMQ8QDVGqY9caZ+fSX9gEVqLuWWBd36lDPkXMHTMMeiOjGTb3iNw5XbNw5OK6wScvda
-         CO9g==
+        bh=AYLtZ41z1RHlFpOZnl+JGLaHaK4EJ2Av6xB01tUKIjQ=;
+        b=FNie7NtBIlaKsZ9JeO4UTZvAADr/vOE4ouDpyC2J7cEuR+3Dd/thtyVqfU90wTT+vo
+         T2vvtkEsWxarn40J0aEfSMXiYfObRgMgqgUgztiu8Pbe2q9fbtQaVJDwuCKjphmzsbbu
+         JbJkPaTR92GhnTqg0cTjlFVEFW6JZ7kS8ZiskcbWTBawHqcXTOa8Z343LCuIJ6yj0R25
+         V7/fCrcTcBuY7DZS3uJDAarNM8aLzi9UzpZfgm5Z/kVfBv+wML+duudHMtsnSKnUQlfZ
+         SuGJqzbsl7PWKVlBli8s9iWfhiCI5LxLmCzHHNaoKngqFkY8nLlLoeC8/0cL0Snf9wd0
+         NkSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=Tmn4zMTjEPlUC2x7KbFrZqCSBZYi0Bx5tDyyMiSTkHI=;
-        b=mn82DFQO+3XnJb48g2m19dSzVwdmiX4ZisGDqTkODSDs6RYKHH9Dh/GUWsxsp4og8q
-         ZadymlMHc/91bB56FyG95pmkIiW/6AT5tT6lJRpJf+V+POqRsaK/SBWntFbO+m9pNZ/0
-         MzcNCkXkB6JLOGQtZadeyPFzjK1rchg13RMFyFqRn5j5TW2XctbRHURZLQ7lCJYRAdQF
-         TbgMdz8mmTnw/AioMi/aUfFIG2YrEKhnG1SakmrZi2Ndwf5ONizeOUdc66K8QnDFzoCL
-         lddAGfp5jNQknVJVBmZrI6XnLIAcX09PNRGn2Z4J3puK0TvE23ICHgQme5iF9kAOE2b7
-         sBRw==
-X-Gm-Message-State: APjAAAVmopYQfYL3CYwC7M5k3XqCzh2TvA5VSJrAk6FAmT1h0QfC6Jjx
-        wk7uG729X74BGdD3sAomftTxLxSYXR3qGfbF/S8y0Q==
-X-Google-Smtp-Source: APXvYqwwJbX16Z8GxujpyEl8EKb14qjxjwwHWOxL57n+QSxdmTSznG4fkHV2cE5AB2mqJ3GSZPqFVdUoApC44ww6iiEddg==
-X-Received: by 2002:a65:6859:: with SMTP id q25mr9838575pgt.181.1565222885343;
- Wed, 07 Aug 2019 17:08:05 -0700 (PDT)
-Date:   Wed,  7 Aug 2019 17:07:08 -0700
+        bh=AYLtZ41z1RHlFpOZnl+JGLaHaK4EJ2Av6xB01tUKIjQ=;
+        b=UCaqLFcMuUj9/4m7uowEBmo3Bs5nGiUJDsdzvNTU1i7OBlD6hSft6tzx1g7XYqWcZ6
+         h+fuMpTD0rNPrX9GhQ9vR/q20+/HEOkZO4kYJGh0AA9UW63TJOd8K6Qde34WnrapQIMh
+         2stFJhonZ9CDZQF3Lj10QxpIRg67SnF0tYImBJTRHkCun7fq6qetjwbsDJhnrMGdID3k
+         I9Pbc4LY+KTkHC3HNeKKtRQsg7NfIT0T/Y1xJt3hGWZXGA7hlkXAOxg08BElxi9wKA97
+         ZqYkldAI7831absizsX60ffmtDTmvVFlxHovQb78NJTY7Ad/ynqwhr+rcS9t7VoAfuAG
+         0VUQ==
+X-Gm-Message-State: APjAAAX8vF3p0MTl0xNYCuRrV+Zd/981Iu5xJSqBxahMChIPFy5fVjHc
+        dqbNpW46t7vGsH0bVVd6B7EEEMCnMD3MuY08KE6BYw==
+X-Google-Smtp-Source: APXvYqyY4hPQ+uSwpXLxD3x3XBZHACPHGjdsgDh7wMOUzCkOt1SqtErX3QclbGkE3NIJReG0NbtaFtOgSRkBHvVk1R4mAA==
+X-Received: by 2002:a63:1b56:: with SMTP id b22mr9896383pgm.265.1565222890522;
+ Wed, 07 Aug 2019 17:08:10 -0700 (PDT)
+Date:   Wed,  7 Aug 2019 17:07:10 -0700
 In-Reply-To: <20190808000721.124691-1-matthewgarrett@google.com>
-Message-Id: <20190808000721.124691-17-matthewgarrett@google.com>
+Message-Id: <20190808000721.124691-19-matthewgarrett@google.com>
 Mime-Version: 1.0
 References: <20190808000721.124691-1-matthewgarrett@google.com>
 X-Mailer: git-send-email 2.22.0.770.g0f2c4a37fd-goog
-Subject: [PATCH V38 16/29] acpi: Disable ACPI table override if the kernel is
- locked down
+Subject: [PATCH V38 18/29] Lock down TIOCSSERIAL
 From:   Matthew Garrett <matthewgarrett@google.com>
 To:     jmorris@namei.org
 Cc:     linux-security-module@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        Linn Crosetto <lcrosetto@gmail.com>,
         David Howells <dhowells@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Matthew Garrett <mjg59@google.com>,
-        Kees Cook <keescook@chromium.org>, linux-acpi@vger.kernel.org
+        Kees Cook <keescook@chromium.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linn Crosetto <lcrosetto@gmail.com>
+From: David Howells <dhowells@redhat.com>
 
-From the kernel documentation (initrd_table_override.txt):
+Lock down TIOCSSERIAL as that can be used to change the ioport and irq
+settings on a serial port.  This only appears to be an issue for the serial
+drivers that use the core serial code.  All other drivers seem to either
+ignore attempts to change port/irq or give an error.
 
-  If the ACPI_INITRD_TABLE_OVERRIDE compile option is true, it is possible
-  to override nearly any ACPI table provided by the BIOS with an
-  instrumented, modified one.
-
-When lockdown is enabled, the kernel should disallow any unauthenticated
-changes to kernel space.  ACPI tables contain code invoked by the kernel,
-so do not allow ACPI tables to be overridden if the kernel is locked down.
-
-Signed-off-by: Linn Crosetto <lcrosetto@gmail.com>
+Reported-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Matthew Garrett <mjg59@google.com>
 Reviewed-by: Kees Cook <keescook@chromium.org>
-cc: linux-acpi@vger.kernel.org
+cc: Jiri Slaby <jslaby@suse.com>
+Cc: linux-serial@vger.kernel.org
 ---
- drivers/acpi/tables.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/tty/serial/serial_core.c | 5 +++++
+ include/linux/security.h         | 1 +
+ security/lockdown/lockdown.c     | 1 +
+ 3 files changed, 7 insertions(+)
 
-diff --git a/drivers/acpi/tables.c b/drivers/acpi/tables.c
-index b32327759380..180ac4329763 100644
---- a/drivers/acpi/tables.c
-+++ b/drivers/acpi/tables.c
-@@ -20,6 +20,7 @@
- #include <linux/memblock.h>
- #include <linux/earlycpio.h>
- #include <linux/initrd.h>
+diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
+index 4223cb496764..6e713be1d4e9 100644
+--- a/drivers/tty/serial/serial_core.c
++++ b/drivers/tty/serial/serial_core.c
+@@ -22,6 +22,7 @@
+ #include <linux/serial_core.h>
+ #include <linux/delay.h>
+ #include <linux/mutex.h>
 +#include <linux/security.h>
- #include "internal.h"
  
- #ifdef CONFIG_ACPI_CUSTOM_DSDT
-@@ -578,6 +579,11 @@ void __init acpi_table_upgrade(void)
- 	if (table_nr == 0)
- 		return;
+ #include <linux/irq.h>
+ #include <linux/uaccess.h>
+@@ -862,6 +863,10 @@ static int uart_set_info(struct tty_struct *tty, struct tty_port *port,
+ 		goto check_and_exit;
+ 	}
  
-+	if (security_locked_down(LOCKDOWN_ACPI_TABLES)) {
-+		pr_notice("kernel is locked down, ignoring table override\n");
-+		return;
-+	}
++	retval = security_locked_down(LOCKDOWN_TIOCSSERIAL);
++	if (retval && (change_irq || change_port))
++		goto exit;
 +
- 	acpi_tables_addr =
- 		memblock_find_in_range(0, ACPI_TABLE_UPGRADE_MAX_PHYS,
- 				       all_tables_size, PAGE_SIZE);
+ 	/*
+ 	 * Ask the low level driver to verify the settings.
+ 	 */
+diff --git a/include/linux/security.h b/include/linux/security.h
+index 3773ad09b831..8f7048395114 100644
+--- a/include/linux/security.h
++++ b/include/linux/security.h
+@@ -112,6 +112,7 @@ enum lockdown_reason {
+ 	LOCKDOWN_MSR,
+ 	LOCKDOWN_ACPI_TABLES,
+ 	LOCKDOWN_PCMCIA_CIS,
++	LOCKDOWN_TIOCSSERIAL,
+ 	LOCKDOWN_INTEGRITY_MAX,
+ 	LOCKDOWN_CONFIDENTIALITY_MAX,
+ };
+diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
+index 22482e1b9a77..00a3a6438dd2 100644
+--- a/security/lockdown/lockdown.c
++++ b/security/lockdown/lockdown.c
+@@ -27,6 +27,7 @@ static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
+ 	[LOCKDOWN_MSR] = "raw MSR access",
+ 	[LOCKDOWN_ACPI_TABLES] = "modifying ACPI tables",
+ 	[LOCKDOWN_PCMCIA_CIS] = "direct PCMCIA CIS storage",
++	[LOCKDOWN_TIOCSSERIAL] = "reconfiguration of serial port IO",
+ 	[LOCKDOWN_INTEGRITY_MAX] = "integrity",
+ 	[LOCKDOWN_CONFIDENTIALITY_MAX] = "confidentiality",
+ };
 -- 
 2.22.0.770.g0f2c4a37fd-goog
 
