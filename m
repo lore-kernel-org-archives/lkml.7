@@ -2,135 +2,87 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A01FCC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:52:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1408EC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:54:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70E032173C
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:52:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=SILICOMLTD.onmicrosoft.com header.i=@SILICOMLTD.onmicrosoft.com header.b="HHXCHmVI"
+	by mail.kernel.org (Postfix) with ESMTP id C92942173E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:54:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565297673;
+	bh=RbcGBY8Rckrm2fQnqb86Wd8ep+YZxpahEYQClJ1cns4=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=Dt4M6j0hPGszwd8sP71kLgjOnirTit6CZpIYouq+cyG/7dwPJMtmlKOSDHbd94flO
+	 hppcOfqQdVocA3Pn0TWPhtF9IV1fouFj8HPeX1vV/d/ripQvjYjRDooFfAAHriBoc6
+	 e7i8pKZMR/YSViQ9lCeDXno79DfOMQU1AduAc/uc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390407AbfHHUwN (ORCPT
+        id S2390391AbfHHUyc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 16:52:13 -0400
-Received: from mail-eopbgr50103.outbound.protection.outlook.com ([40.107.5.103]:49433
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732786AbfHHUwM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 16:52:12 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AnegIlsQOHkiibPYTJUiviHLFPVvnWitgI3LO0KDH39NpjPft50yyEU7XjcumNHtuzFZByyeCPA4cAiU5wuqRf4hXjdNZ2sRosnCyuoLDDOCgCref2M6Rh5iQqQZyX4JOTvWWHz1pO/igyOH/rNiFsOL3JaJ4BHbgwIyjI9/I+NTX8ZYqm90Uj63j4ZcA7uR6IK5hFA8Mop4ac+5bbg1rMDsLwj9RSpIQxUhIIbDDGXNfUJddfkgIon8lk+eunc5WoWqe7Te9lM/obgVlzgV/ActwoVjZ6I6Uo2MQjJJtw0qreLAi+uU7lIxpPGF8FHRSZHyh3XpUhMydP0/n+VxPg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ag3FytFXrQCXhtqyWgy3ljKB9c6k7gZR3P+5VjugJyU=;
- b=HGlDBsIHNMxWJOjklCX4ndh0KOEjcZZcWt+8caq/we5c+3aSUXsjzwTY0iaYZCoXJpP7G+uBhX8FPFT2VgBa8y/emTveBoPD5U9NoOMlZ4wTJOvEF//gObpacSRIo5qdEnpiuTs3rT59o/pe3Vh/lmv1FsKqsC8PBHKBFzfQEd+FxdwmCNR3RbK4i8rzzdLqQhB/QeJ6MiNKrerz6MRTV81JDeOJ3RPVhGe3a2U2ARnm6GKoe/aUHezWWBWEheLEMQwc4GMpH1tDt6HQEBsF+1K3lp5QLJQ1PE1Yv98BAJsWzA8pgOKnOf5fkcRgnIJ4Tg1LJy4CePu/G7mkBfSEuA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=silicom-usa.com; dmarc=pass action=none
- header.from=silicom-usa.com; dkim=pass header.d=silicom-usa.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=SILICOMLTD.onmicrosoft.com; s=selector2-SILICOMLTD-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ag3FytFXrQCXhtqyWgy3ljKB9c6k7gZR3P+5VjugJyU=;
- b=HHXCHmVIuzzINROtiFAd1S1N7w2SpVxGIKPLjiFb0il02/pu/aeZ72Ejmpq+aFeP4Scc+ZtwIiYveJ4bUQOWG9W9kRzrA4O7AbtCooHkVZc+CTiuM+IKXHJ0Sd9qQNhScKS+mS+cU4BFDAs5yV8HFu6lYPaofASEqVRaE9GUpTU=
-Received: from VI1PR0402MB2717.eurprd04.prod.outlook.com (10.175.22.139) by
- VI1PR0402MB2910.eurprd04.prod.outlook.com (10.175.23.140) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.15; Thu, 8 Aug 2019 20:52:09 +0000
-Received: from VI1PR0402MB2717.eurprd04.prod.outlook.com
- ([fe80::eca9:e1f:eca7:8439]) by VI1PR0402MB2717.eurprd04.prod.outlook.com
- ([fe80::eca9:e1f:eca7:8439%9]) with mapi id 15.20.2157.015; Thu, 8 Aug 2019
- 20:52:09 +0000
-From:   Stephen Douthit <stephend@silicom-usa.com>
-To:     Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        James Morse <james.morse@arm.com>
-CC:     Stephen Douthit <stephend@silicom-usa.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH] EDAC, pnd2: Fix ioremap() size in dnv_rd_reg() from 64K ->
- 32K
-Thread-Topic: [PATCH] EDAC, pnd2: Fix ioremap() size in dnv_rd_reg() from 64K
- -> 32K
-Thread-Index: AQHVTiskHjYyDh8ZF0eccCUFKX9IfQ==
-Date:   Thu, 8 Aug 2019 20:52:08 +0000
-Message-ID: <20190808205147.25547-1-stephend@silicom-usa.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BN6PR22CA0041.namprd22.prod.outlook.com
- (2603:10b6:404:37::27) To VI1PR0402MB2717.eurprd04.prod.outlook.com
- (2603:10a6:800:b4::11)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=stephend@silicom-usa.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.21.0
-x-originating-ip: [96.82.2.57]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6f9bc469-1a39-4154-a4f7-08d71c424744
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:VI1PR0402MB2910;
-x-ms-traffictypediagnostic: VI1PR0402MB2910:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0402MB2910B14AE9743C527631B2CF94D70@VI1PR0402MB2910.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1751;
-x-forefront-prvs: 012349AD1C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(376002)(366004)(396003)(39850400004)(136003)(189003)(199004)(8936002)(66476007)(186003)(86362001)(2906002)(26005)(66066001)(54906003)(478600001)(6436002)(50226002)(316002)(52116002)(110136005)(4744005)(2616005)(99286004)(1076003)(102836004)(476003)(486006)(386003)(6506007)(6486002)(305945005)(64756008)(3846002)(81166006)(7736002)(14454004)(81156014)(66446008)(66556008)(25786009)(4326008)(66946007)(5660300002)(71200400001)(71190400001)(6512007)(6116002)(8676002)(36756003)(256004)(14444005)(53936002);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR0402MB2910;H:VI1PR0402MB2717.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: silicom-usa.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Vjq7+6tMlQTJZ/UUA0VLK/8K/0Mufo0uT0OXGHnrTKobuKJWg3SUgAbpPG0ZkmkyH4lqFAUDnKelnSNESL8DgzEniAlFeMwI0lu30bOoxfE/CPXtJLVJqPcahkaPbXt8rO2A777FEbhsXRj9MmCfOVayWKB8XE83f94u5a2YIh3i659Ou/6owRs5biTp9kL5HC3KtNWquyrmPFJ67cUb4trYdOgp4RqYr9FhdWL4stenmYA4TmAUKW8LbdaC3z1HIiL1R5UdeMSXj8W/exUTuB0BrwIQEpc2TYgwzL+hwBRZ4UXX74kNw6YrrY2lLmtQrhzarbBtxNxi95U8YbdIeslnYAtHYF0T92vD8C8wKx0N9vEW+lyP0if/VL2S8NyE1Z27rWmwsgTHTPcthV5gAZs7L8BsdcT+h74TiT5u5Zk=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 8 Aug 2019 16:54:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47430 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732601AbfHHUyc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 16:54:32 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A5762173C;
+        Thu,  8 Aug 2019 20:54:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565297671;
+        bh=RbcGBY8Rckrm2fQnqb86Wd8ep+YZxpahEYQClJ1cns4=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=iS+N5K6W+k2NAMCOroQiYTmg7HnFH3sCVZuj5w1hI3CHnBV4EnwOm0xGL6qdQGC+t
+         aBwN3TCs+AG/Yazs2vNyS02nPNI0shECCVG7R/HtRcGsDOsnUCfGuF75HWKz+K/Teo
+         oPGSTmpwPrO0dziJ9ZUB3zN3gwmPb5d8PvanM27Q=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-X-OriginatorOrg: silicom-usa.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6f9bc469-1a39-4154-a4f7-08d71c424744
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Aug 2019 20:52:09.0152
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c9e326d8-ce47-4930-8612-cc99d3c87ad1
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ie2srQZfxmyCf9tp+FjceuG8Bu70zNnt7sGDVirnpM0853iWQdeczNgFvaad7fbhylmdJaXmfKQu3pQJ6aRR+gddEYvCmm9IneqFgVZx7uo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2910
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190808144929.18685-2-s.nawrocki@samsung.com>
+References: <20190808144929.18685-1-s.nawrocki@samsung.com> <CGME20190808144941eucas1p1b6ba7aadd0c31aedf765a0f90ed6213f@eucas1p1.samsung.com> <20190808144929.18685-2-s.nawrocki@samsung.com>
+Subject: Re: [PATCH v2 2/2] clk: samsung: exynos5800: Move MAU subsystem clocks to MAU sub-CMU
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux@armlinux.org.uk, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        krzk@kernel.org, cw00.choi@samsung.com, m.szyprowski@samsung.com,
+        b.zolnierkie@samsung.com,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>
+To:     Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        mturquette@baylibre.com
+User-Agent: alot/0.8.1
+Date:   Thu, 08 Aug 2019 13:54:30 -0700
+Message-Id: <20190808205431.0A5762173C@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-BIOS has marked the 32K MCHBAR window as reserved, so when dnv_rd_reg()
-tries to ioremap() a 64KB region you get warnings like:
+Quoting Sylwester Nawrocki (2019-08-08 07:49:29)
+> This patch fixes broken sound on Exynos5422/5800 platforms after
+> system/suspend resume cycle in cases where the audio root clock
+> is derived from MAU_EPLL_CLK.
+>=20
+> In order to preserve state of the USER_MUX_MAU_EPLL_CLK clock mux
+> during system suspend/resume cycle for Exynos5800 we group the MAU
+> block input clocks in "MAU" sub-CMU and add the clock mux control
+> bit to .suspend_regs.  This ensures that user configuration of the mux
+> is not lost after the PMU block changes the mux setting to OSC_DIV
+> when switching off the MAU power domain.
+>=20
+> Adding the SRC_TOP9 register to exynos5800_clk_regs[] array is not
+> sufficient as at the time of the syscore_ops suspend call MAU power
+> domain is already turned off and we already save and subsequently
+> restore an incorrect register's value.
+>=20
+> Fixes: b06a532bf1fa ("clk: samsung: Add Exynos5 sub-CMU clock driver")
+> Reported-by: Jaafar Ali <jaafarkhalaf@gmail.com>
+> Suggested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> Tested-by: Jaafar Ali <jaafarkhalaf@gmail.com>
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> ---
 
-resource sanity check: requesting [mem 0xfed10000-0xfed1ffff], which spans =
-more than reserved [mem 0xfed10000-0xfed17fff]
-caller dnv_rd_reg+0xc8/0x240 [pnd2_edac] mapping multiple BARs
-
-ioremap() the correct size on Denverton platforms to get rid of those
-warnings.
-
-Signed-off-by: Stephen Douthit <stephend@silicom-usa.com>
----
- drivers/edac/pnd2_edac.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/edac/pnd2_edac.c b/drivers/edac/pnd2_edac.c
-index 903a4f1fadcc..1d16f2ac776e 100644
---- a/drivers/edac/pnd2_edac.c
-+++ b/drivers/edac/pnd2_edac.c
-@@ -295,7 +295,7 @@ static int dnv_rd_reg(int port, int off, int op, void *=
-data, size_t sz, char *na
- 			addr +=3D (port << 16);
- 		}
-=20
--		base =3D ioremap((resource_size_t)addr, 0x10000);
-+		base =3D ioremap((resource_size_t)addr, 0x8000);
- 		if (!base)
- 			return -ENODEV;
-=20
---=20
-2.21.0
+Applied to clk-fixes
 
