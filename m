@@ -2,168 +2,181 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C3EC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 808ACC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:02:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3C78217D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:01:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="MRB9boU9"
+	by mail.kernel.org (Postfix) with ESMTP id 494B8217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:02:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565276565;
+	bh=dyMO+YEym8ib/r3ptFxeHa3pBfgJ53Bab+zG1JtBiD8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qH35iKzGHaaSvRDvf7Bvpy4UGS+/7tI1y4tLMR5vcAOgKLC1JphuThoo84Khnr0oF
+	 eIwk2JcusfOZEpj63TrgwLu42Ub3QE7tA/Abjm2pENQ1xR1XH6yB3F5ip5enYvk7+M
+	 iZCklQ2neh+/CdA+oGjRH7MNX3iRCf8xhf0rvazk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732855AbfHHPBC (ORCPT
+        id S1732554AbfHHPCo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 11:01:02 -0400
-Received: from mail-eopbgr70043.outbound.protection.outlook.com ([40.107.7.43]:49248
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728327AbfHHPBC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 11:01:02 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=K9VPKnjcyDASvbmGwu6mf1dVA32Kf3G6F1WXq1cGLKPv1+ioxrTv/U4CKYrixTRqT9Mi4jI6AwpXvkNZZIiusqbRud3GYcyGaH0FigreemXP0gJfSmz6gobB7ZTRKIMcojwNoVam2jmVPXRog0ogIPqTdXojW4ChaW8sz2XTib1bZsxml8wYqm42BXw8oDWWAjRufdjLdIR4u8gYrXPebF2+o0MShQvZ3ysIy0an6VUGiOXva7Nm1ytOJfMhJu083nhvH6vY9Hanwwlia97equfcSM9rY4UrtLwyrK1wQn3UFDXi+VXdMnmcrW6e8R7IDrp86Xqep2hUDpPaOwzqLA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yPemLk6G4WA4+sRMOsJnGNz4AxD1T8nt6mFvOmS3lsE=;
- b=lDS+Rrllfa8P/gSzJiKTnroUBhUkLpYMe+gWj15xLzTRZSYyjkQbr6hYKm4XRaN5yqxjQDYSQBpQfGjbHMk+37H6xRekz3y58Dh5k87wgqVUTd3fuhghpLBvRoJjEGwC4VGKL+3vyWEoLNIhr1AQmEIkLhgu7qLh+VMK6SXN5BXRi81Ewm/sjWeiBt/NFQ9qZmM6xf5WoFNDtpOZBfgez3a98fEgh3Xh9EyKnM22EHG3iYbI2SdFH51ZFVGnA+5SPCdYvQNpMuo/nx0XYatuAyMQR/VI+W+JozgxtPdtVpU9j9xqHOQ42TqYjkVjWjP2YGBLHzaR4JqWE208pjontQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yPemLk6G4WA4+sRMOsJnGNz4AxD1T8nt6mFvOmS3lsE=;
- b=MRB9boU985k+wXEjQvqEmoWZqJ6O67NMOKnT47bPZihttMmvsthTkf/p/mWeJ+uwcFJwnQN90fLD4WLIhYDypY8lmIEoveoVxpn+G4McYcNrPKietnhQSdNOcJo7ZaaUP7kK+CLhRXqCLz7kwUmxUmX5mnm3GckQ/gznooqoLIQ=
-Received: from VI1PR04MB7023.eurprd04.prod.outlook.com (10.186.159.144) by
- VI1SPR01MB0363.eurprd04.prod.outlook.com (20.178.120.74) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.13; Thu, 8 Aug 2019 15:00:57 +0000
-Received: from VI1PR04MB7023.eurprd04.prod.outlook.com
- ([fe80::e53d:e6a9:79bd:f970]) by VI1PR04MB7023.eurprd04.prod.outlook.com
- ([fe80::e53d:e6a9:79bd:f970%2]) with mapi id 15.20.2157.015; Thu, 8 Aug 2019
- 15:00:57 +0000
-From:   Leonard Crestez <leonard.crestez@nxp.com>
-To:     Chanwoo Choi <cw00.choi@samsung.com>,
-        =?utf-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>,
-        "georgi.djakov@linaro.org" <georgi.djakov@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "krzk@kernel.org" <krzk@kernel.org>,
-        "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>,
-        "inki.dae@samsung.com" <inki.dae@samsung.com>,
-        "sw0312.kim@samsung.com" <sw0312.kim@samsung.com>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Lukasz Luba <l.luba@partner.samsung.com>
-Subject: Re: [RFC PATCH 09/11] devfreq: exynos-bus: Add interconnect
- functionality to exynos-bus
-Thread-Topic: [RFC PATCH 09/11] devfreq: exynos-bus: Add interconnect
- functionality to exynos-bus
-Thread-Index: AQHVQVEYOnL6Nj5GnEmKqTrzyDUrnA==
-Date:   Thu, 8 Aug 2019 15:00:57 +0000
-Message-ID: <VI1PR04MB7023B5095F706635354C4C50EED70@VI1PR04MB7023.eurprd04.prod.outlook.com>
-References: <20190723122016.30279-1-a.swigon@partner.samsung.com>
- <CGME20190723122028eucas1p2eb75f35b810e71d6c590370aaff0997b@eucas1p2.samsung.com>
- <20190723122016.30279-10-a.swigon@partner.samsung.com>
- <5a82bf8a-d925-ba54-a26f-98b64bedc6e1@samsung.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=leonard.crestez@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a2093a85-bc01-442c-02f4-08d71c1137e5
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1SPR01MB0363;
-x-ms-traffictypediagnostic: VI1SPR01MB0363:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <VI1SPR01MB03631456A4B450C8B5D2A5FCEED70@VI1SPR01MB0363.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 012349AD1C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(366004)(396003)(136003)(39860400002)(51444003)(189003)(199004)(66446008)(26005)(52536014)(54906003)(110136005)(86362001)(66066001)(256004)(5660300002)(2906002)(99286004)(6436002)(102836004)(8676002)(966005)(316002)(229853002)(7696005)(14444005)(478600001)(66574012)(6246003)(6306002)(76176011)(91956017)(66946007)(4326008)(66476007)(64756008)(25786009)(53546011)(6506007)(76116006)(66556008)(44832011)(186003)(7416002)(3846002)(53936002)(81156014)(33656002)(305945005)(81166006)(74316002)(446003)(55016002)(6116002)(71190400001)(9686003)(476003)(14454004)(486006)(2501003)(7736002)(8936002)(71200400001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1SPR01MB0363;H:VI1PR04MB7023.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 6/TfyK8og+c2m1FBabhfrI2fT7BQ6O/bqAQOtHxYW8oaGg3JG+ZApa+fsh8tCvhkSdZfo38oZ+IRMlz6ddAolif7FcAF+CoDj72G/CVYznYHNg1bo/mKCctmFur3J9qQilMelImwXJf7IlBrkAzhOBttFa8yPSkmU8dCyizRZwFFSC7bm6aBUu5ubdoN3X8e8s4+1wbKkLmIgmOmOiKyj/9zrvuDKfh5h+3hL3blUyoQhT4RtEyFOZvPAoX9vqr9oomnrfx40YveICtW5ylXZouqBGl13MjnSTSCp7Lok0sd/troC8tRJux+9vYImLtjr74JdZQpfyOJZsZ7ERGg3YE82UCkWM786nd8DjhCJjfxK8IrSgZWP6f7GI66/acfiQ6WfgnJT4I5mKVStZmJQdrenqEdfhHed0EBfrujkAk=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 8 Aug 2019 11:02:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42176 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727096AbfHHPCo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 11:02:44 -0400
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A32E52189E;
+        Thu,  8 Aug 2019 15:02:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565276562;
+        bh=dyMO+YEym8ib/r3ptFxeHa3pBfgJ53Bab+zG1JtBiD8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=T8SEdQkmyDZjxpkvg3O5aa5y0IUhZYhli6BHqmZLmfiiG7lkr51b/UqgTFh1RGV+e
+         MfHwocgqqK6CPBSQL1LeWybLWFp8cKihuFna7gkTOy+M2wAZon7MndaSRynprNtU82
+         2zgEQWoOZhEBTgp3ROz8ugCpgJEPPuHt0voaKgmo=
+Received: by mail-qt1-f173.google.com with SMTP id w17so11834374qto.10;
+        Thu, 08 Aug 2019 08:02:42 -0700 (PDT)
+X-Gm-Message-State: APjAAAUEDpkF2cHffVdt8XPGyhWMOhHHx39jYiAuMl6WriFvF1/mQx+W
+        clmJ/dBTT48w45jdBy68XG8PT2xKx4LybVO8pA==
+X-Google-Smtp-Source: APXvYqwoUwqMMoJlRpUQeZhstAAUALmk5OLfWeCSiKB8+lRLcDvufCgBEJ1TDb+hHOMFdyjeedwU8GdoRwm/uZYI8ik=
+X-Received: by 2002:ac8:7593:: with SMTP id s19mr6019854qtq.136.1565276561735;
+ Thu, 08 Aug 2019 08:02:41 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a2093a85-bc01-442c-02f4-08d71c1137e5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Aug 2019 15:00:57.3501
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: D+XB0I5M52xAcps6CHYMOCWvOGlpT+qZ3+44CcYG4wn4+syJiBsUN1vJlYGlaIpbEdAimBibXq3sb0iTHOKCLA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1SPR01MB0363
+References: <20190731154752.16557-1-nsaenzjulienne@suse.de>
+ <20190731154752.16557-4-nsaenzjulienne@suse.de> <CAL_JsqKF5nh3hcdLTG5+6RU3_TnFrNX08vD6qZ8wawoA3WSRpA@mail.gmail.com>
+ <2050374ac07e0330e505c4a1637256428adb10c4.camel@suse.de> <CAL_Jsq+LjsRmFg-xaLgpVx3miXN3hid3aD+mgTW__j0SbEFYjQ@mail.gmail.com>
+ <12eb3aba207c552e5eb727535e7c4f08673c4c80.camel@suse.de>
+In-Reply-To: <12eb3aba207c552e5eb727535e7c4f08673c4c80.camel@suse.de>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 8 Aug 2019 09:02:30 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJS6XBSc8DuK2sJApHtY4nCSFpLezf003YMD75THLHAqg@mail.gmail.com>
+Message-ID: <CAL_JsqJS6XBSc8DuK2sJApHtY4nCSFpLezf003YMD75THLHAqg@mail.gmail.com>
+Subject: Re: [PATCH 3/8] of/fdt: add function to get the SoC wide DMA
+ addressable memory size
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Christoph Hellwig <hch@lst.de>,
+        wahrenst@gmx.net, Marc Zyngier <marc.zyngier@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        linux-mm@kvack.org, Frank Rowand <frowand.list@gmail.com>,
+        phill@raspberryi.org, Florian Fainelli <f.fainelli@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Eric Anholt <eric@anholt.net>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjkuMDcuMjAxOSAwNDo0OSwgQ2hhbndvbyBDaG9pIHdyb3RlOgo+IE9uIDE5LiA3LiAyMy4g
-7Jik7ZuEIDk6MjAsIEFydHVyIMWad2lnb8WEIHdyb3RlOgo+PiBUaGlzIHBhdGNoIGFkZHMgaW50
-ZXJjb25uZWN0IGZ1bmN0aW9uYWxpdHkgdG8gdGhlIGV4eW5vcy1idXMgZGV2ZnJlcQo+PiBkcml2
-ZXIuCj4+Cj4+IFRoZSBkZXZmcmVxIHRhcmdldCgpIGNhbGxiYWNrIHByb3ZpZGVkIGJ5IGV4eW5v
-cy1idXMgbm93IHNlbGVjdHMgZWl0aGVyIHRoZQo+PiBmcmVxdWVuY3kgY2FsY3VsYXRlZCBieSB0
-aGUgZGV2ZnJlcSBnb3Zlcm5vciBvciB0aGUgZnJlcXVlbmN5IHJlcXVlc3RlZCB2aWEKPj4gdGhl
-IGludGVyY29ubmVjdCBBUEkgZm9yIHRoZSBnaXZlbiBub2RlLCB3aGljaGV2ZXIgaXMgaGlnaGVy
-Lgo+IAo+IEJhc2ljYWxseSwgSSBhZ3JlZSB0byBzdXBwb3J0IHRoZSBRb1MgcmVxdWlyZW1lbnQg
-YmV0d2VlbiBkZXZpY2VzLgo+IEJ1dCwgSSB0aGluayB0aGF0IG5lZWQgdG8gY29uc2lkZXIgdGhl
-IG11bHRpcGxlIGNhc2VzLgo+IAo+IDEuIFdoZW4gY2hhbmdpbmcgdGhlIGRldmZyZXEgZ292ZXJu
-b3IgYnkgdXNlciwKPiBGb3IgZXhhbXBsZSBvZiB0aGUgY29ubmVjdGlvbiBiZXR3ZWVuIGJ1c19k
-bWMvbGVmdGJ1cy9kaXNwbGF5IG9uIHBhdGNoOCwKPiB0aGVyZSBhcmUgcG9zc2libGUgbXVsdGlw
-bGUgY2FzZXMgd2l0aCB2YXJpb3VzIGRldmZyZXEgZ292ZXJub3IKPiB3aGljaCBpcyBjaGFuZ2Vk
-IG9uIHRoZSBydW50aW1lIGJ5IHVzZXIgdGhyb3VnaCBzeXNmcyBpbnRlcmZhY2UuCj4gCj4gSWYg
-dXNlcnMgY2hhbmdlcyB0aGUgZGV2ZnJlcSBnb3Zlcm5vciBhcyBmb2xsb3dpbmc6Cj4gQmVmb3Jl
-LAo+IC0gYnVzX2RtYyAoc2ltcGxlX29uZGVtYW5kLCBhdmFpbGFibGUgZnJlcXVlbmN5IDEwMC8y
-MDAvMzAwLzQwMCBNSHopCj4gLS0+IGJ1c19sZWZ0YnVzKHNpbXBsZV9vbmRlbWFuZCwgYXZhaWxh
-YmxlIGZyZXF1ZW5jeSAxMDAvMjAwLzMwMC80MDAgTUh6KQo+IC0tLS0+IGJ1c19kaXNwbGF5KHBh
-c3NpdmUpCj4gCj4gQWZ0ZXIgY2hhbmdlZCBnb3Zlcm5vciBvZiBidXNfZG1jLAo+IGlmIHRoZSBt
-aW5fZnJlcSBieSBpbnRlcmNvbm5lY3QgcmVxdWlyZW1lbnQgaXMgNDAwTWh6LAo+IC0gYnVzX2Rt
-YyAocG93ZXJzYXZlKSA6IG1pbl9mcmVxIGFuZCBtYXhfZnJlcSBhbmQgY3VyX2ZyZXEgaXMgMTAw
-TUh6Cj4gLS0+IGJ1c19sZWZ0YnVzKHNpbXBsZV9vbmRlbWFuZCkgOiBjdXJfZnJlcSBpcyA0MDBN
-aHoKPiAtLS0tPiBidXNfZGlzcGxheShwYXNzaXZlKQo+IAo+IFRoZSBmaW5hbCBmcmVxdWVuY3kg
-aXMgNDAwTUh6IG9mIGJ1c19kbWMKPiBldmVuIGlmIHRoZSBtaW5fZnJlcS9tYXhfZnJlcS9jdXJf
-ZnJlcSBpcyAxMDBNSHouCj4gSXQgY2Fubm90IHNob3cgdGhlIGNvcnJlY3QgbWluX2ZyZXEvbWF4
-X2ZyZXEgdGhyb3VnaAo+IGRldmZyZXEgc3lzZnMgaW50ZXJmYWNlLgo+IAo+IAo+IDIuIFdoZW4g
-ZGlzYWJsaW5nIHRoZSBzb21lIGZyZXF1ZW5jeSBieSBkZXZmcmVxLXRoZXJtYWwgdGhyb3R0bGlu
-ZywKPiBUaGlzIHBhdGNoIGNoZWNrcyB0aGUgbWluX2ZyZXEgb2YgaW50ZXJjb25uZWN0IHJlcXVp
-cmVtZW50Cj4gaW4gdGhlIGV4eW5vc19idXNfdGFyZ2V0KCkgYW5kIGV4eW5vc19idXNfcGFzc2l2
-ZV90YXJnZXQoKS4KPiBBbHNvLCBpdCBjYW5ub3Qgc2hvdyB0aGUgY29ycmVjdCBtaW5fZnJlcS9t
-YXhfZnJlcSB0aHJvdWdoCj4gZGV2ZnJlcSBzeXNmcyBpbnRlcmZhY2UuCj4gCj4gRm9yIGV4YW1w
-bGUgb2YgYnVzX2RtYyBidXMsCj4gLSBUaGUgYXZhaWxhYmxlIGZyZXF1ZW5jaWVzIGFyZSAxMDBN
-SHosIDIwME1IeiwgMzAwTUh6LCA0MDBNSHoKPiAtIERpc2FibGUgNDAwTUh6IGJ5IGRldmZyZXEt
-dGhlcm1hbCB0aHJvdHRsaW5nCj4gLSBtaW5fZnJlcSBpcyAxMDBNSHoKPiAtIG1heF9mcmVxIGlz
-IDMwME1Iego+IC0gbWluX2ZyZXEgb2YgaW50ZXJjb25uZWN0IGlzIDQwME1Iego+IAo+IEluIHJl
-c3VsdCwgdGhlIGZpbmFsIGZyZXF1ZW5jeSBpcyA0MDBNSHogYnkgZXh5bm9zX2J1c190YXJnZXQo
-KQo+IFRoZXJlIGFyZSBubyBwcm9ibGVtIGZvciB3b3JraW5nLiBCdXQsIHRoZSB1c2VyIGNhbm5v
-dCBrbm93Cj4gcmVhc29uIHdoeSBjdXJfZnJlcSBpcyA0MDBNSHogZXZlbiBpZiBtYXhfZnJlcSBp
-cyAzMDBNSHouCj4gCj4gQmFzaWNhbGx5LCB1cGRhdGVfZGV2ZnJlcSgpIGNvbnNpZGVycyB0aGUg
-YWxsIGNvbnN0cmFpbnRzCj4gb2YgbWluX2ZyZXEvbWF4X2ZyZXEgdG8gZGVjaWRlIHRoZSBwcm9w
-ZXIgdGFyZ2V0IGZyZXF1ZW5jeS4KCkkgdGhpbmsgdGhhdCBhcHBseWluZyB0aGUgaW50ZXJjb25u
-ZWN0IG1pbl9mcmVxIHZpYSBkZXZfcG1fcW9zIGNhbiBoZWxwIAp3aXRoIG1hbnkgb2YgdGhlc2Ug
-Y29uY2VybnM6IHVwZGF0ZV9kZXZmcmVxIGNvbnRyb2xzIGFsbCB0aGUgbWluL21heCAKaGFuZGxp
-bmcsIHN5c2ZzIGlzIGFjY3VyYXRlIGFuZCBiZXR0ZXIgZGVjaXNpb25zIGNhbiBiZSBtYWRlIHJl
-Z2FyZGluZyAKdGhlcm1hbC4gRW5mb3JjaW5nIGNvbnN0cmFpbnRzIGluIHRoZSBjb3JlIGlzIGRl
-ZmluaXRlbHkgYmV0dGVyLgoKVGhpcyB3b3VsZG4ndCBldmVuIGJlIGEgdmVyeSBiaWcgY2hhbmdl
-LCB5b3UgZG9uJ3QgbmVlZCB0byBhY3R1YWxseSBtb3ZlIAp0aGUgaW50ZXJjb25uZWN0IGNvZGUg
-b3V0c2lkZSBvZiBkZXZmcmVxLiBKdXN0IG1ha2UgZXZlcnkgZGV2ZnJlcS9pY2MgCm5vZGUgcmVn
-aXN0ZXIgYSBkZXZfcG1fcW9zX3JlcXVlc3QgZm9yIGl0c2VsZiBkdXJpbmcgcmVnaXN0cmF0aW9u
-IGFuZCAKY2FsbCBkZXZfcG1fcW9zX3VwZGF0ZV9yZXF1ZXN0IGluc2lkZSBleHlub3NfYnVzX2lj
-Y19zZXQuCgpTZWU6IGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTEwODQyNzkv
-CgotLQpSZWdhcmRzLApMZW9uYXJkCg==
+On Tue, Aug 6, 2019 at 12:12 PM Nicolas Saenz Julienne
+<nsaenzjulienne@suse.de> wrote:
+>
+> Hi Rob,
+>
+> On Mon, 2019-08-05 at 13:23 -0600, Rob Herring wrote:
+> > On Mon, Aug 5, 2019 at 10:03 AM Nicolas Saenz Julienne
+> > <nsaenzjulienne@suse.de> wrote:
+> > > Hi Rob,
+> > > Thanks for the review!
+> > >
+> > > On Fri, 2019-08-02 at 11:17 -0600, Rob Herring wrote:
+> > > > On Wed, Jul 31, 2019 at 9:48 AM Nicolas Saenz Julienne
+> > > > <nsaenzjulienne@suse.de> wrote:
+> > > > > Some SoCs might have multiple interconnects each with their own DMA
+> > > > > addressing limitations. This function parses the 'dma-ranges' on each of
+> > > > > them and tries to guess the maximum SoC wide DMA addressable memory
+> > > > > size.
+> > > > >
+> > > > > This is specially useful for arch code in order to properly setup CMA
+> > > > > and memory zones.
+> > > >
+> > > > We already have a way to setup CMA in reserved-memory, so why is this
+> > > > needed for that?
+> > >
+> > > Correct me if I'm wrong but I got the feeling you got the point of the patch
+> > > later on.
+> >
+> > No, for CMA I don't. Can't we already pass a size and location for CMA
+> > region under /reserved-memory. The only advantage here is perhaps the
+> > CMA range could be anywhere in the DMA zone vs. a fixed location.
+>
+> Now I get it, sorry I wasn't aware of that interface.
+>
+> Still, I'm not convinced it matches RPi's use case as this would hard-code
+> CMA's size. Most people won't care, but for the ones that do, it's nicer to
+> change the value from the kernel command line than editing the dtb.
+
+Sure, I fully agree and am not a fan of the CMA DT overlays I've seen.
+
+> I get that
+> if you need to, for example, reserve some memory for the video to work, it's
+> silly not to hard-code it. Yet due to the board's nature and users base I say
+> it's important to favor flexibility. It would also break compatibility with
+> earlier versions of the board and diverge from the downstream kernel behaviour.
+> Which is a bigger issue than it seems as most users don't always understand
+> which kernel they are running and unknowingly copy configuration options from
+> forums.
+>
+> As I also need to know the DMA addressing limitations to properly configure
+> memory zones and dma-direct. Setting up the proper CMA constraints during the
+> arch's init will be trivial anyway.
+
+It was really just commentary on commit text as for CMA alone we have
+a solution already. I agree on the need for zones.
+
+>
+> > > > IMO, I'd just do:
+> > > >
+> > > > if (of_fdt_machine_is_compatible(blob, "brcm,bcm2711"))
+> > > >     dma_zone_size = XX;
+> > > >
+> > > > 2 lines of code is much easier to maintain than 10s of incomplete code
+> > > > and is clearer who needs this. Maybe if we have dozens of SoCs with
+> > > > this problem we should start parsing dma-ranges.
+> > >
+> > > FYI that's what arm32 is doing at the moment and was my first instinct. But
+> > > it
+> > > seems that arm64 has been able to survive so far without any machine
+> > > specific
+> > > code and I have the feeling Catalin and Will will not be happy about this
+> > > solution. Am I wrong?
+> >
+> > No doubt. I'm fine if the 2 lines live in drivers/of/.
+> >
+> > Note that I'm trying to reduce the number of early_init_dt_scan_*
+> > calls from arch code into the DT code so there's more commonality
+> > across architectures in the early DT scans. So ideally, this can all
+> > be handled under early_init_dt_scan() call.
+>
+> How does this look? (I'll split it in two patches and add a comment explaining
+> why dt_dma_zone_size is needed)
+>
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index f2444c61a136..1395be40b722 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -30,6 +30,8 @@
+>
+>  #include "of_private.h"
+>
+> +u64 dt_dma_zone_size __ro_after_init;
+
+Avoiding a call from arch code by just having a variable isn't really
+better. I'd rather see a common, non DT specific variable that can be
+adjusted. Something similar to initrd_start/end. Then the arch code
+doesn't have to care what hardware description code adjusted the
+value.
+
+Rob
