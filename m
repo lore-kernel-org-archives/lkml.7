@@ -7,47 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E9A0C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23EDDC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:08:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7127C21883
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:07:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED43B21883
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:07:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565291277;
-	bh=pLMZ0R39s6sqErT9cP49pt4d3kGmb9ZL0meTJmLHSx4=;
+	s=default; t=1565291280;
+	bh=sC+HEfa11I6BN7a/9w7edfoxIeYOhoaFVDR/Rtx8ogE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oOuXpzrFGVQeI/+5lXxK0OYQZZdYH3craeL6Gh++hSpE652sLiYm5r13vvBOQcVFB
-	 Z78+UytK5+gvS6e6BmD5Ju0AVo40uzt78GQ8p10HK9Ni8fdbNE0t3JroLw51YseaBU
-	 GiQtHtG7N0dD3dO25FjryxbMreWCcLeJMMSDthtU=
+	b=JaoAwDwsyYw37nycaH8S6lNCZx0oYONUcv7cBsqY/ppAh6JdZhzmjFv3dFOj8xIdd
+	 0+qjBx4naZ/xWN7uQuFEoRgjWiiY07AEBMROo+fJ4vspvLU5AhbnHiGJORpF+QwJ2X
+	 Fb1YMO7/OVYgV0zIAvjtydm0owTOLj4tCVV7Q+s8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404782AbfHHTH4 (ORCPT
+        id S2404793AbfHHTH7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:07:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41736 "EHLO mail.kernel.org"
+        Thu, 8 Aug 2019 15:07:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404766AbfHHTHx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 15:07:53 -0400
+        id S2404389AbfHHTHz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 15:07:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8638621883;
-        Thu,  8 Aug 2019 19:07:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F6142173E;
+        Thu,  8 Aug 2019 19:07:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565291272;
-        bh=pLMZ0R39s6sqErT9cP49pt4d3kGmb9ZL0meTJmLHSx4=;
+        s=default; t=1565291274;
+        bh=sC+HEfa11I6BN7a/9w7edfoxIeYOhoaFVDR/Rtx8ogE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dLHpcumuCOKsM65oXpUK18Lhd/gI99FuTQK++6NvRxOzDB36AO7kLMW8PpIUfMZyU
-         jzylDgInH37X7gD5aJtI6gO/0q9O6srx0VJ7zxQJabQCBs04vo1wq5z4bcx/7chVsl
-         8CuHysBAlHeDyHvbSB1hf50Y0JQp3G7g+5f4Z1HA=
+        b=SFIo09rOle1Nql8PDRzq+tlQxiP8fFmw7m5S+Xiapk8Ufbrpd4RR0MHT26OQhYK58
+         D6VLjBqKpOG8ybRHw76lByXRfmV9dZm7knsPjc28wuGFLJdhVLk4Z0fKsH4wPfzSYJ
+         j/GKYh5Vb+KK3i3mrzbYtYb7ZlpG2BTbkPT9pkqw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guillaume Nault <g.nault@alphalink.fr>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 53/56] compat_ioctl: pppoe: fix PPPOEIOCSFWD handling
-Date:   Thu,  8 Aug 2019 21:05:19 +0200
-Message-Id: <20190808190455.418256875@linuxfoundation.org>
+        stable@vger.kernel.org, Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        =?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>,
+        Dhinakaran Pandiyan <dhinakaran.pandiyan@intel.com>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>,
+        =?UTF-8?q?Fran=C3=A7ois=20Guerraz?= <kubrick@fgv6.net>,
+        Jani Nikula <jani.nikula@intel.com>
+Subject: [PATCH 5.2 54/56] drm/i915/vbt: Fix VBT parsing for the PSR section
+Date:   Thu,  8 Aug 2019 21:05:20 +0200
+Message-Id: <20190808190455.496774701@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190808190452.867062037@linuxfoundation.org>
 References: <20190808190452.867062037@linuxfoundation.org>
@@ -60,132 +64,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Dhinakaran Pandiyan <dhinakaran.pandiyan@intel.com>
 
-[ Upstream commit 055d88242a6046a1ceac3167290f054c72571cd9 ]
+commit 6d61f716a01ec0e134de38ae97e71d6fec5a6ff6 upstream.
 
-Support for handling the PPPOEIOCSFWD ioctl in compat mode was added in
-linux-2.5.69 along with hundreds of other commands, but was always broken
-sincen only the structure is compatible, but the command number is not,
-due to the size being sizeof(size_t), or at first sizeof(sizeof((struct
-sockaddr_pppox)), which is different on 64-bit architectures.
+A single 32-bit PSR2 training pattern field follows the sixteen element
+array of PSR table entries in the VBT spec. But, we incorrectly define
+this PSR2 field for each of the PSR table entries. As a result, the PSR1
+training pattern duration for any panel_type != 0 will be parsed
+incorrectly. Secondly, PSR2 training pattern durations for VBTs with bdb
+version >= 226 will also be wrong.
 
-Guillaume Nault adds:
-
-  And the implementation was broken until 2016 (see 29e73269aa4d ("pppoe:
-  fix reference counting in PPPoE proxy")), and nobody ever noticed. I
-  should probably have removed this ioctl entirely instead of fixing it.
-  Clearly, it has never been used.
-
-Fix it by adding a compat_ioctl handler for all pppoe variants that
-translates the command number and then calls the regular ioctl function.
-
-All other ioctl commands handled by pppoe are compatible between 32-bit
-and 64-bit, and require compat_ptr() conversion.
-
-This should apply to all stable kernels.
-
-Acked-by: Guillaume Nault <g.nault@alphalink.fr>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Cc: José Roberto de Souza <jose.souza@intel.com>
+Cc: stable@vger.kernel.org
+Cc: stable@vger.kernel.org #v5.2
+Fixes: 88a0d9606aff ("drm/i915/vbt: Parse and use the new field with PSR2 TP2/3 wakeup time")
+Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=111088
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204183
+Signed-off-by: Dhinakaran Pandiyan <dhinakaran.pandiyan@intel.com>
+Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Reviewed-by: José Roberto de Souza <jose.souza@intel.com>
+Acked-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Tested-by: François Guerraz <kubrick@fgv6.net>
+Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190717223451.2595-1-dhinakaran.pandiyan@intel.com
+(cherry picked from commit b5ea9c9337007d6e700280c8a60b4e10d070fb53)
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ppp/pppoe.c  |    3 +++
- drivers/net/ppp/pppox.c  |   13 +++++++++++++
- drivers/net/ppp/pptp.c   |    3 +++
- fs/compat_ioctl.c        |    3 ---
- include/linux/if_pppox.h |    3 +++
- net/l2tp/l2tp_ppp.c      |    3 +++
- 6 files changed, 25 insertions(+), 3 deletions(-)
 
---- a/drivers/net/ppp/pppoe.c
-+++ b/drivers/net/ppp/pppoe.c
-@@ -1115,6 +1115,9 @@ static const struct proto_ops pppoe_ops
- 	.recvmsg	= pppoe_recvmsg,
- 	.mmap		= sock_no_mmap,
- 	.ioctl		= pppox_ioctl,
-+#ifdef CONFIG_COMPAT
-+	.compat_ioctl	= pppox_compat_ioctl,
-+#endif
- };
+
+---
+ drivers/gpu/drm/i915/intel_bios.c     |    2 +-
+ drivers/gpu/drm/i915/intel_vbt_defs.h |    6 +++---
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+--- a/drivers/gpu/drm/i915/intel_bios.c
++++ b/drivers/gpu/drm/i915/intel_bios.c
+@@ -762,7 +762,7 @@ parse_psr(struct drm_i915_private *dev_p
+ 	}
  
- static const struct pppox_proto pppoe_proto = {
---- a/drivers/net/ppp/pppox.c
-+++ b/drivers/net/ppp/pppox.c
-@@ -17,6 +17,7 @@
- #include <linux/string.h>
- #include <linux/module.h>
- #include <linux/kernel.h>
-+#include <linux/compat.h>
- #include <linux/errno.h>
- #include <linux/netdevice.h>
- #include <linux/net.h>
-@@ -98,6 +99,18 @@ int pppox_ioctl(struct socket *sock, uns
+ 	if (bdb->version >= 226) {
+-		u32 wakeup_time = psr_table->psr2_tp2_tp3_wakeup_time;
++		u32 wakeup_time = psr->psr2_tp2_tp3_wakeup_time;
  
- EXPORT_SYMBOL(pppox_ioctl);
+ 		wakeup_time = (wakeup_time >> (2 * panel_type)) & 0x3;
+ 		switch (wakeup_time) {
+--- a/drivers/gpu/drm/i915/intel_vbt_defs.h
++++ b/drivers/gpu/drm/i915/intel_vbt_defs.h
+@@ -772,13 +772,13 @@ struct psr_table {
+ 	/* TP wake up time in multiple of 100 */
+ 	u16 tp1_wakeup_time;
+ 	u16 tp2_tp3_wakeup_time;
+-
+-	/* PSR2 TP2/TP3 wakeup time for 16 panels */
+-	u32 psr2_tp2_tp3_wakeup_time;
+ } __packed;
  
-+#ifdef CONFIG_COMPAT
-+int pppox_compat_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg)
-+{
-+	if (cmd == PPPOEIOCSFWD32)
-+		cmd = PPPOEIOCSFWD;
+ struct bdb_psr {
+ 	struct psr_table psr_table[16];
 +
-+	return pppox_ioctl(sock, cmd, (unsigned long)compat_ptr(arg));
-+}
-+
-+EXPORT_SYMBOL(pppox_compat_ioctl);
-+#endif
-+
- static int pppox_create(struct net *net, struct socket *sock, int protocol,
- 			int kern)
- {
---- a/drivers/net/ppp/pptp.c
-+++ b/drivers/net/ppp/pptp.c
-@@ -623,6 +623,9 @@ static const struct proto_ops pptp_ops =
- 	.recvmsg    = sock_no_recvmsg,
- 	.mmap       = sock_no_mmap,
- 	.ioctl      = pppox_ioctl,
-+#ifdef CONFIG_COMPAT
-+	.compat_ioctl = pppox_compat_ioctl,
-+#endif
- };
++	/* PSR2 TP2/TP3 wakeup time for 16 panels */
++	u32 psr2_tp2_tp3_wakeup_time;
+ } __packed;
  
- static const struct pppox_proto pppox_pptp_proto = {
---- a/fs/compat_ioctl.c
-+++ b/fs/compat_ioctl.c
-@@ -638,9 +638,6 @@ COMPATIBLE_IOCTL(PPPIOCDISCONN)
- COMPATIBLE_IOCTL(PPPIOCATTCHAN)
- COMPATIBLE_IOCTL(PPPIOCGCHAN)
- COMPATIBLE_IOCTL(PPPIOCGL2TPSTATS)
--/* PPPOX */
--COMPATIBLE_IOCTL(PPPOEIOCSFWD)
--COMPATIBLE_IOCTL(PPPOEIOCDFWD)
- /* Big A */
- /* sparc only */
- /* Big Q for sound/OSS */
---- a/include/linux/if_pppox.h
-+++ b/include/linux/if_pppox.h
-@@ -80,6 +80,9 @@ extern int register_pppox_proto(int prot
- extern void unregister_pppox_proto(int proto_num);
- extern void pppox_unbind_sock(struct sock *sk);/* delete ppp-channel binding */
- extern int pppox_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg);
-+extern int pppox_compat_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg);
-+
-+#define PPPOEIOCSFWD32    _IOW(0xB1 ,0, compat_size_t)
- 
- /* PPPoX socket states */
- enum {
---- a/net/l2tp/l2tp_ppp.c
-+++ b/net/l2tp/l2tp_ppp.c
-@@ -1681,6 +1681,9 @@ static const struct proto_ops pppol2tp_o
- 	.recvmsg	= pppol2tp_recvmsg,
- 	.mmap		= sock_no_mmap,
- 	.ioctl		= pppox_ioctl,
-+#ifdef CONFIG_COMPAT
-+	.compat_ioctl = pppox_compat_ioctl,
-+#endif
- };
- 
- static const struct pppox_proto pppol2tp_proto = {
+ /*
 
 
