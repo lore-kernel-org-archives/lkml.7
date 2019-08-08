@@ -2,102 +2,135 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C583C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 11:21:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15ADDC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 11:21:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FFBC21874
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 11:21:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC0E921874
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 11:21:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="iCGTFksi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732147AbfHHLVB (ORCPT
+        id S1732202AbfHHLVv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 07:21:01 -0400
-Received: from mga09.intel.com ([134.134.136.24]:64335 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731312AbfHHLVB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 07:21:01 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Aug 2019 04:21:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,360,1559545200"; 
-   d="scan'208";a="374820094"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
-  by fmsmga006.fm.intel.com with ESMTP; 08 Aug 2019 04:20:57 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1hvgTY-0001uN-8N; Thu, 08 Aug 2019 14:20:56 +0300
-Date:   Thu, 8 Aug 2019 14:20:56 +0300
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Cc:     linux-serial@vger.kernel.org, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, jslaby@suse.com,
-        qi-ming.wu@intel.com, cheol.yong.kim@intel.com,
-        rahul.tanwar@intel.com
-Subject: Re: [PATCH v2 1/3] serial: lantiq: Use proper DT compatible string
-Message-ID: <20190808112056.GK30120@smile.fi.intel.com>
-References: <cover.1565257887.git.rahul.tanwar@linux.intel.com>
- <57e2b69e9fbd93328a477b4c7dd2dcc78784ecb1.1565257887.git.rahul.tanwar@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <57e2b69e9fbd93328a477b4c7dd2dcc78784ecb1.1565257887.git.rahul.tanwar@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 8 Aug 2019 07:21:51 -0400
+Received: from conuserg-07.nifty.com ([210.131.2.74]:37726 "EHLO
+        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730747AbfHHLVv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 07:21:51 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-07.nifty.com with ESMTP id x78BLEkO027157;
+        Thu, 8 Aug 2019 20:21:15 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com x78BLEkO027157
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1565263275;
+        bh=Y3joUPUMYoBzCVDWCYCkXvHGxBHe0Rsmx3YuHH4+91M=;
+        h=From:To:Cc:Subject:Date:From;
+        b=iCGTFksi3llJddT4lN0m7yPIlNGjS7AghbijE+hez0ISz3b3PLhEoWhe8ZzA0AQD1
+         tmuGow482ok/3d9oy/0PYpn+1SAfMT+duWTPJQBgh55L34l4wnb740DftNfP72p4bK
+         aVKdwDsT6xKeiIXY6if/cQyMi6kDX7o+z1dasan/d74TyZq2vmZdgJeo71cIXEwTro
+         iqtvX0k17GTKR4xWb7K4k/D8ZMkBB3hhnVx+hj9cJtujetuLZmPO8IkT27p6dP6HMb
+         uwYk3S0pCSmHXXn7Ttt/VrmKEz0l3WNU0cenS5Khc2kLclUhn33SlMDoN2Vlg58Ik9
+         oGL/0vdUIw4fg==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Jan Kiszka <jan.kiszka@siemens.com>,
+        Tom Stonecypher <thomas.edwardx.stonecypher@intel.com>,
+        linux-kernel@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>
+Subject: [PATCH v2] kbuild: show hint if subdir-y/m is used to visit module Makefile
+Date:   Thu,  8 Aug 2019 20:21:11 +0900
+Message-Id: <20190808112111.16159-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 06:02:06PM +0800, Rahul Tanwar wrote:
-> Use explicit string instead of a macro for devicetree compatible string.
-> 
-> This series of patches is to add support for multiple SoCs which reuse the same
-> serial controller IP. The following patches will add another compatible string
-> to support new Lightning Mountain(LGM) SoC. So it makes sense to have the
-> compatible strings explicitly mentioned instead of a fixed macro.
-> 
+Since commit ff9b45c55b26 ("kbuild: modpost: read modules.order instead
+of $(MODVERDIR)/*.mod"), a module is no longer built in the following
+pattern:
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+  [Makefile]
+  subdir-y := some-module
 
-> Suggested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
-> ---
->  drivers/tty/serial/lantiq.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/lantiq.c b/drivers/tty/serial/lantiq.c
-> index 42e27b48e9cc..660d21db57dc 100644
-> --- a/drivers/tty/serial/lantiq.c
-> +++ b/drivers/tty/serial/lantiq.c
-> @@ -693,7 +693,7 @@ lqasc_serial_early_console_setup(struct earlycon_device *device,
->  	device->con->write = lqasc_serial_early_console_write;
->  	return 0;
->  }
-> -OF_EARLYCON_DECLARE(lantiq, DRVNAME, lqasc_serial_early_console_setup);
-> +OF_EARLYCON_DECLARE(lantiq, "lantiq,asc", lqasc_serial_early_console_setup);
->  
->  static struct uart_driver lqasc_reg = {
->  	.owner =	THIS_MODULE,
-> @@ -792,7 +792,7 @@ lqasc_probe(struct platform_device *pdev)
->  }
->  
->  static const struct of_device_id ltq_asc_match[] = {
-> -	{ .compatible = DRVNAME },
-> +	{ .compatible = "lantiq,asc" },
->  	{},
->  };
->  
-> -- 
-> 2.11.0
-> 
+  [some-module/Makefile]
+  obj-m := some-module.o
 
+You cannot write Makefile this way in upstream because modules.order is
+not correctly generated. subdir-y is used to descend to a sub-directory
+that builds tools, device trees, etc.
+
+For external modules, the modules order does not matter. So, the
+Makefile above was known to work.
+
+I believe the Makefile should be re-written as follows:
+
+  [Makefile]
+  obj-m := some-module/
+
+  [some-module/Makefile]
+  obj-m := some-module.o
+
+However, people will have no idea if their Makefile suddenly stops
+working. In fact, I received questions from multiple people.
+
+Show a warning if obj-m is specified in a Makefile visited by subdir-y
+or subdir-m.
+
+I touched the %/ rule to avoid false-positive warnings for the single
+target.
+
+Cc: Jan Kiszka <jan.kiszka@siemens.com>
+Cc: Tom Stonecypher <thomas.edwardx.stonecypher@intel.com>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
+
+Changes in v2:
+ - fix false-positive warnings for single targets
+
+ Makefile               | 2 +-
+ scripts/Makefile.build | 7 +++++++
+ 2 files changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/Makefile b/Makefile
+index 0e37ad2f77bf..fac25e279da6 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1783,7 +1783,7 @@ PHONY += /
+ /: ./
+ 
+ %/: prepare FORCE
+-	$(Q)$(MAKE) KBUILD_MODULES=1 $(build)=$(build-dir)
++	$(Q)$(MAKE) KBUILD_MODULES=1 $(build)=$(build-dir) need-modorder=1
+ 
+ # FIXME Should go into a make.lib or something
+ # ===========================================================================
+diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+index 37a1d2cd49d4..2f66ed388d1c 100644
+--- a/scripts/Makefile.build
++++ b/scripts/Makefile.build
+@@ -52,6 +52,13 @@ ifndef obj
+ $(warning kbuild: Makefile.build is included improperly)
+ endif
+ 
++ifeq ($(MAKECMDGOALS)$(need-modorder),)
++ifneq ($(obj-m),)
++$(warning $(patsubst %.o,'%.ko',$(obj-m)) will not be built even though obj-m is specified.)
++$(warning You cannot use subdir-y/m to visit a module Makefile. Use obj-y/m instead.)
++endif
++endif
++
+ # ===========================================================================
+ 
+ ifneq ($(strip $(lib-y) $(lib-m) $(lib-)),)
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.17.1
 
