@@ -2,81 +2,99 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD7F8C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 10:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 369FDC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 10:04:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A0C321874
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 10:03:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15A5D2187F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 10:04:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389866AbfHHKDD (ORCPT
+        id S2389875AbfHHKEg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 06:03:03 -0400
-Received: from mga03.intel.com ([134.134.136.65]:25684 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389786AbfHHKDD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 06:03:03 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Aug 2019 03:02:13 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,360,1559545200"; 
-   d="scan'208";a="179792908"
-Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
-  by orsmga006.jf.intel.com with ESMTP; 08 Aug 2019 03:02:10 -0700
-From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
-To:     linux-serial@vger.kernel.org, gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org, jslaby@suse.com,
-        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
-        cheol.yong.kim@intel.com, rahul.tanwar@intel.com,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Subject: [PATCH v2 0/3] serial: lantiq: Update driver to support new SoC
-Date:   Thu,  8 Aug 2019 18:02:05 +0800
-Message-Id: <cover.1565257887.git.rahul.tanwar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
+        Thu, 8 Aug 2019 06:04:36 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:46801 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389773AbfHHKEg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 06:04:36 -0400
+Received: by mail-qt1-f196.google.com with SMTP id h21so91447767qtn.13;
+        Thu, 08 Aug 2019 03:04:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RjvrmHnLkNY8judMLmiwx+J5kIvDISrhio/7dX5zE9M=;
+        b=A4L/lVEnAhzimNvZOk2dlay//kRmDE29VrHcAuetZ/+P4JB3Sld8H0YWMeCC1c3mQE
+         wstifSkxoflQ2ddSoIE+VNQ+yTVy9glgoyoKBxzR4dpYfrXoefpDcWMF4HLPEV9jWTbp
+         K/aasTxqk54UTrMWMLdLmxYVnjY1ccSJoj5VgLepnNfA/zFcgC71Hm/eYtj/OW69Wklk
+         m1fISftkc6C8sQD/5EYLMmNzB2TEHQKn2mMMsL2lyru+dNW0pRKJOcBxqmW20PWaae0/
+         GRB0xs0T6TDjR/3W+8s3e4B4sTRhQXX8HsRQ952ImdBoNy1lbzQ8vrriBqfc9opIoqAy
+         7X0A==
+X-Gm-Message-State: APjAAAUsGdPI8Qq8syVEwBV4KItFjxH2sLeAHH0lDWzjKDEUuP3KCn/g
+        Q5SAozm65eI/XTwDwDp5+v1TUv/8Yox7o0uE9hM=
+X-Google-Smtp-Source: APXvYqzYiIGgaQsnnsl/ev4HI3EBWf/N9eNNIZAf4tphrn0oTVGBurf6vSIQ6z6xYL8ITJbX0KbZAIZ3U8xYBBzOq94=
+X-Received: by 2002:ac8:6684:: with SMTP id d4mr7259661qtp.204.1565258674868;
+ Thu, 08 Aug 2019 03:04:34 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190724171615.20774-1-paul@crapouillou.net> <20190724171615.20774-5-paul@crapouillou.net>
+ <20190729165536.dd67ws6nr2msx4pk@pburton-laptop>
+In-Reply-To: <20190729165536.dd67ws6nr2msx4pk@pburton-laptop>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 8 Aug 2019 12:04:18 +0200
+Message-ID: <CAK8P3a0nOc2tpxYAoE0EGzXT1+FXFqzdK1mYE+ZR9CTqAaH_fQ@mail.gmail.com>
+Subject: Re: [EXTERNAL][PATCH v15 04/13] mfd/syscon: Add device_node_to_regmap()
+To:     Paul Burton <paul.burton@mips.com>
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "od@zcrc.me" <od@zcrc.me>, Mathieu Malaterre <malat@debian.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a new Intel Atom based Lightning Mountain(LGM) network processor SoC
-which reuses Lantiq ASC serial controller IP. This patch series updates the
-driver design and code to add support for LGM SoC as well.
+On Mon, Jul 29, 2019 at 6:55 PM Paul Burton <paul.burton@mips.com> wrote:
+>
+> Lee, Arnd,
+>
+> On Wed, Jul 24, 2019 at 01:16:06PM -0400, Paul Cercueil wrote:
+> > device_node_to_regmap() is exactly like syscon_node_to_regmap(), but it
+> > does not check that the node is compatible with "syscon", and won't
+> > attach the first clock it finds to the regmap.
+> >
+> > The rationale behind this, is that one device node with a standard
+> > compatible string "foo,bar" can be covered by multiple drivers sharing a
+> > regmap, or by a single driver doing all the job without a regmap, but
+> > these are implementation details which shouldn't reflect on the
+> > devicetree.
+>
+> Does this looks like a good path forwards to you? Its use in this case
+> is described by Documentation/devicetree/bindings/timer/ingenic,tcu.txt
+> in patch 3 of the series.
+>
+> If you're OK with it an ack would be appreciated so I can take the
+> series through mips-next, otherwise I guess we'd need to go back to the
+> v14 approach.
 
-These patches are baselined upon Linux 5.3-rc2 at below Git tree:
-git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git
+Yes, I guess this is ok, sorry for missing the submission earlier.
 
-Patch 1 modifies devicetree compatible string to a use explicit string instead
-of a fixed macro because this patch series adds support for multiple SoCs.
-
-Patch 2 modifies driver design to support dynamic assignment of IRQ resources
-& ISRs based on devicetree node compatible entries. This is because new LGM SoC
-supports single IRQ for all tx/rx/err interrupts while older SoCs support three
-separate IRQs for tx/rx/err interrupts.
-
-Patch 3 adds LGM SoC specific IRQ/ISR support.
-
-v2:
-* Address review concerns.
-* Separate dt binding document from this patch series. Will try to push it
-  separately by first converting existing txt file to YAML and then add new
-  properties.
-* Omit resending one patch in this series which is already reviewed & added
-  to tty-next.
-
-
-Rahul Tanwar (3):
-  serial: lantiq: Use proper DT compatible string
-  serial: lantiq: Make IRQ & ISR assignment dynamic
-  serial: lantiq: Add support for Lightning Mountain SoC
-
- drivers/tty/serial/lantiq.c | 214 ++++++++++++++++++++++++++++++++++----------
- 1 file changed, 168 insertions(+), 46 deletions(-)
-
--- 
-2.11.0
-
+Acked-by: Arnd Bergmann <arnd@arndb.de>
