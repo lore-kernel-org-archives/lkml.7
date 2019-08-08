@@ -2,193 +2,118 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D2E6C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CEA7C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:33:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E3AE217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:33:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0330D217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:33:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cCOBoICU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732738AbfHHOdd (ORCPT
+        id S1732792AbfHHOdk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 10:33:33 -0400
-Received: from mail-ot1-f69.google.com ([209.85.210.69]:45911 "EHLO
-        mail-ot1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727096AbfHHOdZ (ORCPT
+        Thu, 8 Aug 2019 10:33:40 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:41890 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732741AbfHHOdj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 10:33:25 -0400
-Received: by mail-ot1-f69.google.com with SMTP id b25so62018374otp.12
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 07:33:25 -0700 (PDT)
+        Thu, 8 Aug 2019 10:33:39 -0400
+Received: by mail-ed1-f65.google.com with SMTP id w5so2448565edl.8
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 07:33:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1+hRXOJC+ZDM/4/kVVufU5PRo9dpiWo2Z8YGtmpPW2I=;
+        b=cCOBoICU8CNt81EgZopFsi62bJmq0dCGhRRyOBZrHz6x4zgZMVW0I0qIH4tqKn99Ch
+         KCuglEQChTF0oNH1RULG7gBFl9ROMSdkWPvDjWYgtyOrwC7lBeww1a4RHafAsavxSbuz
+         Fm5M+8QkjJbkTLchwoDqDiNyYbvLWr++v5jvUHZn519FGt5V8pAxBJ4xQpWhD/gIuloD
+         XKVlh5ov7P2gm1HzEQ48jtXVuZeHjUX32eyJr6Bqts2hiTE9KbIsnJiV+CpxXmKThH2e
+         wmRBJg1RkKYjzuvNjK7zAtt1JAO3piFKSeZxcWyHrAMwdAXPw6YlB+ETRwL/ZUXfkWia
+         2s4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to:cc;
-        bh=jZyCbcw3RWENZUjZ8q6u6MdFhvaB3V5am3DAxqvxROk=;
-        b=ENvDCDnk5E81g/cLK58s45BuqJRFrVDS5BHR655rsKsBp59ZxwSP2vYSZJw3TrxaGR
-         AW0llRuau27JqO2BQHqz0SoLbbJZb83fD3udV7S2ABwoxeTYpXY4cRuUSIq6UziY2yzm
-         Il7byJzjS3hwxayfpV3H7HLXcz4RoNqhdV1/jtTPwh2mLTciYlkFIuyGWom+rnnZe/ee
-         8AHaeB7MbSl1cNQWXl0HaV6O9EVcAGfVwbr7noFIOlN1GUaRrwtyhWWXEJ6gq75Bbdpx
-         VvdOulPdbEXZVZNksGLd3rKeG7BJcXtjlnj/UcwJEZWz41heOIPe+qpep6u3Wg7sOBh/
-         8Mog==
-X-Gm-Message-State: APjAAAVqa+ea0ilixwXT24H9n3xR1EAHYQLG2TTVpEwbNGEjnX4jfkuk
-        UiSrjTU17Uxn7b2Ed7l7vAv/HuLB3+EXtPq/sWF/nvcz2cOL
-X-Google-Smtp-Source: APXvYqyHOp2lVA12vv+ST29W9GrxgWuLhJZZhoi+joOmROWgcCD7PxanPpA2bipURq2utrM6+0wONAARKSHheq6iGCjCQwVOjSra
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1+hRXOJC+ZDM/4/kVVufU5PRo9dpiWo2Z8YGtmpPW2I=;
+        b=qgyiQnj9YDMvD3ggUrdJ2lhNsj3M6OSr1hutHK6Aw1eNvSTbFEQS4mX80MlPr9UpjB
+         OL/wJgGKNbx6q5tDREkJI7FKSPSBuWPKqoIQq0mbhLpHe0qrmSdkFugmmS3750Jf2Uyi
+         C/ShSfl6OR8Ozm4P/ltkvf6d4tl2B0vw7GUgCcj3mJcZKSLGTQYa402GAhoBZmBltG6p
+         BQ7uCmL+49gE9gQhc7oNPmAt7a436Rd6BB9GdrilzGt4ajyJIOHvtK1kZ0k/GaljE5jZ
+         kq6sC8llPduDWeZNHM2RbQvgMO+tjEy13CDDFn4NWVZnKUlfS9ZVPIakC+lstpl46xWC
+         hnmQ==
+X-Gm-Message-State: APjAAAUfSdp2FoKPTwzQCfUfEXIK9TiQpkpOH8LB2c7aoq6uYfG/8zKW
+        gtaarzETyuifPM32seEHjd0=
+X-Google-Smtp-Source: APXvYqw60Qv6BR5nyiLLGJOB6JFXkK8yFSkjUH6a9VxpLPc86WgYOyY4BHMmwi1P9oj0mhGac7YRMA==
+X-Received: by 2002:a17:906:4354:: with SMTP id z20mr13315954ejm.163.1565274817932;
+        Thu, 08 Aug 2019 07:33:37 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id m17sm255658ejc.91.2019.08.08.07.33.37
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 08 Aug 2019 07:33:37 -0700 (PDT)
+Date:   Thu, 8 Aug 2019 14:33:36 +0000
+From:   Wei Yang <richard.weiyang@gmail.com>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>,
+        Michal Hocko <mhocko@kernel.org>, akpm@linux-foundation.org,
+        kirill.shutemov@linux.intel.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/mmap.c: refine data locality of find_vma_prev
+Message-ID: <20190808143336.kgq4f6j5gfixtcb4@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <20190806081123.22334-1-richardw.yang@linux.intel.com>
+ <3e57ba64-732b-d5be-1ad6-eecc731ef405@suse.cz>
+ <20190807003109.GB24750@richard>
+ <20190807075101.GN11812@dhcp22.suse.cz>
+ <20190808032638.GA28138@richard>
+ <d4aab7f0-b653-8636-b5a7-97d3291f289d@suse.cz>
 MIME-Version: 1.0
-X-Received: by 2002:a02:ad15:: with SMTP id s21mr17427026jan.47.1565274804827;
- Thu, 08 Aug 2019 07:33:24 -0700 (PDT)
-Date:   Thu, 08 Aug 2019 07:33:24 -0700
-In-Reply-To: <Pine.LNX.4.44L0.1908081027560.1652-100000@iolanthe.rowland.org>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000b7c096058f9bf071@google.com>
-Subject: Re: Re: possible deadlock in open_rio
-From:   syzbot <syzbot+7bbcbe9c9ff0cd49592a@syzkaller.appspotmail.com>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     andreyknvl@google.com, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        oliver@neukum.org, stern@rowland.harvard.edu,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d4aab7f0-b653-8636-b5a7-97d3291f289d@suse.cz>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Wed, 7 Aug 2019, Oliver Neukum wrote:
+On Thu, Aug 08, 2019 at 10:49:29AM +0200, Vlastimil Babka wrote:
+>On 8/8/19 5:26 AM, Wei Yang wrote:
+>> 
+>> @@ -2270,12 +2270,9 @@ find_vma_prev(struct mm_struct *mm, unsigned long addr,
+>>         if (vma) {
+>>                 *pprev = vma->vm_prev;
+>>         } else {
+>> -               struct rb_node *rb_node = mm->mm_rb.rb_node;
+>> -               *pprev = NULL;
+>> -               while (rb_node) {
+>> -                       *pprev = rb_entry(rb_node, struct vm_area_struct, vm_rb);
+>> -                       rb_node = rb_node->rb_right;
+>> -               }
+>> +               struct rb_node *rb_node = rb_last(&mm->mm_rb);
+>> +               *pprev = !rb_node ? NULL :
+>> +                        rb_entry(rb_node, struct vm_area_struct, vm_rb);
+>>         }
+>>         return vma;
+>> 
+>> Not sure this style would help a little in understanding the code?
+>
+>Yeah using rb_last() would be nicer than basically repeating its
+>implementation, so it's fine as a cleanup without performance implications.
+>
 
->> Am Mittwoch, den 07.08.2019, 10:07 -0400 schrieb Alan Stern:
->> > On Wed, 7 Aug 2019, Oliver Neukum wrote:
+Thanks, I would send this version with proper change log.
 
->> > > technically yes. However in practical terms the straight revert I  
->> sent
->> > > out yesterday should fix it.
->> >
->> > I didn't see the revert, and it doesn't appear to have reached the
->> > mailing list archive.  Can you post it again?
+>>> -- 
+>>> Michal Hocko
+>>> SUSE Labs
+>> 
 
->> As soon as our VPN server is back up again.
-
-> The revert may not be necessay; a little fix should get rid of the
-> locking violation.  The key is to avoid calling the registration or
-> deregistration routines while holding the rio500_mutex, and to
-> recognize that the probe and disconnect routines are both protected by
-> the device mutex.
-
-> How does this patch look?
-
-> Alan Stern
-
-
-> #syz test: https://github.com/google/kasan.git 7f7867ff
-
-This crash does not have a reproducer. I cannot test it.
-
-
-> Index: usb-devel/drivers/usb/misc/rio500.c
-> ===================================================================
-> --- usb-devel.orig/drivers/usb/misc/rio500.c
-> +++ usb-devel/drivers/usb/misc/rio500.c
-> @@ -454,52 +454,54 @@ static int probe_rio(struct usb_interfac
->   {
->   	struct usb_device *dev = interface_to_usbdev(intf);
->   	struct rio_usb_data *rio = &rio_instance;
-> -	int retval = 0;
-> +	int retval;
-> +	char *ibuf, *obuf;
-
-> -	mutex_lock(&rio500_mutex);
->   	if (rio->present) {
->   		dev_info(&intf->dev, "Second USB Rio at address %d refused\n",  
-> dev->devnum);
-> -		retval = -EBUSY;
-> -		goto bail_out;
-> -	} else {
-> -		dev_info(&intf->dev, "USB Rio found at address %d\n", dev->devnum);
-> +		return -EBUSY;
->   	}
-> +	dev_info(&intf->dev, "USB Rio found at address %d\n", dev->devnum);
-
->   	retval = usb_register_dev(intf, &usb_rio_class);
->   	if (retval) {
->   		dev_err(&dev->dev,
->   			"Not able to get a minor for this device.\n");
-> -		retval = -ENOMEM;
-> -		goto bail_out;
-> +		goto err_register;
->   	}
-
-> -	rio->rio_dev = dev;
-> -
-> -	if (!(rio->obuf = kmalloc(OBUF_SIZE, GFP_KERNEL))) {
-> +	obuf = kmalloc(OBUF_SIZE, GFP_KERNEL);
-> +	if (!obuf) {
->   		dev_err(&dev->dev,
->   			"probe_rio: Not enough memory for the output buffer\n");
-> -		usb_deregister_dev(intf, &usb_rio_class);
-> -		retval = -ENOMEM;
-> -		goto bail_out;
-> +		goto err_obuf;
->   	}
-> -	dev_dbg(&intf->dev, "obuf address:%p\n", rio->obuf);
-> +	dev_dbg(&intf->dev, "obuf address: %p\n", obuf);
-
-> -	if (!(rio->ibuf = kmalloc(IBUF_SIZE, GFP_KERNEL))) {
-> +	ibuf = kmalloc(IBUF_SIZE, GFP_KERNEL);
-> +	if (!ibuf) {
->   		dev_err(&dev->dev,
->   			"probe_rio: Not enough memory for the input buffer\n");
-> -		usb_deregister_dev(intf, &usb_rio_class);
-> -		kfree(rio->obuf);
-> -		retval = -ENOMEM;
-> -		goto bail_out;
-> +		goto err_ibuf;
->   	}
-> -	dev_dbg(&intf->dev, "ibuf address:%p\n", rio->ibuf);
-> +	dev_dbg(&intf->dev, "ibuf address: %p\n", ibuf);
-
-> +	mutex_lock(&rio500_mutex);
-> +	rio->rio_dev = dev;
-> +	rio->ibuf = ibuf;
-> +	rio->obuf = obuf;
->   	usb_set_intfdata (intf, rio);
->   	rio->present = 1;
-> -bail_out:
->   	mutex_unlock(&rio500_mutex);
-
->   	return retval;
-> +
-> + err_ibuf:
-> +	kfree(obuf);
-> + err_obuf:
-> +	usb_deregister_dev(intf, &usb_rio_class);
-> + err_register:
-> +	return -ENOMEM;
->   }
-
->   static void disconnect_rio(struct usb_interface *intf)
-> @@ -507,10 +509,10 @@ static void disconnect_rio(struct usb_in
->   	struct rio_usb_data *rio = usb_get_intfdata (intf);
-
->   	usb_set_intfdata (intf, NULL);
-> -	mutex_lock(&rio500_mutex);
->   	if (rio) {
->   		usb_deregister_dev(intf, &usb_rio_class);
-
-> +		mutex_lock(&rio500_mutex);
->   		if (rio->isopen) {
->   			rio->isopen = 0;
->   			/* better let it finish - the release will do whats needed */
-> @@ -524,8 +526,8 @@ static void disconnect_rio(struct usb_in
->   		dev_info(&intf->dev, "USB Rio disconnected.\n");
-
->   		rio->present = 0;
-> +		mutex_unlock(&rio500_mutex);
->   	}
-> -	mutex_unlock(&rio500_mutex);
->   }
-
->   static const struct usb_device_id rio_table[] = {
-
+-- 
+Wei Yang
+Help you, Help me
