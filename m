@@ -2,128 +2,248 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF96C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 18:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C250C32754
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 18:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E338E217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 18:39:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="TV/968eA"
+	by mail.kernel.org (Postfix) with ESMTP id EB6D92184E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 18:39:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565289598;
+	bh=d9WMpQ18wPaCSAl8L9q4LyWOMnhWyCQuXribMUhFASA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HD3PL3jydUV5kalUTHjkv1qT+UMCsLhUgR4HLv4DkuT6SybXGcoJIhOp4mxE7Q0hc
+	 xBUvtKgDK6S3o02nGwiz/xKXv3AIg58IRL7L5yaLa9EGQErKIIVQHK6F4LJrCUxXlI
+	 /Wnhgn51x3YjlfnVsxbP6AsdpFHSPrCV7JOtI1vU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390179AbfHHSjk (ORCPT
+        id S2403879AbfHHSj5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 14:39:40 -0400
-Received: from mout.gmx.net ([212.227.15.18]:49593 "EHLO mout.gmx.net"
+        Thu, 8 Aug 2019 14:39:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725535AbfHHSjj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 14:39:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1565289574;
-        bh=dGpkAMtNoDqZDa62BxxMC+N7AToenRiNkGltehKgUbo=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=TV/968eAT82gq65z+zwF7s8khtXqjIa89WdeH9QNm45glqhDomOVjkNxApY1d4JsT
-         Rzw5L570mRa//mMcJWkipW75qELkXI5UBxlEfOK+uoiYH+++Pkx5yIUnYt6UtC1Yni
-         IKTq9gcAkkoi7UJimVQ75NEpOf87i37zTofpbaTU=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([109.90.233.87]) by mail.gmx.com (mrgmx003
- [212.227.17.190]) with ESMTPSA (Nemesis) id 0MUoiS-1hnzo13sFQ-00YCm1; Thu, 08
- Aug 2019 20:39:34 +0200
-Date:   Thu, 8 Aug 2019 20:39:24 +0200
-From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: mfd: rn5t618: Document optional property
- system-power-controller
-Message-ID: <20190808183924.GB1966@latitude>
-References: <20190129135917.29521-1-j.neuschaefer@gmx.net>
- <20190201092411.GG783@dell>
+        id S2389883AbfHHSj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 14:39:56 -0400
+Received: from localhost (unknown [150.199.191.185])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AD54217F4;
+        Thu,  8 Aug 2019 18:39:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565289595;
+        bh=d9WMpQ18wPaCSAl8L9q4LyWOMnhWyCQuXribMUhFASA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VLKCzjDUC3356BGnBZagIOCZpjp2vhuMYe4MLA4mTTkR0HgQFZF6gLfdRTOl49FLd
+         WHvw0chHRhV1oAOfBAEKvh1u2D4ZOM65d6++xx/Kye5j/kXgyPSxneH38I63jG2LBY
+         0Ne2IAExBivEosxfHb105LMY82xFMH3FVfnkb6Ic=
+Date:   Thu, 8 Aug 2019 13:39:54 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        Keith Busch <kbusch@kernel.org>,
+        Mario Limonciello <Mario.Limonciello@dell.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rajat Jain <rajatja@google.com>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v2 2/2] nvme-pci: Allow PCI bus-level PM to be used if
+ ASPM is disabled
+Message-ID: <20190808183954.GG151852@google.com>
+References: <4323ed84dd07474eab65699b4d007aaf@AUSX13MPC105.AMER.DELL.COM>
+ <20190731221956.GB15795@localhost.localdomain>
+ <1921165.pTveHRX1Co@kreacher>
+ <1870928.r7tBYyfqdz@kreacher>
+ <20190808134356.GF151852@google.com>
+ <CAJZ5v0h=nz8yXwOOGBUB9m1GtJPOqBwtNK7zXPNMJjzPhMWd9w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ftEhullJWpWg/VHq"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190201092411.GG783@dell>
+In-Reply-To: <CAJZ5v0h=nz8yXwOOGBUB9m1GtJPOqBwtNK7zXPNMJjzPhMWd9w@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Provags-ID: V03:K1:UjmVhOwYxfTuMNi/1a/JFrncIqEzSeLdJ3cSQi8tXhDD4v/X9z+
- K2kM6jPdFh6Yo+tF3oIjy4adnxjako9At3/c5h4LALZli1pE2kLEPbqrZ4WqXIbCXjDSmG2
- MPeHZrHpLVU3Rv4vEsfcJnATFpq0bLKjJfer35e6moDxjGS+DyWc587eWeSnOvil9VAT2c/
- Baas2YlAaaw+6LYzX5vTg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:EiXht/wTFac=:XkMMK69RgaTsYZqvxxjhK/
- Al9pzKUVL3/xdQGP5cUODLK7702G2MSfdsj9iEU8LfKV46xu2uacrvAWs86OBFJK4zmmXz+dy
- je7g8Oosst/sSS87mqPxasUNzE/AQ8WofTOQHObVUGP17bkwYPK1vwcohc/GGqYH/S1xBN3wJ
- AGXRAKkx0j5uowuq2/uHMPh5tEsF9zxWEW9iHD3CcTIQ9wyHvU4q+LA6QbyKq47JkaDWpNbtM
- nho7DOMuyTBLvn3cQUCBze3eb0h4kf7kCfibRlLo1ItadGJGXHLxvtm3CR2nAd+2ZWrb5kvaH
- g1RuMh1qabvbOlLElolK2us6RMdk0CgqRQYCNG4OWLmS+GlLZ8imUWnudqIHDhclYfNSGhSpW
- RwmDoWSd2SWsutw2wraIGbaGokQrRNQEV0Fpc06WwVvewXv9+yyc7V8VlwvFL2vXCx0CU+wkz
- UjvEF7DbeA800tJ/FgNfyjSI37TP9BUglDs7XO5VqVfuDhmugemMyBKEdkyKVr7OghxnLZVcV
- EFOuRQmk2EeN2arp0hHLXHmkVvYLNP3BC0Pm2bSnjqNhvLajJJc3YlA38yT8dp4o4F8ljwRbT
- cFUfme6fVl12WxwSln7YjAbMDiqgtZ7x5MkZZe1ceoStclO5qFtOuwDiayfvhBmndpKY2JHMU
- WFICUu9/9c6dRc4FmALZQD7bCt2l5RVwZ9l1uWNiHhMEhg1DJ0Bn8lrEFrlM+uo1LtqPf2pSa
- +B5oPiEu5ZkaSCeXRf2cU1zgooTEK/y+IlpcYC1OpolaprXToMt4jU1SSY1Z34Ai1Erqshkff
- PGN+JTJZYKH2byPmAAZUon2rvCneaMG2mG2CmqSNrO47MbvhnfmzZShF4LBAhQXorKr4AkAPr
- 53onThJU3E/TSPBzvXHpstfd8HwzCsMpSRI4Av92LMn4ITku8T/x+VCUxI5LZZffZ4QtBcqHD
- P2cpip2ZusBfb6Hg70Z809yWJ/uXMsoP0wJZGigA0QrdAK750IsUZSqvHCE3MD92wDnWMDCUD
- 58RJEDLQbw23sDmca6X1OMMZh8iyG/hkw8iGUJoy87yuxD1pZOaAnGTi82CuHDPFeqpgSonbs
- K5tM3ZorHz+dMkYXcy5ku3WCyzAAF4oYWZyYxaixv3/fD7mAp8BW1eGOw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Aug 08, 2019 at 04:47:45PM +0200, Rafael J. Wysocki wrote:
+> On Thu, Aug 8, 2019 at 3:43 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Thu, Aug 08, 2019 at 12:10:06PM +0200, Rafael J. Wysocki wrote:
+> > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > >
+> > > One of the modifications made by commit d916b1be94b6 ("nvme-pci: use
+> > > host managed power state for suspend") was adding a pci_save_state()
+> > > call to nvme_suspend() in order to prevent the PCI bus-level PM from
+> > > being applied to the suspended NVMe devices, but if ASPM is not
+> > > enabled for the target NVMe device, that causes its PCIe link to stay
+> > > up and the platform may not be able to get into its optimum low-power
+> > > state because of that.
+> > >
+> > > For example, if ASPM is disabled for the NVMe drive (PC401 NVMe SK
+> > > hynix 256GB) in my Dell XPS13 9380, leaving it in D0 during
+> > > suspend-to-idle prevents the SoC from reaching package idle states
+> > > deeper than PC3, which is way insufficient for system suspend.
+> >
+> > Just curious: I assume the SoC you reference is some part of the NVMe
+> > drive?
+> 
+> No, the SoC is what contains the Intel processor and PCH (formerly "chipset").
+> 
+> > > To address this shortcoming, make nvme_suspend() check if ASPM is
+> > > enabled for the target device and fall back to full device shutdown
+> > > and PCI bus-level PM if that is not the case.
+> > >
+> > > Fixes: d916b1be94b6 ("nvme-pci: use host managed power state for suspend")
+> > > Link: https://lore.kernel.org/linux-pm/2763495.NmdaWeg79L@kreacher/T/#t
+> > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > ---
+> > >
+> > > -> v2:
+> > >   * Move the PCI/PCIe ASPM changes to a separate patch.
+> > >   * Do not add a redundant ndev->last_ps == U32_MAX check in nvme_suspend().
+> > >
+> > > ---
+> > >  drivers/nvme/host/pci.c |   13 ++++++++++---
+> > >  1 file changed, 10 insertions(+), 3 deletions(-)
+> > >
+> > > Index: linux-pm/drivers/nvme/host/pci.c
+> > > ===================================================================
+> > > --- linux-pm.orig/drivers/nvme/host/pci.c
+> > > +++ linux-pm/drivers/nvme/host/pci.c
+> > > @@ -2846,7 +2846,7 @@ static int nvme_resume(struct device *de
+> > >       struct nvme_dev *ndev = pci_get_drvdata(to_pci_dev(dev));
+> > >       struct nvme_ctrl *ctrl = &ndev->ctrl;
+> > >
+> > > -     if (pm_resume_via_firmware() || !ctrl->npss ||
+> > > +     if (ndev->last_ps == U32_MAX ||
+> > >           nvme_set_power_state(ctrl, ndev->last_ps) != 0)
+> > >               nvme_reset_ctrl(ctrl);
+> > >       return 0;
+> > > @@ -2859,6 +2859,8 @@ static int nvme_suspend(struct device *d
+> > >       struct nvme_ctrl *ctrl = &ndev->ctrl;
+> > >       int ret = -EBUSY;
+> > >
+> > > +     ndev->last_ps = U32_MAX;
+> > > +
+> > >       /*
+> > >        * The platform does not remove power for a kernel managed suspend so
+> > >        * use host managed nvme power settings for lowest idle power if
+> > > @@ -2866,8 +2868,14 @@ static int nvme_suspend(struct device *d
+> > >        * shutdown.  But if the firmware is involved after the suspend or the
+> > >        * device does not support any non-default power states, shut down the
+> > >        * device fully.
+> > > +      *
+> > > +      * If ASPM is not enabled for the device, shut down the device and allow
+> > > +      * the PCI bus layer to put it into D3 in order to take the PCIe link
+> > > +      * down, so as to allow the platform to achieve its minimum low-power
+> > > +      * state (which may not be possible if the link is up).
+> > >        */
+> > > -     if (pm_suspend_via_firmware() || !ctrl->npss) {
+> > > +     if (pm_suspend_via_firmware() || !ctrl->npss ||
+> > > +         !pcie_aspm_enabled_mask(pdev)) {
+> >
+> > This seems like a layering violation, in the sense that ASPM is
+> > supposed to be hardware-autonomous and invisible to software.
+> 
+> But software has to enable it.
+> 
+> If it is not enabled, it will not be used, and that's what the check
+> is about.
+> 
+> > IIUC the NVMe device will go to the desired package idle state if
+> > the link is in L0s or L1, but not if the link is in L0.  I don't
+> > understand that connection; AFAIK that would be something outside
+> > the scope of the PCIe spec.
+> 
+> Yes, it is outside of the PCIe spec.
+> 
+> No, this is not about the NVMe device, it is about the Intel SoC
+> (System-on-a-Chip) the platform is based on.
 
---ftEhullJWpWg/VHq
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ah.  So this problem could occur with any device, not just NVMe?  If
+so, how do you address that?  Obviously you don't want to patch all
+drivers this way.
 
-On Fri, Feb 01, 2019 at 09:24:11AM +0000, Lee Jones wrote:
-> On Tue, 29 Jan 2019, Jonathan Neusch=C3=A4fer wrote:
->=20
-> > The RN5T618 family of PMICs can be used as system management
-> > controllers, in which case they handle poweroff and restart. Document
-> > this capability by referring to the corresponding generic DT binding.
-> >=20
-> > Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-> > ---
-> >  Documentation/devicetree/bindings/mfd/rn5t618.txt | 5 +++++
-> >  1 file changed, 5 insertions(+)
->=20
-> Applied, thanks.
+> The background really is commit d916b1be94b6 and its changelog is
+> kind of misleading, unfortunately.  What it did, among other things,
+> was to cause the NVMe driver to prevent the PCI bus type from
+> applying the standard PCI PM to the devices handled by it in the
+> suspend-to-idle flow.  
 
-Hi,
+This is more meaningful to you than to most people because "applying
+the standard PCI PM" doesn't tell us what that means in terms of the
+device.  Presumably it has something to do with a D-state transition?
+I *assume* a suspend might involve the D0 -> D3hot transition you
+mention below?
 
-apparently this patch got lost somehow (I can't find it in mainline or
--next). Should I resend it?
+> The reason for doing that was a (reportedly) widespread failure to
+> take the PCIe link down during D0 -> D3hot transitions of NVMe
+> devices,
 
+I don't know any of the details, but "failure to take the link down
+during D0 -> D3hot transitions" is phrased as though it might be a
+hardware erratum.  If this *is* related to an NVMe erratum, that would
+explain why you only need to patch the nvme driver, and it would be
+useful to mention that in the commit log, since otherwise it sounds
+like something that might be needed in other drivers, too.
 
-Thanks
-Jonathan Neusch=C3=A4fer
+According to PCIe r5.0 sec 5.3.2, the only legal link states for D3hot
+are L1, L2/L3 Ready.  So if you put a device in D3hot and its link
+stays in L0, that sounds like a defect.  Is that what happens?
 
---ftEhullJWpWg/VHq
-Content-Type: application/pgp-signature; name="signature.asc"
+Obviously I'm still confused.  I think it would help if you could
+describe the problem in terms of the specific PCIe states involved
+(D0, D3hot, L0, L1, L2, L3, etc) because then the spec would help
+explain what's happening.
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl1MbFMACgkQCDBEmo7z
-X9teow/7BstSO97Sl8F6BD6eFHTwI0a/YAhcZlXYyQ11Rvt/a9JFhEE+b9oDaFuc
-MaLE3wXSEcx1Ssh8xPhrUzpPsQ8MWV83f1roR6jU0lwUYkjdWm4Far8BSUi5ilmz
-BVPeBOlWgRwoyMEjMojIfYLuvhFm2iBvTNbRyU99h7tMF99n4kor07zu/zaQY+fX
-8hH1/o4TY19vMgMIK/OQjNAYJHQBoJbX/RrICvBq/QB74nxv/XmgICv2eoI1Tkup
-Jf/A6IuTdlhUjGxn1UYwKFfsilMYrLMHYb2l7Zsb6sVYlly3vZjrgBwHsmQWQaYQ
-9aKqaK2x3rb1GMfYKhMIHh+4vN2qjJJZeNHn34ut3CHGVhkI08o2lPk5d3DdeHFC
-ctl6EoCtb9cGpDBUQKdwZc838tB9Tt5Qdn3ixNknpc17M2rhi/XqxJgjwRmOOC2M
-dl2rEh2Ryk4f0mkII5Eo9MoPXimv1fB+rTY5LUFFa91n1rBRYSD6Ko+TvHIpNQDG
-Beyx3ol41HSnSqYrfscl2plPZimIQq53bHfKaRQq094Ph/YqIRPtte1jZo/qRnns
-6LOF3YBGt7M07VKtSjUKm4zM6mFj2oxD7YE1T/9jq05bxwFSFp5oi+3wmRJ+oENx
-f2Ul03iVlXXLBR+W1igbzv09+KAiMeFc8zmkxZ+tKvTLOXNAm5Q=
-=nKs6
------END PGP SIGNATURE-----
-
---ftEhullJWpWg/VHq--
+> which then prevented the platform from going into a deep enough
+> low-power state while suspended (because it was not sure whether or
+> not the NVMe device was really "sufficiently" inactive).  [I guess I
+> should mention that in the changelog of the $subject patch.]  So the
+> idea was to put the (NVMe) device into a low-power state internally
+> and then let ASPM take care of the PCIe link.
+> 
+> Of course, that can only work if ASPM is enabled at all for the
+> device in question, even though it may not be sufficient as you say
+> below.
+> 
+> > The spec (PCIe r5.0, sec 5.4.1.1.1 for L0s, 5.4.1.2.1 for L1) is
+> > careful to say that when the conditions are right, devices
+> > "should" enter L0s but it is never mandatory, or "may" enter L1.
+> >
+> > And this patch assumes that if ASPM is enabled, the link will
+> > eventually go to L0s or L1.
+> 
+> No, it doesn't.
+> 
+> It avoids failure in the case in which it is guaranteed to happen
+> (disabled ASPM) and that's it.
+> 
+> > Because the PCIe spec doesn't mandate that transition, I think
+> > this patch makes the driver dependent on device-specific behavior.
+> 
+> IMO not really.  It just adds a "don't do it if you are going to
+> fail" kind of check.
+> 
+> >
+> > >               nvme_dev_disable(ndev, true);
+> > >               return 0;
+> > >       }
+> > > @@ -2880,7 +2888,6 @@ static int nvme_suspend(struct device *d
+> > >           ctrl->state != NVME_CTRL_ADMIN_ONLY)
+> > >               goto unfreeze;
+> > >
+> > > -     ndev->last_ps = 0;
+> > >       ret = nvme_get_power_state(ctrl, &ndev->last_ps);
+> > >       if (ret < 0)
+> > >               goto unfreeze;
+> > >
+> > >
+> > >
