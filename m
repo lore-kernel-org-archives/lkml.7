@@ -2,161 +2,103 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBDCFC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 22:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC77C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 22:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3E5C2173C
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 22:11:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GrHFzmpF"
+	by mail.kernel.org (Postfix) with ESMTP id D33362173E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 22:12:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565302336;
+	bh=OPna2wRtpLezIz6CjgPBp1jF29Ynib55VfQMv7ffXRo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DVwj2hIO+Zh9Rpd+FlTvrjrMwzRF3BkL7ZHLS4h89qxFnku/4lmNkeytjpBP+qN4j
+	 TlUCxABQkqXt/zvIiVNViCD1WWefL4hp+K3/Ze41wCR+BT1+P8aOuF4EM5a4vRtVS7
+	 jx5B+C1tV/a7J+qw9v2FVuQAUhoS9yn3aUXs8eZE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404547AbfHHWL3 (ORCPT
+        id S2404574AbfHHWMP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 18:11:29 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37735 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725535AbfHHWL3 (ORCPT
+        Thu, 8 Aug 2019 18:12:15 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:54840 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390169AbfHHWMP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 18:11:29 -0400
-Received: by mail-wr1-f68.google.com with SMTP id b3so3995421wro.4;
-        Thu, 08 Aug 2019 15:11:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=DUFalbPLgQ79S1HKBE8+gtAVHYDFf8kRrltg8JK5gHo=;
-        b=GrHFzmpFxtOscokodsO7daDjk84Q/OJ2IZS7SomAGPleaL8JE2NSe9/H13UOWgK5Lx
-         Q3trityf98SqSsd2oAE7h0zZmHWKqKLpu6/gg+x0Q7lSDSgNuTbr16deZebwQpkyItcB
-         FyEOSWmY6Gl7GPnZQV5Zof3vW4wAVNvZH4+D1x3X1qYdtSv6VQAj9MCnThq4YN3XyCv5
-         3PmyiFqrmy/OIS+1CbT5FUz5DzmbPjaBwzbSpqXKMJSl/1Ic3nlVE+ac42rmp5MPP8YD
-         bc/1lec7KWPSFPnW54hVXpjcXe47eSsaEMZtqnGFlV+m7JVBaeRP3q4Sa0K5oTmctaq9
-         DBhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=DUFalbPLgQ79S1HKBE8+gtAVHYDFf8kRrltg8JK5gHo=;
-        b=JAqdWeDzaSyC3kbgSkHz9LJXEMHiji3BvjjHYv5zxQbGlgxtrVhW4ZeusFZxC4KBTo
-         6cGy+68FpGdKn+j7wvTtJj9/2f5V0PEaC12j12Da54tXvH576KHnoUjDUBxxU77MG45h
-         8q/e/KlcZHIFbHsH7LN/1csmIPYI4ZmNIiGMZbHF302EM7f3efA9MXvw6FeHsjFQjiBq
-         3l434WNaXeuCDbE729QYztqKDMVe9V5310HDa5pDmoCqLrCpbzcUhuvwngn3n8IN4sBP
-         QMeXXUnHcNgZDnqK9PXu74XtXMpeQAcw/2m9UhlnklftrecNQ49dmQfT/HjspKtuuwjU
-         jJbA==
-X-Gm-Message-State: APjAAAWlQgY88zf+PFUHOErNvZOqqTPhEFjW/TemfLI0V4fygPZ7Xzhq
-        S3LMyoZb/dZ/d3SE1ALoTuA=
-X-Google-Smtp-Source: APXvYqwfedFez8JUUPUSTs97nv45Gikq8yuXYU80pv8ot4OF9lSma2MRIiDYVMaRG3RNKnIa9KedPg==
-X-Received: by 2002:a5d:55c2:: with SMTP id i2mr19264141wrw.96.1565302286135;
-        Thu, 08 Aug 2019 15:11:26 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f2f:3200:6862:4959:200d:42a? (p200300EA8F2F320068624959200D042A.dip0.t-ipconnect.de. [2003:ea:8f2f:3200:6862:4959:200d:42a])
-        by smtp.googlemail.com with ESMTPSA id y18sm3425947wmi.23.2019.08.08.15.11.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 08 Aug 2019 15:11:25 -0700 (PDT)
-Subject: Re: [PATCH net-next v4 2/2] net: phy: broadcom: add 1000Base-X
- support for BCM54616S
-To:     Tao Ren <taoren@fb.com>, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Arun Parameswaran <arun.parameswaran@broadcom.com>,
-        Justin Chen <justinpopo6@gmail.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>
-References: <20190806210931.3723590-1-taoren@fb.com>
- <fe0d39ea-91f3-0cac-f13b-3d46ea1748a3@fb.com>
- <cfd6e14e-a447-aedb-5bd6-bf65b4b6f98a@gmail.com>
- <a827c44c-3946-8f6f-e515-b476fd375cf6@fb.com>
- <14c1591b-26e1-3a2f-f6c4-beb2c8978e41@fb.com>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <6d080f3e-48b9-a65d-b73e-576296e98738@gmail.com>
-Date:   Fri, 9 Aug 2019 00:11:17 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 8 Aug 2019 18:12:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=pARZA3ohxUG2TFTyA7TlH8jLh4Oscb64NF12pQDdV/g=; b=K6nxPDmuEi5RmSoqdhxi1li7A
+        y+lyQoxKx/iF/bl7WnAxbFkdpgRwepj7hji24AgLO2CLa1NNWSpOldj727IK3VY9cuvTvNXd+ZH/4
+        4gXLlvHkW9+Tjig3Tx1ht3qR9KVtmgcjVb8xU5wD3tn6Vvwrjhi71/iC4xAecEozGEHoU=;
+Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1hvqdn-0004Cj-LW; Thu, 08 Aug 2019 22:12:11 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 673842742BDD; Thu,  8 Aug 2019 23:12:10 +0100 (BST)
+Date:   Thu, 8 Aug 2019 23:12:10 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: Signed-off-by missing for commit in the sound-asoc
+ tree
+Message-ID: <20190808221210.GO3795@sirena.co.uk>
+References: <20190809074325.65a72962@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <14c1591b-26e1-3a2f-f6c4-beb2c8978e41@fb.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="E+IgQzR66AIOcbjA"
+Content-Disposition: inline
+In-Reply-To: <20190809074325.65a72962@canb.auug.org.au>
+X-Cookie: I think we're in trouble.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08.08.2019 23:47, Tao Ren wrote:
-> Hi Heiner,
-> 
-> On 8/7/19 9:24 PM, Tao Ren wrote:
->> Hi Heiner,
->>
->> On 8/7/19 12:18 PM, Heiner Kallweit wrote:
->>> On 06.08.2019 23:42, Tao Ren wrote:
->>>> Hi Andrew / Heiner / Vladimir,
->>>>
->>>> On 8/6/19 2:09 PM, Tao Ren wrote:
->>>>> The BCM54616S PHY cannot work properly in RGMII->1000Base-KX mode (for
->>>>> example, on Facebook CMM BMC platform), mainly because genphy functions
->>>>> are designed for copper links, and 1000Base-X (clause 37) auto negotiation
->>>>> needs to be handled differently.
->>>>>
->>>>> This patch enables 1000Base-X support for BCM54616S by customizing 3
->>>>> driver callbacks:
->>>>>
->>>>>   - probe: probe callback detects PHY's operation mode based on
->>>>>     INTERF_SEL[1:0] pins and 1000X/100FX selection bit in SerDES 100-FX
->>>>>     Control register.
->>>>>
->>>>>   - config_aneg: bcm54616s_config_aneg_1000bx function is added for auto
->>>>>     negotiation in 1000Base-X mode.
->>>>>
->>>>>   - read_status: BCM54616S and BCM5482 PHY share the same read_status
->>>>>     callback which manually set link speed and duplex mode in 1000Base-X
->>>>>     mode.
->>>>>
->>>>> Signed-off-by: Tao Ren <taoren@fb.com>
->>>>
->>>> I customized config_aneg function for BCM54616S 1000Base-X mode and link-down issue is also fixed: the patch is tested on Facebook CMM and Minipack BMC and everything looks normal. Please kindly review when you have bandwidth and let me know if you have further suggestions.
->>>>
->>>> BTW, I would be happy to help if we decide to add a set of genphy functions for clause 37, although that may mean I need more help/guidance from you :-)
->>>
->>> You want to have standard clause 37 aneg and this should be generic in phylib.
->>> I hacked together a first version that is compile-tested only:
->>> https://urldefense.proofpoint.com/v2/url?u=https-3A__patchwork.ozlabs.org_patch_1143631_&d=DwICaQ&c=5VD0RTtNlTh3ycd41b3MUw&r=iYElT7HC77pRZ3byVvW8ng&m=ZJArOJvHqNkqvs1x8l9HjfxjCN8e5xJpPz2YViBuKRA&s=EskpfBQtu9IBVeb96dv-sz76xIz4tJK5-lD4-qdIyWI&e= 
->>> It supports fixed mode too.
->>>
->>> It doesn't support half duplex mode because phylib doesn't know 1000BaseX HD yet.
->>> Not sure whether half duplex mode is used at all in reality.
->>>
->>> You could test the new core functions in your own config_aneg and read_status
->>> callback implementations.
->>
->> Thank you very much for the help! I'm planning to add these functions but I haven't started yet because I'm still going through clause 37 :-)
->>
->> Let me apply your patch and run some test on my platform. Will share you results tomorrow.
-> 
-> The patch "net: phy: add support for clause 37 auto-negotiation" works on my CMM platform, with just 1 minor change in phy.h (I guess it's typo?). Thanks again for the help!
-> 
-> -int genphy_c37_aneg_done(struct phy_device *phydev);
-> +int genphy_c37_config_aneg(struct phy_device *phydev);
-> 
-Indeed, this was a typo. Thanks.
 
-> BTW, shall I send out my patch v5 now (based on your patch)? Or I should wait till your patch is included in net-next and then send out my patch?
-> 
-Adding new functions to the core is typically only acceptable if in the
-same patch series a user of the new functions is added. Therefore it's
-best if you include my patch in your series (just remove the RFC tag and
-set the From: properly).
+--E+IgQzR66AIOcbjA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> Cheers,
-> 
-> Tao
-> 
-Heiner
+On Fri, Aug 09, 2019 at 07:43:25AM +1000, Stephen Rothwell wrote:
+
+> Commit
+
+>   c42d8cbee4c7 ("Merge branches from Takashi to ease Skylake development.=
+")
+
+> is missing a Signed-off-by from its author and committer.
+
+> Despite what the commit message says, this is not a merge commit.
+
+Ugh, that's a git bug - there was a conflict resolution and rather when
+I resolved it it seems to have completely thrown away the fact that
+there was a merge. =20
+
+--E+IgQzR66AIOcbjA
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1MnjkACgkQJNaLcl1U
+h9AAlgf+Ix8ug5eNSrx1p4/j6TcNb5tTbq5IBAT+XRO0oGUuLtBuT4iusOWFz+4D
+iNVl4NI+mg4u8ASC9emv3C4ql2Eeg0T18zJ9BKRvtLzbtVh69w9crzkV7NlTwmcw
+KA6UD0o9GAh34aJYSyr6RqXE3k70wPIdJKF9XzyfSA6wRewP6LEHJ9enK8BeTvMX
+ljntdAYwd9wj2zypPbyKrKOa7mZDFYNURNCTo+leZGyH6djpvrgIFtp+b+5F2y6n
+3nK7geW0KP+otBz1JJ539u+W1noGhbtQsRMPJUUda36EugvLtGQQeThRvEBf446Z
+EqXPnbv00ZzNZdwPxQdLKSwAPXbbag==
+=piES
+-----END PGP SIGNATURE-----
+
+--E+IgQzR66AIOcbjA--
