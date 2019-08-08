@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 180EBC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:09:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A9EEC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:09:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D23A62173E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:09:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B37D21743
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:09:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565291388;
-	bh=2dWzGH1unu8tNch+w1cwBAIik/wtq+hUp5IcHwyk3BU=;
+	s=default; t=1565291391;
+	bh=wXX6c7v6ufyv8qeaTgGQyaBp4jZNRtKWBLXZWn0+ffU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qB1T6DwzUx74Q/eXOeQbAi3Cz6Y5Z1mMTSE3Lf6FDqAceKL3FsboYHuCfvsG8sVOE
-	 MOafLjiZEw4hIiD0MMSv69XzSUZJFdJr/yluMd6UasNm1axTUB91qea6hK3SoUlD/j
-	 afktCyQbJP0r+37VKDwz13J7bGKngZBOQi22Ct8c=
+	b=owrUFmG+aXWRiDuBrrVV9u8EA/6ztQCFLw9fbQAqB+3Vv37lAUyHHar6cpukQ2f7Z
+	 v5+2JH67B+U7W70/+8mOp7Kkjm/hM3Z33igBR/j7q9qGZNhL5CziqJ1mkehoG6SPYm
+	 RSEuGUTPZBVEHhQr7zq4SHZ0cxez/zv7W77ILjSY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405169AbfHHTJr (ORCPT
+        id S2405179AbfHHTJu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:09:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44054 "EHLO mail.kernel.org"
+        Thu, 8 Aug 2019 15:09:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404372AbfHHTJn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 15:09:43 -0400
+        id S2405158AbfHHTJq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 15:09:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73E2F2184E;
-        Thu,  8 Aug 2019 19:09:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D0012173E;
+        Thu,  8 Aug 2019 19:09:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565291383;
-        bh=2dWzGH1unu8tNch+w1cwBAIik/wtq+hUp5IcHwyk3BU=;
+        s=default; t=1565291385;
+        bh=wXX6c7v6ufyv8qeaTgGQyaBp4jZNRtKWBLXZWn0+ffU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RCWgWqAQxkj3OjColNRIJchECopaGAtB9ovUOBaoDxG06BMYl4XU8rOrDuAKGJJVL
-         07vfyT8KjT+WoaYrQkBs3DmB01xA5ySOSq+qkV6IMHuFTDJGkiAJ2dI2lxvW8wdmcv
-         3noeMqrJoQv87kujgqaA30H2PJ8X5lU4ifoDmnAc=
+        b=BPhVQ9uN62LdH8zVTgC4bqQwNlF9HHN23LujqBFU6w4Xpq8sviW0NnkpL+kwXpT5l
+         8DYNPA4VjmP4yveW7eiEpoOs+be4iYVGa4LSswqlAWhvBSwj7d6oc+h2RuuecbhgA/
+         5epw8kZy9Exx/1xBCvsuUWt8BKW0xmMFumSOd1vA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Du=C5=A1an=20Dragi=C4=87?= <dragic.dusan@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: [PATCH 4.19 38/45] r8169: dont use MSI before RTL8168d
-Date:   Thu,  8 Aug 2019 21:05:24 +0200
-Message-Id: <20190808190455.977863116@linuxfoundation.org>
+        stable@vger.kernel.org, Guillaume Nault <g.nault@alphalink.fr>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 39/45] compat_ioctl: pppoe: fix PPPOEIOCSFWD handling
+Date:   Thu,  8 Aug 2019 21:05:25 +0200
+Message-Id: <20190808190456.059378702@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190808190453.827571908@linuxfoundation.org>
 References: <20190808190453.827571908@linuxfoundation.org>
@@ -60,49 +60,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiner Kallweit <hkallweit1@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 003bd5b4a7b4a94b501e3a1e2e7c9df6b2a94ed4 ]
+[ Upstream commit 055d88242a6046a1ceac3167290f054c72571cd9 ]
 
-It was reported that after resuming from suspend network fails with
-error "do_IRQ: 3.38 No irq handler for vector", see [0]. Enabling WoL
-can work around the issue, but the only actual fix is to disable MSI.
-So let's mimic the behavior of the vendor driver and disable MSI on
-all chip versions before RTL8168d.
+Support for handling the PPPOEIOCSFWD ioctl in compat mode was added in
+linux-2.5.69 along with hundreds of other commands, but was always broken
+sincen only the structure is compatible, but the command number is not,
+due to the size being sizeof(size_t), or at first sizeof(sizeof((struct
+sockaddr_pppox)), which is different on 64-bit architectures.
 
-[0] https://bugzilla.kernel.org/show_bug.cgi?id=204079
+Guillaume Nault adds:
 
-Fixes: 6c6aa15fdea5 ("r8169: improve interrupt handling")
-Reported-by: Dušan Dragić <dragic.dusan@gmail.com>
-Tested-by: Dušan Dragić <dragic.dusan@gmail.com>
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+  And the implementation was broken until 2016 (see 29e73269aa4d ("pppoe:
+  fix reference counting in PPPoE proxy")), and nobody ever noticed. I
+  should probably have removed this ioctl entirely instead of fixing it.
+  Clearly, it has never been used.
+
+Fix it by adding a compat_ioctl handler for all pppoe variants that
+translates the command number and then calls the regular ioctl function.
+
+All other ioctl commands handled by pppoe are compatible between 32-bit
+and 64-bit, and require compat_ptr() conversion.
+
+This should apply to all stable kernels.
+
+Acked-by: Guillaume Nault <g.nault@alphalink.fr>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/realtek/r8169.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/net/ppp/pppoe.c  |    3 +++
+ drivers/net/ppp/pppox.c  |   13 +++++++++++++
+ drivers/net/ppp/pptp.c   |    3 +++
+ fs/compat_ioctl.c        |    3 ---
+ include/linux/if_pppox.h |    3 +++
+ net/l2tp/l2tp_ppp.c      |    3 +++
+ 6 files changed, 25 insertions(+), 3 deletions(-)
 
---- a/drivers/net/ethernet/realtek/r8169.c
-+++ b/drivers/net/ethernet/realtek/r8169.c
-@@ -7239,13 +7239,18 @@ static int rtl_alloc_irq(struct rtl8169_
+--- a/drivers/net/ppp/pppoe.c
++++ b/drivers/net/ppp/pppoe.c
+@@ -1120,6 +1120,9 @@ static const struct proto_ops pppoe_ops
+ 	.recvmsg	= pppoe_recvmsg,
+ 	.mmap		= sock_no_mmap,
+ 	.ioctl		= pppox_ioctl,
++#ifdef CONFIG_COMPAT
++	.compat_ioctl	= pppox_compat_ioctl,
++#endif
+ };
+ 
+ static const struct pppox_proto pppoe_proto = {
+--- a/drivers/net/ppp/pppox.c
++++ b/drivers/net/ppp/pppox.c
+@@ -22,6 +22,7 @@
+ #include <linux/string.h>
+ #include <linux/module.h>
+ #include <linux/kernel.h>
++#include <linux/compat.h>
+ #include <linux/errno.h>
+ #include <linux/netdevice.h>
+ #include <linux/net.h>
+@@ -103,6 +104,18 @@ int pppox_ioctl(struct socket *sock, uns
+ 
+ EXPORT_SYMBOL(pppox_ioctl);
+ 
++#ifdef CONFIG_COMPAT
++int pppox_compat_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg)
++{
++	if (cmd == PPPOEIOCSFWD32)
++		cmd = PPPOEIOCSFWD;
++
++	return pppox_ioctl(sock, cmd, (unsigned long)compat_ptr(arg));
++}
++
++EXPORT_SYMBOL(pppox_compat_ioctl);
++#endif
++
+ static int pppox_create(struct net *net, struct socket *sock, int protocol,
+ 			int kern)
  {
- 	unsigned int flags;
+--- a/drivers/net/ppp/pptp.c
++++ b/drivers/net/ppp/pptp.c
+@@ -633,6 +633,9 @@ static const struct proto_ops pptp_ops =
+ 	.recvmsg    = sock_no_recvmsg,
+ 	.mmap       = sock_no_mmap,
+ 	.ioctl      = pppox_ioctl,
++#ifdef CONFIG_COMPAT
++	.compat_ioctl = pppox_compat_ioctl,
++#endif
+ };
  
--	if (tp->mac_version <= RTL_GIGA_MAC_VER_06) {
-+	switch (tp->mac_version) {
-+	case RTL_GIGA_MAC_VER_02 ... RTL_GIGA_MAC_VER_06:
- 		RTL_W8(tp, Cfg9346, Cfg9346_Unlock);
- 		RTL_W8(tp, Config2, RTL_R8(tp, Config2) & ~MSIEnable);
- 		RTL_W8(tp, Cfg9346, Cfg9346_Lock);
-+		/* fall through */
-+	case RTL_GIGA_MAC_VER_07 ... RTL_GIGA_MAC_VER_24:
- 		flags = PCI_IRQ_LEGACY;
--	} else {
-+		break;
-+	default:
- 		flags = PCI_IRQ_ALL_TYPES;
-+		break;
- 	}
+ static const struct pppox_proto pppox_pptp_proto = {
+--- a/fs/compat_ioctl.c
++++ b/fs/compat_ioctl.c
+@@ -894,9 +894,6 @@ COMPATIBLE_IOCTL(PPPIOCDISCONN)
+ COMPATIBLE_IOCTL(PPPIOCATTCHAN)
+ COMPATIBLE_IOCTL(PPPIOCGCHAN)
+ COMPATIBLE_IOCTL(PPPIOCGL2TPSTATS)
+-/* PPPOX */
+-COMPATIBLE_IOCTL(PPPOEIOCSFWD)
+-COMPATIBLE_IOCTL(PPPOEIOCDFWD)
+ /* Big A */
+ /* sparc only */
+ /* Big Q for sound/OSS */
+--- a/include/linux/if_pppox.h
++++ b/include/linux/if_pppox.h
+@@ -84,6 +84,9 @@ extern int register_pppox_proto(int prot
+ extern void unregister_pppox_proto(int proto_num);
+ extern void pppox_unbind_sock(struct sock *sk);/* delete ppp-channel binding */
+ extern int pppox_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg);
++extern int pppox_compat_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg);
++
++#define PPPOEIOCSFWD32    _IOW(0xB1 ,0, compat_size_t)
  
- 	return pci_alloc_irq_vectors(tp->pci_dev, 1, 1, flags);
+ /* PPPoX socket states */
+ enum {
+--- a/net/l2tp/l2tp_ppp.c
++++ b/net/l2tp/l2tp_ppp.c
+@@ -1686,6 +1686,9 @@ static const struct proto_ops pppol2tp_o
+ 	.recvmsg	= pppol2tp_recvmsg,
+ 	.mmap		= sock_no_mmap,
+ 	.ioctl		= pppox_ioctl,
++#ifdef CONFIG_COMPAT
++	.compat_ioctl = pppox_compat_ioctl,
++#endif
+ };
+ 
+ static const struct pppox_proto pppol2tp_proto = {
 
 
