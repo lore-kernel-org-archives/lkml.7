@@ -2,112 +2,97 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFFABC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 18:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB70C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 18:56:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4E8A2184E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 18:55:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565290535;
-	bh=TMOLDJx9XyVOYwAEqNQw5lXlFglvUouj616ZKtFBcC0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Z/0nlu/kR8GlMWHAHQUgk5BRiJ+6ZySsb+J58mnStpGEIG0h4D1lJHWFHumP3c6km
-	 spO5KX0oevCaqnOTOHpnwQElrfUgfYfL1jM6SNFSg44TZF2CMtadU8+rH27vHbB2Mq
-	 ZTNxwFRFOXPMUuv8LY8K8tcogFm6MkBRoZ2vX0+0=
+	by mail.kernel.org (Postfix) with ESMTP id E777621874
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 18:56:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GmtBlYGs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404213AbfHHSze (ORCPT
+        id S2404227AbfHHS4D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 14:55:34 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35066 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404161AbfHHSzd (ORCPT
+        Thu, 8 Aug 2019 14:56:03 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:38802 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403901AbfHHS4D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 14:55:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=QjkoBON2R0G9dPWiD46toYdQm9FG0fge33xVSCag5ms=; b=vqt03qIKNSYXmWRwtn6SMC0vn
-        2KxAD407l3Awcyh2IzdII6GyPqRZFsRiCPW6czfrc9RB9mRifazXgV+8/2TNZ76/UaOA0+A2UJDmJ
-        IyNQtmNyWKwRuBMlsGkSPrg8Pj0jKAk8CeSe2LXRN+1EW53APKC59dZ9Blp6kqbrQuQNw=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1hvnZL-0003lN-Gm; Thu, 08 Aug 2019 18:55:23 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 5CB972742B42; Thu,  8 Aug 2019 19:55:22 +0100 (BST)
-Date:   Thu, 8 Aug 2019 19:55:22 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Tomer Maimon <tmaimon77@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>, bbrezillon@kernel.org,
-        Avi Fishman <avifishman70@gmail.com>,
-        Tali Perry <tali.perry1@gmail.com>,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Benjamin Fair <benjaminfair@google.com>,
-        linux-spi@vger.kernel.org, devicetree <devicetree@vger.kernel.org>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] spi: npcm-fiu: add NPCM FIU controller driver
-Message-ID: <20190808185522.GJ3795@sirena.co.uk>
-References: <20190808131448.349161-1-tmaimon77@gmail.com>
- <20190808131448.349161-3-tmaimon77@gmail.com>
- <20190808132740.GG3795@sirena.co.uk>
- <CAP6Zq1j7jHejdx9h-nxCJcVjtGx_3rHmay7R8nn11DLaE8Q4gA@mail.gmail.com>
+        Thu, 8 Aug 2019 14:56:03 -0400
+Received: by mail-pg1-f193.google.com with SMTP id z14so7292985pga.5
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 11:56:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=G3NhUPjLzs7je5vt+pGcT0rtIfPFfRW8yibRORtLEaE=;
+        b=GmtBlYGsA+TJJPso4MWBwLNOIv7kxqHtbGEGGqRQihC5phbhEz44c5/fID7XQ2b8kA
+         nGpnCLJrfrm0E3Za38bN5qNXXGIuXHPNxmuaV3jyjinaiUgicMsm/uNRAWkzgJCNullf
+         sOFzjthMgOQDwGddWShCVDi7FXkRjB+LUCRFuRrfYiHIDZPUZ+9MgOrZ89t3l7kz73T0
+         qWU238IWAZBP8cLKxI90V4DEtXHTY6Ta29q2A6LLm2ViP/m8LAgUfgRj1rhXo9x3eb74
+         We/kf25M5AuilUYVd98hz4O+oodSFAj60tiFJoLYbEJ+QJ1s2WFgJeZ4urtLDaiZH77O
+         Vfvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=G3NhUPjLzs7je5vt+pGcT0rtIfPFfRW8yibRORtLEaE=;
+        b=qCxOsdPkB7vZxSVD+ca8BTBubuMArvvWkSWpmE3vyMusJsCmJSS6VAVD/UNvsvsfxQ
+         Sm+N5UwDyuQnC/J6iP/+oT3LjSkxD7qmAckLaE2j8fhxICj3r3tUXSvezjMRdeo5nj1f
+         rquXu65/qu7K/7Uk+ayYlBDFkfHUt4y6r0BJ4K9Kh7ir2SJcrdIhMf+1pdmTjntOdgIC
+         evZbidHLhELA7HNMRauF4VnlLpvZHAzeIsZR/tbypZV2xSWF3KUwTu7Dd2agMKBkWK/H
+         bjiGJePwetNl0MVZXwzWYZvVRHt8PM1nR3vXjpfqNwoj9Yc8ro8sx6x4QMC1JTvkKW5K
+         sDpQ==
+X-Gm-Message-State: APjAAAW7II3/Ed/h+krw1iEVZAiBYWp4nxcVy9rabB0ZzbjgKmFWHIkw
+        hjT8EwOa1dUV9YNLuXyuoEQ=
+X-Google-Smtp-Source: APXvYqxrB/9uqlfCMteW9WF5sFZ4DYPJdcyvFQ6jzXf2ExJrH6J6dgl0jvx/fh8l9yzKwCOkRRROGQ==
+X-Received: by 2002:a63:b555:: with SMTP id u21mr14284684pgo.222.1565290562611;
+        Thu, 08 Aug 2019 11:56:02 -0700 (PDT)
+Received: from bharath12345-Inspiron-5559 ([103.110.42.33])
+        by smtp.gmail.com with ESMTPSA id t8sm110170328pfq.31.2019.08.08.11.56.01
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 08 Aug 2019 11:56:02 -0700 (PDT)
+From:   Bharath Vedartham <linux.bhar@gmail.com>
+To:     arnd@arndb.de, gregkh@linuxfoundation.org, sivanich@sgi.com,
+        jhubbard@nvidia.com
+Cc:     ira.weiny@intel.com, jglisse@redhat.com,
+        william.kucharski@oracle.com, hch@lst.de,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Bharath Vedartham <linux.bhar@gmail.com>
+Subject: [Linux-kernel-mentees][PATCH v4 0/1] get_user_pages changes 
+Date:   Fri,  9 Aug 2019 00:25:54 +0530
+Message-Id: <1565290555-14126-1-git-send-email-linux.bhar@gmail.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="5me2qT3T17SWzdxI"
-Content-Disposition: inline
-In-Reply-To: <CAP6Zq1j7jHejdx9h-nxCJcVjtGx_3rHmay7R8nn11DLaE8Q4gA@mail.gmail.com>
-X-Cookie: I think we're in trouble.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+In this 4th version of the patch series, I have compressed the patches
+of the v2 patch series into one patch. This was suggested by Christoph Hellwig.
+The suggestion was to remove the pte_lookup functions and use the 
+get_user_pages* functions directly instead of the pte_lookup functions.
 
---5me2qT3T17SWzdxI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+There is nothing different in this series compared to the previous
+series, It essentially compresses the 3 patches of the original series
+into one patch.
 
-On Thu, Aug 08, 2019 at 06:37:06PM +0300, Tomer Maimon wrote:
+This series survives a compile test.
 
-> for example in our driver we modify the access type (singe, dual or quad)
-> according the op->addr.buswidth
-> for example in the npcm_fiu_set_drd function.
+Bharath Vedartham (1):
+  sgi-gru: Remove *pte_lookup functions
 
->         regmap_update_bits(fiu->regmap, NPCM_FIU_DRD_CFG,
->                            NPCM_FIU_DRD_CFG_ACCTYPE,
->                            ilog2(op->addr.buswidth) <<
->                            NPCM_FIU_DRD_ACCTYPE_SHIFT);
+ drivers/misc/sgi-gru/grufault.c | 112 +++++++++-------------------------------
+ 1 file changed, 24 insertions(+), 88 deletions(-)
 
-> we also modify it in the UMA R/W functions.
+-- 
+2.7.4
 
-Ah, it's only for the flash functions - that's fine.
-
---5me2qT3T17SWzdxI
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1McBkACgkQJNaLcl1U
-h9CSyQf9HMQyWI7F+/mz/TefzbACHnpE0c8lwToPC8gs3NlHo8g0orLblfG3DsLm
-UEB893DEnNq2PyAZ3RalNBeet13paLEA0qBru8OSMUWpeNwDNxNPJnw0LKgWMfJd
-hR7ajSCzI8nNleQRxNko7depUDzpemRXDWxmIyeoBPOYzHxX3AWFoyuaz9aUo2Rl
-Unh0Hf1osxqIy1e/McvePEnPv0TT99Ymj8k6/8GnvioyP4EpahOXI8dSR2jI0EhD
-E00zLhgmAoNpkwrV/jtjy/U4bWl2oEXrySbQ9Ljy8b0iFVArSIEFILHO06iXOkXP
-gKzJeeqWsQ6fz//+fGxegx1F6fcTpg==
-=AZer
------END PGP SIGNATURE-----
-
---5me2qT3T17SWzdxI--
