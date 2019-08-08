@@ -2,55 +2,53 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD69C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:08:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5556FC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F0B12189E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:08:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A6E3214C6
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:08:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565291331;
-	bh=L6QgowxSqMxevoEUkmc7YuDBPjP+ihl/U1fmkymryIE=;
+	s=default; t=1565291335;
+	bh=lmreystj+/u7Ao2YRC/eCXKnhPR102zWldgpG09ZbDc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BmbChzef1EHjijGdKRk96ylkGue2quyHwQe6IMXmyaQgQ5VBrs9tWk1wnTNybBDeU
-	 zUtA71ej1ixJYLnKnnuzPyasLBh8xmFbi+QZ6lSZ9I+KSQMdF0sazruhhU+dwH9Gx+
-	 BOBZN9NXDZOQzereND1C0peqPz20m9lMYQRovp3k=
+	b=c9vyS1IQ8+OcVbohxLeyfZ5PiT0SsvLM4sDY8o8mbLuYfuN7Dq3Si0bxl0qr3R5Sa
+	 t2AfuR+DHIQN23pOdmumilpHUQoJDxq5e3WYu8FaCqSDcSXT8JHGD85FrnN59JoaZb
+	 /WSzUQPO9eQwSzi00BBE+8zfjVwkgHZ/K9VFbkpg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404986AbfHHTIu (ORCPT
+        id S2404999AbfHHTIy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:08:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42822 "EHLO mail.kernel.org"
+        Thu, 8 Aug 2019 15:08:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404509AbfHHTIi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 15:08:38 -0400
+        id S2404518AbfHHTIt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 15:08:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B82F92184E;
-        Thu,  8 Aug 2019 19:08:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A4DC214C6;
+        Thu,  8 Aug 2019 19:08:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565291318;
-        bh=L6QgowxSqMxevoEUkmc7YuDBPjP+ihl/U1fmkymryIE=;
+        s=default; t=1565291328;
+        bh=lmreystj+/u7Ao2YRC/eCXKnhPR102zWldgpG09ZbDc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gYR57TnzP7l62gi/b168AzLPizLlFiIZ67jbuyDg0PpPY6o1TYtxgHv10YFnwpOf+
-         0MmQ3xgIyA5cBkKlgp8rSP+zM8rQV7VqWhtHXW7lDrg73NW8UyULv6Hau4fY07oVnX
-         QXAHpwxMy7TAm1GTCMltUniAwtks4iLEuRzD0ehY=
+        b=2VZorU7dvoVSf+evVRY9oZTEHuHZ+ZBlKM1QHumQEvn4M3J0cXfCALM6yqV7mYKuv
+         jaXOrvy5vHc7ofDYKAyeWV9xOH/xjz59zYVtOYvz0fub64BcXfOZqer4bdfJxu+umY
+         RW0vNWMvOvLwnP0LScCQ5PElAdlKSvbI5Js/eq5Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+fbb5b288c9cb6a2eeac4@syzkaller.appspotmail.com,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 14/45] ife: error out when nla attributes are empty
-Date:   Thu,  8 Aug 2019 21:05:00 +0200
-Message-Id: <20190808190454.554649781@linuxfoundation.org>
+        stable@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
+        Jane Chu <jane.chu@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 04/45] drivers/base: Introduce kill_device()
+Date:   Thu,  8 Aug 2019 21:04:50 +0200
+Message-Id: <20190808190454.048361275@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190808190453.827571908@linuxfoundation.org>
 References: <20190808190453.827571908@linuxfoundation.org>
@@ -63,37 +61,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+commit 00289cd87676e14913d2d8492d1ce05c4baafdae upstream.
 
-[ Upstream commit c8ec4632c6ac9cda0e8c3d51aa41eeab66585bd5 ]
+The libnvdimm subsystem arranges for devices to be destroyed as a result
+of a sysfs operation. Since device_unregister() cannot be called from
+an actively running sysfs attribute of the same device libnvdimm
+arranges for device_unregister() to be performed in an out-of-line async
+context.
 
-act_ife at least requires TCA_IFE_PARMS, so we have to bail out
-when there is no attribute passed in.
+The driver core maintains a 'dead' state for coordinating its own racing
+async registration / de-registration requests. Rather than add local
+'dead' state tracking infrastructure to libnvdimm device objects, export
+the existing state tracking via a new kill_device() helper.
 
-Reported-by: syzbot+fbb5b288c9cb6a2eeac4@syzkaller.appspotmail.com
-Fixes: ef6980b6becb ("introduce IFE action")
-Cc: Jamal Hadi Salim <jhs@mojatatu.com>
-Cc: Jiri Pirko <jiri@resnulli.us>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The kill_device() helper simply marks the device as dead, i.e. that it
+is on its way to device_del(), or returns that the device was already
+dead. This can be used in advance of calling device_unregister() for
+subsystems like libnvdimm that might need to handle multiple user
+threads racing to delete a device.
+
+This refactoring does not change any behavior, but it is a pre-requisite
+for follow-on fixes and therefore marked for -stable.
+
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Fixes: 4d88a97aa9e8 ("libnvdimm, nvdimm: dimm driver and base libnvdimm device-driver...")
+Cc: <stable@vger.kernel.org>
+Tested-by: Jane Chu <jane.chu@oracle.com>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lore.kernel.org/r/156341207332.292348.14959761496009347574.stgit@dwillia2-desk3.amr.corp.intel.com
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sched/act_ife.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/base/core.c    | 27 +++++++++++++++++++--------
+ include/linux/device.h |  1 +
+ 2 files changed, 20 insertions(+), 8 deletions(-)
 
---- a/net/sched/act_ife.c
-+++ b/net/sched/act_ife.c
-@@ -484,6 +484,11 @@ static int tcf_ife_init(struct net *net,
- 	int ret = 0;
- 	int err;
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index 37a90d72f3736..e1a8d5c06f65e 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -2031,6 +2031,24 @@ void put_device(struct device *dev)
+ }
+ EXPORT_SYMBOL_GPL(put_device);
  
-+	if (!nla) {
-+		NL_SET_ERR_MSG_MOD(extack, "IFE requires attributes to be passed");
-+		return -EINVAL;
-+	}
++bool kill_device(struct device *dev)
++{
++	/*
++	 * Require the device lock and set the "dead" flag to guarantee that
++	 * the update behavior is consistent with the other bitfields near
++	 * it and that we cannot have an asynchronous probe routine trying
++	 * to run while we are tearing out the bus/class/sysfs from
++	 * underneath the device.
++	 */
++	lockdep_assert_held(&dev->mutex);
 +
- 	err = nla_parse_nested(tb, TCA_IFE_MAX, nla, ife_policy, NULL);
- 	if (err < 0)
- 		return err;
++	if (dev->p->dead)
++		return false;
++	dev->p->dead = true;
++	return true;
++}
++EXPORT_SYMBOL_GPL(kill_device);
++
+ /**
+  * device_del - delete device from system.
+  * @dev: device.
+@@ -2050,15 +2068,8 @@ void device_del(struct device *dev)
+ 	struct kobject *glue_dir = NULL;
+ 	struct class_interface *class_intf;
+ 
+-	/*
+-	 * Hold the device lock and set the "dead" flag to guarantee that
+-	 * the update behavior is consistent with the other bitfields near
+-	 * it and that we cannot have an asynchronous probe routine trying
+-	 * to run while we are tearing out the bus/class/sysfs from
+-	 * underneath the device.
+-	 */
+ 	device_lock(dev);
+-	dev->p->dead = true;
++	kill_device(dev);
+ 	device_unlock(dev);
+ 
+ 	/* Notify clients of device removal.  This call must come
+diff --git a/include/linux/device.h b/include/linux/device.h
+index 3f1066a9e1c3a..19dd8852602c4 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -1332,6 +1332,7 @@ extern int (*platform_notify_remove)(struct device *dev);
+  */
+ extern struct device *get_device(struct device *dev);
+ extern void put_device(struct device *dev);
++extern bool kill_device(struct device *dev);
+ 
+ #ifdef CONFIG_DEVTMPFS
+ extern int devtmpfs_create_node(struct device *dev);
+-- 
+2.20.1
+
 
 
