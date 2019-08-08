@@ -2,173 +2,102 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD500C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D2CC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A80321874
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:48:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565268484;
-	bh=wyEVJEsBGC94RLV4HyI4Gad5qZWZuH10LrdeVre481M=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=QPhM54QZI6fCzMRbSuBytjBT8poEEOz7pqq8Abz/Feg6S7ZFUkv4AcQ04rE5xAAZk
-	 lSYGXUEOH7fRdkqtpAlydFqtIcSfnQOMo9Nx5SaxXV8txNNHAiNCAgeuQwO2hKEjm0
-	 Kg/YxNl+vXpGtcn28eo3x+lE1bbzVIHlZ1gUlibU=
+	by mail.kernel.org (Postfix) with ESMTP id 9E20621874
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:48:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732658AbfHHMsD (ORCPT
+        id S1732669AbfHHMs2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 08:48:03 -0400
-Received: from mga04.intel.com ([192.55.52.120]:25787 "EHLO mga04.intel.com"
+        Thu, 8 Aug 2019 08:48:28 -0400
+Received: from foss.arm.com ([217.140.110.172]:32848 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727522AbfHHMsD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 08:48:03 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Aug 2019 05:48:01 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,361,1559545200"; 
-   d="asc'?scan'208";a="326299253"
-Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
-  by orsmga004.jf.intel.com with ESMTP; 08 Aug 2019 05:47:58 -0700
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        Roger Quadros <rogerq@ti.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH] usb: dwc3: remove generic PHYs forwarding for XHCI device
-In-Reply-To: <20190719093037.16181-1-m.szyprowski@samsung.com>
-References: <CGME20190719093045eucas1p1a1c6f26ae4103e9ed283fff2396beaef@eucas1p1.samsung.com> <20190719093037.16181-1-m.szyprowski@samsung.com>
-Date:   Thu, 08 Aug 2019 15:47:54 +0300
-Message-ID: <87h86rn7r9.fsf@gmail.com>
+        id S1727522AbfHHMs2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 08:48:28 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8BE6115A2;
+        Thu,  8 Aug 2019 05:48:27 -0700 (PDT)
+Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E029C3F694;
+        Thu,  8 Aug 2019 05:48:25 -0700 (PDT)
+Subject: Re: [PATCH v2 3/9] soc: samsung: Add Exynos Adaptive Supply Voltage
+ driver
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc:     devicetree@vger.kernel.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>, linux-pm@vger.kernel.org,
+        pankaj.dubey@samsung.com,
+        =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= 
+        <b.zolnierkie@samsung.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        robh+dt@kernel.org, kgene@kernel.org, vireshk@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+References: <CGME20190718143130eucas1p26f2058f47eb2f4020e1ddbf1619d1ac8@eucas1p2.samsung.com>
+ <20190718143044.25066-1-s.nawrocki@samsung.com>
+ <20190718143044.25066-4-s.nawrocki@samsung.com>
+ <CAJKOXPeOfDHjqSotxVwVuy+6r9X3Q8ZXLit1_=gGd7bOwkHupA@mail.gmail.com>
+ <a56fe2d8-1f26-b462-1564-f23902f7dbb5@samsung.com>
+ <CAJKOXPc8iFo=2JAGEZSC46N3sZae4+JcZYBCjpKysb6PFPzyaQ@mail.gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <669c6b25-eb7e-ed3a-72a2-ee155a568363@arm.com>
+Date:   Thu, 8 Aug 2019 13:48:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+In-Reply-To: <CAJKOXPc8iFo=2JAGEZSC46N3sZae4+JcZYBCjpKysb6PFPzyaQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On 08/08/2019 13:31, Krzysztof Kozlowski wrote:
+> On Thu, 8 Aug 2019 at 14:07, Sylwester Nawrocki <s.nawrocki@samsung.com> wrote:
+>>>> +static unsigned int exynos5422_asv_parse_table(struct exynos_asv *asv,
+>>>> +                                     unsigned int pkg_id)
+>>>> +{
+>>>> +       return (pkg_id >> EXYNOS5422_TABLE_OFFSET) & EXYNOS5422_TABLE_MASK;
+>>>> +}
+>>>> +
+>>>> +static bool exynos5422_asv_parse_bin2(struct exynos_asv *asv,
+>>>> +                                    unsigned int pkg_id)
+>>>> +{
+>>>> +       return (pkg_id >> EXYNOS5422_BIN2_OFFSET) & EXYNOS5422_BIN2_MASK;
+>>>
+>>> return !!() for converting to boolean.
+>>
+>> I'm not convinced it is needed, the return type of the function is bool
+>> and value of the expression will be implicitly converted to that type.
+>> Is there any compiler warning related to that?
+> 
+> Yeah, but bool is int so there will be no implicit conversion... I
+> guess it is a convention. In theory !! is the proper conversion to
+> bool but if bool==int then it's essentially conversion to 1. I am not
+> sure what's the benefit, maybe for some wrong code which would do
+> comparisons on result like if (exynos5422_asv_parse_bin2() == TRUE)...
 
+Not so - since we use "-std=gnu89", we have C99-like _Bool, which our 
+bool is a typedef of. Conversions, either implicit or explicit, are 
+well-defined:
 
-Hi,
+"6.3.1.2 Boolean type
 
-Marek Szyprowski <m.szyprowski@samsung.com> writes:
+When any scalar value is converted to _Bool, the result is 0 if the 
+value compares equal
+to 0; otherwise, the result is 1."
 
-> Commit 08f871a3aca2 ("usb: dwc3: host: convey the PHYs to xhci") added
-> forwarding of the generic PHYs from DWC3 core to the instantiated XHCI-pl=
-at
-> device. However XHCI(-plat) driver never gained support for generic PHYs,
-> thus the lookup added by that commit is never used. In meantime the commit
-> d64ff406e51e ("usb: dwc3: use bus->sysdev for DMA configuration")
-> incorrectly changed the device used for creating lookup, making the lookup
-> useless and generic PHYs inaccessible from XHCI device.
->
-> However since commit 178a0bce05cb ("usb: core: hcd: integrate the PHY
-> wrapper into the HCD core") USB HCD already handles generic PHYs acquired
-> from the HCD's 'sysdev', which in this case is DWC3 core device. This mea=
-ns
-> that creating any custom lookup entries for XHCI driver is no longer need=
-ed
-> and can be simply removed.
->
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> ---
->  drivers/usb/dwc3/host.c | 22 ++++------------------
->  1 file changed, 4 insertions(+), 18 deletions(-)
->
-> diff --git a/drivers/usb/dwc3/host.c b/drivers/usb/dwc3/host.c
-> index f55947294f7c..8deea8c91e03 100644
-> --- a/drivers/usb/dwc3/host.c
-> +++ b/drivers/usb/dwc3/host.c
-> @@ -85,7 +85,7 @@ int dwc3_host_init(struct dwc3 *dwc)
->  						DWC3_XHCI_RESOURCES_NUM);
->  	if (ret) {
->  		dev_err(dwc->dev, "couldn't add resources to xHCI device\n");
-> -		goto err1;
-> +		goto err;
->  	}
->=20=20
->  	memset(props, 0, sizeof(struct property_entry) * ARRAY_SIZE(props));
-> @@ -112,37 +112,23 @@ int dwc3_host_init(struct dwc3 *dwc)
->  		ret =3D platform_device_add_properties(xhci, props);
->  		if (ret) {
->  			dev_err(dwc->dev, "failed to add properties to xHCI\n");
-> -			goto err1;
-> +			goto err;
->  		}
->  	}
->=20=20
-> -	phy_create_lookup(dwc->usb2_generic_phy, "usb2-phy",
-> -			  dev_name(dwc->dev));
-> -	phy_create_lookup(dwc->usb3_generic_phy, "usb3-phy",
-> -			  dev_name(dwc->dev));
-> -
->  	ret =3D platform_device_add(xhci);
->  	if (ret) {
->  		dev_err(dwc->dev, "failed to register xHCI device\n");
-> -		goto err2;
-> +		goto err;
->  	}
->=20=20
->  	return 0;
-> -err2:
-> -	phy_remove_lookup(dwc->usb2_generic_phy, "usb2-phy",
-> -			  dev_name(dwc->dev));
-> -	phy_remove_lookup(dwc->usb3_generic_phy, "usb3-phy",
-> -			  dev_name(dwc->dev));
-> -err1:
-> +err:
->  	platform_device_put(xhci);
->  	return ret;
->  }
->=20=20
->  void dwc3_host_exit(struct dwc3 *dwc)
->  {
-> -	phy_remove_lookup(dwc->usb2_generic_phy, "usb2-phy",
-> -			  dev_name(dwc->dev));
-> -	phy_remove_lookup(dwc->usb3_generic_phy, "usb3-phy",
-> -			  dev_name(dwc->dev));
->  	platform_device_unregister(dwc->xhci);
->  }
+This is even called out in Documentation/process/coding-style.rst:
 
-Roger, could you verify that this doesn't regress any of your platforms?
+"When using bool types the !! construction is not needed, which 
+eliminates a class of bugs."
 
-Thanks
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl1MGfoACgkQzL64meEa
-mQbikg//UH6PkjeKc14UABfn3WYRRhkmGCSIj4Jo8Fb+0VGwwnCwh6gynHnd/tF9
-e92UjtzJvJaGadq+j9LPLvu1aL7P1RgAVSenk6e5FeDgfKg8AjH16y1Ds7YcG57K
-rZYXp2EHn1JsdX9F2qb6h6aQIhU/QG2w6uZhuaC5ZSRHHbMPk3lUC9l2eEDtZIT7
-VEtvx3yV5YatkOB3pVNIpYMsUncucQzQ9YWH7+GaAKuxek0lUBcSigsw8FWlpZUl
-lEyNmjaY1WHGEtxc/ufFsQLKVRx9hdqQBiBU6ppVSLSYFHI3JrP1tyz3lWOd2pQL
-7fKGqQxKxkTeniltiGfXzua30Qea/qNHN8OPA6MI7BESYrmzRvaX39ubb292NDvG
-sY2riya0yZkJKZVPGTEU8E2yhJio7v0SdK+AT0UrQ6If3s+VD9HNKogqeshk6QPc
-+ukerIHGlZHgohDg8Cn9/mk4rPASfgwf0x7MYBR/4FgcETusEOD5evAQjWydpWeY
-TJ9YgW7bDjZf5SqgcZKzA1UkRZD+g1SY6rvoVMwdLiHaXF89NJn9o/zYSTZF9McS
-p3EDSPpH159AyobnkQF2OSKKbqbrlf3wsGSKcQn3SDgjVt82owJ2Ch1a38GwI1Ki
-0tuJigtq8gGexw6EbAj/U4iydtjYNG4tg+/g7oCmURXWTRGyxjg=
-=Wqee
------END PGP SIGNATURE-----
---=-=-=--
+Robin.
