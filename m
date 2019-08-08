@@ -2,54 +2,52 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11818C32754
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:45:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF02BC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:45:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC06A21881
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:45:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A09DB21882
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:45:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390277AbfHHQpH (ORCPT
+        id S2390263AbfHHQpH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 8 Aug 2019 12:45:07 -0400
-Received: from mail-ot1-f70.google.com ([209.85.210.70]:50194 "EHLO
+Received: from mail-ot1-f70.google.com ([209.85.210.70]:35978 "EHLO
         mail-ot1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390214AbfHHQpG (ORCPT
+        with ESMTP id S2390242AbfHHQpG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 8 Aug 2019 12:45:06 -0400
-Received: by mail-ot1-f70.google.com with SMTP id a21so62934188otk.17
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 09:45:05 -0700 (PDT)
+Received: by mail-ot1-f70.google.com with SMTP id f11so62955375otq.3
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 09:45:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=pCP8x+c3NdmQMNT+LHA6K3XzXnAObCZ6ntIBW771GIM=;
-        b=pJJKz9flVhQo84VdhzQGZESYbSwR6wn9LWOskid8EvtrrL0YB0oPB+rOStXW6gP5O7
-         4FKZxxwWGCNKKprfsYJQySAcKGhrsumLVEz5d0B4oWlt4BbLLQWrN6cKreKUVoR5w0+6
-         ICXN5toCstOFkC419bM9QsOqUrLQYZ9j7y/BOTi5oPxgK1Cu6+7fWck6KU8GTD2i+OL+
-         qYSXTrbQvungT5g/dREY8eP9DsXcVseMlLQ5qlcW4RtyL9gEDy+CxRNbEZMPJWP957vv
-         Gl8Jl9iaJqIeK5HRR6HA2HFuhfzvRJ4RAjPMISzOVyu7BdXbFCNXbL2kw5Lte2zvCi2O
-         DwSA==
-X-Gm-Message-State: APjAAAXr4MuIvUKJKy+ClV5dJQLBkl2Q1WIf3BRXKG25FBDriMlXWOHL
-        INj4jdBSo4jssw3gIVQKTvEcj5PPgANlwTfc5Vec8XP7du69
-X-Google-Smtp-Source: APXvYqyKZOG/tnmvcHVs/lnVgia1SmEKFAl2TJJr91WPNOtvwVYVhOvsr5tAKftpEUX5MjcOQuAl2XktGfyghSfgZBa3BS6XROE2
+        bh=CTN/UWjTmOzg5lWgh/1z4OS5rMon92kj3u7gixuyddI=;
+        b=MZuLf10/ElHDzujtKuO8vPg4FqE7v/VDp4CokxnfVgZB2meTvSWK82ekcA19Cebeyr
+         bXfbK1yRwJ1YpQsqCqI5OlgAX0NMzb0NpgIebVfT5CnmvQqQaGnruC8nJB1USHuQ5Z9T
+         E3udmY1ccvQPsX1WgXSdUTEGQpGs4EBdUV4gNFQyO8O0AOVhKhI0XD5L3KogWJTck0Se
+         XNGtRV9noZHArWxp6vnydGzVScj05tTjTtSpzipWWJ/lvrR/1RtY3Zn7gINwm0S9hbSO
+         Q1Jg7AwlhDCXXqNtWZnXZJFOEw0HuPi0K8Js7pxsWOQ5C7JcAC+nOw3Xq+bRfY6ErxzA
+         k4nQ==
+X-Gm-Message-State: APjAAAVMknL/651nI34dXauVnRexkxhfpdiEFH4nr6T7CN3DEP0uMFd2
+        5S1mMTgDxU5fegukazT4dq3hnVuJm7Vs52qnsmJ4TXb78ttT
+X-Google-Smtp-Source: APXvYqyp+n8vo6H1NRj68YFZPvskIq0GKhnXnfwzys6Mb7jCF82DrbJHZzW8YdVq8vPIft52GgmkWoOP9cnuQUPEzbj4k3B8p/av
 MIME-Version: 1.0
-X-Received: by 2002:a5d:9613:: with SMTP id w19mr109048iol.140.1565282705187;
+X-Received: by 2002:a02:c615:: with SMTP id i21mr1483678jan.135.1565282705702;
  Thu, 08 Aug 2019 09:45:05 -0700 (PDT)
 Date:   Thu, 08 Aug 2019 09:45:05 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000009dac7f058f9dc763@google.com>
-Subject: INFO: rcu detected stall in tcp_write_timer
-From:   syzbot <syzbot+1f80b70f1e8f1df46319@syzkaller.appspotmail.com>
-To:     ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
-        davem@davemloft.net, edumazet@google.com, kafai@fb.com,
-        kuznet@ms2.inr.ac.ru, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, yhs@fb.com,
-        yoshfuji@linux-ipv6.org
+Message-ID: <000000000000a585f2058f9dc7b3@google.com>
+Subject: WARNING in xfrm_policy_inexact_list_reinsert
+From:   syzbot <syzbot+8cc27ace5f6972910b31@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        steffen.klassert@secunet.com, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -60,120 +58,80 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    ce96e791 Add linux-next specific files for 20190731
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=12b2efd0600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=fca5b9d53db6585c
-dashboard link: https://syzkaller.appspot.com/bug?extid=1f80b70f1e8f1df46319
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+HEAD commit:    4010b622 Merge branch 'dax-fix-5.3-rc3' of git://git.kerne..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=13e2829fa00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e397351d2615e10
+dashboard link: https://syzkaller.appspot.com/bug?extid=8cc27ace5f6972910b31
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+80fee25776c2fb61e74c1ecb1a523375c2500b69)
 
 Unfortunately, I don't have any reproducer for this crash yet.
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+1f80b70f1e8f1df46319@syzkaller.appspotmail.com
+Reported-by: syzbot+8cc27ace5f6972910b31@syzkaller.appspotmail.com
 
-rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-	(detected by 1, t=10502 jiffies, g=28777, q=38)
-rcu: All QSes seen, last rcu_preempt kthread activity 10503  
-(4294973637-4294963134), jiffies_till_next_fqs=1, root ->qsmask 0x0
-syz-executor.5  R  running task    27376 17588  10322 0x00004008
+WARNING: CPU: 1 PID: 6756 at net/xfrm/xfrm_policy.c:877  
+xfrm_policy_inexact_list_reinsert+0x625/0x6e0 net/xfrm/xfrm_policy.c:877
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 6756 Comm: syz-executor.1 Not tainted 5.3.0-rc2+ #57
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
 Call Trace:
-  <IRQ>
-  sched_show_task kernel/sched/core.c:5814 [inline]
-  sched_show_task.cold+0x2ed/0x34e kernel/sched/core.c:5789
-  print_other_cpu_stall kernel/rcu/tree_stall.h:410 [inline]
-  check_cpu_stall kernel/rcu/tree_stall.h:536 [inline]
-  rcu_pending kernel/rcu/tree.c:2736 [inline]
-  rcu_sched_clock_irq.cold+0xac8/0xc13 kernel/rcu/tree.c:2183
-  update_process_times+0x32/0x80 kernel/time/timer.c:1639
-  tick_sched_handle+0xa2/0x190 kernel/time/tick-sched.c:167
-  tick_sched_timer+0x53/0x140 kernel/time/tick-sched.c:1296
-  __run_hrtimer kernel/time/hrtimer.c:1389 [inline]
-  __hrtimer_run_queues+0x364/0xe40 kernel/time/hrtimer.c:1451
-  hrtimer_interrupt+0x314/0x770 kernel/time/hrtimer.c:1509
-  local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1068 [inline]
-  smp_apic_timer_interrupt+0x160/0x610 arch/x86/kernel/apic/apic.c:1093
-  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:828
-RIP: 0010:__kasan_check_read+0x0/0x20 mm/kasan/common.c:91
-Code: e8 e9 c0 ae ff 0f 0b 4c 8b 4d d0 e9 27 ee ff ff 48 8b 73 58 89 c2 48  
-c7 c7 e0 c2 89 88 f7 da e8 ca c0 ae ff e9 da ee ff ff 90 <55> 89 f6 31 d2  
-48 89 e5 48 8b 4d 08 e8 cf 26 00 00 5d c3 0f 1f 00
-RSP: 0018:ffff8880ae909b40 EFLAGS: 00000202 ORIG_RAX: ffffffffffffff13
-RAX: 0000000000000000 RBX: ffff8880601cce08 RCX: ffffffff8158f467
-RDX: 0000000000000000 RSI: 0000000000000004 RDI: ffff8880601cce08
-RBP: ffff8880ae909c08 R08: 1ffff1100c0399c1 R09: ffffed100c0399c2
-R10: ffffed100c0399c1 R11: ffff8880601cce0b R12: 0000000000000001
-R13: 0000000000000003 R14: ffffed100c0399c1 R15: 0000000000000001
-  pv_queued_spin_lock_slowpath arch/x86/include/asm/paravirt.h:642 [inline]
-  queued_spin_lock_slowpath arch/x86/include/asm/qspinlock.h:50 [inline]
-  queued_spin_lock include/asm-generic/qspinlock.h:81 [inline]
-  do_raw_spin_lock+0x20e/0x2e0 kernel/locking/spinlock_debug.c:113
-  __raw_spin_lock include/linux/spinlock_api_smp.h:143 [inline]
-  _raw_spin_lock+0x37/0x40 kernel/locking/spinlock.c:151
-  spin_lock include/linux/spinlock.h:338 [inline]
-  tcp_write_timer+0x2b/0x1e0 net/ipv4/tcp_timer.c:610
-  call_timer_fn+0x1ac/0x780 kernel/time/timer.c:1322
-  expire_timers kernel/time/timer.c:1366 [inline]
-  __run_timers kernel/time/timer.c:1685 [inline]
-  __run_timers kernel/time/timer.c:1653 [inline]
-  run_timer_softirq+0x697/0x17a0 kernel/time/timer.c:1698
-  __do_softirq+0x262/0x98c kernel/softirq.c:292
-  invoke_softirq kernel/softirq.c:373 [inline]
-  irq_exit+0x19b/0x1e0 kernel/softirq.c:413
-  exiting_irq arch/x86/include/asm/apic.h:536 [inline]
-  smp_apic_timer_interrupt+0x1a3/0x610 arch/x86/kernel/apic/apic.c:1095
-  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:828
-  </IRQ>
-RIP: 0010:arch_local_irq_restore arch/x86/include/asm/paravirt.h:756  
-[inline]
-RIP: 0010:slab_alloc mm/slab.c:3312 [inline]
-RIP: 0010:__do_kmalloc mm/slab.c:3653 [inline]
-RIP: 0010:__kmalloc+0x2b8/0x770 mm/slab.c:3664
-Code: 7e 0f 85 d6 fe ff ff e8 26 c5 53 ff e9 cc fe ff ff e8 1c ff ca ff 48  
-83 3d e4 52 26 07 00 0f 84 4f 03 00 00 48 8b 7d c0 57 9d <0f> 1f 44 00 00  
-e9 5e fe ff ff 31 d2 be 35 02 00 00 48 c7 c7 ce c0
-RSP: 0018:ffff888069e978c0 EFLAGS: 00000286 ORIG_RAX: ffffffffffffff13
-RAX: 0000000000000007 RBX: 0000000000000dc0 RCX: 1ffffffff134c016
-RDX: 0000000000000000 RSI: ffffffff8177a12e RDI: 0000000000000286
-RBP: ffff888069e97938 R08: ffff888064bee240 R09: ffffed10154802c1
-R10: ffffed10154802c0 R11: ffff8880aa401603 R12: 0000000000000100
-R13: 0000000000000dc0 R14: ffff8880aa4008c0 R15: ffff88805f8e7dc0
-  kmalloc_array include/linux/slab.h:614 [inline]
-  kcalloc include/linux/slab.h:625 [inline]
-  iter_file_splice_write+0x16e/0xbe0 fs/splice.c:690
-  do_splice_from fs/splice.c:848 [inline]
-  direct_splice_actor+0x123/0x190 fs/splice.c:1020
-  splice_direct_to_actor+0x366/0x970 fs/splice.c:975
-  do_splice_direct+0x1da/0x2a0 fs/splice.c:1063
-  do_sendfile+0x597/0xd00 fs/read_write.c:1464
-  __do_sys_sendfile64 fs/read_write.c:1519 [inline]
-  __se_sys_sendfile64 fs/read_write.c:1511 [inline]
-  __x64_sys_sendfile64+0x15a/0x220 fs/read_write.c:1511
-  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x1d8/0x2f8 lib/dump_stack.c:113
+  panic+0x29b/0x7d9 kernel/panic.c:219
+  __warn+0x22f/0x230 kernel/panic.c:576
+  report_bug+0x190/0x290 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  do_error_trap+0xd7/0x440 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x36/0x40 arch/x86/kernel/traps.c:291
+  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1026
+RIP: 0010:xfrm_policy_inexact_list_reinsert+0x625/0x6e0  
+net/xfrm/xfrm_policy.c:877
+Code: ef e8 6f 32 0f fb 4d 8b 6d 00 4c 39 6d 90 0f 85 81 fa ff ff e9 b0 00  
+00 00 e8 c7 87 d4 fa 0f 0b e9 fa fa ff ff e8 bb 87 d4 fa <0f> 0b e9 75 ff  
+ff ff e8 af 87 d4 fa 0f 0b eb a9 44 89 f1 80 e1 07
+RSP: 0018:ffff888052caf080 EFLAGS: 00010283
+RAX: ffffffff86a35975 RBX: 00000000ffffff20 RCX: 0000000000040000
+RDX: ffffc9000816a000 RSI: 00000000000005cd RDI: 00000000000005ce
+RBP: ffff888052caf110 R08: ffffffff86a358ac R09: ffffffff86a3514c
+R10: ffff88805914c380 R11: 0000000000000002 R12: 0000000000000000
+R13: ffff888092fa6aa0 R14: 000000000000007e R15: 000000000000000a
+  xfrm_policy_inexact_node_reinsert net/xfrm/xfrm_policy.c:922 [inline]
+  xfrm_policy_inexact_node_merge net/xfrm/xfrm_policy.c:958 [inline]
+  xfrm_policy_inexact_insert_node+0x537/0xb50 net/xfrm/xfrm_policy.c:1023
+  xfrm_policy_inexact_alloc_chain+0x62b/0xbd0 net/xfrm/xfrm_policy.c:1139
+  xfrm_policy_inexact_insert+0xe8/0x1540 net/xfrm/xfrm_policy.c:1182
+  xfrm_policy_insert+0xdf/0xce0 net/xfrm/xfrm_policy.c:1574
+  xfrm_add_policy+0x4cf/0x9b0 net/xfrm/xfrm_user.c:1670
+  xfrm_user_rcv_msg+0x46b/0x720 net/xfrm/xfrm_user.c:2676
+  netlink_rcv_skb+0x1f0/0x460 net/netlink/af_netlink.c:2477
+  xfrm_netlink_rcv+0x74/0x90 net/xfrm/xfrm_user.c:2684
+  netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+  netlink_unicast+0x809/0x9a0 net/netlink/af_netlink.c:1328
+  netlink_sendmsg+0xa70/0xd30 net/netlink/af_netlink.c:1917
+  sock_sendmsg_nosec net/socket.c:637 [inline]
+  sock_sendmsg net/socket.c:657 [inline]
+  ___sys_sendmsg+0x66b/0x9a0 net/socket.c:2311
+  __sys_sendmsg net/socket.c:2356 [inline]
+  __do_sys_sendmsg net/socket.c:2365 [inline]
+  __se_sys_sendmsg net/socket.c:2363 [inline]
+  __x64_sys_sendmsg+0x1cf/0x290 net/socket.c:2363
+  do_syscall_64+0xfe/0x140 arch/x86/entry/common.c:296
   entry_SYSCALL_64_after_hwframe+0x49/0xbe
 RIP: 0033:0x459829
 Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
 ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f9691478c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000028
-RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 0000000000459829
-RDX: 0000000020001000 RSI: 0000000000000003 RDI: 0000000000000003
+RSP: 002b:00007f16cc51ec78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459829
+RDX: 0000000000000000 RSI: 0000000020000080 RDI: 0000000000000003
 RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 000000000000ffff R11: 0000000000000246 R12: 00007f96914796d4
-R13: 00000000004c6ff7 R14: 00000000004dc558 R15: 00000000ffffffff
-rcu: rcu_preempt kthread starved for 10569 jiffies! g28777 f0x2  
-RCU_GP_WAIT_FQS(5) ->state=0x0 ->cpu=0
-rcu: RCU grace-period kthread stack dump:
-rcu_preempt     R  running task    29688    10      2 0x80004000
-Call Trace:
-  context_switch kernel/sched/core.c:3254 [inline]
-  __schedule+0x755/0x15b0 kernel/sched/core.c:3921
-  schedule+0xa8/0x270 kernel/sched/core.c:3985
-  schedule_timeout+0x486/0xc50 kernel/time/timer.c:1807
-  rcu_gp_fqs_loop kernel/rcu/tree.c:1611 [inline]
-  rcu_gp_kthread+0x9b2/0x18c0 kernel/rcu/tree.c:1768
-  kthread+0x361/0x430 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f16cc51f6d4
+R13: 00000000004c776b R14: 00000000004dceb8 R15: 00000000ffffffff
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
 
 ---
