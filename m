@@ -2,193 +2,109 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5CA5C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:38:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 912D4C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:39:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8561D21874
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:38:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CDAD218A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:39:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732472AbfHHMiM (ORCPT
+        id S1732380AbfHHMjP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 08:38:12 -0400
-Received: from mail-ot1-f70.google.com ([209.85.210.70]:52519 "EHLO
-        mail-ot1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728380AbfHHMiI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 08:38:08 -0400
-Received: by mail-ot1-f70.google.com with SMTP id a17so61470195otd.19
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 05:38:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=l8epR7668LWEzctJNnXHSNPRPIYGaCWB8LBtSCX2CzA=;
-        b=LBs2lI/4HRZha1TodMVDHA8STKkV54zMcEB3bPPpqHLP+wN68NyH3A3f3IrHwvgYUw
-         OvIXWmnaZEO0DhC0+WFmktt7nbx+VJ+2jHI8AtxSI/W6Nzx4Qx69u5zYQnBSD5d648Hb
-         tFbMuq256elsXxN8NRJ+mGU1/fz8t3iGuxsSCZhd1q0hqmvKr52M37g0tlsCcu7m7cVu
-         FOTeJKrf/4fT8D9sFv7XUZ6iBeMru4R4yPoXKsxJasIytV6qhX983ZqWljlkpfk4rjIj
-         93VEJaOJYSJpILevjl6scg1XTh43tKLMFKKnFofnyDf+5CPBNb3+l12W3kbb+f1QoOIm
-         31fQ==
-X-Gm-Message-State: APjAAAVBGcK43IHR1BrIHk/h1bCnN6QSOyJJT/UGznuQiYgJHOWn8K1d
-        LoGoRP1lEXjv7W/hMxvHnKDw3hDXHPXDStmT961UC8Cqpuf1
-X-Google-Smtp-Source: APXvYqyvI3yskL4wQcyCi4AMeNxRy1mOxlW92W8FM4NcDcoqgiMNCT37590NBAPR+PPCwquVEreJx5ydLNKnBkFXNSPe2kbvqPGi
+        Thu, 8 Aug 2019 08:39:15 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58692 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728025AbfHHMjO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 08:39:14 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 90CA2AD22;
+        Thu,  8 Aug 2019 12:39:13 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id B63EDDA7C5; Thu,  8 Aug 2019 14:39:44 +0200 (CEST)
+From:   David Sterba <dsterba@suse.com>
+To:     viro@zeniv.linux.org.uk
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH RESEND] fs: use UB-safe check for signed addition overflow in remap_verify_area
+Date:   Thu,  8 Aug 2019 14:39:42 +0200
+Message-Id: <20190808123942.19592-1-dsterba@suse.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-X-Received: by 2002:a5d:9642:: with SMTP id d2mr14353752ios.278.1565267886862;
- Thu, 08 Aug 2019 05:38:06 -0700 (PDT)
-Date:   Thu, 08 Aug 2019 05:38:06 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000005ff828058f9a5480@google.com>
-Subject: KASAN: use-after-free Read in usbhid_raw_request
-From:   syzbot <syzbot+75e6910bf03e266a277f@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, benjamin.tissoires@redhat.com,
-        jikos@kernel.org, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+The following warning pops up with enabled UBSAN in tests fstests/generic/303:
 
-syzbot found the following crash on:
+  [23127.529395] UBSAN: Undefined behaviour in fs/read_write.c:1725:7
+  [23127.529400] signed integer overflow:
+  [23127.529403] 4611686018427322368 + 9223372036854775807 cannot be represented in type 'long long int'
+  [23127.529412] CPU: 4 PID: 26180 Comm: xfs_io Not tainted 5.2.0-rc2-1.ge195904-vanilla+ #450
+  [23127.556999] Hardware name: empty empty/S3993, BIOS PAQEX0-3 02/24/2008
+  [23127.557001] Call Trace:
+  [23127.557060]  dump_stack+0x67/0x9b
+  [23127.557070]  ubsan_epilogue+0x9/0x40
+  [23127.573496]  handle_overflow+0xb3/0xc0
+  [23127.573514]  do_clone_file_range+0x28f/0x2a0
+  [23127.573547]  vfs_clone_file_range+0x35/0xb0
+  [23127.573564]  ioctl_file_clone+0x8d/0xc0
+  [23127.590144]  do_vfs_ioctl+0x300/0x700
+  [23127.590160]  ksys_ioctl+0x70/0x80
+  [23127.590203]  ? trace_hardirqs_off_thunk+0x1a/0x1c
+  [23127.590210]  __x64_sys_ioctl+0x16/0x20
+  [23127.590215]  do_syscall_64+0x5c/0x1d0
+  [23127.590224]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+  [23127.590231] RIP: 0033:0x7ff6d7250327
+  [23127.590241] RSP: 002b:00007ffe3a38f1d8 EFLAGS: 00000206 ORIG_RAX: 0000000000000010
+  [23127.590246] RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 00007ff6d7250327
+  [23127.590249] RDX: 00007ffe3a38f220 RSI: 000000004020940d RDI: 0000000000000003
+  [23127.590252] RBP: 0000000000000000 R08: 00007ffe3a3c80a0 R09: 00007ffe3a3c8080
+  [23127.590255] R10: 000000000fa99fa0 R11: 0000000000000206 R12: 0000000000000000
+  [23127.590260] R13: 0000000000000000 R14: 3fffffffffff0000 R15: 00007ff6d750a20c
 
-HEAD commit:    e96407b4 usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=16000516600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=cfa2c18fb6a8068e
-dashboard link: https://syzkaller.appspot.com/bug?extid=75e6910bf03e266a277f
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+As loff_t is a signed type, we should use the safe overflow checks
+instead of relying on compiler implementation.
 
-Unfortunately, I don't have any reproducer for this crash yet.
+The bogus values are intentional and the test is supposed to verify the
+boundary conditions.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+75e6910bf03e266a277f@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: use-after-free in usbhid_get_raw_report  
-drivers/hid/usbhid/hid-core.c:865 [inline]
-BUG: KASAN: use-after-free in usbhid_raw_request+0x5f2/0x640  
-drivers/hid/usbhid/hid-core.c:1263
-Read of size 8 at addr ffff8881c8702270 by task syz-executor.4/8993
-
-CPU: 0 PID: 8993 Comm: syz-executor.4 Not tainted 5.3.0-rc2+ #25
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e lib/dump_stack.c:113
-  print_address_description+0x6a/0x32c mm/kasan/report.c:351
-  __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
-  kasan_report+0xe/0x12 mm/kasan/common.c:612
-  usbhid_get_raw_report drivers/hid/usbhid/hid-core.c:865 [inline]
-  usbhid_raw_request+0x5f2/0x640 drivers/hid/usbhid/hid-core.c:1263
-  hid_hw_raw_request include/linux/hid.h:1079 [inline]
-  hidraw_get_report drivers/hid/hidraw.c:228 [inline]
-  hidraw_ioctl+0x936/0xae0 drivers/hid/hidraw.c:426
-  vfs_ioctl fs/ioctl.c:46 [inline]
-  file_ioctl fs/ioctl.c:509 [inline]
-  do_vfs_ioctl+0xd2d/0x1330 fs/ioctl.c:696
-  ksys_ioctl+0x9b/0xc0 fs/ioctl.c:713
-  __do_sys_ioctl fs/ioctl.c:720 [inline]
-  __se_sys_ioctl fs/ioctl.c:718 [inline]
-  __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:718
-  do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x459829
-Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f7f49878c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459829
-RDX: 0000000020000180 RSI: 00000000c0404807 RDI: 0000000000000004
-RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f7f498796d4
-R13: 00000000004c2152 R14: 00000000004d54f8 R15: 00000000ffffffff
-
-Allocated by task 83:
-  save_stack+0x1b/0x80 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_kmalloc mm/kasan/common.c:487 [inline]
-  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:460
-  kmalloc include/linux/slab.h:552 [inline]
-  kzalloc include/linux/slab.h:748 [inline]
-  usb_set_configuration+0x2c4/0x1670 drivers/usb/core/message.c:1846
-  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
-  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
-  really_probe+0x281/0x650 drivers/base/dd.c:548
-  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
-  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:882
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2114
-  usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
-  hub_port_connect drivers/usb/core/hub.c:5098 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
-  port_event drivers/usb/core/hub.c:5359 [inline]
-  hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
-  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
-  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
-  kthread+0x318/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-Freed by task 83:
-  save_stack+0x1b/0x80 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_slab_free+0x130/0x180 mm/kasan/common.c:449
-  slab_free_hook mm/slub.c:1423 [inline]
-  slab_free_freelist_hook mm/slub.c:1470 [inline]
-  slab_free mm/slub.c:3012 [inline]
-  kfree+0xe4/0x2f0 mm/slub.c:3953
-  device_release+0x71/0x200 drivers/base/core.c:1064
-  kobject_cleanup lib/kobject.c:693 [inline]
-  kobject_release lib/kobject.c:722 [inline]
-  kref_put include/linux/kref.h:65 [inline]
-  kobject_put+0x171/0x280 lib/kobject.c:739
-  put_device+0x1b/0x30 drivers/base/core.c:2213
-  usb_disable_device+0x2ce/0x690 drivers/usb/core/message.c:1244
-  usb_disconnect+0x284/0x8d0 drivers/usb/core/hub.c:2199
-  hub_port_connect drivers/usb/core/hub.c:4949 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
-  port_event drivers/usb/core/hub.c:5359 [inline]
-  hub_event+0x1454/0x3640 drivers/usb/core/hub.c:5441
-  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
-  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
-  kthread+0x318/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-The buggy address belongs to the object at ffff8881c8702200
-  which belongs to the cache kmalloc-2k of size 2048
-The buggy address is located 112 bytes inside of
-  2048-byte region [ffff8881c8702200, ffff8881c8702a00)
-The buggy address belongs to the page:
-page:ffffea000721c000 refcount:1 mapcount:0 mapping:ffff8881da00c000  
-index:0x0 compound_mapcount: 0
-flags: 0x200000000010200(slab|head)
-raw: 0200000000010200 dead000000000100 dead000000000122 ffff8881da00c000
-raw: 0000000000000000 00000000000f000f 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff8881c8702100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8881c8702180: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> ffff8881c8702200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                                              ^
-  ffff8881c8702280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8881c8702300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
+Signed-off-by: David Sterba <dsterba@suse.com>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ fs/read_write.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/fs/read_write.c b/fs/read_write.c
+index c543d965e288..a8bd974edf72 100644
+--- a/fs/read_write.c
++++ b/fs/read_write.c
+@@ -20,6 +20,7 @@
+ #include <linux/compat.h>
+ #include <linux/mount.h>
+ #include <linux/fs.h>
++#include <linux/overflow.h>
+ #include "internal.h"
+ 
+ #include <linux/uaccess.h>
+@@ -1718,11 +1719,12 @@ static int remap_verify_area(struct file *file, loff_t pos, loff_t len,
+ 			     bool write)
+ {
+ 	struct inode *inode = file_inode(file);
++	loff_t tmp;
+ 
+ 	if (unlikely(pos < 0 || len < 0))
+ 		return -EINVAL;
+ 
+-	 if (unlikely((loff_t) (pos + len) < 0))
++	if (unlikely(check_add_overflow(pos, len, &tmp)))
+ 		return -EINVAL;
+ 
+ 	if (unlikely(inode->i_flctx && mandatory_lock(inode))) {
+-- 
+2.22.0
+
