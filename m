@@ -2,122 +2,152 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7765C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:32:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C097C41514
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:32:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABD8321883
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:32:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565281953;
-	bh=DPRrfHkMKoXC4AALhxw0NnF3blz40Gf+GGIQLiCnFFM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KSMqczmJJC6ME0lCqNAtt9CXEpOxmJ2hi2OAd336VHKx8gnl74Xx2bOcX2xmD5P7s
-	 KfSEwWoo0+QFN68SxX+udputk5/KUHd+ZccQCBcMIzGUPFjioRi7HRNQJhchSLHxJP
-	 ojwuGBIM3F2CFlaYLye2mg9tfhJ+qAm1/nuf/tkw=
+	by mail.kernel.org (Postfix) with ESMTP id 3A16C2173E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:32:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kV+NV+qW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732769AbfHHQcc (ORCPT
+        id S2403802AbfHHQcg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 8 Aug 2019 12:32:36 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:44027 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725535AbfHHQcc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 8 Aug 2019 12:32:32 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44080 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725535AbfHHQcc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 12:32:32 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id DEBE0AE7F;
-        Thu,  8 Aug 2019 16:32:29 +0000 (UTC)
-Date:   Thu, 8 Aug 2019 18:32:28 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     ndrw.xf@redhazel.co.uk
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Artem S. Tashkinov" <aros@gmx.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>
-Subject: Re: Let's talk about the elephant in the room - the Linux kernel's
- inability to gracefully handle low memory pressure
-Message-ID: <20190808163228.GE18351@dhcp22.suse.cz>
-References: <CAJuCfpHhR+9ybt9ENzxMbdVUd_8rJN+zFbDm+5CeE2Desu82Gg@mail.gmail.com>
- <398f31f3-0353-da0c-fc54-643687bb4774@suse.cz>
- <20190806142728.GA12107@cmpxchg.org>
- <20190806143608.GE11812@dhcp22.suse.cz>
- <CAJuCfpFmOzj-gU1NwoQFmS_pbDKKd2XN=CS1vUV4gKhYCJOUtw@mail.gmail.com>
- <20190806220150.GA22516@cmpxchg.org>
- <20190807075927.GO11812@dhcp22.suse.cz>
- <20190807205138.GA24222@cmpxchg.org>
- <20190808114826.GC18351@dhcp22.suse.cz>
- <806F5696-A8D6-481D-A82F-49DEC1F2B035@redhazel.co.uk>
+Received: by mail-ot1-f67.google.com with SMTP id j11so20619973otp.10
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 09:32:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=erfhL7VDoeVN6LjjmIrSkztKG2I43YnuXIQ5QoKPdbc=;
+        b=kV+NV+qW/5qJZ2Z48xBPFEZ6LJYAXKY5/LhYbls4LmwDokugWNdTa16wJmKp0yXodN
+         iVYJzFf9wKMlE++n5p9Whx3JnTaCk53pROAM7OZ8x0kFxKIh5rsaR/LnSEl93Lnc1C2A
+         Hfwb5Y/I4iLfY0pVARlG0U/1rzE7/uJK5ZkZY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=erfhL7VDoeVN6LjjmIrSkztKG2I43YnuXIQ5QoKPdbc=;
+        b=QKcKMbqjfUSoceLHFuwVQVH6JdwS3nr2iApR9satzPFr9VIyBRFTtledowltWT28Ls
+         dpgHbax9wxCbYQ1bRsGtTa/6lI0JiQBQX3BhLs+kjubZXhOH0esKDN1f9RUgJX1+5tZc
+         2hIr71K9DTj7lFwx8GhK+2UPfcfSrysjlRWbNCQKN7+bEZI5x0ylNGk3XGrPkwOSEXSP
+         7Kw6RcQs5kECb4fZ5HYNJMbZXewfLp2Ig0K0g5Ou5xRK2jPOR7ETQMZkRhBEaC62eu5Z
+         E9zQia5qFWEAvsKNXgk9lbxHgG9fLmhowhILCDpFN/70L2tzEHGyRWOs3LF8s94qmIlL
+         b1HQ==
+X-Gm-Message-State: APjAAAV3ncTykO7w7BZUXnvfaXD0jy7o7rtoevpvnsBtjlNvL6Oc5/M2
+        jdTokhSEryujhs1D8xVPLyu+NPe+gtTd9n8JvzG5ZA==
+X-Google-Smtp-Source: APXvYqy8Y64Qwzaj+EcuykgpBje7tkhZgHMn/Tvi8eNyfMMvhJLC6rMpyPg9xxizaeKi+hpK8mPldF+gfVafFe2ZGzs=
+X-Received: by 2002:a6b:90c1:: with SMTP id s184mr15573418iod.244.1565281952009;
+ Thu, 08 Aug 2019 09:32:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <806F5696-A8D6-481D-A82F-49DEC1F2B035@redhazel.co.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190805211451.20176-1-robdclark@gmail.com> <20190806084821.GA17129@lst.de>
+ <CAJs_Fx6eh1w7c=crMoD5XyEOMzP6orLhqUewErE51cPGYmObBQ@mail.gmail.com>
+ <20190806155044.GC25050@lst.de> <CAJs_Fx6uztwDy2PqRy3Tc9p12k8r_ovS2tAcsMV6HqnAp=Ggug@mail.gmail.com>
+ <20190807062545.GF6627@lst.de> <CAJs_Fx7tqbr_gqRdqJEwOcRFReP0DqZzOu11Dxhxkp8+PygUQw@mail.gmail.com>
+ <20190808100031.GA32658@lst.de>
+In-Reply-To: <20190808100031.GA32658@lst.de>
+From:   Rob Clark <robdclark@chromium.org>
+Date:   Thu, 8 Aug 2019 09:32:21 -0700
+Message-ID: <CAJs_Fx6ikxob7Mu6GM1ESe4pBXAbVv4NNnbZN7YUQdmyfPnxgg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] drm: add cache support for arm64
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Rob Clark <robdclark@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 08-08-19 16:10:07, ndrw.xf@redhazel.co.uk wrote:
-> 
-> 
-> On 8 August 2019 12:48:26 BST, Michal Hocko <mhocko@kernel.org> wrote:
-> >> 
-> >> Per default, the OOM killer will engage after 15 seconds of at least
-> >> 80% memory pressure. These values are tunable via sysctls
-> >> vm.thrashing_oom_period and vm.thrashing_oom_level.
+On Thu, Aug 8, 2019 at 3:00 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+> On Wed, Aug 07, 2019 at 09:09:53AM -0700, Rob Clark wrote:
+> > > > (Eventually I'd like to support pages passed in from userspace.. but
+> > > > that is down the road.)
+> > >
+> > > Eww.  Please talk to the iommu list before starting on that.
 > >
-> >As I've said earlier I would be somehow more comfortable with a kernel
-> >command line/module parameter based tuning because it is less of a
-> >stable API and potential future stall detector might be completely
-> >independent on PSI and the current metric exported. But I can live with
-> >that because a period and level sounds quite generic.
-> 
-> Would it be possible to reserve a fixed (configurable) amount of RAM for caches,
+> > This is more of a long term goal, we can't do it until we have
+> > per-context/process pagetables, ofc.
+> >
+> > Getting a bit off topic, but I'm curious about what problems you are
+> > concerned about.  Userspace can shoot it's own foot, but if it is not
+> > sharing GPU pagetables with other processes, it can't shoot other's
+> > feet.  (I'm guessing you are concerned about non-page-aligned
+> > mappings?)
+>
+> Maybe I misunderstood what you mean above, I though you mean messing
+> with page cachability attributes for userspace pages.  If what you are
+> looking into is just "standard" SVM I only hope that our APIs for that
+> which currently are a mess are in shape by then, as all users currently
+> have their own crufty and at least slightly buggy versions of that.  But
+> at least it is an issue that is being worked on.
 
-I am afraid there is nothing like that available and I would even argue
-it doesn't make much sense either. What would you consider to be a
-cache? A kernel/userspace reclaimable memory? What about any other in
-kernel memory users? How would you setup such a limit and make it
-reasonably maintainable over different kernel releases when the memory
-footprint changes over time?
+ahh, ok.. and no, we wouldn't be remapping 'malloc' memory as
+writecombine.  We'd have to wire up better support for cached buffers.
 
-Besides that how does that differ from the existing reclaim mechanism?
-Once your cache hits the limit, there would have to be some sort of the
-reclaim to happen and then we are back to square one when the reclaim is
-making progress but you are effectively treshing over the hot working
-set (e.g. code pages)
+Currently we use WC for basically all GEM buffers allocated from
+kernel, since that is a good choice for most GPU workloads.. ie. CPU
+isn't reading back from GPU buffers in most cases.  I'm told cached
+buffers are useful for compute workloads where there is more back and
+forth between GPU and CPU, but we haven't really crossed that bridge
+yet.  Compute workloads is also were the SVM interest is.
 
-> and trigger OOM killer earlier, before most UI code is evicted from memory?
+> > > So back to the question, I'd like to understand your use case (and
+> > > maybe hear from the other drm folks if that is common):
+> > >
+> > >  - you allocate pages from shmem (why shmem, btw?  if this is done by
+> > >    other drm drivers how do they guarantee addressability without an
+> > >    iommu?)
+> >
+> > shmem for swappable pages.  I don't unpin and let things get swapped
+> > out yet, but I'm told it starts to become important when you have 50
+> > browser tabs open ;-)
+>
+> Yes,  but at that point the swapping can use the kernel linear mapping
+> and we are going into aliasing problems that can disturb the cache.  So
+> as-is this is going to problematic without new hooks into shmemfs.
+>
 
-How does the kernel knows that important memory is evicted? E.g. say
-that your graphic stack is under pressure and it has to drop internal
-caches. No outstanding processes will be swapped out yet your UI will be
-completely frozen like.
+My expectation is that we'd treat the pages as cached when handing
+them back to shmemfs, and wb+inv when we take them back again from
+shmemfs and re-pin.  I think this works out to be basically the same
+scenario as having to wb+inv when we first get the pages from shmemfs.
 
-> In my use case, I am happy sacrificing e.g. 0.5GB and kill runaway
-> tasks _before_ the system freezes. Potentially OOM killer would also
-> work better in such conditions. I almost never work at close to full
-> memory capacity, it's always a single task that goes wrong and brings
-> the system down.
+> > >  - then the memory is either mapped to userspace or vmapped (or even
+> > >    both, althrough the lack of aliasing you mentioned would speak
+> > >    against it) as writecombine (aka arm v6+ normal uncached).  Does
+> > >    the mapping live on until the memory is freed?
+> >
+> > (side note, *most* of the drm/msm supported devices are armv8, the
+> > exceptions are 8060 and 8064 which are armv7.. I don't think drm/msm
+> > will ever have to deal w/ armv6)
+>
+> Well, the point was that starting from v6 the kernels dma uncached
+> really is write combine.  So that applied to v7 and v8 as well.
 
-If you know which task is that then you can put it into a memory cgroup
-with a stricter memory limit and have it killed before the overal system
-starts suffering.
+ahh, gotcha
 
-> The problem with PSI sensing is that it works after the fact (after
-> the freeze has already occurred). It is not very different from
-> issuing SysRq-f manually on a frozen system, although it would still
-> be a handy feature for batched tasks and remote access.
-
-Not really. PSI is giving you a matric that tells you how much time you
-spend on the memory reclaim. So you can start watching the system from
-lower utilization already.
--- 
-Michal Hocko
-SUSE Labs
+BR,
+-R
