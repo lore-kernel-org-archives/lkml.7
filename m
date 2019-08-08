@@ -2,62 +2,63 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10301C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E811C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:07:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8D99208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:07:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67CB9208C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:07:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ZD9Qby7H"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="D9XZBCMi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732167AbfHHMHI (ORCPT
+        id S1732277AbfHHMHU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 08:07:08 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:40421 "EHLO
+        Thu, 8 Aug 2019 08:07:20 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:40494 "EHLO
         mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730768AbfHHMHG (ORCPT
+        with ESMTP id S1732178AbfHHMHT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 08:07:06 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190808120705euoutp01422c5d65b7309dbf425af6f84e5517c0~48Sggs50k2691426914euoutp01b
-        for <linux-kernel@vger.kernel.org>; Thu,  8 Aug 2019 12:07:05 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190808120705euoutp01422c5d65b7309dbf425af6f84e5517c0~48Sggs50k2691426914euoutp01b
+        Thu, 8 Aug 2019 08:07:19 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190808120717euoutp0171da541255672c5b4496d3d626949594~48SsV6hSu2803428034euoutp01F
+        for <linux-kernel@vger.kernel.org>; Thu,  8 Aug 2019 12:07:17 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190808120717euoutp0171da541255672c5b4496d3d626949594~48SsV6hSu2803428034euoutp01F
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1565266025;
-        bh=wTw/zSeiLhrpgMAmruYSw68EDrMJ/8vKBiwL047PITk=;
+        s=mail20170921; t=1565266037;
+        bh=i8JGwppC3HzczEgBCKedSj/ArWZ6Yk5+D5tGqqs19EY=;
         h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=ZD9Qby7HYzK2lC/Vjog5BsNSIQok+U2a79R4NfUYZ5OVWLZfcwlUnx0f647kw6yUO
-         Knw+x+gXeRGmB+G9KZ8qdxXpn2yQCHWxWWnK5uDRw08HrL19Fzb/m/8vMc03shMpl7
-         Y61oYV36bxW4+HvjPLjyHP+iDmbVJ8zRmUpIuCUs=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        b=D9XZBCMiatOhRnT8eu5I3jljotJEzooPefgvXb1kbfFBSdgFls3kpYYzkDiORf5tC
+         vTPqDFDRFDFLbUGGOJ3KEONov3RMxC3R9HFxFqzDeWexlaZpBHCIQYx/JFBVzKg2+W
+         k04BcE8eJsoHj7J4KuA/zi+UVfYedvf8uZ3C+Q1o=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
         eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190808120704eucas1p27aa37a816849c9af2f5fddc64eccffdc~48Sf44cAI2249122491eucas1p2O;
-        Thu,  8 Aug 2019 12:07:04 +0000 (GMT)
+        20190808120716eucas1p24f95bc266056befb0166718e1f6927ec~48SrW0Hrt1079610796eucas1p2f;
+        Thu,  8 Aug 2019 12:07:16 +0000 (GMT)
 Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 2E.16.04469.8601C4D5; Thu,  8
-        Aug 2019 13:07:04 +0100 (BST)
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 70.B6.04374.4701C4D5; Thu,  8
+        Aug 2019 13:07:16 +0100 (BST)
 Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190808120703eucas1p1a79a8e2eab56201d5bdf16bf674302db~48SfLFaJE1416214162eucas1p1k;
-        Thu,  8 Aug 2019 12:07:03 +0000 (GMT)
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190808120715eucas1p2cb283e1492099f487aa15134de10834f~48SqSneGL0329003290eucas1p2B;
+        Thu,  8 Aug 2019 12:07:15 +0000 (GMT)
 Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
         eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190808120703eusmtrp1b9096581da07a64626585cf295b0c250~48Se8jPPA2071120711eusmtrp1T;
-        Thu,  8 Aug 2019 12:07:03 +0000 (GMT)
-X-AuditID: cbfec7f2-54fff70000001175-0e-5d4c10681521
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id A0.37.04166.7601C4D5; Thu,  8
-        Aug 2019 13:07:03 +0100 (BST)
+        20190808120715eusmtrp189a4622e9026786067b925c35308545a~48SqETiby2071120711eusmtrp1c;
+        Thu,  8 Aug 2019 12:07:15 +0000 (GMT)
+X-AuditID: cbfec7f5-4ddff70000001116-0b-5d4c1074bbca
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id C6.37.04166.3701C4D5; Thu,  8
+        Aug 2019 13:07:15 +0100 (BST)
 Received: from [106.120.51.75] (unknown [106.120.51.75]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190808120702eusmtip140fc4db0fc50f1d5d9b94f81dfd5dc16~48SeYg4pt0142001420eusmtip13;
-        Thu,  8 Aug 2019 12:07:02 +0000 (GMT)
-Subject: Re: [PATCH v2 1/9] soc: samsung: Add exynos chipid driver support
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190808120714eusmtip21c3ee73d1a4b1879ca4996da685be688~48Spg1Qce2980729807eusmtip2j;
+        Thu,  8 Aug 2019 12:07:14 +0000 (GMT)
+Subject: Re: [PATCH v2 2/9] soc: samsung: Convert exynos-chipid driver to
+ use the regmap API
 To:     Krzysztof Kozlowski <krzk@kernel.org>
 Cc:     robh+dt@kernel.org, vireshk@kernel.org, devicetree@vger.kernel.org,
         kgene@kernel.org, pankaj.dubey@samsung.com,
@@ -69,75 +70,108 @@ Cc:     robh+dt@kernel.org, vireshk@kernel.org, devicetree@vger.kernel.org,
         <b.zolnierkie@samsung.com>,
         Marek Szyprowski <m.szyprowski@samsung.com>
 From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
-Message-ID: <b3a31424-84ec-63d7-16ca-26333ad12123@samsung.com>
-Date:   Thu, 8 Aug 2019 14:07:01 +0200
+Message-ID: <dc34402e-6e94-09e7-414d-10f87beb3e7c@samsung.com>
+Date:   Thu, 8 Aug 2019 14:07:13 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
         Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <CAJKOXPfLBif-=09B9jZ3qN1kWdTAcrBQZGvZ+A-MUifXK4si9Q@mail.gmail.com>
+In-Reply-To: <CAJKOXPfLPjmjgX01UAyu_=7etUO1G7osMQDmyHVBNxF2Sdh=yA@mail.gmail.com>
 Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0hTcRT2t3vv7nVs+nNaHuyFQ+wB+YCKC4a9ySzQiKAUqVte1NymbGpZ
-        gVpoapqilY+MNJVsEepKDcWQOZ0mKdoyQXyhZQ8NUsPMV5tXyf++c77vfOd8cBhC3kC5MBHq
-        GF6j5pQKsYSsbZ3r3B2OT4V4VbVI2er8Sop9Yuyk2KzRHwTb1VVFs/rRXor9UF8kZqczjYjN
-        73orYl8aB2j2ac0MzSY3Gmn21XCr+KDUT69LE/u9Kkvwu/dah/ym9VsDySDJ/lBeGRHHazx9
-        L0rCsxpzyegs6lr6XLEoEZWR6ciWAbwH3s0lEelIwshxBYLucTNtJeR4BsHQC3uBmEaQ9t6A
-        1iZyar6JBOIZgorqMVooJhE01d21MAzjiP2hPFljHXDCO+HT4ixlxQQuJWDq8V4rFmNvyGy5
-        h6xyGfaFFiNjbZPYDXQl6SvyDfgcTA03r2AZdoD2grGVq23xaTAWlJOCpTPcmnm+ar8N6iaL
-        VtIA7qVhxNhPWP0BH4WRJGfhfkf4bnpNC3gzdORmkIL+NoKMhn5aKLIt6U3Fq4l9oNnUTVmN
-        CEuYynpPoX0I+trGKMHfDvomHYQb7CCnNm91rQxSU+SC2g3mdXkiAbvA3bFlMhspCtclK1yX
-        pnBdmsL/e4sRqUPOfKxWFcZrvdX8VQ8tp9LGqsM8Lkep9MjyUh1Lpqk36HfPJQPCDFJIZdFt
-        J0PkFBenjVcZEDCEwkk2GHciRC4L5eKv85qoC5pYJa81oE0MqXCW3bAZDpbjMC6Gj+T5aF6z
-        xooYW5dE9ODAuFl/7Ka9wTPz/N+ofWX2W45zgXUTf5ruyMx5E5CAvCIYLmDRN7gqxWZqhzRI
-        fNjO4+yR0T5mY4pKmbFQWtD+sGvB33VWaTY1Lie5Gjzc08Rmu5yf24dCl5PuLw18vPLrc1NJ
-        qddgUOrwsa9nHmkCRuZyp0skkV98jqrn3XsUpDac895FaLTcP8VQrehOAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrPIsWRmVeSWpSXmKPExsVy+t/xu7rpAj6xBrObJCw2zljPajH/yDlW
-        i/7Hr5ktzp/fwG6x6fE1VovLu+awWXzuPcJoMeP8PiaLtUfuslss2vqF3aJ17xF2i80PjrE5
-        8HhsWtXJ5rF5Sb1H35ZVjB6fN8kFsETp2RTll5akKmTkF5fYKkUbWhjpGVpa6BmZWOoZGpvH
-        WhmZKunb2aSk5mSWpRbp2yXoZfTvncxS0M9a0fVzAVMD4xKWLkZODgkBE4lJW18ydTFycQgJ
-        LGWUeLLuEHMXIwdQQkpifosSRI2wxJ9rXWwQNa8ZJZ5fuMgEUiMs4CWxtLUIpEZEQFPi+t/v
-        rCA1zAKLmSUurJ/PDtHQwSTRPBVkAycHm4ChRO/RPkaQZl4BO4mjRzhAwiwCKhKrFnaxgtii
-        AhESh3fMYgSxeQUEJU7OfAJ2KKdAoMSRmUvBbGYBdYk/8y4xQ9jiEk1fVrJC2PIS29/OYZ7A
-        KDQLSfssJC2zkLTMQtKygJFlFaNIamlxbnpusaFecWJucWleul5yfu4mRmBkbjv2c/MOxksb
-        gw8xCnAwKvHwFpzwjhViTSwrrsw9xCjBwawkwnuvzDNWiDclsbIqtSg/vqg0J7X4EKMp0HMT
-        maVEk/OBSSOvJN7Q1NDcwtLQ3Njc2MxCSZy3Q+BgjJBAemJJanZqakFqEUwfEwenVANjRuS0
-        ihWtOkdz1HSZ3aZJKC7f/+a8/0PTgD1p61+pncrKDpdMVA97o6wX+enVqw0/krwz2Sf9Ubr2
-        6PHxko49UQtu1rxMSvgWsU7X2f9MVzK/1oSM7eJL2iaZehVKRC+e+7j9YKz6zSSzXpvPJwvv
-        LPw8Zw3DkvU3FbjeTtGQ2HI2peTcwuaVSizFGYmGWsxFxYkA9u7/3OICAAA=
-X-CMS-MailID: 20190808120703eucas1p1a79a8e2eab56201d5bdf16bf674302db
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrHKsWRmVeSWpSXmKPExsWy7djPc7olAj6xBquvyVtsnLGe1WL+kXOs
+        Fv2PXzNbnD+/gd1i0+NrrBaXd81hs/jce4TRYsb5fUwWa4/cZbdYtPULu0Xr3iPsFpsfHGNz
+        4PHYtKqTzWPzknqPvi2rGD0+b5ILYInisklJzcksSy3St0vgynjz5TRjwRb+ipXXbrA3MK7i
+        6WLk5JAQMJFYcaOXHcQWEljBKNG706eLkQvI/sIosXjPanYI5zOjxIvNE5lgOrb072GFSCxn
+        lFj26iBU1VtGiek995lBqoQF4iRe73gL1iEioClx/e93VhCbWWAxs8SnuaYgNpuAoUTv0T5G
+        EJtXwE7iVt9RsHoWARWJ34u7WUBsUYEIiU8PDrNC1AhKnJz5BCzOKRAocaL/ABPETHGJpi8r
+        oebLS2x/O4cZ5CAJgUvsEpvezIQ620XixKELrBC2sMSr41vYIWwZidOTe1ggGpoZJXp232aH
+        cCYwStw/voARospa4vDxi0DdHEArNCXW79KHCDtKbOroYAcJSwjwSdx4KwhxBJ/EpG3TmSHC
+        vBIdbUIQ1UB/rZoOdY6URPeT/ywTGJVmIXltFpJ3ZiF5ZxbC3gWMLKsYxVNLi3PTU4uN81LL
+        9YoTc4tL89L1kvNzNzECU9Xpf8e/7mDc9yfpEKMAB6MSD++JU96xQqyJZcWVuYcYJTiYlUR4
+        75V5xgrxpiRWVqUW5ccXleakFh9ilOZgURLnrWZ4EC0kkJ5YkpqdmlqQWgSTZeLglGpg3LAz
+        forWLCN21Vlltz3bjWLluB7MFZrmtDE5n3XqTPm7+n9jBLv3CCf2zPpT9HfZH9WcclWXGX8P
+        7TCrf1vZWvtu4YXtaS4tO6bfvK3euzu7QkHtQtGanR+LmXa6qP9im9QhFqws36N2t/d85fqC
+        nUlbfsS1WR+d92xXyhSuj7YrC9kPvVu9WomlOCPRUIu5qDgRAAa+xw9RAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrPIsWRmVeSWpSXmKPExsVy+t/xe7rFAj6xBtd3i1hsnLGe1WL+kXOs
+        Fv2PXzNbnD+/gd1i0+NrrBaXd81hs/jce4TRYsb5fUwWa4/cZbdYtPULu0Xr3iPsFpsfHGNz
+        4PHYtKqTzWPzknqPvi2rGD0+b5ILYInSsynKLy1JVcjILy6xVYo2tDDSM7S00DMysdQzNDaP
+        tTIyVdK3s0lJzcksSy3St0vQy3jz5TRjwRb+ipXXbrA3MK7i6WLk5JAQMJHY0r+HtYuRi0NI
+        YCmjxMWV7WxdjBxACSmJ+S1KEDXCEn+udbFB1LxmlDj+eRNYjbBAnMT8GxkgNSICmhLX/34H
+        m8MssJhZ4sL6+ewgCSGBDiaJq60mIDabgKFE79E+RhCbV8BO4lbfUSYQm0VAReL34m4WEFtU
+        IELi8I5ZUDWCEidnPgGLcwoESpzoPwBWzyygLvFn3iVmCFtcounLSlYIW15i+9s5zBMYhWYh
+        aZ+FpGUWkpZZSFoWMLKsYhRJLS3OTc8tNtQrTswtLs1L10vOz93ECIzMbcd+bt7BeGlj8CFG
+        AQ5GJR7eghPesUKsiWXFlbmHGCU4mJVEeO+VecYK8aYkVlalFuXHF5XmpBYfYjQFem4is5Ro
+        cj4waeSVxBuaGppbWBqaG5sbm1koifN2CByMERJITyxJzU5NLUgtgulj4uCUamC0nLKAk/m/
+        TmqfONeZnTssenZEWqZzNkj892/MZGyY67Gt+q+kxZGDi+IVcnnlv7gpdn8orNNkL71x4VB2
+        999VMzzWFaVraWqYzVj3sv8jz/IguTcfulpz9Ls8Y/P352s9vRnZsvNl/Y5sEZEVD9nkPN9e
+        l/hYeMTNckVqUPCe9X3inxVvlCqxFGckGmoxFxUnAgAxJUiO4gIAAA==
+X-CMS-MailID: 20190808120715eucas1p2cb283e1492099f487aa15134de10834f
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190718143127eucas1p13b1e2c98d270140a87f09562ef46c9a3
+X-RootMTR: 20190718143128eucas1p2677ae16d229dddcd9a0db8084f0da5cf
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20190718143127eucas1p13b1e2c98d270140a87f09562ef46c9a3
-References: <CGME20190718143127eucas1p13b1e2c98d270140a87f09562ef46c9a3@eucas1p1.samsung.com>
+X-CMS-RootMailID: 20190718143128eucas1p2677ae16d229dddcd9a0db8084f0da5cf
+References: <CGME20190718143128eucas1p2677ae16d229dddcd9a0db8084f0da5cf@eucas1p2.samsung.com>
         <20190718143044.25066-1-s.nawrocki@samsung.com>
-        <20190718143044.25066-2-s.nawrocki@samsung.com>
-        <CAJKOXPfLBif-=09B9jZ3qN1kWdTAcrBQZGvZ+A-MUifXK4si9Q@mail.gmail.com>
+        <20190718143044.25066-3-s.nawrocki@samsung.com>
+        <CAJKOXPfLPjmjgX01UAyu_=7etUO1G7osMQDmyHVBNxF2Sdh=yA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/23/19 14:57, Krzysztof Kozlowski wrote:
+On 7/23/19 15:01, Krzysztof Kozlowski wrote:
+> On Thu, 18 Jul 2019 at 16:31, Sylwester Nawrocki <s.nawrocki@samsung.com> wrote:
+>>
+>> Convert the driver to use regmap API in order to allow other
+>> drivers, like ASV, to access the CHIPID registers.
+>>
+>> This patch adds definition of selected CHIPID register offsets
+>> and register bit fields for Exynos5422 SoC.
+>>
+>> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+
 >> diff --git a/drivers/soc/samsung/exynos-chipid.c b/drivers/soc/samsung/exynos-chipid.c
-
->> --- /dev/null
+>> index 78b123ee60c0..594b00488013 100644
+>> --- a/drivers/soc/samsung/exynos-chipid.c
 >> +++ b/drivers/soc/samsung/exynos-chipid.c
->> @@ -0,0 +1,111 @@
->> +// SPDX-License-Identifier: GPL-2.0
+>> @@ -9,18 +9,16 @@
+>>   */
+>> @@ -53,29 +51,24 @@ static const char * __init product_id_to_soc_id(unsigned int product_id)
+>>  int __init exynos_chipid_early_init(void)
+>>  {
 
->> +#include <linux/io.h>
->> +#include <linux/of.h>
->> +#include <linux/of_address.h>
->> +#include <linux/of_platform.h>
->> +#include <linux/platform_device.h>
->
-> Any changes here from my previous comments?
+>> +       regmap = syscon_regmap_lookup_by_compatible("samsung,exynos4210-chipid");
+>> +       if (IS_ERR(regmap)) {
+>> +               pr_err("%s: failed to get regmap\n", __func__);
+> 
+> Other places do not use __func__ prefix so make it consistent. Add it
+> in patch #1?
 
-Oops, I tried hard to not miss any of the comments but probably not hard enough.
-The two above platform header files will be removed in v3.
+I would rather drop the function name prefix here, there should be 
+no problem in finding those error messages with grep. I'll just make
+the above log a bit more specific.
+
+>> +               return PTR_ERR(regmap);
+>>         }
+
+>> diff --git a/include/linux/soc/samsung/exynos-chipid.h b/include/linux/soc/samsung/exynos-chipid.h
+>> new file mode 100644
+>> index 000000000000..25359d70d617
+>> --- /dev/null
+>> +++ b/include/linux/soc/samsung/exynos-chipid.h
+>> @@ -0,0 +1,48 @@
+
+>> +#define EXYNOS_CHIPID_REG_PRO_ID       0x00
+>> + #define EXYNOS_SUBREV_MASK            (0xf << 4)
+> 
+> " #define" is unusual syntax. I think not used anywhere else. Stick to
+> regular one.
+
+Indeed it's almost not used anywhere, I will drop those leading spaces.
+
+git grep "^\ #define" *.[ch] | wc -l
 
 -- 
 Regards,
