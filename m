@@ -4,43 +4,43 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF7FC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:53:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0EFEC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:53:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1606021882
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:53:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 904462184E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:53:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565294021;
-	bh=+hrevod6U+GRNoraVTplUdmzgZKw6sRo8XrLTpG0oo8=;
+	s=default; t=1565294025;
+	bh=AIfkfa0RiDwi8ziRsTnzeTUvsZcK6ySrFmUB+ps5abo=;
 	h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
 	 References:List-ID:From;
-	b=0NX4U/SBnw0jXGhasm4XwK9zEq4WWJMvAwYd9/9yBgVuZbUqA4ivMjMO/AxAAtYSD
-	 HsRsFydzqhOEU2sZn9B4MjoZpIbq04u+7aIfSuiJNshRK4TMwTi/2CU9JrRls5Tw6s
-	 ptwkebZh13AA/coLWNRYW3GGuBJVAu6SdUUsDMiE=
+	b=uPA4STh4pNYCvkCWYttK1NellZ9PhBtuYMDaf7YQXgcIgqVqV6Zv4Mfiu1HsIbPJu
+	 BEcShDcPaKZeAOZfcEwMc55+9oRm3LHkxUuMGRHVP2+a1QBKpx4JYx2GnVl6lk62HC
+	 O7n0cp1AExWjv9TZzl0cJGHFnP+cj53CSC4YwOHY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404693AbfHHTxk (ORCPT
+        id S2404641AbfHHTxf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:53:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58240 "EHLO mail.kernel.org"
+        Thu, 8 Aug 2019 15:53:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404588AbfHHTx3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 15:53:29 -0400
+        id S2404353AbfHHTxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 15:53:24 -0400
 Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61C5F21902;
-        Thu,  8 Aug 2019 19:53:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2470F218D8;
+        Thu,  8 Aug 2019 19:53:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565294008;
-        bh=+hrevod6U+GRNoraVTplUdmzgZKw6sRo8XrLTpG0oo8=;
+        s=default; t=1565294003;
+        bh=AIfkfa0RiDwi8ziRsTnzeTUvsZcK6ySrFmUB+ps5abo=;
         h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=y4Jz00omwW7RGdmLkLGzb8bYKGx+RAnyYDdzGLXBr0w7IzPytnuyYRe2/K6G83zG+
-         WaewQAkwtto9dect7n8pqYiL9C0YSrS1rhttKmENC++B7d7q2pk3EHhTEJkL72JI+P
-         dM7y8F43lWVO4wPm5+iCVr13tQlBKGWFElpBqI2A=
+        b=EhUgKWvGEXIRayAJuuhowmEyW61Gk+qvgWiA05mmgSnaDMcRWdiJZE0lVeo3mYXud
+         61u4+pdHAz6hd6lLxsTwkeK3IWW8KkCeVmDX6MecP67WVfC/207AFKr8DSvGkZZ2Tb
+         pQ0pmT11x9zoyJZZbxIQNxvEnNv20A9wknukKHew=
 From:   zanussi@kernel.org
 To:     LKML <linux-kernel@vger.kernel.org>,
         linux-rt-users <linux-rt-users@vger.kernel.org>,
@@ -52,9 +52,9 @@ To:     LKML <linux-kernel@vger.kernel.org>,
         Daniel Wagner <wagi@monom.org>,
         Tom Zanussi <zanussi@kernel.org>,
         Julia Cartwright <julia@ni.com>
-Subject: [PATCH RT 19/19] Linux 4.14.137-rt65-rc1
-Date:   Thu,  8 Aug 2019 14:52:47 -0500
-Message-Id: <97ea70a48ad812c4aa4fda03a76c51a2795f4c75.1565293935.git.zanussi@kernel.org>
+Subject: [PATCH RT 15/19] Revert "futex: workaround migrate_disable/enable in different context"
+Date:   Thu,  8 Aug 2019 14:52:43 -0500
+Message-Id: <6c551bd14ae69ce8bb8c99cf9d4cd0bafd3015ca.1565293935.git.zanussi@kernel.org>
 X-Mailer: git-send-email 2.14.1
 In-Reply-To: <cover.1565293934.git.zanussi@kernel.org>
 References: <cover.1565293934.git.zanussi@kernel.org>
@@ -65,7 +65,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Zanussi <zanussi@kernel.org>
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
 v4.14.137-rt65-rc1 stable review patch.
 If anyone has any objections, please let me know.
@@ -73,18 +73,69 @@ If anyone has any objections, please let me know.
 -----------
 
 
-Signed-off-by: Tom Zanussi <zanussi@kernel.org>
----
- localversion-rt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+[ Upstream commit a71221d81cc4873891ae44f3aa02df596079b786 ]
 
-diff --git a/localversion-rt b/localversion-rt
-index 10474042df49..03188f3e7d8d 100644
---- a/localversion-rt
-+++ b/localversion-rt
-@@ -1 +1 @@
---rt64
-+-rt65-rc1
+Drop the RT fixup, the futex code will be changed to avoid the need for
+the workaround.
+
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Tom Zanussi <zanussi@kernel.org>
+
+ Conflicts:
+	kernel/futex.c
+---
+ kernel/futex.c | 19 -------------------
+ 1 file changed, 19 deletions(-)
+
+diff --git a/kernel/futex.c b/kernel/futex.c
+index cb7e212fba0f..ec90130cd809 100644
+--- a/kernel/futex.c
++++ b/kernel/futex.c
+@@ -2893,14 +2893,6 @@ static int futex_lock_pi(u32 __user *uaddr, unsigned int flags,
+ 	 * before __rt_mutex_start_proxy_lock() is done.
+ 	 */
+ 	raw_spin_lock_irq(&q.pi_state->pi_mutex.wait_lock);
+-	/*
+-	 * the migrate_disable() here disables migration in the in_atomic() fast
+-	 * path which is enabled again in the following spin_unlock(). We have
+-	 * one migrate_disable() pending in the slow-path which is reversed
+-	 * after the raw_spin_unlock_irq() where we leave the atomic context.
+-	 */
+-	migrate_disable();
+-
+ 	spin_unlock(q.lock_ptr);
+ 	/*
+ 	 * __rt_mutex_start_proxy_lock() unconditionally enqueues the @rt_waiter
+@@ -2909,7 +2901,6 @@ static int futex_lock_pi(u32 __user *uaddr, unsigned int flags,
+ 	 */
+ 	ret = __rt_mutex_start_proxy_lock(&q.pi_state->pi_mutex, &rt_waiter, current);
+ 	raw_spin_unlock_irq(&q.pi_state->pi_mutex.wait_lock);
+-	migrate_enable();
+ 
+ 	if (ret) {
+ 		if (ret == 1)
+@@ -3058,21 +3049,11 @@ static int futex_unlock_pi(u32 __user *uaddr, unsigned int flags)
+ 		 * rt_waiter. Also see the WARN in wake_futex_pi().
+ 		 */
+ 		raw_spin_lock_irq(&pi_state->pi_mutex.wait_lock);
+-		/*
+-		 * Magic trickery for now to make the RT migrate disable
+-		 * logic happy. The following spin_unlock() happens with
+-		 * interrupts disabled so the internal migrate_enable()
+-		 * won't undo the migrate_disable() which was issued when
+-		 * locking hb->lock.
+-		 */
+-		migrate_disable();
+ 		spin_unlock(&hb->lock);
+ 
+ 		/* drops pi_state->pi_mutex.wait_lock */
+ 		ret = wake_futex_pi(uaddr, uval, pi_state);
+ 
+-		migrate_enable();
+-
+ 		put_pi_state(pi_state);
+ 
+ 		/*
 -- 
 2.14.1
 
