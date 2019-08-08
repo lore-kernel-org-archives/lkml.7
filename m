@@ -2,98 +2,86 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B0FAC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 02:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B755BC32751
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 02:22:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BD4B21743
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 02:16:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="m3Fzm81q"
+	by mail.kernel.org (Postfix) with ESMTP id 88AE52173C
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 02:22:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389603AbfHHCQw (ORCPT
+        id S1728159AbfHHCW1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 22:16:52 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:51136 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727230AbfHHCQv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 22:16:51 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x782E9DI156691;
-        Thu, 8 Aug 2019 02:16:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=gSFX7C7laNkAuh/KpAxHJ7SaNxF6mJAaI1qL2c5sLMk=;
- b=m3Fzm81q860KvdZ+5gUMpO4lGjGEDVs4UTkdCG4bFGyV324E0/Ja6152hqytC27Xvx+m
- WVPEEqLxs/BbQiNjg0PfMRtyGcBea2SL0cq6W1oRtPDm+VDCXBhcjF+Jxhq/AH5O74u7
- hfdr8DGKXfLJC7DKDpftr2ydiclB+qEI6sLMj93nSRYD7cJrSezBUYpLzLiORVUeE7de
- dxATYTMtnwFRGXd9OQQkKTQGrvOiPWoBxDwp7I73sVUnIdSzHEKVU1V1k6PASNY2/vO1
- NjeFgnA+T4mw5JPKgORhTIhe/4iNd7KFwN2pbOvTztSyMb8He0xfp2upgozYjhJCr1Ss ag== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2u527pykuk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 08 Aug 2019 02:16:46 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x782D17F022671;
-        Thu, 8 Aug 2019 02:16:46 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2u763jjqav-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 08 Aug 2019 02:16:45 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x782Gipq015007;
-        Thu, 8 Aug 2019 02:16:44 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 07 Aug 2019 19:16:43 -0700
-To:     Colin King <colin.king@canonical.com>
-Cc:     Jack Wang <jinpu.wang@cloud.ionos.com>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] scsi: pm80xx: remove redundant assignments to variable rc
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20190731222214.15720-1-colin.king@canonical.com>
-Date:   Wed, 07 Aug 2019 22:16:41 -0400
-In-Reply-To: <20190731222214.15720-1-colin.king@canonical.com> (Colin King's
-        message of "Wed, 31 Jul 2019 23:22:14 +0100")
-Message-ID: <yq17e7ocsfq.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9342 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=920
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908080021
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9342 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=977 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908080021
+        Wed, 7 Aug 2019 22:22:27 -0400
+Received: from mga03.intel.com ([134.134.136.65]:53450 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727999AbfHHCW1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 22:22:27 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Aug 2019 19:21:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,358,1559545200"; 
+   d="scan'208";a="168832617"
+Received: from ipsg-l-lixuzha.sh.intel.com ([10.239.153.20])
+  by orsmga008.jf.intel.com with ESMTP; 07 Aug 2019 19:21:50 -0700
+From:   Zhang Lixu <lixu.zhang@intel.com>
+To:     linux-input@vger.kernel.org, jikos@kernel.org,
+        benjamin.tissoires@redhat.com
+Cc:     srinivas.pandruvada@linux.intel.com, linux-kernel@vger.kernel.org,
+        lixu.zhang@intel.com
+Subject: [PATCH v2 0/3] HID: intel-ish-hid: support s2idle and s3 in ish_suspend()
+Date:   Thu,  8 Aug 2019 18:21:10 +0800
+Message-Id: <20190808102113.27802-1-lixu.zhang@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Currently, the NO_D3 flag is set in ish_probe(), the intel-ish-ipc driver
+puts the ISH into D0i3 when system enter both suspend-to-idle(S0ix) and
+suspend-to-mem(S3). These patches are to put the ISH into D3 when system
+enter S3 and put the ISH into D0i3 when system enter S0ix.
 
-Colin,
+I tested these patches on the following platforms:
+ISH 5.2: ICL
+ISH 5.0: CNL CFL WHL CML
+ISH 4.0: GLK
+ISH 3.0: KBL
 
-> There are several occasions where variable rc is being initialized
-> with a value that is never read and error is being re-assigned a
-> little later on.  Clean up the code by removing rc entirely and
-> just returning the return value from the call to pm8001_issue_ssp_tmf
+Test steps:
+* Run the IIO Sensor tool to read the accel_3d sensor data
+* Run cmd "echo mem > /sys/power/state" to suspend-to-mem
+* Press the keyboard to wake up OS.
+* Check if the tool can get the sensor data after OS resume.
+* Run cmd "echo freeze > /sys/power/state" to suspend-to-idle
+* Press the keyboard to wake up OS.
+* Check if the tool can get the sensor data after OS resume.
 
-Applied to 5.4/scsi-queue. Thanks!
+Test results:
+The tool can get the accel_3d sensor data after resuming from both
+suspend-to-mem and suspend-to-idle.
+
+Changes from v1:
+* Fix the indentation issue
+* Elaborate the reason to remove the NO_D3 flag
+* Split the PATCH v1 to three changes, and try to minimize the lines change
+
+Zhang Lixu (3):
+  HID: intel-ish-hid: ipc: set NO_D3 flag only when needed
+  HID: intel-ish-hid: ipc: make ish suspend paths clear
+  HID: intel-ish-hid: ipc: check the NO_D3 flag to distinguish resume
+    paths
+
+ drivers/hid/intel-ish-hid/ipc/hw-ish.h  |  1 +
+ drivers/hid/intel-ish-hid/ipc/ipc.c     |  2 +-
+ drivers/hid/intel-ish-hid/ipc/pci-ish.c | 95 +++++++++++++++----------
+ 3 files changed, 61 insertions(+), 37 deletions(-)
 
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+2.17.1
+
