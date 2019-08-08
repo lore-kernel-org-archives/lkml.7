@@ -2,135 +2,117 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BA98C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:31:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2ABBC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D617B20679
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:31:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1D0A2173E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:38:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fqAtfhnq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DVYZ29bT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389754AbfHHTb2 (ORCPT
+        id S2390252AbfHHTit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:31:28 -0400
-Received: from mail-ua1-f73.google.com ([209.85.222.73]:45538 "EHLO
-        mail-ua1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725785AbfHHTb1 (ORCPT
+        Thu, 8 Aug 2019 15:38:49 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:32798 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732327AbfHHTit (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 15:31:27 -0400
-Received: by mail-ua1-f73.google.com with SMTP id m2so8744580uap.12
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 12:31:26 -0700 (PDT)
+        Thu, 8 Aug 2019 15:38:49 -0400
+Received: by mail-wr1-f67.google.com with SMTP id n9so96164230wru.0;
+        Thu, 08 Aug 2019 12:38:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=Y7EhV9R53SdAuJMBA2LVyo7uNmGfsioMNmmNCKcAKVc=;
-        b=fqAtfhnqUKmEuu2DadlaluFP6n9iBHl/UJUasXOkm0OscZqXW+lwkZx/3mv3uoZhAC
-         OCPXv/3lDYe+UEjV6jEFeo4T6KN6OUETZT0uxxEoo2lWtycilli1Usrk+5DmSzUszVed
-         i1igcJIkNhslr9ilyPav1FckCTmCSYShPrxPm0aEbM7vtgRLnZ3thj9VWluYYoeeS8Gr
-         1c8o7qcLtGfRS0KoSrh9B7/oq7YoiCI4etG0+fzmwVPtawENjcZwmgFaLNiFrQlIHgtd
-         xzYY7Hzs+Jk6usoHoVh8SmSU9Pi3/dU1mJJOPJR99sH7+ItDVNNr2DZ7Vc0FK41JvSNH
-         vMGQ==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=YoS8PRw3cjholKW72Wo5FIMucVCjxsoQPkOGGlFKOFU=;
+        b=DVYZ29bTj1ljfEsoUcWARgkYX2a4poFVfmPZkcpwyFgCBscv1sJzBoN2rImkmEQ36a
+         UKXvtxWK0SY7Dr5/gYGDxjmZhKBtbrMMBd26c+29N8+W07gm6IJQB//53uo8v+YbxuZV
+         GgSJM1+PNsPdyLGrHpVm+UBMMrbrzWJO+KOyBkCOeQobGIIz9cIr5wJX0FyJuzklHEVi
+         JSNos6MPi4gmJeY7OtqtHmRc+gs8eTpvd6HagOkCGLjbxOv4XltWt1JqSoDQZo296gd8
+         9Uh7q083ScfjbIcltUi1fT2d+CnuUJpE8vaQJEm6xOkgKcf5vM29uN0HwVlym/8ImXJ9
+         +rmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=Y7EhV9R53SdAuJMBA2LVyo7uNmGfsioMNmmNCKcAKVc=;
-        b=iro/PzRMpwCRh0MVXqf35W9JoFZKA30ptKQjw6MXiHBFc2ZVl4urdUTd09UkncAwoU
-         RtsqfrtD2Sfpr440ZrE1wgfAsBnogmpfCW0oh3f9Rq1Qr31UDxggSSFxlCsa7Fj+TARE
-         4cF89WCc4WCI06ncU/N7Ex2WMS7mt5jwK2BVfsx+tV2q2KCMzcIJ2Sbx2HexWV2awsmv
-         U0v+frJzfWkqOBJbFuuXWuqslGgHXetRBcPXyP0Jn9y2VymMchqpfxrtgdUvsDbvU4Qn
-         J9c4bqjvzZ+S3bGd6PL2hUq+VDS6ef1FtzCruFBAVTrHNlk90jBvXi4JicHAFbOAKBMY
-         9iSg==
-X-Gm-Message-State: APjAAAU0Z183JvRuKb3ki5T3861zINNGGmHVZTuzt1LHLCEPmjKGfOpr
-        FPZBGKsxGPWWNFDklDU7QACFAUFleA==
-X-Google-Smtp-Source: APXvYqzFJnXdQ1RjWmuuNC0tPWroHzGPv2QybfWV/E4n1Fj9Gy51j8vmYrFEA/TFfcPlC3TJIO4khzTuYP0=
-X-Received: by 2002:ac5:ccda:: with SMTP id j26mr6637280vkn.43.1565292686277;
- Thu, 08 Aug 2019 12:31:26 -0700 (PDT)
-Date:   Thu,  8 Aug 2019 12:31:22 -0700
-Message-Id: <20190808193122.76679-1-yabinc@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.22.0.770.g0f2c4a37fd-goog
-Subject: [PATCH] coresight: tmc-etr: Remove perf_data check.
-From:   Yabin Cui <yabinc@google.com>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Yabin Cui <yabinc@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YoS8PRw3cjholKW72Wo5FIMucVCjxsoQPkOGGlFKOFU=;
+        b=I0a2lLdircUKym37q2P+vGSF7ubDsabqL7ipqypL9Oa1VysM47cUtfF/Gu/tVnOtd1
+         YA6g3/mS14Jjgpj/EBpl21leGkFdpRJbOV9lBQqzgK6LDeyLKJlS98HrtkQPt9AyHsZO
+         q1Oh7lscFdRpMO+qnCWNXD51MWpI7z0PRdkJayD5cPQRizLP1WngAsA27VRSB5/ISLWC
+         PRnA/HTyR+XcpjEy/CIQpmjKQ66MnM9uCE3CpG9WYhppCnSWTzPhoE2FCUAF3VKGkgDX
+         D8FL0cLAP0iGCaiPFezBAuddB3xOKwpNN9r62xgztFMpwDMnKzXFWevKzSEhnomB3vvs
+         Ymkw==
+X-Gm-Message-State: APjAAAWcS3Sng+L/ZWp95LRf17+QFrMnRDteWMIYWhicha7NSF4t9KeK
+        ugxOFSqySVk7ntZrTvgayAs=
+X-Google-Smtp-Source: APXvYqxk2r1+U9UcqqJldtJvlXj7yg5APuFEK4cNWKSEBrXzlvkV+3YyhG2ik8OQub5VRW/w/DhsqQ==
+X-Received: by 2002:adf:f04d:: with SMTP id t13mr18922037wro.133.1565293126711;
+        Thu, 08 Aug 2019 12:38:46 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f2f:3200:ec8a:8637:bf5f:7faf? (p200300EA8F2F3200EC8A8637BF5F7FAF.dip0.t-ipconnect.de. [2003:ea:8f2f:3200:ec8a:8637:bf5f:7faf])
+        by smtp.googlemail.com with ESMTPSA id g15sm2924126wrp.29.2019.08.08.12.38.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 08 Aug 2019 12:38:46 -0700 (PDT)
+Subject: Re: [PATCH v2 02/15] net: phy: adin: hook genphy_read_abilities() to
+ get_features
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, davem@davemloft.net,
+        robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com
+References: <20190808123026.17382-1-alexandru.ardelean@analog.com>
+ <20190808123026.17382-3-alexandru.ardelean@analog.com>
+ <20190808152403.GB27917@lunn.ch>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <eeda87c9-bdba-8ef7-6043-85a16bd2cfc2@gmail.com>
+Date:   Thu, 8 Aug 2019 21:32:57 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190808152403.GB27917@lunn.ch>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When tracing etm data of multiple threads on multiple cpus through
-perf interface, each cpu has a unique etr_perf_buffer while sharing
-the same etr device. There is no guarantee that the last cpu starts
-etm tracing also stops last. So the perf_data check is no longer valid.
+On 08.08.2019 17:24, Andrew Lunn wrote:
+> On Thu, Aug 08, 2019 at 03:30:13PM +0300, Alexandru Ardelean wrote:
+>> The ADIN PHYs can operate with Clause 45, however they are not typical for
+>> how phylib considers Clause 45 PHYs.
+>>
+>> If the `features` field & the `get_features` hook are unspecified, and the
+>> device wants to operate via Clause 45, it would also try to read features
+>> via the `genphy_c45_pma_read_abilities()`, which will try to read PMA regs
+>> that are unsupported.
+>>
+>> Hooking the `genphy_read_abilities()` function to the `get_features` hook
+>> will ensure that this does not happen and the PHY features are read
+>> correctly regardless of Clause 22 or Clause 45 operation.
+> 
+> I think we need to stop and think about a PHY which supports both C22
+> and C45.
+> 
+> How does bus enumeration work? Is it discovered twice?  I've always
+> considered phydev->is_c45 means everything is c45, not that some
+> registers can be accessed via c45. But the driver is mixing c22 and
+> c45. Does the driver actually require c45? Are some features which are
+> only accessibly via C45? What does C45 actually bring us for this
+> device?
+> 
+genphy_c45_pma_read_abilities() is only called if phydev->is_c45 is set.
+And this flag means that the PHY complies with Clause 45 incl. all the
+standard devices like PMA. In the case here only some vendor-specific
+registers can be accessed via Clause 45 and therefore is_c45 shouldn't
+bet set. As a consequence this patch isn't needed.
 
-Signed-off-by: Yabin Cui <yabinc@google.com>
----
- drivers/hwtracing/coresight/coresight-tmc-etr.c | 9 ---------
- drivers/hwtracing/coresight/coresight-tmc.h     | 2 --
- 2 files changed, 11 deletions(-)
-
-diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
-index 17006705287a..0418440e0141 100644
---- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
-+++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
-@@ -1484,20 +1484,12 @@ tmc_update_etr_buffer(struct coresight_device *csdev,
- 		goto out;
- 	}
- 
--	if (WARN_ON(drvdata->perf_data != etr_perf)) {
--		lost = true;
--		spin_unlock_irqrestore(&drvdata->spinlock, flags);
--		goto out;
--	}
--
- 	CS_UNLOCK(drvdata->base);
- 
- 	tmc_flush_and_stop(drvdata);
- 	tmc_sync_etr_buf(drvdata);
- 
- 	CS_LOCK(drvdata->base);
--	/* Reset perf specific data */
--	drvdata->perf_data = NULL;
- 	spin_unlock_irqrestore(&drvdata->spinlock, flags);
- 
- 	size = etr_buf->len;
-@@ -1556,7 +1548,6 @@ static int tmc_enable_etr_sink_perf(struct coresight_device *csdev, void *data)
- 	}
- 
- 	etr_perf->head = PERF_IDX2OFF(handle->head, etr_perf);
--	drvdata->perf_data = etr_perf;
- 
- 	/*
- 	 * No HW configuration is needed if the sink is already in
-diff --git a/drivers/hwtracing/coresight/coresight-tmc.h b/drivers/hwtracing/coresight/coresight-tmc.h
-index 1ed50411cc3c..3881a9ee565a 100644
---- a/drivers/hwtracing/coresight/coresight-tmc.h
-+++ b/drivers/hwtracing/coresight/coresight-tmc.h
-@@ -178,7 +178,6 @@ struct etr_buf {
-  *		device configuration register (DEVID)
-  * @idr:	Holds etr_bufs allocated for this ETR.
-  * @idr_mutex:	Access serialisation for idr.
-- * @perf_data:	PERF buffer for ETR.
-  * @sysfs_data:	SYSFS buffer for ETR.
-  */
- struct tmc_drvdata {
-@@ -202,7 +201,6 @@ struct tmc_drvdata {
- 	struct idr		idr;
- 	struct mutex		idr_mutex;
- 	struct etr_buf		*sysfs_buf;
--	void			*perf_data;
- };
- 
- struct etr_buf_operations {
--- 
-2.22.0.770.g0f2c4a37fd-goog
+>      Andrew
+> 
+Heiner
 
