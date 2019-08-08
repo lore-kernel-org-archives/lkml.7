@@ -2,135 +2,173 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CC64C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:47:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD500C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:48:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 040462184E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:47:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="NDj84d3X"
+	by mail.kernel.org (Postfix) with ESMTP id 8A80321874
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:48:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565268484;
+	bh=wyEVJEsBGC94RLV4HyI4Gad5qZWZuH10LrdeVre481M=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=QPhM54QZI6fCzMRbSuBytjBT8poEEOz7pqq8Abz/Feg6S7ZFUkv4AcQ04rE5xAAZk
+	 lSYGXUEOH7fRdkqtpAlydFqtIcSfnQOMo9Nx5SaxXV8txNNHAiNCAgeuQwO2hKEjm0
+	 Kg/YxNl+vXpGtcn28eo3x+lE1bbzVIHlZ1gUlibU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732651AbfHHMrF (ORCPT
+        id S1732658AbfHHMsD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 08:47:05 -0400
-Received: from mail-eopbgr00086.outbound.protection.outlook.com ([40.107.0.86]:32241
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732239AbfHHMrE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 08:47:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TNofIBclOGjZiXi3zMwFSX8lLdnjzZE4cD5xRNxZfBNxUMmmMJWwlkOdOCQbjHaUO710cidFl24zh5wxvruBA/8L4rKjvN5Kn8loyzWm5EafFTA6KBjKOXLQ45fMXyA1lLkMwVuJtnb86lGLLMxvHh/pGSyKBbAmrw5OtaC9+nJZGeVhu9h+B8xv4Mierz8CDvk7AmiVx0S37kNOEgC8a3X+Y3Ma6hw1qBaV0QUVrhvLGRtW4t87y22EPbQ4+wQTXFas94OaQRwR4gHS8LMhzSvbm150tGAgoRGO5Q6fn0fAFzyHKuzn08Dik3xgCuFKVhIAQ+fOkCIcg+F0ic1q2Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UmyIWJg3VCBHJyFHlAwXSgvEbQflGmrOz9toDxtGAHw=;
- b=OApBa7ySvx+ImOgf8GJ1z717S4qp8S741d23BvgOiEwpRoTLS5UPOBpd9/zGyhpmWDTx81hJVh8gGGCL5rze3Zx0AUC06uhRGe0fs0pVq10aK1HcX54+eSLitUQ0UrJ3j1B3Ydp9UZJ9zCJO2148WwAp3hN58iqFLOsyQcVBiWy+js1c5kELnbbJ3xUzZb3wGv4IS0/xtiNQf+n2pcWMewL8M8nGLhV3d9UtQoOFSX2dJivdbx9aHyrbxN4X30jFtcwIvXqKV7m4Cp157nJIvuHRVB3BRoSckxFxT1UFz2P+ZrTXJ7h4wLX8qQyjTs8VdgoWHO8JaBiqQ/EUKlW/fQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UmyIWJg3VCBHJyFHlAwXSgvEbQflGmrOz9toDxtGAHw=;
- b=NDj84d3Xl3VtQEyDeH3JLW9yz78V8v0Y6QZ9xEH+1+sGmQ9VAcuy711cq2WbIQBgaiatKZQo+FIhpi2QAq3kRqpl0M5ax1cZON/5wstjLSZBwR11WXp/O/yrbwjkjnIDqCA2pKPbtVQ7HopL8Fq8fpW0DwroESQ65h695BJWq68=
-Received: from VI1PR0402MB2863.eurprd04.prod.outlook.com (10.175.20.18) by
- VI1PR0402MB3486.eurprd04.prod.outlook.com (52.134.4.10) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.15; Thu, 8 Aug 2019 12:47:00 +0000
-Received: from VI1PR0402MB2863.eurprd04.prod.outlook.com
- ([fe80::7de6:ea4b:9b5d:d023]) by VI1PR0402MB2863.eurprd04.prod.outlook.com
- ([fe80::7de6:ea4b:9b5d:d023%7]) with mapi id 15.20.2157.015; Thu, 8 Aug 2019
- 12:47:00 +0000
-From:   Stefan-gabriel Mirea <stefan-gabriel.mirea@nxp.com>
-To:     Will Deacon <will@kernel.org>
-CC:     "corbet@lwn.net" <corbet@lwn.net>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "jslaby@suse.com" <jslaby@suse.com>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Cosmin Stefan Stoica <cosmin.stoica@nxp.com>,
-        Larisa Ileana Grigore <larisa.grigore@nxp.com>
-Subject: Re: [PATCH 5/6] tty: serial: Add linflexuart driver for S32V234
-Thread-Topic: [PATCH 5/6] tty: serial: Add linflexuart driver for S32V234
-Thread-Index: AQHVTedeF3dhRXLcj0y74YIrrBcLXw==
-Date:   Thu, 8 Aug 2019 12:47:00 +0000
-Message-ID: <VI1PR0402MB28635661A4A294EC6F01095EDFD70@VI1PR0402MB2863.eurprd04.prod.outlook.com>
-References: <20190802194702.30249-1-stefan-gabriel.mirea@nxp.com>
- <20190802194702.30249-6-stefan-gabriel.mirea@nxp.com>
- <20190808080832.nleult5bknmzr3ze@willie-the-truck>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=stefan-gabriel.mirea@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7c582575-b651-4513-b70c-08d71bfe8191
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB3486;
-x-ms-traffictypediagnostic: VI1PR0402MB3486:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0402MB348633D1EBEE64E92FB040FADFD70@VI1PR0402MB3486.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3513;
-x-forefront-prvs: 012349AD1C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(366004)(136003)(39860400002)(376002)(199004)(189003)(64756008)(66946007)(91956017)(229853002)(66556008)(6436002)(66476007)(76116006)(7736002)(99286004)(2906002)(4744005)(186003)(26005)(8936002)(476003)(52536014)(5660300002)(14454004)(54906003)(316002)(33656002)(6916009)(25786009)(4326008)(7696005)(256004)(6246003)(53546011)(66066001)(478600001)(6506007)(305945005)(3846002)(66446008)(71190400001)(81156014)(7416002)(9686003)(86362001)(446003)(486006)(74316002)(81166006)(76176011)(8676002)(55016002)(102836004)(6116002)(71200400001)(53936002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3486;H:VI1PR0402MB2863.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: BgjKTf/kBsvFpTpJggHinQVW9X0pBbFxTEFxaBiDL+1S9EjqYa/wAEIfe+e4NmF3QJl4sP9wuhAnNwG9r0BQuzoJjUADaCiugUsYqE9rhjmW3hezxzMn/9pGocHuBRP6LmzUWsQ07nxG7YdJe8Ud8YA26JzVJzyvfY/fIFI5wI7P9fJwSMTWmb3UOvqwMX827tid436dT2K2tuXxS4hsXpPMXbrL+iKmw1X6d+OAoSy6gZ/1YppqxO/nyMxJfO4CzJY5A/Tl+sTFxWzKewRCQsigjZuE/JVPyKLQjvt+xOaqpbiwY34RPcIKqO27WllOvaGpmcKPAAqq9UCM1an5DaCROsqhamfcK+q/tymyWvFPbQOeIgM3PwJ3asjP9GkCsB3FdQ0yfwktAXJYDh3NLmjJ4EilZVQQZYvv/ge38pA=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 8 Aug 2019 08:48:03 -0400
+Received: from mga04.intel.com ([192.55.52.120]:25787 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727522AbfHHMsD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 08:48:03 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Aug 2019 05:48:01 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,361,1559545200"; 
+   d="asc'?scan'208";a="326299253"
+Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
+  by orsmga004.jf.intel.com with ESMTP; 08 Aug 2019 05:47:58 -0700
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        Roger Quadros <rogerq@ti.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH] usb: dwc3: remove generic PHYs forwarding for XHCI device
+In-Reply-To: <20190719093037.16181-1-m.szyprowski@samsung.com>
+References: <CGME20190719093045eucas1p1a1c6f26ae4103e9ed283fff2396beaef@eucas1p1.samsung.com> <20190719093037.16181-1-m.szyprowski@samsung.com>
+Date:   Thu, 08 Aug 2019 15:47:54 +0300
+Message-ID: <87h86rn7r9.fsf@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7c582575-b651-4513-b70c-08d71bfe8191
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Aug 2019 12:47:00.3988
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: CerixfyV5LJpr6/SlEDA8FuQ0eFQyh0hZwmmAtDDISjSZIKHYnPowRjT3Zmg3Hm7ug7rQuUS9g5QlCqsQjP8X791RdSC5bEf7cZsV3WEj3k=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3486
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Will,=0A=
-=0A=
-On 8/8/2019 11:08 AM, Will Deacon wrote:=0A=
-> On Fri, Aug 02, 2019 at 07:47:23PM +0000, Stefan-gabriel Mirea wrote:=0A=
->> +             linflex,<addr>=0A=
->> +                     Use early console provided by Freescale LinFlex UA=
-RT=0A=
->> +                     serial driver for NXP S32V234 SoCs. A valid base=
-=0A=
->> +                     address must be provided, and the serial port must=
-=0A=
->> +                     already be setup and configured.=0A=
-> =0A=
-> Why isn't earlycon=3D sufficient for this?=0A=
-=0A=
-"earlycon=3D" is not actually supported. I will fix this in the next=0A=
-version by adding a /chosen/stdout-path to the dts. The compatible=0A=
-string provided to OF_EARLYCON_DECLARE will also be changed from=0A=
-"fsl,s32v234-linflexuart" to "fsl,s32-linflexuart" to match the one in=0A=
-the device tree nodes. I missed this after importing a rename from our=0A=
-codebase.=0A=
-=0A=
-Should I remove this addition from kernel-parameters.txt after that?=0A=
-=0A=
-Regards,=0A=
-Stefan=0A=
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+
+
+Hi,
+
+Marek Szyprowski <m.szyprowski@samsung.com> writes:
+
+> Commit 08f871a3aca2 ("usb: dwc3: host: convey the PHYs to xhci") added
+> forwarding of the generic PHYs from DWC3 core to the instantiated XHCI-pl=
+at
+> device. However XHCI(-plat) driver never gained support for generic PHYs,
+> thus the lookup added by that commit is never used. In meantime the commit
+> d64ff406e51e ("usb: dwc3: use bus->sysdev for DMA configuration")
+> incorrectly changed the device used for creating lookup, making the lookup
+> useless and generic PHYs inaccessible from XHCI device.
+>
+> However since commit 178a0bce05cb ("usb: core: hcd: integrate the PHY
+> wrapper into the HCD core") USB HCD already handles generic PHYs acquired
+> from the HCD's 'sysdev', which in this case is DWC3 core device. This mea=
+ns
+> that creating any custom lookup entries for XHCI driver is no longer need=
+ed
+> and can be simply removed.
+>
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+>  drivers/usb/dwc3/host.c | 22 ++++------------------
+>  1 file changed, 4 insertions(+), 18 deletions(-)
+>
+> diff --git a/drivers/usb/dwc3/host.c b/drivers/usb/dwc3/host.c
+> index f55947294f7c..8deea8c91e03 100644
+> --- a/drivers/usb/dwc3/host.c
+> +++ b/drivers/usb/dwc3/host.c
+> @@ -85,7 +85,7 @@ int dwc3_host_init(struct dwc3 *dwc)
+>  						DWC3_XHCI_RESOURCES_NUM);
+>  	if (ret) {
+>  		dev_err(dwc->dev, "couldn't add resources to xHCI device\n");
+> -		goto err1;
+> +		goto err;
+>  	}
+>=20=20
+>  	memset(props, 0, sizeof(struct property_entry) * ARRAY_SIZE(props));
+> @@ -112,37 +112,23 @@ int dwc3_host_init(struct dwc3 *dwc)
+>  		ret =3D platform_device_add_properties(xhci, props);
+>  		if (ret) {
+>  			dev_err(dwc->dev, "failed to add properties to xHCI\n");
+> -			goto err1;
+> +			goto err;
+>  		}
+>  	}
+>=20=20
+> -	phy_create_lookup(dwc->usb2_generic_phy, "usb2-phy",
+> -			  dev_name(dwc->dev));
+> -	phy_create_lookup(dwc->usb3_generic_phy, "usb3-phy",
+> -			  dev_name(dwc->dev));
+> -
+>  	ret =3D platform_device_add(xhci);
+>  	if (ret) {
+>  		dev_err(dwc->dev, "failed to register xHCI device\n");
+> -		goto err2;
+> +		goto err;
+>  	}
+>=20=20
+>  	return 0;
+> -err2:
+> -	phy_remove_lookup(dwc->usb2_generic_phy, "usb2-phy",
+> -			  dev_name(dwc->dev));
+> -	phy_remove_lookup(dwc->usb3_generic_phy, "usb3-phy",
+> -			  dev_name(dwc->dev));
+> -err1:
+> +err:
+>  	platform_device_put(xhci);
+>  	return ret;
+>  }
+>=20=20
+>  void dwc3_host_exit(struct dwc3 *dwc)
+>  {
+> -	phy_remove_lookup(dwc->usb2_generic_phy, "usb2-phy",
+> -			  dev_name(dwc->dev));
+> -	phy_remove_lookup(dwc->usb3_generic_phy, "usb3-phy",
+> -			  dev_name(dwc->dev));
+>  	platform_device_unregister(dwc->xhci);
+>  }
+
+Roger, could you verify that this doesn't regress any of your platforms?
+
+Thanks
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl1MGfoACgkQzL64meEa
+mQbikg//UH6PkjeKc14UABfn3WYRRhkmGCSIj4Jo8Fb+0VGwwnCwh6gynHnd/tF9
+e92UjtzJvJaGadq+j9LPLvu1aL7P1RgAVSenk6e5FeDgfKg8AjH16y1Ds7YcG57K
+rZYXp2EHn1JsdX9F2qb6h6aQIhU/QG2w6uZhuaC5ZSRHHbMPk3lUC9l2eEDtZIT7
+VEtvx3yV5YatkOB3pVNIpYMsUncucQzQ9YWH7+GaAKuxek0lUBcSigsw8FWlpZUl
+lEyNmjaY1WHGEtxc/ufFsQLKVRx9hdqQBiBU6ppVSLSYFHI3JrP1tyz3lWOd2pQL
+7fKGqQxKxkTeniltiGfXzua30Qea/qNHN8OPA6MI7BESYrmzRvaX39ubb292NDvG
+sY2riya0yZkJKZVPGTEU8E2yhJio7v0SdK+AT0UrQ6If3s+VD9HNKogqeshk6QPc
++ukerIHGlZHgohDg8Cn9/mk4rPASfgwf0x7MYBR/4FgcETusEOD5evAQjWydpWeY
+TJ9YgW7bDjZf5SqgcZKzA1UkRZD+g1SY6rvoVMwdLiHaXF89NJn9o/zYSTZF9McS
+p3EDSPpH159AyobnkQF2OSKKbqbrlf3wsGSKcQn3SDgjVt82owJ2Ch1a38GwI1Ki
+0tuJigtq8gGexw6EbAj/U4iydtjYNG4tg+/g7oCmURXWTRGyxjg=
+=Wqee
+-----END PGP SIGNATURE-----
+--=-=-=--
