@@ -2,83 +2,95 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77615C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3541BC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:41:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36C0A2089E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:39:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="16J1OHQK"
+	by mail.kernel.org (Postfix) with ESMTP id 0F0902089E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:41:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390259AbfHHUjj (ORCPT
+        id S2390316AbfHHUlH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 16:39:39 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:45658 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725785AbfHHUji (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 16:39:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=o1ab5hvyDud1JwiSt72xPEY0As9rAHAnTbN6/WPbCF0=; b=16J1OHQK3pgK71LBbbFncpXW+r
-        1iPSFx62hYqOGNpZuoGUTPUu/dIyJ19KaUiKM9OFQLuKPIuDmowXjqz9a/FocsB/9KoB0IQ32EI+E
-        L5EPDyjIZdcLLa+Q3tflkeJR0shp1fhl6Y4h+yRxwisvlQNk1Kumkzn46eVcngqjoAC8=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hvpC8-0005w6-4c; Thu, 08 Aug 2019 22:39:32 +0200
-Date:   Thu, 8 Aug 2019 22:39:32 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, davem@davemloft.net,
-        robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com
-Subject: Re: [PATCH v2 13/15] net: phy: adin: configure downshift on
- config_init
-Message-ID: <20190808203932.GP27917@lunn.ch>
-References: <20190808123026.17382-1-alexandru.ardelean@analog.com>
- <20190808123026.17382-14-alexandru.ardelean@analog.com>
- <420c8e15-3361-a722-4ad1-3c448b1d3bc1@gmail.com>
+        Thu, 8 Aug 2019 16:41:07 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:38548 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725785AbfHHUlH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 16:41:07 -0400
+Received: by mail-qk1-f195.google.com with SMTP id u190so6315795qkh.5;
+        Thu, 08 Aug 2019 13:41:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NHt4kl62PCQFTOrMsi+hPEp59k3mqYgovgD66AjIOD4=;
+        b=tMiVoZTAMvDt+P76BDjkja6B0CRQF65ePRygyd/x8Hh1q2W1zLGGOhoiz5b0jQQtvH
+         hUlWF1uhMg7Mi+f3jsqTeiroz+dfbsyZZDmAV7DubZ7DCxiDHjmTGWi/SUXQ/Bu/keTk
+         1syHaKJchAPq8uoZzuhp3QK0W2icUHYfkB1BKuAQR22jdS8lRvGh/irihuM4GYyUQnpC
+         cxP4hD9rlZWX185rKQZ7/jJSELAgB5bCH+GORWYnTKLzKcc/qISWUOR5yU71TPFvGknW
+         ETwP/JRP0W2ni+r6H3Q4L26lazk0ZuIQ8gfKH/9qvKxZo6+JvDcIVDcq5rsZPiUibUUP
+         DuxA==
+X-Gm-Message-State: APjAAAWmqa3IwftBzR+ed9oYcOQzr01OGx+F5nECOUwL4T5snUHIqDuA
+        BY+INYlnvpUbtGzvYPxDCgV6Na7u/xjL7oXMZFg=
+X-Google-Smtp-Source: APXvYqxvwAzDFtLTI1NTHILmZNs1F2X4p2krCf4ECREW46KwDo93TmuTOs+U9PxQE8DMY4O/p+TnAhiLjCqwXglHtC4=
+X-Received: by 2002:a37:4ac3:: with SMTP id x186mr14669116qka.138.1565296866077;
+ Thu, 08 Aug 2019 13:41:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <420c8e15-3361-a722-4ad1-3c448b1d3bc1@gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20190708124227.3422311-1-arnd@arndb.de> <e752a638c0bde6893adf805322f73de5bd459dbc.camel@fi.rohmeurope.com>
+ <CAK8P3a1HNnstePcreH-ZLyiJi3tNcCNJ=VozZUMnp-VLvYLSaA@mail.gmail.com>
+ <e1687224a155787d9f3c042dca1c03a81b89ed25.camel@fi.rohmeurope.com>
+ <81f5978e-f401-0975-6c96-003b6d94e49d@huawei.com> <f22cf88f836159b9f5428c6297d8e54b4639e1db.camel@fi.rohmeurope.com>
+In-Reply-To: <f22cf88f836159b9f5428c6297d8e54b4639e1db.camel@fi.rohmeurope.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 8 Aug 2019 22:40:49 +0200
+Message-ID: <CAK8P3a1hJBF40n49furd2pJ3tPCKNfELXweNyab+CZZo1fvZTg@mail.gmail.com>
+Subject: Re: [PATCH] rtc: bd70528: fix link error
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "yuehaibing@huawei.com" <yuehaibing@huawei.com>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 09:38:40PM +0200, Heiner Kallweit wrote:
-> On 08.08.2019 14:30, Alexandru Ardelean wrote:
-> > Down-speed auto-negotiation may not always be enabled, in which case the
-> > PHY won't down-shift to 100 or 10 during auto-negotiation.
-> > 
-> > This change enables downshift and configures the number of retries to
-> > default 8 (maximum supported value).
-> > 
-> > The change has been adapted from the Marvell PHY driver.
-> > 
-> Instead of a fixed downshift setting (like in the Marvell driver) you
-> may consider to implement the ethtool phy-tunable ETHTOOL_PHY_DOWNSHIFT.
+On Thu, Aug 8, 2019 at 9:53 PM Vaittinen, Matti
+<Matti.Vaittinen@fi.rohmeurope.com> wrote:
+> On Thu, 2019-08-08 at 10:29 +0800, Yuehaibing wrote:
+> > On 2019/7/9 13:25, Vaittinen, Matti wrote:
+> > > awkward at first sight but indeed - depends on BD70528_WATCHDOG
+> > > disallows BD70528_WATCHDOG=m with RTC_DRV_BD70528=y while
+> > > !BD70528_WATCHDOG allows BD70528_WATCHDOG=n. Brilliant and exactly
+> > > what
+> > > we need :) Thanks a bunch!
+> >
+> > Hello Vaittinen,
+> >
+> > the issue still exists in linux-next 20190807, any plan?
+> >
+>
+> Sorry folks. I thought Arnd would send new patch - I didn't want to
+> steal his work ;) I will be back to my normal life next week so I
+> will send a patch at monday if the issue is still open!
 
-Hi Alexandru
+Sorry I lost track, and thanks for the offer to take care of it.
 
-Upps, sorry, my bad.
+Please add my one
 
-I looked at marvell_set_downshift(), and assumed it was connected to
-the phy-tunable. I have patches somewhere which does that. But they
-have not made it into mainline yet.
+Reported-by: Arnd Bergmann <arnd@arndb.de>
 
-> See the Aquantia PHY driver for an example.
+and/or
 
-Yes, that does have all the tunable stuff.
+Suggested-by: Arnd Bergmann <arnd@arndb.de>
 
-     Andrew
+as appropriate when you create that patch.
+
+       Arnd
