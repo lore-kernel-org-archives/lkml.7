@@ -2,178 +2,107 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B2AC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D42E6C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:49:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD0CB21881
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4C582189E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:49:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cwd3fSQi"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="dV8YQMdc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404188AbfHHQtB (ORCPT
+        id S2404194AbfHHQtd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 12:49:01 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:34883 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404108AbfHHQtB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 12:49:01 -0400
-Received: by mail-wm1-f65.google.com with SMTP id l2so3103753wmg.0
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 09:48:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=lL2ShwsE/GA9BuDEpLxcIGuN5LXS8sAbxL9xoaNEokw=;
-        b=cwd3fSQiRwN6sA8taiEQr8r3230IVi0h+C58VurH9KWDmqdrJ2YUSTjZPnCZyQ3VrV
-         JwqOYtnxH4T9CkZrwy2RluKRFHYHLvGwkb+daaAt/nqT7asOx4UfOxu5nYs/oTMZf1Wq
-         3n1WIpgb/9BbwuYKpRC4BS1sB1heZb2sffB5OhQROsCmrQwZdVfH7OYV6On47fCuvzrp
-         ByJRSkM95InCOT9LHtdITzxsSpIGANBx5HxVgGCEEJcMz1l/zP0prRpZkaW+l1XXfph/
-         wdaacSUL1MW1gHpeuI5QHL3Y86/ts6T0XBqhtwJerzQ08gAH3siBPwwLKAfV6LWisVQ0
-         cbyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=lL2ShwsE/GA9BuDEpLxcIGuN5LXS8sAbxL9xoaNEokw=;
-        b=pqHuAprZ5lp1GHbp+dOTVktRJJZgSvmDl+L5naQv/spDOYiOEH6mGR0khLilX85XfP
-         NHNlo+/F4vhMFJWi675vUtTETeXW2ZAIbpUcQZPUi7G8Tg4NSS9cTYEXmzu9yKn2nmJ2
-         w9qjiLU7DvLJiUDUiY9D51FFdbliY6psri4ju89H4tiTYNE30JGYOQW7pl45h29qyLG+
-         FS/uKwuwPifr+p0HFMM+fbYtjHXFtH83l0IZQdpxpMI4Bw5gJWpaHeox7FoLBAl2LjDh
-         PfTMEUYxyHwiO9DHsnSrgZo6F1CdicxJQgz5WMIDFg4vXdpgJb8rihW/YP0I1a/tGBzV
-         AMCQ==
-X-Gm-Message-State: APjAAAUOfE0k2rcm2IcytItvD9bonbG4FBeaeT7e7EEkzDJOBL/3ardN
-        CCxzf0os3cLREJA/IEhsUJ8hZBRKWPY=
-X-Google-Smtp-Source: APXvYqxffKPC+HPHpszeXHZyBaa0mp+CcvH1UOy9QMMrHgh8Dhaf1vCOw9UxYWNilMieJlTSzKH6rw==
-X-Received: by 2002:a7b:c766:: with SMTP id x6mr5627277wmk.40.1565282937783;
-        Thu, 08 Aug 2019 09:48:57 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id r5sm5114319wmh.35.2019.08.08.09.48.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 08 Aug 2019 09:48:57 -0700 (PDT)
-Subject: Re: [PATCH v2 1/4] dt-bindings: soundwire: add slave bindings
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        vkoul@kernel.org, broonie@kernel.org
-Cc:     bgoswami@codeaurora.org, plai@codeaurora.org, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, lgirdwood@gmail.com,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-References: <20190808144504.24823-1-srinivas.kandagatla@linaro.org>
- <20190808144504.24823-2-srinivas.kandagatla@linaro.org>
- <d346b2af-f285-4c53-b706-46a129ab7951@linux.intel.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <cdd2bded-551c-65f5-ca29-d2bb825bdaba@linaro.org>
-Date:   Thu, 8 Aug 2019 17:48:56 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 8 Aug 2019 12:49:33 -0400
+Received: from mout.gmx.net ([212.227.17.20]:50869 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404015AbfHHQtd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 12:49:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1565282955;
+        bh=NyYRIlyJp1dNqY9bMLhKdZDQoswA/k6BxEUTuDZ+Zb8=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=dV8YQMdchQ5RKjdA20SaoSKPKuU8G05WvMvaPIUMySCtxCIdbqnX0XC2JC+XnLud3
+         SYdo8NKzhO4ZzKKqlGhgHa08DhwP++1cPzSYiJORywewgfjql0t15WfFgsuhuJL2hm
+         Sg1zZdehUfG/U+LeXuL1WcH4lM6G6N/31IVucbfs=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([109.90.233.87]) by mail.gmx.com (mrgmx102
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 0Lmwpk-1iWCHf00Am-00h5Fs; Thu, 08
+ Aug 2019 18:49:15 +0200
+From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     linux-doc@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org,
+        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] Documentation/arm/samsung-s3c24xx: Remove stray U+FEFF character to fix title
+Date:   Thu,  8 Aug 2019 18:48:09 +0200
+Message-Id: <20190808164811.15645-1-j.neuschaefer@gmx.net>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <d346b2af-f285-4c53-b706-46a129ab7951@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Hh+MMVrp26ugQyFj+D/l4R8ydI3JFX9v5nK/15hlhDut2Eh6Y2L
+ QLxShqdo8KDJwsAdSSddpgpiCyup3PqyrM2a5LBmFDQI9C+Eqi+YKFi+Oz36OVw6zwviSk9
+ VZEs46WEyXKOnAuOd9KmrKd8yx2RrwCHZuwP7N+EipYj+eYmxcIcJkVU462lmplJ93HFeZg
+ lR6aVBBmQ4LJvuakhnAFA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:c6pVNIDsHNg=:FGqIiO2jLGaVGa76F74RXp
+ tcUbzZT7A2Oe2urH83/b48cZWUlWW9UKIqGfjTykNm+rilrnwAq88cBHOz6Hz8p5bhBYTtNh5
+ UO7O110UrafNB0hAiOJ9VeqzTor8S3K2LQc+VwdYK4dGshKqeY+QAIrURC4BGU3nDeuNTLzu4
+ BF3NBaOf30B6rNE6QtHsn6yS7InHaIMlKs65YSVmxAH2kE0+Hyn8ZJ11G7/evujkUInGb5IhL
+ iRobXZKV0Jqz5qQPQurj8xEyUvzfQGxkhfWucnJKZVhoW/+TV8FnylKrQIK9TY3f8Ot7ldsH5
+ JqPBo/uJuB/eKCUR1j1Nj5px5LHJ1z2bPEOT3qineeJFqqhFTGKfiVNEJHg9YUNsB9vSlqlA5
+ bFAQbDE6hua+ZDfxBGjzaW7mSB2E0CipOwPjmBtdx30E8a9OV2LWV3Warrm6dn7L1YJYqEEYg
+ hYJ2GeWkWDCXaTlJq0K0iyE8oFXiJcIEKdej/1opQOcsN1rl0sRhmXCa1UyerECVvKtKcivrK
+ ZSihTme0UhUsZLQ2QdhCbT/9Mgb0vKrEtO/Gu+cjLwjshItORUAQA6oBZAk2kirQadpMEd0vn
+ aVXXhsvc9VMHUbjyVugzV0Pm0ooikDnyqyWHQ7e045GdoFAxoz+zTJlQVrieITAXzBFFXHuTb
+ T4Msh2CZV15pW46AUFXHS5u1Qqp980ESjqxMvfA0i5lgMp7KjdnAfTzArDDYOAwvMmH9iR6nV
+ 5my/YOSccGlfbI8hX/fAeXoUIYQBP4dJSLK1qqMi7OfEZmf6Vy+L1Z5AZpCCfiV1PG6T+z8c1
+ QhWN8It4w7aVMchPtxACmU9y60yI2AN+xPlQFzVnmT5rtsLkw0D6AaJwL5aeg2ukpRsOh0S6H
+ DghHEl1VFRBIOH+LHmBGNGJj3Gk7G+UHUiFRhAcu2LKpRXBYcfgV1pNjXPOFEjXZLsJyYR/vt
+ azrmrmCHvhDw8pl8yOwCJacZLcf1HJW9PGIcJxi9pQVIx5pjRtOlmeHEoz+ZZbLrrae9Qiyb6
+ sqGQmWfI27rt/VIpfV0nT9QpBFvcdb/Q5vnk6VnPKrmlAwHyhkc4zQ0lB5MO+RMlXq1A22VKb
+ IjncQgDJuNvD2Rd9RFkUz1SHjExLLhFix5jMV0Cb0D7gezwDQlKjq0rn3CchNQ/rrhvFD9+Nr
+ R47+8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+It seems a UTF-8 byte order mark (the least useful kind of BOM...) snuck
+into the file and broke Sphinx's detection of the title line.
 
-On 08/08/2019 16:58, Pierre-Louis Bossart wrote:
-> 
->> +++ b/Documentation/devicetree/bindings/soundwire/slave.txt
->> @@ -0,0 +1,46 @@
->> +SoundWire slave device bindings.
->> +
->> +SoundWire is a 2-pin multi-drop interface with data and clock line.
->> +It facilitates development of low cost, efficient, high performance 
->> systems.
->> +
->> +SoundWire slave devices:
->> +Every SoundWire controller node can contain zero or more child nodes
->> +representing slave devices on the bus. Every SoundWire slave device is
->> +uniquely determined by the enumeration address containing 5 fields:
->> +SoundWire Version, Instance ID, Manufacturer ID, Part ID and Class ID
->> +for a device. Addition to below required properties, child nodes can
->> +have device specific bindings.
-> 
-> In case the controller supports multiple links, what's the encoding then?
-> in the MIPI DisCo spec there is a linkId field in the _ADR encoding that 
-> helps identify which link the Slave device is connected to
->  >> +
->> +Required property for SoundWire child node if it is present:
->> +- compatible:     "sdwVER,MFD,PID,CID". The textual representation of
->> +          SoundWire Enumeration address comprising SoundWire
->> +          Version, Manufacturer ID, Part ID and Class ID,
->> +          shall be in lower-case hexadecimal with leading
->> +          zeroes suppressed.
->> +          Version number '0x10' represents SoundWire 1.0
->> +          Version number '0x11' represents SoundWire 1.1
->> +          ex: "sdw10,0217,2010,0"
->> +
->> +- sdw-instance-id: Should be ('Instance ID') from SoundWire
->> +          Enumeration Address. Instance ID is for the cases
->> +          where multiple Devices of the same type or Class
->> +          are attached to the bus.
-> 
-> so it is actually required if you have a single Slave device? Or is it 
-> only required when you have more than 1 device of the same type?
-> 
+Besides making arm/samsung-s3c24xx/index.html look a little better, this
+patch also confines the non-index pages in arm/samsung-s3c24xx to their
+own table of contents.
 
-This is mandatory for any slave device!
+Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+=2D--
+ Documentation/arm/samsung-s3c24xx/index.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> FWIW in the MIPI DisCo spec we kept the instanceID as part of the _ADR, 
-> so it's implicitly mandatory (and ignored by the bus if there is only 
-> one device of the same time)
-> 
->> +
->> +SoundWire example for Qualcomm's SoundWire controller:
->> +
->> +soundwire@c2d0000 {
->> +    compatible = "qcom,soundwire-v1.5.0"
->> +    reg = <0x0c2d0000 0x2000>;
->> +
->> +    spkr_left:wsa8810-left{
->> +        compatible = "sdw10,0217,2010,0";
->> +        sdw-instance-id = <1>;
->> +        ...
->> +    };
->> +
->> +    spkr_right:wsa8810-right{
->> +        compatible = "sdw10,0217,2010,0";
->> +        sdw-instance-id = <2>;
-> 
-> Isn't the MIPI encoding reported in the Dev_ID0..5 registers 0-based?
-> 
->> +        ...
->> +    };
->> +};
->>
-> 
-> And now that I think of it, wouldn't it be simpler for everyone if we 
-> aligned on that MIPI DisCo public spec? e.g. you'd have one property 
-> with a 64-bit number that follows the MIPI spec. No special encoding 
-> necessary for device tree cases, your DT blob would use this:
+diff --git a/Documentation/arm/samsung-s3c24xx/index.rst b/Documentation/a=
+rm/samsung-s3c24xx/index.rst
+index 5b8a7f9398d8..ccb951a0bedb 100644
+=2D-- a/Documentation/arm/samsung-s3c24xx/index.rst
++++ b/Documentation/arm/samsung-s3c24xx/index.rst
+@@ -1,6 +1,6 @@
+ .. SPDX-License-Identifier: GPL-2.0
 
-Thanks for the suggestion, adding 64 device bits as compatible string 
-should take care of linkID too. I will give that a go!
+-=EF=BB=BF=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D
+ Samsung S3C24XX SoC Family
+ =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D
 
-> 
-> soundwire@c2d0000 {
->      compatible = "qcom,soundwire-v1.5.0"
->      reg = <0x0c2d0000 0x2000>;
-> 
->      spkr_left:wsa8810-left{
->          compatible = "sdw00 00 10 02 17 20 10 00"
->      }
-> 
->      spkr_right:wsa8810-right{
->          compatible = "sdw0000100217201100"
->      }
-> }
-> 
-> We could use parentheses if it makes people happier, but the information 
-> from the MIPI DisCo spec can be used as is, and provide a means for spec 
-> changes via reserved bits.
+=2D-
+2.20.1
+
