@@ -2,190 +2,212 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC34C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:40:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8016FC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:44:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9F3A2184E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:40:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49FDB2173E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:44:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VRXLvzIA";
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Axe57V7m"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r3sjBSxl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732803AbfHHOkR (ORCPT
+        id S1732857AbfHHOoc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 10:40:17 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:51546 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732375AbfHHOkQ (ORCPT
+        Thu, 8 Aug 2019 10:44:32 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:36262 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730170AbfHHOob (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 10:40:16 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x78EOSgV076510;
-        Thu, 8 Aug 2019 14:39:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=i6ceCYx6lAXpeYFhnWEey2LkjdmU57GUUV9clpAqQxQ=;
- b=VRXLvzIAEcsbhRnf9PMPCzLIodfneXEfq5RYxJSQ0hB9WwOevc5y7tokLu8APqRrOV7L
- +tEkIxWUYgllgy8VF5My05CoEOlQ4HB2W30+/+K/ehI4thnUPg8DtWCUhpvQ4t7Uwlwr
- oW+gQ7o6e/6V/DXEquP9CiocBOVxjxYiMrDYuTbTMsDetTMFNwBMh5fYuYrIlp2EC1ZE
- raA9oqljBfX4tWbzLc7ij5/w3OhEZR44dGxiikap8uwfUw3ScrZUtgI/L4JIHoEQQ4nV
- uz4YhVsu4p39G9X4gZNV3NqAcqKQ9TN9JZo8gYfwOZkIHPPlox4XpamuwyPRkgCrrVgq gA== 
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=i6ceCYx6lAXpeYFhnWEey2LkjdmU57GUUV9clpAqQxQ=;
- b=Axe57V7mPCfHLeY3wXBw/jugYqpfaiGD3HhZl2jK9Zd6Ohm2RmxB8yn73dEq5kiKoHZn
- eWH/K0ADmbhxDSWn7OH6bPupTqvdKSbKkNwJ/Hql9JIHvTsLN+sACsoNM7OoxrM3KRZi
- yv5AK9nhQukFnuF/QQqThs3dzc7bVRWG3SNNsa8LCabOZolsAwqE4gWsmShSCcqwLJWL
- 1tCqynIh+iPM5rE8OeQOmNDnZEB8FpFCG67iut0Rl/2OAykC93bMdp9RygBD8mh4VLhp
- +gSxaV7gdrichw0l5EHeIAY4qBshFon8n50HnYga9AO8IlbNnSOqpNE1ypVRYhjchq86 QA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2u8has9r1q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 08 Aug 2019 14:39:49 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x78ENRl3092195;
-        Thu, 8 Aug 2019 14:39:48 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2u76698bn7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 08 Aug 2019 14:39:48 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x78EdlI8013756;
-        Thu, 8 Aug 2019 14:39:47 GMT
-Received: from Junxiaos-MacBook-Pro.local (/10.11.16.208)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 08 Aug 2019 07:39:47 -0700
-Subject: Re: [PATCH] direct-io: use GFP_NOIO to avoid deadlock
-To:     Mikulas Patocka <mpatocka@redhat.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Mike Snitzer <msnitzer@redhat.com>
-Cc:     dm-devel@redhat.com, Alasdair Kergon <agk@redhat.com>,
-        honglei.wang@oracle.com, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org
-References: <alpine.LRH.2.02.1908080540240.15519@file01.intranet.prod.int.rdu2.redhat.com>
-From:   Junxiao Bi <junxiao.bi@oracle.com>
-Message-ID: <e2ddc05c-a2f8-7f62-c56f-6170adea41dc@oracle.com>
-Date:   Thu, 8 Aug 2019 07:39:45 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
+        Thu, 8 Aug 2019 10:44:31 -0400
+Received: by mail-pg1-f195.google.com with SMTP id l21so44178210pgm.3
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 07:44:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ery/8JOuxtfMq+997gLuixOu9Kzm0qZPa0qj2ihavNQ=;
+        b=r3sjBSxlIRVNM3p0qxMQNO5BC+O2DsWYch1Y05KnQn/ZjQLQz6ylRSrUSQjwGE43gh
+         oXr/vlDORE6L0YRx1csiwZ9EstQVA1JG/XUpyqwfIcvJnmgW/3I0iw2CU4joPoLEOmxT
+         r7UGKaHHpPXXtUcZ+5QYqzgfsnVXT2Zvl1bRBbsVjMNoNuC/F18u+IzLi/3x1FnkAKoL
+         D9W+cw7fQ5YttHjXycEbfZVZmoZaR4P8sMC0s4IUc78tOn9vXmC4KcdcAj//+4xGtCwT
+         q7+oJ0LlaUBL7Xg8aS0qqHThUrvTpcI8rbykNacS+mpdaqVqcV1JVnfoZ9rgmpHoRlVL
+         hc7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ery/8JOuxtfMq+997gLuixOu9Kzm0qZPa0qj2ihavNQ=;
+        b=cc6s/HstLmk2vpv9mRfEydQ0ZdBAgmvXKZeN6nvSIWwLD6xC/jrg4FLJqUxIGhfSEA
+         ExI+I/gJvnoDdmXOUVfBnjDwvQ1UMmJCuozXEpHLiATMBTRJwrHZoO0eKXWF1q0u3owL
+         QBBn5u46BmKLbdNqWja1HDOzaOWedD6dfwnFOtGzirbgT6tOowxy+rkA85qC9YwERYhq
+         aL+ZFGea8zFZALui9QpZOGw2dP5e7iK9zr6nKV2B/tr1A2kOoHpta8nm9RvaDItJWh/a
+         sv270DBVt/70vzgvVbUnfyNfp9mG419m7G88mRUlyDFN24XeBU+OFOKlb4LFw9Liw9+X
+         YPEQ==
+X-Gm-Message-State: APjAAAVImphiKkAiXt2NF0bnl25LNKmevanCRcFRqtOPgkYMyAzsrIdx
+        bNHWLT/va5qlMoXw4sOIxXVL2u6UlVl7v+LtShpkUA==
+X-Google-Smtp-Source: APXvYqxR4xNCgPIxwobF6Y1wFngTF634/sibsaWyv1sUcM4JWvjmNEijzvGZmVRpLPO8QFxMzx4i8MEnUS9JDmLXl8k=
+X-Received: by 2002:a63:c442:: with SMTP id m2mr13337853pgg.286.1565275469838;
+ Thu, 08 Aug 2019 07:44:29 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <alpine.LRH.2.02.1908080540240.15519@file01.intranet.prod.int.rdu2.redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9342 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908080146
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9342 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908080146
+References: <1565187142.15973.3.camel@neukum.org> <Pine.LNX.4.44L0.1908081027560.1652-100000@iolanthe.rowland.org>
+In-Reply-To: <Pine.LNX.4.44L0.1908081027560.1652-100000@iolanthe.rowland.org>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Thu, 8 Aug 2019 16:44:18 +0200
+Message-ID: <CAAeHK+z7a3R+Lvo_0VeeMYZZqjWXgcX0qBmi0-Gcx=rDQsBPNA@mail.gmail.com>
+Subject: Re: possible deadlock in open_rio
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     Oliver Neukum <oliver@neukum.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        syzbot <syzbot+7bbcbe9c9ff0cd49592a@syzkaller.appspotmail.com>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mikulas,
+On Thu, Aug 8, 2019 at 4:33 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+>
+> On Wed, 7 Aug 2019, Oliver Neukum wrote:
+>
+> > Am Mittwoch, den 07.08.2019, 10:07 -0400 schrieb Alan Stern:
+> > > On Wed, 7 Aug 2019, Oliver Neukum wrote:
+>
+> > > > technically yes. However in practical terms the straight revert I sent
+> > > > out yesterday should fix it.
+> > >
+> > > I didn't see the revert, and it doesn't appear to have reached the
+> > > mailing list archive.  Can you post it again?
+> >
+> > As soon as our VPN server is back up again.
+>
+> The revert may not be necessay; a little fix should get rid of the
+> locking violation.  The key is to avoid calling the registration or
+> deregistration routines while holding the rio500_mutex, and to
+> recognize that the probe and disconnect routines are both protected by
+> the device mutex.
+>
+> How does this patch look?
+>
+> Alan Stern
+>
+>
+> #syz test: https://github.com/google/kasan.git 7f7867ff
 
-This seemed not issue on mainline, mutex in dm_bufio_shrink_count() had 
-been removed from mainline.
+There's no reproducer yet (it should appear at some point, I've
+enabled fuzzing of USB char devices). I've tested your patch manually
+and the deadlock report is gone. Thanks!
 
-Thanks,
+Tested-by: Andrey Konovalov <andreyknvl@google.com>
 
-Junxiao.
-
-On 8/8/19 2:50 AM, Mikulas Patocka wrote:
-> A deadlock with this stacktrace was observed.
 >
-> The obvious problem here is that in the call chain
-> xfs_vm_direct_IO->__blockdev_direct_IO->do_blockdev_direct_IO->kmem_cache_alloc
-> we do a GFP_KERNEL allocation while we are in a filesystem driver and in a
-> block device driver.
->
-> This patch changes the direct-io code to use GFP_NOIO.
->
-> PID: 474    TASK: ffff8813e11f4600  CPU: 10  COMMAND: "kswapd0"
->     #0 [ffff8813dedfb938] __schedule at ffffffff8173f405
->     #1 [ffff8813dedfb990] schedule at ffffffff8173fa27
->     #2 [ffff8813dedfb9b0] schedule_timeout at ffffffff81742fec
->     #3 [ffff8813dedfba60] io_schedule_timeout at ffffffff8173f186
->     #4 [ffff8813dedfbaa0] bit_wait_io at ffffffff8174034f
->     #5 [ffff8813dedfbac0] __wait_on_bit at ffffffff8173fec8
->     #6 [ffff8813dedfbb10] out_of_line_wait_on_bit at ffffffff8173ff81
->     #7 [ffff8813dedfbb90] __make_buffer_clean at ffffffffa038736f [dm_bufio]
->     #8 [ffff8813dedfbbb0] __try_evict_buffer at ffffffffa0387bb8 [dm_bufio]
->     #9 [ffff8813dedfbbd0] dm_bufio_shrink_scan at ffffffffa0387cc3 [dm_bufio]
->    #10 [ffff8813dedfbc40] shrink_slab at ffffffff811a87ce
->    #11 [ffff8813dedfbd30] shrink_zone at ffffffff811ad778
->    #12 [ffff8813dedfbdc0] kswapd at ffffffff811ae92f
->    #13 [ffff8813dedfbec0] kthread at ffffffff810a8428
->    #14 [ffff8813dedfbf50] ret_from_fork at ffffffff81745242
->
->    PID: 14127  TASK: ffff881455749c00  CPU: 11  COMMAND: "loop1"
->     #0 [ffff88272f5af228] __schedule at ffffffff8173f405
->     #1 [ffff88272f5af280] schedule at ffffffff8173fa27
->     #2 [ffff88272f5af2a0] schedule_preempt_disabled at ffffffff8173fd5e
->     #3 [ffff88272f5af2b0] __mutex_lock_slowpath at ffffffff81741fb5
->     #4 [ffff88272f5af330] mutex_lock at ffffffff81742133
->     #5 [ffff88272f5af350] dm_bufio_shrink_count at ffffffffa03865f9 [dm_bufio]
->     #6 [ffff88272f5af380] shrink_slab at ffffffff811a86bd
->     #7 [ffff88272f5af470] shrink_zone at ffffffff811ad778
->     #8 [ffff88272f5af500] do_try_to_free_pages at ffffffff811adb34
->     #9 [ffff88272f5af590] try_to_free_pages at ffffffff811adef8
->    #10 [ffff88272f5af610] __alloc_pages_nodemask at ffffffff811a09c3
->    #11 [ffff88272f5af710] alloc_pages_current at ffffffff811e8b71
->    #12 [ffff88272f5af760] new_slab at ffffffff811f4523
->    #13 [ffff88272f5af7b0] __slab_alloc at ffffffff8173a1b5
->    #14 [ffff88272f5af880] kmem_cache_alloc at ffffffff811f484b
->    #15 [ffff88272f5af8d0] do_blockdev_direct_IO at ffffffff812535b3
->    #16 [ffff88272f5afb00] __blockdev_direct_IO at ffffffff81255dc3
->    #17 [ffff88272f5afb30] xfs_vm_direct_IO at ffffffffa01fe3fc [xfs]
->    #18 [ffff88272f5afb90] generic_file_read_iter at ffffffff81198994
->    #19 [ffff88272f5afc50] __dta_xfs_file_read_iter_2398 at ffffffffa020c970 [xfs]
->    #20 [ffff88272f5afcc0] lo_rw_aio at ffffffffa0377042 [loop]
->    #21 [ffff88272f5afd70] loop_queue_work at ffffffffa0377c3b [loop]
->    #22 [ffff88272f5afe60] kthread_worker_fn at ffffffff810a8a0c
->    #23 [ffff88272f5afec0] kthread at ffffffff810a8428
->    #24 [ffff88272f5aff50] ret_from_fork at ffffffff81745242
->
-> Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-> Cc: stable@vger.kernel.org
->
-> ---
->   fs/direct-io.c |    4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
->
-> Index: linux-2.6/fs/direct-io.c
+> Index: usb-devel/drivers/usb/misc/rio500.c
 > ===================================================================
-> --- linux-2.6.orig/fs/direct-io.c	2019-08-02 08:51:56.000000000 +0200
-> +++ linux-2.6/fs/direct-io.c	2019-08-08 11:22:18.000000000 +0200
-> @@ -436,7 +436,7 @@ dio_bio_alloc(struct dio *dio, struct di
->   	 * bio_alloc() is guaranteed to return a bio when allowed to sleep and
->   	 * we request a valid number of vectors.
->   	 */
-> -	bio = bio_alloc(GFP_KERNEL, nr_vecs);
-> +	bio = bio_alloc(GFP_NOIO, nr_vecs);
->   
->   	bio_set_dev(bio, bdev);
->   	bio->bi_iter.bi_sector = first_sector;
-> @@ -1197,7 +1197,7 @@ do_blockdev_direct_IO(struct kiocb *iocb
->   	if (iov_iter_rw(iter) == READ && !count)
->   		return 0;
->   
-> -	dio = kmem_cache_alloc(dio_cache, GFP_KERNEL);
-> +	dio = kmem_cache_alloc(dio_cache, GFP_NOIO);
->   	retval = -ENOMEM;
->   	if (!dio)
->   		goto out;
+> --- usb-devel.orig/drivers/usb/misc/rio500.c
+> +++ usb-devel/drivers/usb/misc/rio500.c
+> @@ -454,52 +454,54 @@ static int probe_rio(struct usb_interfac
+>  {
+>         struct usb_device *dev = interface_to_usbdev(intf);
+>         struct rio_usb_data *rio = &rio_instance;
+> -       int retval = 0;
+> +       int retval;
+> +       char *ibuf, *obuf;
+>
+> -       mutex_lock(&rio500_mutex);
+>         if (rio->present) {
+>                 dev_info(&intf->dev, "Second USB Rio at address %d refused\n", dev->devnum);
+> -               retval = -EBUSY;
+> -               goto bail_out;
+> -       } else {
+> -               dev_info(&intf->dev, "USB Rio found at address %d\n", dev->devnum);
+> +               return -EBUSY;
+>         }
+> +       dev_info(&intf->dev, "USB Rio found at address %d\n", dev->devnum);
+>
+>         retval = usb_register_dev(intf, &usb_rio_class);
+>         if (retval) {
+>                 dev_err(&dev->dev,
+>                         "Not able to get a minor for this device.\n");
+> -               retval = -ENOMEM;
+> -               goto bail_out;
+> +               goto err_register;
+>         }
+>
+> -       rio->rio_dev = dev;
+> -
+> -       if (!(rio->obuf = kmalloc(OBUF_SIZE, GFP_KERNEL))) {
+> +       obuf = kmalloc(OBUF_SIZE, GFP_KERNEL);
+> +       if (!obuf) {
+>                 dev_err(&dev->dev,
+>                         "probe_rio: Not enough memory for the output buffer\n");
+> -               usb_deregister_dev(intf, &usb_rio_class);
+> -               retval = -ENOMEM;
+> -               goto bail_out;
+> +               goto err_obuf;
+>         }
+> -       dev_dbg(&intf->dev, "obuf address:%p\n", rio->obuf);
+> +       dev_dbg(&intf->dev, "obuf address: %p\n", obuf);
+>
+> -       if (!(rio->ibuf = kmalloc(IBUF_SIZE, GFP_KERNEL))) {
+> +       ibuf = kmalloc(IBUF_SIZE, GFP_KERNEL);
+> +       if (!ibuf) {
+>                 dev_err(&dev->dev,
+>                         "probe_rio: Not enough memory for the input buffer\n");
+> -               usb_deregister_dev(intf, &usb_rio_class);
+> -               kfree(rio->obuf);
+> -               retval = -ENOMEM;
+> -               goto bail_out;
+> +               goto err_ibuf;
+>         }
+> -       dev_dbg(&intf->dev, "ibuf address:%p\n", rio->ibuf);
+> +       dev_dbg(&intf->dev, "ibuf address: %p\n", ibuf);
+>
+> +       mutex_lock(&rio500_mutex);
+> +       rio->rio_dev = dev;
+> +       rio->ibuf = ibuf;
+> +       rio->obuf = obuf;
+>         usb_set_intfdata (intf, rio);
+>         rio->present = 1;
+> -bail_out:
+>         mutex_unlock(&rio500_mutex);
+>
+>         return retval;
+> +
+> + err_ibuf:
+> +       kfree(obuf);
+> + err_obuf:
+> +       usb_deregister_dev(intf, &usb_rio_class);
+> + err_register:
+> +       return -ENOMEM;
+>  }
+>
+>  static void disconnect_rio(struct usb_interface *intf)
+> @@ -507,10 +509,10 @@ static void disconnect_rio(struct usb_in
+>         struct rio_usb_data *rio = usb_get_intfdata (intf);
+>
+>         usb_set_intfdata (intf, NULL);
+> -       mutex_lock(&rio500_mutex);
+>         if (rio) {
+>                 usb_deregister_dev(intf, &usb_rio_class);
+>
+> +               mutex_lock(&rio500_mutex);
+>                 if (rio->isopen) {
+>                         rio->isopen = 0;
+>                         /* better let it finish - the release will do whats needed */
+> @@ -524,8 +526,8 @@ static void disconnect_rio(struct usb_in
+>                 dev_info(&intf->dev, "USB Rio disconnected.\n");
+>
+>                 rio->present = 0;
+> +               mutex_unlock(&rio500_mutex);
+>         }
+> -       mutex_unlock(&rio500_mutex);
+>  }
+>
+>  static const struct usb_device_id rio_table[] = {
+>
