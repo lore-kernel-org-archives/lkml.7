@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E6AC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:13:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0276EC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:13:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6E9A214C6
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:13:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1B7C2173E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:13:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565291608;
-	bh=DqXeoOBtZ7dIbwj5xSi70ezL4gJOZKb2h0qnweY3Mqw=;
+	s=default; t=1565291617;
+	bh=Nl+kRXkxWwMQ9iim9Tca5FCr6yfWrfnErkAgEcd9sRc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A5IO3Ya1/hegHa2Zv72sfxjNcV4QsdAabuKadL3ByBD8vmRECOBY+Ri2pAXx7VrdR
-	 EayEadkZmYHORDKHuhiC8Ovqt5NnTQEX5WerzMg5XDvjuv1IpHA8ICRbyzRSYSQKlu
-	 rr8LaLDxcDz21NrDfanP05mWtsw8ylbfhoGUo53k=
+	b=DhOnpLYX5fYMoJbpudvE2ZV72p069O0/kNQJmkhyaTszZTVb0DiHa9AieuaQadCwH
+	 Y5tNa+jzpLHvERq3VrBby2NEog6yEpJ6KCo7kVMiioSGe2FP/ibudGmtzuIBE0x/kw
+	 VTGscT/yvei/WJ75teQqoJZ3D2RDpaa/rJMRTP6k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405272AbfHHTN1 (ORCPT
+        id S2405139AbfHHTJi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:13:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44182 "EHLO mail.kernel.org"
+        Thu, 8 Aug 2019 15:09:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43884 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405181AbfHHTJv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 15:09:51 -0400
+        id S2405119AbfHHTJd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 15:09:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 369812173E;
-        Thu,  8 Aug 2019 19:09:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B46C21743;
+        Thu,  8 Aug 2019 19:09:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565291390;
-        bh=DqXeoOBtZ7dIbwj5xSi70ezL4gJOZKb2h0qnweY3Mqw=;
+        s=default; t=1565291372;
+        bh=Nl+kRXkxWwMQ9iim9Tca5FCr6yfWrfnErkAgEcd9sRc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B1yuTfWDATz95ZfaUtEcvWKDY31wohcc0svk73FTwMMLE6bH6JyABLKlgajrtlCak
-         JrUKQSnj/+7kULqtvZQAJ2dIixRpfdWF/vR26Tfecte9E+qOwRiQKfLT4kGpI/Ssfx
-         Nz3q/cg1Yz7KjnfjgzR8Zo4xH1qcXwAerZgBVOaI=
+        b=UqgdpfK34WsZJFOBkhAbi25jGhflRZeVX2GC4KtLskaWLe95nD4UdiwlK5F8PvQwD
+         PUrLn2J5t5AwUYcgkxltZetJR1IVL/yqYf7APM5xJvZGnu5yeYx3L5pICno2qTv1IG
+         fWc1zgnW/mPhFQ57hnUrlEfprjmg887XlLVitOQA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>
-Subject: [PATCH 4.19 41/45] cgroup: Implement css_task_iter_skip()
-Date:   Thu,  8 Aug 2019 21:05:27 +0200
-Message-Id: <20190808190456.193657578@linuxfoundation.org>
+        stable@vger.kernel.org, Alexis Bauvin <abauvin@scaleway.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 35/45] tun: mark small packets as owned by the tap sock
+Date:   Thu,  8 Aug 2019 21:05:21 +0200
+Message-Id: <20190808190455.784595339@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190808190453.827571908@linuxfoundation.org>
 References: <20190808190453.827571908@linuxfoundation.org>
@@ -59,150 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tejun Heo <tj@kernel.org>
+From: Alexis Bauvin <abauvin@scaleway.com>
 
-commit b636fd38dc40113f853337a7d2a6885ad23b8811 upstream.
+[ Upstream commit 4b663366246be1d1d4b1b8b01245b2e88ad9e706 ]
 
-When a task is moved out of a cset, task iterators pointing to the
-task are advanced using the normal css_task_iter_advance() call.  This
-is fine but we'll be tracking dying tasks on csets and thus moving
-tasks from cset->tasks to (to be added) cset->dying_tasks.  When we
-remove a task from cset->tasks, if we advance the iterators, they may
-move over to the next cset before we had the chance to add the task
-back on the dying list, which can allow the task to escape iteration.
+- v1 -> v2: Move skb_set_owner_w to __tun_build_skb to reduce patch size
 
-This patch separates out skipping from advancing.  Skipping only moves
-the affected iterators to the next pointer rather than fully advancing
-it and the following advancing will recognize that the cursor has
-already been moved forward and do the rest of advancing.  This ensures
-that when a task moves from one list to another in its cset, as long
-as it moves in the right direction, it's always visible to iteration.
+Small packets going out of a tap device go through an optimized code
+path that uses build_skb() rather than sock_alloc_send_pskb(). The
+latter calls skb_set_owner_w(), but the small packet code path does not.
 
-This doesn't cause any visible behavior changes.
+The net effect is that small packets are not owned by the userland
+application's socket (e.g. QEMU), while large packets are.
+This can be seen with a TCP session, where packets are not owned when
+the window size is small enough (around PAGE_SIZE), while they are once
+the window grows (note that this requires the host to support virtio
+tso for the guest to offload segmentation).
+All this leads to inconsistent behaviour in the kernel, especially on
+netfilter modules that uses sk->socket (e.g. xt_owner).
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>
+Fixes: 66ccbc9c87c2 ("tap: use build_skb() for small packet")
+Signed-off-by: Alexis Bauvin <abauvin@scaleway.com>
+Acked-by: Jason Wang <jasowang@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- include/linux/cgroup.h |    3 ++
- kernel/cgroup/cgroup.c |   60 +++++++++++++++++++++++++++++--------------------
- 2 files changed, 39 insertions(+), 24 deletions(-)
+ drivers/net/tun.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/include/linux/cgroup.h
-+++ b/include/linux/cgroup.h
-@@ -43,6 +43,9 @@
- /* walk all threaded css_sets in the domain */
- #define CSS_TASK_ITER_THREADED		(1U << 1)
+--- a/drivers/net/tun.c
++++ b/drivers/net/tun.c
+@@ -1682,6 +1682,7 @@ static struct sk_buff *tun_build_skb(str
  
-+/* internal flags */
-+#define CSS_TASK_ITER_SKIPPED		(1U << 16)
-+
- /* a css_task_iter should be treated as an opaque object */
- struct css_task_iter {
- 	struct cgroup_subsys		*ss;
---- a/kernel/cgroup/cgroup.c
-+++ b/kernel/cgroup/cgroup.c
-@@ -212,7 +212,8 @@ static struct cftype cgroup_base_files[]
+ 	skb_reserve(skb, pad - delta);
+ 	skb_put(skb, len);
++	skb_set_owner_w(skb, tfile->socket.sk);
+ 	get_page(alloc_frag->page);
+ 	alloc_frag->offset += buflen;
  
- static int cgroup_apply_control(struct cgroup *cgrp);
- static void cgroup_finalize_control(struct cgroup *cgrp, int ret);
--static void css_task_iter_advance(struct css_task_iter *it);
-+static void css_task_iter_skip(struct css_task_iter *it,
-+			       struct task_struct *task);
- static int cgroup_destroy_locked(struct cgroup *cgrp);
- static struct cgroup_subsys_state *css_create(struct cgroup *cgrp,
- 					      struct cgroup_subsys *ss);
-@@ -775,6 +776,21 @@ static void css_set_update_populated(str
- 		cgroup_update_populated(link->cgrp, populated);
- }
- 
-+/*
-+ * @task is leaving, advance task iterators which are pointing to it so
-+ * that they can resume at the next position.  Advancing an iterator might
-+ * remove it from the list, use safe walk.  See css_task_iter_skip() for
-+ * details.
-+ */
-+static void css_set_skip_task_iters(struct css_set *cset,
-+				    struct task_struct *task)
-+{
-+	struct css_task_iter *it, *pos;
-+
-+	list_for_each_entry_safe(it, pos, &cset->task_iters, iters_node)
-+		css_task_iter_skip(it, task);
-+}
-+
- /**
-  * css_set_move_task - move a task from one css_set to another
-  * @task: task being moved
-@@ -800,22 +816,9 @@ static void css_set_move_task(struct tas
- 		css_set_update_populated(to_cset, true);
- 
- 	if (from_cset) {
--		struct css_task_iter *it, *pos;
--
- 		WARN_ON_ONCE(list_empty(&task->cg_list));
- 
--		/*
--		 * @task is leaving, advance task iterators which are
--		 * pointing to it so that they can resume at the next
--		 * position.  Advancing an iterator might remove it from
--		 * the list, use safe walk.  See css_task_iter_advance*()
--		 * for details.
--		 */
--		list_for_each_entry_safe(it, pos, &from_cset->task_iters,
--					 iters_node)
--			if (it->task_pos == &task->cg_list)
--				css_task_iter_advance(it);
--
-+		css_set_skip_task_iters(from_cset, task);
- 		list_del_init(&task->cg_list);
- 		if (!css_set_populated(from_cset))
- 			css_set_update_populated(from_cset, false);
-@@ -4183,10 +4186,19 @@ static void css_task_iter_advance_css_se
- 	list_add(&it->iters_node, &cset->task_iters);
- }
- 
--static void css_task_iter_advance(struct css_task_iter *it)
-+static void css_task_iter_skip(struct css_task_iter *it,
-+			       struct task_struct *task)
- {
--	struct list_head *next;
-+	lockdep_assert_held(&css_set_lock);
-+
-+	if (it->task_pos == &task->cg_list) {
-+		it->task_pos = it->task_pos->next;
-+		it->flags |= CSS_TASK_ITER_SKIPPED;
-+	}
-+}
- 
-+static void css_task_iter_advance(struct css_task_iter *it)
-+{
- 	lockdep_assert_held(&css_set_lock);
- repeat:
- 	if (it->task_pos) {
-@@ -4195,15 +4207,15 @@ repeat:
- 		 * consumed first and then ->mg_tasks.  After ->mg_tasks,
- 		 * we move onto the next cset.
- 		 */
--		next = it->task_pos->next;
--
--		if (next == it->tasks_head)
--			next = it->mg_tasks_head->next;
-+		if (it->flags & CSS_TASK_ITER_SKIPPED)
-+			it->flags &= ~CSS_TASK_ITER_SKIPPED;
-+		else
-+			it->task_pos = it->task_pos->next;
- 
--		if (next == it->mg_tasks_head)
-+		if (it->task_pos == it->tasks_head)
-+			it->task_pos = it->mg_tasks_head->next;
-+		if (it->task_pos == it->mg_tasks_head)
- 			css_task_iter_advance_css_set(it);
--		else
--			it->task_pos = next;
- 	} else {
- 		/* called from start, proceed to the first cset */
- 		css_task_iter_advance_css_set(it);
 
 
