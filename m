@@ -2,213 +2,176 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD56C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:26:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B69CC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:27:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3C19217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:26:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B48C217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:27:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CEHHtXeF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731136AbfHHG0y (ORCPT
+        id S1731254AbfHHG1w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 02:26:54 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:58153 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725817AbfHHG0y (ORCPT
+        Thu, 8 Aug 2019 02:27:52 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43727 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725817AbfHHG1v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 02:26:54 -0400
-Received: from alex.numericable.fr (127.19.86.79.rev.sfr.net [79.86.19.127])
-        (Authenticated sender: alex@ghiti.fr)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id A9D96240006;
-        Thu,  8 Aug 2019 06:26:45 +0000 (UTC)
-From:   Alexandre Ghiti <alex@ghiti.fr>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Alexandre Ghiti <alex@ghiti.fr>
-Subject: [PATCH v6 08/14] arm: Use generic mmap top-down layout and brk randomization
-Date:   Thu,  8 Aug 2019 02:17:50 -0400
-Message-Id: <20190808061756.19712-9-alex@ghiti.fr>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190808061756.19712-1-alex@ghiti.fr>
-References: <20190808061756.19712-1-alex@ghiti.fr>
+        Thu, 8 Aug 2019 02:27:51 -0400
+Received: by mail-wr1-f66.google.com with SMTP id p13so19093560wru.10;
+        Wed, 07 Aug 2019 23:27:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=pmLe+2hh12AV2fWDLuCLoZwfalLPQvLzD4g62m50b0k=;
+        b=CEHHtXeFjhD+tzAhZywdJN5LwSzFPBqCcPSeVgeVB0ZC8DV1HXnAJ6FiFTZsAFvsVn
+         wdncjRt3iob6EbqT5FgWKKUJ+mD55V03FSv8G2E4O0KfIbzha6KDxSJO1QE7DqUl2Goy
+         uSwk8JviSdCfCLYjlcNRnTddNDKJscCudG86FTGDWPEOMFmapV90N2vff9vf/4ichait
+         OfP6P4oxvTaHHvCb1GV+2ko5/wBg+MmCPqbc33E98ssCFewIZrEM0Q0pGklNxnvPIUKP
+         savgTzmYGDzDtiRd1TALzqoYIJ/jRrjeU9XCuM2iOdjZNAH0mtqNd/T8K7ILqvY9q6rD
+         KPEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=pmLe+2hh12AV2fWDLuCLoZwfalLPQvLzD4g62m50b0k=;
+        b=N+wWq6jpZFv5/C8xQ7MyWfNctCcWAYZHYnucZs/1T6N5j/Unj1WBqP2V2KnK18j4z/
+         qMSYPDTDaUpoqVd2BUfUyFIterNuo/0P2YI/JBgsUsJNnUIc0QA6veijS/++yDehhFpm
+         YzC6RJlyMTotTniTr6wyNOjMV7XXLwUfEEZMIZ2ZF6HYDlOl+xytEHRgwKn87AUzEVFX
+         5iTlOy+DW01OVox4mlLvJnO8i2PjpydhYlpZ1o4bdfCGZ8xrk/q2dcRG/kp9bLOVwIFE
+         ta7hH7/5prylIuJDkrBh7WTnHxteSar0cJM+POOl5aLsq7/tYehkrVvEepuB6d6elCcr
+         vhpw==
+X-Gm-Message-State: APjAAAXgcQAl6i709nrpBagUE59zAibfQb080zeiP16wZsHEsuy5Ykcx
+        Mmc7Wo0HjaHYHDZWLev77kZSfUf5C5KlMrXiqYK2mGhdCyE=
+X-Google-Smtp-Source: APXvYqyhsrFyIH7cz50WRIDklFfrjHJbj5ngQDSOUJ0FlFhaOO1kHA+UywUlX5g2SYIxq9GcmgjdbYu20O/31kXZY3E=
+X-Received: by 2002:a5d:46cf:: with SMTP id g15mr15347063wrs.93.1565245669397;
+ Wed, 07 Aug 2019 23:27:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190723084104.12639-1-daniel.baluta@nxp.com> <20190723084104.12639-4-daniel.baluta@nxp.com>
+ <d85909d6-c7cb-c64b-dfa9-6cee6c0da2cb@linux.intel.com> <CAEnQRZDr+gj_eiESLNbVUVy1rreRE1nnDgtb3g=CjaRF5Aq9Vw@mail.gmail.com>
+ <CAEnQRZDctjdzQ2RjJXhQh+s=d0y_j3Taa51hDaR4bqJ62C=7iQ@mail.gmail.com>
+ <85b4a2c4-761e-bdcf-f05e-2fb16c06f11e@linux.intel.com> <CAEnQRZCE3mxorYpL_nPXiU4MezGDaqUfuFDx8ci0WdXzDa68JA@mail.gmail.com>
+In-Reply-To: <CAEnQRZCE3mxorYpL_nPXiU4MezGDaqUfuFDx8ci0WdXzDa68JA@mail.gmail.com>
+From:   Daniel Baluta <daniel.baluta@gmail.com>
+Date:   Thu, 8 Aug 2019 09:27:37 +0300
+Message-ID: <CAEnQRZCmKXNxx=mjHRcn6rYQJxzaaPLL4WQf79RZ5Aqdzqcu3Q@mail.gmail.com>
+Subject: Re: [Sound-open-firmware] [PATCH v2 3/5] ASoC: SOF: Add DT DSP device support
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>, Anson Huang <anson.huang@nxp.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Paul Olaru <paul.olaru@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        sound-open-firmware@alsa-project.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-arm uses a top-down mmap layout by default that exactly fits the generic
-functions, so get rid of arch specific code and use the generic version
-by selecting ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT.
+On Wed, Aug 7, 2019 at 6:28 PM Daniel Baluta <daniel.baluta@gmail.com> wrot=
+e:
+>
+> On Wed, Aug 7, 2019 at 6:22 PM Pierre-Louis Bossart
+> <pierre-louis.bossart@linux.intel.com> wrote:
+> >
+> >
+> > >>>> +static int sof_dt_probe(struct platform_device *pdev)
+> > >>>> +{
+> > >>>> +     struct device *dev =3D &pdev->dev;
+> > >>>> +     const struct sof_dev_desc *desc;
+> > >>>> +     /*TODO: create a generic snd_soc_xxx_mach */
+> > >>>> +     struct snd_soc_acpi_mach *mach;
+> > >>>
+> > >>> I wonder if you really need to use the same structures. For Intel w=
+e get
+> > >>> absolutely zero info from the firmware so rely on an ACPI codec ID =
+as a
+> > >>> key to find information on which firmware and topology to use, and =
+which
+> > >>> machine driver to load. You could have all this information in a DT=
+ blob?
+> > >>
+> > >> Yes. I see your point. I will still need to make a generic structure=
+ for
+> > >> snd_soc_acpi_mach so that everyone can use sof_nocodec_setup functio=
+n.
+> > >>
+> > >> Maybe something like this:
+> > >>
+> > >> struct snd_soc_mach {
+> > >>    union {
+> > >>    struct snd_soc_acpi_mach acpi_mach;
+> > >>    struct snd_soc_of_mach of_mach;
+> > >>    }
+> > >> };
+> > >>
+> > >> and then change the prototype of sof_nocodec_setup.
+> > >
+> > > Hi Pierre,
+> > >
+> > > I fixed all the comments except the one above. Replacing snd_soc_acpi=
+_mach
+> > > with a generic snd_soc_mach is not trivial task.
+> > >
+> > > I wonder if it is acceptable to get the initial patches as they are
+> > > now and later switch to
+> > > generic ACPI/OF abstraction.
+> > >
+> > > Asking this because for the moment on the i.MX side I have only
+> > > implemented no codec
+> > > version and we don't probe any of the machine drivers we have.
+> > >
+> > > So, there is this only one member of snd_soc_acpi_mach that imx
+> > > version is making use of:
+> > >
+> > >    mach->drv_name =3D "sof-nocodec";
+> > >
+> > > That's all.
+> > >
+> > > I think the change as it is now is very clean and non-intrusive. Late=
+r
+> > > we will get options to
+> > > read firmware name and stuff from DT.
+> > >
+> > > Anyhow, I don't think we can get rid of snd_dev_desc structure on
+> > > i.MX. This will be used
+> > > to store the information read from DT:
+> > >
+> > > static struct sof_dev_desc sof_of_imx8qxp_desc =3D {
+> > > =C2=BB       .default_fw_path =3D "imx/sof",
+> > > =C2=BB       .default_tplg_path =3D "imx/sof-tplg",
+> > > =C2=BB       .nocodec_fw_filename =3D "sof-imx8.ri",
+> > > =C2=BB       .nocodec_tplg_filename =3D "sof-imx8-nocodec.tplg",
+> > > =C2=BB       .ops =3D &sof_imx8_ops,
+> > > };
+> > >
+> > > For the moment we will only use the default values.
+> >
+> > Yes, that's fine for now. If you don't have a real machine driver then
+> > there's nothing urgent to change.
+> >
+> > Is the new version on GitHub?
+>
+> Not yet, will push it today and ping you.
 
-As ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT selects ARCH_HAS_ELF_RANDOMIZE,
-use the generic version of arch_randomize_brk since it also fits.
-Note that this commit also removes the possibility for arm to have elf
-randomization and no MMU: without MMU, the security added by randomization
-is worth nothing.
-
-Note that it is safe to remove STACK_RND_MASK since it matches the default
-value.
-
-Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
-Acked-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
----
- arch/arm/Kconfig                 |  2 +-
- arch/arm/include/asm/processor.h |  2 --
- arch/arm/kernel/process.c        |  5 ---
- arch/arm/mm/mmap.c               | 62 --------------------------------
- 4 files changed, 1 insertion(+), 70 deletions(-)
-
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 33b00579beff..81b08b027e4e 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -7,7 +7,6 @@ config ARM
- 	select ARCH_HAS_BINFMT_FLAT
- 	select ARCH_HAS_DEBUG_VIRTUAL if MMU
- 	select ARCH_HAS_DEVMEM_IS_ALLOWED
--	select ARCH_HAS_ELF_RANDOMIZE
- 	select ARCH_HAS_FORTIFY_SOURCE
- 	select ARCH_HAS_KEEPINITRD
- 	select ARCH_HAS_KCOV
-@@ -30,6 +29,7 @@ config ARM
- 	select ARCH_SUPPORTS_ATOMIC_RMW
- 	select ARCH_USE_BUILTIN_BSWAP
- 	select ARCH_USE_CMPXCHG_LOCKREF
-+	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT if MMU
- 	select ARCH_WANT_IPC_PARSE_VERSION
- 	select BINFMT_FLAT_ARGVP_ENVP_ON_STACK
- 	select BUILDTIME_EXTABLE_SORT if MMU
-diff --git a/arch/arm/include/asm/processor.h b/arch/arm/include/asm/processor.h
-index 20c2f42454b8..614bf829e454 100644
---- a/arch/arm/include/asm/processor.h
-+++ b/arch/arm/include/asm/processor.h
-@@ -140,8 +140,6 @@ static inline void prefetchw(const void *ptr)
- #endif
- #endif
- 
--#define HAVE_ARCH_PICK_MMAP_LAYOUT
--
- #endif
- 
- #endif /* __ASM_ARM_PROCESSOR_H */
-diff --git a/arch/arm/kernel/process.c b/arch/arm/kernel/process.c
-index f934a6739fc0..9485acc520a4 100644
---- a/arch/arm/kernel/process.c
-+++ b/arch/arm/kernel/process.c
-@@ -319,11 +319,6 @@ unsigned long get_wchan(struct task_struct *p)
- 	return 0;
- }
- 
--unsigned long arch_randomize_brk(struct mm_struct *mm)
--{
--	return randomize_page(mm->brk, 0x02000000);
--}
--
- #ifdef CONFIG_MMU
- #ifdef CONFIG_KUSER_HELPERS
- /*
-diff --git a/arch/arm/mm/mmap.c b/arch/arm/mm/mmap.c
-index 0b94b674aa91..b8d912ac9e61 100644
---- a/arch/arm/mm/mmap.c
-+++ b/arch/arm/mm/mmap.c
-@@ -17,43 +17,6 @@
- 	((((addr)+SHMLBA-1)&~(SHMLBA-1)) +	\
- 	 (((pgoff)<<PAGE_SHIFT) & (SHMLBA-1)))
- 
--/* gap between mmap and stack */
--#define MIN_GAP		(128*1024*1024UL)
--#define MAX_GAP		((STACK_TOP)/6*5)
--#define STACK_RND_MASK	(0x7ff >> (PAGE_SHIFT - 12))
--
--static int mmap_is_legacy(struct rlimit *rlim_stack)
--{
--	if (current->personality & ADDR_COMPAT_LAYOUT)
--		return 1;
--
--	if (rlim_stack->rlim_cur == RLIM_INFINITY)
--		return 1;
--
--	return sysctl_legacy_va_layout;
--}
--
--static unsigned long mmap_base(unsigned long rnd, struct rlimit *rlim_stack)
--{
--	unsigned long gap = rlim_stack->rlim_cur;
--	unsigned long pad = stack_guard_gap;
--
--	/* Account for stack randomization if necessary */
--	if (current->flags & PF_RANDOMIZE)
--		pad += (STACK_RND_MASK << PAGE_SHIFT);
--
--	/* Values close to RLIM_INFINITY can overflow. */
--	if (gap + pad > gap)
--		gap += pad;
--
--	if (gap < MIN_GAP)
--		gap = MIN_GAP;
--	else if (gap > MAX_GAP)
--		gap = MAX_GAP;
--
--	return PAGE_ALIGN(STACK_TOP - gap - rnd);
--}
--
- /*
-  * We need to ensure that shared mappings are correctly aligned to
-  * avoid aliasing issues with VIPT caches.  We need to ensure that
-@@ -181,31 +144,6 @@ arch_get_unmapped_area_topdown(struct file *filp, const unsigned long addr0,
- 	return addr;
- }
- 
--unsigned long arch_mmap_rnd(void)
--{
--	unsigned long rnd;
--
--	rnd = get_random_long() & ((1UL << mmap_rnd_bits) - 1);
--
--	return rnd << PAGE_SHIFT;
--}
--
--void arch_pick_mmap_layout(struct mm_struct *mm, struct rlimit *rlim_stack)
--{
--	unsigned long random_factor = 0UL;
--
--	if (current->flags & PF_RANDOMIZE)
--		random_factor = arch_mmap_rnd();
--
--	if (mmap_is_legacy(rlim_stack)) {
--		mm->mmap_base = TASK_UNMAPPED_BASE + random_factor;
--		mm->get_unmapped_area = arch_get_unmapped_area;
--	} else {
--		mm->mmap_base = mmap_base(random_factor, rlim_stack);
--		mm->get_unmapped_area = arch_get_unmapped_area_topdown;
--	}
--}
--
- /*
-  * You really shouldn't be using read() or write() on /dev/mem.  This
-  * might go away in the future.
--- 
-2.20.1
-
+PR updated: https://github.com/thesofproject/linux/pull/1048
