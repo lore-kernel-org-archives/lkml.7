@@ -2,172 +2,214 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80120C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE37C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:20:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D07C21874
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:19:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25ABA2184E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:20:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="H3u6q2Eg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ss/6IjFh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733054AbfHHNTa (ORCPT
+        id S2389724AbfHHNUr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 09:19:30 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:46708 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733012AbfHHNT3 (ORCPT
+        Thu, 8 Aug 2019 09:20:47 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:46695 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728327AbfHHNUr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 09:19:29 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190808131927euoutp025a2309ebce6eeb7e3123318774e3e70c~49Rs1ynqi0334703347euoutp028
-        for <linux-kernel@vger.kernel.org>; Thu,  8 Aug 2019 13:19:27 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190808131927euoutp025a2309ebce6eeb7e3123318774e3e70c~49Rs1ynqi0334703347euoutp028
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1565270367;
-        bh=ookusFW9IgM6u0l6dG3jFEGxecF9mJq8IKEqSZsXe3U=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=H3u6q2EgP214ncKYGJdX+T/HXd0sIC82mr+MytSy9JvkNarnKoHTK5j/9b5crL4L+
-         MBBfrz6zd/+eyiEor7wQZY2pKhS3rnwWytohGo8DUGPFId6RuzMWr3ZSne+uTMtcib
-         ykFa/zxcxZsMntMWswhZRY7cdWHjTvPbUyVt/c0Q=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190808131926eucas1p27760b9e4918c7ec639731837f737eb78~49RsDnfW82304523045eucas1p2W;
-        Thu,  8 Aug 2019 13:19:26 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id EA.32.04309.E512C4D5; Thu,  8
-        Aug 2019 14:19:26 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190808131925eucas1p18cbdebea41d0501bf9f9edb3bb0baf97~49Rq4M_Vg2619826198eucas1p1V;
-        Thu,  8 Aug 2019 13:19:25 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190808131925eusmtrp2e2247ca1de6d1cc68f838d639791aa13~49RqqA2ig0955809558eusmtrp2b;
-        Thu,  8 Aug 2019 13:19:25 +0000 (GMT)
-X-AuditID: cbfec7f4-afbff700000010d5-8f-5d4c215ea915
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id E6.50.04166.D512C4D5; Thu,  8
-        Aug 2019 14:19:25 +0100 (BST)
-Received: from AMDC3555 (unknown [106.120.51.67]) by eusmtip1.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20190808131924eusmtip1fdcb55f900a56f9267b3b1725f38cee1~49RqA_1gx0713907139eusmtip1h;
-        Thu,  8 Aug 2019 13:19:24 +0000 (GMT)
-Message-ID: <7f4eeef81c2688c2cb18b7aae71d457197c6d018.camel@partner.samsung.com>
-Subject: Re: [RFC PATCH 09/11] devfreq: exynos-bus: Add interconnect
- functionality to exynos-bus
-From:   Artur =?UTF-8?Q?=C5=9Awigo=C5=84?= <a.swigon@partner.samsung.com>
-To:     Leonard Crestez <leonard.crestez@nxp.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>
-Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "krzk@kernel.org" <krzk@kernel.org>,
-        "cw00.choi@samsung.com" <cw00.choi@samsung.com>,
-        "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>,
-        "inki.dae@samsung.com" <inki.dae@samsung.com>,
-        "sw0312.kim@samsung.com" <sw0312.kim@samsung.com>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>
-Date:   Thu, 08 Aug 2019 15:19:23 +0200
-In-Reply-To: <VI1PR04MB5055BED59960B4F4147479AEEED50@VI1PR04MB5055.eurprd04.prod.outlook.com>
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrBKsWRmVeSWpSXmKPExsWy7djP87pxij6xBt9+yFtc//Kc1WL+kXOs
-        Fle+vmezmL53E5vFpPsTWCzOn9/AbrHi7kdWi02Pr7FaXN41h83ic+8RRosZ5/cxWaw9cpfd
-        4nbjCjaLGZNfsjnweWxa1cnmcefaHjaP+93HmTw2L6n32PhuB5NH35ZVjB6fN8kFsEdx2aSk
-        5mSWpRbp2yVwZRy4k1DQwFMx588KxgbGDZxdjJwcEgImEhumb2LqYuTiEBJYwSjxfdl7Ngjn
-        C6PE1d67LBDOZ0aJHW0LmGFaDl58DlW1nFHi/rFnUM4zRonXi3+AVfEKBEic+TybFcQWFkiS
-        WPDoIpjNJuAu8e/5FTBbRCBSYs/uy2ArmAXOskqcm7gOrJlFQFXi7/WpYEWcArESr1pOQa3W
-        kXh7qg+ogQNogaDE3x3CIGFmAXmJ5q2zmUHmSAjcY5foXzeHDaLeReLUksuMELawxKvjW9gh
-        bBmJ/zvnM0HYxRJPd95nhWhuYJTYtOwI1DJricPHQa7mANqgKbF+lz5E2FHibd9RZpCwhACf
-        xI23ghA38ElM2jYdKswr0dEmBGFqSSz4HQ3RKCHRtPoa1GwPiZZHz9knMCrOQvhlFpJfZiFs
-        XcDIvIpRPLW0ODc9tdgoL7Vcrzgxt7g0L10vOT93EyMwfZ3+d/zLDsZdf5IOMQpwMCrx8Bac
-        8I4VYk0sK67MPcQowcGsJMJ7r8wzVog3JbGyKrUoP76oNCe1+BCjNAeLkjhvNcODaCGB9MSS
-        1OzU1ILUIpgsEwenVAPjlsUv5W8YHehlufcrWd/s2JrQZP8cK0E54ekzbjG6SctMNN6b1eCc
-        d3cL+0leJp5XDRZybv0+e7jZZhiu3rej9+Rh2bg51rs8DioKOt033+FVbZtz1fB3pur2XUtS
-        bN3WyT4PvfL6WuB6SfbrciGH72heaZQIjvr6wWf3dhXRMtvjajtsinWVWIozEg21mIuKEwHm
-        2kMrWwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrPIsWRmVeSWpSXmKPExsVy+t/xu7qxij6xBgduClpc//Kc1WL+kXOs
-        Fle+vmezmL53E5vFpPsTWCzOn9/AbrHi7kdWi02Pr7FaXN41h83ic+8RRosZ5/cxWaw9cpfd
-        4nbjCjaLGZNfsjnweWxa1cnmcefaHjaP+93HmTw2L6n32PhuB5NH35ZVjB6fN8kFsEfp2RTl
-        l5akKmTkF5fYKkUbWhjpGVpa6BmZWOoZGpvHWhmZKunb2aSk5mSWpRbp2yXoZRy4k1DQwFMx
-        588KxgbGDZxdjJwcEgImEgcvPmcDsYUEljJKfGhyh4hLSHxcf4MVwhaW+HOtC6iGC6jmCaPE
-        mdXHGEESvAIBEmc+zwYrEhZIkljw6CKYzSbgLvHv+RUwW0QgSuL5jT4mkGZmgXOsEpe3bgdL
-        sAioSvy9PhXM5hSIlXjVcooZYsMSJomDmxexgCSYBTQlWrf/Zoc4Q0fi7ak+oDgH0GZBib87
-        hCFK5CWat85mnsAoOAtJxyyEqllIqhYwMq9iFEktLc5Nzy021CtOzC0uzUvXS87P3cQIjMxt
-        x35u3sF4aWPwIUYBDkYlHt6CE96xQqyJZcWVuYcYJTiYlUR475V5xgrxpiRWVqUW5ccXleak
-        Fh9iNAX6ZyKzlGhyPjBp5JXEG5oamltYGpobmxubWSiJ83YIHIwREkhPLEnNTk0tSC2C6WPi
-        4JRqYJQzXVucOq3T69q1HQ7ObwtuPE67Wn2nc2tl4qTHty4q/O9iPTQ1xO3pXYeOKwG6QnwB
-        GY5szhKrX/ut/ycxuf2e+w1PdV4mzaj9R3v+Xz9sdO97nIuI2YlWgav2lz1eCZrOS7tW2h93
-        +r1P7nvbqZV6e0IyrE7fW/CpXGBWpcdeP03e2yurCpRYijMSDbWYi4oTAeiNT3XiAgAA
-X-CMS-MailID: 20190808131925eucas1p18cbdebea41d0501bf9f9edb3bb0baf97
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190723122028eucas1p2eb75f35b810e71d6c590370aaff0997b
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190723122028eucas1p2eb75f35b810e71d6c590370aaff0997b
-References: <20190723122016.30279-1-a.swigon@partner.samsung.com>
-        <CGME20190723122028eucas1p2eb75f35b810e71d6c590370aaff0997b@eucas1p2.samsung.com>
-        <20190723122016.30279-10-a.swigon@partner.samsung.com>
-        <VI1PR04MB5055BED59960B4F4147479AEEED50@VI1PR04MB5055.eurprd04.prod.outlook.com>
+        Thu, 8 Aug 2019 09:20:47 -0400
+Received: by mail-qt1-f194.google.com with SMTP id h21so92018431qtn.13
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 06:20:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4wv04Yv2Yq5puUXXlC/N3MlD21vo7mH1+S8L0szqWvw=;
+        b=Ss/6IjFhH/DLXdBvwvhX4asY7nXSQugE+H47cTGLDoF0lCn8uT7FEtyf8OZwjPI4gM
+         PCaaxW48G9x/5Kv5PkrzgZedTc9b8q2eyppnNcI2rYdzLjcx/QXPEhtn0tadT3xrRhup
+         lVetNJx0TIpxr0L5kqWJ21VWkV4nGPgjvfZR5ValUXatSuHuR6Tw35c1LgEm61LDpHqO
+         5kvagcTBEbxIVpELGRxv5gDtXQiJ94FMQ+jxXQ/hncp/DKaUYeNSSCS29lapby+Cl4BK
+         E2Fr+jEN8hze5A+6Kwa+oJGmJP4clT18BbqXR7GrO7sSLAGj4/F+DcHoQ606najodbpN
+         xwVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4wv04Yv2Yq5puUXXlC/N3MlD21vo7mH1+S8L0szqWvw=;
+        b=U1LKftEmCVxzBDllaaaVqG4R7o3UoBIUZ8wv7l4M7rBSUL7+dSsDLrtapmWVOS9DQf
+         4uogNKFMhzgS4qmzOadWGFfcVXZvtef//PNdIQ1droOZT6CRaWZYgQyGHm5qDG5D/oJw
+         S/A8JbNbD7tVHhoA8uhDv58NHRyFhcifNxAAtTt+gikbcp/46/ii2mx4RzhQp7YFuA0d
+         NUeXtlrKU/npp6pD7h02cTAocHtPEl+K0DyQXKFuDKlqfBSO5+KBzFlyI0peTi3HqjZ9
+         /sKjzkwaQ72t2MtR2sv+FTb4qAdNMrWQua4FUfjCK4jw6A46yKdr6rsL9iTeF0Gs8Prz
+         EyuA==
+X-Gm-Message-State: APjAAAXcxv35V3q6BMczIinQq55imDao1GGW+IOE+lNiTiieEzXCtmhf
+        1LdOMXsIjDgwnSDHouUi0ek=
+X-Google-Smtp-Source: APXvYqxdY3IP9ZcCFOO3zJ3tZyXNUTSUMzEsCVHm2+zbYqKbIdEYdS7oRj+zEeaeAhAYl9wYRjgqHQ==
+X-Received: by 2002:a0c:dd86:: with SMTP id v6mr13248318qvk.176.1565270445531;
+        Thu, 08 Aug 2019 06:20:45 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id b126sm821393qkg.17.2019.08.08.06.20.41
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 08 Aug 2019 06:20:42 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 8D82340340; Thu,  8 Aug 2019 10:20:39 -0300 (-03)
+Date:   Thu, 8 Aug 2019 10:20:39 -0300
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf db-export: Fix thread__exec_comm()
+Message-ID: <20190808132039.GA19444@kernel.org>
+References: <20190808064823.14846-1-adrian.hunter@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190808064823.14846-1-adrian.hunter@intel.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-Thank you for your comments.
-
-On Tue, 2019-08-06 at 13:41 +0000, Leonard Crestez wrote:
-> On 23.07.2019 15:21, Artur Świgoń wrote:
+Em Thu, Aug 08, 2019 at 09:48:23AM +0300, Adrian Hunter escreveu:
+> Threads synthesized from /proc have comms with a start time of zero, and
+> not marked as "exec". Currently, there can be 2 such comms. The first is
+> created by processing a synthesized fork event and is set to the parent's
+> comm string, and the second by processing a synthesized comm event set to
+> the thread's current comm string.
 > 
-> > +static int exynos_bus_icc_aggregate(struct icc_node *node, u32 avg_bw,
-> > +				    u32 peak_bw, u32 *agg_avg, u32 *agg_peak)
-> > +{
-> > +	*agg_peak = *agg_avg = peak_bw;
-> > +
-> > +	return 0;
-> > +}
+> In the absence of an "exec" comm, thread__exec_comm() picks the last
+> (oldest) comm, which, in the case above, is the parent's comm string. For a
+> main thread, that is very probably wrong. Use the second-to-last in that
+> case.
+
+Thanks, applied.
+
+- Arnaldo
+ 
+> This affects only db-export because it is the only user of
+> thread__exec_comm().
 > 
-> The only current provider aggregates "avg" with "sum" and "peak" with 
-> "max", any particular reason to do something different? This function 
-> doesn't even really do aggregation, if there is a second request for "0" 
-> then the first request is lost.
-
-Yes, you're right. I adopted an oversimplified solution for the purpose of this
-RFC (please bear in mind that currently only one icc_path is used, so there is
-no aggregation anyway).
-
-> I didn't find any docs but my interpretation of avg/peak is that "avg" 
-> is for constant traffic like a display or VPU pushing pixels and "peak" 
-> is for variable traffic like networking. I assume devices which make 
-> "peak" requests are aggregated with max because they're not expected to 
-> all max-out together.
-
-That's correct (according to my understanding).
-
-> In PATCH 11 you're making a bandwidth request based on resolution, that 
-> traffic is constant and guaranteed to happend while the display is on so 
-> it would make sense to request it as an "avg" and aggregate it with "sum".
+> Example:
 > 
-> --
-> Regards,
-> Leonard
+>  $ sudo perf record -a -o pt-a-sleep-1 -e intel_pt//u -- sleep 1
+>  $ sudo chown ahunter pt-a-sleep-1
 > 
+>  Before:
+> 
+>  $ perf script -i pt-a-sleep-1 --itrace=bep -s tools/perf/scripts/python/export-to-sqlite.py pt-a-sleep-1.db branches calls
+>  $ sqlite3 -header -column pt-a-sleep-1.db 'select * from comm_threads_view'
+>  comm_id     command     thread_id   pid         tid
+>  ----------  ----------  ----------  ----------  ----------
+>  1           swapper     1           0           0
+>  2           rcu_sched   2           10          10
+>  3           kthreadd    3           78          78
+>  5           sudo        4           15180       15180
+>  5           sudo        5           15180       15182
+>  7           kworker/4:  6           10335       10335
+>  8           kthreadd    7           55          55
+>  10          systemd     8           865         865
+>  10          systemd     9           865         875
+>  13          perf        10          15181       15181
+>  15          sleep       10          15181       15181
+>  16          kworker/3:  11          14179       14179
+>  17          kthreadd    12          29376       29376
+>  19          systemd     13          746         746
+>  21          systemd     14          401         401
+>  23          systemd     15          879         879
+>  23          systemd     16          879         945
+>  25          kthreadd    17          556         556
+>  27          kworker/u1  18          14136       14136
+>  28          kworker/u1  19          15021       15021
+>  29          kthreadd    20          509         509
+>  31          systemd     21          836         836
+>  31          systemd     22          836         967
+>  33          systemd     23          1148        1148
+>  33          systemd     24          1148        1163
+>  35          kworker/2:  25          17988       17988
+>  36          kworker/0:  26          13478       13478
+> 
+>  After:
+> 
+>  $ perf script -i pt-a-sleep-1 --itrace=bep -s tools/perf/scripts/python/export-to-sqlite.py pt-a-sleep-1b.db branches calls
+>  $ sqlite3 -header -column pt-a-sleep-1b.db 'select * from comm_threads_view'
+>  comm_id     command     thread_id   pid         tid
+>  ----------  ----------  ----------  ----------  ----------
+>  1           swapper     1           0           0
+>  2           rcu_sched   2           10          10
+>  3           kswapd0     3           78          78
+>  4           perf        4           15180       15180
+>  4           perf        5           15180       15182
+>  6           kworker/4:  6           10335       10335
+>  7           kcompactd0  7           55          55
+>  8           accounts-d  8           865         865
+>  8           accounts-d  9           865         875
+>  10          perf        10          15181       15181
+>  12          sleep       10          15181       15181
+>  13          kworker/3:  11          14179       14179
+>  14          kworker/1:  12          29376       29376
+>  15          haveged     13          746         746
+>  16          systemd-jo  14          401         401
+>  17          NetworkMan  15          879         879
+>  17          NetworkMan  16          879         945
+>  19          irq/131-iw  17          556         556
+>  20          kworker/u1  18          14136       14136
+>  21          kworker/u1  19          15021       15021
+>  22          kworker/u1  20          509         509
+>  23          thermald    21          836         836
+>  23          thermald    22          836         967
+>  25          unity-sett  23          1148        1148
+>  25          unity-sett  24          1148        1163
+>  27          kworker/2:  25          17988       17988
+>  28          kworker/0:  26          13478       13478
+> 
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+> Fixes: 65de51f93ebf ("perf tools: Identify which comms are from exec")
+> Cc: stable@vger.kernel.org
+> ---
+>  tools/perf/util/thread.c | 12 +++++++++++-
+>  1 file changed, 11 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
+> index 873ab505ca80..590793cc5142 100644
+> --- a/tools/perf/util/thread.c
+> +++ b/tools/perf/util/thread.c
+> @@ -214,14 +214,24 @@ struct comm *thread__comm(const struct thread *thread)
+>  
+>  struct comm *thread__exec_comm(const struct thread *thread)
+>  {
+> -	struct comm *comm, *last = NULL;
+> +	struct comm *comm, *last = NULL, *second_last = NULL;
+>  
+>  	list_for_each_entry(comm, &thread->comm_list, list) {
+>  		if (comm->exec)
+>  			return comm;
+> +		second_last = last;
+>  		last = comm;
+>  	}
+>  
+> +	/*
+> +	 * 'last' with no start time might be the parent's comm of a synthesized
+> +	 * thread (created by processing a synthesized fork event). For a main
+> +	 * thread, that is very probably wrong. Prefer a later comm to avoid
+> +	 * that case.
+> +	 */
+> +	if (second_last && !last->start && thread->pid_ == thread->tid)
+> +		return second_last;
+> +
+>  	return last;
+>  }
+>  
+> -- 
+> 2.17.1
+
 -- 
-Artur Świgoń
-Samsung R&D Institute Poland
-Samsung Electronics
 
-
+- Arnaldo
