@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D924C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:13:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C613C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:13:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EE9421743
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:13:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 485F921743
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:13:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565291620;
-	bh=B9g71LC9Z8KeGXg4KeRXQCORlBkBFSMoTlMKCBucyqk=;
+	s=default; t=1565291628;
+	bh=Xx7s67zyV53WglYQfrR46qMMLjYFs3VfRWZ/rxu84qA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YwyA0L29ohqhMIvPMpGjBrIPn9x17Nc6wblKJXC4wp7dx7NgoMU9b83d1TFt6kAMJ
-	 uE/kORAYr4WvuHAsRvJcdzjoH216NJYPRCGMankN5MSj5oJCSWx6z0yaqRSq3GnRwU
-	 Dk7SgIBGTE3E/Pc6s9OjYbqWP+3CINmk/UNj4kcE=
+	b=dnJX2sjnmOkfusLqEqdIf9eZOQFvaSLccHEDYPF8Tu9UFEkYF8Cgdahqtdd89ZoPg
+	 BmWmRYbswN2DVY6TsG1o+pUBxn2SUXcT+KKdt5cBtB3/nJnbNCRt7oXM++uiUzTGAT
+	 VsEj9nGL0T5PIg48bnTTI/iLfYj1E59IjMCb4Q6Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405280AbfHHTNj (ORCPT
+        id S2405292AbfHHTNr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:13:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43982 "EHLO mail.kernel.org"
+        Thu, 8 Aug 2019 15:13:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405137AbfHHTJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 15:09:38 -0400
+        id S2405089AbfHHTJX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 15:09:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45B082184E;
-        Thu,  8 Aug 2019 19:09:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0F6921743;
+        Thu,  8 Aug 2019 19:09:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565291377;
-        bh=B9g71LC9Z8KeGXg4KeRXQCORlBkBFSMoTlMKCBucyqk=;
+        s=default; t=1565291362;
+        bh=Xx7s67zyV53WglYQfrR46qMMLjYFs3VfRWZ/rxu84qA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N0tSDu9o0LuQDr8qk5lmwicRSbYTltnf5l4R/Q0/BtTUpIgR+ECNLxONmco9rZWh4
-         bzetnV/tpt408aP//PZiq3nykTAYaho8VZgEs7et7hHbvXV9sd7clKxQfkSx3pOI5o
-         flXKzy91eXk9QVZ+1bMZZaBxwNWh1n8uDZ434IaY=
+        b=OJdfrfNurpMRdYjYtgJqNhNvped2SNpb04WCK+h4Bba1r3oL5SCOCrnCZTuTyzGui
+         TkEYFEgAoqtX81LYWP/PnHEihd6JXUdLPHHGewE9O2H46cPPdFD4tt4dbv2Vf34VOG
+         CInFYpEOcYjN8uRsfLS9AULAkHh99M1ULYOLNx9s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Edward Srouji <edwards@mellanox.com>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 4.19 36/45] net/mlx5: Fix modify_cq_in alignment
-Date:   Thu,  8 Aug 2019 21:05:22 +0200
-Message-Id: <20190808190455.839364156@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+92209502e7aab127c75f@syzkaller.appspotmail.com,
+        syzbot+b972214bb803a343f4fe@syzkaller.appspotmail.com,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        Karsten Graul <kgraul@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 31/45] net/smc: do not schedule tx_work in SMC_CLOSED state
+Date:   Thu,  8 Aug 2019 21:05:17 +0200
+Message-Id: <20190808190455.513332863@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190808190453.827571908@linuxfoundation.org>
 References: <20190808190453.827571908@linuxfoundation.org>
@@ -61,39 +63,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Edward Srouji <edwards@mellanox.com>
+From: Ursula Braun <ubraun@linux.ibm.com>
 
-[ Upstream commit 7a32f2962c56d9d8a836b4469855caeee8766bd4 ]
+[ Upstream commit f9cedf1a9b1cdcfb0c52edb391d01771e43994a4 ]
 
-Fix modify_cq_in alignment to match the device specification.
-After this fix the 'cq_umem_valid' field will be in the right offset.
+The setsockopts options TCP_NODELAY and TCP_CORK may schedule the
+tx worker. Make sure the socket is not yet moved into SMC_CLOSED
+state (for instance by a shutdown SHUT_RDWR call).
 
-Cc: <stable@vger.kernel.org> # 4.19
-Fixes: bd37197554eb ("net/mlx5: Update mlx5_ifc with DEVX UID bits")
-Signed-off-by: Edward Srouji <edwards@mellanox.com>
-Reviewed-by: Yishai Hadas <yishaih@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Reported-by: syzbot+92209502e7aab127c75f@syzkaller.appspotmail.com
+Reported-by: syzbot+b972214bb803a343f4fe@syzkaller.appspotmail.com
+Fixes: 01d2f7e2cdd31 ("net/smc: sockopts TCP_NODELAY and TCP_CORK")
+Signed-off-by: Ursula Braun <ubraun@linux.ibm.com>
+Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/linux/mlx5/mlx5_ifc.h |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ net/smc/af_smc.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/include/linux/mlx5/mlx5_ifc.h
-+++ b/include/linux/mlx5/mlx5_ifc.h
-@@ -5623,7 +5623,12 @@ struct mlx5_ifc_modify_cq_in_bits {
- 
- 	struct mlx5_ifc_cqc_bits cq_context;
- 
--	u8         reserved_at_280[0x600];
-+	u8         reserved_at_280[0x60];
-+
-+ 	u8         cq_umem_valid[0x1];
-+	u8         reserved_at_2e1[0x1f];
-+
-+	u8         reserved_at_300[0x580];
- 
- 	u8         pas[0][0x40];
- };
+--- a/net/smc/af_smc.c
++++ b/net/smc/af_smc.c
+@@ -1680,14 +1680,18 @@ static int smc_setsockopt(struct socket
+ 		}
+ 		break;
+ 	case TCP_NODELAY:
+-		if (sk->sk_state != SMC_INIT && sk->sk_state != SMC_LISTEN) {
++		if (sk->sk_state != SMC_INIT &&
++		    sk->sk_state != SMC_LISTEN &&
++		    sk->sk_state != SMC_CLOSED) {
+ 			if (val && !smc->use_fallback)
+ 				mod_delayed_work(system_wq, &smc->conn.tx_work,
+ 						 0);
+ 		}
+ 		break;
+ 	case TCP_CORK:
+-		if (sk->sk_state != SMC_INIT && sk->sk_state != SMC_LISTEN) {
++		if (sk->sk_state != SMC_INIT &&
++		    sk->sk_state != SMC_LISTEN &&
++		    sk->sk_state != SMC_CLOSED) {
+ 			if (!val && !smc->use_fallback)
+ 				mod_delayed_work(system_wq, &smc->conn.tx_work,
+ 						 0);
 
 
