@@ -2,86 +2,65 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A6DCC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 10:10:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E27FC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 10:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A18421882
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 10:10:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bxWWx9FB"
+	by mail.kernel.org (Postfix) with ESMTP id 5989521874
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 10:10:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389915AbfHHKKu (ORCPT
+        id S2389917AbfHHKK4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 06:10:50 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:59202 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389901AbfHHKKs (ORCPT
+        Thu, 8 Aug 2019 06:10:56 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:54224 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389793AbfHHKKo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 06:10:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=yRYxxTnT0jAVorPkLUtPWJIe8pVj+mQODhml9KCp+bk=; b=bxWWx9FBXDhyN3GkIOCe9ilFT
-        cakjc/vTNoc2ZDNL9roM8NMX4moNcjQqB+Ot4ntNyUoKk5E++1c5MhZs4RG3VI8eUWjCvxbQV7EWE
-        VDgaWMjXzapOJkOuFY4TlotBt7b1LniCPxXSoZaaDHspDfsMIgR2ZJbiNx2mkvnA5L2zkrdoD4xC/
-        W4vjqaeAbqBaz94FAfMfhaBbPTeMAUNV4YDrEkFHqVgCxQoMNokAD+Ll0ndLiF6tIMspz1ivJnkuY
-        JKnSB8GOPWVKU7Su1C8mM56t2q4NunM/Qnk5uw7L/QP+Z7O3YRHme/iHfiQDdxYGQHmndDnoqrIvS
-        V5WzbrQKQ==;
-Received: from [195.167.85.94] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hvfNd-0002zp-3T; Thu, 08 Aug 2019 10:10:45 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     tomi.valkeinen@ti.com
-Cc:     airlied@linux.ie, daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH for-5.3] drm/omap: ensure we have a valid dma_mask
-Date:   Thu,  8 Aug 2019 13:10:42 +0300
-Message-Id: <20190808101042.18809-1-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
+        Thu, 8 Aug 2019 06:10:44 -0400
+Received: from 79.184.254.29.ipv4.supernova.orange.pl (79.184.254.29) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.275)
+ id 12a2dc33bd81580e; Thu, 8 Aug 2019 12:10:42 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     linux-nvme <linux-nvme@lists.infradead.org>
+Cc:     Keith Busch <kbusch@kernel.org>,
+        Mario Limonciello <Mario.Limonciello@dell.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rajat Jain <rajatja@google.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Subject: [PATCH v2 0/2] nvme-pci: Allow PCI bus-level PM to be used if ASPM is disabled
+Date:   Thu, 08 Aug 2019 12:03:09 +0200
+Message-ID: <1921165.pTveHRX1Co@kreacher>
+In-Reply-To: <20190731221956.GB15795@localhost.localdomain>
+References: <4323ed84dd07474eab65699b4d007aaf@AUSX13MPC105.AMER.DELL.COM> <CAJZ5v0iDQ4=kTUgW94tKGt7oJzA_3uVU_M6HAMbNCRXwp_do8A@mail.gmail.com> <47415939.KV5G6iaeJG@kreacher> <20190730144134.GA12844@localhost.localdomain> <100ba4aff1c6434a81e47774ab4acddc@AUSX13MPC105.AMER.DELL.COM> <8246360B-F7D9-42EB-94FC-82995A769E28@canonical.com> <20190730191934.GD13948@localhost.localdomain> <7d3e0b8ba1444194a153c93faa1cabb3@AUSX13MPC105.AMER.DELL.COM> <20190730213114.GK13948@localhost.localdomain> <CAJZ5v0gxfeMN8eCNRjcXmUOkReVsdozb3EccaYMpnmSHu3771g@mail.gmail.com> <20190731221956.GB15795@localhost.localdomain>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The omapfb platform devices does not have a DMA mask set.  The
-traditional arm DMA code ignores, but the generic dma-direct/swiotlb
-has stricter checks and thus fails mappings without a DMA mask.
-As we use swiotlb for arm with LPAE now, omap needs to catch up
-and actually set a DMA mask.
+Hi All,
 
-Fixes: ad3c7b18c5b3 ("arm: use swiotlb for bounce buffering on LPAE configs")
-Reported-by: "H. Nikolaus Schaller" <hns@goldelico.com>
-Tested-by: "H. Nikolaus Schaller" <hns@goldelico.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- drivers/gpu/drm/omapdrm/omap_fbdev.c | 2 ++
- 1 file changed, 2 insertions(+)
+This series is equivalent to the following patch:
 
-diff --git a/drivers/gpu/drm/omapdrm/omap_fbdev.c b/drivers/gpu/drm/omapdrm/omap_fbdev.c
-index 561c4812545b..2c8abf07e617 100644
---- a/drivers/gpu/drm/omapdrm/omap_fbdev.c
-+++ b/drivers/gpu/drm/omapdrm/omap_fbdev.c
-@@ -232,6 +232,8 @@ void omap_fbdev_init(struct drm_device *dev)
- 	if (!priv->num_pipes)
- 		return;
- 
-+	dma_coerce_mask_and_coherent(dev->dev, DMA_BIT_MASK(32));
-+
- 	fbdev = kzalloc(sizeof(*fbdev), GFP_KERNEL);
- 	if (!fbdev)
- 		goto fail;
--- 
-2.20.1
+https://patchwork.kernel.org/patch/11083551/
+
+posted earlier today.
+
+It addresses review comments from Christoph by splitting the PCI/PCIe ASPM part
+off to a separate patch (patch [1/2]) and fixing a few defects.
+
+Thanks!
+
+
 
