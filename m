@@ -2,138 +2,139 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A841C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:11:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C59E6C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:12:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E431521874
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:11:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F3BC2184E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:12:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HDAKTHGL"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="LBJgE3sr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732974AbfHHNLG (ORCPT
+        id S1732922AbfHHNMG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 09:11:06 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:37404 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732645AbfHHNLG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 09:11:06 -0400
-Received: by mail-pf1-f194.google.com with SMTP id 19so44078856pfa.4;
-        Thu, 08 Aug 2019 06:11:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ghbafTZeER7tFVSxKR0FoUNjQNOkuIPxO4zFms6fLUg=;
-        b=HDAKTHGLr1vPMQY+1M6UtNpZ4aeffhDs6Ljt9HwWSKX66NP7I8ulEYeU3JHSfA7U4z
-         L/lmA+ZPFy8xEfhQY/9tgoRPhcm17M29Hl/cbelWsrzDEtrazQlmLSLHuphKSBes3abF
-         5z2hjaD7/BicGKOen58Qi1gnUe69nFMu8mt0alEWPQX8TofJMEePz2LvW7hKz3UQUsfi
-         KovTVAtUDnU/If8ePS/euYbFvhO9+A2GThccvjadlmLbouIyYRAgpgnvZTE6zrJSXhjg
-         OhZtipnGYL6SJ5EDdw5Urtq4sD/HX8IOppoXkyXh8vlEEwzO6ZQCa2bv5r7x6b+C5sk/
-         EcWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ghbafTZeER7tFVSxKR0FoUNjQNOkuIPxO4zFms6fLUg=;
-        b=UZO+PlRCgNq1Wm0LysUTfNBnEiYe8S2I8IgjmOG/C1OAEbsjGmGrAys5s+1oMOZdjr
-         1ie3UnbCgQ1jPtoUw0QP26rrSz/05KZI/WlTM6KMXVJB4iRzVzL2rIfL4Ch0CtgJuqbm
-         un2qhric10uJSlKuDMegy3BeIoLnu+KFbmehLTICDl5/YVGNfl2pgp7NYgIEv/1Nn5bj
-         e0nofB93vUdNULn878ly0NsRWLSNHgFT+86BDhYje2UKhcnnxK4p7grfFGO4qckNxt1J
-         xGD2h0Lif4aLg0ngO75DQxp77RH+I65Ek3WcPjE4M8+cspLqhyh6GmRAHM5BtcFB70gd
-         MbQg==
-X-Gm-Message-State: APjAAAUUj69VRgwREBjDr47235b5rIiktiAzaMjooqGm9XQ+MF50rzt5
-        tYTTbSRfANr1rcIS8C8lWlk=
-X-Google-Smtp-Source: APXvYqyXuh6uMII74oJqQCwpZfDp6HK/LdI9I13SlK2HkQifbdw6zcUTOtC0or/jJO1UDnoNYWLCLg==
-X-Received: by 2002:a62:5252:: with SMTP id g79mr15208485pfb.18.1565269865807;
-        Thu, 08 Aug 2019 06:11:05 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id p67sm118773185pfg.124.2019.08.08.06.11.02
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 08 Aug 2019 06:11:05 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
-        Jens Axboe <axboe@kernel.dk>, xen-devel@lists.xenproject.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH 3/3] xen/blkback: Use refcount_t for refcount
-Date:   Thu,  8 Aug 2019 21:11:00 +0800
-Message-Id: <20190808131100.24751-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 8 Aug 2019 09:12:06 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:13801 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732645AbfHHNMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 09:12:06 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46480f6DSMz9v099;
+        Thu,  8 Aug 2019 15:12:02 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=LBJgE3sr; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id eJxpUM1MSBdv; Thu,  8 Aug 2019 15:12:02 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46480f51jZz9v098;
+        Thu,  8 Aug 2019 15:12:02 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1565269922; bh=FoHJwwJIf4eVtKRsj+ocx2lFK0iueulXt5jhefTGvrU=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=LBJgE3srgUmBzFYk/pZ6HqRFwW3ks9q0Y2eM2QmvCKlPCgNbkteSOS0Is5Oz/OjDy
+         wCt6V7EHscK4nxegfqG4DJ1kDEjwk9jj7U7nZWsrumbkSQtOGfX+SRiMAiiDEs0SiD
+         4H/ySf6RP0IhzJ9joCLbrWkLXBFerpG9pzHFkOGc=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 44F928B872;
+        Thu,  8 Aug 2019 15:12:04 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id Lj3Hc9lCWXDo; Thu,  8 Aug 2019 15:12:04 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id D32478B870;
+        Thu,  8 Aug 2019 15:12:03 +0200 (CEST)
+Subject: Re: SMP lockup at boot on Freescale/NXP T2080 (powerpc 64)
+To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+        "npiggin@gmail.com" <npiggin@gmail.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Grant McEwan <grant.mcewan@alliedtelesis.co.nz>
+References: <1564970785.27215.29.camel@alliedtelesis.co.nz>
+ <4525a16cd3e65f89741b50daf2ec259b6baaab78.camel@alliedtelesis.co.nz>
+ <87wofqv8a0.fsf@concordia.ellerman.id.au>
+ <1565135404.16914.5.camel@alliedtelesis.co.nz>
+ <87o911vktx.fsf@concordia.ellerman.id.au>
+ <1565141097.19352.12.camel@alliedtelesis.co.nz>
+ <b0ad453c-3a2b-6dd5-7bfc-5e275aa7bf62@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <dcdaadb0-209c-605b-f117-fb6d872e2cd8@c-s.fr>
+Date:   Thu, 8 Aug 2019 15:12:03 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <b0ad453c-3a2b-6dd5-7bfc-5e275aa7bf62@c-s.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reference counters are preferred to use refcount_t instead of
-atomic_t.
-This is because the implementation of refcount_t can prevent
-overflows and detect possible use-after-free.
-So convert atomic_t ref counters to refcount_t.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
- drivers/block/xen-blkback/common.h | 7 ++++---
- drivers/block/xen-blkback/xenbus.c | 2 +-
- 2 files changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/block/xen-blkback/common.h b/drivers/block/xen-blkback/common.h
-index 1d3002d773f7..9db5f3586fb4 100644
---- a/drivers/block/xen-blkback/common.h
-+++ b/drivers/block/xen-blkback/common.h
-@@ -35,6 +35,7 @@
- #include <linux/wait.h>
- #include <linux/io.h>
- #include <linux/rbtree.h>
-+#include <linux/refcount.h>
- #include <asm/setup.h>
- #include <asm/pgalloc.h>
- #include <asm/hypervisor.h>
-@@ -309,7 +310,7 @@ struct xen_blkif {
- 	struct xen_vbd		vbd;
- 	/* Back pointer to the backend_info. */
- 	struct backend_info	*be;
--	atomic_t		refcnt;
-+	refcount_t		refcnt;
- 	/* for barrier (drain) requests */
- 	struct completion	drain_complete;
- 	atomic_t		drain;
-@@ -362,10 +363,10 @@ struct pending_req {
- 			 (_v)->bdev->bd_part->nr_sects : \
- 			  get_capacity((_v)->bdev->bd_disk))
- 
--#define xen_blkif_get(_b) (atomic_inc(&(_b)->refcnt))
-+#define xen_blkif_get(_b) (refcount_inc(&(_b)->refcnt))
- #define xen_blkif_put(_b)				\
- 	do {						\
--		if (atomic_dec_and_test(&(_b)->refcnt))	\
-+		if (refcount_dec_and_test(&(_b)->refcnt))	\
- 			schedule_work(&(_b)->free_work);\
- 	} while (0)
- 
-diff --git a/drivers/block/xen-blkback/xenbus.c b/drivers/block/xen-blkback/xenbus.c
-index 3ac6a5d18071..ecc5f9c5bf3f 100644
---- a/drivers/block/xen-blkback/xenbus.c
-+++ b/drivers/block/xen-blkback/xenbus.c
-@@ -169,7 +169,7 @@ static struct xen_blkif *xen_blkif_alloc(domid_t domid)
- 		return ERR_PTR(-ENOMEM);
- 
- 	blkif->domid = domid;
--	atomic_set(&blkif->refcnt, 1);
-+	refcount_set(&blkif->refcnt, 1);
- 	init_completion(&blkif->drain_complete);
- 	INIT_WORK(&blkif->free_work, xen_blkif_deferred_free);
- 
--- 
-2.20.1
+Le 08/08/2019 à 10:46, Christophe Leroy a écrit :
+> 
+> 
+> Le 07/08/2019 à 03:24, Chris Packham a écrit :
+>> On Wed, 2019-08-07 at 11:13 +1000, Michael Ellerman wrote:
+>>> Chris Packham <Chris.Packham@alliedtelesis.co.nz> writes:
+>>>>
+>>>> On Tue, 2019-08-06 at 21:32 +1000, Michael Ellerman wrote:
+>>>> The difference between a working and non working defconfig is
+>>>> CONFIG_PREEMPT specifically CONFIG_PREEMPT=y makes my system hang
+>>>> at
+>>>> boot.
+>>>>
+>>>> Is that now intentionally prohibited on 64-bit powerpc?
+>>> It's not prohibitied, but it probably should be because no one really
+>>> tests it properly. I have a handful of IBM machines where I boot a
+>>> PREEMPT kernel but that's about it.
+>>>
+>>> The corenet configs don't have PREEMPT enabled, which suggests it was
+>>> never really supported on those machines.
+>>>
+>>> But maybe someone from NXP can tell me otherwise.
+>>>
+>>
+>> I think our workloads need CONFIG_PREEMPT=y because our systems have
+>> switch ASIC drivers implemented in userland and we need to be able to
+>> react quickly to network events in order to prevent loops. We have seen
+>> instances of this not happening simply because some other process is in
+>> the middle of a syscall.
+>>
+>> One thing I am working on here is a setup with a few vendor boards and
+>> some of our own kit that we can test the upstream kernels on. Hopefully
+>> that'd make these kinds of reports more timely rather than just
+>> whenever we decide to move to a new kernel version.
+>>
+>>
+> 
+> 
+> The defconfig also sets CONFIG_DEBUG_PREEMPT. Have you tried without 
+> CONFIG_DEBUG_PREEMPT ?
+> 
+
+Reproduced on QEMU. CONFIG_DEBUG_PREEMPT is the trigger. Due to 
+smp_processor_id() being called from early_init_this_mmu(), when 
+CONFIG_DEBUG_PREEMPT is set debug_smp_processor_id() is called instead 
+of raw_smp_processor_id(), but this is too early for 
+debug_smp_processor_id()
+
+As this call is useless, just drop it.
+
+Can you test patch at https://patchwork.ozlabs.org/patch/1144005/ ?
+
+Thanks
+Christophe
 
