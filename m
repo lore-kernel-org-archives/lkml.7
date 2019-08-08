@@ -2,148 +2,156 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF7E8C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2604DC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:26:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA95521743
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:26:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAF322171F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:26:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RRhMYeIA"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RGcrcGuU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732718AbfHHO0g (ORCPT
+        id S1732762AbfHHO05 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 10:26:36 -0400
-Received: from mail-wr1-f46.google.com ([209.85.221.46]:41288 "EHLO
-        mail-wr1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728327AbfHHO0g (ORCPT
+        Thu, 8 Aug 2019 10:26:57 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40108 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728327AbfHHO05 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 10:26:36 -0400
-Received: by mail-wr1-f46.google.com with SMTP id c2so91912056wrm.8
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 07:26:34 -0700 (PDT)
+        Thu, 8 Aug 2019 10:26:57 -0400
+Received: by mail-pf1-f193.google.com with SMTP id p184so44196505pfp.7
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 07:26:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fj4z8W6cdsh45vekjTO59hBeNsl3ptwt6rJ4Cmg/whI=;
-        b=RRhMYeIA7cCQUcGs45JixmTtly34i8plV+jX6oGViZMW4eL2Ijzb1AzcvVEJggHCkM
-         B/TP2QGUWVE9E5bYd4lyzrnf6B6MTxk/tB/T9h5v2ECCq+utUeNQbMSBIW2O+xWY4T29
-         G8aIgsfuSNkjcEDWsSkJvLkBUVIR+F39sZlFvCPgOAFtGn+O9i7lonpqCbBMljV5eGwy
-         r2DrKDVQ/8hhr4E43auR8B9PuN0Vml515UZP4VW9Q4UEaa4cInjOo2snNLRahUyBlcHy
-         CfFitbZ8HKj7EDAbpBzLzpIKRib/oEDwr0j3LC83Ij2YojhZfbQenOo6Pk6AYYAg6wcb
-         7/Ww==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=md2OPGZk0nCv756Mrn9PJif0bN7aUiYeyoo+Xz7PdYE=;
+        b=RGcrcGuU/OaUgSHbE78BfEVc9bZx1UvWtqQWxfNlsLkly64S1IvchY4VZgqriAGzPZ
+         lRISbM1zSNQuRIk871EoOpWK6/RjjnYOVQGS9vGBZk8+AIIx9JU5v9uqTeh/SwcEGTwK
+         q1A6Q2g/vFKmG92OceBjKRjRVp8yb9gg/1dqDM2OiIrtWOXpZa2yOGyNJFDDfTUaj0KF
+         NeoCjHzRZG6lZSI2rzXI7kHLLF8KREs02p0NASgArhkP+Ovji7OyP94FtzJOjrgVphfq
+         zv7AEHpsYP65+EDdccvh1R2mEJr5lcJygV7AQoPqPV84uT2XNxsrrhfiAXryL5G/UcML
+         axtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fj4z8W6cdsh45vekjTO59hBeNsl3ptwt6rJ4Cmg/whI=;
-        b=ibhzA03BPy0POVYQ1m/Dd9xj4XMsCp2AJx8gHv1NpPcruUVVgp6S4QkygMZUgRKeAa
-         hxLfCE8L2+Gn93jlDm9W3z162x+ALyXDOJEZhXZi+aFuC24ouGe7htMZsNOXj8UBRnX4
-         VkfwqE/13Oc2mEz76kSvX7mjI7IexQatumRNjOlQA+IboZB7Bdyha5XewSb5PVcD0etO
-         JJzw1o4Wxx5kpfMarnR+vl9ztNZcWlnvDrK56RuJb/2UnbpcwLow9+6Z+EGLsfNTV1Ne
-         4hepIA2bZRoXe9ph6V1HNtD92T+fF8JTQE3MtG9iCe7oCRD/8ZZFrFTO3qYKhInVvEet
-         4PGQ==
-X-Gm-Message-State: APjAAAU9p0sBAS8FQpWTBZQ+lvXM464OnyPpC5CRiwD4jagNk+ZvctNe
-        VeqTkQDAePW9XSh/4mSh42k6x5eyHdo6R+wnUmU=
-X-Google-Smtp-Source: APXvYqz8UZ005WObjnpvvUlwMyJ+M+pW0lN58RILDMrzqJs48bBb4psl0QdHA4tRVfPepBkzMTIl6iz4vtMFsvd3YHU=
-X-Received: by 2002:adf:f94a:: with SMTP id q10mr16172298wrr.341.1565274393148;
- Thu, 08 Aug 2019 07:26:33 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=md2OPGZk0nCv756Mrn9PJif0bN7aUiYeyoo+Xz7PdYE=;
+        b=tWlQEP5op72Iax2mOb5goBSRJ12rok1Egl95OAssq2uBLsW2l8BWFwCTDoKhsUvIOo
+         mH/rvf19gobVcwePzwBj4u4uCZ6cVgTmAYUJhXlnom6ZYai/+TRC4fuTNECozhvaQz7G
+         zMelRXndTtWV5nGC0RRR0BqxAzbMySog5DzeCAvRGH9Bz6og6KeKbyw4dGbAzAUuonUV
+         LXHdfa9tOjfHkA6EqwRPXmqzII0bYO4iqZ6DZyhWN+buvbOo6U6XAhuVLyZJtAhQiQH9
+         l/P9sHODGyFvPmEqvjQBvBVfzfteFJzGsUhq44Haa6m2MsGDaINep8mmicdy4Hpy3KyM
+         vhTg==
+X-Gm-Message-State: APjAAAX+7V1EGKLD6quawepTAVwAo/8G+kiw9+MYEcBHmWqfLbtf4VxV
+        WuUbKIAF9kF/BVWNdRzyQUk=
+X-Google-Smtp-Source: APXvYqwfXVielMoSb1WFWeRq8TWMnABH9ZbDPtNew3A40VqJcYgKvnifq7ihKwD3wS7PvTDqk8LrVA==
+X-Received: by 2002:aa7:93a5:: with SMTP id x5mr15532929pff.87.1565274413336;
+        Thu, 08 Aug 2019 07:26:53 -0700 (PDT)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
+        by smtp.gmail.com with ESMTPSA id cx22sm2374760pjb.25.2019.08.08.07.26.50
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 08 Aug 2019 07:26:52 -0700 (PDT)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] iio: adc: max1027: Use device-managed APIs
+Date:   Thu,  8 Aug 2019 22:26:46 +0800
+Message-Id: <20190808142646.29567-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190806014830.7424-1-hdanton@sina.com> <CABXGCsMRGRpd9AoJdvZqdpqCP3QzVGzfDPiX=PzVys6QFBLAvA@mail.gmail.com>
- <CADnq5_O08v3_NUZ_zUZJFYwv_tUY7TFFz2GGudqgWEX6nh5LFA@mail.gmail.com> <6d5110ab-6539-378d-f643-0a1d4cf0ff73@daenzer.net>
-In-Reply-To: <6d5110ab-6539-378d-f643-0a1d4cf0ff73@daenzer.net>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Thu, 8 Aug 2019 10:26:20 -0400
-Message-ID: <CADnq5_P=gtz_8vNyV7At73PngbNS_-cyAnpd3aKGPUFyrK64EA@mail.gmail.com>
-Subject: Re: The issue with page allocation 5.3 rc1-rc2 (seems drm culprit here)
-To:     =?UTF-8?Q?Michel_D=C3=A4nzer?= <michel@daenzer.net>
-Cc:     Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Dave Airlie <airlied@gmail.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>
-Content-Type: multipart/mixed; boundary="0000000000002e1b8c058f9bd85e"
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---0000000000002e1b8c058f9bd85e
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Use device-managed APIs to simplify the code.
 
-On Thu, Aug 8, 2019 at 4:13 AM Michel D=C3=A4nzer <michel@daenzer.net> wrot=
-e:
->
-> On 2019-08-08 7:31 a.m., Alex Deucher wrote:
-> > On Wed, Aug 7, 2019 at 11:49 PM Mikhail Gavrilov
-> > <mikhail.v.gavrilov@gmail.com> wrote:
-> >>
-> >> Unfortunately error "gnome-shell: page allocation failure: order:4,
-> >> mode:0x40cc0(GFP_KERNEL|__GFP_COMP),
-> >> nodemask=3D(null),cpuset=3D/,mems_allowed=3D0" still happens even with
-> >> applying this patch.
-> >
-> > I think we can just drop the kmalloc altogether.  How about this patch?
->
-> Memory allocated by kvz/malloc needs to be freed with kvfree.
->
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+ drivers/iio/adc/max1027.c | 30 +++++++-----------------------
+ 1 file changed, 7 insertions(+), 23 deletions(-)
 
-Yup, good catch.  Updated patch attached.
+diff --git a/drivers/iio/adc/max1027.c b/drivers/iio/adc/max1027.c
+index da84adfdb819..f1b90c544b82 100644
+--- a/drivers/iio/adc/max1027.c
++++ b/drivers/iio/adc/max1027.c
+@@ -427,8 +427,9 @@ static int max1027_probe(struct spi_device *spi)
+ 		return -ENOMEM;
+ 	}
+ 
+-	ret = iio_triggered_buffer_setup(indio_dev, &iio_pollfunc_store_time,
+-					 &max1027_trigger_handler, NULL);
++	ret = devm_iio_triggered_buffer_setup(&spi->dev, indio_dev,
++					&iio_pollfunc_store_time,
++					&max1027_trigger_handler, NULL);
+ 	if (ret < 0) {
+ 		dev_err(&indio_dev->dev, "Failed to setup buffer\n");
+ 		return ret;
+@@ -439,7 +440,7 @@ static int max1027_probe(struct spi_device *spi)
+ 	if (st->trig == NULL) {
+ 		ret = -ENOMEM;
+ 		dev_err(&indio_dev->dev, "Failed to allocate iio trigger\n");
+-		goto fail_trigger_alloc;
++		return ret;
+ 	}
+ 
+ 	st->trig->ops = &max1027_trigger_ops;
+@@ -454,7 +455,7 @@ static int max1027_probe(struct spi_device *spi)
+ 					spi->dev.driver->name, st->trig);
+ 	if (ret < 0) {
+ 		dev_err(&indio_dev->dev, "Failed to allocate IRQ.\n");
+-		goto fail_dev_register;
++		return ret;
+ 	}
+ 
+ 	/* Disable averaging */
+@@ -462,33 +463,16 @@ static int max1027_probe(struct spi_device *spi)
+ 	ret = spi_write(st->spi, &st->reg, 1);
+ 	if (ret < 0) {
+ 		dev_err(&indio_dev->dev, "Failed to configure averaging register\n");
+-		goto fail_dev_register;
+-	}
+-
+-	ret = iio_device_register(indio_dev);
+-	if (ret < 0) {
+-		dev_err(&indio_dev->dev, "Failed to register iio device\n");
+-		goto fail_dev_register;
++		return ret;
+ 	}
+ 
+-	return 0;
+-
+-fail_dev_register:
+-fail_trigger_alloc:
+-	iio_triggered_buffer_cleanup(indio_dev);
+-
+-	return ret;
++	return devm_iio_device_register(&spi->dev, indio_dev);
+ }
+ 
+ static int max1027_remove(struct spi_device *spi)
+ {
+-	struct iio_dev *indio_dev = spi_get_drvdata(spi);
+-
+ 	pr_debug("%s: remove(spi = 0x%p)\n", __func__, spi);
+ 
+-	iio_device_unregister(indio_dev);
+-	iio_triggered_buffer_cleanup(indio_dev);
+-
+ 	return 0;
+ }
+ 
+-- 
+2.20.1
 
-Alex
-
---0000000000002e1b8c058f9bd85e
-Content-Type: text/x-patch; charset="US-ASCII"; 
-	name="0001-drm-amd-display-use-kvmalloc-for-dc_state-v2.patch"
-Content-Disposition: attachment; 
-	filename="0001-drm-amd-display-use-kvmalloc-for-dc_state-v2.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_jz2ry4ps0>
-X-Attachment-Id: f_jz2ry4ps0
-
-RnJvbSA1YzI3YzI1Y2U3OWFjMmIxOGEzN2JjZDdkYzZmYTBiZDNkODczM2QzIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBBbGV4IERldWNoZXIgPGFsZXhhbmRlci5kZXVjaGVyQGFtZC5j
-b20+CkRhdGU6IFRodSwgOCBBdWcgMjAxOSAwMDoyOToyMyAtMDUwMApTdWJqZWN0OiBbUEFUQ0hd
-IGRybS9hbWQvZGlzcGxheTogdXNlIGt2bWFsbG9jIGZvciBkY19zdGF0ZSAodjIpCgpJdCdzIGxh
-cmdlIGFuZCBkb2Vzbid0IG5lZWQgY29udGlndW91cyBtZW1vcnkuCgp2Mjoga3ZmcmVlIHRoZSBt
-ZW1vcnkuCgpTaWduZWQtb2ZmLWJ5OiBBbGV4IERldWNoZXIgPGFsZXhhbmRlci5kZXVjaGVyQGFt
-ZC5jb20+Ci0tLQogZHJpdmVycy9ncHUvZHJtL2FtZC9kaXNwbGF5L2RjL2NvcmUvZGMuYyB8IDEx
-ICsrKysrKy0tLS0tCiAxIGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspLCA1IGRlbGV0aW9u
-cygtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9hbWQvZGlzcGxheS9kYy9jb3JlL2Rj
-LmMgYi9kcml2ZXJzL2dwdS9kcm0vYW1kL2Rpc3BsYXkvZGMvY29yZS9kYy5jCmluZGV4IDI1MmI2
-MjFkOTNhOS4uMjFmYjdlZTE3YzljIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vYW1kL2Rp
-c3BsYXkvZGMvY29yZS9kYy5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9hbWQvZGlzcGxheS9kYy9j
-b3JlL2RjLmMKQEAgLTIzLDYgKzIzLDcgQEAKICAqLwogCiAjaW5jbHVkZSA8bGludXgvc2xhYi5o
-PgorI2luY2x1ZGUgPGxpbnV4L21tLmg+CiAKICNpbmNsdWRlICJkbV9zZXJ2aWNlcy5oIgogCkBA
-IC0xMTgzLDggKzExODQsOCBAQCBib29sIGRjX3Bvc3RfdXBkYXRlX3N1cmZhY2VzX3RvX3N0cmVh
-bShzdHJ1Y3QgZGMgKmRjKQogCiBzdHJ1Y3QgZGNfc3RhdGUgKmRjX2NyZWF0ZV9zdGF0ZShzdHJ1
-Y3QgZGMgKmRjKQogewotCXN0cnVjdCBkY19zdGF0ZSAqY29udGV4dCA9IGt6YWxsb2Moc2l6ZW9m
-KHN0cnVjdCBkY19zdGF0ZSksCi0JCQkJCSAgIEdGUF9LRVJORUwpOworCXN0cnVjdCBkY19zdGF0
-ZSAqY29udGV4dCA9IGt2emFsbG9jKHNpemVvZihzdHJ1Y3QgZGNfc3RhdGUpLAorCQkJCQkgICAg
-R0ZQX0tFUk5FTCk7CiAKIAlpZiAoIWNvbnRleHQpCiAJCXJldHVybiBOVUxMOwpAQCAtMTIwNCwx
-MSArMTIwNSwxMSBAQCBzdHJ1Y3QgZGNfc3RhdGUgKmRjX2NyZWF0ZV9zdGF0ZShzdHJ1Y3QgZGMg
-KmRjKQogc3RydWN0IGRjX3N0YXRlICpkY19jb3B5X3N0YXRlKHN0cnVjdCBkY19zdGF0ZSAqc3Jj
-X2N0eCkKIHsKIAlpbnQgaSwgajsKLQlzdHJ1Y3QgZGNfc3RhdGUgKm5ld19jdHggPSBrbWVtZHVw
-KHNyY19jdHgsCi0JCQlzaXplb2Yoc3RydWN0IGRjX3N0YXRlKSwgR0ZQX0tFUk5FTCk7CisJc3Ry
-dWN0IGRjX3N0YXRlICpuZXdfY3R4ID0ga3ZtYWxsb2Moc2l6ZW9mKHN0cnVjdCBkY19zdGF0ZSks
-IEdGUF9LRVJORUwpOwogCiAJaWYgKCFuZXdfY3R4KQogCQlyZXR1cm4gTlVMTDsKKwltZW1jcHko
-bmV3X2N0eCwgc3JjX2N0eCwgc2l6ZW9mKHN0cnVjdCBkY19zdGF0ZSkpOwogCiAJZm9yIChpID0g
-MDsgaSA8IE1BWF9QSVBFUzsgaSsrKSB7CiAJCQlzdHJ1Y3QgcGlwZV9jdHggKmN1cl9waXBlID0g
-Jm5ld19jdHgtPnJlc19jdHgucGlwZV9jdHhbaV07CkBAIC0xMjQyLDcgKzEyNDMsNyBAQCBzdGF0
-aWMgdm9pZCBkY19zdGF0ZV9mcmVlKHN0cnVjdCBrcmVmICprcmVmKQogewogCXN0cnVjdCBkY19z
-dGF0ZSAqY29udGV4dCA9IGNvbnRhaW5lcl9vZihrcmVmLCBzdHJ1Y3QgZGNfc3RhdGUsIHJlZmNv
-dW50KTsKIAlkY19yZXNvdXJjZV9zdGF0ZV9kZXN0cnVjdChjb250ZXh0KTsKLQlrZnJlZShjb250
-ZXh0KTsKKwlrdmZyZWUoY29udGV4dCk7CiB9CiAKIHZvaWQgZGNfcmVsZWFzZV9zdGF0ZShzdHJ1
-Y3QgZGNfc3RhdGUgKmNvbnRleHQpCi0tIAoyLjIwLjEKCg==
---0000000000002e1b8c058f9bd85e--
