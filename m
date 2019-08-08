@@ -2,137 +2,109 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B8FBC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 21:16:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 796A2C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 21:19:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24DD6214C6
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 21:16:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B5392166E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 21:19:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="2GxiWSnw"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="yVsG+UlR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390428AbfHHVQj (ORCPT
+        id S2390191AbfHHVS7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 17:16:39 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:45730 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725535AbfHHVQi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 17:16:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=dNED9cOAaf+dopo9LgD6lakNRzaOyizkrYw7uOWZ5Xo=; b=2GxiWSnwdFRRFSkcT2NQQ41kOP
-        ZUif8Th7z7VjXSCY/+xkhOmbzqIxwsHvzRBDesmOaZn3Y2Isw8iGLNWlrapPp0jir9gAL9bUd55ST
-        X9K0bm8frnrWU2LT/cDF1kHeqjJnRI3y8quzNAp6ZKHCGQNRpbK8OXiNvqjmKahnB0ms=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hvplt-00069g-Ik; Thu, 08 Aug 2019 23:16:29 +0200
-Date:   Thu, 8 Aug 2019 23:16:29 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Tao Ren <taoren@fb.com>
-Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Samuel Mendoza-Jonas <sam@mendozajonas.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
-        William Kennington <wak@google.com>,
-        Joel Stanley <joel@jms.id.au>
-Subject: Re: [PATCH net-next] net/ncsi: allow to customize BMC MAC Address
- offset
-Message-ID: <20190808211629.GQ27917@lunn.ch>
-References: <20190807002118.164360-1-taoren@fb.com>
- <20190807112518.644a21a2@cakuba.netronome.com>
- <20190807184143.GE26047@lunn.ch>
- <806a76a8-229a-7f24-33c7-2cf2094f3436@fb.com>
- <20190808133209.GB32706@lunn.ch>
- <77762b10-b8e7-b8a4-3fc0-e901707a1d54@fb.com>
+        Thu, 8 Aug 2019 17:18:59 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:43259 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728020AbfHHVS7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 17:18:59 -0400
+Received: by mail-pg1-f194.google.com with SMTP id r26so8751120pgl.10
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 14:18:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=vwaIEfS1FAZl0r/hGbrJVWd7+Oh098wPSMDgW6Rp92k=;
+        b=yVsG+UlRQMtUxQczwRr+tGNXUpgb5JuGIZ9Hfs14iduOWR4txHlXpZxwWUtDpHEICM
+         0MfbhxhGzwCJYtqk5hFjfeD7f431qxlD05AvrQtalNSTduDiqTXEzg9UGnLeuDvICMHA
+         amsVyPWg0D2y/C8YKdGFbHSa+zooR1bVvWW6htALbJFbSc6XmTp7bdV5UlaBBO7BnVib
+         Dw7ZdWKCoPW25wvAOjSzgAlahac71LGMqXF2ZndJhZxbF2KxWBMg6tW8x75BCxGLlWci
+         qvlzvbM2kfW6rShIo0jnFME52p2//RFT4yhtncWCGiQOIjt9x5fflNeS7IbAM10OkQf+
+         hL4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=vwaIEfS1FAZl0r/hGbrJVWd7+Oh098wPSMDgW6Rp92k=;
+        b=gJFmYAmlfsIAX0v7/0uvm4hcBjQ7PjUg6bmt0m/ogZrWOPjP0l2xMSibyHsfoBaML/
+         qV0VPUyazxYhe3Nq+oTpkrJDFRBkRmkTeN38amzySAnsPXzSZCuhyKc64UkCyl8S/VW1
+         xEQHEYd1HrMDO9iVE5WsVPBMmPig/AFlC9YlTjAiwJV7YL5XFtdL9vW5N/taWO7jnjsM
+         xnSvveanw6B1oSARWH7LjE7limjQLtHVCpFb6dTur1BV564aplQgsKNZDcKqfBR7OMJq
+         94/CYc/rlIVU+uPgc3UehCLjmqaUVoV43R99Rc22zb1xkIGOMgfUw4wCEH6cHeNNAhQL
+         ErVA==
+X-Gm-Message-State: APjAAAXzdOIMQMAk+0SmTFLxswbXUJphXyiZC3b36JGAsI87aMpO8PLZ
+        qrL+OKNfgrWpba2n9FdnEjekIw==
+X-Google-Smtp-Source: APXvYqyy4N7d0TMp06csDZZcZzQG4KzhyFYusr8lIgCgQLzqwyDXrb7dFwjXWCDy+6BWpdpaIBvNUw==
+X-Received: by 2002:aa7:8705:: with SMTP id b5mr18439724pfo.27.1565299138091;
+        Thu, 08 Aug 2019 14:18:58 -0700 (PDT)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.gmail.com with ESMTPSA id s5sm79644816pfm.97.2019.08.08.14.18.57
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 08 Aug 2019 14:18:57 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>, sboyd@kernel.org,
+        jbrunet@baylibre.com
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 0/4] clk: meson: g12a: add support for DVFS
+In-Reply-To: <20190731084019.8451-1-narmstrong@baylibre.com>
+References: <20190731084019.8451-1-narmstrong@baylibre.com>
+Date:   Thu, 08 Aug 2019 14:18:56 -0700
+Message-ID: <7hzhkje4ov.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <77762b10-b8e7-b8a4-3fc0-e901707a1d54@fb.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 07:02:54PM +0000, Tao Ren wrote:
-> Hi Andrew,
-> 
-> On 8/8/19 6:32 AM, Andrew Lunn wrote:
-> >> Let me prepare patch v2 using device tree. I'm not sure if standard
-> >> "mac-address" fits this situation because all we need is an offset
-> >> (integer) and BMC MAC is calculated by adding the offset to NIC's
-> >> MAC address. Anyways, let me work out v2 patch we can discuss more
-> >> then.
-> > 
-> > Hi Tao
-> > 
-> > I don't know BMC terminology. By NICs MAC address, you are referring
-> > to the hosts MAC address? The MAC address the big CPU is using for its
-> > interface?  Where does this NIC get its MAC address from? If the BMCs
-> > bootloader has access to it, it can set the mac-address property in
-> > the device tree.
-> 
-> Sorry for the confusion and let me clarify more:
-> 
+Neil Armstrong <narmstrong@baylibre.com> writes:
 
-> The NIC here refers to the Network controller which provide network
-> connectivity for both BMC (via NC-SI) and Host (for example, via
-> PCIe).
-> 
+> The G12A/G12B Socs embeds a specific clock tree for each CPU cluster :
+> cpu_clk / cpub_clk
+> |   \- cpu_clk_dyn
+> |      |  \- cpu_clk_premux0
+> |      |        |- cpu_clk_postmux0
+> |      |        |    |- cpu_clk_dyn0_div
+> |      |        |    \- xtal/fclk_div2/fclk_div3
+> |      |        \- xtal/fclk_div2/fclk_div3
+> |      \- cpu_clk_premux1
+> |            |- cpu_clk_postmux1
+> |            |    |- cpu_clk_dyn1_div
+> |            |    \- xtal/fclk_div2/fclk_div3
+> |            \- xtal/fclk_div2/fclk_div3
+> \ sys_pll / sys1_pll
+>
+> This patchset adds notifiers on cpu_clk / cpub_clk, cpu_clk_dyn,
+> cpu_clk_premux0 and sys_pll / sys1_pll to permit change frequency of
+> the CPU clock in a safe way as recommended by the vendor Documentation
+> and reference code.
+>
+> This patchset :
+> - introduces needed core and meson clk changes
+> - adds the clock notifiers
+>
+> Dependencies:
+> - None
 
-> On Facebook Yamp BMC, BMC sends NCSI_OEM_GET_MAC command (as an
-> ethernet packet) to the Network Controller while bringing up eth0,
-> and the (Broadcom) Network Controller replies with the Base MAC
-> Address reserved for the platform. As for Yamp, Base-MAC and
-> Base-MAC+1 are used by Host (big CPU) and Base-MAC+2 are assigned to
-> BMC. In my opinion, Base MAC and MAC address assignments are
-> controlled by Network Controller, which is transparent to both BMC
-> and Host.
+nit: this doesn't apply to v5.3-rc, but appears to apply on
+clk-meson/v5.4/drivers, so it appears to be dependent on the cleanups
+from Alex.
 
-Hi Tao
-
-I've not done any work in the BMC field, so thanks for explaining
-this.
-
-In a typical embedded system, each network interface is assigned a MAC
-address by the vendor. But here, things are different. The BMC SoC
-network interface has not been assigned a MAC address, it needs to ask
-the network controller for its MAC address, and then do some magical
-transformation on the answer to derive a MAC address for
-itself. Correct?
-
-It seems like a better design would of been, the BMC sends a
-NCSI_OEM_GET_BMC_MAC and the answer it gets back is the MAC address
-the BMC should use. No magic involved. But i guess it is too late to
-do that now.
-
-> I'm not sure if I understand your suggestion correctly: do you mean
-> we should move the logic (GET_MAC from Network Controller, adding
-> offset and configuring BMC MAC) from kernel to boot loader?
-
-In general, the kernel is generic. It probably boots on any ARM system
-which is has the needed modules for. The bootloader is often much more
-specific. It might not be fully platform specific, but it will be at
-least specific to the general family of BMC SoCs. If you consider the
-combination of the BMC bootloader and the device tree blob, you have
-something specific to the platform. This magical transformation of
-adding 2 seems to be very platform specific. So having this magic in
-the bootloader+DT seems like the best place to put it.
-
-However, how you pass the resulting MAC address to the kernel should
-be as generic as possible. The DT "mac-address" property is very
-generic, many MAC drivers understand it. Using it also allows for
-vendors which actually assign a MAC address to the BMC to pass it to
-the BMC, avoiding all this NCSI_OEM_GET_MAC handshake. Having an API
-which just passing '2' is not generic at all.
-
-    Andrew
+Kevin
