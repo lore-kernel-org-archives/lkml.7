@@ -2,132 +2,94 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE53C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A3DAC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:58:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C2FF217D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:57:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD0342186A
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:58:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="GsnP6R7C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731703AbfHHJ54 (ORCPT
+        id S1732110AbfHHJ6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 05:57:56 -0400
-Received: from mga05.intel.com ([192.55.52.43]:50931 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728289AbfHHJ54 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 05:57:56 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Aug 2019 02:57:55 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,360,1559545200"; 
-   d="scan'208";a="193122144"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 08 Aug 2019 02:57:51 -0700
-Received: by lahna (sSMTP sendmail emulation); Thu, 08 Aug 2019 12:57:51 +0300
-Date:   Thu, 8 Aug 2019 12:57:51 +0300
-From:   'Mika Westerberg' <mika.westerberg@linux.intel.com>
-To:     David Laight <David.Laight@aculab.com>
-Cc:     'Yehezkel Bernat' <yehezkelshb@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        Mario Limonciello <Mario.Limonciello@dell.com>,
-        Anthony Wong <anthony.wong@canonical.com>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
-Subject: Re: [PATCH 3/8] thunderbolt: Use 32-bit writes when writing ring
- producer/consumer
-Message-ID: <20190808095751.GA2716@lahna.fi.intel.com>
-References: <20190705095800.43534-1-mika.westerberg@linux.intel.com>
- <20190705095800.43534-4-mika.westerberg@linux.intel.com>
- <CA+CmpXtMBEtyh77fcrhX2BU8esiit56CWfZmey6LYEHZVUxf8A@mail.gmail.com>
- <0f3a47d8133945b181d623ea6e0d53f2@AcuMS.aculab.com>
- <20190807161359.GT2716@lahna.fi.intel.com>
- <79616dd147864771b0b74901e77f2607@AcuMS.aculab.com>
- <20190807163629.GV2716@lahna.fi.intel.com>
- <91a579eb2f614739a9a1177bdde5513e@AcuMS.aculab.com>
-MIME-Version: 1.0
+        Thu, 8 Aug 2019 05:58:09 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.54]:25376 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728289AbfHHJ6J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 05:58:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1565258287;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=1/f0k/H0a7K76vFEtcQN8S5GHIKWdhY5l6OaGUoHAj8=;
+        b=GsnP6R7CEXEcVT/yM/KXuWTk0p0HvHOJeecDbCnQwgVJsTEpXuaCTgnA8vwr43oG/Y
+        x0H2A+IfBWhQl5xkuntFSVVqtrhFzERiqtwi4CqemGRB5B5bLGgFrP2SotX7Nsp8au3B
+        rI3FKEFsOEzavmRjzITFzNkHf6Podvac7+9xNuW4/1qBJoe3TyVn2ZDDtyW0FFPMfR0e
+        JHdVlJ2NLZIZG2r6RVGPOFeMr8jW+lVVrmF+CNOLAiQIEsTHOgXACGCpp+ULt0WUvh3I
+        /E6VoqF2YQFbDU/rEKHw6IN1AYxawYFM2h30LwIoFCFeMj4T2wb+da74u0vviShHgA7i
+        bZ2A==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/vrwDCv1g=="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 44.24 DYNA|AUTH)
+        with ESMTPSA id j00b6dv789vvaoi
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Thu, 8 Aug 2019 11:57:57 +0200 (CEST)
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <91a579eb2f614739a9a1177bdde5513e@AcuMS.aculab.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [Bug] v5.3-rc3: arm: omap5: omapdss: omap_fbdev_init fails with lpae config and reports dma_mask error
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20190808072431.GA29852@lst.de>
+Date:   Thu, 8 Aug 2019 11:57:56 +0200
+Cc:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Roger Quadros <rogerq@ti.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kernel@pyra-handheld.com,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <7B845956-A04D-40D8-A433-5812576A72E8@goldelico.com>
+References: <14A6738F-75C6-4479-8B15-FD7395EFC55E@goldelico.com> <DF565339-14BC-411D-9301-5651FA601733@goldelico.com> <20190808072431.GA29852@lst.de>
+To:     Christoph Hellwig <hch@lst.de>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 07, 2019 at 04:41:30PM +0000, David Laight wrote:
-> From: 'Mika Westerberg' [mailto:mika.westerberg@linux.intel.com]
-> > Sent: 07 August 2019 17:36
-> > 
-> > On Wed, Aug 07, 2019 at 04:22:26PM +0000, David Laight wrote:
-> > > From: Mika Westerberg
-> > > > Sent: 07 August 2019 17:14
-> > > > To: David Laight
-> > > >
-> > > > On Fri, Jul 05, 2019 at 04:04:19PM +0000, David Laight wrote:
-> > > > > > Really a matter of taste, but maybe you want to consider having a single
-> > > > > > function, with a 3rd parameter, bool is_tx.
-> > > > > > The calls here will be unified to:
-> > > > > >         ring_iowrite(ring, ring->head, ring->is_tx);
-> > > > > > (No condition is needed here).
-> > > > > >
-> > > > > > The implementation uses the new parameter to decide which part of the register
-> > > > > > to mask, reducing the code duplication (in my eyes):
-> > > > > >
-> > > > > >         val = ioread32(ring_desc_base(ring) + 8);
-> > > > > >         if (is_tx) {
-> > > > > >                 val &= 0x0000ffff;
-> > > > > >                 val |= value << 16;
-> > > > > >         } else {
-> > > > > >                 val &= 0xffff0000;
-> > > > > >                 val |= value;
-> > > > > >         }
-> > > > > >         iowrite32(val, ring_desc_base(ring) + 8);
-> > > > > >
-> > > > > > I'm not sure if it improves the readability or makes it worse. Your call.
-> > > > >
-> > > > > Gah, that is all horrid beyond belief.
-> > > > > If a 32bit write is valid then the hardware must not be updating
-> > > > > the other 16 bits.
-> > > > > In which case the driver knows what they should be.
-> > > > > So it can do a single 32bit write of the required value.
-> > > >
-> > > > I'm not entirely sure I understand what you say above. Can you shed some
-> > > > light on this by a concrete example how it should look like? :-)
-> > >
-> > > The driver must know both the tx and rx ring values, so:
-> > > 	iowrite32(tx_val << 16 | rx_val, ring_desc_base(ring) + 8);
-> > >
-> > 
-> > I see. However, prod or cons side gets updated by the hardware as it
-> > processes buffers and other side is only updated by the driver. I'm not
-> > sure the above works here.
-> 
-> If the hardware updates the other half of the 32bit word it doesn't ever work.
->
-> In that case you must do 16bit writes.
-> If the hardware is ignoring the byte-enables it is broken and unusable.
+Hi Christoph,
 
-It is quite usable as I'm running this code on real hardware ;-) but
-32-bit access is needed.
+> Am 08.08.2019 um 09:24 schrieb Christoph Hellwig <hch@lst.de>:
+>=20
+> Hi Nikolaus,
+>=20
+> please try the patch below:
+>=20
+> diff --git a/drivers/gpu/drm/omapdrm/omap_fbdev.c =
+b/drivers/gpu/drm/omapdrm/omap_fbdev.c
+> index 561c4812545b..2c8abf07e617 100644
+> --- a/drivers/gpu/drm/omapdrm/omap_fbdev.c
+> +++ b/drivers/gpu/drm/omapdrm/omap_fbdev.c
+> @@ -232,6 +232,8 @@ void omap_fbdev_init(struct drm_device *dev)
+> 	if (!priv->num_pipes)
+> 		return;
+>=20
+> +	dma_coerce_mask_and_coherent(dev->dev, DMA_BIT_MASK(32));
+> +
+> 	fbdev =3D kzalloc(sizeof(*fbdev), GFP_KERNEL);
+> 	if (!fbdev)
+> 		goto fail;
 
-The low or high 16-bits are read-only depending on the ring (Tx or Rx)
-and updated by the hardware. It ignores writes to that part so we could
-do this for Tx ring:
+Yes, it fixes the issue!
 
-	iowrite32(prod << 16, ring_desc_base(ring) + 8);
-
-and this for Rx ring:
-
-	iowrite32(cons, ring_desc_base(ring) + 8);
-
-Do you see any issues with this?
+BR and thanks,
+Nikolaus=
