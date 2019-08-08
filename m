@@ -2,102 +2,120 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 638C7C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F199BC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D790217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:03:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1C41217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:04:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404046AbfHHQDX (ORCPT
+        id S2404064AbfHHQEX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 12:03:23 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:33378
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732698AbfHHQDW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 12:03:22 -0400
-X-IronPort-AV: E=Sophos;i="5.64,362,1559512800"; 
-   d="scan'208";a="315951951"
-Received: from portablejulia.rsr.lip6.fr ([132.227.76.63])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Aug 2019 18:03:20 +0200
-Date:   Thu, 8 Aug 2019 18:03:19 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: julia@hadrien
-To:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org
-cc:     linux-kernel@vger.kernel.org, kbuild-all@01.org
-Subject: drivers/media/pci/cx23885/cx23885-video.c:636:24-44: duplicated
- argument to & or | (fwd)
-Message-ID: <alpine.DEB.2.21.1908081802240.2995@hadrien>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 8 Aug 2019 12:04:23 -0400
+Received: from foss.arm.com ([217.140.110.172]:35484 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732845AbfHHQEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 12:04:23 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6ACEB1684;
+        Thu,  8 Aug 2019 09:04:22 -0700 (PDT)
+Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 169B13F706;
+        Thu,  8 Aug 2019 09:04:20 -0700 (PDT)
+Date:   Thu, 8 Aug 2019 17:04:14 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        LAKML <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 6/6] PSCI: cpuidle: Refactor CPU suspend power_state
+ parameter handling
+Message-ID: <20190808160414.GA19233@e107155-lin>
+References: <20190722153745.32446-1-lorenzo.pieralisi@arm.com>
+ <20190722153745.32446-7-lorenzo.pieralisi@arm.com>
+ <20190808125516.GA2246@e107155-lin>
+ <CAPDyKFqHHwq=3XhSH_=uu5QoFkP3VYJ+2h7ENG5DNs-YzM6bNQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFqHHwq=3XhSH_=uu5QoFkP3VYJ+2h7ENG5DNs-YzM6bNQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-V4L2_CAP_VBI_CAPTURE appears twice on lines 635-638.
+On Thu, Aug 08, 2019 at 05:29:24PM +0200, Ulf Hansson wrote:
+> On Thu, 8 Aug 2019 at 14:55, Sudeep Holla <sudeep.holla@arm.com> wrote:
+> >
+> > On Mon, Jul 22, 2019 at 04:37:45PM +0100, Lorenzo Pieralisi wrote:
+> > > Current PSCI code handles idle state entry through the
+> > > psci_cpu_suspend_enter() API, that takes an idle state index as a
+> > > parameter and convert the index into a previously initialized
+> > > power_state parameter before calling the PSCI.CPU_SUSPEND() with it.
+> > >
+> > > This is unwieldly, since it forces the PSCI firmware layer to keep track
+> > > of power_state parameter for every idle state so that the
+> > > index->power_state conversion can be made in the PSCI firmware layer
+> > > instead of the CPUidle driver implementations.
+> > >
+> > > Move the power_state handling out of drivers/firmware/psci
+> > > into the respective ACPI/DT PSCI CPUidle backends and convert
+> > > the psci_cpu_suspend_enter() API to get the power_state
+> > > parameter as input, which makes it closer to its firmware
+> > > interface PSCI.CPU_SUSPEND() API.
+> > >
+> > > A notable side effect is that the PSCI ACPI/DT CPUidle backends
+> > > now can directly handle (and if needed update) power_state
+> > > parameters before handing them over to the PSCI firmware
+> > > interface to trigger PSCI.CPU_SUSPEND() calls.
+> > >
+> > > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > > Cc: Will Deacon <will@kernel.org>
+> > > Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> > > Cc: Sudeep Holla <sudeep.holla@arm.com>
+> >
+> > Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+> >
+> > > +static __init int psci_cpu_init_idle(unsigned int cpu)
+> > > +{
+> > > +     struct device_node *cpu_node;
+> > > +     int ret;
+> > > +
+> > > +     /*
+> > > +      * If the PSCI cpu_suspend function hook has not been initialized
+> > > +      * idle states must not be enabled, so bail out
+> > > +      */
+> > > +     if (!psci_ops.cpu_suspend)
+> > > +             return -EOPNOTSUPP;
+> > > +
+> > > +     cpu_node = of_get_cpu_node(cpu, NULL);
+> >
+> > [nit] You could use of_cpu_device_node_get in linux/of_device.h as
+> > it may avoid parsing if used later during the boot(i.e. after
+> > cpu->of_node is populated). I think there's another instance in
+> > psci_idle_init_cpu
+>
+> Good idea!
+>
+> However, as $subject patch more or less just moves code from the
+> current psci firmware directory into cpuidle, perhaps it's better to
+> defer improvements to be made on top?
+>
 
-julia
+I am fine either way. But since cpuidle-psci.c is new file introduced
+in this series, we can have it as part of the original patch. I leave it
+to Lorenzo to decide :)
 
----------- Forwarded message ----------
-Date: Thu, 8 Aug 2019 22:11:43 +0800
-From: kbuild test robot <lkp@intel.com>
-To: kbuild@01.org
-Cc: Julia Lawall <julia.lawall@lip6.fr>
-Subject: drivers/media/pci/cx23885/cx23885-video.c:636:24-44: duplicated
-    argument to & or |
-
-CC: kbuild-all@01.org
-CC: linux-kernel@vger.kernel.org
-TO: Hans Verkuil <hverkuil@xs4all.nl>
-CC: Mauro Carvalho Chehab <mchehab@kernel.org>
-CC: linux-media@vger.kernel.org
-
-tree:   https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   ecb095bff5d4b8711a81968625b3b4a235d3e477
-commit: 2161536516edcc0be31109eb1284939119e7ba6d media: media/pci: set device_caps in struct video_device
-date:   6 weeks ago
-:::::: branch date: 16 hours ago
-:::::: commit date: 6 weeks ago
-
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Julia Lawall <julia.lawall@lip6.fr>
-
->> drivers/media/pci/cx23885/cx23885-video.c:636:24-44: duplicated argument to & or |
-
-git remote add linus https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux.git
-git remote update linus
-git checkout 2161536516edcc0be31109eb1284939119e7ba6d
-vim +636 drivers/media/pci/cx23885/cx23885-video.c
-
-e47f30b1403335 drivers/media/video/cx23885/cx23885-video.c Steven Toth           2008-01-10  625
-e47f30b1403335 drivers/media/video/cx23885/cx23885-video.c Steven Toth           2008-01-10  626  static int vidioc_querycap(struct file *file, void  *priv,
-e47f30b1403335 drivers/media/video/cx23885/cx23885-video.c Steven Toth           2008-01-10  627  	struct v4l2_capability *cap)
-e47f30b1403335 drivers/media/video/cx23885/cx23885-video.c Steven Toth           2008-01-10  628  {
-568f44a18e9b63 drivers/media/pci/cx23885/cx23885-video.c   Hans Verkuil          2014-04-23  629  	struct cx23885_dev *dev = video_drvdata(file);
-e47f30b1403335 drivers/media/video/cx23885/cx23885-video.c Steven Toth           2008-01-10  630
-cc1e6315e83db0 drivers/media/pci/cx23885/cx23885-video.c   Mauro Carvalho Chehab 2018-09-10  631  	strscpy(cap->driver, "cx23885", sizeof(cap->driver));
-c0decac19da390 drivers/media/pci/cx23885/cx23885-video.c   Mauro Carvalho Chehab 2018-09-10  632  	strscpy(cap->card, cx23885_boards[dev->board].name,
-e47f30b1403335 drivers/media/video/cx23885/cx23885-video.c Steven Toth           2008-01-10  633  		sizeof(cap->card));
-e47f30b1403335 drivers/media/video/cx23885/cx23885-video.c Steven Toth           2008-01-10  634  	sprintf(cap->bus_info, "PCIe:%s", pci_name(dev->pci));
-2161536516edcc drivers/media/pci/cx23885/cx23885-video.c   Hans Verkuil          2019-06-17  635  	cap->capabilities = V4L2_CAP_READWRITE | V4L2_CAP_STREAMING |
-2161536516edcc drivers/media/pci/cx23885/cx23885-video.c   Hans Verkuil          2019-06-17 @636  			    V4L2_CAP_AUDIO | V4L2_CAP_VBI_CAPTURE |
-2161536516edcc drivers/media/pci/cx23885/cx23885-video.c   Hans Verkuil          2019-06-17  637  			    V4L2_CAP_VIDEO_CAPTURE | V4L2_CAP_VBI_CAPTURE |
-2161536516edcc drivers/media/pci/cx23885/cx23885-video.c   Hans Verkuil          2019-06-17  638  			    V4L2_CAP_DEVICE_CAPS;
-0f3bf3dc1ca394 drivers/media/pci/cx23885/cx23885-video.c   Hans Verkuil          2014-06-27  639  	if (dev->tuner_type != TUNER_ABSENT)
-2161536516edcc drivers/media/pci/cx23885/cx23885-video.c   Hans Verkuil          2019-06-17  640  		cap->capabilities |= V4L2_CAP_TUNER;
-e47f30b1403335 drivers/media/video/cx23885/cx23885-video.c Steven Toth           2008-01-10  641  	return 0;
-e47f30b1403335 drivers/media/video/cx23885/cx23885-video.c Steven Toth           2008-01-10  642  }
-e47f30b1403335 drivers/media/video/cx23885/cx23885-video.c Steven Toth           2008-01-10  643
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+--
+Regards,
+Sudeep
