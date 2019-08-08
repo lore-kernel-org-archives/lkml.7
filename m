@@ -2,149 +2,97 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00300C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:32:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15146C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:33:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C93F52184E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:32:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE385217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:33:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="snfI2scr"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="MTtE1i2w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731457AbfHHGcZ (ORCPT
+        id S1731465AbfHHGdK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 02:32:25 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:50087 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725817AbfHHGcX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 02:32:23 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x786W2rN3013649
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 7 Aug 2019 23:32:02 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x786W2rN3013649
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1565245923;
-        bh=VswMpHWj24ULQnUBPrNnj+j7MNQWdOP+qKX2/mk60D0=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=snfI2scraBP8d+ZCZQLgOfGvDiGnPQOl5xvoQ7enyUAjelJgfiM7pmwQABJG5qRB0
-         CUAUrzu2uiL+JRjEh36KTe9xNtIhFlewO4SmrlN6BmbcIqOUnNn6HhcTa+f/56Q3gR
-         ElBCl87MvNtmDK5xm2Amw6y9w6QvPoe2RJcetpBB7h6FoqIoPW/HHL0ypwwVWKFFGH
-         UVLeEY33j4/MyvN/BnTijMlREaoY2v0qv3BHHN9i2dx6UzWwbEUxI2qB0p/Hw+UnhM
-         LSaJKNK2Ya2K2YI3R5rsJm9tlbBF023uipSHtXM3oJ0xJUMgp3wsDrOETnmrNfJsJM
-         SCZPWeItg9pCQ==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x786W2XH3013646;
-        Wed, 7 Aug 2019 23:32:02 -0700
-Date:   Wed, 7 Aug 2019 23:32:02 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Nick Desaulniers <tipbot@zytor.com>
-Message-ID: <tip-b059f801a937d164e03b33c1848bb3dca67c0b04@git.kernel.org>
-Cc:     hpa@zytor.com, peterz@infradead.org, tglx@linutronix.de,
-        mingo@kernel.org, ndesaulniers@google.com,
-        linux-kernel@vger.kernel.org, vaibhavrustagi@google.com
-Reply-To: vaibhavrustagi@google.com, linux-kernel@vger.kernel.org,
-          ndesaulniers@google.com, mingo@kernel.org, tglx@linutronix.de,
-          peterz@infradead.org, hpa@zytor.com
-In-Reply-To: <20190807221539.94583-2-ndesaulniers@google.com>
-References: <20190807221539.94583-2-ndesaulniers@google.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/urgent] x86/purgatory: Use CFLAGS_REMOVE rather than reset
- KBUILD_CFLAGS
-Git-Commit-ID: b059f801a937d164e03b33c1848bb3dca67c0b04
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Thu, 8 Aug 2019 02:33:10 -0400
+Received: from ozlabs.org ([203.11.71.1]:35653 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725817AbfHHGdK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 02:33:10 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 463z8M47sqz9sMr;
+        Thu,  8 Aug 2019 16:33:07 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1565245987;
+        bh=Apx5eCJWWpnCX9eZCPmjBd+hU8WQjYshhIE53owQm7c=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=MTtE1i2w0IQyzrrMXS//6q73d5fcQtk+IntnIzN9JtCO+gt050s9VA90X8753g0ws
+         jtzBripsXwYG3PtOncrTGdGyHfC1ZUtmfoDiUjZJhdjyhDtoSEn3shOB9SRh3KE+FO
+         Hy7ct0t6xlGrY4y3RG892towchQo6+o8kMy7r4nMQt67K2g1jtrzgPjIWr/Q4JeXbr
+         IJv3gdqyVIfBYJWGlI85MjoCKlNMjszQxjQkMWBJZI0VXTTwVGNLeesVl1rySMo7c0
+         PIPpOpZeJfD5ZtTsMBKvYt8iDwFYFhVBXD7mfAnNBDyI/cWuGFXl2EIlTkbdyDEAYs
+         S8QWNdUwd73tw==
+Date:   Thu, 8 Aug 2019 16:33:06 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: Please revert c4b230ac34ce for today's linux-next
+Message-ID: <20190808163306.092be501@canb.auug.org.au>
+In-Reply-To: <CAK7LNARd_RVY9K6ZG0rvamuPizj8E2hfN35UROv++KYekDUcyw@mail.gmail.com>
+References: <CAK7LNARd_RVY9K6ZG0rvamuPizj8E2hfN35UROv++KYekDUcyw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Content-Type: multipart/signed; boundary="Sig_//SA7_h0x+DqX.IYYG8rb82g";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  b059f801a937d164e03b33c1848bb3dca67c0b04
-Gitweb:     https://git.kernel.org/tip/b059f801a937d164e03b33c1848bb3dca67c0b04
-Author:     Nick Desaulniers <ndesaulniers@google.com>
-AuthorDate: Wed, 7 Aug 2019 15:15:33 -0700
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Thu, 8 Aug 2019 08:25:53 +0200
+--Sig_//SA7_h0x+DqX.IYYG8rb82g
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-x86/purgatory: Use CFLAGS_REMOVE rather than reset KBUILD_CFLAGS
+Hi Masahiro,
 
-KBUILD_CFLAGS is very carefully built up in the top level Makefile,
-particularly when cross compiling or using different build tools.
-Resetting KBUILD_CFLAGS via := assignment is an antipattern.
+On Thu, 8 Aug 2019 15:20:11 +0900 Masahiro Yamada <yamada.masahiro@socionex=
+t.com> wrote:
+>
+> I queued the following commit in linux-kbuild/fixes,
+> but it turned out to produce false-positive warnings for single-targets.
+>=20
+> commit c4b230ac34ce64bdd4006f5e0e9be880b8a4d0a5 (origin/fixes)
+> Author: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Date:   Tue Aug 6 19:03:23 2019 +0900
+>=20
+>     kbuild: show hint if subdir-y/m is used to visit module Makefile
+>=20
+>=20
+> If it is not too late, could you revert it for today's linux-next ?
 
-The comment above the reset mentions that -pg is problematic.  Other
-Makefiles use `CFLAGS_REMOVE_file.o = $(CC_FLAGS_FTRACE)` when
-CONFIG_FUNCTION_TRACER is set. Prefer that pattern to wiping out all of
-the important KBUILD_CFLAGS then manually having to re-add them. Seems
-also that __stack_chk_fail references are generated when using
-CONFIG_STACKPROTECTOR or CONFIG_STACKPROTECTOR_STRONG.
+Just caught me in time :-)  I have reverted it.
+--=20
+Cheers,
+Stephen Rothwell
 
-Fixes: 8fc5b4d4121c ("purgatory: core purgatory functionality")
-Reported-by: Vaibhav Rustagi <vaibhavrustagi@google.com>
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Vaibhav Rustagi <vaibhavrustagi@google.com>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190807221539.94583-2-ndesaulniers@google.com
+--Sig_//SA7_h0x+DqX.IYYG8rb82g
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
----
- arch/x86/purgatory/Makefile | 33 ++++++++++++++++++++++++++++-----
- 1 file changed, 28 insertions(+), 5 deletions(-)
+-----BEGIN PGP SIGNATURE-----
 
-diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
-index 91ef244026d2..8901a1f89cf5 100644
---- a/arch/x86/purgatory/Makefile
-+++ b/arch/x86/purgatory/Makefile
-@@ -20,11 +20,34 @@ KCOV_INSTRUMENT := n
- 
- # Default KBUILD_CFLAGS can have -pg option set when FTRACE is enabled. That
- # in turn leaves some undefined symbols like __fentry__ in purgatory and not
--# sure how to relocate those. Like kexec-tools, use custom flags.
--
--KBUILD_CFLAGS := -fno-strict-aliasing -Wall -Wstrict-prototypes -fno-zero-initialized-in-bss -fno-builtin -ffreestanding -c -Os -mcmodel=large
--KBUILD_CFLAGS += -m$(BITS)
--KBUILD_CFLAGS += $(call cc-option,-fno-PIE)
-+# sure how to relocate those.
-+ifdef CONFIG_FUNCTION_TRACER
-+CFLAGS_REMOVE_sha256.o		+= $(CC_FLAGS_FTRACE)
-+CFLAGS_REMOVE_purgatory.o	+= $(CC_FLAGS_FTRACE)
-+CFLAGS_REMOVE_string.o		+= $(CC_FLAGS_FTRACE)
-+CFLAGS_REMOVE_kexec-purgatory.o	+= $(CC_FLAGS_FTRACE)
-+endif
-+
-+ifdef CONFIG_STACKPROTECTOR
-+CFLAGS_REMOVE_sha256.o		+= -fstack-protector
-+CFLAGS_REMOVE_purgatory.o	+= -fstack-protector
-+CFLAGS_REMOVE_string.o		+= -fstack-protector
-+CFLAGS_REMOVE_kexec-purgatory.o	+= -fstack-protector
-+endif
-+
-+ifdef CONFIG_STACKPROTECTOR_STRONG
-+CFLAGS_REMOVE_sha256.o		+= -fstack-protector-strong
-+CFLAGS_REMOVE_purgatory.o	+= -fstack-protector-strong
-+CFLAGS_REMOVE_string.o		+= -fstack-protector-strong
-+CFLAGS_REMOVE_kexec-purgatory.o	+= -fstack-protector-strong
-+endif
-+
-+ifdef CONFIG_RETPOLINE
-+CFLAGS_REMOVE_sha256.o		+= $(RETPOLINE_CFLAGS)
-+CFLAGS_REMOVE_purgatory.o	+= $(RETPOLINE_CFLAGS)
-+CFLAGS_REMOVE_string.o		+= $(RETPOLINE_CFLAGS)
-+CFLAGS_REMOVE_kexec-purgatory.o	+= $(RETPOLINE_CFLAGS)
-+endif
- 
- $(obj)/purgatory.ro: $(PURGATORY_OBJS) FORCE
- 		$(call if_changed,ld)
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1LwiIACgkQAVBC80lX
+0Gw2oggAmHMB1ZGOc+iVe0wZVTwn5RBfQwHk6c8n/wYU5Pz5LK8/MKqTva3oIZP5
+SKznZhKzed4izocTFEzJZzpo6imb08oGMj4fP4ErCr+rlDWox+Z2Pzy6E13F+pzQ
+0ql1L+7AUVoDF2cWsu+7iciISISq5eELHV8Q2G12RPyNdtHVvZloDzzwKAg2iSAU
+td4bwyy3YCm+HOE9w47RR9BTMHp27hyWLpWNfEBwi+I+Na9+rNbhZOvpNTA9tx6C
+kTP9zd4tCfRhxv/JSPdgONYHIEux/9Ms82XnyGOM8/WrpFL3DMqiB/K1HhiW2Jw8
+F+DLhLXfDu9obYa+VOKJyJnWDg6q7w==
+=OfTz
+-----END PGP SIGNATURE-----
+
+--Sig_//SA7_h0x+DqX.IYYG8rb82g--
