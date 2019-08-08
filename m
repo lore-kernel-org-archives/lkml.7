@@ -8,132 +8,134 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AFC4C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 00:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D204C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 00:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A8E8217D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 00:09:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A8A4217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 00:09:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uoIhUEuU"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DvXSmx2j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389854AbfHHAJQ (ORCPT
+        id S2389859AbfHHAJX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 20:09:16 -0400
-Received: from mail-pl1-f201.google.com ([209.85.214.201]:43005 "EHLO
-        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389661AbfHHAII (ORCPT
+        Wed, 7 Aug 2019 20:09:23 -0400
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:41404 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389631AbfHHAIB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 20:08:08 -0400
-Received: by mail-pl1-f201.google.com with SMTP id x1so11876476plm.9
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 17:08:08 -0700 (PDT)
+        Wed, 7 Aug 2019 20:08:01 -0400
+Received: by mail-pf1-f202.google.com with SMTP id q14so57849698pff.8
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 17:08:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=dLYiAr9hqix+w29Ej2S74ESH31+c2YOxCuX5zuQe/lQ=;
-        b=uoIhUEuUfzQjSKJS+7uyEhLItO8fBOuPoBctqNF+mfgcDy7bzRQ/Ft8tv1RdYxWlG5
-         O9VtfxsYBr9KFdaoYsSLwqG3su5Ai7ft9709ro41wWX7OECg9+0mq1iCzMtAk2w3QzTd
-         PES0/NZaoYskLxwaDyNKcSJSorIVrYW+92TbMjkbiQ5e/PzR8Zxe9gR2enjSQy93dh7x
-         5HehUUasr80bkgmESKnM35g6OsTHCyRtdHy2JweVD2RpPwMs0M5cwUS8+Tc1y6CYbvfQ
-         6Y9dbhAZ160BONDi0650a8BqYkdAauasMbBal2w8FlJccfSV5+ZhICF4CCQb1XAGqk6P
-         xsxw==
+        bh=HYGYby6crp40dCLBmhgwCvdnfCZZwxit6AHkXOrrVgc=;
+        b=DvXSmx2jhj8bHAJU1Vj7/I5jwoEGF0urfO5A+cbejgX5sC7HbhpImArmayvvTCoUPr
+         8CDNZqiGvkgLyIndEE2bIpdXQKsGV+IzSKMADXRvJbxdCmJzcyduT0fzwY8j8HBIeFYI
+         RvCnY4x/jhRG2B8teqWoFjV0y6rMXouhVAx17hc4EKRJbm8hEKs0tT4SIXVmOEIhLC6v
+         yTB2E30QNR055+D8sK0S4jRtnpv5pwNKN8is+YqcKHE+YQ5p6TGqyjJFMBfSxBa2sK7x
+         Ief6Shz1b+MwK7E52j+iUBDuJQ+EkUpEeD1pTIXnzK8lUWVelsBBWtqaYI9MAeyOe4cr
+         Ms6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=dLYiAr9hqix+w29Ej2S74ESH31+c2YOxCuX5zuQe/lQ=;
-        b=W4UaBkMOeanbFoW3Q0fMXqekJACPCN6COu72FtTzm+zisoay/wLbzwQnFHBwcfbbfv
-         HexbtArYrq5g81yav7JNKx0cDx6veGllzpbpR6g8/DloPKD+qoTGXgXXeAP55ZuPqzzB
-         SxTxPnuN44WFOjUeA+48HQnD5vqAdwV3SWVc+pH5KVWnfiyv6mFofli5qzU/XpcZYQmh
-         HeuZ4zdLYZ+qXuGW5CibZKqWITfPogyidIqwDD0c0un3oJv2nwZpCArKrVN5HIL/t3F9
-         xD5zJXBSa7IA49OTxuPqHg0NI+XLigdV8GVb4wJOrbSi851SyHSxDwmArxTmbqUSj7Gt
-         Km9w==
-X-Gm-Message-State: APjAAAXkSQmmGBkaGJlXJyQJIxpqer0YH4XR31+XHmvB7Y+bud2P+afr
-        +w61goY8NcIKEIHY8vI53/wZNlCgXdwmhpWF4GkEIg==
-X-Google-Smtp-Source: APXvYqwV8ViolvK5jUMBxX5yiZQcS59+TOG07qwamPrZF9QUUHyiXc3zw/mVoKRuk9XOMpVI0iba9BA2jYXvxHdxWki25Q==
-X-Received: by 2002:a65:51c1:: with SMTP id i1mr10127643pgq.417.1565222887874;
- Wed, 07 Aug 2019 17:08:07 -0700 (PDT)
-Date:   Wed,  7 Aug 2019 17:07:09 -0700
+        bh=HYGYby6crp40dCLBmhgwCvdnfCZZwxit6AHkXOrrVgc=;
+        b=LiaOPEP125f9cI/MuXVubqNFJ8dAfRXnmm9nWhp1Ow9bmqDDiMjWpt2d/HObWkl3jc
+         oyiwOW43zW5n+nGb0/xpFZtlZsWH3gtUJ79+BH2QbvPOdVDP3tUSO7RAzMyDEZFxx45Z
+         SQCw6mVi5FX1G4xizlQrK1l2BpJxqOHyFrdIEZ2jtbFloqkEEQICiyG61QwXx+gZhVvy
+         GyCL6KEQLYfbgjVyV+Vuhu9RVhS/tmorTuo3p6n3xv3H7GmaNFbRqIM1B7PFkB8FJtnL
+         /sVMLxG0YKSkovlJWErKb4iJ04MxkW6EaaFOE4nr8BFKFIm6vPzLDvxcsP3T2GNXZRGe
+         PR8A==
+X-Gm-Message-State: APjAAAVqFUxCq0L4cIzlGKWsBB3QoZ71dnP+3lU2Vb6NsyDAYEibKzmr
+        5uVR7albgZeBfTf3bHUjhSOvtmqiIF6C7kv+QjSOeQ==
+X-Google-Smtp-Source: APXvYqz6bYJHQ5sZ5xj2/KrBurgwQPt+m6iwr0ff7wAAGDBEDLTiqXvJ5XCsr10Ya8UVbvXfbW2QSyIz4Kb0tRI9b5DEzA==
+X-Received: by 2002:a63:1b56:: with SMTP id b22mr9895821pgm.265.1565222880106;
+ Wed, 07 Aug 2019 17:08:00 -0700 (PDT)
+Date:   Wed,  7 Aug 2019 17:07:06 -0700
 In-Reply-To: <20190808000721.124691-1-matthewgarrett@google.com>
-Message-Id: <20190808000721.124691-18-matthewgarrett@google.com>
+Message-Id: <20190808000721.124691-15-matthewgarrett@google.com>
 Mime-Version: 1.0
 References: <20190808000721.124691-1-matthewgarrett@google.com>
 X-Mailer: git-send-email 2.22.0.770.g0f2c4a37fd-goog
-Subject: [PATCH V38 17/29] Prohibit PCMCIA CIS storage when the kernel is
- locked down
+Subject: [PATCH V38 14/29] ACPI: Limit access to custom_method when the kernel
+ is locked down
 From:   Matthew Garrett <matthewgarrett@google.com>
 To:     jmorris@namei.org
 Cc:     linux-security-module@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        David Howells <dhowells@redhat.com>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
         Matthew Garrett <mjg59@google.com>,
-        Kees Cook <keescook@chromium.org>
+        David Howells <dhowells@redhat.com>,
+        Kees Cook <keescook@chromium.org>, linux-acpi@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Matthew Garrett <mjg59@srcf.ucam.org>
 
-Prohibit replacement of the PCMCIA Card Information Structure when the
-kernel is locked down.
+custom_method effectively allows arbitrary access to system memory, making
+it possible for an attacker to circumvent restrictions on module loading.
+Disable it if the kernel is locked down.
 
-Suggested-by: Dominik Brodowski <linux@dominikbrodowski.net>
-Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Matthew Garrett <mjg59@google.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
 Reviewed-by: Kees Cook <keescook@chromium.org>
+cc: linux-acpi@vger.kernel.org
 ---
- drivers/pcmcia/cistpl.c      | 5 +++++
+ drivers/acpi/custom_method.c | 6 ++++++
  include/linux/security.h     | 1 +
  security/lockdown/lockdown.c | 1 +
- 3 files changed, 7 insertions(+)
+ 3 files changed, 8 insertions(+)
 
-diff --git a/drivers/pcmcia/cistpl.c b/drivers/pcmcia/cistpl.c
-index abd029945cc8..629359fe3513 100644
---- a/drivers/pcmcia/cistpl.c
-+++ b/drivers/pcmcia/cistpl.c
-@@ -21,6 +21,7 @@
- #include <linux/pci.h>
- #include <linux/ioport.h>
- #include <linux/io.h>
+diff --git a/drivers/acpi/custom_method.c b/drivers/acpi/custom_method.c
+index b2ef4c2ec955..7031307becd7 100644
+--- a/drivers/acpi/custom_method.c
++++ b/drivers/acpi/custom_method.c
+@@ -9,6 +9,7 @@
+ #include <linux/uaccess.h>
+ #include <linux/debugfs.h>
+ #include <linux/acpi.h>
 +#include <linux/security.h>
- #include <asm/byteorder.h>
- #include <asm/unaligned.h>
  
-@@ -1575,6 +1576,10 @@ static ssize_t pccard_store_cis(struct file *filp, struct kobject *kobj,
- 	struct pcmcia_socket *s;
- 	int error;
+ #include "internal.h"
  
-+	error = security_locked_down(LOCKDOWN_PCMCIA_CIS);
-+	if (error)
-+		return error;
+@@ -29,6 +30,11 @@ static ssize_t cm_write(struct file *file, const char __user * user_buf,
+ 
+ 	struct acpi_table_header table;
+ 	acpi_status status;
++	int ret;
 +
- 	s = to_socket(container_of(kobj, struct device, kobj));
++	ret = security_locked_down(LOCKDOWN_ACPI_TABLES);
++	if (ret)
++		return ret;
  
- 	if (off)
+ 	if (!(*ppos)) {
+ 		/* parse the table header to get the table length */
 diff --git a/include/linux/security.h b/include/linux/security.h
-index 1c32522b3c5a..3773ad09b831 100644
+index 155ff026eca4..1c32522b3c5a 100644
 --- a/include/linux/security.h
 +++ b/include/linux/security.h
-@@ -111,6 +111,7 @@ enum lockdown_reason {
+@@ -110,6 +110,7 @@ enum lockdown_reason {
+ 	LOCKDOWN_PCI_ACCESS,
  	LOCKDOWN_IOPORT,
  	LOCKDOWN_MSR,
- 	LOCKDOWN_ACPI_TABLES,
-+	LOCKDOWN_PCMCIA_CIS,
++	LOCKDOWN_ACPI_TABLES,
  	LOCKDOWN_INTEGRITY_MAX,
  	LOCKDOWN_CONFIDENTIALITY_MAX,
  };
 diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
-index ecb51b1a5c03..22482e1b9a77 100644
+index d99c0bee739d..ecb51b1a5c03 100644
 --- a/security/lockdown/lockdown.c
 +++ b/security/lockdown/lockdown.c
-@@ -26,6 +26,7 @@ static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
+@@ -25,6 +25,7 @@ static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
+ 	[LOCKDOWN_PCI_ACCESS] = "direct PCI access",
  	[LOCKDOWN_IOPORT] = "raw io port access",
  	[LOCKDOWN_MSR] = "raw MSR access",
- 	[LOCKDOWN_ACPI_TABLES] = "modifying ACPI tables",
-+	[LOCKDOWN_PCMCIA_CIS] = "direct PCMCIA CIS storage",
++	[LOCKDOWN_ACPI_TABLES] = "modifying ACPI tables",
  	[LOCKDOWN_INTEGRITY_MAX] = "integrity",
  	[LOCKDOWN_CONFIDENTIALITY_MAX] = "confidentiality",
  };
