@@ -6,74 +6,128 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5691C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:55:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE53C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:57:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 766B621479
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:55:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C2FF217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:57:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731885AbfHHJzN (ORCPT
+        id S1731703AbfHHJ54 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 05:55:13 -0400
-Received: from verein.lst.de ([213.95.11.211]:45154 "EHLO verein.lst.de"
+        Thu, 8 Aug 2019 05:57:56 -0400
+Received: from mga05.intel.com ([192.55.52.43]:50931 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731550AbfHHJzN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 05:55:13 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 2AB2168AFE; Thu,  8 Aug 2019 11:55:07 +0200 (CEST)
-Date:   Thu, 8 Aug 2019 11:55:06 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     Christoph Hellwig <hch@lst.de>, Rob Clark <robdclark@chromium.org>,
-        Rob Clark <robdclark@gmail.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] drm: add cache support for arm64
-Message-ID: <20190808095506.GA32621@lst.de>
-References: <20190805211451.20176-1-robdclark@gmail.com> <20190806084821.GA17129@lst.de> <CAJs_Fx6eh1w7c=crMoD5XyEOMzP6orLhqUewErE51cPGYmObBQ@mail.gmail.com> <20190806155044.GC25050@lst.de> <CAJs_Fx6uztwDy2PqRy3Tc9p12k8r_ovS2tAcsMV6HqnAp=Ggug@mail.gmail.com> <20190807062545.GF6627@lst.de> <CAKMK7uH1O3q8VUftikipGH6ACPoT-8tbV1Zwo-8WL=wUHiqsoQ@mail.gmail.com>
+        id S1728289AbfHHJ54 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 05:57:56 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Aug 2019 02:57:55 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,360,1559545200"; 
+   d="scan'208";a="193122144"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 08 Aug 2019 02:57:51 -0700
+Received: by lahna (sSMTP sendmail emulation); Thu, 08 Aug 2019 12:57:51 +0300
+Date:   Thu, 8 Aug 2019 12:57:51 +0300
+From:   'Mika Westerberg' <mika.westerberg@linux.intel.com>
+To:     David Laight <David.Laight@aculab.com>
+Cc:     'Yehezkel Bernat' <yehezkelshb@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
+        Mario Limonciello <Mario.Limonciello@dell.com>,
+        Anthony Wong <anthony.wong@canonical.com>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
+Subject: Re: [PATCH 3/8] thunderbolt: Use 32-bit writes when writing ring
+ producer/consumer
+Message-ID: <20190808095751.GA2716@lahna.fi.intel.com>
+References: <20190705095800.43534-1-mika.westerberg@linux.intel.com>
+ <20190705095800.43534-4-mika.westerberg@linux.intel.com>
+ <CA+CmpXtMBEtyh77fcrhX2BU8esiit56CWfZmey6LYEHZVUxf8A@mail.gmail.com>
+ <0f3a47d8133945b181d623ea6e0d53f2@AcuMS.aculab.com>
+ <20190807161359.GT2716@lahna.fi.intel.com>
+ <79616dd147864771b0b74901e77f2607@AcuMS.aculab.com>
+ <20190807163629.GV2716@lahna.fi.intel.com>
+ <91a579eb2f614739a9a1177bdde5513e@AcuMS.aculab.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKMK7uH1O3q8VUftikipGH6ACPoT-8tbV1Zwo-8WL=wUHiqsoQ@mail.gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <91a579eb2f614739a9a1177bdde5513e@AcuMS.aculab.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 07, 2019 at 10:48:56AM +0200, Daniel Vetter wrote:
-> >    other drm drivers how do they guarantee addressability without an
-> >    iommu?)
+On Wed, Aug 07, 2019 at 04:41:30PM +0000, David Laight wrote:
+> From: 'Mika Westerberg' [mailto:mika.westerberg@linux.intel.com]
+> > Sent: 07 August 2019 17:36
+> > 
+> > On Wed, Aug 07, 2019 at 04:22:26PM +0000, David Laight wrote:
+> > > From: Mika Westerberg
+> > > > Sent: 07 August 2019 17:14
+> > > > To: David Laight
+> > > >
+> > > > On Fri, Jul 05, 2019 at 04:04:19PM +0000, David Laight wrote:
+> > > > > > Really a matter of taste, but maybe you want to consider having a single
+> > > > > > function, with a 3rd parameter, bool is_tx.
+> > > > > > The calls here will be unified to:
+> > > > > >         ring_iowrite(ring, ring->head, ring->is_tx);
+> > > > > > (No condition is needed here).
+> > > > > >
+> > > > > > The implementation uses the new parameter to decide which part of the register
+> > > > > > to mask, reducing the code duplication (in my eyes):
+> > > > > >
+> > > > > >         val = ioread32(ring_desc_base(ring) + 8);
+> > > > > >         if (is_tx) {
+> > > > > >                 val &= 0x0000ffff;
+> > > > > >                 val |= value << 16;
+> > > > > >         } else {
+> > > > > >                 val &= 0xffff0000;
+> > > > > >                 val |= value;
+> > > > > >         }
+> > > > > >         iowrite32(val, ring_desc_base(ring) + 8);
+> > > > > >
+> > > > > > I'm not sure if it improves the readability or makes it worse. Your call.
+> > > > >
+> > > > > Gah, that is all horrid beyond belief.
+> > > > > If a 32bit write is valid then the hardware must not be updating
+> > > > > the other 16 bits.
+> > > > > In which case the driver knows what they should be.
+> > > > > So it can do a single 32bit write of the required value.
+> > > >
+> > > > I'm not entirely sure I understand what you say above. Can you shed some
+> > > > light on this by a concrete example how it should look like? :-)
+> > >
+> > > The driver must know both the tx and rx ring values, so:
+> > > 	iowrite32(tx_val << 16 | rx_val, ring_desc_base(ring) + 8);
+> > >
+> > 
+> > I see. However, prod or cons side gets updated by the hardware as it
+> > processes buffers and other side is only updated by the driver. I'm not
+> > sure the above works here.
 > 
-> We use shmem to get at swappable pages. We generally just assume that
-> the gpu can get at those pages, but things fall apart in fun ways:
-> - some setups somehow inject bounce buffers. Some drivers just give
-> up, others try to allocate a pool of pages with dma_alloc_coherent.
-> - some devices are misdesigned and can't access as much as the cpu. We
-> allocate using GFP_DMA32 to fix that.
+> If the hardware updates the other half of the 32bit word it doesn't ever work.
+>
+> In that case you must do 16bit writes.
+> If the hardware is ignoring the byte-enables it is broken and unusable.
 
-Well, for shmem you can't really call allocators directly, right?
+It is quite usable as I'm running this code on real hardware ;-) but
+32-bit access is needed.
 
-One thing I have in my pipeline is a dma_alloc_pages API that allocates
-pages that are guaranteed to be addressably by the device or otherwise
-fail.  But that doesn't really help with the shmem fs.
+The low or high 16-bits are read-only depending on the ring (Tx or Rx)
+and updated by the hardware. It ignores writes to that part so we could
+do this for Tx ring:
 
-> Also modern gpu apis pretty much assume you can malloc() and then use
-> that directly with the gpu.
+	iowrite32(prod << 16, ring_desc_base(ring) + 8);
 
-Which is fine as long as the GPU itself supports full 64-bit addressing
-(or always sits behind an iommu), and the platform doesn't impose
-addressing limit, which unfortunately some that are shipped right now
-still do :(
+and this for Rx ring:
 
-But userspace malloc really means dma_map_* anyway, so not really
-relevant for memory allocations.
+	iowrite32(cons, ring_desc_base(ring) + 8);
+
+Do you see any issues with this?
