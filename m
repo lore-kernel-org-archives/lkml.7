@@ -2,198 +2,102 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8715AC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:01:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 638C7C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F430217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:01:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UTQWvhiK"
+	by mail.kernel.org (Postfix) with ESMTP id 3D790217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:03:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404166AbfHHQBF (ORCPT
+        id S2404046AbfHHQDX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 12:01:05 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58392 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403889AbfHHQBE (ORCPT
+        Thu, 8 Aug 2019 12:03:23 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:33378
+        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732698AbfHHQDW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 12:01:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=ess16cPXbwlPMdQlB/xmV3Dd8N7gPnmmYAJHlhdUYyM=; b=UTQWvhiKzWRKxbwjgLpwDsLgDC
-        mdER2aY5BkjLhbcVD3e7Qn2ZWj8gN9YmhyDOIZXRFaHCOkJqMssGtkgQ6B8/VLEOBirIPphRjIcLq
-        tiS8OHDJu2YKmix5fXR8g6vL8uomNeUbO+m/Tuexlii7PxDRAESee02EcVtFUNHSxWkdaEdrhQGi0
-        K5xHqvMOWsAMX02BpcU/2C2e4OOxLMReujU0ZBGCPxq2purguCPYY2w0mLbdpOqV00tdd+PU8ms3b
-        Vw350H8QjPAmpD/uQ1hyaDUCyLtIOKSt1smGUSm651G33drEHzlSC2shYAz/YSDZpgctQ+GzJKuMh
-        Wzl07JIA==;
-Received: from [195.167.85.94] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hvkqW-0006wr-CU; Thu, 08 Aug 2019 16:00:57 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     iommu@lists.linux-foundation.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Vladimir Murzin <vladimir.murzin@arm.com>,
-        Takashi Iwai <tiwai@suse.de>, Helge Deller <deller@gmx.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Michal Simek <monstr@monstr.eu>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-m68k@lists.linux-m68k.org, linux-parisc@vger.kernel.org,
-        linux-sh@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linuxppc-dev@lists.ozlabs.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 8/8] dma-mapping: remove CONFIG_ARCH_NO_COHERENT_DMA_MMAP
-Date:   Thu,  8 Aug 2019 19:00:05 +0300
-Message-Id: <20190808160005.10325-9-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190808160005.10325-1-hch@lst.de>
-References: <20190808160005.10325-1-hch@lst.de>
+        Thu, 8 Aug 2019 12:03:22 -0400
+X-IronPort-AV: E=Sophos;i="5.64,362,1559512800"; 
+   d="scan'208";a="315951951"
+Received: from portablejulia.rsr.lip6.fr ([132.227.76.63])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Aug 2019 18:03:20 +0200
+Date:   Thu, 8 Aug 2019 18:03:19 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@lip6.fr>
+X-X-Sender: julia@hadrien
+To:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org
+cc:     linux-kernel@vger.kernel.org, kbuild-all@01.org
+Subject: drivers/media/pci/cx23885/cx23885-video.c:636:24-44: duplicated
+ argument to & or | (fwd)
+Message-ID: <alpine.DEB.2.21.1908081802240.2995@hadrien>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CONFIG_ARCH_NO_COHERENT_DMA_MMAP is now functionally identical to
-!CONFIG_MMU, so remove the separate symbol.  The only difference is that
-arm did not set it for !CONFIG_MMU, but arm uses a separate dma mapping
-implementation including its own mmap method, which is handled by moving
-the CONFIG_MMU check in dma_can_mmap so that is only applies to the
-dma-direct case, just as the other ifdefs for it.
+V4L2_CAP_VBI_CAPTURE appears twice on lines 635-638.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+julia
+
+---------- Forwarded message ----------
+Date: Thu, 8 Aug 2019 22:11:43 +0800
+From: kbuild test robot <lkp@intel.com>
+To: kbuild@01.org
+Cc: Julia Lawall <julia.lawall@lip6.fr>
+Subject: drivers/media/pci/cx23885/cx23885-video.c:636:24-44: duplicated
+    argument to & or |
+
+CC: kbuild-all@01.org
+CC: linux-kernel@vger.kernel.org
+TO: Hans Verkuil <hverkuil@xs4all.nl>
+CC: Mauro Carvalho Chehab <mchehab@kernel.org>
+CC: linux-media@vger.kernel.org
+
+tree:   https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   ecb095bff5d4b8711a81968625b3b4a235d3e477
+commit: 2161536516edcc0be31109eb1284939119e7ba6d media: media/pci: set device_caps in struct video_device
+date:   6 weeks ago
+:::::: branch date: 16 hours ago
+:::::: commit date: 6 weeks ago
+
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: Julia Lawall <julia.lawall@lip6.fr>
+
+>> drivers/media/pci/cx23885/cx23885-video.c:636:24-44: duplicated argument to & or |
+
+git remote add linus https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux.git
+git remote update linus
+git checkout 2161536516edcc0be31109eb1284939119e7ba6d
+vim +636 drivers/media/pci/cx23885/cx23885-video.c
+
+e47f30b1403335 drivers/media/video/cx23885/cx23885-video.c Steven Toth           2008-01-10  625
+e47f30b1403335 drivers/media/video/cx23885/cx23885-video.c Steven Toth           2008-01-10  626  static int vidioc_querycap(struct file *file, void  *priv,
+e47f30b1403335 drivers/media/video/cx23885/cx23885-video.c Steven Toth           2008-01-10  627  	struct v4l2_capability *cap)
+e47f30b1403335 drivers/media/video/cx23885/cx23885-video.c Steven Toth           2008-01-10  628  {
+568f44a18e9b63 drivers/media/pci/cx23885/cx23885-video.c   Hans Verkuil          2014-04-23  629  	struct cx23885_dev *dev = video_drvdata(file);
+e47f30b1403335 drivers/media/video/cx23885/cx23885-video.c Steven Toth           2008-01-10  630
+cc1e6315e83db0 drivers/media/pci/cx23885/cx23885-video.c   Mauro Carvalho Chehab 2018-09-10  631  	strscpy(cap->driver, "cx23885", sizeof(cap->driver));
+c0decac19da390 drivers/media/pci/cx23885/cx23885-video.c   Mauro Carvalho Chehab 2018-09-10  632  	strscpy(cap->card, cx23885_boards[dev->board].name,
+e47f30b1403335 drivers/media/video/cx23885/cx23885-video.c Steven Toth           2008-01-10  633  		sizeof(cap->card));
+e47f30b1403335 drivers/media/video/cx23885/cx23885-video.c Steven Toth           2008-01-10  634  	sprintf(cap->bus_info, "PCIe:%s", pci_name(dev->pci));
+2161536516edcc drivers/media/pci/cx23885/cx23885-video.c   Hans Verkuil          2019-06-17  635  	cap->capabilities = V4L2_CAP_READWRITE | V4L2_CAP_STREAMING |
+2161536516edcc drivers/media/pci/cx23885/cx23885-video.c   Hans Verkuil          2019-06-17 @636  			    V4L2_CAP_AUDIO | V4L2_CAP_VBI_CAPTURE |
+2161536516edcc drivers/media/pci/cx23885/cx23885-video.c   Hans Verkuil          2019-06-17  637  			    V4L2_CAP_VIDEO_CAPTURE | V4L2_CAP_VBI_CAPTURE |
+2161536516edcc drivers/media/pci/cx23885/cx23885-video.c   Hans Verkuil          2019-06-17  638  			    V4L2_CAP_DEVICE_CAPS;
+0f3bf3dc1ca394 drivers/media/pci/cx23885/cx23885-video.c   Hans Verkuil          2014-06-27  639  	if (dev->tuner_type != TUNER_ABSENT)
+2161536516edcc drivers/media/pci/cx23885/cx23885-video.c   Hans Verkuil          2019-06-17  640  		cap->capabilities |= V4L2_CAP_TUNER;
+e47f30b1403335 drivers/media/video/cx23885/cx23885-video.c Steven Toth           2008-01-10  641  	return 0;
+e47f30b1403335 drivers/media/video/cx23885/cx23885-video.c Steven Toth           2008-01-10  642  }
+e47f30b1403335 drivers/media/video/cx23885/cx23885-video.c Steven Toth           2008-01-10  643
+
 ---
- arch/Kconfig            |  3 ---
- arch/c6x/Kconfig        |  1 -
- arch/m68k/Kconfig       |  1 -
- arch/microblaze/Kconfig |  1 -
- arch/sh/Kconfig         |  1 -
- arch/xtensa/Kconfig     |  1 -
- kernel/dma/mapping.c    | 12 +++++-------
- 7 files changed, 5 insertions(+), 15 deletions(-)
-
-diff --git a/arch/Kconfig b/arch/Kconfig
-index a7b57dd42c26..ec2834206d08 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -790,9 +790,6 @@ config COMPAT_32BIT_TIME
- 	  This is relevant on all 32-bit architectures, and 64-bit architectures
- 	  as part of compat syscall handling.
- 
--config ARCH_NO_COHERENT_DMA_MMAP
--	bool
--
- config ARCH_NO_PREEMPT
- 	bool
- 
-diff --git a/arch/c6x/Kconfig b/arch/c6x/Kconfig
-index b4fb61c83494..e65e8d82442a 100644
---- a/arch/c6x/Kconfig
-+++ b/arch/c6x/Kconfig
-@@ -20,7 +20,6 @@ config C6X
- 	select OF_EARLY_FLATTREE
- 	select GENERIC_CLOCKEVENTS
- 	select MODULES_USE_ELF_RELA
--	select ARCH_NO_COHERENT_DMA_MMAP
- 	select MMU_GATHER_NO_RANGE if MMU
- 
- config MMU
-diff --git a/arch/m68k/Kconfig b/arch/m68k/Kconfig
-index c518d695c376..614b355ae338 100644
---- a/arch/m68k/Kconfig
-+++ b/arch/m68k/Kconfig
-@@ -8,7 +8,6 @@ config M68K
- 	select ARCH_HAS_DMA_PREP_COHERENT if HAS_DMA && MMU && !COLDFIRE
- 	select ARCH_HAS_SYNC_DMA_FOR_DEVICE if HAS_DMA
- 	select ARCH_MIGHT_HAVE_PC_PARPORT if ISA
--	select ARCH_NO_COHERENT_DMA_MMAP if !MMU
- 	select ARCH_NO_PREEMPT if !COLDFIRE
- 	select BINFMT_FLAT_ARGVP_ENVP_ON_STACK
- 	select DMA_DIRECT_REMAP if HAS_DMA && MMU && !COLDFIRE
-diff --git a/arch/microblaze/Kconfig b/arch/microblaze/Kconfig
-index d411de05b628..632c9477a0f6 100644
---- a/arch/microblaze/Kconfig
-+++ b/arch/microblaze/Kconfig
-@@ -9,7 +9,6 @@ config MICROBLAZE
- 	select ARCH_HAS_SYNC_DMA_FOR_CPU
- 	select ARCH_HAS_SYNC_DMA_FOR_DEVICE
- 	select ARCH_MIGHT_HAVE_PC_PARPORT
--	select ARCH_NO_COHERENT_DMA_MMAP if !MMU
- 	select ARCH_WANT_IPC_PARSE_VERSION
- 	select BUILDTIME_EXTABLE_SORT
- 	select TIMER_OF
-diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
-index 6b1b5941b618..f356ee674d89 100644
---- a/arch/sh/Kconfig
-+++ b/arch/sh/Kconfig
-@@ -5,7 +5,6 @@ config SUPERH
- 	select ARCH_HAS_PTE_SPECIAL
- 	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
- 	select ARCH_MIGHT_HAVE_PC_PARPORT
--	select ARCH_NO_COHERENT_DMA_MMAP if !MMU
- 	select HAVE_PATA_PLATFORM
- 	select CLKDEV_LOOKUP
- 	select DMA_DECLARE_COHERENT
-diff --git a/arch/xtensa/Kconfig b/arch/xtensa/Kconfig
-index ebc135bda921..70653aed3005 100644
---- a/arch/xtensa/Kconfig
-+++ b/arch/xtensa/Kconfig
-@@ -5,7 +5,6 @@ config XTENSA
- 	select ARCH_HAS_BINFMT_FLAT if !MMU
- 	select ARCH_HAS_SYNC_DMA_FOR_CPU
- 	select ARCH_HAS_SYNC_DMA_FOR_DEVICE
--	select ARCH_NO_COHERENT_DMA_MMAP if !MMU
- 	select ARCH_USE_QUEUED_RWLOCKS
- 	select ARCH_USE_QUEUED_SPINLOCKS
- 	select ARCH_WANT_FRAME_POINTERS
-diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
-index 64d1de59e133..fc17016b0871 100644
---- a/kernel/dma/mapping.c
-+++ b/kernel/dma/mapping.c
-@@ -186,7 +186,7 @@ int dma_common_mmap(struct device *dev, struct vm_area_struct *vma,
- 		void *cpu_addr, dma_addr_t dma_addr, size_t size,
- 		unsigned long attrs)
- {
--#ifndef CONFIG_ARCH_NO_COHERENT_DMA_MMAP
-+#ifdef CONFIG_MMU
- 	unsigned long user_count = vma_pages(vma);
- 	unsigned long count = PAGE_ALIGN(size) >> PAGE_SHIFT;
- 	unsigned long off = vma->vm_pgoff;
-@@ -217,7 +217,7 @@ int dma_common_mmap(struct device *dev, struct vm_area_struct *vma,
- 			user_count << PAGE_SHIFT, vma->vm_page_prot);
- #else
- 	return -ENXIO;
--#endif /* !CONFIG_ARCH_NO_COHERENT_DMA_MMAP */
-+#endif /* CONFIG_MMU */
- }
- 
- /**
-@@ -231,12 +231,10 @@ bool dma_can_mmap(struct device *dev)
- {
- 	const struct dma_map_ops *ops = get_dma_ops(dev);
- 
--	if (IS_ENABLED(CONFIG_ARCH_NO_COHERENT_DMA_MMAP))
--		return false;
--
- 	if (dma_is_direct(ops)) {
--		return dev_is_dma_coherent(dev) ||
--			IS_ENABLED(CONFIG_ARCH_HAS_DMA_COHERENT_TO_PFN);
-+		return IS_ENABLED(CONFIG_MMU) &&
-+		       (dev_is_dma_coherent(dev) ||
-+			IS_ENABLED(CONFIG_ARCH_HAS_DMA_COHERENT_TO_PFN));
- 	}
- 
- 	return ops->mmap != NULL;
--- 
-2.20.1
-
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
