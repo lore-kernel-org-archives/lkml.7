@@ -6,61 +6,82 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD26FC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7AD5C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:54:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8B32217D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:53:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B39A8217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:54:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389459AbfHHHx5 (ORCPT
+        id S1731716AbfHHHyd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 03:53:57 -0400
-Received: from verein.lst.de ([213.95.11.211]:44228 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725796AbfHHHx4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 03:53:56 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id EB68868B02; Thu,  8 Aug 2019 09:53:51 +0200 (CEST)
-Date:   Thu, 8 Aug 2019 09:53:51 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Rob Clark <robdclark@chromium.org>, Christoph Hellwig <hch@lst.de>,
-        Rob Clark <robdclark@gmail.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] drm: add cache support for arm64
-Message-ID: <20190808075351.GC30308@lst.de>
-References: <20190805211451.20176-1-robdclark@gmail.com> <20190806084821.GA17129@lst.de> <CAJs_Fx6eh1w7c=crMoD5XyEOMzP6orLhqUewErE51cPGYmObBQ@mail.gmail.com> <20190806143457.GF475@lakrids.cambridge.arm.com> <CAJs_Fx4h6SWGmDTLBnV4nmWUFAs_Ge1inxd-dW9aDKgKqmc1eQ@mail.gmail.com> <20190807123807.GD54191@lakrids.cambridge.arm.com>
+        Thu, 8 Aug 2019 03:54:33 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:52472 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725796AbfHHHyd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 03:54:33 -0400
+Received: from p200300ddd71876597e7a91fffec98e25.dip0.t-ipconnect.de ([2003:dd:d718:7659:7e7a:91ff:fec9:8e25])
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hvdFR-0002M4-Ph; Thu, 08 Aug 2019 09:54:09 +0200
+Date:   Thu, 8 Aug 2019 09:54:03 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Christoph Hellwig <hch@infradead.org>
+cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Sebastian Siewior <bigeasy@linutronix.de>,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Julia Cartwright <julia@ni.com>, Jan Kara <jack@suse.cz>,
+        Theodore Tso <tytso@mit.edu>,
+        Matthew Wilcox <willy@infradead.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        Jan Kara <jack@suse.com>, Mark Fasheh <mark@fasheh.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Joel Becker <jlbec@evilplan.org>
+Subject: Re: [patch V2 0/7] fs: Substitute bit-spinlocks for PREEMPT_RT and
+ debugging
+In-Reply-To: <20190808072807.GA25259@infradead.org>
+Message-ID: <alpine.DEB.2.21.1908080953170.2882@nanos.tec.linutronix.de>
+References: <20190801010126.245731659@linutronix.de> <20190802075612.GA20962@infradead.org> <alpine.DEB.2.21.1908021107090.2285@nanos.tec.linutronix.de> <20190806061119.GA17492@infradead.org> <alpine.DEB.2.21.1908080858460.2882@nanos.tec.linutronix.de>
+ <20190808072807.GA25259@infradead.org>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190807123807.GD54191@lakrids.cambridge.arm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 07, 2019 at 01:38:08PM +0100, Mark Rutland wrote:
-> > I *believe* that there are not alias mappings (that I don't control
-> > myself) for pages coming from
-> > shmem_file_setup()/shmem_read_mapping_page()..  
+On Thu, 8 Aug 2019, Christoph Hellwig wrote:
+> On Thu, Aug 08, 2019 at 09:02:47AM +0200, Thomas Gleixner wrote:
+> > > >   mm/slub.c:      bit_spin_lock(PG_locked, &page->flags);
+> > > 
+> > > One caller ouf of a gazillion that spins on the page lock instead of
+> > > sleepign on it like everyone else.  That should not have passed your
+> > > smell test to start with :)
+> > 
+> > I surely stared at it, but that cannot sleep. It's in the middle of a
+> > preempt and interrupt disabled region and used on architectures which do
+> > not support CMPXCHG_DOUBLE and ALIGNED_STRUCT_PAGE ...
 > 
-> AFAICT, that's regular anonymous memory, so there will be a cacheable
-> alias in the linear/direct map.
+> I know.  But the problem here is that normally PG_locked is used together 
+> with wait_on_page_bit_*, but this one instances uses the bit spinlock
+> helpers.  This is the equivalent of calling spin_lock on a struct mutex
+> rather than having a mutex_lock_spin helper for this case.
 
-Yes.  Although shmem is in no way special in that regard.  Even with the
-normal dma_alloc_coherent implementation on arm and arm64 we keep the
-cacheable alias in the direct mapping and just create a new non-cacheable
-one.  The only exception are CMA allocations on 32-bit arm, which do
-get remapped to uncachable in place.
+Yes, I know :(
+
+> Does SLUB work on -rt at all?
+
+It's the only allocator we support with a few tweaks :)
+
+Thanks,
+
+	tglx
