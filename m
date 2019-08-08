@@ -2,123 +2,115 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F6CC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:02:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE522C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D313D2173E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:02:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565272954;
-	bh=rZdFt1nTqsCFfJecz9OvxRQYmusq8d4LHI3dbVndMis=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=MDIvWtw5Ex6qfp6Y2e0tgmBEDRsCOmilmsrX7X0rJ8wsMGqyKV9UEKc/YAQl5OR/F
-	 UuzMmyOT+qJRPAkFXBI+JB0wiuf8zoGXKuuzqFqC20MKQ4fxXbYIexXwx8WJnEcOyt
-	 8ixYD+ulakEvOHhizqzWJFI/CiZU08BcirdtUSSQ=
+	by mail.kernel.org (Postfix) with ESMTP id CA8C42173E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:04:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390080AbfHHOCd (ORCPT
+        id S1732354AbfHHOE5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 10:02:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45572 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732866AbfHHOCd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 10:02:33 -0400
-Received: from localhost.localdomain (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Thu, 8 Aug 2019 10:04:57 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:39196 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725785AbfHHOE5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 10:04:57 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5736B21743;
-        Thu,  8 Aug 2019 14:02:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565272952;
-        bh=rZdFt1nTqsCFfJecz9OvxRQYmusq8d4LHI3dbVndMis=;
-        h=From:To:Cc:Subject:Date:From;
-        b=BvBkOjzTXTL5BAvMofI5yEqRATA7GbCRZ7t0mWQ87KLXqEDmJOD/dFC+dYnTbXyMP
-         Kbxjs5id9rI/Fp0MfBaI/kYag0ExphOHAzsEbpOtpFN0QKWyvdt9gN5jfnQYp3GnsR
-         UUJJvqSeiemyvDqLBBxhE0LI6lwuzkLh/JBiZcXQ=
-From:   Dinh Nguyen <dinguyen@kernel.org>
-To:     devicetree@vger.kernel.org
-Cc:     dinguyen@kernel.org, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, frowand.list@gmail.com, keescook@chromium.org,
-        anton@enomsg.org, ccross@android.com, tony.luck@intel.com
-Subject: [PATCHv3] drivers/amba: add reset control to amba bus probe
-Date:   Thu,  8 Aug 2019 09:01:53 -0500
-Message-Id: <20190808140153.9156-1-dinguyen@kernel.org>
-X-Mailer: git-send-email 2.20.0
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 4CBF128CA63;
+        Thu,  8 Aug 2019 15:04:55 +0100 (BST)
+Date:   Thu, 8 Aug 2019 16:04:52 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Tomer Maimon <tmaimon77@gmail.com>
+Cc:     Vignesh Raghavendra <vigneshr@ti.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-mtd@lists.infradead.org
+Subject: Re: [PATCH v5 2/3] mtd: spi-nor: Move m25p80 code in spi-nor.c
+Message-ID: <20190808160452.1da76beb@collabora.com>
+In-Reply-To: <CAP6Zq1h9Xe9ptGxQpjYwoFaS1sTyd-3EsMTAYwp9e70Cm1czLg@mail.gmail.com>
+References: <20190806051041.3636-1-vigneshr@ti.com>
+        <20190806051041.3636-3-vigneshr@ti.com>
+        <CAP6Zq1h9Xe9ptGxQpjYwoFaS1sTyd-3EsMTAYwp9e70Cm1czLg@mail.gmail.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The primecell controller on some SoCs, i.e. SoCFPGA, is held in reset by
-default. Until recently, the DMA controller was brought out of reset by the
-bootloader(i.e. U-Boot). But a recent change in U-Boot, the peripherals that
-are not used are held in reset and are left to Linux to bring them out of
-reset.
+Hi Tomer,
 
-Add a mechanism for getting the reset property and de-assert the primecell
-module from reset if found. This is a not a hard fail if the reset property
-is not present in the device tree node, so the driver will continue to probe.
+On Thu, 8 Aug 2019 13:05:14 +0300
+Tomer Maimon <tmaimon77@gmail.com> wrote:
 
-Because there are different variants of the controller that may have multiple
-reset signals, the code will find all reset(s) specified and de-assert them.
+> @@ -688,6 +1003,16 @@ static int spi_nor_erase_sector(struct spi_nor *nor,
+> > u32 addr)
+> >         if (nor->erase)
+> >                 return nor->erase(nor, addr);
+> >
+> > +       if (nor->spimem) {
+> > +               struct spi_mem_op op =
+> > +                       SPI_MEM_OP(SPI_MEM_OP_CMD(nor->erase_opcode, 1),
+> > +                                  SPI_MEM_OP_ADDR(nor->addr_width, addr,
+> > 1),
+> > +                                  SPI_MEM_OP_NO_DUMMY,
+> > +                                  SPI_MEM_OP_NO_DATA);
+> > +
+> > +               return spi_mem_exec_op(nor->spimem, &op);
+> > +       }
+> > +
+> >  
+> 
+> static int spi_nor_erase_sector(struct spi_nor *nor, u32 addr)
+> {
+> 
+>	int i;
+> 
+>	if (nor->flags & SNOR_F_S3AN_ADDR_DEFAULT)
+>		addr = spi_nor_s3an_addr_convert(nor, addr);
+> 
+> 	if (nor->erase)
+>		return nor->erase(nor, addr);
+> 
+>	/*
+>	 * Default implementation, if driver doesn't have a specialized HW
+>	 * control
+>	 */
+>	for (i = nor->addr_width - 1; i >= 0; i--) {
+> 		nor->bouncebuf[i] = addr & 0xff;
+>		addr >>= 8;
+>	}
+> 
+>	if (nor->spimem) {
+>		struct spi_mem_op op = 
+>			SPI_MEM_OP(SPI_MEM_OP_CMD(nor->erase_opcode, 1), 
+>			SPI_MEM_OP_NO_ADDR,
+>			SPI_MEM_OP_NO_DUMMY,
+>			SPI_MEM_OP_DATA_OUT(nor->addr_width, nor->bouncebuf, 1));
 
-Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
----
-v3: add a reset_control_put()
-    add error handling for -EPROBE_DEFER
-v2: move reset control to bus code
-    find all reset properties and de-assert them
----
- drivers/amba/bus.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+That's wrong. If you need that, that's probably a spi-mem controller
+driver issue. Address cycles should be passed through the
+spi_mem_op->addr field, not packed with the data cycles.
 
-diff --git a/drivers/amba/bus.c b/drivers/amba/bus.c
-index 100e798a5c82..00e68ea416ca 100644
---- a/drivers/amba/bus.c
-+++ b/drivers/amba/bus.c
-@@ -18,6 +18,7 @@
- #include <linux/limits.h>
- #include <linux/clk/clk-conf.h>
- #include <linux/platform_device.h>
-+#include <linux/reset.h>
- 
- #include <asm/irq.h>
- 
-@@ -401,6 +402,28 @@ static int amba_device_try_add(struct amba_device *dev, struct resource *parent)
- 	ret = amba_get_enable_pclk(dev);
- 	if (ret == 0) {
- 		u32 pid, cid;
-+		int count;
-+		struct reset_control *rstc;
-+
-+		/*
-+		 * Find reset control(s) of the amba bus and de-assert them.
-+		 */
-+		count = reset_control_get_count(&dev->dev);
-+		while (count > 0) {
-+			rstc = of_reset_control_get_shared_by_index(dev->dev.of_node, count - 1);
-+			if (IS_ERR(rstc)) {
-+				if (PTR_ERR(rstc) == -EPROBE_DEFER) {
-+					ret = -EPROBE_DEFER;
-+				} else {
-+					dev_err(&dev->dev, "Can't get amba reset!\n");
-+				}
-+				break;
-+			} else {
-+				reset_control_deassert(rstc);
-+				reset_control_put(rstc);
-+				count--;
-+			}
-+		}
- 
- 		/*
- 		 * Read pid and cid based on size of resource
--- 
-2.20.0
-
+> 
+>		return spi_mem_exec_op(nor->spimem, &op);
+>	}
+> 
+>	return nor->write_reg(nor, nor->erase_opcode, nor->bouncebuf,
+>			      nor->addr_width);
+> }
