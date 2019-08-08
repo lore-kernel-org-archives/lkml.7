@@ -4,40 +4,40 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA90DC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:01:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8715AC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:01:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0C3621881
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:01:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F430217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:01:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Hfu9oWd7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UTQWvhiK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404156AbfHHQBA (ORCPT
+        id S2404166AbfHHQBF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 12:01:00 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:57816 "EHLO
+        Thu, 8 Aug 2019 12:01:05 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58392 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404110AbfHHQA6 (ORCPT
+        with ESMTP id S2403889AbfHHQBE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 12:00:58 -0400
+        Thu, 8 Aug 2019 12:01:04 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=6rX4rzjkHGeK4NcYU1v//qZE74JXI8D/yo/ii/mnYy8=; b=Hfu9oWd7D7VEnMd8lwMF88eh50
-        BrnWu/4N4gMfeeEotmC1C6Y+IfhfJTiB1IC70wAhR5mcLF5yinXgT7iJd4K7dstRQy5m09hks7OrJ
-        zEZ0z/wwBb+A1O/IhjIHd2zh0vKOyma/ny+2FTKGh6YIwANnhvB0/I+c2fS/IjHEGss714co2qvBd
-        lZzHBVxt2ueqjqs7M8VNPgT5WY92kbRli3ckVV8XUh0pvtHqWmcdLDRCdezLIkRi04cOZl/4nSQe/
-        iChZdqMd8IckAsVP9tAkQsCeHzIuGvk+CU7UebYEbFUOa6jlcKLlmUy2IpoztFTi7nPeZYYTmrqvd
-        dvG7o+HA==;
+        bh=ess16cPXbwlPMdQlB/xmV3Dd8N7gPnmmYAJHlhdUYyM=; b=UTQWvhiKzWRKxbwjgLpwDsLgDC
+        mdER2aY5BkjLhbcVD3e7Qn2ZWj8gN9YmhyDOIZXRFaHCOkJqMssGtkgQ6B8/VLEOBirIPphRjIcLq
+        tiS8OHDJu2YKmix5fXR8g6vL8uomNeUbO+m/Tuexlii7PxDRAESee02EcVtFUNHSxWkdaEdrhQGi0
+        K5xHqvMOWsAMX02BpcU/2C2e4OOxLMReujU0ZBGCPxq2purguCPYY2w0mLbdpOqV00tdd+PU8ms3b
+        Vw350H8QjPAmpD/uQ1hyaDUCyLtIOKSt1smGUSm651G33drEHzlSC2shYAz/YSDZpgctQ+GzJKuMh
+        Wzl07JIA==;
 Received: from [195.167.85.94] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hvkqR-0006tx-U6; Thu, 08 Aug 2019 16:00:52 +0000
+        id 1hvkqW-0006wr-CU; Thu, 08 Aug 2019 16:00:57 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     iommu@lists.linux-foundation.org,
         Marek Szyprowski <m.szyprowski@samsung.com>
@@ -50,9 +50,9 @@ Cc:     Vladimir Murzin <vladimir.murzin@arm.com>,
         linux-sh@vger.kernel.org, linux-xtensa@linux-xtensa.org,
         linuxppc-dev@lists.ozlabs.org, x86@kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 7/8] parisc: don't set ARCH_NO_COHERENT_DMA_MMAP
-Date:   Thu,  8 Aug 2019 19:00:04 +0300
-Message-Id: <20190808160005.10325-8-hch@lst.de>
+Subject: [PATCH 8/8] dma-mapping: remove CONFIG_ARCH_NO_COHERENT_DMA_MMAP
+Date:   Thu,  8 Aug 2019 19:00:05 +0300
+Message-Id: <20190808160005.10325-9-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190808160005.10325-1-hch@lst.de>
 References: <20190808160005.10325-1-hch@lst.de>
@@ -64,59 +64,136 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-parisc is the only architecture that sets ARCH_NO_COHERENT_DMA_MMAP
-when an MMU is enabled.  AFAIK this is because parisc CPUs use VIVT
-caches, which means exporting normally cachable memory to userspace is
-relatively dangrous due to cache aliasing.
-
-But normally cachable memory is only allocated by dma_alloc_coherent
-on parisc when using the sba_iommu or ccio_iommu drivers, so just
-remove the .mmap implementation for them so that we don't have to set
-ARCH_NO_COHERENT_DMA_MMAP, which I plan to get rid of.
+CONFIG_ARCH_NO_COHERENT_DMA_MMAP is now functionally identical to
+!CONFIG_MMU, so remove the separate symbol.  The only difference is that
+arm did not set it for !CONFIG_MMU, but arm uses a separate dma mapping
+implementation including its own mmap method, which is handled by moving
+the CONFIG_MMU check in dma_can_mmap so that is only applies to the
+dma-direct case, just as the other ifdefs for it.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- arch/parisc/Kconfig        | 1 -
- drivers/parisc/ccio-dma.c  | 1 -
- drivers/parisc/sba_iommu.c | 1 -
- 3 files changed, 3 deletions(-)
+ arch/Kconfig            |  3 ---
+ arch/c6x/Kconfig        |  1 -
+ arch/m68k/Kconfig       |  1 -
+ arch/microblaze/Kconfig |  1 -
+ arch/sh/Kconfig         |  1 -
+ arch/xtensa/Kconfig     |  1 -
+ kernel/dma/mapping.c    | 12 +++++-------
+ 7 files changed, 5 insertions(+), 15 deletions(-)
 
-diff --git a/arch/parisc/Kconfig b/arch/parisc/Kconfig
-index 6d732e451071..e9dd88b7f81e 100644
---- a/arch/parisc/Kconfig
-+++ b/arch/parisc/Kconfig
-@@ -52,7 +52,6 @@ config PARISC
- 	select GENERIC_SCHED_CLOCK
- 	select HAVE_UNSTABLE_SCHED_CLOCK if SMP
+diff --git a/arch/Kconfig b/arch/Kconfig
+index a7b57dd42c26..ec2834206d08 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -790,9 +790,6 @@ config COMPAT_32BIT_TIME
+ 	  This is relevant on all 32-bit architectures, and 64-bit architectures
+ 	  as part of compat syscall handling.
+ 
+-config ARCH_NO_COHERENT_DMA_MMAP
+-	bool
+-
+ config ARCH_NO_PREEMPT
+ 	bool
+ 
+diff --git a/arch/c6x/Kconfig b/arch/c6x/Kconfig
+index b4fb61c83494..e65e8d82442a 100644
+--- a/arch/c6x/Kconfig
++++ b/arch/c6x/Kconfig
+@@ -20,7 +20,6 @@ config C6X
+ 	select OF_EARLY_FLATTREE
  	select GENERIC_CLOCKEVENTS
+ 	select MODULES_USE_ELF_RELA
 -	select ARCH_NO_COHERENT_DMA_MMAP
- 	select CPU_NO_EFFICIENT_FFS
- 	select NEED_DMA_MAP_STATE
- 	select NEED_SG_DMA_LENGTH
-diff --git a/drivers/parisc/ccio-dma.c b/drivers/parisc/ccio-dma.c
-index 1d7125d29bee..ad290f79983b 100644
---- a/drivers/parisc/ccio-dma.c
-+++ b/drivers/parisc/ccio-dma.c
-@@ -1024,7 +1024,6 @@ static const struct dma_map_ops ccio_ops = {
- 	.unmap_page =		ccio_unmap_page,
- 	.map_sg = 		ccio_map_sg,
- 	.unmap_sg = 		ccio_unmap_sg,
--	.mmap =			dma_common_mmap,
- 	.get_sgtable =		dma_common_get_sgtable,
- };
+ 	select MMU_GATHER_NO_RANGE if MMU
  
-diff --git a/drivers/parisc/sba_iommu.c b/drivers/parisc/sba_iommu.c
-index fa4df65b7e28..ed50502cc65a 100644
---- a/drivers/parisc/sba_iommu.c
-+++ b/drivers/parisc/sba_iommu.c
-@@ -1084,7 +1084,6 @@ static const struct dma_map_ops sba_ops = {
- 	.unmap_page =		sba_unmap_page,
- 	.map_sg =		sba_map_sg,
- 	.unmap_sg =		sba_unmap_sg,
--	.mmap =			dma_common_mmap,
- 	.get_sgtable =		dma_common_get_sgtable,
- };
+ config MMU
+diff --git a/arch/m68k/Kconfig b/arch/m68k/Kconfig
+index c518d695c376..614b355ae338 100644
+--- a/arch/m68k/Kconfig
++++ b/arch/m68k/Kconfig
+@@ -8,7 +8,6 @@ config M68K
+ 	select ARCH_HAS_DMA_PREP_COHERENT if HAS_DMA && MMU && !COLDFIRE
+ 	select ARCH_HAS_SYNC_DMA_FOR_DEVICE if HAS_DMA
+ 	select ARCH_MIGHT_HAVE_PC_PARPORT if ISA
+-	select ARCH_NO_COHERENT_DMA_MMAP if !MMU
+ 	select ARCH_NO_PREEMPT if !COLDFIRE
+ 	select BINFMT_FLAT_ARGVP_ENVP_ON_STACK
+ 	select DMA_DIRECT_REMAP if HAS_DMA && MMU && !COLDFIRE
+diff --git a/arch/microblaze/Kconfig b/arch/microblaze/Kconfig
+index d411de05b628..632c9477a0f6 100644
+--- a/arch/microblaze/Kconfig
++++ b/arch/microblaze/Kconfig
+@@ -9,7 +9,6 @@ config MICROBLAZE
+ 	select ARCH_HAS_SYNC_DMA_FOR_CPU
+ 	select ARCH_HAS_SYNC_DMA_FOR_DEVICE
+ 	select ARCH_MIGHT_HAVE_PC_PARPORT
+-	select ARCH_NO_COHERENT_DMA_MMAP if !MMU
+ 	select ARCH_WANT_IPC_PARSE_VERSION
+ 	select BUILDTIME_EXTABLE_SORT
+ 	select TIMER_OF
+diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
+index 6b1b5941b618..f356ee674d89 100644
+--- a/arch/sh/Kconfig
++++ b/arch/sh/Kconfig
+@@ -5,7 +5,6 @@ config SUPERH
+ 	select ARCH_HAS_PTE_SPECIAL
+ 	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
+ 	select ARCH_MIGHT_HAVE_PC_PARPORT
+-	select ARCH_NO_COHERENT_DMA_MMAP if !MMU
+ 	select HAVE_PATA_PLATFORM
+ 	select CLKDEV_LOOKUP
+ 	select DMA_DECLARE_COHERENT
+diff --git a/arch/xtensa/Kconfig b/arch/xtensa/Kconfig
+index ebc135bda921..70653aed3005 100644
+--- a/arch/xtensa/Kconfig
++++ b/arch/xtensa/Kconfig
+@@ -5,7 +5,6 @@ config XTENSA
+ 	select ARCH_HAS_BINFMT_FLAT if !MMU
+ 	select ARCH_HAS_SYNC_DMA_FOR_CPU
+ 	select ARCH_HAS_SYNC_DMA_FOR_DEVICE
+-	select ARCH_NO_COHERENT_DMA_MMAP if !MMU
+ 	select ARCH_USE_QUEUED_RWLOCKS
+ 	select ARCH_USE_QUEUED_SPINLOCKS
+ 	select ARCH_WANT_FRAME_POINTERS
+diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
+index 64d1de59e133..fc17016b0871 100644
+--- a/kernel/dma/mapping.c
++++ b/kernel/dma/mapping.c
+@@ -186,7 +186,7 @@ int dma_common_mmap(struct device *dev, struct vm_area_struct *vma,
+ 		void *cpu_addr, dma_addr_t dma_addr, size_t size,
+ 		unsigned long attrs)
+ {
+-#ifndef CONFIG_ARCH_NO_COHERENT_DMA_MMAP
++#ifdef CONFIG_MMU
+ 	unsigned long user_count = vma_pages(vma);
+ 	unsigned long count = PAGE_ALIGN(size) >> PAGE_SHIFT;
+ 	unsigned long off = vma->vm_pgoff;
+@@ -217,7 +217,7 @@ int dma_common_mmap(struct device *dev, struct vm_area_struct *vma,
+ 			user_count << PAGE_SHIFT, vma->vm_page_prot);
+ #else
+ 	return -ENXIO;
+-#endif /* !CONFIG_ARCH_NO_COHERENT_DMA_MMAP */
++#endif /* CONFIG_MMU */
+ }
  
+ /**
+@@ -231,12 +231,10 @@ bool dma_can_mmap(struct device *dev)
+ {
+ 	const struct dma_map_ops *ops = get_dma_ops(dev);
+ 
+-	if (IS_ENABLED(CONFIG_ARCH_NO_COHERENT_DMA_MMAP))
+-		return false;
+-
+ 	if (dma_is_direct(ops)) {
+-		return dev_is_dma_coherent(dev) ||
+-			IS_ENABLED(CONFIG_ARCH_HAS_DMA_COHERENT_TO_PFN);
++		return IS_ENABLED(CONFIG_MMU) &&
++		       (dev_is_dma_coherent(dev) ||
++			IS_ENABLED(CONFIG_ARCH_HAS_DMA_COHERENT_TO_PFN));
+ 	}
+ 
+ 	return ops->mmap != NULL;
 -- 
 2.20.1
 
