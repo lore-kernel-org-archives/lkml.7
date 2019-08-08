@@ -2,65 +2,142 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 007BCC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6960C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:27:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B44512184E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:25:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="jyqrfcjO"
+	by mail.kernel.org (Postfix) with ESMTP id 8E5E12173C
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:27:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733221AbfHHPZU (ORCPT
+        id S1732964AbfHHP1q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 11:25:20 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:44610 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732698AbfHHPZU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 11:25:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=Fui130ED+/x15a0urb5H8gvIS0rYY1pJ52buUNv/GUY=; b=jyqrfcjOsaG7bR8VJGRHSaNr/A
-        g7LXLu2uPuY1exDDwl9vx0FczGnhndX6L5bmlE5CkhA7sA199ym60ywOVcERwuXWLRDvbXoJkczIP
-        d8DVMkkdhgDSzUzJxh/+pEACBj/0o8aYfmV3hHQrDVh2jjLIb9cdSyfbp8Q+Xc7/y/js=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hvkI1-0003ph-Em; Thu, 08 Aug 2019 17:25:17 +0200
-Date:   Thu, 8 Aug 2019 17:25:17 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, davem@davemloft.net,
-        robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com,
-        hkallweit1@gmail.com
-Subject: Re: [PATCH v2 04/15] net: phy: adin: add support for interrupts
-Message-ID: <20190808152517.GD27917@lunn.ch>
-References: <20190808123026.17382-1-alexandru.ardelean@analog.com>
- <20190808123026.17382-5-alexandru.ardelean@analog.com>
+        Thu, 8 Aug 2019 11:27:46 -0400
+Received: from goliath.siemens.de ([192.35.17.28]:51700 "EHLO
+        goliath.siemens.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727096AbfHHP1p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 11:27:45 -0400
+Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
+        by goliath.siemens.de (8.15.2/8.15.2) with ESMTPS id x78FRVAq020810
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 8 Aug 2019 17:27:31 +0200
+Received: from [139.25.68.37] (md1q0hnc.ad001.siemens.net [139.25.68.37] (may be forged))
+        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id x78FRVDw010152;
+        Thu, 8 Aug 2019 17:27:31 +0200
+Subject: Re: [PATCH v2] kbuild: show hint if subdir-y/m is used to visit
+ module Makefile
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kbuild@vger.kernel.org
+Cc:     Tom Stonecypher <thomas.edwardx.stonecypher@intel.com>,
+        linux-kernel@vger.kernel.org,
+        Michal Marek <michal.lkml@markovi.net>
+References: <20190808112111.16159-1-yamada.masahiro@socionext.com>
+From:   Jan Kiszka <jan.kiszka@siemens.com>
+Message-ID: <4377a933-1550-d95f-8a71-bb7f64756eb5@siemens.com>
+Date:   Thu, 8 Aug 2019 17:27:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190808123026.17382-5-alexandru.ardelean@analog.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190808112111.16159-1-yamada.masahiro@socionext.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 03:30:15PM +0300, Alexandru Ardelean wrote:
-> This change adds support for enabling PHY interrupts that can be used by
-> the PHY framework to get signal for link/speed/auto-negotiation changes.
+On 08.08.19 13:21, Masahiro Yamada wrote:
+> Since commit ff9b45c55b26 ("kbuild: modpost: read modules.order instead
+> of $(MODVERDIR)/*.mod"), a module is no longer built in the following
+> pattern:
 > 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+>   [Makefile]
+>   subdir-y := some-module
+> 
+>   [some-module/Makefile]
+>   obj-m := some-module.o
+> 
+> You cannot write Makefile this way in upstream because modules.order is
+> not correctly generated. subdir-y is used to descend to a sub-directory
+> that builds tools, device trees, etc.
+> 
+> For external modules, the modules order does not matter. So, the
+> Makefile above was known to work.
+> 
+> I believe the Makefile should be re-written as follows:
+> 
+>   [Makefile]
+>   obj-m := some-module/
+> 
+>   [some-module/Makefile]
+>   obj-m := some-module.o
+> 
+> However, people will have no idea if their Makefile suddenly stops
+> working. In fact, I received questions from multiple people.
+> 
+> Show a warning if obj-m is specified in a Makefile visited by subdir-y
+> or subdir-m.
+> 
+> I touched the %/ rule to avoid false-positive warnings for the single
+> target.
+> 
+> Cc: Jan Kiszka <jan.kiszka@siemens.com>
+> Cc: Tom Stonecypher <thomas.edwardx.stonecypher@intel.com>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+> 
+> Changes in v2:
+>  - fix false-positive warnings for single targets
+> 
+>  Makefile               | 2 +-
+>  scripts/Makefile.build | 7 +++++++
+>  2 files changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Makefile b/Makefile
+> index 0e37ad2f77bf..fac25e279da6 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -1783,7 +1783,7 @@ PHONY += /
+>  /: ./
+>  
+>  %/: prepare FORCE
+> -	$(Q)$(MAKE) KBUILD_MODULES=1 $(build)=$(build-dir)
+> +	$(Q)$(MAKE) KBUILD_MODULES=1 $(build)=$(build-dir) need-modorder=1
+>  
+>  # FIXME Should go into a make.lib or something
+>  # ===========================================================================
+> diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+> index 37a1d2cd49d4..2f66ed388d1c 100644
+> --- a/scripts/Makefile.build
+> +++ b/scripts/Makefile.build
+> @@ -52,6 +52,13 @@ ifndef obj
+>  $(warning kbuild: Makefile.build is included improperly)
+>  endif
+>  
+> +ifeq ($(MAKECMDGOALS)$(need-modorder),)
+> +ifneq ($(obj-m),)
+> +$(warning $(patsubst %.o,'%.ko',$(obj-m)) will not be built even though obj-m is specified.)
+> +$(warning You cannot use subdir-y/m to visit a module Makefile. Use obj-y/m instead.)
+> +endif
+> +endif
+> +
+>  # ===========================================================================
+>  
+>  ifneq ($(strip $(lib-y) $(lib-m) $(lib-)),)
+> 
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+FWIW, I've thrown this patch (with the other 2) at our "special" out-of-tree
+modules repo, and it worked as expected: Warned when we were still using
+subdir-y, remained silent after the fix.
 
-    Andrew
+Tested-by: Jan Kiszka <jan.kiszka@siemens.com>
+
+Jan
+
+-- 
+Siemens AG, Corporate Technology, CT RDA IOT SES-DE
+Corporate Competence Center Embedded Linux
