@@ -2,263 +2,160 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44EBBC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A7E3C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:05:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04B6521874
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:04:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4F84217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:05:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="NiaEP20F"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="EkBVZSNZ";
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="plTG0uX6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404084AbfHHQEl (ORCPT
+        id S2404092AbfHHQF4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 12:04:41 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:36146 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404026AbfHHQEk (ORCPT
+        Thu, 8 Aug 2019 12:05:56 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:47704 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732698AbfHHQF4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 12:04:40 -0400
-Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 28A9BCC;
-        Thu,  8 Aug 2019 18:04:37 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1565280277;
-        bh=2Z25y9y0pIeMu154o724gwaRvd94rUWhzxTXYm467WQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NiaEP20FJyRAMJPXnJnVsUFT/vH8DWKJx8ejlWgYPR6WUDGlo/wqeM7UcgNjRFUrb
-         vRBGUvCqStWmdIkmAiafBuIX2m4Ne2yDMox51YLpba5LD7yfBRGizDbNj9IN7gImam
-         qpibQgFcYg9EXUpg8/qZNSDZFULJQZ6UWhzEEXxY=
-Date:   Thu, 8 Aug 2019 19:04:34 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-i2c@vger.kernel.org, Andrzej Hajda <a.hajda@samsung.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH] i2c: replace i2c_new_secondary_device with an ERR_PTR
- variant
-Message-ID: <20190808160434.GT6055@pendragon.ideasonboard.com>
-References: <20190722172600.3452-1-wsa+renesas@sang-engineering.com>
- <9b71c556-bd70-4d29-dba5-fbeaefb5f3b4@ideasonboard.com>
- <20190808155709.GA1316@ninjato>
+        Thu, 8 Aug 2019 12:05:56 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x78FuLm2155989;
+        Thu, 8 Aug 2019 16:05:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2019-08-05; bh=sBbOLnRj6Q0JgUUU4xmQw9W1HyJ1xIvokVeC4MhO0M4=;
+ b=EkBVZSNZOgiRTalVvPCvhfNII+whsQ9eya8vyGPXljlLhy0E5gQur6667ImfbxiopkPX
+ FktlhZxqaKlYd7leFTIOO5lJkw+YTUCLhz1q4dDwWVhNru3SuifOF0KCeE8Tx3Yk73Bs
+ sqqj46k2bMNikPaQiMHmNX9cdduYX0v6r25eP47uapk7ngwxVBVEMCKUZLWRjkptlNAU
+ cwOlaTnXiPI+585GbgHiyp9COLRJlBHWHzpJ4vOqFiQfNJ6rUAZoMLcMrIHq4eCswlsO
+ lBNSLVRSFMRt9aRZn59EETuHVMGmhzawqhMOWetif8zkCyes6aypnLgZDdOOFOh1GIwt cQ== 
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2018-07-02; bh=sBbOLnRj6Q0JgUUU4xmQw9W1HyJ1xIvokVeC4MhO0M4=;
+ b=plTG0uX62gkHXEYAU2IICb1SBJA0z17MXQg9bDZ4jcPqnUu4eqXH0H/AMcWtUxLPLw47
+ eepVTj7ErVUSfV9ii3gEiUUE269GNfMu0Dc1s+OdgZ1Xvvk1krtc5i+KGXu7XTqQHhVs
+ 3ODF56s0fbN/FbWY6mrM1T6CMW+LGa7Lc5Sb5Lax1FuRnh12j90jqZnzEVsy+TQJlmVA
+ dSkM9Cn55Lss5ZJWt21k/V4mDYxQzLRkYduiByvG5wi8vNqrh0dlpqkv9O9KHeuP0oeW
+ D88/thWhtSK5/z571LJY2rgMH0ep5Ld0Fdm3Cjn/6juYcLjIKiV4FJTdaq1578mMQr3S CA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2u8hgp27ya-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 08 Aug 2019 16:05:45 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x78FwA6j011668;
+        Thu, 8 Aug 2019 16:05:45 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2u763khenv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 08 Aug 2019 16:05:44 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x78G5gHB030447;
+        Thu, 8 Aug 2019 16:05:43 GMT
+Received: from localhost.localdomain (/73.60.114.248)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 08 Aug 2019 09:05:42 -0700
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] padata: initialize pd->cpu with effective cpumask
+Date:   Thu,  8 Aug 2019 12:05:35 -0400
+Message-Id: <20190808160535.27219-1-daniel.m.jordan@oracle.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190808155709.GA1316@ninjato>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9342 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908080151
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9342 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908080151
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 05:57:09PM +0200, Wolfram Sang wrote:
-> On Tue, Jul 23, 2019 at 04:47:09PM +0100, Kieran Bingham wrote:
-> > On 22/07/2019 18:26, Wolfram Sang wrote:
-> > > In the general move to have i2c_new_*_device functions which return
-> > > ERR_PTR instead of NULL, this patch converts i2c_new_secondary_device().
-> > > 
-> > > There are only few users, so this patch converts the I2C core and all
-> > > users in one go. The function gets renamed to i2c_new_ancillary_device()
-> > > so out-of-tree users will get a build failure to understand they need to
-> > > adapt their error checking code.
-> > > 
-> > > Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> > > ---
-> > > 
-> > > Kindly asking for acks/revs/tests from people knowing the modified
-> > > drivers.
-> > 
-> > Certainly, this looks good for the adv748x.
-> > 
-> > The ADV7511, and adv7604 are not mine, but they also look fine to me.
-> > 
-> > Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-> 
-> Thanks, Kieran! Gently pinging for acks for ADV7511 and ADV7604.
+Exercising CPU hotplug on a 5.2 kernel with recent padata fixes from
+cryptodev-2.6.git in an 8-CPU kvm guest...
 
-For the adv7511 driver,
+    # modprobe tcrypt alg="pcrypt(rfc4106(gcm(aes)))" type=3
+    # echo 0 > /sys/devices/system/cpu/cpu1/online
+    # echo c > /sys/kernel/pcrypt/pencrypt/parallel_cpumask
+    # modprobe tcrypt mode=215
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+...caused the following crash:
 
-For the adv7604 driver, please see below.
+    BUG: kernel NULL pointer dereference, address: 0000000000000000
+    #PF: supervisor read access in kernel mode
+    #PF: error_code(0x0000) - not-present page
+    PGD 0 P4D 0
+    Oops: 0000 [#1] SMP PTI
+    CPU: 2 PID: 134 Comm: kworker/2:2 Not tainted 5.2.0-padata-base+ #7
+    Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-<snip>
+    Workqueue: pencrypt padata_parallel_worker
+    RIP: 0010:padata_reorder+0xcb/0x180
+    ...
+    Call Trace:
+     padata_do_serial+0x57/0x60
+     pcrypt_aead_enc+0x3a/0x50 [pcrypt]
+     padata_parallel_worker+0x9b/0xe0
+     process_one_work+0x1b5/0x3f0
+     worker_thread+0x4a/0x3c0
+     ...
 
-> > >  drivers/gpu/drm/bridge/adv7511/adv7511_drv.c | 18 +++++++++---------
-> > >  drivers/i2c/i2c-core-base.c                  | 10 +++++-----
-> > >  drivers/media/i2c/adv748x/adv748x-core.c     |  6 +++---
-> > >  drivers/media/i2c/adv7604.c                  | 10 +++++-----
-> > >  include/linux/i2c.h                          |  2 +-
-> > >  5 files changed, 23 insertions(+), 23 deletions(-)
-> > > 
-> > > diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
-> > > index f6d2681f6927..9e13e466e72c 100644
-> > > --- a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
-> > > +++ b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
-> > > @@ -981,10 +981,10 @@ static int adv7511_init_cec_regmap(struct adv7511 *adv)
-> > >  {
-> > >  	int ret;
-> > >  
-> > > -	adv->i2c_cec = i2c_new_secondary_device(adv->i2c_main, "cec",
-> > > +	adv->i2c_cec = i2c_new_ancillary_device(adv->i2c_main, "cec",
-> > >  						ADV7511_CEC_I2C_ADDR_DEFAULT);
-> > > -	if (!adv->i2c_cec)
-> > > -		return -EINVAL;
-> > > +	if (IS_ERR(adv->i2c_cec))
-> > > +		return PTR_ERR(adv->i2c_cec);
-> > >  	i2c_set_clientdata(adv->i2c_cec, adv);
-> > >  
-> > >  	adv->regmap_cec = devm_regmap_init_i2c(adv->i2c_cec,
-> > > @@ -1165,20 +1165,20 @@ static int adv7511_probe(struct i2c_client *i2c, const struct i2c_device_id *id)
-> > >  
-> > >  	adv7511_packet_disable(adv7511, 0xffff);
-> > >  
-> > > -	adv7511->i2c_edid = i2c_new_secondary_device(i2c, "edid",
-> > > +	adv7511->i2c_edid = i2c_new_ancillary_device(i2c, "edid",
-> > >  					ADV7511_EDID_I2C_ADDR_DEFAULT);
-> > > -	if (!adv7511->i2c_edid) {
-> > > -		ret = -EINVAL;
-> > > +	if (IS_ERR(adv7511->i2c_edid)) {
-> > > +		ret = PTR_ERR(adv7511->i2c_edid);
-> > >  		goto uninit_regulators;
-> > >  	}
-> > >  
-> > >  	regmap_write(adv7511->regmap, ADV7511_REG_EDID_I2C_ADDR,
-> > >  		     adv7511->i2c_edid->addr << 1);
-> > >  
-> > > -	adv7511->i2c_packet = i2c_new_secondary_device(i2c, "packet",
-> > > +	adv7511->i2c_packet = i2c_new_ancillary_device(i2c, "packet",
-> > >  					ADV7511_PACKET_I2C_ADDR_DEFAULT);
-> > > -	if (!adv7511->i2c_packet) {
-> > > -		ret = -EINVAL;
-> > > +	if (IS_ERR(adv7511->i2c_packet)) {
-> > > +		ret = PTR_ERR(adv7511->i2c_packet);
-> > >  		goto err_i2c_unregister_edid;
-> > >  	}
-> > >  
-> > > diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-> > > index f26ed495d384..76cb91e064b8 100644
-> > > --- a/drivers/i2c/i2c-core-base.c
-> > > +++ b/drivers/i2c/i2c-core-base.c
-> > > @@ -966,7 +966,7 @@ struct i2c_client *devm_i2c_new_dummy_device(struct device *dev,
-> > >  EXPORT_SYMBOL_GPL(devm_i2c_new_dummy_device);
-> > >  
-> > >  /**
-> > > - * i2c_new_secondary_device - Helper to get the instantiated secondary address
-> > > + * i2c_new_ancillary_device - Helper to get the instantiated secondary address
-> > >   * and create the associated device
-> > >   * @client: Handle to the primary client
-> > >   * @name: Handle to specify which secondary address to get
-> > > @@ -985,9 +985,9 @@ EXPORT_SYMBOL_GPL(devm_i2c_new_dummy_device);
-> > >   * cell whose "reg-names" value matches the slave name.
-> > >   *
-> > >   * This returns the new i2c client, which should be saved for later use with
-> > > - * i2c_unregister_device(); or NULL to indicate an error.
-> > > + * i2c_unregister_device(); or an ERR_PTR to describe the error.
-> > >   */
-> > > -struct i2c_client *i2c_new_secondary_device(struct i2c_client *client,
-> > > +struct i2c_client *i2c_new_ancillary_device(struct i2c_client *client,
-> > >  						const char *name,
-> > >  						u16 default_addr)
-> > >  {
-> > > @@ -1002,9 +1002,9 @@ struct i2c_client *i2c_new_secondary_device(struct i2c_client *client,
-> > >  	}
-> > >  
-> > >  	dev_dbg(&client->adapter->dev, "Address for %s : 0x%x\n", name, addr);
-> > > -	return i2c_new_dummy(client->adapter, addr);
-> > > +	return i2c_new_dummy_device(client->adapter, addr);
-> > >  }
-> > > -EXPORT_SYMBOL_GPL(i2c_new_secondary_device);
-> > > +EXPORT_SYMBOL_GPL(i2c_new_ancillary_device);
-> > >  
-> > >  /* ------------------------------------------------------------------------- */
-> > >  
-> > > diff --git a/drivers/media/i2c/adv748x/adv748x-core.c b/drivers/media/i2c/adv748x/adv748x-core.c
-> > > index f57cd77a32fa..2567de2b0037 100644
-> > > --- a/drivers/media/i2c/adv748x/adv748x-core.c
-> > > +++ b/drivers/media/i2c/adv748x/adv748x-core.c
-> > > @@ -183,14 +183,14 @@ static int adv748x_initialise_clients(struct adv748x_state *state)
-> > >  	int ret;
-> > >  
-> > >  	for (i = ADV748X_PAGE_DPLL; i < ADV748X_PAGE_MAX; ++i) {
-> > > -		state->i2c_clients[i] = i2c_new_secondary_device(
-> > > +		state->i2c_clients[i] = i2c_new_ancillary_device(
-> > >  				state->client,
-> > >  				adv748x_default_addresses[i].name,
-> > >  				adv748x_default_addresses[i].default_addr);
-> > >  
-> > > -		if (state->i2c_clients[i] == NULL) {
-> > > +		if (IS_ERR(state->i2c_clients[i])) {
-> > >  			adv_err(state, "failed to create i2c client %u\n", i);
-> > > -			return -ENOMEM;
-> > > +			return PTR_ERR(state->i2c_clients[i]);
-> > >  		}
-> > >  
-> > >  		ret = adv748x_configure_regmap(state, i);
-> > > diff --git a/drivers/media/i2c/adv7604.c b/drivers/media/i2c/adv7604.c
-> > > index 28a84bf9f8a9..8ed1d9b59dd2 100644
-> > > --- a/drivers/media/i2c/adv7604.c
-> > > +++ b/drivers/media/i2c/adv7604.c
-> > > @@ -2878,14 +2878,14 @@ static struct i2c_client *adv76xx_dummy_client(struct v4l2_subdev *sd,
-> > >  	struct i2c_client *new_client;
-> > >  
-> > >  	if (pdata && pdata->i2c_addresses[page])
-> > > -		new_client = i2c_new_dummy(client->adapter,
-> > > +		new_client = i2c_new_dummy_device(client->adapter,
-> > >  					   pdata->i2c_addresses[page]);
-> > >  	else
-> > > -		new_client = i2c_new_secondary_device(client,
-> > > +		new_client = i2c_new_ancillary_device(client,
-> > >  				adv76xx_default_addresses[page].name,
-> > >  				adv76xx_default_addresses[page].default_addr);
-> > >  
-> > > -	if (new_client)
-> > > +	if (!IS_ERR(new_client))
-> > >  		io_write(sd, io_reg, new_client->addr << 1);
-> > >  
-> > >  	return new_client;
-> > > @@ -3520,8 +3520,8 @@ static int adv76xx_probe(struct i2c_client *client,
-> > >  			continue;
-> > >  
-> > >  		state->i2c_clients[i] = adv76xx_dummy_client(sd, i);
-> > > -		if (!state->i2c_clients[i]) {
-> > > -			err = -EINVAL;
-> > > +		if (IS_ERR(state->i2c_clients[i])) {
-> > > +			err = PTR_ERR(state->i2c_clients[i]);
-> > >  			v4l2_err(sd, "failed to create i2c client %u\n", i);
-> > >  			goto err_i2c;
+In padata_alloc_pd, pd->cpu is set using the user-supplied cpumask
+instead of the effective cpumask, and in this case cpumask_first picked
+an offline CPU.
 
-This will call adv76xx_unregister_clients(), which will try to
-i2c_unregister_device() all non-NULL i2c_clients entries. You need to
-either set the entry to NULL here, or update
-adv76xx_unregister_clients() to skip IS_ERR() entries. My preference
-would be to store the return value of adv76xx_dummy_client() in a local
-variable here, and set state->i2c_clients[i] after the error check.
+The offline CPU's reorder->list.next is NULL in padata_reorder because
+the list wasn't initialized in padata_init_pqueues, which only operates
+on CPUs in the effective mask.
 
-> > >  		}
-> > > diff --git a/include/linux/i2c.h b/include/linux/i2c.h
-> > > index fa5552c2307b..ebbe024dd9e0 100644
-> > > --- a/include/linux/i2c.h
-> > > +++ b/include/linux/i2c.h
-> > > @@ -473,7 +473,7 @@ extern struct i2c_client *
-> > >  devm_i2c_new_dummy_device(struct device *dev, struct i2c_adapter *adap, u16 address);
-> > >  
-> > >  extern struct i2c_client *
-> > > -i2c_new_secondary_device(struct i2c_client *client,
-> > > +i2c_new_ancillary_device(struct i2c_client *client,
-> > >  				const char *name,
-> > >  				u16 default_addr);
-> > >  
+Fix by using the effective mask in padata_alloc_pd.
 
+Fixes: 726e431130f3 ("padata: Replace delayed timer with immediate workqueue in padata_reorder")
+Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Steffen Klassert <steffen.klassert@secunet.com>
+Cc: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+
+Hi, not sure what the normal process is for fixing patches in cryptodev
+that haven't reached mainline yet.  Feel free to fold this in with the
+Fixes patch if preferred.
+
+Thanks,
+Daniel
+
+ kernel/padata.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/padata.c b/kernel/padata.c
+index 7372fb45eeeb..b60cc3dcee58 100644
+--- a/kernel/padata.c
++++ b/kernel/padata.c
+@@ -426,7 +426,7 @@ static struct parallel_data *padata_alloc_pd(struct padata_instance *pinst,
+ 	atomic_set(&pd->refcnt, 0);
+ 	pd->pinst = pinst;
+ 	spin_lock_init(&pd->lock);
+-	pd->cpu = cpumask_first(pcpumask);
++	pd->cpu = cpumask_first(pd->cpumask.pcpu);
+ 	INIT_WORK(&pd->reorder_work, invoke_padata_reorder);
+ 
+ 	return pd;
 -- 
-Regards,
+2.22.0
 
-Laurent Pinchart
