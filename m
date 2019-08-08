@@ -2,96 +2,137 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C5B0C41517
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAEFDC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 222EE217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:45:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ha5wQch0"
+	by mail.kernel.org (Postfix) with ESMTP id C0DF82171F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:46:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565250371;
+	bh=KQGFnO+gq1uo790n4QAS3mxbsxvibaSyNvsjuI9WHBM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ziExlXcRvKEnUdyFHNjeKYpCWaEt2yXpdDCRj06H96TWYbcNZWZahr2vEHYAHrIjk
+	 gsI1PZVneZFDTVCtrpslweRsuyJH1w1j0wzFSrEPRBKKrPEWB14lQ0dS1FT675yD14
+	 q0Av04W1VsJEkVF8a/Yb3o9y0FBVyHdp3N3AtAQQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731395AbfHHHpK (ORCPT
+        id S1731454AbfHHHqK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 03:45:10 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37744 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726721AbfHHHpJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 03:45:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=33Ef3Sm7bpdfJwlyTclvqrfYhhmgGkQP65uyo6ml4Es=; b=ha5wQch0HRlEFijHatH94E6n+
-        M6IfVEh8p0GGxYincxjuS/UxV5rB1M3RR49E+HU/qbJsrW4PlEyeLjAKK6mP3Id6uAFlIqqOspQOu
-        RlqYAZpw8+GPi0BlsToQxbEm7nUF1waXZ2irBUVTUl0urWZkaSXoC+R3vcRS/h54ldRYTwhy3SRwm
-        CD0UmiJaGme30DAtNmj3uNTVWIEqLhAFQkpoTHTandVGpwK/cwWJhPaOZQXfKNGye2X9Wucbj4cQc
-        FboTbJrZJVVrsu9VVV4oA+S9Z7745mbFXF9T02fpDUDc/Vl3a7NgWGCVgNRKEp0WYJAFapaZriWlE
-        xtTqKlV+g==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hvd6h-0000CR-CS; Thu, 08 Aug 2019 07:45:07 +0000
-Date:   Thu, 8 Aug 2019 00:45:07 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        bpf@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        Amit Pundir <amit.pundir@linaro.org>,
-        David Howells <dhowells@redhat.com>
-Subject: Re: [RFC PATCH] kbuild: re-implement detection of CONFIG options
- leaked to user-space
-Message-ID: <20190808074507.GA22720@infradead.org>
-References: <20190806043729.5562-1-yamada.masahiro@socionext.com>
- <CAK8P3a2POcb+AReLKib513i_RTN9kLM_Tun7+G5LOacDuy7gjQ@mail.gmail.com>
+        Thu, 8 Aug 2019 03:46:10 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56828 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730887AbfHHHqK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 03:46:10 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 36F83B11C;
+        Thu,  8 Aug 2019 07:46:08 +0000 (UTC)
+Date:   Thu, 8 Aug 2019 09:46:07 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        ltp@lists.linux.it, Li Wang <liwang@redhat.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Cyril Hrubis <chrubis@suse.cz>, xishi.qiuxishi@alibaba-inc.com,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH] hugetlbfs: fix hugetlb page migration/fault race causing
+ SIGBUS
+Message-ID: <20190808074607.GI11812@dhcp22.suse.cz>
+References: <20190808000533.7701-1-mike.kravetz@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAK8P3a2POcb+AReLKib513i_RTN9kLM_Tun7+G5LOacDuy7gjQ@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20190808000533.7701-1-mike.kravetz@oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 11:00:19AM +0200, Arnd Bergmann wrote:
-> > I was playing with sed yesterday, but the resulted code might be unreadable.
-> >
-> > Sed scripts tend to be somewhat unreadable.
-> > I just wondered which language is appropriate for this?
-> > Maybe perl, or what else? I am not good at perl, though.
+On Wed 07-08-19 17:05:33, Mike Kravetz wrote:
+> Li Wang discovered that LTP/move_page12 V2 sometimes triggers SIGBUS
+> in the kernel-v5.2.3 testing.  This is caused by a race between hugetlb
+> page migration and page fault.
 > 
-> I like the sed version, in particular as it seems to do the job and
-> I'm not volunteering to write it in anything else.
-
-Did anyone not like sed?  I have to say I do like scripts using sed and
-awk because they are fairly readable and avoid dependencies on "big"
-scripting language and their optional modules that sooner or later get
-pulled in.
-
-> This one is nontrivial, since it defines two incompatible layouts for
-> this structure,
-> and the fdpic version is currently not usable at all from user space. Also,
-> the definition breaks configurations that have both CONFIG_BINFMT_ELF
-> and CONFIG_BINFMT_ELF_FDPIC enabled, which has become possible
-> with commit 382e67aec6a7 ("ARM: enable elf_fdpic on systems with an MMU").
+> If a hugetlb page can not be allocated to satisfy a page fault, the task
+> is sent SIGBUS.  This is normal hugetlbfs behavior.  A hugetlb fault
+> mutex exists to prevent two tasks from trying to instantiate the same
+> page.  This protects against the situation where there is only one
+> hugetlb page, and both tasks would try to allocate.  Without the mutex,
+> one would fail and SIGBUS even though the other fault would be successful.
 > 
-> The best way forward I see is to duplicate the structure definition, adding
-> a new 'struct elf_fdpic_prstatus', and using that in fs/binfmt_elf_fdpic.c.
-> The same change is required in include/linux/elfcore-compat.h.
+> There is a similar race between hugetlb page migration and fault.
+> Migration code will allocate a page for the target of the migration.
+> It will then unmap the original page from all page tables.  It does
+> this unmap by first clearing the pte and then writing a migration
+> entry.  The page table lock is held for the duration of this clear and
+> write operation.  However, the beginnings of the hugetlb page fault
+> code optimistically checks the pte without taking the page table lock.
+> If clear (as it can be during the migration unmap operation), a hugetlb
+> page allocation is attempted to satisfy the fault.  Note that the page
+> which will eventually satisfy this fault was already allocated by the
+> migration code.  However, the allocation within the fault path could
+> fail which would result in the task incorrectly being sent SIGBUS.
+> 
+> Ideally, we could take the hugetlb fault mutex in the migration code
+> when modifying the page tables.  However, locks must be taken in the
+> order of hugetlb fault mutex, page lock, page table lock.  This would
+> require significant rework of the migration code.  Instead, the issue
+> is addressed in the hugetlb fault code.  After failing to allocate a
+> huge page, take the page table lock and check for huge_pte_none before
+> returning an error.  This is the same check that must be made further
+> in the code even if page allocation is successful.
+> 
+> Reported-by: Li Wang <liwang@redhat.com>
+> Fixes: 290408d4a250 ("hugetlb: hugepage migration core")
+> Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+> Tested-by: Li Wang <liwang@redhat.com>
 
-Yeah, this is a mess.  David Howells suggested something similar when
-I brought the issue to his attention last time.
+Acked-by: Michal Hocko <mhocko@suse.com>
+
+Thanks!
+
+> ---
+>  mm/hugetlb.c | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+> 
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index ede7e7f5d1ab..6d7296dd11b8 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+> @@ -3856,6 +3856,25 @@ static vm_fault_t hugetlb_no_page(struct mm_struct *mm,
+>  
+>  		page = alloc_huge_page(vma, haddr, 0);
+>  		if (IS_ERR(page)) {
+> +			/*
+> +			 * Returning error will result in faulting task being
+> +			 * sent SIGBUS.  The hugetlb fault mutex prevents two
+> +			 * tasks from racing to fault in the same page which
+> +			 * could result in false unable to allocate errors.
+> +			 * Page migration does not take the fault mutex, but
+> +			 * does a clear then write of pte's under page table
+> +			 * lock.  Page fault code could race with migration,
+> +			 * notice the clear pte and try to allocate a page
+> +			 * here.  Before returning error, get ptl and make
+> +			 * sure there really is no pte entry.
+> +			 */
+> +			ptl = huge_pte_lock(h, mm, ptep);
+> +			if (!huge_pte_none(huge_ptep_get(ptep))) {
+> +				ret = 0;
+> +				spin_unlock(ptl);
+> +				goto out;
+> +			}
+> +			spin_unlock(ptl);
+>  			ret = vmf_error(PTR_ERR(page));
+>  			goto out;
+>  		}
+> -- 
+> 2.20.1
+
+-- 
+Michal Hocko
+SUSE Labs
