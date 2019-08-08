@@ -2,126 +2,145 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A9B3C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7CA8C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:10:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 407D421873
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:08:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FFAA2186A
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:10:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730924AbfHHGIZ (ORCPT
+        id S1730984AbfHHGKt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 02:08:25 -0400
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:35468 "EHLO
-        omr2.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726187AbfHHGIY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 02:08:24 -0400
-Received: from mr4.cc.vt.edu (mr4.cc.ipv6.vt.edu [IPv6:2607:b400:92:8300:0:7b:e2b1:6a29])
-        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x7868NKF013009
-        for <linux-kernel@vger.kernel.org>; Thu, 8 Aug 2019 02:08:23 -0400
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
-        by mr4.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x7868ITu004116
-        for <linux-kernel@vger.kernel.org>; Thu, 8 Aug 2019 02:08:23 -0400
-Received: by mail-qt1-f198.google.com with SMTP id q26so84709382qtr.3
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 23:08:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-transfer-encoding:date:message-id;
-        bh=//3h4E8VoC24wx7WM5WKExXqnh8y6JbPvWf21T+Yr0M=;
-        b=NG8RC43FbJLEYKeu+AcNaKVcEODry80dEv0LwCxy6+cqo/4V/loTIW8C52OPnE8qRJ
-         qm4k/36+RzCASYIxxfSZzOMs8p2ISJnnw7e8f1rChkvDo9JviT3rdVz4SeD4jXzeoAvo
-         4Sy4SW3+CGQJREkLJn63FoZmJ0rfVbYS+xu/grP3NLjmuFMfuBefx1XNljEwbUWAIvqQ
-         ezIa0y3IYR5Kj1DKmAg8/RhDb8DSKZYnlFjQ1rfULHjUmxVss3X2jk5XH9kzubHM6O1C
-         EAp8nJORWSvsrfmJC5FVwUPj26macn6eU20e76XaHW5qAn31PZVNBBZo5KVlcgNt39Yd
-         DVlA==
-X-Gm-Message-State: APjAAAWENHiRohwGS7RISgg2HJqiBzBypDOVg3f25PfF6Hxk5AgjEKEI
-        q+27Ob4VIP/UjDoA236lr4sP+Q+ZHMZpcduv9NP9F7EweVGOMrxLbDe0MwbLU5ISwMokwFw2Mdu
-        wsfq3a1UlZPzm4H2O2AKXODsYMXbc3yJIK3A=
-X-Received: by 2002:ae9:e916:: with SMTP id x22mr1914508qkf.296.1565244497784;
-        Wed, 07 Aug 2019 23:08:17 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwXGyOQMiS6YkEKeQKZCudGwW3weVcAz9pQIvSdFoSUaUagbeHmgpOQq597BXogeQYsTQCTQQ==
-X-Received: by 2002:ae9:e916:: with SMTP id x22mr1914494qkf.296.1565244497495;
-        Wed, 07 Aug 2019 23:08:17 -0700 (PDT)
-Received: from turing-police ([2601:5c0:c001:4341::359])
-        by smtp.gmail.com with ESMTPSA id u28sm3702894qtc.18.2019.08.07.23.08.16
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 07 Aug 2019 23:08:16 -0700 (PDT)
-From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     Joe Perches <joe@perches.com>
-Cc:     Gilad Ben-Yossef <gilad@benyossef.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] scripts/checkpatch.pl - fix *_NOTIFIER_HEAD handling
-In-Reply-To: <33e3b8748959b2f56b906b0bfd790df322f1ed3c.camel@perches.com>
-References: <33485.1565228181@turing-police>
- <33e3b8748959b2f56b906b0bfd790df322f1ed3c.camel@perches.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="==_Exmh_1565244495_4269P";
-         micalg=pgp-sha1; protocol="application/pgp-signature"
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 08 Aug 2019 02:08:15 -0400
-Message-ID: <56763.1565244495@turing-police>
+        Thu, 8 Aug 2019 02:10:49 -0400
+Received: from mga02.intel.com ([134.134.136.20]:20028 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725817AbfHHGKt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 02:10:49 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Aug 2019 23:10:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,360,1559545200"; 
+   d="scan'208";a="186248110"
+Received: from sneftin-mobl1.ger.corp.intel.com (HELO [10.185.23.132]) ([10.185.23.132])
+  by orsmga002.jf.intel.com with ESMTP; 07 Aug 2019 23:10:43 -0700
+Subject: Re: [Intel-wired-lan] MDI errors during resume from ACPI S3 (suspend
+ to ram)
+To:     Paul Menzel <pmenzel@molgen.mpg.de>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Cc:     Mario Limonciello <mario.limonciello@dell.com>,
+        intel-wired-lan@lists.osuosl.org, linux-kernel@vger.kernel.org
+References: <81004059-6d91-d8be-c80e-70c52359350d@molgen.mpg.de>
+ <2277f25bc44c4aebaac59942de2e24bb@AUSX13MPC105.AMER.DELL.COM>
+ <d0aaa0f8-b94c-be65-7a4e-f5592aa65647@intel.com>
+ <47977dc7-d53a-427c-bbaa-9c665287cb47@molgen.mpg.de>
+From:   "Neftin, Sasha" <sasha.neftin@intel.com>
+Message-ID: <ac9ed79f-2789-4dde-6826-9227bd3113ec@intel.com>
+Date:   Thu, 8 Aug 2019 09:10:43 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <47977dc7-d53a-427c-bbaa-9c665287cb47@molgen.mpg.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---==_Exmh_1565244495_4269P
-Content-Type: text/plain; charset=us-ascii
-
-On Wed, 07 Aug 2019 22:50:47 -0700, Joe Perches said:
-> On Wed, 2019-08-07 at 21:36 -0400, Valdis Klētnieks wrote:
-
-> >  				^.DEFINE_$Ident\(\Q$name\E\)|
-> >  				^.DECLARE_$Ident\(\Q$name\E\)|
-> >  				^.LIST_HEAD\(\Q$name\E\)|
-> > -				^.{$Ident}_NOTIFIER_HEAD\(\Q$name\E\)|
-> > +				^.${Ident}_NOTIFIER_HEAD\(\Q$name\E\)|
->
-> Perhaps also better to convert all the '\Q$name\E' to '\s*\Q$name\E\s*'
-
-Yes, but that would need to be a separate patch.  The question would be if we
-consider 'DEFINE_foo( barbaz )' and similar with whitespace to be desirable
-style or not.
-
-[/usr/src/linux-next] grep '\\Q$name\\E' scripts/checkpatch.pl
-				^.DEFINE_$Ident\(\Q$name\E\)|
-				^.DECLARE_$Ident\(\Q$name\E\)|
-				^.LIST_HEAD\(\Q$name\E\)|
-				^.${Ident}_NOTIFIER_HEAD\(\Q$name\E\)|
-				^.(?:$Storage\s+)?$Type\s*\(\s*\*\s*\Q$name\E\s*\)\s*\(|
-				\b\Q$name\E(?:\s+$Attribute)*\s*(?:;|=|\[|\()
-
-We already have the \s* in one place. Somebody else can decide if it should
-be in the other 5 places or not. :)
-
-
---==_Exmh_1565244495_4269P
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Comment: Exmh version 2.9.0 11/07/2018
-
-iQIVAwUBXUu8TgdmEQWDXROgAQLnuRAAqXGr2OzjeF9ReHEBjpb5UkyDrI6wS1E9
-Z0bLd+hNvhINoJpwG8EkhCG6m2wzjaALCxZK9B5rZrxMB1UcsmciFW1dHxqfkyzk
-IENvO1aQgcxHPTXoMnlrKHHvKy6MHszoE8MhEBI22KBEAe1L93fnnni2YVvELKHn
-DV77q7yMmXcOnzbMZzCtFlmCc9ElfyBmqXtfN8dTE89F9RndH8XO2F0cplY8GZhg
-2DRMPsvgnWqYg8rprVWfzxcOAYzy2dYpBoYQuElYmS1lwznogoyl5ikKqexVrm3c
-2UqRcHDLMuUgV9hMcpq+zUwIWGranHkLlQqIBoZN3xxBCAHAaHhoh3p7ASBQcF1i
-gkCqIWlaEqnb6POL1mQ+BfX0IdJwFfLSbFYkCx9ROrOfAySVXRkfbIrfhLouK23p
-tK97EFNY9vFSug2kM/30Z7x/CDjWXFt2DwsKgFbStUATHDRdK8+BNh8U0LfYDpVO
-KLVFnc5dd0sAYaXDo9/Ybv3bEDOeI1/6LJw8xpjfaR5EtFfvs56HpqRvnvjle189
-sDMEetuGYr2Av/GXlkjz0FCPqPuHknJjhKfi77PDQTyKjnY0HOPZ+R79NsAhhCuB
-EuHkFdhmqM1RZmp6+WAiUJFuWdkkI4TvgY9nCM6IRA/wQDrwd8p4Ly4D/PpgIz0/
-c3vktDEc1I0=
-=pZtC
------END PGP SIGNATURE-----
-
---==_Exmh_1565244495_4269P--
+On 8/7/2019 17:55, Paul Menzel wrote:
+> 
+> Dear Sasha,
+> 
+> 
+> On 07.08.19 09:23, Neftin, Sasha wrote:
+>> On 8/6/2019 18:53, Mario.Limonciello@dell.com wrote:
+>>>> -----Original Message-----
+>>>> From: Paul Menzel <pmenzel@molgen.mpg.de>
+>>>> Sent: Tuesday, August 6, 2019 10:36 AM
+>>>> To: Jeff Kirsher
+>>>> Cc: intel-wired-lan@lists.osuosl.org; Linux Kernel Mailing List; Limonciello, Mario
+>>>> Subject: MDI errors during resume from ACPI S3 (suspend to ram)
+>>>>
+>>>> Dear Linux folks,
+>>>>
+>>>>
+>>>> Trying to decrease the resume time of Linux 5.3-rc3 on the Dell OptiPlex
+>>>> 5040 with the device below
+>>>>
+>>>>       $ lspci -nn -s 00:1f.6
+>>>>       00:1f.6 Ethernet controller [0200]: Intel Corporation Ethernet Connection (2)
+>>>> I219-V [8086:15b8] (rev 31)
+>>>>
+>>>> pm-graph’s script `sleepgraph.py` shows, that the driver *e1000e* takes
+>>>> around 400 ms, which is quite a lot. The call graph trace shows that
+>>>> `e1000e_read_phy_reg_mdic()` is responsible for a lot of those. From
+>>>> `drivers/net/ethernet/intel/e1000e/phy.c` [1]:
+>>>>
+>>>>           for (i = 0; i < (E1000_GEN_POLL_TIMEOUT * 3); i++) {
+>>>>                   udelay(50);
+>>>>                   mdic = er32(MDIC);
+>>>>                   if (mdic & E1000_MDIC_READY)
+>>>>                           break;
+>>>>           }
+>>>>           if (!(mdic & E1000_MDIC_READY)) {
+>>>>                   e_dbg("MDI Read did not complete\n");
+>>>>                   return -E1000_ERR_PHY;
+>>>>           }
+>>>>           if (mdic & E1000_MDIC_ERROR) {
+>>>>                   e_dbg("MDI Error\n");
+>>>>                   return -E1000_ERR_PHY;
+>>>>           }
+>>>>
+>>>> Unfortunately, errors are not logged if dynamic debug is disabled,
+>>>> so rebuilding the Linux kernel with `CONFIG_DYNAMIC_DEBUG`, and
+>>>>
+>>>>       echo "file drivers/net/ethernet/* +p" | sudo tee
+>>>> /sys/kernel/debug/dynamic_debug/control
+>>>>
+>>>> I got the messages below.
+>>>>
+>>>>       [ 4159.204192] e1000e 0000:00:1f.6 net00: MDI Error
+>>>>       [ 4160.267950] e1000e 0000:00:1f.6 net00: MDI Write did not complete
+>>>>       [ 4160.359855] e1000e 0000:00:1f.6 net00: MDI Error
+>>>>
+>>>> Can you please shed a little more light into these errors? Please
+>>>> find the full log attached.
+> 
+>>>> [1]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/net/ethernet/intel/e1000e/phy.c#n206
+>>>
+>>> Strictly as a reference point you may consider trying the out-of-tree driver to see if these
+>>> behaviors persist.
+>>>
+>>> https://sourceforge.net/projects/e1000/
+> 
+> I can try that in the next days.
+> 
+>> We are using external PHY. Required ~200 ms to complete MDIC
+>> transaction (depended on the project).
+> 
+> Are you referring to the out-of-tree driver?
+> 
+I believe the out of tree driver have a same approach to MDIC access.
+>> You need to take to consider this time before access to the PHY. I do
+>> not recommend decrease timer in a 'e1000e_read_phy_reg_mdic()'
+>> method. We could hit on wrong MDI access.
+> My point was more, if you know that more time is needed, before the MDI
+> setting(?) will succeed, why try it anyway and go into the error paths?
+> Isn’t there some polling possible to find out, when MDI can be set up?
+> 
+e1000e is very old driver and serve pretty lot of 1G clients. Each 1Gbe 
+MAC/PHY controller have a different configuration depend platform.
+> 
+> Kind regards,
+> 
+> Paul
+> 
+Hello Paul,
+Let me back later with more information specific your device. I will try 
+find out more details with design team.
