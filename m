@@ -2,126 +2,138 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA6EC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56396C32754
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:30:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D9D62086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:29:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A8B32086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:30:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="POUp9Ap4"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iGN+VVdm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733108AbfHHN3i (ORCPT
+        id S1733124AbfHHN37 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 09:29:38 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:46155 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732882AbfHHN3h (ORCPT
+        Thu, 8 Aug 2019 09:29:59 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40650 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732882AbfHHN37 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 09:29:37 -0400
-Received: by mail-qt1-f195.google.com with SMTP id h21so92049521qtn.13
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 06:29:37 -0700 (PDT)
+        Thu, 8 Aug 2019 09:29:59 -0400
+Received: by mail-pf1-f193.google.com with SMTP id p184so44114158pfp.7;
+        Thu, 08 Aug 2019 06:29:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=iyc1YP6OFH2uDUA0k0oJuyk7GU8Aks6UEWf3is5LGJ0=;
-        b=POUp9Ap4Y7t9JD1UUpV1y/2KLeRrgKlCLtA/UznM2RXtpDtPrNJi+egWYoetU+qlI1
-         vJ8Luiu7UPBUE0Zv0Jj3S9dy+sLkgQrWFK0Y1zlehjDmQeqjuZyPHSvJ4SJDM0+JWpfa
-         rI+tWSiy4H97vjPT43kOIyjUuKshki9iUVYEvaBMYxOtwLv5vUxe7jpeLw+IrkvsfaR6
-         5gbbavYNlXsffEvga6gZx+Otqu0k1e44oixC3DSePiNMYJhuwIkd79GOK2evOJ0tvaRl
-         cJpY2N2aTf9YW42b7P7WL5w8yO9z6QiM2NX6yTpLRGHzB+l4TbkqRzsop6pWopBpfiEd
-         w04w==
+        bh=eAHc4PXH4W80rIzb0P4YR5zSPB3pQZ2IAYO2JR2Za1c=;
+        b=iGN+VVdmYfA4zte+LhxYoLoG8ril+vwki+24TO4FpCqXv0hWmOkcpKxYojxt1VW5TV
+         44TyDOQfqVurgs8GpEIpQ85sV/lVRSgYzwGyKyOOmWk0qivuGIua5HWxz1S6mIc0sajC
+         G0eeFEwNXsfLgJzOEtdQKTlmmMYH0t6v0M9iFbfFVVs4+YU1W6AxOLakX/NdA+Gy4W0B
+         a2v61xtBD8UWsux0K3oJeieS3NnwDV7vJpz1P0auuYNO2Uhb7HKfAejCTW1Qs44hLxeU
+         1MaCexhRxK2V/e5MKU8c5VUz091wqWrSzvYBE5h/wwSDJGkYLlYw+TwceqRJP2SsLi7u
+         /BIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=iyc1YP6OFH2uDUA0k0oJuyk7GU8Aks6UEWf3is5LGJ0=;
-        b=P8rbweKoVkStRWm6Iow3nOkeYz8fBp+RpjCIA7jjztiyFCJbupMOM0pYRS7uP5ltBq
-         olZrE6PViC5+Rwh9Z15GkOdaSvmihVfZr7zqZvQn39RlRSD6ZsVFJmGKGXfKx7AAI2Hm
-         CqzP6vCnROYBwW/T4GuorvSvHvmFL4IWDu4S++CCH3jd9s2tbjDdzogX6dvPnvwyAOrW
-         a+VVLmf8EGQpjxEbahAC8Pmk56emIQAVca5/sdevfx0KqpjmGqoVVDwWxsh5NLjC7+Fw
-         vOcmS9CFvX7CWJ6z32G2IX7sLtPPahWxufKvI4bmMB5cBY/C5uQssnFdMDIddrj6pbEk
-         GquQ==
-X-Gm-Message-State: APjAAAU1YT4LR8+JvA7k34YAq+UGWQn3D22Hu8QfPrrTsM9HpAE0ebvk
-        F4iWXBZn+9QVYyiBs5kkvDILalmx
-X-Google-Smtp-Source: APXvYqxK3q9cJAftPQfz762EBoTD9d2JUzisMr/GPxYSaDmHI6XfgryMNdp0tnCAQwCKwTcR0fH2oA==
-X-Received: by 2002:a0c:9163:: with SMTP id q90mr13450522qvq.37.1565270976709;
-        Thu, 08 Aug 2019 06:29:36 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id x206sm43235556qkb.127.2019.08.08.06.29.34
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 08 Aug 2019 06:29:35 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 3C0C640340; Thu,  8 Aug 2019 10:29:33 -0300 (-03)
-Date:   Thu, 8 Aug 2019 10:29:33 -0300
-To:     zhe.he@windriver.com
-Cc:     peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, kan.liang@linux.intel.com, eranian@google.com,
-        alexey.budankov@linux.intel.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] perf: Fix failure to set cpumask when only one cpu
-Message-ID: <20190808132933.GB19444@kernel.org>
-References: <1564734592-15624-1-git-send-email-zhe.he@windriver.com>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=eAHc4PXH4W80rIzb0P4YR5zSPB3pQZ2IAYO2JR2Za1c=;
+        b=XV5SsLAzLpQ8t0ZGr/MZ1fAPPVs/6l/WsbeUfuVuxMj3cmnNp4d/p5/PyMxGyNPBVP
+         Z977mQTYzf/wturoauO+6UL1MY+m74PhTVF2+UoK1rcbBK/OWP3cufYjcohhT6u6x7iV
+         EL/AlyQnqYJjZ0yxxaveaxsiY657ns3jgBNT8xoDkLRavcHsAG4+FUcHZIDjixhK2GUg
+         Ug7pRKwDXbp4nuNCh0KXjt3pa2FJQyJ3enUb5EWSTUV+L+XZNPp8d7SogDxMEY69Mwgc
+         z24WwD2EQ8bvMxXXhW0Hp5lVHRjX+CyC2ja1S5tFNpexwGoA/3c1R02P+1whGeAeYZvJ
+         mQjA==
+X-Gm-Message-State: APjAAAXnagGm3xOHySu6HD2nPPRE3p+DwRDMuZTMvfAuIa7KS/w888wL
+        a1g0/NysrHmU31SLJM8pXqZtRcO8/kY=
+X-Google-Smtp-Source: APXvYqzsY6UsECuf4DosK1dwgKNHz/fB378Lz71BI9XL/gfpkQKAQ1yCdaEuA5+HtdgpHjIldJ4jxg==
+X-Received: by 2002:a63:ee08:: with SMTP id e8mr13016625pgi.70.1565270998661;
+        Thu, 08 Aug 2019 06:29:58 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id o24sm175272521pfp.135.2019.08.08.06.29.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 08 Aug 2019 06:29:57 -0700 (PDT)
+Date:   Thu, 8 Aug 2019 06:29:56 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        kbuild test robot <lkp@intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH][next] hwmon: pmbus: ucd9000: remove unneeded include
+Message-ID: <20190808132956.GA30151@roeck-us.net>
+References: <20190808080144.6183-1-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1564734592-15624-1-git-send-email-zhe.he@windriver.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <20190808080144.6183-1-brgl@bgdev.pl>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Aug 02, 2019 at 04:29:51PM +0800, zhe.he@windriver.com escreveu:
-> From: He Zhe <zhe.he@windriver.com>
+On Thu, Aug 08, 2019 at 10:01:44AM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > 
-> The buffer containing string used to set cpumask is overwritten by end of
-> string later in cpu_map__snprint_mask due to not enough memory space, when
-> there is only one cpu. And thus causes the following failure.
+> Build bot reports the following build issue after commit 9091373ab7ea
+> ("gpio: remove less important #ifdef around declarations):
 > 
-> $ perf ftrace ls
-> failed to reset ftrace
+>    In file included from drivers/hwmon/pmbus/ucd9000.c:19:0:
+> >> include/linux/gpio/driver.h:576:1: error: redefinition of 'gpiochip_add_pin_range'
+>     gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
+>     ^~~~~~~~~~~~~~~~~~~~~~
+>    In file included from drivers/hwmon/pmbus/ucd9000.c:18:0:
+>    include/linux/gpio.h:245:1: note: previous definition of 'gpiochip_add_pin_range' was here
+>     gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
+>     ^~~~~~~~~~~~~~~~~~~~~~
+>    In file included from drivers/hwmon/pmbus/ucd9000.c:19:0:
+> >> include/linux/gpio/driver.h:583:1: error: redefinition of 'gpiochip_add_pingroup_range'
+>     gpiochip_add_pingroup_range(struct gpio_chip *chip,
+>     ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+>    In file included from drivers/hwmon/pmbus/ucd9000.c:18:0:
+>    include/linux/gpio.h:254:1: note: previous definition of 'gpiochip_add_pingroup_range' was here
+>     gpiochip_add_pingroup_range(struct gpio_chip *chip,
+>     ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+>    In file included from drivers/hwmon/pmbus/ucd9000.c:19:0:
+> >> include/linux/gpio/driver.h:591:1: error: redefinition of 'gpiochip_remove_pin_ranges'
+>     gpiochip_remove_pin_ranges(struct gpio_chip *chip)
+>     ^~~~~~~~~~~~~~~~~~~~~~~~~~
+>    In file included from drivers/hwmon/pmbus/ucd9000.c:18:0:
+>    include/linux/gpio.h:263:1: note: previous definition of 'gpiochip_remove_pin_ranges' was here
+>     gpiochip_remove_pin_ranges(struct gpio_chip *chip)
 > 
-> This patch fixes the calculation of cpumask string size.
+> This is caused by conflicting defines from linux/gpio.h and
+> linux/gpio/driver.h. Drivers should not include both the legacy and
+> the new API headers. This driver doesn't even use linux/gpio.h so
+> remove it.
+> 
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Please next time add this as well:
+Applied.
 
-Fixes: dc23103278c5 ("perf ftrace: Add support for -a and -C option")
+Thanks,
+Guenter
 
-Applied,
-
-- Arnaldo
- 
-> Signed-off-by: He Zhe <zhe.he@windriver.com>
 > ---
->  tools/perf/builtin-ftrace.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/hwmon/pmbus/ucd9000.c | 1 -
+>  1 file changed, 1 deletion(-)
 > 
-> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-> index 66d5a66..0193128 100644
-> --- a/tools/perf/builtin-ftrace.c
-> +++ b/tools/perf/builtin-ftrace.c
-> @@ -173,7 +173,7 @@ static int set_tracing_cpumask(struct cpu_map *cpumap)
->  	int last_cpu;
+> diff --git a/drivers/hwmon/pmbus/ucd9000.c b/drivers/hwmon/pmbus/ucd9000.c
+> index c846759bc1c0..a9229c6b0e84 100644
+> --- a/drivers/hwmon/pmbus/ucd9000.c
+> +++ b/drivers/hwmon/pmbus/ucd9000.c
+> @@ -15,7 +15,6 @@
+>  #include <linux/slab.h>
+>  #include <linux/i2c.h>
+>  #include <linux/pmbus.h>
+> -#include <linux/gpio.h>
+>  #include <linux/gpio/driver.h>
+>  #include "pmbus.h"
 >  
->  	last_cpu = cpu_map__cpu(cpumap, cpumap->nr - 1);
-> -	mask_size = (last_cpu + 3) / 4 + 1;
-> +	mask_size = last_cpu / 4 + 2; /* one more byte for EOS */
->  	mask_size += last_cpu / 32; /* ',' is needed for every 32th cpus */
->  
->  	cpumask = malloc(mask_size);
-> -- 
-> 2.7.4
-
--- 
-
-- Arnaldo
