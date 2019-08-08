@@ -2,313 +2,107 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F06CDC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 21:10:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C29E8C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 21:12:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2D0620B7C
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 21:10:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A9D4214C6
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 21:12:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="DT8VEuxu"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="BC2gVSlE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390423AbfHHVKS (ORCPT
+        id S2390424AbfHHVMR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 17:10:18 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:4716 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732427AbfHHVKS (ORCPT
+        Thu, 8 Aug 2019 17:12:17 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:58597 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725535AbfHHVMR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 17:10:18 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d4c8fbb0000>; Thu, 08 Aug 2019 14:10:19 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 08 Aug 2019 14:10:17 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 08 Aug 2019 14:10:17 -0700
-Received: from rcampbell-dev.nvidia.com (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 8 Aug
- 2019 21:10:16 +0000
-Subject: Re: [PATCH 6/9] nouveau: simplify nouveau_dmem_migrate_to_ram
-To:     Christoph Hellwig <hch@lst.de>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>
-CC:     Bharata B Rao <bharata@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        <linux-mm@kvack.org>, <nouveau@lists.freedesktop.org>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-References: <20190808153346.9061-1-hch@lst.de>
- <20190808153346.9061-7-hch@lst.de>
-From:   Ralph Campbell <rcampbell@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <08112ecb-0984-9e32-a463-e731bc014747@nvidia.com>
-Date:   Thu, 8 Aug 2019 14:10:15 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190808153346.9061-7-hch@lst.de>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
+        Thu, 8 Aug 2019 17:12:17 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 4810A886BF
+        for <linux-kernel@vger.kernel.org>; Fri,  9 Aug 2019 09:12:12 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1565298732;
+        bh=W2k74tqXbJx5Ec7T8QCeVBazUTWZg/ddcDaMpjqSM4g=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=BC2gVSlEZ87YSku2Lei4poT74JChwSzhoHgrSHHOKvvMuAgpSOfuSdTAu/aj82v1R
+         WH8cvnsmjI1eKIQyD+nVWlZpQcpUxf0fu+O1o7SIGOWkfkUVPog39sj9Oz0C7CqpVD
+         yH+PecqOfMGM48V8QZWeP2K8XBPl0jBsAM8zKEMGhOjTA6yOQ5p9R5Kj9oUDlt8SZT
+         zC/CpTIohuqBkhjEIhpFm4rwpDEGC/IOWE9GHOwDYxk2WmUCjGvzM8vO+ZO7xFWvfF
+         55eYCXkW0zeRa4Qlu3DH56NzfSKhW3NnOgiM44yk+QCUTASxoJxzzykUD1SMq+cJsr
+         dOomFfVLvQAGQ==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5d4c902b0001>; Fri, 09 Aug 2019 09:12:11 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
+ by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
+ Microsoft SMTP Server (TLS) id 15.0.1156.6; Fri, 9 Aug 2019 09:12:11 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1156.000; Fri, 9 Aug 2019 09:12:11 +1200
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     "christophe.leroy@c-s.fr" <christophe.leroy@c-s.fr>,
+        "paulus@samba.org" <paulus@samba.org>,
+        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>
+CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] powerpc/64e: drop stale call to smp_processor_id() which
+ hangs SMP startup
+Thread-Topic: [PATCH] powerpc/64e: drop stale call to smp_processor_id() which
+ hangs SMP startup
+Thread-Index: AQHVTeeWjuj86p0A5U+CJo7DQvxMVabw9umA
+Date:   Thu, 8 Aug 2019 21:12:11 +0000
+Message-ID: <1565298731.4267.5.camel@alliedtelesis.co.nz>
+References: <bef479514f4c08329fa649f67735df8918bc0976.1565268248.git.christophe.leroy@c-s.fr>
+In-Reply-To: <bef479514f4c08329fa649f67735df8918bc0976.1565268248.git.christophe.leroy@c-s.fr>
+Accept-Language: en-NZ, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1565298619; bh=oVBAQyD5xUlq4GMTL3CDo5/mxCgb1o2QAFYUcZwvsVY=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=DT8VEuxuGaFlUgwlrCBl+bxMJ34NfECopfGnQdXhLsvMTrSZTI/OVr3RSJRhwwWRJ
-         w/QzZVbGKkx8yjcEIJYg1Ad+ljBOQOv8jG+ZFgmI7KmKcpt1OvYSee6jAWx8cXp2/d
-         TXjfEyQaK/wxLWrI62Bn53t1WWNWi7l+8u4Cxw688GJ+8ij5Q7s2d91Tc/RtWWBAIR
-         nf7+CHObeaDJ6MyhPbtTqKeOd1GJZxtTEF1dqVIfDf5jxnvRx4q1e8vpUlKCPuWnam
-         w5yYUY5HGGmOskuTBVhHSaJNNsAcSwCjfiInxFUovLczrbBIO2I6r4d0fULpuRG1Mh
-         JmS0XghUahm8Q==
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.18.5.2-0ubuntu3.2 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [2001:df5:b000:22:3a2c:4aff:fe70:2b02]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <41B4A7E9A46BAB44BA9C5B3F109F1CF1@atlnz.lc>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 8/8/19 8:33 AM, Christoph Hellwig wrote:
-> Factor the main copy page to ram routine out into a helper that acts on
-> a single page and which doesn't require the nouveau_dmem_fault
-> structure for argument passing.  Also remove the loop over multiple
-> pages as we only handle one at the moment, although the structure of
-> the main worker function makes it relatively easy to add multi page
-> support back if needed in the future.  But at least for now this avoid
-> the needed to dynamically allocate memory for the dma addresses in
-> what is essentially the page fault path.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-
-Reviewed-by: Ralph Campbell <rcampbell@nvidia.com>
-
-> ---
->   drivers/gpu/drm/nouveau/nouveau_dmem.c | 159 +++++++------------------
->   1 file changed, 40 insertions(+), 119 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/nouveau/nouveau_dmem.c b/drivers/gpu/drm/nouveau/nouveau_dmem.c
-> index 21052a4aaf69..473195762974 100644
-> --- a/drivers/gpu/drm/nouveau/nouveau_dmem.c
-> +++ b/drivers/gpu/drm/nouveau/nouveau_dmem.c
-> @@ -86,13 +86,6 @@ static inline struct nouveau_dmem *page_to_dmem(struct page *page)
->   	return container_of(page->pgmap, struct nouveau_dmem, pagemap);
->   }
->   
-> -struct nouveau_dmem_fault {
-> -	struct nouveau_drm *drm;
-> -	struct nouveau_fence *fence;
-> -	dma_addr_t *dma;
-> -	unsigned long npages;
-> -};
-> -
->   struct nouveau_migrate {
->   	struct vm_area_struct *vma;
->   	struct nouveau_drm *drm;
-> @@ -146,130 +139,57 @@ static void nouveau_dmem_fence_done(struct nouveau_fence **fence)
->   	}
->   }
->   
-> -static void
-> -nouveau_dmem_fault_alloc_and_copy(struct vm_area_struct *vma,
-> -				  const unsigned long *src_pfns,
-> -				  unsigned long *dst_pfns,
-> -				  unsigned long start,
-> -				  unsigned long end,
-> -				  struct nouveau_dmem_fault *fault)
-> +static vm_fault_t nouveau_dmem_fault_copy_one(struct nouveau_drm *drm,
-> +		struct vm_fault *vmf, struct migrate_vma *args,
-> +		dma_addr_t *dma_addr)
->   {
-> -	struct nouveau_drm *drm = fault->drm;
->   	struct device *dev = drm->dev->dev;
-> -	unsigned long addr, i, npages = 0;
-> -	nouveau_migrate_copy_t copy;
-> -	int ret;
-> -
-> +	struct page *dpage, *spage;
-> +	vm_fault_t ret = VM_FAULT_SIGBUS;
-
-You can remove this line and return VM_FAULT_SIGBUS in the error path below.
-
->   
-> -	/* First allocate new memory */
-> -	for (addr = start, i = 0; addr < end; addr += PAGE_SIZE, i++) {
-> -		struct page *dpage, *spage;
-> -
-> -		dst_pfns[i] = 0;
-> -		spage = migrate_pfn_to_page(src_pfns[i]);
-> -		if (!spage || !(src_pfns[i] & MIGRATE_PFN_MIGRATE))
-> -			continue;
-> -
-> -		dpage = alloc_page_vma(GFP_HIGHUSER, vma, addr);
-> -		if (!dpage) {
-> -			dst_pfns[i] = MIGRATE_PFN_ERROR;
-> -			continue;
-> -		}
-> -		lock_page(dpage);
-> -
-> -		dst_pfns[i] = migrate_pfn(page_to_pfn(dpage)) |
-> -			      MIGRATE_PFN_LOCKED;
-> -		npages++;
-> -	}
-> +	spage = migrate_pfn_to_page(args->src[0]);
-> +	if (!spage || !(args->src[0] & MIGRATE_PFN_MIGRATE))
-> +		return 0;
->   
-> -	/* Allocate storage for DMA addresses, so we can unmap later. */
-> -	fault->dma = kmalloc(sizeof(*fault->dma) * npages, GFP_KERNEL);
-> -	if (!fault->dma)
-> +	dpage = alloc_page_vma(GFP_HIGHUSER, vmf->vma, vmf->address);
-> +	if (!dpage)
->   		goto error;
-> +	lock_page(dpage);
->   
-> -	/* Copy things over */
-> -	copy = drm->dmem->migrate.copy_func;
-> -	for (addr = start, i = 0; addr < end; addr += PAGE_SIZE, i++) {
-> -		struct page *spage, *dpage;
-> -
-> -		dpage = migrate_pfn_to_page(dst_pfns[i]);
-> -		if (!dpage || dst_pfns[i] == MIGRATE_PFN_ERROR)
-> -			continue;
-> -
-> -		spage = migrate_pfn_to_page(src_pfns[i]);
-> -		if (!spage || !(src_pfns[i] & MIGRATE_PFN_MIGRATE)) {
-> -			dst_pfns[i] = MIGRATE_PFN_ERROR;
-> -			__free_page(dpage);
-> -			continue;
-> -		}
-> -
-> -		fault->dma[fault->npages] =
-> -			dma_map_page_attrs(dev, dpage, 0, PAGE_SIZE,
-> -					   PCI_DMA_BIDIRECTIONAL,
-> -					   DMA_ATTR_SKIP_CPU_SYNC);
-> -		if (dma_mapping_error(dev, fault->dma[fault->npages])) {
-> -			dst_pfns[i] = MIGRATE_PFN_ERROR;
-> -			__free_page(dpage);
-> -			continue;
-> -		}
-> +	*dma_addr = dma_map_page(dev, dpage, 0, PAGE_SIZE, DMA_BIDIRECTIONAL);
-> +	if (dma_mapping_error(dev, *dma_addr))
-> +		goto error_free_page;
->   
-> -		ret = copy(drm, 1, NOUVEAU_APER_HOST,
-> -				fault->dma[fault->npages++],
-> -				NOUVEAU_APER_VRAM,
-> -				nouveau_dmem_page_addr(spage));
-> -		if (ret) {
-> -			dst_pfns[i] = MIGRATE_PFN_ERROR;
-> -			__free_page(dpage);
-> -			continue;
-> -		}
-> -	}
-> +	if (drm->dmem->migrate.copy_func(drm, 1, NOUVEAU_APER_HOST, *dma_addr,
-> +			NOUVEAU_APER_VRAM, nouveau_dmem_page_addr(spage)))
-> +		goto error_dma_unmap;
->   
-> -	nouveau_fence_new(drm->dmem->migrate.chan, false, &fault->fence);
-> -
-> -	return;
-> +	args->dst[0] = migrate_pfn(page_to_pfn(dpage)) | MIGRATE_PFN_LOCKED;
-> +	ret = 0;
-
-This needs to be "return 0;" here so that dpage is not unmapped
-while the DMA I/O is in progress. It gets unmapped after the
-call to nouveau_dmem_fence_done() in nouveau_dmem_migrate_to_ram().
-
->   
-> +error_dma_unmap:
-> +	dma_unmap_page(dev, *dma_addr, PAGE_SIZE, DMA_BIDIRECTIONAL);
-> +error_free_page:
-> +	__free_page(dpage);
->   error:
-> -	for (addr = start, i = 0; addr < end; addr += PAGE_SIZE, ++i) {
-> -		struct page *page;
-> -
-> -		if (!dst_pfns[i] || dst_pfns[i] == MIGRATE_PFN_ERROR)
-> -			continue;
-> -
-> -		page = migrate_pfn_to_page(dst_pfns[i]);
-> -		dst_pfns[i] = MIGRATE_PFN_ERROR;
-> -		if (page == NULL)
-> -			continue;
-> -
-> -		__free_page(page);
-> -	}
-> -}
-> -
-> -static void
-> -nouveau_dmem_fault_finalize_and_map(struct nouveau_dmem_fault *fault)
-> -{
-> -	struct nouveau_drm *drm = fault->drm;
-> -
-> -	nouveau_dmem_fence_done(&fault->fence);
-> -
-> -	while (fault->npages--) {
-> -		dma_unmap_page(drm->dev->dev, fault->dma[fault->npages],
-> -			       PAGE_SIZE, PCI_DMA_BIDIRECTIONAL);
-> -	}
-> -	kfree(fault->dma);
-> +	return ret;
-
-	return VM_FAULT_SIGBUS;
-
->   }
->   
->   static vm_fault_t nouveau_dmem_migrate_to_ram(struct vm_fault *vmf)
->   {
->   	struct nouveau_dmem *dmem = page_to_dmem(vmf->page);
-> -	unsigned long src[1] = {0}, dst[1] = {0};
-> +	struct nouveau_drm *drm = dmem->drm;
-> +	struct nouveau_fence *fence;
-> +	unsigned long src = 0, dst = 0;
-> +	dma_addr_t dma_addr = 0;
-> +	vm_fault_t ret;
->   	struct migrate_vma args = {
->   		.vma		= vmf->vma,
->   		.start		= vmf->address,
->   		.end		= vmf->address + PAGE_SIZE,
-> -		.src		= src,
-> -		.dst		= dst,
-> +		.src		= &src,
-> +		.dst		= &dst,
->   	};
-> -	struct nouveau_dmem_fault fault = { .drm = dmem->drm };
->   
->   	/*
->   	 * FIXME what we really want is to find some heuristic to migrate more
-> @@ -281,16 +201,17 @@ static vm_fault_t nouveau_dmem_migrate_to_ram(struct vm_fault *vmf)
->   	if (!args.cpages)
->   		return 0;
->   
-> -	nouveau_dmem_fault_alloc_and_copy(args.vma, src, dst, args.start,
-> -			args.end, &fault);
-> -	migrate_vma_pages(&args);
-> -	nouveau_dmem_fault_finalize_and_map(&fault);
-> +	ret = nouveau_dmem_fault_copy_one(drm, vmf, &args, &dma_addr);
-> +	if (ret || dst == 0)
-> +		goto done;
->   
-> +	nouveau_fence_new(dmem->migrate.chan, false, &fence);
-> +	migrate_vma_pages(&args);
-> +	nouveau_dmem_fence_done(&fence);
-> +	dma_unmap_page(drm->dev->dev, dma_addr, PAGE_SIZE, DMA_BIDIRECTIONAL);
-> +done:
->   	migrate_vma_finalize(&args);
-> -	if (dst[0] == MIGRATE_PFN_ERROR)
-> -		return VM_FAULT_SIGBUS;
-> -
-> -	return 0;
-> +	return ret;
->   }
->   
->   static const struct dev_pagemap_ops nouveau_dmem_pagemap_ops = {
-> 
+SGkgQ2hyaXN0b3BoZSwNCg0KT24gVGh1LCAyMDE5LTA4LTA4IGF0IDEyOjQ4ICswMDAwLCBDaHJp
+c3RvcGhlIExlcm95IHdyb3RlOg0KPiBTYW50YSBjb21taXQgZWJiOWQzMGE2YTc0ICgicG93ZXJw
+Yy9tbTogYW55IHRocmVhZCBpbiBvbmUgY29yZSBjYW4gYmUNCj4gdGhlIGZpcnN0IHRvIHNldHVw
+IFRMQjEiKSByZW1vdmVkIHRoZSBuZWVkIHRvIGtub3cgdGhlIGNwdV9pZCBpbg0KPiBlYXJseV9p
+bml0X3RoaXNfbW11KCksIGJ1dCB0aGUgY2FsbCB0byBzbXBfcHJvY2Vzc29yX2lkKCkgd2hpY2gg
+d2FzDQo+IG1hcmtlZCBfX21heWJlX3VzZWQgcmVtYWluZWQuDQo+IA0KPiBTaW5jZSBjb21taXQg
+ZWQxY2Q2ZGViMDEzICgicG93ZXJwYzogQWN0aXZhdGUNCj4gQ09ORklHX1RIUkVBRF9JTkZPX0lO
+X1RBU0siKSB0aHJlYWRfaW5mbyBjYW5ub3QgYmUgcmVhY2hlZCBiZWZvcmUgbW11DQo+IGlzIHBy
+b3Blcmx5IHNldCB1cC4NCj4gDQo+IERyb3AgdGhpcyBzdGFsZSBjYWxsIHRvIHNtcF9wcm9jZXNz
+b3JfaWQoKSB3aGljaCBtYWtlIFNNUCBoYW5nDQo+IHdoZW4gQ09ORklHX1BSRUVNUFQgaXMgc2V0
+Lg0KPiANCj4gUmVwb3J0ZWQtYnk6IENocmlzIFBhY2toYW0gPENocmlzLlBhY2toYW1AYWxsaWVk
+dGVsZXNpcy5jby5uej4NCj4gRml4ZXM6IGViYjlkMzBhNmE3NCAoInBvd2VycGMvbW06IGFueSB0
+aHJlYWQgaW4gb25lIGNvcmUgY2FuIGJlIHRoZQ0KPiBmaXJzdCB0byBzZXR1cCBUTEIxIikNCj4g
+TGluazogaHR0cHM6Ly9naXRodWIuY29tL2xpbnV4cHBjL2lzc3Vlcy9pc3N1ZXMvMjY0DQo+IFNp
+Z25lZC1vZmYtYnk6IENocmlzdG9waGUgTGVyb3kgPGNocmlzdG9waGUubGVyb3lAYy1zLmZyPg0K
+PiBDYzogc3RhYmxlQHZnZXIua2VybmVsLm9yZw0KDQpNYW55IHRoYW5rcyBmb3IgeW91ciBoZWxw
+Lg0KDQpUZXN0ZWQtYnk6IENocmlzIFBhY2toYW0gPGNocmlzLnBhY2toYW1AYWxsaWVkdGVsZXNp
+cy5jby5uej4NCg0KPiAtLS0NCj4gwqBhcmNoL3Bvd2VycGMvbW0vbm9oYXNoL3RsYi5jIHwgMSAt
+DQo+IMKgMSBmaWxlIGNoYW5nZWQsIDEgZGVsZXRpb24oLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9h
+cmNoL3Bvd2VycGMvbW0vbm9oYXNoL3RsYi5jDQo+IGIvYXJjaC9wb3dlcnBjL21tL25vaGFzaC90
+bGIuYw0KPiBpbmRleCBkNGFjZjZmYTA1OTYuLmJmNjA5ODNhNThjNyAxMDA2NDQNCj4gLS0tIGEv
+YXJjaC9wb3dlcnBjL21tL25vaGFzaC90bGIuYw0KPiArKysgYi9hcmNoL3Bvd2VycGMvbW0vbm9o
+YXNoL3RsYi5jDQo+IEBAIC02MzAsNyArNjMwLDYgQEAgc3RhdGljIHZvaWQgZWFybHlfaW5pdF90
+aGlzX21tdSh2b2lkKQ0KPiDCoCNpZmRlZiBDT05GSUdfUFBDX0ZTTF9CT09LM0UNCj4gwqAJaWYg
+KG1tdV9oYXNfZmVhdHVyZShNTVVfRlRSX1RZUEVfRlNMX0UpKSB7DQo+IMKgCQl1bnNpZ25lZCBp
+bnQgbnVtX2NhbXM7DQo+IC0JCWludCBfX21heWJlX3VudXNlZCBjcHUgPSBzbXBfcHJvY2Vzc29y
+X2lkKCk7DQo+IMKgCQlib29sIG1hcCA9IHRydWU7DQo+IMKgDQo+IMKgCQkvKiB1c2UgYSBxdWFy
+dGVyIG9mIHRoZSBUTEJDQU0gZm9yIGJvbHRlZCBsaW5lYXIgbWFwDQo+ICov
