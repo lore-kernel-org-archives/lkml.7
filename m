@@ -2,88 +2,97 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F9AEC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B66FC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:42:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D1742173E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:40:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1008E2173E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:42:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733204AbfHHNkD (ORCPT
+        id S1733189AbfHHNmY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 09:40:03 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41118 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732882AbfHHNkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 09:40:03 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E5BB5315C005;
-        Thu,  8 Aug 2019 13:40:02 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-144.ams2.redhat.com [10.36.116.144])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8D0B55C219;
-        Thu,  8 Aug 2019 13:40:02 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id A029816E08; Thu,  8 Aug 2019 15:40:00 +0200 (CEST)
-Date:   Thu, 8 Aug 2019 15:40:00 +0200
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     "Koenig, Christian" <Christian.Koenig@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        "Huang, Ray" <Ray.Huang@amd.com>,
-        "tzimmermann@suse.de" <tzimmermann@suse.de>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 2/8] ttm: turn ttm_bo_device.vma_manager into a pointer
-Message-ID: <20190808134000.oz5ztbjyyux5ufvo@sirius.home.kraxel.org>
-References: <20190808093702.29512-1-kraxel@redhat.com>
- <20190808093702.29512-3-kraxel@redhat.com>
- <2a90c899-19eb-5be2-3eda-f20efd31aa29@amd.com>
- <20190808103521.u6ggltj4ftns77je@sirius.home.kraxel.org>
- <20190808120252.GO7444@phenom.ffwll.local>
+        Thu, 8 Aug 2019 09:42:24 -0400
+Received: from esa2.hc3370-68.iphmx.com ([216.71.145.153]:29022 "EHLO
+        esa2.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728327AbfHHNmY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 09:42:24 -0400
+X-Greylist: delayed 426 seconds by postgrey-1.27 at vger.kernel.org; Thu, 08 Aug 2019 09:42:23 EDT
+Authentication-Results: esa2.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=roger.pau@citrix.com; spf=Pass smtp.mailfrom=roger.pau@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
+Received-SPF: None (esa2.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  roger.pau@citrix.com) identity=pra; client-ip=162.221.158.21;
+  receiver=esa2.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="roger.pau@citrix.com";
+  x-conformance=sidf_compatible
+Received-SPF: Pass (esa2.hc3370-68.iphmx.com: domain of
+  roger.pau@citrix.com designates 162.221.158.21 as permitted
+  sender) identity=mailfrom; client-ip=162.221.158.21;
+  receiver=esa2.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="roger.pau@citrix.com";
+  x-conformance=sidf_compatible; x-record-type="v=spf1";
+  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
+  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
+  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
+  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83 ~all"
+Received-SPF: None (esa2.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@mail.citrix.com) identity=helo;
+  client-ip=162.221.158.21; receiver=esa2.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="postmaster@mail.citrix.com";
+  x-conformance=sidf_compatible
+IronPort-SDR: nEDU6LVRbg88KTlTux6ru2PgFlw3LZjUfq4C1Lk4MHjAdYYLx5hH5dgAN+PxYLeziP35n1JIkU
+ V9/9gTTKBFaujkKcXN+7jTqPGwdxUON4C8t9vauc6bqqS5VS2VfgYKYCgkoY0mPwr3McBoUsMN
+ bRXbiVpK7UnxHm2OUDKfgczWJCS1nMhKNkWTo0BYps8sKTld02npKy+2E2kcAibKuNvv6aWJeW
+ uPS33gMZybumugUioywI5gGjPgweC8x1Al6DE1locvpzmoxG/q3OOVbjPNnzHDRPL6qIZxb2j3
+ tEA=
+X-SBRS: 2.7
+X-MesageID: 4024476
+X-Ironport-Server: esa2.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.64,361,1559534400"; 
+   d="scan'208";a="4024476"
+Date:   Thu, 8 Aug 2019 15:35:10 +0200
+From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
+To:     Chuhong Yuan <hslester96@gmail.com>
+CC:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Jens Axboe <axboe@kernel.dk>, <xen-devel@lists.xenproject.org>,
+        <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/3] xen/blkback: Use refcount_t for refcount
+Message-ID: <20190808133510.tre6twn764pv3e7m@Air-de-Roger>
+References: <20190808131100.24751-1-hslester96@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20190808120252.GO7444@phenom.ffwll.local>
+In-Reply-To: <20190808131100.24751-1-hslester96@gmail.com>
 User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Thu, 08 Aug 2019 13:40:03 +0000 (UTC)
+X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
+ AMSPEX02CL02.citrite.net (10.69.22.126)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  Hi,
+On Thu, Aug 08, 2019 at 09:11:00PM +0800, Chuhong Yuan wrote:
+> Reference counters are preferred to use refcount_t instead of
+> atomic_t.
+> This is because the implementation of refcount_t can prevent
+> overflows and detect possible use-after-free.
+> So convert atomic_t ref counters to refcount_t.
 
-> > > That would also make the verify_access callback completely superfluous 
-> > > and looks like a good step into the right direction of de-midlayering.
-> > 
-> > Hmm, right, noticed that too while working on another patch series.
-> > Guess I'll try to merge those two and see where I end up ...
-> 
-> ... but if it gets too invasive I'd vote for incremental changes.
+Thanks!
 
-Yep, this is what I'm up to.  Sketching things up with vram helpers and
-qxl, in a way that we can switch over drivers one by one.
+I think there are more reference counters in blkback than
+the one you fixed. There's also an inflight field in xen_blkif_ring,
+and a pendcnt in pending_req which look like possible candidates to
+switch to use refcount_t, have you looked into switching those two
+also?
 
-Once all drivers are switched removing ttm_bo_device.vma_manager
-altogether should be easy.
-
-> Even if
-> we completely rip out the vma/mmap lookup stuff from ttm, we still need to
-> keep a copy somewhere for vmwgfx.
-
-If vmwgfx is the only user we can probably just move things from ttm to
-vmwgfx.
-
-> Or would the evil plan be the vmwgfx
-> would use the gem mmap helpers too?
-
-That would work as well ;)
-
-cheers,
-  Gerd
-
+Roger.
