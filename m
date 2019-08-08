@@ -2,121 +2,328 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E727AC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:01:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0542C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:02:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACCE621882
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:01:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="isZbmorM"
+	by mail.kernel.org (Postfix) with ESMTP id 9DBD721743
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:02:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390315AbfHHUBs (ORCPT
+        id S2390354AbfHHUCF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 16:01:48 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54773 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389883AbfHHUBs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 16:01:48 -0400
-Received: by mail-wm1-f65.google.com with SMTP id p74so3521854wme.4;
-        Thu, 08 Aug 2019 13:01:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=7jTaWodj+o7bQpJXVjN7WZTMa/civJyI2O4p/MCweUQ=;
-        b=isZbmorMAwvajUYDEKUD4lUqS1Sw/IbC+rYSpXOdbKPAJ9D7VQ0n2A8Uz+1uPB69T8
-         lohq1iDZbO0d7504KZ7SLh2p6Dz+eNsNo6mOx6YlNjzt3h2l4xLhCVLQjcYyEkEfndPn
-         uoC0EwK1QmGDqb5ZOWzMaun68shdtWKmxxJR5GfdOPjmE94uI/JZcjxJnBa6rafEhRLd
-         NGnuc6O2xOAaIX8a8J9bJp9IutUqTMjqkMCDOkg+KvOF+glR1FEEvT282rR1O/5/HabB
-         VTzEN5RTbGIPrEK5RH+qnM38BpyeyiaVrveldh04w1tvqnw7jT20QotG1tzu3etVvMPZ
-         u51w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7jTaWodj+o7bQpJXVjN7WZTMa/civJyI2O4p/MCweUQ=;
-        b=oPNIcxWjFr2O/WVG2Jiu5i3Lbg2zDCeeaslqfB1T9G0AlldrNnG68AOSDPVujBuH6Z
-         5Bq8bwig0sBmQHqf+z9JOoPzWwZ5i9eDAwe0W2kTFtjMvwYVFEupRAOnlZKIdf2BND6X
-         OGFxaxu5T0oasOa5W6B++Z1o+IAWklN0CCFkd4q6QNASLlXOqMzFh/Bks+ukVLVVGfrQ
-         bJFHmfTyzfJ9r2AMQr3nN3RsW0OeDf3lj4vdcH9ZbNT+laVdzgLTDf0fIiRURBinY4uB
-         wkfttqLEM0+THUdxUmXving/LgBN1LyEwM6GRHW0RcpINlgBhuTqf024gZqBusp2WCdJ
-         NBWA==
-X-Gm-Message-State: APjAAAW7wHEexLzQUAH9v+OpcpFrcWa5RQwYMje6hbyodsWstKGllCgX
-        lMaHm+BuyU0uOZ97UYMWv4w=
-X-Google-Smtp-Source: APXvYqxcK3YbLrWSBF0s2uNuRnPmqxW69hMr0lv92X0Mv1bqON6d0QQLRPBRW8BRfZEMu4MDY2EMuw==
-X-Received: by 2002:a1c:751a:: with SMTP id o26mr6284679wmc.13.1565294505632;
-        Thu, 08 Aug 2019 13:01:45 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f2f:3200:ec8a:8637:bf5f:7faf? (p200300EA8F2F3200EC8A8637BF5F7FAF.dip0.t-ipconnect.de. [2003:ea:8f2f:3200:ec8a:8637:bf5f:7faf])
-        by smtp.googlemail.com with ESMTPSA id o20sm243207712wrh.8.2019.08.08.13.01.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 08 Aug 2019 13:01:44 -0700 (PDT)
-Subject: Re: [PATCH net] net: phy: rtl8211f: do a double read to get real time
- link status
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Yonglong Liu <liuyonglong@huawei.com>, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxarm@huawei.com, salil.mehta@huawei.com,
-        yisen.zhuang@huawei.com, shiju.jose@huawei.com
-References: <1565183772-44268-1-git-send-email-liuyonglong@huawei.com>
- <d67831ab-8902-a653-3db9-b2f55adacabd@gmail.com>
- <e663235c-93eb-702d-5a9c-8f781d631c42@huawei.com>
- <080b68c7-abe6-d142-da4b-26e8a7d4dc19@gmail.com>
- <c15f820b-cc80-9a93-4c48-1b60bc14f73a@huawei.com>
- <b1140603-f05b-2373-445f-c1d7a43ff012@gmail.com>
- <20190808194049.GM27917@lunn.ch>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <26e2c5c9-915c-858b-d091-e5bfa7ab6a5b@gmail.com>
-Date:   Thu, 8 Aug 2019 22:01:39 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 8 Aug 2019 16:02:05 -0400
+Received: from sauhun.de ([88.99.104.3]:58380 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389883AbfHHUCF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 16:02:05 -0400
+Received: from localhost (p5486CA1C.dip0.t-ipconnect.de [84.134.202.28])
+        by pokefinder.org (Postfix) with ESMTPSA id 9AAEE2C3112;
+        Thu,  8 Aug 2019 22:02:02 +0200 (CEST)
+Date:   Thu, 8 Aug 2019 22:02:02 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Biwen Li <biwen.li@nxp.com>,
+        Joshua Frkuska <joshua_frkuska@mentor.com>
+Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        laurentiu.tudor@nxp.com
+Subject: Re: i2c: imx: support slave mode for imx I2C driver
+Message-ID: <20190808200202.GA6609@ninjato>
+References: <20190808035343.34120-1-biwen.li@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20190808194049.GM27917@lunn.ch>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="7JfCtLOvnd9MIVvH"
+Content-Disposition: inline
+In-Reply-To: <20190808035343.34120-1-biwen.li@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08.08.2019 21:40, Andrew Lunn wrote:
->> @@ -568,6 +568,11 @@ int phy_start_aneg(struct phy_device *phydev)
->>  	if (err < 0)
->>  		goto out_unlock;
->>  
->> +	/* The PHY may not yet have cleared aneg-completed and link-up bit
->> +	 * w/o this delay when the following read is done.
->> +	 */
->> +	usleep_range(1000, 2000);
->> +
-> 
-> Hi Heiner
-> 
-> Does 802.3 C22 say anything about this?
-> 
-C22 says:
-"The Auto-Negotiation process shall be restarted by setting bit 0.9 to a logic one. This bit is self-
-clearing, and a PHY shall return a value of one in bit 0.9 until the Auto-Negotiation process has been
-initiated."
 
-Maybe we should read bit 0.9 in genphy_update_link() after having read BMSR and report
-aneg-complete and link-up as false (no matter of their current value) if 0.9 is set.
+--7JfCtLOvnd9MIVvH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> If this PHY is broken with respect to the standard, i would prefer the
-> workaround is in the PHY specific driver code, not generic core code.
-> 
-Based on the C22 statement above the PHY may not be broken and the typical time between
-two MDIO accesses is sufficient for the PHY to clear the bits. I think of MDIO bus access
-functions in network chips that have a 10us-20us delay after each MDIO access.
-On HNS3 this may not be the case.
+On Thu, Aug 08, 2019 at 11:53:43AM +0800, Biwen Li wrote:
+> The patch supports slave mode for imx I2C driver
+>=20
+> Signed-off-by: Biwen Li <biwen.li@nxp.com>
 
-> 	   Andrew
-> 
-Heiner
+Wow, this is much simpler than the other approach flying around:
+
+http://patchwork.ozlabs.org/patch/1124048/
+
+Can this one be master and slave on the same bus, too?
+
+CCing the author of the other patch.
+
+> ---
+>  drivers/i2c/busses/i2c-imx.c | 199 ++++++++++++++++++++++++++++++++---
+>  1 file changed, 185 insertions(+), 14 deletions(-)
+>=20
+> diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
+> index b1b8b938d7f4..f7583a9fa56f 100644
+> --- a/drivers/i2c/busses/i2c-imx.c
+> +++ b/drivers/i2c/busses/i2c-imx.c
+> @@ -202,6 +202,9 @@ struct imx_i2c_struct {
+>  	struct pinctrl_state *pinctrl_pins_gpio;
+> =20
+>  	struct imx_i2c_dma	*dma;
+> +#if IS_ENABLED(CONFIG_I2C_SLAVE)
+> +	struct i2c_client		*slave;
+> +#endif /* CONFIG_I2C_SLAVE */
+>  };
+> =20
+>  static const struct imx_i2c_hwdata imx1_i2c_hwdata =3D {
+> @@ -583,23 +586,40 @@ static void i2c_imx_stop(struct imx_i2c_struct *i2c=
+_imx)
+>  	imx_i2c_write_reg(temp, i2c_imx, IMX_I2C_I2CR);
+>  }
+> =20
+> -static irqreturn_t i2c_imx_isr(int irq, void *dev_id)
+> +/* Clear interrupt flag bit */
+> +static void i2c_imx_clr_if_bit(struct imx_i2c_struct *i2c_imx)
+>  {
+> -	struct imx_i2c_struct *i2c_imx =3D dev_id;
+> -	unsigned int temp;
+> +	unsigned int status;
+> =20
+> -	temp =3D imx_i2c_read_reg(i2c_imx, IMX_I2C_I2SR);
+> -	if (temp & I2SR_IIF) {
+> -		/* save status register */
+> -		i2c_imx->i2csr =3D temp;
+> -		temp &=3D ~I2SR_IIF;
+> -		temp |=3D (i2c_imx->hwdata->i2sr_clr_opcode & I2SR_IIF);
+> -		imx_i2c_write_reg(temp, i2c_imx, IMX_I2C_I2SR);
+> -		wake_up(&i2c_imx->queue);
+> -		return IRQ_HANDLED;
+> -	}
+> +	status =3D imx_i2c_read_reg(i2c_imx, IMX_I2C_I2SR);
+> +	status &=3D ~I2SR_IIF;
+> +	status |=3D (i2c_imx->hwdata->i2sr_clr_opcode & I2SR_IIF);
+> +	imx_i2c_write_reg(status, i2c_imx, IMX_I2C_I2SR);
+> +}
+> +
+> +/* Clear arbitration lost bit */
+> +static void i2c_imx_clr_al_bit(struct imx_i2c_struct *i2c_imx)
+> +{
+> +	unsigned int status;
+> +
+> +	status =3D imx_i2c_read_reg(i2c_imx, IMX_I2C_I2SR);
+> +	status &=3D ~I2SR_IAL;
+> +	imx_i2c_write_reg(status, i2c_imx, IMX_I2C_I2SR);
+> +}
+> =20
+> -	return IRQ_NONE;
+> +static irqreturn_t i2c_imx_master_isr(struct imx_i2c_struct *i2c_imx)
+> +{
+> +	unsigned int status;
+> +
+> +	dev_dbg(&i2c_imx->adapter.dev, "<%s>: master interrupt\n", __func__);
+> +
+> +	/* Save status register */
+> +	status =3D imx_i2c_read_reg(i2c_imx, IMX_I2C_I2SR);
+> +	i2c_imx->i2csr =3D status | I2SR_IIF;
+> +
+> +	wake_up(&i2c_imx->queue);
+> +
+> +	return IRQ_HANDLED;
+>  }
+> =20
+>  static int i2c_imx_dma_write(struct imx_i2c_struct *i2c_imx,
+> @@ -1043,11 +1063,162 @@ static u32 i2c_imx_func(struct i2c_adapter *adap=
+ter)
+>  		| I2C_FUNC_SMBUS_READ_BLOCK_DATA;
+>  }
+> =20
+> +#if IS_ENABLED(CONFIG_I2C_SLAVE)
+> +static void i2c_imx_slave_init(struct imx_i2c_struct *i2c_imx)
+> +{
+> +	unsigned int temp;
+> +
+> +	dev_dbg(&i2c_imx->adapter.dev, "<%s>\n", __func__);
+> +
+> +	/* Set slave addr. */
+> +	imx_i2c_write_reg((i2c_imx->slave->addr << 1), i2c_imx, IMX_I2C_IADR);
+> +
+> +	/* Disable i2c module */
+> +	temp =3D i2c_imx->hwdata->i2cr_ien_opcode
+> +			^ I2CR_IEN;
+> +	imx_i2c_write_reg(temp, i2c_imx, IMX_I2C_I2CR);
+> +
+> +	/* Reset status register */
+> +	imx_i2c_write_reg(i2c_imx->hwdata->i2sr_clr_opcode, i2c_imx,
+> +			  IMX_I2C_I2SR);
+> +
+> +	/* Enable module and enable interrupt from i2c module */
+> +	temp =3D i2c_imx->hwdata->i2cr_ien_opcode
+> +			| I2CR_IIEN;
+> +	imx_i2c_write_reg(temp, i2c_imx, IMX_I2C_I2CR);
+> +
+> +	/* Wait controller to be stable */
+> +	usleep_range(50, 150);
+> +}
+> +
+> +static irqreturn_t i2c_imx_slave_isr(struct imx_i2c_struct *i2c_imx)
+> +{
+> +	unsigned int status, ctl;
+> +	u8 value;
+> +
+> +	if (!i2c_imx->slave) {
+> +		dev_err(&i2c_imx->adapter.dev, "cannot deal with slave irq,i2c_imx->sl=
+ave is null");
+> +		return IRQ_NONE;
+> +	}
+> +
+> +	status =3D imx_i2c_read_reg(i2c_imx, IMX_I2C_I2SR);
+> +	ctl =3D imx_i2c_read_reg(i2c_imx, IMX_I2C_I2CR);
+> +	if (status & I2SR_IAL) { /* Arbitration lost */
+> +		i2c_imx_clr_al_bit(i2c_imx);
+> +	} else if (status & I2SR_IAAS) { /* Addressed as a slave */
+> +		if (status & I2SR_SRW) { /* Master wants to read from us*/
+> +			dev_dbg(&i2c_imx->adapter.dev, "read requested");
+> +			i2c_slave_event(i2c_imx->slave, I2C_SLAVE_READ_REQUESTED, &value);
+> +
+> +			/* Slave transimt */
+> +			ctl |=3D I2CR_MTX;
+> +			imx_i2c_write_reg(ctl, i2c_imx, IMX_I2C_I2CR);
+> +
+> +			/* Send data */
+> +			imx_i2c_write_reg(value, i2c_imx, IMX_I2C_I2DR);
+> +		} else { /* Master wants to write to us */
+> +			dev_dbg(&i2c_imx->adapter.dev, "write requested");
+> +			i2c_slave_event(i2c_imx->slave,	I2C_SLAVE_WRITE_REQUESTED, &value);
+> +
+> +			/* Slave receive */
+> +			ctl &=3D ~I2CR_MTX;
+> +			imx_i2c_write_reg(ctl, i2c_imx, IMX_I2C_I2CR);
+> +			/* Dummy read */
+> +			value =3D imx_i2c_read_reg(i2c_imx, IMX_I2C_I2DR);
+> +		}
+> +	} else {
+> +		if (!(ctl & I2CR_MTX)) { /* Receive mode */
+> +			if (status & I2SR_IBB) { /* No STOP signal detected */
+> +				ctl &=3D ~I2CR_MTX;
+> +				imx_i2c_write_reg(ctl, i2c_imx, IMX_I2C_I2CR);
+> +
+> +				value =3D imx_i2c_read_reg(i2c_imx, IMX_I2C_I2DR);
+> +				i2c_slave_event(i2c_imx->slave,	I2C_SLAVE_WRITE_RECEIVED, &value);
+> +			} else { /* STOP signal is detected */
+> +				dev_dbg(&i2c_imx->adapter.dev,
+> +					"STOP signal detected");
+> +				i2c_slave_event(i2c_imx->slave, I2C_SLAVE_STOP, &value);
+> +			}
+> +		} else { /* Transmit mode */
+> +			if (!(status & I2SR_RXAK)) {	/* Received ACK */
+> +				ctl |=3D I2CR_MTX;
+> +				imx_i2c_write_reg(ctl, i2c_imx, IMX_I2C_I2CR);
+> +
+> +				i2c_slave_event(i2c_imx->slave,	I2C_SLAVE_READ_PROCESSED, &value);
+> +
+> +				imx_i2c_write_reg(value, i2c_imx, IMX_I2C_I2DR);
+> +			} else { /* Received NAK */
+> +				ctl &=3D ~I2CR_MTX;
+> +				imx_i2c_write_reg(ctl, i2c_imx, IMX_I2C_I2CR);
+> +				value =3D imx_i2c_read_reg(i2c_imx, IMX_I2C_I2DR);
+> +			}
+> +		}
+> +	}
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int i2c_imx_reg_slave(struct i2c_client *client)
+> +{
+> +	struct imx_i2c_struct *i2c_imx =3D i2c_get_adapdata(client->adapter);
+> +
+> +	if (i2c_imx->slave)
+> +		return -EINVAL;
+> +
+> +	dev_dbg(&i2c_imx->adapter.dev, "<%s>\n", __func__);
+> +	i2c_imx->slave =3D client;
+> +
+> +	i2c_imx_slave_init(i2c_imx);
+> +
+> +	return 0;
+> +}
+> +
+> +static int i2c_imx_unreg_slave(struct i2c_client *client)
+> +{
+> +	struct imx_i2c_struct *i2c_imx =3D i2c_get_adapdata(client->adapter);
+> +
+> +	if (!i2c_imx->slave)
+> +		return -EINVAL;
+> +
+> +	i2c_imx->slave =3D NULL;
+> +
+> +	return 0;
+> +}
+> +#endif /* CONFIG_I2C_SLAVE */
+> +
+>  static const struct i2c_algorithm i2c_imx_algo =3D {
+>  	.master_xfer	=3D i2c_imx_xfer,
+>  	.functionality	=3D i2c_imx_func,
+> +#if IS_ENABLED(CONFIG_I2C_SLAVE)
+> +	.reg_slave	=3D i2c_imx_reg_slave,
+> +	.unreg_slave	=3D i2c_imx_unreg_slave,
+> +#endif /* CONFIG_I2C_SLAVE */
+>  };
+> =20
+> +static irqreturn_t i2c_imx_isr(int irq, void *dev_id)
+> +{
+> +	struct imx_i2c_struct *i2c_imx =3D dev_id;
+> +	unsigned int status, ctl;
+> +	irqreturn_t irq_status =3D IRQ_NONE;
+> +
+> +	status =3D imx_i2c_read_reg(i2c_imx, IMX_I2C_I2SR);
+> +	ctl =3D imx_i2c_read_reg(i2c_imx, IMX_I2C_I2CR);
+> +
+> +	if (status & I2SR_IIF) {
+> +		i2c_imx_clr_if_bit(i2c_imx);
+> +#if IS_ENABLED(CONFIG_I2C_SLAVE)
+> +		if (ctl & I2CR_MSTA)
+> +			irq_status =3D i2c_imx_master_isr(i2c_imx);
+> +		else
+> +			irq_status =3D i2c_imx_slave_isr(i2c_imx);
+> +#else
+> +		irq_status =3D i2c_imx_master_isr(i2c_imx);
+> +
+> +#endif /* CONFIG_I2C_SLAVE */
+> +	}
+> +
+> +	return irq_status;
+> +}
+> +
+>  static int i2c_imx_probe(struct platform_device *pdev)
+>  {
+>  	const struct of_device_id *of_id =3D of_match_device(i2c_imx_dt_ids,
+> --=20
+> 2.17.1
+>=20
+
+--7JfCtLOvnd9MIVvH
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1Mf7UACgkQFA3kzBSg
+KbbIdRAAmY+CmZvnxzaoFKgN0BZt09R2Y3W+z+3mpuJC4EC9WDc3zZxrLAJBtXKB
+m5GiooGqY9tYfxKDEcZgnAbsg0+duHDCBi7Ky7qrgiyawIo8ZbhRCpa4LSzA0QRN
++FmL91PDIJcqxd4xIU6UKJRFrKCpWeR4iYOAVuF/3PtPlIpzgVRZvvi5/fFAaIHx
+2gGvdGAx9eMtAs7HMA7/GMYalzex4EuGBuP+U5rXP6tUBNh+pSzJtqof9WFwGV/N
+OmUBLCd6dVoLbJcT1F47gxqC4mEo8SKsgv2rMlYS5GQIInVU7/p6uER/Yr5zHERS
+Z/phPdfMhqmATRIOBKdrgDRBPfAwHU9tuBep8glR0MpfjiejrZLWri4kTJ18nPy5
+znVN0QiLU4rFNyHOn716AS9ykzmRd1a2ujs5nT8vRd6ccNxi9zLAT68VuYY62HLS
+iWaVjx5kCgfx/W9GZMs0e++i+I3wca40LpeLMvP56wGjrBh+VfoMQVeKk3IONgYQ
+6fECaczR3Fop5W3pYf8+n/rekOw9u1fEIFz4FDLxxb+Rjsiu60/5o99MgU+Zd8+C
+z42/FHVuhdZE93Y9kfudirKPBen05s6qdnbEr98DZhMJZ0oT7RBCLsfRl5kIqWgH
+mOYmOGy4u7m4h+CLHmlrYDdVOnBPj5JnAqvqJdyqm47YC1OgrvU=
+=2lFt
+-----END PGP SIGNATURE-----
+
+--7JfCtLOvnd9MIVvH--
