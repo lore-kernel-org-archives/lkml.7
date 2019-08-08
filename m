@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92352C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F71C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:10:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E86E2189F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:10:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F5A921874
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:10:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565291434;
-	bh=hCOQ/3o6yVkNnmohc565drS708u0WeyH1cciRFIEELU=;
+	s=default; t=1565291438;
+	bh=MTFwszCrmSaCj63SpvMh7Xi8g7NApYngPDhIgzx0W1A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pnYubqN0EzhwJMzF4IE7tGmzhTeWajlNKBcFkD3q3K42N//3/CDZDVInMWdIvMt7r
-	 ISwDkdnKDN+x/LekVk3n8YTRTH/GiOsy6BlB00//URFabZZ9NCBAdkvWGFKtDQopqq
-	 QOfe7RWgV0qKIkgMRpPHcNa2Hr4Fo3n890f8/CQ8=
+	b=LMkWz1WQzazMbdE+W+gWRKmYR1UdH+rbaw0bQku8190TwR0CU023aOGDEv3vtMOhI
+	 FRdyBq7ArtvZjXr1jeitekCDWNFRGSSdIMT34A4WvXojI5OM472uvMrQ1+cZd8Jep7
+	 vE8G5BrAjQIEXZrfOo4dxuJC+J7Nc1PdHpIhlQ4Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405321AbfHHTKd (ORCPT
+        id S2404939AbfHHTKh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:10:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44806 "EHLO mail.kernel.org"
+        Thu, 8 Aug 2019 15:10:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404891AbfHHTK1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 15:10:27 -0400
+        id S2405312AbfHHTKc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 15:10:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3600C2184E;
-        Thu,  8 Aug 2019 19:10:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DE752173E;
+        Thu,  8 Aug 2019 19:10:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565291426;
-        bh=hCOQ/3o6yVkNnmohc565drS708u0WeyH1cciRFIEELU=;
+        s=default; t=1565291431;
+        bh=MTFwszCrmSaCj63SpvMh7Xi8g7NApYngPDhIgzx0W1A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sfpyGFwuw/lsBTWPdKsllhyaQaEHp9X4wpZmwpcpjXFjLZzDp7NyYdvP0PojX5XCp
-         ROq45wUXlhFdhh/7SqavVVkUY2s8QIM29MXjlMJwCZGIg4iiKccysmFf/8cRoyJidC
-         1+lFjRbyo9dv0x1J7fXWIvSC45fNuOHGnT5XGU30=
+        b=oS67qREMf2qzJtVoYLZ5FBU1/8LbTlbC/rRZ22F2NxIGaR8rHq7yMuYK1RNys18mV
+         UuAettCxkHbUvoM3/LksoVkA1eY7spkcgHg8OYyhkLcU5LBSmLfslokwtVlFLSIzMT
+         8R8eHVoMNciyMsdqIMa637NPVUDWbyzSt0cS7k/A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 4.14 10/33] objtool: Add machine_real_restart() to the noreturn list
-Date:   Thu,  8 Aug 2019 21:05:17 +0200
-Message-Id: <20190808190454.075977122@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 12/33] atm: iphase: Fix Spectre v1 vulnerability
+Date:   Thu,  8 Aug 2019 21:05:19 +0200
+Message-Id: <20190808190454.169203652@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190808190453.582417307@linuxfoundation.org>
 References: <20190808190453.582417307@linuxfoundation.org>
@@ -60,37 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 
-commit 684fb246578b9e81fc7b4ca5c71eae22edb650b2 upstream.
+[ Upstream commit ea443e5e98b5b74e317ef3d26bcaea54931ccdee ]
 
-machine_real_restart() is annotated as '__noreturn", so add it to the
-objtool noreturn list.  This fixes the following warning with clang and
-CONFIG_CC_OPTIMIZE_FOR_SIZE=y:
+board is controlled by user-space, hence leading to a potential
+exploitation of the Spectre variant 1 vulnerability.
 
-  arch/x86/kernel/reboot.o: warning: objtool: native_machine_emergency_restart() falls through to next function machine_power_off()
+This issue was detected with the help of Smatch:
 
-Reported-by: Matthias Kaehlcke <mka@chromium.org>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Matthias Kaehlcke <mka@chromium.org>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-Link: https://lkml.kernel.org/r/791712792aa4431bdd55bf1beb33a169ddf3b4a2.1529423255.git.jpoimboe@redhat.com
+drivers/atm/iphase.c:2765 ia_ioctl() warn: potential spectre issue 'ia_dev' [r] (local cap)
+drivers/atm/iphase.c:2774 ia_ioctl() warn: possible spectre second half.  'iadev'
+drivers/atm/iphase.c:2782 ia_ioctl() warn: possible spectre second half.  'iadev'
+drivers/atm/iphase.c:2816 ia_ioctl() warn: possible spectre second half.  'iadev'
+drivers/atm/iphase.c:2823 ia_ioctl() warn: possible spectre second half.  'iadev'
+drivers/atm/iphase.c:2830 ia_ioctl() warn: potential spectre issue '_ia_dev' [r] (local cap)
+drivers/atm/iphase.c:2845 ia_ioctl() warn: possible spectre second half.  'iadev'
+drivers/atm/iphase.c:2856 ia_ioctl() warn: possible spectre second half.  'iadev'
+
+Fix this by sanitizing board before using it to index ia_dev and _ia_dev
+
+Notice that given that speculation windows are large, the policy is
+to kill the speculation on the first load and not worry if it can be
+completed with a dependent load/store [1].
+
+[1] https://lore.kernel.org/lkml/20180423164740.GY17484@dhcp22.suse.cz/
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- tools/objtool/check.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/atm/iphase.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -165,6 +165,7 @@ static int __dead_end_function(struct ob
- 		"__reiserfs_panic",
- 		"lbug_with_loc",
- 		"fortify_panic",
-+		"machine_real_restart",
- 	};
- 
- 	if (func->bind == STB_WEAK)
+--- a/drivers/atm/iphase.c
++++ b/drivers/atm/iphase.c
+@@ -63,6 +63,7 @@
+ #include <asm/byteorder.h>  
+ #include <linux/vmalloc.h>
+ #include <linux/jiffies.h>
++#include <linux/nospec.h>
+ #include "iphase.h"		  
+ #include "suni.h"		  
+ #define swap_byte_order(x) (((x & 0xff) << 8) | ((x & 0xff00) >> 8))
+@@ -2760,8 +2761,11 @@ static int ia_ioctl(struct atm_dev *dev,
+    }
+    if (copy_from_user(&ia_cmds, arg, sizeof ia_cmds)) return -EFAULT; 
+    board = ia_cmds.status;
+-   if ((board < 0) || (board > iadev_count))
+-         board = 0;    
++
++	if ((board < 0) || (board > iadev_count))
++		board = 0;
++	board = array_index_nospec(board, iadev_count + 1);
++
+    iadev = ia_dev[board];
+    switch (ia_cmds.cmd) {
+    case MEMDUMP:
 
 
