@@ -2,307 +2,135 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6743AC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C8D0C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:14:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3714D217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:13:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7494A2086D
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:14:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731359AbfHHHNZ (ORCPT
+        id S1731369AbfHHHOv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 03:13:25 -0400
-Received: from mga11.intel.com ([192.55.52.93]:36823 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730887AbfHHHNY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 03:13:24 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Aug 2019 00:13:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,360,1559545200"; 
-   d="scan'208";a="182512932"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.122]) ([10.237.72.122])
-  by FMSMGA003.fm.intel.com with ESMTP; 08 Aug 2019 00:13:20 -0700
-Subject: Re: [PATCH V5 2/3] mmc: sdhci: Fix O2 Host data read/write DLL Lock
- Phase shift issue
-To:     "Shirley Her (SC)" <shirley.her@bayhubtech.com>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     "Chevron Li (WH)" <chevron.li@bayhubtech.com>,
-        "Louis Lu (TP)" <louis.lu@bayhubtech.com>,
-        "Max Huang (SC)" <max.huang@bayhubtech.com>,
-        "Shaper Liu (WH)" <shaper.liu@bayhubtech.com>
-References: <1565212190-31562-1-git-send-email-shirley.her@bayhubtech.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <3135c16e-efe5-6937-28c5-b4f8f5f0b456@intel.com>
-Date:   Thu, 8 Aug 2019 10:12:14 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 8 Aug 2019 03:14:51 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:2751 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731038AbfHHHOu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 03:14:50 -0400
+X-UUID: 28828ab66c3845e0bd6f50b3bdb4f73d-20190808
+X-UUID: 28828ab66c3845e0bd6f50b3bdb4f73d-20190808
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 2033063645; Thu, 08 Aug 2019 15:14:39 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ MTKMBS33N1.mediatek.inc (172.27.4.75) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 8 Aug 2019 15:14:35 +0800
+Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 8 Aug 2019 15:14:34 +0800
+Message-ID: <1565248475.31636.0.camel@mtksdaap41>
+Subject: Re: [PATCH v5 3/4] drm/mediatek: add mt8183 dpi clock factor
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Jitao Shi <jitao.shi@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        Ian Campbell <ijc+devicetree@hellion.org.uk>,
+        <linux-pwm@vger.kernel.org>, David Airlie <airlied@linux.ie>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Thierry Reding" <treding@nvidia.com>,
+        Ajay Kumar <ajaykumar.rs@samsung.com>,
+        "Inki Dae" <inki.dae@samsung.com>,
+        Rahul Sharma <rahul.sharma@samsung.com>,
+        "Sean Paul" <seanpaul@chromium.org>,
+        Vincent Palatin <vpalatin@chromium.org>,
+        "Andy Yan" <andy.yan@rock-chips.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Russell King <rmk+kernel@arm.linux.org.uk>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
+        <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
+        <stonea168@163.com>
+Date:   Thu, 8 Aug 2019 15:14:35 +0800
+In-Reply-To: <20190807060257.57007-4-jitao.shi@mediatek.com>
+References: <20190807060257.57007-1-jitao.shi@mediatek.com>
+         <20190807060257.57007-4-jitao.shi@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <1565212190-31562-1-git-send-email-shirley.her@bayhubtech.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: ACA0D368338ADFB945EC0DEE8709C7B8CB13598F3D79743A33E08B5CF2A1E74F2000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/08/19 12:09 AM, Shirley Her (SC) wrote:
-> Fix data read/write error in HS200 mode due to chip DLL lock phase shift
+Hi, Jitao:
 
-Please change the patch subject and commit message to match what the patch
-actually does.
+On Wed, 2019-08-07 at 14:02 +0800, Jitao Shi wrote:
+> The factor depends on the divider of DPI in MT8183, therefore,
+> we should fix this factor to the right and new one.
+> 
 
-> 
-> Signed-off-by:Shirley Her <shirley.her@bayhubtech.com>
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
+
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
 > ---
-> change in V5:
->  1. split 2 patches into 3 patches
->  2. make dll_adjust_count start from 0
->  3. fix ret overwritten issue
->  4. use break instead of goto
+>  drivers/gpu/drm/mediatek/mtk_dpi.c | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
 > 
-> change in V4:
->  1. add a bug fix for V3
-> 
-> change in V3:
->  1. add more explanation in dll_recovery and execute_tuning function
->  2. move dll_adjust_count to O2_host struct
->  3. fix some coding style error
->  4. renaming O2_PLL_WDT_CONTROL1 TO O2_PLL_DLL_WDT_CONTROL1
-> 
-> change in V2:
->  1. use usleep_range instead of udelay
->  2. move dll_adjust_count to sdhci-pci-o2micro.c
-> 
-> chagne in V1:
->  1. add error recovery function to relock DLL with correct phase
->  2. retuning HS200 after DLL locked
-> ---
->  drivers/mmc/host/sdhci-pci-o2micro.c | 188 ++++++++++++++++++-----------------
->  1 file changed, 95 insertions(+), 93 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci-pci-o2micro.c b/drivers/mmc/host/sdhci-pci-o2micro.c
-> index b3a33d9..c780888 100644
-> --- a/drivers/mmc/host/sdhci-pci-o2micro.c
-> +++ b/drivers/mmc/host/sdhci-pci-o2micro.c
-> @@ -58,6 +58,101 @@
->  
->  #define O2_SD_DETECT_SETTING 0x324
->  
-> +static void sdhci_o2_wait_card_detect_stable(struct sdhci_host *host)
-> +{
-> +	ktime_t timeout;
-> +	u32 scratch32;
-> +
-> +	/* Wait max 50 ms */
-> +	timeout = ktime_add_ms(ktime_get(), 50);
-> +	while (1) {
-> +		bool timedout = ktime_after(ktime_get(), timeout);
-> +
-> +		scratch32 = sdhci_readl(host, SDHCI_PRESENT_STATE);
-> +		if ((scratch32 & SDHCI_CARD_PRESENT) >> SDHCI_CARD_PRES_SHIFT
-> +		    == (scratch32 & SDHCI_CD_LVL) >> SDHCI_CD_LVL_SHIFT)
-> +			break;
-> +
-> +		if (timedout) {
-> +			pr_err("%s: Card Detect debounce never finished.\n",
-> +			       mmc_hostname(host->mmc));
-> +			sdhci_dumpregs(host);
-> +			return;
-> +		}
-> +		udelay(10);
-> +	}
-> +}
-> +
-> +static void sdhci_o2_enable_internal_clock(struct sdhci_host *host)
-> +{
-> +	ktime_t timeout;
-> +	u16 scratch;
-> +	u32 scratch32;
-> +
-> +	/* PLL software reset */
-> +	scratch32 = sdhci_readl(host, O2_PLL_DLL_WDT_CONTROL1);
-> +	scratch32 |= O2_PLL_SOFT_RESET;
-> +	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
-> +	udelay(1);
-> +	scratch32 &= ~(O2_PLL_SOFT_RESET);
-> +	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
-> +
-> +	/* PLL force active */
-> +	scratch32 |= O2_PLL_FORCE_ACTIVE;
-> +	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
-> +
-> +	/* Wait max 20 ms */
-> +	timeout = ktime_add_ms(ktime_get(), 20);
-> +	while (1) {
-> +		bool timedout = ktime_after(ktime_get(), timeout);
-> +
-> +		scratch = sdhci_readw(host, O2_PLL_DLL_WDT_CONTROL1);
-> +		if (scratch & O2_PLL_LOCK_STATUS)
-> +			break;
-> +		if (timedout) {
-> +			pr_err("%s: Internal clock never stabilised.\n",
-> +			       mmc_hostname(host->mmc));
-> +			sdhci_dumpregs(host);
-> +			goto out;
-> +		}
-> +		udelay(10);
-> +	}
-> +
-> +	/* Wait for card detect finish */
-> +	udelay(1);
-> +	sdhci_o2_wait_card_detect_stable(host);
-> +
-> +out:
-> +	/* Cancel PLL force active */
-> +	scratch32 = sdhci_readl(host, O2_PLL_DLL_WDT_CONTROL1);
-> +	scratch32 &= ~O2_PLL_FORCE_ACTIVE;
-> +	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
-> +}
-> +
-> +static int sdhci_o2_get_cd(struct mmc_host *mmc)
-> +{
-> +	struct sdhci_host *host = mmc_priv(mmc);
-> +
-> +	if (!(sdhci_readw(host, O2_PLL_DLL_WDT_CONTROL1) & O2_PLL_LOCK_STATUS))
-> +		sdhci_o2_enable_internal_clock(host);
-> +
-> +	return !!(sdhci_readl(host, SDHCI_PRESENT_STATE) & SDHCI_CARD_PRESENT);
-> +}
-> +
-> +static void o2_pci_set_baseclk(struct sdhci_pci_chip *chip, u32 value)
-> +{
-> +	u32 scratch_32;
-> +
-> +	pci_read_config_dword(chip->pdev,
-> +			      O2_SD_PLL_SETTING, &scratch_32);
-> +
-> +	scratch_32 &= 0x0000FFFF;
-> +	scratch_32 |= value;
-> +
-> +	pci_write_config_dword(chip->pdev,
-> +			       O2_SD_PLL_SETTING, scratch_32);
-> +}
-> +
->  static void sdhci_o2_set_tuning_mode(struct sdhci_host *host)
->  {
->  	u16 reg;
-> @@ -136,19 +231,6 @@ static int sdhci_o2_execute_tuning(struct mmc_host *mmc, u32 opcode)
->  	return 0;
+> diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
+> index 743230864ba0..4f2700cbfdb7 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_dpi.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
+> @@ -672,6 +672,16 @@ static unsigned int mt2701_calculate_factor(int clock)
+>  		return 1;
 >  }
 >  
-> -static void o2_pci_set_baseclk(struct sdhci_pci_chip *chip, u32 value)
-> -{
-> -	u32 scratch_32;
-> -	pci_read_config_dword(chip->pdev,
-> -			      O2_SD_PLL_SETTING, &scratch_32);
-> -
-> -	scratch_32 &= 0x0000FFFF;
-> -	scratch_32 |= value;
-> -
-> -	pci_write_config_dword(chip->pdev,
-> -			       O2_SD_PLL_SETTING, scratch_32);
-> -}
-> -
->  static void o2_pci_led_enable(struct sdhci_pci_chip *chip)
->  {
->  	int ret;
-> @@ -284,86 +366,6 @@ static void sdhci_pci_o2_enable_msi(struct sdhci_pci_chip *chip,
->  	host->irq = pci_irq_vector(chip->pdev, 0);
->  }
+> +static unsigned int mt8183_calculate_factor(int clock)
+> +{
+> +	if (clock <= 27000)
+> +		return 8;
+> +	else if (clock <= 167000)
+> +		return 4;
+> +	else
+> +		return 2;
+> +}
+> +
+>  static const struct mtk_dpi_conf mt8173_conf = {
+>  	.cal_factor = mt8173_calculate_factor,
+>  	.reg_h_fre_con = 0xe0,
+> @@ -683,6 +693,11 @@ static const struct mtk_dpi_conf mt2701_conf = {
+>  	.edge_sel_en = true,
+>  };
 >  
-> -static void sdhci_o2_wait_card_detect_stable(struct sdhci_host *host)
-> -{
-> -	ktime_t timeout;
-> -	u32 scratch32;
-> -
-> -	/* Wait max 50 ms */
-> -	timeout = ktime_add_ms(ktime_get(), 50);
-> -	while (1) {
-> -		bool timedout = ktime_after(ktime_get(), timeout);
-> -
-> -		scratch32 = sdhci_readl(host, SDHCI_PRESENT_STATE);
-> -		if ((scratch32 & SDHCI_CARD_PRESENT) >> SDHCI_CARD_PRES_SHIFT
-> -		    == (scratch32 & SDHCI_CD_LVL) >> SDHCI_CD_LVL_SHIFT)
-> -			break;
-> -
-> -		if (timedout) {
-> -			pr_err("%s: Card Detect debounce never finished.\n",
-> -			       mmc_hostname(host->mmc));
-> -			sdhci_dumpregs(host);
-> -			return;
-> -		}
-> -		udelay(10);
-> -	}
-> -}
-> -
-> -static void sdhci_o2_enable_internal_clock(struct sdhci_host *host)
-> -{
-> -	ktime_t timeout;
-> -	u16 scratch;
-> -	u32 scratch32;
-> -
-> -	/* PLL software reset */
-> -	scratch32 = sdhci_readl(host, O2_PLL_DLL_WDT_CONTROL1);
-> -	scratch32 |= O2_PLL_SOFT_RESET;
-> -	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
-> -	udelay(1);
-> -	scratch32 &= ~(O2_PLL_SOFT_RESET);
-> -	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
-> -
-> -	/* PLL force active */
-> -	scratch32 |= O2_PLL_FORCE_ACTIVE;
-> -	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
-> -
-> -	/* Wait max 20 ms */
-> -	timeout = ktime_add_ms(ktime_get(), 20);
-> -	while (1) {
-> -		bool timedout = ktime_after(ktime_get(), timeout);
-> -
-> -		scratch = sdhci_readw(host, O2_PLL_DLL_WDT_CONTROL1);
-> -		if (scratch & O2_PLL_LOCK_STATUS)
-> -			break;
-> -		if (timedout) {
-> -			pr_err("%s: Internal clock never stabilised.\n",
-> -			       mmc_hostname(host->mmc));
-> -			sdhci_dumpregs(host);
-> -			goto out;
-> -		}
-> -		udelay(10);
-> -	}
-> -
-> -	/* Wait for card detect finish */
-> -	udelay(1);
-> -	sdhci_o2_wait_card_detect_stable(host);
-> -
-> -out:
-> -	/* Cancel PLL force active */
-> -	scratch32 = sdhci_readl(host, O2_PLL_DLL_WDT_CONTROL1);
-> -	scratch32 &= ~O2_PLL_FORCE_ACTIVE;
-> -	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
-> -}
-> -
-> -static int sdhci_o2_get_cd(struct mmc_host *mmc)
-> -{
-> -	struct sdhci_host *host = mmc_priv(mmc);
-> -
-> -	sdhci_o2_enable_internal_clock(host);
-> -
-> -	return !!(sdhci_readl(host, SDHCI_PRESENT_STATE) & SDHCI_CARD_PRESENT);
-> -}
-> -
->  static void sdhci_o2_enable_clk(struct sdhci_host *host, u16 clk)
+> +static const struct mtk_dpi_conf mt8183_conf = {
+> +	.cal_factor = mt8183_calculate_factor,
+> +	.reg_h_fre_con = 0xe0,
+> +};
+> +
+>  static int mtk_dpi_probe(struct platform_device *pdev)
 >  {
->  	/* Enable internal clock */
-> 
+>  	struct device *dev = &pdev->dev;
+> @@ -779,6 +794,9 @@ static const struct of_device_id mtk_dpi_of_ids[] = {
+>  	{ .compatible = "mediatek,mt8173-dpi",
+>  	  .data = &mt8173_conf,
+>  	},
+> +	{ .compatible = "mediatek,mt8183-dpi",
+> +	  .data = &mt8183_conf,
+> +	},
+>  	{ },
+>  };
+>  
+
 
