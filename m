@@ -2,60 +2,53 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 976ADC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD3DC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:11:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BC9621743
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:11:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C645021874
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:11:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565291472;
-	bh=Bt6EXsV6kBA3caCwt88SS2syaHLHgL7Yw6ffF4xTHHY=;
+	s=default; t=1565291474;
+	bh=1JmtSuEEbFURk9cb8GNhQDlYrEA99dP6Nu8iiDUHtRY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YRfgB8h13GgEaMlwNRlGkPdf8QA1inhXdeQeUl1n7incdakYpRtAzUwNKaVkjU9xY
-	 Gr65X1oop2UrBTOeB/3uZad01FUQGQ9V1+ZzUKIt/JPx0ixaHEjeyWEiF8kj0NRq3h
-	 gh4bQHF+jwV6XNqx59c0tMGPzUv9ZZyFLKRSIHZk=
+	b=zKc5zIgzPf0kLXE8agWUOFlwkb1R5Vkt6np+kWZUltc4xN3YsiVJGipSFbzVsC7pp
+	 F8SJmmP5iAQcDGvwGYn8HMp7J8hnu1BoiV5V0HHFHbf00D4xEP9LjZE2dhTpVvALHI
+	 o5elp4BpkB/WkWJ7ZmmZGTyCj9Ke9RoqFqZ8jN7Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405436AbfHHTLL (ORCPT
+        id S1728825AbfHHTLN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:11:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45676 "EHLO mail.kernel.org"
+        Thu, 8 Aug 2019 15:11:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405037AbfHHTLJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 15:11:09 -0400
+        id S2405432AbfHHTLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 15:11:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8041721743;
-        Thu,  8 Aug 2019 19:11:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36C102189D;
+        Thu,  8 Aug 2019 19:11:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565291468;
-        bh=Bt6EXsV6kBA3caCwt88SS2syaHLHgL7Yw6ffF4xTHHY=;
+        s=default; t=1565291470;
+        bh=1JmtSuEEbFURk9cb8GNhQDlYrEA99dP6Nu8iiDUHtRY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TZrLHrKAIPdo79fRKedb9uIIhl5hjOeDpcDw/QUmuVYPq2Y+el+czroF83tqFNtbf
-         rWXFSW71YcazPuAbj+KySt2OQ7CpD8pFDrRtXm8iTVpyHXj0JU1RRxdhUlU5WAfz6Z
-         PcMYmevkkCHMsTJ+ipb18ZsXiDI83vazYLBXWdIw=
+        b=R4bEztXGj3Ek6+AbnG82xFIO+68z/Te/7KW6trUePZ1rjEoC5KGtSo3Tz7vUWUdn4
+         4UBXiKW9YsDp/Bv22AfVrXIDu8Rx7Uf66JQW1g4Ay830mrurenx/0HUzUhNSQzd+O6
+         aLalj0ENSnEyG+fG994S8opyFUW88RwQ8T8vkJOg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Andrew Prout <aprout@ll.mit.edu>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        Michal Kubecek <mkubecek@suse.cz>,
-        Neal Cardwell <ncardwell@google.com>,
-        Yuchung Cheng <ycheng@google.com>,
-        Christoph Paasch <cpaasch@apple.com>,
-        Jonathan Looney <jtl@netflix.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Matthieu Baerts <matthieu.baerts@tessares.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 04/33] tcp: be more careful in tcp_fragment()
-Date:   Thu,  8 Aug 2019 21:05:11 +0200
-Message-Id: <20190808190453.790722103@linuxfoundation.org>
+        stable@vger.kernel.org, Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: [PATCH 4.14 05/33] arm64: cpufeature: Fix feature comparison for CTR_EL0.{CWG,ERG}
+Date:   Thu,  8 Aug 2019 21:05:12 +0200
+Message-Id: <20190808190453.833416677@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190808190453.582417307@linuxfoundation.org>
 References: <20190808190453.582417307@linuxfoundation.org>
@@ -68,110 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit b617158dc096709d8600c53b6052144d12b89fab upstream.
+From: Will Deacon <will@kernel.org>
 
-Some applications set tiny SO_SNDBUF values and expect
-TCP to just work. Recent patches to address CVE-2019-11478
-broke them in case of losses, since retransmits might
-be prevented.
+commit 147b9635e6347104b91f48ca9dca61eb0fbf2a54 upstream.
 
-We should allow these flows to make progress.
+If CTR_EL0.{CWG,ERG} are 0b0000 then they must be interpreted to have
+their architecturally maximum values, which defeats the use of
+FTR_HIGHER_SAFE when sanitising CPU ID registers on heterogeneous
+machines.
 
-This patch allows the first and last skb in retransmit queue
-to be split even if memory limits are hit.
+Introduce FTR_HIGHER_OR_ZERO_SAFE so that these fields effectively
+saturate at zero.
 
-It also adds the some room due to the fact that tcp_sendmsg()
-and tcp_sendpage() might overshoot sk_wmem_queued by about one full
-TSO skb (64KB size). Note this allowance was already present
-in stable backports for kernels < 4.15
-
-Note for < 4.15 backports :
- tcp_rtx_queue_tail() will probably look like :
-
-static inline struct sk_buff *tcp_rtx_queue_tail(const struct sock *sk)
-{
-	struct sk_buff *skb = tcp_send_head(sk);
-
-	return skb ? tcp_write_queue_prev(sk, skb) : tcp_write_queue_tail(sk);
-}
-
-Fixes: f070ef2ac667 ("tcp: tcp_fragment() should apply sane memory limits")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: Andrew Prout <aprout@ll.mit.edu>
-Tested-by: Andrew Prout <aprout@ll.mit.edu>
-Tested-by: Jonathan Lemon <jonathan.lemon@gmail.com>
-Tested-by: Michal Kubecek <mkubecek@suse.cz>
-Acked-by: Neal Cardwell <ncardwell@google.com>
-Acked-by: Yuchung Cheng <ycheng@google.com>
-Acked-by: Christoph Paasch <cpaasch@apple.com>
-Cc: Jonathan Looney <jtl@netflix.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 3c739b571084 ("arm64: Keep track of CPU feature registers")
+Cc: <stable@vger.kernel.org> # 4.4.x-
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/tcp.h     | 17 +++++++++++++++++
- net/ipv4/tcp_output.c | 11 ++++++++++-
- 2 files changed, 27 insertions(+), 1 deletion(-)
+ arch/arm64/include/asm/cpufeature.h |    7 ++++---
+ arch/arm64/kernel/cpufeature.c      |    8 ++++++--
+ 2 files changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index 0b477a1e11770..7994e569644e0 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -1688,6 +1688,23 @@ static inline void tcp_check_send_head(struct sock *sk, struct sk_buff *skb_unli
- 		tcp_sk(sk)->highest_sack = NULL;
- }
+--- a/arch/arm64/include/asm/cpufeature.h
++++ b/arch/arm64/include/asm/cpufeature.h
+@@ -44,9 +44,10 @@
+  */
  
-+static inline struct sk_buff *tcp_rtx_queue_head(const struct sock *sk)
-+{
-+	struct sk_buff *skb = tcp_write_queue_head(sk);
-+
-+	if (skb == tcp_send_head(sk))
-+		skb = NULL;
-+
-+	return skb;
-+}
-+
-+static inline struct sk_buff *tcp_rtx_queue_tail(const struct sock *sk)
-+{
-+	struct sk_buff *skb = tcp_send_head(sk);
-+
-+	return skb ? tcp_write_queue_prev(sk, skb) : tcp_write_queue_tail(sk);
-+}
-+
- static inline void __tcp_add_write_queue_tail(struct sock *sk, struct sk_buff *skb)
- {
- 	__skb_queue_tail(&sk->sk_write_queue, skb);
-diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index a5960b9b6741c..a99086bf26eaf 100644
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -1264,6 +1264,7 @@ int tcp_fragment(struct sock *sk, struct sk_buff *skb, u32 len,
- 	struct tcp_sock *tp = tcp_sk(sk);
- 	struct sk_buff *buff;
- 	int nsize, old_factor;
-+	long limit;
- 	int nlen;
- 	u8 flags;
+ enum ftr_type {
+-	FTR_EXACT,	/* Use a predefined safe value */
+-	FTR_LOWER_SAFE,	/* Smaller value is safe */
+-	FTR_HIGHER_SAFE,/* Bigger value is safe */
++	FTR_EXACT,			/* Use a predefined safe value */
++	FTR_LOWER_SAFE,			/* Smaller value is safe */
++	FTR_HIGHER_SAFE,		/* Bigger value is safe */
++	FTR_HIGHER_OR_ZERO_SAFE,	/* Bigger value is safe, but 0 is biggest */
+ };
  
-@@ -1274,7 +1275,15 @@ int tcp_fragment(struct sock *sk, struct sk_buff *skb, u32 len,
- 	if (nsize < 0)
- 		nsize = 0;
- 
--	if (unlikely((sk->sk_wmem_queued >> 1) > sk->sk_sndbuf + 0x20000)) {
-+	/* tcp_sendmsg() can overshoot sk_wmem_queued by one full size skb.
-+	 * We need some allowance to not penalize applications setting small
-+	 * SO_SNDBUF values.
-+	 * Also allow first and last skb in retransmit queue to be split.
-+	 */
-+	limit = sk->sk_sndbuf + 2 * SKB_TRUESIZE(GSO_MAX_SIZE);
-+	if (unlikely((sk->sk_wmem_queued >> 1) > limit &&
-+		     skb != tcp_rtx_queue_head(sk) &&
-+		     skb != tcp_rtx_queue_tail(sk))) {
- 		NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPWQUEUETOOBIG);
- 		return -ENOMEM;
- 	}
--- 
-2.20.1
-
+ #define FTR_STRICT	true	/* SANITY check strict matching required */
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -178,8 +178,8 @@ static const struct arm64_ftr_bits ftr_c
+ 	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_EXACT, 31, 1, 1),		/* RES1 */
+ 	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, 29, 1, 1),	/* DIC */
+ 	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, 28, 1, 1),	/* IDC */
+-	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_HIGHER_SAFE, 24, 4, 0),	/* CWG */
+-	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_HIGHER_SAFE, 20, 4, 0),	/* ERG */
++	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_HIGHER_OR_ZERO_SAFE, 24, 4, 0),	/* CWG */
++	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_HIGHER_OR_ZERO_SAFE, 20, 4, 0),	/* ERG */
+ 	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, CTR_DMINLINE_SHIFT, 4, 1),
+ 	/*
+ 	 * Linux can handle differing I-cache policies. Userspace JITs will
+@@ -411,6 +411,10 @@ static s64 arm64_ftr_safe_value(const st
+ 	case FTR_LOWER_SAFE:
+ 		ret = new < cur ? new : cur;
+ 		break;
++	case FTR_HIGHER_OR_ZERO_SAFE:
++		if (!cur || !new)
++			break;
++		/* Fallthrough */
+ 	case FTR_HIGHER_SAFE:
+ 		ret = new > cur ? new : cur;
+ 		break;
 
 
