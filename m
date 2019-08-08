@@ -2,100 +2,110 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,PI_IMPORTANCE_HIGH,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A54C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C43C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:40:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB81F208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:39:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565278790;
-	bh=o7qg0WXbwML6SNujCJHRWT+d+zh6xFvQWcQ/K40Aaxo=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=hXXlsCoYufkcToMD3wEvJBJAz5rtaBh3Wbs1KMcW3oO4ZdgyNvbouHwzcUixEUhR0
-	 sTYeniFiCMQghfdjUmUiSU2h7prJS8wWxSZvb783EaweQGH7J3qAU/DBPPYHmcZrNM
-	 AKCMwHZv7Y6U9XeJeHNfWH/IOLJyZkS1nrFX0zho=
+	by mail.kernel.org (Postfix) with ESMTP id D7E07208C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:40:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390097AbfHHPjt (ORCPT
+        id S2390104AbfHHPkD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 11:39:49 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:51398 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733256AbfHHPjt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 11:39:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=mLlS+wiJDeUzNhmr83wfdrhRJd6Blu9Cz3Qx8cxr2sk=; b=QDJmRaBg1j+al5i0PoewOrsFj
-        rLpSdeDJJfLe2ci96vyY5IYe2+aet1MnZHjc73nUib5mBqUmrbiZMHZiH7bnpi2OBzo3NWbJ4umnB
-        99P5F/CiT2pRSvG3ma2phEyleCKKmcwMLeKWLA5SsMn/mG743lRcB+ZQrEgZzRTkFCA6hGRAnge2m
-        EhQdOHX/a9PrbYXo6TjKKhFYMVvRVZJr63Ij+OEOHT7ULRph4F8qkT2voi1eyvDFRC42dC9ACGGFD
-        9/YBjXQSzG3Ig3Nk+MQWfsdj46fsKa86xJgUUYWVPD1qBDB+sHZ9yBimhXwGeewaDgNbXJyJLU61/
-        ht87dgRog==;
-Received: from [179.162.52.10] (helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hvkW3-000783-Uy; Thu, 08 Aug 2019 15:39:48 +0000
-Date:   Thu, 8 Aug 2019 12:39:43 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL for v5.3-rc4] media fixes
-Message-ID: <20190808123943.1551193d@coco.lan>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-Importance: high
-X-Priority: 1 (Highest)
+        Thu, 8 Aug 2019 11:40:03 -0400
+Received: from mga07.intel.com ([134.134.136.100]:60338 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733256AbfHHPkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 11:40:03 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Aug 2019 08:40:02 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,362,1559545200"; 
+   d="scan'208";a="174881313"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga008.fm.intel.com with ESMTP; 08 Aug 2019 08:40:00 -0700
+Date:   Thu, 8 Aug 2019 08:40:00 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "Svahn, Kai" <kai.svahn@intel.com>, "bp@alien8.de" <bp@alien8.de>,
+        "josh@joshtriplett.org" <josh@joshtriplett.org>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        "rientjes@google.com" <rientjes@google.com>,
+        "Xing, Cedric" <cedric.xing@intel.com>
+Subject: Re: [PATCH v21 16/28] x86/sgx: Add the Linux SGX Enclave Driver
+Message-ID: <20190808154000.GB23156@linux.intel.com>
+References: <20190713170804.2340-1-jarkko.sakkinen@linux.intel.com>
+ <20190713170804.2340-17-jarkko.sakkinen@linux.intel.com>
+ <88B7642769729B409B4A93D7C5E0C5E7C65ABB8D@hasmsx108.ger.corp.intel.com>
+ <20190807151534.kxsletvhbn3lno6w@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190807151534.kxsletvhbn3lno6w@linux.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Wed, Aug 07, 2019 at 06:15:34PM +0300, Jarkko Sakkinen wrote:
+> On Mon, Jul 29, 2019 at 11:17:57AM +0000, Ayoun, Serge wrote:
+> > > +	/* TCS pages need to be RW in the PTEs, but can be 0 in the EPCM. */
+> > > +	if ((secinfo.flags & SGX_SECINFO_PAGE_TYPE_MASK) ==
+> > > SGX_SECINFO_TCS)
+> > > +		prot |= PROT_READ | PROT_WRITE;
+> > 
+> > For TCS pages you add both RD and WR maximum protection bits.
+> > For the enclave to be able to run, user mode will have to change the
+> > "vma->vm_flags" from PROT_NONE to PROT_READ | PROT_WRITE (otherwise
+> > eenter fails).  This is exactly what your selftest  does.
+> 
+> Recap where the TCS requirements came from? Why does it need
+> RW in PTEs and can be 0 in the EPCM? The comment should explain
+> it rather leave it as a claim IMHO.
 
-Please pull from:
-  git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media media/v5.3-2
+Hardware ignores SECINFO.FLAGS.{R,W,X} coming from userspace and instead
+forces RWX=0.  It does this to prevent software from directly accessing
+the TCS.  But hardware still accesses the TCS through a virtual address,
+e.g. to allow software to zap the page for reclaim, which means hardware
+generates reads and writes to the TCS, i.e. the PTEs need RW permissions.
+
+So, for the EADD ioctl(), it's not unreasonable for userspace to provide
+SECINFO.FLAGS.{R,W,X} = 0 for the TCS to match what will actually get
+jammed into the EPCM.  Allowing userspace to specify RWX=0 means the
+kernel needs to manually add PROT_READ and PROT_WRITE to the allowed prot
+bits so that mmap()/mprotect() work as expected.
+
+From the SDM:
 
 
-For a fix at the vivid CEC support.
-
-Regards,
-Mauro
-
--
-
-The following changes since commit 609488bc979f99f805f34e9a32c1e3b71179d10b:
-
-  Linux 5.3-rc2 (2019-07-28 12:47:02 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media media/v5.3-2
-
-for you to fetch changes up to 92f5b0313e37e2b37aaf8f0bb75b6c50eafb5808:
-
-  media: vivid: fix missing cec adapter name (2019-07-30 11:47:51 -0400)
-
-----------------------------------------------------------------
-media updates for v5.3-rc1
-
-----------------------------------------------------------------
-Hans Verkuil (1):
-      media: vivid: fix missing cec adapter name
-
- drivers/media/platform/vivid/vivid-core.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
+(* For TCS pages, force EPCM.rwx bits to 0 and no debug access *)
+IF (SCRATCH_SECINFO.FLAGS.PT = PT_TCS)
+    THEN
+        SCRATCH_SECINFO.FLAGS.R <= 0;
+        SCRATCH_SECINFO.FLAGS.W <= 0;
+        SCRATCH_SECINFO.FLAGS.X <= 0;
+        (DS:RCX).FLAGS.DBGOPTIN <= 0; // force TCS.FLAGS.DBGOPTIN off
+        DS:RCX.CSSA <= 0;
+        DS:RCX.AEP <= 0;
+        DS:RCX.STATE <= 0;
+        FI;
