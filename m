@@ -2,139 +2,248 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B45BC32751
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 02:53:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E127C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 02:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4B902171F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 02:53:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="h2J8ojQi"
+	by mail.kernel.org (Postfix) with ESMTP id 642102171F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 02:59:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389631AbfHHCxc (ORCPT
+        id S1728148AbfHHC7F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 22:53:32 -0400
-Received: from ozlabs.org ([203.11.71.1]:35857 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727978AbfHHCxb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 22:53:31 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 463tGw3FLXz9s7T;
-        Thu,  8 Aug 2019 12:53:27 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1565232808;
-        bh=/PuKtT7hVEGOuEdR+eb2Zo3CrrUaO63bl10cgsb8BH4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=h2J8ojQiYVX+SIFRiezM7ePsVtjVQwzWzFA0f9xnHmsBVnu6Fsaz2F2RMt4X+z++0
-         C84YjQH/VGCZXtzn0W6H7l+JDtcKvsASqlS63+WBijsGT/Z4v6op/oIfRAAD/WbX5+
-         kF2VMypPt4quEdbIJ7DJu4SDt8tUIBRhKTu/JhnGUagOJMezxE9rD6jt1/ichXiG1m
-         mU275Hk37Hjy19kgIUugnWW8Ze3Q4csh6zHOVlmJY8opVj6ZGMbA5+3BhVdj86jAhn
-         1rOzaMHqhE3LF1GQ1Vr5mqLvSbKDG3HZi9DRY62yJmiawXDEa+akB9XNDxI26JwxzN
-         7X25Qy+eMoyWQ==
-Date:   Thu, 8 Aug 2019 12:53:26 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>
-Subject: linux-next: manual merge of the bpf-next tree with Linus' tree
-Message-ID: <20190808125326.614065d6@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/t965bQleaCIqT2n30_GaWGl";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Wed, 7 Aug 2019 22:59:05 -0400
+Received: from outbound.smtp.vt.edu ([198.82.183.121]:60740 "EHLO
+        omr1.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727994AbfHHC7F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 22:59:05 -0400
+Received: from mr6.cc.vt.edu (mr6.cc.vt.edu [IPv6:2607:b400:92:8500:0:af:2d00:4488])
+        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x782x3gL029038
+        for <linux-kernel@vger.kernel.org>; Wed, 7 Aug 2019 22:59:03 -0400
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+        by mr6.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x782wwjp000573
+        for <linux-kernel@vger.kernel.org>; Wed, 7 Aug 2019 22:59:03 -0400
+Received: by mail-qk1-f197.google.com with SMTP id t124so81305859qkh.3
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 19:59:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:mime-version:date
+         :message-id;
+        bh=zLYlHCKM9FGswpyNMjK6L6TymLo3lRrXDEvQNOBcxFo=;
+        b=eCB6eEL1HqwdDEb09DoKoj0HXvDqMvxtXBJnhwG/pS1AT9tH7totJOp5inpqBNWXg9
+         ABghiZFaAHsM+vUIGMHhwrFciyzhg6BoqrJqADiXT6YOBQJg9xaQeeQxKWxRDWgJLbNY
+         rzNOk+i1LO+QZCH7Y6DsK9Fpw28GWuliIpGAqqzwClckO6F7aW5+fLbtzuOo08ask2Ft
+         HRIdrAhbU9ij56icIWWiYa9aWf3lBT/KMoMWxtQM3yKaLFRz8PUpPM76ZfE9RI0MInHH
+         GMjjL5cCJOy4TSfEzqx2HvRH1e4cT8IX6Msg+erqVyOSkNQcBj4r71FMN7yy/IFn2+/J
+         D6cg==
+X-Gm-Message-State: APjAAAW9Me2WStBQVdxYqFkdxeNdR4EGQGlsoQ1d/qG3HwLSj1haidMX
+        7cdM9bcVQIq5cx3UmHdMvnqIJvo5w7Uw/Y4qilA6S3u1fcLHnyXt/tlIQRpVLARvi5qGSiwpREi
+        AIfrfSdJqvuv8qx5O9oTl6UJ7bOmBc0WcLDk=
+X-Received: by 2002:a05:6214:3f0:: with SMTP id cf16mr11221219qvb.211.1565233137912;
+        Wed, 07 Aug 2019 19:58:57 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxGVT1G6h48UB1aM9okZpkv063eU7ZGRdbyHXQF99oG3xhZr3oGbbDxdl/nkv0nFhYuGKlbqw==
+X-Received: by 2002:a05:6214:3f0:: with SMTP id cf16mr11221212qvb.211.1565233137493;
+        Wed, 07 Aug 2019 19:58:57 -0700 (PDT)
+Received: from turing-police ([2601:5c0:c001:4341::359])
+        by smtp.gmail.com with ESMTPSA id f27sm3031586qkl.25.2019.08.07.19.58.56
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 07 Aug 2019 19:58:56 -0700 (PDT)
+From:   "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <valdis.kletnieks@vt.edu>
+X-Google-Original-From: "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <Valdis.Kletnieks@vt.edu>
+X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
+To:     Steve French <sfrench@samba.org>
+cc:     linux-cifs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] fs/cifs - clean up 'set but not used' variables.
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Date:   Wed, 07 Aug 2019 22:58:55 -0400
+Message-ID: <39561.1565233135@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/t965bQleaCIqT2n30_GaWGl
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+When building with W=1, fs/cifs throws a lot of 'set but not used' messages.
 
-Hi all,
+  CC [M]  fs/cifs/file.o
+fs/cifs/file.c: In function 'cifs_lock':
+fs/cifs/file.c:1698:8: warning: variable 'netfid' set but not used [-Wunused-but-set-variable]
+ 1698 |  __u16 netfid;
+      |        ^~~~~~
+fs/cifs/file.c:1696:24: warning: variable 'cinode' set but not used [-Wunused-but-set-variable]
+ 1696 |  struct cifsInodeInfo *cinode;
+      |                        ^~~~~~
+fs/cifs/file.c: In function 'cifs_write':
+fs/cifs/file.c:1767:23: warning: variable 'cifs_sb' set but not used [-Wunused-but-set-variable]
+ 1767 |  struct cifs_sb_info *cifs_sb;
+      |                       ^~~~~~~
+fs/cifs/file.c: In function 'collect_uncached_read_data':
+fs/cifs/file.c:3580:20: warning: variable 'tcon' set but not used [-Wunused-but-set-variable]
+ 3580 |  struct cifs_tcon *tcon;
+      |                    ^~~~
+  CC [M]  fs/cifs/netmisc.o
+fs/cifs/netmisc.c:120:40: warning: 'mapping_table_ERRHRD' defined but not used [-Wunused-const-variable=]
+  120 | static const struct smb_to_posix_error mapping_table_ERRHRD[] = {
+      |                                        ^~~~~~~~~~~~~~~~~~~~
+  CC [M]  fs/cifs/smb2ops.o
+fs/cifs/smb2ops.c: In function 'smb3_punch_hole':
+fs/cifs/smb2ops.c:2942:24: warning: variable 'cifsi' set but not used [-Wunused-but-set-variable]
+ 2942 |  struct cifsInodeInfo *cifsi;
+      |                        ^~~~~
+  CC [M]  fs/cifs/cifsacl.o
+fs/cifs/cifsacl.c: In function 'sid_to_id':
+fs/cifs/cifsacl.c:367:6: warning: variable 'rc' set but not used [-Wunused-but-set-variable]
+  367 |  int rc;
+      |      ^~
+At top level:
+fs/cifs/cifsacl.c:89:30: warning: 'sid_unix_NFS_mode' defined but not used [-Wunused-const-variable=]
+   89 | static const struct cifs_sid sid_unix_NFS_mode = { 1, 2, {0, 0, 0, 0, 0, 5},
+      |                              ^~~~~~~~~~~~~~~~~
+fs/cifs/cifsacl.c:62:30: warning: 'sid_user' defined but not used [-Wunused-const-variable=]
+   62 | static const struct cifs_sid sid_user = {1, 2 , {0, 0, 0, 0, 0, 5}, {} };
+      |                              ^~~~~~~~
 
-Today's linux-next merge of the bpf-next tree got a conflict in:
+Heave the unused stuff over the side.
 
-  tools/lib/bpf/libbpf.c
+Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
 
-between commit:
+diff --git a/fs/cifs/cifsacl.c b/fs/cifs/cifsacl.c
+index 78eed72f3af0..bcd5eb301230 100644
+--- a/fs/cifs/cifsacl.c
++++ b/fs/cifs/cifsacl.c
+@@ -58,8 +58,6 @@ static const struct cifs_sid sid_everyone = {
+ /* security id for Authenticated Users system group */
+ static const struct cifs_sid sid_authusers = {
+ 	1, 1, {0, 0, 0, 0, 0, 5}, {cpu_to_le32(11)} };
+-/* group users */
+-static const struct cifs_sid sid_user = {1, 2 , {0, 0, 0, 0, 0, 5}, {} };
+ 
+ /* S-1-22-1 Unmapped Unix users */
+ static const struct cifs_sid sid_unix_users = {1, 1, {0, 0, 0, 0, 0, 22},
+@@ -85,11 +83,6 @@ static const struct cifs_sid sid_unix_NFS_groups = { 1, 2, {0, 0, 0, 0, 0, 5},
+ 	{cpu_to_le32(88),
+ 	 cpu_to_le32(2), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0} };
+ 
+-/* S-1-5-88-3 Unix mode */
+-static const struct cifs_sid sid_unix_NFS_mode = { 1, 2, {0, 0, 0, 0, 0, 5},
+-	{cpu_to_le32(88),
+-	 cpu_to_le32(3), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0} };
+-
+ static const struct cred *root_cred;
+ 
+ static int
+@@ -364,7 +357,6 @@ static int
+ sid_to_id(struct cifs_sb_info *cifs_sb, struct cifs_sid *psid,
+ 		struct cifs_fattr *fattr, uint sidtype)
+ {
+-	int rc;
+ 	struct key *sidkey;
+ 	char *sidstr;
+ 	const struct cred *saved_cred;
+@@ -426,7 +418,6 @@ sid_to_id(struct cifs_sb_info *cifs_sb, struct cifs_sid *psid,
+ 	sidkey = request_key(&cifs_idmap_key_type, sidstr, "",
+ 			     &cifs_idmap_key_acl);
+ 	if (IS_ERR(sidkey)) {
+-		rc = -EINVAL;
+ 		cifs_dbg(FYI, "%s: Can't map SID %s to a %cid\n",
+ 			 __func__, sidstr, sidtype == SIDOWNER ? 'u' : 'g');
+ 		goto out_revert_creds;
+@@ -439,7 +430,6 @@ sid_to_id(struct cifs_sb_info *cifs_sb, struct cifs_sid *psid,
+ 	 */
+ 	BUILD_BUG_ON(sizeof(uid_t) != sizeof(gid_t));
+ 	if (sidkey->datalen != sizeof(uid_t)) {
+-		rc = -EIO;
+ 		cifs_dbg(FYI, "%s: Downcall contained malformed key (datalen=%hu)\n",
+ 			 __func__, sidkey->datalen);
+ 		key_invalidate(sidkey);
+diff --git a/fs/cifs/file.c b/fs/cifs/file.c
+index 97090693d182..f16f6d2b5217 100644
+--- a/fs/cifs/file.c
++++ b/fs/cifs/file.c
+@@ -1693,9 +1693,7 @@ int cifs_lock(struct file *file, int cmd, struct file_lock *flock)
+ 	bool posix_lck = false;
+ 	struct cifs_sb_info *cifs_sb;
+ 	struct cifs_tcon *tcon;
+-	struct cifsInodeInfo *cinode;
+ 	struct cifsFileInfo *cfile;
+-	__u16 netfid;
+ 	__u32 type;
+ 
+ 	rc = -EACCES;
+@@ -1711,8 +1709,6 @@ int cifs_lock(struct file *file, int cmd, struct file_lock *flock)
+ 	cifs_read_flock(flock, &type, &lock, &unlock, &wait_flag,
+ 			tcon->ses->server);
+ 	cifs_sb = CIFS_FILE_SB(file);
+-	netfid = cfile->fid.netfid;
+-	cinode = CIFS_I(file_inode(file));
+ 
+ 	if (cap_unix(tcon->ses) &&
+ 	    (CIFS_UNIX_FCNTL_CAP & le64_to_cpu(tcon->fsUnixInfo.Capability)) &&
+@@ -1764,7 +1760,6 @@ cifs_write(struct cifsFileInfo *open_file, __u32 pid, const char *write_data,
+ 	int rc = 0;
+ 	unsigned int bytes_written = 0;
+ 	unsigned int total_written;
+-	struct cifs_sb_info *cifs_sb;
+ 	struct cifs_tcon *tcon;
+ 	struct TCP_Server_Info *server;
+ 	unsigned int xid;
+@@ -1772,8 +1767,6 @@ cifs_write(struct cifsFileInfo *open_file, __u32 pid, const char *write_data,
+ 	struct cifsInodeInfo *cifsi = CIFS_I(d_inode(dentry));
+ 	struct cifs_io_parms io_parms;
+ 
+-	cifs_sb = CIFS_SB(dentry->d_sb);
+-
+ 	cifs_dbg(FYI, "write %zd bytes to offset %lld of %pd\n",
+ 		 write_size, *offset, dentry);
+ 
+@@ -3577,10 +3570,8 @@ collect_uncached_read_data(struct cifs_aio_ctx *ctx)
+ 	struct cifs_readdata *rdata, *tmp;
+ 	struct iov_iter *to = &ctx->iter;
+ 	struct cifs_sb_info *cifs_sb;
+-	struct cifs_tcon *tcon;
+ 	int rc;
+ 
+-	tcon = tlink_tcon(ctx->cfile->tlink);
+ 	cifs_sb = CIFS_SB(ctx->cfile->dentry->d_sb);
+ 
+ 	mutex_lock(&ctx->aio_mutex);
+diff --git a/fs/cifs/netmisc.c b/fs/cifs/netmisc.c
+index ed92958e842d..657f409d4de0 100644
+--- a/fs/cifs/netmisc.c
++++ b/fs/cifs/netmisc.c
+@@ -117,10 +117,6 @@ static const struct smb_to_posix_error mapping_table_ERRSRV[] = {
+ 	{0, 0}
+ };
+ 
+-static const struct smb_to_posix_error mapping_table_ERRHRD[] = {
+-	{0, 0}
+-};
+-
+ /*
+  * Convert a string containing text IPv4 or IPv6 address to binary form.
+  *
+diff --git a/fs/cifs/smb2ops.c b/fs/cifs/smb2ops.c
+index 64a5864127be..f5bbd1d7753e 100644
+--- a/fs/cifs/smb2ops.c
++++ b/fs/cifs/smb2ops.c
+@@ -2939,7 +2939,6 @@ static long smb3_punch_hole(struct file *file, struct cifs_tcon *tcon,
+ 			    loff_t offset, loff_t len)
+ {
+ 	struct inode *inode;
+-	struct cifsInodeInfo *cifsi;
+ 	struct cifsFileInfo *cfile = file->private_data;
+ 	struct file_zero_data_information fsctl_buf;
+ 	long rc;
+@@ -2949,7 +2948,6 @@ static long smb3_punch_hole(struct file *file, struct cifs_tcon *tcon,
+ 	xid = get_xid();
+ 
+ 	inode = d_inode(cfile->dentry);
+-	cifsi = CIFS_I(inode);
+ 
+ 	/* Need to make file sparse, if not already, before freeing range. */
+ 	/* Consider adding equivalent for compressed since it could also work */
 
-  1d4126c4e119 ("libbpf: sanitize VAR to conservative 1-byte INT")
 
-from Linus' tree and commit:
-
-  b03bc6853c0e ("libbpf: convert libbpf code to use new btf helpers")
-
-from the bpf-next tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc tools/lib/bpf/libbpf.c
-index 2b57d7ea7836,3abf2dd1b3b5..000000000000
---- a/tools/lib/bpf/libbpf.c
-+++ b/tools/lib/bpf/libbpf.c
-@@@ -1370,22 -1374,16 +1372,21 @@@ static void bpf_object__sanitize_btf(st
- =20
-  	for (i =3D 1; i <=3D btf__get_nr_types(btf); i++) {
-  		t =3D (struct btf_type *)btf__type_by_id(btf, i);
-- 		kind =3D BTF_INFO_KIND(t->info);
- =20
-- 		if (!has_datasec && kind =3D=3D BTF_KIND_VAR) {
-+ 		if (!has_datasec && btf_is_var(t)) {
-  			/* replace VAR with INT */
-  			t->info =3D BTF_INFO_ENC(BTF_KIND_INT, 0, 0);
- -			t->size =3D sizeof(int);
- -			*(int *)(t + 1) =3D BTF_INT_ENC(0, 0, 32);
- +			/*
- +			 * using size =3D 1 is the safest choice, 4 will be too
- +			 * big and cause kernel BTF validation failure if
- +			 * original variable took less than 4 bytes
- +			 */
- +			t->size =3D 1;
-- 			*(int *)(t+1) =3D BTF_INT_ENC(0, 0, 8);
-- 		} else if (!has_datasec && kind =3D=3D BTF_KIND_DATASEC) {
-++			*(int *)(t + 1) =3D BTF_INT_ENC(0, 0, 8);
-+ 		} else if (!has_datasec && btf_is_datasec(t)) {
-  			/* replace DATASEC with STRUCT */
-- 			struct btf_var_secinfo *v =3D (void *)(t + 1);
-- 			struct btf_member *m =3D (void *)(t + 1);
-+ 			const struct btf_var_secinfo *v =3D btf_var_secinfos(t);
-+ 			struct btf_member *m =3D btf_members(t);
-  			struct btf_type *vt;
-  			char *name;
- =20
-
---Sig_/t965bQleaCIqT2n30_GaWGl
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1LjqYACgkQAVBC80lX
-0GyyZQf9HpGsTBYYj/EbUlYjBJQiYNKf3nilJ36/aZKDUa9R6wBu3tHu6p24zRRh
-cSvwL8hit9tcUZOI1t4OyVh64mlW8GRxE5kKu0722dxRnSMQx7Td3LTA6inrlCCV
-CnJRlEoCHpP7vITbo+0cwVhJt+OR4k4/GEAf/mZVqZAwoXMsUZkC6LY30aKWDJfc
-3TzURLuzemJSJvZAsNOXDHevUM++t+01n1iq+3Y6bf9grOyQc9NI732GKTTxOPEE
-FpNhnSp8H24r2yBiuIgJqHSNAwZy/03TUtiijE8xomQZoIWOUn10BL4d2tnP/kpn
-kU6k1xWsopkhAi54Z0ebJcEEjpDLWA==
-=cXek
------END PGP SIGNATURE-----
-
---Sig_/t965bQleaCIqT2n30_GaWGl--
