@@ -2,53 +2,52 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16794C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:06:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D7EFC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:06:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0EB3214C6
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:06:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0908821880
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:06:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565291188;
-	bh=5wrB4OWkVaPLs28wOrveJdFAHDPbke7ee8m9rx6Tgdw=;
+	s=default; t=1565291191;
+	bh=S6rnoFGWuzDCfGr1eTT+I1+cR/pQ1pXPahYjQFmKkFA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lD3tBjnMqOfHTiy7suenGwndMc38j6YcWn/4S1vNFxYxRaB5ohnrHWvIHpQPItQUL
-	 RZ9e/x+t7v3YmArfZNAYyaHOhwlSBPg5vioH3jxGpOM7/xm0shwJzM+TXc1UG3eV1v
-	 fSN0ieuqb2+ZzmIoPknA1SD/YpB6XGY9vHdsVRP4=
+	b=h6ufa4wKX6j1hRgDh/2B2ufKtjUqZ0Om/dxRhAAlwTCtJmnfsASJD6SrSgBwhH/IF
+	 CgK0QZ60QtzRGkZ3xdFlZeOuPaUlxatYNtUxhEbrLAd085/2bjTqgTeAdaTPRzuZ20
+	 3Pj2PnYQ9j9j8MOWOZr2lSPD0VMnoKzfHplFdDbs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404432AbfHHTG2 (ORCPT
+        id S2404449AbfHHTG3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:06:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39804 "EHLO mail.kernel.org"
+        Thu, 8 Aug 2019 15:06:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404374AbfHHTGW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 15:06:22 -0400
+        id S2404424AbfHHTG2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 15:06:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DA732184E;
-        Thu,  8 Aug 2019 19:06:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD94E214C6;
+        Thu,  8 Aug 2019 19:06:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565291182;
-        bh=5wrB4OWkVaPLs28wOrveJdFAHDPbke7ee8m9rx6Tgdw=;
+        s=default; t=1565291187;
+        bh=S6rnoFGWuzDCfGr1eTT+I1+cR/pQ1pXPahYjQFmKkFA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OVUANY3rxp+69yI51f5dOYJI6RzZ28OXSfnB4Hg+gq2gVatqUKGWO4nQmyOqt5MnL
-         U6xbHNGVFASoeKhdou+5YiIAseDxdzQSCvdnShuuq3828urPBttfSNqbymCYdMmueD
-         nB/tpLwGzlcXQrAsROxLexWhwpCsaG4H/3/ty0YM=
+        b=GehwHTizMD3fGTjMq9Xg42IfW5IrwsQT9W5ArjG2qhXDEu/2U4c/7vOFDvWmcMJhg
+         FHYRebaNtF3Tr2gvdaGK0u4kTDVWGC/16j7aXU99pHWWqojYykIcdp5SxW48dKckJ7
+         P90Qr1UwSp7ir9NV28toqZxXDdj1XaeOaXraDMrE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+88533dc8b582309bf3ee@syzkaller.appspotmail.com,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 18/56] net: bridge: delete local fdb on device init failure
-Date:   Thu,  8 Aug 2019 21:04:44 +0200
-Message-Id: <20190808190453.579244320@linuxfoundation.org>
+        stable@vger.kernel.org, Vishal Verma <vishal.l.verma@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 02/56] libnvdimm/bus: Prepare the nd_ioctl() path to be re-entrant
+Date:   Thu,  8 Aug 2019 21:04:28 +0200
+Message-Id: <20190808190452.965692020@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190808190452.867062037@linuxfoundation.org>
 References: <20190808190452.867062037@linuxfoundation.org>
@@ -61,44 +60,164 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+commit 6de5d06e657acdbcf9637dac37916a4a5309e0f4 upstream.
 
-[ Upstream commit d7bae09fa008c6c9a489580db0a5a12063b97f97 ]
+In preparation for not holding a lock over the execution of nd_ioctl(),
+update the implementation to allow multiple threads to be attempting
+ioctls at the same time. The bus lock still prevents multiple in-flight
+->ndctl() invocations from corrupting each other's state, but static
+global staging buffers are moved to the heap.
 
-On initialization failure we have to delete the local fdb which was
-inserted due to the default pvid creation. This problem has been present
-since the inception of default_pvid. Note that currently there are 2 cases:
-1) in br_dev_init() when br_multicast_init() fails
-2) if register_netdevice() fails after calling ndo_init()
-
-This patch takes care of both since br_vlan_flush() is called on both
-occasions. Also the new fdb delete would be a no-op on normal bridge
-device destruction since the local fdb would've been already flushed by
-br_dev_delete(). This is not an issue for ports since nbp_vlan_init() is
-called last when adding a port thus nothing can fail after it.
-
-Reported-by: syzbot+88533dc8b582309bf3ee@syzkaller.appspotmail.com
-Fixes: 5be5a2df40f0 ("bridge: Add filtering support for default_pvid")
-Signed-off-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reported-by: Vishal Verma <vishal.l.verma@intel.com>
+Reviewed-by: Vishal Verma <vishal.l.verma@intel.com>
+Tested-by: Vishal Verma <vishal.l.verma@intel.com>
+Link: https://lore.kernel.org/r/156341208947.292348.10560140326807607481.stgit@dwillia2-desk3.amr.corp.intel.com
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bridge/br_vlan.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/nvdimm/bus.c | 59 +++++++++++++++++++++++++++-----------------
+ 1 file changed, 37 insertions(+), 22 deletions(-)
 
---- a/net/bridge/br_vlan.c
-+++ b/net/bridge/br_vlan.c
-@@ -715,6 +715,11 @@ void br_vlan_flush(struct net_bridge *br
+diff --git a/drivers/nvdimm/bus.c b/drivers/nvdimm/bus.c
+index dfb93228d6a73..a38572bf486bb 100644
+--- a/drivers/nvdimm/bus.c
++++ b/drivers/nvdimm/bus.c
+@@ -973,20 +973,19 @@ static int __nd_ioctl(struct nvdimm_bus *nvdimm_bus, struct nvdimm *nvdimm,
+ 		int read_only, unsigned int ioctl_cmd, unsigned long arg)
+ {
+ 	struct nvdimm_bus_descriptor *nd_desc = nvdimm_bus->nd_desc;
+-	static char out_env[ND_CMD_MAX_ENVELOPE];
+-	static char in_env[ND_CMD_MAX_ENVELOPE];
+ 	const struct nd_cmd_desc *desc = NULL;
+ 	unsigned int cmd = _IOC_NR(ioctl_cmd);
+ 	struct device *dev = &nvdimm_bus->dev;
+ 	void __user *p = (void __user *) arg;
++	char *out_env = NULL, *in_env = NULL;
+ 	const char *cmd_name, *dimm_name;
+ 	u32 in_len = 0, out_len = 0;
+ 	unsigned int func = cmd;
+ 	unsigned long cmd_mask;
+ 	struct nd_cmd_pkg pkg;
+ 	int rc, i, cmd_rc;
++	void *buf = NULL;
+ 	u64 buf_len = 0;
+-	void *buf;
  
- 	ASSERT_RTNL();
+ 	if (nvdimm) {
+ 		desc = nd_cmd_dimm_desc(cmd);
+@@ -1026,6 +1025,9 @@ static int __nd_ioctl(struct nvdimm_bus *nvdimm_bus, struct nvdimm *nvdimm,
+ 		}
  
-+	/* delete auto-added default pvid local fdb before flushing vlans
-+	 * otherwise it will be leaked on bridge device init failure
-+	 */
-+	br_fdb_delete_by_port(br, NULL, 0, 1);
+ 	/* process an input envelope */
++	in_env = kzalloc(ND_CMD_MAX_ENVELOPE, GFP_KERNEL);
++	if (!in_env)
++		return -ENOMEM;
+ 	for (i = 0; i < desc->in_num; i++) {
+ 		u32 in_size, copy;
+ 
+@@ -1033,14 +1035,17 @@ static int __nd_ioctl(struct nvdimm_bus *nvdimm_bus, struct nvdimm *nvdimm,
+ 		if (in_size == UINT_MAX) {
+ 			dev_err(dev, "%s:%s unknown input size cmd: %s field: %d\n",
+ 					__func__, dimm_name, cmd_name, i);
+-			return -ENXIO;
++			rc = -ENXIO;
++			goto out;
+ 		}
+-		if (in_len < sizeof(in_env))
+-			copy = min_t(u32, sizeof(in_env) - in_len, in_size);
++		if (in_len < ND_CMD_MAX_ENVELOPE)
++			copy = min_t(u32, ND_CMD_MAX_ENVELOPE - in_len, in_size);
+ 		else
+ 			copy = 0;
+-		if (copy && copy_from_user(&in_env[in_len], p + in_len, copy))
+-			return -EFAULT;
++		if (copy && copy_from_user(&in_env[in_len], p + in_len, copy)) {
++			rc = -EFAULT;
++			goto out;
++		}
+ 		in_len += in_size;
+ 	}
+ 
+@@ -1052,6 +1057,12 @@ static int __nd_ioctl(struct nvdimm_bus *nvdimm_bus, struct nvdimm *nvdimm,
+ 	}
+ 
+ 	/* process an output envelope */
++	out_env = kzalloc(ND_CMD_MAX_ENVELOPE, GFP_KERNEL);
++	if (!out_env) {
++		rc = -ENOMEM;
++		goto out;
++	}
 +
- 	vg = br_vlan_group(br);
- 	__vlan_flush(vg);
- 	RCU_INIT_POINTER(br->vlgrp, NULL);
+ 	for (i = 0; i < desc->out_num; i++) {
+ 		u32 out_size = nd_cmd_out_size(nvdimm, cmd, desc, i,
+ 				(u32 *) in_env, (u32 *) out_env, 0);
+@@ -1060,15 +1071,18 @@ static int __nd_ioctl(struct nvdimm_bus *nvdimm_bus, struct nvdimm *nvdimm,
+ 		if (out_size == UINT_MAX) {
+ 			dev_dbg(dev, "%s unknown output size cmd: %s field: %d\n",
+ 					dimm_name, cmd_name, i);
+-			return -EFAULT;
++			rc = -EFAULT;
++			goto out;
+ 		}
+-		if (out_len < sizeof(out_env))
+-			copy = min_t(u32, sizeof(out_env) - out_len, out_size);
++		if (out_len < ND_CMD_MAX_ENVELOPE)
++			copy = min_t(u32, ND_CMD_MAX_ENVELOPE - out_len, out_size);
+ 		else
+ 			copy = 0;
+ 		if (copy && copy_from_user(&out_env[out_len],
+-					p + in_len + out_len, copy))
+-			return -EFAULT;
++					p + in_len + out_len, copy)) {
++			rc = -EFAULT;
++			goto out;
++		}
+ 		out_len += out_size;
+ 	}
+ 
+@@ -1076,12 +1090,15 @@ static int __nd_ioctl(struct nvdimm_bus *nvdimm_bus, struct nvdimm *nvdimm,
+ 	if (buf_len > ND_IOCTL_MAX_BUFLEN) {
+ 		dev_dbg(dev, "%s cmd: %s buf_len: %llu > %d\n", dimm_name,
+ 				cmd_name, buf_len, ND_IOCTL_MAX_BUFLEN);
+-		return -EINVAL;
++		rc = -EINVAL;
++		goto out;
+ 	}
+ 
+ 	buf = vmalloc(buf_len);
+-	if (!buf)
+-		return -ENOMEM;
++	if (!buf) {
++		rc = -ENOMEM;
++		goto out;
++	}
+ 
+ 	if (copy_from_user(buf, p, buf_len)) {
+ 		rc = -EFAULT;
+@@ -1103,17 +1120,15 @@ static int __nd_ioctl(struct nvdimm_bus *nvdimm_bus, struct nvdimm *nvdimm,
+ 		nvdimm_account_cleared_poison(nvdimm_bus, clear_err->address,
+ 				clear_err->cleared);
+ 	}
+-	nvdimm_bus_unlock(&nvdimm_bus->dev);
+ 
+ 	if (copy_to_user(p, buf, buf_len))
+ 		rc = -EFAULT;
+ 
+-	vfree(buf);
+-	return rc;
+-
+- out_unlock:
++out_unlock:
+ 	nvdimm_bus_unlock(&nvdimm_bus->dev);
+- out:
++out:
++	kfree(in_env);
++	kfree(out_env);
+ 	vfree(buf);
+ 	return rc;
+ }
+-- 
+2.20.1
+
 
 
