@@ -2,118 +2,82 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B79F7C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD76C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 992892171F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:41:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3278021874
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:42:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565268157;
+	bh=H3Xm8TVT+2ZXNimGkZTlU8kaRfKXyQSpxg1WVh70iLI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OqKGkbGNLMfrDZH/EjbCkeew/W47/sgf2CIjATHlJvpLoqW/E3qZfVab3234FUWiO
+	 Pk4zl94Z9FWiR3aJo1D7Rr5X81Vxz2MDdh62n0ozFB4/Y1yaZx1sv4wOOIIJJiAQci
+	 Ht3XNSJRjbEdPnGqmRtL5XK0DGDRT5cKxVF6ZHV0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732432AbfHHMlk (ORCPT
+        id S1732388AbfHHMmg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 08:41:40 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4195 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726285AbfHHMlk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 08:41:40 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id DFEF553C41FAB80B3D61;
-        Thu,  8 Aug 2019 20:41:34 +0800 (CST)
-Received: from [127.0.0.1] (10.63.139.185) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Thu, 8 Aug 2019
- 20:41:24 +0800
-Subject: Re: [PATCH v3 0/7] crypto: hisilicon: Add HiSilicon QM and ZIP
- controller driver
-To:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-        <linux-crypto@vger.kernel.org>
-References: <1564732676-35987-1-git-send-email-wangzhou1@hisilicon.com>
-CC:     <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>
-From:   Zhou Wang <wangzhou1@hisilicon.com>
-Message-ID: <5D4C1874.6030200@hisilicon.com>
-Date:   Thu, 8 Aug 2019 20:41:24 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
- Thunderbird/38.5.1
+        Thu, 8 Aug 2019 08:42:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49090 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728120AbfHHMmf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 08:42:35 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38D102171F;
+        Thu,  8 Aug 2019 12:42:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565268154;
+        bh=H3Xm8TVT+2ZXNimGkZTlU8kaRfKXyQSpxg1WVh70iLI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TJa/AClplyDnhtCu5fn8WkR83+bJajnIKx+Y4J/LT90BwsHTPtDpOtcgvGdDDQlbd
+         IRrhenCSxisAAJhQynis+WiF7IQpOcrPUH0La7Cj68dREP9+aJBzFgC77voWxfueNH
+         jSfQXHMTJZxEwws2i/ZtP+jMwgtRbtPCP0JEjFdY=
+Date:   Thu, 8 Aug 2019 14:42:32 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Pankaj Gupta <pagupta@redhat.com>
+Cc:     amit@kernel.org, mst@redhat.com, arnd@arndb.de,
+        virtualization@lists.linux-foundation.org, jasowang@redhat.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] virtio_ring: packed ring: fix
+ virtqueue_detach_unused_buf
+Message-ID: <20190808124232.GA32144@kroah.com>
+References: <20190808113606.19504-1-pagupta@redhat.com>
+ <20190808113606.19504-3-pagupta@redhat.com>
+ <20190808115630.GB2015@kroah.com>
+ <1512438873.7425183.1565267326035.JavaMail.zimbra@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <1564732676-35987-1-git-send-email-wangzhou1@hisilicon.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.63.139.185]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1512438873.7425183.1565267326035.JavaMail.zimbra@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/8/2 15:57, Zhou Wang wrote:
-> This series adds HiSilicon QM and ZIP controller driver in crypto subsystem.
+On Thu, Aug 08, 2019 at 08:28:46AM -0400, Pankaj Gupta wrote:
 > 
-> A simple QM/ZIP driver which helps to provide an example for a general
-> accelerator framework is under review in community[1]. Based on this simple
-> driver, this series adds HW v2 support, PCI passthrough, PCI/misc error
-> handler, debug support. But unlike [1], driver in this patchset only registers
-> to crypto subsystem.
 > 
-> There will be a long discussion about above accelerator framework in the
-> process of upstreaming. So let's firstly review and upstream QM/ZIP crypto
-> driver.
+> > > This patch makes packed ring code compatible with split ring in function
+> > > 'virtqueue_detach_unused_buf_*'.
+> > 
+> > What does that mean?  What does this "fix"?
 > 
-> Changes v2 -> v3:
-> - Change to register zlib/gzip to crypto acomp.
-> - As acomp is using sgl interface, add a common hardware sgl module which
->   also can be used in other HiSilicon accelerator drivers.
-> - Change irq thread to work queue in the flow of irq handler in QM.
-> - Split SRIOV and debugfs out for the convenience of review.
-> - rebased on v5.3-rc1.
-> - Some tiny fixes.
-> 
-> Links:
-> - v2  https://lkml.org/lkml/2019/1/23/358
-> - v1  https://lwn.net/Articles/775484/
-> - rfc https://lkml.org/lkml/2018/12/13/290
-> 
-> Note: this series is based on https://lkml.org/lkml/2019/7/23/1135
-> 
-> Reference:
-> [1] https://lkml.org/lkml/2018/11/12/1951
-> 
-> Zhou Wang (7):
->   crypto: hisilicon: Add queue management driver for HiSilicon QM module
->   crypto: hisilicon: Add hardware SGL support
->   crypto: hisilicon: Add HiSilicon ZIP accelerator support
->   crypto: hisilicon: Add SRIOV support for ZIP
->   Documentation: Add debugfs doc for hisi_zip
->   crypto: hisilicon: Add debugfs for ZIP and QM
->   MAINTAINERS: add maintainer for HiSilicon QM and ZIP controller driver
-> 
->  Documentation/ABI/testing/debugfs-hisi-zip |   50 +
->  MAINTAINERS                                |   11 +
->  drivers/crypto/hisilicon/Kconfig           |   23 +
->  drivers/crypto/hisilicon/Makefile          |    3 +
->  drivers/crypto/hisilicon/qm.c              | 1912 ++++++++++++++++++++++++++++
->  drivers/crypto/hisilicon/qm.h              |  215 ++++
->  drivers/crypto/hisilicon/sgl.c             |  214 ++++
->  drivers/crypto/hisilicon/sgl.h             |   24 +
->  drivers/crypto/hisilicon/zip/Makefile      |    2 +
->  drivers/crypto/hisilicon/zip/zip.h         |   71 ++
->  drivers/crypto/hisilicon/zip/zip_crypto.c  |  651 ++++++++++
->  drivers/crypto/hisilicon/zip/zip_main.c    | 1013 +++++++++++++++
->  12 files changed, 4189 insertions(+)
->  create mode 100644 Documentation/ABI/testing/debugfs-hisi-zip
->  create mode 100644 drivers/crypto/hisilicon/qm.c
->  create mode 100644 drivers/crypto/hisilicon/qm.h
->  create mode 100644 drivers/crypto/hisilicon/sgl.c
->  create mode 100644 drivers/crypto/hisilicon/sgl.h
->  create mode 100644 drivers/crypto/hisilicon/zip/Makefile
->  create mode 100644 drivers/crypto/hisilicon/zip/zip.h
->  create mode 100644 drivers/crypto/hisilicon/zip/zip_crypto.c
->  create mode 100644 drivers/crypto/hisilicon/zip/zip_main.c
-> 
+> Patch 1 frees the buffers When a port is unplugged from the virtio
+> console device. It does this with the help of 'virtqueue_detach_unused_buf_split/packed'
+> function. For split ring case, corresponding function decrements avail ring index.
+> For packed ring code, this functionality is not available, so this patch adds the
+> required support and hence help to remove the unused buffer completely.
 
-Any comments for this version?
+Explain all of this in great detail in the changelog comment.  What you
+have in there today does not make any sense.
 
-Best,
-Zhou
+thanks,
 
+greg k-h
