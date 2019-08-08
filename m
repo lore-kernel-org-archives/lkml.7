@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B85AC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:10:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE6D0C32754
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:10:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20D1A21743
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:10:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9A6C214C6
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:10:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565291424;
-	bh=qbNSV5LpJ6X8wxF5fQvOQNQbGWvO5R4qcdZoAG+IbbI=;
+	s=default; t=1565291427;
+	bh=qiYgcK43HU4xTj+4cIhgLdJuxtg4uUYn0P0UTlRbTlo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q747AAJf1Y1v4p28/BiCtIZeV6QAj000Vb2g2qchjpaz+NeAp8s+INNLVKR1VzP7Q
-	 5uXY6rb282Ff0osw5q/mNEs1TXq2Yc9FIJVNHqtqXj1OpeI2yDagKnhUtXNrluDvjh
-	 GiAASktmrnYgfPC/HwmfyuEwGZiN7Sfb7x3DrgTU=
+	b=IPFxd7egkADCDLCQDActNYRZIYNyOgVqOMEGDlyzTs383fGqVDTz00HFL/22pwjUq
+	 Y2J2EcIYJlpOY8h5RSqzZMfme2j26YTbUS/SaCx+MtRUJe98/6DTs2qypLagM8BLlK
+	 aMKhTqrw1VHXiAhy7hRtbvhGTLtaNOOx3INKfJvA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405282AbfHHTKW (ORCPT
+        id S2404902AbfHHTK0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:10:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44660 "EHLO mail.kernel.org"
+        Thu, 8 Aug 2019 15:10:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405267AbfHHTKT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 15:10:19 -0400
+        id S2405280AbfHHTKW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 15:10:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 725F4214C6;
-        Thu,  8 Aug 2019 19:10:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FC6E214C6;
+        Thu,  8 Aug 2019 19:10:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565291418;
-        bh=qbNSV5LpJ6X8wxF5fQvOQNQbGWvO5R4qcdZoAG+IbbI=;
+        s=default; t=1565291421;
+        bh=qiYgcK43HU4xTj+4cIhgLdJuxtg4uUYn0P0UTlRbTlo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L3TjqF2HQVTqUd81SD6nTYAGOgMaj1fHsAL2n/c/yPeWEBObwRYblx5cjREleIAqb
-         gcyFZ034LKGI6dxu7ZI3CPU2tHK7LmvHCzoIq1GRcV8Dh9kYcTZnFdxigHLPXtI/ua
-         bAXosUmwE/AyOhGCyyx/DOb+6HgdXiZmcracZAus=
+        b=E7g4tugPse4vxzWkQIzCI9/MPSI6oAA4Ra6SoLcbMwy6YSncFCR4Mjoz4JgudQ9mP
+         nTNlhKMGL6nGu0rIwLB6e3uB8Hv41WTRo1HwVVHhLHrcM/uV6ooNA6DbllfOttGTQc
+         vT/52JR7rwOmhem4M4ICtHM54FWUwabrV7hqmhJI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Parav Pandit <parav@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Mark Zhang <markz@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 4.19 25/45] net/mlx5: Use reversed order when unregister devices
-Date:   Thu,  8 Aug 2019 21:05:11 +0200
-Message-Id: <20190808190455.134715675@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Haishuang Yan <yanhaishuang@cmss.chinamobile.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 16/45] ip6_tunnel: fix possible use-after-free on xmit
+Date:   Thu,  8 Aug 2019 21:05:02 +0200
+Message-Id: <20190808190454.652366942@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190808190453.827571908@linuxfoundation.org>
 References: <20190808190453.827571908@linuxfoundation.org>
@@ -61,43 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Zhang <markz@mellanox.com>
+From: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
 
-[ Upstream commit 08aa5e7da6bce1a1963f63cf32c2e7ad434ad578 ]
+[ Upstream commit 01f5bffad555f8e22a61f4b1261fe09cf1b96994 ]
 
-When lag is active, which is controlled by the bonded mlx5e netdev, mlx5
-interface unregestering must happen in the reverse order where rdma is
-unregistered (unloaded) first, to guarantee all references to the lag
-context in hardware is removed, then remove mlx5e netdev interface which
-will cleanup the lag context from hardware.
+ip4ip6/ip6ip6 tunnels run iptunnel_handle_offloads on xmit which
+can cause a possible use-after-free accessing iph/ipv6h pointer
+since the packet will be 'uncloned' running pskb_expand_head if
+it is a cloned gso skb.
 
-Without this fix during destroy of LAG interface, we observed following
-errors:
- * mlx5_cmd_check:752:(pid 12556): DESTROY_LAG(0x843) op_mod(0x0) failed,
-   status bad parameter(0x3), syndrome (0xe4ac33)
- * mlx5_cmd_check:752:(pid 12556): DESTROY_LAG(0x843) op_mod(0x0) failed,
-   status bad parameter(0x3), syndrome (0xa5aee8).
-
-Fixes: a31208b1e11d ("net/mlx5_core: New init and exit flow for mlx5_core")
-Reviewed-by: Parav Pandit <parav@mellanox.com>
-Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Mark Zhang <markz@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Fixes: 0e9a709560db ("ip6_tunnel, ip6_gre: fix setting of DSCP on encapsulated packets")
+Signed-off-by: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/dev.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/ipv6/ip6_tunnel.c |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/dev.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/dev.c
-@@ -307,7 +307,7 @@ void mlx5_unregister_device(struct mlx5_
- 	struct mlx5_interface *intf;
+--- a/net/ipv6/ip6_tunnel.c
++++ b/net/ipv6/ip6_tunnel.c
+@@ -1283,12 +1283,11 @@ ip4ip6_tnl_xmit(struct sk_buff *skb, str
+ 	}
  
- 	mutex_lock(&mlx5_intf_mutex);
--	list_for_each_entry(intf, &intf_list, list)
-+	list_for_each_entry_reverse(intf, &intf_list, list)
- 		mlx5_remove_device(intf, priv);
- 	list_del(&priv->dev_list);
- 	mutex_unlock(&mlx5_intf_mutex);
+ 	fl6.flowi6_uid = sock_net_uid(dev_net(dev), NULL);
++	dsfield = INET_ECN_encapsulate(dsfield, ipv4_get_dsfield(iph));
+ 
+ 	if (iptunnel_handle_offloads(skb, SKB_GSO_IPXIP6))
+ 		return -1;
+ 
+-	dsfield = INET_ECN_encapsulate(dsfield, ipv4_get_dsfield(iph));
+-
+ 	skb_set_inner_ipproto(skb, IPPROTO_IPIP);
+ 
+ 	err = ip6_tnl_xmit(skb, dev, dsfield, &fl6, encap_limit, &mtu,
+@@ -1372,12 +1371,11 @@ ip6ip6_tnl_xmit(struct sk_buff *skb, str
+ 	}
+ 
+ 	fl6.flowi6_uid = sock_net_uid(dev_net(dev), NULL);
++	dsfield = INET_ECN_encapsulate(dsfield, ipv6_get_dsfield(ipv6h));
+ 
+ 	if (iptunnel_handle_offloads(skb, SKB_GSO_IPXIP6))
+ 		return -1;
+ 
+-	dsfield = INET_ECN_encapsulate(dsfield, ipv6_get_dsfield(ipv6h));
+-
+ 	skb_set_inner_ipproto(skb, IPPROTO_IPV6);
+ 
+ 	err = ip6_tnl_xmit(skb, dev, dsfield, &fl6, encap_limit, &mtu,
 
 
