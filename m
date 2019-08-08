@@ -2,81 +2,107 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D86C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 10:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B03CC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 10:35:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3B6A2173E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 10:35:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B2572173E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 10:35:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403769AbfHHKf0 (ORCPT
+        id S2403782AbfHHKf3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 06:35:26 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34536 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389981AbfHHKfW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 06:35:22 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 81CBBEE563;
-        Thu,  8 Aug 2019 10:35:22 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-144.ams2.redhat.com [10.36.116.144])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 143C2600C8;
-        Thu,  8 Aug 2019 10:35:22 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 4F40F16E08; Thu,  8 Aug 2019 12:35:21 +0200 (CEST)
-Date:   Thu, 8 Aug 2019 12:35:21 +0200
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     "Koenig, Christian" <Christian.Koenig@amd.com>
-Cc:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        David Airlie <airlied@linux.ie>,
-        "Huang, Ray" <Ray.Huang@amd.com>,
-        "tzimmermann@suse.de" <tzimmermann@suse.de>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 2/8] ttm: turn ttm_bo_device.vma_manager into a pointer
-Message-ID: <20190808103521.u6ggltj4ftns77je@sirius.home.kraxel.org>
-References: <20190808093702.29512-1-kraxel@redhat.com>
- <20190808093702.29512-3-kraxel@redhat.com>
- <2a90c899-19eb-5be2-3eda-f20efd31aa29@amd.com>
+        Thu, 8 Aug 2019 06:35:29 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:36778 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389923AbfHHKfZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 06:35:25 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 06D7B28C96B
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     linux-media@vger.kernel.org
+Cc:     kernel@collabora.com,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        fbuergisser@chromium.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 08/11] media: hantro: Move copy_metadata() before doing a decode operation
+Date:   Thu,  8 Aug 2019 07:34:29 -0300
+Message-Id: <20190808103432.12062-9-ezequiel@collabora.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190808103432.12062-1-ezequiel@collabora.com>
+References: <20190808103432.12062-1-ezequiel@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2a90c899-19eb-5be2-3eda-f20efd31aa29@amd.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Thu, 08 Aug 2019 10:35:22 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 09:48:49AM +0000, Koenig, Christian wrote:
-> Am 08.08.19 um 11:36 schrieb Gerd Hoffmann:
-> > Rename the embedded struct vma_offset_manager, it is named _vma_manager
-> > now.  ttm_bo_device.vma_manager is a pointer now, pointing to the
-> > embedded ttm_bo_device._vma_manager by default.
-> >
-> > Add ttm_bo_device_init_with_vma_manager() function which allows to
-> > initialize ttm with a different vma manager.
-> 
-> Can't we go down the route of completely removing the vma_manager from 
-> TTM? ttm_bo_mmap() would get the BO as parameter instead.
+From: Boris Brezillon <boris.brezillon@collabora.com>
 
-It surely makes sense to target that.  This patch can be a first step
-into that direction.  It allows gem and ttm to use the same
-vma_offset_manager (see patch #3), which in turn makes various gem
-functions work on ttm objects (see patch #4 for vram helpers).
+Some decoders use intra slice/frame references. The capture buffer
+pointed by these references might be new and thus have invalid
+timestamp which prevents the decoder logic from retrieving the
+vb2_buffer object based on the output buf timestamp.
+Copy all metadata (including the timestamp) before starting the decode
+operation.
 
-> That would also make the verify_access callback completely superfluous 
-> and looks like a good step into the right direction of de-midlayering.
+Suggested-by: Jonas Karlman <jonas@kwiboo.se>
+Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+---
+Changes in v4:
+* None.
+---
+ drivers/staging/media/hantro/hantro_drv.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-Hmm, right, noticed that too while working on another patch series.
-Guess I'll try to merge those two and see where I end up ...
-
-cheers,
-  Gerd
+diff --git a/drivers/staging/media/hantro/hantro_drv.c b/drivers/staging/media/hantro/hantro_drv.c
+index 4af6ee80229e..6e2351e46750 100644
+--- a/drivers/staging/media/hantro/hantro_drv.c
++++ b/drivers/staging/media/hantro/hantro_drv.c
+@@ -111,8 +111,6 @@ static void hantro_job_finish(struct hantro_dev *vpu,
+ 	src->sequence = ctx->sequence_out++;
+ 	dst->sequence = ctx->sequence_cap++;
+ 
+-	v4l2_m2m_buf_copy_metadata(src, dst, true);
+-
+ 	ret = ctx->buf_finish(ctx, &dst->vb2_buf, bytesused);
+ 	if (ret)
+ 		result = VB2_BUF_STATE_ERROR;
+@@ -178,8 +176,12 @@ void hantro_finish_run(struct hantro_ctx *ctx)
+ static void device_run(void *priv)
+ {
+ 	struct hantro_ctx *ctx = priv;
++	struct vb2_v4l2_buffer *src, *dst;
+ 	int ret;
+ 
++	src = hantro_get_src_buf(ctx);
++	dst = hantro_get_dst_buf(ctx);
++
+ 	ret = clk_bulk_enable(ctx->dev->variant->num_clocks, ctx->dev->clocks);
+ 	if (ret)
+ 		goto err_cancel_job;
+@@ -187,6 +189,8 @@ static void device_run(void *priv)
+ 	if (ret < 0)
+ 		goto err_cancel_job;
+ 
++	v4l2_m2m_buf_copy_metadata(src, dst, true);
++
+ 	ctx->codec_ops->run(ctx);
+ 	return;
+ 
+-- 
+2.22.0
 
