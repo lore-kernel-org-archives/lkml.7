@@ -2,116 +2,121 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B984C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:56:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E727AC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:01:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF095214C6
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:56:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACCE621882
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:01:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="isZbmorM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404389AbfHHT4W (ORCPT
+        id S2390315AbfHHUBs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:56:22 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:54081 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390201AbfHHT4W (ORCPT
+        Thu, 8 Aug 2019 16:01:48 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54773 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389883AbfHHUBs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 15:56:22 -0400
-Received: from p200300ddd71876597e7a91fffec98e25.dip0.t-ipconnect.de ([2003:dd:d718:7659:7e7a:91ff:fec9:8e25])
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hvoWJ-00079W-LP; Thu, 08 Aug 2019 21:56:19 +0200
-Date:   Thu, 8 Aug 2019 21:56:14 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Ben Luo <luoben@linux.alibaba.com>
-cc:     alex.williamson@redhat.com, linux-kernel@vger.kernel.org,
-        tao.ma@linux.alibaba.com, gerry@linux.alibaba.com
-Subject: Re: [PATCH 1/2] genirq: introduce update_irq_devid()
-In-Reply-To: <39a5009c77d07c3ce42ef784465c05e36d5f684d.1565263723.git.luoben@linux.alibaba.com>
-Message-ID: <alpine.DEB.2.21.1908082138410.2882@nanos.tec.linutronix.de>
-References: <cover.1565263723.git.luoben@linux.alibaba.com> <39a5009c77d07c3ce42ef784465c05e36d5f684d.1565263723.git.luoben@linux.alibaba.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 8 Aug 2019 16:01:48 -0400
+Received: by mail-wm1-f65.google.com with SMTP id p74so3521854wme.4;
+        Thu, 08 Aug 2019 13:01:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7jTaWodj+o7bQpJXVjN7WZTMa/civJyI2O4p/MCweUQ=;
+        b=isZbmorMAwvajUYDEKUD4lUqS1Sw/IbC+rYSpXOdbKPAJ9D7VQ0n2A8Uz+1uPB69T8
+         lohq1iDZbO0d7504KZ7SLh2p6Dz+eNsNo6mOx6YlNjzt3h2l4xLhCVLQjcYyEkEfndPn
+         uoC0EwK1QmGDqb5ZOWzMaun68shdtWKmxxJR5GfdOPjmE94uI/JZcjxJnBa6rafEhRLd
+         NGnuc6O2xOAaIX8a8J9bJp9IutUqTMjqkMCDOkg+KvOF+glR1FEEvT282rR1O/5/HabB
+         VTzEN5RTbGIPrEK5RH+qnM38BpyeyiaVrveldh04w1tvqnw7jT20QotG1tzu3etVvMPZ
+         u51w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7jTaWodj+o7bQpJXVjN7WZTMa/civJyI2O4p/MCweUQ=;
+        b=oPNIcxWjFr2O/WVG2Jiu5i3Lbg2zDCeeaslqfB1T9G0AlldrNnG68AOSDPVujBuH6Z
+         5Bq8bwig0sBmQHqf+z9JOoPzWwZ5i9eDAwe0W2kTFtjMvwYVFEupRAOnlZKIdf2BND6X
+         OGFxaxu5T0oasOa5W6B++Z1o+IAWklN0CCFkd4q6QNASLlXOqMzFh/Bks+ukVLVVGfrQ
+         bJFHmfTyzfJ9r2AMQr3nN3RsW0OeDf3lj4vdcH9ZbNT+laVdzgLTDf0fIiRURBinY4uB
+         wkfttqLEM0+THUdxUmXving/LgBN1LyEwM6GRHW0RcpINlgBhuTqf024gZqBusp2WCdJ
+         NBWA==
+X-Gm-Message-State: APjAAAW7wHEexLzQUAH9v+OpcpFrcWa5RQwYMje6hbyodsWstKGllCgX
+        lMaHm+BuyU0uOZ97UYMWv4w=
+X-Google-Smtp-Source: APXvYqxcK3YbLrWSBF0s2uNuRnPmqxW69hMr0lv92X0Mv1bqON6d0QQLRPBRW8BRfZEMu4MDY2EMuw==
+X-Received: by 2002:a1c:751a:: with SMTP id o26mr6284679wmc.13.1565294505632;
+        Thu, 08 Aug 2019 13:01:45 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f2f:3200:ec8a:8637:bf5f:7faf? (p200300EA8F2F3200EC8A8637BF5F7FAF.dip0.t-ipconnect.de. [2003:ea:8f2f:3200:ec8a:8637:bf5f:7faf])
+        by smtp.googlemail.com with ESMTPSA id o20sm243207712wrh.8.2019.08.08.13.01.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 08 Aug 2019 13:01:44 -0700 (PDT)
+Subject: Re: [PATCH net] net: phy: rtl8211f: do a double read to get real time
+ link status
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Yonglong Liu <liuyonglong@huawei.com>, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxarm@huawei.com, salil.mehta@huawei.com,
+        yisen.zhuang@huawei.com, shiju.jose@huawei.com
+References: <1565183772-44268-1-git-send-email-liuyonglong@huawei.com>
+ <d67831ab-8902-a653-3db9-b2f55adacabd@gmail.com>
+ <e663235c-93eb-702d-5a9c-8f781d631c42@huawei.com>
+ <080b68c7-abe6-d142-da4b-26e8a7d4dc19@gmail.com>
+ <c15f820b-cc80-9a93-4c48-1b60bc14f73a@huawei.com>
+ <b1140603-f05b-2373-445f-c1d7a43ff012@gmail.com>
+ <20190808194049.GM27917@lunn.ch>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <26e2c5c9-915c-858b-d091-e5bfa7ab6a5b@gmail.com>
+Date:   Thu, 8 Aug 2019 22:01:39 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <20190808194049.GM27917@lunn.ch>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 8 Aug 2019, Ben Luo wrote:
-> +int update_irq_devid(unsigned int irq, void *dev_id, void *new_dev_id)
-> +{
-> +	struct irq_desc *desc = irq_to_desc(irq);
-> +	struct irqaction *action, **action_ptr;
-> +	unsigned long flags;
-> +
-> +	WARN(in_interrupt(),
-> +			"Trying to update IRQ %d from IRQ context!\n", irq);
+On 08.08.2019 21:40, Andrew Lunn wrote:
+>> @@ -568,6 +568,11 @@ int phy_start_aneg(struct phy_device *phydev)
+>>  	if (err < 0)
+>>  		goto out_unlock;
+>>  
+>> +	/* The PHY may not yet have cleared aneg-completed and link-up bit
+>> +	 * w/o this delay when the following read is done.
+>> +	 */
+>> +	usleep_range(1000, 2000);
+>> +
+> 
+> Hi Heiner
+> 
+> Does 802.3 C22 say anything about this?
+> 
+C22 says:
+"The Auto-Negotiation process shall be restarted by setting bit 0.9 to a logic one. This bit is self-
+clearing, and a PHY shall return a value of one in bit 0.9 until the Auto-Negotiation process has been
+initiated."
 
-This is broken. The function needs to return on that condition. Actually it
-cannot even be called from non-preemptible code.
+Maybe we should read bit 0.9 in genphy_update_link() after having read BMSR and report
+aneg-complete and link-up as false (no matter of their current value) if 0.9 is set.
 
-What's worse is that if the interrupt in question is handled concurrently,
-then it will either see the old or the new dev_id and because the interrupt
-handler loop runs with desc->lock dropped even more crap can happen because
-dev_id can be subject to load and store tearing.
+> If this PHY is broken with respect to the standard, i would prefer the
+> workaround is in the PHY specific driver code, not generic core code.
+> 
+Based on the C22 statement above the PHY may not be broken and the typical time between
+two MDIO accesses is sufficient for the PHY to clear the bits. I think of MDIO bus access
+functions in network chips that have a 10us-20us delay after each MDIO access.
+On HNS3 this may not be the case.
 
-Staring at that, I see that there is the same issue in setup_irq() and
-free_irq(). It's actually worse there. I'll have a look.
-
-> +	/*
-> +	 * There can be multiple actions per IRQ descriptor, find the right
-> +	 * one based on the dev_id:
-> +	 */
-> +	action_ptr = &desc->action;
-> +	for (;;) {
-> +		action = *action_ptr;
-> +
-> +		if (!action) {
-> +			WARN(1, "Trying to update already-free IRQ %d\n", irq);
-
-That's wrong in two aspects:
-
-       1) The warn should be outside of the locked region.
-
-       2) Just having the irq number is not useful for debugging either
-       	  when the interrupt is shared.
-
-> +			raw_spin_unlock_irqrestore(&desc->lock, flags);
-> +			chip_bus_sync_unlock(desc);
-> +			return -ENXIO;
-> +		}
-> +
-> +		if (action->dev_id == dev_id) {
-> +			action->dev_id = new_dev_id;
-> +			break;
-> +		}
-> +		action_ptr = &action->next;
-> +	}
-> +
-> +	raw_spin_unlock_irqrestore(&desc->lock, flags);
-> +	chip_bus_sync_unlock(desc);
-> +
-> +	/*
-> +	 * Make sure it's not being used on another CPU:
-> +	 * There is a risk of UAF for old *dev_id, if it is
-> +	 * freed in a short time after this func returns
-> +	 */
-> +	synchronize_irq(irq);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(update_irq_devid);
-
-EXPORT_SYMBOL_GPL() please.
-
-Thanks,
-
-	tglx
+> 	   Andrew
+> 
+Heiner
