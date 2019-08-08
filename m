@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA146C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:10:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4A23C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:10:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5B3B2184E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:10:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8672C214C6
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:10:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565291451;
-	bh=qbNSV5LpJ6X8wxF5fQvOQNQbGWvO5R4qcdZoAG+IbbI=;
+	s=default; t=1565291454;
+	bh=CE0XeXocNm9Y/D3CIRfCnVtD5/uD2UwHjRMp5yVpzg4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oCNWk/s8VAKLvI7zG/CZqbmzgAEmDxjCTOKhyom1hMg5F+ieAMrysfcFdREfEBUej
-	 Q75xmnxWSTW3cMP58V7aEeMx/ofH+VWGRf2uKmNZQXluUQJ1iiMYAj/ezRnwWhUEWh
-	 7P6UAr3GTw4XqWhpRbWC0mSHve88GfvaU/lwEGas=
+	b=DpISRo0+kCWAdSbR4h8vLOXZM9jAhWroP0QblEsgTxE4y4WvqhBQK7YCd2zommby6
+	 wU0A59e25n9HYt1JnpRIPCIxODGKFgzRV0Nhvs4oHDZV4esIYNaKdEfCyUe5zQ1sfv
+	 qTzEDakTh5FjwXb4+gEgQtyBOACq36fPA0EEkTfg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405370AbfHHTKu (ORCPT
+        id S2405383AbfHHTKx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:10:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45248 "EHLO mail.kernel.org"
+        Thu, 8 Aug 2019 15:10:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405334AbfHHTKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 15:10:48 -0400
+        id S2405366AbfHHTKu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 15:10:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF4762184E;
-        Thu,  8 Aug 2019 19:10:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FF1A214C6;
+        Thu,  8 Aug 2019 19:10:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565291447;
-        bh=qbNSV5LpJ6X8wxF5fQvOQNQbGWvO5R4qcdZoAG+IbbI=;
+        s=default; t=1565291450;
+        bh=CE0XeXocNm9Y/D3CIRfCnVtD5/uD2UwHjRMp5yVpzg4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AoxtGh/TZXFcNVUzV9gDhiqdMtVMCo1W5qM0M9eeEW6w0xQU+GTZxOBiSYJpSL9KL
-         pm8XkLRk9vN7pgtnX4p1gY06ghCdYQ6tZeipa+e09Lv38kyR5AMr+g+dUHxPITYUOO
-         4dr94fri9YReEUZ/WbkTtyyx5vhM+HDwl2I9fp6o=
+        b=S3dD64qv3Znc9+87cTGH+flxQDIl838naLQrEjcskNFRVAW9EVdEfhDfjfKvqmV8y
+         NU/65kqx1Lj6JzOr5+vBlMVrtYUFcR9c/qktMIIqW+sXJQHtfC1Dk3yMh66YhqPdrS
+         4mEMPYVRwcDMyVQb7qOzawtdGdBQEniy3JZEF2HE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Parav Pandit <parav@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Mark Zhang <markz@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 4.14 18/33] net/mlx5: Use reversed order when unregister devices
-Date:   Thu,  8 Aug 2019 21:05:25 +0200
-Message-Id: <20190808190454.512233020@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Ren=C3=A9=20van=20Dorst?= <opensource@vdorst.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 19/33] net: phylink: Fix flow control for fixed-link
+Date:   Thu,  8 Aug 2019 21:05:26 +0200
+Message-Id: <20190808190454.562465228@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190808190453.582417307@linuxfoundation.org>
 References: <20190808190453.582417307@linuxfoundation.org>
@@ -61,43 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Zhang <markz@mellanox.com>
+From: "Ren� van Dorst" <opensource@vdorst.com>
 
-[ Upstream commit 08aa5e7da6bce1a1963f63cf32c2e7ad434ad578 ]
+[ Upstream commit 8aace4f3eba2a3ceb431e18683ea0e1ecbade5cd ]
 
-When lag is active, which is controlled by the bonded mlx5e netdev, mlx5
-interface unregestering must happen in the reverse order where rdma is
-unregistered (unloaded) first, to guarantee all references to the lag
-context in hardware is removed, then remove mlx5e netdev interface which
-will cleanup the lag context from hardware.
+In phylink_parse_fixedlink() the pl->link_config.advertising bits are AND
+with pl->supported, pl->supported is zeroed and only the speed/duplex
+modes and MII bits are set.
+So pl->link_config.advertising always loses the flow control/pause bits.
 
-Without this fix during destroy of LAG interface, we observed following
-errors:
- * mlx5_cmd_check:752:(pid 12556): DESTROY_LAG(0x843) op_mod(0x0) failed,
-   status bad parameter(0x3), syndrome (0xe4ac33)
- * mlx5_cmd_check:752:(pid 12556): DESTROY_LAG(0x843) op_mod(0x0) failed,
-   status bad parameter(0x3), syndrome (0xa5aee8).
+By setting Pause and Asym_Pause bits in pl->supported, the flow control
+work again when devicetree "pause" is set in fixes-link node and the MAC
+advertise that is supports pause.
 
-Fixes: a31208b1e11d ("net/mlx5_core: New init and exit flow for mlx5_core")
-Reviewed-by: Parav Pandit <parav@mellanox.com>
-Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Mark Zhang <markz@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Results with this patch.
+
+Legend:
+- DT = 'Pause' is set in the fixed-link in devicetree.
+- validate() = ‘Yes’ means phylink_set(mask, Pause) is set in the
+  validate().
+- flow = results reported my link is Up line.
+
++-----+------------+-------+
+| DT  | validate() | flow  |
++-----+------------+-------+
+| Yes | Yes        | rx/tx |
+| No  | Yes        | off   |
+| Yes | No         | off   |
++-----+------------+-------+
+
+Fixes: 9525ae83959b ("phylink: add phylink infrastructure")
+Signed-off-by: René van Dorst <opensource@vdorst.com>
+Acked-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/dev.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/phy/phylink.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/dev.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/dev.c
-@@ -307,7 +307,7 @@ void mlx5_unregister_device(struct mlx5_
- 	struct mlx5_interface *intf;
- 
- 	mutex_lock(&mlx5_intf_mutex);
--	list_for_each_entry(intf, &intf_list, list)
-+	list_for_each_entry_reverse(intf, &intf_list, list)
- 		mlx5_remove_device(intf, priv);
- 	list_del(&priv->dev_list);
- 	mutex_unlock(&mlx5_intf_mutex);
+--- a/drivers/net/phy/phylink.c
++++ b/drivers/net/phy/phylink.c
+@@ -203,6 +203,8 @@ static int phylink_parse_fixedlink(struc
+ 			       __ETHTOOL_LINK_MODE_MASK_NBITS, true);
+ 	linkmode_zero(pl->supported);
+ 	phylink_set(pl->supported, MII);
++	phylink_set(pl->supported, Pause);
++	phylink_set(pl->supported, Asym_Pause);
+ 	if (s) {
+ 		__set_bit(s->bit, pl->supported);
+ 	} else {
 
 
