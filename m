@@ -2,145 +2,155 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 726DFC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:19:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B990C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:20:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31D1E218A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:19:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565281150;
-	bh=B35pikkFB/J7vGw/V5wO0pktD8+Cprnqbx828X6l5GE=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=YbMKscNlTj27P5FuKraA2vSg+QToEflKyyqzaVCFymBd3XgT6eYeeyBRtNrYsoYZ3
-	 AZEPwIQdG5F8K7gFeLEj3vQi5OMpzJ2Vzv+bRCkzCgvTWWp59fY3DyAYkULZUhHFKR
-	 L59AaYAJQrZVpH/c+DxUstKKdGY2fUvU5mRDWF5Q=
+	by mail.kernel.org (Postfix) with ESMTP id 623772184E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:20:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Y7o7tDsM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404168AbfHHQTI (ORCPT
+        id S1732918AbfHHQUI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 12:19:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43298 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728020AbfHHQTI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 12:19:08 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CE3B2184E;
-        Thu,  8 Aug 2019 16:19:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565281147;
-        bh=B35pikkFB/J7vGw/V5wO0pktD8+Cprnqbx828X6l5GE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=VBA1g0BIMkEYHorY5sBEOMI+5NKBxMbTY/DnSraaw/aob6X2GV1DcNdTw7fUyIj+9
-         u01lH7PvergRZn6kAb9af/N9j0M74TeVHLy5ReC+WgcIXvtyc2RoJuWYsudJhsKRDq
-         YkTJsgDIVkOQeYyiHJXlzeix0z2IkSUcqrfpIp8k=
-Subject: Re: [PATCH v5 1/2] usbip: Skip DMA mapping and unmapping for urb at
- vhci
-To:     Suwan Kim <suwan.kim027@gmail.com>, valentina.manea.m@gmail.com,
-        gregkh@linuxfoundation.org, stern@rowland.harvard.edu
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        shuah <shuah@kernel.org>
-References: <20190808155435.10050-1-suwan.kim027@gmail.com>
- <20190808155435.10050-2-suwan.kim027@gmail.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <d9359f3c-ca4c-6eab-5238-0013f8bb4dbb@kernel.org>
-Date:   Thu, 8 Aug 2019 10:18:59 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 8 Aug 2019 12:20:08 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:34985 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732375AbfHHQUH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 12:20:07 -0400
+Received: by mail-pf1-f194.google.com with SMTP id u14so44392995pfn.2
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 09:20:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:from:cc:to:user-agent:date;
+        bh=rpT1/n0MtDKR55gc7Xe/1ERiGiwTe4vZMPU9Bfy10FI=;
+        b=Y7o7tDsMydMyUuzGRnboQKe/5DZGF0GAAcTEKQ3TnqBW9YBJW+NKiPXSdtZCCYObN8
+         AtJrE90vxGnVWdwPAxzaJhl9IPp4pUP4BUo49u+TH7K9mJ7N7xJ5Ne1r/mTSLgfDqOqe
+         KMeAzvYaE5+sipQTmnJqT9BRA14XUcjFtqt14=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:from:cc:to
+         :user-agent:date;
+        bh=rpT1/n0MtDKR55gc7Xe/1ERiGiwTe4vZMPU9Bfy10FI=;
+        b=aHpswDJ4BM03kI7Hk6HE5+aWa21U6RVJ9mhUW71P1mOU86M2KDqgzNRUg2La7MieJ+
+         69io1TakOSJwI5t6jG4GZ/uKhCOfBlsFVLyAzsReQAgGga8arY8p8C+UFmnrnQLbe7TZ
+         earAUNv9PJy85SgDiCUlb78PhNvtvuA4NrIdFzYjqDTkMBAu9ZL1CPLwRcs+IBiVv5v5
+         BH/+2CkAygRZ0hakV8xlRrkk9ZJ0P7ig5oUO7zoT/PAtL0RG+VmAOYFJPUHdcQHNyUVF
+         HwimjDRAOeze71DRnjGUqYJ2vJi0g8/yL+0r4NDVsaKuDr/NyuzHlRUEkQJrQYiEGZ3z
+         ifjQ==
+X-Gm-Message-State: APjAAAUfL3I5TugdL5X1US0KTjdIZn5WPc98PhYbulxnZ11uKSGy5rZq
+        FEtWeXdI9upo/FgnwaGSJEubAFuiRAo=
+X-Google-Smtp-Source: APXvYqwrRIJFaN3/EOnl4mURCxYQeFmoB2bV4p9L6PhJ6mv+tvNN2NH1QgEbMDZXoHTTiaqtDYC/uQ==
+X-Received: by 2002:a17:90a:c58e:: with SMTP id l14mr4875532pjt.104.1565281206991;
+        Thu, 08 Aug 2019 09:20:06 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id j6sm3065998pjd.19.2019.08.08.09.20.06
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 08 Aug 2019 09:20:06 -0700 (PDT)
+Message-ID: <5d4c4bb6.1c69fb81.db640.7518@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20190808155435.10050-2-suwan.kim027@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190808061228.16573-2-mkshah@codeaurora.org>
+References: <20190808061228.16573-1-mkshah@codeaurora.org> <20190808061228.16573-2-mkshah@codeaurora.org>
+Subject: Re: [PATCH 1/2] dt-bindings: Introduce soc sleep stats bindings for Qualcomm SoCs
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        bjorn.andersson@linaro.org, evgreen@chromium.org,
+        dianders@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org,
+        lsrao@codeaurora.org, mkshah@codeaurora.org,
+        devicetree@vger.kernel.org,
+        Mahesh Sivasubramanian <msivasub@codeaurora.org>
+To:     Maulik Shah <mkshah@codeaurora.org>, andy.gross@linaro.org,
+        david.brown@linaro.org, linux-arm-msm@vger.kernel.org
+User-Agent: alot/0.8.1
+Date:   Thu, 08 Aug 2019 09:20:04 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/8/19 9:54 AM, Suwan Kim wrote:
-> vhci doesn’t do DMA for remote device. Actually, the real DMA
-> operation is done by network card driver. vhci just passes virtual
-> address of the buffer to the network stack, so vhci doesn’t use and
-> need dma address of the buffer of the URB.
-> 
-> But HCD provides DMA mapping and unmapping function by default.
-> Moreover, it causes unnecessary DMA mapping and unmapping which
-> will be done again at the NIC driver and it wastes CPU cycles.
-> So, implement map_urb_for_dma and unmap_urb_for_dma function for
-> vhci in order to skip the DMA mapping and unmapping procedure.
-> 
-> When it comes to supporting SG for vhci, it is useful to use native
-> SG list (urb->num_sgs) instead of mapped SG list because DMA mapping
-> fnuction can adjust the number of SG list (urb->num_mapped_sgs).
-> And vhci_map_urb_for_dma() prevents isoc pipe from using SG as
-> hcd_map_urb_for_dma() does.
-> 
-> Signed-off-by: Suwan Kim <suwan.kim027@gmail.com>
+Quoting Maulik Shah (2019-08-07 23:12:27)
+> Add device binding documentation for Qualcomm Technology Inc's (QTI)
+> SoC sleep stats driver. The driver is used for displaying SoC sleep
+> statistic maintained by Always On Processor or Resource Power Manager.
+>=20
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Mahesh Sivasubramanian <msivasub@codeaurora.org>
+> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+
+Your SoB chain is odd. The author is Mahesh? Otherwise, use the
+Co-Developed-by tag.
+
 > ---
-> v4 - v5
-> - Replace pr_err() with dev_err() in the error path.
-> 
-> v3 - v4
-> - Replace WARN_ON() with pr_err() in the error path.
-> 
-> v2 - v3
-> - Move setting URB_DMA_MAP_SG flag to the patch 2.
-> - Prevent isoc pipe from using SG buffer.
-> 
-> v1 - v2
-> - Add setting URB_DMA_MAP_SG flag in urb->transfer_flags to tell
-> stub driver to use SG buffer.
-> ---
->   drivers/usb/usbip/vhci_hcd.c | 19 +++++++++++++++++++
->   1 file changed, 19 insertions(+)
-> 
-> diff --git a/drivers/usb/usbip/vhci_hcd.c b/drivers/usb/usbip/vhci_hcd.c
-> index 000ab7225717..ea82b932a2f9 100644
-> --- a/drivers/usb/usbip/vhci_hcd.c
-> +++ b/drivers/usb/usbip/vhci_hcd.c
-> @@ -1288,6 +1288,22 @@ static int vhci_free_streams(struct usb_hcd *hcd, struct usb_device *udev,
->   	return 0;
->   }
->   
-> +static int vhci_map_urb_for_dma(struct usb_hcd *hcd, struct urb *urb,
-> +				gfp_t mem_flags)
-> +{
-> +	if (usb_endpoint_xfer_isoc(&urb->ep->desc) && urb->num_sgs) {
-> +		dev_err(&urb->dev->dev, "SG is not supported for isochronous transfer\n");
-> +		return -EINVAL;
-> +	}
+>  .../bindings/soc/qcom/soc-sleep-stats.txt     | 36 +++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/qcom/soc-sleep-=
+stats.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.t=
+xt b/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.txt
+> new file mode 100644
+> index 000000000000..ee40687ded34
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.txt
+> @@ -0,0 +1,36 @@
+> +* SoC Sleep Stats
 > +
-> +	return 0;
-> +}
-> +
-> +static void vhci_unmap_urb_for_dma(struct usb_hcd *hcd, struct urb *urb)
-> +{
-> +	dev_dbg(hcd->self.controller, "vhci does not unmap urb for dma\n");
-> +}
-> +
->   static const struct hc_driver vhci_hc_driver = {
->   	.description	= driver_name,
->   	.product_desc	= driver_desc,
-> @@ -1304,6 +1320,9 @@ static const struct hc_driver vhci_hc_driver = {
->   
->   	.get_frame_number = vhci_get_frame_number,
->   
-> +	.map_urb_for_dma = vhci_map_urb_for_dma,
-> +	.unmap_urb_for_dma = vhci_unmap_urb_for_dma,
-> +
->   	.hub_status_data = vhci_hub_status,
->   	.hub_control    = vhci_hub_control,
->   	.bus_suspend	= vhci_bus_suspend,
-> 
+> +Always On Processor/Resource Power Manager maintains statistics of the S=
+oC
+> +sleep modes involving lowering or powering down of the backbone rails - =
+Cx
 
-Looks good to me.
+What is a 'backbone' rail?
 
-Reviewed-by: Shuah Khan <skhan@linuxfoundation.org>
+> +and Mx and the oscillator clock, XO.
 
-thanks,
--- Shuah
+Drop the comma? XO is the oscillator clock.
+
+> +
+> +Statistics includes SoC sleep mode type, number of times low power mode =
+were
+> +entered, time of last entry, time of last exit and accumulated sleep dur=
+ation.
+> +SoC Sleep Stats driver provides sysfs interface to display this informat=
+ion.
+
+Can this document be YAML? Then it can be validated.
+
+> +
+> +PROPERTIES
+> +
+> +- compatible:
+> +       Usage: required
+> +       Value type: <string>
+> +       Definition: Should be "qcom,rpmh-sleep-stats" or "qcom,rpm-sleep-=
+stats".
+> +
+> +- reg:
+> +       Usage: required
+> +       Value type: <prop-encoded-array>
+> +       Definition: The base address on the Always On Processor or Resour=
+ce Power
+> +                   Manager from where the stats are read.
+> +
+> +EXAMPLE 1:
+> +
+> +       rpmh_sleep_stats: soc-sleep-stats@c3f0000 {
+> +               compatible =3D "qcom,rpmh-sleep-stats";
+> +               reg =3D <0 0xc3f0000 0 0x400>;
+
+Is this memory region in DDR? Or some specific IMEM location? I wonder
+if it would be better to just have a pointer from the RPM node to this
+memory region and then populate some stats if so.
+
+> +       };
+> +
