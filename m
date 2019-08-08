@@ -2,101 +2,138 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E78FC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:37:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B0CC32754
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:38:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CC192186A
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:37:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEF7F2186A
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:38:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L7g3XM0C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732583AbfHHJh2 (ORCPT
+        id S1732615AbfHHJiJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 05:37:28 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55504 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732451AbfHHJhI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 05:37:08 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B145E316D798;
-        Thu,  8 Aug 2019 09:37:07 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-144.ams2.redhat.com [10.36.116.144])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 647B560BE1;
-        Thu,  8 Aug 2019 09:37:04 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id AE46F9D21; Thu,  8 Aug 2019 11:37:03 +0200 (CEST)
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     tzimmermann@suse.de, Gerd Hoffmann <kraxel@redhat.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3 6/8] drm/ttm: add drm_gem_ttm_bo_driver_verify_access()
-Date:   Thu,  8 Aug 2019 11:37:00 +0200
-Message-Id: <20190808093702.29512-7-kraxel@redhat.com>
-In-Reply-To: <20190808093702.29512-1-kraxel@redhat.com>
-References: <20190808093702.29512-1-kraxel@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Thu, 08 Aug 2019 09:37:07 +0000 (UTC)
+        Thu, 8 Aug 2019 05:38:09 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:33362 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732589AbfHHJiJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 05:38:09 -0400
+Received: by mail-lf1-f67.google.com with SMTP id x3so66434408lfc.0
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 02:38:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KKq6Rq+EYX8ExcTVOf/aov+7OPET0b1D6K1n31UVB3c=;
+        b=L7g3XM0CuaMcn8hysQiAwokrdf3uqIKmkZ8fZ7ry8SmuWC3ecsFb7VNl10/lP7yd/x
+         /E0u/ayUH8PafZlMX+eET7r8DVS3gTNBCMsxDUZOPp9OzAXvNBxfoyu3Pq8ci6XkORQe
+         tZFRgq9gqK1ElBj747sU15wkuSikL7IVt7CezdOFlaGps24pW942lPcXuo17N4ZBg2K4
+         SPp7MeMtFQMhTLstz/zV1ZALgQI16ZpLEQ3UnLh1EsCu6jnXeo/q9jOCCTOZl64TjxeQ
+         tyo8jYFPeauPU5tHKH4CppT/cCHg+74BpkE3cyHE3RzAg2xyluC015PMBevegNjPTb7i
+         d7mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KKq6Rq+EYX8ExcTVOf/aov+7OPET0b1D6K1n31UVB3c=;
+        b=ozrQEg8tN6fZ0j9t2QyUt7Iy6LmVgD1LeA6OVHg+wBVsqeVBHY2AwEzTkBmmwWHZNF
+         2Jh/CurbXaF53Smb0RnJHNRDIfnwQV6QnYjlxNbmbyyPWav9wvm2KuFyCcstcUhvMuKv
+         IoxQDZengCyNI4zb7MQOgXK2M70VHx1w1yW00a1y9pef01ufllflhP2YtGmtXHfqz6Jy
+         Tu99Osm94udTjtGHBBjJsT5aBs6jPfTdwEUSm4M4LuakiboYkmyE5AeCx6z/RpXiz19x
+         vvxpwXnqsTc4NRYQYQydMpMWZOZD5rTvo7m5ltO8MG3W4amBE9KHzoCkiKRjw0PAXFoS
+         JJkA==
+X-Gm-Message-State: APjAAAWolc1+UhqgZ3wu9RgGnSGuAiZXLTKahgFlt7gxxU/6Um6wPAaV
+        SAkTYuuOjLgoJnppyW2gPKtEHQ==
+X-Google-Smtp-Source: APXvYqyuMdt7jID+q3HcQXEifvW4J/jspv2uf3zNhF13WH6UysEsAqmZJj9n6zkM8fFyTHX7tVgVIA==
+X-Received: by 2002:ac2:44ce:: with SMTP id d14mr9058953lfm.143.1565257087328;
+        Thu, 08 Aug 2019 02:38:07 -0700 (PDT)
+Received: from localhost.localdomain (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
+        by smtp.gmail.com with ESMTPSA id r21sm3444783lfi.32.2019.08.08.02.38.05
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 08 Aug 2019 02:38:06 -0700 (PDT)
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     bjorn.topel@intel.com, magnus.karlsson@intel.com
+Cc:     davem@davemloft.net, ast@kernel.org, daniel@iogearbox.net,
+        john.fastabend@gmail.com, hawk@kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, xdp-newbies@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Subject: [PATCH v2 bpf-next] xdp: xdp_umem: fix umem pages mapping for 32bits systems
+Date:   Thu,  8 Aug 2019 12:38:03 +0300
+Message-Id: <20190808093803.4918-1-ivan.khoronzhuk@linaro.org>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
----
- include/drm/drm_gem_ttm_helper.h     |  2 ++
- drivers/gpu/drm/drm_gem_ttm_helper.c | 22 ++++++++++++++++++++++
- 2 files changed, 24 insertions(+)
+Use kmap instead of page_address as it's not always in low memory.
 
-diff --git a/include/drm/drm_gem_ttm_helper.h b/include/drm/drm_gem_ttm_helper.h
-index 43c9db3583cc..78e4d8930fec 100644
---- a/include/drm/drm_gem_ttm_helper.h
-+++ b/include/drm/drm_gem_ttm_helper.h
-@@ -26,5 +26,7 @@ int drm_gem_ttm_bo_device_init(struct drm_device *dev,
- 			       struct ttm_bo_device *bdev,
- 			       struct ttm_bo_driver *driver,
- 			       bool need_dma32);
-+int drm_gem_ttm_bo_driver_verify_access(struct ttm_buffer_object *bo,
-+					struct file *filp);
+Acked-by: Björn Töpel <bjorn.topel@intel.com>
+Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+---
+
+Based on bpf-next/master
+v2..v1:
+	included highmem.h
+
+v1: https://lkml.org/lkml/2019/6/26/693
+
+ net/xdp/xdp_umem.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/net/xdp/xdp_umem.c b/net/xdp/xdp_umem.c
+index 83de74ca729a..a0607969f8c0 100644
+--- a/net/xdp/xdp_umem.c
++++ b/net/xdp/xdp_umem.c
+@@ -14,6 +14,7 @@
+ #include <linux/netdevice.h>
+ #include <linux/rtnetlink.h>
+ #include <linux/idr.h>
++#include <linux/highmem.h>
  
- #endif
-diff --git a/drivers/gpu/drm/drm_gem_ttm_helper.c b/drivers/gpu/drm/drm_gem_ttm_helper.c
-index 0c57e9fd50b9..159768c7ec63 100644
---- a/drivers/gpu/drm/drm_gem_ttm_helper.c
-+++ b/drivers/gpu/drm/drm_gem_ttm_helper.c
-@@ -34,3 +34,25 @@ int drm_gem_ttm_bo_device_init(struct drm_device *dev,
- 						   need_dma32);
+ #include "xdp_umem.h"
+ #include "xsk_queue.h"
+@@ -164,6 +165,14 @@ void xdp_umem_clear_dev(struct xdp_umem *umem)
+ 	umem->zc = false;
  }
- EXPORT_SYMBOL(drm_gem_ttm_bo_device_init);
-+
-+/**
-+ * drm_gem_ttm_bo_driver_verify_access() - \
-+	Implements &struct ttm_bo_driver.verify_access
-+ * @bo:		TTM buffer object.
-+ * @filp:	File pointer.
-+ *
-+ * This function assumes filp->private_data refers to the
-+ * corresponding &struct drm_file.
-+ *
-+ * Returns:
-+ * 0 on success, or
-+ * a negative errno code otherwise.
-+ */
-+int drm_gem_ttm_bo_driver_verify_access(struct ttm_buffer_object *bo,
-+					struct file *filp)
+ 
++static void xdp_umem_unmap_pages(struct xdp_umem *umem)
 +{
-+	struct drm_file *ptr = filp->private_data;
++	unsigned int i;
 +
-+	return drm_vma_node_verify_access(&bo->base.vma_node, ptr);
++	for (i = 0; i < umem->npgs; i++)
++		kunmap(umem->pgs[i]);
 +}
-+EXPORT_SYMBOL(drm_gem_ttm_bo_driver_verify_access);
++
+ static void xdp_umem_unpin_pages(struct xdp_umem *umem)
+ {
+ 	unsigned int i;
+@@ -207,6 +216,7 @@ static void xdp_umem_release(struct xdp_umem *umem)
+ 
+ 	xsk_reuseq_destroy(umem);
+ 
++	xdp_umem_unmap_pages(umem);
+ 	xdp_umem_unpin_pages(umem);
+ 
+ 	kfree(umem->pages);
+@@ -369,7 +379,7 @@ static int xdp_umem_reg(struct xdp_umem *umem, struct xdp_umem_reg *mr)
+ 	}
+ 
+ 	for (i = 0; i < umem->npgs; i++)
+-		umem->pages[i].addr = page_address(umem->pgs[i]);
++		umem->pages[i].addr = kmap(umem->pgs[i]);
+ 
+ 	return 0;
+ 
 -- 
-2.18.1
+2.17.1
 
