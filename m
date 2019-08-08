@@ -2,257 +2,119 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FROM_EXCESS_BASE64,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7652C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:10:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C211C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:10:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A51F216C8
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:10:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=joaomoreno-com.20150623.gappssmtp.com header.i=@joaomoreno-com.20150623.gappssmtp.com header.b="Gjm5hEzl"
+	by mail.kernel.org (Postfix) with ESMTP id EDCED216C8
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:10:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404478AbfHHUKa (ORCPT
+        id S2404502AbfHHUKe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 16:10:30 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40940 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389974AbfHHUKa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 16:10:30 -0400
-Received: by mail-wm1-f67.google.com with SMTP id v19so3576002wmj.5
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 13:10:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joaomoreno-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=YXO2XrMQEkvCHSDYBP5IAQUANS6uEyXDlrIGYeaenS8=;
-        b=Gjm5hEzlrTnz8eBZOL5X3rbSIYCV7l2XItN05uzxmEA62vtE3SGTwIHMSdhpmDmaLJ
-         UU0Tp535BGhNDGB+aM1Gg3sTnAQzrw8c/CkG2z45k+NEiWMUKfap/3DZFMZ7FMzrHU3x
-         SxCD9WenLFTtktJvRlw32UJJZVDAWtCDRIM2xsE16qOnIFhKdjl/oZmjgflFFSvkDORQ
-         mgML+4oTBlEV8invbBdNoeusMtN3RTXC12EHjXzBG/w4cGqhRsK2ByJW0OcZJnQe80B7
-         pZToTT3IEjHr5oO/ae35SK06eQczOrgvSgFfc3zIxQRTDK83vj5urJULe9IDKf+K64Mg
-         6++A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=YXO2XrMQEkvCHSDYBP5IAQUANS6uEyXDlrIGYeaenS8=;
-        b=Azl3U8RQwPd6/ZnhvEhDpIAoTjoBUSEsvsZW17SDo2Mlhi2OZd+dnSV7OSXzrujJki
-         xcHNSgFt1pBvEWVD7qhvjbzBW0j8KYmKKpmzvxEql4pHkvKQR21Ir7Y+28QRj2SqwRnG
-         o4w11/lWVEIaCVk+VAfTPCvp1DhPDxg3R1fiilBTu6KKAyZ7sSNILknT9uxlL4Ui9dSF
-         nG6R8OV66H9D+m90VnlrqrspTLtKhWrZB5tMOMc67B6HD6zUkWV6QbL4nsg+HQAqkWKa
-         6xAFfARhLRWQg1nWNjUTEMH46Tn/B6tiYPR0juemxKIUNQm6EIc1OQ06uzURMhcXiiN+
-         UJDQ==
-X-Gm-Message-State: APjAAAVmZHeKZ7kunSd6hQiGzYsMdlmmimjMKzTrm1Xf1piA9EjsVdUw
-        CJIVoiaC6BmdzX3CK/XxFFN0Xhw4H7s/sg1+520/fw==
-X-Google-Smtp-Source: APXvYqzyZLD635dKHSzXiNngoOVo4zAW46kbV+AbiutPRNef/hkEmhFVG8AYLb5g94MJOvyExBCJqqbQIUO1RIQJN6s=
-X-Received: by 2002:a7b:c95a:: with SMTP id i26mr6673668wml.175.1565295026862;
- Thu, 08 Aug 2019 13:10:26 -0700 (PDT)
+        Thu, 8 Aug 2019 16:10:34 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55156 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389974AbfHHUKc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 16:10:32 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 11A5B3024562;
+        Thu,  8 Aug 2019 20:10:32 +0000 (UTC)
+Received: from x1.home (ovpn-116-99.phx2.redhat.com [10.3.116.99])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 23990600C8;
+        Thu,  8 Aug 2019 20:10:31 +0000 (UTC)
+Date:   Thu, 8 Aug 2019 14:10:30 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>, ashok.raj@intel.com,
+        jacob.jun.pan@intel.com, kevin.tian@intel.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: Re: [PATCH 1/2] iommu/vt-d: Detach domain before using a private
+ one
+Message-ID: <20190808141030.323b4a0a@x1.home>
+In-Reply-To: <20190806001409.3293-1-baolu.lu@linux.intel.com>
+References: <20190806001409.3293-1-baolu.lu@linux.intel.com>
+Organization: Red Hat
 MIME-Version: 1.0
-References: <20190610213106.19342-1-mail@joaomoreno.com> <CAHxFc3QC147B6j4pBztjK7stLgCveeYhJWojai_SbKNbnpC9yw@mail.gmail.com>
- <CAO-hwJ+1FyaXj0iuCjvc5R-Kqdh6PNB7Un0ko1F_NV7-f5GMdw@mail.gmail.com> <CAHxFc3QJ1Xkgckt1BPptXT5S1xkROVdJzHTYT=GAcHXgm5UGqg@mail.gmail.com>
-In-Reply-To: <CAHxFc3QJ1Xkgckt1BPptXT5S1xkROVdJzHTYT=GAcHXgm5UGqg@mail.gmail.com>
-From:   =?UTF-8?B?Sm/Do28gTW9yZW5v?= <mail@joaomoreno.com>
-Date:   Thu, 8 Aug 2019 22:10:16 +0200
-Message-ID: <CAHxFc3TjZu7_u0U3ZoB466WGNzbfYLe4ZB7C4LuKdBAwkRum5Q@mail.gmail.com>
-Subject: Re: [PATCH] HID: apple: Fix stuck function keys when using FN
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 08 Aug 2019 20:10:32 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Benjamin,
+On Tue,  6 Aug 2019 08:14:08 +0800
+Lu Baolu <baolu.lu@linux.intel.com> wrote:
 
-On Mon, 8 Jul 2019 at 22:35, Jo=C3=A3o Moreno <mail@joaomoreno.com> wrote:
->
-> Hi Benjamin,
->
-> No worries, also pretty busy over here. Didn't mean to press.
->
-> On Mon, 1 Jul 2019 at 10:32, Benjamin Tissoires
-> <benjamin.tissoires@redhat.com> wrote:
-> >
-> > Hi Jo=C3=A3o,
-> >
-> > On Sun, Jun 30, 2019 at 10:15 PM Jo=C3=A3o Moreno <mail@joaomoreno.com>=
- wrote:
-> > >
-> > > Hi Jiri & Benjamin,
-> > >
-> > > Let me know if you need something else to get this patch moving forwa=
-rd. This
-> > > fixes an issue I hit daily, it would be great to get it fixed.
-> >
-> > Sorry for the delay, I am very busy with internal corporate stuff, and
-> > I tried setting up a new CI system at home, and instead of spending a
-> > couple of ours, I am down to 2 weeks of hard work, without possibility
-> > to switch to the new right now :(
-> > Anyway.
-> >
-> > >
-> > > Thanks.
-> > >
-> > > On Mon, 10 Jun 2019 at 23:31, Joao Moreno <mail@joaomoreno.com> wrote=
-:
-> > > >
-> > > > This fixes an issue in which key down events for function keys woul=
-d be
-> > > > repeatedly emitted even after the user has raised the physical key.=
- For
-> > > > example, the driver fails to emit the F5 key up event when going th=
-rough
-> > > > the following steps:
-> > > > - fnmode=3D1: hold FN, hold F5, release FN, release F5
-> > > > - fnmode=3D2: hold F5, hold FN, release F5, release FN
-> >
-> > Ouch :/
-> >
->
-> Right?!
->
-> > > >
-> > > > The repeated F5 key down events can be easily verified using xev.
-> > > >
-> > > > Signed-off-by: Joao Moreno <mail@joaomoreno.com>
-> > > > ---
-> > > >  drivers/hid/hid-apple.c | 21 +++++++++++----------
-> > > >  1 file changed, 11 insertions(+), 10 deletions(-)
-> > > >
-> > > > diff --git a/drivers/hid/hid-apple.c b/drivers/hid/hid-apple.c
-> > > > index 1cb41992aaa1..81867a6fa047 100644
-> > > > --- a/drivers/hid/hid-apple.c
-> > > > +++ b/drivers/hid/hid-apple.c
-> > > > @@ -205,20 +205,21 @@ static int hidinput_apple_event(struct hid_de=
-vice *hid, struct input_dev *input,
-> > > >                 trans =3D apple_find_translation (table, usage->cod=
-e);
-> > > >
-> > > >                 if (trans) {
-> > > > -                       if (test_bit(usage->code, asc->pressed_fn))
-> > > > -                               do_translate =3D 1;
-> > > > -                       else if (trans->flags & APPLE_FLAG_FKEY)
-> > > > -                               do_translate =3D (fnmode =3D=3D 2 &=
-& asc->fn_on) ||
-> > > > -                                       (fnmode =3D=3D 1 && !asc->f=
-n_on);
-> > > > +                       int fn_on =3D value ? asc->fn_on :
-> > > > +                               test_bit(usage->code, asc->pressed_=
-fn);
-> > > > +
-> > > > +                       if (!value)
-> > > > +                               clear_bit(usage->code, asc->pressed=
-_fn);
-> > > > +                       else if (asc->fn_on)
-> > > > +                               set_bit(usage->code, asc->pressed_f=
-n);
-> >
-> > I have the feeling that this is not the correct fix here.
-> >
-> > I might be wrong, but the following sequence might also mess up the
-> > driver state, depending on how the reports are emitted:
-> > - hold FN, hold F4, hold F5, release F4, release FN, release F5
-> >
->
-> I believe this should be fine. Following the code:
->
-> - hold FN, sets asc->fn_on to true
-> - hold F4, in the trans block fn_on will be true and we'll set the F4
-> bit in the bitmap
-> - hold F5, in the trans block fn_on will be true and we'll set the F5 bit
-> - release F4, in the trans block fn_on will be true (because of the bitma=
-p) and
-> we'll clear the F4 bit
-> - release FN, asc->fn_on will be false, but it doesn't matter since...
-> - release F5, in the trans block we'll look into the bitmap (instead
-> of asc->fn_on),
-> so fn_on will be true and we'll clear the F5 bit
->
-> I tested it in practice using my changes:
->
-> Interestingly the Apple keyboard doesn't seem to emit an even for F5 when=
- F4 is
-> pressed, seems like a hardware limitation. But F6 does work. So, when I e=
-xecute
-> these events in that order, everything works as it should: xev reports
-> the following:
->
-> KeyPress F4
-> KeyPress F6
-> KeyRelease F4
-> KeyRelease F6
->
-> > The reason is that the driver only considers you have one key pressed
-> > with the modifier, and as the code changed its state based on the last
-> > value.
-> >
->
-> I believe the bitmap takes care of storing the FN state per key press. Th=
-e
-> trick I did was to check on the global `asc->fn_on` state only when a key
-> is pressed, but check on the bitmap instead when it's released.
->
-> Let me know what you think. Am I missing something here?
->
-> Cheers,
-> Jo=C3=A3o.
->
-> > IMO a better fix would:
-> >
-> > - keep the existing `trans` mapping lookout
-> > - whenever a `trans` mapping gets found:
-> >   * get both translated and non-translated currently reported values
-> > (`test_bit(keycode, input_dev->key)`)
-> >   * if one of them is set to true, then consider the keycode to be the
-> > one of the key (no matter fn_on)
-> >     -> deal with `value` with the corrected keycode
-> >   * if the key was not pressed:
-> >     -> chose the keycode based on `fn_on` and `fnmode` states
-> >     and report the key press event
-> >
-> > This should remove the nasty pressed_fn state which depends on the
-> > other pressed keys.
-> >
-> > Cheers,
-> > Benjamin
-> >
-> > > > +
-> > > > +                       if (trans->flags & APPLE_FLAG_FKEY)
-> > > > +                               do_translate =3D (fnmode =3D=3D 2 &=
-& fn_on) ||
-> > > > +                                       (fnmode =3D=3D 1 && !fn_on)=
-;
-> > > >                         else
-> > > >                                 do_translate =3D asc->fn_on;
-> > > >
-> > > >                         if (do_translate) {
-> > > > -                               if (value)
-> > > > -                                       set_bit(usage->code, asc->p=
-ressed_fn);
-> > > > -                               else
-> > > > -                                       clear_bit(usage->code, asc-=
->pressed_fn);
-> > > > -
-> > > >                                 input_event(input, usage->type, tra=
-ns->to,
-> > > >                                                 value);
-> > > >
-> > > > --
-> > > > 2.19.1
-> > > >
+> When the default domain of a group doesn't work for a device,
+> the iommu driver will try to use a private domain. The domain
+> which was previously attached to the device must be detached.
+> 
+> Cc: Ashok Raj <ashok.raj@intel.com>
+> Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Cc: Kevin Tian <kevin.tian@intel.com>
+> Cc: Alex Williamson <alex.williamson@redhat.com>
+> Fixes: 942067f1b6b97 ("iommu/vt-d: Identify default domains replaced with private")
+> Reported-by: Alex Williamson <alex.williamson@redhat.com>
+> Link: https://lkml.org/lkml/2019/8/2/1379
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> ---
 
-Gave this another look and I still haven't found any issues, let me
-know if you still
-think I'm missing something. Thanks!
+Tested-by: Alex Williamson <alex.williamson@redhat.com>
 
-Cheers,
-Jo=C3=A3o
+This series resolves the issue I reported against:
+ iommu/vt-d: Cleanup get_valid_domain_for_dev()
+
+Thanks,
+Alex
+
+>  drivers/iommu/intel-iommu.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+> index 3e22fa6ae8c8..37259b7f95a7 100644
+> --- a/drivers/iommu/intel-iommu.c
+> +++ b/drivers/iommu/intel-iommu.c
+> @@ -3449,6 +3449,7 @@ static bool iommu_need_mapping(struct device *dev)
+>  				dmar_domain = to_dmar_domain(domain);
+>  				dmar_domain->flags |= DOMAIN_FLAG_LOSE_CHILDREN;
+>  			}
+> +			dmar_remove_one_dev_info(dev);
+>  			get_private_domain_for_dev(dev);
+>  		}
+>  
+> @@ -4803,7 +4804,8 @@ static void dmar_remove_one_dev_info(struct device *dev)
+>  
+>  	spin_lock_irqsave(&device_domain_lock, flags);
+>  	info = dev->archdata.iommu;
+> -	__dmar_remove_one_dev_info(info);
+> +	if (info)
+> +		__dmar_remove_one_dev_info(info);
+>  	spin_unlock_irqrestore(&device_domain_lock, flags);
+>  }
+>  
+> @@ -5281,6 +5283,7 @@ static int intel_iommu_add_device(struct device *dev)
+>  		if (device_def_domain_type(dev) == IOMMU_DOMAIN_IDENTITY) {
+>  			ret = iommu_request_dm_for_dev(dev);
+>  			if (ret) {
+> +				dmar_remove_one_dev_info(dev);
+>  				dmar_domain->flags |= DOMAIN_FLAG_LOSE_CHILDREN;
+>  				domain_add_dev_info(si_domain, dev);
+>  				dev_info(dev,
+> @@ -5291,6 +5294,7 @@ static int intel_iommu_add_device(struct device *dev)
+>  		if (device_def_domain_type(dev) == IOMMU_DOMAIN_DMA) {
+>  			ret = iommu_request_dma_domain_for_dev(dev);
+>  			if (ret) {
+> +				dmar_remove_one_dev_info(dev);
+>  				dmar_domain->flags |= DOMAIN_FLAG_LOSE_CHILDREN;
+>  				if (!get_private_domain_for_dev(dev)) {
+>  					dev_warn(dev,
+
