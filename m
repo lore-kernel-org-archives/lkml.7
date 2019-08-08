@@ -2,86 +2,153 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7AD5C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:54:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8286C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:57:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B39A8217D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:54:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B00E4218B6
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:57:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731716AbfHHHyd (ORCPT
+        id S1731706AbfHHH5E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 03:54:33 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:52472 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725796AbfHHHyd (ORCPT
+        Thu, 8 Aug 2019 03:57:04 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:40594 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725796AbfHHH5E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 03:54:33 -0400
-Received: from p200300ddd71876597e7a91fffec98e25.dip0.t-ipconnect.de ([2003:dd:d718:7659:7e7a:91ff:fec9:8e25])
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hvdFR-0002M4-Ph; Thu, 08 Aug 2019 09:54:09 +0200
-Date:   Thu, 8 Aug 2019 09:54:03 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Christoph Hellwig <hch@infradead.org>
-cc:     LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sebastian Siewior <bigeasy@linutronix.de>,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Julia Cartwright <julia@ni.com>, Jan Kara <jack@suse.cz>,
-        Theodore Tso <tytso@mit.edu>,
-        Matthew Wilcox <willy@infradead.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        Jan Kara <jack@suse.com>, Mark Fasheh <mark@fasheh.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Joel Becker <jlbec@evilplan.org>
-Subject: Re: [patch V2 0/7] fs: Substitute bit-spinlocks for PREEMPT_RT and
- debugging
-In-Reply-To: <20190808072807.GA25259@infradead.org>
-Message-ID: <alpine.DEB.2.21.1908080953170.2882@nanos.tec.linutronix.de>
-References: <20190801010126.245731659@linutronix.de> <20190802075612.GA20962@infradead.org> <alpine.DEB.2.21.1908021107090.2285@nanos.tec.linutronix.de> <20190806061119.GA17492@infradead.org> <alpine.DEB.2.21.1908080858460.2882@nanos.tec.linutronix.de>
- <20190808072807.GA25259@infradead.org>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 8 Aug 2019 03:57:04 -0400
+Received: by mail-ot1-f65.google.com with SMTP id l15so57827970oth.7;
+        Thu, 08 Aug 2019 00:57:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PfgNCbwNh+egJUA3cbV8dUVAFRIGQlHaXhUpgK2RvWY=;
+        b=JGJMpSjCGosPfjQC++oRo9/VpIYQjtroBHN743qwzAzvGwWB5pIBYAiDbdvUr9BPJt
+         Eo75K5UBgZ/gNMoWwkPqrC1ebkSs6ugBxhbHyqohfNnLDNGaVk38PZCLn+DuTtHuWbh7
+         5hOZdCLwSYvYHaoqJcd3YCtb78oW/V7GqgaUuaKoez42d8Opdb+7SC6HbG3SMcwWfgOX
+         58mFj2RG/w8nyMm9/lRxYUJK4+B17RhjqJLtgW7lPpWJDtAsIvV9RPikTutK1Mb3WE/Z
+         7NkEE7P395FfzzoTyAL38adaFrI9UH5xaJbeITg8/VqaF/DK1vddCOeMp8womXVikOXV
+         qFkQ==
+X-Gm-Message-State: APjAAAWTQXbT7DoKFP8e7rXNysRmu2ExYF6MtNYw7tJUCwhn0jgjnO2h
+        cWv5ICjfuv2JQeBT8lSfrMyNJXm/bigR4DlWAC0=
+X-Google-Smtp-Source: APXvYqyxub+OuS4BmFWrwKCfra+oZAC4TQcubjFwMCIkh5Hd7WXBKupUhwY9Boc0JZWx3NsB6ilSK6bX/BtJ1nAWqYU=
+X-Received: by 2002:aca:bd43:: with SMTP id n64mr1504808oif.148.1565251023062;
+ Thu, 08 Aug 2019 00:57:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20190730181557.90391-1-swboyd@chromium.org> <20190730181557.90391-26-swboyd@chromium.org>
+In-Reply-To: <20190730181557.90391-26-swboyd@chromium.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 8 Aug 2019 09:56:51 +0200
+Message-ID: <CAMuHMdV2786n3ex-rY7N5LdX4PpnqZ-tuX2SyTO0w+TRfrA84g@mail.gmail.com>
+Subject: Re: [PATCH v6 25/57] media: Remove dev_err() usage after platform_get_irq()
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 8 Aug 2019, Christoph Hellwig wrote:
-> On Thu, Aug 08, 2019 at 09:02:47AM +0200, Thomas Gleixner wrote:
-> > > >   mm/slub.c:      bit_spin_lock(PG_locked, &page->flags);
-> > > 
-> > > One caller ouf of a gazillion that spins on the page lock instead of
-> > > sleepign on it like everyone else.  That should not have passed your
-> > > smell test to start with :)
-> > 
-> > I surely stared at it, but that cannot sleep. It's in the middle of a
-> > preempt and interrupt disabled region and used on architectures which do
-> > not support CMPXCHG_DOUBLE and ALIGNED_STRUCT_PAGE ...
-> 
-> I know.  But the problem here is that normally PG_locked is used together 
-> with wait_on_page_bit_*, but this one instances uses the bit spinlock
-> helpers.  This is the equivalent of calling spin_lock on a struct mutex
-> rather than having a mutex_lock_spin helper for this case.
+Hi Stephen,
 
-Yes, I know :(
+On Tue, Jul 30, 2019 at 8:21 PM Stephen Boyd <swboyd@chromium.org> wrote:
+> We don't need dev_err() messages when platform_get_irq() fails now that
+> platform_get_irq() prints an error message itself when something goes
+> wrong. Let's remove these prints with a simple semantic patch.
+>
+> // <smpl>
+> @@
+> expression ret;
+> struct platform_device *E;
+> @@
+>
+> ret =
+> (
+> platform_get_irq(E, ...)
+> |
+> platform_get_irq_byname(E, ...)
+> );
+>
+> if ( \( ret < 0 \| ret <= 0 \) )
+> {
+> (
+> -if (ret != -EPROBE_DEFER)
+> -{ ...
+> -dev_err(...);
+> -... }
+> |
+> ...
+> -dev_err(...);
+> )
+> ...
+> }
+> // </smpl>
+>
+> While we're here, remove braces on if statements that only have one
+> statement (manually).
+>
+> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Cc: linux-media@vger.kernel.org
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> ---
+>
+> Please apply directly to subsystem trees
+>
+>  drivers/media/platform/am437x/am437x-vpfe.c           | 1 -
+>  drivers/media/platform/atmel/atmel-sama5d2-isc.c      | 7 ++-----
+>  drivers/media/platform/exynos4-is/mipi-csis.c         | 4 +---
+>  drivers/media/platform/imx-pxp.c                      | 4 +---
+>  drivers/media/platform/omap3isp/isp.c                 | 1 -
+>  drivers/media/platform/renesas-ceu.c                  | 4 +---
+>  drivers/media/platform/rockchip/rga/rga.c             | 1 -
+>  drivers/media/platform/s3c-camif/camif-core.c         | 4 +---
+>  drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c | 8 ++------
+>  drivers/media/platform/sti/hva/hva-hw.c               | 8 ++------
+>  drivers/media/platform/stm32/stm32-dcmi.c             | 5 +----
+>  drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c    | 7 ++-----
+>  drivers/media/rc/img-ir/img-ir-core.c                 | 4 +---
+>  drivers/media/rc/ir-hix5hd2.c                         | 4 +---
+>  drivers/media/rc/meson-ir.c                           | 4 +---
+>  drivers/media/rc/mtk-cir.c                            | 4 +---
+>  drivers/media/rc/sunxi-cir.c                          | 1 -
+>  17 files changed, 17 insertions(+), 54 deletions(-)
 
-> Does SLUB work on -rt at all?
+Looks like this didn't catch the double assignments in:
 
-It's the only allocator we support with a few tweaks :)
+drivers/media/platform/rcar_fdp1.c:     fdp1->irq = ret =
+platform_get_irq(pdev, 0);
+drivers/media/platform/rcar_fdp1.c-     if (ret < 0) {
+drivers/media/platform/rcar_fdp1.c-             dev_err(&pdev->dev,
+"cannot find IRQ\n");
+drivers/media/platform/rcar_fdp1.c-             return ret;
+drivers/media/platform/rcar_fdp1.c-     }
+drivers/media/platform/rcar_fdp1.c-
+--
+drivers/media/platform/rcar_jpu.c:      jpu->irq = ret =
+platform_get_irq(pdev, 0);
+drivers/media/platform/rcar_jpu.c-      if (ret < 0) {
+drivers/media/platform/rcar_jpu.c-              dev_err(&pdev->dev,
+"cannot find IRQ\n");
+drivers/media/platform/rcar_jpu.c-              return ret;
+drivers/media/platform/rcar_jpu.c-      }
+drivers/media/platform/rcar_jpu.c-
 
-Thanks,
+Gr{oetje,eeting}s,
 
-	tglx
+                        Geert
+
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
