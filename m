@@ -2,135 +2,68 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A8D6C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:30:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3AC4C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:32:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1975F2173E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:30:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kmlK0/FK"
+	by mail.kernel.org (Postfix) with ESMTP id C9D1E2173E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:32:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733151AbfHHPaB (ORCPT
+        id S1733190AbfHHPch (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 11:30:01 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:37132 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727096AbfHHPaA (ORCPT
+        Thu, 8 Aug 2019 11:32:37 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:40508 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725535AbfHHPch (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 11:30:00 -0400
-Received: by mail-vs1-f66.google.com with SMTP id v6so63370724vsq.4
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 08:30:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QQ67960ROY2a/127HWY6jHmfLZvvKglq5u8NMNjYI1Y=;
-        b=kmlK0/FKpYSrx2hur8a9t4OIdtqyOzr9THPxdPoXoVp2SotkfMdIG/oBPmgepUANo7
-         5wxGRYKFtXcz35m5NYV6n1mpRxqm3J2IZBnVx0RHjV/f6d+9Nbyp1jlPAq46MLaojzYN
-         zfi/wcFKJI3CHSAL+5RzV2adQgeYh7gk4sIk4EnOTPm8bYukyOnot1KAbcjyIKVBrUZh
-         sFrr6Tarmycg6qQ2M7QAqs9AkYpRdwv6qGUtBpfOhgF6bEPeR4Re16KmoQwXCwdNsmcl
-         zGYuMktiq2EFXkfZ9q8GKn/83u45cK2qTB/gs/sxKjc+SJZ8WXvAkQlU0hjn71hXwCB0
-         Kvuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QQ67960ROY2a/127HWY6jHmfLZvvKglq5u8NMNjYI1Y=;
-        b=PzXrVfH9D1ox3g2bcLyT0RUJ9uXcagbBw/SK53iHj6gXtyTqyYSX1W1bIGPIqFgylr
-         /PTzaqsetjIcZMNvAYsR7LFqLnw7myg7LuuEuSQDtGlevMMKmINjb0ffr4CHHLcDoma6
-         srzbX5ZWTIps5HEr0y+BuYVRAtTBKdCJN+5DBLD83/6KCSJ4GYY67u67hz9+ydB22G6G
-         Iu58l+7HPAkjXKP7Bs393iltjtoz+3C6/Imcaa5YWiajhT3MYEY92Gy/81yjMu0cHxKq
-         JDL8Y/nWtPEGZZ2o5zbYlLKBbXxLog6n80bagUH5tc15QofifGIZw/pKMY+V68QrVY2B
-         nv5A==
-X-Gm-Message-State: APjAAAXS4LpwCaF1ArMN31ejkFUvIghbZsNQ02WnWnJU76MlTpiewePn
-        ghdm2lIUafQj3MzeML7Az4jV154r2zFE7zraioHoYw==
-X-Google-Smtp-Source: APXvYqxKi3cA9YcGMYMd//YpNRPqFA3cCz3N7LoXHqKDwPYBU0jxMSGjHUhjBPY7g60T9+jxuZelgTW7fSvznp0WgLQ=
-X-Received: by 2002:a67:e454:: with SMTP id n20mr10625187vsm.34.1565278199947;
- Thu, 08 Aug 2019 08:29:59 -0700 (PDT)
+        Thu, 8 Aug 2019 11:32:37 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id D319028CAE4;
+        Thu,  8 Aug 2019 16:32:35 +0100 (BST)
+Date:   Thu, 8 Aug 2019 17:32:32 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Tomer Maimon <tmaimon77@gmail.com>
+Cc:     broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        vigneshr@ti.com, bbrezillon@kernel.org, avifishman70@gmail.com,
+        tali.perry1@gmail.com, venture@google.com, yuenn@google.com,
+        benjaminfair@google.com, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, openbmc@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] spi: npcm-fiu: add NPCM FIU controller driver
+Message-ID: <20190808173232.4d79d698@collabora.com>
+In-Reply-To: <20190808131448.349161-3-tmaimon77@gmail.com>
+References: <20190808131448.349161-1-tmaimon77@gmail.com>
+        <20190808131448.349161-3-tmaimon77@gmail.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20190722153745.32446-1-lorenzo.pieralisi@arm.com>
- <20190722153745.32446-7-lorenzo.pieralisi@arm.com> <20190808125516.GA2246@e107155-lin>
-In-Reply-To: <20190808125516.GA2246@e107155-lin>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 8 Aug 2019 17:29:24 +0200
-Message-ID: <CAPDyKFqHHwq=3XhSH_=uu5QoFkP3VYJ+2h7ENG5DNs-YzM6bNQ@mail.gmail.com>
-Subject: Re: [PATCH 6/6] PSCI: cpuidle: Refactor CPU suspend power_state
- parameter handling
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        LAKML <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 8 Aug 2019 at 14:55, Sudeep Holla <sudeep.holla@arm.com> wrote:
->
-> On Mon, Jul 22, 2019 at 04:37:45PM +0100, Lorenzo Pieralisi wrote:
-> > Current PSCI code handles idle state entry through the
-> > psci_cpu_suspend_enter() API, that takes an idle state index as a
-> > parameter and convert the index into a previously initialized
-> > power_state parameter before calling the PSCI.CPU_SUSPEND() with it.
-> >
-> > This is unwieldly, since it forces the PSCI firmware layer to keep track
-> > of power_state parameter for every idle state so that the
-> > index->power_state conversion can be made in the PSCI firmware layer
-> > instead of the CPUidle driver implementations.
-> >
-> > Move the power_state handling out of drivers/firmware/psci
-> > into the respective ACPI/DT PSCI CPUidle backends and convert
-> > the psci_cpu_suspend_enter() API to get the power_state
-> > parameter as input, which makes it closer to its firmware
-> > interface PSCI.CPU_SUSPEND() API.
-> >
-> > A notable side effect is that the PSCI ACPI/DT CPUidle backends
-> > now can directly handle (and if needed update) power_state
-> > parameters before handing them over to the PSCI firmware
-> > interface to trigger PSCI.CPU_SUSPEND() calls.
-> >
-> > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > Cc: Will Deacon <will@kernel.org>
-> > Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> > Cc: Sudeep Holla <sudeep.holla@arm.com>
->
-> Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
->
-> > +static __init int psci_cpu_init_idle(unsigned int cpu)
-> > +{
-> > +     struct device_node *cpu_node;
-> > +     int ret;
-> > +
-> > +     /*
-> > +      * If the PSCI cpu_suspend function hook has not been initialized
-> > +      * idle states must not be enabled, so bail out
-> > +      */
-> > +     if (!psci_ops.cpu_suspend)
-> > +             return -EOPNOTSUPP;
-> > +
-> > +     cpu_node = of_get_cpu_node(cpu, NULL);
->
-> [nit] You could use of_cpu_device_node_get in linux/of_device.h as
-> it may avoid parsing if used later during the boot(i.e. after
-> cpu->of_node is populated). I think there's another instance in
-> psci_idle_init_cpu
+On Thu,  8 Aug 2019 16:14:48 +0300
+Tomer Maimon <tmaimon77@gmail.com> wrote:
 
-Good idea!
 
-However, as $subject patch more or less just moves code from the
-current psci firmware directory into cpuidle, perhaps it's better to
-defer improvements to be made on top?
+> +
+> +static const struct spi_controller_mem_ops npcm_fiu_mem_ops = {
+> +	.exec_op = npcm_fiu_exec_op,
 
-Kind regards
-Uffe
+No npcm_supports_op()? That's suspicious, especially after looking at
+the npcm_fiu_exec_op() (and the functions called from there) where the
+requested ->buswidth seems to be completely ignored...
+
+> +	.dirmap_create = npcm_fiu_dirmap_create,
+> +	.dirmap_read = npcm_fiu_direct_read,
+> +	.dirmap_write = npcm_fiu_direct_write,
+> +};
+> +
