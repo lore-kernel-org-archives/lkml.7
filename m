@@ -2,148 +2,148 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7AD5C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ED52C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:13:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A1472086D
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:10:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MD08oGuV";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="cdjrC6Ky"
+	by mail.kernel.org (Postfix) with ESMTP id F10712086D
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:13:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731294AbfHHHKw (ORCPT
+        id S1731328AbfHHHNG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 03:10:52 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:54184 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730910AbfHHHKv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 03:10:51 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 61E6E602BC; Thu,  8 Aug 2019 07:10:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1565248250;
-        bh=Gqbmq5rn8ky7RLP8vrGJolEOPnLSsYYhH0jYpshbEqQ=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=MD08oGuVgoAryDGKOyLaRIE1Xz78HGIXPJP2vvcIwme6Q06Ux4nDotts+fFYk8s4s
-         bTTUsHxz0TM0v4HelNGxKz/jn2FK1Rb72w9q5C2VfcKtm5dRD8hBfbOafQbcLMpG4n
-         x6N2lJOUribTRreaGwZvqoqeZHuN8vbcdjfQpYsc=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 003AE602BC;
-        Thu,  8 Aug 2019 07:10:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1565248249;
-        bh=Gqbmq5rn8ky7RLP8vrGJolEOPnLSsYYhH0jYpshbEqQ=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=cdjrC6KyMaYP6xjWN9YWXcrbXtPRURu85FLY+7vEX2jjSL84VD8nW6SXpX2hAgnrf
-         36CdDPDsqahdmp3dxyZJgytKZqwq8DwL9xD1ZUiofjePHy1zapd04XTyhvX0EukK/D
-         kIvYEwCRE4XolY8/WWeav5URR52LD/6OsITyRbAk=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 003AE602BC
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Larry Finger <Larry.Finger@lwfinger.net>
-Cc:     Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        Ping-Ke Shih <pkshih@realtek.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] Fix non-kerneldoc comment in realtek/rtlwifi/usb.c
-References: <34195.1565229118@turing-police>
-        <15df2564-8815-f351-8fb2-b46611a90234@lwfinger.net>
-Date:   Thu, 08 Aug 2019 10:10:45 +0300
-In-Reply-To: <15df2564-8815-f351-8fb2-b46611a90234@lwfinger.net> (Larry
-        Finger's message of "Wed, 7 Aug 2019 21:07:40 -0500")
-Message-ID: <877e7odte2.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Thu, 8 Aug 2019 03:13:06 -0400
+Received: from mga07.intel.com ([134.134.136.100]:21121 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731227AbfHHHNF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 03:13:05 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Aug 2019 00:13:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,360,1559545200"; 
+   d="scan'208";a="182512892"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.122]) ([10.237.72.122])
+  by FMSMGA003.fm.intel.com with ESMTP; 08 Aug 2019 00:13:02 -0700
+Subject: Re: [PATCH V5 1/3] mmc: sdhci: Fix O2 Host data read/write DLL Lock
+ Phase shift issue
+To:     "Shirley Her (SC)" <shirley.her@bayhubtech.com>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     "Chevron Li (WH)" <chevron.li@bayhubtech.com>,
+        "Louis Lu (TP)" <louis.lu@bayhubtech.com>,
+        "Max Huang (SC)" <max.huang@bayhubtech.com>,
+        "Shaper Liu (WH)" <shaper.liu@bayhubtech.com>
+References: <1565212148-30092-1-git-send-email-shirley.her@bayhubtech.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <881b17b2-fa2a-658e-eb90-4d837e09f18e@intel.com>
+Date:   Thu, 8 Aug 2019 10:11:56 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <1565212148-30092-1-git-send-email-shirley.her@bayhubtech.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Larry Finger <Larry.Finger@lwfinger.net> writes:
+On 8/08/19 12:09 AM, Shirley Her (SC) wrote:
+> Fix data read/write error in HS200 mode due to chip DLL lock phase shift
 
-> On 8/7/19 8:51 PM, Valdis Kl=C4=93tnieks wrote:
->> Fix spurious warning message when building with W=3D1:
->>
->>    CC [M]  drivers/net/wireless/realtek/rtlwifi/usb.o
->> drivers/net/wireless/realtek/rtlwifi/usb.c:243: warning: Cannot understa=
-nd  * on line 243 - I thought it was a doc line
->> drivers/net/wireless/realtek/rtlwifi/usb.c:760: warning: Cannot understa=
-nd  * on line 760 - I thought it was a doc line
->> drivers/net/wireless/realtek/rtlwifi/usb.c:790: warning: Cannot understa=
-nd  * on line 790 - I thought it was a doc line
->>
->> Clean up the comment format.
->>
->> Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
->>
->> ---
->> Changes since v1:  Larry Finger pointed out the patch wasn't checkpatch-=
-clean.
->>
->> diff --git a/drivers/net/wireless/realtek/rtlwifi/usb.c b/drivers/net/wi=
-reless/realtek/rtlwifi/usb.c
->> index 34d68dbf4b4c..4b59f3b46b28 100644
->> --- a/drivers/net/wireless/realtek/rtlwifi/usb.c
->> +++ b/drivers/net/wireless/realtek/rtlwifi/usb.c
->> @@ -239,10 +239,7 @@ static void _rtl_usb_io_handler_release(struct ieee=
-80211_hw *hw)
->>   	mutex_destroy(&rtlpriv->io.bb_mutex);
->>   }
->>   -/**
->> - *
->> - *	Default aggregation handler. Do nothing and just return the oldest s=
-kb.
->> - */
->> +/*	Default aggregation handler. Do nothing and just return the oldest s=
-kb.  */
->>   static struct sk_buff *_none_usb_tx_aggregate_hdl(struct ieee80211_hw =
-*hw,
->>   						  struct sk_buff_head *list)
->>   {
->> @@ -756,11 +753,6 @@ static int rtl_usb_start(struct ieee80211_hw *hw)
->>   	return err;
->>   }
->>   -/**
->> - *
->> - *
->> - */
->> -
->>   /*=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D  tx =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D*/
->>   static void rtl_usb_cleanup(struct ieee80211_hw *hw)
->>   {
->> @@ -786,11 +778,7 @@ static void rtl_usb_cleanup(struct ieee80211_hw *hw)
->>   	usb_kill_anchored_urbs(&rtlusb->tx_submitted);
->>   }
->>   -/**
->> - *
->> - * We may add some struct into struct rtl_usb later. Do deinit here.
->> - *
->> - */
->> +/* We may add some struct into struct rtl_usb later. Do deinit here.  */
->>   static void rtl_usb_deinit(struct ieee80211_hw *hw)
->>   {
->>   	rtl_usb_cleanup(hw);
->
-> I missed that the subject line should be "rtwifi: Fix ....". Otherwise it=
- is OK.
+Please change the patch subject and commit message to match what the patch
+actually does.
 
-I can fix the subject during commit.
+> 
+> Signed-off-by:Shirley Her <shirley.her@bayhubtech.com>
+> ---
+> change in V5:
+>  1. split 2 patches into 3 patches
+>  2. make dll_adjust_count start from 0
+>  3. fix ret overwritten issue
+>  4. use break instead of goto
+> 
+> change in V4:
+>  1. add a bug fix for V3
+> 
+> change in V3:
+>  1. add more explanation in dll_recovery and execute_tuning function
+>  2. move dll_adjust_count to O2_host struct
+>  3. fix some coding style error
+>  4. renaming O2_PLL_WDT_CONTROL1 TO O2_PLL_DLL_WDT_CONTROL1
+> 
+> change in V2:
+>  1. use usleep_range instead of udelay
+>  2. move dll_adjust_count to sdhci-pci-o2micro.c
+> 
+> chagne in V1:
+>  1. add error recovery function to relock DLL with correct phase
+>  2. retuning HS200 after DLL locked
+> ---
+>  drivers/mmc/host/sdhci-pci-o2micro.c | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci-pci-o2micro.c b/drivers/mmc/host/sdhci-pci-o2micro.c
+> index 9dc4548..b3a33d9 100644
+> --- a/drivers/mmc/host/sdhci-pci-o2micro.c
+> +++ b/drivers/mmc/host/sdhci-pci-o2micro.c
+> @@ -51,7 +51,7 @@
+>  #define O2_SD_VENDOR_SETTING2	0x1C8
+>  #define O2_SD_HW_TUNING_DISABLE	BIT(4)
+>  
+> -#define O2_PLL_WDT_CONTROL1	0x1CC
+> +#define O2_PLL_DLL_WDT_CONTROL1	0x1CC
+>  #define  O2_PLL_FORCE_ACTIVE	BIT(18)
+>  #define  O2_PLL_LOCK_STATUS	BIT(14)
+>  #define  O2_PLL_SOFT_RESET	BIT(12)
+> @@ -316,23 +316,23 @@ static void sdhci_o2_enable_internal_clock(struct sdhci_host *host)
+>  	u32 scratch32;
+>  
+>  	/* PLL software reset */
+> -	scratch32 = sdhci_readl(host, O2_PLL_WDT_CONTROL1);
+> +	scratch32 = sdhci_readl(host, O2_PLL_DLL_WDT_CONTROL1);
+>  	scratch32 |= O2_PLL_SOFT_RESET;
+> -	sdhci_writel(host, scratch32, O2_PLL_WDT_CONTROL1);
+> +	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
+>  	udelay(1);
+>  	scratch32 &= ~(O2_PLL_SOFT_RESET);
+> -	sdhci_writel(host, scratch32, O2_PLL_WDT_CONTROL1);
+> +	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
+>  
+>  	/* PLL force active */
+>  	scratch32 |= O2_PLL_FORCE_ACTIVE;
+> -	sdhci_writel(host, scratch32, O2_PLL_WDT_CONTROL1);
+> +	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
+>  
+>  	/* Wait max 20 ms */
+>  	timeout = ktime_add_ms(ktime_get(), 20);
+>  	while (1) {
+>  		bool timedout = ktime_after(ktime_get(), timeout);
+>  
+> -		scratch = sdhci_readw(host, O2_PLL_WDT_CONTROL1);
+> +		scratch = sdhci_readw(host, O2_PLL_DLL_WDT_CONTROL1);
+>  		if (scratch & O2_PLL_LOCK_STATUS)
+>  			break;
+>  		if (timedout) {
+> @@ -350,9 +350,9 @@ static void sdhci_o2_enable_internal_clock(struct sdhci_host *host)
+>  
+>  out:
+>  	/* Cancel PLL force active */
+> -	scratch32 = sdhci_readl(host, O2_PLL_WDT_CONTROL1);
+> +	scratch32 = sdhci_readl(host, O2_PLL_DLL_WDT_CONTROL1);
+>  	scratch32 &= ~O2_PLL_FORCE_ACTIVE;
+> -	sdhci_writel(host, scratch32, O2_PLL_WDT_CONTROL1);
+> +	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
+>  }
+>  
+>  static int sdhci_o2_get_cd(struct mmc_host *mmc)
+> 
 
---=20
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
-hes
