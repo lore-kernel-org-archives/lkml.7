@@ -2,51 +2,56 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1642CC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 01:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED200C32751
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 01:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E70D721874
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 01:08:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA77F2184E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 01:15:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389568AbfHHBIx (ORCPT
+        id S2389547AbfHHBPE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 21:08:53 -0400
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:51591 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730467AbfHHBIt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 21:08:49 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=joseph.qi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TYvZ9x9_1565226526;
-Received: from JosephdeMacBook-Pro.local(mailfrom:joseph.qi@linux.alibaba.com fp:SMTPD_---0TYvZ9x9_1565226526)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 08 Aug 2019 09:08:47 +0800
-Subject: Re: [PATCH][ocfs2-next] ocfs2: ensure ret is set to zero before
- returning
-To:     Colin Ian King <colin.king@canonical.com>,
-        Joseph Qi <jiangqi903@gmail.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        ocfs2-devel@oss.oracle.com,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190807121929.28918-1-colin.king@canonical.com>
- <fb3d7441-93ea-b619-52fc-00da950c9201@gmail.com>
- <bf4d059a-94fc-d8cf-78c7-8606644185a5@canonical.com>
-From:   Joseph Qi <joseph.qi@linux.alibaba.com>
-Message-ID: <0cee7ca9-8704-171a-ec82-ee6c16e3381b@linux.alibaba.com>
-Date:   Thu, 8 Aug 2019 09:08:46 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
+        Wed, 7 Aug 2019 21:15:04 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:3933 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730038AbfHHBPE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 21:15:04 -0400
+Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.54])
+        by Forcepoint Email with ESMTP id 13737E7A906BCBCFF543;
+        Thu,  8 Aug 2019 09:15:02 +0800 (CST)
+Received: from dggeme760-chm.china.huawei.com (10.3.19.106) by
+ DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 8 Aug 2019 09:15:01 +0800
+Received: from [127.0.0.1] (10.57.37.248) by dggeme760-chm.china.huawei.com
+ (10.3.19.106) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Thu, 8
+ Aug 2019 09:15:01 +0800
+Subject: Re: [PATCH net] net: phy: rtl8211f: do a double read to get real time
+ link status
+To:     Heiner Kallweit <hkallweit1@gmail.com>, <davem@davemloft.net>,
+        <andrew@lunn.ch>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linuxarm@huawei.com>, <salil.mehta@huawei.com>,
+        <yisen.zhuang@huawei.com>, <shiju.jose@huawei.com>
+References: <1565183772-44268-1-git-send-email-liuyonglong@huawei.com>
+ <d67831ab-8902-a653-3db9-b2f55adacabd@gmail.com>
+From:   Yonglong Liu <liuyonglong@huawei.com>
+Message-ID: <e663235c-93eb-702d-5a9c-8f781d631c42@huawei.com>
+Date:   Thu, 8 Aug 2019 09:15:00 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-In-Reply-To: <bf4d059a-94fc-d8cf-78c7-8606644185a5@canonical.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <d67831ab-8902-a653-3db9-b2f55adacabd@gmail.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.57.37.248]
+X-ClientProxiedBy: dggeme702-chm.china.huawei.com (10.1.199.98) To
+ dggeme760-chm.china.huawei.com (10.3.19.106)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -54,39 +59,65 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 19/8/7 20:42, Colin Ian King wrote:
-> On 07/08/2019 13:35, Joseph Qi wrote:
+On 2019/8/8 0:47, Heiner Kallweit wrote:
+> On 07.08.2019 15:16, Yonglong Liu wrote:
+>> [   27.232781] hns3 0000:bd:00.3 eth7: net open
+>> [   27.237303] 8021q: adding VLAN 0 to HW filter on device eth7
+>> [   27.242972] IPv6: ADDRCONF(NETDEV_CHANGE): eth7: link becomes ready
+>> [   27.244449] hns3 0000:bd:00.3: invalid speed (-1)
+>> [   27.253904] hns3 0000:bd:00.3 eth7: failed to adjust link.
+>> [   27.259379] RTL8211F Gigabit Ethernet mii-0000:bd:00.3:07: PHY state change UP -> RUNNING
+>> [   27.924903] hns3 0000:bd:00.3 eth7: link up
+>> [   28.280479] RTL8211F Gigabit Ethernet mii-0000:bd:00.3:07: PHY state change RUNNING -> NOLINK
+>> [   29.208452] hns3 0000:bd:00.3 eth7: link down
+>> [   32.376745] RTL8211F Gigabit Ethernet mii-0000:bd:00.3:07: PHY state change NOLINK -> RUNNING
+>> [   33.208448] hns3 0000:bd:00.3 eth7: link up
+>> [   35.253821] hns3 0000:bd:00.3 eth7: net stop
+>> [   35.258270] hns3 0000:bd:00.3 eth7: link down
 >>
+>> When using rtl8211f in polling mode, may get a invalid speed,
+>> because of reading a fake link up and autoneg complete status
+>> immediately after starting autoneg:
 >>
->> On 19/8/7 20:19, Colin King wrote:
->>> From: Colin Ian King <colin.king@canonical.com>
->>>
->>> A previous commit introduced a regression where variable ret was
->>> originally being set from the return from a call to function
->>> dlm_create_debugfs_subroot and this set was removed. Currently
->>> ret is now uninitialized if no alloction errors are found which
->>> may end up with a bogus check on ret < 0 on the 'leave:' return
->>> path.  Fix this by setting ret to zero on a successful execution
->>> path.
+>>         ifconfig-1176  [007] ....    27.232763: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x00 val:0x1040
+>>   kworker/u257:1-670   [015] ....    27.232805: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x04 val:0x01e1
+>>   kworker/u257:1-670   [015] ....    27.232815: mdio_access: mii-0000:bd:00.3 write phy:0x07 reg:0x04 val:0x05e1
+>>   kworker/u257:1-670   [015] ....    27.232869: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x01 val:0x79ad
+>>   kworker/u257:1-670   [015] ....    27.232904: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x09 val:0x0200
+>>   kworker/u257:1-670   [015] ....    27.232940: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x00 val:0x1040
+>>   kworker/u257:1-670   [015] ....    27.232949: mdio_access: mii-0000:bd:00.3 write phy:0x07 reg:0x00 val:0x1240
+>>   kworker/u257:1-670   [015] ....    27.233003: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x01 val:0x79ad
+>>   kworker/u257:1-670   [015] ....    27.233039: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x0a val:0x3002
+>>   kworker/u257:1-670   [015] ....    27.233074: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x09 val:0x0200
+>>   kworker/u257:1-670   [015] ....    27.233110: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x05 val:0x0000
+>>   kworker/u257:1-670   [000] ....    28.280475: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x01 val:0x7989
+>>   kworker/u257:1-670   [000] ....    29.304471: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x01 val:0x7989
 >>
->> Good catch.
->> Or shall we just initialize 'ret' at first?
+>> According to the datasheet of rtl8211f, to get the real time
+>> link status, need to read MII_BMSR twice.
+>>
+>> This patch add a read_status hook for rtl8211f, and do a fake
+>> phy_read before genphy_read_status(), so that can get real link
+>> status in genphy_read_status().
+>>
+>> Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+>> ---
+>>  drivers/net/phy/realtek.c | 13 +++++++++++++
+>>  1 file changed, 13 insertions(+)
+>>
+> Is this an accidental resubmit? Because we discussed this in
+> https://marc.info/?t=156413509900003&r=1&w=2 and a fix has
+> been applied already.
 > 
-> Initialized ret first may not catch subsequent coding errors where error
-> returns paths have not initialized ret, so my preference is when it is
-> required and not before.
+> Heiner
 > 
-Okay, looks good to me.
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+> .
+> 
 
->>
->>>
->>> Addresses-Coverity: ("Uninitialzed scalar variable")
-> 
-> Can this be fixed up when applied rather sending a V2?
->>
-Currently ocfs2 patches are maintained in Andrew's mm tree.
-So it depends on Andrew.
+In https://marc.info/?t=156413509900003&r=1&w=2 , the invalid speed
+recurrence rate is almost 100%, and I had test the solution about
+5 times and it works. But yesterday it happen again suddenly, and than
+I fount that the recurrence rate reduce to 10%. This time we get 0x79ad
+after autoneg started which is not 0x798d from last discussion.
 
-Thanks,
-Joseph
+
