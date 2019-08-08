@@ -2,299 +2,135 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E81C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A8D6C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:30:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 830232173E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:29:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1975F2173E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:30:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kmlK0/FK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403826AbfHHP3g (ORCPT
+        id S1733151AbfHHPaB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 11:29:36 -0400
-Received: from foss.arm.com ([217.140.110.172]:34992 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730768AbfHHP3g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 11:29:36 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6E98A1596;
-        Thu,  8 Aug 2019 08:29:35 -0700 (PDT)
-Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8A89F3F706;
-        Thu,  8 Aug 2019 08:29:33 -0700 (PDT)
-Subject: Re: [PATCH 9/9] arm64: Retrieve stolen time as paravirtualized guest
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Will Deacon <will@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Pouloze <suzuki.poulose@arm.com>,
-        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190802145017.42543-1-steven.price@arm.com>
- <20190802145017.42543-10-steven.price@arm.com> <20190804105353.5e9824dc@why>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <dc8a1e56-7b52-cc8f-265d-27eb5f458613@arm.com>
-Date:   Thu, 8 Aug 2019 16:29:32 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 8 Aug 2019 11:30:01 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:37132 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727096AbfHHPaA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 11:30:00 -0400
+Received: by mail-vs1-f66.google.com with SMTP id v6so63370724vsq.4
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 08:30:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QQ67960ROY2a/127HWY6jHmfLZvvKglq5u8NMNjYI1Y=;
+        b=kmlK0/FKpYSrx2hur8a9t4OIdtqyOzr9THPxdPoXoVp2SotkfMdIG/oBPmgepUANo7
+         5wxGRYKFtXcz35m5NYV6n1mpRxqm3J2IZBnVx0RHjV/f6d+9Nbyp1jlPAq46MLaojzYN
+         zfi/wcFKJI3CHSAL+5RzV2adQgeYh7gk4sIk4EnOTPm8bYukyOnot1KAbcjyIKVBrUZh
+         sFrr6Tarmycg6qQ2M7QAqs9AkYpRdwv6qGUtBpfOhgF6bEPeR4Re16KmoQwXCwdNsmcl
+         zGYuMktiq2EFXkfZ9q8GKn/83u45cK2qTB/gs/sxKjc+SJZ8WXvAkQlU0hjn71hXwCB0
+         Kvuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QQ67960ROY2a/127HWY6jHmfLZvvKglq5u8NMNjYI1Y=;
+        b=PzXrVfH9D1ox3g2bcLyT0RUJ9uXcagbBw/SK53iHj6gXtyTqyYSX1W1bIGPIqFgylr
+         /PTzaqsetjIcZMNvAYsR7LFqLnw7myg7LuuEuSQDtGlevMMKmINjb0ffr4CHHLcDoma6
+         srzbX5ZWTIps5HEr0y+BuYVRAtTBKdCJN+5DBLD83/6KCSJ4GYY67u67hz9+ydB22G6G
+         Iu58l+7HPAkjXKP7Bs393iltjtoz+3C6/Imcaa5YWiajhT3MYEY92Gy/81yjMu0cHxKq
+         JDL8Y/nWtPEGZZ2o5zbYlLKBbXxLog6n80bagUH5tc15QofifGIZw/pKMY+V68QrVY2B
+         nv5A==
+X-Gm-Message-State: APjAAAXS4LpwCaF1ArMN31ejkFUvIghbZsNQ02WnWnJU76MlTpiewePn
+        ghdm2lIUafQj3MzeML7Az4jV154r2zFE7zraioHoYw==
+X-Google-Smtp-Source: APXvYqxKi3cA9YcGMYMd//YpNRPqFA3cCz3N7LoXHqKDwPYBU0jxMSGjHUhjBPY7g60T9+jxuZelgTW7fSvznp0WgLQ=
+X-Received: by 2002:a67:e454:: with SMTP id n20mr10625187vsm.34.1565278199947;
+ Thu, 08 Aug 2019 08:29:59 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190804105353.5e9824dc@why>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20190722153745.32446-1-lorenzo.pieralisi@arm.com>
+ <20190722153745.32446-7-lorenzo.pieralisi@arm.com> <20190808125516.GA2246@e107155-lin>
+In-Reply-To: <20190808125516.GA2246@e107155-lin>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 8 Aug 2019 17:29:24 +0200
+Message-ID: <CAPDyKFqHHwq=3XhSH_=uu5QoFkP3VYJ+2h7ENG5DNs-YzM6bNQ@mail.gmail.com>
+Subject: Re: [PATCH 6/6] PSCI: cpuidle: Refactor CPU suspend power_state
+ parameter handling
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/08/2019 10:53, Marc Zyngier wrote:
-> On Fri,  2 Aug 2019 15:50:17 +0100
-> Steven Price <steven.price@arm.com> wrote:
-> 
->> Enable paravirtualization features when running under a hypervisor
->> supporting the PV_TIME_ST hypercall.
->>
->> For each (v)CPU, we ask the hypervisor for the location of a shared
->> page which the hypervisor will use to report stolen time to us. We set
->> pv_time_ops to the stolen time function which simply reads the stolen
->> value from the shared page for a VCPU. We guarantee single-copy
->> atomicity using READ_ONCE which means we can also read the stolen
->> time for another VCPU than the currently running one while it is
->> potentially being updated by the hypervisor.
->>
->> Signed-off-by: Steven Price <steven.price@arm.com>
->> ---
->>  arch/arm64/kernel/Makefile |   1 +
->>  arch/arm64/kernel/kvm.c    | 155 +++++++++++++++++++++++++++++++++++++
-> 
-> nit: Why not using paravirt.c, which clearly states what it does? The
-> alternative would be to name it kvm-pv.c.
+On Thu, 8 Aug 2019 at 14:55, Sudeep Holla <sudeep.holla@arm.com> wrote:
+>
+> On Mon, Jul 22, 2019 at 04:37:45PM +0100, Lorenzo Pieralisi wrote:
+> > Current PSCI code handles idle state entry through the
+> > psci_cpu_suspend_enter() API, that takes an idle state index as a
+> > parameter and convert the index into a previously initialized
+> > power_state parameter before calling the PSCI.CPU_SUSPEND() with it.
+> >
+> > This is unwieldly, since it forces the PSCI firmware layer to keep track
+> > of power_state parameter for every idle state so that the
+> > index->power_state conversion can be made in the PSCI firmware layer
+> > instead of the CPUidle driver implementations.
+> >
+> > Move the power_state handling out of drivers/firmware/psci
+> > into the respective ACPI/DT PSCI CPUidle backends and convert
+> > the psci_cpu_suspend_enter() API to get the power_state
+> > parameter as input, which makes it closer to its firmware
+> > interface PSCI.CPU_SUSPEND() API.
+> >
+> > A notable side effect is that the PSCI ACPI/DT CPUidle backends
+> > now can directly handle (and if needed update) power_state
+> > parameters before handing them over to the PSCI firmware
+> > interface to trigger PSCI.CPU_SUSPEND() calls.
+> >
+> > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > Cc: Will Deacon <will@kernel.org>
+> > Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> > Cc: Sudeep Holla <sudeep.holla@arm.com>
+>
+> Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+>
+> > +static __init int psci_cpu_init_idle(unsigned int cpu)
+> > +{
+> > +     struct device_node *cpu_node;
+> > +     int ret;
+> > +
+> > +     /*
+> > +      * If the PSCI cpu_suspend function hook has not been initialized
+> > +      * idle states must not be enabled, so bail out
+> > +      */
+> > +     if (!psci_ops.cpu_suspend)
+> > +             return -EOPNOTSUPP;
+> > +
+> > +     cpu_node = of_get_cpu_node(cpu, NULL);
+>
+> [nit] You could use of_cpu_device_node_get in linux/of_device.h as
+> it may avoid parsing if used later during the boot(i.e. after
+> cpu->of_node is populated). I think there's another instance in
+> psci_idle_init_cpu
 
-I can move it to paravirt.c - seems reasonable.
+Good idea!
 
->>  include/linux/cpuhotplug.h |   1 +
->>  3 files changed, 157 insertions(+)
->>  create mode 100644 arch/arm64/kernel/kvm.c
->>
->> diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
->> index 478491f07b4f..eb36edf9b930 100644
->> --- a/arch/arm64/kernel/Makefile
->> +++ b/arch/arm64/kernel/Makefile
->> @@ -63,6 +63,7 @@ obj-$(CONFIG_CRASH_CORE)		+= crash_core.o
->>  obj-$(CONFIG_ARM_SDE_INTERFACE)		+= sdei.o
->>  obj-$(CONFIG_ARM64_SSBD)		+= ssbd.o
->>  obj-$(CONFIG_ARM64_PTR_AUTH)		+= pointer_auth.o
->> +obj-$(CONFIG_PARAVIRT)			+= kvm.o
->>  
->>  obj-y					+= vdso/ probes/
->>  obj-$(CONFIG_COMPAT_VDSO)		+= vdso32/
->> diff --git a/arch/arm64/kernel/kvm.c b/arch/arm64/kernel/kvm.c
->> new file mode 100644
->> index 000000000000..245398c79dae
->> --- /dev/null
->> +++ b/arch/arm64/kernel/kvm.c
->> @@ -0,0 +1,155 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +// Copyright (C) 2019 Arm Ltd.
->> +
->> +#define pr_fmt(fmt) "kvmarm-pv: " fmt
->> +
->> +#include <linux/arm-smccc.h>
->> +#include <linux/cpuhotplug.h>
->> +#include <linux/io.h>
->> +#include <linux/printk.h>
->> +#include <linux/psci.h>
->> +#include <linux/reboot.h>
->> +#include <linux/slab.h>
->> +
->> +#include <asm/paravirt.h>
->> +#include <asm/pvclock-abi.h>
->> +#include <asm/smp_plat.h>
->> +
->> +struct kvmarm_stolen_time_region {
->> +	struct pvclock_vcpu_stolen_time_info *kaddr;
->> +};
->> +
->> +static DEFINE_PER_CPU(struct kvmarm_stolen_time_region, stolen_time_region);
->> +
->> +static bool steal_acc = true;
->> +static int __init parse_no_stealacc(char *arg)
->> +{
->> +	steal_acc = false;
->> +	return 0;
->> +}
->> +early_param("no-steal-acc", parse_no_stealacc);
->> +
->> +/* return stolen time in ns by asking the hypervisor */
->> +static u64 kvm_steal_clock(int cpu)
->> +{
->> +	struct kvmarm_stolen_time_region *reg;
->> +
->> +	reg = per_cpu_ptr(&stolen_time_region, cpu);
->> +	if (!reg->kaddr) {
->> +		pr_warn_once("stolen time enabled but not configured for cpu %d\n",
->> +			     cpu);
->> +		return 0;
->> +	}
->> +
->> +	return le64_to_cpu(READ_ONCE(reg->kaddr->stolen_time));
->> +}
->> +
->> +static int disable_stolen_time_current_cpu(void)
->> +{
->> +	struct kvmarm_stolen_time_region *reg;
->> +
->> +	reg = this_cpu_ptr(&stolen_time_region);
->> +	if (!reg->kaddr)
->> +		return 0;
->> +
->> +	memunmap(reg->kaddr);
->> +	memset(reg, 0, sizeof(*reg));
->> +
->> +	return 0;
->> +}
->> +
->> +static int stolen_time_dying_cpu(unsigned int cpu)
->> +{
->> +	return disable_stolen_time_current_cpu();
->> +}
->> +
->> +static int init_stolen_time_cpu(unsigned int cpu)
->> +{
->> +	struct kvmarm_stolen_time_region *reg;
->> +	struct arm_smccc_res res;
->> +
->> +	reg = this_cpu_ptr(&stolen_time_region);
->> +
->> +	if (reg->kaddr)
->> +		return 0;
-> 
-> Can this actually happen? It'd take two CPU_UP calls from the HP
-> notifiers to get in that situation...
+However, as $subject patch more or less just moves code from the
+current psci firmware directory into cpuidle, perhaps it's better to
+defer improvements to be made on top?
 
-Yes, something would have to be very broken for that to happen - I'll
-remove this check.
-
->> +
->> +	arm_smccc_1_1_invoke(ARM_SMCCC_HV_PV_TIME_ST, &res);
->> +
->> +	if ((long)res.a0 < 0)
->> +		return -EINVAL;
->> +
->> +	reg->kaddr = memremap(res.a0,
->> +			sizeof(struct pvclock_vcpu_stolen_time_info),
->> +			MEMREMAP_WB);
->> +
->> +	if (reg->kaddr == NULL) {
->> +		pr_warn("Failed to map stolen time data structure\n");
->> +		return -EINVAL;
-> 
-> -ENOMEM is the expected return code.
-
-Ok
-
->> +	}
->> +
->> +	if (le32_to_cpu(reg->kaddr->revision) != 0 ||
->> +			le32_to_cpu(reg->kaddr->attributes) != 0) {
->> +		pr_warn("Unexpected revision or attributes in stolen time data\n");
->> +		return -ENXIO;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static int kvm_arm_init_stolen_time(void)
->> +{
->> +	int ret;
->> +
->> +	ret = cpuhp_setup_state(CPUHP_AP_ARM_KVMPV_STARTING,
->> +				"hypervisor/kvmarm/pv:starting",
->> +				init_stolen_time_cpu, stolen_time_dying_cpu);
->> +	if (ret < 0)
->> +		return ret;
->> +	return 0;
->> +}
->> +
->> +static bool has_kvm_steal_clock(void)
->> +{
->> +	struct arm_smccc_res res;
->> +
->> +	/* To detect the presence of PV time support we require SMCCC 1.1+ */
->> +	if (psci_ops.smccc_version < SMCCC_VERSION_1_1)
->> +		return false;
->> +
->> +	arm_smccc_1_1_invoke(ARM_SMCCC_ARCH_FEATURES_FUNC_ID,
->> +			     ARM_SMCCC_HV_PV_FEATURES, &res);
->> +
->> +	if (res.a0 != SMCCC_RET_SUCCESS)
->> +		return false;
->> +
->> +	arm_smccc_1_1_invoke(ARM_SMCCC_HV_PV_FEATURES,
->> +			     ARM_SMCCC_HV_PV_TIME_ST, &res);
->> +
->> +	if (res.a0 != SMCCC_RET_SUCCESS)
->> +		return false;
->> +
->> +	return true;
->> +}
->> +
->> +static int __init kvm_guest_init(void)
->> +{
->> +	int ret = 0;
->> +
->> +	if (!has_kvm_steal_clock())
->> +		return 0;
->> +
->> +	ret = kvm_arm_init_stolen_time();
->> +	if (ret)
->> +		return ret;
->> +
->> +	pv_ops.time.steal_clock = kvm_steal_clock;
->> +
->> +	static_key_slow_inc(&paravirt_steal_enabled);
->> +	if (steal_acc)
->> +		static_key_slow_inc(&paravirt_steal_rq_enabled);
->> +
->> +	pr_info("using stolen time PV\n");
->> +
->> +	return 0;
->> +}
->> +early_initcall(kvm_guest_init);
-> 
-> Is there any reason why we wouldn't directly call into this rather than
-> using an initcall?
-
-I'm not sure where the direct call would go - any pointers?
-
-Thanks,
-
-Steve
-
->> diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
->> index 068793a619ca..89d75edb5750 100644
->> --- a/include/linux/cpuhotplug.h
->> +++ b/include/linux/cpuhotplug.h
->> @@ -136,6 +136,7 @@ enum cpuhp_state {
->>  	/* Must be the last timer callback */
->>  	CPUHP_AP_DUMMY_TIMER_STARTING,
->>  	CPUHP_AP_ARM_XEN_STARTING,
->> +	CPUHP_AP_ARM_KVMPV_STARTING,
->>  	CPUHP_AP_ARM_CORESIGHT_STARTING,
->>  	CPUHP_AP_ARM64_ISNDEP_STARTING,
->>  	CPUHP_AP_SMPCFD_DYING,
-> 
-> 
-> Thanks,
-> 
-> 	M.
-> 
-
+Kind regards
+Uffe
