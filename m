@@ -2,86 +2,70 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E19C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:35:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF4EC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:35:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A7942184E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:35:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10F502173E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:35:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="ece1Oj7E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403968AbfHHPfC (ORCPT
+        id S2404000AbfHHPfS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 11:35:02 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35876 "EHLO mx1.redhat.com"
+        Thu, 8 Aug 2019 11:35:18 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:44646 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732549AbfHHPfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 11:35:02 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D92C560171;
-        Thu,  8 Aug 2019 15:35:01 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-144.ams2.redhat.com [10.36.116.144])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2F4A1600C8;
-        Thu,  8 Aug 2019 15:34:59 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 341EB16E08; Thu,  8 Aug 2019 17:34:58 +0200 (CEST)
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Gerd Hoffmann <kraxel@redhat.com>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        virtualization@lists.linux-foundation.org (open list:VIRTIO GPU DRIVER),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] drm/virtio: use virtio_max_dma_size
-Date:   Thu,  8 Aug 2019 17:34:45 +0200
-Message-Id: <20190808153445.27177-1-kraxel@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 08 Aug 2019 15:35:01 +0000 (UTC)
+        id S1732549AbfHHPfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 11:35:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=nu6rJdx/OR9M7kX9A1CXYGTkDCwz7C7JPL3VD4fk9lE=; b=ece1Oj7EG1wH5/v87qfjAICuR7
+        nHNvwuia4csDzGJE1k8b9wsdNaBuHSO/cLwprhyp4cVDSIwyNN0SnOnsgGec9MY0u/0Humd/OAz2h
+        BhGVEkOYkfORX2UEcOf2knt/nzv/qv9jDRXjtv/61AKOWaIE0IqDmXwm/5q1A0VWaauo=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hvkRe-0003sF-6V; Thu, 08 Aug 2019 17:35:14 +0200
+Date:   Thu, 8 Aug 2019 17:35:14 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, davem@davemloft.net,
+        robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com,
+        hkallweit1@gmail.com
+Subject: Re: [PATCH v2 05/15] net: phy: adin: add {write,read}_mmd hooks
+Message-ID: <20190808153514.GE27917@lunn.ch>
+References: <20190808123026.17382-1-alexandru.ardelean@analog.com>
+ <20190808123026.17382-6-alexandru.ardelean@analog.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190808123026.17382-6-alexandru.ardelean@analog.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We must make sure our scatterlist segments are not too big, otherwise
-we might see swiotlb failures (happens with sev, also reproducable with
-swiotlb=force).
+On Thu, Aug 08, 2019 at 03:30:16PM +0300, Alexandru Ardelean wrote:
+> Both ADIN1200 & ADIN1300 support Clause 45 access.
+> The Extended Management Interface (EMI) registers are accessible via both
+> Clause 45 (at register MDIO_MMD_VEND1) and using Clause 22.
+> 
+> However, the Clause 22 MMD access operations differ from the implementation
+> in the kernel, in the sense that it uses registers ExtRegPtr (0x10) &
+> ExtRegData (0x11) to access Clause 45 & EMI registers.
 
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
----
- drivers/gpu/drm/virtio/virtgpu_object.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+It is not that they differ from what the kernel supports. Its that
+they differ from what the Standard says they should use. These
+registers are defined in 802.3, part of C22, and this hardware
+implements the standard incorrectly.
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_object.c b/drivers/gpu/drm/virtio/virtgpu_object.c
-index b2da31310d24..6e44568813dd 100644
---- a/drivers/gpu/drm/virtio/virtgpu_object.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_object.c
-@@ -204,6 +204,7 @@ int virtio_gpu_object_get_sg_table(struct virtio_gpu_device *qdev,
- 		.interruptible = false,
- 		.no_wait_gpu = false
- 	};
-+	unsigned max_segment;
- 
- 	/* wtf swapping */
- 	if (bo->pages)
-@@ -215,8 +216,13 @@ int virtio_gpu_object_get_sg_table(struct virtio_gpu_device *qdev,
- 	if (!bo->pages)
- 		goto out;
- 
--	ret = sg_alloc_table_from_pages(bo->pages, pages, nr_pages, 0,
--					nr_pages << PAGE_SHIFT, GFP_KERNEL);
-+	max_segment = virtio_max_dma_size(qdev->vdev);
-+	max_segment &= ~(size_t)(PAGE_SIZE - 1);
-+	if (max_segment > SCATTERLIST_MAX_SEGMENT)
-+		max_segment = SCATTERLIST_MAX_SEGMENT;
-+	ret = __sg_alloc_table_from_pages(bo->pages, pages, nr_pages, 0,
-+					  nr_pages << PAGE_SHIFT,
-+					  max_segment, GFP_KERNEL);
- 	if (ret)
- 		goto out;
- 	return 0;
--- 
-2.18.1
-
+	   Andrew
