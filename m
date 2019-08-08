@@ -2,221 +2,111 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BC4AC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA420C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:48:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 094EB21874
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:47:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A773921874
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:48:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WN/KRTxG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="apJXGsYi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733273AbfHHNr1 (ORCPT
+        id S1733285AbfHHNsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 09:47:27 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:40538 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732727AbfHHNr0 (ORCPT
+        Thu, 8 Aug 2019 09:48:33 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38540 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732727AbfHHNsd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 09:47:26 -0400
-Received: by mail-qt1-f196.google.com with SMTP id a15so92124780qtn.7;
-        Thu, 08 Aug 2019 06:47:25 -0700 (PDT)
+        Thu, 8 Aug 2019 09:48:33 -0400
+Received: by mail-wr1-f68.google.com with SMTP id g17so94996421wrr.5
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 06:48:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=C6WFPVXGyocEIIrcTDuM4IDv1J5Bc4drJaACPbDYG1I=;
-        b=WN/KRTxGCIva6p3X00xjaE70ElLoP8c9PUb/PtYminSAk1wwVwebUNm6H8xQ4IUCJ6
-         iufh+Ex2vRlMS1Rr/9iQO+pa6PbUQfxpern6I2HlRcB0vnhHY3N6tJ+7aCrbx0npAbJf
-         h/9QMzlT5n+oPiJp9rPgRLlb61VW5pj9u02chyXjIBKtxCt8ZqWPNZArxeFGdTKkyGUV
-         lyNu90kSyzr3BkFhJnIPVAfhFS5t52V5F8ZqYgMiK4Nnf+iyoyD0/eG9g83kTa9kOetG
-         RhobiEpwL753m6K7dGmmjV5XFXQUvsJzCBk/cC44ZnyZJGI3UUHhcYfy8/XlMMWrNXsv
-         KVSw==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=GcZ3zbECdiPLNKqqmt56+5zBkRjZxc9TD5pjLBob95w=;
+        b=apJXGsYiKecvN9aCUGlleABvwzWhhNUx8AvT93d1B9Z5KX/hgJJ82oq6sg2KSpD0HN
+         YqPcBygscdSw1OzzUUentXgHGBy5uA43+V1bcAX4xW2IzYYPEv0ByC5DJQLD2RzCtWXo
+         3ICiGlPzerdFCozXtxwSHBayKvVOLwI+pAY33dMaTtb4NqUy8qUiaN9UTxFNUwFow7/6
+         hSQex81nJ+byGTscj9e2GwGRcJcyo6pJ+TRhC4LxqV57tFdC94ZomJRhKplMYLaVOCac
+         UnQ9gpjvOVuP7hTmfsPBj7QjhO2uZGrN1r2USGPjMyuZ4yFbPbSpOoNUef42Z5YLvtLJ
+         KHjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=C6WFPVXGyocEIIrcTDuM4IDv1J5Bc4drJaACPbDYG1I=;
-        b=kDkQJJhGbmSLR+qaJ3mXeGCYXVhmjCfQGmpAbaNAWO8IXxNVeFf52cuGaBG1kIdVI5
-         SvWuEg6f9MGS/hGK6+6YDQBtTJYJ/Pa7Wf0itbhE7YaSrnExH3FLGgaU5o0FPAig2jjl
-         y6LDkm20nznMNv7bdL2qZWbXKmkfNkCGG6gUGH5mwww1LBhkgXXkqYYe593rHZs3eNfS
-         0X28nOm0eBNnhhCui+5QXJhkFX8XKY38bIZ4l/A2c4csM+qTzYTULIAbzWUryzao/QdV
-         LIdwrLawHksX4AVQx9kuieckqKxy0JSf5vRoQOenGt6ihntrZSwxH+xg9g/bNCni425o
-         loUA==
-X-Gm-Message-State: APjAAAWYnl5xupWSIYdjoEl6IM7asaMP3qSiwnnlF4lZseLOerAVi/GN
-        +YcQCnJrBdNKTQGz4IUELB4=
-X-Google-Smtp-Source: APXvYqwXajS0dWZ56dnedSiwni6MsvOA7HG8BHtpoidglv6YaTkxD0aR893aSrQtzuTTBNCtVsWTlQ==
-X-Received: by 2002:ac8:6d0c:: with SMTP id o12mr8563160qtt.74.1565272045090;
-        Thu, 08 Aug 2019 06:47:25 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id r189sm42039415qkc.60.2019.08.08.06.47.23
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 08 Aug 2019 06:47:23 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id C199340340; Thu,  8 Aug 2019 10:47:21 -0300 (-03)
-Date:   Thu, 8 Aug 2019 10:47:21 -0300
-To:     Thomas Richter <tmricht@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        brueckner@linux.ibm.com, gor@linux.ibm.com,
-        heiko.carstens@de.ibm.com, stable@vger.kernel.org
-Subject: Re: [PATCH 1/2] perf/record: Fix module size on s390
-Message-ID: <20190808134721.GF19444@kernel.org>
-References: <20190724122703.3996-1-tmricht@linux.ibm.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=GcZ3zbECdiPLNKqqmt56+5zBkRjZxc9TD5pjLBob95w=;
+        b=sgRqalLBlDnve7IAhEb7uNAZCaOpxrgMg4AJBO/IxBueKLv/FLuAxxtWvex0c/WOG3
+         znt4Hc5/pcmgZPxjYFl8J5CAzSleX/EeA3vTmenlKIgwU1c1tvo70+i3Bum038LQIM5i
+         AuCS4nRmv9nVKbkFysHiCaHg6YOp393ZLJ0tpGTHtvPCKee4hYyvvy/RigeIFhFh8SGR
+         SyDsByz+a3kCSmEnVZdCzwssO0V1IPCL45AIGyrh8DtPoccr+NGIKSdCUnioJgAsEcwV
+         y8dYH8/Y6RalmLx8PHenKYW2ZQl5xVGANcR2xbG5+dLVRBCbO0slW/D+z0kplIkjwMNF
+         Y6MQ==
+X-Gm-Message-State: APjAAAUeTBOfVedohgPjwSpMwtXX0mrYLraAeLLwnDojrkp7coO+/DhM
+        xDoDAiTILN32ECt38/BpF9tTWg==
+X-Google-Smtp-Source: APXvYqzZEKSzRsVNoSQVYnVv+D/4c8aED8O3MSMhnUXr1S/gKC93rsWnOKFzP1VrFFrVyOnWbqjP6g==
+X-Received: by 2002:adf:9d8b:: with SMTP id p11mr16242610wre.226.1565272110713;
+        Thu, 08 Aug 2019 06:48:30 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id v23sm3153431wmj.32.2019.08.08.06.48.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 08 Aug 2019 06:48:29 -0700 (PDT)
+Subject: Re: [PATCH] soundwire: fix regmap dependencies and align with other
+ serial links
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        alsa-devel@alsa-project.org
+Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
+        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+References: <20190718230215.18675-1-pierre-louis.bossart@linux.intel.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <8529d213-bfbb-780a-092d-3607eeb5e543@linaro.org>
+Date:   Thu, 8 Aug 2019 14:48:28 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190724122703.3996-1-tmricht@linux.ibm.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <20190718230215.18675-1-pierre-louis.bossart@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Jul 24, 2019 at 02:27:02PM +0200, Thomas Richter escreveu:
-> On s390 the modules loaded in memory have the text segment
-> located after the GOT and Relocation table. This can be seen
-> with this output:
->   [root@m35lp76 perf]# fgrep qeth /proc/modules
->   qeth 151552 1 qeth_l2, Live 0x000003ff800b2000
->   ...
->   [root@m35lp76 perf]# cat /sys/module/qeth/sections/.text
->   0x000003ff800b3990
->   [root@m35lp76 perf]#
 
-Thanks, applied.
 
-- Arnaldo
- 
-> There is an offset of 0x1990 bytes. The size of the qeth module
-> is 151552 bytes (0x25000 in hex).
-> The location of the GOT/relocation table at the beginning of a
-> module is unique to s390.
+On 19/07/2019 00:02, Pierre-Louis Bossart wrote:
+> The existing code has a mixed select/depend usage which makes no sense.
 > 
-> commit 203d8a4aa6ed ("perf s390: Fix 'start' address of module's map")
-> adjusts the start address of a module in the map structures, but
-> does not adjust the size of the modules. This leads to overlapping
-> of module maps as this example shows:
+> config SOUNDWIRE_BUS
+>         tristate
+>         select REGMAP_SOUNDWIRE
 > 
-> [root@m35lp76 perf] # ./perf report -D
->      0 0 0xfb0 [0xa0]: PERF_RECORD_MMAP -1/0: [0x3ff800b3990(0x25000)
->           @ 0]:  x /lib/modules/.../qeth.ko.xz
->      0 0 0x1050 [0xb0]: PERF_RECORD_MMAP -1/0: [0x3ff800d85a0(0x8000)
->           @ 0]:  x /lib/modules/.../ip6_tables.ko.xz
+> config REGMAP_SOUNDWIRE
+>          tristate
+>          depends on SOUNDWIRE_BUS
 > 
-> The module qeth.ko has an adjusted start address modified to b3990,
-> but its size is unchanged and the module ends at 0x3ff800d8990.
-> This end address overlaps with the next modules start address of
-> 0x3ff800d85a0.
+> Let's remove one layer of Kconfig definitions and align with the
+> solutions used by all other serial links.
 > 
-> When the size of the leading GOT/Relocation table stored in the
-> beginning of the text segment (0x1990 bytes) is subtracted from
-> module qeth end address, there are no overlaps anymore:
-> 
->    0x3ff800d8990 - 0x1990 = 0x0x3ff800d7000
-> 
-> which is the same as
-> 
->    0x3ff800b2000 + 0x25000 = 0x0x3ff800d7000.
-> 
-> To fix this issue, also adjust the modules size in function
-> arch__fix_module_text_start(). Add another function parameter
-> named size and reduce the size of the module when the text segment
-> start address is changed.
-> 
-> Output after:
->      0 0 0xfb0 [0xa0]: PERF_RECORD_MMAP -1/0: [0x3ff800b3990(0x23670)
->           @ 0]:  x /lib/modules/.../qeth.ko.xz
->      0 0 0x1050 [0xb0]: PERF_RECORD_MMAP -1/0: [0x3ff800d85a0(0x7a60)
->           @ 0]:  x /lib/modules/.../ip6_tables.ko.xz
-> 
-> Fixes: 203d8a4aa6ed ("perf s390: Fix 'start' address of module's map")
-> Cc: <stable@vger.kernel.org> # v4.9+
-> Reported-by: Stefan Liebler <stli@linux.ibm.com>
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> Acked-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 > ---
->  tools/perf/arch/s390/util/machine.c | 14 +++++++++++++-
->  tools/perf/util/machine.c           |  3 ++-
->  tools/perf/util/machine.h           |  2 +-
->  3 files changed, 16 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/perf/arch/s390/util/machine.c b/tools/perf/arch/s390/util/machine.c
-> index a19690a17291..de26b1441a48 100644
-> --- a/tools/perf/arch/s390/util/machine.c
-> +++ b/tools/perf/arch/s390/util/machine.c
-> @@ -7,7 +7,7 @@
->  #include "api/fs/fs.h"
->  #include "debug.h"
->  
-> -int arch__fix_module_text_start(u64 *start, const char *name)
-> +int arch__fix_module_text_start(u64 *start, u64 *size, const char *name)
->  {
->  	u64 m_start = *start;
->  	char path[PATH_MAX];
-> @@ -17,6 +17,18 @@ int arch__fix_module_text_start(u64 *start, const char *name)
->  	if (sysfs__read_ull(path, (unsigned long long *)start) < 0) {
->  		pr_debug2("Using module %s start:%#lx\n", path, m_start);
->  		*start = m_start;
-> +	} else {
-> +		/* Successful read of the modules segment text start address.
-> +		 * Calculate difference between module start address
-> +		 * in memory and module text segment start address.
-> +		 * For example module load address is 0x3ff8011b000
-> +		 * (from /proc/modules) and module text segment start
-> +		 * address is 0x3ff8011b870 (from file above).
-> +		 *
-> +		 * Adjust the module size and subtract the GOT table
-> +		 * size located at the beginning of the module.
-> +		 */
-> +		*size -= (*start - m_start);
->  	}
->  
->  	return 0;
-> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> index dc7aafe45a2b..081fe4bdebaa 100644
-> --- a/tools/perf/util/machine.c
-> +++ b/tools/perf/util/machine.c
-> @@ -1365,6 +1365,7 @@ static int machine__set_modules_path(struct machine *machine)
->  	return map_groups__set_modules_path_dir(&machine->kmaps, modules_path, 0);
->  }
->  int __weak arch__fix_module_text_start(u64 *start __maybe_unused,
-> +				u64 *size __maybe_unused,
->  				const char *name __maybe_unused)
->  {
->  	return 0;
-> @@ -1376,7 +1377,7 @@ static int machine__create_module(void *arg, const char *name, u64 start,
->  	struct machine *machine = arg;
->  	struct map *map;
->  
-> -	if (arch__fix_module_text_start(&start, name) < 0)
-> +	if (arch__fix_module_text_start(&start, &size, name) < 0)
->  		return -1;
->  
->  	map = machine__findnew_module_map(machine, start, name);
-> diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
-> index f70ab98a7bde..7aa38da26427 100644
-> --- a/tools/perf/util/machine.h
-> +++ b/tools/perf/util/machine.h
-> @@ -222,7 +222,7 @@ struct symbol *machine__find_kernel_symbol_by_name(struct machine *machine,
->  
->  struct map *machine__findnew_module_map(struct machine *machine, u64 start,
->  					const char *filename);
-> -int arch__fix_module_text_start(u64 *start, const char *name);
-> +int arch__fix_module_text_start(u64 *start, u64 *size, const char *name);
->  
->  int machine__load_kallsyms(struct machine *machine, const char *filename);
->  
-> -- 
-> 2.21.0
+>   drivers/base/regmap/Kconfig | 2 +-
+>   drivers/soundwire/Kconfig   | 7 +------
+>   drivers/soundwire/Makefile  | 2 +-
+>   3 files changed, 3 insertions(+), 8 deletions(-)
 
--- 
+I have been using some thing similar in my setup.
+I did test this with Qualcomm WSA881x codec.
 
-- Arnaldo
+Tested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+
+--srini
