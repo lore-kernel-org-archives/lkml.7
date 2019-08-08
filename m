@@ -2,116 +2,64 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B25F8C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 18:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F09C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 18:20:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7608E21743
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 18:20:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="ctQdRF6v"
+	by mail.kernel.org (Postfix) with ESMTP id A06EA21743
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 18:20:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732775AbfHHSUN (ORCPT
+        id S1733276AbfHHSUe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 14:20:13 -0400
-Received: from mout.gmx.net ([212.227.17.22]:38375 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731109AbfHHSUM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 14:20:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1565288409;
-        bh=/OhppohmKGbNitwqmMUrBTx3Nb1KGU1IbYsutCsyOVc=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=ctQdRF6vFr6pool5icswOzOzRBsguyOK3sEl3v3QlNbOz+DTg23D5idup80W8N1q/
-         69ceIDl+fHclDXozo5JawtikbIzf7DJcwZI9quEsFUJMe2VPsfaLFZ0C5fFeGKZFiY
-         qwxLyX5zrs1SeTaIHEH7QLfxvoS88bLvgvgTi0is=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([109.90.233.87]) by mail.gmx.com (mrgmx103
- [212.227.17.168]) with ESMTPSA (Nemesis) id 0Ld0E0-1idtDF2B6G-00iEjt; Thu, 08
- Aug 2019 20:20:09 +0200
-From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org
-Subject: [PATCH v2] div64.h: Fix description of do_div parameter
-Date:   Thu,  8 Aug 2019 20:19:48 +0200
-Message-Id: <20190808181948.27659-1-j.neuschaefer@gmx.net>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:YkjB0YyGHTyXPdmDZ5RM2Pl3WYEtY6yAqEj1Y5afIbyJOXLHnnA
- LlnlokemuBSkUIqMGtHJT1ha4TmT/K2pgadc5EeFLZXQKJb2XAqg+7HYj04sD4EVG2hTc08
- AmhErxPSOtBwGpr8qP2nqocRDRtLXCoXsKLmKjgpN/DdC3XnBx5Auoh+NaXuH3ARphSYGy9
- aWtFJS1gTsn3XstvyxFlQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:EdlkLztQgIk=:4qdi546uAqqOW4IduF61sI
- 8GMRH3PZkCuegyMO/HJYGT/5h5Cf8nDhWwk6pFynGWNVdQhTIXelftsG/laS/peTupYaMerkO
- rr+snVA91Zr8CTU8wDEqWKHAjRRAKu3dMNhw7a7Z3Z49OgDTleAXRFeQdpISDxCvyY/SXky8+
- bsf8H2nR053gLeV7LqU4okhRLC2IqqW2+D3GF1tIXp6MUBQSp94RALE57/Yf1IuBnUPdN2+kC
- iTABmt3jbQk2B3c5g9wXSvsb2eJbTq5raKcZ0Yw6Dq5MHxu71nHeFtpFn5xcG1LKWxywYIcE0
- VemKEWKBQDyGgI2xTwcOUGEOMn4IDC3EsUMPcf+x4Bbh0mC+uH82i7bBsZ3Hom1QXslj0dgWP
- KHUFbN/Jb/wxtjrwri2h+b2dKk4aFGxKCBSBne47WoCr1eGmW6kWQ7jQ6JRRa+gSJccP4JyJR
- vIWsIRj8I780A0O4/szoFbVj7qA4r0YUBmeOA2dTnO9NNgN9Ez0uf0JuNKOM7GKAZTNlxac/j
- QLw4wpvtDS/R/AE5IFuMMOJtImwpdsaoDthrRVCX3Oz8actAA/3+3hZfnlkxmal5h+j5Q5Bpx
- lk6vWc1/HHoPEqS6VNlXcJw0CI9oEGJLM1uUfsiC4dWZKiVDvytM8Ksgn6J3vVZA9HMsdZdqi
- GYfygGro9rwnHC3+qcxN4gr3jHe2ziuGU3rQSLnzm/OqaXLiCfPKRy08kc0J7F/sw1jBlrcKX
- ANNVXhDtSnN5O+EqKp/E7q02YajGXmagW6UD/0MS8nvuRNBJu2RDlpN0hcKwazE88/rLIFLiT
- RodTfDf5unHHzUJdR1P8+Vu/nLtH8+enEnZIkngi5DX/JUj2GkGdk/2tO4C8sgs+GOpK/U9fo
- j9fGAg6bEk2sABbp2LmDn+K2o5QyCT0ivuzYk7BVMphFS8N2VdPh/iig6OvcwpCJ6wtGnRmgW
- M932YyaAx1w6DHmOLlPVrRtnivYeriOI4BDQeEvhY3/Be75ItJtoA5hbHwfzEi79ffh8HQht5
- xMw7PX36JA6FHga8wBweQyTSi6oRI59xw5H14oupCjBrnkAGxSbdw70XT4U+lM+P2K9yIqTAL
- bA0D7zuBzCU/QeKMMddyo47127rpmmaX/drOp7WIzV2wQ+0ljEnJBIoZuqV7hGwVWm/Yfj9wH
- WUBCo=
+        Thu, 8 Aug 2019 14:20:34 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:49348 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732344AbfHHSUe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 14:20:34 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 9011F154F9DE8;
+        Thu,  8 Aug 2019 11:20:33 -0700 (PDT)
+Date:   Thu, 08 Aug 2019 11:20:33 -0700 (PDT)
+Message-Id: <20190808.112033.180369877501058953.davem@davemloft.net>
+To:     narmstrong@baylibre.com
+Cc:     robh+dt@kernel.org, martin.blumenstingl@googlemail.com,
+        devicetree@vger.kernel.org, netdev@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/2] dt-bindings: net: meson-dwmac: convert to yaml
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190808114101.29982-1-narmstrong@baylibre.com>
+References: <20190808114101.29982-1-narmstrong@baylibre.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 08 Aug 2019 11:20:33 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Contrary to the description, the first parameter (n) should not be
-passed as a pointer, but directly as an lvalue. This is possible because
-do_div is a macro.
+From: Neil Armstrong <narmstrong@baylibre.com>
+Date: Thu,  8 Aug 2019 13:40:59 +0200
 
-Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-=2D--
+> This patchsets converts the Amlogic Meson DWMAC glue bindings over to
+> YAML schemas using the already converted dwmac bindings.
+> 
+> The first patch is needed because the Amlogic glue needs a supplementary
+> reg cell to access the DWMAC glue registers.
+> 
+> Changes since v2:
+> - Added review tags
+> - Updated allwinner,sun7i-a20-gmac.yaml reg maxItems
 
-v2:
-- add Geert Uytterhoeven's R-b
-
-v1:
-- https://lore.kernel.org/lkml/20190225140355.4335-1-j.neuschaefer@gmx.net=
-/
-=2D--
- include/asm-generic/div64.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/include/asm-generic/div64.h b/include/asm-generic/div64.h
-index dc9726fdac8f..b2a9c74efa55 100644
-=2D-- a/include/asm-generic/div64.h
-+++ b/include/asm-generic/div64.h
-@@ -28,12 +28,12 @@
-
- /**
-  * do_div - returns 2 values: calculate remainder and update new dividend
-- * @n: pointer to uint64_t dividend (will be updated)
-+ * @n: uint64_t dividend (will be updated)
-  * @base: uint32_t divisor
-  *
-  * Summary:
-- * ``uint32_t remainder =3D *n % base;``
-- * ``*n =3D *n / base;``
-+ * ``uint32_t remainder =3D n % base;``
-+ * ``n =3D n / base;``
-  *
-  * Return: (uint32_t)remainder
-  *
-=2D-
-2.20.1
+Where is this targetted to be merged, an ARM tree?  Or one of my
+networking trees?
 
