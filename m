@@ -2,98 +2,127 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9148BC32751
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 01:30:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC8D8C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 01:31:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 597E821873
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 01:30:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8228321873
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 01:31:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PDNyaEku"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="AxY1O5I9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389543AbfHHBaS (ORCPT
+        id S1730675AbfHHBbf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 21:30:18 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:45108 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730433AbfHHBaR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 21:30:17 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x781TW0G048712;
-        Thu, 8 Aug 2019 01:30:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=WynY6nXwME0DR9PAu+tJ6emJNKimUsPqa4OPf2Sw6bs=;
- b=PDNyaEkuuU80CuIG13+H9wAbh2QdE4LY3bBg4jV77zQ7MzHfF3gazCgZWh6lj6U+zP0U
- 7zJnJw1+kKa8p3QE0eocvkHiz+HcAk9t+PKvhCHnNRvLHRbQDJdtn1Vd6lRr71r+GdBK
- X6icZe2Re8oMuW/b2l9bFtl9h0J7MxiU/tnW9wrkc1mNr2Y1/8SnbWI3KQeu2L7++Pwx
- 1J1oGIyJNzjOe1mpkk6D+KrUpBzAIfh29z6f3eL0RGV+aBZMZrTES5vJaq+apIZ5BjN5
- bubgfL+TE0Bg9RAkWgQNym9sytRA61K2NxdXyKc34GY3pWLQEGKEbcKlqxXDlJPiyCN4 5Q== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2u51pu7kb1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 08 Aug 2019 01:30:13 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x781SNh9122368;
-        Thu, 8 Aug 2019 01:30:12 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2u763jhcap-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 08 Aug 2019 01:30:12 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x781U8cu032707;
-        Thu, 8 Aug 2019 01:30:11 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 07 Aug 2019 18:30:08 -0700
-To:     Qian Cai <cai@lca.pw>
-Cc:     martin.petersen@oracle.com, jejb@linux.ibm.com,
-        kashyap.desai@broadcom.com, sumit.saxena@broadcom.com,
-        shivasharan.srikanteshwara@broadcom.com,
-        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] scsi/megaraid_sas: fix a compilation warning
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <1564151143-22889-1-git-send-email-cai@lca.pw>
-Date:   Wed, 07 Aug 2019 21:30:06 -0400
-In-Reply-To: <1564151143-22889-1-git-send-email-cai@lca.pw> (Qian Cai's
-        message of "Fri, 26 Jul 2019 10:25:43 -0400")
-Message-ID: <yq1r25we95t.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Wed, 7 Aug 2019 21:31:35 -0400
+Received: from ozlabs.org ([203.11.71.1]:50273 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730382AbfHHBbf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 21:31:35 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 463rSM2nrcz9sN4;
+        Thu,  8 Aug 2019 11:31:31 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1565227891;
+        bh=VskflzzaHB3YqEhRaWaqpmXfLtKuW7+a50wQ5+qwMzA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=AxY1O5I9qBH6ATA9yYG+iwxjXgQd6T44GfBT3kn9e5nQ3Lccakt9z1jIOUapSTl8a
+         ZDsBr8EmPZDgdIbBxyTJ6hHqKzlax4iuuufbrMpvpHJOGzRqCBUMgGC57dWC9vEHK8
+         FmM+AOWCdyX2sddSaOdsWiuZYeSRDje6Sq4coEnGqoPiR2jKcK8pHIGtSPHb6vo75W
+         92Xe7N2txysoLxQYPSw8wRbNlGbJ5deDKnYRE58ZwhRb4AlBzmS3gKSy/mTR+PHL8p
+         iZMFa92SHIYkLBizRhuzg+YQkHkTZJJlXf0nwfdH0c7BRDdvJmHi6KE7WAehW2o+8K
+         yP63ZpyGsZS1g==
+Date:   Thu, 8 Aug 2019 11:31:30 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>
+Subject: Re: linux-next: Tree for Aug 7 (mm/khugepaged.c)
+Message-ID: <20190808113130.4cc2902f@canb.auug.org.au>
+In-Reply-To: <F53407FB-96CC-42E8-9862-105C92CC2B98@fb.com>
+References: <20190807183606.372ca1a4@canb.auug.org.au>
+        <c18b2828-cdf3-5248-609f-d89a24f558d1@infradead.org>
+        <DCC6982B-17EF-4143-8CE8-9D0EC28FA06B@fb.com>
+        <20190807131029.f7f191aaeeb88cc435c6306f@linux-foundation.org>
+        <BB7412DE-A88E-41A4-9796-5ECEADE31571@fb.com>
+        <20190807142755.8211d58d5ecec8082587b073@linux-foundation.org>
+        <abb5daa5-322e-55e8-a08d-4e938375451f@infradead.org>
+        <F53407FB-96CC-42E8-9862-105C92CC2B98@fb.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9342 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=27 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=796
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908080011
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9342 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=27 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=866 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908080011
+Content-Type: multipart/signed; boundary="Sig_/yhc0x6v6fDgfN4ZWUXD5eHT";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/yhc0x6v6fDgfN4ZWUXD5eHT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Qian,
+Hi Song,
 
-> The commit de516379e85f ("scsi: megaraid_sas: changes to function
-> prototypes") introduced a comilation warning due to it changed the
-> function prototype of read_fw_status_reg() to take an instance pointer
-> instead, but forgot to remove an unused variable.
+On Wed, 7 Aug 2019 22:11:28 +0000 Song Liu <songliubraving@fb.com> wrote:
+>
+> From: Song Liu <songliubraving@fb.com>
+> Date: Wed, 7 Aug 2019 14:57:38 -0700
+> Subject: [PATCH] khugepaged: fix build without CONFIG_SHMEM
+>=20
+> khugepaged_scan_file() should be fully bypassed without CONFIG_SHMEM.
+>=20
+> Fixes: f57286140d96 ("mm,thp: add read-only THP support for (non-shmem) F=
+S")
+> Signed-off-by: Song Liu <songliubraving@fb.com>
+> ---
+>  mm/khugepaged.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> index 272fed3ed0f0..40c25ddf29e4 100644
+> --- a/mm/khugepaged.c
+> +++ b/mm/khugepaged.c
+> @@ -1778,7 +1778,7 @@ static unsigned int khugepaged_scan_mm_slot(unsigne=
+d int pages,
+>                         VM_BUG_ON(khugepaged_scan.address < hstart ||
+>                                   khugepaged_scan.address + HPAGE_PMD_SIZ=
+E >
+>                                   hend);
+> -                       if (vma->vm_file) {
+> +                       if (IS_ENABLED(CONFIG_SHMEM) && vma->vm_file) {
+>                                 struct file *file;
+>                                 pgoff_t pgoff =3D linear_page_index(vma,
+>                                                 khugepaged_scan.address);
 
-Applied to 5.4/scsi-queue, thanks!
+I have applied this to linux-next today (it needed a little adjusting
+after removing the other patches).
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/yhc0x6v6fDgfN4ZWUXD5eHT
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1Le3IACgkQAVBC80lX
+0GymPwf/Yptoay9yV8VDu8pDytNxBrsnHMGbQJ5LRMb9crEICeyHb4JVvUS4W6I7
+KAcTGuB5yrUGdhYIQFU/mgiqxxAerpKch6t1Lw2PjzB+iCkQAST/OTcTmni38ln9
+L+KsyAJR3AyAU6bY7u+CoWnbUeFmWV+itElbvhtJeGw8eAjbjs2OGWup03J4bJXJ
+cnaY61rM0ViOVXS2tbzMJZt5j736Olu3UHRmEA4FxekLP8NHlfNm9WSmqFUOIhA5
+M/zYa1NueNlchfMt3S/b+6TKxwRd3xCiFwUe0fIq04oQIhIxtqXpYv/lkvmIbja7
+F13gAR8XbAdTeSucyWzRJ+16APO80A==
+=5rKS
+-----END PGP SIGNATURE-----
+
+--Sig_/yhc0x6v6fDgfN4ZWUXD5eHT--
