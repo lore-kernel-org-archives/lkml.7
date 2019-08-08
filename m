@@ -2,118 +2,116 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 395F3C41514
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:55:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B984C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:56:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DD08214C6
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:55:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565294150;
-	bh=SOl9abd2o/Qj2dBjH8ebZDl44aPBVBw4i1AVCjPY/nM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UWnsL1Hvoy2R2kWHZZ68G4SOzf2kpqTYxGB2HLUkKNiAamNP/DBsVg4XInppO8Tbp
-	 2LeYHNNlC+Mwg1Ma7ixf8zcd1GZFEs4x07JMNZzyF49gZbdRi03oxOAWYiIm1orhlV
-	 T5vu5sgLT40GwASqc9+bgOl6bii6VsN1D54kyEzE=
+	by mail.kernel.org (Postfix) with ESMTP id DF095214C6
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:56:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390396AbfHHTzt (ORCPT
+        id S2404389AbfHHT4W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:55:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59186 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403831AbfHHTzs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 15:55:48 -0400
-Received: from localhost (unknown [150.199.191.185])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFF27214C6;
-        Thu,  8 Aug 2019 19:55:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565294148;
-        bh=SOl9abd2o/Qj2dBjH8ebZDl44aPBVBw4i1AVCjPY/nM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bcSQCIe8/dBRIW/bkZwTbBcOfWJ4jURkIhZlfAMVQPFrM5ExqBnMoMiU+OZP22HmH
-         qtNCe2+K6MFBvvpcNJEji2ZB4Sedflcze8rLCZwt8trL2tmqUQ7s/NOAENdW8FKmls
-         tkkXDZVEmglLE30DV31AOWoNN5GLRLau9OtaXi+g=
-Date:   Thu, 8 Aug 2019 14:55:46 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org,
-        Wesley Terpstra <wesley@sifive.com>
-Subject: Re: [PATCH v2] pci: Kconfig: select PCI_MSI_IRQ_DOMAIN by default on
- RISC-V
-Message-ID: <20190808195546.GA7302@google.com>
-References: <alpine.DEB.2.21.9999.1907251426450.32766@viisi.sifive.com>
+        Thu, 8 Aug 2019 15:56:22 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:54081 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390201AbfHHT4W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 15:56:22 -0400
+Received: from p200300ddd71876597e7a91fffec98e25.dip0.t-ipconnect.de ([2003:dd:d718:7659:7e7a:91ff:fec9:8e25])
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hvoWJ-00079W-LP; Thu, 08 Aug 2019 21:56:19 +0200
+Date:   Thu, 8 Aug 2019 21:56:14 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Ben Luo <luoben@linux.alibaba.com>
+cc:     alex.williamson@redhat.com, linux-kernel@vger.kernel.org,
+        tao.ma@linux.alibaba.com, gerry@linux.alibaba.com
+Subject: Re: [PATCH 1/2] genirq: introduce update_irq_devid()
+In-Reply-To: <39a5009c77d07c3ce42ef784465c05e36d5f684d.1565263723.git.luoben@linux.alibaba.com>
+Message-ID: <alpine.DEB.2.21.1908082138410.2882@nanos.tec.linutronix.de>
+References: <cover.1565263723.git.luoben@linux.alibaba.com> <39a5009c77d07c3ce42ef784465c05e36d5f684d.1565263723.git.luoben@linux.alibaba.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.9999.1907251426450.32766@viisi.sifive.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul, Wesley,
+On Thu, 8 Aug 2019, Ben Luo wrote:
+> +int update_irq_devid(unsigned int irq, void *dev_id, void *new_dev_id)
+> +{
+> +	struct irq_desc *desc = irq_to_desc(irq);
+> +	struct irqaction *action, **action_ptr;
+> +	unsigned long flags;
+> +
+> +	WARN(in_interrupt(),
+> +			"Trying to update IRQ %d from IRQ context!\n", irq);
 
-On Thu, Jul 25, 2019 at 02:28:07PM -0700, Paul Walmsley wrote:
-> From: Wesley Terpstra <wesley@sifive.com>
-> 
-> This is part of adding support for RISC-V systems with PCIe host 
-> controllers that support message-signaled interrupts.
-> 
-> Signed-off-by: Wesley Terpstra <wesley@sifive.com>
-> [paul.walmsley@sifive.com: wrote patch description; split this
->  patch from the arch/riscv patch]
-> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-> ---
->  drivers/pci/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-> index 2ab92409210a..beb3408a0272 100644
-> --- a/drivers/pci/Kconfig
-> +++ b/drivers/pci/Kconfig
-> @@ -52,7 +52,7 @@ config PCI_MSI
->  	   If you don't know what to do here, say Y.
->  
->  config PCI_MSI_IRQ_DOMAIN
-> -	def_bool ARC || ARM || ARM64 || X86
-> +	def_bool ARC || ARM || ARM64 || X86 || RISCV
+This is broken. The function needs to return on that condition. Actually it
+cannot even be called from non-preemptible code.
 
-The other arches listed here either supply their own include/asm/msi.h
-or generate it:
+What's worse is that if the interrupt in question is handled concurrently,
+then it will either see the old or the new dev_id and because the interrupt
+handler loop runs with desc->lock dropped even more crap can happen because
+dev_id can be subject to load and store tearing.
 
-  $ ls arch/*/include/asm/msi.h
-  arch/x86/include/asm/msi.h
+Staring at that, I see that there is the same issue in setup_irq() and
+free_irq(). It's actually worse there. I'll have a look.
 
-  $ grep msi.h arch/*/include/asm/Kbuild
-  arch/arc/include/asm/Kbuild:generic-y += msi.h
-  arch/arm64/include/asm/Kbuild:generic-y += msi.h
-  arch/arm/include/asm/Kbuild:generic-y += msi.h
-  arch/mips/include/asm/Kbuild:generic-y += msi.h
-  arch/powerpc/include/asm/Kbuild:generic-y += msi.h
-  arch/sparc/include/asm/Kbuild:generic-y += msi.h
+> +	/*
+> +	 * There can be multiple actions per IRQ descriptor, find the right
+> +	 * one based on the dev_id:
+> +	 */
+> +	action_ptr = &desc->action;
+> +	for (;;) {
+> +		action = *action_ptr;
+> +
+> +		if (!action) {
+> +			WARN(1, "Trying to update already-free IRQ %d\n", irq);
 
-For example, see
+That's wrong in two aspects:
 
-  f8430eae9f1b ("PCI/MSI: Enable PCI_MSI_IRQ_DOMAIN support for ARC")
-  be091d468a0a ("arm64: PCI/MSI: Use asm-generic/msi.h")
-  0ab089c2548c ("ARM: Add msi.h to Kbuild")
+       1) The warn should be outside of the locked region.
 
-I didn't look into the details of msi.h generation, but I assume
-RISC-V needs to do something similar?  If so, I think that should be
-part of this patch to avoid issues.
+       2) Just having the irq number is not useful for debugging either
+       	  when the interrupt is shared.
 
-If CONFIG_GENERIC_MSI_IRQ_DOMAIN is defined, include/linux/msi.h
-#includes <asm/msi.h> and I don't see where that would come from.
+> +			raw_spin_unlock_irqrestore(&desc->lock, flags);
+> +			chip_bus_sync_unlock(desc);
+> +			return -ENXIO;
+> +		}
+> +
+> +		if (action->dev_id == dev_id) {
+> +			action->dev_id = new_dev_id;
+> +			break;
+> +		}
+> +		action_ptr = &action->next;
+> +	}
+> +
+> +	raw_spin_unlock_irqrestore(&desc->lock, flags);
+> +	chip_bus_sync_unlock(desc);
+> +
+> +	/*
+> +	 * Make sure it's not being used on another CPU:
+> +	 * There is a risk of UAF for old *dev_id, if it is
+> +	 * freed in a short time after this func returns
+> +	 */
+> +	synchronize_irq(irq);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(update_irq_devid);
 
->  	depends on PCI_MSI
->  	select GENERIC_MSI_IRQ_DOMAIN
+EXPORT_SYMBOL_GPL() please.
 
-Bjorn
+Thanks,
+
+	tglx
