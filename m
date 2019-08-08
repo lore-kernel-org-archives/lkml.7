@@ -3,106 +3,107 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53EB5C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F2E9C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:09:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3634F2189E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:08:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E376E217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:09:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732597AbfHHPIZ convert rfc822-to-8bit (ORCPT
+        id S1732656AbfHHPI7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 11:08:25 -0400
-Received: from foss.arm.com ([217.140.110.172]:34688 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728327AbfHHPIZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 11:08:25 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0D5121596;
-        Thu,  8 Aug 2019 08:08:24 -0700 (PDT)
-Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 75D053F706;
-        Thu,  8 Aug 2019 08:08:21 -0700 (PDT)
-References: <20190802090853.4810-1-patrick.bellasi@arm.com> <20190802090853.4810-3-patrick.bellasi@arm.com> <20190806161153.GA19991@blackbody.suse.cz>
-User-agent: mu4e 1.3.3; emacs 26.2
-From:   Patrick Bellasi <patrick.bellasi@arm.com>
-To:     Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-api@vger.kernel.org, cgroups@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tejun Heo <tj@kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        "Vincent Guittot" <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Paul Turner <pjt@google.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Todd Kjos <tkjos@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Steve Muckle <smuckle@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Alessio Balsini <balsini@android.com>
-Subject: Re: [PATCH v13 2/6] sched/core: uclamp: Propagate parent clamps
-In-reply-to: <20190806161153.GA19991@blackbody.suse.cz>
-Date:   Thu, 08 Aug 2019 16:08:10 +0100
-Message-ID: <87h86r4rvp.fsf@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+        Thu, 8 Aug 2019 11:08:59 -0400
+Received: from outbound.smtp.vt.edu ([198.82.183.121]:41004 "EHLO
+        omr1.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730678AbfHHPI7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 11:08:59 -0400
+Received: from mr1.cc.vt.edu (smtp.ipv6.vt.edu [IPv6:2607:b400:92:9:0:9d:8fcb:4116])
+        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x78F8vHH030144
+        for <linux-kernel@vger.kernel.org>; Thu, 8 Aug 2019 11:08:57 -0400
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+        by mr1.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x78F8qo6019440
+        for <linux-kernel@vger.kernel.org>; Thu, 8 Aug 2019 11:08:57 -0400
+Received: by mail-qk1-f198.google.com with SMTP id c79so82918309qkg.13
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 08:08:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :mime-version:content-transfer-encoding:date:message-id;
+        bh=sZG45UfQMhTHDUgEHKrzSwCRO/ejJ3aFWUQpSgQlypU=;
+        b=ssG5jf51+m+ZWOsagUdMNHHXy23hp5Cd6jzG8hCPpd5D+KtsTKLHi6Ube127tTJP4v
+         J93+PcOZQmzG03+yr1cCUir8bz/nY2lwgdarP3GEyn6kV3jczHBHt9mftmB7cc7lJ0x0
+         Tb9XgNgdiuHEFJa7HuPj7PkSYyxKXwqpL1ywYcwmZZ1T0mS/4trQafooBi+6+LF9NpQ0
+         rgVxEw6juZwPPRixogqEQugYpdz+gfnRLsK+z5M8d9FL475sd2KpVq6Frv6hFLbhuDpP
+         eJQeJN8cDDNGkoKOqHEbdu9a3frCUbkadNUJcDK0Su24g3mrkeZIh/KV6osgLhZzib6V
+         Ce9A==
+X-Gm-Message-State: APjAAAU+K2mfYn5Mvrgo2kU4sWuuz9tP3XQWQvTghBvmGnGYBohKgXzF
+        Ws+XO7A5wla+DnUGvt2ZP1+wssR3vU/g6HbFWkDu6RtEH/F58B4fbWuaqg/QEMKapFjZsMLEuMd
+        tWU0dfbltd87l8USnZTRy6NLu/vGpzzfcX9U=
+X-Received: by 2002:ae9:eb08:: with SMTP id b8mr9196297qkg.481.1565276932488;
+        Thu, 08 Aug 2019 08:08:52 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyA4TmeX8wFs2niCTUr8jpeybcDjuWJjkUN+7g+sMgPRJHkHu8c64Y0d9aeO1jbLAwwx41VNg==
+X-Received: by 2002:ae9:eb08:: with SMTP id b8mr9196266qkg.481.1565276932155;
+        Thu, 08 Aug 2019 08:08:52 -0700 (PDT)
+Received: from turing-police ([2601:5c0:c001:4341::359])
+        by smtp.gmail.com with ESMTPSA id r14sm43822769qke.47.2019.08.08.08.08.50
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 08 Aug 2019 08:08:50 -0700 (PDT)
+From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
+X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
+X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Tony Luck <tony.luck@intel.com>, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] drivers/ras: Don't build debugfs.o if no debugfs in config
+In-Reply-To: <20190808142055.GF20745@zn.tnic>
+References: <7053.1565218556@turing-police> <20190808093101.GE20745@zn.tnic> <77171.1565269299@turing-police>
+ <20190808142055.GF20745@zn.tnic>
+Mime-Version: 1.0
+Content-Type: multipart/signed; boundary="==_Exmh_1565276929_4269P";
+         micalg=pgp-sha1; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 08 Aug 2019 11:08:49 -0400
+Message-ID: <84877.1565276929@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--==_Exmh_1565276929_4269P
+Content-Type: text/plain; charset=us-ascii
 
-On Tue, Aug 06, 2019 at 17:11:53 +0100, Michal Koutný wrote...
+On Thu, 08 Aug 2019 16:20:55 +0200, Borislav Petkov said:
+> config RAS_CEC
+>         depends on X86_MCE && MEMORY_FAILURE && DEBUG_FS
+> 						^^^^^^^^
 
-> On Fri, Aug 02, 2019 at 10:08:49AM +0100, Patrick Bellasi <patrick.bellasi@arm.com> wrote:
->> @@ -7095,6 +7149,7 @@ static ssize_t cpu_uclamp_write(struct kernfs_open_file *of, char *buf,
->>  	if (req.ret)
->>  		return req.ret;
->>  
->> +	mutex_lock(&uclamp_mutex);
->>  	rcu_read_lock();
->>  
->>  	tg = css_tg(of_css(of));
->> @@ -7107,7 +7162,11 @@ static ssize_t cpu_uclamp_write(struct kernfs_open_file *of, char *buf,
->>  	 */
->>  	tg->uclamp_pct[clamp_id] = req.percent;
->>  
->> +	/* Update effective clamps to track the most restrictive value */
->> +	cpu_util_update_eff(of_css(of));
->> +
->>  	rcu_read_unlock();
->> +	mutex_unlock(&uclamp_mutex);
-> Following my remarks to "[PATCH v13 1/6] sched/core: uclamp: Extend
-> CPU's cgroup", I wonder if the rcu_read_lock() couldn't be moved right
-> before cpu_util_update_eff(). And by extension rcu_read_(un)lock could
-> be hidden into cpu_util_update_eff() closer to its actual need.
+I'm willing to respin that patch that way instead - if cec.c is basically
+pointless without debugfs, that's probably a good solution. My first read
+of the code was that the debugfs support was "additional optional" code,
+not "this is pointless without it" code.
 
-Well, if I've got correctly your comment in the previous message, I
-would say that at this stage we don't need RCU looks at all.
+--==_Exmh_1565276929_4269P
+Content-Type: application/pgp-signature
 
-Reason being that cpu_util_update_eff() gets called only from
-cpu_uclamp_write() which is from an ongoing write operation on a cgroup
-attribute and thus granted to be available.
+-----BEGIN PGP SIGNATURE-----
+Comment: Exmh version 2.9.0 11/07/2018
 
-We will eventually need to move the RCU look only down the stack when
-uclamp_update_active_tasks() gets called to update the RUNNABLE tasks on
-a RQ... or perhaps we don't need them since we already get the
-task_rq_lock() for each task we visit.
+iQIVAwUBXUw7AQdmEQWDXROgAQKNRg/+KNGYFpbwNYNSUS145bUcs6vMvWaQtaao
+qWy9xgA3sFeykg6JDreq0viGTyIL/Sr3GHn2XR2Y96d58bOWZZs4o+uDfbjIEdO4
+lQ6qZPOo0gPKMYv04xTyyG8XTFXBCN/JgUQP5zGEapXVasd+IdmDJI3/ITfjx+TF
++k15Ytf0sUGvR/RXaFnautbmcWkSlhKwkCluoo1+6S2As0IgalBCD4R2dx/1W1By
+wclZ+M2f+b4HS3qZC7u/VmLBy7pU6CFJ4aU3zCoc/bKc5lfRWf7xkNwG7DMUVnOV
+QLtDPa9bdMGX7s3HgTf1h4qXM81i6Gy6stjRoyE1CEI5VKO3EnyIycaje5xknEF7
+OAOxqKjgEYi06xlBoWjmMxjVfFUd+nqY61S0PoHPscvmWVJ6p8JkUb4G27tXK21l
+QxExAtX2f8YEYsv0Zjrrq0upXjHcOoiaVuVl9gv6bDaUZgfQ60/hT/78JNSVOv+g
+IRlq4egBQaeF2TrIuAwEoPWlnG6kOfLKuI1hIduKuHVKIcxNk6dmtPt5wO740O98
+8uF9nMivwqBwICkSPWPhAIOdCwSMh4HjhHkNd5xrQ5ZB8+woLy9nW76EdTFk2LUv
+vd9APOV9WNy6BmasFL3ojgYp1nz3tHTcfUQ6ADA/4so69dx7NPAa5FW4JoFTc2x0
+Is22wr5pjoQ=
+=ntaN
+-----END PGP SIGNATURE-----
 
-Is that correct?
-
-Cheers,
-Patrick
-
--- 
-#include <best/regards.h>
-
-Patrick Bellasi
+--==_Exmh_1565276929_4269P--
