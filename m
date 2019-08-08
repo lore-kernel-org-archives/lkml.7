@@ -2,135 +2,98 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3538AC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 23:21:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 053C0C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 23:22:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E32D82171F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 23:21:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAE252086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 23:22:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="l5IhY/V8"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="RGMUuN+u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390513AbfHHXVq (ORCPT
+        id S2390518AbfHHXW1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 19:21:46 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:16780 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390006AbfHHXVq (ORCPT
+        Thu, 8 Aug 2019 19:22:27 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:46855 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732938AbfHHXW0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 19:21:46 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d4cae8b0000>; Thu, 08 Aug 2019 16:21:47 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 08 Aug 2019 16:21:45 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 08 Aug 2019 16:21:45 -0700
-Received: from [10.110.48.28] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 8 Aug
- 2019 23:21:45 +0000
-Subject: Re: [Linux-kernel-mentees][PATCH v4 1/1] sgi-gru: Remove *pte_lookup
- functions
-To:     Bharath Vedartham <linux.bhar@gmail.com>, <arnd@arndb.de>,
-        <gregkh@linuxfoundation.org>, <sivanich@sgi.com>
-CC:     <ira.weiny@intel.com>, <jglisse@redhat.com>,
-        <william.kucharski@oracle.com>, <hch@lst.de>,
-        <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-kernel-mentees@lists.linuxfoundation.org>
-References: <1565290555-14126-1-git-send-email-linux.bhar@gmail.com>
- <1565290555-14126-2-git-send-email-linux.bhar@gmail.com>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <b659042a-f2c3-df3c-4182-bb7dd5156bc1@nvidia.com>
-Date:   Thu, 8 Aug 2019 16:21:44 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 8 Aug 2019 19:22:26 -0400
+Received: by mail-ot1-f67.google.com with SMTP id z17so7136982otk.13
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 16:22:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=yo53A10QsIF3XF0Bf4xyGS53E9kiosKFbv27vH/Lz18=;
+        b=RGMUuN+uZ56NjxAK0C1mhv22NA08OkeaIhz2c2SqFGjp32NDWIxsl1BjVWBIrWGqqy
+         eVmXcq22KWyOpWhm8k2bCOvSoKwKOCddp9/L433MsZSOdHiA1KcaLzbKQWE8UqkysaEh
+         SEqOtcPo9la96yRagHcyqAGJjZogTq1HWq9pU4R2t8tmFB7LafGUzJv5e4oB1LMgPJlF
+         ZAAyWvjq/UlbTHYTvit/Zqv79CnZDf6/VNxXNacQxO8bE+itlqaCUaXXTh3+kDRjIojX
+         zWsLG/5vX+RxVD+DOf8SeLLDB07ehTYMA5ZM1zgJWI0E2qQLoBaVtTZXcSheSjOpml+W
+         3+/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=yo53A10QsIF3XF0Bf4xyGS53E9kiosKFbv27vH/Lz18=;
+        b=kAh+E00JOZ3+L/0qw5cabUqb0VJWuvktZq0w4z7RnRrazvjyr/K1HZjJZMw9+DfLye
+         wg8lh6C1P0TA1wkQqYsRFHkGz1Qdq34WYgMifAHEH8KJIJqOzl3o1W/zW2lngDOC8O7+
+         Ke6fzC7TblJOf3qhqZ8jqsW2chp3d0eX1ZWjA9LOv7lhJs5kbc4fpi0bFsXjmiI4fkQR
+         dpDE5UBSpE3oTtmMmVB9oU9qoUD9wXSsjsiSzm7DoX4Cw+mxRmGZWm61Sf+XW8UKcte+
+         khpN4e7QFkiCDkWEQEwxDPiH47QGaEWKPIrZI1df2fErsrUpvUMODnQx0y42oosGKPEe
+         YLJw==
+X-Gm-Message-State: APjAAAUTPF8bXYedV1wKntnUfkl3ZyTjSUFtsuFqGIrk3ZSzGHNqcNUb
+        04bnLNiY4GOwDKm+fss7OJlnig==
+X-Google-Smtp-Source: APXvYqyut0MaAojt4oQBMYDbrqnOQe3cs7lpeIX8YsgToxuKXyji9/ZByGtjbWQ9UVGGda0uKixR0Q==
+X-Received: by 2002:a6b:6516:: with SMTP id z22mr17741943iob.7.1565306545766;
+        Thu, 08 Aug 2019 16:22:25 -0700 (PDT)
+Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
+        by smtp.gmail.com with ESMTPSA id i4sm118719877iog.31.2019.08.08.16.22.25
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 08 Aug 2019 16:22:25 -0700 (PDT)
+Date:   Thu, 8 Aug 2019 16:22:24 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     akpm@linux-foundation.org
+cc:     mm-commits@vger.kernel.org, bmeng.cn@gmail.com, alex@ghiti.fr,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: + riscv-kbuild-add-virtual-memory-system-selection.patch added
+ to -mm tree
+In-Reply-To: <20190731215335.XZNjD%akpm@linux-foundation.org>
+Message-ID: <alpine.DEB.2.21.9999.1908081620450.21111@viisi.sifive.com>
+References: <20190731215335.XZNjD%akpm@linux-foundation.org>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-In-Reply-To: <1565290555-14126-2-git-send-email-linux.bhar@gmail.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1565306507; bh=+5ClyXF4/+matB7j6ropEiCrm63pptXnzihc56YYTPY=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=l5IhY/V8wKpl1V8ijQzYcYptStoxXGnVHOhdeyz+62DluKzAguhVGZiCGRezc95/U
-         U8C6lT2MUtBedJD6kwr7Jr7y0OfIyp3vjjn8DI1jErn0J4NJeZs9lx6UF3OsV+59PF
-         l9qKdPDJk9lnGXFf/ud/g8F09AgJn0qSM+zmSFnnYPTfYywdwSxcSAhkZRvLOWY1fO
-         GdRjyB+IPWpS5D+ip+y8DKkG89yqpP1f/za6Lv89SZGgGtFsR+oiXNE6uljc1cMMJ1
-         vMRXg4Fs1Odywn1ugGiScfNOrclLqL0LzNz6i4WqKlB6fPKlo6RISUsFSt4Ex1WFaP
-         DGa3Uuu+Ljl7w==
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/8/19 11:55 AM, Bharath Vedartham wrote:
-...
->  static int gru_vtop(struct gru_thread_state *gts, unsigned long vaddr,
->  		    int write, int atomic, unsigned long *gpa, int *pageshift)
->  {
->  	struct mm_struct *mm = gts->ts_mm;
->  	struct vm_area_struct *vma;
->  	unsigned long paddr;
-> -	int ret, ps;
-> +	int ret;
-> +	struct page *page;
->  
->  	vma = find_vma(mm, vaddr);
->  	if (!vma)
-> @@ -263,21 +187,33 @@ static int gru_vtop(struct gru_thread_state *gts, unsigned long vaddr,
->  
->  	/*
->  	 * Atomic lookup is faster & usually works even if called in non-atomic
-> -	 * context.
-> +	 * context. get_user_pages_fast does atomic lookup before falling back to
-> +	 * slow gup.
->  	 */
->  	rmb();	/* Must/check ms_range_active before loading PTEs */
-> -	ret = atomic_pte_lookup(vma, vaddr, write, &paddr, &ps);
-> -	if (ret) {
-> -		if (atomic)
-> +	if (atomic) {
-> +		ret = __get_user_pages_fast(vaddr, 1, write, &page);
-> +		if (!ret)
->  			goto upm;
-> -		if (non_atomic_pte_lookup(vma, vaddr, write, &paddr, &ps))
-> +	} else {
-> +		ret = get_user_pages_fast(vaddr, 1, write ? FOLL_WRITE : 0, &page);
-> +		if (!ret)
->  			goto inval;
->  	}
-> +
-> +	paddr = page_to_phys(page);
-> +	put_user_page(page);
-> +
-> +	if (unlikely(is_vm_hugetlb_page(vma)))
-> +		*pageshift = HPAGE_SHIFT;
-> +	else
-> +		*pageshift = PAGE_SHIFT;
-> +
->  	if (is_gru_paddr(paddr))
->  		goto inval;
-> -	paddr = paddr & ~((1UL << ps) - 1);
-> +	paddr = paddr & ~((1UL << *pageshift) - 1);
->  	*gpa = uv_soc_phys_ram_to_gpa(paddr);
-> -	*pageshift = ps;
+Hi Andrew,
 
-Why are you no longer setting *pageshift? There are a couple of callers
-that both use this variable.
+On Wed, 31 Jul 2019, akpm@linux-foundation.org wrote:
+
+> The patch titled
+>      Subject: riscv: kbuild: add virtual memory system selection
+> has been added to the -mm tree.  Its filename is
+>      riscv-kbuild-add-virtual-memory-system-selection.patch
+> 
+> This patch should soon appear at
+>     http://ozlabs.org/~akpm/mmots/broken-out/riscv-kbuild-add-virtual-memory-system-selection.patch
+> and later at
+>     http://ozlabs.org/~akpm/mmotm/broken-out/riscv-kbuild-add-virtual-memory-system-selection.patch
+
+Could you please drop this patch from -mm when you have the opportunity?  
+Based on some feedback from Christoph Hellwig that this patch would break 
+randconfig, I've decided to abandon this patch for the moment.
+
+thanks
 
 
-thanks,
--- 
-John Hubbard
-NVIDIA
+- Paul
