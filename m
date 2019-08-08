@@ -2,180 +2,204 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB04AC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD4F6C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:41:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A63172186A
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:39:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 858D521874
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:41:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="bZw3ufJS"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="REMvWkfu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389767AbfHHJjk (ORCPT
+        id S1732489AbfHHJlu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 05:39:40 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:59790 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2389684AbfHHJjk (ORCPT
+        Thu, 8 Aug 2019 05:41:50 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:46576 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732169AbfHHJlt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 05:39:40 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x789cIQd023410;
-        Thu, 8 Aug 2019 11:38:22 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=rfAy2kQie5nyqet5futdME6zq6BbLniw6BappTO8JW8=;
- b=bZw3ufJS0Ny+6r7smXCGChSxzXuJohT5YuZKYP1I1STBqCiHttUYNKPztyOe3HPD3ezE
- 00qBEr8ooA9XY7NWjJSrQm8yN9iAWoGSKfzGkM+8KTp5oFvUlJvRCYHxAUd53g7tDU2V
- bfBVvIA/bwifv9nZiJVrCb7ZV3fUGU2p9Ao4zvD1XuKdY5yOpU9CVzV6Pdf59cBjfurz
- sChiUvSoCuJVF3Iw1e1yPDyLh6jzdK+En+LVy0KVIwqG1oYXhRh6uu9SRAf3WBz0haBa
- NPrkaYgnJxtlyIuoI/QlmfjOWQiomFLAZf/ACwBAczRiCPu7Iazvf++zx+AlS5TiPgSu Zg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2u515mvb4c-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Thu, 08 Aug 2019 11:38:22 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 468F938;
-        Thu,  8 Aug 2019 09:38:03 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag6node3.st.com [10.75.127.18])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 22B312DAD65;
-        Thu,  8 Aug 2019 11:38:03 +0200 (CEST)
-Received: from SFHDAG5NODE1.st.com (10.75.127.13) by SFHDAG6NODE3.st.com
- (10.75.127.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 8 Aug
- 2019 11:38:02 +0200
-Received: from SFHDAG5NODE1.st.com ([fe80::cc53:528c:36c8:95f6]) by
- SFHDAG5NODE1.st.com ([fe80::cc53:528c:36c8:95f6%20]) with mapi id
- 15.00.1473.003; Thu, 8 Aug 2019 11:38:02 +0200
-From:   Hugues FRUCHET <hugues.fruchet@st.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "Sakari Ailus" <sakari.ailus@linux.intel.com>
-CC:     "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Yannick FERTRE <yannick.fertre@st.com>,
-        Philippe CORNU <philippe.cornu@st.com>,
-        Mickael GUENE <mickael.guene@st.com>
-Subject: Re: [PATCH v4 0/3] DCMI bridge support
-Thread-Topic: [PATCH v4 0/3] DCMI bridge support
-Thread-Index: AQHVTQkgTcvIjOQmAEWftzhpiuOH2qbw3leA
-Date:   Thu, 8 Aug 2019 09:38:02 +0000
-Message-ID: <85edd40f-68cc-13aa-52e0-6ec832bf6c2f@st.com>
-References: <1564577783-18627-1-git-send-email-hugues.fruchet@st.com>
- <28a2a9ac-d5b9-a312-616a-620e0385cf66@xs4all.nl>
-In-Reply-To: <28a2a9ac-d5b9-a312-616a-620e0385cf66@xs4all.nl>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.45]
+        Thu, 8 Aug 2019 05:41:49 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190808094147euoutp01192430210823a8669dba02a98b789d46~46Tp3iT081488514885euoutp018
+        for <linux-kernel@vger.kernel.org>; Thu,  8 Aug 2019 09:41:47 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190808094147euoutp01192430210823a8669dba02a98b789d46~46Tp3iT081488514885euoutp018
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1565257307;
+        bh=8i0ZsJoTCw9igACp/Y80+zUSsANQc6ilNqp2fm8mj+w=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=REMvWkfujrNbrugXb355ht/X0j80unvJhgP6bTdCcwjUmWVdJMDI/ra/5klSgx+s5
+         ZPgvUs1PE5EDezz+9TisUXJa3TOnaAcpvUVKYKq91gYbuI2iiULlkhv/QboGH+Hq32
+         ZBF3h/OzA36L5+dPrwFVC5mWaClLkybEtLgwZYk4=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190808094147eucas1p1e45c1f2bdb73d61d6a0f318248689611~46TpNAm2k1424414244eucas1p1X;
+        Thu,  8 Aug 2019 09:41:47 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 88.84.04374.A5EEB4D5; Thu,  8
+        Aug 2019 10:41:46 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190808094146eucas1p2a5a88ce5e7a87d47c4bcececab4df9a5~46TodoXf20339303393eucas1p20;
+        Thu,  8 Aug 2019 09:41:46 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190808094146eusmtrp1548af4d6fddd50dd790cc64abf22148b~46ToO-MCt0652806528eusmtrp1b;
+        Thu,  8 Aug 2019 09:41:46 +0000 (GMT)
+X-AuditID: cbfec7f5-4f7ff70000001116-b9-5d4bee5aad1b
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 58.E5.04166.95EEB4D5; Thu,  8
+        Aug 2019 10:41:45 +0100 (BST)
+Received: from AMDC2765.DIGITAL.local (unknown [106.120.51.73]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190808094145eusmtip14ac841d81885e0e191b4896c39a79d32~46TnqfF-T2468724687eusmtip1Q;
+        Thu,  8 Aug 2019 09:41:45 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jochen Sprickerhof <jochen@sprickerhof.de>,
+        Anand Moon <linux.amoon@gmail.com>
+Subject: [PATCH v2 1/2 RESEND] usb: core: phy: add support for PHY
+ calibration
+Date:   Thu,  8 Aug 2019 11:41:27 +0200
+Message-Id: <20190808094128.27213-2-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190808094128.27213-1-m.szyprowski@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA0VSfyxUcQD39d699+7m2utovlOx3fqxtPwotbeRnWX1zNqsVn8wceWFOOwe
+        J1lNlHFJwmR+5fwI1+GcX0VJmAuLuP6ohmUobChkmR/L89B/n5/fz3fffQlEUiawIUIjohll
+        hDxcionQpu6V/hO+c97+TqZqF6out1ZAdSdP4FRSaS1Gla+PAmpgQI9TppYCjModaDOnSl48
+        RKiaum84Vd01glPdJT0olWTIFsgs6Nd5Izg9mZGF06Vvps1pgzYVo98V6nA6vUELaH3DBkov
+        Gmx9CF+RWxATHqpilI7ugaIQ03wCFlVqfTtJp0ESwLilGggJSLrArymzqBqICAlZCaCuXY/z
+        ZAnA38ud22QRwOHVAnSnUjSkQ3ijAsDlmSJkt5LXUgW4FEY6Q/WsGuOwFSmDZeXDGBdCyFYE
+        vl2Z2zIsSR+Yv7yOcxglD8PSRzNbupg8C6fSCwE/Zwdf6tsRDgtJdziVUAy4gyCpxWHNeI05
+        H/KEDxYGER5bwhljA87jA7AvKw3lC0kAjvVX4zxJA9CUmLs94Qo7jYMCNSA273cM1rY48rIH
+        rEhNxTkZknvgl9m9nIxswsymZwgvi2FKsoRPH4F5xprd2fefhrYjNOzVHOJkCfl08xmfUBnA
+        Lu//VDEAWmDNxLCKYIY9FcHEOrByBRsTEexwI1JhAJt/p2/D+OcVaFu73gFIAkgtxB96vf0l
+        ArmKjVN0AEggUivxqMrLXyIOksfdYZSRAcqYcIbtAPsJVGotjjf77ichg+XRTBjDRDHKHdec
+        ENokgKrAsueabF+DqrX3Zo+Z24+x6e5LUuygd6ZfQMzFu4Wj1P2cMFc2cEKzZn+rZOmKbf3V
+        +MZmr3mhp+joar7o/MnmjfrYwZzsz7KMoHOr62fuySzwVhRtnPHrypJfe1xQGfLzgqVCOfrR
+        MXJh8PhQbWri6cm6fU6TYUN/PeKnfl1GpSgbIne2R5Ss/B++aANSNwMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpjkeLIzCtJLcpLzFFi42I5/e/4Xd3Id96xBou22FhsnLGe1eJY2xN2
+        i+bF69kslv69x2hx/vwGdovLu+awWcw4v4/JYtGyVmaLdRtvsVusPXKX3eLYopMsFs2bprA6
+        8HjsnHWX3ePphMnsHov3vGTy2LSqk81j/9w17B59W1YxemzY8o/F4/MmuQCOKD2bovzSklSF
+        jPziElulaEMLIz1DSws9IxNLPUNj81grI1MlfTublNSczLLUIn27BL2My+8b2AoWi1c0r1nI
+        3MD4WLiLkZNDQsBEYt6lNcxdjFwcQgJLGSV2XL/IApGQkTg5rYEVwhaW+HOtiw2i6BOjRMPX
+        84wgCTYBQ4mutyAJTg4RASeJzrWnwYqYBQ4yS1y8uJcdJCEs4Cdx7tlnsAYWAVWJxd2vwBp4
+        BWwlXvTNZYTYIC+xesMBZhCbU8BO4kXDArC4EFDN731tLBMY+RYwMqxiFEktLc5Nzy021CtO
+        zC0uzUvXS87P3cQIjINtx35u3sF4aWPwIUYBDkYlHt6CE96xQqyJZcWVuYcYJTiYlUR475V5
+        xgrxpiRWVqUW5ccXleakFh9iNAU6aiKzlGhyPjBG80riDU0NzS0sDc2NzY3NLJTEeTsEDsYI
+        CaQnlqRmp6YWpBbB9DFxcEo1ME59GjphlexLYd6G1lUcXnp7bvU4b9HW9DD7/UzzAdfiJRO4
+        GfdMadjT0y8qe+pidkk/f8G14x91C7oUQ/ddPnJ9bZABa+CUgmhPZYHEA4Xm+1xsFvw70b+7
+        L753UqWswdKaaW5rt0dOWeV6cYKFTjfHHeXpqcXT0kU9/pZddP6y/Xio1vWnS5RYijMSDbWY
+        i4oTATajDFCZAgAA
+X-CMS-MailID: 20190808094146eucas1p2a5a88ce5e7a87d47c4bcececab4df9a5
+X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-Content-ID: <68E7D2C351D66940A2DE53144A771ACE@st.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-08_05:,,
- signatures=0
+X-RootMTR: 20190808094146eucas1p2a5a88ce5e7a87d47c4bcececab4df9a5
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190808094146eucas1p2a5a88ce5e7a87d47c4bcececab4df9a5
+References: <20190808094128.27213-1-m.szyprowski@samsung.com>
+        <CGME20190808094146eucas1p2a5a88ce5e7a87d47c4bcececab4df9a5@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgSGFucywNCg0KWW91J3JlIHdlbGNvbWUsIGhlcmUgaXQgaXM6DQoNCjEpIHY0bC11dGlscyBt
-YXN0ZXIgYnJhbmNoLCBjb21taXQgDQo2YWExNWY3NDQ3ZDRhZWNhNmFmMWVkN2VlOTY0NGEwYzdl
-ODkxZWNlICJ2NGwyLWN0bDogZml4IGRvdWJsZSANCmRlY3JlbWVudGluZyBvZiBzdHJlYW1fY291
-bnQiDQoNCjIpIENyb3BwaW5nIHRlc3QgaXMgZmFpbGVkIGFzIHVzdWFsIGJlY2F1c2Ugb2YgT1Y1
-NjQwIGRpc2NyZXRlIGZyYW1lc2l6ZXMNCg0KMykgTm8gbW9yZSAvZGV2L21lZGlhKiBhbmQgL2Rl
-di92NGwtKjoNCnJvb3RAc3RtMzJtcDEtYXY5Njp+IyBscyAtYWwgL2Rldi92aWRlbzANCmNydy1y
-dy0tLS0gMSByb290IHZpZGVvIDgxLCAwIE1hciAxOSAxNzo0MiAvZGV2L3ZpZGVvMA0Kcm9vdEBz
-dG0zMm1wMS1hdjk2On4jIGxzIC1hbCAvZGV2L21lZGlhKg0KbHM6IGNhbm5vdCBhY2Nlc3MgJy9k
-ZXYvbWVkaWEqJzogTm8gc3VjaCBmaWxlIG9yIGRpcmVjdG9yeQ0Kcm9vdEBzdG0zMm1wMS1hdjk2
-On4jIGxzIC1hbCAvZGV2L3Y0bC0qDQpsczogY2Fubm90IGFjY2VzcyAnL2Rldi92NGwtKic6IE5v
-IHN1Y2ggZmlsZSBvciBkaXJlY3RvcnkNCg0KDQpyb290QHN0bTMybXAxLWF2OTY6fiMgdjRsMi1j
-b21wbGlhbmNlIC1zDQp2NGwyLWNvbXBsaWFuY2UgU0hBOiA2YWExNWY3NDQ3ZDRhZWNhNmFmMWVk
-N2VlOTY0NGEwYzdlODkxZWNlLCAzMiBiaXRzDQoNCkNvbXBsaWFuY2UgdGVzdCBmb3Igc3RtMzIt
-ZGNtaSBkZXZpY2UgL2Rldi92aWRlbzA6DQoNCkRyaXZlciBJbmZvOg0KICAgICAgICAgRHJpdmVy
-IG5hbWUgICAgICA6IHN0bTMyLWRjbWkNCiAgICAgICAgIENhcmQgdHlwZSAgICAgICAgOiBTVE0z
-MiBDYW1lcmEgTWVtb3J5IEludGVyZmFjZQ0KICAgICAgICAgQnVzIGluZm8gICAgICAgICA6IHBs
-YXRmb3JtOmRjbWkNCiAgICAgICAgIERyaXZlciB2ZXJzaW9uICAgOiA0LjE5LjQ5DQogICAgICAg
-ICBDYXBhYmlsaXRpZXMgICAgIDogMHg4NTIwMDAwMQ0KICAgICAgICAgICAgICAgICBWaWRlbyBD
-YXB0dXJlDQogICAgICAgICAgICAgICAgIFJlYWQvV3JpdGUNCiAgICAgICAgICAgICAgICAgU3Ry
-ZWFtaW5nDQogICAgICAgICAgICAgICAgIEV4dGVuZGVkIFBpeCBGb3JtYXQNCiAgICAgICAgICAg
-ICAgICAgRGV2aWNlIENhcGFiaWxpdGllcw0KICAgICAgICAgRGV2aWNlIENhcHMgICAgICA6IDB4
-MDUyMDAwMDENCiAgICAgICAgICAgICAgICAgVmlkZW8gQ2FwdHVyZQ0KICAgICAgICAgICAgICAg
-ICBSZWFkL1dyaXRlDQogICAgICAgICAgICAgICAgIFN0cmVhbWluZw0KICAgICAgICAgICAgICAg
-ICBFeHRlbmRlZCBQaXggRm9ybWF0DQoNClJlcXVpcmVkIGlvY3RsczoNCiAgICAgICAgIHRlc3Qg
-VklESU9DX1FVRVJZQ0FQOiBPSw0KDQpBbGxvdyBmb3IgbXVsdGlwbGUgb3BlbnM6DQogICAgICAg
-ICB0ZXN0IHNlY29uZCAvZGV2L3ZpZGVvMCBvcGVuOiBPSw0KICAgICAgICAgdGVzdCBWSURJT0Nf
-UVVFUllDQVA6IE9LDQogICAgICAgICB0ZXN0IFZJRElPQ19HL1NfUFJJT1JJVFk6IE9LDQogICAg
-ICAgICB0ZXN0IGZvciB1bmxpbWl0ZWQgb3BlbnM6IE9LDQoNCkRlYnVnIGlvY3RsczoNCiAgICAg
-ICAgIHRlc3QgVklESU9DX0RCR19HL1NfUkVHSVNURVI6IE9LIChOb3QgU3VwcG9ydGVkKQ0KICAg
-ICAgICAgdGVzdCBWSURJT0NfTE9HX1NUQVRVUzogT0sNCg0KSW5wdXQgaW9jdGxzOg0KICAgICAg
-ICAgdGVzdCBWSURJT0NfRy9TX1RVTkVSL0VOVU1fRlJFUV9CQU5EUzogT0sgKE5vdCBTdXBwb3J0
-ZWQpDQogICAgICAgICB0ZXN0IFZJRElPQ19HL1NfRlJFUVVFTkNZOiBPSyAoTm90IFN1cHBvcnRl
-ZCkNCiAgICAgICAgIHRlc3QgVklESU9DX1NfSFdfRlJFUV9TRUVLOiBPSyAoTm90IFN1cHBvcnRl
-ZCkNCiAgICAgICAgIHRlc3QgVklESU9DX0VOVU1BVURJTzogT0sgKE5vdCBTdXBwb3J0ZWQpDQog
-ICAgICAgICB0ZXN0IFZJRElPQ19HL1MvRU5VTUlOUFVUOiBPSw0KICAgICAgICAgdGVzdCBWSURJ
-T0NfRy9TX0FVRElPOiBPSyAoTm90IFN1cHBvcnRlZCkNCiAgICAgICAgIElucHV0czogMSBBdWRp
-byBJbnB1dHM6IDAgVHVuZXJzOiAwDQoNCk91dHB1dCBpb2N0bHM6DQogICAgICAgICB0ZXN0IFZJ
-RElPQ19HL1NfTU9EVUxBVE9SOiBPSyAoTm90IFN1cHBvcnRlZCkNCiAgICAgICAgIHRlc3QgVklE
-SU9DX0cvU19GUkVRVUVOQ1k6IE9LIChOb3QgU3VwcG9ydGVkKQ0KICAgICAgICAgdGVzdCBWSURJ
-T0NfRU5VTUFVRE9VVDogT0sgKE5vdCBTdXBwb3J0ZWQpDQogICAgICAgICB0ZXN0IFZJRElPQ19H
-L1MvRU5VTU9VVFBVVDogT0sgKE5vdCBTdXBwb3J0ZWQpDQogICAgICAgICB0ZXN0IFZJRElPQ19H
-L1NfQVVET1VUOiBPSyAoTm90IFN1cHBvcnRlZCkNCiAgICAgICAgIE91dHB1dHM6IDAgQXVkaW8g
-T3V0cHV0czogMCBNb2R1bGF0b3JzOiAwDQoNCklucHV0L091dHB1dCBjb25maWd1cmF0aW9uIGlv
-Y3RsczoNCiAgICAgICAgIHRlc3QgVklESU9DX0VOVU0vRy9TL1FVRVJZX1NURDogT0sgKE5vdCBT
-dXBwb3J0ZWQpDQogICAgICAgICB0ZXN0IFZJRElPQ19FTlVNL0cvUy9RVUVSWV9EVl9USU1JTkdT
-OiBPSyAoTm90IFN1cHBvcnRlZCkNCiAgICAgICAgIHRlc3QgVklESU9DX0RWX1RJTUlOR1NfQ0FQ
-OiBPSyAoTm90IFN1cHBvcnRlZCkNCiAgICAgICAgIHRlc3QgVklESU9DX0cvU19FRElEOiBPSyAo
-Tm90IFN1cHBvcnRlZCkNCg0KQ29udHJvbCBpb2N0bHMgKElucHV0IDApOg0KICAgICAgICAgdGVz
-dCBWSURJT0NfUVVFUllfRVhUX0NUUkwvUVVFUllNRU5VOiBPSw0KICAgICAgICAgdGVzdCBWSURJ
-T0NfUVVFUllDVFJMOiBPSw0KICAgICAgICAgdGVzdCBWSURJT0NfRy9TX0NUUkw6IE9LDQogICAg
-ICAgICB0ZXN0IFZJRElPQ19HL1MvVFJZX0VYVF9DVFJMUzogT0sNCiAgICAgICAgIHRlc3QgVklE
-SU9DXyhVTilTVUJTQ1JJQkVfRVZFTlQvRFFFVkVOVDogT0sNCiAgICAgICAgIHRlc3QgVklESU9D
-X0cvU19KUEVHQ09NUDogT0sgKE5vdCBTdXBwb3J0ZWQpDQogICAgICAgICBTdGFuZGFyZCBDb250
-cm9sczogMTggUHJpdmF0ZSBDb250cm9sczogMA0KDQpGb3JtYXQgaW9jdGxzIChJbnB1dCAwKToN
-CiAgICAgICAgIHRlc3QgVklESU9DX0VOVU1fRk1UL0ZSQU1FU0laRVMvRlJBTUVJTlRFUlZBTFM6
-IE9LDQogICAgICAgICB0ZXN0IFZJRElPQ19HL1NfUEFSTTogT0sNCiAgICAgICAgIHRlc3QgVklE
-SU9DX0dfRkJVRjogT0sgKE5vdCBTdXBwb3J0ZWQpDQogICAgICAgICB0ZXN0IFZJRElPQ19HX0ZN
-VDogT0sNCiAgICAgICAgIHRlc3QgVklESU9DX1RSWV9GTVQ6IE9LDQogICAgICAgICB0ZXN0IFZJ
-RElPQ19TX0ZNVDogT0sNCiAgICAgICAgIHRlc3QgVklESU9DX0dfU0xJQ0VEX1ZCSV9DQVA6IE9L
-IChOb3QgU3VwcG9ydGVkKQ0KICAgICAgICAgICAgICAgICBmYWlsOiANCi4uLy4uLy4uLy4uLy4u
-Ly4uLy4uLy4uLy4uL3NvdXJjZXMvdjRsLXV0aWxzL3V0aWxzL3Y0bDItY29tcGxpYW5jZS92NGwy
-LXRlc3QtZm9ybWF0cy5jcHAoMTQxNCk6IA0Kbm9kZS0+ZnJtc2l6ZXNfY291bnRbcGl4Zm0NCnRd
-ID4gMQ0KICAgICAgICAgdGVzdCBDcm9wcGluZzogRkFJTA0KICAgICAgICAgdGVzdCBDb21wb3Np
-bmc6IE9LIChOb3QgU3VwcG9ydGVkKQ0KICAgICAgICAgdGVzdCBTY2FsaW5nOiBPSyAoTm90IFN1
-cHBvcnRlZCkNCg0KQ29kZWMgaW9jdGxzIChJbnB1dCAwKToNCiAgICAgICAgIHRlc3QgVklESU9D
-XyhUUllfKUVOQ09ERVJfQ01EOiBPSyAoTm90IFN1cHBvcnRlZCkNCiAgICAgICAgIHRlc3QgVklE
-SU9DX0dfRU5DX0lOREVYOiBPSyAoTm90IFN1cHBvcnRlZCkNCiAgICAgICAgIHRlc3QgVklESU9D
-XyhUUllfKURFQ09ERVJfQ01EOiBPSyAoTm90IFN1cHBvcnRlZCkNCg0KQnVmZmVyIGlvY3RscyAo
-SW5wdXQgMCk6DQogICAgICAgICB0ZXN0IFZJRElPQ19SRVFCVUZTL0NSRUFURV9CVUZTL1FVRVJZ
-QlVGOiBPSw0KICAgICAgICAgdGVzdCBWSURJT0NfRVhQQlVGOiBPSw0KICAgICAgICAgdGVzdCBS
-ZXF1ZXN0czogT0sgKE5vdCBTdXBwb3J0ZWQpDQoNClRlc3QgaW5wdXQgMDoNCg0KU3RyZWFtaW5n
-IGlvY3RsczoNCiAgICAgICAgIHRlc3QgcmVhZC93cml0ZTogT0sNCiAgICAgICAgIHRlc3QgYmxv
-Y2tpbmcgd2FpdDogT0sNCiAgICAgICAgIHRlc3QgTU1BUCAobm8gcG9sbCk6IE9LDQogICAgICAg
-ICB0ZXN0IE1NQVAgKHNlbGVjdCk6IE9LDQogICAgICAgICB0ZXN0IE1NQVAgKGVwb2xsKTogT0sN
-CiAgICAgICAgIHRlc3QgVVNFUlBUUiAobm8gcG9sbCk6IE9LIChOb3QgU3VwcG9ydGVkKQ0KICAg
-ICAgICAgdGVzdCBVU0VSUFRSIChzZWxlY3QpOiBPSyAoTm90IFN1cHBvcnRlZCkNCiAgICAgICAg
-IHRlc3QgRE1BQlVGOiBDYW5ub3QgdGVzdCwgc3BlY2lmeSAtLWV4cGJ1Zi1kZXZpY2UNCg0KVG90
-YWwgZm9yIHN0bTMyLWRjbWkgZGV2aWNlIC9kZXYvdmlkZW8wOiA1MSwgU3VjY2VlZGVkOiA1MCwg
-RmFpbGVkOiAxLCANCldhcm5pbmdzOiAwDQoNCg0KT24gOC83LzE5IDEyOjE1IFBNLCBIYW5zIFZl
-cmt1aWwgd3JvdGU6DQo+IEhpIEh1Z3VlcywNCj4gDQo+IENhbiB5b3UgcHJvdmlkZSB0aGUgb3V0
-cHV0IG9mIHRoZSBtb3N0IHJlY2VudCB2NGwyLWNvbXBsaWFuY2U/DQo+IA0KPiBVc2UgJ3Y0bDIt
-Y29tcGxpYW5jZSAtcycuDQo+IA0KPiBBbHNvLCBqdXN0IHRvIGNvbmZpcm0sIHdpdGggdGhpcyB2
-NCB0aGVyZSBhcmUgbm8gL2Rldi9tZWRpYVggb3INCj4gL2Rldi92NGwtc3ViZGV2WCBkZXZpY2Vz
-IGNyZWF0ZWQgYW55bW9yZSwgcmlnaHQ/DQo+IA0KPiBUaGlzIHY0IGxvb2tzIGdvb2QgdG8gbWUs
-IEkganVzdCB3YW50IHRvIGhhdmUgdGhlc2UgZmluYWwgY2hlY2tzDQo+IGRvbmUuDQo+IA0KPiBS
-ZWdhcmRzLA0KPiANCj4gCUhhbnMNCj4gDQoNCkJlc3QgcmVnYXJkcywNCkh1Z3Vlcy4=
+Some PHYs (for example Exynos5 USB3.0 DRD PHY) require calibration to be
+done after every USB HCD reset. Generic PHY framework has been already
+extended with phy_calibrate() function in commit 36914111e682 ("drivers:
+phy: add calibrate method"). This patch adds support for it to generic
+PHY handling code in USB HCD core.
+
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Tested-by: Anand Moon <linux.amoon@gmail.com>
+Tested-by: Jochen Sprickerhof <jochen@sprickerhof.de>
+---
+ drivers/usb/core/hcd.c |  7 +++++++
+ drivers/usb/core/phy.c | 21 +++++++++++++++++++++
+ drivers/usb/core/phy.h |  1 +
+ 3 files changed, 29 insertions(+)
+
+diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
+index 88533938ce19..b89936c1df23 100644
+--- a/drivers/usb/core/hcd.c
++++ b/drivers/usb/core/hcd.c
+@@ -2291,6 +2291,9 @@ int hcd_bus_resume(struct usb_device *rhdev, pm_message_t msg)
+ 	hcd->state = HC_STATE_RESUMING;
+ 	status = hcd->driver->bus_resume(hcd);
+ 	clear_bit(HCD_FLAG_WAKEUP_PENDING, &hcd->flags);
++	if (status == 0)
++		status = usb_phy_roothub_calibrate(hcd->phy_roothub);
++
+ 	if (status == 0) {
+ 		struct usb_device *udev;
+ 		int port1;
+@@ -2864,6 +2867,10 @@ int usb_add_hcd(struct usb_hcd *hcd,
+ 	}
+ 	hcd->rh_pollable = 1;
+ 
++	retval = usb_phy_roothub_calibrate(hcd->phy_roothub);
++	if (retval)
++		goto err_hcd_driver_setup;
++
+ 	/* NOTE: root hub and controller capabilities may not be the same */
+ 	if (device_can_wakeup(hcd->self.controller)
+ 			&& device_can_wakeup(&hcd->self.root_hub->dev))
+diff --git a/drivers/usb/core/phy.c b/drivers/usb/core/phy.c
+index 7580493b867a..fb1588e7c282 100644
+--- a/drivers/usb/core/phy.c
++++ b/drivers/usb/core/phy.c
+@@ -151,6 +151,27 @@ int usb_phy_roothub_set_mode(struct usb_phy_roothub *phy_roothub,
+ }
+ EXPORT_SYMBOL_GPL(usb_phy_roothub_set_mode);
+ 
++int usb_phy_roothub_calibrate(struct usb_phy_roothub *phy_roothub)
++{
++	struct usb_phy_roothub *roothub_entry;
++	struct list_head *head;
++	int err;
++
++	if (!phy_roothub)
++		return 0;
++
++	head = &phy_roothub->list;
++
++	list_for_each_entry(roothub_entry, head, list) {
++		err = phy_calibrate(roothub_entry->phy);
++		if (err)
++			return err;
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(usb_phy_roothub_calibrate);
++
+ int usb_phy_roothub_power_on(struct usb_phy_roothub *phy_roothub)
+ {
+ 	struct usb_phy_roothub *roothub_entry;
+diff --git a/drivers/usb/core/phy.h b/drivers/usb/core/phy.h
+index dad564e2d2d4..20a267cd986b 100644
+--- a/drivers/usb/core/phy.h
++++ b/drivers/usb/core/phy.h
+@@ -18,6 +18,7 @@ int usb_phy_roothub_exit(struct usb_phy_roothub *phy_roothub);
+ 
+ int usb_phy_roothub_set_mode(struct usb_phy_roothub *phy_roothub,
+ 			     enum phy_mode mode);
++int usb_phy_roothub_calibrate(struct usb_phy_roothub *phy_roothub);
+ int usb_phy_roothub_power_on(struct usb_phy_roothub *phy_roothub);
+ void usb_phy_roothub_power_off(struct usb_phy_roothub *phy_roothub);
+ 
+-- 
+2.17.1
+
