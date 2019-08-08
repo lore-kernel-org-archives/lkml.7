@@ -2,145 +2,155 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7CA8C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:10:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 641D6C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:11:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FFAA2186A
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:10:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CD5F21873
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:11:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EddoiczG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730984AbfHHGKt (ORCPT
+        id S1731019AbfHHGLr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 02:10:49 -0400
-Received: from mga02.intel.com ([134.134.136.20]:20028 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725817AbfHHGKt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 02:10:49 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Aug 2019 23:10:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,360,1559545200"; 
-   d="scan'208";a="186248110"
-Received: from sneftin-mobl1.ger.corp.intel.com (HELO [10.185.23.132]) ([10.185.23.132])
-  by orsmga002.jf.intel.com with ESMTP; 07 Aug 2019 23:10:43 -0700
-Subject: Re: [Intel-wired-lan] MDI errors during resume from ACPI S3 (suspend
- to ram)
-To:     Paul Menzel <pmenzel@molgen.mpg.de>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Cc:     Mario Limonciello <mario.limonciello@dell.com>,
-        intel-wired-lan@lists.osuosl.org, linux-kernel@vger.kernel.org
-References: <81004059-6d91-d8be-c80e-70c52359350d@molgen.mpg.de>
- <2277f25bc44c4aebaac59942de2e24bb@AUSX13MPC105.AMER.DELL.COM>
- <d0aaa0f8-b94c-be65-7a4e-f5592aa65647@intel.com>
- <47977dc7-d53a-427c-bbaa-9c665287cb47@molgen.mpg.de>
-From:   "Neftin, Sasha" <sasha.neftin@intel.com>
-Message-ID: <ac9ed79f-2789-4dde-6826-9227bd3113ec@intel.com>
-Date:   Thu, 8 Aug 2019 09:10:43 +0300
+        Thu, 8 Aug 2019 02:11:47 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35756 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726475AbfHHGLr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 02:11:47 -0400
+Received: by mail-wm1-f66.google.com with SMTP id l2so1151494wmg.0;
+        Wed, 07 Aug 2019 23:11:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=mMFe6N5rGAQL4xugeXf4jUCNrDrEI+HfMzmjEgPHykI=;
+        b=EddoiczG0iEDxUrnZLmFmAqNUTIAcKmvU1h79i/77dDoNiShA1mWQ6EQ5Xkqr+wJsu
+         gTBhutzRW+eKJMaJ9Jr3zDluF4xkAJQVA31ZY2jqSkIpobAV6lWikvowheyJwe2rc3fP
+         BJiNDd0/M8RwqlE+Z+/RXa5vUqR1D1e1PzjdK4/qMyhEZZSumHDubiZJhZMlvslFYPXt
+         b6gl5BP1Hy6mJ/wMxSzrjdQUTuNm3tj+jKSVAny582eC+DeD5W9dnVj7/vTc6hydXYjO
+         FbXnynw5E4LGkICuX+phbOdBTg/yEE/ZsG9SOvj/fAAkcJR4gHkc4seNhFuUBXcVHi20
+         80fQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=mMFe6N5rGAQL4xugeXf4jUCNrDrEI+HfMzmjEgPHykI=;
+        b=XoGjFWpZvl2dkhayYT+e9uJIMQN6SmIoaYaLO5/gyf7Ptrsdn/Ph73KVywpKzEW7Tf
+         5uIL+mgrrdPTJqrSBJZZqfsP01OOcuR82sgWG3rcOEEU2WHOfYS1/cbDJHDJQdcskxKl
+         LlJD5ySyeCddnKl0ZN/1PImot5WRP137fCV3sg0o8tIfL+sKJXS2IIbBzb0t87waSScD
+         /5ARzapN35rlNAga3vxRbNg95OhXprZIyvMtxk7vco1BKsw3FxRgAQPlBDt6J85Ly9YL
+         9uxEGZkUF7ViXP/xANVpUsfdCqLXVh4waofTlOKv9vHB3f4oWVrioiKW/O4npzKHMSKR
+         9nPg==
+X-Gm-Message-State: APjAAAXO9zy4DrWTsHvv4xDsdF4ZVqHMZHkzf3837nfUmUftYd4VAdVp
+        R7UZAXX7i2sl+G1nHbU78ZIPQmN3
+X-Google-Smtp-Source: APXvYqyIoZr6LyMXbISicANkZCBY6Cts5JbF7pVB+ooQLCrXp3GC7DZv9SZsT/o+TOM8UmbrkTebPA==
+X-Received: by 2002:a1c:c747:: with SMTP id x68mr2155419wmf.138.1565244704272;
+        Wed, 07 Aug 2019 23:11:44 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f2f:3200:b0d6:7b82:d784:3855? (p200300EA8F2F3200B0D67B82D7843855.dip0.t-ipconnect.de. [2003:ea:8f2f:3200:b0d6:7b82:d784:3855])
+        by smtp.googlemail.com with ESMTPSA id 66sm13484231wrc.83.2019.08.07.23.11.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Aug 2019 23:11:43 -0700 (PDT)
+Subject: Re: [PATCH net] net: phy: rtl8211f: do a double read to get real time
+ link status
+To:     Yonglong Liu <liuyonglong@huawei.com>, davem@davemloft.net,
+        andrew@lunn.ch
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxarm@huawei.com, salil.mehta@huawei.com,
+        yisen.zhuang@huawei.com, shiju.jose@huawei.com
+References: <1565183772-44268-1-git-send-email-liuyonglong@huawei.com>
+ <d67831ab-8902-a653-3db9-b2f55adacabd@gmail.com>
+ <e663235c-93eb-702d-5a9c-8f781d631c42@huawei.com>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <080b68c7-abe6-d142-da4b-26e8a7d4dc19@gmail.com>
+Date:   Thu, 8 Aug 2019 08:11:33 +0200
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <47977dc7-d53a-427c-bbaa-9c665287cb47@molgen.mpg.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <e663235c-93eb-702d-5a9c-8f781d631c42@huawei.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/7/2019 17:55, Paul Menzel wrote:
-> 
-> Dear Sasha,
+On 08.08.2019 03:15, Yonglong Liu wrote:
 > 
 > 
-> On 07.08.19 09:23, Neftin, Sasha wrote:
->> On 8/6/2019 18:53, Mario.Limonciello@dell.com wrote:
->>>> -----Original Message-----
->>>> From: Paul Menzel <pmenzel@molgen.mpg.de>
->>>> Sent: Tuesday, August 6, 2019 10:36 AM
->>>> To: Jeff Kirsher
->>>> Cc: intel-wired-lan@lists.osuosl.org; Linux Kernel Mailing List; Limonciello, Mario
->>>> Subject: MDI errors during resume from ACPI S3 (suspend to ram)
->>>>
->>>> Dear Linux folks,
->>>>
->>>>
->>>> Trying to decrease the resume time of Linux 5.3-rc3 on the Dell OptiPlex
->>>> 5040 with the device below
->>>>
->>>>       $ lspci -nn -s 00:1f.6
->>>>       00:1f.6 Ethernet controller [0200]: Intel Corporation Ethernet Connection (2)
->>>> I219-V [8086:15b8] (rev 31)
->>>>
->>>> pm-graph’s script `sleepgraph.py` shows, that the driver *e1000e* takes
->>>> around 400 ms, which is quite a lot. The call graph trace shows that
->>>> `e1000e_read_phy_reg_mdic()` is responsible for a lot of those. From
->>>> `drivers/net/ethernet/intel/e1000e/phy.c` [1]:
->>>>
->>>>           for (i = 0; i < (E1000_GEN_POLL_TIMEOUT * 3); i++) {
->>>>                   udelay(50);
->>>>                   mdic = er32(MDIC);
->>>>                   if (mdic & E1000_MDIC_READY)
->>>>                           break;
->>>>           }
->>>>           if (!(mdic & E1000_MDIC_READY)) {
->>>>                   e_dbg("MDI Read did not complete\n");
->>>>                   return -E1000_ERR_PHY;
->>>>           }
->>>>           if (mdic & E1000_MDIC_ERROR) {
->>>>                   e_dbg("MDI Error\n");
->>>>                   return -E1000_ERR_PHY;
->>>>           }
->>>>
->>>> Unfortunately, errors are not logged if dynamic debug is disabled,
->>>> so rebuilding the Linux kernel with `CONFIG_DYNAMIC_DEBUG`, and
->>>>
->>>>       echo "file drivers/net/ethernet/* +p" | sudo tee
->>>> /sys/kernel/debug/dynamic_debug/control
->>>>
->>>> I got the messages below.
->>>>
->>>>       [ 4159.204192] e1000e 0000:00:1f.6 net00: MDI Error
->>>>       [ 4160.267950] e1000e 0000:00:1f.6 net00: MDI Write did not complete
->>>>       [ 4160.359855] e1000e 0000:00:1f.6 net00: MDI Error
->>>>
->>>> Can you please shed a little more light into these errors? Please
->>>> find the full log attached.
-> 
->>>> [1]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/net/ethernet/intel/e1000e/phy.c#n206
+> On 2019/8/8 0:47, Heiner Kallweit wrote:
+>> On 07.08.2019 15:16, Yonglong Liu wrote:
+>>> [   27.232781] hns3 0000:bd:00.3 eth7: net open
+>>> [   27.237303] 8021q: adding VLAN 0 to HW filter on device eth7
+>>> [   27.242972] IPv6: ADDRCONF(NETDEV_CHANGE): eth7: link becomes ready
+>>> [   27.244449] hns3 0000:bd:00.3: invalid speed (-1)
+>>> [   27.253904] hns3 0000:bd:00.3 eth7: failed to adjust link.
+>>> [   27.259379] RTL8211F Gigabit Ethernet mii-0000:bd:00.3:07: PHY state change UP -> RUNNING
+>>> [   27.924903] hns3 0000:bd:00.3 eth7: link up
+>>> [   28.280479] RTL8211F Gigabit Ethernet mii-0000:bd:00.3:07: PHY state change RUNNING -> NOLINK
+>>> [   29.208452] hns3 0000:bd:00.3 eth7: link down
+>>> [   32.376745] RTL8211F Gigabit Ethernet mii-0000:bd:00.3:07: PHY state change NOLINK -> RUNNING
+>>> [   33.208448] hns3 0000:bd:00.3 eth7: link up
+>>> [   35.253821] hns3 0000:bd:00.3 eth7: net stop
+>>> [   35.258270] hns3 0000:bd:00.3 eth7: link down
 >>>
->>> Strictly as a reference point you may consider trying the out-of-tree driver to see if these
->>> behaviors persist.
+>>> When using rtl8211f in polling mode, may get a invalid speed,
+>>> because of reading a fake link up and autoneg complete status
+>>> immediately after starting autoneg:
 >>>
->>> https://sourceforge.net/projects/e1000/
+>>>         ifconfig-1176  [007] ....    27.232763: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x00 val:0x1040
+>>>   kworker/u257:1-670   [015] ....    27.232805: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x04 val:0x01e1
+>>>   kworker/u257:1-670   [015] ....    27.232815: mdio_access: mii-0000:bd:00.3 write phy:0x07 reg:0x04 val:0x05e1
+>>>   kworker/u257:1-670   [015] ....    27.232869: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x01 val:0x79ad
+>>>   kworker/u257:1-670   [015] ....    27.232904: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x09 val:0x0200
+>>>   kworker/u257:1-670   [015] ....    27.232940: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x00 val:0x1040
+>>>   kworker/u257:1-670   [015] ....    27.232949: mdio_access: mii-0000:bd:00.3 write phy:0x07 reg:0x00 val:0x1240
+>>>   kworker/u257:1-670   [015] ....    27.233003: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x01 val:0x79ad
+>>>   kworker/u257:1-670   [015] ....    27.233039: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x0a val:0x3002
+>>>   kworker/u257:1-670   [015] ....    27.233074: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x09 val:0x0200
+>>>   kworker/u257:1-670   [015] ....    27.233110: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x05 val:0x0000
+>>>   kworker/u257:1-670   [000] ....    28.280475: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x01 val:0x7989
+>>>   kworker/u257:1-670   [000] ....    29.304471: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x01 val:0x7989
+>>>
+>>> According to the datasheet of rtl8211f, to get the real time
+>>> link status, need to read MII_BMSR twice.
+>>>
+>>> This patch add a read_status hook for rtl8211f, and do a fake
+>>> phy_read before genphy_read_status(), so that can get real link
+>>> status in genphy_read_status().
+>>>
+>>> Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+>>> ---
+>>>  drivers/net/phy/realtek.c | 13 +++++++++++++
+>>>  1 file changed, 13 insertions(+)
+>>>
+>> Is this an accidental resubmit? Because we discussed this in
+>> https://marc.info/?t=156413509900003&r=1&w=2 and a fix has
+>> been applied already.
+>>
+>> Heiner
+>>
+>> .
+>>
 > 
-> I can try that in the next days.
+> In https://marc.info/?t=156413509900003&r=1&w=2 , the invalid speed
+> recurrence rate is almost 100%, and I had test the solution about
+> 5 times and it works. But yesterday it happen again suddenly, and than
+> I fount that the recurrence rate reduce to 10%. This time we get 0x79ad
+> after autoneg started which is not 0x798d from last discussion.
 > 
->> We are using external PHY. Required ~200 ms to complete MDIC
->> transaction (depended on the project).
 > 
-> Are you referring to the out-of-tree driver?
 > 
-I believe the out of tree driver have a same approach to MDIC access.
->> You need to take to consider this time before access to the PHY. I do
->> not recommend decrease timer in a 'e1000e_read_phy_reg_mdic()'
->> method. We could hit on wrong MDI access.
-> My point was more, if you know that more time is needed, before the MDI
-> setting(?) will succeed, why try it anyway and go into the error paths?
-> Isn’t there some polling possible to find out, when MDI can be set up?
-> 
-e1000e is very old driver and serve pretty lot of 1G clients. Each 1Gbe 
-MAC/PHY controller have a different configuration depend platform.
-> 
-> Kind regards,
-> 
-> Paul
-> 
-Hello Paul,
-Let me back later with more information specific your device. I will try 
-find out more details with design team.
+OK, I'll have a look.
+However the approach is wrong. The double read is related to the latching
+of link-down events. This is done by all PHY's and not specific to RT8211F.
+Also it's not related to the problem. I assume any sufficient delay would
+do instead of the read.
