@@ -2,170 +2,118 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F227C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C212C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:54:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4300521874
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:53:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="iYR9wSCg"
+	by mail.kernel.org (Postfix) with ESMTP id E26A021883
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:54:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565294044;
+	bh=aHv2LDiaGN7dEQiNuFUXYzjr+42/lR/ICUScbvMgjZE=;
+	h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
+	 References:List-ID:From;
+	b=ojnvXk6FpYMEJafDrCt8rOo8gLj+lZ/ga7bGPHk2q5JEfT1f8V2ikocg9LPsLHIP0
+	 2R3DT87+L/YJYoosdUYZTF9kn7DHv+oNSBEzP+jpkK/aQuXz8P9PljthDwOrqqXEgZ
+	 hUOxkellRtGhSDgbrPMqQKMtFZm9zxl129K3FLQA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390280AbfHHTx5 (ORCPT
+        id S2404525AbfHHTxX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:53:57 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:43027 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404517AbfHHTxY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 15:53:24 -0400
-Received: by mail-ed1-f66.google.com with SMTP id e3so92195903edr.10
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 12:53:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=Hx4zFgtlrFg6qa3OGmZWiKmbcXh1MHkynmASC975EfY=;
-        b=iYR9wSCg65JI+uwVkvAiRQJUZALaPs/HlAH+vjKa0SMd0potj9JYU7FbPaB7nYiAmF
-         NU+5kx6mC1PW6k9TygrOuq5eSQWSugpe7Ge24Py8+EyyNaBeBH8MIw5rmXnIpFiLX1pb
-         3fWc+y+802/I7qnlMADscQ57kFFJWQylDP8fI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=Hx4zFgtlrFg6qa3OGmZWiKmbcXh1MHkynmASC975EfY=;
-        b=syFXq3NjD6FJLuZfEP3G4R98yuNcD5n/ZQJs6UB7uMcTGqttBJaYN4S6p49RhqePS3
-         sSyGScYxgz390qO91VtzUJDNE4f3i+Ay54O3/jJBn17vfZ8KN5cx/fOYs5sJI2iPm1yI
-         U6md0GoAKHW22xbYvk3HsXOAf3xX5kEwYSdtB5ja9jw0pak7FEHHlNDLFERVjeSyaNBs
-         RowCQ39LxhezET1p8mNHsn/oNak+7p5hPrgjuhBvmCFoNxuSfN0riW9I+QqC9tim+Yq1
-         JJmqTyH0RsqFBtawho9wm0N6wItTTAKwFxvrUhpnNSMlKlDTeF3QruDQROfI4rMmSy+3
-         plBg==
-X-Gm-Message-State: APjAAAX+bMrbJWa7W9qlTWAJPortE7sVNBJB2gp880X36Rz4n/r4/5Xr
-        7toIL8hTx9+KZsNXxkWz3Py2NY6iWy1yXA==
-X-Google-Smtp-Source: APXvYqy9QZDaIPMY+YwMctNImyD9+BfYQxSi2RrV91xgPr938CL3tw0iNxbTcYIiU2UFL2gp/bBVLA==
-X-Received: by 2002:a17:906:e2c2:: with SMTP id gr2mr15180216ejb.284.1565294002360;
-        Thu, 08 Aug 2019 12:53:22 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id u9sm22123540edm.71.2019.08.08.12.53.20
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 08 Aug 2019 12:53:21 -0700 (PDT)
-Date:   Thu, 8 Aug 2019 21:53:18 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     dri-devel@lists.freedesktop.org, Juston Li <juston.li@intel.com>,
-        Imre Deak <imre.deak@intel.com>,
-        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
-        <ville.syrjala@linux.intel.com>, Harry Wentland <hwentlan@amd.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/26] drm/dp_mst: Move link address dumping into a
- function
-Message-ID: <20190808195318.GQ7444@phenom.ffwll.local>
-Mail-Followup-To: Lyude Paul <lyude@redhat.com>,
-        dri-devel@lists.freedesktop.org, Juston Li <juston.li@intel.com>,
-        Imre Deak <imre.deak@intel.com>,
-        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>,
-        Harry Wentland <hwentlan@amd.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        linux-kernel@vger.kernel.org
-References: <20190718014329.8107-1-lyude@redhat.com>
- <20190718014329.8107-2-lyude@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190718014329.8107-2-lyude@redhat.com>
-X-Operating-System: Linux phenom 4.19.0-5-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 8 Aug 2019 15:53:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57980 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404353AbfHHTxQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 15:53:16 -0400
+Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5773A218B0;
+        Thu,  8 Aug 2019 19:53:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565293996;
+        bh=aHv2LDiaGN7dEQiNuFUXYzjr+42/lR/ICUScbvMgjZE=;
+        h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=qRwYvhYQnb7Je8j2HVjxJydJ5BQhQeewfuvHP64AfiIS4ALF3n3k+nAwR1TvP7UxO
+         hLwxo+fTyElm9vAQ8dzH68nls1ocxGI2bIbNaU5HA2vm7KGQ/cIahA2Ih4g4OnsdiQ
+         5z4kw5bZfv30m7KTQxIGAYmN8wEXl2wC2HGQWjic=
+From:   zanussi@kernel.org
+To:     LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Carsten Emde <C.Emde@osadl.org>,
+        John Kacur <jkacur@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Daniel Wagner <wagi@monom.org>,
+        Tom Zanussi <zanussi@kernel.org>,
+        Julia Cartwright <julia@ni.com>
+Subject: [PATCH RT 07/19] locking/lockdep: Don't complain about incorrect name for no validate class
+Date:   Thu,  8 Aug 2019 14:52:35 -0500
+Message-Id: <6a31ace7aff17a469ea5f390c8b2ae61695b7159.1565293934.git.zanussi@kernel.org>
+X-Mailer: git-send-email 2.14.1
+In-Reply-To: <cover.1565293934.git.zanussi@kernel.org>
+References: <cover.1565293934.git.zanussi@kernel.org>
+In-Reply-To: <cover.1565293934.git.zanussi@kernel.org>
+References: <cover.1565293934.git.zanussi@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 09:42:24PM -0400, Lyude Paul wrote:
-> Since we're about to be calling this from multiple places. Also it makes
-> things easier to read!
-> 
-> Cc: Juston Li <juston.li@intel.com>
-> Cc: Imre Deak <imre.deak@intel.com>
-> Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
-> Cc: Harry Wentland <hwentlan@amd.com>
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+v4.14.137-rt65-rc1 stable review patch.
+If anyone has any objections, please let me know.
 
-> ---
->  drivers/gpu/drm/drm_dp_mst_topology.c | 35 ++++++++++++++++++---------
->  1 file changed, 23 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-> index 0984b9a34d55..998081b9b205 100644
-> --- a/drivers/gpu/drm/drm_dp_mst_topology.c
-> +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-> @@ -2013,6 +2013,28 @@ static void drm_dp_queue_down_tx(struct drm_dp_mst_topology_mgr *mgr,
->  	mutex_unlock(&mgr->qlock);
->  }
->  
-> +static void
-> +drm_dp_dump_link_address(struct drm_dp_link_address_ack_reply *reply)
-> +{
-> +	struct drm_dp_link_addr_reply_port *port_reply;
-> +	int i;
-> +
-> +	for (i = 0; i < reply->nports; i++) {
-> +		port_reply = &reply->ports[i];
-> +		DRM_DEBUG_KMS("port %d: input %d, pdt: %d, pn: %d, dpcd_rev: %02x, mcs: %d, ddps: %d, ldps %d, sdp %d/%d\n",
-> +			      i,
-> +			      port_reply->input_port,
-> +			      port_reply->peer_device_type,
-> +			      port_reply->port_number,
-> +			      port_reply->dpcd_revision,
-> +			      port_reply->mcs,
-> +			      port_reply->ddps,
-> +			      port_reply->legacy_device_plug_status,
-> +			      port_reply->num_sdp_streams,
-> +			      port_reply->num_sdp_stream_sinks);
-> +	}
-> +}
-> +
->  static void drm_dp_send_link_address(struct drm_dp_mst_topology_mgr *mgr,
->  				     struct drm_dp_mst_branch *mstb)
->  {
-> @@ -2038,18 +2060,7 @@ static void drm_dp_send_link_address(struct drm_dp_mst_topology_mgr *mgr,
->  			DRM_DEBUG_KMS("link address nak received\n");
->  		} else {
->  			DRM_DEBUG_KMS("link address reply: %d\n", txmsg->reply.u.link_addr.nports);
-> -			for (i = 0; i < txmsg->reply.u.link_addr.nports; i++) {
-> -				DRM_DEBUG_KMS("port %d: input %d, pdt: %d, pn: %d, dpcd_rev: %02x, mcs: %d, ddps: %d, ldps %d, sdp %d/%d\n", i,
-> -				       txmsg->reply.u.link_addr.ports[i].input_port,
-> -				       txmsg->reply.u.link_addr.ports[i].peer_device_type,
-> -				       txmsg->reply.u.link_addr.ports[i].port_number,
-> -				       txmsg->reply.u.link_addr.ports[i].dpcd_revision,
-> -				       txmsg->reply.u.link_addr.ports[i].mcs,
-> -				       txmsg->reply.u.link_addr.ports[i].ddps,
-> -				       txmsg->reply.u.link_addr.ports[i].legacy_device_plug_status,
-> -				       txmsg->reply.u.link_addr.ports[i].num_sdp_streams,
-> -				       txmsg->reply.u.link_addr.ports[i].num_sdp_stream_sinks);
-> -			}
-> +			drm_dp_dump_link_address(&txmsg->reply.u.link_addr);
->  
->  			drm_dp_check_mstb_guid(mstb, txmsg->reply.u.link_addr.guid);
->  
-> -- 
-> 2.21.0
-> 
+-----------
 
+
+[ Upstream commit 978315462d3ea3cf6cfacd34c563ec1eb02a3aa5 ]
+
+It is possible to ignore the validation for a certain lock by using:
+
+	lockdep_set_novalidate_class()
+
+on it. Each invocation will assign a new name to the class it created
+for created __lockdep_no_validate__. That means that once
+lockdep_set_novalidate_class() has been used on two locks then
+class->name won't match lock->name for the first lock triggering the
+warning.
+
+So ignore changed non-matching ->name pointer for the special
+__lockdep_no_validate__ class.
+
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Will Deacon <will.deacon@arm.com>
+Link: http://lkml.kernel.org/r/20190517212234.32611-1-bigeasy@linutronix.de
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Tom Zanussi <zanussi@kernel.org>
+---
+ kernel/locking/lockdep.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index e576d234f3ea..f194de27123d 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -719,7 +719,8 @@ look_up_lock_class(struct lockdep_map *lock, unsigned int subclass)
+ 			 * Huh! same key, different name? Did someone trample
+ 			 * on some memory? We're most confused.
+ 			 */
+-			WARN_ON_ONCE(class->name != lock->name);
++			WARN_ON_ONCE(class->name != lock->name &&
++				     lock->key != &__lockdep_no_validate__);
+ 			return class;
+ 		}
+ 	}
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+2.14.1
+
