@@ -2,116 +2,135 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADDA9C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BA98C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:31:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A92F20679
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:27:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565292471;
-	bh=IA51LJFFQtc9CnnhayGgVXwqpo7oil08WWkmBaObzUE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bjnSLzOD3s6s91jChgCR1Fa+RL0PyTugS4vROvQxCt6HQgKbiJkWn17V+hoZzEb/r
-	 htTIFlbqHkFfnkOhbrwQKQJkEVUwIQ7vPxvGnRz45miT4f4PDeN20/E1aKxEOMxa9x
-	 DlsfFzECyrPmo/6pMHNEUg4QALs1qk/G3S8K8OzA=
+	by mail.kernel.org (Postfix) with ESMTP id D617B20679
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:31:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fqAtfhnq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390272AbfHHT1u (ORCPT
+        id S2389754AbfHHTb2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:27:50 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:60984 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728025AbfHHT1u (ORCPT
+        Thu, 8 Aug 2019 15:31:28 -0400
+Received: from mail-ua1-f73.google.com ([209.85.222.73]:45538 "EHLO
+        mail-ua1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725785AbfHHTb1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 15:27:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=loQXC1douT+pE3TmAqOFGF87K1GV3m/+5JMD18/HSF0=; b=LEu9JLllOYP8sy6yAvu08FPGc
-        Go/ojWDAqu+DptOthMkNG7BVmL/SloDqUb8BJ4haeFBUx2PNGzh/xulrr3SIF8uiETb6VcQwIwyEe
-        8OUGQcLy3oHIhwWseE1QRYt5Dl3u1NI63a9hjpt3Dm6TRYMj+6g/rQZd8r4FIixFbFb7c=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1hvo4e-0003oc-1Q; Thu, 08 Aug 2019 19:27:44 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 404BD2742B42; Thu,  8 Aug 2019 20:27:43 +0100 (BST)
-Date:   Thu, 8 Aug 2019 20:27:43 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Stefan Agner <stefan@agner.ch>
-Cc:     Takashi Iwai <tiwai@suse.de>, alsa-devel@alsa-project.org,
-        lgirdwood@gmail.com, perex@perex.cz,
-        Stefan Agner <stefan.agner@toradex.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ASoC: soc-core: remove error due to probe deferral
-Message-ID: <20190808192743.GL3795@sirena.co.uk>
-References: <20190808123655.31520-1-stefan@agner.ch>
- <20190808124437.GD3795@sirena.co.uk>
- <s5hlfw3izhl.wl-tiwai@suse.de>
- <20190808130217.GE3795@sirena.co.uk>
- <s5hftmbiyuc.wl-tiwai@suse.de>
- <cd3fd8b9ce6e4f9820197c70dfc42b67@agner.ch>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="1hKfHPzOXWu1rh0v"
-Content-Disposition: inline
-In-Reply-To: <cd3fd8b9ce6e4f9820197c70dfc42b67@agner.ch>
-X-Cookie: I think we're in trouble.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 8 Aug 2019 15:31:27 -0400
+Received: by mail-ua1-f73.google.com with SMTP id m2so8744580uap.12
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 12:31:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=Y7EhV9R53SdAuJMBA2LVyo7uNmGfsioMNmmNCKcAKVc=;
+        b=fqAtfhnqUKmEuu2DadlaluFP6n9iBHl/UJUasXOkm0OscZqXW+lwkZx/3mv3uoZhAC
+         OCPXv/3lDYe+UEjV6jEFeo4T6KN6OUETZT0uxxEoo2lWtycilli1Usrk+5DmSzUszVed
+         i1igcJIkNhslr9ilyPav1FckCTmCSYShPrxPm0aEbM7vtgRLnZ3thj9VWluYYoeeS8Gr
+         1c8o7qcLtGfRS0KoSrh9B7/oq7YoiCI4etG0+fzmwVPtawENjcZwmgFaLNiFrQlIHgtd
+         xzYY7Hzs+Jk6usoHoVh8SmSU9Pi3/dU1mJJOPJR99sH7+ItDVNNr2DZ7Vc0FK41JvSNH
+         vMGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=Y7EhV9R53SdAuJMBA2LVyo7uNmGfsioMNmmNCKcAKVc=;
+        b=iro/PzRMpwCRh0MVXqf35W9JoFZKA30ptKQjw6MXiHBFc2ZVl4urdUTd09UkncAwoU
+         RtsqfrtD2Sfpr440ZrE1wgfAsBnogmpfCW0oh3f9Rq1Qr31UDxggSSFxlCsa7Fj+TARE
+         4cF89WCc4WCI06ncU/N7Ex2WMS7mt5jwK2BVfsx+tV2q2KCMzcIJ2Sbx2HexWV2awsmv
+         U0v+frJzfWkqOBJbFuuXWuqslGgHXetRBcPXyP0Jn9y2VymMchqpfxrtgdUvsDbvU4Qn
+         J9c4bqjvzZ+S3bGd6PL2hUq+VDS6ef1FtzCruFBAVTrHNlk90jBvXi4JicHAFbOAKBMY
+         9iSg==
+X-Gm-Message-State: APjAAAU0Z183JvRuKb3ki5T3861zINNGGmHVZTuzt1LHLCEPmjKGfOpr
+        FPZBGKsxGPWWNFDklDU7QACFAUFleA==
+X-Google-Smtp-Source: APXvYqzFJnXdQ1RjWmuuNC0tPWroHzGPv2QybfWV/E4n1Fj9Gy51j8vmYrFEA/TFfcPlC3TJIO4khzTuYP0=
+X-Received: by 2002:ac5:ccda:: with SMTP id j26mr6637280vkn.43.1565292686277;
+ Thu, 08 Aug 2019 12:31:26 -0700 (PDT)
+Date:   Thu,  8 Aug 2019 12:31:22 -0700
+Message-Id: <20190808193122.76679-1-yabinc@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.22.0.770.g0f2c4a37fd-goog
+Subject: [PATCH] coresight: tmc-etr: Remove perf_data check.
+From:   Yabin Cui <yabinc@google.com>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Yabin Cui <yabinc@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+When tracing etm data of multiple threads on multiple cpus through
+perf interface, each cpu has a unique etr_perf_buffer while sharing
+the same etr device. There is no guarantee that the last cpu starts
+etm tracing also stops last. So the perf_data check is no longer valid.
 
---1hKfHPzOXWu1rh0v
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Yabin Cui <yabinc@google.com>
+---
+ drivers/hwtracing/coresight/coresight-tmc-etr.c | 9 ---------
+ drivers/hwtracing/coresight/coresight-tmc.h     | 2 --
+ 2 files changed, 11 deletions(-)
 
-On Thu, Aug 08, 2019 at 03:16:53PM +0200, Stefan Agner wrote:
-> On 2019-08-08 15:14, Takashi Iwai wrote:
-> > Mark Brown wrote:
+diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+index 17006705287a..0418440e0141 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
++++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+@@ -1484,20 +1484,12 @@ tmc_update_etr_buffer(struct coresight_device *csdev,
+ 		goto out;
+ 	}
+ 
+-	if (WARN_ON(drvdata->perf_data != etr_perf)) {
+-		lost = true;
+-		spin_unlock_irqrestore(&drvdata->spinlock, flags);
+-		goto out;
+-	}
+-
+ 	CS_UNLOCK(drvdata->base);
+ 
+ 	tmc_flush_and_stop(drvdata);
+ 	tmc_sync_etr_buf(drvdata);
+ 
+ 	CS_LOCK(drvdata->base);
+-	/* Reset perf specific data */
+-	drvdata->perf_data = NULL;
+ 	spin_unlock_irqrestore(&drvdata->spinlock, flags);
+ 
+ 	size = etr_buf->len;
+@@ -1556,7 +1548,6 @@ static int tmc_enable_etr_sink_perf(struct coresight_device *csdev, void *data)
+ 	}
+ 
+ 	etr_perf->head = PERF_IDX2OFF(handle->head, etr_perf);
+-	drvdata->perf_data = etr_perf;
+ 
+ 	/*
+ 	 * No HW configuration is needed if the sink is already in
+diff --git a/drivers/hwtracing/coresight/coresight-tmc.h b/drivers/hwtracing/coresight/coresight-tmc.h
+index 1ed50411cc3c..3881a9ee565a 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc.h
++++ b/drivers/hwtracing/coresight/coresight-tmc.h
+@@ -178,7 +178,6 @@ struct etr_buf {
+  *		device configuration register (DEVID)
+  * @idr:	Holds etr_bufs allocated for this ETR.
+  * @idr_mutex:	Access serialisation for idr.
+- * @perf_data:	PERF buffer for ETR.
+  * @sysfs_data:	SYSFS buffer for ETR.
+  */
+ struct tmc_drvdata {
+@@ -202,7 +201,6 @@ struct tmc_drvdata {
+ 	struct idr		idr;
+ 	struct mutex		idr_mutex;
+ 	struct etr_buf		*sysfs_buf;
+-	void			*perf_data;
+ };
+ 
+ struct etr_buf_operations {
+-- 
+2.22.0.770.g0f2c4a37fd-goog
 
-> > I guess we can use dev_printk() with the conditional level choice.
-
-> How about use dev_info always? We get a dev_err message from
-> soc_init_dai_link in error cases...
-
-> 		ret = soc_init_dai_link(card, dai_link);
-> 		if (ret && ret != -EPROBE_DEFER) {
-> 			dev_info(card->dev, "ASoC: failed to init link %s: %d\n",
-> 				 dai_link->name, ret);
-> 		}
-
-Well, if there's adequate error reporting in init_dai_link() it's a bit
-different - we can just remove the print entirely regardless of what the
-return code is.  The point is to ensure that we don't just silently
-fail.  Unfortunately there's no prints in the probe deferral case there
-so they need adding, that'll actually improve things though since we can
-make it print the name of the thing it's mising which will be useful to
-people trying to figure out what's going on (we used to do that but it
-got lost in reshufflings).
-
---1hKfHPzOXWu1rh0v
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1Md64ACgkQJNaLcl1U
-h9AMagf+L43HuMa/NUgOlEHZm98nUtKAaX8K47V2+fZA8apI3qs/jrwjcUoIfhMU
-CZMT7n2i3X520n100poQubrce5JFTbXLd5Mm7H5E77Fs5zoZ5W53jL6ts5DoyQ5E
-UYpoxkg4bMQXmSgAlihHpjLRubteVsS3+07FhrSdGlvwlpGYSBrh+IOMtZes3I7W
-b7xTa6denXXkrx8sg6tznkI7q6xweTy+B3gc9GpIEA1CQek6a3WYq6DV+1C+t8dN
-Ps0f2A39s+UVOaHpPgtwb9V3DwlBGnUis0vdrET8JpfK7whAEaw1D58ADRW77QiS
-o6jc4CTInKtvwwipe0OcMO4Dn9jssQ==
-=mPEe
------END PGP SIGNATURE-----
-
---1hKfHPzOXWu1rh0v--
