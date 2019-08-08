@@ -2,251 +2,177 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8418C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:42:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A71FDC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:45:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAA4321743
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:42:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565296932;
-	bh=1oCHeRSWRVn5OORJZABviMyhZC9dervMj7qPjVPaKdU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=YaAhA1OWqC18cfj0RY84gqaEfLQm2IMuGq4CezXQVP5Y/dFEbHG+43jsC8KTOi7aT
-	 8AxtnibAAh0/Uj7EwGsDeScgQTb8mfs7YZZWjcpV+U6XUxJEcklZEJ7Y++JhY9crp1
-	 14axWQe4qTMOgZzIFrSa1oEnlX70IapPvmLKCtAg=
+	by mail.kernel.org (Postfix) with ESMTP id 7F2752089E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:45:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404273AbfHHUmM (ORCPT
+        id S2390275AbfHHUpw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 16:42:12 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:46680 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733140AbfHHUmJ (ORCPT
+        Thu, 8 Aug 2019 16:45:52 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:36544 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729780AbfHHUpv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 16:42:09 -0400
-Received: by mail-ot1-f67.google.com with SMTP id z17so5619993otk.13;
-        Thu, 08 Aug 2019 13:42:08 -0700 (PDT)
+        Thu, 8 Aug 2019 16:45:51 -0400
+Received: by mail-qk1-f193.google.com with SMTP id g18so69977266qkl.3
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 13:45:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=dPx3oxQe9mnn97sFiVMnQ+/paC/GNRx7B//ee5f5G+w=;
-        b=ugYUBcK+EN5qAowjCobddOV5hfi0mnhAPmOFo0ZYFUxnhvg95duSbiYtF1z2naP2+V
-         q2xd/dANW+KpuStXLVn9Ve4FW4CZPLhiGE4HSv63DtyP0FMwYW2IPckzs2qs0Hu6yHDS
-         je+Xw7Yn6zGIPrIbvP6tlvCrKtSC9MVwQA+kQhqR67GANpQ28XqxTKOeXB/Ds8e+BIuD
-         MpUGVD60OZ+desjBlnCJ+39Lb4FU7qCM/SpM2TDp1db0Zz0M3Vz1UmajJIif0Y2m/pOX
-         dawfTkSsc9d2EnTiXLfpFCH4TlOMPTFMEq2vSbwNggmDq387GmUKYYogpIdB3qeTOa98
-         tMWQ==
-X-Gm-Message-State: APjAAAUgrd0PZWefls767rRfSToKzAJeWV7G0D89YUOEdu17av7w5mvu
-        ZXtwaSGuIpOX5C6c/4Lz103ZEQgGXxrLqSyi8Mo=
-X-Google-Smtp-Source: APXvYqwI9N0vho3Kstoj/H4iMj4aMw65wU5o8DrhhcaHfjfCflP5uRJ/sVsJbHZuSDGKa7kedtXjfG4YYWD9/H6BxTQ=
-X-Received: by 2002:aca:5a41:: with SMTP id o62mr4004626oib.110.1565296927852;
- Thu, 08 Aug 2019 13:42:07 -0700 (PDT)
+        bh=Bhgw+o4B/3gx0f2c2xCh51GNhpAUH3IKPso/TuqCoeo=;
+        b=KZ1d++QWagunIIYAYEmi5yggTBawq26u7nfLg/jltgb1fj/MzJxd4qngsux8tW5ynr
+         h6zndr4UitwqBo9nUHINJM1uDBIzAjalXmu6oASVAj6bLTQSYVcta9gLaoe6vKyTX823
+         +NReg7+u3nIlK9fMOOk+gJoHSFZ/UybSemaVKwi1vqDA7VY00X7jXMpNQ8iwcQ4oZSYX
+         ernXpmKf2GoODBvRsMdeZB1q7/w4O0zpAguzNB3fp6KT+tj+q9u7ns9arTZJ92wVFUlz
+         rfW7+HZihLT20HQk3J0DOMMkohmvKXhNd7jU84quHPRk3/wohUd91ZPX2m65Jf/zOHmP
+         2kkQ==
+X-Gm-Message-State: APjAAAVZXkRb5KWMd+pggAgqBB/ScUpfF/SiHOqfPG6jWa1iprPahF7A
+        9S0wHsmGh5V8iZDdzSjsid2TTlEKYK38X2pl9k4=
+X-Google-Smtp-Source: APXvYqyCp8IPNm4G3NNI1cjHOeiiDeTTDPwCH5aAxuLNo7EEQPLN36feVnDgs3Oztr8t4j0phOqeVmMaOcEteGNK/SI=
+X-Received: by 2002:a37:984:: with SMTP id 126mr9286864qkj.3.1565297150449;
+ Thu, 08 Aug 2019 13:45:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <4323ed84dd07474eab65699b4d007aaf@AUSX13MPC105.AMER.DELL.COM>
- <20190731221956.GB15795@localhost.localdomain> <1921165.pTveHRX1Co@kreacher>
- <1870928.r7tBYyfqdz@kreacher> <20190808134356.GF151852@google.com>
- <CAJZ5v0h=nz8yXwOOGBUB9m1GtJPOqBwtNK7zXPNMJjzPhMWd9w@mail.gmail.com> <20190808183954.GG151852@google.com>
-In-Reply-To: <20190808183954.GG151852@google.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 8 Aug 2019 22:41:56 +0200
-Message-ID: <CAJZ5v0h95m=G2T_i7uSygK4H=VLH4Txte_ffKc5JBA33A=N76Q@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] nvme-pci: Allow PCI bus-level PM to be used if
- ASPM is disabled
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        Keith Busch <kbusch@kernel.org>,
-        Mario Limonciello <Mario.Limonciello@dell.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Linux PM <linux-pm@vger.kernel.org>,
+References: <201908090321.bRMBBE6A%lkp@intel.com>
+In-Reply-To: <201908090321.bRMBBE6A%lkp@intel.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 8 Aug 2019 22:45:34 +0200
+Message-ID: <CAK8P3a0FT1FCkvik++TJxnp8=36+9EW-tjo0UXdGPZxw_MMPfQ@mail.gmail.com>
+Subject: Re: [arnd-playground:randconfig-5.3-rc2 32/347] fs/reiserfs/prints.o:
+ warning: objtool: __reiserfs_error()+0x80: unreachable instruction
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@01.org, Josh Poimboeuf <jpoimboe@redhat.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>
+        Peter Zijlstra <peterz@infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 8, 2019, 20:39 Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Thu, Aug 8, 2019 at 9:06 PM kbuild test robot <lkp@intel.com> wrote:
 >
-> On Thu, Aug 08, 2019 at 04:47:45PM +0200, Rafael J. Wysocki wrote:
-> > On Thu, Aug 8, 2019 at 3:43 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > On Thu, Aug 08, 2019 at 12:10:06PM +0200, Rafael J. Wysocki wrote:
-> > > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > >
-> > > > One of the modifications made by commit d916b1be94b6 ("nvme-pci: use
-> > > > host managed power state for suspend") was adding a pci_save_state()
-> > > > call to nvme_suspend() in order to prevent the PCI bus-level PM from
-> > > > being applied to the suspended NVMe devices, but if ASPM is not
-> > > > enabled for the target NVMe device, that causes its PCIe link to stay
-> > > > up and the platform may not be able to get into its optimum low-power
-> > > > state because of that.
-> > > >
-> > > > For example, if ASPM is disabled for the NVMe drive (PC401 NVMe SK
-> > > > hynix 256GB) in my Dell XPS13 9380, leaving it in D0 during
-> > > > suspend-to-idle prevents the SoC from reaching package idle states
-> > > > deeper than PC3, which is way insufficient for system suspend.
-> > >
-> > > Just curious: I assume the SoC you reference is some part of the NVMe
-> > > drive?
-> >
-> > No, the SoC is what contains the Intel processor and PCH (formerly "chipset").
-> >
-> > > > To address this shortcoming, make nvme_suspend() check if ASPM is
-> > > > enabled for the target device and fall back to full device shutdown
-> > > > and PCI bus-level PM if that is not the case.
-> > > >
-> > > > Fixes: d916b1be94b6 ("nvme-pci: use host managed power state for suspend")
-> > > > Link: https://lore.kernel.org/linux-pm/2763495.NmdaWeg79L@kreacher/T/#t
-> > > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > > ---
-> > > >
-> > > > -> v2:
-> > > >   * Move the PCI/PCIe ASPM changes to a separate patch.
-> > > >   * Do not add a redundant ndev->last_ps == U32_MAX check in nvme_suspend().
-> > > >
-> > > > ---
-> > > >  drivers/nvme/host/pci.c |   13 ++++++++++---
-> > > >  1 file changed, 10 insertions(+), 3 deletions(-)
-> > > >
-> > > > Index: linux-pm/drivers/nvme/host/pci.c
-> > > > ===================================================================
-> > > > --- linux-pm.orig/drivers/nvme/host/pci.c
-> > > > +++ linux-pm/drivers/nvme/host/pci.c
-> > > > @@ -2846,7 +2846,7 @@ static int nvme_resume(struct device *de
-> > > >       struct nvme_dev *ndev = pci_get_drvdata(to_pci_dev(dev));
-> > > >       struct nvme_ctrl *ctrl = &ndev->ctrl;
-> > > >
-> > > > -     if (pm_resume_via_firmware() || !ctrl->npss ||
-> > > > +     if (ndev->last_ps == U32_MAX ||
-> > > >           nvme_set_power_state(ctrl, ndev->last_ps) != 0)
-> > > >               nvme_reset_ctrl(ctrl);
-> > > >       return 0;
-> > > > @@ -2859,6 +2859,8 @@ static int nvme_suspend(struct device *d
-> > > >       struct nvme_ctrl *ctrl = &ndev->ctrl;
-> > > >       int ret = -EBUSY;
-> > > >
-> > > > +     ndev->last_ps = U32_MAX;
-> > > > +
-> > > >       /*
-> > > >        * The platform does not remove power for a kernel managed suspend so
-> > > >        * use host managed nvme power settings for lowest idle power if
-> > > > @@ -2866,8 +2868,14 @@ static int nvme_suspend(struct device *d
-> > > >        * shutdown.  But if the firmware is involved after the suspend or the
-> > > >        * device does not support any non-default power states, shut down the
-> > > >        * device fully.
-> > > > +      *
-> > > > +      * If ASPM is not enabled for the device, shut down the device and allow
-> > > > +      * the PCI bus layer to put it into D3 in order to take the PCIe link
-> > > > +      * down, so as to allow the platform to achieve its minimum low-power
-> > > > +      * state (which may not be possible if the link is up).
-> > > >        */
-> > > > -     if (pm_suspend_via_firmware() || !ctrl->npss) {
-> > > > +     if (pm_suspend_via_firmware() || !ctrl->npss ||
-> > > > +         !pcie_aspm_enabled_mask(pdev)) {
-> > >
-> > > This seems like a layering violation, in the sense that ASPM is
-> > > supposed to be hardware-autonomous and invisible to software.
-> >
-> > But software has to enable it.
-> >
-> > If it is not enabled, it will not be used, and that's what the check
-> > is about.
-> >
-> > > IIUC the NVMe device will go to the desired package idle state if
-> > > the link is in L0s or L1, but not if the link is in L0.  I don't
-> > > understand that connection; AFAIK that would be something outside
-> > > the scope of the PCIe spec.
-> >
-> > Yes, it is outside of the PCIe spec.
-> >
-> > No, this is not about the NVMe device, it is about the Intel SoC
-> > (System-on-a-Chip) the platform is based on.
+> tree:   https://kernel.googlesource.com/pub/scm/linux/kernel/git/arnd/playground.git randconfig-5.3-rc2
+> head:   bfe9aede7372c8310a9bf31963460c9dd11d1f82
+> commit: 97919a3ec80e9841c4bbac14a80e8b9d482666d4 [32/347] [SUBMITTED 20190718] reiserfs: fix code unwinding with clang
+> config: x86_64-lkp (attached as .config)
+> compiler: gcc-7 (Debian 7.4.0-10) 7.4.0
+> reproduce:
+>         git checkout 97919a3ec80e9841c4bbac14a80e8b9d482666d4
+>         # save the attached .config to linux build tree
+>         make ARCH=x86_64
 >
-> Ah.  So this problem could occur with any device, not just NVMe?  If
-> so, how do you address that?  Obviously you don't want to patch all
-> drivers this way.
-
-It could, if the device was left in D0 during suspend, but drivers
-don't let devices stay in D0 during suspend as a rule, so this is all
-academic, except for the NVMe driver that has just started to do it in
-5.3-rc1.
-
-It has started to do that becasuse of what can be regarded as a
-hardware issue, but this does not even matter here.
-
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
 >
-> > The background really is commit d916b1be94b6 and its changelog is
-> > kind of misleading, unfortunately.  What it did, among other things,
-> > was to cause the NVMe driver to prevent the PCI bus type from
-> > applying the standard PCI PM to the devices handled by it in the
-> > suspend-to-idle flow.
+> All warnings (new ones prefixed by >>):
 >
-> This is more meaningful to you than to most people because "applying
-> the standard PCI PM" doesn't tell us what that means in terms of the
-> device.  Presumably it has something to do with a D-state transition?
-> I *assume* a suspend might involve the D0 -> D3hot transition you
-> mention below?
+> >> fs/reiserfs/namei.o: warning: objtool: entry_points_to_object()+0x117: unreachable instruction
+> --
+> >> fs/reiserfs/do_balan.o: warning: objtool: get_FEB()+0x55: unreachable instruction
+> >> fs/reiserfs/prints.o: warning: objtool: __reiserfs_error()+0x80: unreachable instruction
+> >> fs/reiserfs/lbalance.o: warning: objtool: leaf_move_items()+0x210: unreachable instruction
+> >> fs/reiserfs/fix_node.o: warning: objtool: create_virtual_node()+0x295: unreachable instruction
+> >> fs/reiserfs/inode.o: warning: objtool: reiserfs_update_sd_size()+0x26b: unreachable instruction
+> >> fs/reiserfs/ibalance.o: warning: objtool: balance_internal()+0x30d: unreachable instruction
+> >> fs/reiserfs/stree.o: warning: objtool: reiserfs_cut_from_item()+0x239: unreachable instruction
+> >> fs/reiserfs/tail_conversion.o: warning: objtool: direct2indirect()+0x29c: unreachable instruction
+> >> fs/reiserfs/item_ops.o: warning: objtool: direntry_check_left()+0x5d: unreachable instruction
+> >> fs/reiserfs/journal.o: warning: objtool: flush_commit_list()+0x552: unreachable instruction
 
-By "standard PCI PM" I mean what pci_prepare_to_sleep() does. And yes,
-in the vast majority of cases the device goes from D0 to D3hot then.
+Great fun. The patch I did was my workaround for a related problem with clang,
+see below.
 
->
-> > The reason for doing that was a (reportedly) widespread failure to
-> > take the PCIe link down during D0 -> D3hot transitions of NVMe
-> > devices,
->
-> I don't know any of the details, but "failure to take the link down
-> during D0 -> D3hot transitions" is phrased as though it might be a
-> hardware erratum.  If this *is* related to an NVMe erratum, that would
-> explain why you only need to patch the nvme driver, and it would be
-> useful to mention that in the commit log, since otherwise it sounds
-> like something that might be needed in other drivers, too.
+Josh, is this warning above something you are interested in? I don't
+think it happens in mainline, but it could happen anywhere. I think
+the patch below can be dropped once clang is fixed, but I have so far
+been unable to build a new compiler for testing.
 
-Yes, that can be considered as an NVMe erratum and the NVMe driver has
-been *already* patched because of that in 5.3-rc1. [That's the commit
-mentioned in the changelog of the $subject patch.]
+       Arnd
 
-It effectively asks the PCI bus type to leave *all* devices handled by
-it in D0 during suspend-to-idle.  Already today.
+commit 97919a3ec80e9841c4bbac14a80e8b9d482666d4
+Author: Arnd Bergmann <arnd@arndb.de>
+Date:   Fri Jul 12 16:19:52 2019 +0200
 
-I hope that this clarifies the current situation. :-)
+    [SUBMITTED 20190718] reiserfs: fix code unwinding with clang
 
->
-> According to PCIe r5.0 sec 5.3.2, the only legal link states for D3hot
-> are L1, L2/L3 Ready.  So if you put a device in D3hot and its link
-> stays in L0, that sounds like a defect.  Is that what happens?
+    Building reiserfs with clang leads to objtool warnings about a part of the
+    unreachable code that may confuse the ORC unwinder:
 
-For some devices that's what happens. For some other devices the state
-of the link in D3hot appears to be L1 or L2/L3 Ready (as per the spec)
-and that's when the $subject patch makes a difference.
+    fs/reiserfs/ibalance.o: warning: objtool:
+balance_internal()+0xe8f: stack state mismatch: cfa1=7+240 cfa2=7+248
+    fs/reiserfs/ibalance.o: warning: objtool:
+internal_move_pointers_items()+0x36f: stack state mismatch: cfa1=7+152
+cfa2=7+144
+    fs/reiserfs/lbalance.o: warning: objtool:
+leaf_cut_from_buffer()+0x58b: stack state mismatch: cfa1=7+128
+cfa2=7+112
+    fs/reiserfs/lbalance.o: warning: objtool:
+leaf_copy_boundary_item()+0x7a9: stack state mismatch: cfa1=7+104
+cfa2=7+96
+    fs/reiserfs/lbalance.o: warning: objtool:
+leaf_copy_items_entirely()+0x3d2: stack state mismatch: cfa1=7+120
+cfa2=7+128
+    fs/reiserfs/do_balan.o: warning: objtool: replace_key()+0x158:
+stack state mismatch: cfa1=7+40 cfa2=7+56
+    fs/reiserfs/do_balan.o: warning: objtool: balance_leaf()+0x2791:
+stack state mismatch: cfa1=7+176 cfa2=7+192
 
-The underlying principle is that the energy used by the system while
-suspended depends on the states of all of the PCIe links and the
-deeper the link state, the less energy the system will use.
+    Reword this to use the regular BUG() call directly from the original code
+    location, since objtool finds the generated object code more reasonable.
 
-Now, say an NVMe device works in accordance with the spec, so when it
-goes from D0 to D3hot, its PCIe link goes into L1 or L2/L3 Ready.  As
-of 5.3-rc1 or later it will be left in D0 during suspend-to-idle
-(because that's how the NVMe driver works), so its link state will
-depend on whether or not ASPM is enabled for it.  If ASPM is enabled
-for it, the final state of its link will depend on how deep ASPM is
-allowed to go, but if ASPM is not enabled for it, its link will remain
-in L0.
+    This will likely get fixed in a future clang release, but in the meantime
+    the workaround helps us build cleanly with existing releases.
 
-This means, however, that by allowing that device to go into D3hot
-when ASPM is not enabled for it, the energy used by the system while
-suspended can be reduced, because the PCIe link of the device will
-then go to L1 or L2/L3 Ready.  That's exactly what the $subject patch
-does.
+    Link: https://groups.google.com/d/msgid/clang-built-linux/20190712135755.7qa4wxw3bfmwn5rp%40treble
+    Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Is this still not convincing enough?
+diff --git a/fs/reiserfs/prints.c b/fs/reiserfs/prints.c
+index 9fed1c05f1f4..da996eaaebac 100644
+--- a/fs/reiserfs/prints.c
++++ b/fs/reiserfs/prints.c
+@@ -387,7 +387,6 @@ void __reiserfs_panic(struct super_block *sb,
+const char *id,
+        else
+                printk(KERN_WARNING "REISERFS panic: %s%s%s: %s\n",
+                      id ? id : "", id ? " " : "", function, error_buf);
+-       BUG();
+ }
+
+ void __reiserfs_error(struct super_block *sb, const char *id,
+@@ -397,8 +396,10 @@ void __reiserfs_error(struct super_block *sb,
+const char *id,
+
+        BUG_ON(sb == NULL);
+
+-       if (reiserfs_error_panic(sb))
++       if (reiserfs_error_panic(sb)) {
+                __reiserfs_panic(sb, id, function, error_buf);
++               BUG();
++       }
+
+        if (id && id[0])
+                printk(KERN_CRIT "REISERFS error (device %s): %s %s: %s\n",
+diff --git a/fs/reiserfs/reiserfs.h b/fs/reiserfs/reiserfs.h
+index e5ca9ed79e54..f5bd17ee21f6 100644
+--- a/fs/reiserfs/reiserfs.h
++++ b/fs/reiserfs/reiserfs.h
+@@ -3185,10 +3185,9 @@ void unfix_nodes(struct tree_balance *);
+
+ /* prints.c */
+ void __reiserfs_panic(struct super_block *s, const char *id,
+-                     const char *function, const char *fmt, ...)
+-    __attribute__ ((noreturn));
++                     const char *function, const char *fmt, ...);
+ #define reiserfs_panic(s, id, fmt, args...) \
+-       __reiserfs_panic(s, id, __func__, fmt, ##args)
++       do { __reiserfs_panic(s, id, __func__, fmt, ##args); BUG(); } while (0)
+ void __reiserfs_error(struct super_block *s, const char *id,
+                      const char *function, const char *fmt, ...);
+ #define reiserfs_error(s, id, fmt, args...) \
