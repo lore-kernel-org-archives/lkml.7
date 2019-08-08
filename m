@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20AEFC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D844C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:07:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9A2C2173E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:07:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E61FE214C6
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:07:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565291235;
-	bh=X2mMx/M9Iz+bGpyx5Xo/mfNKmf2dnlq8TrSOT8/N1k8=;
+	s=default; t=1565291239;
+	bh=lo+9gVXldfqEmWcOMyPpSJBqA7TptOY2kGHw6NvqqqM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jNvvAKpnYHTA2DJnoIwBVt4kMfyGUGJuu/j8cBJErfVM9GmxQ45LOWj61SFQ3PaHu
-	 rHu3yQvTlZRBep/v6f6eISgWwi7kdbjSkDwTEczYDk3L7CjA/EWc/kfbiflAQiUB+L
-	 aPFoQt5PS1Xt1OzHn8zLc7YGOwgtNSguy3R5KKK0=
+	b=cXGL70gJ03K9JerCDritC9VzX4ghCp8g2JxpJDh22MAI5imIx1wVJbiVBVZIpbXye
+	 5LE7vXdPXe2ubdsde42xwrAQroZ8kiep9FxnKvRpVjxHqU/mF68xi87rzKxdi48D+r
+	 1ZwaG2O58zPErU62wVycK9CmYAikGmGUDNYbeWhY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404621AbfHHTHN (ORCPT
+        id S2404635AbfHHTHR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:07:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40794 "EHLO mail.kernel.org"
+        Thu, 8 Aug 2019 15:07:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404603AbfHHTHJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 15:07:09 -0400
+        id S2404622AbfHHTHO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 15:07:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDB402173E;
-        Thu,  8 Aug 2019 19:07:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1785821743;
+        Thu,  8 Aug 2019 19:07:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565291228;
-        bh=X2mMx/M9Iz+bGpyx5Xo/mfNKmf2dnlq8TrSOT8/N1k8=;
+        s=default; t=1565291233;
+        bh=lo+9gVXldfqEmWcOMyPpSJBqA7TptOY2kGHw6NvqqqM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KA34O/1x9o+p9cFUEqzXFzRjTFUM1XfDeIMk2Z1eicUYEqiX53UVicfrOH2St45bv
-         QAUs8vX4YGcTzs9ehVymtcsPSGCgiFwhPxmphZEZbu80SMQMXe9Jk0PHBpt9/C3OA6
-         BQmQtDsZ5w4RWO2IZ5C/a+doHH6RV6NMCv9yccic=
+        b=Hk/G5WbkYXaL3sT12K7YTQpMyqHIbYaL9pgvB4/MUXy10/4s1m8OLhYzilbvn35ym
+         ZcF7Ipe+tU37OMqnCBcQrVLAOhKULz8wc30hv5G/B6CI739ipX+90GnDgyfun4ESQg
+         k69FboRtmhA5rVjV51Nm8KiLogihj174L63mXczU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+cf35b76f35e068a1107f@syzkaller.appspotmail.com,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.2 34/56] NFC: nfcmrvl: fix gpio-handling regression
-Date:   Thu,  8 Aug 2019 21:05:00 +0200
-Message-Id: <20190808190454.374162182@linuxfoundation.org>
+        stable@vger.kernel.org, Taras Kondratiuk <takondra@cisco.com>,
+        Ying Xue <ying.xue@windriver.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.2 36/56] tipc: compat: allow tipc commands without arguments
+Date:   Thu,  8 Aug 2019 21:05:02 +0200
+Message-Id: <20190808190454.486786876@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190808190452.867062037@linuxfoundation.org>
 References: <20190808190452.867062037@linuxfoundation.org>
@@ -60,77 +60,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Taras Kondratiuk <takondra@cisco.com>
 
-[ Upstream commit c3953a3c2d3175d2f9f0304c9a1ba89e7743c5e4 ]
+[ Upstream commit 4da5f0018eef4c0de31675b670c80e82e13e99d1 ]
 
-Fix two reset-gpio sanity checks which were never converted to use
-gpio_is_valid(), and make sure to use -EINVAL to indicate a missing
-reset line also for the UART-driver module parameter and for the USB
-driver.
+Commit 2753ca5d9009 ("tipc: fix uninit-value in tipc_nl_compat_doit")
+broke older tipc tools that use compat interface (e.g. tipc-config from
+tipcutils package):
 
-This specifically prevents the UART and USB drivers from incidentally
-trying to request and use gpio 0, and also avoids triggering a WARN() in
-gpio_to_desc() during probe when no valid reset line has been specified.
+% tipc-config -p
+operation not supported
 
-Fixes: e33a3f84f88f ("NFC: nfcmrvl: allow gpio 0 for reset signalling")
-Reported-by: syzbot+cf35b76f35e068a1107f@syzkaller.appspotmail.com
-Tested-by: syzbot+cf35b76f35e068a1107f@syzkaller.appspotmail.com
-Signed-off-by: Johan Hovold <johan@kernel.org>
+The commit started to reject TIPC netlink compat messages that do not
+have attributes. It is too restrictive because some of such messages are
+valid (they don't need any arguments):
+
+% grep 'tx none' include/uapi/linux/tipc_config.h
+#define  TIPC_CMD_NOOP              0x0000    /* tx none, rx none */
+#define  TIPC_CMD_GET_MEDIA_NAMES   0x0002    /* tx none, rx media_name(s) */
+#define  TIPC_CMD_GET_BEARER_NAMES  0x0003    /* tx none, rx bearer_name(s) */
+#define  TIPC_CMD_SHOW_PORTS        0x0006    /* tx none, rx ultra_string */
+#define  TIPC_CMD_GET_REMOTE_MNG    0x4003    /* tx none, rx unsigned */
+#define  TIPC_CMD_GET_MAX_PORTS     0x4004    /* tx none, rx unsigned */
+#define  TIPC_CMD_GET_NETID         0x400B    /* tx none, rx unsigned */
+#define  TIPC_CMD_NOT_NET_ADMIN     0xC001    /* tx none, rx none */
+
+This patch relaxes the original fix and rejects messages without
+arguments only if such arguments are expected by a command (reg_type is
+non zero).
+
+Fixes: 2753ca5d9009 ("tipc: fix uninit-value in tipc_nl_compat_doit")
+Cc: stable@vger.kernel.org
+Signed-off-by: Taras Kondratiuk <takondra@cisco.com>
+Acked-by: Ying Xue <ying.xue@windriver.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/nfc/nfcmrvl/main.c |    4 ++--
- drivers/nfc/nfcmrvl/uart.c |    4 ++--
- drivers/nfc/nfcmrvl/usb.c  |    1 +
- 3 files changed, 5 insertions(+), 4 deletions(-)
+ net/tipc/netlink_compat.c |   11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
---- a/drivers/nfc/nfcmrvl/main.c
-+++ b/drivers/nfc/nfcmrvl/main.c
-@@ -244,7 +244,7 @@ void nfcmrvl_chip_reset(struct nfcmrvl_p
- 	/* Reset possible fault of previous session */
- 	clear_bit(NFCMRVL_PHY_ERROR, &priv->flags);
+--- a/net/tipc/netlink_compat.c
++++ b/net/tipc/netlink_compat.c
+@@ -55,6 +55,7 @@ struct tipc_nl_compat_msg {
+ 	int rep_type;
+ 	int rep_size;
+ 	int req_type;
++	int req_size;
+ 	struct net *net;
+ 	struct sk_buff *rep;
+ 	struct tlv_desc *req;
+@@ -257,7 +258,8 @@ static int tipc_nl_compat_dumpit(struct
+ 	int err;
+ 	struct sk_buff *arg;
  
--	if (priv->config.reset_n_io) {
-+	if (gpio_is_valid(priv->config.reset_n_io)) {
- 		nfc_info(priv->dev, "reset the chip\n");
- 		gpio_set_value(priv->config.reset_n_io, 0);
- 		usleep_range(5000, 10000);
-@@ -255,7 +255,7 @@ void nfcmrvl_chip_reset(struct nfcmrvl_p
+-	if (msg->req_type && !TLV_CHECK_TYPE(msg->req, msg->req_type))
++	if (msg->req_type && (!msg->req_size ||
++			      !TLV_CHECK_TYPE(msg->req, msg->req_type)))
+ 		return -EINVAL;
  
- void nfcmrvl_chip_halt(struct nfcmrvl_private *priv)
+ 	msg->rep = tipc_tlv_alloc(msg->rep_size);
+@@ -354,7 +356,8 @@ static int tipc_nl_compat_doit(struct ti
  {
--	if (priv->config.reset_n_io)
-+	if (gpio_is_valid(priv->config.reset_n_io))
- 		gpio_set_value(priv->config.reset_n_io, 0);
- }
+ 	int err;
  
---- a/drivers/nfc/nfcmrvl/uart.c
-+++ b/drivers/nfc/nfcmrvl/uart.c
-@@ -26,7 +26,7 @@
- static unsigned int hci_muxed;
- static unsigned int flow_control;
- static unsigned int break_control;
--static unsigned int reset_n_io;
-+static int reset_n_io = -EINVAL;
+-	if (msg->req_type && !TLV_CHECK_TYPE(msg->req, msg->req_type))
++	if (msg->req_type && (!msg->req_size ||
++			      !TLV_CHECK_TYPE(msg->req, msg->req_type)))
+ 		return -EINVAL;
  
- /*
- ** NFCMRVL NCI OPS
-@@ -231,5 +231,5 @@ MODULE_PARM_DESC(break_control, "Tell if
- module_param(hci_muxed, uint, 0);
- MODULE_PARM_DESC(hci_muxed, "Tell if transport is muxed in HCI one.");
+ 	err = __tipc_nl_compat_doit(cmd, msg);
+@@ -1288,8 +1291,8 @@ static int tipc_nl_compat_recv(struct sk
+ 		goto send;
+ 	}
  
--module_param(reset_n_io, uint, 0);
-+module_param(reset_n_io, int, 0);
- MODULE_PARM_DESC(reset_n_io, "GPIO that is wired to RESET_N signal.");
---- a/drivers/nfc/nfcmrvl/usb.c
-+++ b/drivers/nfc/nfcmrvl/usb.c
-@@ -305,6 +305,7 @@ static int nfcmrvl_probe(struct usb_inte
- 
- 	/* No configuration for USB */
- 	memset(&config, 0, sizeof(config));
-+	config.reset_n_io = -EINVAL;
- 
- 	nfc_info(&udev->dev, "intf %p id %p\n", intf, id);
- 
+-	len = nlmsg_attrlen(req_nlh, GENL_HDRLEN + TIPC_GENL_HDRLEN);
+-	if (!len || !TLV_OK(msg.req, len)) {
++	msg.req_size = nlmsg_attrlen(req_nlh, GENL_HDRLEN + TIPC_GENL_HDRLEN);
++	if (msg.req_size && !TLV_OK(msg.req, msg.req_size)) {
+ 		msg.rep = tipc_get_err_tlv(TIPC_CFG_NOT_SUPPORTED);
+ 		err = -EOPNOTSUPP;
+ 		goto send;
 
 
