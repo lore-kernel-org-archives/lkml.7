@@ -2,114 +2,154 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3393DC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:00:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40418C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:01:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3D3D2173E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:00:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565254854;
-	bh=LWy4gsiJ5ZweJScVxi16KwqfP/e1w1Xari3HQ0g8eUg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=g/iNfOu6KTD4mEJKMGo70VJlFqFaSp+T788PyjvKHLoDfTqKI5w+Vnt/TJUVDk6XL
-	 6wr5a/YSSkWGiMXFokqUu8p9/whdpxlPqSkZo6VDrxpd6DrEHRXJERs2aeI2p6fb5b
-	 wxo+IOGjvnEx66s2k7PJrzmcU18/KJukdrB/jWZo=
+	by mail.kernel.org (Postfix) with ESMTP id 104482173E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:01:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="pO8Xm438"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731819AbfHHJAx (ORCPT
+        id S1731752AbfHHJBg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 05:00:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56676 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731031AbfHHJAw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 05:00:52 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D009F2173E;
-        Thu,  8 Aug 2019 09:00:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565254852;
-        bh=LWy4gsiJ5ZweJScVxi16KwqfP/e1w1Xari3HQ0g8eUg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aRMBZdNlC3OarhMdbUvZyH9rpcMZ0NIOzNZNxpAYxT3agvRxGW5ALR8sv+kjtw/KA
-         2jtJPhNDqF0DG+4RXDgyTcFSQq4/d/XwSTB/vg4wX/PSL1pHBemABxrYgOgQ5G479t
-         Yi7a4rf5hwaF+YtT4Z7gWrqNi4InQOL60F9lzdPg=
-Date:   Thu, 8 Aug 2019 11:00:49 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Alessio Balsini <balsini@android.com>
-Cc:     stable@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@android.com, xiao jin <jin.xiao@intel.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Bart Van Assche <bart.vanassche@wdc.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: Re: [PATCH 3.18.y 4.4.y 4.9.y] block: blk_init_allocated_queue() set
- q->fq as NULL in the fail case
-Message-ID: <20190808090049.GC1265@kroah.com>
-References: <20190808022819.108337-1-balsini@android.com>
+        Thu, 8 Aug 2019 05:01:36 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:59286 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730777AbfHHJBf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 05:01:35 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190808090133euoutp01d6b83e91a6a0bb6b8175c098834e6cbc~45whK_zyn1723417234euoutp01O
+        for <linux-kernel@vger.kernel.org>; Thu,  8 Aug 2019 09:01:33 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190808090133euoutp01d6b83e91a6a0bb6b8175c098834e6cbc~45whK_zyn1723417234euoutp01O
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1565254893;
+        bh=vAPC1KqG78EX5MpxZmqoLOpy+g6UHWhf1FKimkaWP4A=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=pO8Xm438v/7EEIdA82aSLOjUZqy0rWF8TNWSQFD2AuUDYX/6JwjPg1gXh8ENARgP2
+         e3xr90ohBy3jU2A9JUj941NSAm82iGXDqWJYpcEXD2r9QK3gQDkIj++Hsv0mVA9LMF
+         qGUuH5aFDn5ibGl0asc4wW2tKyfLh9vo9m2ngd+Y=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190808090132eucas1p13b40a53172facc537e31245aebf3bae7~45wgZWn290878908789eucas1p1O;
+        Thu,  8 Aug 2019 09:01:32 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 6C.9E.04374.CE4EB4D5; Thu,  8
+        Aug 2019 10:01:32 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190808090131eucas1p1df8f45ce2b1a6022be13edd66dc5a93d~45wfqrqUY0864008640eucas1p1M;
+        Thu,  8 Aug 2019 09:01:31 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190808090131eusmtrp2e352ba3f317c555186224aacbaa12396~45wfp_rbZ0831808318eusmtrp2K;
+        Thu,  8 Aug 2019 09:01:31 +0000 (GMT)
+X-AuditID: cbfec7f5-92d689c000001116-c1-5d4be4ec97fd
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 1C.70.04166.BE4EB4D5; Thu,  8
+        Aug 2019 10:01:31 +0100 (BST)
+Received: from [106.120.51.18] (unknown [106.120.51.18]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190808090130eusmtip14e1361b874b470445d8ee44ed8931457~45wesHjyG0244502445eusmtip1v;
+        Thu,  8 Aug 2019 09:01:30 +0000 (GMT)
+Subject: Re: [PATCH v5 0/4] add coupled regulators for Exynos5422/5800
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+From:   Kamil Konieczny <k.konieczny@partner.samsung.com>
+Message-ID: <b0b8bd85-c016-ef13-7d5e-11d476e35ab0@partner.samsung.com>
+Date:   Thu, 8 Aug 2019 11:01:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190808022819.108337-1-balsini@android.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <6888b704-1971-4832-d7b9-092368c797d0@samsung.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRju2zln57ianU3DlxUKI6KbVij4UXaDioVF/uhHJKNWHrTSKTs6
+        M6nWRS0jzUllVk5Luyy7eS0tqbmceWVoKppmXlBSiVKj0jS3Y+S/53nf93mf9/n4GEL+mVIw
+        R7TRnE6rCVeKJWRJ1a8G7+G+QPXaweH5+HnGUwq3jg1Q2GRtoHBq7xCBGxuf0bj+7DCNC3pb
+        KNxUdkuMRy9bEc5orBDhx9ZOGue12kW448wDMR7+WS/CCa+tNJ5qeU7iwu4q8RaZKj8rH6kK
+        zBfFqsLc06qUIjNS2dpKRarRAs8g8X5JQAgXfkTP6dZsOigJG6x9REal0ceL+nNoA5qgkpEL
+        A6wf1LVloWQkYeTsAwSWrFJaIGMIupIGSIGMIqgrryb/SYZMlyihcR+B3ZIxS0YQ1FT+ETum
+        3Ngd0GxIIxzYnV0ON/40O00ItomEaz1Gp7uY9Yee0jqRA0tnBNn302kHJtml8M54y2m3iN0H
+        37srKWFGBu9v9DnrLuxmSL435jQjWA9o7zOJBOwF54pvEg4zYBMY6G83zjgzM2QbGH8EChHc
+        4IutiBbwEph+KWiBjYX+nBRa0J5H0J30bTbzBqi02SnHHoJdAU/L1gjlrfCqKpcS1rtC24hM
+        OMEVjCXXCaEshQuJcmHaG7Km62bffTEkTz+hriBl5pxgmXPCZM4Jk/nfNxuRZuTBxfARoRzv
+        q+VifXhNBB+jDfU5HBlRgGY+Xu2UbfwFqpg8ZEEsg5QLpNU1gWo5pdHzcREWBAyhdJd26Xeq
+        5dIQTdwJThd5QBcTzvEWtJghlR7S+HndwXI2VBPNHeO4KE73rytiXBQGpDcxCyfXt+8J+vEw
+        6aoi3fx93HQoOz735NhUflwqWdhwr78s2MuQm/bpQwtz+851nZ6+OS3zHW8rXWmwn+ePBlgm
+        v+6yyjwfJQaoXSuKFem/sY7RB/jbJ/J2e3QqEr1X390bGSxZRk24JGjLN6q3r7K9MY8zfW/9
+        PlZ3KPSnhpQkH6ZZt5LQ8Zq/61CsR3QDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrKIsWRmVeSWpSXmKPExsVy+t/xu7qvn3jHGnw7rm6xccZ6VovrX56z
+        Wsw/co7Vov/xa2aL8+c3sFucbXrDbrHp8TVWi8u75rBZfO49wmgx4/w+Jou1R+6yWyy9fpHJ
+        4nbjCjaLNz/OMlm07j3CbvHv2kYWi80PjrE5CHqsmbeG0WPTqk42j81L6j36tqxi9Dh+YzuT
+        x+dNcgFsUXo2RfmlJakKGfnFJbZK0YYWRnqGlhZ6RiaWeobG5rFWRqZK+nY2Kak5mWWpRfp2
+        CXoZL06vZimYyF6x5elC9gbG36xdjJwcEgImEq/ndwPZXBxCAksZJb7ceckIkZCWaDy9mgnC
+        Fpb4c62LDaLoNaPE/cWbWEASwgJuElcaJjKD2CICGhIz/15hBCliFrjKInF+4xyojrOMEpNv
+        nwKrYhMwl3i0/QzYWF6g7gXLJ7OD2CwCKhJHJ80BmyoqECFxeMcsRogaQYmTM5+AxTkF7CW6
+        ln1hA7GZBdQl/sy7xAxhi0vcejKfCcKWl2jeOpt5AqPQLCTts5C0zELSMgtJywJGllWMIqml
+        xbnpucWGesWJucWleel6yfm5mxiBUb7t2M/NOxgvbQw+xCjAwajEw1twwjtWiDWxrLgy9xCj
+        BAezkgjvvTLPWCHelMTKqtSi/Pii0pzU4kOMpkDPTWSWEk3OByagvJJ4Q1NDcwtLQ3Njc2Mz
+        CyVx3g6BgzFCAumJJanZqakFqUUwfUwcnFINjPpFpkesp+WunWG9nO/Ujaws1kN787Ntu47H
+        lbFuucg/VXHN2WNuF195tS4tSnnq6LF628b3ojPd9aMUqnbELGJ5YGLHrL/WT6ym5Ozq4K/d
+        zwy0Y/9tidn4JmplcLeWQd3Fecu9N55oPpFTxHzrZOfNH5EO+3qF7k8smbzkTernE29vrMwo
+        lldiKc5INNRiLipOBAAKRIgXCAMAAA==
+X-CMS-MailID: 20190808090131eucas1p1df8f45ce2b1a6022be13edd66dc5a93d
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190807133855eucas1p1cab425b791262e8dee1b17cbe8b1b3da
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190807133855eucas1p1cab425b791262e8dee1b17cbe8b1b3da
+References: <CGME20190807133855eucas1p1cab425b791262e8dee1b17cbe8b1b3da@eucas1p1.samsung.com>
+        <20190807133838.14678-1-k.konieczny@partner.samsung.com>
+        <6888b704-1971-4832-d7b9-092368c797d0@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 03:28:19AM +0100, Alessio Balsini wrote:
-> From: xiao jin <jin.xiao@intel.com>
-> 
-> commit 54648cf1ec2d7f4b6a71767799c45676a138ca24 upstream.
-> 
-> We find the memory use-after-free issue in __blk_drain_queue()
-> on the kernel 4.14. After read the latest kernel 4.18-rc6 we
-> think it has the same problem.
-> 
-> Memory is allocated for q->fq in the blk_init_allocated_queue().
-> If the elevator init function called with error return, it will
-> run into the fail case to free the q->fq.
-> 
-> Then the __blk_drain_queue() uses the same memory after the free
-> of the q->fq, it will lead to the unpredictable event.
-> 
-> The patch is to set q->fq as NULL in the fail case of
-> blk_init_allocated_queue().
-> 
-> Fixes: commit 7c94e1c157a2 ("block: introduce blk_flush_queue to drive flush machinery")
-> Cc: <stable@vger.kernel.org>
-> Reviewed-by: Ming Lei <ming.lei@redhat.com>
-> Reviewed-by: Bart Van Assche <bart.vanassche@wdc.com>
-> Signed-off-by: xiao jin <jin.xiao@intel.com>
-> Signed-off-by: Jens Axboe <axboe@kernel.dk>
-> Signed-off-by: Alessio Balsini <balsini@android.com>
-> ---
->  block/blk-core.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/block/blk-core.c b/block/blk-core.c
-> index 50d77c90070d..7662f97dded6 100644
-> --- a/block/blk-core.c
-> +++ b/block/blk-core.c
-> @@ -870,6 +870,7 @@ blk_init_allocated_queue(struct request_queue *q, request_fn_proc *rfn,
->  
->  fail:
->  	blk_free_flush_queue(q->fq);
-> +	q->fq = NULL;
->  	return NULL;
->  }
->  EXPORT_SYMBOL(blk_init_allocated_queue);
-> -- 
-> 2.22.0.770.g0f2c4a37fd-goog
-> 
+Hi Chanwoo,
 
-Guenter sent this backport a day before you did, so I took his version
-and added your s-o-b to it.
+On 08.08.2019 03:47, Chanwoo Choi wrote:
+> Hi Kamil,
+> 
+> When I applied them to testing branch, those don't have the author name
+> only just have the email address as following:
+> You have to edit the your git author information with your name.
 
-thanks,
+Sorry, I will resend with proper From: info.
 
-greg k-h
+> author	k.konieczny@partner.samsung.com <k.konieczny@partner.samsung.com>	2019-08-07 15:38:36 +0200
+> committer	Chanwoo Choi <cw00.choi@samsung.com>	2019-08-08 10:35:16 +0900
+> commit	4304f4ecec93cebd255463d56b0a4f112ee9dc50 (patch)
+> tree	2859e566d6f68219f71a61e7c412717c1adba4f5
+> parent	57d85421038b458dd87ec268404ff608f90c36ae (diff)
+> download	linux-4304f4ecec93cebd255463d56b0a4f112ee9dc50.tar.gz
+> 
+> Regards,
+> Chanwoo Choi
+> 
+> On 19. 8. 7. 오후 10:38, k.konieczny@partner.samsung.com wrote:
+>> [...]
+
+-- 
+Best regards,
+Kamil Konieczny
+Samsung R&D Institute Poland
+
