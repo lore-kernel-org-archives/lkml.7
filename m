@@ -2,96 +2,111 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03007C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 17:22:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3788C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 17:22:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9EEA217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 17:22:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565284970;
-	bh=goDYQLYWzyP/I29xI6KE9eIk6wrBfRZGKb9lERIu32E=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=dnQhg+iZ73ATmlTdxgOqr3EGNhhLnmqS4q/USTN650PwYUXNRQeSAAYBm8dSMdaMg
-	 Txqc/YlP48jfVkbYUtvt7urDgitB3wD6UKN26QbKUqwNJ+uJ8NvgLCaJSEaLHeQXH7
-	 zEeZFwf2FmxpiAx1TdpoXNZ5Xfe7k4uGgchC49Nw=
+	by mail.kernel.org (Postfix) with ESMTP id 77627217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 17:22:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404291AbfHHRWt (ORCPT
+        id S2404303AbfHHRWy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 13:22:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41992 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728289AbfHHRWt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 13:22:49 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B2AC217F4;
-        Thu,  8 Aug 2019 17:22:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565284968;
-        bh=goDYQLYWzyP/I29xI6KE9eIk6wrBfRZGKb9lERIu32E=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=ua1MGXeQgpUilKwU9Lv6sFBtO5Ne3BfYuhBuC2bI/xL1c/K6rZ+GE5kbSBIAM9H73
-         2xuxIpKlQbsYUjWDPlQp6YqlPF4drvL4x1jkHEm+EhI1QRTuRhSdKoUqsEKHEv8bgP
-         aRFjcz2gknk+f1DC/RQI4SFJKyW1uuQr+QciRObU=
-Subject: Re: [PATCH v2] selftests: kvm: Adding config fragments
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>, pbonzini@redhat.com
-Cc:     linux-kernel@vger.kernel.org, drjones@redhat.com,
-        sean.j.christopherson@intel.com, linux-kselftest@vger.kernel.org,
-        kvm@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20190808123140.25583-1-naresh.kamboju@linaro.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <5a06389b-5996-b11d-1435-8f4667c1dc4b@kernel.org>
-Date:   Thu, 8 Aug 2019 11:22:46 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 8 Aug 2019 13:22:54 -0400
+Received: from mail.fireflyinternet.com ([109.228.58.192]:52462 "EHLO
+        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2404293AbfHHRWx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 13:22:53 -0400
+X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
+Received: from haswell.alporthouse.com (unverified [78.156.65.138]) 
+        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP id 17934224-1500050 
+        for multiple; Thu, 08 Aug 2019 18:22:27 +0100
+From:   Chris Wilson <chris@chris-wilson.co.uk>
+To:     intel-gfx@lists.freedesktop.org
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Hugh Dickins <hughd@google.com>,
+        Matthew Auld <matthew.auld@intel.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: [PATCH] drm/i915: Stop reconfiguring our shmemfs mountpoint
+Date:   Thu,  8 Aug 2019 18:22:26 +0100
+Message-Id: <20190808172226.18306-1-chris@chris-wilson.co.uk>
+X-Mailer: git-send-email 2.23.0.rc1
 MIME-Version: 1.0
-In-Reply-To: <20190808123140.25583-1-naresh.kamboju@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/8/19 6:31 AM, Naresh Kamboju wrote:
-> selftests kvm all test cases need pre-required kernel configs for the
-> tests to get pass.
-> 
-> The KVM tests are skipped without these configs:
-> 
->          dev_fd = open(KVM_DEV_PATH, O_RDONLY);
->          if (dev_fd < 0)
->                  exit(KSFT_SKIP);
-> 
+The filesystem reconfigure API is undergoing a transition, breaking our
+current code. As we only set the default options, we can simply remove
+the call to s_op->remount_fs(). In the future, when HW permits, we can
+try re-enabling huge page support, albeit as suggested with new per-file
+controls.
 
-Thanks.
+Reported-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
+Suggested-by: Hugh Dickins <hughd@google.com>
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Matthew Auld <matthew.auld@intel.com>
+Cc: Hugh Dickins <hughd@google.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+---
+ drivers/gpu/drm/i915/gem/i915_gemfs.c | 31 ++++++++-------------------
+ 1 file changed, 9 insertions(+), 22 deletions(-)
 
-> Signed-off-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-> ---
->   tools/testing/selftests/kvm/config | 3 +++
->   1 file changed, 3 insertions(+)
->   create mode 100644 tools/testing/selftests/kvm/config
-> 
-> diff --git a/tools/testing/selftests/kvm/config b/tools/testing/selftests/kvm/config
-> new file mode 100644
-> index 000000000000..63ed533f73d6
-> --- /dev/null
-> +++ b/tools/testing/selftests/kvm/config
-> @@ -0,0 +1,3 @@
-> +CONFIG_KVM=y
-> +CONFIG_KVM_INTEL=y
-> +CONFIG_KVM_AMD=y
-> 
-
-Acked-by: Shuah Khan <skhan@linuxfoundation.org>
-
-thanks,
--- Shuah
+diff --git a/drivers/gpu/drm/i915/gem/i915_gemfs.c b/drivers/gpu/drm/i915/gem/i915_gemfs.c
+index 099f3397aada..be94598cb304 100644
+--- a/drivers/gpu/drm/i915/gem/i915_gemfs.c
++++ b/drivers/gpu/drm/i915/gem/i915_gemfs.c
+@@ -20,31 +20,18 @@ int i915_gemfs_init(struct drm_i915_private *i915)
+ 	if (!type)
+ 		return -ENODEV;
+ 
+-	gemfs = kern_mount(type);
+-	if (IS_ERR(gemfs))
+-		return PTR_ERR(gemfs);
+-
+ 	/*
+-	 * Enable huge-pages for objects that are at least HPAGE_PMD_SIZE, most
+-	 * likely 2M. Note that within_size may overallocate huge-pages, if say
+-	 * we allocate an object of size 2M + 4K, we may get 2M + 2M, but under
+-	 * memory pressure shmem should split any huge-pages which can be
+-	 * shrunk.
++	 * By creating our own shmemfs mountpoint, we can pass in
++	 * mount flags that better match our usecase.
++	 *
++	 * One example, although it is probably better with a per-file
++	 * control, is selecting huge page allocations ("huge=within").
++	 * Currently unused due to bandwidth issues (slow reads) on Broadwell+.
+ 	 */
+ 
+-	if (has_transparent_hugepage()) {
+-		struct super_block *sb = gemfs->mnt_sb;
+-		/* FIXME: Disabled until we get W/A for read BW issue. */
+-		char options[] = "huge=never";
+-		int flags = 0;
+-		int err;
+-
+-		err = sb->s_op->remount_fs(sb, &flags, options);
+-		if (err) {
+-			kern_unmount(gemfs);
+-			return err;
+-		}
+-	}
++	gemfs = kern_mount(type);
++	if (IS_ERR(gemfs))
++		return PTR_ERR(gemfs);
+ 
+ 	i915->mm.gemfs = gemfs;
+ 
+-- 
+2.23.0.rc1
 
