@@ -2,162 +2,143 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0CD1C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:07:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10301C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:07:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7929D2189D
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:07:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8D99208C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:07:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ZD9Qby7H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731886AbfHHMHG (ORCPT
+        id S1732167AbfHHMHI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 08:07:06 -0400
-Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:40800 "EHLO
-        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726156AbfHHMHG (ORCPT
+        Thu, 8 Aug 2019 08:07:08 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:40421 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730768AbfHHMHG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 8 Aug 2019 08:07:06 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R861e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=luoben@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0TYy96hE_1565265994;
-Received: from localhost(mailfrom:luoben@linux.alibaba.com fp:SMTPD_---0TYy96hE_1565265994)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 08 Aug 2019 20:06:42 +0800
-From:   Ben Luo <luoben@linux.alibaba.com>
-To:     tglx@linutronix.de, alex.williamson@redhat.com,
-        linux-kernel@vger.kernel.org
-Cc:     tao.ma@linux.alibaba.com, gerry@linux.alibaba.com
-Subject: [PATCH 1/2] genirq: introduce update_irq_devid()
-Date:   Thu,  8 Aug 2019 20:07:31 +0800
-Message-Id: <39a5009c77d07c3ce42ef784465c05e36d5f684d.1565263723.git.luoben@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <cover.1565263723.git.luoben@linux.alibaba.com>
-References: <cover.1565263723.git.luoben@linux.alibaba.com>
-In-Reply-To: <cover.1565263723.git.luoben@linux.alibaba.com>
-References: <cover.1565263723.git.luoben@linux.alibaba.com>
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190808120705euoutp01422c5d65b7309dbf425af6f84e5517c0~48Sggs50k2691426914euoutp01b
+        for <linux-kernel@vger.kernel.org>; Thu,  8 Aug 2019 12:07:05 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190808120705euoutp01422c5d65b7309dbf425af6f84e5517c0~48Sggs50k2691426914euoutp01b
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1565266025;
+        bh=wTw/zSeiLhrpgMAmruYSw68EDrMJ/8vKBiwL047PITk=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=ZD9Qby7HYzK2lC/Vjog5BsNSIQok+U2a79R4NfUYZ5OVWLZfcwlUnx0f647kw6yUO
+         Knw+x+gXeRGmB+G9KZ8qdxXpn2yQCHWxWWnK5uDRw08HrL19Fzb/m/8vMc03shMpl7
+         Y61oYV36bxW4+HvjPLjyHP+iDmbVJ8zRmUpIuCUs=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190808120704eucas1p27aa37a816849c9af2f5fddc64eccffdc~48Sf44cAI2249122491eucas1p2O;
+        Thu,  8 Aug 2019 12:07:04 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 2E.16.04469.8601C4D5; Thu,  8
+        Aug 2019 13:07:04 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190808120703eucas1p1a79a8e2eab56201d5bdf16bf674302db~48SfLFaJE1416214162eucas1p1k;
+        Thu,  8 Aug 2019 12:07:03 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190808120703eusmtrp1b9096581da07a64626585cf295b0c250~48Se8jPPA2071120711eusmtrp1T;
+        Thu,  8 Aug 2019 12:07:03 +0000 (GMT)
+X-AuditID: cbfec7f2-54fff70000001175-0e-5d4c10681521
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id A0.37.04166.7601C4D5; Thu,  8
+        Aug 2019 13:07:03 +0100 (BST)
+Received: from [106.120.51.75] (unknown [106.120.51.75]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190808120702eusmtip140fc4db0fc50f1d5d9b94f81dfd5dc16~48SeYg4pt0142001420eusmtip13;
+        Thu,  8 Aug 2019 12:07:02 +0000 (GMT)
+Subject: Re: [PATCH v2 1/9] soc: samsung: Add exynos chipid driver support
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     robh+dt@kernel.org, vireshk@kernel.org, devicetree@vger.kernel.org,
+        kgene@kernel.org, pankaj.dubey@samsung.com,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= 
+        <b.zolnierkie@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
+Message-ID: <b3a31424-84ec-63d7-16ca-26333ad12123@samsung.com>
+Date:   Thu, 8 Aug 2019 14:07:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <CAJKOXPfLBif-=09B9jZ3qN1kWdTAcrBQZGvZ+A-MUifXK4si9Q@mail.gmail.com>
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0hTcRT2t3vv7nVs+nNaHuyFQ+wB+YCKC4a9ySzQiKAUqVte1NymbGpZ
+        gVpoapqilY+MNJVsEepKDcWQOZ0mKdoyQXyhZQ8NUsPMV5tXyf++c77vfOd8cBhC3kC5MBHq
+        GF6j5pQKsYSsbZ3r3B2OT4V4VbVI2er8Sop9Yuyk2KzRHwTb1VVFs/rRXor9UF8kZqczjYjN
+        73orYl8aB2j2ac0MzSY3Gmn21XCr+KDUT69LE/u9Kkvwu/dah/ym9VsDySDJ/lBeGRHHazx9
+        L0rCsxpzyegs6lr6XLEoEZWR6ciWAbwH3s0lEelIwshxBYLucTNtJeR4BsHQC3uBmEaQ9t6A
+        1iZyar6JBOIZgorqMVooJhE01d21MAzjiP2hPFljHXDCO+HT4ixlxQQuJWDq8V4rFmNvyGy5
+        h6xyGfaFFiNjbZPYDXQl6SvyDfgcTA03r2AZdoD2grGVq23xaTAWlJOCpTPcmnm+ar8N6iaL
+        VtIA7qVhxNhPWP0BH4WRJGfhfkf4bnpNC3gzdORmkIL+NoKMhn5aKLIt6U3Fq4l9oNnUTVmN
+        CEuYynpPoX0I+trGKMHfDvomHYQb7CCnNm91rQxSU+SC2g3mdXkiAbvA3bFlMhspCtclK1yX
+        pnBdmsL/e4sRqUPOfKxWFcZrvdX8VQ8tp9LGqsM8Lkep9MjyUh1Lpqk36HfPJQPCDFJIZdFt
+        J0PkFBenjVcZEDCEwkk2GHciRC4L5eKv85qoC5pYJa81oE0MqXCW3bAZDpbjMC6Gj+T5aF6z
+        xooYW5dE9ODAuFl/7Ka9wTPz/N+ofWX2W45zgXUTf5ruyMx5E5CAvCIYLmDRN7gqxWZqhzRI
+        fNjO4+yR0T5mY4pKmbFQWtD+sGvB33VWaTY1Lie5Gjzc08Rmu5yf24dCl5PuLw18vPLrc1NJ
+        qddgUOrwsa9nHmkCRuZyp0skkV98jqrn3XsUpDac895FaLTcP8VQrehOAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrPIsWRmVeSWpSXmKPExsVy+t/xu7rpAj6xBrObJCw2zljPajH/yDlW
+        i/7Hr5ktzp/fwG6x6fE1VovLu+awWXzuPcJoMeP8PiaLtUfuslss2vqF3aJ17xF2i80PjrE5
+        8HhsWtXJ5rF5Sb1H35ZVjB6fN8kFsETp2RTll5akKmTkF5fYKkUbWhjpGVpa6BmZWOoZGpvH
+        WhmZKunb2aSk5mSWpRbp2yXoZfTvncxS0M9a0fVzAVMD4xKWLkZODgkBE4lJW18ydTFycQgJ
+        LGWUeLLuEHMXIwdQQkpifosSRI2wxJ9rXWwQNa8ZJZ5fuMgEUiMs4CWxtLUIpEZEQFPi+t/v
+        rCA1zAKLmSUurJ/PDtHQwSTRPBVkAycHm4ChRO/RPkaQZl4BO4mjRzhAwiwCKhKrFnaxgtii
+        AhESh3fMYgSxeQUEJU7OfAJ2KKdAoMSRmUvBbGYBdYk/8y4xQ9jiEk1fVrJC2PIS29/OYZ7A
+        KDQLSfssJC2zkLTMQtKygJFlFaNIamlxbnpusaFecWJucWleul5yfu4mRmBkbjv2c/MOxksb
+        gw8xCnAwKvHwFpzwjhViTSwrrsw9xCjBwawkwnuvzDNWiDclsbIqtSg/vqg0J7X4EKMp0HMT
+        maVEk/OBSSOvJN7Q1NDcwtLQ3Njc2MxCSZy3Q+BgjJBAemJJanZqakFqEUwfEwenVANjRuS0
+        ihWtOkdz1HSZ3aZJKC7f/+a8/0PTgD1p61+pncrKDpdMVA97o6wX+enVqw0/krwz2Sf9Ubr2
+        6PHxko49UQtu1rxMSvgWsU7X2f9MVzK/1oSM7eJL2iaZehVKRC+e+7j9YKz6zSSzXpvPJwvv
+        LPw8Zw3DkvU3FbjeTtGQ2HI2peTcwuaVSizFGYmGWsxFxYkA9u7/3OICAAA=
+X-CMS-MailID: 20190808120703eucas1p1a79a8e2eab56201d5bdf16bf674302db
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190718143127eucas1p13b1e2c98d270140a87f09562ef46c9a3
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190718143127eucas1p13b1e2c98d270140a87f09562ef46c9a3
+References: <CGME20190718143127eucas1p13b1e2c98d270140a87f09562ef46c9a3@eucas1p1.samsung.com>
+        <20190718143044.25066-1-s.nawrocki@samsung.com>
+        <20190718143044.25066-2-s.nawrocki@samsung.com>
+        <CAJKOXPfLBif-=09B9jZ3qN1kWdTAcrBQZGvZ+A-MUifXK4si9Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sometimes, only the dev_id field of irqaction need to be changed.
-E.g. KVM VM with device passthru via VFIO may switch irq injection
-path between KVM irqfd and userspace eventfd. These two paths
-share the same irq num and handler for the same vector of a device,
-only with different dev_id referencing to different fds' contexts.
+On 7/23/19 14:57, Krzysztof Kozlowski wrote:
+>> diff --git a/drivers/soc/samsung/exynos-chipid.c b/drivers/soc/samsung/exynos-chipid.c
 
-So, instead of free/request irq, only update dev_id of irqaction.
-This narrows the gap for setting up new irq (and irte, if has)
-and also gains some performance benefit.
+>> --- /dev/null
+>> +++ b/drivers/soc/samsung/exynos-chipid.c
+>> @@ -0,0 +1,111 @@
+>> +// SPDX-License-Identifier: GPL-2.0
 
-Signed-off-by: Ben Luo <luoben@linux.alibaba.com>
-Reviewed-by: Liu Jiang <gerry@linux.alibaba.com>
----
- include/linux/interrupt.h |  3 ++
- kernel/irq/manage.c       | 74 +++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 77 insertions(+)
+>> +#include <linux/io.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/of_platform.h>
+>> +#include <linux/platform_device.h>
+>
+> Any changes here from my previous comments?
 
-diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
-index 5b8328a..2838113 100644
---- a/include/linux/interrupt.h
-+++ b/include/linux/interrupt.h
-@@ -172,6 +172,9 @@ struct irqaction {
- request_percpu_nmi(unsigned int irq, irq_handler_t handler,
- 		   const char *devname, void __percpu *dev);
- 
-+extern int update_irq_devid(unsigned int irq, void *dev_id,
-+		void *new_dev_id);
-+
- extern const void *free_irq(unsigned int, void *);
- extern void free_percpu_irq(unsigned int, void __percpu *);
- 
-diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
-index e8f7f17..18dc10d 100644
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -2059,6 +2059,80 @@ int request_threaded_irq(unsigned int irq, irq_handler_t handler,
- EXPORT_SYMBOL(request_threaded_irq);
- 
- /**
-+ *	update_irq_devid - update irq dev_id to a new one
-+ *	@irq: Interrupt line to update
-+ *	@dev_id: A cookie to find the irqaction to update
-+ *	@new_dev_id: New cookie passed to the handler function
-+ *
-+ *	Sometimes, only the cookie data need to be changed.
-+ *	Instead of free/request irq, only update dev_id here
-+ *	Not only to gain some performance benefit, but also
-+ *	reduce the risk of losing interrupt.
-+ *
-+ *	E.g. irq affinity setting in a VM with VFIO passthru
-+ *	device is carried out in a free-then-request-irq way
-+ *	since lack of this very function. The free_irq()
-+ *	eventually triggers deactivation of IR domain, which
-+ *	will cleanup IRTE. There is a gap before request_irq()
-+ *	finally setup the IRTE again. In this gap, a in-flight
-+ *	irq buffering in hardware layer may trigger DMAR fault
-+ *	and be lost.
-+ *
-+ *	On failure, it returns a negative value. On success,
-+ *	it returns 0
-+ */
-+int update_irq_devid(unsigned int irq, void *dev_id, void *new_dev_id)
-+{
-+	struct irq_desc *desc = irq_to_desc(irq);
-+	struct irqaction *action, **action_ptr;
-+	unsigned long flags;
-+
-+	WARN(in_interrupt(),
-+			"Trying to update IRQ %d from IRQ context!\n", irq);
-+
-+	if (!desc)
-+		return -EINVAL;
-+
-+	chip_bus_lock(desc);
-+	raw_spin_lock_irqsave(&desc->lock, flags);
-+
-+	/*
-+	 * There can be multiple actions per IRQ descriptor, find the right
-+	 * one based on the dev_id:
-+	 */
-+	action_ptr = &desc->action;
-+	for (;;) {
-+		action = *action_ptr;
-+
-+		if (!action) {
-+			WARN(1, "Trying to update already-free IRQ %d\n", irq);
-+			raw_spin_unlock_irqrestore(&desc->lock, flags);
-+			chip_bus_sync_unlock(desc);
-+			return -ENXIO;
-+		}
-+
-+		if (action->dev_id == dev_id) {
-+			action->dev_id = new_dev_id;
-+			break;
-+		}
-+		action_ptr = &action->next;
-+	}
-+
-+	raw_spin_unlock_irqrestore(&desc->lock, flags);
-+	chip_bus_sync_unlock(desc);
-+
-+	/*
-+	 * Make sure it's not being used on another CPU:
-+	 * There is a risk of UAF for old *dev_id, if it is
-+	 * freed in a short time after this func returns
-+	 */
-+	synchronize_irq(irq);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(update_irq_devid);
-+
-+/**
-  *	request_any_context_irq - allocate an interrupt line
-  *	@irq: Interrupt line to allocate
-  *	@handler: Function to be called when the IRQ occurs.
+Oops, I tried hard to not miss any of the comments but probably not hard enough.
+The two above platform header files will be removed in v3.
+
 -- 
-1.8.3.1
-
+Regards,
+Sylwester
