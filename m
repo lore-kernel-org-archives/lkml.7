@@ -2,1476 +2,407 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E6FC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B27DCC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 21:00:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7032821743
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:59:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Sl01ViD+"
+	by mail.kernel.org (Postfix) with ESMTP id 7781E2173C
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 21:00:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390377AbfHHU7e (ORCPT
+        id S2390421AbfHHVAS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 16:59:34 -0400
-Received: from mail-eopbgr20048.outbound.protection.outlook.com ([40.107.2.48]:23062
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725535AbfHHU7d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 16:59:33 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Hw+qSMvXKU2WqhuqVxVnVh0L2SazRzHZSHyUn/RpV7GV8UkzfuFiA0z9yCbIKbkQcpvmiqEE19ahDGhcjetUVKLBQUtB5AAJxN5Cs+eE1Mxe7jKjxnecTsrQpFZvPJ1CSwLS64qZ+1A15C5QwO+0eVhqmv6gStsQriEXHCurhZWHF0/joRBEWBtaqWBoKsXeDxAWVc1i0JddVzWWxVX5JVGNBNB67ap+lQm6uCT02XdkEPi88ggUtnkosz5O9GJGfuS/Q030XaplZLaXFKyFUZrLrfSoiZGZVdUgWVTKV9wJe3jnXxnAO/2pXcxfQ3WJMVThKiKIwryK27kpoVZ7eA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uNT/KGjVKxawowxV0yh0z1gbrT79ZAqgLhlQZy6i8Y8=;
- b=Y2chqCxK2N8dZUsnkV4FUTtrP05agJdmrDr6CT8QgM0poPl0xy6katQetDGkBb/5h+l+92tC0S8r0Jf4Qj13iHbSkGq4jFISgDjUiWL6FEPP7fOmQssO/k4zLmUSqxYdS2b3fCa5+0ZVW1scOlsa/ZgqaOVYOYUmQj9xjA1n6K8EzirO81xf5GrOb12u8UE4QfQEsmG6DFFFuRkc4Ui9NhO/fMp6SH0gACFM126kpE2TjZQHplpzck0oq1Jdq/PFpt6gX+3eKy+Tb3tZ0uQLYOakV3D4qGV78kfIPM80CEFJ6KaU68RM80axpX/Vb4K9sptRKRcZ+668diwvLt5/FQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uNT/KGjVKxawowxV0yh0z1gbrT79ZAqgLhlQZy6i8Y8=;
- b=Sl01ViD+9TUaAySmy6AOPafx4Il/KVH7PhRf4lEj0Tu4tfML0Sow85MSi0ihye/knzJW/iAL5KmrFm0LMXQSmRWm6cNkkOy3ke9eqSHW5R0mfVMwpuV0caUbE8fdDD0afy/uwBLN0jnEyNZZFgVGnyZ1lswJn4r45Ym9NvZzVpI=
-Received: from DB8PR04MB5931.eurprd04.prod.outlook.com (20.179.11.140) by
- DB8PR04MB7115.eurprd04.prod.outlook.com (52.135.61.212) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.14; Thu, 8 Aug 2019 20:59:16 +0000
-Received: from DB8PR04MB5931.eurprd04.prod.outlook.com
- ([fe80::2113:e1:d879:2b4a]) by DB8PR04MB5931.eurprd04.prod.outlook.com
- ([fe80::2113:e1:d879:2b4a%3]) with mapi id 15.20.2136.018; Thu, 8 Aug 2019
- 20:59:16 +0000
-From:   Youri Querry <youri.querry_1@nxp.com>
-To:     Roy Pledge <roy.pledge@nxp.com>, Leo Li <leoyang.li@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Ioana Ciocoi Radulescu <ruxandra.radulescu@nxp.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>
-CC:     Youri Querry <youri.querry_1@nxp.com>
-Subject: [PATCH] soc: fsl: dpio: Add support for QBMan ring bulk enqueue.
-Thread-Topic: [PATCH] soc: fsl: dpio: Add support for QBMan ring bulk enqueue.
-Thread-Index: AQHVTiwkE9TgRlkRX0y9rkZA4kXV5Q==
-Date:   Thu, 8 Aug 2019 20:59:16 +0000
-Message-ID: <1565297931-21138-1-git-send-email-youri.querry_1@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: DM5PR21CA0022.namprd21.prod.outlook.com
- (2603:10b6:3:ac::32) To DB8PR04MB5931.eurprd04.prod.outlook.com
- (2603:10a6:10:ae::12)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=youri.querry_1@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.7.4
-x-originating-ip: [72.142.119.78]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d1163cd7-6132-47e2-fc59-08d71c43465e
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB8PR04MB7115;
-x-ms-traffictypediagnostic: DB8PR04MB7115:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB8PR04MB7115738195A4B04ABD0DA518F3D70@DB8PR04MB7115.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3513;
-x-forefront-prvs: 012349AD1C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(376002)(346002)(39860400002)(366004)(199004)(189003)(25786009)(99286004)(52116002)(4326008)(50226002)(305945005)(81156014)(7736002)(478600001)(81166006)(86362001)(8936002)(64756008)(5660300002)(66946007)(66476007)(66556008)(66446008)(2616005)(6116002)(316002)(53936002)(30864003)(2501003)(3846002)(66066001)(110136005)(71190400001)(476003)(14454004)(8676002)(36756003)(386003)(6506007)(14444005)(2201001)(6436002)(6636002)(2906002)(186003)(6486002)(486006)(102836004)(53946003)(6512007)(26005)(71200400001)(256004)(559001)(569006);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB7115;H:DB8PR04MB5931.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: BaIYdf76LILDz3lzUkGCwceqzQfu4rYlz/7Y5EfYlAULITcDKCE7Pgh7yjHjfWwEhc75oCOFweZ49IQlSJipHS9aD92p9GMGk6lxUjjWLNmUmBsl6uZ4zbJdHW3FJ0jYmkaefpnmdFtDz0oYa9m0kgyBoAO2fy9WUszDoHG0G3CBfuq042AI31tdVjmevVA/te3jmEsRlU9BF8zCfVcSK7V660T2f+5snnPFaPMwPuYRuGDFz/YmLp+42HeMwajPTBJ4LVVazHvoPFXClRUjjo1b5Cqs9MKlO1n4xMjWtPz5evlYlvZOG02frLrZUEFBTnhYrCM7MXPiULa91rboGlXOfBvkNnhqXdPJEVyZTqfEdveddMQYBj21Z3hhIkLNLA9gn8QrHYJ1UkogqtLjGp0LiI2dL5mIwxxUo6MN51M=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 8 Aug 2019 17:00:18 -0400
+Received: from foss.arm.com ([217.140.110.172]:38606 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725535AbfHHVAR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 17:00:17 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 557341596;
+        Thu,  8 Aug 2019 14:00:14 -0700 (PDT)
+Received: from [192.168.122.164] (U201426.austin.arm.com [10.118.28.59])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AD9613F694;
+        Thu,  8 Aug 2019 14:00:13 -0700 (PDT)
+Subject: Re: [RFC PATCH 2/3] perf tools: Add support for "report" for some spe
+ events
+To:     Tan Xiaojun <tanxiaojun@huawei.com>, peterz@infradead.org,
+        mingo@redhat.com, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, ak@linux.intel.com, adrian.hunter@intel.com,
+        yao.jin@linux.intel.com, tmricht@linux.ibm.com,
+        brueckner@linux.ibm.com, songliubraving@fb.com,
+        gregkh@linuxfoundation.org, Kim Phillips <Kim.Phillips@amd.com>
+Cc:     gengdongjiu@huawei.com, wxf.wang@hisilicon.com,
+        liwei391@huawei.com, huawei.libin@huawei.com,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <1564738813-10944-1-git-send-email-tanxiaojun@huawei.com>
+ <1564738813-10944-3-git-send-email-tanxiaojun@huawei.com>
+From:   Jeremy Linton <jeremy.linton@arm.com>
+Message-ID: <0ac06995-273c-034d-52a3-921ea0337be2@arm.com>
+Date:   Thu, 8 Aug 2019 16:00:12 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d1163cd7-6132-47e2-fc59-08d71c43465e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Aug 2019 20:59:16.8259
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: youri.querry_1@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB7115
+In-Reply-To: <1564738813-10944-3-git-send-email-tanxiaojun@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The QBMan frame descriptor enqueuing is changed from array
- mode (a single frame enqueue at a time) to bulk ring mode.
+Hi,
 
-This new mode allows the enqueuing of multiple frames in one operation.
-The original interface is kept but use the bulk enqueue of one frame
+First thanks for posting this!
 
-Signed-off-by: Youri Querry <youri.querry_1@nxp.com>
----
- drivers/soc/fsl/dpio/dpio-service.c |  69 +++-
- drivers/soc/fsl/dpio/qbman-portal.c | 772 ++++++++++++++++++++++++++++++++=
-----
- drivers/soc/fsl/dpio/qbman-portal.h | 175 +++++++-
- 3 files changed, 935 insertions(+), 81 deletions(-)
+I ran this on our DAWN platform and it does what it says. Its a pretty 
+reasonable start, but I get -1's in the command row rather than "dd" (or 
+similar) and this also results in [unknown] for the shared object and 
+most userspace addresses. This is quite possibly something I'm not doing 
+right, but I didn't spend a lot of time testing/debugging it.
 
-diff --git a/drivers/soc/fsl/dpio/dpio-service.c b/drivers/soc/fsl/dpio/dpi=
-o-service.c
-index b9539ef..4eb53ee 100644
---- a/drivers/soc/fsl/dpio/dpio-service.c
-+++ b/drivers/soc/fsl/dpio/dpio-service.c
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
- /*
-  * Copyright 2014-2016 Freescale Semiconductor Inc.
-- * Copyright 2016 NXP
-+ * Copyright 2016-2019 NXP
-  *
-  */
- #include <linux/types.h>
-@@ -435,6 +435,69 @@ int dpaa2_io_service_enqueue_fq(struct dpaa2_io *d,
- EXPORT_SYMBOL(dpaa2_io_service_enqueue_fq);
-=20
- /**
-+ * dpaa2_io_service_enqueue_multiple_fq() - Enqueue multiple frames
-+ * to a frame queue using one fqid.
-+ * @d: the given DPIO service.
-+ * @fqid: the given frame queue id.
-+ * @fd: the list of frame descriptors enqueued.
-+ * @nb: number of frames to be enqueued
-+ *
-+ * Return the number of enqueued frames (0 if EQCR is busy)
-+ * or -ENODEV if there is no dpio service.
-+ */
-+int dpaa2_io_service_enqueue_multiple_fq(struct dpaa2_io *d,
-+				u32 fqid,
-+				const struct dpaa2_fd *fd,
-+				int nb)
-+{
-+	struct qbman_eq_desc ed;
-+
-+	d =3D service_select(d);
-+	if (!d)
-+		return -ENODEV;
-+
-+	qbman_eq_desc_clear(&ed);
-+	qbman_eq_desc_set_no_orp(&ed, 0);
-+	qbman_eq_desc_set_fq(&ed, fqid);
-+
-+	return qbman_swp_enqueue_multiple(d->swp, &ed, fd, 0, nb);
-+}
-+EXPORT_SYMBOL(dpaa2_io_service_enqueue_multiple_fq);
-+
-+/**
-+ * dpaa2_io_service_enqueue_multiple_desc_fq() - Enqueue multiple frames
-+ * to different frame queue using a list of fqids.
-+ * @d: the given DPIO service.
-+ * @fqid: the given list of frame queue ids.
-+ * @fd: the list of frame descriptors enqueued.
-+ * @nb: number of frames to be enqueued
-+ *
-+ * Return the number of enqueued frames (0 if EQCR is busy)
-+ * or -ENODEV if there is no dpio service.
-+ */
-+int dpaa2_io_service_enqueue_multiple_desc_fq(struct dpaa2_io *d,
-+				u32 *fqid,
-+				const struct dpaa2_fd *fd,
-+				int nb)
-+{
-+	int i;
-+	struct qbman_eq_desc_min ed[32];
-+
-+	d =3D service_select(d);
-+	if (!d)
-+		return -ENODEV;
-+
-+	for (i =3D 0; i < nb; i++) {
-+		qbman_eq_desc_min_clear(&ed[i]);
-+		qbman_eq_desc_set_no_orp_min(&ed[i], 0);
-+		qbman_eq_desc_set_min_fq(&ed[i], fqid[i]);
-+	}
-+
-+	return qbman_swp_enqueue_multiple_desc(d->swp, &ed[0], fd, nb);
-+}
-+EXPORT_SYMBOL(dpaa2_io_service_enqueue_multiple_desc_fq);
-+
-+/**
-  * dpaa2_io_service_enqueue_qd() - Enqueue a frame to a QD.
-  * @d: the given DPIO service.
-  * @qdid: the given queuing destination id.
-@@ -528,7 +591,7 @@ EXPORT_SYMBOL_GPL(dpaa2_io_service_acquire);
-=20
- /**
-  * dpaa2_io_store_create() - Create the dma memory storage for dequeue res=
-ult.
-- * @max_frames: the maximum number of dequeued result for frames, must be =
-<=3D 16.
-+ * @max_frames: the maximum number of dequeued result for frames, must be =
-<=3D 32.
-  * @dev:        the device to allow mapping/unmapping the DMAable region.
-  *
-  * The size of the storage is "max_frames*sizeof(struct dpaa2_dq)".
-@@ -543,7 +606,7 @@ struct dpaa2_io_store *dpaa2_io_store_create(unsigned i=
-nt max_frames,
- 	struct dpaa2_io_store *ret;
- 	size_t size;
-=20
--	if (!max_frames || (max_frames > 16))
-+	if (!max_frames || (max_frames > 32))
- 		return NULL;
-=20
- 	ret =3D kmalloc(sizeof(*ret), GFP_KERNEL);
-diff --git a/drivers/soc/fsl/dpio/qbman-portal.c b/drivers/soc/fsl/dpio/qbm=
-an-portal.c
-index c66f5b7..c892a86 100644
---- a/drivers/soc/fsl/dpio/qbman-portal.c
-+++ b/drivers/soc/fsl/dpio/qbman-portal.c
-@@ -1,13 +1,14 @@
- // SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
- /*
-  * Copyright (C) 2014-2016 Freescale Semiconductor, Inc.
-- * Copyright 2016 NXP
-+ * Copyright 2016-2019 NXP
-  *
-  */
-=20
- #include <asm/cacheflush.h>
- #include <linux/io.h>
- #include <linux/slab.h>
-+#include <linux/spinlock.h>
- #include <soc/fsl/dpaa2-global.h>
-=20
- #include "qbman-portal.h"
-@@ -28,6 +29,7 @@
-=20
- /* CINH register offsets */
- #define QBMAN_CINH_SWP_EQCR_PI      0x800
-+#define QBMAN_CINH_SWP_EQCR_CI	    0x840
- #define QBMAN_CINH_SWP_EQAR    0x8c0
- #define QBMAN_CINH_SWP_CR_RT        0x900
- #define QBMAN_CINH_SWP_VDQCR_RT     0x940
-@@ -51,6 +53,8 @@
- #define QBMAN_CENA_SWP_CR      0x600
- #define QBMAN_CENA_SWP_RR(vb)  (0x700 + ((u32)(vb) >> 1))
- #define QBMAN_CENA_SWP_VDQCR   0x780
-+#define QBMAN_CENA_SWP_EQCR_CI 0x840
-+#define QBMAN_CENA_SWP_EQCR_CI_MEMBACK 0x1840
-=20
- /* CENA register offsets in memory-backed mode */
- #define QBMAN_CENA_SWP_DQRR_MEM(n)  (0x800 + ((u32)(n) << 6))
-@@ -78,6 +82,12 @@
- /* opaque token for static dequeues */
- #define QMAN_SDQCR_TOKEN    0xbb
-=20
-+#define QBMAN_EQCR_DCA_IDXMASK          0x0f
-+#define QBMAN_ENQUEUE_FLAG_DCA          (1ULL << 31)
-+
-+#define EQ_DESC_SIZE_WITHOUT_FD 29
-+#define EQ_DESC_SIZE_FD_START 32
-+
- enum qbman_sdqcr_dct {
- 	qbman_sdqcr_dct_null =3D 0,
- 	qbman_sdqcr_dct_prio_ics,
-@@ -90,6 +100,82 @@ enum qbman_sdqcr_fc {
- 	qbman_sdqcr_fc_up_to_3 =3D 1
- };
-=20
-+/* Internal Function declaration */
-+static int qbman_swp_enqueue_ring_mode_direct(struct qbman_swp *s,
-+					      const struct qbman_eq_desc *d,
-+					      const struct dpaa2_fd *fd);
-+static int qbman_swp_enqueue_ring_mode_mem_back(struct qbman_swp *s,
-+						const struct qbman_eq_desc *d,
-+						const struct dpaa2_fd *fd);
-+static int qbman_swp_enqueue_multiple_direct(struct qbman_swp *s,
-+					     const struct qbman_eq_desc *d,
-+					     const struct dpaa2_fd *fd,
-+					     uint32_t *flags,
-+					     int num_frames);
-+static int qbman_swp_enqueue_multiple_mem_back(struct qbman_swp *s,
-+					       const struct qbman_eq_desc *d,
-+					       const struct dpaa2_fd *fd,
-+					       uint32_t *flags,
-+					       int num_frames);
-+static int
-+qbman_swp_enqueue_multiple_desc_direct(struct qbman_swp *s,
-+				       const struct qbman_eq_desc_min *d,
-+				       const struct dpaa2_fd *fd,
-+				       int num_frames);
-+static
-+int qbman_swp_enqueue_multiple_desc_mem_back(struct qbman_swp *s,
-+					     const struct qbman_eq_desc_min *d,
-+					     const struct dpaa2_fd *fd,
-+					     int num_frames);
-+static int qbman_swp_pull_direct(struct qbman_swp *s,
-+				 struct qbman_pull_desc *d);
-+static int qbman_swp_pull_mem_back(struct qbman_swp *s,
-+				   struct qbman_pull_desc *d);
-+
-+const struct dpaa2_dq *qbman_swp_dqrr_next_direct(struct qbman_swp *s);
-+const struct dpaa2_dq *qbman_swp_dqrr_next_mem_back(struct qbman_swp *s);
-+
-+static int qbman_swp_release_direct(struct qbman_swp *s,
-+				    const struct qbman_release_desc *d,
-+				    const u64 *buffers,
-+				    unsigned int num_buffers);
-+static int qbman_swp_release_mem_back(struct qbman_swp *s,
-+				      const struct qbman_release_desc *d,
-+				      const u64 *buffers,
-+				      unsigned int num_buffers);
-+
-+/* Function pointers */
-+int (*qbman_swp_enqueue_ring_mode_ptr)(struct qbman_swp *s,
-+				       const struct qbman_eq_desc *d,
-+				       const struct dpaa2_fd *fd)
-+	=3D qbman_swp_enqueue_ring_mode_direct;
-+
-+int (*qbman_swp_enqueue_multiple_ptr)(struct qbman_swp *s,
-+				      const struct qbman_eq_desc *d,
-+				      const struct dpaa2_fd *fd,
-+				      uint32_t *flags,
-+					     int num_frames)
-+	=3D qbman_swp_enqueue_multiple_direct;
-+
-+int
-+(*qbman_swp_enqueue_multiple_desc_ptr)(struct qbman_swp *s,
-+				       const struct qbman_eq_desc_min *d,
-+				       const struct dpaa2_fd *fd,
-+				       int num_frames)
-+	=3D qbman_swp_enqueue_multiple_desc_direct;
-+
-+int (*qbman_swp_pull_ptr)(struct qbman_swp *s, struct qbman_pull_desc *d)
-+			=3D qbman_swp_pull_direct;
-+
-+const struct dpaa2_dq *(*qbman_swp_dqrr_next_ptr)(struct qbman_swp *s)
-+			=3D qbman_swp_dqrr_next_direct;
-+
-+int (*qbman_swp_release_ptr)(struct qbman_swp *s,
-+			     const struct qbman_release_desc *d,
-+			     const u64 *buffers,
-+			     unsigned int num_buffers)
-+			=3D qbman_swp_release_direct;
-+
- /* Portal Access */
-=20
- static inline u32 qbman_read_register(struct qbman_swp *p, u32 offset)
-@@ -146,6 +232,15 @@ static inline u32 qbman_set_swp_cfg(u8 max_fill, u8 wn=
-,	u8 est, u8 rpm, u8 dcm,
-=20
- #define QMAN_RT_MODE	   0x00000100
-=20
-+static inline u8 qm_cyc_diff(u8 ringsize, u8 first, u8 last)
-+{
-+	/* 'first' is included, 'last' is excluded */
-+	if (first <=3D last)
-+		return last - first;
-+	else
-+		return (2 * ringsize) - (first - last);
-+}
-+
- /**
-  * qbman_swp_init() - Create a functional object representing the given
-  *                    QBMan portal descriptor.
-@@ -156,8 +251,12 @@ static inline u32 qbman_set_swp_cfg(u8 max_fill, u8 wn=
-,	u8 est, u8 rpm, u8 dcm,
-  */
- struct qbman_swp *qbman_swp_init(const struct qbman_swp_desc *d)
- {
--	struct qbman_swp *p =3D kmalloc(sizeof(*p), GFP_KERNEL);
-+	struct qbman_swp *p =3D kzalloc(sizeof(*p), GFP_KERNEL);
- 	u32 reg;
-+	u32 mask_size;
-+	u32 eqcr_pi;
-+
-+	spin_lock_init(&p->access_spinlock);
-=20
- 	if (!p)
- 		return NULL;
-@@ -189,22 +288,39 @@ struct qbman_swp *qbman_swp_init(const struct qbman_s=
-wp_desc *d)
- 	if ((p->desc->qman_version & QMAN_REV_MASK) >=3D QMAN_REV_5000)
- 		memset(p->addr_cena, 0, 64 * 1024);
-=20
--	reg =3D qbman_set_swp_cfg(p->dqrr.dqrr_size,
--				1, /* Writes Non-cacheable */
--				0, /* EQCR_CI stashing threshold */
--				3, /* RPM: Valid bit mode, RCR in array mode */
--				2, /* DCM: Discrete consumption ack mode */
--				3, /* EPM: Valid bit mode, EQCR in array mode */
--				1, /* mem stashing drop enable =3D=3D TRUE */
--				1, /* mem stashing priority =3D=3D TRUE */
--				1, /* mem stashing enable =3D=3D TRUE */
--				1, /* dequeue stashing priority =3D=3D TRUE */
--				0, /* dequeue stashing enable =3D=3D FALSE */
--				0); /* EQCR_CI stashing priority =3D=3D FALSE */
--	if ((p->desc->qman_version & QMAN_REV_MASK) >=3D QMAN_REV_5000)
-+	if ((p->desc->qman_version & QMAN_REV_MASK) >=3D QMAN_REV_5000) {
-+
-+		reg =3D qbman_set_swp_cfg(p->dqrr.dqrr_size,
-+			0, /* Writes Non-cacheable */
-+			1, /* EQCR_CI stashing threshold */
-+			3, /* RPM: RCR in array mode */
-+			2, /* DCM: Discrete consumption ack */
-+			0, /* EPM: EQCR in ring mode */
-+			1, /* mem stashing drop enable */
-+			1, /* mem stashing priority enable */
-+			1, /* mem stashing enable */
-+			1, /* dequeue stashing priority enable */
-+			0, /* dequeue stashing enable */
-+			0); /* EQCR_CI stashing priority enable */
-+	} else {
-+		reg =3D qbman_set_swp_cfg(p->dqrr.dqrr_size,
-+			1, /* Writes Non-cacheable */
-+			0, /* EQCR_CI stashing threshold */
-+			3, /* RPM: RCR in array mode */
-+			2, /* DCM: Discrete consumption ack */
-+			2, /* EPM: EQCR in ring mode */
-+			1, /* mem stashing drop enable enable */
-+			1, /* mem stashing priority enable */
-+			1, /* mem stashing enable */
-+			1, /* dequeue stashing priority Tenable */
-+			0, /* dequeue stashing enable enable */
-+			0); /* EQCR_CI stashing priority enable */
-+	}
-+	if ((p->desc->qman_version & QMAN_REV_MASK) >=3D QMAN_REV_5000) {
- 		reg |=3D 1 << SWP_CFG_CPBS_SHIFT | /* memory-backed mode */
- 		       1 << SWP_CFG_VPM_SHIFT |  /* VDQCR read triggered mode */
- 		       1 << SWP_CFG_CPM_SHIFT;   /* CR read triggered mode */
-+	}
-=20
- 	qbman_write_register(p, QBMAN_CINH_SWP_CFG, reg);
- 	reg =3D qbman_read_register(p, QBMAN_CINH_SWP_CFG);
-@@ -225,6 +341,30 @@ struct qbman_swp *qbman_swp_init(const struct qbman_sw=
-p_desc *d)
- 	 * applied when dequeues from a specific channel are enabled.
- 	 */
- 	qbman_write_register(p, QBMAN_CINH_SWP_SDQCR, 0);
-+
-+	p->eqcr.pi_ring_size =3D 8;
-+	if ((p->desc->qman_version & QMAN_REV_MASK) >=3D QMAN_REV_5000) {
-+		p->eqcr.pi_ring_size =3D 32;
-+		qbman_swp_enqueue_ring_mode_ptr =3D
-+			qbman_swp_enqueue_ring_mode_mem_back;
-+		qbman_swp_enqueue_multiple_ptr =3D
-+			qbman_swp_enqueue_multiple_mem_back;
-+		qbman_swp_enqueue_multiple_desc_ptr =3D
-+			qbman_swp_enqueue_multiple_desc_mem_back;
-+		qbman_swp_pull_ptr =3D qbman_swp_pull_mem_back;
-+		qbman_swp_dqrr_next_ptr =3D qbman_swp_dqrr_next_mem_back;
-+		qbman_swp_release_ptr =3D qbman_swp_release_mem_back;
-+	}
-+
-+	for (mask_size =3D p->eqcr.pi_ring_size; mask_size > 0; mask_size >>=3D 1=
-)
-+		p->eqcr.pi_ci_mask =3D (p->eqcr.pi_ci_mask << 1) + 1;
-+	eqcr_pi =3D qbman_read_register(p, QBMAN_CINH_SWP_EQCR_PI);
-+	p->eqcr.pi =3D eqcr_pi & p->eqcr.pi_ci_mask;
-+	p->eqcr.pi_vb =3D eqcr_pi & QB_VALID_BIT;
-+	p->eqcr.ci =3D qbman_read_register(p, QBMAN_CINH_SWP_EQCR_CI)
-+			& p->eqcr.pi_ci_mask;
-+	p->eqcr.available =3D p->eqcr.pi_ring_size;
-+
- 	return p;
- }
-=20
-@@ -378,6 +518,7 @@ enum qb_enqueue_commands {
- #define QB_ENQUEUE_CMD_ORP_ENABLE_SHIFT      2
- #define QB_ENQUEUE_CMD_IRQ_ON_DISPATCH_SHIFT 3
- #define QB_ENQUEUE_CMD_TARGET_TYPE_SHIFT     4
-+#define QB_ENQUEUE_CMD_DCA_EN_SHIFT          7
-=20
- /**
-  * qbman_eq_desc_clear() - Clear the contents of a descriptor to
-@@ -389,6 +530,16 @@ void qbman_eq_desc_clear(struct qbman_eq_desc *d)
- }
-=20
- /**
-+ * qbman_eq_desc_min_clear() - Clear the contents of a minimal
-+ *			   enqueue descriptor to
-+ *                         default/starting state.
-+ */
-+void qbman_eq_desc_min_clear(struct qbman_eq_desc_min *d)
-+{
-+	memset(d, 0, sizeof(*d));
-+}
-+
-+/**
-  * qbman_eq_desc_set_no_orp() - Set enqueue descriptor without orp
-  * @d:                the enqueue descriptor.
-  * @response_success: 1 =3D enqueue with response always; 0 =3D enqueue wi=
-th
-@@ -403,6 +554,22 @@ void qbman_eq_desc_set_no_orp(struct qbman_eq_desc *d,=
- int respond_success)
- 		d->verb |=3D enqueue_rejects_to_fq;
- }
-=20
-+/**
-+ * qbman_eq_desc_set_no_orp_min() - Set minimal enqueue descriptor without=
- orp
-+ * @d:                the enqueue descriptor.
-+ * @response_success: 1 =3D enqueue with response always; 0 =3D enqueue wi=
-th
-+ *                    rejections returned on a FQ.
-+ */
-+void qbman_eq_desc_set_no_orp_min(struct qbman_eq_desc_min *d,
-+				  int respond_success)
-+{
-+	d->verb &=3D ~(1 << QB_ENQUEUE_CMD_ORP_ENABLE_SHIFT);
-+	if (respond_success)
-+		d->verb |=3D enqueue_response_always;
-+	else
-+		d->verb |=3D enqueue_rejects_to_fq;
-+}
-+
- /*
-  * Exactly one of the following descriptor "targets" should be set. (Calli=
-ng any
-  * one of these will replace the effect of any prior call to one of these.=
-)
-@@ -422,6 +589,17 @@ void qbman_eq_desc_set_fq(struct qbman_eq_desc *d, u32=
- fqid)
- }
-=20
- /**
-+ * qbman_eq_desc_set_min_fq() - set the FQ for the minimal enqueue command
-+ * @d:    the enqueue descriptor
-+ * @fqid: the id of the frame queue to be enqueued
-+ */
-+void qbman_eq_desc_set_min_fq(struct qbman_eq_desc_min *d, u32 fqid)
-+{
-+	d->verb &=3D ~(1 << QB_ENQUEUE_CMD_TARGET_TYPE_SHIFT);
-+	d->tgtid =3D cpu_to_le32(fqid);
-+}
-+
-+/**
-  * qbman_eq_desc_set_qd() - Set Queuing Destination for the enqueue comman=
-d
-  * @d:       the enqueue descriptor
-  * @qdid:    the id of the queuing destination to be enqueued
-@@ -453,41 +631,340 @@ static inline void qbman_write_eqcr_am_rt_register(s=
-truct qbman_swp *p,
- 				     QMAN_RT_MODE);
- }
-=20
-+#define QB_RT_BIT ((u32)0x100)
- /**
-- * qbman_swp_enqueue() - Issue an enqueue command
-+ * qbman_swp_enqueue_ring_mode_direct() - Issue an enqueue command
-  * @s:  the software portal used for enqueue
-  * @d:  the enqueue descriptor
-  * @fd: the frame descriptor to be enqueued
-  *
-- * Please note that 'fd' should only be NULL if the "action" of the
-- * descriptor is "orp_hole" or "orp_nesn".
-+ * Return 0 for successful enqueue, -EBUSY if the EQCR is not ready.
-+ */
-+static
-+int qbman_swp_enqueue_ring_mode_direct(struct qbman_swp *s,
-+				       const struct qbman_eq_desc *d,
-+				       const struct dpaa2_fd *fd)
-+{
-+	int flags =3D 0;
-+	int ret =3D qbman_swp_enqueue_multiple_direct(s, d, fd, &flags, 1);
-+
-+	if (ret >=3D 0)
-+		ret =3D 0;
-+	else
-+		ret =3D -EBUSY;
-+	return  ret;
-+}
-+
-+/**
-+ * qbman_swp_enqueue_ring_mode_mem_back() - Issue an enqueue command
-+ * @s:  the software portal used for enqueue
-+ * @d:  the enqueue descriptor
-+ * @fd: the frame descriptor to be enqueued
-  *
-  * Return 0 for successful enqueue, -EBUSY if the EQCR is not ready.
-  */
--int qbman_swp_enqueue(struct qbman_swp *s, const struct qbman_eq_desc *d,
--		      const struct dpaa2_fd *fd)
-+static
-+int qbman_swp_enqueue_ring_mode_mem_back(struct qbman_swp *s,
-+					 const struct qbman_eq_desc *d,
-+					 const struct dpaa2_fd *fd)
- {
--	struct qbman_eq_desc *p;
--	u32 eqar =3D qbman_read_register(s, QBMAN_CINH_SWP_EQAR);
-+	int flags =3D 0;
-+	int ret =3D qbman_swp_enqueue_multiple_mem_back(s, d, fd, &flags, 1);
-=20
--	if (!EQAR_SUCCESS(eqar))
--		return -EBUSY;
-+	if (ret >=3D 0)
-+		ret =3D 0;
-+	else
-+		ret =3D -EBUSY;
-+	return  ret;
-+}
-=20
--	p =3D qbman_get_cmd(s, QBMAN_CENA_SWP_EQCR(EQAR_IDX(eqar)));
--	memcpy(&p->dca, &d->dca, 31);
--	memcpy(&p->fd, fd, sizeof(*fd));
-+/**
-+ * qbman_swp_enqueue_multiple_direct() - Issue a multi enqueue command
-+ * using one enqueue descriptor
-+ * @s:  the software portal used for enqueue
-+ * @d:  the enqueue descriptor
-+ * @fd: table pointer of frame descriptor table to be enqueued
-+ * @flags: table pointer of QBMAN_ENQUEUE_FLAG_DCA flags, not used if NULL
-+ * @num_frames: number of fd to be enqueued
-+ *
-+ * Return the number of fd enqueued, or a negative error number.
-+ */
-+static
-+int qbman_swp_enqueue_multiple_direct(struct qbman_swp *s,
-+				      const struct qbman_eq_desc *d,
-+				      const struct dpaa2_fd *fd,
-+				      uint32_t *flags,
-+				      int num_frames)
-+{
-+	uint32_t *p =3D NULL;
-+	const uint32_t *cl =3D (uint32_t *)d;
-+	uint32_t eqcr_ci, eqcr_pi, half_mask, full_mask;
-+	int i, num_enqueued =3D 0;
-+
-+	half_mask =3D (s->eqcr.pi_ci_mask>>1);
-+	full_mask =3D s->eqcr.pi_ci_mask;
-+
-+	if (!s->eqcr.available) {
-+		eqcr_ci =3D s->eqcr.ci;
-+		p =3D s->addr_cena + QBMAN_CENA_SWP_EQCR_CI;
-+		s->eqcr.ci =3D __raw_readl(p) & full_mask;
-+
-+		s->eqcr.available =3D qm_cyc_diff(s->eqcr.pi_ring_size,
-+					eqcr_ci, s->eqcr.ci);
-+		if (!s->eqcr.available)
-+			return 0;
-+	}
-=20
--	if ((s->desc->qman_version & QMAN_REV_MASK) < QMAN_REV_5000) {
--		/* Set the verb byte, have to substitute in the valid-bit */
--		dma_wmb();
--		p->verb =3D d->verb | EQAR_VB(eqar);
--	} else {
--		p->verb =3D d->verb | EQAR_VB(eqar);
--		dma_wmb();
--		qbman_write_eqcr_am_rt_register(s, EQAR_IDX(eqar));
-+	eqcr_pi =3D s->eqcr.pi;
-+	num_enqueued =3D (s->eqcr.available < num_frames) ?
-+			s->eqcr.available : num_frames;
-+	s->eqcr.available -=3D num_enqueued;
-+	/* Fill in the EQCR ring */
-+	for (i =3D 0; i < num_enqueued; i++) {
-+		p =3D (s->addr_cena + QBMAN_CENA_SWP_EQCR(eqcr_pi & half_mask));
-+		/* Skip copying the verb */
-+		memcpy(&p[1], &cl[1], EQ_DESC_SIZE_WITHOUT_FD - 1);
-+		memcpy(&p[EQ_DESC_SIZE_FD_START/sizeof(uint32_t)],
-+		       &fd[i], sizeof(*fd));
-+		eqcr_pi++;
- 	}
-=20
--	return 0;
-+	dma_wmb();
-+
-+	/* Set the verb byte, have to substitute in the valid-bit */
-+	eqcr_pi =3D s->eqcr.pi;
-+	for (i =3D 0; i < num_enqueued; i++) {
-+		p =3D (s->addr_cena + QBMAN_CENA_SWP_EQCR(eqcr_pi & half_mask));
-+		p[0] =3D cl[0] | s->eqcr.pi_vb;
-+		if (flags && (flags[i] & QBMAN_ENQUEUE_FLAG_DCA)) {
-+			struct qbman_eq_desc *d =3D (struct qbman_eq_desc *)p;
-+
-+			d->dca =3D (1 << QB_ENQUEUE_CMD_DCA_EN_SHIFT) |
-+				((flags[i]) & QBMAN_EQCR_DCA_IDXMASK);
-+		}
-+		eqcr_pi++;
-+		if (!(eqcr_pi & half_mask))
-+			s->eqcr.pi_vb ^=3D QB_VALID_BIT;
-+	}
-+
-+	s->eqcr.pi =3D (s->eqcr.pi + num_enqueued) & full_mask;
-+
-+	return num_enqueued;
-+}
-+
-+/**
-+ * qbman_swp_enqueue_multiple_mem_back() - Issue a multi enqueue command
-+ * using one enqueue descriptor
-+ * @s:  the software portal used for enqueue
-+ * @d:  the enqueue descriptor
-+ * @fd: table pointer of frame descriptor table to be enqueued
-+ * @flags: table pointer of QBMAN_ENQUEUE_FLAG_DCA flags, not used if NULL
-+ * @num_frames: number of fd to be enqueued
-+ *
-+ * Return the number of fd enqueued, or a negative error number.
-+ */
-+static
-+int qbman_swp_enqueue_multiple_mem_back(struct qbman_swp *s,
-+					const struct qbman_eq_desc *d,
-+					const struct dpaa2_fd *fd,
-+					uint32_t *flags,
-+					int num_frames)
-+{
-+	uint32_t *p =3D NULL;
-+	const uint32_t *cl =3D (uint32_t *)(d);
-+	uint32_t eqcr_ci, eqcr_pi, half_mask, full_mask;
-+	int i, num_enqueued =3D 0;
-+	unsigned long irq_flags;
-+
-+	spin_lock(&s->access_spinlock);
-+	local_irq_save(irq_flags);
-+
-+	half_mask =3D (s->eqcr.pi_ci_mask>>1);
-+	full_mask =3D s->eqcr.pi_ci_mask;
-+	if (!s->eqcr.available) {
-+		eqcr_ci =3D s->eqcr.ci;
-+		p =3D s->addr_cena + QBMAN_CENA_SWP_EQCR_CI_MEMBACK;
-+		s->eqcr.ci =3D __raw_readl(p) & full_mask;
-+		s->eqcr.available =3D qm_cyc_diff(s->eqcr.pi_ring_size,
-+					eqcr_ci, s->eqcr.ci);
-+		if (!s->eqcr.available) {
-+			local_irq_restore(irq_flags);
-+			spin_unlock(&s->access_spinlock);
-+			return 0;
-+		}
-+	}
-+
-+	eqcr_pi =3D s->eqcr.pi;
-+	num_enqueued =3D (s->eqcr.available < num_frames) ?
-+			s->eqcr.available : num_frames;
-+	s->eqcr.available -=3D num_enqueued;
-+	/* Fill in the EQCR ring */
-+	for (i =3D 0; i < num_enqueued; i++) {
-+		p =3D (s->addr_cena + QBMAN_CENA_SWP_EQCR(eqcr_pi & half_mask));
-+		/* Skip copying the verb */
-+		memcpy(&p[1], &cl[1], EQ_DESC_SIZE_WITHOUT_FD - 1);
-+		memcpy(&p[EQ_DESC_SIZE_FD_START/sizeof(uint32_t)],
-+		       &fd[i], sizeof(*fd));
-+		eqcr_pi++;
-+	}
-+
-+	/* Set the verb byte, have to substitute in the valid-bit */
-+	eqcr_pi =3D s->eqcr.pi;
-+	for (i =3D 0; i < num_enqueued; i++) {
-+		p =3D (s->addr_cena + QBMAN_CENA_SWP_EQCR(eqcr_pi & half_mask));
-+		p[0] =3D cl[0] | s->eqcr.pi_vb;
-+		if (flags && (flags[i] & QBMAN_ENQUEUE_FLAG_DCA)) {
-+			struct qbman_eq_desc *d =3D (struct qbman_eq_desc *)p;
-+
-+			d->dca =3D (1 << QB_ENQUEUE_CMD_DCA_EN_SHIFT) |
-+				((flags[i]) & QBMAN_EQCR_DCA_IDXMASK);
-+		}
-+		eqcr_pi++;
-+		if (!(eqcr_pi & half_mask))
-+			s->eqcr.pi_vb ^=3D QB_VALID_BIT;
-+	}
-+	s->eqcr.pi =3D eqcr_pi & full_mask;
-+
-+	dma_wmb();
-+	qbman_write_register(s, QBMAN_CINH_SWP_EQCR_PI,
-+				(QB_RT_BIT)|(s->eqcr.pi)|s->eqcr.pi_vb);
-+	local_irq_restore(irq_flags);
-+	spin_unlock(&s->access_spinlock);
-+
-+	return num_enqueued;
-+}
-+
-+/**
-+ * qbman_swp_enqueue_multiple_desc_direct() - Issue a multi enqueue comman=
-d
-+ * using multiple enqueue descriptor
-+ * @s:  the software portal used for enqueue
-+ * @d:  table of minimal enqueue descriptor
-+ * @fd: table pointer of frame descriptor table to be enqueued
-+ * @num_frames: number of fd to be enqueued
-+ *
-+ * Return the number of fd enqueued, or a negative error number.
-+ */
-+static
-+int qbman_swp_enqueue_multiple_desc_direct(struct qbman_swp *s,
-+					   const struct qbman_eq_desc_min *d,
-+					   const struct dpaa2_fd *fd,
-+					   int num_frames)
-+{
-+	uint32_t *p;
-+	const uint32_t *cl;
-+	uint32_t eqcr_ci, eqcr_pi, half_mask, full_mask;
-+	int i, num_enqueued =3D 0;
-+
-+	half_mask =3D (s->eqcr.pi_ci_mask>>1);
-+	full_mask =3D s->eqcr.pi_ci_mask;
-+	if (!s->eqcr.available) {
-+		eqcr_ci =3D s->eqcr.ci;
-+		p =3D s->addr_cena + QBMAN_CENA_SWP_EQCR_CI;
-+		s->eqcr.ci =3D __raw_readl(p) & full_mask;
-+		s->eqcr.available =3D qm_cyc_diff(s->eqcr.pi_ring_size,
-+					eqcr_ci, s->eqcr.ci);
-+		if (!s->eqcr.available)
-+			return 0;
-+	}
-+
-+	eqcr_pi =3D s->eqcr.pi;
-+	num_enqueued =3D (s->eqcr.available < num_frames) ?
-+			s->eqcr.available : num_frames;
-+	s->eqcr.available -=3D num_enqueued;
-+	/* Fill in the EQCR ring */
-+	for (i =3D 0; i < num_enqueued; i++) {
-+		p =3D (s->addr_cena + QBMAN_CENA_SWP_EQCR(eqcr_pi & half_mask));
-+		cl =3D (uint32_t *)(&d[i]);
-+		/* Skip copying the verb */
-+		memcpy(&p[1], &cl[1], EQ_DESC_SIZE_WITHOUT_FD - 1);
-+		memcpy(&p[EQ_DESC_SIZE_FD_START/sizeof(uint32_t)],
-+		       &fd[i], sizeof(*fd));
-+		eqcr_pi++;
-+	}
-+
-+	dma_wmb();
-+
-+	/* Set the verb byte, have to substitute in the valid-bit */
-+	eqcr_pi =3D s->eqcr.pi;
-+	for (i =3D 0; i < num_enqueued; i++) {
-+		p =3D (s->addr_cena + QBMAN_CENA_SWP_EQCR(eqcr_pi & half_mask));
-+		cl =3D (uint32_t *)(&d[i]);
-+		p[0] =3D cl[0] | s->eqcr.pi_vb;
-+		eqcr_pi++;
-+		if (!(eqcr_pi & half_mask))
-+			s->eqcr.pi_vb ^=3D QB_VALID_BIT;
-+	}
-+	s->eqcr.pi =3D (s->eqcr.pi + num_enqueued) & full_mask;
-+
-+	return num_enqueued;
-+}
-+
-+/**
-+ * qbman_swp_enqueue_multiple_desc_mem_back() - Issue a multi enqueue comm=
-and
-+ * using multiple enqueue descriptor
-+ * @s:  the software portal used for enqueue
-+ * @d:  table of minimal enqueue descriptor
-+ * @fd: table pointer of frame descriptor table to be enqueued
-+ * @num_frames: number of fd to be enqueued
-+ *
-+ * Return the number of fd enqueued, or a negative error number.
-+ */
-+static
-+int qbman_swp_enqueue_multiple_desc_mem_back(struct qbman_swp *s,
-+					     const struct qbman_eq_desc_min *d,
-+					     const struct dpaa2_fd *fd,
-+					     int num_frames)
-+{
-+	uint32_t *p;
-+	const uint32_t *cl;
-+	uint32_t eqcr_ci, eqcr_pi, half_mask, full_mask;
-+	int i, num_enqueued =3D 0;
-+
-+	half_mask =3D (s->eqcr.pi_ci_mask>>1);
-+	full_mask =3D s->eqcr.pi_ci_mask;
-+	if (!s->eqcr.available) {
-+		eqcr_ci =3D s->eqcr.ci;
-+		p =3D s->addr_cena + QBMAN_CENA_SWP_EQCR_CI_MEMBACK;
-+		s->eqcr.ci =3D __raw_readl(p) & full_mask;
-+		s->eqcr.available =3D qm_cyc_diff(s->eqcr.pi_ring_size,
-+					eqcr_ci, s->eqcr.ci);
-+		if (!s->eqcr.available)
-+			return 0;
-+	}
-+
-+	eqcr_pi =3D s->eqcr.pi;
-+	num_enqueued =3D (s->eqcr.available < num_frames) ?
-+			s->eqcr.available : num_frames;
-+	s->eqcr.available -=3D num_enqueued;
-+	/* Fill in the EQCR ring */
-+	for (i =3D 0; i < num_enqueued; i++) {
-+		p =3D (s->addr_cena + QBMAN_CENA_SWP_EQCR(eqcr_pi & half_mask));
-+		cl =3D (uint32_t *)(&d[i]);
-+		/* Skip copying the verb */
-+		memcpy(&p[1], &cl[1], EQ_DESC_SIZE_WITHOUT_FD - 1);
-+		memcpy(&p[EQ_DESC_SIZE_FD_START/sizeof(uint32_t)],
-+		       &fd[i], sizeof(*fd));
-+		eqcr_pi++;
-+	}
-+
-+	/* Set the verb byte, have to substitute in the valid-bit */
-+	eqcr_pi =3D s->eqcr.pi;
-+	for (i =3D 0; i < num_enqueued; i++) {
-+		p =3D (s->addr_cena + QBMAN_CENA_SWP_EQCR(eqcr_pi & half_mask));
-+		cl =3D (uint32_t *)(&d[i]);
-+		p[0] =3D cl[0] | s->eqcr.pi_vb;
-+		eqcr_pi++;
-+		if (!(eqcr_pi & half_mask))
-+			s->eqcr.pi_vb ^=3D QB_VALID_BIT;
-+	}
-+
-+	s->eqcr.pi =3D eqcr_pi & full_mask;
-+
-+	dma_wmb();
-+	qbman_write_register(s, QBMAN_CINH_SWP_EQCR_PI,
-+				(QB_RT_BIT)|(s->eqcr.pi)|s->eqcr.pi_vb);
-+
-+	return num_enqueued;
- }
-=20
- /* Static (push) dequeue */
-@@ -645,7 +1122,7 @@ void qbman_pull_desc_set_channel(struct qbman_pull_des=
-c *d, u32 chid,
- }
-=20
- /**
-- * qbman_swp_pull() - Issue the pull dequeue command
-+ * qbman_swp_pull_direct() - Issue the pull dequeue command
-  * @s: the software portal object
-  * @d: the software portal descriptor which has been configured with
-  *     the set of qbman_pull_desc_set_*() calls
-@@ -653,7 +1130,7 @@ void qbman_pull_desc_set_channel(struct qbman_pull_des=
-c *d, u32 chid,
-  * Return 0 for success, and -EBUSY if the software portal is not ready
-  * to do pull dequeue.
-  */
--int qbman_swp_pull(struct qbman_swp *s, struct qbman_pull_desc *d)
-+static int qbman_swp_pull_direct(struct qbman_swp *s, struct qbman_pull_de=
-sc *d)
- {
- 	struct qbman_pull_desc *p;
-=20
-@@ -671,18 +1148,48 @@ int qbman_swp_pull(struct qbman_swp *s, struct qbman=
-_pull_desc *d)
- 	p->dq_src =3D d->dq_src;
- 	p->rsp_addr =3D d->rsp_addr;
- 	p->rsp_addr_virt =3D d->rsp_addr_virt;
-+	dma_wmb();
-+	/* Set the verb byte, have to substitute in the valid-bit */
-+	p->verb =3D d->verb | s->vdq.valid_bit;
-+	s->vdq.valid_bit ^=3D QB_VALID_BIT;
-=20
--	if ((s->desc->qman_version & QMAN_REV_MASK) < QMAN_REV_5000) {
--		dma_wmb();
--		/* Set the verb byte, have to substitute in the valid-bit */
--		p->verb =3D d->verb | s->vdq.valid_bit;
--		s->vdq.valid_bit ^=3D QB_VALID_BIT;
--	} else {
--		p->verb =3D d->verb | s->vdq.valid_bit;
--		s->vdq.valid_bit ^=3D QB_VALID_BIT;
--		dma_wmb();
--		qbman_write_register(s, QBMAN_CINH_SWP_VDQCR_RT, QMAN_RT_MODE);
-+	return 0;
-+}
-+
-+/**
-+ * qbman_swp_pull_mem_back() - Issue the pull dequeue command
-+ * @s: the software portal object
-+ * @d: the software portal descriptor which has been configured with
-+ *     the set of qbman_pull_desc_set_*() calls
-+ *
-+ * Return 0 for success, and -EBUSY if the software portal is not ready
-+ * to do pull dequeue.
-+ */
-+static int qbman_swp_pull_mem_back(struct qbman_swp *s,
-+				   struct qbman_pull_desc *d)
-+{
-+	struct qbman_pull_desc *p;
-+
-+	if (!atomic_dec_and_test(&s->vdq.available)) {
-+		atomic_inc(&s->vdq.available);
-+		return -EBUSY;
- 	}
-+	s->vdq.storage =3D (void *)(uintptr_t)d->rsp_addr_virt;
-+	if ((s->desc->qman_version & QMAN_REV_MASK) < QMAN_REV_5000)
-+		p =3D qbman_get_cmd(s, QBMAN_CENA_SWP_VDQCR);
-+	else
-+		p =3D qbman_get_cmd(s, QBMAN_CENA_SWP_VDQCR_MEM);
-+	p->numf =3D d->numf;
-+	p->tok =3D QMAN_DQ_TOKEN_VALID;
-+	p->dq_src =3D d->dq_src;
-+	p->rsp_addr =3D d->rsp_addr;
-+	p->rsp_addr_virt =3D d->rsp_addr_virt;
-+
-+	/* Set the verb byte, have to substitute in the valid-bit */
-+	p->verb =3D d->verb | s->vdq.valid_bit;
-+	s->vdq.valid_bit ^=3D QB_VALID_BIT;
-+	dma_wmb();
-+	qbman_write_register(s, QBMAN_CINH_SWP_VDQCR_RT, QMAN_RT_MODE);
-=20
- 	return 0;
- }
-@@ -690,14 +1197,14 @@ int qbman_swp_pull(struct qbman_swp *s, struct qbman=
-_pull_desc *d)
- #define QMAN_DQRR_PI_MASK   0xf
-=20
- /**
-- * qbman_swp_dqrr_next() - Get an valid DQRR entry
-+ * qbman_swp_dqrr_next_direct() - Get an valid DQRR entry
-  * @s: the software portal object
-  *
-  * Return NULL if there are no unconsumed DQRR entries. Return a DQRR entr=
-y
-  * only once, so repeated calls can return a sequence of DQRR entries, wit=
-hout
-  * requiring they be consumed immediately or in any particular order.
-  */
--const struct dpaa2_dq *qbman_swp_dqrr_next(struct qbman_swp *s)
-+const struct dpaa2_dq *qbman_swp_dqrr_next_direct(struct qbman_swp *s)
- {
- 	u32 verb;
- 	u32 response_verb;
-@@ -740,10 +1247,7 @@ const struct dpaa2_dq *qbman_swp_dqrr_next(struct qbm=
-an_swp *s)
- 				       QBMAN_CENA_SWP_DQRR(s->dqrr.next_idx)));
- 	}
-=20
--	if ((s->desc->qman_version & QMAN_REV_MASK) < QMAN_REV_5000)
--		p =3D qbman_get_cmd(s, QBMAN_CENA_SWP_DQRR(s->dqrr.next_idx));
--	else
--		p =3D qbman_get_cmd(s, QBMAN_CENA_SWP_DQRR_MEM(s->dqrr.next_idx));
-+	p =3D qbman_get_cmd(s, QBMAN_CENA_SWP_DQRR(s->dqrr.next_idx));
- 	verb =3D p->dq.verb;
-=20
- 	/*
-@@ -785,6 +1289,98 @@ const struct dpaa2_dq *qbman_swp_dqrr_next(struct qbm=
-an_swp *s)
- }
-=20
- /**
-+ * qbman_swp_dqrr_next_mem_back() - Get an valid DQRR entry
-+ * @s: the software portal object
-+ *
-+ * Return NULL if there are no unconsumed DQRR entries. Return a DQRR entr=
-y
-+ * only once, so repeated calls can return a sequence of DQRR entries, wit=
-hout
-+ * requiring they be consumed immediately or in any particular order.
-+ */
-+const struct dpaa2_dq *qbman_swp_dqrr_next_mem_back(struct qbman_swp *s)
-+{
-+	u32 verb;
-+	u32 response_verb;
-+	u32 flags;
-+	struct dpaa2_dq *p;
-+
-+	/* Before using valid-bit to detect if something is there, we have to
-+	 * handle the case of the DQRR reset bug...
-+	 */
-+	if (unlikely(s->dqrr.reset_bug)) {
-+		/*
-+		 * We pick up new entries by cache-inhibited producer index,
-+		 * which means that a non-coherent mapping would require us to
-+		 * invalidate and read *only* once that PI has indicated that
-+		 * there's an entry here. The first trip around the DQRR ring
-+		 * will be much less efficient than all subsequent trips around
-+		 * it...
-+		 */
-+		u8 pi =3D qbman_read_register(s, QBMAN_CINH_SWP_DQPI) &
-+			QMAN_DQRR_PI_MASK;
-+
-+		/* there are new entries if pi !=3D next_idx */
-+		if (pi =3D=3D s->dqrr.next_idx)
-+			return NULL;
-+
-+		/*
-+		 * if next_idx is/was the last ring index, and 'pi' is
-+		 * different, we can disable the workaround as all the ring
-+		 * entries have now been DMA'd to so valid-bit checking is
-+		 * repaired. Note: this logic needs to be based on next_idx
-+		 * (which increments one at a time), rather than on pi (which
-+		 * can burst and wrap-around between our snapshots of it).
-+		 */
-+		if (s->dqrr.next_idx =3D=3D (s->dqrr.dqrr_size - 1)) {
-+			pr_debug("next_idx=3D%d, pi=3D%d, clear reset bug\n",
-+				 s->dqrr.next_idx, pi);
-+			s->dqrr.reset_bug =3D 0;
-+		}
-+		prefetch(qbman_get_cmd(s,
-+				       QBMAN_CENA_SWP_DQRR(s->dqrr.next_idx)));
-+	}
-+
-+	p =3D qbman_get_cmd(s, QBMAN_CENA_SWP_DQRR_MEM(s->dqrr.next_idx));
-+	verb =3D p->dq.verb;
-+
-+	/*
-+	 * If the valid-bit isn't of the expected polarity, nothing there. Note,
-+	 * in the DQRR reset bug workaround, we shouldn't need to skip these
-+	 * check, because we've already determined that a new entry is available
-+	 * and we've invalidated the cacheline before reading it, so the
-+	 * valid-bit behaviour is repaired and should tell us what we already
-+	 * knew from reading PI.
-+	 */
-+	if ((verb & QB_VALID_BIT) !=3D s->dqrr.valid_bit) {
-+		prefetch(qbman_get_cmd(s,
-+			 QBMAN_CENA_SWP_DQRR(s->dqrr.next_idx)));
-+		return NULL;
-+	}
-+	/*
-+	 * There's something there. Move "next_idx" attention to the next ring
-+	 * entry (and prefetch it) before returning what we found.
-+	 */
-+	s->dqrr.next_idx++;
-+	s->dqrr.next_idx &=3D s->dqrr.dqrr_size - 1; /* Wrap around */
-+	if (!s->dqrr.next_idx)
-+		s->dqrr.valid_bit ^=3D QB_VALID_BIT;
-+
-+	/*
-+	 * If this is the final response to a volatile dequeue command
-+	 * indicate that the vdq is available
-+	 */
-+	flags =3D p->dq.stat;
-+	response_verb =3D verb & QBMAN_RESULT_MASK;
-+	if (response_verb =3D=3D QBMAN_RESULT_DQ &&
-+	    (flags & DPAA2_DQ_STAT_VOLATILE) &&
-+	    (flags & DPAA2_DQ_STAT_EXPIRED))
-+		atomic_inc(&s->vdq.available);
-+
-+	prefetch(qbman_get_cmd(s, QBMAN_CENA_SWP_DQRR(s->dqrr.next_idx)));
-+
-+	return p;
-+}
-+
-+/**
-  * qbman_swp_dqrr_consume() -  Consume DQRR entries previously returned fr=
-om
-  *                             qbman_swp_dqrr_next().
-  * @s: the software portal object
-@@ -872,7 +1468,7 @@ void qbman_release_desc_set_rcdi(struct qbman_release_=
-desc *d, int enable)
- #define RAR_SUCCESS(rar) ((rar) & 0x100)
-=20
- /**
-- * qbman_swp_release() - Issue a buffer release command
-+ * qbman_swp_release_direct() - Issue a buffer release command
-  * @s:           the software portal object
-  * @d:           the release descriptor
-  * @buffers:     a pointer pointing to the buffer address to be released
-@@ -880,8 +1476,53 @@ void qbman_release_desc_set_rcdi(struct qbman_release=
-_desc *d, int enable)
-  *
-  * Return 0 for success, -EBUSY if the release command ring is not ready.
-  */
--int qbman_swp_release(struct qbman_swp *s, const struct qbman_release_desc=
- *d,
--		      const u64 *buffers, unsigned int num_buffers)
-+int qbman_swp_release_direct(struct qbman_swp *s,
-+			     const struct qbman_release_desc *d,
-+			     const u64 *buffers, unsigned int num_buffers)
-+{
-+	int i;
-+	struct qbman_release_desc *p;
-+	u32 rar;
-+
-+	if (!num_buffers || num_buffers > 7)
-+		return -EINVAL;
-+
-+	rar =3D qbman_read_register(s, QBMAN_CINH_SWP_RAR);
-+	if (!RAR_SUCCESS(rar))
-+		return -EBUSY;
-+
-+	/* Start the release command */
-+	if ((s->desc->qman_version & QMAN_REV_MASK) < QMAN_REV_5000)
-+		p =3D qbman_get_cmd(s, QBMAN_CENA_SWP_RCR(RAR_IDX(rar)));
-+	else
-+		p =3D qbman_get_cmd(s, QBMAN_CENA_SWP_RCR_MEM(RAR_IDX(rar)));
-+	/* Copy the caller's buffer pointers to the command */
-+	for (i =3D 0; i < num_buffers; i++)
-+		p->buf[i] =3D cpu_to_le64(buffers[i]);
-+	p->bpid =3D d->bpid;
-+
-+	/*
-+	 * Set the verb byte, have to substitute in the valid-bit
-+	 * and the number of buffers.
-+	 */
-+	dma_wmb();
-+	p->verb =3D d->verb | RAR_VB(rar) | num_buffers;
-+
-+	return 0;
-+}
-+
-+/**
-+ * qbman_swp_release_mem_back() - Issue a buffer release command
-+ * @s:           the software portal object
-+ * @d:           the release descriptor
-+ * @buffers:     a pointer pointing to the buffer address to be released
-+ * @num_buffers: number of buffers to be released,  must be less than 8
-+ *
-+ * Return 0 for success, -EBUSY if the release command ring is not ready.
-+ */
-+int qbman_swp_release_mem_back(struct qbman_swp *s,
-+			       const struct qbman_release_desc *d,
-+			       const u64 *buffers, unsigned int num_buffers)
- {
- 	int i;
- 	struct qbman_release_desc *p;
-@@ -904,19 +1545,10 @@ int qbman_swp_release(struct qbman_swp *s, const str=
-uct qbman_release_desc *d,
- 		p->buf[i] =3D cpu_to_le64(buffers[i]);
- 	p->bpid =3D d->bpid;
-=20
--	if ((s->desc->qman_version & QMAN_REV_MASK) < QMAN_REV_5000) {
--		/*
--		 * Set the verb byte, have to substitute in the valid-bit
--		 * and the number of buffers.
--		 */
--		dma_wmb();
--		p->verb =3D d->verb | RAR_VB(rar) | num_buffers;
--	} else {
--		p->verb =3D d->verb | RAR_VB(rar) | num_buffers;
--		dma_wmb();
--		qbman_write_register(s, QBMAN_CINH_SWP_RCR_AM_RT +
--				     RAR_IDX(rar)  * 4, QMAN_RT_MODE);
--	}
-+	p->verb =3D d->verb | RAR_VB(rar) | num_buffers;
-+	dma_wmb();
-+	qbman_write_register(s, QBMAN_CINH_SWP_RCR_AM_RT +
-+			     RAR_IDX(rar)  * 4, QMAN_RT_MODE);
-=20
- 	return 0;
- }
-diff --git a/drivers/soc/fsl/dpio/qbman-portal.h b/drivers/soc/fsl/dpio/qbm=
-an-portal.h
-index f3ec5d2..f4b6e47 100644
---- a/drivers/soc/fsl/dpio/qbman-portal.h
-+++ b/drivers/soc/fsl/dpio/qbman-portal.h
-@@ -9,6 +9,13 @@
-=20
- #include <soc/fsl/dpaa2-fd.h>
-=20
-+#define QMAN_REV_4000   0x04000000
-+#define QMAN_REV_4100   0x04010000
-+#define QMAN_REV_4101   0x04010001
-+#define QMAN_REV_5000   0x05000000
-+
-+#define QMAN_REV_MASK   0xffff0000
-+
- struct dpaa2_dq;
- struct qbman_swp;
-=20
-@@ -67,6 +74,22 @@ enum qbman_pull_type_e {
- #define QBMAN_FQ_XOFF		0x4e
-=20
- /* structure of enqueue descriptor */
-+struct qbman_eq_desc_min {
-+	u8 verb;
-+	u8 dca;
-+	__le16 seqnum;
-+	__le16 orpid;
-+	__le16 reserved1;
-+	__le32 tgtid;
-+	__le32 tag;
-+	__le16 qdbin;
-+	u8 qpri;
-+	u8 reserved[3];
-+	u8 wae;
-+	u8 rspid;
-+	__le64 rsp_addr;
-+};
-+
- struct qbman_eq_desc {
- 	u8 verb;
- 	u8 dca;
-@@ -132,8 +155,48 @@ struct qbman_swp {
- 		u8 dqrr_size;
- 		int reset_bug; /* indicates dqrr reset workaround is needed */
- 	} dqrr;
-+
-+	struct {
-+		u32 pi;
-+		u32 pi_vb;
-+		u32 pi_ring_size;
-+		u32 pi_ci_mask;
-+		u32 ci;
-+		int available;
-+		u32 pend;
-+		u32 no_pfdr;
-+	} eqcr;
-+
-+	spinlock_t access_spinlock;
- };
-=20
-+/* Function pointers */
-+extern
-+int (*qbman_swp_enqueue_ring_mode_ptr)(struct qbman_swp *s,
-+				       const struct qbman_eq_desc *d,
-+				       const struct dpaa2_fd *fd);
-+extern
-+int (*qbman_swp_enqueue_multiple_ptr)(struct qbman_swp *s,
-+				      const struct qbman_eq_desc *d,
-+				      const struct dpaa2_fd *fd,
-+				      uint32_t *flags,
-+				      int num_frames);
-+extern
-+int (*qbman_swp_enqueue_multiple_desc_ptr)(struct qbman_swp *s,
-+					   const struct qbman_eq_desc_min *d,
-+					   const struct dpaa2_fd *fd,
-+					   int num_frames);
-+extern
-+int (*qbman_swp_pull_ptr)(struct qbman_swp *s, struct qbman_pull_desc *d);
-+extern
-+const struct dpaa2_dq *(*qbman_swp_dqrr_next_ptr)(struct qbman_swp *s);
-+extern
-+int (*qbman_swp_release_ptr)(struct qbman_swp *s,
-+			     const struct qbman_release_desc *d,
-+			     const u64 *buffers,
-+			     unsigned int num_buffers);
-+
-+/* Functions */
- struct qbman_swp *qbman_swp_init(const struct qbman_swp_desc *d);
- void qbman_swp_finish(struct qbman_swp *p);
- u32 qbman_swp_interrupt_read_status(struct qbman_swp *p);
-@@ -158,29 +221,25 @@ void qbman_pull_desc_set_wq(struct qbman_pull_desc *d=
-, u32 wqid,
- void qbman_pull_desc_set_channel(struct qbman_pull_desc *d, u32 chid,
- 				 enum qbman_pull_type_e dct);
-=20
--int qbman_swp_pull(struct qbman_swp *p, struct qbman_pull_desc *d);
--
--const struct dpaa2_dq *qbman_swp_dqrr_next(struct qbman_swp *s);
- void qbman_swp_dqrr_consume(struct qbman_swp *s, const struct dpaa2_dq *dq=
-);
-=20
- int qbman_result_has_new_result(struct qbman_swp *p, const struct dpaa2_dq=
- *dq);
-=20
- void qbman_eq_desc_clear(struct qbman_eq_desc *d);
-+void qbman_eq_desc_min_clear(struct qbman_eq_desc_min *d);
- void qbman_eq_desc_set_no_orp(struct qbman_eq_desc *d, int respond_success=
-);
-+void qbman_eq_desc_set_no_orp_min(struct qbman_eq_desc_min *d,
-+				  int respond_success);
- void qbman_eq_desc_set_token(struct qbman_eq_desc *d, u8 token);
- void qbman_eq_desc_set_fq(struct qbman_eq_desc *d, u32 fqid);
-+void qbman_eq_desc_set_min_fq(struct qbman_eq_desc_min *d, u32 fqid);
- void qbman_eq_desc_set_qd(struct qbman_eq_desc *d, u32 qdid,
- 			  u32 qd_bin, u32 qd_prio);
-=20
--int qbman_swp_enqueue(struct qbman_swp *p, const struct qbman_eq_desc *d,
--		      const struct dpaa2_fd *fd);
--
- void qbman_release_desc_clear(struct qbman_release_desc *d);
- void qbman_release_desc_set_bpid(struct qbman_release_desc *d, u16 bpid);
- void qbman_release_desc_set_rcdi(struct qbman_release_desc *d, int enable)=
-;
-=20
--int qbman_swp_release(struct qbman_swp *s, const struct qbman_release_desc=
- *d,
--		      const u64 *buffers, unsigned int num_buffers);
- int qbman_swp_acquire(struct qbman_swp *s, u16 bpid, u64 *buffers,
- 		      unsigned int num_buffers);
- int qbman_swp_alt_fq_state(struct qbman_swp *s, u32 fqid,
-@@ -194,6 +253,61 @@ void qbman_swp_mc_submit(struct qbman_swp *p, void *cm=
-d, u8 cmd_verb);
- void *qbman_swp_mc_result(struct qbman_swp *p);
-=20
- /**
-+ * qbman_swp_enqueue() - Issue an enqueue command
-+ * @s:  the software portal used for enqueue
-+ * @d:  the enqueue descriptor
-+ * @fd: the frame descriptor to be enqueued
-+ *
-+ * Return 0 for successful enqueue, -EBUSY if the EQCR is not ready.
-+ */
-+static inline int
-+qbman_swp_enqueue(struct qbman_swp *s, const struct qbman_eq_desc *d,
-+		  const struct dpaa2_fd *fd)
-+{
-+	return qbman_swp_enqueue_ring_mode_ptr(s, d, fd);
-+}
-+
-+/**
-+ * qbman_swp_enqueue_multiple() - Issue a multi enqueue command
-+ * using one enqueue descriptor
-+ * @s:  the software portal used for enqueue
-+ * @d:  the enqueue descriptor
-+ * @fd: table pointer of frame descriptor table to be enqueued
-+ * @flags: table pointer of QBMAN_ENQUEUE_FLAG_DCA flags, not used if NULL
-+ * @num_frames: number of fd to be enqueued
-+ *
-+ * Return the number of fd enqueued, or a negative error number.
-+ */
-+static inline int
-+qbman_swp_enqueue_multiple(struct qbman_swp *s,
-+			   const struct qbman_eq_desc *d,
-+			   const struct dpaa2_fd *fd,
-+			   uint32_t *flags,
-+			   int num_frames)
-+{
-+	return qbman_swp_enqueue_multiple_ptr(s, d, fd, flags, num_frames);
-+}
-+
-+/**
-+ * qbman_swp_enqueue_multiple_desc() - Issue a multi enqueue command
-+ * using multiple enqueue descriptor
-+ * @s:  the software portal used for enqueue
-+ * @d:  table of minimal enqueue descriptor
-+ * @fd: table pointer of frame descriptor table to be enqueued
-+ * @num_frames: number of fd to be enqueued
-+ *
-+ * Return the number of fd enqueued, or a negative error number.
-+ */
-+static inline int
-+qbman_swp_enqueue_multiple_desc(struct qbman_swp *s,
-+				const struct qbman_eq_desc_min *d,
-+				const struct dpaa2_fd *fd,
-+				int num_frames)
-+{
-+	return qbman_swp_enqueue_multiple_desc_ptr(s, d, fd, num_frames);
-+}
-+
-+/**
-  * qbman_result_is_DQ() - check if the dequeue result is a dequeue respons=
-e
-  * @dq: the dequeue result to be checked
-  *
-@@ -504,4 +618,49 @@ int qbman_bp_query(struct qbman_swp *s, u16 bpid,
-=20
- u32 qbman_bp_info_num_free_bufs(struct qbman_bp_query_rslt *a);
-=20
-+/**
-+ * qbman_swp_release() - Issue a buffer release command
-+ * @s:           the software portal object
-+ * @d:           the release descriptor
-+ * @buffers:     a pointer pointing to the buffer address to be released
-+ * @num_buffers: number of buffers to be released,  must be less than 8
-+ *
-+ * Return 0 for success, -EBUSY if the release command ring is not ready.
-+ */
-+static inline int qbman_swp_release(struct qbman_swp *s,
-+				    const struct qbman_release_desc *d,
-+				    const u64 *buffers,
-+				    unsigned int num_buffers)
-+{
-+	return qbman_swp_release_ptr(s, d, buffers, num_buffers);
-+}
-+
-+/**
-+ * qbman_swp_pull() - Issue the pull dequeue command
-+ * @s: the software portal object
-+ * @d: the software portal descriptor which has been configured with
-+ *     the set of qbman_pull_desc_set_*() calls
-+ *
-+ * Return 0 for success, and -EBUSY if the software portal is not ready
-+ * to do pull dequeue.
-+ */
-+static inline int qbman_swp_pull(struct qbman_swp *s,
-+				 struct qbman_pull_desc *d)
-+{
-+	return qbman_swp_pull_ptr(s, d);
-+}
-+
-+/**
-+ * qbman_swp_dqrr_next() - Get an valid DQRR entry
-+ * @s: the software portal object
-+ *
-+ * Return NULL if there are no unconsumed DQRR entries. Return a DQRR entr=
-y
-+ * only once, so repeated calls can return a sequence of DQRR entries, wit=
-hout
-+ * requiring they be consumed immediately or in any particular order.
-+ */
-+static inline const struct dpaa2_dq *qbman_swp_dqrr_next(struct qbman_swp =
-*s)
-+{
-+	return qbman_swp_dqrr_next_ptr(s);
-+}
-+
- #endif /* __FSL_QBMAN_PORTAL_H */
---=20
-2.7.4
+I did a quick glance at the code to, and had a couple comments, although 
+I'm not a perf tool expert.
+
+
+On 8/2/19 4:40 AM, Tan Xiaojun wrote:
+> After the commit ffd3d18c20b8 ("perf tools: Add ARM Statistical
+> Profiling Extensions (SPE) support") is merged, "perf record" and
+> "perf report --dump-raw-trace" have been supported. However, the
+> raw data that is dumped cannot be used without parsing.
+> 
+> This patch is to improve the "perf report" support for spe, and
+> further process the data. Currently, support for the three events
+> of llc-miss, tlb-miss, and branch-miss is added.
+> 
+> Example usage:
+> 
+> --------------------------------------------------------------------
+> ...
+>      37.84%    37.84%  dd       [kernel.kallsyms]  [k] perf_iterate_ctx.constprop.64
+>      16.22%    16.22%  dd       [kernel.kallsyms]  [k] copy_page
+>       5.41%     5.41%  dd       [kernel.kallsyms]  [k] find_vma
+>       5.41%     5.41%  dd       [kernel.kallsyms]  [k] perf_event_mmap
+>       5.41%     5.41%  dd       [kernel.kallsyms]  [k] zap_pte_range
+>       5.41%     5.41%  dd       ld-2.28.so         [.] _dl_lookup_symbol_x
+>       5.41%     5.41%  dd       libc-2.28.so       [.] _nl_intern_locale_data
+>       2.70%     2.70%  dd       [kernel.kallsyms]  [k] __remove_shared_vm_struct.isra.1
+>       2.70%     2.70%  dd       [kernel.kallsyms]  [k] kmem_cache_free
+>       2.70%     2.70%  dd       [kernel.kallsyms]  [k] ttwu_do_wakeup.isra.19
+>       2.70%     2.70%  dd       dd                 [.] 0x000000000000d9d8
+>       2.70%     2.70%  dd       ld-2.28.so         [.] _dl_relocate_object
+>       2.70%     2.70%  dd       libc-2.28.so       [.] __unregister_atfork
+>       2.70%     2.70%  dd       libc-2.28.so       [.] _dl_addr
+> 
+>      12.50%    12.50%  dd       [kernel.kallsyms]  [k] __audit_syscall_entry
+>      12.50%    12.50%  dd       [kernel.kallsyms]  [k] kmem_cache_free
+>      12.50%    12.50%  dd       [kernel.kallsyms]  [k] perf_iterate_ctx.constprop.64
+>      12.50%    12.50%  dd       [kernel.kallsyms]  [k] ttwu_do_wakeup.isra.19
+>      12.50%    12.50%  dd       dd                 [.] 0x000000000000d9d8
+>      12.50%    12.50%  dd       libc-2.28.so       [.] __unregister_atfork
+>      12.50%    12.50%  dd       libc-2.28.so       [.] _nl_intern_locale_data
+>      12.50%    12.50%  dd       libc-2.28.so       [.] vfprintf
+> 
+>      16.67%    16.67%  dd       libc-2.28.so       [.] read_alias_file
+>       8.33%     8.33%  dd       [kernel.kallsyms]  [k] __arch_copy_from_user
+>       8.33%     8.33%  dd       [kernel.kallsyms]  [k] __arch_copy_to_user
+>       8.33%     8.33%  dd       [kernel.kallsyms]  [k] lookup_fast
+>       8.33%     8.33%  dd       [kernel.kallsyms]  [k] strncpy_from_user
+>       8.33%     8.33%  dd       ld-2.28.so         [.] _dl_lookup_symbol_x
+>       8.33%     8.33%  dd       ld-2.28.so         [.] check_match
+>       8.33%     8.33%  dd       libc-2.28.so       [.] __GI___printf_fp_l
+>       8.33%     8.33%  dd       libc-2.28.so       [.] _dl_addr
+>       8.33%     8.33%  dd       libc-2.28.so       [.] _int_malloc
+>       8.33%     8.33%  dd       libc-2.28.so       [.] _nl_intern_locale_data
+> 
+> --------------------------------------------------------------------
+> 
+> After that, more analysis and processing of the raw data of spe
+> will be done.
+> 
+> Signed-off-by: Tan Xiaojun <tanxiaojun@huawei.com>
+> ---
+>   tools/perf/builtin-report.c                        |   5 +
+>   tools/perf/util/arm-spe-decoder/Build              |   2 +-
+>   tools/perf/util/arm-spe-decoder/arm-spe-decoder.c  | 214 ++++++
+>   tools/perf/util/arm-spe-decoder/arm-spe-decoder.h  |  51 ++
+>   .../util/arm-spe-decoder/arm-spe-pkt-decoder.h     |   2 +
+>   tools/perf/util/arm-spe.c                          | 715 ++++++++++++++++++++-
+>   tools/perf/util/auxtrace.c                         |  45 ++
+>   tools/perf/util/auxtrace.h                         |  27 +
+>   tools/perf/util/session.h                          |   2 +
+>   9 files changed, 1028 insertions(+), 35 deletions(-)
+>   create mode 100644 tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
+>   create mode 100644 tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+> 
+> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+> index abf0b9b..fadc8eb 100644
+> --- a/tools/perf/builtin-report.c
+> +++ b/tools/perf/builtin-report.c
+> @@ -1007,6 +1007,7 @@ int cmd_report(int argc, const char **argv)
+>   {
+>   	struct perf_session *session;
+>   	struct itrace_synth_opts itrace_synth_opts = { .set = 0, };
+> +	struct arm_spe_synth_opts arm_spe_synth_opts;
+>   	struct stat st;
+>   	bool has_br_stack = false;
+>   	int branch_mode = -1;
+> @@ -1165,6 +1166,9 @@ int cmd_report(int argc, const char **argv)
+>   	OPT_CALLBACK_OPTARG(0, "itrace", &itrace_synth_opts, NULL, "opts",
+>   			    "Instruction Tracing options\n" ITRACE_HELP,
+>   			    itrace_parse_synth_opts),
+> +	OPT_CALLBACK_OPTARG(0, "spe", &arm_spe_synth_opts, NULL, "spe opts",
+> +			    "ARM SPE Tracing options",
+> +			    arm_spe_parse_synth_opts),
+>   	OPT_BOOLEAN(0, "full-source-path", &srcline_full_filename,
+>   			"Show full source file name path for source lines"),
+>   	OPT_BOOLEAN(0, "show-ref-call-graph", &symbol_conf.show_ref_callgraph,
+> @@ -1266,6 +1270,7 @@ int cmd_report(int argc, const char **argv)
+>   	}
+>   
+>   	session->itrace_synth_opts = &itrace_synth_opts;
+> +	session->arm_spe_synth_opts = &arm_spe_synth_opts;
+>   
+>   	report.session = session;
+>   
+> diff --git a/tools/perf/util/arm-spe-decoder/Build b/tools/perf/util/arm-spe-decoder/Build
+> index 16efbc2..f8dae13 100644
+> --- a/tools/perf/util/arm-spe-decoder/Build
+> +++ b/tools/perf/util/arm-spe-decoder/Build
+> @@ -1 +1 @@
+> -perf-$(CONFIG_AUXTRACE) += arm-spe-pkt-decoder.o
+> +perf-$(CONFIG_AUXTRACE) += arm-spe-pkt-decoder.o arm-spe-decoder.o
+> diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
+> new file mode 100644
+> index 0000000..8008375
+> --- /dev/null
+> +++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
+> @@ -0,0 +1,214 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * arm_spe_decoder.c: ARM SPE support
+> + */
+> +
+> +#ifndef _GNU_SOURCE
+> +#define _GNU_SOURCE
+> +#endif
+> +#include <stdlib.h>
+> +#include <stdbool.h>
+> +#include <string.h>
+> +#include <errno.h>
+> +#include <stdint.h>
+> +#include <inttypes.h>
+> +#include <linux/compiler.h>
+> +#include <linux/zalloc.h>
+> +
+> +#include "../util.h"
+> +#include "../auxtrace.h"
+> +
+> +#include "arm-spe-pkt-decoder.h"
+> +#include "arm-spe-decoder.h"
+> +
+> +struct arm_spe_decoder {
+> +	int (*get_trace)(struct arm_spe_buffer *buffer, void *data);
+> +	void *data;
+> +	struct arm_spe_state state;
+> +	const unsigned char *buf;
+> +	size_t len;
+> +	uint64_t pos;
+> +	struct arm_spe_pkt packet;
+> +	int pkt_step;
+> +	int pkt_len;
+> +	int last_packet_type;
+> +
+> +	uint64_t last_ip;
+> +	uint64_t ip;
+> +	uint64_t timestamp;
+> +	uint64_t sample_timestamp;
+> +	const unsigned char *next_buf;
+> +	size_t next_len;
+> +	unsigned char temp_buf[ARM_SPE_PKT_MAX_SZ];
+> +};
+> +
+> +static uint64_t arm_spe_calc_ip(uint64_t payload)
+> +{
+> +	uint64_t ip = (payload & ~(0xffULL << 56));
+> +
+> +	/* fill high 8 bits for kernel virtual address */
+> +	if (ip & 0x1000000000000ULL)
+
+It might be better to use VA_START here if possible.
+
+> +		ip |= (uint64_t)0xff00000000000000ULL;
+> +
+> +	return ip;
+> +}
+> +
+> +struct arm_spe_decoder *arm_spe_decoder_new(struct arm_spe_params *params)
+> +{
+> +	struct arm_spe_decoder *decoder;
+> +
+> +	if (!params->get_trace)
+> +		return NULL;
+> +
+> +	decoder = zalloc(sizeof(struct arm_spe_decoder));
+> +	if (!decoder)
+> +		return NULL;
+> +
+> +	decoder->get_trace          = params->get_trace;
+> +	decoder->data               = params->data;
+> +
+> +	return decoder;
+> +}
+> +
+> +void arm_spe_decoder_free(struct arm_spe_decoder *decoder)
+> +{
+> +	free(decoder);
+> +}
+> +
+> +static int arm_spe_bad_packet(struct arm_spe_decoder *decoder)
+> +{
+> +	decoder->pkt_len = 1;
+> +	decoder->pkt_step = 1;
+> +	pr_debug("ERROR: Bad packet\n");
+> +
+> +	return -EBADMSG;
+> +}
+> +
+> +
+> +static int arm_spe_get_data(struct arm_spe_decoder *decoder)
+> +{
+> +	struct arm_spe_buffer buffer = { .buf = 0, };
+> +	int ret;
+> +
+> +	decoder->pkt_step = 0;
+> +
+> +	pr_debug("Getting more data\n");
+> +	ret = decoder->get_trace(&buffer, decoder->data);
+> +	if (ret)
+> +		return ret;
+> +
+> +	decoder->buf = buffer.buf;
+> +	decoder->len = buffer.len;
+> +	if (!decoder->len) {
+> +		pr_debug("No more data\n");
+> +		return -ENODATA;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int arm_spe_get_next_data(struct arm_spe_decoder *decoder)
+> +{
+> +	return arm_spe_get_data(decoder);
+> +}
+> +
+> +static int arm_spe_get_next_packet(struct arm_spe_decoder *decoder)
+> +{
+> +	int ret;
+> +
+> +	decoder->last_packet_type = decoder->packet.type;
+> +
+> +	do {
+> +		decoder->pos += decoder->pkt_step;
+> +		decoder->buf += decoder->pkt_step;
+> +		decoder->len -= decoder->pkt_step;
+> +
+> +
+> +		if (!decoder->len) {
+> +			ret = arm_spe_get_next_data(decoder);
+> +			if (ret)
+> +				return ret;
+> +		}
+> +
+> +		ret = arm_spe_get_packet(decoder->buf, decoder->len,
+> +				&decoder->packet);
+> +		if (ret <= 0)
+> +			return arm_spe_bad_packet(decoder);
+> +
+> +		decoder->pkt_len = ret;
+> +		decoder->pkt_step = ret;
+> +	} while (decoder->packet.type == ARM_SPE_PAD);
+> +
+> +	return 0;
+> +}
+> +
+> +static int arm_spe_walk_trace(struct arm_spe_decoder *decoder)
+> +{
+> +	int err;
+> +	int idx;
+> +	uint64_t payload;
+> +
+> +	while (1) {
+> +		err = arm_spe_get_next_packet(decoder);
+> +		if (err)
+> +			return err;
+> +
+> +		idx = decoder->packet.index;
+> +		payload = decoder->packet.payload;
+> +
+> +		switch (decoder->packet.type) {
+> +		case ARM_SPE_TIMESTAMP:
+> +			decoder->sample_timestamp = payload;
+> +			return 0;
+> +		case ARM_SPE_END:
+> +			decoder->sample_timestamp = 0;
+> +			return 0;
+> +		case ARM_SPE_ADDRESS:
+> +			decoder->ip = arm_spe_calc_ip(payload);
+> +			if (idx == 0)
+> +				decoder->state.from_ip = decoder->ip;
+> +			else if (idx == 1)
+> +				decoder->state.to_ip = decoder->ip;
+> +			break;
+> +		case ARM_SPE_COUNTER:
+> +			break;
+> +		case ARM_SPE_CONTEXT:
+> +			break;
+> +		case ARM_SPE_OP_TYPE:
+> +			break;
+> +		case ARM_SPE_EVENTS:
+> +			if (payload & 0x20)
+> +				decoder->state.type |= ARM_SPE_TLB_MISS;
+> +			if (payload & 0x80)
+> +				decoder->state.type |= ARM_SPE_BRANCH_MISS;
+> +			if (idx > 1 && (payload & 0x200))
+> +				decoder->state.type |= ARM_SPE_LLC_MISS;
+> +
+> +			break;
+> +		case ARM_SPE_DATA_SOURCE:
+> +			break;
+> +		case ARM_SPE_BAD:
+> +			break;
+> +		case ARM_SPE_PAD:
+> +			break;
+> +		default:
+> +			pr_err("Get Packet Error!\n");
+> +			return -ENOSYS;
+> +		}
+> +	}
+> +}
+
+This code looks very similar to  arm_spe_pkt_desc(), I can't help but 
+think they should be consolidated in some way. If nothing else the magic 
+0x20, 0x80, etc ARM_SPE_EVENTS should be defined somewhere and shared.
+
+
+> +
+> +const struct arm_spe_state *arm_spe_decode(struct arm_spe_decoder *decoder)
+> +{
+> +	int err;
+> +
+> +	decoder->state.type = 0;
+> +
+> +	err = arm_spe_walk_trace(decoder);
+> +	if (err)
+> +		decoder->state.err = err;
+> +
+> +	decoder->state.timestamp = decoder->sample_timestamp;
+> +
+> +	return &decoder->state;
+
+(trimming remainder)
 
