@@ -2,109 +2,136 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 796A2C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 21:19:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90BDDC41514
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 21:21:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B5392166E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 21:19:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="yVsG+UlR"
+	by mail.kernel.org (Postfix) with ESMTP id 5BF812189F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 21:21:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565299310;
+	bh=LgjCrDBOFNjZIGmWfH/ct2Mm4aiB1Es4buMJn30aQvY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=GjGizyS+ESMDxxhbo7jEdbmjjqL7BgLHihfTpHCj8jQmRu2lZoOcb8WZPvJHIkIPF
+	 Z5R/AjgmPxJIqdWWeQHyRz9UWxUuh0ADBBpCgK1Us/sTM11Ginj9nejlkhrcnb8ctn
+	 BbpaZQgRCm6p+od1vX+LaY164XictDuZV5I811RY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390191AbfHHVS7 (ORCPT
+        id S2390326AbfHHVVs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 17:18:59 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:43259 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728020AbfHHVS7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 17:18:59 -0400
-Received: by mail-pg1-f194.google.com with SMTP id r26so8751120pgl.10
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 14:18:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=vwaIEfS1FAZl0r/hGbrJVWd7+Oh098wPSMDgW6Rp92k=;
-        b=yVsG+UlRQMtUxQczwRr+tGNXUpgb5JuGIZ9Hfs14iduOWR4txHlXpZxwWUtDpHEICM
-         0MfbhxhGzwCJYtqk5hFjfeD7f431qxlD05AvrQtalNSTduDiqTXEzg9UGnLeuDvICMHA
-         amsVyPWg0D2y/C8YKdGFbHSa+zooR1bVvWW6htALbJFbSc6XmTp7bdV5UlaBBO7BnVib
-         Dw7ZdWKCoPW25wvAOjSzgAlahac71LGMqXF2ZndJhZxbF2KxWBMg6tW8x75BCxGLlWci
-         qvlzvbM2kfW6rShIo0jnFME52p2//RFT4yhtncWCGiQOIjt9x5fflNeS7IbAM10OkQf+
-         hL4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=vwaIEfS1FAZl0r/hGbrJVWd7+Oh098wPSMDgW6Rp92k=;
-        b=gJFmYAmlfsIAX0v7/0uvm4hcBjQ7PjUg6bmt0m/ogZrWOPjP0l2xMSibyHsfoBaML/
-         qV0VPUyazxYhe3Nq+oTpkrJDFRBkRmkTeN38amzySAnsPXzSZCuhyKc64UkCyl8S/VW1
-         xEQHEYd1HrMDO9iVE5WsVPBMmPig/AFlC9YlTjAiwJV7YL5XFtdL9vW5N/taWO7jnjsM
-         xnSvveanw6B1oSARWH7LjE7limjQLtHVCpFb6dTur1BV564aplQgsKNZDcKqfBR7OMJq
-         94/CYc/rlIVU+uPgc3UehCLjmqaUVoV43R99Rc22zb1xkIGOMgfUw4wCEH6cHeNNAhQL
-         ErVA==
-X-Gm-Message-State: APjAAAXzdOIMQMAk+0SmTFLxswbXUJphXyiZC3b36JGAsI87aMpO8PLZ
-        qrL+OKNfgrWpba2n9FdnEjekIw==
-X-Google-Smtp-Source: APXvYqyy4N7d0TMp06csDZZcZzQG4KzhyFYusr8lIgCgQLzqwyDXrb7dFwjXWCDy+6BWpdpaIBvNUw==
-X-Received: by 2002:aa7:8705:: with SMTP id b5mr18439724pfo.27.1565299138091;
-        Thu, 08 Aug 2019 14:18:58 -0700 (PDT)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id s5sm79644816pfm.97.2019.08.08.14.18.57
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 08 Aug 2019 14:18:57 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>, sboyd@kernel.org,
-        jbrunet@baylibre.com
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 0/4] clk: meson: g12a: add support for DVFS
-In-Reply-To: <20190731084019.8451-1-narmstrong@baylibre.com>
-References: <20190731084019.8451-1-narmstrong@baylibre.com>
-Date:   Thu, 08 Aug 2019 14:18:56 -0700
-Message-ID: <7hzhkje4ov.fsf@baylibre.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Thu, 8 Aug 2019 17:21:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53420 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729780AbfHHVVs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 17:21:48 -0400
+Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BB582166E;
+        Thu,  8 Aug 2019 21:21:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565299307;
+        bh=LgjCrDBOFNjZIGmWfH/ct2Mm4aiB1Es4buMJn30aQvY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=2ImeMMybV064Z0DxdUeprm+KuyhJO20DaFsupoAvVIlLSqheXfGcf1uuRXh14Sd2p
+         ga56EsJLL90V5ZbfzYXSkTVMRDVOsVZzV0sYKuee53I+nxBGGQiS+dMEWj0I6g58kM
+         FTn+JRSENWS2+lhaf+crG46ih3HBKYmNxyVr3cVg=
+Date:   Thu, 8 Aug 2019 14:21:46 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     <linux-mm@kvack.org>, Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        <linux-kernel@vger.kernel.org>, <kernel-team@fb.com>
+Subject: Re: [PATCH] mm: memcontrol: flush slab vmstats on kmem offlining
+Message-Id: <20190808142146.a328cd673c66d5fdbca26f79@linux-foundation.org>
+In-Reply-To: <20190808203604.3413318-1-guro@fb.com>
+References: <20190808203604.3413318-1-guro@fb.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
+On Thu, 8 Aug 2019 13:36:04 -0700 Roman Gushchin <guro@fb.com> wrote:
 
-> The G12A/G12B Socs embeds a specific clock tree for each CPU cluster :
-> cpu_clk / cpub_clk
-> |   \- cpu_clk_dyn
-> |      |  \- cpu_clk_premux0
-> |      |        |- cpu_clk_postmux0
-> |      |        |    |- cpu_clk_dyn0_div
-> |      |        |    \- xtal/fclk_div2/fclk_div3
-> |      |        \- xtal/fclk_div2/fclk_div3
-> |      \- cpu_clk_premux1
-> |            |- cpu_clk_postmux1
-> |            |    |- cpu_clk_dyn1_div
-> |            |    \- xtal/fclk_div2/fclk_div3
-> |            \- xtal/fclk_div2/fclk_div3
-> \ sys_pll / sys1_pll
->
-> This patchset adds notifiers on cpu_clk / cpub_clk, cpu_clk_dyn,
-> cpu_clk_premux0 and sys_pll / sys1_pll to permit change frequency of
-> the CPU clock in a safe way as recommended by the vendor Documentation
-> and reference code.
->
-> This patchset :
-> - introduces needed core and meson clk changes
-> - adds the clock notifiers
->
-> Dependencies:
-> - None
+> I've noticed that the "slab" value in memory.stat is sometimes 0,
+> even if some children memory cgroups have a non-zero "slab" value.
+> The following investigation showed that this is the result
+> of the kmem_cache reparenting in combination with the per-cpu
+> batching of slab vmstats.
+> 
+> At the offlining some vmstat value may leave in the percpu cache,
+> not being propagated upwards by the cgroup hierarchy. It means
+> that stats on ancestor levels are lower than actual. Later when
+> slab pages are released, the precise number of pages is substracted
+> on the parent level, making the value negative. We don't show negative
+> values, 0 is printed instead.
+> 
+> To fix this issue, let's flush percpu slab memcg and lruvec stats
+> on memcg offlining. This guarantees that numbers on all ancestor
+> levels are accurate and match the actual number of outstanding
+> slab pages.
+> 
 
-nit: this doesn't apply to v5.3-rc, but appears to apply on
-clk-meson/v5.4/drivers, so it appears to be dependent on the cleanups
-from Alex.
+Looks expensive.  How frequently can these functions be called?
 
-Kevin
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -3412,6 +3412,50 @@ static int memcg_online_kmem(struct mem_cgroup *memcg)
+>  	return 0;
+>  }
+>  
+> +static void memcg_flush_slab_node_stats(struct mem_cgroup *memcg, int node)
+> +{
+> +	struct mem_cgroup_per_node *pn = memcg->nodeinfo[node];
+> +	struct mem_cgroup_per_node *pi;
+> +	unsigned long recl = 0, unrecl = 0;
+> +	int cpu;
+> +
+> +	for_each_possible_cpu(cpu) {
+> +		recl += raw_cpu_read(
+> +			pn->lruvec_stat_cpu->count[NR_SLAB_RECLAIMABLE]);
+> +		unrecl += raw_cpu_read(
+> +			pn->lruvec_stat_cpu->count[NR_SLAB_UNRECLAIMABLE]);
+> +	}
+> +
+> +	for (pi = pn; pi; pi = parent_nodeinfo(pi, node)) {
+> +		atomic_long_add(recl,
+> +				&pi->lruvec_stat[NR_SLAB_RECLAIMABLE]);
+> +		atomic_long_add(unrecl,
+> +				&pi->lruvec_stat[NR_SLAB_UNRECLAIMABLE]);
+> +	}
+> +}
+> +
+> +static void memcg_flush_slab_vmstats(struct mem_cgroup *memcg)
+> +{
+> +	struct mem_cgroup *mi;
+> +	unsigned long recl = 0, unrecl = 0;
+> +	int node, cpu;
+> +
+> +	for_each_possible_cpu(cpu) {
+> +		recl += raw_cpu_read(
+> +			memcg->vmstats_percpu->stat[NR_SLAB_RECLAIMABLE]);
+> +		unrecl += raw_cpu_read(
+> +			memcg->vmstats_percpu->stat[NR_SLAB_UNRECLAIMABLE]);
+> +	}
+> +
+> +	for (mi = memcg; mi; mi = parent_mem_cgroup(mi)) {
+> +		atomic_long_add(recl, &mi->vmstats[NR_SLAB_RECLAIMABLE]);
+> +		atomic_long_add(unrecl, &mi->vmstats[NR_SLAB_UNRECLAIMABLE]);
+> +	}
+> +
+> +	for_each_node(node)
+> +		memcg_flush_slab_node_stats(memcg, node);
+
+This loops across all possible CPUs once for each possible node.  Ouch.
+
+Implementing hotplug handlers in here (which is surprisingly simple)
+brings this down to num_online_nodes * num_online_cpus which is, I
+think, potentially vastly better.
+
