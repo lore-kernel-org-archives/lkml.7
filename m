@@ -4,74 +4,105 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3950FC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 094FAC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:24:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1612220B7C
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:24:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D534521873
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:24:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731261AbfHHGYI (ORCPT
+        id S1731272AbfHHGYm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 02:24:08 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3783 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726187AbfHHGYH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 02:24:07 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 8FAB4BD13FE50CABA2B0;
-        Thu,  8 Aug 2019 14:24:05 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Thu, 8 Aug 2019
- 14:23:57 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <j.vosburgh@gmail.com>, <vfalico@gmail.com>, <andy@greyhouse.net>,
-        <davem@davemloft.net>, <jiri@resnulli.us>,
-        <jay.vosburgh@canonical.com>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH v2] team: Add vlan tx offload to hw_enc_features
-Date:   Thu, 8 Aug 2019 14:22:47 +0800
-Message-ID: <20190808062247.38352-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-In-Reply-To: <20190807023808.51976-1-yuehaibing@huawei.com>
-References: <20190807023808.51976-1-yuehaibing@huawei.com>
+        Thu, 8 Aug 2019 02:24:42 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:57413 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726187AbfHHGYl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 02:24:41 -0400
+X-Originating-IP: 79.86.19.127
+Received: from alex.numericable.fr (127.19.86.79.rev.sfr.net [79.86.19.127])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 94D2C6000B;
+        Thu,  8 Aug 2019 06:24:35 +0000 (UTC)
+From:   Alexandre Ghiti <alex@ghiti.fr>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        Alexandre Ghiti <alex@ghiti.fr>
+Subject: [PATCH v6 06/14] arm: Properly account for stack randomization and stack guard gap
+Date:   Thu,  8 Aug 2019 02:17:48 -0400
+Message-Id: <20190808061756.19712-7-alex@ghiti.fr>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190808061756.19712-1-alex@ghiti.fr>
+References: <20190808061756.19712-1-alex@ghiti.fr>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We should also enable team's vlan tx offload in hw_enc_features,
-pass the vlan packets to the slave devices with vlan tci, let the
-slave handle vlan tunneling offload implementation.
+This commit takes care of stack randomization and stack guard gap when
+computing mmap base address and checks if the task asked for randomization.
 
-Fixes: 3268e5cb494d ("team: Advertise tunneling offload features")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
-v2: fix commit log typo
----
- drivers/net/team/team.c | 2 ++
- 1 file changed, 2 insertions(+)
+This fixes the problem uncovered and not fixed for arm here:
+https://lkml.kernel.org/r/20170622200033.25714-1-riel@redhat.com
 
-diff --git a/drivers/net/team/team.c b/drivers/net/team/team.c
-index abfa0da..e8089de 100644
---- a/drivers/net/team/team.c
-+++ b/drivers/net/team/team.c
-@@ -1004,6 +1004,8 @@ static void __team_compute_features(struct team *team)
+Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+Acked-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+---
+ arch/arm/mm/mmap.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/mm/mmap.c b/arch/arm/mm/mmap.c
+index f866870db749..bff3d00bda5b 100644
+--- a/arch/arm/mm/mmap.c
++++ b/arch/arm/mm/mmap.c
+@@ -18,8 +18,9 @@
+ 	 (((pgoff)<<PAGE_SHIFT) & (SHMLBA-1)))
  
- 	team->dev->vlan_features = vlan_features;
- 	team->dev->hw_enc_features = enc_features | NETIF_F_GSO_ENCAP_ALL |
-+				     NETIF_F_HW_VLAN_CTAG_TX |
-+				     NETIF_F_HW_VLAN_STAG_TX |
- 				     NETIF_F_GSO_UDP_L4;
- 	team->dev->hard_header_len = max_hard_header_len;
+ /* gap between mmap and stack */
+-#define MIN_GAP (128*1024*1024UL)
+-#define MAX_GAP ((TASK_SIZE)/6*5)
++#define MIN_GAP		(128*1024*1024UL)
++#define MAX_GAP		((TASK_SIZE)/6*5)
++#define STACK_RND_MASK	(0x7ff >> (PAGE_SHIFT - 12))
  
+ static int mmap_is_legacy(struct rlimit *rlim_stack)
+ {
+@@ -35,6 +36,15 @@ static int mmap_is_legacy(struct rlimit *rlim_stack)
+ static unsigned long mmap_base(unsigned long rnd, struct rlimit *rlim_stack)
+ {
+ 	unsigned long gap = rlim_stack->rlim_cur;
++	unsigned long pad = stack_guard_gap;
++
++	/* Account for stack randomization if necessary */
++	if (current->flags & PF_RANDOMIZE)
++		pad += (STACK_RND_MASK << PAGE_SHIFT);
++
++	/* Values close to RLIM_INFINITY can overflow. */
++	if (gap + pad > gap)
++		gap += pad;
+ 
+ 	if (gap < MIN_GAP)
+ 		gap = MIN_GAP;
 -- 
-2.7.4
-
+2.20.1
 
