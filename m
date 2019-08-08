@@ -2,110 +2,313 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D66AAC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 21:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F06CDC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 21:10:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACEFA20B7C
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 21:09:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2D0620B7C
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 21:10:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="DT8VEuxu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390380AbfHHVJM (ORCPT
+        id S2390423AbfHHVKS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 17:09:12 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:54257 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732427AbfHHVJM (ORCPT
+        Thu, 8 Aug 2019 17:10:18 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:4716 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732427AbfHHVKS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 17:09:12 -0400
-Received: from p200300ddd71876597e7a91fffec98e25.dip0.t-ipconnect.de ([2003:dd:d718:7659:7e7a:91ff:fec9:8e25])
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hvpeg-0008E7-78; Thu, 08 Aug 2019 23:09:02 +0200
-Date:   Thu, 8 Aug 2019 23:08:56 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
-cc:     "Li, Aubrey" <aubrey.li@linux.intel.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Daniel Drake <drake@endlessm.com>,
-        "x86@kernel.org" <x86@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Endless Linux Upstreaming Team <linux@endlessm.com>
-Subject: Re: setup_boot_APIC_clock() NULL dereference during early boot on
- reduced hardware platforms
-In-Reply-To: <5bf28ba4-b7c1-51de-88ae-feebae2a28db@amd.com>
-Message-ID: <alpine.DEB.2.21.1908082306220.2882@nanos.tec.linutronix.de>
-References: <CAD8Lp448i7jOk9C5NJtC2wHMaGuRLD4pxVqK17YqRCuMVXhsOA@mail.gmail.com> <CAERHkruxfBc8DqNUr=fbYuQWrXrHC7cK6HnVR3xp0iLA9QtxiQ@mail.gmail.com> <alpine.DEB.2.21.1908010931550.1788@nanos.tec.linutronix.de> <CAERHkrtaVAQHDU1cj2_GLL59LPjp7E=3X0Zna0spfFB=Ve5__w@mail.gmail.com>
- <alpine.DEB.2.21.1908011011250.1788@nanos.tec.linutronix.de> <81666b28-d029-56c3-8978-90abc219d1b7@linux.intel.com> <alpine.DEB.2.21.1908011054210.1965@nanos.tec.linutronix.de> <3d14b0cc-3cca-1874-3521-4ee2ec52141d@amd.com> <alpine.DEB.2.21.1908082235590.2882@nanos.tec.linutronix.de>
- <5bf28ba4-b7c1-51de-88ae-feebae2a28db@amd.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 8 Aug 2019 17:10:18 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d4c8fbb0000>; Thu, 08 Aug 2019 14:10:19 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 08 Aug 2019 14:10:17 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 08 Aug 2019 14:10:17 -0700
+Received: from rcampbell-dev.nvidia.com (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 8 Aug
+ 2019 21:10:16 +0000
+Subject: Re: [PATCH 6/9] nouveau: simplify nouveau_dmem_migrate_to_ram
+To:     Christoph Hellwig <hch@lst.de>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Ben Skeggs <bskeggs@redhat.com>
+CC:     Bharata B Rao <bharata@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        <linux-mm@kvack.org>, <nouveau@lists.freedesktop.org>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+References: <20190808153346.9061-1-hch@lst.de>
+ <20190808153346.9061-7-hch@lst.de>
+From:   Ralph Campbell <rcampbell@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <08112ecb-0984-9e32-a463-e731bc014747@nvidia.com>
+Date:   Thu, 8 Aug 2019 14:10:15 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <20190808153346.9061-7-hch@lst.de>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1565298619; bh=oVBAQyD5xUlq4GMTL3CDo5/mxCgb1o2QAFYUcZwvsVY=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=DT8VEuxuGaFlUgwlrCBl+bxMJ34NfECopfGnQdXhLsvMTrSZTI/OVr3RSJRhwwWRJ
+         w/QzZVbGKkx8yjcEIJYg1Ad+ljBOQOv8jG+ZFgmI7KmKcpt1OvYSee6jAWx8cXp2/d
+         TXjfEyQaK/wxLWrI62Bn53t1WWNWi7l+8u4Cxw688GJ+8ij5Q7s2d91Tc/RtWWBAIR
+         nf7+CHObeaDJ6MyhPbtTqKeOd1GJZxtTEF1dqVIfDf5jxnvRx4q1e8vpUlKCPuWnam
+         w5yYUY5HGGmOskuTBVhHSaJNNsAcSwCjfiInxFUovLczrbBIO2I6r4d0fULpuRG1Mh
+         JmS0XghUahm8Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tom,
 
-On Thu, 8 Aug 2019, Lendacky, Thomas wrote:
-> On 8/8/19 3:36 PM, Thomas Gleixner wrote:
-> > On Thu, 1 Aug 2019, Lendacky, Thomas wrote:
-> >> On 8/1/19 5:13 AM, Thomas Gleixner wrote:
-> >>>    2.1.9 Timers
-> >>>
-> >>>     Each core includes the following timers. These timers do not vary in
-> >>>     frequency regardless of the current P-state or C-state.
-> >>>
-> >>>     * Core::X86::Msr::TSC; the TSC increments at the rate specified by the
-> >>>       P0 Pstate. See Core::X86::Msr::PStateDef.
-> >>>
-> >>>     * The APIC timer (Core::X86::Apic::TimerInitialCount and
-> >>>       Core::X86::Apic::TimerCurrentCount), which increments at the rate of
-> >>>       2xCLKIN; the APIC timer may increment in units of between 1 and 8.
-> >>>
-> >>> The Ryzens use a 100MHz input clock for the APIC normally, but I'm not sure
-> >>> whether this is subject to overclocking. If so then it should be possible
-> >>> to figure that out somehow. Tom?
-> >>
-> >> Let me check with the hardware folks and I'll get back to you.
-> > 
-> > any update on this? The problem seems to come in from several sides now.
+On 8/8/19 8:33 AM, Christoph Hellwig wrote:
+> Factor the main copy page to ram routine out into a helper that acts on
+> a single page and which doesn't require the nouveau_dmem_fault
+> structure for argument passing.  Also remove the loop over multiple
+> pages as we only handle one at the moment, although the structure of
+> the main worker function makes it relatively easy to add multi page
+> support back if needed in the future.  But at least for now this avoid
+> the needed to dynamically allocate memory for the dma addresses in
+> what is essentially the page fault path.
 > 
-> Yes, sort of. There are two ways to overclock and it all depends on which
-> one was used. If the overclocking is done by changing the multipliers,
-> then that 100MHz clock will still be 100MHz. But if the overclocking is
-> done by increasing the input clock, then that 100MHz clock will also
-> increase.
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+
+Reviewed-by: Ralph Campbell <rcampbell@nvidia.com>
+
+> ---
+>   drivers/gpu/drm/nouveau/nouveau_dmem.c | 159 +++++++------------------
+>   1 file changed, 40 insertions(+), 119 deletions(-)
 > 
-> I was trying to get a bit more clarification on this before replying, but
-> it can be detected in software. The base clock is 100MHz, so read the P0
-> multiplier and the TSC should be counting at P0 * 100MHz. If you calibrate
-> the speed of the TSC with the HPET you can see what speed the TSC is
-> counting at. If you divide the TSC delta from the HPET calibration by the
-> P0 multiplier you will either get 100MHz if there is no overclocking or if
-> the multiplier method of overclocking was used, otherwise you'll get a
-> higher value if the input clock method was used. Either way, that should
-> give you the APIC clock speed based on a starting assumption of 100MHz.
+> diff --git a/drivers/gpu/drm/nouveau/nouveau_dmem.c b/drivers/gpu/drm/nouveau/nouveau_dmem.c
+> index 21052a4aaf69..473195762974 100644
+> --- a/drivers/gpu/drm/nouveau/nouveau_dmem.c
+> +++ b/drivers/gpu/drm/nouveau/nouveau_dmem.c
+> @@ -86,13 +86,6 @@ static inline struct nouveau_dmem *page_to_dmem(struct page *page)
+>   	return container_of(page->pgmap, struct nouveau_dmem, pagemap);
+>   }
+>   
+> -struct nouveau_dmem_fault {
+> -	struct nouveau_drm *drm;
+> -	struct nouveau_fence *fence;
+> -	dma_addr_t *dma;
+> -	unsigned long npages;
+> -};
+> -
+>   struct nouveau_migrate {
+>   	struct vm_area_struct *vma;
+>   	struct nouveau_drm *drm;
+> @@ -146,130 +139,57 @@ static void nouveau_dmem_fence_done(struct nouveau_fence **fence)
+>   	}
+>   }
+>   
+> -static void
+> -nouveau_dmem_fault_alloc_and_copy(struct vm_area_struct *vma,
+> -				  const unsigned long *src_pfns,
+> -				  unsigned long *dst_pfns,
+> -				  unsigned long start,
+> -				  unsigned long end,
+> -				  struct nouveau_dmem_fault *fault)
+> +static vm_fault_t nouveau_dmem_fault_copy_one(struct nouveau_drm *drm,
+> +		struct vm_fault *vmf, struct migrate_vma *args,
+> +		dma_addr_t *dma_addr)
+>   {
+> -	struct nouveau_drm *drm = fault->drm;
+>   	struct device *dev = drm->dev->dev;
+> -	unsigned long addr, i, npages = 0;
+> -	nouveau_migrate_copy_t copy;
+> -	int ret;
+> -
+> +	struct page *dpage, *spage;
+> +	vm_fault_t ret = VM_FAULT_SIGBUS;
 
-The problem is that we have no HPET on those machines ....
+You can remove this line and return VM_FAULT_SIGBUS in the error path below.
 
-I think I can get away without having HPET and PIT and do some smart stuff
-with the pm timer for that stuff. I'll look at it tomorrow with brain
-actually awake.
+>   
+> -	/* First allocate new memory */
+> -	for (addr = start, i = 0; addr < end; addr += PAGE_SIZE, i++) {
+> -		struct page *dpage, *spage;
+> -
+> -		dst_pfns[i] = 0;
+> -		spage = migrate_pfn_to_page(src_pfns[i]);
+> -		if (!spage || !(src_pfns[i] & MIGRATE_PFN_MIGRATE))
+> -			continue;
+> -
+> -		dpage = alloc_page_vma(GFP_HIGHUSER, vma, addr);
+> -		if (!dpage) {
+> -			dst_pfns[i] = MIGRATE_PFN_ERROR;
+> -			continue;
+> -		}
+> -		lock_page(dpage);
+> -
+> -		dst_pfns[i] = migrate_pfn(page_to_pfn(dpage)) |
+> -			      MIGRATE_PFN_LOCKED;
+> -		npages++;
+> -	}
+> +	spage = migrate_pfn_to_page(args->src[0]);
+> +	if (!spage || !(args->src[0] & MIGRATE_PFN_MIGRATE))
+> +		return 0;
+>   
+> -	/* Allocate storage for DMA addresses, so we can unmap later. */
+> -	fault->dma = kmalloc(sizeof(*fault->dma) * npages, GFP_KERNEL);
+> -	if (!fault->dma)
+> +	dpage = alloc_page_vma(GFP_HIGHUSER, vmf->vma, vmf->address);
+> +	if (!dpage)
+>   		goto error;
+> +	lock_page(dpage);
+>   
+> -	/* Copy things over */
+> -	copy = drm->dmem->migrate.copy_func;
+> -	for (addr = start, i = 0; addr < end; addr += PAGE_SIZE, i++) {
+> -		struct page *spage, *dpage;
+> -
+> -		dpage = migrate_pfn_to_page(dst_pfns[i]);
+> -		if (!dpage || dst_pfns[i] == MIGRATE_PFN_ERROR)
+> -			continue;
+> -
+> -		spage = migrate_pfn_to_page(src_pfns[i]);
+> -		if (!spage || !(src_pfns[i] & MIGRATE_PFN_MIGRATE)) {
+> -			dst_pfns[i] = MIGRATE_PFN_ERROR;
+> -			__free_page(dpage);
+> -			continue;
+> -		}
+> -
+> -		fault->dma[fault->npages] =
+> -			dma_map_page_attrs(dev, dpage, 0, PAGE_SIZE,
+> -					   PCI_DMA_BIDIRECTIONAL,
+> -					   DMA_ATTR_SKIP_CPU_SYNC);
+> -		if (dma_mapping_error(dev, fault->dma[fault->npages])) {
+> -			dst_pfns[i] = MIGRATE_PFN_ERROR;
+> -			__free_page(dpage);
+> -			continue;
+> -		}
+> +	*dma_addr = dma_map_page(dev, dpage, 0, PAGE_SIZE, DMA_BIDIRECTIONAL);
+> +	if (dma_mapping_error(dev, *dma_addr))
+> +		goto error_free_page;
+>   
+> -		ret = copy(drm, 1, NOUVEAU_APER_HOST,
+> -				fault->dma[fault->npages++],
+> -				NOUVEAU_APER_VRAM,
+> -				nouveau_dmem_page_addr(spage));
+> -		if (ret) {
+> -			dst_pfns[i] = MIGRATE_PFN_ERROR;
+> -			__free_page(dpage);
+> -			continue;
+> -		}
+> -	}
+> +	if (drm->dmem->migrate.copy_func(drm, 1, NOUVEAU_APER_HOST, *dma_addr,
+> +			NOUVEAU_APER_VRAM, nouveau_dmem_page_addr(spage)))
+> +		goto error_dma_unmap;
+>   
+> -	nouveau_fence_new(drm->dmem->migrate.chan, false, &fault->fence);
+> -
+> -	return;
+> +	args->dst[0] = migrate_pfn(page_to_pfn(dpage)) | MIGRATE_PFN_LOCKED;
+> +	ret = 0;
 
-Thanks,
+This needs to be "return 0;" here so that dpage is not unmapped
+while the DMA I/O is in progress. It gets unmapped after the
+call to nouveau_dmem_fence_done() in nouveau_dmem_migrate_to_ram().
 
-	tglx
+>   
+> +error_dma_unmap:
+> +	dma_unmap_page(dev, *dma_addr, PAGE_SIZE, DMA_BIDIRECTIONAL);
+> +error_free_page:
+> +	__free_page(dpage);
+>   error:
+> -	for (addr = start, i = 0; addr < end; addr += PAGE_SIZE, ++i) {
+> -		struct page *page;
+> -
+> -		if (!dst_pfns[i] || dst_pfns[i] == MIGRATE_PFN_ERROR)
+> -			continue;
+> -
+> -		page = migrate_pfn_to_page(dst_pfns[i]);
+> -		dst_pfns[i] = MIGRATE_PFN_ERROR;
+> -		if (page == NULL)
+> -			continue;
+> -
+> -		__free_page(page);
+> -	}
+> -}
+> -
+> -static void
+> -nouveau_dmem_fault_finalize_and_map(struct nouveau_dmem_fault *fault)
+> -{
+> -	struct nouveau_drm *drm = fault->drm;
+> -
+> -	nouveau_dmem_fence_done(&fault->fence);
+> -
+> -	while (fault->npages--) {
+> -		dma_unmap_page(drm->dev->dev, fault->dma[fault->npages],
+> -			       PAGE_SIZE, PCI_DMA_BIDIRECTIONAL);
+> -	}
+> -	kfree(fault->dma);
+> +	return ret;
 
+	return VM_FAULT_SIGBUS;
 
-
-
-
+>   }
+>   
+>   static vm_fault_t nouveau_dmem_migrate_to_ram(struct vm_fault *vmf)
+>   {
+>   	struct nouveau_dmem *dmem = page_to_dmem(vmf->page);
+> -	unsigned long src[1] = {0}, dst[1] = {0};
+> +	struct nouveau_drm *drm = dmem->drm;
+> +	struct nouveau_fence *fence;
+> +	unsigned long src = 0, dst = 0;
+> +	dma_addr_t dma_addr = 0;
+> +	vm_fault_t ret;
+>   	struct migrate_vma args = {
+>   		.vma		= vmf->vma,
+>   		.start		= vmf->address,
+>   		.end		= vmf->address + PAGE_SIZE,
+> -		.src		= src,
+> -		.dst		= dst,
+> +		.src		= &src,
+> +		.dst		= &dst,
+>   	};
+> -	struct nouveau_dmem_fault fault = { .drm = dmem->drm };
+>   
+>   	/*
+>   	 * FIXME what we really want is to find some heuristic to migrate more
+> @@ -281,16 +201,17 @@ static vm_fault_t nouveau_dmem_migrate_to_ram(struct vm_fault *vmf)
+>   	if (!args.cpages)
+>   		return 0;
+>   
+> -	nouveau_dmem_fault_alloc_and_copy(args.vma, src, dst, args.start,
+> -			args.end, &fault);
+> -	migrate_vma_pages(&args);
+> -	nouveau_dmem_fault_finalize_and_map(&fault);
+> +	ret = nouveau_dmem_fault_copy_one(drm, vmf, &args, &dma_addr);
+> +	if (ret || dst == 0)
+> +		goto done;
+>   
+> +	nouveau_fence_new(dmem->migrate.chan, false, &fence);
+> +	migrate_vma_pages(&args);
+> +	nouveau_dmem_fence_done(&fence);
+> +	dma_unmap_page(drm->dev->dev, dma_addr, PAGE_SIZE, DMA_BIDIRECTIONAL);
+> +done:
+>   	migrate_vma_finalize(&args);
+> -	if (dst[0] == MIGRATE_PFN_ERROR)
+> -		return VM_FAULT_SIGBUS;
+> -
+> -	return 0;
+> +	return ret;
+>   }
+>   
+>   static const struct dev_pagemap_ops nouveau_dmem_pagemap_ops = {
+> 
