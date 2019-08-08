@@ -2,92 +2,126 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C63A9C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:35:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D9BC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D86321479
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:35:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EDEA214C6
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:36:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="GyfDnfPt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gySyvL0B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733150AbfHHNfC (ORCPT
+        id S1733164AbfHHNgd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 09:35:02 -0400
-Received: from mail-pg1-f172.google.com ([209.85.215.172]:36346 "EHLO
-        mail-pg1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732982AbfHHNfC (ORCPT
+        Thu, 8 Aug 2019 09:36:33 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:39722 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733075AbfHHNgd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 09:35:02 -0400
-Received: by mail-pg1-f172.google.com with SMTP id l21so44083182pgm.3
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 06:35:01 -0700 (PDT)
+        Thu, 8 Aug 2019 09:36:33 -0400
+Received: by mail-qt1-f194.google.com with SMTP id l9so92062566qtu.6
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 06:36:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=GpmhOOhkjZn/xPUlAc0Il+1MLsQaxLxLhCEUVCkaXcY=;
-        b=GyfDnfPtZ50Yp5OLwkB9MAp59zkRYwuo2uowH34HWERv68pXqjexeZf/LiildrlfkG
-         SUWFQBm4VtFWSeVThF6R2fdBrOjnmJAwD3HBW+48GDXr4kpvnF44jBRpLCS4kBPr3YD0
-         HPWmUbWFP+ndfXLRh200lCvjlg5g54sN+Ok12oavsDAKYb8fxTfesCaRtW3zQO0beCo4
-         VDEcxrZWX9fC0vkkhDspzw9VWnSb8UoOUpZQ/7d/4ouPmgvHPNrPIIpDWidBUOuiL/gT
-         2SzOYPj/ggMeTsVyTgO+zGHSIDa+vhdvlUaFG7NFFMMh235WXPtAtUxr6RdzZP7/9J2o
-         eVUQ==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Tpo/mH7Db4UEwhSkEp+BZ3Zkb9wEFm+LqM2A/cER0z4=;
+        b=gySyvL0B/oQLoH9eU/xy2G6QuF/UUUZSSTGNdrBU7FWFVcITTCccGPPdHZZyOe/dg5
+         1Dcmv9iAfNbZ3+s+Qv/hQFlb8souwtyZyyIrnrblfihKk8YqB9WU2+SrbNj5MD6TmrS1
+         veC4DWm94Umh+LPGfV8a060IYPklA7PSQZwvU2YsxVBVUtayVdJKKKKa46ppSPS/N1qO
+         ObN9L9t23YS+3NC/1ytUPSFX9uc4T0Q/v62627wDu1GwiJQMlbj2xdW3wXkqiPsLtvVy
+         lyF4k4ox57sMyU9TqeLSvjdgMHElYu3afC9e2Lzvf4FCZCZFVJEzlNEO2gb7KsyHZ49x
+         nbfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GpmhOOhkjZn/xPUlAc0Il+1MLsQaxLxLhCEUVCkaXcY=;
-        b=hDzzpTdkD6TOe/sy9WA5XCmk1T+Q6/USHyczPqp5G/ITunUXnz4wC+1sq2/A6oVE+q
-         Lt7w0E9dSSw0mMWmcXVihCBtpFT7DCCrQ9POe3CAxuYA8JKHVqQdah8ks5j+UlwIFOFl
-         4hSFL4wwgP3CULhgbNDNAs+tPVm2b78Vg/Hpu/9TeSVymMTZy+nkpJfmPEsbZi0Ob+Fz
-         KvpPouweHRjAKHlsRI+jgHAfoYZr3vD9p29jR3v7H4fCTBiqiue+3ExZ/+tFmMPvMn7N
-         rRG3qG6H+4j673GcGo0P2IV8+TwRM1t2jsxo2PJJ0rDPnjhx4mYzOdGEQAE9M82tKvRb
-         uNyg==
-X-Gm-Message-State: APjAAAXY9YSNXR3RrcUX8A4FOCdDxyjA9stijxANlMFJZvBQA0vl+oLG
-        idx/0h6IcBXhMK/DpbcvpvYkc/yis/FmOA==
-X-Google-Smtp-Source: APXvYqwuGRL9zpfvmjxOsypOQVucm/W3gHDymvkqRK/j43viONqdygL9QT+paQgK/bWk97ALxnOYMA==
-X-Received: by 2002:a63:6a81:: with SMTP id f123mr12979749pgc.348.1565271301170;
-        Thu, 08 Aug 2019 06:35:01 -0700 (PDT)
-Received: from ?IPv6:2605:e000:100e:83a1:186c:3a47:dc97:3ed1? ([2605:e000:100e:83a1:186c:3a47:dc97:3ed1])
-        by smtp.gmail.com with ESMTPSA id f19sm142886966pfk.180.2019.08.08.06.34.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 08 Aug 2019 06:35:00 -0700 (PDT)
-Subject: Re: [PATCH -next] lightnvm: remove set but not used variables
- 'data_len' and 'rq_len'
-To:     YueHaibing <yuehaibing@huawei.com>, mb@lightnvm.io,
-        hans@owltronix.com, hch@lst.de
-Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
-References: <20190807131847.62412-1-yuehaibing@huawei.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <93b23b81-cc4e-4008-cffe-38f87da11481@kernel.dk>
-Date:   Thu, 8 Aug 2019 06:34:59 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Tpo/mH7Db4UEwhSkEp+BZ3Zkb9wEFm+LqM2A/cER0z4=;
+        b=cXjwQnC6u6+DvqFCOy0y+gsWOjp4pVNNjkGDDciW2WLv/gAdDvpNue/vgGc+Cog7mS
+         8p/JJebozPtQi0+k8j96b+y2zfgBab5aNykB0i0uXqAlhM7lB1OYwqExhNAKp+17Dvpx
+         cnahDl5i1yrbfOHU8pxHbJlkORGHRMVTK3K+mEBNBq73QSGirdK3cuTxFtpvJdx7uWHV
+         CFU6GKx4sReX0ctdhyn42iqVeDq9infE5hSODJvHCln+YxMgIeNer+x4Lylbbl9TDqpi
+         idodzsLalLS0eOsG12n/fFXkQOdU4Ms115fJP0G+SbKiovfY5KCIf+nAHN8CYuKBgaWF
+         OvRg==
+X-Gm-Message-State: APjAAAXWk5NMxagZOKibImNGkrYvRun2IM/O3I/m7mUAqh1mvLU92PiZ
+        hEkrCIrwJuz9qbITbumn8ow=
+X-Google-Smtp-Source: APXvYqwGCO4VXGhxvDyu5inPmVcZZKjMQLEhek3k3MfrHAurstHolF1V950XByCQvtZAhvvJMgvYnQ==
+X-Received: by 2002:ac8:70cd:: with SMTP id g13mr5407324qtp.325.1565271392008;
+        Thu, 08 Aug 2019 06:36:32 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id f25sm47679297qta.81.2019.08.08.06.36.30
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 08 Aug 2019 06:36:31 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 0F31140340; Thu,  8 Aug 2019 10:36:29 -0300 (-03)
+Date:   Thu, 8 Aug 2019 10:36:28 -0300
+To:     zhe.he@windriver.com
+Cc:     peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, kan.liang@linux.intel.com, eranian@google.com,
+        alexey.budankov@linux.intel.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] perf: Fix writing to illegal memory in handling
+ cpumap mask
+Message-ID: <20190808133628.GC19444@kernel.org>
+References: <1564734592-15624-1-git-send-email-zhe.he@windriver.com>
+ <1564734592-15624-2-git-send-email-zhe.he@windriver.com>
 MIME-Version: 1.0
-In-Reply-To: <20190807131847.62412-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1564734592-15624-2-git-send-email-zhe.he@windriver.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/7/19 6:18 AM, YueHaibing wrote:
-> drivers/lightnvm/pblk-read.c: In function pblk_submit_read_gc:
-> drivers/lightnvm/pblk-read.c:423:6: warning: variable data_len set but not used [-Wunused-but-set-variable]
-> drivers/lightnvm/pblk-recovery.c: In function pblk_recov_scan_oob:
-> drivers/lightnvm/pblk-recovery.c:368:15: warning: variable rq_len set but not used [-Wunused-but-set-variable]
+Em Fri, Aug 02, 2019 at 04:29:52PM +0800, zhe.he@windriver.com escreveu:
+> From: He Zhe <zhe.he@windriver.com>
 > 
-> They are not used since commit 48e5da725581 ("lightnvm:
-> move metadata mapping to lower level driver")
+> cpu_map__snprint_mask would write to illegal memory pointed by zalloc(0)
+> when there is only one cpu.
+> 
+> This patch fixes the calculation and adds sanity check against the input
+> parameters.
 
-Applied, thanks.
+Thanks, applied, and added the missing:
+
+Fixes: 4400ac8a9a90 ("perf cpumap: Introduce cpu_map__snprint_mask()")
+
+- Arnaldo
+ 
+> Signed-off-by: He Zhe <zhe.he@windriver.com>
+> ---
+>  tools/perf/util/cpumap.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
+> index 3acfbe3..39cce66 100644
+> --- a/tools/perf/util/cpumap.c
+> +++ b/tools/perf/util/cpumap.c
+> @@ -751,7 +751,10 @@ size_t cpu_map__snprint_mask(struct cpu_map *map, char *buf, size_t size)
+>  	unsigned char *bitmap;
+>  	int last_cpu = cpu_map__cpu(map, map->nr - 1);
+>  
+> -	bitmap = zalloc((last_cpu + 7) / 8);
+> +	if (buf == NULL)
+> +		return 0;
+> +
+> +	bitmap = zalloc(last_cpu / 8 + 1);
+>  	if (bitmap == NULL) {
+>  		buf[0] = '\0';
+>  		return 0;
+> -- 
+> 2.7.4
 
 -- 
-Jens Axboe
 
+- Arnaldo
