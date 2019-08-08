@@ -2,133 +2,163 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69155C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:33:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A59C0C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:40:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45894217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:33:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B4D220880
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:40:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731492AbfHHGd2 (ORCPT
+        id S1731467AbfHHGko (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 02:33:28 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:51379 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725817AbfHHGd1 (ORCPT
+        Thu, 8 Aug 2019 02:40:44 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:46090 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730879AbfHHGko (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 02:33:27 -0400
-X-Originating-IP: 79.86.19.127
-Received: from alex.numericable.fr (127.19.86.79.rev.sfr.net [79.86.19.127])
-        (Authenticated sender: alex@ghiti.fr)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 6957F1BF207;
-        Thu,  8 Aug 2019 06:33:19 +0000 (UTC)
-From:   Alexandre Ghiti <alex@ghiti.fr>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Alexandre Ghiti <alex@ghiti.fr>
-Subject: [PATCH v6 14/14] riscv: Make mmap allocation top-down by default
-Date:   Thu,  8 Aug 2019 02:17:56 -0400
-Message-Id: <20190808061756.19712-15-alex@ghiti.fr>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190808061756.19712-1-alex@ghiti.fr>
-References: <20190808061756.19712-1-alex@ghiti.fr>
-MIME-Version: 1.0
+        Thu, 8 Aug 2019 02:40:44 -0400
+Received: from mail-pl1-f199.google.com ([209.85.214.199])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1hvc6L-0003JS-AZ
+        for linux-kernel@vger.kernel.org; Thu, 08 Aug 2019 06:40:41 +0000
+Received: by mail-pl1-f199.google.com with SMTP id u10so54891766plq.21
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 23:40:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=l5rHDYLgnHvJXY+ZnRDc5GLGTswz9I9fXq6PUolc/fA=;
+        b=EM2YfSsO9jOsXgJfYfeHWAyr0IsyWR99c9Dvoo7F8iZDhHAPxpCTHif3F1gkWIDWMJ
+         /pr+Vs5FsudZg8MulM1ITRqqXPEKRVIzqFrYgGNmk5g/jRsHFumTmmV71tcUsx8l6N2X
+         vMJyexfKDrFaBt06jOjU2Qe4Q6HF75wu09rBTZ6u0qWwbz3Q7rs47GGhtPx5vdYJ9cRf
+         q7WzfKF/zvI3YAAz30zTRgq/QP4khAkujdDD3tWMMNxhe2MglrhFZ9AYT2Mut3HrAX2Q
+         3clhYXkVNyvEVz3KzNu11TGk6Uaixo51T2FQf1DJjPkDvNpWnQ9pZF+66gDyNASVbOUT
+         7nDA==
+X-Gm-Message-State: APjAAAUrmK5pMa/1i+Lcu7Q6myx0Sx6YQPFEV6PNhvLdqir3ecjgjwWJ
+        u+D599n+Jw6U2sAFNLk6SPWJrIJ3JNfb99OZfgP/lRi1IxuQzX075NO9AYWFHdiy4NvjxMe4WHC
+        T/cd5XgsX0uuUArEfq2x+PbU4xOQ8gS7eVkGZZ68ZYg==
+X-Received: by 2002:a63:5d54:: with SMTP id o20mr11396996pgm.413.1565246439459;
+        Wed, 07 Aug 2019 23:40:39 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyCC/9Sa5BPRZy+RR5FexWvctk+jCAEtO3eVujnO8PsCr5So5Y7KoFCZ0L6y07X3R/2s7tBdg==
+X-Received: by 2002:a63:5d54:: with SMTP id o20mr11396964pgm.413.1565246439050;
+        Wed, 07 Aug 2019 23:40:39 -0700 (PDT)
+Received: from 2001-b011-380f-37d3-00e0-0f28-6109-9f39.dynamic-ip6.hinet.net (2001-b011-380f-37d3-00e0-0f28-6109-9f39.dynamic-ip6.hinet.net. [2001:b011:380f:37d3:e0:f28:6109:9f39])
+        by smtp.gmail.com with ESMTPSA id z68sm85843578pgz.88.2019.08.07.23.40.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Aug 2019 23:40:38 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8;
+        delsp=yes;
+        format=flowed
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [Regression] "drm/amdgpu: enable gfxoff again on raven series
+ (v2)"
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <MN2PR12MB3309680845257BC66644133CECD70@MN2PR12MB3309.namprd12.prod.outlook.com>
+Date:   Thu, 8 Aug 2019 14:40:35 +0800
+Cc:     "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Anthony Wong <anthony.wong@canonical.com>
 Content-Transfer-Encoding: 8bit
+Message-Id: <94CAE10C-1C2D-4A62-A26B-971A8EEE277A@canonical.com>
+References: <3EB0E920-31D7-4C91-A360-DBFB4417AC2F@canonical.com>
+ <MN2PR12MB330979BAFF5BCC758258D54CECD40@MN2PR12MB3309.namprd12.prod.outlook.com>
+ <624BFB8F-B586-492E-BEA6-4B138DAEC831@canonical.com>
+ <MN2PR12MB3309680845257BC66644133CECD70@MN2PR12MB3309.namprd12.prod.outlook.com>
+To:     "Huang, Ray" <Ray.Huang@amd.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to avoid wasting user address space by using bottom-up mmap
-allocation scheme, prefer top-down scheme when possible.
+at 14:29, Huang, Ray <Ray.Huang@amd.com> wrote:
 
-Before:
-root@qemuriscv64:~# cat /proc/self/maps
-00010000-00016000 r-xp 00000000 fe:00 6389       /bin/cat.coreutils
-00016000-00017000 r--p 00005000 fe:00 6389       /bin/cat.coreutils
-00017000-00018000 rw-p 00006000 fe:00 6389       /bin/cat.coreutils
-00018000-00039000 rw-p 00000000 00:00 0          [heap]
-1555556000-155556d000 r-xp 00000000 fe:00 7193   /lib/ld-2.28.so
-155556d000-155556e000 r--p 00016000 fe:00 7193   /lib/ld-2.28.so
-155556e000-155556f000 rw-p 00017000 fe:00 7193   /lib/ld-2.28.so
-155556f000-1555570000 rw-p 00000000 00:00 0
-1555570000-1555572000 r-xp 00000000 00:00 0      [vdso]
-1555574000-1555576000 rw-p 00000000 00:00 0
-1555576000-1555674000 r-xp 00000000 fe:00 7187   /lib/libc-2.28.so
-1555674000-1555678000 r--p 000fd000 fe:00 7187   /lib/libc-2.28.so
-1555678000-155567a000 rw-p 00101000 fe:00 7187   /lib/libc-2.28.so
-155567a000-15556a0000 rw-p 00000000 00:00 0
-3fffb90000-3fffbb1000 rw-p 00000000 00:00 0      [stack]
+>> -----Original Message-----
+>> From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+>> Sent: Thursday, August 08, 2019 1:45 AM
+>> To: Huang, Ray <Ray.Huang@amd.com>
+>> Cc: Deucher, Alexander <Alexander.Deucher@amd.com>; Koenig, Christian
+>> <Christian.Koenig@amd.com>; Zhou, David(ChunMing)
+>> <David1.Zhou@amd.com>; amd-gfx list <amd-gfx@lists.freedesktop.org>;
+>> dri-devel@lists.freedesktop.org; LKML <linux-kernel@vger.kernel.org>;
+>> Anthony Wong <anthony.wong@canonical.com>
+>> Subject: Re: [Regression] "drm/amdgpu: enable gfxoff again on raven series
+>> (v2)"
+>>
+>> Hi Ray,
+>>
+>> at 00:03, Huang, Ray <Ray.Huang@amd.com> wrote:
+>>
+>>> May I know the all firmware version in your system?
+>
+> Seems to the issue we encountered with IOMMU enabled. Could you please  
+> disable iommu in SBIOS or GRUB?
 
-After:
-root@qemuriscv64:~# cat /proc/self/maps
-00010000-00016000 r-xp 00000000 fe:00 6389       /bin/cat.coreutils
-00016000-00017000 r--p 00005000 fe:00 6389       /bin/cat.coreutils
-00017000-00018000 rw-p 00006000 fe:00 6389       /bin/cat.coreutils
-2de81000-2dea2000 rw-p 00000000 00:00 0          [heap]
-3ff7eb6000-3ff7ed8000 rw-p 00000000 00:00 0
-3ff7ed8000-3ff7fd6000 r-xp 00000000 fe:00 7187   /lib/libc-2.28.so
-3ff7fd6000-3ff7fda000 r--p 000fd000 fe:00 7187   /lib/libc-2.28.so
-3ff7fda000-3ff7fdc000 rw-p 00101000 fe:00 7187   /lib/libc-2.28.so
-3ff7fdc000-3ff7fe2000 rw-p 00000000 00:00 0
-3ff7fe4000-3ff7fe6000 r-xp 00000000 00:00 0      [vdso]
-3ff7fe6000-3ff7ffd000 r-xp 00000000 fe:00 7193   /lib/ld-2.28.so
-3ff7ffd000-3ff7ffe000 r--p 00016000 fe:00 7193   /lib/ld-2.28.so
-3ff7ffe000-3ff7fff000 rw-p 00017000 fe:00 7193   /lib/ld-2.28.so
-3ff7fff000-3ff8000000 rw-p 00000000 00:00 0
-3fff888000-3fff8a9000 rw-p 00000000 00:00 0      [stack]
+Yes, "amd_iommu=off" can workaround the issue.
 
-Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
-Acked-by: Paul Walmsley <paul.walmsley@sifive.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
----
- arch/riscv/Kconfig | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Kai-Heng
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 59a4727ecd6c..87dc5370becb 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -54,6 +54,18 @@ config RISCV
- 	select EDAC_SUPPORT
- 	select ARCH_HAS_GIGANTIC_PAGE
- 	select ARCH_WANT_HUGE_PMD_SHARE if 64BIT
-+	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT if MMU
-+	select HAVE_ARCH_MMAP_RND_BITS
-+
-+config ARCH_MMAP_RND_BITS_MIN
-+	default 18 if 64BIT
-+	default 8
-+
-+# max bits determined by the following formula:
-+#  VA_BITS - PAGE_SHIFT - 3
-+config ARCH_MMAP_RND_BITS_MAX
-+	default 24 if 64BIT # SV39 based
-+	default 17
- 
- config MMU
- 	def_bool y
--- 
-2.20.1
+>
+> Thanks,
+> Ray
+>
+>> # cat amdgpu_firmware_info
+>> VCE feature version: 0, firmware version: 0x00000000
+>> UVD feature version: 0, firmware version: 0x00000000
+>> MC feature version: 0, firmware version: 0x00000000
+>> ME feature version: 40, firmware version: 0x00000099
+>> PFP feature version: 40, firmware version: 0x000000ae
+>> CE feature version: 40, firmware version: 0x0000004d
+>> RLC feature version: 1, firmware version: 0x00000213
+>> RLC SRLC feature version: 1, firmware version: 0x00000001
+>> RLC SRLG feature version: 1, firmware version: 0x00000001
+>> RLC SRLS feature version: 1, firmware version: 0x00000001
+>> MEC feature version: 40, firmware version: 0x0000018b
+>> MEC2 feature version: 40, firmware version: 0x0000018b
+>> SOS feature version: 0, firmware version: 0x00000000
+>> ASD feature version: 0, firmware version: 0x001ad4d4
+>> TA XGMI feature version: 0, firmware version: 0x00000000
+>> TA RAS feature version: 0, firmware version: 0x00000000
+>> SMC feature version: 0, firmware version: 0x00001e44
+>> SDMA0 feature version: 41, firmware version: 0x000000a9
+>> VCN feature version: 0, firmware version: 0x0110901c
+>> DMCU feature version: 0, firmware version: 0x00000000
+>> VBIOS version: 113-RAVEN-103
+>>
+>> Kai-Heng
+>>
+>>> Thanks,
+>>> Ray
+>>>
+>>> From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+>>> Sent: Wednesday, August 7, 2019 8:50 PM
+>>> To: Huang, Ray
+>>> Cc: Deucher, Alexander; Koenig, Christian; Zhou, David(ChunMing); amd-
+>> gfx
+>>> list; dri-devel@lists.freedesktop.org; LKML; Anthony Wong
+>>> Subject: [Regression] "drm/amdgpu: enable gfxoff again on raven series
+>>> (v2)"
+>>>
+>>> Hi,
+>>>
+>>> After commit 005440066f92 ("drm/amdgpu: enable gfxoff again on raven
+>> series
+>>> (v2)”), browsers on Raven Ridge systems cause serious corruption like  
+>>> this:
+>>> https://launchpadlibrarian.net/436319772/Screenshot%20from%202019-
+>> 08-07%2004-20-34.png
+>>> Firmwares for Raven Ridge is up-to-date.
+>>>
+>>> Kai-Heng
+
 
