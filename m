@@ -2,474 +2,172 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 387D6C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F326C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDFB021743
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:05:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 434A3214C6
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:09:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WQH6cNwn"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="SK8nH480"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733087AbfHHOF3 (ORCPT
+        id S1733197AbfHHOJy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 10:05:29 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:35095 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725785AbfHHOF3 (ORCPT
+        Thu, 8 Aug 2019 10:09:54 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35746 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725785AbfHHOJy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 10:05:29 -0400
-Received: by mail-pf1-f194.google.com with SMTP id u14so44188768pfn.2;
-        Thu, 08 Aug 2019 07:05:28 -0700 (PDT)
+        Thu, 8 Aug 2019 10:09:54 -0400
+Received: by mail-wm1-f66.google.com with SMTP id l2so2594965wmg.0
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 07:09:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sHMBnctDRnXDSO29XMMETuXMrq1SVqcW4ppEF+Xo3DY=;
-        b=WQH6cNwneZrR6sezbxY6d8CNWaF6yKtm+E5dqPZekRgugPs6kC5F91/jYs+moXcErs
-         eHomMUxbZUpVRlW1RaS+i05AqG+c/pvG4TKDeNFotJWP6C7+wnyDZlOapY5JV/ImFdDm
-         /4ymio93HID2HqkFvxHQa7KBaYVgruzfGtrK9ftY0Wp/zZlMW2MVV+DtK13OpUc0EBkh
-         RR/pno6E4MHzoIQW6gSopV1Ta8gjbetDH5gD3avjwocFjXRdU8csbW4sQb2WfcOL7aAK
-         H6EBGKZGeZSOZfcrMv75/FFt1DUjksiE39WTsVrfNKNW8iUJQxMrEEFlc0HIUySEvclC
-         Cf0g==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=fRzbxgOaOYK4ZYdEjfC4xN07dECOTGDAf826r4TpQPs=;
+        b=SK8nH480nj/WrMqBsTFWCK4vvMh/mf+pzwiHCuJUPW1D3OlXb6m4XzFfa1GRe6PyBk
+         cBnAYD8SeNv+3FWa8PqPhlhFFjrLS1AYWWgfbHaBvLiMqsQA6/V15d/mlTJ6z2tVzD64
+         lgDgrFj78F4Mtfl6bhED/tDEutncBiVkHVyJ/3apd8UVMR2M1BmfWXmZxiabCN4cSXSP
+         jUKpLhDRZfug6uCWm5quSKC7tFp3coH5EllSk5zpYU06H57PdFiJThyQllfe/FDnVDV7
+         j5hUk4sFStNwapGnaAyL2Rp/MkrDzB9shyDQCm7h175qDusg6q2qnVUD8s/858NRmcmt
+         B+0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sHMBnctDRnXDSO29XMMETuXMrq1SVqcW4ppEF+Xo3DY=;
-        b=ojAWdM6MyM0x/f/t2oFhnBNtkxpLxqOzu83C15tyMfLzI92hMFgIO+bOSlgcPD8pMp
-         02b4hAGSSLqILCdtrNVpSxeYnl8kGgx/wxA3KELoLi9XG/nH2GJiuPNN8o7FprC29OTo
-         2tQF71G0bZOPUJB0Vs5bpudPSyx0WMIUT5jz8E8gTgg/YiTfmVa/cnpfYVla95KUWzae
-         VC22cIJ6CB8oKnxPzfl0OnDanheuN4PSwiMiI1E7gOiuDoV0RU5MKsclSd68401LK6D4
-         vijnBymztXi8ad9AQHP2woN3eTX9mNT4up+ea/XqsU2YxkNwN/vg/uBwxp5zCeKvZLCA
-         cudg==
-X-Gm-Message-State: APjAAAWn6GVX5cP+ytvxym0BkbWZ9raECkCZE40Kb/QFeCgw0iH8gag/
-        kKwhejdxJVeY4iH8lLMiVu4=
-X-Google-Smtp-Source: APXvYqwY+kNV6cXUvrPO6lvrRUn22QvOvjuQW+w4HDQwlaJHbddjvA+Fg484IkdzB7MpE75a425qjw==
-X-Received: by 2002:a17:90a:bf02:: with SMTP id c2mr4290499pjs.73.1565273128155;
-        Thu, 08 Aug 2019 07:05:28 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 33sm107236041pgy.22.2019.08.08.07.05.26
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=fRzbxgOaOYK4ZYdEjfC4xN07dECOTGDAf826r4TpQPs=;
+        b=dbVWla4B9GOJ5b3elAroTdGL/u0mbhXBH5L2dSPQ1dbRHKcn298JZN2JVCMf52ZEME
+         59vXOOVNXcdpL/Lixv59/G7NxC+0CrwnKbXkdynXUhWq8PyXUOT9V3jVawL9NMDk8aP3
+         ICpDWNz8nJ7/eKvCPOoGo97zbusrnw64QisIht0ktmUIvTdQ7WqQREYchwKZt9liWLVo
+         LrcdqFF//Pwe+DC2fA5o30wK1ulLejlqCVJoWnaSOxp9K6wBMoxbDVnbOIiIufqXkZWx
+         +ZUN7AJTlthFm7Vre44Zzlr769g52ECHQsfzN510V41FJxPmbn87vvW1qrCiZyzmyeX0
+         UzLw==
+X-Gm-Message-State: APjAAAUVuDJg8KRVKUUk0RiFYNC2iIOLcg1tw496W5nJMhUvLXmIRid/
+        6kVrBglu9LC+R7emfe/aVgVpeg==
+X-Google-Smtp-Source: APXvYqxp3PdDQPmSdAbC9WxolTZk3R/nQhJ96oYQMs3RR7dotLRNv9glMTIw4h4PFtic0dHZGEgDmw==
+X-Received: by 2002:a1c:2c41:: with SMTP id s62mr4713556wms.8.1565273391975;
+        Thu, 08 Aug 2019 07:09:51 -0700 (PDT)
+Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id t14sm2906174wrv.12.2019.08.08.07.09.50
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 08 Aug 2019 07:05:27 -0700 (PDT)
-Date:   Thu, 8 Aug 2019 07:05:25 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     John Wang <wangzqbj@inspur.com>
-Cc:     mine260309@gmail.com, jdelvare@suse.com,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        joel@jms.id.au, andrew@aj.id.au, openbmc@lists.ozlabs.org,
-        duanzhijia01@inspur.com
-Subject: Re: [PATCH] hwmon: pmbus: Add Inspur Power System power supply driver
-Message-ID: <20190808140525.GA30738@roeck-us.net>
-References: <20190808073636.18611-1-wangzqbj@inspur.com>
+        Thu, 08 Aug 2019 07:09:51 -0700 (PDT)
+Subject: Re: [PATCH 4/9] drm: meson: vpp: use proper macros instead of magic
+ constants
+To:     Kevin Hilman <khilman@baylibre.com>, 86zhm782g5.fsf@baylibre.com
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, Julien Masson <jmasson@baylibre.com>
+References: <86zhm782g5.fsf@baylibre.com> <86tvcf82eu.fsf@baylibre.com>
+ <7h36jyy3qn.fsf@baylibre.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <d4bb07f6-4b42-573b-abe2-5d54a8b99a92@baylibre.com>
+Date:   Thu, 8 Aug 2019 16:09:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190808073636.18611-1-wangzqbj@inspur.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <7h36jyy3qn.fsf@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 03:36:36PM +0800, John Wang wrote:
-> Add the driver to monitor Inspur Power System power supplies
-> with hwmon over pmbus.
+On 25/06/2019 01:15, Kevin Hilman wrote:
+> Julien Masson <jmasson@baylibre.com> writes:
 > 
-> This driver adds debugfs entries for addintional power supply data,
+>> This patch add new macros which are used to set the following
+>> registers:
+>> - VPP_OSD_SCALE_COEF_IDX
+>> - VPP_DOLBY_CTRL
+>> - VPP_OFIFO_SIZE
+>> - VPP_HOLD_LINES
+>> - VPP_SC_MISC
+>> - VPP_VADJ_CTRL
+>>
+>> Signed-off-by: Julien Masson <jmasson@baylibre.com>
+> 
+> [...]
+> 
+>> @@ -97,20 +97,22 @@ void meson_vpp_init(struct meson_drm *priv)
+>>  	else if (meson_vpu_is_compatible(priv, "amlogic,meson-gxm-vpu")) {
+>>  		writel_bits_relaxed(0xff << 16, 0xff << 16,
+>>  				    priv->io_base + _REG(VIU_MISC_CTRL1));
+>> -		writel_relaxed(0x20000, priv->io_base + _REG(VPP_DOLBY_CTRL));
+>> -		writel_relaxed(0x1020080,
+>> +		writel_relaxed(VPP_PPS_DUMMY_DATA_MODE,
+>> +			       priv->io_base + _REG(VPP_DOLBY_CTRL));
+>> +		writel_relaxed(0x108080,
+> 
+> nit: still a magic constant here, and it's not obvious why it's
+> different from the current one.
 
-s/addintional/additional/
+This is a magic constant, it's a color, but indeed it should not change.
 
-> including vendor,model,part_number,serial number,firmware revision,
-> hardware revision,and psu mode(active/standby).
+0x1020080 is the 10bit variant of 0x108080, on purpose.
 
-Spaces after "'", please.
+Neil
 
 > 
-
-Please run checkpatch --strict and fix what it reports.
-Mostly multi-line alignment, but also stray empty lines
-and missing spaces.
-
-> Signed-off-by: John Wang <wangzqbj@inspur.com>
-> ---
->  drivers/hwmon/pmbus/Kconfig        |   9 +
->  drivers/hwmon/pmbus/Makefile       |   1 +
->  drivers/hwmon/pmbus/inspur-ipsps.c | 291 +++++++++++++++++++++++++++++
->  3 files changed, 301 insertions(+)
->  create mode 100644 drivers/hwmon/pmbus/inspur-ipsps.c
+> Kevin
 > 
-> diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
-> index 30751eb9550a..c09357c26b10 100644
-> --- a/drivers/hwmon/pmbus/Kconfig
-> +++ b/drivers/hwmon/pmbus/Kconfig
-> @@ -203,4 +203,13 @@ config SENSORS_ZL6100
->  	  This driver can also be built as a module. If so, the module will
->  	  be called zl6100.
->  
-> +config SENSORS_INSPUR_IPSPS
-> +	tristate "INSPUR Power System Power Supply"
-> +	help
-> +	  If you say yes here you get hardware monitoring support for the INSPUR
-> +	  Power System power supply.
-> +
-> +	  This driver can also be built as a module. If so, the module will
-> +	  be called inspur-ipsps.
-> +
->  endif # PMBUS
-> diff --git a/drivers/hwmon/pmbus/Makefile b/drivers/hwmon/pmbus/Makefile
-> index 2219b9300316..fde2d10cd05c 100644
-> --- a/drivers/hwmon/pmbus/Makefile
-> +++ b/drivers/hwmon/pmbus/Makefile
-> @@ -23,3 +23,4 @@ obj-$(CONFIG_SENSORS_TPS53679)	+= tps53679.o
->  obj-$(CONFIG_SENSORS_UCD9000)	+= ucd9000.o
->  obj-$(CONFIG_SENSORS_UCD9200)	+= ucd9200.o
->  obj-$(CONFIG_SENSORS_ZL6100)	+= zl6100.o
-> +obj-$(CONFIG_SENSORS_INSPUR_IPSPS)	+= inspur-ipsps.o
-> diff --git a/drivers/hwmon/pmbus/inspur-ipsps.c b/drivers/hwmon/pmbus/inspur-ipsps.c
-> new file mode 100644
-> index 000000000000..7dc2b00cb192
-> --- /dev/null
-> +++ b/drivers/hwmon/pmbus/inspur-ipsps.c
-> @@ -0,0 +1,291 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Copyright 2019 Inspur Corp.
-> + */
-> +
-> +#include <linux/bitops.h>
-> +#include <linux/debugfs.h>
-> +#include <linux/device.h>
-> +#include <linux/fs.h>
-> +#include <linux/i2c.h>
-> +#include <linux/module.h>
-> +#include <linux/pmbus.h>
-> +
-> +#include "pmbus.h"
-> +
-> +#define IPSPS_VENDOR_ID		0x99
-> +#define IPSPS_MODEL		0x9A
-> +#define IPSPS_FW_VERSION	0x9B
-> +#define IPSPS_PN		0x9C
-> +#define IPSPS_SN		0x9E
-> +#define IPSPS_HW_VERSION	0xB0
-> +#define IPSPS_MODE		0xFC
-> +
-> +#define MODE_ACTIVE		0x55
-> +#define MODE_STANDBY		0x0E
-> +#define MODE_REDUNDANCY		0x00
-> +
-> +#define MODE_ACTIVE_STRING		"active"
-> +#define MODE_STANDBY_STRING		"standby"
-> +#define MODE_REDUNDANCY_STRING		"redundancy"
-> +
-> +struct ipsps_attr {
-> +	u8 reg;
-> +	umode_t mode;
-> +	const char *name;
-> +	int mask;
-> +	const struct file_operations *fops;
-> +};
-> +
-> +struct ipsps_entry {
-> +	struct i2c_client *client;
-> +	u8 reg;
-> +};
-> +
-> +static ssize_t ipsps_string_read(struct file *file, char __user *buf,
-> +					size_t count, loff_t *ppos)
-> +{
-> +	struct ipsps_entry *entry = file->private_data;
-> +	char data[I2C_SMBUS_BLOCK_MAX + 1] = { 0 };
-> +	int i, rc;
-> +
-> +	rc = i2c_smbus_read_block_data(entry->client, entry->reg, data);
-> +	if (rc <= 0)
-> +		return rc;
 
-With this, an read size of 0 returns nothing (no newline)
-and no error. Anything else returns a string with newline.
-Is that intentional ?
-
-> +
-> +	for (i = 0; i < rc; i++) {
-> +		if (data[i] == '#')
-> +			break;
-
-What if there is a '\0' in the buffer ?
-
-> +	}
-> +
-> +	data[i] = '\n';
-> +	i++;
-
-	data[i++] = '\n';
-
-> +	data[i] = '\0';
-> +	i++;
-
-	data[i++] = '0';
-
-i2c_smbus_read_block_data() can return up to 32 bytes of data.
-If it does, and the code does not include a '#', the above writes
-after the end of the bufer.
-
-> +
-> +	return simple_read_from_buffer(buf, count, ppos, data, i);
-> +
-> +}
-> +
-> +static ssize_t ipsps_fw_version_read(struct file *file, char __user *buf,
-> +					size_t count, loff_t *ppos)
-> +{
-> +	char data[I2C_SMBUS_BLOCK_MAX] = { 0 };
-> +	int rc;
-> +	struct ipsps_entry *entry = file->private_data;
-> +
-> +	rc = i2c_smbus_read_block_data(entry->client, entry->reg, data);
-> +	if (rc < 0)
-> +		return rc;
-> +
-> +	if (rc != 6)
-> +		return -ENODATA;
-
-That seems inappropriate. There is data, after all, only it is unexpected.
--EPROTO, maybe.
-
-> +
-> +	rc = snprintf(data, sizeof(data), "%d.%02d.%02d\n",
-> +			data[1], data[2], data[3]);
-
-This will be reported as negative numbers if values are larger than 127.
-Is this intentional ?
-
-> +
-> +	return simple_read_from_buffer(buf, count, ppos, data, rc);
-> +}
-> +
-> +static ssize_t ipsps_mode_read(struct file *file,
-> +					    char __user *buf, size_t count,
-> +					    loff_t *ppos)
-> +{
-> +	int rc;
-> +	char data[64] = { 0 };
-> +	struct ipsps_entry *entry = file->private_data;
-
-Please use reverse chrismas tree declarations where possible.
-
-> +
-> +	rc = i2c_smbus_read_byte_data(entry->client, entry->reg);
-> +	if (rc < 0)
-> +		return rc;
-> +
-> +	switch (rc) {
-> +	case MODE_ACTIVE:
-> +		rc = snprintf(data, sizeof(data), "[%s] %s %s\n",
-> +				MODE_ACTIVE_STRING,
-> +				MODE_STANDBY_STRING, MODE_REDUNDANCY_STRING);
-> +		break;
-> +	case MODE_STANDBY:
-> +		rc = snprintf(data, sizeof(data), "%s [%s] %s\n",
-> +				MODE_ACTIVE_STRING,
-> +				MODE_STANDBY_STRING, MODE_REDUNDANCY_STRING);
-> +		break;
-> +	case MODE_REDUNDANCY:
-> +		rc = snprintf(data, sizeof(data), "%s %s [%s]\n",
-> +				MODE_ACTIVE_STRING,
-> +				MODE_STANDBY_STRING, MODE_REDUNDANCY_STRING);
-> +		break;
-> +	default:
-> +		rc = snprintf(data, sizeof(data), "unspecified\n");
-> +		break;
-> +	}
-> +
-> +	return simple_read_from_buffer(buf, count, ppos, data, rc);
-> +}
-> +
-> +static ssize_t ipsps_mode_write(struct file *file, const char __user *buf,
-> +					size_t count, loff_t *ppos)
-> +{
-> +	int rc;
-> +	char data[64] = { 0 };
-> +	struct ipsps_entry *entry = file->private_data;
-> +
-> +	rc = simple_write_to_buffer(data, sizeof(data), ppos, buf, count);
-> +	if (rc < 0)
-> +		return rc;
-> +
-> +	if (strcmp(MODE_STANDBY_STRING, data) == 0 ||
-> +			strcmp(MODE_STANDBY_STRING"\n", data) == 0) {
-
-Any reason for not using sysfs_streq() ?
-
-> +		rc = i2c_smbus_write_byte_data(entry->client, entry->reg,
-> +						MODE_STANDBY);
-> +		if (rc < 0)
-> +			return rc;
-> +		return count;
-> +	} else if (strcmp(MODE_ACTIVE_STRING, data) == 0 ||
-> +			strcmp(MODE_ACTIVE_STRING"\n", data) == 0) {
-> +		rc = i2c_smbus_write_byte_data(entry->client, entry->reg,
-> +						MODE_ACTIVE);
-> +		if (rc < 0)
-> +			return rc;
-> +		return count;
-> +	}
-
-So one can only set active and standby, but not "redundancy".
-If that is intentional, it might make sense to document it somewhere.
-
-Also, it is kind of unusual to configure a device with a debugfs entry.
-Are you sure this is what you want, and not a sysfs attribute ?
-
-> +
-> +	return -EINVAL;
-> +}
-> +
-> +static const struct file_operations ipsps_string_fops = {
-> +	.llseek = noop_llseek,
-> +	.open = simple_open,
-> +	.read = ipsps_string_read,
-> +};
-> +
-> +static const struct file_operations ipsps_fw_version_fops = {
-> +	.llseek = noop_llseek,
-> +	.open = simple_open,
-> +	.read = ipsps_fw_version_read,
-> +};
-> +
-> +static const struct file_operations ipsps_mode_fops = {
-> +	.llseek = noop_llseek,
-> +	.open = simple_open,
-> +	.read = ipsps_mode_read,
-> +	.write = ipsps_mode_write,
-> +};
-> +
-> +struct ipsps_attr ipsps_attrs[] = {
-> +	{
-> +		.name = "vendor",
-> +		.fops = &ipsps_string_fops,
-> +		.reg = IPSPS_VENDOR_ID,
-> +		.mode = 0444,
-> +	}, {
-> +		.name = "model",
-> +		.fops = &ipsps_string_fops,
-> +		.reg = IPSPS_MODEL,
-> +		.mode = 0444,
-> +	}, {
-> +		.name = "fw_version",
-> +		.fops = &ipsps_fw_version_fops,
-> +		.reg = IPSPS_FW_VERSION,
-> +		.mode = 0444,
-> +	}, {
-> +		.name = "part_number",
-> +		.fops = &ipsps_string_fops,
-> +		.reg = IPSPS_PN,
-> +		.mode = 0444,
-> +	}, {
-> +		.name = "serial_number",
-> +		.fops = &ipsps_string_fops,
-> +		.reg = IPSPS_SN,
-> +		.mode = 0444,
-> +	}, {
-> +		.name = "hw_version",
-> +		.fops = &ipsps_string_fops,
-> +		.reg = IPSPS_HW_VERSION,
-> +		.mode = 0444,
-> +	}, {
-> +		.name = "mode",
-> +		.fops = &ipsps_mode_fops,
-> +		.reg = IPSPS_MODE,
-> +		.mode = 0644,
-> +	}
-> +
-> +};
-> +
-> +static struct pmbus_driver_info ipsps_info = {
-> +	.pages = 1,
-> +	.func[0] = PMBUS_HAVE_VIN | PMBUS_HAVE_VOUT | PMBUS_HAVE_IOUT |
-> +		PMBUS_HAVE_POUT | PMBUS_HAVE_PIN | PMBUS_HAVE_FAN12 |
-> +		PMBUS_HAVE_TEMP | PMBUS_HAVE_TEMP2 | PMBUS_HAVE_TEMP3 |
-> +		PMBUS_HAVE_STATUS_VOUT | PMBUS_HAVE_STATUS_IOUT |
-> +		PMBUS_HAVE_STATUS_INPUT | PMBUS_HAVE_STATUS_TEMP |
-> +		PMBUS_HAVE_STATUS_FAN12,
-> +};
-> +
-> +static struct pmbus_platform_data ipsps_pdata = {
-> +	.flags = PMBUS_SKIP_STATUS_CHECK,
-> +};
-> +
-> +static int ipsps_probe(struct i2c_client *client,
-> +			   const struct i2c_device_id *id)
-> +{
-> +	int i, rc;
-> +	struct dentry *debugfs;
-> +	struct dentry *ipsps_dir;
-> +	struct ipsps_entry *entry;
-> +
-> +	client->dev.platform_data = &ipsps_pdata;
-> +	rc = pmbus_do_probe(client, id, &ipsps_info);
-> +	if (rc)
-> +		return rc;
-> +
-> +	/* Don't fail the probe if we can't create debugfs */
-> +	debugfs = pmbus_get_debugfs_dir(client);
-> +	if (!debugfs)
-> +		return 0;
-> +
-> +	ipsps_dir = debugfs_create_dir(client->name, debugfs);
-> +	if (!ipsps_dir)
-> +		return 0;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(ipsps_attrs); ++i) {
-> +		entry = devm_kzalloc(&client->dev, sizeof(*entry), GFP_KERNEL);
-> +		if (!entry)
-> +			return 0;
-> +
-> +		entry->client = client;
-> +		entry->reg = ipsps_attrs[i].reg;
-> +		debugfs_create_file(ipsps_attrs[i].name, ipsps_attrs[i].mode,
-> +					ipsps_dir, entry, ipsps_attrs[i].fops);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct i2c_device_id ipsps_id[] = {
-> +	{ "inspur_ipsps1", 1 },
-
-What is the "1" for ? It isn't used, so 0 might be more appropriate.
-
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(i2c, ipsps_id);
-> +
-> +static const struct of_device_id ipsps_of_match[] = {
-> +	{ .compatible = "inspur,ipsps1" },
-
-Please make sure this is documented in
-./Documentation/devicetree/bindings/trivial-devices.yaml.
-
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, ipsps_of_match);
-> +
-> +static struct i2c_driver ipsps_driver = {
-> +	.driver = {
-> +		.name = "inspur-ipsps",
-> +		.of_match_table = ipsps_of_match,
-> +	},
-> +	.probe = ipsps_probe,
-> +	.remove = pmbus_do_remove,
-> +	.id_table = ipsps_id,
-> +};
-> +
-> +module_i2c_driver(ipsps_driver);
-> +
-> +MODULE_AUTHOR("John Wang");
-> +MODULE_DESCRIPTION("PMBus driver for Inspur Power System power supplies");
-> +MODULE_LICENSE("GPL");
