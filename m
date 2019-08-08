@@ -2,101 +2,126 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B2BC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 01:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91ACCC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 01:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10DD92173C
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 01:51:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Ucm0qWTX"
+	by mail.kernel.org (Postfix) with ESMTP id 71FAA21872
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 01:52:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389706AbfHHBvZ (ORCPT
+        id S2389729AbfHHBwL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 21:51:25 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:54120 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730038AbfHHBvZ (ORCPT
+        Wed, 7 Aug 2019 21:52:11 -0400
+Received: from outbound.smtp.vt.edu ([198.82.183.121]:49584 "EHLO
+        omr1.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2389044AbfHHBwH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 21:51:25 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x781mxSG138309;
-        Thu, 8 Aug 2019 01:51:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=fqar6kzjg03/VcvUI5mP5RbL8vn7I1Tl9jgrXQ+77Ik=;
- b=Ucm0qWTXP3Hk+ghOPnUvolTPNLw7JB1Tr+MCp0iOUlNK3BWq+r/Rb+PcpnJ+ha12yqo9
- sDofcaYtd8guu+duCsNrVMUkAtxb6MZBEjUEaD1ry/8jl1M8x1Dd7Zo6A7kLpAwoNJWn
- N/mCKHWwXEXouYBEOGG2o/bCMGTtsxPyYiIvAet2H/mwu9LcrVXP4OuFYLl3vLuc69si
- GIvl75ZjSr0T0KWIj220JT1CtV5J143WlFDgMGKmkUeDUMf0TeLphJNP4+aU/j33YkbK
- DqbDRpytYm7Gxq9vn1DxNHHF0Lv0Cs28Ct+dJaoGEixxxvdFr+BoF1mXdjRNLTuc+0ol iQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2u527pygxu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 08 Aug 2019 01:51:14 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x781lwuX143092;
-        Thu, 8 Aug 2019 01:51:13 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2u7668a0vv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 08 Aug 2019 01:51:13 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x781pAv9011890;
-        Thu, 8 Aug 2019 01:51:11 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 07 Aug 2019 18:51:09 -0700
-To:     Anil Varughese <aniljoy@cadence.com>
-Cc:     <alim.akhtar@samsung.com>, <avri.altman@wdc.com>,
-        <pedrom.sousa@synopsys.com>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>, <hare@suse.de>, <rafalc@cadence.com>,
-        <mparab@cadence.com>, <jank@cadence.com>, <pawell@cadence.com>,
-        <vigneshr@ti.com>, <linux-scsi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] scsi: ufs: Configure clock in .hce_enable_notify() in Cadence UFS
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20190802112112.18714-1-aniljoy@cadence.com>
-Date:   Wed, 07 Aug 2019 21:51:06 -0400
-In-Reply-To: <20190802112112.18714-1-aniljoy@cadence.com> (Anil Varughese's
-        message of "Fri, 2 Aug 2019 12:21:12 +0100")
-Message-ID: <yq1wofoctmd.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9342 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908080016
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9342 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908080016
+        Wed, 7 Aug 2019 21:52:07 -0400
+Received: from mr5.cc.vt.edu (mr5.cc.ipv6.vt.edu [IPv6:2607:b400:92:8400:0:72:232:758b])
+        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x781q5mn015321
+        for <linux-kernel@vger.kernel.org>; Wed, 7 Aug 2019 21:52:05 -0400
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+        by mr5.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x781q0t2017136
+        for <linux-kernel@vger.kernel.org>; Wed, 7 Aug 2019 21:52:05 -0400
+Received: by mail-qk1-f198.google.com with SMTP id c79so81217401qkg.13
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 18:52:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:mime-version:date
+         :message-id;
+        bh=IVOB0NY2JGj/kstTGc6wLued6V3alD1RmAyhwYH10so=;
+        b=UByGImlJEyAbeUPMX1aWaT9jJui7Q2cQroaPaeGnAakUZsdWfo/UJ3WLOTMBlRUec6
+         gBcMa7XLQLw6+3FGUkkX2LlXWYgmjW7HwU/cYYsqq8xr91BpU66/ZgphuBMzByhJZ2sC
+         iNo+AVO+INOZBjxQAxRtKN2z6TFW4lf8FcvfGy7NZ0a9RzE26nRCaedg14VuXMYtSfdC
+         fX08SAXCQjwmb4aX4gKuj82+MjC0EF3nWJnasuJ38Ir7qFf9gFfmWKR708A+4DXgVNd4
+         +VJwnUPSgW3lD6RZeM3VCyOvVT3gKWLrateOzlTH/uPlOX89jr+/obo5j4+UWb1/fDh+
+         Aowg==
+X-Gm-Message-State: APjAAAWIhg1uOYfTtf0IAyOAxxsCHBcydidEwWIw1x8487b16Bo5a4PO
+        lRKnbSYaLl/YhOz+5nIW0hEu6j0hm2zqQeOaZLUeFxeNxtvbaR+PUS2HnVhQBVUu8SQ6j/q9Fak
+        qxH9g38JPmcIj870XyPpCX48OtwxCnXfSuIk=
+X-Received: by 2002:ac8:45d2:: with SMTP id e18mr10979189qto.258.1565229120431;
+        Wed, 07 Aug 2019 18:52:00 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwsFTfPXmDA5/PiMsVC9GvHUAyCGr/895p2INC7GFhiSvFjcwVR2PUfzyinAlZa29Z3TikFcw==
+X-Received: by 2002:ac8:45d2:: with SMTP id e18mr10979177qto.258.1565229120197;
+        Wed, 07 Aug 2019 18:52:00 -0700 (PDT)
+Received: from turing-police ([2601:5c0:c001:4341::359])
+        by smtp.gmail.com with ESMTPSA id q29sm2965320qtf.74.2019.08.07.18.51.58
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 07 Aug 2019 18:51:59 -0700 (PDT)
+From:   "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <valdis.kletnieks@vt.edu>
+X-Google-Original-From: "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <Valdis.Kletnieks@vt.edu>
+X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
+To:     Ping-Ke Shih <pkshih@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] Fix non-kerneldoc comment in realtek/rtlwifi/usb.c
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Date:   Wed, 07 Aug 2019 21:51:58 -0400
+Message-ID: <34195.1565229118@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Fix spurious warning message when building with W=1:
 
-Anil,
+  CC [M]  drivers/net/wireless/realtek/rtlwifi/usb.o
+drivers/net/wireless/realtek/rtlwifi/usb.c:243: warning: Cannot understand  * on line 243 - I thought it was a doc line
+drivers/net/wireless/realtek/rtlwifi/usb.c:760: warning: Cannot understand  * on line 760 - I thought it was a doc line
+drivers/net/wireless/realtek/rtlwifi/usb.c:790: warning: Cannot understand  * on line 790 - I thought it was a doc line
 
-> Configure CDNS_UFS_REG_HCLKDIV in .hce_enable_notify() instead of
-> .setup_clock() because if UFSHCD resets the controller ip because
-> of phy or device related errors then CDNS_UFS_REG_HCLKDIV is
-> reset to default value and .setup_clock() is not called later
-> in the sequence whereas .hce_enable_notify will be called everytime
-> controller is reenabled.
+Clean up the comment format.
 
-Applied to 5.4/scsi-queue. Thanks!
+Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+---
+Changes since v1:  Larry Finger pointed out the patch wasn't checkpatch-clean.
+
+diff --git a/drivers/net/wireless/realtek/rtlwifi/usb.c b/drivers/net/wireless/realtek/rtlwifi/usb.c
+index 34d68dbf4b4c..4b59f3b46b28 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/usb.c
++++ b/drivers/net/wireless/realtek/rtlwifi/usb.c
+@@ -239,10 +239,7 @@ static void _rtl_usb_io_handler_release(struct ieee80211_hw *hw)
+ 	mutex_destroy(&rtlpriv->io.bb_mutex);
+ }
+ 
+-/**
+- *
+- *	Default aggregation handler. Do nothing and just return the oldest skb.
+- */
++/*	Default aggregation handler. Do nothing and just return the oldest skb.  */
+ static struct sk_buff *_none_usb_tx_aggregate_hdl(struct ieee80211_hw *hw,
+ 						  struct sk_buff_head *list)
+ {
+@@ -756,11 +753,6 @@ static int rtl_usb_start(struct ieee80211_hw *hw)
+ 	return err;
+ }
+ 
+-/**
+- *
+- *
+- */
+-
+ /*=======================  tx =========================================*/
+ static void rtl_usb_cleanup(struct ieee80211_hw *hw)
+ {
+@@ -786,11 +778,7 @@ static void rtl_usb_cleanup(struct ieee80211_hw *hw)
+ 	usb_kill_anchored_urbs(&rtlusb->tx_submitted);
+ }
+ 
+-/**
+- *
+- * We may add some struct into struct rtl_usb later. Do deinit here.
+- *
+- */
++/* We may add some struct into struct rtl_usb later. Do deinit here.  */
+ static void rtl_usb_deinit(struct ieee80211_hw *hw)
+ {
+ 	rtl_usb_cleanup(hw);
+
