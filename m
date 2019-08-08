@@ -2,288 +2,321 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C2EC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 04:03:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF791C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 04:03:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B09C2184E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 04:03:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C8DC21873
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 04:03:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="KiSioMKN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726019AbfHHEDa (ORCPT
+        id S1726223AbfHHEDq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 00:03:30 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:43922 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725805AbfHHED3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 00:03:29 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C3860200103;
-        Thu,  8 Aug 2019 06:03:26 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 7F2E320009E;
-        Thu,  8 Aug 2019 06:03:21 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 012B5402F6;
-        Thu,  8 Aug 2019 12:03:14 +0800 (SGT)
-From:   Biwen Li <biwen.li@nxp.com>
-To:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux-imx@nxp.com, wsa@the-dreams.de
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, laurentiu.tudor@nxp.com,
-        Biwen Li <biwen.li@nxp.com>
-Subject: i2c: imx: support slave mode for imx I2C driver
-Date:   Thu,  8 Aug 2019 11:53:43 +0800
-Message-Id: <20190808035343.34120-1-biwen.li@nxp.com>
-X-Mailer: git-send-email 2.9.5
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Thu, 8 Aug 2019 00:03:46 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44405 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726020AbfHHEDp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 00:03:45 -0400
+Received: by mail-wr1-f65.google.com with SMTP id p17so93402938wrf.11
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 21:03:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ctJbyyLwMP33agpqVGwypoXkfgT1J1HH/9FLl/LJj1E=;
+        b=KiSioMKNVN4ckpn8lnAwBaU6vzjJcekS1R/mBbo7BENCM1p+lGjM0wRNn7LoOrcsY/
+         4Az7FsmY8J+KmoB48yp9wEkKP/2TVdnRE13YG37np981m95paFbIFBNIX9jWfP+8mdWL
+         zt7EglsdAHDzomvMfKWoBOE+oJqZKzSKcPPoSijpHJzAO6usjfnybEdOGVArQTCPyy00
+         zPMFjwngMiybaGqgu1KLzpxGk0LpAoxtKp+1mvTtFRHJSsG7MchyJhE0fM2UCRWqg9kI
+         6Z3IzAtm5fBQI0LEGpeelBNiPG35J/bEYBt79E2Xb3y0FjE0f39uxUGdKj+UcKIO6VbA
+         wWMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ctJbyyLwMP33agpqVGwypoXkfgT1J1HH/9FLl/LJj1E=;
+        b=IQbaXCl/W+ER9HpHJaWXEIdRVfW/YizTir/BToP0wXejNx0LLJ9PN59eqVlqFKTSE1
+         Pb5wpdm8+bjRNs87ZSqMgg+6uthOZcjBSOzqYBNSKERQ5tSsF3JX4AjzEm+mNHu42Ks0
+         o5N48zy8t0SINLkLtAesjoIY34/ueMB5lyxayHSZmnniCR0BdI0JkktLbm7GiPWax+Zp
+         HAyb7p4pcl4aQI5bRc14JiHZ/UDAw65TtVuzGvYtEglXhfVfzbVGXhuIaciYEXvUzAXp
+         Zn1mwBXzVIj+DZPiK05x/UdCBKGmmkg/0vAyqbA4SFO7p5I21PKfxQKdSBaRK+Mphbpb
+         ZrgA==
+X-Gm-Message-State: APjAAAVcZlUnnfZ2BzHAeHrhhMIrw4I9pji0mL8z2H7fbA6y8sTz1wxp
+        Kfg18SbbSSTchAYsppQD+7M6jW5lfCPB8lQNAW5JkA==
+X-Google-Smtp-Source: APXvYqw+zr7sYUMpcCIs/Nf6nfkGt6pARCHzcNVZrVf/9qmDgATyGTeI1/I6LnEk4AcCJNQErEzeObSpUsbjJkqmB9A=
+X-Received: by 2002:adf:b1cb:: with SMTP id r11mr13203226wra.328.1565237023085;
+ Wed, 07 Aug 2019 21:03:43 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190807122726.81544-1-anup.patel@wdc.com> <20190807122726.81544-3-anup.patel@wdc.com>
+ <750dc9365c02d20616ae8ca22ac454d0e54e994e.camel@wdc.com>
+In-Reply-To: <750dc9365c02d20616ae8ca22ac454d0e54e994e.camel@wdc.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Thu, 8 Aug 2019 09:33:31 +0530
+Message-ID: <CAAhSdy0_pR6aZj5R=EYnoa94BDgXfCDujOV+bBHRhMCyKAbb9A@mail.gmail.com>
+Subject: Re: [PATCH v4 02/20] RISC-V: Add bitmap reprensenting ISA features
+ common across CPUs
+To:     Atish Patra <Atish.Patra@wdc.com>
+Cc:     "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "palmer@sifive.com" <palmer@sifive.com>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        "hch@infradead.org" <hch@infradead.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch supports slave mode for imx I2C driver
+On Thu, Aug 8, 2019 at 12:18 AM Atish Patra <Atish.Patra@wdc.com> wrote:
+>
+> On Wed, 2019-08-07 at 12:28 +0000, Anup Patel wrote:
+> > This patch adds riscv_isa bitmap which represents Host ISA features
+> > common across all Host CPUs. The riscv_isa is not same as elf_hwcap
+> > because elf_hwcap will only have ISA features relevant for user-space
+> > apps whereas riscv_isa will have ISA features relevant to both kernel
+> > and user-space apps.
+> >
+> > One of the use-case for riscv_isa bitmap is in KVM hypervisor where
+> > we will use it to do following operations:
+> >
+> > 1. Check whether hypervisor extension is available
+> > 2. Find ISA features that need to be virtualized (e.g. floating
+> >    point support, vector extension, etc.)
+> >
+> > Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> > Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> > ---
+> >  arch/riscv/include/asm/hwcap.h | 26 +++++++++++
+> >  arch/riscv/kernel/cpufeature.c | 79
+> > ++++++++++++++++++++++++++++++++--
+> >  2 files changed, 102 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/arch/riscv/include/asm/hwcap.h
+> > b/arch/riscv/include/asm/hwcap.h
+> > index 7ecb7c6a57b1..9b657375aa51 100644
+> > --- a/arch/riscv/include/asm/hwcap.h
+> > +++ b/arch/riscv/include/asm/hwcap.h
+> > @@ -8,6 +8,7 @@
+> >  #ifndef __ASM_HWCAP_H
+> >  #define __ASM_HWCAP_H
+> >
+> > +#include <linux/bits.h>
+> >  #include <uapi/asm/hwcap.h>
+> >
+> >  #ifndef __ASSEMBLY__
+> > @@ -22,5 +23,30 @@ enum {
+> >  };
+> >
+> >  extern unsigned long elf_hwcap;
+> > +
+> > +#define RISCV_ISA_EXT_a              ('a' - 'a')
+> > +#define RISCV_ISA_EXT_c              ('c' - 'a')
+> > +#define RISCV_ISA_EXT_d              ('d' - 'a')
+> > +#define RISCV_ISA_EXT_f              ('f' - 'a')
+> > +#define RISCV_ISA_EXT_h              ('h' - 'a')
+> > +#define RISCV_ISA_EXT_i              ('i' - 'a')
+> > +#define RISCV_ISA_EXT_m              ('m' - 'a')
+> > +#define RISCV_ISA_EXT_s              ('s' - 'a')
+> > +#define RISCV_ISA_EXT_u              ('u' - 'a')
+>
+> As per the discussion in following threads, 'S' & 'U' are not valid ISA
+> extensions. So we should drop them from here as well.
+>
+> http://lists.infradead.org/pipermail/linux-riscv/2019-August/005771.html
+>
+> https://lists.nongnu.org/archive/html/qemu-devel/2019-08/msg01217.html
 
-Signed-off-by: Biwen Li <biwen.li@nxp.com>
----
- drivers/i2c/busses/i2c-imx.c | 199 ++++++++++++++++++++++++++++++++---
- 1 file changed, 185 insertions(+), 14 deletions(-)
+I disagree because we are not checking or enforcing required ISA features
+here.
 
-diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
-index b1b8b938d7f4..f7583a9fa56f 100644
---- a/drivers/i2c/busses/i2c-imx.c
-+++ b/drivers/i2c/busses/i2c-imx.c
-@@ -202,6 +202,9 @@ struct imx_i2c_struct {
- 	struct pinctrl_state *pinctrl_pins_gpio;
- 
- 	struct imx_i2c_dma	*dma;
-+#if IS_ENABLED(CONFIG_I2C_SLAVE)
-+	struct i2c_client		*slave;
-+#endif /* CONFIG_I2C_SLAVE */
- };
- 
- static const struct imx_i2c_hwdata imx1_i2c_hwdata = {
-@@ -583,23 +586,40 @@ static void i2c_imx_stop(struct imx_i2c_struct *i2c_imx)
- 	imx_i2c_write_reg(temp, i2c_imx, IMX_I2C_I2CR);
- }
- 
--static irqreturn_t i2c_imx_isr(int irq, void *dev_id)
-+/* Clear interrupt flag bit */
-+static void i2c_imx_clr_if_bit(struct imx_i2c_struct *i2c_imx)
- {
--	struct imx_i2c_struct *i2c_imx = dev_id;
--	unsigned int temp;
-+	unsigned int status;
- 
--	temp = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2SR);
--	if (temp & I2SR_IIF) {
--		/* save status register */
--		i2c_imx->i2csr = temp;
--		temp &= ~I2SR_IIF;
--		temp |= (i2c_imx->hwdata->i2sr_clr_opcode & I2SR_IIF);
--		imx_i2c_write_reg(temp, i2c_imx, IMX_I2C_I2SR);
--		wake_up(&i2c_imx->queue);
--		return IRQ_HANDLED;
--	}
-+	status = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2SR);
-+	status &= ~I2SR_IIF;
-+	status |= (i2c_imx->hwdata->i2sr_clr_opcode & I2SR_IIF);
-+	imx_i2c_write_reg(status, i2c_imx, IMX_I2C_I2SR);
-+}
-+
-+/* Clear arbitration lost bit */
-+static void i2c_imx_clr_al_bit(struct imx_i2c_struct *i2c_imx)
-+{
-+	unsigned int status;
-+
-+	status = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2SR);
-+	status &= ~I2SR_IAL;
-+	imx_i2c_write_reg(status, i2c_imx, IMX_I2C_I2SR);
-+}
- 
--	return IRQ_NONE;
-+static irqreturn_t i2c_imx_master_isr(struct imx_i2c_struct *i2c_imx)
-+{
-+	unsigned int status;
-+
-+	dev_dbg(&i2c_imx->adapter.dev, "<%s>: master interrupt\n", __func__);
-+
-+	/* Save status register */
-+	status = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2SR);
-+	i2c_imx->i2csr = status | I2SR_IIF;
-+
-+	wake_up(&i2c_imx->queue);
-+
-+	return IRQ_HANDLED;
- }
- 
- static int i2c_imx_dma_write(struct imx_i2c_struct *i2c_imx,
-@@ -1043,11 +1063,162 @@ static u32 i2c_imx_func(struct i2c_adapter *adapter)
- 		| I2C_FUNC_SMBUS_READ_BLOCK_DATA;
- }
- 
-+#if IS_ENABLED(CONFIG_I2C_SLAVE)
-+static void i2c_imx_slave_init(struct imx_i2c_struct *i2c_imx)
-+{
-+	unsigned int temp;
-+
-+	dev_dbg(&i2c_imx->adapter.dev, "<%s>\n", __func__);
-+
-+	/* Set slave addr. */
-+	imx_i2c_write_reg((i2c_imx->slave->addr << 1), i2c_imx, IMX_I2C_IADR);
-+
-+	/* Disable i2c module */
-+	temp = i2c_imx->hwdata->i2cr_ien_opcode
-+			^ I2CR_IEN;
-+	imx_i2c_write_reg(temp, i2c_imx, IMX_I2C_I2CR);
-+
-+	/* Reset status register */
-+	imx_i2c_write_reg(i2c_imx->hwdata->i2sr_clr_opcode, i2c_imx,
-+			  IMX_I2C_I2SR);
-+
-+	/* Enable module and enable interrupt from i2c module */
-+	temp = i2c_imx->hwdata->i2cr_ien_opcode
-+			| I2CR_IIEN;
-+	imx_i2c_write_reg(temp, i2c_imx, IMX_I2C_I2CR);
-+
-+	/* Wait controller to be stable */
-+	usleep_range(50, 150);
-+}
-+
-+static irqreturn_t i2c_imx_slave_isr(struct imx_i2c_struct *i2c_imx)
-+{
-+	unsigned int status, ctl;
-+	u8 value;
-+
-+	if (!i2c_imx->slave) {
-+		dev_err(&i2c_imx->adapter.dev, "cannot deal with slave irq,i2c_imx->slave is null");
-+		return IRQ_NONE;
-+	}
-+
-+	status = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2SR);
-+	ctl = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2CR);
-+	if (status & I2SR_IAL) { /* Arbitration lost */
-+		i2c_imx_clr_al_bit(i2c_imx);
-+	} else if (status & I2SR_IAAS) { /* Addressed as a slave */
-+		if (status & I2SR_SRW) { /* Master wants to read from us*/
-+			dev_dbg(&i2c_imx->adapter.dev, "read requested");
-+			i2c_slave_event(i2c_imx->slave, I2C_SLAVE_READ_REQUESTED, &value);
-+
-+			/* Slave transimt */
-+			ctl |= I2CR_MTX;
-+			imx_i2c_write_reg(ctl, i2c_imx, IMX_I2C_I2CR);
-+
-+			/* Send data */
-+			imx_i2c_write_reg(value, i2c_imx, IMX_I2C_I2DR);
-+		} else { /* Master wants to write to us */
-+			dev_dbg(&i2c_imx->adapter.dev, "write requested");
-+			i2c_slave_event(i2c_imx->slave,	I2C_SLAVE_WRITE_REQUESTED, &value);
-+
-+			/* Slave receive */
-+			ctl &= ~I2CR_MTX;
-+			imx_i2c_write_reg(ctl, i2c_imx, IMX_I2C_I2CR);
-+			/* Dummy read */
-+			value = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2DR);
-+		}
-+	} else {
-+		if (!(ctl & I2CR_MTX)) { /* Receive mode */
-+			if (status & I2SR_IBB) { /* No STOP signal detected */
-+				ctl &= ~I2CR_MTX;
-+				imx_i2c_write_reg(ctl, i2c_imx, IMX_I2C_I2CR);
-+
-+				value = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2DR);
-+				i2c_slave_event(i2c_imx->slave,	I2C_SLAVE_WRITE_RECEIVED, &value);
-+			} else { /* STOP signal is detected */
-+				dev_dbg(&i2c_imx->adapter.dev,
-+					"STOP signal detected");
-+				i2c_slave_event(i2c_imx->slave, I2C_SLAVE_STOP, &value);
-+			}
-+		} else { /* Transmit mode */
-+			if (!(status & I2SR_RXAK)) {	/* Received ACK */
-+				ctl |= I2CR_MTX;
-+				imx_i2c_write_reg(ctl, i2c_imx, IMX_I2C_I2CR);
-+
-+				i2c_slave_event(i2c_imx->slave,	I2C_SLAVE_READ_PROCESSED, &value);
-+
-+				imx_i2c_write_reg(value, i2c_imx, IMX_I2C_I2DR);
-+			} else { /* Received NAK */
-+				ctl &= ~I2CR_MTX;
-+				imx_i2c_write_reg(ctl, i2c_imx, IMX_I2C_I2CR);
-+				value = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2DR);
-+			}
-+		}
-+	}
-+	return IRQ_HANDLED;
-+}
-+
-+static int i2c_imx_reg_slave(struct i2c_client *client)
-+{
-+	struct imx_i2c_struct *i2c_imx = i2c_get_adapdata(client->adapter);
-+
-+	if (i2c_imx->slave)
-+		return -EINVAL;
-+
-+	dev_dbg(&i2c_imx->adapter.dev, "<%s>\n", __func__);
-+	i2c_imx->slave = client;
-+
-+	i2c_imx_slave_init(i2c_imx);
-+
-+	return 0;
-+}
-+
-+static int i2c_imx_unreg_slave(struct i2c_client *client)
-+{
-+	struct imx_i2c_struct *i2c_imx = i2c_get_adapdata(client->adapter);
-+
-+	if (!i2c_imx->slave)
-+		return -EINVAL;
-+
-+	i2c_imx->slave = NULL;
-+
-+	return 0;
-+}
-+#endif /* CONFIG_I2C_SLAVE */
-+
- static const struct i2c_algorithm i2c_imx_algo = {
- 	.master_xfer	= i2c_imx_xfer,
- 	.functionality	= i2c_imx_func,
-+#if IS_ENABLED(CONFIG_I2C_SLAVE)
-+	.reg_slave	= i2c_imx_reg_slave,
-+	.unreg_slave	= i2c_imx_unreg_slave,
-+#endif /* CONFIG_I2C_SLAVE */
- };
- 
-+static irqreturn_t i2c_imx_isr(int irq, void *dev_id)
-+{
-+	struct imx_i2c_struct *i2c_imx = dev_id;
-+	unsigned int status, ctl;
-+	irqreturn_t irq_status = IRQ_NONE;
-+
-+	status = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2SR);
-+	ctl = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2CR);
-+
-+	if (status & I2SR_IIF) {
-+		i2c_imx_clr_if_bit(i2c_imx);
-+#if IS_ENABLED(CONFIG_I2C_SLAVE)
-+		if (ctl & I2CR_MSTA)
-+			irq_status = i2c_imx_master_isr(i2c_imx);
-+		else
-+			irq_status = i2c_imx_slave_isr(i2c_imx);
-+#else
-+		irq_status = i2c_imx_master_isr(i2c_imx);
-+
-+#endif /* CONFIG_I2C_SLAVE */
-+	}
-+
-+	return irq_status;
-+}
-+
- static int i2c_imx_probe(struct platform_device *pdev)
- {
- 	const struct of_device_id *of_id = of_match_device(i2c_imx_dt_ids,
--- 
-2.17.1
+The asm/hwcap.h should define all possible feature and extension bits
+defined by the RISC-V spec.
 
+The 's' and 'u' bits in ISA mean that S-mode and U-mode are supported.
+These bits are defined in RISC-V privileged spec as well.
+
+Regards,
+Anup
+
+>
+>
+> > +#define RISCV_ISA_EXT_zicsr  (('z' - 'a') + 1)
+> > +#define RISCV_ISA_EXT_zifencei       (('z' - 'a') + 2)
+> > +#define RISCV_ISA_EXT_zam    (('z' - 'a') + 3)
+> > +#define RISCV_ISA_EXT_ztso   (('z' - 'a') + 4)
+> > +
+> > +#define RISCV_ISA_EXT_MAX    256
+> > +
+> > +unsigned long riscv_isa_extension_base(const unsigned long
+> > *isa_bitmap);
+> > +
+> > +#define riscv_isa_extension_mask(ext) BIT_MASK(RISCV_ISA_EXT_##ext)
+> > +
+> > +bool __riscv_isa_extension_available(const unsigned long
+> > *isa_bitmap, int bit);
+> > +#define riscv_isa_extension_available(isa_bitmap, ext)       \
+> > +     __riscv_isa_extension_available(isa_bitmap,
+> > RISCV_ISA_EXT_##ext)
+> > +
+> >  #endif
+> >  #endif
+> > diff --git a/arch/riscv/kernel/cpufeature.c
+> > b/arch/riscv/kernel/cpufeature.c
+> > index b1ade9a49347..4ce71ce5e290 100644
+> > --- a/arch/riscv/kernel/cpufeature.c
+> > +++ b/arch/riscv/kernel/cpufeature.c
+> > @@ -6,21 +6,64 @@
+> >   * Copyright (C) 2017 SiFive
+> >   */
+> >
+> > +#include <linux/bitmap.h>
+> >  #include <linux/of.h>
+> >  #include <asm/processor.h>
+> >  #include <asm/hwcap.h>
+> >  #include <asm/smp.h>
+> >
+> >  unsigned long elf_hwcap __read_mostly;
+> > +
+> > +/* Host ISA bitmap */
+> > +static DECLARE_BITMAP(riscv_isa, RISCV_ISA_EXT_MAX) __read_mostly;
+> > +
+> >  #ifdef CONFIG_FPU
+> >  bool has_fpu __read_mostly;
+> >  #endif
+> >
+> > +/**
+> > + * riscv_isa_extension_base - Get base extension word
+> > + *
+> > + * @isa_bitmap ISA bitmap to use
+> > + * @returns base extension word as unsigned long value
+> > + *
+> > + * NOTE: If isa_bitmap is NULL then Host ISA bitmap will be used.
+> > + */
+> > +unsigned long riscv_isa_extension_base(const unsigned long
+> > *isa_bitmap)
+> > +{
+> > +     if (!isa_bitmap)
+> > +             return riscv_isa[0];
+> > +     return isa_bitmap[0];
+> > +}
+> > +EXPORT_SYMBOL_GPL(riscv_isa_extension_base);
+> > +
+> > +/**
+> > + * __riscv_isa_extension_available - Check whether given extension
+> > + * is available or not
+> > + *
+> > + * @isa_bitmap ISA bitmap to use
+> > + * @bit bit position of the desired extension
+> > + * @returns true or false
+> > + *
+> > + * NOTE: If isa_bitmap is NULL then Host ISA bitmap will be used.
+> > + */
+> > +bool __riscv_isa_extension_available(const unsigned long
+> > *isa_bitmap, int bit)
+> > +{
+> > +     const unsigned long *bmap = (isa_bitmap) ? isa_bitmap :
+> > riscv_isa;
+> > +
+> > +     if (bit >= RISCV_ISA_EXT_MAX)
+> > +             return false;
+> > +
+> > +     return test_bit(bit, bmap) ? true : false;
+> > +}
+> > +EXPORT_SYMBOL_GPL(__riscv_isa_extension_available);
+> > +
+> >  void riscv_fill_hwcap(void)
+> >  {
+> >       struct device_node *node;
+> >       const char *isa;
+> > -     size_t i;
+> > +     char print_str[BITS_PER_LONG+1];
+> > +     size_t i, j, isa_len;
+> >       static unsigned long isa2hwcap[256] = {0};
+> >
+> >       isa2hwcap['i'] = isa2hwcap['I'] = COMPAT_HWCAP_ISA_I;
+> > @@ -32,8 +75,11 @@ void riscv_fill_hwcap(void)
+> >
+> >       elf_hwcap = 0;
+> >
+> > +     bitmap_zero(riscv_isa, RISCV_ISA_EXT_MAX);
+> > +
+> >       for_each_of_cpu_node(node) {
+> >               unsigned long this_hwcap = 0;
+> > +             unsigned long this_isa = 0;
+> >
+> >               if (riscv_of_processor_hartid(node) < 0)
+> >                       continue;
+> > @@ -43,8 +89,20 @@ void riscv_fill_hwcap(void)
+> >                       continue;
+> >               }
+> >
+> > -             for (i = 0; i < strlen(isa); ++i)
+> > +             i = 0;
+> > +             isa_len = strlen(isa);
+> > +#if defined(CONFIG_32BIT)
+> > +             if (!strncmp(isa, "rv32", 4))
+> > +                     i += 4;
+> > +#elif defined(CONFIG_64BIT)
+> > +             if (!strncmp(isa, "rv64", 4))
+> > +                     i += 4;
+> > +#endif
+> > +             for (; i < isa_len; ++i) {
+> >                       this_hwcap |= isa2hwcap[(unsigned
+> > char)(isa[i])];
+> > +                     if ('a' <= isa[i] && isa[i] <= 'z')
+> > +                             this_isa |= (1UL << (isa[i] - 'a'));
+> > +             }
+> >
+> >               /*
+> >                * All "okay" hart should have same isa. Set HWCAP
+> > based on
+> > @@ -55,6 +113,11 @@ void riscv_fill_hwcap(void)
+> >                       elf_hwcap &= this_hwcap;
+> >               else
+> >                       elf_hwcap = this_hwcap;
+> > +
+> > +             if (riscv_isa[0])
+> > +                     riscv_isa[0] &= this_isa;
+> > +             else
+> > +                     riscv_isa[0] = this_isa;
+> >       }
+> >
+> >       /* We don't support systems with F but without D, so mask those
+> > out
+> > @@ -64,7 +127,17 @@ void riscv_fill_hwcap(void)
+> >               elf_hwcap &= ~COMPAT_HWCAP_ISA_F;
+> >       }
+> >
+> > -     pr_info("elf_hwcap is 0x%lx\n", elf_hwcap);
+> > +     memset(print_str, 0, sizeof(print_str));
+> > +     for (i = 0, j = 0; i < BITS_PER_LONG; i++)
+> > +             if (riscv_isa[0] & BIT_MASK(i))
+> > +                     print_str[j++] = (char)('a' + i);
+> > +     pr_info("riscv: ISA extensions %s\n", print_str);
+> > +
+> > +     memset(print_str, 0, sizeof(print_str));
+> > +     for (i = 0, j = 0; i < BITS_PER_LONG; i++)
+> > +             if (elf_hwcap & BIT_MASK(i))
+> > +                     print_str[j++] = (char)('a' + i);
+> > +     pr_info("riscv: ELF capabilities %s\n", print_str);
+> >
+> >  #ifdef CONFIG_FPU
+> >       if (elf_hwcap & (COMPAT_HWCAP_ISA_F | COMPAT_HWCAP_ISA_D))
+>
+> --
+> Regards,
+> Atish
