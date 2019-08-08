@@ -2,189 +2,137 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7C8BC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 21:12:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B8FBC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 21:16:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A089F21743
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 21:12:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24DD6214C6
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 21:16:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ACf43qcD"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="2GxiWSnw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404055AbfHHVMY (ORCPT
+        id S2390428AbfHHVQj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 17:12:24 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39667 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390425AbfHHVMW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 17:12:22 -0400
-Received: by mail-pf1-f196.google.com with SMTP id f17so40790570pfn.6
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 14:12:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ylddyGuuUpJhKUvK1ev1Q44hiLLmL8PwyC4MRMb3mUE=;
-        b=ACf43qcDjfXfx13Z+1Gsw1UZV/Uosrf1yEiF0Agjii4NCq0aSJm4NT0QzSwLCl7Dc5
-         gq+wLSnVQcR3qxZ0fm9hvoSL16jb4cCF5OkMFfCEBQn0MQdPfLlk2tDzdSCLPp3vIQBd
-         UxRwIr8unIchMakLD/5qyLX3unblGeVjDLQfg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ylddyGuuUpJhKUvK1ev1Q44hiLLmL8PwyC4MRMb3mUE=;
-        b=o7NWTca+/1+1FqnnKHlzp5OIfHfBoSYgAyIMsB/tmttjpDJgeJHvuFQS+g2yoUnGuz
-         Y1O/LF07PFwvpCAmL6YK6G7jFv7qtEiU8/nxf7OETYypJPL/SqdGdbbP5ozEl41+OlJy
-         FUIbs8OLomkDu0ybppIZh2tVlRdt7a3PwJoe7LeO7R5pBwDLUzukXz6/I5A6w16YB1RG
-         siWYhotYzgB+SuuoWWlqZEBuEWaAxbQj88iQqcFzVCdkyaemqjsdC8C0qK3kVsanaUie
-         CEqvr9DDvuKi9JA7RLmsokiFnzpE9GdGFf2aTYqHpNnb8et/pP6hqAaMAIRAxXUO18MV
-         dPSA==
-X-Gm-Message-State: APjAAAUaPRNzNm5x3suqmgGV9xpEyv6jey2Fye8ecttLHxTKQh5bZJnt
-        0cwWD4xtBhdbc6UCzKLAhUNv7Q==
-X-Google-Smtp-Source: APXvYqy0pdWoHPkerneL5407ilt1ySmaIIJNjNXYxB0G6sGkOR++FLPJzal2z8CcZbjPxvclbtt+OA==
-X-Received: by 2002:a62:1750:: with SMTP id 77mr17827956pfx.172.1565298741745;
-        Thu, 08 Aug 2019 14:12:21 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q19sm101457867pfc.62.2019.08.08.14.12.20
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 08 Aug 2019 14:12:20 -0700 (PDT)
-Date:   Thu, 8 Aug 2019 14:12:19 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        dri-devel@lists.freedesktop.org,
-        Kostya Serebryany <kcc@google.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org,
-        Christoph Hellwig <hch@infradead.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        linux-media@vger.kernel.org, Kevin Brodsky <kevin.brodsky@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        enh <enh@google.com>, Robin Murphy <robin.murphy@arm.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Subject: Re: [PATCH v19 00/15] arm64: untag user pointers passed to the kernel
-Message-ID: <201908081410.C16D2BD@keescook>
-References: <cover.1563904656.git.andreyknvl@google.com>
- <CAAeHK+yc0D_nd7nTRsY4=qcSx+eQR0VLut3uXMf4NEiE-VpeCw@mail.gmail.com>
- <20190724140212.qzvbcx5j2gi5lcoj@willie-the-truck>
- <CAAeHK+xXzdQHpVXL7f1T2Ef2P7GwFmDMSaBH4VG8fT3=c_OnjQ@mail.gmail.com>
- <20190724142059.GC21234@fuggles.cambridge.arm.com>
- <20190806171335.4dzjex5asoertaob@willie-the-truck>
- <CAAeHK+zF01mxU+PkEYLkoVu-ZZM6jNfL_OwMJKRwLr-sdU4Myg@mail.gmail.com>
+        Thu, 8 Aug 2019 17:16:39 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:45730 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725535AbfHHVQi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 17:16:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=dNED9cOAaf+dopo9LgD6lakNRzaOyizkrYw7uOWZ5Xo=; b=2GxiWSnwdFRRFSkcT2NQQ41kOP
+        ZUif8Th7z7VjXSCY/+xkhOmbzqIxwsHvzRBDesmOaZn3Y2Isw8iGLNWlrapPp0jir9gAL9bUd55ST
+        X9K0bm8frnrWU2LT/cDF1kHeqjJnRI3y8quzNAp6ZKHCGQNRpbK8OXiNvqjmKahnB0ms=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hvplt-00069g-Ik; Thu, 08 Aug 2019 23:16:29 +0200
+Date:   Thu, 8 Aug 2019 23:16:29 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Tao Ren <taoren@fb.com>
+Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Samuel Mendoza-Jonas <sam@mendozajonas.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
+        William Kennington <wak@google.com>,
+        Joel Stanley <joel@jms.id.au>
+Subject: Re: [PATCH net-next] net/ncsi: allow to customize BMC MAC Address
+ offset
+Message-ID: <20190808211629.GQ27917@lunn.ch>
+References: <20190807002118.164360-1-taoren@fb.com>
+ <20190807112518.644a21a2@cakuba.netronome.com>
+ <20190807184143.GE26047@lunn.ch>
+ <806a76a8-229a-7f24-33c7-2cf2094f3436@fb.com>
+ <20190808133209.GB32706@lunn.ch>
+ <77762b10-b8e7-b8a4-3fc0-e901707a1d54@fb.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAAeHK+zF01mxU+PkEYLkoVu-ZZM6jNfL_OwMJKRwLr-sdU4Myg@mail.gmail.com>
+In-Reply-To: <77762b10-b8e7-b8a4-3fc0-e901707a1d54@fb.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 07, 2019 at 07:17:35PM +0200, Andrey Konovalov wrote:
-> On Tue, Aug 6, 2019 at 7:13 PM Will Deacon <will@kernel.org> wrote:
-> >
-> > On Wed, Jul 24, 2019 at 03:20:59PM +0100, Will Deacon wrote:
-> > > On Wed, Jul 24, 2019 at 04:16:49PM +0200, Andrey Konovalov wrote:
-> > > > On Wed, Jul 24, 2019 at 4:02 PM Will Deacon <will@kernel.org> wrote:
-> > > > > On Tue, Jul 23, 2019 at 08:03:29PM +0200, Andrey Konovalov wrote:
-> > > > > > Should this go through the mm or the arm tree?
-> > > > >
-> > > > > I would certainly prefer to take at least the arm64 bits via the arm64 tree
-> > > > > (i.e. patches 1, 2 and 15). We also need a Documentation patch describing
-> > > > > the new ABI.
-> > > >
-> > > > Sounds good! Should I post those patches together with the
-> > > > Documentation patches from Vincenzo as a separate patchset?
-> > >
-> > > Yes, please (although as you say below, we need a new version of those
-> > > patches from Vincenzo to address the feedback on v5). The other thing I
-> > > should say is that I'd be happy to queue the other patches in the series
-> > > too, but some of them are missing acks from the relevant maintainers (e.g.
-> > > the mm/ and fs/ changes).
-> >
-> > Ok, I've queued patches 1, 2, and 15 on a stable branch here:
-> >
-> >   https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git/log/?h=for-next/tbi
-> >
-> > which should find its way into -next shortly via our for-next/core branch.
-> > If you want to make changes, please send additional patches on top.
-> >
-> > This is targetting 5.4, but I will drop it before the merge window if
-> > we don't have both of the following in place:
-> >
-> >   * Updated ABI documentation with Acks from Catalin and Kevin
+On Thu, Aug 08, 2019 at 07:02:54PM +0000, Tao Ren wrote:
+> Hi Andrew,
 > 
-> Catalin has posted a new version today.
+> On 8/8/19 6:32 AM, Andrew Lunn wrote:
+> >> Let me prepare patch v2 using device tree. I'm not sure if standard
+> >> "mac-address" fits this situation because all we need is an offset
+> >> (integer) and BMC MAC is calculated by adding the offset to NIC's
+> >> MAC address. Anyways, let me work out v2 patch we can discuss more
+> >> then.
+> > 
+> > Hi Tao
+> > 
+> > I don't know BMC terminology. By NICs MAC address, you are referring
+> > to the hosts MAC address? The MAC address the big CPU is using for its
+> > interface?  Where does this NIC get its MAC address from? If the BMCs
+> > bootloader has access to it, it can set the mac-address property in
+> > the device tree.
 > 
-> >   * The other patches in the series either Acked (so I can pick them up)
-> >     or queued via some other tree(s) for 5.4.
+> Sorry for the confusion and let me clarify more:
 > 
-> So we have the following patches in this series:
-> 
-> 1. arm64: untag user pointers in access_ok and __uaccess_mask_ptr
-> 2. arm64: Introduce prctl() options to control the tagged user addresses ABI
-> 3. lib: untag user pointers in strn*_user
-> 4. mm: untag user pointers passed to memory syscalls
-> 5. mm: untag user pointers in mm/gup.c
-> 6. mm: untag user pointers in get_vaddr_frames
-> 7. fs/namespace: untag user pointers in copy_mount_options
-> 8. userfaultfd: untag user pointers
-> 9. drm/amdgpu: untag user pointers
-> 10. drm/radeon: untag user pointers in radeon_gem_userptr_ioctl
-> 11. IB/mlx4: untag user pointers in mlx4_get_umem_mr
-> 12. media/v4l2-core: untag user pointers in videobuf_dma_contig_user_get
-> 13. tee/shm: untag user pointers in tee_shm_register
-> 14. vfio/type1: untag user pointers in vaddr_get_pfn
-> 15. selftests, arm64: add a selftest for passing tagged pointers to kernel
-> 
-> 1, 2 and 15 have been picked by Will.
-> 
-> 11 has been picked up by Jason.
-> 
-> 9, 10, 12, 13 and 14 have acks from their subsystem maintainers.
-> 
-> 3 touches generic lib code, I'm not sure if there's a dedicated
-> maintainer for that.
 
-Andrew tends to pick up lib/ patches.
-
-> The ones that are left are the mm ones: 4, 5, 6, 7 and 8.
+> The NIC here refers to the Network controller which provide network
+> connectivity for both BMC (via NC-SI) and Host (for example, via
+> PCIe).
 > 
-> Andrew, could you take a look and give your Acked-by or pick them up directly?
 
-Given the subsystem Acks, it seems like 3-10 and 12 could all just go
-via Andrew? I hope he agrees. :)
+> On Facebook Yamp BMC, BMC sends NCSI_OEM_GET_MAC command (as an
+> ethernet packet) to the Network Controller while bringing up eth0,
+> and the (Broadcom) Network Controller replies with the Base MAC
+> Address reserved for the platform. As for Yamp, Base-MAC and
+> Base-MAC+1 are used by Host (big CPU) and Base-MAC+2 are assigned to
+> BMC. In my opinion, Base MAC and MAC address assignments are
+> controlled by Network Controller, which is transparent to both BMC
+> and Host.
 
--- 
-Kees Cook
+Hi Tao
+
+I've not done any work in the BMC field, so thanks for explaining
+this.
+
+In a typical embedded system, each network interface is assigned a MAC
+address by the vendor. But here, things are different. The BMC SoC
+network interface has not been assigned a MAC address, it needs to ask
+the network controller for its MAC address, and then do some magical
+transformation on the answer to derive a MAC address for
+itself. Correct?
+
+It seems like a better design would of been, the BMC sends a
+NCSI_OEM_GET_BMC_MAC and the answer it gets back is the MAC address
+the BMC should use. No magic involved. But i guess it is too late to
+do that now.
+
+> I'm not sure if I understand your suggestion correctly: do you mean
+> we should move the logic (GET_MAC from Network Controller, adding
+> offset and configuring BMC MAC) from kernel to boot loader?
+
+In general, the kernel is generic. It probably boots on any ARM system
+which is has the needed modules for. The bootloader is often much more
+specific. It might not be fully platform specific, but it will be at
+least specific to the general family of BMC SoCs. If you consider the
+combination of the BMC bootloader and the device tree blob, you have
+something specific to the platform. This magical transformation of
+adding 2 seems to be very platform specific. So having this magic in
+the bootloader+DT seems like the best place to put it.
+
+However, how you pass the resulting MAC address to the kernel should
+be as generic as possible. The DT "mac-address" property is very
+generic, many MAC drivers understand it. Using it also allows for
+vendors which actually assign a MAC address to the BMC to pass it to
+the BMC, avoiding all this NCSI_OEM_GET_MAC handshake. Having an API
+which just passing '2' is not generic at all.
+
+    Andrew
