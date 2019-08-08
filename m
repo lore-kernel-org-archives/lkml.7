@@ -2,52 +2,53 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D7EFC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:06:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE8A6C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:06:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0908821880
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:06:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A87E2184E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:06:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565291191;
-	bh=S6rnoFGWuzDCfGr1eTT+I1+cR/pQ1pXPahYjQFmKkFA=;
+	s=default; t=1565291197;
+	bh=hhpOaXceY8XZTtD7LA9VCiHAjNYrgkjZ+W051FOLOPE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h6ufa4wKX6j1hRgDh/2B2ufKtjUqZ0Om/dxRhAAlwTCtJmnfsASJD6SrSgBwhH/IF
-	 CgK0QZ60QtzRGkZ3xdFlZeOuPaUlxatYNtUxhEbrLAd085/2bjTqgTeAdaTPRzuZ20
-	 3Pj2PnYQ9j9j8MOWOZr2lSPD0VMnoKzfHplFdDbs=
+	b=fIBTEJ/U9OWgzcgkqZAPkOo3q0lpkOlbKBTxadkythuMhCE0sE5xYCUJQlQ8bPMUF
+	 GiNufKsoNrEP8gtNnzhl92VLrxKJqgcN9vDrlLpjl0mctikT9iaFSW9UyXS3bhjMq2
+	 vbazCWzYhdXxiOpOibraEaQ4/+2a9tZOEq8Qqyco=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404449AbfHHTG3 (ORCPT
+        id S2404471AbfHHTGg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:06:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39936 "EHLO mail.kernel.org"
+        Thu, 8 Aug 2019 15:06:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404424AbfHHTG2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 15:06:28 -0400
+        id S2404450AbfHHTGa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 15:06:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD94E214C6;
-        Thu,  8 Aug 2019 19:06:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43BCD2184E;
+        Thu,  8 Aug 2019 19:06:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565291187;
-        bh=S6rnoFGWuzDCfGr1eTT+I1+cR/pQ1pXPahYjQFmKkFA=;
+        s=default; t=1565291189;
+        bh=hhpOaXceY8XZTtD7LA9VCiHAjNYrgkjZ+W051FOLOPE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GehwHTizMD3fGTjMq9Xg42IfW5IrwsQT9W5ArjG2qhXDEu/2U4c/7vOFDvWmcMJhg
-         FHYRebaNtF3Tr2gvdaGK0u4kTDVWGC/16j7aXU99pHWWqojYykIcdp5SxW48dKckJ7
-         P90Qr1UwSp7ir9NV28toqZxXDdj1XaeOaXraDMrE=
+        b=QfLSa41KtgFwoHZJhVpMpPC05K+cZtz53bdmJv4PVzcRBV5O2uCsNehAZZIL+Gsn3
+         RHvyz3MMaH0rFwKQcIWD0fbdDdtZ4YSt4aGDN2WFQC+inZMLiNZlpO+shDMYg+3jOX
+         RDGG12sPhgCAKZoqD5DEE4xyxhMZVepVkkADzNMg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vishal Verma <vishal.l.verma@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 02/56] libnvdimm/bus: Prepare the nd_ioctl() path to be re-entrant
-Date:   Thu,  8 Aug 2019 21:04:28 +0200
-Message-Id: <20190808190452.965692020@linuxfoundation.org>
+        stable@vger.kernel.org, michael-dev <michael-dev@fami-braun.de>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        Roopa Prabhu <roopa@cumulusnetworks.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.2 20/56] net: bridge: move default pvid init/deinit to NETDEV_REGISTER/UNREGISTER
+Date:   Thu,  8 Aug 2019 21:04:46 +0200
+Message-Id: <20190808190453.680894540@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190808190452.867062037@linuxfoundation.org>
 References: <20190808190452.867062037@linuxfoundation.org>
@@ -60,164 +61,187 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 6de5d06e657acdbcf9637dac37916a4a5309e0f4 upstream.
+From: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 
-In preparation for not holding a lock over the execution of nd_ioctl(),
-update the implementation to allow multiple threads to be attempting
-ioctls at the same time. The bus lock still prevents multiple in-flight
-->ndctl() invocations from corrupting each other's state, but static
-global staging buffers are moved to the heap.
+[ Upstream commit 091adf9ba6cdb432cbcc217b47e4ffb8aa0d8865 ]
 
-Reported-by: Vishal Verma <vishal.l.verma@intel.com>
-Reviewed-by: Vishal Verma <vishal.l.verma@intel.com>
-Tested-by: Vishal Verma <vishal.l.verma@intel.com>
-Link: https://lore.kernel.org/r/156341208947.292348.10560140326807607481.stgit@dwillia2-desk3.amr.corp.intel.com
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Most of the bridge device's vlan init bugs come from the fact that its
+default pvid is created at the wrong time, way too early in ndo_init()
+before the device is even assigned an ifindex. It introduces a bug when the
+bridge's dev_addr is added as fdb during the initial default pvid creation
+the notification has ifindex/NDA_MASTER both equal to 0 (see example below)
+which really makes no sense for user-space[0] and is wrong.
+Usually user-space software would ignore such entries, but they are
+actually valid and will eventually have all necessary attributes.
+It makes much more sense to send a notification *after* the device has
+registered and has a proper ifindex allocated rather than before when
+there's a chance that the registration might still fail or to receive
+it with ifindex/NDA_MASTER == 0. Note that we can remove the fdb flush
+from br_vlan_flush() since that case can no longer happen. At
+NETDEV_REGISTER br->default_pvid is always == 1 as it's initialized by
+br_vlan_init() before that and at NETDEV_UNREGISTER it can be anything
+depending why it was called (if called due to NETDEV_REGISTER error
+it'll still be == 1, otherwise it could be any value changed during the
+device life time).
+
+For the demonstration below a small change to iproute2 for printing all fdb
+notifications is added, because it contained a workaround not to show
+entries with ifindex == 0.
+Command executed while monitoring: $ ip l add br0 type bridge
+Before (both ifindex and master == 0):
+$ bridge monitor fdb
+36:7e:8a:b3:56:ba dev * vlan 1 master * permanent
+
+After (proper br0 ifindex):
+$ bridge monitor fdb
+e6:2a:ae:7a:b7:48 dev br0 vlan 1 master br0 permanent
+
+v4: move only the default pvid init/deinit to NETDEV_REGISTER/UNREGISTER
+v3: send the correct v2 patch with all changes (stub should return 0)
+v2: on error in br_vlan_init set br->vlgrp to NULL and return 0 in
+    the br_vlan_bridge_event stub when bridge vlans are disabled
+
+[0] https://bugzilla.kernel.org/show_bug.cgi?id=204389
+
+Reported-by: michael-dev <michael-dev@fami-braun.de>
+Fixes: 5be5a2df40f0 ("bridge: Add filtering support for default_pvid")
+Signed-off-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Acked-by: Roopa Prabhu <roopa@cumulusnetworks.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/nvdimm/bus.c | 59 +++++++++++++++++++++++++++-----------------
- 1 file changed, 37 insertions(+), 22 deletions(-)
+ net/bridge/br.c         |    5 ++++-
+ net/bridge/br_private.h |    9 +++++----
+ net/bridge/br_vlan.c    |   34 ++++++++++++++++------------------
+ 3 files changed, 25 insertions(+), 23 deletions(-)
 
-diff --git a/drivers/nvdimm/bus.c b/drivers/nvdimm/bus.c
-index dfb93228d6a73..a38572bf486bb 100644
---- a/drivers/nvdimm/bus.c
-+++ b/drivers/nvdimm/bus.c
-@@ -973,20 +973,19 @@ static int __nd_ioctl(struct nvdimm_bus *nvdimm_bus, struct nvdimm *nvdimm,
- 		int read_only, unsigned int ioctl_cmd, unsigned long arg)
- {
- 	struct nvdimm_bus_descriptor *nd_desc = nvdimm_bus->nd_desc;
--	static char out_env[ND_CMD_MAX_ENVELOPE];
--	static char in_env[ND_CMD_MAX_ENVELOPE];
- 	const struct nd_cmd_desc *desc = NULL;
- 	unsigned int cmd = _IOC_NR(ioctl_cmd);
- 	struct device *dev = &nvdimm_bus->dev;
- 	void __user *p = (void __user *) arg;
-+	char *out_env = NULL, *in_env = NULL;
- 	const char *cmd_name, *dimm_name;
- 	u32 in_len = 0, out_len = 0;
- 	unsigned int func = cmd;
- 	unsigned long cmd_mask;
- 	struct nd_cmd_pkg pkg;
- 	int rc, i, cmd_rc;
-+	void *buf = NULL;
- 	u64 buf_len = 0;
--	void *buf;
+--- a/net/bridge/br.c
++++ b/net/bridge/br.c
+@@ -37,12 +37,15 @@ static int br_device_event(struct notifi
+ 	int err;
  
- 	if (nvdimm) {
- 		desc = nd_cmd_dimm_desc(cmd);
-@@ -1026,6 +1025,9 @@ static int __nd_ioctl(struct nvdimm_bus *nvdimm_bus, struct nvdimm *nvdimm,
- 		}
- 
- 	/* process an input envelope */
-+	in_env = kzalloc(ND_CMD_MAX_ENVELOPE, GFP_KERNEL);
-+	if (!in_env)
-+		return -ENOMEM;
- 	for (i = 0; i < desc->in_num; i++) {
- 		u32 in_size, copy;
- 
-@@ -1033,14 +1035,17 @@ static int __nd_ioctl(struct nvdimm_bus *nvdimm_bus, struct nvdimm *nvdimm,
- 		if (in_size == UINT_MAX) {
- 			dev_err(dev, "%s:%s unknown input size cmd: %s field: %d\n",
- 					__func__, dimm_name, cmd_name, i);
--			return -ENXIO;
-+			rc = -ENXIO;
-+			goto out;
- 		}
--		if (in_len < sizeof(in_env))
--			copy = min_t(u32, sizeof(in_env) - in_len, in_size);
-+		if (in_len < ND_CMD_MAX_ENVELOPE)
-+			copy = min_t(u32, ND_CMD_MAX_ENVELOPE - in_len, in_size);
- 		else
- 			copy = 0;
--		if (copy && copy_from_user(&in_env[in_len], p + in_len, copy))
--			return -EFAULT;
-+		if (copy && copy_from_user(&in_env[in_len], p + in_len, copy)) {
-+			rc = -EFAULT;
-+			goto out;
-+		}
- 		in_len += in_size;
- 	}
- 
-@@ -1052,6 +1057,12 @@ static int __nd_ioctl(struct nvdimm_bus *nvdimm_bus, struct nvdimm *nvdimm,
- 	}
- 
- 	/* process an output envelope */
-+	out_env = kzalloc(ND_CMD_MAX_ENVELOPE, GFP_KERNEL);
-+	if (!out_env) {
-+		rc = -ENOMEM;
-+		goto out;
-+	}
+ 	if (dev->priv_flags & IFF_EBRIDGE) {
++		err = br_vlan_bridge_event(dev, event, ptr);
++		if (err)
++			return notifier_from_errno(err);
 +
- 	for (i = 0; i < desc->out_num; i++) {
- 		u32 out_size = nd_cmd_out_size(nvdimm, cmd, desc, i,
- 				(u32 *) in_env, (u32 *) out_env, 0);
-@@ -1060,15 +1071,18 @@ static int __nd_ioctl(struct nvdimm_bus *nvdimm_bus, struct nvdimm *nvdimm,
- 		if (out_size == UINT_MAX) {
- 			dev_dbg(dev, "%s unknown output size cmd: %s field: %d\n",
- 					dimm_name, cmd_name, i);
--			return -EFAULT;
-+			rc = -EFAULT;
-+			goto out;
+ 		if (event == NETDEV_REGISTER) {
+ 			/* register of bridge completed, add sysfs entries */
+ 			br_sysfs_addbr(dev);
+ 			return NOTIFY_DONE;
  		}
--		if (out_len < sizeof(out_env))
--			copy = min_t(u32, sizeof(out_env) - out_len, out_size);
-+		if (out_len < ND_CMD_MAX_ENVELOPE)
-+			copy = min_t(u32, ND_CMD_MAX_ENVELOPE - out_len, out_size);
- 		else
- 			copy = 0;
- 		if (copy && copy_from_user(&out_env[out_len],
--					p + in_len + out_len, copy))
--			return -EFAULT;
-+					p + in_len + out_len, copy)) {
-+			rc = -EFAULT;
-+			goto out;
-+		}
- 		out_len += out_size;
+-		br_vlan_bridge_event(dev, event, ptr);
  	}
  
-@@ -1076,12 +1090,15 @@ static int __nd_ioctl(struct nvdimm_bus *nvdimm_bus, struct nvdimm *nvdimm,
- 	if (buf_len > ND_IOCTL_MAX_BUFLEN) {
- 		dev_dbg(dev, "%s cmd: %s buf_len: %llu > %d\n", dimm_name,
- 				cmd_name, buf_len, ND_IOCTL_MAX_BUFLEN);
--		return -EINVAL;
-+		rc = -EINVAL;
-+		goto out;
- 	}
+ 	/* not a port of a bridge */
+--- a/net/bridge/br_private.h
++++ b/net/bridge/br_private.h
+@@ -893,8 +893,8 @@ int nbp_get_num_vlan_infos(struct net_br
+ void br_vlan_get_stats(const struct net_bridge_vlan *v,
+ 		       struct br_vlan_stats *stats);
+ void br_vlan_port_event(struct net_bridge_port *p, unsigned long event);
+-void br_vlan_bridge_event(struct net_device *dev, unsigned long event,
+-			  void *ptr);
++int br_vlan_bridge_event(struct net_device *dev, unsigned long event,
++			 void *ptr);
  
- 	buf = vmalloc(buf_len);
--	if (!buf)
--		return -ENOMEM;
-+	if (!buf) {
-+		rc = -ENOMEM;
-+		goto out;
-+	}
- 
- 	if (copy_from_user(buf, p, buf_len)) {
- 		rc = -EFAULT;
-@@ -1103,17 +1120,15 @@ static int __nd_ioctl(struct nvdimm_bus *nvdimm_bus, struct nvdimm *nvdimm,
- 		nvdimm_account_cleared_poison(nvdimm_bus, clear_err->address,
- 				clear_err->cleared);
- 	}
--	nvdimm_bus_unlock(&nvdimm_bus->dev);
- 
- 	if (copy_to_user(p, buf, buf_len))
- 		rc = -EFAULT;
- 
--	vfree(buf);
--	return rc;
--
-- out_unlock:
-+out_unlock:
- 	nvdimm_bus_unlock(&nvdimm_bus->dev);
-- out:
-+out:
-+	kfree(in_env);
-+	kfree(out_env);
- 	vfree(buf);
- 	return rc;
+ static inline struct net_bridge_vlan_group *br_vlan_group(
+ 					const struct net_bridge *br)
+@@ -1084,9 +1084,10 @@ static inline void br_vlan_port_event(st
+ {
  }
--- 
-2.20.1
-
+ 
+-static inline void br_vlan_bridge_event(struct net_device *dev,
+-					unsigned long event, void *ptr)
++static inline int br_vlan_bridge_event(struct net_device *dev,
++				       unsigned long event, void *ptr)
+ {
++	return 0;
+ }
+ #endif
+ 
+--- a/net/bridge/br_vlan.c
++++ b/net/bridge/br_vlan.c
+@@ -715,11 +715,6 @@ void br_vlan_flush(struct net_bridge *br
+ 
+ 	ASSERT_RTNL();
+ 
+-	/* delete auto-added default pvid local fdb before flushing vlans
+-	 * otherwise it will be leaked on bridge device init failure
+-	 */
+-	br_fdb_delete_by_port(br, NULL, 0, 1);
+-
+ 	vg = br_vlan_group(br);
+ 	__vlan_flush(vg);
+ 	RCU_INIT_POINTER(br->vlgrp, NULL);
+@@ -1048,7 +1043,6 @@ int br_vlan_init(struct net_bridge *br)
+ {
+ 	struct net_bridge_vlan_group *vg;
+ 	int ret = -ENOMEM;
+-	bool changed;
+ 
+ 	vg = kzalloc(sizeof(*vg), GFP_KERNEL);
+ 	if (!vg)
+@@ -1063,17 +1057,10 @@ int br_vlan_init(struct net_bridge *br)
+ 	br->vlan_proto = htons(ETH_P_8021Q);
+ 	br->default_pvid = 1;
+ 	rcu_assign_pointer(br->vlgrp, vg);
+-	ret = br_vlan_add(br, 1,
+-			  BRIDGE_VLAN_INFO_PVID | BRIDGE_VLAN_INFO_UNTAGGED |
+-			  BRIDGE_VLAN_INFO_BRENTRY, &changed, NULL);
+-	if (ret)
+-		goto err_vlan_add;
+ 
+ out:
+ 	return ret;
+ 
+-err_vlan_add:
+-	vlan_tunnel_deinit(vg);
+ err_tunnel_init:
+ 	rhashtable_destroy(&vg->vlan_hash);
+ err_rhtbl:
+@@ -1448,13 +1435,23 @@ static void nbp_vlan_set_vlan_dev_state(
+ }
+ 
+ /* Must be protected by RTNL. */
+-void br_vlan_bridge_event(struct net_device *dev, unsigned long event,
+-			  void *ptr)
++int br_vlan_bridge_event(struct net_device *dev, unsigned long event, void *ptr)
+ {
+ 	struct netdev_notifier_changeupper_info *info;
+-	struct net_bridge *br;
++	struct net_bridge *br = netdev_priv(dev);
++	bool changed;
++	int ret = 0;
+ 
+ 	switch (event) {
++	case NETDEV_REGISTER:
++		ret = br_vlan_add(br, br->default_pvid,
++				  BRIDGE_VLAN_INFO_PVID |
++				  BRIDGE_VLAN_INFO_UNTAGGED |
++				  BRIDGE_VLAN_INFO_BRENTRY, &changed, NULL);
++		break;
++	case NETDEV_UNREGISTER:
++		br_vlan_delete(br, br->default_pvid);
++		break;
+ 	case NETDEV_CHANGEUPPER:
+ 		info = ptr;
+ 		br_vlan_upper_change(dev, info->upper_dev, info->linking);
+@@ -1462,12 +1459,13 @@ void br_vlan_bridge_event(struct net_dev
+ 
+ 	case NETDEV_CHANGE:
+ 	case NETDEV_UP:
+-		br = netdev_priv(dev);
+ 		if (!br_opt_get(br, BROPT_VLAN_BRIDGE_BINDING))
+-			return;
++			break;
+ 		br_vlan_link_state_change(dev, br);
+ 		break;
+ 	}
++
++	return ret;
+ }
+ 
+ /* Must be protected by RTNL. */
 
 
