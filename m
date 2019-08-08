@@ -2,94 +2,99 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A3DAC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:58:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F9DBC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 10:00:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD0342186A
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:58:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="GsnP6R7C"
+	by mail.kernel.org (Postfix) with ESMTP id 7979A21874
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 10:00:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732110AbfHHJ6J (ORCPT
+        id S1732231AbfHHKAh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 05:58:09 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.54]:25376 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728289AbfHHJ6J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 05:58:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1565258287;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=1/f0k/H0a7K76vFEtcQN8S5GHIKWdhY5l6OaGUoHAj8=;
-        b=GsnP6R7CEXEcVT/yM/KXuWTk0p0HvHOJeecDbCnQwgVJsTEpXuaCTgnA8vwr43oG/Y
-        x0H2A+IfBWhQl5xkuntFSVVqtrhFzERiqtwi4CqemGRB5B5bLGgFrP2SotX7Nsp8au3B
-        rI3FKEFsOEzavmRjzITFzNkHf6Podvac7+9xNuW4/1qBJoe3TyVn2ZDDtyW0FFPMfR0e
-        JHdVlJ2NLZIZG2r6RVGPOFeMr8jW+lVVrmF+CNOLAiQIEsTHOgXACGCpp+ULt0WUvh3I
-        /E6VoqF2YQFbDU/rEKHw6IN1AYxawYFM2h30LwIoFCFeMj4T2wb+da74u0vviShHgA7i
-        bZ2A==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/vrwDCv1g=="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 44.24 DYNA|AUTH)
-        with ESMTPSA id j00b6dv789vvaoi
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Thu, 8 Aug 2019 11:57:57 +0200 (CEST)
+        Thu, 8 Aug 2019 06:00:37 -0400
+Received: from verein.lst.de ([213.95.11.211]:45231 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728289AbfHHKAg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 06:00:36 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id DE187227A81; Thu,  8 Aug 2019 12:00:31 +0200 (CEST)
+Date:   Thu, 8 Aug 2019 12:00:31 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Rob Clark <robdclark@chromium.org>
+Cc:     Christoph Hellwig <hch@lst.de>, Rob Clark <robdclark@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] drm: add cache support for arm64
+Message-ID: <20190808100031.GA32658@lst.de>
+References: <20190805211451.20176-1-robdclark@gmail.com> <20190806084821.GA17129@lst.de> <CAJs_Fx6eh1w7c=crMoD5XyEOMzP6orLhqUewErE51cPGYmObBQ@mail.gmail.com> <20190806155044.GC25050@lst.de> <CAJs_Fx6uztwDy2PqRy3Tc9p12k8r_ovS2tAcsMV6HqnAp=Ggug@mail.gmail.com> <20190807062545.GF6627@lst.de> <CAJs_Fx7tqbr_gqRdqJEwOcRFReP0DqZzOu11Dxhxkp8+PygUQw@mail.gmail.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [Bug] v5.3-rc3: arm: omap5: omapdss: omap_fbdev_init fails with lpae config and reports dma_mask error
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20190808072431.GA29852@lst.de>
-Date:   Thu, 8 Aug 2019 11:57:56 +0200
-Cc:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Roger Quadros <rogerq@ti.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kernel@pyra-handheld.com,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <7B845956-A04D-40D8-A433-5812576A72E8@goldelico.com>
-References: <14A6738F-75C6-4479-8B15-FD7395EFC55E@goldelico.com> <DF565339-14BC-411D-9301-5651FA601733@goldelico.com> <20190808072431.GA29852@lst.de>
-To:     Christoph Hellwig <hch@lst.de>
-X-Mailer: Apple Mail (2.3124)
+Content-Disposition: inline
+In-Reply-To: <CAJs_Fx7tqbr_gqRdqJEwOcRFReP0DqZzOu11Dxhxkp8+PygUQw@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+On Wed, Aug 07, 2019 at 09:09:53AM -0700, Rob Clark wrote:
+> > > (Eventually I'd like to support pages passed in from userspace.. but
+> > > that is down the road.)
+> >
+> > Eww.  Please talk to the iommu list before starting on that.
+> 
+> This is more of a long term goal, we can't do it until we have
+> per-context/process pagetables, ofc.
+> 
+> Getting a bit off topic, but I'm curious about what problems you are
+> concerned about.  Userspace can shoot it's own foot, but if it is not
+> sharing GPU pagetables with other processes, it can't shoot other's
+> feet.  (I'm guessing you are concerned about non-page-aligned
+> mappings?)
 
-> Am 08.08.2019 um 09:24 schrieb Christoph Hellwig <hch@lst.de>:
->=20
-> Hi Nikolaus,
->=20
-> please try the patch below:
->=20
-> diff --git a/drivers/gpu/drm/omapdrm/omap_fbdev.c =
-b/drivers/gpu/drm/omapdrm/omap_fbdev.c
-> index 561c4812545b..2c8abf07e617 100644
-> --- a/drivers/gpu/drm/omapdrm/omap_fbdev.c
-> +++ b/drivers/gpu/drm/omapdrm/omap_fbdev.c
-> @@ -232,6 +232,8 @@ void omap_fbdev_init(struct drm_device *dev)
-> 	if (!priv->num_pipes)
-> 		return;
->=20
-> +	dma_coerce_mask_and_coherent(dev->dev, DMA_BIT_MASK(32));
-> +
-> 	fbdev =3D kzalloc(sizeof(*fbdev), GFP_KERNEL);
-> 	if (!fbdev)
-> 		goto fail;
+Maybe I misunderstood what you mean above, I though you mean messing
+with page cachability attributes for userspace pages.  If what you are
+looking into is just "standard" SVM I only hope that our APIs for that
+which currently are a mess are in shape by then, as all users currently
+have their own crufty and at least slightly buggy versions of that.  But
+at least it is an issue that is being worked on.
 
-Yes, it fixes the issue!
+> > So back to the question, I'd like to understand your use case (and
+> > maybe hear from the other drm folks if that is common):
+> >
+> >  - you allocate pages from shmem (why shmem, btw?  if this is done by
+> >    other drm drivers how do they guarantee addressability without an
+> >    iommu?)
+> 
+> shmem for swappable pages.  I don't unpin and let things get swapped
+> out yet, but I'm told it starts to become important when you have 50
+> browser tabs open ;-)
 
-BR and thanks,
-Nikolaus=
+Yes,  but at that point the swapping can use the kernel linear mapping
+and we are going into aliasing problems that can disturb the cache.  So
+as-is this is going to problematic without new hooks into shmemfs.
+
+> >  - then the memory is either mapped to userspace or vmapped (or even
+> >    both, althrough the lack of aliasing you mentioned would speak
+> >    against it) as writecombine (aka arm v6+ normal uncached).  Does
+> >    the mapping live on until the memory is freed?
+> 
+> (side note, *most* of the drm/msm supported devices are armv8, the
+> exceptions are 8060 and 8064 which are armv7.. I don't think drm/msm
+> will ever have to deal w/ armv6)
+
+Well, the point was that starting from v6 the kernels dma uncached
+really is write combine.  So that applied to v7 and v8 as well.
