@@ -2,106 +2,78 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE40C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 05:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B268BC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 05:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96BF5214C6
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 05:49:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8194021873
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 05:50:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730960AbfHHFtS (ORCPT
+        id S1730968AbfHHFuv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 01:49:18 -0400
-Received: from foss.arm.com ([217.140.110.172]:56272 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728090AbfHHFtR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 01:49:17 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 79E6A28;
-        Wed,  7 Aug 2019 22:49:17 -0700 (PDT)
-Received: from [10.163.1.243] (unknown [10.163.1.243])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1DCCD3F706;
-        Wed,  7 Aug 2019 22:51:22 -0700 (PDT)
-Subject: Re: [PATCH v2] arm64: mm: print hexadecimal EC value in
- mem_abort_decode()
-To:     Miles Chen <miles.chen@mediatek.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com,
-        Mark Rutland <Mark.rutland@arm.com>,
-        James Morse <james.morse@arm.com>
-References: <20190807003336.28040-1-miles.chen@mediatek.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <98bdbcfb-24ed-fcd8-4b2c-f2c78b245dda@arm.com>
-Date:   Thu, 8 Aug 2019 11:19:07 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Thu, 8 Aug 2019 01:50:51 -0400
+Received: from smtprelay0022.hostedemail.com ([216.40.44.22]:44146 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730884AbfHHFuv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 01:50:51 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 7C45F1802ED78;
+        Thu,  8 Aug 2019 05:50:49 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: space68_414ad160ef10c
+X-Filterd-Recvd-Size: 1711
+Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf10.hostedemail.com (Postfix) with ESMTPA;
+        Thu,  8 Aug 2019 05:50:48 +0000 (UTC)
+Message-ID: <33e3b8748959b2f56b906b0bfd790df322f1ed3c.camel@perches.com>
+Subject: Re: [PATCH] scripts/checkpatch.pl - fix *_NOTIFIER_HEAD handling
+From:   Joe Perches <joe@perches.com>
+To:     Valdis =?UTF-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        Gilad Ben-Yossef <gilad@benyossef.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org
+Date:   Wed, 07 Aug 2019 22:50:47 -0700
+In-Reply-To: <33485.1565228181@turing-police>
+References: <33485.1565228181@turing-police>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-In-Reply-To: <20190807003336.28040-1-miles.chen@mediatek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 2019-08-07 at 21:36 -0400, Valdis Klētnieks wrote:
+> commit 81398d99e9de80d9dbe65dfe7aadec9497f88242
+> Author: Gilad Ben-Yossef <gilad@benyossef.com>
+> Date:   Wed Jul 31 14:44:23 2019 +1000
+> 
+>     checkpatch: add *_NOTIFIER_HEAD as var definition
+> 
+> has a typo, resulting in a truly amazing error message:
+
+Ouch, thanks.
+
+> Unescaped left brace in regex is passed through in regex; marked by <-- HERE in m/(?:
+[]
+> Fix the typo.
+[]
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+[]
+> @@ -3891,7 +3891,7 @@ sub process {
+>  				^.DEFINE_$Ident\(\Q$name\E\)|
+>  				^.DECLARE_$Ident\(\Q$name\E\)|
+>  				^.LIST_HEAD\(\Q$name\E\)|
+> -				^.{$Ident}_NOTIFIER_HEAD\(\Q$name\E\)|
+> +				^.${Ident}_NOTIFIER_HEAD\(\Q$name\E\)|
+
+Perhaps also better to convert all the '\Q$name\E' to '\s*\Q$name\E\s*'
 
 
-On 08/07/2019 06:03 AM, Miles Chen wrote:
-> This change prints the hexadecimal EC value in mem_abort_decode(),
-> which makes it easier to lookup the corresponding EC in
-> the ARM Architecture Reference Manual.
-> 
-> The commit 1f9b8936f36f ("arm64: Decode information from ESR upon mem
-> faults") prints useful information when memory abort occurs. It would
-> be easier to lookup "0x25" instead of "DABT" in the document. Then we
-> can check the corresponding ISS.
-> 
-> For example:
-> Current	info	  	Document
-> 		  	EC	Exception class
-> "CP15 MCR/MRC"		0x3	"MCR or MRC access to CP15a..."
-> "ASIMD"			0x7	"Access to SIMD or floating-point..."
-> "DABT (current EL)" 	0x25	"Data Abort taken without..."
-> ...
-> 
-> Before:
-> Unable to handle kernel paging request at virtual address 000000000000c000
-> Mem abort info:
->   ESR = 0x96000046
->   Exception class = DABT (current EL), IL = 32 bits
->   SET = 0, FnV = 0
->   EA = 0, S1PTW = 0
-> Data abort info:
->   ISV = 0, ISS = 0x00000046
->   CM = 0, WnR = 1
-> 
-> After:
-> Unable to handle kernel paging request at virtual address 000000000000c000
-> Mem abort info:
->   ESR = 0x96000046
->   EC = 0x25: DABT (current EL), IL = 32 bits
->   SET = 0, FnV = 0
->   EA = 0, S1PTW = 0
-> Data abort info:
->   ISV = 0, ISS = 0x00000046
->   CM = 0, WnR = 1
-> 
-> Change since v1:
-> print "EC" instead of "Exception class"
-> print EC in fixwidth
-> 
-> Cc: Mark Rutland <Mark.rutland@arm.com>
-> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
-> Cc: James Morse <james.morse@arm.com>
-> Signed-off-by: Miles Chen <miles.chen@mediatek.com>
 
-This version implements the suggestion, hence it should have
-also contained acked-by tag from Mark from earlier version.
-
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
