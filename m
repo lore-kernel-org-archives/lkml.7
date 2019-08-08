@@ -2,100 +2,155 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BCBCC32754
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62CA1C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:30:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75775217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:30:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34FD5217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:30:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="mEJslXuA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731355AbfHHGaJ (ORCPT
+        id S1731378AbfHHGao (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 02:30:09 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:44545 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725817AbfHHGaJ (ORCPT
+        Thu, 8 Aug 2019 02:30:44 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:54085 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725817AbfHHGan (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 02:30:09 -0400
-X-Originating-IP: 79.86.19.127
-Received: from alex.numericable.fr (127.19.86.79.rev.sfr.net [79.86.19.127])
-        (Authenticated sender: alex@ghiti.fr)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 42BAFE000B;
-        Thu,  8 Aug 2019 06:30:01 +0000 (UTC)
-From:   Alexandre Ghiti <alex@ghiti.fr>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Alexandre Ghiti <alex@ghiti.fr>
-Subject: [PATCH v6 11/14] mips: Adjust brk randomization offset to fit generic version
-Date:   Thu,  8 Aug 2019 02:17:53 -0400
-Message-Id: <20190808061756.19712-12-alex@ghiti.fr>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190808061756.19712-1-alex@ghiti.fr>
-References: <20190808061756.19712-1-alex@ghiti.fr>
+        Thu, 8 Aug 2019 02:30:43 -0400
+Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id x786US1B009911;
+        Thu, 8 Aug 2019 15:30:29 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x786US1B009911
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1565245829;
+        bh=gPVn4kg/MQMRHf5Lz12yg0uXG1KyqNHjoIC0Y1yDWPo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=mEJslXuASafslBYnKfdobR0iREcFNPyJfk6U35DUduNt6HiYpMm75SA0Gwxq9wfit
+         ustypL/fVDMLkNik17RqYikXROrOHIkt0yd5+LT30kNCZDzU9mQWjCKUJUW9ycwjC2
+         ujbMDDrv+b5Oe9fQd9g0RkcMCD+ZpAecdvahNp0vIJxldAgQ+Jo1U6ABWmbCpZow+o
+         ujyq6CfDT5Hljs1lugE8p1Hha6gETtCXdZjpjfTNrZTtHy+k2c7y6t/FoHimUC259j
+         fKmtXVY6zu37n2mGHBiTFWdEuZAm7P4gcn2JvBfdbtQMP5mqwiKRRY2GYZwJFdURKn
+         BTrXZ0qfVMWKw==
+X-Nifty-SrcIP: [209.85.217.52]
+Received: by mail-vs1-f52.google.com with SMTP id y16so62270686vsc.3;
+        Wed, 07 Aug 2019 23:30:29 -0700 (PDT)
+X-Gm-Message-State: APjAAAWHvF8rgXd7ZRjvsqBd4DG8av/KjS/iArALXyqMoMnHzVZ2LK9R
+        XuM1yJ4ZKd/MjSuaHfq+hFSus41Q7hmG5cyF90k=
+X-Google-Smtp-Source: APXvYqz5LBOdTMvDI8Dv1tMNZP247T6t7FKAkqs+TVVnRbFMv21IkcWjIiYjripFL+jsFTam+Ic/T/5fQtOvkUD0Bbk=
+X-Received: by 2002:a67:d46:: with SMTP id 67mr8336889vsn.181.1565245828043;
+ Wed, 07 Aug 2019 23:30:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190806100323.22919-1-yamada.masahiro@socionext.com> <20190806100323.22919-3-yamada.masahiro@socionext.com>
+In-Reply-To: <20190806100323.22919-3-yamada.masahiro@socionext.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Thu, 8 Aug 2019 15:29:52 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARrC2h_qtFaY6=2+YVz2kJcMK_+QZ+WJEba8T1AH_Nvjg@mail.gmail.com>
+Message-ID: <CAK7LNARrC2h_qtFaY6=2+YVz2kJcMK_+QZ+WJEba8T1AH_Nvjg@mail.gmail.com>
+Subject: Re: [PATCH 3/3] kbuild: show hint if subdir-y/m is used to visit
+ module Makefile
+To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Cc:     Jan Kiszka <jan.kiszka@siemens.com>,
+        Tom Stonecypher <thomas.edwardx.stonecypher@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit simply bumps up to 32MB and 1GB the random offset
-of brk, compared to 8MB and 256MB, for 32bit and 64bit respectively.
+On Tue, Aug 6, 2019 at 7:03 PM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> Since commit ff9b45c55b26 ("kbuild: modpost: read modules.order instead
+> of $(MODVERDIR)/*.mod"), a module is no longer built in the following
+> pattern:
+>
+>   [Makefile]
+>   subdir-y := some-module
+>
+>   [some-module/Makefile]
+>   obj-m := some-module.o
+>
+> You cannot write Makefile this way in upstream because modules.order is
+> not correctly generated. subdir-y is used to descend to a sub-directory
+> that builds tools, device trees, etc.
+>
+> For external modules, the modules order does not matter. So, the
+> Makefile above was known to work.
+>
+> I believe the Makefile should be re-written as follows:
+>
+>   [Makefile]
+>   obj-m := some-module/
+>
+>   [some-module/Makefile]
+>   obj-m := some-module.o
+>
+> However, people will have no idea if their Makefile suddenly stops
+> working. In fact, I received questions from multiple people.
+>
+> Show a warning if obj-m is specified in a Makefile visited by subdir-y
+> or subdir-m.
+>
+> Cc: Jan Kiszka <jan.kiszka@siemens.com>
+> Cc: Tom Stonecypher <thomas.edwardx.stonecypher@intel.com>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
 
-Suggested-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
-Acked-by: Paul Burton <paul.burton@mips.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
----
- arch/mips/mm/mmap.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+This produces false-positive warnings for single-targets.
+I will fix up as follows:
 
-diff --git a/arch/mips/mm/mmap.c b/arch/mips/mm/mmap.c
-index a7e84b2e71d7..ff6ab87e9c56 100644
---- a/arch/mips/mm/mmap.c
-+++ b/arch/mips/mm/mmap.c
-@@ -16,6 +16,7 @@
- #include <linux/random.h>
- #include <linux/sched/signal.h>
- #include <linux/sched/mm.h>
-+#include <linux/sizes.h>
- 
- unsigned long shm_align_mask = PAGE_SIZE - 1;	/* Sane caches */
- EXPORT_SYMBOL(shm_align_mask);
-@@ -189,11 +190,11 @@ static inline unsigned long brk_rnd(void)
- 	unsigned long rnd = get_random_long();
- 
- 	rnd = rnd << PAGE_SHIFT;
--	/* 8MB for 32bit, 256MB for 64bit */
-+	/* 32MB for 32bit, 1GB for 64bit */
- 	if (TASK_IS_32BIT_ADDR)
--		rnd = rnd & 0x7ffffful;
-+		rnd = rnd & (SZ_32M - 1);
- 	else
--		rnd = rnd & 0xffffffful;
-+		rnd = rnd & (SZ_1G - 1);
- 
- 	return rnd;
- }
+
+diff --git a/Makefile b/Makefile
+index 0e37ad2f77bf..fac25e279da6 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1783,7 +1783,7 @@ PHONY += /
+ /: ./
+
+ %/: prepare FORCE
+-       $(Q)$(MAKE) KBUILD_MODULES=1 $(build)=$(build-dir)
++       $(Q)$(MAKE) KBUILD_MODULES=1 $(build)=$(build-dir) need-modorder=1
+
+ # FIXME Should go into a make.lib or something
+ # ===========================================================================
+
+
+
+>
+>  scripts/Makefile.build | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+> index 37a1d2cd49d4..4a26c7ed9198 100644
+> --- a/scripts/Makefile.build
+> +++ b/scripts/Makefile.build
+> @@ -52,6 +52,13 @@ ifndef obj
+>  $(warning kbuild: Makefile.build is included improperly)
+>  endif
+>
+> +ifeq ($(need-modorder),)
+> +ifneq ($(obj-m),)
+> +$(warning $(patsubst %.o,'%.ko',$(obj-m)) will not be built even though obj-m is specified.)
+> +$(warning You cannot use subdir-y/m to visit a module Makefile. Use obj-y/m instead.)
+> +endif
+> +endif
+> +
+>  # ===========================================================================
+>
+>  ifneq ($(strip $(lib-y) $(lib-m) $(lib-)),)
+> --
+> 2.17.1
+>
+
+
 -- 
-2.20.1
-
+Best Regards
+Masahiro Yamada
