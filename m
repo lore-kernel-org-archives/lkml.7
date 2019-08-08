@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54DBAC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6759DC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:09:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2800121882
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:09:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A3A721743
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:09:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565291352;
-	bh=L1UbzN2FbxpMe/YNMfeHccBGcpbxvsiodflnULxUm50=;
+	s=default; t=1565291357;
+	bh=9AGNDiFGuoVv33UzIPs5eYd4Nji75eLh6NNA55ASf/o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u9UmK0sur6akC1OduD94kEQqMyKAZFntwXlFQXgtLZ+FEN+/IFgSu/mtCs6QgxJTI
-	 9dXZhUv3Y3rsqIGRD+f4dwylrwL0pwJIqdZFtPkfuvWHEcUbylbCl9KE9IAqAFMm7x
-	 Rg+IM2q8Dafol1Y0zMPECrv32JLCIf+3mRt5siK4=
+	b=QPp1vOZB/nhl6AQWxJPm5xx7R1hQKnwefso7UaBz1Oz6Vje5A0t0I6kbPkdSOvAuz
+	 Xjf2us4Zzlw0ptg99OEiAxevHYiw0R+r2njtF/lfiNkFXfLNaXV734V13uFnOhbsXk
+	 Vuf4e49rdQ94WCmHuI3M6f7ozfDSIAcRhULa3mA4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404640AbfHHTJL (ORCPT
+        id S2405081AbfHHTJQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:09:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43404 "EHLO mail.kernel.org"
+        Thu, 8 Aug 2019 15:09:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405045AbfHHTJH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 15:09:07 -0400
+        id S2404649AbfHHTJM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 15:09:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FA5021874;
-        Thu,  8 Aug 2019 19:09:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93FEB21743;
+        Thu,  8 Aug 2019 19:09:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565291346;
-        bh=L1UbzN2FbxpMe/YNMfeHccBGcpbxvsiodflnULxUm50=;
+        s=default; t=1565291352;
+        bh=9AGNDiFGuoVv33UzIPs5eYd4Nji75eLh6NNA55ASf/o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qiqFXIDkkAnTUbC3AMUEFPBclya98BzADmMTTDWBoTkAAKwSEaPOnJ/1fPxLB4VV8
-         fVz0iRcPIBfPId5Sg/1EHc514J3G3T4eyvL/S+6ge+7RDEAAB/sbSt5LuQLHcrednF
-         +6rcE2UY6RE85E6fbMhuWijEfAxL5sQxJDkHW6vw=
+        b=KubZJTLf4uUr1A44WXP8iX6Q2GIgAYaCHl4NdgyO6UEdN2wcsOCfF/0YRQNz+bBlf
+         pXBMP6wycaDjdmNl33pvFo9JgFa3RIIUnuscXW2wS1Fk+t+8xoMc9zoOacHV50/GaP
+         cn+t0O/SnRg0eUIf5mk1hlOpadrqFQ4HCV96yO6c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Haishuang Yan <yanhaishuang@cmss.chinamobile.com>,
+        stable@vger.kernel.org, Sean Tranchetti <stranche@codeaurora.org>,
+        Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 17/45] ipip: validate header length in ipip_tunnel_xmit
-Date:   Thu,  8 Aug 2019 21:05:03 +0200
-Message-Id: <20190808190454.703655997@linuxfoundation.org>
+Subject: [PATCH 4.19 27/45] net: qualcomm: rmnet: Fix incorrect UL checksum offload logic
+Date:   Thu,  8 Aug 2019 21:05:13 +0200
+Message-Id: <20190808190455.254936047@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190808190453.827571908@linuxfoundation.org>
 References: <20190808190453.827571908@linuxfoundation.org>
@@ -60,33 +60,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
+From: Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>
 
-[ Upstream commit 47d858d0bdcd47cc1c6c9eeca91b091dd9e55637 ]
+[ Upstream commit a7cf3d24ee6081930feb4c830a7f6f16ebe31c49 ]
 
-We need the same checks introduced by commit cb9f1b783850
-("ip: validate header length on virtual device xmit") for
-ipip tunnel.
+The udp_ip4_ind bit is set only for IPv4 UDP non-fragmented packets
+so that the hardware can flip the checksum to 0xFFFF if the computed
+checksum is 0 per RFC768.
 
-Fixes: cb9f1b783850b ("ip: validate header length on virtual device xmit")
-Signed-off-by: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
+However, this bit had to be set for IPv6 UDP non fragmented packets
+as well per hardware requirements. Otherwise, IPv6 UDP packets
+with computed checksum as 0 were transmitted by hardware and were
+dropped in the network.
+
+In addition to setting this bit for IPv6 UDP, the field is also
+appropriately renamed to udp_ind as part of this change.
+
+Fixes: 5eb5f8608ef1 ("net: qualcomm: rmnet: Add support for TX checksum offload")
+Cc: Sean Tranchetti <stranche@codeaurora.org>
+Signed-off-by: Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/ipip.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/qualcomm/rmnet/rmnet_map.h      |    2 +-
+ drivers/net/ethernet/qualcomm/rmnet/rmnet_map_data.c |   13 +++++++++----
+ 2 files changed, 10 insertions(+), 5 deletions(-)
 
---- a/net/ipv4/ipip.c
-+++ b/net/ipv4/ipip.c
-@@ -281,6 +281,9 @@ static netdev_tx_t ipip_tunnel_xmit(stru
- 	const struct iphdr  *tiph = &tunnel->parms.iph;
- 	u8 ipproto;
+--- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_map.h
++++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_map.h
+@@ -59,7 +59,7 @@ struct rmnet_map_dl_csum_trailer {
+ struct rmnet_map_ul_csum_header {
+ 	__be16 csum_start_offset;
+ 	u16 csum_insert_offset:14;
+-	u16 udp_ip4_ind:1;
++	u16 udp_ind:1;
+ 	u16 csum_enabled:1;
+ } __aligned(1);
  
-+	if (!pskb_inet_may_pull(skb))
-+		goto tx_error;
+--- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_map_data.c
++++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_map_data.c
+@@ -215,9 +215,9 @@ rmnet_map_ipv4_ul_csum_header(void *iphd
+ 	ul_header->csum_insert_offset = skb->csum_offset;
+ 	ul_header->csum_enabled = 1;
+ 	if (ip4h->protocol == IPPROTO_UDP)
+-		ul_header->udp_ip4_ind = 1;
++		ul_header->udp_ind = 1;
+ 	else
+-		ul_header->udp_ip4_ind = 0;
++		ul_header->udp_ind = 0;
+ 
+ 	/* Changing remaining fields to network order */
+ 	hdr++;
+@@ -248,6 +248,7 @@ rmnet_map_ipv6_ul_csum_header(void *ip6h
+ 			      struct rmnet_map_ul_csum_header *ul_header,
+ 			      struct sk_buff *skb)
+ {
++	struct ipv6hdr *ip6h = (struct ipv6hdr *)ip6hdr;
+ 	__be16 *hdr = (__be16 *)ul_header, offset;
+ 
+ 	offset = htons((__force u16)(skb_transport_header(skb) -
+@@ -255,7 +256,11 @@ rmnet_map_ipv6_ul_csum_header(void *ip6h
+ 	ul_header->csum_start_offset = offset;
+ 	ul_header->csum_insert_offset = skb->csum_offset;
+ 	ul_header->csum_enabled = 1;
+-	ul_header->udp_ip4_ind = 0;
 +
- 	switch (skb->protocol) {
- 	case htons(ETH_P_IP):
- 		ipproto = IPPROTO_IPIP;
++	if (ip6h->nexthdr == IPPROTO_UDP)
++		ul_header->udp_ind = 1;
++	else
++		ul_header->udp_ind = 0;
+ 
+ 	/* Changing remaining fields to network order */
+ 	hdr++;
+@@ -428,7 +433,7 @@ sw_csum:
+ 	ul_header->csum_start_offset = 0;
+ 	ul_header->csum_insert_offset = 0;
+ 	ul_header->csum_enabled = 0;
+-	ul_header->udp_ip4_ind = 0;
++	ul_header->udp_ind = 0;
+ 
+ 	priv->stats.csum_sw++;
+ }
 
 
