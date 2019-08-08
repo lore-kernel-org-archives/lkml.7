@@ -2,102 +2,106 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D2CC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C60C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:48:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E20621874
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:48:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E384F21883
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:48:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="HrL2rwQa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732669AbfHHMs2 (ORCPT
+        id S1732685AbfHHMsb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 08:48:28 -0400
-Received: from foss.arm.com ([217.140.110.172]:32848 "EHLO foss.arm.com"
+        Thu, 8 Aug 2019 08:48:31 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:44664 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727522AbfHHMs2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 08:48:28 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8BE6115A2;
-        Thu,  8 Aug 2019 05:48:27 -0700 (PDT)
-Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E029C3F694;
-        Thu,  8 Aug 2019 05:48:25 -0700 (PDT)
-Subject: Re: [PATCH v2 3/9] soc: samsung: Add Exynos Adaptive Supply Voltage
- driver
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc:     devicetree@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>, linux-pm@vger.kernel.org,
-        pankaj.dubey@samsung.com,
-        =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= 
-        <b.zolnierkie@samsung.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        robh+dt@kernel.org, kgene@kernel.org, vireshk@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-References: <CGME20190718143130eucas1p26f2058f47eb2f4020e1ddbf1619d1ac8@eucas1p2.samsung.com>
- <20190718143044.25066-1-s.nawrocki@samsung.com>
- <20190718143044.25066-4-s.nawrocki@samsung.com>
- <CAJKOXPeOfDHjqSotxVwVuy+6r9X3Q8ZXLit1_=gGd7bOwkHupA@mail.gmail.com>
- <a56fe2d8-1f26-b462-1564-f23902f7dbb5@samsung.com>
- <CAJKOXPc8iFo=2JAGEZSC46N3sZae4+JcZYBCjpKysb6PFPzyaQ@mail.gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <669c6b25-eb7e-ed3a-72a2-ee155a568363@arm.com>
-Date:   Thu, 8 Aug 2019 13:48:24 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <CAJKOXPc8iFo=2JAGEZSC46N3sZae4+JcZYBCjpKysb6PFPzyaQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+        id S1732665AbfHHMsa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 08:48:30 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 4647TQ0kk0z9v092;
+        Thu,  8 Aug 2019 14:48:26 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=HrL2rwQa; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 00jIBSq5nYKe; Thu,  8 Aug 2019 14:48:26 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4647TP6PC3z9v091;
+        Thu,  8 Aug 2019 14:48:25 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1565268505; bh=LkuvloXq0B1GPQ4se8YQMng+MHe39MOzCdt0xc5QcVQ=;
+        h=From:Subject:To:Cc:Date:From;
+        b=HrL2rwQaGJA9+MienkOeSMPmHAvp/4esoC/0OsD82dwCsmU655Ev2Eurb4kPCCEiC
+         7MJgFy3wa8w7AIUXaBEXvHOb1XkhQiPc93H4bgvIVIOOlwhpaC+EWLyGvmulFGhIaa
+         j9YmrpM2+euV7o1oca8D7RwP5pVj0tkWlQLK3g7w=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4EE128B870;
+        Thu,  8 Aug 2019 14:48:27 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id RX28SLrlltZi; Thu,  8 Aug 2019 14:48:27 +0200 (CEST)
+Received: from pc17473vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 12F868B85B;
+        Thu,  8 Aug 2019 14:48:27 +0200 (CEST)
+Received: by pc17473vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id AFE6B69623; Thu,  8 Aug 2019 12:48:26 +0000 (UTC)
+Message-Id: <bef479514f4c08329fa649f67735df8918bc0976.1565268248.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH] powerpc/64e: drop stale call to smp_processor_id() which
+ hangs SMP startup
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Thu,  8 Aug 2019 12:48:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/08/2019 13:31, Krzysztof Kozlowski wrote:
-> On Thu, 8 Aug 2019 at 14:07, Sylwester Nawrocki <s.nawrocki@samsung.com> wrote:
->>>> +static unsigned int exynos5422_asv_parse_table(struct exynos_asv *asv,
->>>> +                                     unsigned int pkg_id)
->>>> +{
->>>> +       return (pkg_id >> EXYNOS5422_TABLE_OFFSET) & EXYNOS5422_TABLE_MASK;
->>>> +}
->>>> +
->>>> +static bool exynos5422_asv_parse_bin2(struct exynos_asv *asv,
->>>> +                                    unsigned int pkg_id)
->>>> +{
->>>> +       return (pkg_id >> EXYNOS5422_BIN2_OFFSET) & EXYNOS5422_BIN2_MASK;
->>>
->>> return !!() for converting to boolean.
->>
->> I'm not convinced it is needed, the return type of the function is bool
->> and value of the expression will be implicitly converted to that type.
->> Is there any compiler warning related to that?
-> 
-> Yeah, but bool is int so there will be no implicit conversion... I
-> guess it is a convention. In theory !! is the proper conversion to
-> bool but if bool==int then it's essentially conversion to 1. I am not
-> sure what's the benefit, maybe for some wrong code which would do
-> comparisons on result like if (exynos5422_asv_parse_bin2() == TRUE)...
+Santa commit ebb9d30a6a74 ("powerpc/mm: any thread in one core can be
+the first to setup TLB1") removed the need to know the cpu_id in
+early_init_this_mmu(), but the call to smp_processor_id() which was
+marked __maybe_used remained.
 
-Not so - since we use "-std=gnu89", we have C99-like _Bool, which our 
-bool is a typedef of. Conversions, either implicit or explicit, are 
-well-defined:
+Since commit ed1cd6deb013 ("powerpc: Activate
+CONFIG_THREAD_INFO_IN_TASK") thread_info cannot be reached before mmu
+is properly set up.
 
-"6.3.1.2 Boolean type
+Drop this stale call to smp_processor_id() which make SMP hang
+when CONFIG_PREEMPT is set.
 
-When any scalar value is converted to _Bool, the result is 0 if the 
-value compares equal
-to 0; otherwise, the result is 1."
+Reported-by: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Fixes: ebb9d30a6a74 ("powerpc/mm: any thread in one core can be the first to setup TLB1")
+Link: https://github.com/linuxppc/issues/issues/264
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Cc: stable@vger.kernel.org
+---
+ arch/powerpc/mm/nohash/tlb.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-This is even called out in Documentation/process/coding-style.rst:
+diff --git a/arch/powerpc/mm/nohash/tlb.c b/arch/powerpc/mm/nohash/tlb.c
+index d4acf6fa0596..bf60983a58c7 100644
+--- a/arch/powerpc/mm/nohash/tlb.c
++++ b/arch/powerpc/mm/nohash/tlb.c
+@@ -630,7 +630,6 @@ static void early_init_this_mmu(void)
+ #ifdef CONFIG_PPC_FSL_BOOK3E
+ 	if (mmu_has_feature(MMU_FTR_TYPE_FSL_E)) {
+ 		unsigned int num_cams;
+-		int __maybe_unused cpu = smp_processor_id();
+ 		bool map = true;
+ 
+ 		/* use a quarter of the TLBCAM for bolted linear map */
+-- 
+2.13.3
 
-"When using bool types the !! construction is not needed, which 
-eliminates a class of bugs."
-
-Robin.
