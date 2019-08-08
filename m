@@ -2,98 +2,77 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09113C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:32:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3335BC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:32:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF78921479
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:32:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF574214C6
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:32:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="NXyWjVYQ"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="oTFysx+m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733135AbfHHNcX (ORCPT
+        id S1733155AbfHHNc1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 8 Aug 2019 09:32:27 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:44254 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732909AbfHHNcX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 8 Aug 2019 09:32:23 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43675 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732982AbfHHNcX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 09:32:23 -0400
-Received: by mail-pg1-f195.google.com with SMTP id r26so8130996pgl.10
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 06:32:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=K90bXxKtwMdSHHVI94+y31QoTgVZf3bBjn6Nuaw0xTk=;
-        b=NXyWjVYQzbaz8nyCohCw74QufpVP+/RLKhPR5vDT1hQDx0g03eK7roGny2FBnhmTtj
-         EGQadXPhj0dB1M1OMLV7CIltECIfxI2oBqAjL86PsWvGCUqTszXMIhys4vOvGyPCfv8/
-         3uRmuZzP7R6+hVBXLrIomW+NOU7i43/tCOVoISWbFADwud1ovZWV+LG4y8fT9SPRLW9T
-         TqaJQ1Ntm4Z+qp2qxEg8nRjMeTKMYPIIS2odykcb+KcyRygjF2/pDPlHx5hEKeBQD461
-         4QuxSd3xo2NrqVkBF5YrE8r/PYSrMi6EGyqY8dK5XUFnOgWiIIXqqGiiM/KdoSHupfBm
-         snPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=K90bXxKtwMdSHHVI94+y31QoTgVZf3bBjn6Nuaw0xTk=;
-        b=XrvHnb/kFGZA28urj8PDHCdVB/bQYPa40VkFgvX0G44jz06z4QZaK9t994DREQJHDX
-         Gee3PrBPPPU84iJ+pt9afr6MdAMr/0RHZz0va/gPDMfzUp5vSTvbugRBkhyRqUCMuBNe
-         TGhUcSBV+Hm3ID8FbbntjOAvyZCBkaQrVkvYMwQWU7XfWaKkhhOtXBrOffm3uFywoaBt
-         VlePlgLDJfxFzKS24Cz0vJM7Ntlzru4+zl4+0wjwNXYAw266bN7nS3ovvTgVaqyIDkwK
-         sX+ouNNZymX5xHnB5ukVDTZnvavPHfXSC+BtgsQup9FnFN1BEUm/3lkDZ8mn9Z90KCDu
-         4JaQ==
-X-Gm-Message-State: APjAAAXndP4nOdprmtNZ6/e+nDrHfV9/Z3393u3SFsaPJ3lTYH50PdQf
-        3A7vu/QOYbC2bVMpA2lrt3i7Eg==
-X-Google-Smtp-Source: APXvYqxz+cV93HB9DiXa7nRKr4ie33O0u2MF/MAijDLTrHSjVSk7Y41IL5Z0WdgSjT1lL6DjHMvSbw==
-X-Received: by 2002:a62:770e:: with SMTP id s14mr15028941pfc.150.1565271142654;
-        Thu, 08 Aug 2019 06:32:22 -0700 (PDT)
-Received: from ?IPv6:2605:e000:100e:83a1:186c:3a47:dc97:3ed1? ([2605:e000:100e:83a1:186c:3a47:dc97:3ed1])
-        by smtp.gmail.com with ESMTPSA id k25sm80307167pgt.53.2019.08.08.06.32.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 08 Aug 2019 06:32:21 -0700 (PDT)
-Subject: Re: [BUGFIX 0/1] handle NULL return value by bfq_init_rq()
-To:     Paolo Valente <paolo.valente@linaro.org>, linux@roeck-us.net
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ulf.hansson@linaro.org, linus.walleij@linaro.org,
-        bfq-iosched@googlegroups.com, oleksandr@natalenko.name
-References: <20190807172111.4718-1-paolo.valente@linaro.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <ba544c8b-58f5-4c60-2d11-1277179bb263@kernel.dk>
-Date:   Thu, 8 Aug 2019 06:32:20 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=GHo/6QReMThwQvyBgODim8yuFC35rBgqhlgJLF2q8Q4=; b=oTFysx+mCgXvRtdsg5J4CTTGW9
+        HLBr7jV26zYbqX3l5R1W+PwgvvBWC+pzrJ3PQPhNUQyC24TlfZZebDOLgNBcbMNYiq6arqFiIqBnb
+        RIZABxEu3b7a9BLjmVbOsv1luWS1rqlniXD45/u4PrYAH1Ue6Z0VevzULWXe6kCo64n8=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hviWX-0002zd-D4; Thu, 08 Aug 2019 15:32:09 +0200
+Date:   Thu, 8 Aug 2019 15:32:09 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Tao Ren <taoren@fb.com>
+Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Samuel Mendoza-Jonas <sam@mendozajonas.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
+        William Kennington <wak@google.com>,
+        Joel Stanley <joel@jms.id.au>
+Subject: Re: [PATCH net-next] net/ncsi: allow to customize BMC MAC Address
+ offset
+Message-ID: <20190808133209.GB32706@lunn.ch>
+References: <20190807002118.164360-1-taoren@fb.com>
+ <20190807112518.644a21a2@cakuba.netronome.com>
+ <20190807184143.GE26047@lunn.ch>
+ <806a76a8-229a-7f24-33c7-2cf2094f3436@fb.com>
 MIME-Version: 1.0
-In-Reply-To: <20190807172111.4718-1-paolo.valente@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <806a76a8-229a-7f24-33c7-2cf2094f3436@fb.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/7/19 10:21 AM, Paolo Valente wrote:
-> Hi Jens,
-> this is a hopefully complete version of the fix proposed by Guenter [1].
-> 
-> Thanks,
-> Paolo
-> 
-> [1] https://lkml.org/lkml/2019/7/22/824
-> 
-> Paolo Valente (1):
->    block, bfq: handle NULL return value by bfq_init_rq()
-> 
->   block/bfq-iosched.c | 14 +++++++++++---
->   1 file changed, 11 insertions(+), 3 deletions(-)
+> Let me prepare patch v2 using device tree. I'm not sure if standard
+> "mac-address" fits this situation because all we need is an offset
+> (integer) and BMC MAC is calculated by adding the offset to NIC's
+> MAC address. Anyways, let me work out v2 patch we can discuss more
+> then.
 
-Applied, thanks.
+Hi Tao
 
--- 
-Jens Axboe
+I don't know BMC terminology. By NICs MAC address, you are referring
+to the hosts MAC address? The MAC address the big CPU is using for its
+interface?  Where does this NIC get its MAC address from? If the BMCs
+bootloader has access to it, it can set the mac-address property in
+the device tree.
 
+    Andrew
