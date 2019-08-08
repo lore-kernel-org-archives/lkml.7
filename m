@@ -2,247 +2,131 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA386C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DD1AC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:58:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9738A2184E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:57:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69B2E2173C
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:58:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="O8zlqbgL";
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="wGPKK2I0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404153AbfHHQ5I (ORCPT
+        id S2404186AbfHHQ6Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 12:57:08 -0400
-Received: from mail-ot1-f69.google.com ([209.85.210.69]:34445 "EHLO
-        mail-ot1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728289AbfHHQ5H (ORCPT
+        Thu, 8 Aug 2019 12:58:16 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:52254 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732775AbfHHQ6P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 12:57:07 -0400
-Received: by mail-ot1-f69.google.com with SMTP id 20so19488530oty.1
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 09:57:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=BN3UZkgNyJLCqUjBNQHBV4WCdXniJq9HZ5t4IGYKU4g=;
-        b=PU+7tgynrM3hX0HH2K3qaRdLEO3dFfKE0LtTPn0gVyYCd9g6Hu8+jfbfAW6BunQuGk
-         7G2xz3JgRWKULkv0UaOM7wpGL0qX4aAJZKlEOzJnUDoOMQleij2w9R7rjy3FX/ss94PD
-         jf7Su8df2eFWSg5/6YKqA+5nxMPPxTHXWdsZq7N58J4b8azlmrDrtp1eoQw/Epn3IYZv
-         SrCUpvAqnl8KAcf1gJvrJ+ExbVKnghfk6E7pmRXKy29oP9pzktrIGcu6zZwlvhNiz0Cl
-         7As+ARiQlNqLUBA/UP1ug8fC9vun8ZFJcDg5/bETVIuP0Cpj1LHW/bBpukSEQBNpu2sm
-         wjhw==
-X-Gm-Message-State: APjAAAX1T2GXWGspzD/RBOetiwvqHhAcDlOA4fxipDJ4H0gCnD7pTF+n
-        cPSFzR/DIUq3NW71ukKNJcj5zYT9uq1terSsD5QqeFSKbzhk
-X-Google-Smtp-Source: APXvYqynvht+Tm7siX6cfNrD+9+6E2we+nXHvfVCSqi8VeY6L/X6cbSbM52oKPvEfBQwLmqKbOoIeOOlqkEpHx6WHGyInnZk05PW
+        Thu, 8 Aug 2019 12:58:15 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x78GftSI003876;
+        Thu, 8 Aug 2019 16:57:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=CFZgNss8wrgVTqi9Pxil6jlXsp9W+Mh4dSklyqN+PqM=;
+ b=O8zlqbgLE75TCxPlWeM9ocMKBlIZJG6J2V71ApEUUg6GaqdOfQVTS13GmP3rYi95oiqc
+ yM3oUp0TfeyrKRo0IP2KqzIE6cMnBbduXJ0nV2KDG6PhkmlOBBkcUeAXbs6KtwplnSBY
+ oWIqM/rJ85JpzmOww6CCFGAV+sRnp/0QG6pVfyqt4paiC/5cQPY8BJuCalYoc/TajzXK
+ naAmpc8zat2AQObrzsQdPGPQnjdI+OEyNPhjHw/qzAf8oamanO1XAMmFHA9lNafOmJUs
+ 0RqQmEUQcltreVNmmT30VEAHKwBI4mOe1QgN3XDhrGfi5TPTyYrfkXSHeLPH4jMgpHUp nA== 
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=CFZgNss8wrgVTqi9Pxil6jlXsp9W+Mh4dSklyqN+PqM=;
+ b=wGPKK2I0SarbFd2Ql9+zPXqsk+CgAFBHh6V5BwTvEQtJEgdtwl+ls2IKfgrSv2geDo5k
+ ueCNmpHg6AHhmv+LjFeFNVRs36ojMc5wF4YrB8L0xeZAZS/OE4YPQ+bseE9kmJogBwSo
+ Q+3nrpHUlI+h4AJFO0CP+8K9IRnGmgk4Vmyv5q1ZJywBYdylhAzxbL/X8s9uVL8Qmqd/
+ hUgsw3LPn9i/pZVAoeyXI6+0b6PSgriwQbkuwIvFpYu1+wG5YfZ3eJi81oT+OyljSzge
+ v/R1qa22p0QySQRA3w4u/SG7jQsuqrrNHsmDI4LH3hXEHrsGUWj4KrsTQw1pKCUOTFvu tQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2u8hgp2hep-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 08 Aug 2019 16:57:52 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x78GXLnl105386;
+        Thu, 8 Aug 2019 16:55:51 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2u8pj82qfk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 08 Aug 2019 16:55:51 +0000
+Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x78GtlxC016879;
+        Thu, 8 Aug 2019 16:55:47 GMT
+Received: from [192.168.1.222] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 08 Aug 2019 09:55:47 -0700
+Subject: Re: [PATCH] hugetlbfs: fix hugetlb page migration/fault race causing
+ SIGBUS
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        ltp@lists.linux.it, Li Wang <liwang@redhat.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Cyril Hrubis <chrubis@suse.cz>, xishi.qiuxishi@alibaba-inc.com,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20190808000533.7701-1-mike.kravetz@oracle.com>
+ <20190808074607.GI11812@dhcp22.suse.cz>
+ <20190808074736.GJ11812@dhcp22.suse.cz>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <416ee59e-9ae8-f72d-1b26-4d3d31501330@oracle.com>
+Date:   Thu, 8 Aug 2019 09:55:45 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-Received: by 2002:a6b:f816:: with SMTP id o22mr16628334ioh.166.1565283426026;
- Thu, 08 Aug 2019 09:57:06 -0700 (PDT)
-Date:   Thu, 08 Aug 2019 09:57:06 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000094d2b5058f9df271@google.com>
-Subject: BUG: soft lockup in tcp_delack_timer
-From:   syzbot <syzbot+2d55fb97f42947bbcddd@syzkaller.appspotmail.com>
-To:     fweisbec@gmail.com, linux-kernel@vger.kernel.org, mingo@kernel.org,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <20190808074736.GJ11812@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9342 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908080153
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9342 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908080153
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 8/8/19 12:47 AM, Michal Hocko wrote:
+> On Thu 08-08-19 09:46:07, Michal Hocko wrote:
+>> On Wed 07-08-19 17:05:33, Mike Kravetz wrote:
+>>> Li Wang discovered that LTP/move_page12 V2 sometimes triggers SIGBUS
+>>> in the kernel-v5.2.3 testing.  This is caused by a race between hugetlb
+>>> page migration and page fault.
+<snip>
+>>> Reported-by: Li Wang <liwang@redhat.com>
+>>> Fixes: 290408d4a250 ("hugetlb: hugepage migration core")
+>>> Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+>>> Tested-by: Li Wang <liwang@redhat.com>
+>>
+>> Acked-by: Michal Hocko <mhocko@suse.com>
+> 
+> Btw. is this worth marking for stable? I haven't seen it triggering
+> anywhere but artificial tests. On the other hand the patch is quite
+> straightforward so it shouldn't hurt in general.
 
-syzbot found the following crash on:
+I don't think this really is material for stable.  I added the tag as the
+stable AI logic seems to pick up patches whether marked for stable or not.
+For example, here is one I explicitly said did not need to go to stable.
 
-HEAD commit:    0d8b3265 Add linux-next specific files for 20190729
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=1101fdc8600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ae96f3b8a7e885f7
-dashboard link: https://syzkaller.appspot.com/bug?extid=2d55fb97f42947bbcddd
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+https://lkml.org/lkml/2019/6/1/165
 
-Unfortunately, I don't have any reproducer for this crash yet.
+Ironic to find that commit message in a stable backport.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+2d55fb97f42947bbcddd@syzkaller.appspotmail.com
+I'm happy to drop the Fixes tag.
 
-net_ratelimit: 2 callbacks suppressed
-TCP: request_sock_TCPv6: Possible SYN flooding on port 20002. Sending  
-cookies.  Check SNMP counters.
-watchdog: BUG: soft lockup - CPU#0 stuck for 122s! [swapper/0:0]
-Modules linked in:
-irq event stamp: 92022
-hardirqs last  enabled at (92021): [<ffffffff81660331>]  
-tick_nohz_idle_exit+0x181/0x2e0 kernel/time/tick-sched.c:1180
-hardirqs last disabled at (92022): [<ffffffff873d5d7d>]  
-__schedule+0x1dd/0x15b0 kernel/sched/core.c:3862
-softirqs last  enabled at (90810): [<ffffffff876006cd>]  
-__do_softirq+0x6cd/0x98c kernel/softirq.c:319
-softirqs last disabled at (90703): [<ffffffff8144fc1b>] invoke_softirq  
-kernel/softirq.c:373 [inline]
-softirqs last disabled at (90703): [<ffffffff8144fc1b>]  
-irq_exit+0x19b/0x1e0 kernel/softirq.c:413
-CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.3.0-rc2-next-20190729 #54
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:cpu_relax arch/x86/include/asm/processor.h:656 [inline]
-RIP: 0010:virt_spin_lock arch/x86/include/asm/qspinlock.h:84 [inline]
-RIP: 0010:native_queued_spin_lock_slowpath+0x132/0x9f0  
-kernel/locking/qspinlock.c:325
-Code: 00 00 00 48 8b 45 d0 65 48 33 04 25 28 00 00 00 0f 85 37 07 00 00 48  
-81 c4 98 00 00 00 5b 41 5c 41 5d 41 5e 41 5f 5d c3 f3 90 <e9> 73 ff ff ff  
-8b 45 98 4c 8d 65 d8 3d 00 01 00 00 0f 84 e5 00 00
-RSP: 0018:ffff8880ae809b48 EFLAGS: 00000202 ORIG_RAX: ffffffffffffff13
-RAX: 0000000000000000 RBX: ffff8880621cd088 RCX: ffffffff8158f117
-RDX: 0000000000000000 RSI: 0000000000000004 RDI: ffff8880621cd088
-RBP: ffff8880ae809c08 R08: 1ffff1100c439a11 R09: ffffed100c439a12
-R10: ffffed100c439a11 R11: ffff8880621cd08b R12: 0000000000000001
-R13: 0000000000000003 R14: ffffed100c439a11 R15: 0000000000000001
-FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000001541e88 CR3: 0000000068089000 CR4: 00000000001406f0
-Call Trace:
-  <IRQ>
-  pv_queued_spin_lock_slowpath arch/x86/include/asm/paravirt.h:642 [inline]
-  queued_spin_lock_slowpath arch/x86/include/asm/qspinlock.h:50 [inline]
-  queued_spin_lock include/asm-generic/qspinlock.h:81 [inline]
-  do_raw_spin_lock+0x20e/0x2e0 kernel/locking/spinlock_debug.c:113
-  __raw_spin_lock include/linux/spinlock_api_smp.h:143 [inline]
-  _raw_spin_lock+0x37/0x40 kernel/locking/spinlock.c:151
-  spin_lock include/linux/spinlock.h:338 [inline]
-  tcp_delack_timer+0x2b/0x2a0 net/ipv4/tcp_timer.c:318
-  call_timer_fn+0x1ac/0x780 kernel/time/timer.c:1322
-  expire_timers kernel/time/timer.c:1366 [inline]
-  __run_timers kernel/time/timer.c:1685 [inline]
-  __run_timers kernel/time/timer.c:1653 [inline]
-  run_timer_softirq+0x697/0x17a0 kernel/time/timer.c:1698
-  __do_softirq+0x262/0x98c kernel/softirq.c:292
-  invoke_softirq kernel/softirq.c:373 [inline]
-  irq_exit+0x19b/0x1e0 kernel/softirq.c:413
-  exiting_irq arch/x86/include/asm/apic.h:536 [inline]
-  smp_apic_timer_interrupt+0x1a3/0x610 arch/x86/kernel/apic/apic.c:1095
-  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:828
-  </IRQ>
-RIP: 0010:native_safe_halt+0xe/0x10 arch/x86/include/asm/irqflags.h:61
-Code: c8 75 6e fa eb 8a 90 90 90 90 90 90 e9 07 00 00 00 0f 00 2d c4 b2 49  
-00 f4 c3 66 90 e9 07 00 00 00 0f 00 2d b4 b2 49 00 fb f4 <c3> 90 55 48 89  
-e5 41 57 41 56 41 55 41 54 53 e8 8e 56 21 fa e8 29
-RSP: 0018:ffffffff88c07ce8 EFLAGS: 00000282 ORIG_RAX: ffffffffffffff13
-RAX: 1ffffffff11a5e87 RBX: ffffffff88c7a1c0 RCX: 1ffffffff134bca6
-RDX: dffffc0000000000 RSI: ffffffff81779dee RDI: ffffffff873e794c
-RBP: ffffffff88c07d18 R08: ffffffff88c7a1c0 R09: fffffbfff118f439
-R10: fffffbfff118f438 R11: ffffffff88c7a1c7 R12: dffffc0000000000
-R13: ffffffff89a5b340 R14: 0000000000000000 R15: 0000000000000000
-  arch_cpu_idle+0xa/0x10 arch/x86/kernel/process.c:571
-  default_idle_call+0x84/0xb0 kernel/sched/idle.c:94
-  cpuidle_idle_call kernel/sched/idle.c:154 [inline]
-  do_idle+0x413/0x760 kernel/sched/idle.c:263
-  cpu_startup_entry+0x1b/0x20 kernel/sched/idle.c:354
-  rest_init+0x245/0x37b init/main.c:451
-  arch_call_rest_init+0xe/0x1b
-  start_kernel+0x912/0x951 init/main.c:785
-  x86_64_start_reservations+0x29/0x2b arch/x86/kernel/head64.c:472
-  x86_64_start_kernel+0x77/0x7b arch/x86/kernel/head64.c:453
-  secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:241
-Sending NMI from CPU 0 to CPUs 1:
-INFO: NMI handler (nmi_cpu_backtrace_handler) took too long to run: 1.339  
-msecs
-NMI backtrace for cpu 1
-CPU: 1 PID: 7447 Comm: syz-executor.5 Not tainted 5.3.0-rc2-next-20190729  
-#54
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:cpu_relax arch/x86/include/asm/processor.h:656 [inline]
-RIP: 0010:virt_spin_lock arch/x86/include/asm/qspinlock.h:84 [inline]
-RIP: 0010:native_queued_spin_lock_slowpath+0x132/0x9f0  
-kernel/locking/qspinlock.c:325
-Code: 00 00 00 48 8b 45 d0 65 48 33 04 25 28 00 00 00 0f 85 37 07 00 00 48  
-81 c4 98 00 00 00 5b 41 5c 41 5d 41 5e 41 5f 5d c3 f3 90 <e9> 73 ff ff ff  
-8b 45 98 4c 8d 65 d8 3d 00 01 00 00 0f 84 e5 00 00
-RSP: 0018:ffff8880ae909210 EFLAGS: 00000202
-RAX: 0000000000000000 RBX: ffff8880621cd088 RCX: ffffffff8158f117
-RDX: 0000000000000000 RSI: 0000000000000004 RDI: ffff8880621cd088
-RBP: ffff8880ae9092d0 R08: 1ffff1100c439a11 R09: ffffed100c439a12
-R10: ffffed100c439a11 R11: ffff8880621cd08b R12: 0000000000000001
-R13: 0000000000000003 R14: ffffed100c439a11 R15: 0000000000000001
-FS:  0000555557246940(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000001b32b29000 CR3: 00000000a4e3a000 CR4: 00000000001406e0
-Call Trace:
-  <IRQ>
-  pv_queued_spin_lock_slowpath arch/x86/include/asm/paravirt.h:642 [inline]
-  queued_spin_lock_slowpath arch/x86/include/asm/qspinlock.h:50 [inline]
-  queued_spin_lock include/asm-generic/qspinlock.h:81 [inline]
-  do_raw_spin_lock+0x20e/0x2e0 kernel/locking/spinlock_debug.c:113
-  __raw_spin_lock_bh include/linux/spinlock_api_smp.h:136 [inline]
-  _raw_spin_lock_bh+0x3b/0x50 kernel/locking/spinlock.c:175
-  spin_lock_bh include/linux/spinlock.h:343 [inline]
-  release_sock+0x20/0x1c0 net/core/sock.c:2932
-  wait_on_pending_writer+0x20f/0x420 net/tls/tls_main.c:91
-  tls_sk_proto_cleanup+0x2c5/0x3e0 net/tls/tls_main.c:295
-  tls_sk_proto_unhash+0x90/0x3f0 net/tls/tls_main.c:330
-  tcp_set_state+0x5b9/0x7d0 net/ipv4/tcp.c:2235
-  tcp_done+0xe2/0x320 net/ipv4/tcp.c:3824
-  tcp_reset+0x132/0x500 net/ipv4/tcp_input.c:4080
-  tcp_validate_incoming+0xa2d/0x1660 net/ipv4/tcp_input.c:5440
-  tcp_rcv_established+0x6b5/0x1e70 net/ipv4/tcp_input.c:5648
-  tcp_v6_do_rcv+0x41e/0x12c0 net/ipv6/tcp_ipv6.c:1356
-  tcp_v6_rcv+0x31f1/0x3500 net/ipv6/tcp_ipv6.c:1588
-  ip6_protocol_deliver_rcu+0x2fe/0x1660 net/ipv6/ip6_input.c:397
-  ip6_input_finish+0x84/0x170 net/ipv6/ip6_input.c:438
-  NF_HOOK include/linux/netfilter.h:305 [inline]
-  NF_HOOK include/linux/netfilter.h:299 [inline]
-  ip6_input+0xe4/0x3f0 net/ipv6/ip6_input.c:447
-  dst_input include/net/dst.h:442 [inline]
-  ip6_rcv_finish+0x1de/0x2f0 net/ipv6/ip6_input.c:76
-  NF_HOOK include/linux/netfilter.h:305 [inline]
-  NF_HOOK include/linux/netfilter.h:299 [inline]
-  ipv6_rcv+0x10e/0x420 net/ipv6/ip6_input.c:272
-  __netif_receive_skb_one_core+0x113/0x1a0 net/core/dev.c:4999
-  __netif_receive_skb+0x2c/0x1d0 net/core/dev.c:5113
-  process_backlog+0x206/0x750 net/core/dev.c:5924
-  napi_poll net/core/dev.c:6347 [inline]
-  net_rx_action+0x508/0x10c0 net/core/dev.c:6413
-  __do_softirq+0x262/0x98c kernel/softirq.c:292
-  do_softirq_own_stack+0x2a/0x40 arch/x86/entry/entry_64.S:1080
-  </IRQ>
-  do_softirq.part.0+0x11a/0x170 kernel/softirq.c:337
-  do_softirq kernel/softirq.c:329 [inline]
-  __local_bh_enable_ip+0x211/0x270 kernel/softirq.c:189
-  local_bh_enable include/linux/bottom_half.h:32 [inline]
-  inet_csk_listen_stop+0x1e0/0x850 net/ipv4/inet_connection_sock.c:993
-  tcp_close+0xd5b/0x10e0 net/ipv4/tcp.c:2338
-  inet_release+0xed/0x200 net/ipv4/af_inet.c:427
-  inet6_release+0x53/0x80 net/ipv6/af_inet6.c:470
-  __sock_release+0xce/0x280 net/socket.c:590
-  sock_close+0x1e/0x30 net/socket.c:1268
-  __fput+0x2ff/0x890 fs/file_table.c:280
-  ____fput+0x16/0x20 fs/file_table.c:313
-  task_work_run+0x145/0x1c0 kernel/task_work.c:113
-  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
-  exit_to_usermode_loop+0x316/0x380 arch/x86/entry/common.c:163
-  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
-  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
-  do_syscall_64+0x65f/0x760 arch/x86/entry/common.c:300
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x413511
-Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 1b 00 00 c3 48  
-83 ec 08 e8 0a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48  
-89 c2 e8 53 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
-RSP: 002b:00007ffebfc402f0 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
-RAX: 0000000000000000 RBX: 0000000000000005 RCX: 0000000000413511
-RDX: 0000000000000000 RSI: 000000000000183f RDI: 0000000000000004
-RBP: 0000000000000001 R08: 00000000c44ab83f R09: 00000000c44ab843
-R10: 00007ffebfc403d0 R11: 0000000000000293 R12: 000000000075c9a0
-R13: 000000000075c9a0 R14: 0000000000760750 R15: ffffffffffffffff
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Andrew, can you drop the tag?  Or would you like me to resend?
+-- 
+Mike Kravetz
