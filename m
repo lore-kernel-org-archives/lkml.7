@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48044C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:08:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46AC8C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:08:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C9F42173E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:08:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17D992173E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:08:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565291302;
-	bh=GO944Vpxi6hLaivkOV6+1MtsnIIXDbWFeObHenW4B/8=;
+	s=default; t=1565291304;
+	bh=8CrwL/5KPh4jpq0cJdyOmWbgJuCj/OZSfxl+4Ileh7k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Pspg+uECHcxa0++YYeRk8gT8mej4Asqxg/YCIvD0PkbL0JrvukJJXp0pCma1Jymmb
-	 781aaGj5moWwhTDheLzBmF3YrJK2Uxn6yQYwgb+33p1q8GdPreTy+AsJoCwJUwxo3j
-	 Zsg9SGoHzW4w5jIdyYAPvPpmY5ngR0IFAVE738T0=
+	b=N4dUfmzw/Tr7tQQ2Qv4FcPAlQscsS7CjNeI5xGm8ZH8i9QJ/TFYu+03onFKt5AHrG
+	 OAN/xbDrdpKWo5O9ZqKwg/nqSafaKlmGlq8Q/PqtpJyblkrOq6scA4UZQzhBZwkzCL
+	 4eQtDyuNr1HYGejkpGqyXvLgUysRqVz/vu5zUq10=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404886AbfHHTIU (ORCPT
+        id S2404897AbfHHTIX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:08:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42350 "EHLO mail.kernel.org"
+        Thu, 8 Aug 2019 15:08:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404866AbfHHTIS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 15:08:18 -0400
+        id S2404882AbfHHTIU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 15:08:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14137214C6;
-        Thu,  8 Aug 2019 19:08:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A51B5214C6;
+        Thu,  8 Aug 2019 19:08:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565291297;
-        bh=GO944Vpxi6hLaivkOV6+1MtsnIIXDbWFeObHenW4B/8=;
+        s=default; t=1565291300;
+        bh=8CrwL/5KPh4jpq0cJdyOmWbgJuCj/OZSfxl+4Ileh7k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kMvixmqKajo1TdKFS4lawTp6OtVtUDKxnVXwLE2AiS+O9FNtiPkBXcbDcljji2L5v
-         DYzICfUGcfP9+SO+7P7hByjGkl8x3MIzgEW7sju920GW6IVJLCoy7/Tg4HHoq5/IHG
-         GiAWVKo2SrJ6nq5ED+R0H/E5T+IHTXB3eFpSpthk=
+        b=SnQQPNIDlIv/7qNniDh7sdgAXTSahGE5aru9IQcMc9TcHkh7PwP1L7LHXk8ah+FDd
+         4y2+KICa5F2x6xAfz/p0FZvzmbigPVCXL1sAzTta4bsIraEP/pMMX7ovG6l1T2hPAX
+         aY8j51SfOJqO6+Y5iNLx9UjiAybvuTAR9KZb87bQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        stable@vger.kernel.org, liuyonglong <liuyonglong@huawei.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 46/56] hv_sock: Fix hang when a connection is closed
-Date:   Thu,  8 Aug 2019 21:05:12 +0200
-Message-Id: <20190808190455.008606190@linuxfoundation.org>
+Subject: [PATCH 5.2 47/56] net: phy: fix race in genphy_update_link
+Date:   Thu,  8 Aug 2019 21:05:13 +0200
+Message-Id: <20190808190455.068957361@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190808190452.867062037@linuxfoundation.org>
 References: <20190808190452.867062037@linuxfoundation.org>
@@ -60,66 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dexuan Cui <decui@microsoft.com>
+From: Heiner Kallweit <hkallweit1@gmail.com>
 
-[ Upstream commit 8c7885e5690be9a27231ebebf82ef29fbf46c4e4 ]
+[ Upstream commit aa6b1956158f1afc52761137620d4b3f8a058d24 ]
 
-There is a race condition for an established connection that is being closed
-by the guest: the refcnt is 4 at the end of hvs_release() (Note: here the
-'remove_sock' is false):
+In phy_start_aneg() autoneg is started, and immediately after that
+link and autoneg status are read. As reported in [0] it can happen that
+at time of this read the PHY has reset the "aneg complete" bit but not
+yet the "link up" bit, what can result in a false link-up detection.
+To fix this don't report link as up if we're in aneg mode and PHY
+doesn't signal "aneg complete".
 
-1 for the initial value;
-1 for the sk being in the bound list;
-1 for the sk being in the connected list;
-1 for the delayed close_work.
+[0] https://marc.info/?t=156413509900003&r=1&w=2
 
-After hvs_release() finishes, __vsock_release() -> sock_put(sk) *may*
-decrease the refcnt to 3.
-
-Concurrently, hvs_close_connection() runs in another thread:
-  calls vsock_remove_sock() to decrease the refcnt by 2;
-  call sock_put() to decrease the refcnt to 0, and free the sk;
-  next, the "release_sock(sk)" may hang due to use-after-free.
-
-In the above, after hvs_release() finishes, if hvs_close_connection() runs
-faster than "__vsock_release() -> sock_put(sk)", then there is not any issue,
-because at the beginning of hvs_close_connection(), the refcnt is still 4.
-
-The issue can be resolved if an extra reference is taken when the
-connection is established.
-
-Fixes: a9eeb998c28d ("hv_sock: Add support for delayed close")
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-Reviewed-by: Sunil Muthuswamy <sunilmut@microsoft.com>
+Fixes: 4950c2ba49cc ("net: phy: fix autoneg mismatch case in genphy_read_status")
+Reported-by: liuyonglong <liuyonglong@huawei.com>
+Tested-by: liuyonglong <liuyonglong@huawei.com>
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/vmw_vsock/hyperv_transport.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/net/phy/phy_device.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/net/vmw_vsock/hyperv_transport.c
-+++ b/net/vmw_vsock/hyperv_transport.c
-@@ -311,6 +311,11 @@ static void hvs_close_connection(struct
- 	lock_sock(sk);
- 	hvs_do_close_lock_held(vsock_sk(sk), true);
- 	release_sock(sk);
-+
-+	/* Release the refcnt for the channel that's opened in
-+	 * hvs_open_connection().
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -1730,6 +1730,12 @@ done:
+ 	phydev->link = status & BMSR_LSTATUS ? 1 : 0;
+ 	phydev->autoneg_complete = status & BMSR_ANEGCOMPLETE ? 1 : 0;
+ 
++	/* Consider the case that autoneg was started and "aneg complete"
++	 * bit has been reset, but "link up" bit not yet.
 +	 */
-+	sock_put(sk);
- }
- 
- static void hvs_open_connection(struct vmbus_channel *chan)
-@@ -378,6 +383,9 @@ static void hvs_open_connection(struct v
- 	}
- 
- 	set_per_channel_state(chan, conn_from_host ? new : sk);
++	if (phydev->autoneg == AUTONEG_ENABLE && !phydev->autoneg_complete)
++		phydev->link = 0;
 +
-+	/* This reference will be dropped by hvs_close_connection(). */
-+	sock_hold(conn_from_host ? new : sk);
- 	vmbus_set_chn_rescind_callback(chan, hvs_close_connection);
- 
- 	/* Set the pending send size to max packet size to always get
+ 	return 0;
+ }
+ EXPORT_SYMBOL(genphy_update_link);
 
 
