@@ -2,120 +2,109 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B88FC32751
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 03:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B51B3C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 03:02:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B44E217F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 03:01:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="iZLEYn7q"
+	by mail.kernel.org (Postfix) with ESMTP id 9442E217F5
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 03:02:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389616AbfHHDBu (ORCPT
+        id S2389694AbfHHDCB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 23:01:50 -0400
-Received: from gateway20.websitewelcome.com ([192.185.68.24]:33056 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728059AbfHHDBt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 23:01:49 -0400
-X-Greylist: delayed 1414 seconds by postgrey-1.27 at vger.kernel.org; Wed, 07 Aug 2019 23:01:49 EDT
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id 408C2400C5B69
-        for <linux-kernel@vger.kernel.org>; Wed,  7 Aug 2019 20:34:17 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id vYJihZxjz2qH7vYJihaY80; Wed, 07 Aug 2019 21:38:14 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=w1RwkvHqtPdK7/AYAKy9lm1SQOT6wXcGzEyuBPgukXs=; b=iZLEYn7q3mZHuiGswr40xVFFlS
-        /arE8YYN5eZrF1eMoIs/gi8JC2gB43UC99ugzMRpjryYZToRvUih7YhjG2b77ThWVX5tWMQfRujle
-        fl7bjJeiGimpDVaOebzmjpxAO8n+6QF8w0yzxu6l2arcFo1LQy2SPSvm9WRwlPNma7YWGzflAPSEP
-        EkYcwRa7TDoXB1/gN3d+fqb3PU0TeSEgXerNHnaL4YRTKZPLTuLpWnHqWL3fPqoNSN3W9upwHx9B3
-        J9vGNU7VepvWZP0GT657zplqIGT8uowUy6SJgmEqBXFWIpkgADoWDnSIApbQdcepjzzlRxGd00H2p
-        /3axGsSQ==;
-Received: from [187.192.11.120] (port=32960 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hvYJh-001Kkt-Cq; Wed, 07 Aug 2019 21:38:13 -0500
-Date:   Wed, 7 Aug 2019 21:38:11 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Hartley Sweeten <hsweeten@visionengravers.com>,
-        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-        Russell King <linux@armlinux.org.uk>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] ARM: ep93xx: Mark expected switch fall-through
-Message-ID: <20190808023811.GA14001@embeddedor>
+        Wed, 7 Aug 2019 23:02:01 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:58116 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389632AbfHHDCA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 23:02:00 -0400
+Received: from gondolin.me.apana.org.au ([192.168.0.6] helo=gondolin.hengli.com.au)
+        by fornost.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1hvYgg-0001B1-8I; Thu, 08 Aug 2019 13:01:58 +1000
+Received: from herbert by gondolin.hengli.com.au with local (Exim 4.80)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1hvYgf-0004H8-DD; Thu, 08 Aug 2019 13:01:57 +1000
+Date:   Thu, 8 Aug 2019 13:01:57 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chuhong Yuan <hslester96@gmail.com>
+Subject: Re: linux-next: build failure after merge of the crypto tree
+Message-ID: <20190808030156.GA15782@gondor.apana.org.au>
+References: <20190805145736.2d39f95b@canb.auug.org.au>
+ <20190808115245.0c88c300@canb.auug.org.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.192.11.120
-X-Source-L: No
-X-Exim-ID: 1hvYJh-001Kkt-Cq
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [187.192.11.120]:32960
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 5
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <20190808115245.0c88c300@canb.auug.org.au>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mark switch cases where we are expecting to fall through.
+On Thu, Aug 08, 2019 at 11:52:45AM +1000, Stephen Rothwell wrote:
+> Hi all,
+> 
+> On Mon, 5 Aug 2019 14:57:36 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> >
+> > Hi all,
+> > 
+> > After merging the crypto tree, today's linux-next build (sparc64
+> > defconfig) failed like this:
+> > 
+> > drivers/char/hw_random/n2-drv.c: In function 'n2rng_probe':
+> > drivers/char/hw_random/n2-drv.c:771:29: error: 'pdev' undeclared (first use in this function); did you mean 'cdev'?
+> >   err = devm_hwrng_register(&pdev->dev, &np->hwrng);
+> >                              ^~~~
+> >                              cdev
+> > drivers/char/hw_random/n2-drv.c:771:29: note: each undeclared identifier is reported only once for each function it appears in
+> > 
+> > Caused by commit
+> > 
+> >   3e75241be808 ("hwrng: drivers - Use device-managed registration API")
+> > 
+> > I applied the following patch for today:
+> > 
+> > From: Stephen Rothwell <sfr@canb.auug.org.au>
+> > Date: Mon, 5 Aug 2019 14:49:59 +1000
+> > Subject: [PATCH] hwrng: fix typo in n2-drv.c
+> > 
+> > Fixes: 3e75241be808 ("hwrng: drivers - Use device-managed registration API")
+> > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> > ---
+> >  drivers/char/hw_random/n2-drv.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/char/hw_random/n2-drv.c b/drivers/char/hw_random/n2-drv.c
+> > index 2d256b3470db..73e408146420 100644
+> > --- a/drivers/char/hw_random/n2-drv.c
+> > +++ b/drivers/char/hw_random/n2-drv.c
+> > @@ -768,7 +768,7 @@ static int n2rng_probe(struct platform_device *op)
+> >  	np->hwrng.data_read = n2rng_data_read;
+> >  	np->hwrng.priv = (unsigned long) np;
+> >  
+> > -	err = devm_hwrng_register(&pdev->dev, &np->hwrng);
+> > +	err = devm_hwrng_register(&op->dev, &np->hwrng);
+> >  	if (err)
+> >  		goto out_hvapi_unregister;
+> >  
+> > -- 
+> > 2.20.1
+> 
+> I am still applying that patch ...
 
-Fix the following warnings (Building: arm-ep93xx_defconfig arm):
+Sorry, I forgot about your patch as it wasn't cced to the crypto
+mailing list.  It should be out there now.
 
-arch/arm/mach-ep93xx/crunch.c: In function 'crunch_do':
-arch/arm/mach-ep93xx/crunch.c:46:3: warning: this statement may
-fall through [-Wimplicit-fallthrough=]
-      memset(crunch_state, 0, sizeof(*crunch_state));
-      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   arch/arm/mach-ep93xx/crunch.c:53:2: note: here
-     case THREAD_NOTIFY_EXIT:
-     ^~~~
+I've also added a compile test for this driver so at least it should
+fail for me on x86 too.
 
-Notice that, in this particular case, the code comment is
-modified in accordance with what GCC is expecting to find.
-
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- arch/arm/mach-ep93xx/crunch.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm/mach-ep93xx/crunch.c b/arch/arm/mach-ep93xx/crunch.c
-index 1c9a4be8b503..1c05c5bf7e5c 100644
---- a/arch/arm/mach-ep93xx/crunch.c
-+++ b/arch/arm/mach-ep93xx/crunch.c
-@@ -49,6 +49,7 @@ static int crunch_do(struct notifier_block *self, unsigned long cmd, void *t)
- 		 * FALLTHROUGH: Ensure we don't try to overwrite our newly
- 		 * initialised state information on the first fault.
- 		 */
-+		/* Fall through */
- 
- 	case THREAD_NOTIFY_EXIT:
- 		crunch_task_release(thread);
+Thanks,
 -- 
-2.22.0
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
