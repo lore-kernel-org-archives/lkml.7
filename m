@@ -2,53 +2,127 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F1E8C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C34C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:49:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 695B2218FC
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:49:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 970B6218FC
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:49:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731575AbfHHHtC (ORCPT
+        id S1731612AbfHHHtM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 03:49:02 -0400
-Received: from verein.lst.de ([213.95.11.211]:44133 "EHLO verein.lst.de"
+        Thu, 8 Aug 2019 03:49:12 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35600 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726721AbfHHHtC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 03:49:02 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id B117968B02; Thu,  8 Aug 2019 09:48:58 +0200 (CEST)
-Date:   Thu, 8 Aug 2019 09:48:58 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Lucas Stach <l.stach@pengutronix.de>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>
-Subject: Re: Regression due to d98849aff879 (dma-direct: handle
- DMA_ATTR_NO_KERNEL_MAPPING in common code)
-Message-ID: <20190808074858.GA30308@lst.de>
-References: <1565082809.2323.24.camel@pengutronix.de> <20190806113318.GA20215@lst.de> <41cc93b1-62b5-7fb6-060d-01982e68503b@amd.com> <20190806140408.GA22902@lst.de> <1565100418.2323.32.camel@pengutronix.de> <20190806154403.GA25050@lst.de> <1565191457.2323.41.camel@pengutronix.de>
+        id S1726721AbfHHHtL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 03:49:11 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E4D0B30EA180;
+        Thu,  8 Aug 2019 07:49:10 +0000 (UTC)
+Received: from dhcp-128-65.nay.redhat.com (ovpn-12-94.pek2.redhat.com [10.72.12.94])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 484B95D70D;
+        Thu,  8 Aug 2019 07:49:08 +0000 (UTC)
+Date:   Thu, 8 Aug 2019 15:49:04 +0800
+From:   Dave Young <dyoung@redhat.com>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        Kexec Mailing List <kexec@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        Bhupesh Sharma <bhsharma@redhat.com>
+Subject: Re: [PATCH] do not clean dummy variable in kexec path
+Message-ID: <20190808074904.GA5300@dhcp-128-65.nay.redhat.com>
+References: <20190805083553.GA27708@dhcp-128-65.nay.redhat.com>
+ <CAKv+Gu-my6EpLfxBnbMn21be62oHrF6PKFu2rt-4Pqk9wG9SXA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1565191457.2323.41.camel@pengutronix.de>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <CAKv+Gu-my6EpLfxBnbMn21be62oHrF6PKFu2rt-4Pqk9wG9SXA@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 08 Aug 2019 07:49:11 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 07, 2019 at 05:24:17PM +0200, Lucas Stach wrote:
-> I would suggest to place this line above the comment, as the comment
-> only really applies to the return value. Other than this nitpick, this
-> matches my understanding of the required changes, so:
+On 08/05/19 at 06:55pm, Ard Biesheuvel wrote:
+> On Mon, 5 Aug 2019 at 11:36, Dave Young <dyoung@redhat.com> wrote:
+> >
+> > kexec reboot fails randomly in UEFI based kvm guest.  The firmware
+> > just reset while calling efi_delete_dummy_variable();  Unfortunately
+> > I don't know how to debug the firmware, it is also possible a potential
+> > problem on real hardware as well although nobody reproduced it.
+> >
+> > The intention of efi_delete_dummy_variable is to trigger garbage collection
+> > when entering virtual mode.  But SetVirtualAddressMap can only run once
+> > for each physical reboot, thus kexec_enter_virtual_mode is not necessarily
+> > a good place to clean dummy object.
+> >
 > 
-> Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+> I would argue that this means it is not a good place to *create* the
+> dummy variable, and if we don't create it, we don't have to delete it
+> either.
+> 
+> > Drop efi_delete_dummy_variable so that kexec reboot can work.
+> >
+> 
+> Creating it and not deleting it is bad, so please try and see if we
+> can omit the creation on this code path instead.
+> 
 
-Thanks, I've applied it with that fixed up.
+Check the code for the dummy var, it is created only in below chunk:
+arch/x86/platform/efi/quirks.c:
+efi_query_variable_store():
+[snip]
+	/*
+	 * We account for that by refusing the write if permitting it would
+	 * reduce the available space to under 5KB. This figure was provided by
+	 * Samsung, so should be safe.
+	 */
+	if ((remaining_size - size < EFI_MIN_RESERVE) &&
+		!efi_no_storage_paranoia) {
+
+		/*
+		 * Triggering garbage collection may require that the firmware
+		 * generate a real EFI_OUT_OF_RESOURCES error. We can force
+		 * that by attempting to use more space than is available.
+		 */
+		unsigned long dummy_size = remaining_size + 1024;
+		void *dummy = kzalloc(dummy_size, GFP_KERNEL);
+
+		if (!dummy)
+			return EFI_OUT_OF_RESOURCES;
+
+		status = efi.set_variable((efi_char16_t *)efi_dummy_name,
+					  &EFI_DUMMY_GUID,
+					  EFI_VARIABLE_NON_VOLATILE |
+					  EFI_VARIABLE_BOOTSERVICE_ACCESS |
+					  EFI_VARIABLE_RUNTIME_ACCESS,
+					  dummy_size, dummy);
+
+		if (status == EFI_SUCCESS) {
+			/*
+			 * This should have failed, so if it didn't make sure
+			 * that we delete it...
+			 */
+			efi_delete_dummy_variable();
+		}
+
+[snip]
+
+So the dummy var only be created when the if condition matched, also
+once creating succeeded it is deleted.  The deleting while entering
+virtual mode is always deleting a non exist efi var.  Please correct me
+if I miss something. 
+
+If above is true, then at least in the kexec path can be dropped because
+we have a real bug which resets machine.
+
+Thanks
+Dave
