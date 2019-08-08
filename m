@@ -2,172 +2,118 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF1DC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:54:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 395F3C41514
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:55:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 447BE2184E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:54:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DD08214C6
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:55:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565294084;
-	bh=Wl/v+kMqCliTAzEFxqwHO5PoV20HmLtR8YI/gRJZrzg=;
-	h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
-	 References:List-ID:From;
-	b=ONhhe0aBVq1qgu7t/XGu2FtAD9JnTgGn7vrvoqekEg7CSvEx0IvBJT/mQAk+6sVlV
-	 Ni4rCjWRY1MDtbL245vAybG2Km8S0lQYnbjwO1d1lwMWFuLLJHFXM+uoKyBY9v0tXZ
-	 heMyZnI064K7mQGypS2q5GkaEGiYYdf23Y7zyrWY=
+	s=default; t=1565294150;
+	bh=SOl9abd2o/Qj2dBjH8ebZDl44aPBVBw4i1AVCjPY/nM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UWnsL1Hvoy2R2kWHZZ68G4SOzf2kpqTYxGB2HLUkKNiAamNP/DBsVg4XInppO8Tbp
+	 2LeYHNNlC+Mwg1Ma7ixf8zcd1GZFEs4x07JMNZzyF49gZbdRi03oxOAWYiIm1orhlV
+	 T5vu5sgLT40GwASqc9+bgOl6bii6VsN1D54kyEzE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404426AbfHHTym (ORCPT
+        id S2390396AbfHHTzt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:54:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57888 "EHLO mail.kernel.org"
+        Thu, 8 Aug 2019 15:55:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59186 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404296AbfHHTxN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 15:53:13 -0400
-Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S2403831AbfHHTzs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 15:55:48 -0400
+Received: from localhost (unknown [150.199.191.185])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 785DB214C6;
-        Thu,  8 Aug 2019 19:53:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFF27214C6;
+        Thu,  8 Aug 2019 19:55:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565293992;
-        bh=Wl/v+kMqCliTAzEFxqwHO5PoV20HmLtR8YI/gRJZrzg=;
-        h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=Ds/D0d4oB7ZlRWIwUzjkuZx/eERIVktaq70pb0OzVrfcra0M9XY9Oj+RNDAjNABbt
-         HWY6SXtN1AWJMLkwUhVy5qYNjFH0dajNQdyvxZ5Z1ppIGoOKJ2hm9K0LM+kAdLtXw8
-         fjAetiGBA13eLvPlo97SCh9TZnQQajfEuMGHXFbw=
-From:   zanussi@kernel.org
-To:     LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        John Kacur <jkacur@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Daniel Wagner <wagi@monom.org>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Julia Cartwright <julia@ni.com>
-Subject: [PATCH RT 03/19] genirq: Do not invoke the affinity callback via a workqueue on RT
-Date:   Thu,  8 Aug 2019 14:52:31 -0500
-Message-Id: <16a19c7974fd531ce68182de87fc7314db33117b.1565293934.git.zanussi@kernel.org>
-X-Mailer: git-send-email 2.14.1
-In-Reply-To: <cover.1565293934.git.zanussi@kernel.org>
-References: <cover.1565293934.git.zanussi@kernel.org>
-In-Reply-To: <cover.1565293934.git.zanussi@kernel.org>
-References: <cover.1565293934.git.zanussi@kernel.org>
+        s=default; t=1565294148;
+        bh=SOl9abd2o/Qj2dBjH8ebZDl44aPBVBw4i1AVCjPY/nM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bcSQCIe8/dBRIW/bkZwTbBcOfWJ4jURkIhZlfAMVQPFrM5ExqBnMoMiU+OZP22HmH
+         qtNCe2+K6MFBvvpcNJEji2ZB4Sedflcze8rLCZwt8trL2tmqUQ7s/NOAENdW8FKmls
+         tkkXDZVEmglLE30DV31AOWoNN5GLRLau9OtaXi+g=
+Date:   Thu, 8 Aug 2019 14:55:46 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Paul Walmsley <paul.walmsley@sifive.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org,
+        Wesley Terpstra <wesley@sifive.com>
+Subject: Re: [PATCH v2] pci: Kconfig: select PCI_MSI_IRQ_DOMAIN by default on
+ RISC-V
+Message-ID: <20190808195546.GA7302@google.com>
+References: <alpine.DEB.2.21.9999.1907251426450.32766@viisi.sifive.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.9999.1907251426450.32766@viisi.sifive.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Hi Paul, Wesley,
 
-v4.14.137-rt65-rc1 stable review patch.
-If anyone has any objections, please let me know.
+On Thu, Jul 25, 2019 at 02:28:07PM -0700, Paul Walmsley wrote:
+> From: Wesley Terpstra <wesley@sifive.com>
+> 
+> This is part of adding support for RISC-V systems with PCIe host 
+> controllers that support message-signaled interrupts.
+> 
+> Signed-off-by: Wesley Terpstra <wesley@sifive.com>
+> [paul.walmsley@sifive.com: wrote patch description; split this
+>  patch from the arch/riscv patch]
+> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+> ---
+>  drivers/pci/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+> index 2ab92409210a..beb3408a0272 100644
+> --- a/drivers/pci/Kconfig
+> +++ b/drivers/pci/Kconfig
+> @@ -52,7 +52,7 @@ config PCI_MSI
+>  	   If you don't know what to do here, say Y.
+>  
+>  config PCI_MSI_IRQ_DOMAIN
+> -	def_bool ARC || ARM || ARM64 || X86
+> +	def_bool ARC || ARM || ARM64 || X86 || RISCV
 
------------
+The other arches listed here either supply their own include/asm/msi.h
+or generate it:
 
+  $ ls arch/*/include/asm/msi.h
+  arch/x86/include/asm/msi.h
 
-[ Upstream commit 2122adbe011cdc0eb62ad62494e181005b23c76a ]
+  $ grep msi.h arch/*/include/asm/Kbuild
+  arch/arc/include/asm/Kbuild:generic-y += msi.h
+  arch/arm64/include/asm/Kbuild:generic-y += msi.h
+  arch/arm/include/asm/Kbuild:generic-y += msi.h
+  arch/mips/include/asm/Kbuild:generic-y += msi.h
+  arch/powerpc/include/asm/Kbuild:generic-y += msi.h
+  arch/sparc/include/asm/Kbuild:generic-y += msi.h
 
-Joe Korty reported, that __irq_set_affinity_locked() schedules a
-workqueue while holding a rawlock which results in a might_sleep()
-warning.
-This patch uses swork_queue() instead.
+For example, see
 
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Tom Zanussi <zanussi@kernel.org>
+  f8430eae9f1b ("PCI/MSI: Enable PCI_MSI_IRQ_DOMAIN support for ARC")
+  be091d468a0a ("arm64: PCI/MSI: Use asm-generic/msi.h")
+  0ab089c2548c ("ARM: Add msi.h to Kbuild")
 
- Conflicts:
-	include/linux/interrupt.h
-	kernel/irq/manage.c
----
- include/linux/interrupt.h |  5 ++---
- kernel/irq/manage.c       | 19 ++++---------------
- 2 files changed, 6 insertions(+), 18 deletions(-)
+I didn't look into the details of msi.h generation, but I assume
+RISC-V needs to do something similar?  If so, I think that should be
+part of this patch to avoid issues.
 
-diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
-index 0f25fa19b2d8..233e3c027f53 100644
---- a/include/linux/interrupt.h
-+++ b/include/linux/interrupt.h
-@@ -15,7 +15,7 @@
- #include <linux/hrtimer.h>
- #include <linux/kref.h>
- #include <linux/workqueue.h>
--#include <linux/swork.h>
-+#include <linux/kthread.h>
- 
- #include <linux/atomic.h>
- #include <asm/ptrace.h>
-@@ -230,7 +230,6 @@ extern void resume_device_irqs(void);
-  * struct irq_affinity_notify - context for notification of IRQ affinity changes
-  * @irq:		Interrupt to which notification applies
-  * @kref:		Reference count, for internal use
-- * @swork:		Swork item, for internal use
-  * @work:		Work item, for internal use
-  * @notify:		Function to be called on change.  This will be
-  *			called in process context.
-@@ -243,7 +242,7 @@ struct irq_affinity_notify {
- 	unsigned int irq;
- 	struct kref kref;
- #ifdef CONFIG_PREEMPT_RT_BASE
--	struct swork_event swork;
-+	struct kthread_work work;
- #else
- 	struct work_struct work;
- #endif
-diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
-index f9415590661c..3d5b33fe874b 100644
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -228,7 +228,7 @@ int irq_set_affinity_locked(struct irq_data *data, const struct cpumask *mask,
- 		kref_get(&desc->affinity_notify->kref);
- 
- #ifdef CONFIG_PREEMPT_RT_BASE
--		swork_queue(&desc->affinity_notify->swork);
-+		kthread_schedule_work(&desc->affinity_notify->work);
- #else
- 		schedule_work(&desc->affinity_notify->work);
- #endif
-@@ -293,21 +293,11 @@ static void _irq_affinity_notify(struct irq_affinity_notify *notify)
- }
- 
- #ifdef CONFIG_PREEMPT_RT_BASE
--static void init_helper_thread(void)
--{
--	static int init_sworker_once;
--
--	if (init_sworker_once)
--		return;
--	if (WARN_ON(swork_get()))
--		return;
--	init_sworker_once = 1;
--}
- 
--static void irq_affinity_notify(struct swork_event *swork)
-+static void irq_affinity_notify(struct kthread_work *work)
- {
- 	struct irq_affinity_notify *notify =
--		container_of(swork, struct irq_affinity_notify, swork);
-+		container_of(work, struct irq_affinity_notify, work);
- 	_irq_affinity_notify(notify);
- }
- 
-@@ -350,8 +340,7 @@ irq_set_affinity_notifier(unsigned int irq, struct irq_affinity_notify *notify)
- 		notify->irq = irq;
- 		kref_init(&notify->kref);
- #ifdef CONFIG_PREEMPT_RT_BASE
--		INIT_SWORK(&notify->swork, irq_affinity_notify);
--		init_helper_thread();
-+		kthread_init_work(&notify->work, irq_affinity_notify);
- #else
- 		INIT_WORK(&notify->work, irq_affinity_notify);
- #endif
--- 
-2.14.1
+If CONFIG_GENERIC_MSI_IRQ_DOMAIN is defined, include/linux/msi.h
+#includes <asm/msi.h> and I don't see where that would come from.
 
+>  	depends on PCI_MSI
+>  	select GENERIC_MSI_IRQ_DOMAIN
+
+Bjorn
