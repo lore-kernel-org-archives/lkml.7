@@ -2,144 +2,217 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EADDC41514
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B350C32754
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D859021880
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:47:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED9952173E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:47:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565275680;
+	bh=walldfVVEsfHnnMZVxDHXerifLaoWbty+usssGfG8Ps=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Zwn8S/jCnap7iSiZAkTUxqwsHXyDv45bIbQ/eHUThrab+cXCO/fy3RloRaunY9RM7
+	 LlrIvaa2EW5Uj4kZCywLKV6J/O6QoHF4+aEMANdvSx5kdI506uqdnyFZSX5aLaIkR7
+	 YoeinfuJYZiWkVl7ezWivkRA5UuAk15Sj1gGHEcY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732929AbfHHOrV (ORCPT
+        id S2403813AbfHHOr6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 10:47:21 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42230 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727649AbfHHOrV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 10:47:21 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E099EAE34;
-        Thu,  8 Aug 2019 14:47:19 +0000 (UTC)
-Subject: Re: Let's talk about the elephant in the room - the Linux kernel's
- inability to gracefully handle low memory pressure
-To:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>
-Cc:     Suren Baghdasaryan <surenb@google.com>,
-        "Artem S. Tashkinov" <aros@gmx.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>
-References: <d9802b6a-949b-b327-c4a6-3dbca485ec20@gmx.com>
- <ce102f29-3adc-d0fd-41ee-e32c1bcd7e8d@suse.cz>
- <20190805193148.GB4128@cmpxchg.org>
- <CAJuCfpHhR+9ybt9ENzxMbdVUd_8rJN+zFbDm+5CeE2Desu82Gg@mail.gmail.com>
- <398f31f3-0353-da0c-fc54-643687bb4774@suse.cz>
- <20190806142728.GA12107@cmpxchg.org> <20190806143608.GE11812@dhcp22.suse.cz>
- <CAJuCfpFmOzj-gU1NwoQFmS_pbDKKd2XN=CS1vUV4gKhYCJOUtw@mail.gmail.com>
- <20190806220150.GA22516@cmpxchg.org> <20190807075927.GO11812@dhcp22.suse.cz>
- <20190807205138.GA24222@cmpxchg.org>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Openpgp: preference=signencrypt
-Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <e535fb6a-8af4-3844-34ac-3294eef26ca6@suse.cz>
-Date:   Thu, 8 Aug 2019 16:47:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 8 Aug 2019 10:47:58 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:46519 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732404AbfHHOr6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 10:47:58 -0400
+Received: by mail-ot1-f65.google.com with SMTP id z17so1163022otk.13;
+        Thu, 08 Aug 2019 07:47:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=I2LQv2Mh3q+oxacBs4vqpejh3fV7xCiqjE/VE3P9HYI=;
+        b=cW0OylHHll3raz2LT8ADD88OJ+MijJZokht/koJzAkBGepI5uUxJdabgHfxkaGlgq1
+         AxIOZX3xywc4ENObpSiL9Fb1UJ3jN+RNbT1MMGH09QqOTqtKJ2co1aHml4Z0w0lY7wtS
+         5MEqWWm/jVrbBA7JskE/3+Pgoceyx2CW/rXoZ2TPV3w4F/nxK66P+e6wpwJMfxsVs84/
+         A9nbaS2Fu2eZL9/rZaotf+NRogeqH9M2CQktJd8d7GR83fCONmPIGQsXFb5KiAI0Wb1j
+         ZDv+bNRetPO/wJuUYHmYn/m1TD3jPBKn23yChjD+2fGk1due+XjNqcPXE6Hn97CjG+Ps
+         8DEw==
+X-Gm-Message-State: APjAAAVRu2wOdk1vru23SwF0mZDr907PriBHGkBPHXd9fQppRbVVDeoV
+        QDJbNCKftEbjVpgRQ9lmdina0/zkcA7XydcGcLQ=
+X-Google-Smtp-Source: APXvYqxhAc826GrmJGD4OfqvZgJgeZfwbZvGz+35G+ZgfvJXzYCj3T5Dfx2Mt+Z1mmcPKFI1n4PVLgtOFov2VmT+4zo=
+X-Received: by 2002:a9d:7a51:: with SMTP id z17mr13988216otm.266.1565275676960;
+ Thu, 08 Aug 2019 07:47:56 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190807205138.GA24222@cmpxchg.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <4323ed84dd07474eab65699b4d007aaf@AUSX13MPC105.AMER.DELL.COM>
+ <20190731221956.GB15795@localhost.localdomain> <1921165.pTveHRX1Co@kreacher>
+ <1870928.r7tBYyfqdz@kreacher> <20190808134356.GF151852@google.com>
+In-Reply-To: <20190808134356.GF151852@google.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 8 Aug 2019 16:47:45 +0200
+Message-ID: <CAJZ5v0h=nz8yXwOOGBUB9m1GtJPOqBwtNK7zXPNMJjzPhMWd9w@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] nvme-pci: Allow PCI bus-level PM to be used if
+ ASPM is disabled
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        Keith Busch <kbusch@kernel.org>,
+        Mario Limonciello <Mario.Limonciello@dell.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rajat Jain <rajatja@google.com>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/7/19 10:51 PM, Johannes Weiner wrote:
-> From 9efda85451062dea4ea287a886e515efefeb1545 Mon Sep 17 00:00:00 2001
-> From: Johannes Weiner <hannes@cmpxchg.org>
-> Date: Mon, 5 Aug 2019 13:15:16 -0400
-> Subject: [PATCH] psi: trigger the OOM killer on severe thrashing
+On Thu, Aug 8, 2019 at 3:43 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Thu, Aug 08, 2019 at 12:10:06PM +0200, Rafael J. Wysocki wrote:
+> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >
+> > One of the modifications made by commit d916b1be94b6 ("nvme-pci: use
+> > host managed power state for suspend") was adding a pci_save_state()
+> > call to nvme_suspend() in order to prevent the PCI bus-level PM from
+> > being applied to the suspended NVMe devices, but if ASPM is not
+> > enabled for the target NVMe device, that causes its PCIe link to stay
+> > up and the platform may not be able to get into its optimum low-power
+> > state because of that.
+> >
+> > For example, if ASPM is disabled for the NVMe drive (PC401 NVMe SK
+> > hynix 256GB) in my Dell XPS13 9380, leaving it in D0 during
+> > suspend-to-idle prevents the SoC from reaching package idle states
+> > deeper than PC3, which is way insufficient for system suspend.
+>
+> Just curious: I assume the SoC you reference is some part of the NVMe
+> drive?
 
-Thanks a lot, perhaps finally we are going to eat the elephant ;)
+No, the SoC is what contains the Intel processor and PCH (formerly "chipset").
 
-I've tested this by booting with mem=8G and activating browser tabs as
-long as I could. Then initially the system started thrashing and didn't
-recover for minutes. Then I realized sysrq+f is disabled... Fixed that
-up after next reboot, tried lower thresholds, also started monitoring
-/proc/pressure/memory, and found out that after minutes of not being
-able to move the cursor, both avg10 and avg60 shows only around 15 for
-both some and full. Lowered thrashing_oom_level to 10 and (with
-thrashing_oom_period of 5) the thrashing OOM finally started kicking,
-and the system recovered by itself in reasonable time.
+> > To address this shortcoming, make nvme_suspend() check if ASPM is
+> > enabled for the target device and fall back to full device shutdown
+> > and PCI bus-level PM if that is not the case.
+> >
+> > Fixes: d916b1be94b6 ("nvme-pci: use host managed power state for suspend")
+> > Link: https://lore.kernel.org/linux-pm/2763495.NmdaWeg79L@kreacher/T/#t
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > ---
+> >
+> > -> v2:
+> >   * Move the PCI/PCIe ASPM changes to a separate patch.
+> >   * Do not add a redundant ndev->last_ps == U32_MAX check in nvme_suspend().
+> >
+> > ---
+> >  drivers/nvme/host/pci.c |   13 ++++++++++---
+> >  1 file changed, 10 insertions(+), 3 deletions(-)
+> >
+> > Index: linux-pm/drivers/nvme/host/pci.c
+> > ===================================================================
+> > --- linux-pm.orig/drivers/nvme/host/pci.c
+> > +++ linux-pm/drivers/nvme/host/pci.c
+> > @@ -2846,7 +2846,7 @@ static int nvme_resume(struct device *de
+> >       struct nvme_dev *ndev = pci_get_drvdata(to_pci_dev(dev));
+> >       struct nvme_ctrl *ctrl = &ndev->ctrl;
+> >
+> > -     if (pm_resume_via_firmware() || !ctrl->npss ||
+> > +     if (ndev->last_ps == U32_MAX ||
+> >           nvme_set_power_state(ctrl, ndev->last_ps) != 0)
+> >               nvme_reset_ctrl(ctrl);
+> >       return 0;
+> > @@ -2859,6 +2859,8 @@ static int nvme_suspend(struct device *d
+> >       struct nvme_ctrl *ctrl = &ndev->ctrl;
+> >       int ret = -EBUSY;
+> >
+> > +     ndev->last_ps = U32_MAX;
+> > +
+> >       /*
+> >        * The platform does not remove power for a kernel managed suspend so
+> >        * use host managed nvme power settings for lowest idle power if
+> > @@ -2866,8 +2868,14 @@ static int nvme_suspend(struct device *d
+> >        * shutdown.  But if the firmware is involved after the suspend or the
+> >        * device does not support any non-default power states, shut down the
+> >        * device fully.
+> > +      *
+> > +      * If ASPM is not enabled for the device, shut down the device and allow
+> > +      * the PCI bus layer to put it into D3 in order to take the PCIe link
+> > +      * down, so as to allow the platform to achieve its minimum low-power
+> > +      * state (which may not be possible if the link is up).
+> >        */
+> > -     if (pm_suspend_via_firmware() || !ctrl->npss) {
+> > +     if (pm_suspend_via_firmware() || !ctrl->npss ||
+> > +         !pcie_aspm_enabled_mask(pdev)) {
+>
+> This seems like a layering violation, in the sense that ASPM is
+> supposed to be hardware-autonomous and invisible to software.
 
-So my conclusion is that the patch works, but there's something odd with
-suspiciously low PSI memory values on my system. Any idea how to
-investigate this? Also, does it matter that it's a modern desktop, so
-systemd puts everything into cgroups, and the unified cgroup2 hierarchy
-is also mounted?
+But software has to enable it.
 
-Thanks,
-Vlastimil
+If it is not enabled, it will not be used, and that's what the check is about.
+
+> IIUC the NVMe device will go to the desired package idle state if the
+> link is in L0s or L1, but not if the link is in L0.  I don't
+> understand that connection; AFAIK that would be something outside the
+> scope of the PCIe spec.
+
+Yes, it is outside of the PCIe spec.
+
+No, this is not about the NVMe device, it is about the Intel SoC
+(System-on-a-Chip) the platform is based on.
+
+The background really is commit d916b1be94b6 and its changelog is kind
+of misleading, unfortunately.  What it did, among other things, was to
+cause the NVMe driver to prevent the PCI bus type from applying the
+standard PCI PM to the devices handled by it in the suspend-to-idle
+flow.  The reason for doing that was a (reportedly) widespread failure
+to take the PCIe link down during D0 -> D3hot transitions of NVMe
+devices, which then prevented the platform from going into a deep
+enough low-power state while suspended (because it was not sure
+whether or not the NVMe device was really "sufficiently" inactive).
+[I guess I should mention that in the changelog of the $subject
+patch.]  So the idea was to put the (NVMe) device into a low-power
+state internally and then let ASPM take care of the PCIe link.
+
+Of course, that can only work if ASPM is enabled at all for the device
+in question, even though it may not be sufficient as you say below.
+
+> The spec (PCIe r5.0, sec 5.4.1.1.1 for L0s, 5.4.1.2.1 for L1) is
+> careful to say that when the conditions are right, devices "should"
+> enter L0s but it is never mandatory, or "may" enter L1.
+>
+> And this patch assumes that if ASPM is enabled, the link will
+> eventually go to L0s or L1.
+
+No, it doesn't.
+
+It avoids failure in the case in which it is guaranteed to happen
+(disabled ASPM) and that's it.
+
+> Because the PCIe spec doesn't mandate that transition, I think this patch makes the
+> driver dependent on device-specific behavior.
+
+IMO not really.  It just adds a "don't do it if you are going to fail"
+kind of check.
+
+>
+> >               nvme_dev_disable(ndev, true);
+> >               return 0;
+> >       }
+> > @@ -2880,7 +2888,6 @@ static int nvme_suspend(struct device *d
+> >           ctrl->state != NVME_CTRL_ADMIN_ONLY)
+> >               goto unfreeze;
+> >
+> > -     ndev->last_ps = 0;
+> >       ret = nvme_get_power_state(ctrl, &ndev->last_ps);
+> >       if (ret < 0)
+> >               goto unfreeze;
+> >
+> >
+> >
