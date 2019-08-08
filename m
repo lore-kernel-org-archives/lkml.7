@@ -2,149 +2,86 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE7AC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 03:42:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17254C32756
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 03:42:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A866E2086D
+	by mail.kernel.org (Postfix) with ESMTP id CA9CF2187F
 	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 03:42:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="gUly2egF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730459AbfHHDlO convert rfc822-to-8bit (ORCPT
+        id S1730606AbfHHDl7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 23:41:14 -0400
-Received: from tyo161.gate.nec.co.jp ([114.179.232.161]:49635 "EHLO
-        tyo161.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728019AbfHHDlN (ORCPT
+        Wed, 7 Aug 2019 23:41:59 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:42645 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728167AbfHHDl6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 23:41:13 -0400
-Received: from mailgate02.nec.co.jp ([114.179.233.122])
-        by tyo161.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x783efIu030575
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Thu, 8 Aug 2019 12:40:41 +0900
-Received: from mailsv02.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
-        by mailgate02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x783efAY003936;
-        Thu, 8 Aug 2019 12:40:41 +0900
-Received: from mail02.kamome.nec.co.jp (mail02.kamome.nec.co.jp [10.25.43.5])
-        by mailsv02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x783eeEd020078;
-        Thu, 8 Aug 2019 12:40:41 +0900
-Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.148] [10.38.151.148]) by mail02.kamome.nec.co.jp with ESMTP id BT-MMP-7505107; Thu, 8 Aug 2019 12:36:24 +0900
-Received: from BPXM23GP.gisp.nec.co.jp ([10.38.151.215]) by
- BPXC20GP.gisp.nec.co.jp ([10.38.151.148]) with mapi id 14.03.0439.000; Thu, 8
- Aug 2019 12:36:23 +0900
-From:   Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "ltp@lists.linux.it" <ltp@lists.linux.it>,
-        "Li Wang" <liwang@redhat.com>, Michal Hocko <mhocko@kernel.org>,
-        Cyril Hrubis <chrubis@suse.cz>,
-        "xishi.qiuxishi@alibaba-inc.com" <xishi.qiuxishi@alibaba-inc.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] hugetlbfs: fix hugetlb page migration/fault race
- causing SIGBUS
-Thread-Topic: [PATCH] hugetlbfs: fix hugetlb page migration/fault race
- causing SIGBUS
-Thread-Index: AQHVTX0N0YwnRs9J50WW+DT6/gmNh6bwAwsA
-Date:   Thu, 8 Aug 2019 03:36:22 +0000
-Message-ID: <20190808033622.GA28751@hori.linux.bs1.fc.nec.co.jp>
-References: <20190808000533.7701-1-mike.kravetz@oracle.com>
-In-Reply-To: <20190808000533.7701-1-mike.kravetz@oracle.com>
-Accept-Language: en-US, ja-JP
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.34.125.150]
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-ID: <BB43671309A3D0478266CADD63E511C9@gisp.nec.co.jp>
-Content-Transfer-Encoding: 8BIT
-MIME-Version: 1.0
-X-TM-AS-MML: disable
+        Wed, 7 Aug 2019 23:41:58 -0400
+Received: by mail-pl1-f194.google.com with SMTP id ay6so42964882plb.9
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 20:41:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=CltnQTlt8olc+fDLy2Jnh5hmJd7EG7/QIe5FFgTWxYw=;
+        b=gUly2egFnTMEnmQt8hy4Aef/sXt/p2qtK4St243N9Vr8JaIVzaix9GpTB9gDSS6G8n
+         VRuJ2gK+MoyQV+7mwOr4R6MqR4Ws4cSm57d5b/k0QfttT7FPqEGGaYmxO9zGVN80KUyf
+         Xt7JDRsFKs4Dk255X8jwjb9Q1ycmt/wjj7tng=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=CltnQTlt8olc+fDLy2Jnh5hmJd7EG7/QIe5FFgTWxYw=;
+        b=oDRNGG2xMmub3YbWq/7yzAg4WhweXrn4rcL7bGrXFcNxHkUVKy6ortz1UPvs4TMdfd
+         UEr5zU0mGPFLx7rkR6XVhawQB0uUPaxRVQWX6OTvyeYJlhcDrmXXD/EwsZAtU5W3iv4Z
+         /U2sG7VZAgVExZqz12cxWpYqaI2TXiK8pzdv02KUqh7WOVOIFvxogCEWSenbtNOvV94Y
+         85MeeZQC2eSOg5kHn1VPGLjv32Ei7CFq3UB/yS8tHK/IDKpC8CRv7D/twgk7d5yDsM07
+         3hB7X+Y+hyGPgUN+YqwEII+Vi6lqiwH6IkjimH/vY9A0TGrZuK1EiRhF9SFe6/wa1ElA
+         J99g==
+X-Gm-Message-State: APjAAAXVdna0lb4JyHvmnrMj2hDWmJpodQ0z8KnykD+Y/Iva5aHSwdrO
+        m1a5TNn4b9l5JCKFTZiAfgSD1g==
+X-Google-Smtp-Source: APXvYqy1YWfA92bvwxrgj1XPwg6/YN6ruDZmL72kWXbICFTwOBsziMdPWNVG8Od/3aZ4K4bRsaZoCA==
+X-Received: by 2002:a17:902:74c4:: with SMTP id f4mr10916411plt.13.1565235717808;
+        Wed, 07 Aug 2019 20:41:57 -0700 (PDT)
+Received: from rayagonda.dhcp.broadcom.net ([192.19.234.250])
+        by smtp.gmail.com with ESMTPSA id y14sm46425482pge.7.2019.08.07.20.41.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 07 Aug 2019 20:41:56 -0700 (PDT)
+From:   Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+To:     Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        Ray Jui <ray.jui@broadcom.com>,
+        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Subject: [PATCH v1 0/2] Remove smbus quick cmd and update adapter name
+Date:   Thu,  8 Aug 2019 09:07:51 +0530
+Message-Id: <1565235473-28461-1-git-send-email-rayagonda.kokatanur@broadcom.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 07, 2019 at 05:05:33PM -0700, Mike Kravetz wrote:
-> Li Wang discovered that LTP/move_page12 V2 sometimes triggers SIGBUS
-> in the kernel-v5.2.3 testing.  This is caused by a race between hugetlb
-> page migration and page fault.
-> 
-> If a hugetlb page can not be allocated to satisfy a page fault, the task
-> is sent SIGBUS.  This is normal hugetlbfs behavior.  A hugetlb fault
-> mutex exists to prevent two tasks from trying to instantiate the same
-> page.  This protects against the situation where there is only one
-> hugetlb page, and both tasks would try to allocate.  Without the mutex,
-> one would fail and SIGBUS even though the other fault would be successful.
-> 
-> There is a similar race between hugetlb page migration and fault.
-> Migration code will allocate a page for the target of the migration.
-> It will then unmap the original page from all page tables.  It does
-> this unmap by first clearing the pte and then writing a migration
-> entry.  The page table lock is held for the duration of this clear and
-> write operation.  However, the beginnings of the hugetlb page fault
-> code optimistically checks the pte without taking the page table lock.
-> If clear (as it can be during the migration unmap operation), a hugetlb
-> page allocation is attempted to satisfy the fault.  Note that the page
-> which will eventually satisfy this fault was already allocated by the
-> migration code.  However, the allocation within the fault path could
-> fail which would result in the task incorrectly being sent SIGBUS.
-> 
-> Ideally, we could take the hugetlb fault mutex in the migration code
-> when modifying the page tables.  However, locks must be taken in the
-> order of hugetlb fault mutex, page lock, page table lock.  This would
-> require significant rework of the migration code.  Instead, the issue
-> is addressed in the hugetlb fault code.  After failing to allocate a
-> huge page, take the page table lock and check for huge_pte_none before
-> returning an error.  This is the same check that must be made further
-> in the code even if page allocation is successful.
-> 
-> Reported-by: Li Wang <liwang@redhat.com>
-> Fixes: 290408d4a250 ("hugetlb: hugepage migration core")
-> Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
-> Tested-by: Li Wang <liwang@redhat.com>
+Hi,
 
-Thanks for the work and nice description.
+This patchset contains following changes:
+- Remove SMBUS quick command support
+- Update full name of dt node to adapter name
 
-Reviewed-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+Lori Hikichi (2):
+  i2c: iproc: Stop advertising support of SMBUS quick cmd
+  i2c: iproc: Add full name of devicetree node to adapter name
 
-> ---
->  mm/hugetlb.c | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
-> 
-> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> index ede7e7f5d1ab..6d7296dd11b8 100644
-> --- a/mm/hugetlb.c
-> +++ b/mm/hugetlb.c
-> @@ -3856,6 +3856,25 @@ static vm_fault_t hugetlb_no_page(struct mm_struct *mm,
->  
->  		page = alloc_huge_page(vma, haddr, 0);
->  		if (IS_ERR(page)) {
-> +			/*
-> +			 * Returning error will result in faulting task being
-> +			 * sent SIGBUS.  The hugetlb fault mutex prevents two
-> +			 * tasks from racing to fault in the same page which
-> +			 * could result in false unable to allocate errors.
-> +			 * Page migration does not take the fault mutex, but
-> +			 * does a clear then write of pte's under page table
-> +			 * lock.  Page fault code could race with migration,
-> +			 * notice the clear pte and try to allocate a page
-> +			 * here.  Before returning error, get ptl and make
-> +			 * sure there really is no pte entry.
-> +			 */
-> +			ptl = huge_pte_lock(h, mm, ptep);
-> +			if (!huge_pte_none(huge_ptep_get(ptep))) {
-> +				ret = 0;
-> +				spin_unlock(ptl);
-> +				goto out;
-> +			}
-> +			spin_unlock(ptl);
->  			ret = vmf_error(PTR_ERR(page));
->  			goto out;
->  		}
-> -- 
-> 2.20.1
-> 
-> 
+ drivers/i2c/busses/i2c-bcm-iproc.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+-- 
+1.9.1
+
