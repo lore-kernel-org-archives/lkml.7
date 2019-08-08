@@ -2,146 +2,147 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D71C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 17:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F64C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 17:04:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 573212173C
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 17:03:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBEE82173C
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 17:04:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f7IPdWVv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404177AbfHHRDI (ORCPT
+        id S2404216AbfHHREj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 13:03:08 -0400
-Received: from mga18.intel.com ([134.134.136.126]:41450 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732444AbfHHRDI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 13:03:08 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Aug 2019 10:03:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,362,1559545200"; 
-   d="scan'208";a="169048728"
-Received: from jmath3-mobl1.ger.corp.intel.com (HELO [10.252.5.86]) ([10.252.5.86])
-  by orsmga008.jf.intel.com with ESMTP; 08 Aug 2019 10:03:02 -0700
-Subject: Re: [PATCHv2 2/3] i915: convert to new mount API
-To:     Chris Wilson <chris@chris-wilson.co.uk>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Hugh Dickins <hughd@google.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Howells <dhowells@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-References: <20190805160307.5418-1-sergey.senozhatsky@gmail.com>
- <20190805160307.5418-3-sergey.senozhatsky@gmail.com>
- <20190805181255.GH1131@ZenIV.linux.org.uk>
- <20190805182834.GI1131@ZenIV.linux.org.uk>
- <alpine.LSU.2.11.1908060007190.1941@eggly.anvils>
- <20190807063002.GG6627@lst.de> <20190808012314.GK1131@ZenIV.linux.org.uk>
- <alpine.LSU.2.11.1908080813380.12321@eggly.anvils>
- <156528143789.22627.18099397585070419297@skylake-alporthouse-com>
-From:   Matthew Auld <matthew.auld@intel.com>
-Message-ID: <8a9a9aee-a266-5ab2-85b3-e39e821b2d03@intel.com>
-Date:   Thu, 8 Aug 2019 18:03:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 8 Aug 2019 13:04:39 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:36137 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404172AbfHHREj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 13:04:39 -0400
+Received: by mail-ot1-f68.google.com with SMTP id r6so121419208oti.3
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 10:04:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ElTMuNeoHI+HHYYsxCZw6Aps3F3VALIwkdZIOhALrxA=;
+        b=f7IPdWVvvQMrIFT5y6nMX9j1ZB6ZXkOLJIJ/Aq5Npp3ljgbC8uD1wTUVb1YGYqPbuz
+         2Rzw23yxRRYVZsgsnaQGiqh94Fj/NWZBilmwBU+klcpKW3+RuKKJv9ppHnq2b+e6xWbH
+         MDzXtNYeTk7otDrS+3VsOYB6WIej4R7njmXKmAYYDXeDdwxfJ0YwuNtBz/CAyqvm9GJN
+         FvFHIHEnjvkyILnV7hJTjPFqxljPzGr2S+gE+YqEiUsX2oVcmrByhzE8PblD09YU5CzF
+         S9rzKRPbV3v7sewdRDTeVVN78AVthP8aLdWbboRhtFiZsenQ7fbxqTsNDHlIK8CvidEr
+         dCEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ElTMuNeoHI+HHYYsxCZw6Aps3F3VALIwkdZIOhALrxA=;
+        b=RzDGdj5ekiyxMRFIdmcjv4ELOgSHi25ZyhQrk/9bIIhonYeksJqLp089r4wOVVl2kS
+         7NAddM1PNSWaXnEHQYVh90Hsm+I0Pv5mjXfx2Jwtd3kNG186vkyCiP0iPHPykqrOyYwz
+         YMDRrJgKphxF37aTPUUtD2Gdm0eYjJsHTulc8ne/nCXHymjs4/WgZ/vMPQzLcWpbQqli
+         4ihPlY9zuGYZCmfCgzmyyhNwdUcs8lax1JlpIhnsCYj4nj2f/n4ac+NBu3bdiuivauyZ
+         jzF5FFNeY664WmgsUDDd1Dj7YLrvgG2GZS6aSbcS2PnCPVwqjd3/VCyT6zAActXdewBw
+         RHmA==
+X-Gm-Message-State: APjAAAXWXPEmNA8MlUBMR5BdaLgYb09mCB3m7PZLw15iSZjXi6momzOO
+        3Es9dWfNSeVZbGYULzx6Mqoq8VYty1K17aF7nGFIJA==
+X-Google-Smtp-Source: APXvYqzxBjBYPr3wPY34IaD0DcbIQJtetwQGaIiLDFAooByqTCVN6/j1974v7EFlnwsdK9dVBWgHIWVrxKUZGxtpblE=
+X-Received: by 2002:a5e:de0d:: with SMTP id e13mr6746503iok.144.1565283877966;
+ Thu, 08 Aug 2019 10:04:37 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <156528143789.22627.18099397585070419297@skylake-alporthouse-com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <000000000000edcb3c058e6143d5@google.com> <00000000000083ffc4058e9dddf0@google.com>
+ <CAHk-=why-PdP_HNbskRADMp1bnj+FwUDYpUZSYoNLNHMRPtoVA@mail.gmail.com>
+In-Reply-To: <CAHk-=why-PdP_HNbskRADMp1bnj+FwUDYpUZSYoNLNHMRPtoVA@mail.gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Thu, 8 Aug 2019 19:04:26 +0200
+Message-ID: <CACT4Y+bgH9f090N6G0H0zpPBrM-pW7aXXqt9kMxLjFk2jmpAEw@mail.gmail.com>
+Subject: Re: memory leak in kobject_set_name_vargs (2)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     syzbot <syzbot+ad8ca40ecd77896d51e2@syzkaller.appspotmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        David Miller <davem@davemloft.net>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>, luciano.coelho@intel.com,
+        Netdev <netdev@vger.kernel.org>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/08/2019 17:23, Chris Wilson wrote:
-> Quoting Hugh Dickins (2019-08-08 16:54:16)
->> On Thu, 8 Aug 2019, Al Viro wrote:
->>> On Wed, Aug 07, 2019 at 08:30:02AM +0200, Christoph Hellwig wrote:
->>>> On Tue, Aug 06, 2019 at 12:50:10AM -0700, Hugh Dickins wrote:
->>>>> Though personally I'm averse to managing "f"objects through
->>>>> "m"interfaces, which can get ridiculous (notably, MADV_HUGEPAGE works
->>>>> on the virtual address of a mapping, but the huge-or-not alignment of
->>>>> that mapping must have been decided previously).  In Google we do use
->>>>> fcntls F_HUGEPAGE and F_NOHUGEPAGE to override on a per-file basis -
->>>>> one day I'll get to upstreaming those.
->>>>
->>>> Such an interface seems very useful, although the two fcntls seem a bit
->>>> odd.
->>>>
->>>> But I think the point here is that the i915 has its own somewhat odd
->>>> instance of tmpfs.  If we could pass the equivalent of the huge=*
->>>> options to shmem_file_setup all that garbage (including the
->>>> shmem_file_setup_with_mnt function) could go away.
->>>
->>> ... or follow shmem_file_super() with whatever that fcntl maps to
->>> internally.  I would really love to get rid of that i915 kludge.
->>
->> As to the immediate problem of i915_gemfs using remount_fs on linux-next,
->> IIUC, all that is necessary at the moment is the deletions patch below
->> (but I'd prefer that to come from the i915 folks).  Since gemfs has no
->> need to change the huge option from its default to its default.
->>
->> As to the future of when they get back to wanting huge pages in gemfs,
->> yes, that can probably best be arranged by using the internals of an
->> fcntl F_HUGEPAGE on those objects that would benefit from it.
->>
->> Though my intention there was that the "huge=never" default ought
->> to continue to refuse to give huge pages, even when asked by fcntl.
->> So a little hackery may still be required, to allow the i915_gemfs
->> internal mount to get huge pages when a user mount would not.
->>
->> As to whether shmem_file_setup_with_mnt() needs to live: I've given
->> that no thought, but accept that shm_mnt is such a ragbag of different
->> usages, that i915 is right to prefer their own separate gemfs mount.
->>
->> Hugh
->>
->> --- mmotm/drivers/gpu/drm/i915/gem/i915_gemfs.c 2019-07-21 19:40:16.573703780 -0700
->> +++ linux/drivers/gpu/drm/i915/gem/i915_gemfs.c 2019-08-08 07:19:23.967689058 -0700
->> @@ -24,28 +24,6 @@ int i915_gemfs_init(struct drm_i915_priv
->>          if (IS_ERR(gemfs))
->>                  return PTR_ERR(gemfs);
->>   
->> -       /*
->> -        * Enable huge-pages for objects that are at least HPAGE_PMD_SIZE, most
->> -        * likely 2M. Note that within_size may overallocate huge-pages, if say
->> -        * we allocate an object of size 2M + 4K, we may get 2M + 2M, but under
->> -        * memory pressure shmem should split any huge-pages which can be
->> -        * shrunk.
->> -        */
->> -
->> -       if (has_transparent_hugepage()) {
->> -               struct super_block *sb = gemfs->mnt_sb;
->> -               /* FIXME: Disabled until we get W/A for read BW issue. */
->> -               char options[] = "huge=never";
->> -               int flags = 0;
->> -               int err;
->> -
->> -               err = sb->s_op->remount_fs(sb, &flags, options);
->> -               if (err) {
->> -                       kern_unmount(gemfs);
->> -                       return err;
->> -               }
->> -       }
-> 
-> That's perfectly fine; we should probably leave a hint as to why gemfs
-> exists and include the suggestion of looking at per-file hugepage
-> controls.
-> 
-> Matthew, how does this affect your current plans? If at all?
-Fine with me.
+On Sat, Jul 27, 2019 at 4:29 AM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Fri, Jul 26, 2019 at 4:26 PM syzbot
+> <syzbot+ad8ca40ecd77896d51e2@syzkaller.appspotmail.com> wrote:
+> >
+> > syzbot has bisected this bug to:
+> >
+> > commit 0e034f5c4bc408c943f9c4a06244415d75d7108c
+> > Author: Linus Torvalds <torvalds@linux-foundation.org>
+> > Date:   Wed May 18 18:51:25 2016 +0000
+> >
+> >      iwlwifi: fix mis-merge that breaks the driver
+>
+> While this bisection looks more likely than the other syzbot entry
+> that bisected to a version change, I don't think it is correct eitger.
+>
+> The bisection ended up doing a lot of "git bisect skip" because of the
+>
+>     undefined reference to `nf_nat_icmp_reply_translation'
+>
+> issue. Also, the memory leak doesn't seem to be entirely reliable:
+> when the bisect does 10 runs to verify that some test kernel is bad,
+> there are a couple of cases where only one or two of the ten run
+> failed.
+>
+> Which makes me wonder if one or two of the "everything OK" runs were
+> actually buggy, but just happened to have all ten pass...
 
-> -Chris
-> 
+
+I agree this is unrelated.
+
+Bisection of memory leaks is now turned off completely after a
+week-long experiment (details:
+https://groups.google.com/d/msg/syzkaller/sR8aAXaWEF4/k34t365JBgAJ)
+
+FWIW 'git bisect skip' is not a problem in itself. If the bisection
+will end up being inconclusive due to this, then syzbot will not
+attribute it to any commit (won't send an email at all), it will just
+show the commit range in the web UI for the bug.
+
+Low probability wasn't the root cause as well, first runs ended with
+10/10 precision:
+
+bisecting cause commit starting from 3bfe1fc46794631366faa3ef075e1b0ff7ba120a
+building syzkaller on 1656845f45f284c574eb4f8bfe85dd7916a47a3a
+testing commit 3bfe1fc46794631366faa3ef075e1b0ff7ba120a with gcc (GCC) 8.1.0
+all runs: crashed: memory leak in kobject_set_name_vargs
+testing release v5.2
+testing commit 0ecfebd2b52404ae0c54a878c872bb93363ada36 with gcc (GCC) 8.1.0
+all runs: crashed: memory leak in kobject_set_name_vargs
+testing release v5.1
+testing commit e93c9c99a629c61837d5a7fc2120cd2b6c70dbdd with gcc (GCC) 8.1.0
+all runs: crashed: memory leak in kobject_set_name_vargs
+testing release v5.0
+testing commit 1c163f4c7b3f621efff9b28a47abb36f7378d783 with gcc (GCC) 8.1.0
+all runs: crashed: memory leak in kobject_set_name_vargs
+testing release v4.20
+testing commit 8fe28cb58bcb235034b64cbbb7550a8a43fd88be with gcc (GCC) 8.1.0
+all runs: crashed: memory leak in kobject_set_name_vargs
+testing release v4.19
+testing commit 84df9525b0c27f3ebc2ebb1864fa62a97fdedb7d with gcc (GCC) 8.1.0
+all runs: crashed: memory leak in kobject_set_name_vargs
+
+But it was distracted by other bugs and other memory leaks (which
+reproduce with lower probability) and then the process went random
+(which confirms the bisection analysis results).
