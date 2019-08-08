@@ -6,152 +6,104 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD8E3C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:05:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BCDEC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:07:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DD08218BA
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:05:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A3A821881
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:07:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731898AbfHHIF6 (ORCPT
+        id S1731880AbfHHIHo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 04:05:58 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:34339 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731719AbfHHIF6 (ORCPT
+        Thu, 8 Aug 2019 04:07:44 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:34778 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731737AbfHHIHn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 04:05:58 -0400
-Received: by mail-ot1-f67.google.com with SMTP id n5so115237995otk.1;
-        Thu, 08 Aug 2019 01:05:57 -0700 (PDT)
+        Thu, 8 Aug 2019 04:07:43 -0400
+Received: by mail-qt1-f195.google.com with SMTP id k10so22096870qtq.1;
+        Thu, 08 Aug 2019 01:07:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=TtvrwHBBYi+jmQBqq+h4raD1vCv1LyjklWLsWrx2nck=;
-        b=GHgZWqqPvdsaSjThKrEcyB8F2fmAsTD2iRjGLm0O6NzDk2/weU0u4wqkTjViKEv55K
-         wy3ToeOL8E9ufD0PCgVEsSpvmFPBL9KJlvRTPogWvH7TjOCRZgsB07joovN7EiQv3yno
-         71oRj83ZRF0clOrgvstNvm5rs1WG7mKGWi8i93srTbnfdMa5iqRH8AWW2LQpdIc+mZe7
-         3gl+8DISR+UW1g3mmCx3UYr7Ut5hZPHuKMTQLQTV9gQwHqxtT73yCWxoj9HaafpzMJpE
-         nnPZ/nxLwQxPF+1ENrwjZ79gFeioWiLRAy4gTq29Ex8OAZh+Q8vGFdNv6fk4AAvMjWSB
-         YZJA==
-X-Gm-Message-State: APjAAAWfZSlFsOdZAVBmWFMSHgVDL7dzhXGiO8qCb1gxbq2y7yg7Uj1k
-        oXIQ0q6QyPujHT0ljzBRTjHSO1GhhDOhsbcTjIQ=
-X-Google-Smtp-Source: APXvYqxTlUIJTqAQ7wADVSl1f90KSihADYKiCuHyYG/JvGAUchepy/4WCuvCFz5IgZrJ1/yJcH2/BDRva71dz/6mgyo=
-X-Received: by 2002:a05:6830:210f:: with SMTP id i15mr12213592otc.250.1565251557005;
- Thu, 08 Aug 2019 01:05:57 -0700 (PDT)
+        bh=zpfTTWIVTM8a0np0YvcvEQ5LKGlmAj7NsTRFbsCvaus=;
+        b=PCIzaS+ZqeLxF7wCoLcHb35L3rCJbcM6ck4N6qyOoTrEsO1bRksbqTsKcZjpf3tv9n
+         hO5qRtHk2+x2dpExZuDeKa/tKfhcGYhtxJburSkp7wzpgO2vVx0Ur2QzhP5CJWuIXII7
+         +qwlEn2vFk1Z4YcCkE5c0rwp2flCrYqr50fhUY6Du/mZKAoEIBT4VOTlmtK9r8vhF5hG
+         MckfOYG3WLJRrrNOzneBRqmCUenK08QRz1ALop5wF+LQrktxZp6Li3WbIiTTDJ/n/ong
+         Lc6hmVMb0F5Y3tsVBX5UIpNM6ZIHe+D3TlLGyYr1qOxX+FsKeZ9thVj7qL2rccfaO/JL
+         MJRw==
+X-Gm-Message-State: APjAAAXFNZkW4QNBWxCEu7exHrAtL4Tt8qc+7Zf+z4ylLCL73y2H5qxJ
+        pEDcUvnToH2/k99Ls1DkyfpXR/PndvFVEIFb/II=
+X-Google-Smtp-Source: APXvYqwZZW9N6HttLUMOUHu8OVQ7m6alCwA745gemlJdjpV2mFtSjU3BCMjNtw+/B8K/8fMOgXq8xsaod0+xpp8WY4U=
+X-Received: by 2002:ac8:6684:: with SMTP id d4mr6915506qtp.204.1565251662202;
+ Thu, 08 Aug 2019 01:07:42 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190730181557.90391-1-swboyd@chromium.org> <20190730181557.90391-40-swboyd@chromium.org>
-In-Reply-To: <20190730181557.90391-40-swboyd@chromium.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 8 Aug 2019 10:05:46 +0200
-Message-ID: <CAMuHMdXArXKeE0OUaBN2f8bkAakuV6+55acNw9t9Fc5uyk_LXg@mail.gmail.com>
-Subject: Re: [PATCH v6 39/57] rtc: Remove dev_err() usage after platform_get_irq()
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-rtc@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <20190807151009.31971-1-hch@lst.de> <20190807152215.GA26690@kroah.com>
+ <20190807152438.GA16495@lst.de> <alpine.DEB.2.21.9999.1908070832500.13971@viisi.sifive.com>
+ <20190808075029.GB30308@lst.de>
+In-Reply-To: <20190808075029.GB30308@lst.de>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 8 Aug 2019 10:07:26 +0200
+Message-ID: <CAK8P3a1nwTjt7gbL7bCa11-smQ0c6o-6QUL0vLZnZxzT_aa4-g@mail.gmail.com>
+Subject: Re: [PATCH] riscv: move sifive_l2_cache.c to drivers/misc
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        James Morse <james.morse@arm.com>,
+        linux-riscv@lists.infradead.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-edac@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
-
-On Tue, Jul 30, 2019 at 8:21 PM Stephen Boyd <swboyd@chromium.org> wrote:
-> We don't need dev_err() messages when platform_get_irq() fails now that
-> platform_get_irq() prints an error message itself when something goes
-> wrong. Let's remove these prints with a simple semantic patch.
+On Thu, Aug 8, 2019 at 9:50 AM Christoph Hellwig <hch@lst.de> wrote:
+> On Wed, Aug 07, 2019 at 08:40:58AM -0700, Paul Walmsley wrote:
+> > On Wed, 7 Aug 2019, Christoph Hellwig wrote:
+> > > On Wed, Aug 07, 2019 at 05:22:15PM +0200, Greg KH wrote:
+> > > > > Fixes: a967a289f169 ("RISC-V: sifive_l2_cache: Add L2 cache controller driver for SiFive SoCs")
+> > > > > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > > > > ---
+> > > > >  arch/riscv/mm/Makefile                            | 1 -
+> > > > >  drivers/misc/Makefile                             | 1 +
+> > > > >  {arch/riscv/mm => drivers/misc}/sifive_l2_cache.c | 0
+> > > > >  3 files changed, 1 insertion(+), 1 deletion(-)
+> > > > >  rename {arch/riscv/mm => drivers/misc}/sifive_l2_cache.c (100%)
+> > > >
+> > > > Why isn't this in drivers/edac/ ?
+> > > > why is this a misc driver?  Seems like it should sit next to the edac
+> > > > stuff.
+> > >
+> > > No idea.  EDAC maintainers, would you object to taking what is
+> > > currently in arch/riscv/mm//sifive_l2_cache.c to drivers/edac/ ?
+> >
+> > If this driver is moved out of arch/riscv/mm, it should ideally go into
+> > some sort of common L2 cache controller driver directory, along
+> > with other L2 cache controller drivers like arch/arm/mm/*l2c*.
+> >
+> > Like many L2 cache controllers, this controller also supports cache
+> > flushing operations and SoC-specific way operations.  We just don't use
+> > those on RISC-V - yet.
 >
-> // <smpl>
-> @@
-> expression ret;
-> struct platform_device *E;
-> @@
->
-> ret =
-> (
-> platform_get_irq(E, ...)
-> |
-> platform_get_irq_byname(E, ...)
-> );
->
-> if ( \( ret < 0 \| ret <= 0 \) )
-> {
-> (
-> -if (ret != -EPROBE_DEFER)
-> -{ ...
-> -dev_err(...);
-> -... }
-> |
-> ...
-> -dev_err(...);
-> )
-> ...
-> }
-> // </smpl>
->
-> While we're here, remove braces on if statements that only have one
-> statement (manually).
->
-> Cc: Alessandro Zummo <a.zummo@towertech.it>
-> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Cc: linux-rtc@vger.kernel.org
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> ---
->
-> Please apply directly to subsystem trees
->
->  drivers/rtc/rtc-88pm80x.c    | 1 -
->  drivers/rtc/rtc-88pm860x.c   | 4 +---
->  drivers/rtc/rtc-ac100.c      | 4 +---
->  drivers/rtc/rtc-armada38x.c  | 5 +----
->  drivers/rtc/rtc-asm9260.c    | 4 +---
->  drivers/rtc/rtc-at91rm9200.c | 4 +---
->  drivers/rtc/rtc-at91sam9.c   | 4 +---
->  drivers/rtc/rtc-bd70528.c    | 5 +----
->  drivers/rtc/rtc-davinci.c    | 4 +---
->  drivers/rtc/rtc-jz4740.c     | 4 +---
->  drivers/rtc/rtc-max77686.c   | 5 +----
->  drivers/rtc/rtc-mt7622.c     | 1 -
->  drivers/rtc/rtc-pic32.c      | 4 +---
->  drivers/rtc/rtc-pm8xxx.c     | 4 +---
->  drivers/rtc/rtc-puv3.c       | 8 ++------
->  drivers/rtc/rtc-pxa.c        | 8 ++------
->  drivers/rtc/rtc-rk808.c      | 6 +-----
->  drivers/rtc/rtc-s3c.c        | 8 ++------
->  drivers/rtc/rtc-sc27xx.c     | 4 +---
->  drivers/rtc/rtc-spear.c      | 4 +---
->  drivers/rtc/rtc-stm32.c      | 1 -
->  drivers/rtc/rtc-sun6i.c      | 4 +---
->  drivers/rtc/rtc-sunxi.c      | 4 +---
->  drivers/rtc/rtc-tegra.c      | 4 +---
->  drivers/rtc/rtc-vt8500.c     | 4 +---
->  drivers/rtc/rtc-xgene.c      | 4 +---
->  drivers/rtc/rtc-zynqmp.c     | 8 ++------
->  27 files changed, 28 insertions(+), 92 deletions(-)
+> Well, another reason to not have it under arch/riscv/ as it is a SOC
+> specific driver, which we all have somewhere else, just like arm64
+> and new arm ports do.  And especially not unconditionally built.
 
-Failed to catch:
-drivers/rtc/rtc-sh.c:   ret = platform_get_irq(pdev, 0);
-drivers/rtc/rtc-sh.c-   if (unlikely(ret <= 0)) {
-drivers/rtc/rtc-sh.c-           dev_err(&pdev->dev, "No IRQ resource\n");
-drivers/rtc/rtc-sh.c-           return -ENOENT;
-drivers/rtc/rtc-sh.c-   }
-drivers/rtc/rtc-sh.c-
+soc specific drivers that don't have their own subsystem can
+go into drivers/soc/$VENDOR/.
 
-Note that there are two more calls for optional interrupts:
-drivers/rtc/rtc-sh.c:   rtc->carry_irq = platform_get_irq(pdev, 1);
-drivers/rtc/rtc-sh.c:   rtc->alarm_irq = platform_get_irq(pdev, 2);
+For this driver, I would also think that the edac subsystem is the
+best fit. Right now, the driver is split in two halves: there
+is drivers/edac/sifive_edac.c and arch/riscv/mm/sifive_l2_cache.c,
+with neither of those working without the other.
 
-Gr{oetje,eeting}s,
+Moving both into a single file would seem to allow simplifying
+it as a proper 'platform_driver', which the drivers/edac side today
+is not (it just registers a platform device in its module_init call).
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+      Arnd
