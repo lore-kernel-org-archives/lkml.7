@@ -2,29 +2,29 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F12CC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:10:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC7ABC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:10:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1C5E214C6
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:10:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 865E7214C6
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:10:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403900AbfHHOK1 (ORCPT
+        id S2390127AbfHHOKQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 10:10:27 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:57195 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403838AbfHHOKY (ORCPT
+        Thu, 8 Aug 2019 10:10:16 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:56901 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390104AbfHHOKO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 10:10:24 -0400
+        Thu, 8 Aug 2019 10:10:14 -0400
+X-Originating-IP: 86.250.200.211
 Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
         (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 972F310000D;
-        Thu,  8 Aug 2019 14:10:18 +0000 (UTC)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 92B206000B;
+        Thu,  8 Aug 2019 14:10:11 +0000 (UTC)
 From:   Antoine Tenart <antoine.tenart@bootlin.com>
 To:     davem@davemloft.net, sd@queasysnail.net, andrew@lunn.ch,
         f.fainelli@gmail.com, hkallweit1@gmail.com
@@ -33,9 +33,9 @@ Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
         thomas.petazzoni@bootlin.com, alexandre.belloni@bootlin.com,
         allan.nielsen@microchip.com, camelia.groza@nxp.com,
         Simon.Edelhaus@aquantia.com
-Subject: [PATCH net-next v2 8/9] net: phy: mscc: macsec initialization
-Date:   Thu,  8 Aug 2019 16:05:59 +0200
-Message-Id: <20190808140600.21477-9-antoine.tenart@bootlin.com>
+Subject: [PATCH net-next v2 6/9] net: macsec: hardware offloading infrastructure
+Date:   Thu,  8 Aug 2019 16:05:57 +0200
+Message-Id: <20190808140600.21477-7-antoine.tenart@bootlin.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190808140600.21477-1-antoine.tenart@bootlin.com>
 References: <20190808140600.21477-1-antoine.tenart@bootlin.com>
@@ -46,967 +46,755 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds support for initializing the MACsec engine found within
-the Microsemi Ocelot PHY. The engine is initialized in a passthrough
-mode and does not modify any incoming or outgoing packet. But thanks to
-this it now can be configured to perform MACsec transformations on
-packets, which will be supported by a future patch.
+This patch introduces the MACsec hardware offloading infrastructure.
 
-The MACsec read and write functions are wrapped into two versions: one
-called during the init phase, and the other one later on. This is
-because the init functions in the Microsemi Ocelot PHY driver are called
-while the MDIO bus lock is taken.
+The main idea here is to re-use the logic and data structures of the
+software MACsec implementation. This allows not to duplicate definitions
+and structure storing the same kind of information. It also allows to
+use a unified genlink interface for both MACsec implementations (so that
+the same userspace tool, `ip macsec`, is used with the same arguments).
+The MACsec offloading support cannot be disabled if an interface
+supports it at the moment.
+
+The MACsec configuration is passed to device drivers supporting it
+through macsec_hw_offload() which is called from the MACsec genl
+helpers. This function calls the macsec ops of PHY and Ethernet
+drivers in two steps: a preparation one, and a commit one. The first
+step is allowed to fail and should be used to check if a provided
+configuration is compatible with the features provided by a MACsec
+engine, while the second step is not allowed to fail and should only be
+used to enable a given MACsec configuration. Two extra calls are made:
+when a virtual MACsec interface is created and when it is deleted, so
+that the hardware driver can stay in sync.
+
+The Rx and TX handlers are modified to take in account the special case
+were the MACsec transformation happens in the hardware, whether in a PHY
+or in a MAC, as the packets seen by the networking stack on both the
+physical and MACsec virtual interface are exactly the same. This leads
+to some limitations: the hardware and software implementations can't be
+used on the same physical interface, as the policies would be impossible
+to fulfill (such as strict validation of the frames). Also only a single
+virtual MACsec interface can be attached to a physical port supporting
+hardware offloading as it would be impossible to guess onto which
+interface a given packet should go (for ingress traffic).
+
+Another limitation as of now is that the counters and statistics are not
+reported back from the hardware to the software MACsec implementation.
+This isn't an issue when using offloaded MACsec transformations, but it
+should be added in the future so that the MACsec state can be reported
+to the user (which would also improve the debug).
 
 Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
 ---
- drivers/net/phy/mscc.c           | 403 +++++++++++++++++++++++++++++++
- drivers/net/phy/mscc_fc_buffer.h |  64 +++++
- drivers/net/phy/mscc_mac.h       | 159 ++++++++++++
- drivers/net/phy/mscc_macsec.h    | 256 ++++++++++++++++++++
- 4 files changed, 882 insertions(+)
- create mode 100644 drivers/net/phy/mscc_fc_buffer.h
- create mode 100644 drivers/net/phy/mscc_mac.h
- create mode 100644 drivers/net/phy/mscc_macsec.h
+ drivers/net/macsec.c | 379 +++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 362 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/net/phy/mscc.c b/drivers/net/phy/mscc.c
-index 645d354ffb48..603a3dbd83e9 100644
---- a/drivers/net/phy/mscc.c
-+++ b/drivers/net/phy/mscc.c
-@@ -18,6 +18,10 @@
- #include <linux/netdevice.h>
- #include <dt-bindings/net/mscc-phy-vsc8531.h>
+diff --git a/drivers/net/macsec.c b/drivers/net/macsec.c
+index 3815cb6e9bf2..74f0e06a9fc2 100644
+--- a/drivers/net/macsec.c
++++ b/drivers/net/macsec.c
+@@ -11,11 +11,13 @@
+ #include <linux/module.h>
+ #include <crypto/aead.h>
+ #include <linux/etherdevice.h>
++#include <linux/netdevice.h>
+ #include <linux/rtnetlink.h>
+ #include <linux/refcount.h>
+ #include <net/genetlink.h>
+ #include <net/sock.h>
+ #include <net/gro_cells.h>
++#include <linux/phy.h>
  
-+#include "mscc_macsec.h"
-+#include "mscc_mac.h"
-+#include "mscc_fc_buffer.h"
-+
- enum rgmii_rx_clock_delay {
- 	RGMII_RX_CLK_DELAY_0_2_NS = 0,
- 	RGMII_RX_CLK_DELAY_0_8_NS = 1,
-@@ -121,6 +125,26 @@ enum rgmii_rx_clock_delay {
- #define PHY_S6G_PLL_FSM_CTRL_DATA_POS	  8
- #define PHY_S6G_PLL_FSM_ENA_POS		  7
+ #include <uapi/linux/if_macsec.h>
  
-+#define MSCC_EXT_PAGE_MACSEC_17		  17
-+#define MSCC_EXT_PAGE_MACSEC_18		  18
-+
-+#define MSCC_EXT_PAGE_MACSEC_19		  19
-+#define MSCC_PHY_MACSEC_19_REG_ADDR(x)	  (x)
-+#define MSCC_PHY_MACSEC_19_TARGET(x)	  ((x) << 12)
-+#define MSCC_PHY_MACSEC_19_READ		  BIT(14)
-+#define MSCC_PHY_MACSEC_19_CMD		  BIT(15)
-+
-+#define MSCC_EXT_PAGE_MACSEC_20		  20
-+#define MSCC_PHY_MACSEC_20_TARGET(x)	  (x)
-+enum macsec_bank {
-+	FC_BUFFER   = 0x04,
-+	HOST_MAC    = 0x05,
-+	LINE_MAC    = 0x06,
-+	IP_1588     = 0x0e,
-+	MACSEC_INGR = 0x38,
-+	MACSEC_EGR  = 0x3c,
-+};
-+
- #define MSCC_EXT_PAGE_ACCESS		  31
- #define MSCC_PHY_PAGE_STANDARD		  0x0000 /* Standard registers */
- #define MSCC_PHY_PAGE_EXTENDED		  0x0001 /* Extended registers */
-@@ -128,6 +152,7 @@ enum rgmii_rx_clock_delay {
- #define MSCC_PHY_PAGE_EXTENDED_3	  0x0003 /* Extended reg - page 3 */
- #define MSCC_PHY_PAGE_EXTENDED_4	  0x0004 /* Extended reg - page 4 */
- #define MSCC_PHY_PAGE_CSR_CNTL		  MSCC_PHY_PAGE_EXTENDED_4
-+#define MSCC_PHY_PAGE_MACSEC		  MSCC_PHY_PAGE_EXTENDED_4
- /* Extended reg - GPIO; this is a bank of registers that are shared for all PHYs
-  * in the same package.
-  */
-@@ -1576,6 +1601,379 @@ static int vsc8584_config_pre_init(struct phy_device *phydev)
- 	return ret;
+@@ -318,6 +320,44 @@ static void macsec_set_shortlen(struct macsec_eth_header *h, size_t data_len)
+ 		h->short_length = data_len;
  }
  
-+#if IS_ENABLED(CONFIG_MACSEC)
-+static u32 __vsc8584_macsec_phy_read(struct phy_device *phydev,
-+				     enum macsec_bank bank, u32 reg, bool init)
++/* Checks if underlying layers implement MACsec offloading functions
++ * and returns a pointer to the MACsec ops struct if any (also updates
++ * the MACsec context device reference if provided).
++ */
++static const struct macsec_ops *macsec_get_ops(struct macsec_dev *dev,
++					       struct macsec_context *ctx)
 +{
-+	u32 val, val_l = 0, val_h = 0;
-+	unsigned long deadline;
-+	int rc;
++	struct phy_device *phydev;
 +
-+	if (!init) {
-+		rc = phy_select_page(phydev, MSCC_PHY_PAGE_MACSEC);
-+		if (rc < 0)
-+			goto failed;
-+	} else {
-+		__phy_write_page(phydev, MSCC_PHY_PAGE_MACSEC);
++	if (!dev || !dev->real_dev)
++		return NULL;
++
++	/* Check if the PHY device provides MACsec ops */
++	phydev = dev->real_dev->phydev;
++	if (phydev && phydev->macsec_ops) {
++		if (ctx) {
++			memset(ctx, 0, sizeof(*ctx));
++			ctx->phydev = phydev;
++			ctx->is_phy = 1;
++		}
++
++		return phydev->macsec_ops;
 +	}
 +
-+	__phy_write(phydev, MSCC_EXT_PAGE_MACSEC_20,
-+		    MSCC_PHY_MACSEC_20_TARGET(bank >> 2));
++	/* Check if the net device provides MACsec ops */
++	if (dev->real_dev->features & NETIF_F_HW_MACSEC &&
++	    dev->real_dev->macsec_ops) {
++		if (ctx) {
++			memset(ctx, 0, sizeof(*ctx));
++			ctx->netdev = dev->real_dev;
++		}
 +
-+	if (bank >> 2 == 0x1)
-+		/* non-MACsec access */
-+		bank &= 0x3;
-+	else
-+		bank = 0;
-+
-+	__phy_write(phydev, MSCC_EXT_PAGE_MACSEC_19,
-+		    MSCC_PHY_MACSEC_19_CMD | MSCC_PHY_MACSEC_19_READ |
-+		    MSCC_PHY_MACSEC_19_REG_ADDR(reg) |
-+		    MSCC_PHY_MACSEC_19_TARGET(bank));
-+
-+	deadline = jiffies + msecs_to_jiffies(PROC_CMD_NCOMPLETED_TIMEOUT_MS);
-+	do {
-+		val = __phy_read(phydev, MSCC_EXT_PAGE_MACSEC_19);
-+	} while (time_before(jiffies, deadline) && !(val & MSCC_PHY_MACSEC_19_CMD));
-+
-+	val_l = __phy_read(phydev, MSCC_EXT_PAGE_MACSEC_17);
-+	val_h = __phy_read(phydev, MSCC_EXT_PAGE_MACSEC_18);
-+
-+	if (!init) {
-+failed:
-+		phy_restore_page(phydev, rc, rc);
-+	} else {
-+		__phy_write_page(phydev, MSCC_PHY_PAGE_STANDARD);
++		return dev->real_dev->macsec_ops;
 +	}
 +
-+	return (val_h << 16) | val_l;
++	return NULL;
 +}
 +
-+static u32 vsc8584_macsec_init_phy_read(struct phy_device *phydev,
-+					enum macsec_bank bank, u32 reg)
+ /* validate MACsec packet according to IEEE 802.1AE-2006 9.12 */
+ static bool macsec_validate_skb(struct sk_buff *skb, u16 icv_len)
+ {
+@@ -867,8 +907,10 @@ static struct macsec_rx_sc *find_rx_sc_rtnl(struct macsec_secy *secy, sci_t sci)
+ 	return NULL;
+ }
+ 
+-static void handle_not_macsec(struct sk_buff *skb)
++static enum rx_handler_result handle_not_macsec(struct sk_buff *skb)
+ {
++	/* Deliver to the uncontrolled port by default */
++	enum rx_handler_result ret = RX_HANDLER_PASS;
+ 	struct macsec_rxh_data *rxd;
+ 	struct macsec_dev *macsec;
+ 
+@@ -883,7 +925,8 @@ static void handle_not_macsec(struct sk_buff *skb)
+ 		struct sk_buff *nskb;
+ 		struct pcpu_secy_stats *secy_stats = this_cpu_ptr(macsec->stats);
+ 
+-		if (macsec->secy.validate_frames == MACSEC_VALIDATE_STRICT) {
++		if (!macsec_get_ops(macsec, NULL) &&
++		    macsec->secy.validate_frames == MACSEC_VALIDATE_STRICT) {
+ 			u64_stats_update_begin(&secy_stats->syncp);
+ 			secy_stats->stats.InPktsNoTag++;
+ 			u64_stats_update_end(&secy_stats->syncp);
+@@ -902,9 +945,17 @@ static void handle_not_macsec(struct sk_buff *skb)
+ 			secy_stats->stats.InPktsUntagged++;
+ 			u64_stats_update_end(&secy_stats->syncp);
+ 		}
++
++		if (netif_running(macsec->secy.netdev) &&
++		    macsec_get_ops(macsec, NULL)) {
++			ret = RX_HANDLER_EXACT;
++			goto out;
++		}
+ 	}
+ 
++out:
+ 	rcu_read_unlock();
++	return ret;
+ }
+ 
+ static rx_handler_result_t macsec_handle_frame(struct sk_buff **pskb)
+@@ -929,12 +980,8 @@ static rx_handler_result_t macsec_handle_frame(struct sk_buff **pskb)
+ 		goto drop_direct;
+ 
+ 	hdr = macsec_ethhdr(skb);
+-	if (hdr->eth.h_proto != htons(ETH_P_MACSEC)) {
+-		handle_not_macsec(skb);
+-
+-		/* and deliver to the uncontrolled port */
+-		return RX_HANDLER_PASS;
+-	}
++	if (hdr->eth.h_proto != htons(ETH_P_MACSEC))
++		return handle_not_macsec(skb);
+ 
+ 	skb = skb_unshare(skb, GFP_ATOMIC);
+ 	*pskb = skb;
+@@ -1439,6 +1486,40 @@ static const struct nla_policy macsec_genl_sa_policy[NUM_MACSEC_SA_ATTR] = {
+ 				 .len = MACSEC_MAX_KEY_LEN, },
+ };
+ 
++/* Offloads an operation to a device driver */
++static int macsec_offload(int (* const func)(struct macsec_context *),
++			  struct macsec_context *ctx)
 +{
-+	return __vsc8584_macsec_phy_read(phydev, bank, reg, true);
++	int ret;
++
++	if (unlikely(!func))
++		return 0;
++
++	if (ctx->is_phy)
++		mutex_lock(&ctx->phydev->lock);
++
++	/* Phase I: prepare. The drive should fail here if there are going to be
++	 * issues in the commit phase.
++	 */
++	ctx->prepare = true;
++	ret = (*func)(ctx);
++	if (ret)
++		goto phy_unlock;
++
++	/* Phase II: commit. This step cannot fail. */
++	ctx->prepare = false;
++	ret = (*func)(ctx);
++	/* This should never happen: commit is not allowed to fail */
++	if (unlikely(ret))
++		WARN(1, "MACsec offloading commit failed (%d)\n", ret);
++
++phy_unlock:
++	if (ctx->is_phy)
++		mutex_unlock(&ctx->phydev->lock);
++
++	return ret;
 +}
 +
-+static u32 vsc8584_macsec_phy_read(struct phy_device *phydev,
-+				   enum macsec_bank bank, u32 reg)
-+{
-+	return __vsc8584_macsec_phy_read(phydev, bank, reg, false);
-+}
+ static int parse_sa_config(struct nlattr **attrs, struct nlattr **tb_sa)
+ {
+ 	if (!attrs[MACSEC_ATTR_SA_CONFIG])
+@@ -1490,11 +1571,14 @@ static int macsec_add_rxsa(struct sk_buff *skb, struct genl_info *info)
+ 	struct net_device *dev;
+ 	struct nlattr **attrs = info->attrs;
+ 	struct macsec_secy *secy;
+-	struct macsec_rx_sc *rx_sc;
++	struct macsec_rx_sc *rx_sc, *prev_sc;
+ 	struct macsec_rx_sa *rx_sa;
++	const struct macsec_ops *ops;
++	struct macsec_context ctx;
+ 	unsigned char assoc_num;
+ 	struct nlattr *tb_rxsc[MACSEC_RXSC_ATTR_MAX + 1];
+ 	struct nlattr *tb_sa[MACSEC_SA_ATTR_MAX + 1];
++	bool was_active;
+ 	int err;
+ 
+ 	if (!attrs[MACSEC_ATTR_IFINDEX])
+@@ -1551,11 +1635,32 @@ static int macsec_add_rxsa(struct sk_buff *skb, struct genl_info *info)
+ 		spin_unlock_bh(&rx_sa->lock);
+ 	}
+ 
++	was_active = rx_sa->active;
+ 	if (tb_sa[MACSEC_SA_ATTR_ACTIVE])
+ 		rx_sa->active = !!nla_get_u8(tb_sa[MACSEC_SA_ATTR_ACTIVE]);
+ 
+-	nla_memcpy(rx_sa->key.id, tb_sa[MACSEC_SA_ATTR_KEYID], MACSEC_KEYID_LEN);
++	prev_sc = rx_sa->sc;
+ 	rx_sa->sc = rx_sc;
 +
-+static void __vsc8584_macsec_phy_write(struct phy_device *phydev,
-+				       enum macsec_bank bank, u32 reg, u32 val,
-+				       bool init)
-+{
-+	unsigned long deadline;
-+	int rc;
++	/* If h/w offloading is available, propagate to the device */
++	ops = macsec_get_ops(netdev_priv(dev), &ctx);
++	if (ops) {
++		ctx.sa.assoc_num = assoc_num;
++		ctx.sa.rx_sa = rx_sa;
++		memcpy(ctx.sa.key, nla_data(tb_sa[MACSEC_SA_ATTR_KEY]),
++		       MACSEC_KEYID_LEN);
 +
-+	if (!init) {
-+		rc = phy_select_page(phydev, MSCC_PHY_PAGE_MACSEC);
-+		if (rc < 0)
-+			goto failed;
-+	} else {
-+		__phy_write_page(phydev, MSCC_PHY_PAGE_MACSEC);
++		err = macsec_offload(ops->mdo_add_rxsa, &ctx);
++		if (err) {
++			rx_sa->active = was_active;
++			rx_sa->sc = prev_sc;
++			kfree(rx_sa);
++			rtnl_unlock();
++			return err;
++		}
 +	}
 +
-+	__phy_write(phydev, MSCC_EXT_PAGE_MACSEC_20,
-+		    MSCC_PHY_MACSEC_20_TARGET(bank >> 2));
++	nla_memcpy(rx_sa->key.id, tb_sa[MACSEC_SA_ATTR_KEYID], MACSEC_KEYID_LEN);
+ 	rcu_assign_pointer(rx_sc->sa[assoc_num], rx_sa);
+ 
+ 	rtnl_unlock();
+@@ -1583,6 +1688,10 @@ static int macsec_add_rxsc(struct sk_buff *skb, struct genl_info *info)
+ 	struct nlattr **attrs = info->attrs;
+ 	struct macsec_rx_sc *rx_sc;
+ 	struct nlattr *tb_rxsc[MACSEC_RXSC_ATTR_MAX + 1];
++	const struct macsec_ops *ops;
++	struct macsec_context ctx;
++	bool was_active;
++	int ret;
+ 
+ 	if (!attrs[MACSEC_ATTR_IFINDEX])
+ 		return -EINVAL;
+@@ -1608,9 +1717,22 @@ static int macsec_add_rxsc(struct sk_buff *skb, struct genl_info *info)
+ 		return PTR_ERR(rx_sc);
+ 	}
+ 
++	was_active = rx_sc->active;
+ 	if (tb_rxsc[MACSEC_RXSC_ATTR_ACTIVE])
+ 		rx_sc->active = !!nla_get_u8(tb_rxsc[MACSEC_RXSC_ATTR_ACTIVE]);
+ 
++	ops = macsec_get_ops(netdev_priv(dev), &ctx);
++	if (ops) {
++		ctx.rx_sc = rx_sc;
 +
-+	if ((bank >> 2 == 0x1) || (bank >> 2 == 0x3))
-+		bank &= 0x3;
-+	else
-+		/* MACsec access */
-+		bank = 0;
-+
-+	__phy_write(phydev, MSCC_EXT_PAGE_MACSEC_17, (u16)val);
-+	__phy_write(phydev, MSCC_EXT_PAGE_MACSEC_18, (u16)(val >> 16));
-+
-+	__phy_write(phydev, MSCC_EXT_PAGE_MACSEC_19,
-+		    MSCC_PHY_MACSEC_19_CMD | MSCC_PHY_MACSEC_19_REG_ADDR(reg) |
-+		    MSCC_PHY_MACSEC_19_TARGET(bank));
-+
-+	deadline = jiffies + msecs_to_jiffies(PROC_CMD_NCOMPLETED_TIMEOUT_MS);
-+	do {
-+		val = __phy_read(phydev, MSCC_EXT_PAGE_MACSEC_19);
-+	} while (time_before(jiffies, deadline) && !(val & MSCC_PHY_MACSEC_19_CMD));
-+
-+	if (!init) {
-+failed:
-+		phy_restore_page(phydev, rc, rc);
-+	} else {
-+		__phy_write_page(phydev, MSCC_PHY_PAGE_STANDARD);
-+	}
-+}
-+
-+static void vsc8584_macsec_init_phy_write(struct phy_device *phydev,
-+					  enum macsec_bank bank, u32 reg,
-+					  u32 val)
-+{
-+	return __vsc8584_macsec_phy_write(phydev, bank, reg, val, true);
-+}
-+
-+static void vsc8584_macsec_phy_write(struct phy_device *phydev,
-+				     enum macsec_bank bank, u32 reg, u32 val)
-+{
-+	return __vsc8584_macsec_phy_write(phydev, bank, reg, val, false);
-+}
-+
-+static void vsc8584_macsec_classification(struct phy_device *phydev,
-+					  enum macsec_bank bank)
-+{
-+	/* enable VLAN tag parsing */
-+	vsc8584_macsec_init_phy_write(phydev, bank, MSCC_MS_SAM_CP_TAG,
-+				      MSCC_MS_SAM_CP_TAG_PARSE_STAG |
-+				      MSCC_MS_SAM_CP_TAG_PARSE_QTAG |
-+				      MSCC_MS_SAM_CP_TAG_PARSE_QINQ);
-+}
-+
-+static void vsc8584_macsec_flow_default_action(struct phy_device *phydev,
-+					       enum macsec_bank bank)
-+{
-+	u32 port = (bank == MACSEC_INGR) ?
-+		   MSCC_MS_PORT_CONTROLLED : MSCC_MS_PORT_COMMON;
-+
-+	vsc8584_macsec_init_phy_write(phydev, bank, MSCC_MS_SAM_NM_FLOW_NCP,
-+				      /* MACsec untagged */
-+				      MSCC_MS_SAM_NM_FLOW_NCP_UNTAGGED_DROP_ACTION(MSCC_MS_ACTION_DROP) |
-+				      MSCC_MS_SAM_NM_FLOW_NCP_UNTAGGED_DEST_PORT(port) |
-+				      /* MACsec tagged */
-+				      MSCC_MS_SAM_NM_FLOW_NCP_TAGGED_DROP_ACTION(MSCC_MS_ACTION_DROP) |
-+				      MSCC_MS_SAM_NM_FLOW_NCP_TAGGED_DEST_PORT(port) |
-+				      /* Bad tag */
-+				      MSCC_MS_SAM_NM_FLOW_NCP_BADTAG_DROP_ACTION(MSCC_MS_ACTION_DROP) |
-+				      MSCC_MS_SAM_NM_FLOW_NCP_BADTAG_DEST_PORT(port) |
-+				      /* Kay tag */
-+				      MSCC_MS_SAM_NM_FLOW_NCP_KAY_DROP_ACTION(MSCC_MS_ACTION_DROP) |
-+				      MSCC_MS_SAM_NM_FLOW_NCP_KAY_DEST_PORT(port));
-+	vsc8584_macsec_init_phy_write(phydev, bank, MSCC_MS_SAM_NM_FLOW_CP,
-+				      /* MACsec untagged */
-+				      MSCC_MS_SAM_NM_FLOW_CP_UNTAGGED_DROP_ACTION(MSCC_MS_ACTION_DROP) |
-+				      MSCC_MS_SAM_NM_FLOW_CP_UNTAGGED_DEST_PORT(port) |
-+				      /* MACsec tagged */
-+				      MSCC_MS_SAM_NM_FLOW_CP_TAGGED_DROP_ACTION(MSCC_MS_ACTION_DROP) |
-+				      MSCC_MS_SAM_NM_FLOW_CP_TAGGED_DEST_PORT(port) |
-+				      /* Bad tag */
-+				      MSCC_MS_SAM_NM_FLOW_CP_BADTAG_DROP_ACTION(MSCC_MS_ACTION_DROP) |
-+				      MSCC_MS_SAM_NM_FLOW_CP_BADTAG_DEST_PORT(port) |
-+				      /* Kay tag */
-+				      MSCC_MS_SAM_NM_FLOW_CP_KAY_DROP_ACTION(MSCC_MS_ACTION_DROP) |
-+				      MSCC_MS_SAM_NM_FLOW_CP_KAY_DEST_PORT(port));
-+}
-+
-+static void vsc8584_macsec_integrity_checks(struct phy_device *phydev,
-+					    enum macsec_bank bank)
-+{
-+	u32 val;
-+
-+	if (bank != MACSEC_INGR)
-+		return;
-+
-+	/* Set default rules to pass unmatched frames */
-+	val = vsc8584_macsec_init_phy_read(phydev, bank,
-+					   MSCC_MS_PARAMS2_IG_CC_CONTROL);
-+	val |= MSCC_MS_PARAMS2_IG_CC_CONTROL_NON_MATCH_CTRL_ACT |
-+	       MSCC_MS_PARAMS2_IG_CC_CONTROL_NON_MATCH_ACT;
-+	vsc8584_macsec_init_phy_write(phydev, bank, MSCC_MS_PARAMS2_IG_CC_CONTROL,
-+				      val);
-+
-+	vsc8584_macsec_init_phy_write(phydev, bank, MSCC_MS_PARAMS2_IG_CP_TAG,
-+				      MSCC_MS_PARAMS2_IG_CP_TAG_PARSE_STAG |
-+				      MSCC_MS_PARAMS2_IG_CP_TAG_PARSE_QTAG |
-+				      MSCC_MS_PARAMS2_IG_CP_TAG_PARSE_QINQ);
-+}
-+
-+static void vsc8584_macsec_block_init(struct phy_device *phydev,
-+				      enum macsec_bank bank)
-+{
-+	u32 val;
-+	int i;
-+
-+	vsc8584_macsec_init_phy_write(phydev, bank, MSCC_MS_ENA_CFG,
-+				      MSCC_MS_ENA_CFG_SW_RST |
-+				      MSCC_MS_ENA_CFG_MACSEC_BYPASS_ENA);
-+
-+	/* Set the MACsec block out of s/w reset and enable clocks */
-+	vsc8584_macsec_init_phy_write(phydev, bank, MSCC_MS_ENA_CFG,
-+				      MSCC_MS_ENA_CFG_CLK_ENA);
-+
-+	vsc8584_macsec_init_phy_write(phydev, bank, MSCC_MS_STATUS_CONTEXT_CTRL,
-+				      bank == MACSEC_INGR ? 0xe5880214 : 0xe5880218);
-+	vsc8584_macsec_init_phy_write(phydev, bank, MSCC_MS_MISC_CONTROL,
-+				      MSCC_MS_MISC_CONTROL_MC_LATENCY_FIX(bank == MACSEC_INGR ? 57 : 40) |
-+				      MSCC_MS_MISC_CONTROL_XFORM_REC_SIZE(bank == MACSEC_INGR ? 1 : 2));
-+
-+	/* Clear the counters */
-+	val = vsc8584_macsec_init_phy_read(phydev, bank, MSCC_MS_COUNT_CONTROL);
-+	val |= MSCC_MS_COUNT_CONTROL_AUTO_CNTR_RESET;
-+	vsc8584_macsec_init_phy_write(phydev, bank, MSCC_MS_COUNT_CONTROL, val);
-+
-+	/* Enable octet increment mode */
-+	vsc8584_macsec_init_phy_write(phydev, bank, MSCC_MS_PP_CTRL,
-+				      MSCC_MS_PP_CTRL_MACSEC_OCTET_INCR_MODE);
-+
-+	vsc8584_macsec_init_phy_write(phydev, bank, MSCC_MS_BLOCK_CTX_UPDATE, 0x3);
-+
-+	val = vsc8584_macsec_init_phy_read(phydev, bank, MSCC_MS_COUNT_CONTROL);
-+	val |= MSCC_MS_COUNT_CONTROL_RESET_ALL;
-+	vsc8584_macsec_init_phy_write(phydev, bank, MSCC_MS_COUNT_CONTROL, val);
-+
-+	/* Set the MTU */
-+	vsc8584_macsec_init_phy_write(phydev, bank, MSCC_MS_NON_VLAN_MTU_CHECK,
-+				      MSCC_MS_NON_VLAN_MTU_CHECK_NV_MTU_COMPARE(32761) |
-+				      MSCC_MS_NON_VLAN_MTU_CHECK_NV_MTU_COMP_DROP);
-+
-+	for (i = 0; i < 8; i++)
-+		vsc8584_macsec_init_phy_write(phydev, bank, MSCC_MS_VLAN_MTU_CHECK(i),
-+					      MSCC_MS_VLAN_MTU_CHECK_MTU_COMPARE(32761) |
-+					      MSCC_MS_VLAN_MTU_CHECK_MTU_COMP_DROP);
-+
-+	if (bank == MACSEC_EGR) {
-+		val = vsc8584_macsec_init_phy_read(phydev, bank, MSCC_MS_INTR_CTRL_STATUS);
-+		val &= ~MSCC_MS_INTR_CTRL_STATUS_INTR_ENABLE_M;
-+		vsc8584_macsec_init_phy_write(phydev, bank, MSCC_MS_INTR_CTRL_STATUS, val);
-+
-+		vsc8584_macsec_init_phy_write(phydev, bank, MSCC_MS_FC_CFG,
-+					      MSCC_MS_FC_CFG_FCBUF_ENA |
-+					      MSCC_MS_FC_CFG_LOW_THRESH(0x1) |
-+					      MSCC_MS_FC_CFG_HIGH_THRESH(0x4) |
-+					      MSCC_MS_FC_CFG_LOW_BYTES_VAL(0x4) |
-+					      MSCC_MS_FC_CFG_HIGH_BYTES_VAL(0x6));
++		ret = macsec_offload(ops->mdo_add_rxsc, &ctx);
++		if (ret) {
++			rx_sc->active = was_active;
++			rtnl_unlock();
++			return ret;
++		}
 +	}
 +
-+	vsc8584_macsec_classification(phydev, bank);
-+	vsc8584_macsec_flow_default_action(phydev, bank);
-+	vsc8584_macsec_integrity_checks(phydev, bank);
+ 	rtnl_unlock();
+ 
+ 	return 0;
+@@ -1648,8 +1770,12 @@ static int macsec_add_txsa(struct sk_buff *skb, struct genl_info *info)
+ 	struct macsec_secy *secy;
+ 	struct macsec_tx_sc *tx_sc;
+ 	struct macsec_tx_sa *tx_sa;
++	const struct macsec_ops *ops;
++	struct macsec_context ctx;
+ 	unsigned char assoc_num;
+ 	struct nlattr *tb_sa[MACSEC_SA_ATTR_MAX + 1];
++	bool was_operational, was_active;
++	u32 prev_pn;
+ 	int err;
+ 
+ 	if (!attrs[MACSEC_ATTR_IFINDEX])
+@@ -1700,18 +1826,42 @@ static int macsec_add_txsa(struct sk_buff *skb, struct genl_info *info)
+ 		return err;
+ 	}
+ 
+-	nla_memcpy(tx_sa->key.id, tb_sa[MACSEC_SA_ATTR_KEYID], MACSEC_KEYID_LEN);
+-
+ 	spin_lock_bh(&tx_sa->lock);
++	prev_pn = tx_sa->next_pn;
+ 	tx_sa->next_pn = nla_get_u32(tb_sa[MACSEC_SA_ATTR_PN]);
+ 	spin_unlock_bh(&tx_sa->lock);
+ 
++	was_active = tx_sa->active;
+ 	if (tb_sa[MACSEC_SA_ATTR_ACTIVE])
+ 		tx_sa->active = !!nla_get_u8(tb_sa[MACSEC_SA_ATTR_ACTIVE]);
+ 
++	was_operational = secy->operational;
+ 	if (assoc_num == tx_sc->encoding_sa && tx_sa->active)
+ 		secy->operational = true;
+ 
++	/* If h/w offloading is available, propagate to the device */
++	ops = macsec_get_ops(netdev_priv(dev), &ctx);
++	if (ops) {
++		ctx.sa.assoc_num = assoc_num;
++		ctx.sa.tx_sa = tx_sa;
++		memcpy(ctx.sa.key, nla_data(tb_sa[MACSEC_SA_ATTR_KEY]),
++		       MACSEC_KEYID_LEN);
 +
-+	/* Enable the MACsec block */
-+	vsc8584_macsec_init_phy_write(phydev, bank, MSCC_MS_ENA_CFG,
-+				      MSCC_MS_ENA_CFG_CLK_ENA |
-+				      MSCC_MS_ENA_CFG_MACSEC_ENA |
-+				      MSCC_MS_ENA_CFG_MACSEC_SPEED_MODE(0x5));
-+}
++		err = macsec_offload(ops->mdo_add_txsa, &ctx);
++		if (err) {
++			spin_lock_bh(&tx_sa->lock);
++			tx_sa->next_pn = prev_pn;
++			spin_unlock_bh(&tx_sa->lock);
 +
-+static void vsc8584_macsec_mac_init(struct phy_device *phydev,
-+				    enum macsec_bank bank)
-+{
-+	u32 val;
-+	int i;
++			tx_sa->active = was_active;
++			secy->operational = was_operational;
++			kfree(tx_sa);
++			rtnl_unlock();
++			return err;
++		}
++	}
 +
-+	/* Clear host & line stats */
-+	for (i = 0; i < 36; i++)
-+		vsc8584_macsec_init_phy_write(phydev, bank, 0x1c + i, 0);
++	nla_memcpy(tx_sa->key.id, tb_sa[MACSEC_SA_ATTR_KEYID], MACSEC_KEYID_LEN);
+ 	rcu_assign_pointer(tx_sc->sa[assoc_num], tx_sa);
+ 
+ 	rtnl_unlock();
+@@ -1726,9 +1876,12 @@ static int macsec_del_rxsa(struct sk_buff *skb, struct genl_info *info)
+ 	struct macsec_secy *secy;
+ 	struct macsec_rx_sc *rx_sc;
+ 	struct macsec_rx_sa *rx_sa;
++	const struct macsec_ops *ops;
++	struct macsec_context ctx;
+ 	u8 assoc_num;
+ 	struct nlattr *tb_rxsc[MACSEC_RXSC_ATTR_MAX + 1];
+ 	struct nlattr *tb_sa[MACSEC_SA_ATTR_MAX + 1];
++	int ret;
+ 
+ 	if (!attrs[MACSEC_ATTR_IFINDEX])
+ 		return -EINVAL;
+@@ -1752,6 +1905,19 @@ static int macsec_del_rxsa(struct sk_buff *skb, struct genl_info *info)
+ 		return -EBUSY;
+ 	}
+ 
++	/* If h/w offloading is available, propagate to the device */
++	ops = macsec_get_ops(netdev_priv(dev), &ctx);
++	if (ops) {
++		ctx.sa.assoc_num = assoc_num;
++		ctx.sa.rx_sa = rx_sa;
 +
-+	val = vsc8584_macsec_init_phy_read(phydev, bank,
-+					   MSCC_MAC_PAUSE_CFG_TX_FRAME_CTRL);
-+	val &= ~MSCC_MAC_PAUSE_CFG_TX_FRAME_CTRL_PAUSE_MODE_M;
-+	val |= MSCC_MAC_PAUSE_CFG_TX_FRAME_CTRL_PAUSE_MODE(2) |
-+	       MSCC_MAC_PAUSE_CFG_TX_FRAME_CTRL_PAUSE_VALUE(0xffff);
-+	vsc8584_macsec_init_phy_write(phydev, bank,
-+				      MSCC_MAC_PAUSE_CFG_TX_FRAME_CTRL, val);
++		ret = macsec_offload(ops->mdo_del_rxsa, &ctx);
++		if (ret) {
++			rtnl_unlock();
++			return ret;
++		}
++	}
 +
-+	val = vsc8584_macsec_init_phy_read(phydev, bank,
-+					   MSCC_MAC_PAUSE_CFG_TX_FRAME_CTRL_2);
-+	val |= 0xffff;
-+	vsc8584_macsec_init_phy_write(phydev, bank,
-+				      MSCC_MAC_PAUSE_CFG_TX_FRAME_CTRL_2, val);
+ 	RCU_INIT_POINTER(rx_sc->sa[assoc_num], NULL);
+ 	clear_rx_sa(rx_sa);
+ 
+@@ -1766,8 +1932,11 @@ static int macsec_del_rxsc(struct sk_buff *skb, struct genl_info *info)
+ 	struct net_device *dev;
+ 	struct macsec_secy *secy;
+ 	struct macsec_rx_sc *rx_sc;
++	const struct macsec_ops *ops;
++	struct macsec_context ctx;
+ 	sci_t sci;
+ 	struct nlattr *tb_rxsc[MACSEC_RXSC_ATTR_MAX + 1];
++	int ret;
+ 
+ 	if (!attrs[MACSEC_ATTR_IFINDEX])
+ 		return -EINVAL;
+@@ -1794,6 +1963,17 @@ static int macsec_del_rxsc(struct sk_buff *skb, struct genl_info *info)
+ 		return -ENODEV;
+ 	}
+ 
++	/* If h/w offloading is available, propagate to the device */
++	ops = macsec_get_ops(netdev_priv(dev), &ctx);
++	if (ops) {
++		ctx.rx_sc = rx_sc;
++		ret = macsec_offload(ops->mdo_del_rxsc, &ctx);
++		if (ret) {
++			rtnl_unlock();
++			return ret;
++		}
++	}
 +
-+	val = vsc8584_macsec_init_phy_read(phydev, bank,
-+					   MSCC_MAC_PAUSE_CFG_RX_FRAME_CTRL);
-+	if (bank == HOST_MAC)
-+		val |= MSCC_MAC_PAUSE_CFG_RX_FRAME_CTRL_PAUSE_TIMER_ENA |
-+		       MSCC_MAC_PAUSE_CFG_RX_FRAME_CTRL_PAUSE_FRAME_DROP_ENA;
-+	else
-+		val |= MSCC_MAC_PAUSE_CFG_RX_FRAME_CTRL_PAUSE_REACT_ENA |
-+		       MSCC_MAC_PAUSE_CFG_RX_FRAME_CTRL_PAUSE_FRAME_DROP_ENA |
-+		       MSCC_MAC_PAUSE_CFG_RX_FRAME_CTRL_PAUSE_MODE |
-+		       MSCC_MAC_PAUSE_CFG_RX_FRAME_CTRL_EARLY_PAUSE_DETECT_ENA;
-+	vsc8584_macsec_init_phy_write(phydev, bank,
-+				      MSCC_MAC_PAUSE_CFG_RX_FRAME_CTRL, val);
+ 	free_rx_sc(rx_sc);
+ 	rtnl_unlock();
+ 
+@@ -1807,8 +1987,11 @@ static int macsec_del_txsa(struct sk_buff *skb, struct genl_info *info)
+ 	struct macsec_secy *secy;
+ 	struct macsec_tx_sc *tx_sc;
+ 	struct macsec_tx_sa *tx_sa;
++	const struct macsec_ops *ops;
++	struct macsec_context ctx;
+ 	u8 assoc_num;
+ 	struct nlattr *tb_sa[MACSEC_SA_ATTR_MAX + 1];
++	int ret;
+ 
+ 	if (!attrs[MACSEC_ATTR_IFINDEX])
+ 		return -EINVAL;
+@@ -1829,6 +2012,19 @@ static int macsec_del_txsa(struct sk_buff *skb, struct genl_info *info)
+ 		return -EBUSY;
+ 	}
+ 
++	/* If h/w offloading is available, propagate to the device */
++	ops = macsec_get_ops(netdev_priv(dev), &ctx);
++	if (ops) {
++		ctx.sa.assoc_num = assoc_num;
++		ctx.sa.tx_sa = tx_sa;
 +
-+	vsc8584_macsec_init_phy_write(phydev, bank, MSCC_MAC_CFG_PKTINF_CFG,
-+				      MSCC_MAC_CFG_PKTINF_CFG_STRIP_FCS_ENA |
-+				      MSCC_MAC_CFG_PKTINF_CFG_INSERT_FCS_ENA |
-+				      MSCC_MAC_CFG_PKTINF_CFG_LPI_RELAY_ENA |
-+				      MSCC_MAC_CFG_PKTINF_CFG_STRIP_PREAMBLE_ENA |
-+				      MSCC_MAC_CFG_PKTINF_CFG_INSERT_PREAMBLE_ENA |
-+				      (bank == HOST_MAC ?
-+				       MSCC_MAC_CFG_PKTINF_CFG_ENABLE_TX_PADDING : 0));
++		ret = macsec_offload(ops->mdo_del_txsa, &ctx);
++		if (ret) {
++			rtnl_unlock();
++			return ret;
++		}
++	}
 +
-+	val = vsc8584_macsec_init_phy_read(phydev, bank, MSCC_MAC_CFG_MODE_CFG);
-+	val &= ~MSCC_MAC_CFG_MODE_CFG_DISABLE_DIC;
-+	vsc8584_macsec_init_phy_write(phydev, bank, MSCC_MAC_CFG_MODE_CFG, val);
+ 	RCU_INIT_POINTER(tx_sc->sa[assoc_num], NULL);
+ 	clear_tx_sa(tx_sa);
+ 
+@@ -1865,8 +2061,13 @@ static int macsec_upd_txsa(struct sk_buff *skb, struct genl_info *info)
+ 	struct macsec_secy *secy;
+ 	struct macsec_tx_sc *tx_sc;
+ 	struct macsec_tx_sa *tx_sa;
++	const struct macsec_ops *ops;
++	struct macsec_context ctx;
+ 	u8 assoc_num;
+ 	struct nlattr *tb_sa[MACSEC_SA_ATTR_MAX + 1];
++	bool was_operational, was_active;
++	u32 prev_pn = 0;
++	int ret = 0;
+ 
+ 	if (!attrs[MACSEC_ATTR_IFINDEX])
+ 		return -EINVAL;
+@@ -1887,19 +2088,41 @@ static int macsec_upd_txsa(struct sk_buff *skb, struct genl_info *info)
+ 
+ 	if (tb_sa[MACSEC_SA_ATTR_PN]) {
+ 		spin_lock_bh(&tx_sa->lock);
++		prev_pn = tx_sa->next_pn;
+ 		tx_sa->next_pn = nla_get_u32(tb_sa[MACSEC_SA_ATTR_PN]);
+ 		spin_unlock_bh(&tx_sa->lock);
+ 	}
+ 
++	was_active = tx_sa->active;
+ 	if (tb_sa[MACSEC_SA_ATTR_ACTIVE])
+ 		tx_sa->active = nla_get_u8(tb_sa[MACSEC_SA_ATTR_ACTIVE]);
+ 
++	was_operational = secy->operational;
+ 	if (assoc_num == tx_sc->encoding_sa)
+ 		secy->operational = tx_sa->active;
+ 
++	/* If h/w offloading is available, propagate to the device */
++	ops = macsec_get_ops(netdev_priv(dev), &ctx);
++	if (ops) {
++		ctx.sa.assoc_num = assoc_num;
++		ctx.sa.tx_sa = tx_sa;
 +
-+	val = vsc8584_macsec_init_phy_read(phydev, bank, MSCC_MAC_CFG_MAXLEN_CFG);
-+	val &= ~MSCC_MAC_CFG_MAXLEN_CFG_MAX_LEN_M;
-+	val |= MSCC_MAC_CFG_MAXLEN_CFG_MAX_LEN(10240);
-+	vsc8584_macsec_init_phy_write(phydev, bank, MSCC_MAC_CFG_MAXLEN_CFG, val);
++		ret = macsec_offload(ops->mdo_upd_txsa, &ctx);
++		if (ret) {
++			if (tb_sa[MACSEC_SA_ATTR_PN]) {
++				spin_lock_bh(&tx_sa->lock);
++				tx_sa->next_pn = prev_pn;
++				spin_unlock_bh(&tx_sa->lock);
++			}
 +
-+	vsc8584_macsec_init_phy_write(phydev, bank, MSCC_MAC_CFG_ADV_CHK_CFG,
-+				      MSCC_MAC_CFG_ADV_CHK_CFG_SFD_CHK_ENA |
-+				      MSCC_MAC_CFG_ADV_CHK_CFG_PRM_CHK_ENA |
-+				      MSCC_MAC_CFG_ADV_CHK_CFG_OOR_ERR_ENA |
-+				      MSCC_MAC_CFG_ADV_CHK_CFG_INR_ERR_ENA);
++			tx_sa->active = was_active;
++			secy->operational = was_operational;
++		}
++	}
 +
-+	val = vsc8584_macsec_init_phy_read(phydev, bank, MSCC_MAC_CFG_LFS_CFG);
-+	val &= ~MSCC_MAC_CFG_LFS_CFG_LFS_MODE_ENA;
-+	vsc8584_macsec_init_phy_write(phydev, bank, MSCC_MAC_CFG_LFS_CFG, val);
+ 	rtnl_unlock();
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ static int macsec_upd_rxsa(struct sk_buff *skb, struct genl_info *info)
+@@ -1909,9 +2132,14 @@ static int macsec_upd_rxsa(struct sk_buff *skb, struct genl_info *info)
+ 	struct macsec_secy *secy;
+ 	struct macsec_rx_sc *rx_sc;
+ 	struct macsec_rx_sa *rx_sa;
++	const struct macsec_ops *ops;
++	struct macsec_context ctx;
+ 	u8 assoc_num;
+ 	struct nlattr *tb_rxsc[MACSEC_RXSC_ATTR_MAX + 1];
+ 	struct nlattr *tb_sa[MACSEC_SA_ATTR_MAX + 1];
++	bool was_active;
++	u32 prev_pn = 0;
++	int ret = 0;
+ 
+ 	if (!attrs[MACSEC_ATTR_IFINDEX])
+ 		return -EINVAL;
+@@ -1935,15 +2163,35 @@ static int macsec_upd_rxsa(struct sk_buff *skb, struct genl_info *info)
+ 
+ 	if (tb_sa[MACSEC_SA_ATTR_PN]) {
+ 		spin_lock_bh(&rx_sa->lock);
++		prev_pn = rx_sa->next_pn;
+ 		rx_sa->next_pn = nla_get_u32(tb_sa[MACSEC_SA_ATTR_PN]);
+ 		spin_unlock_bh(&rx_sa->lock);
+ 	}
+ 
++	was_active = rx_sa->active;
+ 	if (tb_sa[MACSEC_SA_ATTR_ACTIVE])
+ 		rx_sa->active = nla_get_u8(tb_sa[MACSEC_SA_ATTR_ACTIVE]);
+ 
++	/* If h/w offloading is available, propagate to the device */
++	ops = macsec_get_ops(netdev_priv(dev), &ctx);
++	if (ops) {
++		ctx.sa.assoc_num = assoc_num;
++		ctx.sa.rx_sa = rx_sa;
 +
-+	vsc8584_macsec_init_phy_write(phydev, bank, MSCC_MAC_CFG_ENA_CFG,
-+				      MSCC_MAC_CFG_ENA_CFG_RX_CLK_ENA |
-+				      MSCC_MAC_CFG_ENA_CFG_TX_CLK_ENA |
-+				      MSCC_MAC_CFG_ENA_CFG_RX_ENA |
-+				      MSCC_MAC_CFG_ENA_CFG_TX_ENA);
-+}
++		ret = macsec_offload(ops->mdo_upd_rxsa, &ctx);
++		if (ret) {
++			if (tb_sa[MACSEC_SA_ATTR_PN]) {
++				spin_lock_bh(&rx_sa->lock);
++				rx_sa->next_pn = prev_pn;
++				spin_unlock_bh(&rx_sa->lock);
++			}
 +
-+/* Must be called with mdio_lock taken */
-+static int vsc8584_macsec_init(struct phy_device *phydev)
-+{
-+	u32 val;
++			rx_sa->active = was_active;
++		}
++	}
 +
-+	vsc8584_macsec_block_init(phydev, MACSEC_INGR);
-+	vsc8584_macsec_block_init(phydev, MACSEC_EGR);
-+	vsc8584_macsec_mac_init(phydev, HOST_MAC);
-+	vsc8584_macsec_mac_init(phydev, LINE_MAC);
+ 	rtnl_unlock();
+-	return 0;
++	return ret;
+ }
+ 
+ static int macsec_upd_rxsc(struct sk_buff *skb, struct genl_info *info)
+@@ -1953,6 +2201,11 @@ static int macsec_upd_rxsc(struct sk_buff *skb, struct genl_info *info)
+ 	struct macsec_secy *secy;
+ 	struct macsec_rx_sc *rx_sc;
+ 	struct nlattr *tb_rxsc[MACSEC_RXSC_ATTR_MAX + 1];
++	const struct macsec_ops *ops;
++	struct macsec_context ctx;
++	unsigned int prev_n_rx_sc;
++	bool was_active;
++	int ret;
+ 
+ 	if (!attrs[MACSEC_ATTR_IFINDEX])
+ 		return -EINVAL;
+@@ -1970,6 +2223,8 @@ static int macsec_upd_rxsc(struct sk_buff *skb, struct genl_info *info)
+ 		return PTR_ERR(rx_sc);
+ 	}
+ 
++	was_active = rx_sc->active;
++	prev_n_rx_sc = secy->n_rx_sc;
+ 	if (tb_rxsc[MACSEC_RXSC_ATTR_ACTIVE]) {
+ 		bool new = !!nla_get_u8(tb_rxsc[MACSEC_RXSC_ATTR_ACTIVE]);
+ 
+@@ -1979,6 +2234,19 @@ static int macsec_upd_rxsc(struct sk_buff *skb, struct genl_info *info)
+ 		rx_sc->active = new;
+ 	}
+ 
++	ops = macsec_get_ops(netdev_priv(dev), &ctx);
++	if (ops) {
++		ctx.rx_sc = rx_sc;
 +
-+	vsc8584_macsec_init_phy_write(phydev, FC_BUFFER,
-+				      MSCC_FCBUF_FC_READ_THRESH_CFG,
-+				      MSCC_FCBUF_FC_READ_THRESH_CFG_TX_THRESH(4) |
-+				      MSCC_FCBUF_FC_READ_THRESH_CFG_RX_THRESH(5));
++		ret = macsec_offload(ops->mdo_upd_rxsc, &ctx);
++		if (ret) {
++			secy->n_rx_sc = prev_n_rx_sc;
++			rx_sc->active = was_active;
++			rtnl_unlock();
++			return 0;
++		}
++	}
 +
-+	val = vsc8584_macsec_init_phy_read(phydev, FC_BUFFER, MSCC_FCBUF_MODE_CFG);
-+	val |= MSCC_FCBUF_MODE_CFG_PAUSE_GEN_ENA |
-+	       MSCC_FCBUF_MODE_CFG_RX_PPM_RATE_ADAPT_ENA |
-+	       MSCC_FCBUF_MODE_CFG_TX_PPM_RATE_ADAPT_ENA;
-+	vsc8584_macsec_init_phy_write(phydev, FC_BUFFER, MSCC_FCBUF_MODE_CFG, val);
+ 	rtnl_unlock();
+ 
+ 	return 0;
+@@ -2546,11 +2814,15 @@ static netdev_tx_t macsec_start_xmit(struct sk_buff *skb,
+ {
+ 	struct macsec_dev *macsec = netdev_priv(dev);
+ 	struct macsec_secy *secy = &macsec->secy;
++	struct macsec_tx_sc *tx_sc = &secy->tx_sc;
+ 	struct pcpu_secy_stats *secy_stats;
++	struct macsec_tx_sa *tx_sa;
+ 	int ret, len;
+ 
++	tx_sa = macsec_txsa_get(tx_sc->sa[tx_sc->encoding_sa]);
 +
-+	vsc8584_macsec_init_phy_write(phydev, FC_BUFFER, MSCC_FCBUF_PPM_RATE_ADAPT_THRESH_CFG,
-+				      MSCC_FCBUF_PPM_RATE_ADAPT_THRESH_CFG_TX_THRESH(8) |
-+				      MSCC_FCBUF_PPM_RATE_ADAPT_THRESH_CFG_TX_OFFSET(9));
+ 	/* 10.5 */
+-	if (!secy->protect_frames) {
++	if (!secy->protect_frames || macsec_get_ops(netdev_priv(dev), NULL)) {
+ 		secy_stats = this_cpu_ptr(macsec->stats);
+ 		u64_stats_update_begin(&secy_stats->syncp);
+ 		secy_stats->stats.OutPktsUntagged++;
+@@ -2645,6 +2917,8 @@ static int macsec_dev_open(struct net_device *dev)
+ {
+ 	struct macsec_dev *macsec = macsec_priv(dev);
+ 	struct net_device *real_dev = macsec->real_dev;
++	const struct macsec_ops *ops;
++	struct macsec_context ctx;
+ 	int err;
+ 
+ 	err = dev_uc_add(real_dev, dev->dev_addr);
+@@ -2663,6 +2937,14 @@ static int macsec_dev_open(struct net_device *dev)
+ 			goto clear_allmulti;
+ 	}
+ 
++	/* If h/w offloading is available, propagate to the device */
++	ops = macsec_get_ops(netdev_priv(dev), &ctx);
++	if (ops) {
++		err = macsec_offload(ops->mdo_dev_open, &ctx);
++		if (err)
++			goto clear_allmulti;
++	}
 +
-+	val = vsc8584_macsec_init_phy_read(phydev, FC_BUFFER,
-+					   MSCC_FCBUF_TX_DATA_QUEUE_CFG);
-+	val &= ~(MSCC_FCBUF_TX_DATA_QUEUE_CFG_START_M |
-+		 MSCC_FCBUF_TX_DATA_QUEUE_CFG_END_M);
-+	val |= MSCC_FCBUF_TX_DATA_QUEUE_CFG_START(0) |
-+		MSCC_FCBUF_TX_DATA_QUEUE_CFG_END(5119);
-+	vsc8584_macsec_init_phy_write(phydev, FC_BUFFER,
-+				      MSCC_FCBUF_TX_DATA_QUEUE_CFG, val);
+ 	if (netif_carrier_ok(real_dev))
+ 		netif_carrier_on(dev);
+ 
+@@ -2680,9 +2962,16 @@ static int macsec_dev_stop(struct net_device *dev)
+ {
+ 	struct macsec_dev *macsec = macsec_priv(dev);
+ 	struct net_device *real_dev = macsec->real_dev;
++	const struct macsec_ops *ops;
++	struct macsec_context ctx;
+ 
+ 	netif_carrier_off(dev);
+ 
++	/* If h/w offloading is available, propagate to the device */
++	ops = macsec_get_ops(netdev_priv(dev), &ctx);
++	if (ops)
++		macsec_offload(ops->mdo_dev_stop, &ctx);
 +
-+	val = vsc8584_macsec_init_phy_read(phydev, FC_BUFFER, MSCC_FCBUF_ENA_CFG);
-+	val |= MSCC_FCBUF_ENA_CFG_TX_ENA | MSCC_FCBUF_ENA_CFG_RX_ENA;
-+	vsc8584_macsec_init_phy_write(phydev, FC_BUFFER, MSCC_FCBUF_ENA_CFG, val);
+ 	dev_mc_unsync(real_dev, dev);
+ 	dev_uc_unsync(real_dev, dev);
+ 
+@@ -2922,6 +3211,11 @@ static int macsec_changelink(struct net_device *dev, struct nlattr *tb[],
+ 			     struct nlattr *data[],
+ 			     struct netlink_ext_ack *extack)
+ {
++	struct macsec_dev *macsec = macsec_priv(dev);
++	struct macsec_context ctx;
++	const struct macsec_ops *ops;
++	int ret;
 +
-+	val = vsc8584_macsec_init_phy_read(phydev, IP_1588,
-+					   MSCC_PROC_0_IP_1588_TOP_CFG_STAT_MODE_CTL);
-+	val &= ~MSCC_PROC_0_IP_1588_TOP_CFG_STAT_MODE_CTL_PROTOCOL_MODE_M;
-+	val |= MSCC_PROC_0_IP_1588_TOP_CFG_STAT_MODE_CTL_PROTOCOL_MODE(4);
-+	vsc8584_macsec_init_phy_write(phydev, IP_1588,
-+				      MSCC_PROC_0_IP_1588_TOP_CFG_STAT_MODE_CTL, val);
+ 	if (!data)
+ 		return 0;
+ 
+@@ -2931,7 +3225,18 @@ static int macsec_changelink(struct net_device *dev, struct nlattr *tb[],
+ 	    data[IFLA_MACSEC_PORT])
+ 		return -EINVAL;
+ 
+-	return macsec_changelink_common(dev, data);
++	/* If h/w offloading is available, propagate to the device */
++	ops = macsec_get_ops(netdev_priv(dev), &ctx);
++	if (ops) {
++		ctx.secy = &macsec->secy;
++		return macsec_offload(ops->mdo_upd_secy, &ctx);
++	}
++
++	ret = macsec_changelink_common(dev, data);
++	if (ret)
++		return ret;
 +
 +	return 0;
-+}
-+#endif /* CONFIG_MACSEC */
-+
- /* Check if one PHY has already done the init of the parts common to all PHYs
-  * in the Quad PHY package.
-  */
-@@ -1705,6 +2103,11 @@ static int vsc8584_config_init(struct phy_device *phydev)
- 	if (ret)
- 		goto err;
+ }
  
-+	/* MACsec */
-+	ret = vsc8584_macsec_init(phydev);
-+	if (ret)
-+		goto err;
+ static void macsec_del_dev(struct macsec_dev *macsec)
+@@ -2973,6 +3278,15 @@ static void macsec_dellink(struct net_device *dev, struct list_head *head)
+ 	struct macsec_dev *macsec = macsec_priv(dev);
+ 	struct net_device *real_dev = macsec->real_dev;
+ 	struct macsec_rxh_data *rxd = macsec_data_rtnl(real_dev);
++	struct macsec_context ctx;
++	const struct macsec_ops *ops;
 +
- 	mutex_unlock(&phydev->mdio.bus->mdio_lock);
++	/* If h/w offloading is available, propagate to the device */
++	ops = macsec_get_ops(netdev_priv(dev), &ctx);
++	if (ops) {
++		ctx.secy = &macsec->secy;
++		macsec_offload(ops->mdo_del_secy, &ctx);
++	}
  
- 	phy_write(phydev, MSCC_EXT_PAGE_ACCESS, MSCC_PHY_PAGE_STANDARD);
-diff --git a/drivers/net/phy/mscc_fc_buffer.h b/drivers/net/phy/mscc_fc_buffer.h
-new file mode 100644
-index 000000000000..7e9c0e877895
---- /dev/null
-+++ b/drivers/net/phy/mscc_fc_buffer.h
-@@ -0,0 +1,64 @@
-+/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
-+/*
-+ * Microsemi Ocelot Switch driver
-+ *
-+ * Copyright (C) 2019 Microsemi Corporation
-+ */
+ 	macsec_common_dellink(dev, head);
+ 
+@@ -3069,7 +3383,10 @@ static int macsec_newlink(struct net *net, struct net_device *dev,
+ 			  struct netlink_ext_ack *extack)
+ {
+ 	struct macsec_dev *macsec = macsec_priv(dev);
+-	struct net_device *real_dev;
++	struct net_device *real_dev, *loop_dev;
++	struct macsec_context ctx;
++	const struct macsec_ops *ops;
++	struct net *loop_net;
+ 	int err;
+ 	sci_t sci;
+ 	u8 icv_len = DEFAULT_ICV_LEN;
+@@ -3081,6 +3398,25 @@ static int macsec_newlink(struct net *net, struct net_device *dev,
+ 	if (!real_dev)
+ 		return -ENODEV;
+ 
++	for_each_net(loop_net) {
++		for_each_netdev(loop_net, loop_dev) {
++			struct macsec_dev *priv;
 +
-+#ifndef _MSCC_OCELOT_FC_BUFFER_H_
-+#define _MSCC_OCELOT_FC_BUFFER_H_
++			if (!netif_is_macsec(loop_dev))
++				continue;
 +
-+#define MSCC_FCBUF_ENA_CFG					0x00
-+#define MSCC_FCBUF_MODE_CFG					0x01
-+#define MSCC_FCBUF_PPM_RATE_ADAPT_THRESH_CFG			0x02
-+#define MSCC_FCBUF_TX_CTRL_QUEUE_CFG				0x03
-+#define MSCC_FCBUF_TX_DATA_QUEUE_CFG				0x04
-+#define MSCC_FCBUF_RX_DATA_QUEUE_CFG				0x05
-+#define MSCC_FCBUF_TX_BUFF_XON_XOFF_THRESH_CFG			0x06
-+#define MSCC_FCBUF_FC_READ_THRESH_CFG				0x07
-+#define MSCC_FCBUF_TX_FRM_GAP_COMP				0x08
++			priv = macsec_priv(loop_dev);
 +
-+#define MSCC_FCBUF_ENA_CFG_TX_ENA				BIT(0)
-+#define MSCC_FCBUF_ENA_CFG_RX_ENA				BIT(4)
++			/* A limitation of the MACsec h/w offloading is only a
++			 * single MACsec interface can be created for a given
++			 * real interface.
++			 */
++			if (macsec_get_ops(netdev_priv(dev), NULL) &&
++			    priv->real_dev == real_dev)
++				return -EBUSY;
++		}
++	}
 +
-+#define MSCC_FCBUF_MODE_CFG_DROP_BEHAVIOUR			BIT(4)
-+#define MSCC_FCBUF_MODE_CFG_PAUSE_REACT_ENA			BIT(8)
-+#define MSCC_FCBUF_MODE_CFG_RX_PPM_RATE_ADAPT_ENA		BIT(12)
-+#define MSCC_FCBUF_MODE_CFG_TX_PPM_RATE_ADAPT_ENA		BIT(16)
-+#define MSCC_FCBUF_MODE_CFG_TX_CTRL_QUEUE_ENA			BIT(20)
-+#define MSCC_FCBUF_MODE_CFG_PAUSE_GEN_ENA			BIT(24)
-+#define MSCC_FCBUF_MODE_CFG_INCLUDE_PAUSE_RCVD_IN_PAUSE_GEN	BIT(28)
+ 	dev->priv_flags |= IFF_MACSEC;
+ 
+ 	macsec->real_dev = real_dev;
+@@ -3134,6 +3470,15 @@ static int macsec_newlink(struct net *net, struct net_device *dev,
+ 			goto del_dev;
+ 	}
+ 
++	/* If h/w offloading is available, propagate to the device */
++	ops = macsec_get_ops(netdev_priv(dev), &ctx);
++	if (ops) {
++		ctx.secy = &macsec->secy;
++		err = macsec_offload(ops->mdo_add_secy, &ctx);
++		if (err)
++			goto del_dev;
++	}
 +
-+#define MSCC_FCBUF_PPM_RATE_ADAPT_THRESH_CFG_TX_THRESH(x)	(x)
-+#define MSCC_FCBUF_PPM_RATE_ADAPT_THRESH_CFG_TX_THRESH_M	GENMASK(15, 0)
-+#define MSCC_FCBUF_PPM_RATE_ADAPT_THRESH_CFG_TX_OFFSET(x)	((x) << 16)
-+#define MSCC_FCBUF_PPM_RATE_ADAPT_THRESH_CFG_TX_OFFSET_M	GENMASK(19, 16)
-+#define MSCC_FCBUF_PPM_RATE_ADAPT_THRESH_CFG_RX_THRESH(x)	((x) << 20)
-+#define MSCC_FCBUF_PPM_RATE_ADAPT_THRESH_CFG_RX_THRESH_M	GENMASK(31, 20)
-+
-+#define MSCC_FCBUF_TX_CTRL_QUEUE_CFG_START(x)			(x)
-+#define MSCC_FCBUF_TX_CTRL_QUEUE_CFG_START_M			GENMASK(15, 0)
-+#define MSCC_FCBUF_TX_CTRL_QUEUE_CFG_END(x)			((x) << 16)
-+#define MSCC_FCBUF_TX_CTRL_QUEUE_CFG_END_M			GENMASK(31, 16)
-+
-+#define MSCC_FCBUF_TX_DATA_QUEUE_CFG_START(x)			(x)
-+#define MSCC_FCBUF_TX_DATA_QUEUE_CFG_START_M			GENMASK(15, 0)
-+#define MSCC_FCBUF_TX_DATA_QUEUE_CFG_END(x)			((x) << 16)
-+#define MSCC_FCBUF_TX_DATA_QUEUE_CFG_END_M			GENMASK(31, 16)
-+
-+#define MSCC_FCBUF_RX_DATA_QUEUE_CFG_START(x)			(x)
-+#define MSCC_FCBUF_RX_DATA_QUEUE_CFG_START_M			GENMASK(15, 0)
-+#define MSCC_FCBUF_RX_DATA_QUEUE_CFG_END(x)			((x) << 16)
-+#define MSCC_FCBUF_RX_DATA_QUEUE_CFG_END_M			GENMASK(31, 16)
-+
-+#define MSCC_FCBUF_TX_BUFF_XON_XOFF_THRESH_CFG_XOFF_THRESH(x)	(x)
-+#define MSCC_FCBUF_TX_BUFF_XON_XOFF_THRESH_CFG_XOFF_THRESH_M	GENMASK(15, 0)
-+#define MSCC_FCBUF_TX_BUFF_XON_XOFF_THRESH_CFG_XON_THRESH(x)	((x) << 16)
-+#define MSCC_FCBUF_TX_BUFF_XON_XOFF_THRESH_CFG_XON_THRESH_M	GENMASK(31, 16)
-+
-+#define MSCC_FCBUF_FC_READ_THRESH_CFG_TX_THRESH(x)		(x)
-+#define MSCC_FCBUF_FC_READ_THRESH_CFG_TX_THRESH_M		GENMASK(15, 0)
-+#define MSCC_FCBUF_FC_READ_THRESH_CFG_RX_THRESH(x)		((x) << 16)
-+#define MSCC_FCBUF_FC_READ_THRESH_CFG_RX_THRESH_M		GENMASK(31, 16)
-+
-+#endif
-diff --git a/drivers/net/phy/mscc_mac.h b/drivers/net/phy/mscc_mac.h
-new file mode 100644
-index 000000000000..9420ee5175a6
---- /dev/null
-+++ b/drivers/net/phy/mscc_mac.h
-@@ -0,0 +1,159 @@
-+/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
-+/*
-+ * Microsemi Ocelot Switch driver
-+ *
-+ * Copyright (c) 2017 Microsemi Corporation
-+ */
-+
-+#ifndef _MSCC_OCELOT_LINE_MAC_H_
-+#define _MSCC_OCELOT_LINE_MAC_H_
-+
-+#define MSCC_MAC_CFG_ENA_CFG					0x00
-+#define MSCC_MAC_CFG_MODE_CFG					0x01
-+#define MSCC_MAC_CFG_MAXLEN_CFG					0x02
-+#define MSCC_MAC_CFG_NUM_TAGS_CFG				0x03
-+#define MSCC_MAC_CFG_TAGS_CFG					0x04
-+#define MSCC_MAC_CFG_ADV_CHK_CFG				0x07
-+#define MSCC_MAC_CFG_LFS_CFG					0x08
-+#define MSCC_MAC_CFG_LB_CFG					0x09
-+#define MSCC_MAC_CFG_PKTINF_CFG					0x0a
-+#define MSCC_MAC_PAUSE_CFG_TX_FRAME_CTRL			0x0b
-+#define MSCC_MAC_PAUSE_CFG_TX_FRAME_CTRL_2			0x0c
-+#define MSCC_MAC_PAUSE_CFG_RX_FRAME_CTRL			0x0d
-+#define MSCC_MAC_PAUSE_CFG_STATE				0x0e
-+#define MSCC_MAC_PAUSE_CFG_MAC_ADDRESS_LSB			0x0f
-+#define MSCC_MAC_PAUSE_CFG_MAC_ADDRESS_MSB			0x10
-+#define MSCC_MAC_STATUS_RX_LANE_STICKY_0			0x11
-+#define MSCC_MAC_STATUS_RX_LANE_STICKY_1			0x12
-+#define MSCC_MAC_STATUS_TX_MONITOR_STICKY			0x13
-+#define MSCC_MAC_STATUS_TX_MONITOR_STICKY_MASK			0x14
-+#define MSCC_MAC_STATUS_STICKY					0x15
-+#define MSCC_MAC_STATUS_STICKY_MASK				0x16
-+#define MSCC_MAC_STATS_32BIT_RX_HIH_CKSM_ERR_CNT		0x17
-+#define MSCC_MAC_STATS_32BIT_RX_XGMII_PROT_ERR_CNT		0x18
-+#define MSCC_MAC_STATS_32BIT_RX_SYMBOL_ERR_CNT			0x19
-+#define MSCC_MAC_STATS_32BIT_RX_PAUSE_CNT			0x1a
-+#define MSCC_MAC_STATS_32BIT_RX_UNSUP_OPCODE_CNT		0x1b
-+#define MSCC_MAC_STATS_32BIT_RX_UC_CNT				0x1c
-+#define MSCC_MAC_STATS_32BIT_RX_MC_CNT				0x1d
-+#define MSCC_MAC_STATS_32BIT_RX_BC_CNT				0x1e
-+#define MSCC_MAC_STATS_32BIT_RX_CRC_ERR_CNT			0x1f
-+#define MSCC_MAC_STATS_32BIT_RX_UNDERSIZE_CNT			0x20
-+#define MSCC_MAC_STATS_32BIT_RX_FRAGMENTS_CNT			0x21
-+#define MSCC_MAC_STATS_32BIT_RX_IN_RANGE_LEN_ERR_CNT		0x22
-+#define MSCC_MAC_STATS_32BIT_RX_OUT_OF_RANGE_LEN_ERR_CNT	0x23
-+#define MSCC_MAC_STATS_32BIT_RX_OVERSIZE_CNT			0x24
-+#define MSCC_MAC_STATS_32BIT_RX_JABBERS_CNT			0x25
-+#define MSCC_MAC_STATS_32BIT_RX_SIZE64_CNT			0x26
-+#define MSCC_MAC_STATS_32BIT_RX_SIZE65TO127_CNT			0x27
-+#define MSCC_MAC_STATS_32BIT_RX_SIZE128TO255_CNT		0x28
-+#define MSCC_MAC_STATS_32BIT_RX_SIZE256TO511_CNT		0x29
-+#define MSCC_MAC_STATS_32BIT_RX_SIZE512TO1023_CNT		0x2a
-+#define MSCC_MAC_STATS_32BIT_RX_SIZE1024TO1518_CNT		0x2b
-+#define MSCC_MAC_STATS_32BIT_RX_SIZE1519TOMAX_CNT		0x2c
-+#define MSCC_MAC_STATS_32BIT_RX_IPG_SHRINK_CNT			0x2d
-+#define MSCC_MAC_STATS_32BIT_TX_PAUSE_CNT			0x2e
-+#define MSCC_MAC_STATS_32BIT_TX_UC_CNT				0x2f
-+#define MSCC_MAC_STATS_32BIT_TX_MC_CNT				0x30
-+#define MSCC_MAC_STATS_32BIT_TX_BC_CNT				0x31
-+#define MSCC_MAC_STATS_32BIT_TX_SIZE64_CNT			0x32
-+#define MSCC_MAC_STATS_32BIT_TX_SIZE65TO127_CNT			0x33
-+#define MSCC_MAC_STATS_32BIT_TX_SIZE128TO255_CNT		0x34
-+#define MSCC_MAC_STATS_32BIT_TX_SIZE256TO511_CNT		0x35
-+#define MSCC_MAC_STATS_32BIT_TX_SIZE512TO1023_CNT		0x36
-+#define MSCC_MAC_STATS_32BIT_TX_SIZE1024TO1518_CNT		0x37
-+#define MSCC_MAC_STATS_32BIT_TX_SIZE1519TOMAX_CNT		0x38
-+#define MSCC_MAC_STATS_40BIT_RX_BAD_BYTES_CNT			0x39
-+#define MSCC_MAC_STATS_40BIT_RX_BAD_BYTES_MSB_CNT		0x3a
-+#define MSCC_MAC_STATS_40BIT_RX_OK_BYTES_CNT			0x3b
-+#define MSCC_MAC_STATS_40BIT_RX_OK_BYTES_MSB_CNT		0x3c
-+#define MSCC_MAC_STATS_40BIT_RX_IN_BYTES_CNT			0x3d
-+#define MSCC_MAC_STATS_40BIT_RX_IN_BYTES_MSB_CNT		0x3e
-+#define MSCC_MAC_STATS_40BIT_TX_OK_BYTES_CNT			0x3f
-+#define MSCC_MAC_STATS_40BIT_TX_OK_BYTES_MSB_CNT		0x40
-+#define MSCC_MAC_STATS_40BIT_TX_OUT_BYTES_CNT			0x41
-+#define MSCC_MAC_STATS_40BIT_TX_OUT_BYTES_MSB_CNT		0x42
-+
-+#define MSCC_MAC_CFG_ENA_CFG_RX_CLK_ENA				BIT(0)
-+#define MSCC_MAC_CFG_ENA_CFG_TX_CLK_ENA				BIT(4)
-+#define MSCC_MAC_CFG_ENA_CFG_RX_SW_RST				BIT(8)
-+#define MSCC_MAC_CFG_ENA_CFG_TX_SW_RST				BIT(12)
-+#define MSCC_MAC_CFG_ENA_CFG_RX_ENA				BIT(16)
-+#define MSCC_MAC_CFG_ENA_CFG_TX_ENA				BIT(20)
-+
-+#define MSCC_MAC_CFG_MODE_CFG_FORCE_CW_UPDATE_INTERVAL(x)	((x) << 20)
-+#define MSCC_MAC_CFG_MODE_CFG_FORCE_CW_UPDATE_INTERVAL_M	GENMASK(29, 20)
-+#define MSCC_MAC_CFG_MODE_CFG_FORCE_CW_UPDATE			BIT(16)
-+#define MSCC_MAC_CFG_MODE_CFG_TUNNEL_PAUSE_FRAMES		BIT(14)
-+#define MSCC_MAC_CFG_MODE_CFG_MAC_PREAMBLE_CFG(x)		((x) << 10)
-+#define MSCC_MAC_CFG_MODE_CFG_MAC_PREAMBLE_CFG_M		GENMASK(12, 10)
-+#define MSCC_MAC_CFG_MODE_CFG_MAC_IPG_CFG			BIT(6)
-+#define MSCC_MAC_CFG_MODE_CFG_XGMII_GEN_MODE_ENA		BIT(4)
-+#define MSCC_MAC_CFG_MODE_CFG_HIH_CRC_CHECK			BIT(2)
-+#define MSCC_MAC_CFG_MODE_CFG_UNDERSIZED_FRAME_DROP_DIS		BIT(1)
-+#define MSCC_MAC_CFG_MODE_CFG_DISABLE_DIC			BIT(0)
-+
-+#define MSCC_MAC_CFG_MAXLEN_CFG_MAX_LEN_TAG_CHK			BIT(16)
-+#define MSCC_MAC_CFG_MAXLEN_CFG_MAX_LEN(x)			(x)
-+#define MSCC_MAC_CFG_MAXLEN_CFG_MAX_LEN_M			GENMASK(15, 0)
-+
-+#define MSCC_MAC_CFG_TAGS_CFG_RSZ				0x4
-+#define MSCC_MAC_CFG_TAGS_CFG_TAG_ID(x)				((x) << 16)
-+#define MSCC_MAC_CFG_TAGS_CFG_TAG_ID_M				GENMASK(31, 16)
-+#define MSCC_MAC_CFG_TAGS_CFG_TAG_ENA				BIT(4)
-+
-+#define MSCC_MAC_CFG_ADV_CHK_CFG_EXT_EOP_CHK_ENA		BIT(24)
-+#define MSCC_MAC_CFG_ADV_CHK_CFG_EXT_SOP_CHK_ENA		BIT(20)
-+#define MSCC_MAC_CFG_ADV_CHK_CFG_SFD_CHK_ENA			BIT(16)
-+#define MSCC_MAC_CFG_ADV_CHK_CFG_PRM_SHK_CHK_DIS		BIT(12)
-+#define MSCC_MAC_CFG_ADV_CHK_CFG_PRM_CHK_ENA			BIT(8)
-+#define MSCC_MAC_CFG_ADV_CHK_CFG_OOR_ERR_ENA			BIT(4)
-+#define MSCC_MAC_CFG_ADV_CHK_CFG_INR_ERR_ENA			BIT(0)
-+
-+#define MSCC_MAC_CFG_LFS_CFG_LFS_INH_TX				BIT(8)
-+#define MSCC_MAC_CFG_LFS_CFG_LFS_DIS_TX				BIT(4)
-+#define MSCC_MAC_CFG_LFS_CFG_LFS_UNIDIR_ENA			BIT(3)
-+#define MSCC_MAC_CFG_LFS_CFG_USE_LEADING_EDGE_DETECT		BIT(2)
-+#define MSCC_MAC_CFG_LFS_CFG_SPURIOUS_Q_DIS			BIT(1)
-+#define MSCC_MAC_CFG_LFS_CFG_LFS_MODE_ENA			BIT(0)
-+
-+#define MSCC_MAC_CFG_LB_CFG_XGMII_HOST_LB_ENA			BIT(4)
-+#define MSCC_MAC_CFG_LB_CFG_XGMII_PHY_LB_ENA			BIT(0)
-+
-+#define MSCC_MAC_CFG_PKTINF_CFG_STRIP_FCS_ENA			BIT(0)
-+#define MSCC_MAC_CFG_PKTINF_CFG_INSERT_FCS_ENA			BIT(4)
-+#define MSCC_MAC_CFG_PKTINF_CFG_STRIP_PREAMBLE_ENA		BIT(8)
-+#define MSCC_MAC_CFG_PKTINF_CFG_INSERT_PREAMBLE_ENA		BIT(12)
-+#define MSCC_MAC_CFG_PKTINF_CFG_LPI_RELAY_ENA			BIT(16)
-+#define MSCC_MAC_CFG_PKTINF_CFG_LF_RELAY_ENA			BIT(20)
-+#define MSCC_MAC_CFG_PKTINF_CFG_RF_RELAY_ENA			BIT(24)
-+#define MSCC_MAC_CFG_PKTINF_CFG_ENABLE_TX_PADDING		BIT(25)
-+#define MSCC_MAC_CFG_PKTINF_CFG_ENABLE_RX_PADDING		BIT(26)
-+#define MSCC_MAC_CFG_PKTINF_CFG_ENABLE_4BYTE_PREAMBLE		BIT(27)
-+#define MSCC_MAC_CFG_PKTINF_CFG_MACSEC_BYPASS_NUM_PTP_STALL_CLKS(x)	((x) << 28)
-+#define MSCC_MAC_CFG_PKTINF_CFG_MACSEC_BYPASS_NUM_PTP_STALL_CLKS_M	GENMASK(30, 28)
-+
-+#define MSCC_MAC_PAUSE_CFG_TX_FRAME_CTRL_PAUSE_VALUE(x)		((x) << 16)
-+#define MSCC_MAC_PAUSE_CFG_TX_FRAME_CTRL_PAUSE_VALUE_M		GENMASK(31, 16)
-+#define MSCC_MAC_PAUSE_CFG_TX_FRAME_CTRL_WAIT_FOR_LPI_LOW	BIT(12)
-+#define MSCC_MAC_PAUSE_CFG_TX_FRAME_CTRL_USE_PAUSE_STALL_ENA	BIT(8)
-+#define MSCC_MAC_PAUSE_CFG_TX_FRAME_CTRL_PAUSE_REPL_MODE	BIT(4)
-+#define MSCC_MAC_PAUSE_CFG_TX_FRAME_CTRL_PAUSE_FRC_FRAME	BIT(2)
-+#define MSCC_MAC_PAUSE_CFG_TX_FRAME_CTRL_PAUSE_MODE(x)		(x)
-+#define MSCC_MAC_PAUSE_CFG_TX_FRAME_CTRL_PAUSE_MODE_M		GENMASK(1, 0)
-+
-+#define MSCC_MAC_PAUSE_CFG_RX_FRAME_CTRL_EARLY_PAUSE_DETECT_ENA	BIT(16)
-+#define MSCC_MAC_PAUSE_CFG_RX_FRAME_CTRL_PRE_CRC_MODE		BIT(20)
-+#define MSCC_MAC_PAUSE_CFG_RX_FRAME_CTRL_PAUSE_TIMER_ENA	BIT(12)
-+#define MSCC_MAC_PAUSE_CFG_RX_FRAME_CTRL_PAUSE_REACT_ENA	BIT(8)
-+#define MSCC_MAC_PAUSE_CFG_RX_FRAME_CTRL_PAUSE_FRAME_DROP_ENA	BIT(4)
-+#define MSCC_MAC_PAUSE_CFG_RX_FRAME_CTRL_PAUSE_MODE		BIT(0)
-+
-+#define MSCC_MAC_PAUSE_CFG_STATE_PAUSE_STATE			BIT(0)
-+#define MSCC_MAC_PAUSE_CFG_STATE_MAC_TX_PAUSE_GEN		BIT(4)
-+
-+#define MSCC_PROC_0_IP_1588_TOP_CFG_STAT_MODE_CTL			0x2
-+#define MSCC_PROC_0_IP_1588_TOP_CFG_STAT_MODE_CTL_PROTOCOL_MODE(x)	(x)
-+#define MSCC_PROC_0_IP_1588_TOP_CFG_STAT_MODE_CTL_PROTOCOL_MODE_M	GENMASK(2, 0)
-+
-+#endif /* _MSCC_OCELOT_LINE_MAC_H_ */
-diff --git a/drivers/net/phy/mscc_macsec.h b/drivers/net/phy/mscc_macsec.h
-new file mode 100644
-index 000000000000..52902669e8ca
---- /dev/null
-+++ b/drivers/net/phy/mscc_macsec.h
-@@ -0,0 +1,256 @@
-+/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
-+/*
-+ * Microsemi Ocelot Switch driver
-+ *
-+ * Copyright (c) 2018 Microsemi Corporation
-+ */
-+
-+#ifndef _MSCC_OCELOT_MACSEC_H_
-+#define _MSCC_OCELOT_MACSEC_H_
-+
-+#define CONTROL_TYPE_EGRESS		0x6
-+#define CONTROL_TYPE_INGRESS		0xf
-+#define CONTROL_IV0			BIT(5)
-+#define CONTROL_IV1			BIT(6)
-+#define CONTROL_IV2			BIT(7)
-+#define CONTROL_UPDATE_SEQ		BIT(13)
-+#define CONTROL_IV_IN_SEQ		BIT(14)
-+#define CONTROL_ENCRYPT_AUTH		BIT(15)
-+#define CONTROL_KEY_IN_CTX		BIT(16)
-+#define CONTROL_CRYPTO_ALG(x)		((x) << 17)
-+#define     CTRYPTO_ALG_AES_CTR_128	0x5
-+#define     CTRYPTO_ALG_AES_CTR_192	0x6
-+#define     CTRYPTO_ALG_AES_CTR_256	0x7
-+#define CONTROL_DIGEST_TYPE(x)		((x) << 21)
-+#define CONTROL_AUTH_ALG(x)		((x) << 23)
-+#define     AUTH_ALG_AES_GHAS		0x4
-+#define CONTROL_AN(x)			((x) << 26)
-+#define CONTROL_SEQ_TYPE(x)		((x) << 28)
-+#define CONTROL_SEQ_MASK		BIT(30)
-+#define CONTROL_CONTEXT_ID		BIT(31)
-+
-+enum mscc_macsec_destination_ports {
-+	MSCC_MS_PORT_COMMON		= 0,
-+	MSCC_MS_PORT_RSVD		= 1,
-+	MSCC_MS_PORT_CONTROLLED		= 2,
-+	MSCC_MS_PORT_UNCONTROLLED	= 3,
-+};
-+
-+enum mscc_macsec_drop_actions {
-+	MSCC_MS_ACTION_BYPASS_CRC	= 0,
-+	MSCC_MS_ACTION_BYPASS_BAD	= 1,
-+	MSCC_MS_ACTION_DROP		= 2,
-+	MSCC_MS_ACTION_BYPASS		= 3,
-+};
-+
-+enum mscc_macsec_flow_types {
-+	MSCC_MS_FLOW_BYPASS		= 0,
-+	MSCC_MS_FLOW_DROP		= 1,
-+	MSCC_MS_FLOW_INGRESS		= 2,
-+	MSCC_MS_FLOW_EGRESS		= 3,
-+};
-+
-+enum mscc_macsec_validate_levels {
-+	MSCC_MS_VALIDATE_DISABLED	= 0,
-+	MSCC_MS_VALIDATE_CHECK		= 1,
-+	MSCC_MS_VALIDATE_STRICT		= 2,
-+};
-+
-+#define MSCC_MS_XFORM_REC(x, y)		(((x) << 5) + (y))
-+#define MSCC_MS_ENA_CFG			0x800
-+#define MSCC_MS_FC_CFG			0x804
-+#define MSCC_MS_SAM_MISC_MATCH(x)	(0x1004 + ((x) << 4))
-+#define MSCC_MS_SAM_MATCH_SCI_LO(x)	(0x1005 + ((x) << 4))
-+#define MSCC_MS_SAM_MATCH_SCI_HI(x)	(0x1006 + ((x) << 4))
-+#define MSCC_MS_SAM_MASK(x)		(0x1007 + ((x) << 4))
-+#define MSCC_MS_SAM_ENTRY_SET1		0x1808
-+#define MSCC_MS_SAM_ENTRY_CLEAR1	0x180c
-+#define MSCC_MS_SAM_FLOW_CTRL(x)	(0x1c00 + (x))
-+#define MSCC_MS_SAM_CP_TAG		0x1e40
-+#define MSCC_MS_SAM_NM_FLOW_NCP		0x1e51
-+#define MSCC_MS_SAM_NM_FLOW_CP		0x1e52
-+#define MSCC_MS_MISC_CONTROL		0x1e5f
-+#define MSCC_MS_COUNT_CONTROL		0x3204
-+#define MSCC_MS_PARAMS2_IG_CC_CONTROL	0x3a10
-+#define MSCC_MS_PARAMS2_IG_CP_TAG	0x3a14
-+#define MSCC_MS_VLAN_MTU_CHECK(x)	(0x3c40 + (x))
-+#define MSCC_MS_NON_VLAN_MTU_CHECK	0x3c48
-+#define MSCC_MS_PP_CTRL			0x3c4b
-+#define MSCC_MS_STATUS_CONTEXT_CTRL	0x3d02
-+#define MSCC_MS_INTR_CTRL_STATUS	0x3d04
-+#define MSCC_MS_BLOCK_CTX_UPDATE	0x3d0c
-+
-+/* MACSEC_ENA_CFG */
-+#define MSCC_MS_ENA_CFG_CLK_ENA				BIT(0)
-+#define MSCC_MS_ENA_CFG_SW_RST				BIT(1)
-+#define MSCC_MS_ENA_CFG_MACSEC_BYPASS_ENA		BIT(8)
-+#define MSCC_MS_ENA_CFG_MACSEC_ENA			BIT(9)
-+#define MSCC_MS_ENA_CFG_MACSEC_SPEED_MODE(x)		((x) << 10)
-+#define MSCC_MS_ENA_CFG_MACSEC_SPEED_MODE_M		GENMASK(12, 10)
-+
-+/* MACSEC_FC_CFG */
-+#define MSCC_MS_FC_CFG_FCBUF_ENA			BIT(0)
-+#define MSCC_MS_FC_CFG_USE_PKT_EXPANSION_INDICATION	BIT(1)
-+#define MSCC_MS_FC_CFG_LOW_THRESH(x)			((x) << 4)
-+#define MSCC_MS_FC_CFG_LOW_THRESH_M			GENMASK(7, 4)
-+#define MSCC_MS_FC_CFG_HIGH_THRESH(x)			((x) << 8)
-+#define MSCC_MS_FC_CFG_HIGH_THRESH_M			GENMASK(11, 8)
-+#define MSCC_MS_FC_CFG_LOW_BYTES_VAL(x)			((x) << 12)
-+#define MSCC_MS_FC_CFG_LOW_BYTES_VAL_M			GENMASK(14, 12)
-+#define MSCC_MS_FC_CFG_HIGH_BYTES_VAL(x)		((x) << 16)
-+#define MSCC_MS_FC_CFG_HIGH_BYTES_VAL_M			GENMASK(18, 16)
-+
-+/* MACSEC_SAM_MISC_MATCH */
-+#define MSCC_MS_SAM_MISC_MATCH_VLAN_VALID		BIT(0)
-+#define MSCC_MS_SAM_MISC_MATCH_QINQ_FOUND		BIT(1)
-+#define MSCC_MS_SAM_MISC_MATCH_STAG_VALID		BIT(2)
-+#define MSCC_MS_SAM_MISC_MATCH_QTAG_VALID		BIT(3)
-+#define MSCC_MS_SAM_MISC_MATCH_VLAN_UP(x)		((x) << 4)
-+#define MSCC_MS_SAM_MISC_MATCH_VLAN_UP_M		GENMASK(6, 4)
-+#define MSCC_MS_SAM_MISC_MATCH_CONTROL_PACKET		BIT(7)
-+#define MSCC_MS_SAM_MISC_MATCH_UNTAGGED			BIT(8)
-+#define MSCC_MS_SAM_MISC_MATCH_TAGGED			BIT(9)
-+#define MSCC_MS_SAM_MISC_MATCH_BAD_TAG			BIT(10)
-+#define MSCC_MS_SAM_MISC_MATCH_KAY_TAG			BIT(11)
-+#define MSCC_MS_SAM_MISC_MATCH_SOURCE_PORT(x)		((x) << 12)
-+#define MSCC_MS_SAM_MISC_MATCH_SOURCE_PORT_M		GENMASK(13, 12)
-+#define MSCC_MS_SAM_MISC_MATCH_MATCH_PRIORITY(x)	((x) << 16)
-+#define MSCC_MS_SAM_MISC_MATCH_MATCH_PRIORITY_M		GENMASK(19, 16)
-+#define MSCC_MS_SAM_MISC_MATCH_AN(x)			((x) << 24)
-+#define MSCC_MS_SAM_MISC_MATCH_TCI(x)			((x) << 26)
-+
-+/* MACSEC_SAM_MASK */
-+#define MSCC_MS_SAM_MASK_MAC_SA_MASK(x)			(x)
-+#define MSCC_MS_SAM_MASK_MAC_SA_MASK_M			GENMASK(5, 0)
-+#define MSCC_MS_SAM_MASK_MAC_DA_MASK(x)			((x) << 6)
-+#define MSCC_MS_SAM_MASK_MAC_DA_MASK_M			GENMASK(11, 6)
-+#define MSCC_MS_SAM_MASK_MAC_ETYPE_MASK			BIT(12)
-+#define MSCC_MS_SAM_MASK_VLAN_VLD_MASK			BIT(13)
-+#define MSCC_MS_SAM_MASK_QINQ_FOUND_MASK		BIT(14)
-+#define MSCC_MS_SAM_MASK_STAG_VLD_MASK			BIT(15)
-+#define MSCC_MS_SAM_MASK_QTAG_VLD_MASK			BIT(16)
-+#define MSCC_MS_SAM_MASK_VLAN_UP_MASK			BIT(17)
-+#define MSCC_MS_SAM_MASK_VLAN_ID_MASK			BIT(18)
-+#define MSCC_MS_SAM_MASK_SOURCE_PORT_MASK		BIT(19)
-+#define MSCC_MS_SAM_MASK_CTL_PACKET_MASK		BIT(20)
-+#define MSCC_MS_SAM_MASK_VLAN_UP_INNER_MASK		BIT(21)
-+#define MSCC_MS_SAM_MASK_VLAN_ID_INNER_MASK		BIT(22)
-+#define MSCC_MS_SAM_MASK_SCI_MASK			BIT(23)
-+#define MSCC_MS_SAM_MASK_AN_MASK(x)			((x) << 24)
-+#define MSCC_MS_SAM_MASK_TCI_MASK(x)			((x) << 26)
-+
-+/* MACSEC_SAM_FLOW_CTRL_EGR */
-+#define MSCC_MS_SAM_FLOW_CTRL_FLOW_TYPE(x)		(x)
-+#define MSCC_MS_SAM_FLOW_CTRL_FLOW_TYPE_M		GENMASK(1, 0)
-+#define MSCC_MS_SAM_FLOW_CTRL_DEST_PORT(x)		((x) << 2)
-+#define MSCC_MS_SAM_FLOW_CTRL_DEST_PORT_M		GENMASK(3, 2)
-+#define MSCC_MS_SAM_FLOW_CTRL_RESV_4			BIT(4)
-+#define MSCC_MS_SAM_FLOW_CTRL_FLOW_CRYPT_AUTH		BIT(5)
-+#define MSCC_MS_SAM_FLOW_CTRL_DROP_ACTION(x)		((x) << 6)
-+#define MSCC_MS_SAM_FLOW_CTRL_DROP_ACTION_M		GENMASK(7, 6)
-+#define MSCC_MS_SAM_FLOW_CTRL_RESV_15_TO_8(x)		((x) << 8)
-+#define MSCC_MS_SAM_FLOW_CTRL_RESV_15_TO_8_M		GENMASK(15, 8)
-+#define MSCC_MS_SAM_FLOW_CTRL_PROTECT_FRAME		BIT(16)
-+#define MSCC_MS_SAM_FLOW_CTRL_REPLAY_PROTECT		BIT(16)
-+#define MSCC_MS_SAM_FLOW_CTRL_SA_IN_USE			BIT(17)
-+#define MSCC_MS_SAM_FLOW_CTRL_INCLUDE_SCI		BIT(18)
-+#define MSCC_MS_SAM_FLOW_CTRL_USE_ES			BIT(19)
-+#define MSCC_MS_SAM_FLOW_CTRL_USE_SCB			BIT(20)
-+#define MSCC_MS_SAM_FLOW_CTRL_VALIDATE_FRAMES(x)	((x) << 19)
-+#define MSCC_MS_SAM_FLOW_CTRL_TAG_BYPASS_SIZE(x)	((x) << 21)
-+#define MSCC_MS_SAM_FLOW_CTRL_TAG_BYPASS_SIZE_M		GENMASK(22, 21)
-+#define MSCC_MS_SAM_FLOW_CTRL_RESV_23			BIT(23)
-+#define MSCC_MS_SAM_FLOW_CTRL_CONFIDENTIALITY_OFFSET(x)	((x) << 24)
-+#define MSCC_MS_SAM_FLOW_CTRL_CONFIDENTIALITY_OFFSET_M	GENMASK(30, 24)
-+#define MSCC_MS_SAM_FLOW_CTRL_CONF_PROTECT		BIT(31)
-+
-+/* MACSEC_SAM_CP_TAG */
-+#define MSCC_MS_SAM_CP_TAG_MAP_TBL(x)			(x)
-+#define MSCC_MS_SAM_CP_TAG_MAP_TBL_M			GENMASK(23, 0)
-+#define MSCC_MS_SAM_CP_TAG_DEF_UP(x)			((x) << 24)
-+#define MSCC_MS_SAM_CP_TAG_DEF_UP_M			GENMASK(26, 24)
-+#define MSCC_MS_SAM_CP_TAG_STAG_UP_EN			BIT(27)
-+#define MSCC_MS_SAM_CP_TAG_QTAG_UP_EN			BIT(28)
-+#define MSCC_MS_SAM_CP_TAG_PARSE_QINQ			BIT(29)
-+#define MSCC_MS_SAM_CP_TAG_PARSE_STAG			BIT(30)
-+#define MSCC_MS_SAM_CP_TAG_PARSE_QTAG			BIT(31)
-+
-+/* MACSEC_SAM_NM_FLOW_NCP */
-+#define MSCC_MS_SAM_NM_FLOW_NCP_UNTAGGED_FLOW_TYPE(x)	(x)
-+#define MSCC_MS_SAM_NM_FLOW_NCP_UNTAGGED_DEST_PORT(x)	((x) << 2)
-+#define MSCC_MS_SAM_NM_FLOW_NCP_UNTAGGED_DROP_ACTION(x)	((x) << 6)
-+#define MSCC_MS_SAM_NM_FLOW_NCP_TAGGED_FLOW_TYPE(x)	((x) << 8)
-+#define MSCC_MS_SAM_NM_FLOW_NCP_TAGGED_DEST_PORT(x)	((x) << 10)
-+#define MSCC_MS_SAM_NM_FLOW_NCP_TAGGED_DROP_ACTION(x)	((x) << 14)
-+#define MSCC_MS_SAM_NM_FLOW_NCP_BADTAG_FLOW_TYPE(x)	((x) << 16)
-+#define MSCC_MS_SAM_NM_FLOW_NCP_BADTAG_DEST_PORT(x)	((x) << 18)
-+#define MSCC_MS_SAM_NM_FLOW_NCP_BADTAG_DROP_ACTION(x)	((x) << 22)
-+#define MSCC_MS_SAM_NM_FLOW_NCP_KAY_FLOW_TYPE(x)	((x) << 24)
-+#define MSCC_MS_SAM_NM_FLOW_NCP_KAY_DEST_PORT(x)	((x) << 26)
-+#define MSCC_MS_SAM_NM_FLOW_NCP_KAY_DROP_ACTION(x)	((x) << 30)
-+
-+/* MACSEC_SAM_NM_FLOW_CP */
-+#define MSCC_MS_SAM_NM_FLOW_CP_UNTAGGED_FLOW_TYPE(x)	(x)
-+#define MSCC_MS_SAM_NM_FLOW_CP_UNTAGGED_DEST_PORT(x)	((x) << 2)
-+#define MSCC_MS_SAM_NM_FLOW_CP_UNTAGGED_DROP_ACTION(x)	((x) << 6)
-+#define MSCC_MS_SAM_NM_FLOW_CP_TAGGED_FLOW_TYPE(x)	((x) << 8)
-+#define MSCC_MS_SAM_NM_FLOW_CP_TAGGED_DEST_PORT(x)	((x) << 10)
-+#define MSCC_MS_SAM_NM_FLOW_CP_TAGGED_DROP_ACTION(x)	((x) << 14)
-+#define MSCC_MS_SAM_NM_FLOW_CP_BADTAG_FLOW_TYPE(x)	((x) << 16)
-+#define MSCC_MS_SAM_NM_FLOW_CP_BADTAG_DEST_PORT(x)	((x) << 18)
-+#define MSCC_MS_SAM_NM_FLOW_CP_BADTAG_DROP_ACTION(x)	((x) << 22)
-+#define MSCC_MS_SAM_NM_FLOW_CP_KAY_FLOW_TYPE(x)		((x) << 24)
-+#define MSCC_MS_SAM_NM_FLOW_CP_KAY_DEST_PORT(x)		((x) << 26)
-+#define MSCC_MS_SAM_NM_FLOW_CP_KAY_DROP_ACTION(x)	((x) << 30)
-+
-+/* MACSEC_MISC_CONTROL */
-+#define MSCC_MS_MISC_CONTROL_MC_LATENCY_FIX(x)		(x)
-+#define MSCC_MS_MISC_CONTROL_MC_LATENCY_FIX_M		GENMASK(5, 0)
-+#define MSCC_MS_MISC_CONTROL_STATIC_BYPASS		BIT(8)
-+#define MSCC_MS_MISC_CONTROL_NM_MACSEC_EN		BIT(9)
-+#define MSCC_MS_MISC_CONTROL_VALIDATE_FRAMES(x)		((x) << 10)
-+#define MSCC_MS_MISC_CONTROL_VALIDATE_FRAMES_M		GENMASK(11, 10)
-+#define MSCC_MS_MISC_CONTROL_XFORM_REC_SIZE(x)		((x) << 24)
-+#define MSCC_MS_MISC_CONTROL_XFORM_REC_SIZE_M		GENMASK(25, 24)
-+
-+/* MACSEC_COUNT_CONTROL */
-+#define MSCC_MS_COUNT_CONTROL_RESET_ALL			BIT(0)
-+#define MSCC_MS_COUNT_CONTROL_DEBUG_ACCESS		BIT(1)
-+#define MSCC_MS_COUNT_CONTROL_SATURATE_CNTRS		BIT(2)
-+#define MSCC_MS_COUNT_CONTROL_AUTO_CNTR_RESET		BIT(3)
-+
-+/* MACSEC_PARAMS2_IG_CC_CONTROL */
-+#define MSCC_MS_PARAMS2_IG_CC_CONTROL_NON_MATCH_CTRL_ACT	BIT(14)
-+#define MSCC_MS_PARAMS2_IG_CC_CONTROL_NON_MATCH_ACT	BIT(15)
-+
-+/* MACSEC_PARAMS2_IG_CP_TAG */
-+#define MSCC_MS_PARAMS2_IG_CP_TAG_MAP_TBL(x)		(x)
-+#define MSCC_MS_PARAMS2_IG_CP_TAG_MAP_TBL_M		GENMASK(23, 0)
-+#define MSCC_MS_PARAMS2_IG_CP_TAG_DEF_UP(x)		((x) << 24)
-+#define MSCC_MS_PARAMS2_IG_CP_TAG_DEF_UP_M		GENMASK(26, 24)
-+#define MSCC_MS_PARAMS2_IG_CP_TAG_STAG_UP_EN		BIT(27)
-+#define MSCC_MS_PARAMS2_IG_CP_TAG_QTAG_UP_EN		BIT(28)
-+#define MSCC_MS_PARAMS2_IG_CP_TAG_PARSE_QINQ		BIT(29)
-+#define MSCC_MS_PARAMS2_IG_CP_TAG_PARSE_STAG		BIT(30)
-+#define MSCC_MS_PARAMS2_IG_CP_TAG_PARSE_QTAG		BIT(31)
-+
-+/* MACSEC_VLAN_MTU_CHECK */
-+#define MSCC_MS_VLAN_MTU_CHECK_MTU_COMPARE(x)		(x)
-+#define MSCC_MS_VLAN_MTU_CHECK_MTU_COMPARE_M		GENMASK(14, 0)
-+#define MSCC_MS_VLAN_MTU_CHECK_MTU_COMP_DROP		BIT(15)
-+
-+/* MACSEC_NON_VLAN_MTU_CHECK */
-+#define MSCC_MS_NON_VLAN_MTU_CHECK_NV_MTU_COMPARE(x)	(x)
-+#define MSCC_MS_NON_VLAN_MTU_CHECK_NV_MTU_COMPARE_M	GENMASK(14, 0)
-+#define MSCC_MS_NON_VLAN_MTU_CHECK_NV_MTU_COMP_DROP	BIT(15)
-+
-+/* MACSEC_PP_CTRL */
-+#define MSCC_MS_PP_CTRL_MACSEC_OCTET_INCR_MODE		BIT(0)
-+
-+/* MACSEC_INTR_CTRL_STATUS */
-+#define MSCC_MS_INTR_CTRL_STATUS_INTR_CLR_STATUS(x)	(x)
-+#define MSCC_MS_INTR_CTRL_STATUS_INTR_CLR_STATUS_M	GENMASK(15, 0)
-+#define MSCC_MS_INTR_CTRL_STATUS_INTR_ENABLE(x)		((x) << 16)
-+#define MSCC_MS_INTR_CTRL_STATUS_INTR_ENABLE_M		GENMASK(31, 16)
-+
-+#endif
+ 	err = register_macsec_dev(real_dev, dev);
+ 	if (err < 0)
+ 		goto del_dev;
 -- 
 2.21.0
 
