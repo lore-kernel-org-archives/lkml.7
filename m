@@ -2,154 +2,137 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 126E7C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:16:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6FB1C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB6DD2171F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:16:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87433217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:17:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="Z1XISyDm"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Kukr2Ouj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732074AbfHHJQV (ORCPT
+        id S1732075AbfHHJR2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 05:16:21 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:45216 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731393AbfHHJQU (ORCPT
+        Thu, 8 Aug 2019 05:17:28 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:38016 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731038AbfHHJR2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 05:16:20 -0400
-Received: by mail-lf1-f66.google.com with SMTP id a30so3216733lfk.12
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 02:16:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=M0Lkp7TI/1lX0PjPf1h84OWxjj1q7OPrwwtMkQUMB80=;
-        b=Z1XISyDmNMrKzhH5jpoXRm+UDpftCfPHsXSHiMp386hpt6qzA47mI+MZCjhh8/Zeyw
-         jokbLjILXaPIhi16o8/c61dqditvR/MIYHeLbkQyQnW1HIi9UnftiHokpg6qK507fm7J
-         Af4qYSS1b0OGvvXKHezXLIVBZAA22zNmMLXIgrCO7kd7HL9v99JBKOfmG2a8I4SKpTHT
-         bYqs+AyT4ajWAbpBYl2QGZEPQO6YYKHDcpVDFpxR617xywNAkq8MTsHvEe09qcGQm0N/
-         Q2SBZWzsoeIcTUgNNHs8jSQHhyhyqyNLDF5nH869msJXyFVwIVvvUIWwVSw8UZZBa3BW
-         /xHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=M0Lkp7TI/1lX0PjPf1h84OWxjj1q7OPrwwtMkQUMB80=;
-        b=erGg0SWoud3mfHWJRryXOi31pWOz953gJwghaCNEXfJt5u8j8/Q7uIS+W0FC9MxIE1
-         v9GYybDfYkFxo+MMdbpKRqStkq73SL1aaj4pSjz3n2EwnvhvzCkjY+domvibEP1deOXO
-         1kFtSNhCwfQ6ACnhdv7A8usUq2j7QwGnPU6itQcKSO6yWMZLlO4/fa3RroYf/nYMY/ox
-         /NiT+S3Gadm+d/ND4bFv3tBsdRbMuQjx/VXemEpl/7pLusZCtpRHY31eFs6bsbg8mWyr
-         fQlc3npy0MMf6jNOYBORpAO/gdSITzrRGQnsfM44VHMAAayAXb3QRduMhfEGkxSVU4A5
-         wflw==
-X-Gm-Message-State: APjAAAW6+TTv1XZJ51rPzSH67uZkugTiErvD61h1SDvrVtUXZGcBmyBs
-        pjDKRMXoQsMkOY+8Z8EVhMfFdQ==
-X-Google-Smtp-Source: APXvYqwAZY8WXCeiGX2n+XECYEd8x3LcF9hNec57wPu9uZBuLdOygGHP8AmFYhQOUjDhlaSnPEqcXw==
-X-Received: by 2002:a19:c711:: with SMTP id x17mr8605646lff.147.1565255778647;
-        Thu, 08 Aug 2019 02:16:18 -0700 (PDT)
-Received: from ?IPv6:2a00:1fa0:8c7:ada9:25b2:24d8:3973:eb87? ([2a00:1fa0:8c7:ada9:25b2:24d8:3973:eb87])
-        by smtp.gmail.com with ESMTPSA id f23sm406561lfc.25.2019.08.08.02.16.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 08 Aug 2019 02:16:17 -0700 (PDT)
-Subject: Re: [PATCH v6 09/14] mips: Properly account for stack randomization
- and stack guard gap
-To:     Alexandre Ghiti <alex@ghiti.fr>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
-References: <20190808061756.19712-1-alex@ghiti.fr>
- <20190808061756.19712-10-alex@ghiti.fr>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <bd67507e-8a5b-34b5-1a33-5500bbb724b2@cogentembedded.com>
-Date:   Thu, 8 Aug 2019 12:16:04 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+        Thu, 8 Aug 2019 05:17:28 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x789GZ3Q049234;
+        Thu, 8 Aug 2019 04:16:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1565255795;
+        bh=AFN9O6o9mO07bhZK9Vv8bZWmYFDF2zWncPLyZjoemxY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Kukr2OujeHdmin+Dhy+sXx3hc0wul8G91sEguAj80/HXxgbUG05pusdWWLB7jpdF8
+         cU5G1SnN5QRrxscoB3W7vT2/CXDLlhTRITju7Sfz6RXmxku781Bud84p+FwmHUQofk
+         q+fzFMCBaYDz1nTKAErgvlR8ROTd/JGHypENrBX8=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x789GZev114711
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 8 Aug 2019 04:16:35 -0500
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 8 Aug
+ 2019 04:16:34 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 8 Aug 2019 04:16:34 -0500
+Received: from [172.24.190.172] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x789GVX8101829;
+        Thu, 8 Aug 2019 04:16:32 -0500
+Subject: Re: [PATCH v2 0/9] ARM: davinci: da850-evm: remove more legacy GPIO
+ calls
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Kevin Hilman <khilman@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        David Lechner <david@lechnology.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+CC:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        <linux-fbdev@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20190722134423.26555-1-brgl@bgdev.pl>
+ <CAMRc=Me51RgQu8VK70dy=1OhmHeKo40HLxfsvp2nD5UC+Mzb=w@mail.gmail.com>
+From:   Sekhar Nori <nsekhar@ti.com>
+Message-ID: <408dc72e-eb4e-ea8d-2c5d-f7300a7a296d@ti.com>
+Date:   Thu, 8 Aug 2019 14:46:31 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190808061756.19712-10-alex@ghiti.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <CAMRc=Me51RgQu8VK70dy=1OhmHeKo40HLxfsvp2nD5UC+Mzb=w@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
-
-On 08.08.2019 9:17, Alexandre Ghiti wrote:
-
-> This commit takes care of stack randomization and stack guard gap when
-> computing mmap base address and checks if the task asked for randomization.
+On 05/08/19 2:00 PM, Bartosz Golaszewski wrote:
+> pon., 22 lip 2019 o 15:44 Bartosz Golaszewski <brgl@bgdev.pl> napisał(a):
+>>
+>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>>
+>> This is another small step on the path to liberating davinci from legacy
+>> GPIO API calls and shrinking the davinci GPIO driver by not having to
+>> support the base GPIO number anymore.
+>>
+>> This time we're removing the legacy calls used indirectly by the LCDC
+>> fbdev driver.
+>>
+>> First two patches enable the GPIO backlight driver in
+>> davinci_all_defconfig.
+>>
+>> Patch 3/12 models the backlight GPIO as an actual GPIO backlight device.
+>>
+>> Patches 4-6 extend the fbdev driver with regulator support and convert
+>> the da850-evm board file to using it.
+>>
+>> Last three patches are improvements to the da8xx fbdev driver since
+>> we're already touching it in this series.
+>>
+>> v1 -> v2:
+>> - dopped the gpio-backlight patches from this series as since v5.3-rc1 we
+>>   can probe the module with neither the OF node nor platform data
+>> - collected review and ack tags
+>> - rebased on top of v5.3-rc1
+>>
+>> Bartosz Golaszewski (9):
+>>   ARM: davinci: refresh davinci_all_defconfig
+>>   ARM: davinci_all_defconfig: enable GPIO backlight
+>>   ARM: davinci: da850-evm: model the backlight GPIO as an actual device
+>>   fbdev: da8xx: add support for a regulator
+>>   ARM: davinci: da850-evm: switch to using a fixed regulator for lcdc
+>>   fbdev: da8xx: remove panel_power_ctrl() callback from platform data
+>>   fbdev: da8xx-fb: use devm_platform_ioremap_resource()
+>>   fbdev: da8xx-fb: drop a redundant if
+>>   fbdev: da8xx: use resource management for dma
+>>
+>>  arch/arm/configs/davinci_all_defconfig  |  27 ++----
+>>  arch/arm/mach-davinci/board-da850-evm.c |  90 +++++++++++++-----
+>>  drivers/video/fbdev/da8xx-fb.c          | 118 +++++++++++++-----------
+>>  include/video/da8xx-fb.h                |   1 -
+>>  4 files changed, 141 insertions(+), 95 deletions(-)
+>>
+>> --
+>> 2.21.0
+>>
 > 
-> This fixes the problem uncovered and not fixed for arm here:
-> https://lkml.kernel.org/r/20170622200033.25714-1-riel@redhat.com
+> Hi Sekhar,
 > 
-> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
-> Acked-by: Kees Cook <keescook@chromium.org>
-> Acked-by: Paul Burton <paul.burton@mips.com>
-> Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
-> ---
->   arch/mips/mm/mmap.c | 14 ++++++++++++--
->   1 file changed, 12 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/mips/mm/mmap.c b/arch/mips/mm/mmap.c
-> index d79f2b432318..f5c778113384 100644
-> --- a/arch/mips/mm/mmap.c
-> +++ b/arch/mips/mm/mmap.c
-> @@ -21,8 +21,9 @@ unsigned long shm_align_mask = PAGE_SIZE - 1;	/* Sane caches */
->   EXPORT_SYMBOL(shm_align_mask);
->   
->   /* gap between mmap and stack */
-> -#define MIN_GAP (128*1024*1024UL)
-> -#define MAX_GAP ((TASK_SIZE)/6*5)
-> +#define MIN_GAP		(128*1024*1024UL)
-> +#define MAX_GAP		((TASK_SIZE)/6*5)
+> the fbdev patches have been acked by Bartlomiej. I think the entire
+> series can go through the ARM-SoC tree.
 
-    Could add spaces around *, while touching this anyway? And parens
-around TASK_SIZE shouldn't be needed...
+Applied for v5.4. Will queue through ARM-SoC.
 
-> +#define STACK_RND_MASK	(0x7ff >> (PAGE_SHIFT - 12))
->   
->   static int mmap_is_legacy(struct rlimit *rlim_stack)
->   {
-> @@ -38,6 +39,15 @@ static int mmap_is_legacy(struct rlimit *rlim_stack)
->   static unsigned long mmap_base(unsigned long rnd, struct rlimit *rlim_stack)
->   {
->   	unsigned long gap = rlim_stack->rlim_cur;
-> +	unsigned long pad = stack_guard_gap;
-> +
-> +	/* Account for stack randomization if necessary */
-> +	if (current->flags & PF_RANDOMIZE)
-> +		pad += (STACK_RND_MASK << PAGE_SHIFT);
-
-    Parens not needed here.
-
-> +
-> +	/* Values close to RLIM_INFINITY can overflow. */
-> +	if (gap + pad > gap)
-> +		gap += pad;
->   
->   	if (gap < MIN_GAP)
->   		gap = MIN_GAP;
-> 
-
+Thanks,
+Sekhar
