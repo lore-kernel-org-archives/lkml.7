@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1296CC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:08:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C331FC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:08:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D29F12184E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:08:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FA862189D
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:08:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565291323;
-	bh=+fdep5RJVQSc0mu4tM0fr/rxAD8tPOhZXxWz/dcPWLc=;
+	s=default; t=1565291329;
+	bh=C0vlF4q5TK3PJwaPnm7lOxC5HVy4TewnLNOZ04n5p08=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2Xex9wHjRXIYnAFhPyDFMgLordfkueK4AJZMfbT63fUjO+IVGAB/7CLuBe0Hwood1
-	 4Ezq86IXhOBqHtdl5sdak98vZOkaAamAT1drFhXG6AjPHwDntV9IhOnGXEB8/gVgBe
-	 X38JL17j5GV3cuNG5H/SFBwU9ESiWE3idfgQxZBQ=
+	b=q6qjnF5Kr29MWLLX0qRNfP9SkXyOKlaQu/DlfQQhoAEFd5gtn6O2fYWdK1GuUYp5d
+	 wrO1KvKRnDBZWJb6IbmORu4qCR24MuOPNUe1SeTMU7J26D+Go8APny8xsQLYJzk5wi
+	 V46+1VU+g07JyFhn4GGEB2PNijVTAva5E86wxruM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404956AbfHHTIn (ORCPT
+        id S2404976AbfHHTIs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:08:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42772 "EHLO mail.kernel.org"
+        Thu, 8 Aug 2019 15:08:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404940AbfHHTIg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 15:08:36 -0400
+        id S2404518AbfHHTIl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 15:08:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2AD862173E;
-        Thu,  8 Aug 2019 19:08:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BDEC2189F;
+        Thu,  8 Aug 2019 19:08:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565291315;
-        bh=+fdep5RJVQSc0mu4tM0fr/rxAD8tPOhZXxWz/dcPWLc=;
+        s=default; t=1565291320;
+        bh=C0vlF4q5TK3PJwaPnm7lOxC5HVy4TewnLNOZ04n5p08=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2JpKN5EPF6oX4LITzRC41KJ5nuvpDXj/YkHDf+C5YHCW26PNbngPnhon1EWm0Lp/y
-         a5VUO2sXwm+hbQFS4GVcfByZO1fvUczSGCfResFG1Pf06oEsnZqy5EA5P4RjhwXwCa
-         hVzM6nAqyQsbwQjtSsiSgWe244WuyO+eLVuzsKmM=
+        b=hzcI/vczumBRhnMIVjYIh255LikgYgfEZCf4Un8x46OkNeOTwmW35nMLYJqa/ABOa
+         wHdBldkHN4gbzv350yfEp7HjWV6o4vQINfuL/YVKSWNV1XP00F5wjYcGXPez+HJy2u
+         1f5C+gGPmrVwvQR0qNv6HSegqOXLEN7leeoBO804=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sudarsana Reddy Kalluru <skalluru@marvell.com>,
-        Manish Chopra <manishc@marvell.com>,
+        stable@vger.kernel.org, William Tu <u9012063@gmail.com>,
+        Haishuang Yan <yanhaishuang@cmss.chinamobile.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 13/45] bnx2x: Disable multi-cos feature.
-Date:   Thu,  8 Aug 2019 21:04:59 +0200
-Message-Id: <20190808190454.503212078@linuxfoundation.org>
+Subject: [PATCH 4.19 15/45] ip6_gre: reload ipv6h in prepare_ip6gre_xmit_ipv6
+Date:   Thu,  8 Aug 2019 21:05:01 +0200
+Message-Id: <20190808190454.603296704@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190808190453.827571908@linuxfoundation.org>
 References: <20190808190453.827571908@linuxfoundation.org>
@@ -61,36 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sudarsana Reddy Kalluru <skalluru@marvell.com>
+From: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
 
-[ Upstream commit d1f0b5dce8fda09a7f5f04c1878f181d548e42f5 ]
+[ Upstream commit 3bc817d665ac6d9de89f59df522ad86f5b5dfc03 ]
 
-Commit 3968d38917eb ("bnx2x: Fix Multi-Cos.") which enabled multi-cos
-feature after prolonged time in driver added some regression causing
-numerous issues (sudden reboots, tx timeout etc.) reported by customers.
-We plan to backout this commit and submit proper fix once we have root
-cause of issues reported with this feature enabled.
+Since ip6_tnl_parse_tlv_enc_lim() can call pskb_may_pull()
+which may change skb->data, so we need to re-load ipv6h at
+the right place.
 
-Fixes: 3968d38917eb ("bnx2x: Fix Multi-Cos.")
-Signed-off-by: Sudarsana Reddy Kalluru <skalluru@marvell.com>
-Signed-off-by: Manish Chopra <manishc@marvell.com>
+Fixes: 898b29798e36 ("ip6_gre: Refactor ip6gre xmit codes")
+Cc: William Tu <u9012063@gmail.com>
+Signed-off-by: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
+Acked-by: William Tu <u9012063@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ net/ipv6/ip6_gre.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
-@@ -1936,8 +1936,7 @@ u16 bnx2x_select_queue(struct net_device
- 	}
+--- a/net/ipv6/ip6_gre.c
++++ b/net/ipv6/ip6_gre.c
+@@ -680,12 +680,13 @@ static int prepare_ip6gre_xmit_ipv6(stru
+ 				    struct flowi6 *fl6, __u8 *dsfield,
+ 				    int *encap_limit)
+ {
+-	struct ipv6hdr *ipv6h = ipv6_hdr(skb);
++	struct ipv6hdr *ipv6h;
+ 	struct ip6_tnl *t = netdev_priv(dev);
+ 	__u16 offset;
  
- 	/* select a non-FCoE queue */
--	return fallback(dev, skb, NULL) %
--	       (BNX2X_NUM_ETH_QUEUES(bp) * bp->max_cos);
-+	return fallback(dev, skb, NULL) % (BNX2X_NUM_ETH_QUEUES(bp));
- }
+ 	offset = ip6_tnl_parse_tlv_enc_lim(skb, skb_network_header(skb));
+ 	/* ip6_tnl_parse_tlv_enc_lim() might have reallocated skb->head */
++	ipv6h = ipv6_hdr(skb);
  
- void bnx2x_set_num_queues(struct bnx2x *bp)
+ 	if (offset > 0) {
+ 		struct ipv6_tlv_tnl_enc_lim *tel;
 
 
