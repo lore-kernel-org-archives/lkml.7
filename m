@@ -2,113 +2,75 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A47C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:04:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14B6AC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:05:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C0A321743
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:04:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D58B021743
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:05:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404271AbfHHUEV (ORCPT
+        id S2404323AbfHHUFz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 16:04:21 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:54093 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732704AbfHHUEU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 16:04:20 -0400
-Received: from p200300ddd71876597e7a91fffec98e25.dip0.t-ipconnect.de ([2003:dd:d718:7659:7e7a:91ff:fec9:8e25])
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hvods-0007Hp-It; Thu, 08 Aug 2019 22:04:08 +0200
-Date:   Thu, 8 Aug 2019 22:04:03 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     =?UTF-8?Q?Valdis_Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>
-cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>
-Subject: Re: [PATCH] arch/x86/kernel/cpu/umwait.c - remove unused variable
-In-Reply-To: <79734.1565272329@turing-police>
-Message-ID: <alpine.DEB.2.21.1908082158580.2882@nanos.tec.linutronix.de>
-References: <79734.1565272329@turing-police>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1191196002-1565294648=:2882"
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Thu, 8 Aug 2019 16:05:55 -0400
+Received: from mail.monom.org ([188.138.9.77]:37838 "EHLO mail.monom.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404174AbfHHUFz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 16:05:55 -0400
+Received: from mail.monom.org (localhost [127.0.0.1])
+        by filter.mynetwork.local (Postfix) with ESMTP id 8BCFE500294;
+        Thu,  8 Aug 2019 22:05:53 +0200 (CEST)
+Received: from localhost (b9168f76.cgn.dg-w.de [185.22.143.118])
+        by mail.monom.org (Postfix) with ESMTPSA id C43F6500241;
+        Thu,  8 Aug 2019 22:05:52 +0200 (CEST)
+Date:   Thu, 08 Aug 2019 22:05:52 +0200
+From:   Daniel Wagner <wagi@monom.org>
+Subject: [ANNOUNCE] 4.4.188-rt185
+Data:   Thu, 08 Aug 2019 20:01:31 -0000
+To:     LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Carsten Emde <C.Emde@osadl.org>,
+        John Kacur <jkacur@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Julia Cartwright <julia@ni.com>, Pavel Machek <pavel@denx.de>
+Message-Id: <20190808200553.8BCFE500294@mail.monom.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hello RT Folks!
 
---8323329-1191196002-1565294648=:2882
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+I'm pleased to announce the 4.4.188-rt185 stable release.
 
-Valdis,
+This release is just an update to the new stable 4.4.188 version
+and no RT specific changes have been made.
 
-On Thu, 8 Aug 2019, Valdis Klētnieks wrote:
+The know issue from last time is now resolved. The missing patch for
+-rt has is now also part of stable 1ab1512366d4 ("mm, vmstat: make
+quiet_vmstat lighter"). There was a patch missing fece2f828ffe
+("vmstat: Remove BUG_ON from vmstat_update"). With this patch the
+NVIDIA boards (at least Tegra K1) should work again.
 
-I really appreciate your work, but can you please refrain from using file
-names as prefixes?
+You can get this release via the git tree at:
 
-git log $FILE gives you usually a pretty good hint what the proper prefix
-is:
+  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
 
-  bd9a0c97e53c ("x86/umwait: Add sysfs interface to control umwait maximum time")
-  ff4b353f2ef9 ("x86/umwait: Add sysfs interface to control umwait C0.2 state")
-  bd688c69b7e6 ("x86/umwait: Initialize umwait control values")
+  branch: v4.4-rt
+  Head SHA1: bc22d8bc8f5566ba4fe13115fb11d843d140f37c
 
-See?
+Or to build 4.4.188-rt185 directly, the following patches should be applied:
 
-> We get a warning when building with W=1:
+  https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.4.tar.xz
 
-Please avoid 'We/I' in changelogs.
- 
->   CC      arch/x86/kernel/cpu/umwait.o
-> arch/x86/kernel/cpu/umwait.c: In function 'umwait_init':
-> arch/x86/kernel/cpu/umwait.c:183:6: warning: variable 'ret' set but not used [-Wunused-but-set-variable]
->   183 |  int ret;
->       |      ^~~
-> 
-> And indeed, we don't do anything with it, so clean it  up.
+  https://www.kernel.org/pub/linux/kernel/v4.x/patch-4.4.188.xz
 
-Well, the question is whether removing the variable is the right thing to
-do.
- 
-> Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-> 
-> diff --git a/arch/x86/kernel/cpu/umwait.c b/arch/x86/kernel/cpu/umwait.c
-> index 6a204e7336c1..3d1d3952774a 100644
-> --- a/arch/x86/kernel/cpu/umwait.c
-> +++ b/arch/x86/kernel/cpu/umwait.c
-> @@ -180,12 +180,11 @@ static struct attribute_group umwait_attr_group = {
->  static int __init umwait_init(void)
->  {
->  	struct device *dev;
-> -	int ret;
->  
->  	if (!boot_cpu_has(X86_FEATURE_WAITPKG))
->  		return -ENODEV;
->  
-> -	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "umwait:online",
-> +	cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "umwait:online",
->  				umwait_cpu_online, NULL);
+  https://www.kernel.org/pub/linux/kernel/projects/rt/4.4/patch-4.4.188-rt185.patch.xz
 
-If that fails then umwait is broken. So instead of removing it, this should
-actually check the return code and act accordingly. Fenghua?
-  
->  	register_syscore_ops(&umwait_syscore_ops);
-
-Thanks,
-
-	tglx
---8323329-1191196002-1565294648=:2882--
+Enjoy!
+   Daniel
