@@ -8,59 +8,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BAB4C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 22:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B32C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 22:27:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31949214C6
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 22:27:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C63BF214C6
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 22:27:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ijU38H5k"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W30psaFi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404848AbfHHW1r (ORCPT
+        id S2404861AbfHHW1y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 18:27:47 -0400
-Received: from mail-pl1-f201.google.com ([209.85.214.201]:45075 "EHLO
-        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404609AbfHHW1r (ORCPT
+        Thu, 8 Aug 2019 18:27:54 -0400
+Received: from mail-vs1-f73.google.com ([209.85.217.73]:40745 "EHLO
+        mail-vs1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404609AbfHHW1y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 18:27:47 -0400
-Received: by mail-pl1-f201.google.com with SMTP id y9so56272698plp.12
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 15:27:46 -0700 (PDT)
+        Thu, 8 Aug 2019 18:27:54 -0400
+Received: by mail-vs1-f73.google.com with SMTP id v9so24645053vsq.7
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 15:27:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=Gg8nHdywARqj4NfIjRfnVnITGpTVJRTSlVwGVid0Qko=;
-        b=ijU38H5kf5gPrtFLsVxbQKfJV+WB9zN4OKWEFpdOF99YKzidgPnA3zkMBd4K8IkvjC
-         fqru1IJuLAmGAH+rl5s2E2irvjFeeg/y1hk+eOeDvqxrPXtz9ZwiE96E3trFp/3xCfIA
-         3M1WynnVATUMgi8dK0mY4H44CrRXdZXHwjdBX68mrx6XYumjQCa4OKjjpnSnnOgN9F+z
-         RG0B2UmoA6gdrhwn8iJpNnInXxPz3CkxYoEHmQCpMZI4Ijr0CWmclYLQzVjqzxOOwrJj
-         HjEs6n4IlU/rgQDlnktw9GzWpe2AMJ8UcnbiSXn8DlOgYWjnz5dy4pb4qu6qvGkoUx1r
-         A/aw==
+        bh=glpAp26pMe1icqRitidp26IFh6a5KAtyBMYwIFTDOcE=;
+        b=W30psaFiIA0cn7RWVZd0TkcI9INoc97phuYQojQUCOq3c0E5XAVZFJaBVeq28e0pnt
+         B1oAMa1fipofqyBGlFrKnFec3xqxe14lkG+twN4ilhOwv6VjIBbG4RQMiQqwGw4KaKec
+         O6LroXNEUlZnHbw6AHPXrR+fGbtWdEdC0TLEaQZXpKjaq5EEdcv0nu+0jtmC7yYZIu+A
+         w8YfnjbxsWMC8980xatvwDxWe2a8hN4VID/95HRkGqf+wrj1fBMNtHMMcT5uydwSxzVs
+         UOLbyX0L1dkCzNUH8u91KSnUSaII8kop5QeHfDvXlC907fCwc0i7aKc/tipfQoxLT2Q/
+         8oQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=Gg8nHdywARqj4NfIjRfnVnITGpTVJRTSlVwGVid0Qko=;
-        b=iJOAAjvR/aI5Pr7dAtrmiDE3APcqCzjVzlUbjbC/4xf7APcXr249z8uVwXdN9HjbCB
-         KG4GzPoMB15tE1S+8qVsKN2zdywNiY1wwkC1Ypj6IaBGIh/oeU7t1/8zHJl7IJ1CuKAI
-         q6UFf5LbWmKurq/27XsvS6FUrogrIzALfynH37XljDv7LorAVA0PwD8VrLWtcj9sMhxp
-         FgeBOHFXHzf4IBHmHjXxUh+hg9MiC3PUM2dR4CX65BLsSaiQffHYNBIvmAr/Vd+MPd2z
-         qo+X9GTs5HbWaEXetKpxAvluOx54eSxTSRwbxkktjKr8ClcqKxnV6EgYEde7PrbXwCqX
-         bynA==
-X-Gm-Message-State: APjAAAVznRl5TwIkbpIk8OPDqBfk8xOWvjZ9y31e+W4/p9cwgrw0cNqo
-        TtmxtvzwZ1d8/khoRgCar/6r+X/OL40=
-X-Google-Smtp-Source: APXvYqx6pc8AZYRIy2S2wR703wxN2Gqx0htVtO5Ct/fs0PSgsxmOGzaRIrPBwEeB/GN6lOSy0S/4Lc4qKDE=
-X-Received: by 2002:a65:5a44:: with SMTP id z4mr14811850pgs.41.1565303266166;
- Thu, 08 Aug 2019 15:27:46 -0700 (PDT)
-Date:   Thu,  8 Aug 2019 15:27:25 -0700
+        bh=glpAp26pMe1icqRitidp26IFh6a5KAtyBMYwIFTDOcE=;
+        b=oUtUYIx5twPp1rqocX4ALa15X3kC87BoVlTZDob7CZ5xAKntXEe2L9sofs/2gtHnBi
+         nm/1Gx78Dx8QYCpdqBfeli0h9eYEmUVzSjfXBObQ4LayCDubHe5+H8trTd6i2MTxPLnd
+         nhGpIzU3bdcjrqnhL+BjbMUQVhZbVpL6bIj16SaOz6vfDdc07bkJ91GLLq4lWrFNokE4
+         WlpBVwxRhrHRugFIXAzrE9Gua5xMVEjMrRQMgRabENHPRHwVMWXOrswpJM53Ls2b9TJT
+         PU1BVb43IPf8M253L2DV3+ZKLD69het2REuHECWYHgEe/mbISQ2Aes5q+nqrjC2tzuNd
+         Ge/g==
+X-Gm-Message-State: APjAAAXQO7cDJF5BthSPCKWe76YKr2bMtfAX1PaUzenm7NVv0yBocQ3w
+        emDeOMS43WlzHLFZfZ23Orp2W1x8P3o=
+X-Google-Smtp-Source: APXvYqwYMoyVBc6m3h6T6jZEVwv9fndM5Olrygl81LtMf4cJkPsvtJbWFB6STk1qAyP4VcI4ifMWkynE+ak=
+X-Received: by 2002:a1f:8bc4:: with SMTP id n187mr7001133vkd.32.1565303272993;
+ Thu, 08 Aug 2019 15:27:52 -0700 (PDT)
+Date:   Thu,  8 Aug 2019 15:27:26 -0700
 In-Reply-To: <20190808222727.132744-1-hridya@google.com>
-Message-Id: <20190808222727.132744-2-hridya@google.com>
+Message-Id: <20190808222727.132744-3-hridya@google.com>
 Mime-Version: 1.0
 References: <20190808222727.132744-1-hridya@google.com>
 X-Mailer: git-send-email 2.22.0.770.g0f2c4a37fd-goog
-Subject: [PATCH v3 1/2] binder: Add default binder devices through binderfs
- when configured
+Subject: [PATCH v3 2/2] binder: Validate the default binderfs device names.
 From:   Hridya Valsaraju <hridya@google.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "=?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?=" <arve@android.com>,
@@ -77,120 +76,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, since each binderfs instance needs its own
-private binder devices, every time a binderfs instance is
-mounted, all the default binder devices need to be created
-via the BINDER_CTL_ADD IOCTL. This patch aims to
-add a solution to automatically create the default binder
-devices for each binderfs instance that gets mounted.
-To achieve this goal, when CONFIG_ANDROID_BINDERFS is set,
-the default binder devices specified by CONFIG_ANDROID_BINDER_DEVICES
-are created in each binderfs instance instead of global devices
-being created by the binder driver.
+Length of a binderfs device name cannot exceed BINDERFS_MAX_NAME.
+This patch adds a check in binderfs_init() to ensure the same
+for the default binder devices that will be created in every
+binderfs instance.
 
 Co-developed-by: Christian Brauner <christian.brauner@ubuntu.com>
 Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 Signed-off-by: Hridya Valsaraju <hridya@google.com>
 ---
+ drivers/android/binderfs.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-Changes in v2:
-- Updated commit message as per Greg Kroah-Hartman.
-- Removed new module parameter creation as per Greg
-  Kroah-Hartman/Christian Brauner.
-- Refactored device name length check into a new patch as per Greg Kroah-Hartman.
-
-Changes in v3:
--Removed unnecessary empty lines as per Dan Carpenter.
-
- drivers/android/binder.c          |  5 +++--
- drivers/android/binder_internal.h |  2 ++
- drivers/android/binderfs.c        | 23 ++++++++++++++++++++---
- 3 files changed, 25 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/android/binder.c b/drivers/android/binder.c
-index 466b6a7f8ab7..ca6b21a53321 100644
---- a/drivers/android/binder.c
-+++ b/drivers/android/binder.c
-@@ -123,7 +123,7 @@ static uint32_t binder_debug_mask = BINDER_DEBUG_USER_ERROR |
- 	BINDER_DEBUG_FAILED_TRANSACTION | BINDER_DEBUG_DEAD_TRANSACTION;
- module_param_named(debug_mask, binder_debug_mask, uint, 0644);
- 
--static char *binder_devices_param = CONFIG_ANDROID_BINDER_DEVICES;
-+char *binder_devices_param = CONFIG_ANDROID_BINDER_DEVICES;
- module_param_named(devices, binder_devices_param, charp, 0444);
- 
- static DECLARE_WAIT_QUEUE_HEAD(binder_user_error_wait);
-@@ -6279,7 +6279,8 @@ static int __init binder_init(void)
- 				    &transaction_log_fops);
- 	}
- 
--	if (strcmp(binder_devices_param, "") != 0) {
-+	if (!IS_ENABLED(CONFIG_ANDROID_BINDERFS) &&
-+	    strcmp(binder_devices_param, "") != 0) {
- 		/*
- 		* Copy the module_parameter string, because we don't want to
- 		* tokenize it in-place.
-diff --git a/drivers/android/binder_internal.h b/drivers/android/binder_internal.h
-index 045b3e42d98b..fe8c745dc8e0 100644
---- a/drivers/android/binder_internal.h
-+++ b/drivers/android/binder_internal.h
-@@ -37,6 +37,8 @@ struct binder_device {
- 
- extern const struct file_operations binder_fops;
- 
-+extern char *binder_devices_param;
-+
- #ifdef CONFIG_ANDROID_BINDERFS
- extern bool is_binderfs_device(const struct inode *inode);
- #else
 diff --git a/drivers/android/binderfs.c b/drivers/android/binderfs.c
-index e773f45d19d9..aee46dd1be91 100644
+index aee46dd1be91..55c5adb87585 100644
 --- a/drivers/android/binderfs.c
 +++ b/drivers/android/binderfs.c
-@@ -186,8 +186,7 @@ static int binderfs_binder_device_create(struct inode *ref_inode,
- 	req->major = MAJOR(binderfs_dev);
- 	req->minor = minor;
- 
--	ret = copy_to_user(userp, req, sizeof(*req));
--	if (ret) {
-+	if (userp && copy_to_user(userp, req, sizeof(*req))) {
- 		ret = -EFAULT;
- 		goto err;
- 	}
-@@ -467,6 +466,9 @@ static int binderfs_fill_super(struct super_block *sb, void *data, int silent)
+@@ -570,6 +570,18 @@ static struct file_system_type binder_fs_type = {
+ int __init init_binderfs(void)
+ {
  	int ret;
- 	struct binderfs_info *info;
- 	struct inode *inode = NULL;
-+	struct binderfs_device device_info = { 0 };
 +	const char *name;
 +	size_t len;
- 
- 	sb->s_blocksize = PAGE_SIZE;
- 	sb->s_blocksize_bits = PAGE_SHIFT;
-@@ -521,7 +523,22 @@ static int binderfs_fill_super(struct super_block *sb, void *data, int silent)
- 	if (!sb->s_root)
- 		return -ENOMEM;
- 
--	return binderfs_binder_ctl_create(sb);
-+	ret = binderfs_binder_ctl_create(sb);
-+	if (ret)
-+		return ret;
 +
++	/* Verify that the default binderfs device names are valid. */
 +	name = binder_devices_param;
 +	for (len = strcspn(name, ","); len > 0; len = strcspn(name, ",")) {
-+		strscpy(device_info.name, name, len + 1);
-+		ret = binderfs_binder_device_create(inode, NULL, &device_info);
-+		if (ret)
-+			return ret;
++		if (len > BINDERFS_MAX_NAME)
++			return -E2BIG;
 +		name += len;
 +		if (*name == ',')
 +			name++;
 +	}
-+
-+	return 0;
- }
  
- static struct dentry *binderfs_mount(struct file_system_type *fs_type,
+ 	/* Allocate new major number for binderfs. */
+ 	ret = alloc_chrdev_region(&binderfs_dev, 0, BINDERFS_MAX_MINOR,
 -- 
 2.22.0.770.g0f2c4a37fd-goog
 
