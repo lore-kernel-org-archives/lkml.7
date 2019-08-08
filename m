@@ -2,84 +2,88 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BECCC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 04:56:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81BC6C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 04:58:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5E9F20B7C
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 04:56:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565240215;
-	bh=fg5khFk3YuZBohTROE3ejwk+PldPzP9n0DbgnXjxBUo=;
-	h=In-Reply-To:References:From:Cc:To:Subject:Date:List-ID:From;
-	b=c27B9VS3QqhF1VkJog6PJYq86r0Dx2/kMoxdNplzBppoLp+yTmA007ckDvAFigGrY
-	 7I/d5PCQ1FiIDTevH7/9YFidbth7jNszI69y6ogGHJX8SkH5xyMY3utiIi6Zb+RfX9
-	 zHfEBZpCjI0mu/1E0VyTzj5xGvuJX+aOLmh0Rq30=
+	by mail.kernel.org (Postfix) with ESMTP id 5C2542173C
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 04:58:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730701AbfHHE4y (ORCPT
+        id S1730844AbfHHE6E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 00:56:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47236 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725868AbfHHE4y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 00:56:54 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3188220880;
-        Thu,  8 Aug 2019 04:56:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565240213;
-        bh=fg5khFk3YuZBohTROE3ejwk+PldPzP9n0DbgnXjxBUo=;
-        h=In-Reply-To:References:From:Cc:To:Subject:Date:From;
-        b=ZVvRL/+btScoFuQMMQikaqYRKNgzP3Kn/Fqby0QVXNbN+QrXEwOjOLZ+cjiGljQft
-         Y7Q5pGfru4aTqCrHwTRE85JXbb4sEpChHXMnNpwp1r+91yfqNRJyu39dpXW4J8aizZ
-         FGSE5fynKRNU2eNNM0Se8feioHbK2RYqPqankRTA=
-Content-Type: text/plain; charset="utf-8"
+        Thu, 8 Aug 2019 00:58:04 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:55006 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725806AbfHHE6E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 00:58:04 -0400
+Received: by mail-wm1-f68.google.com with SMTP id p74so988240wme.4;
+        Wed, 07 Aug 2019 21:58:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Q7D/8BznaDXMUKeNwuiimCqxMs4M4U8z2oe/6Zp1LH0=;
+        b=QRz6meNnUgB1d68hz4Y0uHhl2sc9Lil/A6oHvm/LlDvt5vmfju0IUgGZVfQVVeXTOn
+         YwOggKYCXh2e9wvVL2y1IJdlMbUtYmPOuzxMADhLNuC/D1gN0IQZDBKv563Nhx2TuwSH
+         FKsNcGQVT+E8R0XTsx/TXjbYLJx4dZoS6wlSSHko92DnmlVJwFOCDJrkk8kA1mGq0gny
+         t36kMtEoEZIBxtnXlsyv/yH0PBUn/mJdAymAldrZn3Je2zXp/Hp5fQVqhfk9infMIT0R
+         T36ePaWFEco5ENVQlfRSACgnCiNvmbeCbxFUFQZoJDMPFqT5Ol8X6RlS/M9hOAy59Qnh
+         HF+w==
+X-Gm-Message-State: APjAAAUtHwGGjMGHrZ7mNiC9CDAiDy28FlfWP7gsOGpikMvB86Hz/iO8
+        H0khtR0Up+3l4dUY887ptqU=
+X-Google-Smtp-Source: APXvYqxouo6xkD/Ka8KpoCVDtmIK16o8FHZU0T4FDxQSAnEw7PlKO9Sge9gjs2gBwXn8UQ+e4dHxHA==
+X-Received: by 2002:a1c:751a:: with SMTP id o26mr1727442wmc.13.1565240282122;
+        Wed, 07 Aug 2019 21:58:02 -0700 (PDT)
+Received: from localhost.localdomain (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
+        by smtp.googlemail.com with ESMTPSA id 32sm87082644wrh.76.2019.08.07.21.58.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Aug 2019 21:58:01 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     Bjorn Helgaas <bjorn.helgaas@gmail.com>
+Cc:     Denis Efremov <efremov@linux.com>,
+        Derek Chickles <dchickles@marvell.com>,
+        Satanand Burla <sburla@marvell.com>,
+        Felix Manlunas <fmanlunas@marvell.com>, netdev@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] liquidio: Use pcie_flr() instead of reimplementing it
+Date:   Thu,  8 Aug 2019 07:57:53 +0300
+Message-Id: <20190808045753.5474-1-efremov@linux.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190717145651.17250-1-andrew.smirnov@gmail.com>
-References: <20190717145651.17250-1-andrew.smirnov@gmail.com>
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Chris Healy <cphealy@gmail.com>, linux-kernel@vger.kernel.org
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        linux-clk@vger.kernel.org
-Subject: Re: [PATCH v2] clk: Constify struct clk_bulk_data * where possible
-User-Agent: alot/0.8.1
-Date:   Wed, 07 Aug 2019 21:56:52 -0700
-Message-Id: <20190808045653.3188220880@mail.kernel.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Andrey Smirnov (2019-07-17 07:56:51)
-> The following functions:
->=20
->     - clk_bulk_enable()
->     - clk_bulk_prepare()
->     - clk_bulk_disable()
->     - clk_bulk_unprepare()
->=20
-> already expect const clk_bulk_data * as a second parameter, however
-> their no-op version have mismatching prototypes that don't. Fix that.
->=20
-> While at it, constify the second argument of clk_bulk_prepare_enable()
-> and clk_bulk_disable_unprepare(), since the functions they are
-> comprised of already accept const clk_bulk_data *.
->=20
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Cc: Russell King <linux@armlinux.org.uk>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Chris Healy <cphealy@gmail.com>
-> Cc: linux-clk@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
+octeon_mbox_process_cmd() directly writes the PCI_EXP_DEVCTL_BCR_FLR
+bit, which bypasses timing requirements imposed by the PCIe spec.
+This patch fixes the function to use the pcie_flr() interface instead.
 
-Applied to clk-next
+Signed-off-by: Denis Efremov <efremov@linux.com>
+---
+ drivers/net/ethernet/cavium/liquidio/octeon_mailbox.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/drivers/net/ethernet/cavium/liquidio/octeon_mailbox.c b/drivers/net/ethernet/cavium/liquidio/octeon_mailbox.c
+index 021d99cd1665..614d07be7181 100644
+--- a/drivers/net/ethernet/cavium/liquidio/octeon_mailbox.c
++++ b/drivers/net/ethernet/cavium/liquidio/octeon_mailbox.c
+@@ -260,9 +260,7 @@ static int octeon_mbox_process_cmd(struct octeon_mbox *mbox,
+ 		dev_info(&oct->pci_dev->dev,
+ 			 "got a request for FLR from VF that owns DPI ring %u\n",
+ 			 mbox->q_no);
+-		pcie_capability_set_word(
+-			oct->sriov_info.dpiring_to_vfpcidev_lut[mbox->q_no],
+-			PCI_EXP_DEVCTL, PCI_EXP_DEVCTL_BCR_FLR);
++		pcie_flr(oct->sriov_info.dpiring_to_vfpcidev_lut[mbox->q_no]);
+ 		break;
+ 
+ 	case OCTEON_PF_CHANGED_VF_MACADDR:
+-- 
+2.21.0
 
