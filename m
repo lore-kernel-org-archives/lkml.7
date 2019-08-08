@@ -2,65 +2,131 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C68C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 17:43:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D55C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 17:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE5242173C
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 17:43:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26C582173C
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 17:44:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732662AbfHHRn3 (ORCPT
+        id S1732949AbfHHRoN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 13:43:29 -0400
-Received: from foss.arm.com ([217.140.110.172]:36828 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727096AbfHHRn3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 13:43:29 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EF16815A2;
-        Thu,  8 Aug 2019 10:43:28 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B55B33F575;
-        Thu,  8 Aug 2019 10:43:27 -0700 (PDT)
-Date:   Thu, 8 Aug 2019 18:43:25 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Daniel Axtens <dja@axtens.net>
-Cc:     kasan-dev@googlegroups.com, linux-mm@kvack.org, x86@kernel.org,
-        aryabinin@virtuozzo.com, glider@google.com, luto@kernel.org,
-        linux-kernel@vger.kernel.org, dvyukov@google.com
-Subject: Re: [PATCH v3 1/3] kasan: support backing vmalloc space with real
- shadow memory
-Message-ID: <20190808174325.GD47131@lakrids.cambridge.arm.com>
-References: <20190731071550.31814-1-dja@axtens.net>
- <20190731071550.31814-2-dja@axtens.net>
- <20190808135037.GA47131@lakrids.cambridge.arm.com>
-MIME-Version: 1.0
+        Thu, 8 Aug 2019 13:44:13 -0400
+Received: from outbound.smtp.vt.edu ([198.82.183.121]:46964 "EHLO
+        omr2.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727096AbfHHRoM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 13:44:12 -0400
+Received: from mr3.cc.vt.edu (mr3.cc.ipv6.vt.edu [IPv6:2607:b400:92:8500:0:7f:b804:6b0a])
+        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x78HiB93028971
+        for <linux-kernel@vger.kernel.org>; Thu, 8 Aug 2019 13:44:11 -0400
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
+        by mr3.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x78Hi6S6006749
+        for <linux-kernel@vger.kernel.org>; Thu, 8 Aug 2019 13:44:11 -0400
+Received: by mail-qt1-f200.google.com with SMTP id p34so86253590qtp.1
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 10:44:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:mime-version:date
+         :message-id;
+        bh=ocu8C9DzUnItcD8VwauK/PbrxyEWz2B8Awr1UvoHzFw=;
+        b=Gl0CDDqSyAvH9qyeJS3BE8vy7y+PgIibGuaHVGSU/qqbZO+X1ciimBG7wDWfHuRpVy
+         mufMFfZvL3b2pam7tK4uKsc+sInvhsVEU8Evs8xd2OaR73D1KHcp8uI4yEBfmzf0CRDR
+         YiM7DeJdOrWO1l03U5vuFKh2BLKwYSTv3hin3HK8IZyKepuQehOm2vnhMpZCbZ+Ar+VH
+         guhBOSNL1GpK1bK0G7SK/tgEnRMMp454cn9ixhqmmmNrm2vFcXZjc/J3oDDKrBJQYQI6
+         TUG2N1X/RfQpLXMKF0QrMWMqRroBSH0rbOB+vQLyxhlc7raQVf1eRgwPeSabgVjfZnCv
+         acqQ==
+X-Gm-Message-State: APjAAAW+wXGdwij4v9kvnY9jAogJyURdwPh5VQvh5JuMlhpZuj3KXPz6
+        2MYKBOC6tE2MzilyN0awXTCD2UB5vFe3ysDY2bZiPfUlgtPmIsels69YHbGVbCSNEmA2RarpbMQ
+        EatqCwwPw+bJJ0JIUwsT0oEtbEPuykloV3WI=
+X-Received: by 2002:aed:2d67:: with SMTP id h94mr14182023qtd.154.1565286245456;
+        Thu, 08 Aug 2019 10:44:05 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwWLsjvSpuRTv+an2uu6MpgTPWu4bf1JJwxkDVZffrsO5pybPCTHePzZtCk0LLfZ4P5PeL9tw==
+X-Received: by 2002:aed:2d67:: with SMTP id h94mr14181997qtd.154.1565286245177;
+        Thu, 08 Aug 2019 10:44:05 -0700 (PDT)
+Received: from turing-police ([2601:5c0:c001:4341::359])
+        by smtp.gmail.com with ESMTPSA id a67sm43020911qkg.131.2019.08.08.10.44.03
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 08 Aug 2019 10:44:03 -0700 (PDT)
+From:   "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <valdis.kletnieks@vt.edu>
+X-Google-Original-From: "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <Valdis.Kletnieks@vt.edu>
+X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>
+cc:     x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] arch/x86/events - make more stuff static
+Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190808135037.GA47131@lakrids.cambridge.arm.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+Date:   Thu, 08 Aug 2019 13:44:02 -0400
+Message-ID: <128059.1565286242@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 02:50:37PM +0100, Mark Rutland wrote:
-> Hi Daniel,
-> 
-> This is looking really good!
-> 
-> I spotted a few more things we need to deal with, so I've suggested some
-> (not even compile-tested) code for that below. Mostly that's just error
-> handling, and using helpers to avoid things getting too verbose.
+When building with C=2, sparse makes note of a number of things:
 
-FWIW, I had a quick go at that, and I've pushed the (corrected) results
-to my git repo, along with an initial stab at arm64 support (which is
-currently broken):
+  CHECK   arch/x86/events/intel/rapl.c
+arch/x86/events/intel/rapl.c:637:30: warning: symbol 'rapl_attr_update' was not declared. Should it be static?
+  CHECK   arch/x86/events/intel/cstate.c
+arch/x86/events/intel/cstate.c:449:30: warning: symbol 'core_attr_update' was not declared. Should it be static?
+arch/x86/events/intel/cstate.c:457:30: warning: symbol 'pkg_attr_update' was not declared. Should it be static?
+  CHECK   arch/x86/events/msr.c
+arch/x86/events/msr.c:170:30: warning: symbol 'attr_update' was not declared. Should it be static?
 
-https://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git/log/?h=kasan/vmalloc
+And they can indeed be static.
 
-Thanks,
-Mark.
+Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+
+diff --git a/arch/x86/events/intel/cstate.c b/arch/x86/events/intel/cstate.c
+index 688592b34564..db498b5d4aae 100644
+--- a/arch/x86/events/intel/cstate.c
++++ b/arch/x86/events/intel/cstate.c
+@@ -446,7 +446,7 @@ static int cstate_cpu_init(unsigned int cpu)
+ 	return 0;
+ }
+ 
+-const struct attribute_group *core_attr_update[] = {
++static const struct attribute_group *core_attr_update[] = {
+ 	&group_cstate_core_c1,
+ 	&group_cstate_core_c3,
+ 	&group_cstate_core_c6,
+@@ -454,7 +454,7 @@ const struct attribute_group *core_attr_update[] = {
+ 	NULL,
+ };
+ 
+-const struct attribute_group *pkg_attr_update[] = {
++static const struct attribute_group *pkg_attr_update[] = {
+ 	&group_cstate_pkg_c2,
+ 	&group_cstate_pkg_c3,
+ 	&group_cstate_pkg_c6,
+diff --git a/arch/x86/events/intel/rapl.c b/arch/x86/events/intel/rapl.c
+index 64ab51ffdf06..f34b9491ea6e 100644
+--- a/arch/x86/events/intel/rapl.c
++++ b/arch/x86/events/intel/rapl.c
+@@ -634,7 +634,7 @@ static void cleanup_rapl_pmus(void)
+ 	kfree(rapl_pmus);
+ }
+ 
+-const struct attribute_group *rapl_attr_update[] = {
++static const struct attribute_group *rapl_attr_update[] = {
+ 	&rapl_events_cores_group,
+ 	&rapl_events_pkg_group,
+ 	&rapl_events_ram_group,
+diff --git a/arch/x86/events/msr.c b/arch/x86/events/msr.c
+index 9431447541e9..5812e8747d1f 100644
+--- a/arch/x86/events/msr.c
++++ b/arch/x86/events/msr.c
+@@ -167,7 +167,7 @@ static const struct attribute_group *attr_groups[] = {
+ 	NULL,
+ };
+ 
+-const struct attribute_group *attr_update[] = {
++static const struct attribute_group *attr_update[] = {
+ 	&group_aperf,
+ 	&group_mperf,
+ 	&group_pperf,
+
