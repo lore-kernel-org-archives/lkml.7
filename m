@@ -3,91 +3,141 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD13C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 18:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97BBBC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 18:19:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79AD7217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 18:19:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F76621743
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 18:19:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390221AbfHHSTH (ORCPT
+        id S2390235AbfHHSTs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 14:19:07 -0400
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:52256 "EHLO
-        omr1.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731038AbfHHSTE (ORCPT
+        Thu, 8 Aug 2019 14:19:48 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:6392 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728825AbfHHSTr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 14:19:04 -0400
-Received: from mr2.cc.vt.edu (mr2.cc.ipv6.vt.edu [IPv6:2607:b400:92:8400:0:90:e077:bf22])
-        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x78IJ30D025399
-        for <linux-kernel@vger.kernel.org>; Thu, 8 Aug 2019 14:19:03 -0400
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
-        by mr2.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x78IIwmq028748
-        for <linux-kernel@vger.kernel.org>; Thu, 8 Aug 2019 14:19:03 -0400
-Received: by mail-qt1-f197.google.com with SMTP id j10so4136530qtl.23
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 11:19:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:mime-version:date
-         :message-id;
-        bh=BKPbzs/c+/DyQBCxHuXukcW7gypCNR/lx2Nn+xY4yL8=;
-        b=J25JnZb2MspKyuSC4TfsQf0bnD7US0EYBk+d00r/N8LV5X64ru6SStkU7GQq8PFzcs
-         uUGsUVZyrXTymuSCIyaUi95xwQITXke8nQLbRxPV1VksClIcQfolBhiIp7b0HPLlxMzH
-         6N0NE5LhPpzFu7kBSSdl96cALLW2oVAsBJv1/Pia6yV+T2pi3GZDr0/ohdVQa8d9xWh6
-         giPUGHg/kfKYSETt4hFkl6J96PB9KYAHK3sl41hnKCT6GzEWuAUeOTg3LUt3v7DDnNFL
-         NPyLni3IHLpmLyb3V8sY7PSSyybWyBo1w0Rky5xqvELlaDXoe+9lwcgR04nTVForJAkl
-         bEWQ==
-X-Gm-Message-State: APjAAAVQHpmbKHisGOdjQ0hXekWgrSwWBe4Rl8LcTrlvKQy2H78WqVsG
-        bEelD+6xYmYevvXpwpoGalJYAAISDY/tVDkuMSvxuA1nGNH4mvJnjtZ2OGqQwtrpB7bH+Ani8DX
-        IYe7nC0rXiRHxh5geJpAn9rQQRl3bs+A7sYM=
-X-Received: by 2002:ac8:4117:: with SMTP id q23mr5687989qtl.305.1565288337932;
-        Thu, 08 Aug 2019 11:18:57 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyyvRNY7cu8Qm3FAbdy+PiYVLMMtHKLtwbXgE9JDuk2/NJtSyx0DIcScHnxk8317Hz/bAT/zw==
-X-Received: by 2002:ac8:4117:: with SMTP id q23mr5687975qtl.305.1565288337656;
-        Thu, 08 Aug 2019 11:18:57 -0700 (PDT)
-Received: from turing-police ([2601:5c0:c001:4341::359])
-        by smtp.gmail.com with ESMTPSA id j78sm42577980qke.102.2019.08.08.11.18.56
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 08 Aug 2019 11:18:56 -0700 (PDT)
-From:   "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>
-cc:     linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: [PATCH] arch/x86/kernel/cpu/common.c - add proper prototypes
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Date:   Thu, 08 Aug 2019 14:18:55 -0400
-Message-ID: <131213.1565288335@turing-police>
+        Thu, 8 Aug 2019 14:19:47 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x78I7m42025815
+        for <linux-kernel@vger.kernel.org>; Thu, 8 Aug 2019 14:19:46 -0400
+Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2u8r7bhnc3-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 14:19:46 -0400
+Received: from localhost
+        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <leonardo@linux.ibm.com>;
+        Thu, 8 Aug 2019 19:19:45 +0100
+Received: from b01cxnp22034.gho.pok.ibm.com (9.57.198.24)
+        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 8 Aug 2019 19:19:44 +0100
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x78IJh9U52953596
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 8 Aug 2019 18:19:43 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 30944112062;
+        Thu,  8 Aug 2019 18:19:43 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 96239112061;
+        Thu,  8 Aug 2019 18:19:42 +0000 (GMT)
+Received: from leobras.br.ibm.com (unknown [9.18.235.40])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu,  8 Aug 2019 18:19:42 +0000 (GMT)
+Subject: Re: [PATCH 1/1] fs/splice.c: Fix old documentation about moving
+ pages
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>
+Date:   Thu, 08 Aug 2019 15:19:41 -0300
+In-Reply-To: <20190801223852.16042-1-leonardo@linux.ibm.com>
+References: <20190801223852.16042-1-leonardo@linux.ibm.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-yWqOe3H3Bx7NH7P7c4Zo"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+MIME-Version: 1.0
+X-TM-AS-GCONF: 00
+x-cbid: 19080818-2213-0000-0000-000003BA4864
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011571; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000287; SDB=6.01243951; UDB=6.00656253; IPR=6.01025429;
+ MB=3.00028095; MTD=3.00000008; XFM=3.00000015; UTC=2019-08-08 18:19:45
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19080818-2214-0000-0000-00005F92CA70
+Message-Id: <52a42a7ab5052c7d35c98bca6439ff00e323a947.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-08_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908080162
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When building withW=1, we get a warning..
 
-  CC      arch/x86/kernel/cpu/common.o
-arch/x86/kernel/cpu/common.c:1952:6: warning: no previous prototype for 'arch_smt_update' [-Wmissing-prototypes]
- 1952 | void arch_smt_update(void)
-      |      ^~~~~~~~~~~~~~~
+--=-yWqOe3H3Bx7NH7P7c4Zo
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Provide the proper #include so the prototype is found.
+On Thu, 2019-08-01 at 19:38 -0300, Leonardo Bras wrote:
+> Since commit 485ddb4b9741 ("1/2 splice: dont steal")' (2007),
+> the SPLICE_F_MOVE support was removed (became a no-op according
+> to man pages), and thus disabling steal operation that would make
+> moving pages possible.
+>=20
+> This fixes the comment, making clear pages are not moved.
+>=20
+> Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
+> ---
+>  fs/splice.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>=20
+> diff --git a/fs/splice.c b/fs/splice.c
+> index 14cb602d9a2f..0ba151c40cef 100644
+> --- a/fs/splice.c
+> +++ b/fs/splice.c
+> @@ -671,8 +671,7 @@ ssize_t splice_from_pipe(struct pipe_inode_info *pipe=
+, struct file *out,
+>   * @flags:	splice modifier flags
+>   *
+>   * Description:
+> - *    Will either move or copy pages (determined by @flags options) from
+> - *    the given pipe inode to the given file.
+> + *    Will copy pages from the given pipe inode to the given file.
+>   *    This one is ->write_iter-based.
+>   *
+>   */
 
-Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+Could you give any feedback on this patch?
 
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index e0489d2860d3..b8ed6d8e55df 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -14,6 +14,7 @@
- #include <linux/sched/mm.h>
- #include <linux/sched/clock.h>
- #include <linux/sched/task.h>
-+#include <linux/sched/smt.h>
- #include <linux/init.h>
- #include <linux/kprobes.h>
- #include <linux/kgdb.h>
+--=-yWqOe3H3Bx7NH7P7c4Zo
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl1MZ70ACgkQlQYWtz9S
+ttSKCxAAyVy9d2MaMh99ZvG+CtSZa9O3lImfsXKdkkin/kiZnObUGQn6/LhWZT7u
+VY1S7c+obycYe9muQ5WSH1F0bLDdbDl0vtkL2NMIuh7ippvU6YjMfm4cEgcZzHzD
+sn4T/IJzYy5bA6r3Q/zPey+VKx8JQ7Wc1g9B0YmDD0xhSy3Q65rwv81HDuSwV95c
+Tf9YULStVY+q+4dnCBcN66wGWu2g/LYpDwJWFTkL2hWYAMBKCi/B28qn67OLIiQs
+05C5QAxkirb9PKvHGg1aobs5rYUEv3xUMPev2ByCLdRFcR5nUDTXjYgQHIqGCCD0
+AcIOYQNr6u1ULvUr+63S8BTFD1N/eNenzKFXDS5uFCr2hcCsJDqHA/KTcbW4Rxpg
+FqT/q9I59DTJHBCaa5rMzMHWNgQOeiG+vUA718QGmaGSjB0YVp5CaEMkleiL+npE
+qOlXASccDgUqc9XpP3fMSF3BkJfvmxG85c5tDC9QCjacLPntKq1zdKQRECiBiuzF
+q4MX+AkjRNNZJgmPep3G7IaPUkaQ6IVRyc8ZPX8YwPCz+A5wk1PJP5W6pcguhBub
+fgSDBDo1+YQeRkLyDe/nQ45fDRju+9ugXsUaUdjopPGw96/aTe/Dl92VbnkOuT0B
+eyU9BEEpliDnxxv4rDvG3feLRxuQv01VRzM6mJssRywRO0KaGQM=
+=EBCJ
+-----END PGP SIGNATURE-----
+
+--=-yWqOe3H3Bx7NH7P7c4Zo--
 
