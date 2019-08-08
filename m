@@ -2,196 +2,120 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,LONGWORDS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A6CC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:58:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3997EC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:59:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ABAD217D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:58:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1074A217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:59:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="k8Oj8SxZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733103AbfHHO6G (ORCPT
+        id S1732824AbfHHO7O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 10:58:06 -0400
-Received: from mail-ot1-f70.google.com ([209.85.210.70]:49982 "EHLO
-        mail-ot1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727649AbfHHO6G (ORCPT
+        Thu, 8 Aug 2019 10:59:14 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:40054 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732414AbfHHO7N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 10:58:06 -0400
-Received: by mail-ot1-f70.google.com with SMTP id l7so62368698otj.16
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 07:58:05 -0700 (PDT)
+        Thu, 8 Aug 2019 10:59:13 -0400
+Received: by mail-pf1-f196.google.com with SMTP id p184so44252668pfp.7
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 07:59:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=9+5/LdlgO80ifqp5Q3hDfZTLZi/NJfE6LXgD8QVEE/w=;
+        b=k8Oj8SxZEsMEeHu0tBryjYG26kBKCLyUQPjfsuMKFkmh2q9AmRZebJwGgGQyksprkb
+         ry14QCQKJ60PPHha1SPAM/xmqwrGV2IXMz4AKUcMn34h6MdwTC9RNHaJ9mqBJuw2VC2+
+         LWQJZEiTLbSJB0l1rFABbOurAYvsapfo+I5cw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=hzPCZwefKJfQcvn5B7LPmicli4s8uiqMv/SP2gxfHXg=;
-        b=TCB7vp6FDnb3MdrQOsNgK3YGOpFYYfFZKrM+xxNV4kFy2Xx6IaMfaquvsaNnS4cSsn
-         luZr1nuirBSoA+GGidFV7Y98sx0tTf4p6ZbtcGhwmbuCJxkKL8wr3nHsfmmOVzb+VYft
-         xDFsxQVWymozedPtbQLKdz09MgdHAkXDdyjEtiWMJtodyRNbSQDBApnmsZZIT6q1zAyA
-         HlZEBXk8SCoa3+lZ7sqn1EDiURzraMbaIOG2Hchwtam6JprthzA2cbXeWLbB8sMqlyFh
-         eAXE+p80O9KRs6vWBRS/3raAs0o9ac+EBYa7nmdndRgiwg2bhphGbMF/uA1UV4HMmuxy
-         EVSg==
-X-Gm-Message-State: APjAAAUArAT257N+6rT5Oem16dfSSVvnizQhnlpiVzJlqSAquFsqTExA
-        34Jm7qwwgV8AXlZoyswOLCNwhu253LHbCfob1p+J2fngCskS
-X-Google-Smtp-Source: APXvYqwDuB4Usf52KhYW2cUba6zYP1GiRCFwKZz8FS9QcEa26TO21VotgwzpkHA8HVAZ0/wMGyjDY/77LlbDwzXW1RAx7kGPnZ53
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9+5/LdlgO80ifqp5Q3hDfZTLZi/NJfE6LXgD8QVEE/w=;
+        b=G3U33qHwdFJj11kHlrSt6W8eEvr/tVFDa6Bvru+5ada4KXjhGZNos63/zYrLQLXUJ9
+         Zz3IPWrWIk2BX1E3JAZ1sl8846w++Q6U9HGqlJRCEopFZvcQVldo3escDFg8kOfGJJg9
+         fRl4bUM2nFd8p09N2MwBRk5V/+J7XSNcuejTODMrIuOxb01sz3hj8RGjq6hhXNuld+FC
+         sKw9iP9pl0T9k+ukkyelkUQlqgUqb1G0a6CVRXZWBhUdW2Y8Q5cDGzkV2u4Q10vl+xNJ
+         lec7CZXGcUZUoBF0xEn1Ovm7D1OfGTwK8bNTjhRZJ6fEm1hG7DC1tpJ4EGNSHVcaqq9n
+         qsAA==
+X-Gm-Message-State: APjAAAVTIckNVAzY2TpNntvr5wb0al7G4Y0QeyTVmS4ZU6+gAAvPegCW
+        +6n9NxgHEul8BNd5iUfV/y1m0w==
+X-Google-Smtp-Source: APXvYqxGAiT4LhfRNYdQR7HAuFp10fpkI7UDH9UfUqZHjejYfguJUGHzkoIsYUFPClYRsEA3ortRKA==
+X-Received: by 2002:aa7:8619:: with SMTP id p25mr15765287pfn.220.1565276353145;
+        Thu, 08 Aug 2019 07:59:13 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id t8sm109639363pfq.31.2019.08.08.07.59.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 08 Aug 2019 07:59:12 -0700 (PDT)
+Date:   Thu, 8 Aug 2019 07:59:09 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Harish Bandi <c-hbandi@codeaurora.org>
+Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        bgodavar@codeaurora.org, anubhavg@codeaurora.org
+Subject: Re: [PATCH v1] Bluetooth: hci_qca: wait for Pre shutdown to command
+ complete event before sending the Power off pulse
+Message-ID: <20190808145909.GP250418@google.com>
+References: <1565256353-4476-1-git-send-email-c-hbandi@codeaurora.org>
 MIME-Version: 1.0
-X-Received: by 2002:a02:b791:: with SMTP id f17mr5130499jam.51.1565276285514;
- Thu, 08 Aug 2019 07:58:05 -0700 (PDT)
-Date:   Thu, 08 Aug 2019 07:58:05 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f93dd2058f9c4873@google.com>
-Subject: memory leak in sctp_get_port_local (2)
-From:   syzbot <syzbot+2d7ecdf99f15689032b3@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, linux-kernel@vger.kernel.org,
-        linux-sctp@vger.kernel.org, marcelo.leitner@gmail.com,
-        netdev@vger.kernel.org, nhorman@tuxdriver.com,
-        syzkaller-bugs@googlegroups.com, vyasevich@gmail.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1565256353-4476-1-git-send-email-c-hbandi@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Thu, Aug 08, 2019 at 02:55:53PM +0530, Harish Bandi wrote:
+> When SoC receives pre shut down command, it share the same
+> with other COEX shared clients. So SoC needs a short
+> time after sending VS pre shutdown command before
+> turning off the regulators and sending the power off pulse.
+> 
+> Signed-off-by: Harish Bandi <c-hbandi@codeaurora.org>
+> ---
+>  drivers/bluetooth/btqca.c   | 5 +++--
+>  drivers/bluetooth/hci_qca.c | 2 ++
+>  2 files changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
+> index 2221935..f20991e 100644
+> --- a/drivers/bluetooth/btqca.c
+> +++ b/drivers/bluetooth/btqca.c
+> @@ -106,8 +106,9 @@ int qca_send_pre_shutdown_cmd(struct hci_dev *hdev)
+>  
+>  	bt_dev_dbg(hdev, "QCA pre shutdown cmd");
+>  
+> -	skb = __hci_cmd_sync(hdev, QCA_PRE_SHUTDOWN_CMD, 0,
+> -				NULL, HCI_INIT_TIMEOUT);
+> +	skb = __hci_cmd_sync_ev(hdev, QCA_PRE_SHUTDOWN_CMD, 0,
+> +				NULL, HCI_EV_CMD_COMPLETE, HCI_INIT_TIMEOUT);
+> +
 
-syzbot found the following crash on:
+The commit message does not mention this change, it only talks about
+adding a delay.
 
-HEAD commit:    0eb0ce0a Merge tag 'spi-fix-v5.3-rc3' of git://git.kernel...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1234588c600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=39113f5c48aea971
-dashboard link: https://syzkaller.appspot.com/bug?extid=2d7ecdf99f15689032b3
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=160e1906600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=140ab906600000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+2d7ecdf99f15689032b3@syzkaller.appspotmail.com
-
-executing program
-executing program
-executing program
-executing program
-executing program
-BUG: memory leak
-unreferenced object 0xffff88810fa4b380 (size 64):
-   comm "syz-executor900", pid 7117, jiffies 4294946947 (age 16.560s)
-   hex dump (first 32 bytes):
-     20 4e 00 00 89 e7 4c 8d 00 00 00 00 00 00 00 00   N....L.........
-     58 40 dd 16 82 88 ff ff 00 00 00 00 00 00 00 00  X@..............
-   backtrace:
-     [<00000000f1461735>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000f1461735>] slab_post_alloc_hook mm/slab.h:522 [inline]
-     [<00000000f1461735>] slab_alloc mm/slab.c:3319 [inline]
-     [<00000000f1461735>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3483
-     [<00000000ff3ccf22>] sctp_bucket_create net/sctp/socket.c:8374 [inline]
-     [<00000000ff3ccf22>] sctp_get_port_local+0x189/0x5b0  
-net/sctp/socket.c:8121
-     [<00000000eed41612>] sctp_do_bind+0xcc/0x1e0 net/sctp/socket.c:402
-     [<000000002bf65239>] sctp_bind+0x44/0x70 net/sctp/socket.c:302
-     [<00000000b1aaaf57>] inet_bind+0x40/0xc0 net/ipv4/af_inet.c:441
-     [<00000000db36b917>] __sys_bind+0x11c/0x140 net/socket.c:1647
-     [<00000000679cfe3c>] __do_sys_bind net/socket.c:1658 [inline]
-     [<00000000679cfe3c>] __se_sys_bind net/socket.c:1656 [inline]
-     [<00000000679cfe3c>] __x64_sys_bind+0x1e/0x30 net/socket.c:1656
-     [<000000002aac3ac2>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:296
-     [<000000000c38e074>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88810fa4b380 (size 64):
-   comm "syz-executor900", pid 7117, jiffies 4294946947 (age 19.260s)
-   hex dump (first 32 bytes):
-     20 4e 00 00 89 e7 4c 8d 00 00 00 00 00 00 00 00   N....L.........
-     58 40 dd 16 82 88 ff ff 00 00 00 00 00 00 00 00  X@..............
-   backtrace:
-     [<00000000f1461735>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000f1461735>] slab_post_alloc_hook mm/slab.h:522 [inline]
-     [<00000000f1461735>] slab_alloc mm/slab.c:3319 [inline]
-     [<00000000f1461735>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3483
-     [<00000000ff3ccf22>] sctp_bucket_create net/sctp/socket.c:8374 [inline]
-     [<00000000ff3ccf22>] sctp_get_port_local+0x189/0x5b0  
-net/sctp/socket.c:8121
-     [<00000000eed41612>] sctp_do_bind+0xcc/0x1e0 net/sctp/socket.c:402
-     [<000000002bf65239>] sctp_bind+0x44/0x70 net/sctp/socket.c:302
-     [<00000000b1aaaf57>] inet_bind+0x40/0xc0 net/ipv4/af_inet.c:441
-     [<00000000db36b917>] __sys_bind+0x11c/0x140 net/socket.c:1647
-     [<00000000679cfe3c>] __do_sys_bind net/socket.c:1658 [inline]
-     [<00000000679cfe3c>] __se_sys_bind net/socket.c:1656 [inline]
-     [<00000000679cfe3c>] __x64_sys_bind+0x1e/0x30 net/socket.c:1656
-     [<000000002aac3ac2>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:296
-     [<000000000c38e074>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88810fa4b380 (size 64):
-   comm "syz-executor900", pid 7117, jiffies 4294946947 (age 21.990s)
-   hex dump (first 32 bytes):
-     20 4e 00 00 89 e7 4c 8d 00 00 00 00 00 00 00 00   N....L.........
-     58 40 dd 16 82 88 ff ff 00 00 00 00 00 00 00 00  X@..............
-   backtrace:
-     [<00000000f1461735>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000f1461735>] slab_post_alloc_hook mm/slab.h:522 [inline]
-     [<00000000f1461735>] slab_alloc mm/slab.c:3319 [inline]
-     [<00000000f1461735>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3483
-     [<00000000ff3ccf22>] sctp_bucket_create net/sctp/socket.c:8374 [inline]
-     [<00000000ff3ccf22>] sctp_get_port_local+0x189/0x5b0  
-net/sctp/socket.c:8121
-     [<00000000eed41612>] sctp_do_bind+0xcc/0x1e0 net/sctp/socket.c:402
-     [<000000002bf65239>] sctp_bind+0x44/0x70 net/sctp/socket.c:302
-     [<00000000b1aaaf57>] inet_bind+0x40/0xc0 net/ipv4/af_inet.c:441
-     [<00000000db36b917>] __sys_bind+0x11c/0x140 net/socket.c:1647
-     [<00000000679cfe3c>] __do_sys_bind net/socket.c:1658 [inline]
-     [<00000000679cfe3c>] __se_sys_bind net/socket.c:1656 [inline]
-     [<00000000679cfe3c>] __x64_sys_bind+0x1e/0x30 net/socket.c:1656
-     [<000000002aac3ac2>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:296
-     [<000000000c38e074>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88810fa4b380 (size 64):
-   comm "syz-executor900", pid 7117, jiffies 4294946947 (age 22.940s)
-   hex dump (first 32 bytes):
-     20 4e 00 00 89 e7 4c 8d 00 00 00 00 00 00 00 00   N....L.........
-     58 40 dd 16 82 88 ff ff 00 00 00 00 00 00 00 00  X@..............
-   backtrace:
-     [<00000000f1461735>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000f1461735>] slab_post_alloc_hook mm/slab.h:522 [inline]
-     [<00000000f1461735>] slab_alloc mm/slab.c:3319 [inline]
-     [<00000000f1461735>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3483
-     [<00000000ff3ccf22>] sctp_bucket_create net/sctp/socket.c:8374 [inline]
-     [<00000000ff3ccf22>] sctp_get_port_local+0x189/0x5b0  
-net/sctp/socket.c:8121
-     [<00000000eed41612>] sctp_do_bind+0xcc/0x1e0 net/sctp/socket.c:402
-     [<000000002bf65239>] sctp_bind+0x44/0x70 net/sctp/socket.c:302
-     [<00000000b1aaaf57>] inet_bind+0x40/0xc0 net/ipv4/af_inet.c:441
-     [<00000000db36b917>] __sys_bind+0x11c/0x140 net/socket.c:1647
-     [<00000000679cfe3c>] __do_sys_bind net/socket.c:1658 [inline]
-     [<00000000679cfe3c>] __se_sys_bind net/socket.c:1656 [inline]
-     [<00000000679cfe3c>] __x64_sys_bind+0x1e/0x30 net/socket.c:1656
-     [<000000002aac3ac2>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:296
-     [<000000000c38e074>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-executing program
-executing program
-executing program
-executing program
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+>  	if (IS_ERR(skb)) {
+>  		err = PTR_ERR(skb);
+>  		bt_dev_err(hdev, "QCA preshutdown_cmd failed (%d)", err);
+> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+> index 16db6c0..566aa28 100644
+> --- a/drivers/bluetooth/hci_qca.c
+> +++ b/drivers/bluetooth/hci_qca.c
+> @@ -1386,6 +1386,8 @@ static int qca_power_off(struct hci_dev *hdev)
+>  	/* Perform pre shutdown command */
+>  	qca_send_pre_shutdown_cmd(hdev);
+>  
+> +	usleep_range(8000, 10000);
+> +
+>  	qca_power_shutdown(hu);
+>  	return 0;
+>  }
