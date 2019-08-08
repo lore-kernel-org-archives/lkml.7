@@ -2,135 +2,127 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C8D0C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:14:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30377C32754
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:16:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7494A2086D
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:14:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9AB62075B
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:16:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qZt1LDH0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731369AbfHHHOv (ORCPT
+        id S1731382AbfHHHQY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 03:14:51 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:2751 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731038AbfHHHOu (ORCPT
+        Thu, 8 Aug 2019 03:16:24 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:42694 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725817AbfHHHQY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 03:14:50 -0400
-X-UUID: 28828ab66c3845e0bd6f50b3bdb4f73d-20190808
-X-UUID: 28828ab66c3845e0bd6f50b3bdb4f73d-20190808
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 2033063645; Thu, 08 Aug 2019 15:14:39 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- MTKMBS33N1.mediatek.inc (172.27.4.75) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 8 Aug 2019 15:14:35 +0800
-Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 8 Aug 2019 15:14:34 +0800
-Message-ID: <1565248475.31636.0.camel@mtksdaap41>
-Subject: Re: [PATCH v5 3/4] drm/mediatek: add mt8183 dpi clock factor
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-CC:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        Ian Campbell <ijc+devicetree@hellion.org.uk>,
-        <linux-pwm@vger.kernel.org>, David Airlie <airlied@linux.ie>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Thierry Reding" <treding@nvidia.com>,
-        Ajay Kumar <ajaykumar.rs@samsung.com>,
-        "Inki Dae" <inki.dae@samsung.com>,
-        Rahul Sharma <rahul.sharma@samsung.com>,
-        "Sean Paul" <seanpaul@chromium.org>,
-        Vincent Palatin <vpalatin@chromium.org>,
-        "Andy Yan" <andy.yan@rock-chips.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Russell King <rmk+kernel@arm.linux.org.uk>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
-        <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
-        <stonea168@163.com>
-Date:   Thu, 8 Aug 2019 15:14:35 +0800
-In-Reply-To: <20190807060257.57007-4-jitao.shi@mediatek.com>
-References: <20190807060257.57007-1-jitao.shi@mediatek.com>
-         <20190807060257.57007-4-jitao.shi@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Thu, 8 Aug 2019 03:16:24 -0400
+Received: by mail-pl1-f195.google.com with SMTP id ay6so43188538plb.9;
+        Thu, 08 Aug 2019 00:16:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Do5CFtVi9NCcTSKZkexhPtuQR5/W3q/75hgi7FAin40=;
+        b=qZt1LDH00qJJ9fE/ZsizY14Te+pYIXCNKV1YW6ghgPk/omgGaqm8JsiuLqo0sQdbhv
+         OumkjpNc7WibBEjFe9wBtFlngXA9kebZuztxaYe4DTmImanlv8QxETfIaCc1r3bwz+Jy
+         +Df6l6e+l/f0ThjK/DsxE01kCb6FdBPdpi3ZT5PVuII1k8zLysyBTD4LHenr7be1emKv
+         MbSR1mVoM/fMJV2nuAyaaoJWXIq+oVHIszHYiucuXeY7K3imA3155gqwBA6U79HHe3bt
+         Vr0A1cNCWlSBzqjS9yKvNTkY+DtjQdI0/7sVQ9crtDXPfNYPO4KtA1a96ikanMt3QALG
+         qmfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Do5CFtVi9NCcTSKZkexhPtuQR5/W3q/75hgi7FAin40=;
+        b=qTbbWNYdYGbFl4exhhy8TAK+x1V9QQYgkYVDuIlwIxhow8/DVBiw7skHHgy0ObYBzx
+         qvLVGFbzYfgfh/BUQ+W5M/ClJjq/oLWsEJLXnsIpadUOElwmhiimXHAr2yAYOpLvBz+K
+         JEnseDmfDUQmLXu94i21IJP9NGrbncLhYR88ypyRHYtEoqO8h6Fhu1bFzWieGaZKy9+0
+         wyYrWGz9f9M5PLFqpPR3ln1ZcENBIQUML77QaX7pH1Az/pFyHGiN6GYs0Yq+g1aIvHsK
+         aIqg35a0kpJfnWDouuLVuww6PvROfO7IqoJWkYvmpKSHXnP6t4+Gnk8HDF4BlOi8S6ZK
+         +lXQ==
+X-Gm-Message-State: APjAAAVPayIuKFFmlfgbijArT0cEBegzwJb4MgAMcmJkv5KlJdfWOxwe
+        /40cEoSnYYSL2NbiUi7GYKk=
+X-Google-Smtp-Source: APXvYqypHk5e0aTFkFJU05xQIEIvKal64ctjHqJ5MfnBXONJ25Al8crSv2pnbsUMzrSInxOMdKRf2w==
+X-Received: by 2002:a17:902:1004:: with SMTP id b4mr2353592pla.340.1565248584001;
+        Thu, 08 Aug 2019 00:16:24 -0700 (PDT)
+Received: from localhost.localdomain ([122.163.44.6])
+        by smtp.gmail.com with ESMTPSA id m4sm158947802pff.108.2019.08.08.00.16.21
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 08 Aug 2019 00:16:23 -0700 (PDT)
+From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
+To:     agross@kernel.org, kishon@ti.com, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>
+Subject: [PATCH] phy: qualcomm: phy-qcom-qmp: Add of_node_put() before return
+Date:   Thu,  8 Aug 2019 12:46:12 +0530
+Message-Id: <20190808071612.14071-1-nishkadg.linux@gmail.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: ACA0D368338ADFB945EC0DEE8709C7B8CB13598F3D79743A33E08B5CF2A1E74F2000:8
-X-MTK:  N
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Jitao:
+Each iteration of for_each_available_child_of_node() puts the previous
+node, but in the case of a return from the middle of the loop, there is
+no put, thus causing a memory leak. Hence create a new label,
+err_node_put, that puts the previous node (child) before returning the
+required value. Also include the statement pm_runtime_disable() under
+this label in order to avoid repetition among mid-loop return
+conditions. Edit the mid-loop return statements to instead go to this
+new label err_node_put.
+Issue found with Coccinelle.
 
-On Wed, 2019-08-07 at 14:02 +0800, Jitao Shi wrote:
-> The factor depends on the divider of DPI in MT8183, therefore,
-> we should fix this factor to the right and new one.
-> 
+Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
+---
+ drivers/phy/qualcomm/phy-qcom-qmp.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
-
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_dpi.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
-> index 743230864ba0..4f2700cbfdb7 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_dpi.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
-> @@ -672,6 +672,16 @@ static unsigned int mt2701_calculate_factor(int clock)
->  		return 1;
->  }
->  
-> +static unsigned int mt8183_calculate_factor(int clock)
-> +{
-> +	if (clock <= 27000)
-> +		return 8;
-> +	else if (clock <= 167000)
-> +		return 4;
-> +	else
-> +		return 2;
-> +}
-> +
->  static const struct mtk_dpi_conf mt8173_conf = {
->  	.cal_factor = mt8173_calculate_factor,
->  	.reg_h_fre_con = 0xe0,
-> @@ -683,6 +693,11 @@ static const struct mtk_dpi_conf mt2701_conf = {
->  	.edge_sel_en = true,
->  };
->  
-> +static const struct mtk_dpi_conf mt8183_conf = {
-> +	.cal_factor = mt8183_calculate_factor,
-> +	.reg_h_fre_con = 0xe0,
-> +};
-> +
->  static int mtk_dpi_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
-> @@ -779,6 +794,9 @@ static const struct of_device_id mtk_dpi_of_ids[] = {
->  	{ .compatible = "mediatek,mt8173-dpi",
->  	  .data = &mt8173_conf,
->  	},
-> +	{ .compatible = "mediatek,mt8183-dpi",
-> +	  .data = &mt8183_conf,
-> +	},
->  	{ },
->  };
->  
-
+diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+index 34ff6434da8f..e7b8283acce8 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qmp.c
++++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+@@ -2093,8 +2093,7 @@ static int qcom_qmp_phy_probe(struct platform_device *pdev)
+ 		if (ret) {
+ 			dev_err(dev, "failed to create lane%d phy, %d\n",
+ 				id, ret);
+-			pm_runtime_disable(dev);
+-			return ret;
++			goto err_node_put;
+ 		}
+ 
+ 		/*
+@@ -2105,8 +2104,7 @@ static int qcom_qmp_phy_probe(struct platform_device *pdev)
+ 		if (ret) {
+ 			dev_err(qmp->dev,
+ 				"failed to register pipe clock source\n");
+-			pm_runtime_disable(dev);
+-			return ret;
++			goto err_node_put;
+ 		}
+ 		id++;
+ 	}
+@@ -2118,6 +2116,11 @@ static int qcom_qmp_phy_probe(struct platform_device *pdev)
+ 		pm_runtime_disable(dev);
+ 
+ 	return PTR_ERR_OR_ZERO(phy_provider);
++
++err_node_put:
++	pm_runtime_disable(dev);
++	of_node_put(child);
++	return ret;
+ }
+ 
+ static struct platform_driver qcom_qmp_phy_driver = {
+-- 
+2.19.1
 
