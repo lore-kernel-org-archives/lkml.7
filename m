@@ -2,80 +2,136 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 069FAC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 18:04:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3954FC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 18:05:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB948217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 18:04:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wm5BPoTv"
+	by mail.kernel.org (Postfix) with ESMTP id 1A25B2171F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 18:05:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389924AbfHHSEr (ORCPT
+        id S2390072AbfHHSFN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 14:04:47 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:36177 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729780AbfHHSEr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 14:04:47 -0400
-Received: by mail-lf1-f68.google.com with SMTP id j17so13506972lfp.3
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 11:04:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MaZ/BuHyNlaApD40wywwaA3ZttcsEmS6y79BUPzlwkQ=;
-        b=Wm5BPoTvKbdJUFMXngUMXUpH1apuKAaIpjtolUyDPjiI2xdxGU7Nkp/du0h06ROJMx
-         +fVjNNkwfG53IX6Y69QPnbKY8sxd9g+MeR8YygYAEjYysaXxo6givcWhhE7Tk6uiHIth
-         yVwMP16KxJg0ypz5HAptvoKv5bgwRYe/qKcny+u7pi7upZ+GlbOr1EEQrDKWNzAj+L70
-         4xBVpdLG3TDpJXAoJpRtuyq4C8jH5PxjqDcnNGfS+ZRqjkfcE21iWzgMQlqAXXVsV4WQ
-         VwGdgQ4ehFH8sONF2ymM6hjWzXQZDHeuJ+iCpNkhjcXghR9wJpiOq15DasObTIdlQoD4
-         sdhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MaZ/BuHyNlaApD40wywwaA3ZttcsEmS6y79BUPzlwkQ=;
-        b=WJ4m9w3viZfIMhnw5gpAS+M5BMWtCvDmWy7PQWb0KeuMmTESdwzkoQxHC8bJp0b9O8
-         UWwNjsNj4LHdIoVwmPNc/FpvPQ8fkdInAE9YzRux5KMSUBpe2wQhct6WXugo+RtOlwlA
-         8QBUFYLIa95P4YyGY+PgeJYgUnIGgWA64SVYNU4y6qJqayGjE0UiI6iLSszVeerRnAlq
-         FlQIVW1UKkoa8J1QOCPACDmmvv5OMwVc2+Hw8zUay2lt1F2xuWBVV2ZIOOK2uz0voItM
-         tGvQadvSNvLmIl5GDx667sUQ2QGw8fbA7wfEO0vfUwKwyJxXu8Yw1fgPRTaQVUkwxmlp
-         Z0qQ==
-X-Gm-Message-State: APjAAAUlKzimpzklWBB8g9M5wgKjOXpRDAI1crE2egm1Y7GjFlvdqGGe
-        GIQe8UAG62f0DOOIOUyjLe2AGHmOezRQ1XDJE/o=
-X-Google-Smtp-Source: APXvYqwHb9L622Jo+Y+SC1d0wOhWUahviZL4eCn3QF+yjEDmzEp2+ye680T142EtZdaz4eiey5ye6QRKL9f3a3OrcIE=
-X-Received: by 2002:ac2:4157:: with SMTP id c23mr9873208lfi.173.1565287485224;
- Thu, 08 Aug 2019 11:04:45 -0700 (PDT)
+        Thu, 8 Aug 2019 14:05:13 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49342 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729780AbfHHSFM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 14:05:12 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0BF1381F07;
+        Thu,  8 Aug 2019 18:05:11 +0000 (UTC)
+Received: from whitewolf.redhat.com (ovpn-124-143.rdu2.redhat.com [10.10.124.143])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EAC265C219;
+        Thu,  8 Aug 2019 18:05:01 +0000 (UTC)
+From:   Lyude Paul <lyude@redhat.com>
+To:     nouveau@lists.freedesktop.org
+Cc:     Bohdan Milar <bmilar@redhat.com>, Ben Skeggs <bskeggs@redhat.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        David Airlie <airlied@redhat.com>,
+        Jerry Zuo <Jerry.Zuo@amd.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Juston Li <juston.li@intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Karol Herbst <karolherbst@gmail.com>,
+        Ilia Mirkin <imirkin@alum.mit.edu>, stable@vger.kernel.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/nouveau: Only recalculate PBN/VCPI on mode/connector changes
+Date:   Thu,  8 Aug 2019 14:04:37 -0400
+Message-Id: <20190808180439.19118-1-lyude@redhat.com>
 MIME-Version: 1.0
-References: <20190806142328.5847-1-standby24x7@gmail.com>
-In-Reply-To: <20190806142328.5847-1-standby24x7@gmail.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Thu, 8 Aug 2019 20:04:34 +0200
-Message-ID: <CANiq72mhEXJsSSyGLYtp3Zb_YSG2PKnHyu5sMN5bCeP_TYMHpg@mail.gmail.com>
-Subject: Re: [PATCH] auxdisplay: Fix a typo in cfag12864b-example.c
-To:     Masanari Iida <standby24x7@gmail.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        skhan@linuxfoundation.org, Randy Dunlap <rdunlap@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 08 Aug 2019 18:05:11 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 6, 2019 at 4:25 PM Masanari Iida <standby24x7@gmail.com> wrote:
->
-> This patch fix a spelling typo in cfag12864b-example.c
->
-> Signed-off-by: Masanari Iida <standby24x7@gmail.com>
+I -thought- I had fixed this entirely, but it looks like that I didn't
+test this thoroughly enough as we apparently still make one big mistake
+with nv50_msto_atomic_check() - we don't handle the following scenario:
 
-Picked it up, thanks!
+* CRTC #1 has n VCPI allocated to it, is attached to connector DP-4
+  which is attached to encoder #1. enabled=y active=n
+* CRTC #1 is changed from DP-4 to DP-5, causing:
+  * DP-4 crtc=#1→NULL (VCPI n→0)
+  * DP-5 crtc=NULL→#1
+  * CRTC #1 steals encoder #1 back from DP-4 and gives it to DP-5
+  * CRTC #1 maintains the same mode as before, just with a different
+    connector
+* mode_changed=n connectors_changed=y
+  (we _SHOULD_ do VCPI 0→n here, but don't)
 
-Cheers,
-Miguel
+Once the above scenario is repeated once, we'll attempt freeing VCPI
+from the connector that we didn't allocate due to the connectors
+changing, but the mode staying the same. Sigh.
+
+Since nv50_msto_atomic_check() has broken a few times now, let's rethink
+things a bit to be more careful: limit both VCPI/PBN allocations to
+mode_changed || connectors_changed, since neither VCPI or PBN should
+ever need to change outside of routing and mode changes.
+
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Reported-by: Bohdan Milar <bmilar@redhat.com>
+Tested-by: Bohdan Milar <bmilar@redhat.com>
+Fixes: 232c9eec417a ("drm/nouveau: Use atomic VCPI helpers for MST")
+References: 412e85b60531 ("drm/nouveau: Only release VCPI slots on mode changes")
+Cc: Lyude Paul <lyude@redhat.com>
+Cc: Ben Skeggs <bskeggs@redhat.com>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: David Airlie <airlied@redhat.com>
+Cc: Jerry Zuo <Jerry.Zuo@amd.com>
+Cc: Harry Wentland <harry.wentland@amd.com>
+Cc: Juston Li <juston.li@intel.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Karol Herbst <karolherbst@gmail.com>
+Cc: Ilia Mirkin <imirkin@alum.mit.edu>
+Cc: <stable@vger.kernel.org> # v5.1+
+---
+ drivers/gpu/drm/nouveau/dispnv50/disp.c | 22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+index 126703816794..5d23ab8e4917 100644
+--- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
++++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+@@ -771,16 +771,20 @@ nv50_msto_atomic_check(struct drm_encoder *encoder,
+ 	struct nv50_head_atom *asyh = nv50_head_atom(crtc_state);
+ 	int slots;
+ 
+-	/* When restoring duplicated states, we need to make sure that the
+-	 * bw remains the same and avoid recalculating it, as the connector's
+-	 * bpc may have changed after the state was duplicated
+-	 */
+-	if (!state->duplicated)
+-		asyh->dp.pbn =
+-			drm_dp_calc_pbn_mode(crtc_state->adjusted_mode.clock,
+-					     connector->display_info.bpc * 3);
++	if (crtc_state->mode_changed || crtc_state->connectors_changed) {
++		/*
++		 * When restoring duplicated states, we need to make sure that
++		 * the bw remains the same and avoid recalculating it, as the
++		 * connector's bpc may have changed after the state was
++		 * duplicated
++		 */
++		if (!state->duplicated) {
++			const int bpp = connector->display_info.bpc * 3;
++			const int clock = crtc_state->adjusted_mode.clock;
++
++			asyh->dp.pbn = drm_dp_calc_pbn_mode(bpp, clock);
++		}
+ 
+-	if (crtc_state->mode_changed) {
+ 		slots = drm_dp_atomic_find_vcpi_slots(state, &mstm->mgr,
+ 						      mstc->port,
+ 						      asyh->dp.pbn);
+-- 
+2.21.0
+
