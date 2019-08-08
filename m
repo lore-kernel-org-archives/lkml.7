@@ -7,61 +7,62 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B2DC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:18:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47772C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8841E2173E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:18:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17F582173E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:19:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="WD+9g4D8"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="GyFq/1P/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404684AbfHHUSy (ORCPT
+        id S2404715AbfHHUTf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 16:18:54 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:59199 "EHLO
+        Thu, 8 Aug 2019 16:19:35 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:44911 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404566AbfHHUSx (ORCPT
+        with ESMTP id S2404590AbfHHUTf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 16:18:53 -0400
+        Thu, 8 Aug 2019 16:19:35 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x78KIaV83321220
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x78KJLJD3321297
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 8 Aug 2019 13:18:36 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x78KIaV83321220
+        Thu, 8 Aug 2019 13:19:21 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x78KJLJD3321297
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1565295517;
-        bh=jjsyZe/g1ELpLbfcuFi5lyYTwtm4ps8xKc4c/gamOWc=;
+        s=2019071901; t=1565295561;
+        bh=rdLSYTltPvgVpgyaIOKiiracGRusZLtBYcxcQ7fm2V8=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=WD+9g4D8x0+fjhGmppK9bqLaPjEqFb9CzC/Ocamsi7+NceXvgjAUd6442EIiSGNUL
-         pWvh9Ex4FWno5KYwa1M3b6KLLZwkI0cS/XOv6cSUeLeYiA7g+ciBiBGfrePVWwNt6l
-         KfFL4ODUz4kbwtTPRyfO+J97mYEqilULE/RCPKbrpX30k7lQvtzjKhZnX1kgWqK4JT
-         njXfVwFa+bspsZy+kXx7ehjspFwjT5MpJQERKcyQQq57fIoSJ6H4Y0Xj8nWkCi2Xxv
-         Wp+UZGDq24etbv0i1X3/Ee4UlnrXeGwziLsauJsk1VqAuo9rLdiNQ/Niw48qeyM+0p
-         XYtCtLgMNO82w==
+        b=GyFq/1P/T5PH3rG6NsY5SGXkEL0fbvHNlIksWDeuTaHCAbPMVkx9K2OfdtTUEJ8HG
+         Wzc/D+rarV2r/hzxmLvQQWXhkzrj9p3wOBspmPotqzDMSZl1h8+OkePVrZvEY+1B7f
+         qMOfhiy5o2TkpfbqbJ8VeDtyq+xFBZeIE3mVAiVBPx12HVOtlkN438smH2ubGA5bea
+         ajqon4KQo1UMVTxzCl95mVgqvB+cAt87S3NgWgvHWt50naJFPF97wmTNdK3/zMpfNQ
+         iGbtcPY5PEKh230rC+fvVNG4iClZT/nSO9UrCDVnHlDEx2XBVatew8DJKu97VWLVbi
+         40QgdEjPxwZjQ==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x78KIa9n3321217;
-        Thu, 8 Aug 2019 13:18:36 -0700
-Date:   Thu, 8 Aug 2019 13:18:36 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x78KJKPh3321280;
+        Thu, 8 Aug 2019 13:19:20 -0700
+Date:   Thu, 8 Aug 2019 13:19:20 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for He Zhe <tipbot@zytor.com>
-Message-ID: <tip-cf30ae726c011e0372fd4c2d588466c8b50a8907@git.kernel.org>
-Cc:     eranian@google.com, linux-kernel@vger.kernel.org,
-        alexey.budankov@linux.intel.com, acme@redhat.com, jolsa@redhat.com,
-        hpa@zytor.com, mingo@kernel.org, peterz@infradead.org,
-        alexander.shishkin@linux.intel.com, zhe.he@windriver.com,
-        tglx@linutronix.de, kan.liang@linux.intel.com, namhyung@kernel.org
-Reply-To: acme@redhat.com, jolsa@redhat.com, hpa@zytor.com,
-          linux-kernel@vger.kernel.org, alexey.budankov@linux.intel.com,
-          eranian@google.com, alexander.shishkin@linux.intel.com,
-          zhe.he@windriver.com, peterz@infradead.org, mingo@kernel.org,
-          tglx@linutronix.de, kan.liang@linux.intel.com,
-          namhyung@kernel.org
-In-Reply-To: <1564734592-15624-1-git-send-email-zhe.he@windriver.com>
-References: <1564734592-15624-1-git-send-email-zhe.he@windriver.com>
+Message-ID: <tip-5f5e25f1c7933a6e1673515c0b1d5acd82fea1ed@git.kernel.org>
+Cc:     namhyung@kernel.org, alexey.budankov@linux.intel.com,
+        zhe.he@windriver.com, hpa@zytor.com, acme@redhat.com,
+        peterz@infradead.org, mingo@kernel.org,
+        linux-kernel@vger.kernel.org, alexander.shishkin@linux.intel.com,
+        eranian@google.com, kan.liang@linux.intel.com, jolsa@redhat.com,
+        tglx@linutronix.de
+Reply-To: alexander.shishkin@linux.intel.com, eranian@google.com,
+          kan.liang@linux.intel.com, jolsa@redhat.com, tglx@linutronix.de,
+          hpa@zytor.com, acme@redhat.com, peterz@infradead.org,
+          mingo@kernel.org, linux-kernel@vger.kernel.org,
+          zhe.he@windriver.com, namhyung@kernel.org,
+          alexey.budankov@linux.intel.com
+In-Reply-To: <1564734592-15624-2-git-send-email-zhe.he@windriver.com>
+References: <1564734592-15624-2-git-send-email-zhe.he@windriver.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] perf ftrace: Fix failure to set cpumask when only
- one cpu is present
-Git-Commit-ID: cf30ae726c011e0372fd4c2d588466c8b50a8907
+Subject: [tip:perf/urgent] perf cpumap: Fix writing to illegal memory in
+ handling cpumap mask
+Git-Commit-ID: 5f5e25f1c7933a6e1673515c0b1d5acd82fea1ed
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -75,29 +76,22 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  cf30ae726c011e0372fd4c2d588466c8b50a8907
-Gitweb:     https://git.kernel.org/tip/cf30ae726c011e0372fd4c2d588466c8b50a8907
+Commit-ID:  5f5e25f1c7933a6e1673515c0b1d5acd82fea1ed
+Gitweb:     https://git.kernel.org/tip/5f5e25f1c7933a6e1673515c0b1d5acd82fea1ed
 Author:     He Zhe <zhe.he@windriver.com>
-AuthorDate: Fri, 2 Aug 2019 16:29:51 +0800
+AuthorDate: Fri, 2 Aug 2019 16:29:52 +0800
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Thu, 8 Aug 2019 15:41:10 -0300
 
-perf ftrace: Fix failure to set cpumask when only one cpu is present
+perf cpumap: Fix writing to illegal memory in handling cpumap mask
 
-The buffer containing the string used to set cpumask is overwritten at
-the end of the string later in cpu_map__snprint_mask due to not enough
-memory space, when there is only one cpu.
+cpu_map__snprint_mask() would write to illegal memory pointed by
+zalloc(0) when there is only one cpu.
 
-And thus causes the following failure:
-
-  $ perf ftrace ls
-  failed to reset ftrace
-  $
-
-This patch fixes the calculation of the cpumask string size.
+This patch fixes the calculation and adds sanity check against the input
+parameters.
 
 Signed-off-by: He Zhe <zhe.he@windriver.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
@@ -105,23 +99,26 @@ Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Stephane Eranian <eranian@google.com>
-Fixes: dc23103278c5 ("perf ftrace: Add support for -a and -C option")
-Link: http://lkml.kernel.org/r/1564734592-15624-1-git-send-email-zhe.he@windriver.com
+Fixes: 4400ac8a9a90 ("perf cpumap: Introduce cpu_map__snprint_mask()")
+Link: http://lkml.kernel.org/r/1564734592-15624-2-git-send-email-zhe.he@windriver.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-ftrace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/cpumap.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-index 66d5a6658daf..019312810405 100644
---- a/tools/perf/builtin-ftrace.c
-+++ b/tools/perf/builtin-ftrace.c
-@@ -173,7 +173,7 @@ static int set_tracing_cpumask(struct cpu_map *cpumap)
- 	int last_cpu;
+diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
+index 3acfbe34ebaf..39cce66b4ebc 100644
+--- a/tools/perf/util/cpumap.c
++++ b/tools/perf/util/cpumap.c
+@@ -751,7 +751,10 @@ size_t cpu_map__snprint_mask(struct cpu_map *map, char *buf, size_t size)
+ 	unsigned char *bitmap;
+ 	int last_cpu = cpu_map__cpu(map, map->nr - 1);
  
- 	last_cpu = cpu_map__cpu(cpumap, cpumap->nr - 1);
--	mask_size = (last_cpu + 3) / 4 + 1;
-+	mask_size = last_cpu / 4 + 2; /* one more byte for EOS */
- 	mask_size += last_cpu / 32; /* ',' is needed for every 32th cpus */
- 
- 	cpumask = malloc(mask_size);
+-	bitmap = zalloc((last_cpu + 7) / 8);
++	if (buf == NULL)
++		return 0;
++
++	bitmap = zalloc(last_cpu / 8 + 1);
+ 	if (bitmap == NULL) {
+ 		buf[0] = '\0';
+ 		return 0;
