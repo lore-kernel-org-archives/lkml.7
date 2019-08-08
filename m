@@ -2,161 +2,147 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27003C41517
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 21:29:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 796E8C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 21:29:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA152217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 21:29:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KalgEU89"
+	by mail.kernel.org (Postfix) with ESMTP id 55E4C216C8
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 21:29:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404433AbfHHV3M (ORCPT
+        id S2404482AbfHHV3P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 17:29:12 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:45601 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403940AbfHHV3L (ORCPT
+        Thu, 8 Aug 2019 17:29:15 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:51859 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404251AbfHHV3O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 17:29:11 -0400
-Received: by mail-ot1-f66.google.com with SMTP id x21so31293655otq.12
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 14:29:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DzaZFkNgePDlVaXLESVKlCNNCGSeU4vRw8is94V5UdA=;
-        b=KalgEU890W2v3tdxmH2d7QO3pSxS/bg4+84+pquKaYaO7PNVW3CsGLHZm1QndUrNeZ
-         Kes6GlrYRGfs39qNLpaAgPALwmTqr8BKMMDL5YAXSUayczbCfJxZvC8USF5mL1RKr9Sa
-         eRAaFlqu14/WjkMYqOYUArE0eXX4bUHL0XyNPJl7FJW+2B2PgpuY+2Wdnir2QC1oGtI0
-         dQ41Y0PXBN3BlV82y7AA5w0ORAvn6hNVFoAThakwZ8ytbFoZkjLxwp4YHOk8JYbHk2BI
-         hbfDika9QTq8x7qLymoedawkBjxAXrS54uUhsJGvcAM/+Jd3EOiC5gLCctXcL7jWI7Du
-         +VHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DzaZFkNgePDlVaXLESVKlCNNCGSeU4vRw8is94V5UdA=;
-        b=ZG/9bbDyMih4Qkzazugrfq9D/7lHEC3ojNpcsorsm5LF0TSOECqSiHRh+WtuvLaLQI
-         xa8apIfFZhvwgzfMUKBepSifmXtQ3stAebaumrwlC7WIf5u0EKe+zCjGHZIxnG9M3v8z
-         vhuaJPhan6tDPabNM8pPindTpvZOdrd59mS7eWrKUoLs/SmNRFeSMsQSgeDrc986D/iU
-         vNdYn5lkRD8C3Lp0WfvPFNi0CLd9dZZIH9Sp2uUASjjE4vw8wS/vT36r4hzFvHYBj6zp
-         hkJFhPO8RQhbrBbcGY8kwyu1g3VSCIbVIwvKf1iI6gDC8f5BGwUyWIyWw6hXYPeGTLc1
-         i9Ng==
-X-Gm-Message-State: APjAAAU6onK9+hZKZd3GNxFt/bMU3t2nO/dZ8WD0SwUOuRtetZCpk93t
-        dm2JMk2xCNmVuWuiNAE3ilFSV07kovNkAFWrL3ZvTQ==
-X-Google-Smtp-Source: APXvYqzoPupi/hlxnLQxtV5HHOP2zFDbWqQf5PEzMQj2ePkR0PAEk3t0ZRroKEvH5zKdgxYIRQ3cyRsINwSRUJIJevY=
-X-Received: by 2002:aca:39c4:: with SMTP id g187mr4300457oia.8.1565299749633;
- Thu, 08 Aug 2019 14:29:09 -0700 (PDT)
+        Thu, 8 Aug 2019 17:29:14 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1Mxpqo-1iF0VT3dks-00zD7L; Thu, 08 Aug 2019 23:28:57 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Tony Lindgren <tony@atomide.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Mark Brown <broonie@kernel.org>
+Cc:     linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
+Subject: [PATCH 07/22] ARM: omap1: move perseus spi pinconf to board file
+Date:   Thu,  8 Aug 2019 23:22:16 +0200
+Message-Id: <20190808212234.2213262-8-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20190808212234.2213262-1-arnd@arndb.de>
+References: <20190808212234.2213262-1-arnd@arndb.de>
 MIME-Version: 1.0
-References: <20190808194002.226688-1-almasrymina@google.com> <528b37c6-3e7a-c6fc-a322-beecb89011a5@kernel.org>
-In-Reply-To: <528b37c6-3e7a-c6fc-a322-beecb89011a5@kernel.org>
-From:   Mina Almasry <almasrymina@google.com>
-Date:   Thu, 8 Aug 2019 14:28:58 -0700
-Message-ID: <CAHS8izPosKtqr3nJYEKz-jjG9iuTq_TPqE7yyN+2OQ5Gx8qUGw@mail.gmail.com>
-Subject: Re: [RFC PATCH] hugetlbfs: Add hugetlb_cgroup reservation limits
-To:     shuah <shuah@kernel.org>
-Cc:     mike.kravetz@oracle.com, David Rientjes <rientjes@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Greg Thelen <gthelen@google.com>, akpm@linux-foundation.org,
-        khalid.aziz@oracle.com, open list <linux-kernel@vger.kernel.org>,
-        linux-mm@kvack.org, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:OUywYjmUvR4CggfZfvVTBOs6Wqw61X7ANdp+0I65+P8MCPSSa41
+ 5GvGcAmYjU2DGOzqYVYCAn/KSoqrC1TXd4CnESq/PgpAi3GqLbpTe3IptCS8caaxMlQ7MWB
+ qspivVS8oe8TFvFiGP+yhn+TNtbQ31DZqvBQMB8LsgaAzHiS6rwCdV2Wa5fHzpxxGDK29H2
+ oVjrpRiT3l+OAdxjzkEqg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:HTgsHXt4VYg=:wv/3Tz08gC4O1xmYtn1lnv
+ 0DQVchC6pJEpqwK+9CzLoTkrnBsAxE7wZ+elRXgafIIObsfCNN/YIgTQ1GdzAShuaQlhVUAiI
+ x2put5/QNp+CQKco+ufIo3WHRGRBqey6WIpXX3I0vYqr5zrSFImTvDEr26dWXewa8Mge4eIl9
+ 1zandRW0JCIG0L7TtDX6UFCokfvoWtQFPzY3zsIR/U9cFbYboSkaJl1xb6m8LmTMz1Fy+r3Xo
+ 3IxwAXhdJ539LXs1RLtojMfFqgTVwmfhY2aiC4Mu1N4VhBJRVMUU39ySLQZi7LVc/eOT7qiOt
+ mbUIg0pOs3W84yVSI/V/2eEOCoxIhMCWtiQ8UYSmcrk3HumNFJCiB0TJn2lnbrIByn4XAm24E
+ WznZoc38kwirw1rzqsFaDVwfSRvHkB5IOK392edCP0d7AgSYWCrBKpTvLVWew9EfVojJI/WHc
+ 2mVDRcJiU4P/xzA3rN8j7ED727y6zXc0KrWLV+OLt27wntOZxNuwOIjm9oDiicsH1bvFm7OUC
+ SNkSxxwqlJeNQXllVKUrLsRfTT5UGPZIqVy5go2ubH3J6RHBC1w0pP+0w5WqBW8Cm89usEALa
+ iKtMuH4jjEzc/yH9jf4lu9GQ05158U+qlSFKhqq27BtihJNJhdr4cG8OTguF49oF/z3GoUZbz
+ 0zk3AiGWMmw/7SdHAJ8JjCbDR6tL1hq0xnwyrGxON2pNn9j7RW51LxD6sg3MZJxWqMNYZ+1WU
+ sY7/qqbeEDI/viciS0gwy5RjMHG7ffieopLw0A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 8, 2019 at 1:23 PM shuah <shuah@kernel.org> wrote:
->
-> On 8/8/19 1:40 PM, Mina Almasry wrote:
-> > Problem:
-> > Currently tasks attempting to allocate more hugetlb memory than is available get
-> > a failure at mmap/shmget time. This is thanks to Hugetlbfs Reservations [1].
-> > However, if a task attempts to allocate hugetlb memory only more than its
-> > hugetlb_cgroup limit allows, the kernel will allow the mmap/shmget call,
-> > but will SIGBUS the task when it attempts to fault the memory in.
-> >
-> > We have developers interested in using hugetlb_cgroups, and they have expressed
-> > dissatisfaction regarding this behavior. We'd like to improve this
-> > behavior such that tasks violating the hugetlb_cgroup limits get an error on
-> > mmap/shmget time, rather than getting SIGBUS'd when they try to fault
-> > the excess memory in.
-> >
-> > The underlying problem is that today's hugetlb_cgroup accounting happens
-> > at hugetlb memory *fault* time, rather than at *reservation* time.
-> > Thus, enforcing the hugetlb_cgroup limit only happens at fault time, and
-> > the offending task gets SIGBUS'd.
-> >
-> > Proposed Solution:
-> > A new page counter named hugetlb.xMB.reservation_[limit|usage]_in_bytes. This
-> > counter has slightly different semantics than
-> > hugetlb.xMB.[limit|usage]_in_bytes:
-> >
-> > - While usage_in_bytes tracks all *faulted* hugetlb memory,
-> > reservation_usage_in_bytes tracks all *reserved* hugetlb memory.
-> >
-> > - If a task attempts to reserve more memory than limit_in_bytes allows,
-> > the kernel will allow it to do so. But if a task attempts to reserve
-> > more memory than reservation_limit_in_bytes, the kernel will fail this
-> > reservation.
-> >
-> > This proposal is implemented in this patch, with tests to verify
-> > functionality and show the usage.
-> >
-> > Alternatives considered:
-> > 1. A new cgroup, instead of only a new page_counter attached to
-> >     the existing hugetlb_cgroup. Adding a new cgroup seemed like a lot of code
-> >     duplication with hugetlb_cgroup. Keeping hugetlb related page counters under
-> >     hugetlb_cgroup seemed cleaner as well.
-> >
-> > 2. Instead of adding a new counter, we considered adding a sysctl that modifies
-> >     the behavior of hugetlb.xMB.[limit|usage]_in_bytes, to do accounting at
-> >     reservation time rather than fault time. Adding a new page_counter seems
-> >     better as userspace could, if it wants, choose to enforce different cgroups
-> >     differently: one via limit_in_bytes, and another via
-> >     reservation_limit_in_bytes. This could be very useful if you're
-> >     transitioning how hugetlb memory is partitioned on your system one
-> >     cgroup at a time, for example. Also, someone may find usage for both
-> >     limit_in_bytes and reservation_limit_in_bytes concurrently, and this
-> >     approach gives them the option to do so.
-> >
-> > Caveats:
-> > 1. This support is implemented for cgroups-v1. I have not tried
-> >     hugetlb_cgroups with cgroups v2, and AFAICT it's not supported yet.
-> >     This is largely because we use cgroups-v1 for now. If required, I
-> >     can add hugetlb_cgroup support to cgroups v2 in this patch or
-> >     a follow up.
-> > 2. Most complicated bit of this patch I believe is: where to store the
-> >     pointer to the hugetlb_cgroup to uncharge at unreservation time?
-> >     Normally the cgroup pointers hang off the struct page. But, with
-> >     hugetlb_cgroup reservations, one task can reserve a specific page and another
-> >     task may fault it in (I believe), so storing the pointer in struct
-> >     page is not appropriate. Proposed approach here is to store the pointer in
-> >     the resv_map. See patch for details.
-> >
-> > [1]: https://www.kernel.org/doc/html/latest/vm/hugetlbfs_reserv.html
-> >
-> > Signed-off-by: Mina Almasry <almasrymina@google.com>
-> > ---
-> >   include/linux/hugetlb.h                       |  10 +-
-> >   include/linux/hugetlb_cgroup.h                |  19 +-
-> >   mm/hugetlb.c                                  | 256 ++++++++--
-> >   mm/hugetlb_cgroup.c                           | 153 +++++-
->
-> Is there a reason why all these changes are in a single patch?
-> I can see these split in at least 2 or 3 patches with the test
-> as a separate patch.
->
+The driver has always had a FIXME about this, and it seems
+like this trivial code move avoids a mach header inclusion,
+so just do it.
 
-Only because I was expecting feedback on the approach and alternative
-approaches before an in-detail review. But, no problem; I'll break it
-into smaller patches now.
-> Makes it lot easier to review.
->
-> thanks,
-> -- Shuah
+With that out of the way, and the header file inclusions
+changed to global files, the driver can also be compile-tested
+on other platforms.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ arch/arm/mach-omap1/board-perseus2.c |  6 ++++++
+ drivers/spi/Kconfig                  |  2 +-
+ drivers/spi/spi-omap-uwire.c         | 15 +++------------
+ 3 files changed, 10 insertions(+), 13 deletions(-)
+
+diff --git a/arch/arm/mach-omap1/board-perseus2.c b/arch/arm/mach-omap1/board-perseus2.c
+index 1aeeb7337d29..da0155107d85 100644
+--- a/arch/arm/mach-omap1/board-perseus2.c
++++ b/arch/arm/mach-omap1/board-perseus2.c
+@@ -289,6 +289,12 @@ static void __init omap_perseus2_init(void)
+ 	omap_cfg_reg(F4_7XX_KBC3);
+ 	omap_cfg_reg(E3_7XX_KBC4);
+ 
++	if (IS_ENABLED(CONFIG_SPI_OMAP_UWIRE)) {
++		/* configure pins: MPU_UW_nSCS1, MPU_UW_SDO, MPU_UW_SCLK */
++		int val = omap_readl(OMAP7XX_IO_CONF_9) & ~0x00EEE000;
++		omap_writel(val | 0x00AAA000, OMAP7XX_IO_CONF_9);
++	}
++
+ 	platform_add_devices(devices, ARRAY_SIZE(devices));
+ 
+ 	omap_serial_init();
+diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
+index 949b18ed9d6b..4e67c155229e 100644
+--- a/drivers/spi/Kconfig
++++ b/drivers/spi/Kconfig
+@@ -464,7 +464,7 @@ config SPI_OCTEON
+ 
+ config SPI_OMAP_UWIRE
+ 	tristate "OMAP1 MicroWire"
+-	depends on ARCH_OMAP1
++	depends on ARCH_OMAP1 || (ARM && COMPILE_TEST)
+ 	select SPI_BITBANG
+ 	help
+ 	  This hooks up to the MicroWire controller on OMAP1 chips.
+diff --git a/drivers/spi/spi-omap-uwire.c b/drivers/spi/spi-omap-uwire.c
+index ce8dbdbce312..278d42a2ec49 100644
+--- a/drivers/spi/spi-omap-uwire.c
++++ b/drivers/spi/spi-omap-uwire.c
+@@ -44,13 +44,10 @@
+ #include <linux/module.h>
+ #include <linux/io.h>
+ 
+-#include <mach/hardware.h>
+ #include <asm/mach-types.h>
+-
+-#include <mach/mux.h>
+-
+-#include <mach/omap7xx.h>	/* OMAP7XX_IO_CONF registers */
+-
++#include <linux/soc/ti/omap1-io.h>
++#include <linux/soc/ti/omap1-soc.h>
++#include <linux/soc/ti/omap1-mux.h>
+ 
+ /* FIXME address is now a platform device resource,
+  * and irqs should show there too...
+@@ -541,12 +538,6 @@ static int __init omap_uwire_init(void)
+ 		omap_cfg_reg(N14_1610_UWIRE_CS0);
+ 		omap_cfg_reg(N15_1610_UWIRE_CS1);
+ 	}
+-	if (machine_is_omap_perseus2()) {
+-		/* configure pins: MPU_UW_nSCS1, MPU_UW_SDO, MPU_UW_SCLK */
+-		int val = omap_readl(OMAP7XX_IO_CONF_9) & ~0x00EEE000;
+-		omap_writel(val | 0x00AAA000, OMAP7XX_IO_CONF_9);
+-	}
+-
+ 	return platform_driver_register(&uwire_driver);
+ }
+ 
+-- 
+2.20.0
+
