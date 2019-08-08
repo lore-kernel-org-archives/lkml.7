@@ -2,72 +2,91 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF8D2C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 10:23:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46F99C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 10:24:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C59302173E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 10:23:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 224142173E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 10:24:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389953AbfHHKXV (ORCPT
+        id S2389962AbfHHKYP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 06:23:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53648 "EHLO mx1.redhat.com"
+        Thu, 8 Aug 2019 06:24:15 -0400
+Received: from foss.arm.com ([217.140.110.172]:59486 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389756AbfHHKXU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 06:23:20 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9EDDEC08EC1A;
-        Thu,  8 Aug 2019 10:23:20 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-144.ams2.redhat.com [10.36.116.144])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4DD8D1001955;
-        Thu,  8 Aug 2019 10:23:20 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 582B316E08; Thu,  8 Aug 2019 12:23:19 +0200 (CEST)
-Date:   Thu, 8 Aug 2019 12:23:19 +0200
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        "open list:SCSI SUBSYSTEM" <linux-scsi@vger.kernel.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        open list <linux-kernel@vger.kernel.org>, tzimmermann@suse.de,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH v3 1/8] scsi: core: fix the dma_max_mapping_size call
-Message-ID: <20190808102319.d4wdcp3sfcjqdk44@sirius.home.kraxel.org>
-References: <20190808093702.29512-1-kraxel@redhat.com>
- <20190808093702.29512-2-kraxel@redhat.com>
+        id S2389933AbfHHKYP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 06:24:15 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7E5E628;
+        Thu,  8 Aug 2019 03:24:14 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7C27C3F694;
+        Thu,  8 Aug 2019 03:24:12 -0700 (PDT)
+Date:   Thu, 8 Aug 2019 11:24:10 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Rob Clark <robdclark@chromium.org>,
+        Rob Clark <robdclark@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] drm: add cache support for arm64
+Message-ID: <20190808102410.GB46901@lakrids.cambridge.arm.com>
+References: <20190805211451.20176-1-robdclark@gmail.com>
+ <20190806084821.GA17129@lst.de>
+ <CAJs_Fx6eh1w7c=crMoD5XyEOMzP6orLhqUewErE51cPGYmObBQ@mail.gmail.com>
+ <20190806143457.GF475@lakrids.cambridge.arm.com>
+ <CAJs_Fx4h6SWGmDTLBnV4nmWUFAs_Ge1inxd-dW9aDKgKqmc1eQ@mail.gmail.com>
+ <20190807123807.GD54191@lakrids.cambridge.arm.com>
+ <CAJs_Fx5xU2-dn3iOVqWTzAjpTaQ8BBNP_Gn_iMc-eJpOX+iXoQ@mail.gmail.com>
+ <20190807164958.GA44765@lakrids.cambridge.arm.com>
+ <20190808075827.GD30308@lst.de>
+ <20190808102053.GA46901@lakrids.cambridge.arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190808093702.29512-2-kraxel@redhat.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Thu, 08 Aug 2019 10:23:20 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190808102053.GA46901@lakrids.cambridge.arm.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 11:36:55AM +0200, Gerd Hoffmann wrote:
-> From: Christoph Hellwig <hch@lst.de>
+On Thu, Aug 08, 2019 at 11:20:53AM +0100, Mark Rutland wrote:
+> On Thu, Aug 08, 2019 at 09:58:27AM +0200, Christoph Hellwig wrote:
+> > On Wed, Aug 07, 2019 at 05:49:59PM +0100, Mark Rutland wrote:
+> > > For arm64, we can tear down portions of the linear map, but that has to
+> > > be done explicitly, and this is only possible when using rodata_full. If
+> > > not using rodata_full, it is not possible to dynamically tear down the
+> > > cacheable alias.
+> > 
+> > Interesting.  For this or next merge window I plan to add support to the
+> > generic DMA code to remap pages as uncachable in place based on the
+> > openrisc code.  Aѕ far as I can tell the requirement for that is
+> > basically just that the kernel direct mapping doesn't use PMD or bigger
+> > mapping so that it supports changing protection bits on a per-PTE basis.
+> > Is that the case with arm64 + rodata_full?
 > 
-> We should only call dma_max_mapping_size for devices that have a DMA mask
-> set, otherwise we can run into a NULL pointer dereference that will crash
-> the system.
+> Yes, with the added case that on arm64 we can also have contiguous
+> entries at the PTE level, which we also have to disable.
 > 
-> Also we need to do right shift to get the sectors from the size in bytes,
-> not a left shift.
+> Our kernel page table creation code does that for rodata_full or
+> DEBUG_PAGEALLOC. See arch/arm64/mmu.c, in map_mem(), where we pass
+> NO_{BLOCK,CONT}_MAPPINGS down to our pagetable creation code.
 
-Oops, that wasn't meant to be re-sent, sorry.
+Whoops, that should be: arch/arm64/mm/mmu.c.
 
-drm-misc-next maintainers: any chance for a backmerge to pick up this fix,
-so I don't have to carry it in my branches?
-
-thanks,
-  Gerd
-
+Mark.
