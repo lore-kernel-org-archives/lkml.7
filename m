@@ -6,184 +6,209 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F7F2C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD03C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:37:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11A782173E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:37:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D494A21874
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:37:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732542AbfHHJhS (ORCPT
+        id S1732482AbfHHJhI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 05:37:18 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38376 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732469AbfHHJhI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 8 Aug 2019 05:37:08 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+Received: from mx1.redhat.com ([209.132.183.28]:40836 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732423AbfHHJhH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 05:37:07 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id F20763007F39;
-        Thu,  8 Aug 2019 09:37:07 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9B01130C746E;
+        Thu,  8 Aug 2019 09:37:06 +0000 (UTC)
 Received: from sirius.home.kraxel.org (ovpn-116-144.ams2.redhat.com [10.36.116.144])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6C5FA60BE2;
-        Thu,  8 Aug 2019 09:37:04 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id F273A5DA5B;
+        Thu,  8 Aug 2019 09:37:03 +0000 (UTC)
 Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 8E3DF9D20; Thu,  8 Aug 2019 11:37:03 +0200 (CEST)
+        id 0A95E9D00; Thu,  8 Aug 2019 11:37:03 +0200 (CEST)
 From:   Gerd Hoffmann <kraxel@redhat.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     tzimmermann@suse.de, Gerd Hoffmann <kraxel@redhat.com>,
-        Dave Airlie <airlied@redhat.com>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        virtualization@lists.linux-foundation.org (open list:DRM DRIVER FOR QXL
-        VIRTUAL GPU),
-        spice-devel@lists.freedesktop.org (open list:DRM DRIVER FOR QXL VIRTUAL
-        GPU), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3 5/8] drm/qxl: switch qxl to the new gem_ttm_bo_device_init()
-Date:   Thu,  8 Aug 2019 11:36:59 +0200
-Message-Id: <20190808093702.29512-6-kraxel@redhat.com>
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, Jonathan Corbet <corbet@lwn.net>,
+        linux-doc@vger.kernel.org (open list:DOCUMENTATION),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v3 3/8] drm/ttm: add gem_ttm_bo_device_init()
+Date:   Thu,  8 Aug 2019 11:36:57 +0200
+Message-Id: <20190808093702.29512-4-kraxel@redhat.com>
 In-Reply-To: <20190808093702.29512-1-kraxel@redhat.com>
 References: <20190808093702.29512-1-kraxel@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Thu, 08 Aug 2019 09:37:08 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Thu, 08 Aug 2019 09:37:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Now with ttm_buffer_object being a subclass of drm_gem_object we can
+easily lookup ttm_buffer_object for a given drm_gem_object, which in
+turm allows to create common helper functions.
+
+This patch starts off with a gem_ttm_bo_device_init() helper function
+which initializes ttm with the vma offset manager used by gem, to make
+sure gem and ttm have the same view on vma offsets.
+
+With that in place gem+ttm drivers don't need their private
+drm_driver.dumb_map_offset implementation any more.
+
+v3:
+ - complete rewrite
+
 Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 ---
- drivers/gpu/drm/qxl/qxl_drv.h    |  4 +---
- drivers/gpu/drm/qxl/qxl_object.h |  5 -----
- drivers/gpu/drm/qxl/qxl_drv.c    |  1 -
- drivers/gpu/drm/qxl/qxl_dumb.c   | 17 -----------------
- drivers/gpu/drm/qxl/qxl_ioctl.c  |  5 +++--
- drivers/gpu/drm/qxl/qxl_ttm.c    |  8 ++++----
- drivers/gpu/drm/qxl/Kconfig      |  1 +
- 7 files changed, 9 insertions(+), 32 deletions(-)
+ include/drm/drm_gem_ttm_helper.h     | 30 +++++++++++++++++++++++
+ drivers/gpu/drm/drm_gem_ttm_helper.c | 36 ++++++++++++++++++++++++++++
+ Documentation/gpu/drm-mm.rst         | 12 ++++++++++
+ drivers/gpu/drm/Kconfig              |  7 ++++++
+ drivers/gpu/drm/Makefile             |  3 +++
+ 5 files changed, 88 insertions(+)
+ create mode 100644 include/drm/drm_gem_ttm_helper.h
+ create mode 100644 drivers/gpu/drm/drm_gem_ttm_helper.c
 
-diff --git a/drivers/gpu/drm/qxl/qxl_drv.h b/drivers/gpu/drm/qxl/qxl_drv.h
-index 9e034c5fa87d..82efbe76062a 100644
---- a/drivers/gpu/drm/qxl/qxl_drv.h
-+++ b/drivers/gpu/drm/qxl/qxl_drv.h
-@@ -38,6 +38,7 @@
- #include <drm/drm_crtc.h>
- #include <drm/drm_encoder.h>
- #include <drm/drm_fb_helper.h>
+diff --git a/include/drm/drm_gem_ttm_helper.h b/include/drm/drm_gem_ttm_helper.h
+new file mode 100644
+index 000000000000..43c9db3583cc
+--- /dev/null
++++ b/include/drm/drm_gem_ttm_helper.h
+@@ -0,0 +1,30 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++
++#ifndef DRM_GEM_TTM_HELPER_H
++#define DRM_GEM_TTM_HELPER_H
++
++#include <linux/kernel.h>
++
++#include <drm/drm_gem.h>
++#include <drm/drm_device.h>
++#include <drm/ttm/ttm_bo_api.h>
++#include <drm/ttm/ttm_bo_driver.h>
++
++/**
++ * Returns the container of type &struct ttm_buffer_object
++ * for field base.
++ * @gem:	the GEM object
++ * Returns:	The containing GEM VRAM object
++ */
++static inline struct ttm_buffer_object *drm_gem_ttm_of_gem(
++	struct drm_gem_object *gem)
++{
++	return container_of(gem, struct ttm_buffer_object, base);
++}
++
++int drm_gem_ttm_bo_device_init(struct drm_device *dev,
++			       struct ttm_bo_device *bdev,
++			       struct ttm_bo_driver *driver,
++			       bool need_dma32);
++
++#endif
+diff --git a/drivers/gpu/drm/drm_gem_ttm_helper.c b/drivers/gpu/drm/drm_gem_ttm_helper.c
+new file mode 100644
+index 000000000000..0c57e9fd50b9
+--- /dev/null
++++ b/drivers/gpu/drm/drm_gem_ttm_helper.c
+@@ -0,0 +1,36 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++
 +#include <drm/drm_gem_ttm_helper.h>
- #include <drm/drm_ioctl.h>
- #include <drm/drm_gem.h>
- #include <drm/qxl_drm.h>
-@@ -347,9 +348,6 @@ int qxl_bo_kmap(struct qxl_bo *bo, void **ptr);
- int qxl_mode_dumb_create(struct drm_file *file_priv,
- 			 struct drm_device *dev,
- 			 struct drm_mode_create_dumb *args);
--int qxl_mode_dumb_mmap(struct drm_file *filp,
--		       struct drm_device *dev,
--		       uint32_t handle, uint64_t *offset_p);
++
++/**
++ * DOC: overview
++ *
++ * This library provides helper functions for gem objects backed by
++ * ttm.
++ */
++
++/**
++ * drm_gem_ttm_bo_device_init - ttm init for devices which use gem+ttm
++ *
++ * @dev: A pointer to a struct drm_device.
++ * @bdev: A pointer to a struct ttm_bo_device to initialize.
++ * @driver: A pointer to a struct ttm_bo_driver set up by the caller.
++ * @need_dma32: Whenever the device is limited to 32bit DMA.
++ *
++ * This initializes ttm with dev->vma_offset_manager, so gem and ttm
++ * fuction are working with the same vma_offset_manager.
++ *
++ * Returns:
++ * !0: Failure.
++ */
++int drm_gem_ttm_bo_device_init(struct drm_device *dev,
++			       struct ttm_bo_device *bdev,
++			       struct ttm_bo_driver *driver,
++			       bool need_dma32)
++{
++	return ttm_bo_device_init_with_vma_manager(bdev, driver,
++						   dev->anon_inode->i_mapping,
++						   dev->vma_offset_manager,
++						   need_dma32);
++}
++EXPORT_SYMBOL(drm_gem_ttm_bo_device_init);
+diff --git a/Documentation/gpu/drm-mm.rst b/Documentation/gpu/drm-mm.rst
+index b664f054c259..a70a1d9f30ec 100644
+--- a/Documentation/gpu/drm-mm.rst
++++ b/Documentation/gpu/drm-mm.rst
+@@ -412,6 +412,18 @@ VRAM MM Helper Functions Reference
+ .. kernel-doc:: drivers/gpu/drm/drm_vram_mm_helper.c
+    :export:
  
- /* qxl ttm */
- int qxl_ttm_init(struct qxl_device *qdev);
-diff --git a/drivers/gpu/drm/qxl/qxl_object.h b/drivers/gpu/drm/qxl/qxl_object.h
-index 8ae54ba7857c..1f0316ebcfd0 100644
---- a/drivers/gpu/drm/qxl/qxl_object.h
-+++ b/drivers/gpu/drm/qxl/qxl_object.h
-@@ -58,11 +58,6 @@ static inline unsigned long qxl_bo_size(struct qxl_bo *bo)
- 	return bo->tbo.num_pages << PAGE_SHIFT;
- }
++GEM TTM Helper Functions Reference
++-----------------------------------
++
++.. kernel-doc:: drivers/gpu/drm/drm_gem_ttm_helper.c
++   :doc: overview
++
++.. kernel-doc:: include/drm/drm_gem_ttm_helper.h
++   :internal:
++
++.. kernel-doc:: drivers/gpu/drm/drm_gem_ttm_helper.c
++   :export:
++
+ VMA Offset Manager
+ ==================
  
--static inline u64 qxl_bo_mmap_offset(struct qxl_bo *bo)
--{
--	return drm_vma_node_offset_addr(&bo->tbo.base.vma_node);
--}
--
- static inline int qxl_bo_wait(struct qxl_bo *bo, u32 *mem_type,
- 			      bool no_wait)
- {
-diff --git a/drivers/gpu/drm/qxl/qxl_drv.c b/drivers/gpu/drm/qxl/qxl_drv.c
-index c1802e01d9f6..12cf85a06bed 100644
---- a/drivers/gpu/drm/qxl/qxl_drv.c
-+++ b/drivers/gpu/drm/qxl/qxl_drv.c
-@@ -252,7 +252,6 @@ static struct drm_driver qxl_driver = {
- 	.driver_features = DRIVER_GEM | DRIVER_MODESET | DRIVER_ATOMIC,
- 
- 	.dumb_create = qxl_mode_dumb_create,
--	.dumb_map_offset = qxl_mode_dumb_mmap,
- #if defined(CONFIG_DEBUG_FS)
- 	.debugfs_init = qxl_debugfs_init,
- #endif
-diff --git a/drivers/gpu/drm/qxl/qxl_dumb.c b/drivers/gpu/drm/qxl/qxl_dumb.c
-index 272d19b677d8..bd3b16a701a6 100644
---- a/drivers/gpu/drm/qxl/qxl_dumb.c
-+++ b/drivers/gpu/drm/qxl/qxl_dumb.c
-@@ -69,20 +69,3 @@ int qxl_mode_dumb_create(struct drm_file *file_priv,
- 	args->handle = handle;
- 	return 0;
- }
--
--int qxl_mode_dumb_mmap(struct drm_file *file_priv,
--		       struct drm_device *dev,
--		       uint32_t handle, uint64_t *offset_p)
--{
--	struct drm_gem_object *gobj;
--	struct qxl_bo *qobj;
--
--	BUG_ON(!offset_p);
--	gobj = drm_gem_object_lookup(file_priv, handle);
--	if (gobj == NULL)
--		return -ENOENT;
--	qobj = gem_to_qxl_bo(gobj);
--	*offset_p = qxl_bo_mmap_offset(qobj);
--	drm_gem_object_put_unlocked(gobj);
--	return 0;
--}
-diff --git a/drivers/gpu/drm/qxl/qxl_ioctl.c b/drivers/gpu/drm/qxl/qxl_ioctl.c
-index 8117a45b3610..c8d9ea552532 100644
---- a/drivers/gpu/drm/qxl/qxl_ioctl.c
-+++ b/drivers/gpu/drm/qxl/qxl_ioctl.c
-@@ -67,8 +67,9 @@ static int qxl_map_ioctl(struct drm_device *dev, void *data,
- 	struct qxl_device *qdev = dev->dev_private;
- 	struct drm_qxl_map *qxl_map = data;
- 
--	return qxl_mode_dumb_mmap(file_priv, &qdev->ddev, qxl_map->handle,
--				  &qxl_map->offset);
-+	return drm_gem_dumb_map_offset(file_priv, &qdev->ddev,
-+				       qxl_map->handle,
-+				       &qxl_map->offset);
- }
- 
- struct qxl_reloc_info {
-diff --git a/drivers/gpu/drm/qxl/qxl_ttm.c b/drivers/gpu/drm/qxl/qxl_ttm.c
-index 9b24514c75aa..3a24145dd516 100644
---- a/drivers/gpu/drm/qxl/qxl_ttm.c
-+++ b/drivers/gpu/drm/qxl/qxl_ttm.c
-@@ -322,10 +322,10 @@ int qxl_ttm_init(struct qxl_device *qdev)
- 	int num_io_pages; /* != rom->num_io_pages, we include surface0 */
- 
- 	/* No others user of address space so set it to 0 */
--	r = ttm_bo_device_init(&qdev->mman.bdev,
--			       &qxl_bo_driver,
--			       qdev->ddev.anon_inode->i_mapping,
--			       false);
-+	r = drm_gem_ttm_bo_device_init(&qdev->ddev,
-+				       &qdev->mman.bdev,
-+				       &qxl_bo_driver,
-+				       false);
- 	if (r) {
- 		DRM_ERROR("failed initializing buffer object driver(%d).\n", r);
- 		return r;
-diff --git a/drivers/gpu/drm/qxl/Kconfig b/drivers/gpu/drm/qxl/Kconfig
-index d0d691b31f4a..bfe90c7d17b2 100644
---- a/drivers/gpu/drm/qxl/Kconfig
-+++ b/drivers/gpu/drm/qxl/Kconfig
-@@ -3,6 +3,7 @@ config DRM_QXL
- 	tristate "QXL virtual GPU"
- 	depends on DRM && PCI && MMU
- 	select DRM_KMS_HELPER
-+	select DRM_TTM_HELPER
- 	select DRM_TTM
- 	select CRC32
+diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
+index e6f40fb54c9a..f7b25519f95c 100644
+--- a/drivers/gpu/drm/Kconfig
++++ b/drivers/gpu/drm/Kconfig
+@@ -172,6 +172,13 @@ config DRM_VRAM_HELPER
  	help
+ 	  Helpers for VRAM memory management
+ 
++config DRM_TTM_HELPER
++	tristate
++	depends on DRM
++	select DRM_TTM
++	help
++	  Helpers for ttm-based gem objects
++
+ config DRM_GEM_CMA_HELPER
+ 	bool
+ 	depends on DRM
+diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
+index 10f8329a8b71..545c61d6528b 100644
+--- a/drivers/gpu/drm/Makefile
++++ b/drivers/gpu/drm/Makefile
+@@ -37,6 +37,9 @@ drm_vram_helper-y := drm_gem_vram_helper.o \
+ 		     drm_vram_mm_helper.o
+ obj-$(CONFIG_DRM_VRAM_HELPER) += drm_vram_helper.o
+ 
++drm_ttm_helper-y := drm_gem_ttm_helper.o
++obj-$(CONFIG_DRM_TTM_HELPER) += drm_ttm_helper.o
++
+ drm_kms_helper-y := drm_crtc_helper.o drm_dp_helper.o drm_dsc.o drm_probe_helper.o \
+ 		drm_plane_helper.o drm_dp_mst_topology.o drm_atomic_helper.o \
+ 		drm_kms_helper_common.o drm_dp_dual_mode_helper.o \
 -- 
 2.18.1
 
