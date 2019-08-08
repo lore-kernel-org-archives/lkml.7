@@ -7,58 +7,56 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D29B2C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 11:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C513EC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 11:01:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3E3C21874
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 11:00:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 979CF2184E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 11:01:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="mSR/pXrc"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ia3j+Ici"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389735AbfHHLAd (ORCPT
+        id S1731755AbfHHLBV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 07:00:33 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:57975 "EHLO
+        Thu, 8 Aug 2019 07:01:21 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:47203 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726721AbfHHLAd (ORCPT
+        with ESMTP id S1726721AbfHHLBU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 07:00:33 -0400
+        Thu, 8 Aug 2019 07:01:20 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x78B0FOa3128321
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x78B16cd3128445
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 8 Aug 2019 04:00:15 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x78B0FOa3128321
+        Thu, 8 Aug 2019 04:01:06 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x78B16cd3128445
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1565262016;
-        bh=T+PEPqCjbiKUY0I0c8YBNkeV+FlD66sZGnf9J3SBYfo=;
+        s=2019071901; t=1565262066;
+        bh=PfxstGCABas8L6TL/1R8TcMt3vHSJNWYWZFOgVM8s5w=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=mSR/pXrcIvc2yu2wnRXvj1QWnVfHdX9iKgp7PvF8eqAWNethcdgCARp2P8Y9nWtYR
-         pxDw/GnYLyKNp50DFiwGAhXOnFBUeA2jLMybhWhPUJGtSoEdvN2exlSy+OwqtxP85J
-         bYuxQg5CzRjmxkl2Tx2fMjEyJspQMAdkn+VjpA5hvaxSOrTwEVUIwsvOv+wF6MsbY5
-         wRZC1/ZhAlugP50XcTnW9bI9fu/t6hvUEc9MdU1mnygDsppCF9TEx75DCAUWyAiozm
-         VsbYOiPC47dVaqoR1MMo5JpOtzGyRipYsVxWpBp+3bAp+xcUM33icleJqiZpJiUShX
-         FRoJxhQbqj8uw==
+        b=ia3j+Iciuta3/9m13m0sYDaXNe6oLkSVviZrGMdTaVtGXMELRQ28PbTmc5FX9clZc
+         sZgSvKC1kZ/O0PqyoRrU3us1wlWF6ZoxgPdZyjuO5D46p8ElvLA/XmJC6Zh/kBvlzb
+         SZ3+ltO1sBCURq9fPUo38B4wug5kPgr9oExQiYHBeskUCQ9dwiRka9SuFx1NJK6q05
+         0OTp/Qf4It1nqGeB5YjibfWz4AxC7hnRakSaBMD8s8ipzZ6j/mEkBbK7wRUGwHrzp+
+         GkMv798+crDcCNnC+ManiYTjLIw8jD4qHILOCaCOiwf1snSK2FR3HNdU9p8EUfn/ZW
+         nA7fNO3XhQL2g==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x78B0FCr3128317;
-        Thu, 8 Aug 2019 04:00:15 -0700
-Date:   Thu, 8 Aug 2019 04:00:15 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x78B15qv3128442;
+        Thu, 8 Aug 2019 04:01:05 -0700
+Date:   Thu, 8 Aug 2019 04:01:05 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Qais Yousef <tipbot@zytor.com>
-Message-ID: <tip-5c3ceef9ad7b340b0acee6c26d0c9e6429decb2c@git.kernel.org>
-Cc:     qais.yousef@arm.com, peterz@infradead.org, mingo@redhat.com,
-        hpa@zytor.com, viresh.kumar@linaro.org, vincent.guittot@linaro.org,
-        linux-kernel@vger.kernel.org, rjw@rjwysocki.net,
-        tglx@linutronix.de, mingo@kernel.org
-Reply-To: tglx@linutronix.de, mingo@kernel.org,
-          linux-kernel@vger.kernel.org, rjw@rjwysocki.net,
-          vincent.guittot@linaro.org, qais.yousef@arm.com,
-          peterz@infradead.org, mingo@redhat.com, hpa@zytor.com,
-          viresh.kumar@linaro.org
-In-Reply-To: <20190802104628.8410-1-qais.yousef@arm.com>
-References: <20190802104628.8410-1-qais.yousef@arm.com>
+From:   tip-bot for Phil Auld <tipbot@zytor.com>
+Message-ID: <tip-6b8fd01b21f5f2701b407a7118f236ba4c41226d@git.kernel.org>
+Cc:     tglx@linutronix.de, mingo@redhat.com, linux-kernel@vger.kernel.org,
+        hpa@zytor.com, mingo@kernel.org, peterz@infradead.org,
+        vincent.guittot@linaro.org, pauld@redhat.com
+Reply-To: pauld@redhat.com, vincent.guittot@linaro.org, hpa@zytor.com,
+          linux-kernel@vger.kernel.org, peterz@infradead.org,
+          mingo@redhat.com, tglx@linutronix.de, mingo@kernel.org
+In-Reply-To: <20190801133749.11033-1-pauld@redhat.com>
+References: <20190801133749.11033-1-pauld@redhat.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:sched/core] cpufreq: schedutil: fix equation in comment
-Git-Commit-ID: 5c3ceef9ad7b340b0acee6c26d0c9e6429decb2c
+Subject: [tip:sched/core] sched/fair: Use rq_lock/unlock in
+ online_fair_sched_group
+Git-Commit-ID: 6b8fd01b21f5f2701b407a7118f236ba4c41226d
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -72,52 +70,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  5c3ceef9ad7b340b0acee6c26d0c9e6429decb2c
-Gitweb:     https://git.kernel.org/tip/5c3ceef9ad7b340b0acee6c26d0c9e6429decb2c
-Author:     Qais Yousef <qais.yousef@arm.com>
-AuthorDate: Fri, 2 Aug 2019 11:46:28 +0100
+Commit-ID:  6b8fd01b21f5f2701b407a7118f236ba4c41226d
+Gitweb:     https://git.kernel.org/tip/6b8fd01b21f5f2701b407a7118f236ba4c41226d
+Author:     Phil Auld <pauld@redhat.com>
+AuthorDate: Thu, 1 Aug 2019 09:37:49 -0400
 Committer:  Peter Zijlstra <peterz@infradead.org>
 CommitDate: Thu, 8 Aug 2019 09:09:31 +0200
 
-cpufreq: schedutil: fix equation in comment
+sched/fair: Use rq_lock/unlock in online_fair_sched_group
 
-scale_irq_capacity() call in schedutil_cpu_util() does
+Enabling WARN_DOUBLE_CLOCK in /sys/kernel/debug/sched_features causes
+warning to fire in update_rq_clock. This seems to be caused by onlining
+a new fair sched group not using the rq lock wrappers.
 
-	util *= (max - irq)
-	util /= max
+  [] rq->clock_update_flags & RQCF_UPDATED
+  [] WARNING: CPU: 5 PID: 54385 at kernel/sched/core.c:210 update_rq_clock+0xec/0x150
 
-But the comment says
+  [] Call Trace:
+  []  online_fair_sched_group+0x53/0x100
+  []  cpu_cgroup_css_online+0x16/0x20
+  []  online_css+0x1c/0x60
+  []  cgroup_apply_control_enable+0x231/0x3b0
+  []  cgroup_mkdir+0x41b/0x530
+  []  kernfs_iop_mkdir+0x61/0xa0
+  []  vfs_mkdir+0x108/0x1a0
+  []  do_mkdirat+0x77/0xe0
+  []  do_syscall_64+0x55/0x1d0
+  []  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-	util *= (1 - irq)
-	util /= max
+Using the wrappers in online_fair_sched_group instead of the raw locking
+removes this warning.
 
-Fix the comment to match what the scaling function does.
-
-Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+Signed-off-by: Phil Auld <pauld@redhat.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-Acked-by: Vincent Guittot <vincent.guittot@linaro.org>
 Cc: Ingo Molnar <mingo@redhat.com>
-Cc: "Rafael J . Wysocki" <rjw@rjwysocki.net>
-Link: https://lkml.kernel.org/r/20190802104628.8410-1-qais.yousef@arm.com
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Ingo Molnar <mingo@kernel.org>
+Link: https://lkml.kernel.org/r/20190801133749.11033-1-pauld@redhat.com
 ---
- kernel/sched/cpufreq_schedutil.c | 6 +++---
+ kernel/sched/fair.c | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
-index 636ca6f88c8e..e127d89d5974 100644
---- a/kernel/sched/cpufreq_schedutil.c
-+++ b/kernel/sched/cpufreq_schedutil.c
-@@ -259,9 +259,9 @@ unsigned long schedutil_cpu_util(int cpu, unsigned long util_cfs,
- 	 * irq metric. Because IRQ/steal time is hidden from the task clock we
- 	 * need to scale the task numbers:
- 	 *
--	 *              1 - irq
--	 *   U' = irq + ------- * U
--	 *                max
-+	 *              max - irq
-+	 *   U' = irq + --------- * U
-+	 *                 max
- 	 */
- 	util = scale_irq_capacity(util, irq, max);
- 	util += irq;
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 19c58599e967..d9407517dae9 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -10281,18 +10281,18 @@ err:
+ void online_fair_sched_group(struct task_group *tg)
+ {
+ 	struct sched_entity *se;
++	struct rq_flags rf;
+ 	struct rq *rq;
+ 	int i;
+ 
+ 	for_each_possible_cpu(i) {
+ 		rq = cpu_rq(i);
+ 		se = tg->se[i];
+-
+-		raw_spin_lock_irq(&rq->lock);
++		rq_lock(rq, &rf);
+ 		update_rq_clock(rq);
+ 		attach_entity_cfs_rq(se);
+ 		sync_throttle(tg, i);
+-		raw_spin_unlock_irq(&rq->lock);
++		rq_unlock(rq, &rf);
+ 	}
+ }
+ 
