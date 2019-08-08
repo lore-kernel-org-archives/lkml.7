@@ -2,150 +2,120 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C024C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30216C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:53:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1441E2187F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:52:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B0802187F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:53:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731263AbfHHGwb (ORCPT
+        id S1731292AbfHHGxZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 02:52:31 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:55527 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730943AbfHHGwa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 02:52:30 -0400
-Received: by mail-wm1-f68.google.com with SMTP id f72so1214619wmf.5
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 23:52:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9sum2rKDKD80VbDxgEa5452kAOPQ1tWsrpFAsn0IRm0=;
-        b=JYDWiDBu/SqsTrgDjWOGerCWBos+GAEvvJ106hBhj0ESFrDxDki0343ZIopy96zjmI
-         Zp9TEOuybeuBbJf/O3twPKOM0Nj4SqxVX5kBxSz8E2pEWuSP5ytSdHE9xuO6PzcvVd+y
-         dCu3XA7bPMH7eE/cOVTScvrpnQFgRybWp10zT4VwXFPiiiNV4EUrSP1IwN657YEaKTMn
-         wjh8w2FbGUu6MFC1LSib0iYt/rvymo/F68iRGFQSfOqnleP/Xfa5GmJe7w6U1n3l21lN
-         J2aecpn3ogmiRT9t4+A3b1gyhV/rTOt92tFlRVKJ29hQeloIRRWGe0Ha7oWKOWZT4MTt
-         mRGw==
-X-Gm-Message-State: APjAAAWltdL8TxaG/KSvuEu+K+r9eX+vvihtmyYzt7LwrLQVdTNf8ATg
-        13p5Fl850bJ89ybJmrvGir24GQ==
-X-Google-Smtp-Source: APXvYqxFiutx7k9CykMYMz1GaLlNS/gIE9xUd3wICV7FTJc0loQ4P+j3AutCV5eFBTrawmxR+DdnUw==
-X-Received: by 2002:a1c:7a12:: with SMTP id v18mr2508262wmc.113.1565247148179;
-        Wed, 07 Aug 2019 23:52:28 -0700 (PDT)
-Received: from localhost.localdomain ([151.29.237.107])
-        by smtp.gmail.com with ESMTPSA id j17sm1576604wru.24.2019.08.07.23.52.26
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 07 Aug 2019 23:52:27 -0700 (PDT)
-Date:   Thu, 8 Aug 2019 08:52:25 +0200
-From:   Juri Lelli <juri.lelli@redhat.com>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>, mingo@kernel.org,
-        linux-kernel@vger.kernel.org, luca.abeni@santannapisa.it,
-        bristot@redhat.com, balsini@android.com, dvyukov@google.com,
-        tglx@linutronix.de, vpillai@digitalocean.com, rostedt@goodmis.org
-Subject: Re: [RFC][PATCH 12/13] sched/deadline: Introduce deadline servers
-Message-ID: <20190808065225.GD29310@localhost.localdomain>
-References: <20190726145409.947503076@infradead.org>
- <20190726161358.056107990@infradead.org>
- <34710762-f813-3913-0e55-fde7c91c6c2d@arm.com>
+        Thu, 8 Aug 2019 02:53:25 -0400
+Received: from ozlabs.org ([203.11.71.1]:60309 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730903AbfHHGxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 02:53:25 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 463zbk1Dm3z9sMr;
+        Thu,  8 Aug 2019 16:53:22 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Alastair D'Silva <alastair@d-silva.org>
+Subject: powerpc flush_inval_dcache_range() was buggy until v5.3-rc1 (was Re: [PATCH 4/4] powerpc/64: reuse PPC32 static inline flush_dcache_range())
+References: <239d1c8f15b8bedc161a234f9f1a22a07160dbdf.1557824379.git.christophe.leroy@c-s.fr> <d6f628ffdeb9c7863da722a8f6ef2949e57bb360.1557824379.git.christophe.leroy@c-s.fr>
+Date:   Thu, 08 Aug 2019 16:53:21 +1000
+Message-ID: <87ef1wtafy.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <34710762-f813-3913-0e55-fde7c91c6c2d@arm.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dietmar,
+[ deliberately broke threading so this doesn't get buried ]
 
-On 07/08/19 18:31, Dietmar Eggemann wrote:
-> On 7/26/19 4:54 PM, Peter Zijlstra wrote:
-> > 
-> > 
-> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> 
-> [...]
-> 
-> > @@ -889,6 +891,8 @@ static void update_curr(struct cfs_rq *c
-> >  		trace_sched_stat_runtime(curtask, delta_exec, curr->vruntime);
-> >  		cgroup_account_cputime(curtask, delta_exec);
-> >  		account_group_exec_runtime(curtask, delta_exec);
-> > +		if (curtask->server)
-> > +			dl_server_update(curtask->server, delta_exec);
-> >  	}
-> 
-> I get a lockdep_assert_held(&rq->lock) related warning in start_dl_timer()
-> when running the full stack.
-> 
-> ...
-> [    0.530216] root domain span: 0-5 (max cpu_capacity = 1024)
-> [    0.538655] devtmpfs: initialized
-> [    0.556485] update_curr: rq mismatch rq[0] != rq[4]
-> [    0.561519] update_curr: rq mismatch rq[0] != rq[4]
-> [    0.566497] update_curr: rq mismatch rq[0] != rq[4]
-> [    0.571443] update_curr: rq mismatch rq[0] != rq[4]
-> [    0.576762] update_curr: rq mismatch rq[2] != rq[4]
-> [    0.581674] update_curr: rq mismatch rq[2] != rq[4]
-> [    0.586569] ------------[ cut here ]------------
-> [    0.591220] WARNING: CPU: 2 PID: 2 at kernel/sched/deadline.c:916 start_dl_timer+0x160/0x178
-> [    0.599686] Modules linked in:
-> [    0.602756] CPU: 2 PID: 2 Comm: kthreadd Tainted: G        W         5.3.0-rc3-00013-ga33cf033cc99-dirty #64
-> [    0.612620] Hardware name: ARM Juno development board (r0) (DT)
-> [    0.618560] pstate: 60000085 (nZCv daIf -PAN -UAO)
-> [    0.623369] pc : start_dl_timer+0x160/0x178
-> [    0.627572] lr : start_dl_timer+0x160/0x178
-> [    0.631768] sp : ffff000010013cb0
-> ...
-> [    0.715075] Call trace:
-> [    0.717531]  start_dl_timer+0x160/0x178
-> [    0.721382]  update_curr_dl_se+0x108/0x208
-> [    0.725494]  dl_server_update+0x2c/0x38
-> [    0.729348]  update_curr+0x1b4/0x3b8
-> [    0.732934]  task_tick_fair+0x74/0xa88
-> [    0.736698]  scheduler_tick+0x94/0x110
-> [    0.740461]  update_process_times+0x48/0x60
-> ...
-> 
-> Seems to be related to the fact that the rq can change:
-> 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index e4c14851a34c..5e3130a200ec 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -891,8 +891,17 @@ static void update_curr(struct cfs_rq *cfs_rq)
->                 trace_sched_stat_runtime(curtask, delta_exec, curr->vruntime);
->                 cgroup_account_cputime(curtask, delta_exec);
->                 account_group_exec_runtime(curtask, delta_exec);
-> -               if (curtask->server)
-> +               if (curtask->server) {
-> +                       struct rq *rq = rq_of(cfs_rq);
-> +                       struct rq *rq2 = curtask->server->rq;
-> +
-> +                       if (rq != rq2) {
-> +                               printk("update_curr: rq mismatch rq[%d] != rq[%d]\n",
-> +                                      cpu_of(rq), cpu_of(rq2));
-> +                       }
-> +
->                         dl_server_update(curtask->server, delta_exec);
-> +               }
->         }
-> 
-> ...
+Christophe Leroy <christophe.leroy@c-s.fr> writes:
+> diff --git a/arch/powerpc/kernel/misc_64.S b/arch/powerpc/kernel/misc_64.S
+> index a4fd536efb44..1b0a42c50ef1 100644
+> --- a/arch/powerpc/kernel/misc_64.S
+> +++ b/arch/powerpc/kernel/misc_64.S
+> @@ -115,35 +115,6 @@ _ASM_NOKPROBE_SYMBOL(flush_icache_range)
+>  EXPORT_SYMBOL(flush_icache_range)
+>  
+>  /*
+> - * Like above, but only do the D-cache.
+> - *
+> - * flush_dcache_range(unsigned long start, unsigned long stop)
+> - *
+> - *    flush all bytes from start to stop-1 inclusive
+> - */
+> -
+> -_GLOBAL_TOC(flush_dcache_range)
+> - 	ld	r10,PPC64_CACHES@toc(r2)
+> -	lwz	r7,DCACHEL1BLOCKSIZE(r10)	/* Get dcache block size */
+> -	addi	r5,r7,-1
+> -	andc	r6,r3,r5		/* round low to line bdy */
+> -	subf	r8,r6,r4		/* compute length */
+> -	add	r8,r8,r5		/* ensure we get enough */
+> -	lwz	r9,DCACHEL1LOGBLOCKSIZE(r10)/* Get log-2 of dcache block size */
+> -	srw.	r8,r8,r9		/* compute line count */
+          ^
+> -	beqlr				/* nothing to do? */
 
-Yeah, I actually noticed the same. Some debugging seems to point to
-early boot spawning of kthreads. I can reliably for example attribute
-this mismatch to ksoftirqd(s). It looks like they can avoid the
-dl_server assignment in pick_next_task_dl() and this breaks things.
-Still need to figure out why this happens and how to fix it, though.
+Alastair noticed that this was a 32-bit right shift.
 
-Best,
+Meaning if you called flush_dcache_range() with a range larger than 4GB,
+it did nothing and returned.
 
-Juri
+That code (which was previously called flush_inval_dcache_range()) was
+merged back in 2005:
+
+  https://github.com/mpe/linux-fullhistory/commit/faa5ee3743ff9b6df9f9a03600e34fdae596cfb2#diff-67c7ffa8e420c7d4206cae4a9e888e14
+
+
+Back then it was only used by the smu.c driver, which presumably wasn't
+flushing more than 4GB.
+
+Over time it grew more users:
+
+  v4.17 (Apr 2018): fb5924fddf9e ("powerpc/mm: Flush cache on memory hot(un)plug")
+  v4.15 (Nov 2017): 6c44741d75a2 ("powerpc/lib: Implement UACCESS_FLUSHCACHE API")
+  v4.15 (Nov 2017): 32ce3862af3c ("powerpc/lib: Implement PMEM API")
+  v4.8  (Jul 2016): c40785ad305b ("powerpc/dart: Use a cachable DART")
+
+The DART case doesn't matter, but the others probably could. I assume
+the lack of bug reports is due to the fact that pmem stuff is still in
+development and the lack of flushing usually doesn't actually matter? Or
+are people flushing/hotplugging < 4G at a time?
+
+Anyway we probably want to backport the fix below to various places?
+
+cheers
+
+
+diff --git a/arch/powerpc/kernel/misc_64.S b/arch/powerpc/kernel/misc_64.S
+index 1ad4089dd110..802f5abbf061 100644
+--- a/arch/powerpc/kernel/misc_64.S
++++ b/arch/powerpc/kernel/misc_64.S
+@@ -148,7 +148,7 @@ _GLOBAL(flush_inval_dcache_range)
+ 	subf	r8,r6,r4		/* compute length */
+ 	add	r8,r8,r5		/* ensure we get enough */
+ 	lwz	r9,DCACHEL1LOGBLOCKSIZE(r10)/* Get log-2 of dcache block size */
+-	srw.	r8,r8,r9		/* compute line count */
++	srd.	r8,r8,r9		/* compute line count */
+ 	beqlr				/* nothing to do? */
+ 	sync
+ 	isync
