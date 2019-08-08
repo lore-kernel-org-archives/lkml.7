@@ -1,160 +1,117 @@
 Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A7EC32754
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:18:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68137C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:18:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1341F2186A
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:18:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 388462186A
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:18:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sLFf/+X5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731107AbfHHGSL (ORCPT
+        id S1731128AbfHHGSY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 02:18:11 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:52705 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726475AbfHHGSK (ORCPT
+        Thu, 8 Aug 2019 02:18:24 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34688 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725796AbfHHGSX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 02:18:10 -0400
-Received: from alex.numericable.fr (127.19.86.79.rev.sfr.net [79.86.19.127])
-        (Authenticated sender: alex@ghiti.fr)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id F38AC100003;
-        Thu,  8 Aug 2019 06:18:00 +0000 (UTC)
-From:   Alexandre Ghiti <alex@ghiti.fr>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Alexandre Ghiti <alex@ghiti.fr>
-Subject: [PATCH v6 00/14] Provide generic top-down mmap layout functions
-Date:   Thu,  8 Aug 2019 02:17:42 -0400
-Message-Id: <20190808061756.19712-1-alex@ghiti.fr>
-X-Mailer: git-send-email 2.20.1
+        Thu, 8 Aug 2019 02:18:23 -0400
+Received: by mail-pg1-f193.google.com with SMTP id n9so37257840pgc.1;
+        Wed, 07 Aug 2019 23:18:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+r07c/lyTLQL7Cb4AGcka/LdpqVJd36eUIffcM8hTEI=;
+        b=sLFf/+X5t4mu5egKSTcDzlZSPbcJL6iZZvb/C1hbneK3GQewRY0r6dePKSVxXYBtcc
+         Bjc9990Yfki8ZU+cvc6XgC2m3JTSUPtOitKLi1eDo6+M/XU/hkBu5hH8teK2OHRv/Ayw
+         gccl4gGPs9zP8EdniqWEXahGiou4cVqazBRovMUEkf5QfvPI6gD5hkz4BAnSdo0yg973
+         U9NZE6qpaoZ6qodH2NbpPHjSiM4xYrFAB7myZhH4+tuvVVwDTyyAEMxOJ5wFzePDtJ1H
+         1UxHS+mvTHNt5M9YBFwSFXcxu9LeunlN9/KCoWzsFoPWmGJ6uG9gbQ0YIaSkBHJjcx6r
+         FY2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+r07c/lyTLQL7Cb4AGcka/LdpqVJd36eUIffcM8hTEI=;
+        b=XGPLVBODUayNOy15kxTzB4z+AeR5gQ7nxZbPzaQGw1jEX/97N3RAlUKjKcbqgy4zdE
+         zBQlBbZmoaVRXJP5WRr+pvYUtD0FA5M/LCtB2RbD4LZ9CTlQZsitlH90DIB3mITwMW8E
+         GLqxD64b92io840e7iNATsTfU5oyEchqNdZFHpNYZUbyfsIc72BXS4Y4M+BED69ffZRe
+         8nTtFT+O+Mod/HKcM+GGsq5lppne+Bam7qbi7yMlJqJB5ASQ1IakLzdxo+2lo9B/L+zb
+         S5zo3W2p/jsTPLB01gVLVgcQDCd+DU+eYHW+USCLGpPfpF4EM/SGW6Aztath2VPqGhEI
+         YMmw==
+X-Gm-Message-State: APjAAAUzyuVrwxWpnFuOzZcr8/NtyF0Ba+wfhBqMtZvrQk0EB/8AIw0w
+        qalgZSOD27ewcgBI4NCyWwE=
+X-Google-Smtp-Source: APXvYqyI6sQQOLvaUkbq+xcUhJltUxl7laFmc7PhkK8VyXwXItFdpiaQtI0VtgaEzPhH6BddDmMMCw==
+X-Received: by 2002:aa7:9118:: with SMTP id 24mr13168559pfh.56.1565245102667;
+        Wed, 07 Aug 2019 23:18:22 -0700 (PDT)
+Received: from gmail.com (c-73-140-212-29.hsd1.wa.comcast.net. [73.140.212.29])
+        by smtp.gmail.com with ESMTPSA id u7sm84239482pgr.94.2019.08.07.23.18.21
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 07 Aug 2019 23:18:21 -0700 (PDT)
+Date:   Wed, 7 Aug 2019 23:18:19 -0700
+From:   Andrei Vagin <avagin@gmail.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Adrian Reber <adrian@lisas.de>,
+        Andrei Vagin <avagin@openvz.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        containers@lists.linux-foundation.org, criu@openvz.org,
+        linux-api@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCHv5 06/37] alarmtimer: Provide get_timespec() callback
+Message-ID: <20190808061819.GA20004@gmail.com>
+References: <20190729215758.28405-1-dima@arista.com>
+ <20190729215758.28405-7-dima@arista.com>
+ <alpine.DEB.2.21.1908070803030.24014@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=koi8-r
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1908070803030.24014@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series introduces generic functions to make top-down mmap layout
-easily accessible to architectures, in particular riscv which was
-the initial goal of this series.
-The generic implementation was taken from arm64 and used successively
-by arm, mips and finally riscv.
+On Wed, Aug 07, 2019 at 08:04:10AM +0200, Thomas Gleixner wrote:
+> On Mon, 29 Jul 2019, Dmitry Safonov wrote:
+> >  /**
+> > @@ -869,8 +871,10 @@ static int __init alarmtimer_init(void)
+> >  	/* Initialize alarm bases */
+> >  	alarm_bases[ALARM_REALTIME].base_clockid = CLOCK_REALTIME;
+> >  	alarm_bases[ALARM_REALTIME].get_ktime = &ktime_get_real;
+> > +	alarm_bases[ALARM_REALTIME].get_timespec = posix_get_timespec,
+> 
+> That's just wrong:
+> 
+> >  /*
+> >   * Get monotonic time for posix timers
+> >   */
+> > -static int posix_get_timespec(clockid_t which_clock, struct timespec64 *tp)
+> > +int posix_get_timespec(clockid_t which_clock, struct timespec64 *tp)
+> >  {
+> >  	ktime_get_ts64(tp);
+> >  	return 0;
+> 
+> Using a proper function name would have avoided this.
 
-Note that in addition the series fixes 2 issues:
-- stack randomization was taken into account even if not necessary.
-- [1] fixed an issue with mmap base which did not take into account
-  randomization but did not report it to arm and mips, so by moving
-  arm64 into a generic library, this problem is now fixed for both
-  architectures.
-
-This work is an effort to factorize architecture functions to avoid
-code duplication and oversights as in [1].
-
-[1]: https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1429066.html
-
-Changes in v6:
-  - Do not handle sv48 as it will be correctly implemented later: assume
-    64BIT <=> sv39.
-  - Add acked-by from Paul
-
-Changes in v5:
-  - Fix [PATCH 11/14]
-  - Rebase on top of v5.3rc2 and commit
-    "riscv: kbuild: add virtual memory system selection"
-  - [PATCH 14/14] now takes into account the various virtual memory systems
-
-Changes in v4:
-  - Make ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT select ARCH_HAS_ELF_RANDOMIZE
-    by default as suggested by Kees,
-  - ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT depends on MMU and defines the
-    functions needed by ARCH_HAS_ELF_RANDOMIZE => architectures that use
-    the generic mmap topdown functions cannot have ARCH_HAS_ELF_RANDOMIZE
-    selected without MMU, but I think it's ok since randomization without
-    MMU does not add much security anyway.
-  - There is no common API to determine if a process is 32b, so I came up with
-    !IS_ENABLED(CONFIG_64BIT) || is_compat_task() in [PATCH v4 12/14].
-  - Mention in the change log that x86 already takes care of not offseting mmap
-    base address if the task does not want randomization.
-  - Re-introduce a comment that should not have been removed.
-  - Add Reviewed/Acked-By from Paul, Christoph and Kees, thank you for that.
-  - I tried to minimize the changes from the commits in v3 in order to make
-    easier the review of the v4, the commits changed or added are:
-    - [PATCH v4 5/14]
-    - [PATCH v4 8/14]
-    - [PATCH v4 11/14]
-    - [PATCH v4 12/14]
-    - [PATCH v4 13/14]
-
-Changes in v3:
-  - Split into small patches to ease review as suggested by Christoph
-    Hellwig and Kees Cook
-  - Move help text of new config as a comment, as suggested by Christoph
-  - Make new config depend on MMU, as suggested by Christoph
-
-Changes in v2 as suggested by Christoph Hellwig:
-  - Preparatory patch that moves randomize_stack_top
-  - Fix duplicate config in riscv
-  - Align #if defined on next line => this gives rise to a checkpatch
-    warning. I found this pattern all around the tree, in the same proportion
-    as the previous pattern which was less pretty:
-    git grep -C 1 -n -P "^#if defined.+\|\|.*\\\\$" 
-
-Alexandre Ghiti (14):
-  mm, fs: Move randomize_stack_top from fs to mm
-  arm64: Make use of is_compat_task instead of hardcoding this test
-  arm64: Consider stack randomization for mmap base only when necessary
-  arm64, mm: Move generic mmap layout functions to mm
-  arm64, mm: Make randomization selected by generic topdown mmap layout
-  arm: Properly account for stack randomization and stack guard gap
-  arm: Use STACK_TOP when computing mmap base address
-  arm: Use generic mmap top-down layout and brk randomization
-  mips: Properly account for stack randomization and stack guard gap
-  mips: Use STACK_TOP when computing mmap base address
-  mips: Adjust brk randomization offset to fit generic version
-  mips: Replace arch specific way to determine 32bit task with generic
-    version
-  mips: Use generic mmap top-down layout and brk randomization
-  riscv: Make mmap allocation top-down by default
-
- arch/Kconfig                       |  11 +++
- arch/arm/Kconfig                   |   2 +-
- arch/arm/include/asm/processor.h   |   2 -
- arch/arm/kernel/process.c          |   5 --
- arch/arm/mm/mmap.c                 |  52 --------------
- arch/arm64/Kconfig                 |   2 +-
- arch/arm64/include/asm/processor.h |   2 -
- arch/arm64/kernel/process.c        |   8 ---
- arch/arm64/mm/mmap.c               |  72 -------------------
- arch/mips/Kconfig                  |   2 +-
- arch/mips/include/asm/processor.h  |   5 --
- arch/mips/mm/mmap.c                |  84 ----------------------
- arch/riscv/Kconfig                 |  12 ++++
- fs/binfmt_elf.c                    |  20 ------
- include/linux/mm.h                 |   2 +
- kernel/sysctl.c                    |   6 +-
- mm/util.c                          | 107 ++++++++++++++++++++++++++++-
- 17 files changed, 138 insertions(+), 256 deletions(-)
-
--- 
-2.20.1
-
+You are right. Will fix. Thanks!
+> 
