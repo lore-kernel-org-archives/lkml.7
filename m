@@ -2,131 +2,86 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71FD9C32754
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 10:10:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A6DCC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 10:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DD0221874
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 10:10:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A18421882
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 10:10:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bxWWx9FB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389891AbfHHKKp (ORCPT
+        id S2389915AbfHHKKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 06:10:45 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:47900 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389756AbfHHKKo (ORCPT
+        Thu, 8 Aug 2019 06:10:50 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:59202 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389901AbfHHKKs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 06:10:44 -0400
-Received: from 79.184.254.29.ipv4.supernova.orange.pl (79.184.254.29) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.275)
- id a5993c00402c74dd; Thu, 8 Aug 2019 12:10:41 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     linux-nvme <linux-nvme@lists.infradead.org>
-Cc:     Keith Busch <kbusch@kernel.org>,
-        Mario Limonciello <Mario.Limonciello@dell.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Subject: [PATCH v2 2/2] nvme-pci: Allow PCI bus-level PM to be used if ASPM is disabled
-Date:   Thu, 08 Aug 2019 12:10:06 +0200
-Message-ID: <1870928.r7tBYyfqdz@kreacher>
-In-Reply-To: <1921165.pTveHRX1Co@kreacher>
-References: <4323ed84dd07474eab65699b4d007aaf@AUSX13MPC105.AMER.DELL.COM> <20190731221956.GB15795@localhost.localdomain> <1921165.pTveHRX1Co@kreacher>
+        Thu, 8 Aug 2019 06:10:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=yRYxxTnT0jAVorPkLUtPWJIe8pVj+mQODhml9KCp+bk=; b=bxWWx9FBXDhyN3GkIOCe9ilFT
+        cakjc/vTNoc2ZDNL9roM8NMX4moNcjQqB+Ot4ntNyUoKk5E++1c5MhZs4RG3VI8eUWjCvxbQV7EWE
+        VDgaWMjXzapOJkOuFY4TlotBt7b1LniCPxXSoZaaDHspDfsMIgR2ZJbiNx2mkvnA5L2zkrdoD4xC/
+        W4vjqaeAbqBaz94FAfMfhaBbPTeMAUNV4YDrEkFHqVgCxQoMNokAD+Ll0ndLiF6tIMspz1ivJnkuY
+        JKnSB8GOPWVKU7Su1C8mM56t2q4NunM/Qnk5uw7L/QP+Z7O3YRHme/iHfiQDdxYGQHmndDnoqrIvS
+        V5WzbrQKQ==;
+Received: from [195.167.85.94] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hvfNd-0002zp-3T; Thu, 08 Aug 2019 10:10:45 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     tomi.valkeinen@ti.com
+Cc:     airlied@linux.ie, daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH for-5.3] drm/omap: ensure we have a valid dma_mask
+Date:   Thu,  8 Aug 2019 13:10:42 +0300
+Message-Id: <20190808101042.18809-1-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+The omapfb platform devices does not have a DMA mask set.  The
+traditional arm DMA code ignores, but the generic dma-direct/swiotlb
+has stricter checks and thus fails mappings without a DMA mask.
+As we use swiotlb for arm with LPAE now, omap needs to catch up
+and actually set a DMA mask.
 
-One of the modifications made by commit d916b1be94b6 ("nvme-pci: use
-host managed power state for suspend") was adding a pci_save_state()
-call to nvme_suspend() in order to prevent the PCI bus-level PM from
-being applied to the suspended NVMe devices, but if ASPM is not
-enabled for the target NVMe device, that causes its PCIe link to stay
-up and the platform may not be able to get into its optimum low-power
-state because of that.
-
-For example, if ASPM is disabled for the NVMe drive (PC401 NVMe SK
-hynix 256GB) in my Dell XPS13 9380, leaving it in D0 during
-suspend-to-idle prevents the SoC from reaching package idle states
-deeper than PC3, which is way insufficient for system suspend.
-
-To address this shortcoming, make nvme_suspend() check if ASPM is
-enabled for the target device and fall back to full device shutdown
-and PCI bus-level PM if that is not the case.
-
-Fixes: d916b1be94b6 ("nvme-pci: use host managed power state for suspend")
-Link: https://lore.kernel.org/linux-pm/2763495.NmdaWeg79L@kreacher/T/#t
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: ad3c7b18c5b3 ("arm: use swiotlb for bounce buffering on LPAE configs")
+Reported-by: "H. Nikolaus Schaller" <hns@goldelico.com>
+Tested-by: "H. Nikolaus Schaller" <hns@goldelico.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
+ drivers/gpu/drm/omapdrm/omap_fbdev.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
--> v2:
-  * Move the PCI/PCIe ASPM changes to a separate patch.
-  * Do not add a redundant ndev->last_ps == U32_MAX check in nvme_suspend().
-
----
- drivers/nvme/host/pci.c |   13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
-
-Index: linux-pm/drivers/nvme/host/pci.c
-===================================================================
---- linux-pm.orig/drivers/nvme/host/pci.c
-+++ linux-pm/drivers/nvme/host/pci.c
-@@ -2846,7 +2846,7 @@ static int nvme_resume(struct device *de
- 	struct nvme_dev *ndev = pci_get_drvdata(to_pci_dev(dev));
- 	struct nvme_ctrl *ctrl = &ndev->ctrl;
+diff --git a/drivers/gpu/drm/omapdrm/omap_fbdev.c b/drivers/gpu/drm/omapdrm/omap_fbdev.c
+index 561c4812545b..2c8abf07e617 100644
+--- a/drivers/gpu/drm/omapdrm/omap_fbdev.c
++++ b/drivers/gpu/drm/omapdrm/omap_fbdev.c
+@@ -232,6 +232,8 @@ void omap_fbdev_init(struct drm_device *dev)
+ 	if (!priv->num_pipes)
+ 		return;
  
--	if (pm_resume_via_firmware() || !ctrl->npss ||
-+	if (ndev->last_ps == U32_MAX ||
- 	    nvme_set_power_state(ctrl, ndev->last_ps) != 0)
- 		nvme_reset_ctrl(ctrl);
- 	return 0;
-@@ -2859,6 +2859,8 @@ static int nvme_suspend(struct device *d
- 	struct nvme_ctrl *ctrl = &ndev->ctrl;
- 	int ret = -EBUSY;
- 
-+	ndev->last_ps = U32_MAX;
++	dma_coerce_mask_and_coherent(dev->dev, DMA_BIT_MASK(32));
 +
- 	/*
- 	 * The platform does not remove power for a kernel managed suspend so
- 	 * use host managed nvme power settings for lowest idle power if
-@@ -2866,8 +2868,14 @@ static int nvme_suspend(struct device *d
- 	 * shutdown.  But if the firmware is involved after the suspend or the
- 	 * device does not support any non-default power states, shut down the
- 	 * device fully.
-+	 *
-+	 * If ASPM is not enabled for the device, shut down the device and allow
-+	 * the PCI bus layer to put it into D3 in order to take the PCIe link
-+	 * down, so as to allow the platform to achieve its minimum low-power
-+	 * state (which may not be possible if the link is up).
- 	 */
--	if (pm_suspend_via_firmware() || !ctrl->npss) {
-+	if (pm_suspend_via_firmware() || !ctrl->npss ||
-+	    !pcie_aspm_enabled_mask(pdev)) {
- 		nvme_dev_disable(ndev, true);
- 		return 0;
- 	}
-@@ -2880,7 +2888,6 @@ static int nvme_suspend(struct device *d
- 	    ctrl->state != NVME_CTRL_ADMIN_ONLY)
- 		goto unfreeze;
- 
--	ndev->last_ps = 0;
- 	ret = nvme_get_power_state(ctrl, &ndev->last_ps);
- 	if (ret < 0)
- 		goto unfreeze;
-
-
+ 	fbdev = kzalloc(sizeof(*fbdev), GFP_KERNEL);
+ 	if (!fbdev)
+ 		goto fail;
+-- 
+2.20.1
 
