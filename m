@@ -2,190 +2,138 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF05C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:36:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B2F6C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:39:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AA0E214C6
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:36:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05F6A214C6
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:39:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731535AbfHHIgm (ORCPT
+        id S1731167AbfHHIjk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 04:36:42 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:46339 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726187AbfHHIgl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 04:36:41 -0400
-Received: from 79.184.254.29.ipv4.supernova.orange.pl (79.184.254.29) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.275)
- id 20bffa7542b3d3cc; Thu, 8 Aug 2019 10:36:38 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     linux-nvme <linux-nvme@lists.infradead.org>
-Cc:     Keith Busch <kbusch@kernel.org>,
-        Mario Limonciello <Mario.Limonciello@dell.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Subject: [PATCH] nvme-pci: Allow PCI bus-level PM to be used if ASPM is disabled
-Date:   Thu, 08 Aug 2019 10:36:37 +0200
-Message-ID: <2583975.4sIyE3leJj@kreacher>
-In-Reply-To: <20190731221956.GB15795@localhost.localdomain>
-References: <4323ed84dd07474eab65699b4d007aaf@AUSX13MPC105.AMER.DELL.COM> <CAJZ5v0iDQ4=kTUgW94tKGt7oJzA_3uVU_M6HAMbNCRXwp_do8A@mail.gmail.com> <47415939.KV5G6iaeJG@kreacher> <20190730144134.GA12844@localhost.localdomain> <100ba4aff1c6434a81e47774ab4acddc@AUSX13MPC105.AMER.DELL.COM> <8246360B-F7D9-42EB-94FC-82995A769E28@canonical.com> <20190730191934.GD13948@localhost.localdomain> <7d3e0b8ba1444194a153c93faa1cabb3@AUSX13MPC105.AMER.DELL.COM> <20190730213114.GK13948@localhost.localdomain> <CAJZ5v0gxfeMN8eCNRjcXmUOkReVsdozb3EccaYMpnmSHu3771g@mail.gmail.com> <20190731221956.GB15795@localhost.localdomain>
+        Thu, 8 Aug 2019 04:39:40 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4220 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726187AbfHHIjk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 04:39:40 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id E49C46160CF7EB186C3B;
+        Thu,  8 Aug 2019 16:39:37 +0800 (CST)
+Received: from [127.0.0.1] (10.177.96.203) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Thu, 8 Aug 2019
+ 16:39:27 +0800
+Subject: Re: [PATCH v5 10/10] powerpc/fsl_booke/kaslr: dump out kernel offset
+ information on panic
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        <linuxppc-dev@lists.ozlabs.org>, <diana.craciun@nxp.com>,
+        <christophe.leroy@c-s.fr>, <benh@kernel.crashing.org>,
+        <paulus@samba.org>, <npiggin@gmail.com>, <keescook@chromium.org>,
+        <kernel-hardening@lists.openwall.com>
+CC:     <linux-kernel@vger.kernel.org>, <wangkefeng.wang@huawei.com>,
+        <yebin10@huawei.com>, <thunder.leizhen@huawei.com>,
+        <jingxiangfeng@huawei.com>, <fanchengyang@huawei.com>,
+        <zhaohongjiang@huawei.com>
+References: <20190807065706.11411-1-yanaijie@huawei.com>
+ <20190807065706.11411-11-yanaijie@huawei.com>
+ <87zhklt9eg.fsf@concordia.ellerman.id.au>
+From:   Jason Yan <yanaijie@huawei.com>
+Message-ID: <9113cc5b-0e89-f423-712a-79220af82b92@huawei.com>
+Date:   Thu, 8 Aug 2019 16:39:26 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <87zhklt9eg.fsf@concordia.ellerman.id.au>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.96.203]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-
-One of the modifications made by commit d916b1be94b6 ("nvme-pci: use
-host managed power state for suspend") was adding a pci_save_state()
-call to nvme_suspend() in order to prevent the PCI bus-level PM from
-being applied to the suspended NVMe devices, but if ASPM is not
-enabled for the target NVMe device, that causes its PCIe link to stay
-up and the platform may not be able to get into its optimum low-power
-state because of that.
-
-For example, if ASPM is disabled for the NVMe drive (PC401 NVMe SK
-hynix 256GB) in my Dell XPS13 9380, leaving it in D0 during
-suspend-to-idle prevents the SoC from reaching package idle states
-deeper than PC3, which is way insufficient for system suspend.
-
-To address this shortcoming, make nvme_suspend() check if ASPM is
-enabled for the target device and fall back to full device shutdown
-and PCI bus-level PM if that is not the case.
-
-Fixes: d916b1be94b6 ("nvme-pci: use host managed power state for suspend")
-Link: https://lore.kernel.org/linux-pm/2763495.NmdaWeg79L@kreacher/T/#t
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
-
-This is an update of the following patch:
-
-https://patchwork.kernel.org/patch/11081791/
-
-going with the subject matching the changes in the patch.
-
-This also addresses style-related comments from Christoph and follows the
-Keith's advice to use pci_upstream_bridge() to get to the upstream bridge
-of the device.
-
-Thanks!
-
----
- drivers/nvme/host/pci.c |   15 +++++++++++----
- drivers/pci/pcie/aspm.c |   20 ++++++++++++++++++++
- include/linux/pci.h     |    2 ++
- 3 files changed, 33 insertions(+), 4 deletions(-)
-
-Index: linux-pm/drivers/nvme/host/pci.c
-===================================================================
---- linux-pm.orig/drivers/nvme/host/pci.c
-+++ linux-pm/drivers/nvme/host/pci.c
-@@ -2846,7 +2846,7 @@ static int nvme_resume(struct device *de
- 	struct nvme_dev *ndev = pci_get_drvdata(to_pci_dev(dev));
- 	struct nvme_ctrl *ctrl = &ndev->ctrl;
- 
--	if (pm_resume_via_firmware() || !ctrl->npss ||
-+	if (ndev->last_ps == U32_MAX ||
- 	    nvme_set_power_state(ctrl, ndev->last_ps) != 0)
- 		nvme_reset_ctrl(ctrl);
- 	return 0;
-@@ -2859,6 +2859,8 @@ static int nvme_suspend(struct device *d
- 	struct nvme_ctrl *ctrl = &ndev->ctrl;
- 	int ret = -EBUSY;
- 
-+	ndev->last_ps = U32_MAX;
-+
- 	/*
- 	 * The platform does not remove power for a kernel managed suspend so
- 	 * use host managed nvme power settings for lowest idle power if
-@@ -2866,8 +2868,14 @@ static int nvme_suspend(struct device *d
- 	 * shutdown.  But if the firmware is involved after the suspend or the
- 	 * device does not support any non-default power states, shut down the
- 	 * device fully.
-+	 *
-+	 * If ASPM is not enabled for the device, shut down the device and allow
-+	 * the PCI bus layer to put it into D3 in order to take the PCIe link
-+	 * down, so as to allow the platform to achieve its minimum low-power
-+	 * state (which may not be possible if the link is up).
- 	 */
--	if (pm_suspend_via_firmware() || !ctrl->npss) {
-+	if (pm_suspend_via_firmware() || !ctrl->npss ||
-+	    !pcie_aspm_enabled(pdev)) {
- 		nvme_dev_disable(ndev, true);
- 		return 0;
- 	}
-@@ -2880,9 +2888,8 @@ static int nvme_suspend(struct device *d
- 	    ctrl->state != NVME_CTRL_ADMIN_ONLY)
- 		goto unfreeze;
- 
--	ndev->last_ps = 0;
- 	ret = nvme_get_power_state(ctrl, &ndev->last_ps);
--	if (ret < 0)
-+	if (ret < 0 || ndev->last_ps == U32_MAX)
- 		goto unfreeze;
- 
- 	ret = nvme_set_power_state(ctrl, ctrl->npss);
-Index: linux-pm/drivers/pci/pcie/aspm.c
-===================================================================
---- linux-pm.orig/drivers/pci/pcie/aspm.c
-+++ linux-pm/drivers/pci/pcie/aspm.c
-@@ -1170,6 +1170,26 @@ static int pcie_aspm_get_policy(char *bu
- module_param_call(policy, pcie_aspm_set_policy, pcie_aspm_get_policy,
- 	NULL, 0644);
- 
-+/*
-+ * pcie_aspm_enabled - Return the mask of enabled ASPM link states.
-+ * @pci_device: Target device.
-+ */
-+u32 pcie_aspm_enabled(struct pci_dev *pci_device)
-+{
-+	struct pci_dev *bridge = pci_upstream_bridge(pci_device);
-+	u32 ret;
-+
-+	if (!bridge)
-+		return 0;
-+
-+	mutex_lock(&aspm_lock);
-+	ret = bridge->link_state ? bridge->link_state->aspm_enabled : 0;
-+	mutex_unlock(&aspm_lock);
-+
-+	return ret;
-+}
-+
-+
- #ifdef CONFIG_PCIEASPM_DEBUG
- static ssize_t link_state_show(struct device *dev,
- 		struct device_attribute *attr,
-Index: linux-pm/include/linux/pci.h
-===================================================================
---- linux-pm.orig/include/linux/pci.h
-+++ linux-pm/include/linux/pci.h
-@@ -1567,8 +1567,10 @@ extern bool pcie_ports_native;
- 
- #ifdef CONFIG_PCIEASPM
- bool pcie_aspm_support_enabled(void);
-+u32 pcie_aspm_enabled(struct pci_dev *pci_device);
- #else
- static inline bool pcie_aspm_support_enabled(void) { return false; }
-+static inline u32 pcie_aspm_enabled(struct pci_dev *pci_device) { return 0; }
- #endif
- 
- #ifdef CONFIG_PCIEAER
 
 
+On 2019/8/7 21:03, Michael Ellerman wrote:
+> Jason Yan <yanaijie@huawei.com> writes:
+>> When kaslr is enabled, the kernel offset is different for every boot.
+>> This brings some difficult to debug the kernel. Dump out the kernel
+>> offset when panic so that we can easily debug the kernel.
+> 
+> Some of this is taken from the arm64 version right? Please say so when
+> you copy other people's code.
+> 
+
+No problem. Architectures like x86 or arm64 or s390 both have this
+similar code. I guess x86 is the first one.
+
+>> diff --git a/arch/powerpc/kernel/machine_kexec.c b/arch/powerpc/kernel/machine_kexec.c
+>> index c4ed328a7b96..078fe3d76feb 100644
+>> --- a/arch/powerpc/kernel/machine_kexec.c
+>> +++ b/arch/powerpc/kernel/machine_kexec.c
+>> @@ -86,6 +86,7 @@ void arch_crash_save_vmcoreinfo(void)
+>>   	VMCOREINFO_STRUCT_SIZE(mmu_psize_def);
+>>   	VMCOREINFO_OFFSET(mmu_psize_def, shift);
+>>   #endif
+>> +	vmcoreinfo_append_str("KERNELOFFSET=%lx\n", kaslr_offset());
+>>   }
+> 
+> There's no mention of that in the commit log.
+> 
+> Please split it into a separate patch and describe what you're doing and
+> why.
+
+OK
+
+> 
+>> diff --git a/arch/powerpc/kernel/setup-common.c b/arch/powerpc/kernel/setup-common.c
+>> index 1f8db666468d..064075f02837 100644
+>> --- a/arch/powerpc/kernel/setup-common.c
+>> +++ b/arch/powerpc/kernel/setup-common.c
+>> @@ -715,12 +715,31 @@ static struct notifier_block ppc_panic_block = {
+>>   	.priority = INT_MIN /* may not return; must be done last */
+>>   };
+>>   
+>> +/*
+>> + * Dump out kernel offset information on panic.
+>> + */
+>> +static int dump_kernel_offset(struct notifier_block *self, unsigned long v,
+>> +			      void *p)
+>> +{
+>> +	pr_emerg("Kernel Offset: 0x%lx from 0x%lx\n",
+>> +		 kaslr_offset(), KERNELBASE);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static struct notifier_block kernel_offset_notifier = {
+>> +	.notifier_call = dump_kernel_offset
+>> +};
+>> +
+>>   void __init setup_panic(void)
+>>   {
+>>   	/* PPC64 always does a hard irq disable in its panic handler */
+>>   	if (!IS_ENABLED(CONFIG_PPC64) && !ppc_md.panic)
+>>   		return;
+>>   	atomic_notifier_chain_register(&panic_notifier_list, &ppc_panic_block);
+> 
+>> +	if (IS_ENABLED(CONFIG_RANDOMIZE_BASE) && kaslr_offset() > 0)
+>> +		atomic_notifier_chain_register(&panic_notifier_list,
+>> +					       &kernel_offset_notifier);
+> 
+> Don't you want to do that before the return above?
+> 
+
+Eagle eye. This should not affected by the conditions above.
+
+>>   }
+> 
+> cheers
+> 
+> .
+> 
 
