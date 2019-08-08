@@ -2,286 +2,140 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 113CEC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:57:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBCACC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D18B2217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:57:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B487E217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:58:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404014AbfHHP5M (ORCPT
+        id S2390160AbfHHP6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 11:57:12 -0400
-Received: from sauhun.de ([88.99.104.3]:56634 "EHLO pokefinder.org"
+        Thu, 8 Aug 2019 11:58:51 -0400
+Received: from mga04.intel.com ([192.55.52.120]:42340 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732662AbfHHP5M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 11:57:12 -0400
-Received: from localhost (p5486CA1C.dip0.t-ipconnect.de [84.134.202.28])
-        by pokefinder.org (Postfix) with ESMTPSA id 994732C3112;
-        Thu,  8 Aug 2019 17:57:09 +0200 (CEST)
-Date:   Thu, 8 Aug 2019 17:57:09 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-i2c@vger.kernel.org, Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH] i2c: replace i2c_new_secondary_device with an ERR_PTR
- variant
-Message-ID: <20190808155709.GA1316@ninjato>
-References: <20190722172600.3452-1-wsa+renesas@sang-engineering.com>
- <9b71c556-bd70-4d29-dba5-fbeaefb5f3b4@ideasonboard.com>
+        id S2390115AbfHHP6v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 11:58:51 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Aug 2019 08:58:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,362,1559545200"; 
+   d="scan'208";a="169029082"
+Received: from mcasscle-mobl1.amr.corp.intel.com (HELO [10.251.13.192]) ([10.251.13.192])
+  by orsmga008.jf.intel.com with ESMTP; 08 Aug 2019 08:58:49 -0700
+Subject: Re: [PATCH v2 1/4] dt-bindings: soundwire: add slave bindings
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        vkoul@kernel.org, broonie@kernel.org
+Cc:     bgoswami@codeaurora.org, plai@codeaurora.org, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, lgirdwood@gmail.com,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+References: <20190808144504.24823-1-srinivas.kandagatla@linaro.org>
+ <20190808144504.24823-2-srinivas.kandagatla@linaro.org>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <d346b2af-f285-4c53-b706-46a129ab7951@linux.intel.com>
+Date:   Thu, 8 Aug 2019 10:58:49 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="sm4nu43k4a2Rpi4c"
-Content-Disposition: inline
-In-Reply-To: <9b71c556-bd70-4d29-dba5-fbeaefb5f3b4@ideasonboard.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190808144504.24823-2-srinivas.kandagatla@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---sm4nu43k4a2Rpi4c
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> +++ b/Documentation/devicetree/bindings/soundwire/slave.txt
+> @@ -0,0 +1,46 @@
+> +SoundWire slave device bindings.
+> +
+> +SoundWire is a 2-pin multi-drop interface with data and clock line.
+> +It facilitates development of low cost, efficient, high performance systems.
+> +
+> +SoundWire slave devices:
+> +Every SoundWire controller node can contain zero or more child nodes
+> +representing slave devices on the bus. Every SoundWire slave device is
+> +uniquely determined by the enumeration address containing 5 fields:
+> +SoundWire Version, Instance ID, Manufacturer ID, Part ID and Class ID
+> +for a device. Addition to below required properties, child nodes can
+> +have device specific bindings.
 
-On Tue, Jul 23, 2019 at 04:47:09PM +0100, Kieran Bingham wrote:
-> Hi Wolfram,
->=20
-> On 22/07/2019 18:26, Wolfram Sang wrote:
-> > In the general move to have i2c_new_*_device functions which return
-> > ERR_PTR instead of NULL, this patch converts i2c_new_secondary_device().
-> >=20
-> > There are only few users, so this patch converts the I2C core and all
-> > users in one go. The function gets renamed to i2c_new_ancillary_device()
-> > so out-of-tree users will get a build failure to understand they need to
-> > adapt their error checking code.
-> >=20
-> > Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> > ---
-> >=20
-> > Kindly asking for acks/revs/tests from people knowing the modified
-> > drivers.
->=20
-> Certainly, this looks good for the adv748x.
->=20
-> The ADV7511, and adv7604 are not mine, but they also look fine to me.
->=20
-> Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+In case the controller supports multiple links, what's the encoding then?
+in the MIPI DisCo spec there is a linkId field in the _ADR encoding that 
+helps identify which link the Slave device is connected to
 
+> +
+> +Required property for SoundWire child node if it is present:
+> +- compatible:	 "sdwVER,MFD,PID,CID". The textual representation of
+> +		  SoundWire Enumeration address comprising SoundWire
+> +		  Version, Manufacturer ID, Part ID and Class ID,
+> +		  shall be in lower-case hexadecimal with leading
+> +		  zeroes suppressed.
+> +		  Version number '0x10' represents SoundWire 1.0
+> +		  Version number '0x11' represents SoundWire 1.1
+> +		  ex: "sdw10,0217,2010,0"
+> +
+> +- sdw-instance-id: Should be ('Instance ID') from SoundWire
+> +		  Enumeration Address. Instance ID is for the cases
+> +		  where multiple Devices of the same type or Class
+> +		  are attached to the bus.
 
-Thanks, Kieran! Gently pinging for acks for ADV7511 and ADV7604.
+so it is actually required if you have a single Slave device? Or is it 
+only required when you have more than 1 device of the same type?
 
+FWIW in the MIPI DisCo spec we kept the instanceID as part of the _ADR, 
+so it's implicitly mandatory (and ignored by the bus if there is only 
+one device of the same time)
 
->=20
->=20
-> >  drivers/gpu/drm/bridge/adv7511/adv7511_drv.c | 18 +++++++++---------
-> >  drivers/i2c/i2c-core-base.c                  | 10 +++++-----
-> >  drivers/media/i2c/adv748x/adv748x-core.c     |  6 +++---
-> >  drivers/media/i2c/adv7604.c                  | 10 +++++-----
-> >  include/linux/i2c.h                          |  2 +-
-> >  5 files changed, 23 insertions(+), 23 deletions(-)
-> >=20
-> > diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c b/drivers/gpu=
-/drm/bridge/adv7511/adv7511_drv.c
-> > index f6d2681f6927..9e13e466e72c 100644
-> > --- a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
-> > +++ b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
-> > @@ -981,10 +981,10 @@ static int adv7511_init_cec_regmap(struct adv7511=
- *adv)
-> >  {
-> >  	int ret;
-> > =20
-> > -	adv->i2c_cec =3D i2c_new_secondary_device(adv->i2c_main, "cec",
-> > +	adv->i2c_cec =3D i2c_new_ancillary_device(adv->i2c_main, "cec",
-> >  						ADV7511_CEC_I2C_ADDR_DEFAULT);
-> > -	if (!adv->i2c_cec)
-> > -		return -EINVAL;
-> > +	if (IS_ERR(adv->i2c_cec))
-> > +		return PTR_ERR(adv->i2c_cec);
-> >  	i2c_set_clientdata(adv->i2c_cec, adv);
-> > =20
-> >  	adv->regmap_cec =3D devm_regmap_init_i2c(adv->i2c_cec,
-> > @@ -1165,20 +1165,20 @@ static int adv7511_probe(struct i2c_client *i2c=
-, const struct i2c_device_id *id)
-> > =20
-> >  	adv7511_packet_disable(adv7511, 0xffff);
-> > =20
-> > -	adv7511->i2c_edid =3D i2c_new_secondary_device(i2c, "edid",
-> > +	adv7511->i2c_edid =3D i2c_new_ancillary_device(i2c, "edid",
-> >  					ADV7511_EDID_I2C_ADDR_DEFAULT);
-> > -	if (!adv7511->i2c_edid) {
-> > -		ret =3D -EINVAL;
-> > +	if (IS_ERR(adv7511->i2c_edid)) {
-> > +		ret =3D PTR_ERR(adv7511->i2c_edid);
-> >  		goto uninit_regulators;
-> >  	}
-> > =20
-> >  	regmap_write(adv7511->regmap, ADV7511_REG_EDID_I2C_ADDR,
-> >  		     adv7511->i2c_edid->addr << 1);
-> > =20
-> > -	adv7511->i2c_packet =3D i2c_new_secondary_device(i2c, "packet",
-> > +	adv7511->i2c_packet =3D i2c_new_ancillary_device(i2c, "packet",
-> >  					ADV7511_PACKET_I2C_ADDR_DEFAULT);
-> > -	if (!adv7511->i2c_packet) {
-> > -		ret =3D -EINVAL;
-> > +	if (IS_ERR(adv7511->i2c_packet)) {
-> > +		ret =3D PTR_ERR(adv7511->i2c_packet);
-> >  		goto err_i2c_unregister_edid;
-> >  	}
-> > =20
-> > diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-> > index f26ed495d384..76cb91e064b8 100644
-> > --- a/drivers/i2c/i2c-core-base.c
-> > +++ b/drivers/i2c/i2c-core-base.c
-> > @@ -966,7 +966,7 @@ struct i2c_client *devm_i2c_new_dummy_device(struct=
- device *dev,
-> >  EXPORT_SYMBOL_GPL(devm_i2c_new_dummy_device);
-> > =20
-> >  /**
-> > - * i2c_new_secondary_device - Helper to get the instantiated secondary=
- address
-> > + * i2c_new_ancillary_device - Helper to get the instantiated secondary=
- address
-> >   * and create the associated device
-> >   * @client: Handle to the primary client
-> >   * @name: Handle to specify which secondary address to get
-> > @@ -985,9 +985,9 @@ EXPORT_SYMBOL_GPL(devm_i2c_new_dummy_device);
-> >   * cell whose "reg-names" value matches the slave name.
-> >   *
-> >   * This returns the new i2c client, which should be saved for later us=
-e with
-> > - * i2c_unregister_device(); or NULL to indicate an error.
-> > + * i2c_unregister_device(); or an ERR_PTR to describe the error.
-> >   */
-> > -struct i2c_client *i2c_new_secondary_device(struct i2c_client *client,
-> > +struct i2c_client *i2c_new_ancillary_device(struct i2c_client *client,
-> >  						const char *name,
-> >  						u16 default_addr)
-> >  {
-> > @@ -1002,9 +1002,9 @@ struct i2c_client *i2c_new_secondary_device(struc=
-t i2c_client *client,
-> >  	}
-> > =20
-> >  	dev_dbg(&client->adapter->dev, "Address for %s : 0x%x\n", name, addr);
-> > -	return i2c_new_dummy(client->adapter, addr);
-> > +	return i2c_new_dummy_device(client->adapter, addr);
-> >  }
-> > -EXPORT_SYMBOL_GPL(i2c_new_secondary_device);
-> > +EXPORT_SYMBOL_GPL(i2c_new_ancillary_device);
-> > =20
-> >  /* -------------------------------------------------------------------=
------- */
-> > =20
-> > diff --git a/drivers/media/i2c/adv748x/adv748x-core.c b/drivers/media/i=
-2c/adv748x/adv748x-core.c
-> > index f57cd77a32fa..2567de2b0037 100644
-> > --- a/drivers/media/i2c/adv748x/adv748x-core.c
-> > +++ b/drivers/media/i2c/adv748x/adv748x-core.c
-> > @@ -183,14 +183,14 @@ static int adv748x_initialise_clients(struct adv7=
-48x_state *state)
-> >  	int ret;
-> > =20
-> >  	for (i =3D ADV748X_PAGE_DPLL; i < ADV748X_PAGE_MAX; ++i) {
-> > -		state->i2c_clients[i] =3D i2c_new_secondary_device(
-> > +		state->i2c_clients[i] =3D i2c_new_ancillary_device(
-> >  				state->client,
-> >  				adv748x_default_addresses[i].name,
-> >  				adv748x_default_addresses[i].default_addr);
-> > =20
-> > -		if (state->i2c_clients[i] =3D=3D NULL) {
-> > +		if (IS_ERR(state->i2c_clients[i])) {
-> >  			adv_err(state, "failed to create i2c client %u\n", i);
-> > -			return -ENOMEM;
-> > +			return PTR_ERR(state->i2c_clients[i]);
-> >  		}
-> > =20
-> >  		ret =3D adv748x_configure_regmap(state, i);
-> > diff --git a/drivers/media/i2c/adv7604.c b/drivers/media/i2c/adv7604.c
-> > index 28a84bf9f8a9..8ed1d9b59dd2 100644
-> > --- a/drivers/media/i2c/adv7604.c
-> > +++ b/drivers/media/i2c/adv7604.c
-> > @@ -2878,14 +2878,14 @@ static struct i2c_client *adv76xx_dummy_client(=
-struct v4l2_subdev *sd,
-> >  	struct i2c_client *new_client;
-> > =20
-> >  	if (pdata && pdata->i2c_addresses[page])
-> > -		new_client =3D i2c_new_dummy(client->adapter,
-> > +		new_client =3D i2c_new_dummy_device(client->adapter,
-> >  					   pdata->i2c_addresses[page]);
-> >  	else
-> > -		new_client =3D i2c_new_secondary_device(client,
-> > +		new_client =3D i2c_new_ancillary_device(client,
-> >  				adv76xx_default_addresses[page].name,
-> >  				adv76xx_default_addresses[page].default_addr);
-> > =20
-> > -	if (new_client)
-> > +	if (!IS_ERR(new_client))
-> >  		io_write(sd, io_reg, new_client->addr << 1);
-> > =20
-> >  	return new_client;
-> > @@ -3520,8 +3520,8 @@ static int adv76xx_probe(struct i2c_client *clien=
-t,
-> >  			continue;
-> > =20
-> >  		state->i2c_clients[i] =3D adv76xx_dummy_client(sd, i);
-> > -		if (!state->i2c_clients[i]) {
-> > -			err =3D -EINVAL;
-> > +		if (IS_ERR(state->i2c_clients[i])) {
-> > +			err =3D PTR_ERR(state->i2c_clients[i]);
-> >  			v4l2_err(sd, "failed to create i2c client %u\n", i);
-> >  			goto err_i2c;
-> >  		}
-> > diff --git a/include/linux/i2c.h b/include/linux/i2c.h
-> > index fa5552c2307b..ebbe024dd9e0 100644
-> > --- a/include/linux/i2c.h
-> > +++ b/include/linux/i2c.h
-> > @@ -473,7 +473,7 @@ extern struct i2c_client *
-> >  devm_i2c_new_dummy_device(struct device *dev, struct i2c_adapter *adap=
-, u16 address);
-> > =20
-> >  extern struct i2c_client *
-> > -i2c_new_secondary_device(struct i2c_client *client,
-> > +i2c_new_ancillary_device(struct i2c_client *client,
-> >  				const char *name,
-> >  				u16 default_addr);
-> > =20
-> >=20
->=20
-> --=20
-> Regards
-> --
-> Kieran
+> +
+> +SoundWire example for Qualcomm's SoundWire controller:
+> +
+> +soundwire@c2d0000 {
+> +	compatible = "qcom,soundwire-v1.5.0"
+> +	reg = <0x0c2d0000 0x2000>;
+> +
+> +	spkr_left:wsa8810-left{
+> +		compatible = "sdw10,0217,2010,0";
+> +		sdw-instance-id = <1>;
+> +		...
+> +	};
+> +
+> +	spkr_right:wsa8810-right{
+> +		compatible = "sdw10,0217,2010,0";
+> +		sdw-instance-id = <2>;
 
---sm4nu43k4a2Rpi4c
-Content-Type: application/pgp-signature; name="signature.asc"
+Isn't the MIPI encoding reported in the Dev_ID0..5 registers 0-based?
 
------BEGIN PGP SIGNATURE-----
+> +		...
+> +	};
+> +};
+> 
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1MRlEACgkQFA3kzBSg
-KbY75g/+KoLVKl50vLnV8t/WlRCPjw1QiiofzMQ5Dtt3N9HwGWPvXqbQ11KUL0He
-27nMKf1Chf1V9iwnkPCoUluLU5l2ZqFJcvW5VvHMtvGHDky1On/5IrdhwJdEPyXR
-m4CfqQKxGkvJCJTrIYDMYFANcDpTUvtoqDqPCfcT0NcbhiC5hQvn4eIvHbv4jy4S
-8nHBv4FV6GIIlmi1c1Iux2AmbTOKwtL9uo5VEeefWin6m8NXrfMxpVZmpxoDyjAJ
-Xz6ZrZKEl0VAXHgBa7CIJ6N5S2W5jMq3ZETRJuBZj4qgoYcDQhnaSxz4ksT+VIG9
-7rSEpBCXw8wsW0N1INB1mZpiSArg6BwALbXzHsB0UaOrQwMKqNG/WHm79Gl22uZ5
-RUnvUwcKjXvsxnSL7V8p+jTIUmGuIr1ytWazySOACePgePGNIwMthIYKBvquu+/v
-nbkWeEzDPpZq9jZhcRpwfseQodVrgsTwR6a556L928iF9cRFWDxhU4FjZyfiNkzt
-8jONRD4EXlXygcFuNkOROZ7/Aa5+EIikUSoCNRXOm8TqR9ptpHMh1gAwlfIgnGjO
-kKpa7JyZLS7Uc/3kw+tShClsExYPRc1hG+EW/f31CZ4BpajQ+q50Ilf7/eqNbsQi
-EaLNAZbjMhNZQ3+YQ4IB3WwK53VQP65sU8uxGqwsBVvlCoey5Lc=
-=oIN2
------END PGP SIGNATURE-----
+And now that I think of it, wouldn't it be simpler for everyone if we 
+aligned on that MIPI DisCo public spec? e.g. you'd have one property 
+with a 64-bit number that follows the MIPI spec. No special encoding 
+necessary for device tree cases, your DT blob would use this:
 
---sm4nu43k4a2Rpi4c--
+soundwire@c2d0000 {
+	compatible = "qcom,soundwire-v1.5.0"
+	reg = <0x0c2d0000 0x2000>;
+
+	spkr_left:wsa8810-left{
+		compatible = "sdw0000100217201000"
+	}
+
+	spkr_right:wsa8810-right{
+		compatible = "sdw0000100217201100"
+	}
+}
+
+We could use parentheses if it makes people happier, but the information 
+from the MIPI DisCo spec can be used as is, and provide a means for spec 
+changes via reserved bits.
