@@ -2,402 +2,234 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B981FC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 21:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0703C32754
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 21:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B4D7216C8
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 21:30:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3155216C8
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 21:31:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390457AbfHHVaV (ORCPT
+        id S2390467AbfHHVbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 17:30:21 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:11634 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2390446AbfHHVaV (ORCPT
+        Thu, 8 Aug 2019 17:31:17 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:42593 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728020AbfHHVbR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 17:30:21 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x78LOgZ6032704
-        for <linux-kernel@vger.kernel.org>; Thu, 8 Aug 2019 17:30:18 -0400
-Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2u8rep7ruu-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 17:30:18 -0400
-Received: from localhost
-        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Thu, 8 Aug 2019 22:30:17 +0100
-Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
-        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 8 Aug 2019 22:30:12 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x78LUBH047382834
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 8 Aug 2019 21:30:11 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 57E11B205F;
-        Thu,  8 Aug 2019 21:30:11 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2A290B2066;
-        Thu,  8 Aug 2019 21:30:11 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu,  8 Aug 2019 21:30:11 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 94AD416C9A2E; Thu,  8 Aug 2019 14:30:12 -0700 (PDT)
-Date:   Thu, 8 Aug 2019 14:30:12 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@kernel.org, jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, rostedt@goodmis.org,
-        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
-        oleg@redhat.com, joel@joelfernandes.org
-Subject: Re: [PATCH RFC tip/core/rcu 14/14] rcu/nohz: Make multi_cpu_stop()
- enable tick on all online CPUs
-Reply-To: paulmck@linux.ibm.com
-References: <20190804144317.GF2349@hirez.programming.kicks-ass.net>
- <20190804144835.GB2386@hirez.programming.kicks-ass.net>
- <20190804184159.GC28441@linux.ibm.com>
- <20190805080531.GH2349@hirez.programming.kicks-ass.net>
- <20190805145448.GI28441@linux.ibm.com>
- <20190805155024.GK2332@hirez.programming.kicks-ass.net>
- <20190805174800.GK28441@linux.ibm.com>
- <20190806180824.GA28448@linux.ibm.com>
- <20190807214131.GA15124@linux.ibm.com>
- <20190808203541.GA8160@linux.ibm.com>
+        Thu, 8 Aug 2019 17:31:17 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MRVy9-1hhrWF2GCz-00NOKO; Thu, 08 Aug 2019 23:30:54 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Tony Lindgren <tony@atomide.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Arnd Bergmann <arnd@arndb.de>, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 09/22] fbdev: omap: avoid using mach/*.h files
+Date:   Thu,  8 Aug 2019 23:22:18 +0200
+Message-Id: <20190808212234.2213262-10-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20190808212234.2213262-1-arnd@arndb.de>
+References: <20190808212234.2213262-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190808203541.GA8160@linux.ibm.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19080821-0060-0000-0000-0000036B2416
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011571; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000287; SDB=6.01244014; UDB=6.00656291; IPR=6.01025493;
- MB=3.00028097; MTD=3.00000008; XFM=3.00000015; UTC=2019-08-08 21:30:16
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19080821-0061-0000-0000-00004A7AC423
-Message-Id: <20190808213012.GA28773@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-08_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908080188
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:88szA/Fo8mKxxZtSI6a/3DryoEp3R0RLjKS0a4qc6cmQ6XF/WLN
+ W6t9LZZrLHyweQaVq4It4vpP6q85bngaTLNjJhSu5Zs2FGsc54mk16/FUff6KabydJOjjCe
+ gSmfFkLusQj3C1K+t2nV3Wqk3CMDq1pgtV+FfUcRXuvH8yvWc3/+WkYXaDaoJQ/KokIL5Gr
+ xffTou6CcBEBFvrAC7+Ag==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:6N8ZFBB2B8Y=:wwhyQ2dKFdjd+6txhxm6GB
+ r5EWrXStpxQkas/tMQjlyNgIuWpDTVEGNewKIx4571rKYanefuhEZP0pD3j2pjFRdNzg5UgW+
+ IW7CzqHLPdUm85HJLglUX7OqEOcVEbgGAI1kCxHvXS1uOvbmi7D2v1c7w/yFoBi+vwWVS8LMC
+ aDov4Mh+N2gS8ZThs48vRk+9QD7cxwEEL8X/KY9uzByDaCWMzl/TCZ3Jh6fDzEz8gLit7wkEv
+ 4JZLpB3hartGRTwG+xBsKnN88mk4uf/CDeVnuk7PPbUHKr24BUHqNIqEZL5xsH6QHc5aAR7Hz
+ gRGxaUH6+xvfrWQsKR+4BVWyHEWi3DK7jRLdTDHoA9G0e9QOSV2qwxXqDKyLbuYsjUKFLnRLR
+ HnxedBZ1eZoQXa7u0JGSC3gTvrZODSrSNLszP37JOJu5YYZ2Xk3Z/89TeOGvfjXQHd+pY3I+a
+ qgQxEoY3gquwky6+fW1cac+0CMNSLt0rLsz4B/FSaOPcpddCWCFi7g56CFoGYRWStLTdMI3ku
+ VsedmQ+8yonko1eXRZbay8pU8N/GF4B7zrZKut9GQYn0tU3zh3gak2KJPmQQ3rxDT2ay263OF
+ GKprQYzYiToguAEYLSmF0fj+PvLCyShLqvTE0X9bwMYJ74sQrNCo7ua2Qs9aDs+Lb4jZ8A34Q
+ g6EE4OlJUTq14Pq3PRMnoKSvhNov8EeS6ihQ6jSwX2ds7twSs2Uvp3NvVraWllP7kdtbLG4ZL
+ CY7+25N0BR2fUkAk9y/nUxS35Oa1K3St34qBFQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 01:35:41PM -0700, Paul E. McKenney wrote:
-> On Wed, Aug 07, 2019 at 02:41:31PM -0700, Paul E. McKenney wrote:
-> > On Tue, Aug 06, 2019 at 11:08:24AM -0700, Paul E. McKenney wrote:
-> > > On Mon, Aug 05, 2019 at 10:48:00AM -0700, Paul E. McKenney wrote:
-> > > > On Mon, Aug 05, 2019 at 05:50:24PM +0200, Peter Zijlstra wrote:
-> > > > > On Mon, Aug 05, 2019 at 07:54:48AM -0700, Paul E. McKenney wrote:
-> > > > > 
-> > > > > > > Right; so clearly we're not understanding what's happening. That seems
-> > > > > > > like a requirement for actually doing a patch.
-> > > > > > 
-> > > > > > Almost but not quite.  It is a requirement for a patch *that* *is*
-> > > > > > *supposed* *to* *be* *a* *fix*.  If you are trying to prohibit me from
-> > > > > > writing experimental patches, please feel free to take a long walk on
-> > > > > > a short pier.
-> > > > > > 
-> > > > > > Understood???
-> > > > > 
-> > > > > Ah, my bad, I thought you were actually proposing this as an actual
-> > > > > patch. I now see that is my bad, I'd overlooked the RFC part.
-> > > > 
-> > > > No problem!
-> > > > 
-> > > > And of course adding tracing decreases the frequency and duration of
-> > > > the multi_cpu_stop().  Re-running with shorter-duration triggering.  ;-)
-> > > 
-> > > And I did eventually get a good trace.  If I am interpreting this trace
-> > > correctly, the torture_-135 task didn't get around to attempting to wake
-> > > up all of the CPUs.  I will try again, but this time with the sched_switch
-> > > trace event enabled.
-> > > 
-> > > As a side note, enabling ftrace from the command line seems to interact
-> > > badly with turning tracing off and on in the kernel, so I eventually
-> > > resorted to trace_printk() in the functions of interest.  The trace
-> > > output is below, followed by the current diagnostic patch.  Please note
-> > > that I am -not- using the desperation hammer-the-scheduler patches.
-> > > 
-> > > More as I learn more!
-> > 
-> > And of course I forgot to dump out the online CPUs, so I really had no
-> > idea whether or not all the CPUs were accounted for.  I added tracing
-> > to dump out the online CPUs at the beginning of __stop_cpus() and then
-> > reworked it a few times to get the problem to happen in reasonable time.
-> > Please see below for the resulting annotated trace.
-> > 
-> > I was primed to expect a lost IPI, perhaps due to yet another qemu bug,
-> > but all the migration threads are running within about 2 milliseconds.
-> > It is then almost two minutes(!) until the next trace message.
-> > 
-> > Looks like time to (very carefully!) instrument multi_cpu_stop().
-> > 
-> > Of course, if you have any ideas, please do not keep them a secret!
-> 
-> Functionally, multi_cpu_stop() is working fine, according to the trace
-> below (search for a line beginning with TAB).  But somehow CPU 2 took
-> almost three -minutes- to do one iteration of the loop.  The prime suspect
-> in that loop is cpu_relax() due to the hypervisor having an opportunity
-> to do something at that point.  The commentary below (again, search for
-> a line beginning with TAB) gives my analysis.
-> 
-> Of course, if I am correct, it should be possible to catch cpu_relax()
-> in the act.  That is the next step, give or take the Heisenbuggy nature
-> of this beast.
-> 
-> Another thing for me to try is to run longer with !NO_HZ_FULL, just in
-> case the earlier runs just got lucky.
-> 
-> Thoughts?
+All the headers we actually need are now in include/linux/soc,
+so use those versions instead and allow compile-testing on
+other architectures.
 
-And it really can happen:
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/video/backlight/Kconfig          | 4 ++--
+ drivers/video/backlight/omap1_bl.c       | 4 ++--
+ drivers/video/fbdev/omap/Kconfig         | 4 ++--
+ drivers/video/fbdev/omap/lcd_ams_delta.c | 2 +-
+ drivers/video/fbdev/omap/lcd_dma.c       | 3 ++-
+ drivers/video/fbdev/omap/lcd_inn1510.c   | 2 +-
+ drivers/video/fbdev/omap/lcd_osk.c       | 4 ++--
+ drivers/video/fbdev/omap/lcdc.c          | 2 ++
+ drivers/video/fbdev/omap/omapfb_main.c   | 3 +--
+ drivers/video/fbdev/omap/sossi.c         | 1 +
+ 10 files changed, 16 insertions(+), 13 deletions(-)
 
-[ 1881.467922] migratio-33      4...1 1879530317us : stop_machine_yield: cpu_relax() took 756140 ms
-
-The previous timestamp was 1123391100us, so the cpu_relax() is almost
-exactly the full delay.
-
-But another instance stalled for many minutes without a ten-second
-cpu_relax().  So it is not just cpu_relax() causing trouble.  I could
-rationalize that vCPU preemption being at fault...
-
-And my diagnostic patch is below, just in case I am doing something
-stupid with that.
-
-							Thanx, Paul
-
-------------------------------------------------------------------------
-
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index ce00b442ced0..1a50ed258ef0 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -3569,6 +3569,7 @@ void __init rcu_init(void)
- 	rcu_par_gp_wq = alloc_workqueue("rcu_par_gp", WQ_MEM_RECLAIM, 0);
- 	WARN_ON(!rcu_par_gp_wq);
- 	srcu_init();
-+	tracing_off();
- }
+diff --git a/drivers/video/backlight/Kconfig b/drivers/video/backlight/Kconfig
+index 8b081d61773e..195c71130827 100644
+--- a/drivers/video/backlight/Kconfig
++++ b/drivers/video/backlight/Kconfig
+@@ -213,8 +213,8 @@ config BACKLIGHT_LOCOMO
  
- #include "tree_stall.h"
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 0b22e55cebe8..a5a879a49051 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -479,6 +479,7 @@ void wake_up_q(struct wake_q_head *head)
- {
- 	struct wake_q_node *node = head->first;
+ config BACKLIGHT_OMAP1
+ 	tristate "OMAP1 PWL-based LCD Backlight"
+-	depends on ARCH_OMAP1
+-	default y
++	depends on ARCH_OMAP1 || COMPILE_TEST
++	default ARCH_OMAP1
+ 	help
+ 	  This driver controls the LCD backlight level and power for
+ 	  the PWL module of OMAP1 processors.  Say Y if your board
+diff --git a/drivers/video/backlight/omap1_bl.c b/drivers/video/backlight/omap1_bl.c
+index 74263021b1b3..69a49384b3de 100644
+--- a/drivers/video/backlight/omap1_bl.c
++++ b/drivers/video/backlight/omap1_bl.c
+@@ -14,8 +14,8 @@
+ #include <linux/slab.h>
+ #include <linux/platform_data/omap1_bl.h>
  
-+	trace_printk("entered\n");
- 	while (node != WAKE_Q_TAIL) {
- 		struct task_struct *task;
+-#include <mach/hardware.h>
+-#include <mach/mux.h>
++#include <linux/soc/ti/omap1-io.h>
++#include <linux/soc/ti/omap1-mux.h>
  
-@@ -509,6 +510,7 @@ void resched_curr(struct rq *rq)
- 	struct task_struct *curr = rq->curr;
- 	int cpu;
+ #define OMAPBL_MAX_INTENSITY		0xff
  
-+	trace_printk("entered\n");
- 	lockdep_assert_held(&rq->lock);
+diff --git a/drivers/video/fbdev/omap/Kconfig b/drivers/video/fbdev/omap/Kconfig
+index df2a5d0d4aa2..b1786cf1b486 100644
+--- a/drivers/video/fbdev/omap/Kconfig
++++ b/drivers/video/fbdev/omap/Kconfig
+@@ -2,7 +2,7 @@
+ config FB_OMAP
+ 	tristate "OMAP frame buffer support"
+ 	depends on FB
+-	depends on ARCH_OMAP1
++	depends on ARCH_OMAP1 || (ARM && COMPILE_TEST)
+ 	select FB_CFB_FILLRECT
+ 	select FB_CFB_COPYAREA
+ 	select FB_CFB_IMAGEBLIT
+@@ -42,7 +42,7 @@ config FB_OMAP_LCD_MIPID
  
- 	if (test_tsk_need_resched(curr))
-@@ -1197,6 +1199,7 @@ static inline void dequeue_task(struct rq *rq, struct task_struct *p, int flags)
+ config FB_OMAP_LCD_H3
+ 	bool "TPS65010 LCD controller on OMAP-H3"
+-	depends on MACH_OMAP_H3
++	depends on MACH_OMAP_H3 || COMPILE_TEST
+ 	depends on TPS65010=y
+ 	default y
+ 	help
+diff --git a/drivers/video/fbdev/omap/lcd_ams_delta.c b/drivers/video/fbdev/omap/lcd_ams_delta.c
+index 8e54aae544a0..da2e32615abe 100644
+--- a/drivers/video/fbdev/omap/lcd_ams_delta.c
++++ b/drivers/video/fbdev/omap/lcd_ams_delta.c
+@@ -14,7 +14,7 @@
+ #include <linux/gpio/consumer.h>
+ #include <linux/lcd.h>
  
- void activate_task(struct rq *rq, struct task_struct *p, int flags)
- {
-+	trace_printk("entered\n");
- 	if (task_contributes_to_load(p))
- 		rq->nr_uninterruptible--;
+-#include <mach/hardware.h>
++#include <linux/soc/ti/omap1-io.h>
  
-@@ -1298,6 +1301,7 @@ void check_preempt_curr(struct rq *rq, struct task_struct *p, int flags)
- {
- 	const struct sched_class *class;
+ #include "omapfb.h"
  
-+	trace_printk("entered\n");
- 	if (p->sched_class == rq->curr->sched_class) {
- 		rq->curr->sched_class->check_preempt_curr(rq, p, flags);
- 	} else {
-@@ -2097,6 +2101,7 @@ ttwu_stat(struct task_struct *p, int cpu, int wake_flags)
- static void ttwu_do_wakeup(struct rq *rq, struct task_struct *p, int wake_flags,
- 			   struct rq_flags *rf)
- {
-+	trace_printk("entered\n");
- 	check_preempt_curr(rq, p, wake_flags);
- 	p->state = TASK_RUNNING;
- 	trace_sched_wakeup(p);
-@@ -2132,6 +2137,7 @@ ttwu_do_activate(struct rq *rq, struct task_struct *p, int wake_flags,
- {
- 	int en_flags = ENQUEUE_WAKEUP | ENQUEUE_NOCLOCK;
+diff --git a/drivers/video/fbdev/omap/lcd_dma.c b/drivers/video/fbdev/omap/lcd_dma.c
+index 867a63c06f42..f85817635a8c 100644
+--- a/drivers/video/fbdev/omap/lcd_dma.c
++++ b/drivers/video/fbdev/omap/lcd_dma.c
+@@ -25,7 +25,8 @@
  
-+	trace_printk("entered\n");
- 	lockdep_assert_held(&rq->lock);
+ #include <linux/omap-dma.h>
  
- #ifdef CONFIG_SMP
-@@ -2178,9 +2184,11 @@ void sched_ttwu_pending(void)
- 	struct task_struct *p, *t;
- 	struct rq_flags rf;
+-#include <mach/hardware.h>
++#include <linux/soc/ti/omap1-soc.h>
++#include <linux/soc/ti/omap1-io.h>
  
-+	trace_printk("entered\n");
- 	if (!llist)
- 		return;
+ #include "lcdc.h"
+ #include "lcd_dma.h"
+diff --git a/drivers/video/fbdev/omap/lcd_inn1510.c b/drivers/video/fbdev/omap/lcd_inn1510.c
+index 37ed0c14aa5a..bb915637e9b6 100644
+--- a/drivers/video/fbdev/omap/lcd_inn1510.c
++++ b/drivers/video/fbdev/omap/lcd_inn1510.c
+@@ -10,7 +10,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/io.h>
  
-+	trace_printk("non-NULL llist\n");
- 	rq_lock_irqsave(rq, &rf);
- 	update_rq_clock(rq);
+-#include <mach/hardware.h>
++#include <linux/soc/ti/omap1-soc.h>
  
-@@ -2192,6 +2200,7 @@ void sched_ttwu_pending(void)
+ #include "omapfb.h"
  
- void scheduler_ipi(void)
- {
-+	trace_printk("entered\n");
- 	/*
- 	 * Fold TIF_NEED_RESCHED into the preempt_count; anybody setting
- 	 * TIF_NEED_RESCHED remotely (for the first time) will also send
-@@ -2232,6 +2241,7 @@ static void ttwu_queue_remote(struct task_struct *p, int cpu, int wake_flags)
- {
- 	struct rq *rq = cpu_rq(cpu);
+diff --git a/drivers/video/fbdev/omap/lcd_osk.c b/drivers/video/fbdev/omap/lcd_osk.c
+index 5d5762128c8d..8168ba0d47fd 100644
+--- a/drivers/video/fbdev/omap/lcd_osk.c
++++ b/drivers/video/fbdev/omap/lcd_osk.c
+@@ -11,8 +11,8 @@
+ #include <linux/platform_device.h>
+ #include <linux/gpio.h>
  
-+	trace_printk("%s entered, CPU %d\n", __func__, cpu);
- 	p->sched_remote_wakeup = !!(wake_flags & WF_MIGRATED);
+-#include <mach/hardware.h>
+-#include <mach/mux.h>
++#include <linux/soc/ti/omap1-io.h>
++#include <linux/soc/ti/omap1-mux.h>
  
- 	if (llist_add(&p->wake_entry, &cpu_rq(cpu)->wake_list)) {
-@@ -2277,6 +2287,7 @@ static void ttwu_queue(struct task_struct *p, int cpu, int wake_flags)
- 	struct rq *rq = cpu_rq(cpu);
- 	struct rq_flags rf;
+ #include "omapfb.h"
  
-+	trace_printk("%s entered\n", __func__);
- #if defined(CONFIG_SMP)
- 	if (sched_feat(TTWU_QUEUE) && !cpus_share_cache(smp_processor_id(), cpu)) {
- 		sched_clock_cpu(cpu); /* Sync clocks across CPUs */
-@@ -2399,6 +2410,7 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
- 	unsigned long flags;
- 	int cpu, success = 0;
+diff --git a/drivers/video/fbdev/omap/lcdc.c b/drivers/video/fbdev/omap/lcdc.c
+index 65953b7fbdb9..3af758f12afd 100644
+--- a/drivers/video/fbdev/omap/lcdc.c
++++ b/drivers/video/fbdev/omap/lcdc.c
+@@ -17,6 +17,8 @@
+ #include <linux/clk.h>
+ #include <linux/gfp.h>
  
-+	trace_printk("entered\n");
- 	preempt_disable();
- 	if (p == current) {
- 		/*
-@@ -2545,6 +2557,7 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
-  */
- int wake_up_process(struct task_struct *p)
- {
-+	trace_printk("entered\n");
- 	return try_to_wake_up(p, TASK_NORMAL, 0);
- }
- EXPORT_SYMBOL(wake_up_process);
-diff --git a/kernel/stop_machine.c b/kernel/stop_machine.c
-index 5c2b2f90fae1..a07f77b9c1f2 100644
---- a/kernel/stop_machine.c
-+++ b/kernel/stop_machine.c
-@@ -21,6 +21,7 @@
- #include <linux/atomic.h>
- #include <linux/nmi.h>
- #include <linux/sched/wake_q.h>
-+#include <linux/sched/clock.h>
++#include <linux/soc/ti/omap1-io.h>
++#include <linux/soc/ti/omap1-soc.h>
+ #include <linux/omap-dma.h>
  
- /*
-  * Structure to determine completion condition and record errors.  May
-@@ -80,6 +81,7 @@ static bool cpu_stop_queue_work(unsigned int cpu, struct cpu_stop_work *work)
- 	unsigned long flags;
- 	bool enabled;
+ #include <asm/mach-types.h>
+diff --git a/drivers/video/fbdev/omap/omapfb_main.c b/drivers/video/fbdev/omap/omapfb_main.c
+index dc06057de91d..af73a3f9ac53 100644
+--- a/drivers/video/fbdev/omap/omapfb_main.c
++++ b/drivers/video/fbdev/omap/omapfb_main.c
+@@ -19,8 +19,7 @@
  
-+	trace_printk("entered for CPU %u\n", cpu);
- 	preempt_disable();
- 	raw_spin_lock_irqsave(&stopper->lock, flags);
- 	enabled = stopper->enabled;
-@@ -167,7 +169,7 @@ static void set_state(struct multi_stop_data *msdata,
- 	/* Reset ack counter. */
- 	atomic_set(&msdata->thread_ack, msdata->num_threads);
- 	smp_wmb();
--	msdata->state = newstate;
-+	WRITE_ONCE(msdata->state, newstate);
- }
+ #include <linux/omap-dma.h>
  
- /* Last one to ack a state moves to the next state. */
-@@ -179,7 +181,15 @@ static void ack_state(struct multi_stop_data *msdata)
+-#include <mach/hardware.h>
+-
++#include <linux/soc/ti/omap1-soc.h>
+ #include "omapfb.h"
+ #include "lcdc.h"
  
- void __weak stop_machine_yield(const struct cpumask *cpumask)
- {
-+	u64 starttime = local_clock();
-+	u64 endtime;
-+	const u64 delta = 100ULL * 1000ULL * 1000ULL * 1000ULL;
-+
- 	cpu_relax();
-+	endtime = local_clock();
-+	if (time_after64(endtime, starttime + delta))
-+		trace_printk("cpu_relax() took %llu ms\n",
-+			     (endtime - starttime) / (1000ULL * 1000ULL));
- }
+diff --git a/drivers/video/fbdev/omap/sossi.c b/drivers/video/fbdev/omap/sossi.c
+index ade9d452254c..6b99d89fbe6e 100644
+--- a/drivers/video/fbdev/omap/sossi.c
++++ b/drivers/video/fbdev/omap/sossi.c
+@@ -13,6 +13,7 @@
+ #include <linux/interrupt.h>
  
- /* This is the cpu_stop function which stops the CPU. */
-@@ -210,8 +220,9 @@ static int multi_cpu_stop(void *data)
- 	do {
- 		/* Chill out and ensure we re-read multi_stop_state. */
- 		stop_machine_yield(cpumask);
--		if (msdata->state != curstate) {
--			curstate = msdata->state;
-+		if (READ_ONCE(msdata->state) != curstate) {
-+			curstate = READ_ONCE(msdata->state);
-+			trace_printk("curstate = %d, ack = %d\n", curstate, atomic_read(&msdata->thread_ack));
- 			switch (curstate) {
- 			case MULTI_STOP_DISABLE_IRQ:
- 				local_irq_disable();
-@@ -382,6 +393,7 @@ static bool queue_stop_cpus_work(const struct cpumask *cpumask,
- 	 * preempted by a stopper which might wait for other stoppers
- 	 * to enter @fn which can lead to deadlock.
- 	 */
-+	trace_printk("entered\n");
- 	preempt_disable();
- 	stop_cpus_in_progress = true;
- 	for_each_cpu(cpu, cpumask) {
-@@ -402,11 +414,18 @@ static int __stop_cpus(const struct cpumask *cpumask,
- 		       cpu_stop_fn_t fn, void *arg)
- {
- 	struct cpu_stop_done done;
-+	unsigned long j = jiffies;
+ #include <linux/omap-dma.h>
++#include <linux/soc/ti/omap1-io.h>
  
-+	tracing_on();
-+	trace_printk("entered\n");
-+	trace_printk("CPUs %*pbl online\n", cpumask_pr_args(cpu_online_mask));
- 	cpu_stop_init_done(&done, cpumask_weight(cpumask));
- 	if (!queue_stop_cpus_work(cpumask, fn, arg, &done))
- 		return -ENOENT;
- 	wait_for_completion(&done.completion);
-+	tracing_off();
-+	if (time_after(jiffies, j + HZ * 20))
-+		ftrace_dump(DUMP_ALL);
- 	return done.ret;
- }
- 
-@@ -442,6 +461,7 @@ int stop_cpus(const struct cpumask *cpumask, cpu_stop_fn_t fn, void *arg)
- {
- 	int ret;
- 
-+	trace_printk("entered\n");
- 	/* static works are used, process one request at a time */
- 	mutex_lock(&stop_cpus_mutex);
- 	ret = __stop_cpus(cpumask, fn, arg);
-@@ -599,6 +619,7 @@ int stop_machine_cpuslocked(cpu_stop_fn_t fn, void *data,
- 		.active_cpus = cpus,
- 	};
- 
-+	trace_printk("entered\n");
- 	lockdep_assert_cpus_held();
- 
- 	if (!stop_machine_initialized) {
+ #include "omapfb.h"
+ #include "lcd_dma.h"
+-- 
+2.20.0
 
