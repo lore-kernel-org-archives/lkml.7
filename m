@@ -2,38 +2,36 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18834C32754
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:44:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8497BC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:44:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC5D82173C
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:44:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65782217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:44:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731594AbfHHIog (ORCPT
+        id S1731645AbfHHIoh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 04:44:36 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:55035 "EHLO
+        Thu, 8 Aug 2019 04:44:37 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:53961 "EHLO
         cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728289AbfHHIof (ORCPT
+        with ESMTP id S1731065AbfHHIog (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 04:44:35 -0400
+        Thu, 8 Aug 2019 04:44:36 -0400
 Received: from 79.184.254.29.ipv4.supernova.orange.pl (79.184.254.29) (HELO kreacher.localnet)
  by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.275)
- id 4f9bbccdaa245767; Thu, 8 Aug 2019 10:44:32 +0200
+ id 4dbb172df3063ed1; Thu, 8 Aug 2019 10:44:34 +0200
 From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To:     platform-driver-x86@vger.kernel.org
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         LKML <linux-kernel@vger.kernel.org>,
         Linux PM <linux-pm@vger.kernel.org>,
         Linux ACPI <linux-acpi@vger.kernel.org>
-Subject: [PATCH 2/2] intel-hid: Disable button array during suspend-to-idle
-Date:   Thu, 08 Aug 2019 10:44:25 +0200
-Message-ID: <2765892.t9mEYBIOOk@kreacher>
-In-Reply-To: <1717835.1Yz4jNODO2@kreacher>
-References: <1717835.1Yz4jNODO2@kreacher>
+Subject: [PATCH 0/2] intel-hid: intel-vbtn: Suspend-related fix and update
+Date:   Thu, 08 Aug 2019 10:40:19 +0200
+Message-ID: <1717835.1Yz4jNODO2@kreacher>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
@@ -42,56 +40,16 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Hi,
 
-Notice that intel_button_array_enable() never disables the power
-button which is the only one needed to wake up the system from
-suspend-to-idle, so it can be safely called during suspend-to-idle
-as well as during "regular" system suspend, and rearrange the
-code in the driver's "suspend" and "resume" callbacks accordingly.
+These two patches fix a minor issue related to system suspend in the intel-hid
+and intel-vbtn drivers and update the suspend/resume handling in intel-hid to
+reduce special-casing in it somewhat.
 
-While at it, use pm_suspend_no_platform() to check if the current
-suspend-resume cycle is suspend-to-idle, as that is the only
-case when the device should be enabled while suspended.
+Please refer to the changelogs for details.
 
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- drivers/platform/x86/intel-hid.c |   13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
-
-Index: linux-pm/drivers/platform/x86/intel-hid.c
-===================================================================
---- linux-pm.orig/drivers/platform/x86/intel-hid.c
-+++ linux-pm/drivers/platform/x86/intel-hid.c
-@@ -274,10 +274,11 @@ static void intel_hid_pm_complete(struct
- 
- static int intel_hid_pl_suspend_handler(struct device *device)
- {
--	if (pm_suspend_via_firmware()) {
-+	intel_button_array_enable(device, false);
-+
-+	if (!pm_suspend_no_platform())
- 		intel_hid_set_enable(device, false);
--		intel_button_array_enable(device, false);
--	}
-+
- 	return 0;
- }
- 
-@@ -285,10 +286,10 @@ static int intel_hid_pl_resume_handler(s
- {
- 	intel_hid_pm_complete(device);
- 
--	if (pm_resume_via_firmware()) {
-+	if (!pm_suspend_no_platform())
- 		intel_hid_set_enable(device, true);
--		intel_button_array_enable(device, true);
--	}
-+
-+	intel_button_array_enable(device, true);
- 	return 0;
- }
- 
+Thanks,
+Rafael
 
 
 
