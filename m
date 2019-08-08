@@ -2,171 +2,100 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29FA7C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 03:19:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B019EC32751
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 03:26:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 027B5217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 03:19:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76CA721873
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 03:26:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OibWP8Mo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728356AbfHHDTx (ORCPT
+        id S1728345AbfHHD0C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 23:19:53 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4190 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728059AbfHHDTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 23:19:53 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 45AE7F70927011126D0B;
-        Thu,  8 Aug 2019 11:19:50 +0800 (CST)
-Received: from [127.0.0.1] (10.177.96.203) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Thu, 8 Aug 2019
- 11:19:44 +0800
-Subject: Re: [PATCH v5 00/10] implement KASLR for powerpc/fsl_booke/32
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        <linuxppc-dev@lists.ozlabs.org>, <diana.craciun@nxp.com>,
-        <christophe.leroy@c-s.fr>, <benh@kernel.crashing.org>,
-        <paulus@samba.org>, <npiggin@gmail.com>, <keescook@chromium.org>,
-        <kernel-hardening@lists.openwall.com>, <oss@buserror.net>
-CC:     <linux-kernel@vger.kernel.org>, <wangkefeng.wang@huawei.com>,
-        <yebin10@huawei.com>, <thunder.leizhen@huawei.com>,
-        <jingxiangfeng@huawei.com>, <fanchengyang@huawei.com>,
-        <zhaohongjiang@huawei.com>
-References: <20190807065706.11411-1-yanaijie@huawei.com>
- <87tvatt8z2.fsf@concordia.ellerman.id.au>
-From:   Jason Yan <yanaijie@huawei.com>
-Message-ID: <d20088d2-f993-1d7c-7474-3e41c3b34d45@huawei.com>
-Date:   Thu, 8 Aug 2019 11:19:42 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        Wed, 7 Aug 2019 23:26:02 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:33358 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728019AbfHHD0C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 23:26:02 -0400
+Received: by mail-ed1-f67.google.com with SMTP id i11so25207341edq.0;
+        Wed, 07 Aug 2019 20:26:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=QJF5KkLbVrVBnjHUA0f0vsLZgWb5LYS9Tbu0X4IhjlQ=;
+        b=OibWP8MoiklKgizvfLdsNAsynHNxnNIWaCKS+Eb/en4J160JrnpldIBMUlaMsZYO8P
+         SdRUazIU5/JBlJBdmbhFNijftvqYd5gg03jMadEMoSTQKJ5yoQ6QyU+p4q3fCp5LiPzD
+         WFUfEZPalAnA+/ybm9h62TutL3b0XOmH0xFFAuasT4ITU0kkELnREkIGC3uT8/RUcO9a
+         EuNr06T1ks2dNDR4fb07fOtG4Jw/uspOREBQASow8RtQO5+7cXVw49WqwIjZtrJ4kI6i
+         z+NO1hgZjRBS1t3VDkx2bNmni6g51sYBPZzKybIkuoBEHnHn0mdnPnJxhcJqTH9Ko8Do
+         IyvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=QJF5KkLbVrVBnjHUA0f0vsLZgWb5LYS9Tbu0X4IhjlQ=;
+        b=fq+p22i/qf2aw+bzdJku4OnzxaD1TaKzKwt6hhRmd1UiSPHmbzHqvFTKlzZmND4pMQ
+         kC24zYt7Y4BZQ3gSp4KisldY+hgdLkdPlV+sbSDHTvaEQ4Ojmp1W7z09MnX6TIrg3Poc
+         AQLm9gA1KAgDWUtM4Ex1gwLtG+rvi3k32AI/UaHXgujCe7XEnMo4s+c5NoJ06J77Q2IA
+         htXOF7CU18GIdSog3LnGEegGB72XZA3hRAqtx49lCfSvAmPrmQSLLU5HwozTLX5Z/yL0
+         rP355gASwkZJ6KZoftoAAAvkJPQ3oYmD55lvas14qIOAydzo5f8J8ioh+WfBhkKKtKKV
+         9kWw==
+X-Gm-Message-State: APjAAAX5TgO0q5x2tWPRlnmsJ1HmqFsc4UQMNQ7rAkFF+JHHWyTrRqO1
+        KRV7lv97d4xaJC+PtFlzQbXoEprlS8PR2JDPpGr10A==
+X-Google-Smtp-Source: APXvYqySxn6Aum2fW7hESCBNI/WQ907Tgt2T6h/7T2FnGeErkOVqSep722YIjq80TEItLMeAZ29Csd9tKbbb2livg74=
+X-Received: by 2002:a17:906:81cb:: with SMTP id e11mr11215527ejx.37.1565234760011;
+ Wed, 07 Aug 2019 20:26:00 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <87tvatt8z2.fsf@concordia.ellerman.id.au>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.96.203]
-X-CFilter-Loop: Reflected
+References: <1564306219-17439-1-git-send-email-bmeng.cn@gmail.com> <CAEUhbmX2LXST-5eDD_UQJP6-XqKPEByVdnQ_KqFM-fR_dH6pyQ@mail.gmail.com>
+In-Reply-To: <CAEUhbmX2LXST-5eDD_UQJP6-XqKPEByVdnQ_KqFM-fR_dH6pyQ@mail.gmail.com>
+From:   Bin Meng <bmeng.cn@gmail.com>
+Date:   Thu, 8 Aug 2019 11:25:49 +0800
+Message-ID: <CAEUhbmV1ehuvmbaCePWeuiTZv+CSnjg6HSbDk22oj5hg36QRGw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: interrupt-controller: msi: Correct
+ msi-controller@c's reg
+To:     Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Aug 1, 2019 at 5:53 PM Bin Meng <bmeng.cn@gmail.com> wrote:
+>
+> On Sun, Jul 28, 2019 at 5:30 PM Bin Meng <bmeng.cn@gmail.com> wrote:
+> >
+> > The base address of msi-controller@c should be set to c.
+> >
+> > Signed-off-by: Bin Meng <bmeng.cn@gmail.com>
+> > ---
+> >
+> >  Documentation/devicetree/bindings/interrupt-controller/msi.txt | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/msi.txt b/Documentation/devicetree/bindings/interrupt-controller/msi.txt
+> > index c60c034..c20b51d 100644
+> > --- a/Documentation/devicetree/bindings/interrupt-controller/msi.txt
+> > +++ b/Documentation/devicetree/bindings/interrupt-controller/msi.txt
+> > @@ -98,7 +98,7 @@ Example
+> >         };
+> >
+> >         msi_c: msi-controller@c {
+> > -               reg = <0xb 0xf00>;
+> > +               reg = <0xc 0xf00>;
+> >                 compatible = "vendor-b,another-controller";
+> >                 msi-controller;
+> >                 /* Each device has some unique ID */
+> > --
+>
+> Ping?
 
-
-On 2019/8/7 21:12, Michael Ellerman wrote:
-> Hi Jason,
-> 
-> Jason Yan <yanaijie@huawei.com> writes:
->> This series implements KASLR for powerpc/fsl_booke/32, as a security
->> feature that deters exploit attempts relying on knowledge of the location
->> of kernel internals.
-> 
-> Thanks for doing this work.
-> 
-> Sorry I didn't get a chance to look at this until v5, I sent a few
-> comments just now. Nothing major though, I think this looks almost ready
-> to merge.
-> 
-
-Thank you. I will try my best to improve the code.
-
-> cheers
-> 
->> Since CONFIG_RELOCATABLE has already supported, what we need to do is
->> map or copy kernel to a proper place and relocate. Freescale Book-E
->> parts expect lowmem to be mapped by fixed TLB entries(TLB1). The TLB1
->> entries are not suitable to map the kernel directly in a randomized
->> region, so we chose to copy the kernel to a proper place and restart to
->> relocate.
->>
->> Entropy is derived from the banner and timer base, which will change every
->> build and boot. This not so much safe so additionally the bootloader may
->> pass entropy via the /chosen/kaslr-seed node in device tree.
->>
->> We will use the first 512M of the low memory to randomize the kernel
->> image. The memory will be split in 64M zones. We will use the lower 8
->> bit of the entropy to decide the index of the 64M zone. Then we chose a
->> 16K aligned offset inside the 64M zone to put the kernel in.
->>
->>      KERNELBASE
->>
->>          |-->   64M   <--|
->>          |               |
->>          +---------------+    +----------------+---------------+
->>          |               |....|    |kernel|    |               |
->>          +---------------+    +----------------+---------------+
->>          |                         |
->>          |----->   offset    <-----|
->>
->>                                kimage_vaddr
->>
->> We also check if we will overlap with some areas like the dtb area, the
->> initrd area or the crashkernel area. If we cannot find a proper area,
->> kaslr will be disabled and boot from the original kernel.
->>
->> Changes since v4:
->>   - Add Reviewed-by tag from Christophe
->>   - Remove an unnecessary cast
->>   - Remove unnecessary parenthesis
->>   - Fix checkpatch warning
->>
->> Changes since v3:
->>   - Add Reviewed-by and Tested-by tag from Diana
->>   - Change the comment in fsl_booke_entry_mapping.S to be consistent
->>     with the new code.
->>
->> Changes since v2:
->>   - Remove unnecessary #ifdef
->>   - Use SZ_64M instead of0x4000000
->>   - Call early_init_dt_scan_chosen() to init boot_command_line
->>   - Rename kaslr_second_init() to kaslr_late_init()
->>
->> Changes since v1:
->>   - Remove some useless 'extern' keyword.
->>   - Replace EXPORT_SYMBOL with EXPORT_SYMBOL_GPL
->>   - Improve some assembly code
->>   - Use memzero_explicit instead of memset
->>   - Use boot_command_line and remove early_command_line
->>   - Do not print kaslr offset if kaslr is disabled
->>
->> Jason Yan (10):
->>    powerpc: unify definition of M_IF_NEEDED
->>    powerpc: move memstart_addr and kernstart_addr to init-common.c
->>    powerpc: introduce kimage_vaddr to store the kernel base
->>    powerpc/fsl_booke/32: introduce create_tlb_entry() helper
->>    powerpc/fsl_booke/32: introduce reloc_kernel_entry() helper
->>    powerpc/fsl_booke/32: implement KASLR infrastructure
->>    powerpc/fsl_booke/32: randomize the kernel image offset
->>    powerpc/fsl_booke/kaslr: clear the original kernel if randomized
->>    powerpc/fsl_booke/kaslr: support nokaslr cmdline parameter
->>    powerpc/fsl_booke/kaslr: dump out kernel offset information on panic
->>
->>   arch/powerpc/Kconfig                          |  11 +
->>   arch/powerpc/include/asm/nohash/mmu-book3e.h  |  10 +
->>   arch/powerpc/include/asm/page.h               |   7 +
->>   arch/powerpc/kernel/Makefile                  |   1 +
->>   arch/powerpc/kernel/early_32.c                |   2 +-
->>   arch/powerpc/kernel/exceptions-64e.S          |  10 -
->>   arch/powerpc/kernel/fsl_booke_entry_mapping.S |  27 +-
->>   arch/powerpc/kernel/head_fsl_booke.S          |  55 ++-
->>   arch/powerpc/kernel/kaslr_booke.c             | 427 ++++++++++++++++++
->>   arch/powerpc/kernel/machine_kexec.c           |   1 +
->>   arch/powerpc/kernel/misc_64.S                 |   5 -
->>   arch/powerpc/kernel/setup-common.c            |  19 +
->>   arch/powerpc/mm/init-common.c                 |   7 +
->>   arch/powerpc/mm/init_32.c                     |   5 -
->>   arch/powerpc/mm/init_64.c                     |   5 -
->>   arch/powerpc/mm/mmu_decl.h                    |  10 +
->>   arch/powerpc/mm/nohash/fsl_booke.c            |   8 +-
->>   17 files changed, 560 insertions(+), 50 deletions(-)
->>   create mode 100644 arch/powerpc/kernel/kaslr_booke.c
->>
->> -- 
->> 2.17.2
-> 
-> .
-> 
-
+Ping?
