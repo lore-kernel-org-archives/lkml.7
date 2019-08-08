@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0276EC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:13:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D924C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:13:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1B7C2173E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:13:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EE9421743
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:13:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565291617;
-	bh=Nl+kRXkxWwMQ9iim9Tca5FCr6yfWrfnErkAgEcd9sRc=;
+	s=default; t=1565291620;
+	bh=B9g71LC9Z8KeGXg4KeRXQCORlBkBFSMoTlMKCBucyqk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DhOnpLYX5fYMoJbpudvE2ZV72p069O0/kNQJmkhyaTszZTVb0DiHa9AieuaQadCwH
-	 Y5tNa+jzpLHvERq3VrBby2NEog6yEpJ6KCo7kVMiioSGe2FP/ibudGmtzuIBE0x/kw
-	 VTGscT/yvei/WJ75teQqoJZ3D2RDpaa/rJMRTP6k=
+	b=YwyA0L29ohqhMIvPMpGjBrIPn9x17Nc6wblKJXC4wp7dx7NgoMU9b83d1TFt6kAMJ
+	 uE/kORAYr4WvuHAsRvJcdzjoH216NJYPRCGMankN5MSj5oJCSWx6z0yaqRSq3GnRwU
+	 Dk7SgIBGTE3E/Pc6s9OjYbqWP+3CINmk/UNj4kcE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405139AbfHHTJi (ORCPT
+        id S2405280AbfHHTNj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:09:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43884 "EHLO mail.kernel.org"
+        Thu, 8 Aug 2019 15:13:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405119AbfHHTJd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 15:09:33 -0400
+        id S2405137AbfHHTJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 15:09:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B46C21743;
-        Thu,  8 Aug 2019 19:09:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45B082184E;
+        Thu,  8 Aug 2019 19:09:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565291372;
-        bh=Nl+kRXkxWwMQ9iim9Tca5FCr6yfWrfnErkAgEcd9sRc=;
+        s=default; t=1565291377;
+        bh=B9g71LC9Z8KeGXg4KeRXQCORlBkBFSMoTlMKCBucyqk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UqgdpfK34WsZJFOBkhAbi25jGhflRZeVX2GC4KtLskaWLe95nD4UdiwlK5F8PvQwD
-         PUrLn2J5t5AwUYcgkxltZetJR1IVL/yqYf7APM5xJvZGnu5yeYx3L5pICno2qTv1IG
-         fWc1zgnW/mPhFQ57hnUrlEfprjmg887XlLVitOQA=
+        b=N0tSDu9o0LuQDr8qk5lmwicRSbYTltnf5l4R/Q0/BtTUpIgR+ECNLxONmco9rZWh4
+         bzetnV/tpt408aP//PZiq3nykTAYaho8VZgEs7et7hHbvXV9sd7clKxQfkSx3pOI5o
+         flXKzy91eXk9QVZ+1bMZZaBxwNWh1n8uDZ434IaY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexis Bauvin <abauvin@scaleway.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 35/45] tun: mark small packets as owned by the tap sock
-Date:   Thu,  8 Aug 2019 21:05:21 +0200
-Message-Id: <20190808190455.784595339@linuxfoundation.org>
+        stable@vger.kernel.org, Edward Srouji <edwards@mellanox.com>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 4.19 36/45] net/mlx5: Fix modify_cq_in alignment
+Date:   Thu,  8 Aug 2019 21:05:22 +0200
+Message-Id: <20190808190455.839364156@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190808190453.827571908@linuxfoundation.org>
 References: <20190808190453.827571908@linuxfoundation.org>
@@ -60,43 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexis Bauvin <abauvin@scaleway.com>
+From: Edward Srouji <edwards@mellanox.com>
 
-[ Upstream commit 4b663366246be1d1d4b1b8b01245b2e88ad9e706 ]
+[ Upstream commit 7a32f2962c56d9d8a836b4469855caeee8766bd4 ]
 
-- v1 -> v2: Move skb_set_owner_w to __tun_build_skb to reduce patch size
+Fix modify_cq_in alignment to match the device specification.
+After this fix the 'cq_umem_valid' field will be in the right offset.
 
-Small packets going out of a tap device go through an optimized code
-path that uses build_skb() rather than sock_alloc_send_pskb(). The
-latter calls skb_set_owner_w(), but the small packet code path does not.
-
-The net effect is that small packets are not owned by the userland
-application's socket (e.g. QEMU), while large packets are.
-This can be seen with a TCP session, where packets are not owned when
-the window size is small enough (around PAGE_SIZE), while they are once
-the window grows (note that this requires the host to support virtio
-tso for the guest to offload segmentation).
-All this leads to inconsistent behaviour in the kernel, especially on
-netfilter modules that uses sk->socket (e.g. xt_owner).
-
-Fixes: 66ccbc9c87c2 ("tap: use build_skb() for small packet")
-Signed-off-by: Alexis Bauvin <abauvin@scaleway.com>
-Acked-by: Jason Wang <jasowang@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: <stable@vger.kernel.org> # 4.19
+Fixes: bd37197554eb ("net/mlx5: Update mlx5_ifc with DEVX UID bits")
+Signed-off-by: Edward Srouji <edwards@mellanox.com>
+Reviewed-by: Yishai Hadas <yishaih@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/tun.c |    1 +
- 1 file changed, 1 insertion(+)
+ include/linux/mlx5/mlx5_ifc.h |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/drivers/net/tun.c
-+++ b/drivers/net/tun.c
-@@ -1682,6 +1682,7 @@ static struct sk_buff *tun_build_skb(str
+--- a/include/linux/mlx5/mlx5_ifc.h
++++ b/include/linux/mlx5/mlx5_ifc.h
+@@ -5623,7 +5623,12 @@ struct mlx5_ifc_modify_cq_in_bits {
  
- 	skb_reserve(skb, pad - delta);
- 	skb_put(skb, len);
-+	skb_set_owner_w(skb, tfile->socket.sk);
- 	get_page(alloc_frag->page);
- 	alloc_frag->offset += buflen;
+ 	struct mlx5_ifc_cqc_bits cq_context;
  
+-	u8         reserved_at_280[0x600];
++	u8         reserved_at_280[0x60];
++
++ 	u8         cq_umem_valid[0x1];
++	u8         reserved_at_2e1[0x1f];
++
++	u8         reserved_at_300[0x580];
+ 
+ 	u8         pas[0][0x40];
+ };
 
 
