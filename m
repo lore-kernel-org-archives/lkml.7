@@ -2,130 +2,145 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB04C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 726DFC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:19:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5CB4217D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31D1E218A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:19:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565281150;
+	bh=B35pikkFB/J7vGw/V5wO0pktD8+Cprnqbx828X6l5GE=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=YbMKscNlTj27P5FuKraA2vSg+QToEflKyyqzaVCFymBd3XgT6eYeeyBRtNrYsoYZ3
+	 AZEPwIQdG5F8K7gFeLEj3vQi5OMpzJ2Vzv+bRCkzCgvTWWp59fY3DyAYkULZUhHFKR
+	 L59AaYAJQrZVpH/c+DxUstKKdGY2fUvU5mRDWF5Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733083AbfHHQTE (ORCPT
+        id S2404168AbfHHQTI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 12:19:04 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32734 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728020AbfHHQTE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 12:19:04 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x78GDC5x132960
-        for <linux-kernel@vger.kernel.org>; Thu, 8 Aug 2019 12:19:02 -0400
-Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u8mmcypq6-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 12:19:02 -0400
-Received: from localhost
-        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Thu, 8 Aug 2019 17:19:01 +0100
-Received: from b01cxnp22036.gho.pok.ibm.com (9.57.198.26)
-        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 8 Aug 2019 17:18:58 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x78GIvou13173300
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 8 Aug 2019 16:18:57 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 63424B205F;
-        Thu,  8 Aug 2019 16:18:57 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4666FB2064;
-        Thu,  8 Aug 2019 16:18:57 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu,  8 Aug 2019 16:18:57 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 5CF0E16C8EB1; Thu,  8 Aug 2019 09:18:58 -0700 (PDT)
-Date:   Thu, 8 Aug 2019 09:18:58 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     kbuild-all@01.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH rcu] rcu/nocb: rcu_segcblist_set_len() can be static
-Reply-To: paulmck@linux.ibm.com
-References: <201908081009.37BaOO5n%lkp@intel.com>
- <20190808023258.jomwku7gtzwqc76w@48261080c7f1>
+        Thu, 8 Aug 2019 12:19:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43298 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728020AbfHHQTI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 12:19:08 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CE3B2184E;
+        Thu,  8 Aug 2019 16:19:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565281147;
+        bh=B35pikkFB/J7vGw/V5wO0pktD8+Cprnqbx828X6l5GE=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=VBA1g0BIMkEYHorY5sBEOMI+5NKBxMbTY/DnSraaw/aob6X2GV1DcNdTw7fUyIj+9
+         u01lH7PvergRZn6kAb9af/N9j0M74TeVHLy5ReC+WgcIXvtyc2RoJuWYsudJhsKRDq
+         YkTJsgDIVkOQeYyiHJXlzeix0z2IkSUcqrfpIp8k=
+Subject: Re: [PATCH v5 1/2] usbip: Skip DMA mapping and unmapping for urb at
+ vhci
+To:     Suwan Kim <suwan.kim027@gmail.com>, valentina.manea.m@gmail.com,
+        gregkh@linuxfoundation.org, stern@rowland.harvard.edu
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        shuah <shuah@kernel.org>
+References: <20190808155435.10050-1-suwan.kim027@gmail.com>
+ <20190808155435.10050-2-suwan.kim027@gmail.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <d9359f3c-ca4c-6eab-5238-0013f8bb4dbb@kernel.org>
+Date:   Thu, 8 Aug 2019 10:18:59 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190808023258.jomwku7gtzwqc76w@48261080c7f1>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19080816-0064-0000-0000-00000406DFB4
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011571; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000287; SDB=6.01243910; UDB=6.00656229; IPR=6.01025389;
- MB=3.00028094; MTD=3.00000008; XFM=3.00000015; UTC=2019-08-08 16:19:00
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19080816-0065-0000-0000-00003E9873F1
-Message-Id: <20190808161858.GO28441@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-08_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908080152
+In-Reply-To: <20190808155435.10050-2-suwan.kim027@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 10:32:58AM +0800, kbuild test robot wrote:
+On 8/8/19 9:54 AM, Suwan Kim wrote:
+> vhci doesn’t do DMA for remote device. Actually, the real DMA
+> operation is done by network card driver. vhci just passes virtual
+> address of the buffer to the network stack, so vhci doesn’t use and
+> need dma address of the buffer of the URB.
 > 
-> Fixes: ab2ef5c7b4d1 ("rcu/nocb: Atomic ->len field in rcu_segcblist structure")
-> Signed-off-by: kbuild test robot <lkp@intel.com>
-
-Good catch!  Queued with updated commit log, thank you!
-
-							Thanx, Paul
-
+> But HCD provides DMA mapping and unmapping function by default.
+> Moreover, it causes unnecessary DMA mapping and unmapping which
+> will be done again at the NIC driver and it wastes CPU cycles.
+> So, implement map_urb_for_dma and unmap_urb_for_dma function for
+> vhci in order to skip the DMA mapping and unmapping procedure.
+> 
+> When it comes to supporting SG for vhci, it is useful to use native
+> SG list (urb->num_sgs) instead of mapped SG list because DMA mapping
+> fnuction can adjust the number of SG list (urb->num_mapped_sgs).
+> And vhci_map_urb_for_dma() prevents isoc pipe from using SG as
+> hcd_map_urb_for_dma() does.
+> 
+> Signed-off-by: Suwan Kim <suwan.kim027@gmail.com>
 > ---
->  rcu_segcblist.c |    6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+> v4 - v5
+> - Replace pr_err() with dev_err() in the error path.
 > 
-> diff --git a/kernel/rcu/rcu_segcblist.c b/kernel/rcu/rcu_segcblist.c
-> index ff431cc830378..84bbffaaede83 100644
-> --- a/kernel/rcu/rcu_segcblist.c
-> +++ b/kernel/rcu/rcu_segcblist.c
-> @@ -58,7 +58,7 @@ struct rcu_head *rcu_cblist_dequeue(struct rcu_cblist *rclp)
->  }
->  
->  /* Set the length of an rcu_segcblist structure. */
-> -void rcu_segcblist_set_len(struct rcu_segcblist *rsclp, long v)
-> +static void rcu_segcblist_set_len(struct rcu_segcblist *rsclp, long v)
->  {
->  #ifdef CONFIG_RCU_NOCB_CPU
->  	atomic_long_set(&rsclp->len, v);
-> @@ -74,7 +74,7 @@ void rcu_segcblist_set_len(struct rcu_segcblist *rsclp, long v)
->   * This increase is fully ordered with respect to the callers accesses
->   * both before and after.
->   */
-> -void rcu_segcblist_add_len(struct rcu_segcblist *rsclp, long v)
-> +static void rcu_segcblist_add_len(struct rcu_segcblist *rsclp, long v)
->  {
->  #ifdef CONFIG_RCU_NOCB_CPU
->  	smp_mb__before_atomic(); /* Up to the caller! */
-> @@ -104,7 +104,7 @@ void rcu_segcblist_inc_len(struct rcu_segcblist *rsclp)
->   * with the actual number of callbacks on the structure.  This exchange is
->   * fully ordered with respect to the callers accesses both before and after.
->   */
-> -long rcu_segcblist_xchg_len(struct rcu_segcblist *rsclp, long v)
-> +static long rcu_segcblist_xchg_len(struct rcu_segcblist *rsclp, long v)
->  {
->  #ifdef CONFIG_RCU_NOCB_CPU
->  	return atomic_long_xchg(&rsclp->len, v);
+> v3 - v4
+> - Replace WARN_ON() with pr_err() in the error path.
+> 
+> v2 - v3
+> - Move setting URB_DMA_MAP_SG flag to the patch 2.
+> - Prevent isoc pipe from using SG buffer.
+> 
+> v1 - v2
+> - Add setting URB_DMA_MAP_SG flag in urb->transfer_flags to tell
+> stub driver to use SG buffer.
+> ---
+>   drivers/usb/usbip/vhci_hcd.c | 19 +++++++++++++++++++
+>   1 file changed, 19 insertions(+)
+> 
+> diff --git a/drivers/usb/usbip/vhci_hcd.c b/drivers/usb/usbip/vhci_hcd.c
+> index 000ab7225717..ea82b932a2f9 100644
+> --- a/drivers/usb/usbip/vhci_hcd.c
+> +++ b/drivers/usb/usbip/vhci_hcd.c
+> @@ -1288,6 +1288,22 @@ static int vhci_free_streams(struct usb_hcd *hcd, struct usb_device *udev,
+>   	return 0;
+>   }
+>   
+> +static int vhci_map_urb_for_dma(struct usb_hcd *hcd, struct urb *urb,
+> +				gfp_t mem_flags)
+> +{
+> +	if (usb_endpoint_xfer_isoc(&urb->ep->desc) && urb->num_sgs) {
+> +		dev_err(&urb->dev->dev, "SG is not supported for isochronous transfer\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void vhci_unmap_urb_for_dma(struct usb_hcd *hcd, struct urb *urb)
+> +{
+> +	dev_dbg(hcd->self.controller, "vhci does not unmap urb for dma\n");
+> +}
+> +
+>   static const struct hc_driver vhci_hc_driver = {
+>   	.description	= driver_name,
+>   	.product_desc	= driver_desc,
+> @@ -1304,6 +1320,9 @@ static const struct hc_driver vhci_hc_driver = {
+>   
+>   	.get_frame_number = vhci_get_frame_number,
+>   
+> +	.map_urb_for_dma = vhci_map_urb_for_dma,
+> +	.unmap_urb_for_dma = vhci_unmap_urb_for_dma,
+> +
+>   	.hub_status_data = vhci_hub_status,
+>   	.hub_control    = vhci_hub_control,
+>   	.bus_suspend	= vhci_bus_suspend,
+> 
 
+Looks good to me.
+
+Reviewed-by: Shuah Khan <skhan@linuxfoundation.org>
+
+thanks,
+-- Shuah
