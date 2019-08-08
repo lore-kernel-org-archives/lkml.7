@@ -2,281 +2,93 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F0EFC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:34:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 253E7C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E88A92173C
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:34:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565296450;
-	bh=zEcJUqidXRyuQekRfidqm4cvF6SEpP2XeYNt/Itd11k=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=dNcCqkb6bjHpT6FSK/ywm02W7msFbn62TTDjF/zmY+aobSakoCrrKTU4rpSmIq2tS
-	 TueArJujad7UcHIOiKY+pIThpaxDx8YbY3ByV2IdoLsGy/3qGHq9besRbYGwCtpNqr
-	 BClHXI0bx9kLkRMwrh1FPN8dZnC1cWua3GIc3Mxk=
+	by mail.kernel.org (Postfix) with ESMTP id DB06B2173C
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:34:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="Lf5+Mxhb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404801AbfHHUd5 (ORCPT
+        id S2390398AbfHHUeO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 16:33:57 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:59020 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390231AbfHHUdy (ORCPT
+        Thu, 8 Aug 2019 16:34:14 -0400
+Received: from pio-pvt-msa1.bahnhof.se ([79.136.2.40]:43396 "EHLO
+        pio-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390186AbfHHUeK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 16:33:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=OeiRc1kGALvNFIyeefBM2if1E6m/n9cKkvI3yZsO3XA=; b=aj2YuDrqWmyA
-        U00wx1++zWubcnV3zX1jYxXLoKXydwaVcqSeBdYihZHgzY1+PohHtsbDnffg2uBlRR7Kk8Kpnbxwd
-        kZ+yQf2o6pljcLtrWXQHMf8/t+Xg3pp8SPM8dMF0CWICapoe/xde5+hXkK6xmq2PqANLn9lM+tLtL
-        U/hpI=;
-Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1hvp6b-00042h-M4; Thu, 08 Aug 2019 20:33:49 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 20AB02742BDD; Thu,  8 Aug 2019 21:33:49 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Applied "regulator: qcom-rpmh: Add support for SM8150" to the regulator tree
-In-Reply-To: <20190808093343.5600-2-vkoul@kernel.org>
-X-Patchwork-Hint: ignore
-Message-Id: <20190808203349.20AB02742BDD@ypsilon.sirena.org.uk>
-Date:   Thu,  8 Aug 2019 21:33:49 +0100 (BST)
+        Thu, 8 Aug 2019 16:34:10 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by pio-pvt-msa1.bahnhof.se (Postfix) with ESMTP id B14B03F5D5;
+        Thu,  8 Aug 2019 22:34:07 +0200 (CEST)
+Authentication-Results: pio-pvt-msa1.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b="Lf5+Mxhb";
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from pio-pvt-msa1.bahnhof.se ([127.0.0.1])
+        by localhost (pio-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id N-GpX9dXhaTB; Thu,  8 Aug 2019 22:34:06 +0200 (CEST)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by pio-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id B78203F5A8;
+        Thu,  8 Aug 2019 22:34:05 +0200 (CEST)
+Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id E0D65360301;
+        Thu,  8 Aug 2019 22:34:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1565296444; bh=EIk0/MUpwLpbdNkCz481ROZL1qwhrG0hJX4BjHbekd8=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Lf5+MxhbJc+lwsstwp0LgCIZkWOVlVZhKQueAOEsO3kwvFF8OliImWzJw26HVXTf/
+         PUGGY9SB6hV4Qh3dGW73STTF+vVQ5BqMuvG9UanaRrb8uTJbuZ+CSLxEvu9rTo6c1n
+         mm8RZL/XZ8xyPu1syz5148DT/U61+whiMp3kL398=
+Subject: Re: [PATCH 2/3] pagewalk: seperate function pointers from iterator
+ data
+To:     Christoph Hellwig <hch@lst.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Jerome Glisse <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Steven Price <steven.price@arm.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <20190808154240.9384-1-hch@lst.de>
+ <20190808154240.9384-3-hch@lst.de>
+From:   Thomas Hellstrom <thomas@shipmail.org>
+Message-ID: <087f19ee-0278-b828-feb0-ff4a2c830a0f@shipmail.org>
+Date:   Thu, 8 Aug 2019 22:34:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190808154240.9384-3-hch@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On 8/8/19 5:42 PM, Christoph Hellwig wrote:
+> The mm_walk structure currently mixed data and code.  Split out the
+> operations vectors into a new mm_walk_ops structure, and while we
+> are changing the API also declare the mm_walk structure inside the
+> walk_page_range and walk_page_vma functions.
+>
+> Based on patch from Linus Torvalds.
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
 
-   regulator: qcom-rpmh: Add support for SM8150
+Typo: For the patch title s/seperate/separate/
 
-has been applied to the regulator tree at
+Otherwise for the series
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.4
+Reviewed-by: Thomas Hellstrom <thellstrom@vmware.com>
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+/Thomas
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 06369bcc15a1620930a17fb35e26477504cd2255 Mon Sep 17 00:00:00 2001
-From: Vinod Koul <vkoul@kernel.org>
-Date: Thu, 8 Aug 2019 15:03:43 +0530
-Subject: [PATCH] regulator: qcom-rpmh: Add support for SM8150
-
-Add support from RPMH regulators found in SM8150 platform
-
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Link: https://lore.kernel.org/r/20190808093343.5600-2-vkoul@kernel.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/regulator/qcom-rpmh-regulator.c | 147 ++++++++++++++++++++++++
- 1 file changed, 147 insertions(+)
-
-diff --git a/drivers/regulator/qcom-rpmh-regulator.c b/drivers/regulator/qcom-rpmh-regulator.c
-index b2c2d01d1637..693ffec62f3e 100644
---- a/drivers/regulator/qcom-rpmh-regulator.c
-+++ b/drivers/regulator/qcom-rpmh-regulator.c
-@@ -637,6 +637,72 @@ static const struct rpmh_vreg_hw_data pmic4_lvs = {
- 	/* LVS hardware does not support voltage or mode configuration. */
- };
- 
-+static const struct rpmh_vreg_hw_data pmic5_pldo = {
-+	.regulator_type = VRM,
-+	.ops = &rpmh_regulator_vrm_drms_ops,
-+	.voltage_range = REGULATOR_LINEAR_RANGE(1504000, 0, 255, 8000),
-+	.n_voltages = 256,
-+	.hpm_min_load_uA = 10000,
-+	.pmic_mode_map = pmic_mode_map_pmic4_ldo,
-+	.of_map_mode = rpmh_regulator_pmic4_ldo_of_map_mode,
-+};
-+
-+static const struct rpmh_vreg_hw_data pmic5_pldo_lv = {
-+	.regulator_type = VRM,
-+	.ops = &rpmh_regulator_vrm_drms_ops,
-+	.voltage_range = REGULATOR_LINEAR_RANGE(1504000, 0, 62, 8000),
-+	.n_voltages = 63,
-+	.hpm_min_load_uA = 10000,
-+	.pmic_mode_map = pmic_mode_map_pmic4_ldo,
-+	.of_map_mode = rpmh_regulator_pmic4_ldo_of_map_mode,
-+};
-+
-+static const struct rpmh_vreg_hw_data pmic5_nldo = {
-+	.regulator_type = VRM,
-+	.ops = &rpmh_regulator_vrm_drms_ops,
-+	.voltage_range = REGULATOR_LINEAR_RANGE(320000, 0, 123, 8000),
-+	.n_voltages = 124,
-+	.hpm_min_load_uA = 30000,
-+	.pmic_mode_map = pmic_mode_map_pmic4_ldo,
-+	.of_map_mode = rpmh_regulator_pmic4_ldo_of_map_mode,
-+};
-+
-+static const struct rpmh_vreg_hw_data pmic5_hfsmps510 = {
-+	.regulator_type = VRM,
-+	.ops = &rpmh_regulator_vrm_ops,
-+	.voltage_range = REGULATOR_LINEAR_RANGE(320000, 0, 215, 8000),
-+	.n_voltages = 216,
-+	.pmic_mode_map = pmic_mode_map_pmic4_smps,
-+	.of_map_mode = rpmh_regulator_pmic4_smps_of_map_mode,
-+};
-+
-+static const struct rpmh_vreg_hw_data pmic5_ftsmps510 = {
-+	.regulator_type = VRM,
-+	.ops = &rpmh_regulator_vrm_ops,
-+	.voltage_range = REGULATOR_LINEAR_RANGE(300000, 0, 263, 4000),
-+	.n_voltages = 264,
-+	.pmic_mode_map = pmic_mode_map_pmic4_smps,
-+	.of_map_mode = rpmh_regulator_pmic4_smps_of_map_mode,
-+};
-+
-+static const struct rpmh_vreg_hw_data pmic5_hfsmps515 = {
-+	.regulator_type = VRM,
-+	.ops = &rpmh_regulator_vrm_ops,
-+	.voltage_range = REGULATOR_LINEAR_RANGE(2800000, 0, 4, 1600),
-+	.n_voltages = 5,
-+	.pmic_mode_map = pmic_mode_map_pmic4_smps,
-+	.of_map_mode = rpmh_regulator_pmic4_smps_of_map_mode,
-+};
-+
-+static const struct rpmh_vreg_hw_data pmic5_bob = {
-+	.regulator_type = VRM,
-+	.ops = &rpmh_regulator_vrm_bypass_ops,
-+	.voltage_range = REGULATOR_LINEAR_RANGE(300000, 0, 135, 32000),
-+	.n_voltages = 135,
-+	.pmic_mode_map = pmic_mode_map_pmic4_bob,
-+	.of_map_mode = rpmh_regulator_pmic4_bob_of_map_mode,
-+};
-+
- #define RPMH_VREG(_name, _resource_name, _hw_data, _supply_name) \
- { \
- 	.name		= _name, \
-@@ -705,6 +771,75 @@ static const struct rpmh_vreg_init_data pm8005_vreg_data[] = {
- 	{},
- };
- 
-+static const struct rpmh_vreg_init_data pm8150_vreg_data[] = {
-+	RPMH_VREG("smps1",  "smp%s1",  &pmic5_ftsmps510, "vdd-s1"),
-+	RPMH_VREG("smps2",  "smp%s2",  &pmic5_ftsmps510, "vdd-s2"),
-+	RPMH_VREG("smps3",  "smp%s3",  &pmic5_ftsmps510, "vdd-s3"),
-+	RPMH_VREG("smps4",  "smp%s4",  &pmic5_hfsmps510,   "vdd-s4"),
-+	RPMH_VREG("smps5",  "smp%s5",  &pmic5_hfsmps510,   "vdd-s5"),
-+	RPMH_VREG("smps6",  "smp%s6",  &pmic5_ftsmps510, "vdd-s6"),
-+	RPMH_VREG("smps7",  "smp%s7",  &pmic5_ftsmps510, "vdd-s7"),
-+	RPMH_VREG("smps8",  "smp%s8",  &pmic5_ftsmps510, "vdd-s8"),
-+	RPMH_VREG("smps9",  "smp%s9",  &pmic5_ftsmps510, "vdd-s9"),
-+	RPMH_VREG("smps10", "smp%s10", &pmic5_ftsmps510, "vdd-s10"),
-+	RPMH_VREG("ldo1",   "ldo%s1",  &pmic5_nldo,      "vdd-l1-l8-l11"),
-+	RPMH_VREG("ldo2",   "ldo%s2",  &pmic5_pldo,      "vdd-l2-l10"),
-+	RPMH_VREG("ldo3",   "ldo%s3",  &pmic5_nldo,      "vdd-l3-l4-l5-l18"),
-+	RPMH_VREG("ldo4",   "ldo%s4",  &pmic5_nldo,      "vdd-l3-l4-l5-l18"),
-+	RPMH_VREG("ldo5",   "ldo%s5",  &pmic5_nldo,      "vdd-l3-l4-l5-l18"),
-+	RPMH_VREG("ldo6",   "ldo%s6",  &pmic5_nldo,      "vdd-l6-l9"),
-+	RPMH_VREG("ldo7",   "ldo%s7",  &pmic5_pldo,      "vdd-l7-l12-l14-l15"),
-+	RPMH_VREG("ldo8",   "ldo%s8",  &pmic5_nldo,      "vdd-l1-l8-l11"),
-+	RPMH_VREG("ldo9",   "ldo%s9",  &pmic5_nldo,      "vdd-l6-l9"),
-+	RPMH_VREG("ldo10",  "ldo%s10", &pmic5_pldo,      "vdd-l2-l10"),
-+	RPMH_VREG("ldo11",  "ldo%s11", &pmic5_nldo,      "vdd-l1-l8-l11"),
-+	RPMH_VREG("ldo12",  "ldo%s12", &pmic5_pldo_lv,   "vdd-l7-l12-l14-l15"),
-+	RPMH_VREG("ldo13",  "ldo%s13", &pmic5_pldo,      "vdd-l13-l6-l17"),
-+	RPMH_VREG("ldo14",  "ldo%s14", &pmic5_pldo_lv,   "vdd-l7-l12-l14-l15"),
-+	RPMH_VREG("ldo15",  "ldo%s15", &pmic5_pldo_lv,   "vdd-l7-l12-l14-l15"),
-+	RPMH_VREG("ldo16",  "ldo%s16", &pmic5_pldo,      "vdd-l13-l6-l17"),
-+	RPMH_VREG("ldo17",  "ldo%s17", &pmic5_pldo,      "vdd-l13-l6-l17"),
-+	RPMH_VREG("ldo18",  "ldo%s18", &pmic5_nldo,      "vdd-l3-l4-l5-l18"),
-+	{},
-+};
-+
-+static const struct rpmh_vreg_init_data pm8150l_vreg_data[] = {
-+	RPMH_VREG("smps1",  "smp%s1",  &pmic5_ftsmps510, "vdd-s1"),
-+	RPMH_VREG("smps2",  "smp%s2",  &pmic5_ftsmps510, "vdd-s2"),
-+	RPMH_VREG("smps3",  "smp%s3",  &pmic5_ftsmps510, "vdd-s3"),
-+	RPMH_VREG("smps4",  "smp%s4",  &pmic5_ftsmps510, "vdd-s4"),
-+	RPMH_VREG("smps5",  "smp%s5",  &pmic5_ftsmps510, "vdd-s5"),
-+	RPMH_VREG("smps6",  "smp%s6",  &pmic5_ftsmps510, "vdd-s6"),
-+	RPMH_VREG("smps7",  "smp%s7",  &pmic5_ftsmps510, "vdd-s7"),
-+	RPMH_VREG("smps8",  "smp%s8",  &pmic5_hfsmps510, "vdd-s8"),
-+	RPMH_VREG("ldo1",   "ldo%s1",  &pmic5_pldo_lv,   "vdd-l1-l8"),
-+	RPMH_VREG("ldo2",   "ldo%s2",  &pmic5_nldo,      "vdd-l2-l3"),
-+	RPMH_VREG("ldo3",   "ldo%s3",  &pmic5_nldo,      "vdd-l2-l3"),
-+	RPMH_VREG("ldo4",   "ldo%s4",  &pmic5_pldo,      "vdd-l4-l5-l6"),
-+	RPMH_VREG("ldo5",   "ldo%s5",  &pmic5_pldo,      "vdd-l4-l5-l6"),
-+	RPMH_VREG("ldo6",   "ldo%s6",  &pmic5_pldo,      "vdd-l4-l5-l6"),
-+	RPMH_VREG("ldo7",   "ldo%s7",  &pmic5_pldo,      "vdd-l7-l11"),
-+	RPMH_VREG("ldo8",   "ldo%s8",  &pmic5_pldo_lv,   "vdd-l1-l8-l11"),
-+	RPMH_VREG("ldo9",   "ldo%s9",  &pmic5_pldo,      "vdd-l9-l10"),
-+	RPMH_VREG("ldo10",  "ldo%s10", &pmic5_pldo,      "vdd-l9-l10"),
-+	RPMH_VREG("ldo11",  "ldo%s11", &pmic5_pldo,      "vdd-l7-l11"),
-+	RPMH_VREG("bob",    "bob%s1",  &pmic5_bob,       "vdd-bob"),
-+	{},
-+};
-+
-+static const struct rpmh_vreg_init_data pm8009_vreg_data[] = {
-+	RPMH_VREG("smps1",  "smp%s1",  &pmic5_hfsmps510, "vdd-s1"),
-+	RPMH_VREG("smps2",  "smp%s2",  &pmic5_hfsmps515, "vdd-s2"),
-+	RPMH_VREG("ldo1",   "ldo%s1",  &pmic5_nldo,      "vdd-l1"),
-+	RPMH_VREG("ldo2",   "ldo%s2",  &pmic5_nldo,      "vdd-l2"),
-+	RPMH_VREG("ldo3",   "ldo%s3",  &pmic5_nldo,      "vdd-l3"),
-+	RPMH_VREG("ldo4",   "ldo%s4",  &pmic5_nldo,      "vdd-l4"),
-+	RPMH_VREG("ldo5",   "ldo%s5",  &pmic5_pldo,      "vdd-l5-l6"),
-+	RPMH_VREG("ldo6",   "ldo%s6",  &pmic5_pldo,      "vdd-l5-l6"),
-+	RPMH_VREG("ldo7",   "ldo%s6",  &pmic5_pldo_lv,   "vdd-l7"),
-+	{},
-+};
-+
- static int rpmh_regulator_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -755,6 +890,18 @@ static const struct of_device_id rpmh_regulator_match_table[] = {
- 		.compatible = "qcom,pm8005-rpmh-regulators",
- 		.data = pm8005_vreg_data,
- 	},
-+	{
-+		.compatible = "qcom,pm8150-rpmh-regulators",
-+		.data = pm8150_vreg_data,
-+	},
-+	{
-+		.compatible = "qcom,pm8150l-rpmh-regulators",
-+		.data = pm8150l_vreg_data,
-+	},
-+	{
-+		.compatible = "qcom,pm8009-rpmh-regulators",
-+		.data = pm8009_vreg_data,
-+	},
- 	{}
- };
- MODULE_DEVICE_TABLE(of, rpmh_regulator_match_table);
--- 
-2.20.1
 
