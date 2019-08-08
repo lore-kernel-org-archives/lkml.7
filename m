@@ -2,90 +2,100 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18301C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:37:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCB04C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:39:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E818B217D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:37:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86EE42184E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:39:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565282350;
+	bh=mRyfVMwsOzYDrLMZknImpwFsUvSxDu1kZ2pgGFqnFgU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yEUTD9ub2ApuIobKoiCYwCoiCP23BkYBIko3Wk3V1KwfNgCisbsaJed8GDPwDudSV
+	 yQyctOLf92+g3QJCvV44d0IPGoGrAq4lddXoXzU3pmYc7BW5QxM/7cBbJF1lv3DU8L
+	 6HI5drbVKhNN3ZV3Ad3AOSKh7HYL2zloZ80hrRWM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390171AbfHHQhs (ORCPT
+        id S2404061AbfHHQjJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 12:37:48 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:16383 "EHLO mx1.redhat.com"
+        Thu, 8 Aug 2019 12:39:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725535AbfHHQhs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 12:37:48 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1732760AbfHHQjJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 12:39:09 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 327817BDDA;
-        Thu,  8 Aug 2019 16:37:48 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.136])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 6AEDE5D784;
-        Thu,  8 Aug 2019 16:37:46 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Thu,  8 Aug 2019 18:37:47 +0200 (CEST)
-Date:   Thu, 8 Aug 2019 18:37:45 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Song Liu <songliubraving@fb.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, matthew.wilcox@oracle.com,
-        kirill.shutemov@linux.intel.com, kernel-team@fb.com,
-        william.kucharski@oracle.com, srikar@linux.vnet.ibm.com
-Subject: Re: [PATCH v12 3/6] mm, thp: introduce FOLL_SPLIT_PMD
-Message-ID: <20190808163745.GC7934@redhat.com>
-References: <20190807233729.3899352-1-songliubraving@fb.com>
- <20190807233729.3899352-4-songliubraving@fb.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id B1A4D217F4;
+        Thu,  8 Aug 2019 16:39:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565282348;
+        bh=mRyfVMwsOzYDrLMZknImpwFsUvSxDu1kZ2pgGFqnFgU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AfT6bSTPiQ1sOIRhsY94itXzIintmnNzXfmefa5yG6JMi0HkBuGRy4SL0y+8puvyb
+         SKo0vd2af9p+lEbrzuqrnDeI/NpaB0GuNiOoWY4MYB7V1QidVDQHFPKxJbqnBYmfQK
+         9c8dptNYBC65HyHR5dbM6d8woLWkJBtdzHVJ7/HU=
+Date:   Thu, 8 Aug 2019 18:39:05 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Stephen Hemminger <stephen@networkplumber.org>,
+        Jose Carlos Cazarin Filho <joseespiriki@gmail.com>,
+        isdn@linux-pingi.de, devel@driverdev.osuosl.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] isdn: hysdn: Fix error spaces around '*'
+Message-ID: <20190808163905.GA9224@kroah.com>
+References: <20190802195602.28414-1-joseespiriki@gmail.com>
+ <20190802145506.168b576b@hermes.lan>
+ <2ecfbf8dda354fe47912446bf5c3fe30ca905aa0.camel@perches.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190807233729.3899352-4-songliubraving@fb.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Thu, 08 Aug 2019 16:37:48 +0000 (UTC)
+In-Reply-To: <2ecfbf8dda354fe47912446bf5c3fe30ca905aa0.camel@perches.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/07, Song Liu wrote:
->
-> @@ -399,7 +399,7 @@ static struct page *follow_pmd_mask(struct vm_area_struct *vma,
->  		spin_unlock(ptl);
->  		return follow_page_pte(vma, address, pmd, flags, &ctx->pgmap);
->  	}
-> -	if (flags & FOLL_SPLIT) {
-> +	if (flags & (FOLL_SPLIT | FOLL_SPLIT_PMD)) {
->  		int ret;
->  		page = pmd_page(*pmd);
->  		if (is_huge_zero_page(page)) {
-> @@ -408,7 +408,7 @@ static struct page *follow_pmd_mask(struct vm_area_struct *vma,
->  			split_huge_pmd(vma, pmd, address);
->  			if (pmd_trans_unstable(pmd))
->  				ret = -EBUSY;
-> -		} else {
-> +		} else if (flags & FOLL_SPLIT) {
->  			if (unlikely(!try_get_page(page))) {
->  				spin_unlock(ptl);
->  				return ERR_PTR(-ENOMEM);
-> @@ -420,6 +420,10 @@ static struct page *follow_pmd_mask(struct vm_area_struct *vma,
->  			put_page(page);
->  			if (pmd_none(*pmd))
->  				return no_page_table(vma, flags);
-> +		} else {  /* flags & FOLL_SPLIT_PMD */
-> +			spin_unlock(ptl);
-> +			split_huge_pmd(vma, pmd, address);
-> +			ret = pte_alloc(mm, pmd) ? -ENOMEM : 0;
->  		}
+On Fri, Aug 02, 2019 at 03:05:05PM -0700, Joe Perches wrote:
+> On Fri, 2019-08-02 at 14:55 -0700, Stephen Hemminger wrote:
+> > On Fri,  2 Aug 2019 19:56:02 +0000
+> > Jose Carlos Cazarin Filho <joseespiriki@gmail.com> wrote:
+> > 
+> > > Fix checkpath error:
+> > > CHECK: spaces preferred around that '*' (ctx:WxV)
+> > > +extern hysdn_card *card_root;        /* pointer to first card */
+> > > 
+> > > Signed-off-by: Jose Carlos Cazarin Filho <joseespiriki@gmail.com>
+> > 
+> > Read the TODO, these drivers are scheduled for removal, so changes
+> > are not helpful at this time.
+> 
+> Maybe better to mark the MAINTAINERS entry obsolete so
+> checkpatch bleats a message about unnecessary changes.
+> ---
+>  MAINTAINERS | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 30bf852e6d6b..b5df91032574 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -8628,7 +8628,7 @@ M:	Karsten Keil <isdn@linux-pingi.de>
+>  L:	isdn4linux@listserv.isdn4linux.de (subscribers-only)
+>  L:	netdev@vger.kernel.org
+>  W:	http://www.isdn4linux.de
+> -S:	Odd Fixes
+> +S:	Obsolete
+>  F:	Documentation/isdn/
+>  F:	drivers/isdn/capi/
+>  F:	drivers/staging/isdn/
+> 
 
-Can't resist, let me repeat that I do not like this patch because imo
-it complicates this code for no reason.
+Good idea, will take this patch now, thanks.
 
-But I can't insist and of course I could miss something.
-
-Oleg.
-
+greg k-h
