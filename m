@@ -2,168 +2,172 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB10C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 18:44:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C038C32756
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 18:47:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63C0B2184E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 18:44:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB0B0217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 18:47:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="lsfCX3zt"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="HMR3R7vE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404137AbfHHSod (ORCPT
+        id S2404079AbfHHSrB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 14:44:33 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:33724 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404008AbfHHSoc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 14:44:32 -0400
-Received: by mail-ed1-f68.google.com with SMTP id i11so28449343edq.0
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 11:44:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=OnD8REJjiUQ09MeUwthsY9J1rWTm5v/HD9eRCPSk++8=;
-        b=lsfCX3ztpMTCzqQ61QI4k4mLGAlSga+SA+JM6MdlUtTurWRbcKyta2HZw3aGr9JkSh
-         lh083Z3RQT+f96/OdGYY7TOTlfAXs/Ct/3S0YbTSDYFzd8i69ZTheFeB3q4VymF/1yuN
-         jqJju+D34kBHkVCSmAsH6IsyvyWSC+HhugcsOldPNvAEue88NIkHWqVWOtBZmSxafItq
-         4ClmEOENGPnKoxSymB55KP6UKk5UPwEq5MZjHjuDDxvtfUq7x0Tim3ajHEehi1BnGAt0
-         4EB3+8c0QNGsSJ9+adK3i80N5672PpkAQIZkxp+VGnC9YbnpQiwunnuyTku/bsdLLn3Y
-         V2YQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=OnD8REJjiUQ09MeUwthsY9J1rWTm5v/HD9eRCPSk++8=;
-        b=LxrzUNt5juK4hSNqi0ih3c6g/gIbN/FOLqX3JyFom3WGv71W42xjG2p/DqpmHv14rm
-         lmwVYuHyd+lzcx/4GrDLeoBLZtVdnqJzrJ2dorOjqvDRikMr1861uY9wRygQX8d9Dtwp
-         bSvWqTeapoqWzPZ0pO5eV7q4f2KunjvCzNl2boPD6Qm9VXLljgtoNpXY3pLxRMt2fMT4
-         OqXJXI8UBguvqtnxlLGwYekuLv5rgZCmZucFN9ehNhZ01yPAZnFAwR1eYOiNHn0g19yx
-         Hxf+G1ZaKRHnYEE8jDvYYgoWIjHf9vbAeJD7oT/7jas3vWo/NUPlnlXNlO8SN4FCfh4S
-         iHnA==
-X-Gm-Message-State: APjAAAVjdWJAZtHxh72Lp8X/81BV6CJkXH6b697k41ILvvIrwerHYYUI
-        w0m7ljuecjv7f32LqhI8bGV7aoOCoZOE2j15JpYNkg==
-X-Google-Smtp-Source: APXvYqzNTM/2itQnnnFi1jbNoHH2r8FhmS0Cb3CycZsD8PIZEFgt7etfdlqdZQ/7cAtXUSR7Ohty4Mg1UyiSLvXGrPI=
-X-Received: by 2002:a17:906:5409:: with SMTP id q9mr15148025ejo.209.1565289871191;
- Thu, 08 Aug 2019 11:44:31 -0700 (PDT)
+        Thu, 8 Aug 2019 14:47:01 -0400
+Received: from mail-eopbgr1310121.outbound.protection.outlook.com ([40.107.131.121]:9904
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732375AbfHHSrB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 14:47:01 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iJrsyiHNjzdW7NQuRQZ7AJOhP37DlIjYwSQJqzAZzGysVIevX6E5Dnk7f1QGdmLfrq3EGwHQtNdD83RXjClHIDbZMRk/yWwa5qC/5rfV57mwQwqmJrtLH02p/NqDNiwol5fC3B7kGWQ4H461oTnl4tL+ZuqRYLYaU9inAB3CQIPik0DAVOXlCJ6+FAYeD1UoCpJRbt5xJecxbSQYmkgW92E+KifJylQH4G3XhLH/2Y+n7/WbqY69nZmKeYGjU0WOX6XSXnOcfZujwhkBGkXVeYIhc3LmpZxhRicUJmq8CmFgzOTe7/uFQGAWfm07GcVD1aTdiSTXpMvlYkRGlElyEA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IAYZ9dU/6i43zinEBNLIgVH26s9PLsv6Sw+MgVWb2Vs=;
+ b=isN/4dxZtIUd/FRzvLl5TvpJLqgtnw3tTRmVxsGpZIqkluMn9aoAi03EKjGYi19cI0w1sfK3fwQgeG0IoMDyRoA/gAeFewVL2Lleoj7KIhEldTiQKpIYoeUgYhMT4oexi3va2fWb5Gg0KXozOxFt2Uywvw2vLu+UhKETLwimD3tLxGmuXm8XoWInPB+ZTLQEfgJ8QH7WCyT9ODWoWW31RjMVihXDLZwB84H3ExuJnWPkoHAnZCmTjR78VS+2HcvQGHAAAZhUFsJKzjjPjBMCfS9pgHscGIqVcr8wczpxIDoerkG3hnR34wnnS7dcHGh91nHpR60Ct2fhQ4X35lfC5w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IAYZ9dU/6i43zinEBNLIgVH26s9PLsv6Sw+MgVWb2Vs=;
+ b=HMR3R7vEFAYhOr78oSybbVE5JDELJhtUDl4v4fw+xVsF/SE9uMjOM03iIN11CHZVAzw7LTSjSit9YYzRze8fkfgGZid8+6GgBS03scTgMnfEYkaDHJ/SfT/fHB69eChOzEGiAcJ94xu2KVp8LRVrTjb9MbUcG+4Z3IH1+bwpbb4=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0121.APCP153.PROD.OUTLOOK.COM (10.170.188.14) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.2; Thu, 8 Aug 2019 18:46:52 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::d44e:57b7:d8fc:e91c]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::d44e:57b7:d8fc:e91c%7]) with mapi id 15.20.2157.001; Thu, 8 Aug 2019
+ 18:46:52 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+CC:     Michael Kelley <mikelley@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "driverdev-devel@linuxdriverproject.org" 
+        <driverdev-devel@linuxdriverproject.org>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "jackm@mellanox.com" <jackm@mellanox.com>,
+        Dexuan Cui <decui@microsoft.com>
+Subject: [PATCH] PCI: PM: Also move to D0 before calling
+ pci_legacy_resume_early()
+Thread-Topic: [PATCH] PCI: PM: Also move to D0 before calling
+ pci_legacy_resume_early()
+Thread-Index: AdVOGUCbZsj/msiiS0u0Knw2VZMQCQ==
+Date:   Thu, 8 Aug 2019 18:46:51 +0000
+Message-ID: <PU1P153MB01695867B01987A8C239A8CCBFD70@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-08T18:46:48.2777075Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=be1244be-979b-4200-b7ec-5143529e7577;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:9:c9ac:49d6:29e2:b6ef]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: df167415-44af-49aa-ab1a-08d71c30c734
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:PU1P153MB0121;
+x-ms-traffictypediagnostic: PU1P153MB0121:|PU1P153MB0121:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <PU1P153MB012181186D53E3474FD4698EBFD70@PU1P153MB0121.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 012349AD1C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(136003)(346002)(376002)(366004)(396003)(199004)(189003)(46003)(66446008)(25786009)(66476007)(64756008)(86362001)(10090500001)(4326008)(76116006)(186003)(7416002)(52536014)(5660300002)(102836004)(8990500004)(66556008)(53936002)(14454004)(476003)(486006)(74316002)(6436002)(99286004)(66946007)(55016002)(7696005)(9686003)(6506007)(2906002)(8936002)(316002)(110136005)(6116002)(107886003)(7736002)(14444005)(8676002)(81166006)(478600001)(2201001)(305945005)(10290500003)(81156014)(256004)(33656002)(71200400001)(71190400001)(22452003)(54906003)(2501003);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0121;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: /JHIWFta4PfsRbw/Jk3xSNmDMWwGASoySf78YgUAenBImPB6mFhGnlo/RU7HLCsnLoIec0d8p0VE9MzLPz8jMH6R/yxiqN6yvRMrB0HJ9y24CRgrZpBVhR5KsyERweRIRGoD5+gqDZhu2KnclzyVy///5OeyNKqd1VrxIYAoMDYw4jMyXi1VLY0OdFYm9WdqNhlZgNLmakSddCTrryKr5Cw/YoffC6wJrVIovV2tFAKk1e06e1mU1VZ/IWu1nLSyQaptnQRVP+IidMHyeoyXbQy2mDn46PIDDz5D1z79EbmKi4U1Go7qIGsrKxF1nWmw+fPb2htmrUUAhH8Lo9EWrwCOWxqrrjunOtqNkT+VEriwAFRRGFeNhC17MrPNCHcBJV58BdZ/10WWnSoxZPo1VWUFhl5o474OB6Sd7SVHp5k=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190801152439.11363-1-pasha.tatashin@soleen.com>
-In-Reply-To: <20190801152439.11363-1-pasha.tatashin@soleen.com>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Thu, 8 Aug 2019 14:44:20 -0400
-Message-ID: <CA+CK2bADiBMEx9cJuXT5fQkBYFZAtxUtc7ZzjrNfEjijPZkPtw@mail.gmail.com>
-Subject: Re: [PATCH v1 0/8] arm64: MMU enabled kexec relocation
-To:     Pavel Tatashin <pasha.tatashin@soleen.com>,
-        James Morris <jmorris@namei.org>,
-        Sasha Levin <sashal@kernel.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        kexec mailing list <kexec@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Catalin Marinas <catalin.marinas@arm.com>, will@kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Vladimir Murzin <vladimir.murzin@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Bhupesh Sharma <bhsharma@redhat.com>,
-        linux-mm <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: df167415-44af-49aa-ab1a-08d71c30c734
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Aug 2019 18:46:51.8312
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ko4yk4r0jcGFa03WVn8FjOxo/mMATvFzm0ukzXlyDp0d7PKBSHITSB9j0kOtZ7nG34WhfuuQg/epL12NZ5jVug==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0121
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Just a friendly reminder, please send your comments on this series.
-It's been a week since I sent out these patches, and no feedback yet.
-Also, I'd appreciate if anyone could test this series on vhe hardware
-with vhe kernel, it does not look like QEMU can emulate it yet
 
-Thank you,
-Pasha
+In pci_legacy_suspend_late(), the device state is moved to PCI_UNKNOWN.
+In pci_pm_thaw_noirq(), the state is supposed to be moved back to PCI_D0,
+but the current code misses the pci_legacy_resume_early() path, so the
+state remains in PCI_UNKNOWN in that path, and during hiberantion this
+causes an error for the Mellanox VF driver, which fails to enable
+MSI-X: pci_msi_supported() is false due to dev->current_state !=3D PCI_D0:
 
-On Thu, Aug 1, 2019 at 11:24 AM Pavel Tatashin
-<pasha.tatashin@soleen.com> wrote:
->
-> Enable MMU during kexec relocation in order to improve reboot performance.
->
-> If kexec functionality is used for a fast system update, with a minimal
-> downtime, the relocation of kernel + initramfs takes a significant portion
-> of reboot.
->
-> The reason for slow relocation is because it is done without MMU, and thus
-> not benefiting from D-Cache.
->
-> Performance data
-> ----------------
-> For this experiment, the size of kernel plus initramfs is small, only 25M.
-> If initramfs was larger, than the improvements would be greater, as time
-> spent in relocation is proportional to the size of relocation.
->
-> Previously:
-> kernel shutdown 0.022131328s
-> relocation      0.440510736s
-> kernel startup  0.294706768s
->
-> Relocation was taking: 58.2% of reboot time
->
-> Now:
-> kernel shutdown 0.032066576s
-> relocation      0.022158152s
-> kernel startup  0.296055880s
->
-> Now: Relocation takes 6.3% of reboot time
->
-> Total reboot is x2.16 times faster.
->
-> Previous approaches and discussions
-> -----------------------------------
-> https://lore.kernel.org/lkml/20190709182014.16052-1-pasha.tatashin@soleen.com
-> reserve space for kexec to avoid relocation, involves changes to generic code
-> to optimize a problem that exists on arm64 only:
->
-> https://lore.kernel.org/lkml/20190716165641.6990-1-pasha.tatashin@soleen.com
-> The first attempt to enable MMU, some bugs that prevented performance
-> improvement. The page tables unnecessary configured idmap for the whole
-> physical space.
->
-> https://lore.kernel.org/lkml/20190731153857.4045-1-pasha.tatashin@soleen.com
-> No linear copy, bug with EL2 reboots.
->
-> Pavel Tatashin (8):
->   kexec: quiet down kexec reboot
->   arm64, mm: transitional tables
->   arm64: hibernate: switch to transtional page tables.
->   kexec: add machine_kexec_post_load()
->   arm64, kexec: move relocation function setup and clean up
->   arm64, kexec: add expandable argument to relocation function
->   arm64, kexec: configure transitional page table for kexec
->   arm64, kexec: enable MMU during kexec relocation
->
->  arch/arm64/Kconfig                     |   4 +
->  arch/arm64/include/asm/kexec.h         |  51 ++++-
->  arch/arm64/include/asm/pgtable-hwdef.h |   1 +
->  arch/arm64/include/asm/trans_table.h   |  68 ++++++
->  arch/arm64/kernel/asm-offsets.c        |  14 ++
->  arch/arm64/kernel/cpu-reset.S          |   4 +-
->  arch/arm64/kernel/cpu-reset.h          |   8 +-
->  arch/arm64/kernel/hibernate.c          | 261 ++++++-----------------
->  arch/arm64/kernel/machine_kexec.c      | 199 ++++++++++++++----
->  arch/arm64/kernel/relocate_kernel.S    | 196 +++++++++---------
->  arch/arm64/mm/Makefile                 |   1 +
->  arch/arm64/mm/trans_table.c            | 273 +++++++++++++++++++++++++
->  kernel/kexec.c                         |   4 +
->  kernel/kexec_core.c                    |   8 +-
->  kernel/kexec_file.c                    |   4 +
->  kernel/kexec_internal.h                |   2 +
->  16 files changed, 758 insertions(+), 340 deletions(-)
->  create mode 100644 arch/arm64/include/asm/trans_table.h
->  create mode 100644 arch/arm64/mm/trans_table.c
->
-> --
-> 2.22.0
->
+mlx4_core a6d1:00:02.0: Detected virtual function - running in slave mode
+mlx4_core a6d1:00:02.0: Sending reset
+mlx4_core a6d1:00:02.0: Sending vhcr0
+mlx4_core a6d1:00:02.0: HCA minimum page size:512
+mlx4_core a6d1:00:02.0: Timestamping is not supported in slave mode
+mlx4_core a6d1:00:02.0: INTx is not supported in multi-function mode, abort=
+ing
+PM: dpm_run_callback(): pci_pm_thaw+0x0/0xd7 returns -95
+PM: Device a6d1:00:02.0 failed to thaw: error -95
+
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+---
+ drivers/pci/pci-driver.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+index 36dbe960306b..27dfc68db9e7 100644
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -1074,15 +1074,16 @@ static int pci_pm_thaw_noirq(struct device *dev)
+ 			return error;
+ 	}
+=20
+-	if (pci_has_legacy_pm_support(pci_dev))
+-		return pci_legacy_resume_early(dev);
+-
+ 	/*
+ 	 * pci_restore_state() requires the device to be in D0 (because of MSI
+ 	 * restoration among other things), so force it into D0 in case the
+ 	 * driver's "freeze" callbacks put it into a low-power state directly.
+ 	 */
+ 	pci_set_power_state(pci_dev, PCI_D0);
++
++	if (pci_has_legacy_pm_support(pci_dev))
++		return pci_legacy_resume_early(dev);
++
+ 	pci_restore_state(pci_dev);
+=20
+ 	if (drv && drv->pm && drv->pm->thaw_noirq)
+--=20
+2.19.1
+
