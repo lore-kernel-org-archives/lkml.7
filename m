@@ -2,119 +2,139 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E8AC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 02:47:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B45BC32751
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 02:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38D202089E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 02:47:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4B902171F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 02:53:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="2pId28en"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="h2J8ojQi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728224AbfHHCrU (ORCPT
+        id S2389631AbfHHCxc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 22:47:20 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:57560 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727946AbfHHCrT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 22:47:19 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x782hvDB102089;
-        Thu, 8 Aug 2019 02:46:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=lrRmrH7t2DxXhTipWxRRs5ivdb/74vVU7DqRNEZ410k=;
- b=2pId28en9LJEdW0ne3zijEyIyY48YmF3imXfi6P2+oxCWtdJ6n6EKOllE3HNkXrr5Cgp
- 25iopFMtfd8J0PeGIJtZLoIgdPA2vGVWrxRnsqRfTfcZglqLzSBICsThdvJrL13fq4/T
- aVshbx3FtGdJ0sIGAQwpJ+wJLDwFPgbaZKp0HBsd7bTk7gyQZ4c2Up4Ap4MqZEB+VrpF
- iTmbzXtzX4OkI2a89ev0Qhj94GjIrsftZtwlv+F7/Qt9fszW46aKfRRnKD5t5l45CN7w
- gt7lhpfWpxRuPcCTPjSVX0u3RXC+7j3W1N3okx3TOm6xL2RQGPktKh5qu4Dlq4kpZkqk ew== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2u51pu7u5e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 08 Aug 2019 02:46:54 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x782hJ4C173010;
-        Thu, 8 Aug 2019 02:44:53 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2u7578hr6f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 08 Aug 2019 02:44:53 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x782iqqv010401;
-        Thu, 8 Aug 2019 02:44:52 GMT
-Received: from [192.168.1.222] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 07 Aug 2019 19:44:51 -0700
-Subject: Re: [PATCH] hugetlbfs: fix hugetlb page migration/fault race causing
- SIGBUS
-To:     =?UTF-8?B?6KOY56iA55+zKOeogOefsyk=?= 
-        <xishi.qiuxishi@alibaba-inc.com>, linux-mm <linux-mm@kvack.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        ltp <ltp@lists.linux.it>
-Cc:     Li Wang <liwang@redhat.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Cyril Hrubis <chrubis@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <f7a64f0a-1ae0-4582-a293-b608bc8fed36.xishi.qiuxishi@alibaba-inc.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <5f072c20-2396-48ee-700a-ea7eafc20328@oracle.com>
-Date:   Wed, 7 Aug 2019 19:44:47 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 7 Aug 2019 22:53:32 -0400
+Received: from ozlabs.org ([203.11.71.1]:35857 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727978AbfHHCxb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 22:53:31 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 463tGw3FLXz9s7T;
+        Thu,  8 Aug 2019 12:53:27 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1565232808;
+        bh=/PuKtT7hVEGOuEdR+eb2Zo3CrrUaO63bl10cgsb8BH4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=h2J8ojQiYVX+SIFRiezM7ePsVtjVQwzWzFA0f9xnHmsBVnu6Fsaz2F2RMt4X+z++0
+         C84YjQH/VGCZXtzn0W6H7l+JDtcKvsASqlS63+WBijsGT/Z4v6op/oIfRAAD/WbX5+
+         kF2VMypPt4quEdbIJ7DJu4SDt8tUIBRhKTu/JhnGUagOJMezxE9rD6jt1/ichXiG1m
+         mU275Hk37Hjy19kgIUugnWW8Ze3Q4csh6zHOVlmJY8opVj6ZGMbA5+3BhVdj86jAhn
+         1rOzaMHqhE3LF1GQ1Vr5mqLvSbKDG3HZi9DRY62yJmiawXDEa+akB9XNDxI26JwxzN
+         7X25Qy+eMoyWQ==
+Date:   Thu, 8 Aug 2019 12:53:26 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>
+Subject: linux-next: manual merge of the bpf-next tree with Linus' tree
+Message-ID: <20190808125326.614065d6@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <f7a64f0a-1ae0-4582-a293-b608bc8fed36.xishi.qiuxishi@alibaba-inc.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9342 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908080027
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9342 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908080027
+Content-Type: multipart/signed; boundary="Sig_/t965bQleaCIqT2n30_GaWGl";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/7/19 7:24 PM, 裘稀石(稀石) wrote:
-> Hi Mike,
-> 
-> Do you mean the similar race is like the following?
-> 
-> migration clearing the pte
->   page fault(before we return error, and now we return 0, then try page fault again, right?)
->     migration writing a migration entry
+--Sig_/t965bQleaCIqT2n30_GaWGl
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Yes, something like the that.  The change is to takes the page table lock
-to examine the pte before returning.  If the pte is clear when examined
-while holding the lock, an error will be returned as before.  If not clear,
-then we return zero and try again.
+Hi all,
 
-This change adds code which is very much like this check further in
-the routine hugetlb_no_page():
+Today's linux-next merge of the bpf-next tree got a conflict in:
 
-	ptl = huge_pte_lock(h, mm, ptep);
-	size = i_size_read(mapping->host) >> huge_page_shift(h);
-	if (idx >= size)
-		goto backout;
+  tools/lib/bpf/libbpf.c
 
-	ret = 0;
-	if (!huge_pte_none(huge_ptep_get(ptep)))
-		goto backout;
+between commit:
 
--- 
-Mike Kravetz
+  1d4126c4e119 ("libbpf: sanitize VAR to conservative 1-byte INT")
+
+from Linus' tree and commit:
+
+  b03bc6853c0e ("libbpf: convert libbpf code to use new btf helpers")
+
+from the bpf-next tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc tools/lib/bpf/libbpf.c
+index 2b57d7ea7836,3abf2dd1b3b5..000000000000
+--- a/tools/lib/bpf/libbpf.c
++++ b/tools/lib/bpf/libbpf.c
+@@@ -1370,22 -1374,16 +1372,21 @@@ static void bpf_object__sanitize_btf(st
+ =20
+  	for (i =3D 1; i <=3D btf__get_nr_types(btf); i++) {
+  		t =3D (struct btf_type *)btf__type_by_id(btf, i);
+- 		kind =3D BTF_INFO_KIND(t->info);
+ =20
+- 		if (!has_datasec && kind =3D=3D BTF_KIND_VAR) {
++ 		if (!has_datasec && btf_is_var(t)) {
+  			/* replace VAR with INT */
+  			t->info =3D BTF_INFO_ENC(BTF_KIND_INT, 0, 0);
+ -			t->size =3D sizeof(int);
+ -			*(int *)(t + 1) =3D BTF_INT_ENC(0, 0, 32);
+ +			/*
+ +			 * using size =3D 1 is the safest choice, 4 will be too
+ +			 * big and cause kernel BTF validation failure if
+ +			 * original variable took less than 4 bytes
+ +			 */
+ +			t->size =3D 1;
+- 			*(int *)(t+1) =3D BTF_INT_ENC(0, 0, 8);
+- 		} else if (!has_datasec && kind =3D=3D BTF_KIND_DATASEC) {
+++			*(int *)(t + 1) =3D BTF_INT_ENC(0, 0, 8);
++ 		} else if (!has_datasec && btf_is_datasec(t)) {
+  			/* replace DATASEC with STRUCT */
+- 			struct btf_var_secinfo *v =3D (void *)(t + 1);
+- 			struct btf_member *m =3D (void *)(t + 1);
++ 			const struct btf_var_secinfo *v =3D btf_var_secinfos(t);
++ 			struct btf_member *m =3D btf_members(t);
+  			struct btf_type *vt;
+  			char *name;
+ =20
+
+--Sig_/t965bQleaCIqT2n30_GaWGl
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1LjqYACgkQAVBC80lX
+0GyyZQf9HpGsTBYYj/EbUlYjBJQiYNKf3nilJ36/aZKDUa9R6wBu3tHu6p24zRRh
+cSvwL8hit9tcUZOI1t4OyVh64mlW8GRxE5kKu0722dxRnSMQx7Td3LTA6inrlCCV
+CnJRlEoCHpP7vITbo+0cwVhJt+OR4k4/GEAf/mZVqZAwoXMsUZkC6LY30aKWDJfc
+3TzURLuzemJSJvZAsNOXDHevUM++t+01n1iq+3Y6bf9grOyQc9NI732GKTTxOPEE
+FpNhnSp8H24r2yBiuIgJqHSNAwZy/03TUtiijE8xomQZoIWOUn10BL4d2tnP/kpn
+kU6k1xWsopkhAi54Z0ebJcEEjpDLWA==
+=cXek
+-----END PGP SIGNATURE-----
+
+--Sig_/t965bQleaCIqT2n30_GaWGl--
