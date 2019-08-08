@@ -2,92 +2,124 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E700C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:21:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C2CC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:21:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12C40217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:21:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4B5D2186A
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:21:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731193AbfHHGVa (ORCPT
+        id S1731214AbfHHGVo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 02:21:30 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:52355 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731005AbfHHGV1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 02:21:27 -0400
-X-Originating-IP: 79.86.19.127
-Received: from alex.numericable.fr (127.19.86.79.rev.sfr.net [79.86.19.127])
-        (Authenticated sender: alex@ghiti.fr)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 1AE39E0004;
-        Thu,  8 Aug 2019 06:21:18 +0000 (UTC)
-From:   Alexandre Ghiti <alex@ghiti.fr>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
+        Thu, 8 Aug 2019 02:21:44 -0400
+Received: from foss.arm.com ([217.140.110.172]:56526 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731005AbfHHGVn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 02:21:43 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E63DA337;
+        Wed,  7 Aug 2019 23:21:42 -0700 (PDT)
+Received: from [10.163.1.243] (unknown [10.163.1.243])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AF5E13F706;
+        Wed,  7 Aug 2019 23:23:48 -0700 (PDT)
+Subject: Re: [PATCH v2] arm64: mm: print hexadecimal EC value in
+ mem_abort_decode()
+To:     Miles Chen <miles.chen@mediatek.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will.deacon@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Alexandre Ghiti <alex@ghiti.fr>
-Subject: [PATCH v6 03/14] arm64: Consider stack randomization for mmap base only when necessary
-Date:   Thu,  8 Aug 2019 02:17:45 -0400
-Message-Id: <20190808061756.19712-4-alex@ghiti.fr>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190808061756.19712-1-alex@ghiti.fr>
-References: <20190808061756.19712-1-alex@ghiti.fr>
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com,
+        Mark Rutland <Mark.rutland@arm.com>,
+        James Morse <james.morse@arm.com>
+References: <20190807003336.28040-1-miles.chen@mediatek.com>
+ <98bdbcfb-24ed-fcd8-4b2c-f2c78b245dda@arm.com>
+ <1565244075.26350.3.camel@mtkswgap22>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <256df022-6ad2-bae8-cc94-908adf409a07@arm.com>
+Date:   Thu, 8 Aug 2019 11:51:33 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1565244075.26350.3.camel@mtkswgap22>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Do not offset mmap base address because of stack randomization if
-current task does not want randomization.
-Note that x86 already implements this behaviour.
 
-Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-Acked-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
----
- arch/arm64/mm/mmap.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/mm/mmap.c b/arch/arm64/mm/mmap.c
-index bb0140afed66..e4acaead67de 100644
---- a/arch/arm64/mm/mmap.c
-+++ b/arch/arm64/mm/mmap.c
-@@ -54,7 +54,11 @@ unsigned long arch_mmap_rnd(void)
- static unsigned long mmap_base(unsigned long rnd, struct rlimit *rlim_stack)
- {
- 	unsigned long gap = rlim_stack->rlim_cur;
--	unsigned long pad = (STACK_RND_MASK << PAGE_SHIFT) + stack_guard_gap;
-+	unsigned long pad = stack_guard_gap;
-+
-+	/* Account for stack randomization if necessary */
-+	if (current->flags & PF_RANDOMIZE)
-+		pad += (STACK_RND_MASK << PAGE_SHIFT);
- 
- 	/* Values close to RLIM_INFINITY can overflow. */
- 	if (gap + pad > gap)
--- 
-2.20.1
+On 08/08/2019 11:31 AM, Miles Chen wrote:
+> On Thu, 2019-08-08 at 11:19 +0530, Anshuman Khandual wrote:
+>>
+>> On 08/07/2019 06:03 AM, Miles Chen wrote:
+>>> This change prints the hexadecimal EC value in mem_abort_decode(),
+>>> which makes it easier to lookup the corresponding EC in
+>>> the ARM Architecture Reference Manual.
+>>>
+>>> The commit 1f9b8936f36f ("arm64: Decode information from ESR upon mem
+>>> faults") prints useful information when memory abort occurs. It would
+>>> be easier to lookup "0x25" instead of "DABT" in the document. Then we
+>>> can check the corresponding ISS.
+>>>
+>>> For example:
+>>> Current	info	  	Document
+>>> 		  	EC	Exception class
+>>> "CP15 MCR/MRC"		0x3	"MCR or MRC access to CP15a..."
+>>> "ASIMD"			0x7	"Access to SIMD or floating-point..."
+>>> "DABT (current EL)" 	0x25	"Data Abort taken without..."
+>>> ...
+>>>
+>>> Before:
+>>> Unable to handle kernel paging request at virtual address 000000000000c000
+>>> Mem abort info:
+>>>   ESR = 0x96000046
+>>>   Exception class = DABT (current EL), IL = 32 bits
+>>>   SET = 0, FnV = 0
+>>>   EA = 0, S1PTW = 0
+>>> Data abort info:
+>>>   ISV = 0, ISS = 0x00000046
+>>>   CM = 0, WnR = 1
+>>>
+>>> After:
+>>> Unable to handle kernel paging request at virtual address 000000000000c000
+>>> Mem abort info:
+>>>   ESR = 0x96000046
+>>>   EC = 0x25: DABT (current EL), IL = 32 bits
+>>>   SET = 0, FnV = 0
+>>>   EA = 0, S1PTW = 0
+>>> Data abort info:
+>>>   ISV = 0, ISS = 0x00000046
+>>>   CM = 0, WnR = 1
+>>>
+>>> Change since v1:
+>>> print "EC" instead of "Exception class"
+>>> print EC in fixwidth
+>>>
+>>> Cc: Mark Rutland <Mark.rutland@arm.com>
+>>> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
+>>> Cc: James Morse <james.morse@arm.com>
+>>> Signed-off-by: Miles Chen <miles.chen@mediatek.com>
+>>
+>> This version implements the suggestion, hence it should have
+>> also contained acked-by tag from Mark from earlier version.
+>>
+> 
+> No problem. Sorry for not including the tag.
+> I was not sure if I should add the acked-by tag from Mark in patch v2.
 
+Yeah because V2 has now implemented the suggestion as required for
+getting the tag per Mark in V1.
+
+> 
+>> Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> 
+> If I send patch v3, I should include acked-by tag from Mark and
+> Reviewed-by tag from you, right?
+
+Right.
