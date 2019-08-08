@@ -2,103 +2,91 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC77C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 22:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 171DAC32754
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 22:13:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D33362173E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 22:12:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565302336;
-	bh=OPna2wRtpLezIz6CjgPBp1jF29Ynib55VfQMv7ffXRo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DVwj2hIO+Zh9Rpd+FlTvrjrMwzRF3BkL7ZHLS4h89qxFnku/4lmNkeytjpBP+qN4j
-	 TlUCxABQkqXt/zvIiVNViCD1WWefL4hp+K3/Ze41wCR+BT1+P8aOuF4EM5a4vRtVS7
-	 jx5B+C1tV/a7J+qw9v2FVuQAUhoS9yn3aUXs8eZE=
+	by mail.kernel.org (Postfix) with ESMTP id D4DE32173C
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 22:13:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="BYh3CXmp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404574AbfHHWMP (ORCPT
+        id S2390482AbfHHWNO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 18:12:15 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:54840 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390169AbfHHWMP (ORCPT
+        Thu, 8 Aug 2019 18:13:14 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:39977 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725535AbfHHWNO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 18:12:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=pARZA3ohxUG2TFTyA7TlH8jLh4Oscb64NF12pQDdV/g=; b=K6nxPDmuEi5RmSoqdhxi1li7A
-        y+lyQoxKx/iF/bl7WnAxbFkdpgRwepj7hji24AgLO2CLa1NNWSpOldj727IK3VY9cuvTvNXd+ZH/4
-        4gXLlvHkW9+Tjig3Tx1ht3qR9KVtmgcjVb8xU5wD3tn6Vvwrjhi71/iC4xAecEozGEHoU=;
-Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1hvqdn-0004Cj-LW; Thu, 08 Aug 2019 22:12:11 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 673842742BDD; Thu,  8 Aug 2019 23:12:10 +0100 (BST)
-Date:   Thu, 8 Aug 2019 23:12:10 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: Signed-off-by missing for commit in the sound-asoc
- tree
-Message-ID: <20190808221210.GO3795@sirena.co.uk>
-References: <20190809074325.65a72962@canb.auug.org.au>
+        Thu, 8 Aug 2019 18:13:14 -0400
+Received: by mail-ot1-f68.google.com with SMTP id l15so67777414oth.7
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 15:13:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=QAveB2MW5aJCL42pdrRo0A2p3FoeHwf0+C7PsDEtr8A=;
+        b=BYh3CXmpTdLhzlZKIWTS8wOiE1OOGf9hls2ts3bYz7IveQviKpWWqIgibdewQlI/V0
+         bnjk37YFfE6sgM8hrsj1fuNTcN44llGXOqtbclPgC6p1fVnUUAd8ALIcpBm+ZjLWnwfi
+         +ER3HzavOE3pgbXBU+FsmTQRfpeI78xD3Ppwl/MyXIBZtjmYfOOL6XyaBXGot7zZHq2K
+         GP2NsSb/pb6jBVogIgEhzwOFp5bl1GPq502b3f+b4e3lNQxiSH0BAOt/Z0bLNls5hQmG
+         UxceZu66FYwoLYmp6J+3+/qh1D5I11XIzY0q8b+YtWdiZBmgm7xellduUI32H4JiGWbB
+         17MA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=QAveB2MW5aJCL42pdrRo0A2p3FoeHwf0+C7PsDEtr8A=;
+        b=pQy2DLCHPHwf7DhxzCbmuEhTYSTYxfRgqJBGo83hglCfbZ+EszoxygcLe/Gdbfpvkr
+         DBUU5gx0OxYziYP5JxkNgPeQP219/PQWSdyr2IWlkr4eKT+AqrVVRsLWv8VCGIhhPdyU
+         SXpV5v82ea8MdX1ub1algT4OqJVCnTAJn5pxtElo1Am4DCbygjqhdGdgyQyQTb4lEjzF
+         esZz495SIvft5/0zUWm+TiplnOLkm4atfM4KPL4HMUsZsepJ+zSK8fPSqf0J7dAgu/6t
+         42rsN9OaENs1c7rxiO6qXymXYE5nctg617HnZISJFCt7LLOdfEznMnJCv6RfgTgntant
+         Yl5Q==
+X-Gm-Message-State: APjAAAU3f9NCse8my5/hW7GKkBsJYVYL3PoyvZdcumq6L+bYtDS1/xLp
+        tmKhB6YB+HO9CEC7fbDx4KRdlw==
+X-Google-Smtp-Source: APXvYqw6s/RyB6V5j4rVM86HvbsgecZHQYSNieyQsEmT4pWYa+NHHnA6N9MkEh+XkeHSxuIzd+PxoA==
+X-Received: by 2002:a5d:9acf:: with SMTP id x15mr16478208ion.190.1565302393249;
+        Thu, 08 Aug 2019 15:13:13 -0700 (PDT)
+Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
+        by smtp.gmail.com with ESMTPSA id h19sm63989093iol.65.2019.08.08.15.13.11
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 08 Aug 2019 15:13:12 -0700 (PDT)
+Date:   Thu, 8 Aug 2019 15:13:11 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Bjorn Helgaas <helgaas@kernel.org>
+cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org,
+        Wesley Terpstra <wesley@sifive.com>
+Subject: Re: [PATCH v2] pci: Kconfig: select PCI_MSI_IRQ_DOMAIN by default
+ on RISC-V
+In-Reply-To: <20190808214728.GC7302@google.com>
+Message-ID: <alpine.DEB.2.21.9999.1908081512200.6414@viisi.sifive.com>
+References: <alpine.DEB.2.21.9999.1907251426450.32766@viisi.sifive.com> <20190808195546.GA7302@google.com> <alpine.DEB.2.21.9999.1908081349210.6414@viisi.sifive.com> <20190808214728.GC7302@google.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="E+IgQzR66AIOcbjA"
-Content-Disposition: inline
-In-Reply-To: <20190809074325.65a72962@canb.auug.org.au>
-X-Cookie: I think we're in trouble.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 8 Aug 2019, Bjorn Helgaas wrote:
 
---E+IgQzR66AIOcbjA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Indeed, sorry I missed it.  I generally work based on -rc1, and it
+> looks like 251a44888183 was merged after -rc1.
+> 
+> Since we're after the merge window, the default target would be v5.4,
+> but I see some post-rc1 pull requests from you, so if you need this in
+> v5.3, let me know.
+> 
+> I applied your patch to pci/msi for v5.4 for now.
 
-On Fri, Aug 09, 2019 at 07:43:25AM +1000, Stephen Rothwell wrote:
+v5.4 is fine - thanks.
 
-> Commit
 
->   c42d8cbee4c7 ("Merge branches from Takashi to ease Skylake development.=
-")
-
-> is missing a Signed-off-by from its author and committer.
-
-> Despite what the commit message says, this is not a merge commit.
-
-Ugh, that's a git bug - there was a conflict resolution and rather when
-I resolved it it seems to have completely thrown away the fact that
-there was a merge. =20
-
---E+IgQzR66AIOcbjA
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1MnjkACgkQJNaLcl1U
-h9AAlgf+Ix8ug5eNSrx1p4/j6TcNb5tTbq5IBAT+XRO0oGUuLtBuT4iusOWFz+4D
-iNVl4NI+mg4u8ASC9emv3C4ql2Eeg0T18zJ9BKRvtLzbtVh69w9crzkV7NlTwmcw
-KA6UD0o9GAh34aJYSyr6RqXE3k70wPIdJKF9XzyfSA6wRewP6LEHJ9enK8BeTvMX
-ljntdAYwd9wj2zypPbyKrKOa7mZDFYNURNCTo+leZGyH6djpvrgIFtp+b+5F2y6n
-3nK7geW0KP+otBz1JJ539u+W1noGhbtQsRMPJUUda36EugvLtGQQeThRvEBf446Z
-EqXPnbv00ZzNZdwPxQdLKSwAPXbbag==
-=piES
------END PGP SIGNATURE-----
-
---E+IgQzR66AIOcbjA--
+- Paul
