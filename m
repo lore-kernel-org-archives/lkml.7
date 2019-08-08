@@ -2,51 +2,53 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DFE2C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DDEBC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:15:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FD592173E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:15:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22D592173E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:15:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565291711;
-	bh=i+No/v5lAkCodta36V5I1H31ENzL9BPkUEng+6jrXHo=;
+	s=default; t=1565291720;
+	bh=ha2tKDlOPf8GeMUwPDsJYGi3jftBbOc3UIJHUalPh9k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ILowlW7XzbsD6lzpz3Raq+2dkN4FHHuN+RmWw/ep0jNn0CwdFbMaNH/90r35TkWJ7
-	 BUTabws4ubRiD0yFZY5XpplfM7YcQOOgZN2aUduMzxZomfE7049EMAe6C+sQ9H5zCk
-	 iV1R6TVcICSNeLtWdFob0Ur4iZLlrONdxHZksF8U=
+	b=fdmoDaBcxm3sOzPiCZKM718BbiS7j3yxVT1KpIGlQjRSWmc5vI0wokCHWyKznMl5g
+	 arHVLcu06ATgXezboxBIY4WABEfMOCfJcj6QyKo89zp0J4V6YFkr1U+ErHLbXn/YJc
+	 TSZFe/XHwxGAaedBHumSkQIICCa7cQfX+sYT2HK4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404962AbfHHTPK (ORCPT
+        id S2405227AbfHHTPT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:15:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41140 "EHLO mail.kernel.org"
+        Thu, 8 Aug 2019 15:15:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404262AbfHHTH0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 15:07:26 -0400
+        id S2404603AbfHHTHR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 15:07:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F00D3214C6;
-        Thu,  8 Aug 2019 19:07:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A636A2173E;
+        Thu,  8 Aug 2019 19:07:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565291246;
-        bh=i+No/v5lAkCodta36V5I1H31ENzL9BPkUEng+6jrXHo=;
+        s=default; t=1565291236;
+        bh=ha2tKDlOPf8GeMUwPDsJYGi3jftBbOc3UIJHUalPh9k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nJfXSSote8gcvU6voiEv4TCV45LfUDiB9oDGHLitZwW5bpdAOzvRyROQTy9sD4/bP
-         vHA1lysc1XZkZgbYfHX+2IJHFQv8e3NYDkzESEwxsoP8XAe/OpiFpZsX5aq0BMBhK2
-         fndTlIfxRuWw/dxCaJi0tHx9BNXnZJo8D1se5sr0=
+        b=avklIGJahYFOI7sMKZGU3OgEhXZraB4lRpOGTHEK4tE6JF7aC26HFjaY80RZl7cfG
+         64xQqcZ0COUaqNMLWF767B8KnJAQMkcDqLiUqTrRcw917jsDAnm9FwK/34RXdt6dEb
+         cWMLT2zqU+iLk7MnLHu0b+/k2iWT4/cWDjdr1Fh8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sebastian Parschauer <s.parschauer@gmx.de>,
-        Jiri Kosina <jkosina@suse.cz>
-Subject: [PATCH 5.2 07/56] HID: Add quirk for HP X1200 PIXART OEM mouse
-Date:   Thu,  8 Aug 2019 21:04:33 +0200
-Message-Id: <20190808190453.156076010@linuxfoundation.org>
+        stable@vger.kernel.org, Li Shuang <shuali@redhat.com>,
+        Jon Maloy <jon.maloy@ericsson.com>,
+        Xin Long <lucien.xin@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.2 37/56] tipc: fix unitilized skb list crash
+Date:   Thu,  8 Aug 2019 21:05:03 +0200
+Message-Id: <20190808190454.540265402@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190808190452.867062037@linuxfoundation.org>
 References: <20190808190452.867062037@linuxfoundation.org>
@@ -59,46 +61,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sebastian Parschauer <s.parschauer@gmx.de>
+From: Jon Maloy <jon.maloy@ericsson.com>
 
-commit 49869d2ea9eecc105a10724c1abf035151a3c4e2 upstream.
+[ Upstream commit 2948a1fcd77a8bb11604387e3fc52f0ebf5729e9 ]
 
-The PixArt OEM mice are known for disconnecting every minute in
-runlevel 1 or 3 if they are not always polled. So add quirk
-ALWAYS_POLL for this one as well.
+Our test suite somtimes provokes the following crash:
 
-Jonathan Teh (@jonathan-teh) reported and tested the quirk.
-Reference: https://github.com/sriemer/fix-linux-mouse/issues/15
+Description of problem:
+[ 1092.597234] BUG: unable to handle kernel NULL pointer dereference at 00000000000000e8
+[ 1092.605072] PGD 0 P4D 0
+[ 1092.607620] Oops: 0000 [#1] SMP PTI
+[ 1092.611118] CPU: 37 PID: 0 Comm: swapper/37 Kdump: loaded Not tainted 4.18.0-122.el8.x86_64 #1
+[ 1092.619724] Hardware name: Dell Inc. PowerEdge R740/08D89F, BIOS 1.3.7 02/08/2018
+[ 1092.627215] RIP: 0010:tipc_mcast_filter_msg+0x93/0x2d0 [tipc]
+[ 1092.632955] Code: 0f 84 aa 01 00 00 89 cf 4d 01 ca 4c 8b 26 c1 ef 19 83 e7 0f 83 ff 0c 4d 0f 45 d1 41 8b 6a 10 0f cd 4c 39 e6 0f 84 81 01 00 00 <4d> 8b 9c 24 e8 00 00 00 45 8b 13 41 0f ca 44 89 d7 c1 ef 13 83 e7
+[ 1092.651703] RSP: 0018:ffff929e5fa83a18 EFLAGS: 00010282
+[ 1092.656927] RAX: ffff929e3fb38100 RBX: 00000000069f29ee RCX: 00000000416c0045
+[ 1092.664058] RDX: ffff929e5fa83a88 RSI: ffff929e31a28420 RDI: 0000000000000000
+[ 1092.671209] RBP: 0000000029b11821 R08: 0000000000000000 R09: ffff929e39b4407a
+[ 1092.678343] R10: ffff929e39b4407a R11: 0000000000000007 R12: 0000000000000000
+[ 1092.685475] R13: 0000000000000001 R14: ffff929e3fb38100 R15: ffff929e39b4407a
+[ 1092.692614] FS:  0000000000000000(0000) GS:ffff929e5fa80000(0000) knlGS:0000000000000000
+[ 1092.700702] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 1092.706447] CR2: 00000000000000e8 CR3: 000000031300a004 CR4: 00000000007606e0
+[ 1092.713579] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[ 1092.720712] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[ 1092.727843] PKRU: 55555554
+[ 1092.730556] Call Trace:
+[ 1092.733010]  <IRQ>
+[ 1092.735034]  tipc_sk_filter_rcv+0x7ca/0xb80 [tipc]
+[ 1092.739828]  ? __kmalloc_node_track_caller+0x1cb/0x290
+[ 1092.744974]  ? dev_hard_start_xmit+0xa5/0x210
+[ 1092.749332]  tipc_sk_rcv+0x389/0x640 [tipc]
+[ 1092.753519]  tipc_sk_mcast_rcv+0x23c/0x3a0 [tipc]
+[ 1092.758224]  tipc_rcv+0x57a/0xf20 [tipc]
+[ 1092.762154]  ? ktime_get_real_ts64+0x40/0xe0
+[ 1092.766432]  ? tpacket_rcv+0x50/0x9f0
+[ 1092.770098]  tipc_l2_rcv_msg+0x4a/0x70 [tipc]
+[ 1092.774452]  __netif_receive_skb_core+0xb62/0xbd0
+[ 1092.779164]  ? enqueue_entity+0xf6/0x630
+[ 1092.783084]  ? kmem_cache_alloc+0x158/0x1c0
+[ 1092.787272]  ? __build_skb+0x25/0xd0
+[ 1092.790849]  netif_receive_skb_internal+0x42/0xf0
+[ 1092.795557]  napi_gro_receive+0xba/0xe0
+[ 1092.799417]  mlx5e_handle_rx_cqe+0x83/0xd0 [mlx5_core]
+[ 1092.804564]  mlx5e_poll_rx_cq+0xd5/0x920 [mlx5_core]
+[ 1092.809536]  mlx5e_napi_poll+0xb2/0xce0 [mlx5_core]
+[ 1092.814415]  ? __wake_up_common_lock+0x89/0xc0
+[ 1092.818861]  net_rx_action+0x149/0x3b0
+[ 1092.822616]  __do_softirq+0xe3/0x30a
+[ 1092.826193]  irq_exit+0x100/0x110
+[ 1092.829512]  do_IRQ+0x85/0xd0
+[ 1092.832483]  common_interrupt+0xf/0xf
+[ 1092.836147]  </IRQ>
+[ 1092.838255] RIP: 0010:cpuidle_enter_state+0xb7/0x2a0
+[ 1092.843221] Code: e8 3e 79 a5 ff 80 7c 24 03 00 74 17 9c 58 0f 1f 44 00 00 f6 c4 02 0f 85 d7 01 00 00 31 ff e8 a0 6b ab ff fb 66 0f 1f 44 00 00 <48> b8 ff ff ff ff f3 01 00 00 4c 29 f3 ba ff ff ff 7f 48 39 c3 7f
+[ 1092.861967] RSP: 0018:ffffaa5ec6533e98 EFLAGS: 00000246 ORIG_RAX: ffffffffffffffdd
+[ 1092.869530] RAX: ffff929e5faa3100 RBX: 000000fe63dd2092 RCX: 000000000000001f
+[ 1092.876665] RDX: 000000fe63dd2092 RSI: 000000003a518aaa RDI: 0000000000000000
+[ 1092.883795] RBP: 0000000000000003 R08: 0000000000000004 R09: 0000000000022940
+[ 1092.890929] R10: 0000040cb0666b56 R11: ffff929e5faa20a8 R12: ffff929e5faade78
+[ 1092.898060] R13: ffffffffb59258f8 R14: 000000fe60f3228d R15: 0000000000000000
+[ 1092.905196]  ? cpuidle_enter_state+0x92/0x2a0
+[ 1092.909555]  do_idle+0x236/0x280
+[ 1092.912785]  cpu_startup_entry+0x6f/0x80
+[ 1092.916715]  start_secondary+0x1a7/0x200
+[ 1092.920642]  secondary_startup_64+0xb7/0xc0
+[...]
 
-Signed-off-by: Sebastian Parschauer <s.parschauer@gmx.de>
-CC: stable@vger.kernel.org
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+The reason is that the skb list tipc_socket::mc_method.deferredq only
+is initialized for connectionless sockets, while nothing stops arriving
+multicast messages from being filtered by connection oriented sockets,
+with subsequent access to the said list.
+
+We fix this by initializing the list unconditionally at socket creation.
+This eliminates the crash, while the message still is dropped further
+down in tipc_sk_filter_rcv() as it should be.
+
+Reported-by: Li Shuang <shuali@redhat.com>
+Signed-off-by: Jon Maloy <jon.maloy@ericsson.com>
+Reviewed-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/hid/hid-ids.h    |    1 +
- drivers/hid/hid-quirks.c |    1 +
- 2 files changed, 2 insertions(+)
+ net/tipc/socket.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -568,6 +568,7 @@
- #define USB_PRODUCT_ID_HP_LOGITECH_OEM_USB_OPTICAL_MOUSE_0B4A	0x0b4a
- #define USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE		0x134a
- #define USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE_094A	0x094a
-+#define USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE_0641	0x0641
- 
- #define USB_VENDOR_ID_HUION		0x256c
- #define USB_DEVICE_ID_HUION_TABLET	0x006e
---- a/drivers/hid/hid-quirks.c
-+++ b/drivers/hid/hid-quirks.c
-@@ -91,6 +91,7 @@ static const struct hid_device_id hid_qu
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_HP, USB_PRODUCT_ID_HP_LOGITECH_OEM_USB_OPTICAL_MOUSE_0B4A), HID_QUIRK_ALWAYS_POLL },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_HP, USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE), HID_QUIRK_ALWAYS_POLL },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_HP, USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE_094A), HID_QUIRK_ALWAYS_POLL },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_HP, USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE_0641), HID_QUIRK_ALWAYS_POLL },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_IDEACOM, USB_DEVICE_ID_IDEACOM_IDC6680), HID_QUIRK_MULTI_INPUT },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_INNOMEDIA, USB_DEVICE_ID_INNEX_GENESIS_ATARI), HID_QUIRK_MULTI_INPUT },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE, USB_DEVICE_ID_KYE_EASYPEN_M610X), HID_QUIRK_MULTI_INPUT },
+--- a/net/tipc/socket.c
++++ b/net/tipc/socket.c
+@@ -485,9 +485,8 @@ static int tipc_sk_create(struct net *ne
+ 		tsk_set_unreturnable(tsk, true);
+ 		if (sock->type == SOCK_DGRAM)
+ 			tsk_set_unreliable(tsk, true);
+-		__skb_queue_head_init(&tsk->mc_method.deferredq);
+ 	}
+-
++	__skb_queue_head_init(&tsk->mc_method.deferredq);
+ 	trace_tipc_sk_create(sk, NULL, TIPC_DUMP_NONE, " ");
+ 	return 0;
+ }
 
 
