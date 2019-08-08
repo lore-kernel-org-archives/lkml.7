@@ -2,445 +2,292 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35EDCC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 18:40:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E57AFC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 18:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2E022184E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 18:40:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CCBD217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 18:42:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bq74X2mT"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="VEsafay3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404020AbfHHSkV (ORCPT
+        id S1733256AbfHHSmC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 14:40:21 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45090 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390230AbfHHSkU (ORCPT
+        Thu, 8 Aug 2019 14:42:02 -0400
+Received: from mx.aristanetworks.com ([162.210.129.12]:56150 "EHLO
+        smtp.aristanetworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732375AbfHHSmC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 14:40:20 -0400
-Received: by mail-pg1-f193.google.com with SMTP id o13so44486740pgp.12
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 11:40:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:from:cc:to:user-agent:date;
-        bh=7NN04FEl7bvWdIxYSdH6KV6rKdpmdwVRM9IjBo0UhHs=;
-        b=bq74X2mT6DcA6A0FY6YvwMrqIFPQNTQW56JpfiIVVvB0b/VUTBT1f6x0ODMTPTCd68
-         svuYBtypdWGQM7RNjun5TEWkuV3RGe6rlm5+xQTKebpD9NEVADlkL9Q+3Ap2JODVs5rA
-         S3WMpqXcuIqFz0DjgGOXKV8MmzxrlmLS61rxg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:from:cc:to
-         :user-agent:date;
-        bh=7NN04FEl7bvWdIxYSdH6KV6rKdpmdwVRM9IjBo0UhHs=;
-        b=VIlVOIGsWXjvDZkLHFTKSsVaS8CAWBWyxfbcvoyBapGUMkO0nTurrOviFx/hrNrl8B
-         iO8UYkJip7rlvmCd0AJXsvEl08yD5srOxJeh0G4nj0r6QYK2l5ksqjjgnE5RADQg6moN
-         ceIAZrhD7Fk5wtuU4rZ5X9dQLt4WIqmAmaKiERRmt/T9vZkNUAKv4WZ/GDlPYyrmBHJL
-         y/hfLZgGAFsp8Tj5zAgVeqtCV/SfmGPyLV8L0JYEEL8Aoj4Kn/C9JUz3nmolO5plMq+v
-         SjOfOjKhydPXq86e7SWIkuvLdALHssElNo415KjUR485aLSYmI/fzdDfilyacpD7WMHg
-         xfpQ==
-X-Gm-Message-State: APjAAAVCI1AdjnuO5aB42RHz/EuxIbkA5YNNpIuFRvrs+RUh9re9hYW5
-        Tnj2Xg1asNmWE/QIyMZJtf+qQjXiy6M=
-X-Google-Smtp-Source: APXvYqwIttXOQSLrliAc8oKmvGlPitcplGRoPMPqnF058BiKj9lgglcyKeIhBnaP9fPUFlHdSHUOnQ==
-X-Received: by 2002:a62:e806:: with SMTP id c6mr17182540pfi.158.1565289619342;
-        Thu, 08 Aug 2019 11:40:19 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id j20sm91226002pfr.113.2019.08.08.11.40.18
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 08 Aug 2019 11:40:18 -0700 (PDT)
-Message-ID: <5d4c6c92.1c69fb81.876aa.90c6@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Thu, 8 Aug 2019 14:42:02 -0400
+X-Greylist: delayed 537 seconds by postgrey-1.27 at vger.kernel.org; Thu, 08 Aug 2019 14:42:01 EDT
+Received: from smtp.aristanetworks.com (localhost [127.0.0.1])
+        by smtp.aristanetworks.com (Postfix) with ESMTP id 55FA1427D9F;
+        Thu,  8 Aug 2019 11:33:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arista.com;
+        s=Arista-A; t=1565289225;
+        bh=wT3T8uxsvhilc5G/Tu7ixGp1PL3OKIzCeyPA7IhRvw8=;
+        h=From:To:Cc:Subject:Date;
+        b=VEsafay3g9WIqrjD9haNX+x23eCGDrXxTE0V8upopDUlWe/lPcATaM9odkhJ9QR++
+         Au4D3fSf8h62w9LOzFz2b+d5hjLq5kW84wkHPYnv8ft+lmyQLNcut4TLqIKAWvMp6k
+         WyuxvBI6odO2aKXsTKpAgYaHAZV+qvckM8nH0t9bvuCn3u+dNYC1tmq8kN9WHdRcA9
+         ObapSM5RnUH3Wn2aiOL+5vD7W2dG3Ojn1ReRGYCgi+J4k4w3B9nXff0AQnKheJloZc
+         rMwKUOWhNjpd3jAcZ0stOZLuZ+R10+S8XF0Z1JAtPx/Q9G1BelqEuzHIPj2tHMaMGX
+         QXFvPLpFF5SgA==
+Received: from egc101.sjc.aristanetworks.com (unknown [172.20.210.50])
+        by smtp.aristanetworks.com (Postfix) with ESMTP id 51E3E427D83;
+        Thu,  8 Aug 2019 11:33:45 -0700 (PDT)
+From:   Edward Chron <echron@arista.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        David Rientjes <rientjes@google.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, colona@arista.com,
+        Edward Chron <echron@arista.com>
+Subject: [PATCH] mm/oom: Add killed process selection information
+Date:   Thu,  8 Aug 2019 11:32:47 -0700
+Message-Id: <20190808183247.28206-1-echron@arista.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190808061228.16573-3-mkshah@codeaurora.org>
-References: <20190808061228.16573-1-mkshah@codeaurora.org> <20190808061228.16573-3-mkshah@codeaurora.org>
-Subject: Re: [PATCH 2/2] drivers: qcom: Add SoC sleep stats driver
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        bjorn.andersson@linaro.org, evgreen@chromium.org,
-        dianders@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org,
-        lsrao@codeaurora.org, mkshah@codeaurora.org,
-        Mahesh Sivasubramanian <msivasub@codeaurora.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Maulik Shah <mkshah@codeaurora.org>, andy.gross@linaro.org,
-        david.brown@linaro.org, linux-arm-msm@vger.kernel.org
-User-Agent: alot/0.8.1
-Date:   Thu, 08 Aug 2019 11:40:17 -0700
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Maulik Shah (2019-08-07 23:12:28)
-> Qualcomm Technologies Inc's (QTI) chipsets support SoC level
-> low power modes. Statistics for SoC sleep stats are produced
-> by remote processor.
->=20
-> Lets's add a driver to read the shared memory exported by the
-> remote processor and export to sysfs.
->=20
-> Signed-off-by: Mahesh Sivasubramanian <msivasub@codeaurora.org>
-> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+For an OOM event: print oomscore, memory pct, oom adjustment of the process
+that OOM kills and the totalpages value in kB (KiB) used in the calculation
+with the OOM killed process message. This is helpful to document why the
+process was selected by OOM at the time of the OOM event.
 
-SoB chain is weird here too.
+Sample message output:
+Jul 21 20:07:48 yoursystem kernel: Out of memory: Killed process 2826
+ (processname) total-vm:1056800kB, anon-rss:1052784kB, file-rss:4kB,
+ shmem-rss:0kB memory-usage:3.2% oom_score:1032 oom_score_adj:1000
+ total-pages: 32791748kB
 
-> ---
->  drivers/soc/qcom/Kconfig           |   9 ++
->  drivers/soc/qcom/Makefile          |   1 +
->  drivers/soc/qcom/soc_sleep_stats.c | 249 +++++++++++++++++++++++++++++
+Signed-off-by: Edward Chron <echron@arista.com>
+---
+ fs/proc/base.c      |  2 +-
+ include/linux/oom.h | 18 +++++++++++-
+ mm/oom_kill.c       | 67 +++++++++++++++++++++++++++++++++------------
+ 3 files changed, 68 insertions(+), 19 deletions(-)
 
-There should be a Documentation/ABI/ path in this diffstat above because
-you're adding sysfs attributes.
+diff --git a/fs/proc/base.c b/fs/proc/base.c
+index ebea9501afb8..41880990e6a8 100644
+--- a/fs/proc/base.c
++++ b/fs/proc/base.c
+@@ -550,7 +550,7 @@ static int proc_oom_score(struct seq_file *m, struct pid_namespace *ns,
+ 	unsigned long totalpages = totalram_pages() + total_swap_pages;
+ 	unsigned long points = 0;
+ 
+-	points = oom_badness(task, totalpages) * 1000 / totalpages;
++	points = oom_badness(task, totalpages, NULL) * 1000 / totalpages;
+ 	seq_printf(m, "%lu\n", points);
+ 
+ 	return 0;
+diff --git a/include/linux/oom.h b/include/linux/oom.h
+index c696c265f019..7f7ab125c21c 100644
+--- a/include/linux/oom.h
++++ b/include/linux/oom.h
+@@ -49,6 +49,8 @@ struct oom_control {
+ 	unsigned long totalpages;
+ 	struct task_struct *chosen;
+ 	unsigned long chosen_points;
++	unsigned long chosen_mempts;
++	unsigned long chosen_adj;
+ 
+ 	/* Used to print the constraint info. */
+ 	enum oom_constraint constraint;
+@@ -105,10 +107,24 @@ static inline vm_fault_t check_stable_address_space(struct mm_struct *mm)
+ 	return 0;
+ }
+ 
++/*
++ * Optional argument that can be passed to oom_badness in the arg field
++ *
++ * Input fields that can be filled in: memcg and nodemask
++ * Output fields that can be returned: mempts, adj
++ */
++struct oom_bad_parms {
++	struct mem_cgroup *memcg;
++	const nodemask_t *nodemask;
++	unsigned long mempts;
++	long adj;
++};
++
+ bool __oom_reap_task_mm(struct mm_struct *mm);
+ 
+ extern unsigned long oom_badness(struct task_struct *p,
+-		unsigned long totalpages);
++				 unsigned long totalpages,
++				 struct oom_bad_parms *obp);
+ 
+ extern bool out_of_memory(struct oom_control *oc);
+ 
+diff --git a/mm/oom_kill.c b/mm/oom_kill.c
+index eda2e2a0bdc6..0548845dbef8 100644
+--- a/mm/oom_kill.c
++++ b/mm/oom_kill.c
+@@ -42,6 +42,7 @@
+ #include <linux/kthread.h>
+ #include <linux/init.h>
+ #include <linux/mmu_notifier.h>
++#include <linux/oom.h>
+ 
+ #include <asm/tlb.h>
+ #include "internal.h"
+@@ -195,7 +196,8 @@ static bool is_dump_unreclaim_slabs(void)
+  * predictable as possible.  The goal is to return the highest value for the
+  * task consuming the most memory to avoid subsequent oom failures.
+  */
+-unsigned long oom_badness(struct task_struct *p, unsigned long totalpages)
++unsigned long oom_badness(struct task_struct *p, unsigned long totalpages,
++			  struct oom_bad_parms *obp)
+ {
+ 	long points;
+ 	long adj;
+@@ -208,15 +210,16 @@ unsigned long oom_badness(struct task_struct *p, unsigned long totalpages)
+ 		return 0;
+ 
+ 	/*
+-	 * Do not even consider tasks which are explicitly marked oom
+-	 * unkillable or have been already oom reaped or the are in
+-	 * the middle of vfork
++	 * Do not consider tasks which have already been oom reaped or
++	 * that are in the middle of vfork.
+ 	 */
+ 	adj = (long)p->signal->oom_score_adj;
+-	if (adj == OOM_SCORE_ADJ_MIN ||
+-			test_bit(MMF_OOM_SKIP, &p->mm->flags) ||
+-			in_vfork(p)) {
++	if (test_bit(MMF_OOM_SKIP, &p->mm->flags) || in_vfork(p)) {
+ 		task_unlock(p);
++		if (obp != NULL) {
++			obp->mempts = 0;
++			obp->adj = adj;
++		}
+ 		return 0;
+ 	}
+ 
+@@ -228,6 +231,16 @@ unsigned long oom_badness(struct task_struct *p, unsigned long totalpages)
+ 		mm_pgtables_bytes(p->mm) / PAGE_SIZE;
+ 	task_unlock(p);
+ 
++	/* Also return raw mempts and oom_score_adj along */
++	if (obp != NULL) {
++		obp->mempts = points;
++		obp->adj = adj;
++	}
++
++	/* Unkillable oom task skipped but returns mempts and oom_score_adj */
++	if (adj == OOM_SCORE_ADJ_MIN)
++		return 0;
++
+ 	/* Normalize to oom_score_adj units */
+ 	adj *= totalpages / 1000;
+ 	points += adj;
+@@ -310,6 +323,8 @@ static int oom_evaluate_task(struct task_struct *task, void *arg)
+ {
+ 	struct oom_control *oc = arg;
+ 	unsigned long points;
++	struct oom_bad_parms obp = { .memcg = NULL, .nodemask = oc->nodemask,
++				     .mempts = 0, .adj = 0 };
+ 
+ 	if (oom_unkillable_task(task))
+ 		goto next;
+@@ -339,7 +354,7 @@ static int oom_evaluate_task(struct task_struct *task, void *arg)
+ 		goto select;
+ 	}
+ 
+-	points = oom_badness(task, oc->totalpages);
++	points = oom_badness(task, oc->totalpages, &obp);
+ 	if (!points || points < oc->chosen_points)
+ 		goto next;
+ 
+@@ -349,6 +364,8 @@ static int oom_evaluate_task(struct task_struct *task, void *arg)
+ 	get_task_struct(task);
+ 	oc->chosen = task;
+ 	oc->chosen_points = points;
++	oc->chosen_mempts = obp.mempts;
++	oc->chosen_adj = obp.adj;
+ next:
+ 	return 0;
+ abort:
+@@ -375,6 +392,9 @@ static void select_bad_process(struct oom_control *oc)
+ 				break;
+ 		rcu_read_unlock();
+ 	}
++
++	oc->chosen_points = oc->chosen_points * 1000 / oc->totalpages;
++	oc->chosen_mempts = oc->chosen_mempts * 1000 / oc->totalpages;
+ }
+ 
+ static int dump_task(struct task_struct *p, void *arg)
+@@ -853,7 +873,8 @@ static bool task_will_free_mem(struct task_struct *task)
+ 	return ret;
+ }
+ 
+-static void __oom_kill_process(struct task_struct *victim, const char *message)
++static void __oom_kill_process(struct task_struct *victim, const char *message,
++				struct oom_control *oc)
+ {
+ 	struct task_struct *p;
+ 	struct mm_struct *mm;
+@@ -884,12 +905,24 @@ static void __oom_kill_process(struct task_struct *victim, const char *message)
+ 	 */
+ 	do_send_sig_info(SIGKILL, SEND_SIG_PRIV, victim, PIDTYPE_TGID);
+ 	mark_oom_victim(victim);
+-	pr_err("%s: Killed process %d (%s) total-vm:%lukB, anon-rss:%lukB, file-rss:%lukB, shmem-rss:%lukB\n",
+-		message, task_pid_nr(victim), victim->comm,
+-		K(victim->mm->total_vm),
+-		K(get_mm_counter(victim->mm, MM_ANONPAGES)),
+-		K(get_mm_counter(victim->mm, MM_FILEPAGES)),
+-		K(get_mm_counter(victim->mm, MM_SHMEMPAGES)));
++
++	if (oc != NULL && oc->chosen_mempts > 0)
++		pr_info("%s: Killed process %d (%s) total-vm:%lukB, anon-rss:%lukB, file-rss:%lukB, shmem-rss:%lukB, memory-usage:%lu.%1lu%% oom_score:%lu oom_score_adj:%ld total-pages: %lukB",
++			message, task_pid_nr(victim), victim->comm,
++			K(victim->mm->total_vm),
++			K(get_mm_counter(victim->mm, MM_ANONPAGES)),
++			K(get_mm_counter(victim->mm, MM_FILEPAGES)),
++			K(get_mm_counter(victim->mm, MM_SHMEMPAGES)),
++			oc->chosen_mempts / 10, oc->chosen_mempts % 10,
++			oc->chosen_points, oc->chosen_adj, K(oc->totalpages));
++	else
++		pr_info("%s: Killed process %d (%s) total-vm:%lukB, anon-rss:%lukB, file-rss:%lukB, shmem-rss:%lukB",
++			message, task_pid_nr(victim), victim->comm,
++			K(victim->mm->total_vm),
++			K(get_mm_counter(victim->mm, MM_ANONPAGES)),
++			K(get_mm_counter(victim->mm, MM_FILEPAGES)),
++			K(get_mm_counter(victim->mm, MM_SHMEMPAGES)));
++
+ 	task_unlock(victim);
+ 
+ 	/*
+@@ -942,7 +975,7 @@ static int oom_kill_memcg_member(struct task_struct *task, void *message)
+ 	if (task->signal->oom_score_adj != OOM_SCORE_ADJ_MIN &&
+ 	    !is_global_init(task)) {
+ 		get_task_struct(task);
+-		__oom_kill_process(task, message);
++		__oom_kill_process(task, message, NULL);
+ 	}
+ 	return 0;
+ }
+@@ -979,7 +1012,7 @@ static void oom_kill_process(struct oom_control *oc, const char *message)
+ 	 */
+ 	oom_group = mem_cgroup_get_oom_group(victim, oc->memcg);
+ 
+-	__oom_kill_process(victim, message);
++	__oom_kill_process(victim, message, oc);
+ 
+ 	/*
+ 	 * If necessary, kill all tasks in the selected memory cgroup.
+-- 
+2.20.1
 
-There's some similar support in the ARM PSCI spec for extracting
-idle/suspend stats, see section 5.21 PSCI_STAT_RESIDENCY/COUNT. Maybe
-this code can align with that feature in PSCI? At the least, I hope we
-can come up with a generic sysfs ABI that can be used to describe CPU
-and system wide power states in a way that userspace can read and
-understand how long the device was in these different power states. I
-would guess that other architectures like x86 may also want to get
-involved in reporting this information in a standard way, so please loop
-in some x86 power folks too.
-
-It would be neat if the PSCI feature could be used for this instead of
-having a custom SoC driver. Maybe that won't work though because this
-works for shipping firmware and/or because of the 'client_votes' thing
-which looks like special extra data describing the other subsystems? At
-least for some SoCs it may be all they need though, so keeping the PSCI
-call in mind would be good when developing the ABI and may be enough for
-userspace purposes. The client_votes part may be possible to layer on
-top of the PSCI calls anyway, and go into some other file so we can
-figure out which remoteproc is holding up suspend or idle states.
-
->=20
-> diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
-> index 880cf0290962..7aac24430e99 100644
-> --- a/drivers/soc/qcom/Kconfig
-> +++ b/drivers/soc/qcom/Kconfig
-> @@ -163,6 +163,15 @@ config QCOM_SMSM
->           Say yes here to support the Qualcomm Shared Memory State Machin=
-e.
->           The state machine is represented by bits in shared memory.
-> =20
-> +config QCOM_SOC_SLEEP_STATS
-> +       tristate "Qualcomm Technologies Inc. (QTI) SoC sleep stats driver"
-> +       depends on ARCH_QCOM
-> +       help
-> +         Qualcomm Technologies Inc. (QTI) SoC sleep stats driver to read
-> +         the shared memory exported by the remote processor related to
-
-Shared memory sounds like DDR.
-
-> +         various SoC level low power modes statistics and export to sysfs
-> +         interface.
-> +
->  config QCOM_WCNSS_CTRL
->         tristate "Qualcomm WCNSS control driver"
->         depends on ARCH_QCOM || COMPILE_TEST
-> diff --git a/drivers/soc/qcom/soc_sleep_stats.c b/drivers/soc/qcom/soc_sl=
-eep_stats.c
-> new file mode 100644
-> index 000000000000..5b95d68512ec
-> --- /dev/null
-> +++ b/drivers/soc/qcom/soc_sleep_stats.c
-> @@ -0,0 +1,249 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +
-> +/*
-> + * Copyright (c) 2011-2019, The Linux Foundation. All rights reserved.
-> + */
-> +
-> +#define pr_fmt(fmt) "%s: " fmt, __func__
-> +
-> +#include <linux/init.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
-> +#include <linux/uaccess.h>
-
-Is this include used?
-
-> +
-> +#define ARCH_TIMER_FREQ        19200000
-
-Can't this come through clk APIs? Or is this the ARM architected timer
-freqeuency?
-
-> +
-> +struct stats_config {
-> +       u32 offset_addr;
-> +       u32 num_records;
-> +       bool appended_stats_avail;
-> +};
-> +
-> +struct soc_sleep_stats_data {
-> +       phys_addr_t stats_base;
-> +       resource_size_t stats_size;
-> +       const struct stats_config *config;
-> +       struct kobject *kobj;
-> +       struct kobj_attribute ka;
-> +       struct mutex lock;
-> +};
-> +
-> +struct entry {
-> +       __le32 stat_type;
-> +       __le32 count;
-> +       __le64 last_entered_at;
-> +       __le64 last_exited_at;
-> +       __le64 accumulated;
-> +};
-> +
-> +struct appended_entry {
-> +       __le32 client_votes;
-> +       __le32 reserved[3];
-> +};
-> +
-> +struct stats_entry {
-> +       struct entry entry;
-> +       struct appended_entry appended_entry;
-> +};
-> +
-> +static inline u64 get_time_in_sec(u64 counter)
-> +{
-> +       do_div(counter, ARCH_TIMER_FREQ);
-> +
-> +       return counter;
-> +}
-> +
-> +static inline ssize_t append_data_to_buf(char *buf, int length,
-> +                                        struct stats_entry *data)
-> +{
-> +       char stat_type[5] =3D {0};
-> +
-> +       memcpy(stat_type, &data->entry.stat_type, sizeof(u32));
-
-sizeof(u32) !=3D 5. Is this on purpose?
-
-> +
-> +       return scnprintf(buf, length,
-> +                        "%s\n"
-> +                        "\tCount                    :%u\n"
-> +                        "\tLast Entered At(sec)     :%llu\n"
-> +                        "\tLast Exited At(sec)      :%llu\n"
-> +                        "\tAccumulated Duration(sec):%llu\n"
-> +                        "\tClient Votes             :0x%x\n\n",
-> +                        stat_type, data->entry.count,
-> +                        data->entry.last_entered_at,
-> +                        data->entry.last_exited_at,
-> +                        data->entry.accumulated,
-> +                        data->appended_entry.client_votes);
-> +}
-> +
-> +static ssize_t stats_show(struct kobject *obj, struct kobj_attribute *at=
-tr,
-> +                         char *buf)
-> +{
-> +       void __iomem *reg;
-> +       int i;
-> +       uint32_t offset;
-> +       ssize_t length =3D 0, op_length;
-> +       struct stats_entry data;
-> +       struct entry *e =3D &data.entry;
-> +       struct appended_entry *ae =3D &data.appended_entry;
-> +       struct soc_sleep_stats_data *drv =3D container_of(attr,
-> +                                          struct soc_sleep_stats_data, k=
-a);
-> +
-> +       mutex_lock(&drv->lock);
-> +       reg =3D ioremap_nocache(drv->stats_base, drv->stats_size);
-> +       if (!reg) {
-> +               pr_err("io remap failed\n");
-
-This looks like a real bad idea to ioremap each time the stats are
-shown. Why not just map once in probe so we don't have to create a
-mapping and suffer the overhead involved in that?
-
-> +               mutex_unlock(&drv->lock);
-> +               return length;
-> +       }
-> +
-> +       for (i =3D 0; i < drv->config->num_records; i++) {
-> +               offset =3D offsetof(struct entry, stat_type);
-> +               e->stat_type =3D le32_to_cpu(readl_relaxed(reg + offset));
-> +
-> +               offset =3D offsetof(struct entry, count);
-> +               e->count =3D le32_to_cpu(readl_relaxed(reg + offset));
-> +
-> +               offset =3D offsetof(struct entry, last_entered_at);
-> +               e->last_entered_at =3D le64_to_cpu(readq_relaxed(reg + of=
-fset));
-> +
-> +               offset =3D offsetof(struct entry, last_exited_at);
-> +               e->last_exited_at =3D le64_to_cpu(readq_relaxed(reg + off=
-set));
-> +
-> +               offset =3D offsetof(struct entry, last_exited_at);
-> +               e->accumulated =3D le64_to_cpu(readq_relaxed(reg + offset=
-));
-> +
-> +               e->last_entered_at =3D get_time_in_sec(e->last_entered_at=
-);
-> +               e->last_exited_at =3D get_time_in_sec(e->last_exited_at);
-> +               e->accumulated =3D get_time_in_sec(e->accumulated);
-> +
-> +               reg +=3D sizeof(struct entry);
-> +
-> +               if (drv->config->appended_stats_avail) {
-> +                       offset =3D offsetof(struct appended_entry, client=
-_votes);
-> +                       ae->client_votes =3D le32_to_cpu(readl_relaxed(re=
-g +
-> +                                                                    offs=
-et));
-> +
-> +                       reg +=3D sizeof(struct appended_entry);
-> +               } else
-> +                       ae->client_votes =3D 0;
-
-Please add braces to the else statement when the if statement has
-braces.
-
-> +
-> +               op_length =3D append_data_to_buf(buf + length, PAGE_SIZE =
-- length,
-> +                                              &data);
-> +               if (op_length >=3D PAGE_SIZE - length)
-> +                       goto exit;
-> +
-> +               length +=3D op_length;
-> +       }
-> +exit:
-> +       iounmap(reg);
-> +       mutex_unlock(&drv->lock);
-> +       return length;
-> +}
-> +
-> +static int soc_sleep_stats_create_sysfs(struct platform_device *pdev,
-> +                                       struct soc_sleep_stats_data *drv)
-> +{
-> +       int ret =3D -ENOMEM;
-> +
-> +       drv->kobj =3D kobject_create_and_add("soc_sleep", power_kobj);
-> +       if (!drv->kobj)
-> +               goto fail;
-
-Just return -ENOMEM here. It is really weird to make kobjects directly
-like this. How is userspace expected to use this?
-
-> +
-> +       sysfs_attr_init(drv->ka.attr);
-> +       drv->ka.attr.mode =3D 0444;
-> +       drv->ka.attr.name =3D "stats";
-> +       drv->ka.show =3D stats_show;
-> +
-> +       ret =3D sysfs_create_file(drv->kobj, &drv->ka.attr);
-> +       if (ret)
-> +               goto fail;
-
-Just return sysfs_create_file()?
-
-> +
-> +       platform_set_drvdata(pdev, drv);
-
-Do this platform_set_drvdata in probe?
-
-> +fail:
-> +       return ret;
-> +}
-> +
-> +static const struct stats_config rpm_data =3D {
-> +       .offset_addr =3D 0x14,
-> +       .num_records =3D 2,
-> +       .appended_stats_avail =3D true,
-> +};
-> +
-> +static const struct stats_config rpmh_data =3D {
-> +       .offset_addr =3D 0x4,
-> +       .num_records =3D 3,
-> +       .appended_stats_avail =3D false,
-> +};
-> +
-> +static const struct of_device_id soc_sleep_stats_table[] =3D {
-> +       { .compatible =3D "qcom,rpm-sleep-stats", .data =3D &rpm_data},
-> +       { .compatible =3D "qcom,rpmh-sleep-stats", .data =3D &rpmh_data},
-> +       { },
-> +};
-> +
-> +static int soc_sleep_stats_probe(struct platform_device *pdev)
-> +{
-> +       const struct of_device_id *match;
-> +       struct soc_sleep_stats_data *drv;
-> +       struct resource *res;
-> +       void __iomem *offset_addr;
-> +       int ret;
-> +
-> +       drv =3D devm_kzalloc(&pdev->dev, sizeof(*drv), GFP_KERNEL);
-> +       if (!drv)
-> +               return -ENOMEM;
-> +
-> +       match =3D of_match_node(soc_sleep_stats_table, pdev->dev.of_node);
-> +       if (!match)
-> +               return -ENODEV;
-> +
-> +       drv->config =3D match->data;
-
-Is this of_device_get_match_data()?
-
-> +
-> +       res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       if (!res)
-> +               return PTR_ERR(res);
-> +
-> +       offset_addr =3D ioremap_nocache(res->start + drv->config->offset_=
-addr,
-> +                                     sizeof(u32));
-
-Why not just devm_platform_ioremap_resource()?
-
-> +       if (IS_ERR(offset_addr))
-> +               return PTR_ERR(offset_addr);
-> +
-> +       drv->stats_base =3D res->start | readl_relaxed(offset_addr);
-> +       drv->stats_size =3D resource_size(res);
-> +       iounmap(offset_addr);
-> +       mutex_init(&drv->lock);
-
-Hopefully this lock isn't required?
-
-> +
-> +       ret =3D soc_sleep_stats_create_sysfs(pdev, drv);
-> +       if (ret)
-> +               pr_info("Failed to create sysfs interface\n");
-
-Not pr_err()? Or dev_err()?
-
-> +
-> +       return ret;
-> +}
-> +
-> +static int soc_sleep_stats_remove(struct platform_device *pdev)
-> +{
-> +       struct soc_sleep_stats_data *drv =3D platform_get_drvdata(pdev);
-> +
-> +       sysfs_remove_file(drv->kobj, &drv->ka.attr);
-> +       kobject_put(drv->kobj);
-> +       platform_set_drvdata(pdev, NULL);
-
-This last line isn't necessary. Please remove.
-
-> +
-> +       return 0;
-> +}
-> +
