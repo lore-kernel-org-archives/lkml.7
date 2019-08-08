@@ -2,116 +2,180 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75789C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 23:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF7C9C32756
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 23:57:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37D3C206C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 23:56:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C65E8206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 23:57:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="bs5i/HLm"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="PkoJ+EDW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404913AbfHHX4L (ORCPT
+        id S2404964AbfHHX5y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 19:56:11 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:42743 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404428AbfHHX4L (ORCPT
+        Thu, 8 Aug 2019 19:57:54 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:13241 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733140AbfHHX5y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 19:56:11 -0400
-Received: by mail-pl1-f194.google.com with SMTP id ay6so44249882plb.9
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 16:56:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=biT4M0YoucThQSlA/K5VgSiTRUXRF7LeVpBHBAObouA=;
-        b=bs5i/HLmqpFLNfigz0Plz7De8d6lkN6hXwBWct8V8PSzTT1gZmybZTTSaBX2gcQz1v
-         v+7+2uQleyUr9NGkcELJe3PZuhNx3AsEC/S1wtLUp/oqgHJGfSCL+kZAfe403EZ0iOCe
-         azgHd3tVGBsX1d6DBelSeXFm62Bh1g95sWpPcBua8YwMfpdyLVBcgR9LF76ZyhwBxF3m
-         C24AakAWdz7BY4zFnxV4GkBN9U6qMBYkKu9X5km6u7ECs7tXBSzZZ4Qk/ZLt5264adm6
-         MhUQF+1Slcha3iS9i5kCM0BIBkkTfEW8+DF8B6M3mEy55X1AmkuKRcgq8LX0XDlU8PDS
-         UFFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=biT4M0YoucThQSlA/K5VgSiTRUXRF7LeVpBHBAObouA=;
-        b=WZb4ItovYAw5IMBaLzijPhIDm3wWdlGXgUP8wvchSitPG5283Ymu+WJwZk6xF0FgWL
-         6VCXkWMYmuFyEU9Wyw01ZhhfRKK9LC/TnNC81MlH9Ld21tU1onXZOR+y/oIY4uD6PHoj
-         4xF1bpIs0imQIb2jZg8z9nV1XOgFd5/1EXeFq7QnvFjNDAZkvTksuA3Pu0K8/I/Q9RoL
-         JLctKug1XjxIF8AyncbNOHnQQh1R9QUYZFj2btqQ98C13dU12yyNowWBqTZas9kZTm4X
-         1YemQwQyUEr9mykyZ/Doo63YoJ0RZduGZb7FeYxjRcW77l+3NCt1mVOhad/dLCNi4PD6
-         LRdA==
-X-Gm-Message-State: APjAAAUfB6nUxvdlwW7/rW6cDMDH9w0VkRnCURptYPe+k4GxfMrIfG3v
-        6SOaCuDMCUnfE89UtJWdqC7AHw==
-X-Google-Smtp-Source: APXvYqxps1OkwzB/X0vvisKNGQAqs8R5cKyD/OoIPRFmJS3FKuqkJGigsszmdTGeScs7OS0FWzmHGQ==
-X-Received: by 2002:a17:902:b713:: with SMTP id d19mr16472342pls.267.1565308570262;
-        Thu, 08 Aug 2019 16:56:10 -0700 (PDT)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id h14sm126117376pfq.22.2019.08.08.16.56.09
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 08 Aug 2019 16:56:09 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/6] arm64: g12a: add support for DVFS
-In-Reply-To: <7hwofrh1md.fsf@baylibre.com>
-References: <20190729132622.7566-1-narmstrong@baylibre.com> <7hwofrh1md.fsf@baylibre.com>
-Date:   Thu, 08 Aug 2019 16:56:09 -0700
-Message-ID: <7hk1bn43fq.fsf@baylibre.com>
+        Thu, 8 Aug 2019 19:57:54 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d4cb7020002>; Thu, 08 Aug 2019 16:57:54 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 08 Aug 2019 16:57:52 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 08 Aug 2019 16:57:52 -0700
+Received: from [10.110.48.28] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 8 Aug
+ 2019 23:57:51 +0000
+Subject: Re: [PATCH 1/3] mm/mlock.c: convert put_page() to put_user_page*()
+To:     Ira Weiny <ira.weiny@intel.com>
+CC:     Vlastimil Babka <vbabka@suse.cz>, Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jerome Glisse <jglisse@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-fsdevel@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Black <daniel@linux.ibm.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>
+References: <20190805222019.28592-1-jhubbard@nvidia.com>
+ <20190805222019.28592-2-jhubbard@nvidia.com>
+ <20190807110147.GT11812@dhcp22.suse.cz>
+ <01b5ed91-a8f7-6b36-a068-31870c05aad6@nvidia.com>
+ <20190808062155.GF11812@dhcp22.suse.cz>
+ <875dca95-b037-d0c7-38bc-4b4c4deea2c7@suse.cz>
+ <306128f9-8cc6-761b-9b05-578edf6cce56@nvidia.com>
+ <d1ecb0d4-ea6a-637d-7029-687b950b783f@nvidia.com>
+ <20190808234138.GA15908@iweiny-DESK2.sc.intel.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <5713cc2b-b41c-142a-eb52-f5cda999eca7@nvidia.com>
+Date:   Thu, 8 Aug 2019 16:57:51 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20190808234138.GA15908@iweiny-DESK2.sc.intel.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1565308674; bh=ItTlcxLB3OzkqKxPiAlZSVxn8wLR/CcyzAXny5jY54w=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=PkoJ+EDWEq2PAabC2cPHA1oueE3YrcKkjoul5TR4Oa1yBcvabjT4+f41IFrkiWh2Z
+         FMyHHF6xQc3T1CBt7cg1mqsbQ5mtIYUvCL++2XyzG8RuqfLyjoQpj11SZummKWRV/z
+         XcR8S/Kdg4cmuC0ro638QgTio3qAJoA8sC+XAHtJqsH4Fibn2aZezpl+ol7b0a9c+o
+         xLyC3/U6MxfnBH6duwZ/owBk7ytCphS6oa+2DMO396CuXm3w0FiJGsC3pHOVlWcHg1
+         DD1wz2Shd4QjyoRYu/PDeBzxX/9Nf0jaSgifEpzmFnz+2z5iIqzhtWVw9mrQDdUu35
+         f0aIucgjoeWKw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kevin Hilman <khilman@baylibre.com> writes:
-
-> Neil Armstrong <narmstrong@baylibre.com> writes:
->
->> The G12A & G12B SoCs has kernel controllable CPU clocks and PWMs for
->> voltage regulators.
+On 8/8/19 4:41 PM, Ira Weiny wrote:
+> On Thu, Aug 08, 2019 at 03:59:15PM -0700, John Hubbard wrote:
+>> On 8/8/19 12:20 PM, John Hubbard wrote:
+>>> On 8/8/19 4:09 AM, Vlastimil Babka wrote:
+>>>> On 8/8/19 8:21 AM, Michal Hocko wrote:
+>>>>> On Wed 07-08-19 16:32:08, John Hubbard wrote:
+>>>>>> On 8/7/19 4:01 AM, Michal Hocko wrote:
+>>>>>>> On Mon 05-08-19 15:20:17, john.hubbard@gmail.com wrote:
+...
+>> Oh, and meanwhile, I'm leaning toward a cheap fix: just use gup_fast() instead
+>> of get_page(), and also fix the releasing code. So this incremental patch, on
+>> top of the existing one, should do it:
 >>
->> This patchsets moves the meson-g12a.dtsi to meson-g12-common.dtsi to simplify
->> handling the G12A & G12B differences in the meson-g12a.dtsi & meson-g12b.dtsi
->> files, like the OPPs and CPU nodes.
->>
->> Then G12A & G12B OPP tables are added, followed by the CPU voltages regulators
->> in each boards DT.
->>
->> It was voluntary chosen to enabled DVFS (CPU regulator and CPU clocks) only
->> in boards, to make sure only tested boards has DVFS enabled.
->>
->> This patchset :
->> - moves the G12A DT to a common g12a-common dtsi
->> - adds the G12A and G12B OPPs
->> - enables DVFS on all supported boards
->>
->> Dependencies:
->> - None
->
-> Not quite.  The last patch to enable DVFS on odroid-n2 has a build-time
-> dependency on the clock series that adds the CPUB clock.
->
-> I'll apply the rest of the series to v5.4/dt64 until there's a stable
-> clock tag I can use for the clocks.
+>> diff --git a/mm/mlock.c b/mm/mlock.c
+>> index b980e6270e8a..2ea272c6fee3 100644
+>> --- a/mm/mlock.c
+>> +++ b/mm/mlock.c
+>> @@ -318,18 +318,14 @@ static void __munlock_pagevec(struct pagevec *pvec, struct zone *zone)
+>>                 /*
+>>                  * We won't be munlocking this page in the next phase
+>>                  * but we still need to release the follow_page_mask()
+>> -                * pin. We cannot do it under lru_lock however. If it's
+>> -                * the last pin, __page_cache_release() would deadlock.
+>> +                * pin.
+>>                  */
+>> -               pagevec_add(&pvec_putback, pvec->pages[i]);
+>> +               put_user_page(pages[i]);
 
-In order to test this, I noticed another dependency needed for the PWM
-regulators to work:
+correction, make that:   
+                   put_user_page(pvec->pages[i]);
 
-   https://lore.kernel.org/linux-amlogic/20190729125838.6498-1-narmstrong@baylibre.com/
+(This is not fully tested yet.)
 
-With that and the clock deps, it's working well on my odroid-n2.
+>>                 pvec->pages[i] = NULL;
+>>         }
+>>         __mod_zone_page_state(zone, NR_MLOCK, delta_munlocked);
+>>         spin_unlock_irq(&zone->zone_pgdat->lru_lock);
+>>  
+>> -       /* Now we can release pins of pages that we are not munlocking */
+>> -       pagevec_release(&pvec_putback);
+>> -
+> 
+> I'm not an expert but this skips a call to lru_add_drain().  Is that ok?
 
-Tested-by: Kevin Hilman <khilman@baylibre.com>
+Yes: unless I'm missing something, there is no reason to go through lru_add_drain
+in this case. These are gup'd pages that are not going to get any further
+processing.
 
-Thanks,
+> 
+>>         /* Phase 2: page munlock */
+>>         for (i = 0; i < nr; i++) {
+>>                 struct page *page = pvec->pages[i];
+>> @@ -394,6 +390,8 @@ static unsigned long __munlock_pagevec_fill(struct pagevec *pvec,
+>>         start += PAGE_SIZE;
+>>         while (start < end) {
+>>                 struct page *page = NULL;
+>> +               int ret;
+>> +
+>>                 pte++;
+>>                 if (pte_present(*pte))
+>>                         page = vm_normal_page(vma, start, *pte);
+>> @@ -411,7 +409,13 @@ static unsigned long __munlock_pagevec_fill(struct pagevec *pvec,
+>>                 if (PageTransCompound(page))
+>>                         break;
+>>  
+>> -               get_page(page);
+>> +               /*
+>> +                * Use get_user_pages_fast(), instead of get_page() so that the
+>> +                * releasing code can unconditionally call put_user_page().
+>> +                */
+>> +               ret = get_user_pages_fast(start, 1, 0, &page);
+>> +               if (ret != 1)
+>> +                       break;
+> 
+> I like the idea of making this a get/put pair but I'm feeling uneasy about how
+> this is really supposed to work.
+> 
+> For sure the GUP/PUP was supposed to be separate from [get|put]_page.
+> 
 
-Kevin
+Actually, they both take references on the page. And it is absolutely OK to call
+them both on the same page.
+
+But anyway, we're not mixing them up here. If you follow the code paths, either 
+gup or follow_page_mask() is used, and then put_user_page() releases. 
+
+So...you haven't actually pointed to a bug here, right? :)
+
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
