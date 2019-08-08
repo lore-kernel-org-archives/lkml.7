@@ -2,84 +2,98 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C31E9C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:13:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 058F0C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D37C218B6
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:13:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D10B3218B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:13:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="ZudZIYS4"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="dQ1v5/Iu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732867AbfHHPNM (ORCPT
+        id S1732297AbfHHPNc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 11:13:12 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:44544 "EHLO vps0.lunn.ch"
+        Thu, 8 Aug 2019 11:13:32 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:37234 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730678AbfHHPNM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 11:13:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=N/sx/FwOwz1cNdvUzQADqjy4nEJNfOJJVfBa2REJnzE=; b=ZudZIYS4yxAb8Xk24AkDS0VUOD
-        oHLAbMmVN9PJkJlHe6Q3mBXDAYj61wD8buOn3RASROj3e2wDTzib/qpLkj4IvN65wgncaOP3Oau8c
-        oDnhmiBBzP518eF9uWHy9E6eRCScOLEeY7BDpnDkF/u7rw1SgcW+d92GFDZuibWBgS2s=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hvk6F-0003ki-Ro; Thu, 08 Aug 2019 17:13:07 +0200
-Date:   Thu, 8 Aug 2019 17:13:07 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, davem@davemloft.net,
-        robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com,
-        hkallweit1@gmail.com
-Subject: Re: [PATCH v2 01/15] net: phy: adin: add support for Analog Devices
- PHYs
-Message-ID: <20190808151307.GA27917@lunn.ch>
-References: <20190808123026.17382-1-alexandru.ardelean@analog.com>
- <20190808123026.17382-2-alexandru.ardelean@analog.com>
+        id S1730678AbfHHPNc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 11:13:32 -0400
+Received: from zn.tnic (p200300EC2F0FD700329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:d700:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 574FC1EC09A0;
+        Thu,  8 Aug 2019 17:13:30 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1565277210;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=jR21912ZdCNUT3T+n9ha6B/lUknt+a3m8VxzHVss7TA=;
+        b=dQ1v5/IurfENNsOxaT00uFxgPdOI0P94g9+BHO6yAF2ZqehidLAjoObgtgry+XWpNKMk5+
+        SDRUq3m+dbZ9k9Qj/S+44drI7gcGj1ngKMFevEWNo+cf3Zl60h3++g/HCYdYUjPOtiSu7S
+        qpsd9oH5QNnuIpgxEanZnHrE5vKZh3c=
+Date:   Thu, 8 Aug 2019 17:14:15 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>
+Cc:     Tony Luck <tony.luck@intel.com>, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] drivers/ras: Don't build debugfs.o if no debugfs
+ in config
+Message-ID: <20190808151415.GH20745@zn.tnic>
+References: <7053.1565218556@turing-police>
+ <20190808093101.GE20745@zn.tnic>
+ <77171.1565269299@turing-police>
+ <20190808142055.GF20745@zn.tnic>
+ <84877.1565276929@turing-police>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190808123026.17382-2-alexandru.ardelean@analog.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <84877.1565276929@turing-police>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 03:30:12PM +0300, Alexandru Ardelean wrote:
-> This change adds support for Analog Devices Industrial Ethernet PHYs.
-> Particularly the PHYs this driver adds support for:
->  * ADIN1200 - Robust, Industrial, Low Power 10/100 Ethernet PHY
->  * ADIN1300 - Robust, Industrial, Low Latency 10/100/1000 Gigabit
->    Ethernet PHY
+On Thu, Aug 08, 2019 at 11:08:49AM -0400, Valdis Klētnieks wrote:
+> On Thu, 08 Aug 2019 16:20:55 +0200, Borislav Petkov said:
+> > config RAS_CEC
+> >         depends on X86_MCE && MEMORY_FAILURE && DEBUG_FS
+> > 						^^^^^^^^
 > 
-> The 2 chips are pin & register compatible with one another. The main
-> difference being that ADIN1200 doesn't operate in gigabit mode.
-> 
-> The chips can be operated by the Generic PHY driver as well via the
-> standard IEEE PHY registers (0x0000 - 0x000F) which are supported by the
-> kernel as well. This assumes that configuration of the PHY has been done
-> completely in HW, according to spec.
-> 
-> Configuration can also be done via registers, which will be supported by
-> this driver.
-> 
-> Datasheets:
->   https://www.analog.com/media/en/technical-documentation/data-sheets/ADIN1300.pdf
->   https://www.analog.com/media/en/technical-documentation/data-sheets/ADIN1200.pdf
-> 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> I'm willing to respin that patch that way instead - if cec.c is basically
+> pointless without debugfs, that's probably a good solution. My first read
+> of the code was that the debugfs support was "additional optional" code,
+> not "this is pointless without it" code.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+That's already there so no need.
 
-    Andrew
+I'm build-testing a slightly different version of yours and I'll commit
+it if it passes the build smoke tests:
+
+---
+diff --git a/drivers/ras/Makefile b/drivers/ras/Makefile
+index ef6777e14d3d..6f0404f50107 100644
+--- a/drivers/ras/Makefile
++++ b/drivers/ras/Makefile
+@@ -1,3 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-obj-$(CONFIG_RAS)	+= ras.o debugfs.o
++obj-$(CONFIG_RAS)	+= ras.o
++obj-$(CONFIG_DEBUG_FS)	+= debugfs.o
+ obj-$(CONFIG_RAS_CEC)	+= cec.o
+---
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
