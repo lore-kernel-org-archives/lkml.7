@@ -2,89 +2,80 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B40C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:15:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B49C41514
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50A79218B6
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:15:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A4C2218B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:16:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732645AbfHHPPN convert rfc822-to-8bit (ORCPT
+        id S1733010AbfHHPQB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 11:15:13 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:5010 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727096AbfHHPPM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 11:15:12 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x78F3v1E045024
-        for <linux-kernel@vger.kernel.org>; Thu, 8 Aug 2019 11:15:11 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2u8nsqsd57-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 11:15:11 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.vnet.ibm.com>;
-        Thu, 8 Aug 2019 16:15:09 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 8 Aug 2019 16:15:07 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x78FF6nq27460038
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 8 Aug 2019 15:15:06 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BB865A4053;
-        Thu,  8 Aug 2019 15:15:06 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4849DA405B;
-        Thu,  8 Aug 2019 15:15:06 +0000 (GMT)
-Received: from localhost (unknown [9.85.70.126])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  8 Aug 2019 15:15:06 +0000 (GMT)
-Date:   Thu, 08 Aug 2019 20:45:04 +0530
-From:   "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
-Subject: Re: [PATCH 0/2] ftrace: two fixes with func_probes handling
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <cover.1562249521.git.naveen.n.rao@linux.vnet.ibm.com>
-In-Reply-To: <cover.1562249521.git.naveen.n.rao@linux.vnet.ibm.com>
+        Thu, 8 Aug 2019 11:16:01 -0400
+Received: from mga14.intel.com ([192.55.52.115]:63160 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727096AbfHHPQB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 11:16:01 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Aug 2019 08:16:00 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,361,1559545200"; 
+   d="scan'208";a="350203764"
+Received: from sandersb-mobl.ger.corp.intel.com (HELO localhost) ([10.249.33.239])
+  by orsmga005.jf.intel.com with ESMTP; 08 Aug 2019 08:15:51 -0700
+Date:   Thu, 8 Aug 2019 18:15:50 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        linux-security-module@vger.kernel.org, dhowells@redhat.com,
+        Herbert Xu <herbert@gondor.apana.org.au>, davem@davemloft.net,
+        peterhuewe@gmx.de, jgg@ziepe.ca, jejb@linux.ibm.com,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>
+Subject: Re: [RFC/RFT v3 2/3] KEYS: trusted: move tpm2 trusted keys code
+Message-ID: <20190808151500.ypfcqowklalu76uq@linux.intel.com>
+References: <1565098640-12536-1-git-send-email-sumit.garg@linaro.org>
+ <1565098640-12536-3-git-send-email-sumit.garg@linaro.org>
+ <20190807190320.th4sbnsnmwb7myzx@linux.intel.com>
+ <CAFA6WYN-6MpP2TZQEz49BmjSQiMSqghVFWRZCCY0o1UVad1AFw@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: astroid/0.15.0 (https://github.com/astroidmail/astroid)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8BIT
-X-TM-AS-GCONF: 00
-x-cbid: 19080815-0020-0000-0000-0000035D4EA8
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19080815-0021-0000-0000-000021B25257
-Message-Id: <1565277255.xyq4vg2zkj.naveen@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-08_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=674 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908080148
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFA6WYN-6MpP2TZQEz49BmjSQiMSqghVFWRZCCY0o1UVad1AFw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Naveen N. Rao wrote:
-> Two patches addressing bugs in ftrace function probe handling. The first 
-> patch addresses a NULL pointer dereference reported by LTP tests, while 
-> the second one is a trivial patch to address a missing check for return 
-> value, found by code inspection.
+On Thu, Aug 08, 2019 at 06:51:38PM +0530, Sumit Garg wrote:
+> It seems to be a functional change which I think requires proper unit
+> testing. I am afraid that I don't posses a TPM device to test this and
+> also very less conversant with tpm_buf code.
+> 
+> So what I have done here is to rename existing TPM 1.x trusted keys
+> code to use tpm1_buf.
+> 
+> And I would be happy to integrate a tested patch if anyone familiar
+> could work on this.
 
-Steven,
-Can you please take a look at these patches?
+I can test it on TPM 1.2.
 
-Thanks,
-Naveen
-
+/Jarkko
