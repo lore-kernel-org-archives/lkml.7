@@ -2,100 +2,130 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8630C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C909AC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:17:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4F6C2187F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:15:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D27321881
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:17:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="gtTvn2In"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732031AbfHHIP5 (ORCPT
+        id S1732014AbfHHIRN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 04:15:57 -0400
-Received: from mail.netline.ch ([148.251.143.178]:57153 "EHLO
-        netline-mail3.netline.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731891AbfHHIP5 (ORCPT
+        Thu, 8 Aug 2019 04:17:13 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:36752 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731642AbfHHIRM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 04:15:57 -0400
-X-Greylist: delayed 335 seconds by postgrey-1.27 at vger.kernel.org; Thu, 08 Aug 2019 04:15:55 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by netline-mail3.netline.ch (Postfix) with ESMTP id 8810C2AA156;
-        Thu,  8 Aug 2019 10:10:19 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at netline-mail3.netline.ch
-Received: from netline-mail3.netline.ch ([127.0.0.1])
-        by localhost (netline-mail3.netline.ch [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id d_GMqpSu42f8; Thu,  8 Aug 2019 10:10:19 +0200 (CEST)
-Received: from thor (116.245.63.188.dynamic.wline.res.cust.swisscom.ch [188.63.245.116])
-        by netline-mail3.netline.ch (Postfix) with ESMTPSA id C6F842AA0BD;
-        Thu,  8 Aug 2019 10:10:18 +0200 (CEST)
-Received: from localhost ([::1])
-        by thor with esmtp (Exim 4.92)
-        (envelope-from <michel@daenzer.net>)
-        id 1hvdV3-0005XJ-SO; Thu, 08 Aug 2019 10:10:17 +0200
-Subject: Re: [Regression] "drm/amdgpu: enable gfxoff again on raven series
- (v2)"
-To:     "Huang, Ray" <Ray.Huang@amd.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Anthony Wong <anthony.wong@canonical.com>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>
-References: <3EB0E920-31D7-4C91-A360-DBFB4417AC2F@canonical.com>
- <MN2PR12MB330979BAFF5BCC758258D54CECD40@MN2PR12MB3309.namprd12.prod.outlook.com>
- <624BFB8F-B586-492E-BEA6-4B138DAEC831@canonical.com>
- <MN2PR12MB3309680845257BC66644133CECD70@MN2PR12MB3309.namprd12.prod.outlook.com>
-From:   =?UTF-8?Q?Michel_D=c3=a4nzer?= <michel@daenzer.net>
-Openpgp: preference=signencrypt
-Autocrypt: addr=michel@daenzer.net; prefer-encrypt=mutual; keydata=
- mQGiBDsehS8RBACbsIQEX31aYSIuEKxEnEX82ezMR8z3LG8ktv1KjyNErUX9Pt7AUC7W3W0b
- LUhu8Le8S2va6hi7GfSAifl0ih3k6Bv1Itzgnd+7ZmSrvCN8yGJaHNQfAevAuEboIb+MaVHo
- 9EMJj4ikOcRZCmQWw7evu/D9uQdtkCnRY9iJiAGxbwCguBHtpoGMxDOINCr5UU6qt+m4O+UD
- /355ohBBzzyh49lTj0kTFKr0Ozd20G2FbcqHgfFL1dc1MPyigej2gLga2osu2QY0ObvAGkOu
- WBi3LTY8Zs8uqFGDC4ZAwMPoFy3yzu3ne6T7d/68rJil0QcdQjzzHi6ekqHuhst4a+/+D23h
- Za8MJBEcdOhRhsaDVGAJSFEQB1qLBACOs0xN+XblejO35gsDSVVk8s+FUUw3TSWJBfZa3Imp
- V2U2tBO4qck+wqbHNfdnU/crrsHahjzBjvk8Up7VoY8oT+z03sal2vXEonS279xN2B92Tttr
- AgwosujguFO/7tvzymWC76rDEwue8TsADE11ErjwaBTs8ZXfnN/uAANgPLQjTWljaGVsIERh
- ZW56ZXIgPG1pY2hlbEBkYWVuemVyLm5ldD6IXgQTEQIAHgUCQFXxJgIbAwYLCQgHAwIDFQID
- AxYCAQIeAQIXgAAKCRBaga+OatuyAIrPAJ9ykonXI3oQcX83N2qzCEStLNW47gCeLWm/QiPY
- jqtGUnnSbyuTQfIySkK5AQ0EOx6FRRAEAJZkcvklPwJCgNiw37p0GShKmFGGqf/a3xZZEpjI
- qNxzshFRFneZze4f5LhzbX1/vIm5+ZXsEWympJfZzyCmYPw86QcFxyZflkAxHx9LeD+89Elx
- bw6wT0CcLvSv8ROfU1m8YhGbV6g2zWyLD0/naQGVb8e4FhVKGNY2EEbHgFBrAAMGA/0VktFO
- CxFBdzLQ17RCTwCJ3xpyP4qsLJH0yCoA26rH2zE2RzByhrTFTYZzbFEid3ddGiHOBEL+bO+2
- GNtfiYKmbTkj1tMZJ8L6huKONaVrASFzLvZa2dlc2zja9ZSksKmge5BOTKWgbyepEc5qxSju
- YsYrX5xfLgTZC5abhhztpYhGBBgRAgAGBQI7HoVFAAoJEFqBr45q27IAlscAn2Ufk2d6/3p4
- Cuyz/NX7KpL2dQ8WAJ9UD5JEakhfofed8PSqOM7jOO3LCA==
-Message-ID: <615a4948-d0f9-46fc-f43e-2025455e9af6@daenzer.net>
-Date:   Thu, 8 Aug 2019 10:10:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 8 Aug 2019 04:17:12 -0400
+Received: by mail-ot1-f68.google.com with SMTP id r6so115227363oti.3
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 01:17:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=dNM5N57Ioc8DGeTZqQ0rAIXdhWsFh5H0j1dVFwmVmb4=;
+        b=gtTvn2IndIxQCjjyBbjHq+P0txQocLhuW0xeMXqj5eVcDPoq6BuVqI7IpQwk2ignJU
+         8DyRLC//uN/6s4e1rWXVDWevrneTBo4+Q9LtC2vL7AMkKhAOJx/zCw92RkkPUkwDWzSg
+         Z6NT0FKxGa9xWPFOpGlnTaPTBu2ViA8/jlzJ2yIIPPoicWJH3Z0vbjMwPgB7EacgrSfH
+         bY5qy+QwCAe8+Cb4SG0+Ennjuw3jVUeJKC/t8B+QMcMwMz8hVDhbiATUYO+l5pkzllhX
+         iA98x/+0bobd6W0fdIaTCHrNOytdTCvT5jvTWdGy1E0GmN3OM+5b5NAV4IwZjrFZhUek
+         SK6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=dNM5N57Ioc8DGeTZqQ0rAIXdhWsFh5H0j1dVFwmVmb4=;
+        b=dX6AgkaQxojjJGvsYDOPAI1Hct5A7f5mlenK9tE9N7ljR6MrLv5iCPoPOJiOpPcrr7
+         Jc077Cf+GckBnCEBLDODgOYiggdF5rxHuFBhY0wYqh5ATHascLjPGfOFdIrw7T4PXrmK
+         Sv/WcE7tuc93GuT77/6kBMiVwDwRPXVqOncmy5yzlU+NrVhuu2qh3/WFsgUCB9OGwXeN
+         F6cLzUhH2psqsmVbIHbS7ZWPSrDnH3OngXxhbg9xgSUafxdo7Yeqdt0ScoKvXE3XAcZY
+         jTWCUEs4R17Aa06ztgKE2HYjS4OPQLUXtRbnK8i22kQgUSDA1atZDYZzfAQ/cNvh6aIg
+         +Emw==
+X-Gm-Message-State: APjAAAWE9RHrRh7E1yGz3TvSyNNKNjW2naxlJzb3eqt9p3d0kcZrZKvv
+        ZzPV5PT1KKK0wbgeR/pv/6P9EBLC6ZJ7nW1f/DH7zw==
+X-Google-Smtp-Source: APXvYqwRT6RNZjkYIS7Txd9d/bJwV7lSsUOLdoji98fPLPn7Ri1bmULRrvDu/Ajv9YIyI8JGyUg6MQO3Oo7ThI1tBJc=
+X-Received: by 2002:a6b:f80b:: with SMTP id o11mr13530588ioh.40.1565252231701;
+ Thu, 08 Aug 2019 01:17:11 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <MN2PR12MB3309680845257BC66644133CECD70@MN2PR12MB3309.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 8bit
+References: <20190724082508.27617-1-brgl@bgdev.pl>
+In-Reply-To: <20190724082508.27617-1-brgl@bgdev.pl>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 8 Aug 2019 10:17:00 +0200
+Message-ID: <CAMRc=Mex_Ricd+C4F7nGLmpBggO-hWwJDB6duX8kFpPEeaTDjQ@mail.gmail.com>
+Subject: Re: [PATCH v3 0/7] backlight: gpio: simplify the driver
+To:     Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>
+Cc:     linux-sh@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-08-08 8:29 a.m., Huang, Ray wrote:
->> From: Kai-Heng Feng <kai.heng.feng@canonical.com>
->> at 00:03, Huang, Ray <Ray.Huang@amd.com> wrote:
->>
->>> May I know the all firmware version in your system?
-> 
-> Seems to the issue we encountered with IOMMU enabled. Could you please disable iommu in SBIOS or GRUB?
+=C5=9Br., 24 lip 2019 o 10:25 Bartosz Golaszewski <brgl@bgdev.pl> napisa=C5=
+=82(a):
+>
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> While working on my other series related to gpio-backlight[1] I noticed
+> that we could simplify the driver if we made the only user of platform
+> data use GPIO lookups and device properties. This series tries to do
+> that.
+>
+> The first patch adds all necessary data structures to ecovec24. Patch
+> 2/7 unifies much of the code for both pdata and non-pdata cases. Patches
+> 3-4/7 remove unused platform data fields. Last three patches contain
+> additional improvements for the GPIO backlight driver while we're already
+> modifying it.
+>
+> I don't have access to this HW but hopefully this works. Only compile
+> tested.
+>
+> [1] https://lkml.org/lkml/2019/6/25/900
+>
+> v1 -> v2:
+> - rebased on top of v5.3-rc1 and adjusted to the recent changes from Andy
+> - added additional two patches with minor improvements
+>
+> v2 -> v3:
+> - in patch 7/7: used initializers to set values for pdata and dev local v=
+ars
+>
+> Bartosz Golaszewski (7):
+>   sh: ecovec24: add additional properties to the backlight device
+>   backlight: gpio: simplify the platform data handling
+>   sh: ecovec24: don't set unused fields in platform data
+>   backlight: gpio: remove unused fields from platform data
+>   backlight: gpio: remove dev from struct gpio_backlight
+>   backlight: gpio: remove def_value from struct gpio_backlight
+>   backlight: gpio: use a helper variable for &pdev->dev
+>
+>  arch/sh/boards/mach-ecovec24/setup.c         | 33 ++++++--
+>  drivers/video/backlight/gpio_backlight.c     | 82 +++++---------------
+>  include/linux/platform_data/gpio_backlight.h |  3 -
+>  3 files changed, 44 insertions(+), 74 deletions(-)
+>
+> --
+> 2.21.0
+>
 
-The driver needs to work with the IOMMU enabled. If nothing else, ROCm
-only works with IOMMU I think.
+Hi Rich, Yoshinori,
 
+can you ack the sh patches in this series?
 
--- 
-Earthling Michel Dänzer               |              https://www.amd.com
-Libre software enthusiast             |             Mesa and X developer
+Bart
