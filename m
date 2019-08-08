@@ -2,103 +2,96 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D033C32754
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81AFDC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:48:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CECE2173C
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:48:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EBA52186A
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:48:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731583AbfHHIsK (ORCPT
+        id S1731674AbfHHIsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 04:48:10 -0400
-Received: from verein.lst.de ([213.95.11.211]:44626 "EHLO verein.lst.de"
+        Thu, 8 Aug 2019 04:48:33 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:52854 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725805AbfHHIsK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 04:48:10 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id B571D68BFE; Thu,  8 Aug 2019 10:48:04 +0200 (CEST)
-Date:   Thu, 8 Aug 2019 10:48:04 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     linux-nvme <linux-nvme@lists.infradead.org>,
-        Keith Busch <kbusch@kernel.org>,
-        Mario Limonciello <Mario.Limonciello@dell.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH] nvme-pci: Allow PCI bus-level PM to be used if ASPM is
- disabled
-Message-ID: <20190808084804.GA31404@lst.de>
-References: <47415939.KV5G6iaeJG@kreacher> <20190730144134.GA12844@localhost.localdomain> <100ba4aff1c6434a81e47774ab4acddc@AUSX13MPC105.AMER.DELL.COM> <8246360B-F7D9-42EB-94FC-82995A769E28@canonical.com> <20190730191934.GD13948@localhost.localdomain> <7d3e0b8ba1444194a153c93faa1cabb3@AUSX13MPC105.AMER.DELL.COM> <20190730213114.GK13948@localhost.localdomain> <CAJZ5v0gxfeMN8eCNRjcXmUOkReVsdozb3EccaYMpnmSHu3771g@mail.gmail.com> <20190731221956.GB15795@localhost.localdomain> <2583975.4sIyE3leJj@kreacher>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2583975.4sIyE3leJj@kreacher>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+        id S1725805AbfHHIsd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 04:48:33 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 548901A012F;
+        Thu,  8 Aug 2019 10:48:31 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 43C3E1A094A;
+        Thu,  8 Aug 2019 10:48:28 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 7F6BA402FF;
+        Thu,  8 Aug 2019 16:48:24 +0800 (SGT)
+From:   Biwen Li <biwen.li@nxp.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, leoyang.li@nxp.com
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Biwen Li <biwen.li@nxp.com>
+Subject: [v3,1/3] arm64: dts: ls1028a: Add ftm_alarm0 DT node
+Date:   Thu,  8 Aug 2019 16:38:37 +0800
+Message-Id: <20190808083839.28594-1-biwen.li@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -     ndev->last_ps = 0;
->       ret = nvme_get_power_state(ctrl, &ndev->last_ps);
-> -     if (ret < 0)
-> +     if (ret < 0 || ndev->last_ps == U32_MAX)
+The patch adds ftm_alarm0 DT node for LS1028ARDB board
+FlexTimer1 module is used to wakeup the system
 
-Is the intent of the magic U32_MAX check to see if the
-nvme_get_power_state failed at the nvme level?  In that case just
-checking for any non-zero return value from nvme_get_power_state might
-be the easier and more clear way to do it.
+Signed-off-by: Biwen Li <biwen.li@nxp.com>
+---
+Change in v3:
+	- add little-endian property of rcpm
 
-> Index: linux-pm/drivers/pci/pcie/aspm.c
-> ===================================================================
-> --- linux-pm.orig/drivers/pci/pcie/aspm.c
-> +++ linux-pm/drivers/pci/pcie/aspm.c
+Change in v2:
+	- None
 
-Shouldn't we split PCI vs nvme in two patches?
+ arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-> @@ -1170,6 +1170,26 @@ static int pcie_aspm_get_policy(char *bu
->  module_param_call(policy, pcie_aspm_set_policy, pcie_aspm_get_policy,
->  	NULL, 0644);
->  
-> +/*
-> + * pcie_aspm_enabled - Return the mask of enabled ASPM link states.
-> + * @pci_device: Target device.
-> + */
-> +u32 pcie_aspm_enabled(struct pci_dev *pci_device)
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+index 7975519b4f56..23a758239419 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+@@ -17,6 +17,10 @@
+ 	#address-cells = <2>;
+ 	#size-cells = <2>;
+ 
++	aliases {
++		rtc1 = &ftm_alarm0;
++	};
++
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+@@ -543,6 +547,20 @@
+ 				little-endian;
+ 			};
+ 		};
++
++		rcpm: rcpm@1e34040 {
++			compatible = "fsl,ls1028a-rcpm", "fsl,qoriq-rcpm-2.1+";
++			reg = <0x0 0x1e34040 0x0 0x1c>;
++			#fsl,rcpm-wakeup-cells = <7>;
++			little-endian;
++		};
++
++		ftm_alarm0: timer@2800000 {
++			compatible = "fsl,ls1028a-ftm-alarm";
++			reg = <0x0 0x2800000 0x0 0x10000>;
++			fsl,rcpm-wakeup = <&rcpm 0x0 0x0 0x0 0x0 0x4000 0x0 0x0>;
++			interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
++		};
+ 	};
+ 
+ 	malidp0: display@f080000 {
+-- 
+2.17.1
 
-pcie_aspm_enabled sounds like it returns a boolean.  Shouldn't there be
-a mask or so in the name better documenting what it returns?
-
-> +{
-> +	struct pci_dev *bridge = pci_upstream_bridge(pci_device);
-> +	u32 ret;
-> +
-> +	if (!bridge)
-> +		return 0;
-> +
-> +	mutex_lock(&aspm_lock);
-> +	ret = bridge->link_state ? bridge->link_state->aspm_enabled : 0;
-> +	mutex_unlock(&aspm_lock);
-> +
-> +	return ret;
-> +}
-
-I think this will need a EXPORT_SYMBOL_GPL thrown in so that modular
-nvme continues working.
-
-> +
-> +
->  #ifdef CONFIG_PCIEASPM_DEBUG
-
-Nit: double blank line here.
