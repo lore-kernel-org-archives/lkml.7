@@ -4,43 +4,43 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F04EFC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7415AC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0C80218DA
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:53:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BE1621911
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:53:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565294008;
-	bh=L7znTwJ30DixZpr8AixSBt+yPmHFg5k/O5GZecApfmg=;
+	s=default; t=1565294011;
+	bh=uzqc82uL7ogPgfU3mLq02OpcxdL1zrJ3Wa79m/7CGeM=;
 	h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
 	 References:List-ID:From;
-	b=SN9Pqmga1BV/FtGr1O6IKged62PZbiSVHvoagEMgqRFP46a+1MUNtpXXQw+0etPAi
-	 nzVtJbodb42kNG+9nizDKEEy2q0ERJFKuLnJXg1dBw/ebXX2xZ4Q8Ehdxarz5eWkCg
-	 NEb0yLNvCr8A2VvTy7yeBSVB14YleIGigAUnB5Oo=
+	b=OevJvD2xLBBpjed+IP8mmEGf6VzkWxV38jtcYtMG1H3AVSTNPtbO/EQQZK5rFy4oy
+	 q4p/IRBvWHM7XB78VjIc2SkZPzo8ktdzMrdq0tqXyfQo57UOKIZ2qi5/OxPMnTJ5KA
+	 VJ/9JuF2ZqtbJRKKB0boZ6MG88eHf2QQzBwrQcOA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404580AbfHHTx1 (ORCPT
+        id S2404263AbfHHTxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:53:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58088 "EHLO mail.kernel.org"
+        Thu, 8 Aug 2019 15:53:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404488AbfHHTxV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2404493AbfHHTxV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 8 Aug 2019 15:53:21 -0400
 Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48A02218BE;
-        Thu,  8 Aug 2019 19:53:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4071D218BA;
+        Thu,  8 Aug 2019 19:53:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565294000;
-        bh=L7znTwJ30DixZpr8AixSBt+yPmHFg5k/O5GZecApfmg=;
+        s=default; t=1565294001;
+        bh=uzqc82uL7ogPgfU3mLq02OpcxdL1zrJ3Wa79m/7CGeM=;
         h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=k1owMLkaD9GoVmyw7TDvOoYdW0XYV1AQcFERL/HenE/KAwD9h5+CVYy9fg/EtBCe1
-         hjqd2PkUm2KGNXCz5IqSGeqFzsbDjyZSmvZGFTKH7WCLj/OkhfYRIsvgMNHMaLg9Wg
-         TPE0v55tRcLhRb5pMqM8CJQNEVer3DUtS07F5snA=
+        b=bU4bv4chKeLbwypjLEWS5KvWXiBncOS7Dn7FvnirNJUp8mXqoxpKoHGvp1MK/sM4r
+         vevO0TAAFPf2b+d7XWAJT3PtGAVjoDl4ym+7f7BXmWNYiQHd4fzBFRagIFp0rd76Aq
+         lDxAfy2yDe4OsuvhtGP+MsdMmbiJfMQfTh4aDHbI=
 From:   zanussi@kernel.org
 To:     LKML <linux-kernel@vger.kernel.org>,
         linux-rt-users <linux-rt-users@vger.kernel.org>,
@@ -52,9 +52,9 @@ To:     LKML <linux-kernel@vger.kernel.org>,
         Daniel Wagner <wagi@monom.org>,
         Tom Zanussi <zanussi@kernel.org>,
         Julia Cartwright <julia@ni.com>
-Subject: [PATCH RT 11/19] sched/core: Drop a preempt_disable_rt() statement
-Date:   Thu,  8 Aug 2019 14:52:39 -0500
-Message-Id: <4739a43ec2cae31e82934622f4f63164f08bf03b.1565293934.git.zanussi@kernel.org>
+Subject: [PATCH RT 12/19] Revert "futex: Ensure lock/unlock symetry versus pi_lock and hash bucket lock"
+Date:   Thu,  8 Aug 2019 14:52:40 -0500
+Message-Id: <0b6569b5ad6a4b31289a9f62f40f86a67a151115.1565293934.git.zanussi@kernel.org>
 X-Mailer: git-send-email 2.14.1
 In-Reply-To: <cover.1565293934.git.zanussi@kernel.org>
 References: <cover.1565293934.git.zanussi@kernel.org>
@@ -73,50 +73,31 @@ If anyone has any objections, please let me know.
 -----------
 
 
-[ Upstream commit 761126efdcbe3fa3e99c9079fa0ad6eca2f251f2 ]
+[ Upstream commit 6a773b70cf105b46298ed3b44e77c102ce31d9ec ]
 
-The caller holds a lock which already disables preemption.
-Drop the preempt_disable_rt() statement in get_nohz_timer_target().
+Drop the RT fixup, the futex code will be changed to avoid the need for
+the workaround.
 
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Tom Zanussi <zanussi@kernel.org>
-
- Conflicts:
-        kernel/sched/core.c
 ---
- kernel/sched/core.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+ kernel/futex.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 7d2cc0715114..17da1c1aba56 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -583,14 +583,11 @@ void resched_cpu(int cpu)
-  */
- int get_nohz_timer_target(void)
- {
--	int i, cpu;
-+	int i, cpu = smp_processor_id();
- 	struct sched_domain *sd;
- 
--	preempt_disable_rt();
--	cpu = smp_processor_id();
--
- 	if (!idle_cpu(cpu) && is_housekeeping_cpu(cpu))
--		goto preempt_en_rt;
-+		return cpu;
- 
- 	rcu_read_lock();
- 	for_each_domain(cpu, sd) {
-@@ -609,8 +606,6 @@ int get_nohz_timer_target(void)
- 		cpu = housekeeping_any_cpu();
- unlock:
- 	rcu_read_unlock();
--preempt_en_rt:
--	preempt_enable_rt();
- 	return cpu;
- }
- 
+diff --git a/kernel/futex.c b/kernel/futex.c
+index ad0abb0e339f..07b148ad703a 100644
+--- a/kernel/futex.c
++++ b/kernel/futex.c
+@@ -936,9 +936,7 @@ void exit_pi_state_list(struct task_struct *curr)
+ 		if (head->next != next) {
+ 			/* retain curr->pi_lock for the loop invariant */
+ 			raw_spin_unlock(&pi_state->pi_mutex.wait_lock);
+-			raw_spin_unlock_irq(&curr->pi_lock);
+ 			spin_unlock(&hb->lock);
+-			raw_spin_lock_irq(&curr->pi_lock);
+ 			put_pi_state(pi_state);
+ 			continue;
+ 		}
 -- 
 2.14.1
 
