@@ -2,52 +2,51 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F0DC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:14:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C023C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:14:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7A1C214C6
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:14:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02873214C6
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:14:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565291646;
-	bh=rxiTNpmN3JfowyIDYyku5rB8rgfj5MmDvzXltVZD1vU=;
+	s=default; t=1565291656;
+	bh=TiuuaJ36C3Tq9Pudb/TOeT57HjoTagvIE+dUO1OcGLo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MuRHi8TRJcngOQThTGdXVbFvkm8pzPHBcVKhS2Vw98fUFakS0hDgf4nlLvw+v7VC+
-	 0BBtRAU04M4+Hcm29xqmqwOoNBi9QEkgoyMPzKiwXlwM4owtonTFyhIER6tJAV5bVA
-	 2CZ4GJzl8tTD/Z3UNpIo0WoQbtVONqcjfWzaHNOk=
+	b=iliwVCDergK20br3AINz4rVeqcgPTOZPGVACU//2B2TzUFT/8dPD7N2UuMPpcxOuZ
+	 j3XSpBF5PL45IGu8YQZffDYGKwP2N7t0tOpW9hfjKwo9kdjdWQHmpaNmbTTPRtuyus
+	 bXCTfaESerFnEtNszN57A5JPfi7Nn7XtTE8h5t6U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405164AbfHHTOF (ORCPT
+        id S2404565AbfHHTIr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:14:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43184 "EHLO mail.kernel.org"
+        Thu, 8 Aug 2019 15:08:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405007AbfHHTI5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 15:08:57 -0400
+        id S2404553AbfHHTIn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 15:08:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13881214C6;
-        Thu,  8 Aug 2019 19:08:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE0ED2173E;
+        Thu,  8 Aug 2019 19:08:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565291336;
-        bh=rxiTNpmN3JfowyIDYyku5rB8rgfj5MmDvzXltVZD1vU=;
+        s=default; t=1565291323;
+        bh=TiuuaJ36C3Tq9Pudb/TOeT57HjoTagvIE+dUO1OcGLo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yy58jnSV+W267cOjRACNfs6Q2J+iAbIsacloXvVjac6zm96hi3Ed1Gc3BOws5jXS6
-         CFz4g6v//s2J/7vkOXMCeRS35N/YGYA+x7bYjxLBG2l4EWk1lVHCcH0PpeLM2VtPvw
-         jZnsFm+AnshGoUSCtYTsx/34/ZF1om8kqINm1h+0=
+        b=XiG1uWd5wPVFQCy0WARybNyNP3nCua3INJ1YboAy3XoNIxsRkAstAhhOW4ZTJ8aaH
+         i5xCb2RBSxSlodarFcTsa0II38NgSDHo0Aa/SvHk18vTdBGCFoXb6ZMZgHSkDdZsG0
+         f40dANrMADEK6VmU2Ac/kIpa61onPYmUdZLNkgSo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vishal Verma <vishal.l.verma@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 07/45] libnvdimm/bus: Prepare the nd_ioctl() path to be re-entrant
-Date:   Thu,  8 Aug 2019 21:04:53 +0200
-Message-Id: <20190808190454.189996943@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 02/45] gcc-9: dont warn about uninitialized variable
+Date:   Thu,  8 Aug 2019 21:04:48 +0200
+Message-Id: <20190808190453.957626304@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190808190453.827571908@linuxfoundation.org>
 References: <20190808190453.827571908@linuxfoundation.org>
@@ -60,164 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 6de5d06e657acdbcf9637dac37916a4a5309e0f4 upstream.
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-In preparation for not holding a lock over the execution of nd_ioctl(),
-update the implementation to allow multiple threads to be attempting
-ioctls at the same time. The bus lock still prevents multiple in-flight
-->ndctl() invocations from corrupting each other's state, but static
-global staging buffers are moved to the heap.
+commit cf676908846a06443fa5e6724ca3f5dd7460eca1 upstream.
 
-Reported-by: Vishal Verma <vishal.l.verma@intel.com>
-Reviewed-by: Vishal Verma <vishal.l.verma@intel.com>
-Tested-by: Vishal Verma <vishal.l.verma@intel.com>
-Link: https://lore.kernel.org/r/156341208947.292348.10560140326807607481.stgit@dwillia2-desk3.amr.corp.intel.com
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+I'm not sure what made gcc warn about this code now.  The 'ret' variable
+does end up initialized in all cases, but it's definitely not obvious,
+so the compiler is quite reasonable to warn about this.
+
+So just add initialization to make it all much more obvious both to
+compilers and to humans.
+
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/nvdimm/bus.c | 59 +++++++++++++++++++++++++++-----------------
- 1 file changed, 37 insertions(+), 22 deletions(-)
+ drivers/i2c/i2c-core-base.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/nvdimm/bus.c b/drivers/nvdimm/bus.c
-index 11cfd23e5aff7..5abcdb4faa644 100644
---- a/drivers/nvdimm/bus.c
-+++ b/drivers/nvdimm/bus.c
-@@ -951,20 +951,19 @@ static int __nd_ioctl(struct nvdimm_bus *nvdimm_bus, struct nvdimm *nvdimm,
- 		int read_only, unsigned int ioctl_cmd, unsigned long arg)
+--- a/drivers/i2c/i2c-core-base.c
++++ b/drivers/i2c/i2c-core-base.c
+@@ -185,7 +185,7 @@ static int i2c_generic_bus_free(struct i
+ int i2c_generic_scl_recovery(struct i2c_adapter *adap)
  {
- 	struct nvdimm_bus_descriptor *nd_desc = nvdimm_bus->nd_desc;
--	static char out_env[ND_CMD_MAX_ENVELOPE];
--	static char in_env[ND_CMD_MAX_ENVELOPE];
- 	const struct nd_cmd_desc *desc = NULL;
- 	unsigned int cmd = _IOC_NR(ioctl_cmd);
- 	struct device *dev = &nvdimm_bus->dev;
- 	void __user *p = (void __user *) arg;
-+	char *out_env = NULL, *in_env = NULL;
- 	const char *cmd_name, *dimm_name;
- 	u32 in_len = 0, out_len = 0;
- 	unsigned int func = cmd;
- 	unsigned long cmd_mask;
- 	struct nd_cmd_pkg pkg;
- 	int rc, i, cmd_rc;
-+	void *buf = NULL;
- 	u64 buf_len = 0;
--	void *buf;
+ 	struct i2c_bus_recovery_info *bri = adap->bus_recovery_info;
+-	int i = 0, scl = 1, ret;
++	int i = 0, scl = 1, ret = 0;
  
- 	if (nvdimm) {
- 		desc = nd_cmd_dimm_desc(cmd);
-@@ -1004,6 +1003,9 @@ static int __nd_ioctl(struct nvdimm_bus *nvdimm_bus, struct nvdimm *nvdimm,
- 		}
- 
- 	/* process an input envelope */
-+	in_env = kzalloc(ND_CMD_MAX_ENVELOPE, GFP_KERNEL);
-+	if (!in_env)
-+		return -ENOMEM;
- 	for (i = 0; i < desc->in_num; i++) {
- 		u32 in_size, copy;
- 
-@@ -1011,14 +1013,17 @@ static int __nd_ioctl(struct nvdimm_bus *nvdimm_bus, struct nvdimm *nvdimm,
- 		if (in_size == UINT_MAX) {
- 			dev_err(dev, "%s:%s unknown input size cmd: %s field: %d\n",
- 					__func__, dimm_name, cmd_name, i);
--			return -ENXIO;
-+			rc = -ENXIO;
-+			goto out;
- 		}
--		if (in_len < sizeof(in_env))
--			copy = min_t(u32, sizeof(in_env) - in_len, in_size);
-+		if (in_len < ND_CMD_MAX_ENVELOPE)
-+			copy = min_t(u32, ND_CMD_MAX_ENVELOPE - in_len, in_size);
- 		else
- 			copy = 0;
--		if (copy && copy_from_user(&in_env[in_len], p + in_len, copy))
--			return -EFAULT;
-+		if (copy && copy_from_user(&in_env[in_len], p + in_len, copy)) {
-+			rc = -EFAULT;
-+			goto out;
-+		}
- 		in_len += in_size;
- 	}
- 
-@@ -1030,6 +1035,12 @@ static int __nd_ioctl(struct nvdimm_bus *nvdimm_bus, struct nvdimm *nvdimm,
- 	}
- 
- 	/* process an output envelope */
-+	out_env = kzalloc(ND_CMD_MAX_ENVELOPE, GFP_KERNEL);
-+	if (!out_env) {
-+		rc = -ENOMEM;
-+		goto out;
-+	}
-+
- 	for (i = 0; i < desc->out_num; i++) {
- 		u32 out_size = nd_cmd_out_size(nvdimm, cmd, desc, i,
- 				(u32 *) in_env, (u32 *) out_env, 0);
-@@ -1038,15 +1049,18 @@ static int __nd_ioctl(struct nvdimm_bus *nvdimm_bus, struct nvdimm *nvdimm,
- 		if (out_size == UINT_MAX) {
- 			dev_dbg(dev, "%s unknown output size cmd: %s field: %d\n",
- 					dimm_name, cmd_name, i);
--			return -EFAULT;
-+			rc = -EFAULT;
-+			goto out;
- 		}
--		if (out_len < sizeof(out_env))
--			copy = min_t(u32, sizeof(out_env) - out_len, out_size);
-+		if (out_len < ND_CMD_MAX_ENVELOPE)
-+			copy = min_t(u32, ND_CMD_MAX_ENVELOPE - out_len, out_size);
- 		else
- 			copy = 0;
- 		if (copy && copy_from_user(&out_env[out_len],
--					p + in_len + out_len, copy))
--			return -EFAULT;
-+					p + in_len + out_len, copy)) {
-+			rc = -EFAULT;
-+			goto out;
-+		}
- 		out_len += out_size;
- 	}
- 
-@@ -1054,12 +1068,15 @@ static int __nd_ioctl(struct nvdimm_bus *nvdimm_bus, struct nvdimm *nvdimm,
- 	if (buf_len > ND_IOCTL_MAX_BUFLEN) {
- 		dev_dbg(dev, "%s cmd: %s buf_len: %llu > %d\n", dimm_name,
- 				cmd_name, buf_len, ND_IOCTL_MAX_BUFLEN);
--		return -EINVAL;
-+		rc = -EINVAL;
-+		goto out;
- 	}
- 
- 	buf = vmalloc(buf_len);
--	if (!buf)
--		return -ENOMEM;
-+	if (!buf) {
-+		rc = -ENOMEM;
-+		goto out;
-+	}
- 
- 	if (copy_from_user(buf, p, buf_len)) {
- 		rc = -EFAULT;
-@@ -1081,17 +1098,15 @@ static int __nd_ioctl(struct nvdimm_bus *nvdimm_bus, struct nvdimm *nvdimm,
- 		nvdimm_account_cleared_poison(nvdimm_bus, clear_err->address,
- 				clear_err->cleared);
- 	}
--	nvdimm_bus_unlock(&nvdimm_bus->dev);
- 
- 	if (copy_to_user(p, buf, buf_len))
- 		rc = -EFAULT;
- 
--	vfree(buf);
--	return rc;
--
-- out_unlock:
-+out_unlock:
- 	nvdimm_bus_unlock(&nvdimm_bus->dev);
-- out:
-+out:
-+	kfree(in_env);
-+	kfree(out_env);
- 	vfree(buf);
- 	return rc;
- }
--- 
-2.20.1
-
+ 	if (bri->prepare_recovery)
+ 		bri->prepare_recovery(adap);
 
 
