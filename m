@@ -2,80 +2,134 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B49C41514
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:16:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E15D2C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A4C2218B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:16:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2CD6218B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:17:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733010AbfHHPQB (ORCPT
+        id S1733024AbfHHPRM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 11:16:01 -0400
-Received: from mga14.intel.com ([192.55.52.115]:63160 "EHLO mga14.intel.com"
+        Thu, 8 Aug 2019 11:17:12 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35718 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727096AbfHHPQB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 11:16:01 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Aug 2019 08:16:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,361,1559545200"; 
-   d="scan'208";a="350203764"
-Received: from sandersb-mobl.ger.corp.intel.com (HELO localhost) ([10.249.33.239])
-  by orsmga005.jf.intel.com with ESMTP; 08 Aug 2019 08:15:51 -0700
-Date:   Thu, 8 Aug 2019 18:15:50 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        linux-security-module@vger.kernel.org, dhowells@redhat.com,
-        Herbert Xu <herbert@gondor.apana.org.au>, davem@davemloft.net,
-        peterhuewe@gmx.de, jgg@ziepe.ca, jejb@linux.ibm.com,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>
-Subject: Re: [RFC/RFT v3 2/3] KEYS: trusted: move tpm2 trusted keys code
-Message-ID: <20190808151500.ypfcqowklalu76uq@linux.intel.com>
-References: <1565098640-12536-1-git-send-email-sumit.garg@linaro.org>
- <1565098640-12536-3-git-send-email-sumit.garg@linaro.org>
- <20190807190320.th4sbnsnmwb7myzx@linux.intel.com>
- <CAFA6WYN-6MpP2TZQEz49BmjSQiMSqghVFWRZCCY0o1UVad1AFw@mail.gmail.com>
+        id S1730678AbfHHPRM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 11:17:12 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7005330A00DE;
+        Thu,  8 Aug 2019 15:17:11 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A280E5EE1D;
+        Thu,  8 Aug 2019 15:17:02 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id x78FH2gH019766;
+        Thu, 8 Aug 2019 11:17:02 -0400
+Received: from localhost (mpatocka@localhost)
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id x78FH1f4019762;
+        Thu, 8 Aug 2019 11:17:02 -0400
+X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
+Date:   Thu, 8 Aug 2019 11:17:01 -0400 (EDT)
+From:   Mikulas Patocka <mpatocka@redhat.com>
+X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
+To:     Jens Axboe <axboe@kernel.dk>, Matthew Wilcox <willy@infradead.org>
+cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Mike Snitzer <msnitzer@redhat.com>, junxiao.bi@oracle.com,
+        dm-devel@redhat.com, Alasdair Kergon <agk@redhat.com>,
+        honglei.wang@oracle.com, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-block@vger.kernel.org
+Subject: [PATCH] loop: set PF_MEMALLOC_NOIO for the worker thread
+In-Reply-To: <20190808135329.GG5482@bombadil.infradead.org>
+Message-ID: <alpine.LRH.2.02.1908081113540.18950@file01.intranet.prod.int.rdu2.redhat.com>
+References: <alpine.LRH.2.02.1908080540240.15519@file01.intranet.prod.int.rdu2.redhat.com> <20190808135329.GG5482@bombadil.infradead.org>
+User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFA6WYN-6MpP2TZQEz49BmjSQiMSqghVFWRZCCY0o1UVad1AFw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: NeoMutt/20180716
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Thu, 08 Aug 2019 15:17:11 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 06:51:38PM +0530, Sumit Garg wrote:
-> It seems to be a functional change which I think requires proper unit
-> testing. I am afraid that I don't posses a TPM device to test this and
-> also very less conversant with tpm_buf code.
-> 
-> So what I have done here is to rename existing TPM 1.x trusted keys
-> code to use tpm1_buf.
-> 
-> And I would be happy to integrate a tested patch if anyone familiar
-> could work on this.
+A deadlock with this stacktrace was observed.
 
-I can test it on TPM 1.2.
+The loop thread does a GFP_KERNEL allocation, it calls into dm-bufio
+shrinker and the shrinker depends on I/O completion in the dm-bufio
+subsystem.
 
-/Jarkko
+In order to fix the deadlock (and other similar ones), we set the flag
+PF_MEMALLOC_NOIO at loop thread entry.
+
+PID: 474    TASK: ffff8813e11f4600  CPU: 10  COMMAND: "kswapd0"
+   #0 [ffff8813dedfb938] __schedule at ffffffff8173f405
+   #1 [ffff8813dedfb990] schedule at ffffffff8173fa27
+   #2 [ffff8813dedfb9b0] schedule_timeout at ffffffff81742fec
+   #3 [ffff8813dedfba60] io_schedule_timeout at ffffffff8173f186
+   #4 [ffff8813dedfbaa0] bit_wait_io at ffffffff8174034f
+   #5 [ffff8813dedfbac0] __wait_on_bit at ffffffff8173fec8
+   #6 [ffff8813dedfbb10] out_of_line_wait_on_bit at ffffffff8173ff81
+   #7 [ffff8813dedfbb90] __make_buffer_clean at ffffffffa038736f [dm_bufio]
+   #8 [ffff8813dedfbbb0] __try_evict_buffer at ffffffffa0387bb8 [dm_bufio]
+   #9 [ffff8813dedfbbd0] dm_bufio_shrink_scan at ffffffffa0387cc3 [dm_bufio]
+  #10 [ffff8813dedfbc40] shrink_slab at ffffffff811a87ce
+  #11 [ffff8813dedfbd30] shrink_zone at ffffffff811ad778
+  #12 [ffff8813dedfbdc0] kswapd at ffffffff811ae92f
+  #13 [ffff8813dedfbec0] kthread at ffffffff810a8428
+  #14 [ffff8813dedfbf50] ret_from_fork at ffffffff81745242
+
+  PID: 14127  TASK: ffff881455749c00  CPU: 11  COMMAND: "loop1"
+   #0 [ffff88272f5af228] __schedule at ffffffff8173f405
+   #1 [ffff88272f5af280] schedule at ffffffff8173fa27
+   #2 [ffff88272f5af2a0] schedule_preempt_disabled at ffffffff8173fd5e
+   #3 [ffff88272f5af2b0] __mutex_lock_slowpath at ffffffff81741fb5
+   #4 [ffff88272f5af330] mutex_lock at ffffffff81742133
+   #5 [ffff88272f5af350] dm_bufio_shrink_count at ffffffffa03865f9 [dm_bufio]
+   #6 [ffff88272f5af380] shrink_slab at ffffffff811a86bd
+   #7 [ffff88272f5af470] shrink_zone at ffffffff811ad778
+   #8 [ffff88272f5af500] do_try_to_free_pages at ffffffff811adb34
+   #9 [ffff88272f5af590] try_to_free_pages at ffffffff811adef8
+  #10 [ffff88272f5af610] __alloc_pages_nodemask at ffffffff811a09c3
+  #11 [ffff88272f5af710] alloc_pages_current at ffffffff811e8b71
+  #12 [ffff88272f5af760] new_slab at ffffffff811f4523
+  #13 [ffff88272f5af7b0] __slab_alloc at ffffffff8173a1b5
+  #14 [ffff88272f5af880] kmem_cache_alloc at ffffffff811f484b
+  #15 [ffff88272f5af8d0] do_blockdev_direct_IO at ffffffff812535b3
+  #16 [ffff88272f5afb00] __blockdev_direct_IO at ffffffff81255dc3
+  #17 [ffff88272f5afb30] xfs_vm_direct_IO at ffffffffa01fe3fc [xfs]
+  #18 [ffff88272f5afb90] generic_file_read_iter at ffffffff81198994
+  #19 [ffff88272f5afc50] __dta_xfs_file_read_iter_2398 at ffffffffa020c970 [xfs]
+  #20 [ffff88272f5afcc0] lo_rw_aio at ffffffffa0377042 [loop]
+  #21 [ffff88272f5afd70] loop_queue_work at ffffffffa0377c3b [loop]
+  #22 [ffff88272f5afe60] kthread_worker_fn at ffffffff810a8a0c
+  #23 [ffff88272f5afec0] kthread at ffffffff810a8428
+  #24 [ffff88272f5aff50] ret_from_fork at ffffffff81745242
+
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Cc: stable@vger.kernel.org
+
+---
+ drivers/block/loop.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+Index: linux-2.6/drivers/block/loop.c
+===================================================================
+--- linux-2.6.orig/drivers/block/loop.c	2019-08-08 17:02:50.000000000 +0200
++++ linux-2.6/drivers/block/loop.c	2019-08-08 17:08:14.000000000 +0200
+@@ -885,7 +885,7 @@ static void loop_unprepare_queue(struct
+ 
+ static int loop_kthread_worker_fn(void *worker_ptr)
+ {
+-	current->flags |= PF_LESS_THROTTLE;
++	current->flags |= PF_LESS_THROTTLE | PF_MEMALLOC_NOIO;
+ 	return kthread_worker_fn(worker_ptr);
+ }
+ 
+
