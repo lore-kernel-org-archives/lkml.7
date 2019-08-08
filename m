@@ -2,42 +2,45 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 000EFC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF1DC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:54:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C91932184E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:54:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 447BE2184E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:54:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565294081;
-	bh=S3QTZYjx6BDOf305mGjlzKbXfSHzEKqRofEbPjjrb/Q=;
-	h=From:To:Subject:Date:List-ID:From;
-	b=KH7dRweQdqeCzuOU91rtZ4ArQdYlRjmIFNwtCpxFrrLepMsi87fnhxH0w/hBO+9M6
-	 qjAZqbdprpXTPKgn0imSbz+unDOCQLL9ynTqTdjG/KL7jatvOhEJOO98S/4UUWGurN
-	 7rcSUB48xmPMJoGf7ujuL6CxQBCZYpw26DHXVH1Q=
+	s=default; t=1565294084;
+	bh=Wl/v+kMqCliTAzEFxqwHO5PoV20HmLtR8YI/gRJZrzg=;
+	h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
+	 References:List-ID:From;
+	b=ONhhe0aBVq1qgu7t/XGu2FtAD9JnTgGn7vrvoqekEg7CSvEx0IvBJT/mQAk+6sVlV
+	 Ni4rCjWRY1MDtbL245vAybG2Km8S0lQYnbjwO1d1lwMWFuLLJHFXM+uoKyBY9v0tXZ
+	 heMyZnI064K7mQGypS2q5GkaEGiYYdf23Y7zyrWY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404307AbfHHTxM (ORCPT
+        id S2404426AbfHHTym (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:53:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57818 "EHLO mail.kernel.org"
+        Thu, 8 Aug 2019 15:54:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404228AbfHHTxK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 15:53:10 -0400
+        id S2404296AbfHHTxN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 15:53:13 -0400
 Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8987221883;
-        Thu,  8 Aug 2019 19:53:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 785DB214C6;
+        Thu,  8 Aug 2019 19:53:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565293989;
-        bh=S3QTZYjx6BDOf305mGjlzKbXfSHzEKqRofEbPjjrb/Q=;
-        h=From:To:Subject:Date:From;
-        b=ow4RoGCvPSaihud+cEfwSn2N0W89F64BxVI6fj7shR3ODMl2mZjy3MWijOiWJ5SUd
-         C1fP15c4SFUnubKKRv92GSMI3Db0Z2EUanzJNSnqTvyt1CHTMAHVMB0lK5vSTWuKFu
-         EFX5N0JmT162MXKxHYtQARBuj8W7cflQTc8lOcmg=
+        s=default; t=1565293992;
+        bh=Wl/v+kMqCliTAzEFxqwHO5PoV20HmLtR8YI/gRJZrzg=;
+        h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=Ds/D0d4oB7ZlRWIwUzjkuZx/eERIVktaq70pb0OzVrfcra0M9XY9Oj+RNDAjNABbt
+         HWY6SXtN1AWJMLkwUhVy5qYNjFH0dajNQdyvxZ5Z1ppIGoOKJ2hm9K0LM+kAdLtXw8
+         fjAetiGBA13eLvPlo97SCh9TZnQQajfEuMGHXFbw=
 From:   zanussi@kernel.org
 To:     LKML <linux-kernel@vger.kernel.org>,
         linux-rt-users <linux-rt-users@vger.kernel.org>,
@@ -49,111 +52,122 @@ To:     LKML <linux-kernel@vger.kernel.org>,
         Daniel Wagner <wagi@monom.org>,
         Tom Zanussi <zanussi@kernel.org>,
         Julia Cartwright <julia@ni.com>
-Subject: [PATCH RT 00/19] Linux v4.14.137-rt65-rc1
-Date:   Thu,  8 Aug 2019 14:52:28 -0500
-Message-Id: <cover.1565293934.git.zanussi@kernel.org>
+Subject: [PATCH RT 03/19] genirq: Do not invoke the affinity callback via a workqueue on RT
+Date:   Thu,  8 Aug 2019 14:52:31 -0500
+Message-Id: <16a19c7974fd531ce68182de87fc7314db33117b.1565293934.git.zanussi@kernel.org>
 X-Mailer: git-send-email 2.14.1
+In-Reply-To: <cover.1565293934.git.zanussi@kernel.org>
+References: <cover.1565293934.git.zanussi@kernel.org>
+In-Reply-To: <cover.1565293934.git.zanussi@kernel.org>
+References: <cover.1565293934.git.zanussi@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Zanussi <zanussi@kernel.org>
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-Dear RT Folks,
+v4.14.137-rt65-rc1 stable review patch.
+If anyone has any objections, please let me know.
 
-This is the RT stable review cycle of patch 4.14.137-rt65-rc1.
-
-Please scream at me if I messed something up. Please test the patches
-too.
-
-The -rc release will be uploaded to kernel.org and will be deleted
-when the final release is out. This is just a review release (or
-release candidate).
-
-The pre-releases will not be pushed to the git repository, only the
-final release is.
-
-If all goes well, this patch will be converted to the next main
-release on 2019-08-15.
-
-To build 4.14.137-rt65-rc1 directly, the following patches should be applied:
-
-  https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.14.tar.xz
-
-  https://www.kernel.org/pub/linux/kernel/v4.x/patch-4.14.137.xz
-
-  https://www.kernel.org/pub/linux/kernel/projects/rt/4.14/patch-4.14.137-rt65-rc1.patch.xz
-
-You can also build from 4.14.137-rt64 by applying the incremental patch:
-
-  https://www.kernel.org/pub/linux/kernel/projects/rt/4.14/incr/patch-4.14.137-rt64-rt65-rc1.patch.xz
+-----------
 
 
-Enjoy,
+[ Upstream commit 2122adbe011cdc0eb62ad62494e181005b23c76a ]
 
--- Tom
+Joe Korty reported, that __irq_set_affinity_locked() schedules a
+workqueue while holding a rawlock which results in a might_sleep()
+warning.
+This patch uses swork_queue() instead.
 
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Tom Zanussi <zanussi@kernel.org>
 
-Corey Minyard (1):
-  sched/completion: Fix a lockup in wait_for_completion()
+ Conflicts:
+	include/linux/interrupt.h
+	kernel/irq/manage.c
+---
+ include/linux/interrupt.h |  5 ++---
+ kernel/irq/manage.c       | 19 ++++---------------
+ 2 files changed, 6 insertions(+), 18 deletions(-)
 
-Luis Claudio R. Goncalves (1):
-  mm/zswap: Do not disable preemption in zswap_frontswap_store()
-
-Sebastian Andrzej Siewior (13):
-  kthread: add a global worker thread.
-  genirq: Do not invoke the affinity callback via a workqueue on RT
-  genirq: Handle missing work_struct in irq_set_affinity_notifier()
-  locking/rwsem: Rename rwsem_rt.h to rwsem-rt.h
-  locking/lockdep: Don't complain about incorrect name for no validate
-    class
-  arm: imx6: cpuidle: Use raw_spinlock_t
-  rcu: Don't allow to change rcu_normal_after_boot on RT
-  sched/core: Drop a preempt_disable_rt() statement
-  Revert "futex: Ensure lock/unlock symetry versus pi_lock and hash
-    bucket lock"
-  Revert "futex: Fix bug on when a requeued RT task times out"
-  Revert "rtmutex: Handle the various new futex race conditions"
-  Revert "futex: workaround migrate_disable/enable in different context"
-  futex: Make the futex_hash_bucket lock raw
-
-Thomas Gleixner (1):
-  futex: Delay deallocation of pi_state
-
-Tom Zanussi (2):
-  kthread: Use __RAW_SPIN_LOCK_UNLOCK to initialize kthread_worker lock
-  Linux 4.14.137-rt65-rc1
-
-kbuild test robot (1):
-  pci/switchtec: fix stream_open.cocci warnings
-
- arch/arm/mach-imx/cpuidle-imx6q.c        |  10 +-
- drivers/block/loop.c                     |   2 +-
- drivers/pci/switch/switchtec.c           |   2 +-
- drivers/spi/spi-rockchip.c               |   1 +
- include/linux/blk-cgroup.h               |   1 +
- include/linux/interrupt.h                |   5 +-
- include/linux/kthread-cgroup.h           |  17 +++
- include/linux/kthread.h                  |  10 +-
- include/linux/{rwsem_rt.h => rwsem-rt.h} |   0
- include/linux/rwsem.h                    |   2 +-
- init/main.c                              |   1 +
- kernel/futex.c                           | 232 +++++++++++++------------------
- kernel/irq/manage.c                      |  23 +--
- kernel/kthread.c                         |  13 ++
- kernel/locking/lockdep.c                 |   3 +-
- kernel/locking/rtmutex.c                 |  65 +--------
- kernel/locking/rtmutex_common.h          |   3 -
- kernel/rcu/update.c                      |   2 +
- kernel/sched/completion.c                |   2 +-
- kernel/sched/core.c                      |   9 +-
- localversion-rt                          |   2 +-
- mm/zswap.c                               |  12 +-
- 22 files changed, 179 insertions(+), 238 deletions(-)
- create mode 100644 include/linux/kthread-cgroup.h
- rename include/linux/{rwsem_rt.h => rwsem-rt.h} (100%)
-
+diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
+index 0f25fa19b2d8..233e3c027f53 100644
+--- a/include/linux/interrupt.h
++++ b/include/linux/interrupt.h
+@@ -15,7 +15,7 @@
+ #include <linux/hrtimer.h>
+ #include <linux/kref.h>
+ #include <linux/workqueue.h>
+-#include <linux/swork.h>
++#include <linux/kthread.h>
+ 
+ #include <linux/atomic.h>
+ #include <asm/ptrace.h>
+@@ -230,7 +230,6 @@ extern void resume_device_irqs(void);
+  * struct irq_affinity_notify - context for notification of IRQ affinity changes
+  * @irq:		Interrupt to which notification applies
+  * @kref:		Reference count, for internal use
+- * @swork:		Swork item, for internal use
+  * @work:		Work item, for internal use
+  * @notify:		Function to be called on change.  This will be
+  *			called in process context.
+@@ -243,7 +242,7 @@ struct irq_affinity_notify {
+ 	unsigned int irq;
+ 	struct kref kref;
+ #ifdef CONFIG_PREEMPT_RT_BASE
+-	struct swork_event swork;
++	struct kthread_work work;
+ #else
+ 	struct work_struct work;
+ #endif
+diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
+index f9415590661c..3d5b33fe874b 100644
+--- a/kernel/irq/manage.c
++++ b/kernel/irq/manage.c
+@@ -228,7 +228,7 @@ int irq_set_affinity_locked(struct irq_data *data, const struct cpumask *mask,
+ 		kref_get(&desc->affinity_notify->kref);
+ 
+ #ifdef CONFIG_PREEMPT_RT_BASE
+-		swork_queue(&desc->affinity_notify->swork);
++		kthread_schedule_work(&desc->affinity_notify->work);
+ #else
+ 		schedule_work(&desc->affinity_notify->work);
+ #endif
+@@ -293,21 +293,11 @@ static void _irq_affinity_notify(struct irq_affinity_notify *notify)
+ }
+ 
+ #ifdef CONFIG_PREEMPT_RT_BASE
+-static void init_helper_thread(void)
+-{
+-	static int init_sworker_once;
+-
+-	if (init_sworker_once)
+-		return;
+-	if (WARN_ON(swork_get()))
+-		return;
+-	init_sworker_once = 1;
+-}
+ 
+-static void irq_affinity_notify(struct swork_event *swork)
++static void irq_affinity_notify(struct kthread_work *work)
+ {
+ 	struct irq_affinity_notify *notify =
+-		container_of(swork, struct irq_affinity_notify, swork);
++		container_of(work, struct irq_affinity_notify, work);
+ 	_irq_affinity_notify(notify);
+ }
+ 
+@@ -350,8 +340,7 @@ irq_set_affinity_notifier(unsigned int irq, struct irq_affinity_notify *notify)
+ 		notify->irq = irq;
+ 		kref_init(&notify->kref);
+ #ifdef CONFIG_PREEMPT_RT_BASE
+-		INIT_SWORK(&notify->swork, irq_affinity_notify);
+-		init_helper_thread();
++		kthread_init_work(&notify->work, irq_affinity_notify);
+ #else
+ 		INIT_WORK(&notify->work, irq_affinity_notify);
+ #endif
 -- 
 2.14.1
 
