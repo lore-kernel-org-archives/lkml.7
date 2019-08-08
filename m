@@ -2,65 +2,87 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E27FC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 10:10:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F364C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 10:14:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5989521874
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 10:10:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6551720B7C
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 10:14:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389917AbfHHKK4 (ORCPT
+        id S2389897AbfHHKOC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 06:10:56 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:54224 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389793AbfHHKKo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 06:10:44 -0400
-Received: from 79.184.254.29.ipv4.supernova.orange.pl (79.184.254.29) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.275)
- id 12a2dc33bd81580e; Thu, 8 Aug 2019 12:10:42 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     linux-nvme <linux-nvme@lists.infradead.org>
-Cc:     Keith Busch <kbusch@kernel.org>,
-        Mario Limonciello <Mario.Limonciello@dell.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Subject: [PATCH v2 0/2] nvme-pci: Allow PCI bus-level PM to be used if ASPM is disabled
-Date:   Thu, 08 Aug 2019 12:03:09 +0200
-Message-ID: <1921165.pTveHRX1Co@kreacher>
-In-Reply-To: <20190731221956.GB15795@localhost.localdomain>
-References: <4323ed84dd07474eab65699b4d007aaf@AUSX13MPC105.AMER.DELL.COM> <CAJZ5v0iDQ4=kTUgW94tKGt7oJzA_3uVU_M6HAMbNCRXwp_do8A@mail.gmail.com> <47415939.KV5G6iaeJG@kreacher> <20190730144134.GA12844@localhost.localdomain> <100ba4aff1c6434a81e47774ab4acddc@AUSX13MPC105.AMER.DELL.COM> <8246360B-F7D9-42EB-94FC-82995A769E28@canonical.com> <20190730191934.GD13948@localhost.localdomain> <7d3e0b8ba1444194a153c93faa1cabb3@AUSX13MPC105.AMER.DELL.COM> <20190730213114.GK13948@localhost.localdomain> <CAJZ5v0gxfeMN8eCNRjcXmUOkReVsdozb3EccaYMpnmSHu3771g@mail.gmail.com> <20190731221956.GB15795@localhost.localdomain>
+        Thu, 8 Aug 2019 06:14:02 -0400
+Received: from foss.arm.com ([217.140.110.172]:59328 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389793AbfHHKOB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 06:14:01 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 152E328;
+        Thu,  8 Aug 2019 03:14:01 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7D7403F694;
+        Thu,  8 Aug 2019 03:13:59 -0700 (PDT)
+Date:   Thu, 8 Aug 2019 11:13:54 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jake Oshins <jakeo@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Dexuan Cui <decui@microsoft.com>
+Subject: Re: [PATCH] PCI: pci-hyperv: fix build errors on non-SYSFS config
+Message-ID: <20190808101354.GA30230@e121166-lin.cambridge.arm.com>
+References: <abbe8012-1e6f-bdea-1454-5c59ccbced3d@infradead.org>
+ <DM6PR21MB133723E9D1FA8BA0006E06FECAF20@DM6PR21MB1337.namprd21.prod.outlook.com>
+ <20190713150353.GF10104@sasha-vm>
+ <20190723212107.GB9742@google.com>
+ <20190807150654.GB16214@e121166-lin.cambridge.arm.com>
+ <20190808012745.GV17747@sasha-vm>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190808012745.GV17747@sasha-vm>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
+On Wed, Aug 07, 2019 at 09:27:45PM -0400, Sasha Levin wrote:
+> On Wed, Aug 07, 2019 at 04:06:54PM +0100, Lorenzo Pieralisi wrote:
+> > On Tue, Jul 23, 2019 at 04:21:07PM -0500, Bjorn Helgaas wrote:
+> > > On Sat, Jul 13, 2019 at 11:03:53AM -0400, Sasha Levin wrote:
+> > > > Queued up for hyperv-fixes, thank you!
+> > > 
+> > > What merge strategy do you envision for this?  Previous
+> > > drivers/pci/controller/pci-hyperv.c changes have generally been merged
+> > > by Lorenzo and incorporated into my PCI tree.
+> > > 
+> > > This particular patch doesn't actually touch pci-hyperv.c; it touches
+> > > drivers/pci/Kconfig, so should somehow be coordinated with me.
+> > > 
+> > > Does this need to be tagged for stable?  a15f2c08c708 appeared in
+> > > v4.19, so my first guess is that it's not stable material.
+> > 
+> > AFAIC Bjorn's question still stands. Who will pick this patch up ?
+> 
+> Would it be easier if I just ignored Hyper-V PCI patches?
 
-This series is equivalent to the following patch:
+I think it probably would, yes. Actually this patch does not even
+fall within "Hyper-V CORE AND DRIVERS" maintainers entry.
 
-https://patchwork.kernel.org/patch/11083551/
+As for drivers/pci/controller/pci-hyperv.c, for urgent fixes
+I understand it is easier for you to pull them I would still ask
+you please to sync with me before pulling them.
 
-posted earlier today.
-
-It addresses review comments from Christoph by splitting the PCI/PCIe ASPM part
-off to a separate patch (patch [1/2]) and fixing a few defects.
-
-Thanks!
-
-
-
+Thanks,
+Lorenzo
