@@ -2,99 +2,93 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F9DBC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 10:00:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 635E7C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 10:01:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7979A21874
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 10:00:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 341472187F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 10:01:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565258467;
+	bh=CXGx44GqUVtH0apYlJlTI8Umn34XvELg2oJSMNqJIpw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Q1hBj/eeU6FtmzPwdDeuMzGXvcfbsjqs/2N4O6pN5yeaYmEMSHslAX7JyTFG2ou0/
+	 UEjsp/2PwU0Cn5vJ89+iz+NvM76/Ty4ethke1bz7WP/djrAzlQKN64T3kYJzJ80VAr
+	 MSUV6TZgj7IVRSyx1kcmHtLNldYbiA/9F6AZlt48=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732231AbfHHKAh (ORCPT
+        id S1732359AbfHHKBG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 06:00:37 -0400
-Received: from verein.lst.de ([213.95.11.211]:45231 "EHLO verein.lst.de"
+        Thu, 8 Aug 2019 06:01:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728289AbfHHKAg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 06:00:36 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id DE187227A81; Thu,  8 Aug 2019 12:00:31 +0200 (CEST)
-Date:   Thu, 8 Aug 2019 12:00:31 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Rob Clark <robdclark@chromium.org>
-Cc:     Christoph Hellwig <hch@lst.de>, Rob Clark <robdclark@gmail.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] drm: add cache support for arm64
-Message-ID: <20190808100031.GA32658@lst.de>
-References: <20190805211451.20176-1-robdclark@gmail.com> <20190806084821.GA17129@lst.de> <CAJs_Fx6eh1w7c=crMoD5XyEOMzP6orLhqUewErE51cPGYmObBQ@mail.gmail.com> <20190806155044.GC25050@lst.de> <CAJs_Fx6uztwDy2PqRy3Tc9p12k8r_ovS2tAcsMV6HqnAp=Ggug@mail.gmail.com> <20190807062545.GF6627@lst.de> <CAJs_Fx7tqbr_gqRdqJEwOcRFReP0DqZzOu11Dxhxkp8+PygUQw@mail.gmail.com>
+        id S1728289AbfHHKBF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 06:01:05 -0400
+Received: from linux-8ccs (charybdis-ext.suse.de [195.135.221.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF54221874;
+        Thu,  8 Aug 2019 10:01:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565258464;
+        bh=CXGx44GqUVtH0apYlJlTI8Umn34XvELg2oJSMNqJIpw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PSjghN36wTkmO+sdaV5suvU5gI8yEJg20nbiyId9rjvm243B3d9VxgVaE4YMkp/DE
+         RHH1k1r9NA2oQEW1edym22OFYv3jLpE1XfzvCWJpsALgmvr3G3yvFI8E7fOqhkfIEY
+         MWcEmat6pET6Wq6VlxpkYDejweSzieKMjQmO4+JY=
+Date:   Thu, 8 Aug 2019 12:01:00 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Matthew Garrett <mjg59@google.com>
+Cc:     James Morris <jmorris@namei.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH V37 04/29] Enforce module signatures if the kernel is
+ locked down
+Message-ID: <20190808100059.GA30260@linux-8ccs>
+References: <20190731221617.234725-1-matthewgarrett@google.com>
+ <20190731221617.234725-5-matthewgarrett@google.com>
+ <20190801142157.GA5834@linux-8ccs>
+ <CACdnJusD_9W9tFqwKptDTA8fZU8HrSvsEQhKo0WS9QxLpgz5tA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <CAJs_Fx7tqbr_gqRdqJEwOcRFReP0DqZzOu11Dxhxkp8+PygUQw@mail.gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <CACdnJusD_9W9tFqwKptDTA8fZU8HrSvsEQhKo0WS9QxLpgz5tA@mail.gmail.com>
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.28-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 07, 2019 at 09:09:53AM -0700, Rob Clark wrote:
-> > > (Eventually I'd like to support pages passed in from userspace.. but
-> > > that is down the road.)
-> >
-> > Eww.  Please talk to the iommu list before starting on that.
-> 
-> This is more of a long term goal, we can't do it until we have
-> per-context/process pagetables, ofc.
-> 
-> Getting a bit off topic, but I'm curious about what problems you are
-> concerned about.  Userspace can shoot it's own foot, but if it is not
-> sharing GPU pagetables with other processes, it can't shoot other's
-> feet.  (I'm guessing you are concerned about non-page-aligned
-> mappings?)
++++ Matthew Garrett [01/08/19 13:42 -0700]:
+>On Thu, Aug 1, 2019 at 7:22 AM Jessica Yu <jeyu@kernel.org> wrote:
+>> Apologies if this was addressed in another patch in your series (I've
+>> only skimmed the first few), but what should happen if the kernel is
+>> locked down, but CONFIG_MODULE_SIG=n? Or shouldn't CONFIG_SECURITY_LOCKDOWN_LSM
+>> depend on CONFIG_MODULE_SIG? Otherwise I think we'll end up calling
+>> the empty !CONFIG_MODULE_SIG module_sig_check() stub even though
+>> lockdown is enabled.
+>
+>Hm. Someone could certainly configure their kernel in that way. I'm
+>not sure that tying CONFIG_SECURITY_LOCKDOWN_LSM to CONFIG_MODULE_SIG
+>is the right solution, since the new LSM approach means that any other
+>LSM could also impose the same policy. Perhaps we should just document
+>this?
 
-Maybe I misunderstood what you mean above, I though you mean messing
-with page cachability attributes for userspace pages.  If what you are
-looking into is just "standard" SVM I only hope that our APIs for that
-which currently are a mess are in shape by then, as all users currently
-have their own crufty and at least slightly buggy versions of that.  But
-at least it is an issue that is being worked on.
+Hi Matthew,
 
-> > So back to the question, I'd like to understand your use case (and
-> > maybe hear from the other drm folks if that is common):
-> >
-> >  - you allocate pages from shmem (why shmem, btw?  if this is done by
-> >    other drm drivers how do they guarantee addressability without an
-> >    iommu?)
-> 
-> shmem for swappable pages.  I don't unpin and let things get swapped
-> out yet, but I'm told it starts to become important when you have 50
-> browser tabs open ;-)
+If you're confident that a hard dependency is not the right approach,
+then perhaps we could add a comment in the Kconfig (You could take a
+look at the comment under MODULE_SIG_ALL in init/Kconfig for an
+example)? If someone is configuring the kernel on their own then it'd
+be nice to let them know, otherwise having a lockdown kernel without
+module signatures would defeat the purpose of lockdown no? :-)
 
-Yes,  but at that point the swapping can use the kernel linear mapping
-and we are going into aliasing problems that can disturb the cache.  So
-as-is this is going to problematic without new hooks into shmemfs.
+Thank you,
 
-> >  - then the memory is either mapped to userspace or vmapped (or even
-> >    both, althrough the lack of aliasing you mentioned would speak
-> >    against it) as writecombine (aka arm v6+ normal uncached).  Does
-> >    the mapping live on until the memory is freed?
-> 
-> (side note, *most* of the drm/msm supported devices are armv8, the
-> exceptions are 8060 and 8064 which are armv7.. I don't think drm/msm
-> will ever have to deal w/ armv6)
-
-Well, the point was that starting from v6 the kernels dma uncached
-really is write combine.  So that applied to v7 and v8 as well.
+Jessica
