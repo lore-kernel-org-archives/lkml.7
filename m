@@ -2,74 +2,107 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F19B0C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53EB5C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C90412184E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:05:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565276728;
-	bh=fOS2h4GWI90AxufiprYZK3XN8pFdskKCIW7fKG4FeUI=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=zJWUu9Tro1uBVj04fnw3JX5PdvtlFBByudK+7A3BGxrFn/LSasY9dAvvq8R32wXLj
-	 g4aQ6d7Fw+sR7fxUi7DQ2x6lxlQXnMeeMefEoGxq9hSHd7GBMrOeMkUIj7z+L3m33D
-	 yvgom2YUL2U88y1D1StBi3bjAYyGf/KZ6MdqcBK8=
+	by mail.kernel.org (Postfix) with ESMTP id 3634F2189E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:08:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732507AbfHHPF2 (ORCPT
+        id S1732597AbfHHPIZ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 11:05:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42750 "EHLO mail.kernel.org"
+        Thu, 8 Aug 2019 11:08:25 -0400
+Received: from foss.arm.com ([217.140.110.172]:34688 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728289AbfHHPF1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 11:05:27 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F2A1217D7;
-        Thu,  8 Aug 2019 15:05:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565276726;
-        bh=fOS2h4GWI90AxufiprYZK3XN8pFdskKCIW7fKG4FeUI=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=VFMP51oCHDQdJoMYVsEVFhcHHo+wLWULdRccvSA78T9Lq4peRuwjjfseVgNaYxWAD
-         KwFhyXc8R4nuoQ8mbh661ihCJ/mNEKqK9lAiUQUbqB+9dhnMMVC1aYNdUCrONTeU26
-         bodgB479vAHOHDZvEHGgojYCWYdojpP/EH55ibS0=
-Content-Type: text/plain; charset="utf-8"
+        id S1728327AbfHHPIZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 11:08:25 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0D5121596;
+        Thu,  8 Aug 2019 08:08:24 -0700 (PDT)
+Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 75D053F706;
+        Thu,  8 Aug 2019 08:08:21 -0700 (PDT)
+References: <20190802090853.4810-1-patrick.bellasi@arm.com> <20190802090853.4810-3-patrick.bellasi@arm.com> <20190806161153.GA19991@blackbody.suse.cz>
+User-agent: mu4e 1.3.3; emacs 26.2
+From:   Patrick Bellasi <patrick.bellasi@arm.com>
+To:     Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-api@vger.kernel.org, cgroups@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tejun Heo <tj@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        "Vincent Guittot" <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Alessio Balsini <balsini@android.com>
+Subject: Re: [PATCH v13 2/6] sched/core: uclamp: Propagate parent clamps
+In-reply-to: <20190806161153.GA19991@blackbody.suse.cz>
+Date:   Thu, 08 Aug 2019 16:08:10 +0100
+Message-ID: <87h86r4rvp.fsf@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <5961554a-6416-48ea-44e2-d8e3c7576af0@web.de>
-References: <5961554a-6416-48ea-44e2-d8e3c7576af0@web.de>
-Subject: Re: [PATCH] clk: Use seq_puts() in possible_parent_show()
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-To:     Markus Elfring <Markus.Elfring@web.de>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org
-User-Agent: alot/0.8.1
-Date:   Thu, 08 Aug 2019 08:05:25 -0700
-Message-Id: <20190808150526.9F2A1217D7@mail.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Markus Elfring (2019-07-01 13:24:37)
-> From: Markus Elfring <elfring@users.sourceforge.net>
-> Date: Mon, 1 Jul 2019 22:20:40 +0200
->=20
-> A string which did not contain a data format specification should be put
-> into a sequence. Thus use the corresponding function =E2=80=9Cseq_puts=E2=
-=80=9D.
->=20
-> This issue was detected by using the Coccinelle software.
->=20
-> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-> ---
 
-Applied to clk-next
+On Tue, Aug 06, 2019 at 17:11:53 +0100, Michal Koutný wrote...
 
+> On Fri, Aug 02, 2019 at 10:08:49AM +0100, Patrick Bellasi <patrick.bellasi@arm.com> wrote:
+>> @@ -7095,6 +7149,7 @@ static ssize_t cpu_uclamp_write(struct kernfs_open_file *of, char *buf,
+>>  	if (req.ret)
+>>  		return req.ret;
+>>  
+>> +	mutex_lock(&uclamp_mutex);
+>>  	rcu_read_lock();
+>>  
+>>  	tg = css_tg(of_css(of));
+>> @@ -7107,7 +7162,11 @@ static ssize_t cpu_uclamp_write(struct kernfs_open_file *of, char *buf,
+>>  	 */
+>>  	tg->uclamp_pct[clamp_id] = req.percent;
+>>  
+>> +	/* Update effective clamps to track the most restrictive value */
+>> +	cpu_util_update_eff(of_css(of));
+>> +
+>>  	rcu_read_unlock();
+>> +	mutex_unlock(&uclamp_mutex);
+> Following my remarks to "[PATCH v13 1/6] sched/core: uclamp: Extend
+> CPU's cgroup", I wonder if the rcu_read_lock() couldn't be moved right
+> before cpu_util_update_eff(). And by extension rcu_read_(un)lock could
+> be hidden into cpu_util_update_eff() closer to its actual need.
+
+Well, if I've got correctly your comment in the previous message, I
+would say that at this stage we don't need RCU looks at all.
+
+Reason being that cpu_util_update_eff() gets called only from
+cpu_uclamp_write() which is from an ongoing write operation on a cgroup
+attribute and thus granted to be available.
+
+We will eventually need to move the RCU look only down the stack when
+uclamp_update_active_tasks() gets called to update the RUNNABLE tasks on
+a RQ... or perhaps we don't need them since we already get the
+task_rq_lock() for each task we visit.
+
+Is that correct?
+
+Cheers,
+Patrick
+
+-- 
+#include <best/regards.h>
+
+Patrick Bellasi
