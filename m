@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B648DC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:10:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C0EC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:11:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88BF821743
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:10:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9EEA214C6
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:11:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565291459;
-	bh=5O/qCdf5EeoEXV+hINy4coar5n+yKm8x+R7wXINU+U8=;
+	s=default; t=1565291461;
+	bh=3utsidPywQwbBISYQFaw+ixCRRG1nbJWVSopK7tycjU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CQVPdlkhtEAlbDCetMz2WiQ7Ad74NfhJyIlt91XAbRjYQiO9cPYxlkf4i4eOwuJ/9
-	 bcU2uMPOo+RVvhUqA8JuO5J7kD+AK4dn2kMgvQ8rq38gxaStI1XCFr1gl7k8mwQ2hy
-	 Sl40KGnIYq0OmgYlZjSp4+LkfHc3/TOH0vhOb9L0=
+	b=NBmmQDnUldrQtlwfyafHr6YwZ3DYjnxr1EwG4i95tIJ91FlOwjjQ1FaR2gfa3v5rs
+	 Qm8/vblsHN9pLTu5WuQYFM9Qjcih/ADb7G19d73NuYcdDuxaic1S9cma6yed06IdDS
+	 PTkwqj6ns+4zZFvZoUxXN35+ygTx5jqLqd6f23cc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405402AbfHHTK6 (ORCPT
+        id S2405410AbfHHTLA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:10:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45410 "EHLO mail.kernel.org"
+        Thu, 8 Aug 2019 15:11:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404754AbfHHTKz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 15:10:55 -0400
+        id S2405398AbfHHTK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 15:10:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A26822189D;
-        Thu,  8 Aug 2019 19:10:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 453E3214C6;
+        Thu,  8 Aug 2019 19:10:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565291455;
-        bh=5O/qCdf5EeoEXV+hINy4coar5n+yKm8x+R7wXINU+U8=;
+        s=default; t=1565291457;
+        bh=3utsidPywQwbBISYQFaw+ixCRRG1nbJWVSopK7tycjU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=owTfvqy37j/VGSzZ9iZ15QEDbyVJsDB1Oyu+OXQtBZk13qgHg8GHoOkoe2fm8TgF2
-         PRMp4HwlPXC+uvlJ5ThlaYlLKH6IimPV+mpykc1pxx7A18ABykOCCzVhwHmg+N60wR
-         7UEv7fELj5t3nWKjF9frg7cJhyi2SKgmCGQTdwAo=
+        b=G0Y/f3W5v0hDYyENxZE8BWccY4kLYE2dYhOaq6bewe1Xx8VkGaTpi7BQagupqqn9u
+         W5w3ubdc9Ok45NwrOxVOwdX9Y/8z7SmSwJiKEUdcMmoiglD+rFnsrcA8CaVR98HtAO
+         lhkA5PEb+RbAriDen6FlWDFzm3SHv7Mzedd29/l0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 20/33] net: sched: Fix a possible null-pointer dereference in dequeue_func()
-Date:   Thu,  8 Aug 2019 21:05:27 +0200
-Message-Id: <20190808190454.615932841@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+cf35b76f35e068a1107f@syzkaller.appspotmail.com,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.14 21/33] NFC: nfcmrvl: fix gpio-handling regression
+Date:   Thu,  8 Aug 2019 21:05:28 +0200
+Message-Id: <20190808190454.661075725@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190808190453.582417307@linuxfoundation.org>
 References: <20190808190453.582417307@linuxfoundation.org>
@@ -60,47 +60,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit 051c7b39be4a91f6b7d8c4548444e4b850f1f56c ]
+[ Upstream commit c3953a3c2d3175d2f9f0304c9a1ba89e7743c5e4 ]
 
-In dequeue_func(), there is an if statement on line 74 to check whether
-skb is NULL:
-    if (skb)
+Fix two reset-gpio sanity checks which were never converted to use
+gpio_is_valid(), and make sure to use -EINVAL to indicate a missing
+reset line also for the UART-driver module parameter and for the USB
+driver.
 
-When skb is NULL, it is used on line 77:
-    prefetch(&skb->end);
+This specifically prevents the UART and USB drivers from incidentally
+trying to request and use gpio 0, and also avoids triggering a WARN() in
+gpio_to_desc() during probe when no valid reset line has been specified.
 
-Thus, a possible null-pointer dereference may occur.
-
-To fix this bug, skb->end is used when skb is not NULL.
-
-This bug is found by a static analysis tool STCheck written by us.
-
-Fixes: 76e3cc126bb2 ("codel: Controlled Delay AQM")
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Reviewed-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: e33a3f84f88f ("NFC: nfcmrvl: allow gpio 0 for reset signalling")
+Reported-by: syzbot+cf35b76f35e068a1107f@syzkaller.appspotmail.com
+Tested-by: syzbot+cf35b76f35e068a1107f@syzkaller.appspotmail.com
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/sch_codel.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/nfc/nfcmrvl/main.c |    4 ++--
+ drivers/nfc/nfcmrvl/uart.c |    4 ++--
+ drivers/nfc/nfcmrvl/usb.c  |    1 +
+ 3 files changed, 5 insertions(+), 4 deletions(-)
 
---- a/net/sched/sch_codel.c
-+++ b/net/sched/sch_codel.c
-@@ -71,10 +71,10 @@ static struct sk_buff *dequeue_func(stru
- 	struct Qdisc *sch = ctx;
- 	struct sk_buff *skb = __qdisc_dequeue_head(&sch->q);
+--- a/drivers/nfc/nfcmrvl/main.c
++++ b/drivers/nfc/nfcmrvl/main.c
+@@ -244,7 +244,7 @@ void nfcmrvl_chip_reset(struct nfcmrvl_p
+ 	/* Reset possible fault of previous session */
+ 	clear_bit(NFCMRVL_PHY_ERROR, &priv->flags);
  
--	if (skb)
-+	if (skb) {
- 		sch->qstats.backlog -= qdisc_pkt_len(skb);
--
--	prefetch(&skb->end); /* we'll need skb_shinfo() */
-+		prefetch(&skb->end); /* we'll need skb_shinfo() */
-+	}
- 	return skb;
+-	if (priv->config.reset_n_io) {
++	if (gpio_is_valid(priv->config.reset_n_io)) {
+ 		nfc_info(priv->dev, "reset the chip\n");
+ 		gpio_set_value(priv->config.reset_n_io, 0);
+ 		usleep_range(5000, 10000);
+@@ -255,7 +255,7 @@ void nfcmrvl_chip_reset(struct nfcmrvl_p
+ 
+ void nfcmrvl_chip_halt(struct nfcmrvl_private *priv)
+ {
+-	if (priv->config.reset_n_io)
++	if (gpio_is_valid(priv->config.reset_n_io))
+ 		gpio_set_value(priv->config.reset_n_io, 0);
  }
+ 
+--- a/drivers/nfc/nfcmrvl/uart.c
++++ b/drivers/nfc/nfcmrvl/uart.c
+@@ -26,7 +26,7 @@
+ static unsigned int hci_muxed;
+ static unsigned int flow_control;
+ static unsigned int break_control;
+-static unsigned int reset_n_io;
++static int reset_n_io = -EINVAL;
+ 
+ /*
+ ** NFCMRVL NCI OPS
+@@ -231,5 +231,5 @@ MODULE_PARM_DESC(break_control, "Tell if
+ module_param(hci_muxed, uint, 0);
+ MODULE_PARM_DESC(hci_muxed, "Tell if transport is muxed in HCI one.");
+ 
+-module_param(reset_n_io, uint, 0);
++module_param(reset_n_io, int, 0);
+ MODULE_PARM_DESC(reset_n_io, "GPIO that is wired to RESET_N signal.");
+--- a/drivers/nfc/nfcmrvl/usb.c
++++ b/drivers/nfc/nfcmrvl/usb.c
+@@ -304,6 +304,7 @@ static int nfcmrvl_probe(struct usb_inte
+ 
+ 	/* No configuration for USB */
+ 	memset(&config, 0, sizeof(config));
++	config.reset_n_io = -EINVAL;
+ 
+ 	nfc_info(&udev->dev, "intf %p id %p\n", intf, id);
  
 
 
