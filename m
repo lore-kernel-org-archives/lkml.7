@@ -2,154 +2,156 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A7DDC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:50:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E26C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:50:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E132721874
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:50:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 456EE21874
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:50:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ericsson.com header.i=@ericsson.com header.b="L4qerM9H"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sE60SjEW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390092AbfHHOuC (ORCPT
+        id S1733067AbfHHOus (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 10:50:02 -0400
-Received: from mail-eopbgr750071.outbound.protection.outlook.com ([40.107.75.71]:13134
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732901AbfHHOuC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 10:50:02 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HsjnyM5YzursRdLBKRr9N5sjmQNCRkHDQddWltcK+ZOCYYFlOWT9OIXnnTgPcfLFQNuTxvjFqmCuBKoIQgSKyRttTLlp2GGcOrYqQSlFGkI86dtbBTqG29jKTwVoVRj2fzsrLeDYYyB1JpJ4QbIvLwoSkjuk8xTsEh61ZEc7ldLQKKQLo/gX6eEUiYpVjCxDEk7UtakleqDbOa6JvYHEdZY+mEJhU3Xm7fwO+bJta7f9pAv/RJrYweoNxCDsNU430LU3v2mv8QDcpMcPKOif1KDq5VWKxqW1bLRw986b6tw+BqHAkJNeMPYqxHmuq4OAf7sRFkZxNcwTMIrPM+W2Gg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yL0nlJSeSM94CHyhyv86iXc4NfKp1W9+6UOQAB2lJSg=;
- b=kdkEgb4vjtai36wGjr/VCR29RX96qDIkIPv1Km73AROAhgFjWeUZuR3Wihstm/LUFFH758VDsJfW/F02Tz8jNUDmid7XEaPdectuiGO3ixqp2qywf8CqlOx7Z0Bfss+X8ngFlMa8QilQWW54tqI9ac1rPNkxug8QF8MoT4vfTawdGunqbtqtqWQPsUBvBdd0F7uhADUpDStmC+oeFZqmkZHy9ESL9Rch4SPGBfUewdt7tIkEtKzn82j10fRBAFT9L35PVPgTce9PAKFLi1wtIK4fefyPYAV7oDrjjzmlWghHfemF4PIPOCwSqiZjBOxasycBG4jsUMrbhf0uH1kanQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=ericsson.com; dmarc=pass action=none header.from=ericsson.com;
- dkim=pass header.d=ericsson.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ericsson.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yL0nlJSeSM94CHyhyv86iXc4NfKp1W9+6UOQAB2lJSg=;
- b=L4qerM9HygZjvgAyZ5eNDfMG1GdDs7CqPSj2pb73laOHUk2hw4WASFv1fgJlsGaVsMzhsj2ewz/IjPOIOWxjhVHVSwNfijVon0ahiuglozsZeY+RAcCbMn7sk9zrzNL6/+zjHtSZdmqC+8LgpzQqj1A+QLBM0YhKLxJSWOptimc=
-Received: from MN2PR15MB3581.namprd15.prod.outlook.com (52.132.172.94) by
- MN2PR15MB3104.namprd15.prod.outlook.com (20.178.252.10) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.14; Thu, 8 Aug 2019 14:49:59 +0000
-Received: from MN2PR15MB3581.namprd15.prod.outlook.com
- ([fe80::a8a2:3747:eeff:2cfe]) by MN2PR15MB3581.namprd15.prod.outlook.com
- ([fe80::a8a2:3747:eeff:2cfe%7]) with mapi id 15.20.2157.015; Thu, 8 Aug 2019
- 14:49:59 +0000
-From:   Jon Maloy <jon.maloy@ericsson.com>
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        "ying.xue@windriver.com" <ying.xue@windriver.com>,
-        "davem@davemloft.net" <davem@davemloft.net>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "tipc-discussion@lists.sourceforge.net" 
-        <tipc-discussion@lists.sourceforge.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] tipc: set addr_trail_end when using explicit node
- addresses
-Thread-Topic: [PATCH] tipc: set addr_trail_end when using explicit node
- addresses
-Thread-Index: AQHVTNxmcyx4K5X64kCOEEbx4BfRSKbxVbDQ
-Date:   Thu, 8 Aug 2019 14:49:59 +0000
-Message-ID: <MN2PR15MB358160FE1011F0ED1C785A2E9AD70@MN2PR15MB3581.namprd15.prod.outlook.com>
-References: <20190807045543.28373-1-chris.packham@alliedtelesis.co.nz>
-In-Reply-To: <20190807045543.28373-1-chris.packham@alliedtelesis.co.nz>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jon.maloy@ericsson.com; 
-x-originating-ip: [75.146.241.189]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 72f0e3de-d39b-4a1d-1fc6-08d71c0fafd2
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR15MB3104;
-x-ms-traffictypediagnostic: MN2PR15MB3104:
-x-microsoft-antispam-prvs: <MN2PR15MB31040DA26616194FFC5B6EBB9AD70@MN2PR15MB3104.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 012349AD1C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(376002)(136003)(366004)(396003)(13464003)(189003)(199004)(102836004)(86362001)(81166006)(2201001)(53546011)(81156014)(6506007)(7736002)(14444005)(305945005)(256004)(26005)(2501003)(186003)(71200400001)(52536014)(11346002)(14454004)(99286004)(446003)(66446008)(64756008)(66556008)(486006)(5660300002)(476003)(4326008)(33656002)(76116006)(2906002)(66946007)(66476007)(7696005)(76176011)(44832011)(316002)(6116002)(3846002)(478600001)(8676002)(110136005)(53936002)(71190400001)(25786009)(74316002)(8936002)(66066001)(55016002)(229853002)(9686003)(6246003)(6436002)(54906003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR15MB3104;H:MN2PR15MB3581.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: ericsson.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: /ygghzORsSgFAz9KVoVG+3VypaDCZ9fRsv2oTYTn6sMVKa5HKhSVNcfCD8ED9PBTsY9o9ySU6/JFtqjBxCgTI++sk78psYVcNmxk8Lw0JidOquSgYISEVmlYBc5kbv1olx6ONSrbQJ/H/+1cU/MknSBDCx3ziI32x0rKzjIZ1/Q6ZJ33WjlyBeRnUC2j/wtod9dltflB4EHeo61lMPbdfG3uSC4sfpWfcsvLvScJsypfWI3TP7M3Er4B9wp54AHip4XCsXkd4cJ+5h/PgWC/nZwH28lQvJbGUPTeCVyAP6YxCI7sSVq/2BKPrx7lYbQt1SG9hDFp5FpA1JjsYdORKtVHzSeA6Y0eFf56FLx+IUrifiH3+zuEMaoU6DR23Ex7s9G212twKeluiTSNGt+RUaDBwOlpZ6VVN6jO9bvPH9I=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 8 Aug 2019 10:50:48 -0400
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:46219 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730678AbfHHOus (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 10:50:48 -0400
+Received: by mail-yw1-f66.google.com with SMTP id w10so758412ywa.13;
+        Thu, 08 Aug 2019 07:50:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=pd+si4K6IQLELIBX4tiD+y/43Cjy1FUkTrZU/zYixN4=;
+        b=sE60SjEWlcKLwRIco5fwQ4/fxw00fl89OqZsG9TI2xWu87p4mGrVgFyhd7nu2SoZiz
+         bkfdbqdHL4Z/3Kotsu/DkJzJP7vh+4FZMQHzqoGqIOELRJlPCIdVtfPF5c292X+NzqxQ
+         Bz6v37ex61aD0V+m42+V69lUO2oqBRjAoHxljVvrfJONfWfukSFampgDU73FbUNVxXty
+         fF4A44+Qx6AxarVxSB+RW3Spg/kHDyBUXbEzm9VnInPH3EjSsihkImNDPMrWGtis/EZC
+         +UuG1YG6X+LHRM6ZcC1esjSGfhIBg8K2+CAjLEJP3yx4FzDalCVY/KBS2o3v6b+//UFz
+         viiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=pd+si4K6IQLELIBX4tiD+y/43Cjy1FUkTrZU/zYixN4=;
+        b=LTFs7GhkoAXUlvfO/AAdDnEN9/BvaPVm/iGEuc86XK0+9cdT9PIkyekStJxKaXU1Ss
+         ifZQnDm5U4T7MXLCEs+MeykVrJu8qppjT1QTVsdbbARqu6b9P4TmLYAzKEEHhXxPnnLU
+         +J38AVk+XxUCbO0B7dWl2S6iyOFwwCAyGlwq6hEIC56pgu+qJuFmbks3/Rb8GERDywQd
+         9b2J+Px7zbtNUbiVquPvcnQNxGSFNUT3On/LWjeojmUMe56Kc+MtGqjOMBW2lzUg6eU2
+         uG0ujjhxkpJh1eVvhu2dEs43xF3sO3MQCGAsEVXGwo8cbpfKQkJa/iXWwq4igH5VC5f6
+         Lc0g==
+X-Gm-Message-State: APjAAAWQdJUYghIQKxeztGzxbbabtGSCg/5meQlwe2mQPazvgLnzji8t
+        QtXLbX6f5tKl+Xn4ne6mUqIto6QuWsRmJegZ6VyPsHcPYLA=
+X-Google-Smtp-Source: APXvYqy4X33XWy8GcpnfQPLTgDaawdkVKyWHl6kdh6f4Q7tJTdlAfKFkS13q7zReuXDd+Mc6ZLfTdZeLAZL8itk/jo4=
+X-Received: by 2002:a81:5957:: with SMTP id n84mr9865139ywb.234.1565275846869;
+ Thu, 08 Aug 2019 07:50:46 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: ericsson.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 72f0e3de-d39b-4a1d-1fc6-08d71c0fafd2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Aug 2019 14:49:59.2647
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 92e84ceb-fbfd-47ab-be52-080c6b87953f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: lKde4D9ScGVGL4Dw2TxWMrYwGRN4fW/E6GVdZ0s+0K6KguQTsTGCUzSHX1ka65/u1GWU1bk35DoYd/XPeq1OYQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR15MB3104
+References: <20190808084253.10573-1-clabbe.montjoie@gmail.com>
+In-Reply-To: <20190808084253.10573-1-clabbe.montjoie@gmail.com>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Thu, 8 Aug 2019 16:50:35 +0200
+Message-ID: <CAJiuCccEQFvKemTodJbuEDzDy9j6-M4SYskxPFJ5DpsbQDnvkA@mail.gmail.com>
+Subject: Re: [linux-sunxi] [PATCH] ARM64: dts: allwinner: Add devicetree for
+ pine H64 modelA evaluation board
+To:     clabbe.montjoie@gmail.com
+Cc:     Mark Rutland <mark.rutland@arm.com>, mripard@kernel.org,
+        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-You should rather set this one unconditionally in tipc_set_node_addr().
-The problems is not about the state machine, but that jiffies is close to t=
-he wrap-around time, so that it is perceived as being before the time "0".
+Hi,
 
-BR
-///jon
+On Thu, 8 Aug 2019 at 10:42, Corentin Labbe <clabbe.montjoie@gmail.com> wro=
+te:
+>
+> This patch adds the evaluation variant of the model A of the PineH64.
+> The model A has the same size of the pine64 and has a PCIE slot.
+>
+> The only devicetree difference with current pineH64, is the PHY
+> regulator.
 
+You also need to add the board in
+"Documentation/devicetree/bindings/arm/sunxi.yaml"
 
-> -----Original Message-----
-> From: netdev-owner@vger.kernel.org <netdev-owner@vger.kernel.org> On
-> Behalf Of Chris Packham
-> Sent: 7-Aug-19 00:56
-> To: Jon Maloy <jon.maloy@ericsson.com>; ying.xue@windriver.com;
-> davem@davemloft.net
-> Cc: netdev@vger.kernel.org; tipc-discussion@lists.sourceforge.net; linux-
-> kernel@vger.kernel.org; Chris Packham <chris.packham@alliedtelesis.co.nz>
-> Subject: [PATCH] tipc: set addr_trail_end when using explicit node addres=
-ses
->=20
-> When tipc uses auto-generated node addresses it goes through a duplicate
-> address detection phase to ensure the address is unique.
->=20
-> When using explicitly configured node names the DAD phase is skipped.
-> However addr_trail_end was being left set to 0 which causes parts of the =
-tipc
-> state machine to assume that the address is not yet valid and unnecessari=
-ly
-> delays the discovery phase. By setting addr_trail_end to jiffies when usi=
-ng
-> explicit addresses we ensure that we move straight to discovery.
->=20
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Regards,
+Cl=C3=A9ment
+
+>
+> Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
 > ---
->  net/tipc/discover.c | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/net/tipc/discover.c b/net/tipc/discover.c index
-> c138d68e8a69..f83bfe8c9443 100644
-> --- a/net/tipc/discover.c
-> +++ b/net/tipc/discover.c
-> @@ -361,6 +361,8 @@ int tipc_disc_create(struct net *net, struct
-> tipc_bearer *b,
->  	if (!tipc_own_addr(net)) {
->  		tn->addr_trial_end =3D jiffies + msecs_to_jiffies(1000);
->  		msg_set_type(buf_msg(d->skb), DSC_TRIAL_MSG);
-> +	} else {
-> +		tn->addr_trial_end =3D jiffies;
->  	}
->  	memcpy(&d->dest, dest, sizeof(*dest));
->  	d->net =3D net;
+>  arch/arm64/boot/dts/allwinner/Makefile        |  1 +
+>  .../sun50i-h6-pine-h64-modelA-eval.dts        | 26 +++++++++++++++++++
+>  2 files changed, 27 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-mode=
+lA-eval.dts
+>
+> diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts=
+/allwinner/Makefile
+> index f6db0611cb85..9a02166cbf72 100644
+> --- a/arch/arm64/boot/dts/allwinner/Makefile
+> +++ b/arch/arm64/boot/dts/allwinner/Makefile
+> @@ -25,3 +25,4 @@ dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-orangepi-3.dtb
+>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-orangepi-lite2.dtb
+>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-orangepi-one-plus.dtb
+>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-pine-h64.dtb
+> +dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-pine-h64-modelA-eval.dtb
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-modelA-eval=
+.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-modelA-eval.dts
+> new file mode 100644
+> index 000000000000..d8ff02747efe
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-modelA-eval.dts
+> @@ -0,0 +1,26 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ or MIT)
+> +/*
+> + * Copyright (C) 2019 Corentin Labbe <clabbe.montjoie@gmail.com>
+> + */
+> +
+> +#include "sun50i-h6-pine-h64.dts"
+> +
+> +/ {
+> +       model =3D "Pine H64 model A evaluation board";
+> +       compatible =3D "pine64,pine-h64-modelA-eval", "allwinner,sun50i-h=
+6";
+> +
+> +       reg_gmac_3v3: gmac-3v3 {
+> +               compatible =3D "regulator-fixed";
+> +               regulator-name =3D "vcc-gmac-3v3";
+> +               regulator-min-microvolt =3D <3300000>;
+> +               regulator-max-microvolt =3D <3300000>;
+> +               startup-delay-us =3D <100000>;
+> +               gpio =3D <&pio 2 16 GPIO_ACTIVE_HIGH>;
+> +               enable-active-high;
+> +       };
+> +
+> +};
+> +
+> +&emac {
+> +       phy-supply =3D <&reg_gmac_3v3>;
+> +};
 > --
-> 2.22.0
-
+> 2.21.0
+>
+> --
+> You received this message because you are subscribed to the Google Groups=
+ "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an=
+ email to linux-sunxi+unsubscribe@googlegroups.com.
+> To view this discussion on the web, visit https://groups.google.com/d/msg=
+id/linux-sunxi/20190808084253.10573-1-clabbe.montjoie%40gmail.com.
