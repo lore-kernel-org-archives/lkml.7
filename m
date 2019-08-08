@@ -2,156 +2,257 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FROM_EXCESS_BASE64,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A53DC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7652C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64059216C8
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:09:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A51F216C8
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:10:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=joaomoreno-com.20150623.gappssmtp.com header.i=@joaomoreno-com.20150623.gappssmtp.com header.b="Gjm5hEzl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404465AbfHHUJC (ORCPT
+        id S2404478AbfHHUKa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 16:09:02 -0400
-Received: from mga01.intel.com ([192.55.52.88]:7358 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390202AbfHHUJC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 16:09:02 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Aug 2019 13:09:01 -0700
-X-IronPort-AV: E=Sophos;i="5.64,362,1559545200"; 
-   d="scan'208";a="186459097"
-Received: from rchatre-mobl.amr.corp.intel.com (HELO [10.251.6.227]) ([10.251.6.227])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 08 Aug 2019 13:09:00 -0700
-Subject: Re: [PATCH V2 01/10] x86/CPU: Expose if cache is inclusive of lower
- level caches
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     tglx@linutronix.de, fenghua.yu@intel.com, tony.luck@intel.com,
-        kuo-lang.tseng@intel.com, mingo@redhat.com, hpa@zytor.com,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-References: <151002be-33e6-20d6-7699-bc9be7e51f33@intel.com>
- <20190806173300.GF25897@zn.tnic>
- <d0c04521-ec1a-3468-595c-6929f25f37ff@intel.com>
- <20190806183333.GA4698@zn.tnic>
- <e86c1f54-092d-6580-7652-cbc4ddade440@intel.com>
- <20190806191559.GB4698@zn.tnic>
- <18004821-577d-b0dd-62b8-13b6f9264e72@intel.com>
- <20190806204054.GD4698@zn.tnic>
- <98eeaa53-d100-28ff-0b68-ba57e0ea90fb@intel.com>
- <20190808080841.GA20745@zn.tnic> <20190808081342.GB20745@zn.tnic>
-From:   Reinette Chatre <reinette.chatre@intel.com>
-Message-ID: <1b0b14aa-2c78-8259-9fdc-06ee7f6050f4@intel.com>
-Date:   Thu, 8 Aug 2019 13:08:59 -0700
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 8 Aug 2019 16:10:30 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40940 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389974AbfHHUKa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 16:10:30 -0400
+Received: by mail-wm1-f67.google.com with SMTP id v19so3576002wmj.5
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 13:10:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joaomoreno-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=YXO2XrMQEkvCHSDYBP5IAQUANS6uEyXDlrIGYeaenS8=;
+        b=Gjm5hEzlrTnz8eBZOL5X3rbSIYCV7l2XItN05uzxmEA62vtE3SGTwIHMSdhpmDmaLJ
+         UU0Tp535BGhNDGB+aM1Gg3sTnAQzrw8c/CkG2z45k+NEiWMUKfap/3DZFMZ7FMzrHU3x
+         SxCD9WenLFTtktJvRlw32UJJZVDAWtCDRIM2xsE16qOnIFhKdjl/oZmjgflFFSvkDORQ
+         mgML+4oTBlEV8invbBdNoeusMtN3RTXC12EHjXzBG/w4cGqhRsK2ByJW0OcZJnQe80B7
+         pZToTT3IEjHr5oO/ae35SK06eQczOrgvSgFfc3zIxQRTDK83vj5urJULe9IDKf+K64Mg
+         6++A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=YXO2XrMQEkvCHSDYBP5IAQUANS6uEyXDlrIGYeaenS8=;
+        b=Azl3U8RQwPd6/ZnhvEhDpIAoTjoBUSEsvsZW17SDo2Mlhi2OZd+dnSV7OSXzrujJki
+         xcHNSgFt1pBvEWVD7qhvjbzBW0j8KYmKKpmzvxEql4pHkvKQR21Ir7Y+28QRj2SqwRnG
+         o4w11/lWVEIaCVk+VAfTPCvp1DhPDxg3R1fiilBTu6KKAyZ7sSNILknT9uxlL4Ui9dSF
+         nG6R8OV66H9D+m90VnlrqrspTLtKhWrZB5tMOMc67B6HD6zUkWV6QbL4nsg+HQAqkWKa
+         6xAFfARhLRWQg1nWNjUTEMH46Tn/B6tiYPR0juemxKIUNQm6EIc1OQ06uzURMhcXiiN+
+         UJDQ==
+X-Gm-Message-State: APjAAAVmZHeKZ7kunSd6hQiGzYsMdlmmimjMKzTrm1Xf1piA9EjsVdUw
+        CJIVoiaC6BmdzX3CK/XxFFN0Xhw4H7s/sg1+520/fw==
+X-Google-Smtp-Source: APXvYqzyZLD635dKHSzXiNngoOVo4zAW46kbV+AbiutPRNef/hkEmhFVG8AYLb5g94MJOvyExBCJqqbQIUO1RIQJN6s=
+X-Received: by 2002:a7b:c95a:: with SMTP id i26mr6673668wml.175.1565295026862;
+ Thu, 08 Aug 2019 13:10:26 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190808081342.GB20745@zn.tnic>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190610213106.19342-1-mail@joaomoreno.com> <CAHxFc3QC147B6j4pBztjK7stLgCveeYhJWojai_SbKNbnpC9yw@mail.gmail.com>
+ <CAO-hwJ+1FyaXj0iuCjvc5R-Kqdh6PNB7Un0ko1F_NV7-f5GMdw@mail.gmail.com> <CAHxFc3QJ1Xkgckt1BPptXT5S1xkROVdJzHTYT=GAcHXgm5UGqg@mail.gmail.com>
+In-Reply-To: <CAHxFc3QJ1Xkgckt1BPptXT5S1xkROVdJzHTYT=GAcHXgm5UGqg@mail.gmail.com>
+From:   =?UTF-8?B?Sm/Do28gTW9yZW5v?= <mail@joaomoreno.com>
+Date:   Thu, 8 Aug 2019 22:10:16 +0200
+Message-ID: <CAHxFc3TjZu7_u0U3ZoB466WGNzbfYLe4ZB7C4LuKdBAwkRum5Q@mail.gmail.com>
+Subject: Re: [PATCH] HID: apple: Fix stuck function keys when using FN
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Borislav,
+Hi Benjamin,
 
-On 8/8/2019 1:13 AM, Borislav Petkov wrote:
-> On Thu, Aug 08, 2019 at 10:08:41AM +0200, Borislav Petkov wrote:
->> Ok, tglx and I talked it over a bit on IRC: so your 1/10 patch is pretty
->> close - just leave out the generic struct cacheinfo bits and put the
->> cache inclusivity property in a static variable there.
-> 
-> ... and by "there" I mean arch/x86/kernel/cpu/cacheinfo.c which contains
-> all cache properties etc on x86 and is the proper place to put stuff
-> like that.
+On Mon, 8 Jul 2019 at 22:35, Jo=C3=A3o Moreno <mail@joaomoreno.com> wrote:
+>
+> Hi Benjamin,
+>
+> No worries, also pretty busy over here. Didn't mean to press.
+>
+> On Mon, 1 Jul 2019 at 10:32, Benjamin Tissoires
+> <benjamin.tissoires@redhat.com> wrote:
+> >
+> > Hi Jo=C3=A3o,
+> >
+> > On Sun, Jun 30, 2019 at 10:15 PM Jo=C3=A3o Moreno <mail@joaomoreno.com>=
+ wrote:
+> > >
+> > > Hi Jiri & Benjamin,
+> > >
+> > > Let me know if you need something else to get this patch moving forwa=
+rd. This
+> > > fixes an issue I hit daily, it would be great to get it fixed.
+> >
+> > Sorry for the delay, I am very busy with internal corporate stuff, and
+> > I tried setting up a new CI system at home, and instead of spending a
+> > couple of ours, I am down to 2 weeks of hard work, without possibility
+> > to switch to the new right now :(
+> > Anyway.
+> >
+> > >
+> > > Thanks.
+> > >
+> > > On Mon, 10 Jun 2019 at 23:31, Joao Moreno <mail@joaomoreno.com> wrote=
+:
+> > > >
+> > > > This fixes an issue in which key down events for function keys woul=
+d be
+> > > > repeatedly emitted even after the user has raised the physical key.=
+ For
+> > > > example, the driver fails to emit the F5 key up event when going th=
+rough
+> > > > the following steps:
+> > > > - fnmode=3D1: hold FN, hold F5, release FN, release F5
+> > > > - fnmode=3D2: hold F5, hold FN, release F5, release FN
+> >
+> > Ouch :/
+> >
+>
+> Right?!
+>
+> > > >
+> > > > The repeated F5 key down events can be easily verified using xev.
+> > > >
+> > > > Signed-off-by: Joao Moreno <mail@joaomoreno.com>
+> > > > ---
+> > > >  drivers/hid/hid-apple.c | 21 +++++++++++----------
+> > > >  1 file changed, 11 insertions(+), 10 deletions(-)
+> > > >
+> > > > diff --git a/drivers/hid/hid-apple.c b/drivers/hid/hid-apple.c
+> > > > index 1cb41992aaa1..81867a6fa047 100644
+> > > > --- a/drivers/hid/hid-apple.c
+> > > > +++ b/drivers/hid/hid-apple.c
+> > > > @@ -205,20 +205,21 @@ static int hidinput_apple_event(struct hid_de=
+vice *hid, struct input_dev *input,
+> > > >                 trans =3D apple_find_translation (table, usage->cod=
+e);
+> > > >
+> > > >                 if (trans) {
+> > > > -                       if (test_bit(usage->code, asc->pressed_fn))
+> > > > -                               do_translate =3D 1;
+> > > > -                       else if (trans->flags & APPLE_FLAG_FKEY)
+> > > > -                               do_translate =3D (fnmode =3D=3D 2 &=
+& asc->fn_on) ||
+> > > > -                                       (fnmode =3D=3D 1 && !asc->f=
+n_on);
+> > > > +                       int fn_on =3D value ? asc->fn_on :
+> > > > +                               test_bit(usage->code, asc->pressed_=
+fn);
+> > > > +
+> > > > +                       if (!value)
+> > > > +                               clear_bit(usage->code, asc->pressed=
+_fn);
+> > > > +                       else if (asc->fn_on)
+> > > > +                               set_bit(usage->code, asc->pressed_f=
+n);
+> >
+> > I have the feeling that this is not the correct fix here.
+> >
+> > I might be wrong, but the following sequence might also mess up the
+> > driver state, depending on how the reports are emitted:
+> > - hold FN, hold F4, hold F5, release F4, release FN, release F5
+> >
+>
+> I believe this should be fine. Following the code:
+>
+> - hold FN, sets asc->fn_on to true
+> - hold F4, in the trans block fn_on will be true and we'll set the F4
+> bit in the bitmap
+> - hold F5, in the trans block fn_on will be true and we'll set the F5 bit
+> - release F4, in the trans block fn_on will be true (because of the bitma=
+p) and
+> we'll clear the F4 bit
+> - release FN, asc->fn_on will be false, but it doesn't matter since...
+> - release F5, in the trans block we'll look into the bitmap (instead
+> of asc->fn_on),
+> so fn_on will be true and we'll clear the F5 bit
+>
+> I tested it in practice using my changes:
+>
+> Interestingly the Apple keyboard doesn't seem to emit an even for F5 when=
+ F4 is
+> pressed, seems like a hardware limitation. But F6 does work. So, when I e=
+xecute
+> these events in that order, everything works as it should: xev reports
+> the following:
+>
+> KeyPress F4
+> KeyPress F6
+> KeyRelease F4
+> KeyRelease F6
+>
+> > The reason is that the driver only considers you have one key pressed
+> > with the modifier, and as the code changed its state based on the last
+> > value.
+> >
+>
+> I believe the bitmap takes care of storing the FN state per key press. Th=
+e
+> trick I did was to check on the global `asc->fn_on` state only when a key
+> is pressed, but check on the bitmap instead when it's released.
+>
+> Let me know what you think. Am I missing something here?
+>
+> Cheers,
+> Jo=C3=A3o.
+>
+> > IMO a better fix would:
+> >
+> > - keep the existing `trans` mapping lookout
+> > - whenever a `trans` mapping gets found:
+> >   * get both translated and non-translated currently reported values
+> > (`test_bit(keycode, input_dev->key)`)
+> >   * if one of them is set to true, then consider the keycode to be the
+> > one of the key (no matter fn_on)
+> >     -> deal with `value` with the corrected keycode
+> >   * if the key was not pressed:
+> >     -> chose the keycode based on `fn_on` and `fnmode` states
+> >     and report the key press event
+> >
+> > This should remove the nasty pressed_fn state which depends on the
+> > other pressed keys.
+> >
+> > Cheers,
+> > Benjamin
+> >
+> > > > +
+> > > > +                       if (trans->flags & APPLE_FLAG_FKEY)
+> > > > +                               do_translate =3D (fnmode =3D=3D 2 &=
+& fn_on) ||
+> > > > +                                       (fnmode =3D=3D 1 && !fn_on)=
+;
+> > > >                         else
+> > > >                                 do_translate =3D asc->fn_on;
+> > > >
+> > > >                         if (do_translate) {
+> > > > -                               if (value)
+> > > > -                                       set_bit(usage->code, asc->p=
+ressed_fn);
+> > > > -                               else
+> > > > -                                       clear_bit(usage->code, asc-=
+>pressed_fn);
+> > > > -
+> > > >                                 input_event(input, usage->type, tra=
+ns->to,
+> > > >                                                 value);
+> > > >
+> > > > --
+> > > > 2.19.1
+> > > >
 
-With the goal of following these guidelines exactly I came up with the
-below that is an incremental diff on top of what this review started out as.
+Gave this another look and I still haven't found any issues, let me
+know if you still
+think I'm missing something. Thanks!
 
-Some changes to highlight that may be of concern:
-* In your previous email you do mention that this will be a "single bit
-of information". Please note that I did not specifically use an actual
-bit to capture this information but an unsigned int (I am very aware
-that you also commented on this initially). If you do mean that this
-should be stored as an actual bit, could you please help me by
-elaborating how you would like to see this implemented?
-* Please note that I moved the initialization to init_intel_cacheinfo()
-to be specific to Intel. I did so because from what I understand there
-are some AMD platforms for which this information cannot be determined
-and I thought it simpler to make it specific to Intel with the new
-single static variable.
-* Please note that while this is a single global static variable it will
-be set over and over for each CPU on the system.
-
-diff --git a/arch/x86/include/asm/cacheinfo.h
-b/arch/x86/include/asm/cacheinfo.h
-index 86b63c7feab7..97be5141bb4b 100644
---- a/arch/x86/include/asm/cacheinfo.h
-+++ b/arch/x86/include/asm/cacheinfo.h
-@@ -5,4 +5,6 @@
- void cacheinfo_amd_init_llc_id(struct cpuinfo_x86 *c, int cpu, u8 node_id);
- void cacheinfo_hygon_init_llc_id(struct cpuinfo_x86 *c, int cpu, u8
-node_id);
-
-+unsigned int cacheinfo_intel_l3_inclusive(void);
-+
- #endif /* _ASM_X86_CACHEINFO_H */
-diff --git a/arch/x86/kernel/cpu/cacheinfo.c
-b/arch/x86/kernel/cpu/cacheinfo.c
-index 733874f84f41..247b6a9b5c88 100644
---- a/arch/x86/kernel/cpu/cacheinfo.c
-+++ b/arch/x86/kernel/cpu/cacheinfo.c
-@@ -187,6 +187,7 @@ struct _cpuid4_info_regs {
- };
-
- static unsigned short num_cache_leaves;
-+static unsigned l3_inclusive;
-
- /* AMD doesn't have CPUID4. Emulate it here to report the same
-    information to the user.  This makes some assumptions about the machine:
-@@ -745,6 +746,11 @@ void init_hygon_cacheinfo(struct cpuinfo_x86 *c)
-        num_cache_leaves = find_num_cache_leaves(c);
- }
-
-+unsigned int cacheinfo_intel_l3_inclusive(void)
-+{
-+       return l3_inclusive;
-+}
-+
- void init_intel_cacheinfo(struct cpuinfo_x86 *c)
- {
-        /* Cache sizes */
-@@ -795,6 +801,7 @@ void init_intel_cacheinfo(struct cpuinfo_x86 *c)
-                                num_threads_sharing = 1 +
-this_leaf.eax.split.num_threads_sharing;
-                                index_msb =
-get_count_order(num_threads_sharing);
-                                l3_id = c->apicid & ~((1 << index_msb) - 1);
-+                               l3_inclusive =
-this_leaf.edx.split.inclusive;
-                                break;
-                        default:
-                                break;
-@@ -1010,13 +1017,6 @@ static void ci_leaf_init(struct cacheinfo *this_leaf,
-        this_leaf->physical_line_partition =
-                                base->ebx.split.physical_line_partition + 1;
-
--       if ((boot_cpu_data.x86_vendor == X86_VENDOR_AMD &&
--            boot_cpu_has(X86_FEATURE_TOPOEXT)) ||
--           boot_cpu_data.x86_vendor == X86_VENDOR_HYGON ||
--           boot_cpu_data.x86_vendor == X86_VENDOR_INTEL) {
--               this_leaf->attributes |= CACHE_INCLUSIVE_SET;
--               this_leaf->inclusive = base->edx.split.inclusive;
--       }
-        this_leaf->priv = base->nb;
- }
-
-What do you think?
-
-Reinette
-
+Cheers,
+Jo=C3=A3o
