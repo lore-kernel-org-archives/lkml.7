@@ -3,137 +3,247 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3634EC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:07:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B6DCC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15E0E2184E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:07:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D60D72086D
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:09:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731208AbfHHHHG (ORCPT
+        id S1731248AbfHHHJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 03:07:06 -0400
-Received: from verein.lst.de ([213.95.11.211]:43827 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728167AbfHHHHG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 03:07:06 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 3426E68B02; Thu,  8 Aug 2019 09:07:02 +0200 (CEST)
-Date:   Thu, 8 Aug 2019 09:07:01 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Ralph Campbell <rcampbell@nvidia.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        nouveau@lists.freedesktop.org, Christoph Hellwig <hch@lst.de>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>
-Subject: Re: [PATCH] nouveau/hmm: map pages after migration
-Message-ID: <20190808070701.GC29382@lst.de>
-References: <20190807150214.3629-1-rcampbell@nvidia.com>
+        Thu, 8 Aug 2019 03:09:08 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4218 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728289AbfHHHJI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 03:09:08 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id B66ECAD010A301BCE132;
+        Thu,  8 Aug 2019 15:09:05 +0800 (CST)
+Received: from [127.0.0.1] (10.177.96.203) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Thu, 8 Aug 2019
+ 15:08:55 +0800
+Subject: Re: [PATCH v5 07/10] powerpc/fsl_booke/32: randomize the kernel image
+ offset
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        <linuxppc-dev@lists.ozlabs.org>, <diana.craciun@nxp.com>,
+        <christophe.leroy@c-s.fr>, <benh@kernel.crashing.org>,
+        <paulus@samba.org>, <npiggin@gmail.com>, <keescook@chromium.org>,
+        <kernel-hardening@lists.openwall.com>
+CC:     <linux-kernel@vger.kernel.org>, <wangkefeng.wang@huawei.com>,
+        <yebin10@huawei.com>, <thunder.leizhen@huawei.com>,
+        <jingxiangfeng@huawei.com>, <fanchengyang@huawei.com>,
+        <zhaohongjiang@huawei.com>
+References: <20190807065706.11411-1-yanaijie@huawei.com>
+ <20190807065706.11411-8-yanaijie@huawei.com>
+ <871rxxunz4.fsf@concordia.ellerman.id.au>
+From:   Jason Yan <yanaijie@huawei.com>
+Message-ID: <2826ad57-c081-a22c-32c8-d7d28c1b5acb@huawei.com>
+Date:   Thu, 8 Aug 2019 15:08:54 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190807150214.3629-1-rcampbell@nvidia.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <871rxxunz4.fsf@concordia.ellerman.id.au>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.96.203]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 07, 2019 at 08:02:14AM -0700, Ralph Campbell wrote:
-> When memory is migrated to the GPU it is likely to be accessed by GPU
-> code soon afterwards. Instead of waiting for a GPU fault, map the
-> migrated memory into the GPU page tables with the same access permissions
-> as the source CPU page table entries. This preserves copy on write
-> semantics.
+
+
+On 2019/8/7 21:03, Michael Ellerman wrote:
+> Jason Yan <yanaijie@huawei.com> writes:
+>> After we have the basic support of relocate the kernel in some
+>> appropriate place, we can start to randomize the offset now.
+>>
+>> Entropy is derived from the banner and timer, which will change every
+>> build and boot. This not so much safe so additionally the bootloader may
+>> pass entropy via the /chosen/kaslr-seed node in device tree.
+>>
+>> We will use the first 512M of the low memory to randomize the kernel
+>> image. The memory will be split in 64M zones. We will use the lower 8
+>> bit of the entropy to decide the index of the 64M zone. Then we chose a
+>> 16K aligned offset inside the 64M zone to put the kernel in.
+>>
+>>      KERNELBASE
+>>
+>>          |-->   64M   <--|
+>>          |               |
+>>          +---------------+    +----------------+---------------+
+>>          |               |....|    |kernel|    |               |
+>>          +---------------+    +----------------+---------------+
+>>          |                         |
+>>          |----->   offset    <-----|
+>>
+>>                                kimage_vaddr
 > 
-> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Jason Gunthorpe <jgg@mellanox.com>
-> Cc: "Jérôme Glisse" <jglisse@redhat.com>
-> Cc: Ben Skeggs <bskeggs@redhat.com>
-> ---
+> Can you drop this description / diagram and any other relevant design
+> details in eg. Documentation/powerpc/kaslr-booke32.rst please?
 > 
-> This patch is based on top of Christoph Hellwig's 9 patch series
-> https://lore.kernel.org/linux-mm/20190729234611.GC7171@redhat.com/T/#u
-> "turn the hmm migrate_vma upside down" but without patch 9
-> "mm: remove the unused MIGRATE_PFN_WRITE" and adds a use for the flag.
 
-This looks useful.  I've already dropped that patch for the pending
-resend.
+No problem.
 
->  static unsigned long nouveau_dmem_migrate_copy_one(struct nouveau_drm *drm,
-> -		struct vm_area_struct *vma, unsigned long addr,
-> -		unsigned long src, dma_addr_t *dma_addr)
-> +		struct vm_area_struct *vma, unsigned long src,
-> +		dma_addr_t *dma_addr, u64 *pfn)
+> See cpu_families.rst for an example of how to incorporate the ASCII
+> diagram.
+>  >> diff --git a/arch/powerpc/kernel/kaslr_booke.c 
+b/arch/powerpc/kernel/kaslr_booke.c
+>> index 30f84c0321b2..52b59b05f906 100644
+>> --- a/arch/powerpc/kernel/kaslr_booke.c
+>> +++ b/arch/powerpc/kernel/kaslr_booke.c
+>> @@ -34,15 +36,329 @@
+>>   #include <asm/machdep.h>
+>>   #include <asm/setup.h>
+>>   #include <asm/paca.h>
+>> +#include <asm/kdump.h>
+>>   #include <mm/mmu_decl.h>
+>> +#include <generated/compile.h>
+>> +#include <generated/utsrelease.h>
+>> +
+>> +#ifdef DEBUG
+>> +#define DBG(fmt...) pr_info(fmt)
+>> +#else
+>> +#define DBG(fmt...)
+>> +#endif
+> 
+> Just use pr_debug()?
+> 
 
-I'll pick up the removal of the not needed addr argument for the patch
-introducing nouveau_dmem_migrate_copy_one, thanks,
+Sounds better.
 
->  static void nouveau_dmem_migrate_chunk(struct migrate_vma *args,
-> -		struct nouveau_drm *drm, dma_addr_t *dma_addrs)
-> +		struct nouveau_drm *drm, dma_addr_t *dma_addrs, u64 *pfns)
->  {
->  	struct nouveau_fence *fence;
->  	unsigned long addr = args->start, nr_dma = 0, i;
->  
->  	for (i = 0; addr < args->end; i++) {
->  		args->dst[i] = nouveau_dmem_migrate_copy_one(drm, args->vma,
-> -				addr, args->src[i], &dma_addrs[nr_dma]);
-> +				args->src[i], &dma_addrs[nr_dma], &pfns[i]);
+>> +struct regions {
+>> +	unsigned long pa_start;
+>> +	unsigned long pa_end;
+>> +	unsigned long kernel_size;
+>> +	unsigned long dtb_start;
+>> +	unsigned long dtb_end;
+>> +	unsigned long initrd_start;
+>> +	unsigned long initrd_end;
+>> +	unsigned long crash_start;
+>> +	unsigned long crash_end;
+>> +	int reserved_mem;
+>> +	int reserved_mem_addr_cells;
+>> +	int reserved_mem_size_cells;
+>> +};
+>>   
+>>   extern int is_second_reloc;
+>>   
+>> +/* Simplified build-specific string for starting entropy. */
+>> +static const char build_str[] = UTS_RELEASE " (" LINUX_COMPILE_BY "@"
+>> +		LINUX_COMPILE_HOST ") (" LINUX_COMPILER ") " UTS_VERSION;
+>> +
+>> +static __init void kaslr_get_cmdline(void *fdt)
+>> +{
+>> +	int node = fdt_path_offset(fdt, "/chosen");
+>> +
+>> +	early_init_dt_scan_chosen(node, "chosen", 1, boot_command_line);
+>> +}
+>> +
+>> +static unsigned long __init rotate_xor(unsigned long hash, const void *area,
+>> +				       size_t size)
+>> +{
+>> +	size_t i;
+>> +	const unsigned long *ptr = area;
+>> +
+>> +	for (i = 0; i < size / sizeof(hash); i++) {
+>> +		/* Rotate by odd number of bits and XOR. */
+>> +		hash = (hash << ((sizeof(hash) * 8) - 7)) | (hash >> 7);
+>> +		hash ^= ptr[i];
+>> +	}
+>> +
+>> +	return hash;
+>> +}
+> 
+> That looks suspiciously like the version Kees wrote in 2013 in
+> arch/x86/boot/compressed/kaslr.c ?
+> 
+> You should mention that in the change log at least.
+> 
 
-Nit: I find the &pfns[i] way to pass the argument a little weird to read.
-Why not "pfns + i"?
+Oh yes, I should have do that. Thanks for reminding me.
 
-> +u64 *
-> +nouveau_pfns_alloc(unsigned long npages)
-> +{
-> +	struct nouveau_pfnmap_args *args;
-> +
-> +	args = kzalloc(sizeof(*args) + npages * sizeof(args->p.phys[0]),
+>> +
+>> +/* Attempt to create a simple but unpredictable starting entropy. */
+> 
+> It's simple, but I would argue unpredictable is not really true. A local
+> attacker can probably fingerprint the kernel version, and also has
+> access to the unflattened device tree, which means they can make
+> educated guesses about the flattened tree size.
+> 
+> Be careful when copying comments :)
+> 
 
-Can we use struct_size here?
+It's true that the comment is not so precise. It's an 'attempt' to
+create unpredictable entropy. And apparently the 'attempt' was failed.
+I will try to rewrite the comment to reflect the code more precisely.
 
-> +	int ret;
-> +
-> +	if (!svm)
-> +		return;
-> +
-> +	mutex_lock(&svm->mutex);
-> +	svmm = nouveau_find_svmm(svm, mm);
-> +	if (!svmm) {
-> +		mutex_unlock(&svm->mutex);
-> +		return;
-> +	}
-> +	mutex_unlock(&svm->mutex);
+>> +static unsigned long __init get_boot_seed(void *fdt)
+>> +{
+>> +	unsigned long hash = 0;
+>> +
+>> +	hash = rotate_xor(hash, build_str, sizeof(build_str));
+>> +	hash = rotate_xor(hash, fdt, fdt_totalsize(fdt));
+>> +
+>> +	return hash;
+>> +}
+>> +
+>> +static __init u64 get_kaslr_seed(void *fdt)
+>> +{
+>> +	int node, len;
+>> +	fdt64_t *prop;
+>> +	u64 ret;
+>> +
+>> +	node = fdt_path_offset(fdt, "/chosen");
+>> +	if (node < 0)
+>> +		return 0;
+>> +
+>> +	prop = fdt_getprop_w(fdt, node, "kaslr-seed", &len);
+>> +	if (!prop || len != sizeof(u64))
+>> +		return 0;
+>> +
+>> +	ret = fdt64_to_cpu(*prop);
+>> +	*prop = 0;
+>> +	return ret;
+>> +}
+>> +
+>> +static __init bool regions_overlap(u32 s1, u32 e1, u32 s2, u32 e2)
+>> +{
+>> +	return e1 >= s2 && e2 >= s1;
+>> +}
+> 
+> There's a generic helper called memory_intersects(), though it takes
+> void*. Might not be worth using, not sure.
+> 
 
-Given that nouveau_find_svmm doesn't take any kind of reference, what
-gurantees svmm doesn't go away after dropping the lock?
+I will have a try to see if this can save some codes or not.
 
-> @@ -44,5 +49,19 @@ static inline int nouveau_svmm_bind(struct drm_device *device, void *p,
->  {
->  	return -ENOSYS;
->  }
-> +
-> +u64 *nouveau_pfns_alloc(unsigned long npages)
-> +{
-> +	return NULL;
-> +}
-> +
-> +void nouveau_pfns_free(u64 *pfns)
-> +{
-> +}
-> +
-> +void nouveau_pfns_map(struct nouveau_drm *drm, struct mm_struct *mm,
-> +		      unsigned long addr, u64 *pfns, unsigned long npages)
-> +{
-> +}
->  #endif /* IS_ENABLED(CONFIG_DRM_NOUVEAU_SVM) */
+> ...
+>>   static unsigned long __init kaslr_choose_location(void *dt_ptr, phys_addr_t size,
+>>   						  unsigned long kernel_sz)
+>>   {
+>> -	/* return a fixed offset of 64M for now */
+>> -	return SZ_64M;
+>> +	unsigned long offset, random;
+>> +	unsigned long ram, linear_sz;
+>> +	unsigned long kaslr_offset;
+>> +	u64 seed;
+>> +	struct regions regions;
+> 
+> You pass that around to a lot of the functions, would it be simpler just
+> to make it static global and __initdata ?
+> 
 
-nouveau_dmem.c and nouveau_svm.c are both built conditional on
-CONFIG_DRM_NOUVEAU_SVM, so there is no need for stubs here.
+Not sure if it's simpler. Let me have a try.
+
+> cheers
+> 
+> 
+> .
+> 
+
