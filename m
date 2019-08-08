@@ -2,105 +2,93 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8CA9C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3770EC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:24:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6F682171F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:22:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565270573;
-	bh=gRtTbqNQGMilfVLZgzVIN2dGKouuTcp6PKE2RGisMZ8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JYkrNZHJQGqgn9TNLTMyI5axqm7gRV4MMXQKzqd5MZ1mTCaauW+m4q1zNHAt6RgAj
-	 mgAQRFNU42TpArFLzRS78t+4ipfX47hoXdQvqSQqOZZktw4uOQqw1ubOYBvrBztu35
-	 RzZyGI4AyI6FP3IyoTVikyzowh80w+1YwIjrlOCE=
+	by mail.kernel.org (Postfix) with ESMTP id 0D0722171F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:24:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732986AbfHHNWx (ORCPT
+        id S1733040AbfHHNYX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 09:22:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59748 "EHLO mail.kernel.org"
+        Thu, 8 Aug 2019 09:24:23 -0400
+Received: from mga05.intel.com ([192.55.52.43]:2532 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728327AbfHHNWw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 09:22:52 -0400
-Received: from localhost (unknown [122.178.245.201])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 980D12171F;
-        Thu,  8 Aug 2019 13:22:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565270572;
-        bh=gRtTbqNQGMilfVLZgzVIN2dGKouuTcp6PKE2RGisMZ8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CfuZkLufkWM94Ez0D0cbwNQHrIlzQRthIovDrrS22TQNSXx90SmYMQPaougEPvAZs
-         FBNvUm6i4QzjYxkbxH8VZM483i4Treskd4OiNBrPWnXu/yLeESS+GlXy2Izt4fe2GY
-         q5m4EPWA38HRMBXNmcdoZDHknDQ74mRKzF4qRegk=
-Date:   Thu, 8 Aug 2019 18:51:40 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Jia-Ju Bai <baijiaju1990@gmail.com>
-Cc:     dan.j.williams@intel.com, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dma: mv_xor: Fix a possible null-pointer dereference in
- mv_xor_prep_dma_xor()
-Message-ID: <20190808132140.GZ12733@vkoul-mobl.Dlink>
-References: <20190727093027.11781-1-baijiaju1990@gmail.com>
+        id S1728327AbfHHNYX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 09:24:23 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Aug 2019 06:24:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,361,1559545200"; 
+   d="scan'208";a="199043407"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
+  by fmsmga004.fm.intel.com with ESMTP; 08 Aug 2019 06:24:19 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hviOv-0003YM-Kx; Thu, 08 Aug 2019 16:24:17 +0300
+Date:   Thu, 8 Aug 2019 16:24:17 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     Javier Martinez Canillas <javierm@redhat.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH RFC] modpost: Support I2C Aliases from OF tables
+Message-ID: <20190808132417.GU30120@smile.fi.intel.com>
+References: <20190710193918.31135-1-kieran.bingham+renesas@ideasonboard.com>
+ <0e1b6e0b-1c94-4b00-7fda-c2a303ee3816@redhat.com>
+ <20190731194419.GB4084@kunai>
+ <f4a78e93-6aaa-bc72-cf94-06fc2574451c@redhat.com>
+ <CAMuHMdUA-hjVqSP_c0cB=76cfrucF6xxRi3ymVoEsJ2hbkfT=A@mail.gmail.com>
+ <51451f89-9193-2be6-e724-e9ca44a25f52@redhat.com>
+ <620e0aec-e3d8-7289-6525-b720013e8dfa@metux.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190727093027.11781-1-baijiaju1990@gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <620e0aec-e3d8-7289-6525-b720013e8dfa@metux.net>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27-07-19, 17:30, Jia-Ju Bai wrote:
-> In mv_xor_prep_dma_xor(), there is an if statement on line 577 to check
-> whether sw_desc is NULL:
->     if (sw_desc)
+On Thu, Aug 08, 2019 at 03:12:47PM +0200, Enrico Weigelt, metux IT consult wrote:
+> On 06.08.19 19:12, Javier Martinez Canillas wrote:
 > 
-> When sw_desc is NULL, it is used on line 594:
->     dev_dbg(..., sw_desc, &sw_desc->async_tx);
+> > Right, we could add a macro for that. Although it should probably be called
+> > I2C_OF_MODULE_DEVICE_TABLE() or something like that since is specific to OF.
 > 
-> Thus, a possible null-pointer dereference may occur.
-> 
-> To fix this bug, sw_desc is checked before being used.
-> 
-> This bug is found by a static analysis tool STCheck written by us.
-> 
-> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-> ---
->  drivers/dma/mv_xor.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/dma/mv_xor.c b/drivers/dma/mv_xor.c
-> index 0ac8e7b34e12..08c0b2a9eb32 100644
-> --- a/drivers/dma/mv_xor.c
-> +++ b/drivers/dma/mv_xor.c
-> @@ -589,9 +589,11 @@ mv_xor_prep_dma_xor(struct dma_chan *chan, dma_addr_t dest, dma_addr_t *src,
->  		}
->  	}
->  
-> -	dev_dbg(mv_chan_to_devp(mv_chan),
-> -		"%s sw_desc %p async_tx %p \n",
-> -		__func__, sw_desc, &sw_desc->async_tx);
-> +	if (sw_desc) {
-> +		dev_dbg(mv_chan_to_devp(mv_chan),
-> +			"%s sw_desc %p async_tx %p \n",
-> +			__func__, sw_desc, &sw_desc->async_tx);
-> +	}
+> At that point it should be completely noop when OF is disabled, so we
+> also can get rid of many ifdef's.
 
-why not move this into the preceeding if condition?
+Why?
 
->  	return sw_desc ? &sw_desc->async_tx : NULL;
->  }
->  
-> -- 
-> 2.17.0
+> I've got some patch somewhere for introducing a MODULE_OF_TABLE() macro
+> as replacement for many MODULE_DEVICE_TABLE(of, ...) cases, which noops
+> when CONFIG_OF is disabled. (and similar ones for other table types).
+
+It's simple wrong to have #ifdef CONFIG_OF without counterpart of_match_ptr().
+And taking into consideration that ID table itself doesn't depend to OF at all,
+why not simple drop that #ifdef and of_match_ptr() all together?
+
 
 -- 
-~Vinod
+With Best Regards,
+Andy Shevchenko
+
+
