@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A97C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:09:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E2EDC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:10:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0892521743
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:09:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42C42214C6
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:10:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565291398;
-	bh=SmPRD6NLtLfkZn7PQ79HocHTS2DXrJWNgunAhGJjvRs=;
+	s=default; t=1565291405;
+	bh=9I+jFTe4CVg4SBn5kIG4JbU+BfzvJ6nCCHzgfhtmeII=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SpbBWTE/ayd68KRf0oVyjKzjqnVGfdXcCtjuWNc32LwNJpi7vsW/oAb+0DQFNeGrk
-	 p/ZXVRvObPuUgHKc7cjk5EXo50ztwNkD/YO+dQQ1IPoU9J5e/n4F5qGXMNESxcEBM2
-	 TZ4kyzDdG+POr/ycZY1KyHoOmLReIVo8gJNWauEo=
+	b=KfF0UmrWt8JVDTBxeTt7FMm7xRJofz/swRDdbXUzCeKdt0Epz2sFmt753rOQU+WGn
+	 qKLCSUc+ZVeE+oKjuZ4uQTRTeYwQMst/yL0gDLTsc2VDxkbrVJh61iLsiYW3PL//oc
+	 5iT/UQEfzFkyWlQWn/P9zXRaXRR2XmA6wRdxcKsg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405200AbfHHTJ4 (ORCPT
+        id S2405225AbfHHTKE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:09:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44244 "EHLO mail.kernel.org"
+        Thu, 8 Aug 2019 15:10:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405186AbfHHTJx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 15:09:53 -0400
+        id S2404554AbfHHTKB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 15:10:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCF142173E;
-        Thu,  8 Aug 2019 19:09:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8ED112173E;
+        Thu,  8 Aug 2019 19:10:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565291393;
-        bh=SmPRD6NLtLfkZn7PQ79HocHTS2DXrJWNgunAhGJjvRs=;
+        s=default; t=1565291401;
+        bh=9I+jFTe4CVg4SBn5kIG4JbU+BfzvJ6nCCHzgfhtmeII=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XQARlqRC9rGjgEN2g6eNUVF16+Mx86LZOZsePJVa08KfLJlzJ6jQwFK3fIPAhWim6
-         ME3BGcveF1bGCkTqSzMbCbMDxDWc3k5vFnDPFy4UPiW4oaRCwcabnsqgK1BHT0EQpw
-         rQ9GEABdMb3Y0tirfj9BdhpLmz6hxL7zkLxqPnFw=
+        b=zASZ+k8p3/Ros7pJN8wtmqY41Rn+ihB03eGbina86rnlAGu+CJdA7BwMHbf3EqXX1
+         8wIohlYi6or023GVcQEMeqTN3z7ySwMm9IdZpVrpt+oqE2I1TqUgGRthcBmC2HHpgE
+         g3qKkT+fuY1GMHZZbTNZs+S8lIGa9ruD+DuOaIjY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Topi Miettinen <toiwoton@gmail.com>
-Subject: [PATCH 4.19 42/45] cgroup: Include dying leaders with live threads in PROCS iterations
-Date:   Thu,  8 Aug 2019 21:05:28 +0200
-Message-Id: <20190808190456.269142070@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Martin Sperl <kernel@martin.sperl.org>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.19 45/45] spi: bcm2835: Fix 3-wire mode if DMA is enabled
+Date:   Thu,  8 Aug 2019 21:05:31 +0200
+Message-Id: <20190808190456.438873678@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190808190453.827571908@linuxfoundation.org>
 References: <20190808190453.827571908@linuxfoundation.org>
@@ -60,156 +63,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tejun Heo <tj@kernel.org>
+From: Lukas Wunner <lukas@wunner.de>
 
-commit c03cd7738a83b13739f00546166969342c8ff014 upstream.
+commit 8d8bef50365847134b51c1ec46786bc2873e4e47 upstream.
 
-CSS_TASK_ITER_PROCS currently iterates live group leaders; however,
-this means that a process with dying leader and live threads will be
-skipped.  IOW, cgroup.procs might be empty while cgroup.threads isn't,
-which is confusing to say the least.
+Commit 6935224da248 ("spi: bcm2835: enable support of 3-wire mode")
+added 3-wire support to the BCM2835 SPI driver by setting the REN bit
+(Read Enable) in the CS register when receiving data.  The REN bit puts
+the transmitter in high-impedance state.  The driver recognizes that
+data is to be received by checking whether the rx_buf of a transfer is
+non-NULL.
 
-Fix it by making cset track dying tasks and include dying leaders with
-live threads in PROCS iteration.
+Commit 3ecd37edaa2a ("spi: bcm2835: enable dma modes for transfers
+meeting certain conditions") subsequently broke 3-wire support because
+it set the SPI_MASTER_MUST_RX flag which causes spi_map_msg() to replace
+rx_buf with a dummy buffer if it is NULL.  As a result, rx_buf is
+*always* non-NULL if DMA is enabled.
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Reported-and-tested-by: Topi Miettinen <toiwoton@gmail.com>
-Cc: Oleg Nesterov <oleg@redhat.com>
+Reinstate 3-wire support by not only checking whether rx_buf is non-NULL,
+but also checking that it is not the dummy buffer.
+
+Fixes: 3ecd37edaa2a ("spi: bcm2835: enable dma modes for transfers meeting certain conditions")
+Reported-by: Nuno Sá <nuno.sa@analog.com>
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: stable@vger.kernel.org # v4.2+
+Cc: Martin Sperl <kernel@martin.sperl.org>
+Acked-by: Stefan Wahren <wahrenst@gmx.net>
+Link: https://lore.kernel.org/r/328318841455e505370ef8ecad97b646c033dc8a.1562148527.git.lukas@wunner.de
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/cgroup-defs.h |    1 +
- include/linux/cgroup.h      |    1 +
- kernel/cgroup/cgroup.c      |   44 +++++++++++++++++++++++++++++++++++++-------
- 3 files changed, 39 insertions(+), 7 deletions(-)
+ drivers/spi/spi-bcm2835.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/include/linux/cgroup-defs.h
-+++ b/include/linux/cgroup-defs.h
-@@ -207,6 +207,7 @@ struct css_set {
- 	 */
- 	struct list_head tasks;
- 	struct list_head mg_tasks;
-+	struct list_head dying_tasks;
+--- a/drivers/spi/spi-bcm2835.c
++++ b/drivers/spi/spi-bcm2835.c
+@@ -554,7 +554,8 @@ static int bcm2835_spi_transfer_one(stru
+ 	bcm2835_wr(bs, BCM2835_SPI_CLK, cdiv);
  
- 	/* all css_task_iters currently walking this cset */
- 	struct list_head task_iters;
---- a/include/linux/cgroup.h
-+++ b/include/linux/cgroup.h
-@@ -60,6 +60,7 @@ struct css_task_iter {
- 	struct list_head		*task_pos;
- 	struct list_head		*tasks_head;
- 	struct list_head		*mg_tasks_head;
-+	struct list_head		*dying_tasks_head;
- 
- 	struct css_set			*cur_cset;
- 	struct css_set			*cur_dcset;
---- a/kernel/cgroup/cgroup.c
-+++ b/kernel/cgroup/cgroup.c
-@@ -673,6 +673,7 @@ struct css_set init_css_set = {
- 	.dom_cset		= &init_css_set,
- 	.tasks			= LIST_HEAD_INIT(init_css_set.tasks),
- 	.mg_tasks		= LIST_HEAD_INIT(init_css_set.mg_tasks),
-+	.dying_tasks		= LIST_HEAD_INIT(init_css_set.dying_tasks),
- 	.task_iters		= LIST_HEAD_INIT(init_css_set.task_iters),
- 	.threaded_csets		= LIST_HEAD_INIT(init_css_set.threaded_csets),
- 	.cgrp_links		= LIST_HEAD_INIT(init_css_set.cgrp_links),
-@@ -1145,6 +1146,7 @@ static struct css_set *find_css_set(stru
- 	cset->dom_cset = cset;
- 	INIT_LIST_HEAD(&cset->tasks);
- 	INIT_LIST_HEAD(&cset->mg_tasks);
-+	INIT_LIST_HEAD(&cset->dying_tasks);
- 	INIT_LIST_HEAD(&cset->task_iters);
- 	INIT_LIST_HEAD(&cset->threaded_csets);
- 	INIT_HLIST_NODE(&cset->hlist);
-@@ -4152,15 +4154,18 @@ static void css_task_iter_advance_css_se
- 			it->task_pos = NULL;
- 			return;
- 		}
--	} while (!css_set_populated(cset));
-+	} while (!css_set_populated(cset) && !list_empty(&cset->dying_tasks));
- 
- 	if (!list_empty(&cset->tasks))
- 		it->task_pos = cset->tasks.next;
--	else
-+	else if (!list_empty(&cset->mg_tasks))
- 		it->task_pos = cset->mg_tasks.next;
-+	else
-+		it->task_pos = cset->dying_tasks.next;
- 
- 	it->tasks_head = &cset->tasks;
- 	it->mg_tasks_head = &cset->mg_tasks;
-+	it->dying_tasks_head = &cset->dying_tasks;
- 
- 	/*
- 	 * We don't keep css_sets locked across iteration steps and thus
-@@ -4199,6 +4204,8 @@ static void css_task_iter_skip(struct cs
- 
- static void css_task_iter_advance(struct css_task_iter *it)
- {
-+	struct task_struct *task;
-+
- 	lockdep_assert_held(&css_set_lock);
- repeat:
- 	if (it->task_pos) {
-@@ -4215,17 +4222,32 @@ repeat:
- 		if (it->task_pos == it->tasks_head)
- 			it->task_pos = it->mg_tasks_head->next;
- 		if (it->task_pos == it->mg_tasks_head)
-+			it->task_pos = it->dying_tasks_head->next;
-+		if (it->task_pos == it->dying_tasks_head)
- 			css_task_iter_advance_css_set(it);
- 	} else {
- 		/* called from start, proceed to the first cset */
- 		css_task_iter_advance_css_set(it);
- 	}
- 
--	/* if PROCS, skip over tasks which aren't group leaders */
--	if ((it->flags & CSS_TASK_ITER_PROCS) && it->task_pos &&
--	    !thread_group_leader(list_entry(it->task_pos, struct task_struct,
--					    cg_list)))
--		goto repeat;
-+	if (!it->task_pos)
-+		return;
-+
-+	task = list_entry(it->task_pos, struct task_struct, cg_list);
-+
-+	if (it->flags & CSS_TASK_ITER_PROCS) {
-+		/* if PROCS, skip over tasks which aren't group leaders */
-+		if (!thread_group_leader(task))
-+			goto repeat;
-+
-+		/* and dying leaders w/o live member threads */
-+		if (!atomic_read(&task->signal->live))
-+			goto repeat;
-+	} else {
-+		/* skip all dying ones */
-+		if (task->flags & PF_EXITING)
-+			goto repeat;
-+	}
- }
- 
- /**
-@@ -5682,6 +5704,7 @@ void cgroup_exit(struct task_struct *tsk
- 	if (!list_empty(&tsk->cg_list)) {
- 		spin_lock_irq(&css_set_lock);
- 		css_set_move_task(tsk, cset, NULL, false);
-+		list_add_tail(&tsk->cg_list, &cset->dying_tasks);
- 		cset->nr_tasks--;
- 		spin_unlock_irq(&css_set_lock);
- 	} else {
-@@ -5702,6 +5725,13 @@ void cgroup_release(struct task_struct *
- 	do_each_subsys_mask(ss, ssid, have_release_callback) {
- 		ss->release(task);
- 	} while_each_subsys_mask();
-+
-+	if (use_task_css_set_links) {
-+		spin_lock_irq(&css_set_lock);
-+		css_set_skip_task_iters(task_css_set(task), task);
-+		list_del_init(&task->cg_list);
-+		spin_unlock_irq(&css_set_lock);
-+	}
- }
- 
- void cgroup_free(struct task_struct *task)
+ 	/* handle all the 3-wire mode */
+-	if ((spi->mode & SPI_3WIRE) && (tfr->rx_buf))
++	if (spi->mode & SPI_3WIRE && tfr->rx_buf &&
++	    tfr->rx_buf != master->dummy_rx)
+ 		cs |= BCM2835_SPI_CS_REN;
+ 	else
+ 		cs &= ~BCM2835_SPI_CS_REN;
 
 
