@@ -2,147 +2,146 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01FCCC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:52:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B029C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:52:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D86C621904
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:52:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 198D4217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:52:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731659AbfHHHwY (ORCPT
+        id S1731691AbfHHHw3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 03:52:24 -0400
-Received: from foss.arm.com ([217.140.110.172]:57496 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725796AbfHHHwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 03:52:21 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0E278337;
-        Thu,  8 Aug 2019 00:52:20 -0700 (PDT)
-Received: from [0.0.0.0] (e107985-lin.cambridge.arm.com [10.1.194.38])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2CC7A3F706;
-        Thu,  8 Aug 2019 00:52:18 -0700 (PDT)
-Subject: Re: [RFC][PATCH 12/13] sched/deadline: Introduce deadline servers
-To:     Juri Lelli <juri.lelli@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>, mingo@kernel.org,
-        linux-kernel@vger.kernel.org, luca.abeni@santannapisa.it,
-        bristot@redhat.com, balsini@android.com, dvyukov@google.com,
-        tglx@linutronix.de, vpillai@digitalocean.com, rostedt@goodmis.org
-References: <20190726145409.947503076@infradead.org>
- <20190726161358.056107990@infradead.org>
- <34710762-f813-3913-0e55-fde7c91c6c2d@arm.com>
- <20190808065225.GD29310@localhost.localdomain>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <a889fc31-8826-3040-783d-702ecc302e47@arm.com>
-Date:   Thu, 8 Aug 2019 09:52:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190808065225.GD29310@localhost.localdomain>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+        Thu, 8 Aug 2019 03:52:29 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:13622 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731660AbfHHHw0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 03:52:26 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x787qK1E144264
+        for <linux-kernel@vger.kernel.org>; Thu, 8 Aug 2019 03:52:25 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2u8cfmxwcd-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 03:52:24 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Thu, 8 Aug 2019 08:52:23 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 8 Aug 2019 08:52:19 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x787qIqi31785064
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 8 Aug 2019 07:52:18 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 94EC7A404D;
+        Thu,  8 Aug 2019 07:52:18 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CD1F9A4040;
+        Thu,  8 Aug 2019 07:52:16 +0000 (GMT)
+Received: from rapoport-lnx (unknown [9.148.8.168])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu,  8 Aug 2019 07:52:16 +0000 (GMT)
+Received: by rapoport-lnx (sSMTP sendmail emulation); Thu, 08 Aug 2019 10:52:16 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Nicholas Piggin <npiggin@gmail.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        linux-arch@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-sh@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>
+Subject: [PATCH 3/3] sh: switch to generic version of pte allocation
+Date:   Thu,  8 Aug 2019 10:52:08 +0300
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1565250728-21721-1-git-send-email-rppt@linux.ibm.com>
+References: <1565250728-21721-1-git-send-email-rppt@linux.ibm.com>
+X-TM-AS-GCONF: 00
+x-cbid: 19080807-0016-0000-0000-0000029C2B8E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19080807-0017-0000-0000-000032FC2D77
+Message-Id: <1565250728-21721-4-git-send-email-rppt@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-08_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=923 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908080090
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/8/19 8:52 AM, Juri Lelli wrote:
-> Hi Dietmar,
-> 
-> On 07/08/19 18:31, Dietmar Eggemann wrote:
->> On 7/26/19 4:54 PM, Peter Zijlstra wrote:
->>>
->>>
->>> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
->>
->> [...]
->>
->>> @@ -889,6 +891,8 @@ static void update_curr(struct cfs_rq *c
->>>  		trace_sched_stat_runtime(curtask, delta_exec, curr->vruntime);
->>>  		cgroup_account_cputime(curtask, delta_exec);
->>>  		account_group_exec_runtime(curtask, delta_exec);
->>> +		if (curtask->server)
->>> +			dl_server_update(curtask->server, delta_exec);
->>>  	}
->>
->> I get a lockdep_assert_held(&rq->lock) related warning in start_dl_timer()
->> when running the full stack.
->>
->> ...
->> [    0.530216] root domain span: 0-5 (max cpu_capacity = 1024)
->> [    0.538655] devtmpfs: initialized
->> [    0.556485] update_curr: rq mismatch rq[0] != rq[4]
->> [    0.561519] update_curr: rq mismatch rq[0] != rq[4]
->> [    0.566497] update_curr: rq mismatch rq[0] != rq[4]
->> [    0.571443] update_curr: rq mismatch rq[0] != rq[4]
->> [    0.576762] update_curr: rq mismatch rq[2] != rq[4]
->> [    0.581674] update_curr: rq mismatch rq[2] != rq[4]
->> [    0.586569] ------------[ cut here ]------------
->> [    0.591220] WARNING: CPU: 2 PID: 2 at kernel/sched/deadline.c:916 start_dl_timer+0x160/0x178
->> [    0.599686] Modules linked in:
->> [    0.602756] CPU: 2 PID: 2 Comm: kthreadd Tainted: G        W         5.3.0-rc3-00013-ga33cf033cc99-dirty #64
->> [    0.612620] Hardware name: ARM Juno development board (r0) (DT)
->> [    0.618560] pstate: 60000085 (nZCv daIf -PAN -UAO)
->> [    0.623369] pc : start_dl_timer+0x160/0x178
->> [    0.627572] lr : start_dl_timer+0x160/0x178
->> [    0.631768] sp : ffff000010013cb0
->> ...
->> [    0.715075] Call trace:
->> [    0.717531]  start_dl_timer+0x160/0x178
->> [    0.721382]  update_curr_dl_se+0x108/0x208
->> [    0.725494]  dl_server_update+0x2c/0x38
->> [    0.729348]  update_curr+0x1b4/0x3b8
->> [    0.732934]  task_tick_fair+0x74/0xa88
->> [    0.736698]  scheduler_tick+0x94/0x110
->> [    0.740461]  update_process_times+0x48/0x60
->> ...
->>
->> Seems to be related to the fact that the rq can change:
->>
->> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
->> index e4c14851a34c..5e3130a200ec 100644
->> --- a/kernel/sched/fair.c
->> +++ b/kernel/sched/fair.c
->> @@ -891,8 +891,17 @@ static void update_curr(struct cfs_rq *cfs_rq)
->>                 trace_sched_stat_runtime(curtask, delta_exec, curr->vruntime);
->>                 cgroup_account_cputime(curtask, delta_exec);
->>                 account_group_exec_runtime(curtask, delta_exec);
->> -               if (curtask->server)
->> +               if (curtask->server) {
->> +                       struct rq *rq = rq_of(cfs_rq);
->> +                       struct rq *rq2 = curtask->server->rq;
->> +
->> +                       if (rq != rq2) {
->> +                               printk("update_curr: rq mismatch rq[%d] != rq[%d]\n",
->> +                                      cpu_of(rq), cpu_of(rq2));
->> +                       }
->> +
->>                         dl_server_update(curtask->server, delta_exec);
->> +               }
->>         }
->>
->> ...
-> 
-> Yeah, I actually noticed the same. Some debugging seems to point to
-> early boot spawning of kthreads. I can reliably for example attribute
-> this mismatch to ksoftirqd(s). It looks like they can avoid the
-> dl_server assignment in pick_next_task_dl() and this breaks things.
-> Still need to figure out why this happens and how to fix it, though.
+The sh implementation pte_alloc_one(), pte_alloc_one_kernel(),
+pte_free_kernel() and pte_free() is identical to the generic except of lack
+of __GFP_ACCOUNT for the user PTEs allocation.
 
-Yeah, can confirm this:
+Switch sh to use generic version of these functions.
 
-...
-[0.556941] update_curr: rq mismatch rq[0] != rq[4] curr=[kthreadd, 39]
-[0.563722] update_curr: rq mismatch rq[0] != rq[4] curr=[netns, 39]
-[0.570179] update_curr: rq mismatch rq[0] != rq[4] curr=[netns, 39]
-[0.576606] update_curr: rq mismatch rq[0] != rq[4] curr=[netns, 39]
-[0.583708] update_curr: rq mismatch rq[2] != rq[1] curr=[kworker/2:1, 40]
-[0.590793] update_curr: rq mismatch rq[2] != rq[1] curr=[kworker/2:1, 40]
-[0.615096] update_curr: rq mismatch rq[2] != rq[1] curr=[kworker/2:1, 40]
-...
-[0.626644] WARNING: CPU: 2 PID: 40 at kernel/sched/deadline.c:916 start_dl_timer+0x160/0x178
-...
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+---
+ arch/sh/include/asm/pgalloc.h | 34 +---------------------------------
+ 1 file changed, 1 insertion(+), 33 deletions(-)
+
+diff --git a/arch/sh/include/asm/pgalloc.h b/arch/sh/include/asm/pgalloc.h
+index 9e15054..8c6341a 100644
+--- a/arch/sh/include/asm/pgalloc.h
++++ b/arch/sh/include/asm/pgalloc.h
+@@ -3,6 +3,7 @@
+ #define __ASM_SH_PGALLOC_H
+ 
+ #include <asm/page.h>
++#include <asm-generic/pgalloc.h>
+ 
+ extern pgd_t *pgd_alloc(struct mm_struct *);
+ extern void pgd_free(struct mm_struct *mm, pgd_t *pgd);
+@@ -26,39 +27,6 @@ static inline void pmd_populate(struct mm_struct *mm, pmd_t *pmd,
+ }
+ #define pmd_pgtable(pmd) pmd_page(pmd)
+ 
+-/*
+- * Allocate and free page tables.
+- */
+-static inline pte_t *pte_alloc_one_kernel(struct mm_struct *mm)
+-{
+-	return (pte_t *)__get_free_page(GFP_KERNEL | __GFP_ZERO);
+-}
+-
+-static inline pgtable_t pte_alloc_one(struct mm_struct *mm)
+-{
+-	struct page *page;
+-
+-	page = alloc_page(GFP_KERNEL | __GFP_ZERO);
+-	if (!page)
+-		return NULL;
+-	if (!pgtable_page_ctor(page)) {
+-		__free_page(page);
+-		return NULL;
+-	}
+-	return page;
+-}
+-
+-static inline void pte_free_kernel(struct mm_struct *mm, pte_t *pte)
+-{
+-	free_page((unsigned long)pte);
+-}
+-
+-static inline void pte_free(struct mm_struct *mm, pgtable_t pte)
+-{
+-	pgtable_page_dtor(pte);
+-	__free_page(pte);
+-}
+-
+ #define __pte_free_tlb(tlb,pte,addr)			\
+ do {							\
+ 	pgtable_page_dtor(pte);				\
+-- 
+2.7.4
+
