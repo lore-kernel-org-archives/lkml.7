@@ -2,417 +2,136 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF7DC32754
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8540BC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:03:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC50C218C5
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:03:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E4DE218BA
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:03:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="nbhdu/W7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731949AbfHHIDW (ORCPT
+        id S1731964AbfHHIDd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 04:03:22 -0400
-Received: from imap1.codethink.co.uk ([176.9.8.82]:43433 "EHLO
-        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731281AbfHHIDW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 04:03:22 -0400
-Received: from [167.98.27.226] (helo=ct-lt-765.unassigned)
-        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
-        id 1hvdNp-0008KC-Uf; Thu, 08 Aug 2019 09:02:50 +0100
-Received: from ikerpalomar by ct-lt-765.unassigned with local (Exim 4.89)
-        (envelope-from <ikerpalomar@ct-lt-765.unassigned>)
-        id 1hvdNp-0002Bk-3F; Thu, 08 Aug 2019 09:02:49 +0100
-From:   Iker Perez <iker.perez@codethink.co.uk>
-To:     linux-hwmon@vger.kernel.org, linux@roeck-us.net
-Cc:     jdelvare@suse.com, linux-kernel@vger.kernel.org,
-        Iker Perez del Palomar Sustatxa 
-        <iker.perez@codethink.co.uk>
-Subject: [PATCH v2 1/4] hwmon: (lm75) Create structure to save all the configuration parameters.
-Date:   Thu,  8 Aug 2019 09:02:43 +0100
-Message-Id: <20190808080246.8371-2-iker.perez@codethink.co.uk>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190808080246.8371-1-iker.perez@codethink.co.uk>
-References: <20190808080246.8371-1-iker.perez@codethink.co.uk>
+        Thu, 8 Aug 2019 04:03:33 -0400
+Received: from mail-eopbgr50128.outbound.protection.outlook.com ([40.107.5.128]:2051
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731281AbfHHIDc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 04:03:32 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=c3g0+4aaNilNgb3VHOTZL+7viSQWLJv/yeK8j1CarL77QD/hrlzjVBMgyvftrcg6Rzt6q/Lk9WpKc2rKme/OZ8pmcKiDBVeCPFXhINNTrCqbAKqMIFxvcVzIi3Fs70y7/XOFps7xtRMN4YlkLwD3qz+LNgp8Me40te3Qeu3hfg5Zk3M/a7RBbgRB9042K1sbF7XscNARbn9eURCytMxhZ66MjqViR8Ryc9C2LOKK12ysByB7t8v6MQ95ErDFL+RzrCp4MhhBBe3//b2RFZozV4VAIVO9kB53laiFJNVPtIRIVfQSyL6kRS+8ivn33m86J3jAZT7KlOVVinnNPjKbiw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NnAVFm/UAhmseYR8FKUBhyGM0MpBfE0Koczz7uLHYm8=;
+ b=k8WTlx3kEmCAbBsAvdxFck51F/rymzWMff0MUDQtYyuZEaIknxCvesQ9Mk0LijHLMk6E4TSBh8dO/g6P4BBTQwzVmmB8Sgptx2T9nhbVBnNGLJdoxO/a6Nj48o09WUwyoYfkdiBk1sPIBtulUhglNlKUv6VZoR/PZPYAbTmx68Plg4zEixSv13hbM0NZ5H/F87RKOTFYCkkz4BwmM1GM91XDuh3nQSjqveuipv+KHf/BCD700j1gipnTOfGLBWYjkt7Zzv/OqliKOqrWtYMul3iGh+f3TZVbr22fJAt97mfCOoGP5MUlP+puexS6eBkGI983fNwHg6zPYZqR/PN1zQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
+ dkim=pass header.d=toradex.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NnAVFm/UAhmseYR8FKUBhyGM0MpBfE0Koczz7uLHYm8=;
+ b=nbhdu/W7qYbvDdEPWjjsPsLscdxIINXMk8hd7vjrf36j8lBlVs1bAPayKler+3dpDRitpWlh/MPtDMekDPH6vbysHxlOiWwEsz/tJZnUjKwEg2Q0IaZalPkdkYFky79CUSBsJM+XqUE6gtzE4VbXqrU+taiQC4VgmRv8KTcttfc=
+Received: from VI1PR0502MB3965.eurprd05.prod.outlook.com (52.134.17.157) by
+ VI1PR0502MB3631.eurprd05.prod.outlook.com (52.134.7.30) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.14; Thu, 8 Aug 2019 08:03:23 +0000
+Received: from VI1PR0502MB3965.eurprd05.prod.outlook.com
+ ([fe80::8405:5b51:b25d:39a2]) by VI1PR0502MB3965.eurprd05.prod.outlook.com
+ ([fe80::8405:5b51:b25d:39a2%6]) with mapi id 15.20.2157.015; Thu, 8 Aug 2019
+ 08:03:22 +0000
+From:   Philippe Schenker <philippe.schenker@toradex.com>
+To:     "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>
+CC:     "stefan@agner.ch" <stefan@agner.ch>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        "linux-imx@nxp.com" <linux-imx@nxp.com>,
+        Max Krummenacher <max.krummenacher@toradex.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "michal.vokac@ysoft.com" <michal.vokac@ysoft.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>
+Subject: Re: [PATCH v3 09/21] ARM: dts: imx6qdl-colibri: add phy to fec
+Thread-Topic: [PATCH v3 09/21] ARM: dts: imx6qdl-colibri: add phy to fec
+Thread-Index: AQHVTPnMzs9IdJAHC02xaJ72tyIhqKbvghSAgAFjdYA=
+Date:   Thu, 8 Aug 2019 08:03:22 +0000
+Message-ID: <9849ffad4a07b4ce90b412ccdada93ee45c5bc5d.camel@toradex.com>
+References: <20190807082556.5013-1-philippe.schenker@toradex.com>
+         <20190807082556.5013-10-philippe.schenker@toradex.com>
+         <20190807105107.nqqltv64tjxprow6@pengutronix.de>
+In-Reply-To: <20190807105107.nqqltv64tjxprow6@pengutronix.de>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=philippe.schenker@toradex.com; 
+x-originating-ip: [46.140.72.82]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a3e0140a-c9f4-4101-ff39-08d71bd6e243
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:VI1PR0502MB3631;
+x-ms-traffictypediagnostic: VI1PR0502MB3631:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0502MB363193A5C3A2F10C9A3E1189F4D70@VI1PR0502MB3631.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:466;
+x-forefront-prvs: 012349AD1C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39850400004)(346002)(396003)(366004)(376002)(136003)(199004)(189003)(11346002)(2616005)(6436002)(26005)(478600001)(6506007)(2501003)(99286004)(7416002)(102836004)(3846002)(8676002)(186003)(25786009)(229853002)(6246003)(81166006)(71200400001)(2351001)(256004)(6486002)(53936002)(5640700003)(81156014)(6512007)(76176011)(7736002)(486006)(36756003)(305945005)(4326008)(6116002)(446003)(118296001)(8936002)(71190400001)(6916009)(2906002)(44832011)(14454004)(476003)(66946007)(66066001)(66556008)(91956017)(76116006)(86362001)(66476007)(66446008)(5660300002)(54906003)(316002)(64756008)(32563001);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR0502MB3631;H:VI1PR0502MB3965.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: toradex.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: fKsA7H1giFn4WdP0oeHBR18f9tPqaMma4mDXnPpnP1AeWc7suIbBZe/OKVzEiRnX3M8Ya7f9ho+4notem+oSFHxXXnv9JuXlzq6yZl3rQxrGyVYASqwOG9tYX9rfW7GMfhhBKbD1YKAee2mQDbrHaxB+rUxlSw/y27oaAtUj6wZ7rbhdTDj8Ni/c/KSrnDPySgPWad8qCHuTv4XnG2bQNAYWCqP+ZcY006VmcuL5DPiOf+nnPK6ERRcsMb+YqNu2vICFD7aXwo5QUyqol5fBmZmA24JqDOYsa7uKfUsg9/TPA3TsO6ww3SoIgSwwcIcxzF4I72UqEuo7MSlAsvYQdf8BjHNnXy0qRioyo5Te/Eu6OjbiCFXLcRtwOMv5N+5CdGG86p4/VjGn7HDztCbt8RkZAviyX4C3XDMs4cYWokw=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <8092D70CEC74144BB6A1B117940CE27E@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: toradex.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a3e0140a-c9f4-4101-ff39-08d71bd6e243
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Aug 2019 08:03:22.8223
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: DeLtnfNXwVp0V/pl99L4i9HkKZaAowxKR4gzKLkoBSLXEPM8x0n7MPcjwTRImvUc8Jjuh4iwOrc7BcQLpgQA947uMLYGYu/3wZ/fSq5g9BA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0502MB3631
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Iker Perez del Palomar Sustatxa <iker.perez@codethink.co.uk>
-
-* Add to lm75_data kind field to store the kind of device the driver is
-  working with.
-* Add an structure to store the configuration parameters of all the
-  supported devices.
-* Delete resolution_limits from lm75_data and include them in the structure
-  described above.
-* Add a pointer to the configuration parameters structure to be used as a
-  reference to obtain the parameters.
-* Delete switch-case approach to get the device configuration parameters.
-* The structure is cleaner and easier to maintain.
-
-Signed-off-by: Iker Perez del Palomar Sustatxa <iker.perez@codethink.co.uk>
----
-
-Changes since v1:
-- In the lm75_params structure documentation there have been the next changes:
-        - @resolution has been corrected to @default_resolution.
-        - @resolution_limits description has been corrected.
-- pct2075 device's parameters has been included in device_params structure.
-
- drivers/hwmon/lm75.c | 282 ++++++++++++++++++++++++++++++++-------------------
- 1 file changed, 176 insertions(+), 106 deletions(-)
-
-diff --git a/drivers/hwmon/lm75.c b/drivers/hwmon/lm75.c
-index a2d3f2ce3e1d..65a1131bfa7e 100644
---- a/drivers/hwmon/lm75.c
-+++ b/drivers/hwmon/lm75.c
-@@ -18,7 +18,6 @@
- #include <linux/regmap.h>
- #include "lm75.h"
- 
--
- /*
-  * This driver handles the LM75 and compatible digital temperature sensors.
-  */
-@@ -51,6 +50,28 @@ enum lm75_type {		/* keep sorted in alphabetical order */
- 	tmp75c,
- };
- 
-+/**
-+ * struct lm75_params - lm75 configuration parameters.
-+ * @set_mask:		Bits to set in configuration register when configuring
-+ *			the chip.
-+ * @clr_mask:		Bits to clear in configuration register when configuring
-+ *			the chip.
-+ * @default_resolution:	Default number of bits to represent the temperature
-+ *			value.
-+ * @resolution_limits:	Limit register resolution. Optional. Should be set if
-+ *			the resolution of limit registers does not match the
-+ *			resolution of the temperature register.
-+ * default_sample_time:	Sample time to be set by default.
-+ */
-+
-+struct lm75_params {
-+	u8		set_mask;
-+	u8		clr_mask;
-+	u8		default_resolution;
-+	u8		resolution_limits;
-+	unsigned int	default_sample_time;
-+};
-+
- /* Addresses scanned */
- static const unsigned short normal_i2c[] = { 0x48, 0x49, 0x4a, 0x4b, 0x4c,
- 					0x4d, 0x4e, 0x4f, I2C_CLIENT_END };
-@@ -63,15 +84,151 @@ static const unsigned short normal_i2c[] = { 0x48, 0x49, 0x4a, 0x4b, 0x4c,
- 
- /* Each client has this additional data */
- struct lm75_data {
--	struct i2c_client	*client;
--	struct regmap		*regmap;
--	u8			orig_conf;
--	u8			resolution;	/* In bits, between 9 and 16 */
--	u8			resolution_limits;
--	unsigned int		sample_time;	/* In ms */
-+	struct i2c_client		*client;
-+	struct regmap			*regmap;
-+	u8				orig_conf;
-+	u8				current_conf;
-+	u8				resolution;	/* In bits, 9 to 16 */
-+	unsigned int			sample_time;	/* In ms */
-+	enum lm75_type			kind;
-+	const struct lm75_params	*params;
- };
- 
- /*-----------------------------------------------------------------------*/
-+/* The structure below stores the configuration values of the supported devices.
-+ * In case of being supported multiple configurations, the default one must
-+ * always be the first element of the array
-+ */
-+static const struct lm75_params device_params[] = {
-+	[adt75] = {
-+		.clr_mask = 1 << 5,	/* not one-shot mode */
-+		.default_resolution = 12,
-+		.default_sample_time = MSEC_PER_SEC / 8,
-+	},
-+	[ds1775] = {
-+		.clr_mask = 3 << 5,
-+		.set_mask = 2 << 5,	/* 11-bit mode */
-+		.default_resolution = 11,
-+		.default_sample_time = MSEC_PER_SEC,
-+	},
-+	[ds75] = {
-+		.clr_mask = 3 << 5,
-+		.set_mask = 2 << 5,	/* 11-bit mode */
-+		.default_resolution = 11,
-+		.default_sample_time = MSEC_PER_SEC,
-+	},
-+	[stds75] = {
-+		.clr_mask = 3 << 5,
-+		.set_mask = 2 << 5,	/* 11-bit mode */
-+		.default_resolution = 11,
-+		.default_sample_time = MSEC_PER_SEC,
-+	},
-+	[stlm75] = {
-+		.default_resolution = 9,
-+		.default_sample_time = MSEC_PER_SEC / 5,
-+	},
-+	[ds7505] = {
-+		.set_mask = 3 << 5,	/* 12-bit mode*/
-+		.default_resolution = 12,
-+		.default_sample_time = MSEC_PER_SEC / 4,
-+	},
-+	[g751] = {
-+		.default_resolution = 9,
-+		.default_sample_time = MSEC_PER_SEC / 2,
-+	},
-+	[lm75] = {
-+		.default_resolution = 9,
-+		.default_sample_time = MSEC_PER_SEC / 2,
-+	},
-+	[lm75a] = {
-+		.default_resolution = 9,
-+		.default_sample_time = MSEC_PER_SEC / 2,
-+	},
-+	[lm75b] = {
-+		.default_resolution = 11,
-+		.default_sample_time = MSEC_PER_SEC / 4,
-+	},
-+	[max6625] = {
-+		.default_resolution = 9,
-+		.default_sample_time = MSEC_PER_SEC / 4,
-+	},
-+	[max6626] = {
-+		.default_resolution = 12,
-+		.default_sample_time = MSEC_PER_SEC / 4,
-+		.resolution_limits = 9,
-+	},
-+	[max31725] = {
-+		.default_resolution = 16,
-+		.default_sample_time = MSEC_PER_SEC / 8,
-+	},
-+	[tcn75] = {
-+		.default_resolution = 9,
-+		.default_sample_time = MSEC_PER_SEC / 8,
-+	},
-+	[pct2075] = {
-+		.default_resolution = 11,
-+		.default_sample_time = MSEC_PER_SEC / 10,
-+	},
-+	[mcp980x] = {
-+		.set_mask = 3 << 5,	/* 12-bit mode */
-+		.clr_mask = 1 << 7,	/* not one-shot mode */
-+		.default_resolution = 12,
-+		.resolution_limits = 9,
-+		.default_sample_time = MSEC_PER_SEC,
-+	},
-+	[tmp100] = {
-+		.set_mask = 3 << 5,	/* 12-bit mode */
-+		.clr_mask = 1 << 7,	/* not one-shot mode */
-+		.default_resolution = 12,
-+		.default_sample_time = MSEC_PER_SEC,
-+	},
-+	[tmp101] = {
-+		.set_mask = 3 << 5,	/* 12-bit mode */
-+		.clr_mask = 1 << 7,	/* not one-shot mode */
-+		.default_resolution = 12,
-+		.default_sample_time = MSEC_PER_SEC,
-+	},
-+	[tmp112] = {
-+		.set_mask = 3 << 5,	/* 12-bit mode */
-+		.clr_mask = 1 << 7,	/* no one-shot mode*/
-+		.default_resolution = 12,
-+		.default_sample_time = MSEC_PER_SEC / 4,
-+	},
-+	[tmp105] = {
-+		.set_mask = 3 << 5,	/* 12-bit mode */
-+		.clr_mask = 1 << 7,	/* not one-shot mode*/
-+		.default_resolution = 12,
-+		.default_sample_time = MSEC_PER_SEC / 2,
-+	},
-+	[tmp175] = {
-+		.set_mask = 3 << 5,	/* 12-bit mode */
-+		.clr_mask = 1 << 7,	/* not one-shot mode*/
-+		.default_resolution = 12,
-+		.default_sample_time = MSEC_PER_SEC / 2,
-+	},
-+	[tmp275] = {
-+		.set_mask = 3 << 5,	/* 12-bit mode */
-+		.clr_mask = 1 << 7,	/* not one-shot mode*/
-+		.default_resolution = 12,
-+		.default_sample_time = MSEC_PER_SEC / 2,
-+	},
-+	[tmp75] = {
-+		.set_mask = 3 << 5,	/* 12-bit mode */
-+		.clr_mask = 1 << 7,	/* not one-shot mode*/
-+		.default_resolution = 12,
-+		.default_sample_time = MSEC_PER_SEC / 2,
-+	},
-+	[tmp75b] = { /* not one-shot mode, Conversion rate 37Hz */
-+		.clr_mask = 1 << 7 | 3 << 5,
-+		.default_resolution = 12,
-+		.default_sample_time = MSEC_PER_SEC / 37,
-+	},
-+	[tmp75c] = {
-+		.clr_mask = 1 << 5,	/*not one-shot mode*/
-+		.default_resolution = 12,
-+		.default_sample_time = MSEC_PER_SEC / 4,
-+	}
-+};
- 
- static inline long lm75_reg_to_mc(s16 temp, u8 resolution)
- {
-@@ -146,8 +303,8 @@ static int lm75_write(struct device *dev, enum hwmon_sensor_types type,
- 	 * Resolution of limit registers is assumed to be the same as the
- 	 * temperature input register resolution unless given explicitly.
- 	 */
--	if (data->resolution_limits)
--		resolution = data->resolution_limits;
-+	if (data->params->resolution_limits)
-+		resolution = data->params->resolution_limits;
- 	else
- 		resolution = data->resolution;
- 
-@@ -239,7 +396,6 @@ lm75_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 	struct device *hwmon_dev;
- 	struct lm75_data *data;
- 	int status, err;
--	u8 set_mask, clr_mask;
- 	int new;
- 	enum lm75_type kind;
- 
-@@ -257,6 +413,7 @@ lm75_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 		return -ENOMEM;
- 
- 	data->client = client;
-+	data->kind = kind;
- 
- 	data->regmap = devm_regmap_init_i2c(client, &lm75_regmap_config);
- 	if (IS_ERR(data->regmap))
-@@ -265,109 +422,22 @@ lm75_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 	/* Set to LM75 resolution (9 bits, 1/2 degree C) and range.
- 	 * Then tweak to be more precise when appropriate.
- 	 */
--	set_mask = 0;
--	clr_mask = LM75_SHUTDOWN;		/* continuous conversions */
--
--	switch (kind) {
--	case adt75:
--		clr_mask |= 1 << 5;		/* not one-shot mode */
--		data->resolution = 12;
--		data->sample_time = MSEC_PER_SEC / 8;
--		break;
--	case ds1775:
--	case ds75:
--	case stds75:
--		clr_mask |= 3 << 5;
--		set_mask |= 2 << 5;		/* 11-bit mode */
--		data->resolution = 11;
--		data->sample_time = MSEC_PER_SEC;
--		break;
--	case stlm75:
--		data->resolution = 9;
--		data->sample_time = MSEC_PER_SEC / 5;
--		break;
--	case ds7505:
--		set_mask |= 3 << 5;		/* 12-bit mode */
--		data->resolution = 12;
--		data->sample_time = MSEC_PER_SEC / 4;
--		break;
--	case g751:
--	case lm75:
--	case lm75a:
--		data->resolution = 9;
--		data->sample_time = MSEC_PER_SEC / 2;
--		break;
--	case lm75b:
--		data->resolution = 11;
--		data->sample_time = MSEC_PER_SEC / 4;
--		break;
--	case max6625:
--		data->resolution = 9;
--		data->sample_time = MSEC_PER_SEC / 4;
--		break;
--	case max6626:
--		data->resolution = 12;
--		data->resolution_limits = 9;
--		data->sample_time = MSEC_PER_SEC / 4;
--		break;
--	case max31725:
--		data->resolution = 16;
--		data->sample_time = MSEC_PER_SEC / 8;
--		break;
--	case tcn75:
--		data->resolution = 9;
--		data->sample_time = MSEC_PER_SEC / 8;
--		break;
--	case pct2075:
--		data->resolution = 11;
--		data->sample_time = MSEC_PER_SEC / 10;
--		break;
--	case mcp980x:
--		data->resolution_limits = 9;
--		/* fall through */
--	case tmp100:
--	case tmp101:
--		set_mask |= 3 << 5;		/* 12-bit mode */
--		data->resolution = 12;
--		data->sample_time = MSEC_PER_SEC;
--		clr_mask |= 1 << 7;		/* not one-shot mode */
--		break;
--	case tmp112:
--		set_mask |= 3 << 5;		/* 12-bit mode */
--		clr_mask |= 1 << 7;		/* not one-shot mode */
--		data->resolution = 12;
--		data->sample_time = MSEC_PER_SEC / 4;
--		break;
--	case tmp105:
--	case tmp175:
--	case tmp275:
--	case tmp75:
--		set_mask |= 3 << 5;		/* 12-bit mode */
--		clr_mask |= 1 << 7;		/* not one-shot mode */
--		data->resolution = 12;
--		data->sample_time = MSEC_PER_SEC / 2;
--		break;
--	case tmp75b:  /* not one-shot mode, Conversion rate 37Hz */
--		clr_mask |= 1 << 7 | 0x3 << 5;
--		data->resolution = 12;
--		data->sample_time = MSEC_PER_SEC / 37;
--		break;
--	case tmp75c:
--		clr_mask |= 1 << 5;		/* not one-shot mode */
--		data->resolution = 12;
--		data->sample_time = MSEC_PER_SEC / 4;
--		break;
--	}
- 
--	/* configure as specified */
-+	data->params = &device_params[data->kind];
-+
-+	/* Save default sample time and resolution*/
-+	data->sample_time = data->params->default_sample_time;
-+	data->resolution = data->params->default_resolution;
-+
-+	/* Cache original configuration */
- 	status = i2c_smbus_read_byte_data(client, LM75_REG_CONF);
- 	if (status < 0) {
- 		dev_dbg(dev, "Can't read config? %d\n", status);
- 		return status;
- 	}
- 	data->orig_conf = status;
--	new = status & ~clr_mask;
--	new |= set_mask;
-+	new = status & ~(data->params->clr_mask | LM75_SHUTDOWN);
-+	new |= data->params->set_mask;
- 	if (status != new)
- 		i2c_smbus_write_byte_data(client, LM75_REG_CONF, new);
- 
--- 
-2.11.0
-
+T24gV2VkLCAyMDE5LTA4LTA3IGF0IDEyOjUxICswMjAwLCBVd2UgS2xlaW5lLUvDtm5pZyB3cm90
+ZToNCj4gT24gV2VkLCBBdWcgMDcsIDIwMTkgYXQgMDg6MjY6MjNBTSArMDAwMCwgUGhpbGlwcGUg
+U2NoZW5rZXIgd3JvdGU6DQo+ID4gQWRkIHRoZSBwaHktbm9kZSBhbmQgbWRpbyBidXMgdG8gdGhl
+IGZlYy1ub2RlLCByZXByZXNlbnRlZCBhcyBpcyBvbg0KPiA+IGhhcmR3YXJlLg0KPiA+IFRoaXMg
+Y29tbWl0IGluY2x1ZGVzIG1pY3JlbCxsZWQtbW9kZSB0aGF0IGlzIHNldCB0byB0aGUgZGVmYXVs
+dA0KPiA+IHZhbHVlLCBwcmVwYXJlZCBmb3Igc29tZW9uZSB3aG8gd2FudHMgdG8gY2hhbmdlIHRo
+aXMuDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogUGhpbGlwcGUgU2NoZW5rZXIgPHBoaWxpcHBl
+LnNjaGVua2VyQHRvcmFkZXguY29tPg0KPiA+IC0tLQ0KPiA+IA0KPiA+IENoYW5nZXMgaW4gdjM6
+IE5vbmUNCj4gPiBDaGFuZ2VzIGluIHYyOiBOb25lDQo+ID4gDQo+ID4gIGFyY2gvYXJtL2Jvb3Qv
+ZHRzL2lteDZxZGwtY29saWJyaS5kdHNpIHwgMTEgKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNo
+YW5nZWQsIDExIGluc2VydGlvbnMoKykNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0v
+Ym9vdC9kdHMvaW14NnFkbC1jb2xpYnJpLmR0c2kNCj4gPiBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lt
+eDZxZGwtY29saWJyaS5kdHNpDQo+ID4gaW5kZXggMWJlYWMyMjI2NmVkLi4wMTlkZGE2Yjg4YWQg
+MTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnFkbC1jb2xpYnJpLmR0c2kN
+Cj4gPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2cWRsLWNvbGlicmkuZHRzaQ0KPiA+IEBA
+IC0xNDAsNyArMTQwLDE4IEBADQo+ID4gIAlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOw0KPiA+
+ICAJcGluY3RybC0wID0gPCZwaW5jdHJsX2VuZXQ+Ow0KPiA+ICAJcGh5LW1vZGUgPSAicm1paSI7
+DQo+ID4gKwlwaHktaGFuZGxlID0gPCZldGhwaHk+Ow0KPiA+ICAJc3RhdHVzID0gIm9rYXkiOw0K
+PiA+ICsNCj4gPiArCW1kaW8gew0KPiA+ICsJCSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiA+ICsJ
+CSNzaXplLWNlbGxzID0gPDA+Ow0KPiA+ICsNCj4gPiArCQlldGhwaHk6IGV0aGVybmV0LXBoeUAw
+IHsNCj4gPiArCQkJcmVnID0gPDA+Ow0KPiA+ICsJCQltaWNyZWwsbGVkLW1vZGUgPSA8MD47DQo+
+IA0KPiBEb2Vzbid0IHRoYXQgbmVlZCBhIGNvbXBhdGlibGUgZW50cnkgdG8gYmUgYWN0dWFsbHkg
+dXNlZD8NCj4gDQo+IEJlc3QgcmVnYXJkcw0KPiBVd2UNCg0KSGkgVXdlIGFuZCB0aGFua3MgZm9y
+IHBvaW50aW5nIHRoaXMgb3V0LiBJIGp1c3QgdHJpZWQgaXQgYW5kIGl0IHdvcmtzDQpmaW5lIHdp
+dGhvdXQgdGhlIGNvbXBhdGlibGUuDQoNClBoaWxpcHBlDQoNCj4gPiANCg==
