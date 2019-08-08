@@ -2,70 +2,72 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC0D8C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:18:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF0DC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:19:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77C662186A
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:18:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDE0F217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:19:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="nWG0hjKE"
+	dkim=pass (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="cbUO6aHR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732133AbfHHJSt (ORCPT
+        id S1732151AbfHHJT5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 05:18:49 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40076 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731038AbfHHJSs (ORCPT
+        Thu, 8 Aug 2019 05:19:57 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35228 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731038AbfHHJT5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 05:18:48 -0400
-Received: by mail-wm1-f66.google.com with SMTP id v19so1646628wmj.5
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 02:18:46 -0700 (PDT)
+        Thu, 8 Aug 2019 05:19:57 -0400
+Received: by mail-wr1-f68.google.com with SMTP id k2so8306749wrq.2
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 02:19:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=monstr-eu.20150623.gappssmtp.com; s=20150623;
         h=reply-to:subject:to:cc:references:from:openpgp:autocrypt:message-id
          :date:user-agent:mime-version:in-reply-to;
-        bh=wH6zZD3O6QwkSrOseoe32Lx38cGofcR2MdZT2pC+ZqY=;
-        b=nWG0hjKEqr9Az0dwNodojdwL2zmN9m++dyn+YxBtf8KnT12VhXbSCgAGMFDJ9WE0XL
-         O+UewciviGeqQt93gWGFdbueTPFC689SiUor0HJFHTndE+sNImWQ+Jr0AOZ9VpF6aPCq
-         o8RM58itpq8oDkadBOZYZ+XQS+mCxNpiX5J3hk8HKwBAOqm/5pDz6AXe44URsPh88hjo
-         LQv0CYts0iKQNMO93s93LS8K0IUx6Ht4gSDGxIxXI1LlaGmZZi2iF/krBksFZBjjQvod
-         1WLLTWVABUEZFPu/exb8wYdCJ+4WN2j0zk/26wn70ScC5U4XJdazWQJC9zSuC+dmDrhW
-         VmaQ==
+        bh=boFL17g+r1DVnnh5UlPaoygW7yvD10knzZn4sJQmOy4=;
+        b=cbUO6aHRKhLAAibtk5Zll49z1qNw2fpWRAFBovhBVhN1Zm37T4J87s9LTIH5zchwdd
+         BslCpCTEhmbwB/OAiIg1ozt9ntx0g3mnfDIiR7aFuY6TNIsF9tj1A3IKbPRg87fiGcgS
+         2RkgDDOO4zkOEXjEW7TMJviZJb3KMNbbGKtyNjM+CzFhYtgwik1Opnc8StYPjRQ9BVKH
+         oASK8VeogsuBVk3R+/b4rn/x1HPYNHLspb/1Yrh78T2nf2JZHwJzp0lPbnqKkq/nf9J1
+         brzTKpi5HuQwaEeEZQZ2lq1/9nsveyTU+/breIRNZJ1iWHIlM+N+WE1Y8XgTqVYospQD
+         uS2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:reply-to:subject:to:cc:references:from:openpgp
          :autocrypt:message-id:date:user-agent:mime-version:in-reply-to;
-        bh=wH6zZD3O6QwkSrOseoe32Lx38cGofcR2MdZT2pC+ZqY=;
-        b=Uk2e48ejqn901AzEnhFq3Q3eBDfM1CLqo0L4W5Fr7/fffvcEdclm9zfagiaGKwSuCO
-         A6yAYfnfxpYZuPt6ypNMULDN1F1TWDkDY0tPKf1Wif0vtvGBGSagNl5/hNnSBbx9Rb6T
-         A5dnOyvLtZIRMPRKhCwkeRO+r3ph7H75qBJ95izVlRsJ6C44gBxpfhwWgd76ft4BYlOH
-         N9hcnDQJsnN8r4p6gBaVdwYj44TcXGUuToWTKXu3deNJ40I9LlGk6jUPn4q9bY+/rg9B
-         J3cyAknAX1dQjdIf7iv7k57v3o5JFXQYWhJU3sZJRjfCmal7FGbcqSlU/RCHgmms1q4f
-         rFWg==
-X-Gm-Message-State: APjAAAWAVajSakvVuhfFEbEXjrPQeWaFe5HWMk0khzUtu7825yayadW0
-        xRJR4EcWLI8nL+OZPJvWVD+CWnSyZSWfJw==
-X-Google-Smtp-Source: APXvYqxTtxm06Ju4gZv5/IOWwCEpXbTfJlHTTksjJ4KMl78q2FsQhtslyJldGHM1tPlQ98ecrNwTdA==
-X-Received: by 2002:a1c:f509:: with SMTP id t9mr3321398wmh.6.1565255925039;
-        Thu, 08 Aug 2019 02:18:45 -0700 (PDT)
+        bh=boFL17g+r1DVnnh5UlPaoygW7yvD10knzZn4sJQmOy4=;
+        b=ueY2Gfa3NAl6gdae5Wbb0FFf7pwFGuGi69ZYKOt6UOTYLGR1mkVzMC6ULDhqOPpAmB
+         mZq2L2Bsf6F0CYcXnixSo5dqQNA+CN3Qyt5LwH4QRMSPQoWejpY5yB1iy+YSKVse0TCM
+         YwiHfbDts2rTimCTVqI2T+AfA3AR3KLGoJGsm2Agk2tCJG+m9Ism2AJoETyISsgXIOxN
+         +dfs91xB0TUOXxPRUR8oqSq+jtqhXgNPev6YtgJsWGf4XAx8A9SRE/THg7dAGwmFCvyI
+         CNCI8rp6TeYJzj7xwx51BYC5B4J3e7VzFSRq89KBqQn5O289zfcNVIXdevFgDHGq0Si4
+         u//A==
+X-Gm-Message-State: APjAAAW+CNzouCTtNGyiqO3+sBHB2I2W6z7Dx6Yx9Hdsg4vPFLMQWGZd
+        90PjJg7uCRFB74kUFGOb6hseInh9DTeomA==
+X-Google-Smtp-Source: APXvYqwp/Brb7iV2nE3ExNvKHLIKw/W8ZDiN78+c+hbnPjm85oEqyhH+IimN2bHfuZLceJ5Msx35oQ==
+X-Received: by 2002:adf:9bcd:: with SMTP id e13mr15611808wrc.338.1565255993205;
+        Thu, 08 Aug 2019 02:19:53 -0700 (PDT)
 Received: from [173.194.76.109] ([149.199.62.131])
-        by smtp.gmail.com with ESMTPSA id s63sm2818258wme.17.2019.08.08.02.18.41
+        by smtp.gmail.com with ESMTPSA id v16sm90944999wrn.28.2019.08.08.02.19.50
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 08 Aug 2019 02:18:44 -0700 (PDT)
+        Thu, 08 Aug 2019 02:19:52 -0700 (PDT)
 Reply-To: monstr@monstr.eu
-Subject: Re: [PATCH 1/2] ARM: zynq: support smp in thumb mode
+Subject: Re: [PATCH 2/2] ARM: zynq: Use memcpy_toio instead of memcpy on smp
+ bring-up
 To:     Luis Araneda <luaraneda@gmail.com>,
         Michal Simek <michal.simek@xilinx.com>
 Cc:     Russell King <linux@armlinux.org.uk>,
         linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
         linux-kernel@vger.kernel.org
 References: <20190806030718.29048-1-luaraneda@gmail.com>
- <20190806030718.29048-2-luaraneda@gmail.com>
- <17a45e21-8362-e888-d222-812c879a38a8@xilinx.com>
- <CAHbBuxosAnWdpee8jS7feR06+KF_PjOiTF2+PsiMnMAjwfUFKw@mail.gmail.com>
+ <20190806030718.29048-3-luaraneda@gmail.com>
+ <194fe121-151d-0b64-b83e-e4d82c02efa7@xilinx.com>
+ <CAHbBuxpM8YKxADGJv2PAPbyS-2FZ6xiwohJwGJ1DMPuGnDV-Jg@mail.gmail.com>
 From:   Michal Simek <monstr@monstr.eu>
 Openpgp: preference=signencrypt
 Autocrypt: addr=monstr@monstr.eu; prefer-encrypt=mutual; keydata=
@@ -157,23 +159,23 @@ Autocrypt: addr=monstr@monstr.eu; prefer-encrypt=mutual; keydata=
  EwIAdQuPb2h1QLk5KnknUNikjdIZa9yRC5OnUDwV3ffG4Gsb+xtEL7eTLlbFPgBRUmvy6QbE
  9GjRSSvlab6Mj5tocPBA0CSsonfLCiHlOLvjdMsdmX5NDUpDCo5QMSNEfHEmV3p+A/NOQ/Hk
  Qg41tpHgK85MlNXw6MBWLgdXBSGdD0zVX4S4Gz+vwyY1
-Message-ID: <7ebddbc5-e963-6430-37f3-d13d0c078463@monstr.eu>
-Date:   Thu, 8 Aug 2019 11:18:27 +0200
+Message-ID: <d28323de-6751-0a11-4790-f814539f536f@monstr.eu>
+Date:   Thu, 8 Aug 2019 11:19:46 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <CAHbBuxosAnWdpee8jS7feR06+KF_PjOiTF2+PsiMnMAjwfUFKw@mail.gmail.com>
+In-Reply-To: <CAHbBuxpM8YKxADGJv2PAPbyS-2FZ6xiwohJwGJ1DMPuGnDV-Jg@mail.gmail.com>
 Content-Type: multipart/signed; micalg=pgp-sha1;
  protocol="application/pgp-signature";
- boundary="m05SSs1PYnlpEXtCCW6oEs2zzW9hzFfHe"
+ boundary="3VHn5xLLkhWU4W6I4NCgesZwfMtJ2CRpi"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---m05SSs1PYnlpEXtCCW6oEs2zzW9hzFfHe
-Content-Type: multipart/mixed; boundary="pTpYcIOy9zXSBKG5CBdyTgzsY0cSB9H0L";
+--3VHn5xLLkhWU4W6I4NCgesZwfMtJ2CRpi
+Content-Type: multipart/mixed; boundary="DGNIAlcoa3GStLL3YWKXJKhs2omylnh0X";
  protected-headers="v1"
 From: Michal Simek <monstr@monstr.eu>
 Reply-To: monstr@monstr.eu
@@ -181,50 +183,58 @@ To: Luis Araneda <luaraneda@gmail.com>, Michal Simek <michal.simek@xilinx.com>
 Cc: Russell King <linux@armlinux.org.uk>,
  linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
  linux-kernel@vger.kernel.org
-Message-ID: <7ebddbc5-e963-6430-37f3-d13d0c078463@monstr.eu>
-Subject: Re: [PATCH 1/2] ARM: zynq: support smp in thumb mode
+Message-ID: <d28323de-6751-0a11-4790-f814539f536f@monstr.eu>
+Subject: Re: [PATCH 2/2] ARM: zynq: Use memcpy_toio instead of memcpy on smp
+ bring-up
 References: <20190806030718.29048-1-luaraneda@gmail.com>
- <20190806030718.29048-2-luaraneda@gmail.com>
- <17a45e21-8362-e888-d222-812c879a38a8@xilinx.com>
- <CAHbBuxosAnWdpee8jS7feR06+KF_PjOiTF2+PsiMnMAjwfUFKw@mail.gmail.com>
-In-Reply-To: <CAHbBuxosAnWdpee8jS7feR06+KF_PjOiTF2+PsiMnMAjwfUFKw@mail.gmail.com>
+ <20190806030718.29048-3-luaraneda@gmail.com>
+ <194fe121-151d-0b64-b83e-e4d82c02efa7@xilinx.com>
+ <CAHbBuxpM8YKxADGJv2PAPbyS-2FZ6xiwohJwGJ1DMPuGnDV-Jg@mail.gmail.com>
+In-Reply-To: <CAHbBuxpM8YKxADGJv2PAPbyS-2FZ6xiwohJwGJ1DMPuGnDV-Jg@mail.gmail.com>
 
---pTpYcIOy9zXSBKG5CBdyTgzsY0cSB9H0L
+--DGNIAlcoa3GStLL3YWKXJKhs2omylnh0X
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
 
-On 06. 08. 19 14:40, Luis Araneda wrote:
-> Hi,
+On 06. 08. 19 14:49, Luis Araneda wrote:
+> Hi Michal,
 >=20
-> On Tue, Aug 6, 2019 at 2:39 AM Michal Simek <michal.simek@xilinx.com> w=
+> On Tue, Aug 6, 2019 at 2:42 AM Michal Simek <michal.simek@xilinx.com> w=
 rote:
->>
 >> On 06. 08. 19 5:07, Luis Araneda wrote:
->>> Add .arm directive to headsmp.S to ensure that the
->>> CPU starts in 32-bit ARM mode and the correct code
->>> size is copied on smp bring-up
+>>> This fixes a kernel panic (read overflow) on memcpy when
+>>> FORTIFY_SOURCE is enabled.
 >>>
->>> Additionally, start secondary CPUs on secondary_startup_arm
->>> to automatically switch from ARM to thumb on a thumb kernel
+>>> The computed size of memcpy args are:
+>>> - p_size (dst): 4294967295 =3D (size_t) -1
+>>> - q_size (src): 1
+>>> - size (len): 8
+>>>
+>>> Additionally, the memory is marked as __iomem, so one of
+>>> the memcpy_* functions should be used for read/write
+>>>
+>>> Signed-off-by: Luis Araneda <luaraneda@gmail.com>
 > [...]
->>
->> It is really a question if this should go to stable tree. It is pretty=
-
->> much new feature.
->> Will be good to also add link to similar patch for example this one
->> 5616f36713ea77f57ae908bf2fef641364403c9f.
+>> I would consider this one as stable material. Please also add there li=
+nk
+>> to the patch which this patch fixes.
 >=20
-> Ok, I'm dropping stable from CC. From the previous comments, I thought
-> that the two patches were part of the same fix, but now I realized
-> this is a feature rather than a fix.
->=20
-> Michal, do you want a new version with the link to the similar patch
-> or would you take it in its current form?
+> I'm dropping stable CC (for now), as I'm not sure I completely
+> understood the process for inclusion in stable trees.
+> Do I have to wait for the patch to be on Linus' tree before CCing stabl=
+e?
 
-new version please.
+just put Cc: to commit message and they will pick it up.
+
+>=20
+> As for the link which this patch fixes, you mean
+> aa7eb2bb4e4a22e41bbe4612ff46e5885b13c33e (arm: zynq: Add smp support)?
+> where you added SMP support for zynq.
+
+yes but make sha1 only 12char long.
+
 M
-
 
 --=20
 Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
@@ -235,18 +245,18 @@ U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal SoCs
 
 
 
---pTpYcIOy9zXSBKG5CBdyTgzsY0cSB9H0L--
+--DGNIAlcoa3GStLL3YWKXJKhs2omylnh0X--
 
---m05SSs1PYnlpEXtCCW6oEs2zzW9hzFfHe
+--3VHn5xLLkhWU4W6I4NCgesZwfMtJ2CRpi
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iF0EARECAB0WIQQbPNTMvXmYlBPRwx7KSWXLKUoMIQUCXUvo7AAKCRDKSWXLKUoM
-IfEKAJ0Z79AbVLXOSgJrCHmNLQiOkQVqFQCglZKx1IA2MMe8DXTB4tkC3KkcOUM=
-=VtMM
+iF0EARECAB0WIQQbPNTMvXmYlBPRwx7KSWXLKUoMIQUCXUvpMgAKCRDKSWXLKUoM
+Ia//AJsEYKVSpaeGQaVCvUGxQNGTInvuEACbBEgCQ/p/qhgp4xjFk1G/x3Rhtek=
+=+U0C
 -----END PGP SIGNATURE-----
 
---m05SSs1PYnlpEXtCCW6oEs2zzW9hzFfHe--
+--3VHn5xLLkhWU4W6I4NCgesZwfMtJ2CRpi--
