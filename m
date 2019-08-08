@@ -2,102 +2,146 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F86C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 17:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D71C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 17:03:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 019DB2173C
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 17:00:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="kHPh0W3s"
+	by mail.kernel.org (Postfix) with ESMTP id 573212173C
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 17:03:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404209AbfHHRAR (ORCPT
+        id S2404177AbfHHRDI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 13:00:17 -0400
-Received: from mout.gmx.net ([212.227.17.20]:49027 "EHLO mout.gmx.net"
+        Thu, 8 Aug 2019 13:03:08 -0400
+Received: from mga18.intel.com ([134.134.136.126]:41450 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728020AbfHHRAQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 13:00:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1565283602;
-        bh=zZkX70dLHdMHL6hyofGaCvGcbMThtGfaPzzjiLd6jWo=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=kHPh0W3s0HYLWiPHLbTi2ubt/8L6En+CfHUe9GoJcmOVm3Be/7ZsV4iZvGf3ZrZid
-         i9WFDVmHo6afXqjMG+yYn3Pkua2lYMmmpwHPgWo/bdqyX9scRaLTM9aib7q7zRdpDX
-         IfYDmZ5iqNdY3Ixo62nvuZmNPpp7losklrEhntIs=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([109.90.233.87]) by mail.gmx.com (mrgmx101
- [212.227.17.168]) with ESMTPSA (Nemesis) id 0MSZ6u-1hlpdW0Mnk-00RVGA; Thu, 08
- Aug 2019 19:00:02 +0200
-From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     linux-doc@vger.kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org,
-        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] Documentation/arm/sa1100/assabet: Fix 'make assabet_defconfig' command
-Date:   Thu,  8 Aug 2019 18:58:56 +0200
-Message-Id: <20190808165929.16946-2-j.neuschaefer@gmx.net>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190808165929.16946-1-j.neuschaefer@gmx.net>
-References: <20190808165929.16946-1-j.neuschaefer@gmx.net>
+        id S1732444AbfHHRDI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 13:03:08 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Aug 2019 10:03:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,362,1559545200"; 
+   d="scan'208";a="169048728"
+Received: from jmath3-mobl1.ger.corp.intel.com (HELO [10.252.5.86]) ([10.252.5.86])
+  by orsmga008.jf.intel.com with ESMTP; 08 Aug 2019 10:03:02 -0700
+Subject: Re: [PATCHv2 2/3] i915: convert to new mount API
+To:     Chris Wilson <chris@chris-wilson.co.uk>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Hugh Dickins <hughd@google.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Howells <dhowells@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+References: <20190805160307.5418-1-sergey.senozhatsky@gmail.com>
+ <20190805160307.5418-3-sergey.senozhatsky@gmail.com>
+ <20190805181255.GH1131@ZenIV.linux.org.uk>
+ <20190805182834.GI1131@ZenIV.linux.org.uk>
+ <alpine.LSU.2.11.1908060007190.1941@eggly.anvils>
+ <20190807063002.GG6627@lst.de> <20190808012314.GK1131@ZenIV.linux.org.uk>
+ <alpine.LSU.2.11.1908080813380.12321@eggly.anvils>
+ <156528143789.22627.18099397585070419297@skylake-alporthouse-com>
+From:   Matthew Auld <matthew.auld@intel.com>
+Message-ID: <8a9a9aee-a266-5ab2-85b3-e39e821b2d03@intel.com>
+Date:   Thu, 8 Aug 2019 18:03:02 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:le7Oa6YammkW5O1nxK9SNbOka4/NAc926M3Lalyv0vd1UdL7wK2
- 0cODCpflJuLU31MX1N42QwWEWWVwymlS+vhN9hd2PWZqXg5xSmJ8WYbE1SA20stCwTwz5l6
- USUFUvvv57QJGvgxy4S8+T4LFOIByTRESmQWTwV1Gujiz9f/UoH9zoMtFXxLRmz7nkABJOd
- 7G3rCgrCzKQjZhNC+So2g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:a3MDB1l8RQk=:6MsxMj9SyaS/sHfF1sFLxG
- 1nKhn5ofu6v5zeQpDxG6/V1j/f3ZrtFZumOmrNhVFk0N10FQwszQq+fNbMwa1RKvQxWoFwZ2W
- nKlE04Wdygs+3LuWoQ6urz1zvJOShYhaTKrGnPGNDzvMSmGHMl1+HxVfgcFWVa1wjhImQVuhL
- jn3Bmz1+OsM50kZgQvvNMPRh9AxVbFH5+FhrMl0vBS0hR/H4xqzhcnNEf0beG4oYXat4nDwT/
- NU98QHboozLZMQLV2Mg23v9pUwnxh3Zgg6YfeXRw6Mnp+88lsp/Ap8mrZxoxc1M4GPod7jywJ
- V473qjFTI/PiXBfZyP3SvDga7CLRt0MgDbPhhS5x+EvSq3HvuFq1lDxTvd47puV81LVwobE5P
- +QsrzVaBMr3l/VdCfCkZqB98OwPmLXxvfbBVfxtb07dX2uTMITsKNDiOLN2X6g5/632m7JJYI
- BnaatyP+UMGdRZwaRoFVDfYOp2mH3G7XtfWSwejJnP3g1NGRLI4og/MVN2/hMAOVdp8QEJgaf
- ubGxoFbfGJ/hJS9Iov0sM2WIaxy0xk456Hcw8HSVqKGRPU+0E2ko8a7VOJH0uBteGH8Nh8BW3
- E3bkvF/NeQkxm1C+gSSlbMG/NUegIpMBKQje8Vs4oFpdchu+R6Od2XiZdNl+eSfTAZmf6jBvE
- cyP+w79rA3sh+HIeVAG1MYz6ISOUJiJPwQGtBpUUrelh3BK+rMhOyYob+t9hbLAaH21I9H5JM
- 0BZB+QibMQVqvtrjeX2P1oihUY2IdhcWlf4IAprHzqv3srIh/0T0XTDsEGfYQ2z3kQAdfOzS1
- NiF1KT2fJnX8BMXKf30d7KLoOR0hT5Drre+ggWpUNQlQjU70dTcYkM3VnRuXolPYo7p3mhq2s
- DW7bpHwtl3/7Ox3vzZL/Cc15v4/ZnteEy//6+r5nb5kCXgxsbKn9GWtgcQB5kRcn2rtwzN1yH
- 4pTh7ty36U4ZkdN+RBtBAe4rLSancGLS4mn72Ui8n6k2l2Gzo4PZYcnbP1Qw3LigqKnrV6Mpd
- iVQZBmPORUqemd2SmurDEPyt5yFT9Cx/4mqDA7cIs4hI8KQCf/ElCDAAQLdP5p9sI2IlcFNHr
- 2QgdB2TQhNJdwdB4Gm9QhFPJOPi1zOxA/ql8HU+tx234ts8ajgnt1MCVsz68Kren+TKPfzZVJ
- XZwro=
+In-Reply-To: <156528143789.22627.18099397585070419297@skylake-alporthouse-com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"make assabet_config" doesn't work.
+On 08/08/2019 17:23, Chris Wilson wrote:
+> Quoting Hugh Dickins (2019-08-08 16:54:16)
+>> On Thu, 8 Aug 2019, Al Viro wrote:
+>>> On Wed, Aug 07, 2019 at 08:30:02AM +0200, Christoph Hellwig wrote:
+>>>> On Tue, Aug 06, 2019 at 12:50:10AM -0700, Hugh Dickins wrote:
+>>>>> Though personally I'm averse to managing "f"objects through
+>>>>> "m"interfaces, which can get ridiculous (notably, MADV_HUGEPAGE works
+>>>>> on the virtual address of a mapping, but the huge-or-not alignment of
+>>>>> that mapping must have been decided previously).  In Google we do use
+>>>>> fcntls F_HUGEPAGE and F_NOHUGEPAGE to override on a per-file basis -
+>>>>> one day I'll get to upstreaming those.
+>>>>
+>>>> Such an interface seems very useful, although the two fcntls seem a bit
+>>>> odd.
+>>>>
+>>>> But I think the point here is that the i915 has its own somewhat odd
+>>>> instance of tmpfs.  If we could pass the equivalent of the huge=*
+>>>> options to shmem_file_setup all that garbage (including the
+>>>> shmem_file_setup_with_mnt function) could go away.
+>>>
+>>> ... or follow shmem_file_super() with whatever that fcntl maps to
+>>> internally.  I would really love to get rid of that i915 kludge.
+>>
+>> As to the immediate problem of i915_gemfs using remount_fs on linux-next,
+>> IIUC, all that is necessary at the moment is the deletions patch below
+>> (but I'd prefer that to come from the i915 folks).  Since gemfs has no
+>> need to change the huge option from its default to its default.
+>>
+>> As to the future of when they get back to wanting huge pages in gemfs,
+>> yes, that can probably best be arranged by using the internals of an
+>> fcntl F_HUGEPAGE on those objects that would benefit from it.
+>>
+>> Though my intention there was that the "huge=never" default ought
+>> to continue to refuse to give huge pages, even when asked by fcntl.
+>> So a little hackery may still be required, to allow the i915_gemfs
+>> internal mount to get huge pages when a user mount would not.
+>>
+>> As to whether shmem_file_setup_with_mnt() needs to live: I've given
+>> that no thought, but accept that shm_mnt is such a ragbag of different
+>> usages, that i915 is right to prefer their own separate gemfs mount.
+>>
+>> Hugh
+>>
+>> --- mmotm/drivers/gpu/drm/i915/gem/i915_gemfs.c 2019-07-21 19:40:16.573703780 -0700
+>> +++ linux/drivers/gpu/drm/i915/gem/i915_gemfs.c 2019-08-08 07:19:23.967689058 -0700
+>> @@ -24,28 +24,6 @@ int i915_gemfs_init(struct drm_i915_priv
+>>          if (IS_ERR(gemfs))
+>>                  return PTR_ERR(gemfs);
+>>   
+>> -       /*
+>> -        * Enable huge-pages for objects that are at least HPAGE_PMD_SIZE, most
+>> -        * likely 2M. Note that within_size may overallocate huge-pages, if say
+>> -        * we allocate an object of size 2M + 4K, we may get 2M + 2M, but under
+>> -        * memory pressure shmem should split any huge-pages which can be
+>> -        * shrunk.
+>> -        */
+>> -
+>> -       if (has_transparent_hugepage()) {
+>> -               struct super_block *sb = gemfs->mnt_sb;
+>> -               /* FIXME: Disabled until we get W/A for read BW issue. */
+>> -               char options[] = "huge=never";
+>> -               int flags = 0;
+>> -               int err;
+>> -
+>> -               err = sb->s_op->remount_fs(sb, &flags, options);
+>> -               if (err) {
+>> -                       kern_unmount(gemfs);
+>> -                       return err;
+>> -               }
+>> -       }
+> 
+> That's perfectly fine; we should probably leave a hint as to why gemfs
+> exists and include the suggestion of looking at per-file hugepage
+> controls.
+> 
+> Matthew, how does this affect your current plans? If at all?
+Fine with me.
 
-Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-=2D--
- Documentation/arm/sa1100/assabet.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/arm/sa1100/assabet.rst b/Documentation/arm/sa11=
-00/assabet.rst
-index 3e704831c311..a761e128fb08 100644
-=2D-- a/Documentation/arm/sa1100/assabet.rst
-+++ b/Documentation/arm/sa1100/assabet.rst
-@@ -14,7 +14,7 @@ Building the kernel
-
- To build the kernel with current defaults::
-
--	make assabet_config
-+	make assabet_defconfig
- 	make oldconfig
- 	make zImage
-
-=2D-
-2.20.1
-
+> -Chris
+> 
