@@ -2,144 +2,144 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C811EC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 17:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9186BC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 17:25:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5638217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 17:24:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DBB621874
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 17:25:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404312AbfHHRYH (ORCPT
+        id S2404321AbfHHRY7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 13:24:07 -0400
-Received: from mail-ot1-f72.google.com ([209.85.210.72]:52077 "EHLO
-        mail-ot1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404264AbfHHRYH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 13:24:07 -0400
-Received: by mail-ot1-f72.google.com with SMTP id h12so63040411otn.18
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 10:24:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=e1gv1WeJMlHGANR4IY6E8iV8unm9tW2t77TdB7HR+60=;
-        b=S2BcK8AMFdc+HvIQajjgG9SNMWw3Bd5xn4KDatxWVMrfcjDhTpDah5ybyVeVNhuoht
-         7qOdGtAOVWCYOfwtdbXT5of6QJyzqQ2gMHhj0HCzuoLYt+e9E+/WthXmX5aN0F9Ek7dZ
-         jA05TbJcr7j0h2tPkSJyLnROl3TXuElkzUs+5HxIGqPEszYl0Xuq2WBclS3juZEw2HvY
-         FFcLWNByIpgmPN903YiUKzp1kHAe7ifC0g8Bhht9SI01CIHAJrP1sbTnFJ/9QhZztfag
-         sdaAN/gsEg1nlQbtuwSJmH07t7zac7tNRnMbKj3QdtNsWKo9aFndzU9FItTc/gv5f6LL
-         ndYA==
-X-Gm-Message-State: APjAAAWiPv9RHVSsUwsqIa7zq7mNDZazH51wGHRYKEGdRCxiFk/VzvYj
-        UV9138BYuSScrB9xl8KwIX7Yl81qZVXK5mIJIwvkPcBt7Vgf
-X-Google-Smtp-Source: APXvYqzHlVEvfdz4GO9vSY+QKFPioOgYcsWeEKwBh81ovnl0oAHiXc6BpMVJ4i5rb188ZzJ2tLSS7sfQWxzKOCnTzVv6npF1DGib
+        Thu, 8 Aug 2019 13:24:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42462 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404281AbfHHRY6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 13:24:58 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E963F217F4;
+        Thu,  8 Aug 2019 17:24:56 +0000 (UTC)
+Date:   Thu, 8 Aug 2019 13:24:55 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Jiping Ma <jiping.ma2@windriver.com>,
+        catalin.marinas@arm.com, will.deacon@arm.com, mingo@redhat.com,
+        Joel Fernandes <joel@joelfernandes.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/2 v2] tracing/arm64: Have max stack tracer handle the
+ case of return address after data
+Message-ID: <20190808132455.5fa2c660@gandalf.local.home>
+In-Reply-To: <20190808171153.6j56h4hlcpcl5trz@willie-the-truck>
+References: <20190807172826.352574408@goodmis.org>
+        <20190807172907.155165959@goodmis.org>
+        <20190808162825.7klpu3ffza5zxwrt@willie-the-truck>
+        <20190808123632.0dd1a58c@gandalf.local.home>
+        <20190808171153.6j56h4hlcpcl5trz@willie-the-truck>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-Received: by 2002:a02:c012:: with SMTP id y18mr6831313jai.85.1565285046564;
- Thu, 08 Aug 2019 10:24:06 -0700 (PDT)
-Date:   Thu, 08 Aug 2019 10:24:06 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000002c418a058f9e53cf@google.com>
-Subject: general protection fault in perf_tp_event_match (2)
-From:   syzbot <syzbot+076ba900c4a9a0f67aba@syzkaller.appspotmail.com>
-To:     acme@kernel.org, alexander.shishkin@linux.intel.com,
-        ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
-        jolsa@redhat.com, kafai@fb.com, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, namhyung@kernel.org, netdev@vger.kernel.org,
-        peterz@infradead.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, yhs@fb.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Thu, 8 Aug 2019 18:11:53 +0100
+Will Deacon <will@kernel.org> wrote:
 
-syzbot found the following crash on:
+> > We could make it more descriptive of what it will do and not the reason
+> > for why it is done...
+> > 
+> > 
+> >   ARCH_FTRACE_SHIFT_STACK_TRACER  
+> 
+> Acked-by: Will Deacon <will@kernel.org>
 
-HEAD commit:    1e78030e Merge tag 'mmc-v5.3-rc1' of git://git.kernel.org/..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1011831a600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4c7b914a2680c9c6
-dashboard link: https://syzkaller.appspot.com/bug?extid=076ba900c4a9a0f67aba
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+Thanks Will!
 
-Unfortunately, I don't have any reproducer for this crash yet.
+Here's the official patch.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+076ba900c4a9a0f67aba@syzkaller.appspotmail.com
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 22070 Comm: syz-executor.3 Not tainted 5.3.0-rc2+ #86
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:perf_tp_event_match+0x31/0x260 kernel/events/core.c:8560
-Code: 89 f6 41 55 49 89 d5 41 54 53 48 89 fb e8 b7 0e ea ff 48 8d bb d0 01  
-00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 84  
-c0 74 08 3c 03 0f 8e cc 01 00 00 44 8b a3 d0 01 00
-RSP: 0018:ffff88804ffa7790 EFLAGS: 00010007
-RAX: dffffc0000000000 RBX: 00000000ffffff9f RCX: ffffffff818bcb73
-RDX: 000000002000002d RSI: ffffffff818890b9 RDI: 000000010000016f
-RBP: ffff88804ffa77b0 R08: ffff8880531ba640 R09: ffffed100a6374c9
-R10: ffffed100a6374c8 R11: ffff8880531ba647 R12: ffff8880ae830860
-R13: ffff8880ae830860 R14: ffff88804ffa7880 R15: dffffc0000000000
-FS:  00005555556d7940(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000738008 CR3: 000000004cad5000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  perf_tp_event+0x1ea/0x730 kernel/events/core.c:8611
-  perf_trace_run_bpf_submit+0x131/0x190 kernel/events/core.c:8586
-  perf_trace_sched_wakeup_template+0x42d/0x5d0  
-include/trace/events/sched.h:57
-  trace_sched_wakeup_new include/trace/events/sched.h:103 [inline]
-  wake_up_new_task+0x70f/0xbd0 kernel/sched/core.c:2848
-  _do_fork+0x26c/0xfa0 kernel/fork.c:2393
-  __do_sys_clone kernel/fork.c:2524 [inline]
-  __se_sys_clone kernel/fork.c:2505 [inline]
-  __x64_sys_clone+0x18d/0x250 kernel/fork.c:2505
-  do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x457dfa
-Code: f7 d8 64 89 04 25 d4 02 00 00 64 4c 8b 0c 25 10 00 00 00 31 d2 4d 8d  
-91 d0 02 00 00 31 f6 bf 11 00 20 01 b8 38 00 00 00 0f 05 <48> 3d 00 f0 ff  
-ff 0f 87 f5 00 00 00 85 c0 41 89 c5 0f 85 fc 00 00
-RSP: 002b:00007ffcf0b1c640 EFLAGS: 00000246 ORIG_RAX: 0000000000000038
-RAX: ffffffffffffffda RBX: 00007ffcf0b1c640 RCX: 0000000000457dfa
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000001200011
-RBP: 00007ffcf0b1c680 R08: 0000000000000001 R09: 00005555556d7940
-R10: 00005555556d7c10 R11: 0000000000000246 R12: 0000000000000001
-R13: 0000000000000000 R14: 0000000000000000 R15: 00007ffcf0b1c6d0
-Modules linked in:
----[ end trace 8f4efeb0ada52ec1 ]---
-RIP: 0010:perf_tp_event_match+0x31/0x260 kernel/events/core.c:8560
-Code: 89 f6 41 55 49 89 d5 41 54 53 48 89 fb e8 b7 0e ea ff 48 8d bb d0 01  
-00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 84  
-c0 74 08 3c 03 0f 8e cc 01 00 00 44 8b a3 d0 01 00
-RSP: 0018:ffff88804ffa7790 EFLAGS: 00010007
-RAX: dffffc0000000000 RBX: 00000000ffffff9f RCX: ffffffff818bcb73
-RDX: 000000002000002d RSI: ffffffff818890b9 RDI: 000000010000016f
-RBP: ffff88804ffa77b0 R08: ffff8880531ba640 R09: ffffed100a6374c9
-R10: ffffed100a6374c8 R11: ffff8880531ba647 R12: ffff8880ae830860
-R13: ffff8880ae830860 R14: ffff88804ffa7880 R15: dffffc0000000000
-FS:  00005555556d7940(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000738008 CR3: 000000004cad5000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Most archs (well at least x86) store the function call return address on the
+stack before storing the local variables for the function. The max stack
+tracer depends on this in its algorithm to display the stack size of each
+function it finds in the back trace.
 
+Some archs (arm64), may store the return address (from its link register)
+just before calling a nested function. There's no reason to save the link
+register on leaf functions, as it wont be updated. This breaks the algorithm
+of the max stack tracer.
 
+Add a new define ARCH_RET_ADDR_AFTER_LOCAL_VARS that an architecture may set
+if it stores the return address (link register) after it stores the
+function's local variables, and have the stack trace shift the values of the
+mapped stack size to the appropriate functions.
+
+Link: 20190802094103.163576-1-jiping.ma2@windriver.com
+
+Reported-by: Jiping Ma <jiping.ma2@windriver.com>
+Acked-by: Will Deacon <will@kernel.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ arch/arm64/include/asm/ftrace.h | 13 +++++++++++++
+ kernel/trace/trace_stack.c      | 14 ++++++++++++++
+ 2 files changed, 27 insertions(+)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/arch/arm64/include/asm/ftrace.h b/arch/arm64/include/asm/ftrace.h
+index 5ab5200b2bdc..d48667b04c41 100644
+--- a/arch/arm64/include/asm/ftrace.h
++++ b/arch/arm64/include/asm/ftrace.h
+@@ -14,6 +14,19 @@
+ #define MCOUNT_ADDR		((unsigned long)_mcount)
+ #define MCOUNT_INSN_SIZE	AARCH64_INSN_SIZE
+ 
++/*
++ * Currently, gcc tends to save the link register after the local variables
++ * on the stack. This causes the max stack tracer to report the function
++ * frame sizes for the wrong functions. By defining
++ * ARCH_FTRACE_SHIFT_STACK_TRACER, it will tell the stack tracer to expect
++ * to find the return address on the stack after the local variables have
++ * been set up.
++ *
++ * Note, this may change in the future, and we will need to deal with that
++ * if it were to happen.
++ */
++#define ARCH_FTRACE_SHIFT_STACK_TRACER 1
++
+ #ifndef __ASSEMBLY__
+ #include <linux/compat.h>
+ 
+diff --git a/kernel/trace/trace_stack.c b/kernel/trace/trace_stack.c
+index 5d16f73898db..642a850af81a 100644
+--- a/kernel/trace/trace_stack.c
++++ b/kernel/trace/trace_stack.c
+@@ -158,6 +158,20 @@ static void check_stack(unsigned long ip, unsigned long *stack)
+ 			i++;
+ 	}
+ 
++#ifdef ARCH_FTRACE_SHIFT_STACK_TRACER
++	/*
++	 * Some archs will store the link register before calling
++	 * nested functions. This means the saved return address
++	 * comes after the local storage, and we need to shift
++	 * for that.
++	 */
++	if (x > 1) {
++		memmove(&stack_trace_index[0], &stack_trace_index[1],
++			sizeof(stack_trace_index[0]) * (x - 1));
++		x--;
++	}
++#endif
++
+ 	stack_trace_nr_entries = x;
+ 
+ 	if (task_stack_end_corrupted(current)) {
+-- 
+2.20.1
+
