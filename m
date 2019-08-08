@@ -2,144 +2,116 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74416C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:06:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED1D9C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:07:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49AF12173E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:06:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565255192;
-	bh=dHpPGdPNMilk/AU/8OOMsHEz+PCLejmQn2z3m7PSKjA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=QQTxyGflgRsCdMpJ7bePKjkUpr09N3Ah82XOkJf2CGEkZ9aUDQWNQv2Odpx/q64cp
-	 BNjmo7Ba9JojDmjVoHlEPz9ilhP6ileCPTSy971OJsYAk7aaFahm4rkTCFEExNhTTu
-	 qC+oWD3JYRxDvMk3pfbXpsP70hAiW7598yIIoJj8=
+	by mail.kernel.org (Postfix) with ESMTP id CD39F2171F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:07:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731569AbfHHJGb (ORCPT
+        id S1731833AbfHHJHn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 05:06:31 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:46646 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730777AbfHHJGa (ORCPT
+        Thu, 8 Aug 2019 05:07:43 -0400
+Received: from rp02.intra2net.com ([62.75.181.28]:55278 "EHLO
+        rp02.intra2net.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730777AbfHHJHm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 05:06:30 -0400
-Received: by mail-ot1-f65.google.com with SMTP id z23so7467046ote.13;
-        Thu, 08 Aug 2019 02:06:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=34pNCA2fAatpNgW2gdL2L6PIclEzNScEt8bxwQ+wQhw=;
-        b=btZ7kWQQ7+ANtWZZv0B8Zmo7GHQyct0e5GJoz2SUmqFBw5okICc3X8pjW217ewd8rP
-         tX8Axugdb5ZczQ608pY0Z7daXPJMT9KZsbCp2IdJl5ciRBtQG4NYoC2Za59aboZYK99O
-         0kOHoQXfd/CnpLcAEBu6HdpPoi4hecd8Qduk7rqPjVuvpkaTXgbdQSSAKdD5IT1HzyI2
-         0DzkyAjb7FXgHYNzP0hGRwPxQV/mI3hh6rECqosAOoEKCWosPZ3eecsSsHJx3+Q/TJM2
-         kGxp9upFhpDnA+zA2EGwdP87XSiQgat2RxfE6AxG31947lVx+kepppOamFbdidxYrYoq
-         FBbw==
-X-Gm-Message-State: APjAAAXiwkCDbdsRixfuTrleg//Eq9wEOAqeVAlC0HSQzawBkx2yAlTA
-        JKQ4f5z5qsnFLVZHqhfMvzZZonZC9WPFGkfJl8c=
-X-Google-Smtp-Source: APXvYqzj3UqThCxDGgQPBMBDcNMHtdPq2BpaEuppJuuyxhOKl1E6sX2FzFWUaJgpE/jjcNezeJuicOhA12ciL3iufCI=
-X-Received: by 2002:aca:cdd3:: with SMTP id d202mr1665889oig.115.1565255189517;
- Thu, 08 Aug 2019 02:06:29 -0700 (PDT)
+        Thu, 8 Aug 2019 05:07:42 -0400
+X-Greylist: delayed 328 seconds by postgrey-1.27 at vger.kernel.org; Thu, 08 Aug 2019 05:07:40 EDT
+Received: from mail.m.i2n (unknown [172.17.128.1])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by rp02.intra2net.com (Postfix) with ESMTPS id DDE61100111;
+        Thu,  8 Aug 2019 11:02:11 +0200 (CEST)
+Received: from localhost (mail.m.i2n [127.0.0.1])
+        by localhost (Postfix) with ESMTP id B22BB326;
+        Thu,  8 Aug 2019 11:02:11 +0200 (CEST)
+X-Virus-Scanned: by Intra2net Mail Security (AVE=8.3.54.70,VDF=8.16.20.112)
+Received: from localhost (storm.m.i2n [172.16.1.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.m.i2n (Postfix) with ESMTPS id EE0E62A5;
+        Thu,  8 Aug 2019 11:02:09 +0200 (CEST)
+Date:   Thu, 8 Aug 2019 11:02:09 +0200
+From:   Thomas Jarosch <thomas.jarosch@intra2net.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Florian Westphal <fw@strlen.de>,
+        Jakub Jankowski <shasta@toxcorp.com>,
+        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 4.19 04/42] netfilter: conntrack: always store
+ window size un-scaled
+Message-ID: <20190808090209.wb63n6ibii4ivvba@intra2net.com>
+References: <20190802132302.13537-1-sashal@kernel.org>
+ <20190802132302.13537-4-sashal@kernel.org>
 MIME-Version: 1.0
-References: <47415939.KV5G6iaeJG@kreacher> <20190730144134.GA12844@localhost.localdomain>
- <100ba4aff1c6434a81e47774ab4acddc@AUSX13MPC105.AMER.DELL.COM>
- <8246360B-F7D9-42EB-94FC-82995A769E28@canonical.com> <20190730191934.GD13948@localhost.localdomain>
- <7d3e0b8ba1444194a153c93faa1cabb3@AUSX13MPC105.AMER.DELL.COM>
- <20190730213114.GK13948@localhost.localdomain> <CAJZ5v0gxfeMN8eCNRjcXmUOkReVsdozb3EccaYMpnmSHu3771g@mail.gmail.com>
- <20190731221956.GB15795@localhost.localdomain> <2583975.4sIyE3leJj@kreacher> <20190808084804.GA31404@lst.de>
-In-Reply-To: <20190808084804.GA31404@lst.de>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 8 Aug 2019 11:06:17 +0200
-Message-ID: <CAJZ5v0hTJKPi1zfB_RjuZ415-JjmK2nVP7mss3npqoB3+Xvy4w@mail.gmail.com>
-Subject: Re: [PATCH] nvme-pci: Allow PCI bus-level PM to be used if ASPM is disabled
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        Keith Busch <kbusch@kernel.org>,
-        Mario Limonciello <Mario.Limonciello@dell.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190802132302.13537-4-sashal@kernel.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 8, 2019 at 10:48 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> > -     ndev->last_ps = 0;
-> >       ret = nvme_get_power_state(ctrl, &ndev->last_ps);
-> > -     if (ret < 0)
-> > +     if (ret < 0 || ndev->last_ps == U32_MAX)
->
-> Is the intent of the magic U32_MAX check to see if the
-> nvme_get_power_state failed at the nvme level?  In that case just
-> checking for any non-zero return value from nvme_get_power_state might
-> be the easier and more clear way to do it.
+Hello together,
 
-Now that I think of that, it appears redundant.  I'll drop it.
+You wrote on Fri, Aug 02, 2019 at 09:22:24AM -0400:
+> From: Florian Westphal <fw@strlen.de>
+> 
+> [ Upstream commit 959b69ef57db00cb33e9c4777400ae7183ebddd3 ]
+> 
+> Jakub Jankowski reported following oddity:
+> 
+> After 3 way handshake completes, timeout of new connection is set to
+> max_retrans (300s) instead of established (5 days).
+> 
+> shortened excerpt from pcap provided:
+> 25.070622 IP (flags [DF], proto TCP (6), length 52)
+> 10.8.5.4.1025 > 10.8.1.2.80: Flags [S], seq 11, win 64240, [wscale 8]
+> 26.070462 IP (flags [DF], proto TCP (6), length 48)
+> 10.8.1.2.80 > 10.8.5.4.1025: Flags [S.], seq 82, ack 12, win 65535, [wscale 3]
+> 27.070449 IP (flags [DF], proto TCP (6), length 40)
+> 10.8.5.4.1025 > 10.8.1.2.80: Flags [.], ack 83, win 512, length 0
+> 
+> Turns out the last_win is of u16 type, but we store the scaled value:
+> 512 << 8 (== 0x20000) becomes 0 window.
+> 
+> The Fixes tag is not correct, as the bug has existed forever, but
+> without that change all that this causes might cause is to mistake a
+> window update (to-nonzero-from-zero) for a retransmit.
+> 
+> Fixes: fbcd253d2448b8 ("netfilter: conntrack: lower timeout to RETRANS seconds if window is 0")
+> Reported-by: Jakub Jankowski <shasta@toxcorp.com>
+> Tested-by: Jakub Jankowski <shasta@toxcorp.com>
+> Signed-off-by: Florian Westphal <fw@strlen.de>
+> Acked-by: Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>
+> Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
->
-> > Index: linux-pm/drivers/pci/pcie/aspm.c
-> > ===================================================================
-> > --- linux-pm.orig/drivers/pci/pcie/aspm.c
-> > +++ linux-pm/drivers/pci/pcie/aspm.c
->
-> Shouldn't we split PCI vs nvme in two patches?
+Also:
+Tested-by: Thomas Jarosch <thomas.jarosch@intra2net.com>
 
-That can be done.
+;)
 
-> > @@ -1170,6 +1170,26 @@ static int pcie_aspm_get_policy(char *bu
-> >  module_param_call(policy, pcie_aspm_set_policy, pcie_aspm_get_policy,
-> >       NULL, 0644);
-> >
-> > +/*
-> > + * pcie_aspm_enabled - Return the mask of enabled ASPM link states.
-> > + * @pci_device: Target device.
-> > + */
-> > +u32 pcie_aspm_enabled(struct pci_dev *pci_device)
->
-> pcie_aspm_enabled sounds like it returns a boolean.  Shouldn't there be
-> a mask or so in the name better documenting what it returns?
+We've hit the issue with the wrong conntrack timeout at two different sites,
+long-lived connections to a SAP server over IPSec VPN were constantly dropping.
 
-OK
+For us this was a regression after updating from kernel 3.14 to 4.19.
+Yesterday I've applied the patch to kernel 4.19.57 and the problem is fixed.
 
-> > +{
-> > +     struct pci_dev *bridge = pci_upstream_bridge(pci_device);
-> > +     u32 ret;
-> > +
-> > +     if (!bridge)
-> > +             return 0;
-> > +
-> > +     mutex_lock(&aspm_lock);
-> > +     ret = bridge->link_state ? bridge->link_state->aspm_enabled : 0;
-> > +     mutex_unlock(&aspm_lock);
-> > +
-> > +     return ret;
-> > +}
->
-> I think this will need a EXPORT_SYMBOL_GPL thrown in so that modular
-> nvme continues working.
+The issue was extra hard to debug as we could just boot the new kernel
+for twenty minutes in the evening on these productive systems.
 
-Right, sorry.
+The stable kernel patch from last Friday came right on time. I was just
+about the replay the TCP connection with tcpreplay, so this saved
+me from another week of debugging. Thanks everyone!
 
-> > +
-> > +
-> >  #ifdef CONFIG_PCIEASPM_DEBUG
->
-> Nit: double blank line here.
-
-Overlooked, will fix.
-
-Thanks!
+Best regards,
+Thomas Jarosch
