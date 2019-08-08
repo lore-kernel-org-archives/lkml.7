@@ -2,93 +2,75 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3770EC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:24:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF80C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:26:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D0722171F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:24:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9257B21874
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 13:26:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565270772;
+	bh=xOthRltc9QPDcvSfY6/4aGUZsvl14aXcUqTn5d6Zb0c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PsOB1J9xSMOCTd1kgxzwEXbb4+KxdnM/50L/t/McEFUAbTaWcysJ8/o9OBBRgEjhd
+	 Xuj5+ODqE0zyMHdIZAwnW2IPlYFagxkWHPb/bHLzq8JY+C6YNOvJTqR1Km2TQwi+6b
+	 4duJ8e7ABcMTYaVl8A6hiI/Q7pa8RGA3pyzLHVbg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733040AbfHHNYX (ORCPT
+        id S1733061AbfHHN0L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 09:24:23 -0400
-Received: from mga05.intel.com ([192.55.52.43]:2532 "EHLO mga05.intel.com"
+        Thu, 8 Aug 2019 09:26:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728327AbfHHNYX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 09:24:23 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Aug 2019 06:24:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,361,1559545200"; 
-   d="scan'208";a="199043407"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
-  by fmsmga004.fm.intel.com with ESMTP; 08 Aug 2019 06:24:19 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hviOv-0003YM-Kx; Thu, 08 Aug 2019 16:24:17 +0300
-Date:   Thu, 8 Aug 2019 16:24:17 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     Javier Martinez Canillas <javierm@redhat.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH RFC] modpost: Support I2C Aliases from OF tables
-Message-ID: <20190808132417.GU30120@smile.fi.intel.com>
-References: <20190710193918.31135-1-kieran.bingham+renesas@ideasonboard.com>
- <0e1b6e0b-1c94-4b00-7fda-c2a303ee3816@redhat.com>
- <20190731194419.GB4084@kunai>
- <f4a78e93-6aaa-bc72-cf94-06fc2574451c@redhat.com>
- <CAMuHMdUA-hjVqSP_c0cB=76cfrucF6xxRi3ymVoEsJ2hbkfT=A@mail.gmail.com>
- <51451f89-9193-2be6-e724-e9ca44a25f52@redhat.com>
- <620e0aec-e3d8-7289-6525-b720013e8dfa@metux.net>
+        id S1732643AbfHHN0L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 09:26:11 -0400
+Received: from localhost (unknown [122.178.245.201])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B37412171F;
+        Thu,  8 Aug 2019 13:26:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565270770;
+        bh=xOthRltc9QPDcvSfY6/4aGUZsvl14aXcUqTn5d6Zb0c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wdhiSMgEUzklpKCVFzekiTPw8B+at3lhPkMlMq4SDMz7bagefPWO/3Q+YcDzoHCPg
+         vY90keJnw2raAF5MHo3hox17C8WLQGi9gvALi+W9RX1r1qYdChpA4QJ93ZTn9d6Kam
+         koHNlTvuUSrcY+0LQUue/knLXIFACQjNVu0A19FU=
+Date:   Thu, 8 Aug 2019 18:54:56 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Jia-Ju Bai <baijiaju1990@gmail.com>
+Cc:     dan.j.williams@intel.com, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, dmaengine@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dma: stm32-mdma: Fix a possible null-pointer dereference
+ in stm32_mdma_irq_handler()
+Message-ID: <20190808132456.GA12733@vkoul-mobl.Dlink>
+References: <20190729020849.17971-1-baijiaju1990@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <620e0aec-e3d8-7289-6525-b720013e8dfa@metux.net>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190729020849.17971-1-baijiaju1990@gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 03:12:47PM +0200, Enrico Weigelt, metux IT consult wrote:
-> On 06.08.19 19:12, Javier Martinez Canillas wrote:
+On 29-07-19, 10:08, Jia-Ju Bai wrote:
+> In stm32_mdma_irq_handler(), chan is checked on line 1368.
+> When chan is NULL, it is still used on line 1369:
+>     dev_err(chan2dev(chan), "MDMA channel not initialized\n");
 > 
-> > Right, we could add a macro for that. Although it should probably be called
-> > I2C_OF_MODULE_DEVICE_TABLE() or something like that since is specific to OF.
+> Thus, a possible null-pointer dereference may occur.
 > 
-> At that point it should be completely noop when OF is disabled, so we
-> also can get rid of many ifdef's.
+> To fix this bug, "dev_dbg(mdma2dev(dmadev), ...)" is used instead.
 
-Why?
+Applied after changing subsystem name in patch title to dmaengine: ...,
+Also while fixing it helps to add Fixes tag, have added
 
-> I've got some patch somewhere for introducing a MODULE_OF_TABLE() macro
-> as replacement for many MODULE_DEVICE_TABLE(of, ...) cases, which noops
-> when CONFIG_OF is disabled. (and similar ones for other table types).
-
-It's simple wrong to have #ifdef CONFIG_OF without counterpart of_match_ptr().
-And taking into consideration that ID table itself doesn't depend to OF at all,
-why not simple drop that #ifdef and of_match_ptr() all together?
-
-
+Thanks
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+~Vinod
