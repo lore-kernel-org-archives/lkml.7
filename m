@@ -4,43 +4,43 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FDA7C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:54:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 359F1C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:54:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC0E62184E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:54:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F249321874
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:54:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565294073;
-	bh=3qYlaQUl4rjpzfZVaXqFO7psBcZvQ5hQeGTgLfxda/s=;
+	s=default; t=1565294077;
+	bh=8F6M1GP9no83fV+Wdt/H+/TIMF2roLW3ZPntbR/Okzs=;
 	h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
 	 References:List-ID:From;
-	b=ndSjUjnbY6eu4+wLWRGl4ARZsuaqnxkP/Ms+xr+w4uZSio5H4Yco8o5X0rqFwWkkA
-	 eqf4e5TKSbBpshLlclcJDfGydXLbzmXjoG7eByStbGwVVzQl9azAljH5mVaatd/u0b
-	 6JRQqdEc+wFi7rVByHqgMNbZhI/gSepwha631pbw=
+	b=WF0X3tVpFscB/iInYNn94/TM93GxwWUZleaAs+i9pAUNWKdp4fcluCxxsCOtbNik8
+	 09eWpiZzHpkK7hlhmBvCaU91+9fjsz5chZ/DIlbQQJZ1qn1PYWOOHlOy6ifgzAfon5
+	 qsOdGD/Vbjq+dei5FMRLTwxh1Z69yZM3CQDv5nqA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390389AbfHHTyb (ORCPT
+        id S2404368AbfHHTxN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:54:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57932 "EHLO mail.kernel.org"
+        Thu, 8 Aug 2019 15:53:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404391AbfHHTxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 15:53:15 -0400
+        id S2404163AbfHHTxL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 15:53:11 -0400
 Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 676312189F;
-        Thu,  8 Aug 2019 19:53:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87DC721882;
+        Thu,  8 Aug 2019 19:53:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565293994;
-        bh=3qYlaQUl4rjpzfZVaXqFO7psBcZvQ5hQeGTgLfxda/s=;
+        s=default; t=1565293990;
+        bh=8F6M1GP9no83fV+Wdt/H+/TIMF2roLW3ZPntbR/Okzs=;
         h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=CUtpfZxplnU3Bc0I0mg45vDPMoIX/tZNqviM2fOtcgdD/zio45rwhROxQBAPjO3+W
-         ZQZgFXnbhweeaK3PTeFSuT3nr1jAjLwH7YtUdf1W6WoTQaRoB2+GOIe/KenAW/FWxs
-         p5LrzwKxFjibPlPZYWuxW34b+Q+Lg7dEa5O3mgm0=
+        b=tH4hfQcYzB9kQS5zgwnMvoZ+IlaRrDxtDbJciH1UIyh2gr/+O9c6qRzYXQZCOFuuI
+         oK8ZPh4mVO6Qh9NC6WE1ue/shZSxbe3wwmz3Fq7yK8u2oShzzSGXliE+FQCswN+NRy
+         cKqeHBYFDQ652d+3ex13oKSTXhYpAj0NcEffyFy8=
 From:   zanussi@kernel.org
 To:     LKML <linux-kernel@vger.kernel.org>,
         linux-rt-users <linux-rt-users@vger.kernel.org>,
@@ -52,9 +52,9 @@ To:     LKML <linux-kernel@vger.kernel.org>,
         Daniel Wagner <wagi@monom.org>,
         Tom Zanussi <zanussi@kernel.org>,
         Julia Cartwright <julia@ni.com>
-Subject: [PATCH RT 05/19] locking/rwsem: Rename rwsem_rt.h to rwsem-rt.h
-Date:   Thu,  8 Aug 2019 14:52:33 -0500
-Message-Id: <413840eba0b87756a0bd16b05d4f3ee52f7793ff.1565293934.git.zanussi@kernel.org>
+Subject: [PATCH RT 01/19] kthread: Use __RAW_SPIN_LOCK_UNLOCK to initialize kthread_worker lock
+Date:   Thu,  8 Aug 2019 14:52:29 -0500
+Message-Id: <f4cc7265bb83a3266e8a5c4eac9000f5c3aaa810.1565293934.git.zanussi@kernel.org>
 X-Mailer: git-send-email 2.14.1
 In-Reply-To: <cover.1565293934.git.zanussi@kernel.org>
 References: <cover.1565293934.git.zanussi@kernel.org>
@@ -65,7 +65,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+From: Tom Zanussi <zanussi@kernel.org>
 
 v4.14.137-rt65-rc1 stable review patch.
 If anyone has any objections, please let me know.
@@ -73,35 +73,31 @@ If anyone has any objections, please let me know.
 -----------
 
 
-[ Upstream commit fc7a6bdcce83ce162c32d991f0ac8e56ea260f5b ]
+commit 2a9060beefcf (kthread: convert worker lock to raw spinlock)
+forgot to update KTHREAD_WORKER_INIT() to use
+__RAW_SPIN_LOCK_UNLOCKED() instead of just __SPIN_LOCK_UNLOCKED() when
+it converted the lock to raw.
 
-Rename rwsem_rt.h to rwsem-rt.h to remain consistent with rwsem-rt.c.
+Change it so that e.g. DEFINE_KTHREAD_WORKER() users don't error out.
 
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Tom Zanussi <zanussi@kernel.org>
 ---
- include/linux/{rwsem_rt.h => rwsem-rt.h} | 0
- include/linux/rwsem.h                    | 2 +-
- 2 files changed, 1 insertion(+), 1 deletion(-)
- rename include/linux/{rwsem_rt.h => rwsem-rt.h} (100%)
+ include/linux/kthread.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/rwsem_rt.h b/include/linux/rwsem-rt.h
-similarity index 100%
-rename from include/linux/rwsem_rt.h
-rename to include/linux/rwsem-rt.h
-diff --git a/include/linux/rwsem.h b/include/linux/rwsem.h
-index 513df11a364e..ac0857d60e04 100644
---- a/include/linux/rwsem.h
-+++ b/include/linux/rwsem.h
-@@ -21,7 +21,7 @@
- #endif
+diff --git a/include/linux/kthread.h b/include/linux/kthread.h
+index 4e0449df82c3..4e663f407bd7 100644
+--- a/include/linux/kthread.h
++++ b/include/linux/kthread.h
+@@ -105,7 +105,7 @@ struct kthread_delayed_work {
+ };
  
- #ifdef CONFIG_PREEMPT_RT_FULL
--#include <linux/rwsem_rt.h>
-+#include <linux/rwsem-rt.h>
- #else /* PREEMPT_RT_FULL */
- 
- struct rw_semaphore;
+ #define KTHREAD_WORKER_INIT(worker)	{				\
+-	.lock = __SPIN_LOCK_UNLOCKED((worker).lock),			\
++	.lock = __RAW_SPIN_LOCK_UNLOCKED((worker).lock),		\
+ 	.work_list = LIST_HEAD_INIT((worker).work_list),		\
+ 	.delayed_work_list = LIST_HEAD_INIT((worker).delayed_work_list),\
+ 	}
 -- 
 2.14.1
 
