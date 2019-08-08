@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 126DCC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:03:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B656C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:03:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2FCF218B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:02:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AEC4218BA
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:03:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731889AbfHHIC7 (ORCPT
+        id S1731925AbfHHIDB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 04:02:59 -0400
-Received: from imap1.codethink.co.uk ([176.9.8.82]:43395 "EHLO
+        Thu, 8 Aug 2019 04:03:01 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:43392 "EHLO
         imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731861AbfHHIC4 (ORCPT
+        with ESMTP id S1731548AbfHHIC5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 04:02:56 -0400
+        Thu, 8 Aug 2019 04:02:57 -0400
 Received: from [167.98.27.226] (helo=ct-lt-765.unassigned)
         by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
-        id 1hvdNq-0008KF-0C; Thu, 08 Aug 2019 09:02:50 +0100
+        id 1hvdNp-0008KE-Tm; Thu, 08 Aug 2019 09:02:50 +0100
 Received: from ikerpalomar by ct-lt-765.unassigned with local (Exim 4.89)
         (envelope-from <ikerpalomar@ct-lt-765.unassigned>)
-        id 1hvdNp-0002Bo-4a; Thu, 08 Aug 2019 09:02:49 +0100
+        id 1hvdNp-0002Bq-5E; Thu, 08 Aug 2019 09:02:49 +0100
 From:   Iker Perez <iker.perez@codethink.co.uk>
 To:     linux-hwmon@vger.kernel.org, linux@roeck-us.net
 Cc:     jdelvare@suse.com, linux-kernel@vger.kernel.org,
         Iker Perez del Palomar Sustatxa 
         <iker.perez@codethink.co.uk>
-Subject: [PATCH v2 3/4] hwmon: (lm75) Add new fields into lm75_params_
-Date:   Thu,  8 Aug 2019 09:02:45 +0100
-Message-Id: <20190808080246.8371-4-iker.perez@codethink.co.uk>
+Subject: [PATCH v2 4/4] hwmon: (lm75) Modularize lm75_write and make hwmon_chip writable
+Date:   Thu,  8 Aug 2019 09:02:46 +0100
+Message-Id: <20190808080246.8371-5-iker.perez@codethink.co.uk>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190808080246.8371-1-iker.perez@codethink.co.uk>
 References: <20190808080246.8371-1-iker.perez@codethink.co.uk>
@@ -45,87 +45,104 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Iker Perez del Palomar Sustatxa <iker.perez@codethink.co.uk>
 
-The new fields are included to prepare the driver for next patch. The
-fields are:
-
-* *resolutions: Stores all the supported resolutions by the device.
-* num_sample_times: Stores the number of possible sample times.
-* *sample_times: Stores all the possible sample times to be set.
-* sample_set_masks: The set_masks for the possible sample times
-* sample_clr_mask: Clear mask to set the default sample time.
+* Create two separate functions to write into hwmon_temp and hwmon_chip.
+* Call the functions from lm75_write.
+* Make hwm_chip writable if the chip supports more than one sample time.
 
 Signed-off-by: Iker Perez del Palomar Sustatxa <iker.perez@codethink.co.uk>
 ---
-
-Changes since v1:
-- In the lm75_params structure documentation there have been the next changes:
-        - @num_sample_times description has been extended.
-        - @sample_times description has been extended.
-        - @sample_set_masks description has been extended.
-        - @resolutions description has been included.
-
- drivers/hwmon/lm75.c | 36 +++++++++++++++++++++++++++++++-----
- 1 file changed, 31 insertions(+), 5 deletions(-)
+ drivers/hwmon/lm75.c | 52 +++++++++++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 47 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/hwmon/lm75.c b/drivers/hwmon/lm75.c
-index a32d7952d799..ed72455bcfa3 100644
+index ed72455bcfa3..f83bfd7ceef7 100644
 --- a/drivers/hwmon/lm75.c
 +++ b/drivers/hwmon/lm75.c
-@@ -61,15 +61,34 @@ enum lm75_type {		/* keep sorted in alphabetical order */
-  * @resolution_limits:	Limit register resolution. Optional. Should be set if
-  *			the resolution of limit registers does not match the
-  *			resolution of the temperature register.
-+ * @resolutions		List of resolutions associated with sample times.
-+ *			Optional. Should be set if num_sample_times is larger
-+ *			than 1, and if the resolution changes with sample times.
-+ *			If set, number of entries must match num_sample_times.
-  * default_sample_time:	Sample time to be set by default.
-+ * @num_sample_times:	Number of possible sample times to be set. Optional.
-+ *			Should be set if the number of sample times is larger
-+ *			than one.
-+ * @sample_times:	All the possible sample times to be set. Mandatory if
-+ *			num_sample_times is larger than 1. If set, number of
-+ *			entries must match num_sample_times.
-+ * @sample_set_masks:	All the set_masks for the possible sample times.
-+ *			Mandatory if num_sample_times is larger than 1.
-+ *			If set, number of entries must match num_sample_times.
-+ * @sample_clr_mask:	Clear mask to set the default sample time.
-  */
+@@ -16,6 +16,7 @@
+ #include <linux/of_device.h>
+ #include <linux/of.h>
+ #include <linux/regmap.h>
++#include <linux/util_macros.h>
+ #include "lm75.h"
  
- struct lm75_params {
--	u8		set_mask;
--	u8		clr_mask;
--	u8		default_resolution;
--	u8		resolution_limits;
--	unsigned int	default_sample_time;
-+	u8			set_mask;
-+	u8			clr_mask;
-+	u8			default_resolution;
-+	u8			resolution_limits;
-+	const u8		*resolutions;
-+	unsigned int		default_sample_time;
-+	u8			num_sample_times;
-+	const unsigned int	*sample_times;
-+	const u8		*sample_set_masks;
-+	u8			sample_clr_mask;
- };
+ /*
+@@ -325,16 +326,12 @@ static int lm75_read(struct device *dev, enum hwmon_sensor_types type,
+ 	return 0;
+ }
  
- /* Addresses scanned */
-@@ -221,7 +240,14 @@ static const struct lm75_params device_params[] = {
- 	[tmp75b] = { /* not one-shot mode, Conversion rate 37Hz */
- 		.clr_mask = 1 << 7 | 3 << 5,
- 		.default_resolution = 12,
-+		.sample_set_masks = (u8 []){ 0 << 5, 1 << 5, 2 << 5,
-+			3 << 5 },
-+		.sample_clr_mask = 3 << 5,
- 		.default_sample_time = MSEC_PER_SEC / 37,
-+		.sample_times = (unsigned int []){ MSEC_PER_SEC / 37,
-+			MSEC_PER_SEC / 18,
-+			MSEC_PER_SEC / 9, MSEC_PER_SEC / 4 },
-+		.num_sample_times = 4,
- 	},
- 	[tmp75c] = {
- 		.clr_mask = 1 << 5,	/*not one-shot mode*/
+-static int lm75_write(struct device *dev, enum hwmon_sensor_types type,
+-		      u32 attr, int channel, long temp)
++static int lm75_write_temp(struct device *dev, u32 attr, long temp)
+ {
+ 	struct lm75_data *data = dev_get_drvdata(dev);
+ 	u8 resolution;
+ 	int reg;
+ 
+-	if (type != hwmon_temp)
+-		return -EINVAL;
+-
+ 	switch (attr) {
+ 	case hwmon_temp_max:
+ 		reg = LM75_REG_MAX;
+@@ -362,13 +359,58 @@ static int lm75_write(struct device *dev, enum hwmon_sensor_types type,
+ 	return regmap_write(data->regmap, reg, temp);
+ }
+ 
++static int lm75_write_chip(struct device *dev, u32 attr, long val)
++{
++	struct lm75_data *data = dev_get_drvdata(dev);
++	u8 index;
++	s32 err;
++
++	switch (attr) {
++	case hwmon_chip_update_interval:
++		index = find_closest(val, data->params->sample_times,
++				     (int)data->params->num_sample_times);
++
++		err = lm75_write_config(data,
++					data->params->sample_set_masks[index],
++					data->params->sample_clr_mask);
++		if (err)
++			return err;
++		data->sample_time = data->params->sample_times[index];
++
++		if (data->params->resolutions)
++			data->resolution = data->params->resolutions[index];
++		break;
++	default:
++		return -EINVAL;
++	}
++	return 0;
++}
++
++static int lm75_write(struct device *dev, enum hwmon_sensor_types type,
++		      u32 attr, int channel, long val)
++{
++	switch (type) {
++	case hwmon_chip:
++		return lm75_write_chip(dev, attr, val);
++	case hwmon_temp:
++		return lm75_write_temp(dev, attr, val);
++	default:
++		return -EINVAL;
++	}
++	return 0;
++}
++
+ static umode_t lm75_is_visible(const void *data, enum hwmon_sensor_types type,
+ 			       u32 attr, int channel)
+ {
++	const struct lm75_data *config_data = data;
++
+ 	switch (type) {
+ 	case hwmon_chip:
+ 		switch (attr) {
+ 		case hwmon_chip_update_interval:
++			if (config_data->params->num_sample_times > 1)
++				return 0644;
+ 			return 0444;
+ 		}
+ 		break;
 -- 
 2.11.0
 
