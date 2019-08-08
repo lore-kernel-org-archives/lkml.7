@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23EDDC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:08:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E5AC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:08:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED43B21883
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:07:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B3632173E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:08:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565291280;
-	bh=sC+HEfa11I6BN7a/9w7edfoxIeYOhoaFVDR/Rtx8ogE=;
+	s=default; t=1565291286;
+	bh=of2w7NqEQwz4SLTO2cmpuBq288ETuftqfGJVbf4l79k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JaoAwDwsyYw37nycaH8S6lNCZx0oYONUcv7cBsqY/ppAh6JdZhzmjFv3dFOj8xIdd
-	 0+qjBx4naZ/xWN7uQuFEoRgjWiiY07AEBMROo+fJ4vspvLU5AhbnHiGJORpF+QwJ2X
-	 Fb1YMO7/OVYgV0zIAvjtydm0owTOLj4tCVV7Q+s8=
+	b=2PO4jQWRC10K5fXAZwIo5iKt9j42HJNu+7sJMdCo08N08ZC0r54snKxx5I4E59Uw8
+	 giopo338I9wbHOHbRalKBuaEZFfexVg6Q85o2nglzmfcAjflozcQHmy5wpHN0jRmQy
+	 7xQ2G0654kBwunWLagAdUMo5jqnLRnZzV0uLQixM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404793AbfHHTH7 (ORCPT
+        id S2404823AbfHHTIF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:07:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41826 "EHLO mail.kernel.org"
+        Thu, 8 Aug 2019 15:08:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404389AbfHHTHz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 15:07:55 -0400
+        id S2404799AbfHHTID (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 15:08:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F6142173E;
-        Thu,  8 Aug 2019 19:07:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD5F82173E;
+        Thu,  8 Aug 2019 19:08:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565291274;
-        bh=sC+HEfa11I6BN7a/9w7edfoxIeYOhoaFVDR/Rtx8ogE=;
+        s=default; t=1565291282;
+        bh=of2w7NqEQwz4SLTO2cmpuBq288ETuftqfGJVbf4l79k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SFIo09rOle1Nql8PDRzq+tlQxiP8fFmw7m5S+Xiapk8Ufbrpd4RR0MHT26OQhYK58
-         D6VLjBqKpOG8ybRHw76lByXRfmV9dZm7knsPjc28wuGFLJdhVLk4Z0fKsH4wPfzSYJ
-         j/GKYh5Vb+KK3i3mrzbYtYb7ZlpG2BTbkPT9pkqw=
+        b=Ova7lLxX34DpHOdUxY4f1AhjDgJIry6MhAgajwwZ2tRQtqXOrHcUC00mT9PvtmiHb
+         88JNz5S++cgtBwO1pIvXgLjPfGAb5U3gFhq510oWcisvFyr7HkQYAVfa0N6a8OeYWU
+         jx7e+56PdFY66/pXRcv89MtbxFRLgbYFQJdgmeqA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        =?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>,
-        Dhinakaran Pandiyan <dhinakaran.pandiyan@intel.com>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>,
-        =?UTF-8?q?Fran=C3=A7ois=20Guerraz?= <kubrick@fgv6.net>,
-        Jani Nikula <jani.nikula@intel.com>
-Subject: [PATCH 5.2 54/56] drm/i915/vbt: Fix VBT parsing for the PSR section
-Date:   Thu,  8 Aug 2019 21:05:20 +0200
-Message-Id: <20190808190455.496774701@linuxfoundation.org>
+        stable@vger.kernel.org, Ariel Levkovich <lariel@mellanox.com>,
+        Roi Dayan <roid@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.2 40/56] net/mlx5e: Prevent encap flow counter update async to user query
+Date:   Thu,  8 Aug 2019 21:05:06 +0200
+Message-Id: <20190808190454.687487319@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190808190452.867062037@linuxfoundation.org>
 References: <20190808190452.867062037@linuxfoundation.org>
@@ -64,70 +60,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dhinakaran Pandiyan <dhinakaran.pandiyan@intel.com>
+From: Ariel Levkovich <lariel@mellanox.com>
 
-commit 6d61f716a01ec0e134de38ae97e71d6fec5a6ff6 upstream.
+[ Upstream commit 90bb769291161cf25a818d69cf608c181654473e ]
 
-A single 32-bit PSR2 training pattern field follows the sixteen element
-array of PSR table entries in the VBT spec. But, we incorrectly define
-this PSR2 field for each of the PSR table entries. As a result, the PSR1
-training pattern duration for any panel_type != 0 will be parsed
-incorrectly. Secondly, PSR2 training pattern durations for VBTs with bdb
-version >= 226 will also be wrong.
+This patch prevents a race between user invoked cached counters
+query and a neighbor last usage updater.
 
-Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Cc: José Roberto de Souza <jose.souza@intel.com>
-Cc: stable@vger.kernel.org
-Cc: stable@vger.kernel.org #v5.2
-Fixes: 88a0d9606aff ("drm/i915/vbt: Parse and use the new field with PSR2 TP2/3 wakeup time")
-Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=111088
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204183
-Signed-off-by: Dhinakaran Pandiyan <dhinakaran.pandiyan@intel.com>
-Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Reviewed-by: José Roberto de Souza <jose.souza@intel.com>
-Acked-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Tested-by: François Guerraz <kubrick@fgv6.net>
-Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190717223451.2595-1-dhinakaran.pandiyan@intel.com
-(cherry picked from commit b5ea9c9337007d6e700280c8a60b4e10d070fb53)
-Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+The cached flow counter stats can be queried by calling
+"mlx5_fc_query_cached" which provides the number of bytes and
+packets that passed via this flow since the last time this counter
+was queried.
+It does so by reducting the last saved stats from the current, cached
+stats and then updating the last saved stats with the cached stats.
+It also provide the lastuse value for that flow.
+
+Since "mlx5e_tc_update_neigh_used_value" needs to retrieve the
+last usage time of encapsulation flows, it calls the flow counter
+query method periodically and async to user queries of the flow counter
+using cls_flower.
+This call is causing the driver to update the last reported bytes and
+packets from the cache and therefore, future user queries of the flow
+stats will return lower than expected number for bytes and packets
+since the last saved stats in the driver was updated async to the last
+saved stats in cls_flower.
+
+This causes wrong stats presentation of encapsulation flows to user.
+
+Since the neighbor usage updater only needs the lastuse stats from the
+cached counter, the fix is to use a dedicated lastuse query call that
+returns the lastuse value without synching between the cached stats and
+the last saved stats.
+
+Fixes: f6dfb4c3f216 ("net/mlx5e: Update neighbour 'used' state using HW flow rules counters")
+Signed-off-by: Ariel Levkovich <lariel@mellanox.com>
+Reviewed-by: Roi Dayan <roid@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-
 ---
- drivers/gpu/drm/i915/intel_bios.c     |    2 +-
- drivers/gpu/drm/i915/intel_vbt_defs.h |    6 +++---
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en_tc.c       |    4 ++--
+ drivers/net/ethernet/mellanox/mlx5/core/fs_counters.c |    5 +++++
+ include/linux/mlx5/fs.h                               |    1 +
+ 3 files changed, 8 insertions(+), 2 deletions(-)
 
---- a/drivers/gpu/drm/i915/intel_bios.c
-+++ b/drivers/gpu/drm/i915/intel_bios.c
-@@ -762,7 +762,7 @@ parse_psr(struct drm_i915_private *dev_p
- 	}
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
+@@ -1210,13 +1210,13 @@ static struct mlx5_fc *mlx5e_tc_get_coun
+ void mlx5e_tc_update_neigh_used_value(struct mlx5e_neigh_hash_entry *nhe)
+ {
+ 	struct mlx5e_neigh *m_neigh = &nhe->m_neigh;
+-	u64 bytes, packets, lastuse = 0;
+ 	struct mlx5e_tc_flow *flow;
+ 	struct mlx5e_encap_entry *e;
+ 	struct mlx5_fc *counter;
+ 	struct neigh_table *tbl;
+ 	bool neigh_used = false;
+ 	struct neighbour *n;
++	u64 lastuse;
  
- 	if (bdb->version >= 226) {
--		u32 wakeup_time = psr_table->psr2_tp2_tp3_wakeup_time;
-+		u32 wakeup_time = psr->psr2_tp2_tp3_wakeup_time;
+ 	if (m_neigh->family == AF_INET)
+ 		tbl = &arp_tbl;
+@@ -1236,7 +1236,7 @@ void mlx5e_tc_update_neigh_used_value(st
+ 					    encaps[efi->index]);
+ 			if (flow->flags & MLX5E_TC_FLOW_OFFLOADED) {
+ 				counter = mlx5e_tc_get_counter(flow);
+-				mlx5_fc_query_cached(counter, &bytes, &packets, &lastuse);
++				lastuse = mlx5_fc_query_lastuse(counter);
+ 				if (time_after((unsigned long)lastuse, nhe->reported_lastuse)) {
+ 					neigh_used = true;
+ 					break;
+--- a/drivers/net/ethernet/mellanox/mlx5/core/fs_counters.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/fs_counters.c
+@@ -367,6 +367,11 @@ int mlx5_fc_query(struct mlx5_core_dev *
+ }
+ EXPORT_SYMBOL(mlx5_fc_query);
  
- 		wakeup_time = (wakeup_time >> (2 * panel_type)) & 0x3;
- 		switch (wakeup_time) {
---- a/drivers/gpu/drm/i915/intel_vbt_defs.h
-+++ b/drivers/gpu/drm/i915/intel_vbt_defs.h
-@@ -772,13 +772,13 @@ struct psr_table {
- 	/* TP wake up time in multiple of 100 */
- 	u16 tp1_wakeup_time;
- 	u16 tp2_tp3_wakeup_time;
--
--	/* PSR2 TP2/TP3 wakeup time for 16 panels */
--	u32 psr2_tp2_tp3_wakeup_time;
- } __packed;
- 
- struct bdb_psr {
- 	struct psr_table psr_table[16];
++u64 mlx5_fc_query_lastuse(struct mlx5_fc *counter)
++{
++	return counter->cache.lastuse;
++}
 +
-+	/* PSR2 TP2/TP3 wakeup time for 16 panels */
-+	u32 psr2_tp2_tp3_wakeup_time;
- } __packed;
+ void mlx5_fc_query_cached(struct mlx5_fc *counter,
+ 			  u64 *bytes, u64 *packets, u64 *lastuse)
+ {
+--- a/include/linux/mlx5/fs.h
++++ b/include/linux/mlx5/fs.h
+@@ -211,6 +211,7 @@ int mlx5_modify_rule_destination(struct
  
- /*
+ struct mlx5_fc *mlx5_fc_create(struct mlx5_core_dev *dev, bool aging);
+ void mlx5_fc_destroy(struct mlx5_core_dev *dev, struct mlx5_fc *counter);
++u64 mlx5_fc_query_lastuse(struct mlx5_fc *counter);
+ void mlx5_fc_query_cached(struct mlx5_fc *counter,
+ 			  u64 *bytes, u64 *packets, u64 *lastuse);
+ int mlx5_fc_query(struct mlx5_core_dev *dev, struct mlx5_fc *counter,
 
 
