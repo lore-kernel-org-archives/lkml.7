@@ -2,81 +2,79 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CDEBC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 18:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE708C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 18:04:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB97C208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 18:01:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80746217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 18:04:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qdwZ/pUi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732741AbfHHSBc (ORCPT
+        id S1730170AbfHHSED (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 14:01:32 -0400
-Received: from mga01.intel.com ([192.55.52.88]:61844 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728825AbfHHSBc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 14:01:32 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Aug 2019 11:01:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,362,1559545200"; 
-   d="scan'208";a="179914658"
-Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
-  by orsmga006.jf.intel.com with ESMTP; 08 Aug 2019 11:01:30 -0700
-Date:   Thu, 8 Aug 2019 11:01:30 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     'Christoph Hellwig' <hch@lst.de>
-Cc:     "Yu, Fenghua" <fenghua.yu@intel.com>,
-        'Arnd Bergmann' <arnd@arndb.de>,
-        'Greg Kroah-Hartman' <gregkh@linuxfoundation.org>,
-        "'linux-ia64@vger.kernel.org'" <linux-ia64@vger.kernel.org>,
-        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>
-Subject: Re: remove sn2, hpsim and ia64 machvecs
-Message-ID: <20190808180129.GA18553@agluck-desk2.amr.corp.intel.com>
-References: <20190807133049.20893-1-hch@lst.de>
- <3908561D78D1C84285E8C5FCA982C28F7F41388B@ORSMSX115.amr.corp.intel.com>
- <3908561D78D1C84285E8C5FCA982C28F7F4143CB@ORSMSX115.amr.corp.intel.com>
- <20190807230737.GA11458@agluck-desk2.amr.corp.intel.com>
- <20190808065123.GA29146@lst.de>
+        Thu, 8 Aug 2019 14:04:03 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:33172 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729780AbfHHSED (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 14:04:03 -0400
+Received: by mail-lf1-f66.google.com with SMTP id x3so67628037lfc.0
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 11:04:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cUT1jn+mhet4enel6UW9FMleWsJ0B0RrS3ZSVN0Siaw=;
+        b=qdwZ/pUi0gV3cRmJGekHjmIpDrjItjtcbMuwCUN+weS5dC3bpYKJL+E0p9fw1l6c/Q
+         aKNRLBli+Sgz1FcLJRIZhRlUxuTVjn8l8K5uKI/jRFSRGkzywnolWVwKvwvzinFBMumf
+         1OKB54FJalFs9V++4+7djePhBzdpgZ/gCWkO6FmwNXK14a4DEh6hEAyDoqtrJjA8n7/O
+         dfH5Ad29dd1w5QqjOzzNaO7rZdsxkJ1D6RF4MHfI70obvDRrDTriHIuEMhOENaWvzFgI
+         ChOPEQ8klZepZ1bjS4d05Z77UG4YqvqwLK/pJg/ixTGNzjKX5/oEjs+10Ls0a1ZtYlUm
+         Eb0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cUT1jn+mhet4enel6UW9FMleWsJ0B0RrS3ZSVN0Siaw=;
+        b=qVJqDtRMNpn9fGUJSeEIrOF0ZbrZyK8e446EgDcw09aF42AxErRjARjgzTW8h0JKFr
+         nlgO9kocDWMBr6/coHAFhbl8rg1rwj7ElGYCaDBdPklCdg8H/+971Fs8I5uASRx5pyq1
+         ADXprAnqINbjuVxkOIJ1cV+5QrLWXibxGlw1o1uvRZG6yVi967obMz7xfwa2y0OkSCMS
+         tENFuzTYQgKavA4iRBd9s8bRDQZ7N2Dio6L3zWO1Ybfks8FvahaUct0fjUn9DoB84Skn
+         779X3qRBiBjAo6mM3Yuo1CfnGRlKtvRV2UcVDyeLjMBAu+UEBMFLx/leR8v7dtacvoto
+         qn2g==
+X-Gm-Message-State: APjAAAUAALneMCT8VDxTzzdOlDpyO4LvUaU2OaBV1uLsNEvh5+GLm34Z
+        Do8acH+tRTVjC7ooI2tPfzFPUx4xTr3mqKegUFxFjg==
+X-Google-Smtp-Source: APXvYqxAIuwx5MjBPJx/FB8Ydh95G4+dIv7a8HnRJhPFkh+dt5/ztZaEc523GDkPtGJJokQgibfjr2/m8q5oCypkT5w=
+X-Received: by 2002:a05:6512:484:: with SMTP id v4mr10597105lfq.66.1565287441050;
+ Thu, 08 Aug 2019 11:04:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190808065123.GA29146@lst.de>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+References: <20190806071445.13705-1-yamada.masahiro@socionext.com> <20190806071445.13705-2-yamada.masahiro@socionext.com>
+In-Reply-To: <20190806071445.13705-2-yamada.masahiro@socionext.com>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Thu, 8 Aug 2019 20:03:49 +0200
+Message-ID: <CANiq72mb5OT63s2qUvEOQCbrva6a-rdkJp9nmG9tL7NAuhzfxg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] auxdisplay: charlcd: add include guard to charlcd.h
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 08:51:23AM +0200, 'Christoph Hellwig' wrote:
-> On Wed, Aug 07, 2019 at 04:07:37PM -0700, Luck, Tony wrote:
-> > On Wed, Aug 07, 2019 at 01:26:17PM -0700, Luck, Tony wrote:
-> > > Ugh! The rule to do the compression was in arch/ia64/hp/sim/boot/Makefile
-> > > which went away as part of the deletion of hpsim.
-> > 
-> > This fixes it ... should fold into the patch that dropped the
-> > arch/ia64/hp/sim/boot/Makefile
-> > 
-> > I just cut/pasted in those cmd_gzip and cmd_objcopy definitions
-> > from elsewhere in the tree. It might be possible to simplify them.
-> 
-> Lets keep it simple.  I've picked this up for the hpsim removal patch.
+On Tue, Aug 6, 2019 at 9:15 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> Add a header include guard just in case.
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-So most configs now build, and the generic one boots on my Tukwila system.
+Picked it up, thanks!
 
-But a config based on arch/ia64/configs/zx1_defconfig gets a bunch
-of build errors from different files complaining about 'max_mapnr'
-
-arch/ia64/mm/init.c:198:8: error: 'max_mapnr' undeclared (first use in this function) 
-./include/linux/dma-mapping.h:359:6: error: 'max_mapnr' undeclared (first use in this function)
-kernel/dma/mapping.c:126:8: error: 'max_mapnr' undeclared (first use in this function)
-kernel/dma/mapping.c:181:8: error: 'max_mapnr' undeclared (first use in this function)
-mm/internal.h:393:8: error: 'max_mapnr' undeclared (first use in this function)
-
--Tony
+Cheers,
+Miguel
