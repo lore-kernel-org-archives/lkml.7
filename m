@@ -7,36 +7,36 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DATE_IN_FUTURE_06_12,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E3FAC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 02:22:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D373C32751
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 02:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECC0B2173C
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 02:22:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C96FF2173C
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 02:22:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728213AbfHHCW2 (ORCPT
+        id S1728281AbfHHCWc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 22:22:28 -0400
-Received: from mga03.intel.com ([134.134.136.65]:53450 "EHLO mga03.intel.com"
+        Wed, 7 Aug 2019 22:22:32 -0400
+Received: from mga03.intel.com ([134.134.136.65]:53455 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728000AbfHHCW1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728162AbfHHCW1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 7 Aug 2019 22:22:27 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Aug 2019 19:21:55 -0700
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Aug 2019 19:22:03 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,358,1559545200"; 
-   d="scan'208";a="168832623"
+   d="scan'208";a="168832663"
 Received: from ipsg-l-lixuzha.sh.intel.com ([10.239.153.20])
-  by orsmga008.jf.intel.com with ESMTP; 07 Aug 2019 19:21:53 -0700
+  by orsmga008.jf.intel.com with ESMTP; 07 Aug 2019 19:22:02 -0700
 From:   Zhang Lixu <lixu.zhang@intel.com>
 To:     linux-input@vger.kernel.org, jikos@kernel.org,
         benjamin.tissoires@redhat.com
 Cc:     srinivas.pandruvada@linux.intel.com, linux-kernel@vger.kernel.org,
         lixu.zhang@intel.com
-Subject: [PATCH v2 1/3] HID: intel-ish-hid: ipc: set NO_D3 flag only when needed
-Date:   Thu,  8 Aug 2019 18:21:11 +0800
-Message-Id: <20190808102113.27802-2-lixu.zhang@intel.com>
+Subject: [PATCH v2 3/3] HID: intel-ish-hid: ipc: check the NO_D3 flag to distinguish resume paths
+Date:   Thu,  8 Aug 2019 18:21:13 +0800
+Message-Id: <20190808102113.27802-4-lixu.zhang@intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190808102113.27802-1-lixu.zhang@intel.com>
 References: <20190808102113.27802-1-lixu.zhang@intel.com>
@@ -45,117 +45,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, the NO_D3 flag is set in ish_probe(), and cleared in
-ish_remove(). So even if the system goes into S3, ISH is still
-in D0i3 state. It makes more sense that put ISH into D3 as system
-goes into S3 and put ISH into D0i3 as system goes into suspend-to-idle.
-I remove the NO_D3 setting in ish_probe(), so that ISH can enter
-D3 state when system enters S3. Only set N0_D3 flag when system
-enters the suspend-to-idle or platform specified, and clear it
-when system resume.
-
-When the ISH enters D3, the FW will check the DMA bit status.
-If the DMA bit is set, the FW will reset automatically. So the
-DMA bit need be clear before putting ISH into D3 state.
+The NO_D3 flag would be set if the ISH enter D0i3 in ish_suspend(),
+The resume paths can be distinguished by checking the NO_D3 flag.
+It's more reasonable than checking the FW status.
 
 Signed-off-by: Zhang Lixu <lixu.zhang@intel.com>
 ---
- drivers/hid/intel-ish-hid/ipc/hw-ish.h  |  1 +
- drivers/hid/intel-ish-hid/ipc/ipc.c     |  2 +-
- drivers/hid/intel-ish-hid/ipc/pci-ish.c | 21 +++++++++++++++++++--
- 3 files changed, 21 insertions(+), 3 deletions(-)
+ drivers/hid/intel-ish-hid/ipc/pci-ish.c | 34 +++++++++++--------------
+ 1 file changed, 15 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/hid/intel-ish-hid/ipc/hw-ish.h b/drivers/hid/intel-ish-hid/ipc/hw-ish.h
-index 1065692f90e2..ddd8e8e87cfa 100644
---- a/drivers/hid/intel-ish-hid/ipc/hw-ish.h
-+++ b/drivers/hid/intel-ish-hid/ipc/hw-ish.h
-@@ -77,5 +77,6 @@ irqreturn_t ish_irq_handler(int irq, void *dev_id);
- struct ishtp_device *ish_dev_init(struct pci_dev *pdev);
- int ish_hw_start(struct ishtp_device *dev);
- void ish_device_disable(struct ishtp_device *dev);
-+int ish_disable_dma(struct ishtp_device *dev);
- 
- #endif /* _ISHTP_HW_ISH_H_ */
-diff --git a/drivers/hid/intel-ish-hid/ipc/ipc.c b/drivers/hid/intel-ish-hid/ipc/ipc.c
-index 18fe8af89aad..8f8dfdf64833 100644
---- a/drivers/hid/intel-ish-hid/ipc/ipc.c
-+++ b/drivers/hid/intel-ish-hid/ipc/ipc.c
-@@ -672,7 +672,7 @@ irqreturn_t ish_irq_handler(int irq, void *dev_id)
-  *
-  * Return: 0 for success else error code.
-  */
--static int ish_disable_dma(struct ishtp_device *dev)
-+int ish_disable_dma(struct ishtp_device *dev)
- {
- 	unsigned int	dma_delay;
- 
 diff --git a/drivers/hid/intel-ish-hid/ipc/pci-ish.c b/drivers/hid/intel-ish-hid/ipc/pci-ish.c
-index aa80b4d3b740..89b14d2edd0b 100644
+index 35081f2cf781..f269852304e5 100644
 --- a/drivers/hid/intel-ish-hid/ipc/pci-ish.c
 +++ b/drivers/hid/intel-ish-hid/ipc/pci-ish.c
-@@ -14,6 +14,7 @@
- #include <linux/types.h>
- #include <linux/pci.h>
- #include <linux/sched.h>
-+#include <linux/suspend.h>
- #include <linux/interrupt.h>
- #include <linux/workqueue.h>
- #define CREATE_TRACE_POINTS
-@@ -97,6 +98,11 @@ static const struct pci_device_id ish_invalid_pci_ids[] = {
- 	{}
- };
- 
-+static inline bool ish_should_enter_d0i3(struct pci_dev *pdev)
-+{
-+	return !pm_suspend_via_firmware() || pdev->device == CHV_DEVICE_ID;
-+}
-+
- /**
-  * ish_probe() - PCI driver probe callback
-  * @pdev:	pci device
-@@ -147,7 +153,6 @@ static int ish_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	/* mapping IO device memory */
- 	hw->mem_addr = pcim_iomap_table(pdev)[0];
- 	ishtp->pdev = pdev;
--	pdev->dev_flags |= PCI_DEV_FLAGS_NO_D3;
- 
- 	/* request and enable interrupt */
- 	ret = pci_alloc_irq_vectors(pdev, 1, 1, PCI_IRQ_ALL_TYPES);
-@@ -184,7 +189,6 @@ static void ish_remove(struct pci_dev *pdev)
- 	struct ishtp_device *ishtp_dev = pci_get_drvdata(pdev);
- 
- 	ishtp_bus_remove_all_clients(ishtp_dev, false);
--	pdev->dev_flags &= ~PCI_DEV_FLAGS_NO_D3;
- 	ish_device_disable(ishtp_dev);
- }
- 
-@@ -209,6 +213,8 @@ static void __maybe_unused ish_resume_handler(struct work_struct *work)
- 	uint32_t fwsts;
+@@ -210,19 +210,11 @@ static void __maybe_unused ish_resume_handler(struct work_struct *work)
+ {
+ 	struct pci_dev *pdev = to_pci_dev(ish_resume_device);
+ 	struct ishtp_device *dev = pci_get_drvdata(pdev);
+-	uint32_t fwsts;
  	int ret;
  
-+	pdev->dev_flags &= ~PCI_DEV_FLAGS_NO_D3;
-+
- 	/* Get ISH FW status */
- 	fwsts = IPC_GET_ISH_FWSTS(dev->ops->get_fw_status(dev));
+-	pdev->dev_flags &= ~PCI_DEV_FLAGS_NO_D3;
+-
+-	/* Get ISH FW status */
+-	fwsts = IPC_GET_ISH_FWSTS(dev->ops->get_fw_status(dev));
+-
+-	/*
+-	 * If currently, in ISH FW, sensor app is loaded or beyond that,
+-	 * it means ISH isn't powered off, in this case, send a resume message.
+-	 */
+-	if (fwsts >= FWSTS_SENSOR_APP_LOADED) {
++	/* Check the NO_D3 flag to distinguish the resume paths */
++	if (pdev->dev_flags & PCI_DEV_FLAGS_NO_D3) {
++		pdev->dev_flags &= ~PCI_DEV_FLAGS_NO_D3;
+ 		disable_irq_wake(pdev->irq);
  
-@@ -267,6 +273,17 @@ static int __maybe_unused ish_suspend(struct device *device)
- 						 !dev->suspend_flag,
- 						  msecs_to_jiffies(25));
+ 		ishtp_send_resume(dev);
+@@ -232,16 +224,20 @@ static void __maybe_unused ish_resume_handler(struct work_struct *work)
+ 			ret = wait_event_interruptible_timeout(dev->resume_wait,
+ 				!dev->resume_flag,
+ 				msecs_to_jiffies(WAIT_FOR_RESUME_ACK_MS));
+-	}
  
-+	if (ish_should_enter_d0i3(pdev)) {
-+		/* Set the NO_D3 flag, the ISH would enter D0i3 */
-+		pdev->dev_flags |= PCI_DEV_FLAGS_NO_D3;
+-	/*
+-	 * If in ISH FW, sensor app isn't loaded yet, or no resume response.
+-	 * That means this platform is not S0ix compatible, or something is
+-	 * wrong with ISH FW. So on resume, full reboot of ISH processor will
+-	 * happen, so need to go through init sequence again.
+-	 */
+-	if (dev->resume_flag)
++		/*
++		 * If the flag is not cleared, something is wrong with ISH FW.
++		 * So on resume, need to go through init sequence again.
++		 */
++		if (dev->resume_flag)
++			ish_init(dev);
 +	} else {
 +		/*
-+		 * Clear the DMA bit before putting ISH into D3,
-+		 * or ISH FW would reset automatically.
++		 * Resume from the D3, full reboot of ISH processor will happen,
++		 * so need to go through init sequence again.
 +		 */
-+		ish_disable_dma(dev);
+ 		ish_init(dev);
 +	}
-+
- 	return 0;
  }
  
+ /**
 -- 
 2.17.1
 
