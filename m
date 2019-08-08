@@ -2,113 +2,158 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23956C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 22:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 190A1C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 22:08:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAB882166E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 22:04:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9F6F20880
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 22:08:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390484AbfHHWEo (ORCPT
+        id S2404505AbfHHWIW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 18:04:44 -0400
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:53466 "EHLO
-        omr1.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728020AbfHHWEo (ORCPT
+        Thu, 8 Aug 2019 18:08:22 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:57092 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390169AbfHHWIW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 18:04:44 -0400
-Received: from mr6.cc.vt.edu (mr6.cc.vt.edu [IPv6:2607:b400:92:8500:0:af:2d00:4488])
-        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x78M4gtQ010196
-        for <linux-kernel@vger.kernel.org>; Thu, 8 Aug 2019 18:04:42 -0400
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
-        by mr6.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x78M4bL7032145
-        for <linux-kernel@vger.kernel.org>; Thu, 8 Aug 2019 18:04:42 -0400
-Received: by mail-qt1-f198.google.com with SMTP id e22so21205292qtp.9
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 15:04:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-transfer-encoding:date:message-id;
-        bh=TuPUW4uauKZvKtW12t0EYu+Ky+eWDM1YUZMuhx8X6Sc=;
-        b=ff1SvV6kSiFgFTbKE/+xhyrwe0QcqJwTPPdrDZ+jxi7kALlJtF9DwT6c+gIcxKaksX
-         LuXyhO9spFECeJvqXx7yilBcXpdT7gfDdG8j6ZYPt89lY7bs3sXj5IVGqLJu0lhUq7oe
-         OfoESIY0hbc+It2OJqZxHJEBHulNokIwJETXjFujGHGM0UlpgfCzKppz/RvxI1pgLBzx
-         LqsNXnC8mee/PBpsqVlQBn3/nJlNHfyo8+qCpfnA28LMdAceS1hfY5cs71uAKv5huLb5
-         TwSiRF9OhSLyD2hV/ZLiXmxPH8CHhQ1o5uxmNg2YRxtO1gNJeoR7i9gb3Fnql3Y51juI
-         lnFg==
-X-Gm-Message-State: APjAAAVZi98Si14m4IFMX2ahLp579zV/6y6SOKnICGWNGWleIUYHip8K
-        QmVtpZpcV/Oyt+d/9rMC5hgpkVUxm/3gOsTi/e6ukPSCRD9dUZm1JCHKqN2D4o9v3clZrqLtDzF
-        UBZB9TrREXQpOVXSmJSqFLmVtntL+21AJhsw=
-X-Received: by 2002:a37:a744:: with SMTP id q65mr15514314qke.151.1565301877416;
-        Thu, 08 Aug 2019 15:04:37 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqylW9odmQuabnL8zaJIVyfwISfEf8nn6NAGHAnPJMhlOL+krnoyx+GmOVKUb8WJfz1a8+/paw==
-X-Received: by 2002:a37:a744:: with SMTP id q65mr15514293qke.151.1565301877198;
-        Thu, 08 Aug 2019 15:04:37 -0700 (PDT)
-Received: from turing-police ([2601:5c0:c001:4341::359])
-        by smtp.gmail.com with ESMTPSA id j66sm40204505qkf.86.2019.08.08.15.04.35
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 08 Aug 2019 15:04:35 -0700 (PDT)
-From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>
-Subject: Re: [PATCH] arch/x86/kernel/cpu/umwait.c - remove unused variable
-In-Reply-To: <alpine.DEB.2.21.1908082229010.2882@nanos.tec.linutronix.de>
-References: <79734.1565272329@turing-police> <alpine.DEB.2.21.1908082158580.2882@nanos.tec.linutronix.de> <141835.1565295884@turing-police>
- <alpine.DEB.2.21.1908082229010.2882@nanos.tec.linutronix.de>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="==_Exmh_1565301874_4269P";
-         micalg=pgp-sha1; protocol="application/pgp-signature"
+        Thu, 8 Aug 2019 18:08:22 -0400
+Received: from fsav402.sakura.ne.jp (fsav402.sakura.ne.jp [133.242.250.101])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x78M7rYh052458;
+        Fri, 9 Aug 2019 07:07:53 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav402.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav402.sakura.ne.jp);
+ Fri, 09 Aug 2019 07:07:53 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav402.sakura.ne.jp)
+Received: from [192.168.1.8] (softbank126227201116.bbtec.net [126.227.201.116])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x78M7kF0052448
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Fri, 9 Aug 2019 07:07:53 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Subject: Re: KASAN: use-after-free Read in tomoyo_socket_sendmsg_permission
+To:     syzbot <syzbot+b91501546ab4037f685f@syzkaller.appspotmail.com>,
+        syzkaller-bugs@googlegroups.com,
+        Ralf Baechle <ralf@linux-mips.org>, linux-hams@vger.kernel.org
+References: <000000000000a244b3058f9dc7d6@google.com>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Message-ID: <4616850c-bf9e-d32a-3cfb-dbbaec5e17f2@I-love.SAKURA.ne.jp>
+Date:   Fri, 9 Aug 2019 07:07:42 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <000000000000a244b3058f9dc7d6@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Thu, 08 Aug 2019 18:04:34 -0400
-Message-ID: <147298.1565301874@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---==_Exmh_1565301874_4269P
-Content-Type: text/plain; charset=us-ascii
+On 2019/08/09 1:45, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    107e47cc vrf: make sure skb->data contains ip header to ma..
+> git tree:       net
+> console output: https://syzkaller.appspot.com/x/log.txt?x=139506d8600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=4dba67bf8b8c9ad7
+> dashboard link: https://syzkaller.appspot.com/bug?extid=b91501546ab4037f685f
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-On Thu, 08 Aug 2019 22:32:38 +0200, Thomas Gleixner said:
+This is not TOMOYO's bug. LSM modules expect that "struct sock" does not go away.
 
-> Care to resend the last few with fixed subject lines, so I don't have to
-> clean them up?
+Also, another use-after-free (presumably on the same "struct sock") was concurrently
+inflight at nr_insert_socket() in net/netrom/af_netrom.c . Thus, suspecting netrom's bug.
 
-Will do that later this evening...
-
-> The right thing to do is to have a cpu_offline callback which clears the
-> umwait MSR. That covers also the failure in the cpu hotplug setup. Then
-> handling an error return makes sense and keeps everything in a workable
-> shape.
-
-OK, in that case, toss the umwait patch for now....
-
---==_Exmh_1565301874_4269P
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Comment: Exmh version 2.9.0 11/07/2018
-
-iQIVAwUBXUyccgdmEQWDXROgAQKy0A//XOZgqtQLKHSpYvU3JNwuVsNWXXY2YDGE
-fz4Hz4jh0McUtMvQxB/CucNnu0k4fxNt317OrpUyi05/BHzeJ9sVwDbFAKUArzCB
-4PRL1ZR38FK7S0YQtGIOlFEu9SwpQVGd3gb0y/hR5AzFHwizGK134mvLMHHj5r3E
-00I1bmzlkFJ1TLuYEzsYQvfg6ybwZE6l5pXku7hhdEN0efr01Af5vfed8t8ZZZF+
-QTVTtlrgOHhUrVJhN8r1RZejB4KLMwpiqnRTMxb4sZwKxUkU+kLGnJ4F4yVQmS0l
-QubnTFujqlnHp/59CBmj3lzHAxrcoka5Il2WxtPC6CyAal31MYlb/IkuHAS/a3Ck
-/euRxdnxfr05xxtnBaBLGu/3yL0F9b8faH4t+tmGQbFVF98SbeAHd7H51tqfTv4k
-nrFH0nN0Dz/qgpbI27Bhey4ASeP5EOABPeTx1xv5v4E9DUoRuI78/GyzO3UjIQgx
-clveWJsQ4eooZ1z0NvvWY+O9FjJnsyGJfA8KD/M5a64QJdWuO7CgK/04zXk+4cI7
-O9p7Qf3SOofxuXC1sdH2RBnd1ntEPrr1dORLchYzYG0kNyem+07CqXwec92XN+Bv
-kp70QgGrFnd3HmB9/mqsWiV1DjvchJkWoW3cFCVRR91P1RS9iZ0GetAa3WK6lYEh
-77swpa305J0=
-=5blX
------END PGP SIGNATURE-----
-
---==_Exmh_1565301874_4269P--
+[  625.441058][    C0] ------------[ cut here ]------------
+[  625.446837][    C0] refcount_t: increment on 0; use-after-free.
+[  625.461518][    C0] WARNING: CPU: 0 PID: 0 at lib/refcount.c:156 refcount_inc_checked+0x61/0x70
+[  625.479173][    C0] Kernel panic - not syncing: panic_on_warn set ...
+[  625.746558][    C0] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.2.0+ #97
+[  625.746575][    C0] Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+[  625.755731][    C0] Call Trace:
+[  625.770091][    C0]  <IRQ>
+[  625.777543][    C0]  dump_stack+0x172/0x1f0
+[  625.786005][    C0]  ? refcount_inc_not_zero_checked+0x1f0/0x200
+[  625.794831][    C0]  panic+0x2dc/0x755
+[  625.805217][    C0]  ? add_taint.cold+0x16/0x16
+[  625.813697][    C0]  ? __kasan_check_write+0x14/0x20
+[  625.822433][    C0]  ? __warn.cold+0x5/0x4c
+[  625.832388][    C0]  ? __warn+0xe7/0x1e0
+[  625.841820][    C0]  ? refcount_inc_checked+0x61/0x70
+[  625.851148][    C0]  __warn.cold+0x20/0x4c
+[  625.859701][    C0]  ? vprintk_emit+0x1ea/0x700
+[  625.867208][    C0]  ? refcount_inc_checked+0x61/0x70
+[  625.875413][    C0]  report_bug+0x263/0x2b0
+[  625.884580][    C0]  do_error_trap+0x11b/0x200
+[  625.893730][    C0]  do_invalid_op+0x37/0x50
+[  625.902936][    C0]  ? refcount_inc_checked+0x61/0x70
+[  625.911858][    C0]  invalid_op+0x14/0x20
+[  625.920825][    C0] RIP: 0010:refcount_inc_checked+0x61/0x70
+[  625.929407][    C0] Code: 1d 3f 6e 64 06 31 ff 89 de e8 cb d2 35 fe 84 db 75 dd e8 82 d1 35 fe 48 c7 c7 40 09 c6 87 c6 05 1f 6e 64 06 01 e8 77 39 07 fe <0f> 0b eb c1 90 90 90 90 90 90 90 90 90 90 90 55 48 89 e5 41 57 41
+[  625.937608][    C0] RSP: 0018:ffff8880ae809bf0 EFLAGS: 00010282
+[  625.948510][    C0] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+[  625.957237][    C0] RDX: 0000000000000100 RSI: ffffffff815c3a26 RDI: ffffed1015d01370
+[  625.967249][    C0] RBP: ffff8880ae809c00 R08: ffffffff88c7a1c0 R09: fffffbfff14a775b
+[  625.991542][    C0] R10: fffffbfff14a775a R11: ffffffff8a53bad7 R12: ffff8880a066f480
+[  626.002193][    C0] R13: ffff8880a066f468 R14: ffff88808d69ef48 R15: ffff88808d69ef20
+[  626.014844][    C0]  ? vprintk_func+0x86/0x189
+[  626.027298][    C0]  nr_insert_socket+0x2d/0xe0
+[  626.041237][    C0]  nr_rx_frame+0x1605/0x1e73
+[  626.051737][    C0]  nr_loopback_timer+0x7b/0x170
+[  626.073842][    C0]  call_timer_fn+0x1ac/0x780
+[  626.092970][    C0]  ? nr_process_rx_frame+0x1540/0x1540
+[  626.108552][    C0]  ? msleep_interruptible+0x150/0x150
+[  626.118574][    C0]  ? run_timer_softirq+0x685/0x17a0
+[  626.131811][    C0]  ? trace_hardirqs_on+0x67/0x240
+[  626.145424][    C0]  ? __kasan_check_read+0x11/0x20
+[  626.156592][    C0]  ? nr_process_rx_frame+0x1540/0x1540
+[  626.164362][    C0]  ? nr_process_rx_frame+0x1540/0x1540
+[  626.175423][    C0]  run_timer_softirq+0x697/0x17a0
+[  626.188804][    C0]  ? add_timer+0x930/0x930
+[  626.202652][    C0]  ? kvm_clock_read+0x18/0x30
+[  626.215813][    C0]  ? kvm_sched_clock_read+0x9/0x20
+[  626.231378][    C0]  ? sched_clock+0x2e/0x50
+[  626.231395][    C0]  ? __sanitizer_cov_trace_const_cmp4+0x16/0x20
+[  626.231408][    C0]  ? __sanitizer_cov_trace_const_cmp4+0x16/0x20
+[  626.231432][    C0]  __do_softirq+0x262/0x98c
+[  626.244512][    C0]  ? sched_clock_cpu+0x1b/0x1b0
+[  626.244531][    C0]  irq_exit+0x19b/0x1e0
+[  626.244545][    C0]  smp_apic_timer_interrupt+0x1a3/0x610
+[  626.244558][    C0]  apic_timer_interrupt+0xf/0x20
+[  626.244563][    C0]  </IRQ>
+[  626.244579][    C0] RIP: 0010:native_safe_halt+0xe/0x10
+[  626.244606][    C0] Code: b8 94 73 fa eb 8a 90 90 90 90 90 90 e9 07 00 00 00 0f 00 2d 34 25 4f 00 f4 c3 66 90 e9 07 00 00 00 0f 00 2d 24 25 4f 00 fb f4 <c3> 90 55 48 89 e5 41 57 41 56 41 55 41 54 53 e8 0e 56 27 fa e8 c9
+[  626.257081][    C0] RSP: 0018:ffffffff88c07ce8 EFLAGS: 00000286 ORIG_RAX: ffffffffffffff13
+[  626.269812][    C0] RAX: 1ffffffff11a5e05 RBX: ffffffff88c7a1c0 RCX: 0000000000000000
+[  626.281053][    C0] RDX: dffffc0000000000 RSI: 0000000000000006 RDI: ffffffff88c7aa4c
+[  626.290913][    C0] RBP: ffffffff88c07d18 R08: ffffffff88c7a1c0 R09: 0000000000000000
+[  626.303361][    C0] R10: 0000000000000000 R11: 0000000000000000 R12: dffffc0000000000
+[  626.314081][    C0] R13: ffffffff89a4f778 R14: 0000000000000000 R15: 0000000000000000
+[  626.314116][    C0]  ? default_idle+0x4e/0x360
+[  626.323075][    C0]  arch_cpu_idle+0xa/0x10
+[  626.333543][    C0]  default_idle_call+0x84/0xb0
+[  626.341839][    C0]  do_idle+0x413/0x760
+[  626.370736][    C0]  ? retint_kernel+0x2b/0x2b
+[  626.383044][    C0]  ? arch_cpu_idle_exit+0x80/0x80
+[  626.400071][    C0]  ? do_idle+0x387/0x760
+[  626.418085][    C0]  cpu_startup_entry+0x1b/0x20
+[  626.431835][    C0]  rest_init+0x245/0x37b
+[  626.459420][    C0]  arch_call_rest_init+0xe/0x1b
+[  626.471993][    C0]  start_kernel+0x912/0x951
+[  626.482387][    C0]  ? mem_encrypt_init+0xb/0xb
+[  626.495105][    C0]  ? __sanitizer_cov_trace_const_cmp4+0x16/0x20
+[  626.507125][    C0]  ? x86_family+0x41/0x50
+[  626.519773][    C0]  ? __sanitizer_cov_trace_const_cmp1+0x1a/0x20
+[  626.532837][    C0]  x86_64_start_reservations+0x29/0x2b
+[  626.545019][    C0]  x86_64_start_kernel+0x77/0x7b
+[  626.558711][    C0]  secondary_startup_64+0xa4/0xb0
+[  626.897092][    C0] Kernel Offset: disabled
+[  626.901428][    C0] Rebooting in 86400 seconds..
