@@ -2,93 +2,97 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD9EDC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 00:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3246EC32754
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 00:53:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92CD12186A
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 00:43:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1D6B217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 00:53:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="DXRtw80A"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EQ1V5532"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389509AbfHHAnB (ORCPT
+        id S1730593AbfHHAxQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 20:43:01 -0400
-Received: from ozlabs.org ([203.11.71.1]:57487 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729624AbfHHAnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 20:43:01 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 463qNK34RGz9sDB;
-        Thu,  8 Aug 2019 10:42:57 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1565224977;
-        bh=IbcFGct0WdrCjGA1O2Oy65DuO5Pm1d0UQw80h84ztRQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=DXRtw80AQRUOzjvvGK+GGzVuJJ5QB2f+8c8A0E48I6c3nQn9G9YKbVnFmL8tRqSBA
-         cWBGJzOjYhFPAcLL1hRFN5qszS1v8uGxIf8L4KeMI5nDUJ6oztbGfdc2BTA3a8ti4+
-         vdle1vcAcJAWA1pxI76XOO2hIUmmVm0rE8Up7T1qeHjcQGCFdWBvalthh/qQr0aNbJ
-         SnwUBdbPPpxgY+y/9yL6pulLCarCazb2ECWAA/RI41le2DQsB8q/rrXgjx2//dlByb
-         PmHftP5yEN2xg+nHl6RG44bRHpU73i9IYaamhGTkWYSujFh5lGn/eVnXLHHTG+BpDq
-         d0k+ODxpu4JfA==
-Date:   Thu, 8 Aug 2019 10:42:55 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the dma-mapping-fixes
- tree
-Message-ID: <20190808104255.70592401@canb.auug.org.au>
-In-Reply-To: <20190807223722.GA22875@lst.de>
-References: <20190808082948.781f0033@canb.auug.org.au>
-        <20190807223722.GA22875@lst.de>
+        Wed, 7 Aug 2019 20:53:16 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44468 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730433AbfHHAxP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 20:53:15 -0400
+Received: by mail-pf1-f193.google.com with SMTP id t16so43019622pfe.11
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 17:53:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RYvASjp7Wn9RMY59p408gW18WYgaC6cZBG6rwBoYt8c=;
+        b=EQ1V5532pWSC01xRIbBals7TfyG8s0+WGku7qiJ5OJ8JmmQN7e+VFUFiIRP4vj2NWq
+         SJtgkNzW3gStYja/vtBrUY+SBwOsXWnZsCNGWiGNjGtg6Yji/EkgQ3mDYSdjFuJm3BC/
+         YKOCb/nDnL1cpXWi/bMZHltHFiEn8YRLmKfnY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RYvASjp7Wn9RMY59p408gW18WYgaC6cZBG6rwBoYt8c=;
+        b=Em/XoUKdczt4+HlQPp7HbaDDaCok/HxShe0Hp6cfXmm1+CfeiBTNeOWcnYo3RwKD29
+         GazKYwyYJfAofPxxXHp9iCM2pt0DhOSJTIPGWdv/FX5YyXy5RWycC8yAdIMzd56r1POZ
+         ldrS2XMKH5ufyLggG9w5ksUuspLeB9R62gfcIMaWLP8dQXHgo6QIVVJc+6OIqW6P8bIp
+         qRBgrJmAWPp4PwJoxhNfRfQxZNTtwN12gTWU2ghA7W//oGus1BfWEJtoGX2DDoVd/lQ8
+         GQqkuvnnuos0tir+zqoB+EygaaO/1YEJcivcpedyQa8uCP9NUFBbxT981O5o3uVgDMMF
+         w8pw==
+X-Gm-Message-State: APjAAAVxG10cF/0wOnKRBprp3JXE+toHQ/UZRwj7+7dsPPUZuIztxdGF
+        IYuVrLts74HH5Y8UeRBGNCFyyohUFV8=
+X-Google-Smtp-Source: APXvYqyMfzV1h6/SCyekjmDcrbuLcZLPLV1nHCP/caQMz+jJuG+42aGNUBeRBEeIFp/PVkM4tniLEw==
+X-Received: by 2002:aa7:93bb:: with SMTP id x27mr12721421pff.10.1565225595039;
+        Wed, 07 Aug 2019 17:53:15 -0700 (PDT)
+Received: from egranata0.mtv.corp.google.com ([2620:15c:202:0:20e7:7eb9:f5ee:bbbc])
+        by smtp.gmail.com with ESMTPSA id 64sm94456617pfe.128.2019.08.07.17.53.13
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 07 Aug 2019 17:53:14 -0700 (PDT)
+From:   egranata@chromium.org
+To:     linux-kernel@vger.kernel.org
+Cc:     mst@redhat.com, jasowang@redhat.com, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        trivial@kernel.org, egranata@google.com
+Subject: [PATCH] vhost: do not reference a file that does not exist
+Date:   Wed,  7 Aug 2019 17:52:55 -0700
+Message-Id: <20190808005255.106299-1-egranata@chromium.org>
+X-Mailer: git-send-email 2.22.0.770.g0f2c4a37fd-goog
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/hdl3D5rNO3wtQ=PVzuxMV7p";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/hdl3D5rNO3wtQ=PVzuxMV7p
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Enrico Granata <egranata@google.com>
 
-Hi Christoph,
+lguest was removed from the mainline kernel in late 2017.
 
-On Thu, 8 Aug 2019 00:37:22 +0200 Christoph Hellwig <hch@lst.de> wrote:
->
-> That commit should not have been in that tree at all, let me check what
-> went wrong.
+Signed-off-by: Enrico Granata <egranata@google.com>
+---
+ drivers/vhost/vhost.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-I was wondering about that.  Now it has caused build problems further
-along, so I have reverted the merge of the branch (along with my fix
-up).
+diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+index 0536f8526359..2c376cb66971 100644
+--- a/drivers/vhost/vhost.c
++++ b/drivers/vhost/vhost.c
+@@ -4,8 +4,8 @@
+  *
+  * Author: Michael S. Tsirkin <mst@redhat.com>
+  *
+- * Inspiration, some code, and most witty comments come from
+- * Documentation/virtual/lguest/lguest.c, by Rusty Russell
++ * Inspiration, some code, and most witty comments come from lguest.c
++ * by Rusty Russell
+  *
+  * Generic code for virtio server in host kernel.
+  */
+-- 
+2.22.0.770.g0f2c4a37fd-goog
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/hdl3D5rNO3wtQ=PVzuxMV7p
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1LcA8ACgkQAVBC80lX
-0Gy67wf/dvZOd+KM43G6HGV9VNU29YlQVgDj1xPV0E441lzLnzucqD/DDAQEr5r3
-oG6GjnEbnilZKMIry8vF0WguJ0k67K7pk01aR/iIKanyd0fP5l6yaFcNB3H3pUob
-fMO4aSJHuXHHD0rAIAbdbCaYJjmFzg+DcZtJDT9Tdj0lAoetnr0A4BjVeH+nKUoW
-Oy3lD0dmM+3veykcwzye7XiC9/exA0xMJGlwi6LbhrEoUSQgfGyW32AejYmQb/NW
-hfEvflIzSqMBGj6O38A44Kja4ciKffcZr/kQYD0Nxt9FoWLQufL81lJlVsiPRTlq
-ohdxHd7VnFMoJK/dQkMxiuKLhtEJZQ==
-=siFp
------END PGP SIGNATURE-----
-
---Sig_/hdl3D5rNO3wtQ=PVzuxMV7p--
