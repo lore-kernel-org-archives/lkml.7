@@ -2,100 +2,156 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2399BC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:04:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD8E3C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:05:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8982218BA
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:04:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p9YPinVB"
+	by mail.kernel.org (Postfix) with ESMTP id 8DD08218BA
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:05:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731970AbfHHIEi (ORCPT
+        id S1731898AbfHHIF6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 04:04:38 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:33673 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731281AbfHHIEh (ORCPT
+        Thu, 8 Aug 2019 04:05:58 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:34339 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731719AbfHHIF6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 04:04:37 -0400
-Received: by mail-pg1-f194.google.com with SMTP id n190so2825876pgn.0
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 01:04:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3zc/nRqOvNzHMrKAB58mSOIQ6hQFHOAxtPLfnS5Pwwg=;
-        b=p9YPinVBzkKiADzWLbHOB9eEOT/JbWpsWfw8+bP1HF/X5rFLJbbm+Az9qpXVWtS8v5
-         djuRJ7P3foaPEXsvo1paVGQPpIHscURNKI+h1D55eRXf7Ik9lmZ4ysW1EqdYbELCSzOY
-         WxsShJZN7n6qaW2CYQcb/gAqvko83nhmx52+SB4jC7Hl/hm1gqXI7IAbKOFunbkJexMP
-         JiGPB6usrr0Ut43D9eiogX9y0LN3QWlKnt3lcMigO5bHWf1qW17kUOBPCzF3p2ejjcXy
-         g5fucwGqkEeqweI59NmHIoAF54BhN8XqgvKQ8aFw1msGZoR1hWymiRYj5weRzcX8pPgj
-         k91g==
+        Thu, 8 Aug 2019 04:05:58 -0400
+Received: by mail-ot1-f67.google.com with SMTP id n5so115237995otk.1;
+        Thu, 08 Aug 2019 01:05:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3zc/nRqOvNzHMrKAB58mSOIQ6hQFHOAxtPLfnS5Pwwg=;
-        b=U39nXtLaS+cE0Thny351HoIkFOn2nZKPLXMoQRd/2feRuyGuyGKPSjvE8VYafR2NLW
-         Q2idtQcalAOecljH1Ke156kB7MrXXOGBJakUsVeaUmx59l36vJfMpF/3bQgYIM/LaVU6
-         uE1rMArYsAtX3wF5ks/5uHFWiv2Y10Hd23OL3JbI5j3tvy8qyQXdRM8gQm2wjCHMxMH5
-         HhJL1shAHpXNsrlJKO26WrSzVwhJ0cdqEfBrfwipjfmFJXjBX2E9twvv7E/9B6Ez3Tlo
-         sOP8QzTsB6SFg8jo3JeKCGo2ego6ARKZyDYTRxCGkH+bQez1EfOee9AZw+rhfTqHcgf6
-         3SPw==
-X-Gm-Message-State: APjAAAVKVi8+ZsuTarrb1+WkkBHUDJdobEp94NIHF1aQDn3ZBZqAG4Oi
-        jQNy5mGcobDjmaGautiH4j8=
-X-Google-Smtp-Source: APXvYqzmHJtNbmvqH5x02KLP9NvXXrQGaUa5RFObharE/E1bqetddb9f54vnUjMxywWW841rPaUOfA==
-X-Received: by 2002:aa7:9dc7:: with SMTP id g7mr13517880pfq.170.1565251477031;
-        Thu, 08 Aug 2019 01:04:37 -0700 (PDT)
-Received: from localhost.localdomain ([122.163.44.6])
-        by smtp.gmail.com with ESMTPSA id v63sm97536749pfv.174.2019.08.08.01.04.34
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 08 Aug 2019 01:04:36 -0700 (PDT)
-From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
-To:     cpw@sgi.com, robinmholt@gmail.com, arnd@arndb.de,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
-Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>
-Subject: [PATCH] sgi-xp: xpc_uv: Make structure xpc_arch_ops_uv constant
-Date:   Thu,  8 Aug 2019 13:34:22 +0530
-Message-Id: <20190808080422.16503-1-nishkadg.linux@gmail.com>
-X-Mailer: git-send-email 2.19.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TtvrwHBBYi+jmQBqq+h4raD1vCv1LyjklWLsWrx2nck=;
+        b=GHgZWqqPvdsaSjThKrEcyB8F2fmAsTD2iRjGLm0O6NzDk2/weU0u4wqkTjViKEv55K
+         wy3ToeOL8E9ufD0PCgVEsSpvmFPBL9KJlvRTPogWvH7TjOCRZgsB07joovN7EiQv3yno
+         71oRj83ZRF0clOrgvstNvm5rs1WG7mKGWi8i93srTbnfdMa5iqRH8AWW2LQpdIc+mZe7
+         3gl+8DISR+UW1g3mmCx3UYr7Ut5hZPHuKMTQLQTV9gQwHqxtT73yCWxoj9HaafpzMJpE
+         nnPZ/nxLwQxPF+1ENrwjZ79gFeioWiLRAy4gTq29Ex8OAZh+Q8vGFdNv6fk4AAvMjWSB
+         YZJA==
+X-Gm-Message-State: APjAAAWfZSlFsOdZAVBmWFMSHgVDL7dzhXGiO8qCb1gxbq2y7yg7Uj1k
+        oXIQ0q6QyPujHT0ljzBRTjHSO1GhhDOhsbcTjIQ=
+X-Google-Smtp-Source: APXvYqxTlUIJTqAQ7wADVSl1f90KSihADYKiCuHyYG/JvGAUchepy/4WCuvCFz5IgZrJ1/yJcH2/BDRva71dz/6mgyo=
+X-Received: by 2002:a05:6830:210f:: with SMTP id i15mr12213592otc.250.1565251557005;
+ Thu, 08 Aug 2019 01:05:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190730181557.90391-1-swboyd@chromium.org> <20190730181557.90391-40-swboyd@chromium.org>
+In-Reply-To: <20190730181557.90391-40-swboyd@chromium.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 8 Aug 2019 10:05:46 +0200
+Message-ID: <CAMuHMdXArXKeE0OUaBN2f8bkAakuV6+55acNw9t9Fc5uyk_LXg@mail.gmail.com>
+Subject: Re: [PATCH v6 39/57] rtc: Remove dev_err() usage after platform_get_irq()
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-rtc@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The static xpc_arch_operations structure xpc_arch_ops_uv is only copied
-into the structure xpc_arch_ops, after which it is never modified; nor
-is it used in any other way. Hence it can be declared as a constant to
-prevent unintended modifications of its fields.
-Issue found with Coccinelle.
+Hi Stephen,
 
-Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
----
- drivers/misc/sgi-xp/xpc_uv.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Tue, Jul 30, 2019 at 8:21 PM Stephen Boyd <swboyd@chromium.org> wrote:
+> We don't need dev_err() messages when platform_get_irq() fails now that
+> platform_get_irq() prints an error message itself when something goes
+> wrong. Let's remove these prints with a simple semantic patch.
+>
+> // <smpl>
+> @@
+> expression ret;
+> struct platform_device *E;
+> @@
+>
+> ret =
+> (
+> platform_get_irq(E, ...)
+> |
+> platform_get_irq_byname(E, ...)
+> );
+>
+> if ( \( ret < 0 \| ret <= 0 \) )
+> {
+> (
+> -if (ret != -EPROBE_DEFER)
+> -{ ...
+> -dev_err(...);
+> -... }
+> |
+> ...
+> -dev_err(...);
+> )
+> ...
+> }
+> // </smpl>
+>
+> While we're here, remove braces on if statements that only have one
+> statement (manually).
+>
+> Cc: Alessandro Zummo <a.zummo@towertech.it>
+> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Cc: linux-rtc@vger.kernel.org
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> ---
+>
+> Please apply directly to subsystem trees
+>
+>  drivers/rtc/rtc-88pm80x.c    | 1 -
+>  drivers/rtc/rtc-88pm860x.c   | 4 +---
+>  drivers/rtc/rtc-ac100.c      | 4 +---
+>  drivers/rtc/rtc-armada38x.c  | 5 +----
+>  drivers/rtc/rtc-asm9260.c    | 4 +---
+>  drivers/rtc/rtc-at91rm9200.c | 4 +---
+>  drivers/rtc/rtc-at91sam9.c   | 4 +---
+>  drivers/rtc/rtc-bd70528.c    | 5 +----
+>  drivers/rtc/rtc-davinci.c    | 4 +---
+>  drivers/rtc/rtc-jz4740.c     | 4 +---
+>  drivers/rtc/rtc-max77686.c   | 5 +----
+>  drivers/rtc/rtc-mt7622.c     | 1 -
+>  drivers/rtc/rtc-pic32.c      | 4 +---
+>  drivers/rtc/rtc-pm8xxx.c     | 4 +---
+>  drivers/rtc/rtc-puv3.c       | 8 ++------
+>  drivers/rtc/rtc-pxa.c        | 8 ++------
+>  drivers/rtc/rtc-rk808.c      | 6 +-----
+>  drivers/rtc/rtc-s3c.c        | 8 ++------
+>  drivers/rtc/rtc-sc27xx.c     | 4 +---
+>  drivers/rtc/rtc-spear.c      | 4 +---
+>  drivers/rtc/rtc-stm32.c      | 1 -
+>  drivers/rtc/rtc-sun6i.c      | 4 +---
+>  drivers/rtc/rtc-sunxi.c      | 4 +---
+>  drivers/rtc/rtc-tegra.c      | 4 +---
+>  drivers/rtc/rtc-vt8500.c     | 4 +---
+>  drivers/rtc/rtc-xgene.c      | 4 +---
+>  drivers/rtc/rtc-zynqmp.c     | 8 ++------
+>  27 files changed, 28 insertions(+), 92 deletions(-)
 
-diff --git a/drivers/misc/sgi-xp/xpc_uv.c b/drivers/misc/sgi-xp/xpc_uv.c
-index 0c6de97dd347..89c4b04337d3 100644
---- a/drivers/misc/sgi-xp/xpc_uv.c
-+++ b/drivers/misc/sgi-xp/xpc_uv.c
-@@ -1678,7 +1678,7 @@ xpc_received_payload_uv(struct xpc_channel *ch, void *payload)
- 		XPC_DEACTIVATE_PARTITION(&xpc_partitions[ch->partid], ret);
- }
- 
--static struct xpc_arch_operations xpc_arch_ops_uv = {
-+static const struct xpc_arch_operations xpc_arch_ops_uv = {
- 	.setup_partitions = xpc_setup_partitions_uv,
- 	.teardown_partitions = xpc_teardown_partitions_uv,
- 	.process_activate_IRQ_rcvd = xpc_process_activate_IRQ_rcvd_uv,
+Failed to catch:
+drivers/rtc/rtc-sh.c:   ret = platform_get_irq(pdev, 0);
+drivers/rtc/rtc-sh.c-   if (unlikely(ret <= 0)) {
+drivers/rtc/rtc-sh.c-           dev_err(&pdev->dev, "No IRQ resource\n");
+drivers/rtc/rtc-sh.c-           return -ENOENT;
+drivers/rtc/rtc-sh.c-   }
+drivers/rtc/rtc-sh.c-
+
+Note that there are two more calls for optional interrupts:
+drivers/rtc/rtc-sh.c:   rtc->carry_irq = platform_get_irq(pdev, 1);
+drivers/rtc/rtc-sh.c:   rtc->alarm_irq = platform_get_irq(pdev, 2);
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.19.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
