@@ -7,51 +7,52 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C8C7C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0334CC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10C382173E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:08:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF98E2173E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:08:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565291306;
-	bh=+hWlT7uUS4AlLaEPkmLlas7EoQBPeqvXeM/SV4hytTI=;
+	s=default; t=1565291309;
+	bh=5GQK4tbEBpsRJ1Xb01Mt9JtuVecFHESZrPyggF16xIQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KX8jQkijPIIf3Re7WWwwdSwGx38jwDEeJfTHe5v8XDuUWxntN0RrTN+JPKzO6HqSZ
-	 I6oQwjUY6dDSafyeS6UgMl90OAnOrhEGXyRpcZ1YI2E6THc0KSZGK7kwOs8WqaIpKn
-	 xaclJrtwrMxJuKjtmop+XJDVTFO0l4z/F3z4/qSM=
+	b=hS2OJ8W4QvkPspu7RHaAAO2JNcVaMCKrzPjec0XUtv/YyA8wk3NI5A5FzjLDcEMXG
+	 AFA0hoZ172INLC2UVnLDbAJOzqOv+tyYattf8FbUKdr0VJhggqOKTmvffogA85GmAp
+	 +qkTp4dR2s7MGist9FwgJd0dQXCs+DjECf80fA6E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404472AbfHHTIY (ORCPT
+        id S2404917AbfHHTI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:08:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42464 "EHLO mail.kernel.org"
+        Thu, 8 Aug 2019 15:08:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404896AbfHHTIX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 15:08:23 -0400
+        id S2404896AbfHHTI0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 15:08:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F3EF2184E;
-        Thu,  8 Aug 2019 19:08:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0430214C6;
+        Thu,  8 Aug 2019 19:08:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565291302;
-        bh=+hWlT7uUS4AlLaEPkmLlas7EoQBPeqvXeM/SV4hytTI=;
+        s=default; t=1565291305;
+        bh=5GQK4tbEBpsRJ1Xb01Mt9JtuVecFHESZrPyggF16xIQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XM4nHnl1CaA0R2oJL202jAD9g/La0VdP1xmawsrud0E23IA892eCpC+urvl1Q5soi
-         4F7U31tp/tWKHCcmifY6BjV2XSul8HqL1lSSxtPhiR1lC6LovCFSc5GtKxenm66J8T
-         Wc08KtgVKXmZg0E0WRLAbbMWcjEMcr5q9diWJWkM=
+        b=FIfSUfnl9UYwEohYJKg9hQm/V8cWKTTtslWNjXuDTn4Ah1rmQGIDh7MSrABYIrK8o
+         8wB7RZ302JfX543v0zHVmfzLjY0S8KEBtLNuaqaB88YEA+6IlnvBbzQC+p2eJj1Pji
+         PR4nvGa1CRoM8fLbESxPrHd3S2qTJW6XMW3xQWAc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexis Bauvin <abauvin@scaleway.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 38/56] tun: mark small packets as owned by the tap sock
-Date:   Thu,  8 Aug 2019 21:05:04 +0200
-Message-Id: <20190808190454.585476147@linuxfoundation.org>
+        stable@vger.kernel.org, Hannes Reinecke <hare@suse.de>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.19 01/45] scsi: fcoe: Embed fc_rport_priv in fcoe_rport structure
+Date:   Thu,  8 Aug 2019 21:04:47 +0200
+Message-Id: <20190808190453.902816027@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190808190452.867062037@linuxfoundation.org>
-References: <20190808190452.867062037@linuxfoundation.org>
+In-Reply-To: <20190808190453.827571908@linuxfoundation.org>
+References: <20190808190453.827571908@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,72 +61,221 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexis Bauvin <abauvin@scaleway.com>
+From: Hannes Reinecke <hare@suse.de>
 
-[ Upstream commit 4b663366246be1d1d4b1b8b01245b2e88ad9e706 ]
+commit 023358b136d490ca91735ac6490db3741af5a8bd upstream.
 
-- v1 -> v2: Move skb_set_owner_w to __tun_build_skb to reduce patch size
+Gcc-9 complains for a memset across pointer boundaries, which happens as
+the code tries to allocate a flexible array on the stack.  Turns out we
+cannot do this without relying on gcc-isms, so with this patch we'll embed
+the fc_rport_priv structure into fcoe_rport, can use the normal
+'container_of' outcast, and will only have to do a memset over one
+structure.
 
-Small packets going out of a tap device go through an optimized code
-path that uses build_skb() rather than sock_alloc_send_pskb(). The
-latter calls skb_set_owner_w(), but the small packet code path does not.
-
-The net effect is that small packets are not owned by the userland
-application's socket (e.g. QEMU), while large packets are.
-This can be seen with a TCP session, where packets are not owned when
-the window size is small enough (around PAGE_SIZE), while they are once
-the window grows (note that this requires the host to support virtio
-tso for the guest to offload segmentation).
-All this leads to inconsistent behaviour in the kernel, especially on
-netfilter modules that uses sk->socket (e.g. xt_owner).
-
-Fixes: 66ccbc9c87c2 ("tap: use build_skb() for small packet")
-Signed-off-by: Alexis Bauvin <abauvin@scaleway.com>
-Acked-by: Jason Wang <jasowang@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Hannes Reinecke <hare@suse.de>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/tun.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/drivers/net/tun.c
-+++ b/drivers/net/tun.c
-@@ -1600,7 +1600,8 @@ static bool tun_can_build_skb(struct tun
- 	return true;
+---
+ drivers/scsi/fcoe/fcoe_ctlr.c |   51 ++++++++++++++++--------------------------
+ drivers/scsi/libfc/fc_rport.c |    5 +++-
+ include/scsi/libfcoe.h        |    1 
+ 3 files changed, 25 insertions(+), 32 deletions(-)
+
+--- a/drivers/scsi/fcoe/fcoe_ctlr.c
++++ b/drivers/scsi/fcoe/fcoe_ctlr.c
+@@ -2017,7 +2017,7 @@ EXPORT_SYMBOL_GPL(fcoe_wwn_from_mac);
+  */
+ static inline struct fcoe_rport *fcoe_ctlr_rport(struct fc_rport_priv *rdata)
+ {
+-	return (struct fcoe_rport *)(rdata + 1);
++	return container_of(rdata, struct fcoe_rport, rdata);
  }
  
--static struct sk_buff *__tun_build_skb(struct page_frag *alloc_frag, char *buf,
-+static struct sk_buff *__tun_build_skb(struct tun_file *tfile,
-+				       struct page_frag *alloc_frag, char *buf,
- 				       int buflen, int len, int pad)
+ /**
+@@ -2281,7 +2281,7 @@ static void fcoe_ctlr_vn_start(struct fc
+  */
+ static int fcoe_ctlr_vn_parse(struct fcoe_ctlr *fip,
+ 			      struct sk_buff *skb,
+-			      struct fc_rport_priv *rdata)
++			      struct fcoe_rport *frport)
  {
- 	struct sk_buff *skb = build_skb(buf, buflen);
-@@ -1610,6 +1611,7 @@ static struct sk_buff *__tun_build_skb(s
+ 	struct fip_header *fiph;
+ 	struct fip_desc *desc = NULL;
+@@ -2289,16 +2289,12 @@ static int fcoe_ctlr_vn_parse(struct fco
+ 	struct fip_wwn_desc *wwn = NULL;
+ 	struct fip_vn_desc *vn = NULL;
+ 	struct fip_size_desc *size = NULL;
+-	struct fcoe_rport *frport;
+ 	size_t rlen;
+ 	size_t dlen;
+ 	u32 desc_mask = 0;
+ 	u32 dtype;
+ 	u8 sub;
  
- 	skb_reserve(skb, pad);
- 	skb_put(skb, len);
-+	skb_set_owner_w(skb, tfile->socket.sk);
+-	memset(rdata, 0, sizeof(*rdata) + sizeof(*frport));
+-	frport = fcoe_ctlr_rport(rdata);
+-
+ 	fiph = (struct fip_header *)skb->data;
+ 	frport->flags = ntohs(fiph->fip_flags);
  
- 	get_page(alloc_frag->page);
- 	alloc_frag->offset += buflen;
-@@ -1687,7 +1689,8 @@ static struct sk_buff *tun_build_skb(str
- 	 */
- 	if (hdr->gso_type || !xdp_prog) {
- 		*skb_xdp = 1;
--		return __tun_build_skb(alloc_frag, buf, buflen, len, pad);
-+		return __tun_build_skb(tfile, alloc_frag, buf, buflen, len,
-+				       pad);
+@@ -2361,15 +2357,17 @@ static int fcoe_ctlr_vn_parse(struct fco
+ 			if (dlen != sizeof(struct fip_wwn_desc))
+ 				goto len_err;
+ 			wwn = (struct fip_wwn_desc *)desc;
+-			rdata->ids.node_name = get_unaligned_be64(&wwn->fd_wwn);
++			frport->rdata.ids.node_name =
++				get_unaligned_be64(&wwn->fd_wwn);
+ 			break;
+ 		case FIP_DT_VN_ID:
+ 			if (dlen != sizeof(struct fip_vn_desc))
+ 				goto len_err;
+ 			vn = (struct fip_vn_desc *)desc;
+ 			memcpy(frport->vn_mac, vn->fd_mac, ETH_ALEN);
+-			rdata->ids.port_id = ntoh24(vn->fd_fc_id);
+-			rdata->ids.port_name = get_unaligned_be64(&vn->fd_wwpn);
++			frport->rdata.ids.port_id = ntoh24(vn->fd_fc_id);
++			frport->rdata.ids.port_name =
++				get_unaligned_be64(&vn->fd_wwpn);
+ 			break;
+ 		case FIP_DT_FC4F:
+ 			if (dlen != sizeof(struct fip_fc4_feat))
+@@ -2750,10 +2748,7 @@ static int fcoe_ctlr_vn_recv(struct fcoe
+ {
+ 	struct fip_header *fiph;
+ 	enum fip_vn2vn_subcode sub;
+-	struct {
+-		struct fc_rport_priv rdata;
+-		struct fcoe_rport frport;
+-	} buf;
++	struct fcoe_rport frport = { };
+ 	int rc, vlan_id = 0;
+ 
+ 	fiph = (struct fip_header *)skb->data;
+@@ -2769,7 +2764,7 @@ static int fcoe_ctlr_vn_recv(struct fcoe
+ 		goto drop;
  	}
  
- 	*skb_xdp = 0;
-@@ -1724,7 +1727,7 @@ static struct sk_buff *tun_build_skb(str
- 	rcu_read_unlock();
- 	local_bh_enable();
+-	rc = fcoe_ctlr_vn_parse(fip, skb, &buf.rdata);
++	rc = fcoe_ctlr_vn_parse(fip, skb, &frport);
+ 	if (rc) {
+ 		LIBFCOE_FIP_DBG(fip, "vn_recv vn_parse error %d\n", rc);
+ 		goto drop;
+@@ -2778,19 +2773,19 @@ static int fcoe_ctlr_vn_recv(struct fcoe
+ 	mutex_lock(&fip->ctlr_mutex);
+ 	switch (sub) {
+ 	case FIP_SC_VN_PROBE_REQ:
+-		fcoe_ctlr_vn_probe_req(fip, &buf.rdata);
++		fcoe_ctlr_vn_probe_req(fip, &frport.rdata);
+ 		break;
+ 	case FIP_SC_VN_PROBE_REP:
+-		fcoe_ctlr_vn_probe_reply(fip, &buf.rdata);
++		fcoe_ctlr_vn_probe_reply(fip, &frport.rdata);
+ 		break;
+ 	case FIP_SC_VN_CLAIM_NOTIFY:
+-		fcoe_ctlr_vn_claim_notify(fip, &buf.rdata);
++		fcoe_ctlr_vn_claim_notify(fip, &frport.rdata);
+ 		break;
+ 	case FIP_SC_VN_CLAIM_REP:
+-		fcoe_ctlr_vn_claim_resp(fip, &buf.rdata);
++		fcoe_ctlr_vn_claim_resp(fip, &frport.rdata);
+ 		break;
+ 	case FIP_SC_VN_BEACON:
+-		fcoe_ctlr_vn_beacon(fip, &buf.rdata);
++		fcoe_ctlr_vn_beacon(fip, &frport.rdata);
+ 		break;
+ 	default:
+ 		LIBFCOE_FIP_DBG(fip, "vn_recv unknown subcode %d\n", sub);
+@@ -2814,22 +2809,18 @@ drop:
+  */
+ static int fcoe_ctlr_vlan_parse(struct fcoe_ctlr *fip,
+ 			      struct sk_buff *skb,
+-			      struct fc_rport_priv *rdata)
++			      struct fcoe_rport *frport)
+ {
+ 	struct fip_header *fiph;
+ 	struct fip_desc *desc = NULL;
+ 	struct fip_mac_desc *macd = NULL;
+ 	struct fip_wwn_desc *wwn = NULL;
+-	struct fcoe_rport *frport;
+ 	size_t rlen;
+ 	size_t dlen;
+ 	u32 desc_mask = 0;
+ 	u32 dtype;
+ 	u8 sub;
  
--	return __tun_build_skb(alloc_frag, buf, buflen, len, pad);
-+	return __tun_build_skb(tfile, alloc_frag, buf, buflen, len, pad);
+-	memset(rdata, 0, sizeof(*rdata) + sizeof(*frport));
+-	frport = fcoe_ctlr_rport(rdata);
+-
+ 	fiph = (struct fip_header *)skb->data;
+ 	frport->flags = ntohs(fiph->fip_flags);
  
- err_xdp:
- 	put_page(alloc_frag->page);
+@@ -2883,7 +2874,8 @@ static int fcoe_ctlr_vlan_parse(struct f
+ 			if (dlen != sizeof(struct fip_wwn_desc))
+ 				goto len_err;
+ 			wwn = (struct fip_wwn_desc *)desc;
+-			rdata->ids.node_name = get_unaligned_be64(&wwn->fd_wwn);
++			frport->rdata.ids.node_name =
++				get_unaligned_be64(&wwn->fd_wwn);
+ 			break;
+ 		default:
+ 			LIBFCOE_FIP_DBG(fip, "unexpected descriptor type %x "
+@@ -2994,22 +2986,19 @@ static int fcoe_ctlr_vlan_recv(struct fc
+ {
+ 	struct fip_header *fiph;
+ 	enum fip_vlan_subcode sub;
+-	struct {
+-		struct fc_rport_priv rdata;
+-		struct fcoe_rport frport;
+-	} buf;
++	struct fcoe_rport frport = { };
+ 	int rc;
+ 
+ 	fiph = (struct fip_header *)skb->data;
+ 	sub = fiph->fip_subcode;
+-	rc = fcoe_ctlr_vlan_parse(fip, skb, &buf.rdata);
++	rc = fcoe_ctlr_vlan_parse(fip, skb, &frport);
+ 	if (rc) {
+ 		LIBFCOE_FIP_DBG(fip, "vlan_recv vlan_parse error %d\n", rc);
+ 		goto drop;
+ 	}
+ 	mutex_lock(&fip->ctlr_mutex);
+ 	if (sub == FIP_SC_VL_REQ)
+-		fcoe_ctlr_vlan_disc_reply(fip, &buf.rdata);
++		fcoe_ctlr_vlan_disc_reply(fip, &frport.rdata);
+ 	mutex_unlock(&fip->ctlr_mutex);
+ 
+ drop:
+--- a/drivers/scsi/libfc/fc_rport.c
++++ b/drivers/scsi/libfc/fc_rport.c
+@@ -140,6 +140,7 @@ EXPORT_SYMBOL(fc_rport_lookup);
+ struct fc_rport_priv *fc_rport_create(struct fc_lport *lport, u32 port_id)
+ {
+ 	struct fc_rport_priv *rdata;
++	size_t rport_priv_size = sizeof(*rdata);
+ 
+ 	lockdep_assert_held(&lport->disc.disc_mutex);
+ 
+@@ -147,7 +148,9 @@ struct fc_rport_priv *fc_rport_create(st
+ 	if (rdata)
+ 		return rdata;
+ 
+-	rdata = kzalloc(sizeof(*rdata) + lport->rport_priv_size, GFP_KERNEL);
++	if (lport->rport_priv_size > 0)
++		rport_priv_size = lport->rport_priv_size;
++	rdata = kzalloc(rport_priv_size, GFP_KERNEL);
+ 	if (!rdata)
+ 		return NULL;
+ 
+--- a/include/scsi/libfcoe.h
++++ b/include/scsi/libfcoe.h
+@@ -241,6 +241,7 @@ struct fcoe_fcf {
+  * @vn_mac:	VN_Node assigned MAC address for data
+  */
+ struct fcoe_rport {
++	struct fc_rport_priv rdata;
+ 	unsigned long time;
+ 	u16 fcoe_len;
+ 	u16 flags;
 
 
