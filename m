@@ -2,177 +2,191 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FEBAC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 10:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F3E7C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 10:58:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20E1821874
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 10:58:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="wdnFgsP8"
+	by mail.kernel.org (Postfix) with ESMTP id F27BF2184E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 10:58:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732163AbfHHK6P (ORCPT
+        id S1732218AbfHHK61 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 06:58:15 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:52781 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731122AbfHHK6P (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 06:58:15 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x78Aw0i83127884
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 8 Aug 2019 03:58:00 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x78Aw0i83127884
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019071901; t=1565261881;
-        bh=qQNImJZ/L3c1QFNOJWMJVXYgXgnQZFniH52EegkzYLg=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=wdnFgsP8UGdxwZizVC8Avue5DGAJJIWY5VfiChYNrERdXVP+0gqvkVZEznX8Bejx3
-         F+ZVacHnXjavA4srUqndknMDfx40GiNUWKHRc8mxE0aanEg9aDfJt3AJJYDLJd90xj
-         Iam8SsYhqPp1ozFYo3Hjr9pmj9JGnKEE/DP6ZpRDZ+f2MIYMAbrU6s8ue0g/wNuYjr
-         WQG9D+VO+pl5odRhz2RydHgMlEUR2ePvUmSPyqD+rdCf7jY4OlrV8+geARStfG4j1t
-         uROOLx5kqYvshJT6Kfdj8eUNvD0jIIpyHccswTygDXjCSohUIPZUJFkVXbSTj95rnr
-         Qab9U6IbmqeTA==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x78Aw0HO3127881;
-        Thu, 8 Aug 2019 03:58:00 -0700
-Date:   Thu, 8 Aug 2019 03:58:00 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Peter Zijlstra <tipbot@zytor.com>
-Message-ID: <tip-5ba553eff0c3a7c099b1e29a740277a82c0c3314@git.kernel.org>
-Cc:     hpa@zytor.com, naravamudan@digitalocean.com, mingo@kernel.org,
-        valentin.schneider@arm.com, peterz@infradead.org,
-        tglx@linutronix.de, pauld@redhat.com, aaron.lwe@gmail.com,
-        jdesfossez@digitalocean.com, linux-kernel@vger.kernel.org
-Reply-To: peterz@infradead.org, valentin.schneider@arm.com,
-          tglx@linutronix.de, linux-kernel@vger.kernel.org,
-          jdesfossez@digitalocean.com, aaron.lwe@gmail.com,
-          pauld@redhat.com, hpa@zytor.com, naravamudan@digitalocean.com,
-          mingo@kernel.org
-In-Reply-To: <9e3eb1859b946f03d7e500453a885725b68957ba.1559129225.git.vpillai@digitalocean.com>
-References: <9e3eb1859b946f03d7e500453a885725b68957ba.1559129225.git.vpillai@digitalocean.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:sched/core] sched/fair: Expose newidle_balance()
-Git-Commit-ID: 5ba553eff0c3a7c099b1e29a740277a82c0c3314
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Thu, 8 Aug 2019 06:58:27 -0400
+Received: from foss.arm.com ([217.140.110.172]:60070 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731122AbfHHK60 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 06:58:26 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D98E228;
+        Thu,  8 Aug 2019 03:58:25 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BBD723F694;
+        Thu,  8 Aug 2019 03:58:23 -0700 (PDT)
+Date:   Thu, 8 Aug 2019 11:58:21 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     "Chocron, Jonathan" <jonnyc@amazon.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "Hanoch, Uri" <hanochu@amazon.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "Wasserstrom, Barak" <barakw@amazon.com>,
+        "Saidi, Ali" <alisaidi@amazon.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "Hawa, Hanna" <hhhawa@amazon.com>,
+        "Shenhar, Talel" <talel@amazon.com>,
+        "Krupnik, Ronen" <ronenk@amazon.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>
+Subject: Re: [PATCH v3 8/8] PCI: dw: Add support for
+ PCI_PROBE_ONLY/PCI_REASSIGN_ALL_BUS flags
+Message-ID: <20190808105821.GB30230@e121166-lin.cambridge.arm.com>
+References: <20190723092529.11310-1-jonnyc@amazon.com>
+ <20190723092711.11786-4-jonnyc@amazon.com>
+ <20190807163654.GC16214@e121166-lin.cambridge.arm.com>
+ <67c58ded2177beca030450c25d742d35890eb48a.camel@amazon.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <67c58ded2177beca030450c25d742d35890eb48a.camel@amazon.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  5ba553eff0c3a7c099b1e29a740277a82c0c3314
-Gitweb:     https://git.kernel.org/tip/5ba553eff0c3a7c099b1e29a740277a82c0c3314
-Author:     Peter Zijlstra <peterz@infradead.org>
-AuthorDate: Wed, 29 May 2019 20:36:42 +0000
-Committer:  Peter Zijlstra <peterz@infradead.org>
-CommitDate: Thu, 8 Aug 2019 09:09:31 +0200
+Side note, run:
 
-sched/fair: Expose newidle_balance()
+git log --oneline on drivers/pci/controller/dwc existing files and
+make sure commit subjects are in line with those.
 
-For pick_next_task_fair() it is the newidle balance that requires
-dropping the rq->lock; provided we do put_prev_task() early, we can
-also detect the condition for doing newidle early.
+Eg PCI: dw: should be PCI: dwc:
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Aaron Lu <aaron.lwe@gmail.com>
-Cc: Valentin Schneider <valentin.schneider@arm.com>
-Cc: mingo@kernel.org
-Cc: Phil Auld <pauld@redhat.com>
-Cc: Julien Desfossez <jdesfossez@digitalocean.com>
-Cc: Nishanth Aravamudan <naravamudan@digitalocean.com>
-Link: https://lkml.kernel.org/r/9e3eb1859b946f03d7e500453a885725b68957ba.1559129225.git.vpillai@digitalocean.com
----
- kernel/sched/fair.c  | 18 ++++++++----------
- kernel/sched/sched.h |  4 ++++
- 2 files changed, 12 insertions(+), 10 deletions(-)
+On Thu, Aug 08, 2019 at 09:30:05AM +0000, Chocron, Jonathan wrote:
+> On Wed, 2019-08-07 at 17:36 +0100, Lorenzo Pieralisi wrote:
+> > On Tue, Jul 23, 2019 at 12:27:11PM +0300, Jonathan Chocron wrote:
+> > > This basically aligns the usage of PCI_PROBE_ONLY and
+> > > PCI_REASSIGN_ALL_BUS in dw_pcie_host_init() with the logic in
+> > > pci_host_common_probe().
+> > > 
+> > > Now it will be possible to control via the devicetree whether to
+> > > just
+> > > probe the PCI bus (in cases where FW already configured it) or to
+> > > fully
+> > > configure it.
+> > > 
+> > > Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
+> > > ---
+> > >  .../pci/controller/dwc/pcie-designware-host.c | 23
+> > > +++++++++++++++----
+> > >  1 file changed, 19 insertions(+), 4 deletions(-)
+> > > 
+> > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > index d2ca748e4c85..0a294d8aa21a 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > @@ -342,6 +342,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
+> > >  	if (!bridge)
+> > >  		return -ENOMEM;
+> > >  
+> > > +	of_pci_check_probe_only();
+> > > +
+> > >  	ret = devm_of_pci_get_host_bridge_resources(dev, 0, 0xff,
+> > >  					&bridge->windows, &pp-
+> > > >io_base);
+> > >  	if (ret)
+> > > @@ -474,6 +476,10 @@ int dw_pcie_host_init(struct pcie_port *pp)
+> > >  
+> > >  	pp->root_bus_nr = pp->busn->start;
+> > >  
+> > > +	/* Do not reassign bus nums if probe only */
+> > > +	if (!pci_has_flag(PCI_PROBE_ONLY))
+> > > +		pci_add_flags(PCI_REASSIGN_ALL_BUS);
+> > 
+> > This changes the default for bus reassignment on all DWC host (that
+> > are
+> > !PCI_PROBE_ONLY), we should drop this line, it can trigger
+> > regressions.
+> > 
+> Will be dropped as part of v4. There might also be a behavioral
+> difference below where I added the if (pci_has_flag(PCI_PROBE_ONLY)).
+> Is that still ok?
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 8ce1b8893947..e7c27eda9f24 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -3690,8 +3690,6 @@ static inline unsigned long cfs_rq_load_avg(struct cfs_rq *cfs_rq)
- 	return cfs_rq->avg.load_avg;
- }
- 
--static int idle_balance(struct rq *this_rq, struct rq_flags *rf);
--
- static inline unsigned long task_util(struct task_struct *p)
- {
- 	return READ_ONCE(p->se.avg.util_avg);
-@@ -6878,11 +6876,10 @@ done: __maybe_unused;
- 	return p;
- 
- idle:
--	update_misfit_status(NULL, rq);
--	new_tasks = idle_balance(rq, rf);
-+	new_tasks = newidle_balance(rq, rf);
- 
- 	/*
--	 * Because idle_balance() releases (and re-acquires) rq->lock, it is
-+	 * Because newidle_balance() releases (and re-acquires) rq->lock, it is
- 	 * possible for any higher priority task to appear. In that case we
- 	 * must re-start the pick_next_entity() loop.
- 	 */
-@@ -9045,10 +9042,10 @@ out_one_pinned:
- 	ld_moved = 0;
- 
- 	/*
--	 * idle_balance() disregards balance intervals, so we could repeatedly
--	 * reach this code, which would lead to balance_interval skyrocketting
--	 * in a short amount of time. Skip the balance_interval increase logic
--	 * to avoid that.
-+	 * newidle_balance() disregards balance intervals, so we could
-+	 * repeatedly reach this code, which would lead to balance_interval
-+	 * skyrocketting in a short amount of time. Skip the balance_interval
-+	 * increase logic to avoid that.
- 	 */
- 	if (env.idle == CPU_NEWLY_IDLE)
- 		goto out;
-@@ -9758,7 +9755,7 @@ static inline void nohz_newidle_balance(struct rq *this_rq) { }
-  * idle_balance is called by schedule() if this_cpu is about to become
-  * idle. Attempts to pull tasks from other CPUs.
-  */
--static int idle_balance(struct rq *this_rq, struct rq_flags *rf)
-+int newidle_balance(struct rq *this_rq, struct rq_flags *rf)
- {
- 	unsigned long next_balance = jiffies + HZ;
- 	int this_cpu = this_rq->cpu;
-@@ -9766,6 +9763,7 @@ static int idle_balance(struct rq *this_rq, struct rq_flags *rf)
- 	int pulled_task = 0;
- 	u64 curr_cost = 0;
- 
-+	update_misfit_status(NULL, this_rq);
- 	/*
- 	 * We must set idle_stamp _before_ calling idle_balance(), such that we
- 	 * measure the duration of idle_balance() as idle time.
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index f3c50445bf22..304d98e712bf 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -1445,10 +1445,14 @@ static inline void unregister_sched_domain_sysctl(void)
- }
- #endif
- 
-+extern int newidle_balance(struct rq *this_rq, struct rq_flags *rf);
-+
- #else
- 
- static inline void sched_ttwu_pending(void) { }
- 
-+static inline int newidle_balance(struct rq *this_rq, struct rq_flags *rf) { return 0; }
-+
- #endif /* CONFIG_SMP */
- 
- #include "stats.h"
+That's true but I doubt any DWC host has a DT firmware with
+"linux,pci-probe-only" in it.
+
+It is trial and error I am afraid, please make sure all DWC
+maintainers are copied in.
+
+> As I pointed out in the cover letter, since PCI_PROBE_ONLY is a system
+> wide flag, does it make sense to call of_pci_check_probe_only() here,
+> in the context of a specific driver (including the existing invocation
+> in pci_host_common_probe()), as opposed to a platform/arch context?
+
+It is an ongoing discussion to define how we should handle
+PCI_PROBE_ONLY. Adding this code into DWC I do not think it
+would hurt but if we can postpone it for the next (v5.5) merge
+window after we debate this at LPC within the PCI microconference
+it would be great.
+
+Please sync with Benjamin as a first step, I trust he would ask
+you to do the right thing.
+
+> > If we still want to merge it as a separate change we must test it on
+> > all
+> > DWC host bridges to make sure it does not trigger any issues with
+> > current set-ups, that's not going to be easy though.
+> > 
+> Just out of curiosity, how are such exhaustive tests achieved when a
+> patch requires them?
+
+CC DWC host bridge maintainers and ask them to test it. I do not have
+the HW (and FW) required, I am sorry, that's the only option I can give
+you. -next coverage would help too but to a minor extent.
+
+Thanks,
+Lorenzo
+
+> 
+> > Lorenzo
+> > 
+> > > +
+> > >  	bridge->dev.parent = dev;
+> > >  	bridge->sysdata = pp;
+> > >  	bridge->busnr = pp->root_bus_nr;
+> > > @@ -490,11 +496,20 @@ int dw_pcie_host_init(struct pcie_port *pp)
+> > >  	if (pp->ops->scan_bus)
+> > >  		pp->ops->scan_bus(pp);
+> > >  
+> > > -	pci_bus_size_bridges(pp->root_bus);
+> > > -	pci_bus_assign_resources(pp->root_bus);
+> > > +	/*
+> > > +	 * We insert PCI resources into the iomem_resource and
+> > > +	 * ioport_resource trees in either pci_bus_claim_resources()
+> > > +	 * or pci_bus_assign_resources().
+> > > +	 */
+> > > +	if (pci_has_flag(PCI_PROBE_ONLY)) {
+> > > +		pci_bus_claim_resources(pp->root_bus);
+> > > +	} else {
+> > > +		pci_bus_size_bridges(pp->root_bus);
+> > > +		pci_bus_assign_resources(pp->root_bus);
+> > >  
+> > > -	list_for_each_entry(child, &pp->root_bus->children, node)
+> > > -		pcie_bus_configure_settings(child);
+> > > +		list_for_each_entry(child, &pp->root_bus->children,
+> > > node)
+> > > +			pcie_bus_configure_settings(child);
+> > > +	}
+> > >  
+> > >  	pci_bus_add_devices(pp->root_bus);
+> > >  	return 0;
+> > > -- 
+> > > 2.17.1
+> > > 
