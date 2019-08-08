@@ -2,102 +2,140 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B5DC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F8C9C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:52:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE15521900
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:51:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 593B5217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:52:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731621AbfHHHve (ORCPT
+        id S1731632AbfHHHwU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 03:51:34 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:41232 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725796AbfHHHve (ORCPT
+        Thu, 8 Aug 2019 03:52:20 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:15728 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725796AbfHHHwT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 03:51:34 -0400
-Received: by mail-ot1-f65.google.com with SMTP id o101so115021041ota.8
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 00:51:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0zYvO8kgva/HCROTu3alVTGHgN2aevAEIYRY7aUYyOU=;
-        b=MccHvAmoOe/8QmYajy8LKX5AKdfIjtVfYB2cLcwDiTEhnrsTiUN1Ok4YQi0mhMMBdH
-         4dpYwmHaN2jv3T5viWqRcGE1b7hqPda0Wu4o9KLqofWpqlZTsklnsJaGHkWRdtmv31Lp
-         Nronj/LvXRWGkrfCCr4m4/LmGLuNuXfxQ0Q5lHZux+EKPRy/5lelB9pxA1X44O2RLO+G
-         U2tuLVQ9JwHPcLFDVJzwR1kD5Tt6m8hnmQ7sPESvkZGUaXIwe+sA5CR5cZ38Vn046Bjt
-         vBLGAiL5JVCbK385tuRIfLsmpDGZR12HeqIa+0BHREb1nA6SGiFLO5PeLyBIw8yS4SLr
-         6i4w==
-X-Gm-Message-State: APjAAAVyNtNc/ilYqYY6TcLWJ3gxg4EQU5h3WYV+xsGZ8ESRAL94VtSp
-        /nJzpj9Rxk/IxRc2Zwffu7rzksTmrfW+BmBUCEA=
-X-Google-Smtp-Source: APXvYqwszIoNMVOKBwYp3aP3PPfCWFyxZCZa0aiTnpVpNAVmxKQDAkd6Dd55mIi8FsWP4N0IeISzw4KkePpuqLzoi4k=
-X-Received: by 2002:a9d:529:: with SMTP id 38mr12029150otw.145.1565250693148;
- Thu, 08 Aug 2019 00:51:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190730053845.126834-1-swboyd@chromium.org> <20190731142645.GA1680@kunai>
- <5d41ab2c.1c69fb81.6129.661f@mx.google.com> <20190801122559.GC1659@ninjato>
-In-Reply-To: <20190801122559.GC1659@ninjato>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 8 Aug 2019 09:51:22 +0200
-Message-ID: <CAMuHMdW5QHvr=a1MXzqyCoYc2FC-4tKB-AbhTZQG=etbq=vmAQ@mail.gmail.com>
-Subject: Re: [Cocci] [PATCH v5 0/3] Add error message to platform_get_irq*()
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Javier Martinez Canillas <javierm@redhat.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        cocci@systeme.lip6.fr, Marek Szyprowski <m.szyprowski@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 8 Aug 2019 03:52:19 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x787qDFY059493
+        for <linux-kernel@vger.kernel.org>; Thu, 8 Aug 2019 03:52:18 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2u8er3tg8g-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 03:52:17 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Thu, 8 Aug 2019 08:52:16 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 8 Aug 2019 08:52:12 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x787qBCv41943078
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 8 Aug 2019 07:52:11 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 636E842045;
+        Thu,  8 Aug 2019 07:52:11 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B04B142047;
+        Thu,  8 Aug 2019 07:52:09 +0000 (GMT)
+Received: from rapoport-lnx (unknown [9.148.8.168])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu,  8 Aug 2019 07:52:09 +0000 (GMT)
+Received: by rapoport-lnx (sSMTP sendmail emulation); Thu, 08 Aug 2019 10:52:09 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Nicholas Piggin <npiggin@gmail.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        linux-arch@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-sh@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>
+Subject: [PATCH 0/3] mm: remove quicklist page table caches
+Date:   Thu,  8 Aug 2019 10:52:05 +0300
+X-Mailer: git-send-email 2.7.4
+X-TM-AS-GCONF: 00
+x-cbid: 19080807-0020-0000-0000-0000035D2ABA
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19080807-0021-0000-0000-000021B22C72
+Message-Id: <1565250728-21721-1-git-send-email-rppt@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-08_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908080090
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wolfram,
+Hi,
 
-On Thu, Aug 1, 2019 at 3:13 PM Wolfram Sang <wsa@the-dreams.de> wrote:
-> > these drivers pop up, I think we can have another function like
-> > platform_get_irq_probe() or platform_get_irq_nowarn() that doesn't print
-> > an error message. Then we can convert the drivers that are poking around
-> > for interrupts to use this new function instead. It isn't the same as a
-> > platform_get_optional_irq() API because it returns an error when the irq
-> > isn't there or we fail to parse something, but at least the error
-> > message is gone.
->
-> True.
->
-> I still feel uneasy about pushing false positive error messages to
-> users. Do you think your cocci-script could be updated to modify drivers
-> which do not bail out when platform_get_irq() fails to use
-> platform_get_irq_nowarn()? I'd think this would catch most of them?
->
-> Or maybe the other way around? platform_get_irq_warn() and only convert
-> those which print something?
+I while ago Nicholas proposed to remove quicklist page table caches [1].
 
-Following clk, gpio, regulator, and reset, the functions should be called
-platform_get_irq() and platform_get_irq_optional().
+I've rebased his patch on the curren upstream and switched ia64 and sh to
+use generic versions of PTE allocation.
 
-Gr{oetje,eeting}s,
+[1] https://lore.kernel.org/linux-mm/20190711030339.20892-1-npiggin@gmail.com
 
-                        Geert
+Mike Rapoport (2):
+  ia64: switch to generic version of pte allocation
+  sh: switch to generic version of pte allocation
+
+Nicholas Piggin (1):
+  mm: remove quicklist page table caches
+
+ arch/alpha/include/asm/pgalloc.h      |   2 -
+ arch/arc/include/asm/pgalloc.h        |   1 -
+ arch/arm/include/asm/pgalloc.h        |   2 -
+ arch/arm64/include/asm/pgalloc.h      |   2 -
+ arch/csky/include/asm/pgalloc.h       |   2 -
+ arch/hexagon/include/asm/pgalloc.h    |   2 -
+ arch/ia64/Kconfig                     |   4 --
+ arch/ia64/include/asm/pgalloc.h       |  52 +++--------------
+ arch/m68k/include/asm/pgtable_mm.h    |   2 -
+ arch/m68k/include/asm/pgtable_no.h    |   2 -
+ arch/microblaze/include/asm/pgalloc.h |  89 +++--------------------------
+ arch/microblaze/mm/pgtable.c          |   4 --
+ arch/mips/include/asm/pgalloc.h       |   2 -
+ arch/nds32/include/asm/pgalloc.h      |   2 -
+ arch/nios2/include/asm/pgalloc.h      |   2 -
+ arch/openrisc/include/asm/pgalloc.h   |   2 -
+ arch/parisc/include/asm/pgalloc.h     |   2 -
+ arch/powerpc/include/asm/pgalloc.h    |   2 -
+ arch/riscv/include/asm/pgalloc.h      |   4 --
+ arch/s390/include/asm/pgtable.h       |   1 -
+ arch/sh/include/asm/pgalloc.h         |  44 +--------------
+ arch/sh/mm/Kconfig                    |   3 -
+ arch/sparc/include/asm/pgalloc_32.h   |   2 -
+ arch/sparc/include/asm/pgalloc_64.h   |   2 -
+ arch/sparc/mm/init_32.c               |   1 -
+ arch/um/include/asm/pgalloc.h         |   2 -
+ arch/unicore32/include/asm/pgalloc.h  |   2 -
+ arch/x86/include/asm/pgtable_32.h     |   1 -
+ arch/x86/include/asm/pgtable_64.h     |   1 -
+ arch/xtensa/include/asm/tlbflush.h    |   3 -
+ fs/proc/meminfo.c                     |   4 --
+ include/asm-generic/pgalloc.h         |   5 --
+ include/linux/quicklist.h             |  94 -------------------------------
+ kernel/sched/idle.c                   |   1 -
+ lib/show_mem.c                        |   5 --
+ mm/Kconfig                            |   5 --
+ mm/Makefile                           |   1 -
+ mm/mmu_gather.c                       |   2 -
+ mm/quicklist.c                        | 103 ----------------------------------
+ 39 files changed, 16 insertions(+), 446 deletions(-)
+ delete mode 100644 include/linux/quicklist.h
+ delete mode 100644 mm/quicklist.c
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.7.4
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
