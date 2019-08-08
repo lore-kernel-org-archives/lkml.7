@@ -2,102 +2,76 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDCABC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 144F9C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:28:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3B51204EC
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:28:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JmSzOXhD"
+	by mail.kernel.org (Postfix) with ESMTP id D4608204EC
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 12:28:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732390AbfHHM2G (ORCPT
+        id S1732400AbfHHM2r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 08:28:06 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:41430 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728964AbfHHM2G (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 08:28:06 -0400
-Received: by mail-pg1-f196.google.com with SMTP id x15so33648038pgg.8
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 05:28:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=i/W3w/wF9Y9te3JMoVhcMehzwVrt1opOlejjt4rI4AE=;
-        b=JmSzOXhD6xc1Qb7v1wEp0V2tWsNPh5fGFF88h2zu1ElMyG3KgLjylsdyOnqWGZcItc
-         tP4YvMgsCHqHZw69kNyc6Rx5xdexwEjo/lVa3NrHAjIz+jGBsC7JjYHIXPlqH00+U9Rj
-         vo4g0Iy6lZlXwSvj1LG4dxvGz4gc/mh0fkZaFnckVQDHcmWHPqGX2C9hM5/PiFpv+9tp
-         uqJiPobqcNkiB2JdQ5mmWLwuAideQaaIl7SelOD5YfUny7fvj7TURoAR9qIxlNXNxy5x
-         HT8InMsW/bOjtbJ9dH1E+229QEILOJtHjCeDt0Xh5O0NaoD+C/jOboe4sQj6NhekP3zc
-         yxqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=i/W3w/wF9Y9te3JMoVhcMehzwVrt1opOlejjt4rI4AE=;
-        b=W2Z0Sca3CZ+xmNsy3pHV2n7p9rhEIbIsJ+Rub2qEjJ5FOyqRaqyfzICWJIQZOTp+d3
-         rzIvnIxnP5BgJoRm5v+5DFSkIQ93gcnO7+dtMKPTPPGyuOZou87o9cXyVkfP31l2ikUU
-         9t/ovZ1sO+RtwOXenVhhlFP3TXUW8ysUhphdBJZcuqe6m8unr2ePYUSgdB8A1oEUiOg9
-         Z8NhrE/5Twn3svMy2hOEowve5YkygJudFoBogPuN/Od2Cvo0Cyeu7t3W86r4DOeVYKT7
-         int+DcGN3p4m6WTZLUHcn8GmAF8t37x/ydiwDCwLa5Rb/hPuY8F5efHQbDyMhQFyXhtx
-         u/Pw==
-X-Gm-Message-State: APjAAAXT+Qas01TqCm0C0PaIF9ITtIAb1Z1Ph5IL1U92K+BOhlc9+hAN
-        6Agt1kLWh0Hv0+EF7m/8YCOaB+p0z8lEPa1bmWjKSA==
-X-Google-Smtp-Source: APXvYqwBefv4nXxVQmf02Ua1Yjn/KM4I7FhvNpXklH3IAgqyIJc+slSG3DgWRSLRO89JnCmOD5IciFA0UJhEIpUeIl8=
-X-Received: by 2002:aa7:9e9a:: with SMTP id p26mr15547168pfq.25.1565267285478;
- Thu, 08 Aug 2019 05:28:05 -0700 (PDT)
+        Thu, 8 Aug 2019 08:28:47 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58504 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727096AbfHHM2q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 08:28:46 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 896FC3007F39;
+        Thu,  8 Aug 2019 12:28:46 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7975A19D70;
+        Thu,  8 Aug 2019 12:28:46 +0000 (UTC)
+Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 65D5418089C8;
+        Thu,  8 Aug 2019 12:28:46 +0000 (UTC)
+Date:   Thu, 8 Aug 2019 08:28:46 -0400 (EDT)
+From:   Pankaj Gupta <pagupta@redhat.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     amit@kernel.org, mst@redhat.com, arnd@arndb.de,
+        virtualization@lists.linux-foundation.org, jasowang@redhat.com,
+        linux-kernel@vger.kernel.org
+Message-ID: <1512438873.7425183.1565267326035.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20190808115630.GB2015@kroah.com>
+References: <20190808113606.19504-1-pagupta@redhat.com> <20190808113606.19504-3-pagupta@redhat.com> <20190808115630.GB2015@kroah.com>
+Subject: Re: [PATCH v2 2/2] virtio_ring: packed ring: fix
+ virtqueue_detach_unused_buf
 MIME-Version: 1.0
-References: <000000000000f365b6058f8b07ca@google.com> <Pine.LNX.4.44L0.1908071431050.1514-100000@iolanthe.rowland.org>
-In-Reply-To: <Pine.LNX.4.44L0.1908071431050.1514-100000@iolanthe.rowland.org>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Thu, 8 Aug 2019 14:27:53 +0200
-Message-ID: <CAAeHK+xh6h=HBEpwPB7g2=a07+zZ9zS5Cuk0Tpo_+70Bf5j9Tw@mail.gmail.com>
-Subject: Re: KASAN: use-after-free Read in device_release_driver_internal
-To:     Alan Stern <stern@rowland.harvard.edu>,
-        Dmitry Vyukov <dvyukov@google.com>
-Cc:     syzbot <syzbot+1b2449b7b5dc240d107a@syzkaller.appspotmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Oliver Neukum <oneukum@suse.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.116.132, 10.4.195.15]
+Thread-Topic: virtio_ring: packed ring: fix virtqueue_detach_unused_buf
+Thread-Index: 1dZf+nrJonjXypT43ZqdcgxKewv0gw==
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Thu, 08 Aug 2019 12:28:46 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 7, 2019 at 8:31 PM Alan Stern <stern@rowland.harvard.edu> wrote:
->
-> On Wed, 7 Aug 2019, syzbot wrote:
->
-> > Hello,
-> >
-> > syzbot has tested the proposed patch and the reproducer did not trigger
-> > crash:
-> >
-> > Reported-and-tested-by:
-> > syzbot+1b2449b7b5dc240d107a@syzkaller.appspotmail.com
-> >
-> > Tested on:
-> >
-> > commit:         6a3599ce usb-fuzzer: main usb gadget fuzzer driver
-> > git tree:       https://github.com/google/kasan.git
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=700ca426ab83faae
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > patch:          https://syzkaller.appspot.com/x/patch.diff?x=132eec8c600000
-> >
-> > Note: testing is done by a robot and is best-effort only.
->
-> Andrey, is there any way to get the console output from this test?
 
-Dmitry, would it be possible to link console log for successful tests as well?
 
->
-> Alan Stern
->
+> > This patch makes packed ring code compatible with split ring in function
+> > 'virtqueue_detach_unused_buf_*'.
+> 
+> What does that mean?  What does this "fix"?
+
+Patch 1 frees the buffers When a port is unplugged from the virtio
+console device. It does this with the help of 'virtqueue_detach_unused_buf_split/packed'
+function. For split ring case, corresponding function decrements avail ring index.
+For packed ring code, this functionality is not available, so this patch adds the
+required support and hence help to remove the unused buffer completely.
+
+Thanks,
+Pankaj  
+
+> 
+> thanks,
+> 
+> greg k-h
+> 
