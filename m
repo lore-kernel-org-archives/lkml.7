@@ -4,132 +4,224 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E4A1C32751
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 00:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5CA2C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 00:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 305CA21872
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 00:08:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98D55217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 00:08:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UNLABroC"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IzoA99Ev"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389816AbfHHAIq (ORCPT
+        id S2389831AbfHHAIy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 20:08:46 -0400
-Received: from mail-vs1-f73.google.com ([209.85.217.73]:37105 "EHLO
-        mail-vs1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389799AbfHHAIl (ORCPT
+        Wed, 7 Aug 2019 20:08:54 -0400
+Received: from mail-pf1-f201.google.com ([209.85.210.201]:45294 "EHLO
+        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389756AbfHHAIa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 20:08:41 -0400
-Received: by mail-vs1-f73.google.com with SMTP id a23so23649863vsn.4
-        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 17:08:40 -0700 (PDT)
+        Wed, 7 Aug 2019 20:08:30 -0400
+Received: by mail-pf1-f201.google.com with SMTP id i27so57847017pfk.12
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 17:08:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=QAOtO6nDHkYJ9N49TmHslQT3rCi9zyycpSkmU2B1+ww=;
-        b=UNLABroCADTP2lRj6WXK9ks7taxeIwX7apuvzgPN+SSwyiYIw9M1JIzQ11nyWkr0nd
-         auaYOQ96K8A0C0wqBYZCk6v/qae3ZfIDiK9ohFw5VtmeInfKk59XHKLlBAt9DK9be9i+
-         tpzkvCxKDCRl7CLtKUQCWMv7CUS4Bmn8X2YGeTODNSEntx/U2+iFxrdNvFbqFnoA0BSR
-         6AUjALIVdmgdrJgYCIWuF4TmYaaleMsMU7Ms5sj4SqsBR0z+IlFpl8lnvR704dPIHUIM
-         qqfSk7DFKViWyjwwFsEexIFGPBohDz9s+Vm/G3LYfBQnH9eTHKFqTKOZVSsgutOdjC2R
-         b4Nw==
+        bh=Ogy4z5xXdkGcZVx/gotBD44dFgIvUZxytASg1dmnrz4=;
+        b=IzoA99EvVVMGm9iXr5KRRBbeK85e/Ze+iJ9iWUhTulS6b8deHVOQEYewHyfCg3YWKb
+         3n9ZeQ8b9FstJivLxoyemYdyRzOeASPo7Lb9s6Lul+7rnh/0DUQLnMQerlb9jVwlmAuX
+         CWb1WrhDxYczCeXgOokUhcIjn90LF2+4iaeQpYsBF7vvqj61khqLVsfX5AIHVy59Bfku
+         Cqar1nW/4zmvbfZHpnDPUl8up88QpGSd2JhrKka8MnIZKA43SrVLBO8QNH40/SRdST3C
+         o9GdZ0A7xwSwZT23wwAu1n/eRvupnqUT4xYpFjmhWFyV9vQuQWlJuWMKfIIU76DxdSxp
+         fgmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=QAOtO6nDHkYJ9N49TmHslQT3rCi9zyycpSkmU2B1+ww=;
-        b=WN5raiDWnqDbDVJxdwborWMWgVNkRyjicaUZuWSC9yLWrP6cTy89W5AfuBrJZsxITB
-         1nzfPpWyuUO6hcEmVCwJgqDRdFo9SK5u11ltV0UpB57VVMLLEs9Oj9VTHxkZ1VdKvxX4
-         zh81s57cd2I/Za4lSyJ+Qyuj6+7S7P0PuLC3XebyJxoJcq/UHRb53OsK8TGW6lla+xEv
-         b/YM8v9NWw9yICMY9x3uturE4t8CE32X8675dzmd0j0mGTFVfBnsy1NB9aa4BEYczVG2
-         gM3Dl7BKt5kwBCt9NQFCC36CpOLBN+aXWUjJPX2BYShAIyPlKAemPcF545mqNX4YpP49
-         vVLg==
-X-Gm-Message-State: APjAAAXowqa3cGpXFTUpR/H38Acr25/i47WJ/yQelbWJxlZ1GU4nFgky
-        u34i85aVzN8lCdrNMQCbVU7QpaBih1dMrg/EVCp3VQ==
-X-Google-Smtp-Source: APXvYqxjfOjMVIvi1XfETlUu/RMBz7orOf6co5eDHl8Jr6kBkqjBF9E+N10FvWJcCg9WD+lr3G3JdXg+fI/jU7KDUo5edw==
-X-Received: by 2002:a1f:2242:: with SMTP id i63mr4639075vki.69.1565222919839;
- Wed, 07 Aug 2019 17:08:39 -0700 (PDT)
-Date:   Wed,  7 Aug 2019 17:07:21 -0700
+        bh=Ogy4z5xXdkGcZVx/gotBD44dFgIvUZxytASg1dmnrz4=;
+        b=mtCgnyR6MJ2Jdp72/LHID5uvPCcQw4CQ5DMzQqIE3s3Fco+l6fBc5drq+9YGsj25GT
+         4nT6mqFNLZzu2teYGBU4eespDyTEDPZMPnkWVVQoVrKVOp06pOG4pQ6tP7y7szoyZ4u4
+         YBcVbfOH71s8w2ui2vyD1QmHsEuPKpxxncubna8xaQPrzrCVqHOgxpzlszrqSAZNaZOb
+         WnY6mEaFXCE9i/zPNXAD65H0/SZ3TyuJMdx5JzJ7BIc4pH6pQFky7MEbWw51fDgrwrTD
+         4xDX4qLkwGBHW5+vu3vgop37Rgu3OTaOeP8FcTrK8SuescKQoLqIMRDb+v5oFzBgfazC
+         Qkzg==
+X-Gm-Message-State: APjAAAV6it7CCeLNIFBIZe75Twq5+Z/f6rbVg9gW/6NQIAeS8rxfp2vG
+        WtFctL7dX1hOUXKOHvC2GWhJ3IASUO0GyYUSlX3F2g==
+X-Google-Smtp-Source: APXvYqyYcl1lHJVi5QafLIqnQ/T8ARwsfnJI8TV5cVWwIBkfTH6TsaU92Hxf/kaVz/MLf5f6M/dtpML1JjzLYbz1X/52Rw==
+X-Received: by 2002:a63:4522:: with SMTP id s34mr9957055pga.362.1565222909034;
+ Wed, 07 Aug 2019 17:08:29 -0700 (PDT)
+Date:   Wed,  7 Aug 2019 17:07:17 -0700
 In-Reply-To: <20190808000721.124691-1-matthewgarrett@google.com>
-Message-Id: <20190808000721.124691-30-matthewgarrett@google.com>
+Message-Id: <20190808000721.124691-26-matthewgarrett@google.com>
 Mime-Version: 1.0
 References: <20190808000721.124691-1-matthewgarrett@google.com>
 X-Mailer: git-send-email 2.22.0.770.g0f2c4a37fd-goog
-Subject: [PATCH V38 29/29] lockdown: Print current->comm in restriction messages
+Subject: [PATCH V38 25/29] kexec: Allow kexec_file() with appropriate IMA
+ policy when locked down
 From:   Matthew Garrett <matthewgarrett@google.com>
 To:     jmorris@namei.org
 Cc:     linux-security-module@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
         Matthew Garrett <matthewgarrett@google.com>,
-        David Howells <dhowells@redhat.com>,
         Matthew Garrett <mjg59@google.com>,
-        Kees Cook <keescook@chromium.org>
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        linux-integrity@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Print the content of current->comm in messages generated by lockdown to
-indicate a restriction that was hit.  This makes it a bit easier to find
-out what caused the message.
+Systems in lockdown mode should block the kexec of untrusted kernels.
+For x86 and ARM we can ensure that a kernel is trustworthy by validating
+a PE signature, but this isn't possible on other architectures. On those
+platforms we can use IMA digital signatures instead. Add a function to
+determine whether IMA has or will verify signatures for a given event type,
+and if so permit kexec_file() even if the kernel is otherwise locked down.
+This is restricted to cases where CONFIG_INTEGRITY_TRUSTED_KEYRING is set
+in order to prevent an attacker from loading additional keys at runtime.
 
-The message now patterned something like:
-
-        Lockdown: <comm>: <what> is restricted; see man kernel_lockdown.7
-
-Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Matthew Garrett <mjg59@google.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Acked-by: Mimi Zohar <zohar@linux.ibm.com>
+Cc: Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
+Cc: linux-integrity@vger.kernel.org
 ---
- fs/proc/kcore.c              | 5 +++--
- security/lockdown/lockdown.c | 8 ++++++--
- 2 files changed, 9 insertions(+), 4 deletions(-)
+ include/linux/ima.h                 |  9 ++++++
+ kernel/kexec_file.c                 | 12 +++++--
+ security/integrity/ima/ima.h        |  2 ++
+ security/integrity/ima/ima_main.c   |  2 +-
+ security/integrity/ima/ima_policy.c | 50 +++++++++++++++++++++++++++++
+ 5 files changed, 72 insertions(+), 3 deletions(-)
 
-diff --git a/fs/proc/kcore.c b/fs/proc/kcore.c
-index ee2c576cc94e..e2ed8e08cc7a 100644
---- a/fs/proc/kcore.c
-+++ b/fs/proc/kcore.c
-@@ -548,11 +548,12 @@ static int open_kcore(struct inode *inode, struct file *filp)
- {
- 	int ret = security_locked_down(LOCKDOWN_KCORE);
- 
--	if (ret)
--		return ret;
- 	if (!capable(CAP_SYS_RAWIO))
- 		return -EPERM;
- 
-+	if (ret)
-+		return ret;
+diff --git a/include/linux/ima.h b/include/linux/ima.h
+index a20ad398d260..1c37f17f7203 100644
+--- a/include/linux/ima.h
++++ b/include/linux/ima.h
+@@ -131,4 +131,13 @@ static inline int ima_inode_removexattr(struct dentry *dentry,
+ 	return 0;
+ }
+ #endif /* CONFIG_IMA_APPRAISE */
 +
- 	filp->private_data = kmalloc(PAGE_SIZE, GFP_KERNEL);
- 	if (!filp->private_data)
- 		return -ENOMEM;
-diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
-index 173191562047..f6c74cf6a798 100644
---- a/security/lockdown/lockdown.c
-+++ b/security/lockdown/lockdown.c
-@@ -81,10 +81,14 @@ early_param("lockdown", lockdown_param);
-  */
- static int lockdown_is_locked_down(enum lockdown_reason what)
- {
-+	if (WARN(what >= LOCKDOWN_CONFIDENTIALITY_MAX,
-+		 "Invalid lockdown reason"))
-+		return -EPERM;
-+
- 	if (kernel_locked_down >= what) {
- 		if (lockdown_reasons[what])
--			pr_notice("Lockdown: %s is restricted; see man kernel_lockdown.7\n",
--				  lockdown_reasons[what]);
-+			pr_notice("Lockdown: %s: %s is restricted; see man kernel_lockdown.7\n",
-+				  current->comm, lockdown_reasons[what]);
- 		return -EPERM;
- 	}
++#if defined(CONFIG_IMA_APPRAISE) && defined(CONFIG_INTEGRITY_TRUSTED_KEYRING)
++extern bool ima_appraise_signature(enum kernel_read_file_id func);
++#else
++static inline bool ima_appraise_signature(enum kernel_read_file_id func)
++{
++	return false;
++}
++#endif /* CONFIG_IMA_APPRAISE && CONFIG_INTEGRITY_TRUSTED_KEYRING */
+ #endif /* _LINUX_IMA_H */
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index dd06f1070d66..13c9960a5860 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -228,9 +228,17 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+ 			goto out;
+ 		}
  
+-		ret = security_locked_down(LOCKDOWN_KEXEC);
+-		if (ret)
++		ret = 0;
++
++		/* If IMA is guaranteed to appraise a signature on the kexec
++		 * image, permit it even if the kernel is otherwise locked
++		 * down.
++		 */
++		if (!ima_appraise_signature(READING_KEXEC_IMAGE) &&
++		    security_locked_down(LOCKDOWN_KEXEC)) {
++			ret = -EPERM;
+ 			goto out;
++		}
+ 
+ 		break;
+ 
+diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+index 011b91c79351..64dcb11cf444 100644
+--- a/security/integrity/ima/ima.h
++++ b/security/integrity/ima/ima.h
+@@ -113,6 +113,8 @@ struct ima_kexec_hdr {
+ 	u64 count;
+ };
+ 
++extern const int read_idmap[];
++
+ #ifdef CONFIG_HAVE_IMA_KEXEC
+ void ima_load_kexec_buffer(void);
+ #else
+diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+index 584019728660..b9f57503af2c 100644
+--- a/security/integrity/ima/ima_main.c
++++ b/security/integrity/ima/ima_main.c
+@@ -502,7 +502,7 @@ int ima_read_file(struct file *file, enum kernel_read_file_id read_id)
+ 	return 0;
+ }
+ 
+-static const int read_idmap[READING_MAX_ID] = {
++const int read_idmap[READING_MAX_ID] = {
+ 	[READING_FIRMWARE] = FIRMWARE_CHECK,
+ 	[READING_FIRMWARE_PREALLOC_BUFFER] = FIRMWARE_CHECK,
+ 	[READING_MODULE] = MODULE_CHECK,
+diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+index 6df7f641ff66..827f1e33fe86 100644
+--- a/security/integrity/ima/ima_policy.c
++++ b/security/integrity/ima/ima_policy.c
+@@ -1456,3 +1456,53 @@ int ima_policy_show(struct seq_file *m, void *v)
+ 	return 0;
+ }
+ #endif	/* CONFIG_IMA_READ_POLICY */
++
++#if defined(CONFIG_IMA_APPRAISE) && defined(CONFIG_INTEGRITY_TRUSTED_KEYRING)
++/*
++ * ima_appraise_signature: whether IMA will appraise a given function using
++ * an IMA digital signature. This is restricted to cases where the kernel
++ * has a set of built-in trusted keys in order to avoid an attacker simply
++ * loading additional keys.
++ */
++bool ima_appraise_signature(enum kernel_read_file_id id)
++{
++	struct ima_rule_entry *entry;
++	bool found = false;
++	enum ima_hooks func;
++
++	if (id >= READING_MAX_ID)
++		return false;
++
++	func = read_idmap[id] ?: FILE_CHECK;
++
++	rcu_read_lock();
++	list_for_each_entry_rcu(entry, ima_rules, list) {
++		if (entry->action != APPRAISE)
++			continue;
++
++		/*
++		 * A generic entry will match, but otherwise require that it
++		 * match the func we're looking for
++		 */
++		if (entry->func && entry->func != func)
++			continue;
++
++		/*
++		 * We require this to be a digital signature, not a raw IMA
++		 * hash.
++		 */
++		if (entry->flags & IMA_DIGSIG_REQUIRED)
++			found = true;
++
++		/*
++		 * We've found a rule that matches, so break now even if it
++		 * didn't require a digital signature - a later rule that does
++		 * won't override it, so would be a false positive.
++		 */
++		break;
++	}
++
++	rcu_read_unlock();
++	return found;
++}
++#endif /* CONFIG_IMA_APPRAISE && CONFIG_INTEGRITY_TRUSTED_KEYRING */
 -- 
 2.22.0.770.g0f2c4a37fd-goog
 
