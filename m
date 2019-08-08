@@ -2,118 +2,371 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98116C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:25:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6FB6C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:25:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AEA72173E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:25:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96E422173E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 16:25:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="htp++ycS"
+	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="F/hYqVye"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403842AbfHHQZ3 (ORCPT
+        id S2403924AbfHHQZl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 12:25:29 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:34544 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403833AbfHHQZ2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 12:25:28 -0400
-Received: by mail-ot1-f66.google.com with SMTP id n5so121018637otk.1
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 09:25:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
-        bh=Sh9FQDMasmY5vtQdSiQoK5tO+xz0p3eGu1ZERt15qJc=;
-        b=htp++ycSv4CkfO5k4hhbR1c5pz+jcLYDMM9onORrmnPqr2zXHtSMUdHfSpaejVGxm6
-         1iUtb8fy+qUbYNbYlj4vc4ysrm12p8atovPDzumyNBfwmL6LWMFILpb55bYTZd4nUAvM
-         kk7mR+F2CxE1MNxH6mciDwgla8tKM1V4azlME9VN88ToYJjE74MGZ60BAsb20aoL5zQM
-         WDpNA4qBvSgWOn6/X1Y0n+vuEzqbDFi+onk59s1lf0DSiH2R1Qqerulz2Qi89a8ZFzYG
-         Uw+qEJNsTPTaL9AXDJ+2PAwpnN2Lh89SLPog8RVL1ilqI9Ax2mmK1C3YSNRdtozOp+39
-         A+rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
-         :mime-version;
-        bh=Sh9FQDMasmY5vtQdSiQoK5tO+xz0p3eGu1ZERt15qJc=;
-        b=KDybqUwqaqs11QmmNdkppyOs+HL7gEPPvKAZWDUWohpXEygN+OLFWEZfuwAQutKxB8
-         uXmYYWwUSEKNf7K/unzMNoLVY2WgHqGW2ZuxidHgVNB8DPMFOBSEgP/V6kqNfKXkXCzr
-         Z+4WgRHHLQmR1mktEF42BHUrTIKCaTfEqD8eL9SDPOahRgZt/oz4B8P7JUf3CjEszUwS
-         jbSR1FxsTJXfuSmDtm0v9f4qYKjaumhl24M30fmi39RSUUQiPBt+rLyO3m1qKHGIVa7e
-         HB63pQiZTXl5T4zVaDuePF1j/g+E2rZ25J0TjBIQDKUKg2WUF0Uu5hYHIOPK90bPioAq
-         ejpg==
-X-Gm-Message-State: APjAAAXZxPlqJaJsx5OXB/ek7IcF5Gimy1RTiMgKV5lGXTsVNq3zXPd6
-        YEDmmvCh3B42trilxfLgG4Jtqw==
-X-Google-Smtp-Source: APXvYqytWnigO89QXdNbJ/WyY0oBdo7zxtKLAlx2YBEnBuVEX31JdfD5sKmrXhp2sBu9PWy+U0ezPg==
-X-Received: by 2002:a5d:9690:: with SMTP id m16mr15546380ion.180.1565281527716;
-        Thu, 08 Aug 2019 09:25:27 -0700 (PDT)
-Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
-        by smtp.gmail.com with ESMTPSA id x1sm2315281ioa.85.2019.08.08.09.25.27
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 08 Aug 2019 09:25:27 -0700 (PDT)
-Date:   Thu, 8 Aug 2019 09:25:26 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     linux-riscv@lists.infradead.org
-cc:     linux-kernel@vger.kernel.org, schwab@suse.de
-Subject: [PATCH] riscv: fix flush_tlb_range() end address for
- flush_tlb_page()
-Message-ID: <alpine.DEB.2.21.9999.1908080923320.31070@viisi.sifive.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Thu, 8 Aug 2019 12:25:41 -0400
+Received: from cmta19.telus.net ([209.171.16.92]:37722 "EHLO cmta19.telus.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732327AbfHHQZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 12:25:41 -0400
+Received: from dougxps ([173.180.45.4])
+        by cmsmtp with SMTP
+        id vlENhdR2EeRl4vlEOhCyXi; Thu, 08 Aug 2019 10:25:38 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
+        t=1565281538; bh=iK4UKCvDHqpSwe+rfBK+FC79zxpMt9mKSlV4L95XRnk=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date;
+        b=F/hYqVye9U+IbE44P09jEWMwGHVpqkYbOfobY+Tx1aIvjS0rCpllzSwv5eVOzgxi/
+         ktNJxnyQ5pmZP/2LHt5I9Z+qfg14larhkxWaR8eCHjRBQOxcoR/3/3ewhd6bEKLjVX
+         u8jjk7sRxhHu599dSdscwOm4e0VTdpAvPwsDyCv8YplUyxOhJqwL45JX5G1qd8MFnS
+         aDnk1wSCRxJoaJ1V09Vzd85irJ+bme/UWJQSL5QBPTA2gnxEzPBG5tdIsJYC2qxb4f
+         Gdbovdxrgworslj0ZanqPZj+MuzV8nLcngWEIEOKWoXY+bpe/V0uZpMy+FgalguD1A
+         WMwPdvgC1plaQ==
+X-Telus-Authed: none
+X-Authority-Analysis: v=2.3 cv=KqozJleN c=1 sm=1 tr=0
+ a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
+ a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
+ a=kj9zAlcOel0A:10 a=aatUQebYAAAA:8 a=KKAkSRfTAAAA:8 a=njUrAqMqMSlWPpeZ23EA:9
+ a=CjuIK1q_8ugA:10 a=7715FyvI7WU-l6oqrZBK:22 a=cvBusfyB2V15izCimMoJ:22
+From:   "Doug Smythies" <dsmythies@telus.net>
+To:     "'Viresh Kumar'" <viresh.kumar@linaro.org>
+Cc:     <linux-pm@vger.kernel.org>,
+        "'Vincent Guittot'" <vincent.guittot@linaro.org>,
+        <linux-kernel@vger.kernel.org>,
+        "'Rafael Wysocki'" <rjw@rjwysocki.net>,
+        "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>,
+        "'Len Brown'" <lenb@kernel.org>
+References: <70fce19e43bb825c3b2546e1211d262a59ae7378.1565161495.git.viresh.kumar@linaro.org> <e789eceae3f32a66fff923daeb85b33b88f21fe1.1565161495.git.viresh.kumar@linaro.org>
+In-Reply-To: <e789eceae3f32a66fff923daeb85b33b88f21fe1.1565161495.git.viresh.kumar@linaro.org>
+Subject: RE: [PATCH V4 2/2] cpufreq: intel_pstate: Implement QoS supported freq constraints
+Date:   Thu, 8 Aug 2019 09:25:34 -0700
+Message-ID: <000601d54e05$e93d0130$bbb70390$@net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Office Outlook 12.0
+Content-Language: en-ca
+Thread-Index: AdVM7pmWc4rh8UNSQyCOnfPw6N1TAABC7Rhg
+X-CMAE-Envelope: MS4wfG0/YUiyU9WDGRvqr1mxaRddPtjtx+CuFy/s5KY+IhAHex4Cgd3MjaFBxiPJBlXUhRig9ptoonMbmCkvcj9TajrAq0GGKF+CeOaZonn57EonfYnw0Zly
+ P8YL8wJKjRYBQcr9f3U+2ygbRPPdaDzTz5vZakPnZpJQEuA6EHE/GTjbC/sZaWUNavIsuYzLo3QcuuOPdzt6dqi+lo/QhvVDKJGqmQPg+LUDlC57oNDnlgoE
+ 8M3PXpNlX+vwGQ3fVW0L5xLiz9PklGbXmzSuWv/RyKT215WBXqTl61L/MjxRM3IB+BjJJX8Y1uabjpQwcP0392BEAbqWMWOgx2PjqQPR5CN7QKV+kygXE3ip
+ 97mu82plaRyET/3NT0/r0Lk0mPaMbSHEs+69Gj7PrwxXS7JRNUI=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2019.08.07 00:06 Viresh Kumar wrote:
 
-The RISC-V kernel implementation of flush_tlb_page() when CONFIG_SMP
-is set is wrong.  It passes zero to flush_tlb_range() as the final
-address to flush, but it should be at least 'addr'.
+Thanks for your work on this.
 
-Some other Linux architecture ports use the beginning address to
-flush, plus PAGE_SIZE, as the final address to flush.  This might
-flush slightly more than what's needed, but it seems unlikely that
-being more clever would improve anything.  So let's just take that
-implementation for now.
+> Intel pstate driver exposes min_perf_pct and max_perf_pct sysfs files,
+> which can be used to force a limit on the min/max P state of the driver.
+> Though these files eventually control the min/max frequencies that the
+> CPUs will run at, they don't make a change to policy->min/max values.
+>
+> When the values of these files are changed (in passive mode of the
+> driver), it leads to calling ->limits() callback of the cpufreq
+> governors, like schedutil. On a call to it the governors shall
+> forcefully update the frequency to come within the limits. Since the
+> limits, i.e.  policy->min/max, aren't updated by the driver, the
+> governors fails to get the target freq within limit and sometimes aborts
+> the update believing that the frequency is already set to the target
+> value.
+>
+> This patch implements the QoS supported frequency constraints to update
+> policy->min/max values whenever min_perf_pct or max_perf_pct files are
+> updated. This is only done for the passive mode as of now, as the driver
+> is already working fine in active mode.
+>
+> Fixes: ecd288429126 ("cpufreq: schedutil: Don't set next_freq to UINT_MAX")
+> Reported-by: Doug Smythies <dsmythies@telus.net>
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-While here, convert the macro into a static inline function, primarily
-to avoid unintentional multiple evaluations of 'addr'.
+Tested by: Doug Smythies <dsmythies@telus.net>
+Thermald seems to now be working O.K. for all the governors.
 
-Reported-by: Andreas Schwab <schwab@suse.de>
-Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
----
- arch/riscv/include/asm/tlbflush.h | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+I do note that if one sets
+/sys/devices/system/cpu/cpufreq/policy*/scaling_max_freq
+It seems to override subsequent attempts via
+/sys/devices/system/cpu/intel_pstate/max_perf_pct.
+Myself, I find this confusing.
 
-diff --git a/arch/riscv/include/asm/tlbflush.h b/arch/riscv/include/asm/tlbflush.h
-index 687dd19735a7..b5e64dc19b9e 100644
---- a/arch/riscv/include/asm/tlbflush.h
-+++ b/arch/riscv/include/asm/tlbflush.h
-@@ -53,10 +53,16 @@ static inline void remote_sfence_vma(struct cpumask *cmask, unsigned long start,
- }
- 
- #define flush_tlb_all() sbi_remote_sfence_vma(NULL, 0, -1)
--#define flush_tlb_page(vma, addr) flush_tlb_range(vma, addr, 0)
-+
- #define flush_tlb_range(vma, start, end) \
- 	remote_sfence_vma(mm_cpumask((vma)->vm_mm), start, (end) - (start))
--#define flush_tlb_mm(mm) \
-+
-+static inline void flush_tlb_page(struct vm_area_struct *vma,
-+				  unsigned long addr) {
-+	flush_tlb_range(vma, addr, addr + PAGE_SIZE);
-+}
-+
-+#define flush_tlb_mm(mm)				\
- 	remote_sfence_vma(mm_cpumask(mm), 0, -1)
- 
- #endif /* CONFIG_SMP */
--- 
-2.22.0
+So the question becomes which one is the "master"?
+
+Example:
+
+# for file in /sys/devices/system/cpu/cpufreq/policy*/scaling_max_freq; do echo "2200000" > $file; done
+# cat /sys/devices/system/cpu/cpufreq/policy*/scaling_max_freq
+2200000
+2200000
+2200000
+2200000
+2200000
+2200000
+2200000
+2200000
+root@s15:/home/doug/temp# cat /sys/devices/system/cpu/intel_pstate/max_perf_pct
+... (Note: 50% = 1900000)
+root@s15:/home/doug/temp# cat /sys/devices/system/cpu/cpufreq/policy*/scaling_max_freq
+1900000
+1900000
+1900000
+1900000
+1900000
+1900000
+1900000
+1900000
+root@s15:/home/doug/temp# echo 100 > /sys/devices/system/cpu/intel_pstate/max_perf_pct
+... (Note: 50% = 3800000, and my expectation is 3.8 GHz below)
+root@s15:/home/doug/temp# cat /sys/devices/system/cpu/cpufreq/policy*/scaling_max_freq
+2200000
+2200000
+2200000
+2200000
+2200000
+2200000
+2200000
+2200000
+
+Similarly for the minimum side of things:
+
+root@s15:/home/doug/temp# for file in /sys/devices/system/cpu/cpufreq/policy*/scaling_min_freq; do echo "3200000" > $file; done
+root@s15:/home/doug/temp# cat /sys/devices/system/cpu/cpufreq/policy*/scaling_min_freq
+3200000
+3200000
+3200000
+3200000
+3200000
+3200000
+3200000
+3200000
+root@s15:/home/doug/temp# echo 42 > /sys/devices/system/cpu/intel_pstate/min_perf_pct
+root@s15:/home/doug/temp# cat /sys/devices/system/cpu/intel_pstate/min_perf_pct
+42   ... (note 42% = 1600000 = processor minimum, and that is my expectation below.)
+root@s15:/home/doug/temp# cat /sys/devices/system/cpu/cpufreq/policy*/scaling_min_freq
+3200000
+3200000
+3200000
+3200000
+3200000
+3200000
+3200000
+3200000
+
+I thought these minimum anomalies would cause problems for thermald, but
+for whatever reason, it seems to work properly.
+
+> ---
+> V3->V4:
+> - Reimplemented the solution using QoS constraints instead of
+>   resolve_freq() callback.
+>
+> drivers/cpufreq/intel_pstate.c | 120 +++++++++++++++++++++++++++++++--
+> 1 file changed, 116 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
+> index cc27d4c59dca..e9fbd6c36822 100644
+> --- a/drivers/cpufreq/intel_pstate.c
+> +++ b/drivers/cpufreq/intel_pstate.c
+> @@ -24,6 +24,7 @@
+>  #include <linux/fs.h>
+>  #include <linux/acpi.h>
+>  #include <linux/vmalloc.h>
+> +#include <linux/pm_qos.h>
+>  #include <trace/events/power.h>
+>  
+>  #include <asm/div64.h>
+> @@ -1085,6 +1086,47 @@ static ssize_t store_no_turbo(struct kobject *a, struct kobj_attribute *b,
+>  	return count;
+>  }
+>  
+> +static struct cpufreq_driver intel_pstate;
+> +
+> +static void update_qos_request(enum dev_pm_qos_req_type type)
+> +{
+> +	int max_state, turbo_max, freq, i, perf_pct;
+> +	struct dev_pm_qos_request *req;
+> +	struct cpufreq_policy *policy;
+> +
+> +	for_each_possible_cpu(i) {
+> +		struct cpudata *cpu = all_cpu_data[i];
+> +
+> +		policy = cpufreq_cpu_get(i);
+> +		if (!policy)
+> +			continue;
+> +
+> +		req = policy->driver_data;
+> +		cpufreq_cpu_put(policy);
+> +
+> +		if (!req)
+> +			continue;
+> +
+> +		if (hwp_active)
+> +			intel_pstate_get_hwp_max(i, &turbo_max, &max_state);
+> +		else
+> +			turbo_max = cpu->pstate.turbo_pstate;
+> +
+> +		if (type == DEV_PM_QOS_MIN_FREQUENCY) {
+
+Is it O.K. to assume if the passed op code is
+not DEV_PM_QOS_MIN_FREQUENCY
+then it must have been
+DEV_PM_QOS_MAX_FREQUENCY
+?
+
+It is within this patch, but what about in future?
+
+> +			perf_pct = global.min_perf_pct;
+> +		} else {
+> +			req++;
+> +			perf_pct = global.max_perf_pct;
+> +		}
+> +
+> +		freq = DIV_ROUND_UP(turbo_max * perf_pct, 100);
+> +		freq *= cpu->pstate.scaling;
+> +
+> +		if (dev_pm_qos_update_request(req, freq))
+> +			pr_warn("Failed to update freq constraint: CPU%d\n", i);
+
+I get many of these messages (4520 so far, always in groups of 8 (I have 8 CPUs)),
+and have yet to figure out exactly why. It seems to actually be working fine.
+
+> +	}
+> +}
+> +
+>  static ssize_t store_max_perf_pct(struct kobject *a, struct kobj_attribute *b,
+>  				  const char *buf, size_t count)
+>  {
+> @@ -1108,7 +1150,10 @@ static ssize_t store_max_perf_pct(struct kobject *a, struct kobj_attribute *b,
+>  
+>  	mutex_unlock(&intel_pstate_limits_lock);
+>  
+> -	intel_pstate_update_policies();
+> +	if (intel_pstate_driver == &intel_pstate)
+> +		intel_pstate_update_policies();
+> +	else
+> +		update_qos_request(DEV_PM_QOS_MAX_FREQUENCY);
+>  
+>  	mutex_unlock(&intel_pstate_driver_lock);
+>  
+> @@ -1139,7 +1184,10 @@ static ssize_t store_min_perf_pct(struct kobject *a, struct kobj_attribute *b,
+>  
+>  	mutex_unlock(&intel_pstate_limits_lock);
+>  
+> -	intel_pstate_update_policies();
+> +	if (intel_pstate_driver == &intel_pstate)
+> +		intel_pstate_update_policies();
+> +	else
+> +		update_qos_request(DEV_PM_QOS_MIN_FREQUENCY);
+>  
+>  	mutex_unlock(&intel_pstate_driver_lock);
+>  
+> @@ -2332,8 +2380,16 @@ static unsigned int intel_cpufreq_fast_switch(struct cpufreq_policy *policy,
+>  
+>  static int intel_cpufreq_cpu_init(struct cpufreq_policy *policy)
+>  {
+> -	int ret = __intel_pstate_cpu_init(policy);
+> +	int max_state, turbo_max, min_freq, max_freq, ret;
+> +	struct dev_pm_qos_request *req;
+> +	struct cpudata *cpu;
+> +	struct device *dev;
+> +
+> +	dev = get_cpu_device(policy->cpu);
+> +	if (!dev)
+> +		return -ENODEV;
+>  
+> +	ret = __intel_pstate_cpu_init(policy);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -2342,7 +2398,63 @@ static int intel_cpufreq_cpu_init(struct cpufreq_policy *policy)
+>  	/* This reflects the intel_pstate_get_cpu_pstates() setting. */
+>  	policy->cur = policy->cpuinfo.min_freq;
+>  
+> +	req = kcalloc(2, sizeof(*req), GFP_KERNEL);
+> +	if (!req) {
+> +		ret = -ENOMEM;
+> +		goto pstate_exit;
+> +	}
+> +
+> +	cpu = all_cpu_data[policy->cpu];
+> +
+> +	if (hwp_active)
+> +		intel_pstate_get_hwp_max(policy->cpu, &turbo_max, &max_state);
+> +	else
+> +		turbo_max = cpu->pstate.turbo_pstate;
+> +
+> +	min_freq = DIV_ROUND_UP(turbo_max * global.min_perf_pct, 100);
+> +	min_freq *= cpu->pstate.scaling;
+> +	max_freq = DIV_ROUND_UP(turbo_max * global.max_perf_pct, 100);
+> +	max_freq *= cpu->pstate.scaling;
+> +
+> +	ret = dev_pm_qos_add_request(dev, req, DEV_PM_QOS_MIN_FREQUENCY,
+> +				     min_freq);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Failed to add min-freq constraint (%d)\n", ret);
+> +		goto free_req;
+> +	}
+> +
+> +	ret = dev_pm_qos_add_request(dev, req + 1, DEV_PM_QOS_MAX_FREQUENCY,
+> +				     max_freq);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Failed to add max-freq constraint (%d)\n", ret);
+> +		goto remove_min_req;
+> +	}
+> +
+> +	policy->driver_data = req;
+> +
+>  	return 0;
+> +
+> +remove_min_req:
+> +	dev_pm_qos_remove_request(req);
+> +free_req:
+> +	kfree(req);
+> +pstate_exit:
+> +	intel_pstate_exit_perf_limits(policy);
+> +
+> +	return ret;
+> +}
+> +
+> +static int intel_cpufreq_cpu_exit(struct cpufreq_policy *policy)
+> +{
+> +	struct dev_pm_qos_request *req;
+> +
+> +	req = policy->driver_data;
+> +
+> +	dev_pm_qos_remove_request(req + 1);
+> +	dev_pm_qos_remove_request(req);
+> +	kfree(req);
+> +
+> +	return intel_pstate_cpu_exit(policy);
+>  }
+>  
+>  static struct cpufreq_driver intel_cpufreq = {
+> @@ -2351,7 +2463,7 @@ static struct cpufreq_driver intel_cpufreq = {
+>  	.target		= intel_cpufreq_target,
+>  	.fast_switch	= intel_cpufreq_fast_switch,
+>  	.init		= intel_cpufreq_cpu_init,
+> -	.exit		= intel_pstate_cpu_exit,
+> +	.exit		= intel_cpufreq_cpu_exit,
+>  	.stop_cpu	= intel_cpufreq_stop_cpu,
+>  	.update_limits	= intel_pstate_update_limits,
+>  	.name		= "intel_cpufreq",
+> -- 
+> 2.21.0.rc0.269.g1a574e7a288b
+
 
