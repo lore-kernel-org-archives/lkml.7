@@ -2,124 +2,103 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10948C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D412FC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:50:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8B692173E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:49:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565279390;
-	bh=reIA9LZPgnzCSkG6NfyJ3L//undePSgnT8fqTxyiVU0=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=A5UB37lvJdbt2W5MtvC/B3CKjLB2TtjlVeqcAwYdyQ2/IbaN/0BqW2n/cUCqyVJdS
-	 20L9W3EDurtoqEnDlmqyQpgTi4qMHnwT6xiLXHkobOZZ4MwHIivSMnEmiaxGF6g4oA
-	 9kAdNKvqqf1h0OxJxTbXpio4Hoz3shfxIOVCNk70=
+	by mail.kernel.org (Postfix) with ESMTP id 9D9832173E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 15:50:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Rjenc5zT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403866AbfHHPtt (ORCPT
+        id S2403944AbfHHPuN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 11:49:49 -0400
-Received: from foss.arm.com ([217.140.110.172]:35216 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728380AbfHHPtt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 11:49:49 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 593D01596;
-        Thu,  8 Aug 2019 08:49:48 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A5E283F706;
-        Thu,  8 Aug 2019 08:49:46 -0700 (PDT)
-Subject: Re: [PATCH 9/9] arm64: Retrieve stolen time as paravirtualized guest
-To:     Steven Price <steven.price@arm.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Will Deacon <will@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Pouloze <suzuki.poulose@arm.com>,
-        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190802145017.42543-1-steven.price@arm.com>
- <20190802145017.42543-10-steven.price@arm.com> <20190804105353.5e9824dc@why>
- <dc8a1e56-7b52-cc8f-265d-27eb5f458613@arm.com>
-From:   Marc Zyngier <maz@kernel.org>
-Organization: Approximate
-Message-ID: <7108a70b-dafd-507b-8509-f4a092ef24af@kernel.org>
-Date:   Thu, 8 Aug 2019 16:49:45 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 8 Aug 2019 11:50:13 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:40259 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403889AbfHHPuN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 11:50:13 -0400
+Received: by mail-ot1-f68.google.com with SMTP id l15so63230694oth.7
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 08:50:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=V04LJKvCA0wB/HmsqcSMs/4DuagqVihnyf8uqYLL87Q=;
+        b=Rjenc5zTLUajzfiBedUaxjBiG1dhLJKjDLzS3UjIrusjrHXpf7CCE15NIbWxBhf6x2
+         nvKbbMmWa6RH+y0ZDTTvg77tQLFGuhNysOD/LNi+gRJHzyNfnmCeNRAC2GBGNBYKwvkH
+         5N8d26wze5KVYPDse72CjDU+ghlwcRp/l3VqNvx8ZGbaguxCbhKbpJiSp+K6FxJfgK7b
+         SS/Fmvv8cDGxJyPEpHHTFTiuMIN3L1jaiNnLDgxkeZqxMJwaAMJwkjUNBjVJteC5wA7P
+         LOqEzIFkuLAGC4F76tEqKI36IIfGJyTatKKeo17l0bIREcogBFOTbbhDG5gbK1LVQi9o
+         ANYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=V04LJKvCA0wB/HmsqcSMs/4DuagqVihnyf8uqYLL87Q=;
+        b=OdvStiAA3cvPFiTFoDppfLxCRBDQM4opwTJ33BmzoqkteRq0N9sPmTSykzsD3O+4hG
+         57YmcTNWSTiWR/d1WWQ2oBlJs1WjWfMRJ2QFRsL/X7AjLLsszyLx0y+pp+CNKSXvez8C
+         X13k+77gJrIFQXQOKyR7L/cKsJ+rA/lo56AM2Lgly4M8a/qCn8Qzo7SBrLXaDjgzF1re
+         H8cBZh39DDXKHB1QR8u2hBBjcQR3K4X6Mh+tu0wBL3UYy/XdZLZtgJlp2GQs0ft3tWBI
+         P2OROJGhbpMgIbsMdsCaV2OpdK+nRCRov5/qMuAEWDgIoNa5tXfCTUloUUXPeOODlI20
+         7tAg==
+X-Gm-Message-State: APjAAAU1x2lFVjQeObFph6FUNSdPz41amFplPMOqI6BvlAlYrL6SeazA
+        2m8l+rDofSRKXIFvQB3SVgfW9A==
+X-Google-Smtp-Source: APXvYqxcQzfpDuRczKMtOS49c3Tn97t1k3O5DW8Qp2eNDaFvhOHqa22tgIBfww5r1gp0e8ooLoY7ZA==
+X-Received: by 2002:a6b:6409:: with SMTP id t9mr4933342iog.270.1565279411935;
+        Thu, 08 Aug 2019 08:50:11 -0700 (PDT)
+Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
+        by smtp.gmail.com with ESMTPSA id h18sm73180520iob.80.2019.08.08.08.50.09
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 08 Aug 2019 08:50:09 -0700 (PDT)
+Date:   Thu, 8 Aug 2019 08:50:09 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Anup Patel <anup@brainfault.org>
+cc:     Vincent Chen <vincent.chen@sifive.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] riscv: Correct the initialized flow of FP register
+In-Reply-To: <CAAhSdy0BNN4G270WJ+OqrFAv3-z9o2iE+QDHHo-FY0fqh5wGqg@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.9999.1908080846220.21111@viisi.sifive.com>
+References: <1565251121-28490-1-git-send-email-vincent.chen@sifive.com> <1565251121-28490-2-git-send-email-vincent.chen@sifive.com> <CAAhSdy0BNN4G270WJ+OqrFAv3-z9o2iE+QDHHo-FY0fqh5wGqg@mail.gmail.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-In-Reply-To: <dc8a1e56-7b52-cc8f-265d-27eb5f458613@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/08/2019 16:29, Steven Price wrote:
-> On 04/08/2019 10:53, Marc Zyngier wrote:
->> On Fri,  2 Aug 2019 15:50:17 +0100
->> Steven Price <steven.price@arm.com> wrote:
->>
->>> Enable paravirtualization features when running under a hypervisor
->>> supporting the PV_TIME_ST hypercall.
->>>
->>> For each (v)CPU, we ask the hypervisor for the location of a shared
->>> page which the hypervisor will use to report stolen time to us. We set
->>> pv_time_ops to the stolen time function which simply reads the stolen
->>> value from the shared page for a VCPU. We guarantee single-copy
->>> atomicity using READ_ONCE which means we can also read the stolen
->>> time for another VCPU than the currently running one while it is
->>> potentially being updated by the hypervisor.
->>>
->>> Signed-off-by: Steven Price <steven.price@arm.com>
->>> ---
->>>  arch/arm64/kernel/Makefile |   1 +
->>>  arch/arm64/kernel/kvm.c    | 155 +++++++++++++++++++++++++++++++++++++
+On Thu, 8 Aug 2019, Anup Patel wrote:
 
-[...]
-
->>> +static int __init kvm_guest_init(void)
->>> +{
->>> +	int ret = 0;
->>> +
->>> +	if (!has_kvm_steal_clock())
->>> +		return 0;
->>> +
->>> +	ret = kvm_arm_init_stolen_time();
->>> +	if (ret)
->>> +		return ret;
->>> +
->>> +	pv_ops.time.steal_clock = kvm_steal_clock;
->>> +
->>> +	static_key_slow_inc(&paravirt_steal_enabled);
->>> +	if (steal_acc)
->>> +		static_key_slow_inc(&paravirt_steal_rq_enabled);
->>> +
->>> +	pr_info("using stolen time PV\n");
->>> +
->>> +	return 0;
->>> +}
->>> +early_initcall(kvm_guest_init);
->>
->> Is there any reason why we wouldn't directly call into this rather than
->> using an initcall?
+> On Thu, Aug 8, 2019 at 1:30 PM Vincent Chen <vincent.chen@sifive.com> wrote:
+> >
+> > +static inline void fstate_off(struct task_struct *task,
+> > +                              struct pt_regs *regs)
+> > +{
+> > +       regs->sstatus = (regs->sstatus & ~(SR_FS)) | SR_FS_OFF;
 > 
-> I'm not sure where the direct call would go - any pointers?
+> The SR_FS_OFF is 0x0 so no need for ORing it.
 
-I'd be temped to say arch/arm64/kernel/time.c:time_init(), provided that
-there is no issue with the CPU hotplug lock (I remember hitting that a
-while ago).
+That one looks OK to me, since it makes it more obvious to humans what's 
+happening here - reviewers won't need to know that "off" is 0x0.  The 
+compiler should drop it internally, so it won't affect the generated 
+code.
 
-	M.
--- 
-Jazz is not dead, it just smells funny...
+> Apart from above minor comment, looks good to me.
+> 
+> Reviewed-by: Anup Patel <anup@brainfault.org>
+
+Will add your Reviewed-by: tag - let us know if you want me to drop it or 
+caveat it.
+
+
+- Paul
