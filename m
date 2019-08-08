@@ -4,54 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F1B9C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:12:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D594FC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:13:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 110AA21743
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:12:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0395214C6
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:13:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565291579;
-	bh=zVXtUSMMLf5kQNv2o0MQ6TzFMU207uN96pyBGf1T2vM=;
+	s=default; t=1565291587;
+	bh=poNZxvBB64RY5bgeLeW7pw6ZypDav4EqCJYFwjKF1MM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sRzaKpuLU7pkyM37QYAtmtX3wUJrf63ZNqlX2KGZ3BxetgJ23HTfTg41gcrMQNRkE
-	 sOGAgd9PYPen5Vw5Zu3EnYSrgxEfM/c9DsdK+G4WcJ7hXT7C030HEXLANKp6NLQkTB
-	 vy+ANc7jQ9xqRfzVeKGiOVVweSb4c3pwl1HjJnM0=
+	b=NDpnFTFY4e5oxV44Hjai1R9UmRfiT2o4/M6yu6I6kFc2aDyPGCZLV+8inB+YgntXJ
+	 AtCD5DJT3K5yFJEdrQdhXJMwKIWbkZ748ZibqsuCzR1Lncj4yDTJI+FZ0iqTL7rOuA
+	 viwjjpqIC8lL/TBFUD7r4/p4I6eueQ01x0t4sxDs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405311AbfHHTKb (ORCPT
+        id S2405264AbfHHTKS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:10:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44864 "EHLO mail.kernel.org"
+        Thu, 8 Aug 2019 15:10:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405286AbfHHTKa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 15:10:30 -0400
+        id S2405236AbfHHTKM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 15:10:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAAD5214C6;
-        Thu,  8 Aug 2019 19:10:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA5AF21743;
+        Thu,  8 Aug 2019 19:10:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565291429;
-        bh=zVXtUSMMLf5kQNv2o0MQ6TzFMU207uN96pyBGf1T2vM=;
+        s=default; t=1565291411;
+        bh=poNZxvBB64RY5bgeLeW7pw6ZypDav4EqCJYFwjKF1MM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x5b3ypBtZJBoQLUsApwVRQODji1u1WS/2XGg8Rog/tT6B1m1iP1oD2e10SCxRpkNM
-         T7o3kNGpkxbaYcfdmQwVaM3IQdMDluW85GAan2hqezeFPU1VhfD4oU+3YLM0PZurFL
-         5TLTltQpAjdqOUcthYetEQX0i8TKzhzOZVtrw6jw=
+        b=ZiduICmpddMy+7P25LYqk7lLsa94AtgPmCMIfkAd+ceXRt1fd9w4107qSuYeQUjQ1
+         Bp9ZgTzDQjlgxulTT1uhgi+IO8iAAsz2Ua1PSqAbI0ciD4yHEskX92tjA/90zBbL89
+         SYHj53csbZE+MoBwe6phRPKHitS8TZz+bXpdGh8Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 4.14 11/33] objtool: Add rewind_stack_do_exit() to the noreturn list
-Date:   Thu,  8 Aug 2019 21:05:18 +0200
-Message-Id: <20190808190454.122580323@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 22/45] net: bridge: mcast: dont delete permanent entries when fast leave is enabled
+Date:   Thu,  8 Aug 2019 21:05:08 +0200
+Message-Id: <20190808190454.983078630@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190808190453.582417307@linuxfoundation.org>
-References: <20190808190453.582417307@linuxfoundation.org>
+In-Reply-To: <20190808190453.827571908@linuxfoundation.org>
+References: <20190808190453.827571908@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,34 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 
-commit 4fa5ecda2bf96be7464eb406df8aba9d89260227 upstream.
+[ Upstream commit 5c725b6b65067909548ac9ca9bc777098ec9883d ]
 
-This fixes the following warning seen on GCC 7.3:
+When permanent entries were introduced by the commit below, they were
+exempt from timing out and thus igmp leave wouldn't affect them unless
+fast leave was enabled on the port which was added before permanent
+entries existed. It shouldn't matter if fast leave is enabled or not
+if the user added a permanent entry it shouldn't be deleted on igmp
+leave.
 
-  arch/x86/kernel/dumpstack.o: warning: objtool: oops_end() falls through to next function show_regs()
+Before:
+$ echo 1 > /sys/class/net/eth4/brport/multicast_fast_leave
+$ bridge mdb add dev br0 port eth4 grp 229.1.1.1 permanent
+$ bridge mdb show
+dev br0 port eth4 grp 229.1.1.1 permanent
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/3418ebf5a5a9f6ed7e80954c741c0b904b67b5dc.1554398240.git.jpoimboe@redhat.com
+< join and leave 229.1.1.1 on eth4 >
+
+$ bridge mdb show
+$
+
+After:
+$ echo 1 > /sys/class/net/eth4/brport/multicast_fast_leave
+$ bridge mdb add dev br0 port eth4 grp 229.1.1.1 permanent
+$ bridge mdb show
+dev br0 port eth4 grp 229.1.1.1 permanent
+
+< join and leave 229.1.1.1 on eth4 >
+
+$ bridge mdb show
+dev br0 port eth4 grp 229.1.1.1 permanent
+
+Fixes: ccb1c31a7a87 ("bridge: add flags to distinguish permanent mdb entires")
+Signed-off-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- tools/objtool/check.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/bridge/br_multicast.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -166,6 +166,7 @@ static int __dead_end_function(struct ob
- 		"lbug_with_loc",
- 		"fortify_panic",
- 		"machine_real_restart",
-+		"rewind_stack_do_exit",
- 	};
+--- a/net/bridge/br_multicast.c
++++ b/net/bridge/br_multicast.c
+@@ -1621,6 +1621,9 @@ br_multicast_leave_group(struct net_brid
+ 			if (!br_port_group_equal(p, port, src))
+ 				continue;
  
- 	if (func->bind == STB_WEAK)
++			if (p->flags & MDB_PG_FLAGS_PERMANENT)
++				break;
++
+ 			rcu_assign_pointer(*pp, p->next);
+ 			hlist_del_init(&p->mglist);
+ 			del_timer(&p->timer);
 
 
