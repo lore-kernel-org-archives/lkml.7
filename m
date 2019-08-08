@@ -2,153 +2,101 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8286C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:57:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E556CC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B00E4218B6
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:57:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B560B218B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:57:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OGIRQ+/u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731706AbfHHH5E (ORCPT
+        id S1731749AbfHHH5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 03:57:04 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40594 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725796AbfHHH5E (ORCPT
+        Thu, 8 Aug 2019 03:57:10 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:51220 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725796AbfHHH5F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 03:57:04 -0400
-Received: by mail-ot1-f65.google.com with SMTP id l15so57827970oth.7;
-        Thu, 08 Aug 2019 00:57:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PfgNCbwNh+egJUA3cbV8dUVAFRIGQlHaXhUpgK2RvWY=;
-        b=JGJMpSjCGosPfjQC++oRo9/VpIYQjtroBHN743qwzAzvGwWB5pIBYAiDbdvUr9BPJt
-         Eo75K5UBgZ/gNMoWwkPqrC1ebkSs6ugBxhbHyqohfNnLDNGaVk38PZCLn+DuTtHuWbh7
-         5hOZdCLwSYvYHaoqJcd3YCtb78oW/V7GqgaUuaKoez42d8Opdb+7SC6HbG3SMcwWfgOX
-         58mFj2RG/w8nyMm9/lRxYUJK4+B17RhjqJLtgW7lPpWJDtAsIvV9RPikTutK1Mb3WE/Z
-         7NkEE7P395FfzzoTyAL38adaFrI9UH5xaJbeITg8/VqaF/DK1vddCOeMp8womXVikOXV
-         qFkQ==
-X-Gm-Message-State: APjAAAWTQXbT7DoKFP8e7rXNysRmu2ExYF6MtNYw7tJUCwhn0jgjnO2h
-        cWv5ICjfuv2JQeBT8lSfrMyNJXm/bigR4DlWAC0=
-X-Google-Smtp-Source: APXvYqyxub+OuS4BmFWrwKCfra+oZAC4TQcubjFwMCIkh5Hd7WXBKupUhwY9Boc0JZWx3NsB6ilSK6bX/BtJ1nAWqYU=
-X-Received: by 2002:aca:bd43:: with SMTP id n64mr1504808oif.148.1565251023062;
- Thu, 08 Aug 2019 00:57:03 -0700 (PDT)
+        Thu, 8 Aug 2019 03:57:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=N3npgdq5SN1ktCIc9MeTH4f2H1ZhWQU8PFljfN+O3jg=; b=OGIRQ+/uj2wXA2E7NLAKpgpnt
+        bg3dW58UxYzYyl2ITn2Qj3W4nkir7/aegwaW7/5w5JsjdIiH7ZlLYyww2/aF5e7Wvar+qydRayC7+
+        rl9RZssqcKtxHIDeBAEdG7Nka+BVAdgJzNHp4q+b+j487VEfiyFEA9hxIps4LR1n/ChXlCVsQ74B0
+        FSG7KlGYgYENY49CcVblzsmx8Z+7UmWUZWP4g8SYQWfEe6WA1Un9rGyA6j2dIDNITGAKVJu28G2DM
+        i+1dwnVA8Bix43UC87rhkWiUe7AxV4tM/fW9vniDRyDoI1+opVLA+5F0zokLNA8zBJ+8bnvMczw9Z
+        D48QGZ2lQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hvdHq-0007iX-W8; Thu, 08 Aug 2019 07:56:39 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C50E49803CE; Thu,  8 Aug 2019 09:56:35 +0200 (CEST)
+Date:   Thu, 8 Aug 2019 09:56:35 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     mingo@kernel.org, juri.lelli@redhat.com,
+        linux-kernel@vger.kernel.org, luca.abeni@santannapisa.it,
+        bristot@redhat.com, balsini@android.com, dvyukov@google.com,
+        tglx@linutronix.de, vpillai@digitalocean.com, rostedt@goodmis.org
+Subject: Re: [RFC][PATCH 12/13] sched/deadline: Introduce deadline servers
+Message-ID: <20190808075635.GB17205@worktop.programming.kicks-ass.net>
+References: <20190726145409.947503076@infradead.org>
+ <20190726161358.056107990@infradead.org>
+ <34710762-f813-3913-0e55-fde7c91c6c2d@arm.com>
 MIME-Version: 1.0
-References: <20190730181557.90391-1-swboyd@chromium.org> <20190730181557.90391-26-swboyd@chromium.org>
-In-Reply-To: <20190730181557.90391-26-swboyd@chromium.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 8 Aug 2019 09:56:51 +0200
-Message-ID: <CAMuHMdV2786n3ex-rY7N5LdX4PpnqZ-tuX2SyTO0w+TRfrA84g@mail.gmail.com>
-Subject: Re: [PATCH v6 25/57] media: Remove dev_err() usage after platform_get_irq()
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <34710762-f813-3913-0e55-fde7c91c6c2d@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+On Wed, Aug 07, 2019 at 06:31:59PM +0200, Dietmar Eggemann wrote:
+> On 7/26/19 4:54 PM, Peter Zijlstra wrote:
+> > 
+> > 
+> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> 
+> [...]
+> 
+> > @@ -889,6 +891,8 @@ static void update_curr(struct cfs_rq *c
+> >  		trace_sched_stat_runtime(curtask, delta_exec, curr->vruntime);
+> >  		cgroup_account_cputime(curtask, delta_exec);
+> >  		account_group_exec_runtime(curtask, delta_exec);
+> > +		if (curtask->server)
+> > +			dl_server_update(curtask->server, delta_exec);
+> >  	}
+> 
+> I get a lockdep_assert_held(&rq->lock) related warning in start_dl_timer()
+> when running the full stack.
 
-On Tue, Jul 30, 2019 at 8:21 PM Stephen Boyd <swboyd@chromium.org> wrote:
-> We don't need dev_err() messages when platform_get_irq() fails now that
-> platform_get_irq() prints an error message itself when something goes
-> wrong. Let's remove these prints with a simple semantic patch.
->
-> // <smpl>
-> @@
-> expression ret;
-> struct platform_device *E;
-> @@
->
-> ret =
-> (
-> platform_get_irq(E, ...)
-> |
-> platform_get_irq_byname(E, ...)
-> );
->
-> if ( \( ret < 0 \| ret <= 0 \) )
-> {
-> (
-> -if (ret != -EPROBE_DEFER)
-> -{ ...
-> -dev_err(...);
-> -... }
-> |
-> ...
-> -dev_err(...);
-> )
-> ...
-> }
-> // </smpl>
->
-> While we're here, remove braces on if statements that only have one
-> statement (manually).
->
-> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Cc: linux-media@vger.kernel.org
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> ---
->
-> Please apply directly to subsystem trees
->
->  drivers/media/platform/am437x/am437x-vpfe.c           | 1 -
->  drivers/media/platform/atmel/atmel-sama5d2-isc.c      | 7 ++-----
->  drivers/media/platform/exynos4-is/mipi-csis.c         | 4 +---
->  drivers/media/platform/imx-pxp.c                      | 4 +---
->  drivers/media/platform/omap3isp/isp.c                 | 1 -
->  drivers/media/platform/renesas-ceu.c                  | 4 +---
->  drivers/media/platform/rockchip/rga/rga.c             | 1 -
->  drivers/media/platform/s3c-camif/camif-core.c         | 4 +---
->  drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c | 8 ++------
->  drivers/media/platform/sti/hva/hva-hw.c               | 8 ++------
->  drivers/media/platform/stm32/stm32-dcmi.c             | 5 +----
->  drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c    | 7 ++-----
->  drivers/media/rc/img-ir/img-ir-core.c                 | 4 +---
->  drivers/media/rc/ir-hix5hd2.c                         | 4 +---
->  drivers/media/rc/meson-ir.c                           | 4 +---
->  drivers/media/rc/mtk-cir.c                            | 4 +---
->  drivers/media/rc/sunxi-cir.c                          | 1 -
->  17 files changed, 17 insertions(+), 54 deletions(-)
+That would seem to imply a stale curtask->server value; the hunk below:
 
-Looks like this didn't catch the double assignments in:
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -3756,8 +3756,11 @@ pick_next_task(struct rq *rq, struct tas
 
-drivers/media/platform/rcar_fdp1.c:     fdp1->irq = ret =
-platform_get_irq(pdev, 0);
-drivers/media/platform/rcar_fdp1.c-     if (ret < 0) {
-drivers/media/platform/rcar_fdp1.c-             dev_err(&pdev->dev,
-"cannot find IRQ\n");
-drivers/media/platform/rcar_fdp1.c-             return ret;
-drivers/media/platform/rcar_fdp1.c-     }
-drivers/media/platform/rcar_fdp1.c-
---
-drivers/media/platform/rcar_jpu.c:      jpu->irq = ret =
-platform_get_irq(pdev, 0);
-drivers/media/platform/rcar_jpu.c-      if (ret < 0) {
-drivers/media/platform/rcar_jpu.c-              dev_err(&pdev->dev,
-"cannot find IRQ\n");
-drivers/media/platform/rcar_jpu.c-              return ret;
-drivers/media/platform/rcar_jpu.c-      }
-drivers/media/platform/rcar_jpu.c-
-
-Gr{oetje,eeting}s,
-
-                        Geert
+        for_each_class(class) {
+                p = class->pick_next_task(rq, NULL, NULL);
+-               if (p)
++               if (p) {
++                       if (p->sched_class == class && p->server)
++                               p->server = NULL;
+                        return p;
++               }
+        }
 
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Was supposed to clear p->server, but clearly something is going 'funny'.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+
