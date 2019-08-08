@@ -2,95 +2,164 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3541BC0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:41:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F12DC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:42:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F0902089E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:41:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF66E217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:42:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TsthMIhq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390316AbfHHUlH (ORCPT
+        id S2390367AbfHHUmD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 16:41:07 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:38548 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725785AbfHHUlH (ORCPT
+        Thu, 8 Aug 2019 16:42:03 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:36097 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733140AbfHHUmC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 16:41:07 -0400
-Received: by mail-qk1-f195.google.com with SMTP id u190so6315795qkh.5;
-        Thu, 08 Aug 2019 13:41:06 -0700 (PDT)
+        Thu, 8 Aug 2019 16:42:02 -0400
+Received: by mail-pg1-f195.google.com with SMTP id l21so44652665pgm.3
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 13:42:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=nS7CPtzCVp0ONgQlGgkx7OXPZavZodPDNiD74pSN4ok=;
+        b=TsthMIhqXtbXp4xH+Z2wSZTAZqhudiQe7esQYSq3NqIJCExnewze/88rqQMCne0v0d
+         FN5dRFOqevBvVNOO8AUZEPv3dAUQomTJ83wd9Wr7Y+kJNgX0HKAZzjJBQBi18lQPhP3w
+         ASwqJ7VwHaeLqfgYDU479i5gbC/Pz/daiarWM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NHt4kl62PCQFTOrMsi+hPEp59k3mqYgovgD66AjIOD4=;
-        b=tMiVoZTAMvDt+P76BDjkja6B0CRQF65ePRygyd/x8Hh1q2W1zLGGOhoiz5b0jQQtvH
-         hUlWF1uhMg7Mi+f3jsqTeiroz+dfbsyZZDmAV7DubZ7DCxiDHjmTGWi/SUXQ/Bu/keTk
-         1syHaKJchAPq8uoZzuhp3QK0W2icUHYfkB1BKuAQR22jdS8lRvGh/irihuM4GYyUQnpC
-         cxP4hD9rlZWX185rKQZ7/jJSELAgB5bCH+GORWYnTKLzKcc/qISWUOR5yU71TPFvGknW
-         ETwP/JRP0W2ni+r6H3Q4L26lazk0ZuIQ8gfKH/9qvKxZo6+JvDcIVDcq5rsZPiUibUUP
-         DuxA==
-X-Gm-Message-State: APjAAAWmqa3IwftBzR+ed9oYcOQzr01OGx+F5nECOUwL4T5snUHIqDuA
-        BY+INYlnvpUbtGzvYPxDCgV6Na7u/xjL7oXMZFg=
-X-Google-Smtp-Source: APXvYqxvwAzDFtLTI1NTHILmZNs1F2X4p2krCf4ECREW46KwDo93TmuTOs+U9PxQE8DMY4O/p+TnAhiLjCqwXglHtC4=
-X-Received: by 2002:a37:4ac3:: with SMTP id x186mr14669116qka.138.1565296866077;
- Thu, 08 Aug 2019 13:41:06 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=nS7CPtzCVp0ONgQlGgkx7OXPZavZodPDNiD74pSN4ok=;
+        b=gumREfGRvbo29/KYurXSqgzsdu+cj1bxtM4eUs0KJoxtantQBcQeVyhpR2BtuH8mNk
+         9lE0A0SEozaAqWn4pFkHdpfdlrUkqAJt4gUUOZmxedtxlNTJGlsHues/w6rwZ2w81Wqv
+         vscbXibKoqz0RdRH+qe9F1ikY2XQmfJB9+Gc9inogLbBhpWrkRH3xewePi8FriLdKLPu
+         gEvQYu6uytC6M1c5daHEabkyy+G+H2UrJ+Y/a8Q7ZDY2v0P6IkgccDO5cDT6Dx8ZjKZ1
+         dS3/NsMzUv2vhdLX9VE4B51j+YbNBIvQvzdu5SwLQlNlG9n7uCxIreZLo4Sy8VGnfrh+
+         OHag==
+X-Gm-Message-State: APjAAAVG3PlFO8l1vDPeE31FnHEGQUNhFWfxlV0usTgJJrIOB7QhcN39
+        AnyI269hKWRVCvwJrWd7y915Nw==
+X-Google-Smtp-Source: APXvYqzXHxnpRFvH9kCf1Uy9J4cWLZwuOKZTZDqgdkWhjibPvjL0xvjuHKfltUtrW/23JO7iytrk3Q==
+X-Received: by 2002:a63:60d1:: with SMTP id u200mr14395334pgb.439.1565296921533;
+        Thu, 08 Aug 2019 13:42:01 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id s22sm103042884pfh.107.2019.08.08.13.42.00
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 08 Aug 2019 13:42:00 -0700 (PDT)
+Date:   Thu, 8 Aug 2019 13:41:59 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        syzbot <syzbot+3de312463756f656b47d@syzkaller.appspotmail.com>,
+        allison@lohutok.net, andreyknvl@google.com, cai@lca.pw,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-usb@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
+        Jiri Kosina <jkosina@suse.cz>
+Subject: Re: BUG: bad usercopy in hidraw_ioctl
+Message-ID: <201908081330.98485D9@keescook>
+References: <000000000000ce6527058f8bf0d0@google.com>
+ <20190807195821.GD5482@bombadil.infradead.org>
+ <20190808014925.GL1131@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-References: <20190708124227.3422311-1-arnd@arndb.de> <e752a638c0bde6893adf805322f73de5bd459dbc.camel@fi.rohmeurope.com>
- <CAK8P3a1HNnstePcreH-ZLyiJi3tNcCNJ=VozZUMnp-VLvYLSaA@mail.gmail.com>
- <e1687224a155787d9f3c042dca1c03a81b89ed25.camel@fi.rohmeurope.com>
- <81f5978e-f401-0975-6c96-003b6d94e49d@huawei.com> <f22cf88f836159b9f5428c6297d8e54b4639e1db.camel@fi.rohmeurope.com>
-In-Reply-To: <f22cf88f836159b9f5428c6297d8e54b4639e1db.camel@fi.rohmeurope.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 8 Aug 2019 22:40:49 +0200
-Message-ID: <CAK8P3a1hJBF40n49furd2pJ3tPCKNfELXweNyab+CZZo1fvZTg@mail.gmail.com>
-Subject: Re: [PATCH] rtc: bd70528: fix link error
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "yuehaibing@huawei.com" <yuehaibing@huawei.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190808014925.GL1131@ZenIV.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 8, 2019 at 9:53 PM Vaittinen, Matti
-<Matti.Vaittinen@fi.rohmeurope.com> wrote:
-> On Thu, 2019-08-08 at 10:29 +0800, Yuehaibing wrote:
-> > On 2019/7/9 13:25, Vaittinen, Matti wrote:
-> > > awkward at first sight but indeed - depends on BD70528_WATCHDOG
-> > > disallows BD70528_WATCHDOG=m with RTC_DRV_BD70528=y while
-> > > !BD70528_WATCHDOG allows BD70528_WATCHDOG=n. Brilliant and exactly
-> > > what
-> > > we need :) Thanks a bunch!
-> >
-> > Hello Vaittinen,
-> >
-> > the issue still exists in linux-next 20190807, any plan?
-> >
->
-> Sorry folks. I thought Arnd would send new patch - I didn't want to
-> steal his work ;) I will be back to my normal life next week so I
-> will send a patch at monday if the issue is still open!
+On Thu, Aug 08, 2019 at 02:49:25AM +0100, Al Viro wrote:
+> On Wed, Aug 07, 2019 at 12:58:21PM -0700, Matthew Wilcox wrote:
+> > On Wed, Aug 07, 2019 at 12:28:06PM -0700, syzbot wrote:
+> > > usercopy: Kernel memory exposure attempt detected from wrapped address
+> > > (offset 0, size 0)!
+> > > ------------[ cut here ]------------
+> > > kernel BUG at mm/usercopy.c:98!
+> > 
+> > This report is confusing because the arguments to usercopy_abort() are wrong.
+> > 
+> >         /* Reject if object wraps past end of memory. */
+> >         if (ptr + n < ptr)
+> >                 usercopy_abort("wrapped address", NULL, to_user, 0, ptr + n);
 
-Sorry I lost track, and thanks for the offer to take care of it.
+(Just to reiterate for this branch of the thread: this is an off-by-one
+false positive already fixed in -mm for -next. However, see below...)
 
-Please add my one
+> > 
+> > ptr + n is not 'size', it's what wrapped.  I don't know what 'offset'
+> > should be set to, but 'size' should be 'n'.  Presumably we don't want to
+> > report 'ptr' because it'll leak a kernel address ... reporting 'n' will
+> > leak a range for a kernel address, but I think that's OK?  Admittedly an
+> > attacker can pass in various values for 'n', but it'll be quite noisy
+> > and leave a trace in the kernel logs for forensics to find afterwards.
+> > 
+> > > Call Trace:
+> > >  check_bogus_address mm/usercopy.c:151 [inline]
+> > >  __check_object_size mm/usercopy.c:260 [inline]
+> > >  __check_object_size.cold+0xb2/0xba mm/usercopy.c:250
+> > >  check_object_size include/linux/thread_info.h:119 [inline]
+> > >  check_copy_size include/linux/thread_info.h:150 [inline]
+> > >  copy_to_user include/linux/uaccess.h:151 [inline]
+> > >  hidraw_ioctl+0x38c/0xae0 drivers/hid/hidraw.c:392
+> > 
+> > The root problem would appear to be:
+> > 
+> >                                 else if (copy_to_user(user_arg + offsetof(
+> >                                         struct hidraw_report_descriptor,
+> >                                         value[0]),
+> >                                         dev->hid->rdesc,
+> >                                         min(dev->hid->rsize, len)))
+> > 
+> > That 'min' should surely be a 'max'?
+> 
+> Surely not.  ->rsize is the amount of data available to copy out; len
+> is the size of buffer supplied by userland to copy into.
 
-Reported-by: Arnd Bergmann <arnd@arndb.de>
+include/uapi/linux/hid.h:#define HID_MAX_DESCRIPTOR_SIZE 4096
 
-and/or
+drivers/hid/hidraw.c:
+                        if (get_user(len, (int __user *)arg))
+                                ret = -EFAULT;
+                        else if (len > HID_MAX_DESCRIPTOR_SIZE - 1)
+                                ret = -EINVAL;
+                        else if (copy_to_user(user_arg + offsetof(
+                                struct hidraw_report_descriptor,
+                                value[0]),
+                                dev->hid->rdesc,
+                                min(dev->hid->rsize, len)))
+                                ret = -EFAULT;
 
-Suggested-by: Arnd Bergmann <arnd@arndb.de>
+The copy size must be less than 4096, which means dev->hid->rdesc is
+allocated at the highest page of memory. That whole space collides with
+the ERR_PTR region which has two bad potential side-effects:
 
-as appropriate when you create that patch.
+1) something that checks for ERR_PTRs combined with a high allocation
+will think it failed and leak the allocation.
 
-       Arnd
+2) something that doesn't check ERR_PTRs might try to stomp on an actual
+allocation in that area.
+
+How/why is there memory allocated there, I thought it was intentionally
+left unused specifically for ERR_PTR:
+
+Documentation/x86/x86_64/mm.rst:
+
+     Start addr    | Offset |     End addr     | Size  | VM area description
+  ==========================================================================
+  ...
+  ffffffffffe00000 | -2  MB | ffffffffffffffff |  2 MB | ...unused hole
+
+
+or is this still a real bug with an invalid dev->hid->rdesc which was
+about to fault but usercopy got in the way first?
+
+-- 
+Kees Cook
