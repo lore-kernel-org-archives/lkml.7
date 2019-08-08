@@ -2,147 +2,189 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 796E8C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 21:29:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C36C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 21:29:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55E4C216C8
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 21:29:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EE0C216C8
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 21:29:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="MJZge7m/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404482AbfHHV3P (ORCPT
+        id S2390409AbfHHV3k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 17:29:15 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:51859 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404251AbfHHV3O (ORCPT
+        Thu, 8 Aug 2019 17:29:40 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:6286 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729780AbfHHV3j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 17:29:14 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1Mxpqo-1iF0VT3dks-00zD7L; Thu, 08 Aug 2019 23:28:57 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Tony Lindgren <tony@atomide.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Mark Brown <broonie@kernel.org>
-Cc:     linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
-Subject: [PATCH 07/22] ARM: omap1: move perseus spi pinconf to board file
-Date:   Thu,  8 Aug 2019 23:22:16 +0200
-Message-Id: <20190808212234.2213262-8-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20190808212234.2213262-1-arnd@arndb.de>
-References: <20190808212234.2213262-1-arnd@arndb.de>
+        Thu, 8 Aug 2019 17:29:39 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d4c944b0002>; Thu, 08 Aug 2019 14:29:47 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 08 Aug 2019 14:29:37 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 08 Aug 2019 14:29:37 -0700
+Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 8 Aug
+ 2019 21:29:35 +0000
+Subject: Re: [PATCH] nouveau/hmm: map pages after migration
+To:     Christoph Hellwig <hch@lst.de>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
+        <nouveau@lists.freedesktop.org>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>
+References: <20190807150214.3629-1-rcampbell@nvidia.com>
+ <20190808070701.GC29382@lst.de>
+From:   Ralph Campbell <rcampbell@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <0b96a8d8-86b5-3ce0-db95-669963c1f8a7@nvidia.com>
+Date:   Thu, 8 Aug 2019 14:29:34 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:OUywYjmUvR4CggfZfvVTBOs6Wqw61X7ANdp+0I65+P8MCPSSa41
- 5GvGcAmYjU2DGOzqYVYCAn/KSoqrC1TXd4CnESq/PgpAi3GqLbpTe3IptCS8caaxMlQ7MWB
- qspivVS8oe8TFvFiGP+yhn+TNtbQ31DZqvBQMB8LsgaAzHiS6rwCdV2Wa5fHzpxxGDK29H2
- oVjrpRiT3l+OAdxjzkEqg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:HTgsHXt4VYg=:wv/3Tz08gC4O1xmYtn1lnv
- 0DQVchC6pJEpqwK+9CzLoTkrnBsAxE7wZ+elRXgafIIObsfCNN/YIgTQ1GdzAShuaQlhVUAiI
- x2put5/QNp+CQKco+ufIo3WHRGRBqey6WIpXX3I0vYqr5zrSFImTvDEr26dWXewa8Mge4eIl9
- 1zandRW0JCIG0L7TtDX6UFCokfvoWtQFPzY3zsIR/U9cFbYboSkaJl1xb6m8LmTMz1Fy+r3Xo
- 3IxwAXhdJ539LXs1RLtojMfFqgTVwmfhY2aiC4Mu1N4VhBJRVMUU39ySLQZi7LVc/eOT7qiOt
- mbUIg0pOs3W84yVSI/V/2eEOCoxIhMCWtiQ8UYSmcrk3HumNFJCiB0TJn2lnbrIByn4XAm24E
- WznZoc38kwirw1rzqsFaDVwfSRvHkB5IOK392edCP0d7AgSYWCrBKpTvLVWew9EfVojJI/WHc
- 2mVDRcJiU4P/xzA3rN8j7ED727y6zXc0KrWLV+OLt27wntOZxNuwOIjm9oDiicsH1bvFm7OUC
- SNkSxxwqlJeNQXllVKUrLsRfTT5UGPZIqVy5go2ubH3J6RHBC1w0pP+0w5WqBW8Cm89usEALa
- iKtMuH4jjEzc/yH9jf4lu9GQ05158U+qlSFKhqq27BtihJNJhdr4cG8OTguF49oF/z3GoUZbz
- 0zk3AiGWMmw/7SdHAJ8JjCbDR6tL1hq0xnwyrGxON2pNn9j7RW51LxD6sg3MZJxWqMNYZ+1WU
- sY7/qqbeEDI/viciS0gwy5RjMHG7ffieopLw0A==
+In-Reply-To: <20190808070701.GC29382@lst.de>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1565299787; bh=PhGH3Fz3U6BG9IYzpAywsfQn2QaZDVfO/PlIuALj3rM=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=MJZge7m/9mkhZU4etBnQu2xchsH9bJVmIBhjlhBUSEeMEVfNkuCDij6bxrmYac4g9
+         9l00U+eic6gmLzXQPVqAn8j019mz/QqxOeYW/JKoLsBdEaVKz9RLkiSkpT8P2/nyQY
+         dJY3ZCzRLOOHHVCKzT1PdhiSUdG6plqyGdTnWLRTmmvPZ9RbteRLOLtOtrEFZ9RIKB
+         GzTGB8MM7HtJk/XeAG4akQYZ8yLwq74YHxldhk5dOYfCxGuneF/GePqweBWsMaiObR
+         Tzk5KikVIGjzbxE8Sq3t0NvbeP7bOgXH/SLMeMxad6ZhJxTHatunatImUt79RWsrWT
+         66U0nG6r9iVXA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver has always had a FIXME about this, and it seems
-like this trivial code move avoids a mach header inclusion,
-so just do it.
 
-With that out of the way, and the header file inclusions
-changed to global files, the driver can also be compile-tested
-on other platforms.
+On 8/8/19 12:07 AM, Christoph Hellwig wrote:
+> On Wed, Aug 07, 2019 at 08:02:14AM -0700, Ralph Campbell wrote:
+>> When memory is migrated to the GPU it is likely to be accessed by GPU
+>> code soon afterwards. Instead of waiting for a GPU fault, map the
+>> migrated memory into the GPU page tables with the same access permission=
+s
+>> as the source CPU page table entries. This preserves copy on write
+>> semantics.
+>>
+>> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+>> Cc: Christoph Hellwig <hch@lst.de>
+>> Cc: Jason Gunthorpe <jgg@mellanox.com>
+>> Cc: "J=C3=A9r=C3=B4me Glisse" <jglisse@redhat.com>
+>> Cc: Ben Skeggs <bskeggs@redhat.com>
+>> ---
+>>
+>> This patch is based on top of Christoph Hellwig's 9 patch series
+>> https://lore.kernel.org/linux-mm/20190729234611.GC7171@redhat.com/T/#u
+>> "turn the hmm migrate_vma upside down" but without patch 9
+>> "mm: remove the unused MIGRATE_PFN_WRITE" and adds a use for the flag.
+>=20
+> This looks useful.  I've already dropped that patch for the pending
+> resend.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- arch/arm/mach-omap1/board-perseus2.c |  6 ++++++
- drivers/spi/Kconfig                  |  2 +-
- drivers/spi/spi-omap-uwire.c         | 15 +++------------
- 3 files changed, 10 insertions(+), 13 deletions(-)
+Thanks.
 
-diff --git a/arch/arm/mach-omap1/board-perseus2.c b/arch/arm/mach-omap1/board-perseus2.c
-index 1aeeb7337d29..da0155107d85 100644
---- a/arch/arm/mach-omap1/board-perseus2.c
-+++ b/arch/arm/mach-omap1/board-perseus2.c
-@@ -289,6 +289,12 @@ static void __init omap_perseus2_init(void)
- 	omap_cfg_reg(F4_7XX_KBC3);
- 	omap_cfg_reg(E3_7XX_KBC4);
- 
-+	if (IS_ENABLED(CONFIG_SPI_OMAP_UWIRE)) {
-+		/* configure pins: MPU_UW_nSCS1, MPU_UW_SDO, MPU_UW_SCLK */
-+		int val = omap_readl(OMAP7XX_IO_CONF_9) & ~0x00EEE000;
-+		omap_writel(val | 0x00AAA000, OMAP7XX_IO_CONF_9);
-+	}
-+
- 	platform_add_devices(devices, ARRAY_SIZE(devices));
- 
- 	omap_serial_init();
-diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
-index 949b18ed9d6b..4e67c155229e 100644
---- a/drivers/spi/Kconfig
-+++ b/drivers/spi/Kconfig
-@@ -464,7 +464,7 @@ config SPI_OCTEON
- 
- config SPI_OMAP_UWIRE
- 	tristate "OMAP1 MicroWire"
--	depends on ARCH_OMAP1
-+	depends on ARCH_OMAP1 || (ARM && COMPILE_TEST)
- 	select SPI_BITBANG
- 	help
- 	  This hooks up to the MicroWire controller on OMAP1 chips.
-diff --git a/drivers/spi/spi-omap-uwire.c b/drivers/spi/spi-omap-uwire.c
-index ce8dbdbce312..278d42a2ec49 100644
---- a/drivers/spi/spi-omap-uwire.c
-+++ b/drivers/spi/spi-omap-uwire.c
-@@ -44,13 +44,10 @@
- #include <linux/module.h>
- #include <linux/io.h>
- 
--#include <mach/hardware.h>
- #include <asm/mach-types.h>
--
--#include <mach/mux.h>
--
--#include <mach/omap7xx.h>	/* OMAP7XX_IO_CONF registers */
--
-+#include <linux/soc/ti/omap1-io.h>
-+#include <linux/soc/ti/omap1-soc.h>
-+#include <linux/soc/ti/omap1-mux.h>
- 
- /* FIXME address is now a platform device resource,
-  * and irqs should show there too...
-@@ -541,12 +538,6 @@ static int __init omap_uwire_init(void)
- 		omap_cfg_reg(N14_1610_UWIRE_CS0);
- 		omap_cfg_reg(N15_1610_UWIRE_CS1);
- 	}
--	if (machine_is_omap_perseus2()) {
--		/* configure pins: MPU_UW_nSCS1, MPU_UW_SDO, MPU_UW_SCLK */
--		int val = omap_readl(OMAP7XX_IO_CONF_9) & ~0x00EEE000;
--		omap_writel(val | 0x00AAA000, OMAP7XX_IO_CONF_9);
--	}
--
- 	return platform_driver_register(&uwire_driver);
- }
- 
--- 
-2.20.0
+>=20
+>>   static unsigned long nouveau_dmem_migrate_copy_one(struct nouveau_drm =
+*drm,
+>> -		struct vm_area_struct *vma, unsigned long addr,
+>> -		unsigned long src, dma_addr_t *dma_addr)
+>> +		struct vm_area_struct *vma, unsigned long src,
+>> +		dma_addr_t *dma_addr, u64 *pfn)
+>=20
+> I'll pick up the removal of the not needed addr argument for the patch
+> introducing nouveau_dmem_migrate_copy_one, thanks,
+>=20
+>>   static void nouveau_dmem_migrate_chunk(struct migrate_vma *args,
+>> -		struct nouveau_drm *drm, dma_addr_t *dma_addrs)
+>> +		struct nouveau_drm *drm, dma_addr_t *dma_addrs, u64 *pfns)
+>>   {
+>>   	struct nouveau_fence *fence;
+>>   	unsigned long addr =3D args->start, nr_dma =3D 0, i;
+>>  =20
+>>   	for (i =3D 0; addr < args->end; i++) {
+>>   		args->dst[i] =3D nouveau_dmem_migrate_copy_one(drm, args->vma,
+>> -				addr, args->src[i], &dma_addrs[nr_dma]);
+>> +				args->src[i], &dma_addrs[nr_dma], &pfns[i]);
+>=20
+> Nit: I find the &pfns[i] way to pass the argument a little weird to read.
+> Why not "pfns + i"?
 
+OK, will do in v2.
+Should I convert to "dma_addrs + nr_dma" too?
+
+>> +u64 *
+>> +nouveau_pfns_alloc(unsigned long npages)
+>> +{
+>> +	struct nouveau_pfnmap_args *args;
+>> +
+>> +	args =3D kzalloc(sizeof(*args) + npages * sizeof(args->p.phys[0]),
+>=20
+> Can we use struct_size here?
+
+Yes, good suggestion.
+
+>=20
+>> +	int ret;
+>> +
+>> +	if (!svm)
+>> +		return;
+>> +
+>> +	mutex_lock(&svm->mutex);
+>> +	svmm =3D nouveau_find_svmm(svm, mm);
+>> +	if (!svmm) {
+>> +		mutex_unlock(&svm->mutex);
+>> +		return;
+>> +	}
+>> +	mutex_unlock(&svm->mutex);
+>=20
+> Given that nouveau_find_svmm doesn't take any kind of reference, what
+> gurantees svmm doesn't go away after dropping the lock?
+
+I asked Ben and Jerome about this too.
+I'm still looking into it.
+
+>=20
+>> @@ -44,5 +49,19 @@ static inline int nouveau_svmm_bind(struct drm_device=
+ *device, void *p,
+>>   {
+>>   	return -ENOSYS;
+>>   }
+>> +
+>> +u64 *nouveau_pfns_alloc(unsigned long npages)
+>> +{
+>> +	return NULL;
+>> +}
+>> +
+>> +void nouveau_pfns_free(u64 *pfns)
+>> +{
+>> +}
+>> +
+>> +void nouveau_pfns_map(struct nouveau_drm *drm, struct mm_struct *mm,
+>> +		      unsigned long addr, u64 *pfns, unsigned long npages)
+>> +{
+>> +}
+>>   #endif /* IS_ENABLED(CONFIG_DRM_NOUVEAU_SVM) */
+>=20
+> nouveau_dmem.c and nouveau_svm.c are both built conditional on
+> CONFIG_DRM_NOUVEAU_SVM, so there is no need for stubs here.
+>=20
+
+Good point. I'll remove them in v2.
