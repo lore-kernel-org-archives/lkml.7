@@ -2,156 +2,108 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34395C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B219C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:44:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14A412173C
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:44:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 679F42173C
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 08:44:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731679AbfHHIom (ORCPT
+        id S1731729AbfHHIou (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 04:44:42 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:49275 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731048AbfHHIof (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 04:44:35 -0400
-Received: from 79.184.254.29.ipv4.supernova.orange.pl (79.184.254.29) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.275)
- id 975af00a9d8c7bd9; Thu, 8 Aug 2019 10:44:33 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     platform-driver-x86@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>
-Subject: [PATCH 1/2] intel-hid: intel-vbtn: Avoid leaking wakeup_mode set
-Date:   Thu, 08 Aug 2019 10:42:42 +0200
-Message-ID: <7715913.DUxqI9eLD1@kreacher>
-In-Reply-To: <1717835.1Yz4jNODO2@kreacher>
-References: <1717835.1Yz4jNODO2@kreacher>
+        Thu, 8 Aug 2019 04:44:50 -0400
+Received: from mga17.intel.com ([192.55.52.151]:29778 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731048AbfHHIot (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 04:44:49 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Aug 2019 01:44:49 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,360,1559545200"; 
+   d="scan'208";a="374781621"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by fmsmga006.fm.intel.com with ESMTP; 08 Aug 2019 01:44:48 -0700
+Date:   Thu, 8 Aug 2019 16:44:25 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>,
+        Vlastimil Babka <vbabka@suse.cz>, akpm@linux-foundation.org,
+        kirill.shutemov@linux.intel.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/mmap.c: refine data locality of find_vma_prev
+Message-ID: <20190808084425.GA32524@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <20190806081123.22334-1-richardw.yang@linux.intel.com>
+ <3e57ba64-732b-d5be-1ad6-eecc731ef405@suse.cz>
+ <20190807003109.GB24750@richard>
+ <20190807075101.GN11812@dhcp22.suse.cz>
+ <20190808032638.GA28138@richard>
+ <20190808060210.GE11812@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190808060210.GE11812@dhcp22.suse.cz>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Thu, Aug 08, 2019 at 08:02:10AM +0200, Michal Hocko wrote:
+>On Thu 08-08-19 11:26:38, Wei Yang wrote:
+>> On Wed, Aug 07, 2019 at 09:51:01AM +0200, Michal Hocko wrote:
+>> >On Wed 07-08-19 08:31:09, Wei Yang wrote:
+>> >> On Tue, Aug 06, 2019 at 11:29:52AM +0200, Vlastimil Babka wrote:
+>> >> >On 8/6/19 10:11 AM, Wei Yang wrote:
+>> >> >> When addr is out of the range of the whole rb_tree, pprev will points to
+>> >> >> the biggest node. find_vma_prev gets is by going through the right most
+>> >> >
+>> >> >s/biggest/last/ ? or right-most?
+>> >> >
+>> >> >> node of the tree.
+>> >> >> 
+>> >> >> Since only the last node is the one it is looking for, it is not
+>> >> >> necessary to assign pprev to those middle stage nodes. By assigning
+>> >> >> pprev to the last node directly, it tries to improve the function
+>> >> >> locality a little.
+>> >> >
+>> >> >In the end, it will always write to the cacheline of pprev. The caller has most
+>> >> >likely have it on stack, so it's already hot, and there's no other CPU stealing
+>> >> >it. So I don't understand where the improved locality comes from. The compiler
+>> >> >can also optimize the patched code so the assembly is identical to the previous
+>> >> >code, or vice versa. Did you check for differences?
+>> >> 
+>> >> Vlastimil
+>> >> 
+>> >> Thanks for your comment.
+>> >> 
+>> >> I believe you get a point. I may not use the word locality. This patch tries
+>> >> to reduce some unnecessary assignment of pprev.
+>> >> 
+>> >> Original code would assign the value on each node during iteration, this is
+>> >> what I want to reduce.
+>> >
+>> >Is there any measurable difference (on micro benchmarks or regular
+>> >workloads)?
+>> 
+>> I wrote a test case to compare these two methods, but not find visible
+>> difference in run time.
+>
+>What is the point in changing this code if it doesn't lead to any
+>measurable improvement?
 
-Both intel-hid and intel-vbtn set a wakeup_mode flag causing them
-to behave in a special way during system suspend and while suspended
-in their "prepare" PM callbacks and clear it in their "resume" PM
-callbacks.  That may cause the wakeup_mode flag to remain set after
-a system suspend failure (if some other driver's "suspend" callback
-returns an error before the "suspend" callback of either intel-hid
-or intel-vbtn is invoked).
+You are right.
 
-After commit 10a08fd65ec1 ("ACPI: PM: Set up EC GPE for system wakeup
-from drivers that need it") that also affects the "wakeup mask" bit
-of the EC GPE, which may not be cleared after a failing system
-suspend.
+>-- 
+>Michal Hocko
+>SUSE Labs
 
-Fix this issue by adding "complete" PM callbacks to intel-hid and
-intel-vbtn to clear the wakeup_mode flag and the "wakeup mask" bit
-of the EC GPE if they have not been cleared earlier.
-
-Fixes: 10a08fd65ec1 ("ACPI: PM: Set up EC GPE for system wakeup from drivers that need it")
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
-
-The commit pointed to by the Fixes: tag above is in linux-next only ATM.
-
-The problem had been there before that commit, but it wasn't fixed by it and
-the fix depends on that commit.
-
-
----
- drivers/platform/x86/intel-hid.c  |   17 ++++++++++++-----
- drivers/platform/x86/intel-vbtn.c |   12 +++++++++---
- 2 files changed, 21 insertions(+), 8 deletions(-)
-
-Index: linux-pm/drivers/platform/x86/intel-hid.c
-===================================================================
---- linux-pm.orig/drivers/platform/x86/intel-hid.c
-+++ linux-pm/drivers/platform/x86/intel-hid.c
-@@ -262,6 +262,16 @@ static int intel_hid_pm_prepare(struct d
- 	return 0;
- }
- 
-+static void intel_hid_pm_complete(struct device *device)
-+{
-+	struct intel_hid_priv *priv = dev_get_drvdata(device);
-+
-+	if (priv->wakeup_mode) {
-+		acpi_ec_set_gpe_wake_mask(ACPI_GPE_DISABLE);
-+		priv->wakeup_mode = false;
-+	}
-+}
-+
- static int intel_hid_pl_suspend_handler(struct device *device)
- {
- 	if (pm_suspend_via_firmware()) {
-@@ -273,12 +283,8 @@ static int intel_hid_pl_suspend_handler(
- 
- static int intel_hid_pl_resume_handler(struct device *device)
- {
--	if (device_may_wakeup(device)) {
--		struct intel_hid_priv *priv = dev_get_drvdata(device);
-+	intel_hid_pm_complete(device);
- 
--		acpi_ec_set_gpe_wake_mask(ACPI_GPE_DISABLE);
--		priv->wakeup_mode = false;
--	}
- 	if (pm_resume_via_firmware()) {
- 		intel_hid_set_enable(device, true);
- 		intel_button_array_enable(device, true);
-@@ -288,6 +294,7 @@ static int intel_hid_pl_resume_handler(s
- 
- static const struct dev_pm_ops intel_hid_pl_pm_ops = {
- 	.prepare = intel_hid_pm_prepare,
-+	.complete = intel_hid_pm_complete,
- 	.freeze  = intel_hid_pl_suspend_handler,
- 	.thaw  = intel_hid_pl_resume_handler,
- 	.restore  = intel_hid_pl_resume_handler,
-Index: linux-pm/drivers/platform/x86/intel-vbtn.c
-===================================================================
---- linux-pm.orig/drivers/platform/x86/intel-vbtn.c
-+++ linux-pm/drivers/platform/x86/intel-vbtn.c
-@@ -210,19 +210,25 @@ static int intel_vbtn_pm_prepare(struct
- 	return 0;
- }
- 
--static int intel_vbtn_pm_resume(struct device *dev)
-+static void intel_vbtn_pm_complete(struct device *dev)
- {
--	if (device_may_wakeup(dev)) {
--		struct intel_vbtn_priv *priv = dev_get_drvdata(dev);
-+	struct intel_vbtn_priv *priv = dev_get_drvdata(dev);
- 
-+	if (priv->wakeup_mode) {
- 		acpi_ec_set_gpe_wake_mask(ACPI_GPE_DISABLE);
- 		priv->wakeup_mode = false;
- 	}
-+}
-+
-+static int intel_vbtn_pm_resume(struct device *dev)
-+{
-+	intel_vbtn_pm_complete(dev);
- 	return 0;
- }
- 
- static const struct dev_pm_ops intel_vbtn_pm_ops = {
- 	.prepare = intel_vbtn_pm_prepare,
-+	.complete = intel_vbtn_pm_complete,
- 	.resume = intel_vbtn_pm_resume,
- 	.restore = intel_vbtn_pm_resume,
- 	.thaw = intel_vbtn_pm_resume,
-
-
-
+-- 
+Wei Yang
+Help you, Help me
