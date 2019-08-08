@@ -2,106 +2,101 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACFEBC32751
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 01:20:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD45C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 01:21:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81A7721872
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 01:20:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="eojPfFQr"
+	by mail.kernel.org (Postfix) with ESMTP id 48C822184E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 01:21:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389623AbfHHBUu (ORCPT
+        id S2389647AbfHHBVa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 21:20:50 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:50199 "EHLO ozlabs.org"
+        Wed, 7 Aug 2019 21:21:30 -0400
+Received: from mga11.intel.com ([192.55.52.93]:12546 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389587AbfHHBUu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 21:20:50 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 463rCy6VVqz9sN4;
-        Thu,  8 Aug 2019 11:20:46 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1565227247;
-        bh=umznyvpOFtuEr9ptCP9R8EL6gWu/KVzYLzvUfJ4fnic=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=eojPfFQryfm4YDArVQTTnE+j0hZ3FrIg3kVabXTD9DlJmAkf4QUT1xDDFfs4fUI6s
-         CK0CdaAm5kR4a0BkmC0CrIcYcBWOCAzO0L3JHyGwvsb4l8Mbp5DUBYeyVXB9k5GpPA
-         Y/SbU99wU+5wV7sQE4HJVVmSwaul4CmuLJaFHaJf+xrFsXxlb9gS56o1MRfcUhvJgF
-         Ezsmo/Veyh50isYeZ3tBPtnnVZlLGoE+OCnPs4wxbCiTI7c8pmeIGMXAyrZKreT/6L
-         XR6oPcUfR5nInwiQlMsBakcarm7tIVC/JLYtqx1EP/cmSqyYx4wAIlMHYlriqUAZoT
-         aBvZQC0mZyutg==
-Date:   Thu, 8 Aug 2019 11:20:44 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Song Liu <songliubraving@fb.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>
-Subject: Re: linux-next: Tree for Aug 7 (mm/khugepaged.c)
-Message-ID: <20190808112044.4390d46f@canb.auug.org.au>
-In-Reply-To: <20190807142755.8211d58d5ecec8082587b073@linux-foundation.org>
-References: <20190807183606.372ca1a4@canb.auug.org.au>
-        <c18b2828-cdf3-5248-609f-d89a24f558d1@infradead.org>
-        <DCC6982B-17EF-4143-8CE8-9D0EC28FA06B@fb.com>
-        <20190807131029.f7f191aaeeb88cc435c6306f@linux-foundation.org>
-        <BB7412DE-A88E-41A4-9796-5ECEADE31571@fb.com>
-        <20190807142755.8211d58d5ecec8082587b073@linux-foundation.org>
+        id S2389314AbfHHBV3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 21:21:29 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Aug 2019 18:21:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,358,1559545200"; 
+   d="scan'208";a="176366240"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga007.fm.intel.com with ESMTP; 07 Aug 2019 18:21:25 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1hvX7N-0006wE-6n; Thu, 08 Aug 2019 09:21:25 +0800
+Date:   Thu, 8 Aug 2019 09:20:54 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Pingfan Liu <kernelfans@gmail.com>
+Cc:     kbuild-all@01.org, Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>, x86@kernel.org,
+        Pingfan Liu <kernelfans@gmail.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>, Qian Cai <cai@lca.pw>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Daniel Drake <drake@endlessm.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>,
+        Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org
+Subject: Re: [PATCH 3/4] x86/smp: send capped cpus to a stable state when
+ smp_init()
+Message-ID: <201908080938.Rjv1ILYn%lkp@intel.com>
+References: <1564995539-29609-4-git-send-email-kernelfans@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/j2bKP.0cu/QWzP1Yxga==yl";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1564995539-29609-4-git-send-email-kernelfans@gmail.com>
+X-Patchwork-Hint: ignore
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/j2bKP.0cu/QWzP1Yxga==yl
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Pingfan,
 
-Hi Andrew,
+Thank you for the patch! Perhaps something to improve:
 
-On Wed, 7 Aug 2019 14:27:55 -0700 Andrew Morton <akpm@linux-foundation.org>=
- wrote:
->
-> It's all a bit confusing.  I'll drop=20
->=20
-> mm-move-memcmp_pages-and-pages_identical.patch
-> uprobe-use-original-page-when-all-uprobes-are-removed.patch
-> uprobe-use-original-page-when-all-uprobes-are-removed-v2.patch
-> mm-thp-introduce-foll_split_pmd.patch
-> mm-thp-introduce-foll_split_pmd-v11.patch
-> uprobe-use-foll_split_pmd-instead-of-foll_split.patch
-> khugepaged-enable-collapse-pmd-for-pte-mapped-thp.patch
-> uprobe-collapse-thp-pmd-after-removing-all-uprobes.patch
+[auto build test WARNING on linus/master]
+[cannot apply to v5.3-rc3 next-20190807]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
 
-I have dropped them all from linux-next today.
+url:    https://github.com/0day-ci/linux/commits/Pingfan-Liu/x86-mce-protect-nr_cpus-from-rebooting-by-broadcast-mce/20190806-101748
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.1-rc1-7-g2b96cd8-dirty
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
 
---=20
-Cheers,
-Stephen Rothwell
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
 
---Sig_/j2bKP.0cu/QWzP1Yxga==yl
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
 
------BEGIN PGP SIGNATURE-----
+sparse warnings: (new ones prefixed by >>)
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1LeOwACgkQAVBC80lX
-0Gx7kgf/SIl4fB7HUsRW/clKuyM12Y+85pl9oCSGfH/yoXqig2drxvBIaFMvqXaL
-ANc0d6xdkx6L9WHNlorYU1pi6fDkH1oRhYzcOLVUJIkGSFDZuK5cF3GEwlFFog0p
-7LzT7D1c3g4BuzhVokLGDFSRzF0kd8dewwfmLkNFbBc39i2M94gN1qrqzIc5nemZ
-RbhAtO8QGH6IZ+2XAaoflITeKONoUDXXClzbx8nEGg11T8A/wXi6Q/9rmfQH0rd3
-4Z60pYFpUFqBFal6IDW9yQe3plZ1PfPbnfrzGOepUEnZBgJrQ4FX4YKJa+H14FsD
-Gxl7S3dArcn49pHeszLXsc5CTAEuNA==
-=pphB
------END PGP SIGNATURE-----
+   arch/x86/kernel/cpu/common.c:70:16: sparse: sparse: symbol '__cpu_capped_mask' was not declared. Should it be static?
+>> arch/x86/kernel/cpu/common.c:72:16: sparse: sparse: symbol '__cpu_capped_done_mask' was not declared. Should it be static?
+   arch/x86/kernel/cpu/common.c:138:43: sparse: sparse: cast truncates bits from constant value (fffff becomes ffff)
+   arch/x86/kernel/cpu/common.c:139:43: sparse: sparse: cast truncates bits from constant value (fffff becomes ffff)
+   arch/x86/kernel/cpu/common.c:140:43: sparse: sparse: cast truncates bits from constant value (fffff becomes ffff)
+   arch/x86/kernel/cpu/common.c:141:43: sparse: sparse: cast truncates bits from constant value (fffff becomes ffff)
+   arch/x86/kernel/cpu/common.c:168:43: sparse: sparse: cast truncates bits from constant value (fffff becomes ffff)
+   arch/x86/kernel/cpu/common.c:169:43: sparse: sparse: cast truncates bits from constant value (fffff becomes ffff)
 
---Sig_/j2bKP.0cu/QWzP1Yxga==yl--
+Please review and possibly fold the followup patch.
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
