@@ -2,54 +2,53 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E800FC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:07:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C6F4C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:07:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDF282189D
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:07:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15DD2214C6
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:07:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565291246;
-	bh=sKb2ant9Jf6tIi2b62WRaEOi0Q9/FpMvLtGoIIhoLdM=;
+	s=default; t=1565291250;
+	bh=wPU7qtU9xguWC0entMD6mZtTti9w3RNNQ+vEOPue/Xk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XQjqU6OAe2MxsDrCTZ/OpZZHrWOEddPZkZQOl+NSAZEg96mz5uk+AOVe/TaVbdQrp
-	 T1G/PojnBoZ26AywzdbsDPFeurdZEb9HgzWsVuG3EqB/9rEvunItx3BmTasG1YpyxA
-	 deI/yAkvpELgZvDDQBBGBdj2C6z2W5t4mYDlPWOY=
+	b=hed5AL/Hevoj0+l7X2oEcrFiPrpCcnRFFZ9+yJNWXiHTnsasmdhuar4yO+1DzC1va
+	 ZNlhobK5G/wD+Bus4xO3e49VxKeKwqwQLmPS2UfEw25lc/2gP8WTtWdXqS5pcIBtQj
+	 aW+i+3c6xXN5Z+RHrMS4Aivex5D0ztYAK8ao3wMo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404666AbfHHTHZ (ORCPT
+        id S2404675AbfHHTH3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:07:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41050 "EHLO mail.kernel.org"
+        Thu, 8 Aug 2019 15:07:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404647AbfHHTHV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 15:07:21 -0400
+        id S2404660AbfHHTHY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 15:07:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA10F214C6;
-        Thu,  8 Aug 2019 19:07:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66B3B21874;
+        Thu,  8 Aug 2019 19:07:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565291241;
-        bh=sKb2ant9Jf6tIi2b62WRaEOi0Q9/FpMvLtGoIIhoLdM=;
+        s=default; t=1565291243;
+        bh=wPU7qtU9xguWC0entMD6mZtTti9w3RNNQ+vEOPue/Xk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iWetKm5JVrjMrIg/EVVJWFT+UdBg8ueybPQmMqkB0Hz5dmZ7EEZ6iv/hZcX1X4JYW
-         sKbTeABst4AUUngkbwOOKDWLtzFTIapfC1pHhjm6gDQ/qm+TarKfHlXOp+4Zqw/ogN
-         2IUaWU2aqwUW8XwUR52JmxKelKWHRgmDa+t4YZLE=
+        b=KPY1hiA5dL1/OvrqI0TWvJPh9OvCtgnDGrICLzM2rr0+dj4wGn2X5H9D31SL/0gSz
+         hv3u5snvbHuXr61RH9UQXtkAMNzMgXjPQLkTMT10wsjdkj8szleeaNEQJ68TU0uORG
+         I1MIGmi3I9ETmAnmGkyMFQPoR9G7CrVx3CvKkISQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot <syzbot+d59c4387bfb6eced94e2@syzkaller.appspotmail.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Hillf Danton <hdanton@sina.com>, Takashi Iwai <tiwai@suse.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 05/56] ALSA: usb-audio: Fix gpf in snd_usb_pipe_sanity_check
-Date:   Thu,  8 Aug 2019 21:04:31 +0200
-Message-Id: <20190808190453.077297569@linuxfoundation.org>
+        Aaron Armstrong Skomra <aaron.skomra@wacom.com>,
+        Ping Cheng <ping.cheng@wacom.com>,
+        Jiri Kosina <jkosina@suse.cz>
+Subject: [PATCH 5.2 06/56] HID: wacom: fix bit shift for Cintiq Companion 2
+Date:   Thu,  8 Aug 2019 21:04:32 +0200
+Message-Id: <20190808190453.115412526@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190808190452.867062037@linuxfoundation.org>
 References: <20190808190452.867062037@linuxfoundation.org>
@@ -62,50 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5d78e1c2b7f4be00bbe62141603a631dc7812f35 ]
+From: Aaron Armstrong Skomra <skomra@gmail.com>
 
-syzbot found the following crash on:
+commit 693c3dab4e50403f91bca4b52fc6d8562a3180f6 upstream.
 
-  general protection fault: 0000 [#1] SMP KASAN
-  RIP: 0010:snd_usb_pipe_sanity_check+0x80/0x130 sound/usb/helper.c:75
-  Call Trace:
-    snd_usb_motu_microbookii_communicate.constprop.0+0xa0/0x2fb  sound/usb/quirks.c:1007
-    snd_usb_motu_microbookii_boot_quirk sound/usb/quirks.c:1051 [inline]
-    snd_usb_apply_boot_quirk.cold+0x163/0x370 sound/usb/quirks.c:1280
-    usb_audio_probe+0x2ec/0x2010 sound/usb/card.c:576
-    usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
-    really_probe+0x281/0x650 drivers/base/dd.c:548
-    ....
+The bit indicating BTN_6 on this device is overshifted
+by 2 bits, resulting in the incorrect button being
+reported.
 
-It was introduced in commit 801ebf1043ae for checking pipe and endpoint
-types. It is fixed by adding a check of the ep pointer in question.
+Also fix copy-paste mistake in comments.
 
-BugLink: https://syzkaller.appspot.com/bug?extid=d59c4387bfb6eced94e2
-Reported-by: syzbot <syzbot+d59c4387bfb6eced94e2@syzkaller.appspotmail.com>
-Fixes: 801ebf1043ae ("ALSA: usb-audio: Sanity checks for each pipe and EP types")
-Cc: Andrey Konovalov <andreyknvl@google.com>
-Signed-off-by: Hillf Danton <hdanton@sina.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Aaron Armstrong Skomra <aaron.skomra@wacom.com>
+Reviewed-by: Ping Cheng <ping.cheng@wacom.com>
+Link: https://github.com/linuxwacom/xf86-input-wacom/issues/71
+Fixes: c7f0522a1ad1 ("HID: wacom: Slim down wacom_intuos_pad processing")
+Cc: <stable@vger.kernel.org> # v4.5+
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- sound/usb/helper.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hid/wacom_wac.c |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/sound/usb/helper.c b/sound/usb/helper.c
-index 71d5f540334a2..4c12cc5b53fda 100644
---- a/sound/usb/helper.c
-+++ b/sound/usb/helper.c
-@@ -72,7 +72,7 @@ int snd_usb_pipe_sanity_check(struct usb_device *dev, unsigned int pipe)
- 	struct usb_host_endpoint *ep;
- 
- 	ep = usb_pipe_endpoint(dev, pipe);
--	if (usb_pipetype(pipe) != pipetypes[usb_endpoint_type(&ep->desc)])
-+	if (!ep || usb_pipetype(pipe) != pipetypes[usb_endpoint_type(&ep->desc)])
- 		return -EINVAL;
- 	return 0;
- }
--- 
-2.20.1
-
+--- a/drivers/hid/wacom_wac.c
++++ b/drivers/hid/wacom_wac.c
+@@ -533,14 +533,14 @@ static int wacom_intuos_pad(struct wacom
+ 		 */
+ 		buttons = (data[4] << 1) | (data[3] & 0x01);
+ 	} else if (features->type == CINTIQ_COMPANION_2) {
+-		/* d-pad right  -> data[4] & 0x10
+-		 * d-pad up     -> data[4] & 0x20
+-		 * d-pad left   -> data[4] & 0x40
+-		 * d-pad down   -> data[4] & 0x80
+-		 * d-pad center -> data[3] & 0x01
++		/* d-pad right  -> data[2] & 0x10
++		 * d-pad up     -> data[2] & 0x20
++		 * d-pad left   -> data[2] & 0x40
++		 * d-pad down   -> data[2] & 0x80
++		 * d-pad center -> data[1] & 0x01
+ 		 */
+ 		buttons = ((data[2] >> 4) << 7) |
+-		          ((data[1] & 0x04) << 6) |
++		          ((data[1] & 0x04) << 4) |
+ 		          ((data[2] & 0x0F) << 2) |
+ 		          (data[1] & 0x03);
+ 	} else if (features->type >= INTUOS5S && features->type <= INTUOSPL) {
 
 
