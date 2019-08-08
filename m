@@ -2,52 +2,60 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC313C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:11:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 976ADC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:11:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE9CC21882
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:11:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BC9621743
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 19:11:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565291468;
-	bh=DGxp/fdUdDq1SC23OdTpIicTPrWVXe9uVaqaKTC4L48=;
+	s=default; t=1565291472;
+	bh=Bt6EXsV6kBA3caCwt88SS2syaHLHgL7Yw6ffF4xTHHY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VL61VAOyfYEc5LqyhCovtHMA2TTgGR4/snBZdBkJq5/knVh6gBKFvMCmPDRjyLWCz
-	 L3U29VWopyHip2jgWk8ocAirjH7NoIB5Jhmhu7Yphi5Z+2oLHiv9ea3nPBe3i8VWa3
-	 4hM+sRRVL0MoqkFJlVqRKkKgyG4K8Fflz2iknfqQ=
+	b=YRfgB8h13GgEaMlwNRlGkPdf8QA1inhXdeQeUl1n7incdakYpRtAzUwNKaVkjU9xY
+	 Gr65X1oop2UrBTOeB/3uZad01FUQGQ9V1+ZzUKIt/JPx0ixaHEjeyWEiF8kj0NRq3h
+	 gh4bQHF+jwV6XNqx59c0tMGPzUv9ZZyFLKRSIHZk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404437AbfHHTLH (ORCPT
+        id S2405436AbfHHTLL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 15:11:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45544 "EHLO mail.kernel.org"
+        Thu, 8 Aug 2019 15:11:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405412AbfHHTLE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 15:11:04 -0400
+        id S2405037AbfHHTLJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 15:11:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F2C121743;
-        Thu,  8 Aug 2019 19:11:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8041721743;
+        Thu,  8 Aug 2019 19:11:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565291463;
-        bh=DGxp/fdUdDq1SC23OdTpIicTPrWVXe9uVaqaKTC4L48=;
+        s=default; t=1565291468;
+        bh=Bt6EXsV6kBA3caCwt88SS2syaHLHgL7Yw6ffF4xTHHY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2gaFV0wdqSXpkRyN8vMH8KEBCC+8X1XxSJ0yyndYuK1Ul/1bzBiP39kvow6ABPF0P
-         qSJcRwoh/Cy7mPQt7//a9k8JZ0/VnszjBgOODg2NS9GJKt+0oryuk3Q/oc/r4/Q9hR
-         Ou4uvEmPMpBlp/RWzJEEvAgBFE67K3vBRbtAGfHM=
+        b=TZrLHrKAIPdo79fRKedb9uIIhl5hjOeDpcDw/QUmuVYPq2Y+el+czroF83tqFNtbf
+         rWXFSW71YcazPuAbj+KySt2OQ7CpD8pFDrRtXm8iTVpyHXj0JU1RRxdhUlU5WAfz6Z
+         PcMYmevkkCHMsTJ+ipb18ZsXiDI83vazYLBXWdIw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guillaume Nault <g.nault@alphalink.fr>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 23/33] compat_ioctl: pppoe: fix PPPOEIOCSFWD handling
-Date:   Thu,  8 Aug 2019 21:05:30 +0200
-Message-Id: <20190808190454.759879073@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Andrew Prout <aprout@ll.mit.edu>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        Michal Kubecek <mkubecek@suse.cz>,
+        Neal Cardwell <ncardwell@google.com>,
+        Yuchung Cheng <ycheng@google.com>,
+        Christoph Paasch <cpaasch@apple.com>,
+        Jonathan Looney <jtl@netflix.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Matthieu Baerts <matthieu.baerts@tessares.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 04/33] tcp: be more careful in tcp_fragment()
+Date:   Thu,  8 Aug 2019 21:05:11 +0200
+Message-Id: <20190808190453.790722103@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190808190453.582417307@linuxfoundation.org>
 References: <20190808190453.582417307@linuxfoundation.org>
@@ -60,132 +68,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+commit b617158dc096709d8600c53b6052144d12b89fab upstream.
 
-[ Upstream commit 055d88242a6046a1ceac3167290f054c72571cd9 ]
+Some applications set tiny SO_SNDBUF values and expect
+TCP to just work. Recent patches to address CVE-2019-11478
+broke them in case of losses, since retransmits might
+be prevented.
 
-Support for handling the PPPOEIOCSFWD ioctl in compat mode was added in
-linux-2.5.69 along with hundreds of other commands, but was always broken
-sincen only the structure is compatible, but the command number is not,
-due to the size being sizeof(size_t), or at first sizeof(sizeof((struct
-sockaddr_pppox)), which is different on 64-bit architectures.
+We should allow these flows to make progress.
 
-Guillaume Nault adds:
+This patch allows the first and last skb in retransmit queue
+to be split even if memory limits are hit.
 
-  And the implementation was broken until 2016 (see 29e73269aa4d ("pppoe:
-  fix reference counting in PPPoE proxy")), and nobody ever noticed. I
-  should probably have removed this ioctl entirely instead of fixing it.
-  Clearly, it has never been used.
+It also adds the some room due to the fact that tcp_sendmsg()
+and tcp_sendpage() might overshoot sk_wmem_queued by about one full
+TSO skb (64KB size). Note this allowance was already present
+in stable backports for kernels < 4.15
 
-Fix it by adding a compat_ioctl handler for all pppoe variants that
-translates the command number and then calls the regular ioctl function.
+Note for < 4.15 backports :
+ tcp_rtx_queue_tail() will probably look like :
 
-All other ioctl commands handled by pppoe are compatible between 32-bit
-and 64-bit, and require compat_ptr() conversion.
+static inline struct sk_buff *tcp_rtx_queue_tail(const struct sock *sk)
+{
+	struct sk_buff *skb = tcp_send_head(sk);
 
-This should apply to all stable kernels.
+	return skb ? tcp_write_queue_prev(sk, skb) : tcp_write_queue_tail(sk);
+}
 
-Acked-by: Guillaume Nault <g.nault@alphalink.fr>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Fixes: f070ef2ac667 ("tcp: tcp_fragment() should apply sane memory limits")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: Andrew Prout <aprout@ll.mit.edu>
+Tested-by: Andrew Prout <aprout@ll.mit.edu>
+Tested-by: Jonathan Lemon <jonathan.lemon@gmail.com>
+Tested-by: Michal Kubecek <mkubecek@suse.cz>
+Acked-by: Neal Cardwell <ncardwell@google.com>
+Acked-by: Yuchung Cheng <ycheng@google.com>
+Acked-by: Christoph Paasch <cpaasch@apple.com>
+Cc: Jonathan Looney <jtl@netflix.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ppp/pppoe.c  |    3 +++
- drivers/net/ppp/pppox.c  |   13 +++++++++++++
- drivers/net/ppp/pptp.c   |    3 +++
- fs/compat_ioctl.c        |    3 ---
- include/linux/if_pppox.h |    3 +++
- net/l2tp/l2tp_ppp.c      |    3 +++
- 6 files changed, 25 insertions(+), 3 deletions(-)
+ include/net/tcp.h     | 17 +++++++++++++++++
+ net/ipv4/tcp_output.c | 11 ++++++++++-
+ 2 files changed, 27 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ppp/pppoe.c
-+++ b/drivers/net/ppp/pppoe.c
-@@ -1137,6 +1137,9 @@ static const struct proto_ops pppoe_ops
- 	.recvmsg	= pppoe_recvmsg,
- 	.mmap		= sock_no_mmap,
- 	.ioctl		= pppox_ioctl,
-+#ifdef CONFIG_COMPAT
-+	.compat_ioctl	= pppox_compat_ioctl,
-+#endif
- };
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index 0b477a1e11770..7994e569644e0 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -1688,6 +1688,23 @@ static inline void tcp_check_send_head(struct sock *sk, struct sk_buff *skb_unli
+ 		tcp_sk(sk)->highest_sack = NULL;
+ }
  
- static const struct pppox_proto pppoe_proto = {
---- a/drivers/net/ppp/pppox.c
-+++ b/drivers/net/ppp/pppox.c
-@@ -22,6 +22,7 @@
- #include <linux/string.h>
- #include <linux/module.h>
- #include <linux/kernel.h>
-+#include <linux/compat.h>
- #include <linux/errno.h>
- #include <linux/netdevice.h>
- #include <linux/net.h>
-@@ -103,6 +104,18 @@ int pppox_ioctl(struct socket *sock, uns
- 
- EXPORT_SYMBOL(pppox_ioctl);
- 
-+#ifdef CONFIG_COMPAT
-+int pppox_compat_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg)
++static inline struct sk_buff *tcp_rtx_queue_head(const struct sock *sk)
 +{
-+	if (cmd == PPPOEIOCSFWD32)
-+		cmd = PPPOEIOCSFWD;
++	struct sk_buff *skb = tcp_write_queue_head(sk);
 +
-+	return pppox_ioctl(sock, cmd, (unsigned long)compat_ptr(arg));
++	if (skb == tcp_send_head(sk))
++		skb = NULL;
++
++	return skb;
 +}
 +
-+EXPORT_SYMBOL(pppox_compat_ioctl);
-+#endif
++static inline struct sk_buff *tcp_rtx_queue_tail(const struct sock *sk)
++{
++	struct sk_buff *skb = tcp_send_head(sk);
 +
- static int pppox_create(struct net *net, struct socket *sock, int protocol,
- 			int kern)
++	return skb ? tcp_write_queue_prev(sk, skb) : tcp_write_queue_tail(sk);
++}
++
+ static inline void __tcp_add_write_queue_tail(struct sock *sk, struct sk_buff *skb)
  {
---- a/drivers/net/ppp/pptp.c
-+++ b/drivers/net/ppp/pptp.c
-@@ -636,6 +636,9 @@ static const struct proto_ops pptp_ops =
- 	.recvmsg    = sock_no_recvmsg,
- 	.mmap       = sock_no_mmap,
- 	.ioctl      = pppox_ioctl,
-+#ifdef CONFIG_COMPAT
-+	.compat_ioctl = pppox_compat_ioctl,
-+#endif
- };
+ 	__skb_queue_tail(&sk->sk_write_queue, skb);
+diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+index a5960b9b6741c..a99086bf26eaf 100644
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -1264,6 +1264,7 @@ int tcp_fragment(struct sock *sk, struct sk_buff *skb, u32 len,
+ 	struct tcp_sock *tp = tcp_sk(sk);
+ 	struct sk_buff *buff;
+ 	int nsize, old_factor;
++	long limit;
+ 	int nlen;
+ 	u8 flags;
  
- static const struct pppox_proto pppox_pptp_proto = {
---- a/fs/compat_ioctl.c
-+++ b/fs/compat_ioctl.c
-@@ -1032,9 +1032,6 @@ COMPATIBLE_IOCTL(PPPIOCDISCONN)
- COMPATIBLE_IOCTL(PPPIOCATTCHAN)
- COMPATIBLE_IOCTL(PPPIOCGCHAN)
- COMPATIBLE_IOCTL(PPPIOCGL2TPSTATS)
--/* PPPOX */
--COMPATIBLE_IOCTL(PPPOEIOCSFWD)
--COMPATIBLE_IOCTL(PPPOEIOCDFWD)
- /* Big A */
- /* sparc only */
- /* Big Q for sound/OSS */
---- a/include/linux/if_pppox.h
-+++ b/include/linux/if_pppox.h
-@@ -84,6 +84,9 @@ extern int register_pppox_proto(int prot
- extern void unregister_pppox_proto(int proto_num);
- extern void pppox_unbind_sock(struct sock *sk);/* delete ppp-channel binding */
- extern int pppox_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg);
-+extern int pppox_compat_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg);
-+
-+#define PPPOEIOCSFWD32    _IOW(0xB1 ,0, compat_size_t)
+@@ -1274,7 +1275,15 @@ int tcp_fragment(struct sock *sk, struct sk_buff *skb, u32 len,
+ 	if (nsize < 0)
+ 		nsize = 0;
  
- /* PPPoX socket states */
- enum {
---- a/net/l2tp/l2tp_ppp.c
-+++ b/net/l2tp/l2tp_ppp.c
-@@ -1793,6 +1793,9 @@ static const struct proto_ops pppol2tp_o
- 	.recvmsg	= pppol2tp_recvmsg,
- 	.mmap		= sock_no_mmap,
- 	.ioctl		= pppox_ioctl,
-+#ifdef CONFIG_COMPAT
-+	.compat_ioctl = pppox_compat_ioctl,
-+#endif
- };
- 
- static const struct pppox_proto pppol2tp_proto = {
+-	if (unlikely((sk->sk_wmem_queued >> 1) > sk->sk_sndbuf + 0x20000)) {
++	/* tcp_sendmsg() can overshoot sk_wmem_queued by one full size skb.
++	 * We need some allowance to not penalize applications setting small
++	 * SO_SNDBUF values.
++	 * Also allow first and last skb in retransmit queue to be split.
++	 */
++	limit = sk->sk_sndbuf + 2 * SKB_TRUESIZE(GSO_MAX_SIZE);
++	if (unlikely((sk->sk_wmem_queued >> 1) > limit &&
++		     skb != tcp_rtx_queue_head(sk) &&
++		     skb != tcp_rtx_queue_tail(sk))) {
+ 		NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPWQUEUETOOBIG);
+ 		return -ENOMEM;
+ 	}
+-- 
+2.20.1
+
 
 
