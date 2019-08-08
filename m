@@ -2,269 +2,117 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC64C32754
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 00:55:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC569C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 00:57:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 967F1217D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 00:55:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7265217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 00:57:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="AYsoejlo"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E8ZRAIim"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389402AbfHHAy7 (ORCPT
+        id S2389540AbfHHA54 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 7 Aug 2019 20:54:59 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:42611 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730598AbfHHAy6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 7 Aug 2019 20:54:58 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 463qf66Lb3z9sN4;
-        Thu,  8 Aug 2019 10:54:54 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1565225695;
-        bh=fkz20jXNuUHMucSZ3cT6MAGxvP2OHER5/q4ViDdabN8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=AYsoejlo8gc+3elhHVwNLrRwMqcnUBAZkQ0wdhJV4DU40ZxtqFL2tQO38N1psWOrN
-         K65v/c87utrjQ8LnzSbF6qRMIYWtbGxymyM8SPgQivS+DqlvKjbNZoTgbrwnwhsOSc
-         IJjcvPIUU1htUn1O9EvPr89rGEpfN/epNnB1EGDtjh+CdiIr3WYbnQtzbZGU9BxWpZ
-         LkdeCHRB/Pl9ngS1DRy26h0lzkkDI8CPCDfYonZ+JOv4i+GZLnGFZEVU0Ijpg0biKg
-         uw10EAf2bBZQaxUpCwkVKeloGG677HJnRy2ACbVvH1xvWo28BqgptOxRJDosnsA2rf
-         poDTEQH5mG48Q==
-Date:   Thu, 8 Aug 2019 10:54:54 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Sterba <dsterba@suse.cz>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Filipe Manana <fdmanana@suse.com>, Qu Wenruo <wqu@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>
-Subject: linux-next: manual merge of the btrfs-kdave tree with the
- btrfs-fixes tree
-Message-ID: <20190808105454.7b09b26b@canb.auug.org.au>
+        Wed, 7 Aug 2019 20:57:56 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:37924 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730433AbfHHA54 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 7 Aug 2019 20:57:56 -0400
+Received: by mail-ot1-f66.google.com with SMTP id d17so111990614oth.5;
+        Wed, 07 Aug 2019 17:57:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=QWroORoYJJEypRbywT1Vg4gyvbrefE5EQmwaaN8kPSc=;
+        b=E8ZRAIimD3NWKzKqu/YwNjL4J+25+uMXaiZMMdO24Y/0PuLvdruAdtuKjGDe3MmxWv
+         20JHunB6aSSQadO8VKSl4Yj26rjTEON+qvqsWIXKpbVvFjW6rXzRrpkMFCvy7vWRcar3
+         D2oQBbE1oV7NnUtf1ZY+f+m5IKsEa7eAK7F+wv31UOE7RRwz8x74EWA7xAKjjixD/qqo
+         5sku8fLL/UheU4jomfDhIsTl/ziNQiACSc+EwFgUrPJUayUTIE4tgKAaQipfQ0A9yHfR
+         1q0e4QjNcpsZOLMX4sNL90kS+WRBeuv8UH++wwwCY5pY3wJa8t8og8dTAdiotO2xWaVR
+         BUcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=QWroORoYJJEypRbywT1Vg4gyvbrefE5EQmwaaN8kPSc=;
+        b=RVXd3gFiEkgorbPhaVNj5m3++pghdIXThxv1ghYH10iEo44J7XO133k3jTHHiCfD02
+         pqXXH5ZBkuWF0if997s90wyUyXmRykPsBYgDbfeacKSA46eDx89ernYJYfUGn7TALJd2
+         UPtlCQ2w14fkxrIxtkB6rfO5Nv8fnNilgkAr90i3aWwn4kGvxhnEj+g50QQV2o2FH0qk
+         ub3LWLuiJsyv6TdyIf4z8AI4AbFFMmx2Y0Ccrt/pXswReghfw8cVNSOR2Gs3IWx9NlsU
+         7aLx9YAhJoZEk1JLKepUjHgzBf+FVUKvUiY0UbV5l9eL0b48z/ehH9mxFcFbvVjWa6Xw
+         FXTA==
+X-Gm-Message-State: APjAAAWPfwowNMrx2xxmT1C8TR9Mv9hopm4XAZ5yZhVeF+tu3Qzt/9RB
+        XYy1njtDoJkyxp+pMz+HKnF+8/X0
+X-Google-Smtp-Source: APXvYqxwuFAq7MHTNxNRQPD1XiAsT9tm40H5OgHUHjAkyjHNCYerWkPZGyqH0v7GbhIEW6STp5VBDw==
+X-Received: by 2002:aca:5451:: with SMTP id i78mr682009oib.85.1565225875079;
+        Wed, 07 Aug 2019 17:57:55 -0700 (PDT)
+Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
+        by smtp.gmail.com with ESMTPSA id k3sm31031721otr.1.2019.08.07.17.57.53
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Aug 2019 17:57:54 -0700 (PDT)
+Subject: Re: [PATCH] Fix non-kerneldoc comment in realtek/rtlwifi/usb.c
+To:     =?UTF-8?Q?Valdis_Kl=c4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        Ping-Ke Shih <pkshih@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <5924.1565217560@turing-police>
+From:   Larry Finger <Larry.Finger@lwfinger.net>
+Message-ID: <371d1a31-2daa-202e-85ea-6fe20c36bc2a@lwfinger.net>
+Date:   Wed, 7 Aug 2019 19:57:52 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Ay9WXvNInn/8fLpJN1fI5yX";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <5924.1565217560@turing-police>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Ay9WXvNInn/8fLpJN1fI5yX
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 8/7/19 5:39 PM, Valdis Klētnieks wrote:
 
-Hi all,
+When this driver was originally entered, a line with "/*" was flagged by 
+checkpatch.pl. In fact, when I make your change, I get
 
-Today's linux-next merge of the btrfs-kdave tree got conflicts in:
+WARNING: networking block comments don't use an empty /* line, use /* Comment...
+#243: FILE: drivers/net/wireless/realtek/rtlwifi/usb.c:243:
++/*
++ *
 
-  fs/btrfs/ctree.h
-  fs/btrfs/extent-tree.c
+To avoid a loop of "fixing" compiler/checkpatch warnings, you need to put the 
+first real line of the comment on the line of the "/*". For the first of your 
+patches, that results in
 
-between commits:
+diff --git a/drivers/net/wireless/realtek/rtlwifi/usb.c 
+b/drivers/net/wireless/realtek/rtlwifi/usb.c
+index 34d68dbf4b4c..f89ceac25eff 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/usb.c
++++ b/drivers/net/wireless/realtek/rtlwifi/usb.c
+@@ -239,10 +239,7 @@ static void _rtl_usb_io_handler_release(struct ieee80211_hw 
+*hw)
+         mutex_destroy(&rtlpriv->io.bb_mutex);
+  }
+-/**
+- *
+- *     Default aggregation handler. Do nothing and just return the oldest skb.
+- */
++/* Default aggregation handler. Do nothing and just return the oldest skb.  */
+  static struct sk_buff *_none_usb_tx_aggregate_hdl(struct ieee80211_hw *hw,
+                                                   struct sk_buff_head *list)
 
-  d7cd4dd907c1 ("Btrfs: fix sysfs warning and missing raid sysfs directorie=
-s")
-  07301df7d2fc ("btrfs: trim: Check the range passed into to prevent overfl=
-ow")
+Because you merely shift the warning to a different tool,
 
-from the btrfs-fixes tree and commit:
+NACK.
 
-  4dfbf33fbfb6 ("btrfs: migrate the block group lookup code")
-  f35f767acec1 ("btrfs: move sysfs declarations out of ctree.h")
-  76c49f86437b ("btrfs: factor sysfs code out of link_block_group")
-
-from the btrfs-kdave tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
-I also added this patch:
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Thu, 8 Aug 2019 10:14:25 +1000
-Subject: [PATCH] btrfs: merge fix up for "Btrfs: fix sysfs warning and miss=
-ing
- raid sysfs directories"
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- fs/btrfs/sysfs.c | 52 +++++++++++++++++++-----------------------------
- 1 file changed, 21 insertions(+), 31 deletions(-)
-
-diff --git a/fs/btrfs/sysfs.c b/fs/btrfs/sysfs.c
-index 600db4be740d..ee6f70e8f258 100644
---- a/fs/btrfs/sysfs.c
-+++ b/fs/btrfs/sysfs.c
-@@ -4,6 +4,7 @@
-  */
-=20
- #include <linux/sched.h>
-+#include <linux/sched/mm.h>
- #include <linux/slab.h>
- #include <linux/spinlock.h>
- #include <linux/completion.h>
-@@ -27,7 +28,6 @@ struct btrfs_feature_attr {
- struct raid_kobject {
- 	u64 flags;
- 	struct kobject kobj;
--	struct list_head list;
- };
-=20
- #define __INIT_KOBJ_ATTR(_name, _mode, _show, _store)			\
-@@ -819,33 +819,6 @@ static void init_feature_attrs(void)
- 	}
- }
-=20
--/* link_block_group will queue up kobjects to add when we're reclaim-safe =
-*/
--void btrfs_add_raid_kobjects(struct btrfs_fs_info *fs_info)
--{
--	struct btrfs_space_info *space_info;
--	struct raid_kobject *rkobj;
--	LIST_HEAD(list);
--	int ret =3D 0;
--
--	spin_lock(&fs_info->pending_raid_kobjs_lock);
--	list_splice_init(&fs_info->pending_raid_kobjs, &list);
--	spin_unlock(&fs_info->pending_raid_kobjs_lock);
--
--	list_for_each_entry(rkobj, &list, list) {
--		space_info =3D btrfs_find_space_info(fs_info, rkobj->flags);
--
--		ret =3D kobject_add(&rkobj->kobj, &space_info->kobj,
--				"%s", btrfs_bg_type_to_raid_name(rkobj->flags));
--		if (ret) {
--			kobject_put(&rkobj->kobj);
--			break;
--		}
--	}
--	if (ret)
--		btrfs_warn(fs_info,
--			   "failed to add kobject for block cache, ignoring");
--}
--
- /*
-  * Create a sysfs entry for a given block group type at path
-  * /sys/fs/btrfs/UUID/allocation/data/TYPE
-@@ -855,10 +828,21 @@ void btrfs_sysfs_add_block_group_type(struct btrfs_bl=
-ock_group_cache *cache)
- 	struct btrfs_fs_info *fs_info =3D cache->fs_info;
- 	struct btrfs_space_info *space_info =3D cache->space_info;
- 	struct raid_kobject *rkobj;
-+	unsigned int nofs_flag;
-+	int ret;
- 	const int index =3D btrfs_bg_flags_to_raid_index(cache->flags);
-=20
-+	/*
-+	 * Setup a NOFS context because kobject_add(), deep in its call
-+	 * chain, does GFP_KERNEL allocations, and we are often called
-+	 * in a context where if reclaim is triggered we can deadlock
-+	 * (we are either holding a transaction handle or some lock
-+	 * required for a transaction commit).
-+	 */
-+	nofs_flag =3D memalloc_nofs_save();
- 	rkobj =3D kzalloc(sizeof(*rkobj), GFP_NOFS);
- 	if (!rkobj) {
-+		memalloc_nofs_restore(nofs_flag);
- 		btrfs_warn(cache->fs_info,
- 				"couldn't alloc memory for raid level kobject");
- 		return;
-@@ -867,9 +851,15 @@ void btrfs_sysfs_add_block_group_type(struct btrfs_blo=
-ck_group_cache *cache)
- 	rkobj->flags =3D cache->flags;
- 	kobject_init(&rkobj->kobj, &btrfs_raid_ktype);
-=20
--	spin_lock(&fs_info->pending_raid_kobjs_lock);
--	list_add_tail(&rkobj->list, &fs_info->pending_raid_kobjs);
--	spin_unlock(&fs_info->pending_raid_kobjs_lock);
-+	ret =3D kobject_add(&rkobj->kobj, &space_info->kobj, "%s",
-+			  btrfs_bg_type_to_raid_name(rkobj->flags));
-+	memalloc_nofs_restore(nofs_flag);
-+	if (ret) {
-+		kobject_put(&rkobj->kobj);
-+		btrfs_warn(fs_info,
-+		   "failed to add kobject for block cache, ignoring");
-+		return;
-+	}
- 	space_info->block_group_kobjs[index] =3D &rkobj->kobj;
- }
-=20
---=20
-2.20.1
-
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc fs/btrfs/ctree.h
-index 94660063a162,357316173d84..000000000000
---- a/fs/btrfs/ctree.h
-+++ b/fs/btrfs/ctree.h
-diff --cc fs/btrfs/extent-tree.c
-index 8b7eb22d508a,ad15d05e256b..000000000000
---- a/fs/btrfs/extent-tree.c
-+++ b/fs/btrfs/extent-tree.c
-@@@ -8976,27 -8751,20 +8752,27 @@@ int btrfs_trim_fs(struct btrfs_fs_info=20
-  	int dev_ret =3D 0;
-  	int ret =3D 0;
- =20
- +	/*
- +	 * Check range overflow if range->len is set.
- +	 * The default range->len is U64_MAX.
- +	 */
- +	if (range->len !=3D U64_MAX &&
- +	    check_add_overflow(range->start, range->len, &range_end))
- +		return -EINVAL;
- +
-  	cache =3D btrfs_lookup_first_block_group(fs_info, range->start);
-- 	for (; cache; cache =3D next_block_group(cache)) {
-+ 	for (; cache; cache =3D btrfs_next_block_group(cache)) {
- -		if (cache->key.objectid >=3D (range->start + range->len)) {
- +		if (cache->key.objectid >=3D range_end) {
-  			btrfs_put_block_group(cache);
-  			break;
-  		}
- =20
-  		start =3D max(range->start, cache->key.objectid);
- -		end =3D min(range->start + range->len,
- -				cache->key.objectid + cache->key.offset);
- +		end =3D min(range_end, cache->key.objectid + cache->key.offset);
- =20
-  		if (end - start >=3D range->minlen) {
-- 			if (!block_group_cache_done(cache)) {
-- 				ret =3D cache_block_group(cache, 0);
-+ 			if (!btrfs_block_group_cache_done(cache)) {
-+ 				ret =3D btrfs_cache_block_group(cache, 0);
-  				if (ret) {
-  					bg_failed++;
-  					bg_ret =3D ret;
-
---Sig_/Ay9WXvNInn/8fLpJN1fI5yX
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1Lct4ACgkQAVBC80lX
-0GwWoAf8DA0nnjmya8Zco+bYvxl3ARykzY7ARxBYan6UitapLvWK2sI5GPb014Zj
-k66flp9m8mNxEteaKr7r2+0o4rx9DvuaOawiGeOX+tsH+J9OaTq86/lr4vlqHnQF
-RtJTDHTsPr16jzn0QHRc9H5/bBJ3gbR9AaHhhThssUKrhUplC73PkypH50jAfU0n
-PFzNyj/3YDs7HNmziuba6HLuJNcGM5/vNddsriAL1AWAntp0cogiewAZdoSdFREc
-6IOnOrGOG9D4jwQta1UVJ2UZSFFgoWjjme2f7UkUFXr92naCDNjNfyAFbKZ4oM5W
-XeNgl+45ZHlhXdu/Trd5Gwbk0MILiA==
-=JYC3
------END PGP SIGNATURE-----
-
---Sig_/Ay9WXvNInn/8fLpJN1fI5yX--
+Larry
