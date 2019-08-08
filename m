@@ -2,107 +2,189 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C29E8C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 21:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7C8BC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 21:12:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A9D4214C6
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 21:12:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A089F21743
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 21:12:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="BC2gVSlE"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ACf43qcD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390424AbfHHVMR (ORCPT
+        id S2404055AbfHHVMY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 17:12:17 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:58597 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725535AbfHHVMR (ORCPT
+        Thu, 8 Aug 2019 17:12:24 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39667 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390425AbfHHVMW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 17:12:17 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 4810A886BF
-        for <linux-kernel@vger.kernel.org>; Fri,  9 Aug 2019 09:12:12 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1565298732;
-        bh=W2k74tqXbJx5Ec7T8QCeVBazUTWZg/ddcDaMpjqSM4g=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=BC2gVSlEZ87YSku2Lei4poT74JChwSzhoHgrSHHOKvvMuAgpSOfuSdTAu/aj82v1R
-         WH8cvnsmjI1eKIQyD+nVWlZpQcpUxf0fu+O1o7SIGOWkfkUVPog39sj9Oz0C7CqpVD
-         yH+PecqOfMGM48V8QZWeP2K8XBPl0jBsAM8zKEMGhOjTA6yOQ5p9R5Kj9oUDlt8SZT
-         zC/CpTIohuqBkhjEIhpFm4rwpDEGC/IOWE9GHOwDYxk2WmUCjGvzM8vO+ZO7xFWvfF
-         55eYCXkW0zeRa4Qlu3DH56NzfSKhW3NnOgiM44yk+QCUTASxoJxzzykUD1SMq+cJsr
-         dOomFfVLvQAGQ==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5d4c902b0001>; Fri, 09 Aug 2019 09:12:11 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
- by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
- Microsoft SMTP Server (TLS) id 15.0.1156.6; Fri, 9 Aug 2019 09:12:11 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1156.000; Fri, 9 Aug 2019 09:12:11 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "christophe.leroy@c-s.fr" <christophe.leroy@c-s.fr>,
-        "paulus@samba.org" <paulus@samba.org>,
-        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>
-CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] powerpc/64e: drop stale call to smp_processor_id() which
- hangs SMP startup
-Thread-Topic: [PATCH] powerpc/64e: drop stale call to smp_processor_id() which
- hangs SMP startup
-Thread-Index: AQHVTeeWjuj86p0A5U+CJo7DQvxMVabw9umA
-Date:   Thu, 8 Aug 2019 21:12:11 +0000
-Message-ID: <1565298731.4267.5.camel@alliedtelesis.co.nz>
-References: <bef479514f4c08329fa649f67735df8918bc0976.1565268248.git.christophe.leroy@c-s.fr>
-In-Reply-To: <bef479514f4c08329fa649f67735df8918bc0976.1565268248.git.christophe.leroy@c-s.fr>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.18.5.2-0ubuntu3.2 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:22:3a2c:4aff:fe70:2b02]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <41B4A7E9A46BAB44BA9C5B3F109F1CF1@atlnz.lc>
-Content-Transfer-Encoding: base64
+        Thu, 8 Aug 2019 17:12:22 -0400
+Received: by mail-pf1-f196.google.com with SMTP id f17so40790570pfn.6
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 14:12:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ylddyGuuUpJhKUvK1ev1Q44hiLLmL8PwyC4MRMb3mUE=;
+        b=ACf43qcDjfXfx13Z+1Gsw1UZV/Uosrf1yEiF0Agjii4NCq0aSJm4NT0QzSwLCl7Dc5
+         gq+wLSnVQcR3qxZ0fm9hvoSL16jb4cCF5OkMFfCEBQn0MQdPfLlk2tDzdSCLPp3vIQBd
+         UxRwIr8unIchMakLD/5qyLX3unblGeVjDLQfg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ylddyGuuUpJhKUvK1ev1Q44hiLLmL8PwyC4MRMb3mUE=;
+        b=o7NWTca+/1+1FqnnKHlzp5OIfHfBoSYgAyIMsB/tmttjpDJgeJHvuFQS+g2yoUnGuz
+         Y1O/LF07PFwvpCAmL6YK6G7jFv7qtEiU8/nxf7OETYypJPL/SqdGdbbP5ozEl41+OlJy
+         FUIbs8OLomkDu0ybppIZh2tVlRdt7a3PwJoe7LeO7R5pBwDLUzukXz6/I5A6w16YB1RG
+         siWYhotYzgB+SuuoWWlqZEBuEWaAxbQj88iQqcFzVCdkyaemqjsdC8C0qK3kVsanaUie
+         CEqvr9DDvuKi9JA7RLmsokiFnzpE9GdGFf2aTYqHpNnb8et/pP6hqAaMAIRAxXUO18MV
+         dPSA==
+X-Gm-Message-State: APjAAAUaPRNzNm5x3suqmgGV9xpEyv6jey2Fye8ecttLHxTKQh5bZJnt
+        0cwWD4xtBhdbc6UCzKLAhUNv7Q==
+X-Google-Smtp-Source: APXvYqy0pdWoHPkerneL5407ilt1ySmaIIJNjNXYxB0G6sGkOR++FLPJzal2z8CcZbjPxvclbtt+OA==
+X-Received: by 2002:a62:1750:: with SMTP id 77mr17827956pfx.172.1565298741745;
+        Thu, 08 Aug 2019 14:12:21 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id q19sm101457867pfc.62.2019.08.08.14.12.20
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 08 Aug 2019 14:12:20 -0700 (PDT)
+Date:   Thu, 8 Aug 2019 14:12:19 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
+        dri-devel@lists.freedesktop.org,
+        Kostya Serebryany <kcc@google.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org,
+        Christoph Hellwig <hch@infradead.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        linux-media@vger.kernel.org, Kevin Brodsky <kevin.brodsky@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        enh <enh@google.com>, Robin Murphy <robin.murphy@arm.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Subject: Re: [PATCH v19 00/15] arm64: untag user pointers passed to the kernel
+Message-ID: <201908081410.C16D2BD@keescook>
+References: <cover.1563904656.git.andreyknvl@google.com>
+ <CAAeHK+yc0D_nd7nTRsY4=qcSx+eQR0VLut3uXMf4NEiE-VpeCw@mail.gmail.com>
+ <20190724140212.qzvbcx5j2gi5lcoj@willie-the-truck>
+ <CAAeHK+xXzdQHpVXL7f1T2Ef2P7GwFmDMSaBH4VG8fT3=c_OnjQ@mail.gmail.com>
+ <20190724142059.GC21234@fuggles.cambridge.arm.com>
+ <20190806171335.4dzjex5asoertaob@willie-the-truck>
+ <CAAeHK+zF01mxU+PkEYLkoVu-ZZM6jNfL_OwMJKRwLr-sdU4Myg@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAeHK+zF01mxU+PkEYLkoVu-ZZM6jNfL_OwMJKRwLr-sdU4Myg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQ2hyaXN0b3BoZSwNCg0KT24gVGh1LCAyMDE5LTA4LTA4IGF0IDEyOjQ4ICswMDAwLCBDaHJp
-c3RvcGhlIExlcm95IHdyb3RlOg0KPiBTYW50YSBjb21taXQgZWJiOWQzMGE2YTc0ICgicG93ZXJw
-Yy9tbTogYW55IHRocmVhZCBpbiBvbmUgY29yZSBjYW4gYmUNCj4gdGhlIGZpcnN0IHRvIHNldHVw
-IFRMQjEiKSByZW1vdmVkIHRoZSBuZWVkIHRvIGtub3cgdGhlIGNwdV9pZCBpbg0KPiBlYXJseV9p
-bml0X3RoaXNfbW11KCksIGJ1dCB0aGUgY2FsbCB0byBzbXBfcHJvY2Vzc29yX2lkKCkgd2hpY2gg
-d2FzDQo+IG1hcmtlZCBfX21heWJlX3VzZWQgcmVtYWluZWQuDQo+IA0KPiBTaW5jZSBjb21taXQg
-ZWQxY2Q2ZGViMDEzICgicG93ZXJwYzogQWN0aXZhdGUNCj4gQ09ORklHX1RIUkVBRF9JTkZPX0lO
-X1RBU0siKSB0aHJlYWRfaW5mbyBjYW5ub3QgYmUgcmVhY2hlZCBiZWZvcmUgbW11DQo+IGlzIHBy
-b3Blcmx5IHNldCB1cC4NCj4gDQo+IERyb3AgdGhpcyBzdGFsZSBjYWxsIHRvIHNtcF9wcm9jZXNz
-b3JfaWQoKSB3aGljaCBtYWtlIFNNUCBoYW5nDQo+IHdoZW4gQ09ORklHX1BSRUVNUFQgaXMgc2V0
-Lg0KPiANCj4gUmVwb3J0ZWQtYnk6IENocmlzIFBhY2toYW0gPENocmlzLlBhY2toYW1AYWxsaWVk
-dGVsZXNpcy5jby5uej4NCj4gRml4ZXM6IGViYjlkMzBhNmE3NCAoInBvd2VycGMvbW06IGFueSB0
-aHJlYWQgaW4gb25lIGNvcmUgY2FuIGJlIHRoZQ0KPiBmaXJzdCB0byBzZXR1cCBUTEIxIikNCj4g
-TGluazogaHR0cHM6Ly9naXRodWIuY29tL2xpbnV4cHBjL2lzc3Vlcy9pc3N1ZXMvMjY0DQo+IFNp
-Z25lZC1vZmYtYnk6IENocmlzdG9waGUgTGVyb3kgPGNocmlzdG9waGUubGVyb3lAYy1zLmZyPg0K
-PiBDYzogc3RhYmxlQHZnZXIua2VybmVsLm9yZw0KDQpNYW55IHRoYW5rcyBmb3IgeW91ciBoZWxw
-Lg0KDQpUZXN0ZWQtYnk6IENocmlzIFBhY2toYW0gPGNocmlzLnBhY2toYW1AYWxsaWVkdGVsZXNp
-cy5jby5uej4NCg0KPiAtLS0NCj4gwqBhcmNoL3Bvd2VycGMvbW0vbm9oYXNoL3RsYi5jIHwgMSAt
-DQo+IMKgMSBmaWxlIGNoYW5nZWQsIDEgZGVsZXRpb24oLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9h
-cmNoL3Bvd2VycGMvbW0vbm9oYXNoL3RsYi5jDQo+IGIvYXJjaC9wb3dlcnBjL21tL25vaGFzaC90
-bGIuYw0KPiBpbmRleCBkNGFjZjZmYTA1OTYuLmJmNjA5ODNhNThjNyAxMDA2NDQNCj4gLS0tIGEv
-YXJjaC9wb3dlcnBjL21tL25vaGFzaC90bGIuYw0KPiArKysgYi9hcmNoL3Bvd2VycGMvbW0vbm9o
-YXNoL3RsYi5jDQo+IEBAIC02MzAsNyArNjMwLDYgQEAgc3RhdGljIHZvaWQgZWFybHlfaW5pdF90
-aGlzX21tdSh2b2lkKQ0KPiDCoCNpZmRlZiBDT05GSUdfUFBDX0ZTTF9CT09LM0UNCj4gwqAJaWYg
-KG1tdV9oYXNfZmVhdHVyZShNTVVfRlRSX1RZUEVfRlNMX0UpKSB7DQo+IMKgCQl1bnNpZ25lZCBp
-bnQgbnVtX2NhbXM7DQo+IC0JCWludCBfX21heWJlX3VudXNlZCBjcHUgPSBzbXBfcHJvY2Vzc29y
-X2lkKCk7DQo+IMKgCQlib29sIG1hcCA9IHRydWU7DQo+IMKgDQo+IMKgCQkvKiB1c2UgYSBxdWFy
-dGVyIG9mIHRoZSBUTEJDQU0gZm9yIGJvbHRlZCBsaW5lYXIgbWFwDQo+ICov
+On Wed, Aug 07, 2019 at 07:17:35PM +0200, Andrey Konovalov wrote:
+> On Tue, Aug 6, 2019 at 7:13 PM Will Deacon <will@kernel.org> wrote:
+> >
+> > On Wed, Jul 24, 2019 at 03:20:59PM +0100, Will Deacon wrote:
+> > > On Wed, Jul 24, 2019 at 04:16:49PM +0200, Andrey Konovalov wrote:
+> > > > On Wed, Jul 24, 2019 at 4:02 PM Will Deacon <will@kernel.org> wrote:
+> > > > > On Tue, Jul 23, 2019 at 08:03:29PM +0200, Andrey Konovalov wrote:
+> > > > > > Should this go through the mm or the arm tree?
+> > > > >
+> > > > > I would certainly prefer to take at least the arm64 bits via the arm64 tree
+> > > > > (i.e. patches 1, 2 and 15). We also need a Documentation patch describing
+> > > > > the new ABI.
+> > > >
+> > > > Sounds good! Should I post those patches together with the
+> > > > Documentation patches from Vincenzo as a separate patchset?
+> > >
+> > > Yes, please (although as you say below, we need a new version of those
+> > > patches from Vincenzo to address the feedback on v5). The other thing I
+> > > should say is that I'd be happy to queue the other patches in the series
+> > > too, but some of them are missing acks from the relevant maintainers (e.g.
+> > > the mm/ and fs/ changes).
+> >
+> > Ok, I've queued patches 1, 2, and 15 on a stable branch here:
+> >
+> >   https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git/log/?h=for-next/tbi
+> >
+> > which should find its way into -next shortly via our for-next/core branch.
+> > If you want to make changes, please send additional patches on top.
+> >
+> > This is targetting 5.4, but I will drop it before the merge window if
+> > we don't have both of the following in place:
+> >
+> >   * Updated ABI documentation with Acks from Catalin and Kevin
+> 
+> Catalin has posted a new version today.
+> 
+> >   * The other patches in the series either Acked (so I can pick them up)
+> >     or queued via some other tree(s) for 5.4.
+> 
+> So we have the following patches in this series:
+> 
+> 1. arm64: untag user pointers in access_ok and __uaccess_mask_ptr
+> 2. arm64: Introduce prctl() options to control the tagged user addresses ABI
+> 3. lib: untag user pointers in strn*_user
+> 4. mm: untag user pointers passed to memory syscalls
+> 5. mm: untag user pointers in mm/gup.c
+> 6. mm: untag user pointers in get_vaddr_frames
+> 7. fs/namespace: untag user pointers in copy_mount_options
+> 8. userfaultfd: untag user pointers
+> 9. drm/amdgpu: untag user pointers
+> 10. drm/radeon: untag user pointers in radeon_gem_userptr_ioctl
+> 11. IB/mlx4: untag user pointers in mlx4_get_umem_mr
+> 12. media/v4l2-core: untag user pointers in videobuf_dma_contig_user_get
+> 13. tee/shm: untag user pointers in tee_shm_register
+> 14. vfio/type1: untag user pointers in vaddr_get_pfn
+> 15. selftests, arm64: add a selftest for passing tagged pointers to kernel
+> 
+> 1, 2 and 15 have been picked by Will.
+> 
+> 11 has been picked up by Jason.
+> 
+> 9, 10, 12, 13 and 14 have acks from their subsystem maintainers.
+> 
+> 3 touches generic lib code, I'm not sure if there's a dedicated
+> maintainer for that.
+
+Andrew tends to pick up lib/ patches.
+
+> The ones that are left are the mm ones: 4, 5, 6, 7 and 8.
+> 
+> Andrew, could you take a look and give your Acked-by or pick them up directly?
+
+Given the subsystem Acks, it seems like 3-10 and 12 could all just go
+via Andrew? I hope he agrees. :)
+
+-- 
+Kees Cook
