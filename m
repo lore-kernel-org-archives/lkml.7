@@ -6,140 +6,74 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E50CC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:54:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5691C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:55:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBEE621479
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:54:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 766B621479
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 09:55:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731832AbfHHJyB (ORCPT
+        id S1731885AbfHHJzN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 05:54:01 -0400
-Received: from lgeamrelo12.lge.com ([156.147.23.52]:35911 "EHLO
-        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730777AbfHHJyB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 05:54:01 -0400
-Received: from unknown (HELO lgeamrelo02.lge.com) (156.147.1.126)
-        by 156.147.23.52 with ESMTP; 8 Aug 2019 18:53:58 +0900
-X-Original-SENDERIP: 156.147.1.126
-X-Original-MAILFROM: byungchul.park@lge.com
-Received: from unknown (HELO X58A-UD3R) (10.177.222.33)
-        by 156.147.1.126 with ESMTP; 8 Aug 2019 18:53:58 +0900
-X-Original-SENDERIP: 10.177.222.33
-X-Original-MAILFROM: byungchul.park@lge.com
-Date:   Thu, 8 Aug 2019 18:52:32 +0900
-From:   Byungchul Park <byungchul.park@lge.com>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        linux-kernel@vger.kernel.org, Rao Shoaib <rao.shoaib@oracle.com>,
-        max.byungchul.park@gmail.com, kernel-team@android.com,
-        kernel-team@lge.com, Davidlohr Bueso <dave@stgolabs.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH RFC v1 1/2] rcu/tree: Add basic support for kfree_rcu
- batching
-Message-ID: <20190808095232.GA30401@X58A-UD3R>
-References: <20190806212041.118146-1-joel@joelfernandes.org>
- <20190806235631.GU28441@linux.ibm.com>
- <20190807094504.GB169551@google.com>
- <20190807175215.GE28441@linux.ibm.com>
+        Thu, 8 Aug 2019 05:55:13 -0400
+Received: from verein.lst.de ([213.95.11.211]:45154 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731550AbfHHJzN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 05:55:13 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 2AB2168AFE; Thu,  8 Aug 2019 11:55:07 +0200 (CEST)
+Date:   Thu, 8 Aug 2019 11:55:06 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     Christoph Hellwig <hch@lst.de>, Rob Clark <robdclark@chromium.org>,
+        Rob Clark <robdclark@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] drm: add cache support for arm64
+Message-ID: <20190808095506.GA32621@lst.de>
+References: <20190805211451.20176-1-robdclark@gmail.com> <20190806084821.GA17129@lst.de> <CAJs_Fx6eh1w7c=crMoD5XyEOMzP6orLhqUewErE51cPGYmObBQ@mail.gmail.com> <20190806155044.GC25050@lst.de> <CAJs_Fx6uztwDy2PqRy3Tc9p12k8r_ovS2tAcsMV6HqnAp=Ggug@mail.gmail.com> <20190807062545.GF6627@lst.de> <CAKMK7uH1O3q8VUftikipGH6ACPoT-8tbV1Zwo-8WL=wUHiqsoQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190807175215.GE28441@linux.ibm.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <CAKMK7uH1O3q8VUftikipGH6ACPoT-8tbV1Zwo-8WL=wUHiqsoQ@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 07, 2019 at 10:52:15AM -0700, Paul E. McKenney wrote:
-> On Wed, Aug 07, 2019 at 05:45:04AM -0400, Joel Fernandes wrote:
-> > On Tue, Aug 06, 2019 at 04:56:31PM -0700, Paul E. McKenney wrote:
-> > > On Tue, Aug 06, 2019 at 05:20:40PM -0400, Joel Fernandes (Google) wrote:
+On Wed, Aug 07, 2019 at 10:48:56AM +0200, Daniel Vetter wrote:
+> >    other drm drivers how do they guarantee addressability without an
+> >    iommu?)
 > 
-> [ . . . ]
-> 
-> > > > +	for (; head; head = next) {
-> > > > +		next = head->next;
-> > > > +		head->next = NULL;
-> > > > +		__call_rcu(head, head->func, -1, 1);
-> > > 
-> > > We need at least a cond_resched() here.  200,000 times through this loop
-> > > in a PREEMPT=n kernel might not always be pretty.  Except that this is
-> > > invoked directly from kfree_rcu() which might be invoked with interrupts
-> > > disabled, which precludes calls to cond_resched().  So the realtime guys
-> > > are not going to be at all happy with this loop.
-> > 
-> > Ok, will add this here.
-> > 
-> > > And this loop could be avoided entirely by having a third rcu_head list
-> > > in the kfree_rcu_cpu structure.  Yes, some of the batches would exceed
-> > > KFREE_MAX_BATCH, but given that they are invoked from a workqueue, that
-> > > should be OK, or at least more OK than queuing 200,000 callbacks with
-> > > interrupts disabled.  (If it turns out not to be OK, an array of rcu_head
-> > > pointers can be used to reduce the probability of oversized batches.)
-> > > This would also mean that the equality comparisons with KFREE_MAX_BATCH
-> > > need to become greater-or-equal comparisons or some such.
-> > 
-> > Yes, certainly we can do these kinds of improvements after this patch, and
-> > then add more tests to validate the improvements.
-> 
-> Out of pity for people bisecting, we need this fixed up front.
-> 
-> My suggestion is to just allow ->head to grow until ->head_free becomes
-> available.  That way you are looping with interrupts and preemption
-> enabled in workqueue context, which is much less damaging than doing so
-> with interrupts disabled, and possibly even from hard-irq context.
+> We use shmem to get at swappable pages. We generally just assume that
+> the gpu can get at those pages, but things fall apart in fun ways:
+> - some setups somehow inject bounce buffers. Some drivers just give
+> up, others try to allocate a pool of pages with dma_alloc_coherent.
+> - some devices are misdesigned and can't access as much as the cpu. We
+> allocate using GFP_DMA32 to fix that.
 
-Agree.
+Well, for shmem you can't really call allocators directly, right?
 
-Or after introducing another limit like KFREE_MAX_BATCH_FORCE(>=
-KFREE_MAX_BATCH):
+One thing I have in my pipeline is a dma_alloc_pages API that allocates
+pages that are guaranteed to be addressably by the device or otherwise
+fail.  But that doesn't really help with the shmem fs.
 
-1. Try to drain it on hitting KFREE_MAX_BATCH as it does.
+> Also modern gpu apis pretty much assume you can malloc() and then use
+> that directly with the gpu.
 
-   On success: Same as now.
-   On fail: let ->head grow and drain if possible, until reaching to
-            KFREE_MAX_BATCH_FORCE.
+Which is fine as long as the GPU itself supports full 64-bit addressing
+(or always sits behind an iommu), and the platform doesn't impose
+addressing limit, which unfortunately some that are shipped right now
+still do :(
 
-3. On hitting KFREE_MAX_BATCH_FORCE, give up batching but handle one by
-   one from now on to prevent too many pending requests from being
-   queued for batching work.
-
-This way, we can avoid both:
-
-1. too many requests being queued and
-2. __call_rcu() bunch of requests within a single kfree_rcu().
-
-Thanks,
-Byungchul
-
-> 
-> But please feel free to come up with a better solution!
-> 
-> [ . . . ]
-> 
-> > > > @@ -3459,6 +3645,8 @@ void __init rcu_init(void)
-> > > >  {
-> > > >  	int cpu;
-> > > >  
-> > > > +	kfree_rcu_batch_init();
-> > > 
-> > > What happens if someone does a kfree_rcu() before this point?  It looks
-> > > like it should work, but have you tested it?
-> > > 
-> > > >  	rcu_early_boot_tests();
-> > > 
-> > > For example, by testing it in rcu_early_boot_tests() and moving the
-> > > call to kfree_rcu_batch_init() here.
-> > 
-> > I have not tried to do the kfree_rcu() this early. I will try it out.
-> 
-> Yeah, well, call_rcu() this early came as a surprise to me back in the
-> day, so...  ;-)
-> 
-> 							Thanx, Paul
+But userspace malloc really means dma_map_* anyway, so not really
+relevant for memory allocations.
