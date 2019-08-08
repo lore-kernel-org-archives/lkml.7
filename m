@@ -2,51 +2,39 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C740CC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 05:07:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C26A3C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 05:13:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82EB021743
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 05:07:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565240839;
-	bh=H5FYkCkRBz87c4Ku6tWWxD1X+CNR/CYk6nK3ExV0F1M=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=jcGzwcVllS9kLs+DxGfQEL7hBeuPCqQbzt5SrC3x8w28aj2IFoB208g2QmI+ynHTu
-	 1CTXFgdeI4ubWh9AjgQs4F2STia8DYueFmeOhq/sG6fIKfNNx6YHiFaBeB+2XRj9yk
-	 wPIf37G4EXJNYY2DApszgHTl4KwP31EMdVTEWuUo=
+	by mail.kernel.org (Postfix) with ESMTP id 98ADE21873
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 05:13:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730898AbfHHFHS (ORCPT
+        id S1730889AbfHHFNi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 01:07:18 -0400
-Received: from mga05.intel.com ([192.55.52.43]:28742 "EHLO mga05.intel.com"
+        Thu, 8 Aug 2019 01:13:38 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:35339 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725933AbfHHFHS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 01:07:18 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Aug 2019 22:07:17 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,360,1559545200"; 
-   d="scan'208";a="174736649"
-Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
-  by fmsmga008.fm.intel.com with ESMTP; 07 Aug 2019 22:07:15 -0700
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Yinbo Zhu <yinbo.zhu@nxp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, open list <linux-kernel@vger.kernel.org>
-Cc:     yinbo.zhu@nxp.com, xiaobo.xie@nxp.com, jiafei.pan@nxp.com,
-        Ran Wang <ran.wang_1@nxp.com>
-Subject: Re: [PATCH v1] usb: dwc3: remove the call trace of USBx_GFLADJ
-In-Reply-To: <20190729064607.8131-1-yinbo.zhu@nxp.com>
-References: <20190729064607.8131-1-yinbo.zhu@nxp.com>
-Date:   Thu, 08 Aug 2019 08:07:14 +0300
-Message-ID: <875zn8nt31.fsf@gmail.com>
+        id S1728361AbfHHFNi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 01:13:38 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 463xNY5DDzz9sN1;
+        Thu,  8 Aug 2019 15:13:33 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: Tree for Aug 7
+In-Reply-To: <20190807183606.372ca1a4@canb.auug.org.au>
+References: <20190807183606.372ca1a4@canb.auug.org.au>
+Date:   Thu, 08 Aug 2019 15:13:33 +1000
+Message-ID: <87mugktf2a.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
@@ -54,40 +42,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Hi,
-
-Yinbo Zhu <yinbo.zhu@nxp.com> writes:
-
-> layerscape board sometimes reported some usb call trace, that is due to
-> kernel sent LPM tokerns automatically when it has no pending transfers
-> and think that the link is idle enough to enter L1, which procedure will
-> ask usb register has a recovery,then kernel will compare USBx_GFLADJ and
-> set GFLADJ_30MHZ, GFLADJ_30MHZ_REG until GFLADJ_30MHZ is equal 0x20, if
-> the conditions were met then issue occur, but whatever the conditions
-> whether were met that usb is all need keep GFLADJ_30MHZ of value is 0x20
-> (xhci spec ask use GFLADJ_30MHZ to adjust any offset from clock source
-> that generates the clock that drives the SOF counter, 0x20 is default
-> value of it)That is normal logic, so need remove the call trace.
+Stephen Rothwell <sfr@canb.auug.org.au> writes:
+> Hi all,
 >
-> Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
-> ---
->  drivers/usb/dwc3/core.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+> Changes since 20190806:
 >
-> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-> index 98bce85c29d0..a133d8490322 100644
-> --- a/drivers/usb/dwc3/core.c
-> +++ b/drivers/usb/dwc3/core.c
-> @@ -300,8 +300,7 @@ static void dwc3_frame_length_adjustment(struct dwc3 *dwc)
->  
->  	reg = dwc3_readl(dwc->regs, DWC3_GFLADJ);
->  	dft = reg & DWC3_GFLADJ_30MHZ_MASK;
-> -	if (!dev_WARN_ONCE(dwc->dev, dft == dwc->fladj,
-> -	    "request value same as default, ignoring\n")) {
-> +	if (dft != dwc->fladj) {
+> The arm64 tree introduced a patch that stopped the powerpc ppc64_defconfig
+> build from completing so I reverted that commit.
+>
+> The mips tree gained a conflict against Linus' tree.
+>
+> The crypto tree still had its build failure for which I applied a patch.
+>
+> The drm-misc tree gained a conflict and a sematic conflct against the
+> amdgpu tree.
+>
+> The integrity tree lost its build failure.
+>
+> The akpm-current tree gained a conflict against the arm64 tree and a
+> build failure for which I reverted a commit.
+>
+> The akpm tree lost a patch that turned up elsewhere.
+>
+> Non-merge commits (relative to Linus' tree): 4586
+>  4952 files changed, 265168 insertions(+), 120665 deletions(-)
 
-if the value isn't different, why do you want to change it?
+This is still popping a few implicit fallthrough warnings, from various
+configs:
 
--- 
-balbi
+    arch/arm64/include/asm/kvm_hyp.h:31:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    arch/arm64/include/asm/sysreg.h:808:2: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    arch/arm64/kvm/hyp/debug-sr.c:20:19: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    arch/arm64/kvm/hyp/debug-sr.c:21:19: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    arch/arm64/kvm/hyp/debug-sr.c:22:19: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    arch/arm64/kvm/hyp/debug-sr.c:23:19: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    arch/arm64/kvm/hyp/debug-sr.c:24:19: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    arch/arm64/kvm/hyp/debug-sr.c:25:19: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    arch/arm64/kvm/hyp/debug-sr.c:26:18: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    arch/arm64/kvm/hyp/debug-sr.c:27:18: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    arch/arm64/kvm/hyp/debug-sr.c:28:18: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    arch/arm64/kvm/hyp/debug-sr.c:29:18: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    arch/arm64/kvm/hyp/debug-sr.c:30:18: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    arch/arm64/kvm/hyp/debug-sr.c:31:18: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    arch/arm64/kvm/hyp/debug-sr.c:32:18: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    arch/arm64/kvm/hyp/debug-sr.c:33:18: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    arch/arm64/kvm/hyp/debug-sr.c:34:18: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:351:24: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:353:24: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:361:24: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:363:24: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:384:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:386:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:394:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    arch/arm64/kvm/hyp/../../../../virt/kvm/arm/hyp/vgic-v3-sr.c:396:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    arch/mips/include/asm/octeon/cvmx-sli-defs.h:47:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    arch/nds32/kernel/signal.c:315:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    arch/nds32/kernel/signal.c:362:20: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    drivers/gpu/drm/amd/amdgpu/amdgpu_device.c:279:3: error: implicit declaration of function 'readq' [-Werror=implicit-function-declaration]
+    drivers/gpu/drm/amd/amdgpu/amdgpu_device.c:279:9: error: implicit declaration of function 'readq'; did you mean 'readl'? [-Werror=implicit-function-declaration]
+    drivers/gpu/drm/amd/amdgpu/amdgpu_device.c:279:9: error: implicit declaration of function 'readq' [-Werror=implicit-function-declaration]
+    drivers/gpu/drm/amd/amdgpu/amdgpu_device.c:298:3: error: implicit declaration of function 'writeq'; did you mean 'writel'? [-Werror=implicit-function-declaration]
+    drivers/gpu/drm/amd/amdgpu/amdgpu_device.c:298:3: error: implicit declaration of function 'writeq' [-Werror=implicit-function-declaration]
+    drivers/gpu/drm/sun4i/sun4i_tcon.c:318:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c:993:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    drivers/iommu/arm-smmu-v3.c:1189:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    drivers/misc/lkdtm/bugs.c:279:8: error: implicit declaration of function 'native_read_cr4' [-Werror=implicit-function-declaration]
+    drivers/misc/lkdtm/bugs.c:288:2: error: implicit declaration of function 'native_write_cr4' [-Werror=implicit-function-declaration]
+    drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c:551:41: warning: overflow in implicit constant conversion [-Woverflow]
+    drivers/scsi/ncr53c8xx.c:3908:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    drivers/scsi/ncr53c8xx.c:3914:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    drivers/scsi/ncr53c8xx.c:3917:18: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    drivers/scsi/ncr53c8xx.c:6713:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    drivers/soc/qcom/socinfo.c:231:2: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    drivers/soc/qcom/socinfo.c:323:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    drivers/soc/qcom/socinfo.c:331:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    drivers/soc/qcom/socinfo.c:341:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    drivers/soc/qcom/socinfo.c:348:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    drivers/soc/qcom/socinfo.c:354:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    drivers/soc/qcom/socinfo.c:360:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    drivers/soc/qcom/socinfo.c:366:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    drivers/video/fbdev/sh_mobile_lcdcfb.c:1596:22: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    drivers/video/fbdev/sh_mobile_lcdcfb.c:2086:22: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    include/linux/printk.h:309:2: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    include/math-emu/op-common.h:310:11: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    include/math-emu/op-common.h:320:11: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    include/math-emu/op-common.h:417:11: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    include/math-emu/op-common.h:430:11: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    include/math-emu/soft-fp.h:124:8: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    mm/hmm.c:745:9: error: implicit declaration of function 'pud_pfn' [-Werror=implicit-function-declaration]
+
+cheers
