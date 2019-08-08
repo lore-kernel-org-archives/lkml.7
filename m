@@ -2,80 +2,97 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67245C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADEE7C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:47:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 430B121874
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:46:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 893FC21874
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:47:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730966AbfHHGqx (ORCPT
+        id S1731045AbfHHGrO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 02:46:53 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4192 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725796AbfHHGqw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 02:46:52 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id F10AA387A0EDCAB66BF8;
-        Thu,  8 Aug 2019 14:46:48 +0800 (CST)
-Received: from [127.0.0.1] (10.133.213.239) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Thu, 8 Aug 2019
- 14:46:42 +0800
-Subject: Re: [f2fs-dev] [PATCH] f2fs: Fix build error while CONFIG_NLS=m
-To:     Chao Yu <yuchao0@huawei.com>, <jaegeuk@kernel.org>,
-        <chao@kernel.org>
-References: <20190808020253.27276-1-yuehaibing@huawei.com>
- <4e1c457e-621f-e9bd-e625-3a9f27da2277@huawei.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <c93cdedd-2144-79d9-92ac-a3e02f58a5ef@huawei.com>
-Date:   Thu, 8 Aug 2019 14:46:40 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Thu, 8 Aug 2019 02:47:14 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33734 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730990AbfHHGrO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 02:47:14 -0400
+Received: by mail-wr1-f67.google.com with SMTP id n9so93840753wru.0
+        for <linux-kernel@vger.kernel.org>; Wed, 07 Aug 2019 23:47:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1NKKMOIVQqV9iFYKB9HtV58xs+QTSWgospSlaS/nYDk=;
+        b=FiCPY4vsyOOt44Z8KItbW61Bs3Vs/kFOo8X0OIL5BALhYjmdhFK4xZ2LUNvlYn3O05
+         pr74yjVwRGvMo71oNCoy/0yqPgDi/73mL6ShhLzmItRxOgNGG4+Fhq6c203GL6VO9Hsl
+         PdaWLFDnfj/2uoIRnGYoPwCzBAAPuuJV7q1i2KPmsi5GW4fQB/BbLvUIdPplfxdZseIp
+         9sX1yJiJVaLpuYOXYnMEwBRyCY4WTw6QnJAeRMNjwkuJdEBZHR6epiPYOzcXvGYlN4Xo
+         OXzw9CVpgIVbwQC22zrJKIhH/75NBVKGbHZepNAcRpgm2HXR2CcxGnxko2q65GEDnHPn
+         ViZA==
+X-Gm-Message-State: APjAAAWcJllxZhEd4GOJWSJJNJb7zd1u/Sis7PmdhHXwxGR6FeDKylc3
+        gZOJwwYsawtOxxRk777WrQqUqg==
+X-Google-Smtp-Source: APXvYqwrRU3U8o/LmbRoCWTemjxrlrzgZ05EW/7Ci8indvYGKipc47Etf+6Ab3OenswtztbVM/orgw==
+X-Received: by 2002:a05:6000:118a:: with SMTP id g10mr14562442wrx.175.1565246832444;
+        Wed, 07 Aug 2019 23:47:12 -0700 (PDT)
+Received: from localhost.localdomain ([151.29.237.107])
+        by smtp.gmail.com with ESMTPSA id b15sm111856859wrt.77.2019.08.07.23.47.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 07 Aug 2019 23:47:11 -0700 (PDT)
+Date:   Thu, 8 Aug 2019 08:47:09 +0200
+From:   Juri Lelli <juri.lelli@redhat.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-rt-users <linux-rt-users@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Clark Williams <williams@redhat.com>
+Subject: Re: [RT BUG] isolcpus causes sleeping function called from invalid
+ context (4.19.59-rt24)
+Message-ID: <20190808064709.GC29310@localhost.localdomain>
+References: <20190805100646.GH14724@localhost.localdomain>
+ <20190807160725.10a554e7@gandalf.local.home>
 MIME-Version: 1.0
-In-Reply-To: <4e1c457e-621f-e9bd-e625-3a9f27da2277@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190807160725.10a554e7@gandalf.local.home>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/8/8 14:18, Chao Yu wrote:
-> Hi Haibing,
-> 
-> Thanks for the patch!
-> 
-> Out of curiosity, does Hulk Robot check linux-next git repo as well? This will
-> be more valuable if the bug can be found during development of related patch?
+Hi,
 
-Yes, Hulk Robot now do this on linux-next.git and linux.git every day.
+On 07/08/19 16:07, Steven Rostedt wrote:
+> On Mon, 5 Aug 2019 12:06:46 +0200
+> Juri Lelli <juri.lelli@redhat.com> wrote:
+> 
+> > This only happens if isolcpus are configured at boot.
+> > 
+> > AFAIU, RT is reworking workqueues and 5.x-rt shouldn't suffer from this.
+> > As a matter of fact, I could verify that backporting the workqueue
+> > rework all-in change from 5.0-rt [1] fixes this problem.
+> 
+> So you have backported this and it fixed the bug?
 
-> 
-> On 2019/8/8 10:02, YueHaibing wrote:
->> If CONFIG_F2FS_FS=y but CONFIG_NLS=m, building fails:
->>
->> fs/f2fs/file.o: In function `f2fs_ioctl':
->> file.c:(.text+0xb86f): undefined reference to `utf16s_to_utf8s'
->> file.c:(.text+0xe651): undefined reference to `utf8s_to_utf16s'
->>
->> Select CONFIG_NLS to fix this.
->>
->> Reported-by: Hulk Robot <hulkci@huawei.com>
->> Fixes: 61a3da4d5ef8 ("f2fs: support FS_IOC_{GET,SET}FSLABEL")
->> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> 
-> Reviewed-by: Chao Yu <yuchao0@huawei.com>
-> 
-> Thanks,
-> 
-> .
-> 
+Yeah. I did backport it to a downstream kernel and the splat is gone
+(plus I couldn't spot any other problems my backport might have
+introduced :).
 
+> > I'm thus wondering if there is any plan on backporting the rework to
+> > 4.19-rt stable, and if that patch has dependencies, or if any alternative
+> > fix might be found for this problem.
+> 
+> I could do it after I fix the bug with 4.19.63 merge :-/ (which may be
+> related. Who knows).
+
+Ok, thanks!
+
+Best,
+
+Juri
