@@ -2,97 +2,133 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15146C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:33:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69155C0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:33:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE385217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:33:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="MTtE1i2w"
+	by mail.kernel.org (Postfix) with ESMTP id 45894217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 06:33:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731465AbfHHGdK (ORCPT
+        id S1731492AbfHHGd2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 02:33:10 -0400
-Received: from ozlabs.org ([203.11.71.1]:35653 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725817AbfHHGdK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 02:33:10 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 463z8M47sqz9sMr;
-        Thu,  8 Aug 2019 16:33:07 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1565245987;
-        bh=Apx5eCJWWpnCX9eZCPmjBd+hU8WQjYshhIE53owQm7c=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=MTtE1i2w0IQyzrrMXS//6q73d5fcQtk+IntnIzN9JtCO+gt050s9VA90X8753g0ws
-         jtzBripsXwYG3PtOncrTGdGyHfC1ZUtmfoDiUjZJhdjyhDtoSEn3shOB9SRh3KE+FO
-         Hy7ct0t6xlGrY4y3RG892towchQo6+o8kMy7r4nMQt67K2g1jtrzgPjIWr/Q4JeXbr
-         IJv3gdqyVIfBYJWGlI85MjoCKlNMjszQxjQkMWBJZI0VXTTwVGNLeesVl1rySMo7c0
-         PIPpOpZeJfD5ZtTsMBKvYt8iDwFYFhVBXD7mfAnNBDyI/cWuGFXl2EIlTkbdyDEAYs
-         S8QWNdUwd73tw==
-Date:   Thu, 8 Aug 2019 16:33:06 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Please revert c4b230ac34ce for today's linux-next
-Message-ID: <20190808163306.092be501@canb.auug.org.au>
-In-Reply-To: <CAK7LNARd_RVY9K6ZG0rvamuPizj8E2hfN35UROv++KYekDUcyw@mail.gmail.com>
-References: <CAK7LNARd_RVY9K6ZG0rvamuPizj8E2hfN35UROv++KYekDUcyw@mail.gmail.com>
+        Thu, 8 Aug 2019 02:33:28 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:51379 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725817AbfHHGd1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 02:33:27 -0400
+X-Originating-IP: 79.86.19.127
+Received: from alex.numericable.fr (127.19.86.79.rev.sfr.net [79.86.19.127])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 6957F1BF207;
+        Thu,  8 Aug 2019 06:33:19 +0000 (UTC)
+From:   Alexandre Ghiti <alex@ghiti.fr>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        Alexandre Ghiti <alex@ghiti.fr>
+Subject: [PATCH v6 14/14] riscv: Make mmap allocation top-down by default
+Date:   Thu,  8 Aug 2019 02:17:56 -0400
+Message-Id: <20190808061756.19712-15-alex@ghiti.fr>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190808061756.19712-1-alex@ghiti.fr>
+References: <20190808061756.19712-1-alex@ghiti.fr>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_//SA7_h0x+DqX.IYYG8rb82g";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_//SA7_h0x+DqX.IYYG8rb82g
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+In order to avoid wasting user address space by using bottom-up mmap
+allocation scheme, prefer top-down scheme when possible.
 
-Hi Masahiro,
+Before:
+root@qemuriscv64:~# cat /proc/self/maps
+00010000-00016000 r-xp 00000000 fe:00 6389       /bin/cat.coreutils
+00016000-00017000 r--p 00005000 fe:00 6389       /bin/cat.coreutils
+00017000-00018000 rw-p 00006000 fe:00 6389       /bin/cat.coreutils
+00018000-00039000 rw-p 00000000 00:00 0          [heap]
+1555556000-155556d000 r-xp 00000000 fe:00 7193   /lib/ld-2.28.so
+155556d000-155556e000 r--p 00016000 fe:00 7193   /lib/ld-2.28.so
+155556e000-155556f000 rw-p 00017000 fe:00 7193   /lib/ld-2.28.so
+155556f000-1555570000 rw-p 00000000 00:00 0
+1555570000-1555572000 r-xp 00000000 00:00 0      [vdso]
+1555574000-1555576000 rw-p 00000000 00:00 0
+1555576000-1555674000 r-xp 00000000 fe:00 7187   /lib/libc-2.28.so
+1555674000-1555678000 r--p 000fd000 fe:00 7187   /lib/libc-2.28.so
+1555678000-155567a000 rw-p 00101000 fe:00 7187   /lib/libc-2.28.so
+155567a000-15556a0000 rw-p 00000000 00:00 0
+3fffb90000-3fffbb1000 rw-p 00000000 00:00 0      [stack]
 
-On Thu, 8 Aug 2019 15:20:11 +0900 Masahiro Yamada <yamada.masahiro@socionex=
-t.com> wrote:
->
-> I queued the following commit in linux-kbuild/fixes,
-> but it turned out to produce false-positive warnings for single-targets.
->=20
-> commit c4b230ac34ce64bdd4006f5e0e9be880b8a4d0a5 (origin/fixes)
-> Author: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Date:   Tue Aug 6 19:03:23 2019 +0900
->=20
->     kbuild: show hint if subdir-y/m is used to visit module Makefile
->=20
->=20
-> If it is not too late, could you revert it for today's linux-next ?
+After:
+root@qemuriscv64:~# cat /proc/self/maps
+00010000-00016000 r-xp 00000000 fe:00 6389       /bin/cat.coreutils
+00016000-00017000 r--p 00005000 fe:00 6389       /bin/cat.coreutils
+00017000-00018000 rw-p 00006000 fe:00 6389       /bin/cat.coreutils
+2de81000-2dea2000 rw-p 00000000 00:00 0          [heap]
+3ff7eb6000-3ff7ed8000 rw-p 00000000 00:00 0
+3ff7ed8000-3ff7fd6000 r-xp 00000000 fe:00 7187   /lib/libc-2.28.so
+3ff7fd6000-3ff7fda000 r--p 000fd000 fe:00 7187   /lib/libc-2.28.so
+3ff7fda000-3ff7fdc000 rw-p 00101000 fe:00 7187   /lib/libc-2.28.so
+3ff7fdc000-3ff7fe2000 rw-p 00000000 00:00 0
+3ff7fe4000-3ff7fe6000 r-xp 00000000 00:00 0      [vdso]
+3ff7fe6000-3ff7ffd000 r-xp 00000000 fe:00 7193   /lib/ld-2.28.so
+3ff7ffd000-3ff7ffe000 r--p 00016000 fe:00 7193   /lib/ld-2.28.so
+3ff7ffe000-3ff7fff000 rw-p 00017000 fe:00 7193   /lib/ld-2.28.so
+3ff7fff000-3ff8000000 rw-p 00000000 00:00 0
+3fff888000-3fff8a9000 rw-p 00000000 00:00 0      [stack]
 
-Just caught me in time :-)  I have reverted it.
---=20
-Cheers,
-Stephen Rothwell
+Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+Acked-by: Paul Walmsley <paul.walmsley@sifive.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+---
+ arch/riscv/Kconfig | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
---Sig_//SA7_h0x+DqX.IYYG8rb82g
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index 59a4727ecd6c..87dc5370becb 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -54,6 +54,18 @@ config RISCV
+ 	select EDAC_SUPPORT
+ 	select ARCH_HAS_GIGANTIC_PAGE
+ 	select ARCH_WANT_HUGE_PMD_SHARE if 64BIT
++	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT if MMU
++	select HAVE_ARCH_MMAP_RND_BITS
++
++config ARCH_MMAP_RND_BITS_MIN
++	default 18 if 64BIT
++	default 8
++
++# max bits determined by the following formula:
++#  VA_BITS - PAGE_SHIFT - 3
++config ARCH_MMAP_RND_BITS_MAX
++	default 24 if 64BIT # SV39 based
++	default 17
+ 
+ config MMU
+ 	def_bool y
+-- 
+2.20.1
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1LwiIACgkQAVBC80lX
-0Gw2oggAmHMB1ZGOc+iVe0wZVTwn5RBfQwHk6c8n/wYU5Pz5LK8/MKqTva3oIZP5
-SKznZhKzed4izocTFEzJZzpo6imb08oGMj4fP4ErCr+rlDWox+Z2Pzy6E13F+pzQ
-0ql1L+7AUVoDF2cWsu+7iciISISq5eELHV8Q2G12RPyNdtHVvZloDzzwKAg2iSAU
-td4bwyy3YCm+HOE9w47RR9BTMHp27hyWLpWNfEBwi+I+Na9+rNbhZOvpNTA9tx6C
-kTP9zd4tCfRhxv/JSPdgONYHIEux/9Ms82XnyGOM8/WrpFL3DMqiB/K1HhiW2Jw8
-F+DLhLXfDu9obYa+VOKJyJnWDg6q7w==
-=OfTz
------END PGP SIGNATURE-----
-
---Sig_//SA7_h0x+DqX.IYYG8rb82g--
