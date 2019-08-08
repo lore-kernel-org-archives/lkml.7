@@ -2,80 +2,83 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C987C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77615C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:39:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 147562189F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:37:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36C0A2089E
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:39:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="16J1OHQK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390337AbfHHUhI (ORCPT
+        id S2390259AbfHHUjj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 16:37:08 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:54222 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725785AbfHHUhI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 16:37:08 -0400
-Received: from p200300ddd71876597e7a91fffec98e25.dip0.t-ipconnect.de ([2003:dd:d718:7659:7e7a:91ff:fec9:8e25])
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hvp9Y-0007ps-VX; Thu, 08 Aug 2019 22:36:53 +0200
-Date:   Thu, 8 Aug 2019 22:36:47 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
-cc:     "Li, Aubrey" <aubrey.li@linux.intel.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Daniel Drake <drake@endlessm.com>,
-        "x86@kernel.org" <x86@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Endless Linux Upstreaming Team <linux@endlessm.com>
-Subject: Re: setup_boot_APIC_clock() NULL dereference during early boot on
- reduced hardware platforms
-In-Reply-To: <3d14b0cc-3cca-1874-3521-4ee2ec52141d@amd.com>
-Message-ID: <alpine.DEB.2.21.1908082235590.2882@nanos.tec.linutronix.de>
-References: <CAD8Lp448i7jOk9C5NJtC2wHMaGuRLD4pxVqK17YqRCuMVXhsOA@mail.gmail.com> <CAERHkruxfBc8DqNUr=fbYuQWrXrHC7cK6HnVR3xp0iLA9QtxiQ@mail.gmail.com> <alpine.DEB.2.21.1908010931550.1788@nanos.tec.linutronix.de> <CAERHkrtaVAQHDU1cj2_GLL59LPjp7E=3X0Zna0spfFB=Ve5__w@mail.gmail.com>
- <alpine.DEB.2.21.1908011011250.1788@nanos.tec.linutronix.de> <81666b28-d029-56c3-8978-90abc219d1b7@linux.intel.com> <alpine.DEB.2.21.1908011054210.1965@nanos.tec.linutronix.de> <3d14b0cc-3cca-1874-3521-4ee2ec52141d@amd.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 8 Aug 2019 16:39:39 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:45658 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725785AbfHHUji (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 16:39:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=o1ab5hvyDud1JwiSt72xPEY0As9rAHAnTbN6/WPbCF0=; b=16J1OHQK3pgK71LBbbFncpXW+r
+        1iPSFx62hYqOGNpZuoGUTPUu/dIyJ19KaUiKM9OFQLuKPIuDmowXjqz9a/FocsB/9KoB0IQ32EI+E
+        L5EPDyjIZdcLLa+Q3tflkeJR0shp1fhl6Y4h+yRxwisvlQNk1Kumkzn46eVcngqjoAC8=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hvpC8-0005w6-4c; Thu, 08 Aug 2019 22:39:32 +0200
+Date:   Thu, 8 Aug 2019 22:39:32 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, davem@davemloft.net,
+        robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com
+Subject: Re: [PATCH v2 13/15] net: phy: adin: configure downshift on
+ config_init
+Message-ID: <20190808203932.GP27917@lunn.ch>
+References: <20190808123026.17382-1-alexandru.ardelean@analog.com>
+ <20190808123026.17382-14-alexandru.ardelean@analog.com>
+ <420c8e15-3361-a722-4ad1-3c448b1d3bc1@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <420c8e15-3361-a722-4ad1-3c448b1d3bc1@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tom,
-
-On Thu, 1 Aug 2019, Lendacky, Thomas wrote:
-> On 8/1/19 5:13 AM, Thomas Gleixner wrote:
-> >   2.1.9 Timers
+On Thu, Aug 08, 2019 at 09:38:40PM +0200, Heiner Kallweit wrote:
+> On 08.08.2019 14:30, Alexandru Ardelean wrote:
+> > Down-speed auto-negotiation may not always be enabled, in which case the
+> > PHY won't down-shift to 100 or 10 during auto-negotiation.
 > > 
-> >    Each core includes the following timers. These timers do not vary in
-> >    frequency regardless of the current P-state or C-state.
+> > This change enables downshift and configures the number of retries to
+> > default 8 (maximum supported value).
 > > 
-> >    * Core::X86::Msr::TSC; the TSC increments at the rate specified by the
-> >      P0 Pstate. See Core::X86::Msr::PStateDef.
+> > The change has been adapted from the Marvell PHY driver.
 > > 
-> >    * The APIC timer (Core::X86::Apic::TimerInitialCount and
-> >      Core::X86::Apic::TimerCurrentCount), which increments at the rate of
-> >      2xCLKIN; the APIC timer may increment in units of between 1 and 8.
-> > 
-> > The Ryzens use a 100MHz input clock for the APIC normally, but I'm not sure
-> > whether this is subject to overclocking. If so then it should be possible
-> > to figure that out somehow. Tom?
-> 
-> Let me check with the hardware folks and I'll get back to you.
+> Instead of a fixed downshift setting (like in the Marvell driver) you
+> may consider to implement the ethtool phy-tunable ETHTOOL_PHY_DOWNSHIFT.
 
-any update on this? The problem seems to come in from several sides now.
+Hi Alexandru
 
-Thanks,
+Upps, sorry, my bad.
 
-	tglx
+I looked at marvell_set_downshift(), and assumed it was connected to
+the phy-tunable. I have patches somewhere which does that. But they
+have not made it into mainline yet.
+
+> See the Aquantia PHY driver for an example.
+
+Yes, that does have all the tunable stuff.
+
+     Andrew
