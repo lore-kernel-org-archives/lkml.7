@@ -2,173 +2,196 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6FCC433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:27:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B7CC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:28:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 931D32171F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:27:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eBsLf4ym"
+	by mail.kernel.org (Postfix) with ESMTP id 469FB21743
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 14:28:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389872AbfHHO1K (ORCPT
+        id S1732843AbfHHO2y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 10:27:10 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:38113 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387769AbfHHO1J (ORCPT
+        Thu, 8 Aug 2019 10:28:54 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:43911 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727649AbfHHO2x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 10:27:09 -0400
-Received: by mail-ot1-f67.google.com with SMTP id d17so119430132oth.5;
-        Thu, 08 Aug 2019 07:27:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=kfupe5BCBY7jnSL0f7BIF2NQvyUM9IcPYdq/C0xPwjo=;
-        b=eBsLf4ymJd4TN1TmmVtWpS+ZvLVOln2SBpbkeYigaEHwcMXuaQS7D2/LjueqTfbWJR
-         uWoLzYhviUsYYdPGq0kl5qd0B29UvdUgSxXehrB8HTSCE1XXN5vMabO4qNVsJAOIx6YC
-         2/dvgD0CXyXpnV/ZTxm8prArw2a/H673BzmsI1odR9EnWnnI+kLBm4C+2X/rzaTl4fdT
-         3g+tod2Jcs8Vg2u8K+ZHR0vHDjc8X80Fx8fM1GUHPmWMhdP3MZziOSdRED9LCM5DxJ/b
-         qCHRQ2hqg7A687ZVzLS1JPWGYuTtMPU7IcI0Dp4wjCalaySQFsR9yYCxqgR9mlDSmJNw
-         oecw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=kfupe5BCBY7jnSL0f7BIF2NQvyUM9IcPYdq/C0xPwjo=;
-        b=jvgNY3CmzBwn+SMAGj5/tPuAsi1mP+/QQBzLvomC2iA4w3/LWcu910rc9aRTAMtIxk
-         gwFEbcDS3khsxVM9PgPZ1/JhNxWrO0QYSLzCw22s+pnY5bePEZ0ZmBaFIl9OC7vNfU6K
-         bR5ej2P5NDa2cQKeGVEyFydl36obJlCU7lWdjJl1qvYUGIjT2SBUEvzxz1TCukC6wpNK
-         PJSsgnV/ay3IBXPMlUNnsyqnnDj+tLtYbZBVstzYvP20oDQNPLwqZtGqUWwAjCUGo0No
-         s/JxAo4WzYv+WNRexiBqAmobQM3p4k6eteMH16UXEuaVpalA5hykCGW7McHVPP5RBp1X
-         ZfJw==
-X-Gm-Message-State: APjAAAW1/IJyfJ3ocpoXiLxxrWqhf5+oKA/2Bj6ASSjlYJLQrafHGPln
-        paAqr9S31e4F85mUmMuLgsfZ/8NrOz/d4p7bgw==
-X-Google-Smtp-Source: APXvYqyP1vcNnOqVtrNubvfjYGUmAcMf8O4IxgdBNXI6d0ODggbbZLLe1p7Z2PNdNyzA/kns9Rz4xd6na7idgKhgl2g=
-X-Received: by 2002:a9d:27e2:: with SMTP id c89mr13553083otb.302.1565274428280;
- Thu, 08 Aug 2019 07:27:08 -0700 (PDT)
+        Thu, 8 Aug 2019 10:28:53 -0400
+X-UUID: ad55d4d908ed454083dd1205e0106285-20190808
+X-UUID: ad55d4d908ed454083dd1205e0106285-20190808
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <miles.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
+        with ESMTP id 943411608; Thu, 08 Aug 2019 22:28:42 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 8 Aug 2019 22:28:44 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 8 Aug 2019 22:28:44 +0800
+From:   <miles.chen@mediatek.com>
+To:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
+        Miles Chen <miles.chen@mediatek.com>
+Subject: [RFC PATCH] mm: slub: print kernel addresses when CONFIG_SLUB_DEBUG=y
+Date:   Thu, 8 Aug 2019 22:28:43 +0800
+Message-ID: <20190808142843.32151-1-miles.chen@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-References: <CAH040W7fdd-ND4-QG3DwGpFAPTMGB4zzuXYohMdfoSejV6XE_Q@mail.gmail.com>
- <CA+ASDXM6Jz7YY9XUj6QKv5VJCED-BnQ5K1UZHNApB9p6qTWtgg@mail.gmail.com> <F7CD281DE3E379468C6D07993EA72F84D1889B04@RTITMBSVM04.realtek.com.tw>
-In-Reply-To: <F7CD281DE3E379468C6D07993EA72F84D1889B04@RTITMBSVM04.realtek.com.tw>
-From:   =?UTF-8?B?6rOg7KSA?= <gojun077@gmail.com>
-Date:   Thu, 8 Aug 2019 23:26:57 +0900
-Message-ID: <CAH040W7x92Bb_zOh=g+B+j7sUnsUFh_O2+SXwqcymyjbyNHuXg@mail.gmail.com>
-Subject: Re: Realtek r8822be wireless card fails to work with new rtw88 kernel module
-To:     Tony Chuang <yhchuang@realtek.com>
-Cc:     Brian Norris <briannorris@chromium.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+From: Miles Chen <miles.chen@mediatek.com>
 
-Thanks for sharing the patch, Brian. I am seeing some progress when
-building 5.3.0-rc1+ with
-the wireless-drivers-next patch for the rtw88 kernel module. Before
-the patch, my realtek r8822be
-was not recognized at all.
+This RFC patch is sent to discuss the printing address with %p issue.
 
-After the patch, Realtek ethernet as well as wireless card r8822be are
-recognized and I can see
-a list of wireless access points. But for some reason, ping to my
-local gateway servers (both
-Ethernet and wireless) fail. Running tcpdump on my wireless and
-ethernet interfaces shows
-that ARP requests are showing up, but dns resolution doesn't work. I
-can associate with a
-wireless access point with wpa_supplicant and my ethernet port is
-getting a DHCP lease from
-my dhcp server, however.
+Since commit ad67b74d2469d9b8 ("printk: hash addresses printed with %p"),
+%p gives obfuscated addresses now. When CONFIG_SLUB_DEBUG=y, it is still
+useful to get real virtual addresses.
 
-And for YH~
-Here is a dropbox link to debug info containing the output of dmesg,
-lsmod, and journalctl -b0 zipped
-up into a tarball:
+Possible approaches are:
+1. stop printing kernel addresses
+2. print kernel addresses with %pK,
+3. print kernel addresses with %px.
+4. do nothing
 
-https://www.dropbox.com/s/pl85ob09y6q2qky/debug_5.3.0-rc1%2B_with_rtw88_pat=
-ch.tar.gz?dl=3D0
+This patch takes %px approach and shows the output here.
+(%px will causes checkpatch warnings, let us ignore the warning here to
+have the discussion). Also, use DUMP_PREFIX_OFFSET instead of
+DUMP_PREFIX_ADDRESS.
 
-Thanks for your help!
-Jun
+Before this patch:
 
+INFO: Slab 0x(____ptrval____) objects=25 used=10 fp=0x(____ptrval____)
+INFO: Object 0x(____ptrval____) @offset=1408 fp=0x(____ptrval____)
+Redzone (____ptrval____): bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+Redzone (____ptrval____): bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+Redzone (____ptrval____): bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+Redzone (____ptrval____): bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+Redzone (____ptrval____): bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+Redzone (____ptrval____): bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+Redzone (____ptrval____): bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+Redzone (____ptrval____): bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b a5
+Redzone (____ptrval____): bb bb bb bb bb bb bb bb
+Padding (____ptrval____): 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a
+Padding (____ptrval____): 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a
+Padding (____ptrval____): 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a
+Padding (____ptrval____): 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a
+...
+FIX kmalloc-128: Object at 0x(____ptrval____) not freed
 
-Link to GPG Public Key:
-https://keybase.io/gojun077#show-public
+After this patch:
 
+INFO: Slab 0xffffffbf00f57000 objects=25 used=23 fp=0xffffffc03d5c3500
+INFO: Object 0xffffffc03d5c3500 @offset=13568 fp=0xffffffc03d5c0800
+Redzone 00000000: bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+Redzone 00000010: bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+Redzone 00000020: bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+Redzone 00000030: bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+Redzone 00000040: bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+Redzone 00000050: bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+Redzone 00000060: bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+Redzone 00000070: bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+Object 00000000: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+Object 00000010: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+Object 00000020: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+Object 00000030: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+Object 00000040: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+Object 00000050: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+Object 00000060: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+Object 00000070: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b a5
+Redzone 00000000: bb bb bb bb bb bb bb bb
+Padding 00000000: 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a
+Padding 00000010: 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a
+Padding 00000020: 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a
+Padding 00000030: 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a
+...
+FIX kmalloc-128: Object at 0xffffffc03d5c3500 not freed
 
-Backup link:
-https://keys.openpgp.org/vks/v1/by-fingerprint/79F173A93EB3623D32F86309A569=
-30CF7235138D
+Signed-off-by: Miles Chen <miles.chen@mediatek.com>
+---
+ mm/slub.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
+diff --git a/mm/slub.c b/mm/slub.c
+index 8834563cdb4b..bc1fb8e81557 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -528,7 +528,7 @@ static void print_section(char *level, char *text, u8 *addr,
+ 			  unsigned int length)
+ {
+ 	metadata_access_enable();
+-	print_hex_dump(level, text, DUMP_PREFIX_ADDRESS, 16, 1, addr,
++	print_hex_dump(level, text, DUMP_PREFIX_OFFSET, 16, 1, addr,
+ 			length, 1);
+ 	metadata_access_disable();
+ }
+@@ -611,7 +611,7 @@ static void print_tracking(struct kmem_cache *s, void *object)
+ 
+ static void print_page_info(struct page *page)
+ {
+-	pr_err("INFO: Slab 0x%p objects=%u used=%u fp=0x%p flags=0x%04lx\n",
++	pr_err("INFO: Slab 0x%px objects=%u used=%u fp=0x%px flags=0x%04lx\n",
+ 	       page, page->objects, page->inuse, page->freelist, page->flags);
+ 
+ }
+@@ -653,7 +653,7 @@ static void print_trailer(struct kmem_cache *s, struct page *page, u8 *p)
+ 
+ 	print_page_info(page);
+ 
+-	pr_err("INFO: Object 0x%p @offset=%tu fp=0x%p\n\n",
++	pr_err("INFO: Object 0x%px @offset=%tu fp=0x%px\n\n",
+ 	       p, p - addr, get_freepointer(s, p));
+ 
+ 	if (s->flags & SLAB_RED_ZONE)
+@@ -991,7 +991,7 @@ static void trace(struct kmem_cache *s, struct page *page, void *object,
+ 								int alloc)
+ {
+ 	if (s->flags & SLAB_TRACE) {
+-		pr_info("TRACE %s %s 0x%p inuse=%d fp=0x%p\n",
++		pr_info("TRACE %s %s 0x%px inuse=%d fp=0x%p\n",
+ 			s->name,
+ 			alloc ? "alloc" : "free",
+ 			object, page->inuse,
+@@ -1212,7 +1212,7 @@ static noinline int free_debug_processing(
+ 	slab_unlock(page);
+ 	spin_unlock_irqrestore(&n->list_lock, flags);
+ 	if (!ret)
+-		slab_fix(s, "Object at 0x%p not freed", object);
++		slab_fix(s, "Object at 0x%px not freed", object);
+ 	return ret;
+ }
+ 
+@@ -3693,7 +3693,7 @@ static void list_slab_objects(struct kmem_cache *s, struct page *page,
+ 	for_each_object(p, s, addr, page->objects) {
+ 
+ 		if (!test_bit(slab_index(p, s, addr), map)) {
+-			pr_err("INFO: Object 0x%p @offset=%tu\n", p, p - addr);
++			pr_err("INFO: Object 0x%px @offset=%tu\n", p, p - addr);
+ 			print_tracking(s, p);
+ 		}
+ 	}
+-- 
+2.18.0
 
-Link to GPG Public Key:
-
-https://keybase.io/gojun077#show-public
-
-
-Backup link:
-
-https://keys.openpgp.org/vks/v1/by-fingerprint/79F173A93EB3623D32F86309A569=
-30CF7235138D
-
-
-
-On Wed, Aug 7, 2019 at 11:33 AM Tony Chuang <yhchuang@realtek.com> wrote:
->
-> > + yhchuang
-> >
-> > On Tue, Aug 6, 2019 at 7:32 AM =EA=B3=A0=EC=A4=80 <gojun077@gmail.com> =
-wrote:
-> > >
-> > > Hello,
-> > >
-> > > I recently reported a bug to Ubuntu regarding a regression in wireles=
-s
-> > > driver support for the Realtek r8822be wireless chipset. The issue
-> > > link on launchpad is:
-> > >
-> > > https://bugs.launchpad.net/bugs/1838133
-> > >
-> > > After Canonical developers triaged the bug they determined that the
-> > > problem lies upstream, and instructed me to send mails to the relevan=
-t
-> > > kernel module maintainers at Realtek and to the general kernel.org
-> > > mailing list.
-> > >
-> > > I built kernel 5.3.0-rc1+ with the latest realtek drivers from
-> > > wireless-drivers-next but my Realtek r8822be doesn't work with
-> > > rtw88/rtwpci kernel modules.
-> > >
-> > > Please let me know if there is any additional information I can
-> > > provide that would help in debugging this issue.
-> >
-> > Any chance this would help you?
-> >
-> > https://patchwork.kernel.org/patch/11065631/
-> >
-> > Somebody else was complaining about 8822be regressions that were fixed
-> > with that.
-> >
->
-> I hope it could fix it.
->
-> And as "r8822be" was dropped, it is preferred to use "rtw88" instead.
-> I have received two kinds of failures that cause driver stop working.
-> One is the MSI interrupt should be enabled on certain platforms.
-> Another is the RFE type of the card, could you send more dmesg to me?
->
-> Yan-Hsuan
->
->
