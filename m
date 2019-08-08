@@ -2,84 +2,134 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3632C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:58:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91CDFC0650F
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:59:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B5CE218B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:58:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 694A7218B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 07:59:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731747AbfHHH6c (ORCPT
+        id S1731768AbfHHH7C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 03:58:32 -0400
-Received: from verein.lst.de ([213.95.11.211]:44262 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731588AbfHHH6c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 03:58:32 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 3D39168B02; Thu,  8 Aug 2019 09:58:27 +0200 (CEST)
-Date:   Thu, 8 Aug 2019 09:58:27 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Rob Clark <robdclark@chromium.org>, Christoph Hellwig <hch@lst.de>,
-        Rob Clark <robdclark@gmail.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] drm: add cache support for arm64
-Message-ID: <20190808075827.GD30308@lst.de>
-References: <20190805211451.20176-1-robdclark@gmail.com> <20190806084821.GA17129@lst.de> <CAJs_Fx6eh1w7c=crMoD5XyEOMzP6orLhqUewErE51cPGYmObBQ@mail.gmail.com> <20190806143457.GF475@lakrids.cambridge.arm.com> <CAJs_Fx4h6SWGmDTLBnV4nmWUFAs_Ge1inxd-dW9aDKgKqmc1eQ@mail.gmail.com> <20190807123807.GD54191@lakrids.cambridge.arm.com> <CAJs_Fx5xU2-dn3iOVqWTzAjpTaQ8BBNP_Gn_iMc-eJpOX+iXoQ@mail.gmail.com> <20190807164958.GA44765@lakrids.cambridge.arm.com>
+        Thu, 8 Aug 2019 03:59:02 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:34551 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731588AbfHHH7B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 03:59:01 -0400
+Received: by mail-ot1-f66.google.com with SMTP id n5so115171636otk.1;
+        Thu, 08 Aug 2019 00:59:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DVhpQNMzq05tycScJr2r1xV1Y0LJT9ZISA62PMeb6GU=;
+        b=bZld0Hc13YbAaBD3UHAnCgxZtM3hpnIdwFHXheCeyKB4J1WMWzrXWY07rU4yMnO936
+         YgGI68RhpFYSAp2AHedTfo9xViwRElccjB0FonxO/7n2FwhTsXWSE6WJWA7R0EMJ+oFV
+         ScPxf8/HWF2SHx0xdL9ViNi3DK23gYXsH4QSihQa563XYeAIcfeiXriXGyVPXTSmCZAZ
+         G+/1cDpXe3qLB0SiO3m1ZQXAStKjwV00e73I70hOL97j8RNsxJfuXhgZdK/XuEKdFCex
+         BtMRtEYj6Xt4W0ZKWx1Gcium685nFwrXMB426HBA8DqEP7MvgUfFQU4h0rPs78XPNUj8
+         rGWg==
+X-Gm-Message-State: APjAAAUpZ9jfQ/mlw4EVdCEoXsc4LV0wHv8U0xyfjzxchULQNq2YE21i
+        p6x0qgknz3VzT1KJZXJtVXvFMPX82IgSnucpRBk=
+X-Google-Smtp-Source: APXvYqwlUMzu6TevJKiMfj8xo6e/mWVNrZN8y01RcAxyf4Q1QHT8l2IIDmz1X54nHYhX19Jsj0cvXqwMo6uNXI3FKqA=
+X-Received: by 2002:a9d:5c11:: with SMTP id o17mr11036525otk.107.1565251140765;
+ Thu, 08 Aug 2019 00:59:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190807164958.GA44765@lakrids.cambridge.arm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+References: <20190730181557.90391-1-swboyd@chromium.org> <20190730181557.90391-30-swboyd@chromium.org>
+In-Reply-To: <20190730181557.90391-30-swboyd@chromium.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 8 Aug 2019 09:58:49 +0200
+Message-ID: <CAMuHMdVMTAQ7oiRd443qLfY42cwd21x1nJM0yhKLtoqKjHDLQg@mail.gmail.com>
+Subject: Re: [PATCH v6 29/57] mmc: Remove dev_err() usage after platform_get_irq()
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 07, 2019 at 05:49:59PM +0100, Mark Rutland wrote:
-> I'm fairly confident that the linear/direct map cacheable alias is not
-> torn down when pages are allocated. The gneeric page allocation code
-> doesn't do so, and I see nothing the shmem code to do so.
+Hi Stephen,
 
-It is not torn down anywhere.
+On Tue, Jul 30, 2019 at 10:58 PM Stephen Boyd <swboyd@chromium.org> wrote:
+> We don't need dev_err() messages when platform_get_irq() fails now that
+> platform_get_irq() prints an error message itself when something goes
+> wrong. Let's remove these prints with a simple semantic patch.
+>
+> // <smpl>
+> @@
+> expression ret;
+> struct platform_device *E;
+> @@
+>
+> ret =
+> (
+> platform_get_irq(E, ...)
+> |
+> platform_get_irq_byname(E, ...)
+> );
+>
+> if ( \( ret < 0 \| ret <= 0 \) )
+> {
+> (
+> -if (ret != -EPROBE_DEFER)
+> -{ ...
+> -dev_err(...);
+> -... }
+> |
+> ...
+> -dev_err(...);
+> )
+> ...
+> }
+> // </smpl>
+>
+> While we're here, remove braces on if statements that only have one
+> statement (manually).
+>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Cc: linux-mmc@vger.kernel.org
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> ---
+>
+> Please apply directly to subsystem trees
+>
+>  drivers/mmc/host/bcm2835.c       | 1 -
+>  drivers/mmc/host/jz4740_mmc.c    | 1 -
+>  drivers/mmc/host/meson-gx-mmc.c  | 1 -
+>  drivers/mmc/host/mxcmmc.c        | 4 +---
+>  drivers/mmc/host/s3cmci.c        | 1 -
+>  drivers/mmc/host/sdhci-msm.c     | 2 --
+>  drivers/mmc/host/sdhci-pltfm.c   | 1 -
+>  drivers/mmc/host/sdhci-s3c.c     | 4 +---
+>  drivers/mmc/host/sdhci_f_sdh30.c | 4 +---
+>  drivers/mmc/host/uniphier-sd.c   | 4 +---
+>  10 files changed, 4 insertions(+), 19 deletions(-)
 
-> For arm64, we can tear down portions of the linear map, but that has to
-> be done explicitly, and this is only possible when using rodata_full. If
-> not using rodata_full, it is not possible to dynamically tear down the
-> cacheable alias.
+Failed to catch:
 
-Interesting.  For this or next merge window I plan to add support to the
-generic DMA code to remap pages as uncachable in place based on the
-openrisc code.  Aѕ far as I can tell the requirement for that is
-basically just that the kernel direct mapping doesn't use PMD or bigger
-mapping so that it supports changing protection bits on a per-PTE basis.
-Is that the case with arm64 + rodata_full?
+drivers/mmc/host/sh_mmcif.c:    irq[0] = platform_get_irq(pdev, 0);
+drivers/mmc/host/sh_mmcif.c:    irq[1] = platform_get_irq(pdev, 1);
+drivers/mmc/host/sh_mmcif.c-    if (irq[0] < 0) {
+drivers/mmc/host/sh_mmcif.c-            dev_err(dev, "Get irq error\n");
+drivers/mmc/host/sh_mmcif.c-            return -ENXIO;
+drivers/mmc/host/sh_mmcif.c-    }
 
-> > My understanding is that a cacheable alias is "ok", with some
-> > caveats.. ie. that the cacheable alias is not accessed.  
-> 
-> Unfortunately, that is not true. You'll often get away with it in
-> practice, but that's a matter of probability rather than a guarantee.
-> 
-> You  cannot prevent a CPU from accessing a VA arbitrarily (e.g. as the
-> result of wild speculation). The ARM ARM (ARM DDI 0487E.a) points this
-> out explicitly:
+Gr{oetje,eeting}s,
 
-Well, if we want to fix this properly we'll have to remap in place
-for dma_alloc_coherent and friends.
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
