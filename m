@@ -2,167 +2,145 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5DB9C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F017DC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70EE520B7C
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:51:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C19BA204EC
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:51:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="E5VqcLm1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390281AbfHHUvh (ORCPT
+        id S2390401AbfHHUvx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 16:51:37 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:63588 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730678AbfHHUvg (ORCPT
+        Thu, 8 Aug 2019 16:51:53 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:33638 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730768AbfHHUvx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 16:51:36 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x78KfsJU025933
-        for <linux-kernel@vger.kernel.org>; Thu, 8 Aug 2019 16:51:35 -0400
-Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2u8rchxqjw-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 16:51:34 -0400
-Received: from localhost
-        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Thu, 8 Aug 2019 21:51:33 +0100
-Received: from b01cxnp22033.gho.pok.ibm.com (9.57.198.23)
-        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 8 Aug 2019 21:51:29 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x78KpSXn41615806
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 8 Aug 2019 20:51:28 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 57016B2064;
-        Thu,  8 Aug 2019 20:51:28 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 28BABB2065;
-        Thu,  8 Aug 2019 20:51:28 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu,  8 Aug 2019 20:51:28 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 8406016C9A2E; Thu,  8 Aug 2019 13:51:29 -0700 (PDT)
-Date:   Thu, 8 Aug 2019 13:51:29 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Byungchul Park <byungchul.park@lge.com>,
-        linux-kernel@vger.kernel.org, Rao Shoaib <rao.shoaib@oracle.com>,
-        max.byungchul.park@gmail.com, kernel-team@android.com,
-        kernel-team@lge.com, Davidlohr Bueso <dave@stgolabs.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH RFC v1 1/2] rcu/tree: Add basic support for kfree_rcu
- batching
-Reply-To: paulmck@linux.ibm.com
-References: <20190806212041.118146-1-joel@joelfernandes.org>
- <20190806235631.GU28441@linux.ibm.com>
- <20190807094504.GB169551@google.com>
- <20190808102610.GA7227@X58A-UD3R>
- <20190808181112.GQ28441@linux.ibm.com>
- <20190808201333.GE261256@google.com>
+        Thu, 8 Aug 2019 16:51:53 -0400
+Received: by mail-ot1-f66.google.com with SMTP id q20so124046045otl.0
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 13:51:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=MYiXtYDqJwotW34VbL1gNPhcfMp5HVF3/UwPQRs2BZ8=;
+        b=E5VqcLm1TM2dFLlFksMh4Glkk8vf9CShPiNi2v/7qR+H6sMT72hy6Eva/LC9w1fWsa
+         IP8Ik8LeqyfEKoU08bpvPPfw/CmoGB9yfo1ck//6p2R5WTpHyfX/i4YKtiUWLvPCfdH9
+         bY72iFacAWC2XWP8SGouaRcA635yqcljhSUIeqGhfjGRb/Jm/jc3l066I1a05Bn0v6Ly
+         SAHdAuDnOaQ0wi5bi+0bKNQ/DrWIHPiK5P5eWq+siSrx19YPb50D0AYTNndu2Ls/ceSt
+         wGkXkLcUMMdL8K972+d740G62BVqLwkutB5qypnujz+TOZLxu6OIObPDmmU0+hI1FSDs
+         1cjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=MYiXtYDqJwotW34VbL1gNPhcfMp5HVF3/UwPQRs2BZ8=;
+        b=YGLKd7jSqpgZC2cUli6w+iPYu2LRSgm8XV/8vLLTimfz66enT1g6jcrjh5dEKgk6XP
+         7kAIC84E/HsANrIaY61UfUqiLIkguVsHDsFSq2p7YAuUDkS8TnI5ZZuqyXAmpTfdMcgY
+         EVqOyK2Gx+KR+ajkwNLahOMdtJ60zZ1nD5JiZKuhywLVFlsmpohRGiwk9LmK8XVcHV+G
+         hFdHJq6shD+aFnIumIiCsYvihrSEA7RfiXbLQrBk9gYY+r8ib1NhwO4NkbOjcjnwwTvT
+         C0Bb0h9vHjHggDLiLMDqCfYCe827eroEjqV4W6a5bFz1HSb9bzcfma9+Zy+zREIanNVN
+         vBRA==
+X-Gm-Message-State: APjAAAVsDxhm7Um2FvejjWbljSzxKg3PuZYKQx57FDnH/tVA8l2fkkKI
+        HaHc5avaZpswScRcgLQEhvpCBA==
+X-Google-Smtp-Source: APXvYqwg5Pl4senspTBLLXh2DoiIY98sJyIj+ipD/rz0g87+UZib96GWjWiieV8LkxipSEZor5ZyVQ==
+X-Received: by 2002:a6b:f906:: with SMTP id j6mr17177807iog.26.1565297512230;
+        Thu, 08 Aug 2019 13:51:52 -0700 (PDT)
+Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
+        by smtp.gmail.com with ESMTPSA id h18sm73602337iob.80.2019.08.08.13.51.51
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 08 Aug 2019 13:51:51 -0700 (PDT)
+Date:   Thu, 8 Aug 2019 13:51:50 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Bjorn Helgaas <helgaas@kernel.org>
+cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org,
+        Wesley Terpstra <wesley@sifive.com>
+Subject: Re: [PATCH v2] pci: Kconfig: select PCI_MSI_IRQ_DOMAIN by default
+ on RISC-V
+In-Reply-To: <20190808195546.GA7302@google.com>
+Message-ID: <alpine.DEB.2.21.9999.1908081349210.6414@viisi.sifive.com>
+References: <alpine.DEB.2.21.9999.1907251426450.32766@viisi.sifive.com> <20190808195546.GA7302@google.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190808201333.GE261256@google.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19080820-0072-0000-0000-000004514DF5
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011571; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000287; SDB=6.01244002; UDB=6.00656283; IPR=6.01025480;
- MB=3.00028097; MTD=3.00000008; XFM=3.00000015; UTC=2019-08-08 20:51:32
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19080820-0073-0000-0000-00004CC25693
-Message-Id: <20190808205129.GU28441@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-08_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908080182
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 04:13:33PM -0400, Joel Fernandes wrote:
-> On Thu, Aug 08, 2019 at 11:11:12AM -0700, Paul E. McKenney wrote:
-> > On Thu, Aug 08, 2019 at 07:26:10PM +0900, Byungchul Park wrote:
-> > > On Wed, Aug 07, 2019 at 05:45:04AM -0400, Joel Fernandes wrote:
-> > > > On Tue, Aug 06, 2019 at 04:56:31PM -0700, Paul E. McKenney wrote:
-> > > 
-> > > [snip]
-> > > 
-> > > > > On Tue, Aug 06, 2019 at 05:20:40PM -0400, Joel Fernandes (Google) wrote:
-> > > > > Of course, I am hoping that a later patch uses an array of pointers built
-> > > > > at kfree_rcu() time, similar to Rao's patch (with or without kfree_bulk)
-> > > > > in order to reduce per-object cache-miss overhead.  This would make it
-> > > > > easier for callback invocation to keep up with multi-CPU kfree_rcu()
-> > > > > floods.
-> > > > 
-> > > > I think Byungchul tried an experiment with array of pointers and wasn't
-> > > > immediately able to see a benefit. Perhaps his patch needs a bit more polish
-> > > > or another test-case needed to show benefit due to cache-misses, and the perf
-> > > > tool could be used to show if cache misses were reduced. For this initial
-> > > > pass, we decided to keep it without the array optimization.
-> > > 
-> > > I'm still seeing no improvement with kfree_bulk().
-> > > 
-> > > I've been thinking I could see improvement with kfree_bulk() because:
-> > > 
-> > >    1. As you guys said, the number of cache misses will be reduced.
-> > >    2. We can save (N - 1) irq-disable instructions while N kfrees.
-> > >    3. As Joel said, saving/restoring CPU status that kfree() does inside
-> > >       is not required.
-> > > 
-> > > But even with the following patch applied, the result was same as just
-> > > batching test. We might need to get kmalloc objects from random
-> > > addresses to maximize the result when using kfree_bulk() and this is
-> > > even closer to real practical world too.
-> > > 
-> > > And the second and third reasons doesn't seem to work as much as I
-> > > expected.
-> > > 
-> > > Do you have any idea? Or what do you think about it?
+Hi Bjorn,
+
+On Thu, 8 Aug 2019, Bjorn Helgaas wrote:
+
+> On Thu, Jul 25, 2019 at 02:28:07PM -0700, Paul Walmsley wrote:
+> > From: Wesley Terpstra <wesley@sifive.com>
 > > 
-> > I would not expect kfree_batch() to help all that much unless the
-> > pre-grace-period kfree_rcu() code segregated the objects on a per-slab
-> > basis.
+> > This is part of adding support for RISC-V systems with PCIe host 
+> > controllers that support message-signaled interrupts.
+> > 
+> > Signed-off-by: Wesley Terpstra <wesley@sifive.com>
+> > [paul.walmsley@sifive.com: wrote patch description; split this
+> >  patch from the arch/riscv patch]
+> > Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+> > ---
+> >  drivers/pci/Kconfig | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+> > index 2ab92409210a..beb3408a0272 100644
+> > --- a/drivers/pci/Kconfig
+> > +++ b/drivers/pci/Kconfig
+> > @@ -52,7 +52,7 @@ config PCI_MSI
+> >  	   If you don't know what to do here, say Y.
+> >  
+> >  config PCI_MSI_IRQ_DOMAIN
+> > -	def_bool ARC || ARM || ARM64 || X86
+> > +	def_bool ARC || ARM || ARM64 || X86 || RISCV
 > 
-> You mean kfree_bulk() instead of kfree_batch() right? I agree with you, would
-> be nice to do per-slab optimization in the future.
+> The other arches listed here either supply their own include/asm/msi.h
+> or generate it:
+> 
+>   $ ls arch/*/include/asm/msi.h
+>   arch/x86/include/asm/msi.h
+> 
+>   $ grep msi.h arch/*/include/asm/Kbuild
+>   arch/arc/include/asm/Kbuild:generic-y += msi.h
+>   arch/arm64/include/asm/Kbuild:generic-y += msi.h
+>   arch/arm/include/asm/Kbuild:generic-y += msi.h
+>   arch/mips/include/asm/Kbuild:generic-y += msi.h
+>   arch/powerpc/include/asm/Kbuild:generic-y += msi.h
+>   arch/sparc/include/asm/Kbuild:generic-y += msi.h
+> 
+> For example, see
+> 
+>   f8430eae9f1b ("PCI/MSI: Enable PCI_MSI_IRQ_DOMAIN support for ARC")
+>   be091d468a0a ("arm64: PCI/MSI: Use asm-generic/msi.h")
+>   0ab089c2548c ("ARM: Add msi.h to Kbuild")
+> 
+> I didn't look into the details of msi.h generation, but I assume
+> RISC-V needs to do something similar?  If so, I think that should be
+> part of this patch to avoid issues.
+> 
+> If CONFIG_GENERIC_MSI_IRQ_DOMAIN is defined, include/linux/msi.h
+> #includes <asm/msi.h> and I don't see where that would come from.
 
-Indeed I do mean kfree_bulk()!  One of those mornings, I guess...
+Commit 251a44888183 ("riscv: include generic support for MSI irqdomains") 
+has been merged upstream for this purpose:
 
-But again, without the per-slab locality, I doubt that we will see much
-improvement from kfree_bulk() over kfree().
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=251a44888183003b0380df184835a2c00bfa39d7
 
-> Also, I am thinking that whenever we do per-slab optimization, then the
-> kmem_cache_free_bulk() can be optimized further. If all pointers are on the
-> same slab, then we can just do virt_to_cache on the first pointer and avoid
-> repeated virt_to_cache() calls. That might also give a benefit -- but I could
-> be missing something.
+The original patch was split into a RISC-V component and a generic PCI 
+component to reduce the risk of merge conflicts.
 
-A sort might be required to make that work nicely, which would add some
-overhead.  Probably not that much, though, the increased locality would
-have a fighting chance of overcoming the sort's overhead.
+Does that work for you?
 
-> Right now kmem_cache_free_bulk() just looks like a kmem_cache_free() in a
-> loop except the small benefit of not disabling/enabling IRQs across each
-> __cache_free, and the reduced cache miss benefit of using the array.
 
-C'mon!  Show some respect for the awesome power of temporal locality!!!  ;-)
-
-							Thanx, Paul
-
+- Paul
