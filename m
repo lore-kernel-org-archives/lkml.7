@@ -2,93 +2,89 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 253E7C0650F
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:34:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6646BC433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:34:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB06B2173C
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:34:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 312832173C
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 20:34:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="Lf5+Mxhb"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="0hOmMEjL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390398AbfHHUeO (ORCPT
+        id S2390414AbfHHUeU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 16:34:14 -0400
-Received: from pio-pvt-msa1.bahnhof.se ([79.136.2.40]:43396 "EHLO
-        pio-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390186AbfHHUeK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 16:34:10 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by pio-pvt-msa1.bahnhof.se (Postfix) with ESMTP id B14B03F5D5;
-        Thu,  8 Aug 2019 22:34:07 +0200 (CEST)
-Authentication-Results: pio-pvt-msa1.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b="Lf5+Mxhb";
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from pio-pvt-msa1.bahnhof.se ([127.0.0.1])
-        by localhost (pio-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id N-GpX9dXhaTB; Thu,  8 Aug 2019 22:34:06 +0200 (CEST)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by pio-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id B78203F5A8;
-        Thu,  8 Aug 2019 22:34:05 +0200 (CEST)
-Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id E0D65360301;
-        Thu,  8 Aug 2019 22:34:04 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1565296444; bh=EIk0/MUpwLpbdNkCz481ROZL1qwhrG0hJX4BjHbekd8=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Lf5+MxhbJc+lwsstwp0LgCIZkWOVlVZhKQueAOEsO3kwvFF8OliImWzJw26HVXTf/
-         PUGGY9SB6hV4Qh3dGW73STTF+vVQ5BqMuvG9UanaRrb8uTJbuZ+CSLxEvu9rTo6c1n
-         mm8RZL/XZ8xyPu1syz5148DT/U61+whiMp3kL398=
-Subject: Re: [PATCH 2/3] pagewalk: seperate function pointers from iterator
- data
-To:     Christoph Hellwig <hch@lst.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Jerome Glisse <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Steven Price <steven.price@arm.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <20190808154240.9384-1-hch@lst.de>
- <20190808154240.9384-3-hch@lst.de>
-From:   Thomas Hellstrom <thomas@shipmail.org>
-Message-ID: <087f19ee-0278-b828-feb0-ff4a2c830a0f@shipmail.org>
-Date:   Thu, 8 Aug 2019 22:34:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 8 Aug 2019 16:34:20 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:45646 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390399AbfHHUeT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 16:34:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=FlJZGarl3bbH3/pyryWmZ82ojdu1jbJlpm/J+vJz06E=; b=0hOmMEjLp44q+7Z8ZdVCOhSsF9
+        7CyBnLfLvJ1CyenbpGxPQMBPANu+U6FuuTVEuJJ5/LFOqLZdr3L2yhNMg+kPSgXIzGqa2kXPsmNdR
+        Fa+uXbdefu/j/qdkCPFepaJ65tYYDId6vPRGgjLEri+RhGRnBYgCeGAuu3voLKEVaaSk=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hvp71-0005sf-1V; Thu, 08 Aug 2019 22:34:15 +0200
+Date:   Thu, 8 Aug 2019 22:34:15 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Yonglong Liu <liuyonglong@huawei.com>, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxarm@huawei.com, salil.mehta@huawei.com,
+        yisen.zhuang@huawei.com, shiju.jose@huawei.com
+Subject: Re: [PATCH net] net: phy: rtl8211f: do a double read to get real
+ time link status
+Message-ID: <20190808203415.GO27917@lunn.ch>
+References: <1565183772-44268-1-git-send-email-liuyonglong@huawei.com>
+ <d67831ab-8902-a653-3db9-b2f55adacabd@gmail.com>
+ <e663235c-93eb-702d-5a9c-8f781d631c42@huawei.com>
+ <080b68c7-abe6-d142-da4b-26e8a7d4dc19@gmail.com>
+ <c15f820b-cc80-9a93-4c48-1b60bc14f73a@huawei.com>
+ <b1140603-f05b-2373-445f-c1d7a43ff012@gmail.com>
+ <20190808194049.GM27917@lunn.ch>
+ <26e2c5c9-915c-858b-d091-e5bfa7ab6a5b@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190808154240.9384-3-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <26e2c5c9-915c-858b-d091-e5bfa7ab6a5b@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/8/19 5:42 PM, Christoph Hellwig wrote:
-> The mm_walk structure currently mixed data and code.  Split out the
-> operations vectors into a new mm_walk_ops structure, and while we
-> are changing the API also declare the mm_walk structure inside the
-> walk_page_range and walk_page_vma functions.
->
-> Based on patch from Linus Torvalds.
->
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
+On Thu, Aug 08, 2019 at 10:01:39PM +0200, Heiner Kallweit wrote:
+> On 08.08.2019 21:40, Andrew Lunn wrote:
+> >> @@ -568,6 +568,11 @@ int phy_start_aneg(struct phy_device *phydev)
+> >>  	if (err < 0)
+> >>  		goto out_unlock;
+> >>  
+> >> +	/* The PHY may not yet have cleared aneg-completed and link-up bit
+> >> +	 * w/o this delay when the following read is done.
+> >> +	 */
+> >> +	usleep_range(1000, 2000);
+> >> +
+> > 
+> > Hi Heiner
+> > 
+> > Does 802.3 C22 say anything about this?
+> > 
+> C22 says:
+> "The Auto-Negotiation process shall be restarted by setting bit 0.9 to a logic one. This bit is self-
+> clearing, and a PHY shall return a value of one in bit 0.9 until the Auto-Negotiation process has been
+> initiated."
+> 
+> Maybe we should read bit 0.9 in genphy_update_link() after having read BMSR and report
+> aneg-complete and link-up as false (no matter of their current value) if 0.9 is set.
 
-Typo: For the patch title s/seperate/separate/
+Yes. That sounds sensible.
 
-Otherwise for the series
-
-Reviewed-by: Thomas Hellstrom <thellstrom@vmware.com>
-
-/Thomas
-
-
+     Andrew
