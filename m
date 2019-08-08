@@ -2,115 +2,191 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DATE_IN_PAST_06_12,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UPPERCASE_50_75,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE112C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 04:26:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E933C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 04:37:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACDB620C01
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 04:26:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B3512171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 04:37:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="BjwNLHyq"
+	dkim=pass (2048-bit key) header.d=alistair23.me header.i=@alistair23.me header.b="fON8ouhh";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="A6tjv9iz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbfHIE0c (ORCPT
+        id S1727510AbfHIEh1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 00:26:32 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:59952 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725795AbfHIE0c (ORCPT
+        Fri, 9 Aug 2019 00:37:27 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:36433 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726233AbfHIEh0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 00:26:32 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 2932F886BF;
-        Fri,  9 Aug 2019 16:26:29 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1565324789;
-        bh=vp1EdohliELZRdj/pZ81MK3+sm0w7e9cUDoa1g4+tY8=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=BjwNLHyqeITEWX1D+t/R9TJNM5NVL/sJg8MvAV1g2KxPIxyRe2AkGogwVR+CxKOov
-         kAoHoh2xfhsv3SxtiRciD3n8PXxbvbqh5eLej7AMjsO7HIlZJ/atDXUXR17I+81NKG
-         IpYLIEgp4D2dsjEBI4VNUJJf0kjZtIh7niIJe32RHKdbZpi3ssz/gQPeuyIhzqP72W
-         /Nchc67xrlp+OGTMTcng4ZMv6vjjiwyyxVLkOD5kXnuaq+Wj29BIhbyLDy6mUcsOOL
-         MiVHjGSnHNUT0rdp5gTB+LHfdZaeqg05LpLXP8EOTL7vsr8ukM4r886LXbdV72dElZ
-         JoxH0tmpP3r/w==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5d4cf5f50001>; Fri, 09 Aug 2019 16:26:29 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
- by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
- Microsoft SMTP Server (TLS) id 15.0.1156.6; Fri, 9 Aug 2019 16:26:28 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1156.000; Fri, 9 Aug 2019 16:26:28 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "tjin@wavecomp.com" <tjin@wavecomp.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
-Subject: Re: [EXTERNAL]Re: MIPS Cache Coherency Issue
-Thread-Topic: [EXTERNAL]Re: MIPS Cache Coherency Issue
-Thread-Index: AQHVS5HXMgkNbD3nfE6pTHb9H7kbG6bsRPOAgAEPJ3+ABCDRAA==
-Date:   Fri, 9 Aug 2019 04:26:28 +0000
-Message-ID: <1565324788.4267.36.camel@alliedtelesis.co.nz>
-References: <MWHPR2201MB1119058430642AC300B621ACB8DA0@MWHPR2201MB1119.namprd22.prod.outlook.com>
-        ,<1565039609.15175.3.camel@alliedtelesis.co.nz>
-         <MWHPR2201MB1119ECD5E55C8E1A9CFD3942B8D50@MWHPR2201MB1119.namprd22.prod.outlook.com>
-In-Reply-To: <MWHPR2201MB1119ECD5E55C8E1A9CFD3942B8D50@MWHPR2201MB1119.namprd22.prod.outlook.com>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.18.5.2-0ubuntu3.2 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:22:3a2c:4aff:fe70:2b02]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <6F1D6CC8647BB94CB3796006D3FB6A06@atlnz.lc>
-Content-Transfer-Encoding: base64
+        Fri, 9 Aug 2019 00:37:26 -0400
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
+        by mailout.nyi.internal (Postfix) with ESMTP id 3917E21BA9;
+        Fri,  9 Aug 2019 00:37:25 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute7.internal (MEProxy); Fri, 09 Aug 2019 00:37:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alistair23.me;
+         h=from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm1; bh=4FHimcbCMY+I1omIJBES7VgYGl
+        5XckWciRYWJ2MmcAw=; b=fON8ouhh32YfvctwQ7EYsmF3/de9yGe4ATZOIb25CI
+        7roQEEXRAN3EirUs2SpHNT6vQF8kY+sNA9tP5g1BDuuQA61nGLdnI5U3knxydU5r
+        MbQi7m07YUK2w32d9WcyPvDX951poVxixgQVv8LlmDrV0ip6ZXBsmy753s3jdXVZ
+        7w1u9QfEeYPnUZuBd4NOxJdsF/Ncx8ZgZHNtthCGNt5nNJYKQOjJdDW+sXpnRjJO
+        KZoVzTBJ+VA+CwONbAAgBeIN1kcRHbBxv2EtIH+cAT7auhjBa6GhfJXKCWt82dkD
+        mbv4ocC74L/boGfSRqI2LlAZQt+0Z/zQJo0o7mL2BsEA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=4FHimcbCMY+I1omIJ
+        BES7VgYGl5XckWciRYWJ2MmcAw=; b=A6tjv9izKyBCaGWFB0zFHjATk9PY8nCLp
+        3YDDrKsHkA8ey7bWbeN0a3B5hYxCGK7D/z1IuPx5C9LzB60v3G8jprdCyvwo7NZ6
+        ewOAC2KjuE9ag8qua1wEIQ5n1HIchiTUMSqgMHoz6PtIeguH+TOR3XsV1gBlRwGR
+        tkN6N4jLrkWCXeshHWflmYfmVBJSC9f1NCbmb2oIXVP/Ltgx9NgjUcoDT9KWLfff
+        fwew5SqhK7yJgAvbsHbCX/V+ZhTSodue9+CZ3Vpr3ZMS8IMvIqK/ObCHn9WeeuaF
+        9UIICAjdzGdjScHt1YUxXIkzW/VfkuaAjHuJVdTsjD9q1qULbvtmg==
+X-ME-Sender: <xms:hPhMXYwtpj1cqZkaiehzLUpg6rAeA4v2gw8WxmIq1xWb89Cu4-0V9A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudduiedgkeefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgggfestdekredtre
+    dttdenucfhrhhomheptehlihhsthgrihhrucfhrhgrnhgtihhsuceorghlihhsthgrihhr
+    segrlhhishhtrghirhdvfedrmhgvqeenucfkphepjeefrdelfedrkeegrddvtdeknecurf
+    grrhgrmhepmhgrihhlfhhrohhmpegrlhhishhtrghirhesrghlihhsthgrihhrvdefrdhm
+    vgenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:hPhMXWRKpmbCqrKSU00f5l9oODJck_Fj3RwAQkF4IGSLndIctrcHiA>
+    <xmx:hPhMXQ8TEpDh7BunhOoaZekUvQFVYS0Ct_-ByVUMPo9mUHaqis14EA>
+    <xmx:hPhMXUuVXQlP3sc5y0WCTFUW9x5rR9JwUNkLHibjRo15uztaA7m0qg>
+    <xmx:hfhMXTzY40mTLryCTlPQIj9mtagsYbYqiXA-vXfAgF89gO7rDMpXng>
+Received: from alistair-xps-14z.alistair23.me (c-73-93-84-208.hsd1.ca.comcast.net [73.93.84.208])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 9F950380075;
+        Fri,  9 Aug 2019 00:37:23 -0400 (EDT)
+From:   Alistair Francis <alistair@alistair23.me>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     alistair23@gmail.com, catalin.marinas@arm.com, will@kernel.org,
+        Alistair Francis <alistair@alistair23.me>
+Subject: [PATCH 1/2] arm64: defconfig: Cleanup the defconfig
+Date:   Thu,  8 Aug 2019 14:37:17 -0700
+Message-Id: <20190808213718.12270-1-alistair@alistair23.me>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTA4LTA2IGF0IDAxOjQzICswMDAwLCBUb21teSBKaW4gd3JvdGU6DQo+IEhp
-IENocmlzLA0KPiANCj4gSWYgeW91J3JlIGJ1c3kgd2l0aCBvdGhlciB0aGluZ3MsIG1heWJlIEkg
-Y2FuIGdpdmUgeW91IGEgaGFuZCwgc28gaG93DQo+IGNhbiBJIHJlcGxpY2F0ZSB0aGlzIGlzc3Vl
-IGxvY2FsbHk/DQoNClRoYW5rcyBmb3IgdGhlIG9mZmVyIGJ1dCBJJ20gbm90IHN1cmUgeW91J2xs
-IGJlIGFibGUgdG8gZG8gbXVjaCB3aXRob3V0DQpvdXIgc3BlY2lmaWMgaGFyZHdhcmUuDQoNCj4g
-DQo+IEZyb20geW91ciBsb2csIEkgY2FuIGdldCB0aGUgZm9sbG93aW5nIGluZm9ybWF0aW9uLCBw
-bGVhc2UgY29ycmVjdCBtZQ0KPiBpZiBJIG1pc3MgYW55dGhpbmcuDQo+IGtlcm5lbCB2ZXJzaW9u
-OiA1LjEuMA0KDQpUaGF0J3Mgd2hhdCBJIHdhcyB1c2luZyBhdCB0aGUgdGltZS4gSSBpbWFnaW5l
-IDUuMiBvciA1LjMgd291bGQgYmVoYXZlDQp0aGUgc2FtZS4NCg0KPiBoYXJkd2FyZSBwbGF0Zm9y
-bTogYnJvYWRjb20gQk1JUFM0MzUwDQoNClRoZSBzcGVjaWZpYyBTb0MgaXPCoEJDTTY4MThHUiB3
-aGljaCBJIGJlbGlldmUgaXMgdGhlIHNhbWUgY29yZSBhcyB0aGUNCkJNSVBTNDM1NS4NCg0KPiBJ
-IHByb2JhYmx5IGNvdWxkbid0IGdldCBhIGJyb2FkY29tIEJNSVBTNDM1MCwgaXMgdGhlcmUgYW55
-IHNpbXVsYXRvcg0KPiBmb3IgdGhpcyBib2FyZChlLmcuIFFFTVUpPw0KDQpZZWFoIGl0J3MgYSBw
-cmV0dHkgb2xkIGNoaXAuIEknbSBub3QgYXdhcmUgb2YgYW55IFFFTVUgc3VwcG9ydCwgYnV0IEkN
-CmhhdmVuJ3QgbG9va2VkLg0KDQo+IA0KPiBCZXN0IHJlZ2FyZHMsDQo+IFRvbW15DQo+IEZyb206
-IGxpbnV4LW1pcHMtb3duZXJAdmdlci5rZXJuZWwub3JnIDxsaW51eC1taXBzLW93bmVyQHZnZXIu
-a2VybmVsLg0KPiBvcmc+IG9uIGJlaGFsZiBvZiBDaHJpcyBQYWNraGFtIDxDaHJpcy5QYWNraGFt
-QGFsbGllZHRlbGVzaXMuY28ubno+DQo+IFNlbnQ6IFR1ZXNkYXksIEF1Z3VzdCA2LCAyMDE5IDU6
-MTMgQU0NCj4gVG86IFRvbW15IEppbiA8dGppbkB3YXZlY29tcC5jb20+DQo+IENjOiBsaW51eC1r
-ZXJuZWxAdmdlci5rZXJuZWwub3JnIDxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnPjsgbGlu
-dQ0KPiB4LW1pcHNAdmdlci5rZXJuZWwub3JnIDxsaW51eC1taXBzQHZnZXIua2VybmVsLm9yZz4N
-Cj4gU3ViamVjdDogW0VYVEVSTkFMXVJlOiBNSVBTIENhY2hlIENvaGVyZW5jeSBJc3N1ZQ0KPiDC
-oA0KPiBPbiBNb24sIDIwMTktMDgtMDUgYXQgMTQ6MDIgKzAwMDAsIFRvbW15IEppbiB3cm90ZToN
-Cj4gPiBIaSBDaHJpcywNCj4gPsKgDQo+ID4gTXkgbmFtZSBpcyBUb21teSwgZnJvbSB3YXZlIGNv
-bXB1dGluZyBDbyxMdGQsIG91ciB0ZWFtIGlzIHdvcmtpbmcNCj4gb24NCj4gPiB0aGUgbWFpbnRl
-bmFuY2Ugb2YgdGhlIE1JUFMga2VybmVsLg0KPiA+wqANCj4gPiBZb3UgcmFpc2VkIGEgTUlQUyBj
-YWNoZSBjb2hlcmVuY3kgcGF0Y2ggd2hpY2ggY2FuIGJlIGZvdW5kIGluIHRoZQ0KPiA+IGZvbGxv
-d2luZyBsaW5rcw0KPiA+IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xpbnV4LW1pcHMvMjAxOTA1
-MjgyMjEyNTUuMjI0NjAtMS1jaHJpcy5wYWMNCj4ga2gNCj4gPiBhbUBhbGxpZWR0ZWxlc2lzLmNv
-Lm56L1QvI3UNCj4gPsKgDQo+ID4gV2l0aCBQYXVsJ3MgcGF0Y2gsIEl0IHNlZW1zIHlvdSBzdGls
-bCBnZXQgIm90aGVyIGJhZCBiZWhhdmlvdXIiLCBpdA0KPiA+IGRvZXNuJ3Qgd29yayBmb3IgeW91
-LiBIYXMgdGhpcyBpc3N1ZSBiZWVuIHJlc29sdmVkP8KgDQo+IA0KPiBJbiBzaG9ydCBubyBpdCBo
-YXNuJ3QgYmVlbiByZXNvbHZlZC4gSSBoYXZlbid0IGJlZW4gYWJsZSB0byBzcGVuZA0KPiBtdWNo
-DQo+IHRpbWUgbG9va2luZyBhdCB0aGUgaXNzdWUocykgc28gSSBoYXZlbid0IGJlZW4gYWJsZSB0
-byB0ZWxsIGlmIFBhdWwncw0KPiBwYXRjaCB1bmNvdmVyZWQgcHJlLWV4aXN0aW5nIGlzc3VlcyBv
-ciBjYXVzZWQgbmV3IG9uZXMuDQo+IA0KPiBVbmZvcnR1bmF0ZWx5IEkgcHJvYmFibHkgd29uJ3Qg
-Z2V0IG9udG8gaXQgYW55IHRpbWUgc29vbi4gSSB3YXMNCj4gaG9waW5nDQo+IHRvIGdldCBzb21l
-IG9mIG15IG90aGVyIHRlYW0gbWVtYmVycyB0byBwaWNrIHVwIHRoZSBpc3N1ZSBidXQgdGhleSdy
-ZQ0KPiBhbGwgYnVzeSBhcyB3ZWxsLg==
+Re-run savedefconfig to cleanup the defconfig.
+
+Signed-off-by: Alistair Francis <alistair@alistair23.me>
+---
+ arch/arm64/configs/defconfig | 24 ++++++------------------
+ 1 file changed, 6 insertions(+), 18 deletions(-)
+
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 0e58ef02880c..b17ed20e1754 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -88,7 +88,6 @@ CONFIG_ARM_TEGRA186_CPUFREQ=y
+ CONFIG_ARM_SCPI_PROTOCOL=y
+ CONFIG_RASPBERRYPI_FIRMWARE=y
+ CONFIG_INTEL_STRATIX10_SERVICE=y
+-CONFIG_TI_SCI_PROTOCOL=y
+ CONFIG_EFI_CAPSULE_LOADER=y
+ CONFIG_IMX_SCU=y
+ CONFIG_IMX_SCU_PD=y
+@@ -193,7 +192,6 @@ CONFIG_PCIE_QCOM=y
+ CONFIG_PCIE_ARMADA_8K=y
+ CONFIG_PCIE_KIRIN=y
+ CONFIG_PCIE_HISI_STB=y
+-CONFIG_PCIE_TEGRA194=m
+ CONFIG_DEVTMPFS=y
+ CONFIG_DEVTMPFS_MOUNT=y
+ CONFIG_HISILICON_LPC=y
+@@ -260,18 +258,12 @@ CONFIG_HNS3_ENET=y
+ CONFIG_E1000E=y
+ CONFIG_IGB=y
+ CONFIG_IGBVF=y
+-CONFIG_MLX4_EN=m
+-CONFIG_MLX4_CORE=m
+-CONFIG_MLX4_DEBUG=y
+-CONFIG_MLX4_CORE_GEN2=y
+-CONFIG_MLX5_CORE=m
+-CONFIG_MLX5_CORE_EN=y
+-CONFIG_MLX5_EN_ARFS=y
+-CONFIG_MLX5_EN_RXNFC=y
+-CONFIG_MLX5_MPFS=y
+ CONFIG_MVNETA=y
+ CONFIG_MVPP2=y
+ CONFIG_SKY2=y
++CONFIG_MLX4_EN=m
++CONFIG_MLX5_CORE=m
++CONFIG_MLX5_CORE_EN=y
+ CONFIG_QCOM_EMAC=m
+ CONFIG_RAVB=y
+ CONFIG_SMC91X=y
+@@ -386,8 +378,8 @@ CONFIG_SPI_PL022=y
+ CONFIG_SPI_ROCKCHIP=y
+ CONFIG_SPI_QUP=y
+ CONFIG_SPI_S3C64XX=y
+-CONFIG_SPI_SPIDEV=m
+ CONFIG_SPI_SUN6I=y
++CONFIG_SPI_SPIDEV=m
+ CONFIG_SPMI=y
+ CONFIG_PINCTRL_SINGLE=y
+ CONFIG_PINCTRL_MAX77620=y
+@@ -593,7 +585,6 @@ CONFIG_USB_GADGET=y
+ CONFIG_USB_RENESAS_USBHS_UDC=m
+ CONFIG_USB_RENESAS_USB3=m
+ CONFIG_TYPEC=m
+-CONFIG_TYPEC_HD3SS3220=m
+ CONFIG_MMC=y
+ CONFIG_MMC_BLOCK_MINORS=32
+ CONFIG_MMC_ARMMMCI=y
+@@ -648,9 +639,9 @@ CONFIG_RTC_DRV_SNVS=m
+ CONFIG_RTC_DRV_IMX_SC=m
+ CONFIG_RTC_DRV_XGENE=y
+ CONFIG_DMADEVICES=y
+-CONFIG_FSL_EDMA=y
+ CONFIG_DMA_BCM2835=m
+ CONFIG_DMA_SUN6I=m
++CONFIG_FSL_EDMA=y
+ CONFIG_K3_DMA=y
+ CONFIG_MV_XOR=y
+ CONFIG_MV_XOR_V2=y
+@@ -696,7 +687,6 @@ CONFIG_ARM_MHU=y
+ CONFIG_IMX_MBOX=y
+ CONFIG_PLATFORM_MHU=y
+ CONFIG_BCM2835_MBOX=y
+-CONFIG_TI_MESSAGE_MANAGER=y
+ CONFIG_QCOM_APCS_IPC=y
+ CONFIG_ROCKCHIP_IOMMU=y
+ CONFIG_TEGRA_IOMMU_SMMU=y
+@@ -736,9 +726,7 @@ CONFIG_ARCH_TEGRA_186_SOC=y
+ CONFIG_ARCH_TEGRA_194_SOC=y
+ CONFIG_ARCH_K3_AM6_SOC=y
+ CONFIG_ARCH_K3_J721E_SOC=y
+-CONFIG_SOC_TI=y
+ CONFIG_TI_SCI_PM_DOMAINS=y
+-CONFIG_DEVFREQ_GOV_SIMPLE_ONDEMAND=y
+ CONFIG_EXTCON_USB_GPIO=y
+ CONFIG_EXTCON_USBC_CROS_EC=y
+ CONFIG_MEMORY=y
+@@ -783,11 +771,11 @@ CONFIG_PHY_TEGRA_XUSB=y
+ CONFIG_HISI_PMU=y
+ CONFIG_QCOM_L2_PMU=y
+ CONFIG_QCOM_L3_PMU=y
+-CONFIG_NVMEM_SUNXI_SID=y
+ CONFIG_NVMEM_IMX_OCOTP=y
+ CONFIG_NVMEM_IMX_OCOTP_SCU=y
+ CONFIG_QCOM_QFPROM=y
+ CONFIG_ROCKCHIP_EFUSE=y
++CONFIG_NVMEM_SUNXI_SID=y
+ CONFIG_UNIPHIER_EFUSE=y
+ CONFIG_MESON_EFUSE=m
+ CONFIG_FPGA=y
+-- 
+2.22.0
+
