@@ -2,163 +2,236 @@ Return-Path: <SRS0=IWld=WE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86717C433FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 17:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20BF8C433FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 17:27:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63A082089E
-	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 17:27:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC92821743
+	for <linux-kernel@archiver.kernel.org>; Thu,  8 Aug 2019 17:27:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="fEC/dOGq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404337AbfHHR1W (ORCPT
+        id S2404349AbfHHR13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 13:27:22 -0400
-Received: from mga11.intel.com ([192.55.52.93]:23202 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728020AbfHHR1V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 13:27:21 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Aug 2019 10:27:21 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,362,1559545200"; 
-   d="scan'208";a="203651713"
-Received: from schen9-desk.jf.intel.com (HELO [10.54.74.162]) ([10.54.74.162])
-  by fmsmga002.fm.intel.com with ESMTP; 08 Aug 2019 10:27:20 -0700
-To:     Aaron Lu <aaron.lu@linux.alibaba.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        "Li, Aubrey" <aubrey.li@linux.intel.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-References: <CAERHkrtvLKxrpvfw04urAuougsYOWnNw4-H1vUDFx27Dvy0=Ww@mail.gmail.com>
- <20190725143003.GA992@aaronlu> <20190726152101.GA27884@sinkpad>
- <7dc86e3c-aa3f-905f-3745-01181a3b0dac@linux.intel.com>
- <20190802153715.GA18075@sinkpad>
- <f4778816-69e5-146c-2a30-ec42e7f1677f@linux.intel.com>
- <20190806032418.GA54717@aaronlu>
- <e1c4a7ed-822e-93cb-ff1d-6a0842db115f@linux.intel.com>
- <20190806171241.GQ2349@hirez.programming.kicks-ass.net>
- <21933a50-f796-3d28-664c-030cb7c98431@linux.intel.com>
- <20190808064731.GA5121@aaronlu>
-From:   Tim Chen <tim.c.chen@linux.intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=tim.c.chen@linux.intel.com; prefer-encrypt=mutual; keydata=
- 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
- l50q2K/r651xphs7CGEdKi1nU0YJVbQxJQ==
-Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
-Message-ID: <70d1ff90-9be9-7b05-f1ff-e751f266183b@linux.intel.com>
-Date:   Thu, 8 Aug 2019 10:27:20 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 8 Aug 2019 13:27:29 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33982 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728020AbfHHR13 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 13:27:29 -0400
+Received: by mail-pf1-f195.google.com with SMTP id b13so44473077pfo.1
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 10:27:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=9YLoIfF1qp9qWTvROU0/J3K1ZqRt0okGVnMsloYefE4=;
+        b=fEC/dOGqoMvutovu84msAhBQcEqwR5gwxh7bGGiAuBIErF5YWxT0y8RzpmnjYaTR8k
+         pgLgiWd4QvTWRgYx4U5TNysc8h5klxXyk49IR3BsH29DzJ/tNIz/NIKZxXoMrOu/C8uM
+         B8JDaYMq4J6CAMkO7x6aPr9i6dCjB924y0pAn2ur3D6BQVAJ+3QUCrJYBQSwDqFp78IX
+         V6qPttQK5ipRSNO1Q1TH5IfEQ47E5ynh5rBQsLNHwSpo/CnTeI+NvLZiEUlS7j0lMYP2
+         Kuo7Hd1nC10xSkmzgUxnEcbg6rtIVosCl8llJpl373pXRxQijKmxGU+JtOZ6O6kKq1UP
+         J2cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9YLoIfF1qp9qWTvROU0/J3K1ZqRt0okGVnMsloYefE4=;
+        b=qNUDUXzUgp6Zvt7Qp2FfL1QO+rnfIyVjeWTx6IgxMOOrkH6v/3KQ4oxBwA4UKRYCgZ
+         1BN62mTbuVcwMzIWi+4y1sA6jY010MKyijIfU2XWbVdq/tjmEeensEPMGRLk8eoYFxY3
+         zmryetWGSAOv+21YoTLOfJkufYuqBP/9LkdPF1RyGrzMphZj+BatYuxl+0zfRepQ61aP
+         K6JVzatsM+Ya+paCskGC5CN45pEgpQdhuqB1FhGYeYEpK1mzQGGrOKBKDVPFvbl584PV
+         T05th/h57Sc7QJrIYdPlAbB+ZhTJAgNmbpdqtfHFbrrMyS5EKRQ7pSnSIU0BqxdlNTFU
+         RaaQ==
+X-Gm-Message-State: APjAAAU6vBdHcGHBgRiw0M+Yfx+zUuLWjondVRIdEP25YaPg0yWw2X8C
+        EIDDP102+ykykKR0Bm6R3jTDpA==
+X-Google-Smtp-Source: APXvYqyIrHW8KRjxVPbe/yC6fAZomiy7/nZfI2Q/DfdAzUgoGHrtww2h3eEym6SaRtv2FvttKZAAwQ==
+X-Received: by 2002:a65:52ca:: with SMTP id z10mr14045766pgp.424.1565285248072;
+        Thu, 08 Aug 2019 10:27:28 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::1:e15f])
+        by smtp.gmail.com with ESMTPSA id f7sm92408919pfd.43.2019.08.08.10.27.26
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 08 Aug 2019 10:27:26 -0700 (PDT)
+Date:   Thu, 8 Aug 2019 13:27:25 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        "Artem S. Tashkinov" <aros@gmx.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>
+Subject: Re: Let's talk about the elephant in the room - the Linux kernel's
+ inability to gracefully handle low memory pressure
+Message-ID: <20190808172725.GA16900@cmpxchg.org>
+References: <20190805193148.GB4128@cmpxchg.org>
+ <CAJuCfpHhR+9ybt9ENzxMbdVUd_8rJN+zFbDm+5CeE2Desu82Gg@mail.gmail.com>
+ <398f31f3-0353-da0c-fc54-643687bb4774@suse.cz>
+ <20190806142728.GA12107@cmpxchg.org>
+ <20190806143608.GE11812@dhcp22.suse.cz>
+ <CAJuCfpFmOzj-gU1NwoQFmS_pbDKKd2XN=CS1vUV4gKhYCJOUtw@mail.gmail.com>
+ <20190806220150.GA22516@cmpxchg.org>
+ <20190807075927.GO11812@dhcp22.suse.cz>
+ <20190807205138.GA24222@cmpxchg.org>
+ <e535fb6a-8af4-3844-34ac-3294eef26ca6@suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <20190808064731.GA5121@aaronlu>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e535fb6a-8af4-3844-34ac-3294eef26ca6@suse.cz>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/7/19 11:47 PM, Aaron Lu wrote:
-> On Tue, Aug 06, 2019 at 02:19:57PM -0700, Tim Chen wrote:
->> +void account_core_idletime(struct task_struct *p, u64 exec)
->> +{
->> +	const struct cpumask *smt_mask;
->> +	struct rq *rq;
->> +	bool force_idle, refill;
->> +	int i, cpu;
->> +
->> +	rq = task_rq(p);
->> +	if (!sched_core_enabled(rq) || !p->core_cookie)
->> +		return;
+On Thu, Aug 08, 2019 at 04:47:18PM +0200, Vlastimil Babka wrote:
+> On 8/7/19 10:51 PM, Johannes Weiner wrote:
+> > From 9efda85451062dea4ea287a886e515efefeb1545 Mon Sep 17 00:00:00 2001
+> > From: Johannes Weiner <hannes@cmpxchg.org>
+> > Date: Mon, 5 Aug 2019 13:15:16 -0400
+> > Subject: [PATCH] psi: trigger the OOM killer on severe thrashing
 > 
-> I don't see why return here for untagged task. Untagged task can also
-> preempt tagged task and force a CPU thread enter idle state.
-> Untagged is just another tag to me, unless we want to allow untagged
-> task to coschedule with a tagged task.
+> Thanks a lot, perhaps finally we are going to eat the elephant ;)
+> 
+> I've tested this by booting with mem=8G and activating browser tabs as
+> long as I could. Then initially the system started thrashing and didn't
+> recover for minutes. Then I realized sysrq+f is disabled... Fixed that
+> up after next reboot, tried lower thresholds, also started monitoring
+> /proc/pressure/memory, and found out that after minutes of not being
+> able to move the cursor, both avg10 and avg60 shows only around 15 for
+> both some and full. Lowered thrashing_oom_level to 10 and (with
+> thrashing_oom_period of 5) the thrashing OOM finally started kicking,
+> and the system recovered by itself in reasonable time.
 
-You are right.  This needs to be fixed.
+It sounds like there is a missing annotation. The time has to be going
+somewhere, after all. One *known* missing vector I fixed recently is
+stalls in submit_bio() itself when refaulting, but it's not merged
+yet. Attaching the patch below, can you please test it?
 
-And the cookie check will also need to be changed in prio_less_fair.
+> So my conclusion is that the patch works, but there's something odd with
+> suspiciously low PSI memory values on my system. Any idea how to
+> investigate this? Also, does it matter that it's a modern desktop, so
+> systemd puts everything into cgroups, and the unified cgroup2 hierarchy
+> is also mounted?
 
-@@ -611,6 +611,17 @@ bool prio_less_fair(struct task_struct *a, struct task_struct *b)
- 	 * Normalize the vruntime if tasks are in different cpus.
- 	 */
- 	if (task_cpu(a) != task_cpu(b)) {
+That shouldn't interfere because 1) pressure is reported recursively
+up the cgroup tree, so unless something else runs completely fine on
+the system, global pressure should reflect cgroup pressure and 2) the
+systemd defaults doesn't set any memory limits or protections, so if
+the system is hanging, it's unlikely that anything runs fine.
+
+bcc tools (https://iovisor.github.io/bcc/) has an awesome program
+called 'offcputime' that gives you stack traces of sleeping tasks.
+This could give an insight into where time is going and point out
+operations we might not be annotating correctly yet.
+
+---
+From 1b3888bdf075f86f226af4e350c8a88435d1fe8e Mon Sep 17 00:00:00 2001
+From: Johannes Weiner <hannes@cmpxchg.org>
+Date: Thu, 11 Jul 2019 16:01:40 -0400
+Subject: [PATCH] psi: annotate refault stalls from IO submission
+
+psi tracks the time tasks wait for refaulting pages to become
+uptodate, but it does not track the time spent submitting the IO. The
+submission part can be significant if backing storage is contended or
+when cgroup throttling (io.latency) is in effect - a lot of time is
+spent in submit_bio(). In that case, we underreport memory pressure.
+
+Annotate submit_bio() to account submission time as memory stall when
+the bio is reading userspace workingset pages.
+
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+---
+ block/bio.c               |  3 +++
+ block/blk-core.c          | 23 ++++++++++++++++++++++-
+ include/linux/blk_types.h |  1 +
+ 3 files changed, 26 insertions(+), 1 deletion(-)
+
+diff --git a/block/bio.c b/block/bio.c
+index 29cd6cf4da51..4dd9ea0b068b 100644
+--- a/block/bio.c
++++ b/block/bio.c
+@@ -805,6 +805,9 @@ void __bio_add_page(struct bio *bio, struct page *page,
+ 
+ 	bio->bi_iter.bi_size += len;
+ 	bio->bi_vcnt++;
 +
-+		if (a->core_cookie && b->core_cookie &&
-+		    a->core_cookie != b->core_cookie) {
-
-		if (!cookie_match(a, b))
-
-+			/*
-+			 * Will be force idling one thread,
-+			 * pick the thread that has more allowance.
-+			 */
-+			return (task_rq(a)->core_idle_allowance <=
-+				task_rq(b)->core_idle_allowance) ? true : false;
-+		}
++	if (!bio_flagged(bio, BIO_WORKINGSET) && unlikely(PageWorkingset(page)))
++		bio_set_flag(bio, BIO_WORKINGSET);
+ }
+ EXPORT_SYMBOL_GPL(__bio_add_page);
+ 
+diff --git a/block/blk-core.c b/block/blk-core.c
+index 5d1fc8e17dd1..5993922d63fb 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -36,6 +36,7 @@
+ #include <linux/blk-cgroup.h>
+ #include <linux/debugfs.h>
+ #include <linux/bpf.h>
++#include <linux/psi.h>
+ 
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/block.h>
+@@ -1127,6 +1128,10 @@ EXPORT_SYMBOL_GPL(direct_make_request);
+  */
+ blk_qc_t submit_bio(struct bio *bio)
+ {
++	bool workingset_read = false;
++	unsigned long pflags;
++	blk_qc_t ret;
 +
+ 	/*
+ 	 * If it's a regular read/write or a barrier with data attached,
+ 	 * go through the normal accounting stuff before submission.
+@@ -1142,6 +1147,8 @@ blk_qc_t submit_bio(struct bio *bio)
+ 		if (op_is_write(bio_op(bio))) {
+ 			count_vm_events(PGPGOUT, count);
+ 		} else {
++			if (bio_flagged(bio, BIO_WORKINGSET))
++				workingset_read = true;
+ 			task_io_account_read(bio->bi_iter.bi_size);
+ 			count_vm_events(PGPGIN, count);
+ 		}
+@@ -1156,7 +1163,21 @@ blk_qc_t submit_bio(struct bio *bio)
+ 		}
+ 	}
+ 
+-	return generic_make_request(bio);
++	/*
++	 * If we're reading data that is part of the userspace
++	 * workingset, count submission time as memory stall. When the
++	 * device is congested, or the submitting cgroup IO-throttled,
++	 * submission can be a significant part of overall IO time.
++	 */
++	if (workingset_read)
++		psi_memstall_enter(&pflags);
++
++	ret = generic_make_request(bio);
++
++	if (workingset_read)
++		psi_memstall_leave(&pflags);
++
++	return ret;
+ }
+ EXPORT_SYMBOL(submit_bio);
+ 
+diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
+index 6a53799c3fe2..2f77e3446760 100644
+--- a/include/linux/blk_types.h
++++ b/include/linux/blk_types.h
+@@ -209,6 +209,7 @@ enum {
+ 	BIO_BOUNCED,		/* bio is a bounce bio */
+ 	BIO_USER_MAPPED,	/* contains user pages */
+ 	BIO_NULL_MAPPED,	/* contains invalid user pages */
++	BIO_WORKINGSET,		/* contains userspace workingset pages */
+ 	BIO_QUIET,		/* Make BIO Quiet */
+ 	BIO_CHAIN,		/* chained bio, ->bi_remaining in effect */
+ 	BIO_REFFED,		/* bio has elevated ->bi_cnt */
+-- 
+2.22.0
 
-I'll respin my patches.
-
-Tim
