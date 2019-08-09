@@ -2,129 +2,133 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41018C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:06:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 873F4C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:06:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17A192084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:06:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62B352084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:06:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406470AbfHILGK (ORCPT
+        id S2406495AbfHILGP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 07:06:10 -0400
-Received: from mail-ot1-f71.google.com ([209.85.210.71]:41814 "EHLO
-        mail-ot1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406272AbfHILGJ (ORCPT
+        Fri, 9 Aug 2019 07:06:15 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:39180 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406272AbfHILGN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 07:06:09 -0400
-Received: by mail-ot1-f71.google.com with SMTP id a8so67969208oti.8
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 04:06:08 -0700 (PDT)
+        Fri, 9 Aug 2019 07:06:13 -0400
+Received: by mail-ed1-f65.google.com with SMTP id e16so1325622edv.6
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 04:06:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=zVTRlB/x5YQjuHlXNkGeEct8hD4cekTY0n9YojkyFDU=;
-        b=njUAqIWdjbL8sSE83GSY/bSwBWrxV9VzllBIwHJLofR8RmAa3KcdxzhBK5u8gBbmJW
-         x+87MuzneJ7IUOP03bfygi+GLTdTwComiWlTLlxGJ7tSyH/qctJBJAopvK3pYhGtFmWN
-         pNwfrvv0Laj93chR7frulJehK2FA4qOu6cFucbVzj3hvdclFeHdxAo7c3ipMZoZBKKfV
-         R0L6O+obklXkt+PCe3T3gNswEWhyz+S/0PFkVKsk0JJBJ/Hws1Vasw+5cW5Hc92FMxin
-         mnOVxubJDpH2V7+LxmkjE45IictKgJTPGt9eL0d+RDKdgrCTX7bYiBjxf9vve9AftEXF
-         HoKg==
-X-Gm-Message-State: APjAAAUmy2j87MDeddfox+ZXhUmYNGESa7SwyFM+eNtfOD61QiMREjij
-        ZV/0z8XBxk5zFsF9GChg2/ZzjSnzfHmTZxNoaFqKvboAa5HQ
-X-Google-Smtp-Source: APXvYqy3Q85weNwM4JYCgJFzoo+N1LJJCD2xUNX+lEyYV85+yaBrOpyhVocQSVRI2cA+GCFcEH9eK0j49dfHLsOIwiLTUmuXkheu
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/xMfMLN5n9NvXBMPK4Z+02UCjCT+IDFZNmUQWYyXvps=;
+        b=Kt8IA2lpJppeEakM8liCtYspBQwNKo127VD6PbKtsK2mosUdXxtzxGMm03I9F+w7lE
+         GUjMlgPg+7IMpztowbfnZ5MOmW3OC71LfbaDWbwHCIe2kUjW3ZTY+TafGId8AUU+KFeD
+         HQ4nMhIc95qArbD3nf8Ihhh/6U8MOAHhln6cJ6TlCUlnxlAzDUCLFE6MbHqhffDWXaSK
+         PAtdkkZ65i9+XymZdeQyAaHNjhndxJRREnWHaxZLzbPLRwurr0MEZiikEtm8Kq1pgFTv
+         88UB5gIBuEI4qmbnmjj/2l6bYXcRpGP29y/mXFVURUqA4/kygpqdSZT72CMSBJTXP0/P
+         2aZA==
+X-Gm-Message-State: APjAAAUCFUCew6LUtGkQL1niKRUvgVHDgVpqFooplXml3FKV1+bp2+J5
+        pyP51rIJS9O2d/GXPpZHxAydnQ==
+X-Google-Smtp-Source: APXvYqziQCq15NyoQmGg7IA4VdqjjKmJ5ahYUASWddAObX+FQ83zvRjVHKzSYF8TdPbAQj7hgpZ+sQ==
+X-Received: by 2002:a50:eb4d:: with SMTP id z13mr21172946edp.271.1565348772094;
+        Fri, 09 Aug 2019 04:06:12 -0700 (PDT)
+Received: from localhost.localdomain ([62.140.137.140])
+        by smtp.gmail.com with ESMTPSA id a67sm22197012edf.6.2019.08.09.04.06.08
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 09 Aug 2019 04:06:11 -0700 (PDT)
+Subject: Re: [PATCH] extcon-intel-cht-wc: Don't reset USB data connection at
+ probe
+To:     Yauhen Kharuzhy <jekhor@gmail.com>, linux-kernel@vger.kernel.org,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <20190808220129.2737-1-jekhor@gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <fbe20a5f-0f64-cadf-2c1e-88a468d54a07@redhat.com>
+Date:   Fri, 9 Aug 2019 13:06:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-Received: by 2002:a02:4e05:: with SMTP id r5mr22339509jaa.27.1565348768322;
- Fri, 09 Aug 2019 04:06:08 -0700 (PDT)
-Date:   Fri, 09 Aug 2019 04:06:08 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000492086058fad2979@google.com>
-Subject: BUG: corrupted list in rxrpc_local_processor
-From:   syzbot <syzbot+193e29e9387ea5837f1d@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, dhowells@redhat.com,
-        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <20190808220129.2737-1-jekhor@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi,
 
-syzbot found the following crash on:
+On 8/9/19 12:01 AM, Yauhen Kharuzhy wrote:
+> Intel Cherry Trail Whiskey Cove extcon driver connect USB data lines to
+> PMIC at driver probing for further charger detection. This causes reset of
+> USB data sessions and removing all devices from bus. If system was
+> booted from Live CD or USB dongle, this makes system unusable.
+> 
+> Check if USB ID pin is floating and re-route data lines in this case
+> only, don't touch otherwise.
+> 
+> Signed-off-by: Yauhen Kharuzhy <jekhor@gmail.com>
+> ---
+>   drivers/extcon/extcon-intel-cht-wc.c | 16 ++++++++++++++--
+>   1 file changed, 14 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/extcon/extcon-intel-cht-wc.c b/drivers/extcon/extcon-intel-cht-wc.c
+> index 9d32150e68db..3ae573e93e6e 100644
+> --- a/drivers/extcon/extcon-intel-cht-wc.c
+> +++ b/drivers/extcon/extcon-intel-cht-wc.c
+> @@ -338,6 +338,7 @@ static int cht_wc_extcon_probe(struct platform_device *pdev)
+>   	struct intel_soc_pmic *pmic = dev_get_drvdata(pdev->dev.parent);
+>   	struct cht_wc_extcon_data *ext;
+>   	unsigned long mask = ~(CHT_WC_PWRSRC_VBUS | CHT_WC_PWRSRC_USBID_MASK);
+> +	int pwrsrc_sts, id;
+>   	int irq, ret;
+>   
+>   	irq = platform_get_irq(pdev, 0);
+> @@ -387,8 +388,19 @@ static int cht_wc_extcon_probe(struct platform_device *pdev)
+>   		goto disable_sw_control;
+>   	}
+>   
+> -	/* Route D+ and D- to PMIC for initial charger detection */
+> -	cht_wc_extcon_set_phymux(ext, MUX_SEL_PMIC);
+> +	ret = regmap_read(ext->regmap, CHT_WC_PWRSRC_STS, &pwrsrc_sts);
+> +	if (ret) {
+> +		dev_err(ext->dev, "Error reading pwrsrc status: %d\n", ret);
+> +		goto disable_sw_control;
+> +	}
+> +
+> +	id = cht_wc_extcon_get_id(ext, pwrsrc_sts);
+> +
+> +	/* If no USB host or device connected, route D+ and D- to PMIC for
+> +	 * initial charger detection
+> +	 */
+> +	if (id == INTEL_USB_ID_FLOAT)
+> +		cht_wc_extcon_set_phymux(ext, MUX_SEL_PMIC);
 
-HEAD commit:    87b983f5 Add linux-next specific files for 20190809
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=161309c2600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=28eea330e11df0eb
-dashboard link: https://syzkaller.appspot.com/bug?extid=193e29e9387ea5837f1d
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+The check here should be != INTEL_USB_ID_GND, when we are connected as
+device we are charging from the host we are connected to and the port
+we are connected to may be a CDP (charging downstream port) instead of
+a SDP (standard downstream port) allowing us to charge at 1.5A instead
+of 0.5A, also != INTEL_USB_ID_GND matches the condition used in
+cht_wc_extcon_pwrsrc_event to determine if we should continue with
+charger detection there.
 
-Unfortunately, I don't have any reproducer for this crash yet.
+Like your other patch I will try to give this one a  test-run tomorrow.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+193e29e9387ea5837f1d@syzkaller.appspotmail.com
+Regards,
 
-list_del corruption. prev->next should be ffff8880a4570da0, but was  
-ffff88808c74b6e0
-------------[ cut here ]------------
-kernel BUG at lib/list_debug.c:51!
-invalid opcode: 0000 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 22 Comm: kworker/1:1 Not tainted 5.3.0-rc3-next-20190809 #63
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: krxrpcd rxrpc_local_processor
-RIP: 0010:__list_del_entry_valid.cold+0xf/0x4f lib/list_debug.c:51
-Code: e8 f9 73 1d fe 0f 0b 48 89 f1 48 c7 c7 c0 6f e6 87 4c 89 e6 e8 e5 73  
-1d fe 0f 0b 4c 89 f6 48 c7 c7 60 71 e6 87 e8 d4 73 1d fe <0f> 0b 4c 89 ea  
-4c 89 f6 48 c7 c7 a0 70 e6 87 e8 c0 73 1d fe 0f 0b
-RSP: 0018:ffff8880a9a47cc0 EFLAGS: 00010286
-RAX: 0000000000000054 RBX: ffff8880a4570db8 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff815bb706 RDI: ffffed1015348f8a
-RBP: ffff8880a9a47cd8 R08: 0000000000000054 R09: ffffed1015d260d9
-R10: ffffed1015d260d8 R11: ffff8880ae9306c7 R12: ffff888074400878
-R13: ffff888074400878 R14: ffff8880a4570da0 R15: ffff88809509e580
-FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000400200 CR3: 000000006f1ac000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  __list_del_entry include/linux/list.h:131 [inline]
-  list_del_init include/linux/list.h:190 [inline]
-  rxrpc_local_destroyer net/rxrpc/local_object.c:427 [inline]
-  rxrpc_local_processor+0x251/0x830 net/rxrpc/local_object.c:463
-  process_one_work+0x9af/0x1740 kernel/workqueue.c:2269
-  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
-  kthread+0x361/0x430 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Modules linked in:
----[ end trace c8e00778000f001d ]---
-RIP: 0010:__list_del_entry_valid.cold+0xf/0x4f lib/list_debug.c:51
-Code: e8 f9 73 1d fe 0f 0b 48 89 f1 48 c7 c7 c0 6f e6 87 4c 89 e6 e8 e5 73  
-1d fe 0f 0b 4c 89 f6 48 c7 c7 60 71 e6 87 e8 d4 73 1d fe <0f> 0b 4c 89 ea  
-4c 89 f6 48 c7 c7 a0 70 e6 87 e8 c0 73 1d fe 0f 0b
-RSP: 0018:ffff8880a9a47cc0 EFLAGS: 00010286
-RAX: 0000000000000054 RBX: ffff8880a4570db8 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff815bb706 RDI: ffffed1015348f8a
-RBP: ffff8880a9a47cd8 R08: 0000000000000054 R09: ffffed1015d260d9
-R10: ffffed1015d260d8 R11: ffff8880ae9306c7 R12: ffff888074400878
-R13: ffff888074400878 R14: ffff8880a4570da0 R15: ffff88809509e580
-FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000001b32f22000 CR3: 000000006f1ac000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Hans
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+>   
+>   	/* Get initial state */
+>   	cht_wc_extcon_pwrsrc_event(ext);
+> 
