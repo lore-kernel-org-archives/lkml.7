@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DBDDC0650F
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 00:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0EE8C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 00:37:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2BCE2166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 00:36:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 785B921743
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 00:37:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565310984;
-	bh=PzzWFln+8fBU8bt0haFLRBFaDYMg7dUpD/csKONbLIk=;
+	s=default; t=1565311073;
+	bh=VW1PhqI2dz8XoDJj/JFKjs0UJohC/xrTnYExRLHrtvw=;
 	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=cwUnQrphf60MABnKxP/4SqSysD6I+yWPfzOaf1KkK9mrH1GfApgXpZWJeTxKCZ2Do
-	 XVy50qftDmP6ofzuy3gfVM4FrbRH6po0O/nEtrKIfr5NydbgC5qOJAVtPSZHGvT94x
-	 usaJD1fEgRI3RoBBapje0ZjUl/gMBTdx/SQigH/w=
+	b=oqjRjBzZLQ5AR3oeWTedpCslp5QgcVViYHuLR7drHMZC9dVj4MQ5+J29QoyzGxg/t
+	 aK3zUSsKfXsG7bqA6DLOjIv7p8hy/45po47dHyxn+fnej7yDm+/yDYikBw7YtsHQIQ
+	 hhhfsbRhw2dinN6i/FX/mwNF3+hMpPOex6YzPe9A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404800AbfHIAgQ (ORCPT
+        id S2405049AbfHIAhw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 20:36:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33378 "EHLO mail.kernel.org"
+        Thu, 8 Aug 2019 20:37:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725785AbfHIAgP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 20:36:15 -0400
+        id S2404805AbfHIAhw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 20:37:52 -0400
 Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54B292173C;
-        Fri,  9 Aug 2019 00:36:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A870208C4;
+        Fri,  9 Aug 2019 00:37:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565310975;
-        bh=PzzWFln+8fBU8bt0haFLRBFaDYMg7dUpD/csKONbLIk=;
+        s=default; t=1565311071;
+        bh=VW1PhqI2dz8XoDJj/JFKjs0UJohC/xrTnYExRLHrtvw=;
         h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Fsb/UxdF05oPhxVYIo1F2JixyKe2p9W5n+LHaS24+ktJ3dszMtXqigIAjffrCN4a9
-         aU7Sp2KtSIklciPAgmaOLVsrcZgvSUBk6oCKdKt+LCKW7iHqwxWjgempuiXQJN0zrS
-         1mPjR857jTkIG/cPbuOvehniXaAKF6885J+lT4jo=
-Subject: Re: [PATCH 5.2 00/56] 5.2.8-stable review
+        b=VxTM/MLAnh9Ce49BfMQcEKFh8hBTNEngV7DgYBdRSMyfuiMKO1E93DMAg6OTYlyeF
+         BT8UESnd26vm6IgGsn593ZmqNAMkjSS8AaxbJapgCxSyrWzFNNKQv/p9ktiswHuADr
+         zhnYLo/6psd6vdcQRab73+1K/mwt/mRICJ6kyi6o=
+Subject: Re: [PATCH 4.19 00/45] 4.19.66-stable review
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org
 Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
         linux@roeck-us.net, patches@kernelci.org,
         ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
         stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20190808190452.867062037@linuxfoundation.org>
+References: <20190808190453.827571908@linuxfoundation.org>
 From:   shuah <shuah@kernel.org>
-Message-ID: <c3469416-8f7f-6281-0a28-ee0e1ff4bdf9@kernel.org>
-Date:   Thu, 8 Aug 2019 18:36:13 -0600
+Message-ID: <dd227668-a985-27b8-b013-7634b479b949@kernel.org>
+Date:   Thu, 8 Aug 2019 18:37:50 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190808190452.867062037@linuxfoundation.org>
+In-Reply-To: <20190808190453.827571908@linuxfoundation.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -63,8 +63,8 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 8/8/19 1:04 PM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.2.8 release.
-> There are 56 patches in this series, all will be posted as a response
+> This is the start of the stable review cycle for the 4.19.66 release.
+> There are 45 patches in this series, all will be posted as a response
 > to this one.  If anyone has any issues with these being applied, please
 > let me know.
 > 
@@ -72,9 +72,9 @@ On 8/8/19 1:04 PM, Greg Kroah-Hartman wrote:
 > Anything received after that time might be too late.
 > 
 > The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.8-rc1.gz
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.66-rc1.gz
 > or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.2.y
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
 > and the diffstat can be found below.
 > 
 > thanks,
