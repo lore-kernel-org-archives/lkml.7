@@ -2,163 +2,101 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F1B8C32756
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:28:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC67C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:33:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 451C5214C6
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:28:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YSmPOe6c"
+	by mail.kernel.org (Postfix) with ESMTP id 15171214C6
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:33:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436478AbfHIN2Z (ORCPT
+        id S2407124AbfHINdr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 09:28:25 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:36102 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407085AbfHIN2Y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 09:28:24 -0400
-Received: by mail-lf1-f66.google.com with SMTP id j17so15506339lfp.3;
-        Fri, 09 Aug 2019 06:28:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=EDzK4HqGCuYHNeAik93nZOt6GVBVyL4RxyPi6JCejLQ=;
-        b=YSmPOe6cdLuMYmLalcXrV1zZPmoP7esgm+eyg9ShiE+r9XIoVfqjsOSmd+p3dusaRZ
-         nT8ylNAQWkfK8H+NITQZOI/OKZU+ZtFFSe0ZuzeyI4KWtnzv6APYr/Rihbm5sYUfwxD8
-         nbGaCvyuROjMeFcV9+qkn0IQHwl5WNZFO/UobWPDIXDKnp1g4gM0LpYKnB8t0euqShEe
-         E+Yw7QMFrIt/KyVRwVnlBxE9F82UzfyetEPh/Z9fia6NIHOMpikbZmMEW2nFwxjtnTbn
-         9foy3qAKnkjXCQE35uagSJVeo5Hou4api1+baTtM3V/QcTxMRlMhPX30q15N9TmInibe
-         N0BQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=EDzK4HqGCuYHNeAik93nZOt6GVBVyL4RxyPi6JCejLQ=;
-        b=O9u2GxUA8Rk674G3hPxW27sz8sutU27fHluOYz6fBuW4DOn1rYooyWmeQTWFSItKJe
-         ub5jv6LviicNBuxcl4eeq2IUOJ06pcrqi0OTg9cbZukw5/QCKkvlh89NbDkVrcJSGndn
-         R+Soa/gVmM9MUdtD/KeCjLyUcncugynPNGT+zvl1I8KCH5Fx3RzTjnj+Z/03gX0MehIx
-         4CwCNSNr5nP7qKb//GyCwUxOjZi7plMvZ+njwnhYjwEZkAgXdoiqV1uvYWehBiwmTeSS
-         fZtUdfte7/h643yxTzW4tZ888FrQTpHYBe9Zb1kOk97ahwTT1qgWRg271fUoCTszcbep
-         jZpA==
-X-Gm-Message-State: APjAAAXcxNS8Sd2msu0aB2KbTiUUbIVZFxP3B2g65itkeKHCfIKN/Kty
-        O5YosX7vgRMk+7kUDPsPSvIbp+Qe
-X-Google-Smtp-Source: APXvYqyOgin95krEezpqlMeS2zy8wXVRzT5ENjo1BnJcIm27WZ57gmXVWTJJgHg99kCnFfTlyqFkWQ==
-X-Received: by 2002:a19:8586:: with SMTP id h128mr13172457lfd.62.1565357301241;
-        Fri, 09 Aug 2019 06:28:21 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.34.218])
-        by smtp.googlemail.com with ESMTPSA id k23sm16209456ljg.90.2019.08.09.06.28.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 09 Aug 2019 06:28:20 -0700 (PDT)
-Subject: Re: [PATCH v8 16/21] soc/tegra: pmc: Add pmc wake support for
- tegra210
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
-References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
- <1565308020-31952-17-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <85ea23c7-1459-e396-b08a-b38e0f6d44eb@gmail.com>
-Date:   Fri, 9 Aug 2019 16:28:19 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 9 Aug 2019 09:33:47 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43460 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2436493AbfHINdp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 09:33:45 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id B61F8308FEC1;
+        Fri,  9 Aug 2019 13:33:45 +0000 (UTC)
+Received: from pauld.bos.csb (dhcp-17-51.bos.redhat.com [10.18.17.51])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E41A260BF3;
+        Fri,  9 Aug 2019 13:33:44 +0000 (UTC)
+Date:   Fri, 9 Aug 2019 09:33:43 -0400
+From:   Phil Auld <pauld@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Subject: Re: [PATCH] sched: use rq_lock/unlock in online_fair_sched_group
+Message-ID: <20190809133342.GA18727@pauld.bos.csb>
+References: <20190801133749.11033-1-pauld@redhat.com>
+ <20190806130334.GO2349@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <1565308020-31952-17-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190806130334.GO2349@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Fri, 09 Aug 2019 13:33:45 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-09.08.2019 2:46, Sowjanya Komatineni пишет:
-> This patch implements PMC wakeup sequence for Tegra210 and defines
-> common used RTC alarm wake event.
+On Tue, Aug 06, 2019 at 03:03:34PM +0200 Peter Zijlstra wrote:
+> On Thu, Aug 01, 2019 at 09:37:49AM -0400, Phil Auld wrote:
+> > Enabling WARN_DOUBLE_CLOCK in /sys/kernel/debug/sched_features causes
 > 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/soc/tegra/pmc.c | 98 +++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 98 insertions(+)
+> ISTR there were more issues; but it sure is good to start picking them
+> off.
 > 
-> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
-> index 91c84d0e66ae..3aa71c28a10a 100644
-> --- a/drivers/soc/tegra/pmc.c
-> +++ b/drivers/soc/tegra/pmc.c
-> @@ -58,6 +58,11 @@
->  #define  PMC_CNTRL_SYSCLK_POLARITY	BIT(10) /* sys clk polarity */
->  #define  PMC_CNTRL_MAIN_RST		BIT(4)
->  
-> +#define PMC_WAKE_MASK			0x0c
-> +#define PMC_WAKE_LEVEL			0x10
-> +#define PMC_WAKE_STATUS			0x14
-> +#define PMC_SW_WAKE_STATUS		0x18
-> +
->  #define DPD_SAMPLE			0x020
->  #define  DPD_SAMPLE_ENABLE		BIT(0)
->  #define  DPD_SAMPLE_DISABLE		(0 << 0)
-> @@ -87,6 +92,11 @@
->  
->  #define PMC_SCRATCH41			0x140
->  
-> +#define PMC_WAKE2_MASK			0x160
-> +#define PMC_WAKE2_LEVEL			0x164
-> +#define PMC_WAKE2_STATUS		0x168
-> +#define PMC_SW_WAKE2_STATUS		0x16c
-> +
->  #define PMC_SENSOR_CTRL			0x1b0
->  #define  PMC_SENSOR_CTRL_SCRATCH_WRITE	BIT(2)
->  #define  PMC_SENSOR_CTRL_ENABLE_RST	BIT(1)
-> @@ -1922,6 +1932,43 @@ static const struct irq_domain_ops tegra_pmc_irq_domain_ops = {
->  	.alloc = tegra_pmc_irq_alloc,
->  };
->  
-> +static int tegra210_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
-> +{
-> +	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
-> +	unsigned int offset, bit;
-> +	u32 value;
-> +
-> +	if (data->hwirq == ULONG_MAX)
-> +		return 0;
-> +
-> +	offset = data->hwirq / 32;
-> +	bit = data->hwirq % 32;
-> +
-> +	/* clear wake status */
-> +	tegra_pmc_writel(pmc, 0, PMC_SW_WAKE_STATUS);
-> +	tegra_pmc_writel(pmc, 0, PMC_SW_WAKE2_STATUS);
-> +
-> +	tegra_pmc_writel(pmc, 0, PMC_WAKE_STATUS);
-> +	tegra_pmc_writel(pmc, 0, PMC_WAKE2_STATUS);
-> +
-> +	/* enable PMC wake */
-> +	if (data->hwirq >= 32)
-> +		offset = PMC_WAKE2_MASK;
-> +	else
-> +		offset = PMC_WAKE_MASK;
-> +
-> +	value = tegra_pmc_readl(pmc, offset);
-> +
-> +	if (on)
-> +		value |= 1 << bit;
-> +	else
-> +		value &= ~(1 << bit);
 
-Looks like a good case for utilizing of the BIT() macro here.
+Following up on this I hit another in rt.c which looks like:
+
+[  156.348854] Call Trace:
+[  156.351301]  <IRQ>
+[  156.353322]  sched_rt_period_timer+0x124/0x350
+[  156.357766]  ? sched_rt_rq_enqueue+0x90/0x90
+[  156.362037]  __hrtimer_run_queues+0xfb/0x270
+[  156.366303]  hrtimer_interrupt+0x122/0x270
+[  156.370403]  smp_apic_timer_interrupt+0x6a/0x140
+[  156.375022]  apic_timer_interrupt+0xf/0x20
+[  156.379119]  </IRQ>
+
+It looks like the same issue of not using the rq_lock* wrappers and
+hence not using the pinning. From looking at the code there is at 
+least one potential hit in deadline.c in the push_dl_task path with 
+find_lock_later_rq but I have not hit that in practice.
+
+This commit, which introduced the warning, seems to imply that the use
+of the rq_lock* wrappers is required, at least for any sections that will
+call update_rq_clock:
+
+commit 26ae58d23b94a075ae724fd18783a3773131cfbc
+Author: Peter Zijlstra <peterz@infradead.org>
+Date:   Mon Oct 3 16:53:49 2016 +0200
+
+    sched/core: Add WARNING for multiple update_rq_clock() calls
+    
+    Now that we have no missing calls, add a warning to find multiple
+    calls.
+    
+    By having only a single update_rq_clock() call per rq-lock section,
+    the section appears 'atomic' wrt time.
+
+
+Is that the case? Otherwise we have these false positives.
+
+I can spin up patches if so. 
+
+
+Thanks,
+Phil
+
+
+-- 
