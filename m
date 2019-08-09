@@ -2,230 +2,75 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE2F1C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:18:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B5BCC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:20:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 911C820B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:18:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rP5d8uUt"
+	by mail.kernel.org (Postfix) with ESMTP id D1F0420C01
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:20:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437299AbfHISSn (ORCPT
+        id S2407089AbfHISUn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 14:18:43 -0400
-Received: from mail-pf1-f201.google.com ([209.85.210.201]:49110 "EHLO
-        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726582AbfHISSm (ORCPT
+        Fri, 9 Aug 2019 14:20:43 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:36880 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726358AbfHISUn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 14:18:42 -0400
-Received: by mail-pf1-f201.google.com with SMTP id u21so61970815pfn.15
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 11:18:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=vCc93vaFXwMRZ3fSZ6FSA2GqVkDbS0j1jfgTmaZ8aBc=;
-        b=rP5d8uUtgyhIBDjs3pOQIuKA7CqPkZD87wr6U31d5zfiCN3+zpqMplqHMlAAaxJv5Y
-         mtLjOGMMCHDiDW4eRm5ZqTb8YJp+nUsl6X/dXmaQ6YKC99OzzbfXbosMyYikyKx+YxMK
-         WddcEWcZjamXOX0SzMHQLdh6BYQBctAuMgDwUuBx680TIuZbqFChFDUmuzsNIgJUX4V1
-         RnVJoLfKEjC50m/1xX+078kcG9btrDBeIVgagoOHFJ/JTOZdPj65IWvBOIniw94xrSA6
-         8LmhqGentKO3nOnsG63CBC0FeconSn075YP0D8gwkVY5TLhtdAab5zV1IozxKfU/txpL
-         c6Nw==
+        Fri, 9 Aug 2019 14:20:43 -0400
+Received: by mail-qt1-f195.google.com with SMTP id y26so96731334qto.4;
+        Fri, 09 Aug 2019 11:20:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=vCc93vaFXwMRZ3fSZ6FSA2GqVkDbS0j1jfgTmaZ8aBc=;
-        b=jg/leGkmgh+jfhL1dAZ4tPzLtXxPne6hc8eZKFfqKRzkClmDf+VfjXH44C5PMhCqfE
-         PDOkKxQ2voMrc1GsXj3fOJKpQS3HuTNnqbc8Ney/682RctLkTaQDNAIL4qAjkzPwNZRm
-         CjzDlM4loa6C2M3ye8krDbxi8p/9XZJWOJ4raSL8nkkoD0h8PHi5l+B8rzJw7x57+sCR
-         rseot0dRkwVFkB5/L4zVZVCYcCPqI3RwpjTk6Y6KYX/gRTWh67ibXntVu6LQAMiMklSv
-         7aV855id8ppbB3DTgE/Gl4YDaUMw3H/wYi3FOHGcEyXNd+5Q/xYXHtDFY4+pPu/kf20B
-         LlSQ==
-X-Gm-Message-State: APjAAAWDstw0YJ+hQwzgdplBRVXAoXekagi10GpmwOPNPiuR+iAIWbIJ
-        1xSPZucGOsjE1DCgrrJXQFPyQdn04Oe7rWa+
-X-Google-Smtp-Source: APXvYqyg54n0lDkaOi6YoNCD+Q2chFnQmSkX+NV/dn8iBvhAgc9UN9MRDpw/360/Y3bVmdFJO7zx9N1Mqe5obIpC
-X-Received: by 2002:a63:e807:: with SMTP id s7mr18031604pgh.194.1565374721199;
- Fri, 09 Aug 2019 11:18:41 -0700 (PDT)
-Date:   Fri,  9 Aug 2019 11:17:51 -0700
-In-Reply-To: <20190809181751.219326-1-henryburns@google.com>
-Message-Id: <20190809181751.219326-2-henryburns@google.com>
-Mime-Version: 1.0
-References: <20190809181751.219326-1-henryburns@google.com>
-X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
-Subject: [PATCH 2/2 v2] mm/zsmalloc.c: Fix race condition in zs_destroy_pool
-From:   Henry Burns <henryburns@google.com>
-To:     Minchan Kim <minchan@kernel.org>, Nitin Gupta <ngupta@vflare.org>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jonathan Adams <jwadams@google.com>,
-        HenryBurns <henrywolfeburns@gmail.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Henry Burns <henryburns@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wLXt1wKoYGElfNIOoe/f7Yp/KfXnxPXx1/N7nq8c3go=;
+        b=WtZZDMTVmcKQdsCpYdlF1dvFBc1AELP+oTuigRvcYRtVPzE1H4j9DgXzP52WU1PVIM
+         eelmzD4dJbOsRfhb2+ATh8Ecluu01hViVPaE52dBAN0Vs8BQOwd87wSt4VCYhoQIz2H0
+         vb+xiQYO9jjUC1PMfL3Ao9DLXPiQwiPesoxjBINoh86aN20MMd6ywUF0TzQtmDq87DJ7
+         0l9ZePTuwYX2aq1gGE5JccdiDTYON9IUrns76R/cShiViuVe7hFNLSjmEino6+Mpr8sN
+         PkwfrL5xCkSxohLbFOz8Kj8f19eZgDCxOI0vpSNGgOmqCf4dPjPq5cTR6ZLpNJkCbYau
+         OyNw==
+X-Gm-Message-State: APjAAAUzZKw7CkSnjWsXOhYhGAmUpNITvczFxNsSh4UeWXM910fr3keZ
+        buF+H0JCaJCWCVubsgIGyTOfz8wVUIEjBxSBPD0=
+X-Google-Smtp-Source: APXvYqxKLDXX87FcpQL2TgyMJLEjcIeNCrqNlbfTX64dCbqulfBr4FXPj0VAQFHyeFp8gszFBs/o1nNq1ZSEbmesRLw=
+X-Received: by 2002:a0c:dd86:: with SMTP id v6mr19475380qvk.176.1565374842194;
+ Fri, 09 Aug 2019 11:20:42 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190809144043.476786-1-arnd@arndb.de> <20190809144043.476786-10-arnd@arndb.de>
+ <dc0de0cd9a1e24477b20d563199e800b98d933f6.camel@perches.com>
+In-Reply-To: <dc0de0cd9a1e24477b20d563199e800b98d933f6.camel@perches.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 9 Aug 2019 20:20:26 +0200
+Message-ID: <CAK8P3a2_B+gxqPUtCbfn9oR39DWGH2xQ-z3rCEh36f7jbaS+hA@mail.gmail.com>
+Subject: Re: [PATCH v2 09/13] net: lpc-enet: fix printk format strings
+To:     Joe Perches <joe@perches.com>
+Cc:     soc@kernel.org, Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kbuild test robot <lkp@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In zs_destroy_pool() we call flush_work(&pool->free_work). However, we
-have no guarantee that migration isn't happening in the background
-at that time.
+On Fri, Aug 9, 2019 at 6:30 PM Joe Perches <joe@perches.com> wrote:
+> > @@ -1333,13 +1333,14 @@ static int lpc_eth_drv_probe(struct platform_device *pdev)
+> >       pldat->dma_buff_base_p = dma_handle;
+> >
+> >       netdev_dbg(ndev, "IO address space     :%pR\n", res);
+> > -     netdev_dbg(ndev, "IO address size      :%d\n", resource_size(res));
+> > +     netdev_dbg(ndev, "IO address size      :%zd\n",
+> > +                     (size_t)resource_size(res));
+>
+> Ideally all these would use %zu not %zd
 
-Since migration can't directly free pages, it relies on free_work
-being scheduled to free the pages.  But there's nothing preventing an
-in-progress migrate from queuing the work *after*
-zs_unregister_migration() has called flush_work().  Which would mean
-pages still pointing at the inode when we free it.
+Ok, changed now.
 
-Since we know at destroy time all objects should be free, no new
-migrations can come in (since zs_page_isolate() fails for fully-free
-zspages).  This means it is sufficient to track a "# isolated zspages"
-count by class, and have the destroy logic ensure all such pages have
-drained before proceeding.  Keeping that state under the class
-spinlock keeps the logic straightforward.
-
-Fixes: 48b4800a1c6a ("zsmalloc: page migration support")
-Signed-off-by: Henry Burns <henryburns@google.com>
----
- Changelog since v1:
- - Changed the class level isolated count to a pool level isolated count
-   (of zspages). Also added a pool level flag for when destruction
-   starts and a memory barrier to ensure this flag has global
-   visibility.
-
- mm/zsmalloc.c | 61 +++++++++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 59 insertions(+), 2 deletions(-)
-
-diff --git a/mm/zsmalloc.c b/mm/zsmalloc.c
-index 5105b9b66653..08def3a0d200 100644
---- a/mm/zsmalloc.c
-+++ b/mm/zsmalloc.c
-@@ -54,6 +54,7 @@
- #include <linux/mount.h>
- #include <linux/pseudo_fs.h>
- #include <linux/migrate.h>
-+#include <linux/wait.h>
- #include <linux/pagemap.h>
- #include <linux/fs.h>
- 
-@@ -268,6 +269,10 @@ struct zs_pool {
- #ifdef CONFIG_COMPACTION
- 	struct inode *inode;
- 	struct work_struct free_work;
-+	/* A wait queue for when migration races with async_free_zspage() */
-+	struct wait_queue_head migration_wait;
-+	atomic_long_t isolated_pages;
-+	bool destroying;
- #endif
- };
- 
-@@ -1874,6 +1879,19 @@ static void putback_zspage_deferred(struct zs_pool *pool,
- 
- }
- 
-+static inline void zs_pool_dec_isolated(struct zs_pool *pool)
-+{
-+	VM_BUG_ON(atomic_long_read(&pool->isolated_pages) <= 0);
-+	atomic_long_dec(&pool->isolated_pages);
-+	/*
-+	 * There's no possibility of racing, since wait_for_isolated_drain()
-+	 * checks the isolated count under &class->lock after enqueuing
-+	 * on migration_wait.
-+	 */
-+	if (atomic_long_read(&pool->isolated_pages) == 0 && pool->destroying)
-+		wake_up_all(&pool->migration_wait);
-+}
-+
- static void replace_sub_page(struct size_class *class, struct zspage *zspage,
- 				struct page *newpage, struct page *oldpage)
- {
-@@ -1943,6 +1961,7 @@ static bool zs_page_isolate(struct page *page, isolate_mode_t mode)
- 	 */
- 	if (!list_empty(&zspage->list) && !is_zspage_isolated(zspage)) {
- 		get_zspage_mapping(zspage, &class_idx, &fullness);
-+		atomic_long_inc(&pool->isolated_pages);
- 		remove_zspage(class, zspage, fullness);
- 	}
- 
-@@ -2042,8 +2061,16 @@ static int zs_page_migrate(struct address_space *mapping, struct page *newpage,
- 	 * Page migration is done so let's putback isolated zspage to
- 	 * the list if @page is final isolated subpage in the zspage.
- 	 */
--	if (!is_zspage_isolated(zspage))
-+	if (!is_zspage_isolated(zspage)) {
-+		/*
-+		 * We cannot race with zs_destroy_pool() here because we wait
-+		 * for isolation to hit zero before we start destroying.
-+		 * Also, we ensure that everyone can see pool->destroying before
-+		 * we start waiting.
-+		 */
- 		putback_zspage_deferred(pool, class, zspage);
-+		zs_pool_dec_isolated(pool);
-+	}
- 
- 	reset_page(page);
- 	put_page(page);
-@@ -2094,8 +2121,8 @@ static void zs_page_putback(struct page *page)
- 		 * so let's defer.
- 		 */
- 		putback_zspage_deferred(pool, class, zspage);
-+		zs_pool_dec_isolated(pool);
- 	}
--
- 	spin_unlock(&class->lock);
- }
- 
-@@ -2118,8 +2145,36 @@ static int zs_register_migration(struct zs_pool *pool)
- 	return 0;
- }
- 
-+static bool pool_isolated_are_drained(struct zs_pool *pool)
-+{
-+	return atomic_long_read(&pool->isolated_pages) == 0;
-+}
-+
-+/* Function for resolving migration */
-+static void wait_for_isolated_drain(struct zs_pool *pool)
-+{
-+
-+	/*
-+	 * We're in the process of destroying the pool, so there are no
-+	 * active allocations. zs_page_isolate() fails for completely free
-+	 * zspages, so we need only wait for the zs_pool's isolated
-+	 * count to hit zero.
-+	 */
-+	wait_event(pool->migration_wait,
-+		   pool_isolated_are_drained(pool));
-+}
-+
- static void zs_unregister_migration(struct zs_pool *pool)
- {
-+	pool->destroying = true;
-+	/*
-+	 * We need a memory barrier here to ensure global visibility of
-+	 * pool->destroying. Thus pool->isolated pages will either be 0 in which
-+	 * case we don't care, or it will be > 0 and pool->destroying will
-+	 * ensure that we wake up once isolation hits 0.
-+	 */
-+	smp_mb();
-+	wait_for_isolated_drain(pool); /* This can block */
- 	flush_work(&pool->free_work);
- 	iput(pool->inode);
- }
-@@ -2357,6 +2412,8 @@ struct zs_pool *zs_create_pool(const char *name)
- 	if (!pool->name)
- 		goto err;
- 
-+	init_waitqueue_head(&pool->migration_wait);
-+
- 	if (create_cache(pool))
- 		goto err;
- 
--- 
-2.23.0.rc1.153.gdeed80330f-goog
-
+       Arnd
