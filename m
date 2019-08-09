@@ -7,50 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 455DDC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F36C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:46:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 121C921874
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:46:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14EE4217F4
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:46:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565358361;
-	bh=9I+jFTe4CVg4SBn5kIG4JbU+BfzvJ6nCCHzgfhtmeII=;
+	s=default; t=1565358364;
+	bh=1FDd1yFLv1xP4YB+H2uGGTbxLU9UAx5omIAoX2E56kw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WE2NEi15N2ZCF+54iz4XnxrzLj2y/d5sncIwpvR/77zyi/T58O92//u9RcPIWmXhJ
-	 ZnNtixVcvpUAO3qaf5WKWSc3FWDrf4C2ZnRmjV2npIPRno+W8VbSiaVtXZctr1i/ad
-	 p3fxGfcy4XtzAjXzMTORfjKndsEtNJDCqA4U9Xwk=
+	b=VRH26Zqw0ZEYe4V9UJiVSojRyZeENn5XII3DD5F/ve5J2tCbJZp7l58ZDuT04YZKq
+	 Gt8Qh2WOufxnOmQ09LW3pd3rR6AJafIGm9dhtonf+zkzOtoYzduzaRvBobg8QcmFKC
+	 7M4R4XD/U97FiKqLhJyZ2tjmQZbrxdEbs3XgpFgk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406824AbfHINqA (ORCPT
+        id S2406853AbfHINqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 09:46:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35478 "EHLO mail.kernel.org"
+        Fri, 9 Aug 2019 09:46:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406518AbfHINp7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 09:45:59 -0400
+        id S2406518AbfHINqC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 09:46:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EACB820B7C;
-        Fri,  9 Aug 2019 13:45:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 803E6217D7;
+        Fri,  9 Aug 2019 13:46:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565358358;
-        bh=9I+jFTe4CVg4SBn5kIG4JbU+BfzvJ6nCCHzgfhtmeII=;
+        s=default; t=1565358361;
+        bh=1FDd1yFLv1xP4YB+H2uGGTbxLU9UAx5omIAoX2E56kw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MWZDm30JAicLH6IV/C8MRnt0u05ubfre9Xj8yX8NFrvayxVsN1NFqFUToJIlHYWE1
-         f8Lud7JuI/i4VAO4PLYdGzfoO2ZOp4tHUEcb0GrSH0+CCLxejNO36dPw8RZnoy9B2o
-         wLlK55oX/FgEbWoc0QP8tg+DGM9cLbGyF/B3MKao=
+        b=U6zFQc/W7Qc2P66GjKMW8KS0xO1IqNGn2UugYIh+9S2su4mHLZybZz4nPI/1+1DbA
+         hONeY3AQui8xAhYNjj7fXwpalLQQA4hBwkgqe1y9ai6qpaxW08RPQvUW0XGuPn7fYJ
+         Z/aXJXdrRD3L9fAVCFrNsF/1TEn/7SDMYr1SM348=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Martin Sperl <kernel@martin.sperl.org>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.4 15/21] spi: bcm2835: Fix 3-wire mode if DMA is enabled
-Date:   Fri,  9 Aug 2019 15:45:19 +0200
-Message-Id: <20190809134242.195463204@linuxfoundation.org>
+        stable@vger.kernel.org, Ben Hutchings <ben@decadent.org.uk>
+Subject: [PATCH 4.4 16/21] x86: cpufeatures: Sort feature word 7
+Date:   Fri,  9 Aug 2019 15:45:20 +0200
+Message-Id: <20190809134242.234053013@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190809134241.565496442@linuxfoundation.org>
 References: <20190809134241.565496442@linuxfoundation.org>
@@ -63,51 +58,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukas Wunner <lukas@wunner.de>
+From: Ben Hutchings <ben@decadent.org.uk>
 
-commit 8d8bef50365847134b51c1ec46786bc2873e4e47 upstream.
+This will make it clearer which bits are allocated, in case we need to
+assign more feature bits for later backports.
 
-Commit 6935224da248 ("spi: bcm2835: enable support of 3-wire mode")
-added 3-wire support to the BCM2835 SPI driver by setting the REN bit
-(Read Enable) in the CS register when receiving data.  The REN bit puts
-the transmitter in high-impedance state.  The driver recognizes that
-data is to be received by checking whether the rx_buf of a transfer is
-non-NULL.
-
-Commit 3ecd37edaa2a ("spi: bcm2835: enable dma modes for transfers
-meeting certain conditions") subsequently broke 3-wire support because
-it set the SPI_MASTER_MUST_RX flag which causes spi_map_msg() to replace
-rx_buf with a dummy buffer if it is NULL.  As a result, rx_buf is
-*always* non-NULL if DMA is enabled.
-
-Reinstate 3-wire support by not only checking whether rx_buf is non-NULL,
-but also checking that it is not the dummy buffer.
-
-Fixes: 3ecd37edaa2a ("spi: bcm2835: enable dma modes for transfers meeting certain conditions")
-Reported-by: Nuno Sá <nuno.sa@analog.com>
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Cc: stable@vger.kernel.org # v4.2+
-Cc: Martin Sperl <kernel@martin.sperl.org>
-Acked-by: Stefan Wahren <wahrenst@gmx.net>
-Link: https://lore.kernel.org/r/328318841455e505370ef8ecad97b646c033dc8a.1562148527.git.lukas@wunner.de
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/spi/spi-bcm2835.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/cpufeatures.h |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
---- a/drivers/spi/spi-bcm2835.c
-+++ b/drivers/spi/spi-bcm2835.c
-@@ -554,7 +554,8 @@ static int bcm2835_spi_transfer_one(stru
- 	bcm2835_wr(bs, BCM2835_SPI_CLK, cdiv);
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -196,13 +196,10 @@
+ #define X86_FEATURE_RETPOLINE_AMD ( 7*32+13) /* "" AMD Retpoline mitigation for Spectre variant 2 */
  
- 	/* handle all the 3-wire mode */
--	if ((spi->mode & SPI_3WIRE) && (tfr->rx_buf))
-+	if (spi->mode & SPI_3WIRE && tfr->rx_buf &&
-+	    tfr->rx_buf != master->dummy_rx)
- 		cs |= BCM2835_SPI_CS_REN;
- 	else
- 		cs &= ~BCM2835_SPI_CS_REN;
+ #define X86_FEATURE_INTEL_PT	( 7*32+15) /* Intel Processor Trace */
+-#define X86_FEATURE_RSB_CTXSW	( 7*32+19) /* "" Fill RSB on context switches */
+-
+ #define X86_FEATURE_MSR_SPEC_CTRL ( 7*32+16) /* "" MSR SPEC_CTRL is implemented */
+ #define X86_FEATURE_SSBD	( 7*32+17) /* Speculative Store Bypass Disable */
+ 
+-/* Because the ALTERNATIVE scheme is for members of the X86_FEATURE club... */
+-#define X86_FEATURE_KAISER	( 7*32+31) /* CONFIG_PAGE_TABLE_ISOLATION w/o nokaiser */
++#define X86_FEATURE_RSB_CTXSW	( 7*32+19) /* "" Fill RSB on context switches */
+ 
+ #define X86_FEATURE_USE_IBPB	( 7*32+21) /* "" Indirect Branch Prediction Barrier enabled*/
+ #define X86_FEATURE_USE_IBRS_FW	( 7*32+22) /* "" Use IBRS during runtime firmware calls */
+@@ -215,6 +212,7 @@
+ #define X86_FEATURE_ZEN		( 7*32+28) /* "" CPU is AMD family 0x17 (Zen) */
+ #define X86_FEATURE_L1TF_PTEINV	( 7*32+29) /* "" L1TF workaround PTE inversion */
+ #define X86_FEATURE_IBRS_ENHANCED	( 7*32+30) /* Enhanced IBRS */
++#define X86_FEATURE_KAISER	( 7*32+31) /* CONFIG_PAGE_TABLE_ISOLATION w/o nokaiser */
+ 
+ /* Virtualization flags: Linux defined, word 8 */
+ #define X86_FEATURE_TPR_SHADOW  ( 8*32+ 0) /* Intel TPR Shadow */
 
 
