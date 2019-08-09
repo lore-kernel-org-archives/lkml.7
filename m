@@ -2,120 +2,131 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C211BC32756
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39290C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:57:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B82C2086D
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:55:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="OA/UGs56"
+	by mail.kernel.org (Postfix) with ESMTP id 1DECA2166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:57:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436973AbfHIRze (ORCPT
+        id S2436982AbfHIR5L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 13:55:34 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:36810 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436696AbfHIRze (ORCPT
+        Fri, 9 Aug 2019 13:57:11 -0400
+Received: from outbound-smtp05.blacknight.com ([81.17.249.38]:34892 "EHLO
+        outbound-smtp05.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726463AbfHIR5L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 13:55:34 -0400
-Received: by mail-pl1-f193.google.com with SMTP id k8so45264385plt.3
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 10:55:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=k0JW1MLLNsJwJlBlpJuuU0x2nZPPO+9mm49FYZVazao=;
-        b=OA/UGs56YQC+yyIr42CyZFxmzgMazL51eytKigu93E+h3M3jx1SUQiWiF2xWk/IvJc
-         Q2jev5fwjGsrjHCQYryT6wDWbu5un0fcb5sdT8qg/CF0brDZK8w3+cZX9toQy9nepy2n
-         syvs8gglTWIuvi3BOXS8JqMrhG9URrL7AtZtNZH9xaxgTvcGU4ewWmf/aBrNKiC3sB0R
-         1hyJCFehJSlr9sDErNnlBchuHyiv3Znqbg/Vjpmuq3XjjantHGUcH1i5za2dSzi7pl6K
-         WJh1lWbPp+pxypCQx/oWGviqfHxV5K2wqQT3iP9DbAc3Zi+c1FVe/YKm/Y4l0+as8B6Y
-         Ii1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=k0JW1MLLNsJwJlBlpJuuU0x2nZPPO+9mm49FYZVazao=;
-        b=D3tKd1aVRWTVL12PwWYJIQjuvAftdtSrjAxUfefx8dubIuFHQgXJUobeQi5ENzDTWi
-         lgY6Md1BE7GYsQ1qSLWIR2MRJFVAEMpKcr46YUlZAyDA4LGcjHzizB9hTTxUEKaSbZX9
-         jF8uy4yy3i5cZe1gLdttYiyhx9DQ5PQduG/GKGlrcZ0fSY3m5HzMhUSM2yfEDcmTffup
-         egtW43TT8eYK7qTVz+LeBwCl5p1RcohQWwy1nrdYxixi65aXZ+ahq7GCwzVgAQOou00c
-         s0k3oOcYXQyy5SXzgKn7B7cDQajlHh35zmAi+9Vi+2kUX924vSXq0XXB2RP9qbGY4HRT
-         DL8w==
-X-Gm-Message-State: APjAAAUhiPDTUo/6av2Fq9G6/efRI/Z+16rsdtvt4TNyomUuLG6jPqGE
-        R/nltKp36bmXmTBqfbDN2ND+Cw==
-X-Google-Smtp-Source: APXvYqysFBcmJohUVIoX2xKUnTFNTQhCkCVi2y06fMeHjJJpEKticMBmoCDL0iUgxQ747LXHcXRg/g==
-X-Received: by 2002:a17:902:6b81:: with SMTP id p1mr20019532plk.91.1565373333064;
-        Fri, 09 Aug 2019 10:55:33 -0700 (PDT)
-Received: from localhost ([2601:602:9200:a1a5:b873:707a:e893:cdb3])
-        by smtp.gmail.com with ESMTPSA id i15sm103848714pfd.160.2019.08.09.10.55.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 09 Aug 2019 10:55:32 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>, sboyd@kernel.org
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 0/4] clk: meson: g12a: add support for DVFS
-In-Reply-To: <1jy302o5j7.fsf@starbuckisacylon.baylibre.com>
-References: <20190731084019.8451-1-narmstrong@baylibre.com> <7hzhkje4ov.fsf@baylibre.com> <1jy302o5j7.fsf@starbuckisacylon.baylibre.com>
-Date:   Fri, 09 Aug 2019 10:55:30 -0700
-Message-ID: <7h8ss24419.fsf@baylibre.com>
+        Fri, 9 Aug 2019 13:57:11 -0400
+Received: from mail.blacknight.com (pemlinmail04.blacknight.ie [81.17.254.17])
+        by outbound-smtp05.blacknight.com (Postfix) with ESMTPS id 83DE8985B6
+        for <linux-kernel@vger.kernel.org>; Fri,  9 Aug 2019 18:57:08 +0100 (IST)
+Received: (qmail 23304 invoked from network); 9 Aug 2019 17:57:08 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.93])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 9 Aug 2019 17:57:08 -0000
+Date:   Fri, 9 Aug 2019 18:57:06 +0100
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Minchan Kim <minchan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Miguel de Dios <migueldedios@google.com>,
+        Wei Wang <wvw@google.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [RFC PATCH] mm: drop mark_page_access from the unmap path
+Message-ID: <20190809175706.GO2739@techsingularity.net>
+References: <20190729082052.GA258885@google.com>
+ <20190729083515.GD9330@dhcp22.suse.cz>
+ <20190730121110.GA184615@google.com>
+ <20190730123237.GR9330@dhcp22.suse.cz>
+ <20190730123935.GB184615@google.com>
+ <20190730125751.GS9330@dhcp22.suse.cz>
+ <20190731054447.GB155569@google.com>
+ <20190731072101.GX9330@dhcp22.suse.cz>
+ <20190806105509.GA94582@google.com>
+ <20190809124305.GQ18351@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <20190809124305.GQ18351@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jerome Brunet <jbrunet@baylibre.com> writes:
+On Fri, Aug 09, 2019 at 02:43:24PM +0200, Michal Hocko wrote:
+> On Tue 06-08-19 19:55:09, Minchan Kim wrote:
+> > On Wed, Jul 31, 2019 at 09:21:01AM +0200, Michal Hocko wrote:
+> > > On Wed 31-07-19 14:44:47, Minchan Kim wrote:
+> [...]
+> > > > As Nick mentioned in the description, without mark_page_accessed in
+> > > > zapping part, repeated mmap + touch + munmap never acticated the page
+> > > > while several read(2) calls easily promote it.
+> > > 
+> > > And is this really a problem? If we refault the same page then the
+> > > refaults detection should catch it no? In other words is the above still
+> > > a problem these days?
+> > 
+> > I admit we have been not fair for them because read(2) syscall pages are
+> > easily promoted regardless of zap timing unlike mmap-based pages.
+> > 
+> > However, if we remove the mark_page_accessed in the zap_pte_range, it
+> > would make them more unfair in that read(2)-accessed pages are easily
+> > promoted while mmap-based page should go through refault to be promoted.
+> 
+> I have really hard time to follow why an unmap special handling is
+> making the overall state more reasonable.
+> 
+> Anyway, let me throw the patch for further discussion. Nick, Mel,
+> Johannes what do you think?
+> 
 
-> On Thu 08 Aug 2019 at 14:18, Kevin Hilman <khilman@baylibre.com> wrote:
->
->> Neil Armstrong <narmstrong@baylibre.com> writes:
->>
->>> The G12A/G12B Socs embeds a specific clock tree for each CPU cluster :
->>> cpu_clk / cpub_clk
->>> |   \- cpu_clk_dyn
->>> |      |  \- cpu_clk_premux0
->>> |      |        |- cpu_clk_postmux0
->>> |      |        |    |- cpu_clk_dyn0_div
->>> |      |        |    \- xtal/fclk_div2/fclk_div3
->>> |      |        \- xtal/fclk_div2/fclk_div3
->>> |      \- cpu_clk_premux1
->>> |            |- cpu_clk_postmux1
->>> |            |    |- cpu_clk_dyn1_div
->>> |            |    \- xtal/fclk_div2/fclk_div3
->>> |            \- xtal/fclk_div2/fclk_div3
->>> \ sys_pll / sys1_pll
->>>
->>> This patchset adds notifiers on cpu_clk / cpub_clk, cpu_clk_dyn,
->>> cpu_clk_premux0 and sys_pll / sys1_pll to permit change frequency of
->>> the CPU clock in a safe way as recommended by the vendor Documentation
->>> and reference code.
->>>
->>> This patchset :
->>> - introduces needed core and meson clk changes
->>> - adds the clock notifiers
->>>
->>> Dependencies:
->>> - None
->>
->> nit: this doesn't apply to v5.3-rc, but appears to apply on
->> clk-meson/v5.4/drivers, so it appears to be dependent on the cleanups
->> from Alex.
->
-> Indeed, Applied on top of this.
->
+I won't be able to answer follow-ups to this for a while but here is some
+superficial thinking.
 
-Please let me know when you have a stable tag for this.  I wont' be able
-to apply the odroid-n2 DVFS patch until I have this.
+Minimally, you should test PageReferenced before setting it like
+mark_page_accessed does to avoid unnecessary atomics.  I know it wasn't
+done that way before but there is no harm in addressing it now.
 
-Kevin
+workingset_activation is necessarily expensive. It could speculatively
+lookup memcg outside the RCU read lock and only acquire it if there is
+something interesting to lookup. Probably not much help though.
 
+Note that losing the potential workingset_activation from the patch
+may have consequences if we are relying on refaults to fix this up. I'm
+undecided as to what degree it matters.
+
+That said, I do agree that the mark_page_accessed on page zapping may
+be overkill given that it can be a very expensive call if the page
+gets activated and it's potentially being called in the zap path at a
+high frequency. It's also not a function that is particularly easy to
+optimise if you want to cover all the cases that matter. It really would
+be preferably to have knowledge of a workload that really cares about
+the activations from mmap/touch/munmap.
+
+mark_page_accessed is a hint, it's known that there are gaps with
+it so we shouldn't pay too much of a cost on information that only
+might be useful. If the system is under no memory pressure because the
+workloads are tuned to fit in memory (e.g. database using direct IO)
+then mark_page_accessed is only cost. We could avoid marking it accessed
+entirely if PF_EXITING given that if a task is exiting, it's not a strong
+indication that the page is of any interest.  Even if the page is heavily
+shared page and one user exits, the other users will keep it referenced
+and prevent reclaim anyway. The benefit is too marginal too.
+
+Given the definite cost of mark_page_accessed in this path and the main
+corner case being tasks that access pages via mmap/touch/munmap (which is
+insanely expensive if done at high frequency), I think it's reasonable to
+rely on SetPageReferenced giving the page another lap of the LRU in most
+cases (the obvious exception being CMA forcing reclaim). That opinion
+might change if there is a known example of a realistic workload that
+would suffer from the lack of explicit activations from teardown context.
+
+-- 
+Mel Gorman
+SUSE Labs
