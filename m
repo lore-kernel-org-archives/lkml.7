@@ -2,97 +2,80 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2494CC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 07:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61D26C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 07:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0664206DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 07:39:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3529A2086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 07:42:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405843AbfHIHja (ORCPT
+        id S2405837AbfHIHmA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 03:39:30 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:32893 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405674AbfHIHja (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 03:39:30 -0400
-Received: by mail-wm1-f67.google.com with SMTP id p77so5607153wme.0
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 00:39:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=xaUE+b2Ivx2DbXYmJvLDQ+HYNnryuMwKv4SoNgWueQs=;
-        b=FeKVh1ZzX7spdQZ/Wdo1oMEup9aMWVuQGx2v7EfBCRbA9jTXBg+yp+JAVjqsp8g01n
-         39HD26Biu4vYjA4V0UW54QMTbQATqcNnmQIfMVMcDRP2fSp6N4SdQ8cyRHHnjLUrdug+
-         mvkriZCzleXtxQsDzeJzxDS69d2kMBNhXJSYognhN/x1R6JU1hPHdEr0+KsbJIZvQrNn
-         7D6Og/B4khqBx55Xiea+yow98rCO0rOTJhNI80fS1E0rFntaZEclmLvzTDTyw2U1hlyW
-         OfP7xwWdTBsyyW0gAdMwoyMyC+mUnjbZwkhZSpMzpDzKyfjQWCRgoJ8wd4GWpEtmxPo3
-         rsCQ==
-X-Gm-Message-State: APjAAAXxLNKE1AlZjohIILDF5msNMlMD1p4rBiNgnRKo216UaQS5Vz54
-        0D6TzSNepQK5qqQQt/B9eB7ExQ==
-X-Google-Smtp-Source: APXvYqxytvGnBCzeMG9C+zJI7RJIXc4jYF8EQLjKxY1xmaERR0icUaDIN9Wz/zR8CgJLJXbU7OMqZQ==
-X-Received: by 2002:a1c:f913:: with SMTP id x19mr9078528wmh.139.1565336368260;
-        Fri, 09 Aug 2019 00:39:28 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:b42d:b492:69df:ed61? ([2001:b07:6468:f312:b42d:b492:69df:ed61])
-        by smtp.gmail.com with ESMTPSA id m7sm80941667wrx.65.2019.08.09.00.39.27
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 09 Aug 2019 00:39:27 -0700 (PDT)
-Subject: Re: [PATCH v3 1/2] selftests: kvm: Adding config fragments
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>, shuah@kernel.org
-Cc:     linux-kernel@vger.kernel.org, drjones@redhat.com,
-        sean.j.christopherson@intel.com, linux-kselftest@vger.kernel.org,
-        kvm@vger.kernel.org
-References: <20190809072415.29305-1-naresh.kamboju@linaro.org>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <0a0e0563-aba7-e59c-1fbd-547126d404ed@redhat.com>
-Date:   Fri, 9 Aug 2019 09:39:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 9 Aug 2019 03:42:00 -0400
+Received: from 8bytes.org ([81.169.241.247]:48422 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725985AbfHIHl7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 03:41:59 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 2240339B; Fri,  9 Aug 2019 09:41:58 +0200 (CEST)
+Date:   Fri, 9 Aug 2019 09:41:57 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>
+Subject: Re: [PATCH] MAINTAINERS: add KVM x86 reviewers
+Message-ID: <20190809074157.GA29621@8bytes.org>
+References: <1565336051-31793-1-git-send-email-pbonzini@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190809072415.29305-1-naresh.kamboju@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1565336051-31793-1-git-send-email-pbonzini@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/08/19 09:24, Naresh Kamboju wrote:
-> selftests kvm all test cases need pre-required kernel config for the
-> tests to get pass.
+On Fri, Aug 09, 2019 at 09:34:11AM +0200, Paolo Bonzini wrote:
+> This is probably overdone---KVM x86 has quite a few contributors that
+> usually review each other's patches, which is really helpful to me.
+> Formalize this by listing them as reviewers.  I am including people
+> with various expertise:
 > 
-> CONFIG_KVM=y
+> - Joerg for SVM (with designated reviewers, it makes more sense to have
+> him in the main KVM/x86 stanza)
 > 
-> The KVM tests are skipped without these configs:
+> - Sean for MMU and VMX
 > 
->         dev_fd = open(KVM_DEV_PATH, O_RDONLY);
->         if (dev_fd < 0)
->                 exit(KSFT_SKIP);
+> - Jim for VMX
 > 
-> Signed-off-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-> Acked-by: Shuah Khan <skhan@linuxfoundation.org>
+> - Vitaly for Hyper-V and possibly SVM
+> 
+> - Wanpeng for LAPIC and paravirtualization.
+> 
+> Please ack if you are okay with this arrangement, otherwise speak up.
+> 
+> In other news, Radim is going to leave Red Hat soon.  However, he has
+> not been very much involved in upstream KVM development for some time,
+> and in the immediate future he is still going to help maintain kvm/queue
+> while I am on vacation.  Since not much is going to change, I will let
+> him decide whether he wants to keep the maintainer role after he leaves.
+> 
+> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Cc: Wanpeng Li <wanpengli@tencent.com>
+> Cc: Jim Mattson <jmattson@google.com>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 > ---
->  tools/testing/selftests/kvm/config | 1 +
->  1 file changed, 1 insertion(+)
->  create mode 100644 tools/testing/selftests/kvm/config
-> 
-> diff --git a/tools/testing/selftests/kvm/config b/tools/testing/selftests/kvm/config
-> new file mode 100644
-> index 000000000000..14f90d8d6801
-> --- /dev/null
-> +++ b/tools/testing/selftests/kvm/config
-> @@ -0,0 +1 @@
-> +CONFIG_KVM=y
-> 
+>  MAINTAINERS | 17 +++++++++--------
+>  1 file changed, 9 insertions(+), 8 deletions(-)
 
-I think this is more complicated without a real benefit, so I'll merge v2.
+Acked-by: Joerg Roedel <joro@8bytes.org>
 
-Paolo
