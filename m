@@ -2,128 +2,142 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C1E5C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:13:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82BE8C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:15:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E4AE208C4
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:13:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58CE9208C4
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:15:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GlblEZrk"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="RYY8FKu7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406956AbfHINN0 (ORCPT
+        id S2406964AbfHINPR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 09:13:26 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:45574 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbfHINNZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 09:13:25 -0400
-Received: by mail-lf1-f67.google.com with SMTP id a30so6430752lfk.12;
-        Fri, 09 Aug 2019 06:13:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=R/qbfybNTawBfvTZEySh0cjltm2Kq0tph5R6n428udM=;
-        b=GlblEZrkT23FfH3YxwgAttCw6xMNP7KmjYM4WXbspvsjFKfa2jnMBD9iz9n/359YcB
-         mh1ba0d5xf1zHxpLYacNsJ3P90ZN+296q6JzVff86xucaYj/+8z6O4lg6Lk8RQX1Ftfi
-         ISE1PqIr2YzS82esJXELAiYZhczT1wMe71LlZOhk/PnPHjZ2R5k3+3XQCEEg4zOWHdHr
-         md4eFoFMjx17VGzybjmylCG7pkgn06aca+wnsBRr6jiVDdjPDUmN+4APIHiT9poKviyF
-         oMEBxX3477w1dW3K+x6B52wSS/8CkF3eQtIrPf+jvad1ZuOdshSYXAMuhyVGzBm78tth
-         3qsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=R/qbfybNTawBfvTZEySh0cjltm2Kq0tph5R6n428udM=;
-        b=j1YtCmyfZ48Dgraz2bmpoKEtL8ufcAevdF5JTPvFIHTIsWQb9AbJJKXb8Ubr9jvBdT
-         aOmBfvE+yNH/iiuwkxoDvR09+MdssA7ZCVUf021iZMI9sjcP9jwRbz4ezqKDthz5pfU+
-         T7PF9T9c/8WIFPaQiTQCygYlLL5JPytZEh0GMd4yfRjLiRTMgRF0uLc1UdbPHitH8Wqu
-         B964jWD7e/OX3C6P9tavqmGTEx5x5l0Q34ihhX7kPpHcIqgu7s8ZsJhX90uOFoBWELKB
-         EFi8hKDg5X91ctI0nlZ7d7xwj9jQT+WCz5fhnpfWE+JG2Y1Srny2fOMvU7Ipw4OqK+CH
-         EthQ==
-X-Gm-Message-State: APjAAAVaqDVFElqP5I4yHme1FMNQlqfG6NqGKEQhFVO/gzyEihhdodzT
-        sd7s+OVI4j7Ig1SsDTH6PV4KB+2K
-X-Google-Smtp-Source: APXvYqyf29S37MuD+Ii1VOieSMvQRwalWsMCTSNp4taVg2fWHXkXUtz+sOa2dH9UTLHVaWFwFCfeCQ==
-X-Received: by 2002:ac2:568e:: with SMTP id 14mr12994101lfr.189.1565356402685;
-        Fri, 09 Aug 2019 06:13:22 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.34.218])
-        by smtp.googlemail.com with ESMTPSA id k124sm17587000lfd.60.2019.08.09.06.13.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 09 Aug 2019 06:13:21 -0700 (PDT)
-Subject: Re: [PATCH v8 18/21] soc/tegra: pmc: Configure core power request
- polarity
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
-References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
- <1565308020-31952-19-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <29842147-a5f8-d51d-c594-b93b20b2e20f@gmail.com>
-Date:   Fri, 9 Aug 2019 16:13:20 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 9 Aug 2019 09:15:17 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:43872 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726157AbfHINPQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 09:15:16 -0400
+Received: from zn.tnic (p200300EC2F0BAF004D276273DCAF0EAA.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:af00:4d27:6273:dcaf:eaa])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3C2EC1EC0B07;
+        Fri,  9 Aug 2019 15:15:15 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1565356515;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=sTeaFwbbAjE+f6AcN4Z6yDkT173vzN9tQEm11E8OlTA=;
+        b=RYY8FKu7Twf/EdUKVlLXRvsHCtn439oWBKH7rrhZbR0L61VvLkZlXzwwDNLVg8UmWbylfv
+        zbk3z0cKDnrq2C1RUIVHp3ZuFiJRa3RJ6mN+B6rGnRPh4oe2GvL5abRkxuypeW9ChXoitg
+        /AgJWbAhoBdgb3wnJrkbUmltKUVFoJo=
+Date:   Fri, 9 Aug 2019 15:15:59 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Robert Richter <rrichter@marvell.com>
+Cc:     James Morse <james.morse@arm.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 02/24] EDAC, ghes: Fix grain calculation
+Message-ID: <20190809131559.GF2152@zn.tnic>
+References: <20190624150758.6695-1-rrichter@marvell.com>
+ <20190624150758.6695-3-rrichter@marvell.com>
 MIME-Version: 1.0
-In-Reply-To: <1565308020-31952-19-git-send-email-skomatineni@nvidia.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+In-Reply-To: <20190624150758.6695-3-rrichter@marvell.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-09.08.2019 2:46, Sowjanya Komatineni пишет:
-> This patch configures polarity of the core power request signal
-> in PMC control register based on the device tree property.
+On Mon, Jun 24, 2019 at 03:08:57PM +0000, Robert Richter wrote:
+> The conversion from the physical address mask to a grain (defined as
+> granularity in bytes) is broken:
 > 
-> PMC asserts and de-asserts power request signal based on it polarity
-> when it need to power-up and power-down the core rail during SC7.
+> 	e->grain = ~(mem_err->physical_addr_mask & ~PAGE_MASK);
 > 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/soc/tegra/pmc.c | 6 ++++++
->  1 file changed, 6 insertions(+)
+> E.g., a physical address mask of ~0xfff should give a grain of 0x1000,
+> instead the grain is wrong with the upper bits always set. We also
+> remove the limitation to the page size as the granularity is unrelated
+> to the page size used in the system. We fix this with:
 > 
-> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
-> index 3aa71c28a10a..e013ada7e4e9 100644
-> --- a/drivers/soc/tegra/pmc.c
-> +++ b/drivers/soc/tegra/pmc.c
-> @@ -56,6 +56,7 @@
->  #define  PMC_CNTRL_SIDE_EFFECT_LP0	BIT(14) /* LP0 when CPU pwr gated */
->  #define  PMC_CNTRL_SYSCLK_OE		BIT(11) /* system clock enable */
->  #define  PMC_CNTRL_SYSCLK_POLARITY	BIT(10) /* sys clk polarity */
-> +#define  PMC_CNTRL_PWRREQ_POLARITY	BIT(8)
->  #define  PMC_CNTRL_MAIN_RST		BIT(4)
->  
->  #define PMC_WAKE_MASK			0x0c
-> @@ -2290,6 +2291,11 @@ static void tegra20_pmc_init(struct tegra_pmc *pmc)
->  	else
->  		value |= PMC_CNTRL_SYSCLK_POLARITY;
->  
-> +	if (pmc->corereq_high)
-> +		value &= ~PMC_CNTRL_PWRREQ_POLARITY;
-> +	else
-> +		value |= PMC_CNTRL_PWRREQ_POLARITY;
-> +
->  	/* configure the output polarity while the request is tristated */
->  	tegra_pmc_writel(pmc, value, PMC_CNTRL);
->  
+> 	e->grain = ~mem_err->physical_addr_mask + 1;
 > 
+> Note: We need to adopt the grain_bits calculation as e->grain is now a
+> power of 2 and no longer a bit mask. The formula is now the same as in
+> edac_mc and can later be unified.
 
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Please refrain from using "We" or "I" or etc personal pronouns in a
+commit message and in the code comments below.
+
+From Documentation/process/submitting-patches.rst:
+
+ "Describe your changes in imperative mood, e.g. "make xyzzy do frotz"
+  instead of "[This patch] makes xyzzy do frotz" or "[I] changed xyzzy
+  to do frotz", as if you are giving orders to the codebase to change
+  its behaviour."
+
+Please fix all your other commit messages for the next submission.
+
+> Signed-off-by: Robert Richter <rrichter@marvell.com>
+> ---
+>  drivers/edac/ghes_edac.c | 12 ++++++++++--
+>  1 file changed, 10 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
+> index 7f19f1c672c3..d095d98d6a8d 100644
+> --- a/drivers/edac/ghes_edac.c
+> +++ b/drivers/edac/ghes_edac.c
+> @@ -222,6 +222,7 @@ void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
+>  	/* Cleans the error report buffer */
+>  	memset(e, 0, sizeof (*e));
+>  	e->error_count = 1;
+> +	e->grain = 1;
+>  	strcpy(e->label, "unknown label");
+>  	e->msg = pvt->msg;
+>  	e->other_detail = pvt->other_detail;
+> @@ -317,7 +318,7 @@ void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
+>  
+>  	/* Error grain */
+>  	if (mem_err->validation_bits & CPER_MEM_VALID_PA_MASK)
+> -		e->grain = ~(mem_err->physical_addr_mask & ~PAGE_MASK);
+> +		e->grain = ~mem_err->physical_addr_mask + 1;
+
+This is assuming that that ->physical_addr_mask is contiguous but I
+don't trust any firmware. I guess we can leave it like that for now
+until some "inventive" firmware actually does it.
+
+>  
+>  	/* Memory error location, mapped on e->location */
+>  	p = e->location;
+> @@ -433,8 +434,15 @@ void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
+>  	if (p > pvt->other_detail)
+>  		*(p - 1) = '\0';
+>  
+> +	/*
+> +	 * We expect the hw to report a reasonable grain, fallback to
+> +	 * 1 byte granularity otherwise.
+> +	 */
+> +	if (WARN_ON_ONCE(!e->grain))
+
+Please move that WARN_ON_ONCE in the
+
+	if (mem_err->validation_bits & CPER_MEM_VALID_PA_MASK)
+
+branch above because you're presetting grain to 1 so the warn should be
+close to where it could happen, i.e., when coming from the firmware.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
