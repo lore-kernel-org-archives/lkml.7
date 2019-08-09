@@ -2,113 +2,110 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E710AC31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F71C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC2B020B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:29:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E42F6214C6
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:29:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VOhJowUj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kdszIFnC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436549AbfHIR3J (ORCPT
+        id S2436669AbfHIR3N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 13:29:09 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:46364 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbfHIR3J (ORCPT
+        Fri, 9 Aug 2019 13:29:13 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:44525 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436582AbfHIR3M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 13:29:09 -0400
-Received: by mail-pg1-f193.google.com with SMTP id w3so8977198pgt.13;
-        Fri, 09 Aug 2019 10:29:08 -0700 (PDT)
+        Fri, 9 Aug 2019 13:29:12 -0400
+Received: by mail-pg1-f195.google.com with SMTP id i18so46185549pgl.11;
+        Fri, 09 Aug 2019 10:29:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=2l2uOku7IZIdjpnDK2uRPlXP2kUl+VlcuE2o6tTh0qM=;
-        b=VOhJowUjF7HpnqkbCxFXoMMEq+gVRzXhe2DBlCi5etX6yBcO+JO9bVYCXJ/BLxX2hH
-         b3zbUhe+0LS72aW1bQNp/HRElRZdWKfB2/UDhSrBegbUf7F3Vv/dB40zVLC/cIKEuCnE
-         B3zZwPUe+jwI13wD9XaNQtuAyf5kdJFLc4AG6jVf9cIIuRZPHJX1j68EPknjWq7sJylT
-         5aLe3V6gf6IKWhRWsUPV/ETZ5SEPhJP3qukNKXp2whMHT92dzlpPkJbhXKqePZ/OD8rU
-         gmZVdIbvb9iDRmVMUraebYkz2F9EhJv8Ye9yffKS0JzBNE9qLSXdAP4XI1Fj/mZ6addv
-         c6sA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FUrszxfu12TYz4RSVAJdRYMRyY1/E4H2D0WlNLvKSkU=;
+        b=kdszIFnCo6sZZCcRhyiqMMSZhlU8v9rxWv4gClrYhWcMSOFFyiNSwbUzdaAjCk0RGj
+         jpZpkE50HqF55Vq3vd/tqgnYNVGXou0jM7Vw3SyRlfYcGheZBxa6TJuvs9P+k2xOzRxf
+         ohVGmJ5t0+s6BU+tYqq/KEXmo9Tj3otw8BO8XS0cRmrarLZyZgTjQEcqOJMAw3z4FZiu
+         mn6glH3aeIXR3mpcuOPegWlySanHChSNkE4WM/wJWZ6k0Hwins7b/RjM9rQWkCoZeL8u
+         P0raqZHkk8UlURJTbOPbIzpoB2KMoTyigkkjH6MeGiz0NeoiTpWiCPYe3yK5BQgX41Dh
+         g+0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=2l2uOku7IZIdjpnDK2uRPlXP2kUl+VlcuE2o6tTh0qM=;
-        b=R6SFi+r4UmLY+9gBtCDl15t1DVO39tcqSsVRGnOFRlzF/JGiKvlqIAj8ps5u0INMGL
-         ihVKNiNkyPyhqERu5QoP50hzrp+shqaF9sl/TG3WmtJlmxw30nVBhue8KXgwwWqWpdJK
-         6b+R5M761wXUAjlrqhPMNFkPXmiFZF4OFPq4pYBDSktqBgDHKdydss5ywHF98FCdoB0/
-         0TbWDUgWhY3a3Zh6qvoql4dyp7A6U/lxasXtflRx2LvDVQdwN7rJIPRwIPgZfx5Lso95
-         Zb/uRJe6YdxW/P2DLQ8I9ZsJ8H3jHDskRzuUM+lkvxqgG5Wi+i6tVhYYTLkhwlSMepAB
-         53tg==
-X-Gm-Message-State: APjAAAXDJTXUlKg8R9NnPBmuGlxESayGbfU8g1WkFMmSntqufmmzRhIQ
-        +joY4ZqyJ9K7PhwbMJOW8Xo=
-X-Google-Smtp-Source: APXvYqypywdRwkvnpkLb0alAWpcF3w1UWCqaPzX3ClRIQhWQ+QJv1naaOve6ISzMPMzRpujrUVKiJw==
-X-Received: by 2002:a17:90a:9301:: with SMTP id p1mr10439917pjo.22.1565371748343;
-        Fri, 09 Aug 2019 10:29:08 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id g1sm161190879pgg.27.2019.08.09.10.29.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 09 Aug 2019 10:29:07 -0700 (PDT)
-Date:   Fri, 9 Aug 2019 10:29:06 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>, od@zcrc.me,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] watchdog: jz4740: Driver update
-Message-ID: <20190809172906.GA21450@roeck-us.net>
-References: <20190809115930.6050-1-paul@crapouillou.net>
- <20190809165207.GA18104@roeck-us.net>
- <1565369726.2091.0@crapouillou.net>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FUrszxfu12TYz4RSVAJdRYMRyY1/E4H2D0WlNLvKSkU=;
+        b=fvhxnTgpZ4QuYqLmkbMTGKRmzrvO1u1OowfZUepou7ZKVMqpqmqHV4mdPfp5fHEI71
+         ePxXG8FdIGuRhfzZWTogTNWcbEg0E25ZtTf38IkLwUnh9c2u/XFQZ2f2PPdY7N+il2pg
+         wTfC7zR7f+1vcdnmxNKUPAQZcudNQMl8/dinup7N4CxB3qcUOpMl3U0wBVR1aWhqLjQ/
+         4RE8Xulm0RRPsmxQqAiKSbLWt7hc6099YoiVyuC3MQxVteQqeX3sbsdL7F701KwhB/tK
+         bHds+yS65yTkMX6O1ZFbQPLNT+AU1I4kjFTarGoVxGSvb6wG3kz4t1sZMEIx5GSygnJM
+         wM1Q==
+X-Gm-Message-State: APjAAAW2rWT6YEdXjd/P8HAyX0q5o/sRU8qCf9i+Q3yiaRspkgUN/RCZ
+        tPgrJkXmQZhJt4gjsLB8u+QyH84S55Dhv94C4iw=
+X-Google-Smtp-Source: APXvYqxBYUW+814s+7lrviU0TmD+7hu5PuAQYHJhVfj/j8HK6bW+t1XT1YwWM5b+aguA27df/H70hLt2izbcuuCAT+0=
+X-Received: by 2002:a17:90a:b883:: with SMTP id o3mr10416653pjr.50.1565371751473;
+ Fri, 09 Aug 2019 10:29:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1565369726.2091.0@crapouillou.net>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <000000000000a244b3058f9dc7d6@google.com> <4616850c-bf9e-d32a-3cfb-dbbaec5e17f2@I-love.SAKURA.ne.jp>
+ <CACT4Y+Y7d29kA1fpS13QvSopknuChPANRc9evxeWiJd-zkyNug@mail.gmail.com>
+In-Reply-To: <CACT4Y+Y7d29kA1fpS13QvSopknuChPANRc9evxeWiJd-zkyNug@mail.gmail.com>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Fri, 9 Aug 2019 10:29:00 -0700
+Message-ID: <CAM_iQpVUZGrz_w2Mv1YzCZaOpi9WdhJAZm_=ZkWRame=6odoog@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Read in tomoyo_socket_sendmsg_permission
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        syzbot <syzbot+b91501546ab4037f685f@syzkaller.appspotmail.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        linux-hams <linux-hams@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 06:55:26PM +0200, Paul Cercueil wrote:
-> Hi Guenter,
-> 
-> 
-> Le ven. 9 août 2019 à 18:52, Guenter Roeck <linux@roeck-us.net> a écrit :
-> >On Fri, Aug 09, 2019 at 01:59:27PM +0200, Paul Cercueil wrote:
-> >> Hi,
-> >>
-> >> This patchset comes from a bigger patchset that was cut in smaller
-> >> pieces for easier integration to mainline.
-> >> (The patchset was https://lkml.org/lkml/2019/3/27/1837)
-> >>
-> >> The reviews were kept since the code mostly didn't change. The
-> >>exception
-> >> is the use of device_node_to_regmap() in patch 2/3. This function was
-> >> added in a prior patch, now merged in the MIPS tree.
-> >>
-> >> For that reason this patchset is based on the ingenic-tcu-v5.4 branch
-> >>of
-> >> the MIPS tree
-> >> (git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git).
-> >>
+On Fri, Aug 9, 2019 at 1:53 AM Dmitry Vyukov <dvyukov@google.com> wrote:
+>
+> On Fri, Aug 9, 2019 at 12:08 AM Tetsuo Handa
+> <penguin-kernel@i-love.sakura.ne.jp> wrote:
 > >
-> >What is the expectation here ? Should the series be sent upstream
-> >through the watchdog tree, or through some other tree ?
-> 
-> You can get it through the watchdog tree if you merge the ingenic-tcu-v5.4
-> branch from the MIPS tree. If you'd rather not do that, I can get it merged
-> through the MIPS tree.
-> 
-I would prefer a merge through the mips tree.
+> > On 2019/08/09 1:45, syzbot wrote:
+> > > Hello,
+> > >
+> > > syzbot found the following crash on:
+> > >
+> > > HEAD commit:    107e47cc vrf: make sure skb->data contains ip header to ma..
+> > > git tree:       net
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=139506d8600000
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=4dba67bf8b8c9ad7
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=b91501546ab4037f685f
+> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> >
+> > This is not TOMOYO's bug. LSM modules expect that "struct sock" does not go away.
+> >
+> > Also, another use-after-free (presumably on the same "struct sock") was concurrently
+> > inflight at nr_insert_socket() in net/netrom/af_netrom.c . Thus, suspecting netrom's bug.
+>
+> There is a number of UAFs/refcount bugs in nr sockets lately. Most
+> likely it's the same issue them. Most of them were bisected to:
+>
+> commit c8c8218ec5af5d2598381883acbefbf604e56b5e
+> Date: Thu Jun 27 21:30:58 2019 +0000
+>   netrom: fix a memory leak in nr_rx_frame()
 
-Guenter
+The UAF introduced by this commit has been fixed. There is
+another UAF in netrom which exists long before the above commit,
+it is not fixed. The last time I looked at it, it seems related to the
+state machine used by netrom sockets, so it is not easy.
+
+Thanks,
