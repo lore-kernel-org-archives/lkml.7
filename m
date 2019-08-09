@@ -2,173 +2,347 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27797C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A47CC32756
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:00:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAE9A208C4
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:00:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EFAB208C4
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:00:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="WChoXlbz"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="WYTQsRdy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406650AbfHIMAd (ORCPT
+        id S2406664AbfHIMA4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 08:00:33 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:26482 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726259AbfHIMAc (ORCPT
+        Fri, 9 Aug 2019 08:00:56 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:37414 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406651AbfHIMA4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 08:00:32 -0400
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x79Bvwqv030603;
-        Fri, 9 Aug 2019 08:00:21 -0400
-Received: from nam01-by2-obe.outbound.protection.outlook.com (mail-by2nam01lp2056.outbound.protection.outlook.com [104.47.34.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2u7xkj6xkk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Fri, 09 Aug 2019 08:00:21 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BaeDsmM7Ckm4uwgvGYLegbHP3OZ1u4XBnxTQhm4Da+Iga7dK43M0W1YXQz3Cfyg2KejiIPxMzKa3sX570+cXx/2/F7hfalOuLFhH5JvLEpWAuJxW0vRmjyxZ7Dv0tr6i6KqzilIOyTaeZLfbwhtVkaLV3b8e168oyoVBpqflEdkTzd0jaeRkimIUWiGlvPnSWSlPsWNSb9eff475i2yq8hgHZVUl8tyI+6qQJMEdNU2WHO6D7Uiov+Ha4Pn3bKK86n0DOFjQ8R9WPlfJTfvtDjxkaN+LbMtGEFrSk7P0+P1gr34n4RMeoM8h4aNVr5sfaZnl3oJ5KXLRAgtpEvWTbw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GxEypGi1XkNv3BqBikFW0Kq/OELFIyKZ14sfixDRWEE=;
- b=KjaiDNCanCsQKgXom0NnAr4mylL6+Up5YOdLG2YiEg5bihy4aMFJp5BtxWpw2vumC2x1ZBLKb+MtSWZRJ34bq+2/wZGeYd5LDgeSjfEE7DuWS7D+gEq+Hh6i7LL1m2NNYY6M2sVmgQvi5nc5l8VpoFH0E4PYL9ZwGzjSzuTCquO4J91baCv9dXx8ZiiFUsQjU2O4RlAZEbB7GM61Ho+zPDTrlkHuHe7h/zXQYW0+kwOBsZ7zm2NITWju2gcHQxIVNe9G67X7TdvX/wwAA0vJhPn0ITli2QLB3HjoutZ2fvuzExmOYmLpdoCPKndOuf3PtonPQLEX57MCRGTyGkvvlw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 137.71.25.55) smtp.rcpttodomain=davemloft.net smtp.mailfrom=analog.com;
- dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GxEypGi1XkNv3BqBikFW0Kq/OELFIyKZ14sfixDRWEE=;
- b=WChoXlbzEwDejoCudd1vltZxvdghNCt/4An04/kEvphdmLG0f+OydaXRs3dRUHvJ2qwN71wmC6i+jQ5lAxyQgvN1dMJvG3weEFHbSGVJONQYt+JfIw7FCMHmnUKaKc08UG52Veh0aiYH3ZSEafjVUjyfRWOQW/0IX9u6NRYZxOQ=
-Received: from CY1PR03CA0003.namprd03.prod.outlook.com (2603:10b6:600::13) by
- BYAPR03MB4821.namprd03.prod.outlook.com (2603:10b6:a03:137::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2157.16; Fri, 9 Aug
- 2019 12:00:19 +0000
-Received: from CY1NAM02FT009.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::203) by CY1PR03CA0003.outlook.office365.com
- (2603:10b6:600::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2157.16 via Frontend
- Transport; Fri, 9 Aug 2019 12:00:19 +0000
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
-Received: from nwd2mta1.analog.com (137.71.25.55) by
- CY1NAM02FT009.mail.protection.outlook.com (10.152.75.12) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2157.15
- via Frontend Transport; Fri, 9 Aug 2019 12:00:18 +0000
-Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
-        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id x79C0FKw004515
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Fri, 9 Aug 2019 05:00:15 -0700
-Received: from NWD2MBX7.ad.analog.com ([fe80::190e:f9c1:9a22:9663]) by
- NWD2HUBCAS7.ad.analog.com ([fe80::595b:ced1:cc03:539d%12]) with mapi id
- 14.03.0415.000; Fri, 9 Aug 2019 08:00:17 -0400
-From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-To:     "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "andrew@lunn.ch" <andrew@lunn.ch>
-CC:     "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>
-Subject: Re: [PATCH v2 02/15] net: phy: adin: hook genphy_read_abilities()
- to get_features
-Thread-Topic: [PATCH v2 02/15] net: phy: adin: hook genphy_read_abilities()
- to get_features
-Thread-Index: AQHVTeUU3XI/oJXhpEankJT584hyQKbxoeKAgABFi4CAARPZgA==
-Date:   Fri, 9 Aug 2019 12:00:17 +0000
-Message-ID: <16511bd0d6421549b2968a9419e971923c0d0146.camel@analog.com>
-References: <20190808123026.17382-1-alexandru.ardelean@analog.com>
-         <20190808123026.17382-3-alexandru.ardelean@analog.com>
-         <20190808152403.GB27917@lunn.ch>
-         <eeda87c9-bdba-8ef7-6043-85a16bd2cfc2@gmail.com>
-In-Reply-To: <eeda87c9-bdba-8ef7-6043-85a16bd2cfc2@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.48.65.113]
-x-adiroutedonprem: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A9DA33D6E6744C46A1BA73A0E11EF19D@analog.com>
-Content-Transfer-Encoding: base64
+        Fri, 9 Aug 2019 08:00:56 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190809120053euoutp02beb6da3af3d4e7101cdb4847dcff8d4b~5P2Y--Bml0504905049euoutp02N
+        for <linux-kernel@vger.kernel.org>; Fri,  9 Aug 2019 12:00:53 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190809120053euoutp02beb6da3af3d4e7101cdb4847dcff8d4b~5P2Y--Bml0504905049euoutp02N
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1565352053;
+        bh=BguYn9oSKX3oR2DpH4Tlz7VIQ63AI8ONmZSbhpncKJI=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=WYTQsRdyIT+gO9Nr03W8QscR0R2RkPppEMiMTXjPhafxswCOVnWqz8Iu6z5wMhN61
+         MnnxDcPBc1pfk2XXBZf55PRcO2YRTFbiIr69aZkgNxje5qs71eeiA1kIGu5bSwhC4G
+         cVQgxoGS7lTQpEvk/6c+jKvI9ERBFVlIesKojy98=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190809120053eucas1p1ad487fb702b2b6e22d921dd835e641c7~5P2YRtewy0290802908eucas1p1u;
+        Fri,  9 Aug 2019 12:00:53 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 79.F8.04309.4706D4D5; Fri,  9
+        Aug 2019 13:00:52 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190809120052eucas1p11b56806662ef4f4efb82a152ad651481~5P2XXg1ZR1930019300eucas1p1d;
+        Fri,  9 Aug 2019 12:00:52 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190809120051eusmtrp11cde85396d93e0614b448be140078949~5P2XJLYYa2105621056eusmtrp1T;
+        Fri,  9 Aug 2019 12:00:51 +0000 (GMT)
+X-AuditID: cbfec7f4-ae1ff700000010d5-33-5d4d607400d0
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 12.E1.04117.3706D4D5; Fri,  9
+        Aug 2019 13:00:51 +0100 (BST)
+Received: from [106.120.50.63] (unknown [106.120.50.63]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190809120051eusmtip2418eca23ed93ef2612ceeda4369560d1~5P2WpxVF-1650316503eusmtip2S;
+        Fri,  9 Aug 2019 12:00:51 +0000 (GMT)
+Subject: Re: [PATCH v3 8/8] ACPI: PM: s2idle: Execute LPS0 _DSM functions
+ with suspended devices
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux ACPI <linux-acpi@vger.kernel.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <1b181f35-29c3-c6ce-6c42-ae55e890579e@samsung.com>
+Date:   Fri, 9 Aug 2019 14:00:50 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(346002)(396003)(39860400002)(376002)(136003)(2980300002)(199004)(189003)(50466002)(70586007)(70206006)(86362001)(102836004)(2906002)(6246003)(305945005)(7636002)(7736002)(478600001)(8676002)(36756003)(53546011)(229853002)(8936002)(246002)(118296001)(106002)(11346002)(2616005)(476003)(486006)(336012)(126002)(436003)(426003)(446003)(14454004)(47776003)(110136005)(6116002)(3846002)(5660300002)(316002)(356004)(54906003)(2501003)(76176011)(7696005)(2486003)(23676004)(4326008)(26005)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR03MB4821;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: c761b1ef-5f1e-4d4f-141e-08d71cc12667
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(4709080)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BYAPR03MB4821;
-X-MS-TrafficTypeDiagnostic: BYAPR03MB4821:
-X-Microsoft-Antispam-PRVS: <BYAPR03MB4821C2099B551AE05DC50405F9D60@BYAPR03MB4821.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 01244308DF
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: N4ki/5syX6sLdoAz5OgmgJ4pNCnuMe2OV2I7gWYvCBQqOxHrcGbhzYK2oG3Naw0M4qKighzISx0dFSs3qJGHaMGiBU001RLWtcmN7Kkee3QS9LRR/vka1y68t951hjDUZQOhWUvELFWWbA+OZZe1BZDEA6zFKGGsQi9upaicKL7HjL8mW/B4qOgA7aYnD5LqxORsKO9bvc04HFNAPfy/ra0PJ58aWMx2L5eaPN6qVhovhX0itdCDUEKY/yih5PjTyynWg0PDUVFjLSVRZ9Iyyzgua5uvRySa1ahLum5Ia+EDvUZ5A2ZNkNWS0h4wk/BpqilUwkX7ociinmjDH15A+SRhhM+xtxsnu39OunyMGa2MZTytUI2LQla4LGYWtwrEd7lSwTb2b6+qSAm3GuZQUEfomKr72fwclOjZbZq74MM=
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Aug 2019 12:00:18.9535
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c761b1ef-5f1e-4d4f-141e-08d71cc12667
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB4821
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-09_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=737 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908090125
+In-Reply-To: <74514118.QN1Ey1fWSL@kreacher>
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrBKsWRmVeSWpSXmKPExsWy7djPc7olCb6xBr3zjSx6m6YzWfzrXsZm
+        sXxfP6PF5V1z2Cw+9x5htGjqbGKzOPwl0eLM6UusFk8e9rE5cHrMauhl85g0cwazx+I9L5k8
+        5p0M9NhytZ3F4/MmuQC2KC6blNSczLLUIn27BK6MXx0L2As+ulS0H5rO1MB4waKLkZNDQsBE
+        YuPqX4xdjFwcQgIrGCU6P55jhXC+MEocvXOJEaRKSOAzo8Ty7aZdjBxgHYu2+kHULGeU6H7Z
+        wg7hvGWU+Dn9JitIg7BAkkTv3L/sILaIQJjE7eVvmUGKmAX2MUncvLCIGSTBJmAo0fW2iw3E
+        5hWwk/jTc4oFxGYRUJH4vu80WI2oQIzEzjc9zBA1ghInZz4Bq+EU0Jb4v/Mz2DJmAXmJ5q2z
+        mSFscYlbT+YzgSyTEDjGLnHhwXpmiEddJA6s+QVlC0u8Or6FHcKWkTg9uYcFoqGZUeLhubXs
+        EE4Po8TlphmMEFXWEoePX2QFBQCzgKbE+l36EGFHiX2XNzJCwoVP4sZbQYgj+CQmbZvODBHm
+        lehoE4KoVpOYdXwd3NqDFy4xT2BUmoXktVlI3pmF5J1ZCHsXMLKsYhRPLS3OTU8tNspLLdcr
+        TswtLs1L10vOz93ECExPp/8d/7KDcdefpEOMAhyMSjy8DYo+sUKsiWXFlbmHGCU4mJVEeK9w
+        +MYK8aYkVlalFuXHF5XmpBYfYpTmYFES561meBAtJJCeWJKanZpakFoEk2Xi4JRqYNQ+um3+
+        Bv16t7obtVFFvh8e79nPun/TVWc9pn9/5I80qcoc5fuyQHJO9zTDeZ/eMNidX6UX3iK30jn/
+        +/SdbQ/2FEmt1VD+cYNdTe2g3DLzVPmJd+/qy1T6zRP5+FNYOfHda78NN0O1pY8VXdKsYGae
+        /PLi+4t1v854L7jgN/dHcMnWoq18fH5KLMUZiYZazEXFiQAYqaSjSwMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrJIsWRmVeSWpSXmKPExsVy+t/xe7rFCb6xBm92G1n0Nk1nsvjXvYzN
+        Yvm+fkaLy7vmsFl87j3CaNHU2cRmcfhLosWZ05dYLZ487GNz4PSY1dDL5jFp5gxmj8V7XjJ5
+        zDsZ6LHlajuLx+dNcgFsUXo2RfmlJakKGfnFJbZK0YYWRnqGlhZ6RiaWeobG5rFWRqZK+nY2
+        Kak5mWWpRfp2CXoZvzoWsBd8dKloPzSdqYHxgkUXIweHhICJxKKtfl2MXBxCAksZJU4272bq
+        YuQEistInJzWwAphC0v8udbFBmILCbxmlPiyzA3EFhZIkjj9rY0dxBYRCJPoXPiHEWQQs8AB
+        JonNl5YzQTR4SOze8AasiE3AUKLrLcQgXgE7iT89p1hAbBYBFYnv+04zg9iiAjES+85sZ4eo
+        EZQ4OfMJWA2ngLbE/52fwQ5iFjCTmLf5ITOELS/RvHU2lC0ucevJfKYJjEKzkLTPQtIyC0nL
+        LCQtCxhZVjGKpJYW56bnFhvpFSfmFpfmpesl5+duYgRG47ZjP7fsYOx6F3yIUYCDUYmHV0Pe
+        J1aINbGsuDL3EKMEB7OSCO8VDt9YId6UxMqq1KL8+KLSnNTiQ4ymQM9NZJYSTc4HJoq8knhD
+        U0NzC0tDc2NzYzMLJXHeDoGDMUIC6YklqdmpqQWpRTB9TBycUg2MM1foa3j3fZN74MXW4sKW
+        dMu/VPLnsx0zdSoPfdmn55t0UjlLm3e/rP/ziYtz+ascglVifda9iI9LOhli9SdmRk+iSMiK
+        Hd9MJAp0dRiiFY4eVzt+xuFBurt5h/y0aYeKtq1eMHEK74Qin9VJJVP2JTukxP5cdp3hMZfA
+        gofnhB/xpcSJHFdUYinOSDTUYi4qTgQAIypdV9wCAAA=
+X-CMS-MailID: 20190809120052eucas1p11b56806662ef4f4efb82a152ad651481
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190809120052eucas1p11b56806662ef4f4efb82a152ad651481
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190809120052eucas1p11b56806662ef4f4efb82a152ad651481
+References: <5997740.FPbUVk04hV@kreacher> <74514118.QN1Ey1fWSL@kreacher>
+        <CGME20190809120052eucas1p11b56806662ef4f4efb82a152ad651481@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDE5LTA4LTA4IGF0IDIxOjMyICswMjAwLCBIZWluZXIgS2FsbHdlaXQgd3JvdGU6
-DQo+IFtFeHRlcm5hbF0NCj4gDQo+IE9uIDA4LjA4LjIwMTkgMTc6MjQsIEFuZHJldyBMdW5uIHdy
-b3RlOg0KPiA+IE9uIFRodSwgQXVnIDA4LCAyMDE5IGF0IDAzOjMwOjEzUE0gKzAzMDAsIEFsZXhh
-bmRydSBBcmRlbGVhbiB3cm90ZToNCj4gPiA+IFRoZSBBRElOIFBIWXMgY2FuIG9wZXJhdGUgd2l0
-aCBDbGF1c2UgNDUsIGhvd2V2ZXIgdGhleSBhcmUgbm90IHR5cGljYWwgZm9yDQo+ID4gPiBob3cg
-cGh5bGliIGNvbnNpZGVycyBDbGF1c2UgNDUgUEhZcy4NCj4gPiA+IA0KPiA+ID4gSWYgdGhlIGBm
-ZWF0dXJlc2AgZmllbGQgJiB0aGUgYGdldF9mZWF0dXJlc2AgaG9vayBhcmUgdW5zcGVjaWZpZWQs
-IGFuZCB0aGUNCj4gPiA+IGRldmljZSB3YW50cyB0byBvcGVyYXRlIHZpYSBDbGF1c2UgNDUsIGl0
-IHdvdWxkIGFsc28gdHJ5IHRvIHJlYWQgZmVhdHVyZXMNCj4gPiA+IHZpYSB0aGUgYGdlbnBoeV9j
-NDVfcG1hX3JlYWRfYWJpbGl0aWVzKClgLCB3aGljaCB3aWxsIHRyeSB0byByZWFkIFBNQSByZWdz
-DQo+ID4gPiB0aGF0IGFyZSB1bnN1cHBvcnRlZC4NCj4gPiA+IA0KPiA+ID4gSG9va2luZyB0aGUg
-YGdlbnBoeV9yZWFkX2FiaWxpdGllcygpYCBmdW5jdGlvbiB0byB0aGUgYGdldF9mZWF0dXJlc2Ag
-aG9vaw0KPiA+ID4gd2lsbCBlbnN1cmUgdGhhdCB0aGlzIGRvZXMgbm90IGhhcHBlbiBhbmQgdGhl
-IFBIWSBmZWF0dXJlcyBhcmUgcmVhZA0KPiA+ID4gY29ycmVjdGx5IHJlZ2FyZGxlc3Mgb2YgQ2xh
-dXNlIDIyIG9yIENsYXVzZSA0NSBvcGVyYXRpb24uDQo+ID4gDQo+ID4gSSB0aGluayB3ZSBuZWVk
-IHRvIHN0b3AgYW5kIHRoaW5rIGFib3V0IGEgUEhZIHdoaWNoIHN1cHBvcnRzIGJvdGggQzIyDQo+
-ID4gYW5kIEM0NS4NCj4gPiANCj4gPiBIb3cgZG9lcyBidXMgZW51bWVyYXRpb24gd29yaz8gSXMg
-aXQgZGlzY292ZXJlZCB0d2ljZT8gIEkndmUgYWx3YXlzDQo+ID4gY29uc2lkZXJlZCBwaHlkZXYt
-PmlzX2M0NSBtZWFucyBldmVyeXRoaW5nIGlzIGM0NSwgbm90IHRoYXQgc29tZQ0KPiA+IHJlZ2lz
-dGVycyBjYW4gYmUgYWNjZXNzZWQgdmlhIGM0NS4gQnV0IHRoZSBkcml2ZXIgaXMgbWl4aW5nIGMy
-MiBhbmQNCj4gPiBjNDUuIERvZXMgdGhlIGRyaXZlciBhY3R1YWxseSByZXF1aXJlIGM0NT8gQXJl
-IHNvbWUgZmVhdHVyZXMgd2hpY2ggYXJlDQo+ID4gb25seSBhY2Nlc3NpYmx5IHZpYSBDNDU/IFdo
-YXQgZG9lcyBDNDUgYWN0dWFsbHkgYnJpbmcgdXMgZm9yIHRoaXMNCj4gPiBkZXZpY2U/DQo+ID4g
-DQoNCkhtbSwgSSBjYW4ndCBhbnN3ZXIgW2FsbF0gdGhlc2UgcXVlc3Rpb25zLg0KDQpUaGVzZSBQ
-SFlzIHNlZW0gdG8gYmUgYSBiaXQgZGlmZmVyZW50IGZyb20gdGhlIHJlc3QgdGhhdCBJIGxvb2tl
-ZCBhdCBpbiBkcml2ZXJzL25ldC9waHkgd2l0aCByZWdhcmQgdG8gQzQ1ICYgQzIyLg0KQW5kIEM0
-NSBzZWVtcyB0byBiZSBtb3JlL2Nsb3NlciByZWxhdGVkIHRvIDEwRyBQSFlzIFtmcm9tIHdoYXQg
-SSBjYW4gdGVsbF0uDQoNClRoZSBBRElOIFBIWXMgY2FuIG9wZXJhdGUgb25seSBpbiBDMjIuDQpU
-aGUgb25seSB0aGluZyB0aGF0IGlzIG5lZWRlZCBbYW5kIGEgYml0IHNwZWNpYWxdIGlzIEVFRSwg
-d2hpY2ggW2ZvciBDMjJdIHJlcXVpcmVzIHRoZSB0cmFuc2xhdGlvbiBsYXllciB0byBjb252ZXJ0
-IEM0NQ0KcmVnIGFkZHJlc3NlcyB0byBpbnRlcm5hbCBDMjIgZXF1aXZhbGVudC4NCg0KPiBnZW5w
-aHlfYzQ1X3BtYV9yZWFkX2FiaWxpdGllcygpIGlzIG9ubHkgY2FsbGVkIGlmIHBoeWRldi0+aXNf
-YzQ1IGlzIHNldC4NCj4gQW5kIHRoaXMgZmxhZyBtZWFucyB0aGF0IHRoZSBQSFkgY29tcGxpZXMg
-d2l0aCBDbGF1c2UgNDUgaW5jbC4gYWxsIHRoZQ0KPiBzdGFuZGFyZCBkZXZpY2VzIGxpa2UgUE1B
-LiBJbiB0aGUgY2FzZSBoZXJlIG9ubHkgc29tZSB2ZW5kb3Itc3BlY2lmaWMNCj4gcmVnaXN0ZXJz
-IGNhbiBiZSBhY2Nlc3NlZCB2aWEgQ2xhdXNlIDQ1IGFuZCB0aGVyZWZvcmUgaXNfYzQ1IHNob3Vs
-ZG4ndA0KPiBiZXQgc2V0LiBBcyBhIGNvbnNlcXVlbmNlIHRoaXMgcGF0Y2ggaXNuJ3QgbmVlZGVk
-Lg0KDQphY2ssIHdpbGwgZHJvcCBwYXRjaA0KDQo+IA0KPiA+ICAgICAgQW5kcmV3DQo+ID4gDQo+
-IEhlaW5lcg0KPiANCg==
+Hi Rafael,
+
+On 2019-08-02 12:45, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>
+> According to Section 3.5 of the "Intel Low Power S0 Idle" document [1],
+> Function 5 of the LPS0 _DSM is expected to be invoked when the system
+> configuration matches the criteria for entering the target low-power
+> state of the platform.  In particular, this means that all devices
+> should be suspended and in low-power states already when that function
+> is invoked.
+>
+> This is not the case currently, however, because Function 5 of the
+> LPS0 _DSM is invoked by it before the "noirq" phase of device suspend,
+> which means that some devices may not have been put into low-power
+> states yet at that point.  That is a consequence of the previous
+> design of the suspend-to-idle flow that allowed the "noirq" phase of
+> device suspend and the "noirq" phase of device resume to be carried
+> out for multiple times while "suspended" (if any spurious wakeup
+> events were detected) and the point of the LPS0 _DSM Function 5
+> invocation was chosen so as to call it (and LPS0 _DSM Function 6
+> analogously) once per suspend-resume cycle (regardless of how many
+> times the "noirq" phases of device suspend and resume were carried
+> out while "suspended").
+>
+> Now that the suspend-to-idle flow has been redesigned to carry out
+> the "noirq" phases of device suspend and resume once in each cycle,
+> the code can be reordered to follow the specification that it is
+> based on more closely.
+>
+> For this purpose, add ->prepare_late and ->restore_early platform
+> callbacks for suspend-to-idle, to be executed, respectively, after
+> the "noirq" phase of suspending devices and before the "noirq"
+> phase of resuming them and make ACPI use them for the invocation
+> of LPS0 _DSM functions as appropriate.
+>
+> While at it, move the LPS0 entry requirements check to be made
+> before invoking Functions 3 and 5 of the LPS0 _DSM (also once
+> per cycle) as follows from the specification [1].
+>
+> Link: https://uefi.org/sites/default/files/resources/Intel_ACPI_Low_Power_S0_Idle.pdf # [1]
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>
+> In v2 this was patch 2.
+>
+> ---
+>   drivers/acpi/sleep.c    |   36 ++++++++++++++++++++++++------------
+>   include/linux/suspend.h |    2 ++
+>   kernel/power/suspend.c  |   12 +++++++++---
+>   3 files changed, 35 insertions(+), 15 deletions(-)
+>
+> Index: linux-pm/drivers/acpi/sleep.c
+> ===================================================================
+> --- linux-pm.orig/drivers/acpi/sleep.c
+> +++ linux-pm/drivers/acpi/sleep.c
+> @@ -954,11 +954,6 @@ static int acpi_s2idle_begin(void)
+>   
+>   static int acpi_s2idle_prepare(void)
+>   {
+> -	if (lps0_device_handle && !sleep_no_lps0) {
+> -		acpi_sleep_run_lps0_dsm(ACPI_LPS0_SCREEN_OFF);
+> -		acpi_sleep_run_lps0_dsm(ACPI_LPS0_ENTRY);
+> -	}
+> -
+>   	if (acpi_sci_irq_valid())
+>   		enable_irq_wake(acpi_sci_irq);
+>   
+> @@ -972,11 +967,22 @@ static int acpi_s2idle_prepare(void)
+>   	return 0;
+>   }
+>   
+> -static void acpi_s2idle_wake(void)
+> +static int acpi_s2idle_prepare_late(void)
+>   {
+> -	if (lps0_device_handle && !sleep_no_lps0 && pm_debug_messages_on)
+> +	if (!lps0_device_handle || sleep_no_lps0)
+> +		return 0;
+> +
+> +	if (pm_debug_messages_on)
+>   		lpi_check_constraints();
+>   
+> +	acpi_sleep_run_lps0_dsm(ACPI_LPS0_SCREEN_OFF);
+> +	acpi_sleep_run_lps0_dsm(ACPI_LPS0_ENTRY);
+> +
+> +	return 0;
+> +}
+> +
+> +static void acpi_s2idle_wake(void)
+> +{
+>   	/*
+>   	 * If IRQD_WAKEUP_ARMED is set for the SCI at this point, the SCI has
+>   	 * not triggered while suspended, so bail out.
+> @@ -1011,6 +1017,15 @@ static void acpi_s2idle_wake(void)
+>   	rearm_wake_irq(acpi_sci_irq);
+>   }
+>   
+> +static void acpi_s2idle_restore_early(void)
+> +{
+> +	if (!lps0_device_handle || sleep_no_lps0)
+> +		return;
+> +
+> +	acpi_sleep_run_lps0_dsm(ACPI_LPS0_EXIT);
+> +	acpi_sleep_run_lps0_dsm(ACPI_LPS0_SCREEN_ON);
+> +}
+> +
+>   static void acpi_s2idle_restore(void)
+>   {
+>   	s2idle_wakeup = false;
+> @@ -1021,11 +1036,6 @@ static void acpi_s2idle_restore(void)
+>   
+>   	if (acpi_sci_irq_valid())
+>   		disable_irq_wake(acpi_sci_irq);
+> -
+> -	if (lps0_device_handle && !sleep_no_lps0) {
+> -		acpi_sleep_run_lps0_dsm(ACPI_LPS0_EXIT);
+> -		acpi_sleep_run_lps0_dsm(ACPI_LPS0_SCREEN_ON);
+> -	}
+>   }
+>   
+>   static void acpi_s2idle_end(void)
+> @@ -1036,7 +1046,9 @@ static void acpi_s2idle_end(void)
+>   static const struct platform_s2idle_ops acpi_s2idle_ops = {
+>   	.begin = acpi_s2idle_begin,
+>   	.prepare = acpi_s2idle_prepare,
+> +	.prepare_late = acpi_s2idle_prepare_late,
+>   	.wake = acpi_s2idle_wake,
+> +	.restore_early = acpi_s2idle_restore_early,
+>   	.restore = acpi_s2idle_restore,
+>   	.end = acpi_s2idle_end,
+>   };
+> Index: linux-pm/kernel/power/suspend.c
+> ===================================================================
+> --- linux-pm.orig/kernel/power/suspend.c
+> +++ linux-pm/kernel/power/suspend.c
+> @@ -253,13 +253,19 @@ static int platform_suspend_prepare_late
+>   
+>   static int platform_suspend_prepare_noirq(suspend_state_t state)
+>   {
+> -	return state != PM_SUSPEND_TO_IDLE && suspend_ops->prepare_late ?
+> -		suspend_ops->prepare_late() : 0;
+> +	if (state == PM_SUSPEND_TO_IDLE) {
+> +		if (s2idle_ops && s2idle_ops->prepare_late)
+> +			return s2idle_ops->prepare_late();
+> +	}
+> +	return suspend_ops->prepare_late ? suspend_ops->prepare_late() : 0;
+
+This unconditionally references suspend_ops here, what wasn't done 
+earlier. On one of my test boards (OdroidXU) it causes following NULL 
+pointer dereference since Linux next-20190809 (the first -next, which 
+contains this patch):
+
+root@target:~# time rtcwake -s10 -mmem
+rtcwake: wakeup from "mem" using /dev/rtc0 at Fri Aug  9 12:21:43 2019
+PM: suspend entry (s2idle)
+Filesystems sync: 0.001 seconds
+Freezing user space processes ... (elapsed 0.002 seconds) done.
+OOM killer disabled.
+Freezing remaining freezable tasks ... (elapsed 0.001 seconds) done.
+smsc95xx 1-2:1.0 eth0: entering SUSPEND2 mode
+wake enabled for irq 111
+usb3503 4-0008: switched to STANDBY mode
+samsung-pinctrl 13400000.pinctrl: No retention data configured bank with 
+external wakeup interrupt. Wake-up mask will not be set.
+8<--- cut here ---
+Unable to handle kernel NULL pointer dereference at virtual address 0000000c
+pgd = ac9cf656
+[0000000c] *pgd=00000000
+Internal error: Oops: 5 [#1] PREEMPT SMP ARM
+Modules linked in:
+CPU: 1 PID: 2027 Comm: rtcwake Not tainted 5.3.0-rc3-next-20190809 #6373
+Hardware name: SAMSUNG EXYNOS (Flattened Device Tree)
+PC is at suspend_devices_and_enter+0x330/0xf2c
+LR is at lock_is_held_type+0x80/0x108
+pc : [<c0195b78>]    lr : [<c01883dc>]    psr: 60000013
+sp : e73dfe20  ip : 00000001  fp : 00000001
+r10: c10b9394  r9 : c10ce36c  r8 : c1007648
+r7 : c16d26c8  r6 : 00000001  r5 : 00000000  r4 : c16d26dc
+r3 : 00000000  r2 : 00000000  r1 : c1014220  r0 : 00000000
+Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
+Control: 10c5387d  Table: 671ac06a  DAC: 00000051
+Process rtcwake (pid: 2027, stack limit = 0x59af371a)
+Stack: (0xe73dfe20 to 0xe73e0000)
+...
+[<c0195b78>] (suspend_devices_and_enter) from [<c0196d0c>] 
+(pm_suspend+0x598/0xcb8)
+[<c0196d0c>] (pm_suspend) from [<c0194848>] (state_store+0x6c/0xc8)
+[<c0194848>] (state_store) from [<c0330100>] (kernfs_fop_write+0x100/0x1e0)
+[<c0330100>] (kernfs_fop_write) from [<c02a1594>] (__vfs_write+0x30/0x1d0)
+[<c02a1594>] (__vfs_write) from [<c02a4090>] (vfs_write+0xa4/0x180)
+[<c02a4090>] (vfs_write) from [<c02a42f0>] (ksys_write+0x60/0xdc)
+[<c02a42f0>] (ksys_write) from [<c0101000>] (ret_fast_syscall+0x0/0x28)
+Exception stack(0xe73dffa8 to 0xe73dfff0)
+...
+---[ end trace 627069b7dfd482c9 ]---
+
+>   }
+>   
+>   static void platform_resume_noirq(suspend_state_t state)
+>   {
+> -	if (state != PM_SUSPEND_TO_IDLE && suspend_ops->wake)
+> +	if (state == PM_SUSPEND_TO_IDLE) {
+> +		if (s2idle_ops && s2idle_ops->restore_early)
+> +			s2idle_ops->restore_early();
+> +	} else if (suspend_ops->wake)
+>   		suspend_ops->wake();
+>   }
+>   
+> Index: linux-pm/include/linux/suspend.h
+> ===================================================================
+> --- linux-pm.orig/include/linux/suspend.h
+> +++ linux-pm/include/linux/suspend.h
+> @@ -190,7 +190,9 @@ struct platform_suspend_ops {
+>   struct platform_s2idle_ops {
+>   	int (*begin)(void);
+>   	int (*prepare)(void);
+> +	int (*prepare_late)(void);
+>   	void (*wake)(void);
+> +	void (*restore_early)(void);
+>   	void (*restore)(void);
+>   	void (*end)(void);
+>   };
+
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
+
