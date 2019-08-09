@@ -2,134 +2,167 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39DD1C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0706C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:21:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1010320C01
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:21:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 709B72171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:21:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p1bth4T+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W0gleuCJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407262AbfHISVU (ORCPT
+        id S2407396AbfHISVh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 14:21:20 -0400
-Received: from mail-qt1-f202.google.com ([209.85.160.202]:39690 "EHLO
-        mail-qt1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726358AbfHISVU (ORCPT
+        Fri, 9 Aug 2019 14:21:37 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:53854 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726358AbfHISVh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 14:21:20 -0400
-Received: by mail-qt1-f202.google.com with SMTP id r15so11027777qtt.6
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 11:21:19 -0700 (PDT)
+        Fri, 9 Aug 2019 14:21:37 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 10so6586959wmp.3;
+        Fri, 09 Aug 2019 11:21:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=AfTcG56zmwo+ldOTopXdEviJ01wH7yWHp2h8SCNYIzM=;
-        b=p1bth4T+dnzyYMSmrcDJ0MtjQJnVJKlJ2xP5NDQSsWQau0y+cTyPAyWzulS3Wj5vip
-         91pLNuH856Ct4xX1mCbGtqpxzf6vHz7rW8/+QRrC3Qb1JQs3HNHeRtEF7yskfTTq3NBS
-         g/OQ7VcDRzteoALGdT/qUd8Cg/pWZrqzHkKhPIAnfP4S/BEbpPFC3xUD+0c0CFJkCu67
-         a/kiYjVRt56URANpDGuxohhdQvHYM2TRM29JWOz6T1iO8j9GvAl+BdH+3dcGL/HfQtuz
-         qodCmqtq0wWoI4LlconGshbfCPaw3D6uwxuhWJw3bsBE8Ae3qDSzT4wau477IBIbG/Lf
-         C1Jw==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=KS+6+3TpDsN/cMREG4Zh8J1SqTdnJsjbnKgo2hSxdoU=;
+        b=W0gleuCJ5t5oo8pfcK9STTX3EWn/Qh/9+krSDhjhTcWPj70UiBMbwFiESJtJJaVWoE
+         f/3vLJrtxiWyOqzz4xa7w5iodRf+gbzsvROOEOw6OY0mrvj58pdz8ubf6SxToqp6qchK
+         YcRlX7xMlnGULyDGr64Pz1sbwNi/G10U5fM6mhxdYlat1ejPQ0YhVT3QusnQSiy9ct93
+         sFl/cIqvMZVw8WM3mz/l+O/Kl7+Mv6r6Op/gV6D8cRkDCvYPEshNbeqpCw0isrK9+a1l
+         PIVJdHDdCTz3NSM8ABTc6B+nnS/Kn/JBvSCumgMMDHjO+KGLdJmLNRA7+Ulx9c/aK3h4
+         tAcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=AfTcG56zmwo+ldOTopXdEviJ01wH7yWHp2h8SCNYIzM=;
-        b=bFXj6ctZTQLu1V2Do2vFAqXeOMu8vhZsB74V3raNzQE1H5IenJoUGjhNL6X6YfU6hO
-         2LmaFpbgAsC+RncWLYDWru8SNj266RBf1rZ1thO+9Rw8UultUNSVNp9bBAyH+0TqnoDm
-         hTwyOQMt5UygVwsUtYn8IFDE6JP2esjEilQxD4tGMpgxFG4iDmu73xvwQSVd3Q3X3yNY
-         UDPEADuikCEsz9/QfXOBe2qNMOuadiScOJQR3jY+CGYBujiFDB/YB8sjzDsg4f7XVVsk
-         MJ1DMEwAq+SmzNS4gthaKOkGFfJnPxnpt6o+MvOY2js53UdC62ZZHoyg3an4nb7wLrb1
-         FXyA==
-X-Gm-Message-State: APjAAAVIAQh3ZfbjOFtLQ5J5uKnWp0ElQbBZCXixMSkQiDL+zWV9uMBA
-        3tajiq3IqZ76vASU1eNG/htWpcmKytbxyRSvq/o=
-X-Google-Smtp-Source: APXvYqyBr9e8t8qXW2aILi8aFM5Vs+bZlZEMDvFRIEl4oiFC36YtYLyM576WormxdGC+xze9sVJ/oZmBIENQpBI3fzQ=
-X-Received: by 2002:a05:620a:685:: with SMTP id f5mr19419821qkh.238.1565374879207;
- Fri, 09 Aug 2019 11:21:19 -0700 (PDT)
-Date:   Fri,  9 Aug 2019 11:21:05 -0700
-In-Reply-To: <87h873zs88.fsf@concordia.ellerman.id.au>
-Message-Id: <20190809182106.62130-1-ndesaulniers@google.com>
-Mime-Version: 1.0
-References: <87h873zs88.fsf@concordia.ellerman.id.au>
-X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
-Subject: [PATCH] powerpc: fix inline asm constraints for dcbz
-From:   Nick Desaulniers <ndesaulniers@google.com>
-To:     mpe@ellerman.id.au
-Cc:     christophe.leroy@c-s.fr, segher@kernel.crashing.org, arnd@arndb.de,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        kbuild test robot <lkp@intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=KS+6+3TpDsN/cMREG4Zh8J1SqTdnJsjbnKgo2hSxdoU=;
+        b=kR+S6q0MGXgL3DkgHxoICmYS4RnsWU2g/4O86D+Si+DcYMzU/YR+L7U9y8YBLLmuOh
+         d9gCzgSx4xnpxCN92rEzptlhLAFNnn8u6lqofYh+IvBkYQxIUXkpxvZNIfUjU2aXfqkk
+         eM/+PupbELaiOChzYYgZcF4tihXNmQqg5R0Esm+zpjKNGqKQAAZHb11O3AltBGtz11wS
+         ztaet2LHIRUpSrQKZ2Glc1wOYYb7IXZ//7e2jgJkO0aPmgYOfaY/6luhhoB6SN1f8S3+
+         XAg4i26Cns9oIzHdaTWjVlGpWyq3HQG9lIbLDtiR3QjEtiJvo9O6Cgut/7Zcn5YS4fGt
+         MjLQ==
+X-Gm-Message-State: APjAAAU+12HI4idyW2u015QAsOycLc6OHDkVW8XIF8ZZ94uHfIvaiPaZ
+        lgNeN3RfkE7soGc+HRqZ1Y8=
+X-Google-Smtp-Source: APXvYqxALuzfwghxeWWaugrAJ1zyJR5eJHZlLgeYwHuNE5R5Hu8qBZKiJRWWfbqoeVIRn39/1NkE7w==
+X-Received: by 2002:a1c:9a46:: with SMTP id c67mr12060038wme.11.1565374894612;
+        Fri, 09 Aug 2019 11:21:34 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f2f:3200:2994:d24a:66a1:e0e5? (p200300EA8F2F32002994D24A66A1E0E5.dip0.t-ipconnect.de. [2003:ea:8f2f:3200:2994:d24a:66a1:e0e5])
+        by smtp.googlemail.com with ESMTPSA id m23sm3346214wml.41.2019.08.09.11.21.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 09 Aug 2019 11:21:34 -0700 (PDT)
+Subject: Re: [PATCH v3 03/14] net: phy: adin: add support for interrupts
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com,
+        f.fainelli@gmail.com, andrew@lunn.ch
+References: <20190809133552.21597-1-alexandru.ardelean@analog.com>
+ <20190809133552.21597-4-alexandru.ardelean@analog.com>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <a8a52659-b905-3796-e0ae-86d3af44dca3@gmail.com>
+Date:   Fri, 9 Aug 2019 20:19:39 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190809133552.21597-4-alexandru.ardelean@analog.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The input parameter is modified, so it should be an output parameter
-with "=" to make it so that a copy of the input is not made by Clang.
+On 09.08.2019 15:35, Alexandru Ardelean wrote:
+> This change adds support for enabling PHY interrupts that can be used by
+> the PHY framework to get signal for link/speed/auto-negotiation changes.
+> 
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> ---
+>  drivers/net/phy/adin.c | 38 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+> 
+> diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
+> index fc0148ba4b94..91ff26d08fd5 100644
+> --- a/drivers/net/phy/adin.c
+> +++ b/drivers/net/phy/adin.c
+> @@ -14,11 +14,45 @@
+>  #define PHY_ID_ADIN1200				0x0283bc20
+>  #define PHY_ID_ADIN1300				0x0283bc30
+>  
+> +#define ADIN1300_INT_MASK_REG			0x0018
+> +#define   ADIN1300_INT_MDIO_SYNC_EN		BIT(9)
+> +#define   ADIN1300_INT_ANEG_STAT_CHNG_EN	BIT(8)
+> +#define   ADIN1300_INT_ANEG_PAGE_RX_EN		BIT(6)
+> +#define   ADIN1300_INT_IDLE_ERR_CNT_EN		BIT(5)
+> +#define   ADIN1300_INT_MAC_FIFO_OU_EN		BIT(4)
+> +#define   ADIN1300_INT_RX_STAT_CHNG_EN		BIT(3)
+> +#define   ADIN1300_INT_LINK_STAT_CHNG_EN	BIT(2)
+> +#define   ADIN1300_INT_SPEED_CHNG_EN		BIT(1)
+> +#define   ADIN1300_INT_HW_IRQ_EN		BIT(0)
+> +#define ADIN1300_INT_MASK_EN	\
+> +	(ADIN1300_INT_ANEG_STAT_CHNG_EN | ADIN1300_INT_ANEG_PAGE_RX_EN | \
+> +	 ADIN1300_INT_LINK_STAT_CHNG_EN | ADIN1300_INT_SPEED_CHNG_EN | \
+> +	 ADIN1300_INT_HW_IRQ_EN)
 
-Link: https://bugs.llvm.org/show_bug.cgi?id=42762
-Link: https://gcc.gnu.org/onlinedocs/gcc/Modifiers.html#Modifiers
-Link: https://github.com/ClangBuiltLinux/linux/issues/593
-Link: https://godbolt.org/z/QwhZXi
-Link: https://lore.kernel.org/lkml/20190721075846.GA97701@archlinux-threadripper/
-Fixes: 6c5875843b87 ("powerpc: slightly improve cache helpers")
-Debugged-by: Nathan Chancellor <natechancellor@gmail.com>
-Reported-by: Nathan Chancellor <natechancellor@gmail.com>
-Reported-by: kbuild test robot <lkp@intel.com>
-Suggested-by: Arnd Bergmann <arnd@arndb.de>
-Suggested-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
----
-Green CI run:
-https://travis-ci.com/ClangBuiltLinux/continuous-integration/builds/122521976
-https://github.com/ClangBuiltLinux/continuous-integration/pull/197/files#diff-40bd16e3188587e4d648c30e0c2d6d37
+phylib only needs the link status change interrupt. It shouldn't hurt
+if enable more interrupt sources, but it's not needed.
 
- arch/powerpc/include/asm/cache.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/cache.h b/arch/powerpc/include/asm/cache.h
-index b3388d95f451..5a0df6a1b9dc 100644
---- a/arch/powerpc/include/asm/cache.h
-+++ b/arch/powerpc/include/asm/cache.h
-@@ -107,22 +107,22 @@ extern void _set_L3CR(unsigned long);
- 
- static inline void dcbz(void *addr)
- {
--	__asm__ __volatile__ ("dcbz %y0" : : "Z"(*(u8 *)addr) : "memory");
-+	__asm__ __volatile__ ("dcbz %y0" : "=Z"(*(u8 *)addr) :: "memory");
- }
- 
- static inline void dcbi(void *addr)
- {
--	__asm__ __volatile__ ("dcbi %y0" : : "Z"(*(u8 *)addr) : "memory");
-+	__asm__ __volatile__ ("dcbi %y0" : "=Z"(*(u8 *)addr) :: "memory");
- }
- 
- static inline void dcbf(void *addr)
- {
--	__asm__ __volatile__ ("dcbf %y0" : : "Z"(*(u8 *)addr) : "memory");
-+	__asm__ __volatile__ ("dcbf %y0" : "=Z"(*(u8 *)addr) :: "memory");
- }
- 
- static inline void dcbst(void *addr)
- {
--	__asm__ __volatile__ ("dcbst %y0" : : "Z"(*(u8 *)addr) : "memory");
-+	__asm__ __volatile__ ("dcbst %y0" : "=Z"(*(u8 *)addr) :: "memory");
- }
- #endif /* !__ASSEMBLY__ */
- #endif /* __KERNEL__ */
--- 
-2.23.0.rc1.153.gdeed80330f-goog
+> +#define ADIN1300_INT_STATUS_REG			0x0019
+> +
+>  static int adin_config_init(struct phy_device *phydev)
+>  {
+>  	return genphy_config_init(phydev);
+>  }
+>  
+> +static int adin_phy_ack_intr(struct phy_device *phydev)
+> +{
+> +	/* Clear pending interrupts */
+> +	int rc = phy_read(phydev, ADIN1300_INT_STATUS_REG);
+> +
+> +	return rc < 0 ? rc : 0;
+> +}
+> +
+> +static int adin_phy_config_intr(struct phy_device *phydev)
+> +{
+> +	if (phydev->interrupts == PHY_INTERRUPT_ENABLED)
+> +		return phy_set_bits(phydev, ADIN1300_INT_MASK_REG,
+> +				    ADIN1300_INT_MASK_EN);
+> +
+> +	return phy_clear_bits(phydev, ADIN1300_INT_MASK_REG,
+> +			      ADIN1300_INT_MASK_EN);
+> +}
+> +
+>  static struct phy_driver adin_driver[] = {
+>  	{
+>  		PHY_ID_MATCH_MODEL(PHY_ID_ADIN1200),
+> @@ -26,6 +60,8 @@ static struct phy_driver adin_driver[] = {
+>  		.config_init	= adin_config_init,
+>  		.config_aneg	= genphy_config_aneg,
+>  		.read_status	= genphy_read_status,
+> +		.ack_interrupt	= adin_phy_ack_intr,
+> +		.config_intr	= adin_phy_config_intr,
+>  		.resume		= genphy_resume,
+>  		.suspend	= genphy_suspend,
+>  	},
+> @@ -35,6 +71,8 @@ static struct phy_driver adin_driver[] = {
+>  		.config_init	= adin_config_init,
+>  		.config_aneg	= genphy_config_aneg,
+>  		.read_status	= genphy_read_status,
+> +		.ack_interrupt	= adin_phy_ack_intr,
+> +		.config_intr	= adin_phy_config_intr,
+>  		.resume		= genphy_resume,
+>  		.suspend	= genphy_suspend,
+>  	},
+> 
 
