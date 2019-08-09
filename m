@@ -2,112 +2,110 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D555AC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 04:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 639F3C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 04:57:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A838221743
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 04:57:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565326671;
-	bh=c2r9FC9z+EDj4pfOEGxUvJFcx8xbR4EhmThEzzCOMRc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qTYIdsR8JwMjkyMvelwxqXIi/ZXRyBYyrWNip+URZ+8FM/9VTrbXB5MffNWeAqY/p
-	 hcyKx6Ev3FHASK+ueoXvlAIil6cCm2oEsV+bZc/ga91uV6G6qtYDZE9Hu/aWax1i+1
-	 NosEVm1w0xndznkGikdcS29gIERnmV0DQvisfzN0=
+	by mail.kernel.org (Postfix) with ESMTP id 4227D2173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 04:57:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730423AbfHIE5u (ORCPT
+        id S2405296AbfHIE5y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 00:57:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33802 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725811AbfHIE5u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 00:57:50 -0400
-Received: from localhost (unknown [122.167.65.92])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD7C22173E;
-        Fri,  9 Aug 2019 04:57:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565326669;
-        bh=c2r9FC9z+EDj4pfOEGxUvJFcx8xbR4EhmThEzzCOMRc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rEQXtV1oQBgjC9+EI0rtsFoOwtAFPNHyZWBA4tRxjGk3V3wHBC8NrVusknkHTFVPJ
-         nDnn9FDpvWmdLV+QH266JQjeEfMa2NPt0XWZ7QGP9XXbdGGoD/4dfpjqc4w95G/LkB
-         /OLw++KZcT/y1UU5qfggjoF/s2R2qA132VIaUxoY=
-Date:   Fri, 9 Aug 2019 10:26:30 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     broonie@kernel.org, bgoswami@codeaurora.org, plai@codeaurora.org,
-        pierre-louis.bossart@linux.intel.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, lgirdwood@gmail.com,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/4] ASoC: codecs: Add WSA881x Smart Speaker amplifier
- support
-Message-ID: <20190809045630.GH12733@vkoul-mobl.Dlink>
-References: <20190808144504.24823-1-srinivas.kandagatla@linaro.org>
+        Fri, 9 Aug 2019 00:57:54 -0400
+Received: from szxga03-in.huawei.com ([45.249.212.189]:3085 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725811AbfHIE5w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 00:57:52 -0400
+Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id 01A2419AF3CE2F54FA67;
+        Fri,  9 Aug 2019 12:57:50 +0800 (CST)
+Received: from dggeme760-chm.china.huawei.com (10.3.19.106) by
+ DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 9 Aug 2019 12:57:49 +0800
+Received: from [127.0.0.1] (10.57.37.248) by dggeme760-chm.china.huawei.com
+ (10.3.19.106) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Fri, 9
+ Aug 2019 12:57:49 +0800
+Subject: Re: [PATCH net] net: phy: rtl8211f: do a double read to get real time
+ link status
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+CC:     <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
+        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
+        <shiju.jose@huawei.com>
+References: <1565183772-44268-1-git-send-email-liuyonglong@huawei.com>
+ <d67831ab-8902-a653-3db9-b2f55adacabd@gmail.com>
+ <e663235c-93eb-702d-5a9c-8f781d631c42@huawei.com>
+ <080b68c7-abe6-d142-da4b-26e8a7d4dc19@gmail.com>
+ <c15f820b-cc80-9a93-4c48-1b60bc14f73a@huawei.com>
+ <b1140603-f05b-2373-445f-c1d7a43ff012@gmail.com>
+ <20190808194049.GM27917@lunn.ch>
+ <26e2c5c9-915c-858b-d091-e5bfa7ab6a5b@gmail.com>
+ <20190808203415.GO27917@lunn.ch>
+From:   Yonglong Liu <liuyonglong@huawei.com>
+Message-ID: <414c6809-86a3-506c-b7b0-a32b7cd72fd6@huawei.com>
+Date:   Fri, 9 Aug 2019 12:57:48 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190808144504.24823-1-srinivas.kandagatla@linaro.org>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190808203415.GO27917@lunn.ch>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.57.37.248]
+X-ClientProxiedBy: dggeme719-chm.china.huawei.com (10.1.199.115) To
+ dggeme760-chm.china.huawei.com (10.3.19.106)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08-08-19, 15:45, Srinivas Kandagatla wrote:
-> This patchset adds support to WSA8810/WSA8815 Class-D Smart Speaker
-> Amplifier which is SoundWire interfaced.
-> This also adds support to some missing bits in SoundWire bus layer like
-> Device Tree support and module_sdw_driver macro.
-                                ^^^^^^^^^^^^^^^
-That part we already applied :D
 
-> This patchset along with DB845c machine driver and WCD934x codec driver
-> has been tested on SDM845 SoC based DragonBoard DB845c with two
-> WSA8810 speakers.
-> 
-> Most of the code in this driver is rework of Qualcomm downstream drivers
-> used in Andriod. Credits to Banajit Goswami and Patrick Lai's Team.
-> 
-> TODO:
-> 	Add thermal sensor support in WSA881x.
-> 
-> This patchset also depends on the soundwire Kconfig patch
-> https://lkml.org/lkml/2019/7/18/834 from Pierre
-> 
-> Thanks,
-> srini
-> 
-> Changes since v1 RFC:
-> - bindings document renamed to slave.txt
-> - fix error code from dt slave parsing
-> 
-> Srinivas Kandagatla (4):
->   dt-bindings: soundwire: add slave bindings
->   soundwire: core: add device tree support for slave devices
->   dt-bindings: ASoC: Add WSA881x bindings
->   ASoC: codecs: add wsa881x amplifier support
-> 
->  .../bindings/sound/qcom,wsa881x.txt           |   27 +
->  .../devicetree/bindings/soundwire/slave.txt   |   46 +
->  drivers/soundwire/bus.c                       |    2 +
->  drivers/soundwire/bus.h                       |    1 +
->  drivers/soundwire/slave.c                     |   47 +
->  sound/soc/codecs/Kconfig                      |   10 +
->  sound/soc/codecs/Makefile                     |    2 +
->  sound/soc/codecs/wsa881x.c                    | 1160 +++++++++++++++++
->  8 files changed, 1295 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/qcom,wsa881x.txt
->  create mode 100644 Documentation/devicetree/bindings/soundwire/slave.txt
->  create mode 100644 sound/soc/codecs/wsa881x.c
-> 
-> -- 
-> 2.21.0
 
--- 
-~Vinod
+On 2019/8/9 4:34, Andrew Lunn wrote:
+> On Thu, Aug 08, 2019 at 10:01:39PM +0200, Heiner Kallweit wrote:
+>> On 08.08.2019 21:40, Andrew Lunn wrote:
+>>>> @@ -568,6 +568,11 @@ int phy_start_aneg(struct phy_device *phydev)
+>>>>  	if (err < 0)
+>>>>  		goto out_unlock;
+>>>>  
+>>>> +	/* The PHY may not yet have cleared aneg-completed and link-up bit
+>>>> +	 * w/o this delay when the following read is done.
+>>>> +	 */
+>>>> +	usleep_range(1000, 2000);
+>>>> +
+>>>
+>>> Hi Heiner
+>>>
+>>> Does 802.3 C22 say anything about this?
+>>>
+>> C22 says:
+>> "The Auto-Negotiation process shall be restarted by setting bit 0.9 to a logic one. This bit is self-
+>> clearing, and a PHY shall return a value of one in bit 0.9 until the Auto-Negotiation process has been
+>> initiated."
+>>
+>> Maybe we should read bit 0.9 in genphy_update_link() after having read BMSR and report
+>> aneg-complete and link-up as false (no matter of their current value) if 0.9 is set.
+> 
+> Yes. That sounds sensible.
+> 
+>      Andrew
+> 
+> .
+> 
+
+Hi Heiner:
+	I have test more than 50 times, it works. Previously less
+than 20 times must be recurrence. so I think this patch solved the
+problem.
+	And I checked about 40 times of the time gap between read
+and autoneg started, all of them is more than 2ms, as below:
+
+  kworker/u257:1-670   [015] ....    27.182632: mdio_access: mii-0000:bd:00.3 write phy:0x07 reg:0x00 val:0x1240
+  kworker/u257:1-670   [015] ....    27.184670: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x01 val:0x7989
+
