@@ -8,60 +8,60 @@ X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC6F2C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 07:11:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B715C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 07:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFFC3208C4
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 07:11:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F184E208C4
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 07:11:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qdl5tl0K"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KQOagqHH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405802AbfHIHLI (ORCPT
+        id S2405813AbfHIHLR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 03:11:08 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:45436 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405601AbfHIHLI (ORCPT
+        Fri, 9 Aug 2019 03:11:17 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:35355 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405601AbfHIHLR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 03:11:08 -0400
-Received: by mail-pf1-f194.google.com with SMTP id w26so272738pfq.12
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 00:11:07 -0700 (PDT)
+        Fri, 9 Aug 2019 03:11:17 -0400
+Received: by mail-pl1-f194.google.com with SMTP id w24so44594198plp.2
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 00:11:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=Brhr0qTfy6eIZUgUAjbJm4cExvPM1CHKMDl4HPzycKU=;
-        b=Qdl5tl0KRHY+tjx50bG3jMFxwG3oW5O+XryiHiCs6NMl6IpKJ32OLhWfv0hPAzfW6c
-         7C04HIqzkAFTjbZPGpxwIQDlU3xHxZsIbF3KKS7/mlarPOycLZ2RWL4UeVAY1/XA1Fxv
-         R4WCK5N53nBss2s9NUmrWz3BT5Tljk+X8VPGQ2AJ24vLwXVHyFzwE2j4WENG3yLFHy3e
-         Zjx1lOZKGpFho+bC81eBCZrX3/GCVPwMMpfgmIn+PhtNHHnn2F2tJswHiBpaYgdybb2m
-         5IHp7nCGglVZYkvQsR8+rWSKNRbeKZ08M5/pvhPYJEAZ4rWPN6dNzkr7PY2xXITn1sZk
-         x5uw==
+        bh=EjwZNlktHghstpxixs3rvpStFdmZYyLz/JzoPP3gLRc=;
+        b=KQOagqHHx1/8wVn2eGgM9qF1OnlzjsplWUmA0IrMsWeS7N05lMCyDGlo3aIdoGEVOQ
+         qk/DYh5a1sv6ID7/o25lOJbzCFk9eGxFOSxwwd/2w8NvnphRK96MOkD/PeWk8j7dznXL
+         xXwSEkSod1tfb1YBIhx7WJ18nkcVYWSD1QLmuH3VXfv8d/aUFmhSF0vu6jwzo24EWzSO
+         1wukn1M3lTG23xpTd6mqAMmqVxmFSdAMJr+iZGR2dboMe+SkVDdbxGrgGUCIG/Ee1jRG
+         gBxMWlr0A6oDN4GkzLrPieSAYYkeGlu3VgZImnqGbQUOp7DNsL1sAKztqipW6kQegHzb
+         a0Wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=Brhr0qTfy6eIZUgUAjbJm4cExvPM1CHKMDl4HPzycKU=;
-        b=NWMeK1z+mGYxD4Yhb8+rIU03NFw6EldjqZaB9Gjtvimi9+e526AHRRyBL4DzzivHpy
-         TPWdcexn1vhVwDtdMOD6jpxeeT03DfobWNKAbhvQ9pZ88X/O/LIN1cQnCC/q3ikQpFMx
-         sVZLAk6PcRnR3RenMo6WhPRKEsbo3H/CzeGhuRDQSxYp+e2mxguZLZmvznptDCWh/XvO
-         V8T4Qwsa7A91KabB3QMpWtdoLQUpIRWAQcFmRTPyFDuD1IP5XA7MOSLniFHFWTrduC0A
-         JWyy74Y+pwOZSDG6xtMu/YNm2wFAyKXW6KvmO7N6SZFnsMckC6PAG/t20CYEaYxu5oP3
-         RtYw==
-X-Gm-Message-State: APjAAAX5Z0N2CcY7zWi+0zBomHkqtAAedWLB2ByA/bInktD4j1D5n0vM
-        A37XOJlwy0K2roua2XBFMMjBeQVd2M/G8g==
-X-Google-Smtp-Source: APXvYqyNuLXAnJIl3BgZ6eVc5t++/qJ2IJxO/67J+tvO7ppwH5ARE07Jx6CIq6+pmXnYuw78X6/jTw==
-X-Received: by 2002:a17:90a:26ac:: with SMTP id m41mr2502408pje.59.1565334667285;
-        Fri, 09 Aug 2019 00:11:07 -0700 (PDT)
+        bh=EjwZNlktHghstpxixs3rvpStFdmZYyLz/JzoPP3gLRc=;
+        b=eqgwsyOGPx8b9X3jlGhUMKtSV3ehUPtGJAoK5AkwP9p4WKi4EGxirFGv2xugSMh7Uw
+         hPOpt0qOnXTR5+VhfI2fdKbRw59+AWOCTV/UvRl5VEWupJ6ZI+TJ5WugtYxisnOG3SuD
+         hl5swMqaMwr7ZhLf9ZEb98b89lZyWlGuf5y/EghdeZwwLbB4z395BRe+eRj80rKUAwRR
+         F/OJ/gFupKL2esG2OWYPhSnoAo+YUCqUHuqTeSYxRm71AG3j+9L6yP1zkkIflemhgR+P
+         +848EgHhZrnLh0Xg3GaLXRFssqfkkUeGXmGd/G9bbkWGT1VGmK7H9unrHiw9XWtz/uGa
+         w9cw==
+X-Gm-Message-State: APjAAAUQIXznCuf+mfL2t9Z4Gqs13+VxGpBwyWKpbvC6rLzH8fePVm36
+        ERjyKYjUcJzbKPkHia9TeXvOn/goDMUJRQ==
+X-Google-Smtp-Source: APXvYqwipRn4f40BsFSsZTBr98JqcBPcTzpWV0/hSYU1ENFr90IexVgrrMXlma0Kj19PKoqH2jMK1g==
+X-Received: by 2002:a17:902:461:: with SMTP id 88mr7653273ple.296.1565334676707;
+        Fri, 09 Aug 2019 00:11:16 -0700 (PDT)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id 10sm506324pfv.63.2019.08.09.00.11.05
+        by smtp.gmail.com with ESMTPSA id a16sm105506801pfd.68.2019.08.09.00.11.14
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 09 Aug 2019 00:11:06 -0700 (PDT)
+        Fri, 09 Aug 2019 00:11:16 -0700 (PDT)
 From:   Chuhong Yuan <hslester96@gmail.com>
 Cc:     linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH v4 7/8] userns: Replace strncmp with str_has_prefix
-Date:   Fri,  9 Aug 2019 15:11:03 +0800
-Message-Id: <20190809071103.17442-1-hslester96@gmail.com>
+Subject: [PATCH v4 8/8] watchdog: Replace strncmp with str_has_prefix
+Date:   Fri,  9 Aug 2019 15:11:11 +0800
+Message-Id: <20190809071111.17496-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -80,52 +80,31 @@ to substitute such strncmp to make code better.
 
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
-Changes in v4:
-  - Eliminate assignments in if conditions.
+ kernel/watchdog.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
- kernel/user_namespace.c | 20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
-
-diff --git a/kernel/user_namespace.c b/kernel/user_namespace.c
-index 8eadadc478f9..bd5702f9273a 100644
---- a/kernel/user_namespace.c
-+++ b/kernel/user_namespace.c
-@@ -1138,6 +1138,7 @@ ssize_t proc_setgroups_write(struct file *file, const char __user *buf,
- 	char kbuf[8], *pos;
- 	bool setgroups_allowed;
- 	ssize_t ret;
-+	size_t len;
+diff --git a/kernel/watchdog.c b/kernel/watchdog.c
+index 7f9e7b9306fe..ac7a4b5f856e 100644
+--- a/kernel/watchdog.c
++++ b/kernel/watchdog.c
+@@ -70,13 +70,13 @@ void __init hardlockup_detector_disable(void)
  
- 	/* Only allow a very narrow range of strings to be written */
- 	ret = -EINVAL;
-@@ -1153,16 +1154,19 @@ ssize_t proc_setgroups_write(struct file *file, const char __user *buf,
- 
- 	/* What is being requested? */
- 	ret = -EINVAL;
--	if (strncmp(pos, "allow", 5) == 0) {
--		pos += 5;
-+
-+	len = str_has_prefix(pos, "allow");
-+	if (len) {
-+		pos += len;
- 		setgroups_allowed = true;
-+	} else {
-+		len = str_has_prefix(pos, "deny");
-+		if (len) {
-+			pos += len;
-+			setgroups_allowed = false;
-+		} else
-+			goto out;
- 	}
--	else if (strncmp(pos, "deny", 4) == 0) {
--		pos += 4;
--		setgroups_allowed = false;
--	}
--	else
--		goto out;
- 
- 	/* Verify there is not trailing junk on the line */
- 	pos = skip_spaces(pos);
+ static int __init hardlockup_panic_setup(char *str)
+ {
+-	if (!strncmp(str, "panic", 5))
++	if (str_has_prefix(str, "panic"))
+ 		hardlockup_panic = 1;
+-	else if (!strncmp(str, "nopanic", 7))
++	else if (str_has_prefix(str, "nopanic"))
+ 		hardlockup_panic = 0;
+-	else if (!strncmp(str, "0", 1))
++	else if (str_has_prefix(str, "0"))
+ 		nmi_watchdog_user_enabled = 0;
+-	else if (!strncmp(str, "1", 1))
++	else if (str_has_prefix(str, "1"))
+ 		nmi_watchdog_user_enabled = 1;
+ 	return 1;
+ }
 -- 
 2.20.1
 
