@@ -2,101 +2,276 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B4C1C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D2F7C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:49:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DA542086D
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:48:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dAKPX25M"
+	by mail.kernel.org (Postfix) with ESMTP id 2670C2086D
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:49:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565358548;
+	bh=JRJVzti7Tmrfl8P7VV+NTCqTq97sX3M4T117wwdkuxU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=IppM56455cPUEYqu6aICgQSSgAtcX11TpZ1slax6i4Cs268K0wX3s11XVjtk7PuUP
+	 gJkqV1oxpCBhScF9bizMWQmQwqZCotysGSH4XYrRKbfSNlW6G5zEHPvb56alZKPa7q
+	 WKPPRNqEfXjaROwj+bwCPwPPt9UwYCpD101L+lqE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407254AbfHINsz (ORCPT
+        id S2407203AbfHINtH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 09:48:55 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:37474 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407117AbfHINsw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 09:48:52 -0400
-Received: by mail-ed1-f66.google.com with SMTP id w13so95108296eds.4;
-        Fri, 09 Aug 2019 06:48:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yR+5s19H5XCk7doKkod5jfqUZgK48EnsW+tAB5UH8bw=;
-        b=dAKPX25MR2kQZQZvgVKx5T7q/vyxdZRYsqbQOt+mcp3EMtuwhvqwBkUfQiyBRGsHqF
-         JsGiM+VsbPyY4TLT88JdaiQgPm11MSsTwFypm09G/XbjHMtgAI8sEOSkJuP0dfzFZmb+
-         QTU8CoazveBoQTaPgIKLAfSUPELNsMuxVuMsqVQ4CL6aZPr8AgA/NF0mCRaXe12bXCuO
-         iEHhhbzoFQ8cjB58nQHrPW3J4o1kUDQDVayMIsJCgoM0O/R/mBRD87Da8CSzPk8uyeKo
-         5wN+b6qjcwEnPz3ydmuo2uilF8fhh+r3aY4g1tZhc/fMO0tbTt4+3M1pBA6NUetzjNLG
-         Hqvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yR+5s19H5XCk7doKkod5jfqUZgK48EnsW+tAB5UH8bw=;
-        b=QqA4xDf+6bVbvwLzTw/qIMdGCNTZFkEPKjVcNWvZiZ84uhflx2s9uQlTEZAiR5aqee
-         hhBnIrGvgnJg97/8KLmVRCSVwcZ6xBCHcKiWHQkuT5e6yZ3eeoyZldAOSRFoNWyV3x0v
-         vcer5aGy7tMRM/Hanq7CG1NwMH8zOEssYCtBqAFccw9dLxfZMNUe68ZcYaB8More4FaB
-         SyKxBPR4V0XR/Mhh3UTCsLBxWy8szrLoW1NCtKUwPSAXCihK90oKZVd/x19M174b29Gi
-         5IehTVbvStcYb1Z46zIm/0XbMYyoTu90faH0LZxgnXGlnlAOMcYH4IO5ADizdAb51878
-         k02Q==
-X-Gm-Message-State: APjAAAX2L0MznT+J5q64nJBc7m6MU95VeaaR+Hb7kf17mnwGoXDzS4XQ
-        hMLSuBcvUz3I6USPZet+sn8=
-X-Google-Smtp-Source: APXvYqx9OCKX+nWFkLmri91BqlVkrRygPvan6hB0ETflRbvT1wRyzTakPMOjjsr4Zd4n2oNcNVUNvQ==
-X-Received: by 2002:a50:f5f5:: with SMTP id x50mr21466114edm.89.1565358530524;
-        Fri, 09 Aug 2019 06:48:50 -0700 (PDT)
-Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
-        by smtp.gmail.com with ESMTPSA id rv16sm15937818ejb.79.2019.08.09.06.48.48
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 09 Aug 2019 06:48:49 -0700 (PDT)
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] pwm: Fixes for v5.3-rc4
-Date:   Fri,  9 Aug 2019 15:48:48 +0200
-Message-Id: <20190809134848.18297-1-thierry.reding@gmail.com>
+        Fri, 9 Aug 2019 09:49:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36400 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406599AbfHINqk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 09:46:40 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CFA821783;
+        Fri,  9 Aug 2019 13:46:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565358399;
+        bh=JRJVzti7Tmrfl8P7VV+NTCqTq97sX3M4T117wwdkuxU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Dh5SyEk/6bZAU7utqSaK0RrZ7oo5Xcgxm4rg/pW+L5zwRXTRo7Ygugi3Xnl3oc9aQ
+         mGBQM8vlQ8rR62CEUHJYtmyARaGqtGV+8XXYcidMMP8ik0Z11vRLHlxYU50+vE3XyG
+         OLCIgPTij7o9SxoqMByJYO9Nnq9NyNf5O2sWIzlQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Hannes Reinecke <hare@suse.de>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.9 01/32] scsi: fcoe: Embed fc_rport_priv in fcoe_rport structure
+Date:   Fri,  9 Aug 2019 15:45:04 +0200
+Message-Id: <20190809133923.010789078@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190809133922.945349906@linuxfoundation.org>
+References: <20190809133922.945349906@linuxfoundation.org>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+From: Hannes Reinecke <hare@suse.de>
 
-The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
+commit 023358b136d490ca91735ac6490db3741af5a8bd upstream.
 
-  Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
+Gcc-9 complains for a memset across pointer boundaries, which happens as
+the code tries to allocate a flexible array on the stack.  Turns out we
+cannot do this without relying on gcc-isms, so with this patch we'll embed
+the fc_rport_priv structure into fcoe_rport, can use the normal
+'container_of' outcast, and will only have to do a memset over one
+structure.
 
-are available in the Git repository at:
+Signed-off-by: Hannes Reinecke <hare@suse.de>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-5.3-rc4
+---
+ drivers/scsi/fcoe/fcoe_ctlr.c |   51 ++++++++++++++++--------------------------
+ drivers/scsi/libfc/fc_rport.c |    5 +++-
+ include/scsi/libfcoe.h        |    1 
+ 3 files changed, 25 insertions(+), 32 deletions(-)
 
-for you to fetch changes up to 6cf9481b440da6d6d86bd8e4c99a8b553b9d1271:
+--- a/drivers/scsi/fcoe/fcoe_ctlr.c
++++ b/drivers/scsi/fcoe/fcoe_ctlr.c
+@@ -1984,7 +1984,7 @@ EXPORT_SYMBOL_GPL(fcoe_wwn_from_mac);
+  */
+ static inline struct fcoe_rport *fcoe_ctlr_rport(struct fc_rport_priv *rdata)
+ {
+-	return (struct fcoe_rport *)(rdata + 1);
++	return container_of(rdata, struct fcoe_rport, rdata);
+ }
+ 
+ /**
+@@ -2244,7 +2244,7 @@ static void fcoe_ctlr_vn_start(struct fc
+  */
+ static int fcoe_ctlr_vn_parse(struct fcoe_ctlr *fip,
+ 			      struct sk_buff *skb,
+-			      struct fc_rport_priv *rdata)
++			      struct fcoe_rport *frport)
+ {
+ 	struct fip_header *fiph;
+ 	struct fip_desc *desc = NULL;
+@@ -2252,16 +2252,12 @@ static int fcoe_ctlr_vn_parse(struct fco
+ 	struct fip_wwn_desc *wwn = NULL;
+ 	struct fip_vn_desc *vn = NULL;
+ 	struct fip_size_desc *size = NULL;
+-	struct fcoe_rport *frport;
+ 	size_t rlen;
+ 	size_t dlen;
+ 	u32 desc_mask = 0;
+ 	u32 dtype;
+ 	u8 sub;
+ 
+-	memset(rdata, 0, sizeof(*rdata) + sizeof(*frport));
+-	frport = fcoe_ctlr_rport(rdata);
+-
+ 	fiph = (struct fip_header *)skb->data;
+ 	frport->flags = ntohs(fiph->fip_flags);
+ 
+@@ -2324,15 +2320,17 @@ static int fcoe_ctlr_vn_parse(struct fco
+ 			if (dlen != sizeof(struct fip_wwn_desc))
+ 				goto len_err;
+ 			wwn = (struct fip_wwn_desc *)desc;
+-			rdata->ids.node_name = get_unaligned_be64(&wwn->fd_wwn);
++			frport->rdata.ids.node_name =
++				get_unaligned_be64(&wwn->fd_wwn);
+ 			break;
+ 		case FIP_DT_VN_ID:
+ 			if (dlen != sizeof(struct fip_vn_desc))
+ 				goto len_err;
+ 			vn = (struct fip_vn_desc *)desc;
+ 			memcpy(frport->vn_mac, vn->fd_mac, ETH_ALEN);
+-			rdata->ids.port_id = ntoh24(vn->fd_fc_id);
+-			rdata->ids.port_name = get_unaligned_be64(&vn->fd_wwpn);
++			frport->rdata.ids.port_id = ntoh24(vn->fd_fc_id);
++			frport->rdata.ids.port_name =
++				get_unaligned_be64(&vn->fd_wwpn);
+ 			break;
+ 		case FIP_DT_FC4F:
+ 			if (dlen != sizeof(struct fip_fc4_feat))
+@@ -2670,16 +2668,13 @@ static int fcoe_ctlr_vn_recv(struct fcoe
+ {
+ 	struct fip_header *fiph;
+ 	enum fip_vn2vn_subcode sub;
+-	struct {
+-		struct fc_rport_priv rdata;
+-		struct fcoe_rport frport;
+-	} buf;
++	struct fcoe_rport frport = { };
+ 	int rc;
+ 
+ 	fiph = (struct fip_header *)skb->data;
+ 	sub = fiph->fip_subcode;
+ 
+-	rc = fcoe_ctlr_vn_parse(fip, skb, &buf.rdata);
++	rc = fcoe_ctlr_vn_parse(fip, skb, &frport);
+ 	if (rc) {
+ 		LIBFCOE_FIP_DBG(fip, "vn_recv vn_parse error %d\n", rc);
+ 		goto drop;
+@@ -2688,19 +2683,19 @@ static int fcoe_ctlr_vn_recv(struct fcoe
+ 	mutex_lock(&fip->ctlr_mutex);
+ 	switch (sub) {
+ 	case FIP_SC_VN_PROBE_REQ:
+-		fcoe_ctlr_vn_probe_req(fip, &buf.rdata);
++		fcoe_ctlr_vn_probe_req(fip, &frport.rdata);
+ 		break;
+ 	case FIP_SC_VN_PROBE_REP:
+-		fcoe_ctlr_vn_probe_reply(fip, &buf.rdata);
++		fcoe_ctlr_vn_probe_reply(fip, &frport.rdata);
+ 		break;
+ 	case FIP_SC_VN_CLAIM_NOTIFY:
+-		fcoe_ctlr_vn_claim_notify(fip, &buf.rdata);
++		fcoe_ctlr_vn_claim_notify(fip, &frport.rdata);
+ 		break;
+ 	case FIP_SC_VN_CLAIM_REP:
+-		fcoe_ctlr_vn_claim_resp(fip, &buf.rdata);
++		fcoe_ctlr_vn_claim_resp(fip, &frport.rdata);
+ 		break;
+ 	case FIP_SC_VN_BEACON:
+-		fcoe_ctlr_vn_beacon(fip, &buf.rdata);
++		fcoe_ctlr_vn_beacon(fip, &frport.rdata);
+ 		break;
+ 	default:
+ 		LIBFCOE_FIP_DBG(fip, "vn_recv unknown subcode %d\n", sub);
+@@ -2724,22 +2719,18 @@ drop:
+  */
+ static int fcoe_ctlr_vlan_parse(struct fcoe_ctlr *fip,
+ 			      struct sk_buff *skb,
+-			      struct fc_rport_priv *rdata)
++			      struct fcoe_rport *frport)
+ {
+ 	struct fip_header *fiph;
+ 	struct fip_desc *desc = NULL;
+ 	struct fip_mac_desc *macd = NULL;
+ 	struct fip_wwn_desc *wwn = NULL;
+-	struct fcoe_rport *frport;
+ 	size_t rlen;
+ 	size_t dlen;
+ 	u32 desc_mask = 0;
+ 	u32 dtype;
+ 	u8 sub;
+ 
+-	memset(rdata, 0, sizeof(*rdata) + sizeof(*frport));
+-	frport = fcoe_ctlr_rport(rdata);
+-
+ 	fiph = (struct fip_header *)skb->data;
+ 	frport->flags = ntohs(fiph->fip_flags);
+ 
+@@ -2793,7 +2784,8 @@ static int fcoe_ctlr_vlan_parse(struct f
+ 			if (dlen != sizeof(struct fip_wwn_desc))
+ 				goto len_err;
+ 			wwn = (struct fip_wwn_desc *)desc;
+-			rdata->ids.node_name = get_unaligned_be64(&wwn->fd_wwn);
++			frport->rdata.ids.node_name =
++				get_unaligned_be64(&wwn->fd_wwn);
+ 			break;
+ 		default:
+ 			LIBFCOE_FIP_DBG(fip, "unexpected descriptor type %x "
+@@ -2904,22 +2896,19 @@ static int fcoe_ctlr_vlan_recv(struct fc
+ {
+ 	struct fip_header *fiph;
+ 	enum fip_vlan_subcode sub;
+-	struct {
+-		struct fc_rport_priv rdata;
+-		struct fcoe_rport frport;
+-	} buf;
++	struct fcoe_rport frport = { };
+ 	int rc;
+ 
+ 	fiph = (struct fip_header *)skb->data;
+ 	sub = fiph->fip_subcode;
+-	rc = fcoe_ctlr_vlan_parse(fip, skb, &buf.rdata);
++	rc = fcoe_ctlr_vlan_parse(fip, skb, &frport);
+ 	if (rc) {
+ 		LIBFCOE_FIP_DBG(fip, "vlan_recv vlan_parse error %d\n", rc);
+ 		goto drop;
+ 	}
+ 	mutex_lock(&fip->ctlr_mutex);
+ 	if (sub == FIP_SC_VL_REQ)
+-		fcoe_ctlr_vlan_disc_reply(fip, &buf.rdata);
++		fcoe_ctlr_vlan_disc_reply(fip, &frport.rdata);
+ 	mutex_unlock(&fip->ctlr_mutex);
+ 
+ drop:
+--- a/drivers/scsi/libfc/fc_rport.c
++++ b/drivers/scsi/libfc/fc_rport.c
+@@ -127,12 +127,15 @@ static struct fc_rport_priv *fc_rport_cr
+ 					     u32 port_id)
+ {
+ 	struct fc_rport_priv *rdata;
++	size_t rport_priv_size = sizeof(*rdata);
+ 
+ 	rdata = lport->tt.rport_lookup(lport, port_id);
+ 	if (rdata)
+ 		return rdata;
+ 
+-	rdata = kzalloc(sizeof(*rdata) + lport->rport_priv_size, GFP_KERNEL);
++	if (lport->rport_priv_size > 0)
++		rport_priv_size = lport->rport_priv_size;
++	rdata = kzalloc(rport_priv_size, GFP_KERNEL);
+ 	if (!rdata)
+ 		return NULL;
+ 
+--- a/include/scsi/libfcoe.h
++++ b/include/scsi/libfcoe.h
+@@ -241,6 +241,7 @@ struct fcoe_fcf {
+  * @vn_mac:	VN_Node assigned MAC address for data
+  */
+ struct fcoe_rport {
++	struct fc_rport_priv rdata;
+ 	unsigned long time;
+ 	u16 fcoe_len;
+ 	u16 flags;
 
-  pwm: Fallback to the static lookup-list when acpi_pwm_get fails (2019-08-08 13:17:38 +0200)
 
-Thanks,
-Thierry
-
-----------------------------------------------------------------
-pwm: Fixes for v5.3-rc4
-
-This contains a single fix for a backlight brightness regression
-introduced in v5.3-rc1.
-
-----------------------------------------------------------------
-Hans de Goede (1):
-      pwm: Fallback to the static lookup-list when acpi_pwm_get fails
-
- drivers/pwm/core.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
