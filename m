@@ -2,330 +2,138 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A256BC0650F
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 02:34:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53915C0650F
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 02:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68AD72054F
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 02:34:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E0B12171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 02:46:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pS3vTy2I"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WaAJIxvx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405548AbfHICew (ORCPT
+        id S2404778AbfHICqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 22:34:52 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40638 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405424AbfHICeu (ORCPT
+        Thu, 8 Aug 2019 22:46:53 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37592 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733140AbfHICqx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 22:34:50 -0400
-Received: by mail-pg1-f195.google.com with SMTP id w10so45068271pgj.7
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 19:34:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=n8KBG5nmkGEaawsHMjPOBzO6NvS/PfrVgyogK3T8Log=;
-        b=pS3vTy2IwGTZJtm8Atxiya+8KlteqaTjfeLrA+t36U4t867/r7Ng1H9i1bydZy61y9
-         y/kNlou8qCAhJrhnBxa+B/p8N09Gn0fZUEp8HxeY4RFZMvZXzKeDbeCunqUaSOQTjQCF
-         7iaD6BsdBLZ2ing382OlgLdyJEMPeyMcx3oKfjYas59jLwuiZ1ZoWQVUzEqhD65PR/m6
-         haG/akiESl+bLMJSSzadJ6TaeQ9nJkfRDoG+sz2uf9i1BcoM6DTgizTu9f4bM1c7EzXk
-         zjq8R4Buf8BrW3QIfdQYzFHSl4sJrFLOHrVlzKpGgJk7Un7U03IcPpO6l6XES8RON9eB
-         i0OA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=n8KBG5nmkGEaawsHMjPOBzO6NvS/PfrVgyogK3T8Log=;
-        b=ceBPTR3SU4NYL5kffoKirr3Z1saw2Z9ndqSVyTEGS33vew9VLvqiktIfjWHZR6D88h
-         Mecf7emaEv+HGKenZpHZibC1v/GrOJm+wEix4XWQmyp/IxsgmFPdiG0fVzSd6LHxFvzt
-         Emv9kLsa6h3gpRroQsJLOkIxV6sAXxbmTNrNKaqmeWTy6N4II4kHogH5obKM0GuQ6LOx
-         Ws3O6uyCNh15n2n8zz3zdo+iBThQtYqasuWBcQUnfpADTkbaG7JD/LJ/teKo0dUE24Bd
-         VqgrVJ7+yR0xM+aGnUm7TqV8nQhk/qqE5gph5KXDxReo3APE2VaUBh7EBUTTaDFJthj2
-         MVsQ==
-X-Gm-Message-State: APjAAAU1xSB0ZOM9yo5QbPSNym4Y0L7Fa7Hw/wtqQZaXsepvRViacRBA
-        qhgvJ9rB4k/e8dS3Z1UKw1pSiA==
-X-Google-Smtp-Source: APXvYqwAIzonWFvFcHs1FTxusshjF79mDe9DU1nTJkKVIo3XGpatkk8lRn0c/3N6oxEo2NfhFMqqAw==
-X-Received: by 2002:a65:4304:: with SMTP id j4mr15863872pgq.419.1565318089782;
-        Thu, 08 Aug 2019 19:34:49 -0700 (PDT)
-Received: from localhost ([122.172.76.219])
-        by smtp.gmail.com with ESMTPSA id q19sm101879983pfc.62.2019.08.08.19.34.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 08 Aug 2019 19:34:49 -0700 (PDT)
-Date:   Fri, 9 Aug 2019 08:04:45 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Rafael Wysocki <rjw@rjwysocki.net>
-Cc:     linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 04/10] cpufreq: powerpc_cbe: Switch to QoS requests
- instead of cpufreq notifier
-Message-ID: <20190809023445.xn3mlv5qxjgz6bpp@vireshk-i7>
-References: <cover.1563862014.git.viresh.kumar@linaro.org>
- <524de8ace0596e68a24b57b3b4043c707db32ca7.1563862014.git.viresh.kumar@linaro.org>
+        Thu, 8 Aug 2019 22:46:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=k9ysUCj8sFdxJhtdA1rA7e9UmHUPqdKijogVrakBrS8=; b=WaAJIxvxqLMJwq4r0MuB186tS
+        eB35TdZihw8we7T+6rzfXNcdc1BFrSHTsICCgF9IYxPFMXnH51MOTuYcDuzIEQFJTMbpdZHz7kU4l
+        1gXCVm3zmGNat8g+4gEFOmlEJuABJAdswqsBLhwukirmbwfQV0VJh1UOgKcKX0IHlCnqa9ftb3GN5
+        anKRc6DAtdHrlXV80dZ8UTLKLtWWw6siF34Vuvs30NBWsAIUoDuZlJjPXL5Z3iyVaI9c8MyiBg6a+
+        ZzMgnF9fEFZkYUNsrMbPcS0zzVnVA5rZwBUyx3/flkMtA4BlYIqbgSIAqMmX6Ch8YNSw7wcyQUOQo
+        SWWUHUk+A==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hvuvU-0008Bg-Kn; Fri, 09 Aug 2019 02:46:44 +0000
+Date:   Thu, 8 Aug 2019 19:46:44 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     miles.chen@mediatek.com
+Cc:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        wsd_upstream@mediatek.com, "Tobin C . Harding" <me@tobin.cc>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [RFC PATCH v2] mm: slub: print kernel addresses in slub debug
+ messages
+Message-ID: <20190809024644.GL5482@bombadil.infradead.org>
+References: <20190809010837.24166-1-miles.chen@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <524de8ace0596e68a24b57b3b4043c707db32ca7.1563862014.git.viresh.kumar@linaro.org>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20190809010837.24166-1-miles.chen@mediatek.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23-07-19, 11:44, Viresh Kumar wrote:
-> The cpufreq core now takes the min/max frequency constraints via QoS
-> requests and the CPUFREQ_ADJUST notifier shall get removed later on.
+On Fri, Aug 09, 2019 at 09:08:37AM +0800, miles.chen@mediatek.com wrote:
+> Possible approaches are:
+> 1. stop printing kernel addresses
+> 2. print with %pK,
+> 3. print with %px.
+
+No.  The point of obscuring kernel addresses is that if the attacker manages to find a way to get the kernel to spit out some debug messages that we shouldn't
+leak all this extra information.
+
+> 4. do nothing
+
+5. Find something more useful to print.
+
+> INFO: Slab 0x(____ptrval____) objects=25 used=10 fp=0x(____ptrval____)
+
+... you don't have any randomness on your platform?
+
+> INFO: Object 0x(____ptrval____) @offset=1408 fp=0x(____ptrval____)
+> Redzone (____ptrval____): bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+> Redzone (____ptrval____): bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+> Redzone (____ptrval____): bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+> Redzone (____ptrval____): bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+> Redzone (____ptrval____): bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+> Redzone (____ptrval____): bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+> Redzone (____ptrval____): bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+> Redzone (____ptrval____): bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+> Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+> Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+> Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+> Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+> Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+> Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+> Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+> Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b a5
+> Redzone (____ptrval____): bb bb bb bb bb bb bb bb
+> Padding (____ptrval____): 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a
+> Padding (____ptrval____): 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a
+> Padding (____ptrval____): 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a
+> Padding (____ptrval____): 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a
+> ...
+> FIX kmalloc-128: Object at 0x(____ptrval____) not freed
+
+But if you have randomness, at least some of these "pointers" are valuable
+because you can compare them against "pointers" printed by other parts
+of the kernel.
+
+> After this patch:
 > 
-> Switch over to using the QoS request for maximum frequency constraint
-> for ppc_cbe_cpufreq driver.
-> 
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  drivers/cpufreq/ppc_cbe_cpufreq.c     | 19 +++++-
->  drivers/cpufreq/ppc_cbe_cpufreq.h     |  8 +++
->  drivers/cpufreq/ppc_cbe_cpufreq_pmi.c | 96 +++++++++++++++++----------
->  3 files changed, 86 insertions(+), 37 deletions(-)
+> INFO: Slab 0xffffffbf00f57000 objects=25 used=23 fp=0xffffffc03d5c3500
+> INFO: Object 0xffffffc03d5c3500 @offset=13568 fp=0xffffffc03d5c0800
+> Redzone 00000000: bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+> Redzone 00000010: bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+> Redzone 00000020: bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+> Redzone 00000030: bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+> Redzone 00000040: bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+> Redzone 00000050: bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+> Redzone 00000060: bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+> Redzone 00000070: bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+> Object 00000000: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+> Object 00000010: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+> Object 00000020: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+> Object 00000030: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+> Object 00000040: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+> Object 00000050: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+> Object 00000060: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+> Object 00000070: 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b a5
+> Redzone 00000000: bb bb bb bb bb bb bb bb
+> Padding 00000000: 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a
+> Padding 00000010: 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a
+> Padding 00000020: 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a
+> Padding 00000030: 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a
+> ...
+> FIX kmalloc-128: Object at 0xffffffc03d5c3500 not freed
 
--------------------------8<-------------------------
-From b84e1c119d63ab842c9e4f3acbc3aec22efa866d Mon Sep 17 00:00:00 2001
-Message-Id: <b84e1c119d63ab842c9e4f3acbc3aec22efa866d.1565318034.git.viresh.kumar@linaro.org>
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Date: Fri, 5 Jul 2019 15:49:48 +0530
-Subject: [PATCH] cpufreq: powerpc_cbe: Switch to QoS requests instead of
- cpufreq notifier
-
-The cpufreq core now takes the min/max frequency constraints via QoS
-requests and the CPUFREQ_ADJUST notifier shall get removed later on.
-
-Switch over to using the QoS request for maximum frequency constraint
-for ppc_cbe_cpufreq driver.
-
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
-- dev_pm_qos_update_request() can return 1 on success
- drivers/cpufreq/ppc_cbe_cpufreq.c     | 19 +++++-
- drivers/cpufreq/ppc_cbe_cpufreq.h     |  8 +++
- drivers/cpufreq/ppc_cbe_cpufreq_pmi.c | 96 +++++++++++++++++----------
- 3 files changed, 86 insertions(+), 37 deletions(-)
-
-diff --git a/drivers/cpufreq/ppc_cbe_cpufreq.c b/drivers/cpufreq/ppc_cbe_cpufreq.c
-index b83f36febf03..c58abb4cca3a 100644
---- a/drivers/cpufreq/ppc_cbe_cpufreq.c
-+++ b/drivers/cpufreq/ppc_cbe_cpufreq.c
-@@ -110,6 +110,13 @@ static int cbe_cpufreq_cpu_init(struct cpufreq_policy *policy)
- #endif
- 
- 	policy->freq_table = cbe_freqs;
-+	cbe_cpufreq_pmi_policy_init(policy);
-+	return 0;
-+}
-+
-+static int cbe_cpufreq_cpu_exit(struct cpufreq_policy *policy)
-+{
-+	cbe_cpufreq_pmi_policy_exit(policy);
- 	return 0;
- }
- 
-@@ -129,6 +136,7 @@ static struct cpufreq_driver cbe_cpufreq_driver = {
- 	.verify		= cpufreq_generic_frequency_table_verify,
- 	.target_index	= cbe_cpufreq_target,
- 	.init		= cbe_cpufreq_cpu_init,
-+	.exit		= cbe_cpufreq_cpu_exit,
- 	.name		= "cbe-cpufreq",
- 	.flags		= CPUFREQ_CONST_LOOPS,
- };
-@@ -139,15 +147,24 @@ static struct cpufreq_driver cbe_cpufreq_driver = {
- 
- static int __init cbe_cpufreq_init(void)
- {
-+	int ret;
-+
- 	if (!machine_is(cell))
- 		return -ENODEV;
- 
--	return cpufreq_register_driver(&cbe_cpufreq_driver);
-+	cbe_cpufreq_pmi_init();
-+
-+	ret = cpufreq_register_driver(&cbe_cpufreq_driver);
-+	if (ret)
-+		cbe_cpufreq_pmi_exit();
-+
-+	return ret;
- }
- 
- static void __exit cbe_cpufreq_exit(void)
- {
- 	cpufreq_unregister_driver(&cbe_cpufreq_driver);
-+	cbe_cpufreq_pmi_exit();
- }
- 
- module_init(cbe_cpufreq_init);
-diff --git a/drivers/cpufreq/ppc_cbe_cpufreq.h b/drivers/cpufreq/ppc_cbe_cpufreq.h
-index 9d973519d669..00cd8633b0d9 100644
---- a/drivers/cpufreq/ppc_cbe_cpufreq.h
-+++ b/drivers/cpufreq/ppc_cbe_cpufreq.h
-@@ -20,6 +20,14 @@ int cbe_cpufreq_set_pmode_pmi(int cpu, unsigned int pmode);
- 
- #if IS_ENABLED(CONFIG_CPU_FREQ_CBE_PMI)
- extern bool cbe_cpufreq_has_pmi;
-+void cbe_cpufreq_pmi_policy_init(struct cpufreq_policy *policy);
-+void cbe_cpufreq_pmi_policy_exit(struct cpufreq_policy *policy);
-+void cbe_cpufreq_pmi_init(void);
-+void cbe_cpufreq_pmi_exit(void);
- #else
- #define cbe_cpufreq_has_pmi (0)
-+static inline void cbe_cpufreq_pmi_policy_init(struct cpufreq_policy *policy) {}
-+static inline void cbe_cpufreq_pmi_policy_exit(struct cpufreq_policy *policy) {}
-+static inline void cbe_cpufreq_pmi_init(void) {}
-+static inline void cbe_cpufreq_pmi_exit(void) {}
- #endif
-diff --git a/drivers/cpufreq/ppc_cbe_cpufreq_pmi.c b/drivers/cpufreq/ppc_cbe_cpufreq_pmi.c
-index 97c8ee4614b7..bc9dd30395c4 100644
---- a/drivers/cpufreq/ppc_cbe_cpufreq_pmi.c
-+++ b/drivers/cpufreq/ppc_cbe_cpufreq_pmi.c
-@@ -12,6 +12,7 @@
- #include <linux/timer.h>
- #include <linux/init.h>
- #include <linux/of_platform.h>
-+#include <linux/pm_qos.h>
- 
- #include <asm/processor.h>
- #include <asm/prom.h>
-@@ -24,8 +25,6 @@
- 
- #include "ppc_cbe_cpufreq.h"
- 
--static u8 pmi_slow_mode_limit[MAX_CBE];
--
- bool cbe_cpufreq_has_pmi = false;
- EXPORT_SYMBOL_GPL(cbe_cpufreq_has_pmi);
- 
-@@ -65,64 +64,89 @@ EXPORT_SYMBOL_GPL(cbe_cpufreq_set_pmode_pmi);
- 
- static void cbe_cpufreq_handle_pmi(pmi_message_t pmi_msg)
- {
-+	struct cpufreq_policy *policy;
-+	struct dev_pm_qos_request *req;
- 	u8 node, slow_mode;
-+	int cpu, ret;
- 
- 	BUG_ON(pmi_msg.type != PMI_TYPE_FREQ_CHANGE);
- 
- 	node = pmi_msg.data1;
- 	slow_mode = pmi_msg.data2;
- 
--	pmi_slow_mode_limit[node] = slow_mode;
-+	cpu = cbe_node_to_cpu(node);
- 
- 	pr_debug("cbe_handle_pmi: node: %d max_freq: %d\n", node, slow_mode);
--}
--
--static int pmi_notifier(struct notifier_block *nb,
--				       unsigned long event, void *data)
--{
--	struct cpufreq_policy *policy = data;
--	struct cpufreq_frequency_table *cbe_freqs = policy->freq_table;
--	u8 node;
--
--	/* Should this really be called for CPUFREQ_ADJUST and CPUFREQ_NOTIFY
--	 * policy events?)
--	 */
--	node = cbe_cpu_to_node(policy->cpu);
--
--	pr_debug("got notified, event=%lu, node=%u\n", event, node);
- 
--	if (pmi_slow_mode_limit[node] != 0) {
--		pr_debug("limiting node %d to slow mode %d\n",
--			 node, pmi_slow_mode_limit[node]);
-+	policy = cpufreq_cpu_get(cpu);
-+	if (!policy) {
-+		pr_warn("cpufreq policy not found cpu%d\n", cpu);
-+		return;
-+	}
- 
--		cpufreq_verify_within_limits(policy, 0,
-+	req = policy->driver_data;
- 
--			cbe_freqs[pmi_slow_mode_limit[node]].frequency);
--	}
-+	ret = dev_pm_qos_update_request(req,
-+			policy->freq_table[slow_mode].frequency);
-+	if (ret < 0)
-+		pr_warn("Failed to update freq constraint: %d\n", ret);
-+	else
-+		pr_debug("limiting node %d to slow mode %d\n", node, slow_mode);
- 
--	return 0;
-+	cpufreq_cpu_put(policy);
- }
- 
--static struct notifier_block pmi_notifier_block = {
--	.notifier_call = pmi_notifier,
--};
--
- static struct pmi_handler cbe_pmi_handler = {
- 	.type			= PMI_TYPE_FREQ_CHANGE,
- 	.handle_pmi_message	= cbe_cpufreq_handle_pmi,
- };
- 
-+void cbe_cpufreq_pmi_policy_init(struct cpufreq_policy *policy)
-+{
-+	struct dev_pm_qos_request *req;
-+	int ret;
-+
-+	if (!cbe_cpufreq_has_pmi)
-+		return;
-+
-+	req = kzalloc(sizeof(*req), GFP_KERNEL);
-+	if (!req)
-+		return;
-+
-+	ret = dev_pm_qos_add_request(get_cpu_device(policy->cpu), req,
-+				     DEV_PM_QOS_MAX_FREQUENCY,
-+				     policy->freq_table[0].frequency);
-+	if (ret < 0) {
-+		pr_err("Failed to add freq constraint (%d)\n", ret);
-+		kfree(req);
-+		return;
-+	}
- 
-+	policy->driver_data = req;
-+}
-+EXPORT_SYMBOL_GPL(cbe_cpufreq_pmi_policy_init);
- 
--static int __init cbe_cpufreq_pmi_init(void)
-+void cbe_cpufreq_pmi_policy_exit(struct cpufreq_policy *policy)
- {
--	cbe_cpufreq_has_pmi = pmi_register_handler(&cbe_pmi_handler) == 0;
-+	struct dev_pm_qos_request *req = policy->driver_data;
- 
--	if (!cbe_cpufreq_has_pmi)
--		return -ENODEV;
-+	if (cbe_cpufreq_has_pmi) {
-+		dev_pm_qos_remove_request(req);
-+		kfree(req);
-+	}
-+}
-+EXPORT_SYMBOL_GPL(cbe_cpufreq_pmi_policy_exit);
- 
--	cpufreq_register_notifier(&pmi_notifier_block, CPUFREQ_POLICY_NOTIFIER);
-+void cbe_cpufreq_pmi_init(void)
-+{
-+	if (!pmi_register_handler(&cbe_pmi_handler))
-+		cbe_cpufreq_has_pmi = true;
-+}
-+EXPORT_SYMBOL_GPL(cbe_cpufreq_pmi_init);
- 
--	return 0;
-+void cbe_cpufreq_pmi_exit(void)
-+{
-+	pmi_unregister_handler(&cbe_pmi_handler);
-+	cbe_cpufreq_has_pmi = false;
- }
--device_initcall(cbe_cpufreq_pmi_init);
-+EXPORT_SYMBOL_GPL(cbe_cpufreq_pmi_exit);
+It looks prettier, but I'm not convinced it's more useful.  Unless your
+platform lacks randomness ...
