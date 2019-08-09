@@ -2,64 +2,55 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA619C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:46:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF34C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC7E821783
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:46:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBB5C21773
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:46:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565358402;
-	bh=N84LXan8RF73ksNujkrM9YmqGJ0e0sGU1lfU1OBoylM=;
+	s=default; t=1565358405;
+	bh=nv7C7hPsfrKCHrWbjf8pIA4GQhJakUi/9YQe5uWdW0M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iOd/Rq+XTvNRBc8+UpUtK7cSrU10n5dkPYdJn4jBoOJ1ujFLFVpb+029KNmWfKdOx
-	 aMKrq0cVmnRJnqngPdUGPXC9eJEbAsfmYkWB9JuqUuJgwkAfG5lvrPpF8mdUeH72sH
-	 J6JX6hy6Ne48+MpjvQzCotgoR+NK0pVwGCRt4KoU=
+	b=HX0wePlwJkYeax1aPD4eVqS15nwI1dEb6J/9A67/W8X6+tqSO5Xfhf4CtalOP8RAi
+	 s846p6Zp8fMg2cxhO+/opNNcUGaAcxQ77X2jqwnu8IyoA6G+nU8vspafEzVKnOJFBY
+	 /CLUrnF6fnXSGZkW6CHta3X+plIyb1pY3RYPBArE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436554AbfHINql (ORCPT
+        id S2407108AbfHINqo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 09:46:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36328 "EHLO mail.kernel.org"
+        Fri, 9 Aug 2019 09:46:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436543AbfHINqi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 09:46:38 -0400
+        id S2436543AbfHINqm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 09:46:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C42621773;
-        Fri,  9 Aug 2019 13:46:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A016A217F4;
+        Fri,  9 Aug 2019 13:46:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565358397;
-        bh=N84LXan8RF73ksNujkrM9YmqGJ0e0sGU1lfU1OBoylM=;
+        s=default; t=1565358402;
+        bh=nv7C7hPsfrKCHrWbjf8pIA4GQhJakUi/9YQe5uWdW0M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MQLVRWePzhSafzx+kq1eCDua7LXoPYUkBF5k2zQkVOFMn+n20vxK3t+pTeCqZefVE
-         LyQd6rT8GdKdyNB4/VYMncH4T4BmErMU0RvnBwF1m83HMkYXlW9pAs+pagg8GCiQ+e
-         P7lamaEn5jjfLoyOXwZEyCyfDcucaQ9n4WlkFyxk=
+        b=SRvYtPZ8rPxF//5Q9ocJ+xL7H8fiy3rq79AIK2zUFnHpRqcwn4owVIe3Im2F9Rrq2
+         wmu//6KYuRhcsPBQS5znxDAZ8GLljjk+gAqmhdvHsr3Xonj4495GzUD3Zu+xIoyCCc
+         3uGsXPSimsu/p/oRwXAznlyZ4FJT8pyL/g6rpzIc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wanpeng Li <wanpeng.li@hotmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Brian Gerst <brgerst@gmail.com>,
-        Denys Vlasenko <dvlasenk@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.4 17/21] x86/entry/64: Fix context tracking state warning when load_gs_index fails
-Date:   Fri,  9 Aug 2019 15:45:21 +0200
-Message-Id: <20190809134242.281419373@linuxfoundation.org>
+        stable@vger.kernel.org, Adam Ford <aford173@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 02/32] ARM: dts: Add pinmuxing for i2c2 and i2c3 for LogicPD SOM-LV
+Date:   Fri,  9 Aug 2019 15:45:05 +0200
+Message-Id: <20190809133923.039907302@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190809134241.565496442@linuxfoundation.org>
-References: <20190809134241.565496442@linuxfoundation.org>
+In-Reply-To: <20190809133922.945349906@linuxfoundation.org>
+References: <20190809133922.945349906@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -69,78 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpeng.li@hotmail.com>
+[ Upstream commit 5fe3c0fa0d54877c65e7c9b4442aeeb25cdf469a ]
 
-commit 2fa5f04f85730d0c4f49f984b7efeb4f8d5bd1fc upstream.
+Since I2C1 and I2C4 have explicit pinmuxing set, let's be on the
+safe side and set the pin muxing for I2C2 and I2C3.
 
-This warning:
-
- WARNING: CPU: 0 PID: 3331 at arch/x86/entry/common.c:45 enter_from_user_mode+0x32/0x50
- CPU: 0 PID: 3331 Comm: ldt_gdt_64 Not tainted 4.8.0-rc7+ #13
- Call Trace:
-  dump_stack+0x99/0xd0
-  __warn+0xd1/0xf0
-  warn_slowpath_null+0x1d/0x20
-  enter_from_user_mode+0x32/0x50
-  error_entry+0x6d/0xc0
-  ? general_protection+0x12/0x30
-  ? native_load_gs_index+0xd/0x20
-  ? do_set_thread_area+0x19c/0x1f0
-  SyS_set_thread_area+0x24/0x30
-  do_int80_syscall_32+0x7c/0x220
-  entry_INT80_compat+0x38/0x50
-
-... can be reproduced by running the GS testcase of the ldt_gdt test unit in
-the x86 selftests.
-
-do_int80_syscall_32() will call enter_form_user_mode() to convert context
-tracking state from user state to kernel state. The load_gs_index() call
-can fail with user gsbase, gsbase will be fixed up and proceed if this
-happen.
-
-However, enter_from_user_mode() will be called again in the fixed up path
-though it is context tracking kernel state currently.
-
-This patch fixes it by just fixing up gsbase and telling lockdep that IRQs
-are off once load_gs_index() failed with user gsbase.
-
-Signed-off-by: Wanpeng Li <wanpeng.li@hotmail.com>
-Acked-by: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Brian Gerst <brgerst@gmail.com>
-Cc: Denys Vlasenko <dvlasenk@redhat.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/1475197266-3440-1-git-send-email-wanpeng.li@hotmail.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Adam Ford <aford173@gmail.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/entry/entry_64.S |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/logicpd-som-lv.dtsi | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -1133,7 +1133,6 @@ ENTRY(error_entry)
- 	testb	$3, CS+8(%rsp)
- 	jz	.Lerror_kernelspace
+diff --git a/arch/arm/boot/dts/logicpd-som-lv.dtsi b/arch/arm/boot/dts/logicpd-som-lv.dtsi
+index 876ed5f2922c4..43035cb71cbee 100644
+--- a/arch/arm/boot/dts/logicpd-som-lv.dtsi
++++ b/arch/arm/boot/dts/logicpd-som-lv.dtsi
+@@ -114,10 +114,14 @@
+ };
  
--.Lerror_entry_from_usermode_swapgs:
- 	/*
- 	 * We entered from user mode or we're pretending to have entered
- 	 * from user mode due to an IRET fault.
-@@ -1177,7 +1176,8 @@ ENTRY(error_entry)
- 	 * gsbase and proceed.  We'll fix up the exception and land in
- 	 * gs_change's error handler with kernel gsbase.
- 	 */
--	jmp	.Lerror_entry_from_usermode_swapgs
-+	SWAPGS
-+	jmp .Lerror_entry_done
+ &i2c2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c2_pins>;
+ 	clock-frequency = <400000>;
+ };
  
- .Lbstep_iret:
- 	/* Fix truncated RIP */
+ &i2c3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c3_pins>;
+ 	clock-frequency = <400000>;
+ };
+ 
+@@ -239,6 +243,18 @@
+ 			OMAP3_WKUP_IOPAD(0x2a0c, PIN_OUTPUT | MUX_MODE4)	/* sys_boot1.gpio_3 */
+ 		>;
+ 	};
++	i2c2_pins: pinmux_i2c2_pins {
++		pinctrl-single,pins = <
++			OMAP3_CORE1_IOPAD(0x21be, PIN_INPUT | MUX_MODE0)	/* i2c2_scl */
++			OMAP3_CORE1_IOPAD(0x21c0, PIN_INPUT | MUX_MODE0)	/* i2c2_sda */
++		>;
++	};
++	i2c3_pins: pinmux_i2c3_pins {
++		pinctrl-single,pins = <
++			OMAP3_CORE1_IOPAD(0x21c2, PIN_INPUT | MUX_MODE0)	/* i2c3_scl */
++			OMAP3_CORE1_IOPAD(0x21c4, PIN_INPUT | MUX_MODE0)	/* i2c3_sda */
++		>;
++	};
+ };
+ 
+ &omap3_pmx_core2 {
+-- 
+2.20.1
+
 
 
