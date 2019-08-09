@@ -2,198 +2,187 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDCEDC31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:37:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F90C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:37:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC422214C6
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:37:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=towerbridgetechnology.onmicrosoft.com header.i=@towerbridgetechnology.onmicrosoft.com header.b="E/Kj2b5B"
+	by mail.kernel.org (Postfix) with ESMTP id 392B9214C6
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:37:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407373AbfHIRhc (ORCPT
+        id S2407515AbfHIRhu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 13:37:32 -0400
-Received: from mail-eopbgr760118.outbound.protection.outlook.com ([40.107.76.118]:60740
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2406606AbfHIRhc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 13:37:32 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lQUmL38nmEvV31LAH2NJNKyd5ZnJkc519hoDyw+9gLKlXVuyB+xWFRXoF8GVY7IAGxG6lVL45HOcOAIo9X2oMomJuSmaTpxeI73Tm2+RhR3sHxS3/7m/t7QdJDoCCPguYAgmUu/Ljafh58FpxkzHkBpNBoYdeFx3YbDz99r13eNvUfa/XZI4+/aFqLTQAdrgN/w+gl8pqgmjS9Psv/iFGFgVAWq66sNkL9Qd2uJUnRqoGXa4N4EBhvh9kc7MkEmVljYiwJlaHT7hNUHwXa3mnN7Fm0bk1iE851GnQeAZZ8W1lD4s9DZlFxNi34IcD6GhegJPvkLjo8xtcfgzhtpiVA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FPmTa1IVwAlnaQ2T5o4S/A8TEHamvSIf73w5sViDFL8=;
- b=bIncvhSjiHZRDpKqE4cdpXmNsK/rmAZGNaS09324S53X53yhBX2W+QJOEgLe6+UGKAydhC/ZZHxaXYmZzivRuIb1TQlSqWhXkwXvk844Qcl+ReJSgJVtHEZYmsFsxL7fa5HxoTGL/AGOCoagAd0UeGt/9gFWH2XL3TBJlQhKtXRF94VlrUNf4oU9d8d+H3XIw3fj2DcqnmTcqC3Km7+aPJ2wU2ZCPahhERSBD3tTABEgQpHGVUngiGza+ae9i1I3sauXHZ/mJePIPvKlZlAV5qVe5HLWXtqV5HlnDgCWZ3a0q+RNFX2fG71ogQSVidN+ZDNCEP6EteldYFRnWXuh/Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=bayhubtech.com;dmarc=pass action=none
- header.from=bayhubtech.com;dkim=pass header.d=bayhubtech.com;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=towerbridgetechnology.onmicrosoft.com;
- s=selector2-towerbridgetechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FPmTa1IVwAlnaQ2T5o4S/A8TEHamvSIf73w5sViDFL8=;
- b=E/Kj2b5BbWPVAVDjE3fsZqS4jHuFaYV1d9mrwFjLpuP0RMHIlwu/wG52+hud3IikGf5+igtDZrmn/SZAGR4zIk5eFFAt0pif38uG7IttkojJ7Gv50uWCxGB7lbBuDFuQmiZmYhfFH+ZQmvIqeqQnApG7D9B0Ooep8YzPb/iHFO4=
-Received: from MWHPR16MB1455.namprd16.prod.outlook.com (10.175.5.21) by
- MWHPR16MB1453.namprd16.prod.outlook.com (10.175.3.140) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2136.17; Fri, 9 Aug 2019 17:37:28 +0000
-Received: from MWHPR16MB1455.namprd16.prod.outlook.com
- ([fe80::48f4:c6d9:3a8:e7dd]) by MWHPR16MB1455.namprd16.prod.outlook.com
- ([fe80::48f4:c6d9:3a8:e7dd%4]) with mapi id 15.20.2157.020; Fri, 9 Aug 2019
- 17:37:28 +0000
-From:   "Shirley Her (SC)" <shirley.her@bayhubtech.com>
-To:     "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "Chevron Li (WH)" <chevron.li@bayhubtech.com>,
-        "Shaper Liu (WH)" <shaper.liu@bayhubtech.com>,
-        "Xiaoguang Yu (WH)" <xiaoguang.yu@bayhubtech.com>,
-        "Max Huang (SC)" <max.huang@bayhubtech.com>,
-        "Shirley Her (SC)" <shirley.her@bayhubtech.com>
-Subject: [PATCH V6 1/3] mmc: sdhci: Change O2 Host PLL and DLL register name
-Thread-Topic: [PATCH V6 1/3] mmc: sdhci: Change O2 Host PLL and DLL register
- name
-Thread-Index: AQHVTtkdH7jLrtWrg0qlL9dujbetyg==
-Date:   Fri, 9 Aug 2019 17:37:28 +0000
-Message-ID: <1565372245-4598-1-git-send-email-shirley.her@bayhubtech.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR01CA0023.prod.exchangelabs.com (2603:10b6:a02:80::36)
- To MWHPR16MB1455.namprd16.prod.outlook.com (2603:10b6:320:28::21)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=shirley.her@bayhubtech.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.7.4
-x-originating-ip: [209.36.105.184]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b36c8144-2f93-42f5-7919-08d71cf03f89
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR16MB1453;
-x-ms-traffictypediagnostic: MWHPR16MB1453:
-x-microsoft-antispam-prvs: <MWHPR16MB14532B3389818C097CFBC1368BD60@MWHPR16MB1453.namprd16.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:541;
-x-forefront-prvs: 01244308DF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39840400004)(376002)(346002)(136003)(366004)(396003)(199004)(189003)(64756008)(66446008)(54906003)(53936002)(305945005)(66066001)(8676002)(7736002)(2201001)(110136005)(71200400001)(71190400001)(476003)(508600001)(66556008)(66476007)(66946007)(316002)(107886003)(6512007)(6436002)(36756003)(8936002)(6486002)(2501003)(14454004)(14444005)(86362001)(256004)(486006)(50226002)(5660300002)(81166006)(81156014)(3846002)(6116002)(6506007)(386003)(2906002)(102836004)(4326008)(52116002)(2616005)(99286004)(25786009)(186003)(26005);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR16MB1453;H:MWHPR16MB1455.namprd16.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: bayhubtech.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: DWdHKikN+hxBFwFForn3NkZ4UCR/oAVLX+pbzonZ+C3D93AkI7m5qMzUczU2vXuWtpE/r8iTC0K19CBaDZtZ2ZetLqHgJEKjJryo+6ww6sLn36AOfGb+ce9eUV3RizxxJhKoLgEuMvmNPCILtr+tOg0aTr6GkXkxHQiMd3U3i6t9L/37n2NkxhGp0Ofk11bAVp33zJdlCkY5d/y24h52XpfkIRph795eQ9lQdwGqLK26IdVnMni0UjUPODXf0p+uNoIqYgWOcM6Udq7HEOVgxRNwSOCTKmMoeg8m04IHAfEBjrlbYkOrnhjQ13Jn7BBU6ZN7SXaOXPpr/k0Gbpy0i4UVITcTOnj5t7sRkgG/OnOARP2Aezi6tStcys10Cfyt+zwwwhSccM+PwpyXDzYT1M77ji8BkxancEr5Yf9rXvo=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 9 Aug 2019 13:37:50 -0400
+Received: from foss.arm.com ([217.140.110.172]:51248 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726216AbfHIRht (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 13:37:49 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A400415A2;
+        Fri,  9 Aug 2019 10:37:48 -0700 (PDT)
+Received: from [10.1.195.43] (e107049-lin.cambridge.arm.com [10.1.195.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 564E13F694;
+        Fri,  9 Aug 2019 10:37:47 -0700 (PDT)
+Subject: Re: [RFC PATCH v2 0/5] sched/cpufreq: Make schedutil energy aware
+To:     Patrick Bellasi <patrick.bellasi@arm.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        mingo@redhat.com, rjw@rjwysocki.net, viresh.kumar@linaro.org,
+        quentin.perret@arm.com, dietmar.eggemann@arm.com
+References: <20190627171603.14767-1-douglas.raillard@arm.com>
+ <20190702155115.GW3436@hirez.programming.kicks-ass.net>
+ <5198292b-1874-9ff4-6a9f-826a5ea00466@arm.com>
+ <20190708110904.ecrlr4p77n4r6qzk@e110439-lin>
+ <b35c2281-4d91-2164-65f9-9ef3a28c35d0@arm.com>
+ <20190709103750.hnm4bav6tjy7g37u@e110439-lin>
+From:   Douglas Raillard <douglas.raillard@arm.com>
+Organization: ARM
+Message-ID: <8fbbbfb1-2172-1ecc-4600-2f86ccbbabb4@arm.com>
+Date:   Fri, 9 Aug 2019 18:37:46 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: bayhubtech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b36c8144-2f93-42f5-7919-08d71cf03f89
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Aug 2019 17:37:28.3495
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0a7aae2b-8f2e-44df-ba2f-42de7f93c642
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7G1XzgtCBjXgd032C/Gj8WLunSK0cH/D0scLUrGwg03onMOcr62eANH6iZA+nUzf+3lL+7ER4QhGyC9qlQ8JukUyIwpnKZ5J05SuhMA/CfA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR16MB1453
+In-Reply-To: <20190709103750.hnm4bav6tjy7g37u@e110439-lin>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB-large
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change register name O2_PLL_WDT_CONTROL1 to O2_PLL_DLL_WDT_CONTROL1
+Hi Patrick,
 
-Signed-off-by:Shirley Her <shirley.her@bayhubtech.com>
----
-change in V6:
- 1. change subject and commit message to match the patch
- 2. change register name O2_PLL_WDT_CONTROL1 to O2_PLL_DLL_WDT_CONTROL1
+On 7/9/19 11:37 AM, Patrick Bellasi wrote:
+> On 08-Jul 14:46, Douglas Raillard wrote:
+>> Hi Patrick,
+>>
+>> On 7/8/19 12:09 PM, Patrick Bellasi wrote:
+>>> On 03-Jul 17:36, Douglas Raillard wrote:
+>>>> On 7/2/19 4:51 PM, Peter Zijlstra wrote:
+>>>>> On Thu, Jun 27, 2019 at 06:15:58PM +0100, Douglas RAILLARD wrote:
+> 
+> [...]
+> 
+>>> You are also correct in pointing out that in the steady state
+>>> ramp_boost will not be triggered in that steady state.
+>>>
+>>> IMU, that's for two main reasons:
+>>>    a) it's very likely that enqueued <= util_avg
+>>>    b) even in case enqueued should turn out to be _slightly_ bigger then
+>>>       util_avg, the corresponding (proportional) ramp_boost would be so
+>>>       tiny to not have any noticeable effect on OPP selection.
+>>>
+>>> Am I correct on point b) above?
+>>
+>> Assuming you meant "util_avg slightly bigger than enqueued" (which is when boosting triggers),
+>> then yes since ramp_boost effect is proportional to "task_ue.enqueue - task_u". It makes it robust
+>> against that.
+> 
+> Right :)
+> 
+>>> Could you maybe come up with some experimental numbers related to that
+>>> case specifically?
+>>
+>> With:
+>> * an rt-app task ramping up from 5% to 75% util in one big step. The
+>> whole cycle is 0.6s long (0.3s at 5% followed by 0.3s at 75%). This
+>> cycle is repeated 20 times and the average of boosting is taken.
+>>
+>> * a hikey 960 (this impact the frequency at which the test runs at
+>> the beginning of 75% phase, which impacts the number of missed
+>> activations before the util ramped up).
+>>
+>> * assuming an OPP exists for each util value (i.e. 1024 OPPs, so the
+>> effect of boost on consumption is not impacted by OPP capacities
+>> granularity)
+>>
+>> Then the boosting feature would increase the average power
+>> consumption by 3.1%, out of which 0.12% can be considered "spurious
+>> boosting" due to the util taking some time to really converge to its
+>> steady state value.
+>>
+>> In practice, the impact of small boosts will be even lower since
+>> they will less likely trigger the selection of a high OPP due to OPP
+>> capacity granularity > 1 util unit.
+> 
+> That's ok for the energy side: you estimate a ~3% worst case more
+> energy on that specific target.
+> 
+> By boosting I expect the negative boost to improve.
+> Do you have also numbers/stats related to the negative slack?
+> Can you share a percentage figure for that improvement?
 
-change in V5:
- 1. split 2 patches into 3 patches
- 2. make dll_adjust_count start from 0
- 3. fix ret overwritten issue
- 4. use break instead of goto
+I'm now testing on a Google Pixel 3 (Qcom Snapdragon 845) phone, with the same workload, pinned on a big core.
+It has a lot more OPPs than a hikey 960, so gradations in boosting are better reflected on frequency selection.
 
-change in V4:
- 1. add a bug fix for V3
+avg slack (higher=better):
+     Average time between task sleep and its next periodic activation.
 
-change in V3:
- 1. add more explanation in dll_recovery and execute_tuning function
- 2. move dll_adjust_count to O2_host struct
- 3. fix some coding style error
- 4. renaming O2_PLL_WDT_CONTROL1 TO O2_PLL_DLL_WDT_CONTROL1
+avg negative slack (lower in absolute value=better):
+     Same as avg slack, but only taking into account negative values.
+     Negative slack means a task activation did not have enough time to complete before the next
+     periodic activation fired, which is what we want to avoid.
 
-change in V2:
- 1. use usleep_range instead of udelay
- 2. move dll_adjust_count to sdhci-pci-o2micro.c
+boost energy overhead (lower=better):
+     Extra power consumption induced by ramp boost, assuming continuous OPP space (infinite number of OPP)
+     and single-CPU policies. In practice, fixed number of OPP decrease this value, and more CPU per policy increases it,
+     since boost(policy) = max(boost(cpu of policy)).
 
-chagne in V1:
- 1. add error recovery function to relock DLL with correct phase
- 2. retuning HS200 after DLL locked
----
- drivers/mmc/host/sdhci-pci-o2micro.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+Without ramp boost:
++--------------------+--------------------+
+|avg slack (us)      |avg negative slack  |
+|                    |(us)                |
++--------------------+--------------------+
+|6598.72             |-10217.13           |
+|6595.49             |-10200.13           |
+|6613.72             |-10401.06           |
+|6600.29             |-9860.872           |
+|6605.53             |-10057.64           |
+|6612.05             |-10267.50           |
+|6599.01             |-9939.60            |
+|6593.79             |-9445.633           |
+|6613.56             |-10276.75           |
+|6595.44             |-9751.770           |
++--------------------+--------------------+
+|average                                  |
++--------------------+--------------------+
+|6602.76             |-10041.81           |
++--------------------+--------------------+
 
-diff --git a/drivers/mmc/host/sdhci-pci-o2micro.c b/drivers/mmc/host/sdhci-=
-pci-o2micro.c
-index 9dc4548..b3a33d9 100644
---- a/drivers/mmc/host/sdhci-pci-o2micro.c
-+++ b/drivers/mmc/host/sdhci-pci-o2micro.c
-@@ -51,7 +51,7 @@
- #define O2_SD_VENDOR_SETTING2	0x1C8
- #define O2_SD_HW_TUNING_DISABLE	BIT(4)
-=20
--#define O2_PLL_WDT_CONTROL1	0x1CC
-+#define O2_PLL_DLL_WDT_CONTROL1	0x1CC
- #define  O2_PLL_FORCE_ACTIVE	BIT(18)
- #define  O2_PLL_LOCK_STATUS	BIT(14)
- #define  O2_PLL_SOFT_RESET	BIT(12)
-@@ -316,23 +316,23 @@ static void sdhci_o2_enable_internal_clock(struct sdh=
-ci_host *host)
- 	u32 scratch32;
-=20
- 	/* PLL software reset */
--	scratch32 =3D sdhci_readl(host, O2_PLL_WDT_CONTROL1);
-+	scratch32 =3D sdhci_readl(host, O2_PLL_DLL_WDT_CONTROL1);
- 	scratch32 |=3D O2_PLL_SOFT_RESET;
--	sdhci_writel(host, scratch32, O2_PLL_WDT_CONTROL1);
-+	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
- 	udelay(1);
- 	scratch32 &=3D ~(O2_PLL_SOFT_RESET);
--	sdhci_writel(host, scratch32, O2_PLL_WDT_CONTROL1);
-+	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
-=20
- 	/* PLL force active */
- 	scratch32 |=3D O2_PLL_FORCE_ACTIVE;
--	sdhci_writel(host, scratch32, O2_PLL_WDT_CONTROL1);
-+	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
-=20
- 	/* Wait max 20 ms */
- 	timeout =3D ktime_add_ms(ktime_get(), 20);
- 	while (1) {
- 		bool timedout =3D ktime_after(ktime_get(), timeout);
-=20
--		scratch =3D sdhci_readw(host, O2_PLL_WDT_CONTROL1);
-+		scratch =3D sdhci_readw(host, O2_PLL_DLL_WDT_CONTROL1);
- 		if (scratch & O2_PLL_LOCK_STATUS)
- 			break;
- 		if (timedout) {
-@@ -350,9 +350,9 @@ static void sdhci_o2_enable_internal_clock(struct sdhci=
-_host *host)
-=20
- out:
- 	/* Cancel PLL force active */
--	scratch32 =3D sdhci_readl(host, O2_PLL_WDT_CONTROL1);
-+	scratch32 =3D sdhci_readl(host, O2_PLL_DLL_WDT_CONTROL1);
- 	scratch32 &=3D ~O2_PLL_FORCE_ACTIVE;
--	sdhci_writel(host, scratch32, O2_PLL_WDT_CONTROL1);
-+	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
- }
-=20
- static int sdhci_o2_get_cd(struct mmc_host *mmc)
---=20
-2.7.4
 
+With ramp boost enabled:
++--------------------+--------------------+--------------------+
+|boost energy        |avg slack (us)      |avg negative slack  |
+|overhead (%)        |                    |(us)                |
++--------------------+--------------------+--------------------+
+|3.05                |7148.93             |-5664.26            |
+|3.04                |7144.69             |-5667.77            |
+|3.05                |7149.05             |-5698.31            |
+|2.97                |7126.71             |-6040.23            |
+|3.02                |7140.28             |-5826.78            |
+|3.03                |7135.11             |-5749.62            |
+|3.05                |7140.24             |-5750.0             |
+|3.05                |7144.84             |-5667.04            |
+|3.07                |7157.30             |-5656.65            |
+|3.06                |7154.65             |-5653.76            |
++--------------------+--------------------+--------------------+
+|average                                                       |
++--------------------+--------------------+--------------------+
+|3.039000            |7144.18             |5737.44             |
++--------------------+--------------------+--------------------+
+
+
+The negative slack is due to missed activations while the utilization signals
+increase during the big utilization step. Ramp boost is designed to boost frequency during
+that phase, which materializes in 1.75 less negative slack, for an extra power
+consumption under 3%.
+
+> Best,
+> Patrick
+> 
+
+Thanks,
+Douglas
