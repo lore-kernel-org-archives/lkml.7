@@ -2,51 +2,171 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA1A3C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 14:31:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C89EAC31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 14:36:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CA0F204EC
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 14:31:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92892208C4
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 14:36:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="AJ4bJsKf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406815AbfHIOb2 (ORCPT
+        id S2406791AbfHIOgS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 10:31:28 -0400
-Received: from verein.lst.de ([213.95.11.211]:55714 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726358AbfHIOb2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 10:31:28 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 6E1E568C4E; Fri,  9 Aug 2019 16:31:24 +0200 (CEST)
-Date:   Fri, 9 Aug 2019 16:31:24 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc:     Christoph Hellwig <hch@lst.de>, airlied@linux.ie, daniel@ffwll.ch,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH for-5.3] drm/omap: ensure we have a valid dma_mask
-Message-ID: <20190809143124.GA10121@lst.de>
-References: <20190808101042.18809-1-hch@lst.de> <7fff8fd3-16ae-1f42-fcd6-9aa360fe36b5@ti.com> <20190809080750.GA21874@lst.de> <c219e7e6-0f66-d6fd-e0cf-59c803386825@ti.com>
+        Fri, 9 Aug 2019 10:36:18 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:56170 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726157AbfHIOgR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 10:36:17 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190809143615euoutp02a70a3371751166ccb6b789e0082099df~5R_Clqk3K2229922299euoutp02A
+        for <linux-kernel@vger.kernel.org>; Fri,  9 Aug 2019 14:36:15 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190809143615euoutp02a70a3371751166ccb6b789e0082099df~5R_Clqk3K2229922299euoutp02A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1565361375;
+        bh=eDflF5RCD/YInlHvL2icWnHt8F3jpysJjiPXi+H+VKs=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=AJ4bJsKfq+cQjbUoXDxLYnMKvsxdvlhSIPr27JuByO+X2MmkJ//WIdwvrkhm3EL5d
+         yQtnffUb/I2wx29XysM6YPzI0Ctle8sV8fLVla+aXYYeODVmXJYaL/4F5uAGkKFkO4
+         ITqfX6DQuzQt5zIle6ST8WKl3OX7HvHrQ+zH6iLY=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190809143614eucas1p1ba207acb51332fde256c48166f216859~5R_B75nLN0762007620eucas1p1g;
+        Fri,  9 Aug 2019 14:36:14 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id DD.2A.04309.ED48D4D5; Fri,  9
+        Aug 2019 15:36:14 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190809143614eucas1p136e66c4c1a7a6ec3315a701a7919be37~5R_BGXnlT0369903699eucas1p1f;
+        Fri,  9 Aug 2019 14:36:14 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190809143613eusmtrp2e400ad28dd326312b2fc92a9702cae3e~5R_A4SEyX0063000630eusmtrp23;
+        Fri,  9 Aug 2019 14:36:13 +0000 (GMT)
+X-AuditID: cbfec7f4-ae1ff700000010d5-4a-5d4d84de3cb2
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 90.90.04166.DD48D4D5; Fri,  9
+        Aug 2019 15:36:13 +0100 (BST)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190809143613eusmtip1dc788cff9033ec99180a64f220b6c914~5R_AbcTKG0489304893eusmtip1U;
+        Fri,  9 Aug 2019 14:36:13 +0000 (GMT)
+Subject: Re: [PATCH 02/22] ARM: omap1: make omapfb standalone compilable
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <487da98d-a862-0207-289a-bca8ff18e51a@samsung.com>
+Date:   Fri, 9 Aug 2019 16:36:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c219e7e6-0f66-d6fd-e0cf-59c803386825@ti.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <CAK8P3a3grFEGr33s327yNMabK5=1kCJc3k7y55dhzQx9sTvkyQ@mail.gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrDKsWRmVeSWpSXmKPExsWy7djPc7r3WnxjDXZ/17BY88LB4u+kY+wW
+        V76+Z7NoXryezWLKn+VMFpseX2O1uLxrDpvF7CX9LBbr599is9h/xcuBy+P3r0mMHt++TmLx
+        OPx1IYvHnWt72Dz2z13D7nG/+ziTx+Yl9R7Hb2xn8vi8SS6AM4rLJiU1J7MstUjfLoEr4+me
+        f6wFJ/kq/h5/x9zA+Jy7i5GTQ0LARGLh1RusILaQwApGiZftRl2MXED2F0aJ2SuOs0M4nxkl
+        5p18zQTTcW3THKjEckaJ26+vskA4bxklbm7+xQ5SJSzgIdG+5zSYLSKgKDH1xTNmkCJmgZnM
+        Ekc37gRbyCZgJTGxfRUjiM0rYCcxrW8XmM0ioCJx+fAesBpRgQiJ+8c2sELUCEqcnPmEBcTm
+        FAiU2Ph+NlicWUBc4taT+UwQtrzE9rdzwJZJCLxkl3h8Zz4LxN0uEnPurYP6QVji1fEt7BC2
+        jMT/nSDNIA3rGCX+dryA6t7OKLF88j82iCpricPHLwKt4wBaoSmxfpc+RNhR4t2f9YwgYQkB
+        PokbbwUhjuCTmLRtOjNEmFeio00IolpNYsOyDWwwa7t2rmSewKg0C8lrs5C8MwvJO7MQ9i5g
+        ZFnFKJ5aWpybnlpslJdarlecmFtcmpeul5yfu4kRmMZO/zv+ZQfjrj9JhxgFOBiVeHgzmn1j
+        hVgTy4orcw8xSnAwK4nwXuEACvGmJFZWpRblxxeV5qQWH2KU5mBREuetZngQLSSQnliSmp2a
+        WpBaBJNl4uCUamB0+hJqud+cNSczb60x5/u0r38u7654+SdH9bzsQmYd52SDVJezWzhWWYpd
+        nsCXJnqrfJ1VvWe7oHJEv97NxGNBHx9MC3z4LXzZzL2F5k0+J4sVgwoOvoqq/zRpwRw5lqQl
+        ezfe4MqeNbco6PjE/2+W1pTfWn8keHPou9c/lD9O/Cmz6NKVx95zlViKMxINtZiLihMBtKx3
+        MV8DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrDIsWRmVeSWpSXmKPExsVy+t/xu7p3W3xjDX5+17NY88LB4u+kY+wW
+        V76+Z7NoXryezWLKn+VMFpseX2O1uLxrDpvF7CX9LBbr599is9h/xcuBy+P3r0mMHt++TmLx
+        OPx1IYvHnWt72Dz2z13D7nG/+ziTx+Yl9R7Hb2xn8vi8SS6AM0rPpii/tCRVISO/uMRWKdrQ
+        wkjP0NJCz8jEUs/Q2DzWyshUSd/OJiU1J7MstUjfLkEv4+mef6wFJ/kq/h5/x9zA+Jy7i5GT
+        Q0LAROLapjnsXYxcHEICSxklJmzqZeli5ABKyEgcX18GUSMs8edaFxuILSTwmlFi7jEHEFtY
+        wEOifc9pdhBbREBRYuqLZ8wgc5gF5jJLLHt0mR2iYT2TRO+dehCbTcBKYmL7KkYQm1fATmJa
+        3y4wm0VAReLy4T2sILaoQITEmfcrWCBqBCVOznwCZnMKBEpsfD8brIZZQF3iz7xLzBC2uMSt
+        J/OZIGx5ie1v5zBPYBSahaR9FpKWWUhaZiFpWcDIsopRJLW0ODc9t9hQrzgxt7g0L10vOT93
+        EyMwZrcd+7l5B+OljcGHGAU4GJV4eDOafWOFWBPLiitzDzFKcDArifBe4QAK8aYkVlalFuXH
+        F5XmpBYfYjQFem4is5Rocj4wneSVxBuaGppbWBqaG5sbm1koifN2CByMERJITyxJzU5NLUgt
+        gulj4uCUamCU2Ss99Yz7tr+8L3cvqngpJL0/Kr770ucAFZbHW88kB/iKsRmfnLgoc+o8b6GQ
+        u2eL757gcry5uGVJDGM616dfex7xnBPuF2dsX3mP5bqd91nrSZeclNYsLN3wn2fvtHKWnLN3
+        nCXP2P512/V199cW822fjE1/uhpwHnm+pixbNPRjcc9piQmtSizFGYmGWsxFxYkAEN++Je8C
+        AAA=
+X-CMS-MailID: 20190809143614eucas1p136e66c4c1a7a6ec3315a701a7919be37
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190808212453epcas2p44ff418662ee1acf428c6842ee4488f9f
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190808212453epcas2p44ff418662ee1acf428c6842ee4488f9f
+References: <20190808212234.2213262-1-arnd@arndb.de>
+        <CGME20190808212453epcas2p44ff418662ee1acf428c6842ee4488f9f@epcas2p4.samsung.com>
+        <20190808212234.2213262-3-arnd@arndb.de>
+        <55c9608d-68c4-17f6-2682-7668d5d7720a@samsung.com>
+        <CAK8P3a3grFEGr33s327yNMabK5=1kCJc3k7y55dhzQx9sTvkyQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 01:00:38PM +0300, Tomi Valkeinen wrote:
-> Alright, thanks for the clarification!
+
+On 8/9/19 1:43 PM, Arnd Bergmann wrote:
+> On Fri, Aug 9, 2019 at 1:32 PM Bartlomiej Zolnierkiewicz
+> <b.zolnierkie@samsung.com> wrote:
+>> On 8/8/19 11:22 PM, Arnd Bergmann wrote:
+>>> The omapfb driver is split into platform specific code for omap1, and
+>>> driver code that is also specific to omap1.
+>>>
+>>> Moving both parts into the driver directory simplifies the structure
+>>> and avoids the dependency on certain omap machine header files.
+>>>
+>>> The interrupt numbers in particular however must not be referenced
+>>> directly from the driver to allow building in a multiplatform
+>>> configuration, so these have to be passed through resources, is
+>>> done for all other omap drivers.
+>>>
+>>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>>
+>> For fbdev part:
+>>
+>> Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 > 
-> Here's my version.
+> Thanks for taking a look.
+> 
+>> [ It seems that adding of static inline for omap_set_dma_priority()
+>>   when ARCH_OMAP=n should be in patch #9 but this is a minor issue. ]
+> 
+> That would have been ok as well, but having the addition here was
+> intentional and seems more logical to me as this is where the headers
+> get moved around.
+I see that this is an optimization for making the patch series more
+compact but I think that this addition logically belongs to patch #9
+(which adds support for COMPILE_TEST) where the new code is required.
 
-Looks god to me:
+Moreover patch description for patch #2 lacks any comment about this
+addition being a preparation for changes in patch #9 so I was quite
+puzzled about its purpose when seeing it first.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Therefore please have mercy on the poor/stupid reviewer and don't do
+such optimizations intentionally (or at least describe them properly
+somewhere).. ;-)
+
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
