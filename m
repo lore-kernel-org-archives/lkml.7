@@ -2,159 +2,153 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 732C6C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 02:16:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD4EEC0650F
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 02:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48F2C2173C
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 02:16:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eTYKcvZc"
+	by mail.kernel.org (Postfix) with ESMTP id AB13E216C8
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 02:20:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404888AbfHICQP (ORCPT
+        id S2404579AbfHICUQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 22:16:15 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:36415 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729454AbfHICQO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 22:16:14 -0400
-Received: by mail-pf1-f195.google.com with SMTP id r7so45168365pfl.3
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 19:16:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=a/1ruBHpVt1jTKAf0TMhUUwHx4NvRraYwQZo6GfSVdo=;
-        b=eTYKcvZclF2mMygBExsdVr8uQ39XImTZpvwxdzuJFUrwvnE8abhTW+W9gsCG57Z9X8
-         rxoFxWAEfkg+q7jBAGOkZdQ40J6JzsQt1/4KB2PfNQPXK+ytgI41WcpbBEsi34qqvwAT
-         lhac3eXaCR/13s1Tsc3tgSn7aWy22eiv/dQqJEaHSHVYVvZLqEABjJMNHgD2kXp1E4Nf
-         ZakzsZ7uwpWEefKBNvYa+nnWbnXAnO6QmgnAKqdvRG1QdktLm/qTmfHsc7TRReUPdadn
-         1sac74YI0B8976EX9CVI8WSY6OojDG9mUSejDHx/LM9QJ+Ego1YMwgCzcF7Zh1ACY3+j
-         WBtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=a/1ruBHpVt1jTKAf0TMhUUwHx4NvRraYwQZo6GfSVdo=;
-        b=HHcU8tv8LWaJ64GtCWUesxSdvLtEbGpdPMekzXCKXZCsweDzbw+rq3kGq6wtUPgi2e
-         C8f4FFAfNMg1lwektJM8MoFuSi6S9+NpwNUslVen0n1iTeMjdK5RZz8Z5fHEJr688+Kf
-         jAxmQ0DrY6iZp2ytVMhnoqZ7HDhjcrAqBPBnPBLsmCg2SObtfwC+abzs+66f14WIvjFl
-         ZKb0twIbfwiOimXh1Rv6JSDvV4DQ2weOHXCcKLmE/LBh9b9tkd6qGpI8e9AAWnBtNSLX
-         OqF+uyZ7u8YJmhUhMLFcRQki2NTNrW7ccYWPzRYPNR+lqhm7SQh2yOS4c47My9+Skk/x
-         VJpw==
-X-Gm-Message-State: APjAAAXbt1LTOY6NunbrWiBxPDI/C5wIMt3UEayW3BI6RVflsOdOkL5y
-        ZnPxbuK4KnQOeipaT+XGRRiVew==
-X-Google-Smtp-Source: APXvYqxjFIjKEG2YLl39xJG9/4t10wZbRfOIyNBGmfhWSGuOXgrpO7JTwqWuk4mpETywH4ktBbQbEQ==
-X-Received: by 2002:a17:90a:de02:: with SMTP id m2mr7070396pjv.18.1565316973979;
-        Thu, 08 Aug 2019 19:16:13 -0700 (PDT)
-Received: from localhost ([122.172.76.219])
-        by smtp.gmail.com with ESMTPSA id a3sm97786667pfo.49.2019.08.08.19.16.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 08 Aug 2019 19:16:12 -0700 (PDT)
-Date:   Fri, 9 Aug 2019 07:46:07 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Doug Smythies <dsmythies@telus.net>
-Cc:     linux-pm@vger.kernel.org,
-        'Vincent Guittot' <vincent.guittot@linaro.org>,
-        linux-kernel@vger.kernel.org, 'Rafael Wysocki' <rjw@rjwysocki.net>,
-        'Srinivas Pandruvada' <srinivas.pandruvada@linux.intel.com>,
-        'Len Brown' <lenb@kernel.org>
-Subject: Re: [PATCH V4 2/2] cpufreq: intel_pstate: Implement QoS supported
- freq constraints
-Message-ID: <20190809021607.j4qj3jm72gbisvqh@vireshk-i7>
-References: <70fce19e43bb825c3b2546e1211d262a59ae7378.1565161495.git.viresh.kumar@linaro.org>
- <e789eceae3f32a66fff923daeb85b33b88f21fe1.1565161495.git.viresh.kumar@linaro.org>
- <000601d54e05$e93d0130$bbb70390$@net>
+        Thu, 8 Aug 2019 22:20:16 -0400
+Received: from mail5.windriver.com ([192.103.53.11]:60894 "EHLO mail5.wrs.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729418AbfHICUQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 22:20:16 -0400
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
+        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x792HW5o009767
+        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
+        Thu, 8 Aug 2019 19:17:43 -0700
+Received: from [128.224.162.237] (128.224.162.237) by ALA-HCA.corp.ad.wrs.com
+ (147.11.189.50) with Microsoft SMTP Server id 14.3.468.0; Thu, 8 Aug 2019
+ 19:17:22 -0700
+Subject: Re: [PATCH 1/2 v2] tracing/arm64: Have max stack tracer handle the
+ case of return address after data
+To:     Steven Rostedt <rostedt@goodmis.org>, Will Deacon <will@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <catalin.marinas@arm.com>,
+        <will.deacon@arm.com>, <mingo@redhat.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20190807172826.352574408@goodmis.org>
+ <20190807172907.155165959@goodmis.org>
+ <20190808162825.7klpu3ffza5zxwrt@willie-the-truck>
+ <20190808123632.0dd1a58c@gandalf.local.home>
+ <20190808171153.6j56h4hlcpcl5trz@willie-the-truck>
+ <20190808132455.5fa2c660@gandalf.local.home>
+From:   Jiping Ma <Jiping.Ma2@windriver.com>
+Message-ID: <21530ce5-3847-c669-2a64-7c59ffb45f35@windriver.com>
+Date:   Fri, 9 Aug 2019 10:17:19 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000601d54e05$e93d0130$bbb70390$@net>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20190808132455.5fa2c660@gandalf.local.home>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08-08-19, 09:25, Doug Smythies wrote:
-> On 2019.08.07 00:06 Viresh Kumar wrote:
-> Tested by: Doug Smythies <dsmythies@telus.net>
-> Thermald seems to now be working O.K. for all the governors.
 
-Thanks for testing Doug.
 
-> I do note that if one sets
-> /sys/devices/system/cpu/cpufreq/policy*/scaling_max_freq
-> It seems to override subsequent attempts via
-> /sys/devices/system/cpu/intel_pstate/max_perf_pct.
-> Myself, I find this confusing.
-> 
-> So the question becomes which one is the "master"?
+On 2019年08月09日 01:24, Steven Rostedt wrote:
+> On Thu, 8 Aug 2019 18:11:53 +0100
+> Will Deacon <will@kernel.org> wrote:
+>
+>>> We could make it more descriptive of what it will do and not the reason
+>>> for why it is done...
+>>>
+>>>
+>>>    ARCH_FTRACE_SHIFT_STACK_TRACER
+>> Acked-by: Will Deacon <will@kernel.org>
+> Thanks Will!
+>
+> Here's the official patch.
+>
+> From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+>
+> Most archs (well at least x86) store the function call return address on the
+> stack before storing the local variables for the function. The max stack
+> tracer depends on this in its algorithm to display the stack size of each
+> function it finds in the back trace.
+>
+> Some archs (arm64), may store the return address (from its link register)
+> just before calling a nested function. There's no reason to save the link
+> register on leaf functions, as it wont be updated. This breaks the algorithm
+> of the max stack tracer.
+>
+> Add a new define ARCH_RET_ADDR_AFTER_LOCAL_VARS that an architecture may set
 
-No one is master, cpufreq takes all the requests for frequency
-constraints and tries to set the value based on aggregation of all. So
-for max frequency, the lowest value wins and is shown up in sysfs.
+ARCH_FTRACE_SHIFT_STACK_TRACER is used in the code.
 
-So, everything looks okay to me.
+Jiping
 
-> > +static void update_qos_request(enum dev_pm_qos_req_type type)
-> > +{
-> > +	int max_state, turbo_max, freq, i, perf_pct;
-> > +	struct dev_pm_qos_request *req;
-> > +	struct cpufreq_policy *policy;
-> > +
-> > +	for_each_possible_cpu(i) {
-> > +		struct cpudata *cpu = all_cpu_data[i];
-> > +
-> > +		policy = cpufreq_cpu_get(i);
-> > +		if (!policy)
-> > +			continue;
-> > +
-> > +		req = policy->driver_data;
-> > +		cpufreq_cpu_put(policy);
-> > +
-> > +		if (!req)
-> > +			continue;
-> > +
-> > +		if (hwp_active)
-> > +			intel_pstate_get_hwp_max(i, &turbo_max, &max_state);
-> > +		else
-> > +			turbo_max = cpu->pstate.turbo_pstate;
-> > +
-> > +		if (type == DEV_PM_QOS_MIN_FREQUENCY) {
-> 
-> Is it O.K. to assume if the passed op code is
-> not DEV_PM_QOS_MIN_FREQUENCY
-> then it must have been
-> DEV_PM_QOS_MAX_FREQUENCY
-> ?
-> 
-> It is within this patch, but what about in future?
+> if it stores the return address (link register) after it stores the
+> function's local variables, and have the stack trace shift the values of the
+> mapped stack size to the appropriate functions.
+>
+> Link: 20190802094103.163576-1-jiping.ma2@windriver.com
+>
+> Reported-by: Jiping Ma <jiping.ma2@windriver.com>
+> Acked-by: Will Deacon <will@kernel.org>
+> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> ---
+>   arch/arm64/include/asm/ftrace.h | 13 +++++++++++++
+>   kernel/trace/trace_stack.c      | 14 ++++++++++++++
+>   2 files changed, 27 insertions(+)
+>
+> diff --git a/arch/arm64/include/asm/ftrace.h b/arch/arm64/include/asm/ftrace.h
+> index 5ab5200b2bdc..d48667b04c41 100644
+> --- a/arch/arm64/include/asm/ftrace.h
+> +++ b/arch/arm64/include/asm/ftrace.h
+> @@ -14,6 +14,19 @@
+>   #define MCOUNT_ADDR		((unsigned long)_mcount)
+>   #define MCOUNT_INSN_SIZE	AARCH64_INSN_SIZE
+>   
+> +/*
+> + * Currently, gcc tends to save the link register after the local variables
+> + * on the stack. This causes the max stack tracer to report the function
+> + * frame sizes for the wrong functions. By defining
+> + * ARCH_FTRACE_SHIFT_STACK_TRACER, it will tell the stack tracer to expect
+> + * to find the return address on the stack after the local variables have
+> + * been set up.
+> + *
+> + * Note, this may change in the future, and we will need to deal with that
+> + * if it were to happen.
+> + */
+> +#define ARCH_FTRACE_SHIFT_STACK_TRACER 1
+> +
+>   #ifndef __ASSEMBLY__
+>   #include <linux/compat.h>
+>   
+> diff --git a/kernel/trace/trace_stack.c b/kernel/trace/trace_stack.c
+> index 5d16f73898db..642a850af81a 100644
+> --- a/kernel/trace/trace_stack.c
+> +++ b/kernel/trace/trace_stack.c
+> @@ -158,6 +158,20 @@ static void check_stack(unsigned long ip, unsigned long *stack)
+>   			i++;
+>   	}
+>   
+> +#ifdef ARCH_FTRACE_SHIFT_STACK_TRACER
+> +	/*
+> +	 * Some archs will store the link register before calling
+> +	 * nested functions. This means the saved return address
+> +	 * comes after the local storage, and we need to shift
+> +	 * for that.
+> +	 */
+> +	if (x > 1) {
+> +		memmove(&stack_trace_index[0], &stack_trace_index[1],
+> +			sizeof(stack_trace_index[0]) * (x - 1));
+> +		x--;
+> +	}
+> +#endif
+> +
+>   	stack_trace_nr_entries = x;
+>   
+>   	if (task_stack_end_corrupted(current)) {
 
-Yes, because it is called locally there is no need to add another if
-statement here. And reviews should catch it in future and I don't
-expect it to change much anyway.
-
-> > +			perf_pct = global.min_perf_pct;
-> > +		} else {
-> > +			req++;
-> > +			perf_pct = global.max_perf_pct;
-> > +		}
-> > +
-> > +		freq = DIV_ROUND_UP(turbo_max * perf_pct, 100);
-> > +		freq *= cpu->pstate.scaling;
-> > +
-> > +		if (dev_pm_qos_update_request(req, freq))
-> > +			pr_warn("Failed to update freq constraint: CPU%d\n", i);
-> 
-> I get many of these messages (4520 so far, always in groups of 8 (I have 8 CPUs)),
-> and have yet to figure out exactly why. It seems to actually be working fine.
-
-Because of something I missed. dev_pm_qos_update_request() can return
-1, when the constraint value gets changed. Will fix this patch.
-
--- 
-viresh
