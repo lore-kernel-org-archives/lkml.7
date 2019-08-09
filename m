@@ -2,116 +2,113 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0095C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E710AC31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:29:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8ED9214C6
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:28:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC2B020B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:29:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VOhJowUj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407349AbfHIR2m (ORCPT
+        id S2436549AbfHIR3J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 13:28:42 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42768 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726382AbfHIR2m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 13:28:42 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 858C13082B1F;
-        Fri,  9 Aug 2019 17:28:41 +0000 (UTC)
-Received: from pauld.bos.csb (dhcp-17-51.bos.redhat.com [10.18.17.51])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2E18E600CC;
-        Fri,  9 Aug 2019 17:28:40 +0000 (UTC)
-Date:   Fri, 9 Aug 2019 13:28:38 -0400
-From:   Phil Auld <pauld@redhat.com>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     vincent.guittot@linaro.org, hpa@zytor.com,
-        linux-kernel@vger.kernel.org, peterz@infradead.org,
-        mingo@redhat.com, tglx@linutronix.de, mingo@kernel.org,
-        linux-tip-commits@vger.kernel.org
-Subject: Re: [tip:sched/core] sched/fair: Use rq_lock/unlock in
- online_fair_sched_group
-Message-ID: <20190809172837.GB18727@pauld.bos.csb>
-References: <20190801133749.11033-1-pauld@redhat.com>
- <tip-6b8fd01b21f5f2701b407a7118f236ba4c41226d@git.kernel.org>
- <dfc8f652-ca98-e30a-546f-e6a2df36e33a@arm.com>
+        Fri, 9 Aug 2019 13:29:09 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:46364 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726157AbfHIR3J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 13:29:09 -0400
+Received: by mail-pg1-f193.google.com with SMTP id w3so8977198pgt.13;
+        Fri, 09 Aug 2019 10:29:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=2l2uOku7IZIdjpnDK2uRPlXP2kUl+VlcuE2o6tTh0qM=;
+        b=VOhJowUjF7HpnqkbCxFXoMMEq+gVRzXhe2DBlCi5etX6yBcO+JO9bVYCXJ/BLxX2hH
+         b3zbUhe+0LS72aW1bQNp/HRElRZdWKfB2/UDhSrBegbUf7F3Vv/dB40zVLC/cIKEuCnE
+         B3zZwPUe+jwI13wD9XaNQtuAyf5kdJFLc4AG6jVf9cIIuRZPHJX1j68EPknjWq7sJylT
+         5aLe3V6gf6IKWhRWsUPV/ETZ5SEPhJP3qukNKXp2whMHT92dzlpPkJbhXKqePZ/OD8rU
+         gmZVdIbvb9iDRmVMUraebYkz2F9EhJv8Ye9yffKS0JzBNE9qLSXdAP4XI1Fj/mZ6addv
+         c6sA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=2l2uOku7IZIdjpnDK2uRPlXP2kUl+VlcuE2o6tTh0qM=;
+        b=R6SFi+r4UmLY+9gBtCDl15t1DVO39tcqSsVRGnOFRlzF/JGiKvlqIAj8ps5u0INMGL
+         ihVKNiNkyPyhqERu5QoP50hzrp+shqaF9sl/TG3WmtJlmxw30nVBhue8KXgwwWqWpdJK
+         6b+R5M761wXUAjlrqhPMNFkPXmiFZF4OFPq4pYBDSktqBgDHKdydss5ywHF98FCdoB0/
+         0TbWDUgWhY3a3Zh6qvoql4dyp7A6U/lxasXtflRx2LvDVQdwN7rJIPRwIPgZfx5Lso95
+         Zb/uRJe6YdxW/P2DLQ8I9ZsJ8H3jHDskRzuUM+lkvxqgG5Wi+i6tVhYYTLkhwlSMepAB
+         53tg==
+X-Gm-Message-State: APjAAAXDJTXUlKg8R9NnPBmuGlxESayGbfU8g1WkFMmSntqufmmzRhIQ
+        +joY4ZqyJ9K7PhwbMJOW8Xo=
+X-Google-Smtp-Source: APXvYqypywdRwkvnpkLb0alAWpcF3w1UWCqaPzX3ClRIQhWQ+QJv1naaOve6ISzMPMzRpujrUVKiJw==
+X-Received: by 2002:a17:90a:9301:: with SMTP id p1mr10439917pjo.22.1565371748343;
+        Fri, 09 Aug 2019 10:29:08 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id g1sm161190879pgg.27.2019.08.09.10.29.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 09 Aug 2019 10:29:07 -0700 (PDT)
+Date:   Fri, 9 Aug 2019 10:29:06 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>, od@zcrc.me,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] watchdog: jz4740: Driver update
+Message-ID: <20190809172906.GA21450@roeck-us.net>
+References: <20190809115930.6050-1-paul@crapouillou.net>
+ <20190809165207.GA18104@roeck-us.net>
+ <1565369726.2091.0@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <dfc8f652-ca98-e30a-546f-e6a2df36e33a@arm.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Fri, 09 Aug 2019 17:28:41 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1565369726.2091.0@crapouillou.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 06:21:22PM +0200 Dietmar Eggemann wrote:
-> On 8/8/19 1:01 PM, tip-bot for Phil Auld wrote:
+On Fri, Aug 09, 2019 at 06:55:26PM +0200, Paul Cercueil wrote:
+> Hi Guenter,
 > 
-> [...]
 > 
-> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > index 19c58599e967..d9407517dae9 100644
-> > --- a/kernel/sched/fair.c
-> > +++ b/kernel/sched/fair.c
-> > @@ -10281,18 +10281,18 @@ err:
-> >  void online_fair_sched_group(struct task_group *tg)
-> >  {
-> >  	struct sched_entity *se;
-> > +	struct rq_flags rf;
-> >  	struct rq *rq;
-> >  	int i;
-> >  
-> >  	for_each_possible_cpu(i) {
-> >  		rq = cpu_rq(i);
-> >  		se = tg->se[i];
-> > -
-> > -		raw_spin_lock_irq(&rq->lock);
-> > +		rq_lock(rq, &rf);
-> >  		update_rq_clock(rq);
-> >  		attach_entity_cfs_rq(se);
-> >  		sync_throttle(tg, i);
-> > -		raw_spin_unlock_irq(&rq->lock);
-> > +		rq_unlock(rq, &rf);
-> >  	}
-> >  }
+> Le ven. 9 août 2019 à 18:52, Guenter Roeck <linux@roeck-us.net> a écrit :
+> >On Fri, Aug 09, 2019 at 01:59:27PM +0200, Paul Cercueil wrote:
+> >> Hi,
+> >>
+> >> This patchset comes from a bigger patchset that was cut in smaller
+> >> pieces for easier integration to mainline.
+> >> (The patchset was https://lkml.org/lkml/2019/3/27/1837)
+> >>
+> >> The reviews were kept since the code mostly didn't change. The
+> >>exception
+> >> is the use of device_node_to_regmap() in patch 2/3. This function was
+> >> added in a prior patch, now merged in the MIPS tree.
+> >>
+> >> For that reason this patchset is based on the ingenic-tcu-v5.4 branch
+> >>of
+> >> the MIPS tree
+> >> (git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git).
+> >>
+> >
+> >What is the expectation here ? Should the series be sent upstream
+> >through the watchdog tree, or through some other tree ?
 > 
-> Shouldn't this be:
+> You can get it through the watchdog tree if you merge the ingenic-tcu-v5.4
+> branch from the MIPS tree. If you'd rather not do that, I can get it merged
+> through the MIPS tree.
 > 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index d9407517dae9..1054d2cf6aaa 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -10288,11 +10288,11 @@ void online_fair_sched_group(struct task_group
-> *tg)
->         for_each_possible_cpu(i) {
->                 rq = cpu_rq(i);
->                 se = tg->se[i];
-> -               rq_lock(rq, &rf);
-> +               rq_lock_irq(rq, &rf);
->                 update_rq_clock(rq);
->                 attach_entity_cfs_rq(se);
->                 sync_throttle(tg, i);
-> -               rq_unlock(rq, &rf);
-> +               rq_unlock_irq(rq, &rf);
->         }
->  }
-> 
-> Currently, you should get a 'inconsistent lock state' warning with
-> CONFIG_PROVE_LOCKING.
+I would prefer a merge through the mips tree.
 
-Yes, indeed. Sorry about that. Maybe it can be fixed in tip before 
-it gets any farther?  Or do we need a new patch?
-
-
-Cheers,
-Phil
-
--- 
+Guenter
