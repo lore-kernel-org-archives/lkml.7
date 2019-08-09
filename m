@@ -2,87 +2,136 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B22E7C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 22:17:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45DF2C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 22:20:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7925E21743
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 22:17:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565389042;
-	bh=sBCc7FSNFhlnRsGYMaaCt24naPV+9JGWf4SdSDBpZSQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=C6+A/UqK9h2rIOVe2kh3S50tAOfvLRuvvskPa0+HgvnvXZShBEezcENtVTF1gZJN+
-	 NhqbWng0PoLKjLTYuerZISk3oR0IE36Ai4nv9bx5CtZloRZLFi00zqBWuF9x1Jz1yY
-	 Z9q1Dery3C0tm1/tcZHd750pjTHzl19j5DQkX9Fs=
+	by mail.kernel.org (Postfix) with ESMTP id 1AA3020C01
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 22:20:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h4wFQh0I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729435AbfHIWRV (ORCPT
+        id S1728245AbfHIWUg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 18:17:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38178 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726078AbfHIWRU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 18:17:20 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8646B20C01;
-        Fri,  9 Aug 2019 22:17:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565389039;
-        bh=sBCc7FSNFhlnRsGYMaaCt24naPV+9JGWf4SdSDBpZSQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=M0Yq6MHAY53t1ncV64OxCpQqedn+WGq7kUdkHQs/u4ha4+lqiISH5b3bRrmIog8Wt
-         o8ciIYK8TbwhCQwuiXofvHPxI9UqaGaq0sdOWGr5Xetzut3rRRFlbp/2r5gMkvzC1m
-         KsxqJdOSCt+CD15CCLeCix6toLaH2Y6YVAvmk3DQ=
-Date:   Fri, 9 Aug 2019 15:17:18 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Mike Kravetz <mike.kravetz@oracle.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, ltp@lists.linux.it,
-        Li Wang <liwang@redhat.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Cyril Hrubis <chrubis@suse.cz>, xishi.qiuxishi@alibaba-inc.com,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH] hugetlbfs: fix hugetlb page migration/fault race
- causing SIGBUS
-Message-Id: <20190809151718.d285cd1f6d0f1cf02cb93dc8@linux-foundation.org>
-In-Reply-To: <20190809064633.GK18351@dhcp22.suse.cz>
-References: <20190808000533.7701-1-mike.kravetz@oracle.com>
-        <20190808074607.GI11812@dhcp22.suse.cz>
-        <20190808074736.GJ11812@dhcp22.suse.cz>
-        <416ee59e-9ae8-f72d-1b26-4d3d31501330@oracle.com>
-        <20190808185313.GG18351@dhcp22.suse.cz>
-        <20190808163928.118f8da4f4289f7c51b8ffd4@linux-foundation.org>
-        <20190809064633.GK18351@dhcp22.suse.cz>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 9 Aug 2019 18:20:36 -0400
+Received: from mail-pf1-f181.google.com ([209.85.210.181]:41541 "EHLO
+        mail-pf1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbfHIWUe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 18:20:34 -0400
+Received: by mail-pf1-f181.google.com with SMTP id m30so46763975pff.8;
+        Fri, 09 Aug 2019 15:20:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :content-transfer-encoding:user-agent;
+        bh=yWau7YU+ZUfTifU715n6+E78gOBN34cf0QBHWjhMEdw=;
+        b=h4wFQh0InRYXp9htTypd5kqsYpfnEr1mPy6ky76IydzSZV3x42JM7uS9twJNS8SoE+
+         rGPDd6fIMiJVeR4ev2acQZLDqlYLDgN6yS23rNZ252XJI+8/1EaON6YDIXz1cQk75Js/
+         E8zmnizSowVZ6wmSE6neY5K6XufkOlJs5j5G8CU1TeKom9+PpzY6IxJ9IzDChIT7HBNh
+         fU9RoslRae1VCrqhDUvCI+904SC3E8c6ILPyWKw41BcKrVqMMX/o+mJT57HyAZ/hZ3Eu
+         3XvP13jwXgyfbJcRPc+xzikfcYMPpFUZeEELqQwfr+fcLyYWbx/7E6mErTUSdLtu0FMC
+         TgwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:content-transfer-encoding:user-agent;
+        bh=yWau7YU+ZUfTifU715n6+E78gOBN34cf0QBHWjhMEdw=;
+        b=fuo63BT2SBvcGje1ZqLAQZXqcym0LpeBlTJtwjt1JDxCXiEE7KAjmgKIYAHJtL/89R
+         cMQzsM1TD3YLE++mq1KhD3XrdJlp9j9XoQ5mnxR40kqxawneDuPXlHSBo4ltRYSnpuZ7
+         /wdhp/I4OpRAVMHhZyFsLwv8Tv30kOq8AqQHSiNS62W4jbEdcoXaExW+vHsoD5ctwiVG
+         YQ28pVBlpj288AeQ0dc7lcsfGXuipGmFJkqWUjAWYUEGiqy64Oy4kCPGNskSCPsd9rg0
+         iZOxJmRLG9he/fpJIdu1D6j4kgnaAVzzt40RbTve30Shw7/hLK9czFVfoXMOFKUe+1Ji
+         fu6A==
+X-Gm-Message-State: APjAAAVlqZR/BFN1rHmsRrw9VmJ7kUVyHITR87966znUTHVui9dsoROB
+        CC1n+tI7ZgAffSqZVjBpxS0=
+X-Google-Smtp-Source: APXvYqyxnxOI3p+sxIoZEIOrWszQDrDcbW7VNAsQas0ES+giI17pJvDOx+oaXlfGvxtl0CdktwftAQ==
+X-Received: by 2002:a17:90a:7148:: with SMTP id g8mr11705511pjs.51.1565389233037;
+        Fri, 09 Aug 2019 15:20:33 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id h20sm245256pfq.156.2019.08.09.15.20.32
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 09 Aug 2019 15:20:32 -0700 (PDT)
+Date:   Fri, 9 Aug 2019 15:20:30 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Subject: [git pull] Input updates for v5.3-rc3
+Message-ID: <20190809222030.GA20442@dtor-ws>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 9 Aug 2019 08:46:33 +0200 Michal Hocko <mhocko@kernel.org> wrote:
+Hi Linus,
 
-> > Maybe we should introduce the Fixes-no-stable: tag.  That should get
-> > their attention.
-> 
-> No please, Fixes shouldn't be really tight to any stable tree rules. It
-> is a very useful indication of which commit has introduced bug/problem
-> or whatever that the patch follows up to. We in Suse are using this tag
-> to evaluate potential fixes as the stable is not reliable. We could live
-> with Fixes-no-stable or whatever other name but does it really makes
-> sense to complicate the existing state when stable maintainers are doing
-> whatever they want anyway? Does a tag like that force AI from selecting
-> a patch? I am not really convinced.
+Please pull from:
 
-It should work if we ask stable trees maintainers not to backport
-such patches.
+	git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git for-linus
 
-Sasha, please don't backport patches which are marked Fixes-no-stable:
-and which lack a cc:stable tag.
+to receive updates for the input subsystem. You will get:
+
+- newer systems with Elan touchpads will be switched over to SMBus
+- HP Spectre X360 will be using SMbus/RMI4
+- checks for invalid USB descriptors in kbtab and iforce
+- build fixes for applespi driver (misconfigs)
+
+Thanks!
+
+Changelog:
+---------
+
+Arnd Bergmann (1):
+      Input: applespi - select CRC16 module
+
+Dmitry Torokhov (2):
+      Input: elantech - annotate fall-through case in elantech_use_host_notify()
+      Input: synaptics - enable RMI mode for HP Spectre X360
+
+Gustavo A. R. Silva (1):
+      Input: applespi - use struct_size() helper
+
+Kai-Heng Feng (1):
+      Input: elantech - enable SMBus on new (2018+) systems
+
+Nikolas Nyby (1):
+      Input: applespi - fix trivial typo in struct description
+
+Oliver Neukum (3):
+      Input: usbtouchscreen - initialize PM mutex before using it
+      Input: kbtab - sanity check for endpoint type
+      Input: iforce - add sanity checks
+
+Ronald Tschalär (1):
+      Input: applespi - fix warnings detected by sparse
+
+YueHaibing (1):
+      Input: applespi - add dependency on LEDS_CLASS
+
+Diffstat:
+--------
+
+ drivers/input/joystick/iforce/iforce-usb.c |  5 +++
+ drivers/input/keyboard/Kconfig             |  2 ++
+ drivers/input/keyboard/applespi.c          | 29 +++++++++-------
+ drivers/input/mouse/elantech.c             | 55 ++++++++++++++----------------
+ drivers/input/mouse/synaptics.c            |  1 +
+ drivers/input/tablet/kbtab.c               |  6 ++--
+ drivers/input/touchscreen/usbtouchscreen.c |  2 ++
+ 7 files changed, 56 insertions(+), 44 deletions(-)
+
+Thanks.
+
+
+-- 
+Dmitry
