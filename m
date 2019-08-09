@@ -2,155 +2,163 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 360ABC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F1B8C32756
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:28:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04DFB2171F
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:28:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565357295;
-	bh=5H5b7y+4EokoM0HkClMwlRbqVVUaENMdf+M7pdtzgA0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JjCeP4D6IV0/+RGuevd2AKMSX+o7ZmYWEGS4A00VIYiFF+Lp12kqMvJycbnZLwBu6
-	 XckdDHSjuyrC3a4BHJr4u8hlWDTS+fImNUTIot+kTwMKPhxwplQs7rzWdmhW4HS7EA
-	 gCqT3nGA1lRfAhupVvPb6WyQ+ChfkfCw83JKCQWw=
+	by mail.kernel.org (Postfix) with ESMTP id 451C5214C6
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:28:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YSmPOe6c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407084AbfHIN2O (ORCPT
+        id S2436478AbfHIN2Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 09:28:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55152 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726091AbfHIN2N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 09:28:13 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DDE1214C6;
-        Fri,  9 Aug 2019 13:28:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565357292;
-        bh=5H5b7y+4EokoM0HkClMwlRbqVVUaENMdf+M7pdtzgA0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oxB3Emcyz8XTPMJKE3Y0ERvCS3wx3MpN4HaZYeFBjqS8FG4CZT8m8P1NeKaiqiw2g
-         a9zHd52yoo+fRNoy4aQfLm9DfU2BVXZj8f81DtNHf+dtP4quAWeOFSci/xnCEVebMm
-         NME5uEl0BR2gU5/vRVgQhTn4PmcIyOQZq4sUTsYg=
-Date:   Fri, 9 Aug 2019 15:28:09 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Joe Burmeister <joe.burmeister@devtank.co.uk>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Add optional chip erase functionality to AT25 EEPROM
- driver.
-Message-ID: <20190809132809.GA30876@kroah.com>
-References: <20190809125358.24440-1-joe.burmeister@devtank.co.uk>
- <20190809130005.GA13962@kroah.com>
- <d6534808-aa41-0bf0-a516-cee9bbd8e97a@devtank.co.uk>
+        Fri, 9 Aug 2019 09:28:25 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:36102 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407085AbfHIN2Y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 09:28:24 -0400
+Received: by mail-lf1-f66.google.com with SMTP id j17so15506339lfp.3;
+        Fri, 09 Aug 2019 06:28:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=EDzK4HqGCuYHNeAik93nZOt6GVBVyL4RxyPi6JCejLQ=;
+        b=YSmPOe6cdLuMYmLalcXrV1zZPmoP7esgm+eyg9ShiE+r9XIoVfqjsOSmd+p3dusaRZ
+         nT8ylNAQWkfK8H+NITQZOI/OKZU+ZtFFSe0ZuzeyI4KWtnzv6APYr/Rihbm5sYUfwxD8
+         nbGaCvyuROjMeFcV9+qkn0IQHwl5WNZFO/UobWPDIXDKnp1g4gM0LpYKnB8t0euqShEe
+         E+Yw7QMFrIt/KyVRwVnlBxE9F82UzfyetEPh/Z9fia6NIHOMpikbZmMEW2nFwxjtnTbn
+         9foy3qAKnkjXCQE35uagSJVeo5Hou4api1+baTtM3V/QcTxMRlMhPX30q15N9TmInibe
+         N0BQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EDzK4HqGCuYHNeAik93nZOt6GVBVyL4RxyPi6JCejLQ=;
+        b=O9u2GxUA8Rk674G3hPxW27sz8sutU27fHluOYz6fBuW4DOn1rYooyWmeQTWFSItKJe
+         ub5jv6LviicNBuxcl4eeq2IUOJ06pcrqi0OTg9cbZukw5/QCKkvlh89NbDkVrcJSGndn
+         R+Soa/gVmM9MUdtD/KeCjLyUcncugynPNGT+zvl1I8KCH5Fx3RzTjnj+Z/03gX0MehIx
+         4CwCNSNr5nP7qKb//GyCwUxOjZi7plMvZ+njwnhYjwEZkAgXdoiqV1uvYWehBiwmTeSS
+         fZtUdfte7/h643yxTzW4tZ888FrQTpHYBe9Zb1kOk97ahwTT1qgWRg271fUoCTszcbep
+         jZpA==
+X-Gm-Message-State: APjAAAXcxNS8Sd2msu0aB2KbTiUUbIVZFxP3B2g65itkeKHCfIKN/Kty
+        O5YosX7vgRMk+7kUDPsPSvIbp+Qe
+X-Google-Smtp-Source: APXvYqyOgin95krEezpqlMeS2zy8wXVRzT5ENjo1BnJcIm27WZ57gmXVWTJJgHg99kCnFfTlyqFkWQ==
+X-Received: by 2002:a19:8586:: with SMTP id h128mr13172457lfd.62.1565357301241;
+        Fri, 09 Aug 2019 06:28:21 -0700 (PDT)
+Received: from [192.168.2.145] ([94.29.34.218])
+        by smtp.googlemail.com with ESMTPSA id k23sm16209456ljg.90.2019.08.09.06.28.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 09 Aug 2019 06:28:20 -0700 (PDT)
+Subject: Re: [PATCH v8 16/21] soc/tegra: pmc: Add pmc wake support for
+ tegra210
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
+        jason@lakedaemon.net, marc.zyngier@arm.com,
+        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
+References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
+ <1565308020-31952-17-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <85ea23c7-1459-e396-b08a-b38e0f6d44eb@gmail.com>
+Date:   Fri, 9 Aug 2019 16:28:19 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d6534808-aa41-0bf0-a516-cee9bbd8e97a@devtank.co.uk>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <1565308020-31952-17-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 02:18:24PM +0100, Joe Burmeister wrote:
-> Hi Greg,
+09.08.2019 2:46, Sowjanya Komatineni пишет:
+> This patch implements PMC wakeup sequence for Tegra210 and defines
+> common used RTC alarm wake event.
 > 
-> On 09/08/2019 14:00, Greg Kroah-Hartman wrote:
-> > On Fri, Aug 09, 2019 at 01:53:55PM +0100, Joe Burmeister wrote:
-> > > +static void _eeprom_at25_store_erase_locked(struct at25_data *at25)
-> > > +{
-> > > +	unsigned long	timeout, retries;
-> > > +	int				sr, status;
-> > > +	u8	cp;
-> > > +
-> > > +	cp = AT25_WREN;
-> > > +	status = spi_write(at25->spi, &cp, 1);
-> > > +	if (status < 0) {
-> > > +		dev_dbg(&at25->spi->dev, "ERASE WREN --> %d\n", status);
-> > > +		return;
-> > > +	}
-> > > +	cp = at25->erase_instr;
-> > > +	status = spi_write(at25->spi, &cp, 1);
-> > > +	if (status < 0) {
-> > > +		dev_dbg(&at25->spi->dev, "CHIP_ERASE --> %d\n", status);
-> > > +		return;
-> > > +	}
-> > > +	/* Wait for non-busy status */
-> > > +	timeout = jiffies + msecs_to_jiffies(ERASE_TIMEOUT);
-> > > +	retries = 0;
-> > > +	do {
-> > > +		sr = spi_w8r8(at25->spi, AT25_RDSR);
-> > > +		if (sr < 0 || (sr & AT25_SR_nRDY)) {
-> > > +			dev_dbg(&at25->spi->dev,
-> > > +				"rdsr --> %d (%02x)\n", sr, sr);
-> > > +			/* at HZ=100, this is sloooow */
-> > > +			msleep(1);
-> > > +			continue;
-> > > +		}
-> > > +		if (!(sr & AT25_SR_nRDY))
-> > > +			return;
-> > > +	} while (retries++ < 200 || time_before_eq(jiffies, timeout));
-> > > +
-> > > +	if ((sr < 0) || (sr & AT25_SR_nRDY)) {
-> > > +		dev_err(&at25->spi->dev,
-> > > +			"chip erase, timeout after %u msecs\n",
-> > > +			jiffies_to_msecs(jiffies -
-> > > +				(timeout - ERASE_TIMEOUT)));
-> > > +		status = -ETIMEDOUT;
-> > > +		return;
-> > > +	}
-> > > +}
-> > > +
-> > > +
-> > No need for 2 lines :(
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/soc/tegra/pmc.c | 98 +++++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 98 insertions(+)
 > 
-> Sorry, other coding conventions I'm used to.
+> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+> index 91c84d0e66ae..3aa71c28a10a 100644
+> --- a/drivers/soc/tegra/pmc.c
+> +++ b/drivers/soc/tegra/pmc.c
+> @@ -58,6 +58,11 @@
+>  #define  PMC_CNTRL_SYSCLK_POLARITY	BIT(10) /* sys clk polarity */
+>  #define  PMC_CNTRL_MAIN_RST		BIT(4)
+>  
+> +#define PMC_WAKE_MASK			0x0c
+> +#define PMC_WAKE_LEVEL			0x10
+> +#define PMC_WAKE_STATUS			0x14
+> +#define PMC_SW_WAKE_STATUS		0x18
+> +
+>  #define DPD_SAMPLE			0x020
+>  #define  DPD_SAMPLE_ENABLE		BIT(0)
+>  #define  DPD_SAMPLE_DISABLE		(0 << 0)
+> @@ -87,6 +92,11 @@
+>  
+>  #define PMC_SCRATCH41			0x140
+>  
+> +#define PMC_WAKE2_MASK			0x160
+> +#define PMC_WAKE2_LEVEL			0x164
+> +#define PMC_WAKE2_STATUS		0x168
+> +#define PMC_SW_WAKE2_STATUS		0x16c
+> +
+>  #define PMC_SENSOR_CTRL			0x1b0
+>  #define  PMC_SENSOR_CTRL_SCRATCH_WRITE	BIT(2)
+>  #define  PMC_SENSOR_CTRL_ENABLE_RST	BIT(1)
+> @@ -1922,6 +1932,43 @@ static const struct irq_domain_ops tegra_pmc_irq_domain_ops = {
+>  	.alloc = tegra_pmc_irq_alloc,
+>  };
+>  
+> +static int tegra210_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
+> +{
+> +	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
+> +	unsigned int offset, bit;
+> +	u32 value;
+> +
+> +	if (data->hwirq == ULONG_MAX)
+> +		return 0;
+> +
+> +	offset = data->hwirq / 32;
+> +	bit = data->hwirq % 32;
+> +
+> +	/* clear wake status */
+> +	tegra_pmc_writel(pmc, 0, PMC_SW_WAKE_STATUS);
+> +	tegra_pmc_writel(pmc, 0, PMC_SW_WAKE2_STATUS);
+> +
+> +	tegra_pmc_writel(pmc, 0, PMC_WAKE_STATUS);
+> +	tegra_pmc_writel(pmc, 0, PMC_WAKE2_STATUS);
+> +
+> +	/* enable PMC wake */
+> +	if (data->hwirq >= 32)
+> +		offset = PMC_WAKE2_MASK;
+> +	else
+> +		offset = PMC_WAKE_MASK;
+> +
+> +	value = tegra_pmc_readl(pmc, offset);
+> +
+> +	if (on)
+> +		value |= 1 << bit;
+> +	else
+> +		value &= ~(1 << bit);
 
-checkpatch.pl should have warned you about this, you did run that before
-sending your patch out, right?
-
-> > > +static ssize_t eeprom_at25_store_erase(struct device *dev,
-> > > +					 struct device_attribute *attr,
-> > > +					 const char *buf, size_t count)
-> > > +{
-> > > +	struct at25_data *at25 = dev_get_drvdata(dev);
-> > > +	int erase = 0;
-> > > +
-> > > +	sscanf(buf, "%d", &erase);
-> > > +	if (erase) {
-> > > +		mutex_lock(&at25->lock);
-> > > +		_eeprom_at25_store_erase_locked(at25);
-> > > +		mutex_unlock(&at25->lock);
-> > > +	}
-> > > +
-> > > +	return count;
-> > > +}
-> > > +
-> > > +static DEVICE_ATTR(erase, S_IWUSR, NULL, eeprom_at25_store_erase);
-> > > +
-> > > +
-> > Same here.
-> > 
-> > Also, where is the Documentation/ABI/ update for the new sysfs file?
-> 
-> There isn't anything for the existing SPI EEPROM stuff I can see.
-> 
-> Would I have to document what was already there to add my bit?
-
-Yes, someone has to, sorry :)
-
-thanks,
-
-greg k-h
+Looks like a good case for utilizing of the BIT() macro here.
