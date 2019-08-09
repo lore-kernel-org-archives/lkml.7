@@ -2,380 +2,104 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB1FC31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 20:29:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6624C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 20:29:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1164121743
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 20:29:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 770FB214C6
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 20:29:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="MLDFO4GF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729505AbfHIU3W (ORCPT
+        id S1729591AbfHIU31 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 16:29:22 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:60313 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728985AbfHIU3R (ORCPT
+        Fri, 9 Aug 2019 16:29:27 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:39412 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729533AbfHIU3X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 16:29:17 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MV6G6-1hmnLD3sJC-00SB7i; Fri, 09 Aug 2019 22:29:06 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     soc@kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: [PATCH 14/16] rtc: remove w90x900/nuc900 driver
-Date:   Fri,  9 Aug 2019 22:27:42 +0200
-Message-Id: <20190809202749.742267-15-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20190809202749.742267-1-arnd@arndb.de>
-References: <20190809202749.742267-1-arnd@arndb.de>
+        Fri, 9 Aug 2019 16:29:23 -0400
+Received: by mail-pl1-f195.google.com with SMTP id b7so45442325pls.6
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 13:29:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=A9NhgTl7zfb3l1+NKbkDU/P+hrZFZUgJYh8JpIsec0E=;
+        b=MLDFO4GFjW+A+4D9jAGcXTdfEyXRibjGCZMZZ5cEKAKSUpleSuAJgryFida0cokfZq
+         oApVkJ/APJFAV//OVXvzZNrwYnSrC75TeDz0WS6iedhnobDKVsLxx9AjkKAH6+y+HyhV
+         iubniIEPLSFYfria85M3qoMT6UyFfMsUqYawE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=A9NhgTl7zfb3l1+NKbkDU/P+hrZFZUgJYh8JpIsec0E=;
+        b=RnonJfs2NZs4m4gg7Q7ckKhKDSr13VcKIwFz7UBpfn46e+lUNVlw5xIaFEp/2JkBUS
+         1n5b1zSK5QmVkDZrBfws0DlUBnxn84N55NcneaWNrhsXMEnDQn9BYUbfym4KG3+j/6dU
+         2V+hNIqInEME5ZzdIiRFLWHwSQQqfjMMqwoThPZaB5Db4Xh1YdptoStspiW2XqbuER7L
+         tqQNTz3AZMyI9BSbyVZrL87pbHEx88Wka1B9UG5ftLfRl8fdfG0A63Yn5XRdIyGAyAQj
+         OOk8xTGy2iIbuDtEtqEcHW1dHBym4h24rubqPLhGGjv3P2whqNIeRNQc8TDJtI09tmx4
+         dF7A==
+X-Gm-Message-State: APjAAAXFL2m1PlaV8C4YgrEIUZ7ihMyFz8+tZqtb7NnhW7JElpUu7q1a
+        +hVEa2DADCJlb6NHAgQILI72Zw==
+X-Google-Smtp-Source: APXvYqxAzSoqBoiHk7b+bAdo2F3seV7zxBnNzc1weazPV3iVfTuGK1yaJE3TB+II7IRyJkDlx9xARQ==
+X-Received: by 2002:a17:902:ac88:: with SMTP id h8mr15447969plr.77.1565382562846;
+        Fri, 09 Aug 2019 13:29:22 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id v185sm110394406pfb.14.2019.08.09.13.29.21
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 09 Aug 2019 13:29:21 -0700 (PDT)
+Date:   Fri, 9 Aug 2019 16:29:20 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     Byungchul Park <byungchul.park@lge.com>,
+        linux-kernel@vger.kernel.org, Rao Shoaib <rao.shoaib@oracle.com>,
+        max.byungchul.park@gmail.com, kernel-team@android.com,
+        kernel-team@lge.com, Davidlohr Bueso <dave@stgolabs.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH RFC v1 1/2] rcu/tree: Add basic support for kfree_rcu
+ batching
+Message-ID: <20190809202920.GE255533@google.com>
+References: <20190806235631.GU28441@linux.ibm.com>
+ <20190807094504.GB169551@google.com>
+ <20190807175215.GE28441@linux.ibm.com>
+ <20190808095232.GA30401@X58A-UD3R>
+ <20190808125607.GB261256@google.com>
+ <20190808233014.GA184373@google.com>
+ <20190809151619.GD28441@linux.ibm.com>
+ <20190809153924.GB211412@google.com>
+ <20190809163346.GF28441@linux.ibm.com>
+ <20190809202226.GC255533@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:G8qc/wYNLtJbkuHPeqI/QzOt8e9lF3Tmm4TBFiQWdZlmGL8c/cp
- uogjri1+5d1ebyNGebf3HL2775NUYtbTwPNEdG6HjjGSa3v+fdZWaNB5xvRmCWZvBOlzhFK
- 02BZy0I0AwwEX4ltQ3LXfCkwRPDAR2DDdrqPqhXkPFH8+gDCCLcEbxe8EgvxTkgp+6wtjLB
- PWonxDLwlz2h1Km/+kpHQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:6WFg8zv6ofE=:u2heJHDISJ0KANbIVxC8fY
- OXFKBbZSGDola/OaViuqgSk1YxYZIbOLhDLB1RkAOngCyX8BwbA1QI+42sQLGnfclJtiBqOv0
- TsrS54687OMHU3eIf0YBb+GYjy6TdQ28Zbj4Xi6MJd1W2ulGBlgkCa/ZXaMushUI0y/Kil9XL
- sw5uaGjdK9PA496+DHU+ibjt6gcsUaGO+bYe3BdahvShf4RKVib2uqB5SK7gwk9Y+7pJX9iQx
- PfVXh57E6D3OTeLrM6QkamcJWMfCU1tQtkiKTOTYee62i/HorzSE8t2VzJoKavi3KbCC2XrY4
- Ue4nh6qBjHAqcXKyp9dIOxsviInlLzHe4cBrICmBOj9xPdEUNhG7qVe01bZvKGbuEXaOnn2nG
- zSbHglhQ2l0eD//ZtMcyqD+kbqdO+qj5hv2ORitZzjS9rcqlbf9KX2AXtaAYYGHnlCxrItkXx
- 2W/p8ZYslRZYcB5tPT9e1wrzBE6hvHZq/PtbZdvIeBMnBm1//Mhid815/r+VYL0JaumdZHWVz
- rzsISkJRfIqsccyHQocofq2OYF23omZkA0GiJhFoqNDkflC1th3FKD/udsth/fPlfgvRkOCOq
- 0WC0rMgDfWA7L/oJCA0++O8dUJZVphqEN0rxAI+buCDP026NiP7nu4+cE2LocDPH/wPdp1NV4
- gYUh1CFgOXgL/HyLz8q61WfIpgwcnVcn8cTm9ktf7XYKA7idtjyqrtG19W33mxxEC3tu0MHrB
- sBXETIP7FcjvU6fHtrm47wQ130fl/jAH2kAcrg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190809202226.GC255533@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ARM w90x900 platform is getting removed, so this driver is obsolete.
+On Fri, Aug 09, 2019 at 04:22:26PM -0400, Joel Fernandes wrote:
+> > > > o	With any of the above, invoke rcu_momentary_dyntick_idle() along
+> > > > 	with cond_resched() in your kfree_rcu() loop.  This simulates
+> > > > 	a trip to userspace for nohz_full CPUs, so if this helps for
+> > > > 	non-nohz_full CPUs, adjustments to the kernel might be called for.
+> 
+> I did not try this yet. But I am thinking why would this help in nohz_idle
+> case? In nohz_idle we already have the tick active when CPU is idle. I guess
+> it is because there may be a long time that elapses before
+> rcu_data.rcu_need_heavy_qs == true ?
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/rtc/Kconfig      |   7 -
- drivers/rtc/Makefile     |   1 -
- drivers/rtc/rtc-nuc900.c | 271 ---------------------------------------
- 3 files changed, 279 deletions(-)
- delete mode 100644 drivers/rtc/rtc-nuc900.c
+Sorry, here I meant 'tick active when CPU is not idle'.
 
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index e72f65b61176..2805cbb32ade 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -1247,13 +1247,6 @@ config RTC_DRV_AB8500
- 	  Select this to enable the ST-Ericsson AB8500 power management IC RTC
- 	  support. This chip contains a battery- and capacitor-backed RTC.
+thanks,
+
+ - Joel
  
--config RTC_DRV_NUC900
--	tristate "NUC910/NUC920 RTC driver"
--	depends on ARCH_W90X900 || COMPILE_TEST
--	help
--	  If you say yes here you get support for the RTC subsystem of the
--	  NUC910/NUC920 used in embedded systems.
--
- config RTC_DRV_OPAL
- 	tristate "IBM OPAL RTC driver"
- 	depends on PPC_POWERNV
-diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
-index 6b09c21dc1b6..9fe0e938272c 100644
---- a/drivers/rtc/Makefile
-+++ b/drivers/rtc/Makefile
-@@ -113,7 +113,6 @@ obj-$(CONFIG_RTC_DRV_MT7622)	+= rtc-mt7622.o
- obj-$(CONFIG_RTC_DRV_MV)	+= rtc-mv.o
- obj-$(CONFIG_RTC_DRV_MXC)	+= rtc-mxc.o
- obj-$(CONFIG_RTC_DRV_MXC_V2)	+= rtc-mxc_v2.o
--obj-$(CONFIG_RTC_DRV_NUC900)	+= rtc-nuc900.o
- obj-$(CONFIG_RTC_DRV_OMAP)	+= rtc-omap.o
- obj-$(CONFIG_RTC_DRV_OPAL)	+= rtc-opal.o
- obj-$(CONFIG_RTC_DRV_PALMAS)	+= rtc-palmas.o
-diff --git a/drivers/rtc/rtc-nuc900.c b/drivers/rtc/rtc-nuc900.c
-deleted file mode 100644
-index 49cc4058614d..000000000000
---- a/drivers/rtc/rtc-nuc900.c
-+++ /dev/null
-@@ -1,271 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-only
--/*
-- * Copyright (c) 2008-2009 Nuvoton technology corporation.
-- *
-- * Wan ZongShun <mcuos.com@gmail.com>
-- */
--
--#include <linux/module.h>
--#include <linux/init.h>
--#include <linux/platform_device.h>
--#include <linux/slab.h>
--#include <linux/rtc.h>
--#include <linux/delay.h>
--#include <linux/io.h>
--#include <linux/bcd.h>
--
--/* RTC Control Registers */
--#define REG_RTC_INIR		0x00
--#define REG_RTC_AER		0x04
--#define REG_RTC_FCR		0x08
--#define REG_RTC_TLR		0x0C
--#define REG_RTC_CLR		0x10
--#define REG_RTC_TSSR		0x14
--#define REG_RTC_DWR		0x18
--#define REG_RTC_TAR		0x1C
--#define REG_RTC_CAR		0x20
--#define REG_RTC_LIR		0x24
--#define REG_RTC_RIER		0x28
--#define REG_RTC_RIIR		0x2C
--#define REG_RTC_TTR		0x30
--
--#define RTCSET			0x01
--#define AERRWENB		0x10000
--#define INIRRESET		0xa5eb1357
--#define AERPOWERON		0xA965
--#define AERPOWEROFF		0x0000
--#define LEAPYEAR		0x0001
--#define TICKENB			0x80
--#define TICKINTENB		0x0002
--#define ALARMINTENB		0x0001
--#define MODE24			0x0001
--
--struct nuc900_rtc {
--	int			irq_num;
--	void __iomem		*rtc_reg;
--	struct rtc_device	*rtcdev;
--};
--
--struct nuc900_bcd_time {
--	int bcd_sec;
--	int bcd_min;
--	int bcd_hour;
--	int bcd_mday;
--	int bcd_mon;
--	int bcd_year;
--};
--
--static irqreturn_t nuc900_rtc_interrupt(int irq, void *_rtc)
--{
--	struct nuc900_rtc *rtc = _rtc;
--	unsigned long events = 0, rtc_irq;
--
--	rtc_irq = __raw_readl(rtc->rtc_reg + REG_RTC_RIIR);
--
--	if (rtc_irq & ALARMINTENB) {
--		rtc_irq &= ~ALARMINTENB;
--		__raw_writel(rtc_irq, rtc->rtc_reg + REG_RTC_RIIR);
--		events |= RTC_AF | RTC_IRQF;
--	}
--
--	if (rtc_irq & TICKINTENB) {
--		rtc_irq &= ~TICKINTENB;
--		__raw_writel(rtc_irq, rtc->rtc_reg + REG_RTC_RIIR);
--		events |= RTC_UF | RTC_IRQF;
--	}
--
--	rtc_update_irq(rtc->rtcdev, 1, events);
--
--	return IRQ_HANDLED;
--}
--
--static int *check_rtc_access_enable(struct nuc900_rtc *nuc900_rtc)
--{
--	unsigned int timeout = 0x1000;
--	__raw_writel(INIRRESET, nuc900_rtc->rtc_reg + REG_RTC_INIR);
--
--	mdelay(10);
--
--	__raw_writel(AERPOWERON, nuc900_rtc->rtc_reg + REG_RTC_AER);
--
--	while (!(__raw_readl(nuc900_rtc->rtc_reg + REG_RTC_AER) & AERRWENB)
--								&& --timeout)
--		mdelay(1);
--
--	if (!timeout)
--		return ERR_PTR(-EPERM);
--
--	return NULL;
--}
--
--static void nuc900_rtc_bcd2bin(unsigned int timereg,
--			       unsigned int calreg, struct rtc_time *tm)
--{
--	tm->tm_mday	= bcd2bin(calreg >> 0);
--	tm->tm_mon	= bcd2bin(calreg >> 8);
--	tm->tm_year	= bcd2bin(calreg >> 16) + 100;
--
--	tm->tm_sec	= bcd2bin(timereg >> 0);
--	tm->tm_min	= bcd2bin(timereg >> 8);
--	tm->tm_hour	= bcd2bin(timereg >> 16);
--}
--
--static void nuc900_rtc_bin2bcd(struct device *dev, struct rtc_time *settm,
--						struct nuc900_bcd_time *gettm)
--{
--	gettm->bcd_mday = bin2bcd(settm->tm_mday) << 0;
--	gettm->bcd_mon  = bin2bcd(settm->tm_mon) << 8;
--
--	if (settm->tm_year < 100) {
--		dev_warn(dev, "The year will be between 1970-1999, right?\n");
--		gettm->bcd_year = bin2bcd(settm->tm_year) << 16;
--	} else {
--		gettm->bcd_year = bin2bcd(settm->tm_year - 100) << 16;
--	}
--
--	gettm->bcd_sec  = bin2bcd(settm->tm_sec) << 0;
--	gettm->bcd_min  = bin2bcd(settm->tm_min) << 8;
--	gettm->bcd_hour = bin2bcd(settm->tm_hour) << 16;
--}
--
--static int nuc900_alarm_irq_enable(struct device *dev, unsigned int enabled)
--{
--	struct nuc900_rtc *rtc = dev_get_drvdata(dev);
--
--	if (enabled)
--		__raw_writel(__raw_readl(rtc->rtc_reg + REG_RTC_RIER)|
--				(ALARMINTENB), rtc->rtc_reg + REG_RTC_RIER);
--	else
--		__raw_writel(__raw_readl(rtc->rtc_reg + REG_RTC_RIER)&
--				(~ALARMINTENB), rtc->rtc_reg + REG_RTC_RIER);
--
--	return 0;
--}
--
--static int nuc900_rtc_read_time(struct device *dev, struct rtc_time *tm)
--{
--	struct nuc900_rtc *rtc = dev_get_drvdata(dev);
--	unsigned int timeval, clrval;
--
--	timeval = __raw_readl(rtc->rtc_reg + REG_RTC_TLR);
--	clrval	= __raw_readl(rtc->rtc_reg + REG_RTC_CLR);
--
--	nuc900_rtc_bcd2bin(timeval, clrval, tm);
--
--	return 0;
--}
--
--static int nuc900_rtc_set_time(struct device *dev, struct rtc_time *tm)
--{
--	struct nuc900_rtc *rtc = dev_get_drvdata(dev);
--	struct nuc900_bcd_time gettm;
--	unsigned long val;
--	int *err;
--
--	nuc900_rtc_bin2bcd(dev, tm, &gettm);
--
--	err = check_rtc_access_enable(rtc);
--	if (IS_ERR(err))
--		return PTR_ERR(err);
--
--	val = gettm.bcd_mday | gettm.bcd_mon | gettm.bcd_year;
--	__raw_writel(val, rtc->rtc_reg + REG_RTC_CLR);
--
--	val = gettm.bcd_sec | gettm.bcd_min | gettm.bcd_hour;
--	__raw_writel(val, rtc->rtc_reg + REG_RTC_TLR);
--
--	return 0;
--}
--
--static int nuc900_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alrm)
--{
--	struct nuc900_rtc *rtc = dev_get_drvdata(dev);
--	unsigned int timeval, carval;
--
--	timeval = __raw_readl(rtc->rtc_reg + REG_RTC_TAR);
--	carval	= __raw_readl(rtc->rtc_reg + REG_RTC_CAR);
--
--	nuc900_rtc_bcd2bin(timeval, carval, &alrm->time);
--
--	return rtc_valid_tm(&alrm->time);
--}
--
--static int nuc900_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alrm)
--{
--	struct nuc900_rtc *rtc = dev_get_drvdata(dev);
--	struct nuc900_bcd_time tm;
--	unsigned long val;
--	int *err;
--
--	nuc900_rtc_bin2bcd(dev, &alrm->time, &tm);
--
--	err = check_rtc_access_enable(rtc);
--	if (IS_ERR(err))
--		return PTR_ERR(err);
--
--	val = tm.bcd_mday | tm.bcd_mon | tm.bcd_year;
--	__raw_writel(val, rtc->rtc_reg + REG_RTC_CAR);
--
--	val = tm.bcd_sec | tm.bcd_min | tm.bcd_hour;
--	__raw_writel(val, rtc->rtc_reg + REG_RTC_TAR);
--
--	return 0;
--}
--
--static const struct rtc_class_ops nuc900_rtc_ops = {
--	.read_time = nuc900_rtc_read_time,
--	.set_time = nuc900_rtc_set_time,
--	.read_alarm = nuc900_rtc_read_alarm,
--	.set_alarm = nuc900_rtc_set_alarm,
--	.alarm_irq_enable = nuc900_alarm_irq_enable,
--};
--
--static int __init nuc900_rtc_probe(struct platform_device *pdev)
--{
--	struct resource *res;
--	struct nuc900_rtc *nuc900_rtc;
--
--	nuc900_rtc = devm_kzalloc(&pdev->dev, sizeof(struct nuc900_rtc),
--				GFP_KERNEL);
--	if (!nuc900_rtc)
--		return -ENOMEM;
--
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	nuc900_rtc->rtc_reg = devm_ioremap_resource(&pdev->dev, res);
--	if (IS_ERR(nuc900_rtc->rtc_reg))
--		return PTR_ERR(nuc900_rtc->rtc_reg);
--
--	platform_set_drvdata(pdev, nuc900_rtc);
--
--	nuc900_rtc->rtcdev = devm_rtc_device_register(&pdev->dev, pdev->name,
--						&nuc900_rtc_ops, THIS_MODULE);
--	if (IS_ERR(nuc900_rtc->rtcdev)) {
--		dev_err(&pdev->dev, "rtc device register failed\n");
--		return PTR_ERR(nuc900_rtc->rtcdev);
--	}
--
--	__raw_writel(__raw_readl(nuc900_rtc->rtc_reg + REG_RTC_TSSR) | MODE24,
--					nuc900_rtc->rtc_reg + REG_RTC_TSSR);
--
--	nuc900_rtc->irq_num = platform_get_irq(pdev, 0);
--	if (devm_request_irq(&pdev->dev, nuc900_rtc->irq_num,
--			nuc900_rtc_interrupt, 0, "nuc900rtc", nuc900_rtc)) {
--		dev_err(&pdev->dev, "NUC900 RTC request irq failed\n");
--		return -EBUSY;
--	}
--
--	return 0;
--}
--
--static struct platform_driver nuc900_rtc_driver = {
--	.driver		= {
--		.name	= "nuc900-rtc",
--	},
--};
--
--module_platform_driver_probe(nuc900_rtc_driver, nuc900_rtc_probe);
--
--MODULE_AUTHOR("Wan ZongShun <mcuos.com@gmail.com>");
--MODULE_DESCRIPTION("nuc910/nuc920 RTC driver");
--MODULE_LICENSE("GPL");
--MODULE_ALIAS("platform:nuc900-rtc");
--- 
-2.20.0
-
