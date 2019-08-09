@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5077C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D565C32756
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:18:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72A262171F
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:18:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43EB22171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:18:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407041AbfHINSJ (ORCPT
+        id S2407053AbfHINSK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 09:18:09 -0400
-Received: from mail-ot1-f70.google.com ([209.85.210.70]:40498 "EHLO
-        mail-ot1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406888AbfHINSI (ORCPT
+        Fri, 9 Aug 2019 09:18:10 -0400
+Received: from mail-ot1-f71.google.com ([209.85.210.71]:33951 "EHLO
+        mail-ot1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406970AbfHINSJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 09:18:08 -0400
-Received: by mail-ot1-f70.google.com with SMTP id o21so831904otj.7
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 06:18:07 -0700 (PDT)
+        Fri, 9 Aug 2019 09:18:09 -0400
+Received: by mail-ot1-f71.google.com with SMTP id 20so25263200oty.1
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 06:18:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=hBNJAWh4XzhqelRy/j1mH4qYp8BgL6aj9nK85e0jYjE=;
-        b=eDZMhYi6Ak2gPSQL8cpMk+Ivu0q1L3aFcAKHjcs6UTvigeVO+zSEsIB5RTbnA52Z7J
-         XRn0WbTey9YFxz5Ne0mW3cemqf5kn4QvhGYznCdTfeuHIuf+JN9sRPYfMVcsSxOirk29
-         j9n7jVYNo5s2iqjkvyQf6i2b/b8MwQG18+0fc+yLEgZf+QaXB/gJEVGka+F04iJZ6JLE
-         tnLbZ7UiF8KIFJplXssl4LknevaDn1wbl29bKth+roFc0Q7TgxZNnjKiXLXy/9dn0IEh
-         CaLDmJ6w280xOXzZem99Fi4aiqcrhB47b3U4KKoSSUqmbzmYdP2Fk0CC303qOPJ+2gv9
-         wWaA==
-X-Gm-Message-State: APjAAAU7rDYnPwz+jnbLJfJXLUo4XJlmtyM5Tm8fu5lf9t01uJpjF9tc
-        V1Y+vcu15m9LpAW9i/MiiBxok24tSQcMDKGgJL9ZHTraNr28
-X-Google-Smtp-Source: APXvYqyceo/NhuizTtb4GnxjS0rD8Cbu5/lyx6qI5bdrm2f4C2IdG0HWV98nx/529sjoxEEFtMTyj/ch89JwNlwfFjqC8zBlniX5
+        bh=Kvv51GsZ8BLyp4CiiiYwop4a0Hzx8ieVcMFPRG1pYMA=;
+        b=Vok3n3I22N0aFZ8fBh3gJDuds4rEAWldN+gmV6olh18RjqpvdBnUnVj0WZig2qucQ/
+         0mZSaUb24f1p3CrnivumWpB9TpNooxaY5ul0q+k3y/fHKbAkowxXVNtj554am9L8sn+z
+         72ODe5tZED/eZp+fqc6zAHfLW2S1hs8HyPW56sy8WafUB+Z497UTKl8m1q2rafez8MKC
+         LHN94w08XjGPvqan895HxICXbpXpwI1RGNYeVtXtXYYYEs1/NOLMeR9X99B4g0CofsB2
+         kxVZtF/gTD7xaRZnW6PM8IVJW+yPmWhfQaG01D6g/HOLPnpbzmvJErUlvhO8eg3sDhfx
+         oZhw==
+X-Gm-Message-State: APjAAAVoHdmR/n/vEi1tzAEu66drSSskL1qunmH8vrx2CMZf3y8vBYTX
+        VfndWFigOpISzhbzps0jEEQe118UMd1h2O595FTkSHXjXFEd
+X-Google-Smtp-Source: APXvYqzWbwc1QZIZxwLs/zp7o1Dkn8P3FmJxHSQmOJ77vx3/BPpTj6o3+BHv6HDea9AUA9LWrwH/e5VHVPE6/ROau0SKGPvc4VJX
 MIME-Version: 1.0
-X-Received: by 2002:a02:a18e:: with SMTP id n14mr10820595jah.84.1565356687054;
+X-Received: by 2002:a02:5a02:: with SMTP id v2mr21783557jaa.124.1565356687627;
  Fri, 09 Aug 2019 06:18:07 -0700 (PDT)
 Date:   Fri, 09 Aug 2019 06:18:07 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000475ecc058faf017f@google.com>
-Subject: KASAN: use-after-free Read in ld_usb_release
-From:   syzbot <syzbot+30cf45ebfe0b0c4847a1@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, bhelgaas@google.com,
-        gregkh@linuxfoundation.org, kirr@nexedi.com,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux@roeck-us.net, lkundrak@v3.sk, logang@deltatee.com,
+Message-ID: <000000000000502536058faf0113@google.com>
+Subject: KASAN: use-after-free Read in prepare_to_wait_event
+From:   syzbot <syzbot+332cbcbd8be3e03c62eb@syzkaller.appspotmail.com>
+To:     alexandre.belloni@bootlin.com, andreyknvl@google.com,
+        enric.balletbo@collabora.com, gregkh@linuxfoundation.org,
+        kirr@nexedi.com, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux@roeck-us.net, logang@deltatee.com,
         syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -62,24 +62,22 @@ syzbot found the following crash on:
 
 HEAD commit:    e96407b4 usb-fuzzer: main usb gadget fuzzer driver
 git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=15a16f26600000
+console output: https://syzkaller.appspot.com/x/log.txt?x=10fbde8c600000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=cfa2c18fb6a8068e
-dashboard link: https://syzkaller.appspot.com/bug?extid=30cf45ebfe0b0c4847a1
+dashboard link: https://syzkaller.appspot.com/bug?extid=332cbcbd8be3e03c62eb
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1416df26600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11ce511c600000
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=127dd636600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=171de9ce600000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+30cf45ebfe0b0c4847a1@syzkaller.appspotmail.com
+Reported-by: syzbot+332cbcbd8be3e03c62eb@syzkaller.appspotmail.com
 
 ==================================================================
-BUG: KASAN: use-after-free in __mutex_lock_common  
-kernel/locking/mutex.c:912 [inline]
-BUG: KASAN: use-after-free in __mutex_lock+0xf23/0x1360  
-kernel/locking/mutex.c:1077
-Read of size 8 at addr ffff8881d21fc2d8 by task syz-executor834/1878
+BUG: KASAN: use-after-free in __lock_acquire+0x302a/0x3b50  
+kernel/locking/lockdep.c:3753
+Read of size 8 at addr ffff8881d2a83238 by task syz-executor771/2979
 
-CPU: 0 PID: 1878 Comm: syz-executor834 Not tainted 5.3.0-rc2+ #25
+CPU: 0 PID: 2979 Comm: syz-executor771 Not tainted 5.3.0-rc2+ #25
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
 Call Trace:
@@ -88,29 +86,29 @@ Call Trace:
   print_address_description+0x6a/0x32c mm/kasan/report.c:351
   __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
   kasan_report+0xe/0x12 mm/kasan/common.c:612
-  __mutex_lock_common kernel/locking/mutex.c:912 [inline]
-  __mutex_lock+0xf23/0x1360 kernel/locking/mutex.c:1077
-  ld_usb_release+0xb1/0x400 drivers/usb/misc/ldusb.c:386
-  __fput+0x2d7/0x840 fs/file_table.c:280
-  task_work_run+0x13f/0x1c0 kernel/task_work.c:113
-  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
-  exit_to_usermode_loop+0x1d2/0x200 arch/x86/entry/common.c:163
-  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
-  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
-  do_syscall_64+0x45f/0x580 arch/x86/entry/common.c:299
+  __lock_acquire+0x302a/0x3b50 kernel/locking/lockdep.c:3753
+  lock_acquire+0x127/0x320 kernel/locking/lockdep.c:4412
+  __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+  _raw_spin_lock_irqsave+0x32/0x50 kernel/locking/spinlock.c:159
+  prepare_to_wait_event+0x5b/0x650 kernel/sched/wait.c:263
+  ld_usb_read+0x619/0x780 drivers/usb/misc/ldusb.c:480
+  __vfs_read+0x76/0x100 fs/read_write.c:425
+  vfs_read+0x1ea/0x430 fs/read_write.c:461
+  ksys_read+0x1e8/0x250 fs/read_write.c:587
+  do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x406b31
-Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 19 00 00 c3 48  
-83 ec 08 e8 6a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48  
-89 c2 e8 b3 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
-RSP: 002b:00007ffcf13bd080 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
-RAX: 0000000000000000 RBX: 0000000000000005 RCX: 0000000000406b31
-RDX: fffffffffffffff7 RSI: 0000000000000080 RDI: 0000000000000004
-RBP: 0000000000000159 R08: 0000000000000020 R09: 0000000000000020
-R10: 00007ffcf13bd0b0 R11: 0000000000000293 R12: 000000000001d884
-R13: 0000000000000004 R14: 00000000006e39ec R15: 0000000000000064
+RIP: 0033:0x448859
+Code: e8 ac e7 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 4b 06 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f9b31740ce8 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+RAX: ffffffffffffffda RBX: 00000000006dec48 RCX: 0000000000448859
+RDX: 0000000000000049 RSI: 0000000020000080 RDI: 0000000000000004
+RBP: 00000000006dec40 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dec4c
+R13: 00007ffd58e161df R14: 00007f9b317419c0 R15: 00000000006dec4c
 
-Allocated by task 1775:
+Allocated by task 2705:
   save_stack+0x1b/0x80 mm/kasan/common.c:69
   set_track mm/kasan/common.c:77 [inline]
   __kasan_kmalloc mm/kasan/common.c:487 [inline]
@@ -146,7 +144,7 @@ Allocated by task 1775:
   kthread+0x318/0x420 kernel/kthread.c:255
   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
 
-Freed by task 1775:
+Freed by task 2705:
   save_stack+0x1b/0x80 mm/kasan/common.c:69
   set_track mm/kasan/common.c:77 [inline]
   __kasan_slab_free+0x130/0x180 mm/kasan/common.c:449
@@ -183,25 +181,25 @@ Freed by task 1775:
   kthread+0x318/0x420 kernel/kthread.c:255
   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
 
-The buggy address belongs to the object at ffff8881d21fc280
+The buggy address belongs to the object at ffff8881d2a83180
   which belongs to the cache kmalloc-512 of size 512
-The buggy address is located 88 bytes inside of
-  512-byte region [ffff8881d21fc280, ffff8881d21fc480)
+The buggy address is located 184 bytes inside of
+  512-byte region [ffff8881d2a83180, ffff8881d2a83380)
 The buggy address belongs to the page:
-page:ffffea0007487f00 refcount:1 mapcount:0 mapping:ffff8881da002500  
+page:ffffea00074aa080 refcount:1 mapcount:0 mapping:ffff8881da002500  
 index:0x0 compound_mapcount: 0
 flags: 0x200000000010200(slab|head)
-raw: 0200000000010200 ffffea000739fc80 0000000900000009 ffff8881da002500
+raw: 0200000000010200 dead000000000100 dead000000000122 ffff8881da002500
 raw: 0000000000000000 00000000000c000c 00000001ffffffff 0000000000000000
 page dumped because: kasan: bad access detected
 
 Memory state around the buggy address:
-  ffff8881d21fc180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8881d21fc200: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> ffff8881d21fc280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                                     ^
-  ffff8881d21fc300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8881d21fc380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff8881d2a83100: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+  ffff8881d2a83180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ffff8881d2a83200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                         ^
+  ffff8881d2a83280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff8881d2a83300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
 ==================================================================
 
 
