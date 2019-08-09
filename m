@@ -2,158 +2,154 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2C05C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92103C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7CE321773
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:43:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6902D217D7
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:44:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iRSHIAoC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uj3D0+T2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406190AbfHIJnO (ORCPT
+        id S2406010AbfHIJoR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 05:43:14 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:40300 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726152AbfHIJnO (ORCPT
+        Fri, 9 Aug 2019 05:44:17 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:44484 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730233AbfHIJoR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 05:43:14 -0400
-Received: by mail-ed1-f67.google.com with SMTP id h8so6192212edv.7;
-        Fri, 09 Aug 2019 02:43:13 -0700 (PDT)
+        Fri, 9 Aug 2019 05:44:17 -0400
+Received: by mail-pf1-f196.google.com with SMTP id t16so45736143pfe.11
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 02:44:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=/lYu/e47EnsyNFO2LSj0BQZUPA891bB6xOUbTQXck3k=;
-        b=iRSHIAoCehbO1dVJjrk5QF/hzmOCTQNgxIIcn7YckOVRAm+0XQzij9QF48TBMNLt9d
-         EBphcT+ovzxMiPGdfnK1f+28gfYZtqC1YUYtlfgYoK0Qf5CAenPd/4lBVuOIb8wCqDas
-         kjbQc00sgNTgR1qgU4hgrtJ+7A5UEBzUhjGd5Ld18x70P261etvIs7+2SJ6zqV/HPcZ+
-         6Rmk4Ni5HaSwhK1OWJL2GW2DPvB+kshGD0HQwJJ8v3KrcNtD+MKqMr7r1ysPHUEvJa4p
-         pF/5YuaRxWy6hCGBnGV8QtEO1IkK8GG6DLRAHIuZHz8BrqRStIskb1TCcbBXso7FklsB
-         1Vig==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0MjjxEATeDSohSUdPgCn+0npRclOTNWQmeqagttLXsE=;
+        b=Uj3D0+T2IeTt2j8R9IQoWagucl2E8dAmOFplTadmEtycTdbXiM6UlavYMVIWRj02Cw
+         4nSjNZnzwBdIAEkY38minKr8sYfOUzw8/WLlP8ed8SLzlIhwkZoWRaa1hLLX0HTNpU3l
+         +C0O3IoWFhNMlGSkYFNWh5qqg1YWt7jHjjNwXnsLsenEtvNuAmN6uAW6tETi5HZkGIZL
+         DrOB+8THq13ltaU/8cqB9++tw1zvfEiBQBoX3Cw1iovi0VSPgY9Yvc4UinD0eWP8t6hd
+         ZwvocRvxWFkXtMq3PNSgz9fy8Uktwgue1HOdo+jRr7RaMf3sRku+Hwvkpoi4PR5Myd9g
+         ufQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=/lYu/e47EnsyNFO2LSj0BQZUPA891bB6xOUbTQXck3k=;
-        b=bQ65nz8peSlnpzkoy9FemiKswnzYCd5rCcGS5DG/HLdYhdRzQpwWd33+JEUut5Ja4d
-         jah3Qu3JM6ZZpXBXWvva1CoJ0X+PoF4hJSyZVlQojp69gVRjNWKx2SwEn1zw8uNB73RL
-         b8O+PTzT4SZWeAgsfFbQiuDQxHg4YuLZhV8fwG+HP1sotGTQIgWcuDa1rnQ44EvVkJih
-         1Gvu0bHA6vevIf7MLgVYlkLr0xlGTMWOLhWkDf8789kaeUQr4o1v3b2WQJTg03w1MCCx
-         3kVP4d+3LT0Ty623bJjljM2VHMadfppa0NVv/EkPbmV3DUCuJtEAqL2212EonUx7TsAh
-         TUUw==
-X-Gm-Message-State: APjAAAV2TQTJ6t6oK1Q34DmaI74T8iEcZDT0gxB3nibqJJLlkl9MVhNP
-        +5CosARlvePW98oGeziEd1TgbbhgPz67cIuRETN9tQ==
-X-Google-Smtp-Source: APXvYqxVdiPOOCTMWJskwGRKzFHXzIRK9YGnpC/sX78zcPM+MmvVQt4pR09fZ/Y5p1ameDXTlt9n/UFg9T9EgB5ytqI=
-X-Received: by 2002:a17:907:2069:: with SMTP id qp9mr6652404ejb.90.1565343792337;
- Fri, 09 Aug 2019 02:43:12 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0MjjxEATeDSohSUdPgCn+0npRclOTNWQmeqagttLXsE=;
+        b=Oywvv5bUA4yIhQx6A+JfKRJszZgT7wTH/SpBmto/a+xzmE2DCIWpvnftFe41GD+zaw
+         KrddnUXu6mfNgb2MeVPB3NrrixCr6N+PAhp2R2PQ2xFllNU+/wqVbSskxZHQG1T8d8KP
+         2mmGcewbzZoKVl/OsDPiKylKptOB5cU1PHqZ/Puif11m3h/BTdgJ1FtibTDey+kXyU+1
+         C+5qSvgWou40PAT0N06hdYCHaKxXFWssf/Xe17ZcUK6Zjg+3ZQYBQ5xvjwUPYGTFXBp5
+         dCpP+dGs+dstI9/6QKmvUTyZVP/SUHBysp8JwP2O4W2EBVsriv3tXO0CwXul2o3ceWAX
+         C4qw==
+X-Gm-Message-State: APjAAAUs+5uQfdU/WC10gdoCzdIabUFM0Jc19tl0gFDWnJxA7zY9WClq
+        mI8qtxwZV12n6DFhX7v5M9s=
+X-Google-Smtp-Source: APXvYqwKbvHj8qkjrkEYqfdwuA24Q1Iov787Zkesjq5b/OE+ycYpMk/fRKyoJ/9LftbwlyAmci+LfQ==
+X-Received: by 2002:aa7:9254:: with SMTP id 20mr21121887pfp.212.1565343856824;
+        Fri, 09 Aug 2019 02:44:16 -0700 (PDT)
+Received: from bharath12345-Inspiron-5559 ([103.110.42.33])
+        by smtp.gmail.com with ESMTPSA id e9sm2925944pfh.155.2019.08.09.02.44.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 09 Aug 2019 02:44:16 -0700 (PDT)
+Date:   Fri, 9 Aug 2019 15:14:06 +0530
+From:   Bharath Vedartham <linux.bhar@gmail.com>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     arnd@arndb.de, gregkh@linuxfoundation.org, sivanich@sgi.com,
+        ira.weiny@intel.com, jglisse@redhat.com,
+        william.kucharski@oracle.com, hch@lst.de,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [Linux-kernel-mentees][PATCH v4 1/1] sgi-gru: Remove *pte_lookup
+ functions
+Message-ID: <20190809094406.GA22457@bharath12345-Inspiron-5559>
+References: <1565290555-14126-1-git-send-email-linux.bhar@gmail.com>
+ <1565290555-14126-2-git-send-email-linux.bhar@gmail.com>
+ <b659042a-f2c3-df3c-4182-bb7dd5156bc1@nvidia.com>
 MIME-Version: 1.0
-References: <20190809005754.23009-1-git@andred.net>
-In-Reply-To: <20190809005754.23009-1-git@andred.net>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Fri, 9 Aug 2019 12:43:01 +0300
-Message-ID: <CA+h21hp-K0ryB39O4X9n-mCwapiXoWy5WP6ZsvswgcDy-WBYVw@mail.gmail.com>
-Subject: Re: [PATCH] net: phy: at803x: stop switching phy delay config needlessly
-To:     =?UTF-8?Q?Andr=C3=A9_Draszik?= <git@andred.net>
-Cc:     lkml <linux-kernel@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b659042a-f2c3-df3c-4182-bb7dd5156bc1@nvidia.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andre,
+On Thu, Aug 08, 2019 at 04:21:44PM -0700, John Hubbard wrote:
+> On 8/8/19 11:55 AM, Bharath Vedartham wrote:
+> ...
+> >  static int gru_vtop(struct gru_thread_state *gts, unsigned long vaddr,
+> >  		    int write, int atomic, unsigned long *gpa, int *pageshift)
+> >  {
+> >  	struct mm_struct *mm = gts->ts_mm;
+> >  	struct vm_area_struct *vma;
+> >  	unsigned long paddr;
+> > -	int ret, ps;
+> > +	int ret;
+> > +	struct page *page;
+> >  
+> >  	vma = find_vma(mm, vaddr);
+> >  	if (!vma)
+> > @@ -263,21 +187,33 @@ static int gru_vtop(struct gru_thread_state *gts, unsigned long vaddr,
+> >  
+> >  	/*
+> >  	 * Atomic lookup is faster & usually works even if called in non-atomic
+> > -	 * context.
+> > +	 * context. get_user_pages_fast does atomic lookup before falling back to
+> > +	 * slow gup.
+> >  	 */
+> >  	rmb();	/* Must/check ms_range_active before loading PTEs */
+> > -	ret = atomic_pte_lookup(vma, vaddr, write, &paddr, &ps);
+> > -	if (ret) {
+> > -		if (atomic)
+> > +	if (atomic) {
+> > +		ret = __get_user_pages_fast(vaddr, 1, write, &page);
+> > +		if (!ret)
+> >  			goto upm;
+> > -		if (non_atomic_pte_lookup(vma, vaddr, write, &paddr, &ps))
+> > +	} else {
+> > +		ret = get_user_pages_fast(vaddr, 1, write ? FOLL_WRITE : 0, &page);
+> > +		if (!ret)
+> >  			goto inval;
+> >  	}
+> > +
+> > +	paddr = page_to_phys(page);
+> > +	put_user_page(page);
+> > +
+> > +	if (unlikely(is_vm_hugetlb_page(vma)))
+> > +		*pageshift = HPAGE_SHIFT;
+> > +	else
+> > +		*pageshift = PAGE_SHIFT;
+> > +
+> >  	if (is_gru_paddr(paddr))
+> >  		goto inval;
+> > -	paddr = paddr & ~((1UL << ps) - 1);
+> > +	paddr = paddr & ~((1UL << *pageshift) - 1);
+> >  	*gpa = uv_soc_phys_ram_to_gpa(paddr);
+> > -	*pageshift = ps;
+> 
+> Why are you no longer setting *pageshift? There are a couple of callers
+> that both use this variable.
+Hi John,
 
-On Fri, 9 Aug 2019 at 03:58, Andr=C3=A9 Draszik <git@andred.net> wrote:
->
-> This driver does a funny dance disabling and re-enabling
-> RX and/or TX delays. In any of the RGMII-ID modes, it first
-> disables the delays, just to re-enable them again right
-> away. This looks like a needless exercise.
->
-> Just enable the respective delays when in any of the
-> relevant 'id' modes, and disable them otherwise.
->
-> Also, remove comments which don't add anything that can't be
-> seen by looking at the code.
->
-> Signed-off-by: Andr=C3=A9 Draszik <git@andred.net>
-> CC: Andrew Lunn <andrew@lunn.ch>
-> CC: Florian Fainelli <f.fainelli@gmail.com>
-> CC: Heiner Kallweit <hkallweit1@gmail.com>
-> CC: "David S. Miller" <davem@davemloft.net>
-> CC: netdev@vger.kernel.org
-> ---
+I did set *pageshift. The if statement above sets *pageshift. ps was
+used to retrive the pageshift value when the pte_lookup functions were
+present. ps was passed by reference to those functions and set by them.
+But here since we are trying to remove those functions, we don't need ps
+and we directly set *pageshift to HPAGE_SHIFT or PAGE_SHIFT based on the
+type of vma. 
 
-Is there any particular problem you're facing? Does this make any differenc=
-e?
+Hope this clears things up?
 
->  drivers/net/phy/at803x.c | 26 ++++++--------------------
->  1 file changed, 6 insertions(+), 20 deletions(-)
->
-> diff --git a/drivers/net/phy/at803x.c b/drivers/net/phy/at803x.c
-> index 222ccd9ecfce..2ab51f552e92 100644
-> --- a/drivers/net/phy/at803x.c
-> +++ b/drivers/net/phy/at803x.c
-> @@ -257,35 +257,21 @@ static int at803x_config_init(struct phy_device *ph=
-ydev)
->          *   after HW reset: RX delay enabled and TX delay disabled
->          *   after SW reset: RX delay enabled, while TX delay retains the
->          *   value before reset.
-> -        *
-> -        * So let's first disable the RX and TX delays in PHY and enable
-> -        * them based on the mode selected (this also takes care of RGMII
-> -        * mode where we expect delays to be disabled)
->          */
-> -
-> -       ret =3D at803x_disable_rx_delay(phydev);
-> -       if (ret < 0)
-> -               return ret;
-> -       ret =3D at803x_disable_tx_delay(phydev);
-> -       if (ret < 0)
-> -               return ret;
-> -
->         if (phydev->interface =3D=3D PHY_INTERFACE_MODE_RGMII_ID ||
->             phydev->interface =3D=3D PHY_INTERFACE_MODE_RGMII_RXID) {
-> -               /* If RGMII_ID or RGMII_RXID are specified enable RX dela=
-y,
-> -                * otherwise keep it disabled
-> -                */
->                 ret =3D at803x_enable_rx_delay(phydev);
-> -               if (ret < 0)
-> -                       return ret;
-> +       } else {
-> +               ret =3D at803x_disable_rx_delay(phydev);
->         }
-> +       if (ret < 0)
-> +               return ret;
->
->         if (phydev->interface =3D=3D PHY_INTERFACE_MODE_RGMII_ID ||
->             phydev->interface =3D=3D PHY_INTERFACE_MODE_RGMII_TXID) {
-> -               /* If RGMII_ID or RGMII_TXID are specified enable TX dela=
-y,
-> -                * otherwise keep it disabled
-> -                */
->                 ret =3D at803x_enable_tx_delay(phydev);
-> +       } else {
-> +               ret =3D at803x_disable_tx_delay(phydev);
->         }
->
->         return ret;
-> --
-> 2.20.1
->
-
-Regards,
--Vladimir
+Thank you
+Bharath
+> 
+> thanks,
+> -- 
+> John Hubbard
+> NVIDIA
