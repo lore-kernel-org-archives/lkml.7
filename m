@@ -2,172 +2,105 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 217DFC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 20:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 211E7C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 20:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6BE92166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 20:05:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NDHhR8NC"
+	by mail.kernel.org (Postfix) with ESMTP id EA9AE20B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 20:07:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726505AbfHIUFt (ORCPT
+        id S1726428AbfHIUHj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 16:05:49 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:34625 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725860AbfHIUFt (ORCPT
+        Fri, 9 Aug 2019 16:07:39 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:57652 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbfHIUHj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 16:05:49 -0400
-Received: by mail-wr1-f67.google.com with SMTP id 31so99325121wrm.1;
-        Fri, 09 Aug 2019 13:05:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=5aZ6nPjZggF+jzuY+IlnKBeULmKBMTJ+DxW3V3rlEc0=;
-        b=NDHhR8NCG8Qn1R2Bt1HpyvZvJcLxlsMyMAN//KNAm8gvOGnrr7l6q95SaBk4dWXNuE
-         MYZHrSikm6xpum4FWCgD/uRL6vwAmqTDDyXlFWZzl4LAwHU54n+eLMXIbCos5R+qcj6U
-         okX6qvnSTNEC12ysbEYZcrdFGJ2Xx0RJ98Op+8ZqzWgdJqO05dmh4E6VC855hf10+AlL
-         g4CDLeAo6IqS/05oRlVzj/on/if6iAsJ2gJDMdZee0m31Jv/QM1OnUaET22UXMdDL6pG
-         o7s9QByFsmQSz7gL2zWRuyEOiTtaR/5MzJ0wWb6lPtD2CKumnLAaaYqkfXTBJ+iBDiU9
-         7LJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5aZ6nPjZggF+jzuY+IlnKBeULmKBMTJ+DxW3V3rlEc0=;
-        b=TgcJiK96zIRIxjSOTQ6xiEUDWl9LG2v3wi+B/tbISjxzvpoY7NYY77kNVe2XKo1RqD
-         fKkHY0MbtkzjiHqKHvHNZybINt1Hz1BkPozuIZ9M5lr88/iTRIRJ534hnoRIKw2V62qj
-         5REzS0SXCnselER/Krns1xptO4zZGWDzFKQH0Vcrg7hXjVOfRRpZ+eET341RD9wEOih+
-         8RAA6EJITKpcc7ci0ZXyGTqpOXC+nZLY6VMuT1ThTtg1+5YPk00AOmKzJOEzNWrYp3FI
-         wyDepBr3wTi/700SjVC7c82eBJ+cCHdG9MJn4aDr2soodHOXQ8qqi3fhJ/KPoaUqLITd
-         uNGA==
-X-Gm-Message-State: APjAAAXKDUW4sOBdeD1tUJR8JvYQkrSuXxfE2bEqjwMDT4wUMkenEBnr
-        G7ZQgsNOAYpJac3Ifv1lu98=
-X-Google-Smtp-Source: APXvYqzu6i93OF14Xy9akpmrTnshCEIKOhybVPy7hWroeZ+iNCczRiVKBZubbPzytFq4Fp4E+Y0D7A==
-X-Received: by 2002:a5d:4804:: with SMTP id l4mr14135722wrq.111.1565381146938;
-        Fri, 09 Aug 2019 13:05:46 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f2f:3200:2994:d24a:66a1:e0e5? (p200300EA8F2F32002994D24A66A1E0E5.dip0.t-ipconnect.de. [2003:ea:8f2f:3200:2994:d24a:66a1:e0e5])
-        by smtp.googlemail.com with ESMTPSA id o11sm269068wrw.19.2019.08.09.13.05.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 09 Aug 2019 13:05:46 -0700 (PDT)
-Subject: Re: [PATCH net] net: phy: rtl8211f: do a double read to get real time
- link status
-To:     Yonglong Liu <liuyonglong@huawei.com>, Andrew Lunn <andrew@lunn.ch>
-Cc:     davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linuxarm@huawei.com,
-        salil.mehta@huawei.com, yisen.zhuang@huawei.com,
-        shiju.jose@huawei.com
-References: <1565183772-44268-1-git-send-email-liuyonglong@huawei.com>
- <d67831ab-8902-a653-3db9-b2f55adacabd@gmail.com>
- <e663235c-93eb-702d-5a9c-8f781d631c42@huawei.com>
- <080b68c7-abe6-d142-da4b-26e8a7d4dc19@gmail.com>
- <c15f820b-cc80-9a93-4c48-1b60bc14f73a@huawei.com>
- <b1140603-f05b-2373-445f-c1d7a43ff012@gmail.com>
- <20190808194049.GM27917@lunn.ch>
- <26e2c5c9-915c-858b-d091-e5bfa7ab6a5b@gmail.com>
- <20190808203415.GO27917@lunn.ch>
- <414c6809-86a3-506c-b7b0-a32b7cd72fd6@huawei.com>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <7f18113e-268b-6a4a-af83-236cfa337fcd@gmail.com>
-Date:   Fri, 9 Aug 2019 22:05:38 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 9 Aug 2019 16:07:39 -0400
+Received: from p200300ddd71876457e7a91fffec98e25.dip0.t-ipconnect.de ([2003:dd:d718:7645:7e7a:91ff:fec9:8e25])
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hwBAi-0005PW-HC; Fri, 09 Aug 2019 22:07:32 +0200
+Date:   Fri, 9 Aug 2019 22:07:25 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+cc:     Steven Rostedt <rostedt@goodmis.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Brendan Higgins <brendanhiggins@google.com>
+Subject: Re: [RFC PATCH v4 9/9] printk: use a new ringbuffer implementation
+In-Reply-To: <CAHk-=wiDzz+KU-ArqpnzjYkvDtKWjUqMfiiJXpXhgYU+Wd0r-w@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.1908092141490.21433@nanos.tec.linutronix.de>
+References: <20190807222634.1723-1-john.ogness@linutronix.de> <20190807222634.1723-10-john.ogness@linutronix.de> <CAHk-=wiKTn-BMpp4w645XqmFBEtUXe84+TKc6aRMPbvFwUjA=A@mail.gmail.com> <874l2rclmw.fsf@linutronix.de> <CAHk-=wiRN9v7UmhbTZgskh-MLyY2f0-8Zi3fUziy+GpZnj2i3w@mail.gmail.com>
+ <20190808194523.6f83e087@gandalf.local.home> <CAHk-=wiRpvRg6dpEWqaB20QUFRq8or0-AGgkjvisygptRE64UA@mail.gmail.com> <20190808204841.5afcad46@gandalf.local.home> <CAHk-=whNcrysjJYPDFhKAc4tvd80XGAyh95oZeAY6bmzpv3G-A@mail.gmail.com>
+ <alpine.DEB.2.21.1908091306520.21433@nanos.tec.linutronix.de> <CAHk-=wiDzz+KU-ArqpnzjYkvDtKWjUqMfiiJXpXhgYU+Wd0r-w@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <414c6809-86a3-506c-b7b0-a32b7cd72fd6@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09.08.2019 06:57, Yonglong Liu wrote:
+On Fri, 9 Aug 2019, Linus Torvalds wrote:
+> On Fri, Aug 9, 2019 at 4:15 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >
+> > >
+> > > But I don't know what a power-off-in-laptop scenario really looks like..
+> >
+> > That's random behaviour. It's hardware & BIOS & value add. What do you
+> > expect?
+> >
+> > I tried on a few machines. My laptop does not retain any useful information
+> > and on some server box (which takes ages to boot) the memory is squeaky
+> > clean, i.e. the BIOS wiped it already. Some others worked with a two second
+> > delay between turning the remote power switch on and off.
 > 
-> 
-> On 2019/8/9 4:34, Andrew Lunn wrote:
->> On Thu, Aug 08, 2019 at 10:01:39PM +0200, Heiner Kallweit wrote:
->>> On 08.08.2019 21:40, Andrew Lunn wrote:
->>>>> @@ -568,6 +568,11 @@ int phy_start_aneg(struct phy_device *phydev)
->>>>>  	if (err < 0)
->>>>>  		goto out_unlock;
->>>>>  
->>>>> +	/* The PHY may not yet have cleared aneg-completed and link-up bit
->>>>> +	 * w/o this delay when the following read is done.
->>>>> +	 */
->>>>> +	usleep_range(1000, 2000);
->>>>> +
->>>>
->>>> Hi Heiner
->>>>
->>>> Does 802.3 C22 say anything about this?
->>>>
->>> C22 says:
->>> "The Auto-Negotiation process shall be restarted by setting bit 0.9 to a logic one. This bit is self-
->>> clearing, and a PHY shall return a value of one in bit 0.9 until the Auto-Negotiation process has been
->>> initiated."
->>>
->>> Maybe we should read bit 0.9 in genphy_update_link() after having read BMSR and report
->>> aneg-complete and link-up as false (no matter of their current value) if 0.9 is set.
->>
->> Yes. That sounds sensible.
->>
->>      Andrew
->>
->> .
->>
-> 
-> Hi Heiner:
-> 	I have test more than 50 times, it works. Previously less
-> than 20 times must be recurrence. so I think this patch solved the
-> problem.
-> 	And I checked about 40 times of the time gap between read
-> and autoneg started, all of them is more than 2ms, as below:
-> 
->   kworker/u257:1-670   [015] ....    27.182632: mdio_access: mii-0000:bd:00.3 write phy:0x07 reg:0x00 val:0x1240
->   kworker/u257:1-670   [015] ....    27.184670: mdio_access: mii-0000:bd:00.3 read  phy:0x07 reg:0x01 val:0x7989
-> 
-> 
+> You were there at the Intel meeting, weren't you?
 
-Instead of using this fixed delay, the following experimental patch
-considers that fact that between triggering aneg start and actual
-start of aneg (incl. clearing aneg-complete bit) Clause 22 requires
-a PHY to keep bit 0.9 (aneg restart) set.
-Could you please test this instead of the fixed-delay patch?
+Yup.
 
-Thanks, Heiner
+> This is all about the fact that "we're not getting sane and reliable
+> debug facilities for remote debugging". We haven't gotten them over
+> two decades, we're not seeing it in the future either.
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index b039632de..163295dbc 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -1741,7 +1741,17 @@ EXPORT_SYMBOL(genphy_aneg_done);
-  */
- int genphy_update_link(struct phy_device *phydev)
- {
--	int status;
-+	int status = 0, bmcr;
-+
-+	bmcr = phy_read(phydev, MII_BMCR);
-+	if (bmcr < 0)
-+		return bmcr;
-+
-+	/* Autoneg is being started, therefore disregard BMSR value and
-+	 * report link as down.
-+	 */
-+	if (bmcr & BMCR_ANRESTART)
-+		goto done;
- 
- 	/* The link state is latched low so that momentary link
- 	 * drops can be detected. Do not double-read the status
--- 
-2.22.0
+I know. It sucks.
 
+> So what if we _can_ get an ACPI update and in the next decade your
+> laptop _will_ have a memory area that doesn't get scribbled over?
 
+No argument here.
+
+> Does it work today? Yes it does, but only for very special cases
+> (basically warm reboot with "fast boot" enabled).
+> 
+> But they are special cases that may be things that can be extended
+> upon without any actual hardware changes.
+
+I'm all for it. I just tried it out and the ratio was 3 out of 5 retained
+the data +/- a few bitflips with ~2 seconds power off. The other two were
+the laptop and that server machine which wipes everything.
+
+If that can be avoided with some ACPI tweak especially on the laptop, that
+would be great. I'm not so worried about the server case.
+
+Debugging laptops and random client machines is the real interesting use
+case. They usually lack serial and even if they have serial then the
+reporter has not necessarily a second machine to capture the stuff.
+
+Thanks,
+
+	tglx
