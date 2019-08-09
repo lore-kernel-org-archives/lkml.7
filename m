@@ -2,215 +2,128 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C54C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:12:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C1E5C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:13:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64E19208C4
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:12:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E4AE208C4
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:13:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GlblEZrk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406893AbfHINMV (ORCPT
+        id S2406956AbfHINN0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 09:12:21 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52150 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726157AbfHINMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 09:12:20 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id F2F91B023;
-        Fri,  9 Aug 2019 13:12:18 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id F10761E46DD; Fri,  9 Aug 2019 15:05:27 +0200 (CEST)
-Date:   Fri, 9 Aug 2019 15:05:27 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     " Steven J. Magnani " <steve.magnani@digidescorp.com>
-Cc:     Jan Kara <jack@suse.com>, Steve Magnani <steve@digidescorp.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] udf: reduce leakage of blocks related to named streams
-Message-ID: <20190809130527.GD17568@quack2.suse.cz>
-References: <20190807133258.12432-1-steve@digidescorp.com>
+        Fri, 9 Aug 2019 09:13:26 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:45574 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726157AbfHINNZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 09:13:25 -0400
+Received: by mail-lf1-f67.google.com with SMTP id a30so6430752lfk.12;
+        Fri, 09 Aug 2019 06:13:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=R/qbfybNTawBfvTZEySh0cjltm2Kq0tph5R6n428udM=;
+        b=GlblEZrkT23FfH3YxwgAttCw6xMNP7KmjYM4WXbspvsjFKfa2jnMBD9iz9n/359YcB
+         mh1ba0d5xf1zHxpLYacNsJ3P90ZN+296q6JzVff86xucaYj/+8z6O4lg6Lk8RQX1Ftfi
+         ISE1PqIr2YzS82esJXELAiYZhczT1wMe71LlZOhk/PnPHjZ2R5k3+3XQCEEg4zOWHdHr
+         md4eFoFMjx17VGzybjmylCG7pkgn06aca+wnsBRr6jiVDdjPDUmN+4APIHiT9poKviyF
+         oMEBxX3477w1dW3K+x6B52wSS/8CkF3eQtIrPf+jvad1ZuOdshSYXAMuhyVGzBm78tth
+         3qsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=R/qbfybNTawBfvTZEySh0cjltm2Kq0tph5R6n428udM=;
+        b=j1YtCmyfZ48Dgraz2bmpoKEtL8ufcAevdF5JTPvFIHTIsWQb9AbJJKXb8Ubr9jvBdT
+         aOmBfvE+yNH/iiuwkxoDvR09+MdssA7ZCVUf021iZMI9sjcP9jwRbz4ezqKDthz5pfU+
+         T7PF9T9c/8WIFPaQiTQCygYlLL5JPytZEh0GMd4yfRjLiRTMgRF0uLc1UdbPHitH8Wqu
+         B964jWD7e/OX3C6P9tavqmGTEx5x5l0Q34ihhX7kPpHcIqgu7s8ZsJhX90uOFoBWELKB
+         EFi8hKDg5X91ctI0nlZ7d7xwj9jQT+WCz5fhnpfWE+JG2Y1Srny2fOMvU7Ipw4OqK+CH
+         EthQ==
+X-Gm-Message-State: APjAAAVaqDVFElqP5I4yHme1FMNQlqfG6NqGKEQhFVO/gzyEihhdodzT
+        sd7s+OVI4j7Ig1SsDTH6PV4KB+2K
+X-Google-Smtp-Source: APXvYqyf29S37MuD+Ii1VOieSMvQRwalWsMCTSNp4taVg2fWHXkXUtz+sOa2dH9UTLHVaWFwFCfeCQ==
+X-Received: by 2002:ac2:568e:: with SMTP id 14mr12994101lfr.189.1565356402685;
+        Fri, 09 Aug 2019 06:13:22 -0700 (PDT)
+Received: from [192.168.2.145] ([94.29.34.218])
+        by smtp.googlemail.com with ESMTPSA id k124sm17587000lfd.60.2019.08.09.06.13.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 09 Aug 2019 06:13:21 -0700 (PDT)
+Subject: Re: [PATCH v8 18/21] soc/tegra: pmc: Configure core power request
+ polarity
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
+        jason@lakedaemon.net, marc.zyngier@arm.com,
+        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
+References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
+ <1565308020-31952-19-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <29842147-a5f8-d51d-c594-b93b20b2e20f@gmail.com>
+Date:   Fri, 9 Aug 2019 16:13:20 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190807133258.12432-1-steve@digidescorp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1565308020-31952-19-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 07-08-19 08:32:58,  Steven J. Magnani  wrote:
-> From: Steve Magnani <steve@digidescorp.com>
+09.08.2019 2:46, Sowjanya Komatineni пишет:
+> This patch configures polarity of the core power request signal
+> in PMC control register based on the device tree property.
 > 
-> Windows is capable of creating UDF files having named streams.
-> One example is the "Zone.Identifier" stream attached automatically
-> to files downloaded from a network. See:
->   https://msdn.microsoft.com/en-us/library/dn392609.aspx
+> PMC asserts and de-asserts power request signal based on it polarity
+> when it need to power-up and power-down the core rail during SC7.
 > 
-> Modification of a file having one or more named streams in Linux causes
-> the stream directory to become detached from the file, essentially leaking
-> all blocks pertaining to the file's streams. Worse, an attempt to delete
-> the file causes its directory entry (FID) to be deleted, but because the
-> driver believes that a hard link to the file remains, the Extended File
-> Entry (EFE) and all extents of the file itself remain allocated. Since
-> there is no hard link, after the FID has been deleted all of these blocks
-> are unreachable (leaked).
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/soc/tegra/pmc.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> A complete solution to this problem involves walking the File Identifiers
-> in the file's stream directory and freeing all extents allocated to each
-> named stream (each of which involves a walk of arbitrary length). As the
-> complete solution is quite complex, for now just settle for retaining the
-> stream directory attachment during file modification, and being able to
-> reclaim the blocks of the file, its Extended File Entry, and its Stream
-> Directory EFE during file deletion.
-> 
-> The UDF structures used by Windows to attach a simple Zone.Identifier
-> named stream to a file are:
-> * A stream directory EFE containing an "in ICB" Zone.Identifier FID,
->   which references
-> * An EFE with "in ICB" stream data
-> 
-> For this case, this partial solution reduces the number of blocks leaked
-> during file deletion to just one (the EFE containing the stream data).
-> 
-> Signed-off-by: Steven J. Magnani <steve@digidescorp.com>
-
-Thanks for the patch! I was thinking about this and rather than this
-partial fix, I'd prefer to fail the last unlink of an inode with
-a named-stream directory with EOPNOTSUPP. Later we can properly handle this
-and walk the named-stream directory and remove all associated EFEs for the
-named streams. After all named-stream directories are restricted to not
-have any subdirectories, hardlinks, or anything similarly fancy so the walk
-should not be *that* hard to implement.
-
-								Honza
-
-> 
-> --- a/fs/udf/udf_i.h	2019-07-26 11:35:28.257563879 -0500
-> +++ b/fs/udf/udf_i.h	2019-08-06 14:35:55.579654263 -0500
-> @@ -42,12 +42,15 @@ struct udf_inode_info {
->  	unsigned		i_efe : 1;	/* extendedFileEntry */
->  	unsigned		i_use : 1;	/* unallocSpaceEntry */
->  	unsigned		i_strat4096 : 1;
-> -	unsigned		reserved : 26;
-> +	unsigned		i_streamdir : 1;
-> +	unsigned		reserved : 25;
->  	union {
->  		struct short_ad	*i_sad;
->  		struct long_ad		*i_lad;
->  		__u8		*i_data;
->  	} i_ext;
-> +	struct kernel_lb_addr		i_locStreamdir;
-> +	__u64			i_lenStreams;
->  	struct rw_semaphore	i_data_sem;
->  	struct udf_ext_cache cached_extent;
->  	/* Spinlock for protecting extent cache */
-> --- a/fs/udf/super.c	2019-07-26 11:35:28.253563792 -0500
-> +++ b/fs/udf/super.c	2019-08-06 15:04:30.851086957 -0500
-> @@ -151,9 +151,13 @@ static struct inode *udf_alloc_inode(str
+> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+> index 3aa71c28a10a..e013ada7e4e9 100644
+> --- a/drivers/soc/tegra/pmc.c
+> +++ b/drivers/soc/tegra/pmc.c
+> @@ -56,6 +56,7 @@
+>  #define  PMC_CNTRL_SIDE_EFFECT_LP0	BIT(14) /* LP0 when CPU pwr gated */
+>  #define  PMC_CNTRL_SYSCLK_OE		BIT(11) /* system clock enable */
+>  #define  PMC_CNTRL_SYSCLK_POLARITY	BIT(10) /* sys clk polarity */
+> +#define  PMC_CNTRL_PWRREQ_POLARITY	BIT(8)
+>  #define  PMC_CNTRL_MAIN_RST		BIT(4)
 >  
->  	ei->i_unique = 0;
->  	ei->i_lenExtents = 0;
-> +	ei->i_lenStreams = 0;
->  	ei->i_next_alloc_block = 0;
->  	ei->i_next_alloc_goal = 0;
->  	ei->i_strat4096 = 0;
-> +	ei->i_streamdir = 0;
-> +	ei->i_locStreamdir.logicalBlockNum = 0xFFFFFFFF;
-> +	ei->i_locStreamdir.partitionReferenceNum = 0xFFFF;
->  	init_rwsem(&ei->i_data_sem);
->  	ei->cached_extent.lstart = -1;
->  	spin_lock_init(&ei->i_extent_cache_lock);
-> --- a/fs/udf/inode.c	2019-07-26 11:35:28.253563792 -0500
-> +++ b/fs/udf/inode.c	2019-08-06 15:04:30.851086957 -0500
-> @@ -132,7 +132,7 @@ void udf_evict_inode(struct inode *inode
->  	struct udf_inode_info *iinfo = UDF_I(inode);
->  	int want_delete = 0;
+>  #define PMC_WAKE_MASK			0x0c
+> @@ -2290,6 +2291,11 @@ static void tegra20_pmc_init(struct tegra_pmc *pmc)
+>  	else
+>  		value |= PMC_CNTRL_SYSCLK_POLARITY;
 >  
-> -	if (!inode->i_nlink && !is_bad_inode(inode)) {
-> +	if ((inode->i_nlink == iinfo->i_streamdir) && !is_bad_inode(inode)) {
->  		want_delete = 1;
->  		udf_setsize(inode, 0);
->  		udf_update_inode(inode, IS_SYNC(inode));
-> @@ -1485,6 +1485,10 @@ reread:
->  		iinfo->i_lenEAttr = le32_to_cpu(fe->lengthExtendedAttr);
->  		iinfo->i_lenAlloc = le32_to_cpu(fe->lengthAllocDescs);
->  		iinfo->i_checkpoint = le32_to_cpu(fe->checkpoint);
-> +		iinfo->i_streamdir = 0;
-> +		iinfo->i_lenStreams = 0;
-> +		iinfo->i_locStreamdir.logicalBlockNum = 0xFFFFFFFF;
-> +		iinfo->i_locStreamdir.partitionReferenceNum = 0xFFFF;
->  	} else {
->  		inode->i_blocks = le64_to_cpu(efe->logicalBlocksRecorded) <<
->  		    (inode->i_sb->s_blocksize_bits - 9);
-> @@ -1498,6 +1502,16 @@ reread:
->  		iinfo->i_lenEAttr = le32_to_cpu(efe->lengthExtendedAttr);
->  		iinfo->i_lenAlloc = le32_to_cpu(efe->lengthAllocDescs);
->  		iinfo->i_checkpoint = le32_to_cpu(efe->checkpoint);
+> +	if (pmc->corereq_high)
+> +		value &= ~PMC_CNTRL_PWRREQ_POLARITY;
+> +	else
+> +		value |= PMC_CNTRL_PWRREQ_POLARITY;
 > +
-> +		/* Named streams */
-> +		iinfo->i_streamdir = (efe->streamDirectoryICB.extLength != 0);
-> +		iinfo->i_locStreamdir =
-> +			lelb_to_cpu(efe->streamDirectoryICB.extLocation);
-> +		iinfo->i_lenStreams = le64_to_cpu(efe->objectSize);
-> +		if (iinfo->i_lenStreams >= inode->i_size)
-> +			iinfo->i_lenStreams -= inode->i_size;
-> +		else
-> +			iinfo->i_lenStreams = 0;
->  	}
->  	inode->i_generation = iinfo->i_unique;
+>  	/* configure the output polarity while the request is tristated */
+>  	tegra_pmc_writel(pmc, value, PMC_CNTRL);
 >  
-> @@ -1760,9 +1774,19 @@ static int udf_update_inode(struct inode
->  		       iinfo->i_ext.i_data,
->  		       inode->i_sb->s_blocksize -
->  					sizeof(struct extendedFileEntry));
-> -		efe->objectSize = cpu_to_le64(inode->i_size);
-> +		efe->objectSize =
-> +			cpu_to_le64(inode->i_size + iinfo->i_lenStreams);
->  		efe->logicalBlocksRecorded = cpu_to_le64(lb_recorded);
->  
-> +		if (iinfo->i_streamdir) {
-> +			struct long_ad *icb_lad = &efe->streamDirectoryICB;
-> +
-> +			icb_lad->extLocation =
-> +				cpu_to_lelb(iinfo->i_locStreamdir);
-> +			icb_lad->extLength =
-> +				cpu_to_le32(inode->i_sb->s_blocksize);
-> +		}
-> +
->  		udf_adjust_time(iinfo, inode->i_atime);
->  		udf_adjust_time(iinfo, inode->i_mtime);
->  		udf_adjust_time(iinfo, inode->i_ctime);
-> --- a/fs/udf/ialloc.c	2019-07-26 11:35:28.253563792 -0500
-> +++ b/fs/udf/ialloc.c	2019-08-06 15:04:30.851086957 -0500
-> @@ -31,6 +31,7 @@ void udf_free_inode(struct inode *inode)
->  	struct super_block *sb = inode->i_sb;
->  	struct udf_sb_info *sbi = UDF_SB(sb);
->  	struct logicalVolIntegrityDescImpUse *lvidiu = udf_sb_lvidiu(sb);
-> +	struct udf_inode_info *iinfo = UDF_I(inode);
->  
->  	if (lvidiu) {
->  		mutex_lock(&sbi->s_alloc_mutex);
-> @@ -42,7 +43,13 @@ void udf_free_inode(struct inode *inode)
->  		mutex_unlock(&sbi->s_alloc_mutex);
->  	}
->  
-> -	udf_free_blocks(sb, NULL, &UDF_I(inode)->i_location, 0, 1);
-> +	udf_free_blocks(sb, NULL, &iinfo->i_location, 0, 1);
-> +	if (iinfo->i_streamdir) {
-> +		udf_free_blocks(sb, NULL, &iinfo->i_locStreamdir, 0, 1);
-> +		udf_warn(inode->i_sb,
-> +			 "Leaking unsupported stream blocks for inode %lu\n",
-> +			 inode->i_ino);
-> +	}
->  }
->  
->  struct inode *udf_new_inode(struct inode *dir, umode_t mode)
 > 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
