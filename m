@@ -2,179 +2,68 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B14C32756
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B593C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:25:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A4E420B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:24:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="HbwgriNP"
+	by mail.kernel.org (Postfix) with ESMTP id 0FF732171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:25:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406945AbfHIRYc (ORCPT
+        id S2407231AbfHIRZf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 13:24:32 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:17187 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726358AbfHIRYb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 13:24:31 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d4dac580001>; Fri, 09 Aug 2019 10:24:40 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 09 Aug 2019 10:24:29 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 09 Aug 2019 10:24:29 -0700
-Received: from [10.2.167.88] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 9 Aug
- 2019 17:24:28 +0000
-Subject: Re: [PATCH v8 19/21] soc/tegra: pmc: Configure deep sleep control
- settings
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <tglx@linutronix.de>,
-        <jason@lakedaemon.net>, <marc.zyngier@arm.com>,
-        <linus.walleij@linaro.org>, <stefan@agner.ch>,
-        <mark.rutland@arm.com>
-CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
-        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
-        <josephl@nvidia.com>, <talho@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>, <rjw@rjwysocki.net>,
-        <viresh.kumar@linaro.org>, <linux-pm@vger.kernel.org>
-References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
- <1565308020-31952-20-git-send-email-skomatineni@nvidia.com>
- <57ed54cd-bf57-cab1-eb63-8548761640de@gmail.com>
- <275f3685-bc53-38ff-c778-cf2ea588e5a5@nvidia.com>
-Message-ID: <60ea494a-9960-b7fc-3afb-8c17feec9fda@nvidia.com>
-Date:   Fri, 9 Aug 2019 10:24:27 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 9 Aug 2019 13:25:35 -0400
+Received: from mga03.intel.com ([134.134.136.65]:35903 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726216AbfHIRZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 13:25:35 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 10:25:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,366,1559545200"; 
+   d="scan'208";a="180197881"
+Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
+  by orsmga006.jf.intel.com with ESMTP; 09 Aug 2019 10:25:34 -0700
+Date:   Fri, 9 Aug 2019 10:25:33 -0700
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Stephen Douthit <stephend@silicom-usa.com>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] EDAC, pnd2: Fix ioremap() size in dnv_rd_reg()
+Message-ID: <20190809172533.GA31823@agluck-desk2.amr.corp.intel.com>
+References: <20190809141737.15580-1-stephend@silicom-usa.com>
 MIME-Version: 1.0
-In-Reply-To: <275f3685-bc53-38ff-c778-cf2ea588e5a5@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1565371480; bh=/f4jYEKxyB1FoXf4uT1AIcB499hX8TTQBWVXvydoY5E=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=HbwgriNPRkPifALJsYkdC+2geRtWm0TwB7+YC6TfNVc2n9prugwG4Ctob75lGK2lN
-         /86Dxt5I3E7/gubJWUsZqSpXqAc89LeuMGcRfWZS4d88yKVWYNGjGxk8X/7bL/BFOh
-         MbxkL5a15+qg40o9QYBKk9vfvYPc6PHm3OTVUyRtWDavtEqSYGTor7xk6uPo6Hx+2Y
-         URarbXG5kS1EBjsCLeCBXnoDtpIoEGQsOBpmJz2cRPsPnYGrW66h3DxT127AsKlca5
-         Lk7jxoP30zcGKOIqSzk+XZVr6FjvSBrUJlXY3r56wqFJDPV4N6PtNQzN9oX52qvWbK
-         Bf2HAXaJLsz+A==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190809141737.15580-1-stephend@silicom-usa.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Aug 09, 2019 at 02:18:02PM +0000, Stephen Douthit wrote:
+> Depending on how BIOS has marked the reserved region containing the 32KB
+> MCHBAR you can get warnings like:
+> 
+> resource sanity check: requesting [mem 0xfed10000-0xfed1ffff], which spans more than reserved [mem 0xfed10000-0xfed17fff]
+> caller dnv_rd_reg+0xc8/0x240 [pnd2_edac] mapping multiple BARs
+> 
+> Not all of the mmio regions used in dnv_rd_reg() are the same size.  The
+> MCHBAR window is 32KB and the sideband ports are 64KB.  Pass the correct
+> size to ioremap() depending on which resource we're reading from.
 
-On 8/9/19 9:23 AM, Sowjanya Komatineni wrote:
->
-> On 8/9/19 6:23 AM, Dmitry Osipenko wrote:
->> 09.08.2019 2:46, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> Tegra210 and prior Tegra chips have deep sleep entry and wakeup related
->>> timings which are platform specific that should be configured before
->>> entering into deep sleep.
->>>
->>> Below are the timing specific configurations for deep sleep entry and
->>> wakeup.
->>> - Core rail power-on stabilization timer
->>> - OSC clock stabilization timer after SOC rail power is stabilized.
->>> - Core power off time is the minimum wake delay to keep the system
->>> =C2=A0=C2=A0 in deep sleep state irrespective of any quick wake event.
->>>
->>> These values depends on the discharge time of regulators and turn OFF
->>> time of the PMIC to allow the complete system to finish entering into
->>> deep sleep state.
->>>
->>> These values vary based on the platform design and are specified
->>> through the device tree.
->>>
->>> This patch has implementation to configure these timings which are must
->>> to have for proper deep sleep and wakeup operations.
->>>
->>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>> ---
->>> =C2=A0 drivers/soc/tegra/pmc.c | 13 ++++++++++++-
->>> =C2=A0 1 file changed, 12 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
->>> index e013ada7e4e9..9a78d8417367 100644
->>> --- a/drivers/soc/tegra/pmc.c
->>> +++ b/drivers/soc/tegra/pmc.c
->>> @@ -88,6 +88,8 @@
->>> =C2=A0 =C2=A0 #define PMC_CPUPWRGOOD_TIMER=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 0xc8
->>> =C2=A0 #define PMC_CPUPWROFF_TIMER=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 0xcc
->>> +#define PMC_COREPWRGOOD_TIMER=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 0x3c
->>> +#define PMC_COREPWROFF_TIMER=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- 0xe0
->>> =C2=A0 =C2=A0 #define PMC_PWR_DET_VALUE=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 0xe4
->>> =C2=A0 @@ -2277,7 +2279,7 @@ static const struct tegra_pmc_regs=20
->>> tegra20_pmc_regs =3D {
->>> =C2=A0 =C2=A0 static void tegra20_pmc_init(struct tegra_pmc *pmc)
->>> =C2=A0 {
->>> -=C2=A0=C2=A0=C2=A0 u32 value;
->>> +=C2=A0=C2=A0=C2=A0 u32 value, osc, pmu, off;
->>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Always enable CPU power reques=
-t */
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 value =3D tegra_pmc_readl(pmc, PMC_CNTRL=
-);
->>> @@ -2303,6 +2305,15 @@ static void tegra20_pmc_init(struct tegra_pmc=20
->>> *pmc)
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 value =3D tegra_pmc_readl(pmc, PMC_CNTRL=
-);
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 value |=3D PMC_CNTRL_SYSCLK_OE;
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra_pmc_writel(pmc, value, PMC_CNTRL);
->>> +
->>> +=C2=A0=C2=A0=C2=A0 osc =3D DIV_ROUND_UP(pmc->core_osc_time * 8192, 100=
-0000);
->>> +=C2=A0=C2=A0=C2=A0 pmu =3D DIV_ROUND_UP(pmc->core_pmu_time * 32768, 10=
-00000);
->>> +=C2=A0=C2=A0=C2=A0 off =3D DIV_ROUND_UP(pmc->core_off_time * 32768, 10=
-00000);
->>> +=C2=A0=C2=A0=C2=A0 if (osc && pmu)
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra_pmc_writel(pmc, ((osc=
- << 8) & 0xff00) | (pmu & 0xff),
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 PMC_COREPWRGOOD_TIMER);
->>> +=C2=A0=C2=A0=C2=A0 if (off)
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra_pmc_writel(pmc, off, =
-PMC_COREPWROFF_TIMER);
->> The osc/pmu/off values are undefined if they are not defined in=20
->> device-tree. I suppose this
->> need to be corrected in tegra_pmc_parse_dt() if the values really=20
->> matter even if LP0 suspend
->> isn't supported in device-tree.
->>
->> And I'm also not sure what's wrong with setting 0 for the timers.
->>
-> These settings are for SC7 only and will not have any impact in normal=20
-> state.
-POR value for these timing registers is not 0 and has default timings=20
-based on chip design and on top of that based on platform HW components=20
-charge/discharge timings there's a need to increase these timings so=20
-support for programming these thru DT is needed and these values have=20
-effect only in LP0.
->>> =C2=A0 }
->>> =C2=A0 =C2=A0 static void tegra20_pmc_setup_irq_polarity(struct tegra_p=
-mc *pmc,
->>>
+Applied. Thanks.
+
+-Tony
+
+[Boris/Mauro: I pushed to edac-for-next branch in ras tree
+ git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git]
