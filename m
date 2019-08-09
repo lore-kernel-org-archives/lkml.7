@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD479C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03770C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0BB5217F5
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:46:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA60C2171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:46:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565358414;
-	bh=l+zjRhauc4aZHHmrh02iya1ISMlmFxXR+HN+Di3fIGA=;
+	s=default; t=1565358417;
+	bh=p3K6yhj/p8Um1/Dv9UruoqC3qn4xf3XEZrGCUPmytTM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1G31SJ4Jz0hTMYwJmSbbbbYAjomHo1NgeCljiicVFlOfMdWJVJQry1aXyuo+Vj/fm
-	 +HJ6DBBemv6XDYR0T5mX5CHs99io1o+fV2En1wWcim6PejJ65TtwBTwopQAcBT6T4j
-	 YV+OWIc8KRlraKVucpNLyax51Z2aaCu82lptk4vo=
+	b=nwXDtNFzXNxg3l4RKnQQNfR1yFhv08HVELOm4SafU8iwJji4uEgTEgTxPqUkMB+E8
+	 r3X9thpVz/n1jiMcriaa/VhuzVfbYy/sd6Mv4xK61czzBHLmon+afgQntYseal+37O
+	 CkMwMjjnQ2iVMGD5S2p/pGXmrNZCGV3N36ttX/P4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407165AbfHINqx (ORCPT
+        id S2407177AbfHINq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 09:46:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36632 "EHLO mail.kernel.org"
+        Fri, 9 Aug 2019 09:46:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407144AbfHINqu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 09:46:50 -0400
+        id S2407157AbfHINqx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 09:46:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A196217F4;
-        Fri,  9 Aug 2019 13:46:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB6B521874;
+        Fri,  9 Aug 2019 13:46:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565358409;
-        bh=l+zjRhauc4aZHHmrh02iya1ISMlmFxXR+HN+Di3fIGA=;
+        s=default; t=1565358412;
+        bh=p3K6yhj/p8Um1/Dv9UruoqC3qn4xf3XEZrGCUPmytTM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jVOXJg1OiQum3LqA8xmgXsTvrQFpWnPtW+NaW2kcAeMk+fjbghxSZhSLzn9K+BKJH
-         4SDLTqm2gZci4+Fk8rTAZcRuhTeohjiiqoASNIyM0eDgF+d53bMQHKa0M6qfAAH7S6
-         goCFgFiQ5gljcZPpQ00ATzUFleSldW91bXVROsww=
+        b=xrNNE/O5w25P5+470+7Y5j0mELJYh87FbC0AN/4NgN3mdF0MGoNOTIGQQmqkhKI1b
+         ODyLmZdAsnYqZ6FBnHoTgRUrlHUBkv0xBtT+J0qcX70sAOHDRVbBnH89bvEtGocMKS
+         vB+U2xFNTR4XvT3JUWNPBIPMKZuFxJmglaNJ4Fsc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Shanker Donthineni <shankerd@codeaurora.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 05/32] arm64: cpufeature: Fix CTR_EL0 field definitions
-Date:   Fri,  9 Aug 2019 15:45:08 +0200
-Message-Id: <20190809133923.125312329@linuxfoundation.org>
+        stable@vger.kernel.org, Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 06/32] arm64: cpufeature: Fix feature comparison for CTR_EL0.{CWG,ERG}
+Date:   Fri,  9 Aug 2019 15:45:09 +0200
+Message-Id: <20190809133923.154305701@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190809133922.945349906@linuxfoundation.org>
 References: <20190809133922.945349906@linuxfoundation.org>
@@ -61,49 +62,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit be68a8aaf925aaf35574260bf820bb09d2f9e07f upstream.
+commit 147b9635e6347104b91f48ca9dca61eb0fbf2a54 upstream.
 
-Our field definitions for CTR_EL0 suffer from a number of problems:
+If CTR_EL0.{CWG,ERG} are 0b0000 then they must be interpreted to have
+their architecturally maximum values, which defeats the use of
+FTR_HIGHER_SAFE when sanitising CPU ID registers on heterogeneous
+machines.
 
-  - The IDC and DIC fields are missing, which causes us to enable CTR
-    trapping on CPUs with either of these returning non-zero values.
+Introduce FTR_HIGHER_OR_ZERO_SAFE so that these fields effectively
+saturate at zero.
 
-  - The ERG is FTR_LOWER_SAFE, whereas it should be treated like CWG as
-    FTR_HIGHER_SAFE so that applications can use it to avoid false sharing.
-
-  - [nit] A RES1 field is described as "RAO"
-
-This patch updates the CTR_EL0 field definitions to fix these issues.
-
+Fixes: 3c739b571084 ("arm64: Keep track of CPU feature registers")
 Cc: <stable@vger.kernel.org> # 4.9.y only
-Cc: Shanker Donthineni <shankerd@codeaurora.org>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/cpufeature.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ arch/arm64/include/asm/cpufeature.h | 7 ++++---
+ arch/arm64/kernel/cpufeature.c      | 8 ++++++--
+ 2 files changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index a3ab7dfad50a7..e2ac72b7e89ca 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -148,10 +148,12 @@ static const struct arm64_ftr_bits ftr_id_aa64mmfr2[] = {
+diff --git a/arch/arm64/include/asm/cpufeature.h b/arch/arm64/include/asm/cpufeature.h
+index 15868eca58de0..e7bef3d936d87 100644
+--- a/arch/arm64/include/asm/cpufeature.h
++++ b/arch/arm64/include/asm/cpufeature.h
+@@ -31,9 +31,10 @@
+ 
+ /* CPU feature register tracking */
+ enum ftr_type {
+-	FTR_EXACT,	/* Use a predefined safe value */
+-	FTR_LOWER_SAFE,	/* Smaller value is safe */
+-	FTR_HIGHER_SAFE,/* Bigger value is safe */
++	FTR_EXACT,			/* Use a predefined safe value */
++	FTR_LOWER_SAFE,			/* Smaller value is safe */
++	FTR_HIGHER_SAFE,		/* Bigger value is safe */
++	FTR_HIGHER_OR_ZERO_SAFE,	/* Bigger value is safe, but 0 is biggest */
  };
  
- static const struct arm64_ftr_bits ftr_ctr[] = {
--	ARM64_FTR_BITS(FTR_STRICT, FTR_EXACT, 31, 1, 1),	/* RAO */
--	ARM64_FTR_BITS(FTR_STRICT, FTR_EXACT, 28, 3, 0),
-+	ARM64_FTR_BITS(FTR_STRICT, FTR_EXACT, 31, 1, 1),	/* RES1 */
-+	ARM64_FTR_BITS(FTR_STRICT, FTR_EXACT, 30, 1, 0),
-+	ARM64_FTR_BITS(FTR_STRICT, FTR_LOWER_SAFE, 29, 1, 1),	/* DIC */
-+	ARM64_FTR_BITS(FTR_STRICT, FTR_LOWER_SAFE, 28, 1, 1),	/* IDC */
- 	ARM64_FTR_BITS(FTR_STRICT, FTR_HIGHER_SAFE, 24, 4, 0),	/* CWG */
--	ARM64_FTR_BITS(FTR_STRICT, FTR_LOWER_SAFE, 20, 4, 0),	/* ERG */
-+	ARM64_FTR_BITS(FTR_STRICT, FTR_HIGHER_SAFE, 20, 4, 0),	/* ERG */
+ #define FTR_STRICT	true	/* SANITY check strict matching required */
+diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+index e2ac72b7e89ca..9a8e45dc36bd0 100644
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -152,8 +152,8 @@ static const struct arm64_ftr_bits ftr_ctr[] = {
+ 	ARM64_FTR_BITS(FTR_STRICT, FTR_EXACT, 30, 1, 0),
+ 	ARM64_FTR_BITS(FTR_STRICT, FTR_LOWER_SAFE, 29, 1, 1),	/* DIC */
+ 	ARM64_FTR_BITS(FTR_STRICT, FTR_LOWER_SAFE, 28, 1, 1),	/* IDC */
+-	ARM64_FTR_BITS(FTR_STRICT, FTR_HIGHER_SAFE, 24, 4, 0),	/* CWG */
+-	ARM64_FTR_BITS(FTR_STRICT, FTR_HIGHER_SAFE, 20, 4, 0),	/* ERG */
++	ARM64_FTR_BITS(FTR_STRICT, FTR_HIGHER_OR_ZERO_SAFE, 24, 4, 0),	/* CWG */
++	ARM64_FTR_BITS(FTR_STRICT, FTR_HIGHER_OR_ZERO_SAFE, 20, 4, 0),	/* ERG */
  	ARM64_FTR_BITS(FTR_STRICT, FTR_LOWER_SAFE, CTR_DMINLINE_SHIFT, 4, 1),
  	/*
  	 * Linux can handle differing I-cache policies. Userspace JITs will
+@@ -392,6 +392,10 @@ static s64 arm64_ftr_safe_value(const struct arm64_ftr_bits *ftrp, s64 new,
+ 	case FTR_LOWER_SAFE:
+ 		ret = new < cur ? new : cur;
+ 		break;
++	case FTR_HIGHER_OR_ZERO_SAFE:
++		if (!cur || !new)
++			break;
++		/* Fallthrough */
+ 	case FTR_HIGHER_SAFE:
+ 		ret = new > cur ? new : cur;
+ 		break;
 -- 
 2.20.1
 
