@@ -2,139 +2,127 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E59D8C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 02:49:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C80C0650F
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 02:55:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C02702171F
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 02:49:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64D8F216C8
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 02:55:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="fP6dn5Zw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404900AbfHICtY (ORCPT
+        id S2404896AbfHICzC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 22:49:24 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:48888 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729476AbfHICtY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 22:49:24 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id E46D8D91BFA54964D24E;
-        Fri,  9 Aug 2019 10:33:31 +0800 (CST)
-Received: from localhost.localdomain (10.67.212.132) by
- DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 9 Aug 2019 10:33:22 +0800
-From:   Huazhong Tan <tanhuazhong@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 02/12] net: hns3: fix interrupt clearing error for VF
-Date:   Fri, 9 Aug 2019 10:31:08 +0800
-Message-ID: <1565317878-31806-3-git-send-email-tanhuazhong@huawei.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1565317878-31806-1-git-send-email-tanhuazhong@huawei.com>
-References: <1565317878-31806-1-git-send-email-tanhuazhong@huawei.com>
+        Thu, 8 Aug 2019 22:55:02 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:43489 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729503AbfHICzC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 22:55:02 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 464VGC2vJhz9sND;
+        Fri,  9 Aug 2019 12:54:59 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1565319299;
+        bh=N6x42FJqLLtf5AJTJ8N9Ouj0LI/pvxasYl0hdfaKxdw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=fP6dn5ZwosFfv5RFrhyZUlWBC/cuaOg7VTE5SXlIbFtbSZ3M2N5lw+i8xKQw5h+kC
+         tFvSBBdQWOCgQZUsIRURSLVp4UgCbwe8TvVx3thji5w4ghN/d/JhQTN0m4MVylwmUx
+         UlmNOWci3rZxGzpmEZW6OsWNcnYzZ4RvN/uPKI/OA4YGlx+JhktxQY7oWx6VpRbmuW
+         9LSjEeL4w0oSRL82iu776tXgksEqoTlxP0wOCnO91HBKSXMO+lKjPAJBZbzWw18dTi
+         S59xAOD0P779B922uYLwDlCs1NTHhCPX3T7Ty+HAqGgABcXaMq3dQf6QuZo5Yb8X3m
+         w1XcWZjvsl2Ow==
+Date:   Fri, 9 Aug 2019 12:54:58 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: build failure after merge of the sound tree
+Message-ID: <20190809125458.6c7aaa6c@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.212.132]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; boundary="Sig_/S8foUJF8H+=wKJ0yGK/NO+X";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, VF driver has two kinds of interrupts, reset & CMDQ RX.
-For revision 0x21, according to the UM, each interrupt should be
-cleared by write 0 to the corresponding bit, but the implementation
-writes 0 to the whole register in fact, it will clear other
-interrupt at the same time, then the VF will loss the interrupt.
-But for revision 0x20, this interrupt clear register is a read &
-write register, for compatible, we just keep the old implementation
-for 0x20.
+--Sig_/S8foUJF8H+=wKJ0yGK/NO+X
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-This patch fixes it, also, adds a new register for reading the interrupt
-status according to hardware user manual.
+Hi all,
 
-Fixes: e2cb1dec9779 ("net: hns3: Add HNS3 VF HCL(Hardware Compatibility Layer) Support")
-Fixes: b90fcc5bd904 ("net: hns3: add reset handling for VF when doing Core/Global/IMP reset")
+After merging the sound tree, today's linux-next build (arm
+multi_v7_defconfig) failed like this:
 
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Reviewed-by: Yunsheng Lin <linyunsheng@huawei.com>
+sound/hda/hdac_bus.c: In function 'snd_hdac_aligned_read':
+sound/hda/hdac_bus.c:228:6: error: implicit declaration of function 'readl'=
+; did you mean 'd_real'? [-Werror=3Dimplicit-function-declaration]
+  v =3D readl(aligned_addr);
+      ^~~~~
+      d_real
+sound/hda/hdac_bus.c: In function 'snd_hdac_aligned_write':
+sound/hda/hdac_bus.c:244:2: error: implicit declaration of function 'writel=
+' [-Werror=3Dimplicit-function-declaration]
+  writel(v, aligned_addr);
+  ^~~~~~
+
+Caused by commit
+
+  19abfefd4c76 ("ALSA: hda: Direct MMIO accesses")
+
+I have applied the following patch for today:
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Fri, 9 Aug 2019 12:50:25 +1000
+Subject: [PATCH] ALSA: hda: readl/writel need linux/io.h
+
+Fixes: 19abfefd4c76 ("ALSA: hda: Direct MMIO accesses")
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
 ---
- .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c  | 28 +++++++++++++++-------
- .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h  |  2 ++
- 2 files changed, 21 insertions(+), 9 deletions(-)
+ sound/hda/hdac_bus.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-index ce82b2b..d8b8281 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-@@ -1889,21 +1889,20 @@ static void hclgevf_clear_event_cause(struct hclgevf_dev *hdev, u32 regclr)
- static enum hclgevf_evt_cause hclgevf_check_evt_cause(struct hclgevf_dev *hdev,
- 						      u32 *clearval)
- {
--	u32 val, cmdq_src_reg, rst_ing_reg;
-+	u32 val, cmdq_stat_reg, rst_ing_reg;
- 
- 	/* fetch the events from their corresponding regs */
--	cmdq_src_reg = hclgevf_read_dev(&hdev->hw,
--					HCLGEVF_VECTOR0_CMDQ_SRC_REG);
-+	cmdq_stat_reg = hclgevf_read_dev(&hdev->hw,
-+					 HCLGEVF_VECTOR0_CMDQ_STAT_REG);
- 
--	if (BIT(HCLGEVF_VECTOR0_RST_INT_B) & cmdq_src_reg) {
-+	if (BIT(HCLGEVF_VECTOR0_RST_INT_B) & cmdq_stat_reg) {
- 		rst_ing_reg = hclgevf_read_dev(&hdev->hw, HCLGEVF_RST_ING);
- 		dev_info(&hdev->pdev->dev,
- 			 "receive reset interrupt 0x%x!\n", rst_ing_reg);
- 		set_bit(HNAE3_VF_RESET, &hdev->reset_pending);
- 		set_bit(HCLGEVF_RESET_PENDING, &hdev->reset_state);
- 		set_bit(HCLGEVF_STATE_CMD_DISABLE, &hdev->state);
--		cmdq_src_reg &= ~BIT(HCLGEVF_VECTOR0_RST_INT_B);
--		*clearval = cmdq_src_reg;
-+		*clearval = ~(1U << HCLGEVF_VECTOR0_RST_INT_B);
- 		hdev->rst_stats.vf_rst_cnt++;
- 		/* set up VF hardware reset status, its PF will clear
- 		 * this status when PF has initialized done.
-@@ -1915,9 +1914,20 @@ static enum hclgevf_evt_cause hclgevf_check_evt_cause(struct hclgevf_dev *hdev,
- 	}
- 
- 	/* check for vector0 mailbox(=CMDQ RX) event source */
--	if (BIT(HCLGEVF_VECTOR0_RX_CMDQ_INT_B) & cmdq_src_reg) {
--		cmdq_src_reg &= ~BIT(HCLGEVF_VECTOR0_RX_CMDQ_INT_B);
--		*clearval = cmdq_src_reg;
-+	if (BIT(HCLGEVF_VECTOR0_RX_CMDQ_INT_B) & cmdq_stat_reg) {
-+		/* for revision 0x21, clearing interrupt is writing bit 0
-+		 * to the clear register, writing bit 1 means to keep the
-+		 * old value.
-+		 * for revision 0x20, the clear register is a read & write
-+		 * register, so we should just write 0 to the bit we are
-+		 * handling, and keep other bits as cmdq_stat_reg.
-+		 */
-+		if (hdev->pdev->revision >= 0x21)
-+			*clearval = ~(1U << HCLGEVF_VECTOR0_RX_CMDQ_INT_B);
-+		else
-+			*clearval = cmdq_stat_reg &
-+				    ~BIT(HCLGEVF_VECTOR0_RX_CMDQ_INT_B);
-+
- 		return HCLGEVF_VECTOR0_EVENT_MBX;
- 	}
- 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
-index f0736b0..4ccf107 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
-@@ -87,6 +87,8 @@
- 
- /* Vector0 interrupt CMDQ event source register(RW) */
- #define HCLGEVF_VECTOR0_CMDQ_SRC_REG	0x27100
-+/* Vector0 interrupt CMDQ event status register(RO) */
-+#define HCLGEVF_VECTOR0_CMDQ_STAT_REG	0x27104
- /* CMDQ register bits for RX event(=MBX event) */
- #define HCLGEVF_VECTOR0_RX_CMDQ_INT_B	1
- /* RST register bits for RESET event */
--- 
-2.7.4
+diff --git a/sound/hda/hdac_bus.c b/sound/hda/hdac_bus.c
+index dc2523ef7d98..cd25e2b3f7f2 100644
+--- a/sound/hda/hdac_bus.c
++++ b/sound/hda/hdac_bus.c
+@@ -4,6 +4,7 @@
+  */
+=20
+ #include <linux/init.h>
++#include <linux/io.h>
+ #include <linux/device.h>
+ #include <linux/module.h>
+ #include <linux/export.h>
+--=20
+2.20.1
 
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/S8foUJF8H+=wKJ0yGK/NO+X
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1M4IIACgkQAVBC80lX
+0Gy2cAf/QU6iCDbKpCqx2f0EepphckuXKMSJU4qM+MdkhBZLSppQSFrQ5O0ce1MG
+4OFFDSCXqT5Hsug/eGJlmInZPQ37JdU9wEuPNdZFs8nkEkJZfS2WSfuiZXbP6GAl
+r+TvaCPvZ4SWMsPgY9WnNuMp+WBdBSrKH4ZHPyBQFZiWLOqHiIPf5JoavgiXeZmQ
+m5r2Nf+741eDbG3bDwsrocRzELiYQSBmCwlLzOjN8wGQ42n2XXGnblrwKvpiJ3qw
+oA6h7goZYdT3NlYT+mqSIctq9aqs7EmgYcnSUo8h5chQWT856CRrrIcWzIdTuNOf
+gFBlygd5WZrgXL2/8S0us8E7EyLsfw==
+=Nfo2
+-----END PGP SIGNATURE-----
+
+--Sig_/S8foUJF8H+=wKJ0yGK/NO+X--
