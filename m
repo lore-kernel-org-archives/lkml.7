@@ -2,101 +2,158 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C84C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55A49C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:17:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10E05208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:16:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AB52208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:17:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Es6Xtux7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406773AbfHIMQe (ORCPT
+        id S2406781AbfHIMRb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 08:16:34 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44077 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726152AbfHIMQd (ORCPT
+        Fri, 9 Aug 2019 08:17:31 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:34327 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726152AbfHIMRa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 08:16:33 -0400
-Received: by mail-wr1-f68.google.com with SMTP id p17so98029916wrf.11
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 05:16:33 -0700 (PDT)
+        Fri, 9 Aug 2019 08:17:30 -0400
+Received: by mail-lj1-f194.google.com with SMTP id p17so91933287ljg.1;
+        Fri, 09 Aug 2019 05:17:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=2Y6cibe++jUg1MqhLsa4ocC0OGOAItgbasTPZNkc7eI=;
+        b=Es6Xtux7P3VZubYU24Nu2MzcD53Hn5+4l+jctyBOlss37Ut6Fr35RRHB7rum14F/YO
+         im/2vEWM/Mbwk86IrmWCV3j2JqQfZ18hNsJZtpnwc6KVv37RoYQuXP2le7U5Z90Pp7Tm
+         UOrCh9NsBbBwrn1YVlm9icOVMh5XrQ0dbVE4/ZOcOrL866nFG/cDYJKlV59WH+SHYNSG
+         h1SY+AmpqR6S1ouoiDNZ/6TbGvvZzCkAv6/ctDWfYBQvHxEbOFqvUsu7970eJZDtw+Oo
+         yANlaSFTAl1ZaM5Nta13wmxvh1Z7/P6Py7s5kfj/2IKExjMyvVSdB6O4TNR+WSYavIun
+         VitQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dKnNcxO/SH3Z8UOygzTGmouoajQ3hut2OapA+pyA0Sk=;
-        b=Z9JvlTYqn5SkaUhdKSLfvSEHvQWBZLt8x0Ft1537YTK1Mwu8QGMyTO360YNCEEQGzS
-         A1KGUgrK5Us4NDiQYMen3imXXAnv0vRT5mo4NorBMSuW8uBd4Db/stSnNgp6d5oBEfPS
-         Od07Wpf0mVkiJ9Kska0bP5Rrr+qjPuuVgPf8lveMMX5O2WsWYwHAqLcryR/eCdTHLISP
-         OAl6l7BwQHwTbPVq29z/SaHMhGZUefPZxcuyPx8Q5wGLmUn0V58Mvb+Q+GGmWftJ2KX9
-         715ib9d88fDrqS+CUT7ydwbFW2fQRBhFJnhf77daEASJOk8VtqU3WAyMDzQ8sMpU+FVy
-         dHvQ==
-X-Gm-Message-State: APjAAAXEr/GANq61qUVoFirl3QWJ+GYvUQWrlTZjSlP2Waqfc/G4eDQN
-        Pg5z4reccFRUqggFc7WPUEsu9g==
-X-Google-Smtp-Source: APXvYqy6V0bMNkkWpoNIoqG7/jvb8tmPFpGos6GGp8b3uAdG8cGYOebvtgU+DVaaeRwlxIKnHP8aRA==
-X-Received: by 2002:a5d:4fc8:: with SMTP id h8mr23983716wrw.177.1565352992323;
-        Fri, 09 Aug 2019 05:16:32 -0700 (PDT)
-Received: from localhost.localdomain (mi-18-41-148.service.infuturo.it. [151.18.41.148])
-        by smtp.gmail.com with ESMTPSA id v3sm144491wrq.34.2019.08.09.05.16.30
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 09 Aug 2019 05:16:31 -0700 (PDT)
-Date:   Fri, 9 Aug 2019 14:16:28 +0200
-From:   Juri Lelli <juri.lelli@redhat.com>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>, mingo@kernel.org,
-        linux-kernel@vger.kernel.org, luca.abeni@santannapisa.it,
-        bristot@redhat.com, balsini@android.com, dvyukov@google.com,
-        tglx@linutronix.de, vpillai@digitalocean.com, rostedt@goodmis.org
-Subject: Re: [RFC][PATCH 12/13] sched/deadline: Introduce deadline servers
-Message-ID: <20190809121628.GM29310@localhost.localdomain>
-References: <20190726145409.947503076@infradead.org>
- <20190726161358.056107990@infradead.org>
- <b85f1f95-40e5-852b-f897-1379414354c9@arm.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2Y6cibe++jUg1MqhLsa4ocC0OGOAItgbasTPZNkc7eI=;
+        b=ttJsX8OESu7QANCrHv3lItf+z85Jh+j1qBRJxoCaZI8zLinz1ufMl+mV65Loi/JxaU
+         MI0W+Nv7y2RlfwUbQC2JuR13Km4NxF8b3Vamt6T5pgQkdW23XhbOUQls+WWVntOn5cJO
+         WRDCao7fLEO1pwL7CvJrEY6IT0lOcp1C7UdlGyMWL+/cx8Vl7LVXidafkxnq1izf7MBL
+         AsHA63XsG2I52MvHm4HjkxfkaWnvlA20JYt3WpszBPzRNHUnkzbfBtLSy2+YNfReRrWi
+         OkNb3+jm+Uu+YBxKHA5g7c9EtGl8bOC5VdLqdAM9JdNnlKdE8AGo93OxDdFqIQU2hwYs
+         8S3A==
+X-Gm-Message-State: APjAAAXfuR9FSRrPbHOQS4XOE7mXfEqeS6PTpHMKqafWY6ErY9DN51jg
+        yNSgD6W+JBHoHJlHhum7M7QKuZr/
+X-Google-Smtp-Source: APXvYqzCXqbF8YtE4fLH2dz9U0bvhopDeKHat7TwKL2v5Op5k+Prytgbyv6O6tgSJkzGbUcN7TNCCg==
+X-Received: by 2002:a2e:93cc:: with SMTP id p12mr5978706ljh.11.1565353047460;
+        Fri, 09 Aug 2019 05:17:27 -0700 (PDT)
+Received: from [192.168.2.145] ([94.29.34.218])
+        by smtp.googlemail.com with ESMTPSA id g5sm19606366ljj.69.2019.08.09.05.17.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 09 Aug 2019 05:17:26 -0700 (PDT)
+Subject: Re: [PATCH v8 10/21] clk: tegra: clk-super: Add restore-context
+ support
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
+        jason@lakedaemon.net, marc.zyngier@arm.com,
+        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
+References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
+ <1565308020-31952-11-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <4e33bad9-8d5a-dcd7-c75e-db5843c9be4a@gmail.com>
+Date:   Fri, 9 Aug 2019 15:17:25 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b85f1f95-40e5-852b-f897-1379414354c9@arm.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <1565308020-31952-11-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/08/19 11:17, Dietmar Eggemann wrote:
-> On 7/26/19 4:54 PM, Peter Zijlstra wrote:
+09.08.2019 2:46, Sowjanya Komatineni пишет:
+> This patch implements restore_context for clk_super_mux and clk_super.
 > 
-> [...]
+> During system supend, core power goes off the and context of Tegra
+> CAR registers is lost.
 > 
-> > +void dl_server_init(struct sched_dl_entity *dl_se, struct rq *rq,
-> > +		    dl_server_has_tasks_f has_tasks,
-> > +		    dl_server_pick_f pick)
-> > +{
-> > +	dl_se->dl_server = 1;
-> > +	dl_se->rq = rq;
-> > +	dl_se->server_has_tasks = has_tasks;
-> > +	dl_se->server_pick = pick;
-> > +
-> > +	setup_new_dl_entity(dl_se);
+> So on system resume, context of super clock registers are restored
+> to have them in same state as before suspend.
 > 
-> IMHO, this needs rq locking because of the rq_clock(rq) in
-> setup_new_dl_entity().
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/clk/tegra/clk-super.c | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
 > 
-> [    0.000000] WARNING: CPU: 0 PID: 0 at kernel/sched/sched.h:1119
-> dl_server_init+0x118/0x178
-> ...
-> [    0.000000] CPU: 0 PID: 0 Comm: swapper Tainted: G        W
-> 5.3.0-rc3-00013-ga33cf033cc99-dirty #10
-> [    0.000000] Hardware name: ARM Juno development board (r0) (DT)
-> ...
-> [    0.000000] Call trace:
-> [    0.000000]  dl_server_init+0x118/0x178
-> [    0.000000]  fair_server_init+0x5c/0x68
-> [    0.000000]  sched_init+0x2c8/0x474
-> [    0.000000]  start_kernel+0x290/0x514
-> 
-> [...]
+> diff --git a/drivers/clk/tegra/clk-super.c b/drivers/clk/tegra/clk-super.c
+> index e2a1e95a8db7..74c9e913e41c 100644
+> --- a/drivers/clk/tegra/clk-super.c
+> +++ b/drivers/clk/tegra/clk-super.c
+> @@ -124,9 +124,18 @@ static int clk_super_set_parent(struct clk_hw *hw, u8 index)
+>  	return err;
+>  }
+>  
+> +static void clk_super_mux_restore_context(struct clk_hw *hw)
+> +{
+> +	struct clk_hw *parent = clk_hw_get_parent(hw);
+> +	int parent_id = clk_hw_get_parent_index(hw, parent);
+> +
+> +	clk_super_set_parent(hw, parent_id);
 
-Right.. noticed the same and had a similar thinking the other day (1st
-hunk): 20190808094546.GJ29310@localhost.localdomain
+All Super clocks have a divider, including the "MUX". Thus I'm wondering
+if there is a chance that divider's configuration may differ on resume
+from what it was on suspend.
+
+> +}
+> +
+>  static const struct clk_ops tegra_clk_super_mux_ops = {
+>  	.get_parent = clk_super_get_parent,
+>  	.set_parent = clk_super_set_parent,
+> +	.restore_context = clk_super_mux_restore_context,
+>  };
+>  
+>  static long clk_super_round_rate(struct clk_hw *hw, unsigned long rate,
+> @@ -162,12 +171,24 @@ static int clk_super_set_rate(struct clk_hw *hw, unsigned long rate,
+>  	return super->div_ops->set_rate(div_hw, rate, parent_rate);
+>  }
+>  
+> +static void clk_super_restore_context(struct clk_hw *hw)
+> +{
+> +	struct tegra_clk_super_mux *super = to_clk_super_mux(hw);
+> +	struct clk_hw *div_hw = &super->frac_div.hw;
+> +	struct clk_hw *parent = clk_hw_get_parent(hw);
+> +	int parent_id = clk_hw_get_parent_index(hw, parent);
+> +
+> +	super->div_ops->restore_context(div_hw);
+> +	clk_super_set_parent(hw, parent_id);
+> +}
+> +
+>  const struct clk_ops tegra_clk_super_ops = {
+>  	.get_parent = clk_super_get_parent,
+>  	.set_parent = clk_super_set_parent,
+>  	.set_rate = clk_super_set_rate,
+>  	.round_rate = clk_super_round_rate,
+>  	.recalc_rate = clk_super_recalc_rate,
+> +	.restore_context = clk_super_restore_context,
+>  };
+>  
+>  struct clk *tegra_clk_register_super_mux(const char *name,
+> 
+
