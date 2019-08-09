@@ -2,163 +2,151 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E825C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1251FC31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 156CA20B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:43:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TVc46H13"
+	by mail.kernel.org (Postfix) with ESMTP id DF63620B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:45:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407065AbfHIQnY (ORCPT
+        id S2407106AbfHIQpm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 12:43:24 -0400
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:46986 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726261AbfHIQnX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 12:43:23 -0400
-Received: by mail-yb1-f193.google.com with SMTP id w196so7941303ybe.13;
-        Fri, 09 Aug 2019 09:43:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ee6sLT3QKOZ9HPHIVStB6Oq32MyzNxKnALFXSGrvSq8=;
-        b=TVc46H13EkACc3tRJRH6cBRCNVjYa2zB2vR159T3lp5a1c5olUpKlZnIBVNszXgoH1
-         4ZYzEqbf51kW6xTSVXjf7JFshEao6DydD6v4wZxngF1uvPtjQXNQMOVBZLBEiMxeSLau
-         hDXQqmkPTnFuZEwaZXzfFWhQfdcikA9mAgaYFLwvdykxKXrjT38hchsN1ZvScRI7A41Z
-         P1T6mxZFb6e/57eIJAg7SIwC4HVvhyTPbawIBCEmk9ff7DLLmJAady1ToLm9I7mmbgpq
-         kxma1KWCJkIGeLivc9Dq/zhamVaRBUDGvIlg8VVOQqmgE+/2vVR8puFkGJxMpl6LT07R
-         uXqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ee6sLT3QKOZ9HPHIVStB6Oq32MyzNxKnALFXSGrvSq8=;
-        b=ilKmT8Eimd75aULfsNj9ou5YEoBNW2P23zdsKDxla61bm/zUJmxrbgc9O8R92vU24X
-         EU6OY2++g8p1tu86QLb0jwB/0TgYKc/U92a5xOYGn7xcD+jwExcLsI9YF9nZpab23NLd
-         sSEdO8Xh8VOaAp9KdAyh2iUup4oD2Cd0H7mghMaIaTmgBp3Yjv8w/rSm437IfHVwTM/T
-         CHYsmTNTzSTkob6ygikMHldM8ZQJPudQ/KdJ0c40WQY8xYZ4ayM+EJhcJwq0KucmoSEp
-         nP+X4HUOCRuTi5BCd/WkMjcOa1Hlgvk0oHlF/DTDHOLgXv3L3x3+lk7L0oHh7pU85Tn4
-         uv0g==
-X-Gm-Message-State: APjAAAWzBgJdvoOq7c5D+kODTSsZjZL7gOqtg8JGHBUvusb2ZOJuZuNc
-        sUvZqKM7WpPl0n50YoRvBASchVe1zya4SNHe9r0=
-X-Google-Smtp-Source: APXvYqyWd8Bd2MlCSQQlILPFLseAUONgO+0QnP6HjK5IX+v5Uz2uOP3Djl3F53pUiWu2hsshGUt7B65HXUjxQqXWX6U=
-X-Received: by 2002:a25:d44c:: with SMTP id m73mr9201782ybf.126.1565369002163;
- Fri, 09 Aug 2019 09:43:22 -0700 (PDT)
+        Fri, 9 Aug 2019 12:45:42 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:59504 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406412AbfHIQpm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 12:45:42 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 2B1D1FB03;
+        Fri,  9 Aug 2019 18:45:40 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id zG0agjQGW3tZ; Fri,  9 Aug 2019 18:45:38 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id BDFB241D9E; Fri,  9 Aug 2019 18:45:37 +0200 (CEST)
+Date:   Fri, 9 Aug 2019 18:45:37 +0200
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Ville Baillie <vmbaillie@googlemail.com>
+Cc:     marex@denx.de, stefan@agner.ch, airlied@linux.ie, daniel@ffwll.ch,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Robert Chiras <robert.chiras@nxp.com>
+Subject: Re: [PATCH] mxsfb: allow attachment of display bridges
+Message-ID: <20190809164537.GA4212@bogon.m.sigxcpu.org>
+References: <20190801111853.GA24574@villeb-dev>
 MIME-Version: 1.0
-References: <20190731153443.4984-1-acgoide@tycho.nsa.gov> <CAHC9VhQUoDwBiLi+BiW=_Px18v3xMhhGYDD2mLdu9YZJDWw1yg@mail.gmail.com>
- <CAOQ4uxigYZunXgq0BubRFNM51Kh_g3wrtyNH77PozUX+3sM=aQ@mail.gmail.com> <e69f95ba-3da7-380a-ef14-cc866172d79a@tycho.nsa.gov>
-In-Reply-To: <e69f95ba-3da7-380a-ef14-cc866172d79a@tycho.nsa.gov>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Fri, 9 Aug 2019 19:43:09 +0300
-Message-ID: <CAOQ4uxh4+SDCF7HHwSxGFx01ZyJ43VSLhLM2dDFY2AQ0HkkuvA@mail.gmail.com>
-Subject: Re: [Non-DoD Source] Re: [PATCH] fanotify, inotify, dnotify,
- security: add security hook for fs notifications
-To:     Aaron Goidel <acgoide@tycho.nsa.gov>
-Cc:     Paul Moore <paul@paul-moore.com>, selinux@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>, Jan Kara <jack@suse.cz>,
-        James Morris <jmorris@namei.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190801111853.GA24574@villeb-dev>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> >>> +       switch (flags & FANOTIFY_MARK_TYPE_BITS) {
-> >>> +       case FAN_MARK_MOUNT:
-> >>> +               obj_type = FSNOTIFY_OBJ_TYPE_VFSMOUNT;
-> >>> +               break;
-> >>> +       case FAN_MARK_FILESYSTEM:
-> >>> +               obj_type = FSNOTIFY_OBJ_TYPE_SB;
-> >>> +               break;
-> >>> +       case FAN_MARK_INODE:
-> >>> +               obj_type = FSNOTIFY_OBJ_TYPE_INODE;
-> >>> +               break;
-> >>> +       default:
-> >>> +               ret = -EINVAL;
-> >>> +               goto out;
-> >>> +       }
-> >
-> > Sorry, I just can't stand this extra switch statement here.
-> > Please initialize obj_type at the very first switch statement in
-> > do_fanotify_mark() and pass it to fanotify_find_path().
-> > Preferably also make it a helper that returns either
-> > valid obj_type or <0 for error.
-> >
-> >
-> I have no problem moving the initialization of obj_type up one level to
-> do_fanotify_mark(). I don't think that a helper is necessary at this
-> juncture as this logic seems to only exist in one place. Should this
-> change, then there would be merit to having a separate function.
+Hi,
+On Thu, Aug 01, 2019 at 11:18:53AM +0000, Ville Baillie wrote:
+> ---
+>  drivers/gpu/drm/mxsfb/mxsfb_drv.c | 20 ++++++++++++++++----
+>  drivers/gpu/drm/mxsfb/mxsfb_drv.h |  1 +
+>  drivers/gpu/drm/mxsfb/mxsfb_out.c | 14 +++++++++++---
+>  3 files changed, 28 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.c b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
+> index 6fafc90da4ec..c19a7b7aa3a6 100644
+> --- a/drivers/gpu/drm/mxsfb/mxsfb_drv.c
+> +++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
+> @@ -229,10 +229,22 @@ static int mxsfb_load(struct drm_device *drm, unsigned long flags)
+>  		goto err_vblank;
+>  	}
+>  
+> -	ret = drm_panel_attach(mxsfb->panel, &mxsfb->connector);
+> -	if (ret) {
+> -		dev_err(drm->dev, "Cannot connect panel\n");
+> -		goto err_vblank;
+> +	if (mxsfb->panel) {
+> +		ret = drm_panel_attach(mxsfb->panel, &mxsfb->connector);
+> +		if (ret) {
+> +			dev_err(drm->dev, "Cannot connect panel\n");
+> +			goto err_vblank;
+> +		}
+> +	} else if (mxsfb->bridge) {
+> +		ret = drm_bridge_attach(&mxsfb->pipe.encoder, mxsfb->bridge,
+> +				NULL);
+> +		if (ret) {
+> +			dev_err(drm->dev, "Cannot connect bridge\n");
+> +			goto err_vblank;
+> +		}
+> +	} else {
+> +		dev_err(drm->dev, "No panel or bridge\n");
+> +		return -EINVAL;
+>  	}
+>  
+>  	drm->mode_config.min_width	= MXSFB_MIN_XRES;
+> diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.h b/drivers/gpu/drm/mxsfb/mxsfb_drv.h
+> index d975300dca05..436fe4bbb47a 100644
+> --- a/drivers/gpu/drm/mxsfb/mxsfb_drv.h
+> +++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.h
+> @@ -29,6 +29,7 @@ struct mxsfb_drm_private {
+>  	struct drm_simple_display_pipe	pipe;
+>  	struct drm_connector		connector;
+>  	struct drm_panel		*panel;
+> +	struct drm_bridge		*bridge;
+>  };
+>  
+>  int mxsfb_setup_crtc(struct drm_device *dev);
+> diff --git a/drivers/gpu/drm/mxsfb/mxsfb_out.c b/drivers/gpu/drm/mxsfb/mxsfb_out.c
+> index 91e76f9cead6..77e03eb0fca6 100644
+> --- a/drivers/gpu/drm/mxsfb/mxsfb_out.c
+> +++ b/drivers/gpu/drm/mxsfb/mxsfb_out.c
+> @@ -78,9 +78,11 @@ int mxsfb_create_output(struct drm_device *drm)
+>  {
+>  	struct mxsfb_drm_private *mxsfb = drm->dev_private;
+>  	struct drm_panel *panel;
+> +	struct drm_bridge *bridge;
+>  	int ret;
+>  
+> -	ret = drm_of_find_panel_or_bridge(drm->dev->of_node, 0, 0, &panel, NULL);
+> +	ret = drm_of_find_panel_or_bridge(drm->dev->of_node, 0, 0, &panel,
+> +			&bridge);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -91,8 +93,14 @@ int mxsfb_create_output(struct drm_device *drm)
+>  	ret = drm_connector_init(drm, &mxsfb->connector,
+>  				 &mxsfb_panel_connector_funcs,
+>  				 DRM_MODE_CONNECTOR_Unknown);
+> -	if (!ret)
+> -		mxsfb->panel = panel;
+> +	if (!ret) {
+> +		if (panel)
+> +			mxsfb->panel = panel;
+> +		else if (bridge)
+> +			mxsfb->bridge = bridge;
+> +		else
+> +			return -EINVAL;
+> +	}
+>  
+>  	return ret;
+>  }
+> -- 
+> 2.17.1
 
-Ok.
+Robert Chiras posted bridge support for mxsfb back in June:
 
-> >>> +
-> >>> +       ret = security_path_notify(path, mask, obj_type);
-> >>>          if (ret)
-> >>>                  path_put(path);
-> >
-> > It is probably best to mask out FANOTIFY_EVENT_FLAGS
-> > when calling the hook. Although FAN_EVENT_ON_CHILD
-> > and FAN_ONDIR do map to corresponding FS_ constants,
-> > the security hooks from dnotify and inotify do not pass these
-> > flags, so the security module cannot use them as reliable
-> > information, so it will have to assume that they have been
-> > requested anyway.
-> >
-> > Alternatively, make sure that dnotify/inotify security hooks
-> > always set these two flags, by fixing up and using the
-> > dnotify/inotify arg_to_mask conversion helpers before calling
-> > the security hook.
-> >
-> I think that at this point either approach you mentioned makes just as
-> much sense. If it's all the same to you, Amir, I'll just change the
-> caller in fanotify to include (mask) & ~(FANOTIFY_EVENT_FLAGS)
+    https://patchwork.freedesktop.org/patch/314430/?series=62822&rev=1
 
-On second look, let's go with (mask & ALL_FSNOTIFY_EVENTS)
-It seems simpler and more appropriate way to convert to FS_ flags.
+Cheers,
+ -- Guido
 
-[...]
-> >>>
-> >>> -       ret = inotify_find_inode(pathname, &path, flags);
-> >>> +       ret = inotify_find_inode(pathname, &path, flags, mask);
-> >
-> > Please use (mask & IN_ALL_EVENTS) for converting to common FS_ flags
-> > or use the inotify_arg_to_mask() conversion helper, which contains more
-> > details irrelevant for the security hook.
-> > Otherwise mask may contain flags like IN_MASK_CREATE, which mean
-> > different things on different backends and the security module cannot tell
-> > the difference.
-> >
-> > Also note that at this point, before inotify_arg_to_mask(), the mask does
-> > not yet contain FS_EVENT_ON_CHILD, which could be interesting for
-> > the security hook (fanotify users can opt-in with FAN_EVENT_ON_CHILD).
-> > Not a big deal though as security hook can assume the worse
-> > (that events on child are requested).
-> >
-> I'll use (mask & IN_ALL_EVENTS).
-
-OK.
-
->
-> I can implement the changes in the ways I mentioned above. I don't see a
-> need for anything more in the cases you brought up since none of them
-> change the logic of the hook itself or would make a substantive
-> difference to the operation of the hook given its current implementation.
->
-
-Agree. If more flags are needed for LSMs they could be added later.
-
-Thanks,
-Amir.
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
