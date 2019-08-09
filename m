@@ -2,109 +2,151 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A936EC31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 21:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67A75C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 21:25:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7994120844
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 21:22:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28F7F20B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 21:25:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="T0xdr3m2"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="EOjaMuwx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728217AbfHIVW1 (ORCPT
+        id S1728101AbfHIVZQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 17:22:27 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:36989 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727436AbfHIVW0 (ORCPT
+        Fri, 9 Aug 2019 17:25:16 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:39894 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726232AbfHIVZP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 17:22:26 -0400
-Received: by mail-qt1-f193.google.com with SMTP id y26so97244205qto.4
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 14:22:26 -0700 (PDT)
+        Fri, 9 Aug 2019 17:25:15 -0400
+Received: by mail-pl1-f196.google.com with SMTP id b7so45492668pls.6
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 14:25:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=Ug4MTgi2ueZfqMA4+FWSQr133wSyuN+mgZsk4RxY5I8=;
-        b=T0xdr3m2vk1dRABuDHdagNOsvCUEuquJMDDxB4gyWa18mibI8q1Vl2M6UddZGZuoWW
-         bVUPPg4jkfLa01tuKqceOyPnbi9/T9qyxZo8eXdnZjta40CecwXDLsVLjSwlIwd8TnCx
-         aSKa6IzN3mnKHnng1qTOazZiG7hYxV8s5NDQ5gg57ii+DIvjBI4EAo8h2D1ctIrW7Ogy
-         wb3138VaA4Hi8b6nhh8BQ8xYtUBvPhH2REMBZQlFJw+frygxw/RvqwrnBeusxiEt/6gG
-         V0YnG6ULca5e8RNwu3ogTlbKFOwvOjbG6CzJrOvQ4VB0+sSAdwpat07fvTDXm//+YTms
-         RyAw==
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=G4ABWhOgY+3mhNhK294ojAME4IETU+ywywa2ntO92Zc=;
+        b=EOjaMuwxDTmNbbMp5AqBHBhKz2tbW4foGzn8NunssyfyoEVCBNkwJn3D8xphI7+Ac5
+         mDeuKvKJsSR5hPAESbkz8KLaXQiPyL2wSEWSmlhglaw6lXUXfHQpHGBHKpkmTpdg7npO
+         25kllWW1pytXCVIg+TSKjaPd0ZgeZ5jWCYim8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=Ug4MTgi2ueZfqMA4+FWSQr133wSyuN+mgZsk4RxY5I8=;
-        b=tL2fEQky9O1+wwGoc0iRJOYGhrGKnPW8fIRXDGaS2d2+FTblBmPm9dcNhODNLIJOl2
-         fRlF71aCewYUpibksXkLOfTU4stV/b7Cp/j1br3exE7d1XP3iYDCNd44x1YISyw+0sL8
-         p43sEt5ApvTqBZ/7v8L8lUC4ysXoui89bJdrw6dBDiffMIfa7VBhg2+NrPQ4mQU1UsAs
-         d7a9/x4zvndEgbq2hPjCbSvVNQk8ZvO/mIIdWs5evCWfRnR7PkUNepID4Dla5yfzOvnb
-         u4nsoxF43LELsOeZ8dvQNubucEhn5RKYZQdNni5ycXFUsTX7CJzUHEWyXo8y0YhgkrBO
-         rpGA==
-X-Gm-Message-State: APjAAAWV/adH4fsUyKZTiLJytZCY+AXBdR7GYvDH8jDeagJ2sINUBopv
-        XuGMUurl/sHq3R7zZgc5Q3Cvqw==
-X-Google-Smtp-Source: APXvYqxHJ16TPbArOOObvex2qGMXiPYuuTyPvcouM0eg7EGKkUFhFNbpUw6MquRPUl6SIdbH5N+5zQ==
-X-Received: by 2002:ac8:252e:: with SMTP id 43mr19908152qtm.61.1565385745973;
-        Fri, 09 Aug 2019 14:22:25 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id p3sm63655473qta.12.2019.08.09.14.22.24
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=G4ABWhOgY+3mhNhK294ojAME4IETU+ywywa2ntO92Zc=;
+        b=uGM23lY4CHUIw/GXH7qygvacs9Dfp+hLCu1R4be05sVakMCTCrPzOlRLJifrSWWivS
+         Px0uoVTpR3wMCAHwYNUZmsI6lNi0YCoIgKgaOoYyHqwxRkUg1pwNFM+xDGTQxLdHKZaM
+         xwpXEuFHrlSTp7jUHnNAR1QLfcAGwPE0CvRFygEr5TB8i9Kh//zyM01mZUt5l57v7lHL
+         /jq3zR10THOM0IOGXesgS+IVnEMVmt46iMoGAaEEk7eqctzNtxnjbMyNjw0Mmq6IHdGR
+         8DlXGjeKTeV74bHywsmFnbu5pb1JiwTFoTn/dcFs2pRUpbh0erjp2lxpj1HN5wi8EsQN
+         wPBA==
+X-Gm-Message-State: APjAAAVxyMsVDLnkkmYbSCf1PHnEz67RByW/8h1gZCr/n7p0SjUpIH9c
+        8hc3nRT74eJMyVCgb33BzRHnWQ==
+X-Google-Smtp-Source: APXvYqziDp2DjYbr7ZcinWPobCKuoKnmrF2D4ZgUBGWCJs8Tx2fTSj5fY0r9w3c3RF22QivMk+jTEA==
+X-Received: by 2002:a17:902:7c12:: with SMTP id x18mr11912154pll.123.1565385914703;
+        Fri, 09 Aug 2019 14:25:14 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id a128sm114470075pfb.185.2019.08.09.14.25.13
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 09 Aug 2019 14:22:25 -0700 (PDT)
-Date:   Fri, 9 Aug 2019 14:22:22 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Cc:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Evgeniy Polyakov <zbr@ioremap.net>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-        netdev@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-serial@vger.kernel.org
-Subject: Re: [PATCH v4 7/9] mfd: ioc3: Add driver for SGI IOC3 chip
-Message-ID: <20190809142222.4558691e@cakuba.netronome.com>
-In-Reply-To: <20190809103235.16338-8-tbogendoerfer@suse.de>
-References: <20190809103235.16338-1-tbogendoerfer@suse.de>
-        <20190809103235.16338-8-tbogendoerfer@suse.de>
-Organization: Netronome Systems, Ltd.
+        Fri, 09 Aug 2019 14:25:13 -0700 (PDT)
+Date:   Fri, 9 Aug 2019 17:25:12 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     Byungchul Park <byungchul.park@lge.com>,
+        linux-kernel@vger.kernel.org, Rao Shoaib <rao.shoaib@oracle.com>,
+        max.byungchul.park@gmail.com, Davidlohr Bueso <dave@stgolabs.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH RFC v1 1/2] rcu/tree: Add basic support for kfree_rcu
+ batching
+Message-ID: <20190809212512.GF255533@google.com>
+References: <20190807094504.GB169551@google.com>
+ <20190807175215.GE28441@linux.ibm.com>
+ <20190808095232.GA30401@X58A-UD3R>
+ <20190808125607.GB261256@google.com>
+ <20190808233014.GA184373@google.com>
+ <20190809151619.GD28441@linux.ibm.com>
+ <20190809153924.GB211412@google.com>
+ <20190809163346.GF28441@linux.ibm.com>
+ <20190809202226.GC255533@google.com>
+ <20190809202645.GD255533@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190809202645.GD255533@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri,  9 Aug 2019 12:32:29 +0200, Thomas Bogendoerfer wrote:
-> SGI IOC3 chip has integrated ethernet, keyboard and mouse interface.
-> It also supports connecting a SuperIO chip for serial and parallel
-> interfaces. IOC3 is used inside various SGI systemboards and add-on
-> cards with different equipped external interfaces.
+On Fri, Aug 09, 2019 at 04:26:45PM -0400, Joel Fernandes wrote:
+> On Fri, Aug 09, 2019 at 04:22:26PM -0400, Joel Fernandes wrote:
+> > On Fri, Aug 09, 2019 at 09:33:46AM -0700, Paul E. McKenney wrote:
+> > > On Fri, Aug 09, 2019 at 11:39:24AM -0400, Joel Fernandes wrote:
+> > > > On Fri, Aug 09, 2019 at 08:16:19AM -0700, Paul E. McKenney wrote:
+> > > > > On Thu, Aug 08, 2019 at 07:30:14PM -0400, Joel Fernandes wrote:
+> > > > [snip]
+> > > > > > > But I could make it something like:
+> > > > > > > 1. Letting ->head grow if ->head_free busy
+> > > > > > > 2. If head_free is busy, then just queue/requeue the monitor to try again.
+> > > > > > > 
+> > > > > > > This would even improve performance, but will still risk going out of memory.
+> > > > > > 
+> > > > > > It seems I can indeed hit an out of memory condition once I changed it to
+> > > > > > "letting list grow" (diff is below which applies on top of this patch) while
+> > > > > > at the same time removing the schedule_timeout(2) and replacing it with
+> > > > > > cond_resched() in the rcuperf test.  I think the reason is the rcuperf test
+> > > > > > starves the worker threads that are executing in workqueue context after a
+> > > > > > grace period and those are unable to get enough CPU time to kfree things fast
+> > > > > > enough. But I am not fully sure about it and need to test/trace more to
+> > > > > > figure out why this is happening.
+> > > > > > 
+> > > > > > If I add back the schedule_uninterruptibe_timeout(2) call, the out of memory
+> > > > > > situation goes away.
+> > > > > > 
+> > > > > > Clearly we need to do more work on this patch.
+> > > > > > 
+> > > > > > In the regular kfree_rcu_no_batch() case, I don't hit this issue. I believe
+> > > > > > that since the kfree is happening in softirq context in the _no_batch() case,
+> > > > > > it fares better. The question then I guess is how do we run the rcu_work in a
+> > > > > > higher priority context so it is not starved and runs often enough. I'll
+> > > > > > trace more.
+> > > > > > 
+> > > > > > Perhaps I can also lower the priority of the rcuperf threads to give the
+> > > > > > worker thread some more room to run and see if anything changes. But I am not
+> > > > > > sure then if we're preparing the code for the real world with such
+> > > > > > modifications.
+> > > > > > 
+> > > > > > Any thoughts?
+> > > > > 
+> > > > > Several!  With luck, perhaps some are useful.  ;-)
+> > > > > 
+> > > > > o	Increase the memory via kvm.sh "--memory 1G" or more.  The
+> > > > > 	default is "--memory 500M".
+> > > > 
+> > > > Thanks, this definitely helped.
+> > 
+> > Also, I can go back to 500M if I just keep KFREE_DRAIN_JIFFIES at HZ/50. So I
+> > am quite happy about that. I think I can declare that the "let list grow
+> > indefinitely" design works quite well even with an insanely heavily loaded
+> > case of every CPU in a 16CPU system with 500M memory, indefinitely doing
+> > kfree_rcu()in a tight loop with appropriate cond_resched(). And I am like
+> > thinking - wow how does this stuff even work at such insane scales :-D
 > 
-> Support for ethernet and serial interfaces were implemented inside
-> the network driver. This patchset moves out the not network related
-> parts to a new MFD driver, which takes care of card detection,
-> setup of platform devices and interrupt distribution for the subdevices.
-> 
-> Serial portion: Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> 
-> Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+> Oh, and I should probably also count whether there are any 'total number of
+> grace periods' reduction, due to the batching!
+ 
+And, the number of grace periods did dramatically drop (by 5X) with the
+batching!! I have modified the rcuperf test to show the number of grace
+periods that elapsed during the test.
 
-There are a lot of changes in the ethernet part which are not easy to
-explain by the introduction of the other MFD parts.. Could you possibly
-break this change up into smaller chunks?
+thanks,
 
-Also please don't use stdint types in the kernel, please try checkpatch
-to catch coding style issues.
+ - Joel
+
