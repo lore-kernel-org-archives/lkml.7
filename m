@@ -7,31 +7,31 @@ X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13893C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:31:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6DFEC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:31:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D734B217F4
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:31:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 886CE217F5
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:31:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="JPbfun6S"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="GI6qmeft"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406870AbfHIMbS (ORCPT
+        id S2406896AbfHIMb0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 08:31:18 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:55616 "EHLO
+        Fri, 9 Aug 2019 08:31:26 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:55710 "EHLO
         crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726168AbfHIMbR (ORCPT
+        with ESMTP id S2406877AbfHIMbX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 08:31:17 -0400
+        Fri, 9 Aug 2019 08:31:23 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1565353850; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1565353851; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=/v3/BAVtZKNue7NyDFb+jY+xt8Nkkuc47WZZP4QpfNk=;
-        b=JPbfun6S2OJfE2xqfYQWl1jnD/Ozp5dKiDu/llBTvLQ05O3NBIMb8Sqj5lAoVom7AloJ17
-        X3p60uEuk+ek/JNHCeR43zIQ9nIAfVptGFmw4PWYNu5CTweg0Qm+hlYxBeYCh5wH4CRd1H
-        Qpi3ru3npbC+YSbixgD5w07JFoEBQVo=
+        bh=twtUEGmnrRf9/T9BOJfvw/Rh1VTS7bO7zpSPKjDz9Mo=;
+        b=GI6qmeftuRspjR//yL77mDbybWGMIqFgFR8tE4XHOd4DArgRJeavTbXrb10WlgqCG283d6
+        ccPj4eBvC84typJ8oV6mYNByWSB1t9SJsNdr5lsMYs3RbYGo//qnPPQn9bOpgC/YIz5Mxq
+        bodMpxcz7hgbrjkmpeRbZZUD2ZfMXOs=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Thierry Reding <thierry.reding@gmail.com>
 Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
@@ -40,9 +40,9 @@ Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=
         Paul Cercueil <paul@crapouillou.net>,
         Mathieu Malaterre <malat@debian.org>,
         Artur Rojek <contact@artur-rojek.eu>
-Subject: [PATCH 4/7] pwm: jz4740: Improve algorithm of clock calculation
-Date:   Fri,  9 Aug 2019 14:30:28 +0200
-Message-Id: <20190809123031.24219-5-paul@crapouillou.net>
+Subject: [PATCH 5/7] pwm: jz4740: Allow selection of PWM channels 0 and 1
+Date:   Fri,  9 Aug 2019 14:30:29 +0200
+Message-Id: <20190809123031.24219-6-paul@crapouillou.net>
 In-Reply-To: <20190809123031.24219-1-paul@crapouillou.net>
 References: <20190809123031.24219-1-paul@crapouillou.net>
 MIME-Version: 1.0
@@ -52,105 +52,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The previous algorithm hardcoded details about how the TCU clocks work.
-The new algorithm will use clk_round_rate to find the perfect clock rate
-for the PWM channel.
+The TCU channels 0 and 1 were previously reserved for system tasks, and
+thus unavailable for PWM.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 Tested-by: Mathieu Malaterre <malat@debian.org>
 Tested-by: Artur Rojek <contact@artur-rojek.eu>
 ---
- drivers/pwm/pwm-jz4740.c | 60 +++++++++++++++++++++++++++++-----------
- 1 file changed, 44 insertions(+), 16 deletions(-)
+ drivers/pwm/pwm-jz4740.c | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/pwm/pwm-jz4740.c b/drivers/pwm/pwm-jz4740.c
-index 6ec8794d3b99..f20dc2e19240 100644
+index f20dc2e19240..85e2110aae4f 100644
 --- a/drivers/pwm/pwm-jz4740.c
 +++ b/drivers/pwm/pwm-jz4740.c
-@@ -110,24 +110,56 @@ static int jz4740_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	struct jz4740_pwm_chip *jz4740 = to_jz4740(pwm->chip);
- 	struct clk *clk = pwm_get_chip_data(pwm),
- 		   *parent_clk = clk_get_parent(clk);
--	unsigned long rate, period, duty;
-+	unsigned long rate, parent_rate, period, duty;
- 	unsigned long long tmp;
--	unsigned int prescaler = 0;
-+	int ret;
+@@ -28,6 +28,19 @@ static inline struct jz4740_pwm_chip *to_jz4740(struct pwm_chip *chip)
+ 	return container_of(chip, struct jz4740_pwm_chip, chip);
+ }
  
--	rate = clk_get_rate(parent_clk);
--	tmp = (unsigned long long)rate * state->period;
--	do_div(tmp, 1000000000);
--	period = tmp;
-+	parent_rate = clk_get_rate(parent_clk);
++static bool jz4740_pwm_can_use_chn(struct jz4740_pwm_chip *jz,
++				   unsigned int channel)
++{
++	/* Enable all TCU channels for PWM use by default except channels 0/1 */
++	u32 pwm_channels_mask = GENMASK(NUM_PWM - 1, 2);
 +
-+	jz4740_pwm_disable(chip, pwm);
- 
--	while (period > 0xffff && prescaler < 6) {
--		period >>= 2;
--		rate >>= 2;
--		++prescaler;
-+	/* Reset the clock to the maximum rate, and we'll reduce it if needed */
-+	ret = clk_set_max_rate(clk, parent_rate);
-+	if (ret) {
-+		dev_err(chip->dev, "Unable to set max rate: %d\n", ret);
-+		return ret;
- 	}
- 
--	if (prescaler == 6)
--		return -EINVAL;
-+	ret = clk_set_rate(clk, parent_rate);
-+	if (ret) {
-+		dev_err(chip->dev, "Unable to reset to parent rate (%lu Hz)",
-+			parent_rate);
-+		return ret;
-+	}
++	device_property_read_u32(jz->chip.dev->parent,
++				 "ingenic,pwm-channels-mask",
++				 &pwm_channels_mask);
 +
-+	/*
-+	 * Limit the clock to a maximum rate that still gives us a period value
-+	 * which fits in 16 bits.
-+	 */
-+	tmp = 0xffffull * NSEC_PER_SEC;
-+	do_div(tmp, state->period);
- 
-+	ret = clk_set_max_rate(clk, tmp);
-+	if (ret) {
-+		dev_err(chip->dev, "Unable to set max rate: %d\n", ret);
-+		return ret;
-+	}
++	return !!(pwm_channels_mask & BIT(channel));
++}
 +
-+	/*
-+	 * Read back the clock rate, as it may have been modified by
-+	 * clk_set_max_rate()
-+	 */
-+	rate = clk_get_rate(clk);
-+
-+	if (rate != parent_rate)
-+		dev_dbg(chip->dev, "PWM clock updated to %lu Hz\n", rate);
-+
-+	/* Calculate period value */
-+	tmp = (unsigned long long)rate * state->period;
-+	do_div(tmp, NSEC_PER_SEC);
-+	period = (unsigned long)tmp;
-+
-+	/* Calculate duty value */
- 	tmp = (unsigned long long)period * state->duty_cycle;
- 	do_div(tmp, state->period);
- 	duty = period - tmp;
-@@ -135,14 +167,10 @@ static int jz4740_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	if (duty >= period)
- 		duty = period - 1;
+ static int jz4740_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+ {
+ 	struct jz4740_pwm_chip *jz = to_jz4740(chip);
+@@ -35,11 +48,7 @@ static int jz4740_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+ 	char clk_name[16];
+ 	int ret;
  
--	jz4740_pwm_disable(chip, pwm);
--
- 	/* Set abrupt shutdown */
- 	regmap_update_bits(jz4740->map, TCU_REG_TCSRc(pwm->hwpwm),
- 			   TCU_TCSR_PWM_SD, TCU_TCSR_PWM_SD);
+-	/*
+-	 * Timers 0 and 1 are used for system tasks, so they are unavailable
+-	 * for use as PWMs.
+-	 */
+-	if (pwm->hwpwm < 2)
++	if (!jz4740_pwm_can_use_chn(jz, pwm->hwpwm))
+ 		return -EBUSY;
  
--	clk_set_rate(clk, rate);
--
- 	/* Reset counter to 0 */
- 	regmap_write(jz4740->map, TCU_REG_TCNTc(pwm->hwpwm), 0);
- 
+ 	snprintf(clk_name, sizeof(clk_name), "timer%u", pwm->hwpwm);
 -- 
 2.21.0.593.g511ec345e18
 
