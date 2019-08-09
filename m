@@ -2,146 +2,114 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B376C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 946B6C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:53:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF8CB21874
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:52:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SNwo9M1M"
+	by mail.kernel.org (Postfix) with ESMTP id 6798421783
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:53:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565344426;
+	bh=HvIMRzJAD8xKVNar+I0poiTdap6cuZjybn8Cb39/S4A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wyujpZnKSrPP7kks+Hxm6smQl+GNI7RAn/8t9U2HCMY7Ckc6IdhwQjUY+IyXnlave
+	 1ZHJQUXO5rTaTBeMjjSOQU5XUnKF6TVBP2ZrHbbDaOmk/cPKcmSKcc84kJz2d64rc8
+	 dZb5YEVY9XWGTO8B0X1oNqnW14qnsyXNPnOfkV+Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406053AbfHIJws (ORCPT
+        id S2406196AbfHIJxp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 05:52:48 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:44322 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726185AbfHIJws (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 05:52:48 -0400
-Received: by mail-pf1-f193.google.com with SMTP id t16so45747870pfe.11
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 02:52:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=coff5jRP+4bBeGfReMXie4tO+oyayDQ9HMdvtmpclDQ=;
-        b=SNwo9M1MUx6gatXbQ7l9iO1/w+TnVFKCahmmqUAYpyW9H+8n0Cdqfx30RczFbZbRGj
-         bf4EOgN0mZk5UpfmOEHDh9Tqi+85r9Nx5aBsfBeQVn6CWgEA5sJK+u1L8ocrYKIIthNn
-         2F6M14ipEGBeiPzEROFicAyK7hD9eS/vDy9NYueghQjNprsW0sNm7IxHUP7ML9lzMRIH
-         D8m+LDEHZAb3IFfADaHEHE9SI18Ug5QC84E2WuAMCubC9xOKIVg/6C6m6/cA1MrJ6iDp
-         0M2Cu2ZuV6JQ9NroGGxGfIvGnRa51kvggywzGBfPcsxpBtJp4gQpVeeEHXR2l75EPd2T
-         bx7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=coff5jRP+4bBeGfReMXie4tO+oyayDQ9HMdvtmpclDQ=;
-        b=rQqvBDpx9nkIGzg4c+OtSLZxwAnwNMPk/+pTg5cTFUMORN7wXbNLPMqfdbEn+KmQUr
-         iqGEgs65O3S4haSSBS23Xm5wZprjNclBOn/JMgU7NkvTGnp9AzbaY5qKP0t7kCx0eo7t
-         pW2MuODeCo6nogln3Q+eabgcTW/W23z8SBHm93Ntxq69iR2/hl1E6NoURhZO9CNZNgQc
-         5DlOOa46zVTejBzCoBNZB+evj5Y/fdRaahtAM6Zzpzo6VzfBooBn1MYeJqoGvpIBHLZL
-         O+aDkUDQ4sw/2MUeD4HWwZGuhpnNhq6cE4um89E1KY7DUczspN32sZV5dJv1WnW1jaJk
-         0WnQ==
-X-Gm-Message-State: APjAAAVRp/jxrOOXM2EUpa41bs7Nh0ovzZzxmH7O5IslYSduL8slanRB
-        0SGwxI2jHHLKgrDOHRRrtg8=
-X-Google-Smtp-Source: APXvYqwIP7s3exCajcO3pdPQNdIVdIQ8rixRSXZeeayKqB7Lsr3Vn55iMwIIXCcgoE6PDKAdW4jOHg==
-X-Received: by 2002:a65:654d:: with SMTP id a13mr16525591pgw.196.1565344367473;
-        Fri, 09 Aug 2019 02:52:47 -0700 (PDT)
-Received: from bharath12345-Inspiron-5559 ([103.110.42.33])
-        by smtp.gmail.com with ESMTPSA id e24sm7992122pgk.21.2019.08.09.02.52.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 09 Aug 2019 02:52:47 -0700 (PDT)
-Date:   Fri, 9 Aug 2019 15:22:36 +0530
-From:   Bharath Vedartham <linux.bhar@gmail.com>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     arnd@arndb.de, gregkh@linuxfoundation.org, sivanich@sgi.com,
-        ira.weiny@intel.com, jglisse@redhat.com,
-        william.kucharski@oracle.com, hch@lst.de,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [Linux-kernel-mentees][PATCH v4 1/1] sgi-gru: Remove *pte_lookup
- functions
-Message-ID: <20190809095236.GC22457@bharath12345-Inspiron-5559>
-References: <1565290555-14126-1-git-send-email-linux.bhar@gmail.com>
- <1565290555-14126-2-git-send-email-linux.bhar@gmail.com>
- <b659042a-f2c3-df3c-4182-bb7dd5156bc1@nvidia.com>
+        Fri, 9 Aug 2019 05:53:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59704 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405641AbfHIJxp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 05:53:45 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 815C82171F;
+        Fri,  9 Aug 2019 09:53:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565344424;
+        bh=HvIMRzJAD8xKVNar+I0poiTdap6cuZjybn8Cb39/S4A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mAW5usvY5TRTwNwiyb9HbLqnttY7Fl181BMCrvMtghPMrPW3HXe/FUImhq15iYn+R
+         Fy0fDCyZCSZqFB9kERdFKnUn41T527BTUSDqT89jqc5LukkdNqmwjulPAd8DZKyhu6
+         eTjpDwZA0xMwsF4/pd+QBlSjd51QxUOAeObojS5I=
+Date:   Fri, 9 Aug 2019 10:53:38 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Stefan-gabriel Mirea <stefan-gabriel.mirea@nxp.com>
+Cc:     "corbet@lwn.net" <corbet@lwn.net>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "jslaby@suse.com" <jslaby@suse.com>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Cosmin Stefan Stoica <cosmin.stoica@nxp.com>,
+        Larisa Ileana Grigore <larisa.grigore@nxp.com>
+Subject: Re: [PATCH 5/6] tty: serial: Add linflexuart driver for S32V234
+Message-ID: <20190809095338.d73fomq424gayf2b@willie-the-truck>
+References: <20190802194702.30249-1-stefan-gabriel.mirea@nxp.com>
+ <20190802194702.30249-6-stefan-gabriel.mirea@nxp.com>
+ <20190808080832.nleult5bknmzr3ze@willie-the-truck>
+ <VI1PR0402MB28635661A4A294EC6F01095EDFD70@VI1PR0402MB2863.eurprd04.prod.outlook.com>
+ <20190808171711.nk7ljqkugtketu4q@willie-the-truck>
+ <VI1PR0402MB2863B3E3E2F93CBA8ADB96E5DFD60@VI1PR0402MB2863.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b659042a-f2c3-df3c-4182-bb7dd5156bc1@nvidia.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <VI1PR0402MB2863B3E3E2F93CBA8ADB96E5DFD60@VI1PR0402MB2863.eurprd04.prod.outlook.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 04:21:44PM -0700, John Hubbard wrote:
-> On 8/8/19 11:55 AM, Bharath Vedartham wrote:
-> ...
-> >  static int gru_vtop(struct gru_thread_state *gts, unsigned long vaddr,
-> >  		    int write, int atomic, unsigned long *gpa, int *pageshift)
-> >  {
-> >  	struct mm_struct *mm = gts->ts_mm;
-> >  	struct vm_area_struct *vma;
-> >  	unsigned long paddr;
-> > -	int ret, ps;
-> > +	int ret;
-> > +	struct page *page;
-> >  
-> >  	vma = find_vma(mm, vaddr);
-> >  	if (!vma)
-> > @@ -263,21 +187,33 @@ static int gru_vtop(struct gru_thread_state *gts, unsigned long vaddr,
-> >  
-> >  	/*
-> >  	 * Atomic lookup is faster & usually works even if called in non-atomic
-> > -	 * context.
-> > +	 * context. get_user_pages_fast does atomic lookup before falling back to
-> > +	 * slow gup.
-> >  	 */
-> >  	rmb();	/* Must/check ms_range_active before loading PTEs */
-> > -	ret = atomic_pte_lookup(vma, vaddr, write, &paddr, &ps);
-> > -	if (ret) {
-> > -		if (atomic)
-> > +	if (atomic) {
-> > +		ret = __get_user_pages_fast(vaddr, 1, write, &page);
-> > +		if (!ret)
-> >  			goto upm;
-> > -		if (non_atomic_pte_lookup(vma, vaddr, write, &paddr, &ps))
-> > +	} else {
-> > +		ret = get_user_pages_fast(vaddr, 1, write ? FOLL_WRITE : 0, &page);
-> > +		if (!ret)
-> >  			goto inval;
-> >  	}
-> > +
-> > +	paddr = page_to_phys(page);
-> > +	put_user_page(page);
-> > +
-> > +	if (unlikely(is_vm_hugetlb_page(vma)))
-> > +		*pageshift = HPAGE_SHIFT;
-> > +	else
-> > +		*pageshift = PAGE_SHIFT;
-> > +
-> >  	if (is_gru_paddr(paddr))
-> >  		goto inval;
-> > -	paddr = paddr & ~((1UL << ps) - 1);
-> > +	paddr = paddr & ~((1UL << *pageshift) - 1);
-> >  	*gpa = uv_soc_phys_ram_to_gpa(paddr);
-> > -	*pageshift = ps;
+On Fri, Aug 09, 2019 at 09:45:40AM +0000, Stefan-gabriel Mirea wrote:
+> On 8/8/2019 8:17 PM, Will Deacon wrote:
+> > On Thu, Aug 08, 2019 at 12:47:00PM +0000, Stefan-gabriel Mirea wrote:
+> >> On 8/8/2019 11:08 AM, Will Deacon wrote:
+> >>> On Fri, Aug 02, 2019 at 07:47:23PM +0000, Stefan-gabriel Mirea wrote:
+> >>>> +             linflex,<addr>
+> >>>> +                     Use early console provided by Freescale LinFlex UART
+> >>>> +                     serial driver for NXP S32V234 SoCs. A valid base
+> >>>> +                     address must be provided, and the serial port must
+> >>>> +                     already be setup and configured.
+> >>>
+> >>> Why isn't earlycon= sufficient for this?
+> >>
+> >> "earlycon=" is not actually supported. I will fix this in the next
+> >> version by adding a /chosen/stdout-path to the dts. The compatible
+> >> string provided to OF_EARLYCON_DECLARE will also be changed from
+> >> "fsl,s32v234-linflexuart" to "fsl,s32-linflexuart" to match the one in
+> >> the device tree nodes. I missed this after importing a rename from our
+> >> codebase.
+> >>
+> >> Should I remove this addition from kernel-parameters.txt after that?
+> > 
+> > Yes, if you can use earlycon instead, then you can drop your custom option
+> > entirely and therefore there's no need to document it either.
 > 
-> Why are you no longer setting *pageshift? There are a couple of callers
-> that both use this variable.
-I ll send v5 once your convinced by my argument that ps is not necessary
-to set *pageshift and that *pageshift is being set.
+> Can you please clarify what you mean by "drop your custom option"? The
+> "linflex" option documented in the paragraph is the name of the
+> earlycon_id declared via "OF_EARLYCON_DECLARE(linflex, ...)". We have
+> not done anything particular to accept it in the parameter value.
 
-Thank you
-Bharath
-> 
-> thanks,
-> -- 
-> John Hubbard
-> NVIDIA
+My apologies, I completely misread your patch and thought your were adding
+a *new* kernel parameter. Having looked at the context, I now see you're
+adding a new earlycon option, which is what I was suggesting :)
+
+By all means, please update the stdout-path, because then you can just pass
+"earlycon" and things will work as expected.
+
+Will
