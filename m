@@ -4,37 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28904C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 02:34:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0875FC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 02:34:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F17EB2173C
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 02:34:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB74F2173C
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 02:34:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405481AbfHICeP (ORCPT
+        id S2405531AbfHICej (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 22:34:15 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:59002 "EHLO huawei.com"
+        Thu, 8 Aug 2019 22:34:39 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:58882 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2405051AbfHICdf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 22:33:35 -0400
+        id S2403994AbfHICde (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 22:33:34 -0400
 Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 24FA9DD27F72345221D1;
-        Fri,  9 Aug 2019 10:33:32 +0800 (CST)
+        by Forcepoint Email with ESMTP id F0DC0BA11ED27F493A5C;
+        Fri,  9 Aug 2019 10:33:31 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 9 Aug 2019 10:33:22 +0800
+ 14.3.439.0; Fri, 9 Aug 2019 10:33:25 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Yunsheng Lin <linyunsheng@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 03/12] net: hns3: clean up for vlan handling in hns3_fill_desc_vtags
-Date:   Fri, 9 Aug 2019 10:31:09 +0800
-Message-ID: <1565317878-31806-4-git-send-email-tanhuazhong@huawei.com>
+        <linuxarm@huawei.com>, Huazhong Tan <tanhuazhong@huawei.com>
+Subject: [PATCH net-next 11/12] net: hns3: add handshake with VF for PF reset
+Date:   Fri, 9 Aug 2019 10:31:17 +0800
+Message-ID: <1565317878-31806-12-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1565317878-31806-1-git-send-email-tanhuazhong@huawei.com>
 References: <1565317878-31806-1-git-send-email-tanhuazhong@huawei.com>
@@ -47,245 +45,144 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunsheng Lin <linyunsheng@huawei.com>
+Before PF asserting function reset, it should make sure
+that all its VFs have been ready, otherwise, it will cause
+some hardware errors.
 
-This patch refactors the hns3_fill_desc_vtags function
-by avoiding passing too many parameters, reducing indent
-level and some other clean up.
+So this patch adds function hclge_func_reset_sync_vf() to
+synchronize VF before asserting PF function reset. For new
+firmware which supports command HCLGE_OPC_QUERY_VF_RST_RDY,
+we will try to query VFs' ready status within 30 seconds.
+And keep the old implementation for compatible with firmware
+which does not support this command.
 
-This patch also adds the hns3_fill_skb_desc function to
-fill the first desc of a skb.
-
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-Reviewed-by: Peng Li <lipeng321@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Reviewed-by: Yunsheng Lin <linyunsheng@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 167 +++++++++++++-----------
- 1 file changed, 89 insertions(+), 78 deletions(-)
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h |  7 +++
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 56 ++++++++++++++++++----
+ 2 files changed, 55 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index ed05fb9..fd6a3d5 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -45,6 +45,9 @@ MODULE_PARM_DESC(debug, " Network interface message level setting");
- #define DEFAULT_MSG_LEVEL (NETIF_MSG_PROBE | NETIF_MSG_LINK | \
- 			   NETIF_MSG_IFDOWN | NETIF_MSG_IFUP)
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
+index dade20a..29979be 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
+@@ -87,6 +87,7 @@ enum hclge_opcode_type {
+ 	HCLGE_OPC_QUERY_VF_RSRC		= 0x0024,
+ 	HCLGE_OPC_GET_CFG_PARAM		= 0x0025,
+ 	HCLGE_OPC_PF_RST_DONE		= 0x0026,
++	HCLGE_OPC_QUERY_VF_RST_RDY	= 0x0027,
  
-+#define HNS3_INNER_VLAN_TAG	1
-+#define HNS3_OUTER_VLAN_TAG	2
+ 	HCLGE_OPC_STATS_64_BIT		= 0x0030,
+ 	HCLGE_OPC_STATS_32_BIT		= 0x0031,
+@@ -588,6 +589,12 @@ struct hclge_config_mac_mode_cmd {
+ 	u8 rsv[20];
+ };
+ 
++struct hclge_pf_rst_sync_cmd {
++#define HCLGE_PF_RST_ALL_VF_RDY_B	0
++	u8 all_vf_ready;
++	u8 rsv[23];
++};
 +
- /* hns3_pci_tbl - PCI Device ID Table
-  *
-  * Last entry must be all 0s
-@@ -961,16 +964,16 @@ static void hns3_set_txbd_baseinfo(u16 *bdtp_fe_sc_vld_ra_ri, int frag_end)
- 	hns3_set_field(*bdtp_fe_sc_vld_ra_ri, HNS3_TXD_VLD_B, 1U);
- }
+ #define HCLGE_CFG_SPEED_S		0
+ #define HCLGE_CFG_SPEED_M		GENMASK(5, 0)
  
--static int hns3_fill_desc_vtags(struct sk_buff *skb,
--				struct hns3_enet_ring *tx_ring,
--				u32 *inner_vlan_flag,
--				u32 *out_vlan_flag,
--				u16 *inner_vtag,
--				u16 *out_vtag)
-+static int hns3_handle_vtags(struct hns3_enet_ring *tx_ring,
-+			     struct sk_buff *skb)
- {
--#define HNS3_TX_VLAN_PRIO_SHIFT 13
--
- 	struct hnae3_handle *handle = tx_ring->tqp->handle;
-+	struct vlan_ethhdr *vhdr;
-+	int rc;
-+
-+	if (!(skb->protocol == htons(ETH_P_8021Q) ||
-+	      skb_vlan_tag_present(skb)))
-+		return 0;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index 1315275..d207dac 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -35,6 +35,9 @@
+ #define BUF_RESERVE_PERCENT	90
  
- 	/* Since HW limitation, if port based insert VLAN enabled, only one VLAN
- 	 * header is allowed in skb, otherwise it will cause RAS error.
-@@ -981,8 +984,7 @@ static int hns3_fill_desc_vtags(struct sk_buff *skb,
- 		return -EINVAL;
+ #define HCLGE_RESET_MAX_FAIL_CNT	5
++#define HCLGE_RESET_SYNC_TIME		100
++#define HCLGE_PF_RESET_SYNC_TIME	20
++#define HCLGE_PF_RESET_SYNC_CNT		1500
  
- 	if (skb->protocol == htons(ETH_P_8021Q) &&
--	    !(tx_ring->tqp->handle->kinfo.netdev->features &
--	    NETIF_F_HW_VLAN_CTAG_TX)) {
-+	    !(handle->kinfo.netdev->features & NETIF_F_HW_VLAN_CTAG_TX)) {
- 		/* When HW VLAN acceleration is turned off, and the stack
- 		 * sets the protocol to 802.1q, the driver just need to
- 		 * set the protocol to the encapsulated ethertype.
-@@ -992,45 +994,92 @@ static int hns3_fill_desc_vtags(struct sk_buff *skb,
- 	}
- 
- 	if (skb_vlan_tag_present(skb)) {
--		u16 vlan_tag;
--
--		vlan_tag = skb_vlan_tag_get(skb);
--		vlan_tag |= (skb->priority & 0x7) << HNS3_TX_VLAN_PRIO_SHIFT;
--
- 		/* Based on hw strategy, use out_vtag in two layer tag case,
- 		 * and use inner_vtag in one tag case.
- 		 */
--		if (skb->protocol == htons(ETH_P_8021Q)) {
--			if (handle->port_base_vlan_state ==
--			    HNAE3_PORT_BASE_VLAN_DISABLE){
--				hns3_set_field(*out_vlan_flag,
--					       HNS3_TXD_OVLAN_B, 1);
--				*out_vtag = vlan_tag;
--			} else {
--				hns3_set_field(*inner_vlan_flag,
--					       HNS3_TXD_VLAN_B, 1);
--				*inner_vtag = vlan_tag;
--			}
--		} else {
--			hns3_set_field(*inner_vlan_flag, HNS3_TXD_VLAN_B, 1);
--			*inner_vtag = vlan_tag;
--		}
--	} else if (skb->protocol == htons(ETH_P_8021Q)) {
--		struct vlan_ethhdr *vhdr;
--		int rc;
-+		if (skb->protocol == htons(ETH_P_8021Q) &&
-+		    handle->port_base_vlan_state ==
-+		    HNAE3_PORT_BASE_VLAN_DISABLE)
-+			rc = HNS3_OUTER_VLAN_TAG;
-+		else
-+			rc = HNS3_INNER_VLAN_TAG;
- 
--		rc = skb_cow_head(skb, 0);
--		if (unlikely(rc < 0))
--			return rc;
--		vhdr = (struct vlan_ethhdr *)skb->data;
--		vhdr->h_vlan_TCI |= cpu_to_be16((skb->priority & 0x7)
--					<< HNS3_TX_VLAN_PRIO_SHIFT);
-+		skb->protocol = vlan_get_protocol(skb);
-+		return rc;
- 	}
- 
-+	rc = skb_cow_head(skb, 0);
-+	if (unlikely(rc < 0))
-+		return rc;
-+
-+	vhdr = (struct vlan_ethhdr *)skb->data;
-+	vhdr->h_vlan_TCI |= cpu_to_be16((skb->priority << VLAN_PRIO_SHIFT)
-+					 & VLAN_PRIO_MASK);
-+
- 	skb->protocol = vlan_get_protocol(skb);
+ /* Get DFX BD number offset */
+ #define HCLGE_DFX_BIOS_BD_OFFSET        1
+@@ -3184,6 +3187,39 @@ static int hclge_set_all_vf_rst(struct hclge_dev *hdev, bool reset)
  	return 0;
  }
  
-+static int hns3_fill_skb_desc(struct hns3_enet_ring *ring,
-+			      struct sk_buff *skb, struct hns3_desc *desc)
++int hclge_func_reset_sync_vf(struct hclge_dev *hdev)
 +{
-+	u32 ol_type_vlan_len_msec = 0;
-+	u32 type_cs_vlan_tso = 0;
-+	u32 paylen = skb->len;
-+	u16 inner_vtag = 0;
-+	u16 out_vtag = 0;
-+	u16 mss = 0;
++	struct hclge_pf_rst_sync_cmd *req;
++	struct hclge_desc desc;
++	int cnt = 0;
 +	int ret;
 +
-+	ret = hns3_handle_vtags(ring, skb);
-+	if (unlikely(ret < 0)) {
-+		return ret;
-+	} else if (ret == HNS3_INNER_VLAN_TAG) {
-+		inner_vtag = skb_vlan_tag_get(skb);
-+		inner_vtag |= (skb->priority << VLAN_PRIO_SHIFT) &
-+				VLAN_PRIO_MASK;
-+		hns3_set_field(type_cs_vlan_tso, HNS3_TXD_VLAN_B, 1);
-+	} else if (ret == HNS3_OUTER_VLAN_TAG) {
-+		out_vtag = skb_vlan_tag_get(skb);
-+		out_vtag |= (skb->priority << VLAN_PRIO_SHIFT) &
-+				VLAN_PRIO_MASK;
-+		hns3_set_field(ol_type_vlan_len_msec, HNS3_TXD_OVLAN_B,
-+			       1);
-+	}
++	req = (struct hclge_pf_rst_sync_cmd *)desc.data;
++	hclge_cmd_setup_basic_desc(&desc, HCLGE_OPC_QUERY_VF_RST_RDY, true);
 +
-+	if (skb->ip_summed == CHECKSUM_PARTIAL) {
-+		u8 ol4_proto, il4_proto;
-+
-+		skb_reset_mac_len(skb);
-+
-+		ret = hns3_get_l4_protocol(skb, &ol4_proto, &il4_proto);
-+		if (unlikely(ret))
++	do {
++		ret = hclge_cmd_send(&hdev->hw, &desc, 1);
++		/* for compatible with old firmware, wait
++		 * 100 ms for VF to stop IO
++		 */
++		if (ret == -EOPNOTSUPP) {
++			msleep(HCLGE_RESET_SYNC_TIME);
++			return 0;
++		} else if (ret) {
++			dev_err(&hdev->pdev->dev, "sync with VF fail %d!\n",
++				ret);
 +			return ret;
++		} else if (req->all_vf_ready) {
++			return 0;
++		}
++		msleep(HCLGE_PF_RESET_SYNC_TIME);
++		hclge_cmd_reuse_desc(&desc, true);
++	} while (cnt++ < HCLGE_PF_RESET_SYNC_CNT);
 +
-+		ret = hns3_set_l2l3l4(skb, ol4_proto, il4_proto,
-+				      &type_cs_vlan_tso,
-+				      &ol_type_vlan_len_msec);
-+		if (unlikely(ret))
-+			return ret;
-+
-+		ret = hns3_set_tso(skb, &paylen, &mss,
-+				   &type_cs_vlan_tso);
-+		if (unlikely(ret))
-+			return ret;
-+	}
-+
-+	/* Set txbd */
-+	desc->tx.ol_type_vlan_len_msec =
-+		cpu_to_le32(ol_type_vlan_len_msec);
-+	desc->tx.type_cs_vlan_tso_len = cpu_to_le32(type_cs_vlan_tso);
-+	desc->tx.paylen = cpu_to_le32(paylen);
-+	desc->tx.mss = cpu_to_le16(mss);
-+	desc->tx.vlan_tag = cpu_to_le16(inner_vtag);
-+	desc->tx.outer_vlan_tag = cpu_to_le16(out_vtag);
-+
-+	return 0;
++	dev_err(&hdev->pdev->dev, "sync with VF timeout!\n");
++	return -ETIME;
 +}
 +
- static int hns3_fill_desc(struct hns3_enet_ring *ring, void *priv,
- 			  unsigned int size, int frag_end,
- 			  enum hns_desc_type type)
-@@ -1045,50 +1094,12 @@ static int hns3_fill_desc(struct hns3_enet_ring *ring, void *priv,
+ int hclge_func_reset_cmd(struct hclge_dev *hdev, int func_id)
+ {
+ 	struct hclge_desc desc;
+@@ -3350,17 +3386,18 @@ static void hclge_reset_handshake(struct hclge_dev *hdev, bool enable)
  
- 	if (type == DESC_TYPE_SKB) {
- 		struct sk_buff *skb = (struct sk_buff *)priv;
--		u32 ol_type_vlan_len_msec = 0;
--		u32 type_cs_vlan_tso = 0;
--		u32 paylen = skb->len;
--		u16 inner_vtag = 0;
--		u16 out_vtag = 0;
--		u16 mss = 0;
- 		int ret;
+ static int hclge_reset_prepare_wait(struct hclge_dev *hdev)
+ {
+-#define HCLGE_RESET_SYNC_TIME 100
+-
+ 	u32 reg_val;
+ 	int ret = 0;
  
--		ret = hns3_fill_desc_vtags(skb, ring, &type_cs_vlan_tso,
--					   &ol_type_vlan_len_msec,
--					   &inner_vtag, &out_vtag);
-+		ret = hns3_fill_skb_desc(ring, skb, desc);
- 		if (unlikely(ret))
- 			return ret;
- 
--		if (skb->ip_summed == CHECKSUM_PARTIAL) {
--			u8 ol4_proto, il4_proto;
--
--			skb_reset_mac_len(skb);
--
--			ret = hns3_get_l4_protocol(skb, &ol4_proto, &il4_proto);
--			if (unlikely(ret))
--				return ret;
--
--			ret = hns3_set_l2l3l4(skb, ol4_proto, il4_proto,
--					      &type_cs_vlan_tso,
--					      &ol_type_vlan_len_msec);
--			if (unlikely(ret))
--				return ret;
--
--			ret = hns3_set_tso(skb, &paylen, &mss,
--					   &type_cs_vlan_tso);
--			if (unlikely(ret))
--				return ret;
--		}
--
--		/* Set txbd */
--		desc->tx.ol_type_vlan_len_msec =
--			cpu_to_le32(ol_type_vlan_len_msec);
--		desc->tx.type_cs_vlan_tso_len =	cpu_to_le32(type_cs_vlan_tso);
--		desc->tx.paylen = cpu_to_le32(paylen);
--		desc->tx.mss = cpu_to_le16(mss);
--		desc->tx.vlan_tag = cpu_to_le16(inner_vtag);
--		desc->tx.outer_vlan_tag = cpu_to_le16(out_vtag);
--
- 		dma = dma_map_single(dev, skb->data, size, DMA_TO_DEVICE);
- 	} else {
- 		frag = (skb_frag_t *)priv;
+ 	switch (hdev->reset_type) {
+ 	case HNAE3_FUNC_RESET:
+-		/* There is no mechanism for PF to know if VF has stopped IO
+-		 * for now, just wait 100 ms for VF to stop IO
++		/* to confirm whether all running VF is ready
++		 * before request PF reset
+ 		 */
+-		msleep(HCLGE_RESET_SYNC_TIME);
++		ret = hclge_func_reset_sync_vf(hdev);
++		if (ret)
++			return ret;
++
+ 		ret = hclge_func_reset_cmd(hdev, 0);
+ 		if (ret) {
+ 			dev_err(&hdev->pdev->dev,
+@@ -3377,10 +3414,13 @@ static int hclge_reset_prepare_wait(struct hclge_dev *hdev)
+ 		hdev->rst_stats.pf_rst_cnt++;
+ 		break;
+ 	case HNAE3_FLR_RESET:
+-		/* There is no mechanism for PF to know if VF has stopped IO
+-		 * for now, just wait 100 ms for VF to stop IO
++		/* to confirm whether all running VF is ready
++		 * before request PF reset
+ 		 */
+-		msleep(HCLGE_RESET_SYNC_TIME);
++		ret = hclge_func_reset_sync_vf(hdev);
++		if (ret)
++			return ret;
++
+ 		set_bit(HCLGE_STATE_CMD_DISABLE, &hdev->state);
+ 		set_bit(HNAE3_FLR_DOWN, &hdev->flr_state);
+ 		hdev->rst_stats.flr_rst_cnt++;
 -- 
 2.7.4
 
