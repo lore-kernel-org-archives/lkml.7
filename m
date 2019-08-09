@@ -2,81 +2,93 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 791C4C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2676AC31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:43:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4576421743
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:40:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB8532171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:43:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406630AbfHILkz (ORCPT
+        id S2406581AbfHILna (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 07:40:55 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:56339 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405999AbfHILky (ORCPT
+        Fri, 9 Aug 2019 07:43:30 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:33743 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726537AbfHILna (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 07:40:54 -0400
-Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 7E55410000D;
-        Fri,  9 Aug 2019 11:40:51 +0000 (UTC)
-Date:   Fri, 9 Aug 2019 13:40:50 +0200
-From:   Antoine Tenart <antoine.tenart@bootlin.com>
-To:     "Allan W. Nielsen" <allan.nielsen@microchip.com>
-Cc:     Antoine Tenart <antoine.tenart@bootlin.com>, davem@davemloft.net,
-        sd@queasysnail.net, andrew@lunn.ch, f.fainelli@gmail.com,
-        hkallweit1@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
-        alexandre.belloni@bootlin.com, camelia.groza@nxp.com,
-        Simon.Edelhaus@aquantia.com
-Subject: Re: [PATCH net-next v2 0/9] net: macsec: initial support for
- hardware offloading
-Message-ID: <20190809114050.GA5285@kwain>
-References: <20190808140600.21477-1-antoine.tenart@bootlin.com>
- <20190809112344.5anl7wq5df5ctj26@lx-anielsen.microsemi.net>
+        Fri, 9 Aug 2019 07:43:30 -0400
+Received: by mail-qk1-f195.google.com with SMTP id r6so71395269qkc.0;
+        Fri, 09 Aug 2019 04:43:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VVKEn1uhwnct32QQNQWKMMQwz1IKox/lIkY41QXr3n4=;
+        b=pCcFPrfdJR3psG1WSF4SqBcVO9efXbGlDkZnISOeV48IJOlST7hCwEbNOmGCMbbME9
+         4sKynNmZKh45UuwLnbPw3vRvkUvHtyW+wj6KvnNeMKPb1CuyiUyYO7/RY8EXYdTgopcc
+         pXA0vaCQS4yyjeAUYa5ioHJ8IhnkcHzPM/CjWXpBio6xnthFrColZM75jAjebVvx3SL/
+         filj+B4a9nQDcuYiDoUqLmyeKBP1blIAAp7kiwVJ2Mkd3I6TF1vUK2NYPIgbbAwo4gBb
+         3sq2D2z/K8nUwedJDV4mn1+pYxV0r5jND8v+BI3s4QlDYG6ixG3d/1gE97Wsefrc6faN
+         htOA==
+X-Gm-Message-State: APjAAAUh4oqO4ohfs4yKMOFD3UDhtJ4rqdoVi8O+DO/p/bAwzS5u15Lz
+        3QOkQxjFqTkfoeFfJ/hg2LLbe0FKSOhgcxh/ycM=
+X-Google-Smtp-Source: APXvYqz3y2NTzxkuXgdthyLbml49Ah52Sn2rqR//B9FnkAzFwcen/MazMdX5ZFS3FoRo2xISosV/96/4q4XOkHiRGAw=
+X-Received: by 2002:a05:620a:b:: with SMTP id j11mr17853054qki.352.1565351009257;
+ Fri, 09 Aug 2019 04:43:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190809112344.5anl7wq5df5ctj26@lx-anielsen.microsemi.net>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190808212234.2213262-1-arnd@arndb.de> <CGME20190808212453epcas2p44ff418662ee1acf428c6842ee4488f9f@epcas2p4.samsung.com>
+ <20190808212234.2213262-3-arnd@arndb.de> <55c9608d-68c4-17f6-2682-7668d5d7720a@samsung.com>
+In-Reply-To: <55c9608d-68c4-17f6-2682-7668d5d7720a@samsung.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 9 Aug 2019 13:43:13 +0200
+Message-ID: <CAK8P3a3grFEGr33s327yNMabK5=1kCJc3k7y55dhzQx9sTvkyQ@mail.gmail.com>
+Subject: Re: [PATCH 02/22] ARM: omap1: make omapfb standalone compilable
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Allan,
+On Fri, Aug 9, 2019 at 1:32 PM Bartlomiej Zolnierkiewicz
+<b.zolnierkie@samsung.com> wrote:
+> On 8/8/19 11:22 PM, Arnd Bergmann wrote:
+> > The omapfb driver is split into platform specific code for omap1, and
+> > driver code that is also specific to omap1.
+> >
+> > Moving both parts into the driver directory simplifies the structure
+> > and avoids the dependency on certain omap machine header files.
+> >
+> > The interrupt numbers in particular however must not be referenced
+> > directly from the driver to allow building in a multiplatform
+> > configuration, so these have to be passed through resources, is
+> > done for all other omap drivers.
+> >
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>
+> For fbdev part:
+>
+> Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 
-On Fri, Aug 09, 2019 at 01:23:47PM +0200, Allan W. Nielsen wrote:
-> 
-> I have done a first read through of your patch and it looks good to me.
-> 
-> The only thing which confused me is all the references to Ocelot.
-> 
-> As far as I can see, this is a driver for the vsc8584 PHY in the Viper family.
-> The Ocelot confusion is properly because you are developing it on an Ocelot
-> board. But this is actually a modded board, the official PCB 120 and PCB123 has
-> a different pin compatible PHY without MACsec.
-> 
-> FYI: In the Viper family we have VSC8575, VSC8582, VSC8584, VSC8562 and VSC8564.
-> 
-> VSC8575, does not have MACsec, but all other does, and they are binary
-> compatible (it is the same die instantiated 2 or 4 times, with or without
-> MACsec/SyncE).
-> 
-> I beleive it is only the commit comments which needs to be addressed.
+Thanks for taking a look.
 
-That's right, I mixed up Ocelot and the actual PHY names. I'll look for
-Ocelot references in the patches and I'll fix it in v3.
+> [ It seems that adding of static inline for omap_set_dma_priority()
+>   when ARCH_OMAP=n should be in patch #9 but this is a minor issue. ]
 
-Thanks for spotting this,
-Antoine
+That would have been ok as well, but having the addition here was
+intentional and seems more logical to me as this is where the headers
+get moved around.
 
--- 
-Antoine Ténart, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+      Arnd
