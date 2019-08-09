@@ -2,51 +2,59 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF2E6C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A8ADC31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:46:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1770217D7
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:46:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE0592171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:46:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565358373;
-	bh=zMmiBR71GlW3l1nMHrzxMH4Vf1MCCTt/NYA9dWdzv7s=;
+	s=default; t=1565358379;
+	bh=RkWgbaP0z7+WD+QgWN07YaCbTxNTfwFHr/z1yWrNCgY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=esHhQQPaa8aOR8pkbYtBv7pU8topVYDqnDZtFk0psQlnt5333KDDH61T7VDKuNNb2
-	 HEYWWPw0lupJm5qeDTUC8uQuj+7sSma1PY5UchMIUjHBAVtxFj+KGR2TuBmqam1aZu
-	 PKVbM1sOX8nIhCM0M3Qr/lH9WCyAdptmMJ4/0zyM=
+	b=eFuybZVBe/bMfOAKn1spCT4M/hS850pEaBw/WFRJaprr5oy3Jrx6dVwPbF8uWZls7
+	 BM9MeFBqUeaRRKTGfv4fAZK4Zb7sdfABFLP11N2OvZH1j7t2iNwRsfSIAHVMZjyWv8
+	 jTJ8rIrFO7ZIwDPJXGBMDy1LWcEHQcG/hUrLCiNs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406943AbfHINqM (ORCPT
+        id S2406975AbfHINqQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 09:46:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35694 "EHLO mail.kernel.org"
+        Fri, 9 Aug 2019 09:46:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406518AbfHINqJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 09:46:09 -0400
+        id S2406924AbfHINqM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 09:46:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D2A3217F4;
-        Fri,  9 Aug 2019 13:46:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ACAE02171F;
+        Fri,  9 Aug 2019 13:46:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565358368;
-        bh=zMmiBR71GlW3l1nMHrzxMH4Vf1MCCTt/NYA9dWdzv7s=;
+        s=default; t=1565358371;
+        bh=RkWgbaP0z7+WD+QgWN07YaCbTxNTfwFHr/z1yWrNCgY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JHJeqBAezbBKAud2c0tj05cZJJq0Be3eWZdADA61a03rQ77G7OFZPVLS6p4qCu66y
-         mnS7wagkT3gsVpg5TLDjQ7kuj8bYQSziy18UT2VDJDdcemNnVgmK8eZGdo99DUgXIe
-         ZnJZt1iZQ3zkfO7T7xp2wT94NMMDMPx8sAjO2Ccc=
+        b=RW5GcGOKxHFoOmnKdJ91AnIQVi87szU6YeLt2rpDAr9bOKtVT5gHSx0+Bb+jiGVUb
+         b/IqQ9i5ZcaaBh0vmFTzr0uG7gnVrYL2TNGTUIImyQAAlyw7i8th5gcRVex7fIh3cn
+         bgOJA8r/C8qS6F0MrBLvay7hL77U4wbOcajarEPc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sebastian Parschauer <s.parschauer@gmx.de>,
-        Jiri Kosina <jkosina@suse.cz>
-Subject: [PATCH 4.4 04/21] HID: Add quirk for HP X1200 PIXART OEM mouse
-Date:   Fri,  9 Aug 2019 15:45:08 +0200
-Message-Id: <20190809134241.751925322@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Andrew Prout <aprout@ll.mit.edu>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        Michal Kubecek <mkubecek@suse.cz>,
+        Neal Cardwell <ncardwell@google.com>,
+        Yuchung Cheng <ycheng@google.com>,
+        Christoph Paasch <cpaasch@apple.com>,
+        Jonathan Looney <jtl@netflix.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 05/21] tcp: be more careful in tcp_fragment()
+Date:   Fri,  9 Aug 2019 15:45:09 +0200
+Message-Id: <20190809134241.798600233@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190809134241.565496442@linuxfoundation.org>
 References: <20190809134241.565496442@linuxfoundation.org>
@@ -59,46 +67,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sebastian Parschauer <s.parschauer@gmx.de>
+[ Upstream commit b617158dc096709d8600c53b6052144d12b89fab ]
 
-commit 49869d2ea9eecc105a10724c1abf035151a3c4e2 upstream.
+Some applications set tiny SO_SNDBUF values and expect
+TCP to just work. Recent patches to address CVE-2019-11478
+broke them in case of losses, since retransmits might
+be prevented.
 
-The PixArt OEM mice are known for disconnecting every minute in
-runlevel 1 or 3 if they are not always polled. So add quirk
-ALWAYS_POLL for this one as well.
+We should allow these flows to make progress.
 
-Jonathan Teh (@jonathan-teh) reported and tested the quirk.
-Reference: https://github.com/sriemer/fix-linux-mouse/issues/15
+This patch allows the first and last skb in retransmit queue
+to be split even if memory limits are hit.
 
-Signed-off-by: Sebastian Parschauer <s.parschauer@gmx.de>
-CC: stable@vger.kernel.org
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+It also adds the some room due to the fact that tcp_sendmsg()
+and tcp_sendpage() might overshoot sk_wmem_queued by about one full
+TSO skb (64KB size). Note this allowance was already present
+in stable backports for kernels < 4.15
 
+Note for < 4.15 backports :
+ tcp_rtx_queue_tail() will probably look like :
+
+static inline struct sk_buff *tcp_rtx_queue_tail(const struct sock *sk)
+{
+	struct sk_buff *skb = tcp_send_head(sk);
+
+	return skb ? tcp_write_queue_prev(sk, skb) : tcp_write_queue_tail(sk);
+}
+
+Fixes: f070ef2ac667 ("tcp: tcp_fragment() should apply sane memory limits")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: Andrew Prout <aprout@ll.mit.edu>
+Tested-by: Andrew Prout <aprout@ll.mit.edu>
+Tested-by: Jonathan Lemon <jonathan.lemon@gmail.com>
+Tested-by: Michal Kubecek <mkubecek@suse.cz>
+Acked-by: Neal Cardwell <ncardwell@google.com>
+Acked-by: Yuchung Cheng <ycheng@google.com>
+Acked-by: Christoph Paasch <cpaasch@apple.com>
+Cc: Jonathan Looney <jtl@netflix.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-ids.h           |    1 +
- drivers/hid/usbhid/hid-quirks.c |    1 +
- 2 files changed, 2 insertions(+)
+ include/net/tcp.h     | 17 +++++++++++++++++
+ net/ipv4/tcp_output.c | 11 ++++++++++-
+ 2 files changed, 27 insertions(+), 1 deletion(-)
 
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -470,6 +470,7 @@
- #define USB_PRODUCT_ID_HP_LOGITECH_OEM_USB_OPTICAL_MOUSE_0A4A	0x0a4a
- #define USB_PRODUCT_ID_HP_LOGITECH_OEM_USB_OPTICAL_MOUSE_0B4A	0x0b4a
- #define USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE		0x134a
-+#define USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE_0641	0x0641
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index 77438a8406ecf..0410fd29d5695 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -1526,6 +1526,23 @@ static inline void tcp_check_send_head(struct sock *sk, struct sk_buff *skb_unli
+ 		tcp_sk(sk)->highest_sack = NULL;
+ }
  
- #define USB_VENDOR_ID_HUION		0x256c
- #define USB_DEVICE_ID_HUION_TABLET	0x006e
---- a/drivers/hid/usbhid/hid-quirks.c
-+++ b/drivers/hid/usbhid/hid-quirks.c
-@@ -82,6 +82,7 @@ static const struct hid_blacklist {
- 	{ USB_VENDOR_ID_HP, USB_PRODUCT_ID_HP_LOGITECH_OEM_USB_OPTICAL_MOUSE_0A4A, HID_QUIRK_ALWAYS_POLL },
- 	{ USB_VENDOR_ID_HP, USB_PRODUCT_ID_HP_LOGITECH_OEM_USB_OPTICAL_MOUSE_0B4A, HID_QUIRK_ALWAYS_POLL },
- 	{ USB_VENDOR_ID_HP, USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE, HID_QUIRK_ALWAYS_POLL },
-+	{ USB_VENDOR_ID_HP, USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE_0641, HID_QUIRK_ALWAYS_POLL },
- 	{ USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_C077, HID_QUIRK_ALWAYS_POLL },
- 	{ USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_KEYBOARD_G710_PLUS, HID_QUIRK_NOGET },
- 	{ USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_MOUSE_C01A, HID_QUIRK_ALWAYS_POLL },
++static inline struct sk_buff *tcp_rtx_queue_head(const struct sock *sk)
++{
++	struct sk_buff *skb = tcp_write_queue_head(sk);
++
++	if (skb == tcp_send_head(sk))
++		skb = NULL;
++
++	return skb;
++}
++
++static inline struct sk_buff *tcp_rtx_queue_tail(const struct sock *sk)
++{
++	struct sk_buff *skb = tcp_send_head(sk);
++
++	return skb ? tcp_write_queue_prev(sk, skb) : tcp_write_queue_tail(sk);
++}
++
+ static inline void __tcp_add_write_queue_tail(struct sock *sk, struct sk_buff *skb)
+ {
+ 	__skb_queue_tail(&sk->sk_write_queue, skb);
+diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+index 53edd60fd3817..76ffce0c18aeb 100644
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -1151,6 +1151,7 @@ int tcp_fragment(struct sock *sk, struct sk_buff *skb, u32 len,
+ 	struct tcp_sock *tp = tcp_sk(sk);
+ 	struct sk_buff *buff;
+ 	int nsize, old_factor;
++	long limit;
+ 	int nlen;
+ 	u8 flags;
+ 
+@@ -1161,7 +1162,15 @@ int tcp_fragment(struct sock *sk, struct sk_buff *skb, u32 len,
+ 	if (nsize < 0)
+ 		nsize = 0;
+ 
+-	if (unlikely((sk->sk_wmem_queued >> 1) > sk->sk_sndbuf + 0x20000)) {
++	/* tcp_sendmsg() can overshoot sk_wmem_queued by one full size skb.
++	 * We need some allowance to not penalize applications setting small
++	 * SO_SNDBUF values.
++	 * Also allow first and last skb in retransmit queue to be split.
++	 */
++	limit = sk->sk_sndbuf + 2 * SKB_TRUESIZE(GSO_MAX_SIZE);
++	if (unlikely((sk->sk_wmem_queued >> 1) > limit &&
++		     skb != tcp_rtx_queue_head(sk) &&
++		     skb != tcp_rtx_queue_tail(sk))) {
+ 		NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPWQUEUETOOBIG);
+ 		return -ENOMEM;
+ 	}
+-- 
+2.20.1
+
 
 
