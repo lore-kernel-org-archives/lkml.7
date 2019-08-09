@@ -2,140 +2,83 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=DATE_IN_PAST_03_06,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A1CCC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:16:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D974C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:17:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6142621783
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:16:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="QED54Z6S"
+	by mail.kernel.org (Postfix) with ESMTP id 3F6652184E
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:17:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565342231;
+	bh=iCwSBaFSrhA+3xI7pt6j7vr1dV0x/b9m0YaE7bBEmiM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SISHcT6aysacB8OBAw2JbVrZ/V3yELY5WNKK8rqcfVwOQxbCJzzaTxTShWcpUN2ff
+	 BtsN7a/q0TFh1NQqo878BDjCiE9uJu7Jzsgnnoyu4OfRCO3hGtLgjdkmV+3dHZK6Nr
+	 mXh9P7EAAB36nVhMCDQjfJyNli7Hd/pBOPzdm61w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406113AbfHIJQb (ORCPT
+        id S2406124AbfHIJRK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 05:16:31 -0400
-Received: from vps.xff.cz ([195.181.215.36]:46522 "EHLO vps.xff.cz"
+        Fri, 9 Aug 2019 05:17:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405641AbfHIJQ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 05:16:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1565342186; bh=058fnVgEdld0XWcxrIoVMkGIvEFjKF/KELntlth1H7Y=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=QED54Z6SSAM6GpHg9GkeBumXygOE+uGYcbOUyEZ9cs3qsVjloPPJcPaoWwHrtpIsq
-         98dW5idtdWYH3HUAO8Xn4vgDBzZhDR7Bv02o8SKJTsAafO6SXIZSriBzJmZV/HcfIQ
-         BZIUIfh4poi+kviXd1y+WPaGI2SqNEYTghwjBE0Q=
-Date:   Fri, 9 Aug 2019 11:16:26 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        devicetree <devicetree@vger.kernel.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-rtc@vger.kernel.org
-Subject: Re: [linux-sunxi] [PATCH 0/3] Add basic support for RTC on Allwinner
- H6 SoC
-Message-ID: <20190809091626.6kanjbmvbi4oipco@core.my.home>
-Mail-Followup-To: Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        devicetree <devicetree@vger.kernel.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-rtc@vger.kernel.org
-References: <20190412120730.473-1-megous@megous.com>
- <CAGb2v66cbpsoHJoiFJkBwhZ5SbO+uO+Kf6gtnA3kPFQZq0329Q@mail.gmail.com>
- <20190806183045.edhm3qzpegscf2z7@core.my.home>
- <20190807105502.GK3600@piout.net>
- <20190808121237.g6twq2nh3sayu3vx@core.my.home>
- <20190808233930.GM3600@piout.net>
+        id S1726091AbfHIJRJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 05:17:09 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75F9921743;
+        Fri,  9 Aug 2019 09:17:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565342228;
+        bh=iCwSBaFSrhA+3xI7pt6j7vr1dV0x/b9m0YaE7bBEmiM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=A3aMkzQZyHXmK3y7x0EgKM/jLva+WnTVoJtAno+shZMBuATwEVyz5Ghwx6KVNHyRB
+         kxKiAyDuDDdfgyIDHU26X/seVyS3NoMtcGVY9npfINnxLttPzH5ap9DhcYhBku+BhB
+         U6KfwoNEmivrp0BMjMUrMatHUECod1tOWkkVeHJA=
+Date:   Fri, 9 Aug 2019 07:38:13 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Felipe Balbi <balbi@kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 10/22] usb: omap: avoid mach/*.h headers
+Message-ID: <20190809053813.GA29036@kroah.com>
+References: <20190808212234.2213262-1-arnd@arndb.de>
+ <20190808212234.2213262-11-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190808233930.GM3600@piout.net>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+In-Reply-To: <20190808212234.2213262-11-arnd@arndb.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 01:39:30AM +0200, Alexandre Belloni wrote:
-> On 08/08/2019 14:12:37+0200, Ondřej Jirman wrote:
-> > On Wed, Aug 07, 2019 at 12:55:02PM +0200, Alexandre Belloni wrote:
-> > > Hi,
-> > > 
-> > > On 06/08/2019 20:30:45+0200, Ondřej Jirman wrote:
-> > > > Maybe whether XO or DCXO is used also matters if you want to do some fine
-> > > > tunning of DCXO (control register has pletny of options), but that's probably
-> > > > better done in u-boot. And there's still no need to read HOSC source from DT.
-> > > > The driver can just check compatible, and if it is H6 and OSC_CLK_SRC_SEL is 1,
-> > > > it can do it's DCXO tunning, or whatever. But neither OS nor bootloader will
-> > > > be using this info to gate/disable the osciallator.
-> > > > 
-> > > 
-> > > It is actually useful to be able to tweak the crystal tuning at
-> > > runtime to be able to reduce clock drift and compare with a reliable
-> > > source (e.g. NTP).
-> > 
-> > I don't think there's a Linux kernel API that you can use to achieve that, so
-> > that's a rather theoretical concern at the moment.
-> > 
+On Thu, Aug 08, 2019 at 11:22:19PM +0200, Arnd Bergmann wrote:
+> The omap usb drivers still rely on mach/*.h headers that
+> are explicitly or implicitly included, but all the required
+> definitions are now in include/linux/soc/ti/, so use those
+> instead and allow compile-testing on other architectures.
 > 
-> There is /sys/class/rtc/rtcX/offset which is even properly documented.
-> 
-> The reason I asked is that some RTCs have both analog (changing the
-> oscillator capacitance) and digital (changing the RTC counter) so I'm
-> wondering whether this interface should be extended.
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/usb/gadget/udc/Kconfig     | 2 +-
+>  drivers/usb/gadget/udc/omap_udc.c  | 2 ++
+>  drivers/usb/host/Kconfig           | 2 +-
+>  drivers/usb/host/ohci-omap.c       | 7 +++----
+>  drivers/usb/phy/Kconfig            | 3 ++-
+>  drivers/usb/phy/phy-isp1301-omap.c | 4 ++--
+>  6 files changed, 11 insertions(+), 9 deletions(-)
 
-As I wrote below, that can't be achieved by tuning DCXO.
-
-> > Also there are multiple clocks, that can drive the RTC, and you usually don't
-> > drive it from 24MHz DCXO oscillator. The reason is that you'd have to deal with
-> > the fact that the clock for RTC then becomes 24000000/750 (750 is fixed
-> > divider), which is 32000.
-> > 
-> > So if you want to get 32768Hz for RTC by tuning the DCXO, it would have to have
-> > 24 576 000 Hz. And even if you could achieve that (doubtful), it would throw off
-> > timings in the rest of the system (say UART, USB, CPU, display ctl) in a major way.
-> > 
-> > I guess you can try tuning 24MHz oscillator so that it's closer to the
-> > real-world 24MHz via NTP reference for other reasons. But it would be
-> > complicated, and require precise interaction with other components, like using
-> > HW timers sourced from 24MHz HOSC clock, because you can't use CPU's timers,
-> > because of inaccuracies introduced during DVFS, for example.
-> > 
-> > regards,
-> > 	o.
-> > 
-> > > I'm curious, what kind of options does this RTC have?
-> > > 
-> > > -- 
-> > > Alexandre Belloni, Bootlin
-> > > Embedded Linux and Kernel engineering
-> > > https://bootlin.com
-> > > 
-> > > _______________________________________________
-> > > linux-arm-kernel mailing list
-> > > linux-arm-kernel@lists.infradead.org
-> > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
-> -- 
-> Alexandre Belloni, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
