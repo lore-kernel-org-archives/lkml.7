@@ -6,102 +6,100 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B92ACC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 15:41:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 349E7C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 15:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6348A208C4
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 15:41:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12B96208C4
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 15:41:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436796AbfHIPlG (ORCPT
+        id S2436798AbfHIPlq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 11:41:06 -0400
-Received: from sauhun.de ([88.99.104.3]:39226 "EHLO pokefinder.org"
+        Fri, 9 Aug 2019 11:41:46 -0400
+Received: from mga04.intel.com ([192.55.52.120]:57597 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726255AbfHIPlG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 11:41:06 -0400
-Received: from localhost (p54B333D4.dip0.t-ipconnect.de [84.179.51.212])
-        by pokefinder.org (Postfix) with ESMTPSA id D59B82C3014;
-        Fri,  9 Aug 2019 17:41:03 +0200 (CEST)
-Date:   Fri, 9 Aug 2019 17:41:03 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-i2c@vger.kernel.org, Andrzej Hajda <a.hajda@samsung.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH] i2c: replace i2c_new_secondary_device with an ERR_PTR
- variant
-Message-ID: <20190809154103.GC5099@ninjato>
-References: <20190722172600.3452-1-wsa+renesas@sang-engineering.com>
- <9b71c556-bd70-4d29-dba5-fbeaefb5f3b4@ideasonboard.com>
- <20190808155709.GA1316@ninjato>
- <20190808160434.GT6055@pendragon.ideasonboard.com>
+        id S1726255AbfHIPlp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 11:41:45 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 08:41:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,364,1559545200"; 
+   d="scan'208";a="193411041"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by fmsmga001.fm.intel.com with ESMTP; 09 Aug 2019 08:41:45 -0700
+Date:   Fri, 9 Aug 2019 08:30:57 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] arch/x86/kernel/cpu/umwait.c - remove unused variable
+Message-ID: <20190809153056.GB56628@romley-ivt3.sc.intel.com>
+References: <79734.1565272329@turing-police>
+ <alpine.DEB.2.21.1908082158580.2882@nanos.tec.linutronix.de>
+ <141835.1565295884@turing-police>
+ <alpine.DEB.2.21.1908082229010.2882@nanos.tec.linutronix.de>
+ <20190809004438.GA56628@romley-ivt3.sc.intel.com>
+ <alpine.DEB.2.21.1908091147290.21433@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="4ZLFUWh1odzi/v6L"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190808160434.GT6055@pendragon.ideasonboard.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <alpine.DEB.2.21.1908091147290.21433@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Aug 09, 2019 at 11:49:49AM +0200, Thomas Gleixner wrote:
+> On Thu, 8 Aug 2019, Fenghua Yu wrote:
+> > On Thu, Aug 08, 2019 at 10:32:38PM +0200, Thomas Gleixner wrote:
+> > > Valdis,
+> > > 
+> > > On Thu, 8 Aug 2019, Valdis Klētnieks wrote:
+> > > > On Thu, 08 Aug 2019 22:04:03 +0200, Thomas Gleixner said: It isn't 
+> > > > clear that whatever is doing the device_initcall()s will be able to 
+> > > > do any reasonable recovery if we return an error, so any error 
+> > > > recovery is going to have to happen before the function returns. It 
+> > > > might make sense to do an 'if (ret) return;' before going further in 
+> > > > the function, but given the comment a few lines further down about 
+> > > > ignoring errors, it was apparently considered more important to 
+> > > > struggle through and register stuff in sysfs even if umwait was 
+> > > > broken....
+> > > 
+> > > I missed that when going through it.
+> > > 
+> > > The right thing to do is to have a cpu_offline callback which clears 
+> > > the umwait MSR. That covers also the failure in the cpu hotplug setup. 
+> > > Then handling an error return makes sense and keeps everything in a 
+> > > workable shape.
+> > 
+> > When cpu is offline, the MSR won't be used. We don't need to clear it, right?
+> 
+> Groan. If soemthing goes wrong when registering the hotplug callback, what
+> undoes the MSR setup which might have happened and what takes care of it on
+> cpus coming online later? Exactly nothing. Then you have a non-consistent
+> behaviour.
+> 
+> Make stuff symmmetric and correct and not optimized for the sunshine case.
 
---4ZLFUWh1odzi/v6L
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I see.
 
-Hi Laurent,
+Just want to make sure I understand it correctly:
 
-> > > > +		if (IS_ERR(state->i2c_clients[i])) {
-> > > > +			err =3D PTR_ERR(state->i2c_clients[i]);
-> > > >  			v4l2_err(sd, "failed to create i2c client %u\n", i);
-> > > >  			goto err_i2c;
->=20
-> This will call adv76xx_unregister_clients(), which will try to
-> i2c_unregister_device() all non-NULL i2c_clients entries. You need to
+sysfs_create_group() should not be called if cpuhp_setup_state() has
+ error.
 
-Uh, right! Sorry for missing this :(
+Otherwise, the sysadmin can change the MSR through the sysfs interface.
+After that, a CPU is online and its MSR is not updated because cpu_online
+is not installed. Then this online CPU has different MSR value from
+the other CPUs.
 
-> either set the entry to NULL here, or update
-> adv76xx_unregister_clients() to skip IS_ERR() entries. My preference
-> would be to store the return value of adv76xx_dummy_client() in a local
-> variable here, and set state->i2c_clients[i] after the error check.
+Is that right?
 
-I implemented your preference and simplified
-adv76xx_unregister_clients() because i2c_unregister_device is NULL
-pointer aware. New patch coming in a minute.
+Thanks.
 
-Thanks for the review,
-
-   Wolfram
-
-
---4ZLFUWh1odzi/v6L
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1NlAsACgkQFA3kzBSg
-KbYrtw//eax3sE64XT5D8MkAUjtfesOD/GYUTnTU9ceRn7IEMMJBWCSuw24W6t5i
-tESvfnVngDidODNAHxiAxTLt1fIKkjEPcwE3WVviODWS0vx2nqCidralMM1VsX1y
-4qZB6Ux1ESqmQe8DPFobbu2wCxXnPvqPz11BQyXb4DIlCVVyT5aQXSAtTc9+B8MU
-lZHU9yDBIkVneB6yIVp0H3nxxnXOsstFIQEHUbbIkMklgegyaqFWpzNLYSOtR1OZ
-RGBo9TrmK2abSXSIA3j2+TGhdO8EXrAtchoYa/PZMeR9npMCrdlraa7x8vXBMBji
-fTxZ2NuMbzPi5MWMvSxp6MILBK3MdO9Ph56VZs/RYAqDqkfvfvAbo8htSHglwxcY
-Qk2VxXKqUYs/vTOMwz4Zw45yR0ub1XGix+uxxmxq5P4rKRP7neHI5dq8cxMb5MfF
-YWBYdxzT3zbY2iMrx1QBRzgZZSPaR1aUuolkeo8qAyiyNz4yBG6A7gZqILGnx4Xq
-BEk69WTMCepDKrLiWB2m3G8m49e7StEaBF2D0F+RvV9jPu6CJ6p6tYGNT/Tqcop4
-t8RDnxY5nSpxz3VdWTLsKLvPUcMSKltb4yoTnj82Rpx/mc3sl0k2tldYsdk0/4rK
-op46MBBe0WNEEkbOEgyycC/x3iT/YOX15X9wTdYqM5idUUEdQ/Q=
-=Tjl7
------END PGP SIGNATURE-----
-
---4ZLFUWh1odzi/v6L--
+-Fenghua
