@@ -5,64 +5,66 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07486C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 07:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD1FC31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 07:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDD45208C4
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 07:10:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C168D208C4
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 07:10:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="prEg84b3"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qH5p+7Ef"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405741AbfHIHKX (ORCPT
+        id S2405756AbfHIHK3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 03:10:23 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42620 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725954AbfHIHKW (ORCPT
+        Fri, 9 Aug 2019 03:10:29 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:44640 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405700AbfHIHK3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 03:10:22 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q10so45526382pff.9
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 00:10:22 -0700 (PDT)
+        Fri, 9 Aug 2019 03:10:29 -0400
+Received: by mail-pf1-f194.google.com with SMTP id t16so45513437pfe.11;
+        Fri, 09 Aug 2019 00:10:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=gHnPOS8Pm8ZeyA7Uap/VGmk8/SCT3qez5bm05fI/Eqw=;
-        b=prEg84b3JShuJLqsV9dW/+P4oSDBYOxR5bB92u+ngwNZSS7zuFYv1AwkKKkjxA3nwE
-         83uNgiJ7dEccJcRec7gye36J2u/8CXKE0qp8/YC7ZPKg1avZ2exp/va7iJFp8dPlwDuH
-         G+pURNTYyDVTZrPo2Qy320dJVSDKrpmefK2ocXr8QIbeuCixmXL1gpOMsuKWGi1U/Xic
-         ewYPER4JIbbXHiIPfLdm1gQK2CmuBIL8vP7h/NcNtI28C9xv6vahwgxDYszjD13YcTL/
-         aCcc5Lu7up6gaeFEbXjqdGdcLSZIGDfgxxBvyKFIWLBCOnhw/Qchmby95BN7KhOBKMvm
-         Kkhw==
+        bh=+d5t4lkL11qOJSaV7yGOJ7opndkU1RYl3l6/bnKTaps=;
+        b=qH5p+7EfZpTvCWXaJf2rQvToIJyY8fGExGFmXTWpW5LIVKzGfBWCRmwMR2P8Fe5PtD
+         A1ROzvUb5xtCtgIZWZMI47N96t7XZcSxPnzPuHEVHc9/yGElAVR/sJiKQ7YkNIwNokSe
+         mcCFjFEnhiqVQkmFo29/MsJhaZlYT7Yq/FWGaMcyaCG0x4VJuNH9SCq+4WZufLWeCTwG
+         x7NPB7A6zKoNu4FuPEZMLmrzOd3VHnO8mUk243wLLyG9m0333TNM0Xr9h2Ff2dXFnikw
+         jMHp+qpVA8fYv38qUZN/vio71FYepuG48RrF+sxDKTkLBHO9qosk19mbNxj4JPar7Y6b
+         N6VA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=gHnPOS8Pm8ZeyA7Uap/VGmk8/SCT3qez5bm05fI/Eqw=;
-        b=N9u0fcFOrbWMDauDzOA5OyC7FaGqMMGLx0VIKC1iQ5a6HMDOzcyLGBKElDw0+0rcVm
-         2ivKLYdS2DgDb2+6ycranwkvHkB4s4iYrym7nBBXXaU96PnJm3pnyf55aED3sFtDaEhH
-         JS32L9krLJl850eikJZCKkRlZ7sKMf9o8z6FxkQnIvbs2Y7dLDKGPyRW2MJjnJXfQfaI
-         QEeJEalG/uuVTo1VNT8VmdelF4rF4BgO0Nqeqm82/eBmrvcUOhDh68Hqt5veAxHe7iRI
-         GV8R3riNiCN/RArWmqYYbUXYDoJNRftVOgfL0VwpNHh7sbCY5fv+synFL1Xlaylvy4sX
-         BnSw==
-X-Gm-Message-State: APjAAAVdX1zDJi3SlHHcWa+8/sB3hUy1WZpwbEL845ykbLizBFPrWWog
-        tyF7u+4HQeyT2kjMBFyXrUQ=
-X-Google-Smtp-Source: APXvYqyzFdggpxqtU2zXLf2i37Yizxc6eiLcSf5S1ldAFK8pRtfqycMCmU3h2btvg2QMbGdaQIStCA==
-X-Received: by 2002:a63:550e:: with SMTP id j14mr14561266pgb.302.1565334622328;
-        Fri, 09 Aug 2019 00:10:22 -0700 (PDT)
+        bh=+d5t4lkL11qOJSaV7yGOJ7opndkU1RYl3l6/bnKTaps=;
+        b=W6TyL1vBBjHDGBwDtmhhNaj39r2oemrWzuCMGx28H7WxmIR43Uuu3pTgR1p9De065w
+         ppOHPkNt9T57DTIkBa/AtB31ZOExE8WyGzi0+BCkTQLY1Qo74XMbN1zeLN9j3cK0vKl+
+         eBPSRD3r7/UC4U3u16ssnxJzOb3tdhPFBzAt7x85e/2zKfIdywLVEJLVCrW6TL1Q7LmM
+         YtaoLQ+czjKU0Ru4usKjNgOc8QFjSOw15Wc+guQdHxq+c05sKe4kCfn9XRW2SO3Gl+9w
+         XTMAz/0sdVqc0P7NJr3uvCiGxyUBtFVox77ELhsiVmrITK+GYnQUvJDKfATwLbwlQh/S
+         DIsw==
+X-Gm-Message-State: APjAAAWTPCQrz+a6ItXaSoFX2pKbmqjC9IcMfQbDUTbrM7imvTlbpi7w
+        T1fYeBimemHLJfDkVUnHFeU=
+X-Google-Smtp-Source: APXvYqwoxMyVhTYXNckZ8XJ4rP4tbgD7QG8BKGKz2vfkXe00sq5sM/L1h8plQl5Sn0hdxRO24258Uw==
+X-Received: by 2002:a65:44cc:: with SMTP id g12mr15990426pgs.409.1565334628486;
+        Fri, 09 Aug 2019 00:10:28 -0700 (PDT)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([89.31.126.54])
-        by smtp.gmail.com with ESMTPSA id h129sm92145915pfb.110.2019.08.09.00.10.20
+        by smtp.gmail.com with ESMTPSA id x1sm514293pfj.182.2019.08.09.00.10.25
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 09 Aug 2019 00:10:21 -0700 (PDT)
+        Fri, 09 Aug 2019 00:10:27 -0700 (PDT)
 From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Jessica Yu <jeyu@kernel.org>, linux-kernel@vger.kernel.org,
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
         Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH v4 2/8] module: Replace strncmp with str_has_prefix
-Date:   Fri,  9 Aug 2019 15:10:17 +0800
-Message-Id: <20190809071017.17170-1-hslester96@gmail.com>
+Subject: [PATCH v4 3/8] PM/sleep: Replace strncmp with str_has_prefix
+Date:   Fri,  9 Aug 2019 15:10:23 +0800
+Message-Id: <20190809071023.17224-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -81,22 +83,22 @@ to substitute such strncmp to make code better.
 
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- kernel/module.c | 2 +-
+ kernel/power/main.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/module.c b/kernel/module.c
-index 5933395af9a0..7defa2a4a701 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -2251,7 +2251,7 @@ static int simplify_symbols(struct module *mod, const struct load_info *info)
- 		switch (sym[i].st_shndx) {
- 		case SHN_COMMON:
- 			/* Ignore common symbols */
--			if (!strncmp(name, "__gnu_lto", 9))
-+			if (str_has_prefix(name, "__gnu_lto"))
- 				break;
+diff --git a/kernel/power/main.c b/kernel/power/main.c
+index bdbd605c4215..5e5f64bb3a43 100644
+--- a/kernel/power/main.c
++++ b/kernel/power/main.c
+@@ -495,7 +495,7 @@ static suspend_state_t decode_state(const char *buf, size_t n)
+ 	len = p ? p - buf : n;
  
- 			/* We compiled with -fno-common.  These are not
+ 	/* Check hibernation first. */
+-	if (len == 4 && !strncmp(buf, "disk", len))
++	if (len == 4 && str_has_prefix(buf, "disk"))
+ 		return PM_SUSPEND_MAX;
+ 
+ #ifdef CONFIG_SUSPEND
 -- 
 2.20.1
 
