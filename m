@@ -2,112 +2,113 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89747C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 05:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4777EC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 05:36:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B6842171F
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 05:35:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C3A42173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 05:36:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="klqbFwmY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="atU7IHWX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405524AbfHIFfv (ORCPT
+        id S2405534AbfHIFgi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 01:35:51 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:45484 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726212AbfHIFfu (ORCPT
+        Fri, 9 Aug 2019 01:36:38 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:45865 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbfHIFgi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 01:35:50 -0400
-Received: by mail-pg1-f194.google.com with SMTP id o13so45260394pgp.12;
-        Thu, 08 Aug 2019 22:35:50 -0700 (PDT)
+        Fri, 9 Aug 2019 01:36:38 -0400
+Received: by mail-lj1-f196.google.com with SMTP id t3so2444853ljj.12
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 22:36:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Y9/+wGbpbXCfuTma8kUk8xVzAbm0dcjXmGTrVrB3TKQ=;
-        b=klqbFwmYXvkLwC4h8ftAVxXdmQ9OYmqmpf5ggfLyOLY1Xu/dFKEgJ4YWjzznPM5r/M
-         oUyqM023Ofa1MhmGga1kr/xVmz8G70Xx0VNN676V9y+fF0Hnk05x8dARaVnrDiKb0Hjt
-         A39aCKUpD/kf3Wv2LBh41oi7Rjx6uzvUn0zEWoo8P+Jrk8Y8USrDpetbLtD4g+kt+ipJ
-         Z1+MaInT3UGXJv9lPwVV2JgOG30hOWH/iHLnGxk2k9jBl6BXLLZ3STjRvO8xMHgW1kJB
-         l8jgYZtNZkHAZRoR5/BzDArAgjlvfJyFfotRego4LEoCe9SSqGkkspZh323zOjLIaqAn
-         2t1g==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tkESspP4zbr99ojw52v1cXFMI0dDrn0lXHnV6ilVC5Q=;
+        b=atU7IHWXmtnksMrbQ1k8BhvgynR/4zyE9OG6rt3PbzKxYem2YQ+LktsQVrdVxU9YLC
+         6YS80Puii0arAAtUnabMIGV3zOeVA3ApszU4i/8p8wffKinEejM0dX7NX0PIEsTgMwvO
+         TLzlf48b35qwzLFYgJMSx7ys1Tf0RN+OG8QBquU8whFJhPaB1FkUd42OD9c0OyIJsSHJ
+         KiLi5JgnoeFZjOcc1P0sXibjDkKRUkLk7IMYnOeem0uchFACJ8+T4ZID/+da8ANX2BVu
+         Ko5uHliRhM4w0sAseDx2oJ+M853EwbV2INgH2yf6WehmFBIkH027WuZ/eSEYYm1W4a3G
+         FllQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Y9/+wGbpbXCfuTma8kUk8xVzAbm0dcjXmGTrVrB3TKQ=;
-        b=Gd443j4OX0qBUY6oKnsjCMUhleB6N2w8ZqNSQHyG6IvSCPZGPi5+B/NlkIkdoWRs/G
-         Z0rm/BIQgZngSIhXhzh2TcmnnBuJInyx0KRNZVAzyKm/7MPD9IsbRGdqypZCG10d5Qgc
-         SdK33WH6iCMu/i/vF0UxvaCTqPC2a14NRdjPajIbqu1DO65O7OiDRPCgjJYhdQ4VUivK
-         kT1WWFjPQEi4M8bYXuxWL3NpRMrfCUrnCBkuar23RyqjkW7v0MOIxb7Y0ESzHrnGfolz
-         wUUUfnLfYtlGkrTGbSGjkZtnxHmjn3mGlcYR72PjFMpLCz6aDa5si+n+FIuyJsWG+O3E
-         0dtQ==
-X-Gm-Message-State: APjAAAV9Kl9fvRVOh/B2paCE8gUi4ZVwxh7nLl0jRJRIJ/UmX68gPxB3
-        F4Pz4wfnoCnohoJN61kPVdU=
-X-Google-Smtp-Source: APXvYqxPMujEQFdBHnxMj8KaCeQx3GrElWgDMeZxYIz3P4iD2beWUVElDVjaHoVXoWcPDAJg3LGYKw==
-X-Received: by 2002:a17:90a:2343:: with SMTP id f61mr7780272pje.130.1565328949960;
-        Thu, 08 Aug 2019 22:35:49 -0700 (PDT)
-Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id l189sm116567684pfl.7.2019.08.08.22.35.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 08 Aug 2019 22:35:49 -0700 (PDT)
-From:   Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Fuqian Huang <huangfq.daxian@gmail.com>
-Subject: [PATCH v2] net: tundra: tsi108: use spin_lock_irqsave instead of spin_lock_irq in IRQ context
-Date:   Fri,  9 Aug 2019 13:35:39 +0800
-Message-Id: <20190809053539.8341-1-huangfq.daxian@gmail.com>
-X-Mailer: git-send-email 2.11.0
-To:     unlisted-recipients:; (no To-header on input)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tkESspP4zbr99ojw52v1cXFMI0dDrn0lXHnV6ilVC5Q=;
+        b=XAmxeeCWywhktelEk+PEIARN9VV5yYCAxrf0BNu+pX43GaqDo1YNJmNPcl7NFCW5kr
+         5aWQAO8fNvJvwXLvuvzMeX7xzmY0hwBDpk0ryFA+65hF+GPS4MmgCwmA0nE3jX5Qb7ww
+         I8czIRXhuJksQ3T5300+YHf9w3IxLdlmi7TLqLHXrtAQ0ZwUyX+fF/QstMt6NPIbQdsA
+         i6+zwhdcYN75ZwJ8xbH8a+6036TOH/nmZOowOlZPuTbEOX/qQLfu9ABLOUBKPTAPPUAE
+         7a83K60rHC+MPOW+Z/xN7TBHfBTD6iWQMnEZ9yqUlzT1lh14alTwK/8bQ2nNT3IbW2pT
+         gBzw==
+X-Gm-Message-State: APjAAAWfb6/ukMdSKK4MxHVXuYvYi+cq8ta67FQ+5F1/dCPnCCmeaEj3
+        MWEkg72igiE3je9jOCNeO5RrtBE82DCqKxVwsOY1Jw==
+X-Google-Smtp-Source: APXvYqxxy1TTV6QUfZHgTqMprUtqV1APmZ3PZFtZk65sg1r/cmrL6x9y1rC58d2HxqSp7BbfYHFxOnFanGeQ7Y6xGlk=
+X-Received: by 2002:a2e:301a:: with SMTP id w26mr10098807ljw.76.1565328996305;
+ Thu, 08 Aug 2019 22:36:36 -0700 (PDT)
+MIME-Version: 1.0
+References: <1564489420-677-1-git-send-email-sumit.garg@linaro.org>
+ <1564489420-677-3-git-send-email-sumit.garg@linaro.org> <99777010-db74-096a-ce1a-da30539d6fb5@arm.com>
+In-Reply-To: <99777010-db74-096a-ce1a-da30539d6fb5@arm.com>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Fri, 9 Aug 2019 11:06:24 +0530
+Message-ID: <CAFA6WYPUEUVJqk9E2F6z9oBW3VpC+xeqqpY4YrU9KPL1s0DTyA@mail.gmail.com>
+Subject: Re: [Tee-dev] [RFC v2 2/6] tee: enable support to register kernel memory
+To:     Stuart Yoder <stuart.yoder@arm.com>
+Cc:     keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>, jejb@linux.ibm.com,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dhowells@redhat.com,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As spin_unlock_irq will enable interrupts.
-Function tsi108_stat_carry is called from interrupt handler tsi108_irq.
-Interrupts are enabled in interrupt handler.
-Use spin_lock_irqsave/spin_unlock_irqrestore instead of spin_(un)lock_irq
-in IRQ context to avoid this.
+On Fri, 9 Aug 2019 at 03:57, Stuart Yoder <stuart.yoder@arm.com> wrote:
+>
+>
+>
+> On 7/30/19 7:23 AM, Sumit Garg wrote:
+>
+> > @@ -264,7 +266,17 @@ struct tee_shm *tee_shm_register(struct tee_context *ctx, unsigned long addr,
+> >               goto err;
+> >       }
+> >
+> > -     rc = get_user_pages_fast(start, num_pages, FOLL_WRITE, shm->pages);
+> > +     if (flags & TEE_SHM_USER_MAPPED) {
+> > +             rc = get_user_pages_fast(start, num_pages, FOLL_WRITE,
+> > +                                      shm->pages);
+> > +     } else {
+> > +             const struct kvec kiov = {
+> > +                     .iov_base = (void *)start,
+> > +                     .iov_len = PAGE_SIZE
+> > +             };
+> > +
+> > +             rc = get_kernel_pages(&kiov, num_pages, 0, shm->pages);
+>
+> Passing a single kvec struct is temporary I assume?  Because as currently
+> written this will only work with num_pages==1.
+>
 
-Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
----
-Changes in v2:
-  - Preserve reverse christmas tree ordering of local variables.
+Ah, thanks Stuart for pointing this out. It should rather be an array
+of kvec struct. Will fix it in next version.
 
- drivers/net/ethernet/tundra/tsi108_eth.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+-Sumit
 
-diff --git a/drivers/net/ethernet/tundra/tsi108_eth.c b/drivers/net/ethernet/tundra/tsi108_eth.c
-index 78a7de3fb622..c62f474b6d08 100644
---- a/drivers/net/ethernet/tundra/tsi108_eth.c
-+++ b/drivers/net/ethernet/tundra/tsi108_eth.c
-@@ -371,9 +371,10 @@ tsi108_stat_carry_one(int carry, int carry_bit, int carry_shift,
- static void tsi108_stat_carry(struct net_device *dev)
- {
- 	struct tsi108_prv_data *data = netdev_priv(dev);
-+	unsigned long flags;
- 	u32 carry1, carry2;
- 
--	spin_lock_irq(&data->misclock);
-+	spin_lock_irqsave(&data->misclock, flags);
- 
- 	carry1 = TSI_READ(TSI108_STAT_CARRY1);
- 	carry2 = TSI_READ(TSI108_STAT_CARRY2);
-@@ -441,7 +442,7 @@ static void tsi108_stat_carry(struct net_device *dev)
- 			      TSI108_STAT_TXPAUSEDROP_CARRY,
- 			      &data->tx_pause_drop);
- 
--	spin_unlock_irq(&data->misclock);
-+	spin_unlock_irqrestore(&data->misclock, flags);
- }
- 
- /* Read a stat counter atomically with respect to carries.
--- 
-2.11.0
-
+> Stuart
