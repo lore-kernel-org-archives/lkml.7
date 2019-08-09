@@ -2,118 +2,121 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DC4DC0650F
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 01:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC472C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 01:35:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 415C62171F
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 01:35:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A52A12171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 01:35:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="bTgJPRLs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405411AbfHIBfP (ORCPT
+        id S2405421AbfHIBfk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 21:35:15 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:37826 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732796AbfHIBfP (ORCPT
+        Thu, 8 Aug 2019 21:35:40 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:38062 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732796AbfHIBfk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 21:35:15 -0400
-Received: from dread.disaster.area (pa49-181-167-148.pa.nsw.optusnet.com.au [49.181.167.148])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 9DB6C43F97C;
-        Fri,  9 Aug 2019 11:35:10 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hvtn9-0001Pi-MJ; Fri, 09 Aug 2019 11:34:03 +1000
-Date:   Fri, 9 Aug 2019 11:34:03 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Mikulas Patocka <mpatocka@redhat.com>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Mike Snitzer <msnitzer@redhat.com>, junxiao.bi@oracle.com,
-        dm-devel@redhat.com, Alasdair Kergon <agk@redhat.com>,
-        honglei.wang@oracle.com, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH] direct-io: use GFP_NOIO to avoid deadlock
-Message-ID: <20190809013403.GY7777@dread.disaster.area>
-References: <alpine.LRH.2.02.1908080540240.15519@file01.intranet.prod.int.rdu2.redhat.com>
+        Thu, 8 Aug 2019 21:35:40 -0400
+Received: by mail-ot1-f67.google.com with SMTP id d17so126709968oth.5
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 18:35:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=oT9+0FRk0XTKJRYl2Q4sGfwT0uvjls0OapEyGavcfH0=;
+        b=bTgJPRLs2KrCeHGbSsBv9KpIvMO4o+oQxiwzpIwFpWL81l/u3yEfGm+OY2bjOE74R0
+         9yYJw3nQi+IWuSeNzJUo1TO+upgefj8sw6thmlg87ONcHJ3BejfoutIAglkH2W1wIIzm
+         41roYeNsXFspvh63xyi/HLeMW1uplON18rcefr8C4qTXVAdZ4fVmBYwo7wcmbvU7vJ1N
+         vp2AVdy+3DnZW7iP3rOXxmt/us1b4gnH40TgQVxUcai+W8og/9GcqaEgP48JE/ttGIst
+         PBl1Nr3HEwTHZ++nPN65TvwKesqbXB1Bgw3u07ro5xdvOsdOgWIEOrkOGNsEP3Z63dR/
+         OAEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=oT9+0FRk0XTKJRYl2Q4sGfwT0uvjls0OapEyGavcfH0=;
+        b=rdIHKx60KmFlj7bnP7ZbRCwsTzhFOB37cPDAbxhzbJbHgEoUKih55HMGBb7x3FEtdu
+         N2Ewy1dcLPMR12y73lYfJ6zoGjdTHAaXlx+wJkVwd8WHs28MS7nLFWOUZcrYaiV+zKlt
+         CmkX5lhQEwUqpb/oFnLS8v4tsPbwYD8+eeuI7T1B049fNt1o7O9VphmsTmb3R0HBNcDj
+         W1bW1j6f6NCpPMx8oDi0m2NE77OSL8Qhof/Eht5V10TSyQG98wprTfo7O7d872nSz/2r
+         VSUHRbzeLvClftlyP5gTVLLf0HuLNBPnnnxKoyB9w0SeYfeegmXeCII4E9cZA/4S4pzt
+         JfcQ==
+X-Gm-Message-State: APjAAAXeb/zJDxMd8g1vYAKx1nS6de3t6ztCARRHB/tq8YgUneWi7E2E
+        qRs1YZ+ftJh62vbF2zZGa8QEDQ==
+X-Google-Smtp-Source: APXvYqz6ICJH3+/BdftjNoVT6B/6SpEFAG0akxiwAjeOkWh6cvUY64FsLO+6gp/jqLLJBXFNGB3+Kw==
+X-Received: by 2002:a6b:641a:: with SMTP id t26mr18476138iog.3.1565314539454;
+        Thu, 08 Aug 2019 18:35:39 -0700 (PDT)
+Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
+        by smtp.gmail.com with ESMTPSA id z6sm2274953ioi.8.2019.08.08.18.35.38
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 08 Aug 2019 18:35:38 -0700 (PDT)
+Date:   Thu, 8 Aug 2019 18:35:38 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Paolo Bonzini <pbonzini@redhat.com>
+cc:     Anup Patel <Anup.Patel@wdc.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Radim K <rkrcmar@redhat.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Anup Patel <anup@brainfault.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 00/20] KVM RISC-V Support
+In-Reply-To: <df0638d9-e2f4-30f5-5400-9078bf9d1f99@redhat.com>
+Message-ID: <alpine.DEB.2.21.9999.1908081824500.21111@viisi.sifive.com>
+References: <20190807122726.81544-1-anup.patel@wdc.com> <4a991aa3-154a-40b2-a37d-9ee4a4c7a2ca@redhat.com> <alpine.DEB.2.21.9999.1908071606560.13971@viisi.sifive.com> <df0638d9-e2f4-30f5-5400-9078bf9d1f99@redhat.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LRH.2.02.1908080540240.15519@file01.intranet.prod.int.rdu2.redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0
-        a=gu9DDhuZhshYSb5Zs/lkOA==:117 a=gu9DDhuZhshYSb5Zs/lkOA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=FmdZ9Uzk2mMA:10
-        a=7-415B0cAAAA:8 a=DYX-f1UHc-TVCySozRAA:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 05:50:10AM -0400, Mikulas Patocka wrote:
-> A deadlock with this stacktrace was observed.
-> 
-> The obvious problem here is that in the call chain 
-> xfs_vm_direct_IO->__blockdev_direct_IO->do_blockdev_direct_IO->kmem_cache_alloc 
-> we do a GFP_KERNEL allocation while we are in a filesystem driver and in a 
-> block device driver.
-> 
-> This patch changes the direct-io code to use GFP_NOIO.
-> 
-> PID: 474    TASK: ffff8813e11f4600  CPU: 10  COMMAND: "kswapd0"
->    #0 [ffff8813dedfb938] __schedule at ffffffff8173f405
->    #1 [ffff8813dedfb990] schedule at ffffffff8173fa27
->    #2 [ffff8813dedfb9b0] schedule_timeout at ffffffff81742fec
->    #3 [ffff8813dedfba60] io_schedule_timeout at ffffffff8173f186
->    #4 [ffff8813dedfbaa0] bit_wait_io at ffffffff8174034f
->    #5 [ffff8813dedfbac0] __wait_on_bit at ffffffff8173fec8
->    #6 [ffff8813dedfbb10] out_of_line_wait_on_bit at ffffffff8173ff81
->    #7 [ffff8813dedfbb90] __make_buffer_clean at ffffffffa038736f [dm_bufio]
->    #8 [ffff8813dedfbbb0] __try_evict_buffer at ffffffffa0387bb8 [dm_bufio]
->    #9 [ffff8813dedfbbd0] dm_bufio_shrink_scan at ffffffffa0387cc3 [dm_bufio]
->   #10 [ffff8813dedfbc40] shrink_slab at ffffffff811a87ce
->   #11 [ffff8813dedfbd30] shrink_zone at ffffffff811ad778
->   #12 [ffff8813dedfbdc0] kswapd at ffffffff811ae92f
->   #13 [ffff8813dedfbec0] kthread at ffffffff810a8428
->   #14 [ffff8813dedfbf50] ret_from_fork at ffffffff81745242
-> 
->   PID: 14127  TASK: ffff881455749c00  CPU: 11  COMMAND: "loop1"
->    #0 [ffff88272f5af228] __schedule at ffffffff8173f405
->    #1 [ffff88272f5af280] schedule at ffffffff8173fa27
->    #2 [ffff88272f5af2a0] schedule_preempt_disabled at ffffffff8173fd5e
->    #3 [ffff88272f5af2b0] __mutex_lock_slowpath at ffffffff81741fb5
->    #4 [ffff88272f5af330] mutex_lock at ffffffff81742133
->    #5 [ffff88272f5af350] dm_bufio_shrink_count at ffffffffa03865f9 [dm_bufio]
->    #6 [ffff88272f5af380] shrink_slab at ffffffff811a86bd
->    #7 [ffff88272f5af470] shrink_zone at ffffffff811ad778
->    #8 [ffff88272f5af500] do_try_to_free_pages at ffffffff811adb34
->    #9 [ffff88272f5af590] try_to_free_pages at ffffffff811adef8
->   #10 [ffff88272f5af610] __alloc_pages_nodemask at ffffffff811a09c3
->   #11 [ffff88272f5af710] alloc_pages_current at ffffffff811e8b71
->   #12 [ffff88272f5af760] new_slab at ffffffff811f4523
->   #13 [ffff88272f5af7b0] __slab_alloc at ffffffff8173a1b5
->   #14 [ffff88272f5af880] kmem_cache_alloc at ffffffff811f484b
->   #15 [ffff88272f5af8d0] do_blockdev_direct_IO at ffffffff812535b3
->   #16 [ffff88272f5afb00] __blockdev_direct_IO at ffffffff81255dc3
->   #17 [ffff88272f5afb30] xfs_vm_direct_IO at ffffffffa01fe3fc [xfs]
->   #18 [ffff88272f5afb90] generic_file_read_iter at ffffffff81198994
+On Thu, 8 Aug 2019, Paolo Bonzini wrote:
 
-Um, what kernel is this? XFS stopped using __blockdev_direct_IO some
-time around 4.8 or 4.9, IIRC. Perhaps it would be best to reproduce
-problems on a TOT kernel first?
+> However, for Linux releases after 5.4 I would rather get pull requests 
+> for arch/riscv/kvm from Anup and Atish without involving the RISC-V 
+> tree.  Of course, they or I will ask for your ack, or for a topic 
+> branch, on the occasion that something touches files outside their 
+> maintainership area.  This is how things are already being handled for 
+> ARM, POWER and s390 and it allows me to handle conflicts in common KVM 
+> files before they reach Linus; these are more common than conflicts in 
+> arch files. If you have further questions on git and maintenance 
+> workflows, just ask!
 
-And, FWIW, there's an argument to be made here that the underlying
-bug is dm_bufio_shrink_scan() blocking kswapd by waiting on IO
-completions while holding a mutex that other IO-level reclaim
-contexts require to make progress.
+In principle, that's fine with me, as long as the arch/riscv maintainers 
+and mailing lists are kept in the loop.  We already do something similar 
+to this for the RISC-V BPF JIT.  However, I'd like this to be explicitly 
+documented in the MAINTAINERS file, as it is for BPF.  It looks like it 
+isn't for ARM, POWER, or S390, either looking at MAINTAINERS or 
+spot-checking scripts/get_maintainer.pl:
 
-Cheers,
+$ scripts/get_maintainer.pl -f arch/s390/kvm/interrupt.c 
+Christian Borntraeger <borntraeger@de.ibm.com> (supporter:KERNEL VIRTUAL MACHINE for s390 (KVM/s390))
+Janosch Frank <frankja@linux.ibm.com> (supporter:KERNEL VIRTUAL MACHINE for s390 (KVM/s390))
+David Hildenbrand <david@redhat.com> (reviewer:KERNEL VIRTUAL MACHINE for s390 (KVM/s390))
+Cornelia Huck <cohuck@redhat.com> (reviewer:KERNEL VIRTUAL MACHINE for s390 (KVM/s390))
+Heiko Carstens <heiko.carstens@de.ibm.com> (supporter:S390)
+Vasily Gorbik <gor@linux.ibm.com> (supporter:S390)
+linux-s390@vger.kernel.org (open list:KERNEL VIRTUAL MACHINE for s390 (KVM/s390))
+linux-kernel@vger.kernel.org (open list)
+$
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Would you be willing to send a MAINTAINERS patch to formalize this 
+practice?
+
+
+- Paul
