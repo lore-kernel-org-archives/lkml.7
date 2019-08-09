@@ -2,232 +2,101 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0A2EC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C84C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:16:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC44B208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:15:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565352918;
-	bh=y2AblsgyH90W9uanPM1iy1YMwgP785dob1plVrMLN3c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=vgWgh907cbu+xg6Sf9cU2Eb8M8JDcw6UABgikE1c/gh42UGuWOHlr9kgQY0iQ7yIO
-	 o/wuFV+U3V9RKLPuSLJ/1MXQERmnxcqMYNs3MhcVkXhy+g5vA1MUEV38EKb3TSs8xd
-	 9zdwFWefBk4CIyp8frDm67vZv6MdybHmpmAKNu1Q=
+	by mail.kernel.org (Postfix) with ESMTP id 10E05208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:16:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406758AbfHIMPR (ORCPT
+        id S2406773AbfHIMQe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 08:15:17 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:42570 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbfHIMPR (ORCPT
+        Fri, 9 Aug 2019 08:16:34 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44077 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726152AbfHIMQd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 08:15:17 -0400
-Received: by mail-ot1-f65.google.com with SMTP id l15so131744057otn.9;
-        Fri, 09 Aug 2019 05:15:16 -0700 (PDT)
+        Fri, 9 Aug 2019 08:16:33 -0400
+Received: by mail-wr1-f68.google.com with SMTP id p17so98029916wrf.11
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 05:16:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CPhQEfpz2L9VudZCV93fBfsiwCxuI7FC2IEWQ3k3cwk=;
-        b=bu9o1lxop2dB53R9PaxhTZb0axc1le/joJNESDWnIh+/6kOvvya3BVVtT9xjy8/7LS
-         lKe3qmqO7kCy5YMkYDx0UPICb+Y27//RuWt3ww8LuydVGdwi3zXbKuojrfalmVaS5opP
-         dvBxkt/hn1a+A27ChN/G1g43wKA5xa4TBxRbL9CymNXE9X2CyOeW2kptbjqwJXPTLIo3
-         GTdCHiIbobI3xKt4FwVWyGmAkeJEpw9MuVzDI6R0zBhMsH8Wbszl3Z0RE+2J6Px66r3j
-         79w8892bMoThOw8pEvzTw3MIVgj9/GRmCGb9uXfzh6Njyg1q1gwnuWbNWmpvLDkhegpK
-         0YyA==
-X-Gm-Message-State: APjAAAXNX4MeOr+QZRjCr4E2uMsihkSKokDnK3zP9Lts/Zefi4Ib/SGD
-        o2Wd8fYFRLKTU5p1O93HZXMbscK7f/QTCOWwRXI=
-X-Google-Smtp-Source: APXvYqxNJ013eLC09yGsgapHlLqfUe7REnVobb2QQ0Zm5fWHeXii/Qw7Uj++14PuKNVdHPErOsjLrF24st3nrgHmFx4=
-X-Received: by 2002:aca:d907:: with SMTP id q7mr5752039oig.68.1565352915951;
- Fri, 09 Aug 2019 05:15:15 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dKnNcxO/SH3Z8UOygzTGmouoajQ3hut2OapA+pyA0Sk=;
+        b=Z9JvlTYqn5SkaUhdKSLfvSEHvQWBZLt8x0Ft1537YTK1Mwu8QGMyTO360YNCEEQGzS
+         A1KGUgrK5Us4NDiQYMen3imXXAnv0vRT5mo4NorBMSuW8uBd4Db/stSnNgp6d5oBEfPS
+         Od07Wpf0mVkiJ9Kska0bP5Rrr+qjPuuVgPf8lveMMX5O2WsWYwHAqLcryR/eCdTHLISP
+         OAl6l7BwQHwTbPVq29z/SaHMhGZUefPZxcuyPx8Q5wGLmUn0V58Mvb+Q+GGmWftJ2KX9
+         715ib9d88fDrqS+CUT7ydwbFW2fQRBhFJnhf77daEASJOk8VtqU3WAyMDzQ8sMpU+FVy
+         dHvQ==
+X-Gm-Message-State: APjAAAXEr/GANq61qUVoFirl3QWJ+GYvUQWrlTZjSlP2Waqfc/G4eDQN
+        Pg5z4reccFRUqggFc7WPUEsu9g==
+X-Google-Smtp-Source: APXvYqy6V0bMNkkWpoNIoqG7/jvb8tmPFpGos6GGp8b3uAdG8cGYOebvtgU+DVaaeRwlxIKnHP8aRA==
+X-Received: by 2002:a5d:4fc8:: with SMTP id h8mr23983716wrw.177.1565352992323;
+        Fri, 09 Aug 2019 05:16:32 -0700 (PDT)
+Received: from localhost.localdomain (mi-18-41-148.service.infuturo.it. [151.18.41.148])
+        by smtp.gmail.com with ESMTPSA id v3sm144491wrq.34.2019.08.09.05.16.30
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 09 Aug 2019 05:16:31 -0700 (PDT)
+Date:   Fri, 9 Aug 2019 14:16:28 +0200
+From:   Juri Lelli <juri.lelli@redhat.com>
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>, mingo@kernel.org,
+        linux-kernel@vger.kernel.org, luca.abeni@santannapisa.it,
+        bristot@redhat.com, balsini@android.com, dvyukov@google.com,
+        tglx@linutronix.de, vpillai@digitalocean.com, rostedt@goodmis.org
+Subject: Re: [RFC][PATCH 12/13] sched/deadline: Introduce deadline servers
+Message-ID: <20190809121628.GM29310@localhost.localdomain>
+References: <20190726145409.947503076@infradead.org>
+ <20190726161358.056107990@infradead.org>
+ <b85f1f95-40e5-852b-f897-1379414354c9@arm.com>
 MIME-Version: 1.0
-References: <5997740.FPbUVk04hV@kreacher> <CGME20190809120052eucas1p11b56806662ef4f4efb82a152ad651481@eucas1p1.samsung.com>
- <74514118.QN1Ey1fWSL@kreacher> <1b181f35-29c3-c6ce-6c42-ae55e890579e@samsung.com>
-In-Reply-To: <1b181f35-29c3-c6ce-6c42-ae55e890579e@samsung.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 9 Aug 2019 14:15:04 +0200
-Message-ID: <CAJZ5v0h_Bem4U46tgJyE7k+uHFN7viqUo10Vgh+UWZf_C1qD2g@mail.gmail.com>
-Subject: Re: [PATCH v3 8/8] ACPI: PM: s2idle: Execute LPS0 _DSM functions with
- suspended devices
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b85f1f95-40e5-852b-f897-1379414354c9@arm.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 9, 2019 at 2:00 PM Marek Szyprowski
-<m.szyprowski@samsung.com> wrote:
->
-> Hi Rafael,
->
-> On 2019-08-02 12:45, Rafael J. Wysocki wrote:
-> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >
-> > According to Section 3.5 of the "Intel Low Power S0 Idle" document [1],
-> > Function 5 of the LPS0 _DSM is expected to be invoked when the system
-> > configuration matches the criteria for entering the target low-power
-> > state of the platform.  In particular, this means that all devices
-> > should be suspended and in low-power states already when that function
-> > is invoked.
-> >
-> > This is not the case currently, however, because Function 5 of the
-> > LPS0 _DSM is invoked by it before the "noirq" phase of device suspend,
-> > which means that some devices may not have been put into low-power
-> > states yet at that point.  That is a consequence of the previous
-> > design of the suspend-to-idle flow that allowed the "noirq" phase of
-> > device suspend and the "noirq" phase of device resume to be carried
-> > out for multiple times while "suspended" (if any spurious wakeup
-> > events were detected) and the point of the LPS0 _DSM Function 5
-> > invocation was chosen so as to call it (and LPS0 _DSM Function 6
-> > analogously) once per suspend-resume cycle (regardless of how many
-> > times the "noirq" phases of device suspend and resume were carried
-> > out while "suspended").
-> >
-> > Now that the suspend-to-idle flow has been redesigned to carry out
-> > the "noirq" phases of device suspend and resume once in each cycle,
-> > the code can be reordered to follow the specification that it is
-> > based on more closely.
-> >
-> > For this purpose, add ->prepare_late and ->restore_early platform
-> > callbacks for suspend-to-idle, to be executed, respectively, after
-> > the "noirq" phase of suspending devices and before the "noirq"
-> > phase of resuming them and make ACPI use them for the invocation
-> > of LPS0 _DSM functions as appropriate.
-> >
-> > While at it, move the LPS0 entry requirements check to be made
-> > before invoking Functions 3 and 5 of the LPS0 _DSM (also once
-> > per cycle) as follows from the specification [1].
-> >
-> > Link: https://uefi.org/sites/default/files/resources/Intel_ACPI_Low_Power_S0_Idle.pdf # [1]
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > ---
-> >
-> > In v2 this was patch 2.
-> >
-> > ---
-> >   drivers/acpi/sleep.c    |   36 ++++++++++++++++++++++++------------
-> >   include/linux/suspend.h |    2 ++
-> >   kernel/power/suspend.c  |   12 +++++++++---
-> >   3 files changed, 35 insertions(+), 15 deletions(-)
-> >
-> > Index: linux-pm/drivers/acpi/sleep.c
-> > ===================================================================
-> > --- linux-pm.orig/drivers/acpi/sleep.c
-> > +++ linux-pm/drivers/acpi/sleep.c
-> > @@ -954,11 +954,6 @@ static int acpi_s2idle_begin(void)
-> >
-> >   static int acpi_s2idle_prepare(void)
-> >   {
-> > -     if (lps0_device_handle && !sleep_no_lps0) {
-> > -             acpi_sleep_run_lps0_dsm(ACPI_LPS0_SCREEN_OFF);
-> > -             acpi_sleep_run_lps0_dsm(ACPI_LPS0_ENTRY);
-> > -     }
-> > -
-> >       if (acpi_sci_irq_valid())
-> >               enable_irq_wake(acpi_sci_irq);
-> >
-> > @@ -972,11 +967,22 @@ static int acpi_s2idle_prepare(void)
-> >       return 0;
-> >   }
-> >
-> > -static void acpi_s2idle_wake(void)
-> > +static int acpi_s2idle_prepare_late(void)
-> >   {
-> > -     if (lps0_device_handle && !sleep_no_lps0 && pm_debug_messages_on)
-> > +     if (!lps0_device_handle || sleep_no_lps0)
-> > +             return 0;
-> > +
-> > +     if (pm_debug_messages_on)
-> >               lpi_check_constraints();
-> >
-> > +     acpi_sleep_run_lps0_dsm(ACPI_LPS0_SCREEN_OFF);
-> > +     acpi_sleep_run_lps0_dsm(ACPI_LPS0_ENTRY);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static void acpi_s2idle_wake(void)
+On 09/08/19 11:17, Dietmar Eggemann wrote:
+> On 7/26/19 4:54 PM, Peter Zijlstra wrote:
+> 
+> [...]
+> 
+> > +void dl_server_init(struct sched_dl_entity *dl_se, struct rq *rq,
+> > +		    dl_server_has_tasks_f has_tasks,
+> > +		    dl_server_pick_f pick)
 > > +{
-> >       /*
-> >        * If IRQD_WAKEUP_ARMED is set for the SCI at this point, the SCI has
-> >        * not triggered while suspended, so bail out.
-> > @@ -1011,6 +1017,15 @@ static void acpi_s2idle_wake(void)
-> >       rearm_wake_irq(acpi_sci_irq);
-> >   }
-> >
-> > +static void acpi_s2idle_restore_early(void)
-> > +{
-> > +     if (!lps0_device_handle || sleep_no_lps0)
-> > +             return;
+> > +	dl_se->dl_server = 1;
+> > +	dl_se->rq = rq;
+> > +	dl_se->server_has_tasks = has_tasks;
+> > +	dl_se->server_pick = pick;
 > > +
-> > +     acpi_sleep_run_lps0_dsm(ACPI_LPS0_EXIT);
-> > +     acpi_sleep_run_lps0_dsm(ACPI_LPS0_SCREEN_ON);
-> > +}
-> > +
-> >   static void acpi_s2idle_restore(void)
-> >   {
-> >       s2idle_wakeup = false;
-> > @@ -1021,11 +1036,6 @@ static void acpi_s2idle_restore(void)
-> >
-> >       if (acpi_sci_irq_valid())
-> >               disable_irq_wake(acpi_sci_irq);
-> > -
-> > -     if (lps0_device_handle && !sleep_no_lps0) {
-> > -             acpi_sleep_run_lps0_dsm(ACPI_LPS0_EXIT);
-> > -             acpi_sleep_run_lps0_dsm(ACPI_LPS0_SCREEN_ON);
-> > -     }
-> >   }
-> >
-> >   static void acpi_s2idle_end(void)
-> > @@ -1036,7 +1046,9 @@ static void acpi_s2idle_end(void)
-> >   static const struct platform_s2idle_ops acpi_s2idle_ops = {
-> >       .begin = acpi_s2idle_begin,
-> >       .prepare = acpi_s2idle_prepare,
-> > +     .prepare_late = acpi_s2idle_prepare_late,
-> >       .wake = acpi_s2idle_wake,
-> > +     .restore_early = acpi_s2idle_restore_early,
-> >       .restore = acpi_s2idle_restore,
-> >       .end = acpi_s2idle_end,
-> >   };
-> > Index: linux-pm/kernel/power/suspend.c
-> > ===================================================================
-> > --- linux-pm.orig/kernel/power/suspend.c
-> > +++ linux-pm/kernel/power/suspend.c
-> > @@ -253,13 +253,19 @@ static int platform_suspend_prepare_late
-> >
-> >   static int platform_suspend_prepare_noirq(suspend_state_t state)
-> >   {
-> > -     return state != PM_SUSPEND_TO_IDLE && suspend_ops->prepare_late ?
-> > -             suspend_ops->prepare_late() : 0;
-> > +     if (state == PM_SUSPEND_TO_IDLE) {
-> > +             if (s2idle_ops && s2idle_ops->prepare_late)
-> > +                     return s2idle_ops->prepare_late();
+> > +	setup_new_dl_entity(dl_se);
+> 
+> IMHO, this needs rq locking because of the rq_clock(rq) in
+> setup_new_dl_entity().
+> 
+> [    0.000000] WARNING: CPU: 0 PID: 0 at kernel/sched/sched.h:1119
+> dl_server_init+0x118/0x178
+> ...
+> [    0.000000] CPU: 0 PID: 0 Comm: swapper Tainted: G        W
+> 5.3.0-rc3-00013-ga33cf033cc99-dirty #10
+> [    0.000000] Hardware name: ARM Juno development board (r0) (DT)
+> ...
+> [    0.000000] Call trace:
+> [    0.000000]  dl_server_init+0x118/0x178
+> [    0.000000]  fair_server_init+0x5c/0x68
+> [    0.000000]  sched_init+0x2c8/0x474
+> [    0.000000]  start_kernel+0x290/0x514
+> 
+> [...]
 
-This should be
-
-return s2idle_ops && s2idle_ops->prepare_late ? s2idle_ops->prepare_late() : 0;
-
-> > +     }
-> > +     return suspend_ops->prepare_late ? suspend_ops->prepare_late() : 0;
->
-> This unconditionally references suspend_ops here, what wasn't done
-> earlier. On one of my test boards (OdroidXU) it causes following NULL
-> pointer dereference since Linux next-20190809 (the first -next, which
-> contains this patch):
-
-Sorry about this, will fix early next week.
+Right.. noticed the same and had a similar thinking the other day (1st
+hunk): 20190808094546.GJ29310@localhost.localdomain
