@@ -7,27 +7,27 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A278EC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 22:58:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3840C41514
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 22:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 830A8208C4
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 22:58:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87DFA2166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 22:59:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729913AbfHIW6w (ORCPT
+        id S1730540AbfHIW7D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 18:58:52 -0400
-Received: from mga04.intel.com ([192.55.52.120]:25396 "EHLO mga04.intel.com"
+        Fri, 9 Aug 2019 18:59:03 -0400
+Received: from mga01.intel.com ([192.55.52.88]:62302 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729588AbfHIW6r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 18:58:47 -0400
+        id S1730149AbfHIW65 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 18:58:57 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 15:58:46 -0700
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 15:58:56 -0700
 X-IronPort-AV: E=Sophos;i="5.64,367,1559545200"; 
-   d="scan'208";a="204067068"
+   d="scan'208";a="326762567"
 Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.157])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 15:58:46 -0700
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 15:58:56 -0700
 From:   ira.weiny@intel.com
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
@@ -41,9 +41,9 @@ Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
         linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
         linux-ext4@vger.kernel.org, linux-mm@kvack.org,
         Ira Weiny <ira.weiny@intel.com>
-Subject: [RFC PATCH v2 04/19] mm/gup: Ensure F_LAYOUT lease is held prior to GUP'ing pages
-Date:   Fri,  9 Aug 2019 15:58:18 -0700
-Message-Id: <20190809225833.6657-5-ira.weiny@intel.com>
+Subject: [RFC PATCH v2 10/19] mm/gup: Pass a NULL vaddr_pin through GUP fast
+Date:   Fri,  9 Aug 2019 15:58:24 -0700
+Message-Id: <20190809225833.6657-11-ira.weiny@intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190809225833.6657-1-ira.weiny@intel.com>
 References: <20190809225833.6657-1-ira.weiny@intel.com>
@@ -56,177 +56,254 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ira Weiny <ira.weiny@intel.com>
 
-On FS DAX files users must inform the file system they intend to take
-long term GUP pins on the file pages.  Failure to do so should result in
-an error.
-
-Ensure that a F_LAYOUT lease exists at the time the GUP call is made.
-If not return EPERM.
+Internally GUP fast needs to know that fast users will not support file
+pins.  Pass NULL for vaddr_pin through the fast call stack so that the
+pin code can return an error if it encounters file backed memory within
+the address range.
 
 Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-
 ---
-Changes from RFC v1:
+ mm/gup.c | 65 ++++++++++++++++++++++++++++++++++----------------------
+ 1 file changed, 40 insertions(+), 25 deletions(-)
 
-    The old version had remnants of when GUP was going to take the lease
-    for the user.  Remove this prototype code.
-    Fix issue in gup_device_huge which was setting page reference prior
-    to checking for Layout Lease
-    Re-base to 5.3+
-    Clean up htmldoc comments
-
- fs/locks.c         | 47 ++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/mm.h |  2 ++
- mm/gup.c           | 23 +++++++++++++++++++++++
- mm/huge_memory.c   | 12 ++++++++++++
- 4 files changed, 84 insertions(+)
-
-diff --git a/fs/locks.c b/fs/locks.c
-index 0c7359cdab92..14892c84844b 100644
---- a/fs/locks.c
-+++ b/fs/locks.c
-@@ -2971,3 +2971,50 @@ static int __init filelock_init(void)
- 	return 0;
- }
- core_initcall(filelock_init);
-+
-+/**
-+ * mapping_inode_has_layout - ensure a file mapped page has a layout lease
-+ * taken
-+ * @page: page we are trying to GUP
-+ *
-+ * This should only be called on DAX pages.  DAX pages which are mapped through
-+ * FS DAX do not use the page cache.  As a result they require the user to take
-+ * a LAYOUT lease on them prior to be able to pin them for longterm use.
-+ * This allows the user to opt-into the fact that truncation operations will
-+ * fail for the duration of the pin.
-+ *
-+ * Return true if the page has a LAYOUT lease associated with it's file.
-+ */
-+bool mapping_inode_has_layout(struct page *page)
-+{
-+	bool ret = false;
-+	struct inode *inode;
-+	struct file_lock *fl;
-+
-+	if (WARN_ON(PageAnon(page)) ||
-+	    WARN_ON(!page) ||
-+	    WARN_ON(!page->mapping) ||
-+	    WARN_ON(!page->mapping->host))
-+		return false;
-+
-+	inode = page->mapping->host;
-+
-+	smp_mb();
-+	if (inode->i_flctx &&
-+	    !list_empty_careful(&inode->i_flctx->flc_lease)) {
-+		spin_lock(&inode->i_flctx->flc_lock);
-+		ret = false;
-+		list_for_each_entry(fl, &inode->i_flctx->flc_lease, fl_list) {
-+			if (fl->fl_pid == current->tgid &&
-+			    (fl->fl_flags & FL_LAYOUT) &&
-+			    (fl->fl_flags & FL_EXCLUSIVE)) {
-+				ret = true;
-+				break;
-+			}
-+		}
-+		spin_unlock(&inode->i_flctx->flc_lock);
-+	}
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(mapping_inode_has_layout);
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index ad6766a08f9b..04f22722b374 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -1583,6 +1583,8 @@ int account_locked_vm(struct mm_struct *mm, unsigned long pages, bool inc);
- int __account_locked_vm(struct mm_struct *mm, unsigned long pages, bool inc,
- 			struct task_struct *task, bool bypass_rlim);
- 
-+bool mapping_inode_has_layout(struct page *page);
-+
- /* Container for pinned pfns / pages */
- struct frame_vector {
- 	unsigned int nr_allocated;	/* Number of frames we have space for */
 diff --git a/mm/gup.c b/mm/gup.c
-index 80423779a50a..0b05e22ac05f 100644
+index 7a449500f0a6..504af3e9a942 100644
 --- a/mm/gup.c
 +++ b/mm/gup.c
-@@ -221,6 +221,13 @@ static struct page *follow_page_pte(struct vm_area_struct *vma,
- 			page = pte_page(pte);
- 		else
- 			goto no_page;
-+
-+		if (unlikely(flags & FOLL_LONGTERM) &&
-+		    (*pgmap)->type == MEMORY_DEVICE_FS_DAX &&
-+		    !mapping_inode_has_layout(page)) {
-+			page = ERR_PTR(-EPERM);
-+			goto out;
-+		}
- 	} else if (unlikely(!page)) {
- 		if (flags & FOLL_DUMP) {
- 			/* Avoid special (like zero) pages in core dumps */
-@@ -1847,6 +1854,14 @@ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
+@@ -1813,7 +1813,8 @@ static inline struct page *try_get_compound_head(struct page *page, int refs)
  
- 		VM_BUG_ON_PAGE(compound_head(page) != head, page);
+ #ifdef CONFIG_ARCH_HAS_PTE_SPECIAL
+ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
+-			 unsigned int flags, struct page **pages, int *nr)
++			 unsigned int flags, struct page **pages, int *nr,
++			 struct vaddr_pin *vaddr_pin)
+ {
+ 	struct dev_pagemap *pgmap = NULL;
+ 	int nr_start = *nr, ret = 0;
+@@ -1894,7 +1895,8 @@ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
+  * useful to have gup_huge_pmd even if we can't operate on ptes.
+  */
+ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
+-			 unsigned int flags, struct page **pages, int *nr)
++			 unsigned int flags, struct page **pages, int *nr,
++			 struct vaddr_pin *vaddr_pin)
+ {
+ 	return 0;
+ }
+@@ -1903,7 +1905,7 @@ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
+ #if defined(CONFIG_ARCH_HAS_PTE_DEVMAP) && defined(CONFIG_TRANSPARENT_HUGEPAGE)
+ static int __gup_device_huge(unsigned long pfn, unsigned long addr,
+ 		unsigned long end, struct page **pages, int *nr,
+-		unsigned int flags)
++		unsigned int flags, struct vaddr_pin *vaddr_pin)
+ {
+ 	int nr_start = *nr;
+ 	struct dev_pagemap *pgmap = NULL;
+@@ -1938,13 +1940,14 @@ static int __gup_device_huge(unsigned long pfn, unsigned long addr,
  
-+		if (pte_devmap(pte) &&
-+		    unlikely(flags & FOLL_LONGTERM) &&
-+		    pgmap->type == MEMORY_DEVICE_FS_DAX &&
-+		    !mapping_inode_has_layout(head)) {
-+			put_user_page(head);
-+			goto pte_unmap;
-+		}
-+
- 		SetPageReferenced(page);
- 		pages[*nr] = page;
- 		(*nr)++;
-@@ -1895,6 +1910,14 @@ static int __gup_device_huge(unsigned long pfn, unsigned long addr,
- 			undo_dev_pagemap(nr, nr_start, pages);
+ static int __gup_device_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
+ 		unsigned long end, struct page **pages, int *nr,
+-		unsigned int flags)
++		unsigned int flags, struct vaddr_pin *vaddr_pin)
+ {
+ 	unsigned long fault_pfn;
+ 	int nr_start = *nr;
+ 
+ 	fault_pfn = pmd_pfn(orig) + ((addr & ~PMD_MASK) >> PAGE_SHIFT);
+-	if (!__gup_device_huge(fault_pfn, addr, end, pages, nr, flags))
++	if (!__gup_device_huge(fault_pfn, addr, end, pages, nr, flags,
++			       vaddr_pin))
+ 		return 0;
+ 
+ 	if (unlikely(pmd_val(orig) != pmd_val(*pmdp))) {
+@@ -1957,13 +1960,14 @@ static int __gup_device_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
+ 
+ static int __gup_device_huge_pud(pud_t orig, pud_t *pudp, unsigned long addr,
+ 		unsigned long end, struct page **pages, int *nr,
+-		unsigned int flags)
++		unsigned int flags, struct vaddr_pin *vaddr_pin)
+ {
+ 	unsigned long fault_pfn;
+ 	int nr_start = *nr;
+ 
+ 	fault_pfn = pud_pfn(orig) + ((addr & ~PUD_MASK) >> PAGE_SHIFT);
+-	if (!__gup_device_huge(fault_pfn, addr, end, pages, nr, flags))
++	if (!__gup_device_huge(fault_pfn, addr, end, pages, nr, flags,
++			       vaddr_pin))
+ 		return 0;
+ 
+ 	if (unlikely(pud_val(orig) != pud_val(*pudp))) {
+@@ -1975,7 +1979,7 @@ static int __gup_device_huge_pud(pud_t orig, pud_t *pudp, unsigned long addr,
+ #else
+ static int __gup_device_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
+ 		unsigned long end, struct page **pages, int *nr,
+-		unsigned int flags)
++		unsigned int flags, struct vaddr_pin *vaddr_pin)
+ {
+ 	BUILD_BUG();
+ 	return 0;
+@@ -1983,7 +1987,7 @@ static int __gup_device_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
+ 
+ static int __gup_device_huge_pud(pud_t pud, pud_t *pudp, unsigned long addr,
+ 		unsigned long end, struct page **pages, int *nr,
+-		unsigned int flags)
++		unsigned int flags, struct vaddr_pin *vaddr_pin)
+ {
+ 	BUILD_BUG();
+ 	return 0;
+@@ -2075,7 +2079,8 @@ static inline int gup_huge_pd(hugepd_t hugepd, unsigned long addr,
+ #endif /* CONFIG_ARCH_HAS_HUGEPD */
+ 
+ static int gup_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
+-		unsigned long end, unsigned int flags, struct page **pages, int *nr)
++		unsigned long end, unsigned int flags, struct page **pages,
++		int *nr, struct vaddr_pin *vaddr_pin)
+ {
+ 	struct page *head, *page;
+ 	int refs;
+@@ -2087,7 +2092,7 @@ static int gup_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
+ 		if (unlikely(flags & FOLL_LONGTERM))
  			return 0;
- 		}
-+
-+		if (unlikely(flags & FOLL_LONGTERM) &&
-+		    pgmap->type == MEMORY_DEVICE_FS_DAX &&
-+		    !mapping_inode_has_layout(page)) {
-+			undo_dev_pagemap(nr, nr_start, pages);
-+			return 0;
-+		}
-+
- 		SetPageReferenced(page);
- 		pages[*nr] = page;
- 		get_page(page);
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 1334ede667a8..bc1a07a55be1 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -953,6 +953,12 @@ struct page *follow_devmap_pmd(struct vm_area_struct *vma, unsigned long addr,
- 	if (!*pgmap)
- 		return ERR_PTR(-EFAULT);
- 	page = pfn_to_page(pfn);
-+
-+	if (unlikely(flags & FOLL_LONGTERM) &&
-+	    (*pgmap)->type == MEMORY_DEVICE_FS_DAX &&
-+	    !mapping_inode_has_layout(page))
-+		return ERR_PTR(-EPERM);
-+
- 	get_page(page);
+ 		return __gup_device_huge_pmd(orig, pmdp, addr, end, pages, nr,
+-					     flags);
++					     flags, vaddr_pin);
+ 	}
  
- 	return page;
-@@ -1093,6 +1099,12 @@ struct page *follow_devmap_pud(struct vm_area_struct *vma, unsigned long addr,
- 	if (!*pgmap)
- 		return ERR_PTR(-EFAULT);
- 	page = pfn_to_page(pfn);
-+
-+	if (unlikely(flags & FOLL_LONGTERM) &&
-+	    (*pgmap)->type == MEMORY_DEVICE_FS_DAX &&
-+	    !mapping_inode_has_layout(page))
-+		return ERR_PTR(-EPERM);
-+
- 	get_page(page);
+ 	refs = 0;
+@@ -2117,7 +2122,8 @@ static int gup_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
+ }
  
- 	return page;
+ static int gup_huge_pud(pud_t orig, pud_t *pudp, unsigned long addr,
+-		unsigned long end, unsigned int flags, struct page **pages, int *nr)
++		unsigned long end, unsigned int flags, struct page **pages, int *nr,
++		struct vaddr_pin *vaddr_pin)
+ {
+ 	struct page *head, *page;
+ 	int refs;
+@@ -2129,7 +2135,7 @@ static int gup_huge_pud(pud_t orig, pud_t *pudp, unsigned long addr,
+ 		if (unlikely(flags & FOLL_LONGTERM))
+ 			return 0;
+ 		return __gup_device_huge_pud(orig, pudp, addr, end, pages, nr,
+-					     flags);
++					     flags, vaddr_pin);
+ 	}
+ 
+ 	refs = 0;
+@@ -2196,7 +2202,8 @@ static int gup_huge_pgd(pgd_t orig, pgd_t *pgdp, unsigned long addr,
+ }
+ 
+ static int gup_pmd_range(pud_t pud, unsigned long addr, unsigned long end,
+-		unsigned int flags, struct page **pages, int *nr)
++		unsigned int flags, struct page **pages, int *nr,
++		struct vaddr_pin *vaddr_pin)
+ {
+ 	unsigned long next;
+ 	pmd_t *pmdp;
+@@ -2220,7 +2227,7 @@ static int gup_pmd_range(pud_t pud, unsigned long addr, unsigned long end,
+ 				return 0;
+ 
+ 			if (!gup_huge_pmd(pmd, pmdp, addr, next, flags,
+-				pages, nr))
++				pages, nr, vaddr_pin))
+ 				return 0;
+ 
+ 		} else if (unlikely(is_hugepd(__hugepd(pmd_val(pmd))))) {
+@@ -2231,7 +2238,8 @@ static int gup_pmd_range(pud_t pud, unsigned long addr, unsigned long end,
+ 			if (!gup_huge_pd(__hugepd(pmd_val(pmd)), addr,
+ 					 PMD_SHIFT, next, flags, pages, nr))
+ 				return 0;
+-		} else if (!gup_pte_range(pmd, addr, next, flags, pages, nr))
++		} else if (!gup_pte_range(pmd, addr, next, flags, pages, nr,
++					  vaddr_pin))
+ 			return 0;
+ 	} while (pmdp++, addr = next, addr != end);
+ 
+@@ -2239,7 +2247,8 @@ static int gup_pmd_range(pud_t pud, unsigned long addr, unsigned long end,
+ }
+ 
+ static int gup_pud_range(p4d_t p4d, unsigned long addr, unsigned long end,
+-			 unsigned int flags, struct page **pages, int *nr)
++			 unsigned int flags, struct page **pages, int *nr,
++			 struct vaddr_pin *vaddr_pin)
+ {
+ 	unsigned long next;
+ 	pud_t *pudp;
+@@ -2253,13 +2262,14 @@ static int gup_pud_range(p4d_t p4d, unsigned long addr, unsigned long end,
+ 			return 0;
+ 		if (unlikely(pud_huge(pud))) {
+ 			if (!gup_huge_pud(pud, pudp, addr, next, flags,
+-					  pages, nr))
++					  pages, nr, vaddr_pin))
+ 				return 0;
+ 		} else if (unlikely(is_hugepd(__hugepd(pud_val(pud))))) {
+ 			if (!gup_huge_pd(__hugepd(pud_val(pud)), addr,
+ 					 PUD_SHIFT, next, flags, pages, nr))
+ 				return 0;
+-		} else if (!gup_pmd_range(pud, addr, next, flags, pages, nr))
++		} else if (!gup_pmd_range(pud, addr, next, flags, pages, nr,
++					  vaddr_pin))
+ 			return 0;
+ 	} while (pudp++, addr = next, addr != end);
+ 
+@@ -2267,7 +2277,8 @@ static int gup_pud_range(p4d_t p4d, unsigned long addr, unsigned long end,
+ }
+ 
+ static int gup_p4d_range(pgd_t pgd, unsigned long addr, unsigned long end,
+-			 unsigned int flags, struct page **pages, int *nr)
++			 unsigned int flags, struct page **pages, int *nr,
++			 struct vaddr_pin *vaddr_pin)
+ {
+ 	unsigned long next;
+ 	p4d_t *p4dp;
+@@ -2284,7 +2295,8 @@ static int gup_p4d_range(pgd_t pgd, unsigned long addr, unsigned long end,
+ 			if (!gup_huge_pd(__hugepd(p4d_val(p4d)), addr,
+ 					 P4D_SHIFT, next, flags, pages, nr))
+ 				return 0;
+-		} else if (!gup_pud_range(p4d, addr, next, flags, pages, nr))
++		} else if (!gup_pud_range(p4d, addr, next, flags, pages, nr,
++					  vaddr_pin))
+ 			return 0;
+ 	} while (p4dp++, addr = next, addr != end);
+ 
+@@ -2292,7 +2304,8 @@ static int gup_p4d_range(pgd_t pgd, unsigned long addr, unsigned long end,
+ }
+ 
+ static void gup_pgd_range(unsigned long addr, unsigned long end,
+-		unsigned int flags, struct page **pages, int *nr)
++		unsigned int flags, struct page **pages, int *nr,
++		struct vaddr_pin *vaddr_pin)
+ {
+ 	unsigned long next;
+ 	pgd_t *pgdp;
+@@ -2312,7 +2325,8 @@ static void gup_pgd_range(unsigned long addr, unsigned long end,
+ 			if (!gup_huge_pd(__hugepd(pgd_val(pgd)), addr,
+ 					 PGDIR_SHIFT, next, flags, pages, nr))
+ 				return;
+-		} else if (!gup_p4d_range(pgd, addr, next, flags, pages, nr))
++		} else if (!gup_p4d_range(pgd, addr, next, flags, pages, nr,
++					  vaddr_pin))
+ 			return;
+ 	} while (pgdp++, addr = next, addr != end);
+ }
+@@ -2374,7 +2388,8 @@ int __get_user_pages_fast(unsigned long start, int nr_pages, int write,
+ 	if (IS_ENABLED(CONFIG_HAVE_FAST_GUP) &&
+ 	    gup_fast_permitted(start, end)) {
+ 		local_irq_save(flags);
+-		gup_pgd_range(start, end, write ? FOLL_WRITE : 0, pages, &nr);
++		gup_pgd_range(start, end, write ? FOLL_WRITE : 0, pages, &nr,
++			      NULL);
+ 		local_irq_restore(flags);
+ 	}
+ 
+@@ -2445,7 +2460,7 @@ int get_user_pages_fast(unsigned long start, int nr_pages,
+ 	if (IS_ENABLED(CONFIG_HAVE_FAST_GUP) &&
+ 	    gup_fast_permitted(start, end)) {
+ 		local_irq_disable();
+-		gup_pgd_range(addr, end, gup_flags, pages, &nr);
++		gup_pgd_range(addr, end, gup_flags, pages, &nr, NULL);
+ 		local_irq_enable();
+ 		ret = nr;
+ 	}
 -- 
 2.20.1
 
