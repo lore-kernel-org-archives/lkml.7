@@ -2,207 +2,96 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D6FFC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E02C32757
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:20:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F52020B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:20:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AKKFUTSU"
+	by mail.kernel.org (Postfix) with ESMTP id BDF8D208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:20:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406768AbfHIMUI (ORCPT
+        id S2406807AbfHIMUw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 08:20:08 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:38088 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406739AbfHIMUH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 08:20:07 -0400
-Received: by mail-lj1-f193.google.com with SMTP id r9so91890197ljg.5;
-        Fri, 09 Aug 2019 05:20:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=scz3HNd4I/lEmliM5yrhOJ2y0CgErN/gqkMHsAAbWBs=;
-        b=AKKFUTSUeshHqfnIpgsadrTMDKQOI9nY1rUSygMeho63nVaGXFPK2IZ0YZ7LzfduoR
-         qZ2FzKTyeQu0yv0/90tGEVl9ZKBVTXv9kUdtI6Ojm/WBk9H905V/7GL397fbETdO97Fw
-         lbFKbAvAojHNTnX0b6kWyF8VgA/lEPF5x/IHkzBHujn1iDARGku59GtVUpCWKhB6VfKQ
-         EqcM6fjdNVaYn+yF9l9vWznwEBLUUHTCj6wGZ0GzmTNeWz+8QUtNsLqW2Miil2xC3YXv
-         j9zosCotoLEV8NYKlSqdNJNcT4YvC/mYegemww9d4o7YytgYSX881JwlY2+2v+h9yA0Q
-         ZE5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=scz3HNd4I/lEmliM5yrhOJ2y0CgErN/gqkMHsAAbWBs=;
-        b=ILY3xDO84d7GWr+G/sEs0dJNKJigl/8sNZQNVRj0sVB2m6VvGS0LNzQzB32whRJnT0
-         P6fgIWFVodjS7RkPIzLHH90pWTKu5HMXhDnlJo2VEYoa/O240SPf8PoaDP6b5+HnhzWV
-         eY6HzVc/rwImHLCFAzFIRYs/pCjT3ItEQToOcSldgQbi49q3xFVlwRO/a4q5ytivaPUi
-         6iuoA8+v786ZcQP9PXOXs+qA+Dn1qN7/eYNVBRTJY3UwVg8pxMZm/dqxZ8URkmBPyUbx
-         PbqRXeNmzRxwhoDKVXGvInixrGMznBgJ139o7ywhC8ekh9hkbgf7lHE8/TONE6snjmFQ
-         MiCg==
-X-Gm-Message-State: APjAAAWAjduR5u1NgGNj2zg9jbcMk8upNixZdflPNgRcoqX2lK0biwza
-        mfN6Id0h/mmNUZ34WJirNoPruGif
-X-Google-Smtp-Source: APXvYqwwFdDxnvCmTjeGxpi7RsPWwgau+7HJXKoDobtoiLEazJVAJow3gPgwHS0eMEZpYC9dzp4xyA==
-X-Received: by 2002:a2e:a415:: with SMTP id p21mr11207581ljn.111.1565353203926;
-        Fri, 09 Aug 2019 05:20:03 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.34.218])
-        by smtp.googlemail.com with ESMTPSA id j3sm17490995lfp.34.2019.08.09.05.20.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 09 Aug 2019 05:20:03 -0700 (PDT)
-Subject: Re: [PATCH v8 08/21] clk: tegra: periph: Add restore_context support
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
-References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
- <1565308020-31952-9-git-send-email-skomatineni@nvidia.com>
- <5a5f9fb9-9cdd-5d91-4b0e-9bdb95b2625e@gmail.com>
-Message-ID: <0f8259d8-08f2-671c-331c-fe2d83518be0@gmail.com>
-Date:   Fri, 9 Aug 2019 15:20:01 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 9 Aug 2019 08:20:52 -0400
+Received: from ozlabs.org ([203.11.71.1]:35801 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406730AbfHIMUw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 08:20:52 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 464kpy5K69z9sBF;
+        Fri,  9 Aug 2019 22:20:42 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     John Hubbard <jhubbard@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        =?utf-8?B?SsOpcsO0?= =?utf-8?B?bWU=?= Glisse 
+        <jglisse@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org, ceph-devel@vger.kernel.org,
+        devel@driverdev.osuosl.org, devel@lists.orangefs.org,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mm@kvack.org,
+        linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org, linux-xfs@vger.kernel.org,
+        netdev@vger.kernel.org, rds-devel@oss.oracle.com,
+        sparclinux@vger.kernel.org, x86@kernel.org,
+        xen-devel@lists.xenproject.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christoph Hellwig <hch@lst.de>, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v3 38/41] powerpc: convert put_page() to put_user_page*()
+In-Reply-To: <248c9ab2-93cc-6d8b-606d-d85b83e791e5@nvidia.com>
+References: <20190807013340.9706-1-jhubbard@nvidia.com> <20190807013340.9706-39-jhubbard@nvidia.com> <87k1botdpx.fsf@concordia.ellerman.id.au> <248c9ab2-93cc-6d8b-606d-d85b83e791e5@nvidia.com>
+Date:   Fri, 09 Aug 2019 22:20:40 +1000
+Message-ID: <875zn6ttrb.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-In-Reply-To: <5a5f9fb9-9cdd-5d91-4b0e-9bdb95b2625e@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-09.08.2019 14:55, Dmitry Osipenko пишет:
-> 09.08.2019 2:46, Sowjanya Komatineni пишет:
->> This patch implements restore_context support for clk-periph and
->> clk-sdmmc-mux clock operations to restore clock parent and rates
->> on system resume.
->>
->> During system suspend, core power goes off and looses the context
->> of the Tegra clock controller registers.
->>
->> So on system resume, clocks parent and rate are restored back to
->> the context before suspend based on cached data.
->>
->> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->> ---
->>  drivers/clk/tegra/clk-periph.c    | 18 ++++++++++++++++++
->>  drivers/clk/tegra/clk-sdmmc-mux.c | 12 ++++++++++++
->>  2 files changed, 30 insertions(+)
->>
->> diff --git a/drivers/clk/tegra/clk-periph.c b/drivers/clk/tegra/clk-periph.c
->> index 58437da25156..c9d28cbadccc 100644
->> --- a/drivers/clk/tegra/clk-periph.c
->> +++ b/drivers/clk/tegra/clk-periph.c
->> @@ -3,6 +3,7 @@
->>   * Copyright (c) 2012, NVIDIA CORPORATION.  All rights reserved.
->>   */
->>  
->> +#include <linux/clk.h>
->>  #include <linux/clk-provider.h>
->>  #include <linux/export.h>
->>  #include <linux/slab.h>
->> @@ -99,6 +100,20 @@ static void clk_periph_disable(struct clk_hw *hw)
->>  	gate_ops->disable(gate_hw);
->>  }
->>  
->> +static void clk_periph_restore_context(struct clk_hw *hw)
->> +{
->> +	struct tegra_clk_periph *periph = to_clk_periph(hw);
->> +	const struct clk_ops *div_ops = periph->div_ops;
->> +	struct clk_hw *div_hw = &periph->divider.hw;
->> +	struct clk_hw *parent = clk_hw_get_parent(hw);
->> +	int parent_id = clk_hw_get_parent_index(hw, parent);
->> +
->> +	if (!(periph->gate.flags & TEGRA_PERIPH_NO_DIV))
->> +		div_ops->restore_context(div_hw);
->> +
->> +	clk_periph_set_parent(hw, parent_id);
->> +}
->> +
->>  const struct clk_ops tegra_clk_periph_ops = {
->>  	.get_parent = clk_periph_get_parent,
->>  	.set_parent = clk_periph_set_parent,
->> @@ -108,6 +123,7 @@ const struct clk_ops tegra_clk_periph_ops = {
->>  	.is_enabled = clk_periph_is_enabled,
->>  	.enable = clk_periph_enable,
->>  	.disable = clk_periph_disable,
->> +	.restore_context = clk_periph_restore_context,
->>  };
->>  
->>  static const struct clk_ops tegra_clk_periph_nodiv_ops = {
->> @@ -116,6 +132,7 @@ static const struct clk_ops tegra_clk_periph_nodiv_ops = {
->>  	.is_enabled = clk_periph_is_enabled,
->>  	.enable = clk_periph_enable,
->>  	.disable = clk_periph_disable,
->> +	.restore_context = clk_periph_restore_context,
->>  };
->>  
->>  static const struct clk_ops tegra_clk_periph_no_gate_ops = {
->> @@ -124,6 +141,7 @@ static const struct clk_ops tegra_clk_periph_no_gate_ops = {
->>  	.recalc_rate = clk_periph_recalc_rate,
->>  	.round_rate = clk_periph_round_rate,
->>  	.set_rate = clk_periph_set_rate,
->> +	.restore_context = clk_periph_restore_context,
->>  };
->>  
->>  static struct clk *_tegra_clk_register_periph(const char *name,
->> diff --git a/drivers/clk/tegra/clk-sdmmc-mux.c b/drivers/clk/tegra/clk-sdmmc-mux.c
->> index a5cd3e31dbae..8db48966b100 100644
->> --- a/drivers/clk/tegra/clk-sdmmc-mux.c
->> +++ b/drivers/clk/tegra/clk-sdmmc-mux.c
->> @@ -194,6 +194,17 @@ static void clk_sdmmc_mux_disable(struct clk_hw *hw)
->>  	gate_ops->disable(gate_hw);
->>  }
->>  
->> +static void clk_sdmmc_mux_restore_context(struct clk_hw *hw)
->> +{
->> +	struct clk_hw *parent = clk_hw_get_parent(hw);
->> +	unsigned long parent_rate = clk_hw_get_rate(parent);
->> +	unsigned long rate = clk_hw_get_rate(hw);
->> +	int parent_id = clk_hw_get_parent_index(hw, parent);
->> +
->> +	clk_sdmmc_mux_set_parent(hw, parent_id);
->> +	clk_sdmmc_mux_set_rate(hw, rate, parent_rate);
-> 
-> For the periph clocks you're restoring rate at first and then the
-> parent, while here it's the other way around. I'm wondering if there is
-> any difference in practice and thus whether rate's divider need to be
-> set to a some safe value before switching to a new parent that has a
-> higher clock rate than the old parent.
+John Hubbard <jhubbard@nvidia.com> writes:
+> On 8/7/19 10:42 PM, Michael Ellerman wrote:
+>> Hi John,
+>> 
+>> john.hubbard@gmail.com writes:
+>>> diff --git a/arch/powerpc/mm/book3s64/iommu_api.c b/arch/powerpc/mm/book3s64/iommu_api.c
+>>> index b056cae3388b..e126193ba295 100644
+>>> --- a/arch/powerpc/mm/book3s64/iommu_api.c
+>>> +++ b/arch/powerpc/mm/book3s64/iommu_api.c
+>>> @@ -203,6 +202,7 @@ static void mm_iommu_unpin(struct mm_iommu_table_group_mem_t *mem)
+>>>  {
+>>>  	long i;
+>>>  	struct page *page = NULL;
+>>> +	bool dirty = false;
+>> 
+>> I don't think you need that initialisation do you?
+>> 
+>
+> Nope, it can go. Fixed locally, thanks.
 
-Although, I guess that all peripheral clocks should be disabled at this
-point of resume. Correct?
+Thanks.
 
->> +}
->> +
->>  static const struct clk_ops tegra_clk_sdmmc_mux_ops = {
->>  	.get_parent = clk_sdmmc_mux_get_parent,
->>  	.set_parent = clk_sdmmc_mux_set_parent,
->> @@ -203,6 +214,7 @@ static const struct clk_ops tegra_clk_sdmmc_mux_ops = {
->>  	.is_enabled = clk_sdmmc_mux_is_enabled,
->>  	.enable = clk_sdmmc_mux_enable,
->>  	.disable = clk_sdmmc_mux_disable,
->> +	.restore_context = clk_sdmmc_mux_restore_context,
->>  };
->>  
->>  struct clk *tegra_clk_register_sdmmc_mux_div(const char *name,
->>
-> 
+> Did you get a chance to look at enough of the other bits to feel comfortable 
+> with the patch, overall?
 
+Mostly :) It's not really my area, but all the conversions looked
+correct to me as best as I could tell.
+
+So I'm fine for it to go in as part of the series:
+
+Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
+
+cheers
