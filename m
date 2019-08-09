@@ -2,191 +2,108 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FB0C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC41C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:49:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91F2C214C6
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:49:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C833F214C6
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:49:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565358563;
-	bh=pDnEv89MTmjq9zqtFA/aMxeIGaNa/R9eyQsnDJUV+9c=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=R6a7dE7G5alc6iy48/VNZClDBGrnKCxQGOw1DIf+Wpfhf/i3sPp6QMGeU2NpCo7Rd
-	 kiuGdDmEcwgnyll3VtR7GKZH5ubiYHG2MAbs4wxwuGU8gToTBiYCsOG9V/0yZPMeGY
-	 e5WXwHtLrIsQqiArxggvYpfoTJ9WKMbVZpKMRYkM=
+	s=default; t=1565358579;
+	bh=rl5wtz7GbhbAJkl9Cr5yaGsccTUkoDUHnyJBgaxuCjI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=r/UC8Szt9qQQfuYMkE4EvYadzqiaVeVErYBlP63YVoVobJnb+I9XvGpLWRVXSargT
+	 6y/lmt/OwUUOeUeM/BEbKhS7ZpJPeQ6LpIRxQ0FO9tZm8gT8wcWzlAUsrdfLbBT504
+	 wD9tMJCqhXcBMvajUPbJllVp5r3/judHnKuSVUWc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436574AbfHINtW (ORCPT
+        id S2407245AbfHINti (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 09:49:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36006 "EHLO mail.kernel.org"
+        Fri, 9 Aug 2019 09:49:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436474AbfHINqY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 09:46:24 -0400
+        id S1726037AbfHINp4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 09:45:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A303821880;
-        Fri,  9 Aug 2019 13:46:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61EFA214C6;
+        Fri,  9 Aug 2019 13:45:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565358384;
-        bh=pDnEv89MTmjq9zqtFA/aMxeIGaNa/R9eyQsnDJUV+9c=;
-        h=From:To:Cc:Subject:Date:From;
-        b=wjMaAWhGsu6iZlXOl0UCjuyufA4phMi4j03vkrW5NL86n5rT0Tuvcod9K4cBRJIdW
-         IWSx8vk46lfICL6Sw7AeSrvX2+6W1DOMhwXGQ/VZazD2mKtrHl5JFTjdb9CxgG5/78
-         ssUeIxjGt2w3WnEwyl/sdHC11vGNX+JcAQhm0YEU=
+        s=default; t=1565358355;
+        bh=rl5wtz7GbhbAJkl9Cr5yaGsccTUkoDUHnyJBgaxuCjI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=2HmXPEJT1CuxlzhT+cjArIqk2hya+pV8k77pW+n/x/QUbAQOSzfwSe995H6RAB+r/
+         Ho6LnG0zynGQ0d83WF+44e+nc8JKk6f05TQT0HOPh7wJtCnDIMjBYiUyUZNLKBdkXl
+         3uoIQ/iBxR27CRl+xfQT/CLN4nS8/K297hG+MIOE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 4.4 00/21] 4.4.189-stable review
-Date:   Fri,  9 Aug 2019 15:45:04 +0200
-Message-Id: <20190809134241.565496442@linuxfoundation.org>
+        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
+        Bart Van Assche <bart.vanassche@wdc.com>,
+        xiao jin <jin.xiao@intel.com>, Jens Axboe <axboe@kernel.dk>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Alessio Balsini <balsini@android.com>
+Subject: [PATCH 4.4 14/21] block: blk_init_allocated_queue() set q->fq as NULL in the fail case
+Date:   Fri,  9 Aug 2019 15:45:18 +0200
+Message-Id: <20190809134242.158162001@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-MIME-Version: 1.0
+In-Reply-To: <20190809134241.565496442@linuxfoundation.org>
+References: <20190809134241.565496442@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.189-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.4.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.4.189-rc1
-X-KernelTest-Deadline: 2019-08-11T13:42+00:00
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 4.4.189 release.
-There are 21 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+From: xiao jin <jin.xiao@intel.com>
 
-Responses should be made by Sun 11 Aug 2019 01:42:28 PM UTC.
-Anything received after that time might be too late.
+commit 54648cf1ec2d7f4b6a71767799c45676a138ca24 upstream.
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.189-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
-and the diffstat can be found below.
+We find the memory use-after-free issue in __blk_drain_queue()
+on the kernel 4.14. After read the latest kernel 4.18-rc6 we
+think it has the same problem.
 
-thanks,
+Memory is allocated for q->fq in the blk_init_allocated_queue().
+If the elevator init function called with error return, it will
+run into the fail case to free the q->fq.
 
-greg k-h
+Then the __blk_drain_queue() uses the same memory after the free
+of the q->fq, it will lead to the unpredictable event.
 
--------------
-Pseudo-Shortlog of commits:
+The patch is to set q->fq as NULL in the fail case of
+blk_init_allocated_queue().
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 4.4.189-rc1
+Fixes: commit 7c94e1c157a2 ("block: introduce blk_flush_queue to drive flush machinery")
+Cc: <stable@vger.kernel.org>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Reviewed-by: Bart Van Assche <bart.vanassche@wdc.com>
+Signed-off-by: xiao jin <jin.xiao@intel.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+[groeck: backport to v4.4.y/v4.9.y (context change)]
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Alessio Balsini <balsini@android.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Thomas Gleixner <tglx@linutronix.de>
-    x86/speculation/swapgs: Exclude ATOMs from speculation through SWAPGS
+---
+ block/blk-core.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-Josh Poimboeuf <jpoimboe@redhat.com>
-    x86/entry/64: Use JMP instead of JMPQ
-
-Josh Poimboeuf <jpoimboe@redhat.com>
-    x86/speculation: Enable Spectre v1 swapgs mitigations
-
-Josh Poimboeuf <jpoimboe@redhat.com>
-    x86/speculation: Prepare entry code for Spectre v1 swapgs mitigations
-
-Wanpeng Li <wanpeng.li@hotmail.com>
-    x86/entry/64: Fix context tracking state warning when load_gs_index fails
-
-Ben Hutchings <ben@decadent.org.uk>
-    x86: cpufeatures: Sort feature word 7
-
-Lukas Wunner <lukas@wunner.de>
-    spi: bcm2835: Fix 3-wire mode if DMA is enabled
-
-xiao jin <jin.xiao@intel.com>
-    block: blk_init_allocated_queue() set q->fq as NULL in the fail case
-
-Arnd Bergmann <arnd@arndb.de>
-    compat_ioctl: pppoe: fix PPPOEIOCSFWD handling
-
-Sudarsana Reddy Kalluru <skalluru@marvell.com>
-    bnx2x: Disable multi-cos feature.
-
-Mark Zhang <markz@mellanox.com>
-    net/mlx5: Use reversed order when unregister devices
-
-Jia-Ju Bai <baijiaju1990@gmail.com>
-    net: sched: Fix a possible null-pointer dereference in dequeue_func()
-
-Taras Kondratiuk <takondra@cisco.com>
-    tipc: compat: allow tipc commands without arguments
-
-Jiri Pirko <jiri@mellanox.com>
-    net: fix ifindex collision during namespace removal
-
-Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-    net: bridge: delete local fdb on device init failure
-
-Gustavo A. R. Silva <gustavo@embeddedor.com>
-    atm: iphase: Fix Spectre v1 vulnerability
-
-Eric Dumazet <edumazet@google.com>
-    tcp: be more careful in tcp_fragment()
-
-Sebastian Parschauer <s.parschauer@gmx.de>
-    HID: Add quirk for HP X1200 PIXART OEM mouse
-
-Phil Turnbull <phil.turnbull@oracle.com>
-    netfilter: nfnetlink_acct: validate NFACCT_QUOTA parameter
-
-Will Deacon <will@kernel.org>
-    arm64: cpufeature: Fix feature comparison for CTR_EL0.{CWG,ERG}
-
-Will Deacon <will.deacon@arm.com>
-    arm64: cpufeature: Fix CTR_EL0 field definitions
-
-
--------------
-
-Diffstat:
-
- Documentation/kernel-parameters.txt             |   7 +-
- Makefile                                        |   4 +-
- arch/arm64/include/asm/cpufeature.h             |   7 +-
- arch/arm64/kernel/cpufeature.c                  |  14 +++-
- arch/x86/entry/calling.h                        |  19 +++++
- arch/x86/entry/entry_64.S                       |  25 +++++-
- arch/x86/include/asm/cpufeatures.h              |  10 ++-
- arch/x86/kernel/cpu/bugs.c                      | 105 ++++++++++++++++++++++--
- arch/x86/kernel/cpu/common.c                    |  42 ++++++----
- block/blk-core.c                                |   1 +
- drivers/atm/iphase.c                            |   8 +-
- drivers/hid/hid-ids.h                           |   1 +
- drivers/hid/usbhid/hid-quirks.c                 |   1 +
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c |   2 +-
- drivers/net/ethernet/mellanox/mlx5/core/main.c  |   2 +-
- drivers/net/ppp/pppoe.c                         |   3 +
- drivers/net/ppp/pppox.c                         |  13 +++
- drivers/net/ppp/pptp.c                          |   3 +
- drivers/spi/spi-bcm2835.c                       |   3 +-
- fs/compat_ioctl.c                               |   3 -
- include/linux/if_pppox.h                        |   3 +
- include/net/tcp.h                               |  17 ++++
- net/bridge/br_vlan.c                            |   5 ++
- net/core/dev.c                                  |   2 +
- net/ipv4/tcp_output.c                           |  11 ++-
- net/l2tp/l2tp_ppp.c                             |   3 +
- net/netfilter/nfnetlink_acct.c                  |   2 +
- net/sched/sch_codel.c                           |   3 +-
- net/tipc/netlink_compat.c                       |  11 ++-
- 29 files changed, 272 insertions(+), 58 deletions(-)
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -870,6 +870,7 @@ blk_init_allocated_queue(struct request_
+ 
+ fail:
+ 	blk_free_flush_queue(q->fq);
++	q->fq = NULL;
+ 	return NULL;
+ }
+ EXPORT_SYMBOL(blk_init_allocated_queue);
 
 
