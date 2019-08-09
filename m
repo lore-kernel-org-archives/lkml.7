@@ -2,130 +2,161 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56AD8C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 10:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8991BC31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 10:50:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E52721743
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 10:48:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="olBzn9Ia"
+	by mail.kernel.org (Postfix) with ESMTP id 591A0217F4
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 10:50:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565347825;
+	bh=ufOUeu94naRit4fpOqWaOSOLQLBbQhYnAoy4JSnWZcE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ouws8aY9dy4ILML4dQ9MhPnVkEHA5zznOv25AVEsapw8Wi1ouUrTtg1nn1qxVexRz
+	 /ghHJsTGhtRcw/DyeBA7RDOXUEdPXKRXH6wq5zJpclaSAP5Dy5hu9ZhQlqIX9q0zpJ
+	 YhjFbFN/QQ0eCc7HMVc5s800wEcvx+pHjVDy2q48=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbfHIKsK (ORCPT
+        id S1726683AbfHIKuY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 06:48:10 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34501 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbfHIKsK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 06:48:10 -0400
-Received: by mail-pf1-f195.google.com with SMTP id b13so45855035pfo.1
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 03:48:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=SWSgHhHu/9BjvEKvg6DvYw5jthq0QCStuXD5Y25D++k=;
-        b=olBzn9Iae3J+Se9iHRoHNcpUalAkm0ZD09Av8Rhf0Un1Erb82ltsMGyfBJNHsDpsio
-         LlbQvDyOt9ixqafHrC8B30eZNQFydT4ALlqO+PDtaXDqR4t+msvvRbMRJA9mlCGEu1hk
-         OWPdIUoClXdonkrlZl0wMf7etys7/V0IUfhh6KzMsReQc8ryg6G4ekAD7BMSlJ7V2qmU
-         erp/KwrNpRh1Rsx4z65y13/nqjod+Jpum23/PTaXvdW+hSPFj9YiD2+AqR4K2BRVzNSd
-         eap5YaVNNKHXwu78ZyVTVLyxgl5j7Dke93bjTNx2H5SEjKGaVOV9aCWV5DhSzXE2AMVB
-         pBMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=SWSgHhHu/9BjvEKvg6DvYw5jthq0QCStuXD5Y25D++k=;
-        b=Qlko0yp/TCWsy7phEBUrVqIZKx5vx/9hNywdu1Wuozh1hoOnMo1+Ez7Yb6xmdC31KA
-         SmsDDFVyer4A3dHGQed8OxFVPBfAw+35o90q1wurSx8JHXhjeseezV4GtgEqEKs7L0H5
-         OtnSUGJ2kaMtENYhzB8cn+xTTL7OtDM+QQXzPkWKw23JMzbMHm9OQz9dM9Wt4PwaM9bf
-         knUfPWsXqHYKrF12PFq7EO66rVbUkakOCddNoSALuhofYSW+lutTG7HQ2GmdQ0pj8i6c
-         GnAzzrgEDDEayoDN2H60IYdgUJtNKOdekSyYV26d5zlCYzS3BoRPUD5/Bd3NsXCsvRH/
-         nm0Q==
-X-Gm-Message-State: APjAAAW4+qBLMpVHK5pHw9Z7fHj3+J2k+Ou9RCsjiOHtayozc1cQt/X/
-        nxgndsi34AAGJUdESCB6bhCdJA==
-X-Google-Smtp-Source: APXvYqxgJ7LJSyfYIqCUqyw0nl4BRa1wS+HCiJ9jJJusPxs6KdjJu0Q2m1OI1WoKhxp7olOZNBxCag==
-X-Received: by 2002:aa7:82da:: with SMTP id f26mr20912390pfn.82.1565347689544;
-        Fri, 09 Aug 2019 03:48:09 -0700 (PDT)
-Received: from localhost.localdomain (li456-16.members.linode.com. [50.116.10.16])
-        by smtp.gmail.com with ESMTPSA id l44sm4651449pje.29.2019.08.09.03.48.05
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 09 Aug 2019 03:48:08 -0700 (PDT)
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH] perf trace: Fix segmentation fault when access syscall info
-Date:   Fri,  9 Aug 2019 18:47:52 +0800
-Message-Id: <20190809104752.27338-1-leo.yan@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Fri, 9 Aug 2019 06:50:24 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49822 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726140AbfHIKuX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 06:50:23 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D802AB071;
+        Fri,  9 Aug 2019 10:50:21 +0000 (UTC)
+Date:   Fri, 9 Aug 2019 12:50:16 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     ndrw <ndrw.xf@redhazel.co.uk>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Artem S. Tashkinov" <aros@gmx.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>
+Subject: Re: Let's talk about the elephant in the room - the Linux kernel's
+ inability to gracefully handle low memory pressure
+Message-ID: <20190809105016.GP18351@dhcp22.suse.cz>
+References: <20190807075927.GO11812@dhcp22.suse.cz>
+ <20190807205138.GA24222@cmpxchg.org>
+ <20190808114826.GC18351@dhcp22.suse.cz>
+ <806F5696-A8D6-481D-A82F-49DEC1F2B035@redhazel.co.uk>
+ <20190808163228.GE18351@dhcp22.suse.cz>
+ <5FBB0A26-0CFE-4B88-A4F2-6A42E3377EDB@redhazel.co.uk>
+ <20190808185925.GH18351@dhcp22.suse.cz>
+ <08e5d007-a41a-e322-5631-b89978b9cc20@redhazel.co.uk>
+ <20190809085748.GN18351@dhcp22.suse.cz>
+ <cdb392ee-e192-c136-41cb-48d9e4e4bf47@redhazel.co.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cdb392ee-e192-c136-41cb-48d9e4e4bf47@redhazel.co.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'perf trace' reports the segmentation fault as below on Arm64:
+On Fri 09-08-19 11:09:33, ndrw wrote:
+> On 09/08/2019 09:57, Michal Hocko wrote:
+> > We already do have a reserve (min_free_kbytes). That gives kswapd some
+> > room to perform reclaim in the background without obvious latencies to
+> > allocating tasks (well CPU still be used so there is still some effect).
+> 
+> I tried this option in the past. Unfortunately, I didn't prevent freezes. My
+> understanding is this option reserves some amount of memory to not be
 
-  # perf trace -e string -e augmented_raw_syscalls.c
-  LLVM: dumping tools/perf/examples/bpf/augmented_raw_syscalls.o
-  perf: Segmentation fault
-  Obtained 12 stack frames.
-  perf(sighandler_dump_stack+0x47) [0xaaaaac96ac87]
-  linux-vdso.so.1(+0x5b7) [0xffffadbeb5b7]
-  /lib/aarch64-linux-gnu/libc.so.6(strlen+0x10) [0xfffface7d5d0]
-  /lib/aarch64-linux-gnu/libc.so.6(_IO_vfprintf+0x1ac7) [0xfffface49f97]
-  /lib/aarch64-linux-gnu/libc.so.6(__vsnprintf_chk+0xc7) [0xffffacedfbe7]
-  perf(scnprintf+0x97) [0xaaaaac9ca3ff]
-  perf(+0x997bb) [0xaaaaac8e37bb]
-  perf(cmd_trace+0x28e7) [0xaaaaac8ec09f]
-  perf(+0xd4a13) [0xaaaaac91ea13]
-  perf(main+0x62f) [0xaaaaac8a147f]
-  /lib/aarch64-linux-gnu/libc.so.6(__libc_start_main+0xe3) [0xfffface22d23]
-  perf(+0x57723) [0xaaaaac8a1723]
-  Segmentation fault
+to not be used by normal allocations. It defines reclaim watermarks and
+that influences when the background and direct reclaim start to act.
 
-This issue is introduced by commit 30a910d7d3e0 ("perf trace:
-Preallocate the syscall table"), it allocates trace->syscalls.table[]
-array and the element count is 'trace->sctbl->syscalls.nr_entries';
-but on Arm64, the system call number is not continuously used; e.g. the
-syscall maximum id is 436 but the real entries is only 281.  So the
-table is allocated with 'nr_entries' as the element count, but it
-accesses the table with the syscall id, which might be out of the bound
-of the array and cause the segmentation fault.
+> swapped out but does not prevent the kernel from evicting all pages from
+> cache when more memory is needed.
 
-This patch allocates trace->syscalls.table[] with the element count is
-'trace->sctbl->syscalls.max_id + 1', this allows any id to access the
-table without out of the bound.
+It doesn't have any say on the actual decision on what to reclaim.
 
-Fixes: 30a910d7d3e0 ("perf trace: Preallocate the syscall table")
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
----
- tools/perf/builtin-trace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> > Kswapd tries to keep a balance and free memory low but still with some
+> > room to satisfy an immediate memory demand. Once kswapd doesn't catch up
+> > with the memory demand we dive into the direct reclaim and that is where
+> > people usually see latencies coming from.
+> 
+> Reclaiming memory is fine, of course, but not all the way to 0 caches. No
+> caches means all executable pages, ro pages (e.g. fonts) are evicted from
+> memory and have to be constantly reloaded on every user action. All this
+> while competing with tasks that are using up all memory. This happens with
+> of without swap, although swap does spread this issue in time a bit.
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 75eb3811e942..d553d06a9aeb 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -1492,7 +1492,7 @@ static int trace__read_syscall_info(struct trace *trace, int id)
- 	const char *name = syscalltbl__name(trace->sctbl, id);
- 
- 	if (trace->syscalls.table == NULL) {
--		trace->syscalls.table = calloc(trace->sctbl->syscalls.nr_entries, sizeof(*sc));
-+		trace->syscalls.table = calloc(trace->sctbl->syscalls.max_id + 1, sizeof(*sc));
- 		if (trace->syscalls.table == NULL)
- 			return -ENOMEM;
- 	}
+We try to protect low amount of cache. Have a look at get_scan_count
+function. But the exact amount of the cache to be protected is really
+hard to know wihtout a crystal ball or understanding of the workload.
+The kernel doesn't have neither of the two.
+
+> > The main problem here is that it is hard to tell from a single
+> > allocation latency that we have a bigger problem. As already said, the
+> > usual trashing scenario doesn't show problem during the reclaim because
+> > pages can be freed up very efficiently. The problem is that they are
+> > refaulted very quickly so we are effectively rotating working set like
+> > crazy. Compare that to a normal used-once streaming IO workload which is
+> > generating a lot of page cache that can be recycled in a similar pace
+> > but a working set doesn't get freed. Free memory figures will look very
+> > similar in both cases.
+> 
+> Thank you for the explanation. It is indeed a difficult problem - some
+> cached pages (streaming IO) will likely not be needed again and should be
+> discarded asap, other (like mmapped executable/ro pages of UI utilities)
+> will cause thrashing when evicted under high memory pressure. Another aspect
+> is that PSI is probably not the best measure of detecting imminent
+> thrashing. However, if it can at least detect a freeze that has already
+> occurred and force the OOM killer that is still a lot better than a dead
+> system, which is the current user experience.
+
+We have been thinking about this problem for a long time and couldn't
+come up with anything much better than we have now. PSI is the most recent
+improvement in that area. If you have better ideas then patches are
+always welcome.
+
+> > Good that earlyoom works for you.
+> 
+> I am giving it as an example of a heuristic that seems to work very well for
+> me. Something to look into. And yes, I wouldn't mind having such mechanism
+> built into the kernel.
+> 
+> >   All I am saying is that this is not
+> > generally applicable heuristic because we do care about a larger variety
+> > of workloads. I should probably emphasise that the OOM killer is there
+> > as a _last resort_ hand break when something goes terribly wrong. It
+> > operates at times when any user intervention would be really hard
+> > because there is a lack of resources to be actionable.
+> 
+> It is indeed a last resort solution - without it the system is unusable.
+> Still, accuracy matters because killing a wrong task does not fix the
+> problem (a task hogging memory is still running) and may break the system
+> anyway if something important is killed instead.
+
+That is a completely orthogonal problem, I am afraid. So far we have
+been discussing _when_ to trigger OOM killer. This is _who_ to kill. I
+haven't heard any recent examples that the victim selection would be way
+off and killing something obviously incorrect.
+
+> [...]
+> 
+> > This is a useful feedback! What was your workload? Which kernel version?
+> 
+> I tested it by running a python script that processes a large amount of data
+> in memory (needs around 15GB of RAM). I normally run 2 instances of that
+> script in parallel but for testing I started 4 of them. I sometimes
+> experience the same issue when using multiple regular memory intensive
+> desktop applications in a manner described in the first post but that's
+> harder to reproduce because of the user input needed.
+
+Something that other people can play with to reproduce the issue would
+be more than welcome.
+
 -- 
-2.17.1
-
+Michal Hocko
+SUSE Labs
