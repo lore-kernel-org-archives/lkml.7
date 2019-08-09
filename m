@@ -2,142 +2,93 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E39EC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 00:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 587AAC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 00:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81037216C8
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 00:53:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01FCB2173C
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 00:54:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="pfmt09bc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405133AbfHIAxV (ORCPT
+        id S2405158AbfHIAy5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 20:53:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55492 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733258AbfHIAxV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 20:53:21 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7822AC08EC00;
-        Fri,  9 Aug 2019 00:53:20 +0000 (UTC)
-Received: from whitewolf.redhat.com (ovpn-120-190.rdu2.redhat.com [10.10.120.190])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DFB3360BEC;
-        Fri,  9 Aug 2019 00:53:13 +0000 (UTC)
-From:   Lyude Paul <lyude@redhat.com>
-To:     nouveau@lists.freedesktop.org
-Cc:     William Lewis <minutemaidpark@hotmail.com>,
-        Bohdan Milar <bmilar@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        David Airlie <airlied@redhat.com>,
-        Jerry Zuo <Jerry.Zuo@amd.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Juston Li <juston.li@intel.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Karol Herbst <karolherbst@gmail.com>,
-        Ilia Mirkin <imirkin@alum.mit.edu>, stable@vger.kernel.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] drm/nouveau: Only recalculate PBN/VCPI on mode/connector changes
-Date:   Thu,  8 Aug 2019 20:53:05 -0400
-Message-Id: <20190809005307.18391-1-lyude@redhat.com>
+        Thu, 8 Aug 2019 20:54:57 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:59148 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405051AbfHIAy5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 20:54:57 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 71110806B6;
+        Fri,  9 Aug 2019 12:54:54 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1565312094;
+        bh=P49ozH2DAvwt8y1J8WbUcyJoXFazE5b714yGTC0YJrQ=;
+        h=From:To:Cc:Subject:Date;
+        b=pfmt09bcvfeV2lGKii2doOv/3SuyBMQLDbrTxaW1TajRJ2c1kBEOF2it4qOMRayek
+         dqN8LPQcQoGmigoD1VeRxJ1nd8/qm7QhOLFTbn08AO6DfTvd7pZPiSjTBxoIAvthbN
+         AmMPbQuX2K+7eyxmmVlNBdFxk7GD0pP4FilsbxCqgDZjXV+m9Nsva1c6KGralqgIGj
+         tGYtPeTkM4fC4uLBJhXu216LbGnjmX4qHmsI8rsJmyOqO1rtNNNF6vogmcPxBP1rYg
+         m+5FoVhsThf3+xdBsoQzc3qeGeawf3OcznvRFjdNeEyPzgP8tia6Ng56t2Lr1cMuJz
+         jlZrTau35L44w==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5d4cc45d0000>; Fri, 09 Aug 2019 12:54:53 +1200
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
+        by smtp (Postfix) with ESMTP id 9DA9013EEDE;
+        Fri,  9 Aug 2019 12:54:56 +1200 (NZST)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+        id 305D71E0508; Fri,  9 Aug 2019 12:54:54 +1200 (NZST)
+From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
+To:     jon.maloy@ericsson.com, ying.xue@windriver.com, davem@davemloft.net
+Cc:     netdev@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH v2] tipc: initialise addr_trail_end when setting node addresses
+Date:   Fri,  9 Aug 2019 12:54:51 +1200
+Message-Id: <20190809005451.18881-1-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Fri, 09 Aug 2019 00:53:20 +0000 (UTC)
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I -thought- I had fixed this entirely, but it looks like that I didn't
-test this thoroughly enough as we apparently still make one big mistake
-with nv50_msto_atomic_check() - we don't handle the following scenario:
+Ensure addr_trail_end is set to jiffies when configuring the node
+address. This ensures that we don't treat the initial value of 0 as
+being a wrapped. This isn't a problem when using auto-generated node
+addresses because the addr_trail_end is updated for the duplicate
+address detection phase.
 
-* CRTC #1 has n VCPI allocated to it, is attached to connector DP-4
-  which is attached to encoder #1. enabled=y active=n
-* CRTC #1 is changed from DP-4 to DP-5, causing:
-  * DP-4 crtc=#1→NULL (VCPI n→0)
-  * DP-5 crtc=NULL→#1
-  * CRTC #1 steals encoder #1 back from DP-4 and gives it to DP-5
-  * CRTC #1 maintains the same mode as before, just with a different
-    connector
-* mode_changed=n connectors_changed=y
-  (we _SHOULD_ do VCPI 0→n here, but don't)
-
-Once the above scenario is repeated once, we'll attempt freeing VCPI
-from the connector that we didn't allocate due to the connectors
-changing, but the mode staying the same. Sigh.
-
-Since nv50_msto_atomic_check() has broken a few times now, let's rethink
-things a bit to be more careful: limit both VCPI/PBN allocations to
-mode_changed || connectors_changed, since neither VCPI or PBN should
-ever need to change outside of routing and mode changes.
-
-Changes since v1:
-* Fix accidental reversal of clock and bpp arguments in
-  drm_dp_calc_pbn_mode() - William Lewis
-
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Reported-by: Bohdan Milar <bmilar@redhat.com>
-Tested-by: Bohdan Milar <bmilar@redhat.com>
-Fixes: 232c9eec417a ("drm/nouveau: Use atomic VCPI helpers for MST")
-References: 412e85b60531 ("drm/nouveau: Only release VCPI slots on mode changes")
-Cc: Lyude Paul <lyude@redhat.com>
-Cc: Ben Skeggs <bskeggs@redhat.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: David Airlie <airlied@redhat.com>
-Cc: Jerry Zuo <Jerry.Zuo@amd.com>
-Cc: Harry Wentland <harry.wentland@amd.com>
-Cc: Juston Li <juston.li@intel.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Karol Herbst <karolherbst@gmail.com>
-Cc: Ilia Mirkin <imirkin@alum.mit.edu>
-Cc: <stable@vger.kernel.org> # v5.1+
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
 ---
- drivers/gpu/drm/nouveau/dispnv50/disp.c | 22 +++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
+Changes in v2:
+- move setting to tipc_set_node_addr() as suggested
+- reword commit message
 
-diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c b/drivers/gpu/drm/nouveau/dispnv50/disp.c
-index 126703816794..5c36c75232e6 100644
---- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
-+++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
-@@ -771,16 +771,20 @@ nv50_msto_atomic_check(struct drm_encoder *encoder,
- 	struct nv50_head_atom *asyh = nv50_head_atom(crtc_state);
- 	int slots;
- 
--	/* When restoring duplicated states, we need to make sure that the
--	 * bw remains the same and avoid recalculating it, as the connector's
--	 * bpc may have changed after the state was duplicated
--	 */
--	if (!state->duplicated)
--		asyh->dp.pbn =
--			drm_dp_calc_pbn_mode(crtc_state->adjusted_mode.clock,
--					     connector->display_info.bpc * 3);
-+	if (crtc_state->mode_changed || crtc_state->connectors_changed) {
-+		/*
-+		 * When restoring duplicated states, we need to make sure that
-+		 * the bw remains the same and avoid recalculating it, as the
-+		 * connector's bpc may have changed after the state was
-+		 * duplicated
-+		 */
-+		if (!state->duplicated) {
-+			const int bpp = connector->display_info.bpc * 3;
-+			const int clock = crtc_state->adjusted_mode.clock;
-+
-+			asyh->dp.pbn = drm_dp_calc_pbn_mode(clock, bpp);
-+		}
- 
--	if (crtc_state->mode_changed) {
- 		slots = drm_dp_atomic_find_vcpi_slots(state, &mstm->mgr,
- 						      mstc->port,
- 						      asyh->dp.pbn);
--- 
-2.21.0
+ net/tipc/addr.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/net/tipc/addr.c b/net/tipc/addr.c
+index b88d48d00913..0f1eaed1bd1b 100644
+--- a/net/tipc/addr.c
++++ b/net/tipc/addr.c
+@@ -75,6 +75,7 @@ void tipc_set_node_addr(struct net *net, u32 addr)
+ 		tipc_set_node_id(net, node_id);
+ 	}
+ 	tn->trial_addr =3D addr;
++	tn->addr_trial_end =3D jiffies;
+ 	pr_info("32-bit node address hash set to %x\n", addr);
+ }
+=20
+--=20
+2.22.0
 
