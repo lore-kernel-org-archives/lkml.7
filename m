@@ -2,904 +2,134 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC71C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:02:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C12EC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:02:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC63D21773
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:02:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g0oi6CqA"
+	by mail.kernel.org (Postfix) with ESMTP id E446121743
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:02:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565373769;
+	bh=zjxzQg1FYFOSF2KDukJpcV6tr6z25l9Qqt1DenSM7G0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tyxWP0RG+58DerX2Gyl5dd2my+tMvYnTIuZUkNbGFSqJInApQO71nCGTdjU+hdlT8
+	 N0IKLH3qyP8pxdVi9BD4vcu2t4uHmxgG3S1JXVaKWcFDyNb3Ui28Au0TQv57OqxXhu
+	 8CC5eMCOT+DLKEbKW5MSDrt9DCVtFMguYGAP4iqw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437345AbfHISCZ (ORCPT
+        id S2437359AbfHISCr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 14:02:25 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:39421 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437214AbfHISCZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 14:02:25 -0400
-Received: by mail-ot1-f67.google.com with SMTP id r21so129929096otq.6
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 11:02:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=h3dChRxMujcpJS/h7Gf+sQx61G+5xszBXdmMOQDhv1M=;
-        b=g0oi6CqAAQxe2E6hp6nt7KSkDFm/q5DlK3KWqaUDx6Bp0jlufJsAcurxcrSyGlwFP2
-         /RvA7urrh9enhpMtOOy/nX6Q6Nb8J/WUBwxwkD3+jIj1jYJviniewjKimZ2SWDjOWgkK
-         t2I3EqHIx3HfrGq5cYMAnQEZNHMbh/yj2Oj6aLUDFVshLVlrQ5pZ5Iixy6jtu6UlCCLk
-         mK2BUh9Ej1bBgWNpVnYOkIqMZkgZHrdq3SzqqYOGhSesMtH+jnz66eF9Sn/9zNUflxvY
-         uHSBQZR9hH/rkmItuY2ZrKAhrKqwepUsMzNTpxStB/a3f9YNWMUmm9lV/jEq/XOHMDKa
-         6bxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=h3dChRxMujcpJS/h7Gf+sQx61G+5xszBXdmMOQDhv1M=;
-        b=Am5WRSybPC8e2f2QUuo3tWZNCv4A9ZlBx5NwmVuPazcetSws0MN24V5K4Us3tOVaF0
-         Oa9rpuag88lUbm/aOkbAZyYAGfJxn2UwHInZpZ6FKqOS78jafFTRYtVpupnfx0mDT8r+
-         U7BLWrcDahLM6gxbb8h/xKFkTnH8apMP/78S1VMX9gHX7GmpMu4m1QqvcnIF8RhDK4ER
-         Fc48wwz1Dz89K7M3Orljq3vMc4uszVHt6LReFYWXww5D3EzsfY550ccHjr3QA1Gqqqn6
-         1GJcE/4VrpgCLq7nUxhdSCFoETQUHPD91k6C/U0bwPzh0Cq7lnEQnR6Ew2+ZkEcNtmUH
-         2YwQ==
-X-Gm-Message-State: APjAAAXlqsFfIyxrcwJVwWaIt1EzX3igN7yiiG8PfbAE2kMKTLJ1kpyF
-        DuBoNPXxXeNUKbLebEJK33kZIMmoqKlviuI1JMjRCg==
-X-Google-Smtp-Source: APXvYqwngz2wfrTAed/STUVSr9QbRWy6iKBS9zVgrC7Uk6kr8Y+1SQ8Vs8OmXHwxhxvEjUHT63ji+6Ak8gxXO+Hl8aQ=
-X-Received: by 2002:a6b:f718:: with SMTP id k24mr11226585iog.126.1565373742130;
- Fri, 09 Aug 2019 11:02:22 -0700 (PDT)
+        Fri, 9 Aug 2019 14:02:47 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56890 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2437155AbfHISCr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 14:02:47 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 25050AF89;
+        Fri,  9 Aug 2019 18:02:46 +0000 (UTC)
+Date:   Fri, 9 Aug 2019 20:02:38 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     kirill.shutemov@linux.intel.com, hannes@cmpxchg.org,
+        vbabka@suse.cz, rientjes@google.com, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCH 1/2 -mm] mm: account lazy free pages separately
+Message-ID: <20190809180238.GS18351@dhcp22.suse.cz>
+References: <1565308665-24747-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190809083216.GM18351@dhcp22.suse.cz>
+ <1a3c4185-c7ab-8d6f-8191-77dce02025a7@linux.alibaba.com>
 MIME-Version: 1.0
-References: <20190808131448.349161-1-tmaimon77@gmail.com> <20190808131448.349161-3-tmaimon77@gmail.com>
-In-Reply-To: <20190808131448.349161-3-tmaimon77@gmail.com>
-From:   Benjamin Fair <benjaminfair@google.com>
-Date:   Fri, 9 Aug 2019 11:01:44 -0700
-Message-ID: <CADKL2t4=k=73uDMwdg3OJch1ZhRcv6Z5pRFoAbHvPxmSzvJczg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] spi: npcm-fiu: add NPCM FIU controller driver
-To:     Tomer Maimon <tmaimon77@gmail.com>
-Cc:     broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        vigneshr@ti.com, bbrezillon@kernel.org, avifishman70@gmail.com,
-        Tali Perry <tali.perry1@gmail.com>,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1a3c4185-c7ab-8d6f-8191-77dce02025a7@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 8, 2019 at 6:15 AM Tomer Maimon <tmaimon77@gmail.com> wrote:
->
-> Add Nuvoton NPCM BMC Flash Interface Unit(FIU) SPI master
-> controller driver using SPI-MEM interface.
->
-> The FIU supports single, dual or quad communication interface.
->
-> the FIU controller can operate in following modes:
-> - User Mode Access(UMA): provides flash access by using an
->   indirect address/data mechanism.
-> - direct rd/wr mode: maps the flash memory into the core
->   address space.
-> - SPI-X mode: used for an expansion bus to an ASIC or CPLD.
->
-> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
-> ---
->  drivers/spi/Kconfig        |  10 +
->  drivers/spi/Makefile       |   1 +
->  drivers/spi/spi-npcm-fiu.c | 761 +++++++++++++++++++++++++++++++++++++
->  3 files changed, 772 insertions(+)
->  create mode 100644 drivers/spi/spi-npcm-fiu.c
->
-> diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
-> index 3a1d8f1170de..6ee514fd0920 100644
-> --- a/drivers/spi/Kconfig
-> +++ b/drivers/spi/Kconfig
-> @@ -433,6 +433,16 @@ config SPI_MT7621
->         help
->           This selects a driver for the MediaTek MT7621 SPI Controller.
->
-> +config SPI_NPCM_FIU
-> +       tristate "Nuvoton NPCM FLASH Interface Unit"
-> +       depends on ARCH_NPCM || COMPILE_TEST
-> +       depends on OF && HAS_IOMEM
-> +       help
-> +         This enables support for the Flash Interface Unit SPI controller
-> +         in master mode.
-> +         This driver does not support generic SPI. The implementation only
-> +         supports spi-mem interface.
-> +
->  config SPI_NPCM_PSPI
->         tristate "Nuvoton NPCM PSPI Controller"
->         depends on ARCH_NPCM || COMPILE_TEST
-> diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
-> index 63dcab552bcb..adbebee93a75 100644
-> --- a/drivers/spi/Makefile
-> +++ b/drivers/spi/Makefile
-> @@ -63,6 +63,7 @@ obj-$(CONFIG_SPI_MT65XX)                += spi-mt65xx.o
->  obj-$(CONFIG_SPI_MT7621)               += spi-mt7621.o
->  obj-$(CONFIG_SPI_MXIC)                 += spi-mxic.o
->  obj-$(CONFIG_SPI_MXS)                  += spi-mxs.o
-> +obj-$(CONFIG_SPI_NPCM_FIU)             += spi-npcm-fiu.o
->  obj-$(CONFIG_SPI_NPCM_PSPI)            += spi-npcm-pspi.o
->  obj-$(CONFIG_SPI_NUC900)               += spi-nuc900.o
->  obj-$(CONFIG_SPI_NXP_FLEXSPI)          += spi-nxp-fspi.o
-> diff --git a/drivers/spi/spi-npcm-fiu.c b/drivers/spi/spi-npcm-fiu.c
-> new file mode 100644
-> index 000000000000..2d8c281e8fa9
-> --- /dev/null
-> +++ b/drivers/spi/spi-npcm-fiu.c
-> @@ -0,0 +1,761 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (c) 2019 Nuvoton Technology corporation.
-> +
-> +#include <linux/init.h>
-> +#include <linux/kernel.h>
-> +#include <linux/device.h>
-> +#include <linux/module.h>
-> +#include <linux/ioport.h>
-> +#include <linux/clk.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/io.h>
-> +#include <linux/vmalloc.h>
-> +#include <linux/regmap.h>
-> +#include <linux/of_device.h>
-> +#include <linux/spi/spi-mem.h>
-> +#include <linux/mfd/syscon.h>
-> +
-> +/* NPCM7xx GCR module */
-> +#define NPCM7XX_INTCR3_OFFSET          0x9C
-> +#define NPCM7XX_INTCR3_FIU_FIX         BIT(6)
-> +
-> +/* Flash Interface Unit (FIU) Registers */
-> +#define NPCM_FIU_DRD_CFG               0x00
-> +#define NPCM_FIU_DWR_CFG               0x04
-> +#define NPCM_FIU_UMA_CFG               0x08
-> +#define NPCM_FIU_UMA_CTS               0x0C
-> +#define NPCM_FIU_UMA_CMD               0x10
-> +#define NPCM_FIU_UMA_ADDR              0x14
-> +#define NPCM_FIU_PRT_CFG               0x18
-> +#define NPCM_FIU_UMA_DW0               0x20
-> +#define NPCM_FIU_UMA_DW1               0x24
-> +#define NPCM_FIU_UMA_DW2               0x28
-> +#define NPCM_FIU_UMA_DW3               0x2C
-> +#define NPCM_FIU_UMA_DR0               0x30
-> +#define NPCM_FIU_UMA_DR1               0x34
-> +#define NPCM_FIU_UMA_DR2               0x38
-> +#define NPCM_FIU_UMA_DR3               0x3C
-> +#define NPCM_FIU_MAX_REG_LIMIT         0x80
-> +
-> +/* FIU Direct Read Configuration Register */
-> +#define NPCM_FIU_DRD_CFG_LCK           BIT(31)
-> +#define NPCM_FIU_DRD_CFG_R_BURST       GENMASK(25, 24)
-> +#define NPCM_FIU_DRD_CFG_ADDSIZ                GENMASK(17, 16)
-> +#define NPCM_FIU_DRD_CFG_DBW           GENMASK(13, 12)
-> +#define NPCM_FIU_DRD_CFG_ACCTYPE       GENMASK(9, 8)
-> +#define NPCM_FIU_DRD_CFG_RDCMD         GENMASK(7, 0)
-> +#define NPCM_FIU_DRD_ADDSIZ_SHIFT      16
-> +#define NPCM_FIU_DRD_DBW_SHIFT         12
-> +#define NPCM_FIU_DRD_ACCTYPE_SHIFT     8
-> +
-> +/* FIU Direct Write Configuration Register */
-> +#define NPCM_FIU_DWR_CFG_LCK           BIT(31)
-> +#define NPCM_FIU_DWR_CFG_W_BURST       GENMASK(25, 24)
-> +#define NPCM_FIU_DWR_CFG_ADDSIZ                GENMASK(17, 16)
-> +#define NPCM_FIU_DWR_CFG_ABPCK         GENMASK(11, 10)
-> +#define NPCM_FIU_DWR_CFG_DBPCK         GENMASK(9, 8)
-> +#define NPCM_FIU_DWR_CFG_WRCMD         GENMASK(7, 0)
-> +#define NPCM_FIU_DWR_ADDSIZ_SHIFT      16
-> +#define NPCM_FIU_DWR_ABPCK_SHIFT       10
-> +#define NPCM_FIU_DWR_DBPCK_SHIFT       8
-> +
-> +/* FIU UMA Configuration Register */
-> +#define NPCM_FIU_UMA_CFG_LCK           BIT(31)
-> +#define NPCM_FIU_UMA_CFG_CMMLCK                BIT(30)
-> +#define NPCM_FIU_UMA_CFG_RDATSIZ       GENMASK(28, 24)
-> +#define NPCM_FIU_UMA_CFG_DBSIZ         GENMASK(23, 21)
-> +#define NPCM_FIU_UMA_CFG_WDATSIZ       GENMASK(20, 16)
-> +#define NPCM_FIU_UMA_CFG_ADDSIZ                GENMASK(13, 11)
-> +#define NPCM_FIU_UMA_CFG_CMDSIZ                BIT(10)
-> +#define NPCM_FIU_UMA_CFG_RDBPCK                GENMASK(9, 8)
-> +#define NPCM_FIU_UMA_CFG_DBPCK         GENMASK(7, 6)
-> +#define NPCM_FIU_UMA_CFG_WDBPCK                GENMASK(5, 4)
-> +#define NPCM_FIU_UMA_CFG_ADBPCK                GENMASK(3, 2)
-> +#define NPCM_FIU_UMA_CFG_CMBPCK                GENMASK(1, 0)
-> +#define NPCM_FIU_UMA_CFG_ADBPCK_SHIFT  2
-> +#define NPCM_FIU_UMA_CFG_WDBPCK_SHIFT  4
-> +#define NPCM_FIU_UMA_CFG_DBPCK_SHIFT   6
-> +#define NPCM_FIU_UMA_CFG_RDBPCK_SHIFT  8
-> +#define NPCM_FIU_UMA_CFG_ADDSIZ_SHIFT  11
-> +#define NPCM_FIU_UMA_CFG_WDATSIZ_SHIFT 16
-> +#define NPCM_FIU_UMA_CFG_DBSIZ_SHIFT   21
-> +#define NPCM_FIU_UMA_CFG_RDATSIZ_SHIFT 24
-> +
-> +/* FIU UMA Control and Status Register */
-> +#define NPCM_FIU_UMA_CTS_RDYIE         BIT(25)
-> +#define NPCM_FIU_UMA_CTS_RDYST         BIT(24)
-> +#define NPCM_FIU_UMA_CTS_SW_CS         BIT(16)
-> +#define NPCM_FIU_UMA_CTS_DEV_NUM       GENMASK(9, 8)
-> +#define NPCM_FIU_UMA_CTS_EXEC_DONE     BIT(0)
-> +#define NPCM_FIU_UMA_CTS_DEV_NUM_SHIFT 8
-> +
-> +/* FIU UMA Command Register */
-> +#define NPCM_FIU_UMA_CMD_DUM3          GENMASK(31, 24)
-> +#define NPCM_FIU_UMA_CMD_DUM2          GENMASK(23, 16)
-> +#define NPCM_FIU_UMA_CMD_DUM1          GENMASK(15, 8)
-> +#define NPCM_FIU_UMA_CMD_CMD           GENMASK(7, 0)
-> +
-> +/* FIU UMA Address Register */
-> +#define NPCM_FIU_UMA_ADDR_UMA_ADDR     GENMASK(31, 0)
-> +#define NPCM_FIU_UMA_ADDR_AB3          GENMASK(31, 24)
-> +#define NPCM_FIU_UMA_ADDR_AB2          GENMASK(23, 16)
-> +#define NPCM_FIU_UMA_ADDR_AB1          GENMASK(15, 8)
-> +#define NPCM_FIU_UMA_ADDR_AB0          GENMASK(7, 0)
-> +
-> +/* FIU UMA Write Data Bytes 0-3 Register */
-> +#define NPCM_FIU_UMA_DW0_WB3           GENMASK(31, 24)
-> +#define NPCM_FIU_UMA_DW0_WB2           GENMASK(23, 16)
-> +#define NPCM_FIU_UMA_DW0_WB1           GENMASK(15, 8)
-> +#define NPCM_FIU_UMA_DW0_WB0           GENMASK(7, 0)
-> +
-> +/* FIU UMA Write Data Bytes 4-7 Register */
-> +#define NPCM_FIU_UMA_DW1_WB7           GENMASK(31, 24)
-> +#define NPCM_FIU_UMA_DW1_WB6           GENMASK(23, 16)
-> +#define NPCM_FIU_UMA_DW1_WB5           GENMASK(15, 8)
-> +#define NPCM_FIU_UMA_DW1_WB4           GENMASK(7, 0)
-> +
-> +/* FIU UMA Write Data Bytes 8-11 Register */
-> +#define NPCM_FIU_UMA_DW2_WB11          GENMASK(31, 24)
-> +#define NPCM_FIU_UMA_DW2_WB10          GENMASK(23, 16)
-> +#define NPCM_FIU_UMA_DW2_WB9           GENMASK(15, 8)
-> +#define NPCM_FIU_UMA_DW2_WB8           GENMASK(7, 0)
-> +
-> +/* FIU UMA Write Data Bytes 12-15 Register */
-> +#define NPCM_FIU_UMA_DW3_WB15          GENMASK(31, 24)
-> +#define NPCM_FIU_UMA_DW3_WB14          GENMASK(23, 16)
-> +#define NPCM_FIU_UMA_DW3_WB13          GENMASK(15, 8)
-> +#define NPCM_FIU_UMA_DW3_WB12          GENMASK(7, 0)
-> +
-> +/* FIU UMA Read Data Bytes 0-3 Register */
-> +#define NPCM_FIU_UMA_DR0_RB3           GENMASK(31, 24)
-> +#define NPCM_FIU_UMA_DR0_RB2           GENMASK(23, 16)
-> +#define NPCM_FIU_UMA_DR0_RB1           GENMASK(15, 8)
-> +#define NPCM_FIU_UMA_DR0_RB0           GENMASK(7, 0)
-> +
-> +/* FIU UMA Read Data Bytes 4-7 Register */
-> +#define NPCM_FIU_UMA_DR1_RB15          GENMASK(31, 24)
-> +#define NPCM_FIU_UMA_DR1_RB14          GENMASK(23, 16)
-> +#define NPCM_FIU_UMA_DR1_RB13          GENMASK(15, 8)
-> +#define NPCM_FIU_UMA_DR1_RB12          GENMASK(7, 0)
-> +
-> +/* FIU UMA Read Data Bytes 8-11 Register */
-> +#define NPCM_FIU_UMA_DR2_RB15          GENMASK(31, 24)
-> +#define NPCM_FIU_UMA_DR2_RB14          GENMASK(23, 16)
-> +#define NPCM_FIU_UMA_DR2_RB13          GENMASK(15, 8)
-> +#define NPCM_FIU_UMA_DR2_RB12          GENMASK(7, 0)
-> +
-> +/* FIU UMA Read Data Bytes 12-15 Register */
-> +#define NPCM_FIU_UMA_DR3_RB15          GENMASK(31, 24)
-> +#define NPCM_FIU_UMA_DR3_RB14          GENMASK(23, 16)
-> +#define NPCM_FIU_UMA_DR3_RB13          GENMASK(15, 8)
-> +#define NPCM_FIU_UMA_DR3_RB12          GENMASK(7, 0)
-> +
-> +/* FIU Read Mode */
-> +enum {
-> +       DRD_SINGLE_WIRE_MODE    = 0,
-> +       DRD_DUAL_IO_MODE        = 1,
-> +       DRD_QUAD_IO_MODE        = 2,
-> +       DRD_SPI_X_MODE          = 3,
-> +};
-> +
-> +enum {
-> +       DWR_ABPCK_BIT_PER_CLK   = 0,
-> +       DWR_ABPCK_2_BIT_PER_CLK = 1,
-> +       DWR_ABPCK_4_BIT_PER_CLK = 2,
-> +};
-> +
-> +enum {
-> +       DWR_DBPCK_BIT_PER_CLK   = 0,
-> +       DWR_DBPCK_2_BIT_PER_CLK = 1,
-> +       DWR_DBPCK_4_BIT_PER_CLK = 2,
-> +};
-> +
-> +#define NPCM_FIU_DRD_16_BYTE_BURST     0x3000000
-> +#define NPCM_FIU_DWR_16_BYTE_BURST     0x3000000
-> +
-> +#define MAP_SIZE_128MB                 0x8000000
-> +#define MAP_SIZE_16MB                  0x1000000
-> +#define MAP_SIZE_8MB                   0x800000
-> +
-> +#define NUM_BITS_IN_BYTE               8
-> +#define FIU_DRD_MAX_DUMMY_NUMBER       3
-> +#define NPCM_MAX_CHIP_NUM              4
-> +#define CHUNK_SIZE                     16
-> +#define UMA_MICRO_SEC_TIMEOUT          150
-> +
-> +enum {
-> +       FIU0 = 0,
-> +       FIU3,
-> +       FIUX,
-> +};
-> +
-> +struct npcm_fiu_info {
-> +       char *name;
-> +       u32 fiu_id;
-> +       u32 max_map_size;
-> +       u32 max_cs;
-> +};
-> +
-> +struct fiu_data {
-> +       const struct npcm_fiu_info *npcm_fiu_data_info;
-> +       int fiu_max;
-> +};
-> +
-> +static const struct npcm_fiu_info npxm7xx_fiu_info[] = {
-> +       {.name = "FIU0", .fiu_id = FIU0,
-> +               .max_map_size = MAP_SIZE_128MB, .max_cs = 2},
-> +       {.name = "FIU3", .fiu_id = FIU3,
-> +               .max_map_size = MAP_SIZE_128MB, .max_cs = 4},
-> +       {.name = "FIUX", .fiu_id = FIUX,
-> +               .max_map_size = MAP_SIZE_16MB, .max_cs = 2} };
-> +
-> +static const struct fiu_data npxm7xx_fiu_data = {
-> +       .npcm_fiu_data_info = npxm7xx_fiu_info,
-> +       .fiu_max = 3,
-> +};
-> +
-> +struct npcm_fiu_spi;
-> +
-> +struct npcm_fiu_chip {
-> +       void __iomem *flash_region_mapped_ptr;
-> +       struct npcm_fiu_spi *fiu;
-> +       unsigned long clkrate;
-> +       u32 chipselect;
-> +};
-> +
-> +struct npcm_fiu_spi {
-> +       struct npcm_fiu_chip chip[NPCM_MAX_CHIP_NUM];
-> +       const struct npcm_fiu_info *info;
-> +       struct spi_mem_op drd_op;
-> +       struct resource *res_mem;
-> +       struct regmap *regmap;
-> +       unsigned long clkrate;
-> +       struct device *dev;
-> +       struct clk *clk;
-> +       bool spix_mode;
-> +};
-> +
-> +static const struct regmap_config npcm_mtd_regmap_config = {
-> +       .reg_bits = 32,
-> +       .val_bits = 32,
-> +       .reg_stride = 4,
-> +       .max_register = NPCM_FIU_MAX_REG_LIMIT,
-> +};
-> +
-> +static void npcm_fiu_set_drd(struct npcm_fiu_spi *fiu,
-> +                            const struct spi_mem_op *op)
-> +{
-> +       regmap_update_bits(fiu->regmap, NPCM_FIU_DRD_CFG,
-> +                          NPCM_FIU_DRD_CFG_ACCTYPE,
-> +                          ilog2(op->addr.buswidth) <<
-> +                          NPCM_FIU_DRD_ACCTYPE_SHIFT);
-> +       fiu->drd_op.addr.buswidth = op->addr.buswidth;
-> +       regmap_update_bits(fiu->regmap, NPCM_FIU_DRD_CFG,
-> +                          NPCM_FIU_DRD_CFG_DBW,
-> +                          ((op->dummy.nbytes * ilog2(op->addr.buswidth))
-> +                           / NUM_BITS_IN_BYTE) << NPCM_FIU_DRD_DBW_SHIFT);
-> +       fiu->drd_op.dummy.nbytes = op->dummy.nbytes;
-> +       regmap_update_bits(fiu->regmap, NPCM_FIU_DRD_CFG,
-> +                          NPCM_FIU_DRD_CFG_RDCMD, op->cmd.opcode);
-> +       fiu->drd_op.cmd.opcode = op->cmd.opcode;
-> +       regmap_update_bits(fiu->regmap, NPCM_FIU_DRD_CFG,
-> +                          NPCM_FIU_DRD_CFG_ADDSIZ,
-> +                          (op->addr.nbytes - 3) << NPCM_FIU_DRD_ADDSIZ_SHIFT);
-> +       fiu->drd_op.addr.nbytes = op->addr.nbytes;
-> +}
-> +
-> +static ssize_t npcm_fiu_direct_read(struct spi_mem_dirmap_desc *desc,
-> +                                   u64 offs, size_t len, void *buf)
-> +{
-> +       struct npcm_fiu_spi *fiu =
-> +               spi_controller_get_devdata(desc->mem->spi->master);
-> +       struct npcm_fiu_chip *chip = &fiu->chip[desc->mem->spi->chip_select];
-> +       void __iomem *src = (void __iomem *)(chip->flash_region_mapped_ptr +
-> +                                            offs);
-> +       u8 *buf_rx = buf;
-> +       u32 i;
-> +
-> +       if (fiu->spix_mode) {
-> +               for (i = 0 ; i < len ; i++)
-> +                       *(buf_rx + i) = ioread8(src + i);
-> +       } else {
-> +               if (desc->info.op_tmpl.addr.buswidth != fiu->drd_op.addr.buswidth ||
-> +                   desc->info.op_tmpl.dummy.nbytes != fiu->drd_op.dummy.nbytes ||
-> +                   desc->info.op_tmpl.cmd.opcode != fiu->drd_op.cmd.opcode ||
-> +                   desc->info.op_tmpl.addr.nbytes != fiu->drd_op.addr.nbytes)
-> +                       npcm_fiu_set_drd(fiu, &desc->info.op_tmpl);
-> +
-> +               memcpy_fromio(buf_rx, src, len);
+On Fri 09-08-19 09:19:13, Yang Shi wrote:
+> 
+> 
+> On 8/9/19 1:32 AM, Michal Hocko wrote:
+> > On Fri 09-08-19 07:57:44, Yang Shi wrote:
+> > > When doing partial unmap to THP, the pages in the affected range would
+> > > be considered to be reclaimable when memory pressure comes in.  And,
+> > > such pages would be put on deferred split queue and get minus from the
+> > > memory statistics (i.e. /proc/meminfo).
+> > > 
+> > > For example, when doing THP split test, /proc/meminfo would show:
+> > > 
+> > > Before put on lazy free list:
+> > > MemTotal:       45288336 kB
+> > > MemFree:        43281376 kB
+> > > MemAvailable:   43254048 kB
+> > > ...
+> > > Active(anon):    1096296 kB
+> > > Inactive(anon):     8372 kB
+> > > ...
+> > > AnonPages:       1096264 kB
+> > > ...
+> > > AnonHugePages:   1056768 kB
+> > > 
+> > > After put on lazy free list:
+> > > MemTotal:       45288336 kB
+> > > MemFree:        43282612 kB
+> > > MemAvailable:   43255284 kB
+> > > ...
+> > > Active(anon):    1094228 kB
+> > > Inactive(anon):     8372 kB
+> > > ...
+> > > AnonPages:         49668 kB
+> > > ...
+> > > AnonHugePages:     10240 kB
+> > > 
+> > > The THPs confusingly look disappeared although they are still on LRU if
+> > > you are not familair the tricks done by kernel.
+> > Is this a fallout of the recent deferred freeing work?
+> 
+> This series follows up the discussion happened when reviewing "Make deferred
+> split shrinker memcg aware".
 
-Does this need to make sure the memcpy is aligned, or is that handled
-at a higher layer?
+OK, so it is a pre-existing problem. Thanks!
 
-> +       }
-> +
-> +       return len;
-> +}
-> +
-> +static ssize_t npcm_fiu_direct_write(struct spi_mem_dirmap_desc *desc,
-> +                                    u64 offs, size_t len, const void *buf)
-> +{
-> +       struct npcm_fiu_spi *fiu =
-> +               spi_controller_get_devdata(desc->mem->spi->master);
-> +       struct npcm_fiu_chip *chip = &fiu->chip[desc->mem->spi->chip_select];
-> +       void __iomem *dst = (void __iomem *)(chip->flash_region_mapped_ptr +
-> +                                            offs);
-> +       const u8 *buf_tx = buf;
-> +       u32 i;
-> +
-> +       if (fiu->spix_mode)
-> +               for (i = 0 ; i < len ; i++)
-> +                       iowrite8(*(buf_tx + i), dst + i);
-> +       else
-> +               memcpy_toio(dst, buf_tx, len);
-> +
-> +       return len;
-> +}
-> +
-> +static int npcm_fiu_uma_read(struct spi_mem *mem,
-> +                            const struct spi_mem_op *op, u32 addr,
-> +                             bool is_address_size, u8 *data, u32 data_size)
-> +{
-> +       struct npcm_fiu_spi *fiu =
-> +               spi_controller_get_devdata(mem->spi->master);
-> +       u32 uma_cfg = BIT(10);
-> +       u32 data_reg[4];
-> +       int ret;
-> +       u32 val;
-> +       u32 i;
-> +
-> +       regmap_update_bits(fiu->regmap, NPCM_FIU_UMA_CTS,
-> +                          NPCM_FIU_UMA_CTS_DEV_NUM,
-> +                          (mem->spi->chip_select <<
-> +                           NPCM_FIU_UMA_CTS_DEV_NUM_SHIFT));
-> +       regmap_update_bits(fiu->regmap, NPCM_FIU_UMA_CMD,
-> +                          NPCM_FIU_UMA_CMD_CMD, op->cmd.opcode);
-> +
-> +       if (is_address_size) {
-> +               uma_cfg |= ilog2(op->cmd.buswidth);
-> +               uma_cfg |= ilog2(op->addr.buswidth)
-> +                       << NPCM_FIU_UMA_CFG_ADBPCK_SHIFT;
-> +               uma_cfg |= ilog2(op->dummy.buswidth)
-> +                       << NPCM_FIU_UMA_CFG_DBPCK_SHIFT;
-> +               uma_cfg |= ilog2(op->data.buswidth)
-> +                       << NPCM_FIU_UMA_CFG_RDBPCK_SHIFT;
-> +               uma_cfg |= op->dummy.nbytes << NPCM_FIU_UMA_CFG_DBSIZ_SHIFT;
-> +               uma_cfg |= op->addr.nbytes << NPCM_FIU_UMA_CFG_ADDSIZ_SHIFT;
-> +               regmap_write(fiu->regmap, NPCM_FIU_UMA_ADDR, addr);
-> +       } else {
-> +               regmap_write(fiu->regmap, NPCM_FIU_UMA_ADDR, 0x0);
-> +       }
-> +
-> +       uma_cfg |= data_size << NPCM_FIU_UMA_CFG_RDATSIZ_SHIFT;
-> +       regmap_write(fiu->regmap, NPCM_FIU_UMA_CFG, uma_cfg);
-> +       regmap_write_bits(fiu->regmap, NPCM_FIU_UMA_CTS,
-> +                         NPCM_FIU_UMA_CTS_EXEC_DONE,
-> +                         NPCM_FIU_UMA_CTS_EXEC_DONE);
-> +       ret = regmap_read_poll_timeout(fiu->regmap, NPCM_FIU_UMA_CTS, val,
-> +                                      (!(val & NPCM_FIU_UMA_CTS_EXEC_DONE)), 0,
-> +                                      UMA_MICRO_SEC_TIMEOUT);
-> +       if (ret)
-> +               return ret;
-> +
-> +       if (data_size) {
-> +               for (i = 0; i < DIV_ROUND_UP(data_size, 4); i++)
-> +                       regmap_read(fiu->regmap, NPCM_FIU_UMA_DR0 + (i * 4),
-> +                                   &data_reg[i]);
-> +               memcpy(data, data_reg, data_size);
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static int npcm_fiu_uma_write(struct spi_mem *mem,
-> +                             const struct spi_mem_op *op, u8 cmd,
-> +                             bool is_address_size, u8 *data, u32 data_size)
-> +{
-> +       struct npcm_fiu_spi *fiu =
-> +               spi_controller_get_devdata(mem->spi->master);
-> +       u32 uma_cfg = BIT(10);
-> +       u32 data_reg[4] = {0};
-> +       u32 val;
-> +       u32 i;
-> +
-> +       regmap_update_bits(fiu->regmap, NPCM_FIU_UMA_CTS,
-> +                          NPCM_FIU_UMA_CTS_DEV_NUM,
-> +                          (mem->spi->chip_select <<
-> +                           NPCM_FIU_UMA_CTS_DEV_NUM_SHIFT));
-> +
-> +       regmap_update_bits(fiu->regmap, NPCM_FIU_UMA_CMD,
-> +                          NPCM_FIU_UMA_CMD_CMD, cmd);
-> +
-> +       if (data_size) {
-> +               memcpy(data_reg, data, data_size);
-> +               for (i = 0; i < DIV_ROUND_UP(data_size, 4); i++)
-> +                       regmap_write(fiu->regmap, NPCM_FIU_UMA_DW0 + (i * 4),
-> +                                    data_reg[i]);
-> +       }
-> +
-> +       if (is_address_size) {
-> +               uma_cfg |= ilog2(op->cmd.buswidth);
-> +               uma_cfg |= ilog2(op->addr.buswidth) <<
-> +                       NPCM_FIU_UMA_CFG_ADBPCK_SHIFT;
-> +               uma_cfg |= ilog2(op->data.buswidth) <<
-> +                       NPCM_FIU_UMA_CFG_WDBPCK_SHIFT;
-> +               uma_cfg |= op->addr.nbytes << NPCM_FIU_UMA_CFG_ADDSIZ_SHIFT;
-> +               regmap_write(fiu->regmap, NPCM_FIU_UMA_ADDR, op->addr.val);
-> +       } else {
-> +               regmap_write(fiu->regmap, NPCM_FIU_UMA_ADDR, 0x0);
-> +       }
-> +
-> +       uma_cfg |= (data_size << NPCM_FIU_UMA_CFG_WDATSIZ_SHIFT);
-> +       regmap_write(fiu->regmap, NPCM_FIU_UMA_CFG, uma_cfg);
-> +
-> +       regmap_write_bits(fiu->regmap, NPCM_FIU_UMA_CTS,
-> +                         NPCM_FIU_UMA_CTS_EXEC_DONE,
-> +                         NPCM_FIU_UMA_CTS_EXEC_DONE);
-> +
-> +       return regmap_read_poll_timeout(fiu->regmap, NPCM_FIU_UMA_CTS, val,
-> +                                      (!(val & NPCM_FIU_UMA_CTS_EXEC_DONE)), 0,
-> +                                       UMA_MICRO_SEC_TIMEOUT);
-> +}
-> +
-> +static int npcm_fiu_manualwrite(struct spi_mem *mem,
-> +                               const struct spi_mem_op *op)
-> +{
-> +       struct npcm_fiu_spi *fiu =
-> +               spi_controller_get_devdata(mem->spi->master);
-> +       u8 *data = (u8 *)op->data.buf.out;
-> +       u32 num_data_chunks;
-> +       u32 remain_data;
-> +       u32 idx = 0;
-> +       int ret;
-> +
-> +       num_data_chunks  = op->data.nbytes / CHUNK_SIZE;
-> +       remain_data  = op->data.nbytes % CHUNK_SIZE;
-> +
-> +       regmap_update_bits(fiu->regmap, NPCM_FIU_UMA_CTS,
-> +                          NPCM_FIU_UMA_CTS_DEV_NUM,
-> +                          (mem->spi->chip_select <<
-> +                           NPCM_FIU_UMA_CTS_DEV_NUM_SHIFT));
-> +       regmap_update_bits(fiu->regmap, NPCM_FIU_UMA_CTS,
-> +                          NPCM_FIU_UMA_CTS_SW_CS, 0);
-> +
-> +       ret = npcm_fiu_uma_write(mem, op, op->cmd.opcode, true, NULL, 0);
-> +       if (ret)
-> +               return ret;
-> +
-> +       /* Starting the data writing loop in multiples of 8 */
-> +       for (idx = 0; idx < num_data_chunks; ++idx) {
-> +               ret = npcm_fiu_uma_write(mem, op, data[0], false,
-> +                                        &data[1], CHUNK_SIZE - 1);
-> +               if (ret)
-> +                       return ret;
-> +
-> +               data += CHUNK_SIZE;
-> +       }
-> +
-> +       /* Handling chunk remains */
-> +       if (remain_data > 0) {
-> +               ret = npcm_fiu_uma_write(mem, op, data[0], false,
-> +                                        &data[1], remain_data - 1);
-> +               if (ret)
-> +                       return ret;
-> +       }
-> +
-> +       regmap_update_bits(fiu->regmap, NPCM_FIU_UMA_CTS,
-> +                          NPCM_FIU_UMA_CTS_SW_CS, NPCM_FIU_UMA_CTS_SW_CS);
-> +
-> +       return 0;
-> +}
-> +
-> +static int npcm_fiu_read(struct spi_mem *mem, const struct spi_mem_op *op)
-> +{
-> +       u8 *data = op->data.buf.in;
-> +       int i, readlen, currlen;
-> +       size_t retlen = 0;
-> +       u8 *buf_ptr;
-> +       u32 addr;
-> +       int ret;
-> +
-> +       i = 0;
-> +       currlen = op->data.nbytes;
-> +
-> +       do {
-> +               addr = ((u32)op->addr.val + i);
-> +               if (currlen < 16)
-> +                       readlen = currlen;
-> +               else
-> +                       readlen = 16;
-> +
-> +               buf_ptr = data + i;
-> +               ret = npcm_fiu_uma_read(mem, op, addr, true, buf_ptr,
-> +                                       readlen);
-> +               if (ret)
-> +                       return ret;
-> +
-> +               i += readlen;
-> +               currlen -= 16;
-> +       } while (currlen > 0);
-> +
-> +       retlen = i;
-> +
-> +       return 0;
-> +}
-> +
-> +static void npcm_fiux_set_direct_wr(struct npcm_fiu_spi *fiu)
-> +{
-> +       regmap_write(fiu->regmap, NPCM_FIU_DWR_CFG,
-> +                    NPCM_FIU_DWR_16_BYTE_BURST);
-> +       regmap_update_bits(fiu->regmap, NPCM_FIU_DWR_CFG,
-> +                          NPCM_FIU_DWR_CFG_ABPCK,
-> +                          DWR_ABPCK_4_BIT_PER_CLK << NPCM_FIU_DWR_ABPCK_SHIFT);
-> +       regmap_update_bits(fiu->regmap, NPCM_FIU_DWR_CFG,
-> +                          NPCM_FIU_DWR_CFG_DBPCK,
-> +                          DWR_DBPCK_4_BIT_PER_CLK << NPCM_FIU_DWR_DBPCK_SHIFT);
-> +}
-> +
-> +static void npcm_fiux_set_direct_rd(struct npcm_fiu_spi *fiu)
-> +{
-> +       u32 rx_dummy = 0;
-> +
-> +       regmap_write(fiu->regmap, NPCM_FIU_DRD_CFG,
-> +                    NPCM_FIU_DRD_16_BYTE_BURST);
-> +       regmap_update_bits(fiu->regmap, NPCM_FIU_DRD_CFG,
-> +                          NPCM_FIU_DRD_CFG_ACCTYPE,
-> +                          DRD_SPI_X_MODE << NPCM_FIU_DRD_ACCTYPE_SHIFT);
-> +       regmap_update_bits(fiu->regmap, NPCM_FIU_DRD_CFG,
-> +                          NPCM_FIU_DRD_CFG_DBW,
-> +                          rx_dummy << NPCM_FIU_DRD_DBW_SHIFT);
-> +}
-> +
-> +static int npcm_fiu_exec_op(struct spi_mem *mem, const struct spi_mem_op *op)
-> +{
-> +       struct npcm_fiu_spi *fiu =
-> +               spi_controller_get_devdata(mem->spi->master);
-> +       struct npcm_fiu_chip *chip = &fiu->chip[mem->spi->chip_select];
-> +       int ret = 0;
-> +       u8 *buf;
-> +
-> +       dev_dbg(fiu->dev, "cmd:%#x mode:%d.%d.%d.%d addr:%#llx len:%#x\n",
-> +               op->cmd.opcode, op->cmd.buswidth, op->addr.buswidth,
-> +               op->dummy.buswidth, op->data.buswidth, op->addr.val,
-> +               op->data.nbytes);
-> +
-> +       if (fiu->spix_mode)
-> +               return -ENOTSUPP;
-> +
-> +       if (fiu->clkrate != chip->clkrate) {
-> +               ret = clk_set_rate(fiu->clk, chip->clkrate);
-> +               if (ret < 0)
-> +                       dev_warn(fiu->dev, "Failed setting %lu frequancy, stay at %lu frequancy\n", chip->clkrate, fiu->clkrate);
-> +               else
-> +                       fiu->clkrate = chip->clkrate;
-> +       }
-> +
-> +       if (op->data.dir == SPI_MEM_DATA_IN) {
-> +               if (!op->addr.nbytes) {
-> +                       buf = op->data.buf.in;
-> +                       ret = npcm_fiu_uma_read(mem, op, op->addr.val, false,
-> +                                               buf, op->data.nbytes);
-> +               } else {
-> +                       ret = npcm_fiu_read(mem, op);
-> +               }
-> +       } else  {
-> +               if (!op->addr.nbytes || !op->data.nbytes) {
-> +                       if (op->data.nbytes)
-> +                               buf = (u8 *)op->data.buf.out;
-> +                       else
-> +                               buf = NULL;
-> +                       ret = npcm_fiu_uma_write(mem, op, op->cmd.opcode, false,
-> +                                                buf, op->data.nbytes);
-> +               } else {
-> +                       ret = npcm_fiu_manualwrite(mem, op);
-> +               }
-> +       }
-> +
-> +       return ret;
-> +}
-> +
-> +static int npcm_fiu_dirmap_create(struct spi_mem_dirmap_desc *desc)
-> +{
-> +       struct npcm_fiu_spi *fiu =
-> +               spi_controller_get_devdata(desc->mem->spi->master);
-> +       struct npcm_fiu_chip *chip = &fiu->chip[desc->mem->spi->chip_select];
-> +       struct regmap *gcr_regmap;
-> +
-> +       if (!fiu->res_mem) {
-> +               dev_warn(fiu->dev, "Reserved memory not defined, direct read disabled\n");
-> +               desc->nodirmap = true;
-> +               return 0;
-> +       }
-> +
-> +       if (!fiu->spix_mode &&
-> +           desc->info.op_tmpl.data.dir == SPI_MEM_DATA_OUT) {
-> +               desc->nodirmap = true;
-> +               return 0;
-> +       }
-> +
-> +       if (!chip->flash_region_mapped_ptr) {
-> +               chip->flash_region_mapped_ptr =
-> +                       devm_ioremap_nocache(fiu->dev, (fiu->res_mem->start +
-> +                                                  (fiu->info->max_map_size *
-> +                                                   desc->mem->spi->chip_select)),
-> +                                            (u32)desc->info.length);
-> +               if (!chip->flash_region_mapped_ptr) {
-> +                       dev_warn(fiu->dev, "Error mapping memory region, direct read disabled\n");
-> +                       desc->nodirmap = true;
-> +                       return 0;
-> +               }
-> +       }
-> +
-> +       if (of_device_is_compatible(fiu->dev->of_node, "nuvoton,npcm750-fiu")) {
-> +               gcr_regmap =
-> +                       syscon_regmap_lookup_by_compatible("nuvoton,npcm750-gcr");
-> +               if (IS_ERR(gcr_regmap)) {
-> +                       dev_warn(fiu->dev, "Didn't find nuvoton,npcm750-gcr, direct read disabled\n");
-> +                       desc->nodirmap = true;
-> +                       return 0;
-> +               }
-> +               regmap_update_bits(gcr_regmap, NPCM7XX_INTCR3_OFFSET,
-> +                                  NPCM7XX_INTCR3_FIU_FIX,
-> +                                  NPCM7XX_INTCR3_FIU_FIX);
-> +       }
-> +
-> +       if (desc->info.op_tmpl.data.dir == SPI_MEM_DATA_IN) {
-> +               if (!fiu->spix_mode)
-> +                       npcm_fiu_set_drd(fiu, &desc->info.op_tmpl);
-> +               else
-> +                       npcm_fiux_set_direct_rd(fiu);
-> +
-> +       } else {
-> +               npcm_fiux_set_direct_wr(fiu);
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static int npcm_fiu_setup(struct spi_device *spi)
-> +{
-> +       struct spi_controller *ctrl = spi->master;
-> +       struct npcm_fiu_spi *fiu = spi_controller_get_devdata(ctrl);
-> +       struct npcm_fiu_chip *chip;
-> +
-> +       chip = &fiu->chip[spi->chip_select];
-> +       chip->fiu = fiu;
-> +       chip->chipselect = spi->chip_select;
-> +       chip->clkrate = spi->max_speed_hz;
-> +
-> +       fiu->clkrate = clk_get_rate(fiu->clk);
-> +
-> +       return 0;
-> +}
-> +
-> +static const struct spi_controller_mem_ops npcm_fiu_mem_ops = {
-> +       .exec_op = npcm_fiu_exec_op,
-> +       .dirmap_create = npcm_fiu_dirmap_create,
-> +       .dirmap_read = npcm_fiu_direct_read,
-> +       .dirmap_write = npcm_fiu_direct_write,
-> +};
-> +
-> +static const struct of_device_id npcm_fiu_dt_ids[] = {
-> +       { .compatible = "nuvoton,npcm750-fiu", .data = &npxm7xx_fiu_data  },
-> +       { /* sentinel */ }
-> +};
-> +
-> +static int npcm_fiu_probe(struct platform_device *pdev)
-> +{
-> +       const struct fiu_data *fiu_data_match;
-> +       const struct of_device_id *match;
-> +       struct device *dev = &pdev->dev;
-> +       struct spi_controller *ctrl;
-> +       struct npcm_fiu_spi *fiu;
-> +       void __iomem *regbase;
-> +       struct resource *res;
-> +       int ret;
-> +       int id;
-> +
-> +       ctrl = spi_alloc_master(dev, sizeof(*fiu));
-> +       if (!ctrl)
-> +               return -ENOMEM;
-> +
-> +       fiu = spi_controller_get_devdata(ctrl);
-> +
-> +       match = of_match_device(npcm_fiu_dt_ids, dev);
-> +       if (!match || !match->data) {
-> +               dev_err(dev, "No compatible OF match\n");
-> +               return -ENODEV;
-> +       }
-> +
-> +       fiu_data_match = match->data;
-> +       id = of_alias_get_id(dev->of_node, "fiu");
-> +       if (id < 0 || id >= fiu_data_match->fiu_max) {
-> +               dev_err(dev, "Invalid platform device id: %d\n", id);
-> +               return -EINVAL;
-> +       }
-> +
-> +       fiu->info = &fiu_data_match->npcm_fiu_data_info[id];
-> +
-> +       platform_set_drvdata(pdev, fiu);
-> +       fiu->dev = dev;
-> +
-> +       res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "control");
-> +       regbase = devm_ioremap_resource(dev, res);
-> +       if (IS_ERR(regbase))
-> +               return PTR_ERR(regbase);
-> +
-> +       fiu->regmap = devm_regmap_init_mmio(dev, regbase,
-> +                                           &npcm_mtd_regmap_config);
-> +       if (IS_ERR(fiu->regmap)) {
-> +               dev_err(dev, "Failed to create regmap\n");
-> +               return PTR_ERR(fiu->regmap);
-> +       }
-> +
-> +       fiu->res_mem = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> +                                                   "memory");
-> +       fiu->clk = devm_clk_get(dev, NULL);
-> +       if (IS_ERR(fiu->clk))
-> +               return PTR_ERR(fiu->clk);
-> +
-> +       fiu->spix_mode = of_property_read_bool(dev->of_node, "spix-mode");
-> +
-> +       platform_set_drvdata(pdev, fiu);
-> +       clk_prepare_enable(fiu->clk);
-> +
-> +       ctrl->mode_bits = SPI_RX_DUAL | SPI_RX_QUAD
-> +               | SPI_TX_DUAL | SPI_TX_QUAD;
-> +       ctrl->setup = npcm_fiu_setup;
-> +       ctrl->bus_num = -1;
-> +       ctrl->mem_ops = &npcm_fiu_mem_ops;
-> +       ctrl->num_chipselect = fiu->info->max_cs;
-> +       ctrl->dev.of_node = dev->of_node;
-> +
-> +       ret = devm_spi_register_master(dev, ctrl);
-> +       if (ret)
-> +               return ret;
-> +
-> +       dev_info(dev, "NPCM %s probe succeed\n", fiu->info->name);
-> +
-> +       return 0;
-> +}
-> +
-> +static int npcm_fiu_remove(struct platform_device *pdev)
-> +{
-> +       struct npcm_fiu_spi *fiu = platform_get_drvdata(pdev);
-> +
-> +       clk_disable_unprepare(fiu->clk);
-> +       return 0;
-> +}
-> +
-> +MODULE_DEVICE_TABLE(of, npcm_fiu_dt_ids);
-> +
-> +static struct platform_driver npcm_fiu_driver = {
-> +       .driver = {
-> +               .name   = "NPCM-FIU",
-> +               .bus    = &platform_bus_type,
-> +               .of_match_table = npcm_fiu_dt_ids,
-> +       },
-> +       .probe      = npcm_fiu_probe,
-> +       .remove     = npcm_fiu_remove,
-> +};
-> +module_platform_driver(npcm_fiu_driver);
-> +
-> +MODULE_DESCRIPTION("Nuvoton FLASH Interface Unit SPI Controller Driver");
-> +MODULE_AUTHOR("Tomer Maimon <tomer.maimon@nuvoton.com>");
-> +MODULE_LICENSE("GPL v2");
-> --
-> 2.18.0
->
+> David Rientjes suggested deferred split THP should be accounted into
+> available memory since they would be shrunk when memory pressure comes in,
+> just like MADV_FREE pages. For the discussion, please refer to:
+> https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg2010115.html
+
+Thanks for the reference.
+
+> 
+> > 
+> > > Accounted the lazy free pages to NR_LAZYFREE, and show them in meminfo
+> > > and other places.  With the change the /proc/meminfo would look like:
+> > > Before put on lazy free list:
+> > The name is really confusing because I have thought of MADV_FREE immediately.
+> 
+> Yes, I agree. We may use a more specific name, i.e. DeferredSplitTHP.
+> 
+> > 
+> > > +LazyFreePages: Cleanly freeable pages under memory pressure (i.e. deferred
+> > > +               split THP).
+> > What does that mean actually? I have hard time imagine what cleanly
+> > freeable pages mean.
+> 
+> Like deferred split THP and MADV_FREE pages, they could be reclaimed during
+> memory pressure.
+> 
+> If you just go with "DeferredSplitTHP", these ambiguity would go away.
+
+I have to study the code some more but is there any reason why those
+pages are not accounted as proper THPs anymore? Sure they are partially
+unmaped but they are still THPs so why cannot we keep them accounted
+like that. Having a new counter to reflect that sounds like papering
+over the problem to me. But as I've said I might be missing something
+important here.
+
+-- 
+Michal Hocko
+SUSE Labs
