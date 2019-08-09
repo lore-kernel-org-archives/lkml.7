@@ -2,150 +2,116 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5DACC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 10:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C6EC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 10:01:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77AA72166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 10:01:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABDAD2166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 10:01:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QPLLSo/c"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OV0ixlMx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406284AbfHIKBC (ORCPT
+        id S2406299AbfHIKBz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 06:01:02 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:40320 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726152AbfHIKBC (ORCPT
+        Fri, 9 Aug 2019 06:01:55 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:39609 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726152AbfHIKBz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 06:01:02 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x79A0fRI048307;
-        Fri, 9 Aug 2019 05:00:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1565344841;
-        bh=j7mV9yfiX1/T+LAXN7sKBAuBWQGSmBtE1m1dH8dWDMg=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=QPLLSo/c7PIM3IuGLr4tUxL+fOeHcEbojhZeuCoDWET+gNyhZpH6nmpNZaHGQBVqj
-         DNMViz9lSN0NsV7J62W8tS312+ItZBvVahpOkRRl20KnZxzYEJnTOHZ4Mqqr1H55pO
-         F+wWLyu8c25UQA5TzPsQSgN4Dm2lBLMw9gis9LUQ=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x79A0fBs067623
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 9 Aug 2019 05:00:41 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 9 Aug
- 2019 05:00:41 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 9 Aug 2019 05:00:41 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x79A0dKm006580;
-        Fri, 9 Aug 2019 05:00:39 -0500
-Subject: Re: [PATCH for-5.3] drm/omap: ensure we have a valid dma_mask
-To:     Christoph Hellwig <hch@lst.de>
-CC:     <airlied@linux.ie>, <daniel@ffwll.ch>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>
-References: <20190808101042.18809-1-hch@lst.de>
- <7fff8fd3-16ae-1f42-fcd6-9aa360fe36b5@ti.com> <20190809080750.GA21874@lst.de>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <c219e7e6-0f66-d6fd-e0cf-59c803386825@ti.com>
-Date:   Fri, 9 Aug 2019 13:00:38 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190809080750.GA21874@lst.de>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Fri, 9 Aug 2019 06:01:55 -0400
+Received: by mail-lj1-f194.google.com with SMTP id v18so91489260ljh.6
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 03:01:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=pg4XtA+SLXLzi6cetxivjFuoLtXdpkbDdVYr7VT2SpY=;
+        b=OV0ixlMxJ78+G+mzjCxfvoi/QFApRzxYxo73BN4Iw2aGxmZi9pEm9P9Z0Iqy/Ylc0K
+         QicaYcnvM3WdyQeczJ1la+M5adWB6HcOG3TBjwvKCBlO1waiz0NvmDQp+3dkNaXH6CQ4
+         tPApB0dE81dc5dJzui/jEjmbbrmAKH7BFY4164pN/y6CqvOWGgNID1AUUp3LInxs4I2u
+         +4V21lAxOih31dPzG0gxHHak55IsasO8gM16Nq11AN5JaVVHgibpTV/xcMzw2DErL8Ls
+         FNG+/mgTYViQgQjH4fUr2slfMl/XZ4R5WdaSbKmvC/6Hml0HqfPa5rzfdCVQu5n3L0zK
+         h2mQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=pg4XtA+SLXLzi6cetxivjFuoLtXdpkbDdVYr7VT2SpY=;
+        b=hWEuSJ2XKFAEuT7CYQGspdO3z93LpsdZkIRneLr9ZaPyxsgZBryFbywfsWYMbUNS0v
+         V8uIG2YBpbhDsZrCowTmKpV6JI1vytFHEqBIyp6kSZroBngTw6NmGI9djghi2YwrlnQB
+         NDgABwa3uCUWi1XoqwpXXZYZtfem0q/wA8qa7e/niynBM5HCJcopBzQYKTWOIYVOoeGx
+         9//+Rcg4eBD2JAismGp/f3rlRLHDjq1cVb0IlDUNKCal0C1XHbbVHdG1gTpjwzXRWA6H
+         5VnR0n5yGJMQeOeyd3qbppdpE9CSglzY1H81Bet7AVqt33Qq0bz8pqK6Ihn5HyKqg5Zr
+         7G4w==
+X-Gm-Message-State: APjAAAWqjo0vyPz/pWvqc9UVo6RGdIMxa4qrVvYf27aCmZVWJzTJP/zQ
+        dEn1ebu1qYbAlN4FmgrtIY1HqA==
+X-Google-Smtp-Source: APXvYqwo9Be0wGp47XSaXElvSTAeHX/Cqr/OrCwxyl6LPCE3+XV76iOxjrsetOV6TOEC5eQTioYcdA==
+X-Received: by 2002:a2e:3e01:: with SMTP id l1mr10780346lja.208.1565344913095;
+        Fri, 09 Aug 2019 03:01:53 -0700 (PDT)
+Received: from localhost.localdomain (h-158-174-22-210.NA.cust.bahnhof.se. [158.174.22.210])
+        by smtp.gmail.com with ESMTPSA id i123sm2654114lfi.72.2019.08.09.03.01.51
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 09 Aug 2019 03:01:52 -0700 (PDT)
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+To:     Linus <torvalds@linux-foundation.org>, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [GIT PULL] MMC fixes for v5.3-rc4
+Date:   Fri,  9 Aug 2019 12:01:49 +0200
+Message-Id: <20190809100149.7027-1-ulf.hansson@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/08/2019 11:07, Christoph Hellwig wrote:
-> On Fri, Aug 09, 2019 at 09:40:32AM +0300, Tomi Valkeinen wrote:
->> We do call dma_set_coherent_mask() in omapdrm's probe() (in omap_drv.c),
->> but apparently that's not enough anymore. Changing that call to
->> dma_coerce_mask_and_coherent() removes the WARN. I can create a patch for
->> that, or Christoph can respin this one.
-> 
-> Oh, yes - that actually is the right thing to do here.  If you already
-> have it please just send it out.
-> 
->>
->> I am not too familiar with the dma mask handling, so maybe someone can
->> educate:
->>
->> dma_coerce_mask_and_coherent() overwrites dev->dma_mask. Isn't that a bad
->> thing? What if the platform has set dev->dma_mask, and the driver
->> overwrites it with its value? Or who is supposed to set dev->dma_mask?
-> 
-> ->dma_mask is a complete mess.  It is a pointer when it really should
-> just be a u64, and that means every driver layer has to allocate space
-> for it.  We don't really do that for platform_devices, as that breaks
-> horribly assumptions in the usb code.  That is why
-> dma_coerce_mask_and_coherent exists as a nasty workaround that sets
-> the dma_mask to the coherent_dma_mask for devices that don't have
-> space for ->dma_mask allocated, which works as long as the device
-> doesn't have differnet addressing requirements for both.
-> 
-> I'm actually working to fix that mess up at the moment, but it is going
-> to take a few cycles until everything falls into place.
+Hi Linus,
 
-Alright, thanks for the clarification!
+Here's a PR with a couple of MMC fixes intended for v5.3-rc4. Details about the
+highlights are as usual found in the signed tag.
 
-Here's my version.
+Please pull this in!
 
-From c258309e36fc86076db155aead03a3900b96c3d4 Mon Sep 17 00:00:00 2001
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Date: Fri, 9 Aug 2019 09:54:49 +0300
-Subject: [PATCH] drm/omap: ensure we have a valid dma_mask
-
-The omapdrm driver uses dma_set_coherent_mask(), but that's not enough
-anymore when LPAE is enabled.
-
-From Christoph Hellwig <hch@lst.de>:
-
-The traditional arm DMA code ignores, but the generic dma-direct/swiotlb
-has stricter checks and thus fails mappings without a DMA mask.  As we
-use swiotlb for arm with LPAE now, omapdrm needs to catch up and
-actually set a DMA mask.
-
-Change the dma_set_coherent_mask() call to
-dma_coerce_mask_and_coherent() so that the dev->dma_mask is also set.
-
-Fixes: ad3c7b18c5b3 ("arm: use swiotlb for bounce buffering on LPAE configs")
-Reported-by: "H. Nikolaus Schaller" <hns@goldelico.com>
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-
-diff --git a/drivers/gpu/drm/omapdrm/omap_drv.c b/drivers/gpu/drm/omapdrm/omap_drv.c
-index 288c59dae56a..1bad0a2cc5c6 100644
---- a/drivers/gpu/drm/omapdrm/omap_drv.c
-+++ b/drivers/gpu/drm/omapdrm/omap_drv.c
-@@ -669,7 +669,7 @@ static int pdev_probe(struct platform_device *pdev)
- 	if (omapdss_is_initialized() == false)
- 		return -EPROBE_DEFER;
- 
--	ret = dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(32));
-+	ret = dma_coerce_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
- 	if (ret) {
- 		dev_err(&pdev->dev, "Failed to set the DMA mask\n");
- 		return ret;
+Kind regards
+Ulf Hansson
 
 
+The following changes since commit e21a712a9685488f5ce80495b37b9fdbe96c230d:
 
+  Linux 5.3-rc3 (2019-08-04 18:40:12 -0700)
 
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git tags/mmc-v5.3-rc3
+
+for you to fetch changes up to b803974a86039913d5280add083d730b2b9ed8ec:
+
+  mmc: cavium: Add the missing dma unmap when the dma has finished. (2019-08-06 18:59:14 +0200)
+
+----------------------------------------------------------------
+MMC host:
+ - cavium: Fix DMA support
+ - sdhci-sprd: Fix soft reset when runtime resuming
+
+----------------------------------------------------------------
+Baolin Wang (1):
+      mmc: sdhci-sprd: Fix the incorrect soft reset operation when runtime resuming
+
+Kevin Hao (2):
+      mmc: cavium: Set the correct dma max segment size for mmc_host
+      mmc: cavium: Add the missing dma unmap when the dma has finished.
+
+ drivers/mmc/host/cavium.c          | 4 +++-
+ drivers/mmc/host/sdhci-acpi.c      | 2 +-
+ drivers/mmc/host/sdhci-esdhc-imx.c | 2 +-
+ drivers/mmc/host/sdhci-of-at91.c   | 2 +-
+ drivers/mmc/host/sdhci-pci-core.c  | 4 ++--
+ drivers/mmc/host/sdhci-pxav3.c     | 2 +-
+ drivers/mmc/host/sdhci-s3c.c       | 2 +-
+ drivers/mmc/host/sdhci-sprd.c      | 2 +-
+ drivers/mmc/host/sdhci-xenon.c     | 2 +-
+ drivers/mmc/host/sdhci.c           | 4 ++--
+ drivers/mmc/host/sdhci.h           | 2 +-
+ 11 files changed, 15 insertions(+), 13 deletions(-)
