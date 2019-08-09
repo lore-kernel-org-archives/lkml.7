@@ -2,347 +2,150 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00BBFC31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:38:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4F00C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:43:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0579214C6
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:38:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="a5MnHzP5"
+	by mail.kernel.org (Postfix) with ESMTP id 8B092214C6
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:43:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565354609;
+	bh=r0QJzeaj8zr29WVjE9HdJAZRj0A7iB3blal29rIll70=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mqCQItHGgHapDaXHA8vthYx0yTb9rKWuhafvytdJh3uzhn+bABa51HhR0cc+3l9yJ
+	 LLOS55sD7SYBCesU9U1nqbB9BelIOXyDt/cK2BFnz5R16RC2FlwAnzJWPrrZmcIUJx
+	 vu2Q99HESRuQtw7AAw7TN9E7rGR5CsStykB99NxI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406809AbfHIMip (ORCPT
+        id S2406860AbfHIMn2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 08:38:45 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:33766 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406338AbfHIMip (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 08:38:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1565354323; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:references; bh=FndS2oPSLKjThva69oxQR7nLrr+YqC3DHHMjRRpj7Jc=;
-        b=a5MnHzP5fnfOmikNZsrDe1jNtdASMZSFcSedEx77CMt2AWqdyjOVOOuRiLfN68dEkWrxnf
-        k0IYBTpqgw3aociGUqhNE3OnzEZ5h0AZd9yWvu8TLeNyfYV5npwkw8OoBHQeQ/rOmUnTse
-        uSNPRthmDUSpZY0yhiIrcAmXW3u97t8=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     od@zcrc.me, linux-kernel@vger.kernel.org,
-        Maarten ter Huurne <maarten@treewalker.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Mathieu Malaterre <malat@debian.org>,
-        Artur Rojek <contact@artur-rojek.eu>
-Subject: [PATCH] clocksource: Add driver for the Ingenic JZ47xx OST
-Date:   Fri,  9 Aug 2019 14:38:24 +0200
-Message-Id: <20190809123824.26025-1-paul@crapouillou.net>
+        Fri, 9 Aug 2019 08:43:28 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38074 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2406516AbfHIMn1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 08:43:27 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7472BAF10;
+        Fri,  9 Aug 2019 12:43:25 +0000 (UTC)
+Date:   Fri, 9 Aug 2019 14:43:24 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Miguel de Dios <migueldedios@google.com>,
+        Wei Wang <wvw@google.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Nicholas Piggin <npiggin@gmail.com>
+Subject: [RFC PATCH] mm: drop mark_page_access from the unmap path
+Message-ID: <20190809124305.GQ18351@dhcp22.suse.cz>
+References: <20190729074523.GC9330@dhcp22.suse.cz>
+ <20190729082052.GA258885@google.com>
+ <20190729083515.GD9330@dhcp22.suse.cz>
+ <20190730121110.GA184615@google.com>
+ <20190730123237.GR9330@dhcp22.suse.cz>
+ <20190730123935.GB184615@google.com>
+ <20190730125751.GS9330@dhcp22.suse.cz>
+ <20190731054447.GB155569@google.com>
+ <20190731072101.GX9330@dhcp22.suse.cz>
+ <20190806105509.GA94582@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190806105509.GA94582@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maarten ter Huurne <maarten@treewalker.org>
+On Tue 06-08-19 19:55:09, Minchan Kim wrote:
+> On Wed, Jul 31, 2019 at 09:21:01AM +0200, Michal Hocko wrote:
+> > On Wed 31-07-19 14:44:47, Minchan Kim wrote:
+[...]
+> > > As Nick mentioned in the description, without mark_page_accessed in
+> > > zapping part, repeated mmap + touch + munmap never acticated the page
+> > > while several read(2) calls easily promote it.
+> > 
+> > And is this really a problem? If we refault the same page then the
+> > refaults detection should catch it no? In other words is the above still
+> > a problem these days?
+> 
+> I admit we have been not fair for them because read(2) syscall pages are
+> easily promoted regardless of zap timing unlike mmap-based pages.
+> 
+> However, if we remove the mark_page_accessed in the zap_pte_range, it
+> would make them more unfair in that read(2)-accessed pages are easily
+> promoted while mmap-based page should go through refault to be promoted.
 
-OST is the OS Timer, a 64-bit timer/counter with buffered reading.
+I have really hard time to follow why an unmap special handling is
+making the overall state more reasonable.
 
-SoCs before the JZ4770 had (if any) a 32-bit OST; the JZ4770 and
-JZ4780 have a 64-bit OST.
+Anyway, let me throw the patch for further discussion. Nick, Mel,
+Johannes what do you think?
 
-This driver will register both a clocksource and a sched_clock to the
-system.
+From 3821c2e66347a2141358cabdc6224d9990276fec Mon Sep 17 00:00:00 2001
+From: Michal Hocko <mhocko@suse.com>
+Date: Fri, 9 Aug 2019 14:29:59 +0200
+Subject: [PATCH] mm: drop mark_page_access from the unmap path
 
-Signed-off-by: Maarten ter Huurne <maarten@treewalker.org>
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Tested-by: Mathieu Malaterre <malat@debian.org>
-Tested-by: Artur Rojek <contact@artur-rojek.eu>
+Minchan has noticed that mark_page_access can take quite some time
+during unmap:
+: I had a time to benchmark it via adding some trace_printk hooks between
+: pte_offset_map_lock and pte_unmap_unlock in zap_pte_range. The testing
+: device is 2018 premium mobile device.
+:
+: I can get 2ms delay rather easily to release 2M(ie, 512 pages) when the
+: task runs on little core even though it doesn't have any IPI and LRU
+: lock contention. It's already too heavy.
+:
+: If I remove activate_page, 35-40% overhead of zap_pte_range is gone
+: so most of overhead(about 0.7ms) comes from activate_page via
+: mark_page_accessed. Thus, if there are LRU contention, that 0.7ms could
+: accumulate up to several ms.
+
+bf3f3bc5e734 ("mm: don't mark_page_accessed in fault path") has replaced
+SetPageReferenced by mark_page_accessed arguing that the former is not
+sufficient when mark_page_accessed is removed from the fault path
+because it doesn't promote page to the active list. It is true that a
+page that is mapped by a single process might not get promoted even when
+referenced if the reclaim checks it after the unmap but does that matter
+that much? Can we cosider the page hot if there are no other
+users? Moreover we do have workingset detection in place since then and
+so a next refault would activate the page if it was really hot one.
+
+Drop the expensive mark_page_accessed and restore SetPageReferenced to
+transfer the reference information into the struct page for now to
+reduce the unmap overhead. Should we find workloads that noticeably
+depend on this behavior we should find a way to make mark_page_accessed
+less expensive.
+
+Signed-off-by: Michal Hocko <mhocko@suse.com>
 ---
+ mm/memory.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Hi,
-
-This patch comes from a bigger patchset that was cut in smaller pieces
-for easier integration to mainline.
-(The patchset was https://lkml.org/lkml/2019/3/27/1837)
-
-The only change is the use of device_node_to_regmap(), which was added
-in a prior patchset now merged in the MIPS tree.
-
-For that reason this patch is based on the ingenic-tcu-v5.4 branch of
-the MIPS tree
-(git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git).
-
-Thanks,
--Paul
-
- drivers/clocksource/Kconfig       |   8 ++
- drivers/clocksource/Makefile      |   1 +
- drivers/clocksource/ingenic-ost.c | 221 ++++++++++++++++++++++++++++++
- 3 files changed, 230 insertions(+)
- create mode 100644 drivers/clocksource/ingenic-ost.c
-
-diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-index a9cdc2c4f8bd..3b1503082a23 100644
---- a/drivers/clocksource/Kconfig
-+++ b/drivers/clocksource/Kconfig
-@@ -696,4 +696,12 @@ config INGENIC_TIMER
- 	help
- 	  Support for the timer/counter unit of the Ingenic JZ SoCs.
- 
-+config INGENIC_OST
-+	bool "Ingenic JZ47xx Operating System Timer"
-+	depends on MIPS || COMPILE_TEST
-+	depends on COMMON_CLK
-+	select MFD_SYSCON
-+	help
-+	  Support for the OS Timer of the Ingenic JZ4770 or similar SoC.
-+
- endmenu
-diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
-index 4dfe4225ece7..6bc97a6fd229 100644
---- a/drivers/clocksource/Makefile
-+++ b/drivers/clocksource/Makefile
-@@ -80,6 +80,7 @@ obj-$(CONFIG_ASM9260_TIMER)		+= asm9260_timer.o
- obj-$(CONFIG_H8300_TMR8)		+= h8300_timer8.o
- obj-$(CONFIG_H8300_TMR16)		+= h8300_timer16.o
- obj-$(CONFIG_H8300_TPU)			+= h8300_tpu.o
-+obj-$(CONFIG_INGENIC_OST)		+= ingenic-ost.o
- obj-$(CONFIG_INGENIC_TIMER)		+= ingenic-timer.o
- obj-$(CONFIG_CLKSRC_ST_LPC)		+= clksrc_st_lpc.o
- obj-$(CONFIG_X86_NUMACHIP)		+= numachip.o
-diff --git a/drivers/clocksource/ingenic-ost.c b/drivers/clocksource/ingenic-ost.c
-new file mode 100644
-index 000000000000..c708d5d7dd15
---- /dev/null
-+++ b/drivers/clocksource/ingenic-ost.c
-@@ -0,0 +1,221 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * JZ47xx SoCs TCU Operating System Timer driver
-+ *
-+ * Copyright (C) 2016 Maarten ter Huurne <maarten@treewalker.org>
-+ * Copyright (C) 2018 Paul Cercueil <paul@crapouillou.net>
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/clocksource.h>
-+#include <linux/mfd/ingenic-tcu.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm.h>
-+#include <linux/regmap.h>
-+#include <linux/sched_clock.h>
-+
-+#define TCU_OST_TCSR_MASK	0xffc0
-+#define TCU_OST_TCSR_CNT_MD	BIT(15)
-+
-+#define TCU_OST_CHANNEL		15
-+
-+struct ingenic_ost_soc_info {
-+	bool is64bit;
-+};
-+
-+struct ingenic_ost {
-+	struct regmap *map;
-+	struct clk *clk;
-+
-+	struct clocksource cs;
-+};
-+
-+static struct ingenic_ost *ingenic_ost;
-+
-+static u64 notrace ingenic_ost_read_cntl(void)
-+{
-+	u32 val;
-+
-+	regmap_read(ingenic_ost->map, TCU_REG_OST_CNTL, &val);
-+
-+	return val;
-+}
-+
-+static u64 notrace ingenic_ost_read_cnth(void)
-+{
-+	u32 val;
-+
-+	regmap_read(ingenic_ost->map, TCU_REG_OST_CNTH, &val);
-+
-+	return val;
-+}
-+
-+static u64 notrace ingenic_ost_clocksource_read64(struct clocksource *cs)
-+{
-+	u32 val1, val2;
-+	u64 count, recount;
-+	s64 diff;
-+
-+	/*
-+	 * The buffering of the upper 32 bits of the timer prevents wrong
-+	 * results from the bottom 32 bits overflowing due to the timer ticking
-+	 * along. However, it does not prevent wrong results from simultaneous
-+	 * reads of the timer, which could reset the buffer mid-read.
-+	 * Since this kind of wrong read can happen only when the bottom bits
-+	 * overflow, there will be minutes between wrong reads, so if we read
-+	 * twice in succession, at least one of the reads will be correct.
-+	 */
-+
-+	/* Bypass the regmap here as we must return as soon as possible */
-+	regmap_read(ingenic_ost->map, TCU_REG_OST_CNTL, &val1);
-+	regmap_read(ingenic_ost->map, TCU_REG_OST_CNTHBUF, &val2);
-+	count = (u64)val1 | (u64)val2 << 32;
-+
-+	regmap_read(ingenic_ost->map, TCU_REG_OST_CNTL, &val1);
-+	regmap_read(ingenic_ost->map, TCU_REG_OST_CNTHBUF, &val2);
-+	recount = (u64)val1 | (u64)val2 << 32;
-+
-+	/*
-+	 * A wrong read will produce a result that is 1<<32 too high: the bottom
-+	 * part from before overflow and the upper part from after overflow.
-+	 * Therefore, the lower value of the two reads is the correct value.
-+	 */
-+
-+	diff = (s64)(recount - count);
-+	if (unlikely(diff < 0))
-+		count = recount;
-+
-+	return count;
-+}
-+
-+static u64 notrace ingenic_ost_clocksource_read32(struct clocksource *cs)
-+{
-+	return ingenic_ost_read_cnth();
-+}
-+
-+static int __init ingenic_ost_probe(struct platform_device *pdev)
-+{
-+	const struct ingenic_ost_soc_info *soc_info;
-+	struct device *dev = &pdev->dev;
-+	struct ingenic_ost *ost;
-+	struct clocksource *cs;
-+	unsigned long rate, flags;
-+	int err;
-+
-+	soc_info = device_get_match_data(dev);
-+	if (!soc_info)
-+		return -EINVAL;
-+
-+	ost = devm_kzalloc(dev, sizeof(*ost), GFP_KERNEL);
-+	if (!ost)
-+		return -ENOMEM;
-+
-+	ingenic_ost = ost;
-+
-+	ost->map = device_node_to_regmap(dev->parent->of_node);
-+	if (!ost->map) {
-+		dev_err(dev, "regmap not found\n");
-+		return -EINVAL;
-+	}
-+
-+	ost->clk = devm_clk_get(dev, "ost");
-+	if (IS_ERR(ost->clk))
-+		return PTR_ERR(ost->clk);
-+
-+	err = clk_prepare_enable(ost->clk);
-+	if (err)
-+		return err;
-+
-+	/* Clear counter high/low registers */
-+	if (soc_info->is64bit)
-+		regmap_write(ost->map, TCU_REG_OST_CNTL, 0);
-+	regmap_write(ost->map, TCU_REG_OST_CNTH, 0);
-+
-+	/* Don't reset counter at compare value. */
-+	regmap_update_bits(ost->map, TCU_REG_OST_TCSR,
-+			   TCU_OST_TCSR_MASK, TCU_OST_TCSR_CNT_MD);
-+
-+	rate = clk_get_rate(ost->clk);
-+
-+	/* Enable OST TCU channel */
-+	regmap_write(ost->map, TCU_REG_TESR, BIT(TCU_OST_CHANNEL));
-+
-+	cs = &ost->cs;
-+	cs->name	= "ingenic-ost";
-+	cs->rating	= 320;
-+	cs->flags	= CLOCK_SOURCE_IS_CONTINUOUS;
-+
-+	if (soc_info->is64bit) {
-+		cs->mask = CLOCKSOURCE_MASK(64);
-+		cs->read = ingenic_ost_clocksource_read64;
-+	} else {
-+		cs->mask = CLOCKSOURCE_MASK(32);
-+		cs->read = ingenic_ost_clocksource_read32;
-+	}
-+
-+	err = clocksource_register_hz(cs, rate);
-+	if (err) {
-+		dev_err(dev, "clocksource registration failed: %d\n", err);
-+		clk_disable_unprepare(ost->clk);
-+		return err;
-+	}
-+
-+	/* Cannot register a sched_clock with interrupts on */
-+	local_irq_save(flags);
-+	if (soc_info->is64bit)
-+		sched_clock_register(ingenic_ost_read_cntl, 32, rate);
-+	else
-+		sched_clock_register(ingenic_ost_read_cnth, 32, rate);
-+	local_irq_restore(flags);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused ingenic_ost_suspend(struct device *dev)
-+{
-+	struct ingenic_ost *ost = dev_get_drvdata(dev);
-+
-+	clk_disable(ost->clk);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused ingenic_ost_resume(struct device *dev)
-+{
-+	struct ingenic_ost *ost = dev_get_drvdata(dev);
-+
-+	return clk_enable(ost->clk);
-+}
-+
-+static const struct dev_pm_ops __maybe_unused ingenic_ost_pm_ops = {
-+	/* _noirq: We want the OST clock to be gated last / ungated first */
-+	.suspend_noirq = ingenic_ost_suspend,
-+	.resume_noirq  = ingenic_ost_resume,
-+};
-+
-+static const struct ingenic_ost_soc_info jz4725b_ost_soc_info = {
-+	.is64bit = false,
-+};
-+
-+static const struct ingenic_ost_soc_info jz4770_ost_soc_info = {
-+	.is64bit = true,
-+};
-+
-+static const struct of_device_id ingenic_ost_of_match[] = {
-+	{ .compatible = "ingenic,jz4725b-ost", .data = &jz4725b_ost_soc_info, },
-+	{ .compatible = "ingenic,jz4770-ost", .data = &jz4770_ost_soc_info, },
-+	{ }
-+};
-+
-+static struct platform_driver ingenic_ost_driver = {
-+	.driver = {
-+		.name = "ingenic-ost",
-+#ifdef CONFIG_PM_SUSPEND
-+		.pm = &ingenic_ost_pm_ops,
-+#endif
-+		.of_match_table = ingenic_ost_of_match,
-+	},
-+};
-+builtin_platform_driver_probe(ingenic_ost_driver, ingenic_ost_probe);
+diff --git a/mm/memory.c b/mm/memory.c
+index e2bb51b6242e..ced521df8ee7 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -1053,7 +1053,7 @@ static unsigned long zap_pte_range(struct mmu_gather *tlb,
+ 				}
+ 				if (pte_young(ptent) &&
+ 				    likely(!(vma->vm_flags & VM_SEQ_READ)))
+-					mark_page_accessed(page);
++					SetPageReferenced(page);
+ 			}
+ 			rss[mm_counter(page)]--;
+ 			page_remove_rmap(page, false);
 -- 
-2.21.0.593.g511ec345e18
+2.20.1
 
+-- 
+Michal Hocko
+SUSE Labs
