@@ -2,136 +2,78 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 821C0C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 10:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40E2BC31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 10:24:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F3A22166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 10:23:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E4E72166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 10:24:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406393AbfHIKXv (ORCPT
+        id S2406410AbfHIKYM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 06:23:51 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56026 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406380AbfHIKXu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 06:23:50 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A94783061524;
-        Fri,  9 Aug 2019 10:23:50 +0000 (UTC)
-Received: from localhost (ovpn-8-23.pek2.redhat.com [10.72.8.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 36B1160BF3;
-        Fri,  9 Aug 2019 10:23:46 +0000 (UTC)
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Keith Busch <kbusch@kernel.org>,
-        linux-nvme@lists.infradead.org,
-        Jon Derrick <jonathan.derrick@intel.com>
-Subject: [PATCH 2/2] genirq/affinity: spread vectors on node according to nr_cpu ratio
-Date:   Fri,  9 Aug 2019 18:23:10 +0800
-Message-Id: <20190809102310.27246-3-ming.lei@redhat.com>
-In-Reply-To: <20190809102310.27246-1-ming.lei@redhat.com>
-References: <20190809102310.27246-1-ming.lei@redhat.com>
+        Fri, 9 Aug 2019 06:24:12 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33811 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726255AbfHIKYM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 06:24:12 -0400
+Received: by mail-wr1-f68.google.com with SMTP id 31so97781582wrm.1
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 03:24:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=TRs9/vnl2x2fSDyEARf9rQa4tsoVDu7LpU0anhH+GLg=;
+        b=Amog/8v9JziCSpkaV4yN8bfEfDQUsErMmObe0d0cHNZFgBTGctJqbjgoRQvRlDGpcS
+         uIB7h1i8x3Zl9UQI4Jms85ziej2Igo6gvD4WBNk6vCb4KOYR4KHOvyftDsQN1NBsj7v+
+         Ai16/jMt8L3BkBrJXvybBSTyQzdasXaQmRANEnxwBQRnzNeYffsKowgs5hF+z+hiV9My
+         MEOh+S//EEAy3+88YaNhopeapKVy5/fVZa+L0GDCqdVZ5crR+enjY8TliVWuSvVUhRBI
+         5dusLsfaIZI/rdroP947J3M5eNELNGvsxYGqFrmcS5CC2vtqX/vvi7TP6FV40cz6Ni1F
+         cenQ==
+X-Gm-Message-State: APjAAAW4DObqL/iims3WW/tbu4nttBjRsl/MA7zeZlaNoBDKfWJjiT0r
+        EcmweKgRccgqxaJtsKsbz1zqEg==
+X-Google-Smtp-Source: APXvYqx+uVkNssaIPX1SaKsQj+Z2Ktk1Buf8b3UqK4gB/0g65Hj8oHdWFOkI3Ei7n/L7LZzoAnP6iw==
+X-Received: by 2002:a5d:4a45:: with SMTP id v5mr15381943wrs.108.1565346250170;
+        Fri, 09 Aug 2019 03:24:10 -0700 (PDT)
+Received: from [192.168.10.150] ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id l25sm5040146wme.13.2019.08.09.03.24.09
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 09 Aug 2019 03:24:09 -0700 (PDT)
+Subject: Re: [PATCH] KVM: LAPIC: Periodically revaluate appropriate
+ lapic_timer_advance_ns
+To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+References: <1565329531-12327-1-git-send-email-wanpengli@tencent.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <fad8ceed-8b98-8fc4-5b6a-63bbca4059a8@redhat.com>
+Date:   Fri, 9 Aug 2019 12:24:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Fri, 09 Aug 2019 10:23:50 +0000 (UTC)
+In-Reply-To: <1565329531-12327-1-git-send-email-wanpengli@tencent.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now __irq_build_affinity_masks() spreads vectors evenly per node, and
-all vectors may not be spread in case that each numa node has different
-CPU number, then the following warning in irq_build_affinity_masks() can
-be triggered:
+On 09/08/19 07:45, Wanpeng Li wrote:
+> From: Wanpeng Li <wanpengli@tencent.com>
+> 
+> Even if for realtime CPUs, cache line bounces, frequency scaling, presence 
+> of higher-priority RT tasks, etc can cause different response. These 
+> interferences should be considered and periodically revaluate whether 
+> or not the lapic_timer_advance_ns value is the best, do nothing if it is,
+> otherwise recaluate again. 
 
-	if (nr_present < numvecs)
-		WARN_ON(nr_present + nr_others < numvecs);
+How much fluctuation do you observe between different runs?
 
-Improve current spreading algorithm by assigning vectors according to
-the ratio of node's nr_cpu to nr_remaining_cpus.
-
-Meantime the reported warning can be fixed.
-
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Keith Busch <kbusch@kernel.org>
-Cc: linux-nvme@lists.infradead.org,
-Cc: Jon Derrick <jonathan.derrick@intel.com>
-Reported-by: Jon Derrick <jonathan.derrick@intel.com>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
----
- kernel/irq/affinity.c | 23 +++++++++++++++++------
- 1 file changed, 17 insertions(+), 6 deletions(-)
-
-diff --git a/kernel/irq/affinity.c b/kernel/irq/affinity.c
-index bc3652a2c61b..76f3d1b27d00 100644
---- a/kernel/irq/affinity.c
-+++ b/kernel/irq/affinity.c
-@@ -106,6 +106,7 @@ static int __irq_build_affinity_masks(unsigned int startvec,
- 	unsigned int last_affv = firstvec + numvecs;
- 	unsigned int curvec = startvec;
- 	nodemask_t nodemsk = NODE_MASK_NONE;
-+	unsigned remaining_cpus = 0;
- 
- 	if (!cpumask_weight(cpu_mask))
- 		return 0;
-@@ -126,6 +127,11 @@ static int __irq_build_affinity_masks(unsigned int startvec,
- 		return numvecs;
- 	}
- 
-+	for_each_node_mask(n, nodemsk) {
-+		cpumask_and(nmsk, cpu_mask, node_to_cpumask[n]);
-+		remaining_cpus += cpumask_weight(nmsk);
-+	}
-+
- 	for_each_node_mask(n, nodemsk) {
- 		unsigned int ncpus, v, vecs_to_assign, vecs_per_node;
- 
-@@ -135,17 +141,22 @@ static int __irq_build_affinity_masks(unsigned int startvec,
- 		if (!ncpus)
- 			continue;
- 
-+		if (remaining_cpus == 0)
-+			break;
-+
- 		/*
- 		 * Calculate the number of cpus per vector
- 		 *
--		 * Spread the vectors evenly per node. If the requested
--		 * vector number has been reached, simply allocate one
--		 * vector for each remaining node so that all nodes can
--		 * be covered
-+		 * Spread the vectors among CPUs on this node according
-+		 * to the ratio of 'ncpus' to 'remaining_cpus'. If the
-+		 * requested vector number has been reached, simply
-+		 * spread one vector for each remaining node so that all
-+		 * nodes can be covered
- 		 */
- 		if (numvecs > done)
- 			vecs_per_node = max_t(unsigned,
--					(numvecs - done) / nodes, 1);
-+					(numvecs - done) * ncpus /
-+					remaining_cpus, 1);
- 		else
- 			vecs_per_node = 1;
- 
-@@ -169,7 +180,7 @@ static int __irq_build_affinity_masks(unsigned int startvec,
- 		}
- 
- 		done += v;
--		--nodes;
-+		remaining_cpus -= ncpus;
- 	}
- 	return done < numvecs ? done : numvecs;
- }
--- 
-2.20.1
-
+Paolo
