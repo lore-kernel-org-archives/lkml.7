@@ -2,109 +2,218 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B140C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD3BC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:39:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 665F420B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:39:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6484D20B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:39:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="btgHICFc"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="o41zlVC8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437191AbfHIQjd (ORCPT
+        id S2437268AbfHIQji (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 12:39:33 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:40552 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437094AbfHIQjc (ORCPT
+        Fri, 9 Aug 2019 12:39:38 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:4075 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437094AbfHIQjg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 12:39:32 -0400
-Received: by mail-ot1-f66.google.com with SMTP id l15so77701103oth.7
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 09:39:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CikhgCxe5YHX0c3F28QN7MAGvPAtgLNBsm2uQo1hLD0=;
-        b=btgHICFcCUxPl6D9I8cv8GHpDwrNnZfc0toIv36RpNA6sM6aRbW7JK+RL7MY7vx6cQ
-         ulcmH6aZbBZ7PVYZRkbprh65Ce29zF+FlETeZck1Xe83EP9G+Qdu9A0J7DxlcUKWxKtH
-         n1hcpUP6onuyWpBKc0ArYdjNP2ihj3W3NT/BzYZ05r4r39ufzzLEAEijCePWKjm0IhYi
-         dwwmjTjfFuClvAyaGFaTcaIz0i8h9o3BqYcXcztpUXcZgSVVz7bVuAt39mryY0fPT/BN
-         y8a51j/EZPgx1B4pZ+wD1Fvxlf3dC4UCYSsmEb5WTcDyL40t+VXkFs3n2FiCM6UjBavk
-         QggA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CikhgCxe5YHX0c3F28QN7MAGvPAtgLNBsm2uQo1hLD0=;
-        b=YmYyHc2JPziHpjhYZP+6bdftyDdWRIBYkmaiffo70SvrRA/1mVtcWJqZFzpJZFBs9M
-         f/3q5XnIb2zMmE1I8B4Je0Z3mSjhsqXEsKUguE4CUd96nzUkYRYsSIgsV0YKCGEwyMT1
-         zODAoJEHfcUb4dFtiot7Uk/nruytarrk6+aTPvngm2/Gc+VZueZ300oXQp/KM1X7yqRK
-         aD5rtr2ECJMReqAMGkSLKweHdup7ChemPET187QQIPatvjU2CH03QeuhBZCPmtFyKD7N
-         AJSQEP1edK5gpTxZbJ9fqOEn18exH6dbUe4Di6m9PVTQq/m7+muu/KHbblKN0IiT5qFL
-         sTmw==
-X-Gm-Message-State: APjAAAWKvAkDmW3GN3EiELIMcc3GwLQx+Z1gluV+bwi3slCDw4P8AjbK
-        1Bcyp6oKo7riaSdJTeIFYARCWwuPZim2aPzkiHQRYA==
-X-Google-Smtp-Source: APXvYqxwLpoE/tc3o62UOQlp4MxHt/gGVuPES6o5jLGsvs8jO6hTe+N8rC2/0es03Xs8vz2GcFCsFP96KEZXcmGwrF8=
-X-Received: by 2002:a02:c65a:: with SMTP id k26mr12576081jan.18.1565368771480;
- Fri, 09 Aug 2019 09:39:31 -0700 (PDT)
+        Fri, 9 Aug 2019 12:39:36 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d4da1d00001>; Fri, 09 Aug 2019 09:39:44 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 09 Aug 2019 09:39:33 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 09 Aug 2019 09:39:33 -0700
+Received: from [10.2.167.88] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 9 Aug
+ 2019 16:39:31 +0000
+Subject: Re: [PATCH v8 11/21] clk: tegra: clk-dfll: Add suspend and resume
+ support
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <tglx@linutronix.de>,
+        <jason@lakedaemon.net>, <marc.zyngier@arm.com>,
+        <linus.walleij@linaro.org>, <stefan@agner.ch>,
+        <mark.rutland@arm.com>
+CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
+        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
+        <josephl@nvidia.com>, <talho@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>, <rjw@rjwysocki.net>,
+        <viresh.kumar@linaro.org>, <linux-pm@vger.kernel.org>
+References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
+ <1565308020-31952-12-git-send-email-skomatineni@nvidia.com>
+ <eb4fdab8-aba3-7f0c-a391-d751674fd03e@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <29a85a35-10ff-2d43-d148-9dba1ee25869@nvidia.com>
+Date:   Fri, 9 Aug 2019 09:39:30 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <1565336051-31793-1-git-send-email-pbonzini@redhat.com> <20190809161937.GB10541@linux.intel.com>
-In-Reply-To: <20190809161937.GB10541@linux.intel.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Fri, 9 Aug 2019 09:39:19 -0700
-Message-ID: <CALMp9eT+biHFQDygxk4aNg2huP_DHG=BTPYnbmLsY9bfGcwi0g@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: add KVM x86 reviewers
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <eb4fdab8-aba3-7f0c-a391-d751674fd03e@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1565368784; bh=9K+xIDK15KtnHzPSfE7vIgbQ51SDxHeJAKLybJBjPKQ=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=o41zlVC8fAIKHUMNwo88I810EK8Np1WhCq7WhUlSL5mmY2fpXLKsKNwPwGQ/ycgc2
+         SCF9CXU6z1Hqc7D8unfJT292Ya4VMaxvTnEg6jN+fyrIB7OZAwbL1M//Y57z67NmiH
+         ZCCQkeq5b3W2QgRQdlNUIVAVBT9yAp1gL6c9S+a6wdXASdNzP9IX5wdOowafV5EECY
+         BjZFCPotMY+/dM8p4GCgCUM2vlbe9mYawsPgww0OuD4URE1VVosQ9G0D+jNWrAvElE
+         inCug8oTmQ/lAsLM8M25b7hdqMd5n8KqdnEDbWSahu6oV0AO7ziDdd0IFWzXrdl2HA
+         B+nHixOl9nsmQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 9, 2019 at 9:19 AM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
+
+On 8/9/19 5:23 AM, Dmitry Osipenko wrote:
+> 09.08.2019 2:46, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> This patch implements DFLL suspend and resume operation.
+>>
+>> During system suspend entry, CPU clock will switch CPU to safe
+>> clock source of PLLP and disables DFLL clock output.
+>>
+>> DFLL driver suspend confirms DFLL disable state and errors out on
+>> being active.
+>>
+>> DFLL is re-initialized during the DFLL driver resume as it goes
+>> through complete reset during suspend entry.
+>>
+>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>> ---
+>>   drivers/clk/tegra/clk-dfll.c               | 56 ++++++++++++++++++++++=
+++++++++
+>>   drivers/clk/tegra/clk-dfll.h               |  2 ++
+>>   drivers/clk/tegra/clk-tegra124-dfll-fcpu.c |  1 +
+>>   3 files changed, 59 insertions(+)
+>>
+>> diff --git a/drivers/clk/tegra/clk-dfll.c b/drivers/clk/tegra/clk-dfll.c
+>> index f8688c2ddf1a..eb298a5d7be9 100644
+>> --- a/drivers/clk/tegra/clk-dfll.c
+>> +++ b/drivers/clk/tegra/clk-dfll.c
+>> @@ -1487,6 +1487,7 @@ static int dfll_init(struct tegra_dfll *td)
+>>   	td->last_unrounded_rate =3D 0;
+>>  =20
+>>   	pm_runtime_enable(td->dev);
+>> +	pm_runtime_irq_safe(td->dev);
+>>   	pm_runtime_get_sync(td->dev);
+>>  =20
+>>   	dfll_set_mode(td, DFLL_DISABLED);
+>> @@ -1513,6 +1514,61 @@ static int dfll_init(struct tegra_dfll *td)
+>>   	return ret;
+>>   }
+>>  =20
+>> +/**
+>> + * tegra_dfll_suspend - check DFLL is disabled
+>> + * @dev: DFLL device *
+>> + *
+>> + * DFLL clock should be disabled by the CPUFreq driver. So, make
+>> + * sure it is disabled and disable all clocks needed by the DFLL.
+>> + */
+>> +int tegra_dfll_suspend(struct device *dev)
+>> +{
+>> +	struct tegra_dfll *td =3D dev_get_drvdata(dev);
+>> +
+>> +	if (dfll_is_running(td)) {
+>> +		dev_err(td->dev, "dfll is enabled while shouldn't be\n");
+>> +		return -EBUSY;
+>> +	}
+>> +
+>> +	reset_control_assert(td->dvco_rst);
+>> +
+>> +	return 0;
+>> +}
+>> +EXPORT_SYMBOL(tegra_dfll_suspend);
+>> +
+>> +/**
+>> + * tegra_dfll_resume - reinitialize DFLL on resume
+>> + * @dev: DFLL instance
+>> + *
+>> + * DFLL is disabled and reset during suspend and resume.
+>> + * So, reinitialize the DFLL IP block back for use.
+>> + * DFLL clock is enabled later in closed loop mode by CPUFreq
+>> + * driver before switching its clock source to DFLL output.
+>> + */
+>> +int tegra_dfll_resume(struct device *dev)
+>> +{
+>> +	struct tegra_dfll *td =3D dev_get_drvdata(dev);
+>> +
+>> +	reset_control_deassert(td->dvco_rst);
+> This doesn't look right because I assume that DFLL resetting is
+> synchronous and thus clk should be enabled in order for reset to
+> propagate inside hardware.
 >
-> On Fri, Aug 09, 2019 at 09:34:11AM +0200, Paolo Bonzini wrote:
-> > This is probably overdone---KVM x86 has quite a few contributors that
-> > usually review each other's patches, which is really helpful to me.
-> > Formalize this by listing them as reviewers.  I am including people
-> > with various expertise:
-> >
-> > - Joerg for SVM (with designated reviewers, it makes more sense to have
-> > him in the main KVM/x86 stanza)
-> >
-> > - Sean for MMU and VMX
-> >
-> > - Jim for VMX
-> >
-> > - Vitaly for Hyper-V and possibly SVM
-> >
-> > - Wanpeng for LAPIC and paravirtualization.
-> >
-> > Please ack if you are okay with this arrangement, otherwise speak up.
-> >
-> > In other news, Radim is going to leave Red Hat soon.  However, he has
-> > not been very much involved in upstream KVM development for some time,
-> > and in the immediate future he is still going to help maintain kvm/queue
-> > while I am on vacation.  Since not much is going to change, I will let
-> > him decide whether he wants to keep the maintainer role after he leaves.
-> >
-> > Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-> > Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-> > Cc: Wanpeng Li <wanpengli@tencent.com>
-> > Cc: Jim Mattson <jmattson@google.com>
-> > Cc: Joerg Roedel <joro@8bytes.org>
-> > Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> > ---
-Acked-by: Jim Mattson <jmattson@google.com>
+>> +	pm_runtime_get_sync(td->dev);
+> Hence it will be better to remove the above reset_control_deassert() and
+> add here:
+>
+> 	reset_control_reset(td->dvco_rst);
+
+By the time dfll resume happens, dfll controller clock will already be=20
+enabled.
+
+so doing reset de-assert before pm_runtime seems ok.
+
+>> +	dfll_set_mode(td, DFLL_DISABLED);
+>> +	dfll_set_default_params(td);
+>> +
+>> +	if (td->soc->init_clock_trimmers)
+>> +		td->soc->init_clock_trimmers();
+>> +
+>> +	dfll_set_open_loop_config(td);
+>> +
+>> +	dfll_init_out_if(td);
+>> +
+>> +	pm_runtime_put_sync(td->dev);
+>> +
+>> +	return 0;
+>> +}
+>> +EXPORT_SYMBOL(tegra_dfll_resume);
+>> +
+>>   /*
+>>    * DT data fetch
+>>    */
+>> diff --git a/drivers/clk/tegra/clk-dfll.h b/drivers/clk/tegra/clk-dfll.h
+>> index 1b14ebe7268b..fb209eb5f365 100644
+>> --- a/drivers/clk/tegra/clk-dfll.h
+>> +++ b/drivers/clk/tegra/clk-dfll.h
+>> @@ -42,5 +42,7 @@ int tegra_dfll_register(struct platform_device *pdev,
+>>   struct tegra_dfll_soc_data *tegra_dfll_unregister(struct platform_devi=
+ce *pdev);
+>>   int tegra_dfll_runtime_suspend(struct device *dev);
+>>   int tegra_dfll_runtime_resume(struct device *dev);
+>> +int tegra_dfll_suspend(struct device *dev);
+>> +int tegra_dfll_resume(struct device *dev);
+>>  =20
+>>   #endif /* __DRIVERS_CLK_TEGRA_CLK_DFLL_H */
+>> diff --git a/drivers/clk/tegra/clk-tegra124-dfll-fcpu.c b/drivers/clk/te=
+gra/clk-tegra124-dfll-fcpu.c
+>> index e84b6d52cbbd..2ac2679d696d 100644
+>> --- a/drivers/clk/tegra/clk-tegra124-dfll-fcpu.c
+>> +++ b/drivers/clk/tegra/clk-tegra124-dfll-fcpu.c
+>> @@ -631,6 +631,7 @@ static int tegra124_dfll_fcpu_remove(struct platform=
+_device *pdev)
+>>   static const struct dev_pm_ops tegra124_dfll_pm_ops =3D {
+>>   	SET_RUNTIME_PM_OPS(tegra_dfll_runtime_suspend,
+>>   			   tegra_dfll_runtime_resume, NULL)
+>> +	SET_SYSTEM_SLEEP_PM_OPS(tegra_dfll_suspend, tegra_dfll_resume)
+>>   };
+>>  =20
+>>   static struct platform_driver tegra124_dfll_fcpu_driver =3D {
+>>
