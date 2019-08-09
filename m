@@ -2,136 +2,200 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85058C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 20:21:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4077C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 20:21:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 500272166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 20:21:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565382074;
-	bh=b5ZK9j4Wq2pvFD1iS1I1/Vw1KmYH7fCxHt95Sms61y8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=bHdfrGdaiP2TH2So0Y34wSadneTutEtv4hx6TUCXIcERnjTL+xDyWYPxaOTQS6N/2
-	 nF/pXQ9Qlg0ojc3bxuQ9ZQW8mIgXpOmYqLmOl7OGamH6I6Kx1L5Lnbuk24PT63ppka
-	 x3MJMiSg5Ulq/rNqBfc0IZXuTVPVd8afAEqU9ncU=
+	by mail.kernel.org (Postfix) with ESMTP id AA49C20B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 20:21:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uFKxwL3J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726734AbfHIUVN (ORCPT
+        id S1727282AbfHIUVn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 16:21:13 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:46163 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725985AbfHIUVM (ORCPT
+        Fri, 9 Aug 2019 16:21:43 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:33001 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725927AbfHIUVn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 16:21:12 -0400
-Received: by mail-lj1-f194.google.com with SMTP id v24so93345764ljg.13
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 13:21:11 -0700 (PDT)
+        Fri, 9 Aug 2019 16:21:43 -0400
+Received: by mail-wm1-f67.google.com with SMTP id p77so6884645wme.0;
+        Fri, 09 Aug 2019 13:21:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=b+WuzQJ72s+s55WdGrB/VNoub8TGAPzVmj1NuZWRwNg=;
-        b=e3coo6sSaC5j2muBs53ynP4CEu65iZmHkIOEmoMKYz8/sBgbKCa2qnMS1MbdVrAo1r
-         nzrpKTbzY/TfaOxKeuqnLBzNpONk1xJ35/7xxGVRKnPoo00kWNMZ6Xzr/3smNvCy8yWh
-         lLoAlVi5WeefZbFz22+OPpuVUJiIppTk3Xbio=
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=KRYBujXeesavxkZEhR2u/6WvFBsfbrUIYbLhrwxBRGM=;
+        b=uFKxwL3JgE0/swoMA2NXpTNyIp5TCvLNtLftadRXPE/WyTthtwaM2pE5IPvoVns/IL
+         VAmK0o271QCRnGMdGuZw79XaH19S845iC1xUOvhW1KT21Rq8SGcqPf2IP/XnBG2bOc3U
+         lLmdLEe0fcLzz8WAj8U5ZTmduFnBj13zt0c2TJcfh3nfq/uAb6bIlLk9Egwz7LTlKbsP
+         H+rc5M30ZNNJr0f+SQs1FY8vuU8nPE93PU3KS2F/j8zaM3WR52mm+OOEZ2/lcQMRLxa9
+         V5CV15JQo5ZXNzw9df6jVDSzCUaBGPz9pgDTOy2tlYw3L2hKub06oRq6cI4PhW82CjTm
+         Q+JA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=b+WuzQJ72s+s55WdGrB/VNoub8TGAPzVmj1NuZWRwNg=;
-        b=HdukFzOWJEJVJv1Fgjz0uDQlmdZdbJhDGFznCzNjMA5yEh6WYO6nQy4RGTTVFrjwqG
-         76uD+GsCQyoPEWggOMlkAyGPCM59WtYjRD+lm8a6EcSKFiZsQIk6EGRcNQZsE7Wd1ICq
-         ANWfyNtmnST2cNxDfh3clRTWADtt4if8bEZ/bDD3yEtTVU1kK1J2DLa+vzJ1dsZ+z7FH
-         ttXX6IIMiJJfw6o5eamT33304gBvsFpPip6DSYNPn0QGUX6e66OdOs6np67EMh9LLCAQ
-         0Zcbgjgjv2XDU97JYMkBmGd/nQldrc1nreWdAe7OkE5JlFZ9ru+4/RLj/A0OdH4v9+gO
-         qHxA==
-X-Gm-Message-State: APjAAAUMGFQrAGJESdk1rtb3Z0c4RAfJdVi3Dwe6i7mOLU8ZhJMtgly6
-        Pk18lQ2kNcQNAp1dllQcxD41lydg3uk=
-X-Google-Smtp-Source: APXvYqzJlBjWhSrNAR9DbkmffzTKqDU2j6pgNQXrv1yAsSxe/otjtyhKPkDxGbIycXjwKLCGHjZELA==
-X-Received: by 2002:a2e:9010:: with SMTP id h16mr12778425ljg.49.1565382069822;
-        Fri, 09 Aug 2019 13:21:09 -0700 (PDT)
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
-        by smtp.gmail.com with ESMTPSA id v17sm21979221ljg.36.2019.08.09.13.21.07
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 09 Aug 2019 13:21:07 -0700 (PDT)
-Received: by mail-lj1-f179.google.com with SMTP id r9so93170463ljg.5
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 13:21:07 -0700 (PDT)
-X-Received: by 2002:a2e:9192:: with SMTP id f18mr12296254ljg.52.1565382066715;
- Fri, 09 Aug 2019 13:21:06 -0700 (PDT)
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=KRYBujXeesavxkZEhR2u/6WvFBsfbrUIYbLhrwxBRGM=;
+        b=ad6EKO4rzX2wE6DY5BBwm0kNusWbMiCzH9k+fDFPdQIB/LDD6t+yFDks3LVZjmfM4d
+         pCfjHWxyzgfxxKvSoTrjdfCU4fCX8HSh13qc/LH+paCGWz/GxvYRHLS0Ew9LYwK7qBz3
+         Cvs7Lv/yKJzpL8nbkQ7dji2T7imTOHpjf4JuwNqyPBrilCQwm/v6qfNbUmqJNkyTjvOr
+         N53/oxoaJ77nZ9TPWLGidlHnSTXl0EqlePvPQpD8EPUNPG/4kVsGwDoxazAFGvOTsdWr
+         96yL28FAGHEpLE1YQmE2lp2+AidL//SVj+3/+oL5/Dq8bvMV4p5k1i+Uym+m0UQnM968
+         QVTw==
+X-Gm-Message-State: APjAAAXTw3FEYUlaHNZX/9vCmJvK7kABwQoW6f9OiJ2/hMMxtpbdrPEa
+        b+78m8Nn3Xvz/MYhUKJ9QJU=
+X-Google-Smtp-Source: APXvYqyLCY2+UnvuTTTsqp0D0bjjDvSXFr7omopd9/6FzcqezAx2P2Hvi0mh6qbVaBd/hIzjpvsyBQ==
+X-Received: by 2002:a1c:61d4:: with SMTP id v203mr11610033wmb.164.1565382100073;
+        Fri, 09 Aug 2019 13:21:40 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f2f:3200:2994:d24a:66a1:e0e5? (p200300EA8F2F32002994D24A66A1E0E5.dip0.t-ipconnect.de. [2003:ea:8f2f:3200:2994:d24a:66a1:e0e5])
+        by smtp.googlemail.com with ESMTPSA id o11sm305922wrw.19.2019.08.09.13.21.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 09 Aug 2019 13:21:39 -0700 (PDT)
+Subject: Re: [PATCH net-next v6 3/3] net: phy: broadcom: add 1000Base-X
+ support for BCM54616S
+To:     Tao Ren <taoren@fb.com>, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Arun Parameswaran <arun.parameswaran@broadcom.com>,
+        Justin Chen <justinpopo6@gmail.com>,
+        Vladimir Oltean <olteanv@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
+References: <20190809054411.1015962-1-taoren@fb.com>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <97cd059c-d98e-1392-c814-f3bd628e6366@gmail.com>
+Date:   Fri, 9 Aug 2019 22:21:31 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190807222634.1723-1-john.ogness@linutronix.de>
- <20190807222634.1723-10-john.ogness@linutronix.de> <CAHk-=wiKTn-BMpp4w645XqmFBEtUXe84+TKc6aRMPbvFwUjA=A@mail.gmail.com>
- <874l2rclmw.fsf@linutronix.de> <CAHk-=wiRN9v7UmhbTZgskh-MLyY2f0-8Zi3fUziy+GpZnj2i3w@mail.gmail.com>
- <20190808194523.6f83e087@gandalf.local.home> <CAHk-=wiRpvRg6dpEWqaB20QUFRq8or0-AGgkjvisygptRE64UA@mail.gmail.com>
- <20190808204841.5afcad46@gandalf.local.home> <CAHk-=whNcrysjJYPDFhKAc4tvd80XGAyh95oZeAY6bmzpv3G-A@mail.gmail.com>
- <alpine.DEB.2.21.1908091306520.21433@nanos.tec.linutronix.de>
- <CAHk-=wiDzz+KU-ArqpnzjYkvDtKWjUqMfiiJXpXhgYU+Wd0r-w@mail.gmail.com> <alpine.DEB.2.21.1908092141490.21433@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1908092141490.21433@nanos.tec.linutronix.de>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 9 Aug 2019 13:20:50 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgTEs7AFTxQPsqpHS1JN9OU1eiY6eCdFjxnKSU_1POx=g@mail.gmail.com>
-Message-ID: <CAHk-=wgTEs7AFTxQPsqpHS1JN9OU1eiY6eCdFjxnKSU_1POx=g@mail.gmail.com>
-Subject: Re: [RFC PATCH v4 9/9] printk: use a new ringbuffer implementation
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Brendan Higgins <brendanhiggins@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190809054411.1015962-1-taoren@fb.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 9, 2019 at 1:07 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> I'm all for it. I just tried it out and the ratio was 3 out of 5 retained
-> the data +/- a few bitflips with ~2 seconds power off. The other two were
-> the laptop and that server machine which wipes everything.
+On 09.08.2019 07:44, Tao Ren wrote:
+> The BCM54616S PHY cannot work properly in RGMII->1000Base-KX mode (for
+> example, on Facebook CMM BMC platform), mainly because genphy functions
+> are designed for copper links, and 1000Base-X (clause 37) auto negotiation
+> needs to be handled differently.
+> 
+> This patch enables 1000Base-X support for BCM54616S by customizing 3
+> driver callbacks:
+> 
+>   - probe: probe callback detects PHY's operation mode based on
+>     INTERF_SEL[1:0] pins and 1000X/100FX selection bit in SerDES 100-FX
+>     Control register.
+> 
+>   - config_aneg: calls genphy_c37_config_aneg when the PHY is running in
+>     1000Base-X mode; otherwise, genphy_config_aneg will be called.
+> 
+>   - read_status: calls genphy_c37_read_status when the PHY is running in
+>     1000Base-X mode; otherwise, genphy_read_status will be called.
+> 
+> Signed-off-by: Tao Ren <taoren@fb.com>
+> ---
+>  Changes in v6:
+>   - nothing changed.
+>  Changes in v5:
+>   - include Heiner's patch "net: phy: add support for clause 37
+>     auto-negotiation" into the series.
+>   - use genphy_c37_config_aneg and genphy_c37_read_status in BCM54616S
+>     PHY driver's callback when the PHY is running in 1000Base-X mode.
+>  Changes in v4:
+>   - add bcm54616s_config_aneg_1000bx() to deal with auto negotiation in
+>     1000Base-X mode.
+>  Changes in v3:
+>   - rename bcm5482_read_status to bcm54xx_read_status so the callback can
+>     be shared by BCM5482 and BCM54616S.
+>  Changes in v2:
+>   - Auto-detect PHY operation mode instead of passing DT node.
+>   - move PHY mode auto-detect logic from config_init to probe callback.
+>   - only set speed (not including duplex) in read_status callback.
+>   - update patch description with more background to avoid confusion.
+>   - patch #1 in the series ("net: phy: broadcom: set features explicitly
+>     for BCM54616") is dropped: the fix should go to get_features callback
+>     which may potentially depend on this patch.
+> 
+>  drivers/net/phy/broadcom.c | 54 +++++++++++++++++++++++++++++++++++---
+>  include/linux/brcmphy.h    | 10 +++++--
+>  2 files changed, 58 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/net/phy/broadcom.c b/drivers/net/phy/broadcom.c
+> index 937d0059e8ac..fbd76a31c142 100644
+> --- a/drivers/net/phy/broadcom.c
+> +++ b/drivers/net/phy/broadcom.c
+> @@ -383,9 +383,9 @@ static int bcm5482_config_init(struct phy_device *phydev)
+>  		/*
+>  		 * Select 1000BASE-X register set (primary SerDes)
+>  		 */
+> -		reg = bcm_phy_read_shadow(phydev, BCM5482_SHD_MODE);
+> -		bcm_phy_write_shadow(phydev, BCM5482_SHD_MODE,
+> -				     reg | BCM5482_SHD_MODE_1000BX);
+> +		reg = bcm_phy_read_shadow(phydev, BCM54XX_SHD_MODE);
+> +		bcm_phy_write_shadow(phydev, BCM54XX_SHD_MODE,
+> +				     reg | BCM54XX_SHD_MODE_1000BX);
+>  
+>  		/*
+>  		 * LED1=ACTIVITYLED, LED3=LINKSPD[2]
+> @@ -451,12 +451,44 @@ static int bcm5481_config_aneg(struct phy_device *phydev)
+>  	return ret;
+>  }
+>  
+> +static int bcm54616s_probe(struct phy_device *phydev)
+> +{
+> +	int val, intf_sel;
+> +
+> +	val = bcm_phy_read_shadow(phydev, BCM54XX_SHD_MODE);
+> +	if (val < 0)
+> +		return val;
+> +
+> +	/* The PHY is strapped in RGMII to fiber mode when INTERF_SEL[1:0]
+> +	 * is 01b.
+> +	 */
+> +	intf_sel = (val & BCM54XX_SHD_INTF_SEL_MASK) >> 1;
+> +	if (intf_sel == 1) {
+> +		val = bcm_phy_read_shadow(phydev, BCM54616S_SHD_100FX_CTRL);
+> +		if (val < 0)
+> +			return val;
+> +
+> +		/* Bit 0 of the SerDes 100-FX Control register, when set
+> +		 * to 1, sets the MII/RGMII -> 100BASE-FX configuration.
+> +		 * When this bit is set to 0, it sets the GMII/RGMII ->
+> +		 * 1000BASE-X configuration.
+> +		 */
+> +		if (!(val & BCM54616S_100FX_MODE))
+> +			phydev->dev_flags |= PHY_BCM_FLAGS_MODE_1000BX;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int bcm54616s_config_aneg(struct phy_device *phydev)
+>  {
+>  	int ret;
+>  
+>  	/* Aneg firsly. */
+> -	ret = genphy_config_aneg(phydev);
+> +	if (phydev->dev_flags & PHY_BCM_FLAGS_MODE_1000BX)
+> +		ret = genphy_c37_config_aneg(phydev);
+> +	else
+> +		ret = genphy_config_aneg(phydev);
+>  
 
-Perfect. That actually says "the theory works". My desktop worked only
-on warm reboot - which isn't really the interesting case (it does
-cover things like triple boots etc and "press reset button when it
-hangs, so it *can* be helpful, but even on desktops reset buttons seem
-to be getting less common).
+I'm just wondering whether it needs to be considered that 100base-FX
+doesn't support auto-negotiation. I suppose BMSR reports aneg as
+supported, therefore phylib will use aneg per default.
+Not sure who could set 100Base-FX mode when, but maybe at that place
+also phydev->autoneg needs to be cleared. Did you test 100Base-FX mode?
 
-But yes, the whole thing where BIOSes wipe everything is problematic,
-but that's where I just need to ping the right people inside Intel
-again.
-
-I did send the patch to inside Intel earlier, but I think the timing
-for that might have been bad (people were on vacation), so I should
-just reach out to more Intel people.
-
-It would be better to have a more polished patch (the whole "fixed
-address at around 12GB physical" really is such a horrible hack), but
-I dreaded actually parsing the e280 memory map to do some "static for
-one particular configuration" thing.
-
-I should just do that and have something that Intel HW and FW people
-can test on any hardware.
-
-> If that can be avoided with some ACPI tweak especially on the laptop, that
-> would be great. I'm not so worried about the server case.
-
-Yeah, the server case I think we have covered other ways. Plus people
-running them tend to have serious developer resources anyway.
-
-They might still use something like this for some convenient
-first-order debugging if we end up having generally available, of
-course, but the target really is "random laptop or home user that uses
-a distro and can't be expected to even try to sanely report - much
-less debug - a hung machine condition".
-
-                     Linus
+Heiner
