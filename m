@@ -3,160 +3,159 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EBBDC31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 23:53:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D4E1C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 23:54:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3F1720859
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 23:53:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8C5120859
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 23:54:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727948AbfHIXxp (ORCPT
+        id S1728820AbfHIXyt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 19:53:45 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:55799 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726053AbfHIXxo (ORCPT
+        Fri, 9 Aug 2019 19:54:49 -0400
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:39133 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725985AbfHIXyt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 19:53:44 -0400
-Received: from dread.disaster.area (pa49-181-167-148.pa.nsw.optusnet.com.au [49.181.167.148])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id DAF307E93B3;
-        Sat, 10 Aug 2019 09:53:39 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hwEgR-0001ae-PY; Sat, 10 Aug 2019 09:52:31 +1000
-Date:   Sat, 10 Aug 2019 09:52:31 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     ira.weiny@intel.com
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-        Theodore Ts'o <tytso@mit.edu>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Michal Hocko <mhocko@suse.com>, linux-xfs@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-ext4@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [RFC PATCH v2 01/19] fs/locks: Export F_LAYOUT lease to user
- space
-Message-ID: <20190809235231.GC7777@dread.disaster.area>
-References: <20190809225833.6657-1-ira.weiny@intel.com>
- <20190809225833.6657-2-ira.weiny@intel.com>
+        Fri, 9 Aug 2019 19:54:49 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04395;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0TZ2u7I7_1565394883;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TZ2u7I7_1565394883)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sat, 10 Aug 2019 07:54:46 +0800
+Subject: Re: [RESEND PATCH 1/2 -mm] mm: account lazy free pages separately
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     kirill.shutemov@linux.intel.com, hannes@cmpxchg.org,
+        vbabka@suse.cz, rientjes@google.com, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <1565308665-24747-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190809083216.GM18351@dhcp22.suse.cz>
+ <1a3c4185-c7ab-8d6f-8191-77dce02025a7@linux.alibaba.com>
+ <20190809180238.GS18351@dhcp22.suse.cz>
+ <79c90f6b-fcac-02e1-015a-0eaa4eafdf7d@linux.alibaba.com>
+Message-ID: <fb1f4958-5147-2fab-531f-d234806c2f37@linux.alibaba.com>
+Date:   Fri, 9 Aug 2019 16:54:43 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190809225833.6657-2-ira.weiny@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0
-        a=gu9DDhuZhshYSb5Zs/lkOA==:117 a=gu9DDhuZhshYSb5Zs/lkOA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=FmdZ9Uzk2mMA:10
-        a=QyXUC8HyAAAA:8 a=7-415B0cAAAA:8 a=U9j2fOsc8QPwp6X3jq8A:9
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <79c90f6b-fcac-02e1-015a-0eaa4eafdf7d@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 03:58:15PM -0700, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> In order to support an opt-in policy for users to allow long term pins
-> of FS DAX pages we need to export the LAYOUT lease to user space.
-> 
-> This is the first of 2 new lease flags which must be used to allow a
-> long term pin to be made on a file.
-> 
-> After the complete series:
-> 
-> 0) Registrations to Device DAX char devs are not affected
-> 
-> 1) The user has to opt in to allowing page pins on a file with an exclusive
->    layout lease.  Both exclusive and layout lease flags are user visible now.
-> 
-> 2) page pins will fail if the lease is not active when the file back page is
->    encountered.
-> 
-> 3) Any truncate or hole punch operation on a pinned DAX page will fail.
-> 
-> 4) The user has the option of holding the lease or releasing it.  If they
->    release it no other pin calls will work on the file.
-> 
-> 5) Closing the file is ok.
-> 
-> 6) Unmapping the file is ok
-> 
-> 7) Pins against the files are tracked back to an owning file or an owning mm
->    depending on the internal subsystem needs.  With RDMA there is an owning
->    file which is related to the pined file.
-> 
-> 8) Only RDMA is currently supported
-> 
-> 9) Truncation of pages which are not actively pinned nor covered by a lease
->    will succeed.
 
-This has nothing to do with layout leases or what they provide
-access arbitration over. Layout leases have _nothing_ to do with
-page pinning or RDMA - they arbitrate behaviour the file offset ->
-physical block device mapping within the filesystem and the
-behaviour that will occur when a specific lease is held.
 
-The commit descripting needs to describe what F_LAYOUT actually
-protects, when they'll get broken, etc, not how RDMA is going to use
-it.
+On 8/9/19 11:26 AM, Yang Shi wrote:
+>
+>
+> On 8/9/19 11:02 AM, Michal Hocko wrote:
+>> On Fri 09-08-19 09:19:13, Yang Shi wrote:
+>>>
+>>> On 8/9/19 1:32 AM, Michal Hocko wrote:
+>>>> On Fri 09-08-19 07:57:44, Yang Shi wrote:
+>>>>> When doing partial unmap to THP, the pages in the affected range 
+>>>>> would
+>>>>> be considered to be reclaimable when memory pressure comes in.  And,
+>>>>> such pages would be put on deferred split queue and get minus from 
+>>>>> the
+>>>>> memory statistics (i.e. /proc/meminfo).
+>>>>>
+>>>>> For example, when doing THP split test, /proc/meminfo would show:
+>>>>>
+>>>>> Before put on lazy free list:
+>>>>> MemTotal:       45288336 kB
+>>>>> MemFree:        43281376 kB
+>>>>> MemAvailable:   43254048 kB
+>>>>> ...
+>>>>> Active(anon):    1096296 kB
+>>>>> Inactive(anon):     8372 kB
+>>>>> ...
+>>>>> AnonPages:       1096264 kB
+>>>>> ...
+>>>>> AnonHugePages:   1056768 kB
+>>>>>
+>>>>> After put on lazy free list:
+>>>>> MemTotal:       45288336 kB
+>>>>> MemFree:        43282612 kB
+>>>>> MemAvailable:   43255284 kB
+>>>>> ...
+>>>>> Active(anon):    1094228 kB
+>>>>> Inactive(anon):     8372 kB
+>>>>> ...
+>>>>> AnonPages:         49668 kB
+>>>>> ...
+>>>>> AnonHugePages:     10240 kB
+>>>>>
+>>>>> The THPs confusingly look disappeared although they are still on 
+>>>>> LRU if
+>>>>> you are not familair the tricks done by kernel.
+>>>> Is this a fallout of the recent deferred freeing work?
+>>> This series follows up the discussion happened when reviewing "Make 
+>>> deferred
+>>> split shrinker memcg aware".
+>> OK, so it is a pre-existing problem. Thanks!
+>>
+>>> David Rientjes suggested deferred split THP should be accounted into
+>>> available memory since they would be shrunk when memory pressure 
+>>> comes in,
+>>> just like MADV_FREE pages. For the discussion, please refer to:
+>>> https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg2010115.html 
+>>>
+>> Thanks for the reference.
+>>
+>>>>> Accounted the lazy free pages to NR_LAZYFREE, and show them in 
+>>>>> meminfo
+>>>>> and other places.  With the change the /proc/meminfo would look like:
+>>>>> Before put on lazy free list:
+>>>> The name is really confusing because I have thought of MADV_FREE 
+>>>> immediately.
+>>> Yes, I agree. We may use a more specific name, i.e. DeferredSplitTHP.
+>>>
+>>>>> +LazyFreePages: Cleanly freeable pages under memory pressure (i.e. 
+>>>>> deferred
+>>>>> +               split THP).
+>>>> What does that mean actually? I have hard time imagine what cleanly
+>>>> freeable pages mean.
+>>> Like deferred split THP and MADV_FREE pages, they could be reclaimed 
+>>> during
+>>> memory pressure.
+>>>
+>>> If you just go with "DeferredSplitTHP", these ambiguity would go away.
+>> I have to study the code some more but is there any reason why those
+>> pages are not accounted as proper THPs anymore? Sure they are partially
+>> unmaped but they are still THPs so why cannot we keep them accounted
+>> like that. Having a new counter to reflect that sounds like papering
+>> over the problem to me. But as I've said I might be missing something
+>> important here.
+>
+> I think we could keep those pages accounted for NR_ANON_THPS since 
+> they are still THP although they are unmapped as you mentioned if we 
+> just want to fix the improper accounting.
 
-> @@ -2022,8 +2030,26 @@ static int do_fcntl_add_lease(unsigned int fd, struct file *filp, long arg)
->  	struct file_lock *fl;
->  	struct fasync_struct *new;
->  	int error;
-> +	unsigned int flags = 0;
-> +
-> +	/*
-> +	 * NOTE on F_LAYOUT lease
-> +	 *
-> +	 * LAYOUT lease types are taken on files which the user knows that
-> +	 * they will be pinning in memory for some indeterminate amount of
-> +	 * time.
+By double checking what NR_ANON_THPS really means, 
+Documentation/filesystems/proc.txt says "Non-file backed huge pages 
+mapped into userspace page tables". Then it makes some sense to dec 
+NR_ANON_THPS when removing rmap even though they are still THPs.
 
-Indeed, layout leases have nothing to do with pinning of memory.
-That's something an application taht uses layout leases might do,
-but it largely irrelevant to the functionality layout leases
-provide. What needs to be done here is explain what the layout lease
-API actually guarantees w.r.t. the physical file layout, not what
-some application is going to do with a lease. e.g.
+I don't think we would like to change the definition, if so a new 
+counter may make more sense.
 
-	The layout lease F_RDLCK guarantees that the holder will be
-	notified that the physical file layout is about to be
-	changed, and that it needs to release any resources it has
-	over the range of this lease, drop the lease and then
-	request it again to wait for the kernel to finish whatever
-	it is doing on that range.
+>
+> Here the new counter is introduced for patch 2/2 to account deferred 
+> split THPs into available memory since NR_ANON_THPS may contain 
+> non-deferred split THPs.
+>
+> I could use an internal counter for deferred split THPs, but if it is 
+> accounted by mod_node_page_state, why not just show it in 
+> /proc/meminfo? Or we fix NR_ANON_THPS and show deferred split THPs in 
+> /proc/meminfo?
+>
+>>
+>
 
-	The layout lease F_RDLCK also allows the holder to modify
-	the physical layout of the file. If an operation from the
-	lease holder occurs that would modify the layout, that lease
-	holder does not get notification that a change will occur,
-	but it will block until all other F_RDLCK leases have been
-	released by their holders before going ahead.
-
-	If there is a F_WRLCK lease held on the file, then a F_RDLCK
-	holder will fail any operation that may modify the physical
-	layout of the file. F_WRLCK provides exclusive physical
-	modification access to the holder, guaranteeing nothing else
-	will change the layout of the file while it holds the lease.
-
-	The F_WRLCK holder can change the physical layout of the
-	file if it so desires, this will block while F_RDLCK holders
-	are notified and release their leases before the
-	modification will take place.
-
-We need to define the semantics we expose to userspace first.....
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
