@@ -2,91 +2,85 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DBE1C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 08:15:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE0F2C32756
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 08:15:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1916720B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 08:15:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9542720B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 08:15:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565338534;
+	bh=vnY7oAsY1586ACxhjBeo4HzooGDvWg/bO7dlEEDQ6lw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=kpwWxtOwRCWdBcVf7imzbr9GMkWR92UAmLiPzNLIS/5bABq946BNt2puxjwPqcNr6
+	 HYr5K65g0fElxnBHNbwDOm3I0LdQwx1JZK7les6f/phIrjRpLnqPlkYuVcanibCEWC
+	 ew4HmBBU0HBPGg9Ta8tFY6drZaE37z98fIgKfmIU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405920AbfHIIPA (ORCPT
+        id S2405938AbfHIIPd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 04:15:00 -0400
-Received: from verein.lst.de ([213.95.11.211]:53322 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726054AbfHIIPA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 04:15:00 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 8901768B05; Fri,  9 Aug 2019 10:14:55 +0200 (CEST)
-Date:   Fri, 9 Aug 2019 10:14:55 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Christoph Hellwig <hch@lst.de>, Rob Clark <robdclark@chromium.org>,
-        Rob Clark <robdclark@gmail.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] drm: add cache support for arm64
-Message-ID: <20190809081455.GA21967@lst.de>
-References: <20190805211451.20176-1-robdclark@gmail.com> <20190806084821.GA17129@lst.de> <CAJs_Fx6eh1w7c=crMoD5XyEOMzP6orLhqUewErE51cPGYmObBQ@mail.gmail.com> <20190806155044.GC25050@lst.de> <CAJs_Fx6uztwDy2PqRy3Tc9p12k8r_ovS2tAcsMV6HqnAp=Ggug@mail.gmail.com> <20190807062545.GF6627@lst.de> <CAKMK7uH1O3q8VUftikipGH6ACPoT-8tbV1Zwo-8WL=wUHiqsoQ@mail.gmail.com> <20190808095506.GA32621@lst.de> <20190808115808.GN7444@phenom.ffwll.local>
+        Fri, 9 Aug 2019 04:15:33 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:37793 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726054AbfHIIPd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 04:15:33 -0400
+Received: by mail-ot1-f66.google.com with SMTP id s20so63989493otp.4;
+        Fri, 09 Aug 2019 01:15:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vnY7oAsY1586ACxhjBeo4HzooGDvWg/bO7dlEEDQ6lw=;
+        b=W4xi6YfwcjwWKsSEIGkzW3famA2I1TNwh6HCniGiDvW077yhXA4k6xl9h8/mQaKcsL
+         3mmzgR+TOJ0dXpZXR6rt0zfIMfEGlWcSqXbU/kjHNqhtAFnW5O8bvvjEPOAQeHQ4Bu2m
+         UeNzXSW2cJ0REzRndKE3/ytB4zBH9ONmm3OAIHd0ZpbRUVE7UfuVQM6Efu25Im6U8M0F
+         VHI+TTmGyuciNeYowtyBKREtz75ZZUfCMBGXVCuLDIEYE4Web8LWYCOUxqIhdd+JVpsT
+         VKrvTng3y4SU1B4IlJmFMcXOMu2bh9t49zeUfWB2GBOgkNW/KRccPIgzhvvgdNFEqwEn
+         RT6w==
+X-Gm-Message-State: APjAAAWxtF5kuat+woIuTVcB3meuf0kCe4mey5yiHQfY/CwlC+fb5kft
+        xCk0wO08LGSOq9etxcLGHAhUmmB9uimVO8tLRoA=
+X-Google-Smtp-Source: APXvYqxD5CZq8T4kQd204KLi1aG86Z1J38p4cBHVivVKXkMRm7iLcJLySC1n4t0d2NHxSE2hatpOs10CBonmjZQMous=
+X-Received: by 2002:a05:6830:8a:: with SMTP id a10mr15636164oto.167.1565338532516;
+ Fri, 09 Aug 2019 01:15:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190808115808.GN7444@phenom.ffwll.local>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+References: <1717835.1Yz4jNODO2@kreacher> <20190808111941.GJ30120@smile.fi.intel.com>
+In-Reply-To: <20190808111941.GJ30120@smile.fi.intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 9 Aug 2019 10:15:21 +0200
+Message-ID: <CAJZ5v0h+iHWMkS-vVHUHwd6AmYE2UR_CCoUjhBJH_-ik_jbVQQ@mail.gmail.com>
+Subject: Re: [PATCH 0/2] intel-hid: intel-vbtn: Suspend-related fix and update
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 01:58:08PM +0200, Daniel Vetter wrote:
-> > > We use shmem to get at swappable pages. We generally just assume that
-> > > the gpu can get at those pages, but things fall apart in fun ways:
-> > > - some setups somehow inject bounce buffers. Some drivers just give
-> > > up, others try to allocate a pool of pages with dma_alloc_coherent.
-> > > - some devices are misdesigned and can't access as much as the cpu. We
-> > > allocate using GFP_DMA32 to fix that.
-> > 
-> > Well, for shmem you can't really call allocators directly, right?
-> 
-> We can pass gfp flags to shmem_read_mapping_page_gfp, which is just about
-> enough for the 2 cases on intel platforms where the gpu can only access
-> 4G, but the cpu has way more.
+On Thu, Aug 8, 2019 at 1:19 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Thu, Aug 08, 2019 at 10:40:19AM +0200, Rafael J. Wysocki wrote:
+> > Hi,
+> >
+> > These two patches fix a minor issue related to system suspend in the intel-hid
+> > and intel-vbtn drivers and update the suspend/resume handling in intel-hid to
+> > reduce special-casing in it somewhat.
+> >
+>
+> AFAIR the original patches go via other than PDx86 tree.
 
-Right.  And that works for architectures without weird DMA offsets and
-devices that exactly have a 32-bit DMA limit.  It falls flat for all
-the more complex ones unfortunately.
+That's correct.
 
-> > But userspace malloc really means dma_map_* anyway, so not really
-> > relevant for memory allocations.
-> 
-> It does tie in, since we'll want a dma_map which fails if a direct mapping
-> isn't possible. It also helps the driver code a lot if we could use the
-> same low-level flushing functions between our own memory (whatever that
-> is) and anon pages from malloc. And in all the cases if it's not possible,
-> we want a failure, not elaborate attempts at hiding the differences
-> between all possible architectures out there.
+> Thus, while patches are looking good to me,
+>
+> Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-At the very lowest level all goes down to the same three primitives we
-talked about anyway, but there are different ways how they are combined.
-For the streaming mappins looks at the table in arch/arc/mm/dma.c I
-mentioned earlier.  For memory that is prepared for just mmaping to
-userspace without a kernel user we'll always do a wb+inv.  But as the
-other subthread shows we'll need to eventually look into unmapping
-(or remapping with the same attributes) of that memory in kernel space
-to avoid speculation bugs (or just invalid combination on x86 where
-we check for that), so the API will be a little more complex.
-
-Btw, are all DRM drivers using vmf_insert_* to pre-populate the mapping
-like the MSM case, or are some doing dynamic faulting from
-vm_ops->fault?
+Thanks!
