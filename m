@@ -2,92 +2,159 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB22C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1628CC31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99AE120820
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:16:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E00D320B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:22:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407542AbfHIRQG (ORCPT
+        id S2437300AbfHIRWI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 13:16:06 -0400
-Received: from mga11.intel.com ([192.55.52.93]:63508 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726157AbfHIRQF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 13:16:05 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 10:16:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,366,1559545200"; 
-   d="scan'208";a="374549305"
-Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
-  by fmsmga005.fm.intel.com with ESMTP; 09 Aug 2019 10:16:04 -0700
-Received: from fmsmsx124.amr.corp.intel.com (10.18.125.39) by
- FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 9 Aug 2019 10:16:04 -0700
-Received: from fmsmsx117.amr.corp.intel.com ([169.254.3.69]) by
- fmsmsx124.amr.corp.intel.com ([169.254.8.91]) with mapi id 14.03.0439.000;
- Fri, 9 Aug 2019 10:16:04 -0700
-From:   "Souza, Jose" <jose.souza@intel.com>
-To:     "pebolle@tiscali.nl" <pebolle@tiscali.nl>,
-        "James.Bottomley@HansenPartnership.com" 
-        <James.Bottomley@HansenPartnership.com>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "chris@chris-wilson.co.uk" <chris@chris-wilson.co.uk>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [Intel-gfx] screen freeze with 5.2-rc6 Dell XPS-13 skylake i915
-Thread-Topic: [Intel-gfx] screen freeze with 5.2-rc6 Dell XPS-13 skylake i915
-Thread-Index: AQHVN8s6u18XhfEo0kuWcj/kjNqW06bGT1sAgAAD6QCAAADBAIAAGPCAgAAIRACAAANRAIAABuIAgAAHAoCAAANkgIAA9aWAgAACeQCABSUwAIAACPCAgAE98wCAAeSegIAAAIsAgArdJICAABICAIAAA0IAgBjsbIA=
-Date:   Fri, 9 Aug 2019 17:16:03 +0000
-Message-ID: <54f0979debcd4459ca9d9f25941d4fa29a1aab06.camel@intel.com>
-References: <1561834612.3071.6.camel@HansenPartnership.com>
-         <156283735757.12757.8954391372130933707@skylake-alporthouse-com>
-         <1562875878.2840.0.camel@HansenPartnership.com>
-         <27a5b2ca8cfc79bf617387a363ea7192acc4e1f0.camel@intel.com>
-         <1562876880.2840.12.camel@HansenPartnership.com>
-         <1562882235.13723.1.camel@HansenPartnership.com>
-         <dad073fb4b06cf0abb7ab702a9474b9c443186eb.camel@intel.com>
-         <1562884722.15001.3.camel@HansenPartnership.com>
-         <2c4edfabf49998eb5da3a6adcabc006eb64bfe90.camel@tiscali.nl>
-         <55f4d1c242d684ca2742e8c14613d810a9ee9504.camel@intel.com>
-         <1562888433.2915.0.camel@HansenPartnership.com>
-         <1562941185.3398.1.camel@HansenPartnership.com>
-         <68472c5f390731e170221809a12d88cb3bc6460e.camel@tiscali.nl>
-         <143142cad4a946361a0bf285b6f1701c81096c7b.camel@intel.com>
-         <595d9bc87bf47717c8675eb5b1a1cbb2bc463752.camel@tiscali.nl>
-         <a10f009fc160f05077760ff59cd86a9c99006b39.camel@intel.com>
-         <9ef8fc1ae2c3a9bad588899488a781333af4449a.camel@tiscali.nl>
-         <1563398966.3438.5.camel@HansenPartnership.com>
-         <b22cf290b089cb1174ec0fdeb15bdf2e90bf51dc.camel@tiscali.nl>
-         <d084df248afc1943e06c50d391a775d117064743.camel@intel.com>
-         <df4d83e5c5650ea2f1afde1469c9dc82d6120644.camel@tiscali.nl>
-In-Reply-To: <df4d83e5c5650ea2f1afde1469c9dc82d6120644.camel@tiscali.nl>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.24.9.51]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <38ED6E999C8D6C40A3152AADC7FF2B2D@intel.com>
-Content-Transfer-Encoding: base64
+        Fri, 9 Aug 2019 13:22:08 -0400
+Received: from mail-ot1-f71.google.com ([209.85.210.71]:44058 "EHLO
+        mail-ot1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406606AbfHIRWI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 13:22:08 -0400
+Received: by mail-ot1-f71.google.com with SMTP id q16so70169629otn.11
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 10:22:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=9cgS772CXPKMKmDau0zRvHAXUTX+eRt7zThYm1+Rpm8=;
+        b=A3u2pdPARNWGUHBqjTJah1jLOVJUyw51NG4BXQ2sY/rH0Aq0s5IvK0uNIxraQSqBh1
+         MUX1wUbBB+uRpCkYV0oKT4P+vzzleELMEHOZhk1+CfirurnGfvwVTMapHOu/pGy7dV24
+         VzxQDbV0fT1eOPq8GLzKOIZhLj+WKuluF0mLTVnmfJc5sRLC1OyU/qGG3h3HkfeGoICE
+         wIqIkbN0HUTa7bNKnZCQ+jEbGMwUTKMqg+TU+OVmxKsu++05C/LNwxRsrgbKKzDeTjnE
+         WJQA8+UvJpz8P0058JnF5WeUsTmIA6gL2DwinHXoVpDzAPcszOSwU8SPxa/q0LH/oRXp
+         uJfA==
+X-Gm-Message-State: APjAAAUcHYFu1mOt3+Tn/WjAr7jkheXcS2AG+U4jdWRw7klv6pgX99Lr
+        8zLJS2P7pC9SDCKxl02d6CwdMVF1gfracGL37KZp2gwSk3ab
+X-Google-Smtp-Source: APXvYqzmTg903SSJ0TgWcAxahc1LhK5woD2WlskriQoKETXrD12T92bhJSRQKTmj5Tn6pmpZu4SNKXGtO6x8XEC+++Nyy9mQ5Xzs
 MIME-Version: 1.0
+X-Received: by 2002:a02:6a56:: with SMTP id m22mr11871673jaf.114.1565371327220;
+ Fri, 09 Aug 2019 10:22:07 -0700 (PDT)
+Date:   Fri, 09 Aug 2019 10:22:07 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000e695c1058fb26925@google.com>
+Subject: KASAN: use-after-free Read in rxrpc_send_keepalive
+From:   syzbot <syzbot+d850c266e3df14da1d31@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, dhowells@redhat.com,
+        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rml4IHJlbGVhc2VkIG9uIExpbnV4IDUuMi44DQoNCk9uIFdlZCwgMjAxOS0wNy0yNCBhdCAyMjoz
-OSArMDIwMCwgUGF1bCBCb2xsZSB3cm90ZToNCj4gSGkgSm9zZSwNCj4gDQo+IFNvdXphLCBKb3Nl
-IHNjaHJlZWYgb3Agd28gMjQtMDctMjAxOSBvbSAyMDoyNyBbKzAwMDBdOg0KPiA+IFdlIGZpeGVk
-IHRoZSBwYXRjaCBpbnN0ZWFkIG9mIHJldmVydCBpdCwgaXQgaXMgbWVyZ2VkIG9uIGRybS10aXAN
-Cj4gPiBhbmQgb24NCj4gPiBoaXMgd2F5IHRvIGxpbnV4LXN0YWJsZS4NCj4gDQo+IFRoYXQgc2hv
-dWxkIGJlIChkcm0tdGlwKSBjb21taXQgYjVlYTljOTMzNzAwICgiZHJtL2k5MTUvdmJ0OiBGaXgg
-VkJUDQo+IHBhcnNpbmcNCj4gZm9yIHRoZSBQU1Igc2VjdGlvbiIpLiBDb3JyZWN0Pw0KPiANCj4g
-PiBIdWdlIHRoYW5rcyBhZ2Fpbg0KPiANCj4gWW91J3JlIHdlbGNvbWUuDQo+IA0KPiANCj4gUGF1
-bCBCb2xsZQ0KPiANCg==
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    b678c568 Merge tag 'nfs-for-5.3-2' of git://git.linux-nfs...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=10ea5e36600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a4c9e9f08e9e8960
+dashboard link: https://syzkaller.appspot.com/bug?extid=d850c266e3df14da1d31
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+d850c266e3df14da1d31@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: use-after-free in rxrpc_send_keepalive+0x8a2/0x940  
+net/rxrpc/output.c:635
+Read of size 8 at addr ffff888064219698 by task kworker/0:3/11077
+
+CPU: 0 PID: 11077 Comm: kworker/0:3 Not tainted 5.3.0-rc3+ #96
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: krxrpcd rxrpc_peer_keepalive_worker
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  print_address_description.cold+0xd4/0x306 mm/kasan/report.c:351
+  __kasan_report.cold+0x1b/0x36 mm/kasan/report.c:482
+  kasan_report+0x12/0x17 mm/kasan/common.c:612
+  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
+  rxrpc_send_keepalive+0x8a2/0x940 net/rxrpc/output.c:635
+  rxrpc_peer_keepalive_dispatch net/rxrpc/peer_event.c:369 [inline]
+  rxrpc_peer_keepalive_worker+0x7be/0xd02 net/rxrpc/peer_event.c:430
+  process_one_work+0x9af/0x1740 kernel/workqueue.c:2269
+  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
+  kthread+0x361/0x430 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+Allocated by task 20465:
+  save_stack+0x23/0x90 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_kmalloc mm/kasan/common.c:487 [inline]
+  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:460
+  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:501
+  kmem_cache_alloc_trace+0x158/0x790 mm/slab.c:3550
+  kmalloc include/linux/slab.h:552 [inline]
+  kzalloc include/linux/slab.h:748 [inline]
+  rxrpc_alloc_local net/rxrpc/local_object.c:79 [inline]
+  rxrpc_lookup_local+0x64c/0x1b70 net/rxrpc/local_object.c:279
+  rxrpc_sendmsg+0x379/0x5f0 net/rxrpc/af_rxrpc.c:566
+  sock_sendmsg_nosec net/socket.c:637 [inline]
+  sock_sendmsg+0xd7/0x130 net/socket.c:657
+  ___sys_sendmsg+0x3e2/0x920 net/socket.c:2311
+  __sys_sendmmsg+0x1bf/0x4d0 net/socket.c:2413
+  __do_sys_sendmmsg net/socket.c:2442 [inline]
+  __se_sys_sendmmsg net/socket.c:2439 [inline]
+  __x64_sys_sendmmsg+0x9d/0x100 net/socket.c:2439
+  do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 0:
+  save_stack+0x23/0x90 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:449
+  kasan_slab_free+0xe/0x10 mm/kasan/common.c:457
+  __cache_free mm/slab.c:3425 [inline]
+  kfree+0x10a/0x2c0 mm/slab.c:3756
+  rxrpc_local_rcu+0x62/0x80 net/rxrpc/local_object.c:471
+  __rcu_reclaim kernel/rcu/rcu.h:222 [inline]
+  rcu_do_batch kernel/rcu/tree.c:2114 [inline]
+  rcu_core+0x67f/0x1580 kernel/rcu/tree.c:2314
+  rcu_core_si+0x9/0x10 kernel/rcu/tree.c:2323
+  __do_softirq+0x262/0x98c kernel/softirq.c:292
+
+The buggy address belongs to the object at ffff888064219680
+  which belongs to the cache kmalloc-1k of size 1024
+The buggy address is located 24 bytes inside of
+  1024-byte region [ffff888064219680, ffff888064219a80)
+The buggy address belongs to the page:
+page:ffffea0001908600 refcount:1 mapcount:0 mapping:ffff8880aa400c40  
+index:0xffff888064218480 compound_mapcount: 0
+flags: 0x1fffc0000010200(slab|head)
+raw: 01fffc0000010200 ffffea00025f5a08 ffffea00028fca08 ffff8880aa400c40
+raw: ffff888064218480 ffff888064218000 0000000100000001 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff888064219580: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff888064219600: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+> ffff888064219680: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                             ^
+  ffff888064219700: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff888064219780: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
