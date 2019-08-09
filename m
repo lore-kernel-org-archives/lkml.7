@@ -2,185 +2,75 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FFBAC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 20:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6191BC31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 20:16:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 102F320B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 20:13:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1587B2166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 20:16:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fv2YO58s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726918AbfHIUNS (ORCPT
+        id S1726216AbfHIUQ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 16:13:18 -0400
-Received: from smtp05.smtpout.orange.fr ([80.12.242.127]:28055 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725927AbfHIUNR (ORCPT
+        Fri, 9 Aug 2019 16:16:57 -0400
+Received: from mail-pl1-f201.google.com ([209.85.214.201]:49852 "EHLO
+        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725860AbfHIUQ4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 16:13:17 -0400
-Received: from localhost.localdomain ([92.140.207.10])
-        by mwinf5d28 with ME
-        id n8DA2000G0Dzhgk038DAPq; Fri, 09 Aug 2019 22:13:14 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Fri, 09 Aug 2019 22:13:14 +0200
-X-ME-IP: 92.140.207.10
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     harry.wentland@amd.com, sunpeng.li@amd.com,
-        alexander.deucher@amd.com, christian.koenig@amd.com,
-        David1.Zhou@amd.com, airlied@linux.ie, daniel@ffwll.ch
-Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] drm/amd/display: Fix a typo - dce_aduio_mask --> dce_audio_mask
-Date:   Fri,  9 Aug 2019 22:12:19 +0200
-Message-Id: <20190809201219.629-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 9 Aug 2019 16:16:56 -0400
+Received: by mail-pl1-f201.google.com with SMTP id b30so4249969pla.16
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 13:16:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=ps+kwDWgQoJY3CUqmmTxPvXo4adLKJif88scg6lrYf8=;
+        b=fv2YO58sdU4AQ4I/RtKsVvbmSmj2rwepYD+glEMaxde9cOm6Ya1Ge8Yqqh3kUojLFR
+         JR9B6TmnOS9/7Cby5qjnT7Jwt+MSb5MBzoEadrZflPdmFu4/4wUorIzus/YVb/0vW54b
+         7BM8Ma7BcDggHUci6UxcpH6E3/K/FaVHCspRanUX+/U6xeYXGoAU/Y5yL4mA76W2t+Vt
+         U+pv5sBr0JvQPF2XU5wobvmIToBPSRKm0/7tbvw9m/SLl9CB9qlnKfcBs6XBzNLns0+E
+         xhzTcCdRsNKolC/cIfwsLdeQyrCtbWSTPecL+kc83QZ+Tc040PLhv9PgsNjp5E6kMhgw
+         xYRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=ps+kwDWgQoJY3CUqmmTxPvXo4adLKJif88scg6lrYf8=;
+        b=hXEDyEvkjycBe+UlWa3fjk0DsY7W9/DNZ+8WggrOxvh5Qc5iy7ha/rq0kr4aPEciSQ
+         rVUqP4Vkg3waWztM3GPsMn5sj6KD7f5V9DNP5oxfT+Dbw6U94bTf9ea0+j0wjuqx81M7
+         aO6RdaEuneWogZRzLnBCzazwUrnVlPomMmMZoyTdQm0AkH1Zbwe+Rb0eSAnjzS+8ecyH
+         xN9kGYyA2e09wEy2d1wKBMiVEReJOAvqoNfFjrvwBvfV+T+gbl6rtG7oqByu/tzpCe4M
+         s39UnRk/3zb2MNwbjx5K4tP8YH4FwMNLIM/dpsanTYurwgV9jVaOIguKM9b4kkmFMH9Q
+         +Jkw==
+X-Gm-Message-State: APjAAAWURQnwYxZuKWWPENSKFN6E86zS/ua6eJwnn+jVDS0Zk9Ir5tdJ
+        jH/XGw24SEodoMlEzn552kGaBa1fOw==
+X-Google-Smtp-Source: APXvYqx4tBQFTVP3rt8jWo6e+xDOIHSc4BJlYb3KbGQ87YLO7T3+MR/DvWzL1C/XLAPt3HRHlZUVWLQzMIM=
+X-Received: by 2002:a63:29c4:: with SMTP id p187mr19362879pgp.330.1565381815497;
+ Fri, 09 Aug 2019 13:16:55 -0700 (PDT)
+Date:   Fri,  9 Aug 2019 13:16:31 -0700
+In-Reply-To: <84df6071-ef7e-c3d6-6ffa-fcfcbab0c8e6@arm.com>
+Message-Id: <20190809201631.208455-1-yabinc@google.com>
+Mime-Version: 1.0
+References: <84df6071-ef7e-c3d6-6ffa-fcfcbab0c8e6@arm.com>
+X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
+Subject: Re: [PATCH] coresight: tmc-etr: Remove perf_data check.
+From:   Yabin Cui <yabinc@google.com>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Yabin Cui <yabinc@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This should be 'dce_audio_mask', not 'dce_aduio_mask'.
-
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
- drivers/gpu/drm/amd/display/dc/dce/dce_audio.c          | 2 +-
- drivers/gpu/drm/amd/display/dc/dce/dce_audio.h          | 6 +++---
- drivers/gpu/drm/amd/display/dc/dce100/dce100_resource.c | 2 +-
- drivers/gpu/drm/amd/display/dc/dce110/dce110_resource.c | 2 +-
- drivers/gpu/drm/amd/display/dc/dce112/dce112_resource.c | 2 +-
- drivers/gpu/drm/amd/display/dc/dce120/dce120_resource.c | 2 +-
- drivers/gpu/drm/amd/display/dc/dce80/dce80_resource.c   | 2 +-
- drivers/gpu/drm/amd/display/dc/dcn10/dcn10_resource.c   | 2 +-
- 8 files changed, 10 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/gpu/drm/amd/display/dc/dce/dce_audio.c b/drivers/gpu/drm/amd/display/dc/dce/dce_audio.c
-index 549704998f84..1e88c5f46be7 100644
---- a/drivers/gpu/drm/amd/display/dc/dce/dce_audio.c
-+++ b/drivers/gpu/drm/amd/display/dc/dce/dce_audio.c
-@@ -937,7 +937,7 @@ struct audio *dce_audio_create(
- 		unsigned int inst,
- 		const struct dce_audio_registers *reg,
- 		const struct dce_audio_shift *shifts,
--		const struct dce_aduio_mask *masks
-+		const struct dce_audio_mask *masks
- 		)
- {
- 	struct dce_audio *audio = kzalloc(sizeof(*audio), GFP_KERNEL);
-diff --git a/drivers/gpu/drm/amd/display/dc/dce/dce_audio.h b/drivers/gpu/drm/amd/display/dc/dce/dce_audio.h
-index a0d5724aab31..1392fab0860b 100644
---- a/drivers/gpu/drm/amd/display/dc/dce/dce_audio.h
-+++ b/drivers/gpu/drm/amd/display/dc/dce/dce_audio.h
-@@ -101,7 +101,7 @@ struct dce_audio_shift {
- 	uint32_t DCCG_AUDIO_DTO1_USE_512FBR_DTO;
- };
- 
--struct dce_aduio_mask {
-+struct dce_audio_mask {
- 	uint32_t AZALIA_ENDPOINT_REG_INDEX;
- 	uint32_t AZALIA_ENDPOINT_REG_DATA;
- 
-@@ -125,7 +125,7 @@ struct dce_audio {
- 	struct audio base;
- 	const struct dce_audio_registers *regs;
- 	const struct dce_audio_shift *shifts;
--	const struct dce_aduio_mask *masks;
-+	const struct dce_audio_mask *masks;
- };
- 
- struct audio *dce_audio_create(
-@@ -133,7 +133,7 @@ struct audio *dce_audio_create(
- 		unsigned int inst,
- 		const struct dce_audio_registers *reg,
- 		const struct dce_audio_shift *shifts,
--		const struct dce_aduio_mask *masks);
-+		const struct dce_audio_mask *masks);
- 
- void dce_aud_destroy(struct audio **audio);
- 
-diff --git a/drivers/gpu/drm/amd/display/dc/dce100/dce100_resource.c b/drivers/gpu/drm/amd/display/dc/dce100/dce100_resource.c
-index 6248c8455314..81116286b15b 100644
---- a/drivers/gpu/drm/amd/display/dc/dce100/dce100_resource.c
-+++ b/drivers/gpu/drm/amd/display/dc/dce100/dce100_resource.c
-@@ -304,7 +304,7 @@ static const struct dce_audio_shift audio_shift = {
- 		AUD_COMMON_MASK_SH_LIST(__SHIFT)
- };
- 
--static const struct dce_aduio_mask audio_mask = {
-+static const struct dce_audio_mask audio_mask = {
- 		AUD_COMMON_MASK_SH_LIST(_MASK)
- };
- 
-diff --git a/drivers/gpu/drm/amd/display/dc/dce110/dce110_resource.c b/drivers/gpu/drm/amd/display/dc/dce110/dce110_resource.c
-index 764329264c3b..765e26454a18 100644
---- a/drivers/gpu/drm/amd/display/dc/dce110/dce110_resource.c
-+++ b/drivers/gpu/drm/amd/display/dc/dce110/dce110_resource.c
-@@ -331,7 +331,7 @@ static const struct dce_audio_shift audio_shift = {
- 		AUD_COMMON_MASK_SH_LIST(__SHIFT)
- };
- 
--static const struct dce_aduio_mask audio_mask = {
-+static const struct dce_audio_mask audio_mask = {
- 		AUD_COMMON_MASK_SH_LIST(_MASK)
- };
- 
-diff --git a/drivers/gpu/drm/amd/display/dc/dce112/dce112_resource.c b/drivers/gpu/drm/amd/display/dc/dce112/dce112_resource.c
-index c6136e0ed1a4..3ac4c7e73050 100644
---- a/drivers/gpu/drm/amd/display/dc/dce112/dce112_resource.c
-+++ b/drivers/gpu/drm/amd/display/dc/dce112/dce112_resource.c
-@@ -337,7 +337,7 @@ static const struct dce_audio_shift audio_shift = {
- 		AUD_COMMON_MASK_SH_LIST(__SHIFT)
- };
- 
--static const struct dce_aduio_mask audio_mask = {
-+static const struct dce_audio_mask audio_mask = {
- 		AUD_COMMON_MASK_SH_LIST(_MASK)
- };
- 
-diff --git a/drivers/gpu/drm/amd/display/dc/dce120/dce120_resource.c b/drivers/gpu/drm/amd/display/dc/dce120/dce120_resource.c
-index 54be7ab370df..9a922cd39cf2 100644
---- a/drivers/gpu/drm/amd/display/dc/dce120/dce120_resource.c
-+++ b/drivers/gpu/drm/amd/display/dc/dce120/dce120_resource.c
-@@ -352,7 +352,7 @@ static const struct dce_audio_shift audio_shift = {
- 		DCE120_AUD_COMMON_MASK_SH_LIST(__SHIFT)
- };
- 
--static const struct dce_aduio_mask audio_mask = {
-+static const struct dce_audio_mask audio_mask = {
- 		DCE120_AUD_COMMON_MASK_SH_LIST(_MASK)
- };
- 
-diff --git a/drivers/gpu/drm/amd/display/dc/dce80/dce80_resource.c b/drivers/gpu/drm/amd/display/dc/dce80/dce80_resource.c
-index 860a524ebcfa..2a1ce9ecc66e 100644
---- a/drivers/gpu/drm/amd/display/dc/dce80/dce80_resource.c
-+++ b/drivers/gpu/drm/amd/display/dc/dce80/dce80_resource.c
-@@ -322,7 +322,7 @@ static const struct dce_audio_shift audio_shift = {
- 		AUD_COMMON_MASK_SH_LIST(__SHIFT)
- };
- 
--static const struct dce_aduio_mask audio_mask = {
-+static const struct dce_audio_mask audio_mask = {
- 		AUD_COMMON_MASK_SH_LIST(_MASK)
- };
- 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_resource.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_resource.c
-index 1a20461c2937..1c5835975935 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_resource.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_resource.c
-@@ -270,7 +270,7 @@ static const struct dce_audio_shift audio_shift = {
- 		DCE120_AUD_COMMON_MASK_SH_LIST(__SHIFT)
- };
- 
--static const struct dce_aduio_mask audio_mask = {
-+static const struct dce_audio_mask audio_mask = {
- 		DCE120_AUD_COMMON_MASK_SH_LIST(_MASK)
- };
- 
--- 
-2.20.1
-
+I totally agree that checking etr_buf is a better way.
+It solves my problem.
+I will upload a new patch soon.
