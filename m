@@ -2,221 +2,92 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89013C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:14:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB22C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:16:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5250C20820
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:14:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="OHuayD5C"
+	by mail.kernel.org (Postfix) with ESMTP id 99AE120820
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:16:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407531AbfHIROx (ORCPT
+        id S2407542AbfHIRQG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 13:14:53 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:39928 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406904AbfHIROw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 13:14:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1565370890; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=BBF70ikDL6fPc+9/M1xLUZZCUEyNQzKqucMV2lu69b0=;
-        b=OHuayD5C4YxMSNWFpLoKb4za3Mo+lSg86cemNyoEcNWI7ikdgP9TYbYZ/A6e6RLaU+ecX8
-        sSfo2fNw/j+xfuaMLUr2+hLDPIQIaX7sHGZ2G1aG/UJK2NJDbiKQnmIXsjzoBocBYGhstY
-        HyzfDhc3jAbONzTXyeb8suYuRNiJsYQ=
-Date:   Fri, 09 Aug 2019 19:14:45 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 4/7] pwm: jz4740: Improve algorithm of clock calculation
-To:     Uwe =?iso-8859-1?q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>, od@zcrc.me,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mathieu Malaterre <malat@debian.org>,
-        Artur Rojek <contact@artur-rojek.eu>
-Message-Id: <1565370885.2091.2@crapouillou.net>
-In-Reply-To: <20190809170551.u4ybilf5ay2rsvnn@pengutronix.de>
-References: <20190809123031.24219-1-paul@crapouillou.net>
-        <20190809123031.24219-5-paul@crapouillou.net>
-        <20190809170551.u4ybilf5ay2rsvnn@pengutronix.de>
+        Fri, 9 Aug 2019 13:16:06 -0400
+Received: from mga11.intel.com ([192.55.52.93]:63508 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726157AbfHIRQF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 13:16:05 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 10:16:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,366,1559545200"; 
+   d="scan'208";a="374549305"
+Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
+  by fmsmga005.fm.intel.com with ESMTP; 09 Aug 2019 10:16:04 -0700
+Received: from fmsmsx124.amr.corp.intel.com (10.18.125.39) by
+ FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 9 Aug 2019 10:16:04 -0700
+Received: from fmsmsx117.amr.corp.intel.com ([169.254.3.69]) by
+ fmsmsx124.amr.corp.intel.com ([169.254.8.91]) with mapi id 14.03.0439.000;
+ Fri, 9 Aug 2019 10:16:04 -0700
+From:   "Souza, Jose" <jose.souza@intel.com>
+To:     "pebolle@tiscali.nl" <pebolle@tiscali.nl>,
+        "James.Bottomley@HansenPartnership.com" 
+        <James.Bottomley@HansenPartnership.com>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "chris@chris-wilson.co.uk" <chris@chris-wilson.co.uk>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [Intel-gfx] screen freeze with 5.2-rc6 Dell XPS-13 skylake i915
+Thread-Topic: [Intel-gfx] screen freeze with 5.2-rc6 Dell XPS-13 skylake i915
+Thread-Index: AQHVN8s6u18XhfEo0kuWcj/kjNqW06bGT1sAgAAD6QCAAADBAIAAGPCAgAAIRACAAANRAIAABuIAgAAHAoCAAANkgIAA9aWAgAACeQCABSUwAIAACPCAgAE98wCAAeSegIAAAIsAgArdJICAABICAIAAA0IAgBjsbIA=
+Date:   Fri, 9 Aug 2019 17:16:03 +0000
+Message-ID: <54f0979debcd4459ca9d9f25941d4fa29a1aab06.camel@intel.com>
+References: <1561834612.3071.6.camel@HansenPartnership.com>
+         <156283735757.12757.8954391372130933707@skylake-alporthouse-com>
+         <1562875878.2840.0.camel@HansenPartnership.com>
+         <27a5b2ca8cfc79bf617387a363ea7192acc4e1f0.camel@intel.com>
+         <1562876880.2840.12.camel@HansenPartnership.com>
+         <1562882235.13723.1.camel@HansenPartnership.com>
+         <dad073fb4b06cf0abb7ab702a9474b9c443186eb.camel@intel.com>
+         <1562884722.15001.3.camel@HansenPartnership.com>
+         <2c4edfabf49998eb5da3a6adcabc006eb64bfe90.camel@tiscali.nl>
+         <55f4d1c242d684ca2742e8c14613d810a9ee9504.camel@intel.com>
+         <1562888433.2915.0.camel@HansenPartnership.com>
+         <1562941185.3398.1.camel@HansenPartnership.com>
+         <68472c5f390731e170221809a12d88cb3bc6460e.camel@tiscali.nl>
+         <143142cad4a946361a0bf285b6f1701c81096c7b.camel@intel.com>
+         <595d9bc87bf47717c8675eb5b1a1cbb2bc463752.camel@tiscali.nl>
+         <a10f009fc160f05077760ff59cd86a9c99006b39.camel@intel.com>
+         <9ef8fc1ae2c3a9bad588899488a781333af4449a.camel@tiscali.nl>
+         <1563398966.3438.5.camel@HansenPartnership.com>
+         <b22cf290b089cb1174ec0fdeb15bdf2e90bf51dc.camel@tiscali.nl>
+         <d084df248afc1943e06c50d391a775d117064743.camel@intel.com>
+         <df4d83e5c5650ea2f1afde1469c9dc82d6120644.camel@tiscali.nl>
+In-Reply-To: <df4d83e5c5650ea2f1afde1469c9dc82d6120644.camel@tiscali.nl>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.24.9.51]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <38ED6E999C8D6C40A3152AADC7FF2B2D@intel.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le ven. 9 ao=FBt 2019 =E0 19:05, Uwe =3D?iso-8859-1?q?Kleine-K=3DF6nig?=3D=20
-<u.kleine-koenig@pengutronix.de> a =E9crit :
-> On Fri, Aug 09, 2019 at 02:30:28PM +0200, Paul Cercueil wrote:
->>  The previous algorithm hardcoded details about how the TCU clocks=20
->> work.
->>  The new algorithm will use clk_round_rate to find the perfect clock=20
->> rate
->>  for the PWM channel.
->>=20
->>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>  Tested-by: Mathieu Malaterre <malat@debian.org>
->>  Tested-by: Artur Rojek <contact@artur-rojek.eu>
->>  ---
->>   drivers/pwm/pwm-jz4740.c | 60=20
->> +++++++++++++++++++++++++++++-----------
->>   1 file changed, 44 insertions(+), 16 deletions(-)
->>=20
->>  diff --git a/drivers/pwm/pwm-jz4740.c b/drivers/pwm/pwm-jz4740.c
->>  index 6ec8794d3b99..f20dc2e19240 100644
->>  --- a/drivers/pwm/pwm-jz4740.c
->>  +++ b/drivers/pwm/pwm-jz4740.c
->>  @@ -110,24 +110,56 @@ static int jz4740_pwm_apply(struct pwm_chip=20
->> *chip, struct pwm_device *pwm,
->>   	struct jz4740_pwm_chip *jz4740 =3D to_jz4740(pwm->chip);
->>   	struct clk *clk =3D pwm_get_chip_data(pwm),
->>   		   *parent_clk =3D clk_get_parent(clk);
->>  -	unsigned long rate, period, duty;
->>  +	unsigned long rate, parent_rate, period, duty;
->>   	unsigned long long tmp;
->>  -	unsigned int prescaler =3D 0;
->>  +	int ret;
->>=20
->>  -	rate =3D clk_get_rate(parent_clk);
->>  -	tmp =3D (unsigned long long)rate * state->period;
->>  -	do_div(tmp, 1000000000);
->>  -	period =3D tmp;
->>  +	parent_rate =3D clk_get_rate(parent_clk);
->>  +
->>  +	jz4740_pwm_disable(chip, pwm);
->>=20
->>  -	while (period > 0xffff && prescaler < 6) {
->>  -		period >>=3D 2;
->>  -		rate >>=3D 2;
->>  -		++prescaler;
->>  +	/* Reset the clock to the maximum rate, and we'll reduce it if=20
->> needed */
->>  +	ret =3D clk_set_max_rate(clk, parent_rate);
->=20
-> What is the purpose of this call? IIUC this limits the allowed range=20
-> of
-> rates for clk. I assume the idea is to prevent other consumers to=20
-> change
-> the rate in a way that makes it unsuitable for this pwm. But this only
-> makes sense if you had a notifier for clk changes, doesn't it? I'm
-> confused.
-
-Nothing like that. The second call to clk_set_max_rate() might have set
-a maximum clock rate that's lower than the parent's rate, and we want to
-undo that.
-
-
-> I think this doesn't match the commit log, you didn't even introduced=20
-> a
-> call to clk_round_rate().
-
-Right, I'll edit the commit message.
-
-
->>  +	if (ret) {
->>  +		dev_err(chip->dev, "Unable to set max rate: %d\n", ret);
->>  +		return ret;
->>   	}
->>=20
->>  -	if (prescaler =3D=3D 6)
->>  -		return -EINVAL;
->>  +	ret =3D clk_set_rate(clk, parent_rate);
->>  +	if (ret) {
->>  +		dev_err(chip->dev, "Unable to reset to parent rate (%lu Hz)",
->>  +			parent_rate);
->>  +		return ret;
->>  +	}
->>  +
->>  +	/*
->>  +	 * Limit the clock to a maximum rate that still gives us a period=20
->> value
->>  +	 * which fits in 16 bits.
->>  +	 */
->>  +	tmp =3D 0xffffull * NSEC_PER_SEC;
->>  +	do_div(tmp, state->period);
->>=20
->>  +	ret =3D clk_set_max_rate(clk, tmp);
->=20
-> And now you change the maximal rate again?
-
-Basically, we start from the maximum clock rate we can get for that PWM
-- which is the rate of the parent clk - and from that compute the=20
-maximum
-clock rate that we can support that still gives us < 16-bits hardware
-values for the period and duty.
-
-We then pass that computed maximum clock rate to clk_set_max_rate(),=20
-which
-may or may not update the current PWM clock's rate to match the new=20
-limits.
-Finally we read back the PWM clock's rate and compute the period and=20
-duty
-from that.
-
-
->>  +	if (ret) {
->>  +		dev_err(chip->dev, "Unable to set max rate: %d\n", ret);
->>  +		return ret;
->>  +	}
->>  +
->>  +	/*
->>  +	 * Read back the clock rate, as it may have been modified by
->>  +	 * clk_set_max_rate()
->>  +	 */
->>  +	rate =3D clk_get_rate(clk);
->>  +
->>  +	if (rate !=3D parent_rate)
->>  +		dev_dbg(chip->dev, "PWM clock updated to %lu Hz\n", rate);
->>  +
->>  +	/* Calculate period value */
->>  +	tmp =3D (unsigned long long)rate * state->period;
->>  +	do_div(tmp, NSEC_PER_SEC);
->>  +	period =3D (unsigned long)tmp;
->>  +
->>  +	/* Calculate duty value */
->>   	tmp =3D (unsigned long long)period * state->duty_cycle;
->>   	do_div(tmp, state->period);
->>   	duty =3D period - tmp;
->>  @@ -135,14 +167,10 @@ static int jz4740_pwm_apply(struct pwm_chip=20
->> *chip, struct pwm_device *pwm,
->>   	if (duty >=3D period)
->>   		duty =3D period - 1;
->>=20
->>  -	jz4740_pwm_disable(chip, pwm);
->>  -
->>   	/* Set abrupt shutdown */
->>   	regmap_update_bits(jz4740->map, TCU_REG_TCSRc(pwm->hwpwm),
->>   			   TCU_TCSR_PWM_SD, TCU_TCSR_PWM_SD);
->>=20
->>  -	clk_set_rate(clk, rate);
->>  -
->=20
-> It's not obvious to me why removing these two lines belong in the
-> current patch.
-
-They're not removed, they're both moved up in the function.
-
-
-> Best regards
-> Uwe
->=20
-> --
-> Pengutronix e.K.                           | Uwe Kleine-K=F6nig       =20
->     |
-> Industrial Linux Solutions                 |=20
-> http://www.pengutronix.de/  |
-
-=
-
+Rml4IHJlbGVhc2VkIG9uIExpbnV4IDUuMi44DQoNCk9uIFdlZCwgMjAxOS0wNy0yNCBhdCAyMjoz
+OSArMDIwMCwgUGF1bCBCb2xsZSB3cm90ZToNCj4gSGkgSm9zZSwNCj4gDQo+IFNvdXphLCBKb3Nl
+IHNjaHJlZWYgb3Agd28gMjQtMDctMjAxOSBvbSAyMDoyNyBbKzAwMDBdOg0KPiA+IFdlIGZpeGVk
+IHRoZSBwYXRjaCBpbnN0ZWFkIG9mIHJldmVydCBpdCwgaXQgaXMgbWVyZ2VkIG9uIGRybS10aXAN
+Cj4gPiBhbmQgb24NCj4gPiBoaXMgd2F5IHRvIGxpbnV4LXN0YWJsZS4NCj4gDQo+IFRoYXQgc2hv
+dWxkIGJlIChkcm0tdGlwKSBjb21taXQgYjVlYTljOTMzNzAwICgiZHJtL2k5MTUvdmJ0OiBGaXgg
+VkJUDQo+IHBhcnNpbmcNCj4gZm9yIHRoZSBQU1Igc2VjdGlvbiIpLiBDb3JyZWN0Pw0KPiANCj4g
+PiBIdWdlIHRoYW5rcyBhZ2Fpbg0KPiANCj4gWW91J3JlIHdlbGNvbWUuDQo+IA0KPiANCj4gUGF1
+bCBCb2xsZQ0KPiANCg==
