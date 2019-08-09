@@ -2,217 +2,222 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD926C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 06:30:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC13C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 06:31:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DCE8217D7
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 06:30:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A854D208C4
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 06:31:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Chum987Q"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="dbpdOFsv";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="dbpdOFsv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405638AbfHIGan (ORCPT
+        id S2405676AbfHIGbt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 02:30:43 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:46429 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405510AbfHIGan (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 02:30:43 -0400
-Received: by mail-lf1-f66.google.com with SMTP id n19so277466lfe.13
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 23:30:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=mLNLvsMNd5hZfz3AvWEuXX3/4mciucSpeiAVx2FfSSM=;
-        b=Chum987QEniQ3NEVSqlTuKJstbfFlkhJxhNWa5tRdHXwmaUX+oBUCxvXk9nemaeGmc
-         whlUof/rE2cHxqg2jmTVv7t0pCSLx0RT+5+IKkZw5NDhKRcG51ymTW2AsBlxpiUThP4N
-         CiUxa5lKXiPqhyZLHogRa9EK92Fvlt1mE8Ds2cIiB67rFHKJl9726YBZWMoCqC6z5XQS
-         oydW3OO/Sl55bWuGala3uH7UujJvf0aBJi1lJUjMzI0FY+A0d7qnwRLGhm7jBUXu8tMj
-         I34JIk1DV7dGXipTgXvi2g7HnzWS57+MvuMS2Yu0mVahtbDOhRgXYRyGjaSZzvPTymvR
-         06BA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=mLNLvsMNd5hZfz3AvWEuXX3/4mciucSpeiAVx2FfSSM=;
-        b=llGMt7Ym0MFM1VLXhgO2g76ebaFOn9jN8qTBWD58V3EcFcFP1bkwyB2rSYw9xF+Ulh
-         9llnkeOAVWAQlEiMFA86S/wpmFX2BC/UIsooZBseyC/Tq3EbLDDChIO69YnivmhUrLSu
-         jeOmxk99hZSAYa3JGKOfzMiB5q/tQl/mtq61zJrWca6XoWh2X5/gAapIMeve6KoNewq+
-         Ifl6y4YEp73V3djrJXvL/QTvV3nKdQVZm67YDzzAOPoCmFc4kdQUJmloFXfBorRPQTZq
-         E2o3AuQbeDYy0sSYtbcyJY/ZrOApdTMSE49+tYUGOeSQo3ovLKYoOiQPcyuBEYUx5I8y
-         Ttgw==
-X-Gm-Message-State: APjAAAXB9rwyJICSKjLRXHfJgYBRfx41VhynmQca2m5nL79itTgxLESD
-        5ivh4CQaMMCk9zYPy8c71RLiddUYh96DFfZyb5JsTK0W
-X-Google-Smtp-Source: APXvYqzOoTfW7BQn5i881qWqR4A7xUBWAQT3fYXHgvSmf5b5VCvArBbu1qrpKAf97nDpR04u2tWU8gxQrLs6snuF2Jk=
-X-Received: by 2002:ac2:4c12:: with SMTP id t18mr11767580lfq.134.1565332240143;
- Thu, 08 Aug 2019 23:30:40 -0700 (PDT)
-MIME-Version: 1.0
-From:   Dave Airlie <airlied@gmail.com>
-Date:   Fri, 9 Aug 2019 16:30:28 +1000
-Message-ID: <CAPM=9tyN19sYgfkDqdegE7YV+GmNj5uOb2PjGM7bPriONMBDUA@mail.gmail.com>
-Subject: drm fixes for 5.3-rc4
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 9 Aug 2019 02:31:49 -0400
+Received: from mail-eopbgr150058.outbound.protection.outlook.com ([40.107.15.58]:17127
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2405592AbfHIGbt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 02:31:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nQJVvsrYriM6vX5vpnDCPV+c6fnuOb1vgTSkgAP7bjI=;
+ b=dbpdOFsv2BeQhRrT7NoH6jl8EV0Q7NeCGAx+IOV+pZrgf0F0xpoVRjCgVtgJ2LJQXYLrEw0Ll3O/96qHkUO/xeJZVYf/7Afz/TuWcB6nPZswR49D9XzzayaH93SRTZkYHKOHdqToGDzJPCz5dlpz7bzX/LeZTW2EB9QiA9Dzcgc=
+Received: from VI1PR08CA0239.eurprd08.prod.outlook.com (2603:10a6:802:15::48)
+ by VI1PR0802MB2608.eurprd08.prod.outlook.com (2603:10a6:800:ae::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2157.18; Fri, 9 Aug
+ 2019 06:31:01 +0000
+Received: from AM5EUR03FT017.eop-EUR03.prod.protection.outlook.com
+ (2a01:111:f400:7e08::200) by VI1PR08CA0239.outlook.office365.com
+ (2603:10a6:802:15::48) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2157.18 via Frontend
+ Transport; Fri, 9 Aug 2019 06:31:01 +0000
+Authentication-Results: spf=temperror (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=temperror action=none
+ header.from=arm.com;
+Received-SPF: TempError (protection.outlook.com: error in processing during
+ lookup of arm.com: DNS Timeout)
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ AM5EUR03FT017.mail.protection.outlook.com (10.152.16.89) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.2052.18 via Frontend Transport; Fri, 9 Aug 2019 06:31:00 +0000
+Received: ("Tessian outbound 71602e13cd49:v26"); Fri, 09 Aug 2019 06:30:56 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: 8e49e633699c8c43
+X-CR-MTA-TID: 64aa7808
+Received: from d7d30ac0c16c.1 (cr-mta-lb-1.cr-mta-net [104.47.8.50])
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 0190F177-C97E-467A-A271-BCF1B32D4269.1;
+        Fri, 09 Aug 2019 06:30:50 +0000
+Received: from EUR03-AM5-obe.outbound.protection.outlook.com (mail-am5eur03lp2050.outbound.protection.outlook.com [104.47.8.50])
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id d7d30ac0c16c.1
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384);
+    Fri, 09 Aug 2019 06:30:50 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AMJspDqMxB2mAlesh1L3z1tAhfyXjghNaS2mj/aclHz5HrS9ftE9oh+U96dLhjBa+MQznn4lZ0JR9PuMg0qksxxYHl5YkuLSAFt1c8XlCzGycOVKmeomH/Az1NXyLdn6rUjpYAgdojR7sYurLzciALgyIdfNR3QlTtKiiml5kSYm2EyVZXf1mSx8pZrWV/q7R28D19ixRXA5JMDtbQD7rZ8jA6tUVafVRb43J7S6yF43vYIfdhRJZMiryFg7G724iC0caVILEf4UAfgzfV2FJ8ODEKHsBHsFb+mInmrIAD31rv5k1eAxqI1GjRawhgzDeMe+gA8umHMGdOvKYjRG4w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nQJVvsrYriM6vX5vpnDCPV+c6fnuOb1vgTSkgAP7bjI=;
+ b=cMLDpj6fyXSAoWYZW9WYAVZHLP+Yp8VFNfto782Z7gcOxa7ivQiYljasnDBJkP/77/SPkYQ14ecSRoVD5z+QSXqVROscizMxc3P0r0Kqv9fTSDA2tfiXpLWjfES+e6JQU47ZnLd2/l2oLcjqy0GaMe+ulkzKbAcILaHmfa4ClrgGg1NSkCAbjPg6XdUqf32fAJaXxBXPeV/D6eW+Q88U7VdC0U30rMuUfD6vP5f7sVG8whPCTEr29wIeT6H08ssARliAcOGbdfeNP7ZdD2tc2MDpyKxtsfCjl9g2b1LCG+pudIXtRtlGPNIP+Lg4sEcsRfVZcm9Z8ci0keF+7FpQxQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=arm.com;dmarc=pass action=none header.from=arm.com;dkim=pass
+ header.d=arm.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nQJVvsrYriM6vX5vpnDCPV+c6fnuOb1vgTSkgAP7bjI=;
+ b=dbpdOFsv2BeQhRrT7NoH6jl8EV0Q7NeCGAx+IOV+pZrgf0F0xpoVRjCgVtgJ2LJQXYLrEw0Ll3O/96qHkUO/xeJZVYf/7Afz/TuWcB6nPZswR49D9XzzayaH93SRTZkYHKOHdqToGDzJPCz5dlpz7bzX/LeZTW2EB9QiA9Dzcgc=
+Received: from VE1PR08MB5006.eurprd08.prod.outlook.com (10.255.159.31) by
+ VE1PR08MB5200.eurprd08.prod.outlook.com (20.179.31.87) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2136.14; Fri, 9 Aug 2019 06:30:48 +0000
+Received: from VE1PR08MB5006.eurprd08.prod.outlook.com
+ ([fe80::2151:f0b1:3ea7:c134]) by VE1PR08MB5006.eurprd08.prod.outlook.com
+ ([fe80::2151:f0b1:3ea7:c134%6]) with mapi id 15.20.2157.020; Fri, 9 Aug 2019
+ 06:30:48 +0000
+From:   "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+To:     "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
+CC:     Liviu Dudau <Liviu.Dudau@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "seanpaul@chromium.org" <seanpaul@chromium.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        nd <nd@arm.com>
+Subject: Re: drm/komeda: Initialize and enable output polling on Komeda
+Thread-Topic: drm/komeda: Initialize and enable output polling on Komeda
+Thread-Index: AQHVTnv7tNBLsk0CHUyRBWgRU7wKgg==
+Date:   Fri, 9 Aug 2019 06:30:48 +0000
+Message-ID: <20190809063041.GA31698@jamwan02-TSP300>
+References: <1564733249-24329-1-git-send-email-lowry.li@arm.com>
+In-Reply-To: <1564733249-24329-1-git-send-email-lowry.li@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mutt/1.10.1 (2018-07-13)
+x-originating-ip: [113.29.88.7]
+x-clientproxiedby: HK0PR03CA0021.apcprd03.prod.outlook.com
+ (2603:1096:203:2e::33) To VE1PR08MB5006.eurprd08.prod.outlook.com
+ (2603:10a6:803:113::31)
+Authentication-Results-Original: spf=none (sender IP is )
+ smtp.mailfrom=james.qian.wang@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+X-MS-Office365-Filtering-Correlation-Id: a6d9569e-eded-4dab-409b-08d71c9324fb
+X-MS-Office365-Filtering-HT: Tenant
+X-Microsoft-Antispam-Untrusted: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR08MB5200;
+X-MS-TrafficTypeDiagnostic: VE1PR08MB5200:|VI1PR0802MB2608:
+X-Microsoft-Antispam-PRVS: <VI1PR0802MB2608AAB4E099148C071592DDB3D60@VI1PR0802MB2608.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+x-ms-oob-tlc-oobclassifiers: OLM:747;OLM:747;
+x-forefront-prvs: 01244308DF
+X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(7916004)(39860400002)(366004)(396003)(136003)(376002)(346002)(199004)(189003)(9686003)(102836004)(229853002)(6512007)(11346002)(5660300002)(476003)(86362001)(6246003)(25786009)(55236004)(52116002)(6116002)(6506007)(3846002)(66066001)(58126008)(99286004)(26005)(4326008)(5024004)(316002)(478600001)(186003)(6436002)(66446008)(64756008)(6486002)(66556008)(14454004)(446003)(66476007)(386003)(6862004)(76176011)(81156014)(66946007)(53936002)(8676002)(71190400001)(256004)(54906003)(81166006)(33656002)(33716001)(6636002)(2906002)(305945005)(7736002)(8936002)(486006)(71200400001)(1076003);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR08MB5200;H:VE1PR08MB5006.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info-Original: AJRC527uFqFvUGwcpdAiXM3ZMPhfP6BKZUbf5TcLlWsUxx+Zh5by1BtDJ2p6watJnHExAKZ8yb1x1uhWShlEhGAckv2E54FMSlwdWUbnrFUjufEw6CvgCiTslUWjfq/I348yBqACIMMiAViLTihPzAukJCHWQgzW1bQleMvShuFvIQpK4/BNKgj11D4O3TBt7GKVmwWW8q0aGIifNRpaVUAIPP283d2PzSKhzzGx7Zn1DPujAqC2+Q14FldXdLHZ6GpHvT13jgGUHXj/ReNXgFtXfS2j/oOLQL0pOX4DjX4bQrSqtKuFLowwQUKp3QxfQUmzVV23eEyZZIxDjeb5EG7BbL/+ViqnqHnDUzHcLQoRcmL6BP5KbiCjcLcka2vLe9tB190iXPvum6no+K0BuNR+Yjuziv7cKsvlzxnJet0=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <907FD6867C61C443B84FC7734BBC5303@eurprd08.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR08MB5200
+Original-Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=james.qian.wang@arm.com; 
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: AM5EUR03FT017.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(7916004)(396003)(136003)(39860400002)(376002)(346002)(2980300002)(189003)(199004)(23726003)(6116002)(3846002)(86362001)(46406003)(33656002)(8676002)(81156014)(81166006)(2906002)(22756006)(229853002)(6486002)(1076003)(356004)(6636002)(33716001)(70206006)(70586007)(76130400001)(50466002)(446003)(9686003)(6512007)(5660300002)(8936002)(54906003)(8746002)(4326008)(336012)(478600001)(14454004)(66066001)(316002)(36906005)(6862004)(11346002)(486006)(99286004)(126002)(25786009)(476003)(6246003)(58126008)(97756001)(63350400001)(63370400001)(47776003)(7736002)(26005)(76176011)(26826003)(6506007)(186003)(102836004)(305945005)(386003)(5024004);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0802MB2608;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:TempError;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;MX:1;A:1;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: c07abc46-569a-4e12-133b-08d71c931d99
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(710020)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:VI1PR0802MB2608;
+NoDisclaimer: True
+X-Forefront-PRVS: 01244308DF
+X-Microsoft-Antispam-Message-Info: KrbeS0zn8gOc0RcNtvktR/NO6IXl4XZlh2FkwOaXWonhp0EIlC6ILFyGgfto5UqeEnljl7O6MTngB1w1XssmOvM6nJR1XODrem8dT4DT1LkzrKVE8FPFjmNKUTjKxOuc8ahz/8mV87Q/fWH3VsBSXsbKvVkbegf+/MSS2sMA/PWtB9r4/MLrlHxuts4SzmeO4DmHU+1efNaGxoNLNW6vAOwPx8Vp4fjn292u9majCB7jRPhBvrHzOO+zHz3cOE5OS7jBKjG2XxZFTqdTeBM8LwJsk0PlZuN0KmG/BA5Gvy/iDT8S+1UYdRbfPCTBiqOKizEOflJD9+ZFBTTtwmEPQTS0z+XRliEc0lCebS7cAO1svJp8+7+S4uJXBHWPMNI8v8gVJnY66ifxaZMXBYtbR2vk1r7uua69tc6B6pC+Ysg=
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Aug 2019 06:31:00.1660
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a6d9569e-eded-4dab-409b-08d71c9324fb
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0802MB2608
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Fri, Aug 02, 2019 at 08:07:52AM +0000, Lowry Li (Arm Technology China) w=
+rote:
+> From: "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
+>=20
+> Initialize and enable output polling on Komeda.
+>=20
+> Changes since v1:
+> 1. Enable the polling before registering the driver;
+> 2. Disable the polling after unregistering the driver.
+>=20
+> Changes since v2:
+> 1. If driver register failed, disable the polling.
+>=20
+> Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
+> ---
+>  drivers/gpu/drm/arm/display/komeda/komeda_kms.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+>=20
+> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_kms.c b/drivers/gp=
+u/drm/arm/display/komeda/komeda_kms.c
+> index 419a8b0..d50e75f 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
+> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
+> @@ -15,6 +15,7 @@
+>  #include <drm/drm_gem_framebuffer_helper.h>
+>  #include <drm/drm_irq.h>
+>  #include <drm/drm_vblank.h>
+> +#include <drm/drm_probe_helper.h>
+> =20
+>  #include "komeda_dev.h"
+>  #include "komeda_framebuffer.h"
+> @@ -315,6 +316,8 @@ struct komeda_kms_dev *komeda_kms_attach(struct komed=
+a_dev *mdev)
+> =20
+>  	drm->irq_enabled =3D true;
+> =20
+> +	drm_kms_helper_poll_init(drm);
+> +
+>  	err =3D drm_dev_register(drm, 0);
+>  	if (err)
+>  		goto cleanup_mode_config;
+> @@ -322,6 +325,7 @@ struct komeda_kms_dev *komeda_kms_attach(struct komed=
+a_dev *mdev)
+>  	return kms;
+> =20
+>  cleanup_mode_config:
+> +	drm_kms_helper_poll_fini(drm);
+>  	drm->irq_enabled =3D false;
+>  	drm_mode_config_cleanup(drm);
+>  	komeda_kms_cleanup_private_objs(kms);
+> @@ -338,6 +342,7 @@ void komeda_kms_detach(struct komeda_kms_dev *kms)
+>  	drm->irq_enabled =3D false;
+>  	mdev->funcs->disable_irq(mdev);
+>  	drm_dev_unregister(drm);
+> +	drm_kms_helper_poll_fini(drm);
+>  	component_unbind_all(mdev->dev, drm);
+>  	komeda_kms_cleanup_private_objs(kms);
+>  	drm_mode_config_cleanup(drm);
 
-Usual fixes roundup, summary below in the signed tag. Nothing too
-crazy or serious, one non-released ioctl is removed in the amdkfd
-driver.
+Looks good to me.
 
-Dave.
-
-drm-fixes-2019-08-09:
-drm fixes for 5.3-rc4
-
-core:
-- mode parser strncpy fix
-
-i915:
-- GLK DSI escape clock setting
-- HDCP memleak fix
-
-tegra:
-- one gpiod/of regression fix
-
-amdgpu:
-- Fixes VCN to handle the latest navi10 firmware
-- Fixes for fan control on navi10
-- Properly handle SMU metrics table on navi10
-- Fix a resume regression on Stoney
-- kfd revert a GWS ioctl
-
-vmwgfx:
-- memory leak fix
-
-rockchip:
-- suspend fix
-The following changes since commit e21a712a9685488f5ce80495b37b9fdbe96c230d=
-:
-
-  Linux 5.3-rc3 (2019-08-04 18:40:12 -0700)
-
-are available in the Git repository at:
-
-  git://anongit.freedesktop.org/drm/drm tags/drm-fixes-2019-08-09
-
-for you to fetch changes up to a111ef6b082270f6cbeea5556caf1cbb0143b812:
-
-  Merge tag 'drm-intel-fixes-2019-08-08' of
-git://anongit.freedesktop.org/drm/drm-intel into drm-fixes (2019-08-09
-15:46:10 +1000)
-
-----------------------------------------------------------------
-drm fixes for 5.3-rc4
-
-core:
-- mode parser strncpy fix
-
-i915:
-- GLK DSI escape clock setting
-- HDCP memleak fix
-
-tegra:
-- one gpiod/of regression fix
-
-amdgpu:
-- Fixes VCN to handle the latest navi10 firmware
-- Fixes for fan control on navi10
-- Properly handle SMU metrics table on navi10
-- Fix a resume regression on Stoney
-- kfd revert a GWS ioctl
-
-vmwgfx:
-- memory leak fix
-
-rockchip:
-- suspend fix
-
-----------------------------------------------------------------
-Alex Deucher (1):
-      Revert "drm/amdkfd: New IOCTL to allocate queue GWS"
-
-Chuhong Yuan (1):
-      drm/modes: Fix unterminated strncpy
-
-Colin Ian King (1):
-      drm/vmwgfx: fix memory leak when too many retries have occurred
-
-Dave Airlie (5):
-      Merge tag 'drm/tegra/for-5.3-rc4' of
-git://anongit.freedesktop.org/tegra/linux into drm-fixes
-      Merge tag 'drm-fixes-5.3-2019-08-07' of
-git://people.freedesktop.org/~agd5f/linux into drm-fixes
-      Merge branch 'vmwgfx-fixes-5.3' of
-git://people.freedesktop.org/~thomash/linux into drm-fixes
-      Merge tag 'drm-misc-fixes-2019-08-08' of
-git://anongit.freedesktop.org/drm/drm-misc into drm-fixes
-      Merge tag 'drm-intel-fixes-2019-08-08' of
-git://anongit.freedesktop.org/drm/drm-intel into drm-fixes
-
-Dmitry Osipenko (1):
-      drm/tegra: Fix gpiod_get_from_of_node() regression
-
-Douglas Anderson (1):
-      drm/rockchip: Suspend DP late
-
-Evan Quan (1):
-      drm/amd/powerplay: correct navi10 vcn powergate
-
-Kevin Wang (1):
-      drm/amd/powerplay: honor hw limit on fetching metrics data for navi10
-
-Likun Gao (1):
-      drm/amdgpu: pin the csb buffer on hw init for gfx v8
-
-Marek Ol=C5=A1=C3=A1k (1):
-      Revert "drm/amdgpu: fix transform feedback GDS hang on gfx10 (v2)"
-
-Matt Coffin (1):
-      drm/amd/powerplay: Allow changing of fan_control in smu_v11_0
-
-Stanislav Lisovskiy (1):
-      drm/i915: Fix wrong escape clock divisor init for GLK
-
-Thong Thai (2):
-      drm/amd/amdgpu/vcn_v2_0: Mark RB commands as KMD commands
-      drm/amd/amdgpu/vcn_v2_0: Move VCN 2.0 specific dec ring test to vcn_v=
-2_0
-
-Wei Yongjun (1):
-      drm/i915: fix possible memory leak in intel_hdcp_auth_downstream()
-
- drivers/gpu/drm/amd/amdgpu/amdgpu_gds.h         |  1 -
- drivers/gpu/drm/amd/amdgpu/amdgpu_vcn.h         |  1 +
- drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c          | 12 +---
- drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c           | 40 +++++++++++++
- drivers/gpu/drm/amd/amdgpu/vcn_v2_0.c           | 44 +++++++++++---
- drivers/gpu/drm/amd/amdkfd/kfd_chardev.c        | 28 ---------
- drivers/gpu/drm/amd/powerplay/amdgpu_smu.c      |  4 +-
- drivers/gpu/drm/amd/powerplay/inc/amdgpu_smu.h  |  1 +
- drivers/gpu/drm/amd/powerplay/navi10_ppt.c      | 79 +++++++++++++++++----=
-----
- drivers/gpu/drm/amd/powerplay/smu_v11_0.c       |  2 +-
- drivers/gpu/drm/drm_modes.c                     |  4 +-
- drivers/gpu/drm/i915/display/intel_hdcp.c       |  3 +-
- drivers/gpu/drm/i915/display/vlv_dsi_pll.c      |  4 +-
- drivers/gpu/drm/rockchip/analogix_dp-rockchip.c |  2 +-
- drivers/gpu/drm/tegra/output.c                  |  8 ++-
- drivers/gpu/drm/vmwgfx/vmwgfx_msg.c             |  4 +-
- include/uapi/linux/kfd_ioctl.h                  | 20 +------
- 17 files changed, 155 insertions(+), 102 deletions(-)
+Reviewed-by: James Qian Wang (Arm Technology China) <james.qian.wang@arm.co=
+m>
