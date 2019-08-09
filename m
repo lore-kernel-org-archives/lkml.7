@@ -6,107 +6,128 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C4CC31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 15:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 740CDC31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 15:24:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A174620C01
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 15:24:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50A3020C01
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 15:24:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407250AbfHIPYH (ORCPT
+        id S2407386AbfHIPYK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 11:24:07 -0400
-Received: from mga12.intel.com ([192.55.52.136]:13199 "EHLO mga12.intel.com"
+        Fri, 9 Aug 2019 11:24:10 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45386 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726463AbfHIPYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 11:24:05 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 08:24:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,364,1559545200"; 
-   d="scan'208";a="180166412"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by orsmga006.jf.intel.com with ESMTP; 09 Aug 2019 08:24:04 -0700
-Date:   Fri, 9 Aug 2019 08:24:04 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "Svahn, Kai" <kai.svahn@intel.com>, "bp@alien8.de" <bp@alien8.de>,
-        "josh@joshtriplett.org" <josh@joshtriplett.org>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        "rientjes@google.com" <rientjes@google.com>,
-        "Xing, Cedric" <cedric.xing@intel.com>
-Subject: Re: [PATCH v21 16/28] x86/sgx: Add the Linux SGX Enclave Driver
-Message-ID: <20190809152403.GA10541@linux.intel.com>
-References: <20190713170804.2340-1-jarkko.sakkinen@linux.intel.com>
- <20190713170804.2340-17-jarkko.sakkinen@linux.intel.com>
- <88B7642769729B409B4A93D7C5E0C5E7C65ABB8D@hasmsx108.ger.corp.intel.com>
- <20190807151534.kxsletvhbn3lno6w@linux.intel.com>
- <20190808154000.GB23156@linux.intel.com>
- <cb8a7d13a31588205d1c18521e58a0ee4bac03f8.camel@linux.intel.com>
+        id S1726463AbfHIPYI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 11:24:08 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 58AA930C2425;
+        Fri,  9 Aug 2019 15:24:07 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.136])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 95D7260600;
+        Fri,  9 Aug 2019 15:24:05 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Fri,  9 Aug 2019 17:24:07 +0200 (CEST)
+Date:   Fri, 9 Aug 2019 17:24:04 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <matthew.wilcox@oracle.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Kernel Team <Kernel-team@fb.com>,
+        William Kucharski <william.kucharski@oracle.com>,
+        "srikar@linux.vnet.ibm.com" <srikar@linux.vnet.ibm.com>
+Subject: Re: [PATCH v12 5/6] khugepaged: enable collapse pmd for pte-mapped
+ THP
+Message-ID: <20190809152404.GA21489@redhat.com>
+References: <20190807233729.3899352-1-songliubraving@fb.com>
+ <20190807233729.3899352-6-songliubraving@fb.com>
+ <20190808163303.GB7934@redhat.com>
+ <770B3C29-CE8F-4228-8992-3C6E2B5487B6@fb.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cb8a7d13a31588205d1c18521e58a0ee4bac03f8.camel@linux.intel.com>
+In-Reply-To: <770B3C29-CE8F-4228-8992-3C6E2B5487B6@fb.com>
 User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Fri, 09 Aug 2019 15:24:07 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 06:02:08PM +0300, Jarkko Sakkinen wrote:
-> On Thu, 2019-08-08 at 08:40 -0700, Sean Christopherson wrote:
-> > On Wed, Aug 07, 2019 at 06:15:34PM +0300, Jarkko Sakkinen wrote:
-> > > On Mon, Jul 29, 2019 at 11:17:57AM +0000, Ayoun, Serge wrote:
-> > > > > +	/* TCS pages need to be RW in the PTEs, but can be 0 in the EPCM. */
-> > > > > +	if ((secinfo.flags & SGX_SECINFO_PAGE_TYPE_MASK) ==
-> > > > > SGX_SECINFO_TCS)
-> > > > > +		prot |= PROT_READ | PROT_WRITE;
-> > > > 
-> > > > For TCS pages you add both RD and WR maximum protection bits.
-> > > > For the enclave to be able to run, user mode will have to change the
-> > > > "vma->vm_flags" from PROT_NONE to PROT_READ | PROT_WRITE (otherwise
-> > > > eenter fails).  This is exactly what your selftest  does.
-> > > 
-> > > Recap where the TCS requirements came from? Why does it need
-> > > RW in PTEs and can be 0 in the EPCM? The comment should explain
-> > > it rather leave it as a claim IMHO.
-> > 
-> > Hardware ignores SECINFO.FLAGS.{R,W,X} coming from userspace and instead
-> > forces RWX=0.  It does this to prevent software from directly accessing
-> > the TCS.  But hardware still accesses the TCS through a virtual address,
-> > e.g. to allow software to zap the page for reclaim, which means hardware
-> > generates reads and writes to the TCS, i.e. the PTEs need RW permissions.
-> 
-> Manipulating a PTE should not require any specific permissions on the
-> page that it is defining. Why RW is required in SGX context?
+On 08/08, Song Liu wrote:
+>
+> > On Aug 8, 2019, at 9:33 AM, Oleg Nesterov <oleg@redhat.com> wrote:
+> >
+> >> +	for (i = 0, addr = haddr; i < HPAGE_PMD_NR; i++, addr += PAGE_SIZE) {
+> >> +		pte_t *pte = pte_offset_map(pmd, addr);
+> >> +		struct page *page;
+> >> +
+> >> +		if (pte_none(*pte))
+> >> +			continue;
+> >> +
+> >> +		page = vm_normal_page(vma, addr, *pte);
 
-By PTEs I meant the TCS needs to be mapped RW in the kernel's page tables,
-e.g. hardware generates read and write accesses to the TCS when entering
-an enclave.
+just noticed... shouldn't you also check pte_present() before
+vm_normal_page() ?
 
-> > So, for the EADD ioctl(), it's not unreasonable for userspace to provide
-> > SECINFO.FLAGS.{R,W,X} = 0 for the TCS to match what will actually get
-> > jammed into the EPCM.  Allowing userspace to specify RWX=0 means the
-> > kernel needs to manually add PROT_READ and PROT_WRITE to the allowed prot
-> > bits so that mmap()/mprotect() work as expected.
-> 
-> Anyway, appreciate your throughtout explanation, thanks.
-> 
-> /Jarkko
-> 
+> >> +		if (!page || !PageCompound(page))
+> >> +			return;
+> >> +
+> >> +		if (!hpage) {
+> >> +			hpage = compound_head(page);
+> >
+> > OK,
+> >
+> >> +			if (hpage->mapping != vma->vm_file->f_mapping)
+> >> +				return;
+> >
+> > is it really possible? May be WARN_ON(hpage->mapping != vm_file->f_mapping)
+> > makes more sense ?
+>
+> I haven't found code paths lead to this,
+
+Neither me, that is why I asked. I think this should not be possible,
+but again this is not my area.
+
+> but this is technically possible.
+> This pmd could contain subpages from different THPs.
+
+Then please explain how this can happen ?
+
+> The __replace_page()
+> function in uprobes.c creates similar pmd.
+
+No it doesn't,
+
+> Current uprobe code won't really create this problem, because
+> !PageCompound() check above is sufficient. But it won't be difficult to
+> modify uprobe code to break this.
+
+I bet it will be a) difficult and b) the very idea to do this would be wrong.
+
+> For this code to be accurate and safe,
+> I think both this check and the one below are necessary.
+
+I didn't suggest to remove these checks.
+
+> Also, this code
+> is not on any critical path, so the overhead should be negligible.
+
+I do not care about overhead. But I do care about a poor reader like me
+who will try to understand this code.
+
+If you too do not understand how a THP page can have a different mapping
+then use VM_WARN or at least add a comment to explain that this is not
+supposed to happen!
+
+> Does this make sense?
+
+Not to me :/
+
+Oleg.
+
