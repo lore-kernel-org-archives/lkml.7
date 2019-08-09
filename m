@@ -2,157 +2,92 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3103C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 07:34:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F218C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 07:36:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84A9C2166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 07:34:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0288D206DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 07:36:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QkWIL5tl"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QKL0hpgs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405848AbfHIHeR (ORCPT
+        id S2405824AbfHIHgM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 03:34:17 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:33887 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405674AbfHIHeQ (ORCPT
+        Fri, 9 Aug 2019 03:36:12 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:34971 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405711AbfHIHgM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 03:34:16 -0400
-Received: by mail-wm1-f66.google.com with SMTP id e8so5312439wme.1;
-        Fri, 09 Aug 2019 00:34:14 -0700 (PDT)
+        Fri, 9 Aug 2019 03:36:12 -0400
+Received: by mail-lj1-f195.google.com with SMTP id l14so1280605lje.2
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 00:36:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=HkX6nmLkGtFz5sMFHHQF7NoNIfXNya+Vs9yW/ji0+R0=;
-        b=QkWIL5tlEYJEp0ilZ1FcksWVfGD8oOb+GcgWizi4lf+92K1Y8PJ8ut+Hk5w2l//Hqt
-         ++8Jfu6QJbBLyVAUrNrlsdMIdOlnBUzJkgE+v3eEKKb9oBE4+/zeeV9GIpycVswes2ij
-         TmUXTAqYkSyXnKkFNh069zTorVk2iV6jrB9pkuu96WHrJrWYjkgHAyTuew99UxI3nGc5
-         akJe0U5436jpbBhW/7dPE/SnJnVjBNdTD5zYh45sG2ABq6E4C4HzMBM/forwQ225IEaj
-         XVscx8T0zKYLVH+CRwE7DC+TFp6cOC849biS9u7AsrerbqPkmsX2TuvgMhcyEpSjI882
-         0kyg==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HXqS2DL68BnoaWC7BPpejArIxz6sqUi2fc/63WuQaUE=;
+        b=QKL0hpgsd+0DNocYhr0sEvnxDUB9OXgs3iaJcewg/PpKtcZDd9q9ztHww7OdRd8K1x
+         EsNY858u9uPhQWSOAVrxpmMIUu5KUzwaV3TsHkDCS1t3TCobq/9PGwCabM7oU8ARaMNf
+         M8TmaT+8j2S7leYm4lrZuMoQyyDppVz5G/6gHWkJamj1HsNdShB8on/i+0uX0I6felNt
+         seus2hiiiuYCV5cZO2OpOQTu+nPXKojbfezQmKNtqns0RTRELCP/y5WoSbMDbCsUQDL7
+         xLOJABYKiF1x5K7QwK36deq4e1LaIpzb8TQQ9upjahFFRuEioMivr1TwvLkKnpeAgCfN
+         PQ/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=HkX6nmLkGtFz5sMFHHQF7NoNIfXNya+Vs9yW/ji0+R0=;
-        b=EonJwFXt0rnnruOeuRwWOTj8A/1+qq7O6X9dm9yxRvgMRWVpjUtSc2liwzQodORSgz
-         oA7zqQBLVCelI6jJ6Xu1O6xRD9FglcatMgvb37f0EkL39gqaD3bcN1/JUibbKz4yZH27
-         8wpxDSVgXwl6GDGcu+I6iS3KkcWxluxKAzN8s6Gzg47FKsn/jCZKaIPSRu4I67yJscYo
-         +ZlmGgmDXlxWMXuzJhcqKCoNs7ghaEyS05gkr1N/4BXBBexiaeltb7qr2MhPAZwEXpMZ
-         Tq96AAn79M7DuUOWP1Df60oy/QDMmk10fWbTLxJJt9J5knxXHBVfCfpAl8cpQIM17ny0
-         QxFg==
-X-Gm-Message-State: APjAAAU4dN0jCG/+s3BH/yTwKPg+qmO89sAxQD3wJgHuklMkHte2TmTv
-        tu9ls7ucQIUB/SDsxHv4mGEIPls0
-X-Google-Smtp-Source: APXvYqzX3aiy2Bu+eV/dv5HzjggJD4xiK8V0x3AzyKhiGiV0McJ8ls9qpnSL2vCm954wUlSYXXoRPA==
-X-Received: by 2002:a05:600c:24cb:: with SMTP id 11mr8816042wmu.94.1565336053802;
-        Fri, 09 Aug 2019 00:34:13 -0700 (PDT)
-Received: from 640k.localdomain.com ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id d19sm6552743wrb.7.2019.08.09.00.34.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 09 Aug 2019 00:34:13 -0700 (PDT)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: [PATCH] MAINTAINERS: add KVM x86 reviewers
-Date:   Fri,  9 Aug 2019 09:34:11 +0200
-Message-Id: <1565336051-31793-1-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HXqS2DL68BnoaWC7BPpejArIxz6sqUi2fc/63WuQaUE=;
+        b=f8ZhxsCM7Y0KdhIODmAnNefr2vJqgYU4quur6mzJieUFgasnlSFK8QrTc6dZ4dpiIW
+         RZRM/Ye6HkrGoO5jQX5FQ2yM6ihu8CEoAbTjS5jXTg7GAhrnla8F26/lIx1OVWOgjkBs
+         ZvbbEY9WNJfJ7DeY4svNXklWW4kXYE1v6NhTwk1zwXhR3hV1Et4tTyuxxCTbqwfKm+yj
+         hYrh0o0j5lSDeq7qOTKa1rhQ4qQxguf0y2RFQe8UBc8BjWHD/aXN2yyD2EXJw1NyO6nT
+         gyBZIStYo8ZjnSJmfXXOztfeYP48zb4hIGjgV9wtoBRhX/Css520LFz+gSDjstuxMnhP
+         AvVA==
+X-Gm-Message-State: APjAAAUwO14poPui9dfSNIVPS2QRJw4kEJNNsgCDzEvPKGDfvQleEsDV
+        q2SugKrD61u+JYzCUx3yDueEC4MU8Eb5z1lAIExjTQ==
+X-Google-Smtp-Source: APXvYqzeqLykT6zxNpcnNSzGlO76tabSwRrSF7hhpaCzhGrqiXaDTvhfTN7tkmBVUZHwxkSdgdismvv4yqPs8ykrJOo=
+X-Received: by 2002:a2e:6e0c:: with SMTP id j12mr10467584ljc.123.1565336170583;
+ Fri, 09 Aug 2019 00:36:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190808123140.25583-1-naresh.kamboju@linaro.org>
+ <20190808151010.ktbqbfevgcs3bkjy@kamzik.brq.redhat.com> <b34e8232-ccfd-898c-49de-afef4168a165@redhat.com>
+In-Reply-To: <b34e8232-ccfd-898c-49de-afef4168a165@redhat.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 9 Aug 2019 13:05:59 +0530
+Message-ID: <CA+G9fYv7RZgm36fbQU5yH=58sX84TxgE93SneB_UhRsD1ivGhg@mail.gmail.com>
+Subject: Re: [PATCH v2] selftests: kvm: Adding config fragments
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Andrew Jones <drjones@redhat.com>, Shuah Khan <shuah@kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        sean.j.christopherson@intel.com,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, kvm list <kvm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is probably overdone---KVM x86 has quite a few contributors that
-usually review each other's patches, which is really helpful to me.
-Formalize this by listing them as reviewers.  I am including people
-with various expertise:
+On Thu, 8 Aug 2019 at 21:30, Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> On 08/08/19 17:10, Andrew Jones wrote:
+> >>
+> > What does the kselftests config file do? I was about to complain that this
+> > would break compiling on non-x86 platforms, but 'make kselftest' and other
+> > forms of invoking the build work fine on aarch64 even with this config
+> > file. So is this just for documentation? If so, then its still obviously
+> > wrong for non-x86 platforms. The only config that makes sense here is KVM.
+> > If the other options need to be documented for x86, then should they get
+> > an additional config file? tools/testing/selftests/kvm/x86_64/config?
+>
+> My understanding is that a config file fragment requires some kind of
+> kconfig invocation to create a full .config file.  When you do that,
+> unknown configurations are dropped silently.
 
-- Joerg for SVM (with designated reviewers, it makes more sense to have
-him in the main KVM/x86 stanza)
+You are right on this point. As you said, unknown configs getting dropped for
+arm64 cross compilation.
 
-- Sean for MMU and VMX
-
-- Jim for VMX
-
-- Vitaly for Hyper-V and possibly SVM
-
-- Wanpeng for LAPIC and paravirtualization.
-
-Please ack if you are okay with this arrangement, otherwise speak up.
-
-In other news, Radim is going to leave Red Hat soon.  However, he has
-not been very much involved in upstream KVM development for some time,
-and in the immediate future he is still going to help maintain kvm/queue
-while I am on vacation.  Since not much is going to change, I will let
-him decide whether he wants to keep the maintainer role after he leaves.
-
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: Wanpeng Li <wanpengli@tencent.com>
-Cc: Jim Mattson <jmattson@google.com>
-Cc: Joerg Roedel <joro@8bytes.org>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- MAINTAINERS | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 6498ebaca2f6..c569bd194d2a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8738,14 +8738,6 @@ F:	virt/kvm/*
- F:	tools/kvm/
- F:	tools/testing/selftests/kvm/
- 
--KERNEL VIRTUAL MACHINE FOR AMD-V (KVM/amd)
--M:	Joerg Roedel <joro@8bytes.org>
--L:	kvm@vger.kernel.org
--W:	http://www.linux-kvm.org/
--S:	Maintained
--F:	arch/x86/include/asm/svm.h
--F:	arch/x86/kvm/svm.c
--
- KERNEL VIRTUAL MACHINE FOR ARM/ARM64 (KVM/arm, KVM/arm64)
- M:	Marc Zyngier <marc.zyngier@arm.com>
- R:	James Morse <james.morse@arm.com>
-@@ -8803,6 +8795,11 @@ F:	tools/testing/selftests/kvm/*/s390x/
- KERNEL VIRTUAL MACHINE FOR X86 (KVM/x86)
- M:	Paolo Bonzini <pbonzini@redhat.com>
- M:	Radim Krčmář <rkrcmar@redhat.com>
-+R:	Sean Christopherson <sean.j.christopherson@intel.com>
-+R:	Vitaly Kuznetsov <vkuznets@redhat.com>
-+R:	Wanpeng Li <wanpengli@tencent.com>
-+R:	Jim Mattson <jmattson@google.com>
-+R:	Joerg Roedel <joro@8bytes.org>
- L:	kvm@vger.kernel.org
- W:	http://www.linux-kvm.org
- T:	git git://git.kernel.org/pub/scm/virt/kvm/kvm.git
-@@ -8810,8 +8807,12 @@ S:	Supported
- F:	arch/x86/kvm/
- F:	arch/x86/kvm/*/
- F:	arch/x86/include/uapi/asm/kvm*
-+F:	arch/x86/include/uapi/asm/vmx.h
-+F:	arch/x86/include/uapi/asm/svm.h
- F:	arch/x86/include/asm/kvm*
- F:	arch/x86/include/asm/pvclock-abi.h
-+F:	arch/x86/include/asm/svm.h
-+F:	arch/x86/include/asm/vmx.h
- F:	arch/x86/kernel/kvm.c
- F:	arch/x86/kernel/kvmclock.c
- 
--- 
-1.8.3.1
-
+- Naresh
