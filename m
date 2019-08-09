@@ -2,106 +2,78 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20A8FC31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 21:58:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 720DEC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 21:59:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F23FA2089E
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 21:58:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 356222089E
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 21:59:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XmhQBsfM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728371AbfHIV6q (ORCPT
+        id S1728718AbfHIV7R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 17:58:46 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:43792 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726219AbfHIV6p (ORCPT
+        Fri, 9 Aug 2019 17:59:17 -0400
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:49044 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726219AbfHIV7Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 17:58:45 -0400
-Received: from dread.disaster.area (pa49-181-167-148.pa.nsw.optusnet.com.au [49.181.167.148])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 00E157E96C0;
-        Sat, 10 Aug 2019 07:58:41 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hwCtB-0000wW-Tv; Sat, 10 Aug 2019 07:57:33 +1000
-Date:   Sat, 10 Aug 2019 07:57:33 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Mikulas Patocka <mpatocka@redhat.com>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Mike Snitzer <msnitzer@redhat.com>, junxiao.bi@oracle.com,
-        dm-devel@redhat.com, Alasdair Kergon <agk@redhat.com>,
-        honglei.wang@oracle.com, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH] direct-io: use GFP_NOIO to avoid deadlock
-Message-ID: <20190809215733.GZ7777@dread.disaster.area>
-References: <alpine.LRH.2.02.1908080540240.15519@file01.intranet.prod.int.rdu2.redhat.com>
- <20190809013403.GY7777@dread.disaster.area>
- <alpine.LRH.2.02.1908090725290.31061@file01.intranet.prod.int.rdu2.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LRH.2.02.1908090725290.31061@file01.intranet.prod.int.rdu2.redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0
-        a=gu9DDhuZhshYSb5Zs/lkOA==:117 a=gu9DDhuZhshYSb5Zs/lkOA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=FmdZ9Uzk2mMA:10
-        a=VwQbUJbxAAAA:8 a=7-415B0cAAAA:8 a=pai4EEcvdAjdbTSEN-UA:9
-        a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22 a=biEYGPWJfzWAr4FL6Ov7:22
+        Fri, 9 Aug 2019 17:59:16 -0400
+Received: by mail-pf1-f202.google.com with SMTP id u21so62302320pfn.15
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 14:59:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=aHPozI+kRmLZ/MJlV7luwBtUMjEIFkgoeCnOJismWTA=;
+        b=XmhQBsfMHALmx6QOLM9UBumnO7+O8bCcXOWfbEhvnKPRZtyZjK8Tox3QlWh+5SsoHo
+         nSFWQ4AXRB5rGt1kt3KE4aQEc1I3c3lRuL9npZ/+GiDm5vL+RU7MnPYmUFcMbJyKb6ra
+         WcTRcRm2FQ6DDaHqNyLsrOSB632i+21o8ygllWidqV7vliACQwXLx06D5cWErjUfEvvk
+         oS6tlLYGXRIUWgi8FZPNnxObKBs0OQf/b3sPOwVn84irLt21e12rwexZf1dIbzAlT4UU
+         pC9A8HRAZ1JoHP5xAxw+zFJ7gBhI3E9LOkogGnAloitRhXpmiawVE738kNJQ2UpHPLsi
+         ecbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=aHPozI+kRmLZ/MJlV7luwBtUMjEIFkgoeCnOJismWTA=;
+        b=M2Rqlf+ufzTybVB8TVyBZN3JsbUXmQr16MuQyGUgBgynKDzw9iP2SOr0UDkN9OgO0k
+         agG301iawaRbtGNzKyfQ0d5YBAByyjeD1n4HsINOvhiTiNAOozu62sJ64Fyjpq0Q9gNN
+         eSEZy8iSfLD/XIWCXV9Uu4EuJC+tolAF7LfDE5MetxwlPiN9k+nXxywmVxhmX6pQ1W1Z
+         AAN1+RNGmgmuchcNDq9SxFJkWdmSl4heWNCUKHgaHHvPWNTy5isqmu9HCahNI1zlZaA5
+         ZWxqrxRsAm3gPIx6Z25WuD6ynFWydKFsOpxIPovFHec9FmDcupkNR6p/OhjNetVHs+x2
+         VBvw==
+X-Gm-Message-State: APjAAAV0C6B/0lhsDmi5yGpLWwpSv2q/V7uiZKPtjen0XIuddWoYnbhF
+        B8zLXNK77eo5oT5ruAV/mtDvNpZNeA==
+X-Google-Smtp-Source: APXvYqyz8CcNShPWSHPO/FAxHKFz6gmTSkkw/fYF/3ATwxbLzpgLwoS9L+u1s86mqzbQrSNfPjRKv0frajw=
+X-Received: by 2002:a63:bf01:: with SMTP id v1mr18841445pgf.278.1565387955717;
+ Fri, 09 Aug 2019 14:59:15 -0700 (PDT)
+Date:   Fri,  9 Aug 2019 14:58:48 -0700
+In-Reply-To: <c7ac79dd-c15c-6edf-153f-71dd8f754a93@arm.com>
+Message-Id: <20190809215848.47736-1-yabinc@google.com>
+Mime-Version: 1.0
+References: <c7ac79dd-c15c-6edf-153f-71dd8f754a93@arm.com>
+X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
+Subject: Re: [PATCH] coresight: Serialize enabling/disabling a link device.
+From:   Yabin Cui <yabinc@google.com>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Yabin Cui <yabinc@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 07:30:00AM -0400, Mikulas Patocka wrote:
-> 
-> 
-> On Fri, 9 Aug 2019, Dave Chinner wrote:
-> 
-> > And, FWIW, there's an argument to be made here that the underlying
-> > bug is dm_bufio_shrink_scan() blocking kswapd by waiting on IO
-> > completions while holding a mutex that other IO-level reclaim
-> > contexts require to make progress.
-> > 
-> > Cheers,
-> > 
-> > Dave.
-> 
-> The IO-level reclaim contexts should use GFP_NOIO. If the dm-bufio 
-> shrinker is called with GFP_NOIO, it cannot be blocked by kswapd, because:
+>You may also want to protect the refcount checks below with the same lock, just
+>to be consistent.
 
-No, you misunderstand. I'm talking about blocking kswapd being
-wrong.  i.e. Blocking kswapd in shrinkers causes problems
-because th ememory reclaim code does not expect kswapd to be
-arbitrarily delayed by waiting on IO. We've had this problem with
-the XFS inode cache shrinker for years, and there are many reports
-of extremely long reclaim latencies for both direct and kswapd
-reclaim that result from kswapd not making progress while waiting
-in shrinkers for IO to complete.
-
-The work I'm currently doing to fix this XFS problem can be found
-here:
-
-https://lore.kernel.org/linux-fsdevel/20190801021752.4986-1-david@fromorbit.com/
-
-
-i.e. the point I'm making is that waiting for IO in kswapd reclaim
-context is considered harmful - kswapd context shrinker reclaim
-should be as non-blocking as possible, and any back-off to wait for
-IO to complete should be done by the high level reclaim core once
-it's completed an entire reclaim scan cycle of everything....
-
-What follows from that, and is pertinent for in this situation, is
-that if you don't block kswapd, then other reclaim contexts are not
-going to get stuck waiting for it regardless of the reclaim context
-they use.
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Good suggestion! I didn't protect it because I found other places using refcnt.
+But it turns out they are not link devices.
+I have uploaded patch v2.
