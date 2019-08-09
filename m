@@ -2,107 +2,157 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C13C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:54:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8F4CC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:55:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 811C0214C6
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:54:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C92DB214C6
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:55:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406606AbfHISys (ORCPT
+        id S2407113AbfHISzZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 14:54:48 -0400
-Received: from smtprelay0230.hostedemail.com ([216.40.44.230]:50467 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726457AbfHISys (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 14:54:48 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id C882918011E51;
-        Fri,  9 Aug 2019 18:54:46 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: toes84_80e899a3be108
-X-Filterd-Recvd-Size: 2907
-Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf07.hostedemail.com (Postfix) with ESMTPA;
-        Fri,  9 Aug 2019 18:54:45 +0000 (UTC)
-Message-ID: <2a72a19c81b7e57c044c583452127b453a1a455c.camel@perches.com>
-Subject: [PATCH] kernel/resource.c: Convert printks to pr_<level>
-From:   Joe Perches <joe@perches.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Fri, 09 Aug 2019 11:54:44 -0700
-In-Reply-To: <2e93e4057d1f95680bdd6f7f7d754800b7c87ac9.camel@perches.com>
-References: <1565278859475.1962@mentor.com> <1565358624103.3694@mentor.com>
-         <2e93e4057d1f95680bdd6f7f7d754800b7c87ac9.camel@perches.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+        Fri, 9 Aug 2019 14:55:25 -0400
+Received: from mga14.intel.com ([192.55.52.115]:58709 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726189AbfHISzZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 14:55:25 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 11:55:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,366,1559545200"; 
+   d="scan'208";a="326706151"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by orsmga004.jf.intel.com with ESMTP; 09 Aug 2019 11:55:24 -0700
+Date:   Fri, 9 Aug 2019 11:55:24 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jim Mattson <jmattson@google.com>
+Subject: Re: [PATCH v3 7/7] x86: KVM: svm: eliminate hardcoded RIP
+ advancement from vmrun_interception()
+Message-ID: <20190809185524.GG10541@linux.intel.com>
+References: <20190808173051.6359-1-vkuznets@redhat.com>
+ <20190808173051.6359-8-vkuznets@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190808173051.6359-8-vkuznets@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use pr_<level> to get the output prefixed by the existing #define pr_fmt
+On Thu, Aug 08, 2019 at 07:30:51PM +0200, Vitaly Kuznetsov wrote:
+> Just like we do with other intercepts, in vmrun_interception() we should be
+> doing kvm_skip_emulated_instruction() and not just RIP += 3. Also, it is
+> wrong to increment RIP before nested_svm_vmrun() as it can result in
+> kvm_inject_gp().
+> 
+> We can't call kvm_skip_emulated_instruction() after nested_svm_vmrun() so
+> move it inside. To preserve the return value from it nested_svm_vmrun()
+> needs to start returning an int.
+> 
+> Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> ---
+>  arch/x86/kvm/svm.c | 27 ++++++++++++---------------
+>  1 file changed, 12 insertions(+), 15 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> index 43bc4a5e4948..6c4046eb26b3 100644
+> --- a/arch/x86/kvm/svm.c
+> +++ b/arch/x86/kvm/svm.c
+> @@ -3586,9 +3586,9 @@ static void enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
+>  	mark_all_dirty(svm->vmcb);
+>  }
+>  
+> -static bool nested_svm_vmrun(struct vcpu_svm *svm)
+> +static int nested_svm_vmrun(struct vcpu_svm *svm)
+>  {
+> -	int rc;
+> +	int rc, ret;
+>  	struct vmcb *nested_vmcb;
+>  	struct vmcb *hsave = svm->nested.hsave;
+>  	struct vmcb *vmcb = svm->vmcb;
+> @@ -3598,12 +3598,15 @@ static bool nested_svm_vmrun(struct vcpu_svm *svm)
+>  	vmcb_gpa = svm->vmcb->save.rax;
+>  
+>  	rc = kvm_vcpu_map(&svm->vcpu, gpa_to_gfn(vmcb_gpa), &map);
+> -	if (rc) {
+> -		if (rc == -EINVAL)
+> -			kvm_inject_gp(&svm->vcpu, 0);
+> -		return false;
+> +	if (rc == -EINVAL) {
+> +		kvm_inject_gp(&svm->vcpu, 0);
+> +		return 1;
+>  	}
+>  
+> +	ret = kvm_skip_emulated_instruction(&svm->vcpu);
+> +	if (rc)
+> +		return ret;
 
-Miscellanea:
+This should probably have a comment, the 'if (rc)' looks so wrong at first
+glance.  Maybe not the best suggestion on my part...
 
-o Convert bare printk to pr_info
-o Reduce printk(KERN_WARNING to pr_info as the log level seems better
+Alternatively, this sequence is more obvious and at worst adds a few bytes
+to the code footprint.
 
-Signed-off-by: Joe Perches <joe@perches.com>
----
- kernel/resource.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+	if (ret == EINVAL) {
+		kvm_inject_gp(&svm->vcpu, 0);
+		return 1;
+	} else if (ret) {
+		return kvm_skip_emulated_instruction(&svm->vcpu);
+	}
 
-diff --git a/kernel/resource.c b/kernel/resource.c
-index 7ea4306503c5..59b89e40502a 100644
---- a/kernel/resource.c
-+++ b/kernel/resource.c
-@@ -901,7 +901,8 @@ void insert_resource_expand_to_fit(struct resource *root, struct resource *new)
- 		if (conflict->end > new->end)
- 			new->end = conflict->end;
- 
--		printk("Expanded resource %s due to conflict with %s\n", new->name, conflict->name);
-+		pr_info("Expanded resource %s due to conflict with %s\n",
-+			new->name, conflict->name);
- 	}
- 	write_unlock(&resource_lock);
- }
-@@ -1223,9 +1224,8 @@ void __release_region(struct resource *parent, resource_size_t start,
- 
- 	write_unlock(&resource_lock);
- 
--	printk(KERN_WARNING "Trying to free nonexistent resource "
--		"<%016llx-%016llx>\n", (unsigned long long)start,
--		(unsigned long long)end);
-+	pr_warn("Trying to free nonexistent resource <%016llx-%016llx>\n",
-+		(unsigned long long)start, (unsigned long long)end);
- }
- EXPORT_SYMBOL(__release_region);
- 
-@@ -1557,10 +1557,10 @@ int iomem_map_sanity_check(resource_size_t addr, unsigned long size)
- 		if (p->flags & IORESOURCE_BUSY)
- 			continue;
- 
--		printk(KERN_WARNING "resource sanity check: requesting [mem %#010llx-%#010llx], which spans more than %s %pR\n",
--		       (unsigned long long)addr,
--		       (unsigned long long)(addr + size - 1),
--		       p->name, p);
-+		pr_info("sanity check: requesting [mem %#010llx-%#010llx], which spans more than %s %pR\n",
-+			(unsigned long long)addr,
-+			(unsigned long long)(addr + size - 1),
-+			p->name, p);
- 		err = -1;
- 		break;
- 	}
+	ret = kvm_skip_emulated_instruction(&svm->vcpu);
 
-
-
+> +
+>  	nested_vmcb = map.hva;
+>  
+>  	if (!nested_vmcb_checks(nested_vmcb)) {
+> @@ -3614,7 +3617,7 @@ static bool nested_svm_vmrun(struct vcpu_svm *svm)
+>  
+>  		kvm_vcpu_unmap(&svm->vcpu, &map, true);
+>  
+> -		return false;
+> +		return ret;
+>  	}
+>  
+>  	trace_kvm_nested_vmrun(svm->vmcb->save.rip, vmcb_gpa,
+> @@ -3667,7 +3670,7 @@ static bool nested_svm_vmrun(struct vcpu_svm *svm)
+>  		nested_svm_vmexit(svm);
+>  	}
+>  
+> -	return true;
+> +	return ret;
+>  }
+>  
+>  static void nested_svm_vmloadsave(struct vmcb *from_vmcb, struct vmcb *to_vmcb)
+> @@ -3743,13 +3746,7 @@ static int vmrun_interception(struct vcpu_svm *svm)
+>  	if (nested_svm_check_permissions(svm))
+>  		return 1;
+>  
+> -	/* Save rip after vmrun instruction */
+> -	kvm_rip_write(&svm->vcpu, kvm_rip_read(&svm->vcpu) + 3);
+> -
+> -	if (!nested_svm_vmrun(svm))
+> -		return 1;
+> -
+> -	return 1;
+> +	return nested_svm_vmrun(svm);
+>  }
+>  
+>  static int stgi_interception(struct vcpu_svm *svm)
+> -- 
+> 2.20.1
+> 
