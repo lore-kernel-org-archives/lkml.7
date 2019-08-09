@@ -4,36 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE26DC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 08:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A933EC31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 08:30:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACA592166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 08:27:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CFEA2173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 08:30:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405874AbfHII1H (ORCPT
+        id S2405810AbfHIIaK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 04:27:07 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4206 "EHLO huawei.com"
+        Fri, 9 Aug 2019 04:30:10 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4207 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2405395AbfHII1H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 04:27:07 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 1A4159A14057AC15E2D3;
-        Fri,  9 Aug 2019 16:26:56 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Fri, 9 Aug 2019
- 16:26:47 +0800
+        id S1727063AbfHIIaJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 04:30:09 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id EC09F52A59B69BE39AF9;
+        Fri,  9 Aug 2019 16:29:51 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Fri, 9 Aug 2019
+ 16:29:42 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>, <gregkh@linuxfoundation.org>,
-        <rfontana@redhat.com>
-CC:     <linux-kernel@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+To:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>
+CC:     <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
         YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] ASoC: ml26124: remove unused variable 'ngth'
-Date:   Fri, 9 Aug 2019 16:24:40 +0800
-Message-ID: <20190809082440.67412-1-yuehaibing@huawei.com>
+Subject: [PATCH -next] crypto: aes-generic - remove unused variable 'rco_tab'
+Date:   Fri, 9 Aug 2019 16:29:19 +0800
+Message-ID: <20190809082919.62776-1-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -44,38 +43,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In file included from ./include/sound/tlv.h:10:0,
-                 from sound/soc/codecs/ml26124.c:19:
-sound/soc/codecs/ml26124.c:59:35: warning: ngth defined but not used [-Wunused-const-variable=]
- static const DECLARE_TLV_DB_SCALE(ngth, -7650, 150, 0);
-                                   ^
-./include/uapi/sound/tlv.h:64:15: note: in definition of macro SNDRV_CTL_TLVD_DECLARE_DB_SCALE
-  unsigned int name[] = { \
-               ^~~~
-sound/soc/codecs/ml26124.c:59:14: note: in expansion of macro DECLARE_TLV_DB_SCALE
- static const DECLARE_TLV_DB_SCALE(ngth, -7650, 150, 0);
-              ^~~~~~~~~~~~~~~~~~~~
+crypto/aes_generic.c:64:18: warning:
+ rco_tab defined but not used [-Wunused-const-variable=]
 
 It is never used, so can be removed.
 
 Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- sound/soc/codecs/ml26124.c | 1 -
- 1 file changed, 1 deletion(-)
+ crypto/aes_generic.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/sound/soc/codecs/ml26124.c b/sound/soc/codecs/ml26124.c
-index 3abd278..55823bc 100644
---- a/sound/soc/codecs/ml26124.c
-+++ b/sound/soc/codecs/ml26124.c
-@@ -56,7 +56,6 @@ static const DECLARE_TLV_DB_SCALE(alclvl, -2250, 150, 0);
- static const DECLARE_TLV_DB_SCALE(mingain, -1200, 600, 0);
- static const DECLARE_TLV_DB_SCALE(maxgain, -675, 600, 0);
- static const DECLARE_TLV_DB_SCALE(boost_vol, -1200, 75, 0);
--static const DECLARE_TLV_DB_SCALE(ngth, -7650, 150, 0);
+diff --git a/crypto/aes_generic.c b/crypto/aes_generic.c
+index 71a5c19..22e5867 100644
+--- a/crypto/aes_generic.c
++++ b/crypto/aes_generic.c
+@@ -61,8 +61,6 @@ static inline u8 byte(const u32 x, const unsigned n)
+ 	return x >> (n << 3);
+ }
  
- static const char * const ml26124_companding[] = {"16bit PCM", "u-law",
- 						  "A-law"};
+-static const u32 rco_tab[10] = { 1, 2, 4, 8, 16, 32, 64, 128, 27, 54 };
+-
+ /* cacheline-aligned to facilitate prefetching into cache */
+ __visible const u32 crypto_ft_tab[4][256] ____cacheline_aligned = {
+ 	{
 -- 
 2.7.4
 
