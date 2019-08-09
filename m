@@ -2,287 +2,94 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C858C0650F
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 02:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA172C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 02:24:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18DF02054F
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 02:22:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sp+q6FY6"
+	by mail.kernel.org (Postfix) with ESMTP id 91EED2173C
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 02:24:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404892AbfHICW5 (ORCPT
+        id S2404924AbfHICYo convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 22:22:57 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:45926 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732708AbfHICW5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 22:22:57 -0400
-Received: by mail-pl1-f196.google.com with SMTP id y8so2218043plr.12
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 19:22:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=lu46htF1InWlUeYM+9fitPBE//7fKQaOVdrljIrJ/CI=;
-        b=sp+q6FY6ajqpisklQxr6q7qxxXi0j5dOM534M8NmwG5dNmzJt038Pp2unnhf6rSaIi
-         ijlh9kDM7aBWkdU9uPRfBEPQWDWjjXGJo6GWXy4UHDeQ5/Em6RAzv9zkiMrXUuB4gkEl
-         RLsMRBzVrtww79yvd2YQQAY5wz9VCe8bI/cm8zMEHqVtbaeTuN71L4TKi2CkI9pYYAGy
-         E9nXi/Y59TAXhJ4I/mfDiRJkMreFxQ5RUUzepctU32oGQpPPatuH5EZDw1ejEpRCGJfl
-         5iz5aguFJP7Cvx5c6q5gabb3yKHofn96EYhGCMs1ifBn5GWNRCobS3Dxfhevwp0MYZ3C
-         vvvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=lu46htF1InWlUeYM+9fitPBE//7fKQaOVdrljIrJ/CI=;
-        b=JhX8MHQH7W7ToP5o0cNCEjV74pOOOQX0UibT6BKZlGmSP47WnDXsAtx2dr0/HsHjHU
-         37TumuGwJQmW0o8Qn1Mpa0HYmMdnhNhCCPUMycrHrUgJFH6CrRf6L2fBtacdvmr5kdCo
-         eA4e5MOlMCI7JnrbU4pJtsPTwLHPyZbXJU0pV5Wn8BTmWs8Cl2xl74m2cBu5vI14MJTV
-         9RLLgW6rNcTmCPbK3glF6IvGbvIiExhFOYdG0ntHdf6bvbalAXzRTnur09vZaA4zDME0
-         stRmRJx50fRxMKZNg3SUIkqHzL+e02BDvqKjGGr4my1t/U+P1ZHftYJjmratM2KkwTfs
-         pXvA==
-X-Gm-Message-State: APjAAAV/cn+8nbLfBDw52G8bqBHxL7OPjkzG0LM8KpIitX8kpaiDBwKz
-        UBRvq0jVnMQg/r5ssOCmsElzzw==
-X-Google-Smtp-Source: APXvYqwcnLxgI+99Tjw2S3rs9lwYhAaAX3PaTdjGkF5frU3qFB3+Nc+8ILTVD87kpyzo8McpojjTeQ==
-X-Received: by 2002:a17:902:b48c:: with SMTP id y12mr16538879plr.202.1565317376400;
-        Thu, 08 Aug 2019 19:22:56 -0700 (PDT)
-Received: from localhost ([122.172.76.219])
-        by smtp.gmail.com with ESMTPSA id w22sm102015392pfi.175.2019.08.08.19.22.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 08 Aug 2019 19:22:55 -0700 (PDT)
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Rafael Wysocki <rjw@rjwysocki.net>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Doug Smythies <dsmythies@telus.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH V5 2/2] cpufreq: intel_pstate: Implement QoS supported freq constraints
-Date:   Fri,  9 Aug 2019 07:52:49 +0530
-Message-Id: <85cdbc41f7f59a79b96793cbdcd49c53f964e46d.1565317135.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.21.0.rc0.269.g1a574e7a288b
-In-Reply-To: <e789eceae3f32a66fff923daeb85b33b88f21fe1.1565161495.git.viresh.kumar@linaro.org>
-References: <e789eceae3f32a66fff923daeb85b33b88f21fe1.1565161495.git.viresh.kumar@linaro.org>
+        Thu, 8 Aug 2019 22:24:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49934 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729419AbfHICYo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 22:24:44 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4229D2054F;
+        Fri,  9 Aug 2019 02:24:42 +0000 (UTC)
+Date:   Thu, 8 Aug 2019 22:24:40 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Jiping Ma <Jiping.Ma2@windriver.com>
+Cc:     Will Deacon <will@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <catalin.marinas@arm.com>, <will.deacon@arm.com>,
+        <mingo@redhat.com>, Joel Fernandes <joel@joelfernandes.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 1/2 v2] tracing/arm64: Have max stack tracer handle the
+ case of return address after data
+Message-ID: <20190808222440.2f99c50e@oasis.local.home>
+In-Reply-To: <21530ce5-3847-c669-2a64-7c59ffb45f35@windriver.com>
+References: <20190807172826.352574408@goodmis.org>
+        <20190807172907.155165959@goodmis.org>
+        <20190808162825.7klpu3ffza5zxwrt@willie-the-truck>
+        <20190808123632.0dd1a58c@gandalf.local.home>
+        <20190808171153.6j56h4hlcpcl5trz@willie-the-truck>
+        <20190808132455.5fa2c660@gandalf.local.home>
+        <21530ce5-3847-c669-2a64-7c59ffb45f35@windriver.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Intel pstate driver exposes min_perf_pct and max_perf_pct sysfs files,
-which can be used to force a limit on the min/max P state of the driver.
-Though these files eventually control the min/max frequencies that the
-CPUs will run at, they don't make a change to policy->min/max values.
+On Fri, 9 Aug 2019 10:17:19 +0800
+Jiping Ma <Jiping.Ma2@windriver.com> wrote:
 
-When the values of these files are changed (in passive mode of the
-driver), it leads to calling ->limits() callback of the cpufreq
-governors, like schedutil. On a call to it the governors shall
-forcefully update the frequency to come within the limits. Since the
-limits, i.e.  policy->min/max, aren't updated by the driver, the
-governors fails to get the target freq within limit and sometimes aborts
-the update believing that the frequency is already set to the target
-value.
+> On 2019年08月09日 01:24, Steven Rostedt wrote:
+> > On Thu, 8 Aug 2019 18:11:53 +0100
+> > Will Deacon <will@kernel.org> wrote:
+> >  
+> >>> We could make it more descriptive of what it will do and not the reason
+> >>> for why it is done...
+> >>>
+> >>>
+> >>>    ARCH_FTRACE_SHIFT_STACK_TRACER  
+> >> Acked-by: Will Deacon <will@kernel.org>  
+> > Thanks Will!
+> >
+> > Here's the official patch.
+> >
+> > From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+> >
+> > Most archs (well at least x86) store the function call return address on the
+> > stack before storing the local variables for the function. The max stack
+> > tracer depends on this in its algorithm to display the stack size of each
+> > function it finds in the back trace.
+> >
+> > Some archs (arm64), may store the return address (from its link register)
+> > just before calling a nested function. There's no reason to save the link
+> > register on leaf functions, as it wont be updated. This breaks the algorithm
+> > of the max stack tracer.
+> >
+> > Add a new define ARCH_RET_ADDR_AFTER_LOCAL_VARS that an architecture may set  
+> 
+> ARCH_FTRACE_SHIFT_STACK_TRACER is used in the code.
 
-This patch implements the QoS supported frequency constraints to update
-policy->min/max values whenever min_perf_pct or max_perf_pct files are
-updated. This is only done for the passive mode as of now, as the driver
-is already working fine in active mode.
+Ah, I did a s/x/y/ to the diff of the patch, but not the change log.
+Thanks for pointing that out. I also need to update the comment in 2/2.
 
-Fixes: ecd288429126 ("cpufreq: schedutil: Don't set next_freq to UINT_MAX")
-Reported-by: Doug Smythies <dsmythies@telus.net>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
-V4->V5:
-- dev_pm_qos_update_request() can return 1 in case of success, handle
-  that.
+-- Steve
 
- drivers/cpufreq/intel_pstate.c | 120 +++++++++++++++++++++++++++++++--
- 1 file changed, 116 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
-index cc27d4c59dca..32f27563613b 100644
---- a/drivers/cpufreq/intel_pstate.c
-+++ b/drivers/cpufreq/intel_pstate.c
-@@ -24,6 +24,7 @@
- #include <linux/fs.h>
- #include <linux/acpi.h>
- #include <linux/vmalloc.h>
-+#include <linux/pm_qos.h>
- #include <trace/events/power.h>
- 
- #include <asm/div64.h>
-@@ -1085,6 +1086,47 @@ static ssize_t store_no_turbo(struct kobject *a, struct kobj_attribute *b,
- 	return count;
- }
- 
-+static struct cpufreq_driver intel_pstate;
-+
-+static void update_qos_request(enum dev_pm_qos_req_type type)
-+{
-+	int max_state, turbo_max, freq, i, perf_pct;
-+	struct dev_pm_qos_request *req;
-+	struct cpufreq_policy *policy;
-+
-+	for_each_possible_cpu(i) {
-+		struct cpudata *cpu = all_cpu_data[i];
-+
-+		policy = cpufreq_cpu_get(i);
-+		if (!policy)
-+			continue;
-+
-+		req = policy->driver_data;
-+		cpufreq_cpu_put(policy);
-+
-+		if (!req)
-+			continue;
-+
-+		if (hwp_active)
-+			intel_pstate_get_hwp_max(i, &turbo_max, &max_state);
-+		else
-+			turbo_max = cpu->pstate.turbo_pstate;
-+
-+		if (type == DEV_PM_QOS_MIN_FREQUENCY) {
-+			perf_pct = global.min_perf_pct;
-+		} else {
-+			req++;
-+			perf_pct = global.max_perf_pct;
-+		}
-+
-+		freq = DIV_ROUND_UP(turbo_max * perf_pct, 100);
-+		freq *= cpu->pstate.scaling;
-+
-+		if (dev_pm_qos_update_request(req, freq) < 0)
-+			pr_warn("Failed to update freq constraint: CPU%d\n", i);
-+	}
-+}
-+
- static ssize_t store_max_perf_pct(struct kobject *a, struct kobj_attribute *b,
- 				  const char *buf, size_t count)
- {
-@@ -1108,7 +1150,10 @@ static ssize_t store_max_perf_pct(struct kobject *a, struct kobj_attribute *b,
- 
- 	mutex_unlock(&intel_pstate_limits_lock);
- 
--	intel_pstate_update_policies();
-+	if (intel_pstate_driver == &intel_pstate)
-+		intel_pstate_update_policies();
-+	else
-+		update_qos_request(DEV_PM_QOS_MAX_FREQUENCY);
- 
- 	mutex_unlock(&intel_pstate_driver_lock);
- 
-@@ -1139,7 +1184,10 @@ static ssize_t store_min_perf_pct(struct kobject *a, struct kobj_attribute *b,
- 
- 	mutex_unlock(&intel_pstate_limits_lock);
- 
--	intel_pstate_update_policies();
-+	if (intel_pstate_driver == &intel_pstate)
-+		intel_pstate_update_policies();
-+	else
-+		update_qos_request(DEV_PM_QOS_MIN_FREQUENCY);
- 
- 	mutex_unlock(&intel_pstate_driver_lock);
- 
-@@ -2332,8 +2380,16 @@ static unsigned int intel_cpufreq_fast_switch(struct cpufreq_policy *policy,
- 
- static int intel_cpufreq_cpu_init(struct cpufreq_policy *policy)
- {
--	int ret = __intel_pstate_cpu_init(policy);
-+	int max_state, turbo_max, min_freq, max_freq, ret;
-+	struct dev_pm_qos_request *req;
-+	struct cpudata *cpu;
-+	struct device *dev;
-+
-+	dev = get_cpu_device(policy->cpu);
-+	if (!dev)
-+		return -ENODEV;
- 
-+	ret = __intel_pstate_cpu_init(policy);
- 	if (ret)
- 		return ret;
- 
-@@ -2342,7 +2398,63 @@ static int intel_cpufreq_cpu_init(struct cpufreq_policy *policy)
- 	/* This reflects the intel_pstate_get_cpu_pstates() setting. */
- 	policy->cur = policy->cpuinfo.min_freq;
- 
-+	req = kcalloc(2, sizeof(*req), GFP_KERNEL);
-+	if (!req) {
-+		ret = -ENOMEM;
-+		goto pstate_exit;
-+	}
-+
-+	cpu = all_cpu_data[policy->cpu];
-+
-+	if (hwp_active)
-+		intel_pstate_get_hwp_max(policy->cpu, &turbo_max, &max_state);
-+	else
-+		turbo_max = cpu->pstate.turbo_pstate;
-+
-+	min_freq = DIV_ROUND_UP(turbo_max * global.min_perf_pct, 100);
-+	min_freq *= cpu->pstate.scaling;
-+	max_freq = DIV_ROUND_UP(turbo_max * global.max_perf_pct, 100);
-+	max_freq *= cpu->pstate.scaling;
-+
-+	ret = dev_pm_qos_add_request(dev, req, DEV_PM_QOS_MIN_FREQUENCY,
-+				     min_freq);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to add min-freq constraint (%d)\n", ret);
-+		goto free_req;
-+	}
-+
-+	ret = dev_pm_qos_add_request(dev, req + 1, DEV_PM_QOS_MAX_FREQUENCY,
-+				     max_freq);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to add max-freq constraint (%d)\n", ret);
-+		goto remove_min_req;
-+	}
-+
-+	policy->driver_data = req;
-+
- 	return 0;
-+
-+remove_min_req:
-+	dev_pm_qos_remove_request(req);
-+free_req:
-+	kfree(req);
-+pstate_exit:
-+	intel_pstate_exit_perf_limits(policy);
-+
-+	return ret;
-+}
-+
-+static int intel_cpufreq_cpu_exit(struct cpufreq_policy *policy)
-+{
-+	struct dev_pm_qos_request *req;
-+
-+	req = policy->driver_data;
-+
-+	dev_pm_qos_remove_request(req + 1);
-+	dev_pm_qos_remove_request(req);
-+	kfree(req);
-+
-+	return intel_pstate_cpu_exit(policy);
- }
- 
- static struct cpufreq_driver intel_cpufreq = {
-@@ -2351,7 +2463,7 @@ static struct cpufreq_driver intel_cpufreq = {
- 	.target		= intel_cpufreq_target,
- 	.fast_switch	= intel_cpufreq_fast_switch,
- 	.init		= intel_cpufreq_cpu_init,
--	.exit		= intel_pstate_cpu_exit,
-+	.exit		= intel_cpufreq_cpu_exit,
- 	.stop_cpu	= intel_cpufreq_stop_cpu,
- 	.update_limits	= intel_pstate_update_limits,
- 	.name		= "intel_cpufreq",
--- 
-2.21.0.rc0.269.g1a574e7a288b
-
+> 
+> Jiping
+> 
+>
