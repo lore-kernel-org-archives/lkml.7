@@ -2,87 +2,101 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9735C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 23:17:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4EC8C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 23:23:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADC152086D
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 23:17:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A5F120B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 23:23:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbfHIXR4 (ORCPT
+        id S1727935AbfHIXXZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 19:17:56 -0400
-Received: from smtprelay0134.hostedemail.com ([216.40.44.134]:43541 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726125AbfHIXR4 (ORCPT
+        Fri, 9 Aug 2019 19:23:25 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:39592 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727012AbfHIXXZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 19:17:56 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id E7F38182CF668;
-        Fri,  9 Aug 2019 23:17:54 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: look33_61e18702cab14
-X-Filterd-Recvd-Size: 2488
-Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf12.hostedemail.com (Postfix) with ESMTPA;
-        Fri,  9 Aug 2019 23:17:52 +0000 (UTC)
-Message-ID: <4580cd399d23bbdd9b7cf28a1ffaa7bc1daef6a6.camel@perches.com>
-Subject: Re: checkpatch.pl should suggest __section
-From:   Joe Perches <joe@perches.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Date:   Fri, 09 Aug 2019 16:17:51 -0700
-In-Reply-To: <CAKwvOd=n_8i6+9K=g2OK2mAqubBZZHhmJrDM0=FtT_m0e0D5sQ@mail.gmail.com>
-References: <CAKwvOdmNdvgv=+P1CU36fG+trETojmPEXSMmAmX2TY0e67X-Wg@mail.gmail.com>
-         <7c4db60a2b1976a92b5c824c7d24c4c77aa57278.camel@perches.com>
-         <CAKwvOd=n_8i6+9K=g2OK2mAqubBZZHhmJrDM0=FtT_m0e0D5sQ@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+        Fri, 9 Aug 2019 19:23:25 -0400
+Received: from dread.disaster.area (pa49-181-167-148.pa.nsw.optusnet.com.au [49.181.167.148])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 59581364BCE;
+        Sat, 10 Aug 2019 09:23:17 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1hwED3-0001Oj-SN; Sat, 10 Aug 2019 09:22:09 +1000
+Date:   Sat, 10 Aug 2019 09:22:09 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     ira.weiny@intel.com
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+        Theodore Ts'o <tytso@mit.edu>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Michal Hocko <mhocko@suse.com>, linux-xfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-ext4@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [RFC PATCH v2 08/19] fs/xfs: Fail truncate if page lease can't
+ be broken
+Message-ID: <20190809232209.GA7777@dread.disaster.area>
+References: <20190809225833.6657-1-ira.weiny@intel.com>
+ <20190809225833.6657-9-ira.weiny@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190809225833.6657-9-ira.weiny@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0
+        a=gu9DDhuZhshYSb5Zs/lkOA==:117 a=gu9DDhuZhshYSb5Zs/lkOA==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=FmdZ9Uzk2mMA:10
+        a=QyXUC8HyAAAA:8 a=7-415B0cAAAA:8 a=0k3dsaUolkUxXiJpVawA:9
+        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-08-09 at 16:04 -0700, Nick Desaulniers wrote:
-> > how about:
-> > ---
-> >  scripts/checkpatch.pl | 9 +++++++++
-> >  1 file changed, 9 insertions(+)
-> > 
-> > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> > index 1cdacb4fd207..8e6693ca772c 100755
-> > --- a/scripts/checkpatch.pl
-> > +++ b/scripts/checkpatch.pl
-> > @@ -5901,6 +5901,15 @@ sub process {
-> >                              "__aligned(size) is preferred over __attribute__((aligned(size)))\n" . $herecurr);
-> >                 }
-> > 
-> > +# Check for __attribute__ section, prefer __section (without quotes)
-> > +               if ($realfile !~ m@\binclude/uapi/@ &&
-> > +                   $line =~ /\b__attribute__\s*\(\s*\(.*_*section_*\s*\(\s*("[^"]*")/) {
-> > +                       my $old = substr($rawline, $-[1], $+[1] - $-[1]);
-> > +                       my $new = substr($old, 1, -1);
-> > +                       WARN("PREFER_SECTION",
-> > +                            "__section($new) is preferred over __attribute__((section($old)))\n" . $herecurr);
-> > +               }
-> > +
+On Fri, Aug 09, 2019 at 03:58:22PM -0700, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
 > 
-> I can't read Perl, but this looks pretty good.
-> Acked-by: Nick Desaulniers <ndesaulniers@google.com>
+> If pages are under a lease fail the truncate operation.  We change the order of
+> lease breaks to directly fail the operation if the lease exists.
+> 
+> Select EXPORT_BLOCK_OPS for FS_DAX to ensure that xfs_break_lease_layouts() is
+> defined for FS_DAX as well as pNFS.
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> ---
+>  fs/Kconfig        | 1 +
+>  fs/xfs/xfs_file.c | 5 +++--
+>  2 files changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/Kconfig b/fs/Kconfig
+> index 14cd4abdc143..c10b91f92528 100644
+> --- a/fs/Kconfig
+> +++ b/fs/Kconfig
+> @@ -48,6 +48,7 @@ config FS_DAX
+>  	select DEV_PAGEMAP_OPS if (ZONE_DEVICE && !FS_DAX_LIMITED)
+>  	select FS_IOMAP
+>  	select DAX
+> +	select EXPORTFS_BLOCK_OPS
+>  	help
+>  	  Direct Access (DAX) can be used on memory-backed block devices.
+>  	  If the block device supports DAX and the filesystem supports DAX,
 
-I'll add a Suggested-by: for you.
+That looks wrong. If you require xfs_break_lease_layouts() outside
+of pnfs context, then move the function in the XFS code base to a
+file that is built in. It's only external dependency is on the
+break_layout() function, and XFS already has other unconditional
+direct calls to break_layout()...
 
-But a Tested-by would be more valuable than an Acked-by if you
-don't actually know how it works.
+Cheers,
 
-
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
