@@ -2,90 +2,140 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B900C32756
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 08:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED030C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 08:07:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0284221883
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 08:05:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565337956;
-	bh=DCKEhiY3WsN2J7N7+oSrMuQ9a7BEiIag4l2lUZHRMWM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=BoVATdOFSJoTPy0WMm+EBCjbHh9pHhLYtMMOCR7mK8BDx5RqTWRYVfoUkwGOJyvyL
-	 wqDqCVb8uWwxnCTRwseN0g6nmBVxgUzcdOEzbFp6PeKSv4drbKqf/+6hhM6Aa2k8/R
-	 tzTQ3Q/2roLByoM3XwBQsAHZETGmloCAIQTkobz8=
+	by mail.kernel.org (Postfix) with ESMTP id C581420B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 08:07:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405842AbfHIIFy (ORCPT
+        id S2405852AbfHIIHU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 04:05:54 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:36940 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405395AbfHIIFy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 04:05:54 -0400
-Received: by mail-ot1-f65.google.com with SMTP id s20so63905153otp.4;
-        Fri, 09 Aug 2019 01:05:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Sr58cY4zdsgPpx95oJLIxoU1rGwghcNfH7JlzOMAsu4=;
-        b=e0sK0VsHZup9KFeSpSh9/OOOONx1mjeEvSqwXL+8iaPbMj56HchDBd4czh/+VaeVxX
-         jVsjzSCjzeN0ShkPBbR6q41Zz0rEp/gNzO0IilX66F0iGbsSvnEDF5HOKdGgPFdgfHzk
-         oFP7/b/5GGfQCmueMpYMkb4bIxEXg4sOdCD6x+c07DBRyvhVaNTSYs8qs6Djw0UhdM9T
-         LqNka2bfHWOrWwZen6OWOZsfapElfUshrMP+HitoVzm6Oxtuw6tMo4LfrWei0h8ByCjY
-         SIthfo9LJiitmDn+GyeRqSdvXvNzATTnc0I3j1/Qa/paWuEVWsiB2ui8icUE5J4e3svi
-         dXiA==
-X-Gm-Message-State: APjAAAXmSq1UNOatfNtmaDCtZg/qxa/eRw1yidBhSAe6yxdqdbX4TwCc
-        Oo7RIPpvWENW0JPOBi2RAA2QaoVVG2Kp1cqiWmM=
-X-Google-Smtp-Source: APXvYqwpMqzGpisGEHKCizBrN6MIEGBsCEvXSslf8jFdbZ46Bddh5AKgBJk/fXIOFBpukkxQI73f9PvbdNeJ9XIB+90=
-X-Received: by 2002:aca:d907:: with SMTP id q7mr5177724oig.68.1565337953260;
- Fri, 09 Aug 2019 01:05:53 -0700 (PDT)
+        Fri, 9 Aug 2019 04:07:20 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53198 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405567AbfHIIHU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 04:07:20 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E6B0869086;
+        Fri,  9 Aug 2019 08:07:19 +0000 (UTC)
+Received: from gondolin (dhcp-192-181.str.redhat.com [10.33.192.181])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B21CE5D9D3;
+        Fri,  9 Aug 2019 08:07:16 +0000 (UTC)
+Date:   Fri, 9 Aug 2019 10:07:14 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     Parav Pandit <parav@mellanox.com>, kvm@vger.kernel.org,
+        kwankhede@nvidia.com, linux-kernel@vger.kernel.org, cjia@nvidia.com
+Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
+Message-ID: <20190809100714.6b012f41.cohuck@redhat.com>
+In-Reply-To: <20190808170247.1fc2c4c4@x1.home>
+References: <20190802065905.45239-1-parav@mellanox.com>
+        <20190808141255.45236-1-parav@mellanox.com>
+        <20190808170247.1fc2c4c4@x1.home>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-References: <47415939.KV5G6iaeJG@kreacher> <20190730144134.GA12844@localhost.localdomain>
- <100ba4aff1c6434a81e47774ab4acddc@AUSX13MPC105.AMER.DELL.COM>
- <8246360B-F7D9-42EB-94FC-82995A769E28@canonical.com> <20190730191934.GD13948@localhost.localdomain>
- <7d3e0b8ba1444194a153c93faa1cabb3@AUSX13MPC105.AMER.DELL.COM>
- <20190730213114.GK13948@localhost.localdomain> <CAJZ5v0gxfeMN8eCNRjcXmUOkReVsdozb3EccaYMpnmSHu3771g@mail.gmail.com>
- <20190731221956.GB15795@localhost.localdomain> <2184247.yL3mcj2FRQ@kreacher> <20190808221353.GA27570@localhost.localdomain>
-In-Reply-To: <20190808221353.GA27570@localhost.localdomain>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 9 Aug 2019 10:05:42 +0200
-Message-ID: <CAJZ5v0hh3Yfx0Kbt11NEXV9q5RtApuvvg5JZ2O_rZLvixOWSOA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] nvme-pci: Allow PCI bus-level PM to be used if
- ASPM is disabled
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Mario Limonciello <Mario.Limonciello@dell.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Keith Busch <keith.busch@intel.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Rajat Jain <rajatja@google.com>, Christoph Hellwig <hch@lst.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Fri, 09 Aug 2019 08:07:20 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 9, 2019 at 12:16 AM Keith Busch <kbusch@kernel.org> wrote:
->
-> The v3 series looks good to me.
->
-> Reviewed-by: Keith Busch <keith.busch@intel.com>
->
-> Bjorn,
->
-> If you're okay with the series, we can either take it through nvme,
-> or you can feel free to apply through pci, whichever you prefer.
+On Thu, 8 Aug 2019 17:02:47 -0600
+Alex Williamson <alex.williamson@redhat.com> wrote:
 
-Actually, I can apply it too with your R-by along with the PCIe patch
-ACKed by Bjorn.  Please let me know if that works for you.
+> On Thu,  8 Aug 2019 09:12:53 -0500
+> Parav Pandit <parav@mellanox.com> wrote:
+> 
+> > Currently mtty sample driver uses mdev state and UUID in convoluated way to
+> > generate an interrupt.
+> > It uses several translations from mdev_state to mdev_device to mdev uuid.
+> > After which it does linear search of long uuid comparision to
+> > find out mdev_state in mtty_trigger_interrupt().
+> > mdev_state is already available while generating interrupt from which all
+> > such translations are done to reach back to mdev_state.
+> > 
+> > This translations are done during interrupt generation path.
+> > This is unnecessary and reduandant.  
+> 
+> Is the interrupt handling efficiency of this particular sample driver
+> really relevant, or is its purpose more to illustrate the API and
+> provide a proof of concept?  If we go to the trouble to optimize the
+> sample driver and remove this interface from the API, what do we lose?
+
+Not sure how useful the sample driver is as a template; blindly copying
+their interrupt handling is probably not a good idea.
+
+> 
+> This interface was added via commit:
+> 
+> 99e3123e3d72 vfio-mdev: Make mdev_device private and abstract interfaces
+> 
+> Where the goal was to create a more formal interface and abstract
+> driver access to the struct mdev_device.  In part this served to make
+> out-of-tree mdev vendor drivers more supportable; the object is
+> considered opaque and access is provided via an API rather than through
+> direct structure fields.
+> 
+> I believe that the NVIDIA GRID mdev driver does make use of this
+> interface and it's likely included in the sample driver specifically so
+> that there is an in-kernel user for it (ie. specifically to avoid it
+> being removed so casually).  An interesting feature of the NVIDIA mdev
+> driver is that I believe it has portions that run in userspace.  As we
+> know, mdevs are named with a UUID, so I can imagine there are some
+> efficiencies to be gained in having direct access to the UUID for a
+> device when interacting with userspace, rather than repeatedly parsing
+> it from a device name.  Is that really something we want to make more
+> difficult in order to optimize a sample driver?  Knowing that an mdev
+> device uses a UUID for it's name, as tools like libvirt and mdevctl
+> expect, is it really worthwhile to remove such a trivial API?
+
+Ripping out the uuid is a bad idea, I agree. The device name simply is
+no good replacement for that.
+
+If there's a good use case for using the uuid in a vendor driver, let's
+keep the accessor. But then we probably should either leave the sample
+driver alone, or add a more compelling use of the api there.
+
+> 
+> > Hence,
+> > Patch-1 simplifies mtty sample driver to directly use mdev_state.
+> > 
+> > Patch-2, Since no production driver uses mdev_uuid(), simplifies and
+> > removes redandant mdev_uuid() exported symbol.  
+> 
+> s/no production driver/no in-kernel production driver/
+> 
+> I'd be interested to hear how the NVIDIA folks make use of this API
+> interface.  Thanks,
+> 
+> Alex
+> 
+> > ---
+> > Changelog:
+> > v1->v2:
+> >  - Corrected email of Kirti
+> >  - Updated cover letter commit log to address comment from Cornelia
+> >  - Added Reviewed-by tag
+> > v0->v1:
+> >  - Updated commit log
+> > 
+> > Parav Pandit (2):
+> >   vfio-mdev/mtty: Simplify interrupt generation
+> >   vfio/mdev: Removed unused and redundant API for mdev UUID
+> > 
+> >  drivers/vfio/mdev/mdev_core.c |  6 ------
+> >  include/linux/mdev.h          |  1 -
+> >  samples/vfio-mdev/mtty.c      | 39 +++++++----------------------------
+> >  3 files changed, 8 insertions(+), 38 deletions(-)
+> >   
+> 
+
