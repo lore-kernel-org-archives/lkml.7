@@ -2,154 +2,144 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92103C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E11FC31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:44:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6902D217D7
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:44:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uj3D0+T2"
+	by mail.kernel.org (Postfix) with ESMTP id 6E7532171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:44:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406010AbfHIJoR (ORCPT
+        id S2406099AbfHIJoq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 05:44:17 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:44484 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730233AbfHIJoR (ORCPT
+        Fri, 9 Aug 2019 05:44:46 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:34063 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730233AbfHIJop (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 05:44:17 -0400
-Received: by mail-pf1-f196.google.com with SMTP id t16so45736143pfe.11
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 02:44:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0MjjxEATeDSohSUdPgCn+0npRclOTNWQmeqagttLXsE=;
-        b=Uj3D0+T2IeTt2j8R9IQoWagucl2E8dAmOFplTadmEtycTdbXiM6UlavYMVIWRj02Cw
-         4nSjNZnzwBdIAEkY38minKr8sYfOUzw8/WLlP8ed8SLzlIhwkZoWRaa1hLLX0HTNpU3l
-         +C0O3IoWFhNMlGSkYFNWh5qqg1YWt7jHjjNwXnsLsenEtvNuAmN6uAW6tETi5HZkGIZL
-         DrOB+8THq13ltaU/8cqB9++tw1zvfEiBQBoX3Cw1iovi0VSPgY9Yvc4UinD0eWP8t6hd
-         ZwvocRvxWFkXtMq3PNSgz9fy8Uktwgue1HOdo+jRr7RaMf3sRku+Hwvkpoi4PR5Myd9g
-         ufQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0MjjxEATeDSohSUdPgCn+0npRclOTNWQmeqagttLXsE=;
-        b=Oywvv5bUA4yIhQx6A+JfKRJszZgT7wTH/SpBmto/a+xzmE2DCIWpvnftFe41GD+zaw
-         KrddnUXu6mfNgb2MeVPB3NrrixCr6N+PAhp2R2PQ2xFllNU+/wqVbSskxZHQG1T8d8KP
-         2mmGcewbzZoKVl/OsDPiKylKptOB5cU1PHqZ/Puif11m3h/BTdgJ1FtibTDey+kXyU+1
-         C+5qSvgWou40PAT0N06hdYCHaKxXFWssf/Xe17ZcUK6Zjg+3ZQYBQ5xvjwUPYGTFXBp5
-         dCpP+dGs+dstI9/6QKmvUTyZVP/SUHBysp8JwP2O4W2EBVsriv3tXO0CwXul2o3ceWAX
-         C4qw==
-X-Gm-Message-State: APjAAAUs+5uQfdU/WC10gdoCzdIabUFM0Jc19tl0gFDWnJxA7zY9WClq
-        mI8qtxwZV12n6DFhX7v5M9s=
-X-Google-Smtp-Source: APXvYqwKbvHj8qkjrkEYqfdwuA24Q1Iov787Zkesjq5b/OE+ycYpMk/fRKyoJ/9LftbwlyAmci+LfQ==
-X-Received: by 2002:aa7:9254:: with SMTP id 20mr21121887pfp.212.1565343856824;
-        Fri, 09 Aug 2019 02:44:16 -0700 (PDT)
-Received: from bharath12345-Inspiron-5559 ([103.110.42.33])
-        by smtp.gmail.com with ESMTPSA id e9sm2925944pfh.155.2019.08.09.02.44.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 09 Aug 2019 02:44:16 -0700 (PDT)
-Date:   Fri, 9 Aug 2019 15:14:06 +0530
-From:   Bharath Vedartham <linux.bhar@gmail.com>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     arnd@arndb.de, gregkh@linuxfoundation.org, sivanich@sgi.com,
-        ira.weiny@intel.com, jglisse@redhat.com,
-        william.kucharski@oracle.com, hch@lst.de,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [Linux-kernel-mentees][PATCH v4 1/1] sgi-gru: Remove *pte_lookup
- functions
-Message-ID: <20190809094406.GA22457@bharath12345-Inspiron-5559>
-References: <1565290555-14126-1-git-send-email-linux.bhar@gmail.com>
- <1565290555-14126-2-git-send-email-linux.bhar@gmail.com>
- <b659042a-f2c3-df3c-4182-bb7dd5156bc1@nvidia.com>
+        Fri, 9 Aug 2019 05:44:45 -0400
+X-Originating-IP: 81.250.144.103
+Received: from [10.30.1.20] (lneuilly-657-1-5-103.w81-250.abo.wanadoo.fr [81.250.144.103])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 5865C6000D;
+        Fri,  9 Aug 2019 09:44:39 +0000 (UTC)
+Subject: Re: [PATCH v6 09/14] mips: Properly account for stack randomization
+ and stack guard gap
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Albert Ou <aou@eecs.berkeley.edu>,
+        Kees Cook <keescook@chromium.org>, linux-mm@kvack.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        James Hogan <jhogan@kernel.org>,
+        linux-riscv@lists.infradead.org, linux-mips@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        linux-arm-kernel@lists.infradead.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+References: <20190808061756.19712-1-alex@ghiti.fr>
+ <20190808061756.19712-10-alex@ghiti.fr>
+ <bd67507e-8a5b-34b5-1a33-5500bbb724b2@cogentembedded.com>
+From:   Alexandre Ghiti <alex@ghiti.fr>
+Message-ID: <91e31484-b268-2c90-1dd1-98cec349af6c@ghiti.fr>
+Date:   Fri, 9 Aug 2019 11:44:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b659042a-f2c3-df3c-4182-bb7dd5156bc1@nvidia.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <bd67507e-8a5b-34b5-1a33-5500bbb724b2@cogentembedded.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: fr
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 04:21:44PM -0700, John Hubbard wrote:
-> On 8/8/19 11:55 AM, Bharath Vedartham wrote:
-> ...
-> >  static int gru_vtop(struct gru_thread_state *gts, unsigned long vaddr,
-> >  		    int write, int atomic, unsigned long *gpa, int *pageshift)
-> >  {
-> >  	struct mm_struct *mm = gts->ts_mm;
-> >  	struct vm_area_struct *vma;
-> >  	unsigned long paddr;
-> > -	int ret, ps;
-> > +	int ret;
-> > +	struct page *page;
-> >  
-> >  	vma = find_vma(mm, vaddr);
-> >  	if (!vma)
-> > @@ -263,21 +187,33 @@ static int gru_vtop(struct gru_thread_state *gts, unsigned long vaddr,
-> >  
-> >  	/*
-> >  	 * Atomic lookup is faster & usually works even if called in non-atomic
-> > -	 * context.
-> > +	 * context. get_user_pages_fast does atomic lookup before falling back to
-> > +	 * slow gup.
-> >  	 */
-> >  	rmb();	/* Must/check ms_range_active before loading PTEs */
-> > -	ret = atomic_pte_lookup(vma, vaddr, write, &paddr, &ps);
-> > -	if (ret) {
-> > -		if (atomic)
-> > +	if (atomic) {
-> > +		ret = __get_user_pages_fast(vaddr, 1, write, &page);
-> > +		if (!ret)
-> >  			goto upm;
-> > -		if (non_atomic_pte_lookup(vma, vaddr, write, &paddr, &ps))
-> > +	} else {
-> > +		ret = get_user_pages_fast(vaddr, 1, write ? FOLL_WRITE : 0, &page);
-> > +		if (!ret)
-> >  			goto inval;
-> >  	}
-> > +
-> > +	paddr = page_to_phys(page);
-> > +	put_user_page(page);
-> > +
-> > +	if (unlikely(is_vm_hugetlb_page(vma)))
-> > +		*pageshift = HPAGE_SHIFT;
-> > +	else
-> > +		*pageshift = PAGE_SHIFT;
-> > +
-> >  	if (is_gru_paddr(paddr))
-> >  		goto inval;
-> > -	paddr = paddr & ~((1UL << ps) - 1);
-> > +	paddr = paddr & ~((1UL << *pageshift) - 1);
-> >  	*gpa = uv_soc_phys_ram_to_gpa(paddr);
-> > -	*pageshift = ps;
-> 
-> Why are you no longer setting *pageshift? There are a couple of callers
-> that both use this variable.
-Hi John,
+On 8/8/19 11:16 AM, Sergei Shtylyov wrote:
+> Hello!
+>
+> On 08.08.2019 9:17, Alexandre Ghiti wrote:
+>
+>> This commit takes care of stack randomization and stack guard gap when
+>> computing mmap base address and checks if the task asked for 
+>> randomization.
+>>
+>> This fixes the problem uncovered and not fixed for arm here:
+>> https://lkml.kernel.org/r/20170622200033.25714-1-riel@redhat.com
+>>
+>> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+>> Acked-by: Kees Cook <keescook@chromium.org>
+>> Acked-by: Paul Burton <paul.burton@mips.com>
+>> Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+>> ---
+>>   arch/mips/mm/mmap.c | 14 ++++++++++++--
+>>   1 file changed, 12 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/mips/mm/mmap.c b/arch/mips/mm/mmap.c
+>> index d79f2b432318..f5c778113384 100644
+>> --- a/arch/mips/mm/mmap.c
+>> +++ b/arch/mips/mm/mmap.c
+>> @@ -21,8 +21,9 @@ unsigned long shm_align_mask = PAGE_SIZE - 1;    /* 
+>> Sane caches */
+>>   EXPORT_SYMBOL(shm_align_mask);
+>>     /* gap between mmap and stack */
+>> -#define MIN_GAP (128*1024*1024UL)
+>> -#define MAX_GAP ((TASK_SIZE)/6*5)
+>> +#define MIN_GAP        (128*1024*1024UL)
+>> +#define MAX_GAP        ((TASK_SIZE)/6*5)
+>
+>    Could add spaces around *, while touching this anyway? And parens
+> around TASK_SIZE shouldn't be needed...
+>
 
-I did set *pageshift. The if statement above sets *pageshift. ps was
-used to retrive the pageshift value when the pte_lookup functions were
-present. ps was passed by reference to those functions and set by them.
-But here since we are trying to remove those functions, we don't need ps
-and we directly set *pageshift to HPAGE_SHIFT or PAGE_SHIFT based on the
-type of vma. 
+I did not fix checkpatch warnings here since this code gets removed 
+afterwards.
 
-Hope this clears things up?
 
-Thank you
-Bharath
-> 
-> thanks,
-> -- 
-> John Hubbard
-> NVIDIA
+>> +#define STACK_RND_MASK    (0x7ff >> (PAGE_SHIFT - 12))
+>>     static int mmap_is_legacy(struct rlimit *rlim_stack)
+>>   {
+>> @@ -38,6 +39,15 @@ static int mmap_is_legacy(struct rlimit *rlim_stack)
+>>   static unsigned long mmap_base(unsigned long rnd, struct rlimit 
+>> *rlim_stack)
+>>   {
+>>       unsigned long gap = rlim_stack->rlim_cur;
+>> +    unsigned long pad = stack_guard_gap;
+>> +
+>> +    /* Account for stack randomization if necessary */
+>> +    if (current->flags & PF_RANDOMIZE)
+>> +        pad += (STACK_RND_MASK << PAGE_SHIFT);
+>
+>    Parens not needed here.
+
+
+Belt and braces approach here as I'm never sure about priorities.
+
+Thanks for your time,
+
+Alex
+
+
+>
+>> +
+>> +    /* Values close to RLIM_INFINITY can overflow. */
+>> +    if (gap + pad > gap)
+>> +        gap += pad;
+>>         if (gap < MIN_GAP)
+>>           gap = MIN_GAP;
+>>
+>
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
