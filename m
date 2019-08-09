@@ -2,101 +2,143 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5395BC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:34:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E428EC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:34:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17418208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:34:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565350457;
-	bh=xvzM+rNMezOxa0Bnv95q/aeInbHv/3aA5R7Clz8rzHM=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=flkAslDiM6qtvGUvI81b1fqxJC61mv4f7of2Fe9cL+qyc/2cMrAS2t+42O2FAWOmN
-	 PGbHORyFfCmjmPELNHWzxzMjEoJEat0NMEFFYRppvor3ntAWu43gjZv8lz+fFMyZse
-	 6X55ogs+T9BQe0vsO15/BapspeuawfZFhGpHn6To=
+	by mail.kernel.org (Postfix) with ESMTP id B5A82208C4
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:34:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TMFOedF/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406533AbfHILeQ (ORCPT
+        id S2406560AbfHILe0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 07:34:16 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:47026 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726216AbfHILeP (ORCPT
+        Fri, 9 Aug 2019 07:34:26 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:34794 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726216AbfHILeZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 07:34:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=sWHbXyMzoEuVyq10lfOyRbyxdV133+TtRJ6b0uPtWz8=; b=daZWmeBN8e9GGRVFEIgn+dvOP
-        oMCTXkNDn2JfvAFRz+wGlsiap1blgf3EGKlZqqRTWSOSlFbfR25up2J2IDLXQZhnTXF75KBvjuE/H
-        +4AhCvXt7abPbiT4RsqIDS/13EKSGFGHwrlYFGRC+SOTSSZ8q6t5Ps0RoXxppov/OP+y/VDSiama4
-        lScIWxzTZcdgagd8c5/dFwSROkvDoMru7vdmaKx6H0vCC5lxK/FdiV6NI8uic7iTY0ssyJe+LXY5l
-        twyq4Q83mfflXwwfv9bSgVxy+sDYBpBfqAoyEz8YnI0QHCX/a62oNISITo6h6twI6JKZ+VlFCgxQd
-        C/ZixeG5g==;
-Received: from [179.162.52.10] (helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hw39x-0002yh-Nv; Fri, 09 Aug 2019 11:34:14 +0000
-Date:   Fri, 9 Aug 2019 08:34:10 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL for v5.3-rc4] media fixes
-Message-ID: <20190809083410.3997c6b5@coco.lan>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 9 Aug 2019 07:34:25 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x79BXp2W103086;
+        Fri, 9 Aug 2019 06:33:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1565350431;
+        bh=DXv/jQeoUgS/jLmVHHjMH1IRgDVmsq4gwr/8uuGGdBQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=TMFOedF/iy9Y8Y2M+fSQrQ89aXeGFUuT/AlY+DphI4DUdVvzFsm+/Vu2URSw0jDh3
+         KQ1GMeXkdHEjzu1xuoftDGiZsb9V6gxDAU3BGygFlur9P1lvDKLhnk2P33b8BMa542
+         +pcnyIjRpEaGQZVd2iOFq6ABf+nDLFych41oswOc=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x79BXpUs044281
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 9 Aug 2019 06:33:51 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 9 Aug
+ 2019 06:33:51 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 9 Aug 2019 06:33:51 -0500
+Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x79BXlD6078973;
+        Fri, 9 Aug 2019 06:33:47 -0500
+Subject: Re: [PATCH v7 1/4] mtd: spi-nor: add support for is25wp256
+To:     Sagar Shrikant Kadam <sagar.kadam@sifive.com>,
+        <marek.vasut@gmail.com>, <tudor.ambarus@microchip.com>,
+        <dwmw2@infradead.org>, <computersforpeace@gmail.com>,
+        <miquel.raynal@bootlin.com>, <richard@nod.at>
+CC:     <palmer@sifive.com>, <aou@eecs.berkeley.edu>,
+        <paul.walmsley@sifive.com>, <linux-mtd@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>
+References: <1562092745-11541-1-git-send-email-sagar.kadam@sifive.com>
+ <1562092745-11541-2-git-send-email-sagar.kadam@sifive.com>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <c193950a-ddd9-cf8e-0694-eeb91b994729@ti.com>
+Date:   Fri, 9 Aug 2019 17:04:29 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <1562092745-11541-2-git-send-email-sagar.kadam@sifive.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
 
-Please pull from:
-   git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media media/v5.3-3
 
-For a fix at the vivid CEC support.
+On 03/07/19 12:09 AM, Sagar Shrikant Kadam wrote:
+> Update spi_nor_id table for is25wp256 (32MB) device from ISSI,
+> present on HiFive Unleashed dev board (Rev: A00).
+> 
+> Set method to enable quad mode for ISSI device in flash parameters
+> table.
+> 
+> Based on code originally written by Wesley Terpstra <wesley@sifive.com>
+> and/or Palmer Dabbelt <palmer@sifive.com>
+> https://github.com/riscv/riscv-linux/commit/c94e267766d62bc9a669611c3d0c8ed5ea26569b
+> 
+> Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+> ---
 
--
+Reviewed-by: Vignesh Raghavendra <vigneshr@ti.com>
 
-Last attempt failed due to a mix of factors related to using a different
-machine for the pull request. Sorry for that.
 
-Thanks,
-Mauro
+>  drivers/mtd/spi-nor/spi-nor.c | 9 ++++++++-
+>  include/linux/mtd/spi-nor.h   | 1 +
+>  2 files changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+> index e3a28c0..971f0f3 100644
+> --- a/drivers/mtd/spi-nor/spi-nor.c
+> +++ b/drivers/mtd/spi-nor/spi-nor.c
+> @@ -1857,7 +1857,10 @@ static int sr2_bit7_quad_enable(struct spi_nor *nor)
+>  			SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
+>  	{ "is25wp128",  INFO(0x9d7018, 0, 64 * 1024, 256,
+>  			SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
+> -
+> +	{ "is25wp256", INFO(0x9d7019, 0, 64 * 1024, 1024,
+> +			SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
+> +			SPI_NOR_4B_OPCODES)
+> +	},
+>  	/* Macronix */
+>  	{ "mx25l512e",   INFO(0xc22010, 0, 64 * 1024,   1, SECT_4K) },
+>  	{ "mx25l2005a",  INFO(0xc22012, 0, 64 * 1024,   4, SECT_4K) },
+> @@ -3687,6 +3690,10 @@ static int spi_nor_init_params(struct spi_nor *nor,
+>  		case SNOR_MFR_ST:
+>  		case SNOR_MFR_MICRON:
+>  			break;
+> +		case SNOR_MFR_ISSI:
+> +			params->quad_enable = macronix_quad_enable;
+> +			break;
+> +
+>  
+>  		default:
+>  			/* Kept only for backward compatibility purpose. */
+> diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
+> index b3d360b..b0e42b3 100644
+> --- a/include/linux/mtd/spi-nor.h
+> +++ b/include/linux/mtd/spi-nor.h
+> @@ -21,6 +21,7 @@
+>  #define SNOR_MFR_INTEL		CFI_MFR_INTEL
+>  #define SNOR_MFR_ST		CFI_MFR_ST	/* ST Micro */
+>  #define SNOR_MFR_MICRON		CFI_MFR_MICRON	/* Micron */
+> +#define SNOR_MFR_ISSI		0x9d		/* ISSI */
+>  #define SNOR_MFR_MACRONIX	CFI_MFR_MACRONIX
+>  #define SNOR_MFR_SPANSION	CFI_MFR_AMD
+>  #define SNOR_MFR_SST		CFI_MFR_SST
+> 
 
----
-
-The following changes since commit 609488bc979f99f805f34e9a32c1e3b71179d10b:
-
-  Linux 5.3-rc2 (2019-07-28 12:47:02 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media tags/media/v5.3-3
-
-for you to fetch changes up to 92f5b0313e37e2b37aaf8f0bb75b6c50eafb5808:
-
-  media: vivid: fix missing cec adapter name (2019-07-30 11:47:51 -0400)
-
-----------------------------------------------------------------
-media updates for v5.3-rc1
-
-----------------------------------------------------------------
-Hans Verkuil (1):
-      media: vivid: fix missing cec adapter name
-
- drivers/media/platform/vivid/vivid-core.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
+-- 
+Regards
+Vignesh
