@@ -2,451 +2,397 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F23FCC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 20:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD827C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 20:29:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC8E9218B6
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 20:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1FC921743
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 20:29:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728511AbfHIU27 (ORCPT
+        id S1728667AbfHIU3C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 16:28:59 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:40777 "EHLO
+        Fri, 9 Aug 2019 16:29:02 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:37939 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726557AbfHIU24 (ORCPT
+        with ESMTP id S1728252AbfHIU26 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 16:28:56 -0400
+        Fri, 9 Aug 2019 16:28:58 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MiJhW-1iZ4UU3SoY-00fOaA; Fri, 09 Aug 2019 22:28:28 +0200
+ 1MekvV-1iTrd20yAf-00ajkH; Fri, 09 Aug 2019 22:28:53 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     soc@kernel.org
 Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        linux-watchdog@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 04/16] watchdog: remove ks8695 driver
-Date:   Fri,  9 Aug 2019 22:27:32 +0200
-Message-Id: <20190809202749.742267-5-arnd@arndb.de>
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Subject: [PATCH 10/16] Input: remove w90x900 keyboard driver
+Date:   Fri,  9 Aug 2019 22:27:38 +0200
+Message-Id: <20190809202749.742267-11-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20190809202749.742267-1-arnd@arndb.de>
 References: <20190809202749.742267-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:/xUJ0urBROFGs9psZRmzii/x6kcPUzVYJxl3kP276+fX5WTKDQJ
- AEr5kjNrQllMr6Z7NrWzUAosq4zoo17U5hXEHU1wpbNBF/FzqZG5NpMpn5LmfTvS/oHwrSC
- SPivcPSIrBUD3Wt8JtE7FjLsqknJiLKaxARHJY18MFfhys5Pi20FKvPXIZaoXZvjWMEWqsn
- y86kNTdsiTwj2mtVjJDZw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:5F3GSB/6Nc0=:0OfCFRE5YMaF7NC0TBIXLU
- yk6ETYg8YqB8FGy11h7Y7L//B6f4+goRdrik/F0V+bk2DatX85QQd1DlyqCc96+UiFGNwBS09
- Qv7z6vjR890ibcchOcnmadBVZwSeVZZecL1nP/dE2FKDZyzUnngL0NFlMS+70zsMTqejaGjXI
- ob413DTJ7ukWeWZoRr9XQm4BpR0Z5okW6FQTFQYFnIDBeUoGV9olG6F67BZJc1er/W0GThp8e
- XXcBv+2HMkW40pV9DNFpARsx/Hkd+2g6rJ1WRiEpPfssyi/QQGZRt/yYPaqjWbv4brrZricO6
- LmPEXGI/nZQ8ZBfoWM0y74zwS76J42av57ifvnBX047rWSB66X+a1NRNKhS8S1m+HFiZU6Ipj
- XxxbRiv1mf5oyRPGuybzhvh5ZLYZIUbC33ryujyvR2dpz5GGdPIRbaS+K4CDGhmzGfkbmbWJw
- zXO1836RFCCdJnYKli0kYcVkQ6W+5gg3jmihOj0GINi46YolfvGpxjEoTFfGAFMrKFRzg2/Bt
- 2C7SB49uCVUFbPjRiFfWM31aJDzk/xqYJ7ggWMhMtL7JQ+MVLkBKssvFPynYos9VEeWdV5hhA
- ofdgyBI6o2R8VV6BBdJU869DdteYXhWNJx6xtRuhs2IljiuS2jJv0b3y4Sp21qR55wqH7PsIJ
- cYiASF9Jr6JhBiZ1SPtml20vBsMSx2jWu0hvpDRvxA7eobSIDfE2GoB/WCkkwHVzD5bl+WbCf
- QxWYyqW/tuMzAmZTlvB6KDUvTckS6Ma3M+KXOg==
+X-Provags-ID: V03:K1:B9uf6nqpqCvt0g4bgHe/VJ7Oo6T7W9PFQuUHXJDWTVtHG4RP0qf
+ Vfoz0D9TXzkrIeFexgI+WIlXO2Ph0b8WOgm4nMKp2JG7NdYO83kO+uimIwU7tXgnv4XPEZe
+ agiL6hHosEsJ4040lDCLURCq05wZikhAQ751INNMF62qNOasLqtJVnpqEDhIRZ4m5AW5rgc
+ hx79LJpnFlT30eZXC4+aA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ZFggz2mqPK0=:agiv6d5BGkL6g/2pK3NKpj
+ gh83uUZUs39coUEYJBkz9q69Ly4mdR/7DOfQigWMx/hk5zZNZjQbIaeofZpa8cNY4Q7GleN4R
+ 6bFZnci+Qk0rsKNM9RvzvQLnnvMD3mxsfoHxqjeWaiT0fyG9CEsdCFxRWlp9LA0AlPWe9mUwa
+ g5y5Cr4OwWVrcONj7iI+iT5BmPczYfIwEPlvjtyhz8f1ECEsIPBRbvDhwAqMIPOkzQZhSvffg
+ WXop0t3NQ6MEF3SAe4dQOvd+f5UF4228tgLw8+amBAqeUKLw8dUQFkuI539pX19CNEoPDvPwu
+ f7A/fyH38Yi5onmB5OQMSz1ZX1RZVUW/HUCriWyBFI6ARDSMkaWuAUBK2F2iDE12mOvJydu+I
+ ZUGaUbJPIxKH/bamkY7Tca9Slnsxj3S0rN/5ICs/QRaBZps+uJ0O67Cr1/ivfMBJax+xmqepG
+ JKHhC5IDfSMnYa9IzUkQ3SqlTWbXQV+HqswXCsqFiJanXtbyJla0E4rmkYkl9nuMHuYBrKcc+
+ 9IVfc3mJuwGGMuVyQ6Je2iUwiNjbdMzGnXBMdjVoA3duBGYRL0BOz3YbTH7C0UqVenA7XAZNh
+ 9sjNmEIAvaerksVkfRai01Owwx1JnGn64/KbB2XdXTSaJ3qwv3gugUcuh+4GKekuchao88PhB
+ Fs9R/Y2L4+rSgsOWoVEQYatGUIoeDZ8nNe6KgfJ7X21yxrjdOC4DU8JHWzuSPrKR3AVdiWTMM
+ uPJFO/jHqC3tLzU5zUfD4obiem3WBPcZH4+VXQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The platform is getting removed, so there are no remaining
-users of this driver.
+The ARM w90x900 platform is getting removed, so this driver is obsolete.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- .../watchdog/watchdog-parameters.rst          |   9 -
- drivers/watchdog/Kconfig                      |   7 -
- drivers/watchdog/Makefile                     |   1 -
- drivers/watchdog/ks8695_wdt.c                 | 319 ------------------
- 4 files changed, 336 deletions(-)
- delete mode 100644 drivers/watchdog/ks8695_wdt.c
+ drivers/input/keyboard/Kconfig               |  11 -
+ drivers/input/keyboard/Makefile              |   1 -
+ drivers/input/keyboard/w90p910_keypad.c      | 264 -------------------
+ include/linux/platform_data/keypad-w90p910.h |  16 --
+ 4 files changed, 292 deletions(-)
+ delete mode 100644 drivers/input/keyboard/w90p910_keypad.c
+ delete mode 100644 include/linux/platform_data/keypad-w90p910.h
 
-diff --git a/Documentation/watchdog/watchdog-parameters.rst b/Documentation/watchdog/watchdog-parameters.rst
-index a3985cc5aeda..226aba56f704 100644
---- a/Documentation/watchdog/watchdog-parameters.rst
-+++ b/Documentation/watchdog/watchdog-parameters.rst
-@@ -301,15 +301,6 @@ ixp4xx_wdt:
+diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
+index 8e9c3ea9d5e7..c1da129a4eb5 100644
+--- a/drivers/input/keyboard/Kconfig
++++ b/drivers/input/keyboard/Kconfig
+@@ -731,17 +731,6 @@ config KEYBOARD_XTKBD
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called xtkbd.
  
- -------------------------------------------------
- 
--ks8695_wdt:
--    wdt_time:
--	Watchdog time in seconds. (default=5)
--    nowayout:
--	Watchdog cannot be stopped once started
--	(default=kernel config parameter)
--
---------------------------------------------------
--
- machzwd:
-     nowayout:
- 	Watchdog cannot be stopped once started
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index 8188963a405b..e631f1ae303a 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -477,13 +477,6 @@ config IXP4XX_WATCHDOG
- 
- 	  Say N if you are unsure.
- 
--config KS8695_WATCHDOG
--	tristate "KS8695 watchdog"
--	depends on ARCH_KS8695
+-config KEYBOARD_W90P910
+-	tristate "W90P910 Matrix Keypad support"
+-	depends on ARCH_W90X900
+-	select INPUT_MATRIXKMAP
 -	help
--	  Watchdog timer embedded into KS8695 processor. This will reboot your
--	  system when the timeout is reached.
+-	  Say Y here to enable the matrix keypad on evaluation board
+-	  based on W90P910.
 -
- config HAVE_S3C2410_WATCHDOG
- 	bool
- 	help
-diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-index 7caa920e7e60..85f55ec76f8d 100644
---- a/drivers/watchdog/Makefile
-+++ b/drivers/watchdog/Makefile
-@@ -49,7 +49,6 @@ obj-$(CONFIG_21285_WATCHDOG) += wdt285.o
- obj-$(CONFIG_977_WATCHDOG) += wdt977.o
- obj-$(CONFIG_FTWDT010_WATCHDOG) += ftwdt010_wdt.o
- obj-$(CONFIG_IXP4XX_WATCHDOG) += ixp4xx_wdt.o
--obj-$(CONFIG_KS8695_WATCHDOG) += ks8695_wdt.o
- obj-$(CONFIG_S3C2410_WATCHDOG) += s3c2410_wdt.o
- obj-$(CONFIG_SA1100_WATCHDOG) += sa1100_wdt.o
- obj-$(CONFIG_SAMA5D4_WATCHDOG) += sama5d4_wdt.o
-diff --git a/drivers/watchdog/ks8695_wdt.c b/drivers/watchdog/ks8695_wdt.c
+-	  To compile this driver as a module, choose M here: the
+-	  module will be called w90p910_keypad.
+-
+ config KEYBOARD_CROS_EC
+ 	tristate "ChromeOS EC keyboard"
+ 	select INPUT_MATRIXKMAP
+diff --git a/drivers/input/keyboard/Makefile b/drivers/input/keyboard/Makefile
+index 06a0af6efeae..9510325c0c5d 100644
+--- a/drivers/input/keyboard/Makefile
++++ b/drivers/input/keyboard/Makefile
+@@ -68,4 +68,3 @@ obj-$(CONFIG_KEYBOARD_TEGRA)		+= tegra-kbc.o
+ obj-$(CONFIG_KEYBOARD_TM2_TOUCHKEY)	+= tm2-touchkey.o
+ obj-$(CONFIG_KEYBOARD_TWL4030)		+= twl4030_keypad.o
+ obj-$(CONFIG_KEYBOARD_XTKBD)		+= xtkbd.o
+-obj-$(CONFIG_KEYBOARD_W90P910)		+= w90p910_keypad.o
+diff --git a/drivers/input/keyboard/w90p910_keypad.c b/drivers/input/keyboard/w90p910_keypad.c
 deleted file mode 100644
-index 1550ce3c5702..000000000000
---- a/drivers/watchdog/ks8695_wdt.c
+index c88d05d6108a..000000000000
+--- a/drivers/input/keyboard/w90p910_keypad.c
 +++ /dev/null
-@@ -1,319 +0,0 @@
+@@ -1,264 +0,0 @@
 -// SPDX-License-Identifier: GPL-2.0-only
 -/*
-- * Watchdog driver for Kendin/Micrel KS8695.
+- * Copyright (c) 2008-2009 Nuvoton technology corporation.
 - *
-- * (C) 2007 Andrew Victor
+- * Wan ZongShun <mcuos.com@gmail.com>
 - */
 -
--#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
--
--#include <linux/bitops.h>
--#include <linux/errno.h>
--#include <linux/fs.h>
--#include <linux/init.h>
 -#include <linux/kernel.h>
--#include <linux/miscdevice.h>
 -#include <linux/module.h>
--#include <linux/moduleparam.h>
+-#include <linux/interrupt.h>
+-#include <linux/input.h>
+-#include <linux/device.h>
 -#include <linux/platform_device.h>
--#include <linux/types.h>
--#include <linux/watchdog.h>
+-#include <linux/clk.h>
+-#include <linux/err.h>
 -#include <linux/io.h>
--#include <linux/uaccess.h>
--#include <mach/hardware.h>
+-#include <linux/slab.h>
 -
--#define KS8695_TMR_OFFSET	(0xF0000 + 0xE400)
--#define KS8695_TMR_VA		(KS8695_IO_VA + KS8695_TMR_OFFSET)
+-#include <linux/platform_data/keypad-w90p910.h>
 -
--/*
-- * Timer registers
-- */
--#define KS8695_TMCON		(0x00)		/* Timer Control Register */
--#define KS8695_T0TC		(0x08)		/* Timer 0 Timeout Count Register */
--#define TMCON_T0EN		(1 << 0)	/* Timer 0 Enable */
+-/* Keypad Interface Control Registers */
+-#define KPI_CONF		0x00
+-#define KPI_3KCONF		0x04
+-#define KPI_LPCONF		0x08
+-#define KPI_STATUS		0x0C
 -
--/* Timer0 Timeout Counter Register */
--#define T0TC_WATCHDOG		(0xff)		/* Enable watchdog mode */
+-#define IS1KEY			(0x01 << 16)
+-#define INTTR			(0x01 << 21)
+-#define KEY0R			(0x0f << 3)
+-#define KEY0C			0x07
+-#define DEBOUNCE_BIT		0x08
+-#define KSIZE0			(0x01 << 16)
+-#define KSIZE1			(0x01 << 17)
+-#define KPSEL			(0x01 << 19)
+-#define ENKP			(0x01 << 18)
 -
--#define WDT_DEFAULT_TIME	5	/* seconds */
--#define WDT_MAX_TIME		171	/* seconds */
+-#define KGET_RAW(n)		(((n) & KEY0R) >> 3)
+-#define KGET_COLUMN(n)		((n) & KEY0C)
 -
--static int wdt_time = WDT_DEFAULT_TIME;
--static bool nowayout = WATCHDOG_NOWAYOUT;
+-#define W90P910_NUM_ROWS	8
+-#define W90P910_NUM_COLS	8
+-#define W90P910_ROW_SHIFT	3
 -
--module_param(wdt_time, int, 0);
--MODULE_PARM_DESC(wdt_time, "Watchdog time in seconds. (default="
--					__MODULE_STRING(WDT_DEFAULT_TIME) ")");
+-struct w90p910_keypad {
+-	const struct w90p910_keypad_platform_data *pdata;
+-	struct clk *clk;
+-	struct input_dev *input_dev;
+-	void __iomem *mmio_base;
+-	int irq;
+-	unsigned short keymap[W90P910_NUM_ROWS * W90P910_NUM_COLS];
+-};
 -
--#ifdef CONFIG_WATCHDOG_NOWAYOUT
--module_param(nowayout, bool, 0);
--MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
--				__MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
--#endif
--
--
--static unsigned long ks8695wdt_busy;
--static DEFINE_SPINLOCK(ks8695_lock);
--
--/* ......................................................................... */
--
--/*
-- * Disable the watchdog.
-- */
--static inline void ks8695_wdt_stop(void)
+-static void w90p910_keypad_scan_matrix(struct w90p910_keypad *keypad,
+-							unsigned int status)
 -{
--	unsigned long tmcon;
+-	struct input_dev *input_dev = keypad->input_dev;
+-	unsigned int row = KGET_RAW(status);
+-	unsigned int col = KGET_COLUMN(status);
+-	unsigned int code = MATRIX_SCAN_CODE(row, col, W90P910_ROW_SHIFT);
+-	unsigned int key = keypad->keymap[code];
 -
--	spin_lock(&ks8695_lock);
--	/* disable timer0 */
--	tmcon = __raw_readl(KS8695_TMR_VA + KS8695_TMCON);
--	__raw_writel(tmcon & ~TMCON_T0EN, KS8695_TMR_VA + KS8695_TMCON);
--	spin_unlock(&ks8695_lock);
+-	input_event(input_dev, EV_MSC, MSC_SCAN, code);
+-	input_report_key(input_dev, key, 1);
+-	input_sync(input_dev);
+-
+-	input_event(input_dev, EV_MSC, MSC_SCAN, code);
+-	input_report_key(input_dev, key, 0);
+-	input_sync(input_dev);
 -}
 -
--/*
-- * Enable and reset the watchdog.
-- */
--static inline void ks8695_wdt_start(void)
+-static irqreturn_t w90p910_keypad_irq_handler(int irq, void *dev_id)
 -{
--	unsigned long tmcon;
--	unsigned long tval = wdt_time * KS8695_CLOCK_RATE;
+-	struct w90p910_keypad *keypad = dev_id;
+-	unsigned int  kstatus, val;
 -
--	spin_lock(&ks8695_lock);
--	/* disable timer0 */
--	tmcon = __raw_readl(KS8695_TMR_VA + KS8695_TMCON);
--	__raw_writel(tmcon & ~TMCON_T0EN, KS8695_TMR_VA + KS8695_TMCON);
+-	kstatus = __raw_readl(keypad->mmio_base + KPI_STATUS);
 -
--	/* program timer0 */
--	__raw_writel(tval | T0TC_WATCHDOG, KS8695_TMR_VA + KS8695_T0TC);
+-	val = INTTR | IS1KEY;
 -
--	/* re-enable timer0 */
--	tmcon = __raw_readl(KS8695_TMR_VA + KS8695_TMCON);
--	__raw_writel(tmcon | TMCON_T0EN, KS8695_TMR_VA + KS8695_TMCON);
--	spin_unlock(&ks8695_lock);
+-	if (kstatus & val)
+-		w90p910_keypad_scan_matrix(keypad, kstatus);
+-
+-	return IRQ_HANDLED;
 -}
 -
--/*
-- * Reload the watchdog timer.  (ie, pat the watchdog)
-- */
--static inline void ks8695_wdt_reload(void)
+-static int w90p910_keypad_open(struct input_dev *dev)
 -{
--	unsigned long tmcon;
+-	struct w90p910_keypad *keypad = input_get_drvdata(dev);
+-	const struct w90p910_keypad_platform_data *pdata = keypad->pdata;
+-	unsigned int val, config;
 -
--	spin_lock(&ks8695_lock);
--	/* disable, then re-enable timer0 */
--	tmcon = __raw_readl(KS8695_TMR_VA + KS8695_TMCON);
--	__raw_writel(tmcon & ~TMCON_T0EN, KS8695_TMR_VA + KS8695_TMCON);
--	__raw_writel(tmcon | TMCON_T0EN, KS8695_TMR_VA + KS8695_TMCON);
--	spin_unlock(&ks8695_lock);
+-	/* Enable unit clock */
+-	clk_enable(keypad->clk);
+-
+-	val = __raw_readl(keypad->mmio_base + KPI_CONF);
+-	val |= (KPSEL | ENKP);
+-	val &= ~(KSIZE0 | KSIZE1);
+-
+-	config = pdata->prescale | (pdata->debounce << DEBOUNCE_BIT);
+-
+-	val |= config;
+-
+-	__raw_writel(val, keypad->mmio_base + KPI_CONF);
+-
+-	return 0;
 -}
 -
--/*
-- * Change the watchdog time interval.
-- */
--static int ks8695_wdt_settimeout(int new_time)
+-static void w90p910_keypad_close(struct input_dev *dev)
 -{
--	/*
--	 * All counting occurs at KS8695_CLOCK_RATE / 128 = 0.256 Hz
--	 *
--	 * Since WDV is a 16-bit counter, the maximum period is
--	 * 65536 / 0.256 = 256 seconds.
--	 */
--	if ((new_time <= 0) || (new_time > WDT_MAX_TIME))
+-	struct w90p910_keypad *keypad = input_get_drvdata(dev);
+-
+-	/* Disable clock unit */
+-	clk_disable(keypad->clk);
+-}
+-
+-static int w90p910_keypad_probe(struct platform_device *pdev)
+-{
+-	const struct w90p910_keypad_platform_data *pdata =
+-						dev_get_platdata(&pdev->dev);
+-	const struct matrix_keymap_data *keymap_data;
+-	struct w90p910_keypad *keypad;
+-	struct input_dev *input_dev;
+-	struct resource *res;
+-	int irq;
+-	int error;
+-
+-	if (!pdata) {
+-		dev_err(&pdev->dev, "no platform data defined\n");
 -		return -EINVAL;
--
--	/* Set new watchdog time. It will be used when
--	   ks8695_wdt_start() is called. */
--	wdt_time = new_time;
--	return 0;
--}
--
--/* ......................................................................... */
--
--/*
-- * Watchdog device is opened, and watchdog starts running.
-- */
--static int ks8695_wdt_open(struct inode *inode, struct file *file)
--{
--	if (test_and_set_bit(0, &ks8695wdt_busy))
--		return -EBUSY;
--
--	ks8695_wdt_start();
--	return stream_open(inode, file);
--}
--
--/*
-- * Close the watchdog device.
-- * If CONFIG_WATCHDOG_NOWAYOUT is NOT defined then the watchdog is also
-- *  disabled.
-- */
--static int ks8695_wdt_close(struct inode *inode, struct file *file)
--{
--	/* Disable the watchdog when file is closed */
--	if (!nowayout)
--		ks8695_wdt_stop();
--	clear_bit(0, &ks8695wdt_busy);
--	return 0;
--}
--
--static const struct watchdog_info ks8695_wdt_info = {
--	.identity	= "ks8695 watchdog",
--	.options	= WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING,
--};
--
--/*
-- * Handle commands from user-space.
-- */
--static long ks8695_wdt_ioctl(struct file *file, unsigned int cmd,
--							unsigned long arg)
--{
--	void __user *argp = (void __user *)arg;
--	int __user *p = argp;
--	int new_value;
--
--	switch (cmd) {
--	case WDIOC_GETSUPPORT:
--		return copy_to_user(argp, &ks8695_wdt_info,
--					sizeof(ks8695_wdt_info)) ? -EFAULT : 0;
--	case WDIOC_GETSTATUS:
--	case WDIOC_GETBOOTSTATUS:
--		return put_user(0, p);
--	case WDIOC_SETOPTIONS:
--		if (get_user(new_value, p))
--			return -EFAULT;
--		if (new_value & WDIOS_DISABLECARD)
--			ks8695_wdt_stop();
--		if (new_value & WDIOS_ENABLECARD)
--			ks8695_wdt_start();
--		return 0;
--	case WDIOC_KEEPALIVE:
--		ks8695_wdt_reload();	/* pat the watchdog */
--		return 0;
--	case WDIOC_SETTIMEOUT:
--		if (get_user(new_value, p))
--			return -EFAULT;
--		if (ks8695_wdt_settimeout(new_value))
--			return -EINVAL;
--		/* Enable new time value */
--		ks8695_wdt_start();
--		/* Return current value */
--		return put_user(wdt_time, p);
--	case WDIOC_GETTIMEOUT:
--		return put_user(wdt_time, p);
--	default:
--		return -ENOTTY;
 -	}
+-
+-	keymap_data = pdata->keymap_data;
+-
+-	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		dev_err(&pdev->dev, "failed to get keypad irq\n");
+-		return -ENXIO;
+-	}
+-
+-	keypad = kzalloc(sizeof(struct w90p910_keypad), GFP_KERNEL);
+-	input_dev = input_allocate_device();
+-	if (!keypad || !input_dev) {
+-		dev_err(&pdev->dev, "failed to allocate driver data\n");
+-		error = -ENOMEM;
+-		goto failed_free;
+-	}
+-
+-	keypad->pdata = pdata;
+-	keypad->input_dev = input_dev;
+-	keypad->irq = irq;
+-
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	if (res == NULL) {
+-		dev_err(&pdev->dev, "failed to get I/O memory\n");
+-		error = -ENXIO;
+-		goto failed_free;
+-	}
+-
+-	res = request_mem_region(res->start, resource_size(res), pdev->name);
+-	if (res == NULL) {
+-		dev_err(&pdev->dev, "failed to request I/O memory\n");
+-		error = -EBUSY;
+-		goto failed_free;
+-	}
+-
+-	keypad->mmio_base = ioremap(res->start, resource_size(res));
+-	if (keypad->mmio_base == NULL) {
+-		dev_err(&pdev->dev, "failed to remap I/O memory\n");
+-		error = -ENXIO;
+-		goto failed_free_res;
+-	}
+-
+-	keypad->clk = clk_get(&pdev->dev, NULL);
+-	if (IS_ERR(keypad->clk)) {
+-		dev_err(&pdev->dev, "failed to get keypad clock\n");
+-		error = PTR_ERR(keypad->clk);
+-		goto failed_free_io;
+-	}
+-
+-	/* set multi-function pin for w90p910 kpi. */
+-	mfp_set_groupi(&pdev->dev);
+-
+-	input_dev->name = pdev->name;
+-	input_dev->id.bustype = BUS_HOST;
+-	input_dev->open = w90p910_keypad_open;
+-	input_dev->close = w90p910_keypad_close;
+-	input_dev->dev.parent = &pdev->dev;
+-
+-	error = matrix_keypad_build_keymap(keymap_data, NULL,
+-					   W90P910_NUM_ROWS, W90P910_NUM_COLS,
+-					   keypad->keymap, input_dev);
+-	if (error) {
+-		dev_err(&pdev->dev, "failed to build keymap\n");
+-		goto failed_put_clk;
+-	}
+-
+-	error = request_irq(keypad->irq, w90p910_keypad_irq_handler,
+-			    0, pdev->name, keypad);
+-	if (error) {
+-		dev_err(&pdev->dev, "failed to request IRQ\n");
+-		goto failed_put_clk;
+-	}
+-
+-	__set_bit(EV_REP, input_dev->evbit);
+-	input_set_capability(input_dev, EV_MSC, MSC_SCAN);
+-	input_set_drvdata(input_dev, keypad);
+-
+-	/* Register the input device */
+-	error = input_register_device(input_dev);
+-	if (error) {
+-		dev_err(&pdev->dev, "failed to register input device\n");
+-		goto failed_free_irq;
+-	}
+-
+-	platform_set_drvdata(pdev, keypad);
+-	return 0;
+-
+-failed_free_irq:
+-	free_irq(irq, keypad);
+-failed_put_clk:
+-	clk_put(keypad->clk);
+-failed_free_io:
+-	iounmap(keypad->mmio_base);
+-failed_free_res:
+-	release_mem_region(res->start, resource_size(res));
+-failed_free:
+-	input_free_device(input_dev);
+-	kfree(keypad);
+-	return error;
 -}
 -
--/*
-- * Pat the watchdog whenever device is written to.
-- */
--static ssize_t ks8695_wdt_write(struct file *file, const char *data,
--						size_t len, loff_t *ppos)
+-static int w90p910_keypad_remove(struct platform_device *pdev)
 -{
--	ks8695_wdt_reload();		/* pat the watchdog */
--	return len;
--}
+-	struct w90p910_keypad *keypad = platform_get_drvdata(pdev);
+-	struct resource *res;
 -
--/* ......................................................................... */
+-	free_irq(keypad->irq, keypad);
 -
--static const struct file_operations ks8695wdt_fops = {
--	.owner		= THIS_MODULE,
--	.llseek		= no_llseek,
--	.unlocked_ioctl	= ks8695_wdt_ioctl,
--	.open		= ks8695_wdt_open,
--	.release	= ks8695_wdt_close,
--	.write		= ks8695_wdt_write,
--};
+-	clk_put(keypad->clk);
 -
--static struct miscdevice ks8695wdt_miscdev = {
--	.minor		= WATCHDOG_MINOR,
--	.name		= "watchdog",
--	.fops		= &ks8695wdt_fops,
--};
+-	input_unregister_device(keypad->input_dev);
 -
--static int ks8695wdt_probe(struct platform_device *pdev)
--{
--	int res;
+-	iounmap(keypad->mmio_base);
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	release_mem_region(res->start, resource_size(res));
 -
--	if (ks8695wdt_miscdev.parent)
--		return -EBUSY;
--	ks8695wdt_miscdev.parent = &pdev->dev;
+-	kfree(keypad);
 -
--	res = misc_register(&ks8695wdt_miscdev);
--	if (res)
--		return res;
--
--	pr_info("KS8695 Watchdog Timer enabled (%d seconds%s)\n",
--		wdt_time, nowayout ? ", nowayout" : "");
 -	return 0;
 -}
 -
--static int ks8695wdt_remove(struct platform_device *pdev)
--{
--	misc_deregister(&ks8695wdt_miscdev);
--	ks8695wdt_miscdev.parent = NULL;
--
--	return 0;
--}
--
--static void ks8695wdt_shutdown(struct platform_device *pdev)
--{
--	ks8695_wdt_stop();
--}
--
--#ifdef CONFIG_PM
--
--static int ks8695wdt_suspend(struct platform_device *pdev, pm_message_t message)
--{
--	ks8695_wdt_stop();
--	return 0;
--}
--
--static int ks8695wdt_resume(struct platform_device *pdev)
--{
--	if (ks8695wdt_busy)
--		ks8695_wdt_start();
--	return 0;
--}
--
--#else
--#define ks8695wdt_suspend NULL
--#define ks8695wdt_resume	NULL
--#endif
--
--static struct platform_driver ks8695wdt_driver = {
--	.probe		= ks8695wdt_probe,
--	.remove		= ks8695wdt_remove,
--	.shutdown	= ks8695wdt_shutdown,
--	.suspend	= ks8695wdt_suspend,
--	.resume		= ks8695wdt_resume,
+-static struct platform_driver w90p910_keypad_driver = {
+-	.probe		= w90p910_keypad_probe,
+-	.remove		= w90p910_keypad_remove,
 -	.driver		= {
--		.name	= "ks8695_wdt",
+-		.name	= "nuc900-kpi",
 -	},
 -};
+-module_platform_driver(w90p910_keypad_driver);
 -
--static int __init ks8695_wdt_init(void)
--{
--	/* Check that the heartbeat value is within range;
--	   if not reset to the default */
--	if (ks8695_wdt_settimeout(wdt_time)) {
--		ks8695_wdt_settimeout(WDT_DEFAULT_TIME);
--		pr_info("ks8695_wdt: wdt_time value must be 1 <= wdt_time <= %i"
--					", using %d\n", wdt_time, WDT_MAX_TIME);
--	}
--	return platform_driver_register(&ks8695wdt_driver);
--}
--
--static void __exit ks8695_wdt_exit(void)
--{
--	platform_driver_unregister(&ks8695wdt_driver);
--}
--
--module_init(ks8695_wdt_init);
--module_exit(ks8695_wdt_exit);
--
--MODULE_AUTHOR("Andrew Victor");
--MODULE_DESCRIPTION("Watchdog driver for KS8695");
+-MODULE_AUTHOR("Wan ZongShun <mcuos.com@gmail.com>");
+-MODULE_DESCRIPTION("w90p910 keypad driver");
 -MODULE_LICENSE("GPL");
--MODULE_ALIAS("platform:ks8695_wdt");
+-MODULE_ALIAS("platform:nuc900-keypad");
+diff --git a/include/linux/platform_data/keypad-w90p910.h b/include/linux/platform_data/keypad-w90p910.h
+deleted file mode 100644
+index 206ca4ecd93f..000000000000
+--- a/include/linux/platform_data/keypad-w90p910.h
++++ /dev/null
+@@ -1,16 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef __ASM_ARCH_W90P910_KEYPAD_H
+-#define __ASM_ARCH_W90P910_KEYPAD_H
+-
+-#include <linux/input/matrix_keypad.h>
+-
+-extern void mfp_set_groupi(struct device *dev);
+-
+-struct w90p910_keypad_platform_data {
+-	const struct matrix_keymap_data *keymap_data;
+-
+-	unsigned int	prescale;
+-	unsigned int	debounce;
+-};
+-
+-#endif /* __ASM_ARCH_W90P910_KEYPAD_H */
 -- 
 2.20.0
 
