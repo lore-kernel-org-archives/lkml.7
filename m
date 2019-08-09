@@ -6,98 +6,69 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B64C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 19:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77546C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 19:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BB2D20C01
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 19:15:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4397E20C01
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 19:17:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726196AbfHITPY (ORCPT
+        id S1726300AbfHITRM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 15:15:24 -0400
-Received: from mx2.yrkesakademin.fi ([85.134.45.195]:33007 "EHLO
-        mx2.yrkesakademin.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbfHITPY (ORCPT
+        Fri, 9 Aug 2019 15:17:12 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:36756 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726157AbfHITRL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 15:15:24 -0400
-X-Greylist: delayed 905 seconds by postgrey-1.27 at vger.kernel.org; Fri, 09 Aug 2019 15:15:23 EDT
-Subject: Re: Regression with the latest iwlwifi-9260-*-46.ucode
-To:     Takashi Iwai <tiwai@suse.de>, Luca Coelho <luca@coelho.fi>
-CC:     <dor.shaish@intel.com>, Josh Boyer <jwboyer@kernel.org>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        <linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <s5hr26m9gvc.wl-tiwai@suse.de>
- <280dad08ba9864755c3c45ed3ce26d602fe18a49.camel@intel.com>
- <s5ho91pzyml.wl-tiwai@suse.de> <s5hwogcxwt4.wl-tiwai@suse.de>
- <b225d043d8581e0fec68cb63f7433161868293f3.camel@coelho.fi>
- <s5hmuh7xrqy.wl-tiwai@suse.de>
- <38635c1b10018859457787ecff4f92a3ceec34a4.camel@coelho.fi>
- <ef32cea91614b9708a474e223f3fbbb85a95501d.camel@coelho.fi>
- <s5hsgqgnczv.wl-tiwai@suse.de>
- <99462e51eda721d5d85d9ea9e2c28da62f8b54f5.camel@coelho.fi>
- <a394850acbe0f05d6428ce466ecac1cfaefadd59.camel@coelho.fi>
- <s5ho912momt.wl-tiwai@suse.de>
-From:   Thomas Backlund <tmb@mageia.org>
-Message-ID: <1736104d-3ef4-83d1-2672-00f36b922ef7@mageia.org>
-Date:   Fri, 9 Aug 2019 22:00:15 +0300
+        Fri, 9 Aug 2019 15:17:11 -0400
+Received: by mail-qk1-f194.google.com with SMTP id g18so1233707qkl.3
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 12:17:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ngypOX0p/lDF6ThQM396JuxB1rK3mJwNaBHjmuZzR/M=;
+        b=t1NBBkJkbaKrR9qqqTwbwSzVSlivwCz3kn+EzwINCu5jqWGT7Z41t0CLEcJ3E7dEH5
+         xxR1kcOIe8bFsJCgd6tT1b4XqYpwiwsbeEf0xS7YKWcxmfPwNUE5/MQh4U3Z3CCyN35h
+         FlsuUM/vA6EmclyrZsBIwEDaXqA8lYoOxib0JyloJWvE7w1BJTKB89t0WmEmBoup5r1A
+         MS4H0gCvcS3kGgSenaxwmcUR3OOzppSr0fAUgnNk7SxSe3LNj8GTljEUbo1gyiadn16A
+         iePhPTYQ7tGbUEg/UNQ7d6opokgmvCNT4rWnLovNMOLD8wB4F7lI/0ZXQiuCKISuJmQ1
+         qabg==
+X-Gm-Message-State: APjAAAVc9fJ0CCtvKtCSMuAHD62lpuiGYXhBhJMQRfxHKJRxJvg4mjnJ
+        4PUq9DKNcjVfIVBVSOfDT6oYbjjDs+pMIsyX3PY=
+X-Google-Smtp-Source: APXvYqyS+rCffHQkgotu89qIYFzMBS8JFYn4d9Rz5KFypo6nhDAgNP+7D5JmFL7X12hDwwcbCHxXb5aCPmsjeP/bx0c=
+X-Received: by 2002:a37:5f45:: with SMTP id t66mr19800397qkb.286.1565378230710;
+ Fri, 09 Aug 2019 12:17:10 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <s5ho912momt.wl-tiwai@suse.de>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-WatchGuard-Spam-ID: str=0001.0A0C020D.5D4DC64B.002F,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-X-WatchGuard-Spam-Score: 0, clean; 0, virus threat unknown
-X-WatchGuard-Mail-Client-IP: 85.134.45.195
-X-WatchGuard-Mail-From: tmb@mageia.org
+References: <201908090321.bRMBBE6A%lkp@intel.com> <CAK8P3a0FT1FCkvik++TJxnp8=36+9EW-tjo0UXdGPZxw_MMPfQ@mail.gmail.com>
+ <20190809155329.vqbquhjhz25khrgx@treble>
+In-Reply-To: <20190809155329.vqbquhjhz25khrgx@treble>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 9 Aug 2019 21:16:53 +0200
+Message-ID: <CAK8P3a06aYPv_+v+LpJp1ohYXbJNjBU_YjPcAuWOhFeUSwUdLA@mail.gmail.com>
+Subject: Re: [arnd-playground:randconfig-5.3-rc2 32/347] fs/reiserfs/prints.o:
+ warning: objtool: __reiserfs_error()+0x80: unreachable instruction
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@01.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Den 06-08-2019 kl. 16:04, skrev Takashi Iwai:
-> On Mon, 05 Aug 2019 14:03:55 +0200,
+On Fri, Aug 9, 2019 at 5:53 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> On Thu, Aug 08, 2019 at 10:45:34PM +0200, Arnd Bergmann wrote:
+> > On Thu, Aug 8, 2019 at 9:06 PM kbuild test robot <lkp@intel.com> wrote:
 
-> Now we got a feedback from the latest linux-firmware (20190726) and
-> surprising the result was negative.  The dmesg after the cold boot is
-> found at:
->    https://bugzilla.suse.com/show_bug.cgi?id=1142128#c26
-> 
-> The kernel is 5.2.3, so it should be new enough.
-> 
-> If anything else needed (or something missing), let us know.
-> 
+> > Josh, is this warning above something you are interested in? I don't
+> > think it happens in mainline, but it could happen anywhere. I think
+> > the patch below can be dropped once clang is fixed, but I have so far
+> > been unable to build a new compiler for testing.
+>
+> From a brief glance I think you need to remove __reiserfs_panic from
+> objtool's global_noreturns[] array.
 
-I read on some forum that some commented that the "Add support for SAR 
-South Korea limitation" fix is needed, but it seemed weird...
+Right, makes sense. Added to my private patch now.
 
-Anyway, with theese on top of 5.2.7
-
-39bd984c203e86f3  iwlwifi: mvm: don't send GEO_TX_POWER_LIMIT on version 
-< 41
-f5a47fae6aa3eb06  iwlwifi: mvm: fix version check for GEO_TX_POWER_LIMIT 
-support
-0c3d7282233c7b02  iwlwifi: Add support for SAR South Korea limitation
-
-
-We have confirmation from an affected user that its now stable with both 
-older and newer firmwares...
-
-And we earlier tried with only the:
-39bd984c203e86f3  iwlwifi: mvm: don't send GEO_TX_POWER_LIMIT on version 
-< 41
-
-But that did not help (not that I really expected it since its loading 
-version 46 firmwares anyway)
-
-So my guess is that the newer firmware actually subtly expects to get 
-the behaviour of the:
-0c3d7282233c7b02  iwlwifi: Add support for SAR South Korea limitation
-
-
-
-Of course that's still guessing and I assume only Intel fw guys can 
-verify that...
-
---
-Thomas
+      Arnd
