@@ -2,88 +2,168 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AEEEC31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE63EC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:31:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53D5020C01
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:28:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1D212085A
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:31:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407379AbfHIS2g (ORCPT
+        id S2407510AbfHISbt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 14:28:36 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:38803 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726255AbfHIS2f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 14:28:35 -0400
-Received: by mail-qk1-f193.google.com with SMTP id u190so8730064qkh.5
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 11:28:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=meYZAOaqZ5KaoPmXpKdQX8BQbEOPXVSFqQOk/Zs8rsA=;
-        b=ce7Y8J51F91Wbnr69zfjOY6ncKZCfRi/gCZIPbQ97bT65NFIuYIkz0iibeXJQcKiGk
-         rKS2TUIfZn8VOk8PHNSDKFqsb4iGeKhTqn396ib6Y+ZblxVNLxjE550+hqwbSuLXpzP4
-         FxIhS/rXFwkj+C+8stHE7lARA8aIpsxqto5TG6UA45FGkeTccTbNK3KAA7OaI66/iwXw
-         b07cbNMGulJvlgDVmCq1PsD9nmT8yRmqZzivPA5LTq3CAfqyRwo7R2KqLvi5TLAEpfw7
-         3n8RKHDSODsQ6dEjQl+6ZYbJqO3lPjshGipQq+X2StUYyPnHdPTX5Iq5NfsSRRF/JAL4
-         hiBg==
-X-Gm-Message-State: APjAAAXjyHOtN3zvzAA+8ao4Zru7J7yAUjpUs5puBoxxWl2etukbKczX
-        ZeJNYonIazxbFcsqgMMjwO4ijx/WatzFOKsxswOKxJcn
-X-Google-Smtp-Source: APXvYqzLxdQHC0gUKiwVO2NJAHpHdYXdIWcXVTsS7VCUpP4IfTQCbdx5V1hKHFH1R7BU89gajb/sE4UT39NYqjWxAtw=
-X-Received: by 2002:a37:4ac3:: with SMTP id x186mr18866428qka.138.1565375314918;
- Fri, 09 Aug 2019 11:28:34 -0700 (PDT)
+        Fri, 9 Aug 2019 14:31:49 -0400
+Received: from mga04.intel.com ([192.55.52.120]:7052 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2436791AbfHISbs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 14:31:48 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 11:31:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,366,1559545200"; 
+   d="scan'208";a="374570158"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga005.fm.intel.com with ESMTP; 09 Aug 2019 11:31:47 -0700
+Date:   Fri, 9 Aug 2019 11:31:47 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jim Mattson <jmattson@google.com>
+Subject: Re: [PATCH v3 2/7] x86: kvm: svm: propagate errors from
+ skip_emulated_instruction()
+Message-ID: <20190809183146.GD10541@linux.intel.com>
+References: <20190808173051.6359-1-vkuznets@redhat.com>
+ <20190808173051.6359-3-vkuznets@redhat.com>
 MIME-Version: 1.0
-References: <87h873zs88.fsf@concordia.ellerman.id.au> <20190809182106.62130-1-ndesaulniers@google.com>
-In-Reply-To: <20190809182106.62130-1-ndesaulniers@google.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 9 Aug 2019 20:28:19 +0200
-Message-ID: <CAK8P3a3LynWTbpV8=VPm2TqgNM2MnoEyCPJd0PL2D+tcZqJgHg@mail.gmail.com>
-Subject: Re: [PATCH] powerpc: fix inline asm constraints for dcbz
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        christophe leroy <christophe.leroy@c-s.fr>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        kbuild test robot <lkp@intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190808173051.6359-3-vkuznets@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 9, 2019 at 8:21 PM 'Nick Desaulniers' via Clang Built
-Linux <clang-built-linux@googlegroups.com> wrote:
+On Thu, Aug 08, 2019 at 07:30:46PM +0200, Vitaly Kuznetsov wrote:
+> On AMD, kvm_x86_ops->skip_emulated_instruction(vcpu) can, in theory,
+> fail: in !nrips case we call kvm_emulate_instruction(EMULTYPE_SKIP).
+> Currently, we only do printk(KERN_DEBUG) when this happens and this
+> is not ideal. Propagate the error up the stack.
+> 
+> On VMX, skip_emulated_instruction() doesn't fail, we have two call
+> sites calling it explicitly: handle_exception_nmi() and
+> handle_task_switch(), we can just ignore the result.
+> 
+> On SVM, we also have two explicit call sites:
+> svm_queue_exception() and it seems we don't need to do anything there as
+> we check if RIP was advanced or not. In task_switch_interception(),
+> however, we are better off not proceeding to kvm_task_switch() in case
+> skip_emulated_instruction() failed.
+> 
+> Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> ---
 
->  static inline void dcbz(void *addr)
->  {
-> -       __asm__ __volatile__ ("dcbz %y0" : : "Z"(*(u8 *)addr) : "memory");
-> +       __asm__ __volatile__ ("dcbz %y0" : "=Z"(*(u8 *)addr) :: "memory");
+...
+
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 074385c86c09..2579e7a6d59d 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -1473,7 +1473,7 @@ static int vmx_rtit_ctl_check(struct kvm_vcpu *vcpu, u64 data)
 >  }
->
->  static inline void dcbi(void *addr)
+>  
+>  
+> -static void skip_emulated_instruction(struct kvm_vcpu *vcpu)
+> +static int skip_emulated_instruction(struct kvm_vcpu *vcpu)
 >  {
-> -       __asm__ __volatile__ ("dcbi %y0" : : "Z"(*(u8 *)addr) : "memory");
-> +       __asm__ __volatile__ ("dcbi %y0" : "=Z"(*(u8 *)addr) :: "memory");
+>  	unsigned long rip;
+>  
+> @@ -1483,6 +1483,8 @@ static void skip_emulated_instruction(struct kvm_vcpu *vcpu)
+>  
+>  	/* skipping an emulated instruction also counts */
+>  	vmx_set_interrupt_shadow(vcpu, 0);
+> +
+> +	return EMULATE_DONE;
 >  }
+>  
+>  static void vmx_clear_hlt(struct kvm_vcpu *vcpu)
+> @@ -4547,7 +4549,7 @@ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
+>  			vcpu->arch.dr6 &= ~DR_TRAP_BITS;
+>  			vcpu->arch.dr6 |= dr6 | DR6_RTM;
+>  			if (is_icebp(intr_info))
+> -				skip_emulated_instruction(vcpu);
+> +				(void)skip_emulated_instruction(vcpu);
+>  
+>  			kvm_queue_exception(vcpu, DB_VECTOR);
+>  			return 1;
+> @@ -5057,7 +5059,7 @@ static int handle_task_switch(struct kvm_vcpu *vcpu)
+>  	if (!idt_v || (type != INTR_TYPE_HARD_EXCEPTION &&
+>  		       type != INTR_TYPE_EXT_INTR &&
+>  		       type != INTR_TYPE_NMI_INTR))
+> -		skip_emulated_instruction(vcpu);
+> +		(void)skip_emulated_instruction(vcpu);
 
-I think the result of the discussion was that an output argument only kind-of
-makes sense for dcbz, but for the others it's really an input, and clang is
-wrong in the way it handles the "Z" constraint by making a copy, which it
-doesn't do for "m".
+Maybe a silly idea, but what if we squash the return value in a dedicated
+helper, with a big "DO NOT USE" comment above the int-returning function, e.g.:
 
-I'm not sure whether it's correct to use "m" instead of "Z" here, which
-would be a better workaround if that works. More importantly though,
-clang really needs to be fixed to handle "Z" correctly.
+static int __skip_emulated_instruction(struct kvm_vcpu *vcpu)
+{
+	unsigned long rip;
 
-        Arnd
+	rip = kvm_rip_read(vcpu);
+	rip += vmcs_read32(VM_EXIT_INSTRUCTION_LEN);
+	kvm_rip_write(vcpu, rip);
+
+	/* skipping an emulated instruction also counts */
+	vmx_set_interrupt_shadow(vcpu, 0);
+
+	return EMULATE_DONE;
+}
+
+static inline void skip_emulated_instruction(struct kvm_vcpu *vcpu)
+{
+	(void)__skip_emulated_instruction(vcpu);
+}
+
+
+Alternatively, the inner function could be void, but on my system that
+adds an extra call in the wrapper, i.e. in the kvm_skip_emulated...()
+path.  The above approach generates the same code as your patch, e.g.
+allows the compiler to decide whether or not to inline the meat of the
+code.
+
+>  	if (kvm_task_switch(vcpu, tss_selector,
+>  			    type == INTR_TYPE_SOFT_INTR ? idt_index : -1, reason,
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index c6d951cbd76c..a97818b1111d 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -6383,9 +6383,11 @@ static void kvm_vcpu_do_singlestep(struct kvm_vcpu *vcpu, int *r)
+>  int kvm_skip_emulated_instruction(struct kvm_vcpu *vcpu)
+>  {
+>  	unsigned long rflags = kvm_x86_ops->get_rflags(vcpu);
+> -	int r = EMULATE_DONE;
+> +	int r;
+>  
+> -	kvm_x86_ops->skip_emulated_instruction(vcpu);
+> +	r = kvm_x86_ops->skip_emulated_instruction(vcpu);
+> +	if (r != EMULATE_DONE)
+
+This should probably be wrapped with unlikely.
+
+> +		return 0;
+>  
+>  	/*
+>  	 * rflags is the old, "raw" value of the flags.  The new value has
+> -- 
+> 2.20.1
+> 
