@@ -2,106 +2,156 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 788A1C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:34:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDCFFC31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5455620C01
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:34:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C73AF21773
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:34:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="uNRSX3SR"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="EVaZL4wq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407457AbfHISeZ (ORCPT
+        id S2407521AbfHISe3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 14:34:25 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:41707 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726605AbfHISeZ (ORCPT
+        Fri, 9 Aug 2019 14:34:29 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:34440 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726428AbfHISe2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 14:34:25 -0400
-Received: by mail-ot1-f67.google.com with SMTP id o101so1338319ota.8;
-        Fri, 09 Aug 2019 11:34:24 -0700 (PDT)
+        Fri, 9 Aug 2019 14:34:28 -0400
+Received: by mail-pl1-f196.google.com with SMTP id i2so45316467plt.1
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 11:34:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AKmwT4Oi8XTfOBRZ+EHljM27mGDbATZqErOPdgBZ4Co=;
-        b=uNRSX3SRj+xP7NvVoVokIMCRX8HCckf6BPeA7+psneOxE6/T6dicMcRo/VV/vCJxhH
-         2ah1jUGPfiEAX0QZe8uTSWR6gFWhgEkVpd7BLRD+hlm1cr791u27ba3ZV816f72C1ok8
-         DJvRUpLPV43j5Uaws2WuWHOl5aDZAhlefm6RklI/GKafNpFMkZ7uGhbJLlx6oN0VDFGK
-         p9qsSUzTb1aagLcVK1DFaMoBq3cp8E+gw3IHnqJRv0XMMx6N9H/htf+j/p8DpyKdONPx
-         7eeraJq2zzFsYaU+6cMltnQHj6kObut6IugXtD7G6VOMY3hT8BtTcsGD9yo4ss/GdWjx
-         jZcA==
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=l3qInV8TXmCdHnd23dBAVW8r6K3CCAoKuu4IFFIBWeI=;
+        b=EVaZL4wq7FTuKkCotF7aE5IH5QbekD0MZo2PrS/me34fC2idnhu8PldWFBQCRbXO2o
+         H2HMZ5/EX1c5rRu0rrFDoBME2afBICf19PPklf19ngaynpe3mI8Y6cO3RB3q/vsymN3D
+         +4bRT/WBZjCY0rC/Zs4foifpghF9wtqtzw6e/EfP2gfGw8d7EyuWEhgLv1S2kT5NXrbV
+         EwP8X0MGrNxR6JPzXIG8QGWztfgpBKuURcLDPETmHdbTVLkVX1+H/nDB2TDPuXryfKFp
+         kI5+LwnbCeoWW4J6XKGW6biWwoaHzTWbwKl0UJdP8wPftBXYDNNEHWYLiDPYehVamGjK
+         W3KQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AKmwT4Oi8XTfOBRZ+EHljM27mGDbATZqErOPdgBZ4Co=;
-        b=mkFlhg9mKuybD05VadrXtaYj4DA+ykbi8CQLwYxYL9eGls7zBmXMx8Cg1PSkq9WNPv
-         8Z2AaxZbkYL6v6tRU17a8E8V/UJIASI65JVNwxeL307bv78YxW7j3g30kR1QIp+nrui+
-         um8ag6RbF7LUT5DRqKP1HAOZe6B+A2j2yCaX1RItq377pQq2U78/luQ56mPsSKzwk4av
-         kCcm53ncpDod8hicd9+tQpMv0fn+ssjhobrfhxII06l7dZ1kkc8Zd9Ulis437TOqZAba
-         UHN7MXtfcMP5+Zs3ui9J7uvjXqGf4sIedV+Thz/bsCh8T0JDwNzuUmZuBP80OdeaLmH8
-         A23Q==
-X-Gm-Message-State: APjAAAWTIvrTAryC35K5peaqSpDoD7sCPzPjUIK64lRUashjI3crI80R
-        0lbIo6IBfjkaWowAse5+4iwzvUkoiIxzgmbcCQg=
-X-Google-Smtp-Source: APXvYqxeNb9oXB+s8Utamw3Uuce2Zu+9B+X1DtgWilPG1ZjoTGNqEEBHw02QzXop4CuNga1GSGo5G+1XOzKOUdUwEcY=
-X-Received: by 2002:a5d:9a04:: with SMTP id s4mr22651344iol.19.1565375663936;
- Fri, 09 Aug 2019 11:34:23 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=l3qInV8TXmCdHnd23dBAVW8r6K3CCAoKuu4IFFIBWeI=;
+        b=oHrTkEFtfFvABkpPQskfKc3Crst44QkZ0LCt1Da/U2b4af0rox4w+D8ZXTHltF5Ytw
+         TSCcrBQYOjPR/mMjDy9iGtx6FCj148cGcmc27grEJO5EXlI/Tjk/UQc8DZaOzV1LTche
+         /iRA0wcJnOioyRZfUbhzYe4/s1anNlQRI01ae9JQ9iV/rTyD52Tp3rLIz6iJUh8jcsD0
+         IJHYWiD8S1P2sPIdgQji5YzKNVC5AYV4DF4/1FYPvNjhmtibFLZgAeKpWOltIHpqyH5j
+         4EbtyQaz5MgRiwveHRhLDUNgF2cVYk9sfqfu0z/ioQizyRk+iVfOQBYWMD61ARPD/qdS
+         o/xg==
+X-Gm-Message-State: APjAAAVlCtTzwC0B3aRnDyFTi7KiTqySwQi/viDTJpoWKEgJJoFeZdMU
+        VKfld1rQy6uizJdLOFNE75Vopw==
+X-Google-Smtp-Source: APXvYqwuOSP4hvD9bUY1S1rpgVgLwZxIHZxrC1NKtKz5i9gg7lsAOSA0upVlx16zBHziVtYSYEcx+A==
+X-Received: by 2002:a17:902:441:: with SMTP id 59mr12080641ple.62.1565375667539;
+        Fri, 09 Aug 2019 11:34:27 -0700 (PDT)
+Received: from localhost ([2620:10d:c090:180::ad32])
+        by smtp.gmail.com with ESMTPSA id p20sm138343530pgj.47.2019.08.09.11.34.26
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 09 Aug 2019 11:34:26 -0700 (PDT)
+Date:   Fri, 9 Aug 2019 14:34:24 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Minchan Kim <minchan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Miguel de Dios <migueldedios@google.com>,
+        Wei Wang <wvw@google.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [RFC PATCH] mm: drop mark_page_access from the unmap path
+Message-ID: <20190809183424.GA22347@cmpxchg.org>
+References: <20190729082052.GA258885@google.com>
+ <20190729083515.GD9330@dhcp22.suse.cz>
+ <20190730121110.GA184615@google.com>
+ <20190730123237.GR9330@dhcp22.suse.cz>
+ <20190730123935.GB184615@google.com>
+ <20190730125751.GS9330@dhcp22.suse.cz>
+ <20190731054447.GB155569@google.com>
+ <20190731072101.GX9330@dhcp22.suse.cz>
+ <20190806105509.GA94582@google.com>
+ <20190809124305.GQ18351@dhcp22.suse.cz>
 MIME-Version: 1.0
-References: <20190809162956.488941-1-arnd@arndb.de> <20190809163334.489360-1-arnd@arndb.de>
-In-Reply-To: <20190809163334.489360-1-arnd@arndb.de>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 9 Aug 2019 11:34:12 -0700
-Message-ID: <CAA9_cmdDbBm0ookyqGJMcyLVFHkYHuR3mEeawQKS2UqYJoWWaQ@mail.gmail.com>
-Subject: Re: [PATCH 1/7] [RFC] ARM: remove Intel iop33x and iop13xx support
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     soc@kernel.org, Russell King <linux@armlinux.org.uk>,
-        Vinod Koul <vkoul@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dmaengine@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-i2c@vger.kernel.org, Martin Michlmayr <tbm@cyrius.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190809124305.GQ18351@dhcp22.suse.cz>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ add Martin (if cyrius.com address is still valid) ]
+On Fri, Aug 09, 2019 at 02:43:24PM +0200, Michal Hocko wrote:
+> On Tue 06-08-19 19:55:09, Minchan Kim wrote:
+> > On Wed, Jul 31, 2019 at 09:21:01AM +0200, Michal Hocko wrote:
+> > > On Wed 31-07-19 14:44:47, Minchan Kim wrote:
+> [...]
+> > > > As Nick mentioned in the description, without mark_page_accessed in
+> > > > zapping part, repeated mmap + touch + munmap never acticated the page
+> > > > while several read(2) calls easily promote it.
+> > > 
+> > > And is this really a problem? If we refault the same page then the
+> > > refaults detection should catch it no? In other words is the above still
+> > > a problem these days?
+> > 
+> > I admit we have been not fair for them because read(2) syscall pages are
+> > easily promoted regardless of zap timing unlike mmap-based pages.
+> > 
+> > However, if we remove the mark_page_accessed in the zap_pte_range, it
+> > would make them more unfair in that read(2)-accessed pages are easily
+> > promoted while mmap-based page should go through refault to be promoted.
+> 
+> I have really hard time to follow why an unmap special handling is
+> making the overall state more reasonable.
+> 
+> Anyway, let me throw the patch for further discussion. Nick, Mel,
+> Johannes what do you think?
+> 
+> From 3821c2e66347a2141358cabdc6224d9990276fec Mon Sep 17 00:00:00 2001
+> From: Michal Hocko <mhocko@suse.com>
+> Date: Fri, 9 Aug 2019 14:29:59 +0200
+> Subject: [PATCH] mm: drop mark_page_access from the unmap path
+> 
+> Minchan has noticed that mark_page_access can take quite some time
+> during unmap:
+> : I had a time to benchmark it via adding some trace_printk hooks between
+> : pte_offset_map_lock and pte_unmap_unlock in zap_pte_range. The testing
+> : device is 2018 premium mobile device.
+> :
+> : I can get 2ms delay rather easily to release 2M(ie, 512 pages) when the
+> : task runs on little core even though it doesn't have any IPI and LRU
+> : lock contention. It's already too heavy.
+> :
+> : If I remove activate_page, 35-40% overhead of zap_pte_range is gone
+> : so most of overhead(about 0.7ms) comes from activate_page via
+> : mark_page_accessed. Thus, if there are LRU contention, that 0.7ms could
+> : accumulate up to several ms.
+> 
+> bf3f3bc5e734 ("mm: don't mark_page_accessed in fault path") has replaced
+> SetPageReferenced by mark_page_accessed arguing that the former is not
+> sufficient when mark_page_accessed is removed from the fault path
+> because it doesn't promote page to the active list. It is true that a
+> page that is mapped by a single process might not get promoted even when
+> referenced if the reclaim checks it after the unmap but does that matter
+> that much? Can we cosider the page hot if there are no other
+> users? Moreover we do have workingset detection in place since then and
+> so a next refault would activate the page if it was really hot one.
 
-On Fri, Aug 9, 2019 at 9:35 AM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> There are three families of IOP machines we support in Linux: iop32x
-> (which includes EP80219), iop33x and iop13xx (aka IOP34x aka WP8134x).
->
-> All products we support in the kernel are based on the first of these,
-> iop32x, the other families only ever supported the Intel reference
-> boards but no actual machine anyone could ever buy.
->
-> While one could clearly make them all three work in a single kernel
-> with some work, this takes the easy way out, removing the later two
-> platforms entirely, under the assumption that there are no remaining
-> users.
->
-> Earlier versions of OpenWRT and Debian both had support for iop32x
-> but not the others, and they both dropped iop32x as well in their 2015
-> releases.
->
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
-> I'm just guessing that iop32x is still needed, and the other two are
-> not. If anyone disagrees with that assessment, let me know so we
-> can come up with an alternative approach.
+I do think the pages can be very hot. Think of short-lived executables
+and their libraries. Like shell commands. When they run a few times or
+periodically, they should be promoted to the active list and not have
+to compete with streaming IO on the inactive list - the PG_referenced
+doesn't really help them there, see page_check_references().
 
-I'm not sure who would scream if iop32x support went away as well, but
-I have not followed this space in years hence copying Martin.
+Maybe the refaults will be fine - but latency expectations around
+mapped page cache certainly are a lot higher than unmapped cache.
 
-In any event:
-
-Acked-by: Dan Williams <dan.j.williams@intel.com>
+So I'm a bit reluctant about this patch. If Minchan can be happy with
+the lock batching, I'd prefer that.
