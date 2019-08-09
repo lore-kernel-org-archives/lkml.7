@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11AA7C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD6DC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:48:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE9542086D
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:48:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47F2B2086D
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:48:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565358497;
-	bh=XnHpOzwAsLZq2SZatfzb3BcPviuZ9W76W8V6MKSCvv8=;
+	s=default; t=1565358502;
+	bh=yTQUjLiGg98j1+bl78Zq1HHFkNqXgz6yiBPO75nQCiY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hXltBFL/3hcLhJyjoc9QbzWStuFmren4R1VssgsySlEreXOPUEFFADc7ab0s58xcn
-	 NnNcroL0E2K1Cf1Xt9aglbYUmIDqI+Km11q69ci18xMRkhApo0ftM2vSn+sDX062tV
-	 /ysxba2CksUYF2b0/1wZeey3w4ujLn9Q9c5YYobQ=
+	b=KJcN48Kll7OSF6WJAFXqwFngvkpG+bFYj750OueysMQCf+yLsUxR0G/smm6HLoYyX
+	 34DlVJPWMZoCgomIe7hRN4lN1XXp0kC8FeIGjxjdYspGZAcdNKKbwgBK9MQXavInRp
+	 JSu4sPiZd30ZKqvaIHWwNPVFm7A0mlXFsgL0+EMA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407294AbfHINsQ (ORCPT
+        id S2436630AbfHINrr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 09:48:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38076 "EHLO mail.kernel.org"
+        Fri, 9 Aug 2019 09:47:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436640AbfHINrz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 09:47:55 -0400
+        id S2406833AbfHINrj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 09:47:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDFF52086D;
-        Fri,  9 Aug 2019 13:47:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60747217F4;
+        Fri,  9 Aug 2019 13:47:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565358474;
-        bh=XnHpOzwAsLZq2SZatfzb3BcPviuZ9W76W8V6MKSCvv8=;
+        s=default; t=1565358458;
+        bh=yTQUjLiGg98j1+bl78Zq1HHFkNqXgz6yiBPO75nQCiY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XQx03a4bPqHS5h2rBm1e166TdW5qW9sSqsB28G0PLcYpGInnixkYgN8vTfXwXrPuN
-         gD50Mlgbh0h8pq1Ls9VYUNpEMfU5/fMsOVscthPwtEaIDBYVxkxjD+Ug3nZqtKS2Bt
-         RfSTm7qMcb0NHm1hR8Dk2WA+eYHs6LWOhFi6wA44=
+        b=gNbWFWQSvDHPl+/qGtGVrif5TEb4ppIbOPcQ4BCk4sohFfxcd9hRwSW35WOFZe3VE
+         wXiOUT3DET+ql4hlMam977+PrsVZ0iSDOBSLs6AukYTml1HSg03KnoGAKwwVq4yqCq
+         YIhQDIm7rcZytnVwFoMqHl3i/LONfJ+unizU//yE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ilya Dryomov <idryomov@gmail.com>,
-        Alex Elder <elder@linaro.org>
-Subject: [PATCH 4.9 14/32] libceph: use kbasename() and kill ceph_file_part()
-Date:   Fri,  9 Aug 2019 15:45:17 +0200
-Message-Id: <20190809133923.428258389@linuxfoundation.org>
+        stable@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ben Hutchings <ben@decadent.org.uk>
+Subject: [PATCH 4.9 31/32] x86/entry/64: Use JMP instead of JMPQ
+Date:   Fri,  9 Aug 2019 15:45:34 +0200
+Message-Id: <20190809133923.929468509@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190809133922.945349906@linuxfoundation.org>
 References: <20190809133922.945349906@linuxfoundation.org>
@@ -59,65 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilya Dryomov <idryomov@gmail.com>
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-commit 6f4dbd149d2a151b89d1a5bbf7530ee5546c7908 upstream.
+commit 64dbc122b20f75183d8822618c24f85144a5a94d upstream.
 
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
-Reviewed-by: Alex Elder <elder@linaro.org>
+Somehow the swapgs mitigation entry code patch ended up with a JMPQ
+instruction instead of JMP, where only the short jump is needed.  Some
+assembler versions apparently fail to optimize JMPQ into a two-byte JMP
+when possible, instead always using a 7-byte JMP with relocation.  For
+some reason that makes the entry code explode with a #GP during boot.
+
+Change it back to "JMP" as originally intended.
+
+Fixes: 18ec54fdd6d1 ("x86/speculation: Prepare entry code for Spectre v1 swapgs mitigations")
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+[bwh: Backported to 4.9: adjust context]
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- include/linux/ceph/ceph_debug.h |    6 +++---
- net/ceph/ceph_common.c          |   13 -------------
- 2 files changed, 3 insertions(+), 16 deletions(-)
+ arch/x86/entry/entry_64.S |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/linux/ceph/ceph_debug.h
-+++ b/include/linux/ceph/ceph_debug.h
-@@ -3,6 +3,8 @@
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -434,7 +434,7 @@ END(irq_entries_start)
+ 	TRACE_IRQS_OFF
  
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
-+#include <linux/string.h>
-+
- #ifdef CONFIG_CEPH_LIB_PRETTYDEBUG
- 
- /*
-@@ -12,12 +14,10 @@
-  */
- 
- # if defined(DEBUG) || defined(CONFIG_DYNAMIC_DEBUG)
--extern const char *ceph_file_part(const char *s, int len);
- #  define dout(fmt, ...)						\
- 	pr_debug("%.*s %12.12s:%-4d : " fmt,				\
- 		 8 - (int)sizeof(KBUILD_MODNAME), "    ",		\
--		 ceph_file_part(__FILE__, sizeof(__FILE__)),		\
--		 __LINE__, ##__VA_ARGS__)
-+		 kbasename(__FILE__), __LINE__, ##__VA_ARGS__)
- # else
- /* faux printk call just to see any compiler warnings. */
- #  define dout(fmt, ...)	do {				\
---- a/net/ceph/ceph_common.c
-+++ b/net/ceph/ceph_common.c
-@@ -45,19 +45,6 @@ bool libceph_compatible(void *data)
- }
- EXPORT_SYMBOL(libceph_compatible);
- 
--/*
-- * find filename portion of a path (/foo/bar/baz -> baz)
-- */
--const char *ceph_file_part(const char *s, int len)
--{
--	const char *e = s + len;
--
--	while (e != s && *(e-1) != '/')
--		e--;
--	return e;
--}
--EXPORT_SYMBOL(ceph_file_part);
--
- const char *ceph_msg_type_name(int type)
- {
- 	switch (type) {
+ 	CALL_enter_from_user_mode
+-	jmpq	2f
++	jmp	2f
+ 1:
+ 	FENCE_SWAPGS_KERNEL_ENTRY
+ 2:
 
 
