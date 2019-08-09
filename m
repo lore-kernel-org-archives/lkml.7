@@ -2,87 +2,103 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67171C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 08:54:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB7DC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 08:55:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44F8821743
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 08:54:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7302420B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 08:55:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406035AbfHIIyI (ORCPT
+        id S2406036AbfHIIzZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 04:54:08 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4208 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2405785AbfHIIyI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 04:54:08 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 4523D7AD945B9D40BD57;
-        Fri,  9 Aug 2019 16:54:05 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Fri, 9 Aug 2019
- 16:53:57 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <zajec5@gmail.com>, <kvalo@codeaurora.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-wireless@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] bcma: remove two unused variables
-Date:   Fri, 9 Aug 2019 16:53:08 +0800
-Message-ID: <20190809085308.69748-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Fri, 9 Aug 2019 04:55:25 -0400
+Received: from foss.arm.com ([217.140.110.172]:43682 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405785AbfHIIzZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 04:55:25 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7CA5D344;
+        Fri,  9 Aug 2019 01:55:24 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5D9333F706;
+        Fri,  9 Aug 2019 01:55:23 -0700 (PDT)
+Date:   Fri, 9 Aug 2019 09:55:21 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Jiping Ma <jiping.ma2@windriver.com>, mingo@redhat.com,
+        catalin.marinas@arm.com, will.deacon@arm.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/2 v2] tracing/arm64: Have max stack tracer handle the
+ case of return address after data
+Message-ID: <20190809085520.GC48423@lakrids.cambridge.arm.com>
+References: <20190807172826.352574408@goodmis.org>
+ <20190807172907.155165959@goodmis.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190807172907.155165959@goodmis.org>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drivers/bcma/driver_mips.c:70:18: warning:
- ipsflag_irq_shift defined but not used [-Wunused-const-variable=]
-drivers/bcma/driver_mips.c:62:18: warning:
- ipsflag_irq_mask defined but not used [-Wunused-const-variable=]
+On Wed, Aug 07, 2019 at 01:28:27PM -0400, Steven Rostedt wrote:
+> From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+> 
+> Most archs (well at least x86) store the function call return address on the
+> stack before storing the local variables for the function. The max stack
+> tracer depends on this in its algorithm to display the stack size of each
+> function it finds in the back trace.
+> 
+> Some archs (arm64), may store the return address (from its link register)
+> just before calling a nested function. There's no reason to save the link
+> register on leaf functions, as it wont be updated. This breaks the algorithm
+> of the max stack tracer.
+> 
+> Add a new define ARCH_RET_ADDR_AFTER_LOCAL_VARS that an architecture may set
+> if it stores the return address (link register) after it stores the
+> function's local variables, and have the stack trace shift the values of the
+> mapped stack size to the appropriate functions.
+> 
+> Link: 20190802094103.163576-1-jiping.ma2@windriver.com
+> 
+> Reported-by: Jiping Ma <jiping.ma2@windriver.com>
+> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> ---
+>  arch/arm64/include/asm/ftrace.h | 13 +++++++++++++
+>  kernel/trace/trace_stack.c      | 14 ++++++++++++++
+>  2 files changed, 27 insertions(+)
+> 
+> diff --git a/arch/arm64/include/asm/ftrace.h b/arch/arm64/include/asm/ftrace.h
+> index 5ab5200b2bdc..961e98618db4 100644
+> --- a/arch/arm64/include/asm/ftrace.h
+> +++ b/arch/arm64/include/asm/ftrace.h
+> @@ -14,6 +14,19 @@
+>  #define MCOUNT_ADDR		((unsigned long)_mcount)
+>  #define MCOUNT_INSN_SIZE	AARCH64_INSN_SIZE
+>  
+> +/*
+> + * Currently, gcc tends to save the link register after the local variables
+> + * on the stack. This causes the max stack tracer to report the function
+> + * frame sizes for the wrong functions. By defining
+> + * ARCH_RET_ADDR_AFTER_LOCAL_VARS, it will tell the stack tracer to expect
+> + * to find the return address on the stack after the local variables have
+> + * been set up.
+> + *
+> + * Note, this may change in the future, and we will need to deal with that
+> + * if it were to happen.
+> + */
+> +#define ARCH_RET_ADDR_AFTER_LOCAL_VARS 1
 
-They are never used, so can be removed.
+FWIW (with whatever this got renamed to):
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/bcma/driver_mips.c | 16 ----------------
- 1 file changed, 16 deletions(-)
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 
-diff --git a/drivers/bcma/driver_mips.c b/drivers/bcma/driver_mips.c
-index 27e9686..87760aa 100644
---- a/drivers/bcma/driver_mips.c
-+++ b/drivers/bcma/driver_mips.c
-@@ -59,22 +59,6 @@ static inline void mips_write32(struct bcma_drv_mips *mcore,
- 	bcma_write32(mcore->core, offset, value);
- }
- 
--static const u32 ipsflag_irq_mask[] = {
--	0,
--	BCMA_MIPS_IPSFLAG_IRQ1,
--	BCMA_MIPS_IPSFLAG_IRQ2,
--	BCMA_MIPS_IPSFLAG_IRQ3,
--	BCMA_MIPS_IPSFLAG_IRQ4,
--};
--
--static const u32 ipsflag_irq_shift[] = {
--	0,
--	BCMA_MIPS_IPSFLAG_IRQ1_SHIFT,
--	BCMA_MIPS_IPSFLAG_IRQ2_SHIFT,
--	BCMA_MIPS_IPSFLAG_IRQ3_SHIFT,
--	BCMA_MIPS_IPSFLAG_IRQ4_SHIFT,
--};
--
- static u32 bcma_core_mips_irqflag(struct bcma_device *dev)
- {
- 	u32 flag;
--- 
-2.7.4
-
-
+Thanks,
+Mark.
