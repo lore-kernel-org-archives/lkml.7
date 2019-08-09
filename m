@@ -4,68 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40889C32756
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 21:17:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7040FC31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 21:18:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11ED52089E
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 21:17:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3840C20B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 21:18:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PZAf+XDT"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="G54KRPbp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727950AbfHIVRj (ORCPT
+        id S1728117AbfHIVR7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 17:17:39 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:42036 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726185AbfHIVRi (ORCPT
+        Fri, 9 Aug 2019 17:17:59 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:46336 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727999AbfHIVR6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 17:17:38 -0400
-Received: by mail-lf1-f66.google.com with SMTP id s19so7804310lfb.9
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 14:17:37 -0700 (PDT)
+        Fri, 9 Aug 2019 17:17:58 -0400
+Received: by mail-lj1-f193.google.com with SMTP id v24so93457005ljg.13
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 14:17:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=a6qcKD1aVaygupbagJQvs2szHppirdYUK1GjYON7+Wc=;
-        b=PZAf+XDThboVQRyYZztPO0KbXTs1zesXPlhPtOdK0cxWUGJAax/ZcgrlVtr+Flu12b
-         LM63vttNkoeT5Zskzk7N+8pLvqMd4TuogzXoQ2gjJk1vVQfgsxf3f9vx0Q2iLXCcEOj0
-         jvveAaMqqpP2Aa/Eyw+wy7Ba4XmwDB4MEXCmg=
+        bh=Y4vLpkUXGaCx5ksGKXq1B6fru5dxWZeG1Id+VcyLndE=;
+        b=G54KRPbppyCf6lOgHptflnWoJgyVEK93H+cXO/vp8LfwGrelRzgN5+IYoCLqXUrfYO
+         X/Z645f3sLIDye0s3bOMNqrnMltaBkTAyYjneZ6d8DcT9/YcwkbfnK/Nth/KaLZbh+2/
+         SYW0DZALxCSJQavegwiXuKNfFYGJX1d3/zt9k=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=a6qcKD1aVaygupbagJQvs2szHppirdYUK1GjYON7+Wc=;
-        b=kA2FsTAKFcxfEL6y2c9cmhdZ7DZLu9gpsh7AwOh68Jn5+pQAD4MmgKjmqOz/9jEDVy
-         AzHqCRIqK61bNmw3kq+1SLZyXhHS7uoa90Fh0xThA3c0TvqKxr25/f05O1BCs2/r2V7m
-         9u/o4JX9nWswGOBMdwSlrGfyeSlVW3eVQ4hUrinq336fE79otVO6hwZq4UeQ2GhfF2on
-         xj/MWNkEf+6mVbhPrlvPEZ22F8vhVGlB+5h1bwSK1XRcSKn8/jpsKhYQfldi+QxNGLMS
-         1WmSSD7ozK67lYTy+V+PMS/Cfsv/NkUgqng5UlFnnBWCjl31fpyRgWYhrwAabjgqahq4
-         D0+Q==
-X-Gm-Message-State: APjAAAWpjDF+kYeRlDIEaY4xiB8QTP2Brks6M+hQwDtiQ2fhGQ0qORQ2
-        Pm7RCSjZ9tk8B5acSQ2n8hQ5T6Y2YC0=
-X-Google-Smtp-Source: APXvYqwEDo3BHzU4IhO45oOezpyE56O6VwahmK0Q7tfgTlb4+LLRCFcr135FbE/Awo3IYf0DdTi/Mg==
-X-Received: by 2002:a19:8c56:: with SMTP id i22mr13619520lfj.105.1565385456469;
-        Fri, 09 Aug 2019 14:17:36 -0700 (PDT)
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
-        by smtp.gmail.com with ESMTPSA id a15sm3405853lfo.2.2019.08.09.14.17.35
+        bh=Y4vLpkUXGaCx5ksGKXq1B6fru5dxWZeG1Id+VcyLndE=;
+        b=kbXfGctnCvBxOt2hMPmwOd8VLHX2m5XQRr573tUiM0qry31i5oAIkUj80oUuWy+esI
+         Kgktu2N5cGCEiH3VL8nCUPgAjv1hmGIvPkv2oUYcoa9b7TaOnW95o3/UxZsUPJE1FmnP
+         AzVU4+5P5DPLbXcIZBGEJKjW5Dg1b+eNQDtJKl3zxHS+XcR1HBGgDNsTjQsrQSY36JaS
+         WXgPXjN0GvKEmjhxs99ZMwCLfxgs5nRPc9bQBltjPMXNvPjw3lbe5wuGgO0tFrlGH+68
+         hfgFCNrqEeWBjGsUOj8dhheKKEqX3jzt0gSMK3l5DucScJARto1NhInZoY+vCMtaJslP
+         QBSQ==
+X-Gm-Message-State: APjAAAWyg8XqWT22DZbBcYoQd7Z2wLsMBJb995vGS7AFlt+qy8eqMJSd
+        8s/gYG+yDCG0ql2kUIMpZAeFgZ8dqQI=
+X-Google-Smtp-Source: APXvYqzc2k3hn/GiaBKLOEEHFrWjMLerVQiyRCoXzLfP1VEUUE43c31MwD1YBgWtrJ+sJNnFxpTjOQ==
+X-Received: by 2002:a2e:8802:: with SMTP id x2mr12292920ljh.200.1565385476215;
+        Fri, 09 Aug 2019 14:17:56 -0700 (PDT)
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
+        by smtp.gmail.com with ESMTPSA id f12sm1019381lfm.14.2019.08.09.14.17.55
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 09 Aug 2019 14:17:35 -0700 (PDT)
-Received: by mail-lf1-f43.google.com with SMTP id x3so16706136lfn.6
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 14:17:35 -0700 (PDT)
-X-Received: by 2002:a19:110:: with SMTP id 16mr14160555lfb.63.1565385454814;
- Fri, 09 Aug 2019 14:17:34 -0700 (PDT)
+        Fri, 09 Aug 2019 14:17:55 -0700 (PDT)
+Received: by mail-lj1-f181.google.com with SMTP id z17so4848099ljz.0
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 14:17:55 -0700 (PDT)
+X-Received: by 2002:a2e:93c8:: with SMTP id p8mr12301485ljh.6.1565385474677;
+ Fri, 09 Aug 2019 14:17:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190809121325.8138-1-georgi.djakov@linaro.org> <20190809121325.8138-2-georgi.djakov@linaro.org>
-In-Reply-To: <20190809121325.8138-2-georgi.djakov@linaro.org>
+References: <20190809121325.8138-1-georgi.djakov@linaro.org> <20190809121325.8138-3-georgi.djakov@linaro.org>
+In-Reply-To: <20190809121325.8138-3-georgi.djakov@linaro.org>
 From:   Evan Green <evgreen@chromium.org>
-Date:   Fri, 9 Aug 2019 14:16:58 -0700
-X-Gmail-Original-Message-ID: <CAE=gft4mkz=rhmC7p903UuAhzG2obaST+ZTecOfmDFKbpgSTpg@mail.gmail.com>
-Message-ID: <CAE=gft4mkz=rhmC7p903UuAhzG2obaST+ZTecOfmDFKbpgSTpg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] interconnect: Add support for path tags
+Date:   Fri, 9 Aug 2019 14:17:18 -0700
+X-Gmail-Original-Message-ID: <CAE=gft5JD9QuH3cZpPX=4eJMjbyPi8nes1--6qcsKdb1sw_rNw@mail.gmail.com>
+Message-ID: <CAE=gft5JD9QuH3cZpPX=4eJMjbyPi8nes1--6qcsKdb1sw_rNw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] interconnect: Add pre_aggregate() callback
 To:     Georgi Djakov <georgi.djakov@linaro.org>
 Cc:     linux-pm@vger.kernel.org, David Dai <daidavid1@codeaurora.org>,
         Vincent Guittot <vincent.guittot@linaro.org>,
@@ -83,15 +83,14 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Fri, Aug 9, 2019 at 5:13 AM Georgi Djakov <georgi.djakov@linaro.org> wrote:
 >
-> Consumers may have use cases with different bandwidth requirements based
-> on the system or driver state. The consumer driver can append a specific
-> tag to the path and pass this information to the interconnect platform
-> driver to do the aggregation based on this state.
+> Introduce an optional callback in interconnect provider drivers. It can be
+> used for implementing actions, that need to be executed before the actual
+> aggregation of the bandwidth requests has started.
 >
-> Introduce icc_set_tag() function that will allow the consumers to append
-> an optional tag to each path. The aggregation of these tagged paths is
-> platform specific.
+> The benefit of this for now is that it will significantly simplify the code
+> in provider drivers.
 >
+> Suggested-by: Evan Green <evgreen@chromium.org>
 > Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
 
 Reviewed-by: Evan Green <evgreen@chromium.org>
