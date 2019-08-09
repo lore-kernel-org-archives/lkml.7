@@ -2,91 +2,143 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2615C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:47:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BBD4C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:50:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 889672086D
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:47:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54C3F2086D
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:50:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PTqDgTfJ"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="OTaGAijb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406983AbfHISra (ORCPT
+        id S2406889AbfHISui (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 14:47:30 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:36560 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726168AbfHISra (ORCPT
+        Fri, 9 Aug 2019 14:50:38 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:15880 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726168AbfHISuh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 14:47:30 -0400
-Received: by mail-ua1-f67.google.com with SMTP id v20so38091967uao.3;
-        Fri, 09 Aug 2019 11:47:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hvM3NNhwGMvvfx2MkO3/MD3iVuNxF0JxJmKT+PwR5W4=;
-        b=PTqDgTfJDI6Ddsg4uDOHOgkzKF5/hMMju2mgUT5LWN/QtY3UlV+Emsr5Gsq0+5Aiyk
-         a5B/DizHQFb3ToCirXCgirmD2ZL/kujDPSeRwLFuHFxseSmIjVeQTtFGq+7KKngtRQME
-         4fTt39ovBiycauq1jhnjSYvQLxj8m7SLQfRwddnOwSWWczWOpiMbmp7t/bHwpNeSRc9A
-         mFQQSyUtW74/eTrUGjKQzl5KBGXvUam+SfiDeg1vfoIDSqavsAW5HcQgatUjUA+RhH/b
-         4nrKK01T3GAGEY/r4AWLwlxPfjzV8hrVBpqpDBOd3wR4ZhL/8seT2Tkzlbxakk5qdc5m
-         YYgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hvM3NNhwGMvvfx2MkO3/MD3iVuNxF0JxJmKT+PwR5W4=;
-        b=KxnBlETVhqf0w9jsNVsowl2yAqkCUP+5KKQmBEWZhFzThE0QZwpBZ8ql+H6qsaZC4C
-         dHPicKsLu+Mjpk2eRsR/U1gSuMdk+DlHorypn25i9hGfzfVsdc/AzDZH7QIjbMa6r0Kf
-         mLUUpm1FOATWPvndKK5jGGbQFzX3IRJ+TpXDvL/ytWRX05pN9fTEsduy6Z1Q7bk2EhUd
-         qvGRBzszCtnk5gzVBJhZVjBz1/XbdUNy7J1zyFF4Hk2gluvI8ETqza+mGCYyEr0iWT9h
-         v2K1wiNC3l0LXT+QTEkBcAShIFY0GZQpChMMzcU7N/tT5x/nRvUUm96X5JrOxacucItC
-         nOhg==
-X-Gm-Message-State: APjAAAU2lwlXGkJMFIhvy8vNXdJyy6ktoE6By7MqdlLeF0ONVepX+kXG
-        IMsm7u1fm48Uh6o3CnwnCWBwhCkucv4tVk8DA2U=
-X-Google-Smtp-Source: APXvYqwNUvZ4tnZE9Es0itFcZvDe8vvnYLoMxGxU87idwaNvgZecJqPAN9crbxDKWeXxjDKCOPx4blroSe5rCFlGgXw=
-X-Received: by 2002:ab0:4108:: with SMTP id j8mr14248017uad.104.1565376448875;
- Fri, 09 Aug 2019 11:47:28 -0700 (PDT)
+        Fri, 9 Aug 2019 14:50:37 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d4dc07d0002>; Fri, 09 Aug 2019 11:50:37 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 09 Aug 2019 11:50:35 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 09 Aug 2019 11:50:35 -0700
+Received: from [10.2.167.88] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 9 Aug
+ 2019 18:50:34 +0000
+Subject: Re: [PATCH v8 05/21] clk: tegra: pll: Save and restore pll context
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <tglx@linutronix.de>,
+        <jason@lakedaemon.net>, <marc.zyngier@arm.com>,
+        <linus.walleij@linaro.org>, <stefan@agner.ch>,
+        <mark.rutland@arm.com>
+CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
+        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
+        <josephl@nvidia.com>, <talho@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>, <rjw@rjwysocki.net>,
+        <viresh.kumar@linaro.org>, <linux-pm@vger.kernel.org>
+References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
+ <1565308020-31952-6-git-send-email-skomatineni@nvidia.com>
+ <68f65db6-44b7-1c75-2633-4a2fffd62a92@gmail.com>
+ <dd20aa34-d838-40c4-9edd-bbe5973053f3@nvidia.com>
+ <2eecf4ff-802d-7e0e-d971-0257fae4e3a2@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <9096cbca-f647-b0af-2ab8-d48769555c3e@nvidia.com>
+Date:   Fri, 9 Aug 2019 11:50:33 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20190808172226.18306-1-chris@chris-wilson.co.uk>
-In-Reply-To: <20190808172226.18306-1-chris@chris-wilson.co.uk>
-From:   Matthew Auld <matthew.william.auld@gmail.com>
-Date:   Fri, 9 Aug 2019 19:47:02 +0100
-Message-ID: <CAM0jSHP0BZJyJO3JeMqPDK=eYhS-Az6i6fGFz1tUQgaErA7mfA@mail.gmail.com>
-Subject: Re: [Intel-gfx] [PATCH] drm/i915: Stop reconfiguring our shmemfs mountpoint
-To:     Chris Wilson <chris@chris-wilson.co.uk>
-Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Hugh Dickins <hughd@google.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Matthew Auld <matthew.auld@intel.com>,
-        linux-fsdevel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <2eecf4ff-802d-7e0e-d971-0257fae4e3a2@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1565376637; bh=SfvdUFKLkyQbfTKMP8GT8fp4INVlwrptcyWMvdGjvqQ=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=OTaGAijbYuLx6OHVL6rG0f89MiUPGg3h+uo8DRPKwUCDZ3zOylkdezrznU7bqqddA
+         9i03jhAOpggS3ss1lNCOU217+PvSMFUZSn3SY6nbE0ab4QtmOHyVtU08+sflAmZdBO
+         ZpiW13GEpoMT9uTSZylJsdPJLW6pjs16X7jtX7cBtuUskdx3yhf+BuCfvNJPK7cGOw
+         nTzSx/4GNgIlqHzlXUDf9+vvWg1q/UFpy1c1ncSxdEj5VjXDBkrwOlNSfkrvepd7Um
+         ma245jVkhZHDU81cdhwWaHH76UGumTiQk9nR7zAvP1PXuqM4m0sPcYRm20mhulmuXq
+         It3Xqa/7azCPw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 8 Aug 2019 at 18:23, Chris Wilson <chris@chris-wilson.co.uk> wrote:
->
-> The filesystem reconfigure API is undergoing a transition, breaking our
-> current code. As we only set the default options, we can simply remove
-> the call to s_op->remount_fs(). In the future, when HW permits, we can
-> try re-enabling huge page support, albeit as suggested with new per-file
-> controls.
->
-> Reported-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-> Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
-> Suggested-by: Hugh Dickins <hughd@google.com>
-> Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-> Cc: Matthew Auld <matthew.auld@intel.com>
-> Cc: Hugh Dickins <hughd@google.com>
-> Cc: Al Viro <viro@zeniv.linux.org.uk>
-> Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Reviewed-by: Matthew Auld <matthew.auld@intel.com>
+
+On 8/9/19 10:50 AM, Dmitry Osipenko wrote:
+> 09.08.2019 20:39, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> On 8/9/19 4:33 AM, Dmitry Osipenko wrote:
+>>> 09.08.2019 2:46, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> This patch implements save and restore of PLL context.
+>>>>
+>>>> During system suspend, core power goes off and looses the settings
+>>>> of the Tegra CAR controller registers.
+>>>>
+>>>> So during suspend entry pll context is stored and on resume it is
+>>>> restored back along with its state.
+>>>>
+>>>> Acked-by: Thierry Reding <treding@nvidia.com>
+>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>> ---
+>>>>  =C2=A0 drivers/clk/tegra/clk-pll.c | 88 ++++++++++++++++++++++++++++-=
+----------------
+>>>>  =C2=A0 drivers/clk/tegra/clk.h=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 2 ++
+>>>>  =C2=A0 2 files changed, 58 insertions(+), 32 deletions(-)
+>>>>
+>>>> diff --git a/drivers/clk/tegra/clk-pll.c b/drivers/clk/tegra/clk-pll.c
+>>>> index 1583f5fc992f..e52add2bbdbb 100644
+>>>> --- a/drivers/clk/tegra/clk-pll.c
+>>>> +++ b/drivers/clk/tegra/clk-pll.c
+>>>> @@ -1008,6 +1008,28 @@ static unsigned long clk_plle_recalc_rate(struc=
+t clk_hw *hw,
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return rate;
+>>>>  =C2=A0 }
+>>>>  =C2=A0 +static void tegra_clk_pll_restore_context(struct clk_hw *hw)
+>>>> +{
+>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_clk_pll *pll =3D to_clk_pll(hw);
+>>>> +=C2=A0=C2=A0=C2=A0 struct clk_hw *parent =3D clk_hw_get_parent(hw);
+>>>> +=C2=A0=C2=A0=C2=A0 unsigned long parent_rate =3D clk_hw_get_rate(pare=
+nt);
+>>>> +=C2=A0=C2=A0=C2=A0 unsigned long rate =3D clk_hw_get_rate(hw);
+>>>> +=C2=A0=C2=A0=C2=A0 u32 val;
+>>>> +
+>>>> +=C2=A0=C2=A0=C2=A0 if (clk_pll_is_enabled(hw))
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return;
+>>>> +
+>>>> +=C2=A0=C2=A0=C2=A0 if (pll->params->set_defaults)
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pll->params->set_defaults(=
+pll);
+>>>> +
+>>>> +=C2=A0=C2=A0=C2=A0 clk_pll_set_rate(hw, rate, parent_rate);
+>>>> +
+>>>> +=C2=A0=C2=A0=C2=A0 if (!__clk_get_enable_count(hw->clk))
+>>> What about orphaned clocks? Is enable_count > 0 for them?
+>> There are no orphaned pll clocks.
+> Sorry, I meant the "clk_ignore_unused".
+
+clocks with CLK_IGNORE_UNUSED are taken care by clk driver.
+
+clk_disable_unused checks for clocks with this flag and if they are not=20
+enabled it will enable them.
+
+So by the time suspend happens enable_count is > 0
+
+
