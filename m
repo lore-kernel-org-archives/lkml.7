@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 470C4C0650F
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 01:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E89AC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 01:25:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25FD12171F
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 01:25:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 826F62171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 01:25:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405347AbfHIBZh (ORCPT
+        id S2405376AbfHIBZm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 21:25:37 -0400
-Received: from foss.arm.com ([217.140.110.172]:40424 "EHLO foss.arm.com"
+        Thu, 8 Aug 2019 21:25:42 -0400
+Received: from foss.arm.com ([217.140.110.172]:40446 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404978AbfHIBZh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 21:25:37 -0400
+        id S2404978AbfHIBZk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 21:25:40 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 038DF1596;
-        Thu,  8 Aug 2019 18:25:37 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CAF6C15AB;
+        Thu,  8 Aug 2019 18:25:39 -0700 (PDT)
 Received: from localhost.localdomain (unknown [10.169.40.54])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 82E6F3F575;
-        Thu,  8 Aug 2019 18:25:34 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 503D43F575;
+        Thu,  8 Aug 2019 18:25:37 -0700 (PDT)
 From:   Jia He <justin.he@arm.com>
 To:     Petr Mladek <pmladek@suse.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -35,60 +35,43 @@ Cc:     "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
         Kees Cook <keescook@chromium.org>,
         Shuah Khan <shuah@kernel.org>,
         "Tobin C. Harding" <tobin@kernel.org>, Jia He <justin.he@arm.com>
-Subject: [PATCH 1/2] vsprintf: Prevent crash when dereferencing invalid pointers for %pD
-Date:   Fri,  9 Aug 2019 09:24:56 +0800
-Message-Id: <20190809012457.56685-1-justin.he@arm.com>
+Subject: [PATCH 2/2] lib/test_printf: add test of null/invalid pointer dereference for dentry
+Date:   Fri,  9 Aug 2019 09:24:57 +0800
+Message-Id: <20190809012457.56685-2-justin.he@arm.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190809012457.56685-1-justin.he@arm.com>
+References: <20190809012457.56685-1-justin.he@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 3e5903eb9cff ("vsprintf: Prevent crash when dereferencing invalid
-pointers") prevents most crash except for %pD.
-There is an additional pointer dereferencing before dentry_name.
-
-At least, vma->file can be NULL and be passed to printk %pD in 
-print_bad_pte, which can cause crash.
-
-This patch fixes it with introducing a new file_dentry_name.
+This add some additional test cases of null/invalid pointer dereference
+for dentry and file (%pd and %pD)
 
 Signed-off-by: Jia He <justin.he@arm.com>
 ---
- lib/vsprintf.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ lib/test_printf.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-index 63937044c57d..b4a119176fdb 100644
---- a/lib/vsprintf.c
-+++ b/lib/vsprintf.c
-@@ -869,6 +869,15 @@ char *dentry_name(char *buf, char *end, const struct dentry *d, struct printf_sp
- 	return widen_string(buf, n, end, spec);
- }
+diff --git a/lib/test_printf.c b/lib/test_printf.c
+index 944eb50f3862..befedffeb476 100644
+--- a/lib/test_printf.c
++++ b/lib/test_printf.c
+@@ -455,6 +455,13 @@ dentry(void)
+ 	test("foo", "%pd", &test_dentry[0]);
+ 	test("foo", "%pd2", &test_dentry[0]);
  
-+static noinline_for_stack
-+char *file_dentry_name(char *buf, char *end, const struct file *f,
-+			struct printf_spec spec, const char *fmt)
-+{
-+	if (check_pointer(&buf, end, f, spec))
-+		return buf;
++	/* test the null/invalid pointer case for dentry */
++	test("(null)", "%pd", NULL);
++	test("(efault)", "%pd", PTR_INVALID);
++	/* test the null/invalid pointer case for file */
++	test("(null)", "%pD", NULL);
++	test("(efault)", "%pD", PTR_INVALID);
 +
-+	return dentry_name(buf, end, f->f_path.dentry, spec, fmt);
-+}
- #ifdef CONFIG_BLOCK
- static noinline_for_stack
- char *bdev_name(char *buf, char *end, struct block_device *bdev,
-@@ -2166,9 +2175,7 @@ char *pointer(const char *fmt, char *buf, char *end, void *ptr,
- 	case 'C':
- 		return clock(buf, end, ptr, spec, fmt);
- 	case 'D':
--		return dentry_name(buf, end,
--				   ((const struct file *)ptr)->f_path.dentry,
--				   spec, fmt);
-+		return file_dentry_name(buf, end, ptr, spec, fmt);
- #ifdef CONFIG_BLOCK
- 	case 'g':
- 		return bdev_name(buf, end, ptr, spec, fmt);
+ 	test("romeo", "%pd", &test_dentry[3]);
+ 	test("alfa/romeo", "%pd2", &test_dentry[3]);
+ 	test("bravo/alfa/romeo", "%pd3", &test_dentry[3]);
 -- 
 2.17.1
 
