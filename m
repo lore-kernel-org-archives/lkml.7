@@ -2,266 +2,283 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 721EAC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03678C32756
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:19:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 219F32086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:18:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4B892086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:19:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="nXKYHsZ2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437145AbfHIQST (ORCPT
+        id S2437078AbfHIQT0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 12:18:19 -0400
-Received: from mga04.intel.com ([192.55.52.120]:60753 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437088AbfHIQSS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 12:18:18 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 09:18:16 -0700
-X-IronPort-AV: E=Sophos;i="5.64,364,1559545200"; 
-   d="scan'208";a="203967750"
-Received: from rchatre-mobl.amr.corp.intel.com (HELO [10.251.6.227]) ([10.251.6.227])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/AES256-SHA; 09 Aug 2019 09:18:17 -0700
-Subject: Re: [PATCH V2 01/10] x86/CPU: Expose if cache is inclusive of lower
- level caches
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     tglx@linutronix.de, fenghua.yu@intel.com, tony.luck@intel.com,
-        kuo-lang.tseng@intel.com, mingo@redhat.com, hpa@zytor.com,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-References: <d0c04521-ec1a-3468-595c-6929f25f37ff@intel.com>
- <20190806183333.GA4698@zn.tnic>
- <e86c1f54-092d-6580-7652-cbc4ddade440@intel.com>
- <20190806191559.GB4698@zn.tnic>
- <18004821-577d-b0dd-62b8-13b6f9264e72@intel.com>
- <20190806204054.GD4698@zn.tnic>
- <98eeaa53-d100-28ff-0b68-ba57e0ea90fb@intel.com>
- <20190808080841.GA20745@zn.tnic> <20190808081342.GB20745@zn.tnic>
- <1b0b14aa-2c78-8259-9fdc-06ee7f6050f4@intel.com>
- <20190809073350.GB2152@zn.tnic>
-From:   Reinette Chatre <reinette.chatre@intel.com>
-Message-ID: <0ce45f5f-38a8-10c9-1b94-9b70a8026e84@intel.com>
-Date:   Fri, 9 Aug 2019 09:18:16 -0700
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 9 Aug 2019 12:19:26 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:7489 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436953AbfHIQTZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 12:19:25 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d4d9d0c0001>; Fri, 09 Aug 2019 09:19:24 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 09 Aug 2019 09:19:22 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 09 Aug 2019 09:19:22 -0700
+Received: from [10.2.167.88] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 9 Aug
+ 2019 16:19:21 +0000
+Subject: Re: [PATCH v8 14/21] clk: tegra210: Add suspend and resume support
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <tglx@linutronix.de>,
+        <jason@lakedaemon.net>, <marc.zyngier@arm.com>,
+        <linus.walleij@linaro.org>, <stefan@agner.ch>,
+        <mark.rutland@arm.com>
+CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
+        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
+        <josephl@nvidia.com>, <talho@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>, <rjw@rjwysocki.net>,
+        <viresh.kumar@linaro.org>, <linux-pm@vger.kernel.org>
+References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
+ <1565308020-31952-15-git-send-email-skomatineni@nvidia.com>
+ <a21b7464-62c3-8461-04c2-a0e863bdde85@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <7d101ec9-c559-8b40-1764-6bf67a9c7a7a@nvidia.com>
+Date:   Fri, 9 Aug 2019 09:19:19 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190809073350.GB2152@zn.tnic>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <a21b7464-62c3-8461-04c2-a0e863bdde85@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1565367564; bh=FOPVqa4Dn+ceVBVS8Ls4J5NnDlg7bwVxzOmYPZsKN0c=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=nXKYHsZ27J0weor9ST3WSDlD/BZyovGgOds58z+pam0bhjbg2BV6e7DO1i7az6W+6
+         MtzdKUEzX4RI2pGPpv061Y9akKVKHA4X6hL6pmWZfaPhyFhk8bzpV1KTHfZZwcLsiR
+         gPNgcLvEcMgZtVuna4Z2+lx88nqqdUIXGkrUlswpaY1muTuIUDOw9jR5tymDYU0ayX
+         9bLxpuzZN7kD1UOxZOhuG1U3zHWeAEynQzh9oTxWnUZuk3JfR+mmw1Rx6b3FsUH4xb
+         k4AYGS3x7UpHPewNqNZ0ftXGtvGCutPkbxOvu201ZxXSPF+wPxr0u1chrqvVNnSRQI
+         dYnPrU7Q12afA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Borislav,
 
-On 8/9/2019 12:33 AM, Borislav Petkov wrote:
-> On Thu, Aug 08, 2019 at 01:08:59PM -0700, Reinette Chatre wrote:
->> With the goal of following these guidelines exactly I came up with the
->> below that is an incremental diff on top of what this review started out as.
-> 
-> Thanks but pls in the future, do not use windoze to send a diff - it
-> mangles it to inapplicability.
+On 8/9/19 6:56 AM, Dmitry Osipenko wrote:
+> 09.08.2019 2:46, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> This patch adds support for clk: tegra210: suspend-resume.
+>>
+>> All the CAR controller settings are lost on suspend when core
+>> power goes off.
+>>
+>> This patch has implementation for saving and restoring all PLLs
+>> and clocks context during system suspend and resume to have the
+>> clocks back to same state for normal operation.
+>>
+>> Clock driver suspend and resume are registered as syscore_ops as clocks
+>> restore need to happen before the other drivers resume to have all their
+>> clocks back to the same state as before suspend.
+>>
+>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>> ---
+>>   drivers/clk/tegra/clk-tegra210.c | 103 +++++++++++++++++++++++++++++++=
+++++++--
+>>   drivers/clk/tegra/clk.c          |  64 ++++++++++++++++++++++++
+>>   drivers/clk/tegra/clk.h          |   3 ++
+>>   3 files changed, 166 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-te=
+gra210.c
+>> index 998bf60b219a..8dd6f4f4debb 100644
+>> --- a/drivers/clk/tegra/clk-tegra210.c
+>> +++ b/drivers/clk/tegra/clk-tegra210.c
+>> @@ -9,13 +9,13 @@
+>>   #include <linux/clkdev.h>
+>>   #include <linux/of.h>
+>>   #include <linux/of_address.h>
+>> +#include <linux/syscore_ops.h>
+>>   #include <linux/delay.h>
+>>   #include <linux/export.h>
+>>   #include <linux/mutex.h>
+>>   #include <linux/clk/tegra.h>
+>>   #include <dt-bindings/clock/tegra210-car.h>
+>>   #include <dt-bindings/reset/tegra210-car.h>
+>> -#include <linux/iopoll.h>
+>>   #include <linux/sizes.h>
+>>   #include <soc/tegra/pmc.h>
+>>  =20
+>> @@ -220,11 +220,15 @@
+>>   #define CLK_M_DIVISOR_SHIFT 2
+>>   #define CLK_M_DIVISOR_MASK 0x3
+>>  =20
+>> +#define CLK_MASK_ARM	0x44
+>> +#define MISC_CLK_ENB	0x48
+>> +
+>>   #define RST_DFLL_DVCO 0x2f4
+>>   #define DVFS_DFLL_RESET_SHIFT 0
+>>  =20
+>>   #define CLK_RST_CONTROLLER_RST_DEV_Y_SET 0x2a8
+>>   #define CLK_RST_CONTROLLER_RST_DEV_Y_CLR 0x2ac
+>> +#define CPU_SOFTRST_CTRL 0x380
+>>  =20
+>>   #define LVL2_CLK_GATE_OVRA 0xf8
+>>   #define LVL2_CLK_GATE_OVRC 0x3a0
+>> @@ -2825,6 +2829,7 @@ static int tegra210_enable_pllu(void)
+>>   	struct tegra_clk_pll_freq_table *fentry;
+>>   	struct tegra_clk_pll pllu;
+>>   	u32 reg;
+>> +	int ret;
+>>  =20
+>>   	for (fentry =3D pll_u_freq_table; fentry->input_rate; fentry++) {
+>>   		if (fentry->input_rate =3D=3D pll_ref_freq)
+>> @@ -2853,9 +2858,14 @@ static int tegra210_enable_pllu(void)
+>>   	reg |=3D PLL_ENABLE;
+>>   	writel(reg, clk_base + PLLU_BASE);
+>>  =20
+>> -	readl_relaxed_poll_timeout_atomic(clk_base + PLLU_BASE, reg,
+>> -					  reg & PLL_BASE_LOCK, 2, 1000);
+>> -	if (!(reg & PLL_BASE_LOCK)) {
+>> +	/*
+>> +	 * During clocks resume, same PLLU init and enable sequence get
+>> +	 * executed. So, readx_poll_timeout_atomic can't be used here as it
+>> +	 * uses ktime_get() and timekeeping resume doesn't happen by that
+>> +	 * time. So, using tegra210_wait_for_mask for PLL LOCK.
+>> +	 */
+>> +	ret =3D tegra210_wait_for_mask(&pllu, PLLU_BASE, PLL_BASE_LOCK);
+>> +	if (ret) {
+>>   		pr_err("Timed out waiting for PLL_U to lock\n");
+>>   		return -ETIMEDOUT;
+>>   	}
+>> @@ -3288,6 +3298,84 @@ static void tegra210_disable_cpu_clock(u32 cpu)
+>>   }
+>>  =20
+>>   #ifdef CONFIG_PM_SLEEP
+>> +/*
+>> + * This array lists mask values for each peripheral clk bank
+>> + * to mask out reserved bits during the clocks state restore
+>> + * on SC7 resume to prevent accidental writes to these reserved
+>> + * bits.
+>> + */
+>> +static u32 periph_clk_rsvd_mask[TEGRA210_CAR_BANK_COUNT] =3D {
+> Should be more natural to have a "valid_mask" instead of "rsvd_mask".
+>
+> What's actually wrong with touching of the reserved bits? They must be NO=
+-OP.. or the
+> reserved bits are actually some kind of "secret" bits? If those bits have=
+ some use-case
+> outside of Silicon HW (like FPGA simulation), then this doesn't matter fo=
+r upstream and you
+> have to keep the workaround locally in the downstream kernel or whatever.
 
-I am sorry about that.
+Will rename as valid_mask.
 
-> 
->> Some changes to highlight that may be of concern:
->> * In your previous email you do mention that this will be a "single bit
->> of information". Please note that I did not specifically use an actual
->> bit to capture this information but an unsigned int (I am very aware
->> that you also commented on this initially). If you do mean that this
->> should be stored as an actual bit, could you please help me by
->> elaborating how you would like to see this implemented?
-> 
-> See below for a possible way to do it.
-> 
->> * Please note that I moved the initialization to init_intel_cacheinfo()
->> to be specific to Intel. I did so because from what I understand there
->> are some AMD platforms for which this information cannot be determined
->> and I thought it simpler to make it specific to Intel with the new
->> single static variable.
-> 
-> Yeah, I renamed your function to cacheinfo_l3_inclusive() in case the
-> other vendors would want to use it someday.
-> 
->> * Please note that while this is a single global static variable it will
->> be set over and over for each CPU on the system.
-> 
-> That's fine.
-> 
-> Also, the bits in include/linux/cacheinfo.h need to go too. Here's a diff ontop
-> of your patchset:
-> 
-> ---
-> diff --git a/arch/x86/include/asm/cacheinfo.h b/arch/x86/include/asm/cacheinfo.h
-> index 86b63c7feab7..87eca716e03d 100644
-> --- a/arch/x86/include/asm/cacheinfo.h
-> +++ b/arch/x86/include/asm/cacheinfo.h
-> @@ -5,4 +5,6 @@
->  void cacheinfo_amd_init_llc_id(struct cpuinfo_x86 *c, int cpu, u8 node_id);
->  void cacheinfo_hygon_init_llc_id(struct cpuinfo_x86 *c, int cpu, u8 node_id);
->  
-> +bool cacheinfo_l3_inclusive(void);
-> +
->  #endif /* _ASM_X86_CACHEINFO_H */
-> diff --git a/arch/x86/kernel/cpu/cacheinfo.c b/arch/x86/kernel/cpu/cacheinfo.c
-> index 3b678f46be53..418a6f7392d0 100644
-> --- a/arch/x86/kernel/cpu/cacheinfo.c
-> +++ b/arch/x86/kernel/cpu/cacheinfo.c
-> @@ -188,6 +188,13 @@ struct _cpuid4_info_regs {
->  
->  static unsigned short num_cache_leaves;
->  
-> +struct cache_attributes {
-> +	u64 l3_inclusive	: 1,
-> +	    __resv		: 63;
-> +};
-> +
-> +static struct cache_attributes cache_attrs;
-> +
->  /* AMD doesn't have CPUID4. Emulate it here to report the same
->     information to the user.  This makes some assumptions about the machine:
->     L2 not shared, no SMT etc. that is currently true on AMD CPUs.
-> @@ -745,6 +752,14 @@ void init_hygon_cacheinfo(struct cpuinfo_x86 *c)
->  	num_cache_leaves = find_num_cache_leaves(c);
->  }
->  
-> +bool cacheinfo_l3_inclusive(void)
-> +{
-> +	if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL)
-> +		return false;
-> +
-> +	return cache_attrs.l3_inclusive;
-> +}
-> +
->  void init_intel_cacheinfo(struct cpuinfo_x86 *c)
->  {
->  	/* Cache sizes */
-> @@ -795,6 +810,7 @@ void init_intel_cacheinfo(struct cpuinfo_x86 *c)
->  				num_threads_sharing = 1 + this_leaf.eax.split.num_threads_sharing;
->  				index_msb = get_count_order(num_threads_sharing);
->  				l3_id = c->apicid & ~((1 << index_msb) - 1);
-> +				cache_attrs.l3_inclusive = this_leaf.edx.split.inclusive;
->  				break;
->  			default:
->  				break;
-> @@ -1009,13 +1025,6 @@ static void ci_leaf_init(struct cacheinfo *this_leaf,
->  	this_leaf->number_of_sets = base->ecx.split.number_of_sets + 1;
->  	this_leaf->physical_line_partition =
->  				base->ebx.split.physical_line_partition + 1;
-> -	if ((boot_cpu_data.x86_vendor == X86_VENDOR_AMD &&
-> -	     boot_cpu_has(X86_FEATURE_TOPOEXT)) ||
-> -	    boot_cpu_data.x86_vendor == X86_VENDOR_HYGON ||
-> -	    boot_cpu_data.x86_vendor == X86_VENDOR_INTEL) {
-> -		this_leaf->attributes |= CACHE_INCLUSIVE_SET;
-> -		this_leaf->inclusive = base->edx.split.inclusive;
-> -	}
->  	this_leaf->priv = base->nb;
->  }
->  
-> diff --git a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
-> index b4fff88572bd..644d1780671e 100644
-> --- a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
-> +++ b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
-> @@ -26,6 +26,7 @@
->  #include <asm/intel-family.h>
->  #include <asm/resctrl_sched.h>
->  #include <asm/perf_event.h>
-> +#include <asm/cacheinfo.h>
->  
->  #include "../../events/perf_event.h" /* For X86_CONFIG() */
->  #include "internal.h"
-> @@ -125,30 +126,6 @@ static unsigned int get_cache_line_size(unsigned int cpu, int level)
->  	return 0;
->  }
->  
-> -/**
-> - * get_cache_inclusive - Determine if cache is inclusive of lower levels
-> - * @cpu: CPU with which cache is associated
-> - * @level: Cache level
-> - *
-> - * Context: @cpu has to be online.
-> - * Return: 1 if cache is inclusive of lower cache levels, 0 if cache is not
-> - *         inclusive of lower cache levels or on failure.
-> - */
-> -static unsigned int get_cache_inclusive(unsigned int cpu, int level)
-> -{
-> -	struct cpu_cacheinfo *ci;
-> -	int i;
-> -
-> -	ci = get_cpu_cacheinfo(cpu);
-> -
-> -	for (i = 0; i < ci->num_leaves; i++) {
-> -		if (ci->info_list[i].level == level)
-> -			return ci->info_list[i].inclusive;
-> -	}
-> -
-> -	return 0;
-> -}
-> -
->  /**
->   * pseudo_lock_minor_get - Obtain available minor number
->   * @minor: Pointer to where new minor number will be stored
-> @@ -341,8 +318,7 @@ static int pseudo_lock_single_portion_valid(struct pseudo_lock_region *plr,
->  		goto err_cpu;
->  	}
->  
-> -	if (p->r->cache_level == 3 &&
-> -	    !get_cache_inclusive(plr->cpu, p->r->cache_level)) {
-> +	if (p->r->cache_level == 3 && !cacheinfo_l3_inclusive()) {
->  		rdt_last_cmd_puts("L3 cache not inclusive\n");
->  		goto err_cpu;
->  	}
-> @@ -448,7 +424,7 @@ static int pseudo_lock_l2_l3_portions_valid(struct pseudo_lock_region *plr,
->  		goto err_cpu;
->  	}
->  
-> -	if (!get_cache_inclusive(plr->cpu, l3_p->r->cache_level)) {
-> +	if (!cacheinfo_l3_inclusive()) {
->  		rdt_last_cmd_puts("L3 cache not inclusive\n");
->  		goto err_cpu;
->  	}
-> diff --git a/include/linux/cacheinfo.h b/include/linux/cacheinfo.h
-> index cdc7a9d6923f..46b92cd61d0c 100644
-> --- a/include/linux/cacheinfo.h
-> +++ b/include/linux/cacheinfo.h
-> @@ -33,8 +33,6 @@ extern unsigned int coherency_max_size;
->   * @physical_line_partition: number of physical cache lines sharing the
->   *	same cachetag
->   * @size: Total size of the cache
-> - * @inclusive: Cache is inclusive of lower level caches. Only valid if
-> - *	CACHE_INCLUSIVE_SET attribute is set.
->   * @shared_cpu_map: logical cpumask representing all the cpus sharing
->   *	this cache node
->   * @attributes: bitfield representing various cache attributes
-> @@ -57,7 +55,6 @@ struct cacheinfo {
->  	unsigned int ways_of_associativity;
->  	unsigned int physical_line_partition;
->  	unsigned int size;
-> -	unsigned int inclusive;
->  	cpumask_t shared_cpu_map;
->  	unsigned int attributes;
->  #define CACHE_WRITE_THROUGH	BIT(0)
-> @@ -69,7 +66,6 @@ struct cacheinfo {
->  #define CACHE_ALLOCATE_POLICY_MASK	\
->  	(CACHE_READ_ALLOCATE | CACHE_WRITE_ALLOCATE)
->  #define CACHE_ID		BIT(4)
-> -#define CACHE_INCLUSIVE_SET	BIT(5)
->  	void *fw_token;
->  	bool disable_sysfs;
->  	void *priv;
-> 
-> 
+some bits in these registers are undefined and is not good to write to=20
+these bits as they can cause pslverr.
 
-I really appreciate that you took the time to put this together. I now
-understand how all your suggestions come together.
+>
+>> +	0x23282006,
+>> +	0x782e0c18,
+>> +	0x0c012c05,
+>> +	0x003e7304,
+>> +	0x86c04800,
+>> +	0xc0199000,
+>> +	0x03e03800,
+>> +};
+>> +
+>> +#define car_readl(_base, _off) readl_relaxed(clk_base + (_base) + ((_of=
+f) * 4))
+>> +#define car_writel(_val, _base, _off) \
+>> +		writel_relaxed(_val, clk_base + (_base) + ((_off) * 4))
+>> +
+>> +static u32 spare_reg_ctx, misc_clk_enb_ctx, clk_msk_arm_ctx;
+>> +static u32 cpu_softrst_ctx[3];
+>> +
+>> +static int tegra210_clk_suspend(void)
+>> +{
+>> +	unsigned int i;
+>> +
+>> +	clk_save_context();
+>> +
+>> +	/*
+>> +	 * Save the bootloader configured clock registers SPARE_REG0,
+>> +	 * MISC_CLK_ENB, CLK_MASK_ARM, CPU_SOFTRST_CTRL.
+>> +	 */
+>> +	spare_reg_ctx =3D readl_relaxed(clk_base + SPARE_REG0);
+>> +	misc_clk_enb_ctx =3D readl_relaxed(clk_base + MISC_CLK_ENB);
+>> +	clk_msk_arm_ctx =3D readl_relaxed(clk_base + CLK_MASK_ARM);
+>> +
+>> +	for (i =3D 0; i < ARRAY_SIZE(cpu_softrst_ctx); i++)
+>> +		cpu_softrst_ctx[i] =3D car_readl(CPU_SOFTRST_CTRL, i);
+>> +
+>> +	tegra_clk_periph_suspend();
+>> +	return 0;
+>> +}
+>> +
+>> +static void tegra210_clk_resume(void)
+>> +{
+>> +	unsigned int i;
+>> +
+>> +	tegra_clk_osc_resume(clk_base);
+>> +
+>> +	/*
+>> +	 * Restore the bootloader configured clock registers SPARE_REG0,
+>> +	 * MISC_CLK_ENB, CLK_MASK_ARM, CPU_SOFTRST_CTRL from saved context.
+>> +	 */
+>> +	writel_relaxed(spare_reg_ctx, clk_base + SPARE_REG0);
+>> +	writel_relaxed(misc_clk_enb_ctx, clk_base + MISC_CLK_ENB);
+>> +	writel_relaxed(clk_msk_arm_ctx, clk_base + CLK_MASK_ARM);
+>> +
+>> +	for (i =3D 0; i < ARRAY_SIZE(cpu_softrst_ctx); i++)
+>> +		car_writel(cpu_softrst_ctx[i], CPU_SOFTRST_CTRL, i);
+>> +
+>> +	fence_udelay(5, clk_base);
+>> +
+>> +	/* enable all the clocks before changing the clock sources */
+>> +	tegra_clk_periph_force_on(periph_clk_rsvd_mask);
+> Why clocks need to be enabled before changing the sources?
 
-Thank you for your patience in reviewing this change.
+To prevent glitchless frequency switch, Tegra clock programming=20
+recommended sequence is to change MUX control or divisor or both with=20
+the clocks running.
 
-Reinette
+Actual state of clocks before suspend are restored later after all PLL's=20
+and peripheral clocks are restored.
+
+>
+>> +	/* wait for all writes to happen to have all the clocks enabled */
+>> +	wmb();
+> fence_udelay() has exactly the same barrier at the very beginning of read=
+l(), no need to
+> duplicate it here.
+>
+>> +	fence_udelay(2, clk_base);
+>> +
+>> +	/* restore PLLs and all peripheral clock rates */
+>> +	tegra210_init_pllu();
+> Why USB PLL need to be restored at first?
+USB PLL restore is independent to all other clocks restore. So this can=20
+be done either before clk_restore_context or even after.
+>
+>> +	clk_restore_context();
+>> +
+>> +	/* restore all peripheral clocks enable and reset state */
+>> +	tegra_clk_periph_resume();
+>> +}
+> [snip]
