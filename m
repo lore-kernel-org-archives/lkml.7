@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C360C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:48:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59414C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:48:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2641E21773
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:48:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E65421773
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:48:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565358482;
-	bh=zVXtUSMMLf5kQNv2o0MQ6TzFMU207uN96pyBGf1T2vM=;
+	s=default; t=1565358485;
+	bh=MTFwszCrmSaCj63SpvMh7Xi8g7NApYngPDhIgzx0W1A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yroty56JA+amUdvSj1pSx2jnzOqSYQXdNNUZyrQCBQrV7bfffLGgPk8YLp/8WbQF0
-	 h1nf7uuf/qKdUN5Kk7ibY4mUEUzFb8HBoL7NCYuJ81XW7kDQQBOZ5TYXW+AFY2992N
-	 O4vl2yMz5oA53SlWnypoJxX+Yrc8vrAAzwTsfN4s=
+	b=i49x/9e0r4SWvXfZJdaAMe2xCbkkWHa9kaIvCM3NgiSBm/4ky6tadMJ8Mg0tp2sdE
+	 1+B7iUnen7c8K4k/9nhncLoBMI3dXFJ6fx/RPoCQ1YkyVw95nZ+N68+VUGCb8DFYVG
+	 f34gQ0f9VD6m+t8Ml1Rjd0YLY80YWluK0d9OJbEU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407289AbfHINr6 (ORCPT
+        id S2436675AbfHINsD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 09:47:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38004 "EHLO mail.kernel.org"
+        Fri, 9 Aug 2019 09:48:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406889AbfHINrw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 09:47:52 -0400
+        id S2436660AbfHINr5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 09:47:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57A3C21882;
-        Fri,  9 Aug 2019 13:47:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76DE1214C6;
+        Fri,  9 Aug 2019 13:47:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565358471;
-        bh=zVXtUSMMLf5kQNv2o0MQ6TzFMU207uN96pyBGf1T2vM=;
+        s=default; t=1565358477;
+        bh=MTFwszCrmSaCj63SpvMh7Xi8g7NApYngPDhIgzx0W1A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lQJsZf9rCuD4VFkTldZCrJIza6sP9JCnF3U6UtsiorFBea7DsFzHsVJjdsmCcia7H
-         CjTrJtIpnpdw79zrwirREX1toleBpK2A7kG6Vg6pAdEJL7KtySy9wZiVcIDmZPtlq7
-         hzVVuyek06UJP2dFSDAjo01niPHnudZJahtAumEg=
+        b=hIct4kHuOXH4Su1+mgLH2rgQjvCfoaTrvPjZjlXNRU7XQRsmjB2UotZhVdA6Ti0xp
+         D+C5V/gXzFzVvnpNDsBfx5EajsNlMWpW6uOATlJo9kRJfX5KFyQ8NuSIzGBPPfsNRa
+         lteoyluWjxTPLYOK2rqGp30wCmWkvz9sO0scjgbI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 4.9 13/32] objtool: Add rewind_stack_do_exit() to the noreturn list
-Date:   Fri,  9 Aug 2019 15:45:16 +0200
-Message-Id: <20190809133923.396660809@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 15/32] atm: iphase: Fix Spectre v1 vulnerability
+Date:   Fri,  9 Aug 2019 15:45:18 +0200
+Message-Id: <20190809133923.456414485@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190809133922.945349906@linuxfoundation.org>
 References: <20190809133922.945349906@linuxfoundation.org>
@@ -61,34 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 
-commit 4fa5ecda2bf96be7464eb406df8aba9d89260227 upstream.
+[ Upstream commit ea443e5e98b5b74e317ef3d26bcaea54931ccdee ]
 
-This fixes the following warning seen on GCC 7.3:
+board is controlled by user-space, hence leading to a potential
+exploitation of the Spectre variant 1 vulnerability.
 
-  arch/x86/kernel/dumpstack.o: warning: objtool: oops_end() falls through to next function show_regs()
+This issue was detected with the help of Smatch:
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/3418ebf5a5a9f6ed7e80954c741c0b904b67b5dc.1554398240.git.jpoimboe@redhat.com
+drivers/atm/iphase.c:2765 ia_ioctl() warn: potential spectre issue 'ia_dev' [r] (local cap)
+drivers/atm/iphase.c:2774 ia_ioctl() warn: possible spectre second half.  'iadev'
+drivers/atm/iphase.c:2782 ia_ioctl() warn: possible spectre second half.  'iadev'
+drivers/atm/iphase.c:2816 ia_ioctl() warn: possible spectre second half.  'iadev'
+drivers/atm/iphase.c:2823 ia_ioctl() warn: possible spectre second half.  'iadev'
+drivers/atm/iphase.c:2830 ia_ioctl() warn: potential spectre issue '_ia_dev' [r] (local cap)
+drivers/atm/iphase.c:2845 ia_ioctl() warn: possible spectre second half.  'iadev'
+drivers/atm/iphase.c:2856 ia_ioctl() warn: possible spectre second half.  'iadev'
+
+Fix this by sanitizing board before using it to index ia_dev and _ia_dev
+
+Notice that given that speculation windows are large, the policy is
+to kill the speculation on the first load and not worry if it can be
+completed with a dependent load/store [1].
+
+[1] https://lore.kernel.org/lkml/20180423164740.GY17484@dhcp22.suse.cz/
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- tools/objtool/check.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/atm/iphase.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -166,6 +166,7 @@ static int __dead_end_function(struct ob
- 		"lbug_with_loc",
- 		"fortify_panic",
- 		"machine_real_restart",
-+		"rewind_stack_do_exit",
- 	};
- 
- 	if (func->bind == STB_WEAK)
+--- a/drivers/atm/iphase.c
++++ b/drivers/atm/iphase.c
+@@ -63,6 +63,7 @@
+ #include <asm/byteorder.h>  
+ #include <linux/vmalloc.h>
+ #include <linux/jiffies.h>
++#include <linux/nospec.h>
+ #include "iphase.h"		  
+ #include "suni.h"		  
+ #define swap_byte_order(x) (((x & 0xff) << 8) | ((x & 0xff00) >> 8))
+@@ -2760,8 +2761,11 @@ static int ia_ioctl(struct atm_dev *dev,
+    }
+    if (copy_from_user(&ia_cmds, arg, sizeof ia_cmds)) return -EFAULT; 
+    board = ia_cmds.status;
+-   if ((board < 0) || (board > iadev_count))
+-         board = 0;    
++
++	if ((board < 0) || (board > iadev_count))
++		board = 0;
++	board = array_index_nospec(board, iadev_count + 1);
++
+    iadev = ia_dev[board];
+    switch (ia_cmds.cmd) {
+    case MEMDUMP:
 
 
