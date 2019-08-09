@@ -2,128 +2,182 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD380C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 07:53:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D047C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 07:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5D5F2166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 07:53:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3567B20C01
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 07:57:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nY8IF2S8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XMH6IazT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405903AbfHIHxV (ORCPT
+        id S2405758AbfHIH50 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 03:53:21 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:43427 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405797AbfHIHxV (ORCPT
+        Fri, 9 Aug 2019 03:57:26 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:47031 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405711AbfHIH50 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 03:53:21 -0400
-Received: by mail-lj1-f193.google.com with SMTP id y17so66698818ljk.10
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 00:53:20 -0700 (PDT)
+        Fri, 9 Aug 2019 03:57:26 -0400
+Received: by mail-wr1-f67.google.com with SMTP id z1so97348463wru.13
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 00:57:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GqqiFOTILayCWP92aAvbU7rZYbJzYJq2hFWqssnZfow=;
-        b=nY8IF2S8A3L3Vuay9KDIsTtuFYPZeeklDr8dKII6lyiCdYnIje0PkqQD6KT7a8QWHU
-         4FUv3TSucrFG98xqdbHX/fz/oYdj+KcmhxIwu8wKAtss6gbGo71dbqGgeWzg90cnNTLd
-         daAxPNFCgGaViq4pcXkR0d3YXrO3QvcYqJLrUvOmGL94qGQ59Qp7Xv4ryXeG5I2fMJ+M
-         RYNGCai1CaOieNia2IDUnrL3GIqtVgZc/GqiIUa3v0hJ0AeNWaNOq2pWS/Vu4XzMDeyG
-         iuvJ/pFULgifhSM/dP60F1hCYQ+lhZ8YerE+lgkMmWp/Rib29Nj7JqNyN1P8uIoH04Es
-         rtlQ==
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Iguftgw8UuQt1LPl4gIudR2PY1C7bW7ccyngfRlXYfo=;
+        b=XMH6IazTbIxwa6F7O7WAO+4m6P/5K9d2xxF7yzX/Bsp5GlFVV65itA1gAzexBzwwlJ
+         Z/fAzZI2sTagXV/f4jOUoKj8PopOtUC8huv4Oe/G6oDAAPmNRrt32xmkOul2qhoMC4M+
+         oLrzjgieBPzQ9Hd0e/nrJ2HiVzXbJK8t2RYvedpAMVon+dTevDFd0tnf8BwlE4b3VUde
+         xgvjaG+zGdhOOhO0tSxv2aZ7Bfq/7Oj6TILvAi66EaKrU/nHqh87YwaTbDkoq+IOuWxv
+         MXsrtZ1+0mBgAx8tGlJ67hIcSsD5FYU6JjAmgSJ7LM6YKyEcfapmgxIgFCu6Fxr6AGQZ
+         SRew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GqqiFOTILayCWP92aAvbU7rZYbJzYJq2hFWqssnZfow=;
-        b=epfnrqdqffbOH5f/kau2f+2XoXW/suC73moLWAmLto3PUEs4WUGk516muXN/Qjfcgg
-         anJyUNLuKJ5hCZveGPCpA0wDW3r08GbCefO9bwlvaXZ0R7CQpMYTsaJ+uRqkOeu+Zn/J
-         Zj9zhbSnRzGhfAhlLFYDzVcwqHbLR5+kcbLBvqFW1/K6UAh/ppK498NMpj0Jl7pDasEH
-         hgNVs6Co+eKNbffWIFWjEXQM9EMj9aHTPG5RyZbiLwKmvfA3NZKUbrSRgTZKgLbs2ijT
-         C/RgV7fqHmBtmjTBU2PMmD38yIIuCXOtcvQF/rPOAbDwLZYds+o68k9Qp21arnNSKKm+
-         2JUw==
-X-Gm-Message-State: APjAAAWKiIb5/iYgbr2w36RgU/UGP0aB3NleXEZZjkz94bUu9MMbCUV1
-        l5eLO5RPKchCSEo3UUhXrAJix4GbmAhDioPS826jow==
-X-Google-Smtp-Source: APXvYqxFQuHM3xYJAfyF6kQS8ItALDrQIiaCIj4v6PZYeYPQwqRCeQNlySydBHuBNvEurL5a+9vQM3W8O0NVFX8Igw4=
-X-Received: by 2002:a2e:87d0:: with SMTP id v16mr10709810ljj.24.1565337199321;
- Fri, 09 Aug 2019 00:53:19 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Iguftgw8UuQt1LPl4gIudR2PY1C7bW7ccyngfRlXYfo=;
+        b=PZHNgKUS8OC66WKo4r/cMJfD9KKdk027rlKG1nvZRNYH/YyuHwGq3Ya+uaOg6pXspj
+         hJ1RA5g2IjoY+sy4XunLNZf4U5Fu6uEWD8uIxi4yedkmu7z0Nl7QidX+yZz6OmwWGkhU
+         dSXcKY/Z2OTxZjlCl89P1zcasW5AotJFibkwNsoAq8oi+1O7uJKf5Zz8nghGD1dW55kr
+         EdAnccuCCXLhynufRd97tqiRRY5mN3BPt5IDTPsD7cXyzinwLPQB59TljoOfuKZLg9OK
+         W7b3RmEI/oYPxQEfhTqrH8sywSV/jFCSXNGNTc2d9ZhWHVTqxCZVKm4NsYPrW+U6WWtK
+         VNHA==
+X-Gm-Message-State: APjAAAWL/2qsFj7X8OE0oqysNMRf1Xyy3ZmiqmoU14NDPjyzubSDHPqm
+        pZgcdpsG09VPzKm1LLBtMzTyif6pw4s=
+X-Google-Smtp-Source: APXvYqwt3SZUo/CzJ6i9LRxkvkOD2Q6ZBP8TsblVXqefjDjnyyBr9MSj631e6il1dGJK6B0bYgidlw==
+X-Received: by 2002:a5d:5041:: with SMTP id h1mr9674528wrt.30.1565337443945;
+        Fri, 09 Aug 2019 00:57:23 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:d03c:3d14:ec01:cc94? ([2a01:e34:ed2f:f020:d03c:3d14:ec01:cc94])
+        by smtp.googlemail.com with ESMTPSA id a19sm15226124wra.2.2019.08.09.00.57.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 09 Aug 2019 00:57:23 -0700 (PDT)
+Subject: Re: [PATCH 11/22] clocksource: ti-dmtimer: avoid using
+ mach/hardware.h
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190808212234.2213262-1-arnd@arndb.de>
+ <20190808212234.2213262-12-arnd@arndb.de>
+ <ba446856-0fa1-d06d-9e74-18ed9d630376@linaro.org>
+ <CAK8P3a0cDSr=nyaTFPywnYzUNdeJEhNBDkmWxBhVgXL+2vSyfg@mail.gmail.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ mQINBFv/yykBEADDdW8RZu7iZILSf3zxq5y8YdaeyZjI/MaqgnvG/c3WjFaunoTMspeusiFE
+ sXvtg3ehTOoyD0oFjKkHaia1Zpa1m/gnNdT/WvTveLfGA1gH+yGes2Sr53Ht8hWYZFYMZc8V
+ 2pbSKh8wepq4g8r5YI1XUy9YbcTdj5mVrTklyGWA49NOeJz2QbfytMT3DJmk40LqwK6CCSU0
+ 9Ed8n0a+vevmQoRZJEd3Y1qXn2XHys0F6OHCC+VLENqNNZXdZE9E+b3FFW0lk49oLTzLRNIq
+ 0wHeR1H54RffhLQAor2+4kSSu8mW5qB0n5Eb/zXJZZ/bRiXmT8kNg85UdYhvf03ZAsp3qxcr
+ xMfMsC7m3+ADOtW90rNNLZnRvjhsYNrGIKH8Ub0UKXFXibHbafSuq7RqyRQzt01Ud8CAtq+w
+ P9EftUysLtovGpLSpGDO5zQ++4ZGVygdYFr318aGDqCljKAKZ9hYgRimPBToDedho1S1uE6F
+ 6YiBFnI3ry9+/KUnEP6L8Sfezwy7fp2JUNkUr41QF76nz43tl7oersrLxHzj2dYfWUAZWXva
+ wW4IKF5sOPFMMgxoOJovSWqwh1b7hqI+nDlD3mmVMd20VyE9W7AgTIsvDxWUnMPvww5iExlY
+ eIC0Wj9K4UqSYBOHcUPrVOKTcsBVPQA6SAMJlt82/v5l4J0pSQARAQABtCpEYW5pZWwgTGV6
+ Y2FubyA8ZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZz6JAlcEEwEIAEECGwEFCwkIBwIGFQoJ
+ CAsCBBYCAwECHgECF4ACGQEWIQQk1ibyU76eh+bOW/SP9LjScWdVJwUCXAkeagUJDRnjhwAK
+ CRCP9LjScWdVJ+vYEACStDg7is2JdE7xz1PFu7jnrlOzoITfw05BurgJMqlvoiFYt9tEeUMl
+ zdU2+r0cevsmepqSUVuUvXztN8HA/Ep2vccmWnCXzlE56X1AK7PRRdaQd1SK/eVsJVaKbQTr
+ ii0wjbs6AU1uo0LdLINLjwwItnQ83/ttbf1LheyN8yknlch7jn6H6J2A/ORZECTfJbG4ecVr
+ 7AEm4A/G5nyPO4BG7dMKtjQ+crl/pSSuxV+JTDuoEWUO+YOClg6azjv8Onm0cQ46x9JRtahw
+ YmXdIXD6NsJHmMG9bKmVI0I7o5Q4XL52X6QxkeMi8+VhvqXXIkIZeizZe5XLTYUvFHLdexzX
+ Xze0LwLpmMObFLifjziJQsLP2lWwOfg6ZiH8z8eQJFB8bYTSMqmfTulB61YO0mhd676q17Y7
+ Z7u3md3CLH7rh61wU1g7FcLm9p5tXXWWaAud9Aa2kne2O3sirO0+JhsKbItz3d9yXuWgv6w3
+ heOIF0b91JyrY6tjz42hvyjxtHywRr4cdAEQa2S7HeQkw48BQOG6PqQ9d3FYU34pt3WFJ19V
+ A5qqAiEjqc4N0uPkC79W32yLGdyg0EEe8v0Uhs3CxM9euGg37kr5fujMm+akMtR1ENITo+UI
+ fgsxdwjBD5lNb/UGodU4QvPipB/xx4zz7pS5+2jGimfLeoe7mgGJxrkBDQRb/8z6AQgAvSkg
+ 5w7dVCSbpP6nXc+i8OBz59aq8kuL3YpxT9RXE/y45IFUVuSc2kuUj683rEEgyD7XCf4QKzOw
+ +XgnJcKFQiACpYAowhF/XNkMPQFspPNM1ChnIL5KWJdTp0DhW+WBeCnyCQ2pzeCzQlS/qfs3
+ dMLzzm9qCDrrDh/aEegMMZFO+reIgPZnInAcbHj3xUhz8p2dkExRMTnLry8XXkiMu9WpchHy
+ XXWYxXbMnHkSRuT00lUfZAkYpMP7La2UudC/Uw9WqGuAQzTqhvE1kSQe0e11Uc+PqceLRHA2
+ bq/wz0cGriUrcCrnkzRmzYLoGXQHqRuZazMZn2/pSIMZdDxLbwARAQABiQI2BBgBCAAgFiEE
+ JNYm8lO+nofmzlv0j/S40nFnVScFAlv/zPoCGwwACgkQj/S40nFnVSf4OhAAhWJPjgUu6VfS
+ mV53AUGIyqpOynPvSaMoGJzhNsDeNUDfV5dEZN8K4qjuz2CTNvGIyt4DE/IJbtasvi5dW4wW
+ Fl85bF6xeLM0qpCaZtXAsU5gzp3uT7ut++nTPYW+CpfYIlIpyOIzVAmw7rZbfgsId2Lj7g1w
+ QCjvGHw19mq85/wiEiZZNHeJQ3GuAr/uMoiaRBnf6wVcdpUTFMXlkE8/tYHPWbW0YKcKFwJ3
+ uIsNxZUe6coNzYnL0d9GK2fkDoqKfKbFjNhW9TygfeL2Qhk949jMGQudFS3zlwvN9wwVaC0i
+ KC/D303DiTnB0WFPT8CltMAZSbQ1WEWfwqxhY26di3k9pj+X3BfOmDL9GBlnRTSgwjqjqzpG
+ VZsWouuTfXd9ZPPzvYdUBrlTKgojk1C8v4fhSqb+ard+bZcwNp8Tzl/EI9ygw6lYEATGCUYI
+ Wco+fjehCgG1FWvWavMU+jLNs8/8uwj1u+BtRpWFj4ug/VaDDIuiApKPwl1Ge+zoC7TLMtyb
+ c00W5/8EckjmNgLDIINEsOsidMH61ZOlwDKCxo2lbV+Ij078KHBIY76zuHlwonEQaHLCAdqm
+ WiI95pYZNruAJEqZCpvXDdClmBVMZRDRePzSljCvoHxn7ArEt3F14mabn2RRq/hqB8IhC6ny
+ xAEPQIZaxxginIFYEziOjR65AQ0EW//NCAEIALcJqSmQdkt04vIBD12dryF6WcVWYvVwhspt
+ RlZbZ/NZ6nzarzEYPFcXaYOZCOCv+Xtm6hB8fh5XHd7Y8CWuZNDVp3ozuqwTkzQuux/aVdNb
+ Fe4VNeKGN2FK1aNlguAXJNCDNRCpWgRHuU3rWwGUMgentJogARvxfex2/RV/5mzYG/N1DJKt
+ F7g1zEcQD3JtK6WOwZXd+NDyke3tdG7vsNRFjMDkV4046bOOh1BKbWYu8nL3UtWBxhWKx3Pu
+ 1VOBUVwL2MJKW6umk+WqUNgYc2bjelgcTSdz4A6ZhJxstUO4IUfjvYRjoqle+dQcx1u+mmCn
+ 8EdKJlbAoR4NUFZy7WUAEQEAAYkDbAQYAQgAIBYhBCTWJvJTvp6H5s5b9I/0uNJxZ1UnBQJb
+ /80IAhsCAUAJEI/0uNJxZ1UnwHQgBBkBCAAdFiEEGn3N4YVz0WNVyHskqDIjiipP6E8FAlv/
+ zQgACgkQqDIjiipP6E+FuggAl6lkO7BhTkrRbFhrcjCm0bEoYWnCkQtX9YFvElQeA7MhxznO
+ BY/r1q2Uf6Ifr3YGEkLnME/tQQzUwznydM94CtRJ8KDSa1CxOseEsKq6B38xJtjgYSxNdgQb
+ EIfCzUHIGfk94AFKPdV6pqqSU5VpPUagF+JxiAkoEPOdFiQCULFNRLMsOtG7yp8uSyJRp6Tz
+ cQ+0+1QyX1krcHBUlNlvfdmL9DM+umPtbS9F6oRph15mvKVYiPObI1z8ymHoc68ReWjhUuHc
+ IDQs4w9rJVAyLypQ0p+ySDcTc+AmPP6PGUayIHYX63Q0KhJFgpr1wH0pHKpC78DPtX1a7HGM
+ 7MqzQ4NbD/4oLKKwByrIp12wLpSe3gDQPxLpfGgsJs6BBuAGVdkrdfIx2e6ENnwDoF0Veeji
+ BGrVmjVgLUWV9nUP92zpyByzd8HkRSPNZNlisU4gnz1tKhQl+j6G/l2lDYsqKeRG55TXbu9M
+ LqJYccPJ85B0PXcy63fL9U5DTysmxKQ5RgaxcxIZCM528ULFQs3dfEx5euWTWnnh7pN30RLg
+ a+0AjSGd886Bh0kT1Dznrite0dzYlTHlacbITZG84yRk/gS7DkYQdjL8zgFr/pxH5CbYJDk0
+ tYUhisTESeesbvWSPO5uNqqy1dAFw+dqRcF5gXIh3NKX0gqiAA87NM7nL5ym/CNpJ7z7nRC8
+ qePOXubgouxumi5RQs1+crBmCDa/AyJHKdG2mqCt9fx5EPbDpw6Zzx7hgURh4ikHoS7/tLjK
+ iqWjuat8/HWc01yEd8rtkGuUcMqbCi1XhcAmkaOnX8FYscMRoyyMrWClRZEQRokqZIj79+PR
+ adkDXtr4MeL8BaB7Ij2oyRVjXUwhFQNKi5Z5Rve0a3zvGkkqw8Mz20BOksjSWjAF6g9byukl
+ CUVjC03PdMSufNLK06x5hPc/c4tFR4J9cLrV+XxdCX7r0zGos9SzTPGNuIk1LK++S3EJhLFj
+ 4eoWtNhMWc1uiTf9ENza0ntqH9XBWEQ6IA1gubCniGG+Xg==
+Message-ID: <a67c8009-0a26-465f-07e8-1b7f8a04c6b6@linaro.org>
+Date:   Fri, 9 Aug 2019 09:57:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190809072415.29305-1-naresh.kamboju@linaro.org> <0a0e0563-aba7-e59c-1fbd-547126d404ed@redhat.com>
-In-Reply-To: <0a0e0563-aba7-e59c-1fbd-547126d404ed@redhat.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 9 Aug 2019 13:23:08 +0530
-Message-ID: <CA+G9fYt4QPjHtyoZUfe_tv+uT6yybHehymuDWBFHL-QH3K-PxA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] selftests: kvm: Adding config fragments
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Shuah Khan <shuah@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Andrew Jones <drjones@redhat.com>,
-        sean.j.christopherson@intel.com,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, kvm list <kvm@vger.kernel.org>,
-        Dan Rue <dan.rue@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAK8P3a0cDSr=nyaTFPywnYzUNdeJEhNBDkmWxBhVgXL+2vSyfg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 9 Aug 2019 at 13:09, Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 09/08/19 09:24, Naresh Kamboju wrote:
-> > selftests kvm all test cases need pre-required kernel config for the
-> > tests to get pass.
-> >
-> > CONFIG_KVM=y
-> >
-> > The KVM tests are skipped without these configs:
-> >
-> >         dev_fd = open(KVM_DEV_PATH, O_RDONLY);
-> >         if (dev_fd < 0)
-> >                 exit(KSFT_SKIP);
-> >
-> > Signed-off-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-> > Acked-by: Shuah Khan <skhan@linuxfoundation.org>
-> > ---
-> >  tools/testing/selftests/kvm/config | 1 +
-> >  1 file changed, 1 insertion(+)
-> >  create mode 100644 tools/testing/selftests/kvm/config
-> >
-> > diff --git a/tools/testing/selftests/kvm/config b/tools/testing/selftests/kvm/config
-> > new file mode 100644
-> > index 000000000000..14f90d8d6801
-> > --- /dev/null
-> > +++ b/tools/testing/selftests/kvm/config
-> > @@ -0,0 +1 @@
-> > +CONFIG_KVM=y
-> >
->
-> I think this is more complicated without a real benefit, so I'll merge v2.
+On 09/08/2019 09:33, Arnd Bergmann wrote:
+> On Fri, Aug 9, 2019 at 9:01 AM Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
+>>
+>> On 08/08/2019 23:22, Arnd Bergmann wrote:
+>>> As a preparation for future omap1 multiplatform support, stop
+>>> using mach/hardware.h and instead include the omap1-io.h
+>>> for low-level register access to MOD_CONF_CTRL_1.
+>>>
+>>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>>> ---
+>>
+>> Do you want me to apply it through me tree?
+> 
+> Sorry, I should have included you in the cover letter. I would
+> like to take the whole series through the soc tree, as there are
+> dependencies between the patches and this cannot be applied
+> by itself.
 
-With the recent changes to 'kselftest-merge' nested configs also get merged.
-Please refer this below commit for more details.
----
-commit 6d3db46c8e331908775b0135dc7d2e5920bf6d90
-Author: Dan Rue <dan.rue@linaro.org>
-Date:   Mon May 20 10:16:14 2019 -0500
+Ok,
 
-    kbuild: teach kselftest-merge to find nested config files
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
-    Current implementation of kselftest-merge only finds config files that
-    are one level deep using `$(srctree)/tools/testing/selftests/*/config`.
 
-    Often, config files are added in nested directories, and do not get
-    picked up by kselftest-merge.
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-    Use `find` to catch all config files under
-    `$(srctree)/tools/testing/selftests` instead.
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
-    Signed-off-by: Dan Rue <dan.rue@linaro.org>
-    Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-
-- Naresh
