@@ -2,51 +2,53 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EADEC31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:47:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB6EFC31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:47:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 322E5217F5
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:47:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93CC121874
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:47:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565358460;
-	bh=xX/SrCJ3apGXbDfEE6AWqJiExOw9IYv7bvYaVh6py3w=;
+	s=default; t=1565358462;
+	bh=p/4xwpgrZuT6q8fvaxHR7cf0bzeVGoZXrrFyuzABWEw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=etkpyaVw8QDuV3Y5BxKk90hZVQet+2Kt0EKOsv0pDunjyR+78X5GfOhaRdrP6+FW7
-	 aNL4BLXEOOnZgjFSz40cULYGe9i5koPjA4sqfQqrq+4VhBqNh457MqbVOGYQxegxuh
-	 B+37vzrUkXLy+ZyBhir1gO6qimXEZ7hDEFRztrhk=
+	b=Q1KaG+MOvDq1wWf7++o/e2e4iGyK3+ahHQPUd9MKc8jMu8iHpW9NMRxYqfmQtXPqh
+	 4y5PfdFzpxCOjPIpToX84XMVYsHdayXSAlbBymQ89aim4I0kbyOF/cxfIz7RWf8qDg
+	 OLNpoR8coLy3WpPqSVMoZlhANDqD+GixxUohojJQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407269AbfHINrj (ORCPT
+        id S2407278AbfHINrl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 09:47:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37460 "EHLO mail.kernel.org"
+        Fri, 9 Aug 2019 09:47:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407250AbfHINr0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 09:47:26 -0400
+        id S2436610AbfHINrf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 09:47:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79E312086D;
-        Fri,  9 Aug 2019 13:47:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2EE7A2171F;
+        Fri,  9 Aug 2019 13:47:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565358446;
-        bh=xX/SrCJ3apGXbDfEE6AWqJiExOw9IYv7bvYaVh6py3w=;
+        s=default; t=1565358453;
+        bh=p/4xwpgrZuT6q8fvaxHR7cf0bzeVGoZXrrFyuzABWEw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LsGQeZfESHTvjSnGwwGxQyQ8R4mIXkK9ONxzZWqH+6MxvQqaXeG8K6xJdPNn/OE0A
-         EEIdeGdfCA4XfLDVSQQnmBHbpVf7cePKfxgPa9xNxXDL+5jDFUDg7/95xYJPErE6Kc
-         bAN7RzraDN6e6J25Wf1P+N0qguKZPn1zQfTgGp00=
+        b=zaS0iCuMkpGpC6d3gZB0Ia5fhxGU47yE6BpRTaLMZqmdvNUfZp3zyalTylOOmpzto
+         lf7UIIjNVJnF5ztoU7fLt5G3qMR2F/aZPaVNhiXoIYvLlkXEcy4gEog/v7pAUNQ+yX
+         X87rJ3Dqe5CH35+Kt+c7Db8LU8n0jdi187IYyphw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sebastian Parschauer <s.parschauer@gmx.de>,
-        Jiri Kosina <jkosina@suse.cz>
-Subject: [PATCH 4.9 09/32] HID: Add quirk for HP X1200 PIXART OEM mouse
-Date:   Fri,  9 Aug 2019 15:45:12 +0200
-Message-Id: <20190809133923.247902230@linuxfoundation.org>
+        stable@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Ben Hutchings <ben@decadent.org.uk>
+Subject: [PATCH 4.9 29/32] x86/speculation: Prepare entry code for Spectre v1 swapgs mitigations
+Date:   Fri,  9 Aug 2019 15:45:32 +0200
+Message-Id: <20190809133923.865538682@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190809133922.945349906@linuxfoundation.org>
 References: <20190809133922.945349906@linuxfoundation.org>
@@ -59,46 +61,213 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sebastian Parschauer <s.parschauer@gmx.de>
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-commit 49869d2ea9eecc105a10724c1abf035151a3c4e2 upstream.
+commit 18ec54fdd6d18d92025af097cd042a75cf0ea24c upstream.
 
-The PixArt OEM mice are known for disconnecting every minute in
-runlevel 1 or 3 if they are not always polled. So add quirk
-ALWAYS_POLL for this one as well.
+Spectre v1 isn't only about array bounds checks.  It can affect any
+conditional checks.  The kernel entry code interrupt, exception, and NMI
+handlers all have conditional swapgs checks.  Those may be problematic in
+the context of Spectre v1, as kernel code can speculatively run with a user
+GS.
 
-Jonathan Teh (@jonathan-teh) reported and tested the quirk.
-Reference: https://github.com/sriemer/fix-linux-mouse/issues/15
+For example:
 
-Signed-off-by: Sebastian Parschauer <s.parschauer@gmx.de>
-CC: stable@vger.kernel.org
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+	if (coming from user space)
+		swapgs
+	mov %gs:<percpu_offset>, %reg
+	mov (%reg), %reg1
+
+When coming from user space, the CPU can speculatively skip the swapgs, and
+then do a speculative percpu load using the user GS value.  So the user can
+speculatively force a read of any kernel value.  If a gadget exists which
+uses the percpu value as an address in another load/store, then the
+contents of the kernel value may become visible via an L1 side channel
+attack.
+
+A similar attack exists when coming from kernel space.  The CPU can
+speculatively do the swapgs, causing the user GS to get used for the rest
+of the speculative window.
+
+The mitigation is similar to a traditional Spectre v1 mitigation, except:
+
+  a) index masking isn't possible; because the index (percpu offset)
+     isn't user-controlled; and
+
+  b) an lfence is needed in both the "from user" swapgs path and the
+     "from kernel" non-swapgs path (because of the two attacks described
+     above).
+
+The user entry swapgs paths already have SWITCH_TO_KERNEL_CR3, which has a
+CR3 write when PTI is enabled.  Since CR3 writes are serializing, the
+lfences can be skipped in those cases.
+
+On the other hand, the kernel entry swapgs paths don't depend on PTI.
+
+To avoid unnecessary lfences for the user entry case, create two separate
+features for alternative patching:
+
+  X86_FEATURE_FENCE_SWAPGS_USER
+  X86_FEATURE_FENCE_SWAPGS_KERNEL
+
+Use these features in entry code to patch in lfences where needed.
+
+The features aren't enabled yet, so there's no functional change.
+
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Dave Hansen <dave.hansen@intel.com>
+[bwh: Backported to 4.9:
+ - Assign the CPU feature bits from word 7
+ - Add FENCE_SWAPGS_KERNEL_ENTRY to NMI entry, since it does not
+   use paranoid_entry
+ - Include <asm/cpufeatures.h> in calling.h
+ - Adjust context]
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/hid/hid-ids.h           |    1 +
- drivers/hid/usbhid/hid-quirks.c |    1 +
- 2 files changed, 2 insertions(+)
+ arch/x86/entry/calling.h           |   18 ++++++++++++++++++
+ arch/x86/entry/entry_64.S          |   21 +++++++++++++++++++--
+ arch/x86/include/asm/cpufeatures.h |    3 ++-
+ 3 files changed, 39 insertions(+), 3 deletions(-)
 
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -509,6 +509,7 @@
- #define USB_PRODUCT_ID_HP_LOGITECH_OEM_USB_OPTICAL_MOUSE_0A4A	0x0a4a
- #define USB_PRODUCT_ID_HP_LOGITECH_OEM_USB_OPTICAL_MOUSE_0B4A	0x0b4a
- #define USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE		0x134a
-+#define USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE_0641	0x0641
+--- a/arch/x86/entry/calling.h
++++ b/arch/x86/entry/calling.h
+@@ -1,4 +1,5 @@
+ #include <linux/jump_label.h>
++#include <asm/cpufeatures.h>
  
- #define USB_VENDOR_ID_HUION		0x256c
- #define USB_DEVICE_ID_HUION_TABLET	0x006e
---- a/drivers/hid/usbhid/hid-quirks.c
-+++ b/drivers/hid/usbhid/hid-quirks.c
-@@ -98,6 +98,7 @@ static const struct hid_blacklist {
- 	{ USB_VENDOR_ID_HP, USB_PRODUCT_ID_HP_LOGITECH_OEM_USB_OPTICAL_MOUSE_0A4A, HID_QUIRK_ALWAYS_POLL },
- 	{ USB_VENDOR_ID_HP, USB_PRODUCT_ID_HP_LOGITECH_OEM_USB_OPTICAL_MOUSE_0B4A, HID_QUIRK_ALWAYS_POLL },
- 	{ USB_VENDOR_ID_HP, USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE, HID_QUIRK_ALWAYS_POLL },
-+	{ USB_VENDOR_ID_HP, USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE_0641, HID_QUIRK_ALWAYS_POLL },
- 	{ USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_C077, HID_QUIRK_ALWAYS_POLL },
- 	{ USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_KEYBOARD_G710_PLUS, HID_QUIRK_NOGET },
- 	{ USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_MOUSE_C01A, HID_QUIRK_ALWAYS_POLL },
+ /*
+ 
+@@ -201,6 +202,23 @@ For 32-bit we have the following convent
+ 	.byte 0xf1
+ 	.endm
+ 
++/*
++ * Mitigate Spectre v1 for conditional swapgs code paths.
++ *
++ * FENCE_SWAPGS_USER_ENTRY is used in the user entry swapgs code path, to
++ * prevent a speculative swapgs when coming from kernel space.
++ *
++ * FENCE_SWAPGS_KERNEL_ENTRY is used in the kernel entry non-swapgs code path,
++ * to prevent the swapgs from getting speculatively skipped when coming from
++ * user space.
++ */
++.macro FENCE_SWAPGS_USER_ENTRY
++	ALTERNATIVE "", "lfence", X86_FEATURE_FENCE_SWAPGS_USER
++.endm
++.macro FENCE_SWAPGS_KERNEL_ENTRY
++	ALTERNATIVE "", "lfence", X86_FEATURE_FENCE_SWAPGS_KERNEL
++.endm
++
+ #endif /* CONFIG_X86_64 */
+ 
+ /*
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -420,6 +420,7 @@ END(irq_entries_start)
+ 	 * tracking that we're in kernel mode.
+ 	 */
+ 	SWAPGS
++	FENCE_SWAPGS_USER_ENTRY
+ 	SWITCH_KERNEL_CR3
+ 
+ 	/*
+@@ -433,8 +434,10 @@ END(irq_entries_start)
+ 	TRACE_IRQS_OFF
+ 
+ 	CALL_enter_from_user_mode
+-
++	jmpq	2f
+ 1:
++	FENCE_SWAPGS_KERNEL_ENTRY
++2:
+ 	/*
+ 	 * Save previous stack pointer, optionally switch to interrupt stack.
+ 	 * irq_count is used to check if a CPU is already on an interrupt stack
+@@ -1004,6 +1007,13 @@ ENTRY(paranoid_entry)
+ 	movq	%rax, %cr3
+ 2:
+ #endif
++	/*
++	 * The above doesn't do an unconditional CR3 write, even in the PTI
++	 * case.  So do an lfence to prevent GS speculation, regardless of
++	 * whether PTI is enabled.
++	 */
++	FENCE_SWAPGS_KERNEL_ENTRY
++
+ 	ret
+ END(paranoid_entry)
+ 
+@@ -1065,6 +1075,7 @@ ENTRY(error_entry)
+ 	 * from user mode due to an IRET fault.
+ 	 */
+ 	SWAPGS
++	FENCE_SWAPGS_USER_ENTRY
+ 
+ .Lerror_entry_from_usermode_after_swapgs:
+ 	/*
+@@ -1076,6 +1087,8 @@ ENTRY(error_entry)
+ 	CALL_enter_from_user_mode
+ 	ret
+ 
++.Lerror_entry_done_lfence:
++	FENCE_SWAPGS_KERNEL_ENTRY
+ .Lerror_entry_done:
+ 	TRACE_IRQS_OFF
+ 	ret
+@@ -1094,7 +1107,7 @@ ENTRY(error_entry)
+ 	cmpq	%rax, RIP+8(%rsp)
+ 	je	.Lbstep_iret
+ 	cmpq	$.Lgs_change, RIP+8(%rsp)
+-	jne	.Lerror_entry_done
++	jne	.Lerror_entry_done_lfence
+ 
+ 	/*
+ 	 * hack: .Lgs_change can fail with user gsbase.  If this happens, fix up
+@@ -1102,6 +1115,7 @@ ENTRY(error_entry)
+ 	 * .Lgs_change's error handler with kernel gsbase.
+ 	 */
+ 	SWAPGS
++	FENCE_SWAPGS_USER_ENTRY
+ 	jmp .Lerror_entry_done
+ 
+ .Lbstep_iret:
+@@ -1115,6 +1129,7 @@ ENTRY(error_entry)
+ 	 * Switch to kernel gsbase:
+ 	 */
+ 	SWAPGS
++	FENCE_SWAPGS_USER_ENTRY
+ 
+ 	/*
+ 	 * Pretend that the exception came from user mode: set up pt_regs
+@@ -1211,6 +1226,7 @@ ENTRY(nmi)
+ 	 * to switch CR3 here.
+ 	 */
+ 	cld
++	FENCE_SWAPGS_USER_ENTRY
+ 	movq	%rsp, %rdx
+ 	movq	PER_CPU_VAR(cpu_current_top_of_stack), %rsp
+ 	pushq	5*8(%rdx)	/* pt_regs->ss */
+@@ -1499,6 +1515,7 @@ end_repeat_nmi:
+ 	movq	%rax, %cr3
+ 2:
+ #endif
++	FENCE_SWAPGS_KERNEL_ENTRY
+ 
+ 	/* paranoidentry do_nmi, 0; without TRACE_IRQS_OFF */
+ 	call	do_nmi
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -192,7 +192,8 @@
+ 
+ #define X86_FEATURE_HW_PSTATE	( 7*32+ 8) /* AMD HW-PState */
+ #define X86_FEATURE_PROC_FEEDBACK ( 7*32+ 9) /* AMD ProcFeedbackInterface */
+-
++#define X86_FEATURE_FENCE_SWAPGS_USER	( 7*32+10) /* "" LFENCE in user entry SWAPGS path */
++#define X86_FEATURE_FENCE_SWAPGS_KERNEL	( 7*32+11) /* "" LFENCE in kernel entry SWAPGS path */
+ #define X86_FEATURE_RETPOLINE	( 7*32+12) /* "" Generic Retpoline mitigation for Spectre variant 2 */
+ #define X86_FEATURE_RETPOLINE_AMD ( 7*32+13) /* "" AMD Retpoline mitigation for Spectre variant 2 */
+ 
 
 
