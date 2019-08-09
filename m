@@ -2,150 +2,176 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4F00C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C64C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:44:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B092214C6
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:43:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565354609;
-	bh=r0QJzeaj8zr29WVjE9HdJAZRj0A7iB3blal29rIll70=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mqCQItHGgHapDaXHA8vthYx0yTb9rKWuhafvytdJh3uzhn+bABa51HhR0cc+3l9yJ
-	 LLOS55sD7SYBCesU9U1nqbB9BelIOXyDt/cK2BFnz5R16RC2FlwAnzJWPrrZmcIUJx
-	 vu2Q99HESRuQtw7AAw7TN9E7rGR5CsStykB99NxI=
+	by mail.kernel.org (Postfix) with ESMTP id 14B6C214C6
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:44:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406860AbfHIMn2 (ORCPT
+        id S2406838AbfHIMoL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 08:43:28 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38074 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2406516AbfHIMn1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 08:43:27 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7472BAF10;
-        Fri,  9 Aug 2019 12:43:25 +0000 (UTC)
-Date:   Fri, 9 Aug 2019 14:43:24 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Miguel de Dios <migueldedios@google.com>,
-        Wei Wang <wvw@google.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Nicholas Piggin <npiggin@gmail.com>
-Subject: [RFC PATCH] mm: drop mark_page_access from the unmap path
-Message-ID: <20190809124305.GQ18351@dhcp22.suse.cz>
-References: <20190729074523.GC9330@dhcp22.suse.cz>
- <20190729082052.GA258885@google.com>
- <20190729083515.GD9330@dhcp22.suse.cz>
- <20190730121110.GA184615@google.com>
- <20190730123237.GR9330@dhcp22.suse.cz>
- <20190730123935.GB184615@google.com>
- <20190730125751.GS9330@dhcp22.suse.cz>
- <20190731054447.GB155569@google.com>
- <20190731072101.GX9330@dhcp22.suse.cz>
- <20190806105509.GA94582@google.com>
+        Fri, 9 Aug 2019 08:44:11 -0400
+Received: from m4a0039g.houston.softwaregrp.com ([15.124.2.85]:42062 "EHLO
+        m4a0039g.houston.softwaregrp.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2405948AbfHIMoL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 08:44:11 -0400
+Received: FROM m4a0039g.houston.softwaregrp.com (15.120.17.147) BY m4a0039g.houston.softwaregrp.com WITH ESMTP
+ FOR linux-kernel@vger.kernel.org;
+ Fri,  9 Aug 2019 12:43:59 +0000
+Received: from M4W0334.microfocus.com (2002:f78:1192::f78:1192) by
+ M4W0335.microfocus.com (2002:f78:1193::f78:1193) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Fri, 9 Aug 2019 12:41:44 +0000
+Received: from NAM03-DM3-obe.outbound.protection.outlook.com (15.124.8.14) by
+ M4W0334.microfocus.com (15.120.17.146) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10 via Frontend Transport; Fri, 9 Aug 2019 12:41:44 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SwKvO7/SIMg5MaGRVhPtNUCxOk+Mr7vfl0YhdHenyMTZqePo2w4tw0rTCEGBEabAA0zbzivhsZLx7P6oRnSSDZT8leoZ4WblstEMQ8Q6qJ+HvZj1THyrvvLAtyg3xsWFhxji5cial9NLjCz0lFefrqcowd7tJas9cR56vIu64cDUmlqJ55SyhumoCJYWrP2Xg185QK2/Q1hlDx3yv/ryDDCdmi7uqCduqcG447BAc/4HiIi1I7Ub+2KklXwx3RG8+p/rNu/kgUCaOsNfrNvCCEPTiPBXsPZlRFTmY+RD7jRAWQffLoqT9ORLVAyuDZazsXMLm+H4lSodD+zfqzC//A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sYcvOwjg8cUJpSFkjmv9VmGrPz3s6iUiLi6iwIx3sng=;
+ b=OSQGCh0d/VjaY8dtSzMtGuRwSUzENTn01UIFUYh90+eOyDGqXAPq53h5EgZuY4cuSOIF8ao+FuP/O14JPlF96J7D33ou039O7KH8SWxxTljxYxofcCCdAa+Api8sG5NHQKe7Sv+UaDb+mh77+zfhNroVm27THkQS/R/waakdVuDe1U2IjhQrEcDr8LZ8OgR+dohL+5eQ7vg9+zOCMbRfVVoLrOUutzzBc5k5QkfAXsJux4kWrFFW7S4M7hNEG4GWMjDvDSAFj+O3AeiA/PvOZdy1ba99eKs4RPztB3j4d75XDoUnqvuEfndxDfwPS5Q2Gxo9OZUEmjN1vqXzKSYymg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+Received: from CH2PR18MB3349.namprd18.prod.outlook.com (52.132.246.91) by
+ CH2PR18MB3094.namprd18.prod.outlook.com (52.132.247.150) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.18; Fri, 9 Aug 2019 12:41:43 +0000
+Received: from CH2PR18MB3349.namprd18.prod.outlook.com
+ ([fe80::8818:7a86:93d7:561a]) by CH2PR18MB3349.namprd18.prod.outlook.com
+ ([fe80::8818:7a86:93d7:561a%6]) with mapi id 15.20.2157.015; Fri, 9 Aug 2019
+ 12:41:42 +0000
+From:   Martin Wilck <Martin.Wilck@suse.com>
+To:     "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: 5.3-rc3: Frozen graphics with kcompactd migrating i915 pages
+Thread-Topic: 5.3-rc3: Frozen graphics with kcompactd migrating i915 pages
+Thread-Index: AQHVTq/MWvioSNESukKKSJFs3b9mpA==
+Date:   Fri, 9 Aug 2019 12:41:42 +0000
+Message-ID: <ad70d1985e8d0227dc55fedeec769de166e63ae0.camel@suse.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Martin.Wilck@suse.com; 
+x-originating-ip: [94.218.227.174]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5ac63d25-9da2-4e0a-7dbb-08d71cc6eeaa
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:CH2PR18MB3094;
+x-ms-traffictypediagnostic: CH2PR18MB3094:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <CH2PR18MB3094FF0254A0470A4A0BC64AFCD60@CH2PR18MB3094.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 01244308DF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(346002)(376002)(366004)(136003)(39860400002)(199004)(189003)(256004)(14444005)(6116002)(4326008)(3846002)(86362001)(66066001)(2501003)(478600001)(8936002)(966005)(71190400001)(99286004)(71200400001)(6512007)(6306002)(14454004)(316002)(25786009)(6486002)(6506007)(7736002)(6436002)(5640700003)(26005)(2906002)(102836004)(66556008)(53936002)(305945005)(8676002)(64756008)(66476007)(118296001)(91956017)(66946007)(76116006)(5660300002)(36756003)(486006)(6916009)(81166006)(2351001)(476003)(2616005)(81156014)(66446008)(186003)(10126625002);DIR:OUT;SFP:1102;SCL:1;SRVR:CH2PR18MB3094;H:CH2PR18MB3349.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: suse.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: HFXsEq3Rxuc/glnwt5TG6HqHdX/XL7+TP4+LH8gzL2UwuYRb0vwSyQGGZqEu9eJGO+yvqzyZlGLeVZU1AczFhR75Sg5/Qsi0u9yF9d++aPILketMg4prle/JQNpFv95fnK/8gYOAu2LgagzEbdJEUeb3VH8EenVPAhrQPCs7tfu8bIJoNGZKieFcuZIvcht1xejyNuxmU5UvFKQEObXSdKCrwsnDRmErbqi2hVSomsF5hNQNgWlr8CdT1WRTBp/9/Dz43G3zsdL3uxTRrpyp2ZYkYCLBF/05W1R9+hqhqyoO/YSyoc0+RZoodIjgklYNyPItHuzUaSRJxtB5dtWaQ5Fx6hvP4TMuf03FTRvkYUPwUU1gh9IIqgSOVcdq7nDpF0QL9Ts1E/DKHUd43GDIQywaUYOiYyb3V71LCMCkjiU=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <6362FECD24F3944981FF0F6601AC15D0@namprd18.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190806105509.GA94582@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5ac63d25-9da2-4e0a-7dbb-08d71cc6eeaa
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Aug 2019 12:41:42.8418
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 856b813c-16e5-49a5-85ec-6f081e13b527
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: cSdgwa7fwWJmyN6jTOkt5LuczLqzzg2g6WCfc89fC1cUMBK82TB3FGVy//tQjaIGOGkWb/8BDL2riZJ0EuN6Jw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR18MB3094
+X-OriginatorOrg: suse.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 06-08-19 19:55:09, Minchan Kim wrote:
-> On Wed, Jul 31, 2019 at 09:21:01AM +0200, Michal Hocko wrote:
-> > On Wed 31-07-19 14:44:47, Minchan Kim wrote:
-[...]
-> > > As Nick mentioned in the description, without mark_page_accessed in
-> > > zapping part, repeated mmap + touch + munmap never acticated the page
-> > > while several read(2) calls easily promote it.
-> > 
-> > And is this really a problem? If we refault the same page then the
-> > refaults detection should catch it no? In other words is the above still
-> > a problem these days?
-> 
-> I admit we have been not fair for them because read(2) syscall pages are
-> easily promoted regardless of zap timing unlike mmap-based pages.
-> 
-> However, if we remove the mark_page_accessed in the zap_pte_range, it
-> would make them more unfair in that read(2)-accessed pages are easily
-> promoted while mmap-based page should go through refault to be promoted.
-
-I have really hard time to follow why an unmap special handling is
-making the overall state more reasonable.
-
-Anyway, let me throw the patch for further discussion. Nick, Mel,
-Johannes what do you think?
-
-From 3821c2e66347a2141358cabdc6224d9990276fec Mon Sep 17 00:00:00 2001
-From: Michal Hocko <mhocko@suse.com>
-Date: Fri, 9 Aug 2019 14:29:59 +0200
-Subject: [PATCH] mm: drop mark_page_access from the unmap path
-
-Minchan has noticed that mark_page_access can take quite some time
-during unmap:
-: I had a time to benchmark it via adding some trace_printk hooks between
-: pte_offset_map_lock and pte_unmap_unlock in zap_pte_range. The testing
-: device is 2018 premium mobile device.
-:
-: I can get 2ms delay rather easily to release 2M(ie, 512 pages) when the
-: task runs on little core even though it doesn't have any IPI and LRU
-: lock contention. It's already too heavy.
-:
-: If I remove activate_page, 35-40% overhead of zap_pte_range is gone
-: so most of overhead(about 0.7ms) comes from activate_page via
-: mark_page_accessed. Thus, if there are LRU contention, that 0.7ms could
-: accumulate up to several ms.
-
-bf3f3bc5e734 ("mm: don't mark_page_accessed in fault path") has replaced
-SetPageReferenced by mark_page_accessed arguing that the former is not
-sufficient when mark_page_accessed is removed from the fault path
-because it doesn't promote page to the active list. It is true that a
-page that is mapped by a single process might not get promoted even when
-referenced if the reclaim checks it after the unmap but does that matter
-that much? Can we cosider the page hot if there are no other
-users? Moreover we do have workingset detection in place since then and
-so a next refault would activate the page if it was really hot one.
-
-Drop the expensive mark_page_accessed and restore SetPageReferenced to
-transfer the reference information into the struct page for now to
-reduce the unmap overhead. Should we find workloads that noticeably
-depend on this behavior we should find a way to make mark_page_accessed
-less expensive.
-
-Signed-off-by: Michal Hocko <mhocko@suse.com>
----
- mm/memory.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/mm/memory.c b/mm/memory.c
-index e2bb51b6242e..ced521df8ee7 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -1053,7 +1053,7 @@ static unsigned long zap_pte_range(struct mmu_gather *tlb,
- 				}
- 				if (pte_young(ptent) &&
- 				    likely(!(vma->vm_flags & VM_SEQ_READ)))
--					mark_page_accessed(page);
-+					SetPageReferenced(page);
- 			}
- 			rss[mm_counter(page)]--;
- 			page_remove_rmap(page, false);
--- 
-2.20.1
-
--- 
-Michal Hocko
-SUSE Labs
+VGhpcyBoYXBwZW5lZCB0byBtZSB0b2RheSwgcnVubmluZyBrZXJuZWwgNS4zLjAtcmMzLTEuZzU3
+MTg2M2ItZGVmYXVsdA0KKDUuMy1yYzMgd2l0aCBqdXN0IGEgZmV3IHBhdGNoZXMgb24gdG9wKSwg
+YWZ0ZXIgc3RhcnRpbmcgYSBLVk0gdmlydHVhbA0KbWFjaGluZS4gVGhlIFggc2NyZWVuIHdhcyBm
+cm96ZW4uIFJlbW90ZSBsb2dpbiB2aWEgc3NoIHdhcyBzdGlsbA0KcG9zc2libGUsIHRodXMgSSB3
+YXMgYWJsZSB0byByZXRyaWV2ZSBiYXNpYyBsb2dzLg0KDQpzeXNycS13IHNob3dlZCB0d28gYmxv
+Y2tlZCBwcm9jZXNzZXMgKGtjb21wYWN0ZDAgYW5kIEtWTSkuIEFmdGVyIGENCm1pbnV0ZSwgdGhl
+IHNhbWUgdHdvIHByb2Nlc3NlcyB3ZXJlIHN0aWxsIGJsb2NrZWQuIEtWTSBzZWVtcyB0byB0cnkg
+dG8NCmFjcXVpcmUgYSBsb2NrIHRoYXQga2NvbXBhY3RkIGlzIGhvbGRpbmcuIGtjb21wYWN0ZCBp
+cyB3YWl0aW5nIGZvciBJTw0KdG8gY29tcGxldGUgb24gcGFnZXMgb3duZWQgYnkgdGhlIGk5MTUg
+ZHJpdmVyLg0KDQprY29tcGFjdGQgc3RhY2s6DQoNCkF1ZyAwOSAxMjoxMjo0OCBhcG9sbG9uLnN1
+c2UuZGUga2VybmVsOiBzeXNycTogU2hvdyBCbG9ja2VkIFN0YXRlDQpBdWcgMDkgMTI6MTI6NDgg
+YXBvbGxvbi5zdXNlLmRlDQprZXJuZWw6ICAgdGFzayAgICAgICAgICAgICAgICAgICAgICAgIFBD
+IHN0YWNrICAgcGlkIGZhdGhlcg0KQXVnIDA5IDEyOjEyOjQ4IGFwb2xsb24uc3VzZS5kZSBrZXJu
+ZWw6DQprY29tcGFjdGQwICAgICAgRCAgICAwICAgIDQzICAgICAgMiAweDgwMDA0MDAwDQpBdWcg
+MDkgMTI6MTI6NDggYXBvbGxvbi5zdXNlLmRlIGtlcm5lbDogQ2FsbCBUcmFjZToNCkF1ZyAwOSAx
+MjoxMjo0OCBhcG9sbG9uLnN1c2UuZGUga2VybmVsOiAgPyBfX3NjaGVkdWxlKzB4MmFmLzB4NmEw
+DQpBdWcgMDkgMTI6MTI6NDggYXBvbGxvbi5zdXNlLmRlIGtlcm5lbDogIHNjaGVkdWxlKzB4MzMv
+MHg5MA0KQXVnIDA5IDEyOjEyOjQ4IGFwb2xsb24uc3VzZS5kZSBrZXJuZWw6ICBpb19zY2hlZHVs
+ZSsweDEyLzB4NDANCkF1ZyAwOSAxMjoxMjo0OCBhcG9sbG9uLnN1c2UuZGUga2VybmVsOiAgX19s
+b2NrX3BhZ2UrMHgxMjMvMHgyMDANCkF1ZyAwOSAxMjoxMjo0OCBhcG9sbG9uLnN1c2UuZGUga2Vy
+bmVsOiAgPw0KZ2VuOF9wcGd0dF9jbGVhcl9wZHArMHhjMC8weDE0MCBbaTkxNV0NCkF1ZyAwOSAx
+MjoxMjo0OCBhcG9sbG9uLnN1c2UuZGUga2VybmVsOiAgPw0KZmlsZV9mZGF0YXdhaXRfcmFuZ2Ur
+MHgyMC8weDIwDQpBdWcgMDkgMTI6MTI6NDggYXBvbGxvbi5zdXNlLmRlIGtlcm5lbDogIHNldF9w
+YWdlX2RpcnR5X2xvY2srMHg0OS8weDUwDQpBdWcgMDkgMTI6MTI6NDggYXBvbGxvbi5zdXNlLmRl
+DQprZXJuZWw6ICBpOTE1X2dlbV91c2VycHRyX3B1dF9wYWdlcysweDEzZi8weDFjMCBbaTkxNV0N
+CkF1ZyAwOSAxMjoxMjo0OCBhcG9sbG9uLnN1c2UuZGUNCmtlcm5lbDogIF9faTkxNV9nZW1fb2Jq
+ZWN0X3B1dF9wYWdlcysweDVlLzB4YTAgW2k5MTVdDQpBdWcgMDkgMTI6MTI6NDggYXBvbGxvbi5z
+dXNlLmRlDQprZXJuZWw6ICB1c2VycHRyX21uX2ludmFsaWRhdGVfcmFuZ2Vfc3RhcnQrMHgxZmYv
+MHgyMjAgW2k5MTVdDQpBdWcgMDkgMTI6MTI6NDggYXBvbGxvbi5zdXNlLmRlDQprZXJuZWw6ICBf
+X21tdV9ub3RpZmllcl9pbnZhbGlkYXRlX3JhbmdlX3N0YXJ0KzB4NTcvMHhhMA0KQXVnIDA5IDEy
+OjEyOjQ4IGFwb2xsb24uc3VzZS5kZSBrZXJuZWw6ICB0cnlfdG9fdW5tYXBfb25lKzB4YTBiLzB4
+YWUwDQpBdWcgMDkgMTI6MTI6NDggYXBvbGxvbi5zdXNlLmRlIGtlcm5lbDogID8gX19tb2RfbHJ1
+dmVjX3N0YXRlKzB4M2YvMHhmMA0KQXVnIDA5IDEyOjEyOjQ4IGFwb2xsb24uc3VzZS5kZSBrZXJu
+ZWw6ICBybWFwX3dhbGtfZmlsZSsweGYyLzB4MjUwDQpBdWcgMDkgMTI6MTI6NDggYXBvbGxvbi5z
+dXNlLmRlIGtlcm5lbDogIHRyeV90b191bm1hcCsweGE2LzB4ZTANCkF1ZyAwOSAxMjoxMjo0OCBh
+cG9sbG9uLnN1c2UuZGUga2VybmVsOiAgPyBwYWdlX3JlbW92ZV9ybWFwKzB4MjkwLzB4MjkwDQpB
+dWcgMDkgMTI6MTI6NDggYXBvbGxvbi5zdXNlLmRlIGtlcm5lbDogID8gcGFnZV9ub3RfbWFwcGVk
+KzB4MjAvMHgyMA0KQXVnIDA5IDEyOjEyOjQ4IGFwb2xsb24uc3VzZS5kZSBrZXJuZWw6ICA/IHBh
+Z2VfZ2V0X2Fub25fdm1hKzB4ODAvMHg4MA0KQXVnIDA5IDEyOjEyOjQ4IGFwb2xsb24uc3VzZS5k
+ZSBrZXJuZWw6ICBtaWdyYXRlX3BhZ2VzKzB4OGNkLzB4YmMwDQpBdWcgMDkgMTI6MTI6NDggYXBv
+bGxvbi5zdXNlLmRlIGtlcm5lbDogID8NCmZhc3RfaXNvbGF0ZV9mcmVlcGFnZXMrMHg2YjAvMHg2
+YjANCkF1ZyAwOSAxMjoxMjo0OCBhcG9sbG9uLnN1c2UuZGUga2VybmVsOiAgPyBtb3ZlX2ZyZWVs
+aXN0X3RhaWwrMHhiMC8weGIwDQpBdWcgMDkgMTI6MTI6NDggYXBvbGxvbi5zdXNlLmRlIGtlcm5l
+bDogIGNvbXBhY3Rfem9uZSsweDY2OS8weGM4MA0KQXVnIDA5IDEyOjEyOjQ4IGFwb2xsb24uc3Vz
+ZS5kZSBrZXJuZWw6ICA/DQplbnRyeV9TWVNDQUxMXzY0X2FmdGVyX2h3ZnJhbWUrMHhiOC8weGJl
+DQpBdWcgMDkgMTI6MTI6NDggYXBvbGxvbi5zdXNlLmRlIGtlcm5lbDogIGtjb21wYWN0ZF9kb193
+b3JrKzB4MTIwLzB4MjkwDQoNCg0KS1ZNIHN0YWNrOg0KDQpBdWcgMDkgMTI6MTI6NDggYXBvbGxv
+bi5zdXNlLmRlIGtlcm5lbDogQ1BVIDAvS1ZNICAgICAgIEQgICAgMA0KMjUxODkgICAgICAxIDB4
+MDAwMDAzMjANCkF1ZyAwOSAxMjoxMjo0OCBhcG9sbG9uLnN1c2UuZGUga2VybmVsOiBDYWxsIFRy
+YWNlOg0KQXVnIDA5IDEyOjEyOjQ4IGFwb2xsb24uc3VzZS5kZSBrZXJuZWw6ICA/IF9fc2NoZWR1
+bGUrMHgyYWYvMHg2YTANCkF1ZyAwOSAxMjoxMjo0OCBhcG9sbG9uLnN1c2UuZGUga2VybmVsOiAg
+c2NoZWR1bGUrMHgzMy8weDkwDQpBdWcgMDkgMTI6MTI6NDggYXBvbGxvbi5zdXNlLmRlDQprZXJu
+ZWw6ICBzY2hlZHVsZV9wcmVlbXB0X2Rpc2FibGVkKzB4YS8weDEwDQpBdWcgMDkgMTI6MTI6NDgg
+YXBvbGxvbi5zdXNlLmRlDQprZXJuZWw6ICBfX211dGV4X2xvY2suaXNyYS4wKzB4MTcyLzB4NGQw
+DQpBdWcgMDkgMTI6MTI6NDggYXBvbGxvbi5zdXNlLmRlDQprZXJuZWw6ICB1c2VycHRyX21uX2lu
+dmFsaWRhdGVfcmFuZ2Vfc3RhcnQrMHgxYmYvMHgyMjAgW2k5MTVdDQpBdWcgMDkgMTI6MTI6NDgg
+YXBvbGxvbi5zdXNlLmRlDQprZXJuZWw6ICBfX21tdV9ub3RpZmllcl9pbnZhbGlkYXRlX3Jhbmdl
+X3N0YXJ0KzB4NTcvMHhhMA0KQXVnIDA5IDEyOjEyOjQ4IGFwb2xsb24uc3VzZS5kZSBrZXJuZWw6
+ICB0cnlfdG9fdW5tYXBfb25lKzB4YTBiLzB4YWUwDQpBdWcgMDkgMTI6MTI6NDggYXBvbGxvbi5z
+dXNlLmRlIGtlcm5lbDogIHJtYXBfd2Fsa19maWxlKzB4ZjIvMHgyNTANCkF1ZyAwOSAxMjoxMjo0
+OCBhcG9sbG9uLnN1c2UuZGUga2VybmVsOiAgdHJ5X3RvX3VubWFwKzB4YTYvMHhlMA0KQXVnIDA5
+IDEyOjEyOjQ4IGFwb2xsb24uc3VzZS5kZSBrZXJuZWw6ICA/IHBhZ2VfcmVtb3ZlX3JtYXArMHgy
+OTAvMHgyOTANCkF1ZyAwOSAxMjoxMjo0OCBhcG9sbG9uLnN1c2UuZGUga2VybmVsOiAgPyBwYWdl
+X25vdF9tYXBwZWQrMHgyMC8weDIwDQpBdWcgMDkgMTI6MTI6NDggYXBvbGxvbi5zdXNlLmRlIGtl
+cm5lbDogID8gcGFnZV9nZXRfYW5vbl92bWErMHg4MC8weDgwDQpBdWcgMDkgMTI6MTI6NDggYXBv
+bGxvbi5zdXNlLmRlIGtlcm5lbDogIG1pZ3JhdGVfcGFnZXMrMHg4Y2QvMHhiYzANCkF1ZyAwOSAx
+MjoxMjo0OCBhcG9sbG9uLnN1c2UuZGUga2VybmVsOiAgPw0KZmFzdF9pc29sYXRlX2ZyZWVwYWdl
+cysweDZiMC8weDZiMA0KQXVnIDA5IDEyOjEyOjQ4IGFwb2xsb24uc3VzZS5kZSBrZXJuZWw6ICA/
+IG1vdmVfZnJlZWxpc3RfdGFpbCsweGIwLzB4YjANCkF1ZyAwOSAxMjoxMjo0OCBhcG9sbG9uLnN1
+c2UuZGUga2VybmVsOiAgY29tcGFjdF96b25lKzB4NjY5LzB4YzgwDQpBdWcgMDkgMTI6MTI6NDgg
+YXBvbGxvbi5zdXNlLmRlIGtlcm5lbDogIGNvbXBhY3Rfem9uZV9vcmRlcisweGM2LzB4ZjANCkF1
+ZyAwOSAxMjoxMjo0OCBhcG9sbG9uLnN1c2UuZGUNCmtlcm5lbDogIHRyeV90b19jb21wYWN0X3Bh
+Z2VzKzB4Y2MvMHgyYTANCkF1ZyAwOSAxMjoxMjo0OCBhcG9sbG9uLnN1c2UuZGUNCmtlcm5lbDog
+IF9fYWxsb2NfcGFnZXNfZGlyZWN0X2NvbXBhY3QrMHg3Yy8weDE1MA0KQXVnIDA5IDEyOjEyOjQ4
+IGFwb2xsb24uc3VzZS5kZQ0Ka2VybmVsOiAgX19hbGxvY19wYWdlc19zbG93cGF0aCsweDFlZS8w
+eGQwMA0KQXVnIDA5IDEyOjEyOjQ4IGFwb2xsb24uc3VzZS5kZSBrZXJuZWw6ICA/IHZteF92Y3B1
+X2xvYWQrMHgxMDAvMHgxMjANCltrdm1faW50ZWxdDQoNCkZ1bGwgbG9ncyBjYW4gYmUgZm91bmQg
+dW5kZXIgaHR0cHM6Ly9wYXN0ZWJpbi5jb20vS0o2dGNjajQNCkkgaGF2ZW4ndCB5ZXQgdHJpZWQg
+aWYgdGhpcyBpcyByZXByb2R1Y2libGUuDQoNClJlZ2FyZHMNCk1hcnRpbg0KDQo=
