@@ -2,168 +2,135 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D931CC31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:22:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7FEFC31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB36620C01
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:22:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YedaAfoX"
+	by mail.kernel.org (Postfix) with ESMTP id 8E92220C01
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:26:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436717AbfHISWe (ORCPT
+        id S2407075AbfHIS0V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 14:22:34 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:32840 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407519AbfHISWc (ORCPT
+        Fri, 9 Aug 2019 14:26:21 -0400
+Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:56199 "EHLO
+        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726377AbfHIS0V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 14:22:32 -0400
-Received: by mail-lf1-f65.google.com with SMTP id x3so70272717lfc.0;
-        Fri, 09 Aug 2019 11:22:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=d17w+XfuyIIJSGQTvN29rXadrWu0vpB5brrtMkm6CsM=;
-        b=YedaAfoXaWKKR4xheV/cw+fePm0iEaiWHKnkr6AeeS0ea6v0cPmihNn19xVHKDdb+/
-         rJxupantlpiPHL3QmOZOHpvMcH3/H7Dzmdv+C8ESKzwqryJFYJboUdF/C5H3t+3Wwyc9
-         C/ddZfv2X9WkowWYehUVQqwofdG4rNr91APrD4tXCGoSjznplsxwP16iMa/iYnq/HDmI
-         bukG7ojiP+IbR2Iemuw9Amxp4IEDvLy9CKOrH2yXOIBskhDFpv09IW9ce+cXsWRufPUE
-         VtQtH6VXB6PfBix3tOG5rmj96V1DPHKuM4M5PiNUkLVgNpyfHYEUfQVQbEzu2a3cr+1l
-         2zZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=d17w+XfuyIIJSGQTvN29rXadrWu0vpB5brrtMkm6CsM=;
-        b=twn5syXN5N1o/4fV4qlIzSirHJ0VwW9WLcoyJiH1p4j+1G8UeZt5UWzDwtZBtUX95j
-         qJIjMLdogzw7W91QKVlubX3buQbudzJcy3SS92zSdUMqLvfz0+0+YVcG1lgDejF09I4W
-         dlxfatdKUHO16Q/2Yrwt1AnOz1s4duYhSwu5vGbibmomH5r9pRzqS0D2NRsp0P/eKYXp
-         2FxwID7D7+OoKQhYG4vjg0FOs5kbwJqHJEnw0hUSgxwwZax6BFmlr7IcWZVYeFhlB5IO
-         j370xWCrX/RxuMNYty7g6LcLX9UY8m9Fcn1iAnuK/MV+QRhHRBrtwsqYO7wJFpzDgA1Z
-         LPqw==
-X-Gm-Message-State: APjAAAVXmlZrjbogC/qES46XxZXSHmsB6KOKeHyTBhewJA7u3DS7ObkS
-        dY4oROoAIJXsqDpvU1mfDIYwXeMc
-X-Google-Smtp-Source: APXvYqwD55t6TduNNq/nj1xhhTb8oJCD1U9R3vSd8pnx4NuWlAr61iSdw9qIjaKQSJh4jGRioOIDZA==
-X-Received: by 2002:ac2:5468:: with SMTP id e8mr13255013lfn.2.1565374948181;
-        Fri, 09 Aug 2019 11:22:28 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.34.218])
-        by smtp.googlemail.com with ESMTPSA id d3sm585122ljj.55.2019.08.09.11.22.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 09 Aug 2019 11:22:27 -0700 (PDT)
-Subject: Re: [PATCH v8 19/21] soc/tegra: pmc: Configure deep sleep control
- settings
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
-References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
- <1565308020-31952-20-git-send-email-skomatineni@nvidia.com>
- <57ed54cd-bf57-cab1-eb63-8548761640de@gmail.com>
- <275f3685-bc53-38ff-c778-cf2ea588e5a5@nvidia.com>
- <60ea494a-9960-b7fc-3afb-8c17feec9fda@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <5b585870-f622-0727-8c4d-78cd48623edd@gmail.com>
-Date:   Fri, 9 Aug 2019 21:22:26 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 9 Aug 2019 14:26:21 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R491e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07417;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0TZ1vktP_1565375173;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TZ1vktP_1565375173)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sat, 10 Aug 2019 02:26:17 +0800
+Subject: Re: [RESEND PATCH 1/2 -mm] mm: account lazy free pages separately
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     kirill.shutemov@linux.intel.com, hannes@cmpxchg.org,
+        vbabka@suse.cz, rientjes@google.com, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <1565308665-24747-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190809083216.GM18351@dhcp22.suse.cz>
+ <1a3c4185-c7ab-8d6f-8191-77dce02025a7@linux.alibaba.com>
+ <20190809180238.GS18351@dhcp22.suse.cz>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <79c90f6b-fcac-02e1-015a-0eaa4eafdf7d@linux.alibaba.com>
+Date:   Fri, 9 Aug 2019 11:26:13 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-In-Reply-To: <60ea494a-9960-b7fc-3afb-8c17feec9fda@nvidia.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190809180238.GS18351@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-09.08.2019 20:24, Sowjanya Komatineni пишет:
-> 
-> On 8/9/19 9:23 AM, Sowjanya Komatineni wrote:
->>
->> On 8/9/19 6:23 AM, Dmitry Osipenko wrote:
->>> 09.08.2019 2:46, Sowjanya Komatineni пишет:
->>>> Tegra210 and prior Tegra chips have deep sleep entry and wakeup related
->>>> timings which are platform specific that should be configured before
->>>> entering into deep sleep.
->>>>
->>>> Below are the timing specific configurations for deep sleep entry and
->>>> wakeup.
->>>> - Core rail power-on stabilization timer
->>>> - OSC clock stabilization timer after SOC rail power is stabilized.
->>>> - Core power off time is the minimum wake delay to keep the system
->>>>    in deep sleep state irrespective of any quick wake event.
->>>>
->>>> These values depends on the discharge time of regulators and turn OFF
->>>> time of the PMIC to allow the complete system to finish entering into
->>>> deep sleep state.
->>>>
->>>> These values vary based on the platform design and are specified
->>>> through the device tree.
->>>>
->>>> This patch has implementation to configure these timings which are must
->>>> to have for proper deep sleep and wakeup operations.
->>>>
->>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>> ---
->>>>   drivers/soc/tegra/pmc.c | 13 ++++++++++++-
->>>>   1 file changed, 12 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
->>>> index e013ada7e4e9..9a78d8417367 100644
->>>> --- a/drivers/soc/tegra/pmc.c
->>>> +++ b/drivers/soc/tegra/pmc.c
->>>> @@ -88,6 +88,8 @@
->>>>     #define PMC_CPUPWRGOOD_TIMER        0xc8
->>>>   #define PMC_CPUPWROFF_TIMER        0xcc
->>>> +#define PMC_COREPWRGOOD_TIMER        0x3c
->>>> +#define PMC_COREPWROFF_TIMER        0xe0
->>>>     #define PMC_PWR_DET_VALUE        0xe4
->>>>   @@ -2277,7 +2279,7 @@ static const struct tegra_pmc_regs tegra20_pmc_regs = {
->>>>     static void tegra20_pmc_init(struct tegra_pmc *pmc)
->>>>   {
->>>> -    u32 value;
->>>> +    u32 value, osc, pmu, off;
->>>>         /* Always enable CPU power request */
->>>>       value = tegra_pmc_readl(pmc, PMC_CNTRL);
->>>> @@ -2303,6 +2305,15 @@ static void tegra20_pmc_init(struct tegra_pmc *pmc)
->>>>       value = tegra_pmc_readl(pmc, PMC_CNTRL);
->>>>       value |= PMC_CNTRL_SYSCLK_OE;
->>>>       tegra_pmc_writel(pmc, value, PMC_CNTRL);
->>>> +
->>>> +    osc = DIV_ROUND_UP(pmc->core_osc_time * 8192, 1000000);
->>>> +    pmu = DIV_ROUND_UP(pmc->core_pmu_time * 32768, 1000000);
->>>> +    off = DIV_ROUND_UP(pmc->core_off_time * 32768, 1000000);
->>>> +    if (osc && pmu)
->>>> +        tegra_pmc_writel(pmc, ((osc << 8) & 0xff00) | (pmu & 0xff),
->>>> +                 PMC_COREPWRGOOD_TIMER);
->>>> +    if (off)
->>>> +        tegra_pmc_writel(pmc, off, PMC_COREPWROFF_TIMER);
->>> The osc/pmu/off values are undefined if they are not defined in device-tree. I suppose this
->>> need to be corrected in tegra_pmc_parse_dt() if the values really matter even if LP0 suspend
->>> isn't supported in device-tree.
->>>
->>> And I'm also not sure what's wrong with setting 0 for the timers.
->>>
->> These settings are for SC7 only and will not have any impact in normal state.
-> POR value for these timing registers is not 0 and has default timings based on chip design
-> and on top of that based on platform HW components charge/discharge timings there's a need
-> to increase these timings so support for programming these thru DT is needed and these
-> values have effect only in LP0.
 
-If it is legal to omit the timings in DT, then tegra_pmc_parse_dt() need to be corrected if
-there is assumption of 0 meaning that values are undefined in DT.
+
+On 8/9/19 11:02 AM, Michal Hocko wrote:
+> On Fri 09-08-19 09:19:13, Yang Shi wrote:
+>>
+>> On 8/9/19 1:32 AM, Michal Hocko wrote:
+>>> On Fri 09-08-19 07:57:44, Yang Shi wrote:
+>>>> When doing partial unmap to THP, the pages in the affected range would
+>>>> be considered to be reclaimable when memory pressure comes in.  And,
+>>>> such pages would be put on deferred split queue and get minus from the
+>>>> memory statistics (i.e. /proc/meminfo).
+>>>>
+>>>> For example, when doing THP split test, /proc/meminfo would show:
+>>>>
+>>>> Before put on lazy free list:
+>>>> MemTotal:       45288336 kB
+>>>> MemFree:        43281376 kB
+>>>> MemAvailable:   43254048 kB
+>>>> ...
+>>>> Active(anon):    1096296 kB
+>>>> Inactive(anon):     8372 kB
+>>>> ...
+>>>> AnonPages:       1096264 kB
+>>>> ...
+>>>> AnonHugePages:   1056768 kB
+>>>>
+>>>> After put on lazy free list:
+>>>> MemTotal:       45288336 kB
+>>>> MemFree:        43282612 kB
+>>>> MemAvailable:   43255284 kB
+>>>> ...
+>>>> Active(anon):    1094228 kB
+>>>> Inactive(anon):     8372 kB
+>>>> ...
+>>>> AnonPages:         49668 kB
+>>>> ...
+>>>> AnonHugePages:     10240 kB
+>>>>
+>>>> The THPs confusingly look disappeared although they are still on LRU if
+>>>> you are not familair the tricks done by kernel.
+>>> Is this a fallout of the recent deferred freeing work?
+>> This series follows up the discussion happened when reviewing "Make deferred
+>> split shrinker memcg aware".
+> OK, so it is a pre-existing problem. Thanks!
+>
+>> David Rientjes suggested deferred split THP should be accounted into
+>> available memory since they would be shrunk when memory pressure comes in,
+>> just like MADV_FREE pages. For the discussion, please refer to:
+>> https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg2010115.html
+> Thanks for the reference.
+>
+>>>> Accounted the lazy free pages to NR_LAZYFREE, and show them in meminfo
+>>>> and other places.  With the change the /proc/meminfo would look like:
+>>>> Before put on lazy free list:
+>>> The name is really confusing because I have thought of MADV_FREE immediately.
+>> Yes, I agree. We may use a more specific name, i.e. DeferredSplitTHP.
+>>
+>>>> +LazyFreePages: Cleanly freeable pages under memory pressure (i.e. deferred
+>>>> +               split THP).
+>>> What does that mean actually? I have hard time imagine what cleanly
+>>> freeable pages mean.
+>> Like deferred split THP and MADV_FREE pages, they could be reclaimed during
+>> memory pressure.
+>>
+>> If you just go with "DeferredSplitTHP", these ambiguity would go away.
+> I have to study the code some more but is there any reason why those
+> pages are not accounted as proper THPs anymore? Sure they are partially
+> unmaped but they are still THPs so why cannot we keep them accounted
+> like that. Having a new counter to reflect that sounds like papering
+> over the problem to me. But as I've said I might be missing something
+> important here.
+
+I think we could keep those pages accounted for NR_ANON_THPS since they 
+are still THP although they are unmapped as you mentioned if we just 
+want to fix the improper accounting.
+
+Here the new counter is introduced for patch 2/2 to account deferred 
+split THPs into available memory since NR_ANON_THPS may contain 
+non-deferred split THPs.
+
+I could use an internal counter for deferred split THPs, but if it is 
+accounted by mod_node_page_state, why not just show it in /proc/meminfo? 
+Or we fix NR_ANON_THPS and show deferred split THPs in /proc/meminfo?
+
+>
+
