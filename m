@@ -2,126 +2,191 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4BF8C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:49:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FB0C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:49:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8314B2171F
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:49:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a4W0NpB7"
+	by mail.kernel.org (Postfix) with ESMTP id 91F2C214C6
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:49:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565358563;
+	bh=pDnEv89MTmjq9zqtFA/aMxeIGaNa/R9eyQsnDJUV+9c=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=R6a7dE7G5alc6iy48/VNZClDBGrnKCxQGOw1DIf+Wpfhf/i3sPp6QMGeU2NpCo7Rd
+	 kiuGdDmEcwgnyll3VtR7GKZH5ubiYHG2MAbs4wxwuGU8gToTBiYCsOG9V/0yZPMeGY
+	 e5WXwHtLrIsQqiArxggvYpfoTJ9WKMbVZpKMRYkM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407321AbfHINtM (ORCPT
+        id S2436574AbfHINtW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 09:49:12 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:46066 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436496AbfHINq1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 09:46:27 -0400
-Received: by mail-ed1-f68.google.com with SMTP id x19so89100996eda.12
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 06:46:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=LyignUp7I1w3k1JhRB7hSSaZmUScIlvleAzqEtH71gA=;
-        b=a4W0NpB7Ky7ZNvyTrbh1FeBLRkzD3aPh58RS1Yx4bs/BVTnp45+DINWMGfkbq8hq7Q
-         Y3Z4bdj5hgCTeGW+PRshMaXOMxfFs+yMLbXwPTZLqJTcO/dIrpBRkUNMwIYuvyefgxLE
-         ghaZnnGxRRWhYKHkI/uJzl52jBCmY6GTaX4J6IMtYXbQlVLgECyZntsud91yKcOGxjq1
-         ATUWqTH0gQtzKxNRtGFOYFydwjEzo49N/C0g2sw3KGDcPT84ORGadNZJiyoF1tdgy86l
-         pT+EYQrZCc/tezrHEA9IExUAHvjCjPlw9d1k0TydyGhC6W7edZj2zop9pkCTsz+j9sKa
-         GMoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LyignUp7I1w3k1JhRB7hSSaZmUScIlvleAzqEtH71gA=;
-        b=E6/E093iNzfh1IkVjH+MGFmj3Za8JrapJa0hKg9DPmktU1mj/yynOBVXwppSEx3Dzz
-         lmE78Pku1PFVernVEtbMNd0wSZc5YxxOny37Yb7dHlpQe9ZXZH/OM5fNW1ALW7bvlipK
-         cnrBfxDhPQ2OK7R05WwgDxNANGv/GgaV76JAzkfBecyRRNcgNxQFyXopvce02q9Xf0aq
-         Ge+1HhAsyjstofw2ESy0OO8zh+ruIeyOTu9Gbjb8qd569r/gHvhCl9QBknGoSKz0cW/F
-         1eM+2eov9fFgnLRYzdSMeRDZB5/C1inCSjJMeYsoyMBR+gigV1prCwHUfnmFAk3vJPPs
-         81xA==
-X-Gm-Message-State: APjAAAWobaXrzhtelQFkQG2o+B4HIWIGA2/I8lr3wiSMz5Cle4WorVUX
-        Q5Qyf3zSRM2pagJbckVLN0o=
-X-Google-Smtp-Source: APXvYqxaz13nFHHrpZp/JtkeyPbtXPvJTVD23pHrWjqDjJb17ei5Rg0+DU4QM5tQfP2jLc7hWf/1lw==
-X-Received: by 2002:aa7:ccd6:: with SMTP id y22mr21987171edt.274.1565358386098;
-        Fri, 09 Aug 2019 06:46:26 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id c15sm16018545ejs.17.2019.08.09.06.46.25
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 09 Aug 2019 06:46:25 -0700 (PDT)
-Date:   Fri, 9 Aug 2019 13:46:24 +0000
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>,
-        akpm@linux-foundation.org, osalvador@suse.de,
-        pasha.tatashin@oracle.com, mhocko@suse.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/sparse: use __nr_to_section(section_nr) to get
- mem_section
-Message-ID: <20190809134624.htv6jws7hphs4tvz@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20190809010242.29797-1-richardw.yang@linux.intel.com>
- <e17278f0-94dc-e0c6-379b-b7694cec3247@arm.com>
+        Fri, 9 Aug 2019 09:49:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36006 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2436474AbfHINqY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 09:46:24 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A303821880;
+        Fri,  9 Aug 2019 13:46:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565358384;
+        bh=pDnEv89MTmjq9zqtFA/aMxeIGaNa/R9eyQsnDJUV+9c=;
+        h=From:To:Cc:Subject:Date:From;
+        b=wjMaAWhGsu6iZlXOl0UCjuyufA4phMi4j03vkrW5NL86n5rT0Tuvcod9K4cBRJIdW
+         IWSx8vk46lfICL6Sw7AeSrvX2+6W1DOMhwXGQ/VZazD2mKtrHl5JFTjdb9CxgG5/78
+         ssUeIxjGt2w3WnEwyl/sdHC11vGNX+JcAQhm0YEU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.4 00/21] 4.4.189-stable review
+Date:   Fri,  9 Aug 2019 15:45:04 +0200
+Message-Id: <20190809134241.565496442@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e17278f0-94dc-e0c6-379b-b7694cec3247@arm.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.189-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.4.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.4.189-rc1
+X-KernelTest-Deadline: 2019-08-11T13:42+00:00
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 02:39:59PM +0530, Anshuman Khandual wrote:
->
->
->On 08/09/2019 06:32 AM, Wei Yang wrote:
->> __pfn_to_section is defined as __nr_to_section(pfn_to_section_nr(pfn)).
->
->Right.
->
->> 
->> Since we already get section_nr, it is not necessary to get mem_section
->> from start_pfn. By doing so, we reduce one redundant operation.
->> 
->> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
->
->Looks right.
->
->With this applied, memory hot add still works on arm64.
+This is the start of the stable review cycle for the 4.4.189 release.
+There are 21 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-Thanks for your test.
+Responses should be made by Sun 11 Aug 2019 01:42:28 PM UTC.
+Anything received after that time might be too late.
 
->
->Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
->
->> ---
->>  mm/sparse.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->> 
->> diff --git a/mm/sparse.c b/mm/sparse.c
->> index 72f010d9bff5..95158a148cd1 100644
->> --- a/mm/sparse.c
->> +++ b/mm/sparse.c
->> @@ -867,7 +867,7 @@ int __meminit sparse_add_section(int nid, unsigned long start_pfn,
->>  	 */
->>  	page_init_poison(pfn_to_page(start_pfn), sizeof(struct page) * nr_pages);
->>  
->> -	ms = __pfn_to_section(start_pfn);
->> +	ms = __nr_to_section(section_nr);
->>  	set_section_nid(section_nr, nid);
->>  	section_mark_present(ms);
->>  
->> 
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.189-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
+and the diffstat can be found below.
 
--- 
-Wei Yang
-Help you, Help me
+thanks,
+
+greg k-h
+
+-------------
+Pseudo-Shortlog of commits:
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.4.189-rc1
+
+Thomas Gleixner <tglx@linutronix.de>
+    x86/speculation/swapgs: Exclude ATOMs from speculation through SWAPGS
+
+Josh Poimboeuf <jpoimboe@redhat.com>
+    x86/entry/64: Use JMP instead of JMPQ
+
+Josh Poimboeuf <jpoimboe@redhat.com>
+    x86/speculation: Enable Spectre v1 swapgs mitigations
+
+Josh Poimboeuf <jpoimboe@redhat.com>
+    x86/speculation: Prepare entry code for Spectre v1 swapgs mitigations
+
+Wanpeng Li <wanpeng.li@hotmail.com>
+    x86/entry/64: Fix context tracking state warning when load_gs_index fails
+
+Ben Hutchings <ben@decadent.org.uk>
+    x86: cpufeatures: Sort feature word 7
+
+Lukas Wunner <lukas@wunner.de>
+    spi: bcm2835: Fix 3-wire mode if DMA is enabled
+
+xiao jin <jin.xiao@intel.com>
+    block: blk_init_allocated_queue() set q->fq as NULL in the fail case
+
+Arnd Bergmann <arnd@arndb.de>
+    compat_ioctl: pppoe: fix PPPOEIOCSFWD handling
+
+Sudarsana Reddy Kalluru <skalluru@marvell.com>
+    bnx2x: Disable multi-cos feature.
+
+Mark Zhang <markz@mellanox.com>
+    net/mlx5: Use reversed order when unregister devices
+
+Jia-Ju Bai <baijiaju1990@gmail.com>
+    net: sched: Fix a possible null-pointer dereference in dequeue_func()
+
+Taras Kondratiuk <takondra@cisco.com>
+    tipc: compat: allow tipc commands without arguments
+
+Jiri Pirko <jiri@mellanox.com>
+    net: fix ifindex collision during namespace removal
+
+Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+    net: bridge: delete local fdb on device init failure
+
+Gustavo A. R. Silva <gustavo@embeddedor.com>
+    atm: iphase: Fix Spectre v1 vulnerability
+
+Eric Dumazet <edumazet@google.com>
+    tcp: be more careful in tcp_fragment()
+
+Sebastian Parschauer <s.parschauer@gmx.de>
+    HID: Add quirk for HP X1200 PIXART OEM mouse
+
+Phil Turnbull <phil.turnbull@oracle.com>
+    netfilter: nfnetlink_acct: validate NFACCT_QUOTA parameter
+
+Will Deacon <will@kernel.org>
+    arm64: cpufeature: Fix feature comparison for CTR_EL0.{CWG,ERG}
+
+Will Deacon <will.deacon@arm.com>
+    arm64: cpufeature: Fix CTR_EL0 field definitions
+
+
+-------------
+
+Diffstat:
+
+ Documentation/kernel-parameters.txt             |   7 +-
+ Makefile                                        |   4 +-
+ arch/arm64/include/asm/cpufeature.h             |   7 +-
+ arch/arm64/kernel/cpufeature.c                  |  14 +++-
+ arch/x86/entry/calling.h                        |  19 +++++
+ arch/x86/entry/entry_64.S                       |  25 +++++-
+ arch/x86/include/asm/cpufeatures.h              |  10 ++-
+ arch/x86/kernel/cpu/bugs.c                      | 105 ++++++++++++++++++++++--
+ arch/x86/kernel/cpu/common.c                    |  42 ++++++----
+ block/blk-core.c                                |   1 +
+ drivers/atm/iphase.c                            |   8 +-
+ drivers/hid/hid-ids.h                           |   1 +
+ drivers/hid/usbhid/hid-quirks.c                 |   1 +
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c |   2 +-
+ drivers/net/ethernet/mellanox/mlx5/core/main.c  |   2 +-
+ drivers/net/ppp/pppoe.c                         |   3 +
+ drivers/net/ppp/pppox.c                         |  13 +++
+ drivers/net/ppp/pptp.c                          |   3 +
+ drivers/spi/spi-bcm2835.c                       |   3 +-
+ fs/compat_ioctl.c                               |   3 -
+ include/linux/if_pppox.h                        |   3 +
+ include/net/tcp.h                               |  17 ++++
+ net/bridge/br_vlan.c                            |   5 ++
+ net/core/dev.c                                  |   2 +
+ net/ipv4/tcp_output.c                           |  11 ++-
+ net/l2tp/l2tp_ppp.c                             |   3 +
+ net/netfilter/nfnetlink_acct.c                  |   2 +
+ net/sched/sch_codel.c                           |   3 +-
+ net/tipc/netlink_compat.c                       |  11 ++-
+ 29 files changed, 272 insertions(+), 58 deletions(-)
+
+
