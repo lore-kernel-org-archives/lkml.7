@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C514C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:52:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED215C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:52:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB6182166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:52:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9A542171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:52:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406289AbfHIJwM (ORCPT
+        id S2406251AbfHIJwH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 05:52:12 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:34442 "EHLO huawei.com"
+        Fri, 9 Aug 2019 05:52:07 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4226 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2406224AbfHIJwL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 05:52:11 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 1FFCDCF690B9438D699B;
-        Fri,  9 Aug 2019 17:52:08 +0800 (CST)
+        id S2406222AbfHIJwF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 05:52:05 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 2E6B37C03D5BCA4197A6;
+        Fri,  9 Aug 2019 17:52:03 +0800 (CST)
 Received: from huawei.com (10.175.124.28) by DGGEMS403-HUB.china.huawei.com
  (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Fri, 9 Aug 2019
- 17:51:59 +0800
+ 17:51:52 +0800
 From:   Jason Yan <yanaijie@huawei.com>
 To:     <mpe@ellerman.id.au>, <linuxppc-dev@lists.ozlabs.org>,
         <diana.craciun@nxp.com>, <christophe.leroy@c-s.fr>,
@@ -35,9 +35,9 @@ CC:     <linux-kernel@vger.kernel.org>, <wangkefeng.wang@huawei.com>,
         <yebin10@huawei.com>, <thunder.leizhen@huawei.com>,
         <jingxiangfeng@huawei.com>, <fanchengyang@huawei.com>,
         <zhaohongjiang@huawei.com>, Jason Yan <yanaijie@huawei.com>
-Subject: [PATCH v6 12/12] powerpc/fsl_booke/32: Document KASLR implementation
-Date:   Fri, 9 Aug 2019 18:08:00 +0800
-Message-ID: <20190809100800.5426-13-yanaijie@huawei.com>
+Subject: [PATCH v6 04/12] powerpc/fsl_booke/32: introduce create_tlb_entry() helper
+Date:   Fri, 9 Aug 2019 18:07:52 +0800
+Message-ID: <20190809100800.5426-5-yanaijie@huawei.com>
 X-Mailer: git-send-email 2.17.2
 In-Reply-To: <20190809100800.5426-1-yanaijie@huawei.com>
 References: <20190809100800.5426-1-yanaijie@huawei.com>
@@ -50,7 +50,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add document to explain how we implement KASLR for fsl_booke32.
+Add a new helper create_tlb_entry() to create a tlb entry by the virtual
+and physical address. This is a preparation to support boot kernel at a
+randomized address.
 
 Signed-off-by: Jason Yan <yanaijie@huawei.com>
 Cc: Diana Craciun <diana.craciun@nxp.com>
@@ -60,59 +62,66 @@ Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 Cc: Paul Mackerras <paulus@samba.org>
 Cc: Nicholas Piggin <npiggin@gmail.com>
 Cc: Kees Cook <keescook@chromium.org>
+Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Reviewed-by: Diana Craciun <diana.craciun@nxp.com>
+Tested-by: Diana Craciun <diana.craciun@nxp.com>
 ---
- Documentation/powerpc/kaslr-booke32.rst | 42 +++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
- create mode 100644 Documentation/powerpc/kaslr-booke32.rst
+ arch/powerpc/kernel/head_fsl_booke.S | 29 ++++++++++++++++++++++++++++
+ arch/powerpc/mm/mmu_decl.h           |  1 +
+ 2 files changed, 30 insertions(+)
 
-diff --git a/Documentation/powerpc/kaslr-booke32.rst b/Documentation/powerpc/kaslr-booke32.rst
-new file mode 100644
-index 000000000000..8b259fdfdf03
---- /dev/null
-+++ b/Documentation/powerpc/kaslr-booke32.rst
-@@ -0,0 +1,42 @@
-+.. SPDX-License-Identifier: GPL-2.0
+diff --git a/arch/powerpc/kernel/head_fsl_booke.S b/arch/powerpc/kernel/head_fsl_booke.S
+index adf0505dbe02..04d124fee17d 100644
+--- a/arch/powerpc/kernel/head_fsl_booke.S
++++ b/arch/powerpc/kernel/head_fsl_booke.S
+@@ -1114,6 +1114,35 @@ __secondary_hold_acknowledge:
+ 	.long	-1
+ #endif
+ 
++/*
++ * Create a 64M tlb by address and entry
++ * r3/r4 - physical address
++ * r5 - virtual address
++ * r6 - entry
++ */
++_GLOBAL(create_tlb_entry)
++	lis     r7,0x1000               /* Set MAS0(TLBSEL) = 1 */
++	rlwimi  r7,r6,16,4,15           /* Setup MAS0 = TLBSEL | ESEL(r6) */
++	mtspr   SPRN_MAS0,r7            /* Write MAS0 */
 +
-+===========================
-+KASLR for Freescale BookE32
-+===========================
++	lis     r6,(MAS1_VALID|MAS1_IPROT)@h
++	ori     r6,r6,(MAS1_TSIZE(BOOK3E_PAGESZ_64M))@l
++	mtspr   SPRN_MAS1,r6            /* Write MAS1 */
 +
-+The word KASLR stands for Kernel Address Space Layout Randomization.
++	lis     r6,MAS2_EPN_MASK(BOOK3E_PAGESZ_64M)@h
++	ori     r6,r6,MAS2_EPN_MASK(BOOK3E_PAGESZ_64M)@l
++	and     r6,r6,r5
++	ori	r6,r6,MAS2_M@l
++	mtspr   SPRN_MAS2,r6            /* Write MAS2(EPN) */
 +
-+This document tries to explain the implementation of the KASLR for
-+Freescale BookE32. KASLR is a security feature that deters exploit
-+attempts relying on knowledge of the location of kernel internals.
++	ori     r8,r4,(MAS3_SW|MAS3_SR|MAS3_SX)
++	mtspr   SPRN_MAS3,r8            /* Write MAS3(RPN) */
 +
-+Since CONFIG_RELOCATABLE has already supported, what we need to do is
-+map or copy kernel to a proper place and relocate. Freescale Book-E
-+parts expect lowmem to be mapped by fixed TLB entries(TLB1). The TLB1
-+entries are not suitable to map the kernel directly in a randomized
-+region, so we chose to copy the kernel to a proper place and restart to
-+relocate.
++	tlbwe                           /* Write TLB */
++	isync
++	sync
++	blr
 +
-+Entropy is derived from the banner and timer base, which will change every
-+build and boot. This not so much safe so additionally the bootloader may
-+pass entropy via the /chosen/kaslr-seed node in device tree.
-+
-+We will use the first 512M of the low memory to randomize the kernel
-+image. The memory will be split in 64M zones. We will use the lower 8
-+bit of the entropy to decide the index of the 64M zone. Then we chose a
-+16K aligned offset inside the 64M zone to put the kernel in::
-+
-+    KERNELBASE
-+
-+        |-->   64M   <--|
-+        |               |
-+        +---------------+    +----------------+---------------+
-+        |               |....|    |kernel|    |               |
-+        +---------------+    +----------------+---------------+
-+        |                         |
-+        |----->   offset    <-----|
-+
-+                              kernstart_virt_addr
-+
-+To enable KASLR, set CONFIG_RANDOMIZE_BASE = y. If KASLR is enable and you
-+want to disable it at runtime, add "nokaslr" to the kernel cmdline.
+ /*
+  * Create a tlb entry with the same effective and physical address as
+  * the tlb entry used by the current running code. But set the TS to 1.
+diff --git a/arch/powerpc/mm/mmu_decl.h b/arch/powerpc/mm/mmu_decl.h
+index 32c1a191c28a..a09f89d3aa0f 100644
+--- a/arch/powerpc/mm/mmu_decl.h
++++ b/arch/powerpc/mm/mmu_decl.h
+@@ -142,6 +142,7 @@ extern unsigned long calc_cam_sz(unsigned long ram, unsigned long virt,
+ extern void adjust_total_lowmem(void);
+ extern int switch_to_as1(void);
+ extern void restore_to_as0(int esel, int offset, void *dt_ptr, int bootcpu);
++void create_tlb_entry(phys_addr_t phys, unsigned long virt, int entry);
+ #endif
+ extern void loadcam_entry(unsigned int index);
+ extern void loadcam_multi(int first_idx, int num, int tmp_idx);
 -- 
 2.17.2
 
