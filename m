@@ -2,159 +2,132 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12410C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 14:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0BC3C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 14:44:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E144D20820
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 14:44:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9799720820
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 14:44:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565361870;
+	bh=j082qK0VPCgjQ7rtto77M3UFMPxumwW+3n0+RuNDtXA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=i92n8hYZwU9FFAGaA+sAViDChP5WIymylDEQSnw818sWg3S96oIz9gc58fZNE58I2
+	 +uCbmgMYb4tmvaxnSOfAntGPKv+CUAofNJhujgutZ8FWD8nWXo3ZRrDF2tRaFwoSgH
+	 CCRN7muZeCr0aFFdCxeOIhYCP9oRpuR1SOHh2akg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407131AbfHIOoL (ORCPT
+        id S2407135AbfHIOo3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 10:44:11 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:55503 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407102AbfHIOoK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 10:44:10 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1Mx0VH-1iG7wk0ZcR-00yNx6; Fri, 09 Aug 2019 16:43:57 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     soc@kernel.org
-Cc:     Vladimir Zapolskiy <vz@mleia.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-Subject: [PATCH v2 07/13] net: lpc-enet: move phy setup into platform code
-Date:   Fri,  9 Aug 2019 16:40:33 +0200
-Message-Id: <20190809144043.476786-8-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20190809144043.476786-1-arnd@arndb.de>
-References: <20190809144043.476786-1-arnd@arndb.de>
+        Fri, 9 Aug 2019 10:44:29 -0400
+Received: from mga05.intel.com ([192.55.52.43]:50872 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726157AbfHIOo3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 10:44:29 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 07:44:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,364,1559545200"; 
+   d="scan'208";a="169333583"
+Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
+  by orsmga008.jf.intel.com with ESMTP; 09 Aug 2019 07:44:27 -0700
+Date:   Fri, 9 Aug 2019 08:42:04 -0600
+From:   Keith Busch <kbusch@kernel.org>
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>, linux-nvme@lists.infradead.org,
+        Jon Derrick <jonathan.derrick@intel.com>
+Subject: Re: [PATCH 1/2] genirq/affinity: improve __irq_build_affinity_masks()
+Message-ID: <20190809144204.GA28515@localhost.localdomain>
+References: <20190809102310.27246-1-ming.lei@redhat.com>
+ <20190809102310.27246-2-ming.lei@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:npK/7O3KZV7d5O6NlWG3KNX1AMZFTWjJt5jIZxT/9Cn6I6FKIyo
- QtmoB26+nkmPETIXDitdSAt3MnVUpAxDnh/1ZLz+8c0KEwvBbqHnSWWDkLtfc/YRekmRqr5
- U4rxDZ6QBOwqpsUrp+++R8K7fAN9D0TeE8kfbsHlLe8H0PeB8CZjVjOVT8MXhEld2he1dd2
- UkoVJI9R12KVyqTHBifnQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:kLcmpZsLMHg=:LoRu5U8RBYNWBdajrx2Cwj
- 6uByw9wEYucEAL3bs+1NpQky5IJXsvTOh30GBcLVsNnj5/OwquXE9MpMPWojycLdCkndhwz+z
- puWsll5zQwgM8JWIVSvq6AWJAbVRm2X4pe5oDaKtxCngVuIIA+axfdXJ0S6FbTUnb8VnSwRIz
- qq7v+7v038KEMCGZ35mPmHCkXfEU1cSN6ZYwbZ0efnPULIZduEpJC52N64jDVt8VisVK3ssV7
- 6aZtKKRmULV1uAZhzrlmFP9iq2m/I9znqHOwo0YJr7yMOEeIgUZbJKtSxQV4j+UbcZDmS8HQE
- LuGQwq1CMlbsrrJJ0CGqN2/mLKJxYmnbfJtnsDdp1pjp20yYDa4qMU8r6bhtgwS3/yG7zDNqK
- iZxDQHnl4i8x6PnGJz67MzpBbv3vmsym27A3S58cKKn6Md9UDbBI242zZ6rbizo5HJDKXJ6GI
- UxCWGLvITRVhAspCZCfwt+EBfFguy1dhrC9XrOF4I0VJK3M53cHCw+jPJUdCzLP0oyIMvdtkp
- Weh4d1hylUIKcVZqernWkqPkZorxBi3+lgfwM6I+ifN2erPkpucf3aFo3oP3Wfr9zIDsiHgRm
- mo7Zowpf0ldICtz3wHHRygz4UhGCgI7NWy93AvCjci6ORuvc4Ev3IYioUWqjuGJPDuxULpn4A
- a15PpF5qK7LDO+UcnTtvdG5ORUZbfltTMWziW0OG2VhmkxTExAwXFxEmM7eWriJ1BYH607csq
- 1aGj26CaWSLC6rzP2Cbj9tPr6g43e+aGnQqJxQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190809102310.27246-2-ming.lei@redhat.com>
+User-Agent: Mutt/1.9.1 (2017-09-22)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Setting the phy mode requires touching a platform specific
-register, which prevents us from building the driver without
-its header files.
+On Fri, Aug 09, 2019 at 06:23:09PM +0800, Ming Lei wrote:
+> One invariant of __irq_build_affinity_masks() is that all CPUs in the
+> specified masks( cpu_mask AND node_to_cpumask for each node) should be
+> covered during the spread. Even though all requested vectors have been
+> reached, we still need to spread vectors among left CPUs. The similar
+> policy has been taken in case of 'numvecs <= nodes'.
+> 
+> So remove the following check inside the loop:
+> 
+> 	if (done >= numvecs)
+> 		break;
+> 
+> Meantime assign at least 1 vector for left nodes if 'numvecs' vectors
+> have been spread.
+> 
+> Also, if the specified cpumask for one numa node is empty, simply not
+> spread vectors on this node.
+> 
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Keith Busch <kbusch@kernel.org>
+> Cc: linux-nvme@lists.infradead.org,
+> Cc: Jon Derrick <jonathan.derrick@intel.com>
+> Signed-off-by: Ming Lei <ming.lei@redhat.com>
+> ---
+>  kernel/irq/affinity.c | 33 +++++++++++++++++++++------------
+>  1 file changed, 21 insertions(+), 12 deletions(-)
+> 
+> diff --git a/kernel/irq/affinity.c b/kernel/irq/affinity.c
+> index 6fef48033f96..bc3652a2c61b 100644
+> --- a/kernel/irq/affinity.c
+> +++ b/kernel/irq/affinity.c
+> @@ -129,21 +129,32 @@ static int __irq_build_affinity_masks(unsigned int startvec,
+>  	for_each_node_mask(n, nodemsk) {
+>  		unsigned int ncpus, v, vecs_to_assign, vecs_per_node;
+>  
+> -		/* Spread the vectors per node */
+> -		vecs_per_node = (numvecs - (curvec - firstvec)) / nodes;
+> -
+>  		/* Get the cpus on this node which are in the mask */
+>  		cpumask_and(nmsk, cpu_mask, node_to_cpumask[n]);
+> -
+> -		/* Calculate the number of cpus per vector */
+>  		ncpus = cpumask_weight(nmsk);
+> +		if (!ncpus)
+> +			continue;
 
-Move it into a separate function in arch/arm/mach/lpc32xx
-to hide the core registers from the network driver.
+This shouldn't be possible, right? The nodemsk we're looping  wouldn't
+have had that node set if no CPUs intersect the node_to_cpu_mask for
+that node, so the resulting cpumask should always have a non-zero weight.
 
-Acked-by: Sylvain Lemieux <slemieux.tyco@gmail.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- arch/arm/mach-lpc32xx/common.c       | 12 ++++++++++++
- drivers/net/ethernet/nxp/lpc_eth.c   | 12 +-----------
- include/linux/soc/nxp/lpc32xx-misc.h |  5 +++++
- 3 files changed, 18 insertions(+), 11 deletions(-)
+> @@ -153,16 +164,14 @@ static int __irq_build_affinity_masks(unsigned int startvec,
+>  			}
+>  			irq_spread_init_one(&masks[curvec].mask, nmsk,
+>  						cpus_per_vec);
+> +			if (++curvec >= last_affv)
+> +				curvec = firstvec;
 
-diff --git a/arch/arm/mach-lpc32xx/common.c b/arch/arm/mach-lpc32xx/common.c
-index f648324d5fb4..a475339333c1 100644
---- a/arch/arm/mach-lpc32xx/common.c
-+++ b/arch/arm/mach-lpc32xx/common.c
-@@ -63,6 +63,18 @@ u32 lpc32xx_return_iram(void __iomem **mapbase, dma_addr_t *dmaaddr)
- }
- EXPORT_SYMBOL_GPL(lpc32xx_return_iram);
- 
-+void lpc32xx_set_phy_interface_mode(phy_interface_t mode)
-+{
-+	u32 tmp = __raw_readl(LPC32XX_CLKPWR_MACCLK_CTRL);
-+	tmp &= ~LPC32XX_CLKPWR_MACCTRL_PINS_MSK;
-+	if (mode == PHY_INTERFACE_MODE_MII)
-+		tmp |= LPC32XX_CLKPWR_MACCTRL_USE_MII_PINS;
-+	else
-+		tmp |= LPC32XX_CLKPWR_MACCTRL_USE_RMII_PINS;
-+	__raw_writel(tmp, LPC32XX_CLKPWR_MACCLK_CTRL);
-+}
-+EXPORT_SYMBOL_GPL(lpc32xx_set_phy_interface_mode);
-+
- static struct map_desc lpc32xx_io_desc[] __initdata = {
- 	{
- 		.virtual	= (unsigned long)IO_ADDRESS(LPC32XX_AHB0_START),
-diff --git a/drivers/net/ethernet/nxp/lpc_eth.c b/drivers/net/ethernet/nxp/lpc_eth.c
-index bcdd0adcfb0c..0893b77c385d 100644
---- a/drivers/net/ethernet/nxp/lpc_eth.c
-+++ b/drivers/net/ethernet/nxp/lpc_eth.c
-@@ -20,9 +20,6 @@
- #include <linux/spinlock.h>
- #include <linux/soc/nxp/lpc32xx-misc.h>
- 
--#include <mach/hardware.h>
--#include <mach/platform.h>
--
- #define MODNAME "lpc-eth"
- #define DRV_VERSION "1.00"
- 
-@@ -1237,16 +1234,9 @@ static int lpc_eth_drv_probe(struct platform_device *pdev)
- 	dma_addr_t dma_handle;
- 	struct resource *res;
- 	int irq, ret;
--	u32 tmp;
- 
- 	/* Setup network interface for RMII or MII mode */
--	tmp = __raw_readl(LPC32XX_CLKPWR_MACCLK_CTRL);
--	tmp &= ~LPC32XX_CLKPWR_MACCTRL_PINS_MSK;
--	if (lpc_phy_interface_mode(dev) == PHY_INTERFACE_MODE_MII)
--		tmp |= LPC32XX_CLKPWR_MACCTRL_USE_MII_PINS;
--	else
--		tmp |= LPC32XX_CLKPWR_MACCTRL_USE_RMII_PINS;
--	__raw_writel(tmp, LPC32XX_CLKPWR_MACCLK_CTRL);
-+	lpc32xx_set_phy_interface_mode(lpc_phy_interface_mode(dev));
- 
- 	/* Get platform resources */
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-diff --git a/include/linux/soc/nxp/lpc32xx-misc.h b/include/linux/soc/nxp/lpc32xx-misc.h
-index f232e1a1bcdc..af4f82f6cf3b 100644
---- a/include/linux/soc/nxp/lpc32xx-misc.h
-+++ b/include/linux/soc/nxp/lpc32xx-misc.h
-@@ -9,9 +9,11 @@
- #define __SOC_LPC32XX_MISC_H
- 
- #include <linux/types.h>
-+#include <linux/phy.h>
- 
- #ifdef CONFIG_ARCH_LPC32XX
- extern u32 lpc32xx_return_iram(void __iomem **mapbase, dma_addr_t *dmaaddr);
-+extern void lpc32xx_set_phy_interface_mode(phy_interface_t mode);
- #else
- static inline u32 lpc32xx_return_iram(void __iomem **mapbase, dma_addr_t *dmaaddr)
- {
-@@ -19,6 +21,9 @@ static inline u32 lpc32xx_return_iram(void __iomem **mapbase, dma_addr_t *dmaadd
- 	*dmaaddr = 0;
- 	return 0;
- }
-+static inline void lpc32xx_set_phy_interface_mode(phy_interface_t mode)
-+{
-+}
- #endif
- 
- #endif  /* __SOC_LPC32XX_MISC_H */
--- 
-2.20.0
+I'm not so sure about wrapping the vector to share it across nodes. We
+have enough vectors in this path to ensure each compute node can have
+a unique one, and it's much cheaper to share these within nodes than
+across them.
 
+>  		}
+>  
+>  		done += v;
+> -		if (done >= numvecs)
+> -			break;
+> -		if (curvec >= last_affv)
+> -			curvec = firstvec;
+>  		--nodes;
+>  	}
+> -	return done;
+> +	return done < numvecs ? done : numvecs;
+>  }
