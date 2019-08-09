@@ -2,106 +2,231 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20492C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 22:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A278EC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 22:58:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F414E208C4
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 22:58:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 830A8208C4
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 22:58:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729814AbfHIW6u (ORCPT
+        id S1729913AbfHIW6w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 18:58:50 -0400
-Received: from smtprelay0145.hostedemail.com ([216.40.44.145]:47251 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729533AbfHIW6q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 18:58:46 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id BC25C1801C4F4;
-        Fri,  9 Aug 2019 22:58:44 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: net87_4c35b90f10723
-X-Filterd-Recvd-Size: 3471
-Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf08.hostedemail.com (Postfix) with ESMTPA;
-        Fri,  9 Aug 2019 22:58:43 +0000 (UTC)
-Message-ID: <7c4db60a2b1976a92b5c824c7d24c4c77aa57278.camel@perches.com>
-Subject: Re: checkpatch.pl should suggest __section
-From:   Joe Perches <joe@perches.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Fri, 09 Aug 2019 15:58:41 -0700
-In-Reply-To: <CAKwvOdmNdvgv=+P1CU36fG+trETojmPEXSMmAmX2TY0e67X-Wg@mail.gmail.com>
-References: <CAKwvOdmNdvgv=+P1CU36fG+trETojmPEXSMmAmX2TY0e67X-Wg@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+        Fri, 9 Aug 2019 18:58:52 -0400
+Received: from mga04.intel.com ([192.55.52.120]:25396 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729588AbfHIW6r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 18:58:47 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 15:58:46 -0700
+X-IronPort-AV: E=Sophos;i="5.64,367,1559545200"; 
+   d="scan'208";a="204067068"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.157])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 15:58:46 -0700
+From:   ira.weiny@intel.com
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-ext4@vger.kernel.org, linux-mm@kvack.org,
+        Ira Weiny <ira.weiny@intel.com>
+Subject: [RFC PATCH v2 04/19] mm/gup: Ensure F_LAYOUT lease is held prior to GUP'ing pages
+Date:   Fri,  9 Aug 2019 15:58:18 -0700
+Message-Id: <20190809225833.6657-5-ira.weiny@intel.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190809225833.6657-1-ira.weiny@intel.com>
+References: <20190809225833.6657-1-ira.weiny@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-08-09 at 15:21 -0700, Nick Desaulniers wrote:
-> Hi Joe,
-> While debugging:
-> https://github.com/ClangBuiltLinux/linux/issues/619
-> we found a bunch of places where __section is not used but could be,
-> and uses a string literal when it probably should not be.
-> 
-> Just a thought that maybe checkpatch.pl could warn if
-> `__attribute__((section` appeared in the added diff, and suggest
-> __section? Then further warn to not use `""` for the section name?
+From: Ira Weiny <ira.weiny@intel.com>
 
-Hmm, that makes me wonder about the existing __section uses
-_with_ a quote are actually in the proper sections.
+On FS DAX files users must inform the file system they intend to take
+long term GUP pins on the file pages.  Failure to do so should result in
+an error.
 
-$ git grep -n -P '\b__section\s*\(\s*"'
-arch/arm64/kernel/smp_spin_table.c:22:volatile unsigned long __section(".mmuoff.data.read")
-arch/s390/boot/startup.c:49:static struct diag210 _diag210_tmp_dma __section(".dma.data");
-include/linux/compiler.h:27:                            __section("_ftrace_annotated_branch")   \
-include/linux/compiler.h:63:            __section("_ftrace_branch")             \
-include/linux/compiler.h:121:#define __annotate_jump_table __section(".rodata..c_jump_table")
-include/linux/compiler.h:158:   __section("___kentry" "+" #sym )                        \
-include/linux/compiler.h:301:   static void * __section(".discard.addressable") __used \
-include/linux/export.h:107:     static int __ksym_marker_##sym[0] __section(".discard.ksym") __used
-include/linux/srcutree.h:127:           __section("___srcu_struct_ptrs") = &name
+Ensure that a F_LAYOUT lease exists at the time the GUP call is made.
+If not return EPERM.
 
-Maybe there should also be a __section("<foo>") test too.
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
-Anyway, how about:
 ---
- scripts/checkpatch.pl | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Changes from RFC v1:
 
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index 1cdacb4fd207..8e6693ca772c 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -5901,6 +5901,15 @@ sub process {
- 			     "__aligned(size) is preferred over __attribute__((aligned(size)))\n" . $herecurr);
- 		}
+    The old version had remnants of when GUP was going to take the lease
+    for the user.  Remove this prototype code.
+    Fix issue in gup_device_huge which was setting page reference prior
+    to checking for Layout Lease
+    Re-base to 5.3+
+    Clean up htmldoc comments
+
+ fs/locks.c         | 47 ++++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/mm.h |  2 ++
+ mm/gup.c           | 23 +++++++++++++++++++++++
+ mm/huge_memory.c   | 12 ++++++++++++
+ 4 files changed, 84 insertions(+)
+
+diff --git a/fs/locks.c b/fs/locks.c
+index 0c7359cdab92..14892c84844b 100644
+--- a/fs/locks.c
++++ b/fs/locks.c
+@@ -2971,3 +2971,50 @@ static int __init filelock_init(void)
+ 	return 0;
+ }
+ core_initcall(filelock_init);
++
++/**
++ * mapping_inode_has_layout - ensure a file mapped page has a layout lease
++ * taken
++ * @page: page we are trying to GUP
++ *
++ * This should only be called on DAX pages.  DAX pages which are mapped through
++ * FS DAX do not use the page cache.  As a result they require the user to take
++ * a LAYOUT lease on them prior to be able to pin them for longterm use.
++ * This allows the user to opt-into the fact that truncation operations will
++ * fail for the duration of the pin.
++ *
++ * Return true if the page has a LAYOUT lease associated with it's file.
++ */
++bool mapping_inode_has_layout(struct page *page)
++{
++	bool ret = false;
++	struct inode *inode;
++	struct file_lock *fl;
++
++	if (WARN_ON(PageAnon(page)) ||
++	    WARN_ON(!page) ||
++	    WARN_ON(!page->mapping) ||
++	    WARN_ON(!page->mapping->host))
++		return false;
++
++	inode = page->mapping->host;
++
++	smp_mb();
++	if (inode->i_flctx &&
++	    !list_empty_careful(&inode->i_flctx->flc_lease)) {
++		spin_lock(&inode->i_flctx->flc_lock);
++		ret = false;
++		list_for_each_entry(fl, &inode->i_flctx->flc_lease, fl_list) {
++			if (fl->fl_pid == current->tgid &&
++			    (fl->fl_flags & FL_LAYOUT) &&
++			    (fl->fl_flags & FL_EXCLUSIVE)) {
++				ret = true;
++				break;
++			}
++		}
++		spin_unlock(&inode->i_flctx->flc_lock);
++	}
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(mapping_inode_has_layout);
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index ad6766a08f9b..04f22722b374 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -1583,6 +1583,8 @@ int account_locked_vm(struct mm_struct *mm, unsigned long pages, bool inc);
+ int __account_locked_vm(struct mm_struct *mm, unsigned long pages, bool inc,
+ 			struct task_struct *task, bool bypass_rlim);
  
-+# Check for __attribute__ section, prefer __section (without quotes)
-+		if ($realfile !~ m@\binclude/uapi/@ &&
-+		    $line =~ /\b__attribute__\s*\(\s*\(.*_*section_*\s*\(\s*("[^"]*")/) {
-+			my $old = substr($rawline, $-[1], $+[1] - $-[1]);
-+			my $new = substr($old, 1, -1);
-+			WARN("PREFER_SECTION",
-+			     "__section($new) is preferred over __attribute__((section($old)))\n" . $herecurr);
++bool mapping_inode_has_layout(struct page *page);
++
+ /* Container for pinned pfns / pages */
+ struct frame_vector {
+ 	unsigned int nr_allocated;	/* Number of frames we have space for */
+diff --git a/mm/gup.c b/mm/gup.c
+index 80423779a50a..0b05e22ac05f 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -221,6 +221,13 @@ static struct page *follow_page_pte(struct vm_area_struct *vma,
+ 			page = pte_page(pte);
+ 		else
+ 			goto no_page;
++
++		if (unlikely(flags & FOLL_LONGTERM) &&
++		    (*pgmap)->type == MEMORY_DEVICE_FS_DAX &&
++		    !mapping_inode_has_layout(page)) {
++			page = ERR_PTR(-EPERM);
++			goto out;
++		}
+ 	} else if (unlikely(!page)) {
+ 		if (flags & FOLL_DUMP) {
+ 			/* Avoid special (like zero) pages in core dumps */
+@@ -1847,6 +1854,14 @@ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
+ 
+ 		VM_BUG_ON_PAGE(compound_head(page) != head, page);
+ 
++		if (pte_devmap(pte) &&
++		    unlikely(flags & FOLL_LONGTERM) &&
++		    pgmap->type == MEMORY_DEVICE_FS_DAX &&
++		    !mapping_inode_has_layout(head)) {
++			put_user_page(head);
++			goto pte_unmap;
 +		}
 +
- # Check for __attribute__ format(printf, prefer __printf
- 		if ($realfile !~ m@\binclude/uapi/@ &&
- 		    $line =~ /\b__attribute__\s*\(\s*\(\s*format\s*\(\s*printf/) {
-
-
+ 		SetPageReferenced(page);
+ 		pages[*nr] = page;
+ 		(*nr)++;
+@@ -1895,6 +1910,14 @@ static int __gup_device_huge(unsigned long pfn, unsigned long addr,
+ 			undo_dev_pagemap(nr, nr_start, pages);
+ 			return 0;
+ 		}
++
++		if (unlikely(flags & FOLL_LONGTERM) &&
++		    pgmap->type == MEMORY_DEVICE_FS_DAX &&
++		    !mapping_inode_has_layout(page)) {
++			undo_dev_pagemap(nr, nr_start, pages);
++			return 0;
++		}
++
+ 		SetPageReferenced(page);
+ 		pages[*nr] = page;
+ 		get_page(page);
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 1334ede667a8..bc1a07a55be1 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -953,6 +953,12 @@ struct page *follow_devmap_pmd(struct vm_area_struct *vma, unsigned long addr,
+ 	if (!*pgmap)
+ 		return ERR_PTR(-EFAULT);
+ 	page = pfn_to_page(pfn);
++
++	if (unlikely(flags & FOLL_LONGTERM) &&
++	    (*pgmap)->type == MEMORY_DEVICE_FS_DAX &&
++	    !mapping_inode_has_layout(page))
++		return ERR_PTR(-EPERM);
++
+ 	get_page(page);
+ 
+ 	return page;
+@@ -1093,6 +1099,12 @@ struct page *follow_devmap_pud(struct vm_area_struct *vma, unsigned long addr,
+ 	if (!*pgmap)
+ 		return ERR_PTR(-EFAULT);
+ 	page = pfn_to_page(pfn);
++
++	if (unlikely(flags & FOLL_LONGTERM) &&
++	    (*pgmap)->type == MEMORY_DEVICE_FS_DAX &&
++	    !mapping_inode_has_layout(page))
++		return ERR_PTR(-EPERM);
++
+ 	get_page(page);
+ 
+ 	return page;
+-- 
+2.20.1
 
