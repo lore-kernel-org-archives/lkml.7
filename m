@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B75C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2B88C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:45:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB73520B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:45:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6485214C6
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:45:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565358351;
-	bh=W4LqLQ2WO2/HA7R28cJPumw2OufW3NPRZYQsMC5iLgo=;
+	s=default; t=1565358354;
+	bh=ffO+6krTQU9boY6/1ecq4KfowMD+tJ0GV06nU+/fuJ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xjhQQkmpxvP/GYLvXpgtrTiOdsHg88U5OVq5OYVUhGEJoKgQz358Kl/0fZADlbwPo
-	 Q0I7cJHc/Y6HYGKxhVROJQwn9+doX8ealPkXkan/JfH9y1osBocvQmAns0ni2B6Dz7
-	 kJugMuTjTXcSOKej62JJO7BXBU9jbuw8qIdFEBHI=
+	b=JyVIORe1OnB8bgFWRxxsRhStv5loK/O4lKUFS0lOn22Idi64zdGexUavRbl7Vdldf
+	 1aoX7U0mN+dcv8Z85NDTryeaoXYyCyH/DMJjyO60ziL26GtzC99FYEIqKVuUlXaDuy
+	 GVahHclKoJCxIo1A0tKY+G1npLNT8dCzJUD1hPNQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406738AbfHINpu (ORCPT
+        id S2406778AbfHINpx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 09:45:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35268 "EHLO mail.kernel.org"
+        Fri, 9 Aug 2019 09:45:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726037AbfHINpt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 09:45:49 -0400
+        id S1726037AbfHINpv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 09:45:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B30F020B7C;
-        Fri,  9 Aug 2019 13:45:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44067214C6;
+        Fri,  9 Aug 2019 13:45:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565358348;
-        bh=W4LqLQ2WO2/HA7R28cJPumw2OufW3NPRZYQsMC5iLgo=;
+        s=default; t=1565358350;
+        bh=ffO+6krTQU9boY6/1ecq4KfowMD+tJ0GV06nU+/fuJ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ef5NB0BRnj2Tq0vqKQxtjLhEnlJysVYCqlwjENOiV4nKj2/5axmVjXh41V7ckOczr
-         ZyN1PdYg5Y0vzY5UV47nMdxpsjycVjV6Hx4MtPvLTIRIRgnQCR1IQ3mbNsTT6neggs
-         eReo/OsOq+IiryWSz7YLm2nw9KvxgZuCV0nADpZ8=
+        b=sJL3LzB35llayGqgs6TbUl4pOqsHEkWKHEnrLjv+RZO6xLiWUGbuaUlDQKrnR08HH
+         6VRaGJthofqM0Bi6cYYXgfdeGOgDEpdnOD3fiIsIyii8i3q8rscAQLp+qY7Cx/ZH6z
+         E4rusWNQ301QK0EQF5K2NYaz8w5GU2Qv547bQzu0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Parav Pandit <parav@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Mark Zhang <markz@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 4.4 11/21] net/mlx5: Use reversed order when unregister devices
-Date:   Fri,  9 Aug 2019 15:45:15 +0200
-Message-Id: <20190809134242.048117200@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sudarsana Reddy Kalluru <skalluru@marvell.com>,
+        Manish Chopra <manishc@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 12/21] bnx2x: Disable multi-cos feature.
+Date:   Fri,  9 Aug 2019 15:45:16 +0200
+Message-Id: <20190809134242.085004682@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190809134241.565496442@linuxfoundation.org>
 References: <20190809134241.565496442@linuxfoundation.org>
@@ -61,43 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Zhang <markz@mellanox.com>
+From: Sudarsana Reddy Kalluru <skalluru@marvell.com>
 
-[ Upstream commit 08aa5e7da6bce1a1963f63cf32c2e7ad434ad578 ]
+[ Upstream commit d1f0b5dce8fda09a7f5f04c1878f181d548e42f5 ]
 
-When lag is active, which is controlled by the bonded mlx5e netdev, mlx5
-interface unregestering must happen in the reverse order where rdma is
-unregistered (unloaded) first, to guarantee all references to the lag
-context in hardware is removed, then remove mlx5e netdev interface which
-will cleanup the lag context from hardware.
+Commit 3968d38917eb ("bnx2x: Fix Multi-Cos.") which enabled multi-cos
+feature after prolonged time in driver added some regression causing
+numerous issues (sudden reboots, tx timeout etc.) reported by customers.
+We plan to backout this commit and submit proper fix once we have root
+cause of issues reported with this feature enabled.
 
-Without this fix during destroy of LAG interface, we observed following
-errors:
- * mlx5_cmd_check:752:(pid 12556): DESTROY_LAG(0x843) op_mod(0x0) failed,
-   status bad parameter(0x3), syndrome (0xe4ac33)
- * mlx5_cmd_check:752:(pid 12556): DESTROY_LAG(0x843) op_mod(0x0) failed,
-   status bad parameter(0x3), syndrome (0xa5aee8).
-
-Fixes: a31208b1e11d ("net/mlx5_core: New init and exit flow for mlx5_core")
-Reviewed-by: Parav Pandit <parav@mellanox.com>
-Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Mark Zhang <markz@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Fixes: 3968d38917eb ("bnx2x: Fix Multi-Cos.")
+Signed-off-by: Sudarsana Reddy Kalluru <skalluru@marvell.com>
+Signed-off-by: Manish Chopra <manishc@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/main.c |    2 +-
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/main.c
-@@ -778,7 +778,7 @@ static void mlx5_unregister_device(struc
- 	struct mlx5_interface *intf;
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
+@@ -1957,7 +1957,7 @@ u16 bnx2x_select_queue(struct net_device
+ 	}
  
- 	mutex_lock(&intf_mutex);
--	list_for_each_entry(intf, &intf_list, list)
-+	list_for_each_entry_reverse(intf, &intf_list, list)
- 		mlx5_remove_device(intf, priv);
- 	list_del(&priv->dev_list);
- 	mutex_unlock(&intf_mutex);
+ 	/* select a non-FCoE queue */
+-	return fallback(dev, skb) % (BNX2X_NUM_ETH_QUEUES(bp) * bp->max_cos);
++	return fallback(dev, skb) % (BNX2X_NUM_ETH_QUEUES(bp));
+ }
+ 
+ void bnx2x_set_num_queues(struct bnx2x *bp)
 
 
