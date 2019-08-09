@@ -2,159 +2,180 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A30EFC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 23:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE5DC31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 23:03:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8398520B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 23:00:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C492920B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 23:03:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Hgx4J6Xn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731417AbfHIXAb (ORCPT
+        id S1728265AbfHIXDx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 19:00:31 -0400
-Received: from mga17.intel.com ([192.55.52.151]:9691 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729112AbfHIW6o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 18:58:44 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 15:58:43 -0700
-X-IronPort-AV: E=Sophos;i="5.64,367,1559545200"; 
-   d="scan'208";a="199539184"
-Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.157])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 15:58:43 -0700
-From:   ira.weiny@intel.com
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-ext4@vger.kernel.org, linux-mm@kvack.org,
-        Ira Weiny <ira.weiny@intel.com>
-Subject: [RFC PATCH v2 02/19] fs/locks: Add Exclusive flag to user Layout lease
-Date:   Fri,  9 Aug 2019 15:58:16 -0700
-Message-Id: <20190809225833.6657-3-ira.weiny@intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190809225833.6657-1-ira.weiny@intel.com>
-References: <20190809225833.6657-1-ira.weiny@intel.com>
+        Fri, 9 Aug 2019 19:03:53 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38106 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726263AbfHIXDx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 19:03:53 -0400
+Received: by mail-wr1-f65.google.com with SMTP id g17so99586164wrr.5
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 16:03:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AA45q6IMPxeio0FSS0wDQ5w5I6FSh5bk8IxEXeZUP0E=;
+        b=Hgx4J6XnzbPi/G6IzDkRvXBDXp3Xw1iLGFI/8Hl4XZuiFH/pUvEk+HOHKKjP76/hQX
+         mWBD6zQ+rQEL/nOuq0/6OmDbIxxGtFO6mY0LVFTTsqFrIlaZRSb6M8aKKowHzhH3DQTm
+         2V+ddlS0fA173GTaNiMA1v1CE+VrS8SelYzm2zJvLS4DQ8ADl33KFGIwXY+3yOoWJZOf
+         43vCBcpxoWOuxjX+XDan+MgqKv25HMcRzB9Sdy38s8MR02Rff0hzlNnG2pYSL2LO5aSF
+         Ub94moH3Leka0deP3ghd/pfu+DURzPTrsZXYAaf5nPRADSxRxH4ONydFG4lxIGtrLsfa
+         iSyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AA45q6IMPxeio0FSS0wDQ5w5I6FSh5bk8IxEXeZUP0E=;
+        b=AJXHLtwbhn4PN5cVkwE1egC2Wr3yKsQ5lABBmJ8rsZ7IjDQbLQBKcEr/ziyJcZ/bDx
+         rNXZw/8w7oztdPMLec7GF9t/AZApnD6oDeL7LyOwRCrtGWB1xUOZF8mvjU9UTMiHlcI0
+         m+5CeKYWuQS4NMwv8As1GyeWHd7tk1uwjOAiRifuNzegHfGf2t3ERX6HL0SFa5SLB0kt
+         WFIEbc+07mYsrXQwyZPXABBHuAoj0/KqxVmOhpo9Zqpuwi25Z/GZU4Y3fBhaFcZVDyIa
+         Tw2IYWaKay/xrBSxqEsYKZNXrq7XeWPzx4fhFoitkm6wEgJFr3Jmw/Cs0pzVC9OjO4wN
+         bO6w==
+X-Gm-Message-State: APjAAAWYjyO3U9sevKooAvr9+n5sdydCqebIUX4h0NN32Mj9JeZ0n4VH
+        waqFKWeqqdfBIalT12NuhXZjeAAdG/Jiv8EUE+E5iw==
+X-Google-Smtp-Source: APXvYqxNIFUtq0mvXkjapWy5+xX1d0Xp8TP4K9kMBJ6lZAuc7uPuLpfox+P3pZ3dVwbona9mq6bzyo+H3lZPiB9qFJI=
+X-Received: by 2002:adf:ce88:: with SMTP id r8mr28161681wrn.42.1565391830743;
+ Fri, 09 Aug 2019 16:03:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190808190300.GA9067@cmpxchg.org>
+In-Reply-To: <20190808190300.GA9067@cmpxchg.org>
+From:   Suren Baghdasaryan <surenb@google.com>
+Date:   Fri, 9 Aug 2019 16:03:39 -0700
+Message-ID: <CAJuCfpFQdCmhdCQQGxmWuwjYRdMCL8-xtkuUiqYE03ut+uvW6g@mail.gmail.com>
+Subject: Re: [PATCH RESEND] block: annotate refault stalls from IO submission
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, Dave Chinner <david@fromorbit.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>, linux-btrfs@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-block@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+On Thu, Aug 8, 2019 at 12:03 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
+>
+> psi tracks the time tasks wait for refaulting pages to become
+> uptodate, but it does not track the time spent submitting the IO. The
+> submission part can be significant if backing storage is contended or
+> when cgroup throttling (io.latency) is in effect - a lot of time is
+> spent in submit_bio(). In that case, we underreport memory pressure.
+>
+> Annotate submit_bio() to account submission time as memory stall when
+> the bio is reading userspace workingset pages.
+>
+> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+> ---
+>  block/bio.c               |  3 +++
+>  block/blk-core.c          | 23 ++++++++++++++++++++++-
+>  include/linux/blk_types.h |  1 +
+>  3 files changed, 26 insertions(+), 1 deletion(-)
+>
+> diff --git a/block/bio.c b/block/bio.c
+> index 299a0e7651ec..4196865dd300 100644
+> --- a/block/bio.c
+> +++ b/block/bio.c
+> @@ -806,6 +806,9 @@ void __bio_add_page(struct bio *bio, struct page *page,
+>
+>         bio->bi_iter.bi_size += len;
+>         bio->bi_vcnt++;
+> +
+> +       if (!bio_flagged(bio, BIO_WORKINGSET) && unlikely(PageWorkingset(page)))
+> +               bio_set_flag(bio, BIO_WORKINGSET);
+>  }
+>  EXPORT_SYMBOL_GPL(__bio_add_page);
+>
+> diff --git a/block/blk-core.c b/block/blk-core.c
+> index d0cc6e14d2f0..1b1705b7dde7 100644
+> --- a/block/blk-core.c
+> +++ b/block/blk-core.c
+> @@ -36,6 +36,7 @@
+>  #include <linux/blk-cgroup.h>
+>  #include <linux/debugfs.h>
+>  #include <linux/bpf.h>
+> +#include <linux/psi.h>
+>
+>  #define CREATE_TRACE_POINTS
+>  #include <trace/events/block.h>
+> @@ -1128,6 +1129,10 @@ EXPORT_SYMBOL_GPL(direct_make_request);
+>   */
+>  blk_qc_t submit_bio(struct bio *bio)
+>  {
+> +       bool workingset_read = false;
+> +       unsigned long pflags;
+> +       blk_qc_t ret;
+> +
+>         if (blkcg_punt_bio_submit(bio))
+>                 return BLK_QC_T_NONE;
+>
+> @@ -1146,6 +1151,8 @@ blk_qc_t submit_bio(struct bio *bio)
+>                 if (op_is_write(bio_op(bio))) {
+>                         count_vm_events(PGPGOUT, count);
+>                 } else {
+> +                       if (bio_flagged(bio, BIO_WORKINGSET))
+> +                               workingset_read = true;
+>                         task_io_account_read(bio->bi_iter.bi_size);
+>                         count_vm_events(PGPGIN, count);
+>                 }
+> @@ -1160,7 +1167,21 @@ blk_qc_t submit_bio(struct bio *bio)
+>                 }
+>         }
+>
+> -       return generic_make_request(bio);
+> +       /*
+> +        * If we're reading data that is part of the userspace
+> +        * workingset, count submission time as memory stall. When the
+> +        * device is congested, or the submitting cgroup IO-throttled,
+> +        * submission can be a significant part of overall IO time.
+> +        */
+> +       if (workingset_read)
+> +               psi_memstall_enter(&pflags);
+> +
+> +       ret = generic_make_request(bio);
+> +
+> +       if (workingset_read)
+> +               psi_memstall_leave(&pflags);
+> +
+> +       return ret;
+>  }
+>  EXPORT_SYMBOL(submit_bio);
+>
+> diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
+> index 1b1fa1557e68..a9dadfc16a92 100644
+> --- a/include/linux/blk_types.h
+> +++ b/include/linux/blk_types.h
+> @@ -209,6 +209,7 @@ enum {
+>         BIO_BOUNCED,            /* bio is a bounce bio */
+>         BIO_USER_MAPPED,        /* contains user pages */
+>         BIO_NULL_MAPPED,        /* contains invalid user pages */
+> +       BIO_WORKINGSET,         /* contains userspace workingset pages */
+>         BIO_QUIET,              /* Make BIO Quiet */
+>         BIO_CHAIN,              /* chained bio, ->bi_remaining in effect */
+>         BIO_REFFED,             /* bio has elevated ->bi_cnt */
+> --
+> 2.22.0
+>
 
-Add an exclusive lease flag which indicates that the layout mechanism
-can not be broken.
+The change contributes to the amount of recorded stall while running
+memory stress test with and without the patch. Did not notice any
+performance regressions so far. Thanks!
 
-Exclusive layout leases allow the file system to know that pages may be
-GUP pined and that attempts to change the layout, ie truncate, should be
-failed.
-
-A process which attempts to break it's own exclusive lease gets an
-EDEADLOCK return to help determine that this is likely a programming bug
-vs someone else holding a resource.
-
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
----
- fs/locks.c                       | 23 +++++++++++++++++++++--
- include/linux/fs.h               |  1 +
- include/uapi/asm-generic/fcntl.h |  2 ++
- 3 files changed, 24 insertions(+), 2 deletions(-)
-
-diff --git a/fs/locks.c b/fs/locks.c
-index ad17c6ffca06..0c7359cdab92 100644
---- a/fs/locks.c
-+++ b/fs/locks.c
-@@ -626,6 +626,8 @@ static int lease_init(struct file *filp, long type, unsigned int flags,
- 	fl->fl_flags = FL_LEASE;
- 	if (flags & FL_LAYOUT)
- 		fl->fl_flags |= FL_LAYOUT;
-+	if (flags & FL_EXCLUSIVE)
-+		fl->fl_flags |= FL_EXCLUSIVE;
- 	fl->fl_start = 0;
- 	fl->fl_end = OFFSET_MAX;
- 	fl->fl_ops = NULL;
-@@ -1619,6 +1621,14 @@ int __break_lease(struct inode *inode, unsigned int mode, unsigned int type)
- 	list_for_each_entry_safe(fl, tmp, &ctx->flc_lease, fl_list) {
- 		if (!leases_conflict(fl, new_fl))
- 			continue;
-+		if (fl->fl_flags & FL_EXCLUSIVE) {
-+			error = -ETXTBSY;
-+			if (new_fl->fl_pid == fl->fl_pid) {
-+				error = -EDEADLOCK;
-+				goto out;
-+			}
-+			continue;
-+		}
- 		if (want_write) {
- 			if (fl->fl_flags & FL_UNLOCK_PENDING)
- 				continue;
-@@ -1634,6 +1644,13 @@ int __break_lease(struct inode *inode, unsigned int mode, unsigned int type)
- 			locks_delete_lock_ctx(fl, &dispose);
- 	}
- 
-+	/* We differentiate between -EDEADLOCK and -ETXTBSY so the above loop
-+	 * continues with -ETXTBSY looking for a potential deadlock instead.
-+	 * If deadlock is not found go ahead and return -ETXTBSY.
-+	 */
-+	if (error == -ETXTBSY)
-+		goto out;
-+
- 	if (list_empty(&ctx->flc_lease))
- 		goto out;
- 
-@@ -2044,9 +2061,11 @@ static int do_fcntl_add_lease(unsigned int fd, struct file *filp, long arg)
- 	 * to revoke the lease in break_layout()  And this is done by using
- 	 * F_WRLCK in the break code.
- 	 */
--	if (arg == F_LAYOUT) {
-+	if ((arg & F_LAYOUT) == F_LAYOUT) {
-+		if ((arg & F_EXCLUSIVE) == F_EXCLUSIVE)
-+			flags |= FL_EXCLUSIVE;
- 		arg = F_RDLCK;
--		flags = FL_LAYOUT;
-+		flags |= FL_LAYOUT;
- 	}
- 
- 	fl = lease_alloc(filp, arg, flags);
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index dd60d5be9886..2e41ce547913 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -1005,6 +1005,7 @@ static inline struct file *get_file(struct file *f)
- #define FL_UNLOCK_PENDING	512 /* Lease is being broken */
- #define FL_OFDLCK	1024	/* lock is "owned" by struct file */
- #define FL_LAYOUT	2048	/* outstanding pNFS layout or user held pin */
-+#define FL_EXCLUSIVE	4096	/* Layout lease is exclusive */
- 
- #define FL_CLOSE_POSIX (FL_POSIX | FL_CLOSE)
- 
-diff --git a/include/uapi/asm-generic/fcntl.h b/include/uapi/asm-generic/fcntl.h
-index baddd54f3031..88b175ceccbc 100644
---- a/include/uapi/asm-generic/fcntl.h
-+++ b/include/uapi/asm-generic/fcntl.h
-@@ -176,6 +176,8 @@ struct f_owner_ex {
- 
- #define F_LAYOUT	16      /* layout lease to allow longterm pins such as
- 				   RDMA */
-+#define F_EXCLUSIVE	32      /* layout lease is exclusive */
-+				/* FIXME or shoudl this be F_EXLCK??? */
- 
- /* operations for bsd flock(), also used by the kernel implementation */
- #define LOCK_SH		1	/* shared lock */
--- 
-2.20.1
-
+Tested-by: Suren Baghdasaryan <surenb@google.com>
