@@ -6,99 +6,328 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB7DC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 08:55:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AA29C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 08:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7302420B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 08:55:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CDCF2086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 08:57:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406036AbfHIIzZ (ORCPT
+        id S2406019AbfHII5V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 04:55:25 -0400
-Received: from foss.arm.com ([217.140.110.172]:43682 "EHLO foss.arm.com"
+        Fri, 9 Aug 2019 04:57:21 -0400
+Received: from foss.arm.com ([217.140.110.172]:43720 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405785AbfHIIzZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 04:55:25 -0400
+        id S2405888AbfHII5U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 04:57:20 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7CA5D344;
-        Fri,  9 Aug 2019 01:55:24 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5D9333F706;
-        Fri,  9 Aug 2019 01:55:23 -0700 (PDT)
-Date:   Fri, 9 Aug 2019 09:55:21 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jiping Ma <jiping.ma2@windriver.com>, mingo@redhat.com,
-        catalin.marinas@arm.com, will.deacon@arm.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/2 v2] tracing/arm64: Have max stack tracer handle the
- case of return address after data
-Message-ID: <20190809085520.GC48423@lakrids.cambridge.arm.com>
-References: <20190807172826.352574408@goodmis.org>
- <20190807172907.155165959@goodmis.org>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6D0F5344;
+        Fri,  9 Aug 2019 01:57:19 -0700 (PDT)
+Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 680393F706;
+        Fri,  9 Aug 2019 01:57:18 -0700 (PDT)
+Subject: Re: [PATCH 2/3] pagewalk: seperate function pointers from iterator
+ data
+To:     Christoph Hellwig <hch@lst.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     =?UTF-8?Q?Thomas_Hellstr=c3=b6m?= <thomas@shipmail.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <20190808154240.9384-1-hch@lst.de>
+ <20190808154240.9384-3-hch@lst.de>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <e418faa0-49bf-1bc6-8f77-2849c1b6ae70@arm.com>
+Date:   Fri, 9 Aug 2019 09:57:17 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190807172907.155165959@goodmis.org>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <20190808154240.9384-3-hch@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 07, 2019 at 01:28:27PM -0400, Steven Rostedt wrote:
-> From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: s/seperate/separate/
+
+On 08/08/2019 16:42, Christoph Hellwig wrote:
+> The mm_walk structure currently mixed data and code.  Split out the
+> operations vectors into a new mm_walk_ops structure, and while we
+> are changing the API also declare the mm_walk structure inside the
+> walk_page_range and walk_page_vma functions.
 > 
-> Most archs (well at least x86) store the function call return address on the
-> stack before storing the local variables for the function. The max stack
-> tracer depends on this in its algorithm to display the stack size of each
-> function it finds in the back trace.
+> Based on patch from Linus Torvalds.
 > 
-> Some archs (arm64), may store the return address (from its link register)
-> just before calling a nested function. There's no reason to save the link
-> register on leaf functions, as it wont be updated. This breaks the algorithm
-> of the max stack tracer.
-> 
-> Add a new define ARCH_RET_ADDR_AFTER_LOCAL_VARS that an architecture may set
-> if it stores the return address (link register) after it stores the
-> function's local variables, and have the stack trace shift the values of the
-> mapped stack size to the appropriate functions.
-> 
-> Link: 20190802094103.163576-1-jiping.ma2@windriver.com
-> 
-> Reported-by: Jiping Ma <jiping.ma2@windriver.com>
-> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
->  arch/arm64/include/asm/ftrace.h | 13 +++++++++++++
->  kernel/trace/trace_stack.c      | 14 ++++++++++++++
->  2 files changed, 27 insertions(+)
+>  arch/openrisc/kernel/dma.c              |  22 +++--
+>  arch/powerpc/mm/book3s64/subpage_prot.c |  10 +-
+>  arch/s390/mm/gmap.c                     |  33 +++----
+>  fs/proc/task_mmu.c                      |  74 +++++++--------
+>  include/linux/pagewalk.h                |  64 +++++++------
+>  mm/hmm.c                                |  40 +++-----
+>  mm/madvise.c                            |  41 +++-----
+>  mm/memcontrol.c                         |  23 +++--
+>  mm/mempolicy.c                          |  15 ++-
+>  mm/migrate.c                            |  15 ++-
+>  mm/mincore.c                            |  15 ++-
+>  mm/mprotect.c                           |  24 ++---
+>  mm/pagewalk.c                           | 118 ++++++++++++++----------
+>  13 files changed, 245 insertions(+), 249 deletions(-)
 > 
-> diff --git a/arch/arm64/include/asm/ftrace.h b/arch/arm64/include/asm/ftrace.h
-> index 5ab5200b2bdc..961e98618db4 100644
-> --- a/arch/arm64/include/asm/ftrace.h
-> +++ b/arch/arm64/include/asm/ftrace.h
-> @@ -14,6 +14,19 @@
->  #define MCOUNT_ADDR		((unsigned long)_mcount)
->  #define MCOUNT_INSN_SIZE	AARCH64_INSN_SIZE
+
+[...]
+> diff --git a/mm/pagewalk.c b/mm/pagewalk.c
+> index 8a92a961a2ee..28510fc0dde1 100644
+> --- a/mm/pagewalk.c
+> +++ b/mm/pagewalk.c
+> @@ -9,10 +9,11 @@ static int walk_pte_range(pmd_t *pmd, unsigned long addr, unsigned long end,
+>  {
+>  	pte_t *pte;
+>  	int err = 0;
+> +	const struct mm_walk_ops *ops = walk->ops;
 >  
-> +/*
-> + * Currently, gcc tends to save the link register after the local variables
-> + * on the stack. This causes the max stack tracer to report the function
-> + * frame sizes for the wrong functions. By defining
-> + * ARCH_RET_ADDR_AFTER_LOCAL_VARS, it will tell the stack tracer to expect
-> + * to find the return address on the stack after the local variables have
-> + * been set up.
-> + *
-> + * Note, this may change in the future, and we will need to deal with that
-> + * if it were to happen.
-> + */
-> +#define ARCH_RET_ADDR_AFTER_LOCAL_VARS 1
+>  	pte = pte_offset_map(pmd, addr);
+>  	for (;;) {
+> -		err = walk->pte_entry(pte, addr, addr + PAGE_SIZE, walk);
+> +		err = ops->pte_entry(pte, addr, addr + PAGE_SIZE, walk);
+>  		if (err)
+>  		       break;
+>  		addr += PAGE_SIZE;
+> @@ -30,6 +31,7 @@ static int walk_pmd_range(pud_t *pud, unsigned long addr, unsigned long end,
+>  {
+>  	pmd_t *pmd;
+>  	unsigned long next;
+> +	const struct mm_walk_ops *ops = walk->ops;
+>  	int err = 0;
+>  
+>  	pmd = pmd_offset(pud, addr);
+> @@ -37,8 +39,8 @@ static int walk_pmd_range(pud_t *pud, unsigned long addr, unsigned long end,
+>  again:
+>  		next = pmd_addr_end(addr, end);
+>  		if (pmd_none(*pmd) || !walk->vma) {
+> -			if (walk->pte_hole)
+> -				err = walk->pte_hole(addr, next, walk);
+> +			if (ops->pte_hole)
+> +				err = ops->pte_hole(addr, next, walk);
+>  			if (err)
+>  				break;
+>  			continue;
+> @@ -47,8 +49,8 @@ static int walk_pmd_range(pud_t *pud, unsigned long addr, unsigned long end,
+>  		 * This implies that each ->pmd_entry() handler
+>  		 * needs to know about pmd_trans_huge() pmds
+>  		 */
+> -		if (walk->pmd_entry)
+> -			err = walk->pmd_entry(pmd, addr, next, walk);
+> +		if (ops->pmd_entry)
+> +			err = ops->pmd_entry(pmd, addr, next, walk);
+>  		if (err)
+>  			break;
+>  
+> @@ -56,7 +58,7 @@ static int walk_pmd_range(pud_t *pud, unsigned long addr, unsigned long end,
+>  		 * Check this here so we only break down trans_huge
+>  		 * pages when we _need_ to
+>  		 */
+> -		if (!walk->pte_entry)
+> +		if (!ops->pte_entry)
+>  			continue;
+>  
+>  		split_huge_pmd(walk->vma, pmd, addr);
+> @@ -75,6 +77,7 @@ static int walk_pud_range(p4d_t *p4d, unsigned long addr, unsigned long end,
+>  {
+>  	pud_t *pud;
+>  	unsigned long next;
+> +	const struct mm_walk_ops *ops = walk->ops;
+>  	int err = 0;
+>  
+>  	pud = pud_offset(p4d, addr);
+> @@ -82,18 +85,18 @@ static int walk_pud_range(p4d_t *p4d, unsigned long addr, unsigned long end,
+>   again:
+>  		next = pud_addr_end(addr, end);
+>  		if (pud_none(*pud) || !walk->vma) {
+> -			if (walk->pte_hole)
+> -				err = walk->pte_hole(addr, next, walk);
+> +			if (ops->pte_hole)
+> +				err = ops->pte_hole(addr, next, walk);
+>  			if (err)
+>  				break;
+>  			continue;
+>  		}
+>  
+> -		if (walk->pud_entry) {
+> +		if (ops->pud_entry) {
+>  			spinlock_t *ptl = pud_trans_huge_lock(pud, walk->vma);
+>  
+>  			if (ptl) {
+> -				err = walk->pud_entry(pud, addr, next, walk);
+> +				err = ops->pud_entry(pud, addr, next, walk);
+>  				spin_unlock(ptl);
+>  				if (err)
+>  					break;
+> @@ -105,7 +108,7 @@ static int walk_pud_range(p4d_t *p4d, unsigned long addr, unsigned long end,
+>  		if (pud_none(*pud))
+>  			goto again;
+>  
+> -		if (walk->pmd_entry || walk->pte_entry)
+> +		if (ops->pmd_entry || ops->pte_entry)
+>  			err = walk_pmd_range(pud, addr, next, walk);
+>  		if (err)
+>  			break;
+> @@ -119,19 +122,20 @@ static int walk_p4d_range(pgd_t *pgd, unsigned long addr, unsigned long end,
+>  {
+>  	p4d_t *p4d;
+>  	unsigned long next;
+> +	const struct mm_walk_ops *ops = walk->ops;
+>  	int err = 0;
+>  
+>  	p4d = p4d_offset(pgd, addr);
+>  	do {
+>  		next = p4d_addr_end(addr, end);
+>  		if (p4d_none_or_clear_bad(p4d)) {
+> -			if (walk->pte_hole)
+> -				err = walk->pte_hole(addr, next, walk);
+> +			if (ops->pte_hole)
+> +				err = ops->pte_hole(addr, next, walk);
+>  			if (err)
+>  				break;
+>  			continue;
+>  		}
+> -		if (walk->pmd_entry || walk->pte_entry)
+> +		if (ops->pmd_entry || ops->pte_entry)
+>  			err = walk_pud_range(p4d, addr, next, walk);
+>  		if (err)
+>  			break;
+> @@ -145,19 +149,20 @@ static int walk_pgd_range(unsigned long addr, unsigned long end,
+>  {
+>  	pgd_t *pgd;
+>  	unsigned long next;
+> +	const struct mm_walk_ops *ops = walk->ops;
+>  	int err = 0;
+>  
+>  	pgd = pgd_offset(walk->mm, addr);
+>  	do {
+>  		next = pgd_addr_end(addr, end);
+>  		if (pgd_none_or_clear_bad(pgd)) {
+> -			if (walk->pte_hole)
+> -				err = walk->pte_hole(addr, next, walk);
+> +			if (ops->pte_hole)
+> +				err = ops->pte_hole(addr, next, walk);
+>  			if (err)
+>  				break;
+>  			continue;
+>  		}
+> -		if (walk->pmd_entry || walk->pte_entry)
+> +		if (ops->pmd_entry || ops->pte_entry)
+>  			err = walk_p4d_range(pgd, addr, next, walk);
+>  		if (err)
+>  			break;
+> @@ -183,6 +188,7 @@ static int walk_hugetlb_range(unsigned long addr, unsigned long end,
+>  	unsigned long hmask = huge_page_mask(h);
+>  	unsigned long sz = huge_page_size(h);
+>  	pte_t *pte;
+> +	const struct mm_walk_ops *ops = walk->ops;
+>  	int err = 0;
+>  
+>  	do {
+> @@ -190,9 +196,9 @@ static int walk_hugetlb_range(unsigned long addr, unsigned long end,
+>  		pte = huge_pte_offset(walk->mm, addr & hmask, sz);
+>  
+>  		if (pte)
+> -			err = walk->hugetlb_entry(pte, hmask, addr, next, walk);
+> -		else if (walk->pte_hole)
+> -			err = walk->pte_hole(addr, next, walk);
+> +			err = ops->hugetlb_entry(pte, hmask, addr, next, walk);
+> +		else if (ops->pte_hole)
+> +			err = ops->pte_hole(addr, next, walk);
+>  
+>  		if (err)
+>  			break;
+> @@ -220,9 +226,10 @@ static int walk_page_test(unsigned long start, unsigned long end,
+>  			struct mm_walk *walk)
+>  {
+>  	struct vm_area_struct *vma = walk->vma;
+> +	const struct mm_walk_ops *ops = walk->ops;
+>  
+> -	if (walk->test_walk)
+> -		return walk->test_walk(start, end, walk);
+> +	if (ops->test_walk)
+> +		return ops->test_walk(start, end, walk);
+>  
+>  	/*
+>  	 * vma(VM_PFNMAP) doesn't have any valid struct pages behind VM_PFNMAP
+> @@ -234,8 +241,8 @@ static int walk_page_test(unsigned long start, unsigned long end,
+>  	 */
+>  	if (vma->vm_flags & VM_PFNMAP) {
+>  		int err = 1;
+> -		if (walk->pte_hole)
+> -			err = walk->pte_hole(start, end, walk);
+> +		if (ops->pte_hole)
+> +			err = ops->pte_hole(start, end, walk);
+>  		return err ? err : 1;
+>  	}
+>  	return 0;
+> @@ -248,7 +255,8 @@ static int __walk_page_range(unsigned long start, unsigned long end,
+>  	struct vm_area_struct *vma = walk->vma;
+>  
+>  	if (vma && is_vm_hugetlb_page(vma)) {
+> -		if (walk->hugetlb_entry)
+> +		const struct mm_walk_ops *ops = walk->ops;
 
-FWIW (with whatever this got renamed to):
+NIT: checkpatch would like a blank line here
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+> +		if (ops->hugetlb_entry)
+>  			err = walk_hugetlb_range(start, end, walk);
+>  	} else
+>  		err = walk_pgd_range(start, end, walk);
+> @@ -258,11 +266,13 @@ static int __walk_page_range(unsigned long start, unsigned long end,
+>  
+>  /**
+>   * walk_page_range - walk page table with caller specific callbacks
+> - * @start: start address of the virtual address range
+> - * @end: end address of the virtual address range
+> - * @walk: mm_walk structure defining the callbacks and the target address space
+> + * @mm:		mm_struct representing the target process of page table walk
+> + * @start:	start address of the virtual address range
+> + * @end:	end address of the virtual address range
+> + * @ops:	operation to call during the walk
+> + * @private:	private data for callbacks' usage
+>   *
+> - * Recursively walk the page table tree of the process represented by @walk->mm
+> + * Recursively walk the page table tree of the process represented by @mm
+>   * within the virtual address range [@start, @end). During walking, we can do
+>   * some caller-specific works for each entry, by setting up pmd_entry(),
+>   * pte_entry(), and/or hugetlb_entry(). If you don't set up for some of these
+
+Missing context:
+>  *
+>  * Before starting to walk page table, some callers want to check whether
+>  * they really want to walk over the current vma, typically by checking
+>  * its vm_flags. walk_page_test() and @walk->test_walk() are used for this
+>  * purpose.
+
+@walk->test_walk() should now be @ops->test_walk()
+
+> @@ -283,42 +293,48 @@ static int __walk_page_range(unsigned long start, unsigned long end,
+>   *
+>   * struct mm_walk keeps current values of some common data like vma and pmd,
+>   * which are useful for the access from callbacks. If you want to pass some
+> - * caller-specific data to callbacks, @walk->private should be helpful.
+> + * caller-specific data to callbacks, @private should be helpful.
+>   *
+>   * Locking:
+>   *   Callers of walk_page_range() and walk_page_vma() should hold
+>   *   @walk->mm->mmap_sem, because these function traverse vma list and/or
+
+s/walk->//
+
+Otherwise looks good - I've rebased my series on it and the initial
+testing is fine. So for the series:
+
+Reviewed-by: Steven Price <steven.price@arm.com>
 
 Thanks,
-Mark.
+
+Steve
