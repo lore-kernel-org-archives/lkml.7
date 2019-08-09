@@ -2,140 +2,111 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D732EC31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:20:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E766C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:23:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A193B21882
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:20:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58B6B2086D
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:23:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405690AbfHILUe (ORCPT
+        id S2406054AbfHILXl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 07:20:34 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43970 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726152AbfHILUd (ORCPT
+        Fri, 9 Aug 2019 07:23:41 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:43210 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726152AbfHILXk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 07:20:33 -0400
-Received: by mail-wr1-f67.google.com with SMTP id p13so23312433wru.10;
-        Fri, 09 Aug 2019 04:20:32 -0700 (PDT)
+        Fri, 9 Aug 2019 07:23:40 -0400
+Received: by mail-qt1-f193.google.com with SMTP id w17so14770656qto.10;
+        Fri, 09 Aug 2019 04:23:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=2TA4E4ioABoApo3cN10r+bj+j/F58l9Z+lpydwND1/A=;
-        b=jcxCYjjPC4sqE62z3SxLSdG/ix84v8vX0Z/CRAqbAqNrnccE5dHy3x/TUJGOHBtxfC
-         BC7rt9vBcPPhkPEL3ZGRVXESN0hp6wqp2r+s4KhAGEw652ndQklPtePHFTrS4N79bpBE
-         UYEpTf5ooI+Z6C/SBQyBemQ+pNoxJGmG13ArTVyh1wtG8gsG01TyCDJD4WLqHwiwMabW
-         EZKs+PylXnmAPbOuQJgzWNhODNW2WG1l3REoW/JeVA5XqCrHX/jBAXmS7qxph9wYcXO6
-         DbLQZHGbFBK31cQ0yqaBIhugmLg8uWomK6i2s424+eCyEe/Ls7UMneWtlKLY7AeWT297
-         dUwA==
-X-Gm-Message-State: APjAAAVwaKiw0wMphc4eQ7K+TTl4iSLWDK9fyLP7XTmrmUAz75V2zrMU
-        AHCf0+nB+9I2bXVrhm8/sJFX46+TZzdQ8Q==
-X-Google-Smtp-Source: APXvYqzMgDe8oAcjmYxs+wCUDunJMXo2Ep3gbIXH69T6o9itmzxiNjv2oqHt+mp890zSOrxC69dTrA==
-X-Received: by 2002:adf:e884:: with SMTP id d4mr13902945wrm.99.1565349631718;
-        Fri, 09 Aug 2019 04:20:31 -0700 (PDT)
-Received: from tfsielt31850.garage.tyco.com ([77.107.218.170])
-        by smtp.gmail.com with ESMTPSA id u1sm6018079wml.14.2019.08.09.04.20.30
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 09 Aug 2019 04:20:30 -0700 (PDT)
-From:   =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-Subject: [PATCH v2] net: phy: at803x: stop switching phy delay config needlessly
-Date:   Fri,  9 Aug 2019 12:20:25 +0100
-Message-Id: <20190809112025.27482-1-git@andred.net>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190809005754.23009-1-git@andred.net>
-References: <20190809005754.23009-1-git@andred.net>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gRvZxPuek6JRQruqkUJVQMjk/VZ8xO7dmw6h4WlzFd8=;
+        b=WuaD4yAT13VVQavIIanPYMWs5+oqp9KI29Q+xHlYVB7kU1d3Zww6FUKKWuzIx+8Ktl
+         yFhaN69ky24Y+DsAc/997F3Xl3ggb4Wb5Dd2/mk1RhiuEChJfypa9YPl0vS/y6eB+2Se
+         tfQ181d5FukxVH1ASnDRfBSxV3SrXHjKPqv3Wgv0XatKegTLK4Z/Hku3xpysOjWMxTer
+         2ftZ0PYk9on7TntwuR2xA9cKHJJcBW03NRnEfOXVxDErysGr9GBcqou102NSjouL4td/
+         sIqb3ekeKlBEGRZgodiMOImiOGmsUgMRfblRrq/XJdd+zH/ckKW4ZnwuuvB9qSOzWr63
+         gzYg==
+X-Gm-Message-State: APjAAAWwrlx+lQ20E8NqbfqMQZA0AuztnVm6ZDx0IgJcQC0vY+6vN5Pd
+        jpXZjC7siOENGeQgOWEgVHmXRss/iMgo1GmvfMU=
+X-Google-Smtp-Source: APXvYqwyfun0rS3dI0VPy9YQLTjb23p3p5REd7rS9TuRRKEk5l8WvDyNNaWtDch5+OMsqDgqQyJPBtXPE6lfaVR0VOI=
+X-Received: by 2002:ac8:5311:: with SMTP id t17mr17162360qtn.304.1565349819769;
+ Fri, 09 Aug 2019 04:23:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190808212234.2213262-1-arnd@arndb.de> <20190808212234.2213262-14-arnd@arndb.de>
+ <20190808214257.GF178933@dtor-ws> <CAK8P3a2TOcjxwCBGkZAhMAf9HuTL=FAB1e0=FAg+oHB0U1nJ0A@mail.gmail.com>
+ <20190808221950.GG178933@dtor-ws> <20190808233941.v6elo2mdji5awylu@earth.universe>
+In-Reply-To: <20190808233941.v6elo2mdji5awylu@earth.universe>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 9 Aug 2019 13:23:23 +0200
+Message-ID: <CAK8P3a1QUo=qCGMdojN2RZmpr_kmkqBcJXAOab06yRgSzz4VzQ@mail.gmail.com>
+Subject: Re: [PATCH 13/22] input: omap: void using mach/*.h headers
+To:     Sebastian Reichel <sre@kernel.org>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Tony Lindgren <tony@atomide.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This driver does a funny dance disabling and re-enabling
-RX and/or TX delays. In any of the RGMII-ID modes, it first
-disables the delays, just to re-enable them again right
-away. This looks like a needless exercise.
+On Fri, Aug 9, 2019 at 1:39 AM Sebastian Reichel <sre@kernel.org> wrote:
+> On Thu, Aug 08, 2019 at 03:19:50PM -0700, Dmitry Torokhov wrote:
+> > On Thu, Aug 08, 2019 at 11:46:45PM +0200, Arnd Bergmann wrote:
+> > > On Thu, Aug 8, 2019 at 11:43 PM Dmitry Torokhov wrote:
+> > > > On Thu, Aug 08, 2019 at 11:22:22PM +0200, Arnd Bergmann wrote:
+> > > > > By using the new linux/soc/ti/omap1-io.h header instead,
+> > > > > compile-testing can be enabled, and a CONFIG_ARCH_MULTIPLATFORM
+> > > > > conversion of omap1 may eventually be possible.
+> > > > >
+> > > > > The warning in the header file gets removed in order to
+> > > > > allow CONFIG_COMPILE_TEST.
+> > > >
+> > > > Given that we want to migrate people off this driver everywhere but
+> > > > OMAP1 I wonder why we would want to improve compile coverage of it.
+> > >
+> > > Mainly for consistency: I'm converting all omap1 drivers in this series to
+> > > not rely on mach/* headers and to let them be compiled standalone.
+> > > The other drivers don't have a replacement, so I could treat this different
+> > > from the rest and skip the Kconfig and platform_data changes if you
+> > > prefer.
+> >
+> > Yes, because at least with the version you posted we are losing the
+> > #warning telling people to move to matrix_keypad. We could do:
+> >
+> > #ifndef CONFIG_COMPILE_TEST
+> > #warning ...
+> > #endif
+> >
+> > if you really want to allow compiling standalone for testing.
 
-Just enable the respective delays when in any of the
-relevant 'id' modes, and disable them otherwise.
+No, I'll just drop the compile-test portion and leave the warning
+untouched, leaving only the header file include as a preparation
+for multiplatform support then.
 
-Also, remove comments which don't add anything that can't be
-seen by looking at the code.
+> FWIW the driver depends on ARCH_OMAP1 and the warning is
+> only printed for !ARCH_OMAP1. In other words: The warning
+> is never printed at the moment. All OMAP2+ boards moved to
+> matrix-keypad long time ago and the driver does not support
+> OMAP2+ anymore since f799a3d8fe170 from 2012.
 
-Signed-off-by: André Draszik <git@andred.net>
-CC: Andrew Lunn <andrew@lunn.ch>
-CC: Florian Fainelli <f.fainelli@gmail.com>
-CC: Heiner Kallweit <hkallweit1@gmail.com>
-CC: "David S. Miller" <davem@davemloft.net>
-CC: netdev@vger.kernel.org
+Right, it also seems extremely unlikely that any new platform
+would start using the header, and it also doesn't look like
+anyone is interested in moving omap1 over to matrix-keypad.
 
----
-v2: also remove braces around single lines
----
- drivers/net/phy/at803x.c | 32 ++++++++------------------------
- 1 file changed, 8 insertions(+), 24 deletions(-)
-
-diff --git a/drivers/net/phy/at803x.c b/drivers/net/phy/at803x.c
-index 222ccd9ecfce..6ad8b1c63c34 100644
---- a/drivers/net/phy/at803x.c
-+++ b/drivers/net/phy/at803x.c
-@@ -257,36 +257,20 @@ static int at803x_config_init(struct phy_device *phydev)
- 	 *   after HW reset: RX delay enabled and TX delay disabled
- 	 *   after SW reset: RX delay enabled, while TX delay retains the
- 	 *   value before reset.
--	 *
--	 * So let's first disable the RX and TX delays in PHY and enable
--	 * them based on the mode selected (this also takes care of RGMII
--	 * mode where we expect delays to be disabled)
- 	 */
--
--	ret = at803x_disable_rx_delay(phydev);
--	if (ret < 0)
--		return ret;
--	ret = at803x_disable_tx_delay(phydev);
--	if (ret < 0)
--		return ret;
--
- 	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
--	    phydev->interface == PHY_INTERFACE_MODE_RGMII_RXID) {
--		/* If RGMII_ID or RGMII_RXID are specified enable RX delay,
--		 * otherwise keep it disabled
--		 */
-+	    phydev->interface == PHY_INTERFACE_MODE_RGMII_RXID)
- 		ret = at803x_enable_rx_delay(phydev);
--		if (ret < 0)
--			return ret;
--	}
-+	else
-+		ret = at803x_disable_rx_delay(phydev);
-+	if (ret < 0)
-+		return ret;
- 
- 	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
--	    phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID) {
--		/* If RGMII_ID or RGMII_TXID are specified enable TX delay,
--		 * otherwise keep it disabled
--		 */
-+	    phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID)
- 		ret = at803x_enable_tx_delay(phydev);
--	}
-+	else
-+		ret = at803x_disable_tx_delay(phydev);
- 
- 	return ret;
- }
--- 
-2.20.1
-
+       Arnd
