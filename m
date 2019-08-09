@@ -2,80 +2,81 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86644C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 05:48:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFFDEC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 05:49:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 531202089E
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 05:48:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="ztpno6V+"
+	by mail.kernel.org (Postfix) with ESMTP id CA43A20C01
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 05:49:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405615AbfHIFsI (ORCPT
+        id S2405623AbfHIFtB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 01:48:08 -0400
-Received: from cmta19.telus.net ([209.171.16.92]:60187 "EHLO cmta19.telus.net"
+        Fri, 9 Aug 2019 01:49:01 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40628 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727718AbfHIFsH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 01:48:07 -0400
-Received: from dougxps ([173.180.45.4])
-        by cmsmtp with SMTP
-        id vxkxhj2oCeRl4vxkzhGzqZ; Thu, 08 Aug 2019 23:48:06 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
-        t=1565329686; bh=g2gTzFC4G+ftse5loP4iwGkez7MZ+RNpw9w4IkSd6M4=;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date;
-        b=ztpno6V+F+A+72BoqukRLXSOyncnJpVTxZOLXyXRWxxp3i7TjavD7o1WDSV65P4FV
-         VHcJYG2E5zRdjFqQsGgBL0Vqh9bKpav0MBA0Xlv7Ca90dFx5Lf5FeCIv5LQ4wvyA83
-         zSGWA0B9CQYf0hhAQm9810dFxfYbEotMguFxIV0TIHvnGv2+1fIdRBODkn7VHc3M9P
-         zPVE752JfvfG//p4yIKQJE1Kg0ee/vdyr7dIPr2wVuJ2CBVSvX+mK2l8ZCV5K47u7y
-         /DV3s+LSWiFrZt/cPyrElgCQtnrnEu8Fi4sVwVW8KVa6mVf2T15jw1ZgYx2jsURwgu
-         RLtXGF/dz8s6Q==
-X-Telus-Authed: none
-X-Authority-Analysis: v=2.3 cv=KqozJleN c=1 sm=1 tr=0
- a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
- a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
- a=kj9zAlcOel0A:10 a=FPmxDNgG4_xlF3046EEA:9 a=CjuIK1q_8ugA:10
-From:   "Doug Smythies" <dsmythies@telus.net>
-To:     "'Viresh Kumar'" <viresh.kumar@linaro.org>
-Cc:     <linux-pm@vger.kernel.org>,
-        "'Vincent Guittot'" <vincent.guittot@linaro.org>,
-        <linux-kernel@vger.kernel.org>,
-        "'Rafael Wysocki'" <rjw@rjwysocki.net>,
-        "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>,
-        "'Len Brown'" <lenb@kernel.org>
-References: <e789eceae3f32a66fff923daeb85b33b88f21fe1.1565161495.git.viresh.kumar@linaro.org> <85cdbc41f7f59a79b96793cbdcd49c53f964e46d.1565317135.git.viresh.kumar@linaro.org>
-In-Reply-To: <85cdbc41f7f59a79b96793cbdcd49c53f964e46d.1565317135.git.viresh.kumar@linaro.org>
-Subject: RE: [PATCH V5 2/2] cpufreq: intel_pstate: Implement QoS supported freq constraints
-Date:   Thu, 8 Aug 2019 22:48:02 -0700
-Message-ID: <001e01d54e76$037c4180$0a74c480$@net>
-MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Office Outlook 12.0
-Content-Language: en-ca
-Thread-Index: AdVOWVya2W5jJ0NsR3CbiEAS4upLywAHDk0Q
-X-CMAE-Envelope: MS4wfFFgQRQ0Myu0YxB0EfN0X8DDw4IkrfGkavkV8mRwFdQl1fMUoVXmnnFRq/fDppxqhT5cOVQ1UN/8eDwkHZqSO4yHjFGJNgA+YFukFy1nGBKtcIVlDRMn
- gACMCX7jOt+Z4wFJTMezZe4BA/uZfac/k183w+rQq/uepPELNQU62d3VwdmGm0Jigb05mo/fLgehIIPbFXz2UswjDYFevumNhggla53P7NIWogCjas5NpdcN
- eXv26qGt1yY1rrZo2dxtJJS5JYGD4k/9E63hSkx4k82FZi1th9A6UcG17pQAgWOtxVeaIOZTD73IVgJV/YWhwZ6JjB04aE8XhPvyHVMHWC38xEHO9xNTel+n
- GHjoSktCZZPIZZf7yEfSCIO02u28WPpfgS1p0SLtkp9IQ431tSw=
+        id S1727718AbfHIFtB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 01:49:01 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0B06E7FDCA;
+        Fri,  9 Aug 2019 05:49:01 +0000 (UTC)
+Received: from hp-dl380pg8-01.lab.eng.pek2.redhat.com (hp-dl380pg8-01.lab.eng.pek2.redhat.com [10.73.8.10])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7F0835D9CC;
+        Fri,  9 Aug 2019 05:48:56 +0000 (UTC)
+From:   Jason Wang <jasowang@redhat.com>
+To:     mst@redhat.com, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, jgg@ziepe.ca, Jason Wang <jasowang@redhat.com>
+Subject: [PATCH V5 0/9] Fixes for vhost metadata acceleration
+Date:   Fri,  9 Aug 2019 01:48:42 -0400
+Message-Id: <20190809054851.20118-1-jasowang@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Fri, 09 Aug 2019 05:49:01 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019.08.08 19:23 Viresh Kumar wrote:
-> ---
-> V4->V5:
-> - dev_pm_qos_update_request() can return 1 in case of success, handle
->   that.
+Hi all:
 
-O.K. thanks,
-That fixes the "Fail" messages I was getting with V4.
+This series try to fix several issues introduced by meta data
+accelreation series. Please review.
 
-... Doug
+Changes from V4:
+- switch to use spinlock synchronize MMU notifier with accessors
 
+Changes from V3:
+- remove the unnecessary patch
+
+Changes from V2:
+- use seqlck helper to synchronize MMU notifier with vhost worker
+
+Changes from V1:
+- try not use RCU to syncrhonize MMU notifier with vhost worker
+- set dirty pages after no readers
+- return -EAGAIN only when we find the range is overlapped with
+  metadata
+
+Jason Wang (9):
+  vhost: don't set uaddr for invalid address
+  vhost: validate MMU notifier registration
+  vhost: fix vhost map leak
+  vhost: reset invalidate_count in vhost_set_vring_num_addr()
+  vhost: mark dirty pages during map uninit
+  vhost: don't do synchronize_rcu() in vhost_uninit_vq_maps()
+  vhost: do not use RCU to synchronize MMU notifier with worker
+  vhost: correctly set dirty pages in MMU notifiers callback
+  vhost: do not return -EAGAIN for non blocking invalidation too early
+
+ drivers/vhost/vhost.c | 202 +++++++++++++++++++++++++-----------------
+ drivers/vhost/vhost.h |   6 +-
+ 2 files changed, 122 insertions(+), 86 deletions(-)
+
+-- 
+2.18.1
 
