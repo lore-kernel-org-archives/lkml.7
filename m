@@ -2,116 +2,106 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C6EC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 10:01:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2DA3C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 10:04:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABDAD2166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 10:01:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OV0ixlMx"
+	by mail.kernel.org (Postfix) with ESMTP id BA4232171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 10:04:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406299AbfHIKBz (ORCPT
+        id S2406236AbfHIKEZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 06:01:55 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:39609 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726152AbfHIKBz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 06:01:55 -0400
-Received: by mail-lj1-f194.google.com with SMTP id v18so91489260ljh.6
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 03:01:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=pg4XtA+SLXLzi6cetxivjFuoLtXdpkbDdVYr7VT2SpY=;
-        b=OV0ixlMxJ78+G+mzjCxfvoi/QFApRzxYxo73BN4Iw2aGxmZi9pEm9P9Z0Iqy/Ylc0K
-         QicaYcnvM3WdyQeczJ1la+M5adWB6HcOG3TBjwvKCBlO1waiz0NvmDQp+3dkNaXH6CQ4
-         tPApB0dE81dc5dJzui/jEjmbbrmAKH7BFY4164pN/y6CqvOWGgNID1AUUp3LInxs4I2u
-         +4V21lAxOih31dPzG0gxHHak55IsasO8gM16Nq11AN5JaVVHgibpTV/xcMzw2DErL8Ls
-         FNG+/mgTYViQgQjH4fUr2slfMl/XZ4R5WdaSbKmvC/6Hml0HqfPa5rzfdCVQu5n3L0zK
-         h2mQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=pg4XtA+SLXLzi6cetxivjFuoLtXdpkbDdVYr7VT2SpY=;
-        b=hWEuSJ2XKFAEuT7CYQGspdO3z93LpsdZkIRneLr9ZaPyxsgZBryFbywfsWYMbUNS0v
-         V8uIG2YBpbhDsZrCowTmKpV6JI1vytFHEqBIyp6kSZroBngTw6NmGI9djghi2YwrlnQB
-         NDgABwa3uCUWi1XoqwpXXZYZtfem0q/wA8qa7e/niynBM5HCJcopBzQYKTWOIYVOoeGx
-         9//+Rcg4eBD2JAismGp/f3rlRLHDjq1cVb0IlDUNKCal0C1XHbbVHdG1gTpjwzXRWA6H
-         5VnR0n5yGJMQeOeyd3qbppdpE9CSglzY1H81Bet7AVqt33Qq0bz8pqK6Ihn5HyKqg5Zr
-         7G4w==
-X-Gm-Message-State: APjAAAWqjo0vyPz/pWvqc9UVo6RGdIMxa4qrVvYf27aCmZVWJzTJP/zQ
-        dEn1ebu1qYbAlN4FmgrtIY1HqA==
-X-Google-Smtp-Source: APXvYqwo9Be0wGp47XSaXElvSTAeHX/Cqr/OrCwxyl6LPCE3+XV76iOxjrsetOV6TOEC5eQTioYcdA==
-X-Received: by 2002:a2e:3e01:: with SMTP id l1mr10780346lja.208.1565344913095;
-        Fri, 09 Aug 2019 03:01:53 -0700 (PDT)
-Received: from localhost.localdomain (h-158-174-22-210.NA.cust.bahnhof.se. [158.174.22.210])
-        by smtp.gmail.com with ESMTPSA id i123sm2654114lfi.72.2019.08.09.03.01.51
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 09 Aug 2019 03:01:52 -0700 (PDT)
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-To:     Linus <torvalds@linux-foundation.org>, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [GIT PULL] MMC fixes for v5.3-rc4
-Date:   Fri,  9 Aug 2019 12:01:49 +0200
-Message-Id: <20190809100149.7027-1-ulf.hansson@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Fri, 9 Aug 2019 06:04:25 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56926 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726185AbfHIKEZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 06:04:25 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D5DC8AE36;
+        Fri,  9 Aug 2019 10:04:23 +0000 (UTC)
+Date:   Fri, 09 Aug 2019 12:04:23 +0200
+Message-ID: <s5hh86qhcyg.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     <lgirdwood@gmail.com>, <broonie@kernel.org>,
+        <pierre-louis.bossart@linux.intel.com>, <yang.jie@linux.intel.com>,
+        <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ASoC: SOF: Intel: Add missing include file hdac_hda.h
+In-Reply-To: <20190809095550.71040-1-yuehaibing@huawei.com>
+References: <20190809095550.71040-1-yuehaibing@huawei.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Fri, 09 Aug 2019 11:55:50 +0200,
+YueHaibing wrote:
+> 
+> Building with SND_SOC_SOF_HDA_AUDIO_CODEC fails:
+> 
+> sound/soc/sof/intel/hda-bus.c: In function sof_hda_bus_init:
+> sound/soc/sof/intel/hda-bus.c:16:25: error: implicit declaration of function
+>  snd_soc_hdac_hda_get_ops; did you mean snd_soc_jack_add_gpiods? [-Werror=implicit-function-declaration]
+>  #define sof_hda_ext_ops snd_soc_hdac_hda_get_ops()
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Fixes: d4ff1b3917a5 ('ASoC: SOF: Intel: Initialize hdaudio bus properly")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-Here's a PR with a couple of MMC fixes intended for v5.3-rc4. Details about the
-highlights are as usual found in the signed tag.
+Damn, it seems another oversight.
 
-Please pull this in!
+And now the inclusion in sound/soc/sof/intel/hda.c is superfluous,
+too, so we should just move like
 
-Kind regards
-Ulf Hansson
+diff --git a/sound/soc/sof/intel/hda-bus.c b/sound/soc/sof/intel/hda-bus.c
+index 0caec3a070d3..2b384134a3db 100644
+--- a/sound/soc/sof/intel/hda-bus.c
++++ b/sound/soc/sof/intel/hda-bus.c
+@@ -11,6 +11,9 @@
+ #include <sound/hdaudio.h>
+ #include "../sof-priv.h"
+ #include "hda.h"
++#if IS_ENABLED(CONFIG_SND_SOC_SOF_HDA_AUDIO_CODEC)
++#include "../../codecs/hdac_hda.h"
++#endif
+ 
+ #if IS_ENABLED(CONFIG_SND_SOC_SOF_HDA_AUDIO_CODEC)
+ #define sof_hda_ext_ops	snd_soc_hdac_hda_get_ops()
+diff --git a/sound/soc/sof/intel/hda.c b/sound/soc/sof/intel/hda.c
+index 7ca27000c34d..dd6c8ad62b3e 100644
+--- a/sound/soc/sof/intel/hda.c
++++ b/sound/soc/sof/intel/hda.c
+@@ -23,9 +23,6 @@
+ #include <sound/sof/xtensa.h>
+ #include "../ops.h"
+ #include "hda.h"
+-#if IS_ENABLED(CONFIG_SND_SOC_SOF_HDA_AUDIO_CODEC)
+-#include "../../codecs/hdac_hda.h"
+-#endif
+ 
+ #if IS_ENABLED(CONFIG_SND_SOC_SOF_HDA)
+ #include <sound/soc-acpi-intel-match.h>
 
 
-The following changes since commit e21a712a9685488f5ce80495b37b9fdbe96c230d:
+Could you check whether this works instead?
 
-  Linux 5.3-rc3 (2019-08-04 18:40:12 -0700)
 
-are available in the Git repository at:
+BTW, the inclusion of "../../codecs/hdac_hdac.h" is very ugly...
+In general if a header file is referred from another driver, it should
+be in a more public place under include/sound.  If any, we can create
+a subdirectory like include/sound/codecs.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git tags/mmc-v5.3-rc3
 
-for you to fetch changes up to b803974a86039913d5280add083d730b2b9ed8ec:
+thanks,
 
-  mmc: cavium: Add the missing dma unmap when the dma has finished. (2019-08-06 18:59:14 +0200)
-
-----------------------------------------------------------------
-MMC host:
- - cavium: Fix DMA support
- - sdhci-sprd: Fix soft reset when runtime resuming
-
-----------------------------------------------------------------
-Baolin Wang (1):
-      mmc: sdhci-sprd: Fix the incorrect soft reset operation when runtime resuming
-
-Kevin Hao (2):
-      mmc: cavium: Set the correct dma max segment size for mmc_host
-      mmc: cavium: Add the missing dma unmap when the dma has finished.
-
- drivers/mmc/host/cavium.c          | 4 +++-
- drivers/mmc/host/sdhci-acpi.c      | 2 +-
- drivers/mmc/host/sdhci-esdhc-imx.c | 2 +-
- drivers/mmc/host/sdhci-of-at91.c   | 2 +-
- drivers/mmc/host/sdhci-pci-core.c  | 4 ++--
- drivers/mmc/host/sdhci-pxav3.c     | 2 +-
- drivers/mmc/host/sdhci-s3c.c       | 2 +-
- drivers/mmc/host/sdhci-sprd.c      | 2 +-
- drivers/mmc/host/sdhci-xenon.c     | 2 +-
- drivers/mmc/host/sdhci.c           | 4 ++--
- drivers/mmc/host/sdhci.h           | 2 +-
- 11 files changed, 15 insertions(+), 13 deletions(-)
+Takashi
