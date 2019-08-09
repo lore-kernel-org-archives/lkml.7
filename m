@@ -2,132 +2,140 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B6AC32757
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A1CCC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F7AF2184E
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:16:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565342178;
-	bh=TV6APTnpfV3NfB2dQiDb6/LNtdcZ4qHbPaHm2cq8Boc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RpAFBdkHtUDn1xdQRDgamqncU+i8ME2a4eu7bKgYX6g5t9E0jJy7qJYLFzgBdiLCA
-	 1B60UL28j7/UzIJe1AWMXuYBgcBpwiMLpBXhJgb10GkE8qngrlLSFNds4PMP2duk1X
-	 y3XuzKteKXzoEnNhqPxKp0M/ElI2daAL5V2ISvT8=
+	by mail.kernel.org (Postfix) with ESMTP id 6142621783
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:16:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="QED54Z6S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406090AbfHIJQR (ORCPT
+        id S2406113AbfHIJQb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 05:16:17 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60362 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2405641AbfHIJQR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 05:16:17 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id EAA78B011;
-        Fri,  9 Aug 2019 09:16:14 +0000 (UTC)
-Date:   Fri, 9 Aug 2019 11:16:14 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jerome Glisse <jglisse@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Black <daniel@linux.ibm.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>
-Subject: Re: [PATCH 1/3] mm/mlock.c: convert put_page() to put_user_page*()
-Message-ID: <20190809091614.GO18351@dhcp22.suse.cz>
-References: <20190805222019.28592-2-jhubbard@nvidia.com>
- <20190807110147.GT11812@dhcp22.suse.cz>
- <01b5ed91-a8f7-6b36-a068-31870c05aad6@nvidia.com>
- <20190808062155.GF11812@dhcp22.suse.cz>
- <875dca95-b037-d0c7-38bc-4b4c4deea2c7@suse.cz>
- <306128f9-8cc6-761b-9b05-578edf6cce56@nvidia.com>
- <d1ecb0d4-ea6a-637d-7029-687b950b783f@nvidia.com>
- <420a5039-a79c-3872-38ea-807cedca3b8a@suse.cz>
- <20190809082307.GL18351@dhcp22.suse.cz>
- <a83e4449-fc8d-7771-1b78-2fa645fa0772@nvidia.com>
+        Fri, 9 Aug 2019 05:16:31 -0400
+Received: from vps.xff.cz ([195.181.215.36]:46522 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405641AbfHIJQ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 05:16:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1565342186; bh=058fnVgEdld0XWcxrIoVMkGIvEFjKF/KELntlth1H7Y=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=QED54Z6SSAM6GpHg9GkeBumXygOE+uGYcbOUyEZ9cs3qsVjloPPJcPaoWwHrtpIsq
+         98dW5idtdWYH3HUAO8Xn4vgDBzZhDR7Bv02o8SKJTsAafO6SXIZSriBzJmZV/HcfIQ
+         BZIUIfh4poi+kviXd1y+WPaGI2SqNEYTghwjBE0Q=
+Date:   Fri, 9 Aug 2019 11:16:26 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        devicetree <devicetree@vger.kernel.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-rtc@vger.kernel.org
+Subject: Re: [linux-sunxi] [PATCH 0/3] Add basic support for RTC on Allwinner
+ H6 SoC
+Message-ID: <20190809091626.6kanjbmvbi4oipco@core.my.home>
+Mail-Followup-To: Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        devicetree <devicetree@vger.kernel.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-rtc@vger.kernel.org
+References: <20190412120730.473-1-megous@megous.com>
+ <CAGb2v66cbpsoHJoiFJkBwhZ5SbO+uO+Kf6gtnA3kPFQZq0329Q@mail.gmail.com>
+ <20190806183045.edhm3qzpegscf2z7@core.my.home>
+ <20190807105502.GK3600@piout.net>
+ <20190808121237.g6twq2nh3sayu3vx@core.my.home>
+ <20190808233930.GM3600@piout.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <a83e4449-fc8d-7771-1b78-2fa645fa0772@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190808233930.GM3600@piout.net>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 09-08-19 02:05:15, John Hubbard wrote:
-> On 8/9/19 1:23 AM, Michal Hocko wrote:
-> > On Fri 09-08-19 10:12:48, Vlastimil Babka wrote:
-> > > On 8/9/19 12:59 AM, John Hubbard wrote:
-> > > > > > That's true. However, I'm not sure munlocking is where the
-> > > > > > put_user_page() machinery is intended to be used anyway? These are
-> > > > > > short-term pins for struct page manipulation, not e.g. dirtying of page
-> > > > > > contents. Reading commit fc1d8e7cca2d I don't think this case falls
-> > > > > > within the reasoning there. Perhaps not all GUP users should be
-> > > > > > converted to the planned separate GUP tracking, and instead we should
-> > > > > > have a GUP/follow_page_mask() variant that keeps using get_page/put_page?
-> > > > > 
-> > > > > Interesting. So far, the approach has been to get all the gup callers to
-> > > > > release via put_user_page(), but if we add in Jan's and Ira's vaddr_pin_pages()
-> > > > > wrapper, then maybe we could leave some sites unconverted.
-> > > > > 
-> > > > > However, in order to do so, we would have to change things so that we have
-> > > > > one set of APIs (gup) that do *not* increment a pin count, and another set
-> > > > > (vaddr_pin_pages) that do.
-> > > > > 
-> > > > > Is that where we want to go...?
-> > > > > 
+On Fri, Aug 09, 2019 at 01:39:30AM +0200, Alexandre Belloni wrote:
+> On 08/08/2019 14:12:37+0200, Ondřej Jirman wrote:
+> > On Wed, Aug 07, 2019 at 12:55:02PM +0200, Alexandre Belloni wrote:
+> > > Hi,
 > > > 
-> > > We already have a FOLL_LONGTERM flag, isn't that somehow related? And if
-> > > it's not exactly the same thing, perhaps a new gup flag to distinguish
-> > > which kind of pinning to use?
+> > > On 06/08/2019 20:30:45+0200, Ondřej Jirman wrote:
+> > > > Maybe whether XO or DCXO is used also matters if you want to do some fine
+> > > > tunning of DCXO (control register has pletny of options), but that's probably
+> > > > better done in u-boot. And there's still no need to read HOSC source from DT.
+> > > > The driver can just check compatible, and if it is H6 and OSC_CLK_SRC_SEL is 1,
+> > > > it can do it's DCXO tunning, or whatever. But neither OS nor bootloader will
+> > > > be using this info to gate/disable the osciallator.
+> > > > 
+> > > 
+> > > It is actually useful to be able to tweak the crystal tuning at
+> > > runtime to be able to reduce clock drift and compare with a reliable
+> > > source (e.g. NTP).
 > > 
-> > Agreed. This is a shiny example how forcing all existing gup users into
-> > the new scheme is subotimal at best. Not the mention the overal
-> > fragility mention elsewhere. I dislike the conversion even more now.
-> > 
-> > Sorry if this was already discussed already but why the new pinning is
-> > not bound to FOLL_LONGTERM (ideally hidden by an interface so that users
-> > do not have to care about the flag) only?
+> > I don't think there's a Linux kernel API that you can use to achieve that, so
+> > that's a rather theoretical concern at the moment.
 > > 
 > 
-> Oh, it's been discussed alright, but given how some of the discussions have gone,
-> I certainly am not surprised that there are still questions and criticisms!
-> Especially since I may have misunderstood some of the points, along the way.
-> It's been quite a merry go round. :)
-
-Yeah, I've tried to follow them but just gave up at some point.
-
-> Anyway, what I'm hearing now is: for gup(FOLL_LONGTERM), apply the pinned tracking.
-> And therefore only do put_user_page() on pages that were pinned with
-> FOLL_LONGTERM. For short term pins, let the locking do what it will:
-> things can briefly block and all will be well.
+> There is /sys/class/rtc/rtcX/offset which is even properly documented.
 > 
-> Also, that may or may not come with a wrapper function, courtesy of Jan
-> and Ira.
+> The reason I asked is that some RTCs have both analog (changing the
+> oscillator capacitance) and digital (changing the RTC counter) so I'm
+> wondering whether this interface should be extended.
+
+As I wrote below, that can't be achieved by tuning DCXO.
+
+> > Also there are multiple clocks, that can drive the RTC, and you usually don't
+> > drive it from 24MHz DCXO oscillator. The reason is that you'd have to deal with
+> > the fact that the clock for RTC then becomes 24000000/750 (750 is fixed
+> > divider), which is 32000.
+> > 
+> > So if you want to get 32768Hz for RTC by tuning the DCXO, it would have to have
+> > 24 576 000 Hz. And even if you could achieve that (doubtful), it would throw off
+> > timings in the rest of the system (say UART, USB, CPU, display ctl) in a major way.
+> > 
+> > I guess you can try tuning 24MHz oscillator so that it's closer to the
+> > real-world 24MHz via NTP reference for other reasons. But it would be
+> > complicated, and require precise interaction with other components, like using
+> > HW timers sourced from 24MHz HOSC clock, because you can't use CPU's timers,
+> > because of inaccuracies introduced during DVFS, for example.
+> > 
+> > regards,
+> > 	o.
+> > 
+> > > I'm curious, what kind of options does this RTC have?
+> > > 
+> > > -- 
+> > > Alexandre Belloni, Bootlin
+> > > Embedded Linux and Kernel engineering
+> > > https://bootlin.com
+> > > 
+> > > _______________________________________________
+> > > linux-arm-kernel mailing list
+> > > linux-arm-kernel@lists.infradead.org
+> > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 > 
-> Is that about right? It's late here, but I don't immediately recall any
-> problems with doing it that way...
-
-Yes that makes more sense to me. Whoever needs that tracking should
-opt-in for it. Otherwise you just risk problems like the one discussed
-in the mlock path (because we do a strange stuff in the name of
-performance) and a never ending whack a mole where new users do not
-follow the new API usage and that results in all sorts of weird issues.
-
-Thanks!
--- 
-Michal Hocko
-SUSE Labs
+> -- 
+> Alexandre Belloni, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
