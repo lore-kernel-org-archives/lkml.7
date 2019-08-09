@@ -2,138 +2,145 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AD90C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:46:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E2DC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:51:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1FBF214C6
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:46:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Aicz9GKa"
+	by mail.kernel.org (Postfix) with ESMTP id 5E14F214C6
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 12:51:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406866AbfHIMqK (ORCPT
+        id S2406844AbfHIMvr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 08:46:10 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:44644 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726091AbfHIMqK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 08:46:10 -0400
-Received: by mail-lj1-f193.google.com with SMTP id k18so91944005ljc.11;
-        Fri, 09 Aug 2019 05:46:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=oHD9gAbpUGqohG11KOfFTQG8DPTHY5YiY1mqT8307h0=;
-        b=Aicz9GKaiBL3XNYy5FUJNijtWIq0HJaEKfd7pD9t0ChHaGa9Y6LvuNZ/sXwHV/X0BH
-         yon5hYP3TQtf11PavNBvvfat9+Yb1J76Pxdfj8m58OJ59I4Y0O2gxMUz7KZCkEUKsVrp
-         V8nS5wxKUUhFsoDM5a/QUoD2q2aOwiMJcFyOtJcXpIQ1ILVwMXL8iHee1q1pByLXTp7R
-         fPGJq5NbJ6kSX7fokzgVoyKeBrdltU5JeF91YhpbJdIt12xzx1e8h1Q7oxVJFlHyUSzM
-         4Bz361fkZX9xNhoubpAMwuropRnPruAKK6KMfw4OvUdrEju1PFjFocFpNZLqv8pGTbaQ
-         EuVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=oHD9gAbpUGqohG11KOfFTQG8DPTHY5YiY1mqT8307h0=;
-        b=Ig4IpEx2uURg+2biZT91bNMdGIem5yPCmdQT08oDASzo42uXaWVIKONA137jubl8tG
-         0acbtI2tcL8UuE6LB7M50uBL4tNim3a8/RcW2BCrdapcrzPVN4cApcrQczLlAUczmle7
-         897HO3xz+/XVHEogqyAHMHtAu6rodAW0fkIHwtkQMlmJi71FF/BmeFs6tyaCsa3wmuHb
-         GSZyfP6J6OG4xNhQTFvj48ZXigi/fK+7CMYlJUa99F6L+tRAMPHjDKjaNREROAZF7MM9
-         zi9VjqAkG+SCwLnvS7oTtvg+Alkv19VFSm4SHjtj+GTVyBx57b90fSuK9s79zb5HmDGc
-         7Jtg==
-X-Gm-Message-State: APjAAAWe+D7ZcPmU+HDhCAQRiwwnsL4m1EWGQMpwn6XkOc7ehimoLbvC
-        Atgkzh82fBuB9IxIXVEny938lQHc
-X-Google-Smtp-Source: APXvYqyqnTJF/IDLsH/Wh7eA04jc+Hd8J1dnUy6eHI5Oz6M87mrrHA6GwJ7gbtqVvE/Q0rNE+X8SAw==
-X-Received: by 2002:a2e:9c19:: with SMTP id s25mr11168306lji.188.1565354766958;
-        Fri, 09 Aug 2019 05:46:06 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.34.218])
-        by smtp.googlemail.com with ESMTPSA id a15sm3206759lfo.2.2019.08.09.05.46.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 09 Aug 2019 05:46:06 -0700 (PDT)
-Subject: Re: [PATCH v8 05/21] clk: tegra: pll: Save and restore pll context
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
-References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
- <1565308020-31952-6-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <3e5867db-2675-a701-948b-1436f9d5dcd9@gmail.com>
-Date:   Fri, 9 Aug 2019 15:46:04 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 9 Aug 2019 08:51:47 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:57353 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406735AbfHIMvq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 08:51:46 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 464lVk02RMz9sP7;
+        Fri,  9 Aug 2019 22:51:41 +1000 (AEST)
+From:   mpe@ellerman.id.au
+To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>, x86@kernel.org
+Cc:     iommu@lists.linux-foundation.org, linux-fsdevel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Lianbo Jiang <lijiang@redhat.com>,
+        Mike Anderson <andmike@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Subject: Re: [PATCH v4 0/6] Remove x86-specific code from generic headers
+In-Reply-To: <20190806044919.10622-1-bauerman@linux.ibm.com>
+References: <20190806044919.10622-1-bauerman@linux.ibm.com>
+Date:   Fri, 09 Aug 2019 22:51:41 +1000
+Message-ID: <87sgqasdr6.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-In-Reply-To: <1565308020-31952-6-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-09.08.2019 2:46, Sowjanya Komatineni пишет:
-> This patch implements save and restore of PLL context.
-> 
-> During system suspend, core power goes off and looses the settings
-> of the Tegra CAR controller registers.
-> 
-> So during suspend entry pll context is stored and on resume it is
-> restored back along with its state.
-> 
-> Acked-by: Thierry Reding <treding@nvidia.com>
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/clk/tegra/clk-pll.c | 88 ++++++++++++++++++++++++++++-----------------
->  drivers/clk/tegra/clk.h     |  2 ++
->  2 files changed, 58 insertions(+), 32 deletions(-)
-> 
-> diff --git a/drivers/clk/tegra/clk-pll.c b/drivers/clk/tegra/clk-pll.c
-> index 1583f5fc992f..e52add2bbdbb 100644
-> --- a/drivers/clk/tegra/clk-pll.c
-> +++ b/drivers/clk/tegra/clk-pll.c
-> @@ -1008,6 +1008,28 @@ static unsigned long clk_plle_recalc_rate(struct clk_hw *hw,
->  	return rate;
->  }
->  
-> +static void tegra_clk_pll_restore_context(struct clk_hw *hw)
-> +{
-> +	struct tegra_clk_pll *pll = to_clk_pll(hw);
-> +	struct clk_hw *parent = clk_hw_get_parent(hw);
-> +	unsigned long parent_rate = clk_hw_get_rate(parent);
-> +	unsigned long rate = clk_hw_get_rate(hw);
-> +	u32 val;
-> +
-> +	if (clk_pll_is_enabled(hw))
-> +		return;
-> +
-> +	if (pll->params->set_defaults)
-> +		pll->params->set_defaults(pll);
-> +
-> +	clk_pll_set_rate(hw, rate, parent_rate);
-> +
-> +	if (!__clk_get_enable_count(hw->clk))
-> +		clk_pll_disable(hw);
-> +	else
-> +		clk_pll_enable(hw);
-> +}
+Thiago Jung Bauermann <bauerman@linux.ibm.com> writes:
+> Hello,
+>
+> This version has only a small change in the last patch as requested by
+> Christoph and Halil, and collects Reviewed-by's.
+>
+> These patches are applied on top of v5.3-rc2.
+>
+> I don't have a way to test SME, SEV, nor s390's PEF so the patches have only
+> been build tested.
 
-drivers/clk/tegra/clk-pll.c: In function ‘tegra_clk_pll_restore_context’:
-drivers/clk/tegra/clk-pll.c:1024:6: warning: unused variable ‘val’ [-Wunused-variable]
- 1024 |  u32 val;
+I need to take this series via the powerpc tree because there is another
+fairly large powerpc specific series dependent on it.
 
+I think this series already has pretty much all the acks it needs, which
+almost never happens, amazing work!
+
+I'll put the series in a topic branch, just in case there's any bad
+conflicts and other folks want to merge it later on. I'll then merge the
+topic branch into my next, and so this series will be tested in
+linux-next that way.
+
+cheers
+
+
+> Changelog
+>
+> Since v3:
+>
+> - Patch "s390/mm: Remove sev_active() function"
+>   - Preserve comment from sev_active() in force_dma_unencrypted().
+>     Suggested by Christoph Hellwig.
+>
+> Since v2:
+>
+> - Patch "x86,s390: Move ARCH_HAS_MEM_ENCRYPT definition to arch/Kconfig"
+>   - Added "select ARCH_HAS_MEM_ENCRYPT" to config S390. Suggested by Janani.
+>
+> - Patch "DMA mapping: Move SME handling to x86-specific files"
+>   - Split up into 3 new patches. Suggested by Christoph Hellwig.
+>
+> - Patch "swiotlb: Remove call to sme_active()"
+>   - New patch.
+>
+> - Patch "dma-mapping: Remove dma_check_mask()"
+>   - New patch.
+>
+> - Patch "x86,s390/mm: Move sme_active() and sme_me_mask to x86-specific header"
+>   - New patch.
+>   - Removed export of sme_active symbol. Suggested by Christoph Hellwig.
+>
+> - Patch "fs/core/vmcore: Move sev_active() reference to x86 arch code"
+>   - Removed export of sev_active symbol. Suggested by Christoph Hellwig.
+>
+> - Patch "s390/mm: Remove sev_active() function"
+>   - New patch.
+>
+> Since v1:
+>
+> - Patch "x86,s390: Move ARCH_HAS_MEM_ENCRYPT definition to arch/Kconfig"
+>   - Remove definition of ARCH_HAS_MEM_ENCRYPT from s390/Kconfig as well.
+>   - Reworded patch title and message a little bit.
+>
+> - Patch "DMA mapping: Move SME handling to x86-specific files"
+>   - Adapt s390's <asm/mem_encrypt.h> as well.
+>   - Remove dma_check_mask() from kernel/dma/mapping.c. Suggested by
+>     Christoph Hellwig.
+>
+> Thiago Jung Bauermann (6):
+>   x86,s390: Move ARCH_HAS_MEM_ENCRYPT definition to arch/Kconfig
+>   swiotlb: Remove call to sme_active()
+>   dma-mapping: Remove dma_check_mask()
+>   x86,s390/mm: Move sme_active() and sme_me_mask to x86-specific header
+>   fs/core/vmcore: Move sev_active() reference to x86 arch code
+>   s390/mm: Remove sev_active() function
+>
+>  arch/Kconfig                        |  3 +++
+>  arch/s390/Kconfig                   |  4 +---
+>  arch/s390/include/asm/mem_encrypt.h |  5 +----
+>  arch/s390/mm/init.c                 |  7 +------
+>  arch/x86/Kconfig                    |  4 +---
+>  arch/x86/include/asm/mem_encrypt.h  | 10 ++++++++++
+>  arch/x86/kernel/crash_dump_64.c     |  5 +++++
+>  arch/x86/mm/mem_encrypt.c           |  2 --
+>  fs/proc/vmcore.c                    |  8 ++++----
+>  include/linux/crash_dump.h          | 14 ++++++++++++++
+>  include/linux/mem_encrypt.h         | 15 +--------------
+>  kernel/dma/mapping.c                |  8 --------
+>  kernel/dma/swiotlb.c                |  3 +--
+>  13 files changed, 42 insertions(+), 46 deletions(-)
