@@ -2,93 +2,80 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 587AAC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 00:54:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5866DC0650F
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 00:55:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01FCB2173C
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 00:54:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="pfmt09bc"
+	by mail.kernel.org (Postfix) with ESMTP id 38DD6216C8
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 00:55:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405158AbfHIAy5 (ORCPT
+        id S2405175AbfHIAz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 20:54:57 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:59148 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405051AbfHIAy5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 20:54:57 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 71110806B6;
-        Fri,  9 Aug 2019 12:54:54 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1565312094;
-        bh=P49ozH2DAvwt8y1J8WbUcyJoXFazE5b714yGTC0YJrQ=;
-        h=From:To:Cc:Subject:Date;
-        b=pfmt09bcvfeV2lGKii2doOv/3SuyBMQLDbrTxaW1TajRJ2c1kBEOF2it4qOMRayek
-         dqN8LPQcQoGmigoD1VeRxJ1nd8/qm7QhOLFTbn08AO6DfTvd7pZPiSjTBxoIAvthbN
-         AmMPbQuX2K+7eyxmmVlNBdFxk7GD0pP4FilsbxCqgDZjXV+m9Nsva1c6KGralqgIGj
-         tGYtPeTkM4fC4uLBJhXu216LbGnjmX4qHmsI8rsJmyOqO1rtNNNF6vogmcPxBP1rYg
-         m+5FoVhsThf3+xdBsoQzc3qeGeawf3OcznvRFjdNeEyPzgP8tia6Ng56t2Lr1cMuJz
-         jlZrTau35L44w==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5d4cc45d0000>; Fri, 09 Aug 2019 12:54:53 +1200
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
-        by smtp (Postfix) with ESMTP id 9DA9013EEDE;
-        Fri,  9 Aug 2019 12:54:56 +1200 (NZST)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id 305D71E0508; Fri,  9 Aug 2019 12:54:54 +1200 (NZST)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     jon.maloy@ericsson.com, ying.xue@windriver.com, davem@davemloft.net
-Cc:     netdev@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v2] tipc: initialise addr_trail_end when setting node addresses
-Date:   Fri,  9 Aug 2019 12:54:51 +1200
-Message-Id: <20190809005451.18881-1-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.22.0
+        Thu, 8 Aug 2019 20:55:27 -0400
+Received: from mga05.intel.com ([192.55.52.43]:56413 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729419AbfHIAz1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 20:55:27 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Aug 2019 17:55:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,363,1559545200"; 
+   d="scan'208";a="258890899"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by orsmga001.jf.intel.com with ESMTP; 08 Aug 2019 17:55:26 -0700
+Date:   Thu, 8 Aug 2019 17:44:39 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] arch/x86/kernel/cpu/umwait.c - remove unused variable
+Message-ID: <20190809004438.GA56628@romley-ivt3.sc.intel.com>
+References: <79734.1565272329@turing-police>
+ <alpine.DEB.2.21.1908082158580.2882@nanos.tec.linutronix.de>
+ <141835.1565295884@turing-police>
+ <alpine.DEB.2.21.1908082229010.2882@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <alpine.DEB.2.21.1908082229010.2882@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ensure addr_trail_end is set to jiffies when configuring the node
-address. This ensures that we don't treat the initial value of 0 as
-being a wrapped. This isn't a problem when using auto-generated node
-addresses because the addr_trail_end is updated for the duplicate
-address detection phase.
+On Thu, Aug 08, 2019 at 10:32:38PM +0200, Thomas Gleixner wrote:
+> Valdis,
+> 
+> On Thu, 8 Aug 2019, Valdis Klētnieks wrote:
+> > On Thu, 08 Aug 2019 22:04:03 +0200, Thomas Gleixner said: It isn't 
+> > clear that whatever is doing the device_initcall()s will be able to 
+> > do any reasonable recovery if we return an error, so any error 
+> > recovery is going to have to happen before the function returns. It 
+> > might make sense to do an 'if (ret) return;' before going further in 
+> > the function, but given the comment a few lines further down about 
+> > ignoring errors, it was apparently considered more important to 
+> > struggle through and register stuff in sysfs even if umwait was 
+> > broken....
+> 
+> I missed that when going through it.
+> 
+> The right thing to do is to have a cpu_offline callback which clears 
+> the umwait MSR. That covers also the failure in the cpu hotplug setup. 
+> Then handling an error return makes sense and keeps everything in a 
+> workable shape.
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
-Changes in v2:
-- move setting to tipc_set_node_addr() as suggested
-- reword commit message
+When cpu is offline, the MSR won't be used. We don't need to clear it, right?
 
- net/tipc/addr.c | 1 +
- 1 file changed, 1 insertion(+)
+Thanks.
 
-diff --git a/net/tipc/addr.c b/net/tipc/addr.c
-index b88d48d00913..0f1eaed1bd1b 100644
---- a/net/tipc/addr.c
-+++ b/net/tipc/addr.c
-@@ -75,6 +75,7 @@ void tipc_set_node_addr(struct net *net, u32 addr)
- 		tipc_set_node_id(net, node_id);
- 	}
- 	tn->trial_addr =3D addr;
-+	tn->addr_trial_end =3D jiffies;
- 	pr_info("32-bit node address hash set to %x\n", addr);
- }
-=20
---=20
-2.22.0
+-Fenghua
 
