@@ -2,171 +2,130 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62E9EC31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 10:45:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56AD8C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 10:48:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 430DC2086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 10:45:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E52721743
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 10:48:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="olBzn9Ia"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406222AbfHIKo6 (ORCPT
+        id S1726604AbfHIKsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 06:44:58 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33142 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405999AbfHIKo5 (ORCPT
+        Fri, 9 Aug 2019 06:48:10 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34501 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbfHIKsK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 06:44:57 -0400
-Received: by mail-wr1-f67.google.com with SMTP id n9so97919698wru.0
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 03:44:55 -0700 (PDT)
+        Fri, 9 Aug 2019 06:48:10 -0400
+Received: by mail-pf1-f195.google.com with SMTP id b13so45855035pfo.1
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 03:48:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=SWSgHhHu/9BjvEKvg6DvYw5jthq0QCStuXD5Y25D++k=;
+        b=olBzn9Iae3J+Se9iHRoHNcpUalAkm0ZD09Av8Rhf0Un1Erb82ltsMGyfBJNHsDpsio
+         LlbQvDyOt9ixqafHrC8B30eZNQFydT4ALlqO+PDtaXDqR4t+msvvRbMRJA9mlCGEu1hk
+         OWPdIUoClXdonkrlZl0wMf7etys7/V0IUfhh6KzMsReQc8ryg6G4ekAD7BMSlJ7V2qmU
+         erp/KwrNpRh1Rsx4z65y13/nqjod+Jpum23/PTaXvdW+hSPFj9YiD2+AqR4K2BRVzNSd
+         eap5YaVNNKHXwu78ZyVTVLyxgl5j7Dke93bjTNx2H5SEjKGaVOV9aCWV5DhSzXE2AMVB
+         pBMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=9WzyURDH7ESFlnfzMS62H/D7+dda89YOvkjObehxwI4=;
-        b=D//LVKyHGOVI5Pij1O5eDdvN/8nf9IaT1vyzgpmSU9XV28Mf5IJHkqhI4/UnCk2rOw
-         uHQm/EuOKMmzI8WoHrraqWtCNpfgATdjF7cTbdPpzj5OeQL/6fA/Ad3SyNtdH7wEorJ3
-         LEZsAfJ0UWZDOSibqffC2zxLPruPUqiuzziNz18P15VkWT7UtyG74icD0CZ8tgfIBtoR
-         4Lz3DiwIXJthuevDYK1auX97arutAdbo7kA5nLEI83pIJe0mbMNZ/DzsAPCWyPZ2t/dj
-         S0azuDjEwzQRwGJj+pHBg6YLHXbI3OXWoKcH1bnlhpUK43mQ2oJQB2Wy1BQqV8/B9RrW
-         Ih2A==
-X-Gm-Message-State: APjAAAVhWDslS0iLy88cTJXZlgTp2v4QKsd8LmAtd0Ro6EU4oADqIhhO
-        HXOgmGIJKEElhC0bhD13daMxGw==
-X-Google-Smtp-Source: APXvYqyShx0+uf7pVce5ZDJOlO/Kcni/X/ot9S5XvNCwawUL4fIjZNa87xwbrVguDjFtFCSkw6VU0g==
-X-Received: by 2002:adf:df8b:: with SMTP id z11mr22569218wrl.62.1565347494857;
-        Fri, 09 Aug 2019 03:44:54 -0700 (PDT)
-Received: from vitty.brq.redhat.com (ip-89-176-127-93.net.upcbroadband.cz. [89.176.127.93])
-        by smtp.gmail.com with ESMTPSA id u1sm5907164wml.14.2019.08.09.03.44.53
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=SWSgHhHu/9BjvEKvg6DvYw5jthq0QCStuXD5Y25D++k=;
+        b=Qlko0yp/TCWsy7phEBUrVqIZKx5vx/9hNywdu1Wuozh1hoOnMo1+Ez7Yb6xmdC31KA
+         SmsDDFVyer4A3dHGQed8OxFVPBfAw+35o90q1wurSx8JHXhjeseezV4GtgEqEKs7L0H5
+         OtnSUGJ2kaMtENYhzB8cn+xTTL7OtDM+QQXzPkWKw23JMzbMHm9OQz9dM9Wt4PwaM9bf
+         knUfPWsXqHYKrF12PFq7EO66rVbUkakOCddNoSALuhofYSW+lutTG7HQ2GmdQ0pj8i6c
+         GnAzzrgEDDEayoDN2H60IYdgUJtNKOdekSyYV26d5zlCYzS3BoRPUD5/Bd3NsXCsvRH/
+         nm0Q==
+X-Gm-Message-State: APjAAAW4+qBLMpVHK5pHw9Z7fHj3+J2k+Ou9RCsjiOHtayozc1cQt/X/
+        nxgndsi34AAGJUdESCB6bhCdJA==
+X-Google-Smtp-Source: APXvYqxgJ7LJSyfYIqCUqyw0nl4BRa1wS+HCiJ9jJJusPxs6KdjJu0Q2m1OI1WoKhxp7olOZNBxCag==
+X-Received: by 2002:aa7:82da:: with SMTP id f26mr20912390pfn.82.1565347689544;
+        Fri, 09 Aug 2019 03:48:09 -0700 (PDT)
+Received: from localhost.localdomain (li456-16.members.linode.com. [50.116.10.16])
+        by smtp.gmail.com with ESMTPSA id l44sm4651449pje.29.2019.08.09.03.48.05
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 09 Aug 2019 03:44:54 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     lantianyu1986@gmail.com
-Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>, kvm@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, pbonzini@redhat.com,
-        rkrcmar@redhat.com, corbet@lwn.net, kys@microsoft.com,
-        haiyangz@microsoft.com, sthemmin@microsoft.com, sashal@kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org, michael.h.kelley@microsoft.com
-Subject: Re: [PATCH 2/3] KVM/Hyper-V: Add new KVM cap KVM_CAP_HYPERV_DIRECT_TLBFLUSH
-In-Reply-To: <20190809094939.76093-3-Tianyu.Lan@microsoft.com>
-References: <20190809094939.76093-1-Tianyu.Lan@microsoft.com> <20190809094939.76093-3-Tianyu.Lan@microsoft.com>
-Date:   Fri, 09 Aug 2019 12:44:52 +0200
-Message-ID: <87r25ubot7.fsf@vitty.brq.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Fri, 09 Aug 2019 03:48:08 -0700 (PDT)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH] perf trace: Fix segmentation fault when access syscall info
+Date:   Fri,  9 Aug 2019 18:47:52 +0800
+Message-Id: <20190809104752.27338-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-lantianyu1986@gmail.com writes:
+'perf trace' reports the segmentation fault as below on Arm64:
 
-> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
->
-> This patch adds new KVM cap KVM_CAP_HYPERV_DIRECT_TLBFLUSH and let
-> user space to enable direct tlb flush function when only Hyper-V
-> hypervsior capability is exposed to VM. This patch also adds
-> enable_direct_tlbflush callback in the struct kvm_x86_ops and
-> platforms may use it to implement direct tlb flush support.
->
-> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> ---
->  Documentation/virtual/kvm/api.txt | 10 ++++++++++
->  arch/x86/include/asm/kvm_host.h   |  2 ++
->  arch/x86/kvm/x86.c                |  8 ++++++++
->  include/uapi/linux/kvm.h          |  1 +
->  4 files changed, 21 insertions(+)
->
-> diff --git a/Documentation/virtual/kvm/api.txt b/Documentation/virtual/kvm/api.txt
-> index 2cd6250b2896..45308ed6dd75 100644
-> --- a/Documentation/virtual/kvm/api.txt
-> +++ b/Documentation/virtual/kvm/api.txt
-> @@ -5289,3 +5289,13 @@ Architectures: x86
->  This capability indicates that KVM supports paravirtualized Hyper-V IPI send
->  hypercalls:
->  HvCallSendSyntheticClusterIpi, HvCallSendSyntheticClusterIpiEx.
-> +8.21 KVM_CAP_HYPERV_DIRECT_TLBFLUSH
-> +
-> +Architecture: x86
-> +
-> +This capability indicates that KVM supports Hyper-V direct tlb flush function.
-> +User space should enable this feature only when Hyper-V hypervisor capability
-> +is exposed to guest and KVM profile is hided. Both Hyper-V and KVM hypercalls
-> +use RAX and RCX registers to pass parameters. If KVM hypercall is exposed
-> +to L2 guest with direct tlbflush enabled, Hyper-V may mistake KVM hypercall
-> +for Hyper-V tlb flush Hypercall due to paremeter register overlap.
+  # perf trace -e string -e augmented_raw_syscalls.c
+  LLVM: dumping tools/perf/examples/bpf/augmented_raw_syscalls.o
+  perf: Segmentation fault
+  Obtained 12 stack frames.
+  perf(sighandler_dump_stack+0x47) [0xaaaaac96ac87]
+  linux-vdso.so.1(+0x5b7) [0xffffadbeb5b7]
+  /lib/aarch64-linux-gnu/libc.so.6(strlen+0x10) [0xfffface7d5d0]
+  /lib/aarch64-linux-gnu/libc.so.6(_IO_vfprintf+0x1ac7) [0xfffface49f97]
+  /lib/aarch64-linux-gnu/libc.so.6(__vsnprintf_chk+0xc7) [0xffffacedfbe7]
+  perf(scnprintf+0x97) [0xaaaaac9ca3ff]
+  perf(+0x997bb) [0xaaaaac8e37bb]
+  perf(cmd_trace+0x28e7) [0xaaaaac8ec09f]
+  perf(+0xd4a13) [0xaaaaac91ea13]
+  perf(main+0x62f) [0xaaaaac8a147f]
+  /lib/aarch64-linux-gnu/libc.so.6(__libc_start_main+0xe3) [0xfffface22d23]
+  perf(+0x57723) [0xaaaaac8a1723]
+  Segmentation fault
 
-First, we need to explicitly state that this is for KVM on Hyper-V and
-second, that this disables normal hypercall handling by KVM.
+This issue is introduced by commit 30a910d7d3e0 ("perf trace:
+Preallocate the syscall table"), it allocates trace->syscalls.table[]
+array and the element count is 'trace->sctbl->syscalls.nr_entries';
+but on Arm64, the system call number is not continuously used; e.g. the
+syscall maximum id is 436 but the real entries is only 281.  So the
+table is allocated with 'nr_entries' as the element count, but it
+accesses the table with the syscall id, which might be out of the bound
+of the array and cause the segmentation fault.
 
-My take:
+This patch allocates trace->syscalls.table[] with the element count is
+'trace->sctbl->syscalls.max_id + 1', this allows any id to access the
+table without out of the bound.
 
-This capability indicates that KVM running on top of Hyper-V hypervisor
-enables Direct TLB flush for its guests meaning that TLB flush
-hypercalls are handled by Level 1 hypervisor (Hyper-V) bypassing KVM. 
-Due to the different ABI for hypercall parameters between Hyper-V and
-KVM, enabling this capability effectively disables all hypercall
-handling by KVM (as some KVM hypercall may be mistakenly treated as TLB
-flush hypercalls by Hyper-C) so userspace should disable KVM
-identification in CPUID.
+Fixes: 30a910d7d3e0 ("perf trace: Preallocate the syscall table")
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+---
+ tools/perf/builtin-trace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I think we should also enforce this somehow leaving only Hyper-V style
-hypercalls handling (for Windows guests) in place.
-
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index 0cc5b611a113..667d154e89d4 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -1205,6 +1205,8 @@ struct kvm_x86_ops {
->  	uint16_t (*nested_get_evmcs_version)(struct kvm_vcpu *vcpu);
->  
->  	bool (*need_emulation_on_page_fault)(struct kvm_vcpu *vcpu);
-> +
-> +	int (*enable_direct_tlbflush)(struct kvm_vcpu *vcpu);
->  };
->  
->  struct kvm_arch_async_pf {
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 9d7b9e6a0939..a9d8ee7f7bf0 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -3183,6 +3183,9 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
->  		r = kvm_x86_ops->get_nested_state ?
->  			kvm_x86_ops->get_nested_state(NULL, NULL, 0) : 0;
->  		break;
-> +	case KVM_CAP_HYPERV_DIRECT_TLBFLUSH:
-> +		r = kvm_x86_ops->enable_direct_tlbflush ? 1 : 0;
-> +		break;
->  	default:
->  		break;
->  	}
-> @@ -3953,6 +3956,11 @@ static int kvm_vcpu_ioctl_enable_cap(struct kvm_vcpu *vcpu,
->  				r = -EFAULT;
->  		}
->  		return r;
-> +	case KVM_CAP_HYPERV_DIRECT_TLBFLUSH:
-> +		if (!kvm_x86_ops->enable_direct_tlbflush)
-> +			return -ENOTTY;
-> +
-> +		return kvm_x86_ops->enable_direct_tlbflush(vcpu);
->  
->  	default:
->  		return -EINVAL;
-> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-> index a7c19540ce21..cb959bc925b1 100644
-> --- a/include/uapi/linux/kvm.h
-> +++ b/include/uapi/linux/kvm.h
-> @@ -996,6 +996,7 @@ struct kvm_ppc_resize_hpt {
->  #define KVM_CAP_ARM_PTRAUTH_ADDRESS 171
->  #define KVM_CAP_ARM_PTRAUTH_GENERIC 172
->  #define KVM_CAP_PMU_EVENT_FILTER 173
-> +#define KVM_CAP_HYPERV_DIRECT_TLBFLUSH 174
->  
->  #ifdef KVM_CAP_IRQ_ROUTING
-
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 75eb3811e942..d553d06a9aeb 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -1492,7 +1492,7 @@ static int trace__read_syscall_info(struct trace *trace, int id)
+ 	const char *name = syscalltbl__name(trace->sctbl, id);
+ 
+ 	if (trace->syscalls.table == NULL) {
+-		trace->syscalls.table = calloc(trace->sctbl->syscalls.nr_entries, sizeof(*sc));
++		trace->syscalls.table = calloc(trace->sctbl->syscalls.max_id + 1, sizeof(*sc));
+ 		if (trace->syscalls.table == NULL)
+ 			return -ENOMEM;
+ 	}
 -- 
-Vitaly
+2.17.1
+
