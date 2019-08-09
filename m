@@ -2,107 +2,208 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A6C4C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:45:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65700C32756
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:46:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E61021773
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:45:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 389BA214C6
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:46:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oAF16Iev"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h5q9nk8t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407163AbfHIQps (ORCPT
+        id S2407244AbfHIQqu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 12:45:48 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:36110 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406412AbfHIQps (ORCPT
+        Fri, 9 Aug 2019 12:46:50 -0400
+Received: from mail-pg1-f201.google.com ([209.85.215.201]:44660 "EHLO
+        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726037AbfHIQqt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 12:45:48 -0400
-Received: by mail-pl1-f194.google.com with SMTP id k8so45196805plt.3;
-        Fri, 09 Aug 2019 09:45:47 -0700 (PDT)
+        Fri, 9 Aug 2019 12:46:49 -0400
+Received: by mail-pg1-f201.google.com with SMTP id i134so22829143pgd.11
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 09:46:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=fC+iWISyIRlxP292OZH7zhhrRFIGkbHzKrFLem5U1lY=;
-        b=oAF16IevzBmL62Db1ftInsD9CLosBzDAv6rOEQD6wm0JR07KcQ0nm3AKN/itNFTK9K
-         ZAucyqnzy7OC0OENgbB4zRzYJ+YkytSc5SOyH23AGTLiL8Uuqk+7vh37bgu886MXjA9U
-         ZAcZ6SggTXeYwqTUP1kXlXkFoyY1J8Y2NhAezuGNfNobDN9Kyp1T8JPoet7SQAkF+491
-         T0c6LSMYq/vgj8R9BF18KqToJeKh0i6cnRs/WglBCJ9MehPr7mAbmzgxIf43MjLGwlmK
-         OSslpqj4aAT6d/FxDuWxR4B1gNnFUGu4Z98T6hXdNGDkO4KUpQf3tos2ZRZb0nYgBKur
-         /iSA==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=kplyFBVLfjKpkfsvr+g9LWPdkB2amai/k5Uo/Q9auD8=;
+        b=h5q9nk8tAZfenmZ9nj7f5DB5oIskrbAkgH1SUH6gc/dL9++Do8uiSM7Hh8La2YdhUr
+         c98OMPd7HtrSuUYueAjsNgPsYn0tZRK/5HaykIpTugn6BG5+Vza6P/OsAgMFjkqbX1jb
+         tKDl834IzGHcGXrnYRgJRmTFadPUx3REtsWU81DVqjN2jN5FDozEZFjlmyU/hBBXbLJw
+         ih9km7R2a/yMONai2mjBAVT5BYQDwqVyE8IBYdzOCEpuj+Mpro6pHR2JAgxY5pDIXht1
+         PLk/YyZZ8j9SAXEnGBIuDAzGcW9+kc7EpkUM3SSLFCJSLBJNDHIyfL5sXiJ1vvh7SCy/
+         GzWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fC+iWISyIRlxP292OZH7zhhrRFIGkbHzKrFLem5U1lY=;
-        b=HWzz4vpFPvohlZFK3v6BlKTMcOkc2jmDZPQRGTtoO1imWIsrVKVCPDOWJjk84KBfiJ
-         tiw6BMtxvan9Vaa3qbh0fdXxmLO/Y1z7XMF7ZSziTwtlpUKMfEkc/gGknJQoOPHExlYU
-         0n+A+oCeBNvUN0LlbxfBQ3Lli0cznF9SMK5A2VF4NDfx7CoPkEczqj3TwOV6l4fZtDZi
-         dfohokaJ4EbdKSmAPofRaUmWgTJTnYdbtrSPsHqORJQ70mPtYIAm24z2/e6j7pmifWNO
-         N6YH/jlxMrd+UOBiKpFFYLiFZlp7dpKaM9/LzhbiIlOUTPyKkGdWrtmYCAtbA+Rv2ri8
-         QfaA==
-X-Gm-Message-State: APjAAAX7EpR1GPbq6Bf51R838uYjemu2eDEWza/QWx/IAXT/rwRxOqMR
-        MBikrizB8ozfzWXSHdeMRZo=
-X-Google-Smtp-Source: APXvYqxwsoHu7zSgLhchshilKocyRaYoyNg1d/GhuABSgIm8BHJyzpulwft+131qAKPDwvn5pF5zOw==
-X-Received: by 2002:a17:902:7686:: with SMTP id m6mr19955746pll.239.1565369146822;
-        Fri, 09 Aug 2019 09:45:46 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id i3sm105240142pfo.138.2019.08.09.09.45.46
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 09 Aug 2019 09:45:46 -0700 (PDT)
-Date:   Fri, 9 Aug 2019 09:45:44 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     benjamin.tissoires@redhat.com, grawity@gmail.com, dev@pp3345.net,
-        lyude@redhat.com, teika@gmx.com, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] Input: synaptics - Fix a typo - synpatics --> synaptics
-Message-ID: <20190809164544.GM178933@dtor-ws>
-References: <20190809150814.24793-1-christophe.jaillet@wanadoo.fr>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190809150814.24793-1-christophe.jaillet@wanadoo.fr>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=kplyFBVLfjKpkfsvr+g9LWPdkB2amai/k5Uo/Q9auD8=;
+        b=iYWL93dylIuQ8UKJg3rM8NXl79SNyQGVlAKkmYTIIfqnUE86EPnldi3b/z0p3t8Wjb
+         bOlbAAHqMBQbiQPISMVrouYICB3VdTh6lA4LWd2hzqXJijl/4YnZdMcp74jBGb9M70SS
+         c3+0ZEoDhB9RFRzJgR2l/bmQz3vAslexJkDvMBwlKBxWCpOKRdI0YTLkVDTRowo8sCRz
+         XzWz0xadgyujACT832IzcV0Ngs2si2jFOPfaI//jx1nwoFLRqbeKKQi1OoH4MXLP1BNi
+         kjT6TqcX/8+Ta5lvqeCf29uTJf2k8unPJILJpvN4uqK4lH1xxU5LwLW86+xcsBtOR4yu
+         BSCQ==
+X-Gm-Message-State: APjAAAXqV1OPwmWTlfUjS6Xvgr1vOX/061XF4x2gF9veY2FM8zV+6G+o
+        cfa0eegySjrp7CR+zkamVWTc/qolbObBJ9MN
+X-Google-Smtp-Source: APXvYqx/T4pUV4w673pBYfyL91Im0CVeVEr8FGQeETHGkS2gMOK6RWfCsg0q/8JeJa1WpxxrqXiPwnZ99ymqgwMp
+X-Received: by 2002:a63:7205:: with SMTP id n5mr18128177pgc.443.1565369207803;
+ Fri, 09 Aug 2019 09:46:47 -0700 (PDT)
+Date:   Fri,  9 Aug 2019 09:46:43 -0700
+Message-Id: <20190809164643.5978-1-henryburns@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
+Subject: [PATCH] mm/z3fold.c: Fix race between migration and destruction
+From:   Henry Burns <henryburns@google.com>
+To:     Vitaly Wool <vitalywool@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Vitaly Vul <vitaly.vul@sony.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jonathan Adams <jwadams@google.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Henry Burns <henryburns@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 05:08:14PM +0200, Christophe JAILLET wrote:
-> This should be 'synaptics', not 'synpatics'
-> 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In z3fold_destroy_pool() we call destroy_workqueue(&pool->compact_wq).
+However, we have no guarantee that migration isn't happening in the
+background at that time.
 
-Applied, thank you.
+Migration directly calls queue_work_on(pool->compact_wq), if destruction
+wins that race we are using a destroyed workqueue.
 
-> ---
->  drivers/input/mouse/synaptics.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/input/mouse/synaptics.c b/drivers/input/mouse/synaptics.c
-> index b6da0c1267e3..bbd799c7b058 100644
-> --- a/drivers/input/mouse/synaptics.c
-> +++ b/drivers/input/mouse/synaptics.c
-> @@ -191,7 +191,7 @@ static const char * const forcepad_pnp_ids[] = {
->  };
->  
->  /*
-> - * Send a command to the synpatics touchpad by special commands
-> + * Send a command to the synaptics touchpad by special commands
->   */
->  static int synaptics_send_cmd(struct psmouse *psmouse, u8 cmd, u8 *param)
->  {
-> -- 
-> 2.20.1
-> 
+Signed-off-by: Henry Burns <henryburns@google.com>
+---
+ mm/z3fold.c | 51 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
 
+diff --git a/mm/z3fold.c b/mm/z3fold.c
+index 78447cecfffa..e136d97ce56e 100644
+--- a/mm/z3fold.c
++++ b/mm/z3fold.c
+@@ -40,6 +40,7 @@
+ #include <linux/workqueue.h>
+ #include <linux/slab.h>
+ #include <linux/spinlock.h>
++#include <linux/wait.h>
+ #include <linux/zpool.h>
+ 
+ /*
+@@ -161,8 +162,10 @@ struct z3fold_pool {
+ 	const struct zpool_ops *zpool_ops;
+ 	struct workqueue_struct *compact_wq;
+ 	struct workqueue_struct *release_wq;
++	struct wait_queue_head isolate_wait;
+ 	struct work_struct work;
+ 	struct inode *inode;
++	int isolated_pages;
+ };
+ 
+ /*
+@@ -772,6 +775,7 @@ static struct z3fold_pool *z3fold_create_pool(const char *name, gfp_t gfp,
+ 		goto out_c;
+ 	spin_lock_init(&pool->lock);
+ 	spin_lock_init(&pool->stale_lock);
++	init_waitqueue_head(&pool->isolate_wait);
+ 	pool->unbuddied = __alloc_percpu(sizeof(struct list_head)*NCHUNKS, 2);
+ 	if (!pool->unbuddied)
+ 		goto out_pool;
+@@ -811,6 +815,15 @@ static struct z3fold_pool *z3fold_create_pool(const char *name, gfp_t gfp,
+ 	return NULL;
+ }
+ 
++static bool pool_isolated_are_drained(struct z3fold_pool *pool)
++{
++	bool ret;
++
++	spin_lock(&pool->lock);
++	ret = pool->isolated_pages == 0;
++	spin_unlock(&pool->lock);
++	return ret;
++}
+ /**
+  * z3fold_destroy_pool() - destroys an existing z3fold pool
+  * @pool:	the z3fold pool to be destroyed
+@@ -821,6 +834,13 @@ static void z3fold_destroy_pool(struct z3fold_pool *pool)
+ {
+ 	kmem_cache_destroy(pool->c_handle);
+ 
++	/*
++	 * We need to ensure that no pages are being migrated while we destroy
++	 * these workqueues, as migration can queue work on either of the
++	 * workqueues.
++	 */
++	wait_event(pool->isolate_wait, !pool_isolated_are_drained(pool));
++
+ 	/*
+ 	 * We need to destroy pool->compact_wq before pool->release_wq,
+ 	 * as any pending work on pool->compact_wq will call
+@@ -1317,6 +1337,28 @@ static u64 z3fold_get_pool_size(struct z3fold_pool *pool)
+ 	return atomic64_read(&pool->pages_nr);
+ }
+ 
++/*
++ * z3fold_dec_isolated() expects to be called while pool->lock is held.
++ */
++static void z3fold_dec_isolated(struct z3fold_pool *pool)
++{
++	assert_spin_locked(&pool->lock);
++	VM_BUG_ON(pool->isolated_pages <= 0);
++	pool->isolated_pages--;
++
++	/*
++	 * If we have no more isolated pages, we have to see if
++	 * z3fold_destroy_pool() is waiting for a signal.
++	 */
++	if (pool->isolated_pages == 0 && waitqueue_active(&pool->isolate_wait))
++		wake_up_all(&pool->isolate_wait);
++}
++
++static void z3fold_inc_isolated(struct z3fold_pool *pool)
++{
++	pool->isolated_pages++;
++}
++
+ static bool z3fold_page_isolate(struct page *page, isolate_mode_t mode)
+ {
+ 	struct z3fold_header *zhdr;
+@@ -1343,6 +1385,7 @@ static bool z3fold_page_isolate(struct page *page, isolate_mode_t mode)
+ 		spin_lock(&pool->lock);
+ 		if (!list_empty(&page->lru))
+ 			list_del(&page->lru);
++		z3fold_inc_isolated(pool);
+ 		spin_unlock(&pool->lock);
+ 		z3fold_page_unlock(zhdr);
+ 		return true;
+@@ -1417,6 +1460,10 @@ static int z3fold_page_migrate(struct address_space *mapping, struct page *newpa
+ 
+ 	queue_work_on(new_zhdr->cpu, pool->compact_wq, &new_zhdr->work);
+ 
++	spin_lock(&pool->lock);
++	z3fold_dec_isolated(pool);
++	spin_unlock(&pool->lock);
++
+ 	page_mapcount_reset(page);
+ 	put_page(page);
+ 	return 0;
+@@ -1436,10 +1483,14 @@ static void z3fold_page_putback(struct page *page)
+ 	INIT_LIST_HEAD(&page->lru);
+ 	if (kref_put(&zhdr->refcount, release_z3fold_page_locked)) {
+ 		atomic64_dec(&pool->pages_nr);
++		spin_lock(&pool->lock);
++		z3fold_dec_isolated(pool);
++		spin_unlock(&pool->lock);
+ 		return;
+ 	}
+ 	spin_lock(&pool->lock);
+ 	list_add(&page->lru, &pool->lru);
++	z3fold_dec_isolated(pool);
+ 	spin_unlock(&pool->lock);
+ 	z3fold_page_unlock(zhdr);
+ }
 -- 
-Dmitry
+2.22.0.770.g0f2c4a37fd-goog
+
