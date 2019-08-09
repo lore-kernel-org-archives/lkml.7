@@ -5,65 +5,65 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B87C433FF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62D20C31E40
 	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 03:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61C60217D7
+	by mail.kernel.org (Postfix) with ESMTP id 1846F2171F
 	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 03:54:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FiJ2ZmQa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aN+XPr63"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405213AbfHIDyi (ORCPT
+        id S2405149AbfHIDyg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 23:54:38 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43011 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729307AbfHIDyh (ORCPT
+        Thu, 8 Aug 2019 23:54:36 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:44945 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729307AbfHIDyf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 23:54:37 -0400
-Received: by mail-pg1-f196.google.com with SMTP id r26so9205481pgl.10
-        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 20:54:36 -0700 (PDT)
+        Thu, 8 Aug 2019 23:54:35 -0400
+Received: by mail-pf1-f196.google.com with SMTP id t16so45253511pfe.11
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 20:54:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references:reply-to
          :in-reply-to:references;
-        bh=COoB7J/M4S1HF6JlK+1a14lZwUTZv7OB+klQ0WU4WM0=;
-        b=FiJ2ZmQaKARYkRQtMHszy7pd6hKeD/YFTHcpYIBQiYiGwFKwEQSMq81WjUZNAel33c
-         mZHJINOrOYq8W7QzQMOX4jaIfyxBch2Ypn4dumQzEcGLSh8mB2EJyOLEXGRxS0h8pBP+
-         vs5KLwQTviBFsgICnmTiLV5v9vg2yEBW6nYOVGVzLKtASROGwgN13IEC4RupvCe7I8s8
-         whtfWryUJr/exy4IYCISzKU/sI89ryceHkF/af1SgSmOuqv7vbpValcFfA/vvWTmE9CC
-         TBCnviGsx/hkbbg5BROxo5s0aXsRGxyoY9CJdILlV7x5KQe+T6hdwph9r9nA5RQnsHB2
-         9zHg==
+        bh=1aVagfxyN8G8j+kirK6xoGVYw9Fno6o6iFZH2FNHiqc=;
+        b=aN+XPr637TIDRDqszzE3R7o1IqujRbYmcS9VeVQgDPYaTX+4gclHuL7uUautVnSNZC
+         YlMSvCAZgyHgDXTF3rkDFd5lTWQ7h8aAZ2XUiWKs5nYf1s1nquGV11PNb6h41Wms8QWo
+         fxusB3DOKXqyQaCeoTms7w/h31k/x9w+b8o52ZDg2Ft57+8LRG+l+zKRt644JbouLlTc
+         q2lJw+7l1JgZ6UrVuMgs7SSZnHUUoUIGatDqbw1Ra+R1kX79oUkHefd1fxg/cAHt5MVA
+         po2U6Eb1r0sGSWNMPhpguZouOjOViW9XxkoyMQrgdZ42jW7EB0klLx2YpUUn3kTWbokt
+         Pa5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:reply-to:in-reply-to:references;
-        bh=COoB7J/M4S1HF6JlK+1a14lZwUTZv7OB+klQ0WU4WM0=;
-        b=RiABGj930S6/HiFZ9871TWBD+h7yWcWZR7TMG5j5an4xKABOwDu0bEfMXM6xh4VFul
-         sryIEMRqPguE+ciLeEIYQlAhZxhHaq9bCd+w3E0CSDwua84S2CHxd53oUk+zsqnEGFKy
-         +gtr5JljzQ5HNjemWLHfk6C8q/jW3M3CJ5fQFTE5ljDIgASrjbR5HTzU78jc3orYY7zQ
-         Im+4eoBNQbqs9LDRPr6zaVlGMx62+V4r4R/VQIqEcthgXpWG838Y/AC0gqb3MttGDPRc
-         5/DK5Au+w4/AbcvX4ZoEpwWA+werWekx83HU7VUUk2XiwkIt3PRwnaLUiVVi0szakPdi
-         WkSA==
-X-Gm-Message-State: APjAAAV8E/3SheEgwURHw6l1kdqvq4c/CG0XZF3pRrJe03sMtYQS/xYi
-        caxuUZI0Af7mwwyCxd305G4k4P0p
-X-Google-Smtp-Source: APXvYqzglb40Ftl5Blo0VvJTyO9lo7/f2q7FG5J1Fpe2JafJ4O2n2SmxsBhE3VSSq0HPDQ0yTFLbJA==
-X-Received: by 2002:a63:e807:: with SMTP id s7mr15184975pgh.194.1565322875864;
-        Thu, 08 Aug 2019 20:54:35 -0700 (PDT)
+        bh=1aVagfxyN8G8j+kirK6xoGVYw9Fno6o6iFZH2FNHiqc=;
+        b=ZOOol0yUu54CFa+CHoSW/7iybN2UO7Edpko4D3W+y0/ZzMfzQeNHpyxqUaecIkyuCz
+         gneahi7J4pTHT/EIftoxp6qDJxz9nQ2i/5dJFVQ+Jgt7xiFgprsl17bPGFPF8ok6DNxJ
+         7t+IepXgSFnb4sR2hXcILcRknb+aVdeUhGPxkUVU3u1rN5xhmVSa5X9jBUj+0V/GMpmi
+         Juf4FCz66EZQGXyVqIWGP09wkX68ajIEH4Pgw1x3DDalBYo7Rm2xxlMPLa3iyVsPkI9/
+         q7mB7jZ1JN17IP4KHmrg7iG5aZq6qU9oTRofvR4kxaW1u/tIdZV26VYuIBVcSYoX3j49
+         3zow==
+X-Gm-Message-State: APjAAAW0fCJe9PB/RMmAMBa8hb39OKuPMbzhwOcmCk+nvCNcyzc+cTih
+        raqIiyaSfGBO3w2fHXuGUV4kXR54
+X-Google-Smtp-Source: APXvYqzvceOoObH+gqwg/UiPvP4WhzBwySK+3M0u4UaG924El+N5Twl9BG/exPiI/po8xtgoyX+0YQ==
+X-Received: by 2002:a63:40a:: with SMTP id 10mr15933904pge.317.1565322873889;
+        Thu, 08 Aug 2019 20:54:33 -0700 (PDT)
 Received: from localhost (c-73-189-176-234.hsd1.ca.comcast.net. [73.189.176.234])
-        by smtp.gmail.com with ESMTPSA id o14sm189361560pfh.153.2019.08.08.20.54.34
+        by smtp.gmail.com with ESMTPSA id z13sm98063521pfa.94.2019.08.08.20.54.32
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 08 Aug 2019 20:54:35 -0700 (PDT)
+        Thu, 08 Aug 2019 20:54:33 -0700 (PDT)
 From:   Isaku Yamahata <isaku.yamahata@gmail.com>
 To:     linux-kernel@vger.kernel.org, x86@kernel.org
 Cc:     toshi.kani@hpe.com, fei1.li@intel.com,
         Isaku Yamahata <isaku.yamahata@gmail.com>
-Subject: [PATCH 2/3] x86/mtrr: split common funcs from generic.c
-Date:   Thu,  8 Aug 2019 20:54:19 -0700
-Message-Id: <42a1c726ace6292cf79891d64567bb86137ce8e1.1565300606.git.isaku.yamahata@gmail.com>
+Subject: [PATCH 1/3] x86/mtrr: split common funcs from mtrr.c
+Date:   Thu,  8 Aug 2019 20:54:18 -0700
+Message-Id: <a913f1f3b0117c2d100ae15b994372210e39d44c.1565300606.git.isaku.yamahata@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1565300606.git.isaku.yamahata@gmail.com>
 References: <cover.1565300606.git.isaku.yamahata@gmail.com>
@@ -77,363 +77,728 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 This is a preparation for make PAT(Page Attribute Table) independent
 from MTRR(Memory Type Range Register).
-It renames prefix of common functions in mtrr/generic.c from mtrr_ to
+It renames prefix of common functions in mtrr.c from mtrr_ to
 mtrr_pat_ which are commonly used by both MTRR and PAT and moves out
-them from mtrr/generic.c to rendezvous.c.
+them from mtrr.c to rendezvous.c.
 Only prefix rename and movement, no logic change.
 
 Signed-off-by: Isaku Yamahata <isaku.yamahata@gmail.com>
 ---
- arch/x86/include/asm/mtrr.h           |   4 +
- arch/x86/kernel/cpu/mtrr/generic.c    | 111 ++------------------------
- arch/x86/kernel/cpu/mtrr/mtrr.c       |   2 +-
- arch/x86/kernel/cpu/mtrr/mtrr.h       |   3 +-
- arch/x86/kernel/cpu/mtrr/rendezvous.c |  91 +++++++++++++++++++++
- 5 files changed, 106 insertions(+), 105 deletions(-)
+ arch/x86/include/asm/mtrr.h           |  25 +--
+ arch/x86/kernel/cpu/common.c          |   2 +-
+ arch/x86/kernel/cpu/mtrr/Makefile     |   2 +-
+ arch/x86/kernel/cpu/mtrr/mtrr.c       | 201 ++---------------------
+ arch/x86/kernel/cpu/mtrr/mtrr.h       |   6 +
+ arch/x86/kernel/cpu/mtrr/rendezvous.c | 221 ++++++++++++++++++++++++++
+ arch/x86/kernel/setup.c               |   4 +-
+ arch/x86/kernel/smpboot.c             |   8 +-
+ arch/x86/power/cpu.c                  |   2 +-
+ 9 files changed, 260 insertions(+), 211 deletions(-)
+ create mode 100644 arch/x86/kernel/cpu/mtrr/rendezvous.c
 
 diff --git a/arch/x86/include/asm/mtrr.h b/arch/x86/include/asm/mtrr.h
-index d90e87c55302..5b056374f5a6 100644
+index dbff1456d215..d90e87c55302 100644
 --- a/arch/x86/include/asm/mtrr.h
 +++ b/arch/x86/include/asm/mtrr.h
-@@ -33,6 +33,8 @@
+@@ -32,6 +32,7 @@
+  * arch_phys_wc_add and arch_phys_wc_del.
   */
  # ifdef CONFIG_MTRR
- extern bool mtrr_enabled(void);
-+extern void mtrr_pat_prepare_set(void) __acquires(set_atomicity_lock);
-+extern void mtrr_pat_post_set(void) __releases(set_atomicity_lock);
++extern bool mtrr_enabled(void);
  extern u8 mtrr_type_lookup(u64 addr, u64 end, u8 *uniform);
  extern void mtrr_save_fixed_ranges(void *);
  extern void mtrr_save_state(void);
-@@ -55,6 +57,8 @@ static inline bool mtrr_enabled(void)
- {
- 	return false;
- }
-+static inline void mtrr_pat_prepare_set(void) { };
-+static inline void mtrr_pat_post_set(void) { };
+@@ -42,14 +43,18 @@ extern int mtrr_add_page(unsigned long base, unsigned long size,
+ extern int mtrr_del(int reg, unsigned long base, unsigned long size);
+ extern int mtrr_del_page(int reg, unsigned long base, unsigned long size);
+ extern void mtrr_centaur_report_mcr(int mcr, u32 lo, u32 hi);
+-extern void mtrr_ap_init(void);
+-extern void mtrr_bp_init(void);
+-extern void set_mtrr_aps_delayed_init(void);
+-extern void mtrr_aps_init(void);
+-extern void mtrr_bp_restore(void);
++extern void mtrr_pat_ap_init(void);
++extern void mtrr_pat_bp_init(void);
++extern void set_mtrr_pat_aps_delayed_init(void);
++extern void mtrr_pat_aps_init(void);
++extern void mtrr_pat_bp_restore(void);
+ extern int mtrr_trim_uncached_memory(unsigned long end_pfn);
+ extern int amd_special_default_mtrr(void);
+ #  else
++static inline bool mtrr_enabled(void)
++{
++	return false;
++}
  static inline u8 mtrr_type_lookup(u64 addr, u64 end, u8 *uniform)
  {
  	/*
-diff --git a/arch/x86/kernel/cpu/mtrr/generic.c b/arch/x86/kernel/cpu/mtrr/generic.c
-index aa5c064a6a22..a44f05f64846 100644
---- a/arch/x86/kernel/cpu/mtrr/generic.c
-+++ b/arch/x86/kernel/cpu/mtrr/generic.c
-@@ -397,9 +397,6 @@ print_fixed(unsigned base, unsigned step, const mtrr_type *types)
- 	}
- }
- 
--static void prepare_set(void);
--static void post_set(void);
--
- static void __init print_mtrr_state(void)
+@@ -84,15 +89,15 @@ static inline int mtrr_trim_uncached_memory(unsigned long end_pfn)
+ static inline void mtrr_centaur_report_mcr(int mcr, u32 lo, u32 hi)
  {
- 	unsigned int i;
-@@ -445,20 +442,6 @@ static void __init print_mtrr_state(void)
- 		pr_debug("TOM2: %016llx aka %lldM\n", mtrr_tom2, mtrr_tom2>>20);
  }
- 
--/* PAT setup for BP. We need to go through sync steps here */
--void __init mtrr_bp_pat_init(void)
--{
--	unsigned long flags;
--
--	local_irq_save(flags);
--	prepare_set();
--
--	pat_init();
--
--	post_set();
--	local_irq_restore(flags);
--}
--
- /* Grab all of the MTRR state for this CPU into *state */
- bool __init get_mtrr_state(void)
+-static inline void mtrr_bp_init(void)
++static inline void mtrr_pat_bp_init(void)
  {
-@@ -680,8 +663,6 @@ static bool set_mtrr_var_ranges(unsigned int index, struct mtrr_var_range *vr)
- 	return changed;
+ 	pat_disable("MTRRs disabled, skipping PAT initialization too.");
  }
  
--static u32 deftype_lo, deftype_hi;
--
- /**
-  * set_mtrr_state - Set the MTRR state for this CPU.
-  *
-@@ -705,100 +686,24 @@ static unsigned long set_mtrr_state(void)
- 	 * Set_mtrr_restore restores the old value of MTRRdefType,
- 	 * so to set it we fiddle with the saved value:
- 	 */
--	if ((deftype_lo & 0xff) != mtrr_state.def_type
--	    || ((deftype_lo & 0xc00) >> 10) != mtrr_state.enabled) {
-+	if ((mtrr_deftype_lo & 0xff) != mtrr_state.def_type
-+	    || ((mtrr_deftype_lo & 0xc00) >> 10) != mtrr_state.enabled) {
+-#define mtrr_ap_init() do {} while (0)
+-#define set_mtrr_aps_delayed_init() do {} while (0)
+-#define mtrr_aps_init() do {} while (0)
+-#define mtrr_bp_restore() do {} while (0)
++static inline void mtrr_pat_ap_init(void) { };
++static inline void set_mtrr_pat_aps_delayed_init(void) { };
++static inline void mtrr_pat_aps_init(void) { };
++static inline void mtrr_pat_bp_restore(void) { };
+ #  endif
  
--		deftype_lo = (deftype_lo & ~0xcff) | mtrr_state.def_type |
--			     (mtrr_state.enabled << 10);
-+		mtrr_deftype_lo = (mtrr_deftype_lo & ~0xcff) |
-+			mtrr_state.def_type | (mtrr_state.enabled << 10);
- 		change_mask |= MTRR_CHANGE_MASK_DEFTYPE;
- 	}
- 
- 	return change_mask;
+ #ifdef CONFIG_COMPAT
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index 11472178e17f..39b7942cb6fc 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -1550,7 +1550,7 @@ void identify_secondary_cpu(struct cpuinfo_x86 *c)
+ #ifdef CONFIG_X86_32
+ 	enable_sep_cpu();
+ #endif
+-	mtrr_ap_init();
++	mtrr_pat_ap_init();
+ 	validate_apic_and_package_id(c);
+ 	x86_spec_ctrl_setup_ap();
  }
- 
--
--static unsigned long cr4;
--static DEFINE_RAW_SPINLOCK(set_atomicity_lock);
--
--/*
-- * Since we are disabling the cache don't allow any interrupts,
-- * they would run extremely slow and would only increase the pain.
-- *
-- * The caller must ensure that local interrupts are disabled and
-- * are reenabled after post_set() has been called.
-- */
--static void prepare_set(void) __acquires(set_atomicity_lock)
--{
--	unsigned long cr0;
--
--	/*
--	 * Note that this is not ideal
--	 * since the cache is only flushed/disabled for this CPU while the
--	 * MTRRs are changed, but changing this requires more invasive
--	 * changes to the way the kernel boots
--	 */
--
--	raw_spin_lock(&set_atomicity_lock);
--
--	/* Enter the no-fill (CD=1, NW=0) cache mode and flush caches. */
--	cr0 = read_cr0() | X86_CR0_CD;
--	write_cr0(cr0);
--
--	/*
--	 * Cache flushing is the most time-consuming step when programming
--	 * the MTRRs. Fortunately, as per the Intel Software Development
--	 * Manual, we can skip it if the processor supports cache self-
--	 * snooping.
--	 */
--	if (!static_cpu_has(X86_FEATURE_SELFSNOOP))
--		wbinvd();
--
--	/* Save value of CR4 and clear Page Global Enable (bit 7) */
--	if (boot_cpu_has(X86_FEATURE_PGE)) {
--		cr4 = __read_cr4();
--		__write_cr4(cr4 & ~X86_CR4_PGE);
--	}
--
--	/* Flush all TLBs via a mov %cr3, %reg; mov %reg, %cr3 */
--	count_vm_tlb_event(NR_TLB_LOCAL_FLUSH_ALL);
--	__flush_tlb();
--
--	/* Save MTRR state */
--	rdmsr(MSR_MTRRdefType, deftype_lo, deftype_hi);
--
--	/* Disable MTRRs, and set the default type to uncached */
--	mtrr_wrmsr(MSR_MTRRdefType, deftype_lo & ~0xcff, deftype_hi);
--
--	/* Again, only flush caches if we have to. */
--	if (!static_cpu_has(X86_FEATURE_SELFSNOOP))
--		wbinvd();
--}
--
--static void post_set(void) __releases(set_atomicity_lock)
--{
--	/* Flush TLBs (no need to flush caches - they are disabled) */
--	count_vm_tlb_event(NR_TLB_LOCAL_FLUSH_ALL);
--	__flush_tlb();
--
--	/* Intel (P6) standard MTRRs */
--	mtrr_wrmsr(MSR_MTRRdefType, deftype_lo, deftype_hi);
--
--	/* Enable caches */
--	write_cr0(read_cr0() & ~X86_CR0_CD);
--
--	/* Restore value of CR4 */
--	if (boot_cpu_has(X86_FEATURE_PGE))
--		__write_cr4(cr4);
--	raw_spin_unlock(&set_atomicity_lock);
--}
--
- static void generic_set_all(void)
- {
- 	unsigned long mask, count;
- 	unsigned long flags;
- 
- 	local_irq_save(flags);
--	prepare_set();
-+	mtrr_pat_prepare_set();
- 
- 	/* Actually set the state */
- 	mask = set_mtrr_state();
-@@ -806,7 +711,7 @@ static void generic_set_all(void)
- 	/* also set PAT */
- 	pat_init();
- 
--	post_set();
-+	mtrr_pat_post_set();
- 	local_irq_restore(flags);
- 
- 	/* Use the atomic bitops to update the global mask */
-@@ -837,7 +742,7 @@ static void generic_set_mtrr(unsigned int reg, unsigned long base,
- 	vr = &mtrr_state.var_ranges[reg];
- 
- 	local_irq_save(flags);
--	prepare_set();
-+	mtrr_pat_prepare_set();
- 
- 	if (size == 0) {
- 		/*
-@@ -856,7 +761,7 @@ static void generic_set_mtrr(unsigned int reg, unsigned long base,
- 		mtrr_wrmsr(MTRRphysMask_MSR(reg), vr->mask_lo, vr->mask_hi);
- 	}
- 
--	post_set();
-+	mtrr_pat_post_set();
- 	local_irq_restore(flags);
- }
+diff --git a/arch/x86/kernel/cpu/mtrr/Makefile b/arch/x86/kernel/cpu/mtrr/Makefile
+index cc4f9f1cb94c..e339d729f349 100644
+--- a/arch/x86/kernel/cpu/mtrr/Makefile
++++ b/arch/x86/kernel/cpu/mtrr/Makefile
+@@ -1,4 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-obj-y		:= mtrr.o if.o generic.o cleanup.o
++obj-y		:= mtrr.o if.o generic.o cleanup.o rendezvous.o
+ obj-$(CONFIG_X86_32) += amd.o cyrix.o centaur.o
  
 diff --git a/arch/x86/kernel/cpu/mtrr/mtrr.c b/arch/x86/kernel/cpu/mtrr/mtrr.c
-index 3d35edb1aa42..475627ca2c1b 100644
+index 507039c20128..3d35edb1aa42 100644
 --- a/arch/x86/kernel/cpu/mtrr/mtrr.c
 +++ b/arch/x86/kernel/cpu/mtrr/mtrr.c
-@@ -646,7 +646,7 @@ void __init mtrr_pat_bp_init(void)
- 			__mtrr_enabled = get_mtrr_state();
+@@ -35,7 +35,6 @@
  
- 			if (mtrr_enabled())
--				mtrr_bp_pat_init();
-+				pat_bp_init();
+ #include <linux/types.h> /* FIXME: kvm_para.h needs this */
  
- 			if (mtrr_cleanup(phys_addr)) {
- 				changed_by_mtrr_cleanup = 1;
-diff --git a/arch/x86/kernel/cpu/mtrr/mtrr.h b/arch/x86/kernel/cpu/mtrr/mtrr.h
-index e9aeeeac9a3e..57948b651b8e 100644
---- a/arch/x86/kernel/cpu/mtrr/mtrr.h
-+++ b/arch/x86/kernel/cpu/mtrr/mtrr.h
-@@ -53,7 +53,7 @@ void set_mtrr_prepare_save(struct set_mtrr_context *ctxt);
- void fill_mtrr_var_range(unsigned int index,
- 		u32 base_lo, u32 base_hi, u32 mask_lo, u32 mask_hi);
- bool get_mtrr_state(void);
--void mtrr_bp_pat_init(void);
-+void pat_bp_init(void);
+-#include <linux/stop_machine.h>
+ #include <linux/kvm_para.h>
+ #include <linux/uaccess.h>
+ #include <linux/export.h>
+@@ -46,10 +45,7 @@
+ #include <linux/pci.h>
+ #include <linux/smp.h>
+ #include <linux/syscore_ops.h>
+-#include <linux/rcupdate.h>
  
- extern void __init set_mtrr_ops(const struct mtrr_ops *ops);
- 
-@@ -76,6 +76,7 @@ void set_mtrr_pat(unsigned int reg, unsigned long base,
- 		  unsigned long size, mtrr_type type);
- void set_mtrr_pat_cpuslocked(unsigned int reg, unsigned long base,
- 			     unsigned long size, mtrr_type type);
-+extern u32 mtrr_deftype_lo, mtrr_deftype_hi;
- 
- /* CPU specific mtrr init functions */
- int amd_init_mtrr(void);
-diff --git a/arch/x86/kernel/cpu/mtrr/rendezvous.c b/arch/x86/kernel/cpu/mtrr/rendezvous.c
-index 5448eea573df..d902b9e5cc17 100644
---- a/arch/x86/kernel/cpu/mtrr/rendezvous.c
-+++ b/arch/x86/kernel/cpu/mtrr/rendezvous.c
-@@ -33,14 +33,105 @@
- #define DEBUG
- 
- #include <linux/stop_machine.h>
-+#include <linux/vmstat.h>
- 
+-#include <asm/cpufeature.h>
+-#include <asm/e820/api.h>
  #include <asm/mtrr.h>
  #include <asm/msr.h>
  #include <asm/pat.h>
-+#include <asm/tlbflush.h>
+@@ -62,7 +58,7 @@
+ u32 num_var_ranges;
+ static bool __mtrr_enabled;
  
- #include "mtrr.h"
+-static bool mtrr_enabled(void)
++bool mtrr_enabled(void)
+ {
+ 	return __mtrr_enabled;
+ }
+@@ -71,15 +67,11 @@ unsigned int mtrr_usage_table[MTRR_MAX_VAR_RANGES];
+ static DEFINE_MUTEX(mtrr_mutex);
  
- static bool mtrr_pat_aps_delayed_init;
-+u32 mtrr_deftype_lo, mtrr_deftype_hi;
-+static unsigned long cr4;
-+static DEFINE_RAW_SPINLOCK(set_atomicity_lock);
+ u64 size_or_mask, size_and_mask;
+-static bool mtrr_aps_delayed_init;
+ 
+ static const struct mtrr_ops *mtrr_ops[X86_VENDOR_NUM] __ro_after_init;
+ 
+ const struct mtrr_ops *mtrr_if;
+ 
+-static void set_mtrr(unsigned int reg, unsigned long base,
+-		     unsigned long size, mtrr_type type);
+-
+ void __init set_mtrr_ops(const struct mtrr_ops *ops)
+ {
+ 	if (ops->vendor && ops->vendor < X86_VENDOR_NUM)
+@@ -144,46 +136,6 @@ static void __init init_table(void)
+ 		mtrr_usage_table[i] = 1;
+ }
+ 
+-struct set_mtrr_data {
+-	unsigned long	smp_base;
+-	unsigned long	smp_size;
+-	unsigned int	smp_reg;
+-	mtrr_type	smp_type;
+-};
+-
+-/**
+- * mtrr_rendezvous_handler - Work done in the synchronization handler. Executed
+- * by all the CPUs.
+- * @info: pointer to mtrr configuration data
+- *
+- * Returns nothing.
+- */
+-static int mtrr_rendezvous_handler(void *info)
+-{
+-	struct set_mtrr_data *data = info;
+-
+-	/*
+-	 * We use this same function to initialize the mtrrs during boot,
+-	 * resume, runtime cpu online and on an explicit request to set a
+-	 * specific MTRR.
+-	 *
+-	 * During boot or suspend, the state of the boot cpu's mtrrs has been
+-	 * saved, and we want to replicate that across all the cpus that come
+-	 * online (either at the end of boot or resume or during a runtime cpu
+-	 * online). If we're doing that, @reg is set to something special and on
+-	 * all the cpu's we do mtrr_if->set_all() (On the logical cpu that
+-	 * started the boot/resume sequence, this might be a duplicate
+-	 * set_all()).
+-	 */
+-	if (data->smp_reg != ~0U) {
+-		mtrr_if->set(data->smp_reg, data->smp_base,
+-			     data->smp_size, data->smp_type);
+-	} else if (mtrr_aps_delayed_init || !cpu_online(smp_processor_id())) {
+-		mtrr_if->set_all();
+-	}
+-	return 0;
+-}
+-
+ static inline int types_compatible(mtrr_type type1, mtrr_type type2)
+ {
+ 	return type1 == MTRR_TYPE_UNCACHABLE ||
+@@ -192,77 +144,6 @@ static inline int types_compatible(mtrr_type type1, mtrr_type type2)
+ 	       (type1 == MTRR_TYPE_WRBACK && type2 == MTRR_TYPE_WRTHROUGH);
+ }
+ 
+-/**
+- * set_mtrr - update mtrrs on all processors
+- * @reg:	mtrr in question
+- * @base:	mtrr base
+- * @size:	mtrr size
+- * @type:	mtrr type
+- *
+- * This is kinda tricky, but fortunately, Intel spelled it out for us cleanly:
+- *
+- * 1. Queue work to do the following on all processors:
+- * 2. Disable Interrupts
+- * 3. Wait for all procs to do so
+- * 4. Enter no-fill cache mode
+- * 5. Flush caches
+- * 6. Clear PGE bit
+- * 7. Flush all TLBs
+- * 8. Disable all range registers
+- * 9. Update the MTRRs
+- * 10. Enable all range registers
+- * 11. Flush all TLBs and caches again
+- * 12. Enter normal cache mode and reenable caching
+- * 13. Set PGE
+- * 14. Wait for buddies to catch up
+- * 15. Enable interrupts.
+- *
+- * What does that mean for us? Well, stop_machine() will ensure that
+- * the rendezvous handler is started on each CPU. And in lockstep they
+- * do the state transition of disabling interrupts, updating MTRR's
+- * (the CPU vendors may each do it differently, so we call mtrr_if->set()
+- * callback and let them take care of it.) and enabling interrupts.
+- *
+- * Note that the mechanism is the same for UP systems, too; all the SMP stuff
+- * becomes nops.
+- */
+-static void
+-set_mtrr(unsigned int reg, unsigned long base, unsigned long size, mtrr_type type)
+-{
+-	struct set_mtrr_data data = { .smp_reg = reg,
+-				      .smp_base = base,
+-				      .smp_size = size,
+-				      .smp_type = type
+-				    };
+-
+-	stop_machine(mtrr_rendezvous_handler, &data, cpu_online_mask);
+-}
+-
+-static void set_mtrr_cpuslocked(unsigned int reg, unsigned long base,
+-				unsigned long size, mtrr_type type)
+-{
+-	struct set_mtrr_data data = { .smp_reg = reg,
+-				      .smp_base = base,
+-				      .smp_size = size,
+-				      .smp_type = type
+-				    };
+-
+-	stop_machine_cpuslocked(mtrr_rendezvous_handler, &data, cpu_online_mask);
+-}
+-
+-static void set_mtrr_from_inactive_cpu(unsigned int reg, unsigned long base,
+-				      unsigned long size, mtrr_type type)
+-{
+-	struct set_mtrr_data data = { .smp_reg = reg,
+-				      .smp_base = base,
+-				      .smp_size = size,
+-				      .smp_type = type
+-				    };
+-
+-	stop_machine_from_inactive_cpu(mtrr_rendezvous_handler, &data,
+-				       cpu_callout_mask);
+-}
+-
+ /**
+  * mtrr_add_page - Add a memory type region
+  * @base: Physical base address of region in pages (in units of 4 kB!)
+@@ -382,7 +263,7 @@ int mtrr_add_page(unsigned long base, unsigned long size,
+ 	/* Search for an empty MTRR */
+ 	i = mtrr_if->get_free_region(base, size, replace);
+ 	if (i >= 0) {
+-		set_mtrr_cpuslocked(i, base, size, type);
++		set_mtrr_pat_cpuslocked(i, base, size, type);
+ 		if (likely(replace < 0)) {
+ 			mtrr_usage_table[i] = 1;
+ 		} else {
+@@ -390,7 +271,7 @@ int mtrr_add_page(unsigned long base, unsigned long size,
+ 			if (increment)
+ 				mtrr_usage_table[i]++;
+ 			if (unlikely(replace != i)) {
+-				set_mtrr_cpuslocked(replace, 0, 0, 0);
++				set_mtrr_pat_cpuslocked(replace, 0, 0, 0);
+ 				mtrr_usage_table[replace] = 0;
+ 			}
+ 		}
+@@ -518,7 +399,7 @@ int mtrr_del_page(int reg, unsigned long base, unsigned long size)
+ 		goto out;
+ 	}
+ 	if (--mtrr_usage_table[reg] < 1)
+-		set_mtrr_cpuslocked(reg, 0, 0, 0);
++		set_mtrr_pat_cpuslocked(reg, 0, 0, 0);
+ 	error = reg;
+  out:
+ 	mutex_unlock(&mtrr_mutex);
+@@ -662,9 +543,9 @@ static void mtrr_restore(void)
+ 
+ 	for (i = 0; i < num_var_ranges; i++) {
+ 		if (mtrr_value[i].lsize) {
+-			set_mtrr(i, mtrr_value[i].lbase,
+-				    mtrr_value[i].lsize,
+-				    mtrr_value[i].ltype);
++			set_mtrr_pat(i, mtrr_value[i].lbase,
++					mtrr_value[i].lsize,
++					mtrr_value[i].ltype);
+ 		}
+ 	}
+ }
+@@ -680,13 +561,13 @@ int __initdata changed_by_mtrr_cleanup;
+ 
+ #define SIZE_OR_MASK_BITS(n)  (~((1ULL << ((n) - PAGE_SHIFT)) - 1))
+ /**
+- * mtrr_bp_init - initialize mtrrs on the boot CPU
++ * mtrr_pat_bp_init - initialize mtrrs on the boot CPU
+  *
+  * This needs to be called early; before any of the other CPUs are
+  * initialized (i.e. before smp_init()).
+  *
+  */
+-void __init mtrr_bp_init(void)
++void __init mtrr_pat_bp_init(void)
+ {
+ 	u32 phys_addr;
+ 
+@@ -786,32 +667,6 @@ void __init mtrr_bp_init(void)
+ 	}
+ }
+ 
+-void mtrr_ap_init(void)
+-{
+-	if (!mtrr_enabled())
+-		return;
+-
+-	if (!use_intel() || mtrr_aps_delayed_init)
+-		return;
+-
+-	rcu_cpu_starting(smp_processor_id());
+-
+-	/*
+-	 * Ideally we should hold mtrr_mutex here to avoid mtrr entries
+-	 * changed, but this routine will be called in cpu boot time,
+-	 * holding the lock breaks it.
+-	 *
+-	 * This routine is called in two cases:
+-	 *
+-	 *   1. very earily time of software resume, when there absolutely
+-	 *      isn't mtrr entry changes;
+-	 *
+-	 *   2. cpu hotadd time. We let mtrr_add/del_page hold cpuhotplug
+-	 *      lock to prevent mtrr entry changes
+-	 */
+-	set_mtrr_from_inactive_cpu(~0U, 0, 0, 0);
+-}
+-
+ /**
+  * Save current fixed-range MTRR state of the first cpu in cpu_online_mask.
+  */
+@@ -826,44 +681,6 @@ void mtrr_save_state(void)
+ 	smp_call_function_single(first_cpu, mtrr_save_fixed_ranges, NULL, 1);
+ }
+ 
+-void set_mtrr_aps_delayed_init(void)
+-{
+-	if (!mtrr_enabled())
+-		return;
+-	if (!use_intel())
+-		return;
+-
+-	mtrr_aps_delayed_init = true;
+-}
+-
+-/*
+- * Delayed MTRR initialization for all AP's
+- */
+-void mtrr_aps_init(void)
+-{
+-	if (!use_intel() || !mtrr_enabled())
+-		return;
+-
+-	/*
+-	 * Check if someone has requested the delay of AP MTRR initialization,
+-	 * by doing set_mtrr_aps_delayed_init(), prior to this point. If not,
+-	 * then we are done.
+-	 */
+-	if (!mtrr_aps_delayed_init)
+-		return;
+-
+-	set_mtrr(~0U, 0, 0, 0);
+-	mtrr_aps_delayed_init = false;
+-}
+-
+-void mtrr_bp_restore(void)
+-{
+-	if (!use_intel() || !mtrr_enabled())
+-		return;
+-
+-	mtrr_if->set_all();
+-}
+-
+ static int __init mtrr_init_finialize(void)
+ {
+ 	if (!mtrr_enabled())
+diff --git a/arch/x86/kernel/cpu/mtrr/mtrr.h b/arch/x86/kernel/cpu/mtrr/mtrr.h
+index 2ac99e561181..e9aeeeac9a3e 100644
+--- a/arch/x86/kernel/cpu/mtrr/mtrr.h
++++ b/arch/x86/kernel/cpu/mtrr/mtrr.h
+@@ -71,6 +71,12 @@ void mtrr_state_warn(void);
+ const char *mtrr_attrib_to_str(int x);
+ void mtrr_wrmsr(unsigned, unsigned, unsigned);
+ 
++/* rendezvous */
++void set_mtrr_pat(unsigned int reg, unsigned long base,
++		  unsigned long size, mtrr_type type);
++void set_mtrr_pat_cpuslocked(unsigned int reg, unsigned long base,
++			     unsigned long size, mtrr_type type);
 +
-+/* PAT setup for BP. We need to go through sync steps here */
-+void __init pat_bp_init(void)
+ /* CPU specific mtrr init functions */
+ int amd_init_mtrr(void);
+ int cyrix_init_mtrr(void);
+diff --git a/arch/x86/kernel/cpu/mtrr/rendezvous.c b/arch/x86/kernel/cpu/mtrr/rendezvous.c
+new file mode 100644
+index 000000000000..5448eea573df
+--- /dev/null
++++ b/arch/x86/kernel/cpu/mtrr/rendezvous.c
+@@ -0,0 +1,221 @@
++/* common code for MTRR (Memory Type Range Register) and
++ * PAT(Page Attribute Table)
++ *
++ * Copyright (C) 1997-2000  Richard Gooch
++ * Copyright (c) 2002	     Patrick Mochel
++ *
++ * This library is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Library General Public
++ * License as published by the Free Software Foundation; either
++ * version 2 of the License, or (at your option) any later version.
++ *
++ * This library is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Library General Public License for more details.
++ *
++ * Richard Gooch may be reached by email at  rgooch@atnf.csiro.au
++ * The postal address is:
++ *   Richard Gooch, c/o ATNF, P. O. Box 76, Epping, N.S.W., 2121, Australia.
++ *
++ * Source: "Pentium Pro Family Developer's Manual, Volume 3:
++ * Operating System Writer's Guide" (Intel document number 242692),
++ * section 11.11.7
++ *
++ * This was cleaned and made readable by Patrick Mochel <mochel@osdl.org>
++ * on 6-7 March 2002.
++ * Source: Intel Architecture Software Developers Manual, Volume 3:
++ * System Programming Guide; Section 9.11. (1997 edition - PPro).
++ *
++ * This file was split from mtrr.c and generic.c for MTRR and PAT.
++ */
++
++#define DEBUG
++
++#include <linux/stop_machine.h>
++
++#include <asm/mtrr.h>
++#include <asm/msr.h>
++#include <asm/pat.h>
++
++#include "mtrr.h"
++
++static bool mtrr_pat_aps_delayed_init;
++
++struct set_mtrr_data {
++	unsigned long	smp_base;
++	unsigned long	smp_size;
++	unsigned int	smp_reg;
++	mtrr_type	smp_type;
++};
++
++/**
++ * mtrr_pat_rendezvous_handler - Work done in the synchronization handler.
++ * Executed by all the CPUs.
++ * @info: pointer to mtrr configuration data
++ *
++ * Returns nothing.
++ */
++static int mtrr_pat_rendezvous_handler(void *info)
 +{
-+	unsigned long flags;
++	struct set_mtrr_data *data = info;
 +
-+	local_irq_save(flags);
-+	mtrr_pat_prepare_set();
++	/*
++	 * We use this same function to initialize the mtrrs during boot,
++	 * resume, runtime cpu online and on an explicit request to set a
++	 * specific MTRR.
++	 *
++	 * During boot or suspend, the state of the boot cpu's mtrrs has been
++	 * saved, and we want to replicate that across all the cpus that come
++	 * online (either at the end of boot or resume or during a runtime cpu
++	 * online). If we're doing that, @reg is set to something special and on
++	 * all the cpu's we do mtrr_if->set_all() (On the logical cpu that
++	 * started the boot/resume sequence, this might be a duplicate
++	 * set_all()).
++	 */
++	if (data->smp_reg != ~0U) {
++		mtrr_if->set(data->smp_reg, data->smp_base,
++			     data->smp_size, data->smp_type);
++	} else if (mtrr_pat_aps_delayed_init ||
++		   !cpu_online(smp_processor_id())) {
++		mtrr_if->set_all();
++	}
++	return 0;
++}
 +
-+	pat_init();
++/**
++ * set_mtrr_pat - update mtrrs on all processors
++ * @reg:	mtrr in question
++ * @base:	mtrr base
++ * @size:	mtrr size
++ * @type:	mtrr type
++ *
++ * This is kinda tricky, but fortunately, Intel spelled it out for us cleanly:
++ *
++ * 1. Queue work to do the following on all processors:
++ * 2. Disable Interrupts
++ * 3. Wait for all procs to do so
++ * 4. Enter no-fill cache mode
++ * 5. Flush caches
++ * 6. Clear PGE bit
++ * 7. Flush all TLBs
++ * 8. Disable all range registers
++ * 9. Update the MTRRs
++ * 10. Enable all range registers
++ * 11. Flush all TLBs and caches again
++ * 12. Enter normal cache mode and reenable caching
++ * 13. Set PGE
++ * 14. Wait for buddies to catch up
++ * 15. Enable interrupts.
++ *
++ * What does that mean for us? Well, stop_machine() will ensure that
++ * the rendezvous handler is started on each CPU. And in lockstep they
++ * do the state transition of disabling interrupts, updating MTRR's
++ * (the CPU vendors may each do it differently, so we call mtrr_if->set()
++ * callback and let them take care of it.) and enabling interrupts.
++ *
++ * Note that the mechanism is the same for UP systems, too; all the SMP stuff
++ * becomes nops.
++ */
++void
++set_mtrr_pat(unsigned int reg, unsigned long base,
++	     unsigned long size, mtrr_type type)
++{
++	struct set_mtrr_data data = { .smp_reg = reg,
++				      .smp_base = base,
++				      .smp_size = size,
++				      .smp_type = type
++				    };
 +
-+	mtrr_pat_post_set();
-+	local_irq_restore(flags);
++	stop_machine(mtrr_pat_rendezvous_handler, &data, cpu_online_mask);
++}
++
++void set_mtrr_pat_cpuslocked(unsigned int reg, unsigned long base,
++			     unsigned long size, mtrr_type type)
++{
++	struct set_mtrr_data data = { .smp_reg = reg,
++				      .smp_base = base,
++				      .smp_size = size,
++				      .smp_type = type
++				    };
++
++	stop_machine_cpuslocked(mtrr_pat_rendezvous_handler,
++				&data, cpu_online_mask);
++}
++
++static void set_mtrr_pat_from_inactive_cpu(unsigned int reg, unsigned long base,
++					   unsigned long size, mtrr_type type)
++{
++	struct set_mtrr_data data = { .smp_reg = reg,
++				      .smp_base = base,
++				      .smp_size = size,
++				      .smp_type = type
++				    };
++
++	stop_machine_from_inactive_cpu(mtrr_pat_rendezvous_handler, &data,
++				       cpu_callout_mask);
++}
++
++void mtrr_pat_ap_init(void)
++{
++	if (!mtrr_enabled())
++		return;
++
++	if (!use_intel() || mtrr_pat_aps_delayed_init)
++		return;
++
++	rcu_cpu_starting(smp_processor_id());
++
++	/*
++	 * Ideally we should hold mtrr_mutex here to avoid mtrr entries
++	 * changed, but this routine will be called in cpu boot time,
++	 * holding the lock breaks it.
++	 *
++	 * This routine is called in two cases:
++	 *
++	 *   1. very earily time of software resume, when there absolutely
++	 *      isn't mtrr entry changes;
++	 *
++	 *   2. cpu hotadd time. We let mtrr_add/del_page hold cpuhotplug
++	 *      lock to prevent mtrr entry changes
++	 */
++	set_mtrr_pat_from_inactive_cpu(~0U, 0, 0, 0);
++}
++
++void set_mtrr_pat_aps_delayed_init(void)
++{
++	if (!mtrr_enabled())
++		return;
++	if (!use_intel())
++		return;
++
++	mtrr_pat_aps_delayed_init = true;
 +}
 +
 +/*
-+ * Since we are disabling the cache don't allow any interrupts,
-+ * they would run extremely slow and would only increase the pain.
-+ *
-+ * The caller must ensure that local interrupts are disabled and
-+ * are reenabled after mtrr_pat_post_set() has been called.
++ * Delayed MTRR initialization for all AP's
 + */
-+void mtrr_pat_prepare_set(void) __acquires(set_atomicity_lock)
++void mtrr_pat_aps_init(void)
 +{
-+	unsigned long cr0;
++	if (!use_intel() || !mtrr_enabled())
++		return;
 +
 +	/*
-+	 * Note that this is not ideal
-+	 * since the cache is only flushed/disabled for this CPU while the
-+	 * MTRRs are changed, but changing this requires more invasive
-+	 * changes to the way the kernel boots
++	 * Check if someone has requested the delay of AP MTRR initialization,
++	 * by doing set_mtrr_pat_aps_delayed_init(), prior to this point.
++	 * If not, then we are done.
 +	 */
++	if (!mtrr_pat_aps_delayed_init)
++		return;
 +
-+	raw_spin_lock(&set_atomicity_lock);
-+
-+	/* Enter the no-fill (CD=1, NW=0) cache mode and flush caches. */
-+	cr0 = read_cr0() | X86_CR0_CD;
-+	write_cr0(cr0);
-+
-+	/*
-+	 * Cache flushing is the most time-consuming step when programming
-+	 * the MTRRs. Fortunately, as per the Intel Software Development
-+	 * Manual, we can skip it if the processor supports cache self-
-+	 * snooping.
-+	 */
-+	if (!static_cpu_has(X86_FEATURE_SELFSNOOP))
-+		wbinvd();
-+
-+	/* Save value of CR4 and clear Page Global Enable (bit 7) */
-+	if (boot_cpu_has(X86_FEATURE_PGE)) {
-+		cr4 = __read_cr4();
-+		__write_cr4(cr4 & ~X86_CR4_PGE);
-+	}
-+
-+	/* Flush all TLBs via a mov %cr3, %reg; mov %reg, %cr3 */
-+	count_vm_tlb_event(NR_TLB_LOCAL_FLUSH_ALL);
-+	__flush_tlb();
-+
-+	/* Save MTRR state */
-+	rdmsr(MSR_MTRRdefType, mtrr_deftype_lo, mtrr_deftype_hi);
-+
-+	/* Disable MTRRs, and set the default type to uncached */
-+	mtrr_wrmsr(MSR_MTRRdefType, mtrr_deftype_lo & ~0xcff, mtrr_deftype_hi);
-+
-+	/* Again, only flush caches if we have to. */
-+	if (!static_cpu_has(X86_FEATURE_SELFSNOOP))
-+		wbinvd();
++	set_mtrr_pat(~0U, 0, 0, 0);
++	mtrr_pat_aps_delayed_init = false;
 +}
 +
-+void mtrr_pat_post_set(void) __releases(set_atomicity_lock)
++void mtrr_pat_bp_restore(void)
 +{
-+	/* Flush TLBs (no need to flush caches - they are disabled) */
-+	count_vm_tlb_event(NR_TLB_LOCAL_FLUSH_ALL);
-+	__flush_tlb();
++	if (!use_intel() || !mtrr_enabled())
++		return;
 +
-+	/* Intel (P6) standard MTRRs */
-+	mtrr_wrmsr(MSR_MTRRdefType, mtrr_deftype_lo, mtrr_deftype_hi);
-+
-+	/* Enable caches */
-+	write_cr0(read_cr0() & ~X86_CR0_CD);
-+
-+	/* Restore value of CR4 */
-+	if (boot_cpu_has(X86_FEATURE_PGE))
-+		__write_cr4(cr4);
-+	raw_spin_unlock(&set_atomicity_lock);
++	mtrr_if->set_all();
 +}
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index bbe35bf879f5..ca06370c7a13 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -1064,7 +1064,7 @@ void __init setup_arch(char **cmdline_p)
+ 	max_pfn = e820__end_of_ram_pfn();
  
- struct set_mtrr_data {
- 	unsigned long	smp_base;
+ 	/* update e820 for memory not covered by WB MTRRs */
+-	mtrr_bp_init();
++	mtrr_pat_bp_init();
+ 	if (mtrr_trim_uncached_memory(max_pfn))
+ 		max_pfn = e820__end_of_ram_pfn();
+ 
+@@ -1072,7 +1072,7 @@ void __init setup_arch(char **cmdline_p)
+ 
+ 	/*
+ 	 * This call is required when the CPU does not support PAT. If
+-	 * mtrr_bp_init() invoked it already via pat_init() the call has no
++	 * mtrr_pat_bp_init() invoked it already via pat_init() the call has no
+ 	 * effect.
+ 	 */
+ 	init_cache_modes();
+diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
+index fdbd47ceb84d..3e16e7e3a01b 100644
+--- a/arch/x86/kernel/smpboot.c
++++ b/arch/x86/kernel/smpboot.c
+@@ -1370,7 +1370,7 @@ void __init native_smp_prepare_cpus(unsigned int max_cpus)
+ 
+ 	uv_system_init();
+ 
+-	set_mtrr_aps_delayed_init();
++	set_mtrr_pat_aps_delayed_init();
+ 
+ 	smp_quirk_init_udelay();
+ 
+@@ -1379,12 +1379,12 @@ void __init native_smp_prepare_cpus(unsigned int max_cpus)
+ 
+ void arch_enable_nonboot_cpus_begin(void)
+ {
+-	set_mtrr_aps_delayed_init();
++	set_mtrr_pat_aps_delayed_init();
+ }
+ 
+ void arch_enable_nonboot_cpus_end(void)
+ {
+-	mtrr_aps_init();
++	mtrr_pat_aps_init();
+ }
+ 
+ /*
+@@ -1424,7 +1424,7 @@ void __init native_smp_cpus_done(unsigned int max_cpus)
+ 
+ 	nmi_selftest();
+ 	impress_friends();
+-	mtrr_aps_init();
++	mtrr_pat_aps_init();
+ }
+ 
+ static int __initdata setup_possible_cpus = -1;
+diff --git a/arch/x86/power/cpu.c b/arch/x86/power/cpu.c
+index 24b079e94bc2..860d33b0dd1b 100644
+--- a/arch/x86/power/cpu.c
++++ b/arch/x86/power/cpu.c
+@@ -263,7 +263,7 @@ static void notrace __restore_processor_state(struct saved_context *ctxt)
+ 	do_fpu_end();
+ 	tsc_verify_tsc_adjust(true);
+ 	x86_platform.restore_sched_clock_state();
+-	mtrr_bp_restore();
++	mtrr_pat_bp_restore();
+ 	perf_restore_debug_store();
+ 	msr_restore_context(ctxt);
+ }
 -- 
 2.17.1
 
