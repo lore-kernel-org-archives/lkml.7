@@ -2,75 +2,95 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29682C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 03:39:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1CEFC31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 03:39:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED74C20C01
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 03:39:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FAF820C01
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 03:39:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="GtsqRxeL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405087AbfHIDjC (ORCPT
+        id S2405180AbfHIDjo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 23:39:02 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:40607 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729490AbfHIDjB (ORCPT
+        Thu, 8 Aug 2019 23:39:44 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36537 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405098AbfHIDjo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 23:39:01 -0400
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x793ct12024707, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCASV02.realtek.com.tw[172.21.6.19])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x793ct12024707
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Fri, 9 Aug 2019 11:38:55 +0800
-Received: from RTITMBSVM03.realtek.com.tw ([fe80::e1fe:b2c1:57ec:f8e1]) by
- RTITCASV02.realtek.com.tw ([::1]) with mapi id 14.03.0468.000; Fri, 9 Aug
- 2019 11:38:54 +0800
-From:   Hayes Wang <hayeswang@realtek.com>
-To:     Jakub Kicinski <jakub.kicinski@netronome.com>
-CC:     Maciej Fijalkowski <maciejromanfijalkowski@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        nic_swsd <nic_swsd@realtek.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
-Subject: RE: [PATCH net-next 5/5] r8152: change rx_frag_head_sz and rx_max_agg_num dynamically
-Thread-Topic: [PATCH net-next 5/5] r8152: change rx_frag_head_sz and
- rx_max_agg_num dynamically
-Thread-Index: AQHVTEjAduvqUw50CkySh6Q/0oky4abuKLuAgALKe5D//6zrgIAAi5Rw///n74CAARidjQ==
-Date:   Fri, 9 Aug 2019 03:38:53 +0000
-Message-ID: <0835B3720019904CB8F7AA43166CEEB2F18D0FFE@RTITMBSVM03.realtek.com.tw>
-References: <1394712342-15778-289-albertk@realtek.com>
-        <1394712342-15778-294-albertk@realtek.com>
-        <20190806151007.75a8dd2c@cakuba.netronome.com>
-        <0835B3720019904CB8F7AA43166CEEB2F18D0D8E@RTITMBSVM03.realtek.com.tw>
-        <20190808134959.00006a58@gmail.com>
-        <0835B3720019904CB8F7AA43166CEEB2F18D0F3F@RTITMBSVM03.realtek.com.tw>,<20190808114325.5c346d3a@cakuba.netronome.com>
-In-Reply-To: <20190808114325.5c346d3a@cakuba.netronome.com>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [150.117.242.253]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 8 Aug 2019 23:39:44 -0400
+Received: by mail-pg1-f193.google.com with SMTP id l21so45135154pgm.3
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 20:39:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=65aYqAVIIYjhyCmnyqV/5PNvkM6BEAj6E5sBAAyQwCc=;
+        b=GtsqRxeLoqj8K/ZiX15WNEvzIG7f3782O540QxuRkI9DX/f9lKPiHGZrCibf2mC43C
+         L2c1x+ZZFrRF3TCiOzo6TYY0NVINPIv0vD0NqH2yN1WTjHQ3QCAifRuEi6yTTwMmjYK+
+         gfVd9kz+jmv9glukworuJ+yoqetHZGWKiBvlSswDQIYycGH8fp8Ct3TzcLccWuuzQkjQ
+         lv6CLMX/VIcgopNP1SK2XnAlqTU7d9I1Q1Ogy/DMqVNRQYJ6aptJZdXwDeAEISDQC9sE
+         b6/N6G05TMvxVMTRzRmiWoVtnlikt6IM13dFz6WbuhRdrmCLB58kwoEORyaNQPD37+j/
+         Dckg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=65aYqAVIIYjhyCmnyqV/5PNvkM6BEAj6E5sBAAyQwCc=;
+        b=SzGjwQ/UuZA8Pyi6AruMhhR/6L+EEL+kli+U07GzGZIvqN4lzJXSiPIe/01G6f62c0
+         0adKE+sZsyrYlW1mF3z0RmVl+PRoNG1OzNIvqQlaQObE2r8gWnpZSpfDD04rXs0z02Ni
+         H0AJYROH13HtAL33FtGjuv9cplk2Xo0N9NQe7bW6wC9cGeUlfuIfJXjDaRScEwMFVhIt
+         cU8h1atApRccA8ZetCuhqWu+esygdufO0ftK8+4/xMdpjJIPNlNbPitTMV+355ztaVLU
+         Lt9oTR+xQzxGXejBgxVJrfa7SXu+aJVFC4MiLCrPiM91jlZGgu72sCrdeB1DHN1pqnA+
+         0kUw==
+X-Gm-Message-State: APjAAAVFQqNvfxs5VPpEoPzJuagVDmWlQ6tD9ZGKEf5jI7ImRyqVuh3A
+        sO3lfqYTvhy8k53DL00VRipr8w==
+X-Google-Smtp-Source: APXvYqyCoTbIY/SmEPfVHSkLa4H/SxltOTgybLImw8D4tHCW7Fmh/OfTA2wxCRvGAnZzMymDRXZjcg==
+X-Received: by 2002:a63:481c:: with SMTP id v28mr15527467pga.50.1565321983685;
+        Thu, 08 Aug 2019 20:39:43 -0700 (PDT)
+Received: from ?IPv6:2605:e000:100e:83a1:3965:6e7a:8c2:c21b? ([2605:e000:100e:83a1:3965:6e7a:8c2:c21b])
+        by smtp.gmail.com with ESMTPSA id j1sm129386216pgl.12.2019.08.08.20.39.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 08 Aug 2019 20:39:42 -0700 (PDT)
+Subject: Re: [PATCH v2] loop: Add LOOP_SET_DIRECT_IO to compat ioctl
+To:     Alessio Balsini <balsini@android.com>, linux-block@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, dvander@gmail.com, elsk@google.com,
+        gregkh@linuxfoundation.org, joelaf@google.com,
+        kernel-team@android.com
+References: <CAJWu+oo=GrZ+SbA6=bboM4==TKXBsTRWkTrkWiZ55pqhJtgQqQ@mail.gmail.com>
+ <20190807004828.28059-1-balsini@android.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <4dc06fb1-df3c-5887-725a-0d20c3291528@kernel.dk>
+Date:   Thu, 8 Aug 2019 20:39:40 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20190807004828.28059-1-balsini@android.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SmFrdWIgS2ljaW5za2kgW2pha3ViLmtpY2luc2tpQG5ldHJvbm9tZS5jb21dClsuLl0+IFRoZSBr
-ZXJuZWwgY291bGQgc3VwcG9ydCBpdC4gQW5kIEkgaGFzIGZpbmlzaGVkIGl0Lgo+ID4gSG93ZXZl
-ciwgd2hlbiBJIHdhbnQgdG8gdGVzdCBpdCBieSBldGh0b29sLCBJIGNvdWxkbid0IGZpbmQgc3Vp
-dGFibGUgY29tbWFuZC4KPiA+IEkgY291bGRuJ3QgZmluZCByZWxhdGl2ZSBmZWF0dXJlIGluIHRo
-ZSBzb3VyY2UgY29kZSBvZiBldGh0b29sLCBlaXRoZXIuCgo+IEl0J3MgcG9zc2libGUgaXQncyBu
-b3QgaW1wbGVtZW50ZWQgaW4gdGhlIHVzZXIgc3BhY2UgdG9vbCDwn6SUCj4KPiBMb29rcyBsaWtl
-IGl0IGdvdCBwb3N0ZWQgaGVyZToKPgo+IGh0dHBzOi8vd3d3LnNwaW5pY3MubmV0L2xpc3RzL25l
-dGRldi9tc2cyOTk4NzcuaHRtbAo+Cj4gQnV0IHBlcmhhcHMgbmV2ZXIgZmluaXNoZWQ/CgpNYXkg
-SSBpbXBsZW1lbnQgYm90aCBzeXNmcyBhbmQgc2V0X3R1bmFsYmUgZm9yIGNvcHlicmVhayBmaXJz
-dApiZWZvcmUgdGhlIHVzZXIgc3BhY2UgdG9vbCBpcyByZWFkeT8gT3RoZXJ3aXNlLCB0aGUgdXNl
-ciBjb3VsZG4ndApjaGFuZ2UgdGhlIGNvcHlicmVhayBub3cuCgpCZXN0IFJlZ2FyZHMsCkhheWVz
-Cg==
+On 8/6/19 5:48 PM, Alessio Balsini wrote:
+> Enabling Direct I/O with loop devices helps reducing memory usage by
+> avoiding double caching.  32 bit applications running on 64 bits systems
+> are currently not able to request direct I/O because is missing from the
+> lo_compat_ioctl.
+> 
+> This patch fixes the compatibility issue mentioned above by exporting
+> LOOP_SET_DIRECT_IO as additional lo_compat_ioctl() entry.
+> The input argument for this ioctl is a single long converted to a 1-bit
+> boolean, so compatibility is preserved.
+
+Applied, thanks.
+
+-- 
+Jens Axboe
+
