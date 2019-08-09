@@ -2,110 +2,76 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E605C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2408DC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:37:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3939E2166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:37:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="FI1vTkLp"
+	by mail.kernel.org (Postfix) with ESMTP id F22CE2086D
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:37:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436892AbfHIShS (ORCPT
+        id S2436947AbfHIShc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 14:37:18 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:33524 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407617AbfHIShR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 14:37:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=IGx1tU/8oZZB3pB47GcI0li+Dcw0am8UumHeTJgqBsA=; b=FI1vTkLp5g159Uj8cKQ9M9yPg
-        5o1Cnqp19oMJ6nrpK4zw0M1TH8cDtseJ969So98LRY7NxqWnT2GtIvCesWJy5YogAvFlQcwVLFf9m
-        MdzBWgIc6Eqi9mNeGKEbCZ9AbhgxE+I9yycgXHBgxA5104BGeZr1YZid8L4JBbwIYV/BtyAyk1euz
-        KwZgttgdk5EEc6iqpUf2Bvj3Duy/uTnZNEIAJhQsO9IeHKI/u7syQ7tOl0+F2VQniPR2YGbBcT+Ft
-        8Xy5MdDaQ7/hyU4s3LkVh3XzSZpYapT3CopyQgW0n2gy4ZTERYvKaCunp9i2GpwSUkZmulS+XvQ7r
-        dl2HpuDSQ==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:42960)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1hw9lA-0003Lr-PB; Fri, 09 Aug 2019 19:37:04 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1hw9l4-0003t7-5w; Fri, 09 Aug 2019 19:36:58 +0100
-Date:   Fri, 9 Aug 2019 19:36:58 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, soc@kernel.org,
-        Vinod Koul <vkoul@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dmaengine@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-i2c@vger.kernel.org, Martin Michlmayr <tbm@cyrius.com>
-Subject: Re: [PATCH 1/7] [RFC] ARM: remove Intel iop33x and iop13xx support
-Message-ID: <20190809183658.GA13294@shell.armlinux.org.uk>
-References: <20190809162956.488941-1-arnd@arndb.de>
- <20190809163334.489360-1-arnd@arndb.de>
- <CAA9_cmdDbBm0ookyqGJMcyLVFHkYHuR3mEeawQKS2UqYJoWWaQ@mail.gmail.com>
+        Fri, 9 Aug 2019 14:37:32 -0400
+Received: from mga04.intel.com ([192.55.52.120]:7513 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2436899AbfHIShb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 14:37:31 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 11:37:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,366,1559545200"; 
+   d="scan'208";a="374571640"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga005.fm.intel.com with ESMTP; 09 Aug 2019 11:37:30 -0700
+Date:   Fri, 9 Aug 2019 11:37:30 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jim Mattson <jmattson@google.com>
+Subject: Re: [PATCH v3 5/7] x86: KVM: svm: remove hardcoded instruction
+ length from intercepts
+Message-ID: <20190809183730.GE10541@linux.intel.com>
+References: <20190808173051.6359-1-vkuznets@redhat.com>
+ <20190808173051.6359-6-vkuznets@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAA9_cmdDbBm0ookyqGJMcyLVFHkYHuR3mEeawQKS2UqYJoWWaQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190808173051.6359-6-vkuznets@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 11:34:12AM -0700, Dan Williams wrote:
-> [ add Martin (if cyrius.com address is still valid) ]
+On Thu, Aug 08, 2019 at 07:30:49PM +0200, Vitaly Kuznetsov wrote:
+> Various intercepts hard-code the respective instruction lengths to optimize
+> skip_emulated_instruction(): when next_rip is pre-set we skip
+> kvm_emulate_instruction(vcpu, EMULTYPE_SKIP). The optimization is, however,
+> incorrect: different (redundant) prefixes could be used to enlarge the
+> instruction. We can't really avoid decoding.
 > 
-> On Fri, Aug 9, 2019 at 9:35 AM Arnd Bergmann <arnd@arndb.de> wrote:
-> >
-> > There are three families of IOP machines we support in Linux: iop32x
-> > (which includes EP80219), iop33x and iop13xx (aka IOP34x aka WP8134x).
-> >
-> > All products we support in the kernel are based on the first of these,
-> > iop32x, the other families only ever supported the Intel reference
-> > boards but no actual machine anyone could ever buy.
-> >
-> > While one could clearly make them all three work in a single kernel
-> > with some work, this takes the easy way out, removing the later two
-> > platforms entirely, under the assumption that there are no remaining
-> > users.
-> >
-> > Earlier versions of OpenWRT and Debian both had support for iop32x
-> > but not the others, and they both dropped iop32x as well in their 2015
-> > releases.
-> >
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > ---
-> > I'm just guessing that iop32x is still needed, and the other two are
-> > not. If anyone disagrees with that assessment, let me know so we
-> > can come up with an alternative approach.
+> svm->next_rip is not used when CPU supports 'nrips' (X86_FEATURE_NRIPS)
+> feature: next RIP is provided in VMCB. The feature is not really new
+> (Opteron G3s had it already) and the change should have zero affect.
 > 
-> I'm not sure who would scream if iop32x support went away as well, but
-> I have not followed this space in years hence copying Martin.
+> Remove manual svm->next_rip setting with hard-coded instruction lengths.
+> The only case where we now use svm->next_rip is EXIT_IOIO: the instruction
+> length is provided to us by hardware.
 > 
-> In any event:
+> Hardcoded RIP advancement remains in vmrun_interception(), this is going to
+> be taken care of separately.
 > 
-> Acked-by: Dan Williams <dan.j.williams@intel.com>
+> Reported-by: Jim Mattson <jmattson@google.com>
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> ---
 
-Those of us who have and still run Thecus N2100's, for example?
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
