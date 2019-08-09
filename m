@@ -2,52 +2,59 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59414C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:48:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA210C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:48:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E65421773
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:48:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B6862086D
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 13:48:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565358485;
-	bh=MTFwszCrmSaCj63SpvMh7Xi8g7NApYngPDhIgzx0W1A=;
+	s=default; t=1565358490;
+	bh=wghxmeAPHzsujAz79/ipyVQr0oFzQXLpRvGjhXLRHZM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i49x/9e0r4SWvXfZJdaAMe2xCbkkWHa9kaIvCM3NgiSBm/4ky6tadMJ8Mg0tp2sdE
-	 1+B7iUnen7c8K4k/9nhncLoBMI3dXFJ6fx/RPoCQ1YkyVw95nZ+N68+VUGCb8DFYVG
-	 f34gQ0f9VD6m+t8Ml1Rjd0YLY80YWluK0d9OJbEU=
+	b=Lke+Ua9jb/3JD2hqeN8xrg/gstCt+W+m50UEPYFJw7qf5IRqc+oVuzY5c9FaM36gx
+	 mMS0pQWVpWWeVPaENH3+7Q6mMJa/PhCKZKdH9fVqV39fsdImI7UobKW9UfhiG3Zxjo
+	 8Bn7ai8Y75vZjhvNqBViHluqVbONQurjVDsyaGXg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436675AbfHINsD (ORCPT
+        id S2436692AbfHINsJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 09:48:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38136 "EHLO mail.kernel.org"
+        Fri, 9 Aug 2019 09:48:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436660AbfHINr5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 09:47:57 -0400
+        id S2436666AbfHINsC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 09:48:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76DE1214C6;
-        Fri,  9 Aug 2019 13:47:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 887972086D;
+        Fri,  9 Aug 2019 13:48:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565358477;
-        bh=MTFwszCrmSaCj63SpvMh7Xi8g7NApYngPDhIgzx0W1A=;
+        s=default; t=1565358482;
+        bh=wghxmeAPHzsujAz79/ipyVQr0oFzQXLpRvGjhXLRHZM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hIct4kHuOXH4Su1+mgLH2rgQjvCfoaTrvPjZjlXNRU7XQRsmjB2UotZhVdA6Ti0xp
-         D+C5V/gXzFzVvnpNDsBfx5EajsNlMWpW6uOATlJo9kRJfX5KFyQ8NuSIzGBPPfsNRa
-         lteoyluWjxTPLYOK2rqGp30wCmWkvz9sO0scjgbI=
+        b=WJUs7m8sN3ZUh0mxuG9PdGwo4OA2F62sfS8Fjvy+26WMothE2wmDiujmSn903TxVd
+         lgnN5JcfkDtvXmWbkg1zRtE6v13FbV3n4nmjRKxji05yr/g139SVMQkErvpuJx9qL7
+         NWTaV0Biid+tn1bIpsP3r7Lp14P6f/y2t2U1jo1I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 15/32] atm: iphase: Fix Spectre v1 vulnerability
-Date:   Fri,  9 Aug 2019 15:45:18 +0200
-Message-Id: <20190809133923.456414485@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Andrew Prout <aprout@ll.mit.edu>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        Michal Kubecek <mkubecek@suse.cz>,
+        Neal Cardwell <ncardwell@google.com>,
+        Yuchung Cheng <ycheng@google.com>,
+        Christoph Paasch <cpaasch@apple.com>,
+        Jonathan Looney <jtl@netflix.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 07/32] tcp: be more careful in tcp_fragment()
+Date:   Fri,  9 Aug 2019 15:45:10 +0200
+Message-Id: <20190809133923.184065453@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190809133922.945349906@linuxfoundation.org>
 References: <20190809133922.945349906@linuxfoundation.org>
@@ -60,62 +67,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+[ Upstream commit b617158dc096709d8600c53b6052144d12b89fab ]
 
-[ Upstream commit ea443e5e98b5b74e317ef3d26bcaea54931ccdee ]
+Some applications set tiny SO_SNDBUF values and expect
+TCP to just work. Recent patches to address CVE-2019-11478
+broke them in case of losses, since retransmits might
+be prevented.
 
-board is controlled by user-space, hence leading to a potential
-exploitation of the Spectre variant 1 vulnerability.
+We should allow these flows to make progress.
 
-This issue was detected with the help of Smatch:
+This patch allows the first and last skb in retransmit queue
+to be split even if memory limits are hit.
 
-drivers/atm/iphase.c:2765 ia_ioctl() warn: potential spectre issue 'ia_dev' [r] (local cap)
-drivers/atm/iphase.c:2774 ia_ioctl() warn: possible spectre second half.  'iadev'
-drivers/atm/iphase.c:2782 ia_ioctl() warn: possible spectre second half.  'iadev'
-drivers/atm/iphase.c:2816 ia_ioctl() warn: possible spectre second half.  'iadev'
-drivers/atm/iphase.c:2823 ia_ioctl() warn: possible spectre second half.  'iadev'
-drivers/atm/iphase.c:2830 ia_ioctl() warn: potential spectre issue '_ia_dev' [r] (local cap)
-drivers/atm/iphase.c:2845 ia_ioctl() warn: possible spectre second half.  'iadev'
-drivers/atm/iphase.c:2856 ia_ioctl() warn: possible spectre second half.  'iadev'
+It also adds the some room due to the fact that tcp_sendmsg()
+and tcp_sendpage() might overshoot sk_wmem_queued by about one full
+TSO skb (64KB size). Note this allowance was already present
+in stable backports for kernels < 4.15
 
-Fix this by sanitizing board before using it to index ia_dev and _ia_dev
+Note for < 4.15 backports :
+ tcp_rtx_queue_tail() will probably look like :
 
-Notice that given that speculation windows are large, the policy is
-to kill the speculation on the first load and not worry if it can be
-completed with a dependent load/store [1].
+static inline struct sk_buff *tcp_rtx_queue_tail(const struct sock *sk)
+{
+	struct sk_buff *skb = tcp_send_head(sk);
 
-[1] https://lore.kernel.org/lkml/20180423164740.GY17484@dhcp22.suse.cz/
+	return skb ? tcp_write_queue_prev(sk, skb) : tcp_write_queue_tail(sk);
+}
 
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Fixes: f070ef2ac667 ("tcp: tcp_fragment() should apply sane memory limits")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: Andrew Prout <aprout@ll.mit.edu>
+Tested-by: Andrew Prout <aprout@ll.mit.edu>
+Tested-by: Jonathan Lemon <jonathan.lemon@gmail.com>
+Tested-by: Michal Kubecek <mkubecek@suse.cz>
+Acked-by: Neal Cardwell <ncardwell@google.com>
+Acked-by: Yuchung Cheng <ycheng@google.com>
+Acked-by: Christoph Paasch <cpaasch@apple.com>
+Cc: Jonathan Looney <jtl@netflix.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/atm/iphase.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ include/net/tcp.h     | 17 +++++++++++++++++
+ net/ipv4/tcp_output.c | 11 ++++++++++-
+ 2 files changed, 27 insertions(+), 1 deletion(-)
 
---- a/drivers/atm/iphase.c
-+++ b/drivers/atm/iphase.c
-@@ -63,6 +63,7 @@
- #include <asm/byteorder.h>  
- #include <linux/vmalloc.h>
- #include <linux/jiffies.h>
-+#include <linux/nospec.h>
- #include "iphase.h"		  
- #include "suni.h"		  
- #define swap_byte_order(x) (((x & 0xff) << 8) | ((x & 0xff00) >> 8))
-@@ -2760,8 +2761,11 @@ static int ia_ioctl(struct atm_dev *dev,
-    }
-    if (copy_from_user(&ia_cmds, arg, sizeof ia_cmds)) return -EFAULT; 
-    board = ia_cmds.status;
--   if ((board < 0) || (board > iadev_count))
--         board = 0;    
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index 1eda31f7f013b..a474213ca015b 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -1595,6 +1595,23 @@ static inline void tcp_check_send_head(struct sock *sk, struct sk_buff *skb_unli
+ 		tcp_sk(sk)->highest_sack = NULL;
+ }
+ 
++static inline struct sk_buff *tcp_rtx_queue_head(const struct sock *sk)
++{
++	struct sk_buff *skb = tcp_write_queue_head(sk);
 +
-+	if ((board < 0) || (board > iadev_count))
-+		board = 0;
-+	board = array_index_nospec(board, iadev_count + 1);
++	if (skb == tcp_send_head(sk))
++		skb = NULL;
 +
-    iadev = ia_dev[board];
-    switch (ia_cmds.cmd) {
-    case MEMDUMP:
++	return skb;
++}
++
++static inline struct sk_buff *tcp_rtx_queue_tail(const struct sock *sk)
++{
++	struct sk_buff *skb = tcp_send_head(sk);
++
++	return skb ? tcp_write_queue_prev(sk, skb) : tcp_write_queue_tail(sk);
++}
++
+ static inline void __tcp_add_write_queue_tail(struct sock *sk, struct sk_buff *skb)
+ {
+ 	__skb_queue_tail(&sk->sk_write_queue, skb);
+diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+index 0c195b0f42169..9ddb05b98312c 100644
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -1175,6 +1175,7 @@ int tcp_fragment(struct sock *sk, struct sk_buff *skb, u32 len,
+ 	struct tcp_sock *tp = tcp_sk(sk);
+ 	struct sk_buff *buff;
+ 	int nsize, old_factor;
++	long limit;
+ 	int nlen;
+ 	u8 flags;
+ 
+@@ -1185,7 +1186,15 @@ int tcp_fragment(struct sock *sk, struct sk_buff *skb, u32 len,
+ 	if (nsize < 0)
+ 		nsize = 0;
+ 
+-	if (unlikely((sk->sk_wmem_queued >> 1) > sk->sk_sndbuf + 0x20000)) {
++	/* tcp_sendmsg() can overshoot sk_wmem_queued by one full size skb.
++	 * We need some allowance to not penalize applications setting small
++	 * SO_SNDBUF values.
++	 * Also allow first and last skb in retransmit queue to be split.
++	 */
++	limit = sk->sk_sndbuf + 2 * SKB_TRUESIZE(GSO_MAX_SIZE);
++	if (unlikely((sk->sk_wmem_queued >> 1) > limit &&
++		     skb != tcp_rtx_queue_head(sk) &&
++		     skb != tcp_rtx_queue_tail(sk))) {
+ 		NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPWQUEUETOOBIG);
+ 		return -ENOMEM;
+ 	}
+-- 
+2.20.1
+
 
 
