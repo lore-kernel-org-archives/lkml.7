@@ -2,91 +2,140 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48951C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D732EC31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:20:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2450F208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:15:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A193B21882
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:20:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406493AbfHILPU (ORCPT
+        id S2405690AbfHILUe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 07:15:20 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:56393 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbfHILPS (ORCPT
+        Fri, 9 Aug 2019 07:20:34 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43970 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726152AbfHILUd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 07:15:18 -0400
-Received: from p200300ddd71876457e7a91fffec98e25.dip0.t-ipconnect.de ([2003:dd:d718:7645:7e7a:91ff:fec9:8e25])
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hw2rX-0005Hx-HG; Fri, 09 Aug 2019 13:15:11 +0200
-Date:   Fri, 9 Aug 2019 13:15:05 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-cc:     Steven Rostedt <rostedt@goodmis.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Brendan Higgins <brendanhiggins@google.com>
-Subject: Re: [RFC PATCH v4 9/9] printk: use a new ringbuffer implementation
-In-Reply-To: <CAHk-=whNcrysjJYPDFhKAc4tvd80XGAyh95oZeAY6bmzpv3G-A@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1908091306520.21433@nanos.tec.linutronix.de>
-References: <20190807222634.1723-1-john.ogness@linutronix.de> <20190807222634.1723-10-john.ogness@linutronix.de> <CAHk-=wiKTn-BMpp4w645XqmFBEtUXe84+TKc6aRMPbvFwUjA=A@mail.gmail.com> <874l2rclmw.fsf@linutronix.de> <CAHk-=wiRN9v7UmhbTZgskh-MLyY2f0-8Zi3fUziy+GpZnj2i3w@mail.gmail.com>
- <20190808194523.6f83e087@gandalf.local.home> <CAHk-=wiRpvRg6dpEWqaB20QUFRq8or0-AGgkjvisygptRE64UA@mail.gmail.com> <20190808204841.5afcad46@gandalf.local.home> <CAHk-=whNcrysjJYPDFhKAc4tvd80XGAyh95oZeAY6bmzpv3G-A@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 9 Aug 2019 07:20:33 -0400
+Received: by mail-wr1-f67.google.com with SMTP id p13so23312433wru.10;
+        Fri, 09 Aug 2019 04:20:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=2TA4E4ioABoApo3cN10r+bj+j/F58l9Z+lpydwND1/A=;
+        b=jcxCYjjPC4sqE62z3SxLSdG/ix84v8vX0Z/CRAqbAqNrnccE5dHy3x/TUJGOHBtxfC
+         BC7rt9vBcPPhkPEL3ZGRVXESN0hp6wqp2r+s4KhAGEw652ndQklPtePHFTrS4N79bpBE
+         UYEpTf5ooI+Z6C/SBQyBemQ+pNoxJGmG13ArTVyh1wtG8gsG01TyCDJD4WLqHwiwMabW
+         EZKs+PylXnmAPbOuQJgzWNhODNW2WG1l3REoW/JeVA5XqCrHX/jBAXmS7qxph9wYcXO6
+         DbLQZHGbFBK31cQ0yqaBIhugmLg8uWomK6i2s424+eCyEe/Ls7UMneWtlKLY7AeWT297
+         dUwA==
+X-Gm-Message-State: APjAAAVwaKiw0wMphc4eQ7K+TTl4iSLWDK9fyLP7XTmrmUAz75V2zrMU
+        AHCf0+nB+9I2bXVrhm8/sJFX46+TZzdQ8Q==
+X-Google-Smtp-Source: APXvYqzMgDe8oAcjmYxs+wCUDunJMXo2Ep3gbIXH69T6o9itmzxiNjv2oqHt+mp890zSOrxC69dTrA==
+X-Received: by 2002:adf:e884:: with SMTP id d4mr13902945wrm.99.1565349631718;
+        Fri, 09 Aug 2019 04:20:31 -0700 (PDT)
+Received: from tfsielt31850.garage.tyco.com ([77.107.218.170])
+        by smtp.gmail.com with ESMTPSA id u1sm6018079wml.14.2019.08.09.04.20.30
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 09 Aug 2019 04:20:30 -0700 (PDT)
+From:   =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+Subject: [PATCH v2] net: phy: at803x: stop switching phy delay config needlessly
+Date:   Fri,  9 Aug 2019 12:20:25 +0100
+Message-Id: <20190809112025.27482-1-git@andred.net>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190809005754.23009-1-git@andred.net>
+References: <20190809005754.23009-1-git@andred.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 8 Aug 2019, Linus Torvalds wrote:
+This driver does a funny dance disabling and re-enabling
+RX and/or TX delays. In any of the RGMII-ID modes, it first
+disables the delays, just to re-enable them again right
+away. This looks like a needless exercise.
 
-> On Thu, Aug 8, 2019 at 5:48 PM Steven Rostedt <rostedt@goodmis.org> wrote:
-> >
-> > I've never tried, but are you saying that even with the "10 second
-> > hold" the laptop's DRAM may still have old data that is accessible?
-> 
-> The power doesn't go off when you *start* the 10s hold. It goes off
-> after ten seconds.
-> 
-> So power is off only for the time it then takes you to press the power
-> button again to turn it on again. So just a second or two if you react
-> quickly to the "ok, power light finally went off". Longer if you
-> don't.
-> 
-> But yes, DRAM has retention time in the seconds. See for example
-> 
->     https://www.pdl.cmu.edu/PDL-FTP/NVM/dram-retention_isca13.pdf
-> 
-> and look at the kinds of times they are looking at - their graphs
-> aren't in  milliseconds, they are in 1-5 seconds (and the retention is
-> pretty high for that time).
-> 
-> But I don't know what a power-off-in-laptop scenario really looks like..
+Just enable the respective delays when in any of the
+relevant 'id' modes, and disable them otherwise.
 
-That's random behaviour. It's hardware & BIOS & value add. What do you
-expect?
+Also, remove comments which don't add anything that can't be
+seen by looking at the code.
 
-I tried on a few machines. My laptop does not retain any useful information
-and on some server box (which takes ages to boot) the memory is squeaky
-clean, i.e. the BIOS wiped it already. Some others worked with a two second
-delay between turning the remote power switch on and off.
+Signed-off-by: André Draszik <git@andred.net>
+CC: Andrew Lunn <andrew@lunn.ch>
+CC: Florian Fainelli <f.fainelli@gmail.com>
+CC: Heiner Kallweit <hkallweit1@gmail.com>
+CC: "David S. Miller" <davem@davemloft.net>
+CC: netdev@vger.kernel.org
 
-Thanks,
+---
+v2: also remove braces around single lines
+---
+ drivers/net/phy/at803x.c | 32 ++++++++------------------------
+ 1 file changed, 8 insertions(+), 24 deletions(-)
 
-	tglx
+diff --git a/drivers/net/phy/at803x.c b/drivers/net/phy/at803x.c
+index 222ccd9ecfce..6ad8b1c63c34 100644
+--- a/drivers/net/phy/at803x.c
++++ b/drivers/net/phy/at803x.c
+@@ -257,36 +257,20 @@ static int at803x_config_init(struct phy_device *phydev)
+ 	 *   after HW reset: RX delay enabled and TX delay disabled
+ 	 *   after SW reset: RX delay enabled, while TX delay retains the
+ 	 *   value before reset.
+-	 *
+-	 * So let's first disable the RX and TX delays in PHY and enable
+-	 * them based on the mode selected (this also takes care of RGMII
+-	 * mode where we expect delays to be disabled)
+ 	 */
+-
+-	ret = at803x_disable_rx_delay(phydev);
+-	if (ret < 0)
+-		return ret;
+-	ret = at803x_disable_tx_delay(phydev);
+-	if (ret < 0)
+-		return ret;
+-
+ 	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
+-	    phydev->interface == PHY_INTERFACE_MODE_RGMII_RXID) {
+-		/* If RGMII_ID or RGMII_RXID are specified enable RX delay,
+-		 * otherwise keep it disabled
+-		 */
++	    phydev->interface == PHY_INTERFACE_MODE_RGMII_RXID)
+ 		ret = at803x_enable_rx_delay(phydev);
+-		if (ret < 0)
+-			return ret;
+-	}
++	else
++		ret = at803x_disable_rx_delay(phydev);
++	if (ret < 0)
++		return ret;
+ 
+ 	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
+-	    phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID) {
+-		/* If RGMII_ID or RGMII_TXID are specified enable TX delay,
+-		 * otherwise keep it disabled
+-		 */
++	    phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID)
+ 		ret = at803x_enable_tx_delay(phydev);
+-	}
++	else
++		ret = at803x_disable_tx_delay(phydev);
+ 
+ 	return ret;
+ }
+-- 
+2.20.1
+
