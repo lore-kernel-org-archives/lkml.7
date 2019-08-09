@@ -2,91 +2,158 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC8BC433FF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2C05C31E40
 	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D17E21743
+	by mail.kernel.org (Postfix) with ESMTP id C7CE321773
 	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:43:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565343797;
-	bh=Myej1XaHJ37HBPiQb0ac9jF7pYIU1tfzoPpCO0wTV0E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jBazjEAwqeFSWjv/tPCZWIf0B6vIA2akztjhoo9Y0iAT8z5Lj/4Avg8AUE7/LZ67m
-	 dqBz2qjezYfQOvccNaU1gb/KPEr1ycJ5W6nn5l1z9NCRspIPrMAtGgSrAiZwkQt1eg
-	 gistxnarYkYMqfVESbzti526NcnGqUWx2tXkheL0=
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iRSHIAoC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405868AbfHIJnG (ORCPT
+        id S2406190AbfHIJnO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 05:43:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54502 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726152AbfHIJnG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 05:43:06 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B50C2171F;
-        Fri,  9 Aug 2019 09:43:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565343785;
-        bh=Myej1XaHJ37HBPiQb0ac9jF7pYIU1tfzoPpCO0wTV0E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WnGnOucdz4Xp9sozzeiW4ZaP5DkmviSXDf6b6J2phlrcJ/K5uhs66bvAKpfYT9KMi
-         Z5HezNzRhmv4f9i5frSOKJv4CZ1GnZuW0SW5xMuw/qdqY/ZFwLp+4a7u2lIvePrdIZ
-         UzN4nsVp/jfhXZcuhjymi6E0dOuotK57/bbtD1zU=
-Date:   Fri, 9 Aug 2019 11:43:03 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Charlemagne Lasse <charlemagnelasse@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Basil Peace <grv87@yandex.ru>,
-        Carmen Bianca Bakker <carmen@carmenbianca.eu>,
-        Keith Maxwell <keith.maxwell@gmail.com>,
-        Matija =?utf-8?Q?=C5=A0uklje?= <matija.suklje@liferay.com>
-Subject: Re: REUSE/SPDX: Invalid LicenseRef in Linux sources
-Message-ID: <20190809094303.GA6297@kroah.com>
-References: <CAFGhKbwJVv23Mwd7ruo8JCC-0U3BdNRwnxih9zgFSCyPe=jnoA@mail.gmail.com>
+        Fri, 9 Aug 2019 05:43:14 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:40300 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726152AbfHIJnO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 05:43:14 -0400
+Received: by mail-ed1-f67.google.com with SMTP id h8so6192212edv.7;
+        Fri, 09 Aug 2019 02:43:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=/lYu/e47EnsyNFO2LSj0BQZUPA891bB6xOUbTQXck3k=;
+        b=iRSHIAoCehbO1dVJjrk5QF/hzmOCTQNgxIIcn7YckOVRAm+0XQzij9QF48TBMNLt9d
+         EBphcT+ovzxMiPGdfnK1f+28gfYZtqC1YUYtlfgYoK0Qf5CAenPd/4lBVuOIb8wCqDas
+         kjbQc00sgNTgR1qgU4hgrtJ+7A5UEBzUhjGd5Ld18x70P261etvIs7+2SJ6zqV/HPcZ+
+         6Rmk4Ni5HaSwhK1OWJL2GW2DPvB+kshGD0HQwJJ8v3KrcNtD+MKqMr7r1ysPHUEvJa4p
+         pF/5YuaRxWy6hCGBnGV8QtEO1IkK8GG6DLRAHIuZHz8BrqRStIskb1TCcbBXso7FklsB
+         1Vig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=/lYu/e47EnsyNFO2LSj0BQZUPA891bB6xOUbTQXck3k=;
+        b=bQ65nz8peSlnpzkoy9FemiKswnzYCd5rCcGS5DG/HLdYhdRzQpwWd33+JEUut5Ja4d
+         jah3Qu3JM6ZZpXBXWvva1CoJ0X+PoF4hJSyZVlQojp69gVRjNWKx2SwEn1zw8uNB73RL
+         b8O+PTzT4SZWeAgsfFbQiuDQxHg4YuLZhV8fwG+HP1sotGTQIgWcuDa1rnQ44EvVkJih
+         1Gvu0bHA6vevIf7MLgVYlkLr0xlGTMWOLhWkDf8789kaeUQr4o1v3b2WQJTg03w1MCCx
+         3kVP4d+3LT0Ty623bJjljM2VHMadfppa0NVv/EkPbmV3DUCuJtEAqL2212EonUx7TsAh
+         TUUw==
+X-Gm-Message-State: APjAAAV2TQTJ6t6oK1Q34DmaI74T8iEcZDT0gxB3nibqJJLlkl9MVhNP
+        +5CosARlvePW98oGeziEd1TgbbhgPz67cIuRETN9tQ==
+X-Google-Smtp-Source: APXvYqxVdiPOOCTMWJskwGRKzFHXzIRK9YGnpC/sX78zcPM+MmvVQt4pR09fZ/Y5p1ameDXTlt9n/UFg9T9EgB5ytqI=
+X-Received: by 2002:a17:907:2069:: with SMTP id qp9mr6652404ejb.90.1565343792337;
+ Fri, 09 Aug 2019 02:43:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFGhKbwJVv23Mwd7ruo8JCC-0U3BdNRwnxih9zgFSCyPe=jnoA@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190809005754.23009-1-git@andred.net>
+In-Reply-To: <20190809005754.23009-1-git@andred.net>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Fri, 9 Aug 2019 12:43:01 +0300
+Message-ID: <CA+h21hp-K0ryB39O4X9n-mCwapiXoWy5WP6ZsvswgcDy-WBYVw@mail.gmail.com>
+Subject: Re: [PATCH] net: phy: at803x: stop switching phy delay config needlessly
+To:     =?UTF-8?Q?Andr=C3=A9_Draszik?= <git@andred.net>
+Cc:     lkml <linux-kernel@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 11:30:44AM +0200, Charlemagne Lasse wrote:
-> When I run the reuse lint tool on the current linux sources, I get
-> following error
-> 
-> reuse.project - WARNING - Could not resolve SPDX identifier of
-> LICENSES/deprecated/GPL-1.0, resolving to LicenseRef-Unknown0
-> reuse.project - WARNING - Could not resolve SPDX identifier of
-> LICENSES/exceptions/GCC-exception-2.0, resolving to
-> LicenseRef-Unknown1
-> reuse.project - WARNING - Could not resolve SPDX identifier of
-> LICENSES/preferred/LGPL-2.0, resolving to LicenseRef-Unknown2
-> reuse.project - WARNING - Could not resolve SPDX identifier of
-> LICENSES/preferred/LGPL-2.1, resolving to LicenseRef-Unknown3
-> reuse.project - WARNING - Could not resolve SPDX identifier of
-> LICENSES/preferred/GPL-2.0, resolving to LicenseRef-Unknown4
-> reuse.project - WARNING - Could not resolve SPDX identifier of
-> LICENSES/dual/Apache-2.0, resolving to LicenseRef-Unknown5
-> reuse.project - WARNING - Could not resolve SPDX identifier of
-> LICENSES/dual/MPL-1.1, resolving to LicenseRef-Unknown6
-> reuse.project - WARNING - Could not resolve SPDX identifier of
-> LICENSES/dual/CDDL-1.0, resolving to LicenseRef-Unknown7
-> 
-> Can you please help to fix the problem
+Hi Andre,
 
-Please fix the reuse tool, I don't see this being a kernel issue, it has
-never said it follows the spec put forth by the reuse project.
+On Fri, 9 Aug 2019 at 03:58, Andr=C3=A9 Draszik <git@andred.net> wrote:
+>
+> This driver does a funny dance disabling and re-enabling
+> RX and/or TX delays. In any of the RGMII-ID modes, it first
+> disables the delays, just to re-enable them again right
+> away. This looks like a needless exercise.
+>
+> Just enable the respective delays when in any of the
+> relevant 'id' modes, and disable them otherwise.
+>
+> Also, remove comments which don't add anything that can't be
+> seen by looking at the code.
+>
+> Signed-off-by: Andr=C3=A9 Draszik <git@andred.net>
+> CC: Andrew Lunn <andrew@lunn.ch>
+> CC: Florian Fainelli <f.fainelli@gmail.com>
+> CC: Heiner Kallweit <hkallweit1@gmail.com>
+> CC: "David S. Miller" <davem@davemloft.net>
+> CC: netdev@vger.kernel.org
+> ---
 
-thanks,
+Is there any particular problem you're facing? Does this make any differenc=
+e?
 
-greg k-h
+>  drivers/net/phy/at803x.c | 26 ++++++--------------------
+>  1 file changed, 6 insertions(+), 20 deletions(-)
+>
+> diff --git a/drivers/net/phy/at803x.c b/drivers/net/phy/at803x.c
+> index 222ccd9ecfce..2ab51f552e92 100644
+> --- a/drivers/net/phy/at803x.c
+> +++ b/drivers/net/phy/at803x.c
+> @@ -257,35 +257,21 @@ static int at803x_config_init(struct phy_device *ph=
+ydev)
+>          *   after HW reset: RX delay enabled and TX delay disabled
+>          *   after SW reset: RX delay enabled, while TX delay retains the
+>          *   value before reset.
+> -        *
+> -        * So let's first disable the RX and TX delays in PHY and enable
+> -        * them based on the mode selected (this also takes care of RGMII
+> -        * mode where we expect delays to be disabled)
+>          */
+> -
+> -       ret =3D at803x_disable_rx_delay(phydev);
+> -       if (ret < 0)
+> -               return ret;
+> -       ret =3D at803x_disable_tx_delay(phydev);
+> -       if (ret < 0)
+> -               return ret;
+> -
+>         if (phydev->interface =3D=3D PHY_INTERFACE_MODE_RGMII_ID ||
+>             phydev->interface =3D=3D PHY_INTERFACE_MODE_RGMII_RXID) {
+> -               /* If RGMII_ID or RGMII_RXID are specified enable RX dela=
+y,
+> -                * otherwise keep it disabled
+> -                */
+>                 ret =3D at803x_enable_rx_delay(phydev);
+> -               if (ret < 0)
+> -                       return ret;
+> +       } else {
+> +               ret =3D at803x_disable_rx_delay(phydev);
+>         }
+> +       if (ret < 0)
+> +               return ret;
+>
+>         if (phydev->interface =3D=3D PHY_INTERFACE_MODE_RGMII_ID ||
+>             phydev->interface =3D=3D PHY_INTERFACE_MODE_RGMII_TXID) {
+> -               /* If RGMII_ID or RGMII_TXID are specified enable TX dela=
+y,
+> -                * otherwise keep it disabled
+> -                */
+>                 ret =3D at803x_enable_tx_delay(phydev);
+> +       } else {
+> +               ret =3D at803x_disable_tx_delay(phydev);
+>         }
+>
+>         return ret;
+> --
+> 2.20.1
+>
+
+Regards,
+-Vladimir
