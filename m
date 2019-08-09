@@ -2,142 +2,121 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D48C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:49:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF36C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 163142171F
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:49:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dWfaV7hT"
+	by mail.kernel.org (Postfix) with ESMTP id A13632171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 11:54:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406641AbfHILta (ORCPT
+        id S2406637AbfHILyM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 07:49:30 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:45770 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405957AbfHILt3 (ORCPT
+        Fri, 9 Aug 2019 07:54:12 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:22032 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726216AbfHILyM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 07:49:29 -0400
-Received: by mail-lj1-f195.google.com with SMTP id t3so3281000ljj.12;
-        Fri, 09 Aug 2019 04:49:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=VCBhyo06VOEmixGYfFHSZZpvZroq28bWEJWhtoz6O4c=;
-        b=dWfaV7hT+05xAtJIMVdIRiiOWSBqn+pUID6YcdCnSkYfiWa9pfF+VRmL570WdzqI84
-         4YMkakT3NShSK+hqI7g6H4tmJLDAV1FR+jHwD9W209TXjix/x3HYK2zo1zkQrLv3iH1Z
-         +u2GVS8Z4ESe7dUcj0sCzV9ctgDHXN2mPZh9UXNYMdkBZBdM1cQKnPYrM3I80AuDuufk
-         kg3JP2HMfBslYiOEU0xqJKoDliBCVesm/zSdMuyd5ZHI7pLS+V6x58EuPj9ujmgSy589
-         bgLkWSVYJ7XEmedVKeAKQIpZUVVbHPRlaz3hHP6nxefxcgiV0ENffdf436t9z64z1Xeb
-         k/7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=VCBhyo06VOEmixGYfFHSZZpvZroq28bWEJWhtoz6O4c=;
-        b=t4mBfzYptIGzolhBeRcktJXY1gQ5Y+4bBFAc3aERVLBHQkqRI/F1NqMDsESiMihVGa
-         hUrW7+nKRN1RHlBE9To6+0chIjTEVv/0TxsOplxwHN2WvA+TBUQ2nJpy6ImeslKJfDvo
-         KZrHjTCaPQ6PNLkthJwvIHNEWwng6lvq73rXDekp+2kaxF/4dx1LB+vz9z4UB3WjCQ1k
-         3fu3AQwGy22k+OXIuG5bV+cwgd/sDQTg/sWHZ/WdKof2Ox7jmc7cdMYKDxF8mig2xkZU
-         aMrH3E6IcgzMQLWRMTaNf17mqvJu45AUE41tnx5XyZ+Yy4czaQieuYSZi2Cz2W/jFY+S
-         bnuw==
-X-Gm-Message-State: APjAAAVWVds/czT0IS/r7/2pxRD+cMrQ2lRL3BT+EcEk5GkVoXoGMaB6
-        YPhb+guoti0ZiKK3KCVV8/fgHKQf
-X-Google-Smtp-Source: APXvYqwkvYftBGirDTu4du8iCwpltNlXO8U3J3ep5fExPc/o5Bhi52YocxePkxKNb4/qCn3O54NU2A==
-X-Received: by 2002:a2e:8945:: with SMTP id b5mr10815467ljk.93.1565351366420;
-        Fri, 09 Aug 2019 04:49:26 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.34.218])
-        by smtp.googlemail.com with ESMTPSA id k27sm19148767lfm.90.2019.08.09.04.49.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 09 Aug 2019 04:49:25 -0700 (PDT)
-Subject: Re: [PATCH v8 07/21] clk: Add API to get index of the clock parent
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
-References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
- <1565308020-31952-8-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <311faac9-1dcc-19ee-4662-017d8d9c5918@gmail.com>
-Date:   Fri, 9 Aug 2019 14:49:24 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 9 Aug 2019 07:54:12 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x79Bq9A4146262
+        for <linux-kernel@vger.kernel.org>; Fri, 9 Aug 2019 07:54:10 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2u97f2j0b8-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 07:54:10 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <gor@linux.ibm.com>;
+        Fri, 9 Aug 2019 12:54:08 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 9 Aug 2019 12:54:05 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x79Bs4oh50659394
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 9 Aug 2019 11:54:04 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BDF844C046;
+        Fri,  9 Aug 2019 11:54:04 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6CA394C059;
+        Fri,  9 Aug 2019 11:54:04 +0000 (GMT)
+Received: from localhost (unknown [9.152.212.24])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Fri,  9 Aug 2019 11:54:04 +0000 (GMT)
+Date:   Fri, 9 Aug 2019 13:54:03 +0200
+From:   Vasily Gorbik <gor@linux.ibm.com>
+To:     Daniel Axtens <dja@axtens.net>
+Cc:     kasan-dev@googlegroups.com, linux-mm@kvack.org, x86@kernel.org,
+        aryabinin@virtuozzo.com, glider@google.com, luto@kernel.org,
+        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
+        dvyukov@google.com
+Subject: Re: [PATCH v3 1/3] kasan: support backing vmalloc space with real
+ shadow memory
+References: <20190731071550.31814-1-dja@axtens.net>
+ <20190731071550.31814-2-dja@axtens.net>
 MIME-Version: 1.0
-In-Reply-To: <1565308020-31952-8-git-send-email-skomatineni@nvidia.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+In-Reply-To: <20190731071550.31814-2-dja@axtens.net>
+X-TM-AS-GCONF: 00
+x-cbid: 19080911-0028-0000-0000-0000038DB433
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19080911-0029-0000-0000-0000244FB9F1
+Message-Id: <your-ad-here.call-01565351643-ext-1834@work.hours>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-09_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908090124
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-09.08.2019 2:46, Sowjanya Komatineni пишет:
-> This patch adds an API clk_hw_get_parent_index to get index of the
-> clock parent to use during the clock restore operations on system
-> resume.
+On Wed, Jul 31, 2019 at 05:15:48PM +1000, Daniel Axtens wrote:
+> Hook into vmalloc and vmap, and dynamically allocate real shadow
+> memory to back the mappings.
 > 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> Most mappings in vmalloc space are small, requiring less than a full
+> page of shadow space. Allocating a full shadow page per mapping would
+> therefore be wasteful. Furthermore, to ensure that different mappings
+> use different shadow pages, mappings would have to be aligned to
+> KASAN_SHADOW_SCALE_SIZE * PAGE_SIZE.
+> 
+> Instead, share backing space across multiple mappings. Allocate
+> a backing page the first time a mapping in vmalloc space uses a
+> particular page of the shadow region. Keep this page around
+> regardless of whether the mapping is later freed - in the mean time
+> the page could have become shared by another vmalloc mapping.
+> 
+> This can in theory lead to unbounded memory growth, but the vmalloc
+> allocator is pretty good at reusing addresses, so the practical memory
+> usage grows at first but then stays fairly stable.
+> 
+> This requires architecture support to actually use: arches must stop
+> mapping the read-only zero page over portion of the shadow region that
+> covers the vmalloc space and instead leave it unmapped.
+> 
+> This allows KASAN with VMAP_STACK, and will be needed for architectures
+> that do not have a separate module space (e.g. powerpc64, which I am
+> currently working on). It also allows relaxing the module alignment
+> back to PAGE_SIZE.
+> 
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=202009
+> Signed-off-by: Daniel Axtens <dja@axtens.net>
+> 
 > ---
->  drivers/clk/clk.c            | 17 +++++++++++++++++
->  include/linux/clk-provider.h |  1 +
->  2 files changed, 18 insertions(+)
-> 
-> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-> index c0990703ce54..f26252e48f73 100644
-> --- a/drivers/clk/clk.c
-> +++ b/drivers/clk/clk.c
-> @@ -1643,6 +1643,23 @@ static int clk_fetch_parent_index(struct clk_core *core,
->  	return i;
->  }
->  
-> +/**
-> + * clk_hw_get_parent_index - return the index of parent clock
-> + * @hw: clk_hw associated with the clk being consumed
-> + * @parent_hw: clk_hw associated with the parent of clk
-> + *
-> + * Fetches and returns the index of parent clock.
-> + * if hw or parent_hw is NULL, returns -EINVAL.
-> + */
-> +int clk_hw_get_parent_index(struct clk_hw *hw, struct clk_hw *parent_hw)
-> +{
-> +	if (!hw || !parent_hw)
-> +		return -EINVAL;
-> +
-> +	return clk_fetch_parent_index(hw->core, parent_hw->core);
-> +}
-> +EXPORT_SYMBOL_GPL(clk_hw_get_parent_index);
-> +
->  /*
->   * Update the orphan status of @core and all its children.
->   */
-> diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-> index 2ae7604783dd..477112946dd2 100644
-> --- a/include/linux/clk-provider.h
-> +++ b/include/linux/clk-provider.h
-> @@ -817,6 +817,7 @@ unsigned int clk_hw_get_num_parents(const struct clk_hw *hw);
->  struct clk_hw *clk_hw_get_parent(const struct clk_hw *hw);
->  struct clk_hw *clk_hw_get_parent_by_index(const struct clk_hw *hw,
->  					  unsigned int index);
-> +int clk_hw_get_parent_index(struct clk_hw *hw, struct clk_hw *parent_hw);
->  unsigned int __clk_get_enable_count(struct clk *clk);
->  unsigned long clk_hw_get_rate(const struct clk_hw *hw);
->  unsigned long __clk_get_flags(struct clk *clk);
-> 
+Acked-by: Vasily Gorbik <gor@linux.ibm.com>
 
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+I've added s390 specific kasan init part and the whole thing looks good!
+Unfortunately I also had to make additional changes in s390 code, so
+s390 part would go later through s390 tree. But looking forward seeing
+your patch series upstream.
+
