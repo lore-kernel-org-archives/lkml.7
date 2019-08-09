@@ -2,112 +2,115 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3CA0C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 04:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E6BBC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 04:45:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A86CD2173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 04:45:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="kyWCi4uT"
+	by mail.kernel.org (Postfix) with ESMTP id 3323921743
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 04:45:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565325949;
+	bh=5Clcq+nCQfKRfDUoQ5prGejswwIm6F7UXpCRFZJzJjY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2R9F6vWQ8trbIg22Cucloei0Cmh6Eho3DGc9EAdZtQHvsem76+8SNLW6KELHo3+cU
+	 m8JfyQUsFUnKCHaYGZoIR1agLJjwCmZ01RGHzgcKMGbMMX8QOXEf6tUES/jThMdT46
+	 yBSJ8EvOqEQ8KmUoEeKT1/vMI0vfkEYwZogTPUBc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405205AbfHIEpJ (ORCPT
+        id S2405287AbfHIEps (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 00:45:09 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:43468 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725811AbfHIEpJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 00:45:09 -0400
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x794it7W019781;
-        Fri, 9 Aug 2019 13:44:56 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x794it7W019781
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1565325896;
-        bh=df0sEzxWZq8ySeGezqUd0Gu5Yd91jnr1Jw8yFv3zznI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=kyWCi4uTGZPVJAGsUBiaeqtMlKivr/+Jdkm9+GhJAqVQoHzgD3UnsKEB5odoXDxL8
-         1GNIt/qLK2cg34+QUT9MJJ5l0i7pXYYuaWYridyJ+bY0P0oGGG+J78OMtF3tFGkEUq
-         88r/812ccE8JzunKt0B/nUJdoxmKFXe95+o6FUZXAQb5pVxI09zaFn+po1M0SzIhce
-         f3nviG3f1nBcDCTr8mla6wFt1Xaw+8F4ON7iQYiFQ9Ysp/y0QPZ4BJfF2fqjRSxjuD
-         J/fAS9a1c4u2CNaK4uKcKK/HwtRWar0/PpacpWoA2XJ92ktRkD6b15VvTjOC/nSBA6
-         HXN3WxRkuu1kg==
-X-Nifty-SrcIP: [209.85.222.51]
-Received: by mail-ua1-f51.google.com with SMTP id v18so37284220uad.12;
-        Thu, 08 Aug 2019 21:44:56 -0700 (PDT)
-X-Gm-Message-State: APjAAAVk9yjbaeWffkAxWjT0FRSmeJo4z+yJv1duCKngVJvE0rzfYhOj
-        MBu0TpOSG97JB5X2f9BNL1CUnP0GHK1HkTStFoc=
-X-Google-Smtp-Source: APXvYqwqJy5vILZgO5JWCC5MfeyozBzFJI7asrS040QYhMFPFNY9xCGax/HbGYlCcYYcJJKa8qt2hZ1G5XAp0QRjDIA=
-X-Received: by 2002:ab0:4e8c:: with SMTP id l12mr2378717uah.121.1565325895216;
- Thu, 08 Aug 2019 21:44:55 -0700 (PDT)
+        Fri, 9 Aug 2019 00:45:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53654 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727040AbfHIEpr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 00:45:47 -0400
+Received: from localhost (unknown [122.167.65.92])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 175A62171F;
+        Fri,  9 Aug 2019 04:45:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565325946;
+        bh=5Clcq+nCQfKRfDUoQ5prGejswwIm6F7UXpCRFZJzJjY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LBoYylBYjLSWgXUc5iTdRFDSaFk6IlEUj5GslPK22oWu00NUD/ondl2FMRESGFLch
+         R9j/hlaLnpzqeojXmFGYOlE/6vJYoFHjRrcAfxr5wMFJTbJTNKWmBcxT5uNv6NQf0F
+         ZqphTV2CWQO9HVwlmbAoKdPdZDpy+RdRDcMvxHTs=
+Date:   Fri, 9 Aug 2019 10:14:35 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Mark Brown <broonie@kernel.org>, linux-arm-msm@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 2/2] regulator: qcom-rpmh: Add support for SM8150
+Message-ID: <20190809044435.GE12733@vkoul-mobl.Dlink>
+References: <20190808093343.5600-1-vkoul@kernel.org>
+ <20190808093343.5600-2-vkoul@kernel.org>
+ <20190809033255.GL26807@tuxbook-pro>
 MIME-Version: 1.0
-References: <20190808181739.62f257ed@canb.auug.org.au> <20190808225316.GA3725@osiris>
-In-Reply-To: <20190808225316.GA3725@osiris>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Fri, 9 Aug 2019 13:44:19 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASzxcicBPM5OkScnwHPef_7X=oiuO_0xCH3f55ACYZEWw@mail.gmail.com>
-Message-ID: <CAK7LNASzxcicBPM5OkScnwHPef_7X=oiuO_0xCH3f55ACYZEWw@mail.gmail.com>
-Subject: Re: linux-next: Tree for Aug 8
-To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190809033255.GL26807@tuxbook-pro>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Heiko, Stephen,
+On 08-08-19, 20:32, Bjorn Andersson wrote:
+> On Thu 08 Aug 02:33 PDT 2019, Vinod Koul wrote:
+> > diff --git a/drivers/regulator/qcom-rpmh-regulator.c b/drivers/regulator/qcom-rpmh-regulator.c
+> [..]
+> > +static const struct rpmh_vreg_hw_data pmic5_bob = {
+> > +	.regulator_type = VRM,
+> > +	.ops = &rpmh_regulator_vrm_bypass_ops,
+> > +	.voltage_range = REGULATOR_LINEAR_RANGE(300000, 0, 135, 32000),
+> > +	.n_voltages = 135,
+> 
+> There are 136 voltages in [0,135]
 
-On Fri, Aug 9, 2019 at 7:53 AM Heiko Carstens <heiko.carstens@de.ibm.com> wrote:
->
-> On Thu, Aug 08, 2019 at 06:17:39PM +1000, Stephen Rothwell wrote:
-> > Hi all,
-> >
-> > Changes since 20190807:
-> >
-> > I reverted a commit from the kbuild-current tree by request.
->
-> Hello Masahiro,
->
-> it looks like there is (another?) bug in kbuild. With your patch
->
-> commit 421a15c167b2d1f43f287da5b75ef2704650640b (refs/bisect/bad)
-> Author: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Date:   Fri Jul 26 11:17:47 2019 +0900
->
->     kbuild: clean-up subdir-ym computation
->
->     The intermediate variables __subdir-{y,m} are unneeded.
->
->     Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
->
-> the file modules.builtin starts to miss a lot of entries when building
-> the kernel tree. Reverting that patch on top of linux-next 20190808
-> restores the old behaviour.
->
-> This is the diff I get without and with the above commit (s390 with
-> defconfig):
->
-> --- modules.builtin.ok  2019-08-09 00:39:58.148624485 +0200
-> +++ modules.builtin     2019-08-09 00:40:07.878637541 +0200
+Oops, will send an update
 
+> 
+> > +	.pmic_mode_map = pmic_mode_map_pmic4_bob,
+> > +	.of_map_mode = rpmh_regulator_pmic4_bob_of_map_mode,
+> > +};
+> > +
+> [..]
+> > @@ -755,6 +890,18 @@ static const struct of_device_id rpmh_regulator_match_table[] = {
+> >  		.compatible = "qcom,pm8005-rpmh-regulators",
+> >  		.data = pm8005_vreg_data,
+> >  	},
+> > +	{
+> > +		.compatible = "qcom,pm8150-rpmh-regulators",
+> > +		.data = pm8150_vreg_data,
+> > +	},
+> > +	{
+> > +		.compatible = "qcom,pm8150l-rpmh-regulators",
+> > +		.data = pm8150l_vreg_data,
+> > +	},
+> > +	{
+> > +		.compatible = "qcom,pm8009-rpmh-regulators",
+> > +		.data = pm8009_vreg_data,
+> > +	},
+> 
+> Sort order...
 
-You are right. This commit is bad.
+Yes will sort all entries.
 
+> >  	{}
+> >  };
+> >  MODULE_DEVICE_TABLE(of, rpmh_regulator_match_table);
+> 
+> Apart from these nits this looks good.
 
-Stephen, could you revert this commit for today's linux-next ?
-
-
-BTW, I had dropped this commit from my branch (with another reason),
-but I forgot to push it to the public place...
-
+Thanks :)
 
 -- 
-Best Regards
-Masahiro Yamada
+~Vinod
