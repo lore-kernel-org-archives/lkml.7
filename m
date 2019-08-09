@@ -2,86 +2,91 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25A8FC31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:41:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC8BC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE17020B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:41:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D17E21743
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 09:43:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1565343797;
+	bh=Myej1XaHJ37HBPiQb0ac9jF7pYIU1tfzoPpCO0wTV0E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jBazjEAwqeFSWjv/tPCZWIf0B6vIA2akztjhoo9Y0iAT8z5Lj/4Avg8AUE7/LZ67m
+	 dqBz2qjezYfQOvccNaU1gb/KPEr1ycJ5W6nn5l1z9NCRspIPrMAtGgSrAiZwkQt1eg
+	 gistxnarYkYMqfVESbzti526NcnGqUWx2tXkheL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406156AbfHIJlW (ORCPT
+        id S2405868AbfHIJnG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 05:41:22 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:26600
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726164AbfHIJlW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 05:41:22 -0400
-X-IronPort-AV: E=Sophos;i="5.64,364,1559512800"; 
-   d="scan'208";a="316002950"
-Received: from portablejulia.rsr.lip6.fr ([132.227.76.63])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 11:41:19 +0200
-Date:   Fri, 9 Aug 2019 11:41:19 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: julia@hadrien
-To:     David Lechner <david@lechnology.com>
-cc:     William Breathitt Gray <vilhelm.gray@gmail.com>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kbuild-all@01.org
-Subject: [PATCH] counter: fix devm_platform_ioremap_resource.cocci warnings
-Message-ID: <alpine.DEB.2.21.1908091139270.2946@hadrien>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 9 Aug 2019 05:43:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54502 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726152AbfHIJnG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 05:43:06 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B50C2171F;
+        Fri,  9 Aug 2019 09:43:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565343785;
+        bh=Myej1XaHJ37HBPiQb0ac9jF7pYIU1tfzoPpCO0wTV0E=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WnGnOucdz4Xp9sozzeiW4ZaP5DkmviSXDf6b6J2phlrcJ/K5uhs66bvAKpfYT9KMi
+         Z5HezNzRhmv4f9i5frSOKJv4CZ1GnZuW0SW5xMuw/qdqY/ZFwLp+4a7u2lIvePrdIZ
+         UzN4nsVp/jfhXZcuhjymi6E0dOuotK57/bbtD1zU=
+Date:   Fri, 9 Aug 2019 11:43:03 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Charlemagne Lasse <charlemagnelasse@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Basil Peace <grv87@yandex.ru>,
+        Carmen Bianca Bakker <carmen@carmenbianca.eu>,
+        Keith Maxwell <keith.maxwell@gmail.com>,
+        Matija =?utf-8?Q?=C5=A0uklje?= <matija.suklje@liferay.com>
+Subject: Re: REUSE/SPDX: Invalid LicenseRef in Linux sources
+Message-ID: <20190809094303.GA6297@kroah.com>
+References: <CAFGhKbwJVv23Mwd7ruo8JCC-0U3BdNRwnxih9zgFSCyPe=jnoA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFGhKbwJVv23Mwd7ruo8JCC-0U3BdNRwnxih9zgFSCyPe=jnoA@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: kbuild test robot <lkp@intel.com>
+On Fri, Aug 09, 2019 at 11:30:44AM +0200, Charlemagne Lasse wrote:
+> When I run the reuse lint tool on the current linux sources, I get
+> following error
+> 
+> reuse.project - WARNING - Could not resolve SPDX identifier of
+> LICENSES/deprecated/GPL-1.0, resolving to LicenseRef-Unknown0
+> reuse.project - WARNING - Could not resolve SPDX identifier of
+> LICENSES/exceptions/GCC-exception-2.0, resolving to
+> LicenseRef-Unknown1
+> reuse.project - WARNING - Could not resolve SPDX identifier of
+> LICENSES/preferred/LGPL-2.0, resolving to LicenseRef-Unknown2
+> reuse.project - WARNING - Could not resolve SPDX identifier of
+> LICENSES/preferred/LGPL-2.1, resolving to LicenseRef-Unknown3
+> reuse.project - WARNING - Could not resolve SPDX identifier of
+> LICENSES/preferred/GPL-2.0, resolving to LicenseRef-Unknown4
+> reuse.project - WARNING - Could not resolve SPDX identifier of
+> LICENSES/dual/Apache-2.0, resolving to LicenseRef-Unknown5
+> reuse.project - WARNING - Could not resolve SPDX identifier of
+> LICENSES/dual/MPL-1.1, resolving to LicenseRef-Unknown6
+> reuse.project - WARNING - Could not resolve SPDX identifier of
+> LICENSES/dual/CDDL-1.0, resolving to LicenseRef-Unknown7
+> 
+> Can you please help to fix the problem
 
- Use devm_platform_ioremap_resource helper which wraps
- platform_get_resource() and devm_ioremap_resource() together.
+Please fix the reuse tool, I don't see this being a kernel issue, it has
+never said it follows the spec put forth by the reuse project.
 
-Generated by: scripts/coccinelle/api/devm_platform_ioremap_resource.cocci
+thanks,
 
-Fixes: 78958c294246 ("counter: new TI eQEP driver")
-Signed-off-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Julia Lawall <julia.lawall@lip6.fr>
----
-
-tree:   https://github.com/dlech/linux bone-counter
-head:   669cef0feba0b11f271f462c4d26e4d1449a9db8
-commit: 78958c294246fe1177ff62518eef45d20ad0165e [5/8] counter: new TI eQEP driver
-:::::: branch date: 2 days ago
-:::::: commit date: 2 days ago
-
-Despite the fixes tag, this is not actually fixing a bug, it just makes
-the code a little shorter.
-
- ti-eqep.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
---- a/drivers/counter/ti-eqep.c
-+++ b/drivers/counter/ti-eqep.c
-@@ -392,15 +392,13 @@ static int ti_eqep_probe(struct platform
- {
- 	struct device *dev = &pdev->dev;
- 	struct ti_eqep_cnt *priv;
--	struct resource *res;
- 	void __iomem *base;
-
- 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
- 	if (!priv)
- 		return -ENOMEM;
-
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	base = devm_ioremap_resource(dev, res);
-+	base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(base))
- 		return PTR_ERR(base);
-
+greg k-h
