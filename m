@@ -2,177 +2,186 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E42ECC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:03:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF7CC31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:03:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B1CA2089E
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:03:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5227D21773
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 16:03:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dQfJKfzi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436967AbfHIQDK (ORCPT
+        id S2436985AbfHIQDT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 12:03:10 -0400
-Received: from foss.arm.com ([217.140.110.172]:49390 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726421AbfHIQDJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 12:03:09 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 979B315A2;
-        Fri,  9 Aug 2019 09:03:08 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C67723F575;
-        Fri,  9 Aug 2019 09:03:03 -0700 (PDT)
-Date:   Fri, 9 Aug 2019 17:03:01 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Andrey Konovalov <andreyknvl@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
-        linux-media@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Dave Hansen <dave.hansen@intel.com>
-Subject: Re: [PATCH v19 04/15] mm: untag user pointers passed to memory
- syscalls
-Message-ID: <20190809160301.GB23083@arrakis.emea.arm.com>
-References: <cover.1563904656.git.andreyknvl@google.com>
- <aaf0c0969d46b2feb9017f3e1b3ef3970b633d91.1563904656.git.andreyknvl@google.com>
+        Fri, 9 Aug 2019 12:03:19 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:46710 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726421AbfHIQDS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 12:03:18 -0400
+Received: by mail-qt1-f195.google.com with SMTP id j15so2687272qtl.13;
+        Fri, 09 Aug 2019 09:03:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xel7PXRC4R/rnhsYvj8GQ1rwIBZrbD1zkzhd5zm878Y=;
+        b=dQfJKfziUd5BIIhnmKWm5QryRbkd42Q1/Tnqs9KXosa0Fy7PZbBE7fjT4MT0IdoewE
+         UWPZefpflc19oP5b3wSZasXpuBSi889ihXkxtmx/oNloLrWbnuRMATgEkXwbcTawsmDS
+         5O0GCy94BjW2+OPefPjl9CeNMvGl3y6oegu6wKs25sqieb4mDwP5b1fsIaqPriPruhfu
+         UAwOGrpIYKD1CiegfYKNBi38c3TJuvYaChrK5PPGLQJCYkEC6FIe5HeroupWFGt8khYP
+         NkYiIrhKl8/a9sgqqbi/vIxkzLEkmYWbXbI7jPub80bLRxj0HAGdhtMlXR1fgfghfOQI
+         oF7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xel7PXRC4R/rnhsYvj8GQ1rwIBZrbD1zkzhd5zm878Y=;
+        b=gdvfjhpyDYGWiTfTM7yuy38oW+wz2y5u5X0pEpEJP2/YmKFUEHeZ1VkoqPnYo5SIds
+         VwGZzZziwjeiPLs7KEA/7SikQOXOvf0Vcmzd2Gbn6Fwze6iPbcnyjavSM1i9c+xycXnX
+         MX8CFn949htokeOPs1HIUZQP6fiULKtrF6Q8Uemgav/z8YJMQWulZFYR0nGf8ygJ8o8g
+         3GoDRvQf5JzkQ/cBslhhrv8N8bJ3CFiPQc+BYsyVNwo0mEGv/qlaSFWWar1ODGWixgkL
+         RWMcx4lBR/slN5R2PZjo56+bsvH81jyp0EL8rcPpqspYhheqtPLJNz09C7JY7qD8XHFd
+         bYnQ==
+X-Gm-Message-State: APjAAAWouFa9t0MA5I1BJcevM9Os2HjNXoGfdMpJ4B9Y4rw/1dwvADTr
+        zvlJSgCDh57lA4vJMwpi0uQ=
+X-Google-Smtp-Source: APXvYqweXIEM9Qd18EZsE0BquWOtFBkkGxNWe1jzmCExse3IwwVkL7mR3t+QJkHssIVPoNGPHEMYcQ==
+X-Received: by 2002:a0c:b59c:: with SMTP id g28mr18922345qve.244.1565366596692;
+        Fri, 09 Aug 2019 09:03:16 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id o50sm14727107qtj.17.2019.08.09.09.03.13
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 09 Aug 2019 09:03:13 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 4EAED40340; Fri,  9 Aug 2019 13:03:11 -0300 (-03)
+Date:   Fri, 9 Aug 2019 13:03:11 -0300
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH] perf trace: Fix segmentation fault when access syscall
+ info
+Message-ID: <20190809160311.GA9280@kernel.org>
+References: <20190809104752.27338-1-leo.yan@linaro.org>
+ <20190809132522.GB20899@kernel.org>
+ <20190809134431.GE8313@leoy-ThinkPad-X240s>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aaf0c0969d46b2feb9017f3e1b3ef3970b633d91.1563904656.git.andreyknvl@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190809134431.GE8313@leoy-ThinkPad-X240s>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 07:58:41PM +0200, Andrey Konovalov wrote:
-> This patch is a part of a series that extends kernel ABI to allow to pass
-> tagged user pointers (with the top byte set to something else other than
-> 0x00) as syscall arguments.
+Em Fri, Aug 09, 2019 at 09:44:31PM +0800, Leo Yan escreveu:
+> On Fri, Aug 09, 2019 at 10:25:22AM -0300, Arnaldo Carvalho de Melo wrote:
+> > Em Fri, Aug 09, 2019 at 06:47:52PM +0800, Leo Yan escreveu:
+> > > 'perf trace' reports the segmentation fault as below on Arm64:
+> > > 
+> > >   # perf trace -e string -e augmented_raw_syscalls.c
+> > >   LLVM: dumping tools/perf/examples/bpf/augmented_raw_syscalls.o
+> > >   perf: Segmentation fault
+> > >   Obtained 12 stack frames.
+> > >   perf(sighandler_dump_stack+0x47) [0xaaaaac96ac87]
+> > >   linux-vdso.so.1(+0x5b7) [0xffffadbeb5b7]
+> > >   /lib/aarch64-linux-gnu/libc.so.6(strlen+0x10) [0xfffface7d5d0]
+> > >   /lib/aarch64-linux-gnu/libc.so.6(_IO_vfprintf+0x1ac7) [0xfffface49f97]
+> > >   /lib/aarch64-linux-gnu/libc.so.6(__vsnprintf_chk+0xc7) [0xffffacedfbe7]
+> > >   perf(scnprintf+0x97) [0xaaaaac9ca3ff]
+> > >   perf(+0x997bb) [0xaaaaac8e37bb]
+> > >   perf(cmd_trace+0x28e7) [0xaaaaac8ec09f]
+> > >   perf(+0xd4a13) [0xaaaaac91ea13]
+> > >   perf(main+0x62f) [0xaaaaac8a147f]
+> > >   /lib/aarch64-linux-gnu/libc.so.6(__libc_start_main+0xe3) [0xfffface22d23]
+> > >   perf(+0x57723) [0xaaaaac8a1723]
+> > >   Segmentation fault
+> > > 
+> > > This issue is introduced by commit 30a910d7d3e0 ("perf trace:
+> > > Preallocate the syscall table"), it allocates trace->syscalls.table[]
+> > > array and the element count is 'trace->sctbl->syscalls.nr_entries';
+> > > but on Arm64, the system call number is not continuously used; e.g. the
+> > > syscall maximum id is 436 but the real entries is only 281.  So the
+> > > table is allocated with 'nr_entries' as the element count, but it
+> > > accesses the table with the syscall id, which might be out of the bound
+> > > of the array and cause the segmentation fault.
+> > > 
+> > > This patch allocates trace->syscalls.table[] with the element count is
+> > > 'trace->sctbl->syscalls.max_id + 1', this allows any id to access the
+> > > table without out of the bound.
+> > 
+> > Thanks a lot!
 > 
-> This patch allows tagged pointers to be passed to the following memory
-> syscalls: get_mempolicy, madvise, mbind, mincore, mlock, mlock2, mprotect,
-> mremap, msync, munlock, move_pages.
+> You are welcome, Arnaldo.
 > 
-> The mmap and mremap syscalls do not currently accept tagged addresses.
-> Architectures may interpret the tag as a background colour for the
-> corresponding vma.
+> > My bad, that is why we have that max_id there, I forgot
+> > about it and since I tested so far only on x86_64... applied to
+> > perf/core, since it is only on:
+> > 
+> > [acme@quaco perf]$ git tag --contains 30a910d7d3e0
+> > perf-core-for-mingo-5.4-20190729
+> > [acme@quaco perf]$
 > 
-> Reviewed-by: Khalid Aziz <khalid.aziz@oracle.com>
-> Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-> ---
->  mm/madvise.c   | 2 ++
->  mm/mempolicy.c | 3 +++
->  mm/migrate.c   | 2 +-
->  mm/mincore.c   | 2 ++
->  mm/mlock.c     | 4 ++++
->  mm/mprotect.c  | 2 ++
->  mm/mremap.c    | 7 +++++++
->  mm/msync.c     | 2 ++
->  8 files changed, 23 insertions(+), 1 deletion(-)
+> Thanks!  Yes, I am working on perf/core branch and hit this issue.
+> 
+> Just in case Ingo has not merged your PR, if could save your efforts
+> it's quite fine for me to merge this change in your original patch.
 
-More back and forth discussions on how to specify the exceptions here.
-I'm proposing just dropping the exceptions and folding in the diff
-below.
+This got already merged into tip/perf/core, so no way to combine both by
+now, unfortunately, would be good for bisection purposes on ARM64,
+agreed, but not possible.
 
-Andrew, if you prefer a standalone patch instead, please let me know:
+Thanks again,
 
-------------------8<----------------------------
-From 9a5286acaa638c6a917d96986bf28dad35e24a0c Mon Sep 17 00:00:00 2001
-From: Catalin Marinas <catalin.marinas@arm.com>
-Date: Fri, 9 Aug 2019 14:21:33 +0100
-Subject: [PATCH] fixup! mm: untag user pointers passed to memory syscalls
+- Arnaldo
+ 
+> Thanks,
+> Leo Yan
+> 
+> > 
+> > - Arnaldo
+> >  
+> > > Fixes: 30a910d7d3e0 ("perf trace: Preallocate the syscall table")
+> > > Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> > > ---
+> > >  tools/perf/builtin-trace.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> > > index 75eb3811e942..d553d06a9aeb 100644
+> > > --- a/tools/perf/builtin-trace.c
+> > > +++ b/tools/perf/builtin-trace.c
+> > > @@ -1492,7 +1492,7 @@ static int trace__read_syscall_info(struct trace *trace, int id)
+> > >  	const char *name = syscalltbl__name(trace->sctbl, id);
+> > >  
+> > >  	if (trace->syscalls.table == NULL) {
+> > > -		trace->syscalls.table = calloc(trace->sctbl->syscalls.nr_entries, sizeof(*sc));
+> > > +		trace->syscalls.table = calloc(trace->sctbl->syscalls.max_id + 1, sizeof(*sc));
+> > >  		if (trace->syscalls.table == NULL)
+> > >  			return -ENOMEM;
+> > >  	}
+> > > -- 
+> > > 2.17.1
+> > 
+> > -- 
+> > 
+> > - Arnaldo
 
-mmap, mremap, munmap, brk added to the list of syscalls that accept
-tagged pointers.
+-- 
 
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
----
- mm/mmap.c   | 5 +++++
- mm/mremap.c | 6 +-----
- 2 files changed, 6 insertions(+), 5 deletions(-)
-
-diff --git a/mm/mmap.c b/mm/mmap.c
-index 7e8c3e8ae75f..b766b633b7ae 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -201,6 +201,8 @@ SYSCALL_DEFINE1(brk, unsigned long, brk)
- 	bool downgraded = false;
- 	LIST_HEAD(uf);
- 
-+	brk = untagged_addr(brk);
-+
- 	if (down_write_killable(&mm->mmap_sem))
- 		return -EINTR;
- 
-@@ -1573,6 +1575,8 @@ unsigned long ksys_mmap_pgoff(unsigned long addr, unsigned long len,
- 	struct file *file = NULL;
- 	unsigned long retval;
- 
-+	addr = untagged_addr(addr);
-+
- 	if (!(flags & MAP_ANONYMOUS)) {
- 		audit_mmap_fd(fd, flags);
- 		file = fget(fd);
-@@ -2874,6 +2878,7 @@ EXPORT_SYMBOL(vm_munmap);
- 
- SYSCALL_DEFINE2(munmap, unsigned long, addr, size_t, len)
- {
-+	addr = untagged_addr(addr);
- 	profile_munmap(addr);
- 	return __vm_munmap(addr, len, true);
- }
-diff --git a/mm/mremap.c b/mm/mremap.c
-index 64c9a3b8be0a..1fc8a29fbe3f 100644
---- a/mm/mremap.c
-+++ b/mm/mremap.c
-@@ -606,12 +606,8 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned long, old_len,
- 	LIST_HEAD(uf_unmap_early);
- 	LIST_HEAD(uf_unmap);
- 
--	/*
--	 * Architectures may interpret the tag passed to mmap as a background
--	 * colour for the corresponding vma. For mremap we don't allow tagged
--	 * new_addr to preserve similar behaviour to mmap.
--	 */
- 	addr = untagged_addr(addr);
-+	new_addr = untagged_addr(new_addr);
- 
- 	if (flags & ~(MREMAP_FIXED | MREMAP_MAYMOVE))
- 		return ret;
+- Arnaldo
