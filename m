@@ -6,47 +6,48 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C09BFC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:43:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA1F6C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:43:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8630B214C6
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:43:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82429214C6
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:43:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=auristor.com header.i=jaltman@auristor.com header.b="P4X9qUTn"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=auristor.com header.i=jaltman@auristor.com header.b="UsYixCFl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407596AbfHIRnx (ORCPT
+        id S2436627AbfHIRnx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 9 Aug 2019 13:43:53 -0400
-Received: from sequoia-grove.ad.secure-endpoints.com ([208.125.0.235]:50784
+Received: from sequoia-grove.ad.secure-endpoints.com ([208.125.0.235]:50783
         "EHLO smtp.secure-endpoints.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2406730AbfHIRnw (ORCPT
+        by vger.kernel.org with ESMTP id S2407103AbfHIRnx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 13:43:52 -0400
+        Fri, 9 Aug 2019 13:43:53 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/relaxed;
-        d=auristor.com; s=MDaemon; t=1565372181; x=1565976981;
+        d=auristor.com; s=MDaemon; t=1565372091; x=1565976891;
         i=jaltman@auristor.com; q=dns/txt; h=VBR-Info:Subject:To:Cc:
         References:From:Openpgp:Autocrypt:Organization:Message-ID:Date:
-        User-Agent:MIME-Version:In-Reply-To:Content-Type; bh=cRpaUxcJ/2y
-        LIVSAnV2WMQLyX+OBtF3TrLDuDjpgfqA=; b=P4X9qUTn9fq0NA1sBiUF4xtsuoh
-        zaIpkUqV+Rt9sYHbph5jBmMkj+PHptoJh/VSVTiRraigyr6xZBoN2QYRbPRnbbhg
-        l7R0xuQIW8krVLjtu1LN0LRX+dM7FbsrlfQ4WT+MweSQ3kpWV8mGBheFbwFzI1Ey
-        052bLv80V95CjNG8=
+        User-Agent:MIME-Version:In-Reply-To:Content-Type; bh=Lvi65olvWPn
+        4AGOcZvXePf3q6sMec8qrI2/jHlOxfbs=; b=UsYixCFl8iqV6Q7FYJu0jGoU8ZP
+        fYb/v2bsyKqCU7b4HIPF99Dr78x+jxP2mnLeb9fiwqWhYXPbPGPYMbOKmtA0k5oX
+        THGvfmtR7I3Rrk0cMdTcQw9DSkrF8pO2LxDt7Na3ABhf4HR6HxX6K2hN6i74aFq+
+        CsxqcUyuAAV2d/6A=
 X-MDAV-Result: clean
-X-MDAV-Processed: smtp.secure-endpoints.com, Fri, 09 Aug 2019 13:36:21 -0400
+X-MDAV-Processed: smtp.secure-endpoints.com, Fri, 09 Aug 2019 13:34:51 -0400
 Received: from [IPv6:2001:470:1f07:f77:c0fd:eae8:d216:e0ed] by auristor.com (IPv6:2001:470:1f07:f77:28d9:68fb:855d:c2a5) (MDaemon PRO v19.0.3) 
-        with ESMTPSA id md50002191198.msg; Fri, 09 Aug 2019 13:36:21 -0400
+        with ESMTPSA id md50002191194.msg; Fri, 09 Aug 2019 13:34:50 -0400
 VBR-Info: md=auristor.com; mc=all; mv=vbr.emailcertification.org;
 X-MDRemoteIP: 2001:470:1f07:f77:c0fd:eae8:d216:e0ed
 X-MDHelo: [IPv6:2001:470:1f07:f77:c0fd:eae8:d216:e0ed]
-X-MDArrival-Date: Fri, 09 Aug 2019 13:36:21 -0400
+X-MDArrival-Date: Fri, 09 Aug 2019 13:34:50 -0400
 X-Authenticated-Sender: jaltman@auristor.com
 X-Return-Path: prvs=1124d98d78=jaltman@auristor.com
 X-Envelope-From: jaltman@auristor.com
 X-MDaemon-Deliver-To: linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] afs: remove unused variable 'afs_zero_fid'
+Subject: Re: [PATCH -next] afs: use correct afs_call_type in
+ yfs_fs_store_opaque_acl2
 To:     YueHaibing <yuehaibing@huawei.com>, dhowells@redhat.com
 Cc:     linux-kernel@vger.kernel.org, linux-afs@lists.infradead.org
-References: <20190809084231.62132-1-yuehaibing@huawei.com>
+References: <20190809084323.46204-1-yuehaibing@huawei.com>
 From:   Jeffrey E Altman <jaltman@auristor.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=jaltman@auristor.com; keydata=
@@ -93,13 +94,13 @@ Autocrypt: addr=jaltman@auristor.com; keydata=
  4kG/E7pI/4lke5X5X9vroXRHB7tkpAgT46SqSM/XTwCaseXG9orDgz3duRTUp6K0++S/qsqT
  akGVmjD5917A1HqWfMmiKA==
 Organization: AuriStor, Inc.
-Message-ID: <aac9a7c0-ff88-b43a-64cf-53abe65298e7@auristor.com>
-Date:   Fri, 9 Aug 2019 13:36:11 -0400
+Message-ID: <b008a1eb-6665-8dde-2aa4-e71dddaafd42@auristor.com>
+Date:   Fri, 9 Aug 2019 13:34:42 -0400
 User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190809084231.62132-1-yuehaibing@huawei.com>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms030305040706020602080209"
+In-Reply-To: <20190809084323.46204-1-yuehaibing@huawei.com>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms020203090106060009030702"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -107,48 +108,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 This is a cryptographically signed message in MIME format.
 
---------------ms030305040706020602080209
+--------------ms020203090106060009030702
 Content-Type: multipart/mixed;
- boundary="------------695636827308FACAB97F260C"
+ boundary="------------79C6E55FCA8819B819F9D874"
 Content-Language: en-US
 
 This is a multi-part message in MIME format.
---------------695636827308FACAB97F260C
+--------------79C6E55FCA8819B819F9D874
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-Confirmed.
+This change is correct.
 
-On 8/9/2019 4:42 AM, YueHaibing wrote:
-> fs/afs/fsclient.c:18:29: warning:
->  afs_zero_fid defined but not used [-Wunused-const-variable=3D]
+On 8/9/2019 4:43 AM, YueHaibing wrote:
+> It seems that 'yfs_RXYFSStoreOpaqueACL2' should be use in
+> yfs_fs_store_opaque_acl2().
 >=20
-> It is never used since commit 025db80c9e42 ("afs: Trace
-> the initiation and completion of client calls")
->=20
-> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Fixes: f5e4546347bc ("afs: Implement YFS ACL setting")
 > Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 > ---
->  fs/afs/fsclient.c | 2 --
->  1 file changed, 2 deletions(-)
+>  fs/afs/yfsclient.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >=20
-> diff --git a/fs/afs/fsclient.c b/fs/afs/fsclient.c
-> index 114f281..67af068 100644
-> --- a/fs/afs/fsclient.c
-> +++ b/fs/afs/fsclient.c
-> @@ -15,8 +15,6 @@
->  #include "xdr_fs.h"
->  #include "protocol_yfs.h"
+> diff --git a/fs/afs/yfsclient.c b/fs/afs/yfsclient.c
+> index 2575503..ca24528 100644
+> --- a/fs/afs/yfsclient.c
+> +++ b/fs/afs/yfsclient.c
+> @@ -2171,7 +2171,7 @@ int yfs_fs_store_opaque_acl2(struct afs_fs_cursor=
+ *fc, const struct afs_acl *acl
+>  	       key_serial(fc->key), vnode->fid.vid, vnode->fid.vnode);
 > =20
-> -static const struct afs_fid afs_zero_fid;
-> -
->  static inline void afs_use_fs_server(struct afs_call *call, struct afs=
-_cb_interest *cbi)
->  {
->  	call->cbi =3D afs_get_cb_interest(cbi);
+>  	size =3D round_up(acl->size, 4);
+> -	call =3D afs_alloc_flat_call(net, &yfs_RXYFSStoreStatus,
+> +	call =3D afs_alloc_flat_call(net, &yfs_RXYFSStoreOpaqueACL2,
+>  				   sizeof(__be32) * 2 +
+>  				   sizeof(struct yfs_xdr_YFSFid) +
+>  				   sizeof(__be32) + size,
 >=20
 
---------------695636827308FACAB97F260C
+--------------79C6E55FCA8819B819F9D874
 Content-Type: text/x-vcard; charset=utf-8;
  name="jaltman.vcf"
 Content-Transfer-Encoding: quoted-printable
@@ -168,9 +166,9 @@ version:2.1
 end:vcard
 
 
---------------695636827308FACAB97F260C--
+--------------79C6E55FCA8819B819F9D874--
 
---------------ms030305040706020602080209
+--------------ms020203090106060009030702
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -238,18 +236,18 @@ TfqF2eAgprpyzLWmdr0mou3bv1Sq4OuBhmTQCnqxAXr4yVTRYHkp5lCvRgeJAme1OTVpVPth
 /O7HJ7VuEP9GOr6kCXCXmjB4P3UJ2oU0NqfoQdcSSSt9hliALnExTEjii20B2nSDojGCAxQw
 ggMQAgEBME4wOjELMAkGA1UEBhMCVVMxEjAQBgNVBAoTCUlkZW5UcnVzdDEXMBUGA1UEAxMO
 VHJ1c3RJRCBDQSBBMTICEEABZtMZ6Gd9S673WFjAzkMwDQYJYIZIAWUDBAIBBQCgggGXMBgG
-CSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTE5MDgwOTE3MzYxNlow
-LwYJKoZIhvcNAQkEMSIEIO5M0siQltvIQE7Ab7WCx4naH2uyax/I7uZeIgX+c3YQMF0GCSsG
+CSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTE5MDgwOTE3MzQ0NVow
+LwYJKoZIhvcNAQkEMSIEIGqKQt3SLirkIxaexnAf/M8/vMzDiuaO3v10C23J7hv8MF0GCSsG
 AQQBgjcQBDFQME4wOjELMAkGA1UEBhMCVVMxEjAQBgNVBAoTCUlkZW5UcnVzdDEXMBUGA1UE
 AxMOVHJ1c3RJRCBDQSBBMTICEEABZtMZ6Gd9S673WFjAzkMwXwYLKoZIhvcNAQkQAgsxUKBO
 MDoxCzAJBgNVBAYTAlVTMRIwEAYDVQQKEwlJZGVuVHJ1c3QxFzAVBgNVBAMTDlRydXN0SUQg
 Q0EgQTEyAhBAAWbTGehnfUuu91hYwM5DMGwGCSqGSIb3DQEJDzFfMF0wCwYJYIZIAWUDBAEq
 MAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzAOBggqhkiG9w0DAgICAIAwDQYIKoZIhvcNAwIC
-AUAwBwYFKw4DAgcwDQYIKoZIhvcNAwICASgwDQYJKoZIhvcNAQEBBQAEggEAa3NC9LNhsDar
-DIdWILGrNrmNq1c37rp+pR02AmXLUHPAhZ53TdItMZlejYuAYZNUqIDQICMphZsb5a0xRNYY
-uolFYQgVONE4lovqYHHTlD6c3MY8mwppaQMlrmkhVoBJYlkbDz6xtqf96lb0dFgVPAJdvjxB
-yPzxuwJuQG8I/iYlbXZpwPnfZC+Rccr5fc079KgYK184OaRNbjG406VGXgKjb4sKXIQSq65h
-tVBy5bToaHFDAKN3NIpcOYr+Jwu9J8RIeMzXr2oSyPooesQilhRALL1ptVvxM2aOkDNNVncx
-pNjvTG4n14vpbprgQKiNtL23LYQE/KYHVnoCQKGmTwAAAAAAAA==
---------------ms030305040706020602080209--
+AUAwBwYFKw4DAgcwDQYIKoZIhvcNAwICASgwDQYJKoZIhvcNAQEBBQAEggEAjQZOpGqYpwW+
+5pKQul2YO8dj5bvWzrJ7CKeaD+hivhSjLfbF8rVeNI9GzvM3T4oDGRO97i5E0IKSVLS6TP6B
+vlUKggeB5wvncaOXCkNt3VIOUmYQzlN+foFkS0lUkHu76+sTDGpljw3Q+9NTi+yyRJrONKZ5
+zcu34jkeCqJLRyKfhYExbkj2O1FH4Dpo35zX0irAtSF0fi90ENNlIO7cZd9ivrQc98K/W4gS
+PkHWb7/JNEKwbodjJQkWCYx3aSbj+kJXCb6lHSme7dMTX+wWZA3ZvQPUtCQJQmt5X3HEegdp
+I/Dd4W0RYB7paRqfoFLv8lqfcepIoZbP98ssxjm66wAAAAAAAA==
+--------------ms020203090106060009030702--
 
