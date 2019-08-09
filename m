@@ -2,164 +2,131 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5152C32757
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 543CAC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:11:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C77C20820
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:08:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="kGm2sza8"
+	by mail.kernel.org (Postfix) with ESMTP id 3035920820
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:11:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437245AbfHIRIy (ORCPT
+        id S2437278AbfHIRLD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 13:08:54 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:5793 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437166AbfHIRIy (ORCPT
+        Fri, 9 Aug 2019 13:11:03 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:53147 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437253AbfHIRLC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 13:08:54 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d4da8ae0001>; Fri, 09 Aug 2019 10:09:02 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 09 Aug 2019 10:08:52 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 09 Aug 2019 10:08:52 -0700
-Received: from [10.2.167.88] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 9 Aug
- 2019 17:08:50 +0000
-Subject: Re: [PATCH v8 10/21] clk: tegra: clk-super: Add restore-context
- support
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <tglx@linutronix.de>,
-        <jason@lakedaemon.net>, <marc.zyngier@arm.com>,
-        <linus.walleij@linaro.org>, <stefan@agner.ch>,
-        <mark.rutland@arm.com>
-CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
-        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
-        <josephl@nvidia.com>, <talho@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>, <rjw@rjwysocki.net>,
-        <viresh.kumar@linaro.org>, <linux-pm@vger.kernel.org>
-References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
- <1565308020-31952-11-git-send-email-skomatineni@nvidia.com>
- <4e33bad9-8d5a-dcd7-c75e-db5843c9be4a@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <12250cae-8850-ff1d-91b1-0a50cdab6fa1@nvidia.com>
-Date:   Fri, 9 Aug 2019 10:08:50 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 9 Aug 2019 13:11:02 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hw8Pq-0007mJ-Pz; Fri, 09 Aug 2019 19:10:58 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hw8Pq-0005n4-6q; Fri, 09 Aug 2019 19:10:58 +0200
+Date:   Fri, 9 Aug 2019 19:10:58 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Thierry Reding <thierry.reding@gmail.com>, od@zcrc.me,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/7] pwm: jz4740: Make PWM start with the active part
+Message-ID: <20190809171058.gothydohec6qx7hu@pengutronix.de>
+References: <20190809123031.24219-1-paul@crapouillou.net>
+ <20190809123031.24219-7-paul@crapouillou.net>
 MIME-Version: 1.0
-In-Reply-To: <4e33bad9-8d5a-dcd7-c75e-db5843c9be4a@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1565370542; bh=09y05NqmBwmVkLsJ/gobzxv2L+O0AAJFVHDh198fo8E=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=kGm2sza8k9L7nEzpuYMA+Llr4XC9vEazCHEAYrTewWQ5DYKVDqCW6E4MB1HB8fddE
-         3RQrvHgrxAP31OVdIXqgRE4F0Oz7eGOom7TAsARANRrh3chHJaW4SAgXSfMQu52w1N
-         ybIGCJp8B4T6Vas0c7B+DXCaqUhes+CUfkVfw00AeditKublw+w2bXGtQFY4cSEKn3
-         YUY8z5jtcj+JA5Iu4gY8+6aKMpwqR2/Xv+2+VBOyVqawRSnpDrk5UpDGWiHweiP6uS
-         +QtzIMpDZL5/geG9CCo2dRusIUTuq0eifwlXqoFBBoIMiEiCUtjHNllC24XP4gxEiE
-         ii8tAVycyLmNA==
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190809123031.24219-7-paul@crapouillou.net>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Aug 09, 2019 at 02:30:30PM +0200, Paul Cercueil wrote:
+> The PWM will always start with the inactive part. To counter that,
+> when PWM is enabled we switch the configured polarity, and use
+> 'period - duty + 1' as the real duty.
 
-On 8/9/19 5:17 AM, Dmitry Osipenko wrote:
-> 09.08.2019 2:46, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> This patch implements restore_context for clk_super_mux and clk_super.
->>
->> During system supend, core power goes off the and context of Tegra
->> CAR registers is lost.
->>
->> So on system resume, context of super clock registers are restored
->> to have them in same state as before suspend.
->>
->> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->> ---
->>   drivers/clk/tegra/clk-super.c | 21 +++++++++++++++++++++
->>   1 file changed, 21 insertions(+)
->>
->> diff --git a/drivers/clk/tegra/clk-super.c b/drivers/clk/tegra/clk-super=
-.c
->> index e2a1e95a8db7..74c9e913e41c 100644
->> --- a/drivers/clk/tegra/clk-super.c
->> +++ b/drivers/clk/tegra/clk-super.c
->> @@ -124,9 +124,18 @@ static int clk_super_set_parent(struct clk_hw *hw, =
-u8 index)
->>   	return err;
->>   }
->>  =20
->> +static void clk_super_mux_restore_context(struct clk_hw *hw)
->> +{
->> +	struct clk_hw *parent =3D clk_hw_get_parent(hw);
->> +	int parent_id =3D clk_hw_get_parent_index(hw, parent);
->> +
->> +	clk_super_set_parent(hw, parent_id);
-> All Super clocks have a divider, including the "MUX". Thus I'm wondering
-> if there is a chance that divider's configuration may differ on resume
-> from what it was on suspend.
+Where does the + 1 come from? This looks wrong. (So if duty=0 is
+requested you use duty = period + 1?)
 
-tegra_clk_register_super_mux which uses tegra_clk_super_mux_ops doesn't=20
-do divider rate programming.
+> 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+>  drivers/pwm/pwm-jz4740.c | 22 +++++++++++++---------
+>  1 file changed, 13 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/pwm/pwm-jz4740.c b/drivers/pwm/pwm-jz4740.c
+> index 85e2110aae4f..8df898429d47 100644
+> --- a/drivers/pwm/pwm-jz4740.c
+> +++ b/drivers/pwm/pwm-jz4740.c
+> @@ -121,6 +121,7 @@ static int jz4740_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>  		   *parent_clk = clk_get_parent(clk);
+>  	unsigned long rate, parent_rate, period, duty;
+>  	unsigned long long tmp;
+> +	bool polarity_inversed;
+>  	int ret;
+>  
+>  	parent_rate = clk_get_rate(parent_clk);
+> @@ -183,24 +184,27 @@ static int jz4740_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>  	/* Reset counter to 0 */
+>  	regmap_write(jz4740->map, TCU_REG_TCNTc(pwm->hwpwm), 0);
+>  
+> -	/* Set duty */
+> -	regmap_write(jz4740->map, TCU_REG_TDHRc(pwm->hwpwm), duty);
+> -
+>  	/* Set period */
+>  	regmap_write(jz4740->map, TCU_REG_TDFRc(pwm->hwpwm), period);
+>  
+> +	/*
+> +	 * The PWM will always start with the inactive part. To counter that,
+> +	 * when PWM is enabled we switch the configured polarity, and use
+> +	 * 'period - duty + 1' as the real duty.
+> +	 */
+> +
+> +	/* Set duty */
+> +	regmap_write(jz4740->map, TCU_REG_TDHRc(pwm->hwpwm), period - duty + 1);
+> +
 
-I believe you are referring to sclk_divider, cclklp_divider,=20
-cclkg_divider...
+Before you set duty first, then period, now you do it the other way
+round. Is there a good reason?
 
-these are registered as clk_divider and are restored during clk_divider=20
-resume.
+>  	/* Set polarity */
+> -	switch (state->polarity) {
+> -	case PWM_POLARITY_NORMAL:
+> +	polarity_inversed = state->polarity == PWM_POLARITY_INVERSED;
+> +	if (!polarity_inversed ^ state->enabled)
 
->> +}
->> +
->>   static const struct clk_ops tegra_clk_super_mux_ops =3D {
->>   	.get_parent =3D clk_super_get_parent,
->>   	.set_parent =3D clk_super_set_parent,
->> +	.restore_context =3D clk_super_mux_restore_context,
->>   };
->>  =20
->>   static long clk_super_round_rate(struct clk_hw *hw, unsigned long rate=
-,
->> @@ -162,12 +171,24 @@ static int clk_super_set_rate(struct clk_hw *hw, u=
-nsigned long rate,
->>   	return super->div_ops->set_rate(div_hw, rate, parent_rate);
->>   }
->>  =20
->> +static void clk_super_restore_context(struct clk_hw *hw)
->> +{
->> +	struct tegra_clk_super_mux *super =3D to_clk_super_mux(hw);
->> +	struct clk_hw *div_hw =3D &super->frac_div.hw;
->> +	struct clk_hw *parent =3D clk_hw_get_parent(hw);
->> +	int parent_id =3D clk_hw_get_parent_index(hw, parent);
->> +
->> +	super->div_ops->restore_context(div_hw);
->> +	clk_super_set_parent(hw, parent_id);
->> +}
->> +
->>   const struct clk_ops tegra_clk_super_ops =3D {
->>   	.get_parent =3D clk_super_get_parent,
->>   	.set_parent =3D clk_super_set_parent,
->>   	.set_rate =3D clk_super_set_rate,
->>   	.round_rate =3D clk_super_round_rate,
->>   	.recalc_rate =3D clk_super_recalc_rate,
->> +	.restore_context =3D clk_super_restore_context,
->>   };
->>  =20
->>   struct clk *tegra_clk_register_super_mux(const char *name,
->>
+Why does state->enabled suddenly matter here?
+
+>  		regmap_update_bits(jz4740->map, TCU_REG_TCSRc(pwm->hwpwm),
+>  				   TCU_TCSR_PWM_INITL_HIGH, 0);
+> -		break;
+> -	case PWM_POLARITY_INVERSED:
+> +	else
+>  		regmap_update_bits(jz4740->map, TCU_REG_TCSRc(pwm->hwpwm),
+>  				   TCU_TCSR_PWM_INITL_HIGH,
+>  				   TCU_TCSR_PWM_INITL_HIGH);
+> -		break;
+> -	}
+>  
+>  	if (state->enabled)
+>  		jz4740_pwm_enable(chip, pwm);
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
