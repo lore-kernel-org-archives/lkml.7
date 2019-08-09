@@ -2,95 +2,81 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE684C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 10:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 993F0C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 10:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9454A2171F
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 10:17:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pag4yExu"
+	by mail.kernel.org (Postfix) with ESMTP id 6F5742171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 10:18:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406352AbfHIKRI (ORCPT
+        id S2406361AbfHIKSM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 06:17:08 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52306 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726091AbfHIKRH (ORCPT
+        Fri, 9 Aug 2019 06:18:12 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37475 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726091AbfHIKSM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 06:17:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=qtavp7CPHfZNeNkYBrPvAtPsbANfqFLQtCdliW3pDao=; b=pag4yExuYAml6RAwW8ClSI/8O
-        4SvhyG05DRb/VW/V9CDsF+zHeZ5UXFBZuSEmH6L2R/TkkFTUdvg0G5X+mChPhSDo0bv/G81bqVcOE
-        H0+ebgEssg+HPPdNYRmJesf50lZppQPNOWSyxdr7otHpaF8cn8K9ckBUuEcdXQR2moiTTpd1jGx/f
-        vjh5YbK7fMXAxAHvYpu7bjS0cCBSZ//FEHycRa1QcZu/mYorpr133FpqiXnyp7o6RFhVYguPt/B8f
-        P2fGNwRrQbpxYk76nYUeyruj+MAsigriKyn6idQDkNDTkIb9YC0oHITHhwpJDVUNGhDUhHSp0NaMd
-        UOTH8wydQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hw1wn-0006xR-4P; Fri, 09 Aug 2019 10:16:33 +0000
-Date:   Fri, 9 Aug 2019 03:16:33 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC V2 0/1] mm/debug: Add tests for architecture exported page
- table helpers
-Message-ID: <20190809101632.GM5482@bombadil.infradead.org>
-References: <1565335998-22553-1-git-send-email-anshuman.khandual@arm.com>
+        Fri, 9 Aug 2019 06:18:12 -0400
+Received: by mail-wr1-f65.google.com with SMTP id b3so5343224wro.4
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 03:18:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=cuVKDc0uavb8FjLQUAtTTA5OlojkA129esFBNoztMxo=;
+        b=O0EUyyL0IDALgKS+J9xKOpX043IGdqTPirKg54Fod7nZvfiIhg4/i7uVUc+KYRAOme
+         NT1iRpuDbmu/bhrDlp+AvFCoe8oeiKLKzkSdmX3fnDScaCDH47ShGHI0Zo7E7USMbKeQ
+         U7PZ5Py2OWyYAflcyyOkvflInBe28PIQPzZ/Dq/z+dphy/xm34LkqhBFbBCowP5G2uSQ
+         U6ftkH+QAshtLaYTOCCZoWAJYYcf6E84n3Q5UB7CkMFVai9RQX4xT+WVwRJB4gAPUlk2
+         J8lSI7Y+fFzxh7hG+ZHwgXQCvuS1H5AU77I2gfgWply9nwEhBtMf7vLNcqbQjtBdRf20
+         HfSQ==
+X-Gm-Message-State: APjAAAXkFTlcNg/BCcLhvcdeUqSlKgx+zDCHSJ8RiIEm7hkGAq5xoXgO
+        8N+pQDkT0HVn0CxxJuSpgMrgOg==
+X-Google-Smtp-Source: APXvYqwGlQdoLBApaInPPRuk+HOjO5hFnd6m+xzhuho3EgmDFnNdQo4FMdSiYqdiHuankaDhNx4XOA==
+X-Received: by 2002:adf:f744:: with SMTP id z4mr3790705wrp.211.1565345889872;
+        Fri, 09 Aug 2019 03:18:09 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:b42d:b492:69df:ed61? ([2001:b07:6468:f312:b42d:b492:69df:ed61])
+        by smtp.gmail.com with ESMTPSA id y16sm209844185wrg.85.2019.08.09.03.18.09
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 09 Aug 2019 03:18:09 -0700 (PDT)
+Subject: Re: [PATCH v3 1/2] selftests: kvm: Adding config fragments
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     Shuah Khan <shuah@kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Andrew Jones <drjones@redhat.com>,
+        sean.j.christopherson@intel.com,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, kvm list <kvm@vger.kernel.org>,
+        Dan Rue <dan.rue@linaro.org>
+References: <20190809072415.29305-1-naresh.kamboju@linaro.org>
+ <0a0e0563-aba7-e59c-1fbd-547126d404ed@redhat.com>
+ <CA+G9fYt4QPjHtyoZUfe_tv+uT6yybHehymuDWBFHL-QH3K-PxA@mail.gmail.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <28a9ac44-7ae2-7892-4e68-59245b6dc27b@redhat.com>
+Date:   Fri, 9 Aug 2019 12:18:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1565335998-22553-1-git-send-email-anshuman.khandual@arm.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <CA+G9fYt4QPjHtyoZUfe_tv+uT6yybHehymuDWBFHL-QH3K-PxA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 01:03:17PM +0530, Anshuman Khandual wrote:
-> Should alloc_gigantic_page() be made available as an interface for general
-> use in the kernel. The test module here uses very similar implementation from
-> HugeTLB to allocate a PUD aligned memory block. Similar for mm_alloc() which
-> needs to be exported through a header.
+On 09/08/19 09:53, Naresh Kamboju wrote:
+>> I think this is more complicated without a real benefit, so I'll merge v2.
+> With the recent changes to 'kselftest-merge' nested configs also get merged.
+> Please refer this below commit for more details.
 
-Why are you allocating memory at all instead of just using some
-known-to-exist PFNs like I suggested?
+Sure---both v2 and v3 work but this one adds more config files with
+little benefit.
+
+Paolo
