@@ -2,259 +2,356 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93C5FC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 21:38:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81088C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 21:40:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F6072086D
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 21:38:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44A652086D
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 21:40:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fA4UXBof"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="XpDqpay4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728442AbfHIVie (ORCPT
+        id S1728046AbfHIVkQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 17:38:34 -0400
-Received: from mail-pl1-f202.google.com ([209.85.214.202]:55870 "EHLO
-        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728261AbfHIVie (ORCPT
+        Fri, 9 Aug 2019 17:40:16 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:51044 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726125AbfHIVkP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 17:38:34 -0400
-Received: by mail-pl1-f202.google.com with SMTP id q11so58099250pll.22
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 14:38:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=xA4sS4X8FQOcKXsaLmxwZyVjI3eJo4lwqwVNVh8IS+4=;
-        b=fA4UXBofzcCuH8Ox2KDQK0BxsPfpGm7973kzLcneUP3vYQowr/+NJ+nNUg5QRpKn8Y
-         3W68DrLgQdzpAFciU5sYMCVnhzZ3KswD/8BJDIRwTo6TUjOLK3K2dZFE66tQSD1h2AA4
-         zy9iDurswmTQS/NNCJWI6FZbV6Gsrb3Mqc6InzTFO79yVNpfuIbUNxPRqY4FC2nmTmdY
-         VnfiDHzpltInJ88rHqirfJ54cJIn3QWGf1oDK3aJ3hNmClHJY5s8u8zC3zV37UtRnld7
-         5pecTAQ3ygzGi1caKsDJgyonQMCEYGYntdtEeU8mX8Gy2zBk8VQ6zL2avzbsfAHoN2gH
-         WrYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=xA4sS4X8FQOcKXsaLmxwZyVjI3eJo4lwqwVNVh8IS+4=;
-        b=V+HWMXQIcB9QLG9EnmpcjvLg11Qmb3sMrLnS5gHX9l8jKEjyzdD/TXIs28/KM8mPne
-         R+SvRuDuP42y0p1dDuTI6htqtXAnII0hVb3+/vprwC4qd9zANH9Dhmu+HBXlYLC/cFvg
-         F5j5JqYxUCY94lxiRIGNZ5AsivJkeoYuHxT6vpbp6jJ2qWXy+qKFeguAQxf8QUbcHPKc
-         LnpLzeJmxFSiIfTb7gDPeJT6O43FbFwKRqT4KXwLGMGzVt3mxyLtmF8yjvbYc2jBKPQL
-         5PF6bD0aB6lbsd3q0V8M1Py4g9QGqsafzLr5NPk81ncSAQJUoR4jsgQn4oLF5UVWz/xm
-         gtNA==
-X-Gm-Message-State: APjAAAWAtyicCyk2t6MczqwGmgotXyDEg7o+COVZ3jbQ+mvvzWiQpJ8k
-        p+TXMJradt2D3lxvpNgdRxCPXLGZ6wRrIvk1
-X-Google-Smtp-Source: APXvYqwxBo8gk0xscIsZMbqcPDBwOjLUfEANF/KXXEv5uX61h79LJVfKhfhgmzb5/EeNB3vwZs2c8qk79C+kWMH0
-X-Received: by 2002:a63:3281:: with SMTP id y123mr18805072pgy.72.1565386712674;
- Fri, 09 Aug 2019 14:38:32 -0700 (PDT)
-Date:   Fri,  9 Aug 2019 14:38:28 -0700
-Message-Id: <20190809213828.202833-1-henryburns@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
-Subject: [PATCH v2] mm/z3fold.c: Fix race between migration and destruction
-From:   Henry Burns <henryburns@google.com>
-To:     Vitaly Wool <vitalywool@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Vitaly Vul <vitaly.vul@sony.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jonathan Adams <jwadams@google.com>,
-        Henry Burns <henrywolfeburns@gmail.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Henry Burns <henryburns@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 9 Aug 2019 17:40:15 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x79LeA8o044455;
+        Fri, 9 Aug 2019 16:40:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1565386810;
+        bh=rvbC/eUk3CqrvPCJSGPBj/aE/j9tg/4DEycDb2m2lSk=;
+        h=From:To:CC:Subject:Date;
+        b=XpDqpay4RwkEmqqJBqV+TbKIqQk9HxYUeoa3BbcLwJ/rl6t9YkpxEgXPKGTmfrfs0
+         YpGGNH3T66cZrmQ02BH+5GfjSw6sGXqw6Fx3hb6/HeqE053jj7DYK4im2lOvVsTdcR
+         5V9j11Wx3aez+WJGAsa3rgr1k/gDmzLkbuABV/gc=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x79LeAcJ027906
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 9 Aug 2019 16:40:10 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 9 Aug
+ 2019 16:40:10 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 9 Aug 2019 16:40:10 -0500
+Received: from legion.dal.design.ti.com (legion.dal.design.ti.com [128.247.22.53])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x79LeAux040133;
+        Fri, 9 Aug 2019 16:40:10 -0500
+Received: from localhost (irmo.dhcp.ti.com [128.247.58.153])
+        by legion.dal.design.ti.com (8.11.7p1+Sun/8.11.7) with ESMTP id x79Le9Z27245;
+        Fri, 9 Aug 2019 16:40:09 -0500 (CDT)
+From:   Suman Anna <s-anna@ti.com>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+CC:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Loic Pallardy <loic.pallardy@st.com>,
+        Fabien Dessenne <fabien.dessenne@st.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>
+Subject: [PATCH] rpmsg: add a description field
+Date:   Fri, 9 Aug 2019 16:40:05 -0500
+Message-ID: <20190809214005.32159-1-s-anna@ti.com>
+X-Mailer: git-send-email 2.22.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In z3fold_destroy_pool() we call destroy_workqueue(&pool->compact_wq).
-However, we have no guarantee that migration isn't happening in the
-background at that time.
+From: Ohad Ben-Cohen <ohad@wizery.com>
 
-Migration directly calls queue_work_on(pool->compact_wq), if destruction
-wins that race we are using a destroyed workqueue.
+Add a new description field to the rpmsg bus infrastructure
+that can be passed onto the rpmsg client drivers for additional
+information. The current rpmsg bus client drivers need to have
+a fixed id_table for proper matching, this new field can allow
+flexibility for the client drivers (eg: like creating unique
+cdevs).
 
-Signed-off-by: Henry Burns <henryburns@google.com>
+The description field is published through an enhanced name
+service announcement message structure. The name service
+message processing logic is updated to maintain backward
+compatibility with the previous message structure.
+
+Based on an initial patch from Ohad Ben-Cohen.
+
+Signed-off-by: Ohad Ben-Cohen <ohad@wizery.com>
+[s-anna@ti.com: forward port, add sysfs documentation, fixup qcom drivers]
+Signed-off-by: Suman Anna <s-anna@ti.com>
+[t-kristo@ti.com: reworked to support both rpmsg with/without the desc field]
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
 ---
- Changelog since v1:
- - Fixed a bug where migration could still queue work after we have
-   waited for it to drain. (added z3fold_pool->destroying in the
-   process)
+ Documentation/ABI/testing/sysfs-bus-rpmsg | 29 +++++++++++++++
+ drivers/rpmsg/qcom_glink_native.c         |  1 +
+ drivers/rpmsg/qcom_smd.c                  |  1 +
+ drivers/rpmsg/rpmsg_char.c                |  1 +
+ drivers/rpmsg/rpmsg_core.c                |  6 ++++
+ drivers/rpmsg/virtio_rpmsg_bus.c          | 44 +++++++++++++++++++----
+ drivers/soc/qcom/wcnss_ctrl.c             |  1 +
+ include/linux/rpmsg.h                     |  4 +++
+ 8 files changed, 80 insertions(+), 7 deletions(-)
 
- mm/z3fold.c | 89 +++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 89 insertions(+)
-
-diff --git a/mm/z3fold.c b/mm/z3fold.c
-index 78447cecfffa..6b32c94c4ca1 100644
---- a/mm/z3fold.c
-+++ b/mm/z3fold.c
-@@ -40,6 +40,7 @@
- #include <linux/workqueue.h>
- #include <linux/slab.h>
- #include <linux/spinlock.h>
-+#include <linux/wait.h>
- #include <linux/zpool.h>
+diff --git a/Documentation/ABI/testing/sysfs-bus-rpmsg b/Documentation/ABI/testing/sysfs-bus-rpmsg
+index 990fcc420935..7f1b09ecc64d 100644
+--- a/Documentation/ABI/testing/sysfs-bus-rpmsg
++++ b/Documentation/ABI/testing/sysfs-bus-rpmsg
+@@ -93,3 +93,32 @@ Description:
+ 		This sysfs entry allows the rpmsg driver for a rpmsg device
+ 		to be specified which will override standard OF, ID table
+ 		and name matching.
++
++What:		/sys/bus/rpmsg/devices/.../desc
++Date:		August 2019
++KernelVersion:	5.4
++Contact:	Bjorn Andersson <bjorn.andersson@linaro.org>
++Description:
++		Every rpmsg device is a communication channel with a remote
++		processor. Channels are identified by a textual name (see
++		/sys/bus/rpmsg/devices/.../name above) and have a local
++		("source") rpmsg address, and remote ("destination") rpmsg
++		address.
++
++		A channel is first created when an entity, whether local
++		or remote, starts listening on it for messages (and is thus
++		called an rpmsg server). When that happens, a "name service"
++		announcement is sent to the other processor, in order to let
++		it know about the creation of the channel (this way remote
++		clients know they can start sending messages).
++
++		The listening entity (or client) which communicates with a
++		remote processor is referred as rpmsg driver. The rpmsg device
++		and rpmsg driver are matched based on rpmsg device name (see
++		/sys/bus/rpmsg/devices/.../name above) and rpmsg driver ID table.
++
++		This sysfs entry contains an additional optional description of
++		the rpmsg device that can be optionally included as part of the
++		"name service" announcement. This description is then passed on
++		to the corresponding rpmsg drivers to further distinguish multiple
++		devices associated with the same rpmsg driver.
+diff --git a/drivers/rpmsg/qcom_glink_native.c b/drivers/rpmsg/qcom_glink_native.c
+index f46c787733e8..cfdabddc15ac 100644
+--- a/drivers/rpmsg/qcom_glink_native.c
++++ b/drivers/rpmsg/qcom_glink_native.c
+@@ -1456,6 +1456,7 @@ static void qcom_glink_rx_close(struct qcom_glink *glink, unsigned int rcid)
+ 		strncpy(chinfo.name, channel->name, sizeof(chinfo.name));
+ 		chinfo.src = RPMSG_ADDR_ANY;
+ 		chinfo.dst = RPMSG_ADDR_ANY;
++		chinfo.desc[0] = '\0';
  
- /*
-@@ -143,6 +144,8 @@ struct z3fold_header {
-  * @release_wq:	workqueue for safe page release
-  * @work:	work_struct for safe page release
-  * @inode:	inode for z3fold pseudo filesystem
-+ * @destroying: bool to stop migration once we start destruction
-+ * @isolated: int to count the number of pages currently in isolation
-  *
-  * This structure is allocated at pool creation time and maintains metadata
-  * pertaining to a particular z3fold pool.
-@@ -161,8 +164,11 @@ struct z3fold_pool {
- 	const struct zpool_ops *zpool_ops;
- 	struct workqueue_struct *compact_wq;
- 	struct workqueue_struct *release_wq;
-+	struct wait_queue_head isolate_wait;
- 	struct work_struct work;
- 	struct inode *inode;
-+	bool destroying;
-+	int isolated;
+ 		rpmsg_unregister_device(glink->dev, &chinfo);
+ 	}
+diff --git a/drivers/rpmsg/qcom_smd.c b/drivers/rpmsg/qcom_smd.c
+index 4abbeea782fa..7cd6b9c47065 100644
+--- a/drivers/rpmsg/qcom_smd.c
++++ b/drivers/rpmsg/qcom_smd.c
+@@ -1307,6 +1307,7 @@ static void qcom_channel_state_worker(struct work_struct *work)
+ 		strncpy(chinfo.name, channel->name, sizeof(chinfo.name));
+ 		chinfo.src = RPMSG_ADDR_ANY;
+ 		chinfo.dst = RPMSG_ADDR_ANY;
++		chinfo.desc[0] = '\0';
+ 		rpmsg_unregister_device(&edge->dev, &chinfo);
+ 		channel->registered = false;
+ 		spin_lock_irqsave(&edge->channels_lock, flags);
+diff --git a/drivers/rpmsg/rpmsg_char.c b/drivers/rpmsg/rpmsg_char.c
+index eea5ebbb5119..4bd91445a2fd 100644
+--- a/drivers/rpmsg/rpmsg_char.c
++++ b/drivers/rpmsg/rpmsg_char.c
+@@ -442,6 +442,7 @@ static long rpmsg_ctrldev_ioctl(struct file *fp, unsigned int cmd,
+ 	chinfo.name[RPMSG_NAME_SIZE-1] = '\0';
+ 	chinfo.src = eptinfo.src;
+ 	chinfo.dst = eptinfo.dst;
++	chinfo.desc[0] = '\0';
+ 
+ 	return rpmsg_eptdev_create(ctrldev, chinfo);
  };
+diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
+index ea88fd4e2a6e..334a50425b5c 100644
+--- a/drivers/rpmsg/rpmsg_core.c
++++ b/drivers/rpmsg/rpmsg_core.c
+@@ -302,6 +302,10 @@ static int rpmsg_device_match(struct device *dev, void *data)
+ 	if (strncmp(chinfo->name, rpdev->id.name, RPMSG_NAME_SIZE))
+ 		return 0;
  
- /*
-@@ -772,6 +778,7 @@ static struct z3fold_pool *z3fold_create_pool(const char *name, gfp_t gfp,
- 		goto out_c;
- 	spin_lock_init(&pool->lock);
- 	spin_lock_init(&pool->stale_lock);
-+	init_waitqueue_head(&pool->isolate_wait);
- 	pool->unbuddied = __alloc_percpu(sizeof(struct list_head)*NCHUNKS, 2);
- 	if (!pool->unbuddied)
- 		goto out_pool;
-@@ -811,6 +818,15 @@ static struct z3fold_pool *z3fold_create_pool(const char *name, gfp_t gfp,
- 	return NULL;
++	if (chinfo->desc && chinfo->desc != rpdev->desc &&
++	    strncmp(chinfo->desc, rpdev->desc, RPMSG_NAME_SIZE))
++		return 0;
++
+ 	/* found a match ! */
+ 	return 1;
  }
+@@ -365,6 +369,7 @@ static DEVICE_ATTR_RW(field)
  
-+static bool pool_isolated_are_drained(struct z3fold_pool *pool)
-+{
-+	bool ret;
+ /* for more info, see Documentation/ABI/testing/sysfs-bus-rpmsg */
+ rpmsg_show_attr(name, id.name, "%s\n");
++rpmsg_show_attr(desc, desc, "%s\n");
+ rpmsg_show_attr(src, src, "0x%x\n");
+ rpmsg_show_attr(dst, dst, "0x%x\n");
+ rpmsg_show_attr(announce, announce ? "true" : "false", "%s\n");
+@@ -386,6 +391,7 @@ static DEVICE_ATTR_RO(modalias);
+ 
+ static struct attribute *rpmsg_dev_attrs[] = {
+ 	&dev_attr_name.attr,
++	&dev_attr_desc.attr,
+ 	&dev_attr_modalias.attr,
+ 	&dev_attr_dst.attr,
+ 	&dev_attr_src.attr,
+diff --git a/drivers/rpmsg/virtio_rpmsg_bus.c b/drivers/rpmsg/virtio_rpmsg_bus.c
+index 376ebbf880d6..49901582ff0e 100644
+--- a/drivers/rpmsg/virtio_rpmsg_bus.c
++++ b/drivers/rpmsg/virtio_rpmsg_bus.c
+@@ -110,6 +110,23 @@ struct rpmsg_ns_msg {
+ 	u32 flags;
+ } __packed;
+ 
++/**
++ * struct rpmsg_ns_msg_ext - dynamic name service announcement message v2
++ * @name: name of remote service that is published
++ * @desc: description of remote service
++ * @addr: address of remote service that is published
++ * @flags: indicates whether service is created or destroyed
++ *
++ * Interchangeable nameservice message with rpmsg_ns_msg. This one has
++ * the addition of the desc field for extra flexibility.
++ */
++struct rpmsg_ns_msg_ext {
++	char name[RPMSG_NAME_SIZE];
++	char desc[RPMSG_NAME_SIZE];
++	u32 addr;
++	u32 flags;
++} __packed;
 +
-+	spin_lock(&pool->lock);
-+	ret = pool->isolated == 0;
-+	spin_unlock(&pool->lock);
-+	return ret;
-+}
  /**
-  * z3fold_destroy_pool() - destroys an existing z3fold pool
-  * @pool:	the z3fold pool to be destroyed
-@@ -820,6 +836,22 @@ static struct z3fold_pool *z3fold_create_pool(const char *name, gfp_t gfp,
- static void z3fold_destroy_pool(struct z3fold_pool *pool)
- {
- 	kmem_cache_destroy(pool->c_handle);
-+	/*
-+	 * We set pool-> destroying under lock to ensure that
-+	 * z3fold_page_isolate() sees any changes to destroying. This way we
-+	 * avoid the need for any memory barriers.
-+	 */
-+
-+	spin_lock(&pool->lock);
-+	pool->destroying = true;
-+	spin_unlock(&pool->lock);
-+
-+	/*
-+	 * We need to ensure that no pages are being migrated while we destroy
-+	 * these workqueues, as migration can queue work on either of the
-+	 * workqueues.
-+	 */
-+	wait_event(pool->isolate_wait, !pool_isolated_are_drained(pool));
+  * enum rpmsg_ns_flags - dynamic name service announcement flags
+  *
+@@ -402,8 +419,9 @@ static struct rpmsg_device *rpmsg_create_channel(struct virtproc_info *vrp,
+ 	if (tmp) {
+ 		/* decrement the matched device's refcount back */
+ 		put_device(tmp);
+-		dev_err(dev, "channel %s:%x:%x already exist\n",
+-				chinfo->name, chinfo->src, chinfo->dst);
++		dev_err(dev, "channel %s:%s:%x:%x already exist\n",
++			chinfo->name, chinfo->desc,
++			chinfo->src, chinfo->dst);
+ 		return NULL;
+ 	}
+ 
+@@ -419,6 +437,7 @@ static struct rpmsg_device *rpmsg_create_channel(struct virtproc_info *vrp,
+ 	rpdev->src = chinfo->src;
+ 	rpdev->dst = chinfo->dst;
+ 	rpdev->ops = &virtio_rpmsg_ops;
++	strncpy(rpdev->desc, chinfo->desc, RPMSG_NAME_SIZE);
  
  	/*
- 	 * We need to destroy pool->compact_wq before pool->release_wq,
-@@ -1317,6 +1349,28 @@ static u64 z3fold_get_pool_size(struct z3fold_pool *pool)
- 	return atomic64_read(&pool->pages_nr);
- }
- 
-+/*
-+ * z3fold_dec_isolated() expects to be called while pool->lock is held.
-+ */
-+static void z3fold_dec_isolated(struct z3fold_pool *pool)
-+{
-+	assert_spin_locked(&pool->lock);
-+	VM_BUG_ON(pool->isolated <= 0);
-+	pool->isolated--;
-+
-+	/*
-+	 * If we have no more isolated pages, we have to see if
-+	 * z3fold_destroy_pool() is waiting for a signal.
-+	 */
-+	if (pool->isolated == 0 && waitqueue_active(&pool->isolate_wait))
-+		wake_up_all(&pool->isolate_wait);
-+}
-+
-+static void z3fold_inc_isolated(struct z3fold_pool *pool)
-+{
-+	pool->isolated++;
-+}
-+
- static bool z3fold_page_isolate(struct page *page, isolate_mode_t mode)
+ 	 * rpmsg server channels has predefined local address (for now),
+@@ -816,18 +835,29 @@ static int rpmsg_ns_cb(struct rpmsg_device *rpdev, void *data, int len,
+ 		       void *priv, u32 src)
  {
- 	struct z3fold_header *zhdr;
-@@ -1343,6 +1397,33 @@ static bool z3fold_page_isolate(struct page *page, isolate_mode_t mode)
- 		spin_lock(&pool->lock);
- 		if (!list_empty(&page->lru))
- 			list_del(&page->lru);
-+		/*
-+		 * We need to check for destruction while holding pool->lock, as
-+		 * otherwise destruction could see 0 isolated pages, and
-+		 * proceed.
-+		 */
-+		if (unlikely(pool->destroying)) {
-+			spin_unlock(&pool->lock);
-+			/*
-+			 * If this page isn't stale, somebody else holds a
-+			 * reference to it. Let't drop our refcount so that they
-+			 * can call the release logic.
-+			 */
-+			if (unlikely(kref_put(&zhdr->refcount,
-+					      release_z3fold_page_locked))) {
-+				/*
-+				 * If we get here we have kref problems, so we
-+				 * should freak out.
-+				 */
-+				WARN(1, "Z3fold is experiencing kref problems\n");
-+				return false;
-+			}
-+			z3fold_page_unlock(zhdr);
-+			return false;
-+		}
-+
-+
-+		z3fold_inc_isolated(pool);
- 		spin_unlock(&pool->lock);
- 		z3fold_page_unlock(zhdr);
- 		return true;
-@@ -1417,6 +1498,10 @@ static int z3fold_page_migrate(struct address_space *mapping, struct page *newpa
+ 	struct rpmsg_ns_msg *msg = data;
++	struct rpmsg_ns_msg_ext *msg_ext = data;
+ 	struct rpmsg_device *newch;
+ 	struct rpmsg_channel_info chinfo;
+ 	struct virtproc_info *vrp = priv;
+ 	struct device *dev = &vrp->vdev->dev;
+ 	int ret;
++	u32 addr;
++	u32 flags;
  
- 	queue_work_on(new_zhdr->cpu, pool->compact_wq, &new_zhdr->work);
+ #if defined(CONFIG_DYNAMIC_DEBUG)
+ 	dynamic_hex_dump("NS announcement: ", DUMP_PREFIX_NONE, 16, 1,
+ 			 data, len, true);
+ #endif
  
-+	spin_lock(&pool->lock);
-+	z3fold_dec_isolated(pool);
-+	spin_unlock(&pool->lock);
-+
- 	page_mapcount_reset(page);
- 	put_page(page);
- 	return 0;
-@@ -1436,10 +1521,14 @@ static void z3fold_page_putback(struct page *page)
- 	INIT_LIST_HEAD(&page->lru);
- 	if (kref_put(&zhdr->refcount, release_z3fold_page_locked)) {
- 		atomic64_dec(&pool->pages_nr);
-+		spin_lock(&pool->lock);
-+		z3fold_dec_isolated(pool);
-+		spin_unlock(&pool->lock);
- 		return;
+-	if (len != sizeof(*msg)) {
++	if (len == sizeof(*msg)) {
++		addr = msg->addr;
++		flags = msg->flags;
++		chinfo.desc[0] = '\0';
++	} else if (len == sizeof(*msg_ext)) {
++		addr = msg_ext->addr;
++		flags = msg_ext->flags;
++		strncpy(chinfo.desc, msg_ext->desc, sizeof(chinfo.desc));
++	} else if (len != sizeof(*msg)) {
+ 		dev_err(dev, "malformed ns msg (%d)\n", len);
+ 		return -EINVAL;
  	}
- 	spin_lock(&pool->lock);
- 	list_add(&page->lru, &pool->lru);
-+	z3fold_dec_isolated(pool);
- 	spin_unlock(&pool->lock);
- 	z3fold_page_unlock(zhdr);
+@@ -847,14 +877,14 @@ static int rpmsg_ns_cb(struct rpmsg_device *rpdev, void *data, int len,
+ 	msg->name[RPMSG_NAME_SIZE - 1] = '\0';
+ 
+ 	dev_info(dev, "%sing channel %s addr 0x%x\n",
+-		 msg->flags & RPMSG_NS_DESTROY ? "destroy" : "creat",
+-		 msg->name, msg->addr);
++		 flags & RPMSG_NS_DESTROY ? "destroy" : "creat",
++		 msg->name, addr);
+ 
+ 	strncpy(chinfo.name, msg->name, sizeof(chinfo.name));
+ 	chinfo.src = RPMSG_ADDR_ANY;
+-	chinfo.dst = msg->addr;
++	chinfo.dst = addr;
+ 
+-	if (msg->flags & RPMSG_NS_DESTROY) {
++	if (flags & RPMSG_NS_DESTROY) {
+ 		ret = rpmsg_unregister_device(&vrp->vdev->dev, &chinfo);
+ 		if (ret)
+ 			dev_err(dev, "rpmsg_destroy_channel failed: %d\n", ret);
+diff --git a/drivers/soc/qcom/wcnss_ctrl.c b/drivers/soc/qcom/wcnss_ctrl.c
+index e5c68051fb17..ad9f28dc13f1 100644
+--- a/drivers/soc/qcom/wcnss_ctrl.c
++++ b/drivers/soc/qcom/wcnss_ctrl.c
+@@ -276,6 +276,7 @@ struct rpmsg_endpoint *qcom_wcnss_open_channel(void *wcnss, const char *name, rp
+ 	strscpy(chinfo.name, name, sizeof(chinfo.name));
+ 	chinfo.src = RPMSG_ADDR_ANY;
+ 	chinfo.dst = RPMSG_ADDR_ANY;
++	chinfo.desc[0] = '\0';
+ 
+ 	return rpmsg_create_ept(_wcnss->channel->rpdev, cb, priv, chinfo);
  }
+diff --git a/include/linux/rpmsg.h b/include/linux/rpmsg.h
+index 9fe156d1c018..436faf04ba1c 100644
+--- a/include/linux/rpmsg.h
++++ b/include/linux/rpmsg.h
+@@ -28,11 +28,13 @@ struct rpmsg_endpoint_ops;
+ /**
+  * struct rpmsg_channel_info - channel info representation
+  * @name: name of service
++ * @desc: description of service
+  * @src: local address
+  * @dst: destination address
+  */
+ struct rpmsg_channel_info {
+ 	char name[RPMSG_NAME_SIZE];
++	char desc[RPMSG_NAME_SIZE];
+ 	u32 src;
+ 	u32 dst;
+ };
+@@ -42,6 +44,7 @@ struct rpmsg_channel_info {
+  * @dev: the device struct
+  * @id: device id (used to match between rpmsg drivers and devices)
+  * @driver_override: driver name to force a match
++ * @desc: description of remote service
+  * @src: local address
+  * @dst: destination address
+  * @ept: the rpmsg endpoint of this channel
+@@ -51,6 +54,7 @@ struct rpmsg_device {
+ 	struct device dev;
+ 	struct rpmsg_device_id id;
+ 	char *driver_override;
++	char desc[RPMSG_NAME_SIZE];
+ 	u32 src;
+ 	u32 dst;
+ 	struct rpmsg_endpoint *ept;
 -- 
-2.23.0.rc1.153.gdeed80330f-goog
+2.22.0
 
