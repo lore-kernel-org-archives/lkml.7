@@ -2,251 +2,386 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C4AC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:44:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 425E7C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:46:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 501C32086D
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:44:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 085192086D
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 18:46:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Xp6CIOgI"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="totvYs6W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406726AbfHISoW (ORCPT
+        id S2436648AbfHISqB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 14:44:22 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:45656 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726189AbfHISoV (ORCPT
+        Fri, 9 Aug 2019 14:46:01 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:38858 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406599AbfHISqA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 14:44:21 -0400
-Received: by mail-qt1-f193.google.com with SMTP id f7so3897506qtq.12
-        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 11:44:21 -0700 (PDT)
+        Fri, 9 Aug 2019 14:46:00 -0400
+Received: by mail-pl1-f193.google.com with SMTP id m12so6677252plt.5
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 11:46:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vEuL2EbGOVGMLn0kU1w+hsZbPb98Gl+S1kfZ1qfhHFA=;
-        b=Xp6CIOgIk3oDjKzavwAl88b8bezmjuL6Genksw2JvgrEM8Z2cf2+0wHWBvZdyvc4OL
-         9UUGuhUOBtJVBTWPPzwp5b9vdRV0qUlUW5YfH109IfVaaSbfsSM/76YeBCGflRe8lcTZ
-         VmfX20SGtnC0CvSfpzGXdh/3aLHp4w5B0N81o=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kA5LMiIp35kf1OvXboDks3RjTBrzmyys+m0gU3GXqkY=;
+        b=totvYs6WJYnbIThPXIKEypX7mCUKzz85xs246Qyy6UXtgaVUmub9FQl8br2uKbfpFg
+         7pZWXSDF7ZHNYbhmdZaOklLs4Okoq5X9BjvlNPdUYgSuFJOBTOW4oAtVt1XwZrpBn1ml
+         mdJOGpAw7V6y5I9ta7dsFbWWAB0aQC0qEyauE+/jVdoyPdl+hfhv8QMq7ACaWI39hc9W
+         SaHlJ+RXDa7BMM9ba8p1GYay1MVHF9L3SsPQeTRFRdGE0RUrN/9uj+XuHaxfZ7oDD8IS
+         S2nWTpOipd7a4StfDh7np0KJjkZ3DDll8OYCnDjQX9N33li3sexl18rfRUOg7bNHod84
+         PwtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vEuL2EbGOVGMLn0kU1w+hsZbPb98Gl+S1kfZ1qfhHFA=;
-        b=dYvWS7jwsy3atVb6lOYau0G7yNeOOHxSvG761JOsKjyynbFhXAb4s0C4Vklsp/7HsO
-         5EON0lo3XLnWQ5Qkn+h/+xW4KAz1uudlgnJofE+Pk9xBn+4qetI8pam9WMnrjSDwQL8D
-         GMxmeqJBrD9NzXy1dJuz2F+D2rdSc2P1WvVKoMOhIjcv595zhgh7TzDRj5DgFp3kdaV4
-         UZYS+IOWSNcAdJy0N+kNOjezo2cyF2F18ZzgtaYqzqces4xhgK6q1EeQCdNoW6CExI8L
-         ilcWued0HGgoBcfsV/vQXC58JuinYv0iaxtxiV9vRfY+MCaTE/gEdzxiXwTE7sQzaNnk
-         nwVw==
-X-Gm-Message-State: APjAAAVAZI73L6JFnk1aRLpjvuV/CAJ4BABqKI26gNhwOXKiSqbd7hAk
-        GyUj7PaMu2RJc6BWqAxD3Y3r2nIzlos8VrVJcR4AOmqUuAI=
-X-Google-Smtp-Source: APXvYqxaQ/rW76Rpp5DfBAiCzkWHmV5FzYB1SRSbWqo08gJ62yizkR/UqId4EXjNeD5gLNa2lhDCNxH6197a8vbXJUY=
-X-Received: by 2002:ac8:768b:: with SMTP id g11mr19907262qtr.182.1565376260532;
- Fri, 09 Aug 2019 11:44:20 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kA5LMiIp35kf1OvXboDks3RjTBrzmyys+m0gU3GXqkY=;
+        b=i59Ryy60LXfLHPD14e5VQBmz1hNd5Y5569wOrUW9JHl+zv8UnoRwg0T4a0bNu8ptiK
+         oRhldgnzLh5Zkvsh79xwrfVBbVX0r8WQMSEFmD4MAMnWE5sXuxrKQ1RUxov2wuymw2X5
+         yDHkC6T7WWSwA8AAUqs8ouKsQ6ksLUrrcNixdc1g9o604QE9mY3lmcKcyC7tbZeoKPYt
+         c8PRk+aVeGRKRgZtF2vv67ByckF1JMSJn5dLG7vVqUL3ZqYAmK/6Ko86/oyn8eyGcHM+
+         BrTBOM+jEHbZ9T0U+UPyO1LUiF7RW7k4+mlXtXYxDE2ZMB6c5zdBO/bAfZmPHRpjLrJn
+         csrQ==
+X-Gm-Message-State: APjAAAXIewbC867gz9vYPdb9AjOENQbfn+NBIkM4tBKi0RykCPiANhdc
+        iVzEi6GYL1WvTLbAcYo6y6Xs
+X-Google-Smtp-Source: APXvYqx8Xc1qNXI4kyu3+M5Sl/Db8l+iqg6Tbc4dM4Y8QzmZEndaSqDq3bql3F92nRtZlLFfP8a5ig==
+X-Received: by 2002:a17:902:8203:: with SMTP id x3mr20514753pln.304.1565376359454;
+        Fri, 09 Aug 2019 11:45:59 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:6092:4e27:d84b:95b4:a65a:8749])
+        by smtp.gmail.com with ESMTPSA id w16sm121850348pfj.85.2019.08.09.11.45.50
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 09 Aug 2019 11:45:58 -0700 (PDT)
+Date:   Sat, 10 Aug 2019 00:15:46 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Helen Koike <helen.koike@collabora.com>
+Cc:     linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de,
+        jacob2.chen@rock-chips.com, jeffy.chen@rock-chips.com,
+        zyc@rock-chips.com, linux-kernel@vger.kernel.org,
+        tfiga@chromium.org, hans.verkuil@cisco.com,
+        laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com,
+        kernel@collabora.com, ezequiel@collabora.com,
+        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        zhengsq@rock-chips.com
+Subject: Re: [PATCH v8 00/14] Rockchip ISP1 Driver
+Message-ID: <20190809184546.GA29746@Mani-XPS-13-9360>
+References: <20190730184256.30338-1-helen.koike@collabora.com>
 MIME-Version: 1.0
-References: <000000000000e3e6d7058fb2c624@google.com>
-In-Reply-To: <000000000000e3e6d7058fb2c624@google.com>
-From:   Prashant Malani <pmalani@chromium.org>
-Date:   Fri, 9 Aug 2019 11:44:09 -0700
-Message-ID: <CACeCKafa5OkV=Mj0sBvr_oQeT5HBe9CRcT1g7BKqzECXv7ODvg@mail.gmail.com>
-Subject: Re: KASAN: use-after-free Read in usb_kill_urb
-To:     syzbot <syzbot+22ae4e3b9fcc8a5c153a@syzkaller.appspotmail.com>
-Cc:     andreyknvl@google.com, gregkh@linuxfoundation.org,
-        gustavo@embeddedor.com, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190730184256.30338-1-helen.koike@collabora.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(Sorry for the resend, I was in HTML mode earlier :S)
-Hi,
+Hi Helen,
 
-I'm trying to get up to speed on USB kernel code. Sounds like
-dev->intf should have been set to NULL for the error path in
-ld_usb_probe() ?
-
-https://elixir.bootlin.com/linux/latest/source/drivers/usb/misc/ldusb.c#L666
-
-
-On Fri, Aug 9, 2019 at 10:48 AM syzbot
-<syzbot+22ae4e3b9fcc8a5c153a@syzkaller.appspotmail.com> wrote:
->
+On Fri, Aug 09, 2019 at 03:40:02PM -0300, Helen Koike wrote:
 > Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    e96407b4 usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1799392c600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=cfa2c18fb6a8068e
-> dashboard link: https://syzkaller.appspot.com/bug?extid=22ae4e3b9fcc8a5c153a
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1134c802600000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13278c4a600000
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+22ae4e3b9fcc8a5c153a@syzkaller.appspotmail.com
->
-> ==================================================================
-> BUG: KASAN: use-after-free in atomic_read
-> include/asm-generic/atomic-instrumented.h:26 [inline]
-> BUG: KASAN: use-after-free in usb_kill_urb drivers/usb/core/urb.c:695
-> [inline]
-> BUG: KASAN: use-after-free in usb_kill_urb+0x24b/0x2c0
-> drivers/usb/core/urb.c:687
-> Read of size 4 at addr ffff8881d635b110 by task syz-executor672/1999
->
-> CPU: 1 PID: 1999 Comm: syz-executor672 Not tainted 5.3.0-rc2+ #25
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Call Trace:
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0xca/0x13e lib/dump_stack.c:113
->   print_address_description+0x6a/0x32c mm/kasan/report.c:351
->   __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
->   kasan_report+0xe/0x12 mm/kasan/common.c:612
->   check_memory_region_inline mm/kasan/generic.c:185 [inline]
->   check_memory_region+0x128/0x190 mm/kasan/generic.c:192
->   atomic_read include/asm-generic/atomic-instrumented.h:26 [inline]
->   usb_kill_urb drivers/usb/core/urb.c:695 [inline]
->   usb_kill_urb+0x24b/0x2c0 drivers/usb/core/urb.c:687
->   ld_usb_abort_transfers+0xb7/0x1d0 drivers/usb/misc/ldusb.c:196
->   ld_usb_release+0x19f/0x400 drivers/usb/misc/ldusb.c:406
->   __fput+0x2d7/0x840 fs/file_table.c:280
->   task_work_run+0x13f/0x1c0 kernel/task_work.c:113
->   exit_task_work include/linux/task_work.h:22 [inline]
->   do_exit+0x8ef/0x2c50 kernel/exit.c:878
->   do_group_exit+0x125/0x340 kernel/exit.c:982
->   __do_sys_exit_group kernel/exit.c:993 [inline]
->   __se_sys_exit_group kernel/exit.c:991 [inline]
->   __x64_sys_exit_group+0x3a/0x50 kernel/exit.c:991
->   do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x440418
-> Code: 00 00 be 3c 00 00 00 eb 19 66 0f 1f 84 00 00 00 00 00 48 89 d7 89 f0
-> 0f 05 48 3d 00 f0 ff ff 77 21 f4 48 89 d7 44 89 c0 0f 05 <48> 3d 00 f0 ff
-> ff 76 e0 f7 d8 64 41 89 01 eb d8 0f 1f 84 00 00 00
-> RSP: 002b:00007ffe884abf88 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
-> RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000440418
-> RDX: 0000000000000000 RSI: 000000000000003c RDI: 0000000000000000
-> RBP: 00000000004bff50 R08: 00000000000000e7 R09: ffffffffffffffd0
-> R10: 0000000000000064 R11: 0000000000000246 R12: 0000000000000001
-> R13: 00000000006d2180 R14: 0000000000000000 R15: 0000000000000000
->
-> Allocated by task 22:
->   save_stack+0x1b/0x80 mm/kasan/common.c:69
->   set_track mm/kasan/common.c:77 [inline]
->   __kasan_kmalloc mm/kasan/common.c:487 [inline]
->   __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:460
->   kmalloc include/linux/slab.h:557 [inline]
->   usb_alloc_urb+0x65/0xb0 drivers/usb/core/urb.c:73
->   ld_usb_probe+0x3e1/0xa65 drivers/usb/misc/ldusb.c:708
->   usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
->   really_probe+0x281/0x650 drivers/base/dd.c:548
->   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
->   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
->   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
->   __device_attach+0x217/0x360 drivers/base/dd.c:882
->   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
->   device_add+0xae6/0x16f0 drivers/base/core.c:2114
->   usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
->   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
->   usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
->   really_probe+0x281/0x650 drivers/base/dd.c:548
->   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
->   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
->   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
->   __device_attach+0x217/0x360 drivers/base/dd.c:882
->   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
->   device_add+0xae6/0x16f0 drivers/base/core.c:2114
->   usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
->   hub_port_connect drivers/usb/core/hub.c:5098 [inline]
->   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
->   port_event drivers/usb/core/hub.c:5359 [inline]
->   hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
->   process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
->   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
->   kthread+0x318/0x420 kernel/kthread.c:255
->   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
->
-> Freed by task 22:
->   save_stack+0x1b/0x80 mm/kasan/common.c:69
->   set_track mm/kasan/common.c:77 [inline]
->   __kasan_slab_free+0x130/0x180 mm/kasan/common.c:449
->   slab_free_hook mm/slub.c:1423 [inline]
->   slab_free_freelist_hook mm/slub.c:1470 [inline]
->   slab_free mm/slub.c:3012 [inline]
->   kfree+0xe4/0x2f0 mm/slub.c:3953
->   urb_destroy drivers/usb/core/urb.c:26 [inline]
->   kref_put include/linux/kref.h:65 [inline]
->   usb_free_urb.part.0+0x7a/0xc0 drivers/usb/core/urb.c:95
->   usb_free_urb+0x1b/0x30 drivers/usb/core/urb.c:94
->   ld_usb_delete+0x3f/0x130 drivers/usb/misc/ldusb.c:211
->   ld_usb_probe+0x728/0xa65 drivers/usb/misc/ldusb.c:744
->   usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
->   really_probe+0x281/0x650 drivers/base/dd.c:548
->   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
->   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
->   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
->   __device_attach+0x217/0x360 drivers/base/dd.c:882
->   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
->   device_add+0xae6/0x16f0 drivers/base/core.c:2114
->   usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
->   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
->   usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
->   really_probe+0x281/0x650 drivers/base/dd.c:548
->   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
->   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
->   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
->   __device_attach+0x217/0x360 drivers/base/dd.c:882
->   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
->   device_add+0xae6/0x16f0 drivers/base/core.c:2114
->   usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
->   hub_port_connect drivers/usb/core/hub.c:5098 [inline]
->   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
->   port_event drivers/usb/core/hub.c:5359 [inline]
->   hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
->   process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
->   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
->   kthread+0x318/0x420 kernel/kthread.c:255
->   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
->
-> The buggy address belongs to the object at ffff8881d635b100
->   which belongs to the cache kmalloc-192 of size 192
-> The buggy address is located 16 bytes inside of
->   192-byte region [ffff8881d635b100, ffff8881d635b1c0)
-> The buggy address belongs to the page:
-> page:ffffea000758d6c0 refcount:1 mapcount:0 mapping:ffff8881da002a00
-> index:0x0
-> flags: 0x200000000000200(slab)
-> raw: 0200000000000200 dead000000000100 dead000000000122 ffff8881da002a00
-> raw: 0000000000000000 0000000080100010 00000001ffffffff 0000000000000000
-> page dumped because: kasan: bad access detected
->
-> Memory state around the buggy address:
->   ffff8881d635b000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->   ffff8881d635b080: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
-> > ffff8881d635b100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->                           ^
->   ffff8881d635b180: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
->   ffff8881d635b200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ==================================================================
->
->
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
+> 
+> I'm re-sending a new version of ISP(Camera) v4l2 driver for rockchip
+> rk3399 SoC.
+> 
+> I didn't change much from the last version, just applying the
+> suggestions made in the previous one.
+> 
+> This patchset is also available at:
+> https://gitlab.collabora.com/koike/linux/tree/rockchip/isp/v8
+> 
+> Libcamera patched to work with this version:
+> https://gitlab.collabora.com/koike/libcamera
+> (also sent to the mailing list)
+> 
+> I tested on the rockpi 4 with a rpi v1.3 sensor and also with the
+> Scarlet Chromebook.
+> 
+
+I just tested this patchset on Rock960 but getting below error while
+configuring media link:
+
+root@linaro-alip:~# media-ctl -p /dev/media0 -v
+Opening media device /dev/media0
+Enumerating entities
+looking up device: 81:4
+looking up device: 81:0
+looking up device: 81:1
+looking up device: 81:2
+looking up device: 81:3
+looking up device: 81:5
+Found 6 entities
+Enumerating pads and links
+*** Error in `media-ctl': munmap_chunk(): invalid pointer: 0x01ce44d0 ***
+Aborted
+
+Here is the change I did for Rock960:
+https://pastebin.ubuntu.com/p/CmdcqJ7bsJ/
+
+Did I miss anything?
+
+Thanks,
+Mani
+
+> Known issues (same as in v7):
+> -------------
+> - Reloading the module doesn't work (there is some missing cleanup when
+> unloading)
+> - When capturing in bayer format, changing the size doesn't seem to
+> affect the image.
+> - crop needs more tests
+> - v4l2-compliance error:
+>         fail: v4l2-test-controls.cpp(824): subscribe event for control 'Image Processing Controls' failed
+> test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: FAIL
+> It seems that if controls are supported, v4l2-compliance says that
+> controls of type 'Image Processing Controls' are mandatory, is this
+> correct?
+> - It seems there are still some issues with interrupts, but I couldn't
+> isolate them yet.
+> 
+> Previous changelog:
+> -------------------
+> 
+> changes in V6:
+>   - add mipi txrx phy support
+>   - remove bool and enum from uapi header
+>   - add buf_prepare op
+>   - correct some spelling problems
+>   - return all queued buffers when starting stream failed
+> 
+> changes in V5: Sync with local changes,
+>   - fix the SP height limit
+>   - speed up the second stream capture
+>   - the second stream can't force sync for rsz when start/stop streaming
+>   - add frame id to param vb2 buf
+>   - enable luminance maximum threshold
+> 
+> changes in V4:
+>   - fix some bugs during development
+>   - move quantization settings to rkisp1 subdev
+>   - correct some spelling problems
+>   - describe ports in dt-binding documents
+> 
+> changes in V3:
+>   - add some comments
+>   - fix wrong use of v4l2_async_subdev_notifier_register
+>   - optimize two paths capture at a time
+>   - remove compose
+>   - re-struct headers
+>   - add a tmp wiki page: http://opensource.rock-chips.com/wiki_Rockchip-isp1
+> 
+> changes in V2:
+>   mipi-phy:
+>     - use async probing
+>     - make it be a child device of the GRF
+>   isp:
+>     - add dummy buffer
+>     - change the way to get bus configuration, which make it possible to
+>             add parallel sensor support in the future(without mipi-phy driver).
+> 
+> ------------------
+> 
+> Changes in v8:
+> - Add SPDX in the header
+> - Remove emacs configs
+> - Fix doc style
+> - Remove boiler plate license text
+> 
+> Changes in v7:
+> - s/IPU3/RK_ISP1
+> - s/correspond/corresponding
+> - s/use/uses
+> - s/docuemnt/document
+> - Fix checkpatch errors (lines over 80 and SPDX)
+> - Add TODO to improve docs
+> - Migrate dphy specific code from
+> drivers/media/platform/rockchip/isp1/mipi_dphy_sy.c
+> to drivers/phy/rockchip/phy-rockchip-dphy.c
+> - Drop support for rk3288
+> - Drop support for dphy txrx
+> - code styling and checkpatch fixes
+> - fixed warning because of unknown entity type
+> - fixed v4l2-compliance errors regarding rkisp1 formats, try formats
+> and default values
+> - fix typo riksp1/rkisp1
+> - redesign: remove mipi/csi subdevice, sensors connect directly to the
+> isp subdevice in the media topology now. As a consequence, remove the
+> hack in mipidphy_g_mbus_config() where information from the sensor was
+> being propagated through the topology.
+> - From the old dphy:
+>         * cache get_remote_sensor() in s_stream
+>         * use V4L2_CID_PIXEL_RATE instead of V4L2_CID_LINK_FREQ
+> - Replace stream state with a boolean
+> - code styling and checkpatch fixes
+> - fix stop_stream (return after calling stop, do not reenable the stream)
+> - fix rkisp1_isp_sd_get_selection when V4L2_SUBDEV_FORMAT_TRY is set
+> - fix get format in output (isp_sd->out_fmt.mbus_code was being ignored)
+> - s/intput/input
+> - remove #define sd_to_isp_sd(_sd), add a static inline as it will be
+> reused by the capture
+> - s/strlcpy/strscpy
+> - sort out the locks in isp stats
+> - code styling and checkpatch fixes
+> - s/strlcpy/strscpy
+> - s/strcpy/strscpy
+> - fix config lsc error
+> LSC data table size is 17x17, but when configuring data to ISP,
+> should be aligned to 18x17. That means every last data of last
+> line should be filled with 0, and not filled with the data of
+> next line.
+> - Update new ISP parameters immediately
+> For those sub modules that have shadow registers in core isp, the
+> new programing parameters would not be active if both
+> CIF_ISP_CTRL_ISP_CFG_UPD_PERMANENT and CFG_UPD are not set. Now
+> we configure CFG_UPD to force update the shadow registers when new
+> ISP parameters are configured.
+> - fix some ISP parameters config error
+> Some ISP parameter config functions may override the old enable
+> bit value, because the enable bits of these modules are in the
+> same registers with parameters. So we should save the old enable
+> bits firstly.
+> - code styling and checkpatch fixes
+> - s/strlcpy/strscpy
+> - Fix v4l2-compliance issues:
+>         * remove input ioctls
+> media api can be used to define the topology, this input api is not
+> required. Besides it, if an input is enumerated, v4l2-compliance is not
+> happy with G_FMT returning the default colorspace instead of something
+> more specific.
+>         * return the pixelformat to the userspace
+> G_/S_/TRY_ FORMAT should return a valid pixelformat to the user, even if
+> the user gave an invalid one
+>         * add missing default colorspace and ycbcr
+>         * fix wrong pixformat in mp_fmts[] table
+>         * add buf type check in s_/g_selection
+>         * queue_setup - check sizes
+>         * normalize bus_info name
+>         * fix field any v4l2-compliance -s complain - set field none
+>         when streaming
+> - Fix compiling error: s/vidioc_enum_fmt_vid_cap_mplane/vidioc_enum_fmt_vid_cap
+> - Replace stream state with a boolean
+> The rkisp1_state enum consists only of 3 entries, where 1 is completely
+> unused and the other two respectively mean not streaming or streaming.
+> Replace it with a boolean called "streaming".
+> - Simplify MI interrupt handling
+> Rather than adding unnecessary indirection, just use stream index to
+> handle MI interrupt enable/disable/clear, since the stream index matches
+> the order of bits now, thanks to previous patch. While at it, remove
+> some dead code.
+> - code styling and checkpatch fixes
+> - add link_validate: don't allow a link with bayer/non-bayer mismatch
+> - VIDEO_ROCKCHIP_ISP1 selects VIDEOBUF2_VMALLOC
+> - add PHY_ROCKCHIP_DPHY as a dependency for VIDEO_ROCKCHIP_ISP1
+> - Fix compilation and runtime errors due to bitrotting
+> The code has bit-rotten since March 2018, fix compilation errors.
+> The new V4L2 async notifier API requires notifiers to be initialized by
+> a call to v4l2_async_notifier_init() before being used, do so.
+> - Add missing module device table
+> - use clk_bulk framework
+> - add missing notifiers cleanups
+> - s/strlcpy/strscpy
+> - normalize bus_info name
+> - fix s_stream error path, stream_cnt wans't being decremented properly
+> - use devm_platform_ioremap_resource() helper
+> - s/deice/device
+> - redesign: remove mipi/csi subdevice, sensors connect directly to the
+> isp subdevice in the media topology now.
+> - remove "saved_state" member from rkisp1_stream struct
+> - Reverse the order of MIs
+> - Simplify MI interrupt handling
+> Rather than adding unnecessary indirection, just use stream index to
+> handle MI interrupt enable/disable/clear, since the stream index matches
+> the order of bits now, thanks to previous patch. While at it, remove
+> some dead code.
+> - code styling and checkpatch fixes
+> - update document with new design and tested example
+> - updated doc with new design and tested example
+> - add phy properties
+> - add ports
+> - add phy-cells
+> 
+> Helen Koike (1):
+>   MAINTAINERS: add entry for Rockchip ISP1 driver
+> 
+> Jacob Chen (9):
+>   media: doc: add document for rkisp1 meta buffer format
+>   media: rkisp1: add Rockchip MIPI Synopsys DPHY driver
+>   media: rkisp1: add Rockchip ISP1 subdev driver
+>   media: rkisp1: add ISP1 statistics driver
+>   media: rkisp1: add ISP1 params driver
+>   media: rkisp1: add capture device driver
+>   media: rkisp1: add rockchip isp1 core driver
+>   dt-bindings: Document the Rockchip ISP1 bindings
+>   dt-bindings: Document the Rockchip MIPI RX D-PHY bindings
+> 
+> Jeffy Chen (1):
+>   media: rkisp1: Add user space ABI definitions
+> 
+> Shunqian Zheng (3):
+>   media: videodev2.h, v4l2-ioctl: add rkisp1 meta buffer format
+>   arm64: dts: rockchip: add isp0 node for rk3399
+>   arm64: dts: rockchip: add rx0 mipi-phy for rk3399
+> 
+>  .../bindings/media/rockchip-isp1.txt          |   71 +
+>  .../bindings/media/rockchip-mipi-dphy.txt     |   38 +
+>  Documentation/media/uapi/v4l/meta-formats.rst |    2 +
+>  .../uapi/v4l/pixfmt-meta-rkisp1-params.rst    |   23 +
+>  .../uapi/v4l/pixfmt-meta-rkisp1-stat.rst      |   22 +
+>  MAINTAINERS                                   |    8 +
+>  arch/arm64/boot/dts/rockchip/rk3399.dtsi      |   36 +
+>  drivers/media/platform/Kconfig                |   12 +
+>  drivers/media/platform/Makefile               |    1 +
+>  drivers/media/platform/rockchip/isp1/Makefile |    7 +
+>  .../media/platform/rockchip/isp1/capture.c    | 1754 +++++++++++++++++
+>  .../media/platform/rockchip/isp1/capture.h    |  164 ++
+>  drivers/media/platform/rockchip/isp1/common.h |  101 +
+>  drivers/media/platform/rockchip/isp1/dev.c    |  675 +++++++
+>  drivers/media/platform/rockchip/isp1/dev.h    |   97 +
+>  .../media/platform/rockchip/isp1/isp_params.c | 1604 +++++++++++++++
+>  .../media/platform/rockchip/isp1/isp_params.h |   50 +
+>  .../media/platform/rockchip/isp1/isp_stats.c  |  508 +++++
+>  .../media/platform/rockchip/isp1/isp_stats.h  |   60 +
+>  drivers/media/platform/rockchip/isp1/regs.c   |  223 +++
+>  drivers/media/platform/rockchip/isp1/regs.h   | 1525 ++++++++++++++
+>  drivers/media/platform/rockchip/isp1/rkisp1.c | 1286 ++++++++++++
+>  drivers/media/platform/rockchip/isp1/rkisp1.h |  111 ++
+>  drivers/media/v4l2-core/v4l2-ioctl.c          |    2 +
+>  drivers/phy/rockchip/Kconfig                  |    8 +
+>  drivers/phy/rockchip/Makefile                 |    1 +
+>  drivers/phy/rockchip/phy-rockchip-dphy.c      |  408 ++++
+>  include/uapi/linux/rkisp1-config.h            |  816 ++++++++
+>  include/uapi/linux/videodev2.h                |    4 +
+>  29 files changed, 9617 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/rockchip-isp1.txt
+>  create mode 100644 Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt
+>  create mode 100644 Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
+>  create mode 100644 Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
+>  create mode 100644 drivers/media/platform/rockchip/isp1/Makefile
+>  create mode 100644 drivers/media/platform/rockchip/isp1/capture.c
+>  create mode 100644 drivers/media/platform/rockchip/isp1/capture.h
+>  create mode 100644 drivers/media/platform/rockchip/isp1/common.h
+>  create mode 100644 drivers/media/platform/rockchip/isp1/dev.c
+>  create mode 100644 drivers/media/platform/rockchip/isp1/dev.h
+>  create mode 100644 drivers/media/platform/rockchip/isp1/isp_params.c
+>  create mode 100644 drivers/media/platform/rockchip/isp1/isp_params.h
+>  create mode 100644 drivers/media/platform/rockchip/isp1/isp_stats.c
+>  create mode 100644 drivers/media/platform/rockchip/isp1/isp_stats.h
+>  create mode 100644 drivers/media/platform/rockchip/isp1/regs.c
+>  create mode 100644 drivers/media/platform/rockchip/isp1/regs.h
+>  create mode 100644 drivers/media/platform/rockchip/isp1/rkisp1.c
+>  create mode 100644 drivers/media/platform/rockchip/isp1/rkisp1.h
+>  create mode 100644 drivers/phy/rockchip/phy-rockchip-dphy.c
+>  create mode 100644 include/uapi/linux/rkisp1-config.h
+> 
+> -- 
+> 2.22.0
+> 
+> 
+> -- 
+> To unsubscribe, send mail to kernel-unsubscribe@lists.collabora.co.uk.
+> 
