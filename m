@@ -2,125 +2,177 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3E2C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 03:16:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B36E8C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 03:16:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF35A2171F
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 03:16:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 885DA2171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 03:16:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="D8/MqC/o"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ad2T/wcr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404959AbfHIDQU (ORCPT
+        id S2405021AbfHIDQx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 8 Aug 2019 23:16:20 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:35225 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729307AbfHIDQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 8 Aug 2019 23:16:20 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 464Vkn2z53z9sNF;
-        Fri,  9 Aug 2019 13:16:17 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1565320577;
-        bh=j620e+LUIbCLV8iTUjI4kEqH6+/8f678kfhUrESWVT4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=D8/MqC/oXJ/8wJxtMtYn66kU8aHXgKLIp+Bg8yYMi3ThX2qx0XfOuXN7PUdNVZHit
-         bIjIrY+0ro6RXYjemXmnivnE3ykDjUX9oMqth5goMFMLaUDlO9bixdOnRkcm1Lsp1V
-         Zt6YIR5kMpOnP6Xm1++yCip/IXXg2mr0FBe8gtwL3FRoR6UkdoTH2kDJ0/UBQLAeX+
-         d9hWtzhQ31G1fVgyRvx+zhqxFl/f0eFaXaf12MT9nogPqOr0S8RFmtl5lURQ3sye8C
-         w5tb3Wi9DGpW4VyXsKXulxucC2PgxcSoo4Ga0RQekphRAAcVzm6Z1CULv6e7poz6mq
-         ynpbSpAoaHmwg==
-Date:   Fri, 9 Aug 2019 13:16:16 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Cezary Rojewski <cezary.rojewski@intel.com>
-Subject: linux-next: manual merge of the sound-asoc tree with the sound tree
-Message-ID: <20190809131616.629cc15c@canb.auug.org.au>
+        Thu, 8 Aug 2019 23:16:53 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:45773 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729307AbfHIDQx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 8 Aug 2019 23:16:53 -0400
+Received: by mail-lj1-f196.google.com with SMTP id t3so2241613ljj.12
+        for <linux-kernel@vger.kernel.org>; Thu, 08 Aug 2019 20:16:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ap+UfHyCcDfWJ28GS6VDod2lJYk3U20UyDyDSk+YgNU=;
+        b=Ad2T/wcrh/0oEXeHX+SN5YRB9puIjAlohZaaMUIvhceDwH3JF8ZKIjoCAg9lldYX2W
+         8/Ir7mgcvabwfL5bs/7Kd83XFlYluOyFuF4VUskly3mm3AGMQSOXun8db9EFbx2XDvzv
+         uIY5FoDXcOvZnGIcA3w8stkT7c7kAFcQ2qMzHV7/SQvTtidvwSgx2N931zW59AOUV9lJ
+         NN3hgAlhFkwqiRheXQWmvLpGsrvvaZmB2TNy6P4ZjRHbdGTq5El1k6gCf+fMi75t2t9w
+         aGKDwwbfBsyrVP8NN16pDOpWEn91qhDQvyXFQEff51es5PR+6qkSTeJBIEBY8Z0WMsd7
+         uKLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ap+UfHyCcDfWJ28GS6VDod2lJYk3U20UyDyDSk+YgNU=;
+        b=lEkQ9HHDh+G/cJIXgfzvjH3ykd6hNqaQdgTHJ8t0RH/Rle6/AkQhKFc1LRq/mOl0ZS
+         INx6eg3xePND6T58uaLuR+UC3M/bBO4lwEmi+cge3lTXhgqU3P7Dx1KWBmqsmxWS94yQ
+         cm+3fxPQJmzqeem0g7fiOJ5RmkUUzTCXr+Thd65/4JSbF/lJZVMdNKHDatG6TGNXkkOK
+         VBqoWbpiW5t+lhiA+s81TVHPecMzwnQdB7VIQptKEgKqG5Dedh6MZMKYrjw4ZMkUrLd6
+         72FSHH0V00c1Ybgb1Zdin9Dmw44tv7fuxO71rjreQy3IoFjlGkwr35tQFlWpFNUrXc09
+         SDjg==
+X-Gm-Message-State: APjAAAVentbLUg9o/dTU8OplTqtNjySxkH9BiNTKludaCeRi5AJQjAtw
+        yiqdjOPZg0CO1dfi05FQT4V8cweuv33lynizxRyUDQ==
+X-Google-Smtp-Source: APXvYqxlp5q6mYbtSqoReypwJRxhrw81dFQn4P8NzUodkeL8WzZVOx2GcgcoAVn2lbSsALhesp4E3fB6eHfv29F3oj0=
+X-Received: by 2002:a2e:9b4a:: with SMTP id o10mr10140284ljj.137.1565320610979;
+ Thu, 08 Aug 2019 20:16:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/M1DZ5ohMWwKGImFhgO6nF7Z";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20190808190453.582417307@linuxfoundation.org>
+In-Reply-To: <20190808190453.582417307@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 9 Aug 2019 08:46:38 +0530
+Message-ID: <CA+G9fYtkahD0+otEc_+-nA1hA6o7euOCHbarSZQJWgUyx5HyyA@mail.gmail.com>
+Subject: Re: [PATCH 4.14 00/33] 4.14.138-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/M1DZ5ohMWwKGImFhgO6nF7Z
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Fri, 9 Aug 2019 at 00:41, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.14.138 release.
+> There are 33 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat 10 Aug 2019 07:03:19 PM UTC.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.14.138-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.14.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Hi all,
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-Today's linux-next merge of the sound-asoc tree (yesterday' version)
-got a conflict in:
+Summary
+------------------------------------------------------------------------
 
-  sound/soc/intel/skylake/skl.c
+kernel: 4.14.138-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.14.y
+git commit: 4ec3ef9505a33da8c993347fc2e178b46356bb92
+git describe: v4.14.136-94-g4ec3ef9505a3
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
+ild/v4.14.136-94-g4ec3ef9505a3
 
-between commit:
 
-  19abfefd4c76 ("ALSA: hda: Direct MMIO accesses")
+No regressions (compared to build v4.14.136)
 
-from the sound tree and commit:
 
-  bcc2a2dc3ba8 ("ASoC: Intel: Skylake: Merge skl_sst and skl into skl_dev s=
-truct")
+No fixes (compared to build v4.14.136)
 
-from the sound-asoc tree.
+Ran 23722 total tests in the following environments and test suites.
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* ltp-containers-tests
+* network-basic-tests
+* ltp-open-posix-tests
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+* ssuite
 
 --=20
-Cheers,
-Stephen Rothwell
-
-diff --cc sound/soc/intel/skylake/skl.c
-index 239348b0596b,6be25e617c21..000000000000
---- a/sound/soc/intel/skylake/skl.c
-+++ b/sound/soc/intel/skylake/skl.c
-@@@ -858,10 -854,11 +858,10 @@@ out_err
-   * constructor
-   */
-  static int skl_create(struct pci_dev *pci,
-- 		      struct skl **rskl)
- -		      const struct hdac_io_ops *io_ops,
-+ 		      struct skl_dev **rskl)
-  {
-  	struct hdac_ext_bus_ops *ext_ops =3D NULL;
-- 	struct skl *skl;
-+ 	struct skl_dev *skl;
-  	struct hdac_bus *bus;
-  	struct hda_bus *hbus;
-  	int err;
-
---Sig_/M1DZ5ohMWwKGImFhgO6nF7Z
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1M5YAACgkQAVBC80lX
-0GxnoAf/VgNtlVtvtHULWWeW4uCZy1eON68np/HDTEUIS5Fgi/Uf5tdmG8dNsjcr
-REdphwIwdictk8P6h2k4BDKBrf7moQbdrmWl5bZR+peS9Y1a07NjtBMrcnA+AsGW
-lu2RzzPP4rMJQqTdKl+VnEMjQr0A4D8Ueuath0T93C2JREHZvP7WXUcSjl6WQLZS
-YuBkvmSKb51iGJ3hY7canznUu3GFvAjyJfHHh1EdNhn3OMwMMSUU0laE2RFeUK0y
-5IZlW/PnU1fz9Gd71OZx4t1OawKEMjioEL3d+m8KfGtHFK7F36j3l20yPUxfpSUx
-a8MXLfVrs+tm5a2YAPWQjJLHWwVv6g==
-=4x22
------END PGP SIGNATURE-----
-
---Sig_/M1DZ5ohMWwKGImFhgO6nF7Z--
+Linaro LKFT
+https://lkft.linaro.org
