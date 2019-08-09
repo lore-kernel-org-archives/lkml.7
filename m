@@ -2,120 +2,73 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C96C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 10:37:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F49DC433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 10:44:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 406892086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 10:37:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12E952086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 10:44:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406181AbfHIKhN (ORCPT
+        id S2406111AbfHIKoT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 06:37:13 -0400
-Received: from foss.arm.com ([217.140.110.172]:45238 "EHLO foss.arm.com"
+        Fri, 9 Aug 2019 06:44:19 -0400
+Received: from mga01.intel.com ([192.55.52.88]:6052 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726091AbfHIKhM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 06:37:12 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E35191596;
-        Fri,  9 Aug 2019 03:37:11 -0700 (PDT)
-Received: from queper01-lin (queper01-lin.cambridge.arm.com [10.1.195.48])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D64833F575;
-        Fri,  9 Aug 2019 03:37:10 -0700 (PDT)
-Date:   Fri, 9 Aug 2019 11:37:06 +0100
-From:   Quentin Perret <quentin.perret@arm.com>
-To:     Douglas Raillard <douglas.raillard@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-pm@vger.kernel.org, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, agross@kernel.org
-Subject: Re: [PATCH 1/2] cpufreq: drivers: Enable frequency invariance in
- qcom-cpufreq-hw
-Message-ID: <20190809103704.fatayhzso2b62fmx@queper01-lin>
-References: <20190808131857.21082-1-douglas.raillard@arm.com>
- <20190808173230.53ddupihjlr6uvne@queper01-lin>
- <14762a81-a81d-d05f-b42a-495dacb28168@arm.com>
+        id S1726140AbfHIKoT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 06:44:19 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Aug 2019 03:44:19 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,364,1559545200"; 
+   d="scan'208";a="176788402"
+Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
+  by fmsmga007.fm.intel.com with ESMTP; 09 Aug 2019 03:44:16 -0700
+From:   Felipe Balbi <felipe.balbi@linux.intel.com>
+To:     Roger Quadros <rogerq@ti.com>, Pawel Laszczak <pawell@cadence.com>,
+        Pavel Machek <pavel@denx.de>
+Cc:     "gregkh\@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-usb\@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jbergsagel\@ti.com" <jbergsagel@ti.com>,
+        "nsekhar\@ti.com" <nsekhar@ti.com>, "nm\@ti.com" <nm@ti.com>,
+        Suresh Punnoose <sureshp@cadence.com>,
+        Jayshri Dajiram Pawar <jpawar@cadence.com>,
+        Rahul Kumar <kurahul@cadence.com>,
+        Anil Joy Varughese <aniljoy@cadence.com>
+Subject: Re: [PATCH v10 0/6] Introduced new Cadence USBSS DRD Driver.
+In-Reply-To: <3fce07ee-5e69-58a9-58f6-750f60b66296@ti.com>
+References: <1563733939-21214-1-git-send-email-pawell@cadence.com> <20190721190335.GA19831@xo-6d-61-c0.localdomain> <BYAPR07MB470904ACCD1ED91B10BB6BEFDDC40@BYAPR07MB4709.namprd07.prod.outlook.com> <20190722114839.GA10515@kroah.com> <20190722115644.GA12069@amd> <20190722210021.GA25235@amd> <BYAPR07MB470966850323EE3003B3097ADDC70@BYAPR07MB4709.namprd07.prod.outlook.com> <93b4a702-227b-0410-a414-76873088ad72@ti.com> <BYAPR07MB47095895491CFD211EE9E051DDD70@BYAPR07MB4709.namprd07.prod.outlook.com> <3fce07ee-5e69-58a9-58f6-750f60b66296@ti.com>
+Date:   Fri, 09 Aug 2019 13:44:15 +0300
+Message-ID: <87wofmty80.fsf@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <14762a81-a81d-d05f-b42a-495dacb28168@arm.com>
-User-Agent: NeoMutt/20171215
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday 09 Aug 2019 at 11:16:12 (+0100), Douglas Raillard wrote:
-> Hi Quentin,
-> 
-> On 8/8/19 6:32 PM, Quentin Perret wrote:
-> > Hi Douglas,
-> > 
-> > On Thursday 08 Aug 2019 at 14:18:57 (+0100), Douglas RAILLARD wrote:
-> > > Add calls to arch_set_freq_scale() in qcom-cpufreq-hw driver to enable
-> > > frequency invariance.
-> > 
-> > Is there a patch 2/2 ?
-> 
-> That slipped through when format-patch-ing unrelated commits, there is no 2nd patch.
-> 
-> > > 
-> > > Signed-off-by: Douglas RAILLARD <douglas.raillard@arm.com>
-> > > ---
-> > >   drivers/cpufreq/qcom-cpufreq-hw.c | 10 +++++++++-
-> > >   1 file changed, 9 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-cpufreq-hw.c
-> > > index 4b0b50403901..3bd3b8b268d9 100644
-> > > --- a/drivers/cpufreq/qcom-cpufreq-hw.c
-> > > +++ b/drivers/cpufreq/qcom-cpufreq-hw.c
-> > > @@ -34,9 +34,12 @@ static int qcom_cpufreq_hw_target_index(struct cpufreq_policy *policy,
-> > >   					unsigned int index)
-> > >   {
-> > >   	void __iomem *perf_state_reg = policy->driver_data;
-> > > +	unsigned long freq = policy->freq_table[index].frequency;
-> > >   	writel_relaxed(index, perf_state_reg);
-> > > +	arch_set_freq_scale(policy->related_cpus, freq,
-> > > +			    policy->cpuinfo.max_freq);
-> > >   	return 0;
-> > >   }
-> > > @@ -63,6 +66,7 @@ static unsigned int qcom_cpufreq_hw_fast_switch(struct cpufreq_policy *policy,
-> > >   {
-> > >   	void __iomem *perf_state_reg = policy->driver_data;
-> > >   	int index;
-> > > +	unsigned long freq;
-> > >   	index = policy->cached_resolved_idx;
-> > >   	if (index < 0)
-> > > @@ -70,7 +74,11 @@ static unsigned int qcom_cpufreq_hw_fast_switch(struct cpufreq_policy *policy,
-> > >   	writel_relaxed(index, perf_state_reg);
-> > > -	return policy->freq_table[index].frequency;
-> > > +	freq = policy->freq_table[index].frequency;
-> > > +	arch_set_freq_scale(policy->related_cpus, freq,
-> > > +			    policy->cpuinfo.max_freq);
-> > > +
-> > > +	return freq;
-> > >   }
-> > >   static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
-> > > -- 
-> > > 2.22.0
-> > 
-> > Reviewed-by: Quentin Perret <quentin.perret@arm.com>
-> > 
-> > Thanks,
-> > Quentin
-> > 
-> 
-> Thanks,
-> Douglas
 
-Actually, one nit, the $subject should probably be formatted as:
+Hi,
 
-  cpufreq: qcom-hw: invoke frequency-invariance setter function
+Roger Quadros <rogerq@ti.com> writes:
+>> It allows me for testing some functionality using only single board 
+>> and even with lacking right cable for proper otg detection. 
+>> 
+>> So, removing this can cause that testing some functionality 
+>> will  be limited on my boards.
+>> 
+>> If you rely want to remove this, maybe we could do this 
+>> after putting this driver to kernel ?.  
+>
+> I don't want you to remove the user based role change functionality.
+> I'm just asking to rely on role switch framework for that and not debugfs.
 
-for consistency with other patches in this area.
+I agree with Roger. Use role switch framework for production, not debugfs.
 
-Thanks,
-Quentin
+-- 
+balbi
