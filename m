@@ -2,132 +2,142 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E22C31E40
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 21:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89752C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 21:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51E2F20B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 21:50:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5958C2089E
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 21:56:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="GvjdEwV3";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="yEXkWiFl"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kQdIpVEb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726840AbfHIVux (ORCPT
+        id S1728120AbfHIV4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 17:50:53 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:55411 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726022AbfHIVux (ORCPT
+        Fri, 9 Aug 2019 17:56:12 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:41911 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbfHIV4L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 17:50:53 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 0FBA6217F;
-        Fri,  9 Aug 2019 17:50:52 -0400 (EDT)
-Received: from imap36 ([10.202.2.86])
-  by compute4.internal (MEProxy); Fri, 09 Aug 2019 17:50:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm1; bh=FDGxDXPN2SUWSByp360DMt/uwwjigIP
-        j7nZHao0b4BQ=; b=GvjdEwV3qRM4CESVG0xWRLWI+29GB62ehpRrK+x3nuOIi5a
-        mHPCzGYWfwN9TkAsQZ4XvUZTaStNK1mv36vHvcjITLHY0LlsZAZeVDUjok8o/oQq
-        y0rH4YITtaQ/mrv8oLnsqUIRKb3k8YkCjsxsG8WolCtNo08JfH0XUE+OeT9mZz4j
-        R8eqbSyrUG1uIbJ5tY/kZC7wtOwGZZJ//Eplln7vVIOLKK2H8q2V6zesXW0NbYRI
-        dlbfRjM7CJEdnhEeom2oqjZKAmplN+TzBfvqQ5pOcfmNz9SykzWEeDhlG3ksvroG
-        gMn917unXh3lkwxOyWsu7lvZScEp9eQr7D1kQAQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=FDGxDX
-        PN2SUWSByp360DMt/uwwjigIPj7nZHao0b4BQ=; b=yEXkWiFliuHufd+e/NWJ+C
-        Kq+eZ7OyUsY+ojUw77LB/IztX4BmPuyQcTpILsfqoGEIxhm+sk6o/F/Tl1mzkkoh
-        +FwcV0KLTwWY2Pq1o2oQJg1myRpD2wJJ4SRgJI8InfpoX2yKLwFXYbH9PnYAaX6f
-        AOMlPq3LmQYN/6M5k3IbUZ7tcl5Toao71ahIat/ZawnoTyMUI5Q/Q1bjGJnyc44a
-        B+hl5u2aTXTVdb/NRBFvdsHBs15EDzYHW9JxMt9+o/srORGBb2ARlKoMt3Ec09Rt
-        8Yt5Y7UBL3hHmo/Y0BLyxrrLLwYAhKXfkF66u6QH7/8boKblqXH6ZSD6575/ZDvg
-        ==
-X-ME-Sender: <xms:uepNXUBa663m5lMWIokKDpec0gV4YYlA9CMZSojoFMunsI1dUEm-rw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddruddukedgtdehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    gfrhhlucfvnfffucdlfeehmdenucfjughrpefofgggkfgjfhffhffvufgtsehttdertder
-    reejnecuhfhrohhmpedfffgrnhhivghlucgiuhdfuceougiguhesugiguhhuuhdrgiihii
-    eqnecurfgrrhgrmhepmhgrihhlfhhrohhmpegugihusegugihuuhhurdighiiinecuvehl
-    uhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:uepNXWPC0mlX1bW0ZGEYU8i0AFWf58ThG1pB7G1JlZpZjxHRdxr-hg>
-    <xmx:uepNXSb8f8nO-pgfI8mr3vPoAoqoWkKdYbFd4JPEPdxNKuL_xvthdg>
-    <xmx:uepNXdM7YU35B3D3M5qQ3ek6f6kU8Uh9quxLTwTAdbVMhrSxdpj8Nw>
-    <xmx:vOpNXeFCwkHBQIthWTWG25US4NNj6wnIApLqLX81bLvGrnQGSE-BkA>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 0446B12200A2; Fri,  9 Aug 2019 17:50:48 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.6-809-g8e5c451-fmstable-20190809v1
-Mime-Version: 1.0
-Message-Id: <3429be0c-1a10-452e-a566-bf02db72f5ba@www.fastmail.com>
-In-Reply-To: <20190809214642.12078-1-dxu@dxuuu.xyz>
-References: <20190809214642.12078-1-dxu@dxuuu.xyz>
-Date:   Fri, 09 Aug 2019 14:50:47 -0700
-From:   "Daniel Xu" <dxu@dxuuu.xyz>
-To:     "Song Liu" <songliubraving@fb.com>, "Yonghong Song" <yhs@fb.com>,
-        "Andrii Nakryiko" <andriin@fb.com>, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org
-Cc:     ast@fb.com, alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, linux-kernel@vger.kernel.org
-Subject: =?UTF-8?Q?Re:_[PATCH_v2_bpf-next_0/4]_tracing/probe:_Add_PERF=5FEVENT=5F?=
- =?UTF-8?Q?IOC=5FQUERY=5FPROBE?=
-Content-Type: text/plain
+        Fri, 9 Aug 2019 17:56:11 -0400
+Received: by mail-pg1-f196.google.com with SMTP id x15so36133869pgg.8;
+        Fri, 09 Aug 2019 14:56:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=iF8XDfjf7OAYK6LGbHjkXf1kEPXCCuRVGlqPI2lfvf4=;
+        b=kQdIpVEb36HQzmYc1mG+FFRNAWSm8ZMY2r71qKqpR3j0RDWHumGqsKzVButPqdcaKA
+         wqOSy6HXElsFnQczjlnC6J8KVJkGCE73DDJ00ftNfhmSxIJbpl77wor6QvXqpXZoFTKN
+         HAytglT+YJniUV5hSreLG2wh4Jhc4ydruLXQ/l6MFLAfLNpz6fbQoBf+0AEO/NBBEO5Q
+         paAR4GhyUDlAYhi+40b3KjBnZ7tOdiS8ZfEnf6iml/8PAr27aOWDagw/6lRVuMudoIf5
+         LKqPpalwAtbdG/R1KtXdYGyx2vQxw4FRzhBjx+2zRwcXVKuSTNJ6HkJVGNz9xmp7KIz1
+         2u2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=iF8XDfjf7OAYK6LGbHjkXf1kEPXCCuRVGlqPI2lfvf4=;
+        b=rcyYMo3+05SqvukoP6uvONqOxNcCbqKGCJwBcKLB0iGUctOPwwP2FVx+Pg+jQ8tWtk
+         gbmgiQkRbzgJ7J9v2Zkvc5xYy2hVIOraJsyxCkQkrTCEOO6KkxoLNZCKIIp3kTBQAH1c
+         h2+55VQ0zZetPIzjki9+Iiho7w1cLK3bU0IRLVY5d/dTXgH0mfBJF6NL5ekYWcVQXQiv
+         AaoSLzbTzSIPwQjd61qprL8QOvwZPj7bMvbdJ0BHOnn8RaLMpxtsxAO8B/kz1C7aJpNz
+         Z0vUpwL/yASJ5RiURwGXvfCfJNK5NrCzkgbwEmMxVu4o43FLKX/V2XTf7lLqoq9rNmg6
+         q4Kw==
+X-Gm-Message-State: APjAAAWxGl5tZwbSelZvqMoNpQpZBXDKcnxdGabtbYc86UTyDrCFngDl
+        LN9SuClqAQtt0kUvds4Edb/Fg7LI
+X-Google-Smtp-Source: APXvYqyfsm+jqRUZiXsW83kcSpTAuQb8JUXdteAu+1jKe417GHvittc8WO+BS+ESv4GBJPQ+5BD5vw==
+X-Received: by 2002:a65:4341:: with SMTP id k1mr19356600pgq.153.1565387770900;
+        Fri, 09 Aug 2019 14:56:10 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 185sm99336215pfd.125.2019.08.09.14.56.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 09 Aug 2019 14:56:09 -0700 (PDT)
+Date:   Fri, 9 Aug 2019 14:56:08 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Rich Felker <dalias@libc.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sh: Drop -Werror from kernel Makefile
+Message-ID: <20190809215608.GA11065@roeck-us.net>
+References: <1564971263-21562-1-git-send-email-linux@roeck-us.net>
+ <20190805032441.GO9017@brightrain.aerifal.cx>
+ <20190809195630.GA15606@roeck-us.net>
+ <5f26547f-b48e-4b9f-b8ef-858283915e3d@embeddedor.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5f26547f-b48e-4b9f-b8ef-858283915e3d@embeddedor.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 9, 2019, at 2:47 PM, Daniel Xu wrote:
-> It's useful to know [uk]probe's nmissed and nhit stats. For example with
-> tracing tools, it's important to know when events may have been lost.
-> debugfs currently exposes a control file to get this information, but
-> it is not compatible with probes registered with the perf API.
+On Fri, Aug 09, 2019 at 04:36:01PM -0500, Gustavo A. R. Silva wrote:
+> Hi Guenter,
 > 
-> While bpf programs may be able to manually count nhit, there is no way
-> to gather nmissed. In other words, it is currently not possible to
-> retrieve information about FD-based probes.
+> On 8/9/19 2:56 PM, Guenter Roeck wrote:
+> > On Sun, Aug 04, 2019 at 11:24:41PM -0400, Rich Felker wrote:
+> >> On Sun, Aug 04, 2019 at 07:14:23PM -0700, Guenter Roeck wrote:
+> >>> Since commit a035d552a93b ("Makefile: Globally enable fall-through
+> >>> warning"), all sh builds fail with errors such as
+> >>>
+> >>> arch/sh/kernel/disassemble.c: In function 'print_sh_insn':
+> >>> arch/sh/kernel/disassemble.c:478:8: error: this statement may fall through
+> >>>
+> >>> Since this effectively disables all build and boot tests for the
+> >>> architecture, let's drop -Werror from the sh kernel Makefile until
+> >>> the problems are fixed.
+> >>>
+> >>> Cc: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> >>> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+> >>
+> >> Acked-by: Rich Felker <dalias@libc.org>
+> >>
+> > Any chance to get this or a similar patch applied soon ? All sh builds
+> > in mainline and -next are still broken.
+> > 
 > 
-> This patch adds a new ioctl that lets users query nmissed (as well as
-> nhit for completeness). We currently only add support for [uk]probes
-> but leave the possibility open for other probes like tracepoint.
+> If no one cares, I can add it to my tree and include it in my pull-request
+> for 5.3-rc4.
 > 
-> v1 -> v2:
-> - More descriptive cover letter
-> - Make API more generic and support uprobes as well
-> - Use casters/getters for libbpf instead of single getter
-> - Fix typos
-> - Remove size field from ioctl struct
-> - Split out libbpf.h sync to tools dir to separate commit
+> I would just need your Tested-by.
 > 
-> Daniel Xu (4):
->   tracing/probe: Add PERF_EVENT_IOC_QUERY_PROBE ioctl
->   libbpf: Add helpers to extract perf fd from bpf_link
->   tracing/probe: Sync perf_event.h to tools
->   tracing/probe: Add self test for PERF_EVENT_IOC_QUERY_PROBE
-> 
->  include/linux/trace_events.h                  |  12 +++
->  include/uapi/linux/perf_event.h               |  19 ++++
->  kernel/events/core.c                          |  20 ++++
->  kernel/trace/trace_kprobe.c                   |  23 ++++
->  kernel/trace/trace_uprobe.c                   |  23 ++++
->  tools/include/uapi/linux/perf_event.h         |  19 ++++
->  tools/lib/bpf/libbpf.c                        |  19 ++++
->  tools/lib/bpf/libbpf.h                        |   8 ++
->  tools/lib/bpf/libbpf.map                      |   6 ++
->  .../selftests/bpf/prog_tests/attach_probe.c   | 102 ++++++++++++++++++
->  10 files changed, 251 insertions(+)
-> 
-> -- 
-> 2.20.1
-> 
->
 
-CC PeterZ, whose email I misspelled. Apologies.
+Sure:
 
-Daniel
+Tested-by: Guenter Roeck <linux@roeck-us.net>
+
+[ Applied to ToT and built sh:{defconfig,allnoconfig,tinyconfig} ]
+
+Thanks,
+Guenter
+
+> Thanks
+> --
+> Gustavo
+> 
+> > Thanks,
+> > Guenter
+> > 
+> >>> ---
+> >>>  arch/sh/kernel/Makefile | 2 --
+> >>>  1 file changed, 2 deletions(-)
+> >>>
+> >>> diff --git a/arch/sh/kernel/Makefile b/arch/sh/kernel/Makefile
+> >>> index 59673f8a3379..ef65f0625c6c 100644
+> >>> --- a/arch/sh/kernel/Makefile
+> >>> +++ b/arch/sh/kernel/Makefile
+> >>> @@ -47,5 +47,3 @@ obj-$(CONFIG_DWARF_UNWINDER)	+= dwarf.o
+> >>>  obj-$(CONFIG_PERF_EVENTS)	+= perf_event.o perf_callchain.o
+> >>>  obj-$(CONFIG_DMA_NONCOHERENT)	+= dma-coherent.o
+> >>>  obj-$(CONFIG_HAVE_HW_BREAKPOINT)		+= hw_breakpoint.o
+> >>> -
+> >>> -ccflags-y := -Werror
+> >>> -- 
+> >>> 2.7.4
