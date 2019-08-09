@@ -2,99 +2,125 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1806FC433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 14:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF65C31E40
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 14:13:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E72262171F
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 14:12:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BCAA2171F
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 14:13:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=SILICOMLTD.onmicrosoft.com header.i=@SILICOMLTD.onmicrosoft.com header.b="akgJrY4/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406822AbfHIOMH (ORCPT
+        id S2406681AbfHIONj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 10:12:07 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:60215 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726157AbfHIOMH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 10:12:07 -0400
-X-UUID: 725620696fd34fab965989687eb53529-20190809
-X-UUID: 725620696fd34fab965989687eb53529-20190809
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <miles.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
-        with ESMTP id 735304464; Fri, 09 Aug 2019 22:11:58 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 9 Aug 2019 22:11:58 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 9 Aug 2019 22:11:58 +0800
-Message-ID: <1565359918.12824.20.camel@mtkswgap22>
-Subject: Re: [RFC PATCH v2] mm: slub: print kernel addresses in slub debug
- messages
-From:   Miles Chen <miles.chen@mediatek.com>
-To:     Matthew Wilcox <willy@infradead.org>
-CC:     Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
-        "Tobin C . Harding" <me@tobin.cc>,
-        Kees Cook <keescook@chromium.org>
-Date:   Fri, 9 Aug 2019 22:11:58 +0800
-In-Reply-To: <20190809024644.GL5482@bombadil.infradead.org>
-References: <20190809010837.24166-1-miles.chen@mediatek.com>
-         <20190809024644.GL5482@bombadil.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Fri, 9 Aug 2019 10:13:39 -0400
+Received: from mail-eopbgr130133.outbound.protection.outlook.com ([40.107.13.133]:58521
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726140AbfHIONi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 10:13:38 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ebD4TfFzKaUhuKPDTZ7+9oyTNiKeO/OGjuGDarjgEDJlgeESxspaIVdO9WdTfcg+hCeijJ4kMJJzy6qP08ZW3eT35Nubw1apIrqSOgWuQBkTj03Ov6xeNUydSAib/m7blJqT0T3QV/0mGtU+TBjBlIA+FYhhiyhF1WLVklybgAGkeKPcBAEmzloDESJX0sCBAlKevoEUMPuu1X1zKTYOABOoL0B00vjvdL/9baD5JMhbMFXkbKX2DdngGLFmGg0sntuKB+csUvk6V8cqlcz+T6RWQ9/4F4XLScZ927NyRe7Z7+x7HOVvnPcQu8jinmmPKLUzQL1JhRsiW0XYC272nQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CKifQRYV5lKuI9xhCIiFbLqGFCI/+pvnjeFV2zLzosc=;
+ b=JDa7gXfzPQ4RICXBcoCJwvQgw0wB48VzcotXw+8vHvr0UZ+cQbzsatvF/zIchsWZHrs7PES1dDrtbcauhRCGkE41ohlJ/KA4Iw/vJk6zadrybSeDNQbzKgipD4qwlz/HJNYNcJJ5PGaeAAtNIjxhdCvuONlpUZNHAun0yOn4mFpVcoR4v4FkZdmcYVh9zglVilS1680nnD5eRaZrUhTu0bD6343XL7J0yIMSGkqAq3cg0b6MFfDQN/5OTEik7G4Zej+gvT+A5rgPW7pYUoReyZCV0P/u1Lbld1MZ01wevj9v2bfXFYGM7xwGb90rjd29D2sa/FHuaC+7PZHGtZR0wQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=silicom-usa.com; dmarc=pass action=none
+ header.from=silicom-usa.com; dkim=pass header.d=silicom-usa.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=SILICOMLTD.onmicrosoft.com; s=selector2-SILICOMLTD-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CKifQRYV5lKuI9xhCIiFbLqGFCI/+pvnjeFV2zLzosc=;
+ b=akgJrY4/s4FnIFIe6PTBzYhrm7o4dygZtUO9EWbPkzOKCevYBGIyPsklOYGVTaTAeMxZ6NhHBlrosBKp9m1qMJK8Mqpm0u11bNg5I6JlY7YJRQX8facUpNYEgAiLabvU9Kwde8KuLWi0EFFCnL6/VZXl3VgsAy7ie28KTvpG8+k=
+Received: from VI1PR0402MB2717.eurprd04.prod.outlook.com (10.175.22.139) by
+ VI1PR0402MB3854.eurprd04.prod.outlook.com (52.134.16.150) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.13; Fri, 9 Aug 2019 14:13:32 +0000
+Received: from VI1PR0402MB2717.eurprd04.prod.outlook.com
+ ([fe80::eca9:e1f:eca7:8439]) by VI1PR0402MB2717.eurprd04.prod.outlook.com
+ ([fe80::eca9:e1f:eca7:8439%9]) with mapi id 15.20.2157.020; Fri, 9 Aug 2019
+ 14:13:32 +0000
+From:   Stephen Douthit <stephend@silicom-usa.com>
+To:     "Luck, Tony" <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        James Morse <james.morse@arm.com>
+CC:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] EDAC, pnd2: Fix ioremap() size in dnv_rd_reg() from 64K
+ -> 32K
+Thread-Topic: [PATCH] EDAC, pnd2: Fix ioremap() size in dnv_rd_reg() from 64K
+ -> 32K
+Thread-Index: AQHVTiskHjYyDh8ZF0eccCUFKX9IfabxvLZQgAEgJoA=
+Date:   Fri, 9 Aug 2019 14:13:31 +0000
+Message-ID: <57c16c37-c81c-a935-6b8f-efd41657aaad@silicom-usa.com>
+References: <20190808205147.25547-1-stephend@silicom-usa.com>
+ <3908561D78D1C84285E8C5FCA982C28F7F416946@ORSMSX115.amr.corp.intel.com>
+In-Reply-To: <3908561D78D1C84285E8C5FCA982C28F7F416946@ORSMSX115.amr.corp.intel.com>
+Reply-To: Stephen Douthit <stephend@silicom-usa.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BN8PR07CA0015.namprd07.prod.outlook.com
+ (2603:10b6:408:ac::28) To VI1PR0402MB2717.eurprd04.prod.outlook.com
+ (2603:10a6:800:b4::11)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=stephend@silicom-usa.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [96.82.2.57]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ccbf4e39-0aa3-43f6-2734-08d71cd3c1ed
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:VI1PR0402MB3854;
+x-ms-traffictypediagnostic: VI1PR0402MB3854:
+x-microsoft-antispam-prvs: <VI1PR0402MB385413E2AC3E5AF1F12A6B4194D60@VI1PR0402MB3854.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 01244308DF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(39840400004)(376002)(346002)(136003)(396003)(366004)(189003)(199004)(53936002)(71200400001)(71190400001)(3450700001)(66446008)(64756008)(66556008)(66476007)(66946007)(6486002)(2906002)(31686004)(43066004)(6512007)(3846002)(6116002)(53546011)(6506007)(386003)(81166006)(478600001)(81156014)(4326008)(186003)(6436002)(7736002)(305945005)(6246003)(66066001)(5660300002)(8936002)(52116002)(36756003)(76176011)(99286004)(25786009)(102836004)(26005)(14454004)(8676002)(2616005)(446003)(11346002)(31696002)(476003)(86362001)(229853002)(256004)(486006)(14444005)(110136005)(54906003)(316002)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR0402MB3854;H:VI1PR0402MB2717.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: silicom-usa.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 4IxEgkgkNyPeMZoYVvRZUvRwo15NEzKLPvGSr9vSvbwVNqXY3bIV6eTWoFvRZHXbnqO5iLdGpJH/V5w60/o7ObSTIucTlw+RWQj4hRhsUzlOU1T9tRm+ogvy7HWkOeRd2RymRbfh/icXC7XP3DHfYpVVdyB9rH0QbV1WbPy50oRmPxIYzOhgIUup+Ok4tw+VqdmeFWsaU2eePGyvfLpz4Q/lzAFW8rNXKE2GocUo3JHl6YVOri7p1Lq9zMjzHr5X2RfOFN2jnHnY5P/Hvz1a1ADMmByF4RO/vl3xrOiAVSWqKj2JrujdbEuMGuNLw1C/UqjmV9oVq0pEsr9YK23Ta4ClJKH4V6rU9TobxqfbC92EW6h1TXGim27ppGF83wBS8bj+PF+lO7exPFz8Ojb7pNUp6SzqsRp5BX0UQ2d05uw=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <0355ED99921C05419263F7D68E36E214@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-MTK:  N
+X-OriginatorOrg: silicom-usa.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ccbf4e39-0aa3-43f6-2734-08d71cd3c1ed
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Aug 2019 14:13:31.8094
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c9e326d8-ce47-4930-8612-cc99d3c87ad1
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: OPqL7DE20tcQQ61unYCcJlwv/Uur4nqignZaPmC4McdmnlJrdNagBBaQkfX2hTVh9VvOHinAgAC7DvGatIZLXRDyJ8Ns3B1tO5gZGUSb0DA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3854
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-08-08 at 19:46 -0700, Matthew Wilcox wrote:
-> On Fri, Aug 09, 2019 at 09:08:37AM +0800, miles.chen@mediatek.com wrote:
-> > Possible approaches are:
-> > 1. stop printing kernel addresses
-> > 2. print with %pK,
-> > 3. print with %px.
-> 
-> No.  The point of obscuring kernel addresses is that if the attacker manages to find a way to get the kernel to spit out some debug messages that we shouldn't
-> leak all this extra information.
-
-got it.
-> 
-> > 4. do nothing
-> 
-> 5. Find something more useful to print.
-
-agree
-> 
-> > INFO: Slab 0x(____ptrval____) objects=25 used=10 fp=0x(____ptrval____)
-> 
-> ... you don't have any randomness on your platform?
-
-We have randomized base on our platforms.
-
-> But if you have randomness, at least some of these "pointers" are valuable
-> because you can compare them against "pointers" printed by other parts
-> of the kernel.
-
-Understood. Keep current %p, do not leak kernel addresses.
-
-I'll collect more cases and see if we really need some extra
-information. (maybe the @offset in current message is enough)
-
-
-thanks for your comments!
-
-
-
+T24gOC84LzE5IDU6MDUgUE0sIEx1Y2ssIFRvbnkgd3JvdGU6DQo+IC0JCWJhc2UgPSBpb3JlbWFw
+KChyZXNvdXJjZV9zaXplX3QpYWRkciwgMHgxMDAwMCk7DQo+ICsJCWJhc2UgPSBpb3JlbWFwKChy
+ZXNvdXJjZV9zaXplX3QpYWRkciwgMHg4MDAwKTsNCj4gDQo+IENoYW5naW5nIG9uZSBtYWdpYyB2
+YWx1ZSBmb3IgYW5vdGhlci4gIDotKA0KDQpPaywgSSdsbCBnaXZlIGl0IGEgbmFtZS4NCg0KPiBE
+byBkaWZmZXJlbnQgQklPUyBkbyBkaWZmZXJlbnQgdGhpbmdzPyAgSSBkb24ndCByZWNhbGwgc2Vl
+aW5nIHRoaXMgZXJyb3INCj4gKGJ1dCBwZXJoYXBzIEkgbWlzc2VkIGl0LCBvciBwZXJoYXBzIHRo
+ZSBrZXJuZWwgaGFzIGFkZGVkIGJldHRlciBjaGVja3MpLg0KDQpTdXJlLCBkZXBlbmRpbmcgb24g
+d2hlcmUgYSBCSU9TIGxvY2F0ZXMgTU1JTyByZXNvdXJjZXMgdGhlIHJlcG9ydGVkDQpyZXNlcnZl
+ZCByYW5nZXMgd2lsbCB2YXJ5LiAgTm9ybWFsbHkgdGhvc2UgcmVzb3VyY2VzIGFyZSBwYWNrZWQg
+Ynkgc2l6ZQ0Kc28gYW55IGNoYW5nZXMgaW4gdGhlIGluc3RhbGxlZC9lbmFibGVkIGRldmljZSBs
+aXN0IGNhbiBjaGFuZ2UgdGhlDQpsYXlvdXQgb2YgdGhlIE1NSU8gcmVzZXJ2ZWQgcmVnaW9ucyBh
+cyB3ZWxsLg0KDQpUaGUgQklPUyBjb3VsZCBhbHNvIGNob29zZSB0byByZXBvcnQgYWRqYWNlbnQg
+TU1JTyByZXNvdXJjZXMgYXMgb25lDQpsYXJnZXIgcmVzZXJ2ZWQgcmVnaW9uLg0KDQo+IElmIHRo
+aXMgbnVtYmVyIGlzIGF0IHRoZSB3aGltIG9mIHRoZSBCSU9TLCBpcyB0aGVyZSBzb21lIHdheSB0
+bw0KPiBmaWd1cmUgb3V0IHdoYXQgaXMgdGhlIHJpZ2h0IHZhbHVlIG9uIGEgc3BlY2lmaWMgaW1w
+bGVtZW50YXRpb24/DQpEaWdnaW5nIGJhY2sgdGhvdWdoIHRoZSBFRFMgKEludGVsIERvYyAjNTU4
+NTc5KSBJIGZvdW5kIHRoYXQgdGhlcmUgYXJlDQp0d28gc2l6ZXMgd2UgbmVlZCB0byBoYW5kbGUu
+ICBJZiB3ZSdyZSByZWFkaW5nIHZpYSB0aGUgbWVtb3J5IGNvbnRyb2xsZXINCmh1YiB0aGF0IEJB
+UiBpcyAzMktCIHBlciBzZWN0aW9uIDQ0LjIuNyBvZiB0aGUgRURTLg0KDQpBbGwgc2lkZWJhbmQg
+cG9ydHMgYXJlIDY0S0IsIEknbGwgcmVzdWJtaXQgdGFraW5nIHRoYXQgaW50byBhY2NvdW50Lg0K
