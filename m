@@ -2,132 +2,76 @@ Return-Path: <SRS0=0SVE=WF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 472E2C433FF
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:52:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF035C433FF
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:53:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22BAF21773
-	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:52:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1565373140;
-	bh=r8Bq+SnZpJUmLQaBOnbYN2UKuU7ICvpXGqhmlnMNdCU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ghwQooic4ho1jko/OlwvSar9rzu3B6yvUCga5LVKLwm5aretNpNsucZy4WC2CYw7e
-	 +2BMr/9x6MooZ+854QVMsuxxHOLuyUiKCoV4joMKp4+vwKt91asUqmDyAqJVUZ8LCy
-	 nxG/YyvbI4zGdaGgRuAijZIMK+sYDU3XVH+VcOXE=
+	by mail.kernel.org (Postfix) with ESMTP id 989E32086D
+	for <linux-kernel@archiver.kernel.org>; Fri,  9 Aug 2019 17:53:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436740AbfHIRwT (ORCPT
+        id S2436837AbfHIRxB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 9 Aug 2019 13:52:19 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52114 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726628AbfHIRwS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 9 Aug 2019 13:52:18 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 97480ADCB;
-        Fri,  9 Aug 2019 17:52:16 +0000 (UTC)
-Date:   Fri, 9 Aug 2019 19:52:10 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Jan Kara <jack@suse.cz>
-Cc:     John Hubbard <jhubbard@nvidia.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jerome Glisse <jglisse@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Black <daniel@linux.ibm.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>
-Subject: Re: [PATCH 1/3] mm/mlock.c: convert put_page() to put_user_page*()
-Message-ID: <20190809175210.GR18351@dhcp22.suse.cz>
-References: <20190805222019.28592-2-jhubbard@nvidia.com>
- <20190807110147.GT11812@dhcp22.suse.cz>
- <01b5ed91-a8f7-6b36-a068-31870c05aad6@nvidia.com>
- <20190808062155.GF11812@dhcp22.suse.cz>
- <875dca95-b037-d0c7-38bc-4b4c4deea2c7@suse.cz>
- <306128f9-8cc6-761b-9b05-578edf6cce56@nvidia.com>
- <d1ecb0d4-ea6a-637d-7029-687b950b783f@nvidia.com>
- <420a5039-a79c-3872-38ea-807cedca3b8a@suse.cz>
- <20190809082307.GL18351@dhcp22.suse.cz>
- <20190809135813.GF17568@quack2.suse.cz>
+        Fri, 9 Aug 2019 13:53:01 -0400
+Received: from mail-ot1-f70.google.com ([209.85.210.70]:40390 "EHLO
+        mail-ot1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726628AbfHIRxB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 9 Aug 2019 13:53:01 -0400
+Received: by mail-ot1-f70.google.com with SMTP id o21so2388356otj.7
+        for <linux-kernel@vger.kernel.org>; Fri, 09 Aug 2019 10:53:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=zfLUeixZ0xxyCbY54z0hYvSD6TcuS24V1c/+Vq6E3hY=;
+        b=PXWLldl6pRrlf7a5x+CKF04RP8Jn8wv+ekg04GyDbP532kcxXWaJBKYyfuI5Gkv+OV
+         jbRYsvG4DGcBdhCMPZBeowG9VcsH8I4WQAg6n0s9/xePwR1+3szrZDL4rq/I9cdevFub
+         ftsOQaoTP01+3Zjk8YoTozKuNzz/2FM0kIJWHmPI/Ydm4KAwj6U6CBbqGzHcGC7B2D6s
+         DbiqudFn2K4p14EDpmM9xYheuICWMk2i5jgKPKCel5f9FJjfLMomd5H2E2L6qy4K1/5m
+         EhLo7O+x3PT9fDmKWku5faE6hJ4frImDkgcgrjsJS2MsfgVDID3oHokpvA+CWOSUyGQM
+         QMhQ==
+X-Gm-Message-State: APjAAAUjFu0oiRHk1J/WNxQm/2DgZ1CB47AfEpjaUPdKlUGpyA+1s2Ws
+        Acr5KaUXY92+yZtvjZkm1kh/JYgL+8zEoDBPYdNJ7yZsbK/+
+X-Google-Smtp-Source: APXvYqw/TXi1UjpCaVvf4WkbF4/wpHhbA67XNDTIgl03f49zVXIXcyl57HB5i3MLccYNJEphSG1rojmsMvnLyphLutfMcDYqwKX2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190809135813.GF17568@quack2.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Received: by 2002:a02:1087:: with SMTP id 129mr24265518jay.131.1565373180454;
+ Fri, 09 Aug 2019 10:53:00 -0700 (PDT)
+Date:   Fri, 09 Aug 2019 10:53:00 -0700
+In-Reply-To: <CAAeHK+wiwkC0SoGMvZgQ49dUbJE7ECpacXfPWpM4f9C84VY=zQ@mail.gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000005cb00c058fb2d840@google.com>
+Subject: Re: KASAN: use-after-free Read in ld_usb_release
+From:   syzbot <syzbot+30cf45ebfe0b0c4847a1@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, bhelgaas@google.com, greg@kroah.com,
+        kirr@nexedi.com, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux@roeck-us.net, lkundrak@v3.sk,
+        logang@deltatee.com, stern@rowland.harvard.edu,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 09-08-19 15:58:13, Jan Kara wrote:
-> On Fri 09-08-19 10:23:07, Michal Hocko wrote:
-> > On Fri 09-08-19 10:12:48, Vlastimil Babka wrote:
-> > > On 8/9/19 12:59 AM, John Hubbard wrote:
-> > > >>> That's true. However, I'm not sure munlocking is where the
-> > > >>> put_user_page() machinery is intended to be used anyway? These are
-> > > >>> short-term pins for struct page manipulation, not e.g. dirtying of page
-> > > >>> contents. Reading commit fc1d8e7cca2d I don't think this case falls
-> > > >>> within the reasoning there. Perhaps not all GUP users should be
-> > > >>> converted to the planned separate GUP tracking, and instead we should
-> > > >>> have a GUP/follow_page_mask() variant that keeps using get_page/put_page?
-> > > >>>  
-> > > >>
-> > > >> Interesting. So far, the approach has been to get all the gup callers to
-> > > >> release via put_user_page(), but if we add in Jan's and Ira's vaddr_pin_pages()
-> > > >> wrapper, then maybe we could leave some sites unconverted.
-> > > >>
-> > > >> However, in order to do so, we would have to change things so that we have
-> > > >> one set of APIs (gup) that do *not* increment a pin count, and another set
-> > > >> (vaddr_pin_pages) that do. 
-> > > >>
-> > > >> Is that where we want to go...?
-> > > >>
-> > > 
-> > > We already have a FOLL_LONGTERM flag, isn't that somehow related? And if
-> > > it's not exactly the same thing, perhaps a new gup flag to distinguish
-> > > which kind of pinning to use?
-> > 
-> > Agreed. This is a shiny example how forcing all existing gup users into
-> > the new scheme is subotimal at best. Not the mention the overal
-> > fragility mention elsewhere. I dislike the conversion even more now.
-> > 
-> > Sorry if this was already discussed already but why the new pinning is
-> > not bound to FOLL_LONGTERM (ideally hidden by an interface so that users
-> > do not have to care about the flag) only?
-> 
-> The new tracking cannot be bound to FOLL_LONGTERM. Anything that gets page
-> reference and then touches page data (e.g. direct IO) needs the new kind of
-> tracking so that filesystem knows someone is messing with the page data.
-> So what John is trying to address is a different (although related) problem
-> to someone pinning a page for a long time.
+Hello,
 
-OK, I see. Thanks for the clarification.
+syzbot has tested the proposed patch and the reproducer did not trigger  
+crash:
 
-> In principle, I'm not strongly opposed to a new FOLL flag to determine
-> whether a pin or an ordinary page reference will be acquired at least as an
-> internal implementation detail inside mm/gup.c. But I would really like to
-> discourage new GUP users taking just page reference as the most clueless
-> users (drivers) usually need a pin in the sense John implements. So in
-> terms of API I'd strongly prefer to deprecate GUP as an API, provide
-> vaddr_pin_pages() for drivers to get their buffer pages pinned and then for
-> those few users who really know what they are doing (and who are not
-> interested in page contents) we can have APIs like follow_page() to get a
-> page reference from a virtual address.
+Reported-and-tested-by:  
+syzbot+30cf45ebfe0b0c4847a1@syzkaller.appspotmail.com
 
-Yes, going with a dedicated API sounds much better to me. Whether a
-dedicated FOLL flag is used internally is not that important. I am also
-for making the underlying gup to be really internal to the core kernel.
+Tested on:
 
-Thanks!
--- 
-Michal Hocko
-SUSE Labs
+commit:         e96407b4 usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan.git
+kernel config:  https://syzkaller.appspot.com/x/.config?x=cfa2c18fb6a8068e
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=15b4c802600000
+
+Note: testing is done by a robot and is best-effort only.
